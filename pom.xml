@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>cool.scx</groupId>
+        <artifactId>scx-parent</artifactId>
+        <version>1.1.0</version>
+    </parent>
+
+    <artifactId>scx</artifactId>
+    <packaging>jar</packaging>
+    <name>scx</name>
+
+    <version>1.9.0</version>
+
+    <description>SCX 是一个 "Web 开发框架"; 目标是提供简单快速的开发体验。</description>
+    <url>https://github.com/scx567888/scx</url>
+
+    <developers>
+        <developer>
+            <id>scx567888</id>
+            <name>scx567888</name>
+            <email>scx567888@outlook.com</email>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://github.com/scx567888/scx/blob/master/LICENSE</url>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:https://github.com/scx567888/scx.git</connection>
+        <developerConnection>scm:git:https://github.com/scx567888/scx.git</developerConnection>
+        <url>https://github.com/scx567888/scx</url>
+    </scm>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jasypt</groupId>
+            <artifactId>jasypt</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.coobird</groupId>
+            <artifactId>thumbnailator</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j18-impl</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <properties>
+        <scx.mainClass>cool.scx.EmptyMain</scx.mainClass>
+    </properties>
+
+</project>

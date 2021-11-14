@@ -1,0 +1,36 @@
+package cool.scx.exception;
+
+import cool.scx.ScxHandler;
+import io.vertx.ext.web.RoutingContext;
+
+/**
+ * 自定义 HttpRequestException 异常
+ *
+ * @author scx567888
+ * @version 1.1.14
+ */
+public class CustomHttpRequestException extends HttpRequestException {
+
+    /**
+     * a
+     */
+    private final ScxHandler<RoutingContext> errFun;
+
+    /**
+     * 自定义异常
+     *
+     * @param _errFun a long.
+     */
+    public CustomHttpRequestException(ScxHandler<RoutingContext> _errFun) {
+        this.errFun = _errFun;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void handle(RoutingContext ctx) {
+        errFun.handle(ctx);
+    }
+
+}
