@@ -1,5 +1,6 @@
 package cool.scx.web.handler;
 
+import io.netty.handler.codec.http.HttpHeaderNames;
 import io.vertx.core.http.HttpMethod;
 
 import java.util.LinkedHashSet;
@@ -18,12 +19,8 @@ public final class ScxCorsHandlerConfiguration {
     private static final boolean allowCredentials = true;
 
     static {
-        allowedHeaders.add("x-requested-with");
-        allowedHeaders.add("Access-Control-Allow-Origin");
-        allowedHeaders.add("origin");
-        allowedHeaders.add("Content-Type");
-        allowedHeaders.add("accept");
-        allowedHeaders.add("X-PINGARUNER");
+        allowedHeaders.add(HttpHeaderNames.ACCEPT.toString());
+        allowedHeaders.add(HttpHeaderNames.CONTENT_TYPE.toString());
 
         allowedMethods.add(HttpMethod.GET);
         allowedMethods.add(HttpMethod.POST);

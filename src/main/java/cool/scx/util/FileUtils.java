@@ -238,10 +238,10 @@ public final class FileUtils {
         int lastSeparatorPosUnix = fileName.lastIndexOf(UNIX_FILE_SEPARATOR);
 
         // takes the greater of the two values, which mean last file separator
-        int indexOflastSeparator = Math.max(lastSeparatorPosWindows, lastSeparatorPosUnix);
+        int indexOfLastSeparator = Math.max(lastSeparatorPosWindows, lastSeparatorPosUnix);
 
         // make sure the file extension appear after the last file separator
-        if (indexOfLastExtension > indexOflastSeparator) {
+        if (indexOfLastExtension > indexOfLastSeparator) {
             extension = fileName.substring(indexOfLastExtension + 1);
         }
 

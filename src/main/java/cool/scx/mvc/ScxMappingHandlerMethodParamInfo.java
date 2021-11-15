@@ -3,6 +3,7 @@ package cool.scx.mvc;
 import cool.scx.annotation.FromBody;
 import cool.scx.annotation.FromPath;
 import cool.scx.annotation.FromQuery;
+import cool.scx.annotation.FromUpload;
 import cool.scx.util.StringUtils;
 
 import java.lang.reflect.Parameter;
@@ -85,6 +86,14 @@ public final class ScxMappingHandlerMethodParamInfo {
                     this.name = fromPath.value();
                 }
                 this.merge = fromPath.merge();
+            } else if (aClass == FromUpload.class) {
+                var fromUpload = (FromUpload) a;
+                this.fromType = ScxMappingFromType.FROM_UPLOAD;
+                this.required = fromUpload.required();
+                if (StringUtils.isNotBlank(fromUpload.value())) {
+                    this.name = fromUpload.value();
+                }
+                this.merge = false;
             }
         }
     }

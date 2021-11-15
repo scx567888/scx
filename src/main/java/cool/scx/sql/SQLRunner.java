@@ -286,12 +286,11 @@ public final class SQLRunner {
      * <pre>{@code
      *      假设有以下结构的数据表
      *      create table test (
-     *          name varchar(32) null,
-     *          constraint test_name_uindex unique (name)
+     *          name varchar(32) null unique,
      *      );
      *      在连接消费者中传入要执行的操作
      *      try {
-     *          SQLRunner.autoTransaction(con -> {
+     *          sqlRunner.autoTransaction(con -> {
      *              // 这句代码会正确执行
      *              SQLRunner.execute(con, "insert into test(name) values('uniqueName') ", null);
      *              // 这句会产生异常 这时上一个语句会进行回滚 (rollback) 同时将异常抛出

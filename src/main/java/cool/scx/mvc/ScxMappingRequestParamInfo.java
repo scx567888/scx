@@ -3,7 +3,7 @@ package cool.scx.mvc;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.ScxContext;
-import cool.scx.bo.FileUpload;
+import cool.scx.bo.UploadedEntity;
 import cool.scx.enumeration.ScxFeature;
 import cool.scx.exception.BadRequestException;
 import cool.scx.util.ObjectUtils;
@@ -28,7 +28,7 @@ final class ScxMappingRequestParamInfo {
     private final Map<String, Object> formAttributesMap;
     private final Map<String, Object> queryParams;
     private final Map<String, String> pathParams;
-    private final Map<String, FileUpload> fileUploadMap;
+    private final Map<String, UploadedEntity> uploadedEntityMap;
     private final boolean isJsonBody;//是不是 json格式的请求
 
     /**
@@ -43,7 +43,7 @@ final class ScxMappingRequestParamInfo {
         this.isJsonBody = this.formAttributesMap.size() == 0;
         this.queryParams = multiMapToMap(ctx.queryParams());
         this.pathParams = ctx.pathParams();
-        this.fileUploadMap = ctx.get("uploadFiles") != null ? ctx.get("uploadFiles") : new HashMap<>();
+        this.uploadedEntityMap = ctx.get("uploadedEntityMap") != null ? ctx.get("uploadedEntityMap") : new HashMap<>();
     }
 
     private static JsonNode initJsonBody(RoutingContext ctx) {
@@ -87,13 +87,18 @@ final class ScxMappingRequestParamInfo {
     }
 
     /**
-     * <p>getFileUpload.</p>
+     * <p>getUploadedEntity.</p>
      *
      * @param name a {@link java.lang.String} object
-     * @return a {@link cool.scx.bo.FileUpload} object
+     * @return a {@link UploadedEntity} object
      */
-    public FileUpload getFileUpload(String name) {
-        return fileUploadMap.get(name);
+    public UploadedEntity getUploadedEntity(String name, boolean required) throws RequiredParamEmptyException {
+        var v = uploadedEntityMap.get(name);
+        //为空的时候做两个处理 即必填则报错 非必填则返回 null
+        if (required && v == null) {
+            throw new RequiredParamEmptyException();
+        }
+        return v;
     }
 
     /**
@@ -192,8 +197,8 @@ final class ScxMappingRequestParamInfo {
             try {
                 if (p.javaType() == RoutingContext.class) {
                     finalHandlerParams[i] = routingContext;
-                } else if (p.javaType() == FileUpload.class) {
-                    finalHandlerParams[i] = getFileUpload(p.name());
+                } else if (p.javaType() == UploadedEntity.class) {
+                    finalHandlerParams[i] = getUploadedEntity(p.name(), p.isRequired());
                 } else if (p.fromType() == ScxMappingFromType.FROM_BODY) {
                     finalHandlerParams[i] = getBody(p.name(), p.isUseAllBody(), p.isRequired(), p.javaType());
                 } else if (p.fromType() == ScxMappingFromType.FROM_QUERY) {
