@@ -46,9 +46,9 @@ public final class ScxBodyHandler implements Handler<RoutingContext> {
         final RoutingContext context;
         final boolean isMultipart;
         final boolean isUrlEncoded;
+        final AtomicInteger uploadCount = new AtomicInteger();
         Buffer body = Buffer.buffer(1024);
         boolean failed;
-        AtomicInteger uploadCount = new AtomicInteger();
         boolean ended;
         long uploadSize = 0L;
 
