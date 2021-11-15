@@ -5,12 +5,11 @@ import cool.scx.ScxModuleInfo;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.config.ScxEasyConfig;
 import cool.scx.mvc.ScxMappingHandler;
-import cool.scx.web.handler.ScxBodyBufferHandler;
+import cool.scx.web.handler.ScxBodyHandler;
 import cool.scx.web.handler.ScxCookieHandlerConfiguration;
 import cool.scx.web.handler.ScxCorsHandlerConfiguration;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
-import io.vertx.core.http.HttpHeaders;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.FaviconHandler;
@@ -81,17 +80,7 @@ public final class ScxRouteRegistry {
     }
 
     private static void registerBodyHandler(Router vertxRouter) {
-        var bodyHandlerRoute = (Handler<RoutingContext>) (ctx -> {
-            var request = ctx.request();
-            if (request.headers().contains(HttpHeaders.UPGRADE, HttpHeaders.WEBSOCKET, true)) {
-                ctx.next();
-            } else {
-                var handler = new ScxBodyBufferHandler(ctx);
-                request.handler(handler);
-                request.endHandler(v -> handler.end());
-            }
-        });
-        vertxRouter.route().handler(bodyHandlerRoute);
+        vertxRouter.route().handler(new ScxBodyHandler());
     }
 
     private static void registerScxMappingHandler(Router vertxRouter, List<ScxModuleInfo<? extends ScxModule>> scxModuleInfos) {

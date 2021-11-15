@@ -9,6 +9,8 @@ package cool.scx.mvc;
 public enum ScxMappingFromType {
     // FromBody
     FROM_BODY,
+    // FROM_UPLOAD
+    FROM_UPLOAD,
     // FromPath
     FROM_PATH,
     // FromQuery
