@@ -87,12 +87,12 @@ final class ScxMappingRequestParamInfo {
     }
 
     /**
-     * <p>getFileUpload.</p>
+     * <p>getUploadedEntity.</p>
      *
      * @param name a {@link java.lang.String} object
      * @return a {@link UploadedEntity} object
      */
-    public UploadedEntity getFileUpload(String name, boolean required) throws RequiredParamEmptyException {
+    public UploadedEntity getUploadedEntity(String name, boolean required) throws RequiredParamEmptyException {
         var v = uploadedEntityMap.get(name);
         //为空的时候做两个处理 即必填则报错 非必填则返回 null
         if (required && v == null) {
@@ -198,7 +198,7 @@ final class ScxMappingRequestParamInfo {
                 if (p.javaType() == RoutingContext.class) {
                     finalHandlerParams[i] = routingContext;
                 } else if (p.javaType() == UploadedEntity.class) {
-                    finalHandlerParams[i] = getFileUpload(p.name(), p.isRequired());
+                    finalHandlerParams[i] = getUploadedEntity(p.name(), p.isRequired());
                 } else if (p.fromType() == ScxMappingFromType.FROM_BODY) {
                     finalHandlerParams[i] = getBody(p.name(), p.isUseAllBody(), p.isRequired(), p.javaType());
                 } else if (p.fromType() == ScxMappingFromType.FROM_QUERY) {
