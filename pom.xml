@@ -103,19 +103,4 @@
         <scx.mainClass>cool.scx.EmptyMain</scx.mainClass>
     </properties>
 
-
-    <build>
-        <plugins>
-            <!-- 对 jar 包等文件进行 gpg 签名  -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>${maven.gpg.plugin.version}</version>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-
 </project>
