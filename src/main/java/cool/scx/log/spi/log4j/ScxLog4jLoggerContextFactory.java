@@ -5,11 +5,11 @@ import org.apache.logging.log4j.spi.LoggerContextFactory;
 
 import java.net.URI;
 
-public final class ScxLog4jContextFactory implements LoggerContextFactory {
+public final class ScxLog4jLoggerContextFactory implements LoggerContextFactory {
 
     private static final ScxLog4jLoggerContext context = new ScxLog4jLoggerContext();
 
-    public ScxLog4jContextFactory() {
+    public ScxLog4jLoggerContextFactory() {
     }
 
     public LoggerContext getContext(final String fqcn, final ClassLoader loader, final Object externalContext, final boolean currentContext) {
