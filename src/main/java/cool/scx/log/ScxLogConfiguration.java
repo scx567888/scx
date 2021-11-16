@@ -74,7 +74,7 @@ public final class ScxLogConfiguration {
         }
     }
 
-    static ScxLoggerInfo getLoggerInfo(String name) {
+    public static ScxLoggerInfo getLoggerInfo(String name) {
         return loggerInfoMap.getOrDefault(name, rootScxLoggerInfo);
     }
 

@@ -1,4 +1,4 @@
-package cool.scx.log;
+package cool.scx.log.spi.slf4j;
 
 import org.slf4j.ILoggerFactory;
 import org.slf4j.IMarkerFactory;
@@ -11,7 +11,7 @@ public final class ScxSLF4JServiceProvider implements SLF4JServiceProvider {
 
     private static final String REQUESTED_API_VERSION = "2.0.99";
 
-    private static final ScxLoggerFactory SCX_LOGGER_FACTORY = new ScxLoggerFactory();
+    private static final ScxSLF4JLoggerFactory SCX_LOGGER_FACTORY = new ScxSLF4JLoggerFactory();
 
     private static final IMarkerFactory markerFactory = new BasicMarkerFactory();
 

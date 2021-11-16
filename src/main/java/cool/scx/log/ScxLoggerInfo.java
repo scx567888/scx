@@ -4,7 +4,7 @@ import org.slf4j.event.Level;
 
 import java.io.File;
 
-final class ScxLoggerInfo {
+public final class ScxLoggerInfo {
     public String name;
     public Level level;
     public ScxLoggerInfoType type;

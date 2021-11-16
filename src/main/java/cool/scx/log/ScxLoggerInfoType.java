@@ -1,6 +1,6 @@
 package cool.scx.log;
 
-enum ScxLoggerInfoType {
+public enum ScxLoggerInfoType {
     CONSOLE,
     FILE,
     BOTH
