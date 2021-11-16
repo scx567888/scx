@@ -13,7 +13,7 @@
     <packaging>jar</packaging>
     <name>scx</name>
 
-    <version>1.9.1</version>
+    <version>1.9.2</version>
 
     <description>SCX 是一个 "Web 开发框架"; 目标是提供简单快速的开发体验。</description>
     <url>https://github.com/scx567888/scx</url>
@@ -88,12 +88,7 @@
 
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-slf4j18-impl</artifactId>
+            <artifactId>log4j-api</artifactId>
         </dependency>
 
         <dependency>

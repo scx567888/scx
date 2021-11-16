@@ -6,6 +6,7 @@ import cool.scx.config.ScxFeatureConfig;
 import cool.scx.dao.ScxDao;
 import cool.scx.enumeration.ScxFeature;
 import cool.scx.eventbus.ScxEventBus;
+import cool.scx.log.ScxLogConfiguration;
 import cool.scx.util.ConsoleUtils;
 import cool.scx.util.NetUtils;
 import cool.scx.util.StringUtils;
@@ -20,8 +21,6 @@ import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.net.JksOptions;
 import io.vertx.ext.web.Router;
-import org.apache.logging.log4j.core.config.ConfigurationSource;
-import org.apache.logging.log4j.core.config.Configurator;
 
 import java.io.IOException;
 import java.net.BindException;
@@ -47,17 +46,12 @@ public final class Scx {
     /**
      * SCX 版本号
      */
-    private static final String SCX_VERSION = "1.9.1";
+    private static final String SCX_VERSION = "1.9.2";
 
     /**
      * 默认配置文件 路径
      */
     private static final String DEFAULT_SCX_CONFIG_PATH = "AppRoot:scx-config.json";
-
-    /**
-     * 默认 LOG4J2 配置文件 路径
-     */
-    private static final String DEFAULT_LOG4J2_CONFIG_PATH = "AppRoot:scx-log4j2.xml";
 
     /**
      * mainClass 用作定位 项目根目录
@@ -163,8 +157,8 @@ public final class Scx {
         //4, 初始化配置文件
         this.scxConfig = new ScxConfig(this.scxAppRoot.getFileByAppRoot(DEFAULT_SCX_CONFIG_PATH), this.args);
         this.scxEasyConfig = new ScxEasyConfig(this.scxConfig, this.scxAppRoot, this.appKey);
-        //5, 初始化 LOG4J2 日志
-        initLOG4J2(this.scxAppRoot);
+        //5, 初始化 ScxLog 日志框架
+        ScxLogConfiguration.init(this.scxConfig, this.scxAppRoot);
         //6, 初始化 Vertx 这里在 log4j2 之后初始化是因为 vertx 需要使用 log4j2 打印日志
         this.vertx = initVertx();
         //7, 初始化事件总线 (这里的 ScxEventBus 其实只是针对 vertx 的 eventBus 进行一次包装)
@@ -288,17 +282,6 @@ public final class Scx {
             System.err.println("注意!!! 未设置 APP_KEY ,已采用 DEFAULT_APP_KEY , 这是非常不安全的 , 建议设置自定义的 APP_KEY !!!");
         }
         return appKey;
-    }
-
-    /**
-     * <p>initLogger.</p>
-     *
-     * @param appRoot a
-     */
-    private static void initLOG4J2(ScxAppRoot appRoot) {
-        var fileByAppRoot = appRoot.getFileByAppRoot(DEFAULT_LOG4J2_CONFIG_PATH);
-        var configurationSource = ConfigurationSource.fromUri(fileByAppRoot.toURI());
-        Configurator.initialize(null, configurationSource);
     }
 
     /**
