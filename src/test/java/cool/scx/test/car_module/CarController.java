@@ -33,6 +33,11 @@ public class CarController {
      */
     @ScxMapping(value = "/", method = HttpMethod.GET)
     public Html TestIndex() throws SQLException, IOException {
+        try {
+            Thread.sleep(1000*100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         Html index = Html.ofTemplate("index");
         index.add("name", "小明");
         index.add("age", 22);

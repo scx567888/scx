@@ -13,6 +13,8 @@ import cool.scx.util.ExceptionUtils;
 import cool.scx.util.StringUtils;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.vertx.ext.web.RoutingContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -26,6 +28,8 @@ import java.util.stream.Stream;
  * @version 0.3.6
  */
 public final class ScxMappingHandler implements ScxHandler<RoutingContext> {
+
+    Logger logger= LoggerFactory.getLogger(ScxMappingHandler.class);
 
     /**
      * 用来校验 路径的正则表达式

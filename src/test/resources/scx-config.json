@@ -33,13 +33,13 @@
     "log": {
       "root": {
         "level": "DEBUG",
-        "type": "CONSOLE",
+        "type": "BOTH",
         "file-path": "AppRoot:logs"
       },
       "loggers": [
         {
           "name": "cool.scx.sql.SQLRunner",
-          "level": "DEBUG",
+          "level": "BOTH",
           "type": "CONSOLE",
           "file-path": "AppRoot:sql-logs"
         }

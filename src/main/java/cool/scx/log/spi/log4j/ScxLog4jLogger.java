@@ -3,7 +3,6 @@ package cool.scx.log.spi.log4j;
 import cool.scx.log.ScxLogConfiguration;
 import cool.scx.log.ScxLogHelper;
 import cool.scx.log.ScxLoggerInfo;
-import cool.scx.util.ExceptionUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.message.Message;
@@ -92,10 +91,7 @@ public class ScxLog4jLogger extends AbstractLogger {
     public void logMessage(final String fqcn, final Level mgsLevel, final Marker marker, final Message message, final Throwable throwable) {
         var levelStr = (level == Level.INFO || level == Level.WARN) ? level + " " : level.toString();
         var msg = message.getFormattedMessage();
-        if (throwable != null) {
-            msg = msg + "Throwable : " + ExceptionUtils.getStackTrace(throwable);
-        }
-        ScxLogHelper.logMessage(name, levelStr, msg, scxLoggerInfo);
+        ScxLogHelper.logMessage(name, levelStr, msg, scxLoggerInfo, throwable);
     }
 
 }
