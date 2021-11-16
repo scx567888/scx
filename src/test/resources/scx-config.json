@@ -33,7 +33,7 @@
     "log": {
       "root": {
         "level": "DEBUG",
-        "type": "BOTH",
+        "type": "file",
         "file-path": "AppRoot:logs"
       },
       "loggers": [

@@ -17,7 +17,7 @@ public final class ScxLogHelper {
         var threadName = Thread.currentThread().getName();
         var finalMsg = nowTimeStr + " [" + threadName + "] " + levelStr + " " + name + " - " + msg + System.lineSeparator();
         if (throwable != null) {
-            finalMsg = finalMsg + ExceptionUtils.getStackTrace(throwable);
+            finalMsg = finalMsg + ExceptionUtils.getCustomStackTrace(throwable);
         }
         if (scxLoggerInfo.type == ScxLoggerInfoType.CONSOLE || scxLoggerInfo.type == ScxLoggerInfoType.BOTH) {
             System.out.print(finalMsg);
