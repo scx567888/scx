@@ -13,6 +13,8 @@ import cool.scx.util.ExceptionUtils;
 import cool.scx.util.StringUtils;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.vertx.ext.web.RoutingContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -26,6 +28,8 @@ import java.util.stream.Stream;
  * @version 0.3.6
  */
 public final class ScxMappingHandler implements ScxHandler<RoutingContext> {
+
+    private static final Logger logger = LoggerFactory.getLogger(ScxMappingHandler.class);
 
     /**
      * 用来校验 路径的正则表达式
@@ -179,14 +183,14 @@ public final class ScxMappingHandler implements ScxHandler<RoutingContext> {
                 ((HttpRequestException) exception).handle(context);
             } else {
                 //3, 打印错误信息
-                exception.printStackTrace();
+                logger.error("执行反射调用时发生异常 !!!", exception);
                 //4, 如果这时 response 还没有被关闭的话 就返回 500 错误信息
                 if (!context.response().ended() && !context.response().closed()) {
                     //5, 这里根据是否开启了开发人员错误页面 进行相应的返回
                     context.response().setStatusCode(500)
                             .putHeader(HttpHeaderNames.CONTENT_TYPE, "text/plain;charset=utf-8")
                             .end(ScxContext.getFeatureState(ScxFeature.USE_DEVELOPMENT_ERROR_PAGE) ?
-                                    ExceptionUtils.getStackTrace(exception) : "Internal Server Error !!!");
+                                    ExceptionUtils.getCustomStackTrace(exception) : "Internal Server Error !!!");
                 }
             }
         }
