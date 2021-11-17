@@ -164,8 +164,8 @@ public final class ScxRouteRegistry {
             for (var h : handler.httpMethods) {
                 if (Arrays.stream(a.httpMethods).toList().contains(h)) {
                     logger.error("检测到重复的路由!!! {} --> \"{}\" , 相关 class 及方法如下 ▼" + System.lineSeparator() +
-                                    "{} --> {}" + System.lineSeparator() +
-                                    "{} --> {}",
+                                    "\t{} : {}" + System.lineSeparator() +
+                                    "\t{} : {}",
                             h,
                             handler.patternUrl,
                             handler.clazz.getName(),

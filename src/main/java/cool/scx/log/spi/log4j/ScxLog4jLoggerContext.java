@@ -1,14 +1,15 @@
 package cool.scx.log.spi.log4j;
 
 import org.apache.logging.log4j.message.MessageFactory;
-import org.apache.logging.log4j.spi.AbstractLogger;
 import org.apache.logging.log4j.spi.ExtendedLogger;
 import org.apache.logging.log4j.spi.LoggerContext;
-import org.apache.logging.log4j.spi.LoggerRegistry;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ScxLog4jLoggerContext implements LoggerContext {
 
-    private final LoggerRegistry<ExtendedLogger> loggerRegistry = new LoggerRegistry<>();
+    private final Map<String, ExtendedLogger> loggerCache = new HashMap<>();
 
     public ScxLog4jLoggerContext() {
 
@@ -19,14 +20,13 @@ public class ScxLog4jLoggerContext implements LoggerContext {
     }
 
     public ExtendedLogger getLogger(final String name, final MessageFactory messageFactory) {
-        ExtendedLogger extendedLogger = this.loggerRegistry.getLogger(name, messageFactory);
+        var extendedLogger = this.loggerCache.get(name);
         if (extendedLogger != null) {
-            AbstractLogger.checkMessageFactory(extendedLogger, messageFactory);
             return extendedLogger;
         } else {
-            var scxLog4jLogger = new ScxLog4jLogger(name, messageFactory);
-            this.loggerRegistry.putIfAbsent(name, messageFactory, scxLog4jLogger);
-            return this.loggerRegistry.getLogger(name, messageFactory);
+            var scxLog4jLogger = new ScxLog4jLogger(name);
+            this.loggerCache.putIfAbsent(name, scxLog4jLogger);
+            return this.loggerCache.get(name);
         }
     }
 

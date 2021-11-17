@@ -1,12 +1,7 @@
 package cool.scx.log;
 
-import org.slf4j.event.Level;
+import java.nio.file.Path;
 
-import java.io.File;
+public record ScxLoggerInfo(String name, ScxLogLevel level, ScxLogLoggingType loggingType, Path storedDirectory) {
 
-public final class ScxLoggerInfo {
-    public String name;
-    public Level level;
-    public ScxLoggerInfoType type;
-    public File filePath;
 }

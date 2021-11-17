@@ -2,22 +2,23 @@ package cool.scx.log.spi.log4j;
 
 import cool.scx.log.ScxLogConfiguration;
 import cool.scx.log.ScxLogHelper;
+import cool.scx.log.ScxLogLevel;
 import cool.scx.log.ScxLoggerInfo;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.message.Message;
-import org.apache.logging.log4j.message.MessageFactory;
 import org.apache.logging.log4j.spi.AbstractLogger;
 
-public class ScxLog4jLogger extends AbstractLogger {
-    private final Level level;
+public final class ScxLog4jLogger extends AbstractLogger {
 
     private final ScxLoggerInfo scxLoggerInfo;
 
-    public ScxLog4jLogger(final String name, final MessageFactory messageFactory) {
-        super(name, messageFactory);
+    private final Level level;
+
+    public ScxLog4jLogger(final String name) {
+        super(name);
         this.scxLoggerInfo = ScxLogConfiguration.getLoggerInfo(name);
-        this.level = Level.toLevel(this.scxLoggerInfo.level.name(), Level.ERROR);
+        this.level = this.scxLoggerInfo.level().toLog4jLevel();
     }
 
     public Level getLevel() {
@@ -89,9 +90,7 @@ public class ScxLog4jLogger extends AbstractLogger {
     }
 
     public void logMessage(final String fqcn, final Level mgsLevel, final Marker marker, final Message message, final Throwable throwable) {
-        var levelStr = (level == Level.INFO || level == Level.WARN) ? level + " " : level.toString();
-        var msg = message.getFormattedMessage();
-        ScxLogHelper.logMessage(name, levelStr, msg, scxLoggerInfo, throwable);
+        ScxLogHelper.logMessage(name, ScxLogLevel.of(mgsLevel), message.getFormattedMessage(), scxLoggerInfo, throwable);
     }
 
 }
