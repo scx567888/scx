@@ -28,9 +28,9 @@ public final class ScxLogHelper {
         var finalMessage = stringBuilder.toString();
         if (scxLoggerInfo.loggingType() == ScxLogLoggingType.CONSOLE || scxLoggerInfo.loggingType() == ScxLogLoggingType.BOTH) {
             if (level.toInt() <= ScxLogLevel.ERROR.toInt()) {
-                System.err.print(stringBuilder);
+                System.err.print(finalMessage);
             } else {
-                System.out.print(stringBuilder);
+                System.out.print(finalMessage);
             }
         }
         if (scxLoggerInfo.loggingType() == ScxLogLoggingType.FILE || scxLoggerInfo.loggingType() == ScxLogLoggingType.BOTH) {
