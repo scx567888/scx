@@ -2,6 +2,7 @@ package cool.scx.log.spi.slf4j;
 
 import cool.scx.log.ScxLogConfiguration;
 import cool.scx.log.ScxLogHelper;
+import cool.scx.log.ScxLogLevel;
 import cool.scx.log.ScxLoggerInfo;
 import org.slf4j.Marker;
 import org.slf4j.event.Level;
@@ -12,9 +13,12 @@ public final class ScxSLF4JLogger extends LegacyAbstractLogger {
 
     private final ScxLoggerInfo scxLoggerInfo;
 
+    private final Level level;
+
     public ScxSLF4JLogger(String name) {
         this.name = name;
         this.scxLoggerInfo = ScxLogConfiguration.getLoggerInfo(name);
+        this.level = this.scxLoggerInfo.level().toSLF4JLevel();
     }
 
     @Override
@@ -24,34 +28,32 @@ public final class ScxSLF4JLogger extends LegacyAbstractLogger {
 
     @Override
     protected void handleNormalizedLoggingCall(Level level, Marker marker, String message, Object[] arguments, Throwable throwable) {
-        var levelStr = (level == Level.INFO || level == Level.WARN) ? level + " " : level.toString();
-        var msg = MessageFormatter.arrayFormat(message, arguments).getMessage();
-        ScxLogHelper.logMessage(name, levelStr, msg, scxLoggerInfo, throwable);
+        ScxLogHelper.logMessage(name, ScxLogLevel.of(level), MessageFormatter.arrayFormat(message, arguments).getMessage(), scxLoggerInfo, throwable);
     }
 
     @Override
     public boolean isTraceEnabled() {
-        return scxLoggerInfo.level.toInt() <= Level.TRACE.toInt();
+        return level.toInt() <= Level.TRACE.toInt();
     }
 
     @Override
     public boolean isDebugEnabled() {
-        return scxLoggerInfo.level.toInt() <= Level.DEBUG.toInt();
+        return level.toInt() <= Level.DEBUG.toInt();
     }
 
     @Override
     public boolean isInfoEnabled() {
-        return scxLoggerInfo.level.toInt() <= Level.INFO.toInt();
+        return level.toInt() <= Level.INFO.toInt();
     }
 
     @Override
     public boolean isWarnEnabled() {
-        return scxLoggerInfo.level.toInt() <= Level.WARN.toInt();
+        return level.toInt() <= Level.WARN.toInt();
     }
 
     @Override
     public boolean isErrorEnabled() {
-        return scxLoggerInfo.level.toInt() <= Level.ERROR.toInt();
+        return level.toInt() <= Level.ERROR.toInt();
     }
 
 }

@@ -231,6 +231,10 @@ public final class ObjectUtils {
         return reader.readValue(jsonNode);
     }
 
+    public static TypeFactory getTypeFactory() {
+        return TYPE_FACTORY;
+    }
+
     /**
      * 对象转 json 使用 注解如 @JsonIgnore
      *

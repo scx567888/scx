@@ -4,7 +4,6 @@ import cool.scx.util.ExceptionUtils;
 import cool.scx.util.FileUtils;
 
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -12,19 +11,31 @@ public final class ScxLogHelper {
 
     private static final DateTimeFormatter LOG_DATETIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
-    public static void logMessage(String name, String levelStr, String msg, ScxLoggerInfo scxLoggerInfo, Throwable throwable) {
+    public static void logMessage(String name, ScxLogLevel level, String msg, ScxLoggerInfo scxLoggerInfo, Throwable throwable) {
+        //关闭日志
+        if (level == ScxLogLevel.OFF) {
+            return;
+        }
         var nowTimeStr = ScxLogHelper.LOG_DATETIME_FORMATTER.format(LocalDateTime.now());
-        var threadName = Thread.currentThread().getName();
-        var finalMsg = nowTimeStr + " [" + threadName + "] " + levelStr + " " + name + " - " + msg + System.lineSeparator();
+        var stringBuilder = new StringBuilder();
+        stringBuilder.append(nowTimeStr)
+                .append(" [").append(Thread.currentThread().getName()).append("] ")
+                .append(level.toFixedLengthString()).append(" ").append(name).append(" - ").append(msg)
+                .append(System.lineSeparator());
         if (throwable != null) {
-            finalMsg = finalMsg + ExceptionUtils.getCustomStackTrace(throwable);
+            stringBuilder.append(ExceptionUtils.getCustomStackTrace(throwable));
         }
-        if (scxLoggerInfo.type == ScxLoggerInfoType.CONSOLE || scxLoggerInfo.type == ScxLoggerInfoType.BOTH) {
-            System.out.print(finalMsg);
+        var finalMessage = stringBuilder.toString();
+        if (scxLoggerInfo.loggingType() == ScxLogLoggingType.CONSOLE || scxLoggerInfo.loggingType() == ScxLogLoggingType.BOTH) {
+            if (level.toInt() <= ScxLogLevel.ERROR.toInt()) {
+                System.err.print(stringBuilder);
+            } else {
+                System.out.print(stringBuilder);
+            }
         }
-        if (scxLoggerInfo.type == ScxLoggerInfoType.FILE || scxLoggerInfo.type == ScxLoggerInfoType.BOTH) {
-            var filePath = Path.of(scxLoggerInfo.filePath.getPath(), nowTimeStr.split(" ")[0] + ".log");
-            FileUtils.fileAppend(filePath, finalMsg.getBytes(StandardCharsets.UTF_8));
+        if (scxLoggerInfo.loggingType() == ScxLogLoggingType.FILE || scxLoggerInfo.loggingType() == ScxLogLoggingType.BOTH) {
+            var logStoredPath = scxLoggerInfo.storedDirectory().resolve(nowTimeStr.substring(0, 10) + ".log");
+            FileUtils.fileAppend(logStoredPath, finalMessage.getBytes(StandardCharsets.UTF_8));
         }
     }
 
