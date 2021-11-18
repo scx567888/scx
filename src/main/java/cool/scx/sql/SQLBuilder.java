@@ -349,7 +349,7 @@ public final class SQLBuilder {
      * @return a {@link java.lang.String} object
      */
     private String GetInsertSQL() {
-        return " INSERT INTO " + tableName + " ( " + String.join(",", insertColumns) + " ) VALUES ( " + String.join(",", insertValues) + " ) ";
+        return "INSERT INTO " + tableName + " ( " + String.join(",", insertColumns) + " ) VALUES ( " + String.join(",", insertValues) + " ) ";
     }
 
     /**
@@ -359,7 +359,7 @@ public final class SQLBuilder {
      */
     private String GetUpdateSQL() {
         if (updateSetColumns.length > 0) {
-            return " UPDATE " + tableName + " SET " + String.join(", ", updateSetColumns) + getWhereSQL();
+            return "UPDATE " + tableName + " SET " + String.join(", ", updateSetColumns) + getWhereSQL();
         } else {
             return null;
         }
@@ -371,7 +371,7 @@ public final class SQLBuilder {
      * @return a {@link java.lang.String} object
      */
     private String GetDeleteSQL() {
-        return " DELETE FROM " + tableName + getWhereSQL();
+        return "DELETE FROM " + tableName + getWhereSQL();
     }
 
     /**
@@ -383,7 +383,7 @@ public final class SQLBuilder {
         var groupBySQL = groupByColumns != null && groupByColumns.length != 0 ? " GROUP BY " + String.join(",", groupByColumns) : "";
         var orderBySQL = orderByClauses != null && orderByClauses.length != 0 ? " ORDER BY " + String.join(",", orderByClauses) : "";
         var limitSQL = offset != null && size != null ? " LIMIT " + offset + "," + size : "";
-        return " SELECT " + String.join(", ", selectColumns) + " FROM " + tableName + getWhereSQL() + groupBySQL + orderBySQL + limitSQL;
+        return "SELECT " + String.join(", ", selectColumns) + " FROM " + tableName + getWhereSQL() + groupBySQL + orderBySQL + limitSQL;
     }
 
     /**
