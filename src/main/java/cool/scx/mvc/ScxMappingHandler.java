@@ -11,7 +11,7 @@ import cool.scx.mvc.processor.ScxMappingResultProcessorConfiguration;
 import cool.scx.util.CaseUtils;
 import cool.scx.util.ExceptionUtils;
 import cool.scx.util.StringUtils;
-import io.netty.handler.codec.http.HttpHeaderNames;
+import cool.scx.util.VoHelper;
 import io.vertx.ext.web.RoutingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -187,8 +187,7 @@ public final class ScxMappingHandler implements ScxHandler<RoutingContext> {
                 //4, 如果这时 response 还没有被关闭的话 就返回 500 错误信息
                 if (!context.response().ended() && !context.response().closed()) {
                     //5, 这里根据是否开启了开发人员错误页面 进行相应的返回
-                    context.response().setStatusCode(500)
-                            .putHeader(HttpHeaderNames.CONTENT_TYPE, "text/plain;charset=utf-8")
+                    VoHelper.fillTextPlainContentType(context.response().setStatusCode(500))
                             .end(ScxContext.getFeatureState(ScxFeature.USE_DEVELOPMENT_ERROR_PAGE) ?
                                     ExceptionUtils.getCustomStackTrace(exception) : "Internal Server Error !!!");
                 }

@@ -1,10 +1,9 @@
 package cool.scx.vo;
 
 import cool.scx.ScxContext;
+import cool.scx.util.VoHelper;
 import freemarker.template.Template;
-import io.netty.handler.codec.http.HttpHeaderNames;
-import io.vertx.core.buffer.Buffer;
-import io.vertx.core.http.HttpServerResponse;
+import freemarker.template.TemplateException;
 import io.vertx.ext.web.RoutingContext;
 
 import java.io.IOException;
@@ -20,15 +19,18 @@ import java.util.Map;
  */
 public final class Html implements BaseVo {
 
+    private final boolean useTemplate;
+
     private final Template template;
 
     private final String htmlStr;
 
     private final Map<String, Object> dataMap = new HashMap<>();
 
-    private Html(Template template, String htmlStr) {
+    private Html(Template template, String htmlStr, boolean useTemplate) {
         this.template = template;
         this.htmlStr = htmlStr;
+        this.useTemplate = useTemplate;
     }
 
     /**
@@ -38,7 +40,7 @@ public final class Html implements BaseVo {
      * @return a {@link cool.scx.vo.Html} object
      */
     public static Html ofString(String htmlStr) {
-        return new Html(null, htmlStr);
+        return new Html(null, htmlStr, false);
     }
 
     /**
@@ -48,9 +50,9 @@ public final class Html implements BaseVo {
      * @return a {@link cool.scx.vo.Html} object
      * @throws java.io.IOException if any.
      */
-    public static Html ofTemplate(String templatePath) throws IOException {
+    public static Html of(String templatePath) throws IOException {
         var template = ScxContext.template().getTemplateByPath(templatePath);
-        return new Html(template, null);
+        return new Html(template, null, true);
     }
 
     /**
@@ -71,28 +73,15 @@ public final class Html implements BaseVo {
      * sendToClient
      */
     @Override
-    public void handle(RoutingContext context) {
-        var response = context.response();
-        response.putHeader(HttpHeaderNames.CONTENT_TYPE, "text/html;charset=utf-8");
-        if (template != null) {
-            sendTemplate(response);
-        } else {
-            sendStr(response);
-        }
-    }
-
-    private void sendStr(HttpServerResponse response) {
-        response.end(Buffer.buffer(htmlStr));
-    }
-
-    private void sendTemplate(HttpServerResponse response) {
-        var sw = new StringWriter();
-        try {
+    public void handle(RoutingContext context) throws TemplateException, IOException {
+        var response = VoHelper.fillHtmlContentType(context.request().response());
+        if (useTemplate) {
+            var sw = new StringWriter();
             template.process(dataMap, sw);
-        } catch (Exception e) {
-            e.printStackTrace();
+            response.end(sw.toString());
+        } else {
+            response.end(htmlStr);
         }
-        response.end(Buffer.buffer(sw.toString()));
     }
 
 }

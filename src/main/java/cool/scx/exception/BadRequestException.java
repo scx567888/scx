@@ -1,6 +1,7 @@
 package cool.scx.exception;
 
-import cool.scx.vo.Json;
+import cool.scx.util.ExceptionUtils;
+import cool.scx.util.VoHelper;
 import io.vertx.ext.web.RoutingContext;
 
 /**
@@ -9,18 +10,18 @@ import io.vertx.ext.web.RoutingContext;
  * @author scx567888
  * @version 1.1.15
  */
-public class BadRequestException extends HttpRequestException {
+public class BadRequestException extends ScxHttpException {
 
     /**
-     *
+     * 错误信息
      */
-    private final Object throwableMessage;
+    private final String throwableMessage;
 
     /**
      * <p>Constructor for BadRequestException.</p>
      */
     public BadRequestException() {
-        throwableMessage = null;
+        this.throwableMessage = "Bad Request !!!";
     }
 
     /**
@@ -28,8 +29,17 @@ public class BadRequestException extends HttpRequestException {
      *
      * @param throwableMessage a {@link java.lang.Throwable} object
      */
-    public BadRequestException(Object throwableMessage) {
+    public BadRequestException(String throwableMessage) {
         this.throwableMessage = throwableMessage;
+    }
+
+    /**
+     * <p>Constructor for BadRequestException.</p>
+     *
+     * @param throwable a {@link java.lang.Throwable} object
+     */
+    public BadRequestException(Throwable throwable) {
+        this.throwableMessage = ExceptionUtils.getCustomStackTrace(throwable);
     }
 
     /**
@@ -37,12 +47,8 @@ public class BadRequestException extends HttpRequestException {
      */
     @Override
     public void handle(RoutingContext ctx) {
-        if (throwableMessage == null) {
-            ctx.response().setStatusCode(400).end("Bad Request !!!");
-        } else {
-            ctx.response().setStatusCode(400);
-            Json.fail("Request Parameter Wrong !!!").put("message", throwableMessage).handle(ctx);
-        }
+        VoHelper.fillTextPlainContentType(ctx.request().response().setStatusCode(400))
+                .end(throwableMessage);
     }
 
 }

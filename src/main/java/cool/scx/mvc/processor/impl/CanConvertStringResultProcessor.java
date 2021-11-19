@@ -2,7 +2,7 @@ package cool.scx.mvc.processor.impl;
 
 import cool.scx.mvc.processor.ScxMappingResultProcessor;
 import cool.scx.util.ObjectUtils;
-import io.netty.handler.codec.http.HttpHeaderNames;
+import cool.scx.util.VoHelper;
 import io.vertx.ext.web.RoutingContext;
 
 import java.time.LocalDateTime;
@@ -21,8 +21,7 @@ public final class CanConvertStringResultProcessor implements ScxMappingResultPr
 
     @Override
     public void handle(Object result, RoutingContext context) {
-        context.request().response()
-                .putHeader(HttpHeaderNames.CONTENT_TYPE, "text/plain;charset=utf-8")
+        VoHelper.fillTextPlainContentType(context.request().response())
                 .end(ObjectUtils.convertValue(result, String.class));
     }
 

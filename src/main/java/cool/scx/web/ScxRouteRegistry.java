@@ -5,6 +5,7 @@ import cool.scx.ScxModuleInfo;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.config.ScxEasyConfig;
 import cool.scx.mvc.ScxMappingHandler;
+import cool.scx.util.VoHelper;
 import cool.scx.web.handler.ScxBodyHandler;
 import cool.scx.web.handler.ScxCookieHandlerConfiguration;
 import cool.scx.web.handler.ScxCorsHandlerConfiguration;
@@ -112,7 +113,8 @@ public final class ScxRouteRegistry {
     }
 
     private static void registerNotFoundHandler(Router vertxRouter) {
-        var notFoundHandler = (Handler<RoutingContext>) ctx -> ctx.response().setStatusCode(404).end("Not Found !!!");
+        var notFoundHandler = (Handler<RoutingContext>) ctx -> VoHelper.fillTextPlainContentType(ctx
+                .request().response().setStatusCode(404)).end("Not Found !!!");
         vertxRouter.route().handler(notFoundHandler);
     }
 

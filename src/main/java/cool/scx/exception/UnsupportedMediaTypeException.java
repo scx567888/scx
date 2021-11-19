@@ -1,5 +1,6 @@
 package cool.scx.exception;
 
+import cool.scx.util.VoHelper;
 import io.vertx.ext.web.RoutingContext;
 
 /**
@@ -15,7 +16,8 @@ public class UnsupportedMediaTypeException extends ScxHttpException {
      */
     @Override
     public void handle(RoutingContext ctx) {
-        ctx.request().response().setStatusCode(415).end("Unsupported Media Type !!!");
+        VoHelper.fillTextPlainContentType(ctx.request().response().setStatusCode(415))
+                .end("Unsupported Media Type !!!");
     }
 
 }

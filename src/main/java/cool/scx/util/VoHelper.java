@@ -45,6 +45,14 @@ public final class VoHelper {
         return response.putHeader(HttpHeaderNames.CONTENT_TYPE, "application/json;charset=utf-8");
     }
 
+    public static HttpServerResponse fillHtmlContentType(HttpServerResponse response) {
+        return response.putHeader(HttpHeaderNames.CONTENT_TYPE, "text/html;charset=utf-8");
+    }
+
+    public static HttpServerResponse fillTextPlainContentType(HttpServerResponse response) {
+        return response.putHeader(HttpHeaderNames.CONTENT_TYPE, "text/plain;charset=utf-8");
+    }
+
     /**
      * 填充 contextType
      *

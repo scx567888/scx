@@ -1,5 +1,6 @@
 package cool.scx.exception;
 
+import cool.scx.util.VoHelper;
 import io.vertx.ext.web.RoutingContext;
 
 /**
@@ -15,7 +16,8 @@ public class UnauthorizedException extends ScxHttpException {
      */
     @Override
     public void handle(RoutingContext ctx) {
-        ctx.request().response().setStatusCode(401).end("Unauthorized !!!");
+        VoHelper.fillTextPlainContentType(ctx.request().response().setStatusCode(401))
+                .end("Unauthorized !!!");
     }
 
 }
