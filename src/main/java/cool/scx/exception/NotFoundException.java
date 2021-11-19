@@ -8,14 +8,14 @@ import io.vertx.ext.web.RoutingContext;
  * @author scx567888
  * @version 1.1.14
  */
-public class NotFoundException extends HttpRequestException {
+public class NotFoundException extends ScxHttpException {
 
     /**
      * {@inheritDoc}
      */
     @Override
     public void handle(RoutingContext ctx) {
-        ctx.response().setStatusCode(404).end("Not Found !!!");
+        ctx.request().response().setStatusCode(404).end("Not Found !!!");
     }
 
 }

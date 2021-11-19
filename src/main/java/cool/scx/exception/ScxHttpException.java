@@ -13,6 +13,6 @@ import io.vertx.ext.web.RoutingContext;
  * @author scx567888
  * @version 1.0.10
  */
-public abstract class HttpRequestException extends Exception implements ScxHandler<RoutingContext> {
+public abstract class ScxHttpException extends RuntimeException implements ScxHandler<RoutingContext> {
 
 }

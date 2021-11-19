@@ -8,14 +8,14 @@ import io.vertx.ext.web.RoutingContext;
  * @author scx567888
  * @version 1.1.14
  */
-public class UnsupportedMediaTypeException extends HttpRequestException {
+public class UnsupportedMediaTypeException extends ScxHttpException {
 
     /**
      * {@inheritDoc}
      */
     @Override
     public void handle(RoutingContext ctx) {
-        ctx.response().setStatusCode(415).end("Unsupported Media Type !!!");
+        ctx.request().response().setStatusCode(415).end("Unsupported Media Type !!!");
     }
 
 }

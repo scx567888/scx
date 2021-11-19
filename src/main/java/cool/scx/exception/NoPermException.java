@@ -8,11 +8,11 @@ import io.vertx.ext.web.RoutingContext;
  * @author scx567888
  * @version 1.1.19
  */
-public class NoPermException extends HttpRequestException {
+public class NoPermException extends ScxHttpException {
 
     @Override
     public void handle(RoutingContext ctx) {
-        ctx.response().setStatusCode(403).end("No Perm !!!");
+        ctx.request().response().setStatusCode(403).end("No Perm !!!");
     }
 
 }

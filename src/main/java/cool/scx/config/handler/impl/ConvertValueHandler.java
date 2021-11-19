@@ -14,12 +14,12 @@ public final class ConvertValueHandler<T> implements ScxHandlerR<ScxConfigHandle
 
     public ConvertValueHandler(Class<T> tClass) {
         Objects.requireNonNull(tClass, "Class 不能为空 !!!");
-        this.javaType = ObjectUtils.getTypeFactory().constructType(tClass);
+        this.javaType = ObjectUtils.constructType(tClass);
     }
 
     public ConvertValueHandler(TypeReference<T> tTypeReference) {
         Objects.requireNonNull(tTypeReference, "TypeReference 不能为空 !!!");
-        this.javaType = ObjectUtils.getTypeFactory().constructType(tTypeReference);
+        this.javaType = ObjectUtils.constructType(tTypeReference);
     }
 
     @Override
