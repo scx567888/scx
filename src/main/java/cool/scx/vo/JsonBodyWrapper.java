@@ -17,6 +17,9 @@ public final class JsonBodyWrapper<T> {
 
     /**
      * 构造函数
+     *
+     * @param message a
+     * @param data    a
      */
     public JsonBodyWrapper(String message, T data) {
         this.message = message;

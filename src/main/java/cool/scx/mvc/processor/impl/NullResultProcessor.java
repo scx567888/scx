@@ -3,6 +3,9 @@ package cool.scx.mvc.processor.impl;
 import cool.scx.mvc.processor.ScxMappingResultProcessor;
 import io.vertx.ext.web.RoutingContext;
 
+/**
+ * a
+ */
 public final class NullResultProcessor implements ScxMappingResultProcessor {
 
     @Override

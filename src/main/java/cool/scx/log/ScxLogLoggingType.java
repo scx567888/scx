@@ -2,11 +2,33 @@ package cool.scx.log;
 
 import java.util.Objects;
 
+/**
+ * a
+ */
 public enum ScxLogLoggingType {
+
+    /**
+     * a
+     */
     CONSOLE,
+
+    /**
+     * a
+     */
     FILE,
+
+    /**
+     * a
+     */
     BOTH;
 
+    /**
+     * a
+     *
+     * @param loggingTypeName    a
+     * @param defaultLoggingType a
+     * @return a
+     */
     public static ScxLogLoggingType of(String loggingTypeName, ScxLogLoggingType defaultLoggingType) {
         try {
             return of(loggingTypeName);
@@ -15,6 +37,12 @@ public enum ScxLogLoggingType {
         }
     }
 
+    /**
+     * a
+     *
+     * @param loggingTypeName a
+     * @return a
+     */
     public static ScxLogLoggingType of(String loggingTypeName) {
         Objects.requireNonNull(loggingTypeName, "loggingTypeName 不能为空 !!!");
         var finalLoggingTypeName = loggingTypeName.trim().toUpperCase();

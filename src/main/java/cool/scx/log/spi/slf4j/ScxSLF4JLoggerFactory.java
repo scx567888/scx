@@ -3,6 +3,9 @@ package cool.scx.log.spi.slf4j;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.Logger;
 
+/**
+ * a
+ */
 public final class ScxSLF4JLoggerFactory implements ILoggerFactory {
 
     @Override

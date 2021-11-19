@@ -28,8 +28,9 @@ public final class VoHelper {
      * 也就是说如果想向前台发送一些 json 建议使用此方法进行序列化
      * 以保证标注 @JsonIgnore 注解的属性可以被忽略 防止一些私密信息泄露
      *
-     * @param value object
-     * @return string
+     * @param value a
+     * @return a
+     * @throws JsonProcessingException a
      */
     public static String toJson(Object value) throws JsonProcessingException {
         return OBJECT_MAPPER.writeValueAsString(value);
@@ -45,10 +46,22 @@ public final class VoHelper {
         return response.putHeader(HttpHeaderNames.CONTENT_TYPE, "application/json;charset=utf-8");
     }
 
+    /**
+     * a
+     *
+     * @param response a
+     * @return a
+     */
     public static HttpServerResponse fillHtmlContentType(HttpServerResponse response) {
         return response.putHeader(HttpHeaderNames.CONTENT_TYPE, "text/html;charset=utf-8");
     }
 
+    /**
+     * a
+     *
+     * @param response a
+     * @return a
+     */
     public static HttpServerResponse fillTextPlainContentType(HttpServerResponse response) {
         return response.putHeader(HttpHeaderNames.CONTENT_TYPE, "text/plain;charset=utf-8");
     }
@@ -58,6 +71,7 @@ public final class VoHelper {
      *
      * @param contentType c
      * @param response    r
+     * @return r
      */
     public static HttpServerResponse fillContentType(String contentType, HttpServerResponse response) {
         if (contentType != null) {

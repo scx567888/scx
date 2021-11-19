@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * a
+ */
 public record ConvertStaticServerHandler(
         ScxAppRoot scxAppRoot) implements ScxHandlerR<ScxConfigHandlerParam, List<StaticServer>> {
 

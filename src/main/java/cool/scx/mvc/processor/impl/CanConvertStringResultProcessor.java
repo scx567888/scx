@@ -7,6 +7,9 @@ import io.vertx.ext.web.RoutingContext;
 
 import java.time.LocalDateTime;
 
+/**
+ * a
+ */
 public final class CanConvertStringResultProcessor implements ScxMappingResultProcessor {
 
     @Override

@@ -49,22 +49,64 @@ public final class ObjectUtils {
         }
     }
 
+    /**
+     * a
+     *
+     * @param jsonNode a
+     * @param type     a
+     * @param <T>      a
+     * @return a
+     * @throws IOException a
+     */
     public static <T> T readValue(JsonNode jsonNode, Type type) throws IOException {
         return _o().readerFor(JacksonHelper.getTypeFactory().constructType(type)).readValue(jsonNode);
     }
 
+    /**
+     * a
+     *
+     * @param fromValue a
+     * @param tClass    a
+     * @param <T>       a
+     * @return a
+     */
     public static <T> T convertValue(Object fromValue, Class<T> tClass) {
         return _o().convertValue(fromValue, JacksonHelper.getTypeFactory().constructType(tClass));
     }
 
+    /**
+     * a
+     *
+     * @param fromValue   a
+     * @param toValueType a
+     * @param <T>         a
+     * @return a
+     */
     public static <T> T convertValue(Object fromValue, Type toValueType) {
         return _o().convertValue(fromValue, JacksonHelper.getTypeFactory().constructType(toValueType));
     }
 
+    /**
+     * a
+     *
+     * @param fromValue a
+     * @param javaType  a
+     * @param <T>       a
+     * @return a
+     */
     public static <T> T convertValue(Object fromValue, JavaType javaType) {
         return _o().convertValue(fromValue, javaType);
     }
 
+    /**
+     * a
+     *
+     * @param fromValue   a
+     * @param toValueType a
+     * @param <T>         a
+     * @return a
+     * @throws JsonProcessingException a
+     */
     public static <T> T readValue(String fromValue, Type toValueType) throws JsonProcessingException {
         return _o().readValue(fromValue, JacksonHelper.getTypeFactory().constructType(toValueType));
     }
@@ -73,7 +115,8 @@ public final class ObjectUtils {
      * 将对象转 json 底层调用 JacksonHelper.getObjectMapperIgnoreJsonIgnore().writeValueAsString()
      * 所以会忽略 JsonIgnore 注解 同时如果转换失败则在其内部消化异常 (打印) 并返回 ""
      *
-     * @param value a {@link Object} object.
+     * @param value        a {@link Object} object.
+     * @param defaultValue a {@link Object} object.
      * @return a {@link java.lang.String} object.
      */
     public static String writeValueAsString(Object value, String defaultValue) {
@@ -85,18 +128,44 @@ public final class ObjectUtils {
         }
     }
 
+    /**
+     * a
+     *
+     * @param value a
+     * @return a
+     * @throws JsonProcessingException a
+     */
     public static String writeValueAsString(Object value) throws JsonProcessingException {
         return _o().writeValueAsString(value);
     }
 
+    /**
+     * a
+     *
+     * @param type a
+     * @return a
+     */
     public static JavaType constructType(Type type) {
         return JacksonHelper.getTypeFactory().constructType(type);
     }
 
+    /**
+     * a
+     *
+     * @param typeRef a
+     * @return a
+     */
     public static JavaType constructType(TypeReference<?> typeRef) {
         return JacksonHelper.getTypeFactory().constructType(typeRef);
     }
 
+    /**
+     * a
+     *
+     * @param file a
+     * @return a
+     * @throws IOException a
+     */
     public static Map<String, Object> readValueToMap(File file) throws IOException {
         return _o().readValue(file, JacksonHelper.MAP_TYPE);
     }
@@ -104,7 +173,7 @@ public final class ObjectUtils {
     /**
      * 获取 ObjectMapper
      *
-     * @return
+     * @return a
      */
     private static ObjectMapper _o() {
         return JacksonHelper.getObjectMapper();

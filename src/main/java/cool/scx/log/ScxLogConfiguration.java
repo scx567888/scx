@@ -11,11 +11,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * a
+ */
 public final class ScxLogConfiguration {
 
     private static final Map<String, ScxLoggerInfo> loggerInfoMap = new HashMap<>();
     private static ScxLoggerInfo rootScxLoggerInfo = null;
 
+    /**
+     * a
+     *
+     * @param scxConfig  a
+     * @param scxAppRoot a
+     */
     public static void init(ScxConfig scxConfig, ScxAppRoot scxAppRoot) {
         //先初始化好 rootScxLoggerInfo
         var rootName = "ScxLogRoot";
@@ -47,6 +56,12 @@ public final class ScxLogConfiguration {
         }
     }
 
+    /**
+     * a
+     *
+     * @param name a
+     * @return a
+     */
     public static ScxLoggerInfo getLoggerInfo(String name) {
         return loggerInfoMap.getOrDefault(name, rootScxLoggerInfo);
     }

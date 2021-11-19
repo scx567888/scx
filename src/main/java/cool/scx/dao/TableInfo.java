@@ -260,6 +260,7 @@ public final class TableInfo {
      * 检查是否需要修复表
      *
      * @return true 需要 false 不需要
+     * @throws SQLException e
      */
     public boolean checkNeedFixTable() throws SQLException {
         var databaseName = ScxContext.easyConfig().dataSourceDatabase();

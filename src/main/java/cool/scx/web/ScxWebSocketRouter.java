@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * a
+ */
 public final class ScxWebSocketRouter implements ScxHandler<ServerWebSocket> {
 
     /**
@@ -18,6 +21,7 @@ public final class ScxWebSocketRouter implements ScxHandler<ServerWebSocket> {
     /**
      * 添加一个路由
      *
+     * @param scxRoute s
      * @return s
      */
     public ScxWebSocketRouter addRoute(ScxWebSocketRoute scxRoute) {
@@ -27,6 +31,11 @@ public final class ScxWebSocketRouter implements ScxHandler<ServerWebSocket> {
         return this;
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public List<ScxWebSocketRoute> getRoutes() {
         return new ArrayList<>(scxWebSocketRouteMapping.values());
     }

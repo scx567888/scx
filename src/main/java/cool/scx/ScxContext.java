@@ -28,6 +28,7 @@ public final class ScxContext {
      * 路由上下文 THREAD_LOCAL
      */
     private static final ThreadLocal<RoutingContext> ROUTING_CONTEXT_THREAD_LOCAL = new ThreadLocal<>();
+
     /**
      * 全局唯一的 SCX APP
      * <br>
@@ -142,9 +143,10 @@ public final class ScxContext {
     }
 
     /**
-     * <p>appRoot.</p>
+     * appRoot
      *
-     * @return a {@link java.io.File} object
+     * @param path a
+     * @return a
      */
     public static File getFileByAppRoot(String path) {
         return appRoot().getFileByAppRoot(path);
@@ -218,6 +220,7 @@ public final class ScxContext {
     /**
      * a
      *
+     * @param scxFeature a
      * @return a
      */
     public static boolean getFeatureState(ScxFeature scxFeature) {
@@ -243,6 +246,7 @@ public final class ScxContext {
      *
      * @param command 执行的事件
      * @param delay   延时执行的时间  单位毫秒
+     * @return a
      */
     public static ScheduledFuture<?> schedule(Runnable command, long delay) {
         return vertx().nettyEventLoopGroup().schedule(command, delay, TimeUnit.MILLISECONDS);
@@ -255,6 +259,7 @@ public final class ScxContext {
      * @param command      执行的任务
      * @param initialDelay 初始化延迟的时间 0 为立即执行
      * @param period       间隔的时间
+     * @return a
      */
     public static ScheduledFuture<?> scheduleAtFixedRate(Runnable command, long initialDelay, long period) {
         return vertx().nettyEventLoopGroup().scheduleAtFixedRate(command, initialDelay, period, TimeUnit.MILLISECONDS);
@@ -281,10 +286,21 @@ public final class ScxContext {
         vertx().nettyEventLoopGroup().execute(command);
     }
 
+    /**
+     * a
+     *
+     * @param command a
+     * @return a
+     */
     public static Future<?> submit(Runnable command) {
         return vertx().nettyEventLoopGroup().submit(command);
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public static SQLRunner sqlRunner() {
         return scx().scxDao().sqlRunner();
     }

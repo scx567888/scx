@@ -4,6 +4,9 @@ import cool.scx.mvc.processor.ScxMappingResultProcessor;
 import cool.scx.vo.BaseVo;
 import io.vertx.ext.web.RoutingContext;
 
+/**
+ * a
+ */
 public final class BaseVoResultProcessor implements ScxMappingResultProcessor {
 
     @Override

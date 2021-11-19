@@ -8,8 +8,18 @@ import cool.scx.util.StringUtils;
 
 import java.util.List;
 
+/**
+ * a
+ */
 public final class ScxWebSocketRouteRegistry {
 
+    /**
+     * a
+     *
+     * @param scxWebSocketRouter a
+     * @param scxModuleInfos     a
+     * @param scxBeanFactory     a
+     */
     public static void registerAllRoute(ScxWebSocketRouter scxWebSocketRouter, List<ScxModuleInfo<? extends ScxModule>> scxModuleInfos, ScxBeanFactory scxBeanFactory) {
         for (var scxModuleInfo : scxModuleInfos) {
             for (var c : scxModuleInfo.scxWebSocketRouteClassList()) {

@@ -19,6 +19,9 @@ import javax.sql.DataSource;
  */
 public final class ScxDao {
 
+    /**
+     * a
+     */
     private static final Logger logger = LoggerFactory.getLogger(ScxDao.class);
 
     /**
@@ -26,8 +29,17 @@ public final class ScxDao {
      */
     private final DataSource dataSource;
 
+    /**
+     * a
+     */
     private final SQLRunner sqlRunner;
 
+    /**
+     * a
+     *
+     * @param easyConfig       a
+     * @param scxFeatureConfig a
+     */
     public ScxDao(ScxEasyConfig easyConfig, ScxFeatureConfig scxFeatureConfig) {
         var mysqlDataSource = getMySQLDataSource(easyConfig, scxFeatureConfig);
         this.dataSource = getHikariDataSource(mysqlDataSource);
@@ -115,6 +127,11 @@ public final class ScxDao {
         return dataSource;
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public SQLRunner sqlRunner() {
         return sqlRunner;
     }

@@ -16,11 +16,14 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Map;
 
+/**
+ * a
+ */
 public final class JacksonHelper {
 
     /**
      * 因为 java 无法方便的存储泛型 使用 TypeReference 创建一些常用的类型
-     * 此类为 Map<String, Object>
+     * 此类为 Map 类型
      */
     public static final TypeReference<Map<String, Object>> MAP_TYPE = new TypeReference<>() {
     };

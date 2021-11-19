@@ -7,10 +7,22 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * a
+ */
 public final class ScxLogHelper {
 
     private static final DateTimeFormatter LOG_DATETIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
+    /**
+     * a
+     *
+     * @param name          a
+     * @param level         a
+     * @param msg           a
+     * @param scxLoggerInfo a
+     * @param throwable     a
+     */
     public static void logMessage(String name, ScxLogLevel level, String msg, ScxLoggerInfo scxLoggerInfo, Throwable throwable) {
         //关闭日志
         if (level == ScxLogLevel.OFF) {

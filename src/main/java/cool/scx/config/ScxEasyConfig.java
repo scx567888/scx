@@ -98,6 +98,7 @@ public final class ScxEasyConfig {
      *
      * @param scxConfig  a
      * @param scxAppRoot a
+     * @param appKey     a
      */
     public ScxEasyConfig(ScxConfig scxConfig, ScxAppRoot scxAppRoot, String appKey) {
         port = scxConfig.getOrDefault("scx.port", 8080);

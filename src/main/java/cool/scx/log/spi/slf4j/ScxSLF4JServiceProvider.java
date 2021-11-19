@@ -7,6 +7,9 @@ import org.slf4j.helpers.NOPMDCAdapter;
 import org.slf4j.spi.MDCAdapter;
 import org.slf4j.spi.SLF4JServiceProvider;
 
+/**
+ * a
+ */
 public final class ScxSLF4JServiceProvider implements SLF4JServiceProvider {
 
     private static final String REQUESTED_API_VERSION = "2.0.99";

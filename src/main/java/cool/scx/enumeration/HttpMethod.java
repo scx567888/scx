@@ -8,14 +8,49 @@ package cool.scx.enumeration;
  */
 public enum HttpMethod {
 
+    /**
+     * a
+     */
     POST,
+
+    /**
+     * a
+     */
     GET,
+
+    /**
+     * a
+     */
     PUT,
+
+    /**
+     * a
+     */
     DELETE,
+
+    /**
+     * a
+     */
     HEAD,
+
+    /**
+     * a
+     */
     TRANCE,
+
+    /**
+     * a
+     */
     CONNECT,
+
+    /**
+     * a
+     */
     PATCH,
+
+    /**
+     * a
+     */
     OPTION
 
 }

@@ -5,6 +5,9 @@ import cool.scx.enumeration.ScxFeature;
 import java.util.EnumMap;
 import java.util.Map;
 
+/**
+ * a
+ */
 public final class ScxFeatureConfig {
 
     /**

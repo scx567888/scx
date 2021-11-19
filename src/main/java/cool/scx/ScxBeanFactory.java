@@ -58,6 +58,11 @@ public final class ScxBeanFactory {
         springBeanFactory.removeBeanDefinition(beanName);
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public String[] getBeanDefinitionNames() {
         return springBeanFactory.getBeanDefinitionNames();
     }
