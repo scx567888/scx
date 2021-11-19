@@ -102,10 +102,9 @@ public final class Download implements BaseVo {
     }
 
     private void sendBytes(RoutingContext context) {
-        var response = context.response();
-        VoHelper.fillContentType(MimeMapping.getMimeTypeForFilename(downloadName.toLowerCase()), response);
-        response.putHeader(HttpHeaderNames.CONTENT_DISPOSITION, VoHelper.getDownloadContentDisposition(downloadName));
-        response.putHeader(HttpHeaderNames.CONTENT_LENGTH, String.valueOf(voBytesWriter.bytes().length));
+        var response = VoHelper.fillContentType(MimeMapping.getMimeTypeForFilename(downloadName.toLowerCase()), context.request().response())
+                .putHeader(HttpHeaderNames.CONTENT_DISPOSITION, VoHelper.getDownloadContentDisposition(downloadName))
+                .putHeader(HttpHeaderNames.CONTENT_LENGTH, String.valueOf(voBytesWriter.bytes().length));
         voBytesWriter.writeBytes(response, 0);
     }
 

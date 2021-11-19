@@ -95,10 +95,9 @@ public final class Raw implements BaseVo {
     }
 
     private void sendBytes(RoutingContext context) {
-        var response = context.response();
-        VoHelper.fillContentType(MimeMapping.getMimeTypeForExtension(rawType.name().toLowerCase()), response);
-        response.putHeader(HttpHeaderNames.CONTENT_DISPOSITION, "inline");
-        response.putHeader(HttpHeaderNames.CONTENT_LENGTH, String.valueOf(voBytesWriter.bytes().length));
+        var response = VoHelper.fillContentType(MimeMapping.getMimeTypeForExtension(rawType.name().toLowerCase()), context.request().response())
+                .putHeader(HttpHeaderNames.CONTENT_DISPOSITION, "inline")
+                .putHeader(HttpHeaderNames.CONTENT_LENGTH, String.valueOf(voBytesWriter.bytes().length));
         voBytesWriter.writeBytes(response, 0);
     }
 

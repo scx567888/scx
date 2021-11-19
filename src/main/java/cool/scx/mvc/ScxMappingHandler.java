@@ -5,7 +5,7 @@ import cool.scx.ScxHandler;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.enumeration.HttpMethod;
 import cool.scx.enumeration.ScxFeature;
-import cool.scx.exception.HttpRequestException;
+import cool.scx.exception.ScxHttpException;
 import cool.scx.mvc.interceptor.ScxMappingInterceptorConfiguration;
 import cool.scx.mvc.processor.ScxMappingResultProcessorConfiguration;
 import cool.scx.util.CaseUtils;
@@ -179,8 +179,8 @@ public final class ScxMappingHandler implements ScxHandler<RoutingContext> {
             //1, 如果是反射调用方法就使用 方法的内部异常 否则使用异常
             var exception = (e instanceof InvocationTargetException) ? e.getCause() : e;
             //2, 在此处进行对异常进行截获处理
-            if (exception instanceof HttpRequestException) {
-                ((HttpRequestException) exception).handle(context);
+            if (exception instanceof ScxHttpException) {
+                ((ScxHttpException) exception).handle(context);
             } else {
                 //3, 打印错误信息
                 logger.error("执行反射调用时发生异常 !!!", exception);

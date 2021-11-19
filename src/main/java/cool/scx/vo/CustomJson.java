@@ -4,29 +4,26 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.util.VoHelper;
 import io.vertx.ext.web.RoutingContext;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Json 格式的返回值
  *
  * @author scx567888
- * @version 0.3.6
+ * @version 1.9.5
  */
-public final class Json implements BaseVo {
+public final class CustomJson implements BaseVo {
 
     /**
      * 内部结构
      */
-    private final JsonBodyWrapper<Map<String, Object>> jsonBodyWrapper;
+    private final JsonBodyWrapper<Object> jsonBodyWrapper;
 
     /**
      * 全参构造
      *
      * @param message 消息
      */
-    private Json(String message) {
-        jsonBodyWrapper = new JsonBodyWrapper<>(message, new HashMap<>());
+    private CustomJson(String message) {
+        jsonBodyWrapper = new JsonBodyWrapper<>(message, null);
     }
 
     /**
@@ -34,8 +31,8 @@ public final class Json implements BaseVo {
      *
      * @return json
      */
-    public static Json ok() {
-        return new Json("ok");
+    public static CustomJson ok() {
+        return new CustomJson("ok");
     }
 
     /**
@@ -43,8 +40,8 @@ public final class Json implements BaseVo {
      *
      * @return json
      */
-    public static Json fail() {
-        return new Json("fail");
+    public static CustomJson fail() {
+        return new CustomJson("fail");
     }
 
     /**
@@ -53,19 +50,20 @@ public final class Json implements BaseVo {
      * @param message 自定义的错误信息
      * @return json
      */
-    public static Json message(String message) {
-        return new Json(message);
+    public static CustomJson message(String message) {
+        return new CustomJson(message);
     }
 
     /**
-     * 设置操作返回的数据，数据使用自定义的key存储
+     * 设置操作返回的数据，数据使用自定义的 Object 存储
+     * <br>
+     * 若重复调用则之前的会被覆盖
      *
-     * @param dataKey 自定义的key
      * @param dataVal 值
      * @return json
      */
-    public Json put(String dataKey, Object dataVal) {
-        jsonBodyWrapper.data.put(dataKey, dataVal);
+    public CustomJson data(Object dataVal) {
+        jsonBodyWrapper.data = dataVal;
         return this;
     }
 
