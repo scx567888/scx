@@ -6,6 +6,7 @@ import cool.scx.ScxContext;
 import cool.scx.bo.UploadedEntity;
 import cool.scx.enumeration.ScxFeature;
 import cool.scx.exception.BadRequestException;
+import cool.scx.util.JacksonHelper;
 import cool.scx.util.ObjectUtils;
 import io.vertx.core.MultiMap;
 import io.vertx.ext.web.RoutingContext;
@@ -49,7 +50,7 @@ final class ScxMappingRequestParamInfo {
     private static JsonNode initJsonBody(RoutingContext ctx) {
         //先从多个来源获取参数 并缓存起来
         try {
-            return ObjectUtils.readTree(ctx.getBodyAsString());
+            return JacksonHelper.getObjectMapper().readTree(ctx.getBodyAsString());
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             return null;
@@ -190,7 +191,7 @@ final class ScxMappingRequestParamInfo {
 
     Object[] convert(ScxMappingHandlerMethodParamInfo[] paramsInfos) throws BadRequestException {
         //存储转换过程中可能出现的错误信息
-        var errMessageMap = new ArrayList<String>();
+        var errMessageList = new ArrayList<String>();
         var finalHandlerParams = new Object[paramsInfos.length];
         for (int i = 0; i < finalHandlerParams.length; i++) {
             var p = paramsInfos[i];
@@ -223,15 +224,15 @@ final class ScxMappingRequestParamInfo {
                     }
                 }
             } catch (ParamConvertException e) {
-                errMessageMap.add("参数类型转换异常 !!! 参数名称 [" + p.name() + "] , 参数来源 [" + p.fromType() + ", useAllBody=" + p.isUseAllBody() + ", merge=" + p.isMerge() + "] , 参数类型 [" + p.javaType().getTypeName() + "] , 详细错误信息 : " + e.exception.getMessage());
+                errMessageList.add("参数类型转换异常 !!! 参数名称 [" + p.name() + "] , 参数来源 [" + p.fromType() + ", useAllBody=" + p.isUseAllBody() + ", merge=" + p.isMerge() + "] , 参数类型 [" + p.javaType().getTypeName() + "] , 详细错误信息 : " + e.exception.getMessage());
             } catch (RequiredParamEmptyException e) {
-                errMessageMap.add("必填参数不能为空 !!! 参数名称 [" + p.name() + "] , 参数来源 [" + p.fromType() + ", useAllBody=" + p.isUseAllBody() + ", merge=" + p.isMerge() + "] , 参数类型 [" + p.javaType().getTypeName() + "]");
+                errMessageList.add("必填参数不能为空 !!! 参数名称 [" + p.name() + "] , 参数来源 [" + p.fromType() + ", useAllBody=" + p.isUseAllBody() + ", merge=" + p.isMerge() + "] , 参数类型 [" + p.javaType().getTypeName() + "]");
             }
         }
-        if (!errMessageMap.isEmpty()) {
+        if (!errMessageList.isEmpty()) {
             //是否使用开发时错误页面
             if (ScxContext.getFeatureState(ScxFeature.USE_DEVELOPMENT_ERROR_PAGE)) {
-                throw new BadRequestException(errMessageMap);
+                throw new BadRequestException(String.join("," + System.lineSeparator(), errMessageList));
             } else {
                 throw new BadRequestException();
             }

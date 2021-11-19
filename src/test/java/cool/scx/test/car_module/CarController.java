@@ -33,7 +33,7 @@ public class CarController {
      */
     @ScxMapping(value = "/", method = HttpMethod.GET)
     public Html TestIndex() throws SQLException, IOException {
-        Html index = Html.ofTemplate("index");
+        Html index = Html.of("index");
         index.add("name", "小明");
         index.add("age", 22);
         return index;

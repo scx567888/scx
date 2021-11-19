@@ -1,5 +1,6 @@
 package cool.scx.exception;
 
+import cool.scx.util.VoHelper;
 import io.vertx.ext.web.RoutingContext;
 
 /**
@@ -8,11 +9,15 @@ import io.vertx.ext.web.RoutingContext;
  * @author scx567888
  * @version 1.1.19
  */
-public class NoPermException extends HttpRequestException {
+public class NoPermException extends ScxHttpException {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void handle(RoutingContext ctx) {
-        ctx.response().setStatusCode(403).end("No Perm !!!");
+        VoHelper.fillTextPlainContentType(ctx.request().response().setStatusCode(403))
+                .end("No Perm !!!");
     }
 
 }
