@@ -8,6 +8,9 @@ import cool.scx.mvc.processor.impl.NullResultProcessor;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * a
+ */
 public final class ScxMappingResultProcessorConfiguration {
 
     private static final List<ScxMappingResultProcessor> SCX_MAPPING_RESULT_PROCESSOR_LIST = new ArrayList<>();
@@ -20,10 +23,21 @@ public final class ScxMappingResultProcessorConfiguration {
         addResultProcessor(new CanConvertJsonResultProcessor());
     }
 
+    /**
+     * a
+     *
+     * @param resultProcessor a
+     */
     public static void addResultProcessor(ScxMappingResultProcessor resultProcessor) {
         SCX_MAPPING_RESULT_PROCESSOR_LIST.add(resultProcessor);
     }
 
+    /**
+     * a
+     *
+     * @param result a
+     * @return a
+     */
     public static ScxMappingResultProcessor findResultProcessor(Object result) {
         for (var scxMappingResultProcessor : SCX_MAPPING_RESULT_PROCESSOR_LIST) {
             if (scxMappingResultProcessor.canHandle(result)) {

@@ -21,26 +21,32 @@ public final class ScxMappingHandlerMethodParamInfo {
      * 类型
      */
     private final Type javaType;
+
     /**
      * 原始 Parameter
      */
     private final Parameter javaParameter;
+
     /**
      * 参数名称 默认取 参数名称 也可以由 参数上的注解覆盖
      */
     private String name;
+
     /**
      * 使用全部 body
      */
     private boolean useAllBody;
+
     /**
      * 是否合并参数
      */
     private boolean merge;
+
     /**
      * 数据来源
      */
     private ScxMappingFromType fromType;
+
     /**
      * 是否不为空
      */
@@ -98,30 +104,65 @@ public final class ScxMappingHandlerMethodParamInfo {
         }
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public String name() {
         return name;
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public boolean isUseAllBody() {
         return useAllBody;
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public boolean isMerge() {
         return merge;
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public ScxMappingFromType fromType() {
         return fromType;
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public boolean isRequired() {
         return required;
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public Type javaType() {
         return javaType;
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public Parameter javaParameter() {
         return javaParameter;
     }

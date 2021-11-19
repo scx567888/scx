@@ -5,6 +5,9 @@ import cool.scx.config.handler.ScxConfigHandlerParam;
 import cool.scx.util.CryptoUtils;
 import cool.scx.util.ansi.Ansi;
 
+/**
+ * a
+ */
 public record DecryptValueHandler(String password) implements ScxHandlerR<ScxConfigHandlerParam, String> {
 
     @Override

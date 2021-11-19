@@ -9,12 +9,26 @@ import org.slf4j.event.Level;
 import org.slf4j.helpers.LegacyAbstractLogger;
 import org.slf4j.helpers.MessageFormatter;
 
+/**
+ * a
+ */
 public final class ScxSLF4JLogger extends LegacyAbstractLogger {
 
+    /**
+     * a
+     */
     private final ScxLoggerInfo scxLoggerInfo;
 
+    /**
+     * a
+     */
     private final Level level;
 
+    /**
+     * a
+     *
+     * @param name a
+     */
     public ScxSLF4JLogger(String name) {
         this.name = name;
         this.scxLoggerInfo = ScxLogConfiguration.getLoggerInfo(name);

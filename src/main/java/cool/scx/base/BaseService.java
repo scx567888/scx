@@ -30,10 +30,18 @@ import java.util.Map;
  */
 public class BaseService<Entity extends BaseModel> extends AbstractBaseService<Entity> {
 
+    /**
+     * a
+     */
     public BaseService() {
         super();
     }
 
+    /**
+     * a
+     *
+     * @param entityClass a
+     */
     public BaseService(Class<Entity> entityClass) {
         super(entityClass);
     }

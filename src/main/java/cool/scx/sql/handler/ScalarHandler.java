@@ -8,7 +8,7 @@ import java.sql.SQLException;
 /**
  * a
  *
- * @param <T>
+ * @param <T> t
  * @author scx567888
  * @version 1.7.3
  */

@@ -7,14 +7,30 @@ package cool.scx.mvc;
  * @version 1.4.7
  */
 public enum ScxMappingFromType {
-    // FromBody
+
+    /**
+     * FromBody
+     */
     FROM_BODY,
-    // FROM_UPLOAD
+
+    /**
+     * FROM_UPLOAD
+     */
+
     FROM_UPLOAD,
-    // FromPath
+
+    /**
+     * FromPath
+     */
     FROM_PATH,
-    // FromQuery
+
+    /**
+     * FromQuery
+     */
+
     FROM_QUERY,
-    // 为自行猜测
+    /**
+     * 为自行猜测
+     */
     UNKNOWN
 }

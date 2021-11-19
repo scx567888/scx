@@ -5,6 +5,9 @@ import cool.scx.mvc.processor.ScxMappingResultProcessor;
 import cool.scx.util.VoHelper;
 import io.vertx.ext.web.RoutingContext;
 
+/**
+ * a
+ */
 public final class CanConvertJsonResultProcessor implements ScxMappingResultProcessor {
 
     @Override

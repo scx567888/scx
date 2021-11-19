@@ -31,6 +31,7 @@ public interface ScxMappingInterceptor {
      * @param context           ctx 上下文对象
      * @param scxMappingHandler 待处理的 scxMappingHandler
      * @param result            上一步 ScxMappingHandler 核心处理器 处理返回的结果
+     * @return 处理后的结果
      * @throws java.lang.Exception java.lang.Exception 会交给 ScxMappingExceptionProcessor 进行处理
      */
     default Object postHandle(RoutingContext context, ScxMappingHandler scxMappingHandler, Object result) throws Exception {

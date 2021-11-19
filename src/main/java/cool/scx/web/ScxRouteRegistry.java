@@ -35,10 +35,14 @@ public final class ScxRouteRegistry {
 
     private static final List<ScxMappingHandler> SCX_MAPPING_HANDLER_LIST = new ArrayList<>();
 
+
     /**
      * 注册路由
      *
-     * @param vertxRouter a
+     * @param vertxRouter    a
+     * @param scxEasyConfig  a
+     * @param vertx          a
+     * @param scxModuleInfos a
      */
     public static void registerAllRoute(Router vertxRouter, ScxEasyConfig scxEasyConfig, Vertx vertx, List<ScxModuleInfo<? extends ScxModule>> scxModuleInfos) {
         registerFaviconHandler(vertxRouter, scxEasyConfig, vertx);

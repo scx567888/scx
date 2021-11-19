@@ -11,12 +11,20 @@ import cool.scx.mvc.interceptor.impl.ScxMappingInterceptorImpl;
 public final class ScxMappingInterceptorConfiguration {
 
     /**
-     * 拦截器
+     * 默认拦截器
      */
     private static final ScxMappingInterceptor defaultScxMappingInterceptor = new ScxMappingInterceptorImpl();
 
+    /**
+     * 拦截器
+     */
     private static ScxMappingInterceptor scxMappingInterceptor = defaultScxMappingInterceptor;
 
+    /**
+     * a
+     *
+     * @param scxMappingInterceptor a
+     */
     public static void setScxMappingInterceptor(ScxMappingInterceptor scxMappingInterceptor) {
         if (scxMappingInterceptor == null) {
             throw new IllegalArgumentException("ScxMappingInterceptor must not be empty !!!");
@@ -24,6 +32,11 @@ public final class ScxMappingInterceptorConfiguration {
         ScxMappingInterceptorConfiguration.scxMappingInterceptor = scxMappingInterceptor;
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public static ScxMappingInterceptor interceptor() {
         return scxMappingInterceptor;
     }

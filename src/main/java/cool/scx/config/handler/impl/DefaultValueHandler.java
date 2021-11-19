@@ -4,6 +4,11 @@ import cool.scx.ScxHandlerR;
 import cool.scx.config.handler.ScxConfigHandlerParam;
 import cool.scx.util.ansi.Ansi;
 
+/**
+ * a
+ *
+ * @param <T> a
+ */
 public record DefaultValueHandler<T>(T defaultVal) implements ScxHandlerR<ScxConfigHandlerParam, T> {
 
     @SuppressWarnings("unchecked")

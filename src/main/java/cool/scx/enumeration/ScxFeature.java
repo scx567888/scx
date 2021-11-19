@@ -26,6 +26,11 @@ public enum ScxFeature {
         this._defaultValue = defaultValue;
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public boolean defaultValue() {
         return _defaultValue;
     }

@@ -48,18 +48,42 @@ public final class OrderBy {
         return this;
     }
 
+    /**
+     * a
+     *
+     * @param orderByColumn a
+     * @return a
+     */
     public OrderBy asc(String orderByColumn) {
         return add(orderByColumn, OrderByType.ASC);
     }
 
+    /**
+     * a
+     *
+     * @param orderBySQL a
+     * @return a
+     */
     public OrderBy ascSQL(String orderBySQL) {
         return addSQL(orderBySQL, OrderByType.ASC);
     }
 
+    /**
+     * a
+     *
+     * @param orderByColumn a
+     * @return a
+     */
     public OrderBy desc(String orderByColumn) {
         return add(orderByColumn, OrderByType.DESC);
     }
 
+    /**
+     * a
+     *
+     * @param orderBySQL a
+     * @return a
+     */
     public OrderBy descSQL(String orderBySQL) {
         return addSQL(orderBySQL, OrderByType.DESC);
     }

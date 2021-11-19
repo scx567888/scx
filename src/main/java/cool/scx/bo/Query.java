@@ -122,22 +122,45 @@ public final class Query {
         return this;
     }
 
-
+    /**
+     * a
+     *
+     * @param orderByColumn a
+     * @return a
+     */
     public Query asc(String orderByColumn) {
         this.orderBy.asc(orderByColumn);
         return this;
     }
 
+    /**
+     * a
+     *
+     * @param orderBySQL a
+     * @return a
+     */
     public Query ascSQL(String orderBySQL) {
         this.orderBy.ascSQL(orderBySQL);
         return this;
     }
 
+    /**
+     * a
+     *
+     * @param orderByColumn a
+     * @return a
+     */
     public Query desc(String orderByColumn) {
         this.orderBy.desc(orderByColumn);
         return this;
     }
 
+    /**
+     * a
+     *
+     * @param orderBySQL a
+     * @return a
+     */
     public Query descSQL(String orderBySQL) {
         this.orderBy.descSQL(orderBySQL);
         return this;
