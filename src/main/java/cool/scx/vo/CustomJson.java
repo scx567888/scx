@@ -45,13 +45,13 @@ public final class CustomJson implements BaseVo {
     }
 
     /**
-     * 返回 Json 带有消息
+     * 返回操作失败的 Json 带有消息
      *
-     * @param message 自定义的错误信息
+     * @param failMessage 自定义的错误信息
      * @return json
      */
-    public static CustomJson message(String message) {
-        return new CustomJson(message);
+    public static CustomJson fail(String failMessage) {
+        return new CustomJson(failMessage);
     }
 
     /**
@@ -73,8 +73,8 @@ public final class CustomJson implements BaseVo {
      * sendToClient
      */
     @Override
-    public void handle(RoutingContext context) throws JsonProcessingException {
-        VoHelper.fillJsonContentType(context.request().response()).end(toJsonString());
+    public void handle(RoutingContext context) {
+        VoHelper.fillJsonContentType(context.request().response()).end(toJson(""));
     }
 
     /**
@@ -83,8 +83,18 @@ public final class CustomJson implements BaseVo {
      * @return r
      * @throws JsonProcessingException 转换失败
      */
-    public String toJsonString() throws JsonProcessingException {
+    public String toJson() throws JsonProcessingException {
         return VoHelper.toJson(this.jsonBodyWrapper);
+    }
+
+    /**
+     * a
+     *
+     * @param defaultValue a
+     * @return a
+     */
+    public String toJson(String defaultValue) {
+        return VoHelper.toJson(this.jsonBodyWrapper, defaultValue);
     }
 
 }

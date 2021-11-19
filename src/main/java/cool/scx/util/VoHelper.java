@@ -37,6 +37,22 @@ public final class VoHelper {
     }
 
     /**
+     * a
+     *
+     * @param value        a
+     * @param defaultValue a
+     * @return a
+     */
+    public static String toJson(Object value, String defaultValue) {
+        try {
+            return toJson(value);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return defaultValue;
+        }
+    }
+
+    /**
      * 填充 CONTENT_TYPE 为 json 格式
      *
      * @param response r
