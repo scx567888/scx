@@ -152,7 +152,7 @@ public final class Ansi {
     }
 
     /**
-     * 检测是否支持 ansi
+     * 检测是否支持 ansi todo 此处检测应该更加严谨
      *
      * @return ansi
      */
@@ -162,7 +162,7 @@ public final class Ansi {
                 return false;
             }
             var OPERATING_SYSTEM_NAME = System.getProperty("os.name").toLowerCase(Locale.ENGLISH);
-            return !(OPERATING_SYSTEM_NAME.contains("win"));
+            return !OPERATING_SYSTEM_NAME.contains("win");
         } catch (Throwable ex) {
             return false;
         }
@@ -174,7 +174,7 @@ public final class Ansi {
      * @param elements  a
      * @param elements2 b
      */
-    public static AnsiElement[] filterAnsiElement(AnsiElement[] elements, AnsiElement... elements2) {
+    private static AnsiElement[] filterAnsiElement(AnsiElement[] elements, AnsiElement... elements2) {
         AnsiElement ansiColor = null;
         AnsiElement ansiBackground = null;
         Set<AnsiStyle> ansiStyleSet = new LinkedHashSet<>();
@@ -389,11 +389,11 @@ public final class Ansi {
      * @param o a {@link java.lang.String} object.
      * @return a {@link cool.scx.util.ansi.Ansi} object.
      */
-    public Ansi color(Object o) {
+    public Ansi color(Object o, AnsiElement... ansiElements) {
         if (nextPrintColor >= ANSI_COLORS.length) {
             nextPrintColor = 0;
         }
-        add(o, ANSI_COLORS[nextPrintColor]);
+        add(o, filterAnsiElement(ansiElements, ANSI_COLORS[nextPrintColor]));
         nextPrintColor = nextPrintColor + 1;
         return this;
     }
