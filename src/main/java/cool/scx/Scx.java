@@ -1,6 +1,7 @@
 package cool.scx;
 
 import cool.scx.config.ScxConfig;
+import cool.scx.config.ScxConfigDefaultValue;
 import cool.scx.config.ScxEasyConfig;
 import cool.scx.config.ScxFeatureConfig;
 import cool.scx.dao.ScxDao;
@@ -161,7 +162,7 @@ public final class Scx {
         //3, 初始化其他参数
         this.scxAppRoot = new ScxAppRoot(this.mainClass);
         //4, 初始化配置文件
-        this.scxConfig = new ScxConfig(this.scxAppRoot.getFileByAppRoot(DEFAULT_SCX_CONFIG_PATH), this.args);
+        this.scxConfig = new ScxConfig(this.scxAppRoot.getFileByAppRoot(DEFAULT_SCX_CONFIG_PATH), ScxConfigDefaultValue.getDefaultConfig(), this.args);
         this.scxEasyConfig = new ScxEasyConfig(this.scxConfig, this.scxAppRoot, this.appKey);
         //5, 初始化 ScxLog 日志框架
         ScxLogConfiguration.init(this.scxConfig, this.scxAppRoot);
