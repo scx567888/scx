@@ -2,7 +2,7 @@ package cool.scx.mvc;
 
 import cool.scx.ScxContext;
 import cool.scx.enumeration.ScxFeature;
-import cool.scx.exception.BadRequestException;
+import cool.scx.exception.impl.BadRequestException;
 import cool.scx.mvc.exception_handler.ScxMappingExceptionHandler;
 import cool.scx.mvc.exception_handler.impl.LastExceptionHandler;
 import cool.scx.mvc.exception_handler.impl.ScxHttpExceptionHandler;
@@ -173,8 +173,7 @@ public final class ScxMappingConfiguration {
         if (!errMessageList.isEmpty()) {
             //是否使用开发时错误页面
             if (ScxContext.getFeatureState(ScxFeature.USE_DEVELOPMENT_ERROR_PAGE)) {
-                var errMessageInfo = errMessageList.stream().map(Throwable::getMessage).collect(Collectors.joining("," + System.lineSeparator()));
-                throw new BadRequestException(errMessageInfo);
+                throw new BadRequestException(errMessageList.stream().map(Throwable::getMessage).collect(Collectors.joining(";" + System.lineSeparator())));
             } else {
                 throw new BadRequestException();
             }

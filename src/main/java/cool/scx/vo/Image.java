@@ -1,6 +1,6 @@
 package cool.scx.vo;
 
-import cool.scx.exception.NotFoundException;
+import cool.scx.exception.impl.NotFoundException;
 import cool.scx.util.FixedMap;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.vertx.core.buffer.Buffer;

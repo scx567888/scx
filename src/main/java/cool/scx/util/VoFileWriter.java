@@ -1,6 +1,6 @@
 package cool.scx.util;
 
-import cool.scx.exception.NotFoundException;
+import cool.scx.exception.impl.NotFoundException;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.vertx.core.MultiMap;

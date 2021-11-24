@@ -1,7 +1,7 @@
 package cool.scx.vo;
 
 import cool.scx.enumeration.RawType;
-import cool.scx.exception.NotFoundException;
+import cool.scx.exception.impl.NotFoundException;
 import cool.scx.util.VoBytesWriter;
 import cool.scx.util.VoFileWriter;
 import cool.scx.util.VoHelper;

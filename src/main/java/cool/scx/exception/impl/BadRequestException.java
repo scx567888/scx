@@ -1,7 +1,8 @@
-package cool.scx.exception;
+package cool.scx.exception.impl;
 
+import cool.scx.exception.ScxHttpException;
+import cool.scx.exception.ScxHttpExceptionHelper;
 import cool.scx.util.ExceptionUtils;
-import cool.scx.util.VoHelper;
 import io.vertx.ext.web.RoutingContext;
 
 /**
@@ -47,8 +48,7 @@ public class BadRequestException extends ScxHttpException {
      */
     @Override
     public void handle(RoutingContext ctx) {
-        VoHelper.fillTextPlainContentType(ctx.request().response().setStatusCode(400))
-                .end(throwableMessage);
+        ScxHttpExceptionHelper.sendException(400, "Bad Request !!!", throwableMessage, ctx);
     }
 
 }
