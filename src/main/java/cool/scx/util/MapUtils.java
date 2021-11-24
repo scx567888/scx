@@ -1,8 +1,5 @@
 package cool.scx.util;
 
-import io.vertx.core.MultiMap;
-
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -33,20 +30,6 @@ public final class MapUtils {
             }
         });
         return result;
-    }
-
-    /**
-     * <p>multiMapToMap.</p>
-     *
-     * @param multiMap a {@link io.vertx.core.MultiMap} object
-     * @return a {@link java.util.Map} object
-     */
-    public static Map<String, Object> multiMapToMap(MultiMap multiMap) {
-        var map = new HashMap<String, Object>();
-        for (var m : multiMap) {
-            map.put(m.getKey(), m.getValue());
-        }
-        return map;
     }
 
 }

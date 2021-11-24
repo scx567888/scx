@@ -408,7 +408,7 @@ public final class Ansi {
      * <p>print.</p>
      */
     public void print() {
-        System.err.print(toString(this.elements.toArray()));
+        System.out.print(toString(this.elements.toArray()));
     }
 
     /**
