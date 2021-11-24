@@ -3,7 +3,7 @@ package cool.scx.mvc.interceptor.impl;
 import cool.scx.mvc.interceptor.ScxMappingInterceptor;
 
 /**
- * <p>DefaultScxMappingPreProcessor class.</p>
+ * 默认 ScxMapping 拦截器实现
  *
  * @author scx567888
  * @version 1.3.14

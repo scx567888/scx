@@ -4,17 +4,9 @@ import cool.scx.ScxContext;
 import cool.scx.ScxHandler;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.enumeration.HttpMethod;
-import cool.scx.enumeration.ScxFeature;
-import cool.scx.exception.ScxHttpException;
-import cool.scx.mvc.interceptor.ScxMappingInterceptorConfiguration;
-import cool.scx.mvc.processor.ScxMappingResultProcessorConfiguration;
 import cool.scx.util.CaseUtils;
-import cool.scx.util.ExceptionUtils;
 import cool.scx.util.StringUtils;
-import cool.scx.util.VoHelper;
 import io.vertx.ext.web.RoutingContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -28,8 +20,6 @@ import java.util.stream.Stream;
  * @version 0.3.6
  */
 public final class ScxMappingHandler implements ScxHandler<RoutingContext> {
-
-    private static final Logger logger = LoggerFactory.getLogger(ScxMappingHandler.class);
 
     /**
      * 用来校验 路径的正则表达式
@@ -70,11 +60,6 @@ public final class ScxMappingHandler implements ScxHandler<RoutingContext> {
     public final HttpMethod[] httpMethods;
 
     /**
-     * 方法的参数信息 比如参数名称 参数 来源(body,path等) 参数是否必填 等信息
-     */
-    public final ScxMappingHandlerMethodParamInfo[] paramsInfos;
-
-    /**
      * handler 排序 目前规则是以 路径匹配参数的数量为标准
      * 如 /api/:a/:b 的参数为 2 个 /api/test/:b 的参数为 1 个 ,所以需要将 第一个路径的匹配优先级要小于第二个路径
      */
@@ -95,16 +80,6 @@ public final class ScxMappingHandler implements ScxHandler<RoutingContext> {
         this.url = getUrl(classScxMapping, methodScxMapping);
         this.patternUrl = getPatternUrl(this.url);
         this.httpMethods = getHttpMethod(methodScxMapping);
-        this.paramsInfos = getFormattedParamsInfo(method);
-    }
-
-    private static ScxMappingHandlerMethodParamInfo[] getFormattedParamsInfo(Method method) {
-        var parameters = method.getParameters();
-        var _formattedParamsInfos = new ScxMappingHandlerMethodParamInfo[parameters.length];
-        for (int i = 0; i < _formattedParamsInfos.length; i++) {
-            _formattedParamsInfos[i] = new ScxMappingHandlerMethodParamInfo(parameters[i]);
-        }
-        return _formattedParamsInfos;
     }
 
     /**
@@ -162,36 +137,22 @@ public final class ScxMappingHandler implements ScxHandler<RoutingContext> {
         ScxContext.routingContext(context);
         try {
             //1, 执行前置处理器 (一般用于校验权限之类)
-            ScxMappingInterceptorConfiguration.interceptor().preHandle(context, this);
-            //2, 执行具体方法 (用来从请求中获取参数并执行反射调用方法以获取返回值)
-            var tempResult = this.method.invoke(this.example, new ScxMappingRequestParamInfo(context).convert(this.paramsInfos));
-            //3, 判断返回值是否为 void 如果不是则继续处理, 否则直接终止方法运行
-            if (void.class != this.method.getReturnType()) {
-                //4, 执行后置处理器 (一般用来将方法返回的结果进行二次加工处理)
-                var finalResult = ScxMappingInterceptorConfiguration.interceptor().postHandle(context, this, tempResult);
-                //5, 检查 response 是否已经被客户端进行响应或关闭了 如果是 ,这里便不再进行后续处理
-                if (!context.response().ended() && !context.response().closed()) {
-                    //6, 根据不同的返回值类型自动进行处理
-                    ScxMappingResultProcessorConfiguration.findResultProcessor(finalResult).handle(finalResult, context);
-                }
+            ScxContext.scxMappingConfiguration().scxMappingInterceptor().preHandle(context, this);
+            //2, 根据 method 参数获取 invoke 时的参数
+            var methodParameters = ScxContext.scxMappingConfiguration().buildMethodParameters(method.getParameters(), context);
+            //3, 执行具体方法 (用来从请求中获取参数并执行反射调用方法以获取返回值)
+            var tempResult = this.method.invoke(this.example, methodParameters);
+            //4, 执行后置处理器
+            var finalResult = ScxContext.scxMappingConfiguration().scxMappingInterceptor().postHandle(context, this, tempResult);
+            if (!context.request().response().ended()) {
+                ScxContext.scxMappingConfiguration().findMethodReturnValueHandler(finalResult).handle(finalResult, context);
             }
         } catch (Exception e) {
-            //1, 如果是反射调用方法就使用 方法的内部异常 否则使用异常
-            var exception = (e instanceof InvocationTargetException) ? e.getCause() : e;
-            //2, 在此处进行对异常进行截获处理
-            if (exception instanceof ScxHttpException) {
-                ((ScxHttpException) exception).handle(context);
-            } else {
-                //3, 打印错误信息
-                logger.error("执行反射调用时发生异常 !!!", exception);
-                //4, 如果这时 response 还没有被关闭的话 就返回 500 错误信息
-                if (!context.response().ended() && !context.response().closed()) {
-                    //5, 这里根据是否开启了开发人员错误页面 进行相应的返回
-                    VoHelper.fillTextPlainContentType(context.response().setStatusCode(500))
-                            .end(ScxContext.getFeatureState(ScxFeature.USE_DEVELOPMENT_ERROR_PAGE) ?
-                                    ExceptionUtils.getCustomStackTrace(exception) : "Internal Server Error !!!");
-                }
-            }
+            //1, 如果是反射调用时发生异常 则使用反射异常的内部异常 否则使用异常
+            var exception = e instanceof InvocationTargetException ? e.getCause() : e;
+            //2, 如果是包装类型异常
+//            exception = exception instanceof RuntimeExceptionWrapper ? ((RuntimeExceptionWrapper) exception).getDetail() : e;
+            ScxContext.scxMappingConfiguration().findExceptionHandler(exception).handle(exception, context);
         }
     }
 

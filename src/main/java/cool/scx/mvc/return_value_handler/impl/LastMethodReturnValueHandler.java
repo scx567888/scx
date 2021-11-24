@@ -1,14 +1,16 @@
-package cool.scx.mvc.processor.impl;
+package cool.scx.mvc.return_value_handler.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import cool.scx.mvc.processor.ScxMappingResultProcessor;
+import cool.scx.mvc.return_value_handler.ScxMappingMethodReturnValueHandler;
 import cool.scx.util.VoHelper;
 import io.vertx.ext.web.RoutingContext;
 
 /**
  * a
  */
-public final class CanConvertJsonResultProcessor implements ScxMappingResultProcessor {
+public final class LastMethodReturnValueHandler implements ScxMappingMethodReturnValueHandler {
+
+    public static final LastMethodReturnValueHandler DEFAULT_INSTANCE = new LastMethodReturnValueHandler();
 
     @Override
     public boolean canHandle(Object result) {

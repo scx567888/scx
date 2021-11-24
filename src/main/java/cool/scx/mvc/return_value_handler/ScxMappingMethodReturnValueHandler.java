@@ -1,11 +1,11 @@
-package cool.scx.mvc.processor;
+package cool.scx.mvc.return_value_handler;
 
 import io.vertx.ext.web.RoutingContext;
 
 /**
  * a
  */
-public interface ScxMappingResultProcessor {
+public interface ScxMappingMethodReturnValueHandler {
 
     /**
      * a

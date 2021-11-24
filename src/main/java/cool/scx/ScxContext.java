@@ -6,6 +6,7 @@ import cool.scx.config.ScxFeatureConfig;
 import cool.scx.dao.ScxDao;
 import cool.scx.enumeration.ScxFeature;
 import cool.scx.eventbus.ScxEventBus;
+import cool.scx.mvc.ScxMappingConfiguration;
 import cool.scx.sql.SQLRunner;
 import cool.scx.web.ScxWebSocketRouter;
 import io.netty.util.concurrent.Future;
@@ -303,6 +304,10 @@ public final class ScxContext {
      */
     public static SQLRunner sqlRunner() {
         return scx().scxDao().sqlRunner();
+    }
+
+    public static ScxMappingConfiguration scxMappingConfiguration() {
+        return scx().scxMappingConfiguration();
     }
 
 }

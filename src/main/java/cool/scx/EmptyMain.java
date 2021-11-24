@@ -17,7 +17,7 @@ public final class EmptyMain {
      */
     public static void main(String[] args) {
         Scx.printBanner();
-        System.err.println("请在您的模块中使用, 按下回车退出!!!");
+        System.out.println("请在您的模块中使用, 按下回车退出!!!");
         ConsoleUtils.readLine();
     }
 
