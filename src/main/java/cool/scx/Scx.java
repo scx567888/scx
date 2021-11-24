@@ -7,6 +7,7 @@ import cool.scx.dao.ScxDao;
 import cool.scx.enumeration.ScxFeature;
 import cool.scx.eventbus.ScxEventBus;
 import cool.scx.log.ScxLogConfiguration;
+import cool.scx.mvc.ScxMappingConfiguration;
 import cool.scx.util.ConsoleUtils;
 import cool.scx.util.NetUtils;
 import cool.scx.util.StringUtils;
@@ -118,6 +119,11 @@ public final class Scx {
      * s
      */
     private final ScxEventBus scxEventBus;
+
+    /**
+     * a
+     */
+    private final ScxMappingConfiguration scxMappingConfiguration = new ScxMappingConfiguration();
 
     /**
      * 路由
@@ -525,6 +531,10 @@ public final class Scx {
      */
     public ScxWebSocketRouter scxWebSocketRouter() {
         return scxWebSocketRouter;
+    }
+
+    public ScxMappingConfiguration scxMappingConfiguration() {
+        return scxMappingConfiguration;
     }
 
     /**

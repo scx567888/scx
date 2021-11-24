@@ -1,13 +1,15 @@
-package cool.scx.mvc.processor.impl;
+package cool.scx.mvc.return_value_handler.impl;
 
-import cool.scx.mvc.processor.ScxMappingResultProcessor;
+import cool.scx.mvc.return_value_handler.ScxMappingMethodReturnValueHandler;
 import cool.scx.vo.BaseVo;
 import io.vertx.ext.web.RoutingContext;
 
 /**
  * a
  */
-public final class BaseVoResultProcessor implements ScxMappingResultProcessor {
+public final class BaseVoMethodReturnValueHandler implements ScxMappingMethodReturnValueHandler {
+
+    public static final BaseVoMethodReturnValueHandler DEFAULT_INSTANCE = new BaseVoMethodReturnValueHandler();
 
     @Override
     public boolean canHandle(Object result) {
