@@ -1,6 +1,7 @@
-package cool.scx.exception;
+package cool.scx.exception.impl;
 
 import cool.scx.ScxHandler;
+import cool.scx.exception.ScxHttpException;
 import io.vertx.ext.web.RoutingContext;
 
 /**

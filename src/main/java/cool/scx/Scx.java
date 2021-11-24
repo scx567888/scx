@@ -123,7 +123,7 @@ public final class Scx {
     /**
      * a
      */
-    private final ScxMappingConfiguration scxMappingConfiguration = new ScxMappingConfiguration();
+    private final ScxMappingConfiguration scxMappingConfiguration;
 
     /**
      * 路由
@@ -175,6 +175,8 @@ public final class Scx {
         this.scxTemplate = new ScxTemplate(this.scxEasyConfig);
         //10, 初始化持久层
         this.scxDao = new ScxDao(this.scxEasyConfig, this.scxFeatureConfig);
+        //11, ScxMapping 配置类
+        this.scxMappingConfiguration = new ScxMappingConfiguration();
     }
 
     /**

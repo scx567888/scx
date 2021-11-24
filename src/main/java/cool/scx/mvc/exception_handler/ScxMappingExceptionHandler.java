@@ -15,9 +15,9 @@ public interface ScxMappingExceptionHandler {
     /**
      * 将结果处理并返回
      *
-     * @param result  a
-     * @param context a
-     * @throws Exception a
+     * @param throwable a
+     * @param context   a
      */
     void handle(Throwable throwable, RoutingContext context);
+
 }
