@@ -35,8 +35,9 @@ public final class ScxConfig {
      * @param scxConfigFile a
      * @param args          a
      */
-    public ScxConfig(File scxConfigFile, String[] args) {
+    public ScxConfig(File scxConfigFile, Map<String, Object> defaultConfig, String... args) {
         try {
+            configMapping.putAll(defaultConfig);
             if (scxConfigFile == null || !scxConfigFile.exists()) {
                 throw new ScxConfigFileMissingException();
             }
