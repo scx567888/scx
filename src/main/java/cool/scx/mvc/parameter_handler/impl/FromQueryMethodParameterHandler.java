@@ -4,10 +4,9 @@ import cool.scx.annotation.FromQuery;
 import cool.scx.mvc.parameter_handler.ParamConvertException;
 import cool.scx.mvc.parameter_handler.RequiredParamEmptyException;
 import cool.scx.mvc.parameter_handler.ScxMappingMethodParameterHandler;
-import cool.scx.util.MapUtils;
+import cool.scx.mvc.parameter_handler.ScxMappingRoutingContextInfo;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
-import io.vertx.ext.web.RoutingContext;
 
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
@@ -16,13 +15,16 @@ public final class FromQueryMethodParameterHandler implements ScxMappingMethodPa
 
     public static final FromQueryMethodParameterHandler DEFAULT_INSTANCE = new FromQueryMethodParameterHandler();
 
-    public static Object getValueFromQuery(String name, boolean merge, boolean required, Type javaType, RoutingContext routingContext) throws RequiredParamEmptyException, ParamConvertException {
-        var queryParams = MapUtils.multiMapToMap(routingContext.queryParams());
-        var v = merge ? queryParams : queryParams.get(name);
-        //为空的时候做两个处理 即必填则报错 非必填则返回 null
-        if (required && v == null) {
-            throw new RequiredParamEmptyException("必填参数不能为空 !!! 参数名称 [" + name + "] , 参数来源 [FromQuery, merge=" + merge + "] , 参数类型 [" + javaType.getTypeName() + "]");
+    public static Object getValueFromQuery(String name, boolean merge, boolean required, Type javaType, ScxMappingRoutingContextInfo routingContext) throws RequiredParamEmptyException, ParamConvertException {
+        var v = merge ? routingContext.queryParams() : routingContext.queryParams().get(name);
+        if (v == null) {
+            //为空的时候做两个处理 即必填则报错 非必填则返回 null
+            if (required) {
+                throw new RequiredParamEmptyException("必填参数不能为空 !!! 参数名称 [" + name + "] , 参数来源 [FromQuery, merge=" + merge + "] , 参数类型 [" + javaType.getTypeName() + "]");
+            }
+            return null;
         }
+
         try {
             return ObjectUtils.convertValue(v, javaType);
         } catch (Exception e) {
@@ -40,7 +42,7 @@ public final class FromQueryMethodParameterHandler implements ScxMappingMethodPa
     }
 
     @Override
-    public Object handle(Parameter parameter, RoutingContext context) throws Exception {
+    public Object handle(Parameter parameter, ScxMappingRoutingContextInfo context) throws Exception {
         var javaType = parameter.getParameterizedType();
         var required = false;
         var name = parameter.getName();

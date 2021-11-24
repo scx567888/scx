@@ -11,6 +11,7 @@ import cool.scx.mvc.interceptor.impl.ScxMappingInterceptorImpl;
 import cool.scx.mvc.parameter_handler.ParamConvertException;
 import cool.scx.mvc.parameter_handler.RequiredParamEmptyException;
 import cool.scx.mvc.parameter_handler.ScxMappingMethodParameterHandler;
+import cool.scx.mvc.parameter_handler.ScxMappingRoutingContextInfo;
 import cool.scx.mvc.parameter_handler.impl.*;
 import cool.scx.mvc.return_value_handler.ScxMappingMethodReturnValueHandler;
 import cool.scx.mvc.return_value_handler.impl.BaseVoMethodReturnValueHandler;
@@ -158,12 +159,13 @@ public final class ScxMappingConfiguration {
     }
 
     public Object[] buildMethodParameters(Parameter[] parameters, RoutingContext context) throws Exception {
+        var scxMappingRoutingContextInfo = new ScxMappingRoutingContextInfo(context);
         var errMessageList = new ArrayList<Exception>();
         var methodParameter = new Object[parameters.length];
         for (int i = 0; i < methodParameter.length; i++) {
             var methodParameterHandler = ScxContext.scxMappingConfiguration().findMethodParameterHandler(parameters[i]);
             try {
-                methodParameter[i] = methodParameterHandler.handle(parameters[i], context);
+                methodParameter[i] = methodParameterHandler.handle(parameters[i], scxMappingRoutingContextInfo);
             } catch (ParamConvertException | RequiredParamEmptyException e) {
                 errMessageList.add(e);
             }

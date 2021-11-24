@@ -1,16 +1,12 @@
 package cool.scx.mvc.parameter_handler.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.annotation.FromBody;
 import cool.scx.mvc.parameter_handler.ParamConvertException;
 import cool.scx.mvc.parameter_handler.RequiredParamEmptyException;
 import cool.scx.mvc.parameter_handler.ScxMappingMethodParameterHandler;
-import cool.scx.util.JacksonHelper;
-import cool.scx.util.MapUtils;
+import cool.scx.mvc.parameter_handler.ScxMappingRoutingContextInfo;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
-import io.vertx.ext.web.RoutingContext;
 
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
@@ -19,13 +15,12 @@ public final class FromBodyMethodParameterHandler implements ScxMappingMethodPar
 
     public static final FromBodyMethodParameterHandler DEFAULT_INSTANCE = new FromBodyMethodParameterHandler();
 
-    public static Object getValueFromBody(String name, boolean useAllBody, boolean required, Type type, RoutingContext routingContext) throws RequiredParamEmptyException, ParamConvertException {
-        var useJsonBody = routingContext.request().formAttributes().isEmpty();
-        return useJsonBody ? getValueFromJsonBody(name, useAllBody, required, type, routingContext) : getValueFromFormAttributes(name, useAllBody, required, type, routingContext);
+    public static Object getValueFromBody(String name, boolean useAllBody, boolean required, Type type, ScxMappingRoutingContextInfo routingContext) throws RequiredParamEmptyException, ParamConvertException {
+        return routingContext.isJsonBody() ? getValueFromJsonBody(name, useAllBody, required, type, routingContext) : getValueFromFormAttributes(name, useAllBody, required, type, routingContext);
     }
 
-    private static Object getValueFromJsonBody(String name, boolean useAllBody, boolean required, Type javaType, RoutingContext routingContext) throws RequiredParamEmptyException, ParamConvertException {
-        var tempValue = initJsonBody(routingContext);
+    private static Object getValueFromJsonBody(String name, boolean useAllBody, boolean required, Type javaType, ScxMappingRoutingContextInfo routingContext) throws RequiredParamEmptyException, ParamConvertException {
+        var tempValue = routingContext.getJsonBody();
         if (!useAllBody) {
             String[] split = name.split("\\.");
             for (String s : split) {
@@ -36,10 +31,14 @@ public final class FromBodyMethodParameterHandler implements ScxMappingMethodPar
                 }
             }
         }
-        //为空的时候做两个处理 即必填则报错 非必填则返回 null
-        if (required && (tempValue == null || tempValue.isNull())) {
-            throw new RequiredParamEmptyException("必填参数不能为空 !!! 参数名称 [" + name + "] , 参数来源 [FromBody, useAllBody=" + useAllBody + "] , 参数类型 [" + javaType.getTypeName() + "]");
+        if (tempValue == null || tempValue.isNull()) {
+            //为空的时候做两个处理 即必填则报错 非必填则返回 null
+            if (required) {
+                throw new RequiredParamEmptyException("必填参数不能为空 !!! 参数名称 [" + name + "] , 参数来源 [FromBody, useAllBody=" + useAllBody + "] , 参数类型 [" + javaType.getTypeName() + "]");
+            }
+            return null;
         }
+
         try {
             return ObjectUtils.readValue(tempValue, javaType);
         } catch (Exception e) {
@@ -51,13 +50,16 @@ public final class FromBodyMethodParameterHandler implements ScxMappingMethodPar
         return null;
     }
 
-    private static Object getValueFromFormAttributes(String name, boolean useAllBody, boolean required, Type javaType, RoutingContext routingContext) throws RequiredParamEmptyException, ParamConvertException {
-        var formAttributes = MapUtils.multiMapToMap(routingContext.request().formAttributes());
-        var v = useAllBody ? formAttributes : formAttributes.get(name);
-        //为空的时候做两个处理 即必填则报错 非必填则返回 null
-        if (required && v == null) {
-            throw new RequiredParamEmptyException("必填参数不能为空 !!! 参数名称 [" + name + "] , 参数来源 [FromBody, useAllBody=" + useAllBody + "] , 参数类型 [" + javaType.getTypeName() + "]");
+    private static Object getValueFromFormAttributes(String name, boolean useAllBody, boolean required, Type javaType, ScxMappingRoutingContextInfo routingContext) throws RequiredParamEmptyException, ParamConvertException {
+        var v = useAllBody ? routingContext.formAttributesMap() : routingContext.formAttributesMap().get(name);
+        if (v == null) {
+            //为空的时候做两个处理 即必填则报错 非必填则返回 null
+            if (required) {
+                throw new RequiredParamEmptyException("必填参数不能为空 !!! 参数名称 [" + name + "] , 参数来源 [FromBody, useAllBody=" + useAllBody + "] , 参数类型 [" + javaType.getTypeName() + "]");
+            }
+            return null;
         }
+
         try {
             return ObjectUtils.convertValue(v, javaType);
         } catch (Exception e) {
@@ -69,23 +71,13 @@ public final class FromBodyMethodParameterHandler implements ScxMappingMethodPar
         return null;
     }
 
-    private static JsonNode initJsonBody(RoutingContext ctx) {
-        //先从多个来源获取参数 并缓存起来
-        try {
-            return JacksonHelper.getObjectMapper().readTree(ctx.getBodyAsString());
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
     @Override
     public boolean canHandle(Parameter parameter) {
         return parameter.getAnnotation(FromBody.class) != null;
     }
 
     @Override
-    public Object handle(Parameter parameter, RoutingContext context) throws Exception {
+    public Object handle(Parameter parameter, ScxMappingRoutingContextInfo context) throws Exception {
         var javaType = parameter.getParameterizedType();
         var required = false;
         var name = parameter.getName();

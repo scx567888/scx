@@ -4,9 +4,9 @@ import cool.scx.annotation.FromPath;
 import cool.scx.mvc.parameter_handler.ParamConvertException;
 import cool.scx.mvc.parameter_handler.RequiredParamEmptyException;
 import cool.scx.mvc.parameter_handler.ScxMappingMethodParameterHandler;
+import cool.scx.mvc.parameter_handler.ScxMappingRoutingContextInfo;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
-import io.vertx.ext.web.RoutingContext;
 
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
@@ -15,12 +15,14 @@ public final class FromPathMethodParameterHandler implements ScxMappingMethodPar
 
     public static final FromPathMethodParameterHandler DEFAULT_INSTANCE = new FromPathMethodParameterHandler();
 
-    public static Object getValueFromPath(String name, boolean merge, boolean required, Type javaType, RoutingContext routingContext) throws RequiredParamEmptyException, ParamConvertException {
-        var pathParams = routingContext.pathParams();
-        var v = merge ? pathParams : pathParams.get(name);
-        //为空的时候做两个处理 即必填则报错 非必填则返回 null
-        if (required && v == null) {
-            throw new RequiredParamEmptyException("必填参数不能为空 !!! 参数名称 [" + name + "] , 参数来源 [FromPath, merge=" + merge + "] , 参数类型 [" + javaType.getTypeName() + "]");
+    public static Object getValueFromPath(String name, boolean merge, boolean required, Type javaType, ScxMappingRoutingContextInfo routingContext) throws RequiredParamEmptyException, ParamConvertException {
+        var v = merge ? routingContext.routingContext().pathParams() : routingContext.routingContext().pathParams().get(name);
+        if (v == null) {
+            //为空的时候做两个处理 即必填则报错 非必填则返回 null
+            if (required) {
+                throw new RequiredParamEmptyException("必填参数不能为空 !!! 参数名称 [" + name + "] , 参数来源 [FromPath, merge=" + merge + "] , 参数类型 [" + javaType.getTypeName() + "]");
+            }
+            return null;
         }
         try {
             return ObjectUtils.convertValue(v, javaType);
@@ -39,7 +41,7 @@ public final class FromPathMethodParameterHandler implements ScxMappingMethodPar
     }
 
     @Override
-    public Object handle(Parameter parameter, RoutingContext context) throws Exception {
+    public Object handle(Parameter parameter, ScxMappingRoutingContextInfo context) throws Exception {
         var javaType = parameter.getParameterizedType();
         var required = false;
         var name = parameter.getName();
