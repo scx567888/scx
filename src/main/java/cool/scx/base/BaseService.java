@@ -131,9 +131,8 @@ public class BaseService<Entity extends BaseModel> extends AbstractBaseService<E
      *
      * @param ids 待恢复的数据 id 集合
      * @return 恢复删除成功的数据条数
-     * @throws java.sql.SQLException if any.
      */
-    public long revokeDelete(long... ids) throws SQLException {
+    public long revokeDelete(long... ids) {
         return this.revokeDelete(new Query().in("id", ids));
     }
 
@@ -142,9 +141,8 @@ public class BaseService<Entity extends BaseModel> extends AbstractBaseService<E
      *
      * @param query 指定的条件
      * @return 恢复删除成功的数据条数
-     * @throws java.sql.SQLException if any.
      */
-    public long revokeDelete(Query query) throws SQLException {
+    public long revokeDelete(Query query) {
         if (!ScxContext.easyConfig().tombstone()) {
             throw new RuntimeException("物理删除模式下不允许恢复删除!!!");
         } else {
@@ -175,9 +173,8 @@ public class BaseService<Entity extends BaseModel> extends AbstractBaseService<E
      *
      * @param entity 待更新的数据 ( 注意: 请保证数据中 id 字段不为空 )
      * @return 更新成功后的数据
-     * @throws java.sql.SQLException if any.
      */
-    public Entity update(Entity entity) throws SQLException {
+    public Entity update(Entity entity) {
         if (entity.id == null) {
             throw new RuntimeException("根据 id 更新时 id 不能为空");
         }
@@ -206,9 +203,8 @@ public class BaseService<Entity extends BaseModel> extends AbstractBaseService<E
      *
      * @param entity 待更新的数据 ( 注意: 请保证数据中 id 字段不为空 )
      * @return 更新成功后的数据
-     * @throws java.sql.SQLException if any.
      */
-    public Entity updateIncludeNull(Entity entity) throws SQLException {
+    public Entity updateIncludeNull(Entity entity) {
         if (entity.id == null) {
             throw new RuntimeException("根据 id 更新时 id 不能为空");
         }
@@ -246,9 +242,8 @@ public class BaseService<Entity extends BaseModel> extends AbstractBaseService<E
      *
      * @param query 聚合查询参数对象
      * @return 数据条数
-     * @throws java.sql.SQLException if any.
      */
-    public long count(Query query) throws SQLException {
+    public long count(Query query) {
         if (ScxContext.easyConfig().tombstone()) {
             query.equal("tombstone", false);
         }
@@ -259,9 +254,8 @@ public class BaseService<Entity extends BaseModel> extends AbstractBaseService<E
      * 获取所有数据的条数
      *
      * @return 所有数据的条数
-     * @throws java.sql.SQLException if any.
      */
-    public long count() throws SQLException {
+    public long count() {
         return count(new Query());
     }
 
@@ -283,9 +277,8 @@ public class BaseService<Entity extends BaseModel> extends AbstractBaseService<E
      *
      * @param ids ID (主键) 列表
      * @return 数据列表
-     * @throws java.sql.SQLException if any.
      */
-    public List<Entity> list(long... ids) throws SQLException {
+    public List<Entity> list(long... ids) {
         return list(new Query().in("id", ids));
     }
 
@@ -293,9 +286,8 @@ public class BaseService<Entity extends BaseModel> extends AbstractBaseService<E
      * 获取所有数据 (注意 : 默认根据最后更新时间 {@link cool.scx.base.BaseModel#updateDate} 排序)
      *
      * @return 所有数据
-     * @throws java.sql.SQLException if any.
      */
-    public List<Entity> list() throws SQLException {
+    public List<Entity> list() {
         var query = new Query().desc("updateDate");
         if (ScxContext.easyConfig().tombstone()) {
             query.equal("tombstone", false);
@@ -308,9 +300,8 @@ public class BaseService<Entity extends BaseModel> extends AbstractBaseService<E
      *
      * @param fieldName 字段名称
      * @return 以 value 为键值的 list 集合
-     * @throws java.sql.SQLException if any.
      */
-    public List<Map<String, Object>> getFieldList(String fieldName) throws SQLException {
+    public List<Map<String, Object>> getFieldList(String fieldName) {
         //判断查询字段是否安全 ( 数据库字段内 防止 sql 注入)
         var isSafe = Arrays.stream(this.scxDaoTableInfo.allFields)
                 .filter(field -> field.getName().equals(fieldName))
