@@ -20,11 +20,12 @@ import java.util.List;
 public class CarModuleTest {
 
     public static void main(String[] args) {
-        runModule(args);
+        runModule();
     }
 
     @BeforeTest
-    public static void runModule(String[] args) {
+    public static void runModule() {
+        var args = new String[0];
         Scx scx = Scx.builder()
                 .addModule(new CarModule())
                 .setMainClass(CarModule.class)
