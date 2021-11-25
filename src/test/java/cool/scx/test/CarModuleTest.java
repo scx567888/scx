@@ -20,15 +20,15 @@ import java.util.List;
 public class CarModuleTest {
 
     public static void main(String[] args) {
-        runModule();
+        runModule(args);
     }
 
     @BeforeTest
-    public static void runModule() {
+    public static void runModule(String[] args) {
         Scx scx = Scx.builder()
                 .addModule(new CarModule())
                 .setMainClass(CarModule.class)
-                .setArgs("")
+                .setArgs(args)
                 .configure(ScxFeature.SHOW_BANNER, true)
                 .configure(ScxFeature.SHOW_EASY_CONFIG_INFO, true)
                 .configure(ScxFeature.USE_DEVELOPMENT_ERROR_PAGE, true)
