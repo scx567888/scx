@@ -1,4 +1,4 @@
-package cool.scx.util;
+package cool.scx.vo;
 
 import cool.scx.exception.impl.NotFoundException;
 import io.netty.handler.codec.http.HttpHeaderNames;

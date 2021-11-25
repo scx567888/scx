@@ -4,6 +4,7 @@ import cool.scx.ScxContext;
 import cool.scx.ScxHandler;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.enumeration.HttpMethod;
+import cool.scx.exception.ScxExceptionHelper;
 import cool.scx.util.CaseUtils;
 import cool.scx.util.StringUtils;
 import io.vertx.ext.web.RoutingContext;
@@ -149,9 +150,8 @@ public final class ScxMappingHandler implements ScxHandler<RoutingContext> {
             }
         } catch (Exception e) {
             //1, 如果是反射调用时发生异常 则使用反射异常的内部异常 否则使用异常
-            var exception = e instanceof InvocationTargetException ? e.getCause() : e;
-            //2, 如果是包装类型异常
-//            exception = exception instanceof RuntimeExceptionWrapper ? ((RuntimeExceptionWrapper) exception).getDetail() : e;
+            //2, 如果是包装类型异常 (ScxWrappedRuntimeException) 则使用其内部的异常
+            var exception = ScxExceptionHelper.getRootCause(e instanceof InvocationTargetException ? e.getCause() : e);
             ScxContext.scxMappingConfiguration().findExceptionHandler(exception).handle(exception, context);
         }
     }
