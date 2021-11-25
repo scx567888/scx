@@ -13,7 +13,6 @@ import cool.scx.util.Timer;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,11 +99,7 @@ public class CarModuleTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        try {
-            System.out.println("当前条数 事务回滚后" + carService.count());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        System.out.println("当前条数 事务回滚后" + carService.count());
     }
 
 }
