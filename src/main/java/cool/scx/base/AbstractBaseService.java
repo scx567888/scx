@@ -2,7 +2,7 @@ package cool.scx.base;
 
 import cool.scx.ScxContext;
 import cool.scx.bo.Query;
-import cool.scx.dao.TableInfo;
+import cool.scx.dao.ScxDaoTableInfo;
 import cool.scx.sql.SQLBuilder;
 import cool.scx.sql.SQLRunner;
 import cool.scx.sql.UpdateResult;
@@ -31,7 +31,7 @@ public abstract class AbstractBaseService<Entity> {
     /**
      * 实体类对应的 table 结构
      */
-    protected final TableInfo tableInfo;
+    protected final ScxDaoTableInfo scxDaoTableInfo;
 
     /**
      * 实体类 class 用于泛型转换
@@ -47,7 +47,7 @@ public abstract class AbstractBaseService<Entity> {
         if (genericSuperclass instanceof ParameterizedType) {
             var typeArguments = ((ParameterizedType) genericSuperclass).getActualTypeArguments();
             this.entityClass = (Class<Entity>) typeArguments[0];
-            this.tableInfo = new TableInfo(this.entityClass);
+            this.scxDaoTableInfo = new ScxDaoTableInfo(this.entityClass);
         } else {
             throw new IllegalArgumentException(this.getClass().getName() + " : 必须设置泛型参数 !!!");
         }
@@ -60,7 +60,7 @@ public abstract class AbstractBaseService<Entity> {
      */
     public AbstractBaseService(Class<Entity> entityClass) {
         this.entityClass = entityClass;
-        this.tableInfo = new TableInfo(this.entityClass);
+        this.scxDaoTableInfo = new ScxDaoTableInfo(this.entityClass);
     }
 
     /**
@@ -73,9 +73,9 @@ public abstract class AbstractBaseService<Entity> {
      * @throws java.sql.SQLException if any.
      */
     final Long _insert(Entity entity, boolean useInternalConnection, Connection con) throws SQLException {
-        var c = Stream.of(tableInfo.canInsertFields).filter(field -> ObjectUtils.getFieldValue(field, entity) != null).toArray(Field[]::new);
+        var c = Stream.of(scxDaoTableInfo.canInsertFields).filter(field -> ObjectUtils.getFieldValue(field, entity) != null).toArray(Field[]::new);
         var sql = SQLBuilder
-                .Insert(tableInfo.tableName, c)
+                .Insert(scxDaoTableInfo.tableName, c)
                 .Values(c)
                 .GetSQL();
         UpdateResult updateResult;
@@ -101,14 +101,14 @@ public abstract class AbstractBaseService<Entity> {
         var mapList = new ArrayList<Map<String, Object>>(entityList.size());
         for (var entity : entityList) {
             var map = new HashMap<String, Object>();
-            for (var canInsertField : tableInfo.canInsertFields) {
+            for (var canInsertField : scxDaoTableInfo.canInsertFields) {
                 map.put(canInsertField.getName(), ObjectUtils.getFieldValue(canInsertField, entity));
             }
             mapList.add(map);
         }
         var sql = SQLBuilder
-                .Insert(tableInfo.tableName, tableInfo.canInsertFields)
-                .Values(tableInfo.canInsertFields)
+                .Insert(scxDaoTableInfo.tableName, scxDaoTableInfo.canInsertFields)
+                .Values(scxDaoTableInfo.canInsertFields)
                 .GetSQL();
         if (useInternalConnection) {
             return ScxContext.sqlRunner().updateBatch(sql, mapList).generatedKeys();
@@ -128,8 +128,8 @@ public abstract class AbstractBaseService<Entity> {
      */
     final List<Entity> _select(Query query, boolean useInternalConnection, Connection con) throws SQLException {
         var sql = SQLBuilder
-                .Select(tableInfo.selectColumns)
-                .From(tableInfo.tableName)
+                .Select(scxDaoTableInfo.selectColumns)
+                .From(scxDaoTableInfo.tableName)
                 .Where(query.where())
                 .GroupBy(query.groupBy())
                 .OrderBy(query.orderBy())
@@ -154,7 +154,7 @@ public abstract class AbstractBaseService<Entity> {
     final long _count(Query query, boolean useInternalConnection, Connection con) throws SQLException {
         var sql = SQLBuilder
                 .Select("COUNT(*) AS count")
-                .From(tableInfo.tableName)
+                .From(scxDaoTableInfo.tableName)
                 .Where(query.where())
                 .GroupBy(query.groupBy())
                 .GetSQL();
@@ -180,14 +180,14 @@ public abstract class AbstractBaseService<Entity> {
         if (query == null || query.where().isEmpty()) {
             throw new RuntimeException("更新数据时 必须指定 id , 删除条件 或 自定义的 where 语句 !!!");
         }
-        var u = includeNull ? tableInfo.canUpdateFields : Stream.of(tableInfo.canUpdateFields).filter(field -> ObjectUtils.getFieldValue(field, entity) != null).toArray(Field[]::new);
+        var u = includeNull ? scxDaoTableInfo.canUpdateFields : Stream.of(scxDaoTableInfo.canUpdateFields).filter(field -> ObjectUtils.getFieldValue(field, entity) != null).toArray(Field[]::new);
         if (u.length == 0) {
             throw new RuntimeException("更新数据时 待更新的数据 [实体类中除被 @Column(excludeOnUpdate = true) 修饰以外的字段] 不能全部为 null !!!");
         }
         var entityMap = ObjectUtils.convertValueToMap(entity);
         entityMap.putAll(query.where().getWhereParamMap());
         var sql = SQLBuilder
-                .Update(tableInfo.tableName)
+                .Update(scxDaoTableInfo.tableName)
                 .Set(u)
                 .Where(query.where())
                 .GetSQL();
@@ -212,7 +212,7 @@ public abstract class AbstractBaseService<Entity> {
             throw new RuntimeException("删除数据时必须指定 id , 删除条件 或 自定义的 where 语句 !!!");
         }
         var sql = SQLBuilder
-                .Delete(tableInfo.tableName)
+                .Delete(scxDaoTableInfo.tableName)
                 .Where(query.where())
                 .GetSQL();
         if (useInternalConnection) {

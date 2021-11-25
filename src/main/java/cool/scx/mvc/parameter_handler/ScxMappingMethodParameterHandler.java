@@ -15,8 +15,8 @@ public interface ScxMappingMethodParameterHandler {
     /**
      * 将结果处理并返回
      *
-     * @param parameter      a
-     * @param routingContext a
+     * @param parameter                    方法参数
+     * @param scxMappingRoutingContextInfo 包装后的 RoutingContext
      */
     Object handle(Parameter parameter, ScxMappingRoutingContextInfo scxMappingRoutingContextInfo) throws Exception;
 

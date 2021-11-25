@@ -323,7 +323,7 @@ public class BaseService<Entity extends BaseModel> extends AbstractBaseService<E
      */
     public List<Map<String, Object>> getFieldList(String fieldName) throws SQLException {
         //判断查询字段是否安全 ( 数据库字段内 防止 sql 注入)
-        var isSafe = Arrays.stream(this.tableInfo.allFields)
+        var isSafe = Arrays.stream(this.scxDaoTableInfo.allFields)
                 .filter(field -> field.getName().equals(fieldName))
                 .count() == 1;
         if (isSafe) {
@@ -334,7 +334,7 @@ public class BaseService<Entity extends BaseModel> extends AbstractBaseService<E
             }
             var sql = SQLBuilder
                     .Select(selectColumn)
-                    .From(this.tableInfo.tableName)
+                    .From(this.scxDaoTableInfo.tableName)
                     .Where(where)
                     .GroupBy("value")
                     .GetSQL();

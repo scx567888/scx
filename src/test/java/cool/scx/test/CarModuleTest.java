@@ -3,7 +3,7 @@ package cool.scx.test;
 import cool.scx.Scx;
 import cool.scx.ScxContext;
 import cool.scx.bo.Query;
-import cool.scx.dao.FixTableUtils;
+import cool.scx.dao.ScxDaoHelper;
 import cool.scx.enumeration.ScxFeature;
 import cool.scx.test.car_module.Car;
 import cool.scx.test.car_module.CarModule;
@@ -35,7 +35,7 @@ public class CarModuleTest {
                 .build();
         scx.run();
         //修复表 (这里忽略提示 即直接修复不询问用户)
-        FixTableUtils.fixAllTable(true);
+        ScxDaoHelper.fixAllTable(true);
     }
 
     @Test

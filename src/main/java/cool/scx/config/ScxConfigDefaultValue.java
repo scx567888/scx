@@ -5,25 +5,41 @@ import java.util.HashSet;
 import java.util.Map;
 
 public final class ScxConfigDefaultValue {
-    public static Map<String, Object> getDefaultConfig() {
-        var map = new HashMap<String, Object>();
-        map.put("scx.port", 8080);
-        map.put("scx.tombstone", false);
-        map.put("scx.allowed-origin", "*");
-        map.put("scx.template.root", "AppRoot:/c/");
-        map.put("scx.static-servers", new Object[0]);
-        map.put("scx.https.enabled", false);
-        map.put("scx.https.ssl-path", "");
-        map.put("scx.https.ssl-password", "");
-        map.put("scx.data-source.host", "127.0.0.1");
-        map.put("scx.data-source.port", 3306);
-        map.put("scx.data-source.database", "");
-        map.put("scx.data-source.username", "");
-        map.put("scx.data-source.password", "");
-        map.put("scx.data-source.parameters", new HashSet<>());
-        map.put("scx.log.root.level", "ERROR");
-        map.put("scx.log.root.logging-type", "CONSOLE");
-        map.put("scx.log.root.stored-directory", "AppRoot:logs");
-        return map;
+
+    /**
+     * 默认配置键值对, 以便在没有配置文件的时候可以使项目正确启动
+     */
+    private static final Map<String, Object> DEFAULT_CONFIG_MAP;
+
+    static {
+        DEFAULT_CONFIG_MAP = new HashMap<>();
+        DEFAULT_CONFIG_MAP.put("scx.port", 8080);
+        DEFAULT_CONFIG_MAP.put("scx.tombstone", false);
+        DEFAULT_CONFIG_MAP.put("scx.allowed-origin", "*");
+        DEFAULT_CONFIG_MAP.put("scx.template.root", "AppRoot:/c/");
+        DEFAULT_CONFIG_MAP.put("scx.static-servers", new Object[0]);
+        DEFAULT_CONFIG_MAP.put("scx.https.enabled", false);
+        DEFAULT_CONFIG_MAP.put("scx.https.ssl-path", "");
+        DEFAULT_CONFIG_MAP.put("scx.https.ssl-password", "");
+        DEFAULT_CONFIG_MAP.put("scx.data-source.host", "127.0.0.1");
+        DEFAULT_CONFIG_MAP.put("scx.data-source.port", 3306);
+        DEFAULT_CONFIG_MAP.put("scx.data-source.database", "");
+        DEFAULT_CONFIG_MAP.put("scx.data-source.username", "");
+        DEFAULT_CONFIG_MAP.put("scx.data-source.password", "");
+        DEFAULT_CONFIG_MAP.put("scx.data-source.parameters", new HashSet<>());
+        DEFAULT_CONFIG_MAP.put("scx.log.root.level", "ERROR");
+        DEFAULT_CONFIG_MAP.put("scx.log.root.logging-type", "CONSOLE");
+        DEFAULT_CONFIG_MAP.put("scx.log.root.stored-directory", "AppRoot:logs");
     }
+
+
+    /**
+     * 返回默认的配置文件
+     *
+     * @return r
+     */
+    public static Map<String, Object> defaultConfig() {
+        return DEFAULT_CONFIG_MAP;
+    }
+
 }
