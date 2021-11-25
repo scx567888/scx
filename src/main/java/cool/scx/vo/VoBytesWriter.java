@@ -1,4 +1,4 @@
-package cool.scx.util;
+package cool.scx.vo;
 
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpServerResponse;

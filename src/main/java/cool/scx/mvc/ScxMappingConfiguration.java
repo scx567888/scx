@@ -87,18 +87,67 @@ public final class ScxMappingConfiguration {
         return scxMappingInterceptor;
     }
 
+    /**
+     * 添加一个 异常处理器
+     *
+     * @param scxMappingExceptionHandler s
+     * @return s
+     */
     public ScxMappingConfiguration addExceptionHandler(ScxMappingExceptionHandler scxMappingExceptionHandler) {
         scxMappingExceptionHandlers.add(scxMappingExceptionHandler);
         return this;
     }
 
     /**
-     * a
+     * 添加一个 方法参数处理器
+     *
+     * @param scxMappingMethodParameterHandler a
+     * @return a
+     */
+    public ScxMappingConfiguration addMethodParameterHandler(ScxMappingMethodParameterHandler scxMappingMethodParameterHandler) {
+        scxMappingMethodParameterHandlers.add(scxMappingMethodParameterHandler);
+        return this;
+    }
+
+    /**
+     * 添加一个方法返回值处理器
      *
      * @param returnValueHandler a
      */
     public ScxMappingConfiguration addMethodReturnValueHandler(ScxMappingMethodReturnValueHandler returnValueHandler) {
         scxMappingMethodReturnValueHandlers.add(returnValueHandler);
+        return this;
+    }
+
+    /**
+     * 添加一个 异常处理器
+     *
+     * @param scxMappingExceptionHandler s
+     * @return s
+     */
+    public ScxMappingConfiguration addExceptionHandler(int index, ScxMappingExceptionHandler scxMappingExceptionHandler) {
+        scxMappingExceptionHandlers.add(index, scxMappingExceptionHandler);
+        return this;
+    }
+
+    /**
+     * 添加一个 方法参数处理器
+     *
+     * @param scxMappingMethodParameterHandler a
+     * @return a
+     */
+    public ScxMappingConfiguration addMethodParameterHandler(int index, ScxMappingMethodParameterHandler scxMappingMethodParameterHandler) {
+        scxMappingMethodParameterHandlers.add(index, scxMappingMethodParameterHandler);
+        return this;
+    }
+
+    /**
+     * 添加一个方法返回值处理器
+     *
+     * @param returnValueHandler a
+     */
+    public ScxMappingConfiguration addMethodReturnValueHandler(int index, ScxMappingMethodReturnValueHandler returnValueHandler) {
+        scxMappingMethodReturnValueHandlers.add(index, returnValueHandler);
         return this;
     }
 
@@ -115,17 +164,6 @@ public final class ScxMappingConfiguration {
             }
         }
         return LastMethodReturnValueHandler.DEFAULT_INSTANCE;
-    }
-
-    /**
-     * a
-     *
-     * @param scxMappingMethodParameterHandler a
-     * @return a
-     */
-    public ScxMappingConfiguration addMethodParameterHandler(ScxMappingMethodParameterHandler scxMappingMethodParameterHandler) {
-        scxMappingMethodParameterHandlers.add(scxMappingMethodParameterHandler);
-        return this;
     }
 
     /**
@@ -158,6 +196,14 @@ public final class ScxMappingConfiguration {
         return LastExceptionHandler.DEFAULT_INSTANCE;
     }
 
+    /**
+     * 构建方法参数
+     *
+     * @param parameters p
+     * @param context    c
+     * @return r
+     * @throws Exception r
+     */
     public Object[] buildMethodParameters(Parameter[] parameters, RoutingContext context) throws Exception {
         var scxMappingRoutingContextInfo = new ScxMappingRoutingContextInfo(context);
         var errMessageList = new ArrayList<Exception>();

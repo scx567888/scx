@@ -15,12 +15,12 @@ public final class FromBodyMethodParameterHandler implements ScxMappingMethodPar
 
     public static final FromBodyMethodParameterHandler DEFAULT_INSTANCE = new FromBodyMethodParameterHandler();
 
-    public static Object getValueFromBody(String name, boolean useAllBody, boolean required, Type type, ScxMappingRoutingContextInfo routingContext) throws RequiredParamEmptyException, ParamConvertException {
-        return routingContext.isJsonBody() ? getValueFromJsonBody(name, useAllBody, required, type, routingContext) : getValueFromFormAttributes(name, useAllBody, required, type, routingContext);
+    public static Object getValueFromBody(String name, boolean useAllBody, boolean required, Type type, ScxMappingRoutingContextInfo scxMappingRoutingContextInfo) throws RequiredParamEmptyException, ParamConvertException {
+        return scxMappingRoutingContextInfo.isJsonBody() ? getValueFromJsonBody(name, useAllBody, required, type, scxMappingRoutingContextInfo) : getValueFromFormAttributes(name, useAllBody, required, type, scxMappingRoutingContextInfo);
     }
 
-    private static Object getValueFromJsonBody(String name, boolean useAllBody, boolean required, Type javaType, ScxMappingRoutingContextInfo routingContext) throws RequiredParamEmptyException, ParamConvertException {
-        var tempValue = routingContext.getJsonBody();
+    private static Object getValueFromJsonBody(String name, boolean useAllBody, boolean required, Type javaType, ScxMappingRoutingContextInfo scxMappingRoutingContextInfo) throws RequiredParamEmptyException, ParamConvertException {
+        var tempValue = scxMappingRoutingContextInfo.getJsonBody();
         if (!useAllBody) {
             String[] split = name.split("\\.");
             for (String s : split) {
@@ -50,8 +50,8 @@ public final class FromBodyMethodParameterHandler implements ScxMappingMethodPar
         return null;
     }
 
-    private static Object getValueFromFormAttributes(String name, boolean useAllBody, boolean required, Type javaType, ScxMappingRoutingContextInfo routingContext) throws RequiredParamEmptyException, ParamConvertException {
-        var v = useAllBody ? routingContext.formAttributesMap() : routingContext.formAttributesMap().get(name);
+    private static Object getValueFromFormAttributes(String name, boolean useAllBody, boolean required, Type javaType, ScxMappingRoutingContextInfo scxMappingRoutingContextInfo) throws RequiredParamEmptyException, ParamConvertException {
+        var v = useAllBody ? scxMappingRoutingContextInfo.formAttributesMap() : scxMappingRoutingContextInfo.formAttributesMap().get(name);
         if (v == null) {
             //为空的时候做两个处理 即必填则报错 非必填则返回 null
             if (required) {
@@ -77,7 +77,7 @@ public final class FromBodyMethodParameterHandler implements ScxMappingMethodPar
     }
 
     @Override
-    public Object handle(Parameter parameter, ScxMappingRoutingContextInfo context) throws Exception {
+    public Object handle(Parameter parameter, ScxMappingRoutingContextInfo scxMappingRoutingContextInfo) throws Exception {
         var javaType = parameter.getParameterizedType();
         var required = false;
         var name = parameter.getName();
@@ -92,7 +92,7 @@ public final class FromBodyMethodParameterHandler implements ScxMappingMethodPar
             useAllBody = fromBody.useAllBody();
         }
 
-        return getValueFromBody(name, useAllBody, required, javaType, context);
+        return getValueFromBody(name, useAllBody, required, javaType, scxMappingRoutingContextInfo);
     }
 
 }

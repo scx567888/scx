@@ -23,7 +23,7 @@ import java.util.stream.Stream;
  * @author scx567888
  * @version 0.5.0
  */
-public final class TableInfo {
+public final class ScxDaoTableInfo {
 
     /**
      * 实体类型 不含@NoColunm 和@NoUpdate 注解的 field
@@ -55,7 +55,7 @@ public final class TableInfo {
      *
      * @param clazz a {@link java.lang.Class} object.
      */
-    public TableInfo(Class<?> clazz) {
+    public ScxDaoTableInfo(Class<?> clazz) {
         this.tableName = initTableName(clazz);
         this.allFields = initAllFields(clazz);
         this.canInsertFields = initCanInsertFields(allFields);

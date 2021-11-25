@@ -48,7 +48,7 @@ public final class Scx {
     /**
      * SCX 版本号
      */
-    private static final String SCX_VERSION = "1.9.6";
+    private static final String SCX_VERSION = "1.9.7";
 
     /**
      * 默认配置文件 路径
@@ -162,7 +162,7 @@ public final class Scx {
         //3, 初始化其他参数
         this.scxAppRoot = new ScxAppRoot(this.mainClass);
         //4, 初始化配置文件
-        this.scxConfig = new ScxConfig(this.scxAppRoot.getFileByAppRoot(DEFAULT_SCX_CONFIG_PATH), ScxConfigDefaultValue.getDefaultConfig(), this.args);
+        this.scxConfig = new ScxConfig(this.scxAppRoot.getFileByAppRoot(DEFAULT_SCX_CONFIG_PATH), ScxConfigDefaultValue.defaultConfig(), this.args);
         this.scxEasyConfig = new ScxEasyConfig(this.scxConfig, this.scxAppRoot, this.appKey);
         //5, 初始化 ScxLog 日志框架
         ScxLogConfiguration.init(this.scxConfig, this.scxAppRoot);

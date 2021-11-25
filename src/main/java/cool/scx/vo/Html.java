@@ -1,7 +1,6 @@
 package cool.scx.vo;
 
 import cool.scx.ScxContext;
-import cool.scx.util.VoHelper;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import io.vertx.ext.web.RoutingContext;

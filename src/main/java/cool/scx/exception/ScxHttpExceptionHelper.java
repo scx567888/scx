@@ -1,6 +1,6 @@
 package cool.scx.exception;
 
-import cool.scx.util.VoHelper;
+import cool.scx.vo.VoHelper;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.vertx.ext.web.RoutingContext;
 

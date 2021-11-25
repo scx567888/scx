@@ -2,7 +2,7 @@ package cool.scx.mvc.return_value_handler.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.mvc.return_value_handler.ScxMappingMethodReturnValueHandler;
-import cool.scx.util.VoHelper;
+import cool.scx.vo.VoHelper;
 import io.vertx.ext.web.RoutingContext;
 
 /**

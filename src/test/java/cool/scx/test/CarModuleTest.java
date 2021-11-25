@@ -3,7 +3,7 @@ package cool.scx.test;
 import cool.scx.Scx;
 import cool.scx.ScxContext;
 import cool.scx.bo.Query;
-import cool.scx.dao.FixTableUtils;
+import cool.scx.dao.ScxDaoHelper;
 import cool.scx.enumeration.ScxFeature;
 import cool.scx.test.car_module.Car;
 import cool.scx.test.car_module.CarModule;
@@ -13,7 +13,6 @@ import cool.scx.util.Timer;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,17 +24,18 @@ public class CarModuleTest {
 
     @BeforeTest
     public static void runModule() {
+        var args = new String[0];
         Scx scx = Scx.builder()
                 .addModule(new CarModule())
                 .setMainClass(CarModule.class)
-                .setArgs("")
+                .setArgs(args)
                 .configure(ScxFeature.SHOW_BANNER, true)
                 .configure(ScxFeature.SHOW_EASY_CONFIG_INFO, true)
                 .configure(ScxFeature.USE_DEVELOPMENT_ERROR_PAGE, true)
                 .build();
         scx.run();
         //修复表 (这里忽略提示 即直接修复不询问用户)
-        FixTableUtils.fixAllTable(true);
+        ScxDaoHelper.fixAllTable(true);
     }
 
     @Test
@@ -99,11 +99,7 @@ public class CarModuleTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        try {
-            System.out.println("当前条数 事务回滚后" + carService.count());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        System.out.println("当前条数 事务回滚后" + carService.count());
     }
 
 }

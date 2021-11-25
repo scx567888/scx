@@ -3,6 +3,7 @@ package cool.scx.sql;
 import com.mysql.cj.jdbc.ClientPreparedStatement;
 import cool.scx.ScxHandlerE;
 import cool.scx.ScxHandlerRE;
+import cool.scx.exception.ScxExceptionHelper;
 import cool.scx.util.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -230,12 +231,13 @@ public final class SQLRunner {
      * @param resultSetHandler a object
      * @param <T>              a T class
      * @return a map 集合
-     * @throws SQLException if any.
      */
-    public <T> T query(String sql, ScxHandlerRE<ResultSet, T, SQLException> resultSetHandler, Map<String, Object> param) throws SQLException {
-        try (var con = dataSource.getConnection()) {
-            return query(con, sql, resultSetHandler, param);
-        }
+    public <T> T query(String sql, ScxHandlerRE<ResultSet, T, SQLException> resultSetHandler, Map<String, Object> param) {
+        return ScxExceptionHelper.wrap(() -> {
+            try (var con = dataSource.getConnection()) {
+                return query(con, sql, resultSetHandler, param);
+            }
+        });
     }
 
     /**
@@ -244,12 +246,13 @@ public final class SQLRunner {
      * @param sql   a {@link java.lang.String} object.
      * @param param a {@link java.util.Map} object.
      * @return a 执行结果
-     * @throws SQLException if any.
      */
-    public int execute(String sql, Map<String, Object> param) throws SQLException {
-        try (var con = dataSource.getConnection()) {
-            return execute(con, sql, param);
-        }
+    public int execute(String sql, Map<String, Object> param) {
+        return ScxExceptionHelper.wrap(() -> {
+            try (var con = dataSource.getConnection()) {
+                return execute(con, sql, param);
+            }
+        });
     }
 
     /**
@@ -258,12 +261,13 @@ public final class SQLRunner {
      * @param sql   a {@link java.lang.String} object.
      * @param param a {@link java.util.Map} object.
      * @return a {@link cool.scx.sql.UpdateResult} object.
-     * @throws SQLException if any.
      */
-    public UpdateResult update(String sql, Map<String, Object> param) throws SQLException {
-        try (var con = dataSource.getConnection()) {
-            return update(con, sql, param);
-        }
+    public UpdateResult update(String sql, Map<String, Object> param) {
+        return ScxExceptionHelper.wrap(() -> {
+            try (var con = dataSource.getConnection()) {
+                return update(con, sql, param);
+            }
+        });
     }
 
     /**
@@ -272,12 +276,13 @@ public final class SQLRunner {
      * @param sql          sql
      * @param paramMapList p
      * @return r
-     * @throws SQLException if any.
      */
-    public UpdateResult updateBatch(String sql, List<Map<String, Object>> paramMapList) throws SQLException {
-        try (var con = dataSource.getConnection()) {
-            return updateBatch(con, sql, paramMapList);
-        }
+    public UpdateResult updateBatch(String sql, List<Map<String, Object>> paramMapList) {
+        return ScxExceptionHelper.wrap(() -> {
+            try (var con = dataSource.getConnection()) {
+                return updateBatch(con, sql, paramMapList);
+            }
+        });
     }
 
     /**

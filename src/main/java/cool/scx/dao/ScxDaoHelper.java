@@ -14,9 +14,9 @@ import java.util.List;
  * @author scx567888
  * @version 1.4.4
  */
-public final class FixTableUtils {
+public final class ScxDaoHelper {
 
-    private static final Logger logger = LoggerFactory.getLogger(FixTableUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(ScxDaoHelper.class);
 
     /**
      * <p>fixTable.</p>
@@ -39,7 +39,7 @@ public final class FixTableUtils {
         var noNeedToFix = 0;
         for (var v : getAllScxModelClassList()) {
             //根据 class 获取 tableInfo
-            var tableInfo = new TableInfo(v);
+            var tableInfo = new ScxDaoTableInfo(v);
             try {
                 if (tableInfo.checkNeedFixTable()) {
                     //如果已经显示过gui选择界面了就不再显示

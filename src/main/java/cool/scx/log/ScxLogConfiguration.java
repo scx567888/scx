@@ -12,12 +12,19 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * a
+ * ScxLog 配置类
  */
 public final class ScxLogConfiguration {
 
+    /**
+     *
+     */
     private static final Map<String, ScxLoggerInfo> loggerInfoMap = new HashMap<>();
-    private static ScxLoggerInfo rootScxLoggerInfo = null;
+
+    /**
+     * root
+     */
+    private static ScxLoggerInfo rootScxLoggerInfo = new ScxLoggerInfo("ScxLogRoot", ScxLogLevel.ERROR, ScxLogLoggingType.CONSOLE, null);
 
     /**
      * a

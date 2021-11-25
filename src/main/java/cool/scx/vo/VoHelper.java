@@ -1,7 +1,8 @@
-package cool.scx.util;
+package cool.scx.vo;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import cool.scx.util.JacksonHelper;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.vertx.core.http.HttpServerResponse;
 

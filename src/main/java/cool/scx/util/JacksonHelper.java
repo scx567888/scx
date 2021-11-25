@@ -68,7 +68,7 @@ public final class JacksonHelper {
      *
      * @return a {@link com.fasterxml.jackson.databind.ObjectMapper} object
      */
-    static ObjectMapper initObjectMapper() {
+    public static ObjectMapper initObjectMapper() {
         // 初始化一个 JsonMapper 构建器
         var jsonMapper = JsonMapper.builder()
                 // 注册 module 用来识别一些特定的类型
