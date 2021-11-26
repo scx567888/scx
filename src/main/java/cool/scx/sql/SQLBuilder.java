@@ -349,7 +349,7 @@ public final class SQLBuilder {
      * @return a {@link java.lang.String} object
      */
     private String GetInsertSQL() {
-        return "INSERT INTO " + tableName + " ( " + String.join(",", insertColumns) + " ) VALUES ( " + String.join(",", insertValues) + " ) ";
+        return "INSERT INTO " + tableName + " (" + String.join(", ", insertColumns) + ") VALUES (" + String.join(", ", insertValues) + ")";
     }
 
     /**
@@ -380,8 +380,8 @@ public final class SQLBuilder {
      * @return s
      */
     private String GetSelectSQL() {
-        var groupBySQL = groupByColumns != null && groupByColumns.length != 0 ? " GROUP BY " + String.join(",", groupByColumns) : "";
-        var orderBySQL = orderByClauses != null && orderByClauses.length != 0 ? " ORDER BY " + String.join(",", orderByClauses) : "";
+        var groupBySQL = groupByColumns != null && groupByColumns.length != 0 ? " GROUP BY " + String.join(", ", groupByColumns) : "";
+        var orderBySQL = orderByClauses != null && orderByClauses.length != 0 ? " ORDER BY " + String.join(", ", orderByClauses) : "";
         var limitSQL = offset != null && size != null ? " LIMIT " + offset + "," + size : "";
         return "SELECT " + String.join(", ", selectColumns) + " FROM " + tableName + getWhereSQL() + groupBySQL + orderBySQL + limitSQL;
     }
