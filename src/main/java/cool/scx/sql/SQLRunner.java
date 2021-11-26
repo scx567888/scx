@@ -1,17 +1,18 @@
 package cool.scx.sql;
 
-import com.mysql.cj.jdbc.ClientPreparedStatement;
 import cool.scx.ScxHandlerE;
 import cool.scx.ScxHandlerRE;
 import cool.scx.exception.ScxExceptionHelper;
-import cool.scx.util.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -23,14 +24,17 @@ import java.util.Map;
 public final class SQLRunner {
 
     /**
-     * Constant <code>logger</code>
+     * logger
      */
-    private static final Logger logger = LoggerFactory.getLogger(SQLRunner.class);
+    static final Logger logger = LoggerFactory.getLogger(SQLRunner.class);
 
+    /**
+     * 数据源
+     */
     private final DataSource dataSource;
 
     /**
-     * <p>Constructor for SQLRunner.</p>
+     * 根据数据源构建一个 SQLRunner
      *
      * @param dataSource a DataSource object
      */
@@ -54,7 +58,24 @@ public final class SQLRunner {
      * @throws SQLException if any.
      */
     public static <T> T query(Connection con, String sql, ScxHandlerRE<ResultSet, T, SQLException> resultSetHandler, Map<String, Object> param) throws SQLException {
-        try (var preparedStatement = getPreparedStatement(con, new NamedParameterSQL(sql), param)) {
+        try (var preparedStatement = new NamedParameterSQL(sql, param).getPreparedStatement(con)) {
+            var resultSet = preparedStatement.executeQuery();
+            return resultSetHandler.handle(resultSet);
+        }
+    }
+
+    /**
+     * a
+     *
+     * @param con              a
+     * @param sql              a
+     * @param resultSetHandler a
+     * @param <T>              a
+     * @return a
+     * @throws SQLException a
+     */
+    public static <T> T query(Connection con, String sql, ScxHandlerRE<ResultSet, T, SQLException> resultSetHandler, Object... sqlParameters) throws SQLException {
+        try (var preparedStatement = new PlaceholderSQL(sql, sqlParameters).getPreparedStatement(con)) {
             var resultSet = preparedStatement.executeQuery();
             return resultSetHandler.handle(resultSet);
         }
@@ -70,7 +91,14 @@ public final class SQLRunner {
      * @throws SQLException if any.
      */
     public static int execute(Connection con, String sql, Map<String, Object> param) throws SQLException {
-        try (var preparedStatement = getPreparedStatement(con, new NamedParameterSQL(sql), param)) {
+        try (var preparedStatement = new NamedParameterSQL(sql, param).getPreparedStatement(con)) {
+            preparedStatement.execute();
+            return preparedStatement.getUpdateCount();
+        }
+    }
+
+    public static int execute(Connection con, String sql, Object... sqlParameters) throws SQLException {
+        try (var preparedStatement = new PlaceholderSQL(sql, sqlParameters).getPreparedStatement(con)) {
             preparedStatement.execute();
             return preparedStatement.getUpdateCount();
         }
@@ -86,15 +114,34 @@ public final class SQLRunner {
      * @throws SQLException if any.
      */
     public static UpdateResult update(Connection con, String sql, Map<String, Object> param) throws SQLException {
-        try (var preparedStatement = getPreparedStatement(con, new NamedParameterSQL(sql), param)) {
-            var affectedLength = preparedStatement.executeUpdate();
-            var resultSet = preparedStatement.getGeneratedKeys();
-            var ids = new ArrayList<Long>();
-            while (resultSet.next()) {
-                ids.add(resultSet.getLong(1));
-            }
-            return new UpdateResult(affectedLength, ids);
+        try (var preparedStatement = new NamedParameterSQL(sql, param).getPreparedStatement(con)) {
+            return getUpdateResult(preparedStatement);
         }
+    }
+
+    /**
+     * a
+     *
+     * @param con           a
+     * @param sql           a
+     * @param sqlParameters a
+     * @return a
+     * @throws SQLException a
+     */
+    public static UpdateResult update(Connection con, String sql, Object... sqlParameters) throws SQLException {
+        try (var preparedStatement = new PlaceholderSQL(sql, sqlParameters).getPreparedStatement(con)) {
+            return getUpdateResult(preparedStatement);
+        }
+    }
+
+    private static UpdateResult getUpdateResult(PreparedStatement preparedStatement) throws SQLException {
+        var affectedLength = preparedStatement.executeUpdate();
+        var resultSet = preparedStatement.getGeneratedKeys();
+        var ids = new ArrayList<Long>();
+        while (resultSet.next()) {
+            ids.add(resultSet.getLong(1));
+        }
+        return new UpdateResult(affectedLength, ids);
     }
 
     /**
@@ -106,8 +153,8 @@ public final class SQLRunner {
      * @return r
      * @throws SQLException if any.
      */
-    public static UpdateResult updateBatch(Connection con, String sql, List<Map<String, Object>> paramMapList) throws SQLException {
-        try (var preparedStatement = getPreparedStatement(con, new NamedParameterSQL(sql), paramMapList)) {
+    public static UpdateResult updateBatch(Connection con, String sql, Collection<Map<String, Object>> paramMapList) throws SQLException {
+        try (var preparedStatement = new NamedParameterSQL(sql, paramMapList).getPreparedStatement(con)) {
             var affectedLength = preparedStatement.executeBatch().length;
             var resultSet = preparedStatement.getGeneratedKeys();
             var ids = new ArrayList<Long>();
@@ -115,93 +162,6 @@ public final class SQLRunner {
                 ids.add(resultSet.getLong(1));
             }
             return new UpdateResult(affectedLength, ids);
-        }
-    }
-
-    /**
-     * 获取 PreparedStatement (带填充数据)
-     *
-     * @param con               链接
-     * @param namedParameterSQL 包含具名参数的 sql 语句
-     * @param paramMap          a {@link java.util.Map} object
-     * @return r
-     * @throws SQLException e
-     */
-    private static PreparedStatement getPreparedStatement(Connection con, NamedParameterSQL namedParameterSQL, Map<String, Object> paramMap) throws SQLException {
-        var preparedStatement = con.prepareStatement(namedParameterSQL.normalSQL(), Statement.RETURN_GENERATED_KEYS);
-        if (paramMap != null) {
-            fillPreparedStatementByNamedParameterNameIndex(preparedStatement, namedParameterSQL.namedParameterNameIndex(), paramMap);
-        }
-        if (logger.isDebugEnabled()) {
-            var realSQL = preparedStatement.unwrap(ClientPreparedStatement.class).asSql();
-            logger.debug(realSQL);
-        }
-        return preparedStatement;
-    }
-
-    /**
-     * 获取 PreparedStatement (带填充数据)
-     *
-     * @param con               链接
-     * @param namedParameterSQL 包含具名参数的 sql 语句
-     * @param paramMapList      参数
-     * @return r
-     * @throws SQLException e
-     */
-    private static PreparedStatement getPreparedStatement(Connection con, NamedParameterSQL namedParameterSQL, List<Map<String, Object>> paramMapList) throws SQLException {
-        var preparedStatement = con.prepareStatement(namedParameterSQL.normalSQL(), Statement.RETURN_GENERATED_KEYS);
-        //循环加入
-        for (var paramMap : paramMapList) {
-            if (paramMap != null) {
-                fillPreparedStatementByNamedParameterNameIndex(preparedStatement, namedParameterSQL.namedParameterNameIndex(), paramMap);
-                preparedStatement.addBatch();
-            }
-        }
-        if (logger.isDebugEnabled()) {
-            var realSQL = preparedStatement.unwrap(ClientPreparedStatement.class).asSql();
-            logger.debug(realSQL + "... 额外的 " + (paramMapList.size() - 1) + " 项");
-        }
-        return preparedStatement;
-    }
-
-    /**
-     * 使用具名参数向 preparedStatement 填充数据
-     *
-     * @param preparedStatement       p
-     * @param namedParameterNameIndex 具名参数数组
-     * @param paramMap                具名参数 map
-     * @throws SQLException e
-     */
-    private static void fillPreparedStatementByNamedParameterNameIndex(PreparedStatement preparedStatement, String[] namedParameterNameIndex, Map<String, Object> paramMap) throws SQLException {
-        var index = 1;
-        for (var name : namedParameterNameIndex) {
-            var tempValue = paramMap.get(name);
-            if (tempValue != null) {
-                //判断是否为数据库(MySQL)直接支持的数据类型
-                var mysqlType = SQLTypeHelper.getMySQLType(tempValue.getClass());
-                if (mysqlType != null) {
-                    preparedStatement.setObject(index, tempValue, mysqlType);
-                } else {//不是则转换为 json 存入
-                    preparedStatement.setString(index, ObjectUtils.writeValueAsString(tempValue, ""));
-                }
-            } else {
-                //这里的 Types.NULL 其实内部并没有使用
-                preparedStatement.setNull(index, Types.NULL);
-            }
-            index = index + 1;
-        }
-    }
-
-    /**
-     * 关闭连接 (一般用不到这个方法)
-     *
-     * @param connection c
-     */
-    public static void close(Connection connection) {
-        try {
-            connection.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
@@ -241,6 +201,23 @@ public final class SQLRunner {
     }
 
     /**
+     * a
+     *
+     * @param sql              a
+     * @param resultSetHandler a
+     * @param sqlParameters    a
+     * @param <T>              a
+     * @return a
+     */
+    public <T> T query(String sql, ScxHandlerRE<ResultSet, T, SQLException> resultSetHandler, Object... sqlParameters) {
+        return ScxExceptionHelper.wrap(() -> {
+            try (var con = dataSource.getConnection()) {
+                return query(con, sql, resultSetHandler, sqlParameters);
+            }
+        });
+    }
+
+    /**
      * 执行 sql 语句
      *
      * @param sql   a {@link java.lang.String} object.
@@ -251,6 +228,21 @@ public final class SQLRunner {
         return ScxExceptionHelper.wrap(() -> {
             try (var con = dataSource.getConnection()) {
                 return execute(con, sql, param);
+            }
+        });
+    }
+
+    /**
+     * a
+     *
+     * @param sql           a
+     * @param sqlParameters a
+     * @return a
+     */
+    public int execute(String sql, Object... sqlParameters) {
+        return ScxExceptionHelper.wrap(() -> {
+            try (var con = dataSource.getConnection()) {
+                return execute(con, sql, sqlParameters);
             }
         });
     }
@@ -271,13 +263,28 @@ public final class SQLRunner {
     }
 
     /**
+     * a
+     *
+     * @param sql           a
+     * @param sqlParameters a
+     * @return a
+     */
+    public UpdateResult update(String sql, Object... sqlParameters) {
+        return ScxExceptionHelper.wrap(() -> {
+            try (var con = dataSource.getConnection()) {
+                return update(con, sql, sqlParameters);
+            }
+        });
+    }
+
+    /**
      * 批量执行更新语句
      *
      * @param sql          sql
      * @param paramMapList p
      * @return r
      */
-    public UpdateResult updateBatch(String sql, List<Map<String, Object>> paramMapList) {
+    public UpdateResult updateBatch(String sql, Collection<Map<String, Object>> paramMapList) {
         return ScxExceptionHelper.wrap(() -> {
             try (var con = dataSource.getConnection()) {
                 return updateBatch(con, sql, paramMapList);
