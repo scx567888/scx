@@ -247,10 +247,10 @@ public final class ScxDaoTableInfo {
                 var nonExistentFields = getNonExistentFields(nowColumns, allFields);
                 if (nonExistentFields.length > 0) {
                     var alertTableDDL = this.getAlertTableDDL(nonExistentFields);
-                    SQLRunner.execute(con, alertTableDDL, null);
+                    SQLRunner.execute(con, alertTableDDL);
                 }
             } else {//没有这个表
-                SQLRunner.execute(con, this.getCreateTableDDL(), null);
+                SQLRunner.execute(con, this.getCreateTableDDL());
             }
         }
 
