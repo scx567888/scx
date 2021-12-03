@@ -30,8 +30,8 @@
         "root": "AppRoot:c\\static"
       }
     ],
-    "log": {
-      "root": {
+    "logging": {
+      "default": {
         "level": "DEBUG",
         "logging-type": "CONSOLE",
         "stored-directory": "AppRoot:logs"

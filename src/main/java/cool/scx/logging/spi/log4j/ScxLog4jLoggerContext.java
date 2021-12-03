@@ -1,4 +1,4 @@
-package cool.scx.log.spi.log4j;
+package cool.scx.logging.spi.log4j;
 
 import org.apache.logging.log4j.message.MessageFactory;
 import org.apache.logging.log4j.spi.ExtendedLogger;

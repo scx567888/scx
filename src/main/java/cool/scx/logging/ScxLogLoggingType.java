@@ -1,4 +1,4 @@
-package cool.scx.log;
+package cool.scx.logging;
 
 import java.util.Objects;
 

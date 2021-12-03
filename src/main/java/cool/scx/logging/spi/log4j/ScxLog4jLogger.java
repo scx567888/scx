@@ -1,9 +1,9 @@
-package cool.scx.log.spi.log4j;
+package cool.scx.logging.spi.log4j;
 
-import cool.scx.log.ScxLogConfiguration;
-import cool.scx.log.ScxLogHelper;
-import cool.scx.log.ScxLogLevel;
-import cool.scx.log.ScxLoggerInfo;
+import cool.scx.logging.ScxLogConfiguration;
+import cool.scx.logging.ScxLogHelper;
+import cool.scx.logging.ScxLogLevel;
+import cool.scx.logging.ScxLoggerInfo;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.message.Message;
