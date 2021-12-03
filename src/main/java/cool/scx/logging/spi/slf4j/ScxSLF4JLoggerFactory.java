@@ -1,4 +1,4 @@
-package cool.scx.log.spi.slf4j;
+package cool.scx.logging.spi.slf4j;
 
 import org.slf4j.ILoggerFactory;
 import org.slf4j.Logger;

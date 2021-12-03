@@ -7,7 +7,7 @@ import cool.scx.config.ScxFeatureConfig;
 import cool.scx.dao.ScxDao;
 import cool.scx.enumeration.ScxFeature;
 import cool.scx.eventbus.ScxEventBus;
-import cool.scx.log.ScxLogConfiguration;
+import cool.scx.logging.ScxLogConfiguration;
 import cool.scx.mvc.ScxMappingConfiguration;
 import cool.scx.util.ConsoleUtils;
 import cool.scx.util.NetUtils;

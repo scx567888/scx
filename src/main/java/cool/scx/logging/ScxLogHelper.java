@@ -1,4 +1,4 @@
-package cool.scx.log;
+package cool.scx.logging;
 
 import cool.scx.util.ExceptionUtils;
 import cool.scx.util.FileUtils;

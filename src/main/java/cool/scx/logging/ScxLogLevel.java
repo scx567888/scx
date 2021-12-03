@@ -1,4 +1,4 @@
-package cool.scx.log;
+package cool.scx.logging;
 
 import org.slf4j.event.Level;
 
