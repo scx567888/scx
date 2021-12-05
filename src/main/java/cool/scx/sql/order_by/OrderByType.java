@@ -21,11 +21,11 @@ public enum OrderByType {
     /**
      * a
      *
-     * @param orderByStr a
+     * @param orderByTypeStr a
      * @return a
      */
-    public static OrderByType of(String orderByStr) {
-        return OrderByType.valueOf(orderByStr.trim().toUpperCase());
+    public static OrderByType of(String orderByTypeStr) {
+        return OrderByType.valueOf(orderByTypeStr.trim().toUpperCase());
     }
 
 }
