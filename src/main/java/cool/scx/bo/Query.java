@@ -1,6 +1,12 @@
 package cool.scx.bo;
 
-import cool.scx.sql.*;
+import cool.scx.sql.group_by.GroupBy;
+import cool.scx.sql.group_by.GroupByOption;
+import cool.scx.sql.order_by.OrderBy;
+import cool.scx.sql.order_by.OrderByOption;
+import cool.scx.sql.pagination.Pagination;
+import cool.scx.sql.where.Where;
+import cool.scx.sql.where.WhereOption;
 
 /**
  * 查询参数类<br>
@@ -79,11 +85,11 @@ public final class Query {
     /**
      * 添加一个 分组字段
      *
-     * @param fieldName 分组字段的名称 (注意是实体类的字段名 , 不是数据库中的字段名)
+     * @param name 分组字段的名称 (默认是实体类的字段名 , 不是数据库中的字段名)
      * @return 本身, 方便链式调用
      */
-    public Query addGroupBy(String fieldName) {
-        this.groupBy.add(fieldName);
+    public Query addGroupBy(String name, GroupByOption... options) {
+        this.groupBy.add(name, options);
         return this;
     }
 
@@ -111,298 +117,228 @@ public final class Query {
     }
 
     /**
-     * 添加一个排序字段
+     * a
      *
-     * @param orderByColumn 排序字段的名称 (注意是实体类的字段名 , 不是数据库中的字段名)
-     * @param orderByType   排序类型 正序或倒序
-     * @return 本身, 方便链式调用
+     * @param name a
+     * @return a
      */
-    public Query addOrderBy(String orderByColumn, OrderByType orderByType) {
-        this.orderBy.add(orderByColumn, orderByType);
+    public Query asc(String name, OrderByOption... options) {
+        this.orderBy.asc(name, options);
         return this;
     }
 
     /**
      * a
      *
-     * @param orderByColumn a
+     * @param name a
      * @return a
      */
-    public Query asc(String orderByColumn) {
-        this.orderBy.asc(orderByColumn);
-        return this;
-    }
-
-    /**
-     * a
-     *
-     * @param orderBySQL a
-     * @return a
-     */
-    public Query ascSQL(String orderBySQL) {
-        this.orderBy.ascSQL(orderBySQL);
-        return this;
-    }
-
-    /**
-     * a
-     *
-     * @param orderByColumn a
-     * @return a
-     */
-    public Query desc(String orderByColumn) {
-        this.orderBy.desc(orderByColumn);
-        return this;
-    }
-
-    /**
-     * a
-     *
-     * @param orderBySQL a
-     * @return a
-     */
-    public Query descSQL(String orderBySQL) {
-        this.orderBy.descSQL(orderBySQL);
-        return this;
-    }
-
-    /**
-     * 添加一个排序字段
-     *
-     * @param orderByColumn 排序字段的名称 (注意是实体类的字段名 , 不是数据库中的字段名)
-     * @param orderByStr    排序类型 正序或倒序
-     * @return 本身, 方便链式调用
-     */
-    public Query addOrderBy(String orderByColumn, String orderByStr) {
-        this.orderBy.add(orderByColumn, orderByStr);
-        return this;
-    }
-
-    /**
-     * 添加一个排序 SQL
-     *
-     * @param orderByColumn 排序 SQL ( SQL 表达式 )
-     * @param orderByStr    排序类型 正序或倒序
-     * @return 本身, 方便链式调用
-     */
-    public Query addOrderBySQL(String orderByColumn, String orderByStr) {
-        this.orderBy.addSQL(orderByColumn, orderByStr);
-        return this;
-    }
-
-    /**
-     * 添加一个排序 SQL
-     *
-     * @param orderByColumn 排序 SQL ( SQL 表达式 )
-     * @param orderByType   排序类型 正序或倒序
-     * @return 本身, 方便链式调用
-     */
-    public Query addOrderBySQL(String orderByColumn, OrderByType orderByType) {
-        this.orderBy.addSQL(orderByColumn, orderByType);
+    public Query desc(String name, OrderByOption... options) {
+        this.orderBy.desc(name, options);
         return this;
     }
 
     /**
      * 不在其中
      *
-     * @param fieldName 字段名称 (注意 : 不是数据库名称)
-     * @param value     比较值
+     * @param name  字段名称 (注意 : 不是数据库名称)
+     * @param value 比较值
      * @return this 方便链式调用
      */
-    public Query notIn(String fieldName, Object value) {
-        this.where.notIn(fieldName, value);
+    public Query notIn(String name, Object value, WhereOption... options) {
+        this.where.notIn(name, value, options);
         return this;
     }
 
     /**
      * 在其中
      *
-     * @param fieldName 字段名称 (注意 : 不是数据库名称)
-     * @param value     比较值
+     * @param name  字段名称 (注意 : 不是数据库名称)
+     * @param value 比较值
      * @return this 方便链式调用
      */
-    public Query in(String fieldName, Object value) {
-        this.where.in(fieldName, value);
+    public Query in(String name, Object value, WhereOption... options) {
+        this.where.in(name, value, options);
         return this;
     }
 
     /**
      * 包含  : 一般用于 JSON 格式字段 区别于 in
      *
-     * @param fieldName 字段名称 (注意 : 不是数据库名称)
-     * @param value     比较值
+     * @param name  字段名称 (注意 : 不是数据库名称)
+     * @param value 比较值
      * @return this 方便链式调用
      */
-    public Query jsonContains(String fieldName, Object value) {
-        this.where.jsonContains(fieldName, value);
+    public Query jsonContains(String name, Object value, WhereOption... options) {
+        this.where.jsonContains(name, value, options);
         return this;
     }
 
     /**
      * not like : 默认会在首尾添加 %
      *
-     * @param fieldName 字段名称 (注意 : 不是数据库名称)
-     * @param value     默认会在首尾添加 %
+     * @param name  字段名称 (注意 : 不是数据库名称)
+     * @param value 默认会在首尾添加 %
      * @return this 方便链式调用
      */
-    public Query notLike(String fieldName, Object value) {
-        this.where.notLike(fieldName, value);
+    public Query notLike(String name, Object value, WhereOption... options) {
+        this.where.notLike(name, value, options);
         return this;
     }
 
     /**
      * like : 默认会在首尾添加 %
      *
-     * @param fieldName 字段名称 (注意 : 不是数据库名称)
-     * @param value     参数 默认会在首尾添加 %
+     * @param name  字段名称 (注意 : 不是数据库名称)
+     * @param value 参数 默认会在首尾添加 %
      * @return this 方便链式调用
      */
-    public Query like(String fieldName, Object value) {
-        this.where.like(fieldName, value);
+    public Query like(String name, Object value, WhereOption... options) {
+        this.where.like(name, value, options);
         return this;
     }
 
     /**
      * not like : 根据 SQL 表达式进行判断
      *
-     * @param fieldName 字段名称 (注意 : 不是数据库名称)
-     * @param value     SQL 表达式
+     * @param name  字段名称 (注意 : 不是数据库名称)
+     * @param value SQL 表达式
      * @return this 方便链式调用
      */
-    public Query notLikeRegex(String fieldName, String value) {
-        this.where.notLikeRegex(fieldName, value);
+    public Query notLikeRegex(String name, String value, WhereOption... options) {
+        this.where.notLikeRegex(name, value, options);
         return this;
     }
 
     /**
      * like : 根据 SQL 表达式进行判断
      *
-     * @param fieldName 字段名称 (注意 : 不是数据库名称)
-     * @param value     SQL 表达式
+     * @param name  字段名称 (注意 : 不是数据库名称)
+     * @param value SQL 表达式
      * @return this 方便链式调用
      */
-    public Query likeRegex(String fieldName, String value) {
-        this.where.likeRegex(fieldName, value);
+    public Query likeRegex(String name, String value, WhereOption... options) {
+        this.where.likeRegex(name, value, options);
         return this;
     }
 
     /**
      * 不处于两者之间
      *
-     * @param fieldName 字段名称 (注意 : 不是数据库名称)
-     * @param value1    比较值1
-     * @param value2    比较值2
+     * @param name   字段名称 (注意 : 不是数据库名称)
+     * @param value1 比较值1
+     * @param value2 比较值2
      * @return this 方便链式调用
      */
-    public Query notBetween(String fieldName, Object value1, Object value2) {
-        this.where.notBetween(fieldName, value1, value2);
+    public Query notBetween(String name, Object value1, Object value2, WhereOption... options) {
+        this.where.notBetween(name, value1, value2, options);
         return this;
     }
 
     /**
      * 两者之间
      *
-     * @param fieldName 字段名称 (注意 : 不是数据库名称)
-     * @param value1    比较值1
-     * @param value2    比较值2
+     * @param name   字段名称 (注意 : 不是数据库名称)
+     * @param value1 比较值1
+     * @param value2 比较值2
      * @return this 方便链式调用
      */
-    public Query between(String fieldName, Object value1, Object value2) {
-        this.where.between(fieldName, value1, value2);
+    public Query between(String name, Object value1, Object value2, WhereOption... options) {
+        this.where.between(name, value1, value2, options);
         return this;
     }
 
     /**
      * 小于等于
      *
-     * @param fieldName 字段名称 (注意 : 不是数据库名称)
-     * @param value     比较值
+     * @param name  字段名称 (注意 : 不是数据库名称)
+     * @param value 比较值
      * @return this 方便链式调用
      */
-    public Query lessThanOrEqual(String fieldName, Object value) {
-        this.where.lessThanOrEqual(fieldName, value);
+    public Query lessThanOrEqual(String name, Object value, WhereOption... options) {
+        this.where.lessThanOrEqual(name, value, options);
         return this;
     }
 
     /**
      * 小于
      *
-     * @param fieldName 字段名称 (注意 : 不是数据库名称)
-     * @param value     比较值
+     * @param name  字段名称 (注意 : 不是数据库名称)
+     * @param value 比较值
      * @return this 方便链式调用
      */
-    public Query lessThan(String fieldName, Object value) {
-        this.where.lessThan(fieldName, value);
+    public Query lessThan(String name, Object value, WhereOption... options) {
+        this.where.lessThan(name, value, options);
         return this;
     }
 
     /**
      * 大于等于
      *
-     * @param fieldName 字段名称 (注意 : 不是数据库名称)
-     * @param value     比较值
+     * @param name  字段名称 (注意 : 不是数据库名称)
+     * @param value 比较值
      * @return this 方便链式调用
      */
-    public Query greaterThanOrEqual(String fieldName, Object value) {
-        this.where.greaterThanOrEqual(fieldName, value);
+    public Query greaterThanOrEqual(String name, Object value, WhereOption... options) {
+        this.where.greaterThanOrEqual(name, value, options);
         return this;
     }
 
     /**
      * 大于
      *
-     * @param fieldName 字段名称 (注意 : 不是数据库名称)
-     * @param value     比较值
+     * @param name  字段名称 (注意 : 不是数据库名称)
+     * @param value 比较值
      * @return this 方便链式调用
      */
-    public Query greaterThan(String fieldName, Object value) {
-        this.where.greaterThan(fieldName, value);
+    public Query greaterThan(String name, Object value, WhereOption... options) {
+        this.where.greaterThan(name, value, options);
         return this;
     }
 
     /**
      * 不相等
      *
-     * @param fieldName 字段名称 (注意 : 不是数据库名称)
-     * @param value     比较值
+     * @param name  字段名称 (注意 : 不是数据库名称)
+     * @param value 比较值
      * @return this 方便链式调用
      */
-    public Query notEqual(String fieldName, Object value) {
-        this.where.notEqual(fieldName, value);
+    public Query notEqual(String name, Object value, WhereOption... options) {
+        this.where.notEqual(name, value, options);
         return this;
     }
 
     /**
      * 相等
      *
-     * @param fieldName 字段名称 (注意 : 不是数据库名称)
-     * @param value     比较值
+     * @param name  字段名称 (注意 : 不是数据库名称)
+     * @param value 比较值
      * @return this 方便链式调用
      */
-    public Query equal(String fieldName, Object value) {
-        this.where.equal(fieldName, value);
+    public Query equal(String name, Object value, WhereOption... options) {
+        this.where.equal(name, value, options);
         return this;
     }
 
     /**
      * 不为空
      *
-     * @param fieldName 字段名称 (注意 : 不是数据库名称)
+     * @param name 字段名称 (注意 : 不是数据库名称)
      * @return this 方便链式调用
      */
-    public Query isNotNull(String fieldName) {
-        this.where.isNotNull(fieldName);
+    public Query isNotNull(String name, WhereOption... options) {
+        this.where.isNotNull(name, options);
         return this;
     }
 
     /**
      * 为空
      *
-     * @param fieldName 字段名称 (注意 : 不是数据库名称)
+     * @param name 字段名称 (注意 : 不是数据库名称)
      * @return this 方便链式调用
      */
-    public Query isNull(String fieldName) {
-        this.where.isNull(fieldName);
+    public Query isNull(String name, WhereOption... options) {
+        this.where.isNull(name, options);
         return this;
     }
 

@@ -3,8 +3,8 @@ package cool.scx.base;
 import cool.scx.ScxContext;
 import cool.scx.bo.Query;
 import cool.scx.sql.SQLBuilder;
-import cool.scx.sql.Where;
 import cool.scx.sql.handler.MapListHandler;
+import cool.scx.sql.where.Where;
 import cool.scx.util.CaseUtils;
 
 import java.sql.Connection;

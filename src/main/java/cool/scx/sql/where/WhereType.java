@@ -1,4 +1,4 @@
-package cool.scx.sql;
+package cool.scx.sql.where;
 
 /**
  * WhereType <br>
