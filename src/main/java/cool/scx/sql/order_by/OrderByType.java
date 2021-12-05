@@ -16,6 +16,16 @@ public enum OrderByType {
     /**
      * 倒序 : 也就是从大到小 (6,5,4,3,2,1)
      */
-    DESC
+    DESC;
+
+    public static OrderByType of(String orderByStr) {
+        if ("ASC".equalsIgnoreCase(orderByStr.trim())) {
+            return OrderByType.ASC;
+        } else if ("DESC".equalsIgnoreCase(orderByStr.trim())) {
+            return OrderByType.DESC;
+        } else {
+            throw new IllegalArgumentException("排序类型有误 : 只能是 asc 或 desc (不区分大小写) !!!");
+        }
+    }
 
 }
