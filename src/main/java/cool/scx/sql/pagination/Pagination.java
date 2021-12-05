@@ -1,4 +1,4 @@
-package cool.scx.sql;
+package cool.scx.sql.pagination;
 
 /**
  * 分页参数
@@ -78,7 +78,7 @@ public final class Pagination {
      *
      * @return a int
      */
-    Integer offset() {
+    public Integer offset() {
         if (page != null && size != null) {
             return (page - 1) * size;
         } else {
@@ -91,7 +91,7 @@ public final class Pagination {
      *
      * @return a int
      */
-    Integer size() {
+    public Integer size() {
         return size;
     }
 

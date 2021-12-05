@@ -3,8 +3,9 @@ package cool.scx.base;
 import cool.scx.ScxContext;
 import cool.scx.bo.Query;
 import cool.scx.sql.SQLBuilder;
-import cool.scx.sql.Where;
 import cool.scx.sql.handler.MapListHandler;
+import cool.scx.sql.where.Where;
+import cool.scx.sql.where.WhereOption;
 import cool.scx.util.CaseUtils;
 
 import java.sql.Connection;
@@ -162,7 +163,7 @@ public class BaseService<Entity extends BaseModel> extends AbstractBaseService<E
     public long update(Entity entity, Query query) {
         //逻辑删除时不更新 处于逻辑删除状态的数据
         if (ScxContext.easyConfig().tombstone()) {
-            query.equal("tombstone", false);
+            query.equal("tombstone", false, WhereOption.REPLACE);
         }
         //更新成功的条数
         return this._update(entity, query, false);
@@ -192,7 +193,7 @@ public class BaseService<Entity extends BaseModel> extends AbstractBaseService<E
     public long updateIncludeNull(Entity entity, Query query) {
         //逻辑删除时不更新 处于逻辑删除状态的数据
         if (ScxContext.easyConfig().tombstone()) {
-            query.equal("tombstone", false);
+            query.equal("tombstone", false, WhereOption.REPLACE);
         }
         //更新成功的条数
         return this._update(entity, query, true);
@@ -230,7 +231,7 @@ public class BaseService<Entity extends BaseModel> extends AbstractBaseService<E
      */
     public Entity get(Query query) {
         if (ScxContext.easyConfig().tombstone()) {
-            query.equal("tombstone", false);
+            query.equal("tombstone", false, WhereOption.REPLACE);
         }
         query.setPagination(1);
         var list = this._select(query);
@@ -245,7 +246,7 @@ public class BaseService<Entity extends BaseModel> extends AbstractBaseService<E
      */
     public long count(Query query) {
         if (ScxContext.easyConfig().tombstone()) {
-            query.equal("tombstone", false);
+            query.equal("tombstone", false, WhereOption.REPLACE);
         }
         return this._count(query);
     }
@@ -267,7 +268,7 @@ public class BaseService<Entity extends BaseModel> extends AbstractBaseService<E
      */
     public List<Entity> list(Query query) {
         if (ScxContext.easyConfig().tombstone()) {
-            query.equal("tombstone", false);
+            query.equal("tombstone", false, WhereOption.REPLACE);
         }
         return this._select(query);
     }
@@ -290,7 +291,7 @@ public class BaseService<Entity extends BaseModel> extends AbstractBaseService<E
     public List<Entity> list() {
         var query = new Query().desc("updateDate");
         if (ScxContext.easyConfig().tombstone()) {
-            query.equal("tombstone", false);
+            query.equal("tombstone", false, WhereOption.REPLACE);
         }
         return this._select(query);
     }
@@ -458,7 +459,7 @@ public class BaseService<Entity extends BaseModel> extends AbstractBaseService<E
     public long update(Connection con, Entity entity, Query query) throws SQLException {
         //逻辑删除时不更新 处于逻辑删除状态的数据
         if (ScxContext.easyConfig().tombstone()) {
-            query.equal("tombstone", false);
+            query.equal("tombstone", false, WhereOption.REPLACE);
         }
         //更新成功的条数
         return this._update(entity, query, false, con);
@@ -492,7 +493,7 @@ public class BaseService<Entity extends BaseModel> extends AbstractBaseService<E
     public long updateIncludeNull(Connection con, Entity entity, Query query) throws SQLException {
         //逻辑删除时不更新 处于逻辑删除状态的数据
         if (ScxContext.easyConfig().tombstone()) {
-            query.equal("tombstone", false);
+            query.equal("tombstone", false, WhereOption.REPLACE);
         }
         //更新成功的条数
         return this._update(entity, query, true, con);
@@ -524,7 +525,7 @@ public class BaseService<Entity extends BaseModel> extends AbstractBaseService<E
      */
     public Entity get(Connection con, Query query) throws SQLException {
         if (ScxContext.easyConfig().tombstone()) {
-            query.equal("tombstone", false);
+            query.equal("tombstone", false, WhereOption.REPLACE);
         }
         query.setPagination(1);
         var list = this._select(query, con);
@@ -553,7 +554,7 @@ public class BaseService<Entity extends BaseModel> extends AbstractBaseService<E
     public List<Entity> list(Connection con) throws SQLException {
         var query = new Query().desc("updateDate");
         if (ScxContext.easyConfig().tombstone()) {
-            query.equal("tombstone", false);
+            query.equal("tombstone", false, WhereOption.REPLACE);
         }
         return this._select(query, con);
     }
@@ -581,7 +582,7 @@ public class BaseService<Entity extends BaseModel> extends AbstractBaseService<E
      */
     public List<Entity> list(Connection con, Query query) throws SQLException {
         if (ScxContext.easyConfig().tombstone()) {
-            query.equal("tombstone", false);
+            query.equal("tombstone", false, WhereOption.REPLACE);
         }
         return this._select(query, con);
     }
@@ -596,7 +597,7 @@ public class BaseService<Entity extends BaseModel> extends AbstractBaseService<E
      */
     public long count(Connection con, Query query) throws SQLException {
         if (ScxContext.easyConfig().tombstone()) {
-            query.equal("tombstone", false);
+            query.equal("tombstone", false, WhereOption.REPLACE);
         }
         return this._count(query, con);
     }

@@ -1,5 +1,9 @@
 package cool.scx.sql;
 
+import cool.scx.sql.group_by.GroupBy;
+import cool.scx.sql.order_by.OrderBy;
+import cool.scx.sql.pagination.Pagination;
+import cool.scx.sql.where.Where;
 import cool.scx.util.CaseUtils;
 
 import java.lang.reflect.Field;
@@ -200,7 +204,7 @@ public final class SQLBuilder {
     /**
      * a
      *
-     * @param where a {@link cool.scx.sql.Where} object
+     * @param where a {@link Where} object
      * @return a {@link cool.scx.sql.SQLBuilder} object
      */
     public SQLBuilder Where(Where where) {
@@ -213,7 +217,7 @@ public final class SQLBuilder {
     /**
      * a
      *
-     * @param groupBy a {@link cool.scx.sql.GroupBy} object
+     * @param groupBy a {@link GroupBy} object
      * @return a {@link cool.scx.sql.SQLBuilder} object
      */
     public SQLBuilder GroupBy(GroupBy groupBy) {
@@ -226,7 +230,7 @@ public final class SQLBuilder {
     /**
      * a
      *
-     * @param orderBy a {@link cool.scx.sql.OrderBy} object
+     * @param orderBy a {@link OrderBy} object
      * @return a {@link cool.scx.sql.SQLBuilder} object
      */
     public SQLBuilder OrderBy(OrderBy orderBy) {
@@ -239,7 +243,7 @@ public final class SQLBuilder {
     /**
      * a
      *
-     * @param pagination a {@link cool.scx.sql.Pagination} object
+     * @param pagination a {@link Pagination} object
      * @return a {@link cool.scx.sql.SQLBuilder} object
      */
     public SQLBuilder Limit(Pagination pagination) {
