@@ -133,4 +133,13 @@ public enum WhereType {
         return keyWord;
     }
 
+    /**
+     * a
+     * @param whereTypeStr a
+     * @retur n a
+     */
+    public static WhereType of(String whereTypeStr) {
+        return WhereType.valueOf(whereTypeStr.trim().toUpperCase());
+    }
+
 }

@@ -18,14 +18,14 @@ public enum OrderByType {
      */
     DESC;
 
+    /**
+     * a
+     *
+     * @param orderByStr a
+     * @return a
+     */
     public static OrderByType of(String orderByStr) {
-        if ("ASC".equalsIgnoreCase(orderByStr.trim())) {
-            return OrderByType.ASC;
-        } else if ("DESC".equalsIgnoreCase(orderByStr.trim())) {
-            return OrderByType.DESC;
-        } else {
-            throw new IllegalArgumentException("排序类型有误 : 只能是 asc 或 desc (不区分大小写) !!!");
-        }
+        return OrderByType.valueOf(orderByStr.trim().toUpperCase());
     }
 
 }
