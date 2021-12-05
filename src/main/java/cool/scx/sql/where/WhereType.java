@@ -136,7 +136,7 @@ public enum WhereType {
     /**
      * a
      * @param whereTypeStr a
-     * @retur n a
+     * @return a
      */
     public static WhereType of(String whereTypeStr) {
         return WhereType.valueOf(whereTypeStr.trim().toUpperCase());
