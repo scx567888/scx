@@ -11,10 +11,28 @@ import cool.scx.util.StringUtils;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
 
+/**
+ * a
+ */
 public final class FromQueryMethodParameterHandler implements ScxMappingMethodParameterHandler {
 
+    /**
+     * a
+     */
     public static final FromQueryMethodParameterHandler DEFAULT_INSTANCE = new FromQueryMethodParameterHandler();
 
+    /**
+     * a
+     *
+     * @param name           a
+     * @param merge          a
+     * @param required       a
+     * @param javaType       a
+     * @param routingContext a
+     * @return a
+     * @throws RequiredParamEmptyException a
+     * @throws ParamConvertException       a
+     */
     public static Object getValueFromQuery(String name, boolean merge, boolean required, Type javaType, ScxMappingRoutingContextInfo routingContext) throws RequiredParamEmptyException, ParamConvertException {
         var v = merge ? routingContext.queryParams() : routingContext.queryParams().get(name);
         if (v == null) {

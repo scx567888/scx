@@ -192,7 +192,6 @@ public abstract class AbstractBaseService<Entity> {
      *
      * @param query 查询条件
      * @return 条数
-     * @throws java.sql.SQLException if any.
      */
     public final long _count(Query query) {
         var parameter = _buildCountParameter(query);

@@ -7,6 +7,9 @@ import io.vertx.ext.web.RoutingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * a
+ */
 public final class ScxHttpExceptionHandler implements ScxMappingExceptionHandler {
 
     /**

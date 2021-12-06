@@ -12,12 +12,23 @@ import io.vertx.ext.web.RoutingContext;
  */
 public class NotFoundException extends ScxHttpException {
 
+    /**
+     * a
+     */
     private final String message;
 
+    /**
+     * a
+     */
     public NotFoundException() {
         this.message = "";
     }
 
+    /**
+     * a
+     *
+     * @param message a
+     */
     public NotFoundException(String message) {
         this.message = message;
     }

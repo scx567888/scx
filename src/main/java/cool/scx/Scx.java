@@ -536,6 +536,11 @@ public final class Scx {
         return scxWebSocketRouter;
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public ScxMappingConfiguration scxMappingConfiguration() {
         return scxMappingConfiguration;
     }

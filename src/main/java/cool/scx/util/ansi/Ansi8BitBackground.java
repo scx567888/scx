@@ -5,15 +5,22 @@ package cool.scx.util.ansi;
  */
 public final class Ansi8BitBackground implements AnsiElement {
 
+    /**
+     * a
+     */
     private final int code;
 
+    /**
+     * a
+     *
+     * @param code a
+     */
     public Ansi8BitBackground(int code) {
         if (code < 0 || code > 255) {
             throw new IllegalArgumentException("Code must be between 0 and 255");
         }
         this.code = code;
     }
-
 
     @Override
     public String code() {

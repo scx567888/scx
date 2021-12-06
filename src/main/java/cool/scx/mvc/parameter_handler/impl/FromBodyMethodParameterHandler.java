@@ -11,14 +11,44 @@ import cool.scx.util.StringUtils;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
 
+/**
+ * a
+ */
 public final class FromBodyMethodParameterHandler implements ScxMappingMethodParameterHandler {
 
+    /**
+     * a
+     */
     public static final FromBodyMethodParameterHandler DEFAULT_INSTANCE = new FromBodyMethodParameterHandler();
 
+    /**
+     * a
+     *
+     * @param name                         a
+     * @param useAllBody                   a
+     * @param required                     a
+     * @param type                         a
+     * @param scxMappingRoutingContextInfo a
+     * @return a
+     * @throws RequiredParamEmptyException a
+     * @throws ParamConvertException       a
+     */
     public static Object getValueFromBody(String name, boolean useAllBody, boolean required, Type type, ScxMappingRoutingContextInfo scxMappingRoutingContextInfo) throws RequiredParamEmptyException, ParamConvertException {
         return scxMappingRoutingContextInfo.isJsonBody() ? getValueFromJsonBody(name, useAllBody, required, type, scxMappingRoutingContextInfo) : getValueFromFormAttributes(name, useAllBody, required, type, scxMappingRoutingContextInfo);
     }
 
+    /**
+     * a
+     *
+     * @param name                         a
+     * @param useAllBody                   a
+     * @param required                     a
+     * @param javaType                     a
+     * @param scxMappingRoutingContextInfo a
+     * @return a
+     * @throws RequiredParamEmptyException a
+     * @throws ParamConvertException       a
+     */
     private static Object getValueFromJsonBody(String name, boolean useAllBody, boolean required, Type javaType, ScxMappingRoutingContextInfo scxMappingRoutingContextInfo) throws RequiredParamEmptyException, ParamConvertException {
         var tempValue = scxMappingRoutingContextInfo.getJsonBody();
         if (!useAllBody) {
@@ -50,6 +80,18 @@ public final class FromBodyMethodParameterHandler implements ScxMappingMethodPar
         return null;
     }
 
+    /**
+     * a
+     *
+     * @param name                         a
+     * @param useAllBody                   a
+     * @param required                     a
+     * @param javaType                     a
+     * @param scxMappingRoutingContextInfo a
+     * @return a
+     * @throws RequiredParamEmptyException a
+     * @throws ParamConvertException       a
+     */
     private static Object getValueFromFormAttributes(String name, boolean useAllBody, boolean required, Type javaType, ScxMappingRoutingContextInfo scxMappingRoutingContextInfo) throws RequiredParamEmptyException, ParamConvertException {
         var v = useAllBody ? scxMappingRoutingContextInfo.formAttributesMap() : scxMappingRoutingContextInfo.formAttributesMap().get(name);
         if (v == null) {

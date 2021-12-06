@@ -78,6 +78,8 @@ public final class ScxDaoHelper {
 
     /**
      * 检查是否有任何 (BaseModel) 类需要修复表
+     *
+     * @return 是否有
      */
     public static boolean checkAllNeedFixTable() {
         logger.debug("检查数据表结构中...");
@@ -99,6 +101,7 @@ public final class ScxDaoHelper {
     /**
      * a
      *
+     * @param tableInfo a
      * @throws SQLException a
      */
     public static void fixTable0(ScxDaoTableInfo tableInfo) throws SQLException {

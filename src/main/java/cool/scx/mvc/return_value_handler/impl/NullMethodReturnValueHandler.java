@@ -8,6 +8,9 @@ import io.vertx.ext.web.RoutingContext;
  */
 public final class NullMethodReturnValueHandler implements ScxMappingMethodReturnValueHandler {
 
+    /**
+     * a
+     */
     public static final NullMethodReturnValueHandler DEFAULT_INSTANCE = new NullMethodReturnValueHandler();
 
     @Override

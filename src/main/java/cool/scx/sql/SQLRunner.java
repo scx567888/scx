@@ -70,6 +70,7 @@ public final class SQLRunner {
      * @param con              a
      * @param sql              a
      * @param resultSetHandler a
+     * @param sqlParameters    a
      * @param <T>              a
      * @return a
      * @throws SQLException a
@@ -97,6 +98,15 @@ public final class SQLRunner {
         }
     }
 
+    /**
+     * a
+     *
+     * @param con           a
+     * @param sql           a
+     * @param sqlParameters a
+     * @return a
+     * @throws SQLException a
+     */
     public static int execute(Connection con, String sql, Object... sqlParameters) throws SQLException {
         try (var preparedStatement = new PlaceholderSQL(sql, sqlParameters).getPreparedStatement(con)) {
             preparedStatement.execute();

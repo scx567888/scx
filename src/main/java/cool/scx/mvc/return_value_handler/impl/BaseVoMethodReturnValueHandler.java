@@ -9,6 +9,9 @@ import io.vertx.ext.web.RoutingContext;
  */
 public final class BaseVoMethodReturnValueHandler implements ScxMappingMethodReturnValueHandler {
 
+    /**
+     * a
+     */
     public static final BaseVoMethodReturnValueHandler DEFAULT_INSTANCE = new BaseVoMethodReturnValueHandler();
 
     @Override

@@ -5,8 +5,14 @@ import cool.scx.mvc.parameter_handler.ScxMappingRoutingContextInfo;
 
 import java.lang.reflect.Parameter;
 
+/**
+ * a
+ */
 public final class LastMethodParameterHandler implements ScxMappingMethodParameterHandler {
 
+    /**
+     * a
+     */
     public static final LastMethodParameterHandler DEFAULT_INSTANCE = new LastMethodParameterHandler();
 
     @Override

@@ -5,38 +5,89 @@ package cool.scx.util.ansi;
  */
 public enum AnsiBackground implements AnsiElement {
 
+    /**
+     * a
+     */
     DEFAULT("49"),
 
+    /**
+     * a
+     */
     BLACK("40"),
 
+    /**
+     * a
+     */
     RED("41"),
 
+    /**
+     * a
+     */
     GREEN("42"),
 
+    /**
+     * a
+     */
     YELLOW("43"),
 
+    /**
+     * a
+     */
     BLUE("44"),
 
+    /**
+     * a
+     */
     MAGENTA("45"),
 
+    /**
+     * a
+     */
     CYAN("46"),
 
+    /**
+     * a
+     */
     WHITE("47"),
 
+    /**
+     * a
+     */
     BRIGHT_BLACK("100"),
 
+    /**
+     * a
+     */
     BRIGHT_RED("101"),
 
+    /**
+     * a
+     */
     BRIGHT_GREEN("102"),
 
+    /**
+     * a
+     */
     BRIGHT_YELLOW("103"),
 
+    /**
+     * a
+     */
     BRIGHT_BLUE("104"),
 
+    /**
+     * a
+     */
     BRIGHT_MAGENTA("105"),
 
+    /**
+     * a
+     */
     BRIGHT_CYAN("106"),
 
+    /**
+     * a
+     */
     BRIGHT_WHITE("107");
 
     private final String code;
