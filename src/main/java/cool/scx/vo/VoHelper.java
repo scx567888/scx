@@ -2,7 +2,7 @@ package cool.scx.vo;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import cool.scx.util.JacksonHelper;
+import cool.scx.util.ObjectMapperHelper;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.vertx.core.http.HttpServerResponse;
 
@@ -20,7 +20,7 @@ public final class VoHelper {
     /**
      * 普通的 objectMapper 用于向前台发送数据使用
      */
-    private static final ObjectMapper OBJECT_MAPPER = JacksonHelper.initObjectMapper();
+    private static final ObjectMapper OBJECT_MAPPER = ObjectMapperHelper.initObjectMapper();
 
     /**
      * 将 一个对象转换为 json 字符串 (这里本质上是调用了)

@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
@@ -14,8 +13,8 @@ import java.util.Map;
 
 /**
  * 处理对象的工具类<br>
- * 本质上就是对 {@link JacksonHelper} 进行了一些简单的封装
- * 注意其中所有方法使用的 ObjectMapper 均采用 {@link JacksonHelper#getObjectMapper}
+ * 本质上就是对 {@link ObjectMapper} 进行了一些简单的封装
+ * 注意其中所有方法使用的 ObjectMapper 均采用 {@link ObjectMapperHelper#setIgnoreJsonIgnore} 进行了处理
  * 故此方法中所有方法均忽略 @JsonIgnore 注解
  *
  * @author scx567888
@@ -24,14 +23,16 @@ import java.util.Map;
 public final class ObjectUtils {
 
     /**
-     * <p>convertValueToMap.</p>
-     *
-     * @param obj a {@link java.lang.Object} object
-     * @return a {@link java.util.Map} object
+     * 因为 java 无法方便的存储泛型 使用 TypeReference 创建一些常用的类型
+     * 此类为 Map 类型
      */
-    public static Map<String, Object> convertValueToMap(Object obj) {
-        return _o().convertValue(obj, JacksonHelper.MAP_TYPE);
-    }
+    public static final TypeReference<Map<String, Object>> MAP_TYPE = new TypeReference<>() {
+    };
+
+    /**
+     * 忽略 @JsonIgnore 注解的 objectMapper 一般用于内部使用
+     */
+    private static final ObjectMapper OBJECT_MAPPER = ObjectMapperHelper.setIgnoreJsonIgnore(ObjectMapperHelper.initObjectMapper());
 
     /**
      * 获取字段值
@@ -59,7 +60,7 @@ public final class ObjectUtils {
      * @throws IOException a
      */
     public static <T> T readValue(JsonNode jsonNode, Type type) throws IOException {
-        return _o().readerFor(JacksonHelper.getTypeFactory().constructType(type)).readValue(jsonNode);
+        return mapper().readerFor(constructType(type)).readValue(jsonNode);
     }
 
     /**
@@ -71,7 +72,7 @@ public final class ObjectUtils {
      * @return a
      */
     public static <T> T convertValue(Object fromValue, Class<T> tClass) {
-        return _o().convertValue(fromValue, JacksonHelper.getTypeFactory().constructType(tClass));
+        return mapper().convertValue(fromValue, constructType(tClass));
     }
 
     /**
@@ -83,19 +84,7 @@ public final class ObjectUtils {
      * @return a
      */
     public static <T> T convertValue(Object fromValue, Type toValueType) {
-        return _o().convertValue(fromValue, JacksonHelper.getTypeFactory().constructType(toValueType));
-    }
-
-    /**
-     * a
-     *
-     * @param fromValue a
-     * @param javaType  a
-     * @param <T>       a
-     * @return a
-     */
-    public static <T> T convertValue(Object fromValue, JavaType javaType) {
-        return _o().convertValue(fromValue, javaType);
+        return mapper().convertValue(fromValue, constructType(toValueType));
     }
 
     /**
@@ -108,7 +97,7 @@ public final class ObjectUtils {
      * @throws JsonProcessingException a
      */
     public static <T> T readValue(String fromValue, Type toValueType) throws JsonProcessingException {
-        return _o().readValue(fromValue, JacksonHelper.getTypeFactory().constructType(toValueType));
+        return mapper().readValue(fromValue, constructType(toValueType));
     }
 
     /**
@@ -136,7 +125,16 @@ public final class ObjectUtils {
      * @throws JsonProcessingException a
      */
     public static String writeValueAsString(Object value) throws JsonProcessingException {
-        return _o().writeValueAsString(value);
+        return mapper().writeValueAsString(value);
+    }
+
+    /**
+     * 获取 ObjectMapper
+     *
+     * @return a
+     */
+    public static ObjectMapper mapper() {
+        return OBJECT_MAPPER;
     }
 
     /**
@@ -146,7 +144,7 @@ public final class ObjectUtils {
      * @return a
      */
     public static JavaType constructType(Type type) {
-        return JacksonHelper.getTypeFactory().constructType(type);
+        return mapper().getTypeFactory().constructType(type);
     }
 
     /**
@@ -156,27 +154,7 @@ public final class ObjectUtils {
      * @return a
      */
     public static JavaType constructType(TypeReference<?> typeRef) {
-        return JacksonHelper.getTypeFactory().constructType(typeRef);
-    }
-
-    /**
-     * a
-     *
-     * @param file a
-     * @return a
-     * @throws IOException a
-     */
-    public static Map<String, Object> readValueToMap(File file) throws IOException {
-        return _o().readValue(file, JacksonHelper.MAP_TYPE);
-    }
-
-    /**
-     * 获取 ObjectMapper
-     *
-     * @return a
-     */
-    private static ObjectMapper _o() {
-        return JacksonHelper.getObjectMapper();
+        return mapper().getTypeFactory().constructType(typeRef);
     }
 
 }

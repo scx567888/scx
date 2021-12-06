@@ -39,7 +39,7 @@ public final class ConvertValueHandler<T> implements ScxHandlerR<ScxConfigHandle
 
     @Override
     public T handle(ScxConfigHandlerParam param) {
-        return param.value() != null ? ObjectUtils.convertValue(param.value(), this.javaType) : null;
+        return param.value() != null ? ObjectUtils.mapper().convertValue(param.value(), this.javaType) : null;
     }
 
 }

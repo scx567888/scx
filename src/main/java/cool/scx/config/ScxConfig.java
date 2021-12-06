@@ -41,7 +41,7 @@ public final class ScxConfig {
             if (scxConfigFile == null || !scxConfigFile.exists()) {
                 throw new ScxConfigFileMissingException();
             }
-            configMapping.putAll(MapUtils.flatMap(ObjectUtils.readValueToMap(scxConfigFile), null));
+            configMapping.putAll(MapUtils.flatMap(ObjectUtils.mapper().readValue(scxConfigFile, ObjectUtils.MAP_TYPE), null));
             Ansi.out().brightBlue("Y 已加载配置文件 : " + scxConfigFile.getPath()).println();
         } catch (Exception e) {
             if (e instanceof ScxConfigFileMissingException) {

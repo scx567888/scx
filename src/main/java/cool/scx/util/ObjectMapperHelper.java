@@ -1,12 +1,10 @@
 package cool.scx.util;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.introspect.AnnotatedMember;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
@@ -14,19 +12,11 @@ import cool.scx.ScxConstant;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Map;
 
 /**
  * a
  */
-public final class JacksonHelper {
-
-    /**
-     * 因为 java 无法方便的存储泛型 使用 TypeReference 创建一些常用的类型
-     * 此类为 Map 类型
-     */
-    public static final TypeReference<Map<String, Object>> MAP_TYPE = new TypeReference<>() {
-    };
+public final class ObjectMapperHelper {
 
     /**
      * 默认的 NullKey 序列化器
@@ -37,11 +27,6 @@ public final class JacksonHelper {
      * 默认的 JavaTimeModule
      */
     private static final JavaTimeModule JAVA_TIME_MODULE = initJavaTimeModule();
-
-    /**
-     * 忽略 @JsonIgnore 注解的 objectMapper 一般用于内部使用
-     */
-    private static final ObjectMapper OBJECT_MAPPER = setIgnoreJsonIgnore(initObjectMapper());
 
     /**
      * 获取针对日期处理的 jackson module;
@@ -72,7 +57,7 @@ public final class JacksonHelper {
         // 初始化一个 JsonMapper 构建器
         var jsonMapper = JsonMapper.builder()
                 // 注册 module 用来识别一些特定的类型
-                .addModule(JacksonHelper.JAVA_TIME_MODULE)
+                .addModule(ObjectMapperHelper.JAVA_TIME_MODULE)
                 // 遇到未知属性是否抛出异常 (默认为 : true) 例如 json 中包含的属性 bean 中没有 这时会抛出异常
                 // 在此设置 false 表示遇到上述情况时不抛出异常
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
@@ -81,7 +66,7 @@ public final class JacksonHelper {
                 .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
                 .build();
         // 获取序列化空值 处理器 一般用于处理例如 map.put(null,"abc"); 之类 key 为空的
-        jsonMapper.getSerializerProvider().setNullKeySerializer(JacksonHelper.NULL_KEY_SERIALIZER);
+        jsonMapper.getSerializerProvider().setNullKeySerializer(ObjectMapperHelper.NULL_KEY_SERIALIZER);
         return jsonMapper;
     }
 
@@ -91,27 +76,8 @@ public final class JacksonHelper {
      * @param mapper m
      * @return m
      */
-    private static ObjectMapper setIgnoreJsonIgnore(ObjectMapper mapper) {
+    static ObjectMapper setIgnoreJsonIgnore(ObjectMapper mapper) {
         return mapper.setAnnotationIntrospector(new IgnoreJsonIgnore());
-    }
-
-
-    /**
-     * 获取 ObjectMapperIgnoreJsonIgnore
-     *
-     * @return r
-     */
-    public static ObjectMapper getObjectMapper() {
-        return OBJECT_MAPPER;
-    }
-
-    /**
-     * 获取类型工厂方便转换
-     *
-     * @return t
-     */
-    public static TypeFactory getTypeFactory() {
-        return OBJECT_MAPPER.getTypeFactory();
     }
 
     /**
