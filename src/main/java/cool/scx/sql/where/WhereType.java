@@ -116,6 +116,16 @@ public enum WhereType {
     }
 
     /**
+     * a
+     *
+     * @param whereTypeStr a
+     * @return a
+     */
+    public static WhereType of(String whereTypeStr) {
+        return WhereType.valueOf(whereTypeStr.trim().toUpperCase());
+    }
+
+    /**
      * 获取参数数量
      *
      * @return 参数数量
@@ -131,15 +141,6 @@ public enum WhereType {
      */
     public String keyWord() {
         return keyWord;
-    }
-
-    /**
-     * a
-     * @param whereTypeStr a
-     * @return a
-     */
-    public static WhereType of(String whereTypeStr) {
-        return WhereType.valueOf(whereTypeStr.trim().toUpperCase());
     }
 
 }

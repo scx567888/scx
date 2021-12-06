@@ -26,25 +26,6 @@ public final class Pagination {
     }
 
     /**
-     * <p>Constructor for Pagination.</p>
-     *
-     * @param page a int
-     * @param size a int
-     */
-    public Pagination(int page, int size) {
-        set(page, size);
-    }
-
-    /**
-     * 默认取第一页
-     *
-     * @param size a int
-     */
-    public Pagination(int size) {
-        set(size);
-    }
-
-    /**
      * 设置分页参数
      *
      * @param page 分页页码
@@ -93,6 +74,17 @@ public final class Pagination {
      */
     public Integer size() {
         return size;
+    }
+
+    /**
+     * a
+     *
+     * @return a
+     */
+    public Pagination clear() {
+        this.page = null;
+        this.size = null;
+        return this;
     }
 
 }

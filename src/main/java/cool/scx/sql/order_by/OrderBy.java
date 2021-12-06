@@ -1,5 +1,7 @@
 package cool.scx.sql.order_by;
 
+import cool.scx.util.StringUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,42 +33,9 @@ public final class OrderBy {
      * @return 本身, 方便链式调用
      */
     public OrderBy add(String name, OrderByType orderByType, OrderByOption... options) {
-        if (name == null) {
-            throw new RuntimeException(" OrderBy 类型 : " + orderByType + " , 字段名称不能为空 !!!");
+        if (StringUtils.isBlank(name) || orderByType == null) {
+            throw new IllegalArgumentException("OrderBy 类型 : " + orderByType + " , 字段名称不能为空 !!!");
         }
-        return _add(name.trim(), orderByType, options);
-    }
-
-    /**
-     * a
-     *
-     * @param name a
-     * @return a
-     */
-    public OrderBy asc(String name, OrderByOption... options) {
-        return add(name.trim(), OrderByType.ASC, options);
-    }
-
-
-    /**
-     * a
-     *
-     * @param name a
-     * @return a
-     */
-    public OrderBy desc(String name, OrderByOption... options) {
-        return add(name.trim(), OrderByType.DESC, options);
-    }
-
-    /**
-     * a
-     *
-     * @param name        a
-     * @param orderByType a
-     * @param options     a
-     * @return a
-     */
-    private OrderBy _add(String name, OrderByType orderByType, OrderByOption... options) {
         var replace = false;
         var useOriginalName = false;
         for (var option : options) {
@@ -84,6 +53,26 @@ public final class OrderBy {
         }
         orderByBodyList.add(orderByBody);
         return this;
+    }
+
+    /**
+     * a
+     *
+     * @param name a
+     * @return a
+     */
+    public OrderBy asc(String name, OrderByOption... options) {
+        return add(name.trim(), OrderByType.ASC, options);
+    }
+
+    /**
+     * a
+     *
+     * @param name a
+     * @return a
+     */
+    public OrderBy desc(String name, OrderByOption... options) {
+        return add(name.trim(), OrderByType.DESC, options);
     }
 
     /**

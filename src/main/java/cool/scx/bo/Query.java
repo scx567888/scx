@@ -4,6 +4,7 @@ import cool.scx.sql.group_by.GroupBy;
 import cool.scx.sql.group_by.GroupByOption;
 import cool.scx.sql.order_by.OrderBy;
 import cool.scx.sql.order_by.OrderByOption;
+import cool.scx.sql.order_by.OrderByType;
 import cool.scx.sql.pagination.Pagination;
 import cool.scx.sql.where.Where;
 import cool.scx.sql.where.WhereOption;
@@ -94,6 +95,27 @@ public final class Query {
     }
 
     /**
+     * a
+     *
+     * @param name a
+     * @return a
+     */
+    public Query removeGroupBy(String name) {
+        this.groupBy.remove(name);
+        return this;
+    }
+
+    /**
+     * a
+     *
+     * @return a
+     */
+    public Query clearGroupBy() {
+        this.groupBy.clear();
+        return this;
+    }
+
+    /**
      * 设置分页参数
      *
      * @param page 分页页码
@@ -119,6 +141,28 @@ public final class Query {
     /**
      * a
      *
+     * @return a
+     */
+    public Query clearPagination() {
+        pagination.clear();
+        return this;
+    }
+
+    /**
+     * 添加一个排序字段
+     *
+     * @param orderByColumn 排序字段的名称 (注意是实体类的字段名 , 不是数据库中的字段名)
+     * @param orderByType   排序类型 正序或倒序
+     * @return 本身, 方便链式调用
+     */
+    public Query addOrderBy(String orderByColumn, OrderByType orderByType, OrderByOption... options) {
+        this.orderBy.add(orderByColumn, orderByType, options);
+        return this;
+    }
+
+    /**
+     * a
+     *
      * @param name a
      * @return a
      */
@@ -135,6 +179,27 @@ public final class Query {
      */
     public Query desc(String name, OrderByOption... options) {
         this.orderBy.desc(name, options);
+        return this;
+    }
+
+    /**
+     * a
+     *
+     * @return a
+     */
+    public Query clearOrderBy() {
+        this.orderBy.clear();
+        return this;
+    }
+
+    /**
+     * a
+     *
+     * @param name a
+     * @return a
+     */
+    public Query removeOrderBy(String name) {
+        this.orderBy.remove(name);
         return this;
     }
 
@@ -361,6 +426,27 @@ public final class Query {
      */
     public Query whereSQL(String whereSQL) {
         this.where.whereSQL(whereSQL);
+        return this;
+    }
+
+    /**
+     * a
+     *
+     * @param name a
+     * @return a
+     */
+    public Query removeWhere(String name) {
+        this.where.remove(name);
+        return this;
+    }
+
+    /**
+     * a
+     *
+     * @return a
+     */
+    public Query clearWhere() {
+        this.where.clear();
         return this;
     }
 
