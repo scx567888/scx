@@ -70,7 +70,7 @@ public abstract class AbstractBaseService<Entity> {
      * @return 插入成功的主键 ID 如果插入失败则返回 null
      * @throws java.sql.SQLException if any.
      */
-    final Long _insert(Entity entity, Connection con) throws SQLException {
+    public final Long _insert(Connection con, Entity entity) throws SQLException {
         var parameter = _buildInsertParameter(entity);
         var updateResult = SQLRunner.update(con, parameter.sql(), parameter.param());
         return updateResult.generatedKeys().size() > 0 ? updateResult.generatedKeys().get(0) : -1;
@@ -82,7 +82,7 @@ public abstract class AbstractBaseService<Entity> {
      * @param entity 待插入的数据
      * @return 插入成功的主键 ID 如果插入失败则返回 null
      */
-    final Long _insert(Entity entity) {
+    public final Long _insert(Entity entity) {
         var parameter = _buildInsertParameter(entity);
         var updateResult = ScxContext.sqlRunner().update(parameter.sql(), parameter.param());
         return updateResult.generatedKeys().size() > 0 ? updateResult.generatedKeys().get(0) : -1;
@@ -105,7 +105,7 @@ public abstract class AbstractBaseService<Entity> {
      * @return 保存成功的主键 (ID) 列表
      * @throws java.sql.SQLException if any.
      */
-    final List<Long> _insertBatch(List<Entity> entityList, Connection con) throws SQLException {
+    public final List<Long> _insertBatch(Connection con, List<Entity> entityList) throws SQLException {
         var parameter = _buildInsertBatchParameter(entityList);
         return SQLRunner.updateBatch(con, parameter.sql(), parameter.param()).generatedKeys();
     }
@@ -116,7 +116,7 @@ public abstract class AbstractBaseService<Entity> {
      * @param entityList 待保存的列表
      * @return 保存成功的主键 (ID) 列表
      */
-    final List<Long> _insertBatch(List<Entity> entityList) {
+    public final List<Long> _insertBatch(List<Entity> entityList) {
         var parameter = _buildInsertBatchParameter(entityList);
         return ScxContext.sqlRunner().updateBatch(parameter.sql(), parameter.param()).generatedKeys();
     }
@@ -146,7 +146,7 @@ public abstract class AbstractBaseService<Entity> {
      * @return a {@link java.util.List} object.
      * @throws java.sql.SQLException if any.
      */
-    final List<Entity> _select(Query query, Connection con) throws SQLException {
+    public final List<Entity> _select(Connection con, Query query) throws SQLException {
         var parameter = _buildSelectParameter(query);
         return SQLRunner.query(con, parameter.sql(), new BeanListHandler<>(entityClass), parameter.param());
     }
@@ -157,7 +157,7 @@ public abstract class AbstractBaseService<Entity> {
      * @param query 查询过滤条件.
      * @return a {@link java.util.List} object.
      */
-    final List<Entity> _select(Query query) {
+    public final List<Entity> _select(Query query) {
         var parameter = _buildSelectParameter(query);
         return ScxContext.sqlRunner().query(parameter.sql(), new BeanListHandler<>(entityClass), parameter.param());
     }
@@ -182,12 +182,19 @@ public abstract class AbstractBaseService<Entity> {
      * @return 条数
      * @throws java.sql.SQLException if any.
      */
-    final long _count(Query query, Connection con) throws SQLException {
+    public final long _count(Connection con, Query query) throws SQLException {
         var parameter = _buildCountParameter(query);
         return SQLRunner.query(con, parameter.sql(), new ScalarHandler<>("count"), parameter.param());
     }
 
-    final long _count(Query query) {
+    /**
+     * 获取条数
+     *
+     * @param query 查询条件
+     * @return 条数
+     * @throws java.sql.SQLException if any.
+     */
+    public final long _count(Query query) {
         var parameter = _buildCountParameter(query);
         return ScxContext.sqlRunner().query(parameter.sql(), new ScalarHandler<>("count"), parameter.param());
     }
@@ -212,7 +219,7 @@ public abstract class AbstractBaseService<Entity> {
      * @return 受影响的条数
      * @throws java.sql.SQLException if any.
      */
-    final long _update(Entity entity, Query query, boolean includeNull, Connection con) throws SQLException {
+    public final long _update(Connection con, Entity entity, Query query, boolean includeNull) throws SQLException {
         var parameter = _buildUpdateParameter(entity, query, includeNull);
         return SQLRunner.update(con, parameter.sql(), parameter.param()).affectedLength();
     }
@@ -225,7 +232,7 @@ public abstract class AbstractBaseService<Entity> {
      * @param includeNull a boolean.
      * @return 受影响的条数
      */
-    final long _update(Entity entity, Query query, boolean includeNull) {
+    public final long _update(Entity entity, Query query, boolean includeNull) {
         var parameter = _buildUpdateParameter(entity, query, includeNull);
         return ScxContext.sqlRunner().update(parameter.sql(), parameter.param()).affectedLength();
     }
@@ -256,7 +263,7 @@ public abstract class AbstractBaseService<Entity> {
      * @return 受影响的条数
      * @throws java.sql.SQLException if any.
      */
-    final long _delete(Query query, Connection connection) throws SQLException {
+    public final long _delete(Connection connection, Query query) throws SQLException {
         var parameter = _buildDeleteParameter(query);
         return SQLRunner.update(connection, parameter.sql(), parameter.param()).affectedLength();
     }
@@ -267,7 +274,7 @@ public abstract class AbstractBaseService<Entity> {
      * @param query where 条件
      * @return 受影响的条数
      */
-    final long _delete(Query query) {
+    public final long _delete(Query query) {
         var parameter = _buildDeleteParameter(query);
         return ScxContext.sqlRunner().update(parameter.sql(), parameter.param()).affectedLength();
     }

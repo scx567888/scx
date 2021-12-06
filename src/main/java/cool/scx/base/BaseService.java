@@ -334,7 +334,7 @@ public class BaseService<Entity extends BaseModel> extends AbstractBaseService<E
      * @throws java.sql.SQLException if any.
      */
     public Entity save(Connection con, Entity entity) throws SQLException {
-        var newId = this._insert(entity, con);
+        var newId = this._insert(con, entity);
         return this.get(con, newId);
     }
 
@@ -350,7 +350,7 @@ public class BaseService<Entity extends BaseModel> extends AbstractBaseService<E
         if (entityList == null || entityList.size() == 0) {
             return new ArrayList<>();
         } else {
-            return this._insertBatch(entityList, con);
+            return this._insertBatch(con, entityList);
         }
     }
 
@@ -365,12 +365,12 @@ public class BaseService<Entity extends BaseModel> extends AbstractBaseService<E
     public long delete(Connection con, long... ids) throws SQLException {
         //物理删除
         if (!ScxContext.easyConfig().tombstone()) {
-            return this._delete(new Query().in("id", ids), con);
+            return this._delete(con, new Query().in("id", ids));
         } else {// 逻辑删除
             var needTombstoneEntity = ScxContext.beanFactory().getBean(entityClass);
             needTombstoneEntity.tombstone = true;
             var query = new Query().in("id", ids).equal("tombstone", false);
-            return this._update(needTombstoneEntity, query, false, con);
+            return this._update(con, needTombstoneEntity, query, false);
         }
     }
 
@@ -385,11 +385,11 @@ public class BaseService<Entity extends BaseModel> extends AbstractBaseService<E
     public long delete(Connection con, Query query) throws SQLException {
         //物理删除
         if (!ScxContext.easyConfig().tombstone()) {
-            return this._delete(query, con);
+            return this._delete(con, query);
         } else {//逻辑删除
             var needTombstoneEntity = ScxContext.beanFactory().getBean(entityClass);
             needTombstoneEntity.tombstone = true;
-            return this._update(needTombstoneEntity, query, false, con);
+            return this._update(con, needTombstoneEntity, query, false);
         }
     }
 
@@ -402,7 +402,7 @@ public class BaseService<Entity extends BaseModel> extends AbstractBaseService<E
      * @throws java.sql.SQLException c
      */
     public long deleteIgnoreConfig(Connection con, long... ids) throws SQLException {
-        return this._delete(new Query().in("id", ids), con);
+        return this._delete(con, new Query().in("id", ids));
     }
 
     /**
@@ -414,7 +414,7 @@ public class BaseService<Entity extends BaseModel> extends AbstractBaseService<E
      * @throws java.sql.SQLException c
      */
     public long deleteIgnoreConfig(Connection con, Query query) throws SQLException {
-        return this._delete(query, con);
+        return this._delete(con, query);
     }
 
     /**
@@ -443,7 +443,7 @@ public class BaseService<Entity extends BaseModel> extends AbstractBaseService<E
         } else {
             var needRevokeDeleteModel = ScxContext.beanFactory().getBean(entityClass);
             needRevokeDeleteModel.tombstone = false;
-            return this._update(needRevokeDeleteModel, query, false, con);
+            return this._update(con, needRevokeDeleteModel, query, false);
         }
     }
 
@@ -462,7 +462,7 @@ public class BaseService<Entity extends BaseModel> extends AbstractBaseService<E
             query.equal("tombstone", false, WhereOption.REPLACE);
         }
         //更新成功的条数
-        return this._update(entity, query, false, con);
+        return this._update(con, entity, query, false);
     }
 
     /**
@@ -496,7 +496,7 @@ public class BaseService<Entity extends BaseModel> extends AbstractBaseService<E
             query.equal("tombstone", false, WhereOption.REPLACE);
         }
         //更新成功的条数
-        return this._update(entity, query, true, con);
+        return this._update(con, entity, query, true);
     }
 
     /**
@@ -528,7 +528,7 @@ public class BaseService<Entity extends BaseModel> extends AbstractBaseService<E
             query.equal("tombstone", false, WhereOption.REPLACE);
         }
         query.setPagination(1);
-        var list = this._select(query, con);
+        var list = this._select(con, query);
         return list.size() > 0 ? list.get(0) : null;
     }
 
@@ -556,7 +556,7 @@ public class BaseService<Entity extends BaseModel> extends AbstractBaseService<E
         if (ScxContext.easyConfig().tombstone()) {
             query.equal("tombstone", false, WhereOption.REPLACE);
         }
-        return this._select(query, con);
+        return this._select(con, query);
     }
 
 
@@ -584,7 +584,7 @@ public class BaseService<Entity extends BaseModel> extends AbstractBaseService<E
         if (ScxContext.easyConfig().tombstone()) {
             query.equal("tombstone", false, WhereOption.REPLACE);
         }
-        return this._select(query, con);
+        return this._select(con, query);
     }
 
     /**
@@ -599,7 +599,7 @@ public class BaseService<Entity extends BaseModel> extends AbstractBaseService<E
         if (ScxContext.easyConfig().tombstone()) {
             query.equal("tombstone", false, WhereOption.REPLACE);
         }
-        return this._count(query, con);
+        return this._count(con, query);
     }
 
     /**
