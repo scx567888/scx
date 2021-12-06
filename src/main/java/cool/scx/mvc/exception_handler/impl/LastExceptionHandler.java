@@ -9,6 +9,9 @@ import io.vertx.ext.web.RoutingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * a
+ */
 public final class LastExceptionHandler implements ScxMappingExceptionHandler {
 
     /**
@@ -38,4 +41,5 @@ public final class LastExceptionHandler implements ScxMappingExceptionHandler {
             logger.error("执行 ScxMappingHandler 处理器时发生异常 !!!, 因为请求已被相应, 所以错误信息可能没有正确返回给客户端 !!!", throwable);
         }
     }
+
 }

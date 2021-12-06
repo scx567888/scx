@@ -63,27 +63,58 @@ public final class ScxMappingRoutingContextInfo {
         return map;
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public boolean isJsonBody() {
         return isJsonBody;
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public Map<String, Object> formAttributesMap() {
         return formAttributesMap;
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public JsonNode getJsonBody() {
         return jsonBody;
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public Map<String, UploadedEntity> uploadedEntityMap() {
         return uploadedEntityMap;
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public Map<String, Object> queryParams() {
         return queryParams;
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public RoutingContext routingContext() {
         return routingContext;
     }
+
 }

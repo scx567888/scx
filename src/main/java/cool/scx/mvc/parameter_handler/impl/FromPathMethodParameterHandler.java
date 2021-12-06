@@ -11,10 +11,28 @@ import cool.scx.util.StringUtils;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
 
+/**
+ * a
+ */
 public final class FromPathMethodParameterHandler implements ScxMappingMethodParameterHandler {
 
+    /**
+     * a
+     */
     public static final FromPathMethodParameterHandler DEFAULT_INSTANCE = new FromPathMethodParameterHandler();
 
+    /**
+     * a
+     *
+     * @param name           a
+     * @param merge          a
+     * @param required       a
+     * @param javaType       a
+     * @param routingContext a
+     * @return a
+     * @throws RequiredParamEmptyException a
+     * @throws ParamConvertException       a
+     */
     public static Object getValueFromPath(String name, boolean merge, boolean required, Type javaType, ScxMappingRoutingContextInfo routingContext) throws RequiredParamEmptyException, ParamConvertException {
         var v = merge ? routingContext.routingContext().pathParams() : routingContext.routingContext().pathParams().get(name);
         if (v == null) {

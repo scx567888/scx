@@ -306,6 +306,11 @@ public final class ScxContext {
         return scx().scxDao().sqlRunner();
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public static ScxMappingConfiguration scxMappingConfiguration() {
         return scx().scxMappingConfiguration();
     }

@@ -4,8 +4,19 @@ import cool.scx.vo.VoHelper;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.vertx.ext.web.RoutingContext;
 
+/**
+ * a
+ */
 public final class ScxHttpExceptionHelper {
 
+    /**
+     * a
+     *
+     * @param code           a
+     * @param title          a
+     * @param info           a
+     * @param routingContext a
+     */
     public static void sendException(int code, String title, String info, RoutingContext routingContext) {
         var accept = routingContext.request().headers().get(HttpHeaderNames.ACCEPT);
         //根据 accept 返回不同的错误信息
@@ -19,10 +30,22 @@ public final class ScxHttpExceptionHelper {
         }
     }
 
+    /**
+     * a
+     *
+     * @param scxHttpExceptionViewWrapper a
+     * @return a
+     */
     public static String toJson(ScxHttpExceptionViewWrapper scxHttpExceptionViewWrapper) {
         return VoHelper.toJson(scxHttpExceptionViewWrapper, "");
     }
 
+    /**
+     * a
+     *
+     * @param scxHttpExceptionViewWrapper a
+     * @return a
+     */
     public static String toHtml(ScxHttpExceptionViewWrapper scxHttpExceptionViewWrapper) {
         var htmlStr = """
                 <!DOCTYPE html>

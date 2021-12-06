@@ -33,6 +33,7 @@ public final class ScxConfig {
      * a
      *
      * @param scxConfigFile a
+     * @param defaultConfig a
      * @param args          a
      */
     public ScxConfig(File scxConfigFile, Map<String, Object> defaultConfig, String... args) {

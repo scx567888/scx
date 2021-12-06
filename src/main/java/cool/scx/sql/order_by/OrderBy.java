@@ -30,6 +30,7 @@ public final class OrderBy {
      *
      * @param name        排序字段的名称 (默认是实体类的字段名 , 不是数据库中的字段名)
      * @param orderByType 排序类型 正序或倒序
+     * @param options     配置
      * @return 本身, 方便链式调用
      */
     public OrderBy add(String name, OrderByType orderByType, OrderByOption... options) {
@@ -56,9 +57,10 @@ public final class OrderBy {
     }
 
     /**
-     * a
+     * 正序 : 也就是从小到大 (1,2,3,4,5,6)
      *
-     * @param name a
+     * @param name    a
+     * @param options 配置
      * @return a
      */
     public OrderBy asc(String name, OrderByOption... options) {
@@ -66,9 +68,10 @@ public final class OrderBy {
     }
 
     /**
-     * a
+     * 倒序 : 也就是从大到小 (6,5,4,3,2,1)
      *
-     * @param name a
+     * @param name    a
+     * @param options 配置
      * @return a
      */
     public OrderBy desc(String name, OrderByOption... options) {

@@ -5,8 +5,16 @@ package cool.scx.util.ansi;
  */
 public final class Ansi8BitColor implements AnsiElement {
 
+    /**
+     * a
+     */
     private final int code;
 
+    /**
+     * a
+     *
+     * @param code a
+     */
     public Ansi8BitColor(int code) {
         if (code < 0 || code > 255) {
             throw new IllegalArgumentException("Code must be between 0 and 255");

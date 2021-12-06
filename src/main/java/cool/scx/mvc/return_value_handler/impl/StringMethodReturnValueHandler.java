@@ -10,6 +10,9 @@ import io.vertx.ext.web.RoutingContext;
  */
 public final class StringMethodReturnValueHandler implements ScxMappingMethodReturnValueHandler {
 
+    /**
+     * a
+     */
     public static final StringMethodReturnValueHandler DEFAULT_INSTANCE = new StringMethodReturnValueHandler();
 
     @Override

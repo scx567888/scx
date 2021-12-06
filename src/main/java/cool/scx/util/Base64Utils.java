@@ -3,6 +3,9 @@ package cool.scx.util;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
+/**
+ * a
+ */
 public final class Base64Utils {
 
     /**

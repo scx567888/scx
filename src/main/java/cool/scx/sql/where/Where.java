@@ -40,6 +40,7 @@ public final class Where {
      * @param whereType where 类型
      * @param value1    参数1
      * @param value2    参数2
+     * @param options   配置
      * @return 本身 , 方便链式调用
      */
     public Where add2(String name, WhereType whereType, Object value1, Object value2, WhereOption... options) {
@@ -61,6 +62,7 @@ public final class Where {
      * @param name      名称 (注意 : 默认为字段名称 , 不是数据库名称)
      * @param whereType where 类型
      * @param value1    参数1
+     * @param options   配置
      * @return 本身 , 方便链式调用
      */
     public Where add1(String name, WhereType whereType, Object value1, WhereOption... options) {
@@ -81,6 +83,7 @@ public final class Where {
      *
      * @param name      名称 (注意 : 默认为字段名称 , 不是数据库名称)
      * @param whereType where 类型
+     * @param options   配置
      * @return 本身 , 方便链式调用
      */
     public Where add0(String name, WhereType whereType, WhereOption... options) {
@@ -106,6 +109,7 @@ public final class Where {
      * 为空
      *
      * @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
+     * @param options   配置
      * @return this 方便链式调用
      */
     public Where isNull(String fieldName, WhereOption... options) {
@@ -116,6 +120,7 @@ public final class Where {
      * 不为空
      *
      * @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
+     * @param options   配置
      * @return this 方便链式调用
      */
     public Where isNotNull(String fieldName, WhereOption... options) {
@@ -127,6 +132,7 @@ public final class Where {
      *
      * @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
      * @param value     比较值
+     * @param options   配置
      * @return this 方便链式调用
      */
     public Where equal(String fieldName, Object value, WhereOption... options) {
@@ -138,6 +144,7 @@ public final class Where {
      *
      * @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
      * @param value     比较值
+     * @param options   配置
      * @return this 方便链式调用
      */
     public Where notEqual(String fieldName, Object value, WhereOption... options) {
@@ -149,6 +156,7 @@ public final class Where {
      *
      * @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
      * @param value     比较值
+     * @param options   配置
      * @return this 方便链式调用
      */
     public Where greaterThan(String fieldName, Object value, WhereOption... options) {
@@ -160,6 +168,7 @@ public final class Where {
      *
      * @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
      * @param value     比较值
+     * @param options   配置
      * @return this 方便链式调用
      */
     public Where greaterThanOrEqual(String fieldName, Object value, WhereOption... options) {
@@ -171,6 +180,7 @@ public final class Where {
      *
      * @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
      * @param value     比较值
+     * @param options   配置
      * @return this 方便链式调用
      */
     public Where lessThan(String fieldName, Object value, WhereOption... options) {
@@ -182,6 +192,7 @@ public final class Where {
      *
      * @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
      * @param value     比较值
+     * @param options   配置
      * @return this 方便链式调用
      */
     public Where lessThanOrEqual(String fieldName, Object value, WhereOption... options) {
@@ -194,6 +205,7 @@ public final class Where {
      * @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
      * @param value1    比较值1
      * @param value2    比较值2
+     * @param options   配置
      * @return this 方便链式调用
      */
     public Where between(String fieldName, Object value1, Object value2, WhereOption... options) {
@@ -206,6 +218,7 @@ public final class Where {
      * @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
      * @param value1    比较值1
      * @param value2    比较值2
+     * @param options   配置
      * @return this 方便链式调用
      */
     public Where notBetween(String fieldName, Object value1, Object value2, WhereOption... options) {
@@ -217,6 +230,7 @@ public final class Where {
      *
      * @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
      * @param value     SQL 表达式
+     * @param options   配置
      * @return this 方便链式调用
      */
     public Where likeRegex(String fieldName, String value, WhereOption... options) {
@@ -228,6 +242,7 @@ public final class Where {
      *
      * @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
      * @param value     SQL 表达式
+     * @param options   配置
      * @return this 方便链式调用
      */
     public Where notLikeRegex(String fieldName, String value, WhereOption... options) {
@@ -239,6 +254,7 @@ public final class Where {
      *
      * @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
      * @param value     参数 默认会在首尾添加 %
+     * @param options   配置
      * @return this 方便链式调用
      */
     public Where like(String fieldName, Object value, WhereOption... options) {
@@ -250,6 +266,7 @@ public final class Where {
      *
      * @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
      * @param value     默认会在首尾添加 %
+     * @param options   配置
      * @return this 方便链式调用
      */
     public Where notLike(String fieldName, Object value, WhereOption... options) {
@@ -261,6 +278,7 @@ public final class Where {
      *
      * @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
      * @param value     比较值
+     * @param options   配置
      * @return this 方便链式调用
      */
     public Where jsonContains(String fieldName, Object value, WhereOption... options) {
@@ -272,6 +290,7 @@ public final class Where {
      *
      * @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
      * @param value     比较值
+     * @param options   配置
      * @return this 方便链式调用
      */
     public Where in(String fieldName, Object value, WhereOption... options) {
@@ -283,6 +302,7 @@ public final class Where {
      *
      * @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
      * @param value     比较值
+     * @param options   配置
      * @return this 方便链式调用
      */
     public Where notIn(String fieldName, Object value, WhereOption... options) {

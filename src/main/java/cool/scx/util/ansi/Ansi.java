@@ -115,6 +115,12 @@ public final class Ansi {
         return sb.toString();
     }
 
+    /**
+     * a
+     *
+     * @param sb       a
+     * @param elements a
+     */
     private static void buildEnabled(StringBuilder sb, Object[] elements) {
         boolean writingAnsi = false;
         boolean containsEncoding = false;
@@ -143,6 +149,12 @@ public final class Ansi {
         }
     }
 
+    /**
+     * a
+     *
+     * @param sb       a
+     * @param elements a
+     */
     private static void buildDisabled(StringBuilder sb, Object[] elements) {
         for (Object element : elements) {
             if (!(element instanceof AnsiElement) && element != null) {
@@ -206,7 +218,8 @@ public final class Ansi {
     /**
      * 红色
      *
-     * @param o a {@link java.lang.Object} object.
+     * @param o            a {@link java.lang.Object} object.
+     * @param ansiElements AnsiElements
      * @return Ansi 方便链式调用
      */
     public Ansi red(Object o, AnsiElement... ansiElements) {
@@ -216,7 +229,8 @@ public final class Ansi {
     /**
      * 绿色
      *
-     * @param o a {@link java.lang.Object} object.
+     * @param o            a {@link java.lang.Object} object.
+     * @param ansiElements AnsiElements
      * @return Ansi 方便链式调用
      */
     public Ansi green(Object o, AnsiElement... ansiElements) {
@@ -226,7 +240,8 @@ public final class Ansi {
     /**
      * 亮青色
      *
-     * @param o a {@link java.lang.Object} object.
+     * @param o            a {@link java.lang.Object} object.
+     * @param ansiElements AnsiElements
      * @return Ansi 方便链式调用
      */
     public Ansi brightCyan(Object o, AnsiElement... ansiElements) {
@@ -236,7 +251,8 @@ public final class Ansi {
     /**
      * 蓝色
      *
-     * @param o a {@link java.lang.Object} object.
+     * @param o            a {@link java.lang.Object} object.
+     * @param ansiElements AnsiElements
      * @return Ansi 方便链式调用
      */
     public Ansi blue(Object o, AnsiElement... ansiElements) {
@@ -246,7 +262,8 @@ public final class Ansi {
     /**
      * 青色
      *
-     * @param o a {@link java.lang.Object} object.
+     * @param o            a {@link java.lang.Object} object.
+     * @param ansiElements AnsiElements
      * @return Ansi 方便链式调用
      */
     public Ansi cyan(Object o, AnsiElement... ansiElements) {
@@ -256,7 +273,8 @@ public final class Ansi {
     /**
      * 亮蓝色
      *
-     * @param o a {@link java.lang.Object} object.
+     * @param o            a {@link java.lang.Object} object.
+     * @param ansiElements AnsiElements
      * @return Ansi 方便链式调用
      */
     public Ansi brightBlue(Object o, AnsiElement... ansiElements) {
@@ -266,7 +284,8 @@ public final class Ansi {
     /**
      * 亮紫色
      *
-     * @param o a {@link java.lang.Object} object.
+     * @param o            a {@link java.lang.Object} object.
+     * @param ansiElements AnsiElements
      * @return Ansi 方便链式调用
      */
     public Ansi brightMagenta(Object o, AnsiElement... ansiElements) {
@@ -276,7 +295,8 @@ public final class Ansi {
     /**
      * 亮红色
      *
-     * @param o a {@link java.lang.Object} object.
+     * @param o            a {@link java.lang.Object} object.
+     * @param ansiElements AnsiElements
      * @return Ansi 方便链式调用
      */
     public Ansi brightRed(Object o, AnsiElement... ansiElements) {
@@ -286,7 +306,8 @@ public final class Ansi {
     /**
      * 亮绿色
      *
-     * @param o a {@link java.lang.Object} object.
+     * @param o            a {@link java.lang.Object} object.
+     * @param ansiElements AnsiElements
      * @return Ansi 方便链式调用
      */
     public Ansi brightGreen(Object o, AnsiElement... ansiElements) {
@@ -296,7 +317,8 @@ public final class Ansi {
     /**
      * 黑色
      *
-     * @param o a {@link java.lang.Object} object.
+     * @param o            a {@link java.lang.Object} object.
+     * @param ansiElements AnsiElements
      * @return Ansi 方便链式调用
      */
     public Ansi black(Object o, AnsiElement... ansiElements) {
@@ -306,7 +328,8 @@ public final class Ansi {
     /**
      * 亮黑色 ( 真的存在这种颜色吗 ? )
      *
-     * @param o a {@link java.lang.Object} object.
+     * @param o            a {@link java.lang.Object} object.
+     * @param ansiElements AnsiElements
      * @return Ansi 方便链式调用
      */
     public Ansi brightBlack(Object o, AnsiElement... ansiElements) {
@@ -316,7 +339,8 @@ public final class Ansi {
     /**
      * 亮黄色
      *
-     * @param o a {@link java.lang.Object} object.
+     * @param o            a {@link java.lang.Object} object.
+     * @param ansiElements AnsiElements
      * @return Ansi 方便链式调用
      */
     public Ansi brightYellow(Object o, AnsiElement... ansiElements) {
@@ -326,7 +350,8 @@ public final class Ansi {
     /**
      * 黄色
      *
-     * @param o a {@link java.lang.Object} object.
+     * @param o            a {@link java.lang.Object} object.
+     * @param ansiElements AnsiElements
      * @return Ansi 方便链式调用
      */
     public Ansi yellow(Object o, AnsiElement... ansiElements) {
@@ -336,7 +361,8 @@ public final class Ansi {
     /**
      * 紫色
      *
-     * @param o a {@link java.lang.Object} object.
+     * @param o            a {@link java.lang.Object} object.
+     * @param ansiElements AnsiElements
      * @return Ansi 方便链式调用
      */
     public Ansi magenta(Object o, AnsiElement... ansiElements) {
@@ -346,7 +372,8 @@ public final class Ansi {
     /**
      * 白色
      *
-     * @param o a {@link java.lang.Object} object.
+     * @param o            a {@link java.lang.Object} object.
+     * @param ansiElements AnsiElements
      * @return Ansi 方便链式调用
      */
     public Ansi white(Object o, AnsiElement... ansiElements) {
@@ -356,7 +383,8 @@ public final class Ansi {
     /**
      * 亮白色
      *
-     * @param o a {@link java.lang.Object} object.
+     * @param o            a {@link java.lang.Object} object.
+     * @param ansiElements AnsiElements
      * @return Ansi 方便链式调用
      */
     public Ansi brightWhite(Object o, AnsiElement... ansiElements) {
@@ -366,7 +394,8 @@ public final class Ansi {
     /**
      * 默认颜色
      *
-     * @param o a {@link java.lang.Object} object.
+     * @param o            a {@link java.lang.Object} object.
+     * @param ansiElements AnsiElements
      * @return Ansi 方便链式调用
      */
     public Ansi defaultColor(Object o, AnsiElement... ansiElements) {
@@ -386,7 +415,8 @@ public final class Ansi {
     /**
      * 向控制台打印输出 颜色根据内部计数器自动读取
      *
-     * @param o a {@link java.lang.String} object.
+     * @param o            a {@link java.lang.String} object.
+     * @param ansiElements AnsiElements
      * @return a {@link cool.scx.util.ansi.Ansi} object.
      */
     public Ansi color(Object o, AnsiElement... ansiElements) {
@@ -398,6 +428,13 @@ public final class Ansi {
         return this;
     }
 
+    /**
+     * a
+     *
+     * @param o            a
+     * @param ansiElements a
+     * @return a
+     */
     public Ansi add(Object o, AnsiElement... ansiElements) {
         elements.addAll(Arrays.asList(ansiElements));
         elements.add(o);

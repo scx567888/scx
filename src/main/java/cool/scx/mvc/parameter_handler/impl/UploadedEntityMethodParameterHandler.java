@@ -9,8 +9,14 @@ import cool.scx.util.StringUtils;
 
 import java.lang.reflect.Parameter;
 
+/**
+ * a
+ */
 public final class UploadedEntityMethodParameterHandler implements ScxMappingMethodParameterHandler {
 
+    /**
+     * a
+     */
     public static final UploadedEntityMethodParameterHandler DEFAULT_INSTANCE = new UploadedEntityMethodParameterHandler();
 
     @Override

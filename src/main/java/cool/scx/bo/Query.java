@@ -86,7 +86,8 @@ public final class Query {
     /**
      * 添加一个 分组字段
      *
-     * @param name 分组字段的名称 (默认是实体类的字段名 , 不是数据库中的字段名)
+     * @param name    分组字段的名称 (默认是实体类的字段名 , 不是数据库中的字段名)
+     * @param options 配置
      * @return 本身, 方便链式调用
      */
     public Query addGroupBy(String name, GroupByOption... options) {
@@ -153,6 +154,7 @@ public final class Query {
      *
      * @param orderByColumn 排序字段的名称 (注意是实体类的字段名 , 不是数据库中的字段名)
      * @param orderByType   排序类型 正序或倒序
+     * @param options       配置
      * @return 本身, 方便链式调用
      */
     public Query addOrderBy(String orderByColumn, OrderByType orderByType, OrderByOption... options) {
@@ -161,9 +163,10 @@ public final class Query {
     }
 
     /**
-     * a
+     * 正序 : 也就是从小到大 (1,2,3,4,5,6)
      *
-     * @param name a
+     * @param name    字段名称
+     * @param options 配置
      * @return a
      */
     public Query asc(String name, OrderByOption... options) {
@@ -172,9 +175,10 @@ public final class Query {
     }
 
     /**
-     * a
+     * 倒序 : 也就是从大到小 (6,5,4,3,2,1)
      *
-     * @param name a
+     * @param name    字段名称
+     * @param options 配置
      * @return a
      */
     public Query desc(String name, OrderByOption... options) {
@@ -206,8 +210,9 @@ public final class Query {
     /**
      * 不在其中
      *
-     * @param name  字段名称 (注意 : 不是数据库名称)
-     * @param value 比较值
+     * @param name    字段名称 (注意 : 不是数据库名称)
+     * @param value   比较值
+     * @param options 配置
      * @return this 方便链式调用
      */
     public Query notIn(String name, Object value, WhereOption... options) {
@@ -218,8 +223,9 @@ public final class Query {
     /**
      * 在其中
      *
-     * @param name  字段名称 (注意 : 不是数据库名称)
-     * @param value 比较值
+     * @param name    字段名称 (注意 : 不是数据库名称)
+     * @param value   比较值
+     * @param options 配置
      * @return this 方便链式调用
      */
     public Query in(String name, Object value, WhereOption... options) {
@@ -230,8 +236,9 @@ public final class Query {
     /**
      * 包含  : 一般用于 JSON 格式字段 区别于 in
      *
-     * @param name  字段名称 (注意 : 不是数据库名称)
-     * @param value 比较值
+     * @param name    字段名称 (注意 : 不是数据库名称)
+     * @param value   比较值
+     * @param options 配置
      * @return this 方便链式调用
      */
     public Query jsonContains(String name, Object value, WhereOption... options) {
@@ -242,8 +249,9 @@ public final class Query {
     /**
      * not like : 默认会在首尾添加 %
      *
-     * @param name  字段名称 (注意 : 不是数据库名称)
-     * @param value 默认会在首尾添加 %
+     * @param name    字段名称 (注意 : 不是数据库名称)
+     * @param value   默认会在首尾添加 %
+     * @param options 配置
      * @return this 方便链式调用
      */
     public Query notLike(String name, Object value, WhereOption... options) {
@@ -254,8 +262,9 @@ public final class Query {
     /**
      * like : 默认会在首尾添加 %
      *
-     * @param name  字段名称 (注意 : 不是数据库名称)
-     * @param value 参数 默认会在首尾添加 %
+     * @param name    字段名称 (注意 : 不是数据库名称)
+     * @param value   参数 默认会在首尾添加 %
+     * @param options 配置
      * @return this 方便链式调用
      */
     public Query like(String name, Object value, WhereOption... options) {
@@ -266,8 +275,9 @@ public final class Query {
     /**
      * not like : 根据 SQL 表达式进行判断
      *
-     * @param name  字段名称 (注意 : 不是数据库名称)
-     * @param value SQL 表达式
+     * @param name    字段名称 (注意 : 不是数据库名称)
+     * @param value   SQL 表达式
+     * @param options 配置
      * @return this 方便链式调用
      */
     public Query notLikeRegex(String name, String value, WhereOption... options) {
@@ -278,8 +288,9 @@ public final class Query {
     /**
      * like : 根据 SQL 表达式进行判断
      *
-     * @param name  字段名称 (注意 : 不是数据库名称)
-     * @param value SQL 表达式
+     * @param name    字段名称 (注意 : 不是数据库名称)
+     * @param value   SQL 表达式
+     * @param options 配置
      * @return this 方便链式调用
      */
     public Query likeRegex(String name, String value, WhereOption... options) {
@@ -290,9 +301,10 @@ public final class Query {
     /**
      * 不处于两者之间
      *
-     * @param name   字段名称 (注意 : 不是数据库名称)
-     * @param value1 比较值1
-     * @param value2 比较值2
+     * @param name    字段名称 (注意 : 不是数据库名称)
+     * @param value1  比较值1
+     * @param value2  比较值2
+     * @param options 配置
      * @return this 方便链式调用
      */
     public Query notBetween(String name, Object value1, Object value2, WhereOption... options) {
@@ -303,9 +315,10 @@ public final class Query {
     /**
      * 两者之间
      *
-     * @param name   字段名称 (注意 : 不是数据库名称)
-     * @param value1 比较值1
-     * @param value2 比较值2
+     * @param name    字段名称 (注意 : 不是数据库名称)
+     * @param value1  比较值1
+     * @param value2  比较值2
+     * @param options 配置
      * @return this 方便链式调用
      */
     public Query between(String name, Object value1, Object value2, WhereOption... options) {
@@ -316,8 +329,9 @@ public final class Query {
     /**
      * 小于等于
      *
-     * @param name  字段名称 (注意 : 不是数据库名称)
-     * @param value 比较值
+     * @param name    字段名称 (注意 : 不是数据库名称)
+     * @param value   比较值
+     * @param options 配置
      * @return this 方便链式调用
      */
     public Query lessThanOrEqual(String name, Object value, WhereOption... options) {
@@ -328,8 +342,9 @@ public final class Query {
     /**
      * 小于
      *
-     * @param name  字段名称 (注意 : 不是数据库名称)
-     * @param value 比较值
+     * @param name    字段名称 (注意 : 不是数据库名称)
+     * @param value   比较值
+     * @param options 配置
      * @return this 方便链式调用
      */
     public Query lessThan(String name, Object value, WhereOption... options) {
@@ -340,8 +355,9 @@ public final class Query {
     /**
      * 大于等于
      *
-     * @param name  字段名称 (注意 : 不是数据库名称)
-     * @param value 比较值
+     * @param name    字段名称 (注意 : 不是数据库名称)
+     * @param value   比较值
+     * @param options 配置
      * @return this 方便链式调用
      */
     public Query greaterThanOrEqual(String name, Object value, WhereOption... options) {
@@ -352,8 +368,9 @@ public final class Query {
     /**
      * 大于
      *
-     * @param name  字段名称 (注意 : 不是数据库名称)
-     * @param value 比较值
+     * @param name    字段名称 (注意 : 不是数据库名称)
+     * @param value   比较值
+     * @param options 配置
      * @return this 方便链式调用
      */
     public Query greaterThan(String name, Object value, WhereOption... options) {
@@ -364,8 +381,9 @@ public final class Query {
     /**
      * 不相等
      *
-     * @param name  字段名称 (注意 : 不是数据库名称)
-     * @param value 比较值
+     * @param name    字段名称 (注意 : 不是数据库名称)
+     * @param value   比较值
+     * @param options 配置
      * @return this 方便链式调用
      */
     public Query notEqual(String name, Object value, WhereOption... options) {
@@ -376,8 +394,9 @@ public final class Query {
     /**
      * 相等
      *
-     * @param name  字段名称 (注意 : 不是数据库名称)
-     * @param value 比较值
+     * @param name    字段名称 (注意 : 不是数据库名称)
+     * @param value   比较值
+     * @param options 配置
      * @return this 方便链式调用
      */
     public Query equal(String name, Object value, WhereOption... options) {
@@ -388,7 +407,8 @@ public final class Query {
     /**
      * 不为空
      *
-     * @param name 字段名称 (注意 : 不是数据库名称)
+     * @param name    字段名称 (注意 : 不是数据库名称)
+     * @param options 配置
      * @return this 方便链式调用
      */
     public Query isNotNull(String name, WhereOption... options) {
@@ -399,7 +419,8 @@ public final class Query {
     /**
      * 为空
      *
-     * @param name 字段名称 (注意 : 不是数据库名称)
+     * @param name    字段名称 (注意 : 不是数据库名称)
+     * @param options 配置
      * @return this 方便链式调用
      */
     public Query isNull(String name, WhereOption... options) {

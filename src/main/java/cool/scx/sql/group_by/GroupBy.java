@@ -28,7 +28,8 @@ public final class GroupBy {
     /**
      * 添加一个 分组字段
      *
-     * @param name 分组字段的名称 (默认是实体类的字段名 , 不是数据库中的字段名)
+     * @param name    分组字段的名称 (默认是实体类的字段名 , 不是数据库中的字段名)
+     * @param options 配置
      * @return 本身, 方便链式调用
      */
     public GroupBy add(String name, GroupByOption... options) {

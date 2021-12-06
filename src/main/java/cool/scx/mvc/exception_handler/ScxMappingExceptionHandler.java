@@ -2,6 +2,9 @@ package cool.scx.mvc.exception_handler;
 
 import io.vertx.ext.web.RoutingContext;
 
+/**
+ * a
+ */
 public interface ScxMappingExceptionHandler {
 
     /**

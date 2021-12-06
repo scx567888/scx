@@ -10,6 +10,9 @@ import io.vertx.ext.web.RoutingContext;
  */
 public final class LastMethodReturnValueHandler implements ScxMappingMethodReturnValueHandler {
 
+    /**
+     * a
+     */
     public static final LastMethodReturnValueHandler DEFAULT_INSTANCE = new LastMethodReturnValueHandler();
 
     @Override
