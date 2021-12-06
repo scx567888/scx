@@ -201,7 +201,7 @@ public final class ScxDaoTableInfo {
             createTableDDL.add(getMySQLColumnByField(field));
         }
         createTableDDL.addAll(getOtherSQL(allFields));
-        return "CREATE TABLE `" + tableName + "` (" + String.join(",", createTableDDL) + ");";
+        return "CREATE TABLE `" + tableName + "` (" + String.join(", ", createTableDDL) + ");";
     }
 
     /**
@@ -219,7 +219,7 @@ public final class ScxDaoTableInfo {
         for (var s : getOtherSQL(fields)) {
             alertTableDDL.add("ADD " + s);
         }
-        return "ALTER TABLE `" + tableName + "` " + String.join(",", alertTableDDL) + ";";
+        return "ALTER TABLE `" + tableName + "` " + String.join(", ", alertTableDDL) + ";";
     }
 
 }
