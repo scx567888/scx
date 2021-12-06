@@ -1,12 +1,17 @@
 package cool.scx.dao;
 
 import cool.scx.ScxContext;
-import cool.scx.util.ConsoleUtils;
+import cool.scx.sql.SQLRunner;
+import cool.scx.util.CaseUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Field;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * <p>SQLDDLHelper class.</p>
@@ -20,17 +25,9 @@ public final class ScxDaoHelper {
 
     /**
      * <p>fixTable.</p>
-     *
-     * @param ignoreConfirm 是否显示提示框
      */
-    public static void fixAllTable(boolean ignoreConfirm) {
-        //如果无法链接数据库 就跳过修复表
-        if (!ScxContext.dao().checkDataSource()) {
-            return;
-        }
-        logger.debug("检查数据表结构中...");
-        //已经显示过修复表的 gui 这里使用 flag 只显示一次
-        boolean alreadyShowConfirmFixTable = ignoreConfirm;
+    public static void fixTable() {
+        logger.debug("修复数据表结构中...");
         //修复成功的表
         var fixSuccess = 0;
         //修复失败的表
@@ -41,20 +38,8 @@ public final class ScxDaoHelper {
             //根据 class 获取 tableInfo
             var tableInfo = new ScxDaoTableInfo(v);
             try {
-                if (tableInfo.checkNeedFixTable()) {
-                    //如果已经显示过gui选择界面了就不再显示
-                    if (!alreadyShowConfirmFixTable) {
-                        //获取用户数据 true 为修复 false 为不修复
-                        var result = confirmFixTable();
-                        //如果取消修复 直接跳出这个方法
-                        if (!result) {
-                            logger.warn("已取消修复表...");
-                            return;
-                        }
-                        //设置 flag
-                        alreadyShowConfirmFixTable = true;
-                    }
-                    tableInfo.fixTable();
+                if (checkNeedFixTable0(tableInfo)) {
+                    fixTable0(tableInfo);
                     fixSuccess = fixSuccess + 1;
                 } else {
                     noNeedToFix = noNeedToFix + 1;
@@ -92,23 +77,89 @@ public final class ScxDaoHelper {
     }
 
     /**
-     * 向用户确认是否修复数据表
-     *
-     * @return a 结果
+     * 检查是否有任何 (BaseModel) 类需要修复表
      */
-    public static boolean confirmFixTable() {
-        while (true) {
-            System.err.println("Y 检测到需要修复数据表 , 是否修复? [Y]修复数据表 [N]忽略 [Q]退出 ");
-            var result = ConsoleUtils.readLine().trim();
-            if ("Y".equalsIgnoreCase(result)) {
-                return true;
-            } else if ("N".equalsIgnoreCase(result)) {
-                return false;
-            } else if ("Q".equalsIgnoreCase(result)) {
-                System.exit(-1);
-                return false;
+    public static boolean checkAllNeedFixTable() {
+        logger.debug("检查数据表结构中...");
+        for (var v : getAllScxModelClassList()) {
+            //根据 class 获取 tableInfo
+            var tableInfo = new ScxDaoTableInfo(v);
+            try {
+                //有任何需要修复的直接 返回 true
+                if (checkNeedFixTable0(tableInfo)) {
+                    return true;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
+        return false;
+    }
+
+    /**
+     * a
+     *
+     * @throws SQLException a
+     */
+    public static void fixTable0(ScxDaoTableInfo tableInfo) throws SQLException {
+        var databaseName = ScxContext.easyConfig().dataSourceDatabase();
+        try (var con = ScxContext.dao().dataSource().getConnection()) {
+            var dbMetaData = con.getMetaData();
+            var nowTable = dbMetaData.getTables(databaseName, databaseName, tableInfo.tableName, new String[]{"TABLE"});
+            if (nowTable.next()) { //有这个表
+                var nowColumns = dbMetaData.getColumns(databaseName, databaseName, nowTable.getString("TABLE_NAME"), null);
+                //所有不包含的 field
+                var nonExistentFields = getNonExistentColumnName(nowColumns, tableInfo);
+                if (nonExistentFields.size() > 0) {
+                    var alertTableDDL = tableInfo.getAlertTableDDL(nonExistentFields);
+                    SQLRunner.execute(con, alertTableDDL);
+                }
+            } else {//没有这个表
+                SQLRunner.execute(con, tableInfo.getCreateTableDDL());
+            }
+        }
+    }
+
+    /**
+     * 检查是否需要修复表
+     *
+     * @param tableInfo a
+     * @return true 需要 false 不需要
+     * @throws SQLException e
+     */
+    private static boolean checkNeedFixTable0(ScxDaoTableInfo tableInfo) throws SQLException {
+        var databaseName = ScxContext.easyConfig().dataSourceDatabase();
+        try (var con = ScxContext.dao().dataSource().getConnection()) {
+            var dbMetaData = con.getMetaData();
+            var nowTable = dbMetaData.getTables(databaseName, databaseName, tableInfo.tableName, new String[]{"TABLE"});
+            if (nowTable.next()) { //有这个表
+                var nowColumns = dbMetaData.getColumns(databaseName, databaseName, nowTable.getString("TABLE_NAME"), null);
+                //所有不包含的 field
+                return getNonExistentColumnName(nowColumns, tableInfo).size() != 0;
+            } else {
+                return true;
+            }
+        }
+    }
+
+    /**
+     * 获取不存在的 列名称 用于后续的表修复
+     *
+     * @param nowColumns n
+     * @param tableInfo  a
+     * @return a
+     * @throws SQLException a
+     */
+    private static List<String> getNonExistentColumnName(ResultSet nowColumns, ScxDaoTableInfo tableInfo) throws SQLException {
+        var existingColumn = new ArrayList<>();
+        while (nowColumns.next()) {
+            existingColumn.add(nowColumns.getString("COLUMN_NAME"));
+        }
+        //所有不包含的
+        return Stream.of(tableInfo.allFields)
+                .map(Field::getName)
+                .filter(name -> !existingColumn.contains(CaseUtils.toSnake(name)))
+                .toList();
     }
 
 }

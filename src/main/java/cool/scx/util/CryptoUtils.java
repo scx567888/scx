@@ -7,9 +7,6 @@ import org.jasypt.util.password.PasswordEncryptor;
 import org.jasypt.util.text.AES256TextEncryptor;
 import org.jasypt.util.text.TextEncryptor;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-
 /**
  * 加密,解密工具类 <br>
  *
@@ -89,28 +86,6 @@ public final class CryptoUtils {
      */
     public static byte[] decryptBinary(byte[] encryptedBinary, String encryptorPassword) {
         return getBinaryEncryptor(encryptorPassword).decrypt(encryptedBinary);
-    }
-
-    /**
-     * 根据 字符串 获取(加密) BASE64
-     *
-     * @param str a {@link java.lang.String} object
-     * @return a {@link java.lang.String} object
-     */
-    public static String encodeBase64(String str) {
-        var encoder = Base64.getEncoder();
-        return encoder.encodeToString(str.getBytes(StandardCharsets.UTF_8));
-    }
-
-    /**
-     * 根据 BASE64 获取(解密) 字符串
-     *
-     * @param base64 a {@link java.lang.String} object
-     * @return a {@link java.lang.String} object
-     */
-    public static String decodeBase64(String base64) {
-        var decoder = Base64.getDecoder();
-        return new String(decoder.decode(base64), StandardCharsets.UTF_8);
     }
 
     /**

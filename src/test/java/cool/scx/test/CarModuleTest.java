@@ -35,7 +35,7 @@ public class CarModuleTest {
                 .build();
         scx.run();
         //修复表 (这里忽略提示 即直接修复不询问用户)
-        ScxDaoHelper.fixAllTable(true);
+        ScxDaoHelper.fixTable();
     }
 
     @Test
