@@ -81,7 +81,7 @@ public final class ScxDaoHelper {
      *
      * @return 是否有
      */
-    public static boolean checkAllNeedFixTable() {
+    public static boolean checkNeedFixTable() {
         logger.debug("检查数据表结构中...");
         for (var v : getAllScxModelClassList()) {
             //根据 class 获取 tableInfo
@@ -104,7 +104,7 @@ public final class ScxDaoHelper {
      * @param tableInfo a
      * @throws SQLException a
      */
-    public static void fixTable0(ScxDaoTableInfo tableInfo) throws SQLException {
+    private static void fixTable0(ScxDaoTableInfo tableInfo) throws SQLException {
         var databaseName = ScxContext.easyConfig().dataSourceDatabase();
         try (var con = ScxContext.dao().dataSource().getConnection()) {
             var dbMetaData = con.getMetaData();
