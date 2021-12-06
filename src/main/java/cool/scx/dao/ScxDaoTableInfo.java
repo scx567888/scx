@@ -4,14 +4,11 @@ import cool.scx.ScxContext;
 import cool.scx.annotation.Column;
 import cool.scx.annotation.NoColumn;
 import cool.scx.annotation.ScxModel;
-import cool.scx.sql.SQLRunner;
 import cool.scx.sql.SQLTypeHelper;
 import cool.scx.util.CaseUtils;
 import cool.scx.util.StringUtils;
 
 import java.lang.reflect.Field;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -193,15 +190,6 @@ public final class ScxDaoTableInfo {
         return columnName + type + notNull + autoIncrement + defaultValue + onUpdate;
     }
 
-    private static Field[] getNonExistentFields(ResultSet nowColumns, Field[] allFields) throws SQLException {
-        var existingColumn = new ArrayList<>();
-        while (nowColumns.next()) {
-            existingColumn.add(nowColumns.getString("COLUMN_NAME"));
-        }
-        //所有不包含的
-        return Stream.of(allFields).filter(field -> !existingColumn.contains(CaseUtils.toSnake(field.getName()))).toArray(Field[]::new);
-    }
-
     /**
      * 获取建表语句
      *
@@ -219,63 +207,19 @@ public final class ScxDaoTableInfo {
     /**
      * 获取修复表的语句
      *
-     * @param nonExistentFields a
+     * @param fieldNames 字段的名称 (注意 : fieldNames 中存在但 allFields 中不存在的则会忽略)
      * @return a
      */
-    public String getAlertTableDDL(Field[] nonExistentFields) {
+    public String getAlertTableDDL(List<String> fieldNames) {
+        var fields = Arrays.stream(allFields).filter(field -> fieldNames.contains(field.getName())).toArray(Field[]::new);
         var alertTableDDL = new ArrayList<String>();
-        for (var field : nonExistentFields) {
+        for (var field : fields) {
             alertTableDDL.add("ADD " + getMySQLColumnByField(field));
         }
-        for (var s : getOtherSQL(nonExistentFields)) {
+        for (var s : getOtherSQL(fields)) {
             alertTableDDL.add("ADD " + s);
         }
         return "ALTER TABLE `" + tableName + "` " + String.join(",", alertTableDDL) + ";";
-    }
-
-    /**
-     * @throws SQLException a
-     */
-    public void fixTable() throws SQLException {
-        var databaseName = ScxContext.easyConfig().dataSourceDatabase();
-        try (var con = ScxContext.dao().dataSource().getConnection()) {
-            var dbMetaData = con.getMetaData();
-            var nowTable = dbMetaData.getTables(databaseName, databaseName, tableName, new String[]{"TABLE"});
-            if (nowTable.next()) { //有这个表
-                var nowColumns = dbMetaData.getColumns(databaseName, databaseName, nowTable.getString("TABLE_NAME"), null);
-                //所有不包含的 field
-                var nonExistentFields = getNonExistentFields(nowColumns, allFields);
-                if (nonExistentFields.length > 0) {
-                    var alertTableDDL = this.getAlertTableDDL(nonExistentFields);
-                    SQLRunner.execute(con, alertTableDDL);
-                }
-            } else {//没有这个表
-                SQLRunner.execute(con, this.getCreateTableDDL());
-            }
-        }
-
-    }
-
-    /**
-     * 检查是否需要修复表
-     *
-     * @return true 需要 false 不需要
-     * @throws SQLException e
-     */
-    public boolean checkNeedFixTable() throws SQLException {
-        var databaseName = ScxContext.easyConfig().dataSourceDatabase();
-        try (var con = ScxContext.dao().dataSource().getConnection()) {
-            var dbMetaData = con.getMetaData();
-            var nowTable = dbMetaData.getTables(databaseName, databaseName, tableName, new String[]{"TABLE"});
-            if (nowTable.next()) { //有这个表
-                var nowColumns = dbMetaData.getColumns(databaseName, databaseName, nowTable.getString("TABLE_NAME"), null);
-                //所有不包含的 field
-                var nonExistentFieldLength = getNonExistentFields(nowColumns, allFields).length;
-                return nonExistentFieldLength != 0;
-            } else {
-                return true;
-            }
-        }
     }
 
 }
