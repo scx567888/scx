@@ -94,7 +94,7 @@ public abstract class AbstractBaseService<Entity> {
                 .Insert(scxDaoTableInfo.tableName, c)
                 .Values(c)
                 .GetSQL();
-        return new SQLRunnerParameterWrapper<>(sql, ObjectUtils.convertValueToMap(entity));
+        return new SQLRunnerParameterWrapper<>(sql, ObjectUtils.mapper().convertValue(entity, ObjectUtils.MAP_TYPE));
     }
 
     /**
@@ -238,7 +238,7 @@ public abstract class AbstractBaseService<Entity> {
         if (u.length == 0) {
             throw new RuntimeException("更新数据时 待更新的数据 [实体类中除被 @Column(excludeOnUpdate = true) 修饰以外的字段] 不能全部为 null !!!");
         }
-        var entityMap = ObjectUtils.convertValueToMap(entity);
+        var entityMap = ObjectUtils.mapper().convertValue(entity, ObjectUtils.MAP_TYPE);
         entityMap.putAll(query.where().getWhereParamMap());
         var sql = SQLBuilder
                 .Update(scxDaoTableInfo.tableName)

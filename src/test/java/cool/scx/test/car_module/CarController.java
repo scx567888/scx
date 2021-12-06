@@ -11,7 +11,6 @@ import cool.scx.vo.*;
 import java.io.IOException;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
-import java.sql.SQLException;
 import java.util.HashMap;
 
 /**
@@ -28,11 +27,10 @@ public class CarController {
      * 测试!!!
      *
      * @return 页面
-     * @throws java.sql.SQLException if any.
-     * @throws java.io.IOException   if any.
+     * @throws java.io.IOException if any.
      */
     @ScxMapping(value = "/", method = HttpMethod.GET)
-    public Html TestIndex() throws SQLException, IOException {
+    public Html TestIndex() throws IOException {
         Html index = Html.of("index");
         index.add("name", "小明");
         index.add("age", 22);

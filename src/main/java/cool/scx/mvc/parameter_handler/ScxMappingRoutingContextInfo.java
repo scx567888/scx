@@ -3,7 +3,7 @@ package cool.scx.mvc.parameter_handler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.bo.UploadedEntity;
-import cool.scx.util.JacksonHelper;
+import cool.scx.util.ObjectUtils;
 import io.vertx.core.MultiMap;
 import io.vertx.ext.web.RoutingContext;
 
@@ -42,7 +42,7 @@ public final class ScxMappingRoutingContextInfo {
     private static JsonNode initJsonBody(RoutingContext ctx) {
         //先从多个来源获取参数 并缓存起来
         try {
-            return JacksonHelper.getObjectMapper().readTree(ctx.getBodyAsString());
+            return ObjectUtils.mapper().readTree(ctx.getBodyAsString());
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             return null;

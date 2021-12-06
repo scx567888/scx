@@ -76,7 +76,7 @@ public final class Raw implements BaseVo {
      * {@inheritDoc}
      */
     @Override
-    public void handle(RoutingContext context) throws Exception {
+    public void handle(RoutingContext context) {
         if (isFromFile) {
             sendFile(context);
         } else {
