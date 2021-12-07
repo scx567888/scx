@@ -403,7 +403,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @return c
      * @throws java.sql.SQLException c
      */
-    public long deleteIgnoreConfig(Connection con, long... ids) throws SQLException {
+    public long deleteIgnoreTombstone(Connection con, long... ids) throws SQLException {
         return this._delete(con, new Query().in("id", ids));
     }
 
@@ -415,7 +415,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @return c
      * @throws java.sql.SQLException c
      */
-    public long deleteIgnoreConfig(Connection con, Query query) throws SQLException {
+    public long deleteIgnoreTombstone(Connection con, Query query) throws SQLException {
         return this._delete(con, query);
     }
 
