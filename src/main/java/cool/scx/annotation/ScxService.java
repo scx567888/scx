@@ -6,9 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * ScxService
- * service 层映射
- * 设置此注解的方法 必须同时 继承 BaseService
+ * 标注此类是一个 Service 层映射
  *
  * @author scx567888
  * @version 0.3.6

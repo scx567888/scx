@@ -17,11 +17,14 @@ import java.util.Map;
 
 /**
  * 提供一些针对 BaseModel 类型实体类 简单的 CRUD 操作的 service 类
+ * <p>
+ * 业务 service 可以继承此类 (注意 : 如需要被 beanFactory 扫描到 请标注 {@link cool.scx.annotation.ScxService} 注解)
+ * <p>
  * 注意和 {@link BasicService} 进行区分
  * <p>
- * '_' 下划线开头的方法为具体实现方法 其余方法为实现方法的建议封装
+ * '_' 下划线开头的方法为 BasicService 的实现方法, 其余为基于以上方法进行的封装以便使用
  * <p>
- * 业务 service 可以继承此类 或手动创建 : new BaseService()
+ * 或手动创建 : new BaseModelService()
  * <p>
  * 如果 无法满足需求
  * <p>
