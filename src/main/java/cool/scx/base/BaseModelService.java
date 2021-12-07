@@ -16,7 +16,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 最基本的 service 类 , 提供一些简单的 CRUD 操作
+ * 提供一些针对 BaseModel 类型实体类 简单的 CRUD 操作的 service 类
+ * 注意和 {@link BasicService} 进行区分
  * <p>
  * '_' 下划线开头的方法为具体实现方法 其余方法为实现方法的建议封装
  * <p>
@@ -29,12 +30,12 @@ import java.util.Map;
  * @author scx567888
  * @version 0.3.6
  */
-public class BaseService<Entity extends BaseModel> extends AbstractBaseService<Entity> {
+public class BaseModelService<Entity extends BaseModel> extends BasicService<Entity> {
 
     /**
      * a
      */
-    public BaseService() {
+    public BaseModelService() {
         super();
     }
 
@@ -43,7 +44,7 @@ public class BaseService<Entity extends BaseModel> extends AbstractBaseService<E
      *
      * @param entityClass a
      */
-    public BaseService(Class<Entity> entityClass) {
+    public BaseModelService(Class<Entity> entityClass) {
         super(entityClass);
     }
 
@@ -113,7 +114,7 @@ public class BaseService<Entity extends BaseModel> extends AbstractBaseService<E
      * @param ids 要删除的数据的 id 集合
      * @return 删除成功的数据条数
      */
-    public long deleteIgnoreConfig(long... ids) {
+    public long deleteIgnoreTombstone(long... ids) {
         return this._delete(new Query().in("id", ids));
     }
 
@@ -123,7 +124,7 @@ public class BaseService<Entity extends BaseModel> extends AbstractBaseService<E
      * @param query 删除条件
      * @return 被删除的数据条数
      */
-    public long deleteIgnoreConfig(Query query) {
+    public long deleteIgnoreTombstone(Query query) {
         return this._delete(query);
     }
 

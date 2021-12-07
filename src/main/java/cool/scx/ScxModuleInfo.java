@@ -5,7 +5,7 @@ import cool.scx.annotation.ScxModel;
 import cool.scx.annotation.ScxService;
 import cool.scx.annotation.ScxWebSocketMapping;
 import cool.scx.base.BaseModel;
-import cool.scx.base.BaseService;
+import cool.scx.base.BaseModelService;
 import cool.scx.base.BaseWebSocketHandler;
 import cool.scx.util.ScanClassUtils;
 
@@ -54,12 +54,12 @@ public final class ScxModuleInfo<T extends ScxModule> implements Serializable {
     /**
      * 所有 标识 ScxModel 注解并且 继承自 BaseModel 的 class
      */
-    private final List<Class<? extends BaseModel>> scxModelClassList;
+    private final List<Class<? extends BaseModel>> scxBaseModelClassList;
 
     /**
-     * 所有 标识 ScxService 注解并且 继承自 BaseService 且 泛型参数不为空 的 class
+     * 所有 标识 ScxService 注解并且 继承自 BaseModelService 且 泛型参数不为空 的 class
      */
-    private final List<Class<? extends BaseService<?>>> scxServiceClassList;
+    private final List<Class<? extends BaseModelService<?>>> scxBaseModelServiceClassList;
 
     /**
      * 所有 标识 ScxMapping 注解的 class
@@ -110,8 +110,8 @@ public final class ScxModuleInfo<T extends ScxModule> implements Serializable {
             this.allClassList = ScanClassUtils.filterByBasePackage(allClassList, basePackage);
             this.moduleRootPath = classSourceFile;
         }
-        this.scxModelClassList = initScxModelClassList(this.allClassList);
-        this.scxServiceClassList = initScxServiceClassList(this.allClassList);
+        this.scxBaseModelClassList = initScxBaseModelClassList(this.allClassList);
+        this.scxBaseModelServiceClassList = initScxBaseModelServiceClassList(this.allClassList);
         this.scxMappingClassList = initScxMappingClassList(this.allClassList);
         this.scxWebSocketRouteClassList = initScxWebSocketRouteClassList(this.allClassList);
         this.needRegisterBeanClassList = initNeedRegisterBeanClassList(this.allClassList);
@@ -173,17 +173,17 @@ public final class ScxModuleInfo<T extends ScxModule> implements Serializable {
      * @return a
      */
     @SuppressWarnings("unchecked")
-    private static List<Class<? extends BaseService<?>>> initScxServiceClassList(List<Class<?>> allClassList) {
-        var tempList = new ArrayList<Class<? extends BaseService<?>>>();
+    private static List<Class<? extends BaseModelService<?>>> initScxBaseModelServiceClassList(List<Class<?>> allClassList) {
+        var tempList = new ArrayList<Class<? extends BaseModelService<?>>>();
         for (Class<?> c : allClassList) {
-            if (c.isAnnotationPresent(ScxService.class) && !c.isInterface() && BaseService.class.isAssignableFrom(c)) {
+            if (c.isAnnotationPresent(ScxService.class) && !c.isInterface() && BaseModelService.class.isAssignableFrom(c)) {
                 //这里获取 泛型类
                 var genericSuperclass = c.getGenericSuperclass();
                 //只有拥有泛型参数的 并且 参数符合 条件 的才加入到 列表中
                 if (genericSuperclass instanceof ParameterizedType) {
                     var typeArguments = ((ParameterizedType) genericSuperclass).getActualTypeArguments();
                     if (typeArguments.length == 1) {
-                        tempList.add((Class<? extends BaseService<?>>) c);
+                        tempList.add((Class<? extends BaseModelService<?>>) c);
                     }
                 }
             }
@@ -198,7 +198,7 @@ public final class ScxModuleInfo<T extends ScxModule> implements Serializable {
      * @return a
      */
     @SuppressWarnings("unchecked")
-    private static List<Class<? extends BaseModel>> initScxModelClassList(List<Class<?>> allClassList) {
+    private static List<Class<? extends BaseModel>> initScxBaseModelClassList(List<Class<?>> allClassList) {
         var tempList = new ArrayList<Class<? extends BaseModel>>();
         for (Class<?> c : allClassList) {
             if (c.isAnnotationPresent(ScxModel.class) && !c.isInterface() && BaseModel.class.isAssignableFrom(c)) {
@@ -280,8 +280,8 @@ public final class ScxModuleInfo<T extends ScxModule> implements Serializable {
      *
      * @return a
      */
-    public List<Class<? extends BaseModel>> scxModelClassList() {
-        return scxModelClassList;
+    public List<Class<? extends BaseModel>> scxBaseModelClassList() {
+        return scxBaseModelClassList;
     }
 
     /**
@@ -289,8 +289,8 @@ public final class ScxModuleInfo<T extends ScxModule> implements Serializable {
      *
      * @return a
      */
-    public List<Class<? extends BaseService<?>>> scxServiceClassList() {
-        return scxServiceClassList;
+    public List<Class<? extends BaseModelService<?>>> scxBaseModelServiceClassList() {
+        return scxBaseModelServiceClassList;
     }
 
     /**

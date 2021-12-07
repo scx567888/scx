@@ -34,7 +34,7 @@ public final class ScxDaoHelper {
         var fixFail = 0;
         //不需要修复的表
         var noNeedToFix = 0;
-        for (var v : getAllScxModelClassList()) {
+        for (var v : getAllScxBaseModelClassList()) {
             //根据 class 获取 tableInfo
             var tableInfo = new ScxDaoTableInfo(v);
             try {
@@ -67,11 +67,11 @@ public final class ScxDaoHelper {
      *
      * @return s
      */
-    private static List<Class<?>> getAllScxModelClassList() {
+    private static List<Class<?>> getAllScxBaseModelClassList() {
         var allScxModelClassList = new ArrayList<Class<?>>();
         for (var scxModuleInfo : ScxContext.scxModuleInfos()) {
             //只对 ScxModel 注解标识的了类进行数据表修复
-            allScxModelClassList.addAll(scxModuleInfo.scxModelClassList());
+            allScxModelClassList.addAll(scxModuleInfo.scxBaseModelClassList());
         }
         return allScxModelClassList;
     }
@@ -83,7 +83,7 @@ public final class ScxDaoHelper {
      */
     public static boolean checkNeedFixTable() {
         logger.debug("检查数据表结构中...");
-        for (var v : getAllScxModelClassList()) {
+        for (var v : getAllScxBaseModelClassList()) {
             //根据 class 获取 tableInfo
             var tableInfo = new ScxDaoTableInfo(v);
             try {
