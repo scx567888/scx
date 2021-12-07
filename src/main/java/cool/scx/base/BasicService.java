@@ -20,12 +20,13 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 /**
- * <p>Abstract AbstractBaseService class.</p>
+ * 最基本的 可以实现 实体类 CRUD 的 Service
+ * 注意和 {@link BaseModelService} 进行区分
  *
  * @author scx567888
  * @version 1.5.1
  */
-public abstract class AbstractBaseService<Entity> {
+public class BasicService<Entity> {
 
     /**
      * 实体类对应的 table 结构
@@ -41,7 +42,7 @@ public abstract class AbstractBaseService<Entity> {
      * 从泛型中获取 entityClass
      */
     @SuppressWarnings("unchecked")
-    public AbstractBaseService() {
+    public BasicService() {
         var genericSuperclass = this.getClass().getGenericSuperclass();
         if (genericSuperclass instanceof ParameterizedType) {
             var typeArguments = ((ParameterizedType) genericSuperclass).getActualTypeArguments();
@@ -57,7 +58,7 @@ public abstract class AbstractBaseService<Entity> {
      *
      * @param entityClass 继承自 {@link cool.scx.base.BaseModel} 的实体类 class
      */
-    public AbstractBaseService(Class<Entity> entityClass) {
+    public BasicService(Class<Entity> entityClass) {
         this.entityClass = entityClass;
         this.scxDaoTableInfo = new ScxDaoTableInfo(this.entityClass);
     }
@@ -88,6 +89,12 @@ public abstract class AbstractBaseService<Entity> {
         return updateResult.generatedKeys().size() > 0 ? updateResult.generatedKeys().get(0) : -1;
     }
 
+    /**
+     * a
+     *
+     * @param entity a
+     * @return a
+     */
     private SQLRunnerParameterWrapper<Map<String, Object>> _buildInsertParameter(Entity entity) {
         var c = Stream.of(scxDaoTableInfo.canInsertFields).filter(field -> ObjectUtils.getFieldValue(field, entity) != null).toArray(Field[]::new);
         var sql = SQLBuilder
@@ -121,6 +128,12 @@ public abstract class AbstractBaseService<Entity> {
         return ScxContext.sqlRunner().updateBatch(parameter.sql(), parameter.param()).generatedKeys();
     }
 
+    /**
+     * a
+     *
+     * @param entityList a
+     * @return a
+     */
     private SQLRunnerParameterWrapper<ArrayList<Map<String, Object>>> _buildInsertBatchParameter(List<Entity> entityList) {
         //将 entity 转换为 map
         var mapList = new ArrayList<Map<String, Object>>(entityList.size());
@@ -162,6 +175,12 @@ public abstract class AbstractBaseService<Entity> {
         return ScxContext.sqlRunner().query(parameter.sql(), new BeanListHandler<>(entityClass), parameter.param());
     }
 
+    /**
+     * a
+     *
+     * @param query a
+     * @return a
+     */
     private SQLRunnerParameterWrapper<Map<String, Object>> _buildSelectParameter(Query query) {
         var sql = SQLBuilder
                 .Select(scxDaoTableInfo.selectColumns)
@@ -198,6 +217,12 @@ public abstract class AbstractBaseService<Entity> {
         return ScxContext.sqlRunner().query(parameter.sql(), new ScalarHandler<>("count"), parameter.param());
     }
 
+    /**
+     * a
+     *
+     * @param query a
+     * @return a
+     */
     private SQLRunnerParameterWrapper<Map<String, Object>> _buildCountParameter(Query query) {
         var sql = SQLBuilder
                 .Select("COUNT(*) AS count")
@@ -236,6 +261,14 @@ public abstract class AbstractBaseService<Entity> {
         return ScxContext.sqlRunner().update(parameter.sql(), parameter.param()).affectedLength();
     }
 
+    /**
+     * a
+     *
+     * @param entity      a
+     * @param query       a
+     * @param includeNull a
+     * @return a
+     */
     private SQLRunnerParameterWrapper<Map<String, Object>> _buildUpdateParameter(Entity entity, Query query, boolean includeNull) {
         if (query == null || query.where().isEmpty()) {
             throw new RuntimeException("更新数据时 必须指定 id , 删除条件 或 自定义的 where 语句 !!!");
@@ -278,6 +311,12 @@ public abstract class AbstractBaseService<Entity> {
         return ScxContext.sqlRunner().update(parameter.sql(), parameter.param()).affectedLength();
     }
 
+    /**
+     * a
+     *
+     * @param query a
+     * @return a
+     */
     private SQLRunnerParameterWrapper<Map<String, Object>> _buildDeleteParameter(Query query) {
         if (query == null || query.where().isEmpty()) {
             throw new RuntimeException("删除数据时必须指定 id , 删除条件 或 自定义的 where 语句 !!!");
