@@ -20,15 +20,13 @@ import java.util.Map;
  * <p>
  * 业务 service 可以继承此类 (注意 : 如需要被 beanFactory 扫描到 请标注 {@link cool.scx.annotation.ScxService} 注解)
  * <p>
+ * 或手动创建 : new BaseModelService()
+ * <p>
  * 注意和 {@link BasicService} 进行区分
  * <p>
  * '_' 下划线开头的方法为 BasicService 的实现方法, 其余为基于以上方法进行的封装以便使用
  * <p>
- * 或手动创建 : new BaseModelService()
- * <p>
- * 如果 无法满足需求
- * <p>
- * 可以考虑使用 {@link cool.scx.sql.SQLRunner}
+ * 如果还是无法满足需求, 可以考虑使用 {@link cool.scx.sql.SQLRunner}
  *
  * @author scx567888
  * @version 0.3.6
