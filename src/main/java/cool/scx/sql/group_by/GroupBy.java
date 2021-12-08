@@ -33,15 +33,15 @@ public final class GroupBy {
      * @return 本身, 方便链式调用
      */
     public GroupBy add(String name, GroupByOption... options) {
-        if (StringUtils.isBlank(name)) {
-            throw new IllegalArgumentException("GroupBy 类型 : 字段名称不能为空 !!!");
-        }
         var useOriginalName = false;
         for (var option : options) {
             if (option == GroupByOption.USE_ORIGINAL_NAME) {
                 useOriginalName = true;
                 break;
             }
+        }
+        if (StringUtils.isBlank(name)) {
+            throw new IllegalArgumentException("GroupBy 参数错误 : 名称 不能为空 !!!");
         }
         var groupByBody = new GroupByBody(name, useOriginalName);
         groupByBodyList.add(groupByBody);

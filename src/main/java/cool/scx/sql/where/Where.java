@@ -44,16 +44,7 @@ public final class Where {
      * @return 本身 , 方便链式调用
      */
     public Where add2(String name, WhereType whereType, Object value1, Object value2, WhereOption... options) {
-        if (name == null) {
-            throw new RuntimeException(" WhereType 类型 : " + whereType + " , 字段名称不能为空 !!!");
-        }
-        if (whereType.paramSize() != 2) {
-            throw new RuntimeException(" WhereType 类型 : " + whereType + " , 参数数量必须为 " + whereType.paramSize());
-        }
-        if (value1 == null || value2 == null) {
-            throw new RuntimeException(" WhereType 类型 : " + whereType + " , 参数列表不能为空 !!!");
-        }
-        return _add(name, whereType, value1, value2, options);
+        return _add(name, whereType, value1, value2, 2, options);
     }
 
     /**
@@ -66,16 +57,7 @@ public final class Where {
      * @return 本身 , 方便链式调用
      */
     public Where add1(String name, WhereType whereType, Object value1, WhereOption... options) {
-        if (name == null) {
-            throw new RuntimeException(" WhereType 类型 : " + whereType + " , 字段名称不能为空 !!!");
-        }
-        if (whereType.paramSize() != 1) {
-            throw new RuntimeException(" WhereType 类型 : " + whereType + " , 参数数量必须为 " + whereType.paramSize());
-        }
-        if (value1 == null) {
-            throw new RuntimeException(" WhereType 类型 : " + whereType + " , 参数列表不能为空 !!!");
-        }
-        return _add(name, whereType, value1, null, options);
+        return _add(name, whereType, value1, null, 1, options);
     }
 
     /**
@@ -87,13 +69,7 @@ public final class Where {
      * @return 本身 , 方便链式调用
      */
     public Where add0(String name, WhereType whereType, WhereOption... options) {
-        if (name == null) {
-            throw new RuntimeException(" WhereType 类型 : " + whereType + " , 字段名称不能为空 !!!");
-        }
-        if (whereType.paramSize() != 0) {
-            throw new RuntimeException(" WhereType 类型 : " + whereType + " , 参数数量必须为 " + whereType.paramSize());
-        }
-        return _add(name, whereType, null, null, options);
+        return _add(name, whereType, null, null, 0, options);
     }
 
     /**
@@ -365,15 +341,46 @@ public final class Where {
      * @param options   a
      * @return a
      */
-    private Where _add(String name, WhereType whereType, Object value1, Object value2, WhereOption... options) {
-        var replace = false;
-        var useOriginalName = false;
+    private Where _add(String name, WhereType whereType, Object value1, Object value2, int needParamSize, WhereOption... options) {
+        var replace = false;// 是否替换已有的相同名称的 WhereBody
+        var useOriginalName = false;// 是否使用原始名称
+        var skipIfNull = false;//true : 如果参数为null 则跳过 , false 抛出移除
         for (var option : options) {
             if (option == WhereOption.REPLACE) {
                 replace = true;
             } else if (option == WhereOption.USE_ORIGINAL_NAME) {
                 useOriginalName = true;
+            } else if (option == WhereOption.SKIP_IF_NULL) {
+                skipIfNull = true;
             }
+        }
+        //校验参数 首先是名称一定不能为空
+        if (StringUtils.isBlank(name)) {
+            throw new IllegalArgumentException("Where 参数错误 : 名称 不能为空 !!!");
+        }
+        //类型也不能为空
+        if (whereType == null) {
+            throw new IllegalArgumentException("Where 参数错误 : whereType 不能为空 !!!");
+        }
+        //类型所需的参数数量和所传的参数数量必须一致
+        if (whereType.paramSize() != needParamSize) {
+            throw new IllegalArgumentException("Where 参数错误 : whereType 类型 : " + whereType + " , 参数数量必须为 " + whereType.paramSize());
+        }
+        //有效的参数数量(不为空的) 每检测到一个有效的(不为空的) 便加 1
+        var validParamSize = 0;
+        if (value1 != null) {
+            validParamSize = validParamSize + 1;
+        }
+        if (value2 != null) {
+            validParamSize = validParamSize + 1;
+        }
+        //有效参数的数量和所需的参数数量不一致
+        if (whereType.paramSize() != validParamSize) {
+            //根据是否跳过空进行校验
+            if (!skipIfNull) {
+                throw new IllegalArgumentException("Where 参数错误 : whereType 类型 : " + whereType + " , 参数列表不能为空 !!!");
+            }
+            return this;
         }
         // 是否使用原始名称 (即不进行转义)
         var whereBody = new WhereBody(name, whereType, value1, value2, useOriginalName);
