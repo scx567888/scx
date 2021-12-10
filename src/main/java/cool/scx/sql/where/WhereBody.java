@@ -47,7 +47,7 @@ public final class WhereBody {
                 var jsonContainsParams = toArray(value1);
                 var placeholder = getPlaceholder(this.name);
                 whereParamMap.put(placeholder, jsonContainsParams);
-                whereClause = keyWord + " ( " + columnName + ", :" + placeholder + " )";
+                whereClause = keyWord + "(" + columnName + ", :" + placeholder + ")";
             }
             case LIKE, NOT_LIKE -> {
                 var placeholder = getPlaceholder(this.name);
@@ -62,7 +62,7 @@ public final class WhereBody {
                     sList[i] = ":" + placeholder;
                     whereParamMap.put(placeholder, inParams[i]);
                 }
-                whereClause = columnName + " " + keyWord + " ( " + String.join(",", sList) + " )";
+                whereClause = columnName + " " + keyWord + " (" + String.join(", ", sList) + ")";
             }
             case BETWEEN, NOT_BETWEEN -> {
                 var placeholder1 = getPlaceholder(this.name);
