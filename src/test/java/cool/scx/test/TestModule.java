@@ -44,28 +44,29 @@ public class TestModule implements ScxModule {
         var carService = ScxContext.beanFactory().getBean(CarService.class);
         var carService1 = new BaseModelService<>(Car.class);
         try {
-            System.err.println("开始: 方式1 (批量) 插入");
-            //插入数据 方式1
-            Timer.start("save1");
-            var l = new ArrayList<Car>();
-            for (int i = 0; i < 999; i++) {
-                var c = new Car();
-                c.name = RandomUtils.getRandomString(10, false);
-                l.add(c);
-            }
-            carService.save(l);
-            System.err.println("完成: 方式1 (批量) 插入 999条数据时间 :" + Timer.stopToMillis("save1"));
+            if (carService1.count() < 1500) {
+                System.err.println("开始: 方式1 (批量) 插入");
+                //插入数据 方式1
+                Timer.start("save1");
+                var l = new ArrayList<Car>();
+                for (int i = 0; i < 999; i++) {
+                    var c = new Car();
+                    c.name = RandomUtils.getRandomString(10, false) + "🤣";
+                    l.add(c);
+                }
+                carService.save(l);
+                System.err.println("完成: 方式1 (批量) 插入 999条数据时间 :" + Timer.stopToMillis("save1"));
 
-            System.err.println("开始: 方式2 (循环单次) 插入");
-            //插入数据 方式2
-            Timer.start("save2");
-            for (int i = 0; i < 999; i++) {
-                var c = new Car();
-                c.name = RandomUtils.getRandomString(10, false);
-                carService1.save(c);
+                System.err.println("开始: 方式2 (循环单次) 插入");
+                //插入数据 方式2
+                Timer.start("save2");
+                for (int i = 0; i < 999; i++) {
+                    var c = new Car();
+                    c.name = RandomUtils.getRandomString(10, false) + "😢";
+                    carService1.save(c);
+                }
+                System.err.println("方式2 (循环单次) 插入 999条数据时间 :" + Timer.stopToMillis("save2"));
             }
-            System.err.println("方式2 (循环单次) 插入 999条数据时间 :" + Timer.stopToMillis("save2"));
-
 
             System.err.println("将 id 大于 200 的 name 设置为空 !!!");
             var c = new Car();
