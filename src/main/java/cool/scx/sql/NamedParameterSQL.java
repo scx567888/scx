@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -28,7 +27,7 @@ final class NamedParameterSQL extends AbstractPlaceholderSQL {
     /**
      * 具名参数名称索引
      */
-    private final List<String> namedParameterNameIndex = new ArrayList<>();
+    private final String[] namedParameterNameIndex;
 
     /**
      * 是否为批量数据
@@ -51,7 +50,7 @@ final class NamedParameterSQL extends AbstractPlaceholderSQL {
      * @param namedParameterSQL a {@link java.lang.String} object
      */
     public NamedParameterSQL(String namedParameterSQL, Map<String, Object> param) {
-        initNamedParameterSQL(namedParameterSQL);
+        this.namedParameterNameIndex = initNamedParameterNameIndex(namedParameterSQL);
         this.isBatch = false;
         this.param = param;
         this.params = null;
@@ -64,7 +63,7 @@ final class NamedParameterSQL extends AbstractPlaceholderSQL {
      * @param params            a
      */
     public NamedParameterSQL(String namedParameterSQL, Collection<Map<String, Object>> params) {
-        initNamedParameterSQL(namedParameterSQL);
+        this.namedParameterNameIndex = initNamedParameterNameIndex(namedParameterSQL);
         this.isBatch = true;
         this.param = null;
         this.params = params != null ? params : new ArrayList<>();
@@ -75,15 +74,17 @@ final class NamedParameterSQL extends AbstractPlaceholderSQL {
      *
      * @param namedParameterSQL a
      */
-    private void initNamedParameterSQL(String namedParameterSQL) {
+    private String[] initNamedParameterNameIndex(String namedParameterSQL) {
         var matcher = NAMED_PARAMETER_PATTERN.matcher(namedParameterSQL);
         var normalSQL = new StringBuilder();
+        var tempNameIndexList = new ArrayList<String>();
         while (matcher.find()) {
             matcher.appendReplacement(normalSQL, "?");
-            this.namedParameterNameIndex.add(matcher.group(1));
+            tempNameIndexList.add(matcher.group(1));
         }
         matcher.appendTail(normalSQL);
         this.normalSQL = normalSQL.toString();
+        return tempNameIndexList.toArray(String[]::new);
     }
 
     @Override
@@ -102,7 +103,7 @@ final class NamedParameterSQL extends AbstractPlaceholderSQL {
         var preparedStatement = con.prepareStatement(normalSQL, Statement.RETURN_GENERATED_KEYS);
         //单条数据
         if (param != null) {
-            fillPreparedStatement(preparedStatement, namedParameterNameIndex.stream().map(param::get).toArray());
+            fillPreparedStatement(preparedStatement, mapToArray(param));
         }
         if (SQLRunner.logger.isDebugEnabled()) {
             var realSQL = preparedStatement.unwrap(ClientPreparedStatement.class).asSql();
@@ -123,7 +124,7 @@ final class NamedParameterSQL extends AbstractPlaceholderSQL {
         //根据数据量, 判断是否使用 批量插入
         for (var paramMap : params) {
             if (paramMap != null) {
-                fillPreparedStatement(preparedStatement, namedParameterNameIndex.stream().map(paramMap::get).toArray());
+                fillPreparedStatement(preparedStatement, mapToArray(paramMap));
                 preparedStatement.addBatch();
             }
         }
@@ -136,6 +137,20 @@ final class NamedParameterSQL extends AbstractPlaceholderSQL {
             }
         }
         return preparedStatement;
+    }
+
+    /**
+     * 根据 namedParameterNameIndex 将 map 转为数组
+     *
+     * @param objectMap a
+     * @return a
+     */
+    private Object[] mapToArray(Map<String, Object> objectMap) {
+        var objectArray = new Object[namedParameterNameIndex.length];
+        for (int i1 = 0; i1 < namedParameterNameIndex.length; i1++) {
+            objectArray[i1] = objectMap.get(namedParameterNameIndex[i1]);
+        }
+        return objectArray;
     }
 
 }
