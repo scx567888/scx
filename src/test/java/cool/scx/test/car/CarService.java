@@ -1,4 +1,4 @@
-package cool.scx.test.car_module;
+package cool.scx.test.car;
 
 import cool.scx.annotation.ScxService;
 import cool.scx.base.BaseModelService;
