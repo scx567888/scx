@@ -31,7 +31,17 @@ final class NamedParameterSQL extends AbstractPlaceholderSQL {
     private final List<String> namedParameterNameIndex = new ArrayList<>();
 
     /**
-     * a
+     * 是否为批量数据
+     */
+    private final boolean isBatch;
+
+    /**
+     * 单条数据
+     */
+    private final Map<String, Object> param;
+
+    /**
+     * 批量数据
      */
     private final Collection<Map<String, Object>> params;
 
@@ -41,7 +51,10 @@ final class NamedParameterSQL extends AbstractPlaceholderSQL {
      * @param namedParameterSQL a {@link java.lang.String} object
      */
     public NamedParameterSQL(String namedParameterSQL, Map<String, Object> param) {
-        this(namedParameterSQL, param != null ? List.of(param) : null);
+        initNamedParameterSQL(namedParameterSQL);
+        this.isBatch = false;
+        this.param = param;
+        this.params = null;
     }
 
     /**
@@ -51,6 +64,18 @@ final class NamedParameterSQL extends AbstractPlaceholderSQL {
      * @param params            a
      */
     public NamedParameterSQL(String namedParameterSQL, Collection<Map<String, Object>> params) {
+        initNamedParameterSQL(namedParameterSQL);
+        this.isBatch = true;
+        this.param = null;
+        this.params = params != null ? params : new ArrayList<>();
+    }
+
+    /**
+     * 初始化 namedParameterSQL;
+     *
+     * @param namedParameterSQL a
+     */
+    private void initNamedParameterSQL(String namedParameterSQL) {
         var matcher = NAMED_PARAMETER_PATTERN.matcher(namedParameterSQL);
         var normalSQL = new StringBuilder();
         while (matcher.find()) {
@@ -59,29 +84,52 @@ final class NamedParameterSQL extends AbstractPlaceholderSQL {
         }
         matcher.appendTail(normalSQL);
         this.normalSQL = normalSQL.toString();
-        this.params = params != null ? params : new ArrayList<>();
     }
 
     @Override
     public PreparedStatement getPreparedStatement(Connection con) throws SQLException {
+        return isBatch ? getPreparedStatement1(con) : getPreparedStatement0(con);
+    }
+
+    /**
+     * 根据 单条参数获取
+     *
+     * @param con c
+     * @return c
+     * @throws SQLException c
+     */
+    private PreparedStatement getPreparedStatement0(Connection con) throws SQLException {
+        var preparedStatement = con.prepareStatement(normalSQL, Statement.RETURN_GENERATED_KEYS);
+        //单条数据
+        if (param != null) {
+            fillPreparedStatement(preparedStatement, namedParameterNameIndex.stream().map(param::get).toArray());
+        }
+        if (SQLRunner.logger.isDebugEnabled()) {
+            var realSQL = preparedStatement.unwrap(ClientPreparedStatement.class).asSql();
+            SQLRunner.logger.debug(realSQL);
+        }
+        return preparedStatement;
+    }
+
+    /**
+     * 根据批量参数获取
+     *
+     * @param con c
+     * @return c
+     * @throws SQLException c
+     */
+    private PreparedStatement getPreparedStatement1(Connection con) throws SQLException {
         var preparedStatement = con.prepareStatement(normalSQL, Statement.RETURN_GENERATED_KEYS);
         //根据数据量, 判断是否使用 批量插入
-        var isBatch = params.size() > 1;
         for (var paramMap : params) {
             if (paramMap != null) {
                 fillPreparedStatement(preparedStatement, namedParameterNameIndex.stream().map(paramMap::get).toArray());
-                if (isBatch) {
-                    preparedStatement.addBatch();
-                }
+                preparedStatement.addBatch();
             }
         }
         if (SQLRunner.logger.isDebugEnabled()) {
             var realSQL = preparedStatement.unwrap(ClientPreparedStatement.class).asSql();
-            if (isBatch) {
-                SQLRunner.logger.debug(realSQL + "... 额外的 " + (params.size() - 1) + " 项");
-            } else {
-                SQLRunner.logger.debug(realSQL);
-            }
+            SQLRunner.logger.debug(realSQL + "... 额外的 " + (params.size() - 1) + " 项");
         }
         return preparedStatement;
     }
