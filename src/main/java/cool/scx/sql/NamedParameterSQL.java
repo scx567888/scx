@@ -129,7 +129,11 @@ final class NamedParameterSQL extends AbstractPlaceholderSQL {
         }
         if (SQLRunner.logger.isDebugEnabled()) {
             var realSQL = preparedStatement.unwrap(ClientPreparedStatement.class).asSql();
-            SQLRunner.logger.debug(realSQL + "... 额外的 " + (params.size() - 1) + " 项");
+            if (params.size() > 1) {
+                SQLRunner.logger.debug(realSQL + "... 额外的 " + (params.size() - 1) + " 项");
+            } else {
+                SQLRunner.logger.debug(realSQL);
+            }
         }
         return preparedStatement;
     }
