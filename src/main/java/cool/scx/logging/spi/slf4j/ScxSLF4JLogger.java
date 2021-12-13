@@ -1,9 +1,8 @@
 package cool.scx.logging.spi.slf4j;
 
-import cool.scx.logging.ScxLogConfiguration;
-import cool.scx.logging.ScxLogHelper;
-import cool.scx.logging.ScxLogLevel;
-import cool.scx.logging.ScxLoggerInfo;
+import cool.scx.logging.ScxLogger;
+import cool.scx.logging.ScxLoggerFactory;
+import cool.scx.logging.ScxLoggingLevel;
 import org.slf4j.Marker;
 import org.slf4j.event.Level;
 import org.slf4j.helpers.LegacyAbstractLogger;
@@ -17,12 +16,7 @@ public final class ScxSLF4JLogger extends LegacyAbstractLogger {
     /**
      * a
      */
-    private final ScxLoggerInfo scxLoggerInfo;
-
-    /**
-     * a
-     */
-    private final Level level;
+    private final ScxLogger scxLogger;
 
     /**
      * a
@@ -31,8 +25,17 @@ public final class ScxSLF4JLogger extends LegacyAbstractLogger {
      */
     public ScxSLF4JLogger(String name) {
         this.name = name;
-        this.scxLoggerInfo = ScxLogConfiguration.getLoggerInfo(name);
-        this.level = this.scxLoggerInfo.level().toSLF4JLevel();
+        this.scxLogger = ScxLoggerFactory.getLogger(name);
+    }
+
+    private static ScxLoggingLevel toScxLoggingLevel(Level level) {
+        return switch (level) {
+            case ERROR -> ScxLoggingLevel.ERROR;
+            case WARN -> ScxLoggingLevel.WARN;
+            case INFO -> ScxLoggingLevel.INFO;
+            case DEBUG -> ScxLoggingLevel.DEBUG;
+            case TRACE -> ScxLoggingLevel.TRACE;
+        };
     }
 
     @Override
@@ -42,32 +45,42 @@ public final class ScxSLF4JLogger extends LegacyAbstractLogger {
 
     @Override
     protected void handleNormalizedLoggingCall(Level level, Marker marker, String message, Object[] arguments, Throwable throwable) {
-        ScxLogHelper.logMessage(name, ScxLogLevel.of(level), MessageFormatter.arrayFormat(message, arguments).getMessage(), scxLoggerInfo, throwable);
+        this.scxLogger.logMessage(toScxLoggingLevel(level), MessageFormatter.arrayFormat(message, arguments).getMessage(), throwable);
     }
 
     @Override
     public boolean isTraceEnabled() {
-        return level.toInt() <= Level.TRACE.toInt();
+        return getLevel().toInt() <= Level.TRACE.toInt();
     }
 
     @Override
     public boolean isDebugEnabled() {
-        return level.toInt() <= Level.DEBUG.toInt();
+        return getLevel().toInt() <= Level.DEBUG.toInt();
     }
 
     @Override
     public boolean isInfoEnabled() {
-        return level.toInt() <= Level.INFO.toInt();
+        return getLevel().toInt() <= Level.INFO.toInt();
     }
 
     @Override
     public boolean isWarnEnabled() {
-        return level.toInt() <= Level.WARN.toInt();
+        return getLevel().toInt() <= Level.WARN.toInt();
     }
 
     @Override
     public boolean isErrorEnabled() {
-        return level.toInt() <= Level.ERROR.toInt();
+        return getLevel().toInt() <= Level.ERROR.toInt();
+    }
+
+    public Level getLevel() {
+        return switch (this.scxLogger.level()) {
+            case OFF, FATAL, ERROR -> Level.ERROR;
+            case WARN -> Level.WARN;
+            case INFO -> Level.INFO;
+            case DEBUG -> Level.DEBUG;
+            case TRACE, ALL -> Level.TRACE;
+        };
     }
 
 }

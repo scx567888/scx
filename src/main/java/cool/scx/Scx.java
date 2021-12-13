@@ -7,7 +7,7 @@ import cool.scx.config.ScxFeatureConfig;
 import cool.scx.dao.ScxDao;
 import cool.scx.enumeration.ScxFeature;
 import cool.scx.eventbus.ScxEventBus;
-import cool.scx.logging.ScxLogConfiguration;
+import cool.scx.logging.ScxLoggerConfiguration;
 import cool.scx.mvc.ScxMappingConfiguration;
 import cool.scx.util.ConsoleUtils;
 import cool.scx.util.NetUtils;
@@ -165,7 +165,7 @@ public final class Scx {
         this.scxConfig = new ScxConfig(this.scxAppRoot.getFileByAppRoot(DEFAULT_SCX_CONFIG_PATH), ScxConfigDefaultValue.defaultConfig(), this.args);
         this.scxEasyConfig = new ScxEasyConfig(this.scxConfig, this.scxAppRoot, this.appKey);
         //5, 初始化 ScxLog 日志框架
-        ScxLogConfiguration.init(this.scxConfig, this.scxAppRoot);
+        ScxLoggerConfiguration.init(this.scxConfig, this.scxAppRoot);
         //6, 初始化 Vertx 这里在 log4j2 之后初始化是因为 vertx 需要使用 log4j2 打印日志
         this.vertx = initVertx();
         //7, 初始化事件总线 (这里的 ScxEventBus 其实只是针对 vertx 的 eventBus 进行一次包装)
