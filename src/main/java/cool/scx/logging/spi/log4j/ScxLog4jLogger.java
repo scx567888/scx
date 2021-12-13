@@ -28,9 +28,18 @@ public final class ScxLog4jLogger extends AbstractLogger {
         this.scxLogger = ScxLoggerFactory.getLogger(name);
     }
 
-    @Override
-    public Level getLevel() {
-        return Level.getLevel(this.scxLogger.level().toString());
+    private static ScxLoggingLevel toScxLoggingLevel(Level level) {
+        return switch (level.toString()) {
+            case "OFF" -> ScxLoggingLevel.OFF;
+            case "FATAL" -> ScxLoggingLevel.FATAL;
+            case "ERROR" -> ScxLoggingLevel.ERROR;
+            case "WARN" -> ScxLoggingLevel.WARN;
+            case "INFO" -> ScxLoggingLevel.INFO;
+            case "DEBUG" -> ScxLoggingLevel.DEBUG;
+            case "TRACE" -> ScxLoggingLevel.TRACE;
+            case "ALL" -> ScxLoggingLevel.ALL;
+            default -> throw new IllegalArgumentException();
+        };
     }
 
     @Override
@@ -115,7 +124,21 @@ public final class ScxLog4jLogger extends AbstractLogger {
 
     @Override
     public void logMessage(final String fqcn, final Level mgsLevel, final Marker marker, final Message message, final Throwable throwable) {
-        this.scxLogger.logMessage(ScxLoggingLevel.of(mgsLevel.name()), message.getFormattedMessage(), throwable);
+        this.scxLogger.logMessage(toScxLoggingLevel(mgsLevel), message.getFormattedMessage(), throwable);
+    }
+
+    @Override
+    public Level getLevel() {
+        return switch (this.scxLogger.level()) {
+            case OFF -> Level.OFF;
+            case FATAL -> Level.FATAL;
+            case ERROR -> Level.ERROR;
+            case WARN -> Level.WARN;
+            case INFO -> Level.INFO;
+            case DEBUG -> Level.DEBUG;
+            case TRACE -> Level.TRACE;
+            case ALL -> Level.ALL;
+        };
     }
 
 }

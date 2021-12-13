@@ -28,6 +28,16 @@ public final class ScxSLF4JLogger extends LegacyAbstractLogger {
         this.scxLogger = ScxLoggerFactory.getLogger(name);
     }
 
+    private static ScxLoggingLevel toScxLoggingLevel(Level level) {
+        return switch (level) {
+            case ERROR -> ScxLoggingLevel.ERROR;
+            case WARN -> ScxLoggingLevel.WARN;
+            case INFO -> ScxLoggingLevel.INFO;
+            case DEBUG -> ScxLoggingLevel.DEBUG;
+            case TRACE -> ScxLoggingLevel.TRACE;
+        };
+    }
+
     @Override
     protected String getFullyQualifiedCallerName() {
         return null;
@@ -35,7 +45,7 @@ public final class ScxSLF4JLogger extends LegacyAbstractLogger {
 
     @Override
     protected void handleNormalizedLoggingCall(Level level, Marker marker, String message, Object[] arguments, Throwable throwable) {
-        this.scxLogger.logMessage(ScxLoggingLevel.of(level.toString()), MessageFormatter.arrayFormat(message, arguments).getMessage(), throwable);
+        this.scxLogger.logMessage(toScxLoggingLevel(level), MessageFormatter.arrayFormat(message, arguments).getMessage(), throwable);
     }
 
     @Override
@@ -64,14 +74,13 @@ public final class ScxSLF4JLogger extends LegacyAbstractLogger {
     }
 
     public Level getLevel() {
-        //因为 SLF4J 日志级别分类较少所以这里做一个处理
-        if (this.scxLogger.level() == ScxLoggingLevel.OFF || this.scxLogger.level() == ScxLoggingLevel.FATAL) {
-            return Level.ERROR;
-        } else if (this.scxLogger.level() == ScxLoggingLevel.ALL) {
-            return Level.TRACE;
-        } else {
-            return Level.valueOf(this.scxLogger.level().toString());
-        }
+        return switch (this.scxLogger.level()) {
+            case OFF, FATAL, ERROR -> Level.ERROR;
+            case WARN -> Level.WARN;
+            case INFO -> Level.INFO;
+            case DEBUG -> Level.DEBUG;
+            case TRACE, ALL -> Level.TRACE;
+        };
     }
 
 }

@@ -45,13 +45,7 @@ public enum ScxLoggingType {
      */
     public static ScxLoggingType of(String loggingTypeName) {
         Objects.requireNonNull(loggingTypeName, "loggingTypeName 不能为空 !!!");
-        var finalLoggingTypeName = loggingTypeName.trim().toUpperCase();
-        return switch (finalLoggingTypeName) {
-            case "CONSOLE" -> ScxLoggingType.CONSOLE;
-            case "FILE" -> ScxLoggingType.FILE;
-            case "BOTH" -> ScxLoggingType.BOTH;
-            default -> throw new IllegalArgumentException("无法识别 ScLoggingType [" + finalLoggingTypeName + "] !!!");
-        };
+        return ScxLoggingType.valueOf(loggingTypeName.trim().toUpperCase());
     }
 
 }
