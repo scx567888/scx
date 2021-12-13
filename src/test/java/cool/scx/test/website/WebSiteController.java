@@ -6,7 +6,7 @@ import cool.scx.enumeration.HttpMethod;
 import cool.scx.enumeration.RawType;
 import cool.scx.test.car.Car;
 import cool.scx.test.car.CarService;
-import cool.scx.util.HttpUtils;
+import cool.scx.util.HttpClientUtils;
 import cool.scx.util.RandomUtils;
 import cool.scx.util.digest.DigestUtils;
 import cool.scx.util.zip.IVirtualFile;
@@ -83,8 +83,8 @@ public class WebSiteController {
      */
     @ScxMapping(value = "/baidu", method = HttpMethod.GET)
     public Html TestHttpUtils() throws IOException, InterruptedException {
-        HttpResponse<String> stringHttpResponse = HttpUtils.get("https://www.baidu.com/", new HashMap<>());
-        return Html.ofString(stringHttpResponse.body());
+        var baiduHtml = HttpClientUtils.get("https://www.baidu.com/").body();
+        return Html.ofString(baiduHtml);
     }
 
     /**
