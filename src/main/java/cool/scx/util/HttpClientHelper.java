@@ -18,52 +18,36 @@ import java.util.Map;
  * @author scx567888
  * @version 1.1.9
  */
-public final class HttpClientUtils {
+public final class HttpClientHelper {
 
     private static final HttpClient HTTP_CLIENT = HttpClient.newBuilder().build();
 
-    public static <T> HttpResponse<T> delete(String url, Map<String, String> headers, HttpResponse.BodyHandler<T> responseBodyHandler) throws IOException, InterruptedException {
-        return HTTP_CLIENT.send(getNormalRequestBuilder(url, headers).DELETE().build(), responseBodyHandler);
-    }
-
     public static HttpResponse<String> delete(String url, Map<String, String> headers) throws IOException, InterruptedException {
-        return delete(url, headers, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+        return HTTP_CLIENT.send(getNormalRequestBuilder(url, headers).DELETE().build(), HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
     }
 
     public static HttpResponse<String> delete(String url) throws IOException, InterruptedException {
         return delete(url, null);
     }
 
-    public static <T> HttpResponse<T> put(String url, Map<String, String> headers, Object body, HttpResponse.BodyHandler<T> responseBodyHandler) throws IOException, InterruptedException {
-        return HTTP_CLIENT.send(getNormalRequestBuilder(url, headers).PUT(getBodyPublisher(body)).build(), responseBodyHandler);
-    }
-
     public static HttpResponse<String> put(String url, Map<String, String> headers, Object body) throws IOException, InterruptedException {
-        return put(url, headers, body, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+        return HTTP_CLIENT.send(getNormalRequestBuilder(url, headers).PUT(getBodyPublisher(body)).build(), HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
     }
 
     public static HttpResponse<String> put(String url, Object body) throws IOException, InterruptedException {
         return put(url, null, body);
     }
 
-    public static <T> HttpResponse<T> post(String url, Map<String, String> headers, Object body, HttpResponse.BodyHandler<T> responseBodyHandler) throws IOException, InterruptedException {
-        return HTTP_CLIENT.send(getNormalRequestBuilder(url, headers).POST(getBodyPublisher(body)).build(), responseBodyHandler);
-    }
-
     public static HttpResponse<String> post(String url, Map<String, String> headers, Object body) throws IOException, InterruptedException {
-        return post(url, headers, body, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+        return HTTP_CLIENT.send(getNormalRequestBuilder(url, headers).POST(getBodyPublisher(body)).build(), HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
     }
 
     public static HttpResponse<String> post(String url, Object body) throws IOException, InterruptedException {
         return post(url, null, body);
     }
 
-    public static <T> HttpResponse<T> get(String url, Map<String, String> headers, HttpResponse.BodyHandler<T> responseBodyHandler) throws IOException, InterruptedException {
-        return HTTP_CLIENT.send(getNormalRequestBuilder(url, headers).GET().build(), responseBodyHandler);
-    }
-
     public static HttpResponse<String> get(String url, Map<String, String> headers) throws IOException, InterruptedException {
-        return get(url, headers, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+        return HTTP_CLIENT.send(getNormalRequestBuilder(url, headers).GET().build(), HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
     }
 
     public static HttpResponse<String> get(String url) throws IOException, InterruptedException {
