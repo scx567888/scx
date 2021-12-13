@@ -6,7 +6,7 @@ import cool.scx.enumeration.HttpMethod;
 import cool.scx.enumeration.RawType;
 import cool.scx.test.car.Car;
 import cool.scx.test.car.CarService;
-import cool.scx.util.HttpUtils;
+import cool.scx.util.HttpClientHelper;
 import cool.scx.util.RandomUtils;
 import cool.scx.util.digest.DigestUtils;
 import cool.scx.util.zip.IVirtualFile;
@@ -18,9 +18,7 @@ import io.vertx.ext.web.RoutingContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
-import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 
 /**
  * 简单测试
@@ -83,8 +81,8 @@ public class WebSiteController {
      */
     @ScxMapping(value = "/baidu", method = HttpMethod.GET)
     public Html TestHttpUtils() throws IOException, InterruptedException {
-        HttpResponse<String> stringHttpResponse = HttpUtils.get("https://www.baidu.com/", new HashMap<>());
-        return Html.ofString(stringHttpResponse.body());
+        var baiduHtml = HttpClientHelper.get("https://www.baidu.com/").body();
+        return Html.ofString(baiduHtml);
     }
 
     /**
