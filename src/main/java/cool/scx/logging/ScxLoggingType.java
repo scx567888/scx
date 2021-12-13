@@ -5,7 +5,7 @@ import java.util.Objects;
 /**
  * a
  */
-public enum ScxLogLoggingType {
+public enum ScxLoggingType {
 
     /**
      * a
@@ -29,7 +29,7 @@ public enum ScxLogLoggingType {
      * @param defaultLoggingType a
      * @return a
      */
-    public static ScxLogLoggingType of(String loggingTypeName, ScxLogLoggingType defaultLoggingType) {
+    public static ScxLoggingType of(String loggingTypeName, ScxLoggingType defaultLoggingType) {
         try {
             return of(loggingTypeName);
         } catch (Exception e) {
@@ -43,14 +43,14 @@ public enum ScxLogLoggingType {
      * @param loggingTypeName a
      * @return a
      */
-    public static ScxLogLoggingType of(String loggingTypeName) {
+    public static ScxLoggingType of(String loggingTypeName) {
         Objects.requireNonNull(loggingTypeName, "loggingTypeName 不能为空 !!!");
         var finalLoggingTypeName = loggingTypeName.trim().toUpperCase();
         return switch (finalLoggingTypeName) {
-            case "CONSOLE" -> ScxLogLoggingType.CONSOLE;
-            case "FILE" -> ScxLogLoggingType.FILE;
-            case "BOTH" -> ScxLogLoggingType.BOTH;
-            default -> throw new IllegalArgumentException("无法识别 ScxLogLoggingType [" + finalLoggingTypeName + "] !!!");
+            case "CONSOLE" -> ScxLoggingType.CONSOLE;
+            case "FILE" -> ScxLoggingType.FILE;
+            case "BOTH" -> ScxLoggingType.BOTH;
+            default -> throw new IllegalArgumentException("无法识别 ScLoggingType [" + finalLoggingTypeName + "] !!!");
         };
     }
 
