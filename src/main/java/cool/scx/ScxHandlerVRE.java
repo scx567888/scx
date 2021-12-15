@@ -1,7 +1,7 @@
 package cool.scx;
 
 /**
- * Scx 核心 handler ,没有参数, 有返回值 允许抛出异常
+ * Scx 核心 handler , 没有参数 , 有返回值 , 允许抛出异常 . 相当与 {@link java.util.concurrent.Callable}
  *
  * @param <R> 返回值类型
  * @param <E> 异常类型

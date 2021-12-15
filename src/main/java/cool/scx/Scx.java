@@ -9,6 +9,7 @@ import cool.scx.enumeration.ScxFeature;
 import cool.scx.eventbus.ScxEventBus;
 import cool.scx.logging.ScxLoggerConfiguration;
 import cool.scx.mvc.ScxMappingConfiguration;
+import cool.scx.scheduler.ScxScheduler;
 import cool.scx.util.ConsoleUtils;
 import cool.scx.util.NetUtils;
 import cool.scx.util.StringUtils;
@@ -48,7 +49,7 @@ public final class Scx {
     /**
      * SCX 版本号
      */
-    private static final String SCX_VERSION = "1.9.20";
+    private static final String SCX_VERSION = "1.9.21";
 
     /**
      * 默认配置文件 路径
@@ -127,6 +128,11 @@ public final class Scx {
     private final ScxMappingConfiguration scxMappingConfiguration;
 
     /**
+     * 任务调度器
+     */
+    private final ScxScheduler scxScheduler;
+
+    /**
      * 路由
      */
     private Router vertxRouter = null;
@@ -178,6 +184,8 @@ public final class Scx {
         this.scxDao = new ScxDao(this.scxEasyConfig, this.scxFeatureConfig);
         //11, ScxMapping 配置类
         this.scxMappingConfiguration = new ScxMappingConfiguration();
+        //12, 初始化任务调度器
+        this.scxScheduler = new ScxScheduler(vertx.nettyEventLoopGroup());
     }
 
     /**
@@ -554,6 +562,10 @@ public final class Scx {
             this.stopAllModules();
             Ansi.out().red("项目正在停止!!!").println();
         }));
+    }
+
+    public ScxScheduler scxScheduler() {
+        return scxScheduler;
     }
 
 }
