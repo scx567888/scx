@@ -1,5 +1,7 @@
 package cool.scx;
 
+import cool.scx.config.ScxFeatureConfig;
+import cool.scx.enumeration.ScxFeature;
 import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
@@ -24,18 +26,20 @@ public final class ScxBeanFactory {
     /**
      * <p>Constructor for ScxBeanFactory.</p>
      */
-    public ScxBeanFactory(ScheduledExecutorService scheduledExecutorService) {
+    public ScxBeanFactory(ScheduledExecutorService scheduledExecutorService, ScxFeatureConfig scxFeatureConfig) {
         //这里添加一个 bean 的后置处理器以便可以使用 @Autowired 注解
         var beanPostProcessor = new AutowiredAnnotationBeanPostProcessor();
         beanPostProcessor.setBeanFactory(this.springBeanFactory);
-        //这里在添加一个 bean 的后置处理器 以便使用 定时任务 注解
-        var scheduledAnnotationBeanPostProcessor = new ScheduledAnnotationBeanPostProcessor();
-        scheduledAnnotationBeanPostProcessor.setBeanFactory(this.springBeanFactory);
-        scheduledAnnotationBeanPostProcessor.setScheduler(scheduledExecutorService);
-        scheduledAnnotationBeanPostProcessor.afterSingletonsInstantiated();
-        //将以上的后置处理器 添加到 springBeanFactory 中
         this.springBeanFactory.addBeanPostProcessor(beanPostProcessor);
-        this.springBeanFactory.addBeanPostProcessor(scheduledAnnotationBeanPostProcessor);
+        //只有 开启标识时才 启用定时任务 这里直接跳过 后置处理器
+        if (scxFeatureConfig.getFeatureState(ScxFeature.ENABLE_SCHEDULING_WITH_ANNOTATION)) {
+            //这里在添加一个 bean 的后置处理器 以便使用 定时任务 注解
+            var scheduledAnnotationBeanPostProcessor = new ScheduledAnnotationBeanPostProcessor();
+            scheduledAnnotationBeanPostProcessor.setBeanFactory(this.springBeanFactory);
+            scheduledAnnotationBeanPostProcessor.setScheduler(scheduledExecutorService);
+            scheduledAnnotationBeanPostProcessor.afterSingletonsInstantiated();
+            this.springBeanFactory.addBeanPostProcessor(scheduledAnnotationBeanPostProcessor);
+        }
     }
 
     /**

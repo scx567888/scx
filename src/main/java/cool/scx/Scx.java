@@ -178,7 +178,7 @@ public final class Scx {
         //7, 初始化事件总线 (这里的 ScxEventBus 其实只是针对 vertx 的 eventBus 进行一次包装)
         this.scxEventBus = new ScxEventBus(this.vertx);
         //8, 初始化 BeanFactory
-        this.scxBeanFactory = initScxBeanFactory(this.scxModuleInfos, this.vertx.nettyEventLoopGroup());
+        this.scxBeanFactory = initScxBeanFactory(this.scxModuleInfos, this.vertx.nettyEventLoopGroup(), this.scxFeatureConfig);
         //9, 初始化模板
         this.scxTemplate = new ScxTemplate(this.scxEasyConfig);
         //10, 初始化持久层
@@ -221,12 +221,28 @@ public final class Scx {
      */
     private static boolean isUseNewPort(int port) {
         while (true) {
-            System.err.println("[INFO] 端口号 [" + port + "] 已被占用, 是否采用新端口号? [Y]es [N]o");
+            var errMessage = """
+                    *******************************************************
+                    *                                                     *
+                    *         端口号 [ %s ] 已被占用, 是否采用新端口号 ?       *
+                    *                                                     *
+                    *                [Y]es    |    [N]o                   *
+                    *                                                     *
+                    *******************************************************
+                    """;
+            System.err.printf((errMessage) + System.lineSeparator(), port);
             var result = ConsoleUtils.readLine().trim();
             if ("Y".equalsIgnoreCase(result)) {
                 return true;
             } else if ("N".equalsIgnoreCase(result)) {
-                System.err.println("N 端口号被占用!!! 服务器启动失败!!!");
+                var ignoreMessage = """
+                        *******************************************
+                        *                                         *
+                        *     N 端口号被占用!!! 服务器启动失败 !!!      *
+                        *                                         *
+                        *******************************************
+                        """;
+                System.err.println(ignoreMessage);
                 System.exit(-1);
                 return false;
             }
@@ -238,10 +254,11 @@ public final class Scx {
      *
      * @param scxModuleInfos           s
      * @param scheduledExecutorService s
+     * @param scxFeatureConfig
      * @return r
      */
-    private static ScxBeanFactory initScxBeanFactory(List<ScxModuleInfo<? extends ScxModule>> scxModuleInfos, ScheduledExecutorService scheduledExecutorService) {
-        var tempScxBeanFactory = new ScxBeanFactory(scheduledExecutorService);
+    private static ScxBeanFactory initScxBeanFactory(List<ScxModuleInfo<? extends ScxModule>> scxModuleInfos, ScheduledExecutorService scheduledExecutorService, ScxFeatureConfig scxFeatureConfig) {
+        var tempScxBeanFactory = new ScxBeanFactory(scheduledExecutorService, scxFeatureConfig);
         for (var scxModuleInfo : scxModuleInfos) {
             tempScxBeanFactory.registerBean(scxModuleInfo.needRegisterBeanClassList());
         }
@@ -372,9 +389,12 @@ public final class Scx {
      * 将所有的 bean 加载一次以实现 已注解形式的 定时任务的启动
      */
     private void initScheduleTaskBean() {
-        for (var scxModuleInfo : scxModuleInfos) {
-            for (var aClass : scxModuleInfo.needRegisterBeanClassList()) {
-                this.scxBeanFactory.getBean(aClass);
+        //只有开启标识时才 执行定时任务
+        if (scxFeatureConfig.getFeatureState(ScxFeature.ENABLE_SCHEDULING_WITH_ANNOTATION)) {
+            for (var scxModuleInfo : scxModuleInfos) {
+                for (var aClass : scxModuleInfo.needRegisterBeanClassList()) {
+                    this.scxBeanFactory.getBean(aClass);
+                }
             }
         }
     }
