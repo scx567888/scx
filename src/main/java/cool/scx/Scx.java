@@ -254,7 +254,7 @@ public final class Scx {
      *
      * @param scxModuleInfos           s
      * @param scheduledExecutorService s
-     * @param scxFeatureConfig
+     * @param scxFeatureConfig a
      * @return r
      */
     private static ScxBeanFactory initScxBeanFactory(List<ScxModuleInfo<? extends ScxModule>> scxModuleInfos, ScheduledExecutorService scheduledExecutorService, ScxFeatureConfig scxFeatureConfig) {
@@ -393,7 +393,11 @@ public final class Scx {
         if (scxFeatureConfig.getFeatureState(ScxFeature.ENABLE_SCHEDULING_WITH_ANNOTATION)) {
             for (var scxModuleInfo : scxModuleInfos) {
                 for (var aClass : scxModuleInfo.needRegisterBeanClassList()) {
-                    this.scxBeanFactory.getBean(aClass);
+                    try {
+                        this.scxBeanFactory.getBean(aClass);
+                    } catch (Exception ignored) {
+
+                    }
                 }
             }
         }
