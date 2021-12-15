@@ -42,7 +42,7 @@ public class WebSiteController {
     @ScxMapping(method = HttpMethod.GET)
     public static void TestTransaction(RoutingContext ctx) throws Exception {
         var sb = new StringBuilder();
-        CarService bean = ScxContext.beanFactory().getBean(CarService.class);
+        CarService bean = ScxContext.getBean(CarService.class);
         try {
             ScxContext.sqlRunner().autoTransaction((con) -> {
                 sb.append("事务开始前数据库中 数据条数 : ").append(bean.list(con).size()).append("</br>");

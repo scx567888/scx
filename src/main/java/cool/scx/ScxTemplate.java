@@ -70,7 +70,7 @@ public final class ScxTemplate {
      */
     public void addDirective(Class<? extends BaseTemplateDirective> clazz) {
         try {
-            var myDirective = (BaseTemplateDirective) ScxContext.beanFactory().getBean(clazz);
+            var myDirective = ScxContext.getBean(clazz);
             logger.debug("已添加自定义 Freemarker 标签 [{}] Class -> {}", myDirective.directiveName(), clazz.getName());
             freemarkerConfig.setSharedVariable(myDirective.directiveName(), myDirective);
         } catch (Exception e) {

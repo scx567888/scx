@@ -41,7 +41,7 @@ public class TestModule implements ScxModule {
 
     @Test
     public static void test0() {
-        var carService = ScxContext.beanFactory().getBean(CarService.class);
+        var carService = ScxContext.getBean(CarService.class);
         var carService1 = new BaseModelService<>(Car.class);
         try {
             if (carService1.count() < 1500) {

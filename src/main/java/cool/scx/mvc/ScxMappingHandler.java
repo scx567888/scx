@@ -77,7 +77,7 @@ public final class ScxMappingHandler implements ScxHandler<RoutingContext> {
         var classScxMapping = clazz.getAnnotation(ScxMapping.class);
         this.clazz = clazz;
         this.method = method;
-        this.example = ScxContext.beanFactory().getBean(clazz);
+        this.example = ScxContext.getBean(clazz);
         this.url = getUrl(classScxMapping, methodScxMapping);
         this.patternUrl = getPatternUrl(this.url);
         this.httpMethods = getHttpMethod(methodScxMapping);

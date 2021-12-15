@@ -142,16 +142,6 @@ public final class ScxContext {
     }
 
     /**
-     * appRoot
-     *
-     * @param path a
-     * @return a
-     */
-    public static File getFileByAppRoot(String path) {
-        return appRoot().getFileByAppRoot(path);
-    }
-
-    /**
      * <p>appKey.</p>
      *
      * @return a {@link java.lang.String} object
@@ -170,17 +160,6 @@ public final class ScxContext {
     }
 
     /**
-     * <p>findScxModuleInfo.</p>
-     *
-     * @param clazz a {@link java.lang.Class} object
-     * @param <T>   a T class
-     * @return a {@link ScxModuleInfo} object
-     */
-    public static <T extends ScxModule> ScxModuleInfo<T> findScxModuleInfo(Class<T> clazz) {
-        return scx().findScxModuleInfo(clazz);
-    }
-
-    /**
      * a
      *
      * @return a
@@ -190,7 +169,7 @@ public final class ScxContext {
     }
 
     /**
-     * a
+     * 返回当前运行的 scx 实例的 beanFactory
      *
      * @return a
      */
@@ -208,7 +187,7 @@ public final class ScxContext {
     }
 
     /**
-     * a
+     * 返回当前运行的 scx 实例的 template
      *
      * @return a
      */
@@ -217,7 +196,34 @@ public final class ScxContext {
     }
 
     /**
-     * a
+     * 返回当前运行的 scx 实例的 vertx
+     *
+     * @return 全局的事件总线
+     */
+    public static Vertx vertx() {
+        return scx().vertx();
+    }
+
+    /**
+     * 返回当前运行的 scx 实例的 scheduler
+     *
+     * @return a
+     */
+    public static ScxScheduler scheduler() {
+        return scx().scxScheduler();
+    }
+
+    /**
+     * 返回当前运行的 scx 实例的 scxMappingConfiguration
+     *
+     * @return a
+     */
+    public static ScxMappingConfiguration scxMappingConfiguration() {
+        return scx().scxMappingConfiguration();
+    }
+
+    /**
+     * 简化方法
      *
      * @param scxFeature a
      * @return a
@@ -227,39 +233,44 @@ public final class ScxContext {
     }
 
     /**
-     * 获取全局的 vertx
-     *
-     * @return 全局的事件总线
-     */
-    public static Vertx vertx() {
-        return scx().vertx();
-    }
-
-    /**
-     * a
+     * 简化方法
      *
      * @return a
      */
     public static SQLRunner sqlRunner() {
-        return scx().scxDao().sqlRunner();
+        return dao().sqlRunner();
     }
 
     /**
-     * a
+     * 简化方法
      *
-     * @return a
+     * @param requiredType r
+     * @param <T>          r
+     * @return r
      */
-    public static ScxScheduler scheduler() {
-        return scx().scxScheduler();
+    public static <T> T getBean(Class<T> requiredType) {
+        return beanFactory().getBean(requiredType);
     }
 
     /**
-     * a
+     * 简化方法
      *
+     * @param clazz a {@link java.lang.Class} object
+     * @param <T>   a T class
+     * @return a {@link ScxModuleInfo} object
+     */
+    public static <T extends ScxModule> ScxModuleInfo<T> findScxModuleInfo(Class<T> clazz) {
+        return scx().findScxModuleInfo(clazz);
+    }
+
+    /**
+     * 简化方法
+     *
+     * @param path a
      * @return a
      */
-    public static ScxMappingConfiguration scxMappingConfiguration() {
-        return scx().scxMappingConfiguration();
+    public static File getFileByAppRoot(String path) {
+        return appRoot().getFileByAppRoot(path);
     }
 
 }
