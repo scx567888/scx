@@ -7,10 +7,9 @@ import cool.scx.dao.ScxDao;
 import cool.scx.enumeration.ScxFeature;
 import cool.scx.eventbus.ScxEventBus;
 import cool.scx.mvc.ScxMappingConfiguration;
+import cool.scx.scheduler.ScxScheduler;
 import cool.scx.sql.SQLRunner;
 import cool.scx.web.ScxWebSocketRouter;
-import io.netty.util.concurrent.Future;
-import io.netty.util.concurrent.ScheduledFuture;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServer;
 import io.vertx.ext.web.Router;
@@ -18,7 +17,6 @@ import io.vertx.ext.web.RoutingContext;
 
 import java.io.File;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 用来存储 整个项目的上下文
@@ -144,16 +142,6 @@ public final class ScxContext {
     }
 
     /**
-     * appRoot
-     *
-     * @param path a
-     * @return a
-     */
-    public static File getFileByAppRoot(String path) {
-        return appRoot().getFileByAppRoot(path);
-    }
-
-    /**
      * <p>appKey.</p>
      *
      * @return a {@link java.lang.String} object
@@ -172,17 +160,6 @@ public final class ScxContext {
     }
 
     /**
-     * <p>findScxModuleInfo.</p>
-     *
-     * @param clazz a {@link java.lang.Class} object
-     * @param <T>   a T class
-     * @return a {@link ScxModuleInfo} object
-     */
-    public static <T extends ScxModule> ScxModuleInfo<T> findScxModuleInfo(Class<T> clazz) {
-        return scx().findScxModuleInfo(clazz);
-    }
-
-    /**
      * a
      *
      * @return a
@@ -192,7 +169,7 @@ public final class ScxContext {
     }
 
     /**
-     * a
+     * 返回当前运行的 scx 实例的 beanFactory
      *
      * @return a
      */
@@ -210,7 +187,7 @@ public final class ScxContext {
     }
 
     /**
-     * a
+     * 返回当前运行的 scx 实例的 template
      *
      * @return a
      */
@@ -219,18 +196,7 @@ public final class ScxContext {
     }
 
     /**
-     * a
-     *
-     * @param scxFeature a
-     * @return a
-     */
-    public static boolean getFeatureState(ScxFeature scxFeature) {
-        return featureConfig().getFeatureState(scxFeature);
-    }
-
-
-    /**
-     * 获取全局的 vertx
+     * 返回当前运行的 scx 实例的 vertx
      *
      * @return 全局的事件总线
      */
@@ -239,80 +205,72 @@ public final class ScxContext {
     }
 
     /**
-     * 设置计时器
-     * <p>
-     * 本质上时内部调用 netty 的线程池完成
-     * <p>
-     * 因为java无法做到特别精确的计时所以此处单位采取 毫秒
-     *
-     * @param command 执行的事件
-     * @param delay   延时执行的时间  单位毫秒
-     * @return a
-     */
-    public static ScheduledFuture<?> schedule(Runnable command, long delay) {
-        return vertx().nettyEventLoopGroup().schedule(command, delay, TimeUnit.MILLISECONDS);
-    }
-
-    /**
-     * 循环执行一个任务
-     * 只有当前任务执行完成后才会执行下一次任务 不用并行执行
-     *
-     * @param command      执行的任务
-     * @param initialDelay 初始化延迟的时间 0 为立即执行
-     * @param period       间隔的时间
-     * @return a
-     */
-    public static ScheduledFuture<?> scheduleAtFixedRate(Runnable command, long initialDelay, long period) {
-        return vertx().nettyEventLoopGroup().scheduleAtFixedRate(command, initialDelay, period, TimeUnit.MILLISECONDS);
-    }
-
-    /**
-     * 循环执行一个任务
-     * 不管当前任务是否执行完成都会直接执行下一次任务 采用并行执行
-     *
-     * @param command      执行的任务
-     * @param initialDelay 初始化延迟的时间 0 为立即执行
-     * @param delay        间隔的时间
-     */
-    public static void scheduleWithFixedDelay(Runnable command, long initialDelay, long delay) {
-        vertx().nettyEventLoopGroup().scheduleWithFixedDelay(command, initialDelay, delay, TimeUnit.MILLISECONDS);
-    }
-
-    /**
-     * 执行一个事件
-     *
-     * @param command 事件
-     */
-    public static void execute(Runnable command) {
-        vertx().nettyEventLoopGroup().execute(command);
-    }
-
-    /**
-     * a
-     *
-     * @param command a
-     * @return a
-     */
-    public static Future<?> submit(Runnable command) {
-        return vertx().nettyEventLoopGroup().submit(command);
-    }
-
-    /**
-     * a
+     * 返回当前运行的 scx 实例的 scheduler
      *
      * @return a
      */
-    public static SQLRunner sqlRunner() {
-        return scx().scxDao().sqlRunner();
+    public static ScxScheduler scheduler() {
+        return scx().scxScheduler();
     }
 
     /**
-     * a
+     * 返回当前运行的 scx 实例的 scxMappingConfiguration
      *
      * @return a
      */
     public static ScxMappingConfiguration scxMappingConfiguration() {
         return scx().scxMappingConfiguration();
+    }
+
+    /**
+     * 简化方法
+     *
+     * @param scxFeature a
+     * @return a
+     */
+    public static boolean getFeatureState(ScxFeature scxFeature) {
+        return featureConfig().getFeatureState(scxFeature);
+    }
+
+    /**
+     * 简化方法
+     *
+     * @return a
+     */
+    public static SQLRunner sqlRunner() {
+        return dao().sqlRunner();
+    }
+
+    /**
+     * 简化方法
+     *
+     * @param requiredType r
+     * @param <T>          r
+     * @return r
+     */
+    public static <T> T getBean(Class<T> requiredType) {
+        return beanFactory().getBean(requiredType);
+    }
+
+    /**
+     * 简化方法
+     *
+     * @param clazz a {@link java.lang.Class} object
+     * @param <T>   a T class
+     * @return a {@link ScxModuleInfo} object
+     */
+    public static <T extends ScxModule> ScxModuleInfo<T> findScxModuleInfo(Class<T> clazz) {
+        return scx().findScxModuleInfo(clazz);
+    }
+
+    /**
+     * 简化方法
+     *
+     * @param path a
+     * @return a
+     */
+    public static File getFileByAppRoot(String path) {
+        return appRoot().getFileByAppRoot(path);
     }
 
 }

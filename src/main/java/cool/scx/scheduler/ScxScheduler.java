@@ -1,0 +1,102 @@
+package cool.scx.scheduler;
+
+import cool.scx.ScxHandler;
+import cool.scx.ScxHandlerV;
+import cool.scx.ScxHandlerVR;
+import io.netty.channel.EventLoopGroup;
+import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.Trigger;
+import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
+
+import java.time.Duration;
+import java.time.Instant;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+
+/**
+ * 针对 spring 的 ${@link  TaskScheduler}  进行一些简单的封装
+ * <br>
+ * 以便可以实现一些简单的任务调度
+ */
+public final class ScxScheduler {
+
+    private final ScheduledExecutorService scheduledExecutorService;
+
+    private final TaskScheduler taskScheduler;
+
+    public ScxScheduler(EventLoopGroup eventLoopGroup) {
+        this.scheduledExecutorService = eventLoopGroup;
+        this.taskScheduler = new ConcurrentTaskScheduler(this.scheduledExecutorService);
+    }
+
+    /**
+     * a
+     *
+     * @param task a
+     * @param <R>  a
+     * @return a
+     */
+    public <R> Future<R> submit(ScxHandlerVR<R> task) {
+        return scheduledExecutorService.submit(task::handle);
+    }
+
+    /**
+     * a
+     *
+     * @param scxHandlerV a
+     * @return a
+     */
+    public Future<?> submit(ScxHandlerV scxHandlerV) {
+        return scheduledExecutorService.submit(scxHandlerV::handle);
+    }
+
+    /**
+     * a
+     *
+     * @param scxHandlerVR a
+     * @param delay        a
+     * @param <R>          a
+     * @return a
+     */
+    public <R> ScheduledFuture<R> schedule(ScxHandlerVR<R> scxHandlerVR, long delay, TimeUnit unit) {
+        return scheduledExecutorService.schedule(scxHandlerVR::handle, delay, unit);
+    }
+
+    /**
+     * 设置计时器
+     * <p>
+     * 本质上时内部调用 netty 的线程池完成
+     * <p>
+     * 因为java无法做到特别精确的计时所以此处单位采取 毫秒
+     *
+     * @param scxHandlerV 执行的事件
+     * @param delay       延时执行的时间  单位毫秒
+     * @return a
+     */
+    public ScheduledFuture<?> schedule(ScxHandlerV scxHandlerV, long delay, TimeUnit unit) {
+        return scheduledExecutorService.schedule(scxHandlerV::handle, delay, unit);
+    }
+
+    public ScheduledFuture<?> schedule(ScxHandler<ScheduleStatus> scxHandler, Trigger trigger) {
+        return new CounterRunnable(scxHandler).schedule(taskScheduler, trigger);
+    }
+
+    public ScheduledFuture<?> scheduleWithFixedDelay(ScxHandler<ScheduleStatus> scxHandler, Instant startTime, Duration delay) {
+        return new CounterRunnable(scxHandler).scheduleWithFixedDelay(taskScheduler, startTime, delay);
+    }
+
+    public ScheduledFuture<?> scheduleAtFixedRate(ScxHandler<ScheduleStatus> scxHandler, Instant startTime, Duration delay) {
+        return new CounterRunnable(scxHandler).scheduleAtFixedRate(taskScheduler, startTime, delay);
+    }
+
+    public ScheduledFuture<?> scheduleWithFixedDelay(ScxHandler<ScheduleStatus> scxHandler, Instant startTime, Duration delay, long maxRunCount) {
+        return new FixedRunCountRunnable(scxHandler, maxRunCount).scheduleWithFixedDelay(taskScheduler, startTime, delay);
+    }
+
+    public ScheduledFuture<?> scheduleAtFixedRate(ScxHandler<ScheduleStatus> scxHandler, Instant startTime, Duration delay, long maxRunCount) {
+        return new FixedRunCountRunnable(scxHandler, maxRunCount).scheduleAtFixedRate(taskScheduler, startTime, delay);
+    }
+
+}

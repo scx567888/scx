@@ -85,7 +85,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
         if (!ScxContext.easyConfig().tombstone()) {
             return this._delete(new Query().in("id", ids));
         } else {// 逻辑删除
-            var needTombstoneEntity = ScxContext.beanFactory().getBean(entityClass);
+            var needTombstoneEntity = ScxContext.getBean(entityClass);
             needTombstoneEntity.tombstone = true;
             var query = new Query().in("id", ids).equal("tombstone", false);
             return this._update(needTombstoneEntity, query, false);
@@ -103,7 +103,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
         if (!ScxContext.easyConfig().tombstone()) {
             return this._delete(query);
         } else {//逻辑删除
-            var needTombstoneEntity = ScxContext.beanFactory().getBean(entityClass);
+            var needTombstoneEntity = ScxContext.getBean(entityClass);
             needTombstoneEntity.tombstone = true;
             return this._update(needTombstoneEntity, query, false);
         }
@@ -149,7 +149,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
         if (!ScxContext.easyConfig().tombstone()) {
             throw new RuntimeException("物理删除模式下不允许恢复删除!!!");
         } else {
-            var needRevokeDeleteModel = ScxContext.beanFactory().getBean(entityClass);
+            var needRevokeDeleteModel = ScxContext.getBean(entityClass);
             needRevokeDeleteModel.tombstone = false;
             return this._update(needRevokeDeleteModel, query, false);
         }
@@ -369,7 +369,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
         if (!ScxContext.easyConfig().tombstone()) {
             return this._delete(con, new Query().in("id", ids));
         } else {// 逻辑删除
-            var needTombstoneEntity = ScxContext.beanFactory().getBean(entityClass);
+            var needTombstoneEntity = ScxContext.getBean(entityClass);
             needTombstoneEntity.tombstone = true;
             var query = new Query().in("id", ids).equal("tombstone", false);
             return this._update(con, needTombstoneEntity, query, false);
@@ -389,7 +389,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
         if (!ScxContext.easyConfig().tombstone()) {
             return this._delete(con, query);
         } else {//逻辑删除
-            var needTombstoneEntity = ScxContext.beanFactory().getBean(entityClass);
+            var needTombstoneEntity = ScxContext.getBean(entityClass);
             needTombstoneEntity.tombstone = true;
             return this._update(con, needTombstoneEntity, query, false);
         }
@@ -443,7 +443,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
         if (!ScxContext.easyConfig().tombstone()) {
             throw new RuntimeException("物理删除模式下不允许恢复删除!!!");
         } else {
-            var needRevokeDeleteModel = ScxContext.beanFactory().getBean(entityClass);
+            var needRevokeDeleteModel = ScxContext.getBean(entityClass);
             needRevokeDeleteModel.tombstone = false;
             return this._update(con, needRevokeDeleteModel, query, false);
         }
