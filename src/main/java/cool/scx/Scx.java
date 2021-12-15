@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * 启动类
@@ -177,7 +178,7 @@ public final class Scx {
         //7, 初始化事件总线 (这里的 ScxEventBus 其实只是针对 vertx 的 eventBus 进行一次包装)
         this.scxEventBus = new ScxEventBus(this.vertx);
         //8, 初始化 BeanFactory
-        this.scxBeanFactory = initScxBeanFactory(this.scxModuleInfos);
+        this.scxBeanFactory = initScxBeanFactory(this.scxModuleInfos, this.vertx.nettyEventLoopGroup());
         //9, 初始化模板
         this.scxTemplate = new ScxTemplate(this.scxEasyConfig);
         //10, 初始化持久层
@@ -185,7 +186,7 @@ public final class Scx {
         //11, ScxMapping 配置类
         this.scxMappingConfiguration = new ScxMappingConfiguration();
         //12, 初始化任务调度器
-        this.scxScheduler = new ScxScheduler(vertx.nettyEventLoopGroup());
+        this.scxScheduler = new ScxScheduler(this.vertx.nettyEventLoopGroup());
     }
 
     /**
@@ -235,11 +236,12 @@ public final class Scx {
     /**
      * 初始化 bean 工厂
      *
-     * @param scxModuleInfos s
+     * @param scxModuleInfos           s
+     * @param scheduledExecutorService s
      * @return r
      */
-    private static ScxBeanFactory initScxBeanFactory(List<ScxModuleInfo<? extends ScxModule>> scxModuleInfos) {
-        var tempScxBeanFactory = new ScxBeanFactory();
+    private static ScxBeanFactory initScxBeanFactory(List<ScxModuleInfo<? extends ScxModule>> scxModuleInfos, ScheduledExecutorService scheduledExecutorService) {
+        var tempScxBeanFactory = new ScxBeanFactory(scheduledExecutorService);
         for (var scxModuleInfo : scxModuleInfos) {
             tempScxBeanFactory.registerBean(scxModuleInfo.needRegisterBeanClassList());
         }
@@ -362,6 +364,19 @@ public final class Scx {
         this.addShutdownHook();
         //6, 使用初始端口号 启动服务器
         this.startServer(this.scxEasyConfig.port());
+        //7,定时任务的 bean 需要被加载一次才可以执行, 这里将所有注入的类全部加载一次以实现在项目运行的时候执行定时任务
+        this.initScheduleTaskBean();
+    }
+
+    /**
+     * 将所有的 bean 加载一次以实现 已注解形式的 定时任务的启动
+     */
+    private void initScheduleTaskBean() {
+        for (var scxModuleInfo : scxModuleInfos) {
+            for (var aClass : scxModuleInfo.needRegisterBeanClassList()) {
+                this.scxBeanFactory.getBean(aClass);
+            }
+        }
     }
 
     /**

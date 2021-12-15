@@ -11,9 +11,14 @@ import cool.scx.test.car.Car;
 import cool.scx.test.car.CarService;
 import cool.scx.util.RandomUtils;
 import cool.scx.util.Timer;
+import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.support.CronTrigger;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 public class TestModule implements ScxModule {
@@ -103,6 +108,23 @@ public class TestModule implements ScxModule {
      */
     @Override
     public void start() {
+        var logger = LoggerFactory.getLogger(TestModule.class);
+        //测试定时任务
+        ScxContext.scheduler().scheduleAtFixedRate((a) -> {
+            logger.error("这是通过 ScxContext.scheduleAtFixedRate() 打印的 : 一共 10 次 , 这时第 " + a.runCount() + " 次执行 !!!");
+        }, Instant.now().plusSeconds(3), Duration.of(1, ChronoUnit.SECONDS), 10);
+
+        ScxContext.scheduler().schedule((a) -> {
+            logger.error("这是通过 ScxContext.scheduler() 使用 Cron 表达式 打印的 : 这时第 " + a.runCount() + " 次执行 !!!");
+        }, new CronTrigger("*/1 * * * * ?"));
+
+        ScxContext.scheduler().scheduleAtFixedRate((a) -> {
+            logger.error("这是通过 ScxContext.scheduleAtFixedRate() 打印的 : 不限次数 不过到 第 10 次手动取消 , 这是第 " + a.runCount() + " 次执行 !!!");
+            if (a.runCount() >= 10) {
+                a.scheduledFuture().cancel(false);
+            }
+        }, Instant.now().plusSeconds(3), Duration.of(1, ChronoUnit.SECONDS));
+
         System.out.println("CarModule-Start");
     }
 

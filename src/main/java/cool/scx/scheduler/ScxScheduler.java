@@ -4,29 +4,64 @@ import cool.scx.ScxHandler;
 import cool.scx.ScxHandlerV;
 import cool.scx.ScxHandlerVR;
 import io.netty.channel.EventLoopGroup;
-import io.netty.util.concurrent.ScheduledFuture;
+import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.Trigger;
+import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * 针对 spring 的 ${@link  TaskScheduler}  进行一些简单的封装
+ * <br>
+ * 以便可以实现一些简单的任务调度
+ */
 public final class ScxScheduler {
 
-    private final EventLoopGroup eventLoopGroup;
+    private final ScheduledExecutorService scheduledExecutorService;
+
+    private final TaskScheduler taskScheduler;
 
     public ScxScheduler(EventLoopGroup eventLoopGroup) {
-        this.eventLoopGroup = eventLoopGroup;
+        this.scheduledExecutorService = eventLoopGroup;
+        this.taskScheduler = new ConcurrentTaskScheduler(this.scheduledExecutorService);
     }
 
-    public <T> Future<T> run(ScxHandlerVR<T> task) {
-        return eventLoopGroup.submit(task::handle);
+    /**
+     * a
+     *
+     * @param task a
+     * @param <R>  a
+     * @return a
+     */
+    public <R> Future<R> submit(ScxHandlerVR<R> task) {
+        return scheduledExecutorService.submit(task::handle);
     }
 
-    public <T> Future<T> run(ScxHandlerV task, T result) {
-        return eventLoopGroup.submit(task::handle, result);
+    /**
+     * a
+     *
+     * @param scxHandlerV a
+     * @return a
+     */
+    public Future<?> submit(ScxHandlerV scxHandlerV) {
+        return scheduledExecutorService.submit(scxHandlerV::handle);
     }
 
-    public Future<?> run(ScxHandlerV scxHandlerV) {
-        return eventLoopGroup.submit(scxHandlerV::handle);
+    /**
+     * a
+     *
+     * @param scxHandlerVR a
+     * @param delay        a
+     * @param <R>          a
+     * @return a
+     */
+    public <R> ScheduledFuture<R> schedule(ScxHandlerVR<R> scxHandlerVR, long delay, TimeUnit unit) {
+        return scheduledExecutorService.schedule(scxHandlerVR::handle, delay, unit);
     }
 
     /**
@@ -40,50 +75,28 @@ public final class ScxScheduler {
      * @param delay       延时执行的时间  单位毫秒
      * @return a
      */
-    public ScheduledFuture<?> run(ScxHandlerV scxHandlerV, long delay) {
-        return eventLoopGroup.schedule(scxHandlerV::handle, delay, TimeUnit.MILLISECONDS);
+    public ScheduledFuture<?> schedule(ScxHandlerV scxHandlerV, long delay, TimeUnit unit) {
+        return scheduledExecutorService.schedule(scxHandlerV::handle, delay, unit);
     }
 
-    public <R> ScheduledFuture<R> run(ScxHandlerVR<R> scxHandlerVR, long delay) {
-        return eventLoopGroup.schedule(scxHandlerVR::handle, delay, TimeUnit.MILLISECONDS);
+    public ScheduledFuture<?> schedule(ScxHandler<ScheduleStatus> scxHandler, Trigger trigger) {
+        return new CounterRunnable(scxHandler).schedule(taskScheduler, trigger);
     }
 
-    /**
-     * 循环执行一个任务
-     * 只有当前任务执行完成后才会执行下一次任务 不会并行执行
-     *
-     * @param scxHandler 执行的任务
-     * @param trigger    触发器
-     */
-    public void runAtFixedRate(ScxHandler<ScheduleStatus> scxHandler, ScxTrigger trigger) {
-        if (trigger.noNeedToRun()) {
-            return;
-        }
-        //查看循环次数 为 -1 则无限循环
-        if (trigger.numberOfCycles() == -1) {
-            new InfiniteExecutionRunnable(scxHandler).scheduleAtFixedRate(eventLoopGroup, trigger.delay(), trigger.periodValue());
-        } else {
-            new FixedExecutionRunnable(scxHandler, trigger.numberOfCycles()).scheduleAtFixedRate(eventLoopGroup, trigger.delay(), trigger.periodValue());
-        }
+    public ScheduledFuture<?> scheduleWithFixedDelay(ScxHandler<ScheduleStatus> scxHandler, Instant startTime, Duration delay) {
+        return new CounterRunnable(scxHandler).scheduleWithFixedDelay(taskScheduler, startTime, delay);
     }
 
-    /**
-     * 循环执行一个任务
-     * 不管当前任务是否执行完成都会直接执行下一次任务 采用并行执行
-     *
-     * @param scxHandler 执行的任务
-     * @param trigger    触发器
-     */
-    public void runWithFixedDelay(ScxHandler<ScheduleStatus> scxHandler, ScxTrigger trigger) {
-        if (trigger.noNeedToRun()) {
-            return;
-        }
-        //查看循环次数 为 -1 则无限循环
-        if (trigger.numberOfCycles() == -1) {
-            new InfiniteExecutionRunnable(scxHandler).scheduleWithFixedDelay(eventLoopGroup, trigger.delay(), trigger.periodValue());
-        } else {
-            new FixedExecutionRunnable(scxHandler, trigger.numberOfCycles()).scheduleWithFixedDelay(eventLoopGroup, trigger.delay(), trigger.periodValue());
-        }
+    public ScheduledFuture<?> scheduleAtFixedRate(ScxHandler<ScheduleStatus> scxHandler, Instant startTime, Duration delay) {
+        return new CounterRunnable(scxHandler).scheduleAtFixedRate(taskScheduler, startTime, delay);
+    }
+
+    public ScheduledFuture<?> scheduleWithFixedDelay(ScxHandler<ScheduleStatus> scxHandler, Instant startTime, Duration delay, long maxRunCount) {
+        return new FixedRunCountRunnable(scxHandler, maxRunCount).scheduleWithFixedDelay(taskScheduler, startTime, delay);
+    }
+
+    public ScheduledFuture<?> scheduleAtFixedRate(ScxHandler<ScheduleStatus> scxHandler, Instant startTime, Duration delay, long maxRunCount) {
+        return new FixedRunCountRunnable(scxHandler, maxRunCount).scheduleAtFixedRate(taskScheduler, startTime, delay);
     }
 
 }
