@@ -88,11 +88,26 @@ public final class ScxDao {
      */
     public static void dataSourceExceptionHandler(Exception e) {
         while (true) {
-            System.err.println("X 数据源连接失败 !!! 是否忽略错误并继续运行? [Y]es [N]o");
+            var errMessage = """
+                    **************************************************************
+                    *                                                            *
+                    *           X 数据源连接失败 !!! 是否忽略错误并继续运行 ?            *
+                    *                                                            *
+                    *        [Y] 忽略错误并继续运行    |     [N] 退出程序              *
+                    *                                                            *
+                    **************************************************************
+                    """;
+            System.err.println(errMessage);
             var result = ConsoleUtils.readLine().trim();
             if ("Y".equalsIgnoreCase(result)) {
-                System.err.println("N 数据源链接错误,用户已忽略!!!");
-                e.printStackTrace();
+                var ignoreMessage = """
+                        *******************************************
+                        *                                         *
+                        *       N 数据源链接错误,用户已忽略 !!!         *
+                        *                                         *
+                        *******************************************
+                        """;
+                System.err.println(ignoreMessage);
                 break;
             } else if ("N".equalsIgnoreCase(result)) {
                 e.printStackTrace();
