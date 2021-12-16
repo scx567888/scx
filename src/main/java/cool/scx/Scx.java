@@ -254,7 +254,7 @@ public final class Scx {
      *
      * @param scxModuleInfos           s
      * @param scheduledExecutorService s
-     * @param scxFeatureConfig a
+     * @param scxFeatureConfig         a
      * @return r
      */
     private static ScxBeanFactory initScxBeanFactory(List<ScxModuleInfo<? extends ScxModule>> scxModuleInfos, ScheduledExecutorService scheduledExecutorService, ScxFeatureConfig scxFeatureConfig) {

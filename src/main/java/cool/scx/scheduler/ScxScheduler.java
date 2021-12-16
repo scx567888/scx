@@ -99,4 +99,20 @@ public final class ScxScheduler {
         return new FixedRunCountRunnable(scxHandler, maxRunCount).scheduleAtFixedRate(taskScheduler, startTime, delay);
     }
 
+    public ScheduledFuture<?> scheduleWithFixedDelay(ScxHandler<ScheduleStatus> scxHandler, Duration delay) {
+        return new CounterRunnable(scxHandler).scheduleWithFixedDelay(taskScheduler, delay);
+    }
+
+    public ScheduledFuture<?> scheduleAtFixedRate(ScxHandler<ScheduleStatus> scxHandler, Duration delay) {
+        return new CounterRunnable(scxHandler).scheduleAtFixedRate(taskScheduler, delay);
+    }
+
+    public ScheduledFuture<?> scheduleWithFixedDelay(ScxHandler<ScheduleStatus> scxHandler, Duration delay, long maxRunCount) {
+        return new FixedRunCountRunnable(scxHandler, maxRunCount).scheduleWithFixedDelay(taskScheduler, delay);
+    }
+
+    public ScheduledFuture<?> scheduleAtFixedRate(ScxHandler<ScheduleStatus> scxHandler, Duration delay, long maxRunCount) {
+        return new FixedRunCountRunnable(scxHandler, maxRunCount).scheduleAtFixedRate(taskScheduler, delay);
+    }
+
 }
