@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.Map;
 
@@ -33,22 +32,6 @@ public final class ObjectUtils {
      * 忽略 @JsonIgnore 注解的 objectMapper 一般用于内部使用
      */
     private static final ObjectMapper OBJECT_MAPPER = ObjectMapperHelper.setIgnoreJsonIgnore(ObjectMapperHelper.initObjectMapper());
-
-    /**
-     * 获取字段值
-     *
-     * @param field  字段
-     * @param target 字段所属实例对象
-     * @return a
-     */
-    public static Object getFieldValue(Field field, Object target) {
-        try {
-            return field.get(target);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 
     /**
      * a

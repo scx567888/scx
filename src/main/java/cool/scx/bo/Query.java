@@ -41,6 +41,11 @@ public final class Query {
     private final Pagination pagination = new Pagination();
 
     /**
+     * 查询列配置 包含排除项或包含项
+     */
+    private final SelectFilter selectFilter = new SelectFilter();
+
+    /**
      * 创建 Query 对象
      */
     public Query() {
@@ -81,6 +86,15 @@ public final class Query {
      */
     public Pagination pagination() {
         return pagination;
+    }
+
+    /**
+     * a
+     *
+     * @return a
+     */
+    public SelectFilter selectFilter() {
+        return selectFilter;
     }
 
     /**
@@ -462,12 +476,117 @@ public final class Query {
     }
 
     /**
-     * a
+     * 清除所有 where 条件 (包括 whereSQL)
      *
-     * @return a
+     * @return this 方便链式调用
      */
     public Query clearWhere() {
         this.where.clear();
+        return this;
+    }
+
+    /**
+     * 清除所有 where 条件
+     *
+     * @param alsoClearWhereSQL 是否包括 whereSQL
+     * @return this 方便链式调用
+     */
+    public Query clearWhere(boolean alsoClearWhereSQL) {
+        this.where.clear(alsoClearWhereSQL);
+        return this;
+    }
+
+    /**
+     * 添加 包含类型的列
+     *
+     * @param includedFieldNames 包含的列名 (注意是 java 字段名称 ,不是 数据库 字段名称)
+     * @return this 方便链式调用
+     */
+    public Query addIncluded(String... includedFieldNames) {
+        this.selectFilter.addIncluded(includedFieldNames);
+        return this;
+    }
+
+    /**
+     * 添加 排除类型的列
+     *
+     * @param excludedFieldNames 排除的列名 (注意是 java 字段名称 ,不是 数据库 字段名称)
+     * @return this 方便链式调用
+     */
+    public Query addExcluded(String... excludedFieldNames) {
+        this.selectFilter.addExcluded(excludedFieldNames);
+        return this;
+    }
+
+    /**
+     * 根据指定名称 移除 包含类型的列
+     *
+     * @param includedFieldNames 包含的列名 (注意是 java 字段名称 ,不是 数据库 字段名称)
+     * @return this 方便链式调用
+     */
+    public Query removeIncluded(String... includedFieldNames) {
+        this.selectFilter.removeIncluded(includedFieldNames);
+        return this;
+    }
+
+    /**
+     * 根据指定名称 移除 排除类型的列
+     *
+     * @param excludedFieldNames 排除的列名 (注意是 java 字段名称 ,不是 数据库 字段名称)
+     * @return this 方便链式调用
+     */
+    public Query removeExcluded(String... excludedFieldNames) {
+        this.selectFilter.removeExcluded(excludedFieldNames);
+        return this;
+    }
+
+    /**
+     * 清除所有 包含类型的列
+     *
+     * @return this 方便链式调用
+     */
+    public Query clearIncluded() {
+        this.selectFilter.clearIncluded();
+        return this;
+    }
+
+    /**
+     * 清除所有 排除类型的列
+     *
+     * @return this 方便链式调用
+     */
+    public Query clearExcluded() {
+        this.selectFilter.clearExcluded();
+        return this;
+    }
+
+    /**
+     * 关闭列 filter
+     *
+     * @return this 方便链式调用
+     */
+    public Query disableFilter() {
+        this.selectFilter.disableFilter();
+        return this;
+    }
+
+    /**
+     * 使用包含模式
+     *
+     * @return this 方便链式调用
+     */
+    public Query useIncludeMode() {
+        this.selectFilter.useIncludeMode();
+        return this;
+    }
+
+    /**
+     * 使用排除模式
+     *
+     * @return this 方便链式调用
+     */
+    public Query useExcludeMode() {
+        this.selectFilter.useExcludeMode();
         return this;
     }
 

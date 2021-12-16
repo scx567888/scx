@@ -6,7 +6,6 @@ import cool.scx.sql.SQLBuilder;
 import cool.scx.sql.handler.MapListHandler;
 import cool.scx.sql.where.Where;
 import cool.scx.sql.where.WhereOption;
-import cool.scx.util.CaseUtils;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -47,6 +46,31 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      */
     public BaseModelService(Class<Entity> entityClass) {
         super(entityClass);
+    }
+
+    /**
+     * 处理墓碑机制的数据
+     * <br>
+     * 如果没有开启墓碑机制 : 不做任何处理
+     * <br>
+     * 如果开启墓碑机制 做以下处理
+     * 1, 在查询条件强制添加 tombstone 字段值等于 false
+     * <br>
+     * 2, 根据不同的 selectFilter 类型进行查询参数过滤 隐藏数据库中所有 tombstone 字段的信息
+     *
+     * @param query q
+     */
+    private static void queryProcessorForTombstone(Query query) {
+        if (ScxContext.easyConfig().tombstone()) {
+            query.equal("tombstone", false, WhereOption.REPLACE);
+            if (query.selectFilter().mode() == 0) {
+                query.useExcludeMode().addExcluded("tombstone");
+            } else if (query.selectFilter().mode() == 1) {
+                query.removeIncluded("tombstone");
+            } else if (query.selectFilter().mode() == 2) {
+                query.addExcluded("tombstone");
+            }
+        }
     }
 
     /**
@@ -164,9 +188,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      */
     public long update(Entity entity, Query query) {
         //逻辑删除时不更新 处于逻辑删除状态的数据
-        if (ScxContext.easyConfig().tombstone()) {
-            query.equal("tombstone", false, WhereOption.REPLACE);
-        }
+        queryProcessorForTombstone(query);
         //更新成功的条数
         return this._update(entity, query, false);
     }
@@ -193,10 +215,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @return 更新成功的数据条数
      */
     public long updateIncludeNull(Entity entity, Query query) {
-        //逻辑删除时不更新 处于逻辑删除状态的数据
-        if (ScxContext.easyConfig().tombstone()) {
-            query.equal("tombstone", false, WhereOption.REPLACE);
-        }
+        queryProcessorForTombstone(query);
         //更新成功的条数
         return this._update(entity, query, true);
     }
@@ -232,9 +251,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @return 查到多个则返回第一个 没有则返回 null
      */
     public Entity get(Query query) {
-        if (ScxContext.easyConfig().tombstone()) {
-            query.equal("tombstone", false, WhereOption.REPLACE);
-        }
+        queryProcessorForTombstone(query);
         query.setPagination(1);
         var list = this._select(query);
         return list.size() > 0 ? list.get(0) : null;
@@ -247,9 +264,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @return 数据条数
      */
     public long count(Query query) {
-        if (ScxContext.easyConfig().tombstone()) {
-            query.equal("tombstone", false, WhereOption.REPLACE);
-        }
+        queryProcessorForTombstone(query);
         return this._count(query);
     }
 
@@ -269,9 +284,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @return 数据列表
      */
     public List<Entity> list(Query query) {
-        if (ScxContext.easyConfig().tombstone()) {
-            query.equal("tombstone", false, WhereOption.REPLACE);
-        }
+        queryProcessorForTombstone(query);
         return this._select(query);
     }
 
@@ -292,9 +305,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      */
     public List<Entity> list() {
         var query = new Query().desc("updateDate");
-        if (ScxContext.easyConfig().tombstone()) {
-            query.equal("tombstone", false, WhereOption.REPLACE);
-        }
+        queryProcessorForTombstone(query);
         return this._select(query);
     }
 
@@ -306,17 +317,16 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      */
     public List<Map<String, Object>> getFieldList(String fieldName) {
         //判断查询字段是否安全 ( 数据库字段内 防止 sql 注入)
-        var isSafe = Arrays.stream(this.scxDaoTableInfo.allFields)
-                .filter(field -> field.getName().equals(fieldName))
-                .count() == 1;
+        var l = Arrays.stream(this.scxDaoTableInfo.allColumnInfos)
+                .filter(c -> c.fieldName().equals(fieldName)).findAny().orElse(null);
+        var isSafe = l != null;
         if (isSafe) {
-            var selectColumn = CaseUtils.toSnake(fieldName) + " As value ";
             var where = new Where();
             if (ScxContext.easyConfig().tombstone()) {
                 where.equal("tombstone", false);
             }
             var sql = SQLBuilder
-                    .Select(selectColumn)
+                    .Select(l.name() + " AS value")
                     .From(this.scxDaoTableInfo.tableName)
                     .Where(where)
                     .GroupBy("value")
@@ -459,10 +469,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @throws java.sql.SQLException c
      */
     public long update(Connection con, Entity entity, Query query) throws SQLException {
-        //逻辑删除时不更新 处于逻辑删除状态的数据
-        if (ScxContext.easyConfig().tombstone()) {
-            query.equal("tombstone", false, WhereOption.REPLACE);
-        }
+        queryProcessorForTombstone(query);
         //更新成功的条数
         return this._update(con, entity, query, false);
     }
@@ -494,9 +501,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      */
     public long updateIncludeNull(Connection con, Entity entity, Query query) throws SQLException {
         //逻辑删除时不更新 处于逻辑删除状态的数据
-        if (ScxContext.easyConfig().tombstone()) {
-            query.equal("tombstone", false, WhereOption.REPLACE);
-        }
+        queryProcessorForTombstone(query);
         //更新成功的条数
         return this._update(con, entity, query, true);
     }
@@ -526,14 +531,11 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @throws SQLException a
      */
     public Entity get(Connection con, Query query) throws SQLException {
-        if (ScxContext.easyConfig().tombstone()) {
-            query.equal("tombstone", false, WhereOption.REPLACE);
-        }
+        queryProcessorForTombstone(query);
         query.setPagination(1);
         var list = this._select(con, query);
         return list.size() > 0 ? list.get(0) : null;
     }
-
 
     /**
      * @param con a
@@ -545,7 +547,6 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
         return get(con, new Query().equal("id", id));
     }
 
-
     /**
      * a
      *
@@ -555,12 +556,9 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      */
     public List<Entity> list(Connection con) throws SQLException {
         var query = new Query().desc("updateDate");
-        if (ScxContext.easyConfig().tombstone()) {
-            query.equal("tombstone", false, WhereOption.REPLACE);
-        }
+        queryProcessorForTombstone(query);
         return this._select(con, query);
     }
-
 
     /**
      * a
@@ -583,9 +581,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @throws SQLException a
      */
     public List<Entity> list(Connection con, Query query) throws SQLException {
-        if (ScxContext.easyConfig().tombstone()) {
-            query.equal("tombstone", false, WhereOption.REPLACE);
-        }
+        queryProcessorForTombstone(query);
         return this._select(con, query);
     }
 
@@ -598,9 +594,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @throws SQLException a
      */
     public long count(Connection con, Query query) throws SQLException {
-        if (ScxContext.easyConfig().tombstone()) {
-            query.equal("tombstone", false, WhereOption.REPLACE);
-        }
+        queryProcessorForTombstone(query);
         return this._count(con, query);
     }
 

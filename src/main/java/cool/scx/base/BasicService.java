@@ -2,6 +2,7 @@ package cool.scx.base;
 
 import cool.scx.ScxContext;
 import cool.scx.bo.Query;
+import cool.scx.dao.ScxDaoColumnInfo;
 import cool.scx.dao.ScxDaoTableInfo;
 import cool.scx.sql.SQLBuilder;
 import cool.scx.sql.SQLRunner;
@@ -9,7 +10,6 @@ import cool.scx.sql.handler.BeanListHandler;
 import cool.scx.sql.handler.ScalarHandler;
 import cool.scx.util.ObjectUtils;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -96,10 +96,10 @@ public class BasicService<Entity> {
      * @return a
      */
     private SQLRunnerParameterWrapper<Map<String, Object>> _buildInsertParameter(Entity entity) {
-        var c = Stream.of(scxDaoTableInfo.canInsertFields).filter(field -> ObjectUtils.getFieldValue(field, entity) != null).toArray(Field[]::new);
+        var insertColumns = Stream.of(scxDaoTableInfo.canInsertColumnInfos).filter(c -> c.getFieldValue(entity) != null).toArray(ScxDaoColumnInfo[]::new);
         var sql = SQLBuilder
-                .Insert(scxDaoTableInfo.tableName, c)
-                .Values(c)
+                .Insert(scxDaoTableInfo.tableName, insertColumns)
+                .Values(insertColumns)
                 .GetSQL();
         return new SQLRunnerParameterWrapper<>(sql, ObjectUtils.mapper().convertValue(entity, ObjectUtils.MAP_TYPE));
     }
@@ -139,14 +139,14 @@ public class BasicService<Entity> {
         var mapList = new ArrayList<Map<String, Object>>(entityList.size());
         for (var entity : entityList) {
             var map = new HashMap<String, Object>();
-            for (var canInsertField : scxDaoTableInfo.canInsertFields) {
-                map.put(canInsertField.getName(), ObjectUtils.getFieldValue(canInsertField, entity));
+            for (var canInsertField : scxDaoTableInfo.canInsertColumnInfos) {
+                map.put(canInsertField.fieldName(), canInsertField.getFieldValue(entity));
             }
             mapList.add(map);
         }
         var sql = SQLBuilder
-                .Insert(scxDaoTableInfo.tableName, scxDaoTableInfo.canInsertFields)
-                .Values(scxDaoTableInfo.canInsertFields)
+                .Insert(scxDaoTableInfo.tableName, scxDaoTableInfo.canInsertColumnInfos)
+                .Values(scxDaoTableInfo.canInsertColumnInfos)
                 .GetSQL();
         return new SQLRunnerParameterWrapper<>(sql, mapList);
     }
@@ -183,7 +183,7 @@ public class BasicService<Entity> {
      */
     private SQLRunnerParameterWrapper<Map<String, Object>> _buildSelectParameter(Query query) {
         var sql = SQLBuilder
-                .Select(scxDaoTableInfo.selectColumns)
+                .Select(query.selectFilter().filter(scxDaoTableInfo.allColumnInfos))
                 .From(scxDaoTableInfo.tableName)
                 .Where(query.where())
                 .GroupBy(query.groupBy())
@@ -273,7 +273,7 @@ public class BasicService<Entity> {
         if (query == null || query.where().isEmpty()) {
             throw new RuntimeException("更新数据时 必须指定 id , 删除条件 或 自定义的 where 语句 !!!");
         }
-        var u = includeNull ? scxDaoTableInfo.canUpdateFields : Stream.of(scxDaoTableInfo.canUpdateFields).filter(field -> ObjectUtils.getFieldValue(field, entity) != null).toArray(Field[]::new);
+        var u = includeNull ? scxDaoTableInfo.canUpdateColumnInfos : Stream.of(scxDaoTableInfo.canUpdateColumnInfos).filter(field -> field.getFieldValue(entity) != null).toArray(ScxDaoColumnInfo[]::new);
         if (u.length == 0) {
             throw new RuntimeException("更新数据时 待更新的数据 [实体类中除被 @Column(excludeOnUpdate = true) 修饰以外的字段] 不能全部为 null !!!");
         }
