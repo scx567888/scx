@@ -96,8 +96,8 @@ public final class SQLBuilder {
      * @return a
      * @ param insertColumnInfos a
      */
-    public static SQLBuilder Select(ScxDaoColumnInfo... insertColumnInfos) {
-        return Select(Arrays.stream(insertColumnInfos).map(ScxDaoColumnInfo::selectSQL).toArray(String[]::new));
+    public static SQLBuilder Select(ScxDaoColumnInfo... selectColumnInfos) {
+        return Select(Arrays.stream(selectColumnInfos).map(ScxDaoColumnInfo::selectSQL).toArray(String[]::new));
     }
 
     /**
