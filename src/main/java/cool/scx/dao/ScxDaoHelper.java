@@ -105,10 +105,10 @@ public final class ScxDaoHelper {
     private static void fixTable0(ScxDaoTableInfo tableInfo) throws SQLException {
         var databaseName = ScxContext.easyConfig().dataSourceDatabase();
         try (var con = ScxContext.dao().dataSource().getConnection()) {
-            var existingColumn = getTableAllColumnNames(con, databaseName, tableInfo.tableName);
+            var existingColumn = getTableAllColumnNames(con, databaseName, tableInfo.tableName());
             if (existingColumn != null) {
                 //获取不存在的字段
-                var nonExistentColumnNames = Stream.of(tableInfo.allColumnInfos).filter(c -> !existingColumn.contains(c.name())).toList();
+                var nonExistentColumnNames = Stream.of(tableInfo.columnInfos()).filter(c -> !existingColumn.contains(c.columnName())).toList();
                 if (nonExistentColumnNames.size() > 0) {
                     var alertTableDDL = tableInfo.getAlertTableDDL(nonExistentColumnNames);
                     SQLRunner.execute(con, alertTableDDL);
@@ -129,11 +129,11 @@ public final class ScxDaoHelper {
     private static boolean checkNeedFixTable0(ScxDaoTableInfo tableInfo) throws SQLException {
         var databaseName = ScxContext.easyConfig().dataSourceDatabase();
         try (var con = ScxContext.dao().dataSource().getConnection()) {
-            var existingColumn = getTableAllColumnNames(con, databaseName, tableInfo.tableName);
+            var existingColumn = getTableAllColumnNames(con, databaseName, tableInfo.tableName());
             //这个表不存在
             if (existingColumn != null) {
                 //获取不存在的字段
-                var nonExistentColumnNames = Stream.of(tableInfo.allColumnInfos).filter(c -> !existingColumn.contains(c.name())).toList();
+                var nonExistentColumnNames = Stream.of(tableInfo.columnInfos()).filter(c -> !existingColumn.contains(c.columnName())).toList();
                 return nonExistentColumnNames.size() != 0;
             } else {
                 return true;

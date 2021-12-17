@@ -96,9 +96,9 @@ public class BasicService<Entity> {
      * @return a
      */
     private SQLRunnerParameterWrapper<Map<String, Object>> _buildInsertParameter(Entity entity, UpdateFilter insertFilter) {
-        var insertColumns = insertFilter != null ? insertFilter.filter(entity, scxDaoTableInfo.allColumnInfos) : scxDaoTableInfo.allColumnInfos;
+        var insertColumns = insertFilter != null ? insertFilter.filter(entity, scxDaoTableInfo.columnInfos()) : scxDaoTableInfo.columnInfos();
         //insert 允许空列所以这里不做判断
-        var sql = SQLBuilder.Insert(scxDaoTableInfo.tableName, insertColumns).Values(insertColumns).GetSQL();
+        var sql = SQLBuilder.Insert(scxDaoTableInfo.tableName(), insertColumns).Values(insertColumns).GetSQL();
         return new SQLRunnerParameterWrapper<>(sql, ObjectUtils.mapper().convertValue(entity, ObjectUtils.MAP_TYPE));
     }
 
@@ -133,7 +133,7 @@ public class BasicService<Entity> {
      * @return a
      */
     private SQLRunnerParameterWrapper<ArrayList<Map<String, Object>>> _buildInsertBatchParameter(List<Entity> entityList, UpdateFilter updateFilter) {
-        var insertColumns = updateFilter != null ? updateFilter.filter(scxDaoTableInfo.allColumnInfos) : scxDaoTableInfo.allColumnInfos;
+        var insertColumns = updateFilter != null ? updateFilter.filter(scxDaoTableInfo.columnInfos()) : scxDaoTableInfo.columnInfos();
         //将 entity 转换为 map
         var mapList = new ArrayList<Map<String, Object>>(entityList.size());
         for (var entity : entityList) {
@@ -143,7 +143,7 @@ public class BasicService<Entity> {
             }
             mapList.add(map);
         }
-        var sql = SQLBuilder.Insert(scxDaoTableInfo.tableName, insertColumns).Values(insertColumns).GetSQL();
+        var sql = SQLBuilder.Insert(scxDaoTableInfo.tableName(), insertColumns).Values(insertColumns).GetSQL();
         return new SQLRunnerParameterWrapper<>(sql, mapList);
     }
 
@@ -178,11 +178,11 @@ public class BasicService<Entity> {
      * @return a
      */
     private SQLRunnerParameterWrapper<Map<String, Object>> _buildSelectParameter(Query query, SelectFilter selectFilter) {
-        var selectColumnInfos = selectFilter != null ? selectFilter.filter(scxDaoTableInfo.allColumnInfos) : scxDaoTableInfo.allColumnInfos;
+        var selectColumnInfos = selectFilter != null ? selectFilter.filter(scxDaoTableInfo.columnInfos()) : scxDaoTableInfo.columnInfos();
         if (selectColumnInfos.length == 0) {
             throw new IllegalArgumentException("查询数据时 待查询的数据列 不能全部为 null !!!");
         }
-        var sql = SQLBuilder.Select(selectColumnInfos).From(scxDaoTableInfo.tableName).Where(query.where()).GroupBy(query.groupBy()).OrderBy(query.orderBy()).Limit(query.pagination()).GetSQL();
+        var sql = SQLBuilder.Select(selectColumnInfos).From(scxDaoTableInfo.tableName()).Where(query.where()).GroupBy(query.groupBy()).OrderBy(query.orderBy()).Limit(query.pagination()).GetSQL();
         return new SQLRunnerParameterWrapper<>(sql, query.where().getWhereParamMap());
     }
 
@@ -217,7 +217,7 @@ public class BasicService<Entity> {
      * @return a
      */
     private SQLRunnerParameterWrapper<Map<String, Object>> _buildCountParameter(Query query) {
-        var sql = SQLBuilder.Select("COUNT(*) AS count").From(scxDaoTableInfo.tableName).Where(query.where()).GroupBy(query.groupBy()).GetSQL();
+        var sql = SQLBuilder.Select("COUNT(*) AS count").From(scxDaoTableInfo.tableName()).Where(query.where()).GroupBy(query.groupBy()).GetSQL();
         return new SQLRunnerParameterWrapper<>(sql, query.where().getWhereParamMap());
     }
 
@@ -258,13 +258,13 @@ public class BasicService<Entity> {
         if (query == null || query.where().isEmpty()) {
             throw new IllegalArgumentException("更新数据时 必须指定 id , 删除条件 或 自定义的 where 语句 !!!");
         }
-        var updateSetColumnInfos = updateFilter != null ? updateFilter.filter(entity, scxDaoTableInfo.allColumnInfos) : scxDaoTableInfo.allColumnInfos;
+        var updateSetColumnInfos = updateFilter != null ? updateFilter.filter(entity, scxDaoTableInfo.columnInfos()) : scxDaoTableInfo.columnInfos();
         if (updateSetColumnInfos.length == 0) {
             throw new IllegalArgumentException("更新数据时 待更新的数据列 不能全部为 null !!!");
         }
         var entityMap = ObjectUtils.mapper().convertValue(entity, ObjectUtils.MAP_TYPE);
         entityMap.putAll(query.where().getWhereParamMap());
-        var sql = SQLBuilder.Update(scxDaoTableInfo.tableName).Set(updateSetColumnInfos).Where(query.where()).GetSQL();
+        var sql = SQLBuilder.Update(scxDaoTableInfo.tableName()).Set(updateSetColumnInfos).Where(query.where()).GetSQL();
         return new SQLRunnerParameterWrapper<>(sql, entityMap);
     }
 
@@ -302,7 +302,7 @@ public class BasicService<Entity> {
         if (query == null || query.where().isEmpty()) {
             throw new RuntimeException("删除数据时必须指定 id , 删除条件 或 自定义的 where 语句 !!!");
         }
-        var sql = SQLBuilder.Delete(scxDaoTableInfo.tableName).Where(query.where()).GetSQL();
+        var sql = SQLBuilder.Delete(scxDaoTableInfo.tableName()).Where(query.where()).GetSQL();
         return new SQLRunnerParameterWrapper<>(sql, query.where().getWhereParamMap());
     }
 

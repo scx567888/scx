@@ -119,7 +119,7 @@ public final class SQLBuilder {
      * @return a {@link cool.scx.sql.SQLBuilder} object
      */
     public static SQLBuilder Insert(String tableName, ScxDaoColumnInfo... insertColumnInfos) {
-        return Insert(tableName, Arrays.stream(insertColumnInfos).map(ScxDaoColumnInfo::name).toArray(String[]::new));
+        return Insert(tableName, Arrays.stream(insertColumnInfos).map(ScxDaoColumnInfo::columnName).toArray(String[]::new));
     }
 
     /**

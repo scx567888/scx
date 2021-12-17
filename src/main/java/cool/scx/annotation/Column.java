@@ -66,20 +66,6 @@ public @interface Column {
     boolean primaryKey() default false;
 
     /**
-     * 插入时是否过滤掉此字段 如 createTime
-     *
-     * @return 插入时是否过滤掉此字段
-     */
-    boolean excludeOnInsert() default false;
-
-    /**
-     * 更新时是否过滤掉此字段 如 id
-     *
-     * @return 更新时是否过滤掉此字段
-     */
-    boolean excludeOnUpdate() default false;
-
-    /**
      * 此字段是否为自增 仅用于 创建或修复表时
      *
      * @return 是否为自增

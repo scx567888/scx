@@ -17,19 +17,19 @@ public abstract class BaseModel implements Serializable {
     /**
      * id
      */
-    @Column(primaryKey = true, excludeOnInsert = true, excludeOnUpdate = true, autoIncrement = true)
+    @Column(primaryKey = true, autoIncrement = true)
     public Long id;
 
     /**
      * 修改时间
      */
-    @Column(excludeOnInsert = true, excludeOnUpdate = true, notNull = true, defaultValue = "CURRENT_TIMESTAMP", onUpdateValue = "CURRENT_TIMESTAMP", needIndex = true)
+    @Column(notNull = true, defaultValue = "CURRENT_TIMESTAMP", onUpdateValue = "CURRENT_TIMESTAMP", needIndex = true)
     public LocalDateTime updateDate;
 
     /**
      * 创建时间
      */
-    @Column(excludeOnInsert = true, excludeOnUpdate = true, notNull = true, defaultValue = "CURRENT_TIMESTAMP", needIndex = true)
+    @Column(notNull = true, defaultValue = "CURRENT_TIMESTAMP", needIndex = true)
     public LocalDateTime createDate;
 
     /**
@@ -38,7 +38,7 @@ public abstract class BaseModel implements Serializable {
      * 用于标识逻辑删除的状态
      */
     @JsonIgnore
-    @Column(excludeOnInsert = true, notNull = true, defaultValue = "false")
+    @Column(notNull = true, defaultValue = "false")
     public Boolean tombstone;
 
 }

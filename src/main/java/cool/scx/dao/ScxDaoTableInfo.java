@@ -6,7 +6,6 @@ import cool.scx.util.CaseUtils;
 import cool.scx.util.StringUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -19,24 +18,14 @@ import java.util.stream.Stream;
 public final class ScxDaoTableInfo {
 
     /**
-     * 实体类型 不含@NoColunm 和@NoUpdate 注解的 field
-     */
-    public final ScxDaoColumnInfo[] canUpdateColumnInfos;
-
-    /**
-     * 实体类型 不含@NoColunm 和@NoInsert 注解的 field
-     */
-    public final ScxDaoColumnInfo[] canInsertColumnInfos;
-
-    /**
      * 实体类型不含@NoColunm 注解的field
      */
-    public final ScxDaoColumnInfo[] allColumnInfos;
+    private final ScxDaoColumnInfo[] columnInfos;
 
     /**
      * 表名
      */
-    public final String tableName;
+    private final String tableName;
 
     /**
      * c
@@ -45,9 +34,7 @@ public final class ScxDaoTableInfo {
      */
     public ScxDaoTableInfo(Class<?> clazz) {
         this.tableName = initTableName(clazz);
-        this.allColumnInfos = initAllColumnInfos(clazz);
-        this.canInsertColumnInfos = filterCanInsertColumnInfos(this.allColumnInfos);
-        this.canUpdateColumnInfos = filterCanUpdateColumnInfos(this.allColumnInfos);
+        this.columnInfos = initAllColumnInfos(clazz);
     }
 
     /**
@@ -58,26 +45,6 @@ public final class ScxDaoTableInfo {
      */
     private static ScxDaoColumnInfo[] initAllColumnInfos(Class<?> clazz) {
         return Stream.of(clazz.getFields()).filter(field -> !field.isAnnotationPresent(NoColumn.class)).map(ScxDaoColumnInfo::new).toArray(ScxDaoColumnInfo[]::new);
-    }
-
-    /**
-     * a
-     *
-     * @param allFields a
-     * @return a
-     */
-    private static ScxDaoColumnInfo[] filterCanInsertColumnInfos(ScxDaoColumnInfo[] allFields) {
-        return Arrays.stream(allFields).filter(ta -> !ta.excludeOnInsert()).toArray(ScxDaoColumnInfo[]::new);
-    }
-
-    /**
-     * a
-     *
-     * @param allFields a
-     * @return a
-     */
-    private static ScxDaoColumnInfo[] filterCanUpdateColumnInfos(ScxDaoColumnInfo[] allFields) {
-        return Arrays.stream(allFields).filter(ta -> !ta.excludeOnUpdate()).toArray(ScxDaoColumnInfo[]::new);
     }
 
     /**
@@ -105,10 +72,10 @@ public final class ScxDaoTableInfo {
      */
     public String getCreateTableDDL() {
         var createTableDDL = new ArrayList<String>();
-        for (var columnInfo : allColumnInfos) {
+        for (var columnInfo : columnInfos) {
             createTableDDL.add(columnInfo.normalDDL());
         }
-        for (var columnInfo : allColumnInfos) {
+        for (var columnInfo : columnInfos) {
             createTableDDL.addAll(List.of(columnInfo.specialDDL()));
         }
         return "CREATE TABLE `" + tableName + "` (" + String.join(", ", createTableDDL) + ");";
@@ -131,6 +98,14 @@ public final class ScxDaoTableInfo {
             }
         }
         return "ALTER TABLE `" + tableName + "` " + String.join(", ", alertTableDDL) + ";";
+    }
+
+    public String tableName() {
+        return tableName;
+    }
+
+    public ScxDaoColumnInfo[] columnInfos() {
+        return columnInfos;
     }
 
 }

@@ -18,22 +18,12 @@ public final class ScxDaoColumnInfo {
     /**
      * 列名称 (数据库中的列名称)
      */
-    private final String name;
+    private final String columnName;
 
     /**
      * 类型  (数据库中的类型 , 目前仅在建表时使用)
      */
     private final String type;
-
-    /**
-     * 是否在插入时排除此 列
-     */
-    private final boolean excludeOnInsert;
-
-    /**
-     * 是否在更新时排除此 列
-     */
-    private final boolean excludeOnUpdate;
 
     /**
      * 当前列对象通常的 DDL 如设置 字段名 类型 是否可以为空 默认值等 (建表语句片段 , 需和 specialDDL 一起使用才完整)
@@ -82,22 +72,18 @@ public final class ScxDaoColumnInfo {
 
     public ScxDaoColumnInfo(Field field) {
         this.field = field;
-        this.name = CaseUtils.toSnake(this.field.getName());
+        this.columnName = CaseUtils.toSnake(this.field.getName());
         var column = field.getAnnotation(Column.class);
         if (column != null) {
             this.type = StringUtils.isNotBlank(column.type()) ? column.type() : SQLTypeHelper.getMySQLTypeCreateName(field.getType());
-            this.excludeOnInsert = column.excludeOnInsert();
-            this.excludeOnUpdate = column.excludeOnUpdate();
         } else {
             this.type = SQLTypeHelper.getMySQLTypeCreateName(field.getType());
-            this.excludeOnInsert = false;
-            this.excludeOnUpdate = false;
         }
-        this.normalDDL = initNormalDDL(this.name, this.type, column);
-        this.specialDDL = initSpecialDDL(this.name, column);
-        this.updateSetSQL = this.name + " = :" + this.fieldName();
+        this.normalDDL = initNormalDDL(this.columnName, this.type, column);
+        this.specialDDL = initSpecialDDL(this.columnName, column);
+        this.updateSetSQL = this.columnName + " = :" + this.fieldName();
         this.insertValuesSQL = ":" + this.fieldName();
-        this.selectSQL = this.fieldName().equals(this.name) ? this.name : this.name + " AS " + this.fieldName();
+        this.selectSQL = this.fieldName().equals(this.columnName) ? this.columnName : this.columnName + " AS " + this.fieldName();
     }
 
     /**
@@ -156,8 +142,8 @@ public final class ScxDaoColumnInfo {
         return selectSQL;
     }
 
-    public String name() {
-        return name;
+    public String columnName() {
+        return columnName;
     }
 
     public String updateSetSQL() {
@@ -166,14 +152,6 @@ public final class ScxDaoColumnInfo {
 
     public String insertValuesSQL() {
         return insertValuesSQL;
-    }
-
-    public boolean excludeOnInsert() {
-        return excludeOnInsert;
-    }
-
-    public boolean excludeOnUpdate() {
-        return excludeOnUpdate;
     }
 
     /**
