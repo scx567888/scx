@@ -180,7 +180,7 @@ public class BasicService<Entity> {
     private SQLRunnerParameterWrapper<Map<String, Object>> _buildSelectParameter(Query query, SelectFilter selectFilter) {
         var selectColumnInfos = selectFilter != null ? selectFilter.filter(scxDaoTableInfo.columnInfos()) : scxDaoTableInfo.columnInfos();
         if (selectColumnInfos.length == 0) {
-            throw new IllegalArgumentException("查询数据时 待查询的数据列 不能全部为 null !!!");
+            throw new IllegalArgumentException("查询数据时 待查询的数据列 不能为空 !!!");
         }
         var sql = SQLBuilder.Select(selectColumnInfos).From(scxDaoTableInfo.tableName()).Where(query.where()).GroupBy(query.groupBy()).OrderBy(query.orderBy()).Limit(query.pagination()).GetSQL();
         return new SQLRunnerParameterWrapper<>(sql, query.where().getWhereParamMap());
@@ -256,11 +256,11 @@ public class BasicService<Entity> {
      */
     private SQLRunnerParameterWrapper<Map<String, Object>> _buildUpdateParameter(Entity entity, Query query, UpdateFilter updateFilter) {
         if (query == null || query.where().isEmpty()) {
-            throw new IllegalArgumentException("更新数据时 必须指定 id , 删除条件 或 自定义的 where 语句 !!!");
+            throw new IllegalArgumentException("更新数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
         }
         var updateSetColumnInfos = updateFilter != null ? updateFilter.filter(entity, scxDaoTableInfo.columnInfos()) : scxDaoTableInfo.columnInfos();
         if (updateSetColumnInfos.length == 0) {
-            throw new IllegalArgumentException("更新数据时 待更新的数据列 不能全部为 null !!!");
+            throw new IllegalArgumentException("更新数据时 待更新的数据列 不能为空 !!!");
         }
         var entityMap = ObjectUtils.mapper().convertValue(entity, ObjectUtils.MAP_TYPE);
         entityMap.putAll(query.where().getWhereParamMap());
@@ -300,7 +300,7 @@ public class BasicService<Entity> {
      */
     private SQLRunnerParameterWrapper<Map<String, Object>> _buildDeleteParameter(Query query) {
         if (query == null || query.where().isEmpty()) {
-            throw new RuntimeException("删除数据时必须指定 id , 删除条件 或 自定义的 where 语句 !!!");
+            throw new IllegalArgumentException("删除数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
         }
         var sql = SQLBuilder.Delete(scxDaoTableInfo.tableName()).Where(query.where()).GetSQL();
         return new SQLRunnerParameterWrapper<>(sql, query.where().getWhereParamMap());
