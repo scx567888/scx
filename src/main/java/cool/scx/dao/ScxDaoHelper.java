@@ -2,12 +2,10 @@ package cool.scx.dao;
 
 import cool.scx.ScxContext;
 import cool.scx.sql.SQLRunner;
-import cool.scx.util.CaseUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Field;
-import java.sql.ResultSet;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -107,17 +105,15 @@ public final class ScxDaoHelper {
     private static void fixTable0(ScxDaoTableInfo tableInfo) throws SQLException {
         var databaseName = ScxContext.easyConfig().dataSourceDatabase();
         try (var con = ScxContext.dao().dataSource().getConnection()) {
-            var dbMetaData = con.getMetaData();
-            var nowTable = dbMetaData.getTables(databaseName, databaseName, tableInfo.tableName, new String[]{"TABLE"});
-            if (nowTable.next()) { //有这个表
-                var nowColumns = dbMetaData.getColumns(databaseName, databaseName, nowTable.getString("TABLE_NAME"), null);
-                //所有不包含的 field
-                var nonExistentFields = getNonExistentColumnName(nowColumns, tableInfo);
-                if (nonExistentFields.size() > 0) {
-                    var alertTableDDL = tableInfo.getAlertTableDDL(nonExistentFields);
+            var existingColumn = getTableAllColumnNames(con, databaseName, tableInfo.tableName);
+            if (existingColumn != null) {
+                //获取不存在的字段
+                var nonExistentColumnNames = Stream.of(tableInfo.allColumnInfos).filter(c -> !existingColumn.contains(c.name())).toList();
+                if (nonExistentColumnNames.size() > 0) {
+                    var alertTableDDL = tableInfo.getAlertTableDDL(nonExistentColumnNames);
                     SQLRunner.execute(con, alertTableDDL);
                 }
-            } else {//没有这个表
+            } else {// 没有这个表
                 SQLRunner.execute(con, tableInfo.getCreateTableDDL());
             }
         }
@@ -133,12 +129,12 @@ public final class ScxDaoHelper {
     private static boolean checkNeedFixTable0(ScxDaoTableInfo tableInfo) throws SQLException {
         var databaseName = ScxContext.easyConfig().dataSourceDatabase();
         try (var con = ScxContext.dao().dataSource().getConnection()) {
-            var dbMetaData = con.getMetaData();
-            var nowTable = dbMetaData.getTables(databaseName, databaseName, tableInfo.tableName, new String[]{"TABLE"});
-            if (nowTable.next()) { //有这个表
-                var nowColumns = dbMetaData.getColumns(databaseName, databaseName, nowTable.getString("TABLE_NAME"), null);
-                //所有不包含的 field
-                return getNonExistentColumnName(nowColumns, tableInfo).size() != 0;
+            var existingColumn = getTableAllColumnNames(con, databaseName, tableInfo.tableName);
+            //这个表不存在
+            if (existingColumn != null) {
+                //获取不存在的字段
+                var nonExistentColumnNames = Stream.of(tableInfo.allColumnInfos).filter(c -> !existingColumn.contains(c.name())).toList();
+                return nonExistentColumnNames.size() != 0;
             } else {
                 return true;
             }
@@ -146,23 +142,25 @@ public final class ScxDaoHelper {
     }
 
     /**
-     * 获取不存在的 列名称 用于后续的表修复
+     * 根据连接 获取数据库中所有的字段
      *
-     * @param nowColumns n
-     * @param tableInfo  a
-     * @return a
-     * @throws SQLException a
+     * @param con       连接
+     * @param tableName 表名称
+     * @return 如果表存在返回所有字段的名称 否则返回 null
      */
-    private static List<String> getNonExistentColumnName(ResultSet nowColumns, ScxDaoTableInfo tableInfo) throws SQLException {
-        var existingColumn = new ArrayList<>();
-        while (nowColumns.next()) {
-            existingColumn.add(nowColumns.getString("COLUMN_NAME"));
+    public static List<String> getTableAllColumnNames(Connection con, String databaseName, String tableName) throws SQLException {
+        var dbMetaData = con.getMetaData();
+        var nowTable = dbMetaData.getTables(databaseName, databaseName, tableName, new String[]{"TABLE"});
+        if (nowTable.next()) { //有这个表
+            var nowColumns = dbMetaData.getColumns(databaseName, databaseName, nowTable.getString("TABLE_NAME"), null);
+            var existingColumn = new ArrayList<String>();
+            while (nowColumns.next()) {
+                existingColumn.add(nowColumns.getString("COLUMN_NAME"));
+            }
+            return existingColumn;
+        } else {//没有这个表
+            return null;
         }
-        //所有不包含的
-        return Stream.of(tableInfo.allFields)
-                .map(Field::getName)
-                .filter(name -> !existingColumn.contains(CaseUtils.toSnake(name)))
-                .toList();
     }
 
 }

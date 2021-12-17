@@ -1,13 +1,12 @@
 package cool.scx.sql;
 
+import cool.scx.dao.ScxDaoColumnInfo;
 import cool.scx.sql.group_by.GroupBy;
 import cool.scx.sql.order_by.OrderBy;
 import cool.scx.sql.pagination.Pagination;
 import cool.scx.sql.where.Where;
-import cool.scx.util.CaseUtils;
 
-import java.lang.reflect.Field;
-import java.util.stream.Stream;
+import java.util.Arrays;
 
 /**
  * <p>SQLBuilder class.</p>
@@ -94,6 +93,16 @@ public final class SQLBuilder {
     /**
      * a
      *
+     * @return a
+     * @ param insertColumnInfos a
+     */
+    public static SQLBuilder Select(ScxDaoColumnInfo... selectColumnInfos) {
+        return Select(Arrays.stream(selectColumnInfos).map(ScxDaoColumnInfo::selectSQL).toArray(String[]::new));
+    }
+
+    /**
+     * a
+     *
      * @param tableName     a {@link java.lang.String} object
      * @param insertColumns a {@link java.lang.String} object
      * @return a {@link cool.scx.sql.SQLBuilder} object
@@ -105,12 +114,12 @@ public final class SQLBuilder {
     /**
      * a
      *
-     * @param tableName    a {@link java.lang.String} object
-     * @param insertFields a {@link java.lang.reflect.Field} object
+     * @param tableName         a {@link java.lang.String} object
+     * @param insertColumnInfos a {@link java.lang.reflect.Field} object
      * @return a {@link cool.scx.sql.SQLBuilder} object
      */
-    public static SQLBuilder Insert(String tableName, Field... insertFields) {
-        return Insert(tableName, Stream.of(insertFields).map(o -> CaseUtils.toSnake(o.getName())).toArray(String[]::new));
+    public static SQLBuilder Insert(String tableName, ScxDaoColumnInfo... insertColumnInfos) {
+        return Insert(tableName, Arrays.stream(insertColumnInfos).map(ScxDaoColumnInfo::name).toArray(String[]::new));
     }
 
     /**
@@ -281,12 +290,11 @@ public final class SQLBuilder {
     /**
      * a
      *
-     * @param insertFields a {@link java.lang.reflect.Field} object
+     * @param insertColumnInfos a {@link java.lang.reflect.Field} object
      * @return a {@link cool.scx.sql.SQLBuilder} object
      */
-    public SQLBuilder Values(Field... insertFields) {
-        this.insertValues = Stream.of(insertFields).map(o -> ":" + o.getName()).toArray(String[]::new);
-        return this;
+    public SQLBuilder Values(ScxDaoColumnInfo... insertColumnInfos) {
+        return Values(Arrays.stream(insertColumnInfos).map(ScxDaoColumnInfo::insertValuesSQL).toArray(String[]::new));
     }
 
     /**
@@ -314,12 +322,11 @@ public final class SQLBuilder {
     /**
      * a
      *
-     * @param updateSetFields a {@link java.lang.reflect.Field} object
+     * @param updateSetColumnInfos a {@link java.lang.reflect.Field} object
      * @return a {@link cool.scx.sql.SQLBuilder} object
      */
-    public SQLBuilder Set(Field... updateSetFields) {
-        this.updateSetColumns = Stream.of(updateSetFields).map(field -> CaseUtils.toSnake(field.getName()) + " = :" + field.getName()).toArray(String[]::new);
-        return this;
+    public SQLBuilder Set(ScxDaoColumnInfo... updateSetColumnInfos) {
+        return Set(Arrays.stream(updateSetColumnInfos).map(ScxDaoColumnInfo::updateSetSQL).toArray(String[]::new));
     }
 
     /**

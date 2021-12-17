@@ -5,6 +5,7 @@ import cool.scx.ScxContext;
 import cool.scx.ScxModule;
 import cool.scx.base.BaseModelService;
 import cool.scx.bo.Query;
+import cool.scx.bo.UpdateFilter;
 import cool.scx.dao.ScxDaoHelper;
 import cool.scx.enumeration.ScxFeature;
 import cool.scx.test.car.Car;
@@ -78,7 +79,7 @@ public class TestModule implements ScxModule {
             var c = new Car();
             c.tombstone = false;
             c.name = null;
-            carService.updateIncludeNull(c, new Query().greaterThan("id", 200));
+            carService.update(c, new Query().greaterThan("id", 200), UpdateFilter.ofExcluded(false));
 
             System.err.println("查询所有数据条数 !!! : " + carService.list().size());
             System.err.println("查询所有 id 大于 200 条数 !!! : " + carService.list(new Query().greaterThan("id", 200)).size());
