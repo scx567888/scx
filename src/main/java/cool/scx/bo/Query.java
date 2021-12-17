@@ -462,12 +462,23 @@ public final class Query {
     }
 
     /**
-     * a
+     * 清除所有 where 条件 (包括 whereSQL)
      *
-     * @return a
+     * @return this 方便链式调用
      */
     public Query clearWhere() {
         this.where.clear();
+        return this;
+    }
+
+    /**
+     * 清除所有 where 条件
+     *
+     * @param alsoClearWhereSQL 是否包括 whereSQL
+     * @return this 方便链式调用
+     */
+    public Query clearWhere(boolean alsoClearWhereSQL) {
+        this.where.clear(alsoClearWhereSQL);
         return this;
     }
 

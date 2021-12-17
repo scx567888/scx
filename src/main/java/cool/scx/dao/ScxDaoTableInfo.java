@@ -1,16 +1,11 @@
 package cool.scx.dao;
 
-import cool.scx.ScxContext;
-import cool.scx.annotation.Column;
 import cool.scx.annotation.NoColumn;
 import cool.scx.annotation.ScxModel;
-import cool.scx.sql.SQLTypeHelper;
 import cool.scx.util.CaseUtils;
 import cool.scx.util.StringUtils;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -23,29 +18,14 @@ import java.util.stream.Stream;
 public final class ScxDaoTableInfo {
 
     /**
-     * 实体类型 不含@NoColunm 和@NoUpdate 注解的 field
-     */
-    public final Field[] canUpdateFields;
-
-    /**
-     * 实体类型 不含@NoColunm 和@NoInsert 注解的 field
-     */
-    public final Field[] canInsertFields;
-
-    /**
      * 实体类型不含@NoColunm 注解的field
      */
-    public final Field[] allFields;
+    private final ScxDaoColumnInfo[] columnInfos;
 
     /**
      * 表名
      */
-    public final String tableName;
-
-    /**
-     * 所有select sql的列名，有带下划线的将其转为aa_bb AS aaBb
-     */
-    public final String[] selectColumns;
+    private final String tableName;
 
     /**
      * c
@@ -54,10 +34,7 @@ public final class ScxDaoTableInfo {
      */
     public ScxDaoTableInfo(Class<?> clazz) {
         this.tableName = initTableName(clazz);
-        this.allFields = initAllFields(clazz);
-        this.canInsertFields = initCanInsertFields(allFields);
-        this.canUpdateFields = initCanUpdateFields(allFields);
-        this.selectColumns = initSelectColumns(allFields);
+        this.columnInfos = initAllColumnInfos(clazz);
     }
 
     /**
@@ -66,47 +43,8 @@ public final class ScxDaoTableInfo {
      * @param clazz a
      * @return a
      */
-    private static Field[] initAllFields(Class<?> clazz) {
-        return Stream.of(clazz.getFields()).filter(field -> !field.isAnnotationPresent(NoColumn.class)).toArray(Field[]::new);
-    }
-
-    /**
-     * a
-     *
-     * @param allFields a
-     * @return a
-     */
-    private static Field[] initCanInsertFields(Field[] allFields) {
-        return Arrays.stream(allFields).filter(ta -> {
-            var column = ta.getAnnotation(Column.class);
-            return column == null || !column.excludeOnInsert();
-        }).toArray(Field[]::new);
-    }
-
-    /**
-     * a
-     *
-     * @param allFields a
-     * @return a
-     */
-    private static Field[] initCanUpdateFields(Field[] allFields) {
-        return Arrays.stream(allFields).filter(ta -> {
-            var column = ta.getAnnotation(Column.class);
-            return column == null || !column.excludeOnUpdate();
-        }).toArray(Field[]::new);
-    }
-
-    /**
-     * a
-     *
-     * @param allFields a
-     * @return a
-     */
-    private static String[] initSelectColumns(Field[] allFields) {
-        return Stream.of(allFields).filter(field -> !ScxContext.easyConfig().tombstone() || !"tombstone".equals(field.getName())).map(field -> {
-            var underscore = CaseUtils.toSnake(field.getName());
-            return underscore.contains("_") ? underscore + " AS " + field.getName() : underscore;
-        }).toArray(String[]::new);
+    private static ScxDaoColumnInfo[] initAllColumnInfos(Class<?> clazz) {
+        return Stream.of(clazz.getFields()).filter(field -> !field.isAnnotationPresent(NoColumn.class)).map(ScxDaoColumnInfo::new).toArray(ScxDaoColumnInfo[]::new);
     }
 
     /**
@@ -128,98 +66,46 @@ public final class ScxDaoTableInfo {
     }
 
     /**
-     * 根据 field 构建 特殊的 SQLColumn
-     * 如 是否为唯一键 是否添加索引 是否为主键等
-     *
-     * @param allFields allFields
-     * @return 生成的语句片段
-     */
-    private static List<String> getOtherSQL(Field... allFields) {
-        var list = new ArrayList<String>();
-        for (Field field : allFields) {
-            var column = field.getAnnotation(Column.class);
-            if (column != null) {
-                var columnName = CaseUtils.toSnake(field.getName());
-                if (column.primaryKey()) {
-                    list.add("PRIMARY KEY (`" + columnName + "`)");
-                }
-                if (column.unique()) {
-                    list.add("UNIQUE KEY `unique_" + columnName + "`(`" + columnName + "`)");
-                }
-                if (column.needIndex()) {
-                    list.add("KEY `index_" + columnName + "`(`" + columnName + "`)");
-                }
-            }
-        }
-        return list;
-    }
-
-    /**
-     * 根据 field 构建 基本的 SQLColumn
-     *
-     * @param field field
-     * @return 生成的语句片段
-     */
-    private static String getMySQLColumnByField(Field field) {
-        var columnName = "`" + CaseUtils.toSnake(field.getName()) + "` ";
-        var type = "";
-        var notNull = "";
-        var autoIncrement = "";
-        var defaultValue = "";
-        var onUpdate = "";
-        var fieldColumn = field.getAnnotation(Column.class);
-        if (fieldColumn != null) {
-            type = "".equals(fieldColumn.type()) ? SQLTypeHelper.getMySQLTypeCreateName(field.getType()) : fieldColumn.type();
-            notNull = fieldColumn.notNull() ? " NOT NULL" : " NULL";
-            if (fieldColumn.autoIncrement()) {
-                autoIncrement = " AUTO_INCREMENT ";
-            }
-            if (fieldColumn.primaryKey()) {
-                notNull = " NOT NULL ";
-            }
-            if (!"".equals(fieldColumn.defaultValue())) {
-                defaultValue = " DEFAULT " + fieldColumn.defaultValue();
-            }
-            if (!"".equals(fieldColumn.onUpdateValue())) {
-                onUpdate += " ON UPDATE " + fieldColumn.defaultValue();
-            }
-        } else {
-            type = SQLTypeHelper.getMySQLTypeCreateName(field.getType());
-            notNull = " NULL ";
-        }
-        return columnName + type + notNull + autoIncrement + defaultValue + onUpdate;
-    }
-
-    /**
      * 获取建表语句
      *
      * @return s
      */
     public String getCreateTableDDL() {
         var createTableDDL = new ArrayList<String>();
-        for (var field : allFields) {
-            createTableDDL.add(getMySQLColumnByField(field));
+        for (var columnInfo : columnInfos) {
+            createTableDDL.add(columnInfo.normalDDL());
         }
-        createTableDDL.addAll(getOtherSQL(allFields));
+        for (var columnInfo : columnInfos) {
+            createTableDDL.addAll(List.of(columnInfo.specialDDL()));
+        }
         return "CREATE TABLE `" + tableName + "` (" + String.join(", ", createTableDDL) + ");";
     }
 
     /**
      * 获取修复表的语句
      *
-     * @param fieldNames 字段的名称 (注意 : fieldNames 中存在但 allFields 中不存在的则会忽略)
+     * @param nonExistentColumnName java 字段的名称 (注意 : fieldNames 中存在但 allFields 中不存在的则会忽略)
      * @return a
      */
-    public String getAlertTableDDL(List<String> fieldNames) {
-        var fields = Arrays.stream(allFields).filter(field -> fieldNames.contains(field.getName())).toArray(Field[]::new);
+    public String getAlertTableDDL(List<ScxDaoColumnInfo> nonExistentColumnName) {
         var alertTableDDL = new ArrayList<String>();
-        for (var field : fields) {
-            alertTableDDL.add("ADD " + getMySQLColumnByField(field));
+        for (var field : nonExistentColumnName) {
+            alertTableDDL.add("ADD " + field.normalDDL());
         }
-        for (var s : getOtherSQL(fields)) {
-            alertTableDDL.add("ADD " + s);
+        for (var s : nonExistentColumnName) {
+            for (var s1 : s.specialDDL()) {
+                alertTableDDL.add("ADD " + s1);
+            }
         }
         return "ALTER TABLE `" + tableName + "` " + String.join(", ", alertTableDDL) + ";";
+    }
+
+    public String tableName() {
+        return tableName;
+    }
+
+    public ScxDaoColumnInfo[] columnInfos() {
+        return columnInfos;
     }
 
 }

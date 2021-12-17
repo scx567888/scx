@@ -404,14 +404,26 @@ public final class Where {
     }
 
     /**
-     * a
+     * 清除所有 where 条件
      *
-     * @return a
+     * @param alsoClearWhereSQL 是否包括 whereSQL
+     * @return this 方便链式调用
+     */
+    public Where clear(boolean alsoClearWhereSQL) {
+        whereBodyList.clear();
+        if (alsoClearWhereSQL) {
+            whereSQL = null;
+        }
+        return this;
+    }
+
+    /**
+     * 清除所有 where 条件 包括 whereSQL
+     *
+     * @return this 方便链式调用
      */
     public Where clear() {
-        whereBodyList.clear();
-        whereSQL = null;
-        return this;
+        return clear(true);
     }
 
 }
