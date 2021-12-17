@@ -4,6 +4,9 @@ import cool.scx.dao.ScxDaoColumnInfo;
 
 import java.util.Arrays;
 
+/**
+ * 更新及保存数据是的字段过滤器 (注意 excludeIfFieldValueIsNull 在 批量保存时无效)
+ */
 public final class UpdateFilter extends AbstractFilter<UpdateFilter> {
 
     /**
@@ -28,7 +31,7 @@ public final class UpdateFilter extends AbstractFilter<UpdateFilter> {
      * @return a
      */
     public static UpdateFilter ofIncluded() {
-        return ofExcluded(true);
+        return ofIncluded(true);
     }
 
     /**

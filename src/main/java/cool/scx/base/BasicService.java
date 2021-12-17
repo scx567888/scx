@@ -67,13 +67,11 @@ public class BasicService<Entity> {
      * 保存单条数据
      *
      * @param entity 待插入的数据
-     * @param con    外部传来的连接 (useInternalConnection 为 false 是使用)
      * @return 插入成功的主键 ID 如果插入失败则返回 null
-     * @throws java.sql.SQLException if any.
      */
-    public final Long _insert(Connection con, Entity entity, UpdateFilter updateFilter) throws SQLException {
-        var parameter = _buildInsertParameter(entity, updateFilter);
-        var updateResult = SQLRunner.update(con, parameter.sql(), parameter.param());
+    public final Long _insert(Entity entity, UpdateFilter insertFilter) {
+        var parameter = _buildInsertParameter(entity, insertFilter);
+        var updateResult = ScxContext.sqlRunner().update(parameter.sql(), parameter.param());
         return updateResult.generatedKeys().size() > 0 ? updateResult.generatedKeys().get(0) : -1;
     }
 
@@ -81,11 +79,13 @@ public class BasicService<Entity> {
      * 保存单条数据
      *
      * @param entity 待插入的数据
+     * @param con    外部传来的连接 (useInternalConnection 为 false 是使用)
      * @return 插入成功的主键 ID 如果插入失败则返回 null
+     * @throws java.sql.SQLException if any.
      */
-    public final Long _insert(Entity entity, UpdateFilter insertFilter) {
-        var parameter = _buildInsertParameter(entity, insertFilter);
-        var updateResult = ScxContext.sqlRunner().update(parameter.sql(), parameter.param());
+    public final Long _insert(Connection con, Entity entity, UpdateFilter updateFilter) throws SQLException {
+        var parameter = _buildInsertParameter(entity, updateFilter);
+        var updateResult = SQLRunner.update(con, parameter.sql(), parameter.param());
         return updateResult.generatedKeys().size() > 0 ? updateResult.generatedKeys().get(0) : -1;
     }
 
@@ -106,6 +106,17 @@ public class BasicService<Entity> {
      * 保存多条数据
      *
      * @param entityList 待保存的列表
+     * @return 保存成功的主键 (ID) 列表
+     */
+    public final List<Long> _insertBatch(List<Entity> entityList, UpdateFilter updateFilter) {
+        var parameter = _buildInsertBatchParameter(entityList, updateFilter);
+        return ScxContext.sqlRunner().updateBatch(parameter.sql(), parameter.param()).generatedKeys();
+    }
+
+    /**
+     * 保存多条数据
+     *
+     * @param entityList 待保存的列表
      * @param con        外部传来的连接 (useInternalConnection 为 false 是使用)
      * @return 保存成功的主键 (ID) 列表
      * @throws java.sql.SQLException if any.
@@ -113,17 +124,6 @@ public class BasicService<Entity> {
     public final List<Long> _insertBatch(Connection con, List<Entity> entityList, UpdateFilter updateFilter) throws SQLException {
         var parameter = _buildInsertBatchParameter(entityList, updateFilter);
         return SQLRunner.updateBatch(con, parameter.sql(), parameter.param()).generatedKeys();
-    }
-
-    /**
-     * 保存多条数据
-     *
-     * @param entityList 待保存的列表
-     * @return 保存成功的主键 (ID) 列表
-     */
-    public final List<Long> _insertBatch(List<Entity> entityList, UpdateFilter updateFilter) {
-        var parameter = _buildInsertBatchParameter(entityList, updateFilter);
-        return ScxContext.sqlRunner().updateBatch(parameter.sql(), parameter.param()).generatedKeys();
     }
 
     /**
@@ -151,6 +151,17 @@ public class BasicService<Entity> {
      * 获取列表
      *
      * @param query 查询过滤条件.
+     * @return a {@link java.util.List} object.
+     */
+    public final List<Entity> _select(Query query, SelectFilter selectFilter) {
+        var parameter = _buildSelectParameter(query, selectFilter);
+        return ScxContext.sqlRunner().query(parameter.sql(), new BeanListHandler<>(entityClass), parameter.param());
+    }
+
+    /**
+     * 获取列表
+     *
+     * @param query 查询过滤条件.
      * @param con   外部传来的连接 (useInternalConnection 为 false 是使用)
      * @return a {@link java.util.List} object.
      * @throws java.sql.SQLException if any.
@@ -158,17 +169,6 @@ public class BasicService<Entity> {
     public final List<Entity> _select(Connection con, Query query, SelectFilter selectFilter) throws SQLException {
         var parameter = _buildSelectParameter(query, selectFilter);
         return SQLRunner.query(con, parameter.sql(), new BeanListHandler<>(entityClass), parameter.param());
-    }
-
-    /**
-     * 获取列表
-     *
-     * @param query 查询过滤条件.
-     * @return a {@link java.util.List} object.
-     */
-    public final List<Entity> _select(Query query, SelectFilter selectFilter) {
-        var parameter = _buildSelectParameter(query, selectFilter);
-        return ScxContext.sqlRunner().query(parameter.sql(), new BeanListHandler<>(entityClass), parameter.param());
     }
 
     /**
@@ -190,6 +190,17 @@ public class BasicService<Entity> {
      * 获取条数
      *
      * @param query 查询条件
+     * @return 条数
+     */
+    public final long _count(Query query) {
+        var parameter = _buildCountParameter(query);
+        return ScxContext.sqlRunner().query(parameter.sql(), new ScalarHandler<>("count"), parameter.param());
+    }
+
+    /**
+     * 获取条数
+     *
+     * @param query 查询条件
      * @param con   外部传来的连接 (useInternalConnection 为 false 是使用)
      * @return 条数
      * @throws java.sql.SQLException if any.
@@ -197,17 +208,6 @@ public class BasicService<Entity> {
     public final long _count(Connection con, Query query) throws SQLException {
         var parameter = _buildCountParameter(query);
         return SQLRunner.query(con, parameter.sql(), new ScalarHandler<>("count"), parameter.param());
-    }
-
-    /**
-     * 获取条数
-     *
-     * @param query 查询条件
-     * @return 条数
-     */
-    public final long _count(Query query) {
-        var parameter = _buildCountParameter(query);
-        return ScxContext.sqlRunner().query(parameter.sql(), new ScalarHandler<>("count"), parameter.param());
     }
 
     /**
@@ -226,13 +226,11 @@ public class BasicService<Entity> {
      *
      * @param entity 要更新的数据
      * @param query  更新的过滤条件
-     * @param con    外部传来的连接 (useInternalConnection 为 false 是使用)
      * @return 受影响的条数
-     * @throws java.sql.SQLException if any.
      */
-    public final long _update(Connection con, Entity entity, Query query, UpdateFilter updateFilter) throws SQLException {
+    public final long _update(Entity entity, Query query, UpdateFilter updateFilter) {
         var parameter = _buildUpdateParameter(entity, query, updateFilter);
-        return SQLRunner.update(con, parameter.sql(), parameter.param()).affectedLength();
+        return ScxContext.sqlRunner().update(parameter.sql(), parameter.param()).affectedLength();
     }
 
     /**
@@ -240,11 +238,13 @@ public class BasicService<Entity> {
      *
      * @param entity 要更新的数据
      * @param query  更新的过滤条件
+     * @param con    外部传来的连接 (useInternalConnection 为 false 是使用)
      * @return 受影响的条数
+     * @throws java.sql.SQLException if any.
      */
-    public final long _update(Entity entity, Query query, UpdateFilter updateFilter) {
+    public final long _update(Connection con, Entity entity, Query query, UpdateFilter updateFilter) throws SQLException {
         var parameter = _buildUpdateParameter(entity, query, updateFilter);
-        return ScxContext.sqlRunner().update(parameter.sql(), parameter.param()).affectedLength();
+        return SQLRunner.update(con, parameter.sql(), parameter.param()).affectedLength();
     }
 
     /**
@@ -271,6 +271,17 @@ public class BasicService<Entity> {
     /**
      * 删除数据
      *
+     * @param query where 条件
+     * @return 受影响的条数
+     */
+    public final long _delete(Query query) {
+        var parameter = _buildDeleteParameter(query);
+        return ScxContext.sqlRunner().update(parameter.sql(), parameter.param()).affectedLength();
+    }
+
+    /**
+     * 删除数据
+     *
      * @param query      where 条件
      * @param connection 外部传来的连接 (useInternalConnection 为 false 是使用)
      * @return 受影响的条数
@@ -279,17 +290,6 @@ public class BasicService<Entity> {
     public final long _delete(Connection connection, Query query) throws SQLException {
         var parameter = _buildDeleteParameter(query);
         return SQLRunner.update(connection, parameter.sql(), parameter.param()).affectedLength();
-    }
-
-    /**
-     * 删除数据
-     *
-     * @param query where 条件
-     * @return 受影响的条数
-     */
-    public final long _delete(Query query) {
-        var parameter = _buildDeleteParameter(query);
-        return ScxContext.sqlRunner().update(parameter.sql(), parameter.param()).affectedLength();
     }
 
     /**
