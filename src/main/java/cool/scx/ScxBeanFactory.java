@@ -24,7 +24,10 @@ public final class ScxBeanFactory {
     private final DefaultListableBeanFactory springBeanFactory = new DefaultListableBeanFactory();
 
     /**
-     * <p>Constructor for ScxBeanFactory.</p>
+     * a
+     *
+     * @param scheduledExecutorService a
+     * @param scxFeatureConfig         a
      */
     public ScxBeanFactory(ScheduledExecutorService scheduledExecutorService, ScxFeatureConfig scxFeatureConfig) {
         //这里添加一个 bean 的后置处理器以便可以使用 @Autowired 注解

@@ -28,10 +28,22 @@ public final class ScxLoggerFactory {
         return defaultStoredDirectory;
     }
 
+    /**
+     * a
+     *
+     * @param clazz a
+     * @return a
+     */
     public static ScxLogger getLogger(Class<?> clazz) {
         return getLogger(clazz.getName());
     }
 
+    /**
+     * a
+     *
+     * @param name a
+     * @return a
+     */
     public static ScxLogger getLogger(String name) {
         var logger = LOGGER_CACHE.get(name);
         if (logger == null) {

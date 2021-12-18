@@ -66,6 +66,7 @@ public final class UpdateFilter extends AbstractFilter<UpdateFilter> {
     /**
      * 过滤
      *
+     * @param entity            a
      * @param scxDaoColumnInfos 带过滤的列表
      * @return 过滤后的列表
      */

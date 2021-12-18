@@ -73,6 +73,11 @@ public final class ScxSLF4JLogger extends LegacyAbstractLogger {
         return getLevel().toInt() <= Level.ERROR.toInt();
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public Level getLevel() {
         return switch (this.scxLogger.level()) {
             case OFF, FATAL, ERROR -> Level.ERROR;
