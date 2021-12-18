@@ -144,9 +144,11 @@ public final class ScxDaoHelper {
     /**
      * 根据连接 获取数据库中所有的字段
      *
-     * @param con       连接
-     * @param tableName 表名称
+     * @param con          连接
+     * @param databaseName 数据库名称
+     * @param tableName    表名称
      * @return 如果表存在返回所有字段的名称 否则返回 null
+     * @throws SQLException s
      */
     public static List<String> getTableAllColumnNames(Connection con, String databaseName, String tableName) throws SQLException {
         var dbMetaData = con.getMetaData();

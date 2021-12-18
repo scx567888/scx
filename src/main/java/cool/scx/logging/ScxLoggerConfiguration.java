@@ -16,6 +16,9 @@ import java.util.Map;
  */
 public final class ScxLoggerConfiguration {
 
+    /**
+     * a
+     */
     public static final DateTimeFormatter LOG_DATETIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
     /**

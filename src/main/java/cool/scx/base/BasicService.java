@@ -66,11 +66,12 @@ public class BasicService<Entity> {
     /**
      * 保存单条数据
      *
-     * @param entity 待插入的数据
+     * @param entity       待插入的数据
+     * @param updateFilter a
      * @return 插入成功的主键 ID 如果插入失败则返回 null
      */
-    public final Long _insert(Entity entity, UpdateFilter insertFilter) {
-        var parameter = _buildInsertParameter(entity, insertFilter);
+    public final Long _insert(Entity entity, UpdateFilter updateFilter) {
+        var parameter = _buildInsertParameter(entity, updateFilter);
         var updateResult = ScxContext.sqlRunner().update(parameter.sql(), parameter.param());
         return updateResult.generatedKeys().size() > 0 ? updateResult.generatedKeys().get(0) : -1;
     }
@@ -78,8 +79,9 @@ public class BasicService<Entity> {
     /**
      * 保存单条数据
      *
-     * @param entity 待插入的数据
-     * @param con    外部传来的连接 (useInternalConnection 为 false 是使用)
+     * @param entity       待插入的数据
+     * @param con          外部传来的连接 (useInternalConnection 为 false 是使用)
+     * @param updateFilter a
      * @return 插入成功的主键 ID 如果插入失败则返回 null
      * @throws java.sql.SQLException if any.
      */
@@ -92,11 +94,12 @@ public class BasicService<Entity> {
     /**
      * a
      *
-     * @param entity a
+     * @param entity       a
+     * @param updateFilter a
      * @return a
      */
-    private SQLRunnerParameterWrapper<Map<String, Object>> _buildInsertParameter(Entity entity, UpdateFilter insertFilter) {
-        var insertColumns = insertFilter != null ? insertFilter.filter(entity, scxDaoTableInfo.columnInfos()) : scxDaoTableInfo.columnInfos();
+    private SQLRunnerParameterWrapper<Map<String, Object>> _buildInsertParameter(Entity entity, UpdateFilter updateFilter) {
+        var insertColumns = updateFilter != null ? updateFilter.filter(entity, scxDaoTableInfo.columnInfos()) : scxDaoTableInfo.columnInfos();
         //insert 允许空列所以这里不做判断
         var sql = SQLBuilder.Insert(scxDaoTableInfo.tableName(), insertColumns).Values(insertColumns).GetSQL();
         return new SQLRunnerParameterWrapper<>(sql, ObjectUtils.mapper().convertValue(entity, ObjectUtils.MAP_TYPE));
@@ -105,7 +108,8 @@ public class BasicService<Entity> {
     /**
      * 保存多条数据
      *
-     * @param entityList 待保存的列表
+     * @param entityList   待保存的列表
+     * @param updateFilter a
      * @return 保存成功的主键 (ID) 列表
      */
     public final List<Long> _insertBatch(List<Entity> entityList, UpdateFilter updateFilter) {
@@ -116,8 +120,9 @@ public class BasicService<Entity> {
     /**
      * 保存多条数据
      *
-     * @param entityList 待保存的列表
-     * @param con        外部传来的连接 (useInternalConnection 为 false 是使用)
+     * @param entityList   待保存的列表
+     * @param con          外部传来的连接 (useInternalConnection 为 false 是使用)
+     * @param updateFilter a
      * @return 保存成功的主键 (ID) 列表
      * @throws java.sql.SQLException if any.
      */
@@ -129,7 +134,8 @@ public class BasicService<Entity> {
     /**
      * a
      *
-     * @param entityList a
+     * @param entityList   a
+     * @param updateFilter a
      * @return a
      */
     private SQLRunnerParameterWrapper<ArrayList<Map<String, Object>>> _buildInsertBatchParameter(List<Entity> entityList, UpdateFilter updateFilter) {
@@ -150,7 +156,8 @@ public class BasicService<Entity> {
     /**
      * 获取列表
      *
-     * @param query 查询过滤条件.
+     * @param query        查询过滤条件.
+     * @param selectFilter a
      * @return a {@link java.util.List} object.
      */
     public final List<Entity> _select(Query query, SelectFilter selectFilter) {
@@ -161,8 +168,9 @@ public class BasicService<Entity> {
     /**
      * 获取列表
      *
-     * @param query 查询过滤条件.
-     * @param con   外部传来的连接 (useInternalConnection 为 false 是使用)
+     * @param query        查询过滤条件.
+     * @param con          外部传来的连接 (useInternalConnection 为 false 是使用)
+     * @param selectFilter a
      * @return a {@link java.util.List} object.
      * @throws java.sql.SQLException if any.
      */
@@ -174,7 +182,8 @@ public class BasicService<Entity> {
     /**
      * a
      *
-     * @param query a
+     * @param query        a
+     * @param selectFilter a
      * @return a
      */
     private SQLRunnerParameterWrapper<Map<String, Object>> _buildSelectParameter(Query query, SelectFilter selectFilter) {
@@ -224,8 +233,9 @@ public class BasicService<Entity> {
     /**
      * 更新数据
      *
-     * @param entity 要更新的数据
-     * @param query  更新的过滤条件
+     * @param entity       要更新的数据
+     * @param query        更新的过滤条件
+     * @param updateFilter a
      * @return 受影响的条数
      */
     public final long _update(Entity entity, Query query, UpdateFilter updateFilter) {
@@ -236,9 +246,10 @@ public class BasicService<Entity> {
     /**
      * 更新数据
      *
-     * @param entity 要更新的数据
-     * @param query  更新的过滤条件
-     * @param con    外部传来的连接 (useInternalConnection 为 false 是使用)
+     * @param entity       要更新的数据
+     * @param query        更新的过滤条件
+     * @param con          外部传来的连接 (useInternalConnection 为 false 是使用)
+     * @param updateFilter a
      * @return 受影响的条数
      * @throws java.sql.SQLException if any.
      */
@@ -250,8 +261,9 @@ public class BasicService<Entity> {
     /**
      * a
      *
-     * @param entity a
-     * @param query  a
+     * @param entity       a
+     * @param query        a
+     * @param updateFilter a
      * @return a
      */
     private SQLRunnerParameterWrapper<Map<String, Object>> _buildUpdateParameter(Entity entity, Query query, UpdateFilter updateFilter) {

@@ -8,6 +8,9 @@ import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+/**
+ * a
+ */
 public final class ScxLogger {
 
     private final String name;
@@ -15,6 +18,11 @@ public final class ScxLogger {
     private ScxLoggingType type = null;
     private Path storedDirectory = null;
 
+    /**
+     * a
+     *
+     * @param name a
+     */
     public ScxLogger(String name) {
         this.name = name;
     }
@@ -34,14 +42,29 @@ public final class ScxLogger {
         this.storedDirectory = newStoredDirectory;
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public ScxLoggingLevel level() {
         return level != null ? level : ScxLoggerFactory.defaultLevel();
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public ScxLoggingType type() {
         return type != null ? type : ScxLoggerFactory.defaultType();
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public Path storedDirectory() {
         return storedDirectory != null ? storedDirectory : ScxLoggerFactory.defaultStoredDirectory();
     }

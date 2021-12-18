@@ -8,6 +8,9 @@ import cool.scx.util.StringUtils;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
+/**
+ * a
+ */
 public final class ScxDaoColumnInfo {
 
     /**
@@ -70,6 +73,11 @@ public final class ScxDaoColumnInfo {
      */
     private final String selectSQL;
 
+    /**
+     * a
+     *
+     * @param field a
+     */
     public ScxDaoColumnInfo(Field field) {
         this.field = field;
         this.columnName = CaseUtils.toSnake(this.field.getName());
@@ -134,22 +142,47 @@ public final class ScxDaoColumnInfo {
         return list.toArray(String[]::new);
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public String fieldName() {
         return field.getName();
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public String selectSQL() {
         return selectSQL;
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public String columnName() {
         return columnName;
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public String updateSetSQL() {
         return updateSetSQL;
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public String insertValuesSQL() {
         return insertValuesSQL;
     }
@@ -169,14 +202,29 @@ public final class ScxDaoColumnInfo {
         }
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public String normalDDL() {
         return normalDDL;
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public String[] specialDDL() {
         return specialDDL;
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public String type() {
         return type;
     }

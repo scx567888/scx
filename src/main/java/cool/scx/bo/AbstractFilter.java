@@ -6,6 +6,11 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * a
+ *
+ * @param <E> a
+ */
 public abstract class AbstractFilter<E extends AbstractFilter<E>> {
 
     /**
@@ -18,6 +23,11 @@ public abstract class AbstractFilter<E extends AbstractFilter<E>> {
      */
     private final FilterMode filterMode;
 
+    /**
+     * a
+     *
+     * @param filterMode a
+     */
     protected AbstractFilter(FilterMode filterMode) {
         this.filterMode = filterMode;
     }

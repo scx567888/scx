@@ -100,10 +100,20 @@ public final class ScxDaoTableInfo {
         return "ALTER TABLE `" + tableName + "` " + String.join(", ", alertTableDDL) + ";";
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public String tableName() {
         return tableName;
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public ScxDaoColumnInfo[] columnInfos() {
         return columnInfos;
     }
