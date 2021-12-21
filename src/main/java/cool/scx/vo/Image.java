@@ -1,7 +1,6 @@
 package cool.scx.vo;
 
 import cool.scx.exception.impl.NotFoundException;
-import cool.scx.util.FixedMap;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpServerResponse;
@@ -27,11 +26,6 @@ import java.util.Map;
  * @version 1.0.10
  */
 public final class Image implements BaseVo {
-
-    /**
-     * 图片缓存
-     */
-    private static final FixedMap<String, Buffer> imageCache = new FixedMap<>(100);
 
     /**
      * type 和裁剪类型 映射表
@@ -109,13 +103,6 @@ public final class Image implements BaseVo {
     }
 
     /**
-     * <p>cleanCache.</p>
-     */
-    public static void cleanCache() {
-        imageCache.clear();
-    }
-
-    /**
      * {@inheritDoc}
      * <p>
      * sendToClient
@@ -126,10 +113,6 @@ public final class Image implements BaseVo {
         //设置缓存 减少服务器压力
         response.putHeader("cache-control", "public,immutable,max-age=2628000");
         response.putHeader("accept-ranges", "bytes");
-        //命中缓存
-        if (checkImageCache(response)) {
-            return;
-        }
         // 图片不存在 这里抛出不存在异常
         if (!file.exists()) {
             throw new NotFoundException();
@@ -149,23 +132,6 @@ public final class Image implements BaseVo {
     }
 
     /**
-     * 检查图片缓存
-     *
-     * @param response r
-     * @return r
-     */
-    private boolean checkImageCache(HttpServerResponse response) {
-        var str = file.getPath() + ";" + height + ";" + width + ";" + type;
-        var buffer = imageCache.get(str);
-        if (buffer != null) {
-            response.end(buffer);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
      * 就不是普通的图片 我们就返回他在操作系统中的展示图标即可
      *
      * @param response r
@@ -178,9 +144,7 @@ public final class Image implements BaseVo {
             g.drawImage(image, 0, 0, null);
             g.dispose();
             ImageIO.write(myImage, "png", out);
-            var b = Buffer.buffer(out.toByteArray());
-            imageCache.put(file.getPath() + ";" + height + ";" + width, b);
-            response.end(b);
+            response.end(Buffer.buffer(out.toByteArray()));
         } catch (Exception e) {
             throw new NotFoundException();
         }
@@ -208,9 +172,7 @@ public final class Image implements BaseVo {
                 Thumbnails.of(file).size(croppedWidth, croppedHeight).keepAspectRatio(false).toOutputStream(out);
             }
 
-            var b = Buffer.buffer(out.toByteArray());
-            imageCache.put(file.getPath() + ";" + height + ";" + width + ";" + type, b);
-            response.end(b);
+            response.end(Buffer.buffer(out.toByteArray()));
         } catch (Exception e) {
             throw new NotFoundException();
         }
