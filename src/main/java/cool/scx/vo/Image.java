@@ -3,7 +3,6 @@ package cool.scx.vo;
 import cool.scx.exception.impl.NotFoundException;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.vertx.core.buffer.Buffer;
-import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.http.impl.MimeMapping;
 import io.vertx.ext.web.RoutingContext;
 import net.coobird.thumbnailator.Thumbnails;
@@ -18,6 +17,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * <p>Image class.</p>
@@ -76,15 +76,27 @@ public final class Image implements BaseVo {
     private final String type;
 
     /**
+     * 如果图片是需要裁剪的这里存储裁剪过后的字节数组 以提高多次调用的性能
+     */
+    private final Buffer buffer;
+
+    /**
+     * image type 图片类型 分为原始图 , 裁剪图 和 系统图标图
+     */
+    private final ImageType imageType;
+
+    /**
+     * a
+     */
+    private final String contentType;
+
+    /**
      * <p>Constructor for Image.</p>
      *
      * @param _file a {@link java.io.File} object.
      */
     public Image(File _file) {
-        file = _file;
-        width = null;
-        height = null;
-        type = "z";
+        this(_file, null, null, "z");
     }
 
     /**
@@ -96,10 +108,18 @@ public final class Image implements BaseVo {
      * @param _type   a {@link java.lang.String} object
      */
     public Image(File _file, Integer _width, Integer _height, String _type) {
+        Objects.requireNonNull(_file, "图片文件不能为 null");
+        // 图片不存在 这里抛出不存在异常
+        if (!_file.exists()) {
+            throw new NotFoundException();
+        }
         file = _file;
+        contentType = MimeMapping.getMimeTypeForFilename(file.getName());
         width = _width;
         height = _height;
         type = _type == null ? "z" : _type;
+        imageType = initImageType();
+        buffer = getBuffer();
     }
 
     /**
@@ -111,32 +131,19 @@ public final class Image implements BaseVo {
     public void handle(RoutingContext context) throws NotFoundException {
         var response = context.response();
         //设置缓存 减少服务器压力
-        response.putHeader("cache-control", "public,immutable,max-age=2628000");
-        response.putHeader("accept-ranges", "bytes");
-        // 图片不存在 这里抛出不存在异常
-        if (!file.exists()) {
-            throw new NotFoundException();
-        }
-        var contentType = MimeMapping.getMimeTypeForFilename(file.getName());
-        if (contentType != null && contentType.startsWith("image")) {
-            response.putHeader(HttpHeaderNames.CONTENT_TYPE, contentType);
-            if (height == null && width == null) {
-                response.sendFile(file.getPath());
-            } else {
-                sendCroppedPicture(response);
-            }
-        } else {
-            response.putHeader(HttpHeaderNames.CONTENT_TYPE, "image/png");
-            sendSystemIcon(response);
+        response.putHeader(HttpHeaderNames.CACHE_CONTROL, "public,immutable,max-age=2628000");
+        response.putHeader(HttpHeaderNames.ACCEPT_RANGES, "bytes");
+        switch (this.imageType) {
+            case ORIGINAL -> response.sendFile(file.getPath());
+            case CROPPED -> response.putHeader(HttpHeaderNames.CONTENT_TYPE, contentType).end(buffer);
+            case SYSTEM_ICON -> response.putHeader(HttpHeaderNames.CONTENT_TYPE, "image/png").end(buffer);
         }
     }
 
     /**
      * 就不是普通的图片 我们就返回他在操作系统中的展示图标即可
-     *
-     * @param response r
      */
-    private void sendSystemIcon(HttpServerResponse response) throws NotFoundException {
+    private Buffer getBufferBySystemIcon() throws NotFoundException {
         try (var out = new ByteArrayOutputStream()) {
             var image = ((ImageIcon) FileSystemView.getFileSystemView().getSystemIcon(file)).getImage();
             var myImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
@@ -144,7 +151,7 @@ public final class Image implements BaseVo {
             g.drawImage(image, 0, 0, null);
             g.dispose();
             ImageIO.write(myImage, "png", out);
-            response.end(Buffer.buffer(out.toByteArray()));
+            return Buffer.buffer(out.toByteArray());
         } catch (Exception e) {
             throw new NotFoundException();
         }
@@ -152,10 +159,8 @@ public final class Image implements BaseVo {
 
     /**
      * 裁剪后的图片
-     *
-     * @param response r
      */
-    private void sendCroppedPicture(HttpServerResponse response) throws NotFoundException {
+    private Buffer getBufferByCroppedPicture() throws NotFoundException {
         try (var out = new ByteArrayOutputStream()) {
             var image = Thumbnails.of(file).scale(1.0).asBufferedImage();
             var imageHeight = image.getHeight();
@@ -172,10 +177,34 @@ public final class Image implements BaseVo {
                 Thumbnails.of(file).size(croppedWidth, croppedHeight).keepAspectRatio(false).toOutputStream(out);
             }
 
-            response.end(Buffer.buffer(out.toByteArray()));
+            return Buffer.buffer(out.toByteArray());
         } catch (Exception e) {
             throw new NotFoundException();
         }
+    }
+
+    private ImageType initImageType() {
+        if (contentType != null && contentType.startsWith("image")) {
+            if (height == null && width == null) {
+                return ImageType.ORIGINAL;
+            } else {
+                return ImageType.CROPPED;
+            }
+        } else {
+            return ImageType.SYSTEM_ICON;
+        }
+    }
+
+    private Buffer getBuffer() {
+        return switch (this.imageType) {
+            case CROPPED -> getBufferByCroppedPicture();
+            case SYSTEM_ICON -> getBufferBySystemIcon();
+            default -> null;
+        };
+    }
+
+    private enum ImageType {
+        ORIGINAL, CROPPED, SYSTEM_ICON
     }
 
 }
