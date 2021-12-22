@@ -8,6 +8,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -20,7 +22,15 @@ import java.util.Map;
  */
 public final class HttpClientHelper {
 
+    /**
+     * 默认 HTTP_CLIENT 实例
+     */
     private static final HttpClient HTTP_CLIENT = HttpClient.newBuilder().build();
+
+    /**
+     * BODY_HANDLER
+     */
+    private static final HttpResponse.BodyHandler<String> RESPONSE_BODY_HANDLER = HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8);
 
     /**
      * a
@@ -32,7 +42,7 @@ public final class HttpClientHelper {
      * @throws InterruptedException a
      */
     public static HttpResponse<String> delete(String url, Map<String, String> headers) throws IOException, InterruptedException {
-        return HTTP_CLIENT.send(getNormalRequestBuilder(url, headers).DELETE().build(), HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+        return delete(HTTP_CLIENT, url, headers);
     }
 
     /**
@@ -44,7 +54,33 @@ public final class HttpClientHelper {
      * @throws InterruptedException a
      */
     public static HttpResponse<String> delete(String url) throws IOException, InterruptedException {
-        return delete(url, null);
+        return delete(HTTP_CLIENT, url, new HashMap<>());
+    }
+
+    /**
+     * a
+     *
+     * @param httpClient a
+     * @param url        a
+     * @param headers    a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
+    public static HttpResponse<String> delete(HttpClient httpClient, String url, Map<String, String> headers) throws IOException, InterruptedException {
+        return httpClient.send(getRequestBuilder(url, headers).DELETE().build(), RESPONSE_BODY_HANDLER);
+    }
+
+    /**
+     * a
+     *
+     * @param url a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
+    public static HttpResponse<String> delete(HttpClient httpClient, String url) throws IOException, InterruptedException {
+        return delete(httpClient, url, new HashMap<>());
     }
 
     /**
@@ -52,53 +88,109 @@ public final class HttpClientHelper {
      *
      * @param url     a
      * @param headers a
-     * @param body    a
+     * @param bodyStr a
      * @return a
      * @throws IOException          a
      * @throws InterruptedException a
      */
-    public static HttpResponse<String> put(String url, Map<String, String> headers, Object body) throws IOException, InterruptedException {
-        return HTTP_CLIENT.send(getNormalRequestBuilder(url, headers).PUT(getBodyPublisher(body)).build(), HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
-    }
-
-    /**
-     * a
-     *
-     * @param url  a
-     * @param body a
-     * @return a
-     * @throws IOException          a
-     * @throws InterruptedException a
-     */
-    public static HttpResponse<String> put(String url, Object body) throws IOException, InterruptedException {
-        return put(url, null, body);
+    public static HttpResponse<String> put(String url, Map<String, String> headers, String bodyStr) throws IOException, InterruptedException {
+        return put(HTTP_CLIENT, url, headers, bodyStr);
     }
 
     /**
      * a
      *
      * @param url     a
-     * @param headers a
-     * @param body    a
+     * @param bodyStr a
      * @return a
      * @throws IOException          a
      * @throws InterruptedException a
      */
-    public static HttpResponse<String> post(String url, Map<String, String> headers, Object body) throws IOException, InterruptedException {
-        return HTTP_CLIENT.send(getNormalRequestBuilder(url, headers).POST(getBodyPublisher(body)).build(), HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+    public static HttpResponse<String> put(String url, String bodyStr) throws IOException, InterruptedException {
+        return put(HTTP_CLIENT, url, new HashMap<>(), bodyStr);
     }
 
     /**
      * a
      *
-     * @param url  a
-     * @param body a
+     * @param httpClient a
+     * @param url        a
+     * @param headers    a
+     * @param bodyStr    a
      * @return a
      * @throws IOException          a
      * @throws InterruptedException a
      */
-    public static HttpResponse<String> post(String url, Object body) throws IOException, InterruptedException {
-        return post(url, null, body);
+    public static HttpResponse<String> put(HttpClient httpClient, String url, Map<String, String> headers, String bodyStr) throws IOException, InterruptedException {
+        return httpClient.send(getRequestBuilder(url, headers).PUT(getBodyPublisher(bodyStr)).build(), RESPONSE_BODY_HANDLER);
+    }
+
+    /**
+     * a
+     *
+     * @param url     a
+     * @param bodyStr a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
+    public static HttpResponse<String> put(HttpClient httpClient, String url, String bodyStr) throws IOException, InterruptedException {
+        return put(httpClient, url, new HashMap<>(), bodyStr);
+    }
+
+    /**
+     * a
+     *
+     * @param url     a
+     * @param headers 请求头 若为空则内部会设置为
+     * @param bodyStr a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
+    public static HttpResponse<String> post(String url, Map<String, String> headers, String bodyStr) throws IOException, InterruptedException {
+        return post(HTTP_CLIENT, url, headers, bodyStr);
+    }
+
+    /**
+     * a
+     *
+     * @param url     a
+     * @param bodyStr a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
+    public static HttpResponse<String> post(String url, String bodyStr) throws IOException, InterruptedException {
+        return post(HTTP_CLIENT, url, new HashMap<>(), bodyStr);
+    }
+
+    /**
+     * a
+     *
+     * @param httpClient a
+     * @param url        a
+     * @param headers    a
+     * @param bodyStr    a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
+    public static HttpResponse<String> post(HttpClient httpClient, String url, Map<String, String> headers, String bodyStr) throws IOException, InterruptedException {
+        return httpClient.send(getRequestBuilder(url, headers).POST(getBodyPublisher(bodyStr)).build(), RESPONSE_BODY_HANDLER);
+    }
+
+    /**
+     * a
+     *
+     * @param url     a
+     * @param bodyStr a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
+    public static HttpResponse<String> post(HttpClient httpClient, String url, String bodyStr) throws IOException, InterruptedException {
+        return post(httpClient, url, new HashMap<>(), bodyStr);
     }
 
     /**
@@ -111,7 +203,7 @@ public final class HttpClientHelper {
      * @throws InterruptedException a
      */
     public static HttpResponse<String> get(String url, Map<String, String> headers) throws IOException, InterruptedException {
-        return HTTP_CLIENT.send(getNormalRequestBuilder(url, headers).GET().build(), HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+        return get(HTTP_CLIENT, url, headers);
     }
 
     /**
@@ -123,20 +215,62 @@ public final class HttpClientHelper {
      * @throws InterruptedException a
      */
     public static HttpResponse<String> get(String url) throws IOException, InterruptedException {
-        return get(url, null);
+        return get(HTTP_CLIENT, url, new HashMap<>());
     }
 
-    private static HttpRequest.BodyPublisher getBodyPublisher(Object body) {
-        var bodyBytes = ObjectUtils.writeValueAsString(body, "").getBytes(StandardCharsets.UTF_8);
-        return HttpRequest.BodyPublishers.ofByteArray(bodyBytes);
+    /**
+     * a
+     *
+     * @param url     a
+     * @param headers a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
+    public static HttpResponse<String> get(HttpClient httpClient, String url, Map<String, String> headers) throws IOException, InterruptedException {
+        return httpClient.send(getRequestBuilder(url, headers).GET().build(), RESPONSE_BODY_HANDLER);
     }
 
-    private static HttpRequest.Builder getNormalRequestBuilder(String url, Map<String, String> headers) {
-        var requestBuilder = HttpRequest.newBuilder().uri(URI.create(url)).header(HttpHeaderNames.ACCEPT.toString(), "application/json").header(HttpHeaderNames.CONTENT_TYPE.toString(), "application/json;charset=utf-8");
-        if (headers != null) {
-            headers.forEach(requestBuilder::setHeader);
-        }
+    /**
+     * a
+     *
+     * @param url a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
+    public static HttpResponse<String> get(HttpClient httpClient, String url) throws IOException, InterruptedException {
+        return get(httpClient, url, new HashMap<>());
+    }
+
+    /**
+     * 获取 HttpRequest.Builder
+     *
+     * @param url     地址
+     * @param headers 头
+     * @return r
+     */
+    private static HttpRequest.Builder getRequestBuilder(String url, Map<String, String> headers) {
+        var requestBuilder = HttpRequest.newBuilder().uri(URI.create(url));
+        //这里为了移除重复的 header 做一次运算
+        var finalHeaders = new HashMap<String, String>();
+        headers.forEach((k, v) -> finalHeaders.put(k.trim().toLowerCase(Locale.ROOT), v));
+        //如果没有设置 ACCEPT 和 CONTENT_TYPE 这里默认设置为 json
+        finalHeaders.putIfAbsent(HttpHeaderNames.ACCEPT.toString().trim().toLowerCase(Locale.ROOT), "application/json");
+        finalHeaders.putIfAbsent(HttpHeaderNames.CONTENT_TYPE.toString().trim().toLowerCase(Locale.ROOT), "application/json;charset=utf-8");
+        //循环添加头
+        finalHeaders.forEach(requestBuilder::setHeader);
         return requestBuilder;
+    }
+
+    /**
+     * a
+     *
+     * @param bodyStr a
+     * @return a
+     */
+    private static HttpRequest.BodyPublisher getBodyPublisher(String bodyStr) {
+        return HttpRequest.BodyPublishers.ofByteArray(bodyStr.getBytes(StandardCharsets.UTF_8));
     }
 
 }
