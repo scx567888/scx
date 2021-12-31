@@ -26,8 +26,9 @@ public final class LastMethodReturnValueHandler implements ScxMappingMethodRetur
     public void handle(Object result, RoutingContext context) throws JsonProcessingException {
         var accept = context.request().getHeader(HttpHeaderNames.ACCEPT);
         if (accept != null && accept.toLowerCase().startsWith(HttpHeaderValues.APPLICATION_XML.toString())) {
+            // 只有明确指定 接受参数是 application/xml 的才返回 xml
             VoHelper.fillXmlContentType(context.request().response()).end(VoHelper.toXml(result));
-        } else {
+        } else { // 其余全部返回 json
             VoHelper.fillJsonContentType(context.request().response()).end(VoHelper.toJson(result));
         }
     }

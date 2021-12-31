@@ -43,7 +43,7 @@ public final class ScxMappingRoutingContextInfo {
     }
 
     /**
-     * 初始化 body
+     * 根据不同的 ContentType 以不同的逻辑初始化 body
      *
      * @param ctx ctx
      * @return c
@@ -53,7 +53,7 @@ public final class ScxMappingRoutingContextInfo {
         // contentType 不为空
         if (contentType != null) {
             contentType = contentType.toLowerCase();
-            //json 类型的请求体
+            // json 类型的请求体
             if (contentType.startsWith(HttpHeaderValues.APPLICATION_JSON.toString())) {
                 try {
                     return ObjectUtils.jsonMapper().readTree(ctx.getBodyAsString());
@@ -65,12 +65,15 @@ public final class ScxMappingRoutingContextInfo {
                     }
                 }
             } else if (contentType.startsWith(HttpHeaderValues.MULTIPART_FORM_DATA.toString()) || contentType.startsWith(HttpHeaderValues.APPLICATION_X_WWW_FORM_URLENCODED.toString())) {
+                // ContentType 为 multipart/form-data 或者 application/x-www-form-urlencoded 的时候 不需要从 body 中获取数据
+                // 而是从 formAttributes 中获取
                 if (ctx.request().formAttributes().isEmpty()) {
                     return NullNode.getInstance();
                 } else {
                     return ObjectUtils.jsonMapper().valueToTree(multiMapToMap(ctx.request().formAttributes()));
                 }
             } else if (contentType.startsWith(HttpHeaderValues.APPLICATION_XML.toString())) {
+                //这里是 xml 的格式 (注意 : 如果 body 为空 则 xml 转换 也会失败 !!!)
                 try {
                     return ObjectUtils.xmlMapper().readTree(ctx.getBodyAsString());
                 } catch (JsonProcessingException e) {
@@ -82,7 +85,7 @@ public final class ScxMappingRoutingContextInfo {
                 }
             }
         }
-        //这里不知道 body 的具体格式 所以进行猜测
+        //走到这里标识以上的匹配全部失败 , 这里不知道 body 的具体格式 所以进行猜测转换
         var bodyAsString = ctx.getBodyAsString();
         //先尝试以 json 格式进行尝试转换
         try {
