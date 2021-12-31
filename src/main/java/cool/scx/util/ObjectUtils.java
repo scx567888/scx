@@ -3,17 +3,17 @@ package cool.scx.util;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Map;
 
 /**
  * 处理对象的工具类<br>
  * 本质上就是对 {@link ObjectMapper} 进行了一些简单的封装
- * 注意其中所有方法使用的 ObjectMapper 均采用 {@link ObjectMapperHelper#setIgnoreJsonIgnore} 进行了处理
+ * 注意其中所有方法使用的 ObjectMapper 均采用 {@link JacksonHelper#setIgnoreJsonIgnore} 进行了处理
  * 故此方法中所有方法均忽略 @JsonIgnore 注解
  *
  * @author scx567888
@@ -29,22 +29,14 @@ public final class ObjectUtils {
     };
 
     /**
-     * 忽略 @JsonIgnore 注解的 objectMapper 一般用于内部使用
+     * 忽略 @JsonIgnore 注解的 jsonMapper 一般用于内部使用
      */
-    private static final ObjectMapper OBJECT_MAPPER = ObjectMapperHelper.setIgnoreJsonIgnore(ObjectMapperHelper.initObjectMapper());
+    private static final JsonMapper JSON_MAPPER = JacksonHelper.setIgnoreJsonIgnore(JacksonHelper.initJsonMapper());
 
     /**
-     * a
-     *
-     * @param jsonNode a
-     * @param type     a
-     * @param <T>      a
-     * @return a
-     * @throws IOException a
+     * 忽略 @JsonIgnore 注解的 xmlMapper 一般用于内部使用
      */
-    public static <T> T readValue(JsonNode jsonNode, Type type) throws IOException {
-        return mapper().readerFor(constructType(type)).readValue(jsonNode);
-    }
+    private static final XmlMapper XML_MAPPER = JacksonHelper.setIgnoreJsonIgnore(JacksonHelper.initXmlMapper());
 
     /**
      * a
@@ -55,7 +47,7 @@ public final class ObjectUtils {
      * @return a
      */
     public static <T> T convertValue(Object fromValue, Class<T> tClass) {
-        return mapper().convertValue(fromValue, constructType(tClass));
+        return jsonMapper().convertValue(fromValue, tClass);
     }
 
     /**
@@ -67,33 +59,49 @@ public final class ObjectUtils {
      * @return a
      */
     public static <T> T convertValue(Object fromValue, Type toValueType) {
-        return mapper().convertValue(fromValue, constructType(toValueType));
+        return jsonMapper().convertValue(fromValue, constructType(toValueType));
     }
 
     /**
      * a
      *
-     * @param fromValue   a
-     * @param toValueType a
-     * @param <T>         a
+     * @param fromValue      a
+     * @param toValueTypeRef a
+     * @param <T>            a
      * @return a
-     * @throws JsonProcessingException a
      */
-    public static <T> T readValue(String fromValue, Type toValueType) throws JsonProcessingException {
-        return mapper().readValue(fromValue, constructType(toValueType));
+    public static <T> T convertValue(Object fromValue, TypeReference<T> toValueTypeRef) {
+        return jsonMapper().convertValue(fromValue, toValueTypeRef);
     }
 
     /**
-     * 将对象转 json 底层调用 JacksonHelper.getObjectMapperIgnoreJsonIgnore().writeValueAsString()
+     * 将对象转 json 底层调用 JSON_MAPPER.writeValueAsString()
      * 所以会忽略 JsonIgnore 注解 同时如果转换失败则在其内部消化异常 (打印) 并返回 ""
      *
      * @param value        a {@link Object} object.
      * @param defaultValue a {@link Object} object.
      * @return a {@link java.lang.String} object.
      */
-    public static String writeValueAsString(Object value, String defaultValue) {
+    public static String toJson(Object value, String defaultValue) {
         try {
-            return writeValueAsString(value);
+            return toJson(value);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return defaultValue;
+        }
+    }
+
+    /**
+     * 将对象转 xml 底层调用 XML_MAPPER.writeValueAsString()
+     * 所以会忽略 JsonIgnore 注解 同时如果转换失败则在其内部消化异常 (打印) 并返回 ""
+     *
+     * @param value        a {@link Object} object.
+     * @param defaultValue a {@link Object} object.
+     * @return a {@link java.lang.String} object.
+     */
+    public static String toXml(Object value, String defaultValue) {
+        try {
+            return toXml(value);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             return defaultValue;
@@ -107,17 +115,37 @@ public final class ObjectUtils {
      * @return a
      * @throws JsonProcessingException a
      */
-    public static String writeValueAsString(Object value) throws JsonProcessingException {
-        return mapper().writeValueAsString(value);
+    public static String toJson(Object value) throws JsonProcessingException {
+        return jsonMapper().writeValueAsString(value);
     }
 
     /**
-     * 获取 ObjectMapper
+     * a
+     *
+     * @param value a
+     * @return a
+     * @throws JsonProcessingException a
+     */
+    public static String toXml(Object value) throws JsonProcessingException {
+        return xmlMapper().writeValueAsString(value);
+    }
+
+    /**
+     * 获取 jsonMapper
      *
      * @return a
      */
-    public static ObjectMapper mapper() {
-        return OBJECT_MAPPER;
+    public static JsonMapper jsonMapper() {
+        return JSON_MAPPER;
+    }
+
+    /**
+     * 获取 xmlMapper
+     *
+     * @return a
+     */
+    public static XmlMapper xmlMapper() {
+        return XML_MAPPER;
     }
 
     /**
@@ -127,7 +155,7 @@ public final class ObjectUtils {
      * @return a
      */
     public static JavaType constructType(Type type) {
-        return mapper().getTypeFactory().constructType(type);
+        return jsonMapper().getTypeFactory().constructType(type);
     }
 
     /**
@@ -137,7 +165,7 @@ public final class ObjectUtils {
      * @return a
      */
     public static JavaType constructType(TypeReference<?> typeRef) {
-        return mapper().getTypeFactory().constructType(typeRef);
+        return jsonMapper().getTypeFactory().constructType(typeRef);
     }
 
 }

@@ -2,9 +2,11 @@ package cool.scx.util;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.cfg.MapperBuilder;
 import com.fasterxml.jackson.databind.introspect.AnnotatedMember;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
@@ -16,7 +18,7 @@ import java.time.LocalDateTime;
 /**
  * a
  */
-public final class ObjectMapperHelper {
+public final class JacksonHelper {
 
     /**
      * 默认的 NullKey 序列化器
@@ -44,8 +46,26 @@ public final class ObjectMapperHelper {
     }
 
     /**
-     * 获取 ObjectMapper (JsonMapper) 对象 (注意!!! 这里会对默认属性进行一些设置,具体如下)
-     * 如需获得原始的 ObjectMapper (JsonMapper) 对象请使用 {@link JsonMapper#builder}; 自行创建
+     * 获取 jsonMapper
+     *
+     * @return jsonMapper
+     */
+    public static JsonMapper initJsonMapper() {
+        return initObjectMapper(JsonMapper.builder());
+    }
+
+    /**
+     * 获取 xmlMapper
+     *
+     * @return xmlMapper
+     */
+    public static XmlMapper initXmlMapper() {
+        return initObjectMapper(XmlMapper.builder());
+    }
+
+    /**
+     * 根据 MapperBuilder 获取 ObjectMapper 对象 并对默认属性进行一些设置,具体如下
+     * 如需获得原始的 ObjectMapper 对象请使用 {@link MapperBuilder}; 自行创建
      * 1, 针对 LocalDateTime 类型设置默认的日期格式化格式 具体格式由 {@link ScxConstant#DEFAULT_DATETIME_FORMATTER} 决定
      * 2, DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES 设置为  false
      * 3, SerializationFeature.FAIL_ON_EMPTY_BEANS          设置为  false
@@ -53,21 +73,20 @@ public final class ObjectMapperHelper {
      *
      * @return a {@link com.fasterxml.jackson.databind.ObjectMapper} object
      */
-    public static ObjectMapper initObjectMapper() {
+    static <M extends ObjectMapper, B extends MapperBuilder<M, B>> M initObjectMapper(MapperBuilder<M, B> mapperBuilder) {
         // 初始化一个 JsonMapper 构建器
-        var jsonMapper = JsonMapper.builder()
+        var objectMapper = mapperBuilder
                 // 注册 module 用来识别一些特定的类型
-                .addModule(ObjectMapperHelper.JAVA_TIME_MODULE)
+                .addModule(JacksonHelper.JAVA_TIME_MODULE)
                 // 遇到未知属性是否抛出异常 (默认为 : true) 例如 json 中包含的属性 bean 中没有 这时会抛出异常
                 // 在此设置 false 表示遇到上述情况时不抛出异常
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                 // 当 待序列化的对象没有任何可以序列化的属性(字段)时是否抛出异常
                 // 如 public class EmptyClass { }
-                .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
-                .build();
+                .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false).build();
         // 获取序列化空值 处理器 一般用于处理例如 map.put(null,"abc"); 之类 key 为空的
-        jsonMapper.getSerializerProvider().setNullKeySerializer(ObjectMapperHelper.NULL_KEY_SERIALIZER);
-        return jsonMapper;
+        objectMapper.getSerializerProvider().setNullKeySerializer(JacksonHelper.NULL_KEY_SERIALIZER);
+        return objectMapper;
     }
 
     /**
@@ -76,8 +95,9 @@ public final class ObjectMapperHelper {
      * @param mapper m
      * @return m
      */
-    static ObjectMapper setIgnoreJsonIgnore(ObjectMapper mapper) {
-        return mapper.setAnnotationIntrospector(new IgnoreJsonIgnore());
+    static <M extends ObjectMapper> M setIgnoreJsonIgnore(M mapper) {
+        mapper.setAnnotationIntrospector(new IgnoreJsonIgnore());
+        return mapper;
     }
 
     /**

@@ -34,7 +34,7 @@ abstract class AbstractPlaceholderSQL {
                 if (mysqlType != null) {
                     preparedStatement.setObject(index, tempValue, mysqlType);
                 } else {//不是则转换为 json 存入
-                    preparedStatement.setString(index, ObjectUtils.writeValueAsString(tempValue, ""));
+                    preparedStatement.setString(index, ObjectUtils.toJson(tempValue, ""));
                 }
             } else {
                 //这里的 Types.NULL 其实内部并没有使用

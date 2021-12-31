@@ -3,10 +3,10 @@ package cool.scx.web.handler;
 import cool.scx.bo.UploadedEntity;
 import cool.scx.util.FileUtils;
 import io.netty.handler.codec.DecoderException;
-import io.netty.handler.codec.http.HttpHeaderValues;
 import io.vertx.core.Handler;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpHeaders;
+import io.vertx.core.http.impl.HttpUtils;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.impl.RoutingContextInternal;
 
@@ -21,7 +21,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public final class ScxBodyHandler implements Handler<RoutingContext> {
 
-    //默认上传大小
+    /**
+     * 默认允许的最大请求体大小
+     */
     private final long bodyLimit = FileUtils.displaySizeToLong("16384KB");
 
     @Override
@@ -44,8 +46,7 @@ public final class ScxBodyHandler implements Handler<RoutingContext> {
     private class BHandler implements Handler<Buffer> {
 
         final RoutingContext context;
-        final boolean isMultipart;
-        final boolean isUrlEncoded;
+        final boolean noNeedAppendBody; //为 true 表示不需要将 Buffer 追加到 body 中
         final AtomicInteger uploadCount = new AtomicInteger();
         Buffer body = Buffer.buffer(1024);
         boolean failed;
@@ -59,10 +60,12 @@ public final class ScxBodyHandler implements Handler<RoutingContext> {
 
             final String contentType = context.request().getHeader(HttpHeaders.CONTENT_TYPE);
 
-            isMultipart = contentType != null && contentType.toLowerCase().startsWith(HttpHeaderValues.MULTIPART_FORM_DATA.toString());
-            isUrlEncoded = contentType != null && contentType.toLowerCase().startsWith(HttpHeaderValues.APPLICATION_X_WWW_FORM_URLENCODED.toString());
+            // 判断是否不需要将 Buffer 追加到 body 中
+            // 因为满足条件时 调用 setExpectMultipart(true) , 其内部的 decoder 便会对请求体进行解码
+            // 并直接存储到 formAttributes 中 后续处理 直接从 formAttributes 读取即可
+            noNeedAppendBody = contentType != null && HttpUtils.isValidMultipartContentType(contentType);
 
-            if (isMultipart || isUrlEncoded) {
+            if (noNeedAppendBody) {
                 context.request().setExpectMultipart(true);
 
                 context.request().uploadHandler(upload -> {
@@ -103,7 +106,7 @@ public final class ScxBodyHandler implements Handler<RoutingContext> {
                 if (uploadSize > bodyLimit) {
                     failed = true;
                     context.fail(413);
-                } else if (!isMultipart) {
+                } else if (!noNeedAppendBody) {
                     body.appendBuffer(buff);
                 }
             }

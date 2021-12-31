@@ -144,6 +144,12 @@ public class WebSiteController {
         return Json.ok().put("items", users);
     }
 
+    @ScxMapping(method = HttpMethod.GET)
+    public BaseVo bigXml() {
+        var users = carService1.list();
+        return new Xml(users);
+    }
+
     /**
      * 测试!!!
      *
