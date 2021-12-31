@@ -15,9 +15,7 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.security.Security;
-import java.security.spec.InvalidKeySpecException;
 
 /**
  * 加密,解密工具类 <br>
@@ -133,14 +131,12 @@ public final class CryptoUtils {
      * @param data      数据
      * @return 加密后的数据
      * @throws NoSuchAlgorithmException  a
-     * @throws NoSuchProviderException   a
-     * @throws InvalidKeySpecException   a
      * @throws NoSuchPaddingException    a
      * @throws InvalidKeyException       a
      * @throws IllegalBlockSizeException a
      * @throws BadPaddingException       a
      */
-    public static byte[] encrypt(String algorithm, byte[] password, byte[] data) throws NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+    public static byte[] encrypt(String algorithm, byte[] password, byte[] data) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
         var key = new SecretKeySpec(password, algorithm);
         var cipher = Cipher.getInstance(algorithm);
         cipher.init(Cipher.ENCRYPT_MODE, key);
@@ -156,12 +152,11 @@ public final class CryptoUtils {
      * @return 解密后的数据
      * @throws NoSuchPaddingException    a
      * @throws NoSuchAlgorithmException  a
-     * @throws NoSuchProviderException   a
      * @throws InvalidKeyException       a
      * @throws IllegalBlockSizeException a
      * @throws BadPaddingException       a
      */
-    public static byte[] decrypt(String algorithm, byte[] password, byte[] data) throws NoSuchPaddingException, NoSuchAlgorithmException, NoSuchProviderException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+    public static byte[] decrypt(String algorithm, byte[] password, byte[] data) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
         var key = new SecretKeySpec(password, algorithm);
         var cipher = Cipher.getInstance(algorithm);
         cipher.init(Cipher.DECRYPT_MODE, key);
