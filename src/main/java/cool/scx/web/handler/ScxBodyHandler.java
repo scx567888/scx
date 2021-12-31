@@ -46,7 +46,7 @@ public final class ScxBodyHandler implements Handler<RoutingContext> {
     private class BHandler implements Handler<Buffer> {
 
         final RoutingContext context;
-        final boolean noNeedAppendBody; //不需要将 byte 追加到 body 中
+        final boolean noNeedAppendBody; //为 true 表示不需要将 Buffer 追加到 body 中
         final AtomicInteger uploadCount = new AtomicInteger();
         Buffer body = Buffer.buffer(1024);
         boolean failed;
@@ -60,7 +60,9 @@ public final class ScxBodyHandler implements Handler<RoutingContext> {
 
             final String contentType = context.request().getHeader(HttpHeaders.CONTENT_TYPE);
 
-            //这种就不需要追加到 body 中 因为 setExpectMultipart(true) 时 内部的 decoder 会对请求体进行解码
+            // 判断是否不需要将 Buffer 追加到 body 中
+            // 因为满足条件时 调用 setExpectMultipart(true) , 其内部的 decoder 便会对请求体进行解码
+            // 并直接存储到 formAttributes 中 后续处理 直接从 formAttributes 读取即可
             noNeedAppendBody = contentType != null && HttpUtils.isValidMultipartContentType(contentType);
 
             if (noNeedAppendBody) {
