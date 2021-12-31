@@ -1,5 +1,6 @@
 package cool.scx.mvc.parameter_handler.impl;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.annotation.FromBody;
 import cool.scx.mvc.parameter_handler.ParamConvertException;
 import cool.scx.mvc.parameter_handler.RequiredParamEmptyException;
@@ -8,6 +9,7 @@ import cool.scx.mvc.parameter_handler.ScxMappingRoutingContextInfo;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
 
+import java.io.IOException;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
 
@@ -70,7 +72,7 @@ public final class FromBodyMethodParameterHandler implements ScxMappingMethodPar
         }
 
         try {
-            return ObjectUtils.readValue(tempValue, javaType);
+            return readValue(tempValue, javaType);
         } catch (Exception e) {
             //和上方类似 针对是否是必填项进行不同的处理
             if (required) {
@@ -111,6 +113,19 @@ public final class FromBodyMethodParameterHandler implements ScxMappingMethodPar
             }
         }
         return null;
+    }
+
+    /**
+     * a
+     *
+     * @param jsonNode a
+     * @param type     a
+     * @param <T>      a
+     * @return a
+     * @throws IOException a
+     */
+    private static <T> T readValue(JsonNode jsonNode, Type type) throws IOException {
+        return ObjectUtils.jsonMapper().readerFor(ObjectUtils.constructType(type)).readValue(jsonNode);
     }
 
     @Override

@@ -31,7 +31,7 @@ public record BeanListHandler<T>(Class<? extends T> type) implements ScxHandlerR
     private static Object readJsonValueOrNull(String json, Type genericType) {
         if (json != null) {
             try {
-                return ObjectUtils.readValue(json, genericType);
+                return ObjectUtils.jsonMapper().readValue(json, ObjectUtils.constructType(genericType));
             } catch (Exception e) {
                 e.printStackTrace();
             }

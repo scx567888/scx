@@ -102,7 +102,7 @@ public class BasicService<Entity> {
         var insertColumns = updateFilter != null ? updateFilter.filter(entity, scxDaoTableInfo.columnInfos()) : scxDaoTableInfo.columnInfos();
         //insert 允许空列所以这里不做判断
         var sql = SQLBuilder.Insert(scxDaoTableInfo.tableName(), insertColumns).Values(insertColumns).GetSQL();
-        return new SQLRunnerParameterWrapper<>(sql, ObjectUtils.mapper().convertValue(entity, ObjectUtils.MAP_TYPE));
+        return new SQLRunnerParameterWrapper<>(sql, ObjectUtils.convertValue(entity, ObjectUtils.MAP_TYPE));
     }
 
     /**
@@ -274,7 +274,7 @@ public class BasicService<Entity> {
         if (updateSetColumnInfos.length == 0) {
             throw new IllegalArgumentException("更新数据时 待更新的数据列 不能为空 !!!");
         }
-        var entityMap = ObjectUtils.mapper().convertValue(entity, ObjectUtils.MAP_TYPE);
+        var entityMap = ObjectUtils.convertValue(entity, ObjectUtils.MAP_TYPE);
         entityMap.putAll(query.where().getWhereParamMap());
         var sql = SQLBuilder.Update(scxDaoTableInfo.tableName()).Set(updateSetColumnInfos).Where(query.where()).GetSQL();
         return new SQLRunnerParameterWrapper<>(sql, entityMap);

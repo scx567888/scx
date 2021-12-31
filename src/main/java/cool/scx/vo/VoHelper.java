@@ -1,8 +1,9 @@
 package cool.scx.vo;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import cool.scx.util.ObjectMapperHelper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import cool.scx.util.JacksonHelper;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.vertx.core.http.HttpServerResponse;
 
@@ -18,9 +19,14 @@ import java.nio.charset.StandardCharsets;
 public final class VoHelper {
 
     /**
-     * 普通的 objectMapper 用于向前台发送数据使用
+     * 普通的 jsonMapper 用于向前台发送 Json 数据使用
      */
-    private static final ObjectMapper OBJECT_MAPPER = ObjectMapperHelper.initObjectMapper();
+    private static final JsonMapper JSON_MAPPER = JacksonHelper.initJsonMapper();
+
+    /**
+     * 普通的 xmlMapper 用于向前台发送 XML 数据使用
+     */
+    private static final XmlMapper XML_MAPPER = JacksonHelper.initXmlMapper();
 
     /**
      * 将 一个对象转换为 json 字符串 (这里本质上是调用了)
@@ -34,7 +40,7 @@ public final class VoHelper {
      * @throws JsonProcessingException a
      */
     public static String toJson(Object value) throws JsonProcessingException {
-        return OBJECT_MAPPER.writeValueAsString(value);
+        return JSON_MAPPER.writeValueAsString(value);
     }
 
     /**
@@ -47,6 +53,33 @@ public final class VoHelper {
     public static String toJson(Object value, String defaultValue) {
         try {
             return toJson(value);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return defaultValue;
+        }
+    }
+
+    /**
+     * a
+     *
+     * @param value a
+     * @return a
+     * @throws JsonProcessingException a
+     */
+    public static String toXml(Object value) throws JsonProcessingException {
+        return XML_MAPPER.writeValueAsString(value);
+    }
+
+    /**
+     * a
+     *
+     * @param value        a
+     * @param defaultValue a
+     * @return a
+     */
+    public static String toXml(Object value, String defaultValue) {
+        try {
+            return toXml(value);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             return defaultValue;
