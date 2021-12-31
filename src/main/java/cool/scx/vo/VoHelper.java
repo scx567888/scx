@@ -97,6 +97,16 @@ public final class VoHelper {
     }
 
     /**
+     * 填充 CONTENT_TYPE 为 xml 格式
+     *
+     * @param response r
+     * @return r
+     */
+    public static HttpServerResponse fillXmlContentType(HttpServerResponse response) {
+        return response.putHeader(HttpHeaderNames.CONTENT_TYPE, "application/xml;charset=utf-8");
+    }
+
+    /**
      * a
      *
      * @param response a
