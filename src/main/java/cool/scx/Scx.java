@@ -50,7 +50,7 @@ public final class Scx {
     /**
      * SCX 版本号
      */
-    private static final String SCX_VERSION = "1.10.5";
+    private static final String SCX_VERSION = "1.10.6";
 
     /**
      * 默认配置文件 路径

@@ -31,7 +31,7 @@ public final class ScxConfigDefaultValue {
         DEFAULT_CONFIG_MAP.put("scx.data-source.password", "");
         DEFAULT_CONFIG_MAP.put("scx.data-source.parameters", new HashSet<>());
         DEFAULT_CONFIG_MAP.put("scx.logging.default.level", "ERROR");
-        DEFAULT_CONFIG_MAP.put("scx.logging.default.logging-type", "CONSOLE");
+        DEFAULT_CONFIG_MAP.put("scx.logging.default.type", "CONSOLE");
         DEFAULT_CONFIG_MAP.put("scx.logging.default.stored-directory", "AppRoot:logs");
     }
 
