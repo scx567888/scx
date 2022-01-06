@@ -1,7 +1,7 @@
 package cool.scx.util;
 
-import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * <p>RandomUtils class.</p>
@@ -10,8 +10,6 @@ import java.util.UUID;
  * @version 1.7.3
  */
 public final class RandomUtils {
-
-    private static final Random RANDOM = new Random();
 
     /**
      * 仅数字
@@ -35,7 +33,7 @@ public final class RandomUtils {
         var code = new StringBuilder();
         var pool = withLetter ? NUMBER_AND_LETTER_POOL : NUMBER_POOL;
         for (int j = 0; j < size; j++) {
-            code.append(pool[RANDOM.nextInt(pool.length)]);
+            code.append(pool[ThreadLocalRandom.current().nextInt(pool.length)]);
         }
         return code.toString();
     }
@@ -48,7 +46,7 @@ public final class RandomUtils {
      * @return 随机数
      */
     public static int getRandomNumber(int min, int max) {
-        return RANDOM.nextInt(max - min + 1) + min;
+        return ThreadLocalRandom.current().nextInt(min, max + 1);
     }
 
     /**
