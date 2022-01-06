@@ -41,14 +41,14 @@ public final class RandomUtils {
     }
 
     /**
-     * 获取随机数
+     * 取一个指定区间的随机数 (包含两端)
      *
      * @param min 最小值
      * @param max 最大值
-     * @return 返回再此区间的数值
+     * @return 随机数
      */
     public static int getRandomNumber(int min, int max) {
-        return RANDOM.nextInt(max) + min;
+        return RANDOM.nextInt(max - min + 1) + min;
     }
 
     /**
