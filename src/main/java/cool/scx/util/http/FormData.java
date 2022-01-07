@@ -6,8 +6,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Spliterator;
-import java.util.function.Consumer;
 
 public final class FormData implements Iterable<FormData.FormDataItem> {
 
@@ -41,16 +39,6 @@ public final class FormData implements Iterable<FormData.FormDataItem> {
     @Override
     public Iterator<FormDataItem> iterator() {
         return formDataItems.iterator();
-    }
-
-    @Override
-    public void forEach(Consumer<? super FormDataItem> action) {
-        Iterable.super.forEach(action);
-    }
-
-    @Override
-    public Spliterator<FormDataItem> spliterator() {
-        return Iterable.super.spliterator();
     }
 
     /**
