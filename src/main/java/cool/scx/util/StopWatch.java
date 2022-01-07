@@ -1,7 +1,9 @@
 package cool.scx.util;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
+import java.util.Map;
 
 /**
  * 简易计时器类 用来计算启动时间
@@ -9,12 +11,22 @@ import java.util.concurrent.TimeUnit;
  * @author scx567888
  * @version 1.1.0
  */
-public final class Timer {
+public final class StopWatch {
+
+    /**
+     * 纳秒和毫秒直接的换算单位
+     */
+    private static final long MILLI_SCALE = 1000 * 1000;
+
+    /**
+     * 纳秒和秒之间的换算单位
+     */
+    private static final double SECOND_SCALE = 1000 * MILLI_SCALE;
 
     /**
      * 池
      */
-    private static final HashMap<String, Long> START_TIME_MAP = new HashMap<>();
+    private static final Map<String, Long> START_TIME_MAP = new HashMap<>();
 
     /**
      * 启动计时器
@@ -25,16 +37,27 @@ public final class Timer {
         if (START_TIME_MAP.get(name) == null) {
             START_TIME_MAP.put(name, System.nanoTime());
         } else {
-            System.err.println("定时器 [ " + name + " ] 已存在!!! 若要强制覆盖定时器,请使用 forceStart() !!!");
+            throw new IllegalArgumentException("定时器 [ " + name + " ] 已存在!!! 若要重置定时器,请使用 reset() !!!");
         }
     }
 
     /**
-     * <p>forceStart.</p>
+     * 创建随机名称
      *
-     * @param name a {@link java.lang.String} object.
+     * @return a
      */
-    public static void forceStart(String name) {
+    public static String start() {
+        var randomName = RandomUtils.getRandomString(6, true);
+        start(randomName);
+        return randomName;
+    }
+
+    /**
+     * a
+     *
+     * @param name a
+     */
+    public static void reset(String name) {
         START_TIME_MAP.put(name, System.nanoTime());
     }
 
@@ -44,13 +67,9 @@ public final class Timer {
      * @param name a {@link java.lang.String} object.
      * @return 时间差
      */
-    public static long stop(String name) {
+    public static long stopToNanos(String name) {
         var startTime = START_TIME_MAP.get(name);
-        if (startTime == null) {
-            return 0;
-        } else {
-            return System.nanoTime() - startTime;
-        }
+        return startTime != null ? System.nanoTime() - startTime : -1;
     }
 
     /**
@@ -60,7 +79,7 @@ public final class Timer {
      * @return 时间差
      */
     public static long stopToMillis(String name) {
-        return nanosToMillis(stop(name));
+        return nanosToMillis(stopToNanos(name));
     }
 
     /**
@@ -70,7 +89,7 @@ public final class Timer {
      * @return 时间差
      */
     public static double stopToSeconds(String name) {
-        return nanosToSeconds(stop(name));
+        return nanosToSeconds(stopToNanos(name));
     }
 
     /**
@@ -80,17 +99,17 @@ public final class Timer {
      * @return d
      */
     private static long nanosToMillis(long duration) {
-        return TimeUnit.NANOSECONDS.toMillis(duration);
+        return duration / MILLI_SCALE;
     }
 
     /**
-     * 纳秒转秒
+     * 纳秒转秒 (这里四舍五入 并精确到后两位数)
      *
      * @param duration d
      * @return d
      */
     private static double nanosToSeconds(long duration) {
-        return (double) duration / 1.0E9D;
+        return new BigDecimal(duration / SECOND_SCALE).setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 
 }

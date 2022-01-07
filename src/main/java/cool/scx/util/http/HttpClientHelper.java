@@ -1,5 +1,6 @@
-package cool.scx.util;
+package cool.scx.util.http;
 
+import cool.scx.util.RandomUtils;
 import io.netty.handler.codec.http.HttpHeaderNames;
 
 import java.io.IOException;
@@ -25,7 +26,7 @@ public final class HttpClientHelper {
     /**
      * 默认 HTTP_CLIENT 实例
      */
-    private static final HttpClient HTTP_CLIENT = HttpClient.newBuilder().build();
+    public static final HttpClient HTTP_CLIENT = HttpClient.newBuilder().build();
 
     /**
      * BODY_HANDLER
@@ -191,6 +192,64 @@ public final class HttpClientHelper {
      */
     public static HttpResponse<String> post(HttpClient httpClient, String url, String bodyStr) throws IOException, InterruptedException {
         return post(httpClient, url, new HashMap<>(), bodyStr);
+    }
+
+    /**
+     * a
+     *
+     * @param httpClient a
+     * @param url        a
+     * @param headers    a
+     * @param formData   a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
+    public static HttpResponse<String> post(HttpClient httpClient, String url, Map<String, String> headers, FormData formData) throws IOException, InterruptedException {
+        final String boundary = RandomUtils.getUUID();
+        headers.put("content-type", "multipart/form-data; boundary=" + boundary);
+        return httpClient.send(getRequestBuilder(url, headers).POST(new FormDataBodyPublisherBuilder(formData, boundary).build()).build(), RESPONSE_BODY_HANDLER);
+    }
+
+    /**
+     * a
+     *
+     * @param httpClient a
+     * @param url        a
+     * @param formData   a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
+    public static HttpResponse<String> post(HttpClient httpClient, String url, FormData formData) throws IOException, InterruptedException {
+        return post(httpClient, url, new HashMap<>(), formData);
+    }
+
+    /**
+     * a
+     *
+     * @param url      a
+     * @param headers  a
+     * @param formData a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
+    public static HttpResponse<String> post(String url, Map<String, String> headers, FormData formData) throws IOException, InterruptedException {
+        return post(HTTP_CLIENT, url, headers, formData);
+    }
+
+    /**
+     * a
+     *
+     * @param url      a
+     * @param formData a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
+    public static HttpResponse<String> post(String url, FormData formData) throws IOException, InterruptedException {
+        return post(HTTP_CLIENT, url, formData);
     }
 
     /**
