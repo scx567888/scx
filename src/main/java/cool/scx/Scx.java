@@ -12,8 +12,8 @@ import cool.scx.mvc.ScxMappingConfiguration;
 import cool.scx.scheduler.ScxScheduler;
 import cool.scx.util.ConsoleUtils;
 import cool.scx.util.NetUtils;
+import cool.scx.util.StopWatch;
 import cool.scx.util.StringUtils;
-import cool.scx.util.Timer;
 import cool.scx.util.ansi.Ansi;
 import cool.scx.web.ScxRouteRegistry;
 import cool.scx.web.ScxWebSocketRouteRegistry;
@@ -347,7 +347,7 @@ public final class Scx {
      */
     public void run() {
         //0, 启动 核心计时器
-        Timer.start("ScxRun");
+        StopWatch.start("ScxRun");
         //1, 根据配置打印一下 banner 或者配置文件信息之类
         if (this.scxFeatureConfig.getFeatureState(ScxFeature.SHOW_BANNER)) {
             printBanner();
@@ -410,7 +410,7 @@ public final class Scx {
         this.vertxHttpServer.listen(port, http -> {
             if (http.succeeded()) {
                 var httpOrHttps = this.scxEasyConfig.isHttpsEnabled() ? "https" : "http";
-                Ansi.out().green("服务器启动成功... 用时 " + Timer.stopToMillis("ScxRun") + " ms").ln()
+                Ansi.out().green("服务器启动成功... 用时 " + StopWatch.stopToMillis("ScxRun") + " ms").ln()
                         .green("> 网络 : " + httpOrHttps + "://" + NetUtils.getLocalAddress() + ":" + this.vertxHttpServer.actualPort() + "/").ln()
                         .green("> 本地 : " + httpOrHttps + "://localhost:" + this.vertxHttpServer.actualPort() + "/").println();
             } else {

@@ -11,7 +11,7 @@ import cool.scx.enumeration.ScxFeature;
 import cool.scx.test.car.Car;
 import cool.scx.test.car.CarService;
 import cool.scx.util.RandomUtils;
-import cool.scx.util.Timer;
+import cool.scx.util.StopWatch;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.support.CronTrigger;
 import org.testng.annotations.BeforeTest;
@@ -54,7 +54,7 @@ public class TestModule implements ScxModule {
             if (carService1.count() < 1500) {
                 System.err.println("开始: 方式1 (批量) 插入");
                 //插入数据 方式1
-                Timer.start("save1");
+                StopWatch.start("save1");
                 var l = new ArrayList<Car>();
                 for (int i = 0; i < 999; i++) {
                     var c = new Car();
@@ -62,17 +62,17 @@ public class TestModule implements ScxModule {
                     l.add(c);
                 }
                 carService.save(l);
-                System.err.println("完成: 方式1 (批量) 插入 999条数据时间 :" + Timer.stopToMillis("save1"));
+                System.err.println("完成: 方式1 (批量) 插入 999条数据时间 :" + StopWatch.stopToMillis("save1"));
 
                 System.err.println("开始: 方式2 (循环单次) 插入");
                 //插入数据 方式2
-                Timer.start("save2");
+                StopWatch.start("save2");
                 for (int i = 0; i < 999; i++) {
                     var c = new Car();
                     c.name = RandomUtils.getRandomString(10, false) + "😢";
                     carService1.save(c);
                 }
-                System.err.println("方式2 (循环单次) 插入 999条数据时间 :" + Timer.stopToMillis("save2"));
+                System.err.println("方式2 (循环单次) 插入 999条数据时间 :" + StopWatch.stopToMillis("save2"));
             }
 
             System.err.println("将 id 大于 200 的 name 设置为空 !!!");
