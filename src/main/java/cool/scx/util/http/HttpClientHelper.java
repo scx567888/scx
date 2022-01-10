@@ -29,6 +29,11 @@ public final class HttpClientHelper {
     public static final HttpClient HTTP_CLIENT = HttpClient.newBuilder().build();
 
     /**
+     * a
+     */
+    private static final String FORM_BOUNDARY_PREFIX = "----ScxHttpClientHelperFormBoundary";
+
+    /**
      * BODY_HANDLER
      */
     private static final HttpResponse.BodyHandler<String> RESPONSE_BODY_HANDLER = HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8);
@@ -206,9 +211,9 @@ public final class HttpClientHelper {
      * @throws InterruptedException a
      */
     public static HttpResponse<String> post(HttpClient httpClient, String url, Map<String, String> headers, FormData formData) throws IOException, InterruptedException {
-        final String boundary = RandomUtils.getUUID();
+        final String boundary = FORM_BOUNDARY_PREFIX + RandomUtils.getRandomString(6, true);
         headers.put("content-type", "multipart/form-data; boundary=" + boundary);
-        return httpClient.send(getRequestBuilder(url, headers).POST(new FormDataBodyPublisherBuilder(formData, boundary).build()).build(), RESPONSE_BODY_HANDLER);
+        return httpClient.send(getRequestBuilder(url, headers).POST(formData.getBodyPublisher(boundary)).build(), RESPONSE_BODY_HANDLER);
     }
 
     /**

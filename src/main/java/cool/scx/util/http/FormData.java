@@ -3,75 +3,86 @@ package cool.scx.util.http;
 import io.vertx.core.http.impl.MimeMapping;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.http.HttpRequest;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-public final class FormData implements Iterable<FormData.FormDataItem> {
+public final class FormData {
+
+    private static final String lineSeparator = "\r\n";
 
     private final List<FormDataItem> formDataItems = new ArrayList<>();
 
-    /**
-     * <p>add.</p>
-     *
-     * @param name a {@link String} object
-     * @param text a {@link Object} object
-     * @return a {@link FormDataBodyPublisherBuilder} object
-     */
     public FormData add(String name, Object text) {
-        formDataItems.add(new FormDataItem(name, FormDataItemType.TEXT, text.toString(), null));
+        this.formDataItems.add(new FormDataItem(name, text.toString()));
         return this;
     }
 
-    /**
-     * todo 这里还没有处理重复键问题
-     * <p>addFile.</p>
-     *
-     * @param name a {@link String} object
-     * @param file a {@link File} object
-     * @return a {@link FormDataBodyPublisherBuilder} object
-     */
-    public FormData addFile(String name, File file) {
-        formDataItems.add(new FormDataItem(name, FormDataItemType.FILE, null, file));
+    public FormData addFile(String name, File file) throws IOException {
+        this.formDataItems.add(new FormDataItem(name, file));
         return this;
     }
 
-    @Override
-    public Iterator<FormDataItem> iterator() {
-        return formDataItems.iterator();
+    public FormData addFile(String name, byte[] fileByte, String filename, String contentType) {
+        this.formDataItems.add(new FormDataItem(name, fileByte, filename, contentType));
+        return this;
     }
 
-    /**
-     * 表单项类型 文字 或 文件
-     */
-    public enum FormDataItemType {
-        TEXT, FILE
+    public FormData remove(String name) {
+        this.formDataItems.removeIf(formDataItem -> name.equals(formDataItem.name));
+        return this;
     }
 
-    /**
-     * 表单项
-     */
-    public static final class FormDataItem {
+    private List<byte[]> toByteArray(FormDataItem formDataItem, String boundary) {
+        var head = "--" + boundary + lineSeparator + formDataItem.getHeader() + lineSeparator + lineSeparator;
+        return List.of(head.getBytes(StandardCharsets.UTF_8), formDataItem.getContent(), lineSeparator.getBytes(StandardCharsets.UTF_8));
+    }
 
-        public final String name;
-        public final FormDataItemType type;
-        public final String text;
-        public final File file;
-        public final String filename;
-        public final String contentType;
+    HttpRequest.BodyPublisher getBodyPublisher(String boundary) {
+        var iter = new ArrayList<byte[]>();
+        for (var formDataItem : formDataItems) {
+            iter.addAll(toByteArray(formDataItem, boundary));
+        }
+        iter.add(("--" + boundary + "--").getBytes(StandardCharsets.UTF_8));
+        return HttpRequest.BodyPublishers.ofByteArrays(iter);
+    }
 
-        public FormDataItem(String name, FormDataItemType type, String text, File file) {
+    private static class FormDataItem {
+
+        final String name;
+        final byte[] content;
+        final String filename;
+        final String contentType;
+
+        FormDataItem(String name, Object text) {
+            this(name, text.toString().getBytes(StandardCharsets.UTF_8), null, null);
+        }
+
+        FormDataItem(String name, File file) throws IOException {
+            this(name, Files.readAllBytes(file.toPath()), file.getName(), MimeMapping.getMimeTypeForFilename(file.getName().toLowerCase()));
+        }
+
+        FormDataItem(String name, byte[] fileByte, String filename, String contentType) {
             this.name = name;
-            this.type = type;
-            this.text = text;
-            this.file = file;
-            if (type == FormDataItemType.FILE) {
-                this.filename = file.getName();
-                this.contentType = MimeMapping.getMimeTypeForFilename(this.filename.toLowerCase());
-            } else {
-                this.filename = null;
-                this.contentType = null;
-            }
+            this.content = fileByte;
+            this.filename = filename;
+            this.contentType = contentType;
+        }
+
+        String getHeader() {
+            var headerStr = filename == null ?
+                    "Content-Disposition: form-data; name=\"" + name + "\"" :
+                    "Content-Disposition: form-data; name=\"" + name + "\"; filename=\"" + filename + "\"";
+            return contentType == null ?
+                    headerStr :
+                    headerStr + FormData.lineSeparator + "Content-Type: " + contentType;
+        }
+
+        byte[] getContent() {
+            return content;
         }
 
     }
