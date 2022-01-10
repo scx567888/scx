@@ -211,7 +211,7 @@ public final class HttpClientHelper {
      * @throws InterruptedException a
      */
     public static HttpResponse<String> post(HttpClient httpClient, String url, Map<String, String> headers, FormData formData) throws IOException, InterruptedException {
-        final String boundary = FORM_BOUNDARY_PREFIX + RandomUtils.getRandomString(6, true);
+        final String boundary = FORM_BOUNDARY_PREFIX + RandomUtils.getRandomString(8, true);
         headers.put("content-type", "multipart/form-data; boundary=" + boundary);
         return httpClient.send(getRequestBuilder(url, headers).POST(formData.getBodyPublisher(boundary)).build(), RESPONSE_BODY_HANDLER);
     }
