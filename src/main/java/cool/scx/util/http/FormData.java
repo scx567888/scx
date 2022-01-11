@@ -5,7 +5,6 @@ import io.vertx.core.http.impl.MimeMapping;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.net.http.HttpRequest;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -13,9 +12,14 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * a
+ */
 public final class FormData {
 
-    static final String lineSeparator = "\r\n";
+    private static final String lineSeparator = "\r\n";
+
+    private static final byte[] lineSeparatorByteArray = lineSeparator.getBytes(StandardCharsets.UTF_8);
 
     private final List<FormDataItem> formDataItemList = new ArrayList<>();
 
@@ -24,13 +28,18 @@ public final class FormData {
         return this;
     }
 
-    public FormData addFile(String name, File file) throws IOException {
+    public FormData addFile(String name, File file) {
         this.formDataItemList.add(new FormDataItem(name, file));
         return this;
     }
 
     public FormData addFile(String name, byte[] fileByte, String filename, String contentType) {
         this.formDataItemList.add(new FormDataItem(name, fileByte, filename, contentType));
+        return this;
+    }
+
+    public FormData addFile(String name, byte[] fileByte, String filename) {
+        this.formDataItemList.add(new FormDataItem(name, fileByte, filename));
         return this;
     }
 
@@ -44,20 +53,22 @@ public final class FormData {
     }
 
     enum FormDataItemType {
-        TEXT, FILE, FILE_BYTE, FINAL_BOUNDARY
+        CONTENT, FILE, FINAL_BOUNDARY
+    }
+
+    enum NowState {
+        PLEASE_SEND_HEADER, PLEASE_SEND_CONTENT, PLEASE_SEND_END
     }
 
     static final class FormDataByteArrayIterable implements Iterator<byte[]> {
 
-        private final FormDataItem[] formDataItems;
-        private final String boundary;
-        private int nowIndex = 0;
-        //当前状态 0 为 待发送 头 2 为待发送内容 4 为待发送 尾部
-        private byte nowState;
-        //如果当前文件
-        private FileInputStream nowFileInputStream;
+        final FormDataItem[] formDataItems;
+        final String boundary;
+        int nowIndex = 0;
+        NowState nowState = NowState.PLEASE_SEND_HEADER;
+        FileInputStream nowFileInputStream; //如果当前 formDataItem 是文件则会创建一个 文件流 用于读取文件的字节
 
-        public FormDataByteArrayIterable(List<FormDataItem> formDataItemList, String boundary) {
+        FormDataByteArrayIterable(List<FormDataItem> formDataItemList, String boundary) {
             this.formDataItems = new FormDataItem[formDataItemList.size() + 1];
             for (int i = 0; i < formDataItemList.size(); i++) {
                 this.formDataItems[i] = formDataItemList.get(i);
@@ -69,85 +80,109 @@ public final class FormData {
 
         @Override
         public boolean hasNext() {
-            return nowIndex < formDataItems.length;
+            return this.nowIndex < this.formDataItems.length;
         }
 
         @Override
         public byte[] next() {
-            //超出索引返回 null
-            if (!(nowIndex < formDataItems.length)) {
-                return null;
-            }
-            var nowItem = formDataItems[nowIndex];
-            if (nowItem.type == FormDataItemType.FINAL_BOUNDARY) {
-                nowState = 0;
-                nowIndex = nowIndex + 1;
-                return ("--" + boundary + "--").getBytes(StandardCharsets.UTF_8);
-            }
-            if (nowState == 0) {
-                //如果是文件的话 这里开启一下 文件的流
-                if (nowItem.type == FormDataItemType.FILE) {
-                    nowFileInputStream = ScxExceptionHelper.wrap(() -> new FileInputStream(nowItem.file));
+            if (hasNext()) {
+                var nowItem = this.formDataItems[nowIndex];
+                //最终块直接返回 并执行 doEnd
+                if (nowItem.type == FormDataItemType.FINAL_BOUNDARY) {
+                    doEnd();
+                    return ("--" + this.boundary + "--").getBytes(StandardCharsets.UTF_8);
                 }
-                nowState = 2;
-                return getStart(nowItem);
-            } else if (nowState == 2) {
-                if (nowItem.type == FormDataItemType.TEXT) {
-                    nowState = 4;
-                    return nowItem.text.getBytes(StandardCharsets.UTF_8);
-                } else if (nowItem.type == FormDataItemType.FILE_BYTE) {
-                    nowState = 4;
-                    return nowItem.fileByte;
-                } else if (nowItem.type == FormDataItemType.FILE) {
-                    var tempByte = new byte[4096];
-                    var f = ScxExceptionHelper.wrap(() -> nowFileInputStream.read(tempByte));
-                    if (f > 0) {
-                        return Arrays.copyOfRange(tempByte, 0, f);
-                    } else {//全部读取完毕
-                        ScxExceptionHelper.wrap(() -> nowFileInputStream.close());
-                        nowFileInputStream = null;
-                        nowState = 0;
-                        nowIndex = nowIndex + 1;
-                        return getEnd();
+                //根据当前的状态 判断执行何种操作
+                if (this.nowState == NowState.PLEASE_SEND_HEADER) {//需要发送头
+                    this.nowState = NowState.PLEASE_SEND_CONTENT;
+                    if (nowItem.type == FormDataItemType.FILE) {//如果是文件 这里额外进行一次创建文件流的操作
+                        this.nowFileInputStream = ScxExceptionHelper.wrap(() -> new FileInputStream(nowItem.file));
                     }
+                    return getStart(nowItem);//返回头
+                } else if (this.nowState == NowState.PLEASE_SEND_CONTENT) {// 需要发送内容
+                    if (nowItem.type == FormDataItemType.CONTENT) {// CONTENT 类型的 可以一次性返回
+                        this.nowState = NowState.PLEASE_SEND_END;
+                        return nowItem.content;
+                    } else if (nowItem.type == FormDataItemType.FILE) {//文件则使用 inputStream 分多次返回
+                        var cache = new byte[4096]; //缓存使用 4KB 大小
+                        var i = ScxExceptionHelper.wrap(() -> this.nowFileInputStream.read(cache));
+                        if (i > 0) { //读取到内容 则返回内容
+                            return Arrays.copyOfRange(cache, 0, i);
+                        } else {// 全部读取完毕 这里直接 处理一下文件流的关闭并 doEnd 即可
+                            ScxExceptionHelper.wrap(() -> this.nowFileInputStream.close());
+                            this.nowFileInputStream = null;
+                            return doEnd();
+                        }
+                    }
+                } else if (this.nowState == NowState.PLEASE_SEND_END) {//需要发送结束
+                    return doEnd();
                 }
-            } else if (nowState == 4) {
-                nowState = 0;
-                nowIndex = nowIndex + 1;
-                return getEnd();
             }
             return null;
         }
 
-        public byte[] getStart(FormDataItem formDataItem) {
-            var head = "--" + boundary + lineSeparator + formDataItem.getHeader() + lineSeparator + lineSeparator;
-            return head.getBytes(StandardCharsets.UTF_8);
+        /**
+         * 将 状态设置为需要 获取头 并向后移动索引
+         *
+         * @return 换行
+         */
+        byte[] doEnd() {
+            this.nowState = NowState.PLEASE_SEND_HEADER;
+            this.nowIndex = this.nowIndex + 1;
+            return lineSeparatorByteArray;
         }
 
-        public byte[] getEnd() {
-            return lineSeparator.getBytes(StandardCharsets.UTF_8);
+        /**
+         * 获取头
+         *
+         * @param f f
+         * @return a
+         */
+        byte[] getStart(FormDataItem f) {
+            var headerStr = f.filename == null ?
+                    "Content-Disposition: form-data; name=\"" + f.name + "\"" :
+                    "Content-Disposition: form-data; name=\"" + f.name + "\"; filename=\"" + f.filename + "\"";
+            var finalHeader = f.contentType == null ?
+                    headerStr :
+                    headerStr + lineSeparator + "Content-Type: " + f.contentType;
+            var start = "--" + this.boundary + lineSeparator + finalHeader + lineSeparator + lineSeparator;
+            return start.getBytes(StandardCharsets.UTF_8);
         }
 
     }
 
     static final class FormDataItem {
+        FormDataItemType type;
+        String name;
+        File file;
+        byte[] content;
+        String filename;
+        String contentType;
 
-        final FormDataItemType type;
-        final String name;
-        final String text;
-        final File file;
-        final byte[] fileByte;
-        final String filename;
-        final String contentType;
+        FormDataItem(FormDataItemType type) {
+            this.type = type;
+        }
 
         FormDataItem(String name, Object text) {
-            this.type = FormDataItemType.TEXT;
+            this.type = FormDataItemType.CONTENT;
             this.name = name;
-            this.text = text.toString();
-            file = null;
-            fileByte = null;
-            filename = null;
-            contentType = null;
+            this.content = text.toString().getBytes(StandardCharsets.UTF_8);
+        }
+
+        FormDataItem(String name, byte[] content, String filename, String contentType) {
+            this.type = FormDataItemType.CONTENT;
+            this.name = name;
+            this.content = content;
+            this.filename = filename;
+            this.contentType = contentType;
+        }
+
+        FormDataItem(String name, byte[] content, String filename) {
+            this.type = FormDataItemType.CONTENT;
+            this.name = name;
+            this.content = content;
+            this.filename = filename;
+            this.contentType = MimeMapping.getMimeTypeForFilename(this.filename);
         }
 
         FormDataItem(String name, File file) {
@@ -155,38 +190,7 @@ public final class FormData {
             this.name = name;
             this.file = file;
             this.filename = file.getName();
-            this.contentType = MimeMapping.getMimeTypeForFilename(file.getName().toLowerCase());
-            text = null;
-            fileByte = null;
-        }
-
-        FormDataItem(String name, byte[] fileByte, String filename, String contentType) {
-            this.type = FormDataItemType.FILE_BYTE;
-            this.name = name;
-            this.fileByte = fileByte;
-            this.filename = filename;
-            this.contentType = contentType;
-            text = null;
-            file = null;
-        }
-
-        public FormDataItem(FormDataItemType finalBoundary) {
-            this.type = finalBoundary;
-            this.name = null;
-            this.fileByte = null;
-            this.filename = null;
-            this.contentType = null;
-            text = null;
-            file = null;
-        }
-
-        String getHeader() {
-            var headerStr = filename == null ?
-                    "Content-Disposition: form-data; name=\"" + name + "\"" :
-                    "Content-Disposition: form-data; name=\"" + name + "\"; filename=\"" + filename + "\"";
-            return contentType == null ?
-                    headerStr :
-                    headerStr + FormData.lineSeparator + "Content-Type: " + contentType;
+            this.contentType = MimeMapping.getMimeTypeForFilename(this.filename);
         }
 
     }
