@@ -91,9 +91,4 @@ public final class VirtualFile extends AbstractVirtualFile {
         }
     }
 
-    @Override
-    public AbstractVirtualFile parent() {
-        return parent;
-    }
-
 }

@@ -4,7 +4,6 @@ import cool.scx.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * <p>VirtualDirectory class.</p>
@@ -160,20 +159,6 @@ public final class VirtualDirectory extends AbstractVirtualFile {
             }
         }
         return null;
-    }
-
-    @Override
-    public AbstractVirtualFile parent() {
-        return this.parent;
-    }
-
-    /**
-     * <p>children.</p>
-     *
-     * @return a {@link java.util.List} object
-     */
-    public List<AbstractVirtualFile> children() {
-        return children;
     }
 
 }
