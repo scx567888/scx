@@ -2,8 +2,8 @@ package cool.scx.util.zip;
 
 import cool.scx.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -12,17 +12,7 @@ import java.util.List;
  * @author scx567888
  * @version 1.7.3
  */
-public final class VirtualDirectory implements IVirtualFile {
-
-    /**
-     * 存储内部的 children
-     */
-    private final List<IVirtualFile> children = new LinkedList<>();
-
-    /**
-     * 文件夹名称
-     */
-    private final String directoryName;
+public final class VirtualDirectory extends AbstractVirtualFile {
 
     /**
      * 内部构造函数
@@ -30,7 +20,7 @@ public final class VirtualDirectory implements IVirtualFile {
      * @param directoryName a
      */
     private VirtualDirectory(String directoryName) {
-        this.directoryName = directoryName;
+        super(directoryName, new ArrayList<>());
     }
 
     /**
@@ -73,9 +63,9 @@ public final class VirtualDirectory implements IVirtualFile {
      * @param virtualFile v
      * @return 返回自身以便链式调用
      */
-    public VirtualDirectory put(String pathStr, IVirtualFile virtualFile) {
+    public VirtualDirectory put(String pathStr, AbstractVirtualFile virtualFile) {
         var childrenByPath = getOrCreate(pathStr);
-        if (childrenByPath.isDirectory()) {
+        if (childrenByPath instanceof VirtualDirectory) {
             ((VirtualDirectory) childrenByPath).put(virtualFile);
         } else {
             throw new IllegalArgumentException("路径为 [" + pathStr + "] 的虚拟文件不是目录, 无法添加子文件或子目录 !!!");
@@ -89,12 +79,13 @@ public final class VirtualDirectory implements IVirtualFile {
      * @param virtualFile v
      * @return v
      */
-    public VirtualDirectory put(IVirtualFile virtualFile) {
+    public VirtualDirectory put(AbstractVirtualFile virtualFile) {
         for (var child : this.children) {
-            if (child.path() != null && child.path().equalsIgnoreCase(virtualFile.path())) {
-                throw new IllegalArgumentException("不能重复添加相同名称的 IVirtualFile : " + virtualFile.path());
+            if (child.name != null && child.name.equalsIgnoreCase(virtualFile.name)) {
+                throw new IllegalArgumentException("不能重复添加相同名称的 IVirtualFile : " + virtualFile.name);
             }
         }
+        virtualFile.setParent(this);
         children.add(virtualFile);
         return this;
     }
@@ -105,12 +96,14 @@ public final class VirtualDirectory implements IVirtualFile {
      * @param pathStr p
      * @return s
      */
-    public IVirtualFile get(String pathStr) {
+    public AbstractVirtualFile get(String pathStr) {
         var paths = getValidPaths(pathStr);
-        IVirtualFile findByPath = this;
+        AbstractVirtualFile findByPath = this;
         for (var path : paths) {
             if (findByPath != null) {
-                findByPath = findByPath.findChildren(path);
+                findByPath = findByPath instanceof VirtualDirectory ?
+                        ((VirtualDirectory) findByPath).findChildren(path) :
+                        null;
             } else {
                 break;
             }
@@ -127,16 +120,18 @@ public final class VirtualDirectory implements IVirtualFile {
      * @param pathStr path (多层级目录请以 "/" 分开)
      * @return 获取到的文件
      */
-    public IVirtualFile getOrCreate(String pathStr) {
+    public AbstractVirtualFile getOrCreate(String pathStr) {
         //先把路径 切割为待创建的路径数组
         var paths = getValidPaths(pathStr);
         //假设当前 虚拟目录 为当前对象
-        IVirtualFile findByPath = this;
+        AbstractVirtualFile findByPath = this;
         //标识到了第几层
         int deep = 1;
         for (var path : paths) {
             //先根据路径获取 子节点
-            var tempChildren = findByPath.findChildren(path);
+            var tempChildren = findByPath instanceof VirtualDirectory ?
+                    ((VirtualDirectory) findByPath).findChildren(path) :
+                    null;
             //当前路径深度为 1 或者 是最后一层了 或者为空 或者 是一个文件夹
             if (paths.length == 1 || deep == paths.length || tempChildren == null || tempChildren instanceof VirtualDirectory) {
                 //如果当前目录是一个文件夹 并且 里面的 children 也没有拿到 就说明可以创建一个
@@ -158,14 +153,18 @@ public final class VirtualDirectory implements IVirtualFile {
     /**
      * {@inheritDoc}
      */
-    @Override
-    public IVirtualFile findChildren(String name) {
+    public AbstractVirtualFile findChildren(String name) {
         for (var child : children) {
-            if (child.path() != null && child.path().equalsIgnoreCase(name)) {
+            if (child.name != null && child.name.equalsIgnoreCase(name)) {
                 return child;
             }
         }
         return null;
+    }
+
+    @Override
+    public AbstractVirtualFile parent() {
+        return this.parent;
     }
 
     /**
@@ -173,24 +172,8 @@ public final class VirtualDirectory implements IVirtualFile {
      *
      * @return a {@link java.util.List} object
      */
-    public List<IVirtualFile> children() {
+    public List<AbstractVirtualFile> children() {
         return children;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isDirectory() {
-        return true;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String path() {
-        return directoryName;
     }
 
 }

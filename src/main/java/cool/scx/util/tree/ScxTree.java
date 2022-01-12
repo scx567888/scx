@@ -16,13 +16,17 @@ public interface ScxTree<T extends ScxTree<T>> {
      *
      * @return a T object
      */
-    T parent();
+    default T parent() {
+        return null;
+    }
 
     /**
      * <p>children.</p>
      *
      * @return a {@link java.util.List} object
      */
-    List<T> children();
+    default List<T> children() {
+        return null;
+    }
 
 }
