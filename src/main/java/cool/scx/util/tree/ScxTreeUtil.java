@@ -12,6 +12,32 @@ import java.util.List;
 public final class ScxTreeUtil {
 
     /**
+     * walk 的另一种写法 稍慢于 walk
+     *
+     * @param scxTree a
+     * @param visitor a
+     * @param <T>     a
+     * @throws Exception a
+     */
+    public static <T extends ScxTree<T>> void walk1(final T scxTree, final ScxTreeVisitor<T> visitor) throws Exception {
+        ArrayList<T> parents = null;
+        T now = scxTree;
+        while (now.parent() != null) {
+            if (parents == null) {
+                parents = new ArrayList<>();
+            }
+            parents.add(0, now.parent());
+            now = now.parent();
+        }
+        visitor.handle(parents, scxTree);
+        if (scxTree.children() != null) {
+            for (var child : scxTree.children()) {
+                walk1(child, visitor);
+            }
+        }
+    }
+
+    /**
      * <p>walk.</p>
      *
      * @param scxTree a T object
@@ -20,7 +46,7 @@ public final class ScxTreeUtil {
      * @throws java.lang.Exception if any.
      */
     public static <T extends ScxTree<T>> void walk(final T scxTree, final ScxTreeVisitor<T> visitor) throws Exception {
-        walk0(null, scxTree, visitor);
+        _walk(null, scxTree, visitor);
     }
 
     /**
@@ -32,12 +58,14 @@ public final class ScxTreeUtil {
      * @param <T>            a T class
      * @throws java.lang.Exception if any.
      */
-    private static <T extends ScxTree<T>> void walk0(final List<T> parents, final T currentScxTree, final ScxTreeVisitor<T> visitor) throws Exception {
+    private static <T extends ScxTree<T>> void _walk(final List<T> parents, final T currentScxTree, final ScxTreeVisitor<T> visitor) throws Exception {
         visitor.handle(parents, currentScxTree);
         var newParents = parents == null ? new ArrayList<T>() : new ArrayList<>(parents);
         newParents.add(currentScxTree);
-        for (var child : currentScxTree.children()) {
-            walk0(newParents, child, visitor);
+        if (currentScxTree.children() != null) {
+            for (var child : currentScxTree.children()) {
+                _walk(newParents, child, visitor);
+            }
         }
     }
 

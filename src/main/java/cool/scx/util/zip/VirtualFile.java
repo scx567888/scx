@@ -10,7 +10,7 @@ import java.io.IOException;
  * @author scx567888
  * @version 1.7.3
  */
-public final class VirtualFile implements IVirtualFile {
+public final class VirtualFile extends AbstractVirtualFile {
 
     /**
      * 物理文件
@@ -21,11 +21,6 @@ public final class VirtualFile implements IVirtualFile {
      * 字节数组
      */
     private final byte[] bytes;
-
-    /**
-     * 文件名
-     */
-    private final String fileName;
 
     /**
      * 虚拟文件类型
@@ -42,9 +37,9 @@ public final class VirtualFile implements IVirtualFile {
      * @param type         a
      */
     private VirtualFile(File physicalFile, byte[] bytes, String fileName, int type) {
+        super(fileName, null);
         this.physicalFile = physicalFile;
         this.bytes = bytes;
-        this.fileName = fileName;
         this.type = type;
     }
 
@@ -96,28 +91,9 @@ public final class VirtualFile implements IVirtualFile {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public boolean isDirectory() {
-        return false;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String path() {
-        return fileName;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public IVirtualFile findChildren(String name) {
-        return null;
+    public AbstractVirtualFile parent() {
+        return parent;
     }
 
 }

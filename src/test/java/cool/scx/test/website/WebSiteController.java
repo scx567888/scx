@@ -9,7 +9,6 @@ import cool.scx.test.car.CarService;
 import cool.scx.util.RandomUtils;
 import cool.scx.util.digest.DigestUtils;
 import cool.scx.util.http.HttpClientHelper;
-import cool.scx.util.zip.IVirtualFile;
 import cool.scx.util.zip.VirtualDirectory;
 import cool.scx.util.zip.VirtualFile;
 import cool.scx.util.zip.ZipAction;
@@ -200,7 +199,7 @@ public class WebSiteController {
         var virtualDirectory = VirtualDirectory.of("第一个目录");
         virtualDirectory.put("第二个目录", VirtualFile.of("第二个目录中的文件.txt", "文件内容".getBytes(StandardCharsets.UTF_8)));
         virtualDirectory.getOrCreate("这是一系列空目录/这是一系列空目录/这是一系列空目录/这是一系列空目录/这是一系列空目录");
-        IVirtualFile orCreate = virtualDirectory.getOrCreate("这不是一系列空目录/这不是一系列空目录/这不是一系列空目录/这不是一系列空目录/这不是一系列空目录");
+        var orCreate = virtualDirectory.getOrCreate("这不是一系列空目录/这不是一系列空目录/这不是一系列空目录/这不是一系列空目录/这不是一系列空目录");
         if (orCreate instanceof VirtualDirectory a) {
             a.put(VirtualFile.of("一个文本文件.txt", "一些内容,一些内容,一些内容,一些内容 下😊😂🤣❤😍😒👌😘".getBytes(StandardCharsets.UTF_8)));
         }

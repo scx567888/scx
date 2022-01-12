@@ -1,6 +1,7 @@
 package cool.scx.util.zip;
 
 import cool.scx.util.StringUtils;
+import cool.scx.util.tree.ScxTreeUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -10,6 +11,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -28,7 +33,7 @@ public final class ZipAction {
      * @return a
      * @throws java.lang.Exception a
      */
-    public static byte[] toZipFileByteArray(IVirtualFile virtualFile) throws Exception {
+    public static byte[] toZipFileByteArray(AbstractVirtualFile virtualFile) throws Exception {
         var bo = new ByteArrayOutputStream();
         try (var zos = new ZipOutputStream(bo)) {
             //遍历目录
@@ -44,7 +49,7 @@ public final class ZipAction {
      * @param outputFile  a
      * @throws java.lang.Exception a
      */
-    public static void zipFile(IVirtualFile virtualFile, String outputFile) throws Exception {
+    public static void zipFile(AbstractVirtualFile virtualFile, String outputFile) throws Exception {
         // 创建一个新的空的输出文件的临时文件
         var outputFilePath = Files.createFile(Path.of(outputFile));
         try (var zos = new ZipOutputStream(Files.newOutputStream(outputFilePath))) {
@@ -60,7 +65,7 @@ public final class ZipAction {
      * @param zos         a
      * @throws java.lang.Exception a
      */
-    private static void writeVirtualFileToZipOutputStream(IVirtualFile virtualFile, ZipOutputStream zos) throws Exception {
+    private static void writeVirtualFileToZipOutputStream(AbstractVirtualFile virtualFile, ZipOutputStream zos) throws Exception {
         walk(virtualFile, new VirtualFileVisitor() {
             @Override
             public void visitDirectory(String path) throws IOException {
@@ -133,34 +138,29 @@ public final class ZipAction {
     /**
      * 循环遍历一个 虚拟文件
      *
-     * @param iVirtualFile a
-     * @param visitor      a
+     * @param sourceVirtualFile a
+     * @param visitor           a
      * @throws java.lang.Exception a
      */
-    public static void walk(IVirtualFile iVirtualFile, VirtualFileVisitor visitor) throws Exception {
-        recursionWalk(null, iVirtualFile, visitor);
-    }
-
-    /**
-     * 递归 walk
-     *
-     * @param parentPath   父目录
-     * @param iVirtualFile i
-     * @param visitor      a
-     * @throws java.lang.Exception e
-     */
-    private static void recursionWalk(String parentPath, IVirtualFile iVirtualFile, VirtualFileVisitor visitor) throws Exception {
-        var fullPath = parentPath == null ? iVirtualFile.path() : parentPath + "/" + iVirtualFile.path();
-        if (iVirtualFile instanceof VirtualFile virtualFile) {
-            visitor.visitFile(fullPath, virtualFile.getBytes());
-        } else if (iVirtualFile instanceof VirtualDirectory virtualDirectory) {
-            if (fullPath != null) {
+    public static void walk(AbstractVirtualFile sourceVirtualFile, VirtualFileVisitor visitor) throws Exception {
+        ScxTreeUtil.walk(sourceVirtualFile, (parent, self) -> {
+            var fullPath = getFullPath(parent, self);
+            if (self instanceof VirtualFile) {
+                visitor.visitFile(fullPath, ((VirtualFile) self).getBytes());
+            } else if (self instanceof VirtualDirectory) {
+                // 文件夹需以 / 结尾
                 visitor.visitDirectory(fullPath + "/");
             }
-            for (var child : virtualDirectory.children()) {
-                recursionWalk(fullPath, child, visitor);
-            }
+        });
+    }
+
+    private static String getFullPath(List<AbstractVirtualFile> abstractVirtualFiles1, AbstractVirtualFile... abstractVirtualFiles2) {
+        var fullList = new ArrayList<AbstractVirtualFile>();
+        if (abstractVirtualFiles1 != null) {
+            fullList.addAll(abstractVirtualFiles1);
         }
+        Collections.addAll(fullList, abstractVirtualFiles2);
+        return fullList.stream().map((f) -> f.name).collect(Collectors.joining("/"));
     }
 
 }
