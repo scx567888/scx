@@ -48,7 +48,7 @@ public final class ScxEasyConfig {
     private final Integer dataSourcePort;
 
     /**
-     * 数据源端口
+     * 数据源 数据库名称
      */
     private final String dataSourceDatabase;
 
@@ -60,7 +60,6 @@ public final class ScxEasyConfig {
     /**
      * 数据源密码 真实值(解密后)
      */
-
     private final String dataSourcePassword;
 
     /**
@@ -258,7 +257,7 @@ public final class ScxEasyConfig {
                 .green("Y 证书路径                            \t -->\t " + (sslPath != null ? sslPath.getPath() : "")).ln()
                 .green("Y 证书密码                            \t -->\t *****").ln()
                 .green("Y 数据源 Host                          \t -->\t " + dataSourceHost).ln()
-                .green("Y 数据源 端口号                        \t -->\t " + port).ln()
+                .green("Y 数据源 端口号                        \t -->\t " + dataSourcePort).ln()
                 .green("Y 数据源 数据库名称                    \t -->\t " + dataSourceDatabase).ln()
                 .green("Y 数据源 用户名                        \t -->\t " + dataSourceUsername).ln()
                 .green("Y 数据源 连接密码                      \t -->\t *****").ln()
