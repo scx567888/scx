@@ -152,7 +152,7 @@ public final class FormData {
     }
 
     static final class FormDataItem {
-        FormDataItemType type;
+        final FormDataItemType type;
         String name;
         File file;
         byte[] content;
