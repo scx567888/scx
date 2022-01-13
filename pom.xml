@@ -13,7 +13,7 @@
     <packaging>jar</packaging>
     <name>scx</name>
 
-    <version>1.10.12</version>
+    <version>1.11.0</version>
 
     <description>SCX 是一个 "Web 开发框架"; 目标是提供简单快速的开发体验。</description>
     <url>https://github.com/scx567888/scx</url>
@@ -38,6 +38,40 @@
         <developerConnection>scm:git:https://github.com/scx567888/scx.git</developerConnection>
         <url>https://github.com/scx567888/scx</url>
     </scm>
+
+    <build>
+        <plugins>
+
+            <!-- 此插件用于将项目打包为 可执行 jar 包-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <!-- 此处因为没有类似 maven-source-plugin 插件中 excludeResources 的选项 -->
+                    <!-- 所以在这里手动排除资源文件 , 具体文件说明见下方 -->
+                    <excludes>
+                        <!-- 默认模板测试文件 -->
+                        <exclude>/c/</exclude>
+                        <!-- 默认 ssl 占位空文件 -->
+                        <exclude>/ssl/</exclude>
+                        <!-- 默认 配置文件 -->
+                        <exclude>/*.json</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+
+            <!-- 对 jar 包等文件进行 gpg 签名  -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <configuration>
+                    <!-- 这里启用签名 -->
+                    <skip>false</skip>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
 
     <dependencies>
 
