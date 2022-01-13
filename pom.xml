@@ -56,7 +56,6 @@
                         <exclude>/ssl/</exclude>
                         <!-- 默认 配置文件 -->
                         <exclude>/*.json</exclude>
-                        <exclude>/*.xml</exclude>
                     </excludes>
                 </configuration>
             </plugin>
@@ -65,7 +64,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
-                <version>${maven.gpg.plugin.version}</version>
                 <configuration>
                     <!-- 这里启用签名 -->
                     <skip>false</skip>
