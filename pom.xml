@@ -40,7 +40,6 @@
     </scm>
 
     <build>
-
         <plugins>
 
             <!-- 此插件用于将项目打包为 可执行 jar 包-->
@@ -74,7 +73,6 @@
             </plugin>
 
         </plugins>
-
     </build>
 
     <dependencies>
