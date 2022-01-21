@@ -14,6 +14,7 @@ import io.vertx.core.Vertx;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.FaviconHandler;
+import io.vertx.ext.web.handler.FileSystemAccess;
 import io.vertx.ext.web.handler.StaticHandler;
 import io.vertx.ext.web.handler.impl.CorsHandlerImpl;
 import org.slf4j.Logger;
@@ -34,7 +35,6 @@ public final class ScxRouteRegistry {
     private static final Logger logger = LoggerFactory.getLogger(ScxRouteRegistry.class);
 
     private static final List<ScxMappingHandler> SCX_MAPPING_HANDLER_LIST = new ArrayList<>();
-
 
     /**
      * 注册路由
@@ -110,9 +110,8 @@ public final class ScxRouteRegistry {
     private static void registerStaticServerHandler(Router vertxRouter, ScxEasyConfig scxEasyConfig) {
         for (var staticServer : scxEasyConfig.staticServers()) {
             vertxRouter.route(staticServer.location())
-                    .handler(StaticHandler.create()
-                            .setAllowRootFileSystemAccess(true)
-                            .setWebRoot(staticServer.root().getPath()));
+                    .handler(StaticHandler.create(FileSystemAccess.ROOT, staticServer.root().getPath())
+                            .setFilesReadOnly(false));
         }
     }
 
