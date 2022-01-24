@@ -65,9 +65,14 @@ public record BeanListHandler<T>(Class<? extends T> type) implements ScxHandlerR
                     var field = allField[i];
                     if (field != null) {
                         var filedType = field.getType();
-                        var o = SQLTypeHelper.isSupportedType(filedType) ?
-                                rs.getObject(i, filedType) :
-                                readJsonValueOrNull(rs.getString(i), field.getGenericType());
+                        Object o;
+                        if (SQLTypeHelper.getMySQLType(filedType) != null) {
+                            o = rs.getObject(i, filedType);
+                        } else if (filedType.isEnum()) {
+                            o = ObjectUtils.convertValue(rs.getString(i), filedType);
+                        } else {
+                            o = readJsonValueOrNull(rs.getString(i), field.getGenericType());
+                        }
                         //这里如果数据库中为空 则不进行赋值
                         if (o != null) {
                             field.set(t, o);

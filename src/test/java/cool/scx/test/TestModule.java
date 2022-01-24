@@ -10,6 +10,7 @@ import cool.scx.dao.ScxDaoHelper;
 import cool.scx.enumeration.ScxFeature;
 import cool.scx.test.car.Car;
 import cool.scx.test.car.CarService;
+import cool.scx.test.car.CarType;
 import cool.scx.util.RandomUtils;
 import cool.scx.util.StopWatch;
 import org.slf4j.LoggerFactory;
@@ -59,6 +60,7 @@ public class TestModule implements ScxModule {
                 for (int i = 0; i < 999; i++) {
                     var c = new Car();
                     c.name = RandomUtils.getRandomString(10, false) + "🤣";
+                    c.type = CarType.values()[RandomUtils.getRandomNumber(0, 3)];
                     l.add(c);
                 }
                 carService.save(l);
@@ -70,6 +72,7 @@ public class TestModule implements ScxModule {
                 for (int i = 0; i < 999; i++) {
                     var c = new Car();
                     c.name = RandomUtils.getRandomString(10, false) + "😢";
+                    c.type = CarType.values()[RandomUtils.getRandomNumber(0, 3)];
                     carService1.save(c);
                 }
                 System.err.println("方式2 (循环单次) 插入 999条数据时间 :" + StopWatch.stopToMillis("save2"));
@@ -93,6 +96,7 @@ public class TestModule implements ScxModule {
                 System.err.println("现在插入 1 数据条数");
                 var bb = new Car();
                 bb.name = "唯一ID";
+                bb.type = CarType.values()[RandomUtils.getRandomNumber(0, 3)];
                 carService.save(con, bb);
                 System.err.println("现在数据库中数据条数 : " + carService.count(con));
                 System.err.println("现在在插入 1 错误数据");

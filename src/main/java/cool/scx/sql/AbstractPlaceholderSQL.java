@@ -29,11 +29,14 @@ abstract class AbstractPlaceholderSQL {
         var index = 1;
         for (var tempValue : params) {
             if (tempValue != null) {
+                var tempValueClass = tempValue.getClass();
                 //判断是否为数据库(MySQL)直接支持的数据类型
-                var mysqlType = SQLTypeHelper.getMySQLType(tempValue.getClass());
+                var mysqlType = SQLTypeHelper.getMySQLType(tempValueClass);
                 if (mysqlType != null) {
                     preparedStatement.setObject(index, tempValue, mysqlType);
-                } else {//不是则转换为 json 存入
+                } else if (tempValueClass.isEnum()) {//不是则转换做一下特殊处理 枚举我们直接存名称
+                    preparedStatement.setString(index, ObjectUtils.convertValue(tempValue, String.class));
+                } else {//否则存 json
                     preparedStatement.setString(index, ObjectUtils.toJson(tempValue, ""));
                 }
             } else {

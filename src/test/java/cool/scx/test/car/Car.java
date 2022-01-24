@@ -10,4 +10,6 @@ public class Car extends BaseModel {
     @Column(unique = true)
     public String name;
 
+    public CarType type;
+
 }
