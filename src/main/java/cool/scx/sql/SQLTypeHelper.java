@@ -1,8 +1,10 @@
 package cool.scx.sql;
 
 import com.mysql.cj.MysqlType;
+import cool.scx.util.ObjectUtils;
 
 import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.*;
@@ -103,6 +105,53 @@ public final class SQLTypeHelper {
                     .orElse(null);
         }
         return mysqlType;
+    }
+
+    public static String convertToStringOrNull(Object o) {
+        try {
+            return ObjectUtils.convertValue(o, String.class);
+        } catch (Exception e) {
+            SQLRunner.logger.error("序列化时发生错误 , 已使用 NULL !!!", e);
+            return null;
+        }
+    }
+
+    public static String convertToJsonOrNull(Object o) {
+        try {
+            return ObjectUtils.toJson(o);
+        } catch (Exception e) {
+            SQLRunner.logger.error("序列化时发生错误 , 已使用 NULL !!!", e);
+            return null;
+        }
+    }
+
+    public static Object readFromValueOrNull(String o, Class<?> filedType) {
+        if (o != null) {
+            try {
+                return ObjectUtils.convertValue(o, filedType);
+            } catch (Exception e) {
+                SQLRunner.logger.error("反序列化时发生错误 , 已使用 NULL !!!", e);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 读取 json 值 或者返回 null
+     *
+     * @param json        s
+     * @param genericType g
+     * @return r
+     */
+    public static Object readFromJsonValueOrNull(String json, Type genericType) {
+        if (json != null) {
+            try {
+                return ObjectUtils.jsonMapper().readValue(json, ObjectUtils.constructType(genericType));
+            } catch (Exception e) {
+                SQLRunner.logger.error("反序列化时发生错误 , 已使用 NULL !!!", e);
+            }
+        }
+        return null;
     }
 
 }

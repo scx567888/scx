@@ -1,7 +1,5 @@
 package cool.scx.sql;
 
-import cool.scx.util.ObjectUtils;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -35,9 +33,9 @@ abstract class AbstractPlaceholderSQL {
                 if (mysqlType != null) {
                     preparedStatement.setObject(index, tempValue, mysqlType);
                 } else if (tempValueClass.isEnum()) {//不是则转换做一下特殊处理 枚举我们直接存名称
-                    preparedStatement.setString(index, ObjectUtils.convertValue(tempValue, String.class));
+                    preparedStatement.setString(index, SQLTypeHelper.convertToStringOrNull(tempValue));
                 } else {//否则存 json
-                    preparedStatement.setString(index, ObjectUtils.toJson(tempValue, ""));
+                    preparedStatement.setString(index, SQLTypeHelper.convertToJsonOrNull(tempValue));
                 }
             } else {
                 //这里的 Types.NULL 其实内部并没有使用
