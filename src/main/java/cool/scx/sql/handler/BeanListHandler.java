@@ -2,11 +2,9 @@ package cool.scx.sql.handler;
 
 import cool.scx.ScxHandlerRE;
 import cool.scx.sql.SQLTypeHelper;
-import cool.scx.util.ObjectUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Type;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -20,24 +18,6 @@ import java.util.List;
  * @version 1.7.3
  */
 public record BeanListHandler<T>(Class<? extends T> type) implements ScxHandlerRE<ResultSet, List<T>, SQLException> {
-
-    /**
-     * 读取 json 值 或者返回 null
-     *
-     * @param json        s
-     * @param genericType g
-     * @return r
-     */
-    private static Object readJsonValueOrNull(String json, Type genericType) {
-        if (json != null) {
-            try {
-                return ObjectUtils.jsonMapper().readValue(json, ObjectUtils.constructType(genericType));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
 
     /**
      * {@inheritDoc}
@@ -65,9 +45,14 @@ public record BeanListHandler<T>(Class<? extends T> type) implements ScxHandlerR
                     var field = allField[i];
                     if (field != null) {
                         var filedType = field.getType();
-                        var o = SQLTypeHelper.isSupportedType(filedType) ?
-                                rs.getObject(i, filedType) :
-                                readJsonValueOrNull(rs.getString(i), field.getGenericType());
+                        Object o;
+                        if (SQLTypeHelper.getMySQLType(filedType) != null) {
+                            o = rs.getObject(i, filedType);
+                        } else if (filedType.isEnum()) {
+                            o = SQLTypeHelper.readFromValueOrNull(rs.getString(i), filedType);
+                        } else {
+                            o = SQLTypeHelper.readFromJsonValueOrNull(rs.getString(i), field.getGenericType());
+                        }
                         //这里如果数据库中为空 则不进行赋值
                         if (o != null) {
                             field.set(t, o);
