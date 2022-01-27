@@ -105,7 +105,7 @@ public class YourModule implements ScxModule {
 }
 ```
 
-#### 3. 使用浏览器访问 http://localhost:8080/ 应看到如下内容。
+#### 3. 使用浏览器访问 http://localhost:8080/ 应看到如下内容 。
 
 ```html
 Hello World
