@@ -75,7 +75,14 @@
 #### 2. 编写您自己的模块并运行 main 方法 。
 
 ``` java
+import cool.scx.Scx;
+import cool.scx.ScxModule;
+import cool.scx.annotation.ScxMapping;
+import cool.scx.enumeration.HttpMethod;
+
 //注意 : 自定义的模块需要继承 ScxModule
+//此处的 ScxMapping 注解用来表示这是一个需要被扫描 WebHandler 的类
+@ScxMapping
 public class YourModule implements ScxModule {
 
     public static void main(String[] args) {
@@ -87,7 +94,21 @@ public class YourModule implements ScxModule {
                 .build().run();                 //4, 构建并运行项目
     }
 
+    //此处的 ScxMapping 注解用来表示这是一个具体的 WebHandler
+    //路径为 "/" , 请求方法为 GET
+    @ScxMapping(value = "/", method = HttpMethod.GET)
+    public String helloWorld() {
+        //向页面返回的具体内容
+        return "Hello World";
+    }
+
 }
+```
+
+#### 3. 使用浏览器访问 http://localhost:8080/ 应看到如下内容。
+
+```html
+Hello World
 ```
 
 更多信息请查看 [文档 | DOCS](https://scx.cool/docs/scx/index.html)
