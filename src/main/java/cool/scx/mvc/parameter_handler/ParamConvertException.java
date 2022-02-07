@@ -14,9 +14,4 @@ public class ParamConvertException extends Exception {
         super(message);
     }
 
-    @Override
-    public String getMessage() {
-        return super.getMessage();
-    }
-
 }

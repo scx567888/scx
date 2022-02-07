@@ -14,9 +14,4 @@ public final class ScxWrappedRuntimeException extends RuntimeException {
         super(cause);
     }
 
-    @Override
-    public synchronized Throwable getCause() {
-        return super.getCause();
-    }
-
 }

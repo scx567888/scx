@@ -28,7 +28,7 @@ public interface BaseTemplateDirective extends TemplateDirectiveModel {
      * @return p
      */
     @SuppressWarnings("unchecked")
-    static Map<String, Object> formatMapParams(Map params) {
+    static Map<String, Object> formatMapParams(Map<?, ?> params) {
         var newMap = new HashMap<String, Object>();
         for (var s : ((Map<String, TemplateModel>) params).entrySet()) {
             try {
