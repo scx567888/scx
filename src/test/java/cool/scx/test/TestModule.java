@@ -116,10 +116,12 @@ public class TestModule implements ScxModule {
         var logger = LoggerFactory.getLogger(TestModule.class);
         //测试定时任务
         ScxContext.scheduler().scheduleAtFixedRate((a) -> {
+            //测试
             logger.error("这是通过 ScxContext.scheduleAtFixedRate() 打印的 : 一共 10 次 , 这时第 " + a.runCount() + " 次执行 !!!");
         }, Instant.now().plusSeconds(3), Duration.of(1, ChronoUnit.SECONDS), 10);
 
         ScxContext.scheduler().schedule((a) -> {
+            //测试
             logger.error("这是通过 ScxContext.scheduler() 使用 Cron 表达式 打印的 : 这时第 " + a.runCount() + " 次执行 !!!");
         }, new CronTrigger("*/1 * * * * ?"));
 
