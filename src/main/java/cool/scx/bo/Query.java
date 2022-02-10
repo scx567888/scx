@@ -439,13 +439,14 @@ public final class Query {
 
     /**
      * 设置 whereSQL 适用于 复杂查询的自定义 where 子句<br>
+     * 支持两种类型 String 和 WhereBody
      * 在最终 sql 中会拼接到 where 子句的最后<br>
      * 注意 :  除特殊语法外不需要手动在头部添加 AND
      *
      * @param whereSQL sql 语句
      * @return 本身 , 方便链式调用
      */
-    public Query whereSQL(String whereSQL) {
+    public Query whereSQL(Object... whereSQL) {
         this.where.whereSQL(whereSQL);
         return this;
     }
@@ -462,7 +463,7 @@ public final class Query {
     }
 
     /**
-     * 清除所有 where 条件 (包括 whereSQL)
+     * 清除所有 where 条件 (不包括 whereSQL)
      *
      * @return this 方便链式调用
      */
@@ -472,13 +473,22 @@ public final class Query {
     }
 
     /**
-     * 清除所有 where 条件
+     * 清楚 where 条件中的 whereSQL
      *
-     * @param alsoClearWhereSQL 是否包括 whereSQL
      * @return this 方便链式调用
      */
-    public Query clearWhere(boolean alsoClearWhereSQL) {
-        this.where.clear(alsoClearWhereSQL);
+    public Query clearWhereSQL() {
+        this.where.clearWhereSQL();
+        return this;
+    }
+
+    /**
+     * 清除所有 where 条件 (包括 whereSQL)
+     *
+     * @return this 方便链式调用
+     */
+    public Query clearWhereAll() {
+        this.where.clearAll();
         return this;
     }
 
