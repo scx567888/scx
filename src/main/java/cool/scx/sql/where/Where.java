@@ -22,6 +22,11 @@ public final class Where {
     private final List<WhereBody> whereBodyList = new ArrayList<>();
 
     /**
+     * 自定义的查询语句的参数
+     */
+    private final Map<String, Object> whereSQLParamMap = new HashMap<>();
+
+    /**
      * 自定义的查询语句
      */
     private String whereSQL = null;
@@ -34,7 +39,7 @@ public final class Where {
     }
 
     /**
-     * 添加一个查询条件 (注意 : 此处添加的所有条件都会以 and 拼接 , 如需使用 or 请考虑使用 {@link #whereSQL(String)} })
+     * 添加一个查询条件 (注意 : 此处添加的所有条件都会以 and 拼接 , 如需使用 or 请考虑使用 {@link #whereSQL(Object...)} })
      *
      * @param name      名称 (注意 : 默认为字段名称 , 不是数据库名称)
      * @param whereType where 类型
@@ -48,7 +53,7 @@ public final class Where {
     }
 
     /**
-     * 添加一个查询条件 (注意 : 此处添加的所有条件都会以 and 拼接 , 如需使用 or 请考虑使用 {@link #whereSQL(String)} })
+     * 添加一个查询条件 (注意 : 此处添加的所有条件都会以 and 拼接 , 如需使用 or 请考虑使用 {@link #whereSQL(Object...)} })
      *
      * @param name      名称 (注意 : 默认为字段名称 , 不是数据库名称)
      * @param whereType where 类型
@@ -61,7 +66,7 @@ public final class Where {
     }
 
     /**
-     * 添加一个查询条件 (注意 : 此处添加的所有条件都会以 and 拼接 , 如需使用 or 请考虑使用 {@link #whereSQL(String)} })
+     * 添加一个查询条件 (注意 : 此处添加的所有条件都会以 and 拼接 , 如需使用 or 请考虑使用 {@link #whereSQL(Object...)} })
      *
      * @param name      名称 (注意 : 默认为字段名称 , 不是数据库名称)
      * @param whereType where 类型
@@ -305,7 +310,10 @@ public final class Where {
      */
     public Map<String, Object> getWhereParamMap() {
         var whereParamMap = new HashMap<String, Object>();
+        //常规 where 的参数
         whereBodyList.forEach(whereBody -> whereParamMap.putAll(whereBody.whereParamMap()));
+        //whereSQL 的参数
+        whereParamMap.putAll(whereSQLParamMap);
         return whereParamMap;
     }
 
@@ -320,14 +328,24 @@ public final class Where {
 
     /**
      * 设置 whereSQL 适用于 复杂查询的自定义 where 子句<br>
+     * 支持两种类型 String 和 WhereBody
      * 在最终 sql 中会拼接到 where 子句的最后<br>
      * 注意 :  除特殊语法外不需要手动在头部添加 AND
      *
      * @param whereSQL sql 语句
      * @return 本身 , 方便链式调用
      */
-    public Where whereSQL(String whereSQL) {
-        this.whereSQL = whereSQL;
+    public Where whereSQL(Object... whereSQL) {
+        var tempWhereSQL = new StringBuilder();
+        for (Object o : whereSQL) {
+            if (o instanceof String) {
+                tempWhereSQL.append((String) o);
+            } else if (o instanceof WhereBody) {
+                tempWhereSQL.append(((WhereBody) o).whereClause());
+                whereSQLParamMap.putAll(((WhereBody) o).whereParamMap());
+            }
+        }
+        this.whereSQL = tempWhereSQL.toString();
         return this;
     }
 
@@ -404,26 +422,35 @@ public final class Where {
     }
 
     /**
-     * 清除所有 where 条件
-     *
-     * @param alsoClearWhereSQL 是否包括 whereSQL
-     * @return this 方便链式调用
-     */
-    public Where clear(boolean alsoClearWhereSQL) {
-        whereBodyList.clear();
-        if (alsoClearWhereSQL) {
-            whereSQL = null;
-        }
-        return this;
-    }
-
-    /**
-     * 清除所有 where 条件 包括 whereSQL
+     * 清除所有 where 条件 (不包括 whereSQL)
      *
      * @return this 方便链式调用
      */
     public Where clear() {
-        return clear(true);
+        whereBodyList.clear();
+        return this;
+    }
+
+    /**
+     * 清楚 where 条件中的 whereSQL
+     *
+     * @return this 方便链式调用
+     */
+    public Where clearWhereSQL() {
+        whereSQL = null;
+        whereSQLParamMap.clear();
+        return this;
+    }
+
+    /**
+     * 清除所有 where 条件 (包括 whereSQL)
+     *
+     * @return this 方便链式调用
+     */
+    public Where clearAll() {
+        clear();
+        clearWhereSQL();
+        return this;
     }
 
 }
