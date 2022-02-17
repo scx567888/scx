@@ -1,5 +1,6 @@
 package cool.scx.exception.impl;
 
+import cool.scx.ScxConstant;
 import cool.scx.exception.ScxHttpException;
 import cool.scx.exception.ScxHttpExceptionHelper;
 import io.vertx.ext.web.RoutingContext;
@@ -38,7 +39,7 @@ public class NotFoundException extends ScxHttpException {
      */
     @Override
     public void handle(RoutingContext ctx) {
-        ScxHttpExceptionHelper.sendException(404, "Not Found !!!", message, ctx);
+        ScxHttpExceptionHelper.sendException(404, ScxConstant.HTTP_NOT_FOUND_TITLE, message, ctx);
     }
 
 }

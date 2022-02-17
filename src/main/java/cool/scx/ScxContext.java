@@ -9,6 +9,8 @@ import cool.scx.eventbus.ScxEventBus;
 import cool.scx.mvc.ScxMappingConfiguration;
 import cool.scx.scheduler.ScxScheduler;
 import cool.scx.sql.SQLRunner;
+import cool.scx.web.ScxRouteRegistry;
+import cool.scx.web.ScxWebSocketRouteRegistry;
 import cool.scx.web.ScxWebSocketRouter;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServer;
@@ -211,6 +213,14 @@ public final class ScxContext {
      */
     public static ScxScheduler scheduler() {
         return scx().scxScheduler();
+    }
+
+    public static ScxRouteRegistry routeRegistry() {
+        return scx().scxRouteRegistry();
+    }
+
+    public static ScxWebSocketRouteRegistry webSocketRouteRegistry() {
+        return scx().scxWebSocketRouteRegistry();
     }
 
     /**
