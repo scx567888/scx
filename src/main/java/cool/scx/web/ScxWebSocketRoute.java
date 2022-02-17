@@ -8,6 +8,7 @@ import cool.scx.base.BaseWebSocketHandler;
 public final class ScxWebSocketRoute {
 
     private String path;
+
     private BaseWebSocketHandler baseWebSocketHandler;
 
     /**
@@ -56,4 +57,5 @@ public final class ScxWebSocketRoute {
         this.baseWebSocketHandler = baseWebSocketHandler;
         return this;
     }
+
 }

@@ -355,19 +355,20 @@ public final class Scx {
         if (this.scxFeatureConfig.getFeatureState(ScxFeature.SHOW_EASY_CONFIG_INFO)) {
             this.scxEasyConfig.showEasyConfigInfo();
         }
-        //1, 依次执行 模块的 start 生命周期 , 这里放到 router 之前执行是为了保证自定义的各种 router handler 可以注入到 router 中去
-        startAllModules();
         //2, 初始化路由
         this.vertxRouter = Router.router(this.vertx);
         this.scxWebSocketRouter = new ScxWebSocketRouter();
         //3, 注册默认路由
         ScxRouteRegistry.registerAllRoute(this.vertxRouter, this.scxEasyConfig, this.vertx, this.scxModuleInfos);
         ScxWebSocketRouteRegistry.registerAllRoute(this.scxWebSocketRouter, this.scxModuleInfos, this.scxBeanFactory);
+        //4, 依次执行 模块的 start 生命周期 , 在这里我们可以操作 vertxRouter 手动注册自己的路由或其他任何操作
+        this.startAllModules();
+        //5, 打印基本信息
         Ansi.out()
                 .color("已加载 " + scxBeanFactory.getBeanDefinitionNames().length + " 个 Bean !!!").ln()
                 .color("已加载 " + vertxRouter.getRoutes().size() + " 个 Http 路由 !!!").ln()
                 .color("已加载 " + scxWebSocketRouter.getRoutes().size() + " 个 WebSocket 路由 !!!").println();
-        //4, 初始化服务器
+        //6, 初始化服务器
         var httpServerOptions = new HttpServerOptions();
         if (this.scxEasyConfig.isHttpsEnabled()) {
             httpServerOptions.setSsl(true)
@@ -377,11 +378,11 @@ public final class Scx {
         }
         this.vertxHttpServer = vertx.createHttpServer(httpServerOptions);
         this.vertxHttpServer.requestHandler(this.vertxRouter).webSocketHandler(this.scxWebSocketRouter::handle);
-        //5, 添加程序停止时的钩子函数
+        //7, 添加程序停止时的钩子函数
         this.addShutdownHook();
-        //6, 使用初始端口号 启动服务器
+        //8, 使用初始端口号 启动服务器
         this.startServer(this.scxEasyConfig.port());
-        //7,定时任务的 bean 需要被加载一次才可以执行, 这里将所有注入的类全部加载一次以实现在项目运行的时候执行定时任务
+        //9,定时任务的 bean 需要被加载一次才可以执行, 这里将所有注入的类全部加载一次以实现在项目运行的时候执行定时任务
         this.initScheduleTaskBean();
     }
 

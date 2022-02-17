@@ -7,7 +7,6 @@ import cool.scx.config.ScxEasyConfig;
 import cool.scx.exception.ScxHttpExceptionHelper;
 import cool.scx.mvc.ScxMappingHandler;
 import cool.scx.web.handler.ScxBodyHandler;
-import cool.scx.web.handler.ScxCookieHandlerConfiguration;
 import cool.scx.web.handler.ScxCorsHandlerConfiguration;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
@@ -46,7 +45,6 @@ public final class ScxRouteRegistry {
      */
     public static void registerAllRoute(Router vertxRouter, ScxEasyConfig scxEasyConfig, Vertx vertx, List<ScxModuleInfo<? extends ScxModule>> scxModuleInfos) {
         registerFaviconHandler(vertxRouter, scxEasyConfig, vertx);
-        registerCookieHandler(vertxRouter);
         registerCorsHandler(vertxRouter, scxEasyConfig);
         registerBodyHandler(vertxRouter);
         registerScxMappingHandler(vertxRouter, scxModuleInfos);
@@ -64,16 +62,6 @@ public final class ScxRouteRegistry {
     private static void registerFaviconHandler(Router vertxRouter, ScxEasyConfig scxEasyConfig, Vertx vertx) {
         var faviconHandlerRoute = FaviconHandler.create(vertx, Path.of(scxEasyConfig.templateRoot().getPath(), "favicon.ico").toString());
         vertxRouter.route().handler(faviconHandlerRoute);
-    }
-
-    /**
-     * <p>register.</p>
-     *
-     * @param vertxRouter a {@link io.vertx.ext.web.Router} object
-     */
-    private static void registerCookieHandler(Router vertxRouter) {
-        var cookieHandlerRoute = ScxCookieHandlerConfiguration.getScxCookieHandler();
-        vertxRouter.route().handler(cookieHandlerRoute);
     }
 
     private static void registerCorsHandler(Router vertxRouter, ScxEasyConfig scxEasyConfig) {
@@ -182,6 +170,5 @@ public final class ScxRouteRegistry {
         }
         return false;
     }
-
 
 }
