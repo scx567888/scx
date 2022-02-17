@@ -1,5 +1,6 @@
 package cool.scx.exception.impl;
 
+import cool.scx.ScxConstant;
 import cool.scx.exception.ScxHttpException;
 import cool.scx.exception.ScxHttpExceptionHelper;
 import io.vertx.ext.web.RoutingContext;
@@ -17,7 +18,7 @@ public class UnsupportedMediaTypeException extends ScxHttpException {
      */
     @Override
     public void handle(RoutingContext ctx) {
-        ScxHttpExceptionHelper.sendException(415, "Unsupported Media Type !!!", "", ctx);
+        ScxHttpExceptionHelper.sendException(415, ScxConstant.HTTP_UNSUPPORTED_MEDIA_TYPE_TITLE, "", ctx);
     }
 
 }

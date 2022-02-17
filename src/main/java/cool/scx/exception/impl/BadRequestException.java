@@ -1,5 +1,6 @@
 package cool.scx.exception.impl;
 
+import cool.scx.ScxConstant;
 import cool.scx.exception.ScxHttpException;
 import cool.scx.exception.ScxHttpExceptionHelper;
 import cool.scx.util.ExceptionUtils;
@@ -48,7 +49,7 @@ public class BadRequestException extends ScxHttpException {
      */
     @Override
     public void handle(RoutingContext ctx) {
-        ScxHttpExceptionHelper.sendException(400, "Bad Request !!!", throwableMessage, ctx);
+        ScxHttpExceptionHelper.sendException(400, ScxConstant.HTTP_BAD_REQUEST_TITLE, throwableMessage, ctx);
     }
 
 }

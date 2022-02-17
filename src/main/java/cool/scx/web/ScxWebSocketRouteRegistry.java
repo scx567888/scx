@@ -20,7 +20,7 @@ public final class ScxWebSocketRouteRegistry {
      * @param scxModuleInfos     a
      * @param scxBeanFactory     a
      */
-    public static void registerAllRoute(ScxWebSocketRouter scxWebSocketRouter, List<ScxModuleInfo<? extends ScxModule>> scxModuleInfos, ScxBeanFactory scxBeanFactory) {
+    public void registerAllRoute(ScxWebSocketRouter scxWebSocketRouter, List<ScxModuleInfo<? extends ScxModule>> scxModuleInfos, ScxBeanFactory scxBeanFactory) {
         for (var scxModuleInfo : scxModuleInfos) {
             for (var c : scxModuleInfo.scxWebSocketRouteClassList()) {
                 var annotation = c.getAnnotation(ScxWebSocketMapping.class);

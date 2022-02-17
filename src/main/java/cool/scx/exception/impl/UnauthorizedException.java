@@ -1,5 +1,6 @@
 package cool.scx.exception.impl;
 
+import cool.scx.ScxConstant;
 import cool.scx.exception.ScxHttpException;
 import cool.scx.exception.ScxHttpExceptionHelper;
 import io.vertx.ext.web.RoutingContext;
@@ -17,7 +18,7 @@ public class UnauthorizedException extends ScxHttpException {
      */
     @Override
     public void handle(RoutingContext ctx) {
-        ScxHttpExceptionHelper.sendException(401, "Unauthorized !!!", "", ctx);
+        ScxHttpExceptionHelper.sendException(401, ScxConstant.HTTP_UNAUTHORIZED_TITLE, "", ctx);
     }
 
 }

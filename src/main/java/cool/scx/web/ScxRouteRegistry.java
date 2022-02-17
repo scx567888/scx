@@ -4,14 +4,15 @@ import cool.scx.ScxModule;
 import cool.scx.ScxModuleInfo;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.config.ScxEasyConfig;
-import cool.scx.exception.ScxHttpExceptionHelper;
 import cool.scx.mvc.ScxMappingHandler;
 import cool.scx.web.handler.ScxBodyHandler;
-import cool.scx.web.handler.ScxCorsHandlerConfiguration;
-import io.vertx.core.Handler;
+import cool.scx.web.handler.ScxNotFoundHandler;
+import io.netty.handler.codec.http.HttpHeaderNames;
 import io.vertx.core.Vertx;
+import io.vertx.core.http.HttpMethod;
+import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
-import io.vertx.ext.web.RoutingContext;
+import io.vertx.ext.web.handler.CorsHandler;
 import io.vertx.ext.web.handler.FaviconHandler;
 import io.vertx.ext.web.handler.FileSystemAccess;
 import io.vertx.ext.web.handler.StaticHandler;
@@ -20,10 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 /**
  * ScxRouter 路由注册器
@@ -33,50 +31,61 @@ public final class ScxRouteRegistry {
 
     private static final Logger logger = LoggerFactory.getLogger(ScxRouteRegistry.class);
 
-    private static final List<ScxMappingHandler> SCX_MAPPING_HANDLER_LIST = new ArrayList<>();
+    private final List<ScxMappingHandler> SCX_MAPPING_HANDLER_LIST = new ArrayList<>();
+
+    private final FaviconHandler faviconHandler;
+    private final CorsHandler corsHandler;
+    private final ScxBodyHandler scxBodyHandler;
+    private final ScxNotFoundHandler scxNotFoundHandler;
+    private Route faviconHandlerRoute;
+    private Route corsHandlerRoute;
+    private Route scxBodyHandlerRoute;
+    private Route scxNotFoundHandlerRoute;
+
+    public ScxRouteRegistry(ScxEasyConfig scxEasyConfig, Vertx vertx) {
+        this.faviconHandler = FaviconHandler.create(vertx, Path.of(scxEasyConfig.templateRoot().getPath(), "favicon.ico").toString());
+        this.corsHandler = getCorsHandlerInstance(scxEasyConfig);
+        this.scxBodyHandler = new ScxBodyHandler();
+        this.scxNotFoundHandler = new ScxNotFoundHandler();
+    }
+
+    private static CorsHandler getCorsHandlerInstance(ScxEasyConfig scxEasyConfig) {
+        Set<HttpMethod> allowedMethods = new LinkedHashSet<>();
+        Set<String> allowedHeaders = new LinkedHashSet<>();
+        boolean allowCredentials = true;
+        allowedHeaders.add(HttpHeaderNames.ACCEPT.toString());
+        allowedHeaders.add(HttpHeaderNames.CONTENT_TYPE.toString());
+
+        allowedMethods.add(HttpMethod.GET);
+        allowedMethods.add(HttpMethod.POST);
+        allowedMethods.add(HttpMethod.OPTIONS);
+        allowedMethods.add(HttpMethod.DELETE);
+        allowedMethods.add(HttpMethod.PATCH);
+        allowedMethods.add(HttpMethod.PUT);
+
+        return new CorsHandlerImpl(scxEasyConfig.allowedOrigin())
+                .allowedHeaders(allowedHeaders)
+                .allowedMethods(allowedMethods)
+                .allowCredentials(allowCredentials);
+    }
 
     /**
      * 注册路由
      *
      * @param vertxRouter    a
      * @param scxEasyConfig  a
-     * @param vertx          a
      * @param scxModuleInfos a
      */
-    public static void registerAllRoute(Router vertxRouter, ScxEasyConfig scxEasyConfig, Vertx vertx, List<ScxModuleInfo<? extends ScxModule>> scxModuleInfos) {
-        registerFaviconHandler(vertxRouter, scxEasyConfig, vertx);
-        registerCorsHandler(vertxRouter, scxEasyConfig);
-        registerBodyHandler(vertxRouter);
+    public void registerAllRoute(Router vertxRouter, ScxEasyConfig scxEasyConfig, List<ScxModuleInfo<? extends ScxModule>> scxModuleInfos) {
+        this.faviconHandlerRoute = vertxRouter.route().handler(faviconHandler);
+        this.corsHandlerRoute = vertxRouter.route().handler(corsHandler);
+        this.scxBodyHandlerRoute = vertxRouter.route().handler(scxBodyHandler);
+        this.scxNotFoundHandlerRoute = vertxRouter.route().order(Integer.MAX_VALUE).handler(scxNotFoundHandler);
         registerScxMappingHandler(vertxRouter, scxModuleInfos);
         registerStaticServerHandler(vertxRouter, scxEasyConfig);
-        registerNotFoundHandler(vertxRouter);
     }
 
-    /**
-     * <p>register.</p>
-     *
-     * @param vertxRouter   a {@link Router} object
-     * @param scxEasyConfig a
-     * @param vertx         a
-     */
-    private static void registerFaviconHandler(Router vertxRouter, ScxEasyConfig scxEasyConfig, Vertx vertx) {
-        var faviconHandlerRoute = FaviconHandler.create(vertx, Path.of(scxEasyConfig.templateRoot().getPath(), "favicon.ico").toString());
-        vertxRouter.route().handler(faviconHandlerRoute);
-    }
-
-    private static void registerCorsHandler(Router vertxRouter, ScxEasyConfig scxEasyConfig) {
-        var corsHandlerRoute = new CorsHandlerImpl(scxEasyConfig.allowedOrigin())
-                .allowedHeaders(ScxCorsHandlerConfiguration.allowedHeaders())
-                .allowedMethods(ScxCorsHandlerConfiguration.allowedMethods())
-                .allowCredentials(ScxCorsHandlerConfiguration.isAllowCredentials());
-        vertxRouter.route().handler(corsHandlerRoute);
-    }
-
-    private static void registerBodyHandler(Router vertxRouter) {
-        vertxRouter.route().handler(new ScxBodyHandler());
-    }
-
-    private static void registerScxMappingHandler(Router vertxRouter, List<ScxModuleInfo<? extends ScxModule>> scxModuleInfos) {
+    private void registerScxMappingHandler(Router vertxRouter, List<ScxModuleInfo<? extends ScxModule>> scxModuleInfos) {
         ScanScxMappingHandlers(scxModuleInfos);
         //此处排序的意义在于将 需要正则表达式匹配的 放在最后 防止匹配错误
         SCX_MAPPING_HANDLER_LIST.stream().sorted(Comparator.comparing(ScxMappingHandler::order))
@@ -95,7 +104,7 @@ public final class ScxRouteRegistry {
      * @param vertxRouter   a {@link Router} object
      * @param scxEasyConfig a
      */
-    private static void registerStaticServerHandler(Router vertxRouter, ScxEasyConfig scxEasyConfig) {
+    private void registerStaticServerHandler(Router vertxRouter, ScxEasyConfig scxEasyConfig) {
         for (var staticServer : scxEasyConfig.staticServers()) {
             vertxRouter.route(staticServer.location())
                     .handler(StaticHandler.create(FileSystemAccess.ROOT, staticServer.root().getPath())
@@ -103,17 +112,12 @@ public final class ScxRouteRegistry {
         }
     }
 
-    private static void registerNotFoundHandler(Router vertxRouter) {
-        var notFoundHandler = (Handler<RoutingContext>) ctx -> ScxHttpExceptionHelper.sendException(404, "Not Found !!!", "", ctx);
-        vertxRouter.route().handler(notFoundHandler);
-    }
-
     /**
      * 扫描所有被 ScxMapping注解标记的方法 并封装为 ScxMappingHandler.
      *
      * @param scxModuleInfos a
      */
-    private static void ScanScxMappingHandlers(List<ScxModuleInfo<? extends ScxModule>> scxModuleInfos) {
+    private void ScanScxMappingHandlers(List<ScxModuleInfo<? extends ScxModule>> scxModuleInfos) {
         SCX_MAPPING_HANDLER_LIST.clear();
         for (var scxModuleInfo : scxModuleInfos) {
             for (var clazz : scxModuleInfo.scxMappingClassList()) {
@@ -138,7 +142,7 @@ public final class ScxRouteRegistry {
      *
      * @return 所有 handler
      */
-    public static List<ScxMappingHandler> getAllScxMappingHandler() {
+    public List<ScxMappingHandler> getAllScxMappingHandler() {
         return SCX_MAPPING_HANDLER_LIST;
     }
 
@@ -148,7 +152,7 @@ public final class ScxRouteRegistry {
      * @param handler h
      * @return true 为存在 false 为不存在
      */
-    private static boolean checkScxMappingHandlerRouteExists(ScxMappingHandler handler) {
+    private boolean checkScxMappingHandlerRouteExists(ScxMappingHandler handler) {
         for (var a : SCX_MAPPING_HANDLER_LIST) {
             if (!a.patternUrl.equals(handler.patternUrl)) {
                 continue;
@@ -169,6 +173,38 @@ public final class ScxRouteRegistry {
             }
         }
         return false;
+    }
+
+    public FaviconHandler faviconHandler() {
+        return faviconHandler;
+    }
+
+    public CorsHandler corsHandler() {
+        return corsHandler;
+    }
+
+    public ScxBodyHandler scxBodyHandler() {
+        return scxBodyHandler;
+    }
+
+    public ScxNotFoundHandler scxNotFoundHandler() {
+        return scxNotFoundHandler;
+    }
+
+    public Route faviconHandlerRoute() {
+        return faviconHandlerRoute;
+    }
+
+    public Route corsHandlerRoute() {
+        return corsHandlerRoute;
+    }
+
+    public Route scxBodyHandlerRoute() {
+        return scxBodyHandlerRoute;
+    }
+
+    public Route scxNotFoundHandlerRoute() {
+        return scxNotFoundHandlerRoute;
     }
 
 }
