@@ -390,7 +390,7 @@ public final class Scx {
                             .setPassword(this.scxEasyConfig.sslPassword()));
         }
         this.vertxHttpServer = vertx.createHttpServer(httpServerOptions);
-        this.vertxHttpServer.requestHandler(this.vertxRouter).webSocketHandler(this.scxWebSocketRouter::handle);
+        this.vertxHttpServer.requestHandler(this.vertxRouter).webSocketHandler(this.scxWebSocketRouter);
         //8, 添加程序停止时的钩子函数
         this.addShutdownHook();
         //9, 使用初始端口号 启动服务器

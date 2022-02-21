@@ -1,6 +1,7 @@
 package cool.scx.web;
 
-import cool.scx.ScxHandler;
+import cool.scx.mvc.exception_handler.ScxMappingExceptionHandler;
+import io.vertx.core.Handler;
 import io.vertx.core.http.ServerWebSocket;
 
 import java.util.ArrayList;
@@ -11,7 +12,12 @@ import java.util.Map;
 /**
  * a
  */
-public final class ScxWebSocketRouter implements ScxHandler<ServerWebSocket> {
+public final class ScxWebSocketRouter implements Handler<ServerWebSocket> {
+
+    /**
+     * 异常处理器
+     */
+    private final List<ScxMappingExceptionHandler> scxMappingExceptionHandlers = new ArrayList<>();
 
     /**
      * a
@@ -54,8 +60,7 @@ public final class ScxWebSocketRouter implements ScxHandler<ServerWebSocket> {
         webSocket.frameHandler(h -> {
             if (h.isText()) {
                 handler.onTextMessage(h.textData(), h, webSocket);
-            }
-            if (h.isBinary()) {
+            } else if (h.isBinary()) {
                 handler.onBinaryMessage(h.binaryData(), h, webSocket);
             }
         });

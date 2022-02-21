@@ -1,12 +1,12 @@
 package cool.scx.mvc;
 
 import cool.scx.ScxContext;
-import cool.scx.ScxHandler;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.enumeration.HttpMethod;
 import cool.scx.exception.ScxExceptionHelper;
 import cool.scx.util.CaseUtils;
 import cool.scx.util.StringUtils;
+import io.vertx.core.Handler;
 import io.vertx.ext.web.RoutingContext;
 
 import java.lang.reflect.InvocationTargetException;
@@ -20,7 +20,7 @@ import java.util.stream.Stream;
  * @author scx567888
  * @version 0.3.6
  */
-public final class ScxMappingHandler implements ScxHandler<RoutingContext> {
+public final class ScxMappingHandler implements Handler<RoutingContext> {
 
     /**
      * 用来校验 路径的正则表达式

@@ -94,7 +94,7 @@ public final class ScxRouteRegistry {
                     for (var httpMethod : c.httpMethods) {
                         r.method(io.vertx.core.http.HttpMethod.valueOf(httpMethod.name()));
                     }
-                    r.handler(c::handle);
+                    r.handler(c);
                 });
     }
 
