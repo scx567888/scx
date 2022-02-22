@@ -1,6 +1,8 @@
 package cool.scx.exception;
 
 import cool.scx.ScxHandler;
+import cool.scx.vo.VoHelper;
+import io.netty.handler.codec.http.HttpHeaderNames;
 import io.vertx.ext.web.RoutingContext;
 
 /**
@@ -13,6 +15,71 @@ import io.vertx.ext.web.RoutingContext;
  * @author scx567888
  * @version 1.0.10
  */
-public abstract class ScxHttpException extends RuntimeException implements ScxHandler<RoutingContext> {
+public class ScxHttpException extends RuntimeException implements ScxHandler<RoutingContext> {
+
+    final int httpStatusCode;
+    final String title;
+    final String info;
+
+    public ScxHttpException(int httpStatusCode, String title, String info) {
+        this.httpStatusCode = httpStatusCode;
+        this.title = title;
+        this.info = info;
+    }
+
+    public final int httpStatusCode() {
+        return this.httpStatusCode;
+    }
+
+    public final String title() {
+        return this.title;
+    }
+
+    public final String info() {
+        return this.info;
+    }
+
+    public void sendException(RoutingContext routingContext) {
+        var accept = routingContext.request().headers().get(HttpHeaderNames.ACCEPT);
+        //根据 accept 返回不同的错误信息
+        var scxHttpExceptionViewWrapper = new ScxHttpExceptionViewWrapper(httpStatusCode, title, info);
+        if (accept != null && accept.toLowerCase().contains("text/html")) {
+            VoHelper.fillHtmlContentType(routingContext.request().response().setStatusCode(httpStatusCode))
+                    .end(scxHttpExceptionViewWrapper.toHtml());
+        } else {
+            VoHelper.fillJsonContentType(routingContext.request().response().setStatusCode(httpStatusCode))
+                    .end(scxHttpExceptionViewWrapper.toJson());
+        }
+    }
+
+    @Override
+    public void handle(RoutingContext routingContext) {
+        routingContext.fail(httpStatusCode(), this);
+    }
+
+    private record ScxHttpExceptionViewWrapper(int httpStatusCode, String title, String info) {
+
+        public String toHtml() {
+            var htmlStr = """
+                    <!DOCTYPE html>
+                    <html lang="en">
+                    <head>
+                        <meta charset="UTF-8">
+                        <title>%s</title>
+                    </head>
+                    <body>
+                        <h1>%s - %s</h1>
+                        <pre>%s</pre>
+                    </body>
+                    </html>
+                    """;
+            return String.format(htmlStr, title, httpStatusCode, title, info);
+        }
+
+        public String toJson() {
+            return VoHelper.toJson(this, "");
+        }
+
+    }
 
 }

@@ -22,6 +22,8 @@ public final class ScxConstant {
 
     public static final String HTTP_BAD_REQUEST_TITLE = "Bad Request !!!";
 
+    public static final String HTTP_METHOD_NOT_ALLOWED_TITLE = "Method Not Allowed !!!";
+
     public static final String HTTP_INTERNAL_SERVER_ERROR_TITLE = "Internal Server Error !!!";
 
 }

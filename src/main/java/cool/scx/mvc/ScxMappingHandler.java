@@ -1,5 +1,6 @@
 package cool.scx.mvc;
 
+import cool.scx.ScxBeanFactory;
 import cool.scx.ScxContext;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.enumeration.HttpMethod;
@@ -72,12 +73,12 @@ public final class ScxMappingHandler implements Handler<RoutingContext> {
      * @param method a {@link java.lang.reflect.Method} object.
      * @param clazz  a {@link java.lang.Class} object.
      */
-    public ScxMappingHandler(Class<?> clazz, Method method) {
+    public ScxMappingHandler(ScxBeanFactory scxBeanFactory, Class<?> clazz, Method method) {
         var methodScxMapping = method.getAnnotation(ScxMapping.class);
         var classScxMapping = clazz.getAnnotation(ScxMapping.class);
         this.clazz = clazz;
         this.method = method;
-        this.example = ScxContext.getBean(clazz);
+        this.example = scxBeanFactory.getBean(clazz);
         this.url = getUrl(classScxMapping, methodScxMapping);
         this.patternUrl = getPatternUrl(this.url);
         this.httpMethods = getHttpMethod(methodScxMapping);

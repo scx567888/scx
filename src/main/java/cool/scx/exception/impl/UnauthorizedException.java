@@ -2,8 +2,6 @@ package cool.scx.exception.impl;
 
 import cool.scx.ScxConstant;
 import cool.scx.exception.ScxHttpException;
-import cool.scx.exception.ScxHttpExceptionHelper;
-import io.vertx.ext.web.RoutingContext;
 
 /**
  * 未认证异常 (未登录)
@@ -13,12 +11,12 @@ import io.vertx.ext.web.RoutingContext;
  */
 public class UnauthorizedException extends ScxHttpException {
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void handle(RoutingContext ctx) {
-        ScxHttpExceptionHelper.sendException(401, ScxConstant.HTTP_UNAUTHORIZED_TITLE, "", ctx);
+    public UnauthorizedException() {
+        super(401, ScxConstant.HTTP_UNAUTHORIZED_TITLE, "");
+    }
+
+    public UnauthorizedException(String info) {
+        super(401, ScxConstant.HTTP_UNAUTHORIZED_TITLE, info);
     }
 
 }

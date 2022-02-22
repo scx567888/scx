@@ -66,6 +66,7 @@ public class WebSiteController {
      */
     @ScxMapping(value = "/", method = HttpMethod.GET)
     public Html TestIndex() throws IOException {
+        var s=1/0;
         System.err.println("两个 carService 是否相等 " + (carService == carService1));
         Html index = Html.of("index");
         index.add("name", "小明");

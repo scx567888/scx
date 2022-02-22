@@ -15,15 +15,13 @@ import cool.scx.util.NetUtils;
 import cool.scx.util.StopWatch;
 import cool.scx.util.StringUtils;
 import cool.scx.util.ansi.Ansi;
-import cool.scx.web.ScxRouteRegistry;
-import cool.scx.web.ScxWebSocketRouteRegistry;
+import cool.scx.web.ScxRouter;
 import cool.scx.web.ScxWebSocketRouter;
 import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.net.JksOptions;
-import io.vertx.ext.web.Router;
 
 import java.io.IOException;
 import java.net.BindException;
@@ -136,7 +134,7 @@ public final class Scx {
     /**
      * 路由
      */
-    private Router vertxRouter = null;
+    private ScxRouter scxRouter = null;
 
     /**
      * websocket 路由
@@ -147,16 +145,6 @@ public final class Scx {
      * 后台服务器
      */
     private HttpServer vertxHttpServer = null;
-
-    /**
-     * Http 路由注册器 在这里可以修改一些默认的路由
-     */
-    private ScxRouteRegistry scxRouteRegistry = null;
-
-    /**
-     * WebSocket 路由注册器
-     */
-    private ScxWebSocketRouteRegistry scxWebSocketRouteRegistry = null;
 
     /**
      * 初始化 Scx
@@ -365,23 +353,17 @@ public final class Scx {
         if (this.scxFeatureConfig.getFeatureState(ScxFeature.SHOW_EASY_CONFIG_INFO)) {
             this.scxEasyConfig.showEasyConfigInfo();
         }
-        //2, 初始化路由
-        this.vertxRouter = Router.router(this.vertx);
-        this.scxWebSocketRouter = new ScxWebSocketRouter();
-        //3, 注册默认 Http 路由
-        this.scxRouteRegistry = new ScxRouteRegistry(this.scxEasyConfig, this.vertx);
-        this.scxRouteRegistry.registerAllRoute(this.vertxRouter, this.scxEasyConfig, this.scxModuleInfos);
-        //4, 注册默认 WebSocket 路由
-        this.scxWebSocketRouteRegistry = new ScxWebSocketRouteRegistry();
-        this.scxWebSocketRouteRegistry.registerAllRoute(this.scxWebSocketRouter, this.scxModuleInfos, this.scxBeanFactory);
-        //5, 依次执行 模块的 start 生命周期 , 在这里我们可以操作 scxRouteRegistry, vertxRouter 等对象 "手动注册新路由" 或其他任何操作
+        //2, 初始化路由 (Http 和 WebSocket)
+        this.scxRouter = new ScxRouter(this.scxEasyConfig, this.vertx, this.scxModuleInfos, this.scxBeanFactory);
+        this.scxWebSocketRouter = new ScxWebSocketRouter(this.scxEasyConfig, this.vertx, this.scxModuleInfos, this.scxBeanFactory);
+        //3, 依次执行 模块的 start 生命周期 , 在这里我们可以操作 scxRouteRegistry, vertxRouter 等对象 "手动注册新路由" 或其他任何操作
         this.startAllModules();
-        //6, 打印基本信息
+        //4, 打印基本信息
         Ansi.out()
-                .color("已加载 " + scxBeanFactory.getBeanDefinitionNames().length + " 个 Bean !!!").ln()
-                .color("已加载 " + vertxRouter.getRoutes().size() + " 个 Http 路由 !!!").ln()
-                .color("已加载 " + scxWebSocketRouter.getRoutes().size() + " 个 WebSocket 路由 !!!").println();
-        //7, 初始化服务器
+                .color("已加载 " + this.scxBeanFactory.getBeanDefinitionNames().length + " 个 Bean !!!").ln()
+                .color("已加载 " + this.scxRouter.vertxRouter().getRoutes().size() + " 个 Http 路由 !!!").ln()
+                .color("已加载 " + this.scxWebSocketRouter.getRoutes().size() + " 个 WebSocket 路由 !!!").println();
+        //5, 初始化服务器
         var httpServerOptions = new HttpServerOptions();
         if (this.scxEasyConfig.isHttpsEnabled()) {
             httpServerOptions.setSsl(true)
@@ -390,12 +372,12 @@ public final class Scx {
                             .setPassword(this.scxEasyConfig.sslPassword()));
         }
         this.vertxHttpServer = vertx.createHttpServer(httpServerOptions);
-        this.vertxHttpServer.requestHandler(this.vertxRouter).webSocketHandler(this.scxWebSocketRouter);
-        //8, 添加程序停止时的钩子函数
+        this.vertxHttpServer.requestHandler(this.scxRouter.vertxRouter()).webSocketHandler(this.scxWebSocketRouter);
+        //6, 添加程序停止时的钩子函数
         this.addShutdownHook();
-        //9, 使用初始端口号 启动服务器
+        //7, 使用初始端口号 启动服务器
         this.startServer(this.scxEasyConfig.port());
-        //10,定时任务的 bean 需要被加载一次才可以执行, 这里将所有注入的类全部加载一次以实现在项目运行的时候执行定时任务
+        //8,定时任务的 bean 需要被加载一次才可以执行, 这里将所有注入的类全部加载一次以实现在项目运行的时候执行定时任务
         this.initScheduleTaskBean();
     }
 
@@ -512,8 +494,8 @@ public final class Scx {
      *
      * @return a
      */
-    public Router vertxRouter() {
-        return this.vertxRouter;
+    public ScxRouter scxRouter() {
+        return this.scxRouter;
     }
 
     /**
@@ -624,14 +606,6 @@ public final class Scx {
      */
     public ScxScheduler scxScheduler() {
         return scxScheduler;
-    }
-
-    public ScxRouteRegistry scxRouteRegistry() {
-        return scxRouteRegistry;
-    }
-
-    public ScxWebSocketRouteRegistry scxWebSocketRouteRegistry() {
-        return scxWebSocketRouteRegistry;
     }
 
 }

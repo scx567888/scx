@@ -23,6 +23,7 @@ public class CustomHttpException extends ScxHttpException {
      * @param _errFun a long.
      */
     public CustomHttpException(ScxHandler<RoutingContext> _errFun) {
+        super(0, "", "");
         this.errFun = _errFun;
     }
 
