@@ -1,9 +1,6 @@
 package cool.scx;
 
-import cool.scx.annotation.ScxMapping;
-import cool.scx.annotation.ScxModel;
-import cool.scx.annotation.ScxService;
-import cool.scx.annotation.ScxWebSocketMapping;
+import cool.scx.annotation.*;
 import cool.scx.base.BaseModel;
 import cool.scx.base.BaseModelService;
 import cool.scx.base.BaseWebSocketHandler;
@@ -14,8 +11,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * ScxModuleInfo 用于描述 ScxModule 实例的基本信息
@@ -124,13 +121,7 @@ public final class ScxModuleInfo<T extends ScxModule> implements Serializable {
      * @return a
      */
     private static List<Class<?>> initNeedRegisterBeanClassList(List<Class<?>> allClassList) {
-        var tempList = new ArrayList<Class<?>>();
-        for (Class<?> c : allClassList) {
-            if (hasScxAnnotation(c)) {
-                tempList.add(c);
-            }
-        }
-        return tempList;
+        return allClassList.stream().filter(ScxModuleInfo::hasScxAnnotation).toList(); // 所有标注 Scx 注解的都是需要注入的 BeanClass
     }
 
     /**
@@ -141,13 +132,10 @@ public final class ScxModuleInfo<T extends ScxModule> implements Serializable {
      */
     @SuppressWarnings("unchecked")
     private static List<Class<? extends BaseWebSocketHandler>> initScxWebSocketRouteClassList(List<Class<?>> allClassList) {
-        var tempList = new ArrayList<Class<? extends BaseWebSocketHandler>>();
-        for (Class<?> c : allClassList) {
-            if (c.isAnnotationPresent(ScxWebSocketMapping.class) && !c.isInterface() && BaseWebSocketHandler.class.isAssignableFrom(c)) {
-                tempList.add((Class<? extends BaseWebSocketHandler>) c);
-            }
-        }
-        return tempList;
+        return allClassList.stream().filter(c -> c.isAnnotationPresent(ScxWebSocketMapping.class) // 拥有注解
+                        && ScanClassUtils.isNormalClass(c) // 是一个普通的类 (不是接口, 不是抽象类) ; 此处不要求有必须有无参构造函数 因为此类的创建会由 beanFactory 进行处理
+                        && BaseWebSocketHandler.class.isAssignableFrom(c)) // 继承自 BaseWebSocketHandler
+                .map(c -> (Class<? extends BaseWebSocketHandler>) c).collect(Collectors.toList());
     }
 
     /**
@@ -157,13 +145,8 @@ public final class ScxModuleInfo<T extends ScxModule> implements Serializable {
      * @return a
      */
     private static List<Class<?>> initScxMappingClassList(List<Class<?>> allClassList) {
-        var tempList = new ArrayList<Class<?>>();
-        for (Class<?> c : allClassList) {
-            if (c.isAnnotationPresent(ScxMapping.class) && !c.isInterface()) {
-                tempList.add(c);
-            }
-        }
-        return tempList;
+        return allClassList.stream().filter(c -> c.isAnnotationPresent(ScxMapping.class) //拥有注解
+                && ScanClassUtils.isNormalClass(c)).toList(); // 是一个普通的类 (不是接口, 不是抽象类) ; 此处不要求有必须有无参构造函数 因为此类的创建会由 beanFactory 进行处理
     }
 
     /**
@@ -174,21 +157,11 @@ public final class ScxModuleInfo<T extends ScxModule> implements Serializable {
      */
     @SuppressWarnings("unchecked")
     private static List<Class<? extends BaseModelService<?>>> initScxBaseModelServiceClassList(List<Class<?>> allClassList) {
-        var tempList = new ArrayList<Class<? extends BaseModelService<?>>>();
-        for (Class<?> c : allClassList) {
-            if (c.isAnnotationPresent(ScxService.class) && !c.isInterface() && BaseModelService.class.isAssignableFrom(c)) {
-                //这里获取 泛型类
-                var genericSuperclass = c.getGenericSuperclass();
-                //只有拥有泛型参数的 并且 参数符合 条件 的才加入到 列表中
-                if (genericSuperclass instanceof ParameterizedType) {
-                    var typeArguments = ((ParameterizedType) genericSuperclass).getActualTypeArguments();
-                    if (typeArguments.length == 1) {
-                        tempList.add((Class<? extends BaseModelService<?>>) c);
-                    }
-                }
-            }
-        }
-        return tempList;
+        return allClassList.stream().filter(c -> c.isAnnotationPresent(ScxService.class) // 拥有注解
+                        && ScanClassUtils.isNormalClass(c) // 是一个普通的类 (不是接口, 不是抽象类) ; 此处不要求有必须有无参构造函数 因为此类的创建会由 beanFactory 进行处理
+                        && c.getGenericSuperclass() instanceof ParameterizedType t //需要有泛型参数
+                        && t.getActualTypeArguments().length == 1) //并且泛型参数的数量必须是一个
+                .map(c -> (Class<? extends BaseModelService<?>>) c).collect(Collectors.toList());
     }
 
     /**
@@ -199,13 +172,10 @@ public final class ScxModuleInfo<T extends ScxModule> implements Serializable {
      */
     @SuppressWarnings("unchecked")
     private static List<Class<? extends BaseModel>> initScxBaseModelClassList(List<Class<?>> allClassList) {
-        var tempList = new ArrayList<Class<? extends BaseModel>>();
-        for (Class<?> c : allClassList) {
-            if (c.isAnnotationPresent(ScxModel.class) && !c.isInterface() && BaseModel.class.isAssignableFrom(c)) {
-                tempList.add((Class<? extends BaseModel>) c);
-            }
-        }
-        return tempList;
+        return allClassList.stream().filter(c -> c.isAnnotationPresent(ScxModel.class) // 拥有注解
+                        && ScanClassUtils.isInstantiableClass(c) // 是一个可以不需要其他参数直接生成实例化的对象
+                        && BaseModel.class.isAssignableFrom(c))// 继承自 BaseModel
+                .map(c -> (Class<? extends BaseModel>) c).collect(Collectors.toList());
     }
 
     /**
@@ -215,9 +185,10 @@ public final class ScxModuleInfo<T extends ScxModule> implements Serializable {
      * @return b
      */
     private static boolean hasScxAnnotation(Class<?> clazz) {
-        return clazz.isAnnotationPresent(ScxService.class)
+        return clazz.isAnnotationPresent(ScxComponent.class)
                 || clazz.isAnnotationPresent(ScxMapping.class)
                 || clazz.isAnnotationPresent(ScxModel.class)
+                || clazz.isAnnotationPresent(ScxService.class)
                 || clazz.isAnnotationPresent(ScxWebSocketMapping.class);
     }
 
