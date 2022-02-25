@@ -1,4 +1,4 @@
-package cool.scx.bo;
+package cool.scx.base;
 
 /**
  * 查询列过滤器

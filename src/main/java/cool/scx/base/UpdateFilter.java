@@ -1,4 +1,4 @@
-package cool.scx.bo;
+package cool.scx.base;
 
 import cool.scx.dao.ScxDaoColumnInfo;
 

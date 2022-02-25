@@ -3,7 +3,6 @@ package cool.scx.base;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import cool.scx.annotation.Column;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -12,7 +11,7 @@ import java.time.LocalDateTime;
  * @author scx567888
  * @version 0.3.6
  */
-public abstract class BaseModel implements Serializable {
+public abstract class BaseModel {
 
     /**
      * id

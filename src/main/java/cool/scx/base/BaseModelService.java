@@ -1,10 +1,6 @@
 package cool.scx.base;
 
 import cool.scx.ScxContext;
-import cool.scx.bo.AbstractFilter;
-import cool.scx.bo.Query;
-import cool.scx.bo.SelectFilter;
-import cool.scx.bo.UpdateFilter;
 import cool.scx.sql.where.WhereOption;
 
 import java.sql.Connection;
