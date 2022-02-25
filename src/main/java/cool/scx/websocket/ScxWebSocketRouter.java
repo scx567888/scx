@@ -8,6 +8,8 @@ import cool.scx.functional.ScxHandlerV;
 import cool.scx.util.StringUtils;
 import io.vertx.core.Handler;
 import io.vertx.core.http.ServerWebSocket;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,6 +22,11 @@ import java.util.Map;
 public final class ScxWebSocketRouter implements Handler<ServerWebSocket> {
 
     /**
+     * 日志
+     */
+    private static final Logger logger = LoggerFactory.getLogger(ScxWebSocketRouter.class);
+
+    /**
      * a
      */
     private final Map<String, ScxWebSocketRoute> scxWebSocketRouteMapping = new HashMap<>();
@@ -28,11 +35,11 @@ public final class ScxWebSocketRouter implements Handler<ServerWebSocket> {
         scxModuleInfos.stream().flatMap(c -> c.scxWebSocketRouteClassList().stream()).forEach(c -> this.addRoute(new ScxWebSocketRoute(StringUtils.cleanHttpURL(c.getAnnotation(ScxWebSocketMapping.class).value()), scxBeanFactory.getBean(c))));
     }
 
-    private static void handleException(ScxHandlerV args) {
+    private static void handleException(ScxHandlerV s) {
         try {
-            args.handle();
+            s.handle();
         } catch (Throwable e) {
-            e.printStackTrace();
+            logger.error("ScxWebSocketRouter 发生异常 !!!", e);
         }
     }
 

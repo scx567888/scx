@@ -78,8 +78,11 @@ public final class ScxExceptionHelper {
      * @return t
      */
     public static String getCustomStackTrace(Throwable throwable) {
+        if (throwable == null) {
+            return "";
+        }
         var stringBuilder = new StringBuilder();
-        stringBuilder.append(throwable.toString()).append(System.lineSeparator());
+        stringBuilder.append(throwable).append(System.lineSeparator());
         var stackTrace = throwable.getStackTrace();
         for (var st : stackTrace) {
             var s = st.getClassName() + "." + st.getMethodName() + "(" +

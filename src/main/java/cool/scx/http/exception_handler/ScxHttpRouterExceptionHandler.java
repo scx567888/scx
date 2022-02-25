@@ -1,11 +1,11 @@
-package cool.scx.mvc.exception_handler;
+package cool.scx.http.exception_handler;
 
 import io.vertx.ext.web.RoutingContext;
 
 /**
  * a
  */
-public interface ScxMappingExceptionHandler {
+public interface ScxHttpRouterExceptionHandler {
 
     /**
      * 判断是否可以处理这个异常
