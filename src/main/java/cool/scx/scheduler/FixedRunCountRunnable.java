@@ -1,6 +1,6 @@
 package cool.scx.scheduler;
 
-import cool.scx.ScxHandler;
+import cool.scx.functional.ScxHandler;
 
 /**
  * 固定次数执行的 Runnable

@@ -1,6 +1,6 @@
 package cool.scx.scheduler;
 
-import cool.scx.ScxHandler;
+import cool.scx.functional.ScxHandler;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.Trigger;
 
