@@ -25,11 +25,11 @@ public final class ScxExceptionHelper {
      * @param <T>                    a
      * @return a
      */
-    public static <T> T wrap(ScxHandlerVRE<T, Exception> exceptionScxHandlerVRE) {
+    public static <T> T wrap(ScxHandlerVRE<T, ?> exceptionScxHandlerVRE) {
         try {
             return exceptionScxHandlerVRE.handle();
-        } catch (Exception exception) {
-            throw new ScxWrappedRuntimeException(exception);
+        } catch (Throwable throwable) {
+            throw new ScxWrappedRuntimeException(throwable);
         }
     }
 
@@ -38,11 +38,11 @@ public final class ScxExceptionHelper {
      *
      * @param exceptionScxHandlerVE a
      */
-    public static void wrap(ScxHandlerVE<Exception> exceptionScxHandlerVE) {
+    public static void wrap(ScxHandlerVE<?> exceptionScxHandlerVE) {
         try {
             exceptionScxHandlerVE.handle();
-        } catch (Exception exception) {
-            throw new ScxWrappedRuntimeException(exception);
+        } catch (Throwable throwable) {
+            throw new ScxWrappedRuntimeException(throwable);
         }
     }
 
