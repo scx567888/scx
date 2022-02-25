@@ -157,7 +157,7 @@ public final class ScxMappingHandler implements Handler<RoutingContext> {
             if (!context.request().response().ended()) {
                 this.scxMappingConfiguration.findMethodReturnValueHandler(finalResult).handle(finalResult, context);
             }
-        } catch (Exception e) {
+        } catch (Throwable e) {
             //1, 如果是反射调用时发生异常 则使用反射异常的内部异常 否则使用异常
             context.fail(e instanceof InvocationTargetException ? e.getCause() : e);
         }
