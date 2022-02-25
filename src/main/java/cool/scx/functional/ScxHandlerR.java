@@ -1,4 +1,4 @@
-package cool.scx;
+package cool.scx.functional;
 
 /**
  * Scx 核心 handler , 有返回值 , 不允许抛出异常 .
