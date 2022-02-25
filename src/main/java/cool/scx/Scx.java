@@ -7,6 +7,7 @@ import cool.scx.config.ScxFeatureConfig;
 import cool.scx.dao.ScxDao;
 import cool.scx.enumeration.ScxFeature;
 import cool.scx.eventbus.ScxEventBus;
+import cool.scx.http.ScxHttpRouter;
 import cool.scx.logging.ScxLoggerConfiguration;
 import cool.scx.mvc.ScxMappingConfiguration;
 import cool.scx.scheduler.ScxScheduler;
@@ -15,13 +16,13 @@ import cool.scx.util.NetUtils;
 import cool.scx.util.StopWatch;
 import cool.scx.util.StringUtils;
 import cool.scx.util.ansi.Ansi;
-import cool.scx.web.ScxRouter;
-import cool.scx.web.ScxWebSocketRouter;
+import cool.scx.websocket.ScxWebSocketRouter;
 import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.net.JksOptions;
+import io.vertx.ext.web.Router;
 
 import java.io.IOException;
 import java.net.BindException;
@@ -134,7 +135,7 @@ public final class Scx {
     /**
      * 路由
      */
-    private ScxRouter scxRouter = null;
+    private ScxHttpRouter scxHttpRouter = null;
 
     /**
      * websocket 路由
@@ -354,14 +355,14 @@ public final class Scx {
             this.scxEasyConfig.showEasyConfigInfo();
         }
         //2, 初始化路由 (Http 和 WebSocket)
-        this.scxRouter = new ScxRouter(this.scxEasyConfig, this.vertx, this.scxModuleInfos, this.scxBeanFactory);
-        this.scxWebSocketRouter = new ScxWebSocketRouter(this.scxEasyConfig, this.vertx, this.scxModuleInfos, this.scxBeanFactory);
+        this.scxHttpRouter = new ScxHttpRouter(this.scxEasyConfig, this.vertx, this.scxModuleInfos, this.scxBeanFactory);
+        this.scxWebSocketRouter = new ScxWebSocketRouter(this.scxModuleInfos, this.scxBeanFactory);
         //3, 依次执行 模块的 start 生命周期 , 在这里我们可以操作 scxRouteRegistry, vertxRouter 等对象 "手动注册新路由" 或其他任何操作
         this.startAllModules();
         //4, 打印基本信息
         Ansi.out()
                 .color("已加载 " + this.scxBeanFactory.getBeanDefinitionNames().length + " 个 Bean !!!").ln()
-                .color("已加载 " + this.scxRouter.vertxRouter().getRoutes().size() + " 个 Http 路由 !!!").ln()
+                .color("已加载 " + this.scxHttpRouter.vertxRouter().getRoutes().size() + " 个 Http 路由 !!!").ln()
                 .color("已加载 " + this.scxWebSocketRouter.getRoutes().size() + " 个 WebSocket 路由 !!!").println();
         //5, 初始化服务器
         var httpServerOptions = new HttpServerOptions();
@@ -372,7 +373,7 @@ public final class Scx {
                             .setPassword(this.scxEasyConfig.sslPassword()));
         }
         this.vertxHttpServer = vertx.createHttpServer(httpServerOptions);
-        this.vertxHttpServer.requestHandler(this.scxRouter.vertxRouter()).webSocketHandler(this.scxWebSocketRouter);
+        this.vertxHttpServer.requestHandler(this.scxHttpRouter.vertxRouter()).webSocketHandler(this.scxWebSocketRouter);
         //6, 添加程序停止时的钩子函数
         this.addShutdownHook();
         //7, 使用初始端口号 启动服务器
@@ -494,8 +495,17 @@ public final class Scx {
      *
      * @return a
      */
-    public ScxRouter scxRouter() {
-        return this.scxRouter;
+    public ScxHttpRouter scxHttpRouter() {
+        return this.scxHttpRouter;
+    }
+
+    /**
+     * a
+     *
+     * @return a
+     */
+    public Router vertxRouter() {
+        return this.scxHttpRouter.vertxRouter();
     }
 
     /**

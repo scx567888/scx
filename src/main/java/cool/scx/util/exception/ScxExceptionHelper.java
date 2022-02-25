@@ -14,6 +14,11 @@ import java.security.CodeSource;
 public final class ScxExceptionHelper {
 
     /**
+     * 默认 classLoader
+     */
+    private static final ClassLoader DEFAULT_CLASS_LOADER = ClassLoader.getSystemClassLoader();
+
+    /**
      * a
      *
      * @param exceptionScxHandlerVRE a
@@ -53,11 +58,6 @@ public final class ScxExceptionHelper {
         }
         return throwable;
     }
-
-    /**
-     * 默认 classLoader
-     */
-    private static final ClassLoader DEFAULT_CLASS_LOADER = ClassLoader.getSystemClassLoader();
 
     /**
      * 获取 jdk 内部默认实现的堆栈跟踪字符串
