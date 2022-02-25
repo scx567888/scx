@@ -1,4 +1,4 @@
-package cool.scx.bo;
+package cool.scx.type;
 
 import io.vertx.core.buffer.Buffer;
 

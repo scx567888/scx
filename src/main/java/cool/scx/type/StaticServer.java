@@ -1,4 +1,4 @@
-package cool.scx.web.handler;
+package cool.scx.type;
 
 import java.io.File;
 
