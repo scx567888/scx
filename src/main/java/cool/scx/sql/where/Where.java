@@ -372,26 +372,8 @@ public final class Where {
                 skipIfNull = true;
             }
         }
-        //校验参数 首先是名称一定不能为空
-        if (StringUtils.isBlank(name)) {
-            throw new IllegalArgumentException("Where 参数错误 : 名称 不能为空 !!!");
-        }
-        //类型也不能为空
-        if (whereType == null) {
-            throw new IllegalArgumentException("Where 参数错误 : whereType 不能为空 !!!");
-        }
-        //类型所需的参数数量和所传的参数数量必须一致
-        if (whereType.paramSize() != needParamSize) {
-            throw new IllegalArgumentException("Where 参数错误 : whereType 类型 : " + whereType + " , 参数数量必须为 " + whereType.paramSize());
-        }
-        //有效的参数数量(不为空的) 每检测到一个有效的(不为空的) 便加 1
-        var validParamSize = 0;
-        if (value1 != null) {
-            validParamSize = validParamSize + 1;
-        }
-        if (value2 != null) {
-            validParamSize = validParamSize + 1;
-        }
+        //校验参数 并获取有效的参数数量(不为空的) 每检测到一个有效的(不为空的) 便加 1
+        var validParamSize = WhereBody.checkParamsAndGetValidParamSize(name, whereType, value1, value2, needParamSize);
         //有效参数的数量和所需的参数数量不一致
         if (whereType.paramSize() != validParamSize) {
             //根据是否跳过空进行校验
