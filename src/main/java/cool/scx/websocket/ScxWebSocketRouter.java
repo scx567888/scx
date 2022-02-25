@@ -1,7 +1,7 @@
 package cool.scx.websocket;
 
 import cool.scx.ScxBeanFactory;
-import cool.scx.ScxHandlerV;
+import cool.scx.ScxHandlerVE;
 import cool.scx.ScxModule;
 import cool.scx.ScxModuleInfo;
 import cool.scx.annotation.ScxWebSocketMapping;
@@ -41,7 +41,7 @@ public final class ScxWebSocketRouter implements Handler<ServerWebSocket> {
         scxModuleInfos.stream().flatMap(c -> c.scxWebSocketRouteClassList().stream()).forEach(c -> this.addRoute(new ScxWebSocketRoute(StringUtils.cleanHttpURL(c.getAnnotation(ScxWebSocketMapping.class).value()), scxBeanFactory.getBean(c))));
     }
 
-    private static void handleException(ScxHandlerV s) {
+    private static void handleException(ScxHandlerVE<?> s) {
         try {
             s.handle();
         } catch (Throwable e) {

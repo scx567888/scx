@@ -16,15 +16,17 @@ public interface BaseWebSocketHandler {
      * 连接打开时
      *
      * @param webSocket a {@link io.vertx.core.http.ServerWebSocket} object.
+     * @throws Exception e
      */
-    void onOpen(ServerWebSocket webSocket);
+    void onOpen(ServerWebSocket webSocket) throws Exception;
 
     /**
      * 连接关闭时
      *
      * @param webSocket a {@link io.vertx.core.http.ServerWebSocket} object.
+     * @throws Exception e
      */
-    void onClose(ServerWebSocket webSocket);
+    void onClose(ServerWebSocket webSocket) throws Exception;
 
     /**
      * 发送 文本数据
@@ -32,8 +34,9 @@ public interface BaseWebSocketHandler {
      * @param textData  a {@link java.lang.String} object.
      * @param h         a {@link io.vertx.core.http.WebSocketFrame} object.
      * @param webSocket a {@link io.vertx.core.http.ServerWebSocket} object.
+     * @throws Exception e
      */
-    void onTextMessage(String textData, WebSocketFrame h, ServerWebSocket webSocket);
+    void onTextMessage(String textData, WebSocketFrame h, ServerWebSocket webSocket) throws Exception;
 
     /**
      * 发送二进制数据
@@ -41,15 +44,17 @@ public interface BaseWebSocketHandler {
      * @param binaryData a {@link io.vertx.core.buffer.Buffer} object.
      * @param h          a {@link io.vertx.core.http.WebSocketFrame} object.
      * @param webSocket  a {@link io.vertx.core.http.ServerWebSocket} object.
+     * @throws Exception e
      */
-    void onBinaryMessage(Buffer binaryData, WebSocketFrame h, ServerWebSocket webSocket);
+    void onBinaryMessage(Buffer binaryData, WebSocketFrame h, ServerWebSocket webSocket) throws Exception;
 
     /**
      * 连接错误时
      *
      * @param event     a {@link java.lang.Throwable} object.
      * @param webSocket a {@link io.vertx.core.http.ServerWebSocket} object.
+     * @throws Exception e
      */
-    void onError(Throwable event, ServerWebSocket webSocket);
+    void onError(Throwable event, ServerWebSocket webSocket) throws Exception;
 
 }
