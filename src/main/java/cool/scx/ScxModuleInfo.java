@@ -90,21 +90,20 @@ public final class ScxModuleInfo<T extends ScxModule> implements Serializable {
      */
     @SuppressWarnings("unchecked")
     public ScxModuleInfo(T scxModuleExample) throws URISyntaxException, IOException {
-        var moduleClass = (Class<T>) scxModuleExample.getClass();
-        this.scxModuleClass = moduleClass;
-        this.basePackage = moduleClass.getPackageName();
+        this.scxModuleClass = (Class<T>) scxModuleExample.getClass();
+        this.basePackage = this.scxModuleClass.getPackageName();
         this.scxModuleName = scxModuleExample.name();
         this.scxModuleExample = scxModuleExample;
-        var classSource = ScanClassUtils.getClassSource(moduleClass);
+        var classSource = ScanClassUtils.getClassSource(this.scxModuleClass);
         var classSourceFile = new File(classSource);
         //判断当前是否处于 jar 包中
         if (ScanClassUtils.isJar(classSourceFile)) {
             var allClassList = ScanClassUtils.getClassListByJar(classSource);
-            this.allClassList = ScanClassUtils.filterByBasePackage(allClassList, basePackage);
+            this.allClassList = ScanClassUtils.filterByBasePackage(allClassList, this.basePackage);
             this.moduleRootPath = classSourceFile.getParentFile();
         } else {
-            var allClassList = ScanClassUtils.getClassListByDir(classSource, moduleClass.getClassLoader());
-            this.allClassList = ScanClassUtils.filterByBasePackage(allClassList, basePackage);
+            var allClassList = ScanClassUtils.getClassListByDir(classSource, this.scxModuleClass.getClassLoader());
+            this.allClassList = ScanClassUtils.filterByBasePackage(allClassList, this.basePackage);
             this.moduleRootPath = classSourceFile;
         }
         this.scxBaseModelClassList = initScxBaseModelClassList(this.allClassList);
@@ -185,11 +184,11 @@ public final class ScxModuleInfo<T extends ScxModule> implements Serializable {
      * @return b
      */
     private static boolean hasScxAnnotation(Class<?> clazz) {
-        return clazz.isAnnotationPresent(ScxComponent.class)
-                || clazz.isAnnotationPresent(ScxMapping.class)
-                || clazz.isAnnotationPresent(ScxModel.class)
-                || clazz.isAnnotationPresent(ScxService.class)
-                || clazz.isAnnotationPresent(ScxWebSocketMapping.class);
+        return clazz.isAnnotationPresent(ScxComponent.class) // ScxComponent
+                || clazz.isAnnotationPresent(ScxMapping.class)// ScxMapping
+                || clazz.isAnnotationPresent(ScxModel.class) // ScxModel
+                || clazz.isAnnotationPresent(ScxService.class)// ScxService
+                || clazz.isAnnotationPresent(ScxWebSocketMapping.class);// ScxWebSocketMapping
     }
 
     /**
