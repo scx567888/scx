@@ -88,21 +88,10 @@ public final class ScxHttpRouter {
     }
 
     private void bindErrorHandler(Router vertxRouter) {
-        var callExceptionHandler = (Handler<RoutingContext>) (routingContext) -> {
-            var routingContextException = ScxExceptionHelper.getRootCause(routingContext.failure());
-            var routingContextStatusCode = routingContext.statusCode();
-            if (routingContextStatusCode == 500) { // vertx 会将所有为声明状态码的异常归类为 500 其中就包括 我们的 ScxHttpException
-                findExceptionHandler(routingContextException).handle(routingContextException, routingContext);
-            } else {
-                //不是 500 的话 根据状态码 我们看一下是否能需要进行一次包装
-                var byStatusCode = ScxHttpResponseStatus.findByStatusCode(routingContext.statusCode());
-                var scxHttpException = byStatusCode != null ? new ScxHttpException(byStatusCode.statusCode(), byStatusCode.reasonPhrase(), routingContextException) : new InternalServerErrorException(routingContextException);
-                findExceptionHandler(scxHttpException).handle(scxHttpException, routingContext);
-            }
-        };
+        var errorHandler = new ErrorHandler(this);
         // 因为 ScxHttpResponseStatus 中所有的错误状态 都处在可以处理的范围内 所以我们 按照 ScxHttpResponseStatus 的值进行批量设置
         for (var s : ScxHttpResponseStatus.values()) {
-            vertxRouter.errorHandler(s.statusCode(), callExceptionHandler);
+            vertxRouter.errorHandler(s.statusCode(), errorHandler);
         }
     }
 
@@ -119,7 +108,7 @@ public final class ScxHttpRouter {
                 for (var method : clazz.getMethods()) {
                     if (method.isAnnotationPresent(ScxMapping.class)) {
                         //现根据 注解 和 方法等创建一个路由
-                        var s = new ScxMappingHandler(clazz, method, scxBeanFactory, scxHttpRouterConfiguration);
+                        var s = new ScxMappingHandler(clazz, method, scxBeanFactory, scxHttpRouterConfiguration, this);
                         //此处校验路由是否已经存在
                         if (!checkScxMappingHandlerRouteExists(s)) {
                             SCX_MAPPING_HANDLER_LIST.add(s);
@@ -275,13 +264,31 @@ public final class ScxHttpRouter {
      * @param throwable a
      * @return a
      */
-    private ScxHttpRouterExceptionHandler findExceptionHandler(Throwable throwable) {
+    public ScxHttpRouterExceptionHandler findExceptionHandler(Throwable throwable) {
         for (var handler : scxHttpRouterExceptionHandlers) {
             if (handler.canHandle(throwable)) {
                 return handler;
             }
         }
         return LastExceptionHandler.DEFAULT_INSTANCE;
+    }
+
+    private record ErrorHandler(ScxHttpRouter scxHttpRouter) implements Handler<RoutingContext> {
+
+        @Override
+        public void handle(RoutingContext routingContext) {
+            var routingContextException = ScxExceptionHelper.getRootCause(routingContext.failure());
+            var routingContextStatusCode = routingContext.statusCode();
+            if (routingContextStatusCode == 500) { // vertx 会将所有为声明状态码的异常归类为 500 其中就包括 我们的 ScxHttpException
+                scxHttpRouter.findExceptionHandler(routingContextException).handle(routingContextException, routingContext);
+            } else {
+                //不是 500 的话 根据状态码 我们看一下是否能需要进行一次包装
+                var byStatusCode = ScxHttpResponseStatus.findByStatusCode(routingContextStatusCode);
+                var scxHttpException = byStatusCode != null ? new ScxHttpException(byStatusCode.statusCode(), byStatusCode.reasonPhrase(), routingContextException) : new InternalServerErrorException(routingContextException);
+                scxHttpRouter.findExceptionHandler(scxHttpException).handle(scxHttpException, routingContext);
+            }
+        }
+
     }
 
 }

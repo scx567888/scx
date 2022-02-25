@@ -4,8 +4,10 @@ import cool.scx.ScxBeanFactory;
 import cool.scx.ScxContext;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.enumeration.HttpMethod;
+import cool.scx.http.ScxHttpRouter;
 import cool.scx.util.CaseUtils;
 import cool.scx.util.StringUtils;
+import cool.scx.util.exception.ScxExceptionHelper;
 import io.vertx.core.Handler;
 import io.vertx.ext.web.RoutingContext;
 
@@ -66,6 +68,11 @@ public final class ScxMappingHandler implements Handler<RoutingContext> {
     private final ScxMappingConfiguration scxMappingConfiguration;
 
     /**
+     * a
+     */
+    private final ScxHttpRouter scxHttpRouter;
+
+    /**
      * handler 排序 目前规则是以 路径匹配参数的数量为标准
      * 如 /api/:a/:b 的参数为 2 个 /api/test/:b 的参数为 1 个 ,所以需要将 第一个路径的匹配优先级要小于第二个路径
      */
@@ -78,8 +85,9 @@ public final class ScxMappingHandler implements Handler<RoutingContext> {
      * @param method                     a
      * @param scxBeanFactory             a
      * @param scxHttpRouterConfiguration a
+     * @param scxHttpRouter              a
      */
-    public ScxMappingHandler(Class<?> clazz, Method method, ScxBeanFactory scxBeanFactory, ScxMappingConfiguration scxHttpRouterConfiguration) {
+    public ScxMappingHandler(Class<?> clazz, Method method, ScxBeanFactory scxBeanFactory, ScxMappingConfiguration scxHttpRouterConfiguration, ScxHttpRouter scxHttpRouter) {
         var methodScxMapping = method.getAnnotation(ScxMapping.class);
         var classScxMapping = clazz.getAnnotation(ScxMapping.class);
         this.clazz = clazz;
@@ -90,6 +98,7 @@ public final class ScxMappingHandler implements Handler<RoutingContext> {
         this.httpMethods = getHttpMethod(methodScxMapping);
         this.method.setAccessible(true);
         this.scxMappingConfiguration = scxHttpRouterConfiguration;
+        this.scxHttpRouter = scxHttpRouter;
     }
 
     /**
@@ -159,7 +168,9 @@ public final class ScxMappingHandler implements Handler<RoutingContext> {
             }
         } catch (Throwable e) {
             //1, 如果是反射调用时发生异常 则使用反射异常的内部异常 否则使用异常
-            context.fail(e instanceof InvocationTargetException ? e.getCause() : e);
+            //2, 如果是包装类型异常 (ScxWrappedRuntimeException) 则使用其内部的异常
+            var exception = ScxExceptionHelper.getRootCause(e instanceof InvocationTargetException ? e.getCause() : e);
+            this.scxHttpRouter.findExceptionHandler(exception).handle(exception, context);
         }
     }
 
