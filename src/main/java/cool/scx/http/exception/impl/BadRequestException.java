@@ -1,8 +1,7 @@
-package cool.scx.exception.impl;
+package cool.scx.http.exception.impl;
 
 import cool.scx.ScxConstant;
-import cool.scx.exception.ScxHttpException;
-import cool.scx.util.ExceptionUtils;
+import cool.scx.http.exception.ScxHttpException;
 
 /**
  * 请求错误异常
@@ -16,16 +15,16 @@ public class BadRequestException extends ScxHttpException {
      * <p>Constructor for BadRequestException.</p>
      */
     public BadRequestException() {
-        super(400, ScxConstant.HTTP_BAD_REQUEST_TITLE, "");
+        super(400, ScxConstant.HTTP_BAD_REQUEST_TITLE);
     }
 
     /**
      * <p>Constructor for BadRequestException.</p>
      *
-     * @param throwableMessage a {@link java.lang.Throwable} object
+     * @param info a {@link java.lang.Throwable} object
      */
-    public BadRequestException(String throwableMessage) {
-        super(400, ScxConstant.HTTP_BAD_REQUEST_TITLE, throwableMessage);
+    public BadRequestException(String info) {
+        super(400, ScxConstant.HTTP_BAD_REQUEST_TITLE, info);
     }
 
     /**
@@ -34,7 +33,7 @@ public class BadRequestException extends ScxHttpException {
      * @param throwable a {@link java.lang.Throwable} object
      */
     public BadRequestException(Throwable throwable) {
-        super(400, ScxConstant.HTTP_BAD_REQUEST_TITLE, ExceptionUtils.getCustomStackTrace(throwable));
+        super(400, ScxConstant.HTTP_BAD_REQUEST_TITLE, throwable);
     }
 
 }

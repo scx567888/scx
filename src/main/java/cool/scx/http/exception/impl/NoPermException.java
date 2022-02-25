@@ -1,7 +1,7 @@
-package cool.scx.exception.impl;
+package cool.scx.http.exception.impl;
 
 import cool.scx.ScxConstant;
-import cool.scx.exception.ScxHttpException;
+import cool.scx.http.exception.ScxHttpException;
 
 /**
  * 登录了但是没权限
@@ -12,11 +12,15 @@ import cool.scx.exception.ScxHttpException;
 public class NoPermException extends ScxHttpException {
 
     public NoPermException() {
-        super(403, ScxConstant.HTTP_NO_PERM_TITLE, "");
+        super(403, ScxConstant.HTTP_NO_PERM_TITLE);
     }
 
     public NoPermException(String info) {
         super(403, ScxConstant.HTTP_NO_PERM_TITLE, info);
+    }
+
+    public NoPermException(Throwable throwable) {
+        super(403, ScxConstant.HTTP_NO_PERM_TITLE, throwable);
     }
 
 }
