@@ -1,7 +1,8 @@
 package cool.scx.http.exception.impl;
 
-import cool.scx.ScxConstant;
 import cool.scx.http.exception.ScxHttpException;
+
+import static cool.scx.http.ScxHttpResponseStatus.BAD_REQUEST;
 
 /**
  * 请求错误异常
@@ -15,7 +16,7 @@ public class BadRequestException extends ScxHttpException {
      * <p>Constructor for BadRequestException.</p>
      */
     public BadRequestException() {
-        super(400, ScxConstant.HTTP_BAD_REQUEST_TITLE);
+        super(BAD_REQUEST.statusCode(), BAD_REQUEST.reasonPhrase());
     }
 
     /**
@@ -24,7 +25,7 @@ public class BadRequestException extends ScxHttpException {
      * @param info a {@link java.lang.Throwable} object
      */
     public BadRequestException(String info) {
-        super(400, ScxConstant.HTTP_BAD_REQUEST_TITLE, info);
+        super(BAD_REQUEST.statusCode(), BAD_REQUEST.reasonPhrase(), info);
     }
 
     /**
@@ -33,7 +34,7 @@ public class BadRequestException extends ScxHttpException {
      * @param throwable a {@link java.lang.Throwable} object
      */
     public BadRequestException(Throwable throwable) {
-        super(400, ScxConstant.HTTP_BAD_REQUEST_TITLE, throwable);
+        super(BAD_REQUEST.statusCode(), BAD_REQUEST.reasonPhrase(), throwable);
     }
 
 }

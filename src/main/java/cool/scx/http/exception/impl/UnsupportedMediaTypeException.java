@@ -1,7 +1,8 @@
 package cool.scx.http.exception.impl;
 
-import cool.scx.ScxConstant;
 import cool.scx.http.exception.ScxHttpException;
+
+import static cool.scx.http.ScxHttpResponseStatus.UNSUPPORTED_MEDIA_TYPE;
 
 /**
  * 415 参数异常
@@ -12,15 +13,15 @@ import cool.scx.http.exception.ScxHttpException;
 public class UnsupportedMediaTypeException extends ScxHttpException {
 
     public UnsupportedMediaTypeException() {
-        super(415, ScxConstant.HTTP_UNSUPPORTED_MEDIA_TYPE_TITLE);
+        super(UNSUPPORTED_MEDIA_TYPE.statusCode(), UNSUPPORTED_MEDIA_TYPE.reasonPhrase());
     }
 
     public UnsupportedMediaTypeException(String info) {
-        super(415, ScxConstant.HTTP_UNSUPPORTED_MEDIA_TYPE_TITLE, info);
+        super(UNSUPPORTED_MEDIA_TYPE.statusCode(), UNSUPPORTED_MEDIA_TYPE.reasonPhrase(), info);
     }
 
     public UnsupportedMediaTypeException(Throwable throwable) {
-        super(415, ScxConstant.HTTP_UNSUPPORTED_MEDIA_TYPE_TITLE, throwable);
+        super(UNSUPPORTED_MEDIA_TYPE.statusCode(), UNSUPPORTED_MEDIA_TYPE.reasonPhrase(), throwable);
     }
 
 }

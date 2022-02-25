@@ -1,7 +1,8 @@
 package cool.scx.http.exception.impl;
 
-import cool.scx.ScxConstant;
 import cool.scx.http.exception.ScxHttpException;
+
+import static cool.scx.http.ScxHttpResponseStatus.INTERNAL_SERVER_ERROR;
 
 /**
  * 服务器内部异常
@@ -9,15 +10,15 @@ import cool.scx.http.exception.ScxHttpException;
 public class InternalServerErrorException extends ScxHttpException {
 
     public InternalServerErrorException() {
-        super(500, ScxConstant.HTTP_INTERNAL_SERVER_ERROR_TITLE);
+        super(INTERNAL_SERVER_ERROR.statusCode(), INTERNAL_SERVER_ERROR.reasonPhrase());
     }
 
     public InternalServerErrorException(String info) {
-        super(500, ScxConstant.HTTP_INTERNAL_SERVER_ERROR_TITLE, info);
+        super(INTERNAL_SERVER_ERROR.statusCode(), INTERNAL_SERVER_ERROR.reasonPhrase(), info);
     }
 
     public InternalServerErrorException(Throwable throwable) {
-        super(500, ScxConstant.HTTP_INTERNAL_SERVER_ERROR_TITLE, throwable);
+        super(INTERNAL_SERVER_ERROR.statusCode(), INTERNAL_SERVER_ERROR.reasonPhrase(), throwable);
     }
 
 }

@@ -1,7 +1,8 @@
 package cool.scx.http.exception.impl;
 
-import cool.scx.ScxConstant;
 import cool.scx.http.exception.ScxHttpException;
+
+import static cool.scx.http.ScxHttpResponseStatus.NOT_FOUND;
 
 /**
  * 404 not found 未找到异常
@@ -15,7 +16,7 @@ public class NotFoundException extends ScxHttpException {
      * a
      */
     public NotFoundException() {
-        super(404, ScxConstant.HTTP_NOT_FOUND_TITLE);
+        super(NOT_FOUND.statusCode(), NOT_FOUND.reasonPhrase());
     }
 
     /**
@@ -24,11 +25,11 @@ public class NotFoundException extends ScxHttpException {
      * @param message a
      */
     public NotFoundException(String info) {
-        super(404, ScxConstant.HTTP_NOT_FOUND_TITLE, info);
+        super(NOT_FOUND.statusCode(), NOT_FOUND.reasonPhrase(), info);
     }
 
     public NotFoundException(Throwable throwable) {
-        super(404, ScxConstant.HTTP_NOT_FOUND_TITLE, throwable);
+        super(NOT_FOUND.statusCode(), NOT_FOUND.reasonPhrase(), throwable);
     }
 
 }

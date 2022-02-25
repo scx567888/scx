@@ -1,7 +1,8 @@
 package cool.scx.http.exception.impl;
 
-import cool.scx.ScxConstant;
 import cool.scx.http.exception.ScxHttpException;
+
+import static cool.scx.http.ScxHttpResponseStatus.METHOD_NOT_ALLOWED;
 
 /**
  * 方法不被允许
@@ -9,15 +10,15 @@ import cool.scx.http.exception.ScxHttpException;
 public class MethodNotAllowedException extends ScxHttpException {
 
     public MethodNotAllowedException() {
-        super(405, ScxConstant.HTTP_METHOD_NOT_ALLOWED_TITLE);
+        super(METHOD_NOT_ALLOWED.statusCode(), METHOD_NOT_ALLOWED.reasonPhrase());
     }
 
     public MethodNotAllowedException(String info) {
-        super(405, ScxConstant.HTTP_METHOD_NOT_ALLOWED_TITLE, info);
+        super(METHOD_NOT_ALLOWED.statusCode(), METHOD_NOT_ALLOWED.reasonPhrase(), info);
     }
 
     public MethodNotAllowedException(Throwable throwable) {
-        super(405, ScxConstant.HTTP_METHOD_NOT_ALLOWED_TITLE, throwable);
+        super(METHOD_NOT_ALLOWED.statusCode(), METHOD_NOT_ALLOWED.reasonPhrase(), throwable);
     }
 
 }

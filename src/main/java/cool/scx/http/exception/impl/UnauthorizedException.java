@@ -1,7 +1,8 @@
 package cool.scx.http.exception.impl;
 
-import cool.scx.ScxConstant;
 import cool.scx.http.exception.ScxHttpException;
+
+import static cool.scx.http.ScxHttpResponseStatus.UNAUTHORIZED;
 
 /**
  * 未认证异常 (未登录)
@@ -12,15 +13,15 @@ import cool.scx.http.exception.ScxHttpException;
 public class UnauthorizedException extends ScxHttpException {
 
     public UnauthorizedException() {
-        super(401, ScxConstant.HTTP_UNAUTHORIZED_TITLE);
+        super(UNAUTHORIZED.statusCode(), UNAUTHORIZED.reasonPhrase());
     }
 
     public UnauthorizedException(String info) {
-        super(401, ScxConstant.HTTP_UNAUTHORIZED_TITLE, info);
+        super(UNAUTHORIZED.statusCode(), UNAUTHORIZED.reasonPhrase(), info);
     }
 
     public UnauthorizedException(Throwable throwable) {
-        super(401, ScxConstant.HTTP_UNAUTHORIZED_TITLE, throwable);
+        super(UNAUTHORIZED.statusCode(), UNAUTHORIZED.reasonPhrase(), throwable);
     }
 
 }
