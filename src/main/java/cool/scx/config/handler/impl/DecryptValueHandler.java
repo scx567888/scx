@@ -1,7 +1,7 @@
 package cool.scx.config.handler.impl;
 
+import cool.scx.ScxHandlerR;
 import cool.scx.config.handler.ScxConfigHandlerParam;
-import cool.scx.functional.ScxHandlerR;
 import cool.scx.util.CryptoUtils;
 import cool.scx.util.ansi.Ansi;
 

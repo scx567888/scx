@@ -1,7 +1,7 @@
 package cool.scx.util.exception;
 
-import cool.scx.functional.ScxHandlerVE;
-import cool.scx.functional.ScxHandlerVRE;
+import cool.scx.ScxHandlerVE;
+import cool.scx.ScxHandlerVRE;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

@@ -1,10 +1,10 @@
 package cool.scx.websocket;
 
 import cool.scx.ScxBeanFactory;
+import cool.scx.ScxHandlerV;
 import cool.scx.ScxModule;
 import cool.scx.ScxModuleInfo;
 import cool.scx.annotation.ScxWebSocketMapping;
-import cool.scx.functional.ScxHandlerV;
 import cool.scx.util.StringUtils;
 import io.vertx.core.Handler;
 import io.vertx.core.http.ServerWebSocket;

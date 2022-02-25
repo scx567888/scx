@@ -1,6 +1,6 @@
 package cool.scx.http.exception;
 
-import cool.scx.functional.ScxHandler;
+import cool.scx.ScxHandler;
 import cool.scx.util.exception.ScxExceptionHelper;
 import cool.scx.vo.VoHelper;
 import io.netty.handler.codec.http.HttpHeaderNames;

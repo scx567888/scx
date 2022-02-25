@@ -1,6 +1,6 @@
 package cool.scx.eventbus;
 
-import cool.scx.functional.ScxHandler;
+import cool.scx.ScxHandler;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.eventbus.impl.EventBusImpl;
