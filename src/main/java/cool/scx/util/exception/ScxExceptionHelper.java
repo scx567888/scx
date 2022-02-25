@@ -1,4 +1,7 @@
-package cool.scx.util;
+package cool.scx.util.exception;
+
+import cool.scx.functional.ScxHandlerVE;
+import cool.scx.functional.ScxHandlerVRE;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -8,7 +11,48 @@ import java.security.CodeSource;
 /**
  * a
  */
-public final class ExceptionUtils {
+public final class ScxExceptionHelper {
+
+    /**
+     * a
+     *
+     * @param exceptionScxHandlerVRE a
+     * @param <T>                    a
+     * @return a
+     */
+    public static <T> T wrap(ScxHandlerVRE<T, Exception> exceptionScxHandlerVRE) {
+        try {
+            return exceptionScxHandlerVRE.handle();
+        } catch (Exception exception) {
+            throw new ScxWrappedRuntimeException(exception);
+        }
+    }
+
+    /**
+     * a
+     *
+     * @param exceptionScxHandlerVE a
+     */
+    public static void wrap(ScxHandlerVE<Exception> exceptionScxHandlerVE) {
+        try {
+            exceptionScxHandlerVE.handle();
+        } catch (Exception exception) {
+            throw new ScxWrappedRuntimeException(exception);
+        }
+    }
+
+    /**
+     * a
+     *
+     * @param throwable a
+     * @return a
+     */
+    public static Throwable getRootCause(Throwable throwable) {
+        if (throwable instanceof ScxWrappedRuntimeException) {
+            return getRootCause(throwable.getCause());
+        }
+        return throwable;
+    }
 
     /**
      * 默认 classLoader

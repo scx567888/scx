@@ -1,6 +1,6 @@
 package cool.scx.util.http;
 
-import cool.scx.exception.ScxExceptionHelper;
+import cool.scx.util.exception.ScxExceptionHelper;
 import io.vertx.core.http.impl.MimeMapping;
 
 import java.io.File;

@@ -1,4 +1,4 @@
-package cool.scx.exception;
+package cool.scx.util.exception;
 
 /**
  * a
