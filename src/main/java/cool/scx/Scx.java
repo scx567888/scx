@@ -22,7 +22,6 @@ import io.vertx.core.VertxOptions;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.net.JksOptions;
-import io.vertx.ext.web.Router;
 
 import java.io.IOException;
 import java.net.BindException;
@@ -497,15 +496,6 @@ public final class Scx {
      */
     public ScxHttpRouter scxHttpRouter() {
         return this.scxHttpRouter;
-    }
-
-    /**
-     * a
-     *
-     * @return a
-     */
-    public Router vertxRouter() {
-        return this.scxHttpRouter.vertxRouter();
     }
 
     /**
