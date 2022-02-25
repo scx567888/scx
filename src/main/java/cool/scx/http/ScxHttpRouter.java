@@ -57,7 +57,7 @@ public final class ScxHttpRouter {
     /**
      * 异常处理器列表
      */
-    private final List<ScxHttpRouterExceptionHandler> scxMappingExceptionHandlers = new ArrayList<>();
+    private final List<ScxHttpRouterExceptionHandler> scxHttpRouterExceptionHandlers = new ArrayList<>();
 
     /**
      * a
@@ -249,23 +249,23 @@ public final class ScxHttpRouter {
     /**
      * 添加一个 异常处理器
      *
-     * @param scxMappingExceptionHandler s
+     * @param scxHttpRouterExceptionHandler s
      * @return s
      */
-    public ScxHttpRouter addExceptionHandler(ScxHttpRouterExceptionHandler scxMappingExceptionHandler) {
-        scxMappingExceptionHandlers.add(scxMappingExceptionHandler);
+    public ScxHttpRouter addExceptionHandler(ScxHttpRouterExceptionHandler scxHttpRouterExceptionHandler) {
+        scxHttpRouterExceptionHandlers.add(scxHttpRouterExceptionHandler);
         return this;
     }
 
     /**
      * 添加一个 异常处理器
      *
-     * @param index                      索引
-     * @param scxMappingExceptionHandler s
+     * @param index                         索引
+     * @param scxHttpRouterExceptionHandler s
      * @return s
      */
-    public ScxHttpRouter addExceptionHandler(int index, ScxHttpRouterExceptionHandler scxMappingExceptionHandler) {
-        scxMappingExceptionHandlers.add(index, scxMappingExceptionHandler);
+    public ScxHttpRouter addExceptionHandler(int index, ScxHttpRouterExceptionHandler scxHttpRouterExceptionHandler) {
+        scxHttpRouterExceptionHandlers.add(index, scxHttpRouterExceptionHandler);
         return this;
     }
 
@@ -276,7 +276,7 @@ public final class ScxHttpRouter {
      * @return a
      */
     private ScxHttpRouterExceptionHandler findExceptionHandler(Throwable throwable) {
-        for (var handler : scxMappingExceptionHandlers) {
+        for (var handler : scxHttpRouterExceptionHandlers) {
             if (handler.canHandle(throwable)) {
                 return handler;
             }
