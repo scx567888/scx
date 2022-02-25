@@ -13,7 +13,6 @@ import cool.scx.sql.SQLRunner;
 import cool.scx.websocket.ScxWebSocketRouter;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServer;
-import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 
 import java.io.File;
@@ -183,17 +182,8 @@ public final class ScxContext {
      *
      * @return a
      */
-    public static ScxHttpRouter httpRouter() {
+    public static ScxHttpRouter router() {
         return scx().scxHttpRouter();
-    }
-
-    /**
-     * a
-     *
-     * @return a
-     */
-    public static Router vertxRouter() {
-        return scx().vertxRouter();
     }
 
     /**
