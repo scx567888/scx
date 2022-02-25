@@ -1,12 +1,12 @@
 package cool.scx.mvc;
 
+import cool.scx.ScxBeanFactory;
 import cool.scx.ScxContext;
-import cool.scx.ScxHandler;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.enumeration.HttpMethod;
-import cool.scx.exception.ScxExceptionHelper;
 import cool.scx.util.CaseUtils;
 import cool.scx.util.StringUtils;
+import io.vertx.core.Handler;
 import io.vertx.ext.web.RoutingContext;
 
 import java.lang.reflect.InvocationTargetException;
@@ -20,7 +20,7 @@ import java.util.stream.Stream;
  * @author scx567888
  * @version 0.3.6
  */
-public final class ScxMappingHandler implements ScxHandler<RoutingContext> {
+public final class ScxMappingHandler implements Handler<RoutingContext> {
 
     /**
      * 用来校验 路径的正则表达式
@@ -61,26 +61,35 @@ public final class ScxMappingHandler implements ScxHandler<RoutingContext> {
     public final HttpMethod[] httpMethods;
 
     /**
+     * scxMappingConfiguration 配置
+     */
+    private final ScxMappingConfiguration scxMappingConfiguration;
+
+    /**
      * handler 排序 目前规则是以 路径匹配参数的数量为标准
      * 如 /api/:a/:b 的参数为 2 个 /api/test/:b 的参数为 1 个 ,所以需要将 第一个路径的匹配优先级要小于第二个路径
      */
     private int order = 0;
 
     /**
-     * <p>Constructor for ScxRouteHandler.</p>
+     * a
      *
-     * @param method a {@link java.lang.reflect.Method} object.
-     * @param clazz  a {@link java.lang.Class} object.
+     * @param clazz                      a
+     * @param method                     a
+     * @param scxBeanFactory             a
+     * @param scxHttpRouterConfiguration a
      */
-    public ScxMappingHandler(Class<?> clazz, Method method) {
+    public ScxMappingHandler(Class<?> clazz, Method method, ScxBeanFactory scxBeanFactory, ScxMappingConfiguration scxHttpRouterConfiguration) {
         var methodScxMapping = method.getAnnotation(ScxMapping.class);
         var classScxMapping = clazz.getAnnotation(ScxMapping.class);
         this.clazz = clazz;
         this.method = method;
-        this.example = ScxContext.getBean(clazz);
+        this.example = scxBeanFactory.getBean(clazz);
         this.url = getUrl(classScxMapping, methodScxMapping);
         this.patternUrl = getPatternUrl(this.url);
         this.httpMethods = getHttpMethod(methodScxMapping);
+        this.method.setAccessible(true);
+        this.scxMappingConfiguration = scxHttpRouterConfiguration;
     }
 
     /**
@@ -138,21 +147,19 @@ public final class ScxMappingHandler implements ScxHandler<RoutingContext> {
         ScxContext.routingContext(context);
         try {
             //1, 执行前置处理器 (一般用于校验权限之类)
-            ScxContext.scxMappingConfiguration().scxMappingInterceptor().preHandle(context, this);
+            this.scxMappingConfiguration.scxMappingInterceptor().preHandle(context, this);
             //2, 根据 method 参数获取 invoke 时的参数
-            var methodParameters = ScxContext.scxMappingConfiguration().buildMethodParameters(method.getParameters(), context);
+            var methodParameters = this.scxMappingConfiguration.buildMethodParameters(method.getParameters(), context);
             //3, 执行具体方法 (用来从请求中获取参数并执行反射调用方法以获取返回值)
             var tempResult = this.method.invoke(this.example, methodParameters);
             //4, 执行后置处理器
-            var finalResult = ScxContext.scxMappingConfiguration().scxMappingInterceptor().postHandle(context, this, tempResult);
+            var finalResult = this.scxMappingConfiguration.scxMappingInterceptor().postHandle(context, this, tempResult);
             if (!context.request().response().ended()) {
-                ScxContext.scxMappingConfiguration().findMethodReturnValueHandler(finalResult).handle(finalResult, context);
+                this.scxMappingConfiguration.findMethodReturnValueHandler(finalResult).handle(finalResult, context);
             }
         } catch (Exception e) {
             //1, 如果是反射调用时发生异常 则使用反射异常的内部异常 否则使用异常
-            //2, 如果是包装类型异常 (ScxWrappedRuntimeException) 则使用其内部的异常
-            var exception = ScxExceptionHelper.getRootCause(e instanceof InvocationTargetException ? e.getCause() : e);
-            ScxContext.scxMappingConfiguration().findExceptionHandler(exception).handle(exception, context);
+            context.fail(e instanceof InvocationTargetException ? e.getCause() : e);
         }
     }
 

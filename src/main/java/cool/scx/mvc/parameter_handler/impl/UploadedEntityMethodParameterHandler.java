@@ -1,10 +1,10 @@
 package cool.scx.mvc.parameter_handler.impl;
 
 import cool.scx.annotation.FromUpload;
-import cool.scx.bo.UploadedEntity;
 import cool.scx.mvc.parameter_handler.RequiredParamEmptyException;
 import cool.scx.mvc.parameter_handler.ScxMappingMethodParameterHandler;
 import cool.scx.mvc.parameter_handler.ScxMappingRoutingContextInfo;
+import cool.scx.type.UploadedEntity;
 import cool.scx.util.StringUtils;
 
 import java.lang.reflect.Parameter;

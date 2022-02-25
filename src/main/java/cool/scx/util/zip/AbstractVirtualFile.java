@@ -16,11 +16,22 @@ public abstract class AbstractVirtualFile implements ScxTree<AbstractVirtualFile
     final List<AbstractVirtualFile> children;
     AbstractVirtualFile parent;
 
+    /**
+     * a
+     *
+     * @param name     a
+     * @param children a
+     */
     public AbstractVirtualFile(String name, List<AbstractVirtualFile> children) {
         this.name = name;
         this.children = children;
     }
 
+    /**
+     * a
+     *
+     * @param parent a
+     */
     public final void setParent(AbstractVirtualFile parent) {
         this.parent = parent;
     }

@@ -1,7 +1,7 @@
 package cool.scx.logging;
 
-import cool.scx.util.ExceptionUtils;
 import cool.scx.util.FileUtils;
+import cool.scx.util.exception.ScxExceptionHelper;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
@@ -88,7 +88,7 @@ public final class ScxLogger {
                 .append(level.toFixedLengthString()).append(" ").append(name).append(" - ").append(msg)
                 .append(System.lineSeparator());
         if (throwable != null) {
-            stringBuilder.append(ExceptionUtils.getCustomStackTrace(throwable));
+            stringBuilder.append(ScxExceptionHelper.getCustomStackTrace(throwable));
         }
         var finalMessage = stringBuilder.toString();
         if (type() == ScxLoggingType.CONSOLE || type() == ScxLoggingType.BOTH) {

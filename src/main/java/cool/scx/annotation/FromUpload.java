@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 从上传中获取参数 (注意 : 必须标注在 {@link cool.scx.bo.UploadedEntity} 类型的参数上)
+ * 从上传中获取参数 (注意 : 必须标注在 {@link cool.scx.type.UploadedEntity} 类型的参数上)
  *
  * @author scx567888
  * @version 1.9.1

@@ -107,6 +107,12 @@ public final class SQLTypeHelper {
         return mysqlType;
     }
 
+    /**
+     * a
+     *
+     * @param o a
+     * @return a
+     */
     public static String convertToStringOrNull(Object o) {
         try {
             return ObjectUtils.convertValue(o, String.class);
@@ -116,6 +122,12 @@ public final class SQLTypeHelper {
         }
     }
 
+    /**
+     * a
+     *
+     * @param o a
+     * @return a
+     */
     public static String convertToJsonOrNull(Object o) {
         try {
             return ObjectUtils.toJson(o);
@@ -125,6 +137,13 @@ public final class SQLTypeHelper {
         }
     }
 
+    /**
+     * a
+     *
+     * @param o         a
+     * @param filedType a
+     * @return a
+     */
     public static Object readFromValueOrNull(String o, Class<?> filedType) {
         if (o != null) {
             try {

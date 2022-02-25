@@ -2,10 +2,7 @@ package cool.scx.mvc;
 
 import cool.scx.ScxContext;
 import cool.scx.enumeration.ScxFeature;
-import cool.scx.exception.impl.BadRequestException;
-import cool.scx.mvc.exception_handler.ScxMappingExceptionHandler;
-import cool.scx.mvc.exception_handler.impl.LastExceptionHandler;
-import cool.scx.mvc.exception_handler.impl.ScxHttpExceptionHandler;
+import cool.scx.http.exception.impl.BadRequestException;
 import cool.scx.mvc.interceptor.ScxMappingInterceptor;
 import cool.scx.mvc.interceptor.impl.ScxMappingInterceptorImpl;
 import cool.scx.mvc.parameter_handler.ParamConvertException;
@@ -26,7 +23,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * a
+ * ScxMappingConfiguration 配置类 再此处可配置 [前置后置拦截器,参数处理器,返回值处理器等]
  */
 public final class ScxMappingConfiguration {
 
@@ -41,11 +38,6 @@ public final class ScxMappingConfiguration {
     private final List<ScxMappingMethodParameterHandler> scxMappingMethodParameterHandlers = new ArrayList<>();
 
     /**
-     * 异常处理器
-     */
-    private final List<ScxMappingExceptionHandler> scxMappingExceptionHandlers = new ArrayList<>();
-
-    /**
      * 拦截器
      */
     private ScxMappingInterceptor scxMappingInterceptor = new ScxMappingInterceptorImpl();
@@ -58,8 +50,6 @@ public final class ScxMappingConfiguration {
         addMethodReturnValueHandler(NullMethodReturnValueHandler.DEFAULT_INSTANCE);
         addMethodReturnValueHandler(StringMethodReturnValueHandler.DEFAULT_INSTANCE);
         addMethodReturnValueHandler(BaseVoMethodReturnValueHandler.DEFAULT_INSTANCE);
-        //初始化默认的异常处理器
-        addExceptionHandler(ScxHttpExceptionHandler.DEFAULT_INSTANCE);
         //初始化默认的参数处理器
         addMethodParameterHandler(RoutingContextMethodParameterHandler.DEFAULT_INSTANCE);
         addMethodParameterHandler(UploadedEntityMethodParameterHandler.DEFAULT_INSTANCE);
@@ -92,17 +82,6 @@ public final class ScxMappingConfiguration {
     }
 
     /**
-     * 添加一个 异常处理器
-     *
-     * @param scxMappingExceptionHandler s
-     * @return s
-     */
-    public ScxMappingConfiguration addExceptionHandler(ScxMappingExceptionHandler scxMappingExceptionHandler) {
-        scxMappingExceptionHandlers.add(scxMappingExceptionHandler);
-        return this;
-    }
-
-    /**
      * 添加一个 方法参数处理器
      *
      * @param scxMappingMethodParameterHandler a
@@ -121,18 +100,6 @@ public final class ScxMappingConfiguration {
      */
     public ScxMappingConfiguration addMethodReturnValueHandler(ScxMappingMethodReturnValueHandler returnValueHandler) {
         scxMappingMethodReturnValueHandlers.add(returnValueHandler);
-        return this;
-    }
-
-    /**
-     * 添加一个 异常处理器
-     *
-     * @param index                      索引
-     * @param scxMappingExceptionHandler s
-     * @return s
-     */
-    public ScxMappingConfiguration addExceptionHandler(int index, ScxMappingExceptionHandler scxMappingExceptionHandler) {
-        scxMappingExceptionHandlers.add(index, scxMappingExceptionHandler);
         return this;
     }
 
@@ -191,21 +158,6 @@ public final class ScxMappingConfiguration {
     }
 
     /**
-     * a
-     *
-     * @param throwable a
-     * @return a
-     */
-    public ScxMappingExceptionHandler findExceptionHandler(Throwable throwable) {
-        for (var handler : scxMappingExceptionHandlers) {
-            if (handler.canHandle(throwable)) {
-                return handler;
-            }
-        }
-        return LastExceptionHandler.DEFAULT_INSTANCE;
-    }
-
-    /**
      * 构建方法参数
      *
      * @param parameters p
@@ -218,7 +170,7 @@ public final class ScxMappingConfiguration {
         var errMessageList = new ArrayList<Exception>();
         var methodParameter = new Object[parameters.length];
         for (int i = 0; i < methodParameter.length; i++) {
-            var methodParameterHandler = ScxContext.scxMappingConfiguration().findMethodParameterHandler(parameters[i]);
+            var methodParameterHandler = findMethodParameterHandler(parameters[i]);
             try {
                 methodParameter[i] = methodParameterHandler.handle(parameters[i], scxMappingRoutingContextInfo);
             } catch (ParamConvertException | RequiredParamEmptyException e) {

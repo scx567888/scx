@@ -2,7 +2,7 @@ package cool.scx.sql;
 
 import cool.scx.ScxHandlerE;
 import cool.scx.ScxHandlerRE;
-import cool.scx.exception.ScxExceptionHelper;
+import cool.scx.util.exception.ScxExceptionHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

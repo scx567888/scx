@@ -80,7 +80,8 @@ public final class HttpClientHelper {
     /**
      * a
      *
-     * @param url a
+     * @param httpClient a
+     * @param url        a
      * @return a
      * @throws IOException          a
      * @throws InterruptedException a
@@ -134,8 +135,9 @@ public final class HttpClientHelper {
     /**
      * a
      *
-     * @param url     a
-     * @param bodyStr a
+     * @param httpClient a
+     * @param url        a
+     * @param bodyStr    a
      * @return a
      * @throws IOException          a
      * @throws InterruptedException a
@@ -189,8 +191,9 @@ public final class HttpClientHelper {
     /**
      * a
      *
-     * @param url     a
-     * @param bodyStr a
+     * @param httpClient a
+     * @param url        a
+     * @param bodyStr    a
      * @return a
      * @throws IOException          a
      * @throws InterruptedException a
@@ -285,8 +288,9 @@ public final class HttpClientHelper {
     /**
      * a
      *
-     * @param url     a
-     * @param headers a
+     * @param httpClient a
+     * @param url        a
+     * @param headers    a
      * @return a
      * @throws IOException          a
      * @throws InterruptedException a
@@ -298,7 +302,8 @@ public final class HttpClientHelper {
     /**
      * a
      *
-     * @param url a
+     * @param httpClient a
+     * @param url        a
      * @return a
      * @throws IOException          a
      * @throws InterruptedException a

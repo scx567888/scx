@@ -45,7 +45,7 @@ public final class Redirections implements BaseVo {
     }
 
     @Override
-    public void handle(RoutingContext routingContext) throws Exception {
+    public void handle(RoutingContext routingContext) {
         routingContext.request().response().putHeader(HttpHeaderNames.LOCATION, location).setStatusCode(statusCode).end();
     }
 

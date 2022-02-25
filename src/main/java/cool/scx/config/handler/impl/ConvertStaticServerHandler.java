@@ -3,7 +3,7 @@ package cool.scx.config.handler.impl;
 import cool.scx.ScxAppRoot;
 import cool.scx.ScxHandlerR;
 import cool.scx.config.handler.ScxConfigHandlerParam;
-import cool.scx.web.handler.StaticServer;
+import cool.scx.type.StaticServer;
 
 import java.util.ArrayList;
 import java.util.List;

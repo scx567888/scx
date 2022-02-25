@@ -1,9 +1,6 @@
 package cool.scx.base;
 
 import cool.scx.ScxContext;
-import cool.scx.bo.Query;
-import cool.scx.bo.SelectFilter;
-import cool.scx.bo.UpdateFilter;
 import cool.scx.dao.ScxDaoTableInfo;
 import cool.scx.sql.SQLBuilder;
 import cool.scx.sql.SQLRunner;
@@ -39,6 +36,11 @@ public class BasicService<Entity> {
     protected final Class<Entity> entityClass;
 
     /**
+     * 实体类对应的 BeanListHandler
+     */
+    protected final BeanListHandler<Entity> entityBeanListHandler;
+
+    /**
      * 从泛型中获取 entityClass
      */
     @SuppressWarnings("unchecked")
@@ -48,6 +50,7 @@ public class BasicService<Entity> {
             var typeArguments = ((ParameterizedType) genericSuperclass).getActualTypeArguments();
             this.entityClass = (Class<Entity>) typeArguments[0];
             this.scxDaoTableInfo = new ScxDaoTableInfo(this.entityClass);
+            this.entityBeanListHandler = new BeanListHandler<>(this.entityClass);
         } else {
             throw new IllegalArgumentException(this.getClass().getName() + " : 必须设置泛型参数 !!!");
         }
@@ -61,6 +64,7 @@ public class BasicService<Entity> {
     public BasicService(Class<Entity> entityClass) {
         this.entityClass = entityClass;
         this.scxDaoTableInfo = new ScxDaoTableInfo(this.entityClass);
+        this.entityBeanListHandler = new BeanListHandler<>(this.entityClass);
     }
 
     /**
@@ -162,7 +166,7 @@ public class BasicService<Entity> {
      */
     public final List<Entity> _select(Query query, SelectFilter selectFilter) {
         var parameter = _buildSelectParameter(query, selectFilter);
-        return ScxContext.sqlRunner().query(parameter.sql(), new BeanListHandler<>(entityClass), parameter.param());
+        return ScxContext.sqlRunner().query(parameter.sql(), entityBeanListHandler, parameter.param());
     }
 
     /**
@@ -176,7 +180,7 @@ public class BasicService<Entity> {
      */
     public final List<Entity> _select(Connection con, Query query, SelectFilter selectFilter) throws SQLException {
         var parameter = _buildSelectParameter(query, selectFilter);
-        return SQLRunner.query(con, parameter.sql(), new BeanListHandler<>(entityClass), parameter.param());
+        return SQLRunner.query(con, parameter.sql(), entityBeanListHandler, parameter.param());
     }
 
     /**

@@ -4,9 +4,9 @@ import cool.scx.ScxAppRoot;
 import cool.scx.config.handler.impl.AppRootHandler;
 import cool.scx.config.handler.impl.ConvertStaticServerHandler;
 import cool.scx.config.handler.impl.DecryptValueHandler;
+import cool.scx.type.StaticServer;
 import cool.scx.util.NetUtils;
 import cool.scx.util.ansi.Ansi;
-import cool.scx.web.handler.StaticServer;
 
 import java.io.File;
 import java.util.HashSet;

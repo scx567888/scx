@@ -2,6 +2,8 @@ package cool.scx.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -133,6 +135,37 @@ public final class ScanClassUtils {
      */
     public static boolean isJar(File file) {
         return !file.isDirectory() && file.getPath().endsWith(".jar");
+    }
+
+    /**
+     * 如果类的构造函数是私有的 我们便假设此类不想让我们进行实例化
+     *
+     * @param c c
+     * @return c
+     */
+    public static boolean isInstantiableClass(Class<?> c) {
+        //既不是 接口也不是 抽象类
+        if (isNormalClass(c)) {
+            try {
+                //可以实例化
+                c.getConstructor().newInstance();
+                return true;
+            } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException ignored) {
+
+            }
+        }
+        return false;
+    }
+
+    /**
+     * a
+     *
+     * @param c a
+     * @return a
+     */
+    public static boolean isNormalClass(Class<?> c) {
+        //既不是 接口也不是 抽象类
+        return !c.isInterface() && !Modifier.isAbstract(c.getModifiers());
     }
 
 }
