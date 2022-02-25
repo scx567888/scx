@@ -2,8 +2,8 @@ package cool.scx.config.handler.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JavaType;
-import cool.scx.ScxHandlerR;
 import cool.scx.config.handler.ScxConfigHandlerParam;
+import cool.scx.functional.ScxHandlerR;
 import cool.scx.util.ObjectUtils;
 
 import java.util.Objects;

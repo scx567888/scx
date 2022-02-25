@@ -1,10 +1,10 @@
 package cool.scx.config;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import cool.scx.ScxHandlerR;
 import cool.scx.config.handler.ScxConfigHandlerParam;
 import cool.scx.config.handler.impl.ConvertValueHandler;
 import cool.scx.config.handler.impl.DefaultValueHandler;
+import cool.scx.functional.ScxHandlerR;
 import cool.scx.util.MapUtils;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.ansi.Ansi;

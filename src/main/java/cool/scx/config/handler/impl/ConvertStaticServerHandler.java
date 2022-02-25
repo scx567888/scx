@@ -1,8 +1,8 @@
 package cool.scx.config.handler.impl;
 
 import cool.scx.ScxAppRoot;
-import cool.scx.ScxHandlerR;
 import cool.scx.config.handler.ScxConfigHandlerParam;
+import cool.scx.functional.ScxHandlerR;
 import cool.scx.web.handler.StaticServer;
 
 import java.util.ArrayList;
