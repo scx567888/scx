@@ -12,14 +12,27 @@ import static cool.scx.http.ScxHttpResponseStatus.NO_PERM;
  */
 public class NoPermException extends ScxHttpException {
 
+    /**
+     * a
+     */
     public NoPermException() {
         super(NO_PERM.statusCode(), NO_PERM.reasonPhrase());
     }
 
+    /**
+     * a
+     *
+     * @param info a
+     */
     public NoPermException(String info) {
         super(NO_PERM.statusCode(), NO_PERM.reasonPhrase(), info);
     }
 
+    /**
+     * a
+     *
+     * @param throwable a
+     */
     public NoPermException(Throwable throwable) {
         super(NO_PERM.statusCode(), NO_PERM.reasonPhrase(), throwable);
     }

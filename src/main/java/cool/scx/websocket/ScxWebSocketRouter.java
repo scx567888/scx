@@ -31,6 +31,12 @@ public final class ScxWebSocketRouter implements Handler<ServerWebSocket> {
      */
     private final Map<String, ScxWebSocketRoute> scxWebSocketRouteMapping = new HashMap<>();
 
+    /**
+     * a
+     *
+     * @param scxModuleInfos a
+     * @param scxBeanFactory a
+     */
     public ScxWebSocketRouter(List<ScxModuleInfo<? extends ScxModule>> scxModuleInfos, ScxBeanFactory scxBeanFactory) {
         scxModuleInfos.stream().flatMap(c -> c.scxWebSocketRouteClassList().stream()).forEach(c -> this.addRoute(new ScxWebSocketRoute(StringUtils.cleanHttpURL(c.getAnnotation(ScxWebSocketMapping.class).value()), scxBeanFactory.getBean(c))));
     }

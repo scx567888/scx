@@ -187,6 +187,11 @@ public final class ScxContext {
         return scx().scxHttpRouter();
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public static Router vertxRouter() {
         return scx().vertxRouter();
     }

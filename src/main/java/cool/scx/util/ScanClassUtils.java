@@ -157,6 +157,12 @@ public final class ScanClassUtils {
         return false;
     }
 
+    /**
+     * a
+     *
+     * @param c a
+     * @return a
+     */
     public static boolean isNormalClass(Class<?> c) {
         //既不是 接口也不是 抽象类
         return !c.isInterface() && !Modifier.isAbstract(c.getModifiers());

@@ -20,36 +20,82 @@ import java.util.LinkedHashMap;
  */
 public class ScxHttpException extends RuntimeException implements ScxHandler<RoutingContext> {
 
+    /**
+     * http 状态码
+     */
     final int statusCode;
+
+    /**
+     * 简短说明
+     */
     final String title;
+
+    /**
+     * 详细原因
+     */
     final String info;
 
+    /**
+     * a
+     *
+     * @param statusCode a
+     * @param title      a
+     * @param info       a
+     */
     public ScxHttpException(int statusCode, String title, String info) {
         this.statusCode = statusCode;
         this.title = title;
         this.info = info;
     }
 
+    /**
+     * a
+     *
+     * @param statusCode a
+     * @param title      a
+     */
     public ScxHttpException(int statusCode, String title) {
         this.statusCode = statusCode;
         this.title = title;
         this.info = "";
     }
 
+    /**
+     * a
+     *
+     * @param statusCode a
+     * @param title      a
+     * @param throwable  a
+     */
     public ScxHttpException(int statusCode, String title, Throwable throwable) {
         this.statusCode = statusCode;
         this.title = title;
         this.info = ScxExceptionHelper.getCustomStackTrace(throwable);
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public final int statusCode() {
         return this.statusCode;
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public final String title() {
         return this.title;
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public final String info() {
         return this.info;
     }
@@ -65,6 +111,11 @@ public class ScxHttpException extends RuntimeException implements ScxHandler<Rou
         }
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public String toHtml() {
         var htmlStr = """
                 <!DOCTYPE html>
@@ -82,6 +133,11 @@ public class ScxHttpException extends RuntimeException implements ScxHandler<Rou
         return String.format(htmlStr, title, statusCode, title, info);
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public String toJson() {
         var tempMap = new LinkedHashMap<>();
         tempMap.put("statusCode", statusCode);

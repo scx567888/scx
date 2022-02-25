@@ -165,14 +165,16 @@ public final class CryptoUtils {
      * 加密
      *
      * @param algorithm 算法
+     * @param params    算法参数
      * @param password  密码
      * @param data      数据
      * @return 加密后的数据
-     * @throws NoSuchAlgorithmException  a
-     * @throws NoSuchPaddingException    a
-     * @throws InvalidKeyException       a
-     * @throws IllegalBlockSizeException a
-     * @throws BadPaddingException       a
+     * @throws NoSuchAlgorithmException           a
+     * @throws NoSuchPaddingException             a
+     * @throws InvalidKeyException                a
+     * @throws IllegalBlockSizeException          a
+     * @throws BadPaddingException                a
+     * @throws InvalidAlgorithmParameterException a
      */
     public static byte[] encrypt(String algorithm, AlgorithmParameters params, byte[] password, byte[] data) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
         var key = new SecretKeySpec(password, algorithm);
@@ -185,14 +187,16 @@ public final class CryptoUtils {
      * 解密
      *
      * @param algorithm 算法
+     * @param params    算法参数
      * @param password  密码
      * @param data      密文
      * @return 解密后的数据
-     * @throws NoSuchPaddingException    a
-     * @throws NoSuchAlgorithmException  a
-     * @throws InvalidKeyException       a
-     * @throws IllegalBlockSizeException a
-     * @throws BadPaddingException       a
+     * @throws NoSuchPaddingException             a
+     * @throws NoSuchAlgorithmException           a
+     * @throws InvalidKeyException                a
+     * @throws IllegalBlockSizeException          a
+     * @throws BadPaddingException                a
+     * @throws InvalidAlgorithmParameterException a
      */
     public static byte[] decrypt(String algorithm, AlgorithmParameters params, byte[] password, byte[] data) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
         var key = new SecretKeySpec(password, algorithm);

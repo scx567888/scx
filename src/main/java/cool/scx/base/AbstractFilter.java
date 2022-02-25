@@ -10,6 +10,8 @@ import java.util.Set;
  * a
  *
  * @param <E> a
+ * @author scx567888
+ * @version 1.11.5
  */
 public abstract class AbstractFilter<E extends AbstractFilter<E>> {
 

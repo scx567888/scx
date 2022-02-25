@@ -29,6 +29,11 @@ public final class BeanListHandler<T> implements ScxHandlerRE<ResultSet, List<T>
      */
     private final Map<String, Field> nameFieldMap = new HashMap<>();
 
+    /**
+     * a
+     *
+     * @param type a
+     */
     public BeanListHandler(Class<T> type) {
         if (ScanClassUtils.isNormalClass(type)) {
             try {

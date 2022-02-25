@@ -72,10 +72,12 @@ public final class ScxMappingHandler implements Handler<RoutingContext> {
     private int order = 0;
 
     /**
-     * <p>Constructor for ScxRouteHandler.</p>
+     * a
      *
-     * @param method a {@link java.lang.reflect.Method} object.
-     * @param clazz  a {@link java.lang.Class} object.
+     * @param clazz                      a
+     * @param method                     a
+     * @param scxBeanFactory             a
+     * @param scxHttpRouterConfiguration a
      */
     public ScxMappingHandler(Class<?> clazz, Method method, ScxBeanFactory scxBeanFactory, ScxMappingConfiguration scxHttpRouterConfiguration) {
         var methodScxMapping = method.getAnnotation(ScxMapping.class);

@@ -23,26 +23,63 @@ public final class FormData {
 
     private final List<FormDataItem> formDataItemList = new ArrayList<>();
 
+    /**
+     * a
+     *
+     * @param name a
+     * @param text a
+     * @return a
+     */
     public FormData add(String name, Object text) {
         this.formDataItemList.add(new FormDataItem(name, text.toString()));
         return this;
     }
 
+    /**
+     * a
+     *
+     * @param name a
+     * @param file a
+     * @return a
+     */
     public FormData addFile(String name, File file) {
         this.formDataItemList.add(new FormDataItem(name, file));
         return this;
     }
 
+    /**
+     * a
+     *
+     * @param name        a
+     * @param fileByte    a
+     * @param filename    a
+     * @param contentType a
+     * @return a
+     */
     public FormData addFile(String name, byte[] fileByte, String filename, String contentType) {
         this.formDataItemList.add(new FormDataItem(name, fileByte, filename, contentType));
         return this;
     }
 
+    /**
+     * a
+     *
+     * @param name     a
+     * @param fileByte a
+     * @param filename a
+     * @return a
+     */
     public FormData addFile(String name, byte[] fileByte, String filename) {
         this.formDataItemList.add(new FormDataItem(name, fileByte, filename));
         return this;
     }
 
+    /**
+     * a
+     *
+     * @param name a
+     * @return a
+     */
     public FormData remove(String name) {
         this.formDataItemList.removeIf(formDataItem -> name.equals(formDataItem.name));
         return this;

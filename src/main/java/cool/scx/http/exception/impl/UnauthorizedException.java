@@ -12,14 +12,27 @@ import static cool.scx.http.ScxHttpResponseStatus.UNAUTHORIZED;
  */
 public class UnauthorizedException extends ScxHttpException {
 
+    /**
+     * a
+     */
     public UnauthorizedException() {
         super(UNAUTHORIZED.statusCode(), UNAUTHORIZED.reasonPhrase());
     }
 
+    /**
+     * a
+     *
+     * @param info a
+     */
     public UnauthorizedException(String info) {
         super(UNAUTHORIZED.statusCode(), UNAUTHORIZED.reasonPhrase(), info);
     }
 
+    /**
+     * a
+     *
+     * @param throwable a
+     */
     public UnauthorizedException(Throwable throwable) {
         super(UNAUTHORIZED.statusCode(), UNAUTHORIZED.reasonPhrase(), throwable);
     }

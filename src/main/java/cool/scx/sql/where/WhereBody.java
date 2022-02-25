@@ -351,7 +351,8 @@ public final class WhereBody {
      * @param name      名称 (注意 : 默认为字段名称 , 不是数据库名称)
      * @param whereType WhereBody类型
      * @param value1    参数1
-     * @param options   参数2
+     * @param value2    参数2
+     * @param options   具体配置
      * @return 本身 , 方便链式调用
      */
     public static WhereBody newInstance2(String name, WhereType whereType, Object value1, Object value2, WhereOption... options) {

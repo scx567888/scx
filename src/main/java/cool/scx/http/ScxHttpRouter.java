@@ -33,6 +33,9 @@ import org.slf4j.LoggerFactory;
 import java.nio.file.Path;
 import java.util.*;
 
+/**
+ * ScxHttp 路由 内部使用 vertxRouter 进行具体路由的处理
+ */
 public final class ScxHttpRouter {
 
     private static final Logger logger = LoggerFactory.getLogger(ScxHttpRouter.class);
@@ -56,6 +59,15 @@ public final class ScxHttpRouter {
      */
     private final List<ScxHttpRouterExceptionHandler> scxMappingExceptionHandlers = new ArrayList<>();
 
+    /**
+     * a
+     *
+     * @param scxMappingConfiguration a
+     * @param scxEasyConfig           a
+     * @param vertx                   a
+     * @param scxModuleInfos          a
+     * @param scxBeanFactory          a
+     */
     public ScxHttpRouter(ScxMappingConfiguration scxMappingConfiguration, ScxEasyConfig scxEasyConfig, Vertx vertx, List<ScxModuleInfo<? extends ScxModule>> scxModuleInfos, ScxBeanFactory scxBeanFactory) {
         //初始化默认的异常处理器
         addExceptionHandler(ScxHttpExceptionHandler.DEFAULT_INSTANCE);
@@ -171,30 +183,65 @@ public final class ScxHttpRouter {
         return false;
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public Router vertxRouter() {
         return vertxRouter;
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public FaviconHandler faviconHandler() {
         return faviconHandler;
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public CorsHandler corsHandler() {
         return corsHandler;
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public ScxBodyHandler scxBodyHandler() {
         return scxBodyHandler;
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public Route faviconHandlerRoute() {
         return faviconHandlerRoute;
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public Route corsHandlerRoute() {
         return corsHandlerRoute;
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public Route scxBodyHandlerRoute() {
         return scxBodyHandlerRoute;
     }

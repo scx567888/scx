@@ -26,10 +26,20 @@ public final class ScxBodyHandler implements Handler<RoutingContext> {
      */
     private long bodyLimit = FileUtils.displaySizeToLong("16384KB");
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public long bodyLimit() {
         return bodyLimit;
     }
 
+    /**
+     * a
+     *
+     * @param bodyLimit a
+     */
     public void bodyLimit(long bodyLimit) {
         this.bodyLimit = bodyLimit;
     }

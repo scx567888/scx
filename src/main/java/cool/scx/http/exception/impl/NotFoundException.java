@@ -22,12 +22,17 @@ public class NotFoundException extends ScxHttpException {
     /**
      * a
      *
-     * @param message a
+     * @param info a
      */
     public NotFoundException(String info) {
         super(NOT_FOUND.statusCode(), NOT_FOUND.reasonPhrase(), info);
     }
 
+    /**
+     * a
+     *
+     * @param throwable a
+     */
     public NotFoundException(Throwable throwable) {
         super(NOT_FOUND.statusCode(), NOT_FOUND.reasonPhrase(), throwable);
     }

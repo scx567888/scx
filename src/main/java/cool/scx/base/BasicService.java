@@ -35,6 +35,9 @@ public class BasicService<Entity> {
      */
     protected final Class<Entity> entityClass;
 
+    /**
+     * 实体类对应的 BeanListHandler
+     */
     protected final BeanListHandler<Entity> entityBeanListHandler;
 
     /**

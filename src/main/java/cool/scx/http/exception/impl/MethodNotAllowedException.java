@@ -9,14 +9,27 @@ import static cool.scx.http.ScxHttpResponseStatus.METHOD_NOT_ALLOWED;
  */
 public class MethodNotAllowedException extends ScxHttpException {
 
+    /**
+     * a
+     */
     public MethodNotAllowedException() {
         super(METHOD_NOT_ALLOWED.statusCode(), METHOD_NOT_ALLOWED.reasonPhrase());
     }
 
+    /**
+     * a
+     *
+     * @param info a
+     */
     public MethodNotAllowedException(String info) {
         super(METHOD_NOT_ALLOWED.statusCode(), METHOD_NOT_ALLOWED.reasonPhrase(), info);
     }
 
+    /**
+     * a
+     *
+     * @param throwable a
+     */
     public MethodNotAllowedException(Throwable throwable) {
         super(METHOD_NOT_ALLOWED.statusCode(), METHOD_NOT_ALLOWED.reasonPhrase(), throwable);
     }
