@@ -4,9 +4,9 @@ import cool.scx.ScxBeanFactory;
 import cool.scx.ScxContext;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.enumeration.HttpMethod;
-import cool.scx.exception.ScxExceptionHelper;
 import cool.scx.util.CaseUtils;
 import cool.scx.util.StringUtils;
+import cool.scx.util.exception.ScxExceptionHelper;
 import io.vertx.core.Handler;
 import io.vertx.ext.web.RoutingContext;
 
@@ -82,6 +82,7 @@ public final class ScxMappingHandler implements Handler<RoutingContext> {
         this.url = getUrl(classScxMapping, methodScxMapping);
         this.patternUrl = getPatternUrl(this.url);
         this.httpMethods = getHttpMethod(methodScxMapping);
+        this.method.setAccessible(true);
     }
 
     /**

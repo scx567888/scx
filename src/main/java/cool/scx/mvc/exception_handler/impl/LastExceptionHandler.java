@@ -2,9 +2,9 @@ package cool.scx.mvc.exception_handler.impl;
 
 import cool.scx.ScxContext;
 import cool.scx.enumeration.ScxFeature;
-import cool.scx.exception.impl.InternalServerErrorException;
+import cool.scx.http.exception.impl.InternalServerErrorException;
 import cool.scx.mvc.exception_handler.ScxMappingExceptionHandler;
-import cool.scx.util.ExceptionUtils;
+import cool.scx.util.exception.ScxExceptionHelper;
 import io.vertx.ext.web.RoutingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +37,7 @@ public final class LastExceptionHandler implements ScxMappingExceptionHandler {
             logger.error("执行 ScxMappingHandler 处理器时发生异常 !!!", throwable);
             //5, 这里根据是否开启了开发人员错误页面 进行相应的返回
             if (ScxContext.getFeatureState(ScxFeature.USE_DEVELOPMENT_ERROR_PAGE)) {
-                new InternalServerErrorException(ExceptionUtils.getCustomStackTrace(throwable)).handle(context);
+                new InternalServerErrorException(ScxExceptionHelper.getCustomStackTrace(throwable)).handle(context);
             } else {
                 new InternalServerErrorException().handle(context);
             }

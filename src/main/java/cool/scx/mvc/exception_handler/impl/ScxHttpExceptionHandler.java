@@ -1,7 +1,7 @@
 package cool.scx.mvc.exception_handler.impl;
 
-import cool.scx.exception.ScxHttpException;
-import cool.scx.exception.impl.CustomHttpException;
+import cool.scx.http.exception.ScxHttpException;
+import cool.scx.http.exception.impl.CustomHttpException;
 import cool.scx.mvc.exception_handler.ScxMappingExceptionHandler;
 import io.vertx.ext.web.RoutingContext;
 import org.slf4j.Logger;

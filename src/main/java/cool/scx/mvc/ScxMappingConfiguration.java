@@ -2,7 +2,7 @@ package cool.scx.mvc;
 
 import cool.scx.ScxContext;
 import cool.scx.enumeration.ScxFeature;
-import cool.scx.exception.impl.BadRequestException;
+import cool.scx.http.exception.impl.BadRequestException;
 import cool.scx.mvc.exception_handler.ScxMappingExceptionHandler;
 import cool.scx.mvc.exception_handler.impl.LastExceptionHandler;
 import cool.scx.mvc.exception_handler.impl.ScxHttpExceptionHandler;
