@@ -34,4 +34,14 @@ public class InternalServerErrorException extends ScxHttpException {
         super(INTERNAL_SERVER_ERROR.statusCode(), INTERNAL_SERVER_ERROR.reasonPhrase(), throwable);
     }
 
+    /**
+     * a
+     *
+     * @param info      a
+     * @param throwable a
+     */
+    public InternalServerErrorException(String info, Throwable throwable) {
+        super(INTERNAL_SERVER_ERROR.statusCode(), INTERNAL_SERVER_ERROR.reasonPhrase(), info, throwable);
+    }
+
 }

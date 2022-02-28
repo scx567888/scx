@@ -37,4 +37,14 @@ public class BadRequestException extends ScxHttpException {
         super(BAD_REQUEST.statusCode(), BAD_REQUEST.reasonPhrase(), throwable);
     }
 
+    /**
+     * a
+     *
+     * @param info      a
+     * @param throwable a
+     */
+    public BadRequestException(String info, Throwable throwable) {
+        super(BAD_REQUEST.statusCode(), BAD_REQUEST.reasonPhrase(), info, throwable);
+    }
+
 }

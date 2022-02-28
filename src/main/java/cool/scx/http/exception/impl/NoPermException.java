@@ -37,4 +37,14 @@ public class NoPermException extends ScxHttpException {
         super(NO_PERM.statusCode(), NO_PERM.reasonPhrase(), throwable);
     }
 
+    /**
+     * a
+     *
+     * @param info      a
+     * @param throwable a
+     */
+    public NoPermException(String info, Throwable throwable) {
+        super(NO_PERM.statusCode(), NO_PERM.reasonPhrase(), info, throwable);
+    }
+
 }

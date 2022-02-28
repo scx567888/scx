@@ -34,4 +34,14 @@ public class MethodNotAllowedException extends ScxHttpException {
         super(METHOD_NOT_ALLOWED.statusCode(), METHOD_NOT_ALLOWED.reasonPhrase(), throwable);
     }
 
+    /**
+     * a
+     *
+     * @param info      a
+     * @param throwable a
+     */
+    public MethodNotAllowedException(String info, Throwable throwable) {
+        super(METHOD_NOT_ALLOWED.statusCode(), METHOD_NOT_ALLOWED.reasonPhrase(), info, throwable);
+    }
+
 }

@@ -37,4 +37,14 @@ public class NotFoundException extends ScxHttpException {
         super(NOT_FOUND.statusCode(), NOT_FOUND.reasonPhrase(), throwable);
     }
 
+    /**
+     * a
+     *
+     * @param info      a
+     * @param throwable a
+     */
+    public NotFoundException(String info, Throwable throwable) {
+        super(NOT_FOUND.statusCode(), NOT_FOUND.reasonPhrase(), info, throwable);
+    }
+
 }
