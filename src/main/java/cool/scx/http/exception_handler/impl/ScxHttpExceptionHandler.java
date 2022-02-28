@@ -45,6 +45,12 @@ public final class ScxHttpExceptionHandler implements ScxHttpRouterExceptionHand
      */
     private static final Logger logger = LoggerFactory.getLogger(ScxHttpExceptionHandler.class);
 
+    /**
+     * a
+     *
+     * @param scxHttpException a
+     * @param routingContext   a
+     */
     public static void handleScxHttpException(ScxHttpException scxHttpException, RoutingContext routingContext) {
         String info = null;
         //1, 这里根据是否开启了开发人员错误页面 进行相应的返回
