@@ -29,7 +29,7 @@ public final class LastExceptionHandler implements ScxHttpRouterExceptionHandler
     @Override
     public void handle(Throwable throwable, RoutingContext context) {
         //1, 如果这时 response 还没有被关闭的话 就返回 500 错误信息
-        if (!context.response().ended() && !context.response().closed()) {
+        if (!context.request().response().ended() && !context.request().response().closed()) {
             //打印错误信息
             logger.error("ScxHttpRouter 发生异常 !!!", throwable);
             ScxHttpExceptionHandler.handleScxHttpException(new InternalServerErrorException(throwable), context);

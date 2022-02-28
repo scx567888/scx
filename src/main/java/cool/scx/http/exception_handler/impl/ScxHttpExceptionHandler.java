@@ -18,7 +18,7 @@ import java.util.LinkedHashMap;
  */
 public final class ScxHttpExceptionHandler implements ScxHttpRouterExceptionHandler {
 
-    public static final String htmlTemplate = """
+    private static final String htmlTemplate = """
             <!DOCTYPE html>
             <html lang="en">
             <head>
@@ -27,6 +27,7 @@ public final class ScxHttpExceptionHandler implements ScxHttpRouterExceptionHand
             </head>
             <body>
                 <h1>%s - %s</h1>
+                <hr>
                 <pre>%s</pre>
             </body>
             </html>
@@ -43,7 +44,7 @@ public final class ScxHttpExceptionHandler implements ScxHttpRouterExceptionHand
     private static final Logger logger = LoggerFactory.getLogger(ScxHttpExceptionHandler.class);
 
     public static void handleScxHttpException(ScxHttpException scxHttpException, RoutingContext routingContext) {
-        var info = "";
+        String info = null;
         //1, 这里根据是否开启了开发人员错误页面 进行相应的返回
         if (ScxContext.getFeatureState(ScxFeature.USE_DEVELOPMENT_ERROR_PAGE)) {
             var cause = ScxExceptionHelper.getRootCause(scxHttpException.getCause());
@@ -53,7 +54,7 @@ public final class ScxHttpExceptionHandler implements ScxHttpRouterExceptionHand
                 info = ScxExceptionHelper.getStackTraceString(cause);
             }
         }
-        sendToClient(scxHttpException.statusCode(), scxHttpException.title(), info != null ? info : "", routingContext);
+        sendToClient(scxHttpException.statusCode(), scxHttpException.title(), info, routingContext);
     }
 
     /**
@@ -65,20 +66,25 @@ public final class ScxHttpExceptionHandler implements ScxHttpRouterExceptionHand
      * @param info           a
      */
     public static void sendToClient(int statusCode, String title, String info, RoutingContext routingContext) {
+        //防止页面出现 null 这种奇怪的情况
+        if (title == null) {
+            title = "";
+        }
+        if (info == null) {
+            info = "";
+        }
         var accept = routingContext.request().headers().get(HttpHeaderNames.ACCEPT);
         //根据 accept 返回不同的错误信息
         if (accept != null && accept.toLowerCase().contains("text/html")) {
             var htmlStr = String.format(htmlTemplate, title, statusCode, title, info);
-            VoHelper.fillHtmlContentType(routingContext.request().response().setStatusCode(statusCode))
-                    .end(htmlStr);
+            VoHelper.fillHtmlContentType(routingContext.request().response().setStatusCode(statusCode)).end(htmlStr);
         } else {
             var tempMap = new LinkedHashMap<>();
             tempMap.put("statusCode", statusCode);
             tempMap.put("title", title);
             tempMap.put("info", info);
             var jsonStr = VoHelper.toJson(tempMap, "");
-            VoHelper.fillJsonContentType(routingContext.request().response().setStatusCode(statusCode))
-                    .end(jsonStr);
+            VoHelper.fillJsonContentType(routingContext.request().response().setStatusCode(statusCode)).end(jsonStr);
         }
     }
 

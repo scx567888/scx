@@ -163,7 +163,7 @@ public final class ScxMappingHandler implements Handler<RoutingContext> {
             var tempResult = this.method.invoke(this.example, methodParameters);
             //4, 执行后置处理器
             var finalResult = this.scxMappingConfiguration.scxMappingInterceptor().postHandle(context, this, tempResult);
-            if (!context.request().response().ended()) {
+            if (!context.request().response().ended() && !context.request().response().closed()) {
                 this.scxMappingConfiguration.findMethodReturnValueHandler(finalResult).handle(finalResult, context);
             }
         } catch (Throwable e) {
