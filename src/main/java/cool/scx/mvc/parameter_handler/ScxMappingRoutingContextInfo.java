@@ -31,7 +31,7 @@ public final class ScxMappingRoutingContextInfo {
     /**
      * <p>Constructor for ScxMappingRequestParamInfo.</p>
      *
-     * @param ctx a {@link RoutingContext} object
+     * @param ctx a {@link io.vertx.ext.web.RoutingContext} object
      */
     public ScxMappingRoutingContextInfo(RoutingContext ctx) {
         this.routingContext = ctx;
