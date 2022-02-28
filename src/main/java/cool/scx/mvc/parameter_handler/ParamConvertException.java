@@ -1,9 +1,9 @@
 package cool.scx.mvc.parameter_handler;
 
 /**
- * a
+ * 参数转换异常
  */
-public class ParamConvertException extends Exception {
+public final class ParamConvertException extends RuntimeException {
 
     /**
      * a
