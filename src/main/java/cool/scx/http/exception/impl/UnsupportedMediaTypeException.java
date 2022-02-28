@@ -37,4 +37,14 @@ public class UnsupportedMediaTypeException extends ScxHttpException {
         super(UNSUPPORTED_MEDIA_TYPE.statusCode(), UNSUPPORTED_MEDIA_TYPE.reasonPhrase(), throwable);
     }
 
+    /**
+     * a
+     *
+     * @param info      a
+     * @param throwable a
+     */
+    public UnsupportedMediaTypeException(String info, Throwable throwable) {
+        super(UNSUPPORTED_MEDIA_TYPE.statusCode(), UNSUPPORTED_MEDIA_TYPE.reasonPhrase(), info, throwable);
+    }
+
 }

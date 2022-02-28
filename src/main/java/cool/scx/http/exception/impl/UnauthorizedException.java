@@ -37,4 +37,14 @@ public class UnauthorizedException extends ScxHttpException {
         super(UNAUTHORIZED.statusCode(), UNAUTHORIZED.reasonPhrase(), throwable);
     }
 
+    /**
+     * a
+     *
+     * @param info      a
+     * @param throwable a
+     */
+    public UnauthorizedException(String info, Throwable throwable) {
+        super(UNAUTHORIZED.statusCode(), UNAUTHORIZED.reasonPhrase(), info, throwable);
+    }
+
 }

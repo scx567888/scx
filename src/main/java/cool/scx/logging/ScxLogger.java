@@ -88,7 +88,7 @@ public final class ScxLogger {
                 .append(level.toFixedLengthString()).append(" ").append(name).append(" - ").append(msg)
                 .append(System.lineSeparator());
         if (throwable != null) {
-            stringBuilder.append(ScxExceptionHelper.getCustomStackTrace(throwable));
+            stringBuilder.append(ScxExceptionHelper.getStackTraceString(throwable));
         }
         var finalMessage = stringBuilder.toString();
         if (type() == ScxLoggingType.CONSOLE || type() == ScxLoggingType.BOTH) {

@@ -1,15 +1,7 @@
 package cool.scx.http.exception;
 
-import cool.scx.ScxHandler;
-import cool.scx.util.exception.ScxExceptionHelper;
-import cool.scx.vo.VoHelper;
-import io.netty.handler.codec.http.HttpHeaderNames;
-import io.vertx.ext.web.RoutingContext;
-
-import java.util.LinkedHashMap;
-
 /**
- * 在 ScxMapping 注解标记的方法中抛出此异常会被ScxMappingHandler 进行截获并调用其中的 {@link #handle(RoutingContext)}}
+ * 在 ScxMapping 注解标记的方法中抛出此异常会被ScxMappingHandler 进行截获并进行处理
  * <p>
  * 当我们的代码中有需要向客户端返回错误信息的时候
  * <p>
@@ -18,7 +10,7 @@ import java.util.LinkedHashMap;
  * @author scx567888
  * @version 1.0.10
  */
-public class ScxHttpException extends RuntimeException implements ScxHandler<RoutingContext> {
+public class ScxHttpException extends RuntimeException {
 
     /**
      * http 状态码
@@ -31,9 +23,16 @@ public class ScxHttpException extends RuntimeException implements ScxHandler<Rou
     final String title;
 
     /**
-     * 详细原因
+     * a
+     *
+     * @param statusCode a
+     * @param title      a
      */
-    final String info;
+    public ScxHttpException(int statusCode, String title) {
+        super();
+        this.statusCode = statusCode;
+        this.title = title;
+    }
 
     /**
      * a
@@ -43,21 +42,9 @@ public class ScxHttpException extends RuntimeException implements ScxHandler<Rou
      * @param info       a
      */
     public ScxHttpException(int statusCode, String title, String info) {
+        super(info);
         this.statusCode = statusCode;
         this.title = title;
-        this.info = info;
-    }
-
-    /**
-     * a
-     *
-     * @param statusCode a
-     * @param title      a
-     */
-    public ScxHttpException(int statusCode, String title) {
-        this.statusCode = statusCode;
-        this.title = title;
-        this.info = "";
     }
 
     /**
@@ -68,9 +55,23 @@ public class ScxHttpException extends RuntimeException implements ScxHandler<Rou
      * @param throwable  a
      */
     public ScxHttpException(int statusCode, String title, Throwable throwable) {
+        super(throwable);
         this.statusCode = statusCode;
         this.title = title;
-        this.info = ScxExceptionHelper.getCustomStackTrace(throwable);
+    }
+
+    /**
+     * a
+     *
+     * @param statusCode a
+     * @param title      a
+     * @param info       a
+     * @param throwable  a
+     */
+    public ScxHttpException(int statusCode, String title, String info, Throwable throwable) {
+        super(info, throwable);
+        this.statusCode = statusCode;
+        this.title = title;
     }
 
     /**
@@ -89,61 +90,6 @@ public class ScxHttpException extends RuntimeException implements ScxHandler<Rou
      */
     public final String title() {
         return this.title;
-    }
-
-    /**
-     * a
-     *
-     * @return a
-     */
-    public final String info() {
-        return this.info;
-    }
-
-    @Override
-    public void handle(RoutingContext routingContext) {
-        var accept = routingContext.request().headers().get(HttpHeaderNames.ACCEPT);
-        //根据 accept 返回不同的错误信息
-        if (accept != null && accept.toLowerCase().contains("text/html")) {
-            VoHelper.fillHtmlContentType(routingContext.request().response().setStatusCode(statusCode)).end(toHtml());
-        } else {
-            VoHelper.fillJsonContentType(routingContext.request().response().setStatusCode(statusCode)).end(toJson());
-        }
-    }
-
-    /**
-     * a
-     *
-     * @return a
-     */
-    public String toHtml() {
-        var htmlStr = """
-                <!DOCTYPE html>
-                <html lang="en">
-                <head>
-                    <meta charset="UTF-8">
-                    <title>%s</title>
-                </head>
-                <body>
-                    <h1>%s - %s</h1>
-                    <pre>%s</pre>
-                </body>
-                </html>
-                """;
-        return String.format(htmlStr, title, statusCode, title, info);
-    }
-
-    /**
-     * a
-     *
-     * @return a
-     */
-    public String toJson() {
-        var tempMap = new LinkedHashMap<>();
-        tempMap.put("statusCode", statusCode);
-        tempMap.put("title", title);
-        tempMap.put("info", info);
-        return VoHelper.toJson(tempMap, "");
     }
 
 }

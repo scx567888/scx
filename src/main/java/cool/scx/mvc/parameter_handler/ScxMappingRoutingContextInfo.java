@@ -4,8 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.NullNode;
 import com.fasterxml.jackson.databind.node.TextNode;
-import cool.scx.ScxContext;
-import cool.scx.enumeration.ScxFeature;
 import cool.scx.http.exception.impl.BadRequestException;
 import cool.scx.type.UploadedEntity;
 import cool.scx.util.ObjectUtils;
@@ -58,11 +56,7 @@ public final class ScxMappingRoutingContextInfo {
                 try {
                     return ObjectUtils.jsonMapper().readTree(ctx.getBodyAsString());
                 } catch (JsonProcessingException e) {
-                    if (ScxContext.getFeatureState(ScxFeature.USE_DEVELOPMENT_ERROR_PAGE)) {
-                        throw new BadRequestException(e);
-                    } else {
-                        throw new BadRequestException();
-                    }
+                    throw new BadRequestException(e);
                 }
             } else if (contentType.startsWith(HttpHeaderValues.MULTIPART_FORM_DATA.toString()) || contentType.startsWith(HttpHeaderValues.APPLICATION_X_WWW_FORM_URLENCODED.toString())) {
                 // ContentType 为 multipart/form-data 或者 application/x-www-form-urlencoded 的时候 不需要从 body 中获取数据
@@ -77,11 +71,7 @@ public final class ScxMappingRoutingContextInfo {
                 try {
                     return ObjectUtils.xmlMapper().readTree(ctx.getBodyAsString());
                 } catch (JsonProcessingException e) {
-                    if (ScxContext.getFeatureState(ScxFeature.USE_DEVELOPMENT_ERROR_PAGE)) {
-                        throw new BadRequestException(e);
-                    } else {
-                        throw new BadRequestException();
-                    }
+                    throw new BadRequestException(e);
                 }
             }
         }

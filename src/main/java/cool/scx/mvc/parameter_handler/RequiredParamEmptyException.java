@@ -1,9 +1,9 @@
 package cool.scx.mvc.parameter_handler;
 
 /**
- * a
+ * 必须参数缺失异常
  */
-public class RequiredParamEmptyException extends Exception {
+public final class RequiredParamEmptyException extends Exception {
 
     /**
      * a
