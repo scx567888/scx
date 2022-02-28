@@ -18,6 +18,14 @@ import java.util.LinkedHashMap;
  */
 public final class ScxHttpExceptionHandler implements ScxHttpRouterExceptionHandler {
 
+    /**
+     * a
+     */
+    public static final ScxHttpExceptionHandler DEFAULT_INSTANCE = new ScxHttpExceptionHandler();
+
+    /**
+     * 默认 html 模板
+     */
     private static final String htmlTemplate = """
             <!DOCTYPE html>
             <html lang="en">
@@ -32,12 +40,6 @@ public final class ScxHttpExceptionHandler implements ScxHttpRouterExceptionHand
             </body>
             </html>
             """;
-
-    /**
-     * a
-     */
-    public static final ScxHttpExceptionHandler DEFAULT_INSTANCE = new ScxHttpExceptionHandler();
-
     /**
      * a
      */
