@@ -1,7 +1,5 @@
 package cool.scx.http.exception;
 
-import cool.scx.util.exception.ScxExceptionHelper;
-
 /**
  * 在 ScxMapping 注解标记的方法中抛出此异常会被ScxMappingHandler 进行截获并进行处理
  * <p>
@@ -57,7 +55,7 @@ public class ScxHttpException extends RuntimeException {
      * @param throwable  a
      */
     public ScxHttpException(int statusCode, String title, Throwable throwable) {
-        super(ScxExceptionHelper.getRootCause(throwable));
+        super(throwable);
         this.statusCode = statusCode;
         this.title = title;
     }
@@ -71,7 +69,7 @@ public class ScxHttpException extends RuntimeException {
      * @param throwable  a
      */
     public ScxHttpException(int statusCode, String title, String info, Throwable throwable) {
-        super(info, ScxExceptionHelper.getRootCause(throwable));
+        super(info, throwable);
         this.statusCode = statusCode;
         this.title = title;
     }

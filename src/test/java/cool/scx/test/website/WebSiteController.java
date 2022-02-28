@@ -4,6 +4,7 @@ import cool.scx.ScxContext;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.enumeration.HttpMethod;
 import cool.scx.enumeration.RawType;
+import cool.scx.http.exception.impl.BadRequestException;
 import cool.scx.test.car.Car;
 import cool.scx.test.car.CarService;
 import cool.scx.util.RandomUtils;
@@ -66,6 +67,11 @@ public class WebSiteController {
      */
     @ScxMapping(value = "/", method = HttpMethod.GET)
     public Html TestIndex() throws IOException {
+//        var s=1/0;
+        if (true) {
+            throw new  BadRequestException();
+//            throw new IllegalArgumentException("啥破参数");
+        }
         System.err.println("两个 carService 是否相等 " + (carService == carService1));
         Html index = Html.of("index");
         index.add("name", "小明");

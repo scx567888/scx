@@ -1,10 +1,7 @@
 package cool.scx.http.exception_handler.impl;
 
-import cool.scx.ScxContext;
-import cool.scx.enumeration.ScxFeature;
 import cool.scx.http.exception.impl.InternalServerErrorException;
 import cool.scx.http.exception_handler.ScxHttpRouterExceptionHandler;
-import cool.scx.util.exception.ScxExceptionHelper;
 import io.vertx.ext.web.RoutingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,12 +32,7 @@ public final class LastExceptionHandler implements ScxHttpRouterExceptionHandler
         if (!context.response().ended() && !context.response().closed()) {
             //打印错误信息
             logger.error("ScxHttpRouter 发生异常 !!!", throwable);
-            //5, 这里根据是否开启了开发人员错误页面 进行相应的返回
-            if (ScxContext.getFeatureState(ScxFeature.USE_DEVELOPMENT_ERROR_PAGE)) {
-                new InternalServerErrorException(ScxExceptionHelper.getCustomStackTrace(throwable)).handle(context);
-            } else {
-                new InternalServerErrorException().handle(context);
-            }
+            ScxHttpExceptionHandler.handleScxHttpException(new InternalServerErrorException(throwable), context);
         } else {
             logger.error("ScxHttpRouter 发生异常 !!!, 因为请求已被相应, 所以错误信息可能没有正确返回给客户端 !!!", throwable);
         }

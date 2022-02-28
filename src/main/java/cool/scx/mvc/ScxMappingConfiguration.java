@@ -1,7 +1,5 @@
 package cool.scx.mvc;
 
-import cool.scx.ScxContext;
-import cool.scx.enumeration.ScxFeature;
 import cool.scx.http.exception.impl.BadRequestException;
 import cool.scx.mvc.interceptor.ScxMappingInterceptor;
 import cool.scx.mvc.interceptor.impl.ScxMappingInterceptorImpl;
@@ -167,23 +165,19 @@ public final class ScxMappingConfiguration {
      */
     public Object[] buildMethodParameters(Parameter[] parameters, RoutingContext context) throws Exception {
         var scxMappingRoutingContextInfo = new ScxMappingRoutingContextInfo(context);
-        var errMessageList = new ArrayList<Exception>();
+        var exceptionArrayList = new ArrayList<RuntimeException>();
         var methodParameter = new Object[parameters.length];
         for (int i = 0; i < methodParameter.length; i++) {
             var methodParameterHandler = findMethodParameterHandler(parameters[i]);
             try {
                 methodParameter[i] = methodParameterHandler.handle(parameters[i], scxMappingRoutingContextInfo);
             } catch (ParamConvertException | RequiredParamEmptyException e) {
-                errMessageList.add(e);
+                exceptionArrayList.add(e);
             }
         }
-        if (!errMessageList.isEmpty()) {
+        if (!exceptionArrayList.isEmpty()) {
             //是否使用开发时错误页面
-            if (ScxContext.getFeatureState(ScxFeature.USE_DEVELOPMENT_ERROR_PAGE)) {
-                throw new BadRequestException(errMessageList.stream().map(Throwable::getMessage).collect(Collectors.joining(";" + System.lineSeparator())));
-            } else {
-                throw new BadRequestException();
-            }
+            throw new BadRequestException(exceptionArrayList.stream().map(Throwable::getMessage).collect(Collectors.joining(";" + System.lineSeparator())));
         }
         return methodParameter;
     }
