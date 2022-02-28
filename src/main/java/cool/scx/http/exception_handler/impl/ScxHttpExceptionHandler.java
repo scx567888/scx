@@ -40,6 +40,7 @@ public final class ScxHttpExceptionHandler implements ScxHttpRouterExceptionHand
             </body>
             </html>
             """;
+
     /**
      * a
      */
