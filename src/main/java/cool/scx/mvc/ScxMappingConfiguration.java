@@ -165,7 +165,7 @@ public final class ScxMappingConfiguration {
      */
     public Object[] buildMethodParameters(Parameter[] parameters, RoutingContext context) throws Exception {
         var scxMappingRoutingContextInfo = new ScxMappingRoutingContextInfo(context);
-        var exceptionArrayList = new ArrayList<RuntimeException>();
+        var exceptionArrayList = new ArrayList<Exception>();
         var methodParameter = new Object[parameters.length];
         for (int i = 0; i < methodParameter.length; i++) {
             var methodParameterHandler = findMethodParameterHandler(parameters[i]);
