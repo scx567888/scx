@@ -10,6 +10,9 @@ import java.util.Objects;
 
 /**
  * a
+ *
+ * @author scx567888
+ * @version 1.11.8
  */
 public final class ScxLogger {
 
@@ -27,16 +30,31 @@ public final class ScxLogger {
         this.name = name;
     }
 
+    /**
+     * <p>level.</p>
+     *
+     * @param newLevel a {@link cool.scx.logging.ScxLoggingLevel} object
+     */
     void level(ScxLoggingLevel newLevel) {
         Objects.requireNonNull(newLevel);
         this.level = newLevel;
     }
 
+    /**
+     * <p>type.</p>
+     *
+     * @param newType a {@link cool.scx.logging.ScxLoggingType} object
+     */
     void type(ScxLoggingType newType) {
         Objects.requireNonNull(newType);
         this.type = newType;
     }
 
+    /**
+     * <p>storedDirectory.</p>
+     *
+     * @param newStoredDirectory a {@link java.nio.file.Path} object
+     */
     void storedDirectory(Path newStoredDirectory) {
         Objects.requireNonNull(newStoredDirectory);
         this.storedDirectory = newStoredDirectory;
