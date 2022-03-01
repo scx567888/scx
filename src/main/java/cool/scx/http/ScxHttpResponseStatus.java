@@ -43,14 +43,20 @@ public enum ScxHttpResponseStatus {
      */
     INTERNAL_SERVER_ERROR(500, "Internal Server Error !!!");
 
+    /**
+     * a
+     */
     private final int statusCode;
 
+    /**
+     * a
+     */
     private final String reasonPhrase;
 
     /**
      * <p>Constructor for ScxHttpResponseStatus.</p>
      *
-     * @param statusCode a int
+     * @param statusCode   a int
      * @param reasonPhrase a {@link java.lang.String} object
      */
     ScxHttpResponseStatus(int statusCode, String reasonPhrase) {

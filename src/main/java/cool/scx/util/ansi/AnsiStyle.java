@@ -33,6 +33,9 @@ public enum AnsiStyle implements AnsiElement {
      */
     UNDERLINE("4");
 
+    /**
+     * a
+     */
     private final String code;
 
     /**

@@ -32,6 +32,9 @@ public enum ScxFeature {
      */
     ENABLE_SCHEDULING_WITH_ANNOTATION(true);
 
+    /**
+     * a
+     */
     private final boolean _defaultValue;
 
     /**

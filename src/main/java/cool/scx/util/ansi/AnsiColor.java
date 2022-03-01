@@ -93,6 +93,9 @@ public enum AnsiColor implements AnsiElement {
      */
     BRIGHT_WHITE("97");
 
+    /**
+     * a
+     */
     private final String code;
 
     /**

@@ -93,6 +93,9 @@ public enum AnsiBackground implements AnsiElement {
      */
     BRIGHT_WHITE("107");
 
+    /**
+     * a
+     */
     private final String code;
 
     /**

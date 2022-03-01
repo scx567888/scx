@@ -50,10 +50,19 @@ public enum ScxLoggingLevel {
      */
     ALL(70, "ALL");
 
+    /**
+     * a
+     */
     private final int levelInt;
 
+    /**
+     * a
+     */
     private final String levelStr;
 
+    /**
+     * a
+     */
     private final String fixedLengthStr;
 
     /**
