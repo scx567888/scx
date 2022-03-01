@@ -2,6 +2,9 @@ package cool.scx.enumeration;
 
 /**
  * scx 特性枚举
+ *
+ * @author scx567888
+ * @version 1.11.8
  */
 public enum ScxFeature {
 
@@ -29,6 +32,11 @@ public enum ScxFeature {
      */
     ENABLE_SCHEDULING_WITH_ANNOTATION(true);
 
+    /**
+     * <p>Constructor for ScxFeature.</p>
+     *
+     * @param defaultValue a boolean
+     */
     private final boolean _defaultValue;
 
     ScxFeature(boolean defaultValue) {

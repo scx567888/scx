@@ -12,6 +12,8 @@ import java.util.Objects;
  * a
  *
  * @param <T> a
+ * @author scx567888
+ * @version 1.11.8
  */
 public final class ConvertValueHandler<T> implements ScxHandlerR<ScxConfigHandlerParam, T> {
 
@@ -37,6 +39,9 @@ public final class ConvertValueHandler<T> implements ScxHandlerR<ScxConfigHandle
         this.javaType = ObjectUtils.constructType(tTypeReference);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public T handle(ScxConfigHandlerParam param) {
         return param.value() != null ? ObjectUtils.convertValue(param.value(), this.javaType) : null;

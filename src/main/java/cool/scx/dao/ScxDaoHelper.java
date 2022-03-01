@@ -19,6 +19,9 @@ import java.util.stream.Stream;
  */
 public final class ScxDaoHelper {
 
+    /**
+     * Constant <code>logger</code>
+     */
     private static final Logger logger = LoggerFactory.getLogger(ScxDaoHelper.class);
 
     /**
@@ -100,7 +103,7 @@ public final class ScxDaoHelper {
      * a
      *
      * @param tableInfo a
-     * @throws SQLException a
+     * @throws java.sql.SQLException a
      */
     private static void fixTable0(ScxDaoTableInfo tableInfo) throws SQLException {
         var databaseName = ScxContext.easyConfig().dataSourceDatabase();
@@ -124,7 +127,7 @@ public final class ScxDaoHelper {
      *
      * @param tableInfo a
      * @return true 需要 false 不需要
-     * @throws SQLException e
+     * @throws java.sql.SQLException e
      */
     private static boolean checkNeedFixTable0(ScxDaoTableInfo tableInfo) throws SQLException {
         var databaseName = ScxContext.easyConfig().dataSourceDatabase();
@@ -148,7 +151,7 @@ public final class ScxDaoHelper {
      * @param databaseName 数据库名称
      * @param tableName    表名称
      * @return 如果表存在返回所有字段的名称 否则返回 null
-     * @throws SQLException s
+     * @throws java.sql.SQLException s
      */
     public static List<String> getTableAllColumnNames(Connection con, String databaseName, String tableName) throws SQLException {
         var dbMetaData = con.getMetaData();
