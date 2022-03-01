@@ -110,6 +110,13 @@ public final class ScxMappingHandler implements Handler<RoutingContext> {
         return order;
     }
 
+    /**
+     * <p>Getter for the field <code>url</code>.</p>
+     *
+     * @param classScxMapping  a {@link cool.scx.annotation.ScxMapping} object
+     * @param methodScxMapping a {@link cool.scx.annotation.ScxMapping} object
+     * @return a {@link java.lang.String} object
+     */
     private String getUrl(ScxMapping classScxMapping, ScxMapping methodScxMapping) {
         var urlArray = new String[]{"", ""};
         if (!methodScxMapping.ignoreParentUrl()) {
@@ -124,6 +131,12 @@ public final class ScxMappingHandler implements Handler<RoutingContext> {
         return StringUtils.cleanHttpURL(urlArray);
     }
 
+    /**
+     * <p>getHttpMethod.</p>
+     *
+     * @param methodScxMapping a {@link cool.scx.annotation.ScxMapping} object
+     * @return an array of {@link cool.scx.enumeration.HttpMethod} objects
+     */
     private HttpMethod[] getHttpMethod(ScxMapping methodScxMapping) {
         return Stream.of(methodScxMapping.method()).distinct().toArray(HttpMethod[]::new);
     }

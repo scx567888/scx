@@ -9,6 +9,9 @@ import io.vertx.ext.web.RoutingContext;
 
 /**
  * a
+ *
+ * @author scx567888
+ * @version 1.11.8
  */
 public final class LastMethodReturnValueHandler implements ScxMappingMethodReturnValueHandler {
 
@@ -17,11 +20,17 @@ public final class LastMethodReturnValueHandler implements ScxMappingMethodRetur
      */
     public static final LastMethodReturnValueHandler DEFAULT_INSTANCE = new LastMethodReturnValueHandler();
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean canHandle(Object result) {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void handle(Object result, RoutingContext context) throws JsonProcessingException {
         var accept = context.request().getHeader(HttpHeaderNames.ACCEPT);

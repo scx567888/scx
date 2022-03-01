@@ -4,6 +4,9 @@ import io.vertx.ext.web.RoutingContext;
 
 /**
  * a
+ *
+ * @author scx567888
+ * @version 1.11.8
  */
 public interface ScxMappingMethodReturnValueHandler {
 
@@ -20,7 +23,7 @@ public interface ScxMappingMethodReturnValueHandler {
      *
      * @param result  a
      * @param context a
-     * @throws Exception a
+     * @throws java.lang.Exception a
      */
     void handle(Object result, RoutingContext context) throws Exception;
 

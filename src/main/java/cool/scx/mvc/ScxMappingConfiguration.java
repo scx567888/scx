@@ -22,6 +22,9 @@ import java.util.stream.Collectors;
 
 /**
  * ScxMappingConfiguration 配置类 再此处可配置 [前置后置拦截器,参数处理器,返回值处理器等]
+ *
+ * @author scx567888
+ * @version 1.11.8
  */
 public final class ScxMappingConfiguration {
 
@@ -161,7 +164,7 @@ public final class ScxMappingConfiguration {
      * @param parameters p
      * @param context    c
      * @return r
-     * @throws Exception r
+     * @throws java.lang.Exception r
      */
     public Object[] buildMethodParameters(Parameter[] parameters, RoutingContext context) throws Exception {
         var scxMappingRoutingContextInfo = new ScxMappingRoutingContextInfo(context);
