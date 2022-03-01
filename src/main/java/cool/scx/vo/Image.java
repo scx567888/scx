@@ -142,6 +142,9 @@ public final class Image implements BaseVo {
 
     /**
      * 就不是普通的图片 我们就返回他在操作系统中的展示图标即可
+     *
+     * @return a {@link io.vertx.core.buffer.Buffer} object
+     * @throws cool.scx.http.exception.impl.NotFoundException if any.
      */
     private Buffer getBufferBySystemIcon() throws NotFoundException {
         try (var out = new ByteArrayOutputStream()) {
@@ -159,6 +162,9 @@ public final class Image implements BaseVo {
 
     /**
      * 裁剪后的图片
+     *
+     * @return a {@link io.vertx.core.buffer.Buffer} object
+     * @throws cool.scx.http.exception.impl.NotFoundException if any.
      */
     private Buffer getBufferByCroppedPicture() throws NotFoundException {
         try (var out = new ByteArrayOutputStream()) {
@@ -183,6 +189,11 @@ public final class Image implements BaseVo {
         }
     }
 
+    /**
+     * <p>initImageType.</p>
+     *
+     * @return a {@link cool.scx.vo.Image.ImageType} object
+     */
     private ImageType initImageType() {
         if (contentType != null && contentType.startsWith("image")) {
             if (height == null && width == null) {
@@ -195,6 +206,11 @@ public final class Image implements BaseVo {
         }
     }
 
+    /**
+     * <p>Getter for the field <code>buffer</code>.</p>
+     *
+     * @return a {@link io.vertx.core.buffer.Buffer} object
+     */
     private Buffer getBuffer() {
         return switch (this.imageType) {
             case CROPPED -> getBufferByCroppedPicture();

@@ -37,7 +37,7 @@ public final class VoHelper {
      *
      * @param value a
      * @return a
-     * @throws JsonProcessingException a
+     * @throws com.fasterxml.jackson.core.JsonProcessingException a
      */
     public static String toJson(Object value) throws JsonProcessingException {
         return JSON_MAPPER.writeValueAsString(value);
@@ -64,7 +64,7 @@ public final class VoHelper {
      *
      * @param value a
      * @return a
-     * @throws JsonProcessingException a
+     * @throws com.fasterxml.jackson.core.JsonProcessingException a
      */
     public static String toXml(Object value) throws JsonProcessingException {
         return XML_MAPPER.writeValueAsString(value);

@@ -70,6 +70,8 @@ public final class Download implements BaseVo {
      *
      * @param bytes        文件
      * @param downloadName 下载的文件名称
+     * @param file         a {@link java.io.File} object
+     * @param isFromFile   a boolean
      */
     private Download(File file, byte[] bytes, String downloadName, boolean isFromFile) {
         this.downloadName = downloadName;
@@ -91,13 +93,21 @@ public final class Download implements BaseVo {
     }
 
     /**
+     * <p>sendFile.</p>
+     *
      * @param context c
+     * @throws cool.scx.http.exception.impl.NotFoundException if any.
      */
     private void sendFile(RoutingContext context) throws NotFoundException {
         context.response().putHeader(HttpHeaderNames.CONTENT_DISPOSITION, VoHelper.getDownloadContentDisposition(downloadName));
         voFileWriter.writeFile(context);
     }
 
+    /**
+     * <p>sendBytes.</p>
+     *
+     * @param context a {@link io.vertx.ext.web.RoutingContext} object
+     */
     private void sendBytes(RoutingContext context) {
         var response = VoHelper.fillContentType(MimeMapping.getMimeTypeForFilename(downloadName.toLowerCase()), context.request().response())
                 .putHeader(HttpHeaderNames.CONTENT_DISPOSITION, VoHelper.getDownloadContentDisposition(downloadName))

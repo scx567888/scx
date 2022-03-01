@@ -82,7 +82,7 @@ public final class Json implements BaseVo {
      * 将内部的 JsonBody 转换为 json 字符串
      *
      * @return r
-     * @throws JsonProcessingException 转换失败
+     * @throws com.fasterxml.jackson.core.JsonProcessingException 转换失败
      */
     public String toJson() throws JsonProcessingException {
         return VoHelper.toJson(this.jsonBodyWrapper);

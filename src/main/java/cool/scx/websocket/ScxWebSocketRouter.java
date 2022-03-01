@@ -18,6 +18,9 @@ import java.util.Map;
 
 /**
  * a
+ *
+ * @author scx567888
+ * @version 1.11.8
  */
 public final class ScxWebSocketRouter implements Handler<ServerWebSocket> {
 
@@ -41,6 +44,11 @@ public final class ScxWebSocketRouter implements Handler<ServerWebSocket> {
         scxModuleInfos.stream().flatMap(c -> c.scxWebSocketRouteClassList().stream()).forEach(c -> this.addRoute(new ScxWebSocketRoute(StringUtils.cleanHttpURL(c.getAnnotation(ScxWebSocketMapping.class).value()), scxBeanFactory.getBean(c))));
     }
 
+    /**
+     * <p>handleException.</p>
+     *
+     * @param s a {@link cool.scx.ScxHandlerVE} object
+     */
     private static void handleException(ScxHandlerVE<?> s) {
         try {
             s.handle();
@@ -71,6 +79,9 @@ public final class ScxWebSocketRouter implements Handler<ServerWebSocket> {
         return new ArrayList<>(scxWebSocketRouteMapping.values());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void handle(ServerWebSocket webSocket) {
         var route = scxWebSocketRouteMapping.get(webSocket.path());

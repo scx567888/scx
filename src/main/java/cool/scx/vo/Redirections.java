@@ -5,6 +5,9 @@ import io.vertx.ext.web.RoutingContext;
 
 /**
  * 重定向
+ *
+ * @author scx567888
+ * @version 1.11.8
  */
 public final class Redirections implements BaseVo {
 
@@ -19,6 +22,12 @@ public final class Redirections implements BaseVo {
     private final int statusCode;
 
 
+    /**
+     * <p>Constructor for Redirections.</p>
+     *
+     * @param location   a {@link java.lang.String} object
+     * @param statusCode a int
+     */
     private Redirections(String location, int statusCode) {
         this.location = location;
         this.statusCode = statusCode;
@@ -44,6 +53,9 @@ public final class Redirections implements BaseVo {
         return new Redirections(location, 302);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void handle(RoutingContext routingContext) {
         routingContext.request().response().putHeader(HttpHeaderNames.LOCATION, location).setStatusCode(statusCode).end();
