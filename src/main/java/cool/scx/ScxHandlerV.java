@@ -6,6 +6,7 @@ package cool.scx;
  * @author scx567888
  * @version 1.9.21
  */
+@FunctionalInterface
 public interface ScxHandlerV {
 
     /**

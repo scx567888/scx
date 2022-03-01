@@ -8,6 +8,7 @@ package cool.scx;
  * @author scx567888
  * @version 1.9.7
  */
+@FunctionalInterface
 public interface ScxHandlerVRE<R, E extends Exception> {
 
     /**
