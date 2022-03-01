@@ -48,7 +48,7 @@ public final class Scx {
     /**
      * SCX 版本号
      */
-    private static final String SCX_VERSION = "1.11.7";
+    private static final String SCX_VERSION = "1.11.8";
 
     /**
      * 默认配置文件 路径
@@ -263,19 +263,42 @@ public final class Scx {
         return tempScxBeanFactory;
     }
 
+    /**
+     * <p>initVertx.</p>
+     *
+     * @return a {@link io.vertx.core.Vertx} object
+     */
     private static Vertx initVertx() {
         var vertxOptions = new VertxOptions();
         return Vertx.vertx(vertxOptions);
     }
 
+    /**
+     * <p>initArgs.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects
+     * @return an array of {@link java.lang.String} objects
+     */
     private static String[] initArgs(String[] args) {
         return args != null ? args : new String[0];
     }
 
+    /**
+     * <p>initFeatureConfig.</p>
+     *
+     * @param featureConfig a {@link cool.scx.config.ScxFeatureConfig} object
+     * @return a {@link cool.scx.config.ScxFeatureConfig} object
+     */
     private static ScxFeatureConfig initFeatureConfig(ScxFeatureConfig featureConfig) {
         return featureConfig != null ? featureConfig : new ScxFeatureConfig();
     }
 
+    /**
+     * <p>initScxModuleInfos.</p>
+     *
+     * @param scxModules an array of {@link cool.scx.ScxModule} objects
+     * @return a {@link java.util.List} object
+     */
     private static List<ScxModuleInfo<? extends ScxModule>> initScxModuleInfos(ScxModule[] scxModules) {
         //2, 检查模块参数是否正确
         if (scxModules == null || Arrays.stream(scxModules).noneMatch(Objects::nonNull)) {
@@ -295,6 +318,12 @@ public final class Scx {
         return tempScxModuleInfoList;
     }
 
+    /**
+     * <p>initMainClass.</p>
+     *
+     * @param mainClass a {@link java.lang.Class} object
+     * @return a {@link java.lang.Class} object
+     */
     private static Class<?> initMainClass(Class<?> mainClass) {
         //1,检测 mainClass 是否正确
         if (mainClass == null) {
@@ -401,6 +430,8 @@ public final class Scx {
 
     /**
      * 启动服务器
+     *
+     * @param port a int
      */
     private void startServer(int port) {
         this.vertxHttpServer.listen(port, http -> {
@@ -464,7 +495,7 @@ public final class Scx {
      *
      * @param clazz a {@link java.lang.Class} object
      * @param <T>   a T class
-     * @return a {@link ScxModuleInfo} object
+     * @return a {@link cool.scx.ScxModuleInfo} object
      */
     @SuppressWarnings("unchecked")
     public <T extends ScxModule> ScxModuleInfo<T> findScxModuleInfo(Class<T> clazz) {

@@ -19,6 +19,9 @@ import java.io.IOException;
  */
 public final class ScxTemplate {
 
+    /**
+     * Constant <code>logger</code>
+     */
     private static final Logger logger = LoggerFactory.getLogger(ScxTemplate.class);
 
     /**
@@ -32,6 +35,8 @@ public final class ScxTemplate {
     private final Configuration freemarkerConfig = new Configuration(VERSION);
 
     /**
+     * <p>Constructor for ScxTemplate.</p>
+     *
      * @param scxEasyConfig a
      */
     public ScxTemplate(ScxEasyConfig scxEasyConfig) {

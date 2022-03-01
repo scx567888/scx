@@ -20,6 +20,9 @@ import java.util.List;
 
 /**
  * 用来存储 整个项目的上下文
+ *
+ * @author scx567888
+ * @version 1.11.8
  */
 public final class ScxContext {
 
@@ -257,7 +260,7 @@ public final class ScxContext {
      *
      * @param clazz a {@link java.lang.Class} object
      * @param <T>   a T class
-     * @return a {@link ScxModuleInfo} object
+     * @return a {@link cool.scx.ScxModuleInfo} object
      */
     public static <T extends ScxModule> ScxModuleInfo<T> findScxModuleInfo(Class<T> clazz) {
         return scx().findScxModuleInfo(clazz);

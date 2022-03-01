@@ -4,6 +4,9 @@ import java.time.format.DateTimeFormatter;
 
 /**
  * 所有常量
+ *
+ * @author scx567888
+ * @version 1.11.8
  */
 public final class ScxConstant {
 
