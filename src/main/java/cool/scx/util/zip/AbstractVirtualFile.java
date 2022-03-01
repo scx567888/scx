@@ -36,11 +36,17 @@ public abstract class AbstractVirtualFile implements ScxTree<AbstractVirtualFile
         this.parent = parent;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public final AbstractVirtualFile parent() {
         return this.parent;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public final List<AbstractVirtualFile> children() {
         return children;

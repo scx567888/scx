@@ -14,11 +14,20 @@ import java.util.List;
 
 /**
  * a
+ *
+ * @author scx567888
+ * @version 1.11.8
  */
 public final class FormData {
 
+    /**
+     * Constant <code>lineSeparator="\r\n"</code>
+     */
     private static final String lineSeparator = "\r\n";
 
+    /**
+     * Constant <code>lineSeparatorByteArray</code>
+     */
     private static final byte[] lineSeparatorByteArray = lineSeparator.getBytes(StandardCharsets.UTF_8);
 
     private final List<FormDataItem> formDataItemList = new ArrayList<>();
@@ -85,6 +94,12 @@ public final class FormData {
         return this;
     }
 
+    /**
+     * <p>getBodyPublisher.</p>
+     *
+     * @param boundary a {@link java.lang.String} object
+     * @return a HttpRequest.BodyPublisher object
+     */
     HttpRequest.BodyPublisher getBodyPublisher(String boundary) {
         return HttpRequest.BodyPublishers.ofByteArrays(() -> new FormDataByteArrayIterable(formDataItemList, boundary));
     }

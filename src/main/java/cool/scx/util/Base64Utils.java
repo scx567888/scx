@@ -6,6 +6,9 @@ import java.util.Base64;
 
 /**
  * a
+ *
+ * @author scx567888
+ * @version 1.11.8
  */
 public final class Base64Utils {
 
@@ -22,7 +25,7 @@ public final class Base64Utils {
     /**
      * 根据 字符串 获取(加密) BASE64
      *
-     * @param str a {@link String} object
+     * @param str a {@link java.lang.String} object
      * @return a {@link java.lang.String} object
      */
     public static byte[] encode(String str) {

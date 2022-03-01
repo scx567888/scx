@@ -154,6 +154,13 @@ public final class ZipAction {
         });
     }
 
+    /**
+     * <p>getFullPath.</p>
+     *
+     * @param abstractVirtualFiles1 a {@link java.util.List} object
+     * @param abstractVirtualFiles2 a {@link cool.scx.util.zip.AbstractVirtualFile} object
+     * @return a {@link java.lang.String} object
+     */
     private static String getFullPath(List<AbstractVirtualFile> abstractVirtualFiles1, AbstractVirtualFile... abstractVirtualFiles2) {
         var fullList = new ArrayList<AbstractVirtualFile>();
         if (abstractVirtualFiles1 != null) {

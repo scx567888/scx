@@ -17,6 +17,9 @@ import java.time.LocalDateTime;
 
 /**
  * a
+ *
+ * @author scx567888
+ * @version 1.11.8
  */
 public final class JacksonHelper {
 
@@ -34,6 +37,8 @@ public final class JacksonHelper {
      * 获取针对日期处理的 jackson module;
      * <br>
      * 仅仅是在 jackson-datatype-jsr310 包的基础上 添加了一些自定义的日期序列化格式
+     *
+     * @return a {@link com.fasterxml.jackson.datatype.jsr310.JavaTimeModule} object
      */
     private static JavaTimeModule initJavaTimeModule() {
         var javaTimeModule = new JavaTimeModule();
@@ -65,12 +70,15 @@ public final class JacksonHelper {
 
     /**
      * 根据 MapperBuilder 获取 ObjectMapper 对象 并对默认属性进行一些设置,具体如下
-     * 如需获得原始的 ObjectMapper 对象请使用 {@link MapperBuilder}; 自行创建
-     * 1, 针对 LocalDateTime 类型设置默认的日期格式化格式 具体格式由 {@link ScxConstant#DEFAULT_DATETIME_FORMATTER} 决定
+     * 如需获得原始的 ObjectMapper 对象请使用 {@link com.fasterxml.jackson.databind.cfg.MapperBuilder}; 自行创建
+     * 1, 针对 LocalDateTime 类型设置默认的日期格式化格式 具体格式由 {@link cool.scx.ScxConstant#DEFAULT_DATETIME_FORMATTER} 决定
      * 2, DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES 设置为  false
      * 3, SerializationFeature.FAIL_ON_EMPTY_BEANS          设置为  false
      * 4, NullKeySerializer                                 设置为  JacksonHelper.NULL_KEY_SERIALIZER
      *
+     * @param mapperBuilder a {@link com.fasterxml.jackson.databind.cfg.MapperBuilder} object
+     * @param <M>           a M class
+     * @param <B>           a B class
      * @return a {@link com.fasterxml.jackson.databind.ObjectMapper} object
      */
     static <M extends ObjectMapper, B extends MapperBuilder<M, B>> M initObjectMapper(MapperBuilder<M, B> mapperBuilder) {
@@ -93,6 +101,7 @@ public final class JacksonHelper {
      * 设置 IgnoreJsonIgnore
      *
      * @param mapper m
+     * @param <M>    a M class
      * @return m
      */
     static <M extends ObjectMapper> M setIgnoreJsonIgnore(M mapper) {

@@ -151,6 +151,9 @@ public final class VirtualDirectory extends AbstractVirtualFile {
 
     /**
      * {@inheritDoc}
+     *
+     * @param name a {@link java.lang.String} object
+     * @return a {@link cool.scx.util.zip.AbstractVirtualFile} object
      */
     public AbstractVirtualFile findChildren(String name) {
         for (var child : children) {
