@@ -2,6 +2,9 @@ package cool.scx.sql.where;
 
 /**
  * a
+ *
+ * @author scx567888
+ * @version 1.11.8
  */
 public enum WhereOption {
 

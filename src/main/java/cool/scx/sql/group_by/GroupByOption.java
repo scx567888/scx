@@ -2,6 +2,9 @@ package cool.scx.sql.group_by;
 
 /**
  * a
+ *
+ * @author scx567888
+ * @version 1.11.8
  */
 public enum GroupByOption {
 

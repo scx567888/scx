@@ -352,11 +352,12 @@ public final class Where {
     /**
      * a
      *
-     * @param name      a
-     * @param whereType a
-     * @param value1    a
-     * @param value2    a
-     * @param options   a
+     * @param name          a
+     * @param whereType     a
+     * @param value1        a
+     * @param value2        a
+     * @param options       a
+     * @param needParamSize a int
      * @return a
      */
     private Where _add(String name, WhereType whereType, Object value1, Object value2, int needParamSize, WhereOption... options) {

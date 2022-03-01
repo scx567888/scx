@@ -12,6 +12,9 @@ import java.util.Set;
 
 /**
  * where 封装体
+ *
+ * @author scx567888
+ * @version 1.11.8
  */
 public final class WhereBody {
 
@@ -31,7 +34,13 @@ public final class WhereBody {
     private final Map<String, Object> whereParamMap = new HashMap<>();
 
     /**
+     * <p>Constructor for WhereBody.</p>
      *
+     * @param _name           a {@link java.lang.String} object
+     * @param whereType       a {@link cool.scx.sql.where.WhereType} object
+     * @param value1          a {@link java.lang.Object} object
+     * @param value2          a {@link java.lang.Object} object
+     * @param useOriginalName a boolean
      */
     WhereBody(final String _name, final WhereType whereType, final Object value1, final Object value2, boolean useOriginalName) {
         this.name = _name.trim();
@@ -308,6 +317,17 @@ public final class WhereBody {
         return newInstance1(fieldName, WhereType.NOT_IN, value, options);
     }
 
+    /**
+     * <p>_newInstance.</p>
+     *
+     * @param name          a {@link java.lang.String} object
+     * @param whereType     a {@link cool.scx.sql.where.WhereType} object
+     * @param value1        a {@link java.lang.Object} object
+     * @param value2        a {@link java.lang.Object} object
+     * @param needParamSize a int
+     * @param options       a {@link cool.scx.sql.where.WhereOption} object
+     * @return a {@link cool.scx.sql.where.WhereBody} object
+     */
     private static WhereBody _newInstance(String name, WhereType whereType, Object value1, Object value2, int needParamSize, WhereOption... options) {
         var useOriginalName = false;// 是否使用原始名称
         for (var option : options) {
