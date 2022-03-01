@@ -22,10 +22,12 @@ public final class ScxLoggerFactory {
      * Constant <code>defaultLevel</code>
      */
     private static ScxLoggingLevel defaultLevel = ScxLoggingLevel.ERROR;
+
     /**
      * Constant <code>defaultType</code>
      */
     private static ScxLoggingType defaultType = ScxLoggingType.CONSOLE;
+
     /**
      * Constant <code>defaultStoredDirectory</code>
      */
