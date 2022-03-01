@@ -93,13 +93,13 @@ public enum AnsiBackground implements AnsiElement {
      */
     BRIGHT_WHITE("107");
 
+    private final String code;
+
     /**
      * <p>Constructor for AnsiBackground.</p>
      *
      * @param code a {@link java.lang.String} object
      */
-    private final String code;
-
     AnsiBackground(String code) {
         this.code = code;
     }

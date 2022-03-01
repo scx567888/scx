@@ -33,13 +33,13 @@ public enum AnsiStyle implements AnsiElement {
      */
     UNDERLINE("4");
 
+    private final String code;
+
     /**
      * <p>Constructor for AnsiStyle.</p>
      *
      * @param code a {@link java.lang.String} object
      */
-    private final String code;
-
     AnsiStyle(String code) {
         this.code = code;
     }

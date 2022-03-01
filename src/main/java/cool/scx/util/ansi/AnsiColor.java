@@ -93,13 +93,13 @@ public enum AnsiColor implements AnsiElement {
      */
     BRIGHT_WHITE("97");
 
+    private final String code;
+
     /**
      * <p>Constructor for AnsiColor.</p>
      *
      * @param code a {@link java.lang.String} object
      */
-    private final String code;
-
     AnsiColor(String code) {
         this.code = code;
     }
