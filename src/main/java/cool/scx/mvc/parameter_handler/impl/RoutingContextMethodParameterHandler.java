@@ -8,6 +8,9 @@ import java.lang.reflect.Parameter;
 
 /**
  * 类型为 RoutingContext 的参数处理器
+ *
+ * @author scx567888
+ * @version 1.11.8
  */
 public final class RoutingContextMethodParameterHandler implements ScxMappingMethodParameterHandler {
 
@@ -16,11 +19,17 @@ public final class RoutingContextMethodParameterHandler implements ScxMappingMet
      */
     public static final RoutingContextMethodParameterHandler DEFAULT_INSTANCE = new RoutingContextMethodParameterHandler();
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean canHandle(Parameter parameter) {
         return parameter.getParameterizedType() == RoutingContext.class;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Object handle(Parameter paramInfo, ScxMappingRoutingContextInfo routingContext) {
         return routingContext.routingContext();

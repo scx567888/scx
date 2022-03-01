@@ -4,6 +4,9 @@ import java.lang.reflect.Parameter;
 
 /**
  * a
+ *
+ * @author scx567888
+ * @version 1.11.8
  */
 public interface ScxMappingMethodParameterHandler {
 
@@ -21,7 +24,7 @@ public interface ScxMappingMethodParameterHandler {
      * @param parameter                    方法参数
      * @param scxMappingRoutingContextInfo 包装后的 RoutingContext
      * @return 处理后的结果
-     * @throws Exception e
+     * @throws java.lang.Exception e
      */
     Object handle(Parameter parameter, ScxMappingRoutingContextInfo scxMappingRoutingContextInfo) throws Exception;
 

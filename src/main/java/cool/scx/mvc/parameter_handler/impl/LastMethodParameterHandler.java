@@ -7,6 +7,9 @@ import java.lang.reflect.Parameter;
 
 /**
  * a
+ *
+ * @author scx567888
+ * @version 1.11.8
  */
 public final class LastMethodParameterHandler implements ScxMappingMethodParameterHandler {
 
@@ -15,11 +18,17 @@ public final class LastMethodParameterHandler implements ScxMappingMethodParamet
      */
     public static final LastMethodParameterHandler DEFAULT_INSTANCE = new LastMethodParameterHandler();
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean canHandle(Parameter parameter) {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Object handle(Parameter parameter, ScxMappingRoutingContextInfo context) throws Exception {
         //------ 这里针对没有注解的参数进行赋值猜测 ---------------
