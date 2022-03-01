@@ -44,6 +44,9 @@ public final class ScxBodyHandler implements Handler<RoutingContext> {
         this.bodyLimit = bodyLimit;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void handle(RoutingContext context) {
         var request = context.request();

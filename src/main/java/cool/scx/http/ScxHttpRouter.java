@@ -35,9 +35,15 @@ import java.util.*;
 
 /**
  * ScxHttp 路由 内部使用 vertxRouter 进行具体路由的处理
+ *
+ * @author scx567888
+ * @version 1.11.8
  */
 public final class ScxHttpRouter {
 
+    /**
+     * Constant <code>logger</code>
+     */
     private static final Logger logger = LoggerFactory.getLogger(ScxHttpRouter.class);
 
     private final List<ScxMappingHandler> SCX_MAPPING_HANDLER_LIST = new ArrayList<>();
@@ -87,6 +93,11 @@ public final class ScxHttpRouter {
         registerStaticServerHandler(this.vertxRouter, scxEasyConfig);
     }
 
+    /**
+     * <p>bindErrorHandler.</p>
+     *
+     * @param vertxRouter a {@link io.vertx.ext.web.Router} object
+     */
     private void bindErrorHandler(Router vertxRouter) {
         var errorHandler = new ErrorHandler(this);
         // 因为 ScxHttpResponseStatus 中所有的错误状态 都处在可以处理的范围内 所以我们 按照 ScxHttpResponseStatus 的值进行批量设置
@@ -100,6 +111,7 @@ public final class ScxHttpRouter {
      *
      * @param scxHttpRouterConfiguration s
      * @param scxModuleInfos             a
+     * @param scxBeanFactory             a {@link cool.scx.ScxBeanFactory} object
      */
     private void registerScxMappingHandler(ScxBeanFactory scxBeanFactory, ScxMappingConfiguration scxHttpRouterConfiguration, List<ScxModuleInfo<? extends ScxModule>> scxModuleInfos) {
         SCX_MAPPING_HANDLER_LIST.clear();
@@ -131,7 +143,7 @@ public final class ScxHttpRouter {
     /**
      * <p>register.</p>
      *
-     * @param vertxRouter   a {@link Router} object
+     * @param vertxRouter   a {@link io.vertx.ext.web.Router} object
      * @param scxEasyConfig a
      */
     private void registerStaticServerHandler(Router vertxRouter, ScxEasyConfig scxEasyConfig) {
