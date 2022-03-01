@@ -32,13 +32,13 @@ public enum ScxFeature {
      */
     ENABLE_SCHEDULING_WITH_ANNOTATION(true);
 
+    private final boolean _defaultValue;
+
     /**
      * <p>Constructor for ScxFeature.</p>
      *
      * @param defaultValue a boolean
      */
-    private final boolean _defaultValue;
-
     ScxFeature(boolean defaultValue) {
         this._defaultValue = defaultValue;
     }
