@@ -6,6 +6,9 @@ import java.util.Arrays;
 
 /**
  * 更新及保存数据是的字段过滤器 (注意 excludeIfFieldValueIsNull 在 批量保存时无效)
+ *
+ * @author scx567888
+ * @version 1.11.8
  */
 public final class UpdateFilter extends AbstractFilter<UpdateFilter> {
 

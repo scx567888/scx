@@ -50,7 +50,7 @@ public final class Query {
     /**
      * <p>orderBy.</p>
      *
-     * @return a {@link OrderBy} object
+     * @return a {@link cool.scx.sql.order_by.OrderBy} object
      */
     public OrderBy orderBy() {
         return orderBy;
@@ -59,7 +59,7 @@ public final class Query {
     /**
      * <p>groupBy.</p>
      *
-     * @return a {@link GroupBy} object
+     * @return a {@link cool.scx.sql.group_by.GroupBy} object
      */
     public GroupBy groupBy() {
         return groupBy;
@@ -68,7 +68,7 @@ public final class Query {
     /**
      * <p>where.</p>
      *
-     * @return a {@link Where} object
+     * @return a {@link cool.scx.sql.where.Where} object
      */
     public Where where() {
         return where;
@@ -77,7 +77,7 @@ public final class Query {
     /**
      * <p>pagination.</p>
      *
-     * @return a {@link Pagination} object
+     * @return a {@link cool.scx.sql.pagination.Pagination} object
      */
     public Pagination pagination() {
         return pagination;
