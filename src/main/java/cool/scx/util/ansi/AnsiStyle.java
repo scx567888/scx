@@ -2,6 +2,9 @@ package cool.scx.util.ansi;
 
 /**
  * Ansi 样式
+ *
+ * @author scx567888
+ * @version 1.11.8
  */
 public enum AnsiStyle implements AnsiElement {
 
@@ -30,12 +33,20 @@ public enum AnsiStyle implements AnsiElement {
      */
     UNDERLINE("4");
 
+    /**
+     * <p>Constructor for AnsiStyle.</p>
+     *
+     * @param code a {@link java.lang.String} object
+     */
     private final String code;
 
     AnsiStyle(String code) {
         this.code = code;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String code() {
         return this.code;

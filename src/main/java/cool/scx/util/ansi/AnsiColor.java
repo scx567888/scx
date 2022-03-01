@@ -2,6 +2,9 @@ package cool.scx.util.ansi;
 
 /**
  * 前景色
+ *
+ * @author scx567888
+ * @version 1.11.8
  */
 public enum AnsiColor implements AnsiElement {
 
@@ -90,12 +93,20 @@ public enum AnsiColor implements AnsiElement {
      */
     BRIGHT_WHITE("97");
 
+    /**
+     * <p>Constructor for AnsiColor.</p>
+     *
+     * @param code a {@link java.lang.String} object
+     */
     private final String code;
 
     AnsiColor(String code) {
         this.code = code;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String code() {
         return this.code;

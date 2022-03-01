@@ -86,7 +86,7 @@ public final class Ansi {
     }
 
     /**
-     * Encode a single {@link AnsiElement} if output is enabled.
+     * Encode a single {@link cool.scx.util.ansi.AnsiElement} if output is enabled.
      *
      * @param element the element to encode
      * @return the encoded element or an empty string
@@ -99,7 +99,7 @@ public final class Ansi {
     }
 
     /**
-     * Create a new ANSI string from the specified elements. Any {@link AnsiElement}s will
+     * Create a new ANSI string from the specified elements. Any {@link cool.scx.util.ansi.AnsiElement}s will
      * be encoded as required.
      *
      * @param elements the elements to encode
@@ -185,6 +185,7 @@ public final class Ansi {
      *
      * @param elements  a
      * @param elements2 b
+     * @return an array of {@link cool.scx.util.ansi.AnsiElement} objects
      */
     private static AnsiElement[] filterAnsiElement(AnsiElement[] elements, AnsiElement... elements2) {
         AnsiElement ansiColor = null;
