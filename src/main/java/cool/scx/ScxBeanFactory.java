@@ -46,6 +46,8 @@ public final class ScxBeanFactory {
     }
 
     /**
+     * <p>registerBean.</p>
+     *
      * @param classList c
      */
     public void registerBean(Collection<Class<?>> classList) {

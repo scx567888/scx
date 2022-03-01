@@ -7,6 +7,9 @@ import java.util.Map;
 
 /**
  * a
+ *
+ * @author scx567888
+ * @version 1.11.8
  */
 public final class ScxFeatureConfig {
 

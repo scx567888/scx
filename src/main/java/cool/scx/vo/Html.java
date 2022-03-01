@@ -26,6 +26,13 @@ public final class Html implements BaseVo {
 
     private final Map<String, Object> dataMap = new HashMap<>();
 
+    /**
+     * <p>Constructor for Html.</p>
+     *
+     * @param template    a {@link freemarker.template.Template} object
+     * @param htmlStr     a {@link java.lang.String} object
+     * @param useTemplate a boolean
+     */
     private Html(Template template, String htmlStr, boolean useTemplate) {
         this.template = template;
         this.htmlStr = htmlStr;

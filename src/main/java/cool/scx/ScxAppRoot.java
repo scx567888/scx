@@ -6,6 +6,9 @@ import java.io.File;
 
 /**
  * 用来存储 项目所在路径
+ *
+ * @author scx567888
+ * @version 1.11.8
  */
 public final class ScxAppRoot {
 

@@ -158,7 +158,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * 插入数据 (不使用自动提交)
      *
      * @param entity 待插入的数据
-     * @param con    a Connection object
+     * @param con    a {@link java.sql.Connection} object
      * @return 插入后的数据
      * @throws java.sql.SQLException if any.
      */
@@ -170,7 +170,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * 插入数据 (不使用自动提交)
      *
      * @param entity       待插入的数据
-     * @param con          a Connection object
+     * @param con          a {@link java.sql.Connection} object
      * @param updateFilter u
      * @return 插入后的数据
      * @throws java.sql.SQLException if any.
@@ -184,7 +184,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * 批量插入数据 (不使用自动提交)
      *
      * @param entityList 数据集合
-     * @param con        a Connection object
+     * @param con        a {@link java.sql.Connection} object
      * @return 插入成功的数据的自增主键列表
      * @throws java.sql.SQLException if any.
      */
@@ -195,7 +195,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     /**
      * a
      *
-     * @param con          a
+     * @param con          a {@link java.sql.Connection} object
      * @param entityList   a
      * @param updateFilter a
      * @return a
@@ -252,7 +252,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     /**
      * a
      *
-     * @param con a
+     * @param con a {@link java.sql.Connection} object
      * @return a
      * @throws SQLException a
      */
@@ -263,7 +263,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     /**
      * a
      *
-     * @param con          a
+     * @param con          a  {@link java.sql.Connection} object
      * @param selectFilter a
      * @return a
      * @throws SQLException a
@@ -275,7 +275,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     /**
      * 根据聚合查询条件 {@link Query} 获取数据列表
      *
-     * @param con   c
+     * @param con   a {@link java.sql.Connection} object
      * @param query 聚合查询参数对象
      * @return 数据列表
      * @throws SQLException s
@@ -287,7 +287,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     /**
      * a
      *
-     * @param con          a
+     * @param con          a {@link java.sql.Connection} object
      * @param query        a
      * @param selectFilter a
      * @return a
@@ -343,7 +343,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     /**
      * 根据 ID (主键) 查询单条数据
      *
-     * @param con c
+     * @param con a {@link java.sql.Connection} object
      * @param id  id ( 主键 )
      * @return 查到多个则返回第一个 没有则返回 null
      * @throws SQLException e
@@ -355,7 +355,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     /**
      * a
      *
-     * @param con          a
+     * @param con          a {@link java.sql.Connection} object
      * @param id           a
      * @param selectFilter a
      * @return a
@@ -368,7 +368,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     /**
      * 根据聚合查询条件 {@link Query} 获取单条数据
      *
-     * @param con   c
+     * @param con   a {@link java.sql.Connection} object
      * @param query 聚合查询参数对象
      * @return 查到多个则返回第一个 没有则返回 null
      * @throws SQLException s
@@ -380,7 +380,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     /**
      * a
      *
-     * @param con          a
+     * @param con          a {@link java.sql.Connection} object
      * @param query        a
      * @param selectFilter a
      * @return a
@@ -413,7 +413,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     /**
      * 获取所有数据的条数
      *
-     * @param con c
+     * @param con a {@link java.sql.Connection} object
      * @return 所有数据的条数
      * @throws SQLException s
      */
@@ -424,7 +424,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     /**
      * 根据聚合查询条件 {@link Query} 获取数据条数
      *
-     * @param con   c
+     * @param con   a {@link java.sql.Connection} object
      * @param query 聚合查询参数对象
      * @return 数据条数
      * @throws SQLException s
@@ -485,7 +485,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     /**
      * 根据  id 更新
      *
-     * @param con    a
+     * @param con    a {@link java.sql.Connection} object
      * @param entity 待更新的数据 ( 注意: 请保证数据中 id 字段不为空 )
      * @return 更新成功后的数据
      * @throws SQLException s
@@ -497,7 +497,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     /**
      * a
      *
-     * @param con          a
+     * @param con          a {@link java.sql.Connection} object
      * @param entity       a
      * @param updateFilter a
      * @return a
@@ -514,7 +514,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     /**
      * 根据指定条件更新数据
      *
-     * @param con    a
+     * @param con    a {@link java.sql.Connection} object
      * @param entity 待更新的数据
      * @param query  更新的条件
      * @return 更新成功的数据条数
@@ -527,7 +527,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     /**
      * a
      *
-     * @param con          a
+     * @param con          a {@link java.sql.Connection} object
      * @param entity       a
      * @param query        a
      * @param updateFilter a
@@ -571,7 +571,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     /**
      * 根据 ID 列表删除指定的数据
      *
-     * @param con con
+     * @param con a {@link java.sql.Connection} object
      * @param ids 要删除的数据的 id 集合
      * @return 删除成功的数据条数
      * @throws SQLException e
@@ -583,7 +583,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     /**
      * 根据条件删除
      *
-     * @param con   con
+     * @param con   a {@link java.sql.Connection} object
      * @param query 删除条件
      * @return 被删除的数据条数
      * @throws SQLException e
@@ -632,7 +632,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     /**
      * 根据 ID 列表恢复删除的数据
      *
-     * @param con a
+     * @param con a {@link java.sql.Connection} object
      * @param ids 待恢复的数据 id 集合
      * @return 恢复删除成功的数据条数
      * @throws SQLException s
@@ -644,7 +644,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     /**
      * 根据指定条件恢复删除的数据
      *
-     * @param con   c
+     * @param con   a {@link java.sql.Connection} object
      * @param query 指定的条件
      * @return 恢复删除成功的数据条数
      * @throws SQLException s

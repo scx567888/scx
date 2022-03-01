@@ -213,7 +213,7 @@ public final class SQLBuilder {
     /**
      * a
      *
-     * @param where a {@link Where} object
+     * @param where a {@link cool.scx.sql.where.Where} object
      * @return a {@link cool.scx.sql.SQLBuilder} object
      */
     public SQLBuilder Where(Where where) {
@@ -226,7 +226,7 @@ public final class SQLBuilder {
     /**
      * a
      *
-     * @param groupBy a {@link GroupBy} object
+     * @param groupBy a {@link cool.scx.sql.group_by.GroupBy} object
      * @return a {@link cool.scx.sql.SQLBuilder} object
      */
     public SQLBuilder GroupBy(GroupBy groupBy) {
@@ -239,7 +239,7 @@ public final class SQLBuilder {
     /**
      * a
      *
-     * @param orderBy a {@link OrderBy} object
+     * @param orderBy a {@link cool.scx.sql.order_by.OrderBy} object
      * @return a {@link cool.scx.sql.SQLBuilder} object
      */
     public SQLBuilder OrderBy(OrderBy orderBy) {
@@ -252,7 +252,7 @@ public final class SQLBuilder {
     /**
      * a
      *
-     * @param pagination a {@link Pagination} object
+     * @param pagination a {@link cool.scx.sql.pagination.Pagination} object
      * @return a {@link cool.scx.sql.SQLBuilder} object
      */
     public SQLBuilder Limit(Pagination pagination) {

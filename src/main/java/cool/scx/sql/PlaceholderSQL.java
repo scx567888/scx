@@ -7,6 +7,12 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+/**
+ * a
+ *
+ * @author scx567888
+ * @version 1.5.0
+ */
 final class PlaceholderSQL extends AbstractPlaceholderSQL {
 
     /**

@@ -15,6 +15,9 @@ import java.util.LinkedHashMap;
 
 /**
  * a
+ *
+ * @author scx567888
+ * @version 1.11.8
  */
 public final class ScxHttpExceptionHandler implements ScxHttpRouterExceptionHandler {
 
@@ -97,11 +100,17 @@ public final class ScxHttpExceptionHandler implements ScxHttpRouterExceptionHand
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean canHandle(Throwable throwable) {
         return throwable instanceof ScxHttpException;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void handle(Throwable throwable, RoutingContext context) {
         if (!context.request().response().ended() && !context.request().response().closed()) {

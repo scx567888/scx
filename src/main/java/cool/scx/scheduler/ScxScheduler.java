@@ -16,9 +16,12 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 针对 spring 的 ${@link  TaskScheduler}  进行一些简单的封装
+ * 针对 spring 的 ${@link org.springframework.scheduling.TaskScheduler}  进行一些简单的封装
  * <br>
  * 以便可以实现一些简单的任务调度
+ *
+ * @author scx567888
+ * @version 1.11.8
  */
 public final class ScxScheduler {
 

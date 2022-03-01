@@ -94,6 +94,11 @@ public final class BeanListHandler<T> implements ScxHandlerRE<ResultSet, List<T>
         return list;
     }
 
+    /**
+     * <p>newInstance.</p>
+     *
+     * @return a T object
+     */
     private T newInstance() {
         try {
             return tConstructor.newInstance();

@@ -11,6 +11,9 @@ import java.lang.reflect.Parameter;
 
 /**
  * a
+ *
+ * @author scx567888
+ * @version 1.11.8
  */
 public final class UploadedEntityMethodParameterHandler implements ScxMappingMethodParameterHandler {
 
@@ -19,11 +22,17 @@ public final class UploadedEntityMethodParameterHandler implements ScxMappingMet
      */
     public static final UploadedEntityMethodParameterHandler DEFAULT_INSTANCE = new UploadedEntityMethodParameterHandler();
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean canHandle(Parameter parameter) {
         return parameter.getParameterizedType() == UploadedEntity.class;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Object handle(Parameter parameter, ScxMappingRoutingContextInfo context) throws RequiredParamEmptyException {
         var name = parameter.getName();

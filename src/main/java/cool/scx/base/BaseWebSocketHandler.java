@@ -16,7 +16,7 @@ public interface BaseWebSocketHandler {
      * 连接打开时
      *
      * @param webSocket a {@link io.vertx.core.http.ServerWebSocket} object.
-     * @throws Exception e
+     * @throws java.lang.Exception e
      */
     void onOpen(ServerWebSocket webSocket) throws Exception;
 
@@ -24,7 +24,7 @@ public interface BaseWebSocketHandler {
      * 连接关闭时
      *
      * @param webSocket a {@link io.vertx.core.http.ServerWebSocket} object.
-     * @throws Exception e
+     * @throws java.lang.Exception e
      */
     void onClose(ServerWebSocket webSocket) throws Exception;
 
@@ -34,7 +34,7 @@ public interface BaseWebSocketHandler {
      * @param textData  a {@link java.lang.String} object.
      * @param h         a {@link io.vertx.core.http.WebSocketFrame} object.
      * @param webSocket a {@link io.vertx.core.http.ServerWebSocket} object.
-     * @throws Exception e
+     * @throws java.lang.Exception e
      */
     void onTextMessage(String textData, WebSocketFrame h, ServerWebSocket webSocket) throws Exception;
 
@@ -44,7 +44,7 @@ public interface BaseWebSocketHandler {
      * @param binaryData a {@link io.vertx.core.buffer.Buffer} object.
      * @param h          a {@link io.vertx.core.http.WebSocketFrame} object.
      * @param webSocket  a {@link io.vertx.core.http.ServerWebSocket} object.
-     * @throws Exception e
+     * @throws java.lang.Exception e
      */
     void onBinaryMessage(Buffer binaryData, WebSocketFrame h, ServerWebSocket webSocket) throws Exception;
 
@@ -53,7 +53,7 @@ public interface BaseWebSocketHandler {
      *
      * @param event     a {@link java.lang.Throwable} object.
      * @param webSocket a {@link io.vertx.core.http.ServerWebSocket} object.
-     * @throws Exception e
+     * @throws java.lang.Exception e
      */
     void onError(Throwable event, ServerWebSocket webSocket) throws Exception;
 

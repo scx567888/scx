@@ -9,6 +9,9 @@ import java.io.File;
 
 /**
  * a
+ *
+ * @author scx567888
+ * @version 1.11.8
  */
 public final class AppRootHandler implements ScxHandlerR<ScxConfigHandlerParam, File> {
 
@@ -16,6 +19,8 @@ public final class AppRootHandler implements ScxHandlerR<ScxConfigHandlerParam, 
     private final ScxAppRoot scxAppRoot;
 
     /**
+     * <p>Constructor for AppRootHandler.</p>
+     *
      * @param scxAppRoot a
      */
     public AppRootHandler(ScxAppRoot scxAppRoot) {
@@ -33,6 +38,9 @@ public final class AppRootHandler implements ScxHandlerR<ScxConfigHandlerParam, 
         this.scxAppRoot = scxAppRoot;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public File handle(ScxConfigHandlerParam param) {
         var path = new ConvertValueHandler<>(String.class).handle(param);

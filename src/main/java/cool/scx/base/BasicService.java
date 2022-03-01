@@ -18,7 +18,7 @@ import java.util.Map;
 
 /**
  * 最基本的 可以实现 实体类 CRUD 的 Service
- * 注意和 {@link BaseModelService} 进行区分
+ * 注意和 {@link cool.scx.base.BaseModelService} 进行区分
  *
  * @author scx567888
  * @version 1.5.1

@@ -17,7 +17,7 @@ public final class ScxTreeUtil {
      * @param scxTree a
      * @param visitor a
      * @param <T>     a
-     * @throws Exception a
+     * @throws java.lang.Exception a
      */
     public static <T extends ScxTree<T>> void walk1(final T scxTree, final ScxTreeVisitor<T> visitor) throws Exception {
         ArrayList<T> parents = null;

@@ -2,6 +2,9 @@ package cool.scx.base;
 
 /**
  * 查询列过滤器
+ *
+ * @author scx567888
+ * @version 1.11.8
  */
 public final class SelectFilter extends AbstractFilter<SelectFilter> {
 

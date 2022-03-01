@@ -13,6 +13,9 @@ import java.util.Map;
 
 /**
  * ScxLog 配置类
+ *
+ * @author scx567888
+ * @version 1.11.8
  */
 public final class ScxLoggerConfiguration {
 

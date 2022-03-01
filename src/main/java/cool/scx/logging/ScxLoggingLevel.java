@@ -4,6 +4,9 @@ import java.util.Objects;
 
 /**
  * a
+ *
+ * @author scx567888
+ * @version 1.11.8
  */
 public enum ScxLoggingLevel {
 
@@ -47,12 +50,27 @@ public enum ScxLoggingLevel {
      */
     ALL(70, "ALL");
 
+    /**
+     * a
+     */
     private final int levelInt;
 
+    /**
+     * a
+     */
     private final String levelStr;
 
+    /**
+     * a
+     */
     private final String fixedLengthStr;
 
+    /**
+     * <p>Constructor for ScxLoggingLevel.</p>
+     *
+     * @param i a int
+     * @param s a {@link java.lang.String} object
+     */
     ScxLoggingLevel(int i, String s) {
         levelInt = i;
         levelStr = s;
@@ -103,6 +121,9 @@ public enum ScxLoggingLevel {
         return fixedLengthStr;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return levelStr;

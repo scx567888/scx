@@ -10,6 +10,9 @@ import java.util.ArrayList;
 
 /**
  * a
+ *
+ * @author scx567888
+ * @version 1.11.8
  */
 public final class ScxDaoColumnInfo {
 
@@ -97,6 +100,9 @@ public final class ScxDaoColumnInfo {
     /**
      * 获取通常的 ddl
      *
+     * @param name   a {@link java.lang.String} object
+     * @param type   a {@link java.lang.String} object
+     * @param column a {@link cool.scx.annotation.Column} object
      * @return a
      */
     private static String initNormalDDL(String name, String type, Column column) {
@@ -123,6 +129,8 @@ public final class ScxDaoColumnInfo {
     /**
      * 获取特殊的 ddl 如是否为主键 是否是唯一键 是否添加 索引 等
      *
+     * @param name   a {@link java.lang.String} object
+     * @param column a {@link cool.scx.annotation.Column} object
      * @return a
      */
     private static String[] initSpecialDDL(String name, Column column) {

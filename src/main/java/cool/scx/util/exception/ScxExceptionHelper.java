@@ -8,6 +8,9 @@ import java.io.StringWriter;
 
 /**
  * a
+ *
+ * @author scx567888
+ * @version 1.11.8
  */
 public final class ScxExceptionHelper {
 

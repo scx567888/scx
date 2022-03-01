@@ -8,6 +8,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * a
+ *
+ * @author scx567888
+ * @version 1.11.8
  */
 public final class LastExceptionHandler implements ScxHttpRouterExceptionHandler {
 
@@ -21,11 +24,17 @@ public final class LastExceptionHandler implements ScxHttpRouterExceptionHandler
      */
     private static final Logger logger = LoggerFactory.getLogger(LastExceptionHandler.class);
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean canHandle(Throwable throwable) {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void handle(Throwable throwable, RoutingContext context) {
         //1, 如果这时 response 还没有被关闭的话 就返回 500 错误信息

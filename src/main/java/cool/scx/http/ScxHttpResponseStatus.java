@@ -2,6 +2,9 @@ package cool.scx.http;
 
 /**
  * 规定一些常见的 http 相应状态
+ *
+ * @author scx567888
+ * @version 1.11.8
  */
 public enum ScxHttpResponseStatus {
 
@@ -40,9 +43,22 @@ public enum ScxHttpResponseStatus {
      */
     INTERNAL_SERVER_ERROR(500, "Internal Server Error !!!");
 
+    /**
+     * a
+     */
     private final int statusCode;
+
+    /**
+     * a
+     */
     private final String reasonPhrase;
 
+    /**
+     * <p>Constructor for ScxHttpResponseStatus.</p>
+     *
+     * @param statusCode   a int
+     * @param reasonPhrase a {@link java.lang.String} object
+     */
     ScxHttpResponseStatus(int statusCode, String reasonPhrase) {
         this.statusCode = statusCode;
         this.reasonPhrase = reasonPhrase;

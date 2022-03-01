@@ -62,8 +62,9 @@ public final class Raw implements BaseVo {
      * <p>Constructor for Raw.</p>
      *
      * @param file       a {@link java.io.File} object
-     * @param rawType    a {@link RawType} object
+     * @param rawType    a {@link cool.scx.enumeration.RawType} object
      * @param isFromFile a boolean
+     * @param bytes      an array of {@link byte} objects
      */
     private Raw(File file, byte[] bytes, RawType rawType, boolean isFromFile) {
         this.voBytesWriter = bytes != null ? new VoBytesWriter(bytes) : null;
@@ -85,12 +86,20 @@ public final class Raw implements BaseVo {
     }
 
     /**
+     * <p>sendFile.</p>
+     *
      * @param context c
+     * @throws cool.scx.http.exception.impl.NotFoundException if any.
      */
     private void sendFile(RoutingContext context) throws NotFoundException {
         voFileWriter.writeFile(context);
     }
 
+    /**
+     * <p>sendBytes.</p>
+     *
+     * @param context a {@link io.vertx.ext.web.RoutingContext} object
+     */
     private void sendBytes(RoutingContext context) {
         var response = VoHelper.fillContentType(MimeMapping.getMimeTypeForExtension(rawType.name().toLowerCase()), context.request().response())
                 .putHeader(HttpHeaderNames.CONTENT_DISPOSITION, "inline")

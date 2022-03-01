@@ -2,6 +2,9 @@ package cool.scx.util.ansi;
 
 /**
  * 8Bit 背景色
+ *
+ * @author scx567888
+ * @version 1.11.8
  */
 public final class Ansi8BitBackground implements AnsiElement {
 
@@ -22,6 +25,9 @@ public final class Ansi8BitBackground implements AnsiElement {
         this.code = code;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String code() {
         return "48;5;" + this.code;

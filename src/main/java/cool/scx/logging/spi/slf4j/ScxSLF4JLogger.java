@@ -10,6 +10,9 @@ import org.slf4j.helpers.MessageFormatter;
 
 /**
  * a
+ *
+ * @author scx567888
+ * @version 1.11.8
  */
 public final class ScxSLF4JLogger extends LegacyAbstractLogger {
 
@@ -28,6 +31,12 @@ public final class ScxSLF4JLogger extends LegacyAbstractLogger {
         this.scxLogger = ScxLoggerFactory.getLogger(name);
     }
 
+    /**
+     * <p>toScxLoggingLevel.</p>
+     *
+     * @param level a {@link org.slf4j.event.Level} object
+     * @return a {@link cool.scx.logging.ScxLoggingLevel} object
+     */
     private static ScxLoggingLevel toScxLoggingLevel(Level level) {
         return switch (level) {
             case ERROR -> ScxLoggingLevel.ERROR;
@@ -38,36 +47,57 @@ public final class ScxSLF4JLogger extends LegacyAbstractLogger {
         };
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected String getFullyQualifiedCallerName() {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void handleNormalizedLoggingCall(Level level, Marker marker, String message, Object[] arguments, Throwable throwable) {
         this.scxLogger.logMessage(toScxLoggingLevel(level), MessageFormatter.arrayFormat(message, arguments).getMessage(), throwable);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isTraceEnabled() {
         return getLevel().toInt() <= Level.TRACE.toInt();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isDebugEnabled() {
         return getLevel().toInt() <= Level.DEBUG.toInt();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isInfoEnabled() {
         return getLevel().toInt() <= Level.INFO.toInt();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isWarnEnabled() {
         return getLevel().toInt() <= Level.WARN.toInt();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isErrorEnabled() {
         return getLevel().toInt() <= Level.ERROR.toInt();

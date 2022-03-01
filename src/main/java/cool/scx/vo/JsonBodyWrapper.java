@@ -2,6 +2,9 @@ package cool.scx.vo;
 
 /**
  * JsonBody
+ *
+ * @author scx567888
+ * @version 1.11.8
  */
 public final class JsonBodyWrapper<T> {
 

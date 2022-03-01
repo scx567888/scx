@@ -15,6 +15,9 @@ import java.lang.reflect.Type;
 
 /**
  * a
+ *
+ * @author scx567888
+ * @version 1.11.8
  */
 public final class FromBodyMethodParameterHandler implements ScxMappingMethodParameterHandler {
 
@@ -32,8 +35,8 @@ public final class FromBodyMethodParameterHandler implements ScxMappingMethodPar
      * @param javaType                     a
      * @param scxMappingRoutingContextInfo a
      * @return a
-     * @throws RequiredParamEmptyException a
-     * @throws ParamConvertException       a
+     * @throws cool.scx.mvc.parameter_handler.RequiredParamEmptyException a
+     * @throws cool.scx.mvc.parameter_handler.ParamConvertException       a
      */
     public static Object getValueFromBody(String name, boolean useAllBody, boolean required, Type javaType, ScxMappingRoutingContextInfo scxMappingRoutingContextInfo) throws RequiredParamEmptyException, ParamConvertException {
         var tempValue = scxMappingRoutingContextInfo.getBody();
@@ -73,17 +76,23 @@ public final class FromBodyMethodParameterHandler implements ScxMappingMethodPar
      * @param type     a
      * @param <T>      a
      * @return a
-     * @throws IOException a
+     * @throws java.io.IOException a
      */
     private static <T> T readValue(JsonNode jsonNode, Type type) throws IOException {
         return ObjectUtils.jsonMapper().readerFor(ObjectUtils.constructType(type)).readValue(jsonNode);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean canHandle(Parameter parameter) {
         return parameter.getAnnotation(FromBody.class) != null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Object handle(Parameter parameter, ScxMappingRoutingContextInfo scxMappingRoutingContextInfo) throws Exception {
         var javaType = parameter.getParameterizedType();

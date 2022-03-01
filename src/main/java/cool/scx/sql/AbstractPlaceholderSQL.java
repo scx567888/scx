@@ -7,11 +7,19 @@ import java.sql.Types;
 
 /**
  * 抽象的 占位符 SQL
+ *
+ * @author scx567888
+ * @version 1.11.8
  */
 abstract class AbstractPlaceholderSQL {
 
     String normalSQL;
 
+    /**
+     * <p>normalSQL.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String normalSQL() {
         return normalSQL;
     }
@@ -21,7 +29,7 @@ abstract class AbstractPlaceholderSQL {
      *
      * @param preparedStatement a
      * @param params            a
-     * @throws SQLException a
+     * @throws java.sql.SQLException a
      */
     public final void fillPreparedStatement(PreparedStatement preparedStatement, Object[] params) throws SQLException {
         var index = 1;
@@ -48,9 +56,9 @@ abstract class AbstractPlaceholderSQL {
     /**
      * 获取 PreparedStatement
      *
-     * @param con c
-     * @return c
-     * @throws SQLException c
+     * @param con a
+     * @return a
+     * @throws java.sql.SQLException a
      */
     public abstract PreparedStatement getPreparedStatement(Connection con) throws SQLException;
 

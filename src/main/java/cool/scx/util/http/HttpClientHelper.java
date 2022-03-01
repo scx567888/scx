@@ -44,8 +44,8 @@ public final class HttpClientHelper {
      * @param url     a
      * @param headers a
      * @return a
-     * @throws IOException          a
-     * @throws InterruptedException a
+     * @throws java.io.IOException            a
+     * @throws java.lang.InterruptedException a
      */
     public static HttpResponse<String> delete(String url, Map<String, String> headers) throws IOException, InterruptedException {
         return delete(HTTP_CLIENT, url, headers);
@@ -56,8 +56,8 @@ public final class HttpClientHelper {
      *
      * @param url a
      * @return a
-     * @throws IOException          a
-     * @throws InterruptedException a
+     * @throws java.io.IOException            a
+     * @throws java.lang.InterruptedException a
      */
     public static HttpResponse<String> delete(String url) throws IOException, InterruptedException {
         return delete(HTTP_CLIENT, url, new HashMap<>());
@@ -70,8 +70,8 @@ public final class HttpClientHelper {
      * @param url        a
      * @param headers    a
      * @return a
-     * @throws IOException          a
-     * @throws InterruptedException a
+     * @throws java.io.IOException            a
+     * @throws java.lang.InterruptedException a
      */
     public static HttpResponse<String> delete(HttpClient httpClient, String url, Map<String, String> headers) throws IOException, InterruptedException {
         return httpClient.send(getRequestBuilder(url, headers).DELETE().build(), RESPONSE_BODY_HANDLER);
@@ -83,8 +83,8 @@ public final class HttpClientHelper {
      * @param httpClient a
      * @param url        a
      * @return a
-     * @throws IOException          a
-     * @throws InterruptedException a
+     * @throws java.io.IOException            a
+     * @throws java.lang.InterruptedException a
      */
     public static HttpResponse<String> delete(HttpClient httpClient, String url) throws IOException, InterruptedException {
         return delete(httpClient, url, new HashMap<>());
@@ -97,8 +97,8 @@ public final class HttpClientHelper {
      * @param headers a
      * @param bodyStr a
      * @return a
-     * @throws IOException          a
-     * @throws InterruptedException a
+     * @throws java.io.IOException            a
+     * @throws java.lang.InterruptedException a
      */
     public static HttpResponse<String> put(String url, Map<String, String> headers, String bodyStr) throws IOException, InterruptedException {
         return put(HTTP_CLIENT, url, headers, bodyStr);
@@ -110,8 +110,8 @@ public final class HttpClientHelper {
      * @param url     a
      * @param bodyStr a
      * @return a
-     * @throws IOException          a
-     * @throws InterruptedException a
+     * @throws java.io.IOException            a
+     * @throws java.lang.InterruptedException a
      */
     public static HttpResponse<String> put(String url, String bodyStr) throws IOException, InterruptedException {
         return put(HTTP_CLIENT, url, new HashMap<>(), bodyStr);
@@ -125,8 +125,8 @@ public final class HttpClientHelper {
      * @param headers    a
      * @param bodyStr    a
      * @return a
-     * @throws IOException          a
-     * @throws InterruptedException a
+     * @throws java.io.IOException            a
+     * @throws java.lang.InterruptedException a
      */
     public static HttpResponse<String> put(HttpClient httpClient, String url, Map<String, String> headers, String bodyStr) throws IOException, InterruptedException {
         return httpClient.send(getRequestBuilder(url, headers).PUT(getBodyPublisher(bodyStr)).build(), RESPONSE_BODY_HANDLER);
@@ -139,8 +139,8 @@ public final class HttpClientHelper {
      * @param url        a
      * @param bodyStr    a
      * @return a
-     * @throws IOException          a
-     * @throws InterruptedException a
+     * @throws java.io.IOException            a
+     * @throws java.lang.InterruptedException a
      */
     public static HttpResponse<String> put(HttpClient httpClient, String url, String bodyStr) throws IOException, InterruptedException {
         return put(httpClient, url, new HashMap<>(), bodyStr);
@@ -153,8 +153,8 @@ public final class HttpClientHelper {
      * @param headers 请求头 若为空则内部会设置为
      * @param bodyStr a
      * @return a
-     * @throws IOException          a
-     * @throws InterruptedException a
+     * @throws java.io.IOException            a
+     * @throws java.lang.InterruptedException a
      */
     public static HttpResponse<String> post(String url, Map<String, String> headers, String bodyStr) throws IOException, InterruptedException {
         return post(HTTP_CLIENT, url, headers, bodyStr);
@@ -166,8 +166,8 @@ public final class HttpClientHelper {
      * @param url     a
      * @param bodyStr a
      * @return a
-     * @throws IOException          a
-     * @throws InterruptedException a
+     * @throws java.io.IOException            a
+     * @throws java.lang.InterruptedException a
      */
     public static HttpResponse<String> post(String url, String bodyStr) throws IOException, InterruptedException {
         return post(HTTP_CLIENT, url, new HashMap<>(), bodyStr);
@@ -181,8 +181,8 @@ public final class HttpClientHelper {
      * @param headers    a
      * @param bodyStr    a
      * @return a
-     * @throws IOException          a
-     * @throws InterruptedException a
+     * @throws java.io.IOException            a
+     * @throws java.lang.InterruptedException a
      */
     public static HttpResponse<String> post(HttpClient httpClient, String url, Map<String, String> headers, String bodyStr) throws IOException, InterruptedException {
         return httpClient.send(getRequestBuilder(url, headers).POST(getBodyPublisher(bodyStr)).build(), RESPONSE_BODY_HANDLER);
@@ -195,8 +195,8 @@ public final class HttpClientHelper {
      * @param url        a
      * @param bodyStr    a
      * @return a
-     * @throws IOException          a
-     * @throws InterruptedException a
+     * @throws java.io.IOException            a
+     * @throws java.lang.InterruptedException a
      */
     public static HttpResponse<String> post(HttpClient httpClient, String url, String bodyStr) throws IOException, InterruptedException {
         return post(httpClient, url, new HashMap<>(), bodyStr);
@@ -210,8 +210,8 @@ public final class HttpClientHelper {
      * @param headers    a
      * @param formData   a
      * @return a
-     * @throws IOException          a
-     * @throws InterruptedException a
+     * @throws java.io.IOException            a
+     * @throws java.lang.InterruptedException a
      */
     public static HttpResponse<String> post(HttpClient httpClient, String url, Map<String, String> headers, FormData formData) throws IOException, InterruptedException {
         final String boundary = FORM_BOUNDARY_PREFIX + RandomUtils.getRandomString(8, true);
@@ -226,8 +226,8 @@ public final class HttpClientHelper {
      * @param url        a
      * @param formData   a
      * @return a
-     * @throws IOException          a
-     * @throws InterruptedException a
+     * @throws java.io.IOException            a
+     * @throws java.lang.InterruptedException a
      */
     public static HttpResponse<String> post(HttpClient httpClient, String url, FormData formData) throws IOException, InterruptedException {
         return post(httpClient, url, new HashMap<>(), formData);
@@ -240,8 +240,8 @@ public final class HttpClientHelper {
      * @param headers  a
      * @param formData a
      * @return a
-     * @throws IOException          a
-     * @throws InterruptedException a
+     * @throws java.io.IOException            a
+     * @throws java.lang.InterruptedException a
      */
     public static HttpResponse<String> post(String url, Map<String, String> headers, FormData formData) throws IOException, InterruptedException {
         return post(HTTP_CLIENT, url, headers, formData);
@@ -253,8 +253,8 @@ public final class HttpClientHelper {
      * @param url      a
      * @param formData a
      * @return a
-     * @throws IOException          a
-     * @throws InterruptedException a
+     * @throws java.io.IOException            a
+     * @throws java.lang.InterruptedException a
      */
     public static HttpResponse<String> post(String url, FormData formData) throws IOException, InterruptedException {
         return post(HTTP_CLIENT, url, formData);
@@ -266,8 +266,8 @@ public final class HttpClientHelper {
      * @param url     a
      * @param headers a
      * @return a
-     * @throws IOException          a
-     * @throws InterruptedException a
+     * @throws java.io.IOException            a
+     * @throws java.lang.InterruptedException a
      */
     public static HttpResponse<String> get(String url, Map<String, String> headers) throws IOException, InterruptedException {
         return get(HTTP_CLIENT, url, headers);
@@ -278,8 +278,8 @@ public final class HttpClientHelper {
      *
      * @param url a
      * @return a
-     * @throws IOException          a
-     * @throws InterruptedException a
+     * @throws java.io.IOException            a
+     * @throws java.lang.InterruptedException a
      */
     public static HttpResponse<String> get(String url) throws IOException, InterruptedException {
         return get(HTTP_CLIENT, url, new HashMap<>());
@@ -292,8 +292,8 @@ public final class HttpClientHelper {
      * @param url        a
      * @param headers    a
      * @return a
-     * @throws IOException          a
-     * @throws InterruptedException a
+     * @throws java.io.IOException            a
+     * @throws java.lang.InterruptedException a
      */
     public static HttpResponse<String> get(HttpClient httpClient, String url, Map<String, String> headers) throws IOException, InterruptedException {
         return httpClient.send(getRequestBuilder(url, headers).GET().build(), RESPONSE_BODY_HANDLER);
@@ -305,8 +305,8 @@ public final class HttpClientHelper {
      * @param httpClient a
      * @param url        a
      * @return a
-     * @throws IOException          a
-     * @throws InterruptedException a
+     * @throws java.io.IOException            a
+     * @throws java.lang.InterruptedException a
      */
     public static HttpResponse<String> get(HttpClient httpClient, String url) throws IOException, InterruptedException {
         return get(httpClient, url, new HashMap<>());

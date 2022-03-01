@@ -13,6 +13,9 @@ import java.lang.reflect.Type;
 
 /**
  * a
+ *
+ * @author scx567888
+ * @version 1.11.8
  */
 public final class FromQueryMethodParameterHandler implements ScxMappingMethodParameterHandler {
 
@@ -30,8 +33,8 @@ public final class FromQueryMethodParameterHandler implements ScxMappingMethodPa
      * @param javaType       a
      * @param routingContext a
      * @return a
-     * @throws RequiredParamEmptyException a
-     * @throws ParamConvertException       a
+     * @throws cool.scx.mvc.parameter_handler.RequiredParamEmptyException a
+     * @throws cool.scx.mvc.parameter_handler.ParamConvertException       a
      */
     public static Object getValueFromQuery(String name, boolean merge, boolean required, Type javaType, ScxMappingRoutingContextInfo routingContext) throws RequiredParamEmptyException, ParamConvertException {
         var v = merge ? routingContext.queryParams() : routingContext.queryParams().get(name);
@@ -54,11 +57,17 @@ public final class FromQueryMethodParameterHandler implements ScxMappingMethodPa
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean canHandle(Parameter parameter) {
         return parameter.getAnnotation(FromQuery.class) != null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Object handle(Parameter parameter, ScxMappingRoutingContextInfo context) throws Exception {
         var javaType = parameter.getParameterizedType();

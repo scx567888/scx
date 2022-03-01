@@ -2,6 +2,9 @@ package cool.scx.util.exception;
 
 /**
  * a
+ *
+ * @author scx567888
+ * @version 1.11.8
  */
 public final class ScxWrappedRuntimeException extends RuntimeException {
 

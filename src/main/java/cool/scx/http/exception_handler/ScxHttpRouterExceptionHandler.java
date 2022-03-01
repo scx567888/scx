@@ -4,6 +4,9 @@ import io.vertx.ext.web.RoutingContext;
 
 /**
  * a
+ *
+ * @author scx567888
+ * @version 1.11.8
  */
 public interface ScxHttpRouterExceptionHandler {
 

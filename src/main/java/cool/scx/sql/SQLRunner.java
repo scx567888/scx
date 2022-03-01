@@ -51,11 +51,11 @@ public final class SQLRunner {
      *
      * @param sql              a {@link java.lang.String} object.
      * @param param            a {@link java.util.Map} object.
-     * @param con              a Connection object
+     * @param con              a {@link java.sql.Connection} object
      * @param resultSetHandler a  object
      * @param <T>              a T class
      * @return a map 集合
-     * @throws SQLException if any.
+     * @throws java.sql.SQLException if any.
      */
     public static <T> T query(Connection con, String sql, ScxHandlerRE<ResultSet, T, SQLException> resultSetHandler, Map<String, Object> param) throws SQLException {
         try (var preparedStatement = new NamedParameterSQL(sql, param).getPreparedStatement(con)) {
@@ -67,13 +67,13 @@ public final class SQLRunner {
     /**
      * a
      *
-     * @param con              a
+     * @param con              a {@link java.sql.Connection} object
      * @param sql              a
      * @param resultSetHandler a
      * @param sqlParameters    a
      * @param <T>              a
      * @return a
-     * @throws SQLException a
+     * @throws java.sql.SQLException a
      */
     public static <T> T query(Connection con, String sql, ScxHandlerRE<ResultSet, T, SQLException> resultSetHandler, Object... sqlParameters) throws SQLException {
         try (var preparedStatement = new PlaceholderSQL(sql, sqlParameters).getPreparedStatement(con)) {
@@ -89,7 +89,7 @@ public final class SQLRunner {
      * @param param a {@link java.util.Map} object.
      * @param con   a Connection object
      * @return a 执行结果
-     * @throws SQLException if any.
+     * @throws java.sql.SQLException if any.
      */
     public static int execute(Connection con, String sql, Map<String, Object> param) throws SQLException {
         try (var preparedStatement = new NamedParameterSQL(sql, param).getPreparedStatement(con)) {
@@ -105,7 +105,7 @@ public final class SQLRunner {
      * @param sql           a
      * @param sqlParameters a
      * @return a
-     * @throws SQLException a
+     * @throws java.sql.SQLException a
      */
     public static int execute(Connection con, String sql, Object... sqlParameters) throws SQLException {
         try (var preparedStatement = new PlaceholderSQL(sql, sqlParameters).getPreparedStatement(con)) {
@@ -121,7 +121,7 @@ public final class SQLRunner {
      * @param param a {@link java.util.Map} object.
      * @param con   a Connection object
      * @return a {@link cool.scx.sql.UpdateResult} object.
-     * @throws SQLException if any.
+     * @throws java.sql.SQLException if any.
      */
     public static UpdateResult update(Connection con, String sql, Map<String, Object> param) throws SQLException {
         try (var preparedStatement = new NamedParameterSQL(sql, param).getPreparedStatement(con)) {
@@ -136,7 +136,7 @@ public final class SQLRunner {
      * @param sql           a
      * @param sqlParameters a
      * @return a
-     * @throws SQLException a
+     * @throws java.sql.SQLException a
      */
     public static UpdateResult update(Connection con, String sql, Object... sqlParameters) throws SQLException {
         try (var preparedStatement = new PlaceholderSQL(sql, sqlParameters).getPreparedStatement(con)) {
@@ -144,6 +144,13 @@ public final class SQLRunner {
         }
     }
 
+    /**
+     * <p>getUpdateResult.</p>
+     *
+     * @param preparedStatement a PreparedStatement object
+     * @return a {@link cool.scx.sql.UpdateResult} object
+     * @throws java.sql.SQLException if any.
+     */
     private static UpdateResult getUpdateResult(PreparedStatement preparedStatement) throws SQLException {
         var affectedLength = preparedStatement.executeUpdate();
         var resultSet = preparedStatement.getGeneratedKeys();
@@ -161,7 +168,7 @@ public final class SQLRunner {
      * @param paramMapList p
      * @param con          a Connection object
      * @return r
-     * @throws SQLException if any.
+     * @throws java.sql.SQLException if any.
      */
     public static UpdateResult updateBatch(Connection con, String sql, Collection<Map<String, Object>> paramMapList) throws SQLException {
         try (var preparedStatement = new NamedParameterSQL(sql, paramMapList).getPreparedStatement(con)) {
