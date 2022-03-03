@@ -18,7 +18,8 @@ public final class PlaceholderSQL extends AbstractPlaceholderSQL<Object[]> {
     /**
      * 构建一个占位符 sql
      *
-     * @param params a {@link java.lang.String} object
+     * @param normalSQL a
+     * @param params    a
      */
     public PlaceholderSQL(String normalSQL, Object... params) {
         super(false);
@@ -26,6 +27,12 @@ public final class PlaceholderSQL extends AbstractPlaceholderSQL<Object[]> {
         this.params = params;
     }
 
+    /**
+     * a
+     *
+     * @param normalSQL   a
+     * @param batchParams a
+     */
     public PlaceholderSQL(String normalSQL, List<Object[]> batchParams) {
         super(true);
         this.normalSQL = normalSQL;
