@@ -6,15 +6,13 @@ import cool.scx.sql.SQLBuilder;
 import cool.scx.sql.SQLRunner;
 import cool.scx.sql.handler.BeanListHandler;
 import cool.scx.sql.handler.ScalarHandler;
-import cool.scx.util.ObjectUtils;
 
 import java.lang.reflect.ParameterizedType;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 最基本的 可以实现 实体类 CRUD 的 Service
@@ -102,11 +100,11 @@ public class BasicService<Entity> {
      * @param updateFilter a
      * @return a
      */
-    private SQLRunnerParameterWrapper<Map<String, Object>> _buildInsertParameter(Entity entity, UpdateFilter updateFilter) {
+    private SQLRunnerParameterWrapper<Object[]> _buildInsertParameter(Entity entity, UpdateFilter updateFilter) {
         var insertColumns = updateFilter != null ? updateFilter.filter(entity, scxDaoTableInfo.columnInfos()) : scxDaoTableInfo.columnInfos();
         //insert 允许空列所以这里不做判断
         var sql = SQLBuilder.Insert(scxDaoTableInfo.tableName(), insertColumns).Values(insertColumns).GetSQL();
-        return new SQLRunnerParameterWrapper<>(sql, ObjectUtils.convertValue(entity, ObjectUtils.MAP_TYPE));
+        return new SQLRunnerParameterWrapper<>(sql, Arrays.stream(insertColumns).map(c -> c.getFieldValue(entity)).toArray());
     }
 
     /**
@@ -142,19 +140,12 @@ public class BasicService<Entity> {
      * @param updateFilter a
      * @return a
      */
-    private SQLRunnerParameterWrapper<ArrayList<Map<String, Object>>> _buildInsertBatchParameter(List<Entity> entityList, UpdateFilter updateFilter) {
+    private SQLRunnerParameterWrapper<List<Object[]>> _buildInsertBatchParameter(List<Entity> entityList, UpdateFilter updateFilter) {
         var insertColumns = updateFilter != null ? updateFilter.filter(scxDaoTableInfo.columnInfos()) : scxDaoTableInfo.columnInfos();
-        //将 entity 转换为 map
-        var mapList = new ArrayList<Map<String, Object>>(entityList.size());
-        for (var entity : entityList) {
-            var map = new HashMap<String, Object>();
-            for (var insertColumn : insertColumns) {
-                map.put(insertColumn.fieldName(), insertColumn.getFieldValue(entity));
-            }
-            mapList.add(map);
-        }
+        //将 entityList 转换为 objectArrayList
+        var objectArrayList = entityList.stream().map(entity -> Arrays.stream(insertColumns).map(c -> c.getFieldValue(entity)).toArray()).toList();
         var sql = SQLBuilder.Insert(scxDaoTableInfo.tableName(), insertColumns).Values(insertColumns).GetSQL();
-        return new SQLRunnerParameterWrapper<>(sql, mapList);
+        return new SQLRunnerParameterWrapper<>(sql, objectArrayList);
     }
 
     /**
@@ -190,13 +181,13 @@ public class BasicService<Entity> {
      * @param selectFilter a
      * @return a
      */
-    private SQLRunnerParameterWrapper<Map<String, Object>> _buildSelectParameter(Query query, SelectFilter selectFilter) {
+    private SQLRunnerParameterWrapper<Object[]> _buildSelectParameter(Query query, SelectFilter selectFilter) {
         var selectColumnInfos = selectFilter != null ? selectFilter.filter(scxDaoTableInfo.columnInfos()) : scxDaoTableInfo.columnInfos();
         if (selectColumnInfos.length == 0) {
             throw new IllegalArgumentException("查询数据时 待查询的数据列 不能为空 !!!");
         }
         var sql = SQLBuilder.Select(selectColumnInfos).From(scxDaoTableInfo.tableName()).Where(query.where()).GroupBy(query.groupBy()).OrderBy(query.orderBy()).Limit(query.pagination()).GetSQL();
-        return new SQLRunnerParameterWrapper<>(sql, query.where().getWhereParamMap());
+        return new SQLRunnerParameterWrapper<>(sql, query.where().getWhereParams());
     }
 
     /**
@@ -229,9 +220,9 @@ public class BasicService<Entity> {
      * @param query a
      * @return a
      */
-    private SQLRunnerParameterWrapper<Map<String, Object>> _buildCountParameter(Query query) {
+    private SQLRunnerParameterWrapper<Object[]> _buildCountParameter(Query query) {
         var sql = SQLBuilder.Select("COUNT(*) AS count").From(scxDaoTableInfo.tableName()).Where(query.where()).GroupBy(query.groupBy()).GetSQL();
-        return new SQLRunnerParameterWrapper<>(sql, query.where().getWhereParamMap());
+        return new SQLRunnerParameterWrapper<>(sql, query.where().getWhereParams());
     }
 
     /**
@@ -270,7 +261,7 @@ public class BasicService<Entity> {
      * @param updateFilter a
      * @return a
      */
-    private SQLRunnerParameterWrapper<Map<String, Object>> _buildUpdateParameter(Entity entity, Query query, UpdateFilter updateFilter) {
+    private SQLRunnerParameterWrapper<Object[]> _buildUpdateParameter(Entity entity, Query query, UpdateFilter updateFilter) {
         if (query == null || query.where().isEmpty()) {
             throw new IllegalArgumentException("更新数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
         }
@@ -278,10 +269,10 @@ public class BasicService<Entity> {
         if (updateSetColumnInfos.length == 0) {
             throw new IllegalArgumentException("更新数据时 待更新的数据列 不能为空 !!!");
         }
-        var entityMap = ObjectUtils.convertValue(entity, ObjectUtils.MAP_TYPE);
-        entityMap.putAll(query.where().getWhereParamMap());
+        var entityParams = Arrays.stream(updateSetColumnInfos).map(c -> c.getFieldValue(entity)).collect(Collectors.toList());
+        entityParams.addAll(List.of(query.where().getWhereParams()));
         var sql = SQLBuilder.Update(scxDaoTableInfo.tableName()).Set(updateSetColumnInfos).Where(query.where()).GetSQL();
-        return new SQLRunnerParameterWrapper<>(sql, entityMap);
+        return new SQLRunnerParameterWrapper<>(sql, entityParams.toArray());
     }
 
     /**
@@ -314,12 +305,12 @@ public class BasicService<Entity> {
      * @param query a
      * @return a
      */
-    private SQLRunnerParameterWrapper<Map<String, Object>> _buildDeleteParameter(Query query) {
+    private SQLRunnerParameterWrapper<Object[]> _buildDeleteParameter(Query query) {
         if (query == null || query.where().isEmpty()) {
             throw new IllegalArgumentException("删除数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
         }
         var sql = SQLBuilder.Delete(scxDaoTableInfo.tableName()).Where(query.where()).GetSQL();
-        return new SQLRunnerParameterWrapper<>(sql, query.where().getWhereParamMap());
+        return new SQLRunnerParameterWrapper<>(sql, query.where().getWhereParams());
     }
 
     private record SQLRunnerParameterWrapper<T>(String sql, T param) {

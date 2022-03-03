@@ -3,9 +3,8 @@ package cool.scx.sql.where;
 import cool.scx.util.StringUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -24,7 +23,7 @@ public final class Where {
     /**
      * 自定义的查询语句的参数
      */
-    private final Map<String, Object> whereSQLParamMap = new HashMap<>();
+    private final List<Object> whereSQLParams = new ArrayList<>();
 
     /**
      * 自定义的查询语句
@@ -308,13 +307,12 @@ public final class Where {
      *
      * @return a {@link java.util.Map} object
      */
-    public Map<String, Object> getWhereParamMap() {
-        var whereParamMap = new HashMap<String, Object>();
+    public Object[] getWhereParams() {
         //常规 where 的参数
-        whereBodyList.forEach(whereBody -> whereParamMap.putAll(whereBody.whereParamMap()));
+        var whereParams = whereBodyList.stream().flatMap(w -> Arrays.stream(w.whereParams())).collect(Collectors.toList());
         //whereSQL 的参数
-        whereParamMap.putAll(whereSQLParamMap);
-        return whereParamMap;
+        whereParams.addAll(whereSQLParams);
+        return whereParams.toArray();
     }
 
     /**
@@ -336,13 +334,14 @@ public final class Where {
      * @return 本身 , 方便链式调用
      */
     public Where whereSQL(Object... whereSQL) {
+        clearWhereSQL();
         var tempWhereSQL = new StringBuilder();
         for (Object o : whereSQL) {
-            if (o instanceof String) {
-                tempWhereSQL.append((String) o);
-            } else if (o instanceof WhereBody) {
-                tempWhereSQL.append(((WhereBody) o).whereClause());
-                whereSQLParamMap.putAll(((WhereBody) o).whereParamMap());
+            if (o instanceof String s) {
+                tempWhereSQL.append(s);
+            } else if (o instanceof WhereBody w) {
+                tempWhereSQL.append(w.whereClause());
+                whereSQLParams.addAll(List.of(w.whereParams()));
             }
         }
         this.whereSQL = tempWhereSQL.toString();
@@ -421,7 +420,7 @@ public final class Where {
      */
     public Where clearWhereSQL() {
         whereSQL = null;
-        whereSQLParamMap.clear();
+        whereSQLParams.clear();
         return this;
     }
 

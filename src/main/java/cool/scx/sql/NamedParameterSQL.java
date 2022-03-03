@@ -1,13 +1,11 @@
 package cool.scx.sql;
 
-import com.mysql.cj.jdbc.ClientPreparedStatement;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -17,7 +15,7 @@ import java.util.regex.Pattern;
  * @author scx567888
  * @version 1.5.0
  */
-final class NamedParameterSQL extends AbstractPlaceholderSQL {
+final class NamedParameterSQL extends AbstractPlaceholderSQL<Map<String, Object>> {
 
     /**
      * 具名参数匹配的正则表达式
@@ -30,43 +28,26 @@ final class NamedParameterSQL extends AbstractPlaceholderSQL {
     private final String[] namedParameterNameIndex;
 
     /**
-     * 是否为批量数据
-     */
-    private final boolean isBatch;
-
-    /**
-     * 单条数据
-     */
-    private final Map<String, Object> param;
-
-    /**
-     * 批量数据
-     */
-    private final Collection<Map<String, Object>> params;
-
-    /**
      * <p>Constructor for NamedParameterSQLConverter.</p>
      *
      * @param namedParameterSQL a {@link java.lang.String} object
      */
-    public NamedParameterSQL(String namedParameterSQL, Map<String, Object> param) {
+    public NamedParameterSQL(String namedParameterSQL, Map<String, Object> params) {
+        super(false);
         this.namedParameterNameIndex = initNamedParameterNameIndex(namedParameterSQL);
-        this.isBatch = false;
-        this.param = param;
-        this.params = null;
+        this.params = params;
     }
 
     /**
      * 批量
      *
      * @param namedParameterSQL a
-     * @param params            a
+     * @param batchParams       a
      */
-    public NamedParameterSQL(String namedParameterSQL, Collection<Map<String, Object>> params) {
+    public NamedParameterSQL(String namedParameterSQL, List<Map<String, Object>> batchParams) {
+        super(true);
         this.namedParameterNameIndex = initNamedParameterNameIndex(namedParameterSQL);
-        this.isBatch = true;
-        this.param = null;
-        this.params = params != null ? params : new ArrayList<>();
+        this.batchParams = batchParams != null ? batchParams : new ArrayList<>();
     }
 
     /**
@@ -87,11 +68,6 @@ final class NamedParameterSQL extends AbstractPlaceholderSQL {
         return tempNameIndexList.toArray(String[]::new);
     }
 
-    @Override
-    public PreparedStatement getPreparedStatement(Connection con) throws SQLException {
-        return isBatch ? getPreparedStatement1(con) : getPreparedStatement0(con);
-    }
-
     /**
      * 根据 单条参数获取
      *
@@ -99,16 +75,14 @@ final class NamedParameterSQL extends AbstractPlaceholderSQL {
      * @return c
      * @throws SQLException c
      */
-    private PreparedStatement getPreparedStatement0(Connection con) throws SQLException {
+    @Override
+    public PreparedStatement getPreparedStatement0(Connection con) throws SQLException {
         var preparedStatement = con.prepareStatement(normalSQL, Statement.RETURN_GENERATED_KEYS);
         //单条数据
-        if (param != null) {
-            fillPreparedStatement(preparedStatement, mapToArray(param));
+        if (params != null) {
+            fillPreparedStatement(preparedStatement, mapToArray(params));
         }
-        if (SQLRunner.logger.isDebugEnabled()) {
-            var realSQL = preparedStatement.unwrap(ClientPreparedStatement.class).asSql();
-            SQLRunner.logger.debug(realSQL);
-        }
+        logSQL(preparedStatement);
         return preparedStatement;
     }
 
@@ -119,23 +93,17 @@ final class NamedParameterSQL extends AbstractPlaceholderSQL {
      * @return c
      * @throws SQLException c
      */
-    private PreparedStatement getPreparedStatement1(Connection con) throws SQLException {
+    @Override
+    public PreparedStatement getPreparedStatement1(Connection con) throws SQLException {
         var preparedStatement = con.prepareStatement(normalSQL, Statement.RETURN_GENERATED_KEYS);
         //根据数据量, 判断是否使用 批量插入
-        for (var paramMap : params) {
+        for (var paramMap : batchParams) {
             if (paramMap != null) {
                 fillPreparedStatement(preparedStatement, mapToArray(paramMap));
                 preparedStatement.addBatch();
             }
         }
-        if (SQLRunner.logger.isDebugEnabled()) {
-            var realSQL = preparedStatement.unwrap(ClientPreparedStatement.class).asSql();
-            if (params.size() > 1) {
-                SQLRunner.logger.debug(realSQL + "... 额外的 " + (params.size() - 1) + " 项");
-            } else {
-                SQLRunner.logger.debug(realSQL);
-            }
-        }
+        logBatchSQL(preparedStatement);
         return preparedStatement;
     }
 
