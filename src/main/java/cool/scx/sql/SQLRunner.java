@@ -12,7 +12,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -181,29 +180,13 @@ public final class SQLRunner {
     /**
      * 批量执行更新语句
      *
-     * @param sql          sql
-     * @param paramMapList p
-     * @param con          a Connection object
+     * @param placeholderSQL sql
+     * @param con            a Connection object
      * @return r
      * @throws java.sql.SQLException if any.
      */
-    public static UpdateResult updateBatchByMap(Connection con, String sql, List<Map<String, Object>> paramMapList) throws SQLException {
-        try (var preparedStatement = new NamedParameterSQL(sql, paramMapList).getPreparedStatement(con)) {
-            return getBatchUpdateResult(preparedStatement);
-        }
-    }
-
-    /**
-     * a
-     *
-     * @param con             a
-     * @param sql             a
-     * @param objectArrayList a
-     * @return a
-     * @throws SQLException a
-     */
-    public static UpdateResult updateBatch(Connection con, String sql, List<Object[]> objectArrayList) throws SQLException {
-        try (var preparedStatement = new PlaceholderSQL(sql, objectArrayList).getPreparedStatement(con)) {
+    public static UpdateResult updateBatch(Connection con, AbstractPlaceholderSQL<?> placeholderSQL) throws SQLException {
+        try (var preparedStatement = placeholderSQL.getPreparedStatement(con)) {
             return getBatchUpdateResult(preparedStatement);
         }
     }
@@ -323,29 +306,13 @@ public final class SQLRunner {
     /**
      * 批量执行更新语句
      *
-     * @param sql          sql
-     * @param paramMapList p
-     * @return r
-     */
-    public UpdateResult updateBatchByMap(String sql, List<Map<String, Object>> paramMapList) {
-        return ScxExceptionHelper.wrap(() -> {
-            try (var con = dataSource.getConnection()) {
-                return updateBatchByMap(con, sql, paramMapList);
-            }
-        });
-    }
-
-    /**
-     * a
-     *
-     * @param sql          a
-     * @param paramMapList a
+     * @param placeholderSQL a
      * @return a
      */
-    public UpdateResult updateBatch(String sql, List<Object[]> paramMapList) {
+    public UpdateResult updateBatch(AbstractPlaceholderSQL<?> placeholderSQL) {
         return ScxExceptionHelper.wrap(() -> {
             try (var con = dataSource.getConnection()) {
-                return updateBatch(con, sql, paramMapList);
+                return updateBatch(con, placeholderSQL);
             }
         });
     }

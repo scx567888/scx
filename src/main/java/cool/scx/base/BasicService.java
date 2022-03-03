@@ -2,6 +2,7 @@ package cool.scx.base;
 
 import cool.scx.ScxContext;
 import cool.scx.dao.ScxDaoTableInfo;
+import cool.scx.sql.PlaceholderSQL;
 import cool.scx.sql.SQLBuilder;
 import cool.scx.sql.SQLRunner;
 import cool.scx.sql.handler.BeanListHandler;
@@ -116,7 +117,7 @@ public class BasicService<Entity> {
      */
     public final List<Long> _insertBatch(List<Entity> entityList, UpdateFilter updateFilter) {
         var parameter = _buildInsertBatchParameter(entityList, updateFilter);
-        return ScxContext.sqlRunner().updateBatch(parameter.sql(), parameter.param()).generatedKeys();
+        return ScxContext.sqlRunner().updateBatch(new PlaceholderSQL(parameter.sql(), parameter.param())).generatedKeys();
     }
 
     /**
@@ -130,7 +131,7 @@ public class BasicService<Entity> {
      */
     public final List<Long> _insertBatch(Connection con, List<Entity> entityList, UpdateFilter updateFilter) throws SQLException {
         var parameter = _buildInsertBatchParameter(entityList, updateFilter);
-        return SQLRunner.updateBatch(con, parameter.sql(), parameter.param()).generatedKeys();
+        return SQLRunner.updateBatch(con, new PlaceholderSQL(parameter.sql(), parameter.param())).generatedKeys();
     }
 
     /**
