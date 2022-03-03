@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
  * @author scx567888
  * @version 1.5.0
  */
-final class NamedParameterSQL extends AbstractPlaceholderSQL<Map<String, Object>> {
+public final class NamedParameterSQL extends AbstractPlaceholderSQL<Map<String, Object>> {
 
     /**
      * 具名参数匹配的正则表达式

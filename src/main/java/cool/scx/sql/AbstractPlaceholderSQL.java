@@ -14,7 +14,7 @@ import java.util.List;
  * @author scx567888
  * @version 1.11.8
  */
-abstract class AbstractPlaceholderSQL<T> {
+public abstract class AbstractPlaceholderSQL<T> {
 
     /**
      * 是否为批量数据

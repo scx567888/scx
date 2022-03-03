@@ -13,7 +13,7 @@ import java.util.List;
  * @author scx567888
  * @version 1.5.0
  */
-final class PlaceholderSQL extends AbstractPlaceholderSQL<Object[]> {
+public final class PlaceholderSQL extends AbstractPlaceholderSQL<Object[]> {
 
     /**
      * 构建一个占位符 sql
