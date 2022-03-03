@@ -12,7 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -162,6 +162,23 @@ public final class SQLRunner {
     }
 
     /**
+     * a
+     *
+     * @param preparedStatement a
+     * @return a
+     * @throws SQLException a
+     */
+    private static UpdateResult getBatchUpdateResult(PreparedStatement preparedStatement) throws SQLException {
+        var affectedLength = preparedStatement.executeBatch().length;
+        var resultSet = preparedStatement.getGeneratedKeys();
+        var ids = new ArrayList<Long>();
+        while (resultSet.next()) {
+            ids.add(resultSet.getLong(1));
+        }
+        return new UpdateResult(affectedLength, ids);
+    }
+
+    /**
      * 批量执行更新语句
      *
      * @param sql          sql
@@ -170,15 +187,24 @@ public final class SQLRunner {
      * @return r
      * @throws java.sql.SQLException if any.
      */
-    public static UpdateResult updateBatch(Connection con, String sql, Collection<Map<String, Object>> paramMapList) throws SQLException {
+    public static UpdateResult updateBatchByMap(Connection con, String sql, List<Map<String, Object>> paramMapList) throws SQLException {
         try (var preparedStatement = new NamedParameterSQL(sql, paramMapList).getPreparedStatement(con)) {
-            var affectedLength = preparedStatement.executeBatch().length;
-            var resultSet = preparedStatement.getGeneratedKeys();
-            var ids = new ArrayList<Long>();
-            while (resultSet.next()) {
-                ids.add(resultSet.getLong(1));
-            }
-            return new UpdateResult(affectedLength, ids);
+            return getBatchUpdateResult(preparedStatement);
+        }
+    }
+
+    /**
+     * a
+     *
+     * @param con             a
+     * @param sql             a
+     * @param objectArrayList a
+     * @return a
+     * @throws SQLException a
+     */
+    public static UpdateResult updateBatch(Connection con, String sql, List<Object[]> objectArrayList) throws SQLException {
+        try (var preparedStatement = new PlaceholderSQL(sql, objectArrayList).getPreparedStatement(con)) {
+            return getBatchUpdateResult(preparedStatement);
         }
     }
 
@@ -301,7 +327,22 @@ public final class SQLRunner {
      * @param paramMapList p
      * @return r
      */
-    public UpdateResult updateBatch(String sql, Collection<Map<String, Object>> paramMapList) {
+    public UpdateResult updateBatchByMap(String sql, List<Map<String, Object>> paramMapList) {
+        return ScxExceptionHelper.wrap(() -> {
+            try (var con = dataSource.getConnection()) {
+                return updateBatchByMap(con, sql, paramMapList);
+            }
+        });
+    }
+
+    /**
+     * a
+     *
+     * @param sql          a
+     * @param paramMapList a
+     * @return a
+     */
+    public UpdateResult updateBatch(String sql, List<Object[]> paramMapList) {
         return ScxExceptionHelper.wrap(() -> {
             try (var con = dataSource.getConnection()) {
                 return updateBatch(con, sql, paramMapList);

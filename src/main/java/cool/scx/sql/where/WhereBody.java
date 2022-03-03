@@ -2,12 +2,9 @@ package cool.scx.sql.where;
 
 import cool.scx.util.CaseUtils;
 import cool.scx.util.ObjectUtils;
-import cool.scx.util.RandomUtils;
 import cool.scx.util.StringUtils;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -31,7 +28,7 @@ public final class WhereBody {
     /**
      * 根据 where 条件对象生成的 map 防止 sql 注入
      */
-    private final Map<String, Object> whereParamMap = new HashMap<>();
+    private final Object[] whereParams;
 
     /**
      * <p>Constructor for WhereBody.</p>
@@ -47,52 +44,40 @@ public final class WhereBody {
         var columnName = useOriginalName ? this.name : CaseUtils.toSnake(this.name);
         var keyWord = whereType.keyWord();
         switch (whereType) {
-            case IS_NULL, IS_NOT_NULL -> whereClause = columnName + " " + keyWord;
+            case IS_NULL, IS_NOT_NULL -> {
+                whereParams = new Object[]{};
+                whereClause = columnName + " " + keyWord;
+            }
             case EQUAL, NOT_EQUAL, LESS_THAN, LESS_THAN_OR_EQUAL, GREATER_THAN, GREATER_THAN_OR_EQUAL, LIKE_REGEX, NOT_LIKE_REGEX -> {
-                var placeholder = getPlaceholder(this.name);
-                whereParamMap.put(placeholder, value1);
-                whereClause = columnName + " " + keyWord + " :" + placeholder;
+                whereParams = new Object[]{value1};
+                whereClause = columnName + " " + keyWord + " ?";
             }
             case JSON_CONTAINS -> {
                 var jsonContainsParams = toArray(value1);
-                var placeholder = getPlaceholder(this.name);
-                whereParamMap.put(placeholder, jsonContainsParams);
-                whereClause = keyWord + "(" + columnName + ", :" + placeholder + ")";
+                whereParams = new Object[]{jsonContainsParams};
+                whereClause = keyWord + "(" + columnName + ", ?)";
             }
             case LIKE, NOT_LIKE -> {
-                var placeholder = getPlaceholder(this.name);
-                whereParamMap.put(placeholder, value1);
-                whereClause = columnName + " " + keyWord + " CONCAT('%',:" + placeholder + ",'%')";
+                whereParams = new Object[]{value1};
+                whereClause = columnName + " " + keyWord + " CONCAT('%',?,'%')";
             }
             case IN, NOT_IN -> {
-                var inParams = toArray(value1);
-                var sList = new String[inParams.length];
-                for (int i = 0; i < inParams.length; i++) {
-                    var placeholder = getPlaceholder(this.name);
-                    sList[i] = ":" + placeholder;
-                    whereParamMap.put(placeholder, inParams[i]);
+                whereParams = toArray(value1);
+                var sList = new String[whereParams.length];
+                for (int i = 0; i < whereParams.length; i++) {
+                    sList[i] = "?";
                 }
                 whereClause = columnName + " " + keyWord + " (" + String.join(", ", sList) + ")";
             }
             case BETWEEN, NOT_BETWEEN -> {
-                var placeholder1 = getPlaceholder(this.name);
-                var placeholder2 = getPlaceholder(this.name);
-                whereParamMap.put(placeholder1, value1);
-                whereParamMap.put(placeholder2, value2);
-                whereClause = columnName + " " + keyWord + " :" + placeholder1 + " AND :" + placeholder2;
+                whereParams = new Object[]{value1, value2};
+                whereClause = columnName + " " + keyWord + " ? AND ?";
             }
-            default -> whereClause = null;
+            default -> {
+                whereParams = null;
+                whereClause = null;
+            }
         }
-    }
-
-    /**
-     * 获取占位符
-     *
-     * @param name n
-     * @return a {@link java.lang.String} object
-     */
-    private static String getPlaceholder(String name) {
-        return name + "_" + RandomUtils.getRandomString(6, true);
     }
 
     /**
@@ -442,8 +427,8 @@ public final class WhereBody {
      *
      * @return a
      */
-    Map<String, Object> whereParamMap() {
-        return whereParamMap;
+    Object[] whereParams() {
+        return whereParams;
     }
 
 }

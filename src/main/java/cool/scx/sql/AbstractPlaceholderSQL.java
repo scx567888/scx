@@ -1,9 +1,12 @@
 package cool.scx.sql;
 
+import com.mysql.cj.jdbc.ClientPreparedStatement;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.List;
 
 /**
  * 抽象的 占位符 SQL
@@ -11,9 +14,31 @@ import java.sql.Types;
  * @author scx567888
  * @version 1.11.8
  */
-abstract class AbstractPlaceholderSQL {
+abstract class AbstractPlaceholderSQL<T> {
 
+    /**
+     * 是否为批量数据
+     */
+    final boolean isBatch;
+
+    /**
+     * a
+     */
     String normalSQL;
+
+    /**
+     * a
+     */
+    T params;
+
+    /**
+     * a
+     */
+    List<T> batchParams;
+
+    protected AbstractPlaceholderSQL(boolean isBatch) {
+        this.isBatch = isBatch;
+    }
 
     /**
      * <p>normalSQL.</p>
@@ -31,7 +56,7 @@ abstract class AbstractPlaceholderSQL {
      * @param params            a
      * @throws java.sql.SQLException a
      */
-    public final void fillPreparedStatement(PreparedStatement preparedStatement, Object[] params) throws SQLException {
+    final void fillPreparedStatement(PreparedStatement preparedStatement, Object[] params) throws SQLException {
         var index = 1;
         for (var tempValue : params) {
             if (tempValue != null) {
@@ -53,13 +78,31 @@ abstract class AbstractPlaceholderSQL {
         }
     }
 
-    /**
-     * 获取 PreparedStatement
-     *
-     * @param con a
-     * @return a
-     * @throws java.sql.SQLException a
-     */
-    public abstract PreparedStatement getPreparedStatement(Connection con) throws SQLException;
+    void logBatchSQL(PreparedStatement preparedStatement) throws SQLException {
+        if (SQLRunner.logger.isDebugEnabled()) {
+            var size = batchParams.size();
+            var realSQL = preparedStatement.unwrap(ClientPreparedStatement.class).asSql();
+            if (size > 1) {
+                SQLRunner.logger.debug(realSQL + "... 额外的 " + (size - 1) + " 项");
+            } else {
+                SQLRunner.logger.debug(realSQL);
+            }
+        }
+    }
+
+    void logSQL(PreparedStatement preparedStatement) throws SQLException {
+        if (SQLRunner.logger.isDebugEnabled()) {
+            var realSQL = preparedStatement.unwrap(ClientPreparedStatement.class).asSql();
+            SQLRunner.logger.debug(realSQL);
+        }
+    }
+
+    public abstract PreparedStatement getPreparedStatement1(Connection con) throws SQLException;
+
+    public abstract PreparedStatement getPreparedStatement0(Connection con) throws SQLException;
+
+    public final PreparedStatement getPreparedStatement(Connection con) throws SQLException {
+        return isBatch ? getPreparedStatement1(con) : getPreparedStatement0(con);
+    }
 
 }

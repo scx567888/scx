@@ -92,8 +92,8 @@ public final class ScxDaoColumnInfo {
         }
         this.normalDDL = initNormalDDL(this.columnName, this.type, column);
         this.specialDDL = initSpecialDDL(this.columnName, column);
-        this.updateSetSQL = this.columnName + " = :" + this.fieldName();
-        this.insertValuesSQL = ":" + this.fieldName();
+        this.updateSetSQL = this.columnName + " = ?";
+        this.insertValuesSQL = "?";
         this.selectSQL = this.fieldName().equals(this.columnName) ? this.columnName : this.columnName + " AS " + this.fieldName();
     }
 
