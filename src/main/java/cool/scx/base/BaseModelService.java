@@ -549,7 +549,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
         if (ids.length == 0) {
             throw new IllegalArgumentException("待删除的 ids 数量至少为 1 个");
         }
-        return delete(ids.length == 1 ? new Query().equal("id", ids) : new Query().in("id", ids));
+        return delete(ids.length == 1 ? new Query().equal("id", ids[0]) : new Query().in("id", ids));
     }
 
     /**
