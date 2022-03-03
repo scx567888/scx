@@ -546,7 +546,10 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @return 删除成功的数据条数
      */
     public long delete(long... ids) {
-        return delete(new Query().in("id", ids));
+        if (ids.length == 0) {
+            throw new IllegalArgumentException("待删除的 ids 数量至少为 1 个");
+        }
+        return delete(ids.length == 1 ? new Query().equal("id", ids[0]) : new Query().in("id", ids));
     }
 
     /**
