@@ -28,9 +28,10 @@ public final class NamedParameterSQL extends AbstractPlaceholderSQL<Map<String, 
     private final String[] namedParameterNameIndex;
 
     /**
-     * <p>Constructor for NamedParameterSQLConverter.</p>
+     * a
      *
-     * @param namedParameterSQL a {@link java.lang.String} object
+     * @param namedParameterSQL a
+     * @param params            a
      */
     public NamedParameterSQL(String namedParameterSQL, Map<String, Object> params) {
         super(false);

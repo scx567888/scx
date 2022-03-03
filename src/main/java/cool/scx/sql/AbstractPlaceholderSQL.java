@@ -36,6 +36,11 @@ public abstract class AbstractPlaceholderSQL<T> {
      */
     List<T> batchParams;
 
+    /**
+     * a
+     *
+     * @param isBatch a
+     */
     protected AbstractPlaceholderSQL(boolean isBatch) {
         this.isBatch = isBatch;
     }
@@ -97,10 +102,31 @@ public abstract class AbstractPlaceholderSQL<T> {
         }
     }
 
+    /**
+     * a
+     *
+     * @param con a
+     * @return a
+     * @throws SQLException a
+     */
     public abstract PreparedStatement getPreparedStatement1(Connection con) throws SQLException;
 
+    /**
+     * a
+     *
+     * @param con a
+     * @return a
+     * @throws SQLException a
+     */
     public abstract PreparedStatement getPreparedStatement0(Connection con) throws SQLException;
 
+    /**
+     * a
+     *
+     * @param con a
+     * @return a
+     * @throws SQLException a
+     */
     public final PreparedStatement getPreparedStatement(Connection con) throws SQLException {
         return isBatch ? getPreparedStatement1(con) : getPreparedStatement0(con);
     }
