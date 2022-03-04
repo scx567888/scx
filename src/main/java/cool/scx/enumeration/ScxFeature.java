@@ -19,6 +19,16 @@ public enum ScxFeature {
     SHOW_EASY_CONFIG_INFO(true),
 
     /**
+     * 显示模块生命周期信息
+     */
+    SHOW_MODULE_LIFE_CYCLE_INFO(true),
+
+    /**
+     * 显示启动信息
+     */
+    SHOW_START_UP_INFO(true),
+
+    /**
      * 是否使用开发人员错误页面
      */
     USE_DEVELOPMENT_ERROR_PAGE(false),
