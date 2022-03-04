@@ -48,7 +48,7 @@ public final class Scx {
     /**
      * SCX 版本号
      */
-    private static final String SCX_VERSION = "1.11.11";
+    private static final String SCX_VERSION = "1.11.12";
 
     /**
      * 默认配置文件 路径
@@ -351,10 +351,16 @@ public final class Scx {
      * 执行模块启动的生命周期
      */
     private void startAllModules() {
-        for (var scxModuleInfo : scxModuleInfos) {
-            Ansi.out().brightWhite("[").brightGreen("Starting").brightWhite("] " + scxModuleInfo.scxModuleName()).println();
-            scxModuleInfo.scxModuleExample().start();
-            Ansi.out().brightWhite("[").brightGreen("Start OK").brightWhite("] " + scxModuleInfo.scxModuleName()).println();
+        if (this.scxFeatureConfig.getFeatureState(ScxFeature.SHOW_MODULE_LIFE_CYCLE_INFO)) {
+            for (var scxModuleInfo : scxModuleInfos) {
+                Ansi.out().brightWhite("[").brightGreen("Starting").brightWhite("] " + scxModuleInfo.scxModuleName()).println();
+                scxModuleInfo.scxModuleExample().start();
+                Ansi.out().brightWhite("[").brightGreen("Start OK").brightWhite("] " + scxModuleInfo.scxModuleName()).println();
+            }
+        } else {
+            for (var scxModuleInfo : scxModuleInfos) {
+                scxModuleInfo.scxModuleExample().start();
+            }
         }
     }
 
@@ -362,10 +368,16 @@ public final class Scx {
      * 执行模块结束的生命周期
      */
     private void stopAllModules() {
-        for (var scxModuleInfo : scxModuleInfos) {
-            Ansi.out().brightWhite("[").brightRed("Stopping").brightWhite("] " + scxModuleInfo.scxModuleName()).println();
-            scxModuleInfo.scxModuleExample().stop();
-            Ansi.out().brightWhite("[").brightRed("Stop  OK").brightWhite("] " + scxModuleInfo.scxModuleName()).println();
+        if (this.scxFeatureConfig.getFeatureState(ScxFeature.SHOW_MODULE_LIFE_CYCLE_INFO)) {
+            for (var scxModuleInfo : scxModuleInfos) {
+                Ansi.out().brightWhite("[").brightRed("Stopping").brightWhite("] " + scxModuleInfo.scxModuleName()).println();
+                scxModuleInfo.scxModuleExample().stop();
+                Ansi.out().brightWhite("[").brightRed("Stop  OK").brightWhite("] " + scxModuleInfo.scxModuleName()).println();
+            }
+        } else {
+            for (var scxModuleInfo : scxModuleInfos) {
+                scxModuleInfo.scxModuleExample().stop();
+            }
         }
     }
 
@@ -388,10 +400,12 @@ public final class Scx {
         //3, 依次执行 模块的 start 生命周期 , 在这里我们可以操作 scxRouteRegistry, vertxRouter 等对象 "手动注册新路由" 或其他任何操作
         this.startAllModules();
         //4, 打印基本信息
-        Ansi.out()
-                .color("已加载 " + this.scxBeanFactory.getBeanDefinitionNames().length + " 个 Bean !!!").ln()
-                .color("已加载 " + this.scxHttpRouter.vertxRouter().getRoutes().size() + " 个 Http 路由 !!!").ln()
-                .color("已加载 " + this.scxWebSocketRouter.getRoutes().size() + " 个 WebSocket 路由 !!!").println();
+        if (this.scxFeatureConfig.getFeatureState(ScxFeature.SHOW_START_UP_INFO)) {
+            Ansi.out()
+                    .color("已加载 " + this.scxBeanFactory.getBeanDefinitionNames().length + " 个 Bean !!!").ln()
+                    .color("已加载 " + this.scxHttpRouter.vertxRouter().getRoutes().size() + " 个 Http 路由 !!!").ln()
+                    .color("已加载 " + this.scxWebSocketRouter.getRoutes().size() + " 个 WebSocket 路由 !!!").println();
+        }
         //5, 初始化服务器
         var httpServerOptions = new HttpServerOptions();
         if (this.scxEasyConfig.isHttpsEnabled()) {

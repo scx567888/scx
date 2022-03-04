@@ -40,6 +40,8 @@ public class TestModule implements ScxModule {
                 .setArgs(args)
                 .configure(ScxFeature.SHOW_BANNER, true)
                 .configure(ScxFeature.SHOW_EASY_CONFIG_INFO, true)
+                .configure(ScxFeature.SHOW_MODULE_LIFE_CYCLE_INFO, true)
+                .configure(ScxFeature.SHOW_START_UP_INFO, true)
                 .configure(ScxFeature.USE_DEVELOPMENT_ERROR_PAGE, true)
                 .configure(ScxFeature.ENABLE_SCHEDULING_WITH_ANNOTATION, true)
                 .build().run();
