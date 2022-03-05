@@ -13,7 +13,7 @@
     <packaging>jar</packaging>
     <name>scx</name>
 
-    <version>1.11.12</version>
+    <version>1.12.0</version>
 
     <description>SCX 是一个 "Web 开发框架"; 目标是提供简单快速的开发体验。</description>
     <url>https://github.com/scx567888/scx</url>
@@ -118,6 +118,11 @@
         <dependency>
             <groupId>net.coobird</groupId>
             <artifactId>thumbnailator</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
         </dependency>
 
         <dependency>
