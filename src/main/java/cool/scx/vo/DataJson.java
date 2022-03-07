@@ -4,12 +4,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.vertx.ext.web.RoutingContext;
 
 /**
- * Json 格式的返回值
+ * Json 格式的返回值 (注意和 {@link Json} 区分, 此格式适合传递单个参数)
  *
  * @author scx567888
  * @version 1.9.5
  */
-public final class CustomJson implements BaseVo {
+public final class DataJson implements BaseVo {
 
     /**
      * 内部结构
@@ -21,7 +21,7 @@ public final class CustomJson implements BaseVo {
      *
      * @param message 消息
      */
-    private CustomJson(String message) {
+    private DataJson(String message) {
         jsonBodyWrapper = new JsonBodyWrapper<>(message, null);
     }
 
@@ -30,8 +30,8 @@ public final class CustomJson implements BaseVo {
      *
      * @return json
      */
-    public static CustomJson ok() {
-        return new CustomJson("ok");
+    public static DataJson ok() {
+        return new DataJson("ok");
     }
 
     /**
@@ -39,8 +39,8 @@ public final class CustomJson implements BaseVo {
      *
      * @return json
      */
-    public static CustomJson fail() {
-        return new CustomJson("fail");
+    public static DataJson fail() {
+        return new DataJson("fail");
     }
 
     /**
@@ -49,8 +49,8 @@ public final class CustomJson implements BaseVo {
      * @param failMessage 自定义的错误信息
      * @return json
      */
-    public static CustomJson fail(String failMessage) {
-        return new CustomJson(failMessage);
+    public static DataJson fail(String failMessage) {
+        return new DataJson(failMessage);
     }
 
     /**
@@ -61,7 +61,7 @@ public final class CustomJson implements BaseVo {
      * @param dataVal 值
      * @return json
      */
-    public CustomJson data(Object dataVal) {
+    public DataJson data(Object dataVal) {
         jsonBodyWrapper.data = dataVal;
         return this;
     }
