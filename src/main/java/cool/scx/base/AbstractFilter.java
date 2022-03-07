@@ -116,7 +116,12 @@ public abstract class AbstractFilter<E extends AbstractFilter<E>> {
         /**
          * 排除模式
          */
-        EXCLUDED
+        EXCLUDED;
+
+        public static FilterMode of(String filterModeStr) {
+            return valueOf(filterModeStr.trim().toUpperCase());
+        }
+
     }
 
 }
