@@ -64,6 +64,15 @@ public final class Pagination {
     }
 
     /**
+     * 获取分页大小 (这里分页大小即等于行数 所以直接返回 pageSize)
+     *
+     * @return rowCount
+     */
+    public Integer rowCount() {
+        return pageSize;
+    }
+
+    /**
      * a
      *
      * @return a
@@ -72,15 +81,6 @@ public final class Pagination {
         this.currentPage = null;
         this.pageSize = null;
         return this;
-    }
-
-    /**
-     * 获取分页大小 (这里分页大小即等于行数 所以直接返回 pageSize)
-     *
-     * @return rowCount
-     */
-    public Integer rowCount() {
-        return pageSize;
     }
 
 }
