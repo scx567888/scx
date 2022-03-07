@@ -217,8 +217,7 @@ public final class SQLBuilder {
      * @return a
      */
     public SQLBuilder Limit(Integer size) {
-        this.size = size;
-        return this;
+        return Limit(0, size);
     }
 
     /**
@@ -268,8 +267,7 @@ public final class SQLBuilder {
      */
     public SQLBuilder Limit(Pagination pagination) {
         if (pagination != null) {
-            this.offset = pagination.offset();
-            this.size = pagination.size();
+            Limit(pagination.offset(), pagination.size());
         }
         return this;
     }
@@ -404,7 +402,7 @@ public final class SQLBuilder {
     private String GetSelectSQL() {
         var groupBySQL = groupByColumns != null && groupByColumns.length != 0 ? " GROUP BY " + String.join(", ", groupByColumns) : "";
         var orderBySQL = orderByClauses != null && orderByClauses.length != 0 ? " ORDER BY " + String.join(", ", orderByClauses) : "";
-        var limitSQL = size == null ? "" : offset == null || offset == 0 ? " LIMIT " + size : " LIMIT " + offset + "," + size;
+        var limitSQL = size != null && offset != null ? " LIMIT " + offset + "," + size : "";
         return "SELECT " + String.join(", ", selectColumns) + " FROM " + tableName + getWhereSQL() + groupBySQL + orderBySQL + limitSQL;
     }
 

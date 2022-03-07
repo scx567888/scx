@@ -11,7 +11,7 @@ public final class Pagination {
     /**
      * 分页 页码 默认为空 即不设置分页页码
      */
-    private Integer page = null;
+    private Integer page = 0;
 
     /**
      * 分页 每页数量 默认为空 即不设置分页内容
@@ -64,7 +64,7 @@ public final class Pagination {
      * @return a int
      */
     public Integer offset() {
-        return page != null && page != 0 && size != null ? page * size : null;
+        return size != null ? page * size : null;
     }
 
     /**
