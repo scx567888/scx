@@ -149,6 +149,9 @@ public final class SQLBuilder {
      * @return a {@link cool.scx.sql.SQLBuilder} object
      */
     private SQLBuilder _Select(String... selectColumns) {
+        if (selectColumns.length == 0) {
+            throw new IllegalArgumentException("Select 子句错误 : 待查询的数据列 不能为空 !!!");
+        }
         this.selectColumns = selectColumns;
         return this;
     }
@@ -332,7 +335,7 @@ public final class SQLBuilder {
      */
     public SQLBuilder Set(String... updateSetColumns) {
         if (updateSetColumns.length == 0) {
-            throw new IllegalArgumentException("Set 子句错误 : 待更新列数量不能为 0 !!!");
+            throw new IllegalArgumentException("Set 子句错误 : 待更新的数据列 不能为空 !!!");
         }
         this.updateSetColumns = updateSetColumns;
         return this;

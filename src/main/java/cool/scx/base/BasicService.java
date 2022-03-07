@@ -184,9 +184,6 @@ public class BasicService<Entity> {
      */
     private SQLRunnerParameterWrapper<Object[]> _buildSelectParameter(Query query, SelectFilter selectFilter) {
         var selectColumnInfos = selectFilter != null ? selectFilter.filter(scxDaoTableInfo.columnInfos()) : scxDaoTableInfo.columnInfos();
-        if (selectColumnInfos.length == 0) {
-            throw new IllegalArgumentException("查询数据时 待查询的数据列 不能为空 !!!");
-        }
         var sql = SQLBuilder.Select(selectColumnInfos).From(scxDaoTableInfo.tableName()).Where(query.where()).GroupBy(query.groupBy()).OrderBy(query.orderBy()).Limit(query.pagination()).GetSQL();
         return new SQLRunnerParameterWrapper<>(sql, query.where().getWhereParams());
     }
@@ -199,7 +196,7 @@ public class BasicService<Entity> {
      */
     public final long _count(Query query) {
         var parameter = _buildCountParameter(query);
-        return ScxContext.sqlRunner().query(parameter.sql(), new ScalarHandler<>("count"), parameter.param());
+        return ScxContext.sqlRunner().query(parameter.sql(), new ScalarHandler<>("count", Long.class), parameter.param());
     }
 
     /**
@@ -212,7 +209,7 @@ public class BasicService<Entity> {
      */
     public final long _count(Connection con, Query query) throws SQLException {
         var parameter = _buildCountParameter(query);
-        return SQLRunner.query(con, parameter.sql(), new ScalarHandler<>("count"), parameter.param());
+        return SQLRunner.query(con, parameter.sql(), new ScalarHandler<>("count", Long.class), parameter.param());
     }
 
     /**
@@ -267,12 +264,9 @@ public class BasicService<Entity> {
             throw new IllegalArgumentException("更新数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
         }
         var updateSetColumnInfos = updateFilter != null ? updateFilter.filter(entity, scxDaoTableInfo.columnInfos()) : scxDaoTableInfo.columnInfos();
-        if (updateSetColumnInfos.length == 0) {
-            throw new IllegalArgumentException("更新数据时 待更新的数据列 不能为空 !!!");
-        }
+        var sql = SQLBuilder.Update(scxDaoTableInfo.tableName()).Set(updateSetColumnInfos).Where(query.where()).GetSQL();
         var entityParams = Arrays.stream(updateSetColumnInfos).map(c -> c.getFieldValue(entity)).collect(Collectors.toList());
         entityParams.addAll(List.of(query.where().getWhereParams()));
-        var sql = SQLBuilder.Update(scxDaoTableInfo.tableName()).Set(updateSetColumnInfos).Where(query.where()).GetSQL();
         return new SQLRunnerParameterWrapper<>(sql, entityParams.toArray());
     }
 
