@@ -22,6 +22,9 @@ import java.util.Map;
  */
 public final class BeanListHandler<T> implements ScxHandlerRE<ResultSet, List<T>, SQLException> {
 
+    /**
+     * a
+     */
     private final Constructor<T> tConstructor;
 
     /**

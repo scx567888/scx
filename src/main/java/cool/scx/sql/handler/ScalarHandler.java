@@ -27,17 +27,23 @@ public class ScalarHandler<T> implements ScxHandlerRE<ResultSet, T, SQLException
     /**
      * a
      */
-    public ScalarHandler() {
-        this(1, null);
-    }
+    private final Class<T> clazz;
+
+    /**
+     * 使用名称还是索引
+     */
+    private final boolean useName;
 
     /**
      * <p>Constructor for ScalarHandler.</p>
      *
      * @param columnIndex a
      */
-    public ScalarHandler(int columnIndex) {
-        this(columnIndex, null);
+    public ScalarHandler(int columnIndex, Class<T> clazz) {
+        this.columnIndex = columnIndex;
+        this.columnName = null;
+        this.useName = false;
+        this.clazz = clazz;
     }
 
     /**
@@ -45,33 +51,20 @@ public class ScalarHandler<T> implements ScxHandlerRE<ResultSet, T, SQLException
      *
      * @param columnName a
      */
-    public ScalarHandler(String columnName) {
-        this(1, columnName);
-    }
-
-    /**
-     * <p>Constructor for ScalarHandler.</p>
-     *
-     * @param columnIndex a
-     * @param columnName  a
-     */
-    private ScalarHandler(int columnIndex, String columnName) {
-        this.columnIndex = columnIndex;
+    public ScalarHandler(String columnName, Class<T> clazz) {
+        this.columnIndex = 0;
         this.columnName = columnName;
+        this.useName = true;
+        this.clazz = clazz;
     }
 
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("unchecked")
     @Override
     public T handle(ResultSet rs) throws SQLException {
-
         if (rs.next()) {
-            if (this.columnName == null) {
-                return (T) rs.getObject(this.columnIndex);
-            }
-            return (T) rs.getObject(this.columnName);
+            return useName ? rs.getObject(this.columnName, clazz) : rs.getObject(this.columnIndex, clazz);
         }
         return null;
     }
