@@ -204,10 +204,26 @@ public final class SQLBuilder {
      * @param size   a int
      * @return a {@link cool.scx.sql.SQLBuilder} object
      */
-    public SQLBuilder Limit(int offset, int size) {
+    public SQLBuilder Limit(Integer offset, Integer size) {
+        if (offset == null || offset < 0) {
+            throw new IllegalArgumentException("分页参数错误 : offset (偏移量) 不能为空或小于 0 !!!");
+        }
+        if (size == null || size < 0) {
+            throw new IllegalArgumentException("分页参数错误 : size (每页数量) 不能为空或小于 0 !!!");
+        }
         this.offset = offset;
         this.size = size;
         return this;
+    }
+
+    /**
+     * a
+     *
+     * @param size a
+     * @return a
+     */
+    public SQLBuilder Limit(Integer size) {
+        return Limit(0, size);
     }
 
     /**
@@ -315,6 +331,9 @@ public final class SQLBuilder {
      * @return a {@link cool.scx.sql.SQLBuilder} object
      */
     public SQLBuilder Set(String... updateSetColumns) {
+        if (updateSetColumns.length == 0) {
+            throw new IllegalArgumentException("Set 子句错误 : 待更新列数量不能为 0 !!!");
+        }
         this.updateSetColumns = updateSetColumns;
         return this;
     }
@@ -369,11 +388,7 @@ public final class SQLBuilder {
      * @return a {@link java.lang.String} object
      */
     private String GetUpdateSQL() {
-        if (updateSetColumns.length > 0) {
-            return "UPDATE " + tableName + " SET " + String.join(", ", updateSetColumns) + getWhereSQL();
-        } else {
-            return null;
-        }
+        return "UPDATE " + tableName + " SET " + String.join(", ", updateSetColumns) + getWhereSQL();
     }
 
     /**
@@ -391,10 +406,7 @@ public final class SQLBuilder {
      * @return s
      */
     private String GetSelectSQL() {
-        var groupBySQL = groupByColumns != null && groupByColumns.length != 0 ? " GROUP BY " + String.join(", ", groupByColumns) : "";
-        var orderBySQL = orderByClauses != null && orderByClauses.length != 0 ? " ORDER BY " + String.join(", ", orderByClauses) : "";
-        var limitSQL = offset != null && size != null ? " LIMIT " + offset + "," + size : "";
-        return "SELECT " + String.join(", ", selectColumns) + " FROM " + tableName + getWhereSQL() + groupBySQL + orderBySQL + limitSQL;
+        return "SELECT " + String.join(", ", selectColumns) + " FROM " + tableName + getWhereSQL() + getGroupBySQL() + getOrderBySQL() + getLimitSQL();
     }
 
     /**
@@ -404,6 +416,18 @@ public final class SQLBuilder {
      */
     private String getWhereSQL() {
         return whereClauses != null && whereClauses.length > 0 ? " WHERE " + String.join(" AND ", whereClauses) : "";
+    }
+
+    private String getLimitSQL() {
+        return size == null ? "" : offset == null || offset == 0 ? " LIMIT " + size : " LIMIT " + offset + "," + size;
+    }
+
+    private String getGroupBySQL() {
+        return groupByColumns != null && groupByColumns.length != 0 ? " GROUP BY " + String.join(", ", groupByColumns) : "";
+    }
+
+    private String getOrderBySQL() {
+        return orderByClauses != null && orderByClauses.length != 0 ? " ORDER BY " + String.join(", ", orderByClauses) : "";
     }
 
 }

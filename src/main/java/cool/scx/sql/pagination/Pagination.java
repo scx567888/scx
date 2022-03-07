@@ -28,30 +28,30 @@ public final class Pagination {
     /**
      * 设置分页参数
      *
-     * @param page 分页页码
-     * @param size a int
+     * @param page 分页页码 注意从 0 开始
+     * @param size 每页数量
      * @return p
      */
-    public Pagination set(int page, int size) {
-        if (page < 1) {
-            throw new IllegalArgumentException("分页参数错误 : page 不能小于 1 !!!");
-        } else if (size < 0) {
-            throw new IllegalArgumentException("分页参数错误 : size 不能小于 0 !!!");
-        } else {
-            this.page = page;
-            this.size = size;
-            return this;
+    public Pagination set(Integer page, Integer size) {
+        if (page == null || page < 0) {
+            throw new IllegalArgumentException("分页参数错误 : page (分页页码) 不能为空或小于 0 !!!");
         }
+        if (size == null || size < 0) {
+            throw new IllegalArgumentException("分页参数错误 : size (每页数量) 不能为空或小于 0 !!!");
+        }
+        this.page = page;
+        this.size = size;
+        return this;
     }
 
     /**
-     * <p>set.</p>
+     * 设置每页数量
      *
      * @param size s
      * @return s
      */
-    public Pagination set(int size) {
-        return set(1, size);
+    public Pagination set(Integer size) {
+        return set(0, size);
     }
 
     /**
@@ -60,11 +60,7 @@ public final class Pagination {
      * @return a int
      */
     public Integer offset() {
-        if (page != null && size != null) {
-            return (page - 1) * size;
-        } else {
-            return null;
-        }
+        return size != null && page != null ? size * page : null;
     }
 
     /**

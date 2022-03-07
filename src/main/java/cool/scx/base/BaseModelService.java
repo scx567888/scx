@@ -92,7 +92,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     }
 
     /**
-     * 处理 updateFilter  使在插入数据时永远过滤 "id", "updateDate", "createDate", "tombstone" 四个字段
+     * 处理 updateFilter  使在更新数据时永远过滤 "id", "updateDate", "createDate" 三个字段
      *
      * @param updateFilter u
      */
@@ -210,7 +210,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     }
 
     /**
-     * 获取所有数据 (注意 : 默认根据最后更新时间 {@link cool.scx.base.BaseModel#updateDate} 排序)
+     * 获取所有数据
      *
      * @return 所有数据
      */
@@ -225,7 +225,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @return a
      */
     public List<Entity> list(SelectFilter selectFilter) {
-        return list(new Query().desc("updateDate"), selectFilter);
+        return list(new Query(), selectFilter);
     }
 
     /**
@@ -269,7 +269,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @throws SQLException a
      */
     public List<Entity> list(Connection con, SelectFilter selectFilter) throws SQLException {
-        return list(con, new Query().desc("updateDate"), selectFilter);
+        return list(con, new Query(), selectFilter);
     }
 
     /**
