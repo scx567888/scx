@@ -40,7 +40,7 @@ public final class Pagination {
             throw new IllegalArgumentException("分页参数错误 : pageSize (每页数量) 不能为空或小于 0 !!!");
         }
         this.currentPage = currentPage;
-        this.pageSize = currentPage;
+        this.pageSize = pageSize;
         return this;
     }
 
