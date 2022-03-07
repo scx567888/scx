@@ -34,7 +34,7 @@ public final class Pagination {
      */
     public Pagination set(Integer currentPage, Integer pageSize) {
         if (currentPage == null || currentPage < 0) {
-            throw new IllegalArgumentException("分页参数错误 : page (分页页码) 不能为空或小于 0 !!!");
+            throw new IllegalArgumentException("分页参数错误 : currentPage (分页页码) 不能为空或小于 0 !!!");
         }
         if (pageSize == null || pageSize < 0) {
             throw new IllegalArgumentException("分页参数错误 : pageSize (每页数量) 不能为空或小于 0 !!!");
