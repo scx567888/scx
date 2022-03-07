@@ -204,7 +204,7 @@ public final class SQLBuilder {
      * @param size   a int
      * @return a {@link cool.scx.sql.SQLBuilder} object
      */
-    public SQLBuilder Limit(Integer offset, Integer size) {
+    public SQLBuilder Limit(int offset, int size) {
         this.offset = offset;
         this.size = size;
         return this;
