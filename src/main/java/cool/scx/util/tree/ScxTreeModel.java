@@ -34,6 +34,8 @@ public interface ScxTreeModel<T extends ScxTreeModel<T>> {
 
     /**
      * 设置子节点
+     *
+     * @param list a
      */
     void children(List<T> list);
 
