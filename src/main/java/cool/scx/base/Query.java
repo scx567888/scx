@@ -119,23 +119,23 @@ public final class Query {
     /**
      * 设置分页参数
      *
-     * @param page 分页页码
-     * @param size 每页数量
+     * @param currentPage 分页页码
+     * @param pageSize    每页数量
      * @return p
      */
-    public Query setPagination(Integer page, Integer size) {
-        pagination.set(page, size);
+    public Query setPagination(Integer currentPage, Integer pageSize) {
+        pagination.set(currentPage, pageSize);
         return this;
     }
 
     /**
      * 设置分页 默认 第一页
      *
-     * @param size a {@link java.lang.Integer} object.
+     * @param pageSize a {@link java.lang.Integer} object.
      * @return a 当前实例
      */
-    public Query setPagination(Integer size) {
-        pagination.set(size);
+    public Query setPagination(Integer pageSize) {
+        pagination.set(pageSize);
         return this;
     }
 
