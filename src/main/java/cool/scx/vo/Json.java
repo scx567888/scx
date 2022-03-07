@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Json 格式的返回值
+ * Json 格式的返回值 (注意 {@link DataJson} 进行区分, 此格式适合传递多个参数)
  *
  * @author scx567888
  * @version 0.3.6
