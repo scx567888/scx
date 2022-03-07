@@ -204,8 +204,19 @@ public final class SQLBuilder {
      * @param size   a int
      * @return a {@link cool.scx.sql.SQLBuilder} object
      */
-    public SQLBuilder Limit(int offset, int size) {
+    public SQLBuilder Limit(Integer offset, Integer size) {
         this.offset = offset;
+        this.size = size;
+        return this;
+    }
+
+    /**
+     * a
+     *
+     * @param size a
+     * @return a
+     */
+    public SQLBuilder Limit(Integer size) {
         this.size = size;
         return this;
     }
@@ -393,7 +404,7 @@ public final class SQLBuilder {
     private String GetSelectSQL() {
         var groupBySQL = groupByColumns != null && groupByColumns.length != 0 ? " GROUP BY " + String.join(", ", groupByColumns) : "";
         var orderBySQL = orderByClauses != null && orderByClauses.length != 0 ? " ORDER BY " + String.join(", ", orderByClauses) : "";
-        var limitSQL = offset != null && size != null ? " LIMIT " + offset + "," + size : "";
+        var limitSQL = size == null ? "" : offset == null || offset == 0 ? " LIMIT " + size : " LIMIT " + offset + "," + size;
         return "SELECT " + String.join(", ", selectColumns) + " FROM " + tableName + getWhereSQL() + groupBySQL + orderBySQL + limitSQL;
     }
 
