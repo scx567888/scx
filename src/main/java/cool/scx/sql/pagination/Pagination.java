@@ -9,14 +9,14 @@ package cool.scx.sql.pagination;
 public final class Pagination {
 
     /**
-     * 分页 页码 默认为空 即不设置分页页码
+     * 当前页 页码 默认为空 即不设置页码
      */
-    private Integer page = null;
+    private Integer currentPage = null;
 
     /**
-     * 分页 每页数量 默认为空 即不设置分页内容
+     * 每页数量分页 每页数量 默认为空 即不设置分页内容
      */
-    private Integer size = null;
+    private Integer pageSize = null;
 
     /**
      * <p>Constructor for Pagination.</p>
@@ -39,8 +39,8 @@ public final class Pagination {
         if (size == null || size < 0) {
             throw new IllegalArgumentException("分页参数错误 : size (每页数量) 不能为空或小于 0 !!!");
         }
-        this.page = page;
-        this.size = size;
+        this.currentPage = page;
+        this.pageSize = size;
         return this;
     }
 
@@ -60,16 +60,7 @@ public final class Pagination {
      * @return a int
      */
     public Integer offset() {
-        return size != null && page != null ? size * page : null;
-    }
-
-    /**
-     * 获取分页大小
-     *
-     * @return a int
-     */
-    public Integer size() {
-        return size;
+        return pageSize != null && currentPage != null ? pageSize * currentPage : null;
     }
 
     /**
@@ -78,9 +69,18 @@ public final class Pagination {
      * @return a
      */
     public Pagination clear() {
-        this.page = null;
-        this.size = null;
+        this.currentPage = null;
+        this.pageSize = null;
         return this;
+    }
+
+    /**
+     * 获取分页大小 (这里分页大小即等于行数 所以直接返回 pageSize)
+     *
+     * @return rowCount
+     */
+    public Integer rowCount() {
+        return pageSize;
     }
 
 }

@@ -54,7 +54,7 @@ public final class SQLBuilder {
     /**
      * a
      */
-    private Integer size = null;
+    private Integer rowCount = null;
 
     /**
      * a
@@ -200,19 +200,19 @@ public final class SQLBuilder {
     /**
      * a
      *
-     * @param offset a int
-     * @param size   a int
+     * @param offset   a int
+     * @param rowCount a int
      * @return a {@link cool.scx.sql.SQLBuilder} object
      */
-    public SQLBuilder Limit(Integer offset, Integer size) {
+    public SQLBuilder Limit(Integer offset, Integer rowCount) {
         if (offset == null || offset < 0) {
             throw new IllegalArgumentException("分页参数错误 : offset (偏移量) 不能为空或小于 0 !!!");
         }
-        if (size == null || size < 0) {
-            throw new IllegalArgumentException("分页参数错误 : size (每页数量) 不能为空或小于 0 !!!");
+        if (rowCount == null || rowCount < 0) {
+            throw new IllegalArgumentException("分页参数错误 : rowCount (每页数量) 不能为空或小于 0 !!!");
         }
         this.offset = offset;
-        this.size = size;
+        this.rowCount = rowCount;
         return this;
     }
 
@@ -274,7 +274,7 @@ public final class SQLBuilder {
     public SQLBuilder Limit(Pagination pagination) {
         if (pagination != null) {
             this.offset = pagination.offset();
-            this.size = pagination.size();
+            this.rowCount = pagination.rowCount();
         }
         return this;
     }
@@ -419,7 +419,7 @@ public final class SQLBuilder {
     }
 
     private String getLimitSQL() {
-        return size == null ? "" : offset == null || offset == 0 ? " LIMIT " + size : " LIMIT " + offset + "," + size;
+        return rowCount == null ? "" : offset == null || offset == 0 ? " LIMIT " + rowCount : " LIMIT " + offset + "," + rowCount;
     }
 
     private String getGroupBySQL() {
