@@ -83,25 +83,25 @@ import cool.scx.ScxModule;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.enumeration.HttpMethod;
 
-//注意 : 自定义的模块需要继承 ScxModule
-//此处的 ScxMapping 注解用来表示这是一个需要被扫描 WebHandler 的类
+// 注意 : 自定义的模块需要继承 ScxModule
+// 此处的 ScxMapping 注解用来表示这是一个需要被扫描 WebHandler 的类
 @ScxMapping
 public class YourModule implements ScxModule {
 
     public static void main(String[] args) {
         // 使用 Scx 构建器 ,构建并运行 项目
         Scx.builder()
-                .setMainClass(YourModule.class) //1, Main 方法的 Class
-                .addModule(new YourModule())    //2, 您自己的模块
-                .setArgs(args)                  //3, 外部参数
-                .run();                         //4, 构建并运行项目
+                .setMainClass(YourModule.class) // 1, Main 方法的 Class
+                .addModule(new YourModule())    // 2, 您自己的模块
+                .setArgs(args)                  // 3, 外部参数
+                .run();                         // 4, 构建并运行项目
     }
 
-    //此处的 ScxMapping 注解用来表示这是一个具体的 WebHandler
-    //路径为 "/" , 请求方法为 GET
+    // 此处的 ScxMapping 注解用来表示这是一个具体的 WebHandler
+    // 路径为 "/" , 请求方法为 GET
     @ScxMapping(value = "/", method = HttpMethod.GET)
     public String helloWorld() {
-        //向页面返回的具体内容
+        // 向页面返回的具体内容
         return "Hello World";
     }
 
