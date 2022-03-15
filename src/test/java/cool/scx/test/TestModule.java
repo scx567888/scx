@@ -44,7 +44,7 @@ public class TestModule implements ScxModule {
                 .configure(ScxFeature.SHOW_START_UP_INFO, true)
                 .configure(ScxFeature.USE_DEVELOPMENT_ERROR_PAGE, true)
                 .configure(ScxFeature.ENABLE_SCHEDULING_WITH_ANNOTATION, true)
-                .build().run();
+                .run();
         //修复表
         ScxDaoHelper.fixTable();
     }

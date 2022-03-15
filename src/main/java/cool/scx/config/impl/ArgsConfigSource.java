@@ -2,12 +2,12 @@ package cool.scx.config.impl;
 
 import cool.scx.config.ScxConfigSource;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public final class ArgsConfigSource implements ScxConfigSource {
 
-    private final Map<String, Object> configMapping = new HashMap<>();
+    private final Map<String, Object> configMapping = new LinkedHashMap<>();
 
     public ArgsConfigSource(String... args) {
         for (var arg : args) {

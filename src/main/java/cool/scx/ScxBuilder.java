@@ -127,6 +127,13 @@ public final class ScxBuilder {
     }
 
     /**
+     * a
+     */
+    public void run() {
+        this.build().run();
+    }
+
+    /**
      * 构建
      *
      * @return a

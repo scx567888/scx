@@ -7,7 +7,7 @@ import cool.scx.util.ObjectUtils;
 import cool.scx.util.ansi.Ansi;
 
 import java.io.File;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public final class JsonFileConfigSource implements ScxConfigSource {
 
-    private final Map<String, Object> configMapping = new HashMap<>();
+    private final LinkedHashMap<String, Object> configMapping = new LinkedHashMap<>();
 
     private JsonFileConfigSource(File jsonFile) {
         if (jsonFile == null) {
