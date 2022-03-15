@@ -1,15 +1,10 @@
 package cool.scx.config;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.ScxHandlerR;
 import cool.scx.config.handler.ScxConfigHandlerParam;
 import cool.scx.config.handler.impl.ConvertValueHandler;
 import cool.scx.config.handler.impl.DefaultValueHandler;
-import cool.scx.util.MapUtils;
-import cool.scx.util.ObjectUtils;
-import cool.scx.util.ansi.Ansi;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -32,34 +27,11 @@ public final class ScxConfig {
     /**
      * a
      *
-     * @param scxConfigFile a
-     * @param defaultConfig a
-     * @param args          a
+     * @param scxConfigSources a
      */
-    public ScxConfig(File scxConfigFile, Map<String, Object> defaultConfig, String... args) {
-        try {
-            configMapping.putAll(defaultConfig);
-            if (scxConfigFile == null || !scxConfigFile.exists()) {
-                throw new ScxConfigFileMissingException();
-            }
-            configMapping.putAll(MapUtils.flatMap(ObjectUtils.jsonMapper().readValue(scxConfigFile, ObjectUtils.MAP_TYPE), null));
-            Ansi.out().brightBlue("Y 已加载配置文件 : " + scxConfigFile.getPath()).println();
-        } catch (Exception e) {
-            if (e instanceof ScxConfigFileMissingException) {
-                Ansi.out().red("N 配置文件已丢失!!! 请确保配置文件存在 scx-config.json").println();
-            } else if (e instanceof JsonProcessingException) {
-                Ansi.out().red("N 配置文件已损坏!!! 请确保配置文件正确 scx-config.json").println();
-            } else {
-                e.printStackTrace();
-            }
-        }
-        for (var arg : args) {
-            if (arg.startsWith("--")) {
-                var strings = arg.substring(2).split("=");
-                if (strings.length == 2) {
-                    configMapping.put(strings[0], strings[1]);
-                }
-            }
+    public ScxConfig(ScxConfigSource... scxConfigSources) {
+        for (var scxConfigSource : scxConfigSources) {
+            configMapping.putAll(scxConfigSource.getConfigMapping());
         }
     }
 
@@ -118,13 +90,6 @@ public final class ScxConfig {
      */
     public Map<String, Object> configMapping() {
         return new HashMap<>(configMapping);
-    }
-
-    /**
-     * 配置文件丢失异常
-     */
-    private static class ScxConfigFileMissingException extends Exception {
-
     }
 
 }

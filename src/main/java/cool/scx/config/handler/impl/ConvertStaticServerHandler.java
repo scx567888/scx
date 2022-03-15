@@ -1,6 +1,6 @@
 package cool.scx.config.handler.impl;
 
-import cool.scx.ScxAppRoot;
+import cool.scx.ScxEnvironment;
 import cool.scx.ScxHandlerR;
 import cool.scx.config.handler.ScxConfigHandlerParam;
 import cool.scx.type.StaticServer;
@@ -13,7 +13,7 @@ import java.util.Map;
  * a
  */
 public record ConvertStaticServerHandler(
-        ScxAppRoot scxAppRoot) implements ScxHandlerR<ScxConfigHandlerParam, List<StaticServer>> {
+        ScxEnvironment scxEnvironment) implements ScxHandlerR<ScxConfigHandlerParam, List<StaticServer>> {
 
     @Override
     public List<StaticServer> handle(ScxConfigHandlerParam o) {
@@ -21,7 +21,7 @@ public record ConvertStaticServerHandler(
         var tempList = new ArrayList<StaticServer>();
         for (var arg : arrayList) {
             try {
-                tempList.add(new StaticServer(arg.get("location"), scxAppRoot.getFileByAppRoot(arg.get("root"))));
+                tempList.add(new StaticServer(arg.get("location"), scxEnvironment.getFileByAppRoot(arg.get("root"))));
             } catch (Exception ignored) {
 
             }

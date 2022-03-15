@@ -94,7 +94,7 @@ public class YourModule implements ScxModule {
                 .setMainClass(YourModule.class) //1, Main 方法的 Class
                 .addModule(new YourModule())    //2, 您自己的模块
                 .setArgs(args)                  //3, 外部参数
-                .build().run();                 //4, 构建并运行项目
+                .run();                         //4, 构建并运行项目
     }
 
     //此处的 ScxMapping 注解用来表示这是一个具体的 WebHandler

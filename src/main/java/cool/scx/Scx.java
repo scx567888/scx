@@ -1,7 +1,7 @@
 package cool.scx;
 
 import cool.scx.config.ScxConfig;
-import cool.scx.config.ScxConfigDefaultValue;
+import cool.scx.config.ScxConfigSource;
 import cool.scx.config.ScxEasyConfig;
 import cool.scx.config.ScxFeatureConfig;
 import cool.scx.dao.ScxDao;
@@ -14,7 +14,6 @@ import cool.scx.scheduler.ScxScheduler;
 import cool.scx.util.ConsoleUtils;
 import cool.scx.util.NetUtils;
 import cool.scx.util.StopWatch;
-import cool.scx.util.StringUtils;
 import cool.scx.util.ansi.Ansi;
 import cool.scx.websocket.ScxWebSocketRouter;
 import io.vertx.core.Vertx;
@@ -41,29 +40,10 @@ import java.util.concurrent.ScheduledExecutorService;
 public final class Scx {
 
     /**
-     * 默认的核心包 APP KEY (密码) , 注意请不要在您自己的模块中使用此常量 , 非常不安全
+     * 项目根模块 所在路径
+     * 默认取 所有自定义模块的最后一个 所在的文件根目录
      */
-    static final String DEFAULT_APP_KEY = "SCX-123456";
-
-    /**
-     * SCX 版本号
-     */
-    private static final String SCX_VERSION = "1.12.1";
-
-    /**
-     * 默认配置文件 路径
-     */
-    private static final String DEFAULT_SCX_CONFIG_PATH = "AppRoot:scx-config.json";
-
-    /**
-     * mainClass 用作定位 项目根目录
-     */
-    private final Class<?> mainClass;
-
-    /**
-     * ScxModule 描述集合
-     */
-    private final List<ScxModuleInfo<? extends ScxModule>> scxModuleInfos;
+    private final ScxEnvironment scxEnvironment;
 
     /**
      * 项目的 appKey
@@ -76,20 +56,14 @@ public final class Scx {
     private final ScxFeatureConfig scxFeatureConfig;
 
     /**
-     * 外部参数
-     */
-    private final String[] args;
-
-    /**
-     * 项目根模块 所在路径
-     * 默认取 所有自定义模块的最后一个 所在的文件根目录
-     */
-    private final ScxAppRoot scxAppRoot;
-
-    /**
      * scxConfig
      */
     private final ScxConfig scxConfig;
+
+    /**
+     * ScxModule 描述集合
+     */
+    private final List<ScxModuleInfo<?>> scxModuleInfos;
 
     /**
      * scxEasyConfig
@@ -100,6 +74,11 @@ public final class Scx {
      * vertx
      */
     private final Vertx vertx;
+
+    /**
+     * s
+     */
+    private final ScxEventBus scxEventBus;
 
     /**
      * scxBeanFactory
@@ -115,11 +94,6 @@ public final class Scx {
      * dao
      */
     private final ScxDao scxDao;
-
-    /**
-     * s
-     */
-    private final ScxEventBus scxEventBus;
 
     /**
      * a
@@ -149,41 +123,37 @@ public final class Scx {
     /**
      * 初始化 Scx
      *
-     * @param mainClass        m
-     * @param scxModules       s
+     * @param scxEnvironment   m
      * @param appKey           a
      * @param scxFeatureConfig f
-     * @param args             a
+     * @param scxConfigSources f
+     * @param scxModules       s
      */
-    public Scx(Class<?> mainClass, ScxModule[] scxModules, String appKey, ScxFeatureConfig scxFeatureConfig, String[] args) {
+    Scx(ScxEnvironment scxEnvironment, String appKey, ScxFeatureConfig scxFeatureConfig, ScxConfigSource[] scxConfigSources, ScxModule[] scxModules) {
         //0, 赋值到全局
         ScxContext.scx(this);
         //1, 初始化基本参数
-        this.mainClass = initMainClass(mainClass);
+        this.scxEnvironment = scxEnvironment;
+        this.appKey = appKey;
+        this.scxFeatureConfig = scxFeatureConfig;
+        this.scxConfig = new ScxConfig(scxConfigSources);
         this.scxModuleInfos = initScxModuleInfos(scxModules);
-        this.appKey = initAppKey(appKey);
-        this.scxFeatureConfig = initFeatureConfig(scxFeatureConfig);
-        this.args = initArgs(args);
-        //3, 初始化其他参数
-        this.scxAppRoot = new ScxAppRoot(this.mainClass);
-        //4, 初始化配置文件
-        this.scxConfig = new ScxConfig(this.scxAppRoot.getFileByAppRoot(DEFAULT_SCX_CONFIG_PATH), ScxConfigDefaultValue.defaultConfig(), this.args);
-        this.scxEasyConfig = new ScxEasyConfig(this.scxConfig, this.scxAppRoot, this.appKey);
-        //5, 初始化 ScxLog 日志框架
-        ScxLoggerConfiguration.init(this.scxConfig, this.scxAppRoot);
-        //6, 初始化 Vertx 这里在 log4j2 之后初始化是因为 vertx 需要使用 log4j2 打印日志
+        this.scxEasyConfig = new ScxEasyConfig(this.scxConfig, this.scxEnvironment, this.appKey);
+        //2, 初始化 ScxLog 日志框架
+        ScxLoggerConfiguration.init(this.scxConfig, this.scxEnvironment);
+        //3, 初始化 Vertx 这里在 log4j2 之后初始化是因为 vertx 需要使用 log4j2 打印日志
         this.vertx = initVertx();
-        //7, 初始化事件总线 (这里的 ScxEventBus 其实只是针对 vertx 的 eventBus 进行一次包装)
+        //4, 初始化事件总线 (这里的 ScxEventBus 其实只是针对 vertx 的 eventBus 进行一次包装)
         this.scxEventBus = new ScxEventBus(this.vertx);
-        //8, 初始化 BeanFactory
+        //5, 初始化 BeanFactory
         this.scxBeanFactory = initScxBeanFactory(this.scxModuleInfos, this.vertx.nettyEventLoopGroup(), this.scxFeatureConfig);
-        //9, 初始化模板
+        //6, 初始化模板
         this.scxTemplate = new ScxTemplate(this.scxEasyConfig);
-        //10, 初始化持久层
+        //7, 初始化持久层
         this.scxDao = new ScxDao(this.scxEasyConfig, this.scxFeatureConfig);
-        //11, ScxMapping 配置类
+        //8, ScxMapping 配置类
         this.scxMappingConfiguration = new ScxMappingConfiguration();
-        //12, 初始化任务调度器
+        //9, 初始化任务调度器
         this.scxScheduler = new ScxScheduler(this.vertx.nettyEventLoopGroup());
     }
 
@@ -199,7 +169,7 @@ public final class Scx {
                 .red("▀███████████ ").green("███        ").blue("   ████▀██▄     ").ln()
                 .red("         ███ ").green("███    █▄  ").blue("  ▐███  ▀███    ").ln()
                 .red("   ▄█    ███ ").green("███    ███ ").blue(" ▄███     ███▄  ").ln()
-                .red(" ▄████████▀  ").green("████████▀  ").blue("████       ███▄ ").cyan(" Version ").brightCyan(SCX_VERSION).println();
+                .red(" ▄████████▀  ").green("████████▀  ").blue("████       ███▄ ").cyan(" Version ").brightCyan(ScxConstant.SCX_VERSION).println();
     }
 
     /**
@@ -274,26 +244,6 @@ public final class Scx {
     }
 
     /**
-     * <p>initArgs.</p>
-     *
-     * @param args an array of {@link java.lang.String} objects
-     * @return an array of {@link java.lang.String} objects
-     */
-    private static String[] initArgs(String[] args) {
-        return args != null ? args : new String[0];
-    }
-
-    /**
-     * <p>initFeatureConfig.</p>
-     *
-     * @param featureConfig a {@link cool.scx.config.ScxFeatureConfig} object
-     * @return a {@link cool.scx.config.ScxFeatureConfig} object
-     */
-    private static ScxFeatureConfig initFeatureConfig(ScxFeatureConfig featureConfig) {
-        return featureConfig != null ? featureConfig : new ScxFeatureConfig();
-    }
-
-    /**
      * <p>initScxModuleInfos.</p>
      *
      * @param scxModules an array of {@link cool.scx.ScxModule} objects
@@ -316,35 +266,6 @@ public final class Scx {
             }
         }
         return tempScxModuleInfoList;
-    }
-
-    /**
-     * <p>initMainClass.</p>
-     *
-     * @param mainClass a {@link java.lang.Class} object
-     * @return a {@link java.lang.Class} object
-     */
-    private static Class<?> initMainClass(Class<?> mainClass) {
-        //1,检测 mainClass 是否正确
-        if (mainClass == null) {
-            throw new IllegalArgumentException("MainClass must not be empty !!! ");
-        }
-        return mainClass;
-    }
-
-    /**
-     * 初始化 AppKey
-     *
-     * @param appKey a
-     * @return a
-     */
-    private static String initAppKey(String appKey) {
-        if (StringUtils.isBlank(appKey)) {
-            throw new IllegalArgumentException("AppKey cannot be set empty");
-        } else if (DEFAULT_APP_KEY.equals(appKey)) {
-            System.err.println("注意!!! 未设置 APP_KEY ,已采用 DEFAULT_APP_KEY , 这是非常不安全的 , 建议设置自定义的 APP_KEY !!!");
-        }
-        return appKey;
     }
 
     /**
@@ -473,8 +394,8 @@ public final class Scx {
      *
      * @return a
      */
-    public ScxAppRoot scxAppRoot() {
-        return scxAppRoot;
+    public ScxEnvironment scxEnvironment() {
+        return scxEnvironment;
     }
 
     /**
@@ -568,24 +489,6 @@ public final class Scx {
      */
     public ScxFeatureConfig scxFeatureConfig() {
         return scxFeatureConfig;
-    }
-
-    /**
-     * a
-     *
-     * @return a
-     */
-    public Class<?> mainClass() {
-        return mainClass;
-    }
-
-    /**
-     * a
-     *
-     * @return a
-     */
-    public String[] args() {
-        return args;
     }
 
     /**

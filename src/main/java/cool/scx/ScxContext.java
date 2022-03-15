@@ -140,8 +140,8 @@ public final class ScxContext {
      *
      * @return a {@link java.io.File} object
      */
-    public static ScxAppRoot appRoot() {
-        return scx().scxAppRoot();
+    public static ScxEnvironment environment() {
+        return scx().scxEnvironment();
     }
 
     /**
@@ -273,7 +273,7 @@ public final class ScxContext {
      * @return a
      */
     public static File getFileByAppRoot(String path) {
-        return appRoot().getFileByAppRoot(path);
+        return environment().getFileByAppRoot(path);
     }
 
 }

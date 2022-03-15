@@ -118,6 +118,12 @@ public abstract class AbstractFilter<E extends AbstractFilter<E>> {
          */
         EXCLUDED;
 
+        /**
+         * a
+         *
+         * @param filterModeStr a
+         * @return a
+         */
         public static FilterMode of(String filterModeStr) {
             return valueOf(filterModeStr.trim().toUpperCase());
         }

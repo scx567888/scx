@@ -1,7 +1,7 @@
 package cool.scx.logging;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import cool.scx.ScxAppRoot;
+import cool.scx.ScxEnvironment;
 import cool.scx.config.ScxConfig;
 import cool.scx.config.handler.impl.AppRootHandler;
 import cool.scx.config.handler.impl.ConvertValueHandler;
@@ -27,14 +27,14 @@ public final class ScxLoggerConfiguration {
     /**
      * a
      *
-     * @param scxConfig  a
-     * @param scxAppRoot a
+     * @param scxConfig      a
+     * @param scxEnvironment a
      */
-    public static void init(ScxConfig scxConfig, ScxAppRoot scxAppRoot) {
+    public static void init(ScxConfig scxConfig, ScxEnvironment scxEnvironment) {
         //先初始化好 DefaultScxLoggerInfo
         var defaultLevel = ScxLoggingLevel.of(scxConfig.getOrDefault("scx.logging.default.level", "ERROR"));
         var defaultType = ScxLoggingType.of(scxConfig.getOrDefault("scx.logging.default.type", "CONSOLE"));
-        var defaultStoredDirectory = scxConfig.get("scx.logging.default.stored-directory", new AppRootHandler("AppRoot:logs", scxAppRoot)).toPath();
+        var defaultStoredDirectory = scxConfig.get("scx.logging.default.stored-directory", new AppRootHandler("AppRoot:logs", scxEnvironment)).toPath();
         ScxLoggerFactory.updateDefaultLevel(defaultLevel);
         ScxLoggerFactory.updateDefaultType(defaultType);
         ScxLoggerFactory.updateDefaultStoredDirectory(defaultStoredDirectory);
@@ -49,7 +49,7 @@ public final class ScxLoggerConfiguration {
             var name = logger.get("name");
             var level = ScxLoggingLevel.of(logger.get("level"), defaultLevel);
             var type = ScxLoggingType.of(logger.get("type"), defaultType);
-            var storedDirectory = StringUtils.isNotBlank(logger.get("stored-directory")) ? scxAppRoot.getFileByAppRoot(logger.get("stored-directory")).toPath() : defaultStoredDirectory;
+            var storedDirectory = StringUtils.isNotBlank(logger.get("stored-directory")) ? scxEnvironment.getFileByAppRoot(logger.get("stored-directory")).toPath() : defaultStoredDirectory;
             if (StringUtils.isNotBlank(name)) {
                 ScxLoggerFactory.updateLogger(name, level, type, storedDirectory);
             }
