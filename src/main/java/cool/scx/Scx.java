@@ -140,7 +140,7 @@ public final class Scx {
         this.scxModuleInfos = initScxModuleInfos(scxModules);
         this.scxEasyConfig = new ScxEasyConfig(this.scxConfig, this.scxAppRoot, this.appKey);
         //2, 初始化 ScxLog 日志框架
-        ScxLoggerConfiguration.init(this.scxAppRoot, this.scxConfig);
+        ScxLoggerConfiguration.init(this.scxConfig, this.scxAppRoot);
         //3, 初始化 Vertx 这里在 log4j2 之后初始化是因为 vertx 需要使用 log4j2 打印日志
         this.vertx = initVertx();
         //4, 初始化事件总线 (这里的 ScxEventBus 其实只是针对 vertx 的 eventBus 进行一次包装)

@@ -30,7 +30,7 @@ public final class ScxLoggerConfiguration {
      * @param scxConfig  a
      * @param scxAppRoot a
      */
-    public static void init(ScxAppRoot scxAppRoot, ScxConfig scxConfig) {
+    public static void init(ScxConfig scxConfig, ScxAppRoot scxAppRoot) {
         //先初始化好 DefaultScxLoggerInfo
         var defaultLevel = ScxLoggingLevel.of(scxConfig.getOrDefault("scx.logging.default.level", "ERROR"));
         var defaultType = ScxLoggingType.of(scxConfig.getOrDefault("scx.logging.default.type", "CONSOLE"));
