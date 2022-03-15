@@ -144,16 +144,16 @@ public final class ScxBuilder {
         //检查 mainClass
         checkMainClass(mainClass);
         //处理数据源
-        var scxAppRoot = new ScxAppRoot(mainClass);
+        var scxEnvironment = new ScxEnvironment(mainClass);
         //配置源 注意顺序 以保证可以逐个覆盖
         var defaultMapConfigSource = MapConfigSource.of(DEFAULT_CONFIG_MAP);
-        var defaultJsonFileConfigSource = JsonFileConfigSource.of(scxAppRoot.getFileByAppRoot(DEFAULT_SCX_CONFIG_PATH));
+        var defaultJsonFileConfigSource = JsonFileConfigSource.of(scxEnvironment.getFileByAppRoot(DEFAULT_SCX_CONFIG_PATH));
         var defaultArgsConfigSource = ArgsConfigSource.of(args);
         scxConfigSources.add(defaultMapConfigSource);
         scxConfigSources.add(defaultJsonFileConfigSource);
         scxConfigSources.add(defaultArgsConfigSource);
         //创建 scx 实例
-        return new Scx(scxAppRoot, appKey, scxFeatureConfig, scxConfigSources.toArray(ScxConfigSource[]::new), scxModules.toArray(ScxModule[]::new));
+        return new Scx(scxEnvironment, appKey, scxFeatureConfig, scxConfigSources.toArray(ScxConfigSource[]::new), scxModules.toArray(ScxModule[]::new));
     }
 
     /**

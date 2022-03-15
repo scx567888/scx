@@ -43,7 +43,7 @@ public final class Scx {
      * 项目根模块 所在路径
      * 默认取 所有自定义模块的最后一个 所在的文件根目录
      */
-    private final ScxAppRoot scxAppRoot;
+    private final ScxEnvironment scxEnvironment;
 
     /**
      * 项目的 appKey
@@ -123,24 +123,24 @@ public final class Scx {
     /**
      * 初始化 Scx
      *
-     * @param scxAppRoot       m
+     * @param scxEnvironment   m
      * @param appKey           a
      * @param scxFeatureConfig f
      * @param scxConfigSources f
      * @param scxModules       s
      */
-    Scx(ScxAppRoot scxAppRoot, String appKey, ScxFeatureConfig scxFeatureConfig, ScxConfigSource[] scxConfigSources, ScxModule[] scxModules) {
+    Scx(ScxEnvironment scxEnvironment, String appKey, ScxFeatureConfig scxFeatureConfig, ScxConfigSource[] scxConfigSources, ScxModule[] scxModules) {
         //0, 赋值到全局
         ScxContext.scx(this);
         //1, 初始化基本参数
-        this.scxAppRoot = scxAppRoot;
+        this.scxEnvironment = scxEnvironment;
         this.appKey = appKey;
         this.scxFeatureConfig = scxFeatureConfig;
         this.scxConfig = new ScxConfig(scxConfigSources);
         this.scxModuleInfos = initScxModuleInfos(scxModules);
-        this.scxEasyConfig = new ScxEasyConfig(this.scxConfig, this.scxAppRoot, this.appKey);
+        this.scxEasyConfig = new ScxEasyConfig(this.scxConfig, this.scxEnvironment, this.appKey);
         //2, 初始化 ScxLog 日志框架
-        ScxLoggerConfiguration.init(this.scxConfig, this.scxAppRoot);
+        ScxLoggerConfiguration.init(this.scxConfig, this.scxEnvironment);
         //3, 初始化 Vertx 这里在 log4j2 之后初始化是因为 vertx 需要使用 log4j2 打印日志
         this.vertx = initVertx();
         //4, 初始化事件总线 (这里的 ScxEventBus 其实只是针对 vertx 的 eventBus 进行一次包装)
@@ -394,8 +394,8 @@ public final class Scx {
      *
      * @return a
      */
-    public ScxAppRoot scxAppRoot() {
-        return scxAppRoot;
+    public ScxEnvironment scxEnvironment() {
+        return scxEnvironment;
     }
 
     /**

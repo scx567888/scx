@@ -5,12 +5,12 @@ import cool.scx.util.ScanClassUtils;
 import java.io.File;
 
 /**
- * 用来存储 项目所在路径
+ * 项目环境
  *
  * @author scx567888
  * @version 1.11.8
  */
-public final class ScxAppRoot {
+public final class ScxEnvironment {
 
     /**
      * 项目根模块 所在路径
@@ -23,7 +23,7 @@ public final class ScxAppRoot {
      *
      * @param mainClass class
      */
-    public ScxAppRoot(Class<?> mainClass) {
+    public ScxEnvironment(Class<?> mainClass) {
         this.appRootFile = initAppRoot(mainClass);
     }
 

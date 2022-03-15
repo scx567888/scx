@@ -38,6 +38,7 @@ public class ScalarHandler<T> implements ScxHandlerRE<ResultSet, T, SQLException
      * <p>Constructor for ScalarHandler.</p>
      *
      * @param columnIndex a
+     * @param clazz       a
      */
     public ScalarHandler(int columnIndex, Class<T> clazz) {
         this.columnIndex = columnIndex;
@@ -50,6 +51,7 @@ public class ScalarHandler<T> implements ScxHandlerRE<ResultSet, T, SQLException
      * <p>Constructor for ScalarHandler.</p>
      *
      * @param columnName a
+     * @param clazz      a
      */
     public ScalarHandler(String columnName, Class<T> clazz) {
         this.columnIndex = 0;

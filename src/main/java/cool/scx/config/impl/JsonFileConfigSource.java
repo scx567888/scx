@@ -39,6 +39,12 @@ public final class JsonFileConfigSource implements ScxConfigSource {
         }
     }
 
+    /**
+     * a
+     *
+     * @param jsonFile a
+     * @return a
+     */
     public static JsonFileConfigSource of(File jsonFile) {
         return new JsonFileConfigSource(jsonFile);
     }

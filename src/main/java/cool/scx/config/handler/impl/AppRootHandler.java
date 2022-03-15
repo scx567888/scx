@@ -1,6 +1,6 @@
 package cool.scx.config.handler.impl;
 
-import cool.scx.ScxAppRoot;
+import cool.scx.ScxEnvironment;
 import cool.scx.ScxHandlerR;
 import cool.scx.config.handler.ScxConfigHandlerParam;
 import cool.scx.util.ansi.Ansi;
@@ -15,27 +15,34 @@ import java.io.File;
  */
 public final class AppRootHandler implements ScxHandlerR<ScxConfigHandlerParam, File> {
 
+    /**
+     * a
+     */
     private final String defaultVal;
-    private final ScxAppRoot scxAppRoot;
+
+    /**
+     * a
+     */
+    private final ScxEnvironment scxEnvironment;
 
     /**
      * <p>Constructor for AppRootHandler.</p>
      *
-     * @param scxAppRoot a
+     * @param scxEnvironment a
      */
-    public AppRootHandler(ScxAppRoot scxAppRoot) {
-        this(null, scxAppRoot);
+    public AppRootHandler(ScxEnvironment scxEnvironment) {
+        this(null, scxEnvironment);
     }
 
     /**
      * a
      *
-     * @param defaultVal a
-     * @param scxAppRoot a
+     * @param defaultVal     a
+     * @param scxEnvironment a
      */
-    public AppRootHandler(String defaultVal, ScxAppRoot scxAppRoot) {
+    public AppRootHandler(String defaultVal, ScxEnvironment scxEnvironment) {
         this.defaultVal = defaultVal;
-        this.scxAppRoot = scxAppRoot;
+        this.scxEnvironment = scxEnvironment;
     }
 
     /**
@@ -45,9 +52,9 @@ public final class AppRootHandler implements ScxHandlerR<ScxConfigHandlerParam, 
     public File handle(ScxConfigHandlerParam param) {
         var path = new ConvertValueHandler<>(String.class).handle(param);
         if (path != null) {
-            return scxAppRoot.getFileByAppRoot(path);
+            return scxEnvironment.getFileByAppRoot(path);
         } else {
-            var defaultValFile = this.defaultVal != null ? scxAppRoot.getFileByAppRoot(this.defaultVal) : null;
+            var defaultValFile = this.defaultVal != null ? scxEnvironment.getFileByAppRoot(this.defaultVal) : null;
             Ansi.out().red("N 未检测到 " + param.ketPath() + " , 已采用默认值 : " + defaultValFile).println();
             return defaultValFile;
         }

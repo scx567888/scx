@@ -1,6 +1,6 @@
 package cool.scx.config;
 
-import cool.scx.ScxAppRoot;
+import cool.scx.ScxEnvironment;
 import cool.scx.config.handler.impl.AppRootHandler;
 import cool.scx.config.handler.impl.ConvertStaticServerHandler;
 import cool.scx.config.handler.impl.DecryptValueHandler;
@@ -95,18 +95,18 @@ public final class ScxEasyConfig {
     /**
      * a
      *
-     * @param scxConfig  a
-     * @param scxAppRoot a
-     * @param appKey     a
+     * @param scxConfig      a
+     * @param scxEnvironment a
+     * @param appKey         a
      */
-    public ScxEasyConfig(ScxConfig scxConfig, ScxAppRoot scxAppRoot, String appKey) {
+    public ScxEasyConfig(ScxConfig scxConfig, ScxEnvironment scxEnvironment, String appKey) {
         port = scxConfig.getOrDefault("scx.port", 8080);
         tombstone = scxConfig.getOrDefault("scx.tombstone", false);
         allowedOrigin = scxConfig.getOrDefault("scx.allowed-origin", "*");
-        templateRoot = scxConfig.get("scx.template.root", new AppRootHandler("AppRoot:/c/", scxAppRoot));
-        staticServers = scxConfig.get("scx.static-servers", new ConvertStaticServerHandler(scxAppRoot));
+        templateRoot = scxConfig.get("scx.template.root", new AppRootHandler("AppRoot:/c/", scxEnvironment));
+        staticServers = scxConfig.get("scx.static-servers", new ConvertStaticServerHandler(scxEnvironment));
         httpsEnabled = scxConfig.getOrDefault("scx.https.enabled", false);
-        sslPath = scxConfig.get("scx.https.ssl-path", new AppRootHandler(scxAppRoot));
+        sslPath = scxConfig.get("scx.https.ssl-path", new AppRootHandler(scxEnvironment));
         sslPassword = scxConfig.get("scx.https.ssl-password", new DecryptValueHandler(appKey));
         dataSourceHost = scxConfig.getOrDefault("scx.data-source.host", "127.0.0.1");
         dataSourcePort = scxConfig.getOrDefault("scx.data-source.port", 3306);

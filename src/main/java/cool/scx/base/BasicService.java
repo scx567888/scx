@@ -308,6 +308,11 @@ public class BasicService<Entity> {
         return new SQLRunnerParameterWrapper<>(sql, query.where().getWhereParams());
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public ScxDaoTableInfo _scxDaoTableInfo() {
         return scxDaoTableInfo;
     }

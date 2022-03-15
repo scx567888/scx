@@ -7,6 +7,11 @@ import java.util.Map;
  */
 public interface ScxConfigSource {
 
+    /**
+     * a
+     *
+     * @return a
+     */
     Map<String, Object> getConfigMapping();
 
 }
