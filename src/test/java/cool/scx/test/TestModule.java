@@ -35,6 +35,7 @@ public class TestModule implements ScxModule {
         //模拟外部参数
         var args = new String[]{"--scx.port=8888"};
         Scx.builder()
+                .setMainClass(TestModule.class)
                 .addModule(new TestModule())
                 .setArgs(args)
                 .configure(ScxFeature.SHOW_BANNER, true)

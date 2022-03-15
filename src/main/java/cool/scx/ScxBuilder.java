@@ -56,7 +56,7 @@ public final class ScxBuilder {
     /**
      * 用来存储临时待添加的 mainClass
      */
-    private Class<?> mainClass;
+    private Class<?> mainClass = null;
 
     /**
      * 用来存储临时待添加的 appKey
@@ -67,7 +67,7 @@ public final class ScxBuilder {
      * 构造函数
      */
     public ScxBuilder() {
-        mainClass = deduceMainApplicationClass();
+
     }
 
     /**
@@ -236,20 +236,6 @@ public final class ScxBuilder {
     public ScxBuilder configure(ScxFeature scxFeature, boolean state) {
         scxFeatureConfig.configure(scxFeature, state);
         return this;
-    }
-
-    private Class<?> deduceMainApplicationClass() {
-        try {
-            StackTraceElement[] stackTrace = new RuntimeException().getStackTrace();
-            for (StackTraceElement stackTraceElement : stackTrace) {
-                if ("main".equals(stackTraceElement.getMethodName())) {
-                    return Class.forName(stackTraceElement.getClassName());
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            // Swallow and continue
-        }
-        return null;
     }
 
 }
