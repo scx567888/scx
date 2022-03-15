@@ -1,10 +1,14 @@
 package cool.scx;
 
+import cool.scx.config.ScxConfigSource;
 import cool.scx.config.ScxFeatureConfig;
+import cool.scx.config.impl.ArgsConfigSource;
+import cool.scx.config.impl.JsonFileConfigSource;
+import cool.scx.config.impl.MapConfigSource;
 import cool.scx.enumeration.ScxFeature;
+import cool.scx.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Scx 构建器
@@ -13,6 +17,21 @@ import java.util.List;
  * @version 1.11.8
  */
 public final class ScxBuilder {
+
+    /**
+     * 默认配置键值对, 以便在没有配置文件的时候可以使项目正确启动
+     */
+    private static final Map<String, Object> DEFAULT_CONFIG_MAP = initDefaultConfigMap();
+
+    /**
+     * 默认的核心包 APP KEY (密码) , 注意请不要在您自己的模块中使用此常量 , 非常不安全
+     */
+    private static final String DEFAULT_APP_KEY = "SCX-123456";
+
+    /**
+     * 默认配置文件 路径
+     */
+    private static final String DEFAULT_SCX_CONFIG_PATH = "AppRoot:scx-config.json";
 
     /**
      * 用来存储临时待添加的 scxModules
@@ -25,25 +44,86 @@ public final class ScxBuilder {
     private final ScxFeatureConfig scxFeatureConfig = new ScxFeatureConfig();
 
     /**
+     * 配置源
+     */
+    private final List<ScxConfigSource> scxConfigSources = new ArrayList<>();
+
+    /**
      * 用来存储临时待添加的 外部参数
      */
-    private String[] args = null;
+    private String[] args = new String[]{};
 
     /**
      * 用来存储临时待添加的 mainClass
      */
-    private Class<?> mainClass = null;
+    private Class<?> mainClass;
 
     /**
      * 用来存储临时待添加的 appKey
      */
-    private String appKey = Scx.DEFAULT_APP_KEY;
+    private String appKey = DEFAULT_APP_KEY;
 
     /**
      * 构造函数
      */
     public ScxBuilder() {
+        mainClass = deduceMainApplicationClass();
+    }
 
+    /**
+     * a
+     *
+     * @return a
+     */
+    private static Map<String, Object> initDefaultConfigMap() {
+        var tempMap = new LinkedHashMap<String, Object>();
+        tempMap.put("scx.port", 8080);
+        tempMap.put("scx.tombstone", false);
+        tempMap.put("scx.allowed-origin", "*");
+        tempMap.put("scx.template.root", "AppRoot:/c/");
+        tempMap.put("scx.static-servers", new Object[0]);
+        tempMap.put("scx.https.enabled", false);
+        tempMap.put("scx.https.ssl-path", "");
+        tempMap.put("scx.https.ssl-password", "");
+        tempMap.put("scx.data-source.host", "127.0.0.1");
+        tempMap.put("scx.data-source.port", 3306);
+        tempMap.put("scx.data-source.database", "");
+        tempMap.put("scx.data-source.username", "");
+        tempMap.put("scx.data-source.password", "");
+        tempMap.put("scx.data-source.parameters", new HashSet<>());
+        tempMap.put("scx.logging.default.level", "ERROR");
+        tempMap.put("scx.logging.default.type", "CONSOLE");
+        tempMap.put("scx.logging.default.stored-directory", "AppRoot:logs");
+        return tempMap;
+    }
+
+    /**
+     * 初始化 AppKey
+     *
+     * @param appKey a
+     * @return a
+     */
+    private static String checkAppKey(String appKey) {
+        if (StringUtils.isBlank(appKey)) {
+            throw new IllegalArgumentException("AppKey cannot be set empty");
+        } else if (DEFAULT_APP_KEY.equals(appKey)) {
+            System.err.println("注意!!! 未设置 APP_KEY ,已采用 DEFAULT_APP_KEY , 这是非常不安全的 , 建议设置自定义的 APP_KEY !!!");
+        }
+        return appKey;
+    }
+
+    /**
+     * <p>initMainClass.</p>
+     *
+     * @param mainClass a {@link java.lang.Class} object
+     * @return a {@link java.lang.Class} object
+     */
+    private static Class<?> checkMainClass(Class<?> mainClass) {
+        //1,检测 mainClass 是否正确
+        if (mainClass == null) {
+            throw new IllegalArgumentException("MainClass must not be empty !!! ");
+        }
+        return mainClass;
     }
 
     /**
@@ -52,7 +132,21 @@ public final class ScxBuilder {
      * @return a
      */
     public Scx build() {
-        return new Scx(mainClass, scxModules.toArray(ScxModule[]::new), appKey, scxFeatureConfig, args);
+        //检查 appKey
+        checkAppKey(appKey);
+        //检查 mainClass
+        checkMainClass(mainClass);
+        //处理数据源
+        var scxAppRoot = new ScxAppRoot(mainClass);
+        //配置源 注意顺序 以保证可以逐个覆盖
+        var defaultMapConfigSource = MapConfigSource.of(DEFAULT_CONFIG_MAP);
+        var defaultJsonFileConfigSource = JsonFileConfigSource.of(scxAppRoot.getFileByAppRoot(DEFAULT_SCX_CONFIG_PATH));
+        var defaultArgsConfigSource = ArgsConfigSource.of(args);
+        scxConfigSources.add(defaultMapConfigSource);
+        scxConfigSources.add(defaultJsonFileConfigSource);
+        scxConfigSources.add(defaultArgsConfigSource);
+        //创建 scx 实例
+        return new Scx(scxAppRoot, appKey, scxFeatureConfig, scxConfigSources.toArray(ScxConfigSource[]::new), scxModules.toArray(ScxModule[]::new));
     }
 
     /**
@@ -135,6 +229,20 @@ public final class ScxBuilder {
     public ScxBuilder configure(ScxFeature scxFeature, boolean state) {
         scxFeatureConfig.configure(scxFeature, state);
         return this;
+    }
+
+    private Class<?> deduceMainApplicationClass() {
+        try {
+            StackTraceElement[] stackTrace = new RuntimeException().getStackTrace();
+            for (StackTraceElement stackTraceElement : stackTrace) {
+                if ("main".equals(stackTraceElement.getMethodName())) {
+                    return Class.forName(stackTraceElement.getClassName());
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            // Swallow and continue
+        }
+        return null;
     }
 
 }
