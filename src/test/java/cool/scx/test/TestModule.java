@@ -36,7 +36,6 @@ public class TestModule implements ScxModule {
         var args = new String[]{"--scx.port=8888"};
         Scx.builder()
                 .addModule(new TestModule())
-                .setMainClass(TestModule.class)
                 .setArgs(args)
                 .configure(ScxFeature.SHOW_BANNER, true)
                 .configure(ScxFeature.SHOW_EASY_CONFIG_INFO, true)
