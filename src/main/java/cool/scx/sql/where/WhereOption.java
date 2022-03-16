@@ -21,6 +21,13 @@ public enum WhereOption {
     /**
      * a
      */
-    USE_ORIGINAL_NAME
+    USE_ORIGINAL_NAME,
+
+    /**
+     * 使用 json 查询
+     * <br>
+     * 注意和 {@link WhereType#JSON_CONTAINS} 一起使用时无效 因为 {@link WhereType#JSON_CONTAINS} 自己有针对 Json 的特殊实现
+     */
+    USE_JSON_EXTRACT
 
 }

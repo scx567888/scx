@@ -360,35 +360,22 @@ public final class Where {
      * @return a
      */
     private Where _add(String name, WhereType whereType, Object value1, Object value2, int needParamSize, WhereOption... options) {
-        var replace = false;// 是否替换已有的相同名称的 WhereBody
-        var useOriginalName = false;// 是否使用原始名称
-        var skipIfNull = false;//true : 如果参数为null 则跳过 , false 抛出移除
-        for (var option : options) {
-            if (option == WhereOption.REPLACE) {
-                replace = true;
-            } else if (option == WhereOption.USE_ORIGINAL_NAME) {
-                useOriginalName = true;
-            } else if (option == WhereOption.SKIP_IF_NULL) {
-                skipIfNull = true;
-            }
-        }
         //校验参数 并获取有效的参数数量(不为空的) 每检测到一个有效的(不为空的) 便加 1
         var validParamSize = WhereBody.checkParamsAndGetValidParamSize(name, whereType, value1, value2, needParamSize);
+        //创建 option 信息
+        var info = new WhereOptionInfo(options);
         //有效参数的数量和所需的参数数量不一致
-        if (whereType.paramSize() != validParamSize) {
-            //根据是否跳过空进行校验
-            if (!skipIfNull) {
-                throw new IllegalArgumentException("Where 参数错误 : whereType 类型 : " + whereType + " , 参数列表不能为空 !!!");
+        if (whereType.paramSize() == validParamSize) {
+            // 是否使用原始名称 (即不进行转义)
+            var whereBody = new WhereBody(name, whereType, value1, value2, info);
+            // 是否替换
+            if (info.replace()) {
+                whereBodyList.removeIf(w -> whereBody.name().equals(w.name()));
             }
-            return this;
+            whereBodyList.add(whereBody);
+        } else if (!info.skipIfNull()) { //根据是否跳过空进行校验
+            throw new IllegalArgumentException("Where 参数错误 : whereType 类型 : " + whereType + " , 参数列表不能为空 !!!");
         }
-        // 是否使用原始名称 (即不进行转义)
-        var whereBody = new WhereBody(name, whereType, value1, value2, useOriginalName);
-        // 是否替换
-        if (replace) {
-            whereBodyList.removeIf(w -> whereBody.name().equals(w.name()));
-        }
-        whereBodyList.add(whereBody);
         return this;
     }
 

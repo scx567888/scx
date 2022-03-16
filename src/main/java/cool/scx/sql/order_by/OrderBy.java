@@ -34,15 +34,6 @@ public final class OrderBy {
      * @return 本身, 方便链式调用
      */
     public OrderBy add(String name, OrderByType orderByType, OrderByOption... options) {
-        var replace = false;
-        var useOriginalName = false;
-        for (var option : options) {
-            if (option == OrderByOption.REPLACE) {
-                replace = true;
-            } else if (option == OrderByOption.USE_ORIGINAL_NAME) {
-                useOriginalName = true;
-            }
-        }
         //校验参数
         if (StringUtils.isBlank(name)) {
             throw new IllegalArgumentException("OrderBy 参数错误 : 名称 不能为空 !!!");
@@ -50,10 +41,11 @@ public final class OrderBy {
         if (orderByType == null) {
             throw new IllegalArgumentException("OrderBy 参数错误 : orderByType 不能为空 !!!");
         }
+        var info = new OrderByOptionInfo(options);
         // 是否使用原始名称 (即不进行转义)
-        var orderByBody = new OrderByBody(name, orderByType, useOriginalName);
+        var orderByBody = new OrderByBody(name, orderByType, info);
         // 是否替换
-        if (replace) {
+        if (info.replace()) {
             orderByBodyList.removeIf(w -> orderByBody.name().equals(w.name()));
         }
         orderByBodyList.add(orderByBody);

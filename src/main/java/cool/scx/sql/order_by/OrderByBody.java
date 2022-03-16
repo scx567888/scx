@@ -1,6 +1,6 @@
 package cool.scx.sql.order_by;
 
-import cool.scx.util.CaseUtils;
+import cool.scx.sql.SQLHelper;
 
 /**
  * OrderBy 封装体
@@ -17,13 +17,13 @@ final class OrderByBody {
     /**
      * <p>Constructor for OrderByBody.</p>
      *
-     * @param _name           a {@link java.lang.String} object
-     * @param orderByType     a {@link cool.scx.sql.order_by.OrderByType} object
-     * @param useOriginalName a boolean
+     * @param _name       a {@link String} object
+     * @param orderByType a {@link OrderByType} object
+     * @param info        a boolean
      */
-    OrderByBody(String _name, OrderByType orderByType, boolean useOriginalName) {
+    OrderByBody(String _name, OrderByType orderByType, OrderByOptionInfo info) {
         this.name = _name.trim();
-        var columnName = useOriginalName ? this.name : CaseUtils.toSnake(this.name);
+        var columnName = SQLHelper.getColumnName(this.name, info.useJsonExtract(), info.useOriginalName());
         this.orderByClause = columnName + " " + orderByType.name();
     }
 

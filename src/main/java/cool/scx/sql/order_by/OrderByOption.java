@@ -16,6 +16,11 @@ public enum OrderByOption {
     /**
      * a
      */
-    USE_ORIGINAL_NAME
+    USE_ORIGINAL_NAME,
+
+    /**
+     * 使用 json 查询
+     */
+    USE_JSON_EXTRACT
 
 }

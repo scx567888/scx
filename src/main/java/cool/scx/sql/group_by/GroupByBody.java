@@ -1,6 +1,6 @@
 package cool.scx.sql.group_by;
 
-import cool.scx.util.CaseUtils;
+import cool.scx.sql.SQLHelper;
 
 /**
  * <p>GroupByBody class.</p>
@@ -17,12 +17,12 @@ final class GroupByBody {
     /**
      * <p>Constructor for GroupByBody.</p>
      *
-     * @param _name           a {@link java.lang.String} object
-     * @param useOriginalName a boolean
+     * @param _name a {@link java.lang.String} object
+     * @param info  a boolean
      */
-    GroupByBody(String _name, boolean useOriginalName) {
+    GroupByBody(String _name, GroupByOptionInfo info) {
         this.name = _name.trim();
-        this.groupByColumn = useOriginalName ? this.name : CaseUtils.toSnake(this.name);
+        this.groupByColumn = SQLHelper.getColumnName(this.name, info.useJsonExtract(), info.useOriginalName());
     }
 
     /**

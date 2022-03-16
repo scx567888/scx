@@ -1,7 +1,9 @@
 package cool.scx.sql;
 
 import com.mysql.cj.MysqlType;
+import cool.scx.util.CaseUtils;
 import cool.scx.util.ObjectUtils;
+import cool.scx.util.StringUtils;
 
 import java.io.InputStream;
 import java.lang.reflect.Type;
@@ -17,7 +19,7 @@ import java.util.Map;
  * @author scx567888
  * @version 1.1.0
  */
-public final class SQLTypeHelper {
+public final class SQLHelper {
 
     /**
      * 这里是直接从 mysql 驱动中复制出来的
@@ -171,6 +173,39 @@ public final class SQLTypeHelper {
             }
         }
         return null;
+    }
+
+    public static String getColumnName(String name, boolean useJsonExtract, boolean useOriginalName) {
+        if (useJsonExtract) {
+            var c = splitIntoColumnNameAndFieldPath(name);
+            if (StringUtils.isNotBlank(c.columnName()) && StringUtils.isNotBlank(c.fieldPath())) {
+                var jsonQueryColumnName = useOriginalName ? c.columnName() : CaseUtils.toSnake(c.columnName());
+                return jsonQueryColumnName + " -> " + "'$" + c.fieldPath() + "'";
+            } else {
+                throw new IllegalArgumentException("使用 USE_JSON_EXTRACT 时, 查询名称不合法 !!! 字段名 : " + name);
+            }
+        } else {// 这里就是普通的判断一下是否使用 原始名称即可
+            return useOriginalName ? name : CaseUtils.toSnake(name);
+        }
+    }
+
+    public static ColumnNameAndFieldPath splitIntoColumnNameAndFieldPath(String name) {
+        var charArray = name.toCharArray();
+        var index = charArray.length;
+        for (int i = 0; i < charArray.length; i++) {
+            var c = charArray[i];
+            if (c == '.' || c == '[') {
+                index = i;
+                break;
+            }
+        }
+        var columnName = name.substring(0, index);
+        var fieldPath = name.substring(index);
+        return new ColumnNameAndFieldPath(columnName, fieldPath);
+    }
+
+    public record ColumnNameAndFieldPath(String columnName, String fieldPath) {
+
     }
 
 }

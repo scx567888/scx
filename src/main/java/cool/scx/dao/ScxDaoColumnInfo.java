@@ -1,7 +1,7 @@
 package cool.scx.dao;
 
 import cool.scx.annotation.Column;
-import cool.scx.sql.SQLTypeHelper;
+import cool.scx.sql.SQLHelper;
 import cool.scx.util.CaseUtils;
 import cool.scx.util.StringUtils;
 
@@ -86,9 +86,9 @@ public final class ScxDaoColumnInfo {
         this.columnName = CaseUtils.toSnake(this.field.getName());
         var column = field.getAnnotation(Column.class);
         if (column != null) {
-            this.type = StringUtils.isNotBlank(column.type()) ? column.type() : SQLTypeHelper.getMySQLTypeCreateName(field.getType());
+            this.type = StringUtils.isNotBlank(column.type()) ? column.type() : SQLHelper.getMySQLTypeCreateName(field.getType());
         } else {
-            this.type = SQLTypeHelper.getMySQLTypeCreateName(field.getType());
+            this.type = SQLHelper.getMySQLTypeCreateName(field.getType());
         }
         this.normalDDL = initNormalDDL(this.columnName, this.type, column);
         this.specialDDL = initSpecialDDL(this.columnName, column);

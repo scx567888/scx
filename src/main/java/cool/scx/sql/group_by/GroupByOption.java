@@ -11,6 +11,11 @@ public enum GroupByOption {
     /**
      * a
      */
-    USE_ORIGINAL_NAME
+    USE_ORIGINAL_NAME,
+
+    /**
+     * a
+     */
+    USE_JSON_EXTRACT
 
 }

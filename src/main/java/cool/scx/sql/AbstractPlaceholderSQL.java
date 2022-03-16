@@ -67,13 +67,13 @@ public abstract class AbstractPlaceholderSQL<T> {
             if (tempValue != null) {
                 var tempValueClass = tempValue.getClass();
                 //判断是否为数据库(MySQL)直接支持的数据类型
-                var mysqlType = SQLTypeHelper.getMySQLType(tempValueClass);
+                var mysqlType = SQLHelper.getMySQLType(tempValueClass);
                 if (mysqlType != null) {
                     preparedStatement.setObject(index, tempValue, mysqlType);
                 } else if (tempValueClass.isEnum()) {//不是则转换做一下特殊处理 枚举我们直接存名称
-                    preparedStatement.setString(index, SQLTypeHelper.convertToStringOrNull(tempValue));
+                    preparedStatement.setString(index, SQLHelper.convertToStringOrNull(tempValue));
                 } else {//否则存 json
-                    preparedStatement.setString(index, SQLTypeHelper.convertToJsonOrNull(tempValue));
+                    preparedStatement.setString(index, SQLHelper.convertToJsonOrNull(tempValue));
                 }
             } else {
                 //这里的 Types.NULL 其实内部并没有使用

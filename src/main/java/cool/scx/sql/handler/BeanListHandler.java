@@ -1,7 +1,7 @@
 package cool.scx.sql.handler;
 
 import cool.scx.ScxHandlerRE;
-import cool.scx.sql.SQLTypeHelper;
+import cool.scx.sql.SQLHelper;
 import cool.scx.util.ScanClassUtils;
 
 import java.lang.reflect.Constructor;
@@ -75,12 +75,12 @@ public final class BeanListHandler<T> implements ScxHandlerRE<ResultSet, List<T>
                 if (field != null) {
                     var filedType = field.getType();
                     Object o;
-                    if (SQLTypeHelper.getMySQLType(filedType) != null) {
+                    if (SQLHelper.getMySQLType(filedType) != null) {
                         o = rs.getObject(i, filedType);
                     } else if (filedType.isEnum()) {
-                        o = SQLTypeHelper.readFromValueOrNull(rs.getString(i), filedType);
+                        o = SQLHelper.readFromValueOrNull(rs.getString(i), filedType);
                     } else {
-                        o = SQLTypeHelper.readFromJsonValueOrNull(rs.getString(i), field.getGenericType());
+                        o = SQLHelper.readFromJsonValueOrNull(rs.getString(i), field.getGenericType());
                     }
                     //这里如果数据库中为空 则不进行赋值
                     if (o != null) {
