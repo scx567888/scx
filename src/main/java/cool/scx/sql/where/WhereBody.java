@@ -1,6 +1,6 @@
 package cool.scx.sql.where;
 
-import cool.scx.util.CaseUtils;
+import cool.scx.sql.SQLHelper;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
 
@@ -31,17 +31,17 @@ public final class WhereBody {
     private final Object[] whereParams;
 
     /**
-     * <p>Constructor for WhereBody.</p>
+     * a
      *
-     * @param _name           a {@link java.lang.String} object
-     * @param whereType       a {@link cool.scx.sql.where.WhereType} object
-     * @param value1          a {@link java.lang.Object} object
-     * @param value2          a {@link java.lang.Object} object
-     * @param useOriginalName a boolean
+     * @param _name     a
+     * @param whereType a
+     * @param value1    a
+     * @param value2    a
+     * @param info      a
      */
-    WhereBody(final String _name, final WhereType whereType, final Object value1, final Object value2, boolean useOriginalName) {
+    WhereBody(String _name, WhereType whereType, Object value1, Object value2, WhereOptionInfo info) {
         this.name = _name.trim();
-        var columnName = useOriginalName ? this.name : CaseUtils.toSnake(this.name);
+        var columnName = SQLHelper.getColumnName(this.name, info.useJsonExtract(), info.useOriginalName());
         var keyWord = whereType.keyWord();
         switch (whereType) {
             case IS_NULL, IS_NOT_NULL -> {
@@ -314,13 +314,6 @@ public final class WhereBody {
      * @return a {@link cool.scx.sql.where.WhereBody} object
      */
     private static WhereBody _newInstance(String name, WhereType whereType, Object value1, Object value2, int needParamSize, WhereOption... options) {
-        var useOriginalName = false;// 是否使用原始名称
-        for (var option : options) {
-            if (option == WhereOption.USE_ORIGINAL_NAME) {
-                useOriginalName = true;
-                break;
-            }
-        }
         //校验参数 并获取有效的参数数量(不为空的) 每检测到一个有效的(不为空的) 便加 1
         var validParamSize = checkParamsAndGetValidParamSize(name, whereType, value1, value2, needParamSize);
         //有效参数的数量和所需的参数数量不一致
@@ -329,7 +322,7 @@ public final class WhereBody {
             throw new IllegalArgumentException("Where 参数错误 : whereType 类型 : " + whereType + " , 参数列表不能为空 !!!");
         }
         // 是否使用原始名称 (即不进行转义)
-        return new WhereBody(name, whereType, value1, value2, useOriginalName);
+        return new WhereBody(name, whereType, value1, value2, new WhereOptionInfo(options));
     }
 
     /**

@@ -1,7 +1,9 @@
 package cool.scx.sql;
 
 import com.mysql.cj.MysqlType;
+import cool.scx.util.CaseUtils;
 import cool.scx.util.ObjectUtils;
+import cool.scx.util.StringUtils;
 
 import java.io.InputStream;
 import java.lang.reflect.Type;
@@ -17,7 +19,7 @@ import java.util.Map;
  * @author scx567888
  * @version 1.1.0
  */
-public final class SQLTypeHelper {
+public final class SQLHelper {
 
     /**
      * 这里是直接从 mysql 驱动中复制出来的
@@ -171,6 +173,29 @@ public final class SQLTypeHelper {
             }
         }
         return null;
+    }
+
+    public static String getColumnName(String name, boolean useJsonExtract, boolean useOriginalName) {
+        if (useJsonExtract) {
+            var i = 0;
+            for (char c : name.toCharArray()) {
+                if (c == '.' || c == '[') {
+                    break;
+                }
+                i = i + 1;
+            }
+            var columnName = name.substring(0, i);
+            var fieldPath = name.substring(i);
+            //也就是说有至少可以分为 columnName 和 查询参 两部分
+            if (StringUtils.isNotBlank(columnName) && StringUtils.isNotBlank(fieldPath)) {
+                var jsonQueryColumnName = useOriginalName ? columnName : CaseUtils.toSnake(columnName);
+                return jsonQueryColumnName + " -> " + "'$" + fieldPath + "'";
+            } else {
+                throw new IllegalArgumentException("Json 查询时 参数错误 !!! 字段名 : " + name);
+            }
+        } else {// 这里就是普通的判断一下是否使用 原始名称即可
+            return useOriginalName ? name : CaseUtils.toSnake(name);
+        }
     }
 
 }
