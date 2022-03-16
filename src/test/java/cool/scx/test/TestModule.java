@@ -8,9 +8,11 @@ import cool.scx.base.Query;
 import cool.scx.base.UpdateFilter;
 import cool.scx.dao.ScxDaoHelper;
 import cool.scx.enumeration.ScxFeature;
+import cool.scx.sql.where.WhereOption;
 import cool.scx.test.car.Car;
+import cool.scx.test.car.CarColor;
+import cool.scx.test.car.CarOwner;
 import cool.scx.test.car.CarService;
-import cool.scx.test.car.CarType;
 import cool.scx.util.RandomUtils;
 import cool.scx.util.StopWatch;
 import org.slf4j.LoggerFactory;
@@ -62,7 +64,8 @@ public class TestModule implements ScxModule {
                 for (int i = 0; i < 999; i++) {
                     var c = new Car();
                     c.name = RandomUtils.getRandomString(10, false) + "🤣";
-                    c.type = CarType.values()[RandomUtils.getRandomNumber(0, 3)];
+                    c.color = CarColor.values()[RandomUtils.getRandomNumber(0, 3)];
+                    c.owner = new CarOwner("Jack", i, "123456789");
                     l.add(c);
                 }
                 carService.save(l);
@@ -74,7 +77,8 @@ public class TestModule implements ScxModule {
                 for (int i = 0; i < 999; i++) {
                     var c = new Car();
                     c.name = RandomUtils.getRandomString(10, false) + "😢";
-                    c.type = CarType.values()[RandomUtils.getRandomNumber(0, 3)];
+                    c.color = CarColor.values()[RandomUtils.getRandomNumber(0, 3)];
+                    c.owner = new CarOwner("David", i, "987654321");
                     carService1.save(c);
                 }
                 System.err.println("方式2 (循环单次) 插入 999条数据时间 :" + StopWatch.stopToMillis("save2"));
@@ -88,6 +92,8 @@ public class TestModule implements ScxModule {
             System.err.println("查询所有数据条数 !!! : " + carService.list().size());
             System.err.println("查询所有 id 大于 200 条数 !!! : " + carService.list(new Query().greaterThan("id", 200)).size());
             System.err.println("查询所有 name 为空 条数 !!! : " + carService.list(new Query().isNull("name")).size());
+            System.err.println("查询所有 车主为 Jack 的条数 !!! : " + carService.list(new Query().equal("owner.name", "Jack", WhereOption.USE_JSON_EXTRACT)).size());
+            System.err.println("查询所有 车主年龄大于 18 的条数 !!! : " + carService.list(new Query().greaterThan("owner.age", 18, WhereOption.USE_JSON_EXTRACT)).size());
 
             System.err.println("------------------------- 测试事务 --------------------------------");
             // 测试事务
@@ -98,7 +104,7 @@ public class TestModule implements ScxModule {
                 System.err.println("现在插入 1 数据条数");
                 var bb = new Car();
                 bb.name = "唯一ID";
-                bb.type = CarType.values()[RandomUtils.getRandomNumber(0, 3)];
+                bb.color = CarColor.values()[RandomUtils.getRandomNumber(0, 3)];
                 carService.save(con, bb);
                 System.err.println("现在数据库中数据条数 : " + carService.count(con));
                 System.err.println("现在在插入 1 错误数据");
