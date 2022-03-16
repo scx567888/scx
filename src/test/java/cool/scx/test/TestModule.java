@@ -65,7 +65,8 @@ public class TestModule implements ScxModule {
                     var c = new Car();
                     c.name = RandomUtils.getRandomString(10, false) + "🤣";
                     c.color = CarColor.values()[RandomUtils.getRandomNumber(0, 3)];
-                    c.owner = new CarOwner("Jack", i, "123456789");
+                    c.owner = new CarOwner("Jack", i, new String[]{"123456789", "666666666"});
+                    c.tags = new String[]{"fast", "beautiful", "small", "big"};
                     l.add(c);
                 }
                 carService.save(l);
@@ -78,7 +79,7 @@ public class TestModule implements ScxModule {
                     var c = new Car();
                     c.name = RandomUtils.getRandomString(10, false) + "😢";
                     c.color = CarColor.values()[RandomUtils.getRandomNumber(0, 3)];
-                    c.owner = new CarOwner("David", i, "987654321");
+                    c.owner = new CarOwner("David", i, new String[]{"987654321"});
                     carService1.save(c);
                 }
                 System.err.println("方式2 (循环单次) 插入 999条数据时间 :" + StopWatch.stopToMillis("save2"));
@@ -94,6 +95,8 @@ public class TestModule implements ScxModule {
             System.err.println("查询所有 name 为空 条数 !!! : " + carService.list(new Query().isNull("name")).size());
             System.err.println("查询所有 车主为 Jack 的条数 !!! : " + carService.list(new Query().equal("owner.name", "Jack", WhereOption.USE_JSON_EXTRACT)).size());
             System.err.println("查询所有 车主年龄大于 18 的条数 !!! : " + carService.list(new Query().greaterThan("owner.age", 18, WhereOption.USE_JSON_EXTRACT)).size());
+            System.err.println("查询所有 拥有 fast 和 big 标签的条数 !!! : " + carService.list(new Query().jsonContains("tags", "fast,big")).size());
+            System.err.println("查询所有 汽车 中 车主 的 电话号 中 包含 666666666 的条数 !!! : " + carService.list(new Query().jsonContains("owner.phoneNumber", "666666666")).size());
 
             System.err.println("------------------------- 测试事务 --------------------------------");
             // 测试事务

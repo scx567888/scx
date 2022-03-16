@@ -9,13 +9,13 @@ public class CarOwner {
 
     public int age;
 
-    public String phoneNumber;
+    public String[] phoneNumber;
 
     public CarOwner() {
 
     }
 
-    public CarOwner(String name, int age, String phoneNumber) {
+    public CarOwner(String name, int age, String[] phoneNumber) {
         this.name = name;
         this.age = age;
         this.phoneNumber = phoneNumber;

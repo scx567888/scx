@@ -1,11 +1,6 @@
 package cool.scx.sql.where;
 
-import cool.scx.sql.SQLHelper;
-import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
-
-import java.util.List;
-import java.util.Set;
 
 /**
  * where 封装体
@@ -41,61 +36,9 @@ public final class WhereBody {
      */
     WhereBody(String _name, WhereType whereType, Object value1, Object value2, WhereOptionInfo info) {
         this.name = _name.trim();
-        var columnName = SQLHelper.getColumnName(this.name, info.useJsonExtract(), info.useOriginalName());
-        var keyWord = whereType.keyWord();
-        switch (whereType) {
-            case IS_NULL, IS_NOT_NULL -> {
-                whereParams = new Object[]{};
-                whereClause = columnName + " " + keyWord;
-            }
-            case EQUAL, NOT_EQUAL, LESS_THAN, LESS_THAN_OR_EQUAL, GREATER_THAN, GREATER_THAN_OR_EQUAL, LIKE_REGEX, NOT_LIKE_REGEX -> {
-                whereParams = new Object[]{value1};
-                whereClause = columnName + " " + keyWord + " ?";
-            }
-            case JSON_CONTAINS -> {
-                var jsonContainsParams = toArray(value1);
-                whereParams = new Object[]{jsonContainsParams};
-                whereClause = keyWord + "(" + columnName + ", ?)";
-            }
-            case LIKE, NOT_LIKE -> {
-                whereParams = new Object[]{value1};
-                whereClause = columnName + " " + keyWord + " CONCAT('%',?,'%')";
-            }
-            case IN, NOT_IN -> {
-                whereParams = toArray(value1);
-                var sList = new String[whereParams.length];
-                for (int i = 0; i < whereParams.length; i++) {
-                    sList[i] = "?";
-                }
-                whereClause = columnName + " " + keyWord + " (" + String.join(", ", sList) + ")";
-            }
-            case BETWEEN, NOT_BETWEEN -> {
-                whereParams = new Object[]{value1, value2};
-                whereClause = columnName + " " + keyWord + " ? AND ?";
-            }
-            default -> {
-                whereParams = null;
-                whereClause = null;
-            }
-        }
-    }
-
-    /**
-     * a
-     *
-     * @param value a
-     * @return a
-     */
-    private static Object[] toArray(Object value) {
-        var objectArray = new Object[0];
-        if (value.getClass().isArray() || value instanceof List || value instanceof Set) {
-            objectArray = ObjectUtils.convertValue(value, objectArray.getClass());
-        } else if (value instanceof String) {
-            objectArray = ((String) value).split(",");
-        } else {
-            objectArray = new Object[]{value};
-        }
-        return objectArray;
+        var w = whereType.getWhereParamsAndWhereClause(this.name, value1, value2, info);
+        this.whereParams = w.whereParams();
+        this.whereClause = w.whereClause();
     }
 
     /**

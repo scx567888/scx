@@ -177,25 +177,35 @@ public final class SQLHelper {
 
     public static String getColumnName(String name, boolean useJsonExtract, boolean useOriginalName) {
         if (useJsonExtract) {
-            var i = 0;
-            for (char c : name.toCharArray()) {
-                if (c == '.' || c == '[') {
-                    break;
-                }
-                i = i + 1;
-            }
-            var columnName = name.substring(0, i);
-            var fieldPath = name.substring(i);
-            //也就是说有至少可以分为 columnName 和 查询参 两部分
-            if (StringUtils.isNotBlank(columnName) && StringUtils.isNotBlank(fieldPath)) {
-                var jsonQueryColumnName = useOriginalName ? columnName : CaseUtils.toSnake(columnName);
-                return jsonQueryColumnName + " -> " + "'$" + fieldPath + "'";
+            var c = splitIntoColumnNameAndFieldPath(name);
+            if (StringUtils.isNotBlank(c.columnName()) && StringUtils.isNotBlank(c.fieldPath())) {
+                var jsonQueryColumnName = useOriginalName ? c.columnName() : CaseUtils.toSnake(c.columnName());
+                return jsonQueryColumnName + " -> " + "'$" + c.fieldPath() + "'";
             } else {
-                throw new IllegalArgumentException("Json 查询时 参数错误 !!! 字段名 : " + name);
+                throw new IllegalArgumentException("使用 USE_JSON_EXTRACT 时, 查询名称不合法 !!! 字段名 : " + name);
             }
         } else {// 这里就是普通的判断一下是否使用 原始名称即可
             return useOriginalName ? name : CaseUtils.toSnake(name);
         }
+    }
+
+    public static ColumnNameAndFieldPath splitIntoColumnNameAndFieldPath(String name) {
+        var charArray = name.toCharArray();
+        var index = charArray.length;
+        for (int i = 0; i < charArray.length; i++) {
+            var c = charArray[i];
+            if (c == '.' || c == '[') {
+                index = i;
+                break;
+            }
+        }
+        var columnName = name.substring(0, index);
+        var fieldPath = name.substring(index);
+        return new ColumnNameAndFieldPath(columnName, fieldPath);
+    }
+
+    public record ColumnNameAndFieldPath(String columnName, String fieldPath) {
+
     }
 
 }

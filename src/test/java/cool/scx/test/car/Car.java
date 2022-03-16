@@ -14,4 +14,6 @@ public class Car extends BaseModel {
 
     public CarOwner owner;
 
+    public String[] tags;
+
 }
