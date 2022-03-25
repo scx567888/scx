@@ -175,6 +175,14 @@ public final class SQLHelper {
         return null;
     }
 
+    /**
+     * a
+     *
+     * @param name            a
+     * @param useJsonExtract  a
+     * @param useOriginalName a
+     * @return a
+     */
     public static String getColumnName(String name, boolean useJsonExtract, boolean useOriginalName) {
         if (useJsonExtract) {
             var c = splitIntoColumnNameAndFieldPath(name);
@@ -189,6 +197,12 @@ public final class SQLHelper {
         }
     }
 
+    /**
+     * a
+     *
+     * @param name a
+     * @return a
+     */
     public static ColumnNameAndFieldPath splitIntoColumnNameAndFieldPath(String name) {
         var charArray = name.toCharArray();
         var index = charArray.length;
@@ -204,6 +218,12 @@ public final class SQLHelper {
         return new ColumnNameAndFieldPath(columnName, fieldPath);
     }
 
+    /**
+     * a
+     *
+     * @param columnName a
+     * @param fieldPath  a
+     */
     public record ColumnNameAndFieldPath(String columnName, String fieldPath) {
 
     }
