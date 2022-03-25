@@ -1,7 +1,6 @@
 package cool.scx.websocket;
 
 import cool.scx.ScxBeanFactory;
-import cool.scx.ScxHandlerVE;
 import cool.scx.ScxModule;
 import cool.scx.ScxModuleInfo;
 import cool.scx.annotation.ScxWebSocketMapping;
@@ -12,9 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * a
@@ -32,7 +29,7 @@ public final class ScxWebSocketRouter implements Handler<ServerWebSocket> {
     /**
      * a
      */
-    private final Map<String, ScxWebSocketRoute> scxWebSocketRouteMapping = new HashMap<>();
+    private final List<ScxWebSocketRoute> scxWebSocketRoutes = new ArrayList<>();
 
     /**
      * a
@@ -41,19 +38,12 @@ public final class ScxWebSocketRouter implements Handler<ServerWebSocket> {
      * @param scxBeanFactory a
      */
     public ScxWebSocketRouter(List<ScxModuleInfo<? extends ScxModule>> scxModuleInfos, ScxBeanFactory scxBeanFactory) {
-        scxModuleInfos.stream().flatMap(c -> c.scxWebSocketRouteClassList().stream()).forEach(c -> this.addRoute(new ScxWebSocketRoute(StringUtils.cleanHttpURL(c.getAnnotation(ScxWebSocketMapping.class).value()), scxBeanFactory.getBean(c))));
-    }
-
-    /**
-     * <p>handleException.</p>
-     *
-     * @param s a {@link cool.scx.ScxHandlerVE} object
-     */
-    private static void handleException(ScxHandlerVE<?> s) {
-        try {
-            s.handle();
-        } catch (Throwable e) {
-            logger.error("ScxWebSocketRouter 发生异常 !!!", e);
+        for (var scxModuleInfo : scxModuleInfos) {
+            for (var clazz : scxModuleInfo.scxWebSocketRouteClassList()) {
+                var path = StringUtils.cleanHttpURL(clazz.getAnnotation(ScxWebSocketMapping.class).value());
+                var baseWebSocketHandler = scxBeanFactory.getBean(clazz);
+                addRoute(new ScxWebSocketRoute(path, baseWebSocketHandler));
+            }
         }
     }
 
@@ -64,9 +54,7 @@ public final class ScxWebSocketRouter implements Handler<ServerWebSocket> {
      * @return s
      */
     public ScxWebSocketRouter addRoute(ScxWebSocketRoute scxRoute) {
-        if (scxRoute.path() != null) {
-            scxWebSocketRouteMapping.put(scxRoute.path(), scxRoute);
-        }
+        scxWebSocketRoutes.add(scxRoute);
         return this;
     }
 
@@ -76,31 +64,22 @@ public final class ScxWebSocketRouter implements Handler<ServerWebSocket> {
      * @return a
      */
     public List<ScxWebSocketRoute> getRoutes() {
-        return new ArrayList<>(scxWebSocketRouteMapping.values());
+        return new ArrayList<>(scxWebSocketRoutes);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void handle(ServerWebSocket webSocket) {
-        var route = scxWebSocketRouteMapping.get(webSocket.path());
-        if (route == null) {
-            //此处拒绝此 websocket 连接 使用 404 意味没有找到
-            webSocket.reject(404);
-            return;
+    public void handle(ServerWebSocket serverWebSocket) {
+        for (var route : scxWebSocketRoutes) {
+            if (route.matches(serverWebSocket)) {
+                route.handle(serverWebSocket);
+                return;
+            }
         }
-        var handler = route.baseWebSocketHandler();
-        handleException(() -> handler.onOpen(webSocket));
-        webSocket.frameHandler(h -> handleException(() -> {
-                    if (h.isText()) {
-                        handler.onTextMessage(h.textData(), h, webSocket);
-                    } else if (h.isBinary()) {
-                        handler.onBinaryMessage(h.binaryData(), h, webSocket);
-                    }
-                }))
-                .exceptionHandler(event -> handleException(() -> handler.onError(event, webSocket)))
-                .closeHandler(h -> handleException(() -> handler.onClose(webSocket)));
+        //没有任何路由匹配 , 此处拒绝此 websocket 连接 使用 404 意味没有找到
+        serverWebSocket.reject(404);
     }
 
 }
