@@ -1,4 +1,4 @@
-﻿package cool.scx.base;
+package cool.scx.base;
 
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.ServerWebSocket;
