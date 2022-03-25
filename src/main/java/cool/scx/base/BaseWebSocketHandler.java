@@ -1,11 +1,11 @@
-package cool.scx.base;
+﻿package cool.scx.base;
 
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.ServerWebSocket;
 import io.vertx.core.http.WebSocketFrame;
 
 /**
- * BaseWSHandler 基本接口 请与 ScxWebSocketRoute 配合使用
+ * BaseWebSocketHandler 基本接口 请与 {@link cool.scx.annotation.ScxWebSocketMapping} 配合使用
  *
  * @author scx567888
  * @version 1.0.10
@@ -13,48 +13,58 @@ import io.vertx.core.http.WebSocketFrame;
 public interface BaseWebSocketHandler {
 
     /**
-     * 连接打开时
+     * 连接 打开 时
      *
-     * @param webSocket a {@link io.vertx.core.http.ServerWebSocket} object.
+     * @param webSocket ServerWebSocket 连接对象
      * @throws java.lang.Exception e
      */
-    void onOpen(ServerWebSocket webSocket) throws Exception;
+    default void onOpen(ServerWebSocket webSocket) throws Exception {
+
+    }
 
     /**
-     * 连接关闭时
+     * 发送 文本数据 时
      *
-     * @param webSocket a {@link io.vertx.core.http.ServerWebSocket} object.
+     * @param textData  文本数据
+     * @param frame     帧对象
+     * @param webSocket ServerWebSocket 连接对象
      * @throws java.lang.Exception e
      */
-    void onClose(ServerWebSocket webSocket) throws Exception;
+    default void onTextMessage(String textData, WebSocketFrame frame, ServerWebSocket webSocket) throws Exception {
+
+    }
 
     /**
-     * 发送 文本数据
+     * 发送 二进制数据 时
      *
-     * @param textData  a {@link java.lang.String} object.
-     * @param h         a {@link io.vertx.core.http.WebSocketFrame} object.
-     * @param webSocket a {@link io.vertx.core.http.ServerWebSocket} object.
+     * @param binaryData 二进制数据
+     * @param frame      帧对象
+     * @param webSocket  ServerWebSocket 连接对象
      * @throws java.lang.Exception e
      */
-    void onTextMessage(String textData, WebSocketFrame h, ServerWebSocket webSocket) throws Exception;
+    default void onBinaryMessage(Buffer binaryData, WebSocketFrame frame, ServerWebSocket webSocket) throws Exception {
+
+    }
 
     /**
-     * 发送二进制数据
+     * 连接 关闭 时
      *
-     * @param binaryData a {@link io.vertx.core.buffer.Buffer} object.
-     * @param h          a {@link io.vertx.core.http.WebSocketFrame} object.
-     * @param webSocket  a {@link io.vertx.core.http.ServerWebSocket} object.
+     * @param webSocket ServerWebSocket 连接对象
      * @throws java.lang.Exception e
      */
-    void onBinaryMessage(Buffer binaryData, WebSocketFrame h, ServerWebSocket webSocket) throws Exception;
+    default void onClose(ServerWebSocket webSocket) throws Exception {
+
+    }
 
     /**
-     * 连接错误时
+     * 连接 错误 时
      *
-     * @param event     a {@link java.lang.Throwable} object.
-     * @param webSocket a {@link io.vertx.core.http.ServerWebSocket} object.
+     * @param event     发生的错误
+     * @param webSocket ServerWebSocket 连接对象
      * @throws java.lang.Exception e
      */
-    void onError(Throwable event, ServerWebSocket webSocket) throws Exception;
+    default void onError(Throwable event, ServerWebSocket webSocket) throws Exception {
+
+    }
 
 }

@@ -34,33 +34,37 @@ public record ScxWebSocketRoute(String path,
         return this.path.equals(serverWebSocket.path());
     }
 
-    class FrameHandler implements Handler<WebSocketFrame> {
+    private class FrameHandler implements Handler<WebSocketFrame> {
 
-        private final ServerWebSocket serverWebSocket;
+        final ServerWebSocket serverWebSocket;
 
-        public FrameHandler(ServerWebSocket serverWebSocket) {
+        FrameHandler(ServerWebSocket serverWebSocket) {
             this.serverWebSocket = serverWebSocket;
         }
 
         @Override
         public void handle(WebSocketFrame h) {
-            try {
-                if (h.isText()) {
+            if (h.isText()) {
+                try {
                     baseWebSocketHandler.onTextMessage(h.textData(), h, serverWebSocket);
-                } else if (h.isBinary()) {
-                    baseWebSocketHandler.onBinaryMessage(h.binaryData(), h, serverWebSocket);
+                } catch (Exception e) {
+                    logger.error("ScxWebSocketRoute : onTextMessage 发生异常 !!!", e);
                 }
-            } catch (Exception e) {
-                logger.error("ScxWebSocketRouter 发生异常 !!!", e);
+            } else if (h.isBinary()) {
+                try {
+                    baseWebSocketHandler.onBinaryMessage(h.binaryData(), h, serverWebSocket);
+                } catch (Exception e) {
+                    logger.error("ScxWebSocketRoute : onBinaryMessage 发生异常 !!!", e);
+                }
             }
         }
     }
 
-    class ExceptionHandler implements Handler<Throwable> {
+    private class ExceptionHandler implements Handler<Throwable> {
 
-        public final ServerWebSocket serverWebSocket;
+        final ServerWebSocket serverWebSocket;
 
-        public ExceptionHandler(ServerWebSocket serverWebSocket) {
+        ExceptionHandler(ServerWebSocket serverWebSocket) {
             this.serverWebSocket = serverWebSocket;
         }
 
@@ -69,16 +73,16 @@ public record ScxWebSocketRoute(String path,
             try {
                 baseWebSocketHandler.onError(event, serverWebSocket);
             } catch (Exception e) {
-                logger.error("ScxWebSocketRouter 发生异常 !!!", e);
+                logger.error("ScxWebSocketRoute : onError 发生异常 !!!", e);
             }
         }
     }
 
-    class CloseHandler implements Handler<Void> {
+    private class CloseHandler implements Handler<Void> {
 
-        public final ServerWebSocket serverWebSocket;
+        final ServerWebSocket serverWebSocket;
 
-        public CloseHandler(ServerWebSocket serverWebSocket) {
+        CloseHandler(ServerWebSocket serverWebSocket) {
             this.serverWebSocket = serverWebSocket;
         }
 
@@ -87,17 +91,17 @@ public record ScxWebSocketRoute(String path,
             try {
                 baseWebSocketHandler.onClose(serverWebSocket);
             } catch (Exception e) {
-                logger.error("ScxWebSocketRouter 发生异常 !!!", e);
+                logger.error("ScxWebSocketRoute : onClose 发生异常 !!!", e);
             }
         }
 
     }
 
-    class OpenHandler implements ScxHandlerV {
+    private class OpenHandler implements ScxHandlerV {
 
-        public final ServerWebSocket serverWebSocket;
+        final ServerWebSocket serverWebSocket;
 
-        public OpenHandler(ServerWebSocket serverWebSocket) {
+        OpenHandler(ServerWebSocket serverWebSocket) {
             this.serverWebSocket = serverWebSocket;
         }
 
@@ -106,7 +110,7 @@ public record ScxWebSocketRoute(String path,
             try {
                 baseWebSocketHandler.onOpen(serverWebSocket);
             } catch (Exception e) {
-                logger.error("ScxWebSocketRouter 发生异常 !!!", e);
+                logger.error("ScxWebSocketRoute : onOpen 发生异常 !!!", e);
             }
         }
 
