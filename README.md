@@ -91,12 +91,12 @@ import cool.scx.enumeration.HttpMethod;
 public class YourModule implements ScxModule {
 
     public static void main(String[] args) {
-        // Use Scx Builder, build and run peoject
+        // Use Scx Builder, build and run project
         Scx.builder()
                 .setMainClass(YourModule.class) // 1, The class of the Main method
                 .addModule(new YourModule())    // 2, Your own modules
                 .setArgs(args)                  // 3, External parameters
-                .run();                         // 4, build and run peoject
+                .run();                         // 4, Build and run project
     }
 
     // This @ScxMapping indicate this method is a WebHandler 
