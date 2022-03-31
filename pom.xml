@@ -13,9 +13,9 @@
     <packaging>jar</packaging>
     <name>scx</name>
 
-    <version>1.12.4</version>
+    <version>1.12.5</version>
 
-    <description>SCX 是一个 "Web 开发框架"; 目标是提供简单快速的开发体验。</description>
+    <description>A Web rapid development framework</description>
     <url>https://github.com/scx567888/scx</url>
 
     <developers>

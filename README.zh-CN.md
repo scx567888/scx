@@ -61,9 +61,9 @@
     </a>
 </p>
 
-English | [简体中文](./README.zh-CN.md)
+简体中文 | [English](./README.md)
 
-> A Web rapid development framework
+> 一个 Web 快速开发框架
 
 ## Maven
 
@@ -75,9 +75,9 @@ English | [简体中文](./README.zh-CN.md)
 </dependency>
 ```
 
-## Quick start
+## 快速开始
 
-#### 1. Write your own module and run the main method .
+#### 1. 编写您自己的模块并运行 main 方法 。
 
 ``` java
 import cool.scx.Scx;
@@ -85,37 +85,37 @@ import cool.scx.ScxModule;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.enumeration.HttpMethod;
 
-// Note : Custom modules need implements ScxModule
-// This @ScxMapping indicate this class needs to be scanned by WebHandler
+// 注意 : 自定义的模块需要继承 ScxModule
+// 此处的 @ScxMapping 注解用来表示这是一个需要被扫描 WebHandler 的类
 @ScxMapping
 public class YourModule implements ScxModule {
 
     public static void main(String[] args) {
-        // Use Scx Builder, build and run peoject
+        // 使用 Scx 构建器 ,构建并运行 项目
         Scx.builder()
-                .setMainClass(YourModule.class) // 1, The class of the Main method
-                .addModule(new YourModule())    // 2, Your own modules
-                .setArgs(args)                  // 3, External parameters
-                .run();                         // 4, build and run peoject
+                .setMainClass(YourModule.class) // 1, Main 方法的 Class
+                .addModule(new YourModule())    // 2, 您自己的模块
+                .setArgs(args)                  // 3, 外部参数
+                .run();                         // 4, 构建并运行项目
     }
 
-    // This @ScxMapping indicate this method is a WebHandler 
-    // The path is "/" and the request method is GET
+    // 此处的 @ScxMapping 注解用来表示这是一个具体的 WebHandler
+    // 路径为 "/" , 请求方法为 GET
     @ScxMapping(value = "/", method = HttpMethod.GET)
     public String helloWorld() {
-        // The content that will be sent to the client 
+        // 向页面返回的具体内容
         return "Hello World";
     }
 
 }
 ```
 
-#### 2. Use your browser to access http://localhost:8080/ , you should see this .
+#### 2. 使用浏览器访问 http://localhost:8080/ , 您应看到如下内容 。
 
 ```html
 Hello World
 ```
 
-For more information, see [docs](https://scx.cool/docs/scx/index.html)
+有关更多信息，请参阅 [文档](https://scx.cool/docs/scx/index.html)
 
-Note : I also provide some extension modules for easy use, see [SCX-EXT](https://github.com/scx567888/scx-ext)
+备注 : 我还提供了一些拓展模块方便使用 具体请看 [SCX-EXT](https://github.com/scx567888/scx-ext)
