@@ -26,6 +26,8 @@ import java.util.stream.Collectors;
  */
 public final class ScanClassUtils {
 
+    private static final String SEPARATOR_REGEX = "[/\\\\]";
+
     /**
      * 默认 classLoader
      */
@@ -118,13 +120,14 @@ public final class ScanClassUtils {
     /**
      * 将路径转换为 class 名称
      *
-     * @param path p
+     * @param fullPath p
      * @return c
      */
-    private static String pathToClassName(String path) {
-        return path.replace(".class", "")//移除尾部的 class
-                .replaceAll("\\\\", ".")//windows 路径替换
-                .replaceAll("/", ".");//linux 路径替换
+    private static String pathToClassName(String fullPath) {
+        var suffixLength = ".class".length();
+        //这里是可以保证 path 最后一定是 .class 所以在此处可以放心移除
+        var path = fullPath.substring(0, fullPath.length() - suffixLength);
+        return String.join(".", path.split(SEPARATOR_REGEX));
     }
 
     /**
