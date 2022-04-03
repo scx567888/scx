@@ -230,6 +230,8 @@ public final class Scx {
         for (var scxModuleInfo : scxModuleInfos) {
             tempScxBeanFactory.registerBean(scxModuleInfo.needRegisterBeanClassList());
         }
+        //此处刷新 bean
+        tempScxBeanFactory.refresh();
         return tempScxBeanFactory;
     }
 
@@ -341,26 +343,6 @@ public final class Scx {
         this.addShutdownHook();
         //7, 使用初始端口号 启动服务器
         this.startServer(this.scxEasyConfig.port());
-        //8,定时任务的 bean 需要被加载一次才可以执行, 这里将所有注入的类全部加载一次以实现在项目运行的时候执行定时任务
-        this.initScheduleTaskBean();
-    }
-
-    /**
-     * 将所有的 bean 加载一次以实现 已注解形式的 定时任务的启动
-     */
-    private void initScheduleTaskBean() {
-        //只有开启标识时才 执行定时任务
-        if (scxFeatureConfig.getFeatureState(ScxFeature.ENABLE_SCHEDULING_WITH_ANNOTATION)) {
-            for (var scxModuleInfo : scxModuleInfos) {
-                for (var aClass : scxModuleInfo.needRegisterBeanClassList()) {
-                    try {
-                        this.scxBeanFactory.getBean(aClass);
-                    } catch (Exception ignored) {
-
-                    }
-                }
-            }
-        }
     }
 
     /**

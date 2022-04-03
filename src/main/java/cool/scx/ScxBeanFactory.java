@@ -2,9 +2,10 @@ package cool.scx;
 
 import cool.scx.config.ScxFeatureConfig;
 import cool.scx.enumeration.ScxFeature;
+import org.springframework.beans.factory.annotation.AnnotatedGenericBeanDefinition;
 import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
-import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.context.annotation.AnnotationConfigUtils;
 import org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor;
 
 import java.util.Collection;
@@ -43,6 +44,12 @@ public final class ScxBeanFactory {
             scheduledAnnotationBeanPostProcessor.afterSingletonsInstantiated();
             this.springBeanFactory.addBeanPostProcessor(scheduledAnnotationBeanPostProcessor);
         }
+        //这里默认禁止循环依赖
+        this.springBeanFactory.setAllowCircularReferences(false);
+    }
+
+    public void refresh() {
+        this.springBeanFactory.preInstantiateSingletons();
     }
 
     /**
@@ -52,7 +59,10 @@ public final class ScxBeanFactory {
      */
     public void registerBean(Collection<Class<?>> classList) {
         for (var c : classList) {
-            springBeanFactory.registerBeanDefinition(c.getName(), BeanDefinitionBuilder.rootBeanDefinition(c).getBeanDefinition());
+            var beanDefinition = new AnnotatedGenericBeanDefinition(c);
+            //这里是为了兼容 spring context 的部分注解
+            AnnotationConfigUtils.processCommonDefinitionAnnotations(beanDefinition);
+            springBeanFactory.registerBeanDefinition(c.getName(), beanDefinition);
         }
     }
 
