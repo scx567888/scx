@@ -8,7 +8,6 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.annotation.AnnotationConfigUtils;
 import org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor;
 
-import java.util.Collection;
 import java.util.concurrent.ScheduledExecutorService;
 
 /**
@@ -48,22 +47,11 @@ public final class ScxBeanFactory {
         this.springBeanFactory.setAllowCircularReferences(false);
     }
 
-    public void refresh() {
-        this.springBeanFactory.preInstantiateSingletons();
-    }
-
     /**
-     * <p>registerBean.</p>
-     *
-     * @param classList c
+     * a
      */
-    public void registerBean(Collection<Class<?>> classList) {
-        for (var c : classList) {
-            var beanDefinition = new AnnotatedGenericBeanDefinition(c);
-            //这里是为了兼容 spring context 的部分注解
-            AnnotationConfigUtils.processCommonDefinitionAnnotations(beanDefinition);
-            springBeanFactory.registerBeanDefinition(c.getName(), beanDefinition);
-        }
+    void refresh() {
+        this.springBeanFactory.preInstantiateSingletons();
     }
 
     /**
@@ -75,6 +63,20 @@ public final class ScxBeanFactory {
      */
     public <T> T getBean(Class<T> requiredType) {
         return springBeanFactory.getBean(requiredType);
+    }
+
+    /**
+     * <p>registerBean.</p>
+     *
+     * @param classList c
+     */
+    public void registerBeanDefinition(Class<?>... classList) {
+        for (var c : classList) {
+            var beanDefinition = new AnnotatedGenericBeanDefinition(c);
+            //这里是为了兼容 spring context 的部分注解
+            AnnotationConfigUtils.processCommonDefinitionAnnotations(beanDefinition);
+            springBeanFactory.registerBeanDefinition(c.getName(), beanDefinition);
+        }
     }
 
     /**
