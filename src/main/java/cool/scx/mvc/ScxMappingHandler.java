@@ -119,7 +119,7 @@ public final class ScxMappingHandler implements Handler<RoutingContext> {
      */
     private String getUrl(ScxMapping classScxMapping, ScxMapping methodScxMapping) {
         var urlArray = new String[]{"", ""};
-        if (!methodScxMapping.ignoreParentUrl()) {
+        if (!methodScxMapping.ignoreParentUrl() && classScxMapping != null) {
             urlArray[0] = classScxMapping.value();
         }
         //获取方法的 url
