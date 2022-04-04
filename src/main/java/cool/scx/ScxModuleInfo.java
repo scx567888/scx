@@ -5,10 +5,15 @@ import cool.scx.base.BaseModel;
 import cool.scx.base.BaseModelService;
 import cool.scx.base.BaseWebSocketHandler;
 import cool.scx.util.ScanClassUtils;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -22,6 +27,12 @@ import java.util.stream.Collectors;
  */
 public final class ScxModuleInfo<T extends ScxModule> implements Serializable {
 
+
+    private static final List<Class<? extends Annotation>> beanFilterAnnotation = List.of(
+            //scx 注解
+            ScxComponent.class, ScxMapping.class, ScxModel.class, ScxService.class, ScxWebSocketMapping.class,
+            //兼容 spring 注解
+            Component.class, Controller.class, Service.class, Repository.class);
 
     /**
      * 模块名称 用于区分模块 (不允许重复)
@@ -144,7 +155,7 @@ public final class ScxModuleInfo<T extends ScxModule> implements Serializable {
      * @return a
      */
     private static List<Class<?>> initScxMappingClassList(List<Class<?>> allClassList) {
-        return allClassList.stream().filter(c -> c.isAnnotationPresent(ScxMapping.class) //拥有注解
+        return allClassList.stream().filter(c -> (c.isAnnotationPresent(ScxMapping.class) || c.isAnnotationPresent(Controller.class)) //拥有注解
                 && ScanClassUtils.isNormalClass(c)).toList(); // 是一个普通的类 (不是接口, 不是抽象类) ; 此处不要求有必须有无参构造函数 因为此类的创建会由 beanFactory 进行处理
     }
 
@@ -184,11 +195,12 @@ public final class ScxModuleInfo<T extends ScxModule> implements Serializable {
      * @return b
      */
     private static boolean hasScxAnnotation(Class<?> clazz) {
-        return clazz.isAnnotationPresent(ScxComponent.class) // ScxComponent
-                || clazz.isAnnotationPresent(ScxMapping.class)// ScxMapping
-                || clazz.isAnnotationPresent(ScxModel.class) // ScxModel
-                || clazz.isAnnotationPresent(ScxService.class)// ScxService
-                || clazz.isAnnotationPresent(ScxWebSocketMapping.class);// ScxWebSocketMapping
+        for (var a : beanFilterAnnotation) {
+            if (clazz.getAnnotation(a) != null) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
