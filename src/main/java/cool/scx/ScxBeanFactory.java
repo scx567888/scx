@@ -44,7 +44,7 @@ public final class ScxBeanFactory {
             this.springBeanFactory.addBeanPostProcessor(scheduledAnnotationBeanPostProcessor);
         }
         //这里默认禁止循环依赖
-        this.springBeanFactory.setAllowCircularReferences(false);
+        this.springBeanFactory.setAllowCircularReferences(scxFeatureConfig.getFeatureState(ScxFeature.ALLOW_CIRCULAR_REFERENCES));
     }
 
     /**

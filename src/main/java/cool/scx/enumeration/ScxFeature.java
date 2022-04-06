@@ -40,7 +40,12 @@ public enum ScxFeature {
      * <br>
      * 若设置为 false 则相当与忽略整个项目中所有的 注解类型定时任务 (注意 !!! 手动设置的定时任务 不受此标识影响)
      */
-    ENABLE_SCHEDULING_WITH_ANNOTATION(true);
+    ENABLE_SCHEDULING_WITH_ANNOTATION(true),
+
+    /**
+     * 是否允许 bean 之间的循环依赖 默认 false
+     */
+    ALLOW_CIRCULAR_REFERENCES(false);
 
     /**
      * a
