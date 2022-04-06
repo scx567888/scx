@@ -23,8 +23,6 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.CorsHandler;
 import io.vertx.ext.web.handler.FaviconHandler;
-import io.vertx.ext.web.handler.FileSystemAccess;
-import io.vertx.ext.web.handler.StaticHandler;
 import io.vertx.ext.web.handler.impl.CorsHandlerImpl;
 import io.vertx.ext.web.handler.impl.FaviconHandlerImpl;
 import org.slf4j.Logger;
