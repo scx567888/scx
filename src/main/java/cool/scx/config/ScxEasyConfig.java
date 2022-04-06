@@ -2,9 +2,7 @@ package cool.scx.config;
 
 import cool.scx.ScxEnvironment;
 import cool.scx.config.handler.impl.AppRootHandler;
-import cool.scx.config.handler.impl.ConvertStaticServerHandler;
 import cool.scx.config.handler.impl.DecryptValueHandler;
-import cool.scx.type.StaticServer;
 import cool.scx.util.NetUtils;
 import cool.scx.util.ansi.Ansi;
 
@@ -88,11 +86,6 @@ public final class ScxEasyConfig {
     private final File templateRoot;
 
     /**
-     * 静态服务器列表
-     */
-    private final List<StaticServer> staticServers;
-
-    /**
      * a
      *
      * @param scxConfig      a
@@ -104,7 +97,6 @@ public final class ScxEasyConfig {
         tombstone = scxConfig.getOrDefault("scx.tombstone", false);
         allowedOrigin = scxConfig.getOrDefault("scx.allowed-origin", "*");
         templateRoot = scxConfig.get("scx.template.root", new AppRootHandler("AppRoot:/c/", scxEnvironment));
-        staticServers = scxConfig.get("scx.static-servers", new ConvertStaticServerHandler(scxEnvironment));
         httpsEnabled = scxConfig.getOrDefault("scx.https.enabled", false);
         sslPath = scxConfig.get("scx.https.ssl-path", new AppRootHandler(scxEnvironment));
         sslPassword = scxConfig.get("scx.https.ssl-password", new DecryptValueHandler(appKey));
@@ -225,15 +217,6 @@ public final class ScxEasyConfig {
     }
 
     /**
-     * <p>staticServers.</p>
-     *
-     * @return a {@link java.util.List} object
-     */
-    public List<StaticServer> staticServers() {
-        return staticServers;
-    }
-
-    /**
      * <p>allowedOrigin.</p>
      *
      * @return a {@link java.lang.String} object.
@@ -252,7 +235,6 @@ public final class ScxEasyConfig {
                 .green("Y 数据库删除方式为                     \t -->\t " + (tombstone ? "逻辑删除" : "物理删除")).ln()
                 .green("Y 允许的请求源                         \t -->\t " + allowedOrigin).ln()
                 .green("Y 模板根目录                           \t -->\t " + templateRoot.getPath()).ln()
-                .green("Y 静态资源服务器                       \t -->\t " + staticServers.stream().map(StaticServer::location).collect(Collectors.joining(", ", "[", "]"))).ln()
                 .green("Y 是否开启 https                       \t -->\t " + (httpsEnabled ? "是" : "否")).ln()
                 .green("Y 证书路径                            \t -->\t " + (sslPath != null ? sslPath.getPath() : "")).ln()
                 .green("Y 证书密码                            \t -->\t *****").ln()

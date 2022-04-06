@@ -90,7 +90,6 @@ public final class ScxHttpRouter {
         this.corsHandlerRoute = this.vertxRouter.route().handler(corsHandler);
         this.scxBodyHandlerRoute = this.vertxRouter.route().handler(scxBodyHandler);
         registerScxMappingHandler(scxBeanFactory, scxMappingConfiguration, scxModuleInfos);
-        registerStaticServerHandler(this.vertxRouter, scxEasyConfig);
     }
 
     /**
@@ -138,20 +137,6 @@ public final class ScxHttpRouter {
                     }
                     r.handler(c);
                 });
-    }
-
-    /**
-     * <p>register.</p>
-     *
-     * @param vertxRouter   a {@link io.vertx.ext.web.Router} object
-     * @param scxEasyConfig a
-     */
-    private void registerStaticServerHandler(Router vertxRouter, ScxEasyConfig scxEasyConfig) {
-        for (var staticServer : scxEasyConfig.staticServers()) {
-            vertxRouter.route(staticServer.location())
-                    .handler(StaticHandler.create(FileSystemAccess.ROOT, staticServer.root().getPath())
-                            .setFilesReadOnly(false));
-        }
     }
 
     /**
