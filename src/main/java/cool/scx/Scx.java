@@ -219,20 +219,6 @@ public final class Scx {
     }
 
     /**
-     * 初始化 bean 工厂
-     *
-     * @param scxBeanFactory a
-     * @param scxModuleInfos s
-     */
-    private void initScxBeanFactory(ScxBeanFactory scxBeanFactory, List<ScxModuleInfo<?>> scxModuleInfos) {
-        for (var s : scxModuleInfos) {
-            scxBeanFactory.registerBeanDefinition(s.needRegisterBeanClassList().toArray(Class[]::new));
-        }
-        //此处刷新 bean
-        scxBeanFactory.refresh();
-    }
-
-    /**
      * <p>initVertx.</p>
      *
      * @return a {@link io.vertx.core.Vertx} object
@@ -265,6 +251,20 @@ public final class Scx {
             }
         }
         return tempScxModuleInfoList;
+    }
+
+    /**
+     * 初始化 bean 工厂
+     *
+     * @param scxBeanFactory a
+     * @param scxModuleInfos s
+     */
+    private void initScxBeanFactory(ScxBeanFactory scxBeanFactory, List<ScxModuleInfo<?>> scxModuleInfos) {
+        for (var s : scxModuleInfos) {
+            scxBeanFactory.registerBeanDefinition(s.needRegisterBeanClassList().toArray(Class[]::new));
+        }
+        //此处刷新 bean
+        scxBeanFactory.refresh();
     }
 
     /**

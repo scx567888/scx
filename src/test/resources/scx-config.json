@@ -24,12 +24,6 @@
     "template": {
       "root": "AppRoot:c"
     },
-    "static-servers": [
-      {
-        "location": "/static/*",
-        "root": "AppRoot:c\\static"
-      }
-    ],
     "logging": {
       "default": {
         "level": "DEBUG",

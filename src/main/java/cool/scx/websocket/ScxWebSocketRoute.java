@@ -30,6 +30,12 @@ public record ScxWebSocketRoute(String path,
         serverWebSocket.frameHandler(frameHandler).exceptionHandler(exceptionHandler).closeHandler(closeHandler);
     }
 
+    /**
+     * a
+     *
+     * @param serverWebSocket a
+     * @return a
+     */
     public boolean matches(ServerWebSocket serverWebSocket) {
         return this.path.equals(serverWebSocket.path());
     }
