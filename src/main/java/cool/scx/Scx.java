@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * 启动类
@@ -145,16 +146,14 @@ public final class Scx {
         //4, 初始化事件总线 (这里的 ScxEventBus 其实只是针对 vertx 的 eventBus 进行一次包装)
         this.scxEventBus = new ScxEventBus(this.vertx);
         //5, 初始化 BeanFactory
-        this.scxBeanFactory = new ScxBeanFactory(this.vertx.nettyEventLoopGroup(), this.scxFeatureConfig);
-        //6, 注册 Bean 并刷新 BeanFactory
-        initScxBeanFactory(this.scxBeanFactory, this.scxModuleInfos);
-        //7, 初始化模板
+        this.scxBeanFactory = initScxBeanFactory(this.scxModuleInfos, this.vertx.nettyEventLoopGroup(), this.scxFeatureConfig);
+        //6, 初始化模板
         this.scxTemplate = new ScxTemplate(this.scxEasyConfig);
-        //8, 初始化持久层
+        //7, 初始化持久层
         this.scxDao = new ScxDao(this.scxEasyConfig, this.scxFeatureConfig);
-        //9, ScxMapping 配置类
+        //8, ScxMapping 配置类
         this.scxMappingConfiguration = new ScxMappingConfiguration();
-        //10, 初始化任务调度器
+        //9, 初始化任务调度器
         this.scxScheduler = new ScxScheduler(this.vertx.nettyEventLoopGroup());
     }
 
@@ -219,6 +218,22 @@ public final class Scx {
     }
 
     /**
+     * 初始化 bean 工厂
+     *
+     * @param scxModuleInfos           s
+     * @param scheduledExecutorService s
+     * @param scxFeatureConfig         a
+     * @return r
+     */
+    private static ScxBeanFactory initScxBeanFactory(List<ScxModuleInfo<? extends ScxModule>> scxModuleInfos, ScheduledExecutorService scheduledExecutorService, ScxFeatureConfig scxFeatureConfig) {
+        var tempScxBeanFactory = new ScxBeanFactory(scheduledExecutorService, scxFeatureConfig);
+        for (var scxModuleInfo : scxModuleInfos) {
+            tempScxBeanFactory.registerBeanDefinition(scxModuleInfo.needRegisterBeanClassList().toArray(Class[]::new));
+        }
+        return tempScxBeanFactory;
+    }
+
+    /**
      * <p>initVertx.</p>
      *
      * @return a {@link io.vertx.core.Vertx} object
@@ -251,20 +266,6 @@ public final class Scx {
             }
         }
         return tempScxModuleInfoList;
-    }
-
-    /**
-     * 初始化 bean 工厂
-     *
-     * @param scxBeanFactory a
-     * @param scxModuleInfos s
-     */
-    private void initScxBeanFactory(ScxBeanFactory scxBeanFactory, List<ScxModuleInfo<?>> scxModuleInfos) {
-        for (var s : scxModuleInfos) {
-            scxBeanFactory.registerBeanDefinition(s.needRegisterBeanClassList().toArray(Class[]::new));
-        }
-        //此处刷新 bean
-        scxBeanFactory.refresh();
     }
 
     /**
@@ -340,6 +341,8 @@ public final class Scx {
         this.addShutdownHook();
         //7, 使用初始端口号 启动服务器
         this.startServer(this.scxEasyConfig.port());
+        //8, 此处刷新 scxBeanFactory 使其实例化所有符合条件的 Bean
+        this.scxBeanFactory.refresh();
     }
 
     /**
