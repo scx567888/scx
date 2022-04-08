@@ -416,9 +416,9 @@ public final class Scx {
      */
     @SuppressWarnings("unchecked")
     public <T extends ScxModule> T findScxModule(Class<T> clazz) {
-        for (ScxModuleMetadata<?> scxModuleMetaData : this.scxModuleMetadataList) {
-            if (scxModuleMetaData.scxModuleClass() == clazz) {
-                return (T) scxModuleMetaData.scxModuleExample();
+        for (var m : this.scxModuleMetadataList) {
+            if (m.scxModuleClass() == clazz) {
+                return (T) m.scxModuleExample();
             }
         }
         return null;
