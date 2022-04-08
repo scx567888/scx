@@ -68,10 +68,10 @@ public final class ScxHttpRouter {
      * @param scxMappingConfiguration a
      * @param scxEasyConfig           a
      * @param vertx                   a
-     * @param scxModuleMetaData       a
+     * @param metadataList            a
      * @param scxBeanFactory          a
      */
-    public ScxHttpRouter(ScxMappingConfiguration scxMappingConfiguration, ScxEasyConfig scxEasyConfig, Vertx vertx, List<ScxModuleMetadata<?>> scxModuleMetaData, ScxBeanFactory scxBeanFactory) {
+    public ScxHttpRouter(ScxMappingConfiguration scxMappingConfiguration, ScxEasyConfig scxEasyConfig, Vertx vertx, List<ScxModuleMetadata<?>> metadataList, ScxBeanFactory scxBeanFactory) {
         //初始化默认的异常处理器
         addExceptionHandler(ScxHttpExceptionHandler.DEFAULT_INSTANCE);
         //创建 vertxRouter 用来管理整个项目的路由
@@ -86,7 +86,7 @@ public final class ScxHttpRouter {
         this.faviconHandlerRoute = this.vertxRouter.route().handler(faviconHandler);
         this.corsHandlerRoute = this.vertxRouter.route().handler(corsHandler);
         this.scxBodyHandlerRoute = this.vertxRouter.route().handler(scxBodyHandler);
-        registerScxMappingHandler(scxBeanFactory, scxMappingConfiguration, scxModuleMetaData);
+        registerScxMappingHandler(scxBeanFactory, scxMappingConfiguration, metadataList);
     }
 
     /**
