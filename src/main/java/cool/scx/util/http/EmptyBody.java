@@ -5,7 +5,7 @@ import java.net.http.HttpRequest;
 /**
  * a
  */
-public final class EmptyBody implements HttpClientHelper.Body {
+final class EmptyBody implements HttpClientHelper.Body {
 
     @Override
     public HttpRequest.BodyPublisher getBodyPublisher(HttpRequest.Builder builder) {

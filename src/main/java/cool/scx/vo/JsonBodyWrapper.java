@@ -6,7 +6,7 @@ package cool.scx.vo;
  * @author scx567888
  * @version 1.11.8
  */
-public final class JsonBodyWrapper<T> {
+final class JsonBodyWrapper<T> {
 
     /**
      * 消息
