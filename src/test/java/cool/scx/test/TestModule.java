@@ -131,20 +131,20 @@ public class TestModule implements ScxModule {
     public static void test1() {
         var logger = LoggerFactory.getLogger(TestModule.class);
         //测试 URIBuilder
-        ScxContext.scheduler().scheduleAtFixedRate((a) -> {
+        for (int i = 0; i < 1000; i++) {
             try {
                 var s = "http://127.0.0.1:8888/test0";
                 var stringHttpResponse = HttpClientHelper.post(
                         new URIBuilder(s)
-                                .addParam("name", "小明😊")
+                                .addParam("name", "小明😊123?!@%^&**()_特-殊 字=符")
                                 .addParam("age", 18).toString(),
                         new FormData().addFile("content", "内容内容内容内容内容".getBytes(StandardCharsets.UTF_8), "", "")
                 ).body();
-                logger.error("测试请求[{}] : {}", a.runCount(), stringHttpResponse);
+                logger.error("测试请求[{}] : {}", i, stringHttpResponse);
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
-        }, Duration.of(1, ChronoUnit.MILLIS), 1000);
+        }
     }
 
     /**
