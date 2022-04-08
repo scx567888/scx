@@ -1,17 +1,13 @@
 package cool.scx.util.http;
 
-import cool.scx.util.RandomUtils;
-import io.netty.handler.codec.http.HttpHeaderNames;
+import cool.scx.enumeration.HttpMethod;
+import cool.scx.util.URIBuilder;
 
 import java.io.IOException;
-import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
 
 /**
  * 针对 {@link java.net.http.HttpClient} 进行一些极其简单的封装
@@ -24,322 +20,375 @@ import java.util.Map;
 public final class HttpClientHelper {
 
     /**
-     * 默认 HTTP_CLIENT 实例
+     * 默认的 HTTP_CLIENT 实例
      */
-    public static final HttpClient HTTP_CLIENT = HttpClient.newBuilder().build();
+    public static final HttpClient DEFAULT_HTTP_CLIENT = HttpClient.newBuilder().build();
 
     /**
-     * a
+     * 默认的 RESPONSE_BODY_HANDLER
      */
-    private static final String FORM_BOUNDARY_PREFIX = "----ScxHttpClientHelperFormBoundary";
-
-    /**
-     * BODY_HANDLER
-     */
-    private static final HttpResponse.BodyHandler<String> RESPONSE_BODY_HANDLER = HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8);
-
-    /**
-     * a
-     *
-     * @param url     a
-     * @param headers a
-     * @return a
-     * @throws java.io.IOException            a
-     * @throws java.lang.InterruptedException a
-     */
-    public static HttpResponse<String> delete(String url, Map<String, String> headers) throws IOException, InterruptedException {
-        return delete(HTTP_CLIENT, url, headers);
-    }
+    private static final HttpResponse.BodyHandler<String> DEFAULT_RESPONSE_BODY_HANDLER = HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8);
 
     /**
      * a
      *
      * @param url a
      * @return a
-     * @throws java.io.IOException            a
-     * @throws java.lang.InterruptedException a
-     */
-    public static HttpResponse<String> delete(String url) throws IOException, InterruptedException {
-        return delete(HTTP_CLIENT, url, new HashMap<>());
-    }
-
-    /**
-     * a
-     *
-     * @param httpClient a
-     * @param url        a
-     * @param headers    a
-     * @return a
-     * @throws java.io.IOException            a
-     * @throws java.lang.InterruptedException a
-     */
-    public static HttpResponse<String> delete(HttpClient httpClient, String url, Map<String, String> headers) throws IOException, InterruptedException {
-        return httpClient.send(getRequestBuilder(url, headers).DELETE().build(), RESPONSE_BODY_HANDLER);
-    }
-
-    /**
-     * a
-     *
-     * @param httpClient a
-     * @param url        a
-     * @return a
-     * @throws java.io.IOException            a
-     * @throws java.lang.InterruptedException a
-     */
-    public static HttpResponse<String> delete(HttpClient httpClient, String url) throws IOException, InterruptedException {
-        return delete(httpClient, url, new HashMap<>());
-    }
-
-    /**
-     * a
-     *
-     * @param url     a
-     * @param headers a
-     * @param bodyStr a
-     * @return a
-     * @throws java.io.IOException            a
-     * @throws java.lang.InterruptedException a
-     */
-    public static HttpResponse<String> put(String url, Map<String, String> headers, String bodyStr) throws IOException, InterruptedException {
-        return put(HTTP_CLIENT, url, headers, bodyStr);
-    }
-
-    /**
-     * a
-     *
-     * @param url     a
-     * @param bodyStr a
-     * @return a
-     * @throws java.io.IOException            a
-     * @throws java.lang.InterruptedException a
-     */
-    public static HttpResponse<String> put(String url, String bodyStr) throws IOException, InterruptedException {
-        return put(HTTP_CLIENT, url, new HashMap<>(), bodyStr);
-    }
-
-    /**
-     * a
-     *
-     * @param httpClient a
-     * @param url        a
-     * @param headers    a
-     * @param bodyStr    a
-     * @return a
-     * @throws java.io.IOException            a
-     * @throws java.lang.InterruptedException a
-     */
-    public static HttpResponse<String> put(HttpClient httpClient, String url, Map<String, String> headers, String bodyStr) throws IOException, InterruptedException {
-        return httpClient.send(getRequestBuilder(url, headers).PUT(getBodyPublisher(bodyStr)).build(), RESPONSE_BODY_HANDLER);
-    }
-
-    /**
-     * a
-     *
-     * @param httpClient a
-     * @param url        a
-     * @param bodyStr    a
-     * @return a
-     * @throws java.io.IOException            a
-     * @throws java.lang.InterruptedException a
-     */
-    public static HttpResponse<String> put(HttpClient httpClient, String url, String bodyStr) throws IOException, InterruptedException {
-        return put(httpClient, url, new HashMap<>(), bodyStr);
-    }
-
-    /**
-     * a
-     *
-     * @param url     a
-     * @param headers 请求头 若为空则内部会设置为
-     * @param bodyStr a
-     * @return a
-     * @throws java.io.IOException            a
-     * @throws java.lang.InterruptedException a
-     */
-    public static HttpResponse<String> post(String url, Map<String, String> headers, String bodyStr) throws IOException, InterruptedException {
-        return post(HTTP_CLIENT, url, headers, bodyStr);
-    }
-
-    /**
-     * a
-     *
-     * @param url     a
-     * @param bodyStr a
-     * @return a
-     * @throws java.io.IOException            a
-     * @throws java.lang.InterruptedException a
-     */
-    public static HttpResponse<String> post(String url, String bodyStr) throws IOException, InterruptedException {
-        return post(HTTP_CLIENT, url, new HashMap<>(), bodyStr);
-    }
-
-    /**
-     * a
-     *
-     * @param httpClient a
-     * @param url        a
-     * @param headers    a
-     * @param bodyStr    a
-     * @return a
-     * @throws java.io.IOException            a
-     * @throws java.lang.InterruptedException a
-     */
-    public static HttpResponse<String> post(HttpClient httpClient, String url, Map<String, String> headers, String bodyStr) throws IOException, InterruptedException {
-        return httpClient.send(getRequestBuilder(url, headers).POST(getBodyPublisher(bodyStr)).build(), RESPONSE_BODY_HANDLER);
-    }
-
-    /**
-     * a
-     *
-     * @param httpClient a
-     * @param url        a
-     * @param bodyStr    a
-     * @return a
-     * @throws java.io.IOException            a
-     * @throws java.lang.InterruptedException a
-     */
-    public static HttpResponse<String> post(HttpClient httpClient, String url, String bodyStr) throws IOException, InterruptedException {
-        return post(httpClient, url, new HashMap<>(), bodyStr);
-    }
-
-    /**
-     * a
-     *
-     * @param httpClient a
-     * @param url        a
-     * @param headers    a
-     * @param formData   a
-     * @return a
-     * @throws java.io.IOException            a
-     * @throws java.lang.InterruptedException a
-     */
-    public static HttpResponse<String> post(HttpClient httpClient, String url, Map<String, String> headers, FormData formData) throws IOException, InterruptedException {
-        final String boundary = FORM_BOUNDARY_PREFIX + RandomUtils.getRandomString(8, true);
-        headers.put("content-type", "multipart/form-data; boundary=" + boundary);
-        return httpClient.send(getRequestBuilder(url, headers).POST(formData.getBodyPublisher(boundary)).build(), RESPONSE_BODY_HANDLER);
-    }
-
-    /**
-     * a
-     *
-     * @param httpClient a
-     * @param url        a
-     * @param formData   a
-     * @return a
-     * @throws java.io.IOException            a
-     * @throws java.lang.InterruptedException a
-     */
-    public static HttpResponse<String> post(HttpClient httpClient, String url, FormData formData) throws IOException, InterruptedException {
-        return post(httpClient, url, new HashMap<>(), formData);
-    }
-
-    /**
-     * a
-     *
-     * @param url      a
-     * @param headers  a
-     * @param formData a
-     * @return a
-     * @throws java.io.IOException            a
-     * @throws java.lang.InterruptedException a
-     */
-    public static HttpResponse<String> post(String url, Map<String, String> headers, FormData formData) throws IOException, InterruptedException {
-        return post(HTTP_CLIENT, url, headers, formData);
-    }
-
-    /**
-     * a
-     *
-     * @param url      a
-     * @param formData a
-     * @return a
-     * @throws java.io.IOException            a
-     * @throws java.lang.InterruptedException a
-     */
-    public static HttpResponse<String> post(String url, FormData formData) throws IOException, InterruptedException {
-        return post(HTTP_CLIENT, url, formData);
-    }
-
-    /**
-     * a
-     *
-     * @param url     a
-     * @param headers a
-     * @return a
-     * @throws java.io.IOException            a
-     * @throws java.lang.InterruptedException a
-     */
-    public static HttpResponse<String> get(String url, Map<String, String> headers) throws IOException, InterruptedException {
-        return get(HTTP_CLIENT, url, headers);
-    }
-
-    /**
-     * a
-     *
-     * @param url a
-     * @return a
-     * @throws java.io.IOException            a
-     * @throws java.lang.InterruptedException a
+     * @throws IOException          a
+     * @throws InterruptedException a
      */
     public static HttpResponse<String> get(String url) throws IOException, InterruptedException {
-        return get(HTTP_CLIENT, url, new HashMap<>());
+        return get(url, null);
     }
 
     /**
      * a
      *
-     * @param httpClient a
-     * @param url        a
-     * @param headers    a
+     * @param url     a
+     * @param options a
      * @return a
-     * @throws java.io.IOException            a
-     * @throws java.lang.InterruptedException a
+     * @throws IOException          a
+     * @throws InterruptedException a
      */
-    public static HttpResponse<String> get(HttpClient httpClient, String url, Map<String, String> headers) throws IOException, InterruptedException {
-        return httpClient.send(getRequestBuilder(url, headers).GET().build(), RESPONSE_BODY_HANDLER);
+    public static HttpResponse<String> get(String url, Options options) throws IOException, InterruptedException {
+        return get(new URIBuilder(url), options);
     }
 
     /**
      * a
      *
-     * @param httpClient a
-     * @param url        a
+     * @param url a
      * @return a
-     * @throws java.io.IOException            a
-     * @throws java.lang.InterruptedException a
+     * @throws IOException          a
+     * @throws InterruptedException a
      */
-    public static HttpResponse<String> get(HttpClient httpClient, String url) throws IOException, InterruptedException {
-        return get(httpClient, url, new HashMap<>());
-    }
-
-    /**
-     * 获取 HttpRequest.Builder
-     *
-     * @param url     地址
-     * @param headers 头
-     * @return r
-     */
-    private static HttpRequest.Builder getRequestBuilder(String url, Map<String, String> headers) {
-        var requestBuilder = HttpRequest.newBuilder().uri(URI.create(url));
-        //这里为了移除重复的 header 做一次运算
-        var finalHeaders = new HashMap<String, String>();
-        headers.forEach((k, v) -> finalHeaders.put(k.trim().toLowerCase(Locale.ROOT), v));
-        //如果没有设置 ACCEPT 和 CONTENT_TYPE 这里默认设置为 json
-        finalHeaders.putIfAbsent(HttpHeaderNames.ACCEPT.toString().trim().toLowerCase(Locale.ROOT), "application/json");
-        finalHeaders.putIfAbsent(HttpHeaderNames.CONTENT_TYPE.toString().trim().toLowerCase(Locale.ROOT), "application/json;charset=utf-8");
-        //循环添加头
-        finalHeaders.forEach(requestBuilder::setHeader);
-        return requestBuilder;
+    public static HttpResponse<String> get(URIBuilder url) throws IOException, InterruptedException {
+        return get(url, null);
     }
 
     /**
      * a
      *
-     * @param bodyStr a
+     * @param url     a
+     * @param options a
      * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
      */
-    private static HttpRequest.BodyPublisher getBodyPublisher(String bodyStr) {
-        return HttpRequest.BodyPublishers.ofByteArray(bodyStr.getBytes(StandardCharsets.UTF_8));
+    public static HttpResponse<String> get(URIBuilder url, Options options) throws IOException, InterruptedException {
+        return request(url, HttpMethod.GET, null, options);
+    }
+
+    /**
+     * a
+     *
+     * @param url a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
+    public static HttpResponse<String> post(String url) throws IOException, InterruptedException {
+        return post(url, null);
+    }
+
+    /**
+     * a
+     *
+     * @param url  a
+     * @param body a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
+    public static HttpResponse<String> post(String url, Body body) throws IOException, InterruptedException {
+        return post(url, body, null);
+    }
+
+    /**
+     * a
+     *
+     * @param url     a
+     * @param body    a
+     * @param options a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
+    public static HttpResponse<String> post(String url, Body body, Options options) throws IOException, InterruptedException {
+        return post(new URIBuilder(url), body, options);
+    }
+
+    /**
+     * a
+     *
+     * @param url a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
+    public static HttpResponse<String> post(URIBuilder url) throws IOException, InterruptedException {
+        return post(url, null);
+    }
+
+    /**
+     * a
+     *
+     * @param url  a
+     * @param body a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
+    public static HttpResponse<String> post(URIBuilder url, Body body) throws IOException, InterruptedException {
+        return post(url, body, null);
+    }
+
+    /**
+     * a
+     *
+     * @param url     a
+     * @param body    a
+     * @param options a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
+    public static HttpResponse<String> post(URIBuilder url, Body body, Options options) throws IOException, InterruptedException {
+        return request(url, HttpMethod.POST, body, options);
+    }
+
+    /**
+     * a
+     *
+     * @param url a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
+    public static HttpResponse<String> delete(String url) throws IOException, InterruptedException {
+        return delete(url, null);
+    }
+
+    /**
+     * a
+     *
+     * @param url     a
+     * @param options a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
+    public static HttpResponse<String> delete(String url, Options options) throws IOException, InterruptedException {
+        return delete(new URIBuilder(url), options);
+    }
+
+    /**
+     * a
+     *
+     * @param url a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
+    public static HttpResponse<String> delete(URIBuilder url) throws IOException, InterruptedException {
+        return delete(url, null);
+    }
+
+    /**
+     * a
+     *
+     * @param url     a
+     * @param options a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
+    public static HttpResponse<String> delete(URIBuilder url, Options options) throws IOException, InterruptedException {
+        return request(url, HttpMethod.DELETE, null, options);
+    }
+
+    /**
+     * a
+     *
+     * @param url a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
+    public static HttpResponse<String> put(String url) throws IOException, InterruptedException {
+        return put(url, null);
+    }
+
+    /**
+     * a
+     *
+     * @param url  a
+     * @param body a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
+    public static HttpResponse<String> put(String url, Body body) throws IOException, InterruptedException {
+        return put(url, body, null);
+    }
+
+    /**
+     * a
+     *
+     * @param url     a
+     * @param body    a
+     * @param options a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
+    public static HttpResponse<String> put(String url, Body body, Options options) throws IOException, InterruptedException {
+        return put(new URIBuilder(url), body, options);
+    }
+
+    /**
+     * a
+     *
+     * @param url a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
+    public static HttpResponse<String> put(URIBuilder url) throws IOException, InterruptedException {
+        return put(url, null);
+    }
+
+    /**
+     * a
+     *
+     * @param url  a
+     * @param body a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
+    public static HttpResponse<String> put(URIBuilder url, Body body) throws IOException, InterruptedException {
+        return put(url, body, null);
+    }
+
+    /**
+     * a
+     *
+     * @param url     a
+     * @param body    a
+     * @param options a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
+    public static HttpResponse<String> put(URIBuilder url, Body body, Options options) throws IOException, InterruptedException {
+        return request(url, HttpMethod.PUT, body, options);
+    }
+
+    /**
+     * a
+     *
+     * @param url     a
+     * @param method  a
+     * @param body    a
+     * @param options a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
+    private static HttpResponse<String> request(URIBuilder url, HttpMethod method, Body body, Options options) throws IOException, InterruptedException {
+        var b = body != null ? body : new EmptyBody();
+        var o = options != null ? options : new Options();
+        var httpClient = o.httpClient() != null ? o.httpClient() : DEFAULT_HTTP_CLIENT;
+        var httpRequestBuilder = o.getHttpRequestBuilder().uri(url.toURI());
+        var bodyPublisher = b.getBodyPublisher(httpRequestBuilder);
+        var httpRequest = switch (method) {
+            case GET -> httpRequestBuilder.GET().build();
+            case POST -> httpRequestBuilder.POST(bodyPublisher).build();
+            case DELETE -> httpRequestBuilder.DELETE().build();
+            case PUT -> httpRequestBuilder.PUT(bodyPublisher).build();
+            default -> throw new IllegalArgumentException("method 只能为 [GET, POST, DELETE, PUT] 这四种 !!! method : " + method);
+        };
+        return httpClient.send(httpRequest, DEFAULT_RESPONSE_BODY_HANDLER);
+    }
+
+    /**
+     * a
+     */
+    public interface Body {
+
+        /**
+         * a
+         *
+         * @param builder a
+         * @return a
+         */
+        HttpRequest.BodyPublisher getBodyPublisher(HttpRequest.Builder builder);
+
+    }
+
+    /**
+     * a
+     */
+    public static class Options {
+
+        private final HttpRequest.Builder builder = HttpRequest.newBuilder();
+
+        private HttpClient httpClient;
+
+        /**
+         * a
+         *
+         * @param httpClient a
+         * @return a
+         */
+        public Options httpClient(HttpClient httpClient) {
+            this.httpClient = httpClient;
+            return this;
+        }
+
+        /**
+         * a
+         *
+         * @param name  a
+         * @param value a
+         * @return a
+         */
+        public Options header(String name, String value) {
+            builder.header(name, value);
+            return this;
+        }
+
+        /**
+         * a
+         *
+         * @param name  a
+         * @param value a
+         * @return a
+         */
+        public Options setHeader(String name, String value) {
+            builder.setHeader(name, value);
+            return this;
+        }
+
+        /**
+         * a
+         *
+         * @return a
+         */
+        public HttpRequest.Builder getHttpRequestBuilder() {
+            return builder;
+        }
+
+        /**
+         * a
+         *
+         * @return a
+         */
+        public HttpClient httpClient() {
+            return httpClient;
+        }
+
     }
 
 }
