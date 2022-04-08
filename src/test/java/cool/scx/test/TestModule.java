@@ -18,6 +18,8 @@ import cool.scx.util.StopWatch;
 import cool.scx.util.URIBuilder;
 import cool.scx.util.http.FormData;
 import cool.scx.util.http.HttpClientHelper;
+import io.vertx.ext.web.handler.FileSystemAccess;
+import io.vertx.ext.web.handler.StaticHandler;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.support.CronTrigger;
 import org.testng.annotations.BeforeTest;
@@ -129,6 +131,9 @@ public class TestModule implements ScxModule {
      */
     @Override
     public void start() {
+        ScxContext.router().vertxRouter().route("/static/*")
+                .handler(StaticHandler.create(FileSystemAccess.ROOT, ScxContext.environment().getFileByAppRoot("AppRoot:c\\static").getPath())
+                        .setFilesReadOnly(false));
         var logger = LoggerFactory.getLogger(TestModule.class);
         //测试定时任务
         ScxContext.scheduler().scheduleAtFixedRate((a) -> {
