@@ -18,6 +18,8 @@ import cool.scx.util.StopWatch;
 import cool.scx.util.URIBuilder;
 import cool.scx.util.http.FormData;
 import cool.scx.util.http.HttpClientHelper;
+import io.vertx.ext.web.handler.FileSystemAccess;
+import io.vertx.ext.web.handler.StaticHandler;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.support.CronTrigger;
 import org.testng.annotations.BeforeTest;
@@ -129,6 +131,9 @@ public class TestModule implements ScxModule {
      */
     @Override
     public void start() {
+        ScxContext.router().vertxRouter().route("/static/*")
+                .handler(StaticHandler.create(FileSystemAccess.ROOT, ScxContext.environment().getFileByAppRoot("AppRoot:c\\static").getPath())
+                        .setFilesReadOnly(false));
         var logger = LoggerFactory.getLogger(TestModule.class);
         //测试定时任务
         ScxContext.scheduler().scheduleAtFixedRate((a) -> {
@@ -154,8 +159,8 @@ public class TestModule implements ScxModule {
                 var s = "http://127.0.0.1:8888/test0";
                 var stringHttpResponse = HttpClientHelper.post(
                         new URIBuilder(s)
-                                .queryParam("name", "小明😊")
-                                .queryParam("age", 18),
+                                .addParam("name", "小明😊")
+                                .addParam("age", 18).toString(),
                         new FormData().addFile("content", "内容内容内容内容内容".getBytes(StandardCharsets.UTF_8), "", "")
                 ).body();
                 logger.error("测试请求[{}] : {}", a.runCount(), stringHttpResponse);
