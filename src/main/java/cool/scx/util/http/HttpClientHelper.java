@@ -29,47 +29,145 @@ public final class HttpClientHelper {
      */
     private static final HttpResponse.BodyHandler<String> DEFAULT_RESPONSE_BODY_HANDLER = HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8);
 
-
+    /**
+     * a
+     *
+     * @param url a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
     public static HttpResponse<String> get(String url) throws IOException, InterruptedException {
         return get(url, null);
     }
 
+    /**
+     * a
+     *
+     * @param url     a
+     * @param options a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
     public static HttpResponse<String> get(String url, Options options) throws IOException, InterruptedException {
         return request(url, HttpMethod.GET, null, options);
     }
 
+    /**
+     * a
+     *
+     * @param url a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
     public static HttpResponse<String> post(String url) throws IOException, InterruptedException {
         return post(url, null);
     }
 
+    /**
+     * a
+     *
+     * @param url  a
+     * @param body a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
     public static HttpResponse<String> post(String url, Body body) throws IOException, InterruptedException {
         return post(url, body, null);
     }
 
+    /**
+     * a
+     *
+     * @param url     a
+     * @param body    a
+     * @param options a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
     public static HttpResponse<String> post(String url, Body body, Options options) throws IOException, InterruptedException {
         return request(url, HttpMethod.POST, body, options);
     }
 
+    /**
+     * a
+     *
+     * @param url a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
     public static HttpResponse<String> delete(String url) throws IOException, InterruptedException {
         return delete(url, null);
     }
 
+    /**
+     * a
+     *
+     * @param url     a
+     * @param options a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
     public static HttpResponse<String> delete(String url, Options options) throws IOException, InterruptedException {
         return request(url, HttpMethod.DELETE, null, options);
     }
 
+    /**
+     * a
+     *
+     * @param url a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
     public static HttpResponse<String> put(String url) throws IOException, InterruptedException {
         return put(url, null);
     }
 
+    /**
+     * a
+     *
+     * @param url  a
+     * @param body a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
     public static HttpResponse<String> put(String url, Body body) throws IOException, InterruptedException {
         return put(url, body, null);
     }
 
+    /**
+     * a
+     *
+     * @param url     a
+     * @param body    a
+     * @param options a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
     public static HttpResponse<String> put(String url, Body body, Options options) throws IOException, InterruptedException {
         return request(url, HttpMethod.PUT, body, options);
     }
 
+    /**
+     * a
+     *
+     * @param url     a
+     * @param method  a
+     * @param body    a
+     * @param options a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
     private static HttpResponse<String> request(String url, HttpMethod method, Body body, Options options) throws IOException, InterruptedException {
         var b = body != null ? body : new EmptyBody();
         var o = options != null ? options : new Options();
@@ -101,6 +199,9 @@ public final class HttpClientHelper {
 
     }
 
+    /**
+     * a
+     */
     public static class Options {
 
         private final HttpRequest.Builder builder = HttpRequest.newBuilder();

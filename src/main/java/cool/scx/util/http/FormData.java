@@ -101,15 +101,11 @@ public final class FormData implements HttpClientHelper.Body {
     }
 
     /**
-     * <p>getBodyPublisher.</p>
+     * a
      *
-     * @param boundary a {@link java.lang.String} object
-     * @return a HttpRequest.BodyPublisher object
+     * @param builder a a
+     * @return a
      */
-    HttpRequest.BodyPublisher getBodyPublisher(String boundary) {
-        return HttpRequest.BodyPublishers.ofByteArrays(() -> new FormDataByteArrayIterable(formDataItemList, boundary));
-    }
-
     @Override
     public HttpRequest.BodyPublisher getBodyPublisher(HttpRequest.Builder builder) {
         final String boundary = FORM_BOUNDARY_PREFIX + RandomUtils.getRandomString(8, true);
