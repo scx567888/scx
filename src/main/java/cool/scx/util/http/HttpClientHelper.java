@@ -103,9 +103,9 @@ public final class HttpClientHelper {
 
     public static class Options {
 
-        public HttpClient httpClient;
-
         private final HttpRequest.Builder builder = HttpRequest.newBuilder();
+
+        private HttpClient httpClient;
 
         public Options httpClient(HttpClient httpClient) {
             this.httpClient = httpClient;

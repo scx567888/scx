@@ -2,7 +2,6 @@ package cool.scx.util.http;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.util.ObjectUtils;
-import cool.scx.util.http.HttpClientHelper;
 
 import java.net.http.HttpRequest;
 import java.nio.charset.StandardCharsets;
