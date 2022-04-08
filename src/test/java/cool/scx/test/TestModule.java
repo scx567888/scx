@@ -15,11 +15,16 @@ import cool.scx.test.car.CarOwner;
 import cool.scx.test.car.CarService;
 import cool.scx.util.RandomUtils;
 import cool.scx.util.StopWatch;
+import cool.scx.util.URIBuilder;
+import cool.scx.util.http.FormData;
+import cool.scx.util.http.HttpClientHelper;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.support.CronTrigger;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -142,6 +147,22 @@ public class TestModule implements ScxModule {
                 a.scheduledFuture().cancel(false);
             }
         }, Instant.now().plusSeconds(3), Duration.of(1, ChronoUnit.SECONDS));
+
+        //测试 URIBuilder
+        ScxContext.scheduler().scheduleAtFixedRate((a) -> {
+            try {
+                var s = "http://127.0.0.1:8888/test0";
+                var stringHttpResponse = HttpClientHelper.post(
+                        new URIBuilder(s)
+                                .queryParam("name", "小明😊")
+                                .queryParam("age", 18),
+                        new FormData().addFile("content", "内容内容内容内容内容".getBytes(StandardCharsets.UTF_8), "", "")
+                ).body();
+                System.out.println("测试请求 : " + stringHttpResponse);
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+            }
+        }, Duration.of(1, ChronoUnit.MILLIS));
 
         System.out.println("CarModule-Start");
     }

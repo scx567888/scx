@@ -1,9 +1,9 @@
 package cool.scx.util.http;
 
 import cool.scx.enumeration.HttpMethod;
+import cool.scx.util.URIBuilder;
 
 import java.io.IOException;
-import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -38,7 +38,7 @@ public final class HttpClientHelper {
      * @throws InterruptedException a
      */
     public static HttpResponse<String> get(String url) throws IOException, InterruptedException {
-        return get(url, null);
+        return get(new URIBuilder(url));
     }
 
     /**
@@ -51,6 +51,31 @@ public final class HttpClientHelper {
      * @throws InterruptedException a
      */
     public static HttpResponse<String> get(String url, Options options) throws IOException, InterruptedException {
+        return get(new URIBuilder(url), options);
+    }
+
+    /**
+     * a
+     *
+     * @param url a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
+    public static HttpResponse<String> get(URIBuilder url) throws IOException, InterruptedException {
+        return get(url, null);
+    }
+
+    /**
+     * a
+     *
+     * @param url     a
+     * @param options a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
+    public static HttpResponse<String> get(URIBuilder url, Options options) throws IOException, InterruptedException {
         return request(url, HttpMethod.GET, null, options);
     }
 
@@ -63,7 +88,7 @@ public final class HttpClientHelper {
      * @throws InterruptedException a
      */
     public static HttpResponse<String> post(String url) throws IOException, InterruptedException {
-        return post(url, null);
+        return post(new URIBuilder(url));
     }
 
     /**
@@ -76,7 +101,7 @@ public final class HttpClientHelper {
      * @throws InterruptedException a
      */
     public static HttpResponse<String> post(String url, Body body) throws IOException, InterruptedException {
-        return post(url, body, null);
+        return post(new URIBuilder(url), body);
     }
 
     /**
@@ -90,6 +115,45 @@ public final class HttpClientHelper {
      * @throws InterruptedException a
      */
     public static HttpResponse<String> post(String url, Body body, Options options) throws IOException, InterruptedException {
+        return post(new URIBuilder(url), body, options);
+    }
+
+    /**
+     * a
+     *
+     * @param url a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
+    public static HttpResponse<String> post(URIBuilder url) throws IOException, InterruptedException {
+        return post(url, null);
+    }
+
+    /**
+     * a
+     *
+     * @param url  a
+     * @param body a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
+    public static HttpResponse<String> post(URIBuilder url, Body body) throws IOException, InterruptedException {
+        return post(url, body, null);
+    }
+
+    /**
+     * a
+     *
+     * @param url     a
+     * @param body    a
+     * @param options a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
+    public static HttpResponse<String> post(URIBuilder url, Body body, Options options) throws IOException, InterruptedException {
         return request(url, HttpMethod.POST, body, options);
     }
 
@@ -102,7 +166,7 @@ public final class HttpClientHelper {
      * @throws InterruptedException a
      */
     public static HttpResponse<String> delete(String url) throws IOException, InterruptedException {
-        return delete(url, null);
+        return delete(new URIBuilder(url));
     }
 
     /**
@@ -115,6 +179,31 @@ public final class HttpClientHelper {
      * @throws InterruptedException a
      */
     public static HttpResponse<String> delete(String url, Options options) throws IOException, InterruptedException {
+        return delete(new URIBuilder(url), options);
+    }
+
+    /**
+     * a
+     *
+     * @param url a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
+    public static HttpResponse<String> delete(URIBuilder url) throws IOException, InterruptedException {
+        return delete(url);
+    }
+
+    /**
+     * a
+     *
+     * @param url     a
+     * @param options a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
+    public static HttpResponse<String> delete(URIBuilder url, Options options) throws IOException, InterruptedException {
         return request(url, HttpMethod.DELETE, null, options);
     }
 
@@ -127,7 +216,7 @@ public final class HttpClientHelper {
      * @throws InterruptedException a
      */
     public static HttpResponse<String> put(String url) throws IOException, InterruptedException {
-        return put(url, null);
+        return put(new URIBuilder(url));
     }
 
     /**
@@ -140,7 +229,7 @@ public final class HttpClientHelper {
      * @throws InterruptedException a
      */
     public static HttpResponse<String> put(String url, Body body) throws IOException, InterruptedException {
-        return put(url, body, null);
+        return put(new URIBuilder(url), body);
     }
 
     /**
@@ -154,6 +243,45 @@ public final class HttpClientHelper {
      * @throws InterruptedException a
      */
     public static HttpResponse<String> put(String url, Body body, Options options) throws IOException, InterruptedException {
+        return put(new URIBuilder(url), body, options);
+    }
+
+    /**
+     * a
+     *
+     * @param url a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
+    public static HttpResponse<String> put(URIBuilder url) throws IOException, InterruptedException {
+        return put(url, null);
+    }
+
+    /**
+     * a
+     *
+     * @param url  a
+     * @param body a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
+    public static HttpResponse<String> put(URIBuilder url, Body body) throws IOException, InterruptedException {
+        return put(url, body, null);
+    }
+
+    /**
+     * a
+     *
+     * @param url     a
+     * @param body    a
+     * @param options a
+     * @return a
+     * @throws IOException          a
+     * @throws InterruptedException a
+     */
+    public static HttpResponse<String> put(URIBuilder url, Body body, Options options) throws IOException, InterruptedException {
         return request(url, HttpMethod.PUT, body, options);
     }
 
@@ -168,11 +296,11 @@ public final class HttpClientHelper {
      * @throws IOException          a
      * @throws InterruptedException a
      */
-    private static HttpResponse<String> request(String url, HttpMethod method, Body body, Options options) throws IOException, InterruptedException {
+    private static HttpResponse<String> request(URIBuilder url, HttpMethod method, Body body, Options options) throws IOException, InterruptedException {
         var b = body != null ? body : new EmptyBody();
         var o = options != null ? options : new Options();
         var httpClient = o.httpClient() != null ? o.httpClient() : DEFAULT_HTTP_CLIENT;
-        var httpRequestBuilder = o.getHttpRequestBuilder().uri(URI.create(url));
+        var httpRequestBuilder = o.getHttpRequestBuilder().uri(url.toURI());
         var bodyPublisher = b.getBodyPublisher(httpRequestBuilder);
         var httpRequest = switch (method) {
             case GET -> httpRequestBuilder.GET().build();

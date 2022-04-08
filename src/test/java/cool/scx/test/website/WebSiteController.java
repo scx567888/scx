@@ -1,11 +1,15 @@
 package cool.scx.test.website;
 
+import cool.scx.ScxConstant;
 import cool.scx.ScxContext;
+import cool.scx.annotation.FromQuery;
+import cool.scx.annotation.FromUpload;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.enumeration.HttpMethod;
 import cool.scx.enumeration.RawType;
 import cool.scx.test.car.Car;
 import cool.scx.test.car.CarService;
+import cool.scx.type.UploadedEntity;
 import cool.scx.util.RandomUtils;
 import cool.scx.util.digest.DigestUtils;
 import cool.scx.util.http.HttpClientHelper;
@@ -18,6 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.util.Map;
 
 /**
  * 简单测试
@@ -36,6 +42,14 @@ public class WebSiteController {
 
     public WebSiteController(CarService carService) {
         this.carService = carService;
+    }
+
+    @ScxMapping(method = HttpMethod.POST)
+    public static Object test0(@FromQuery String name,
+                               @FromQuery Integer age,
+                               @FromUpload UploadedEntity content) {
+        return Map.of("now", ScxConstant.DEFAULT_DATETIME_FORMATTER.format(LocalDateTime.now()),
+                "name", name, "age", age, "content", content.buffer().toString(StandardCharsets.UTF_8));
     }
 
     @ScxMapping(method = HttpMethod.GET)
