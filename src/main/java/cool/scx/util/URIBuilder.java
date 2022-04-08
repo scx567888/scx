@@ -6,21 +6,41 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * a
+ */
 public class URIBuilder {
 
     private final URI oldUri;
 
     private final Map<String, String> queryParam = new HashMap<>();
 
-    public URIBuilder(String uriStr) {
-        this.oldUri = URI.create(uriStr);
+    /**
+     * a
+     *
+     * @param str a
+     */
+    public URIBuilder(String str) {
+        this.oldUri = URI.create(str);
     }
 
+    /**
+     * a
+     *
+     * @param key   a
+     * @param value a
+     * @return a
+     */
     public URIBuilder queryParam(String key, Object value) {
         queryParam.put(key, value.toString());
         return this;
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     private String getQueryParamStr() {
         var tempList = new ArrayList<String>();
         for (var e : queryParam.entrySet()) {
@@ -29,6 +49,11 @@ public class URIBuilder {
         return String.join("&", tempList);
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public URI toURI() {
         //旧的查询
         var oldQuery = oldUri.getQuery();

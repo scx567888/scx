@@ -13,6 +13,12 @@ public final class XmlBody implements HttpClientHelper.Body {
 
     private final String bodyStr;
 
+    /**
+     * a
+     *
+     * @param o a
+     * @throws JsonProcessingException a
+     */
     public XmlBody(Object o) throws JsonProcessingException {
         bodyStr = ObjectUtils.toXml(o);
     }

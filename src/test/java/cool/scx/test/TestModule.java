@@ -158,11 +158,11 @@ public class TestModule implements ScxModule {
                                 .queryParam("age", 18),
                         new FormData().addFile("content", "内容内容内容内容内容".getBytes(StandardCharsets.UTF_8), "", "")
                 ).body();
-                System.out.println("测试请求 : " + stringHttpResponse);
+                logger.error("测试请求[{}] : {}", a.runCount(), stringHttpResponse);
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
-        }, Duration.of(1, ChronoUnit.MILLIS));
+        }, Duration.of(1, ChronoUnit.MILLIS), 1000);
 
         System.out.println("CarModule-Start");
     }
