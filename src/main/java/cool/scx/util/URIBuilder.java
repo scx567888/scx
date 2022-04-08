@@ -15,8 +15,14 @@ import java.util.Map;
  */
 public class URIBuilder {
 
+    /**
+     * a
+     */
     private final String uri;
 
+    /**
+     * a
+     */
     private final ArrayListMultimap<String, String> queryParams = ArrayListMultimap.create();
 
     /**
@@ -45,19 +51,41 @@ public class URIBuilder {
         return this;
     }
 
+    /**
+     * a
+     *
+     * @param key a
+     * @return a
+     */
     public URIBuilder removeParam(String key) {
         queryParams.removeAll(key);
         return this;
     }
 
+    /**
+     * a
+     *
+     * @param key a
+     * @return a
+     */
     public List<String> getParams(String key) {
         return queryParams.get(key);
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public Map<String, Collection<String>> getAllParams() {
         return queryParams.asMap();
     }
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public URIBuilder removeAllParams() {
         queryParams.clear();
         return this;
