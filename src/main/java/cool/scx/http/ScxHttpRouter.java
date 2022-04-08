@@ -106,7 +106,7 @@ public final class ScxHttpRouter {
      * 扫描所有被 ScxMapping注解标记的方法 并封装为 ScxMappingHandler.
      *
      * @param scxHttpRouterConfiguration s
-     * @param metadataList          a
+     * @param metadataList               a
      * @param scxBeanFactory             a {@link cool.scx.ScxBeanFactory} object
      */
     private void registerScxMappingHandler(ScxBeanFactory scxBeanFactory, ScxMappingConfiguration scxHttpRouterConfiguration, List<ScxModuleMetadata<?>> metadataList) {
