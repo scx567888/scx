@@ -70,9 +70,9 @@ public final class ScxDaoHelper {
      */
     private static List<Class<?>> getAllScxBaseModelClassList() {
         var allScxModelClassList = new ArrayList<Class<?>>();
-        for (var scxModuleInfo : ScxContext.scxModuleInfos()) {
+        for (var m : ScxContext.scxModuleMetadataList()) {
             //只对 ScxModel 注解标识的了类进行数据表修复
-            allScxModelClassList.addAll(scxModuleInfo.scxBaseModelClassList());
+            allScxModelClassList.addAll(m.scxBaseModelClassList());
         }
         return allScxModelClassList;
     }

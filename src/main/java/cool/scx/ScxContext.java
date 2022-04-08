@@ -158,8 +158,8 @@ public final class ScxContext {
      *
      * @return a {@link java.util.List} object.
      */
-    public static List<ScxModuleInfo<? extends ScxModule>> scxModuleInfos() {
-        return scx().scxModuleInfos();
+    public static List<ScxModuleMetadata<?>> scxModuleMetadataList() {
+        return scx().scxModuleMetadataList();
     }
 
     /**
@@ -260,10 +260,10 @@ public final class ScxContext {
      *
      * @param clazz a {@link java.lang.Class} object
      * @param <T>   a T class
-     * @return a {@link cool.scx.ScxModuleInfo} object
+     * @return a {@link ScxModuleMetadata} object
      */
-    public static <T extends ScxModule> ScxModuleInfo<T> findScxModuleInfo(Class<T> clazz) {
-        return scx().findScxModuleInfo(clazz);
+    public static <T extends ScxModule> T findScxModule(Class<T> clazz) {
+        return scx().findScxModule(clazz);
     }
 
     /**

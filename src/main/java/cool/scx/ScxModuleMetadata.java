@@ -16,17 +16,17 @@ import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * ScxModuleInfo 用于描述 ScxModule 实例的基本信息
+ * ScxModuleMetadata 用于描述 ScxModule 实例的基本信息
  *
  * @author scx567888
  * @version 1.1.2
  */
-public final class ScxModuleInfo<T extends ScxModule> implements Serializable {
-
+public final class ScxModuleMetadata<T extends ScxModule> implements Serializable {
 
     private static final List<Class<? extends Annotation>> beanFilterAnnotation = List.of(
             //scx 注解
@@ -83,7 +83,7 @@ public final class ScxModuleInfo<T extends ScxModule> implements Serializable {
      * 所有 需要注册到 spring 中的 class
      * 一般就是 scxModelClassList, scxServiceClassList, scxMappingClassList, scxWebSocketRouteClassList 这些类的总和
      */
-    private final List<Class<?>> needRegisterBeanClassList;
+    private final List<Class<?>> beanClassList;
 
     /**
      * 模块根路径
@@ -93,14 +93,14 @@ public final class ScxModuleInfo<T extends ScxModule> implements Serializable {
     private final File moduleRootPath;
 
     /**
-     * 根据 scxModule 实例 创建 ScxModuleInfo
+     * 根据 scxModule 实例 创建 ScxModuleMetadata
      *
      * @param scxModuleExample b
      * @throws java.net.URISyntaxException if any.
      * @throws java.io.IOException         if any.
      */
     @SuppressWarnings("unchecked")
-    public ScxModuleInfo(T scxModuleExample) throws URISyntaxException, IOException {
+    public ScxModuleMetadata(T scxModuleExample) throws URISyntaxException, IOException {
         this.scxModuleClass = (Class<T>) scxModuleExample.getClass();
         this.basePackage = this.scxModuleClass.getPackageName();
         this.scxModuleName = scxModuleExample.name();
@@ -121,7 +121,7 @@ public final class ScxModuleInfo<T extends ScxModule> implements Serializable {
         this.scxBaseModelServiceClassList = initScxBaseModelServiceClassList(this.allClassList);
         this.scxMappingClassList = initScxMappingClassList(this.allClassList);
         this.scxWebSocketRouteClassList = initScxWebSocketRouteClassList(this.allClassList);
-        this.needRegisterBeanClassList = initNeedRegisterBeanClassList(this.allClassList);
+        this.beanClassList = initBeanClassList(this.allClassList);
     }
 
     /**
@@ -130,8 +130,23 @@ public final class ScxModuleInfo<T extends ScxModule> implements Serializable {
      * @param allClassList a
      * @return a
      */
-    private static List<Class<?>> initNeedRegisterBeanClassList(List<Class<?>> allClassList) {
-        return allClassList.stream().filter(ScxModuleInfo::hasScxAnnotation).toList(); // 所有标注 Scx 注解的都是需要注入的 BeanClass
+    private static List<Class<?>> initBeanClassList(List<Class<?>> allClassList) {
+        return allClassList.stream().filter(ScxModuleMetadata::isBeanClass).toList(); // 所有标注 Scx 注解的都是需要注入的 BeanClass
+    }
+
+    /**
+     * 拥有 scx 注解
+     *
+     * @param clazz class
+     * @return b
+     */
+    private static boolean isBeanClass(Class<?> clazz) {
+        for (var a : beanFilterAnnotation) {
+            if (clazz.getAnnotation(a) != null) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -186,21 +201,6 @@ public final class ScxModuleInfo<T extends ScxModule> implements Serializable {
                         && ScanClassUtils.isInstantiableClass(c) // 是一个可以不需要其他参数直接生成实例化的对象
                         && BaseModel.class.isAssignableFrom(c))// 继承自 BaseModel
                 .map(c -> (Class<? extends BaseModel>) c).collect(Collectors.toList());
-    }
-
-    /**
-     * 拥有 scx 注解
-     *
-     * @param clazz class
-     * @return b
-     */
-    private static boolean hasScxAnnotation(Class<?> clazz) {
-        for (var a : beanFilterAnnotation) {
-            if (clazz.getAnnotation(a) != null) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**
@@ -263,7 +263,7 @@ public final class ScxModuleInfo<T extends ScxModule> implements Serializable {
      * @return a
      */
     public List<Class<? extends BaseModel>> scxBaseModelClassList() {
-        return scxBaseModelClassList;
+        return new ArrayList<>(scxBaseModelClassList);
     }
 
     /**
@@ -272,7 +272,7 @@ public final class ScxModuleInfo<T extends ScxModule> implements Serializable {
      * @return a
      */
     public List<Class<? extends BaseModelService<?>>> scxBaseModelServiceClassList() {
-        return scxBaseModelServiceClassList;
+        return new ArrayList<>(scxBaseModelServiceClassList);
     }
 
     /**
@@ -281,7 +281,7 @@ public final class ScxModuleInfo<T extends ScxModule> implements Serializable {
      * @return a
      */
     public List<Class<?>> scxMappingClassList() {
-        return scxMappingClassList;
+        return new ArrayList<>(scxMappingClassList);
     }
 
     /**
@@ -290,7 +290,7 @@ public final class ScxModuleInfo<T extends ScxModule> implements Serializable {
      * @return a
      */
     public List<Class<? extends BaseWebSocketHandler>> scxWebSocketRouteClassList() {
-        return scxWebSocketRouteClassList;
+        return new ArrayList<>(scxWebSocketRouteClassList);
     }
 
     /**
@@ -298,8 +298,8 @@ public final class ScxModuleInfo<T extends ScxModule> implements Serializable {
      *
      * @return a
      */
-    public List<Class<?>> needRegisterBeanClassList() {
-        return needRegisterBeanClassList;
+    public List<Class<?>> beanClassList() {
+        return new ArrayList<>(beanClassList);
     }
 
 }

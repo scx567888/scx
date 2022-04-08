@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * 启动类
@@ -62,7 +63,7 @@ public final class Scx {
     /**
      * ScxModule 描述集合
      */
-    private final List<ScxModuleInfo<?>> scxModuleInfos;
+    private final List<ScxModuleMetadata<?>> scxModuleMetadataList;
 
     /**
      * scxEasyConfig
@@ -136,7 +137,7 @@ public final class Scx {
         this.appKey = appKey;
         this.scxFeatureConfig = scxFeatureConfig;
         this.scxConfig = new ScxConfig(scxConfigSources);
-        this.scxModuleInfos = initScxModuleInfos(scxModules);
+        this.scxModuleMetadataList = initScxModuleMetadataList(scxModules);
         this.scxEasyConfig = new ScxEasyConfig(this.scxConfig, this.scxEnvironment, this.appKey);
         //2, 初始化 ScxLog 日志框架
         ScxLoggerConfiguration.init(this.scxConfig, this.scxEnvironment);
@@ -145,16 +146,14 @@ public final class Scx {
         //4, 初始化事件总线 (这里的 ScxEventBus 其实只是针对 vertx 的 eventBus 进行一次包装)
         this.scxEventBus = new ScxEventBus(this.vertx);
         //5, 初始化 BeanFactory
-        this.scxBeanFactory = new ScxBeanFactory(this.vertx.nettyEventLoopGroup(), this.scxFeatureConfig);
-        //6, 注册 Bean 并刷新 BeanFactory
-        initScxBeanFactory(this.scxBeanFactory, this.scxModuleInfos);
-        //7, 初始化模板
+        this.scxBeanFactory = initScxBeanFactory(this.scxModuleMetadataList, this.vertx.nettyEventLoopGroup(), this.scxFeatureConfig);
+        //6, 初始化模板
         this.scxTemplate = new ScxTemplate(this.scxEasyConfig);
-        //8, 初始化持久层
+        //7, 初始化持久层
         this.scxDao = new ScxDao(this.scxEasyConfig, this.scxFeatureConfig);
-        //9, ScxMapping 配置类
+        //8, ScxMapping 配置类
         this.scxMappingConfiguration = new ScxMappingConfiguration();
-        //10, 初始化任务调度器
+        //9, 初始化任务调度器
         this.scxScheduler = new ScxScheduler(this.vertx.nettyEventLoopGroup());
     }
 
@@ -219,6 +218,22 @@ public final class Scx {
     }
 
     /**
+     * 初始化 bean 工厂
+     *
+     * @param metadataList             s
+     * @param scheduledExecutorService s
+     * @param scxFeatureConfig         a
+     * @return r
+     */
+    private static ScxBeanFactory initScxBeanFactory(List<ScxModuleMetadata<?>> metadataList, ScheduledExecutorService scheduledExecutorService, ScxFeatureConfig scxFeatureConfig) {
+        var tempScxBeanFactory = new ScxBeanFactory(scheduledExecutorService, scxFeatureConfig);
+        for (var m : metadataList) {
+            tempScxBeanFactory.registerBeanDefinition(m.beanClassList().toArray(Class[]::new));
+        }
+        return tempScxBeanFactory;
+    }
+
+    /**
      * <p>initVertx.</p>
      *
      * @return a {@link io.vertx.core.Vertx} object
@@ -229,57 +244,43 @@ public final class Scx {
     }
 
     /**
-     * <p>initScxModuleInfos.</p>
+     * <p>initScxModuleMetadataList.</p>
      *
      * @param scxModules an array of {@link cool.scx.ScxModule} objects
      * @return a {@link java.util.List} object
      */
-    private static List<ScxModuleInfo<? extends ScxModule>> initScxModuleInfos(ScxModule[] scxModules) {
+    private static List<ScxModuleMetadata<?>> initScxModuleMetadataList(ScxModule[] scxModules) {
         //2, 检查模块参数是否正确
         if (scxModules == null || Arrays.stream(scxModules).noneMatch(Objects::nonNull)) {
             throw new IllegalArgumentException("Modules must not be empty !!!");
         }
-        var tempScxModuleInfoList = new ArrayList<ScxModuleInfo<? extends ScxModule>>();
+        var tempList = new ArrayList<ScxModuleMetadata<?>>();
         //循环加载 module
         for (var module : scxModules) {
             if (module != null) {
                 try {
-                    tempScxModuleInfoList.add(new ScxModuleInfo<>(module));
+                    tempList.add(new ScxModuleMetadata<>(module));
                 } catch (URISyntaxException | IOException e) {
                     e.printStackTrace();
                 }
             }
         }
-        return tempScxModuleInfoList;
-    }
-
-    /**
-     * 初始化 bean 工厂
-     *
-     * @param scxBeanFactory a
-     * @param scxModuleInfos s
-     */
-    private void initScxBeanFactory(ScxBeanFactory scxBeanFactory, List<ScxModuleInfo<?>> scxModuleInfos) {
-        for (var s : scxModuleInfos) {
-            scxBeanFactory.registerBeanDefinition(s.needRegisterBeanClassList().toArray(Class[]::new));
-        }
-        //此处刷新 bean
-        scxBeanFactory.refresh();
+        return tempList;
     }
 
     /**
      * 执行模块启动的生命周期
      */
-    private void startAllModules() {
+    private void startAllScxModules() {
         if (this.scxFeatureConfig.getFeatureState(ScxFeature.SHOW_MODULE_LIFE_CYCLE_INFO)) {
-            for (var scxModuleInfo : scxModuleInfos) {
-                Ansi.out().brightWhite("[").brightGreen("Starting").brightWhite("] " + scxModuleInfo.scxModuleName()).println();
-                scxModuleInfo.scxModuleExample().start();
-                Ansi.out().brightWhite("[").brightGreen("Start OK").brightWhite("] " + scxModuleInfo.scxModuleName()).println();
+            for (var m : scxModuleMetadataList) {
+                Ansi.out().brightWhite("[").brightGreen("Starting").brightWhite("] " + m.scxModuleName()).println();
+                m.scxModuleExample().start();
+                Ansi.out().brightWhite("[").brightGreen("Start OK").brightWhite("] " + m.scxModuleName()).println();
             }
         } else {
-            for (var scxModuleInfo : scxModuleInfos) {
-                scxModuleInfo.scxModuleExample().start();
+            for (var m : scxModuleMetadataList) {
+                m.scxModuleExample().start();
             }
         }
     }
@@ -287,16 +288,16 @@ public final class Scx {
     /**
      * 执行模块结束的生命周期
      */
-    private void stopAllModules() {
+    private void stopAllScxModules() {
         if (this.scxFeatureConfig.getFeatureState(ScxFeature.SHOW_MODULE_LIFE_CYCLE_INFO)) {
-            for (var scxModuleInfo : scxModuleInfos) {
-                Ansi.out().brightWhite("[").brightRed("Stopping").brightWhite("] " + scxModuleInfo.scxModuleName()).println();
-                scxModuleInfo.scxModuleExample().stop();
-                Ansi.out().brightWhite("[").brightRed("Stop  OK").brightWhite("] " + scxModuleInfo.scxModuleName()).println();
+            for (var m : scxModuleMetadataList) {
+                Ansi.out().brightWhite("[").brightRed("Stopping").brightWhite("] " + m.scxModuleName()).println();
+                m.scxModuleExample().stop();
+                Ansi.out().brightWhite("[").brightRed("Stop  OK").brightWhite("] " + m.scxModuleName()).println();
             }
         } else {
-            for (var scxModuleInfo : scxModuleInfos) {
-                scxModuleInfo.scxModuleExample().stop();
+            for (var m : scxModuleMetadataList) {
+                m.scxModuleExample().stop();
             }
         }
     }
@@ -315,10 +316,10 @@ public final class Scx {
             this.scxEasyConfig.showEasyConfigInfo();
         }
         //2, 初始化路由 (Http 和 WebSocket)
-        this.scxHttpRouter = new ScxHttpRouter(this.scxMappingConfiguration, this.scxEasyConfig, this.vertx, this.scxModuleInfos, this.scxBeanFactory);
-        this.scxWebSocketRouter = new ScxWebSocketRouter(this.scxModuleInfos, this.scxBeanFactory);
+        this.scxHttpRouter = new ScxHttpRouter(this.scxMappingConfiguration, this.scxEasyConfig, this.vertx, this.scxModuleMetadataList, this.scxBeanFactory);
+        this.scxWebSocketRouter = new ScxWebSocketRouter(this.scxModuleMetadataList, this.scxBeanFactory);
         //3, 依次执行 模块的 start 生命周期 , 在这里我们可以操作 scxRouteRegistry, vertxRouter 等对象 "手动注册新路由" 或其他任何操作
-        this.startAllModules();
+        this.startAllScxModules();
         //4, 打印基本信息
         if (this.scxFeatureConfig.getFeatureState(ScxFeature.SHOW_START_UP_INFO)) {
             Ansi.out()
@@ -340,6 +341,8 @@ public final class Scx {
         this.addShutdownHook();
         //7, 使用初始端口号 启动服务器
         this.startServer(this.scxEasyConfig.port());
+        //8, 此处刷新 scxBeanFactory 使其实例化所有符合条件的 Bean
+        this.scxBeanFactory.refresh();
     }
 
     /**
@@ -400,20 +403,25 @@ public final class Scx {
      *
      * @return a
      */
-    public List<ScxModuleInfo<? extends ScxModule>> scxModuleInfos() {
-        return scxModuleInfos;
+    public List<ScxModuleMetadata<?>> scxModuleMetadataList() {
+        return new ArrayList<>(scxModuleMetadataList);
     }
 
     /**
-     * <p>findScxModuleInfo.</p>
+     * <p>findScxModule.</p>
      *
      * @param clazz a {@link java.lang.Class} object
      * @param <T>   a T class
-     * @return a {@link cool.scx.ScxModuleInfo} object
+     * @return a {@link ScxModuleMetadata} object
      */
     @SuppressWarnings("unchecked")
-    public <T extends ScxModule> ScxModuleInfo<T> findScxModuleInfo(Class<T> clazz) {
-        return (ScxModuleInfo<T>) scxModuleInfos.stream().filter(s -> s.scxModuleClass() == clazz).findAny().orElse(null);
+    public <T extends ScxModule> T findScxModule(Class<T> clazz) {
+        for (ScxModuleMetadata<?> scxModuleMetaData : this.scxModuleMetadataList) {
+            if (scxModuleMetaData.scxModuleClass() == clazz) {
+                return (T) scxModuleMetaData.scxModuleExample();
+            }
+        }
+        return null;
     }
 
     /**
@@ -521,7 +529,7 @@ public final class Scx {
      */
     private void addShutdownHook() {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            this.stopAllModules();
+            this.stopAllScxModules();
             Ansi.out().red("项目正在停止!!!").println();
         }));
     }
