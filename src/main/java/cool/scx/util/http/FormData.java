@@ -1,5 +1,6 @@
 package cool.scx.util.http;
 
+import cool.scx.util.RandomUtils;
 import cool.scx.util.exception.ScxExceptionHelper;
 import io.vertx.core.http.impl.MimeMapping;
 
@@ -18,7 +19,12 @@ import java.util.List;
  * @author scx567888
  * @version 1.11.8
  */
-public final class FormData {
+public final class FormData implements HttpClientHelper.Body {
+
+    /**
+     * a
+     */
+    private static final String FORM_BOUNDARY_PREFIX = "----ScxHttpClientHelperFormBoundary";
 
     /**
      * Constant <code>lineSeparator="\r\n"</code>
@@ -101,6 +107,13 @@ public final class FormData {
      * @return a HttpRequest.BodyPublisher object
      */
     HttpRequest.BodyPublisher getBodyPublisher(String boundary) {
+        return HttpRequest.BodyPublishers.ofByteArrays(() -> new FormDataByteArrayIterable(formDataItemList, boundary));
+    }
+
+    @Override
+    public HttpRequest.BodyPublisher getBodyPublisher(HttpRequest.Builder builder) {
+        final String boundary = FORM_BOUNDARY_PREFIX + RandomUtils.getRandomString(8, true);
+        builder.setHeader("content-type", "multipart/form-data; boundary=" + boundary);
         return HttpRequest.BodyPublishers.ofByteArrays(() -> new FormDataByteArrayIterable(formDataItemList, boundary));
     }
 
