@@ -1,8 +1,7 @@
 package cool.scx.http;
 
 import cool.scx.ScxBeanFactory;
-import cool.scx.ScxModule;
-import cool.scx.ScxModuleInfo;
+import cool.scx.ScxModuleMetadata;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.config.ScxEasyConfig;
 import cool.scx.http.exception.ScxHttpException;
@@ -69,10 +68,10 @@ public final class ScxHttpRouter {
      * @param scxMappingConfiguration a
      * @param scxEasyConfig           a
      * @param vertx                   a
-     * @param scxModuleInfos          a
+     * @param scxModuleMetaData       a
      * @param scxBeanFactory          a
      */
-    public ScxHttpRouter(ScxMappingConfiguration scxMappingConfiguration, ScxEasyConfig scxEasyConfig, Vertx vertx, List<ScxModuleInfo<? extends ScxModule>> scxModuleInfos, ScxBeanFactory scxBeanFactory) {
+    public ScxHttpRouter(ScxMappingConfiguration scxMappingConfiguration, ScxEasyConfig scxEasyConfig, Vertx vertx, List<ScxModuleMetadata<?>> scxModuleMetaData, ScxBeanFactory scxBeanFactory) {
         //初始化默认的异常处理器
         addExceptionHandler(ScxHttpExceptionHandler.DEFAULT_INSTANCE);
         //创建 vertxRouter 用来管理整个项目的路由
@@ -87,7 +86,7 @@ public final class ScxHttpRouter {
         this.faviconHandlerRoute = this.vertxRouter.route().handler(faviconHandler);
         this.corsHandlerRoute = this.vertxRouter.route().handler(corsHandler);
         this.scxBodyHandlerRoute = this.vertxRouter.route().handler(scxBodyHandler);
-        registerScxMappingHandler(scxBeanFactory, scxMappingConfiguration, scxModuleInfos);
+        registerScxMappingHandler(scxBeanFactory, scxMappingConfiguration, scxModuleMetaData);
     }
 
     /**
@@ -107,13 +106,13 @@ public final class ScxHttpRouter {
      * 扫描所有被 ScxMapping注解标记的方法 并封装为 ScxMappingHandler.
      *
      * @param scxHttpRouterConfiguration s
-     * @param scxModuleInfos             a
+     * @param metadataList          a
      * @param scxBeanFactory             a {@link cool.scx.ScxBeanFactory} object
      */
-    private void registerScxMappingHandler(ScxBeanFactory scxBeanFactory, ScxMappingConfiguration scxHttpRouterConfiguration, List<ScxModuleInfo<? extends ScxModule>> scxModuleInfos) {
+    private void registerScxMappingHandler(ScxBeanFactory scxBeanFactory, ScxMappingConfiguration scxHttpRouterConfiguration, List<ScxModuleMetadata<?>> metadataList) {
         SCX_MAPPING_HANDLER_LIST.clear();
-        for (var scxModuleInfo : scxModuleInfos) {
-            for (var clazz : scxModuleInfo.scxMappingClassList()) {
+        for (var m : metadataList) {
+            for (var clazz : m.scxMappingClassList()) {
                 for (var method : clazz.getMethods()) {
                     if (method.isAnnotationPresent(ScxMapping.class)) {
                         //现根据 注解 和 方法等创建一个路由
