@@ -3,7 +3,7 @@ package cool.scx.util;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -13,7 +13,7 @@ public class URIBuilder {
 
     private final URI oldUri;
 
-    private final Map<String, String> queryParam = new HashMap<>();
+    private final Map<String, String> queryParam = new LinkedHashMap<>();
 
     /**
      * a
