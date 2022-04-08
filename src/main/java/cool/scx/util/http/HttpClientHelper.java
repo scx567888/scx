@@ -38,7 +38,7 @@ public final class HttpClientHelper {
      * @throws InterruptedException a
      */
     public static HttpResponse<String> get(String url) throws IOException, InterruptedException {
-        return get(new URIBuilder(url));
+        return get(url, null);
     }
 
     /**
@@ -88,7 +88,7 @@ public final class HttpClientHelper {
      * @throws InterruptedException a
      */
     public static HttpResponse<String> post(String url) throws IOException, InterruptedException {
-        return post(new URIBuilder(url));
+        return post(url, null);
     }
 
     /**
@@ -101,7 +101,7 @@ public final class HttpClientHelper {
      * @throws InterruptedException a
      */
     public static HttpResponse<String> post(String url, Body body) throws IOException, InterruptedException {
-        return post(new URIBuilder(url), body);
+        return post(url, body, null);
     }
 
     /**
@@ -166,7 +166,7 @@ public final class HttpClientHelper {
      * @throws InterruptedException a
      */
     public static HttpResponse<String> delete(String url) throws IOException, InterruptedException {
-        return delete(new URIBuilder(url));
+        return delete(url, null);
     }
 
     /**
@@ -191,7 +191,7 @@ public final class HttpClientHelper {
      * @throws InterruptedException a
      */
     public static HttpResponse<String> delete(URIBuilder url) throws IOException, InterruptedException {
-        return delete(url);
+        return delete(url, null);
     }
 
     /**
@@ -216,7 +216,7 @@ public final class HttpClientHelper {
      * @throws InterruptedException a
      */
     public static HttpResponse<String> put(String url) throws IOException, InterruptedException {
-        return put(new URIBuilder(url));
+        return put(url, null);
     }
 
     /**
@@ -229,7 +229,7 @@ public final class HttpClientHelper {
      * @throws InterruptedException a
      */
     public static HttpResponse<String> put(String url, Body body) throws IOException, InterruptedException {
-        return put(new URIBuilder(url), body);
+        return put(url, body, null);
     }
 
     /**
