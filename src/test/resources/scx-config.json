@@ -27,7 +27,7 @@
     "logging": {
       "default": {
         "level": "DEBUG",
-        "type": "CONSOLE",
+        "type": "BOTH",
         "stored-directory": "AppRoot:logs"
       },
       "loggers": [
