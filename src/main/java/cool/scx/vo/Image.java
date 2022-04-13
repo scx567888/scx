@@ -1,5 +1,7 @@
 package cool.scx.vo;
 
+import cool.scx.http.exception.ScxHttpException;
+import cool.scx.http.exception.impl.BadRequestException;
 import cool.scx.http.exception.impl.NotFoundException;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.vertx.core.buffer.Buffer;
@@ -128,7 +130,7 @@ public final class Image implements BaseVo {
      * sendToClient
      */
     @Override
-    public void handle(RoutingContext context) throws NotFoundException {
+    public void handle(RoutingContext context) throws BadRequestException {
         var response = context.response();
         //设置缓存 减少服务器压力
         response.putHeader(HttpHeaderNames.CACHE_CONTROL, "public,immutable,max-age=2628000");
@@ -144,9 +146,9 @@ public final class Image implements BaseVo {
      * 就不是普通的图片 我们就返回他在操作系统中的展示图标即可
      *
      * @return a {@link io.vertx.core.buffer.Buffer} object
-     * @throws cool.scx.http.exception.impl.NotFoundException if any.
+     * @throws cool.scx.http.exception.ScxHttpException if any.
      */
-    private Buffer getBufferBySystemIcon() throws NotFoundException {
+    private Buffer getBufferBySystemIcon() throws ScxHttpException {
         try (var out = new ByteArrayOutputStream()) {
             var image = ((ImageIcon) FileSystemView.getFileSystemView().getSystemIcon(file)).getImage();
             var myImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
@@ -156,7 +158,7 @@ public final class Image implements BaseVo {
             ImageIO.write(myImage, "png", out);
             return Buffer.buffer(out.toByteArray());
         } catch (Exception e) {
-            throw new NotFoundException();
+            throw new BadRequestException(e);
         }
     }
 
@@ -164,9 +166,9 @@ public final class Image implements BaseVo {
      * 裁剪后的图片
      *
      * @return a {@link io.vertx.core.buffer.Buffer} object
-     * @throws cool.scx.http.exception.impl.NotFoundException if any.
+     * @throws cool.scx.http.exception.ScxHttpException if any.
      */
-    private Buffer getBufferByCroppedPicture() throws NotFoundException {
+    private Buffer getBufferByCroppedPicture() throws ScxHttpException {
         try (var out = new ByteArrayOutputStream()) {
             var image = Thumbnails.of(file).scale(1.0).asBufferedImage();
             var imageHeight = image.getHeight();
@@ -185,7 +187,7 @@ public final class Image implements BaseVo {
 
             return Buffer.buffer(out.toByteArray());
         } catch (Exception e) {
-            throw new NotFoundException();
+            throw new BadRequestException(e);
         }
     }
 
