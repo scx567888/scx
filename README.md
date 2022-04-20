@@ -119,3 +119,7 @@ Hello World
 For more information, see [docs](https://scx.cool/docs/scx/index.html)
 
 Note : I also provide some extension modules for easy use, see [SCX-EXT](https://github.com/scx567888/scx-ext)
+
+## Stats
+
+![Alt](https://repobeats.axiom.co/api/embed/7c4eddb6eff53274d58005e1fbe519b0807cbce3.svg "Repobeats analytics image")

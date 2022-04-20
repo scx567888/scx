@@ -119,3 +119,7 @@ Hello World
 有关更多信息，请参阅 [文档](https://scx.cool/docs/scx/index.html)
 
 备注 : 我还提供了一些拓展模块方便使用 具体请看 [SCX-EXT](https://github.com/scx567888/scx-ext)
+
+## Stats
+
+![Alt](https://repobeats.axiom.co/api/embed/7c4eddb6eff53274d58005e1fbe519b0807cbce3.svg "Repobeats analytics image")
