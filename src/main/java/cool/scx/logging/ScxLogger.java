@@ -3,6 +3,7 @@ package cool.scx.logging;
 import cool.scx.util.FileUtils;
 import cool.scx.util.exception.ScxExceptionHelper;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
@@ -118,7 +119,11 @@ public final class ScxLogger {
         }
         if (type() == ScxLoggingType.FILE || type() == ScxLoggingType.BOTH) {
             var logStoredPath = storedDirectory().resolve(nowTimeStr.substring(0, 10) + ".log");
-            FileUtils.fileAppend(logStoredPath, finalMessage.getBytes(StandardCharsets.UTF_8));
+            try {
+                FileUtils.write(logStoredPath, finalMessage.getBytes(StandardCharsets.UTF_8));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
