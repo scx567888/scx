@@ -336,7 +336,7 @@ public final class Where {
     public Where whereSQL(Object... whereSQL) {
         clearWhereSQL();
         var tempWhereSQL = new StringBuilder();
-        for (Object o : whereSQL) {
+        for (var o : whereSQL) {
             if (o instanceof String s) {
                 tempWhereSQL.append(s);
             } else if (o instanceof WhereBody w) {

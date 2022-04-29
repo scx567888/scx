@@ -1,5 +1,7 @@
 package cool.scx.sql.where;
 
+import cool.scx.tuple.Tuple2;
+
 import static cool.scx.sql.where.WhereTypeHandler.*;
 
 /**
@@ -152,7 +154,7 @@ public enum WhereType {
         return keyWord;
     }
 
-    WhereParamsAndWhereClause getWhereParamsAndWhereClause(String name, Object value1, Object value2, WhereOptionInfo info) {
+    Tuple2<Object[], String> getWhereParamsAndWhereClause(String name, Object value1, Object value2, WhereOptionInfo info) {
         return whereTypeHandler.getWhereParamsAndWhereClause(name, this, value1, value2, info);
     }
 
