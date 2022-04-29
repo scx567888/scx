@@ -3,9 +3,7 @@ package cool.scx.sql.where;
 import cool.scx.util.StringUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * where 查询条件封装类
@@ -295,11 +293,15 @@ public final class Where {
      * @return w
      */
     public String[] getWhereClauses() {
-        var whereClauses = whereBodyList.stream().map(WhereBody::whereClause).collect(Collectors.toList());
-        if (StringUtils.isNotBlank(this.whereSQL)) {
-            whereClauses.add(this.whereSQL);
+        var hasWhereSQL = StringUtils.isNotBlank(this.whereSQL);
+        var arr = new String[hasWhereSQL ? whereBodyList.size() + 1 : whereBodyList.size()];
+        for (int i = 0; i < whereBodyList.size(); i++) {
+            arr[i] = whereBodyList.get(i).whereClause();
         }
-        return whereClauses.toArray(new String[0]);
+        if (hasWhereSQL) {
+            arr[arr.length - 1] = this.whereSQL;
+        }
+        return arr;
     }
 
     /**
@@ -308,11 +310,23 @@ public final class Where {
      * @return a {@link java.util.Map} object
      */
     public Object[] getWhereParams() {
-        //常规 where 的参数
-        var whereParams = whereBodyList.stream().flatMap(w -> Arrays.stream(w.whereParams())).collect(Collectors.toList());
-        //whereSQL 的参数
-        whereParams.addAll(whereSQLParams);
-        return whereParams.toArray();
+        var totalLength = whereSQLParams.size();
+        for (var whereBody : whereBodyList) {
+            totalLength = totalLength + whereBody.whereParams().length;
+        }
+        var arr = new Object[totalLength];
+        var index = 0;
+        for (var whereBody : whereBodyList) {
+            for (var o : whereBody.whereParams()) {
+                arr[index] = o;
+                index = index + 1;
+            }
+        }
+        for (var o : whereSQLParams) {
+            arr[index] = o;
+            index = index + 1;
+        }
+        return arr;
     }
 
     /**
