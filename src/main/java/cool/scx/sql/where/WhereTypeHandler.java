@@ -7,9 +7,6 @@ import cool.scx.util.CaseUtils;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
 
-import java.util.List;
-import java.util.Set;
-
 interface WhereTypeHandler {
 
     WhereTypeHandler IS_NULL_HANDLER = (name, whereType, value1, value2, info) -> {
@@ -51,12 +48,16 @@ interface WhereTypeHandler {
     WhereTypeHandler IN_HANDLER = (name, whereType, value1, value2, info) -> {
         var columnName = SQLHelper.getColumnName(name, info.useJsonExtract(), info.useOriginalName());
         var whereParams = toArray(value1);
-        var sList = new String[whereParams.length];
-        for (int i = 0; i < whereParams.length; i++) {
-            sList[i] = "?";
+        var whereClause = new StringBuilder();
+        whereClause.append(columnName).append(" ").append(whereType.keyWord()).append(" (");
+        if (whereParams.length > 0) {
+            for (int i = 0, len = whereParams.length - 1; i < len; i++) {
+                whereClause.append("?, ");
+            }
+            whereClause.append("?");
         }
-        var whereClause = columnName + " " + whereType.keyWord() + " (" + String.join(", ", sList) + ")";
-        return Tuples.of(whereParams, whereClause);
+        whereClause.append(")");
+        return Tuples.of(whereParams, whereClause.toString());
     };
 
     WhereTypeHandler NOT_IN_HANDLER = IN_HANDLER;
@@ -76,11 +77,11 @@ interface WhereTypeHandler {
         if (StringUtils.isNotBlank(c.columnName())) {
             var jsonContainsParams = toArray(value1);
             var whereParams = new Object[]{jsonContainsParams};
-            var whereClause = "";
+            var whereClause = whereType.keyWord() + "(" + columnName;
             if (StringUtils.isNotBlank(c.fieldPath())) {
-                whereClause = whereType.keyWord() + "(" + columnName + ", ?, '$" + c.fieldPath() + "')";
+                whereClause = whereClause + ", ?, '$" + c.fieldPath() + "')";
             } else {
-                whereClause = whereType.keyWord() + "(" + columnName + ", ?)";
+                whereClause = whereClause + ", ?)";
             }
             return Tuples.of(whereParams, whereClause);
         } else {
@@ -95,15 +96,10 @@ interface WhereTypeHandler {
      * @return a
      */
     private static Object[] toArray(Object value) {
-        var objectArray = new Object[0];
-        if (value.getClass().isArray() || value instanceof List || value instanceof Set) {
-            objectArray = ObjectUtils.convertValue(value, objectArray.getClass());
-        } else if (value instanceof String) {
-            objectArray = ((String) value).split(",");
-        } else {
-            objectArray = new Object[]{value};
+        if (value instanceof String str) {
+            return str.split(",");
         }
-        return objectArray;
+        return ObjectUtils.toObjectArray(value);
     }
 
     Tuple2<Object[], String> getWhereParamsAndWhereClause(String name, WhereType whereType, Object value1, Object value2, WhereOptionInfo info);
