@@ -1,4 +1,4 @@
-package cool.scx;
+package cool.scx.functional;
 
 /**
  * Scx 核心 handler , 没有返回值 , 没有参数 , 不允许抛出异常 . 相当与 {@link java.lang.Runnable}
