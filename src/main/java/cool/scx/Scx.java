@@ -1,9 +1,9 @@
 package cool.scx;
 
 import cool.scx.config.ScxConfig;
-import cool.scx.config.source.ScxConfigSource;
 import cool.scx.config.ScxEasyConfig;
 import cool.scx.config.ScxFeatureConfig;
+import cool.scx.config.source.ScxConfigSource;
 import cool.scx.dao.ScxDao;
 import cool.scx.enumeration.ScxFeature;
 import cool.scx.eventbus.ScxEventBus;

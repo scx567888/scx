@@ -2,13 +2,13 @@ package cool.scx.base;
 
 import cool.scx.ScxContext;
 import cool.scx.dao.ScxDaoTableInfo;
-import cool.scx.tuple.ScxTuple;
-import cool.scx.tuple.Tuple2;
 import cool.scx.sql.PlaceholderSQL;
 import cool.scx.sql.SQLBuilder;
 import cool.scx.sql.SQLRunner;
 import cool.scx.sql.handler.BeanListHandler;
 import cool.scx.sql.handler.ScalarHandler;
+import cool.scx.tuple.ScxTuple;
+import cool.scx.tuple.Tuple2;
 
 import java.lang.reflect.ParameterizedType;
 import java.sql.Connection;
@@ -143,7 +143,7 @@ public class BasicService<Entity> {
      * @param updateFilter a
      * @return a
      */
-    private Tuple2<String,List<Object[]>> _buildInsertBatchParameter(List<Entity> entityList, UpdateFilter updateFilter) {
+    private Tuple2<String, List<Object[]>> _buildInsertBatchParameter(List<Entity> entityList, UpdateFilter updateFilter) {
         var insertColumns = updateFilter != null ? updateFilter.filter(scxDaoTableInfo.columnInfos()) : scxDaoTableInfo.columnInfos();
         //将 entityList 转换为 objectArrayList
         var objectArrayList = entityList.stream().map(entity -> Arrays.stream(insertColumns).map(c -> c.getFieldValue(entity)).toArray()).toList();
@@ -184,7 +184,7 @@ public class BasicService<Entity> {
      * @param selectFilter a
      * @return a
      */
-    private Tuple2<String,Object[]> _buildSelectParameter(Query query, SelectFilter selectFilter) {
+    private Tuple2<String, Object[]> _buildSelectParameter(Query query, SelectFilter selectFilter) {
         var selectColumnInfos = selectFilter != null ? selectFilter.filter(scxDaoTableInfo.columnInfos()) : scxDaoTableInfo.columnInfos();
         var sql = SQLBuilder.Select(selectColumnInfos).From(scxDaoTableInfo.tableName()).Where(query.where()).GroupBy(query.groupBy()).OrderBy(query.orderBy()).Limit(query.pagination()).GetSQL();
         return ScxTuple.of(sql, query.where().getWhereParams());
@@ -220,7 +220,7 @@ public class BasicService<Entity> {
      * @param query a
      * @return a
      */
-    private Tuple2<String,Object[]> _buildCountParameter(Query query) {
+    private Tuple2<String, Object[]> _buildCountParameter(Query query) {
         var sql = SQLBuilder.Select("COUNT(*) AS count").From(scxDaoTableInfo.tableName()).Where(query.where()).GroupBy(query.groupBy()).GetSQL();
         return ScxTuple.of(sql, query.where().getWhereParams());
     }
