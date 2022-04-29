@@ -83,7 +83,7 @@ public final class NetUtils {
                 }
             }
             if (!ipv4Result.isEmpty()) {
-                for (String ip : ipv4Result) {
+                for (var ip : ipv4Result) {
                     if (ip.startsWith("127.0") || ip.startsWith("192.168")) {
                         continue;
                     }
