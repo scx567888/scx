@@ -187,14 +187,39 @@ public final class ObjectUtils {
         if (source.getClass().isArray()) {
             var length = Array.getLength(source);
             var arr = new Object[length];
-            if (source instanceof byte[] arrSource) for (int i = 0; i < length; i++) arr[i] = arrSource[i];
-            else if (source instanceof short[] arrSource) for (int i = 0; i < length; i++) arr[i] = arrSource[i];
-            else if (source instanceof int[] arrSource) for (int i = 0; i < length; i++) arr[i] = arrSource[i];
-            else if (source instanceof long[] arrSource) for (int i = 0; i < length; i++) arr[i] = arrSource[i];
-            else if (source instanceof float[] arrSource) for (int i = 0; i < length; i++) arr[i] = arrSource[i];
-            else if (source instanceof double[] arrSource) for (int i = 0; i < length; i++) arr[i] = arrSource[i];
-            else if (source instanceof boolean[] arrSource) for (int i = 0; i < length; i++) arr[i] = arrSource[i];
-            else if (source instanceof char[] arrSource) for (int i = 0; i < length; i++) arr[i] = arrSource[i];
+            if (source instanceof byte[] arrSource) {
+                for (int i = 0; i < length; i++) {
+                    arr[i] = arrSource[i];
+                }
+            } else if (source instanceof short[] arrSource) {
+                for (int i = 0; i < length; i++) {
+                    arr[i] = arrSource[i];
+                }
+            } else if (source instanceof int[] arrSource) {
+                for (int i = 0; i < length; i++) {
+                    arr[i] = arrSource[i];
+                }
+            } else if (source instanceof long[] arrSource) {
+                for (int i = 0; i < length; i++) {
+                    arr[i] = arrSource[i];
+                }
+            } else if (source instanceof float[] arrSource) {
+                for (int i = 0; i < length; i++) {
+                    arr[i] = arrSource[i];
+                }
+            } else if (source instanceof double[] arrSource) {
+                for (int i = 0; i < length; i++) {
+                    arr[i] = arrSource[i];
+                }
+            } else if (source instanceof boolean[] arrSource) {
+                for (int i = 0; i < length; i++) {
+                    arr[i] = arrSource[i];
+                }
+            } else if (source instanceof char[] arrSource) {
+                for (int i = 0; i < length; i++) {
+                    arr[i] = arrSource[i];
+                }
+            }
             return arr;
         }
         throw new IllegalArgumentException("源数据无法转换为数组对象 !!!");
