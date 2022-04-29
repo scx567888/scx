@@ -48,8 +48,7 @@ interface WhereTypeHandler {
     WhereTypeHandler IN_HANDLER = (name, whereType, value1, value2, info) -> {
         var columnName = SQLHelper.getColumnName(name, info.useJsonExtract(), info.useOriginalName());
         var whereParams = toArray(value1);
-        var whereClause = new StringBuilder();
-        whereClause.append(columnName).append(" ").append(whereType.keyWord()).append(" (");
+        var whereClause = new StringBuilder().append(columnName).append(" ").append(whereType.keyWord()).append(" (");
         if (whereParams.length > 0) {
             for (int i = 0, len = whereParams.length - 1; i < len; i++) {
                 whereClause.append("?, ");
