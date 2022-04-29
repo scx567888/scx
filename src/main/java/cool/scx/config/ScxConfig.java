@@ -5,7 +5,7 @@ import cool.scx.config.handler.DefaultValueHandler;
 import cool.scx.config.source.ScxConfigSource;
 import cool.scx.functional.ScxHandlerR;
 import cool.scx.tuple.KeyValue;
-import cool.scx.tuple.ScxTuple;
+import cool.scx.tuple.Tuples;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -70,7 +70,7 @@ public final class ScxConfig {
      * @return a
      */
     public <T> T get(String keyPath, ScxHandlerR<KeyValue<String, Object>, T> handlerR) {
-        return handlerR.handle(ScxTuple.keyValue(keyPath, get(keyPath)));
+        return handlerR.handle(Tuples.keyValue(keyPath, get(keyPath)));
     }
 
     /**

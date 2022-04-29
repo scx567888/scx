@@ -8,16 +8,7 @@ package cool.scx.tuple;
  * @param <A>   a
  * @param <B>   b
  */
-public record KeyValue<A, B>(A key, B value) implements ScxTuple {
-
-    @Override
-    public Object value(int pos) {
-        return switch (pos) {
-            case 0 -> key();
-            case 1 -> value();
-            default -> throw new IllegalArgumentException("索引越界 !!!");
-        };
-    }
+public record KeyValue<A, B>(A key, B value) {
 
 }
 

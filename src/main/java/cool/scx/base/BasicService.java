@@ -7,8 +7,8 @@ import cool.scx.sql.SQLBuilder;
 import cool.scx.sql.SQLRunner;
 import cool.scx.sql.handler.BeanListHandler;
 import cool.scx.sql.handler.ScalarHandler;
-import cool.scx.tuple.ScxTuple;
 import cool.scx.tuple.Tuple2;
+import cool.scx.tuple.Tuples;
 
 import java.lang.reflect.ParameterizedType;
 import java.sql.Connection;
@@ -107,7 +107,7 @@ public class BasicService<Entity> {
         var insertColumns = updateFilter != null ? updateFilter.filter(entity, scxDaoTableInfo.columnInfos()) : scxDaoTableInfo.columnInfos();
         //insert 允许空列所以这里不做判断
         var sql = SQLBuilder.Insert(scxDaoTableInfo.tableName(), insertColumns).Values(insertColumns).GetSQL();
-        return ScxTuple.of(sql, Arrays.stream(insertColumns).map(c -> c.getFieldValue(entity)).toArray());
+        return Tuples.of(sql, Arrays.stream(insertColumns).map(c -> c.getFieldValue(entity)).toArray());
     }
 
     /**
@@ -148,7 +148,7 @@ public class BasicService<Entity> {
         //将 entityList 转换为 objectArrayList
         var objectArrayList = entityList.stream().map(entity -> Arrays.stream(insertColumns).map(c -> c.getFieldValue(entity)).toArray()).toList();
         var sql = SQLBuilder.Insert(scxDaoTableInfo.tableName(), insertColumns).Values(insertColumns).GetSQL();
-        return ScxTuple.of(sql, objectArrayList);
+        return Tuples.of(sql, objectArrayList);
     }
 
     /**
@@ -187,7 +187,7 @@ public class BasicService<Entity> {
     private Tuple2<String, Object[]> _buildSelectParameter(Query query, SelectFilter selectFilter) {
         var selectColumnInfos = selectFilter != null ? selectFilter.filter(scxDaoTableInfo.columnInfos()) : scxDaoTableInfo.columnInfos();
         var sql = SQLBuilder.Select(selectColumnInfos).From(scxDaoTableInfo.tableName()).Where(query.where()).GroupBy(query.groupBy()).OrderBy(query.orderBy()).Limit(query.pagination()).GetSQL();
-        return ScxTuple.of(sql, query.where().getWhereParams());
+        return Tuples.of(sql, query.where().getWhereParams());
     }
 
     /**
@@ -222,7 +222,7 @@ public class BasicService<Entity> {
      */
     private Tuple2<String, Object[]> _buildCountParameter(Query query) {
         var sql = SQLBuilder.Select("COUNT(*) AS count").From(scxDaoTableInfo.tableName()).Where(query.where()).GroupBy(query.groupBy()).GetSQL();
-        return ScxTuple.of(sql, query.where().getWhereParams());
+        return Tuples.of(sql, query.where().getWhereParams());
     }
 
     /**
@@ -269,7 +269,7 @@ public class BasicService<Entity> {
         var sql = SQLBuilder.Update(scxDaoTableInfo.tableName()).Set(updateSetColumnInfos).Where(query.where()).GetSQL();
         var entityParams = Arrays.stream(updateSetColumnInfos).map(c -> c.getFieldValue(entity)).collect(Collectors.toList());
         entityParams.addAll(List.of(query.where().getWhereParams()));
-        return ScxTuple.of(sql, entityParams.toArray());
+        return Tuples.of(sql, entityParams.toArray());
     }
 
     /**
@@ -307,7 +307,7 @@ public class BasicService<Entity> {
             throw new IllegalArgumentException("删除数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
         }
         var sql = SQLBuilder.Delete(scxDaoTableInfo.tableName()).Where(query.where()).GetSQL();
-        return ScxTuple.of(sql, query.where().getWhereParams());
+        return Tuples.of(sql, query.where().getWhereParams());
     }
 
     /**

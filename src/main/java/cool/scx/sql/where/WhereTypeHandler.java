@@ -1,8 +1,8 @@
 package cool.scx.sql.where;
 
 import cool.scx.sql.SQLHelper;
-import cool.scx.tuple.ScxTuple;
 import cool.scx.tuple.Tuple2;
+import cool.scx.tuple.Tuples;
 import cool.scx.util.CaseUtils;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
@@ -16,7 +16,7 @@ interface WhereTypeHandler {
         var columnName = SQLHelper.getColumnName(name, info.useJsonExtract(), info.useOriginalName());
         var whereParams = new Object[]{};
         var whereClause = columnName + " " + whereType.keyWord();
-        return ScxTuple.of(whereParams, whereClause);
+        return Tuples.of(whereParams, whereClause);
     };
 
     /**
@@ -28,7 +28,7 @@ interface WhereTypeHandler {
         var columnName = SQLHelper.getColumnName(name, info.useJsonExtract(), info.useOriginalName());
         var whereParams = new Object[]{value1};
         var whereClause = columnName + " " + whereType.keyWord() + " ?";
-        return ScxTuple.of(whereParams, whereClause);
+        return Tuples.of(whereParams, whereClause);
     };
 
     WhereTypeHandler NOT_EQUAL_HANDLER = EQUAL_HANDLER;
@@ -43,7 +43,7 @@ interface WhereTypeHandler {
         var columnName = SQLHelper.getColumnName(name, info.useJsonExtract(), info.useOriginalName());
         var whereParams = new Object[]{value1};
         var whereClause = columnName + " " + whereType.keyWord() + " CONCAT('%',?,'%')";
-        return ScxTuple.of(whereParams, whereClause);
+        return Tuples.of(whereParams, whereClause);
     };
 
     WhereTypeHandler NOT_LIKE_HANDLER = LIKE_HANDLER;
@@ -56,7 +56,7 @@ interface WhereTypeHandler {
             sList[i] = "?";
         }
         var whereClause = columnName + " " + whereType.keyWord() + " (" + String.join(", ", sList) + ")";
-        return ScxTuple.of(whereParams, whereClause);
+        return Tuples.of(whereParams, whereClause);
     };
 
     WhereTypeHandler NOT_IN_HANDLER = IN_HANDLER;
@@ -65,7 +65,7 @@ interface WhereTypeHandler {
         var columnName = SQLHelper.getColumnName(name, info.useJsonExtract(), info.useOriginalName());
         var whereParams = new Object[]{value1, value2};
         var whereClause = columnName + " " + whereType.keyWord() + " ? AND ?";
-        return ScxTuple.of(whereParams, whereClause);
+        return Tuples.of(whereParams, whereClause);
     };
 
     WhereTypeHandler NOT_BETWEEN_HANDLER = BETWEEN_HANDLER;
@@ -82,7 +82,7 @@ interface WhereTypeHandler {
             } else {
                 whereClause = whereType.keyWord() + "(" + columnName + ", ?)";
             }
-            return ScxTuple.of(whereParams, whereClause);
+            return Tuples.of(whereParams, whereClause);
         } else {
             throw new IllegalArgumentException("使用 JSON_CONTAINS 时, 查询名称不合法 !!! 字段名 : " + name);
         }
