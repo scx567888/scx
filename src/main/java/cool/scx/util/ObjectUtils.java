@@ -23,16 +23,16 @@ import java.util.Map;
 public final class ObjectUtils {
 
     /**
-     * a
-     */
-    private static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
-
-    /**
      * 因为 java 无法方便的存储泛型 使用 TypeReference 创建一些常用的类型
      * 此类为 Map 类型
      */
     public static final TypeReference<Map<String, Object>> MAP_TYPE = new TypeReference<>() {
     };
+
+    /**
+     * a
+     */
+    private static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
 
     /**
      * 忽略 @JsonIgnore 注解的 jsonMapper 一般用于内部使用
