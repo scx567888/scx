@@ -1,6 +1,6 @@
 package cool.scx.sql.handler;
 
-import cool.scx.ScxHandlerRE;
+import cool.scx.functional.ScxHandlerRE;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
