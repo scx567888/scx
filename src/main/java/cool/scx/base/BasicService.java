@@ -13,6 +13,7 @@ import cool.scx.tuple.Tuples;
 import java.lang.reflect.ParameterizedType;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -146,7 +147,14 @@ public class BasicService<Entity> {
     private Tuple2<String, List<Object[]>> _buildInsertBatchParameter(List<Entity> entityList, UpdateFilter updateFilter) {
         var insertColumns = updateFilter != null ? updateFilter.filter(scxDaoTableInfo.columnInfos()) : scxDaoTableInfo.columnInfos();
         //将 entityList 转换为 objectArrayList
-        var objectArrayList = entityList.stream().map(entity -> Arrays.stream(insertColumns).map(c -> c.getFieldValue(entity)).toArray()).toList();
+        var objectArrayList = new ArrayList<Object[]>();
+        for (var entity : entityList) {
+            var o = new ArrayList<>();
+            for (var insertColumn : insertColumns) {
+                o.add(insertColumn.getFieldValue(entity));
+            }
+            objectArrayList.add(o.toArray());
+        }
         var sql = SQLBuilder.Insert(scxDaoTableInfo.tableName(), insertColumns).Values(insertColumns).GetSQL();
         return Tuples.of(sql, objectArrayList);
     }
