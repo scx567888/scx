@@ -131,9 +131,7 @@ public final class FormData implements HttpClientHelper.Body {
 
         FormDataByteArrayIterable(List<FormDataItem> formDataItemList, String boundary) {
             this.formDataItems = new FormDataItem[formDataItemList.size() + 1];
-            for (int i = 0; i < formDataItemList.size(); i++) {
-                this.formDataItems[i] = formDataItemList.get(i);
-            }
+            System.arraycopy(formDataItemList.toArray(FormDataItem[]::new), 0, this.formDataItems, 0, formDataItemList.size());
             //将最后一位设置为 FINAL_BOUNDARY
             this.formDataItems[this.formDataItems.length - 1] = new FormDataItem(FormDataItemType.FINAL_BOUNDARY);
             this.boundary = boundary;
