@@ -1,6 +1,6 @@
 package cool.scx.scheduler;
 
-import cool.scx.ScxHandler;
+import cool.scx.functional.ScxHandler;
 
 /**
  * 固定次数执行的 Runnable
@@ -18,7 +18,7 @@ final class FixedRunCountRunnable extends CounterRunnable {
     /**
      * <p>Constructor for FixedRunCountRunnable.</p>
      *
-     * @param scxHandler  a {@link cool.scx.ScxHandler} object
+     * @param scxHandler  a {@link ScxHandler} object
      * @param maxRunCount a long
      */
     public FixedRunCountRunnable(ScxHandler<ScheduleStatus> scxHandler, long maxRunCount) {

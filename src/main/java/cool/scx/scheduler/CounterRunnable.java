@@ -1,6 +1,6 @@
 package cool.scx.scheduler;
 
-import cool.scx.ScxHandler;
+import cool.scx.functional.ScxHandler;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.Trigger;
 
@@ -35,7 +35,7 @@ class CounterRunnable implements Runnable {
     /**
      * <p>Constructor for CounterRunnable.</p>
      *
-     * @param scxHandler a {@link cool.scx.ScxHandler} object
+     * @param scxHandler a {@link ScxHandler} object
      */
     public CounterRunnable(ScxHandler<ScheduleStatus> scxHandler) {
         this.scxHandler = scxHandler;

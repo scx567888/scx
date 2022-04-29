@@ -41,8 +41,8 @@ public final class FromBodyMethodParameterHandler implements ScxMappingMethodPar
     public static Object getValueFromBody(String name, boolean useAllBody, boolean required, Type javaType, ScxMappingRoutingContextInfo scxMappingRoutingContextInfo) throws RequiredParamEmptyException, ParamConvertException {
         var tempValue = scxMappingRoutingContextInfo.getBody();
         if (!useAllBody) {
-            String[] split = name.split("\\.");
-            for (String s : split) {
+            var split = name.split("\\.");
+            for (var s : split) {
                 if (tempValue != null) {
                     tempValue = tempValue.get(s);
                 } else {

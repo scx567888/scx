@@ -1,8 +1,8 @@
 package cool.scx.scheduler;
 
-import cool.scx.ScxHandler;
-import cool.scx.ScxHandlerV;
-import cool.scx.ScxHandlerVR;
+import cool.scx.functional.ScxHandler;
+import cool.scx.functional.ScxHandlerV;
+import cool.scx.functional.ScxHandlerVR;
 import io.netty.channel.EventLoopGroup;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.Trigger;
