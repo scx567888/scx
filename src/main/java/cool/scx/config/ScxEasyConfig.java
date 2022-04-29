@@ -1,8 +1,8 @@
 package cool.scx.config;
 
 import cool.scx.ScxEnvironment;
-import cool.scx.config.handler.impl.AppRootHandler;
-import cool.scx.config.handler.impl.DecryptValueHandler;
+import cool.scx.config.handler.AppRootHandler;
+import cool.scx.config.handler.DecryptValueHandler;
 import cool.scx.util.NetUtils;
 import cool.scx.util.ansi.Ansi;
 

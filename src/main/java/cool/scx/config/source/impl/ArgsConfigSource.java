@@ -1,6 +1,6 @@
-package cool.scx.config.impl;
+package cool.scx.config.source.impl;
 
-import cool.scx.config.ScxConfigSource;
+import cool.scx.config.source.ScxConfigSource;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
