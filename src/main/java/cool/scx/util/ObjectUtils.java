@@ -6,7 +6,9 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Type;
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -19,6 +21,11 @@ import java.util.Map;
  * @version 0.3.6
  */
 public final class ObjectUtils {
+
+    /**
+     * a
+     */
+    private static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
 
     /**
      * 因为 java 无法方便的存储泛型 使用 TypeReference 创建一些常用的类型
@@ -165,6 +172,32 @@ public final class ObjectUtils {
      */
     public static JavaType constructType(TypeReference<?> typeRef) {
         return jsonMapper().getTypeFactory().constructType(typeRef);
+    }
+
+    public static Object[] toObjectArray(Object source) {
+        if (source instanceof Object[]) {
+            return (Object[]) source;
+        }
+        if (source == null) {
+            return EMPTY_OBJECT_ARRAY;
+        }
+        if (source instanceof Collection) {
+            return ((Collection<?>) source).toArray();
+        }
+        if (source.getClass().isArray()) {
+            var length = Array.getLength(source);
+            var arr = new Object[length];
+            if (source instanceof byte[] arrSource) for (int i = 0; i < length; i++) arr[i] = arrSource[i];
+            else if (source instanceof short[] arrSource) for (int i = 0; i < length; i++) arr[i] = arrSource[i];
+            else if (source instanceof int[] arrSource) for (int i = 0; i < length; i++) arr[i] = arrSource[i];
+            else if (source instanceof long[] arrSource) for (int i = 0; i < length; i++) arr[i] = arrSource[i];
+            else if (source instanceof float[] arrSource) for (int i = 0; i < length; i++) arr[i] = arrSource[i];
+            else if (source instanceof double[] arrSource) for (int i = 0; i < length; i++) arr[i] = arrSource[i];
+            else if (source instanceof boolean[] arrSource) for (int i = 0; i < length; i++) arr[i] = arrSource[i];
+            else if (source instanceof char[] arrSource) for (int i = 0; i < length; i++) arr[i] = arrSource[i];
+            return arr;
+        }
+        throw new IllegalArgumentException("源数据无法转换为数组对象 !!!");
     }
 
 }
