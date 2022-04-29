@@ -27,7 +27,7 @@ public final class ScxMappingHandler implements Handler<RoutingContext> {
     /**
      * 用来校验 路径的正则表达式
      */
-    private static final Pattern RE_TOKEN_SEARCH = Pattern.compile(":([A-Za-z0-9_]+)");
+    private static final Pattern RE_TOKEN_SEARCH = Pattern.compile(":(\\w+)");
 
     /**
      * 方法

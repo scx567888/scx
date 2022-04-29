@@ -20,7 +20,7 @@ public final class NamedParameterSQL extends AbstractPlaceholderSQL<Map<String, 
     /**
      * 具名参数匹配的正则表达式
      */
-    private static final Pattern NAMED_PARAMETER_PATTERN = Pattern.compile(":([a-zA-Z0-9_.-]+)");
+    private static final Pattern NAMED_PARAMETER_PATTERN = Pattern.compile(":([\\w.-]+)");
 
     /**
      * 具名参数名称索引
