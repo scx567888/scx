@@ -1,7 +1,7 @@
 package cool.scx.websocket;
 
-import cool.scx.ScxHandler;
-import cool.scx.ScxHandlerV;
+import cool.scx.functional.ScxHandler;
+import cool.scx.functional.ScxHandlerV;
 import cool.scx.base.BaseWebSocketHandler;
 import io.vertx.core.Handler;
 import io.vertx.core.http.ServerWebSocket;

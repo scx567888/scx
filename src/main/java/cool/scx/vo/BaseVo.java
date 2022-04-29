@@ -1,6 +1,6 @@
 package cool.scx.vo;
 
-import cool.scx.ScxHandlerE;
+import cool.scx.functional.ScxHandlerE;
 import io.vertx.ext.web.RoutingContext;
 
 /**
