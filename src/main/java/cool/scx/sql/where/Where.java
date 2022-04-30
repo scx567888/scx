@@ -3,7 +3,9 @@ package cool.scx.sql.where;
 import cool.scx.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * where 查询条件封装类
@@ -293,40 +295,15 @@ public final class Where {
      * @return w
      */
     public String[] getWhereClauses() {
-        var hasWhereSQL = StringUtils.isNotBlank(this.whereSQL);
-        var arr = new String[hasWhereSQL ? whereBodyList.size() + 1 : whereBodyList.size()];
-        for (int i = 0; i < whereBodyList.size(); i++) {
-            arr[i] = whereBodyList.get(i).whereClause();
+        var stringStream = whereBodyList.stream().map(WhereBody::whereClause);
+        if (StringUtils.isNotBlank(this.whereSQL)) {
+            stringStream = Stream.concat(stringStream, Stream.of(this.whereSQL));
         }
-        if (hasWhereSQL) {
-            arr[arr.length - 1] = this.whereSQL;
-        }
-        return arr;
+        return stringStream.toArray(String[]::new);
     }
 
-    /**
-     * <p>Getter for the field <code>whereParamMap</code>.</p>
-     *
-     * @return a {@link java.util.Map} object
-     */
     public Object[] getWhereParams() {
-        var totalLength = whereSQLParams.size();
-        for (var whereBody : whereBodyList) {
-            totalLength = totalLength + whereBody.whereParams().length;
-        }
-        var arr = new Object[totalLength];
-        var index = 0;
-        for (var whereBody : whereBodyList) {
-            for (var o : whereBody.whereParams()) {
-                arr[index] = o;
-                index = index + 1;
-            }
-        }
-        for (var o : whereSQLParams) {
-            arr[index] = o;
-            index = index + 1;
-        }
-        return arr;
+        return Stream.concat(whereBodyList.stream().flatMap(w -> Arrays.stream(w.whereParams())), whereSQLParams.stream()).toArray();
     }
 
     /**
