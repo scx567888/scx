@@ -7,6 +7,8 @@ import cool.scx.util.CaseUtils;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
 
+import java.util.Arrays;
+
 interface WhereTypeHandler {
 
     WhereTypeHandler IS_NULL_HANDLER = (name, whereType, value1, value2, info) -> {
@@ -48,15 +50,10 @@ interface WhereTypeHandler {
     WhereTypeHandler IN_HANDLER = (name, whereType, value1, value2, info) -> {
         var columnName = SQLHelper.getColumnName(name, info.useJsonExtract(), info.useOriginalName());
         var whereParams = toArray(value1);
-        var whereClause = new StringBuilder().append(columnName).append(" ").append(whereType.keyWord()).append(" (");
-        if (whereParams.length > 0) {
-            for (int i = 0, len = whereParams.length - 1; i < len; i++) {
-                whereClause.append("?, ");
-            }
-            whereClause.append("?");
-        }
-        whereClause.append(")");
-        return Tuples.of(whereParams, whereClause.toString());
+        var sList = new String[whereParams.length];
+        Arrays.fill(sList, "?");
+        var whereClause = columnName + " " + whereType.keyWord() + " (" + String.join(", ", sList) + ")";
+        return Tuples.of(whereParams, whereClause);
     };
 
     WhereTypeHandler NOT_IN_HANDLER = IN_HANDLER;
