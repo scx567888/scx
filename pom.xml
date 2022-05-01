@@ -150,6 +150,7 @@
 
     <properties>
         <scx.mainClass>cool.scx.EmptyMain</scx.mainClass>
+        <mysql-connector-j.version>8.0.28</mysql-connector-j.version>
     </properties>
 
 </project>
