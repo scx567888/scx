@@ -1,7 +1,7 @@
 package cool.scx.util.exception;
 
-import cool.scx.ScxHandlerVE;
-import cool.scx.ScxHandlerVRE;
+import cool.scx.functional.ScxHandlerVE;
+import cool.scx.functional.ScxHandlerVRE;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -39,6 +39,35 @@ public final class ScxExceptionHelper {
             exceptionScxHandlerVE.handle();
         } catch (Throwable throwable) {
             throw new ScxWrappedRuntimeException(throwable);
+        }
+    }
+
+    /**
+     * 执行的操作是否有异常 (有异常时不打印信息)
+     *
+     * @param exceptionScxHandlerVE a
+     * @return a
+     */
+    public static boolean noException(ScxHandlerVE<?> exceptionScxHandlerVE) {
+        return noException(exceptionScxHandlerVE, false);
+    }
+
+    /**
+     * 执行的操作是否有异常 (有异常时根据 printStackTrace 控制是否打印信息)
+     *
+     * @param exceptionScxHandlerVE a
+     * @param printStackTrace       是否打印异常信息
+     * @return a
+     */
+    public static boolean noException(ScxHandlerVE<?> exceptionScxHandlerVE, boolean printStackTrace) {
+        try {
+            exceptionScxHandlerVE.handle();
+            return true;
+        } catch (Throwable throwable) {
+            if (printStackTrace) {
+                throwable.printStackTrace();
+            }
+            return false;
         }
     }
 
