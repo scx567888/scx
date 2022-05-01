@@ -37,8 +37,8 @@ public final class WhereBody {
     WhereBody(String _name, WhereType whereType, Object value1, Object value2, WhereOptionInfo info) {
         this.name = _name.trim();
         var w = whereType.getWhereParamsAndWhereClause(this.name, value1, value2, info);
-        this.whereParams = w.whereParams();
-        this.whereClause = w.whereClause();
+        this.whereParams = w.value0();
+        this.whereClause = w.value1();
     }
 
     /**

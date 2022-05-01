@@ -5,7 +5,7 @@ import cool.scx.util.StringUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * where 查询条件封装类
@@ -295,24 +295,15 @@ public final class Where {
      * @return w
      */
     public String[] getWhereClauses() {
-        var whereClauses = whereBodyList.stream().map(WhereBody::whereClause).collect(Collectors.toList());
+        var stringStream = whereBodyList.stream().map(WhereBody::whereClause);
         if (StringUtils.isNotBlank(this.whereSQL)) {
-            whereClauses.add(this.whereSQL);
+            stringStream = Stream.concat(stringStream, Stream.of(this.whereSQL));
         }
-        return whereClauses.toArray(new String[0]);
+        return stringStream.toArray(String[]::new);
     }
 
-    /**
-     * <p>Getter for the field <code>whereParamMap</code>.</p>
-     *
-     * @return a {@link java.util.Map} object
-     */
     public Object[] getWhereParams() {
-        //常规 where 的参数
-        var whereParams = whereBodyList.stream().flatMap(w -> Arrays.stream(w.whereParams())).collect(Collectors.toList());
-        //whereSQL 的参数
-        whereParams.addAll(whereSQLParams);
-        return whereParams.toArray();
+        return Stream.concat(whereBodyList.stream().flatMap(w -> Arrays.stream(w.whereParams())), whereSQLParams.stream()).toArray();
     }
 
     /**
@@ -336,7 +327,7 @@ public final class Where {
     public Where whereSQL(Object... whereSQL) {
         clearWhereSQL();
         var tempWhereSQL = new StringBuilder();
-        for (Object o : whereSQL) {
+        for (var o : whereSQL) {
             if (o instanceof String s) {
                 tempWhereSQL.append(s);
             } else if (o instanceof WhereBody w) {

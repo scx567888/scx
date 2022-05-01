@@ -1,9 +1,9 @@
-package cool.scx.config.handler.impl;
+package cool.scx.config.handler;
 
 import cool.scx.ScxEnvironment;
 import cool.scx.ScxHandlerR;
-import cool.scx.config.handler.ScxConfigHandlerParam;
 import cool.scx.util.ansi.Ansi;
+import cool.scx.util.tuple.KeyValue;
 
 import java.io.File;
 
@@ -13,7 +13,7 @@ import java.io.File;
  * @author scx567888
  * @version 1.11.8
  */
-public final class AppRootHandler implements ScxHandlerR<ScxConfigHandlerParam, File> {
+public final class AppRootHandler implements ScxHandlerR<KeyValue<String, Object>, File> {
 
     /**
      * a
@@ -49,13 +49,13 @@ public final class AppRootHandler implements ScxHandlerR<ScxConfigHandlerParam, 
      * {@inheritDoc}
      */
     @Override
-    public File handle(ScxConfigHandlerParam param) {
+    public File handle(KeyValue<String, Object> param) {
         var path = new ConvertValueHandler<>(String.class).handle(param);
         if (path != null) {
             return scxEnvironment.getFileByAppRoot(path);
         } else {
             var defaultValFile = this.defaultVal != null ? scxEnvironment.getFileByAppRoot(this.defaultVal) : null;
-            Ansi.out().red("N 未检测到 " + param.ketPath() + " , 已采用默认值 : " + defaultValFile).println();
+            Ansi.out().red("N 未检测到 " + param.key() + " , 已采用默认值 : " + defaultValFile).println();
             return defaultValFile;
         }
     }

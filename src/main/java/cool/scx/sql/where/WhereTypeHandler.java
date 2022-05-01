@@ -4,9 +4,10 @@ import cool.scx.sql.SQLHelper;
 import cool.scx.util.CaseUtils;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
+import cool.scx.util.tuple.Tuple2;
+import cool.scx.util.tuple.Tuples;
 
-import java.util.List;
-import java.util.Set;
+import java.util.Arrays;
 
 interface WhereTypeHandler {
 
@@ -14,7 +15,7 @@ interface WhereTypeHandler {
         var columnName = SQLHelper.getColumnName(name, info.useJsonExtract(), info.useOriginalName());
         var whereParams = new Object[]{};
         var whereClause = columnName + " " + whereType.keyWord();
-        return new WhereParamsAndWhereClause(whereParams, whereClause);
+        return Tuples.of(whereParams, whereClause);
     };
 
     /**
@@ -26,7 +27,7 @@ interface WhereTypeHandler {
         var columnName = SQLHelper.getColumnName(name, info.useJsonExtract(), info.useOriginalName());
         var whereParams = new Object[]{value1};
         var whereClause = columnName + " " + whereType.keyWord() + " ?";
-        return new WhereParamsAndWhereClause(whereParams, whereClause);
+        return Tuples.of(whereParams, whereClause);
     };
 
     WhereTypeHandler NOT_EQUAL_HANDLER = EQUAL_HANDLER;
@@ -41,7 +42,7 @@ interface WhereTypeHandler {
         var columnName = SQLHelper.getColumnName(name, info.useJsonExtract(), info.useOriginalName());
         var whereParams = new Object[]{value1};
         var whereClause = columnName + " " + whereType.keyWord() + " CONCAT('%',?,'%')";
-        return new WhereParamsAndWhereClause(whereParams, whereClause);
+        return Tuples.of(whereParams, whereClause);
     };
 
     WhereTypeHandler NOT_LIKE_HANDLER = LIKE_HANDLER;
@@ -50,11 +51,9 @@ interface WhereTypeHandler {
         var columnName = SQLHelper.getColumnName(name, info.useJsonExtract(), info.useOriginalName());
         var whereParams = toArray(value1);
         var sList = new String[whereParams.length];
-        for (int i = 0; i < whereParams.length; i++) {
-            sList[i] = "?";
-        }
+        Arrays.fill(sList, "?");
         var whereClause = columnName + " " + whereType.keyWord() + " (" + String.join(", ", sList) + ")";
-        return new WhereParamsAndWhereClause(whereParams, whereClause);
+        return Tuples.of(whereParams, whereClause);
     };
 
     WhereTypeHandler NOT_IN_HANDLER = IN_HANDLER;
@@ -63,7 +62,7 @@ interface WhereTypeHandler {
         var columnName = SQLHelper.getColumnName(name, info.useJsonExtract(), info.useOriginalName());
         var whereParams = new Object[]{value1, value2};
         var whereClause = columnName + " " + whereType.keyWord() + " ? AND ?";
-        return new WhereParamsAndWhereClause(whereParams, whereClause);
+        return Tuples.of(whereParams, whereClause);
     };
 
     WhereTypeHandler NOT_BETWEEN_HANDLER = BETWEEN_HANDLER;
@@ -74,13 +73,13 @@ interface WhereTypeHandler {
         if (StringUtils.isNotBlank(c.columnName())) {
             var jsonContainsParams = toArray(value1);
             var whereParams = new Object[]{jsonContainsParams};
-            var whereClause = "";
+            var whereClause = whereType.keyWord() + "(" + columnName;
             if (StringUtils.isNotBlank(c.fieldPath())) {
-                whereClause = whereType.keyWord() + "(" + columnName + ", ?, '$" + c.fieldPath() + "')";
+                whereClause = whereClause + ", ?, '$" + c.fieldPath() + "')";
             } else {
-                whereClause = whereType.keyWord() + "(" + columnName + ", ?)";
+                whereClause = whereClause + ", ?)";
             }
-            return new WhereParamsAndWhereClause(whereParams, whereClause);
+            return Tuples.of(whereParams, whereClause);
         } else {
             throw new IllegalArgumentException("使用 JSON_CONTAINS 时, 查询名称不合法 !!! 字段名 : " + name);
         }
@@ -93,21 +92,12 @@ interface WhereTypeHandler {
      * @return a
      */
     private static Object[] toArray(Object value) {
-        var objectArray = new Object[0];
-        if (value.getClass().isArray() || value instanceof List || value instanceof Set) {
-            objectArray = ObjectUtils.convertValue(value, objectArray.getClass());
-        } else if (value instanceof String) {
-            objectArray = ((String) value).split(",");
-        } else {
-            objectArray = new Object[]{value};
+        if (value instanceof String str) {
+            return str.split(",");
         }
-        return objectArray;
+        return ObjectUtils.toObjectArray(value);
     }
 
-    WhereParamsAndWhereClause getWhereParamsAndWhereClause(String name, WhereType whereType, Object value1, Object value2, WhereOptionInfo info);
-
-    record WhereParamsAndWhereClause(Object[] whereParams, String whereClause) {
-
-    }
+    Tuple2<Object[], String> getWhereParamsAndWhereClause(String name, WhereType whereType, Object value1, Object value2, WhereOptionInfo info);
 
 }

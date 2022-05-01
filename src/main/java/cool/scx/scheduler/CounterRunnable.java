@@ -35,7 +35,7 @@ class CounterRunnable implements Runnable {
     /**
      * <p>Constructor for CounterRunnable.</p>
      *
-     * @param scxHandler a {@link cool.scx.ScxHandler} object
+     * @param scxHandler a {@link ScxHandler} object
      */
     public CounterRunnable(ScxHandler<ScheduleStatus> scxHandler) {
         this.scxHandler = scxHandler;

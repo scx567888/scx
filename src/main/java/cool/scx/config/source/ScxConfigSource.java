@@ -1,4 +1,4 @@
-package cool.scx.config;
+package cool.scx.config.source;
 
 import java.util.Map;
 

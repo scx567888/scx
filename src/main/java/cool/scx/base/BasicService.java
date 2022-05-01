@@ -7,10 +7,13 @@ import cool.scx.sql.SQLBuilder;
 import cool.scx.sql.SQLRunner;
 import cool.scx.sql.handler.BeanListHandler;
 import cool.scx.sql.handler.ScalarHandler;
+import cool.scx.util.tuple.Tuple2;
+import cool.scx.util.tuple.Tuples;
 
 import java.lang.reflect.ParameterizedType;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -75,7 +78,7 @@ public class BasicService<Entity> {
      */
     public final Long _insert(Entity entity, UpdateFilter updateFilter) {
         var parameter = _buildInsertParameter(entity, updateFilter);
-        var updateResult = ScxContext.sqlRunner().update(parameter.sql(), parameter.param());
+        var updateResult = ScxContext.sqlRunner().update(parameter.value0(), parameter.value1());
         return updateResult.generatedKeys().size() > 0 ? updateResult.generatedKeys().get(0) : -1;
     }
 
@@ -90,7 +93,7 @@ public class BasicService<Entity> {
      */
     public final Long _insert(Connection con, Entity entity, UpdateFilter updateFilter) throws SQLException {
         var parameter = _buildInsertParameter(entity, updateFilter);
-        var updateResult = SQLRunner.update(con, parameter.sql(), parameter.param());
+        var updateResult = SQLRunner.update(con, parameter.value0(), parameter.value1());
         return updateResult.generatedKeys().size() > 0 ? updateResult.generatedKeys().get(0) : -1;
     }
 
@@ -101,11 +104,11 @@ public class BasicService<Entity> {
      * @param updateFilter a
      * @return a
      */
-    private SQLRunnerParameterWrapper<Object[]> _buildInsertParameter(Entity entity, UpdateFilter updateFilter) {
+    private Tuple2<String, Object[]> _buildInsertParameter(Entity entity, UpdateFilter updateFilter) {
         var insertColumns = updateFilter != null ? updateFilter.filter(entity, scxDaoTableInfo.columnInfos()) : scxDaoTableInfo.columnInfos();
         //insert 允许空列所以这里不做判断
         var sql = SQLBuilder.Insert(scxDaoTableInfo.tableName(), insertColumns).Values(insertColumns).GetSQL();
-        return new SQLRunnerParameterWrapper<>(sql, Arrays.stream(insertColumns).map(c -> c.getFieldValue(entity)).toArray());
+        return Tuples.of(sql, Arrays.stream(insertColumns).map(c -> c.getFieldValue(entity)).toArray());
     }
 
     /**
@@ -117,7 +120,7 @@ public class BasicService<Entity> {
      */
     public final List<Long> _insertBatch(List<Entity> entityList, UpdateFilter updateFilter) {
         var parameter = _buildInsertBatchParameter(entityList, updateFilter);
-        return ScxContext.sqlRunner().updateBatch(new PlaceholderSQL(parameter.sql(), parameter.param())).generatedKeys();
+        return ScxContext.sqlRunner().updateBatch(new PlaceholderSQL(parameter.value0(), parameter.value1())).generatedKeys();
     }
 
     /**
@@ -131,7 +134,7 @@ public class BasicService<Entity> {
      */
     public final List<Long> _insertBatch(Connection con, List<Entity> entityList, UpdateFilter updateFilter) throws SQLException {
         var parameter = _buildInsertBatchParameter(entityList, updateFilter);
-        return SQLRunner.updateBatch(con, new PlaceholderSQL(parameter.sql(), parameter.param())).generatedKeys();
+        return SQLRunner.updateBatch(con, new PlaceholderSQL(parameter.value0(), parameter.value1())).generatedKeys();
     }
 
     /**
@@ -141,12 +144,19 @@ public class BasicService<Entity> {
      * @param updateFilter a
      * @return a
      */
-    private SQLRunnerParameterWrapper<List<Object[]>> _buildInsertBatchParameter(List<Entity> entityList, UpdateFilter updateFilter) {
+    private Tuple2<String, List<Object[]>> _buildInsertBatchParameter(List<Entity> entityList, UpdateFilter updateFilter) {
         var insertColumns = updateFilter != null ? updateFilter.filter(scxDaoTableInfo.columnInfos()) : scxDaoTableInfo.columnInfos();
         //将 entityList 转换为 objectArrayList
-        var objectArrayList = entityList.stream().map(entity -> Arrays.stream(insertColumns).map(c -> c.getFieldValue(entity)).toArray()).toList();
+        var objectArrayList = new ArrayList<Object[]>();
+        for (var entity : entityList) {
+            var o = new ArrayList<>();
+            for (var insertColumn : insertColumns) {
+                o.add(insertColumn.getFieldValue(entity));
+            }
+            objectArrayList.add(o.toArray());
+        }
         var sql = SQLBuilder.Insert(scxDaoTableInfo.tableName(), insertColumns).Values(insertColumns).GetSQL();
-        return new SQLRunnerParameterWrapper<>(sql, objectArrayList);
+        return Tuples.of(sql, objectArrayList);
     }
 
     /**
@@ -158,7 +168,7 @@ public class BasicService<Entity> {
      */
     public final List<Entity> _select(Query query, SelectFilter selectFilter) {
         var parameter = _buildSelectParameter(query, selectFilter);
-        return ScxContext.sqlRunner().query(parameter.sql(), entityBeanListHandler, parameter.param());
+        return ScxContext.sqlRunner().query(parameter.value0(), entityBeanListHandler, parameter.value1());
     }
 
     /**
@@ -172,7 +182,7 @@ public class BasicService<Entity> {
      */
     public final List<Entity> _select(Connection con, Query query, SelectFilter selectFilter) throws SQLException {
         var parameter = _buildSelectParameter(query, selectFilter);
-        return SQLRunner.query(con, parameter.sql(), entityBeanListHandler, parameter.param());
+        return SQLRunner.query(con, parameter.value0(), entityBeanListHandler, parameter.value1());
     }
 
     /**
@@ -182,10 +192,10 @@ public class BasicService<Entity> {
      * @param selectFilter a
      * @return a
      */
-    private SQLRunnerParameterWrapper<Object[]> _buildSelectParameter(Query query, SelectFilter selectFilter) {
+    private Tuple2<String, Object[]> _buildSelectParameter(Query query, SelectFilter selectFilter) {
         var selectColumnInfos = selectFilter != null ? selectFilter.filter(scxDaoTableInfo.columnInfos()) : scxDaoTableInfo.columnInfos();
         var sql = SQLBuilder.Select(selectColumnInfos).From(scxDaoTableInfo.tableName()).Where(query.where()).GroupBy(query.groupBy()).OrderBy(query.orderBy()).Limit(query.pagination()).GetSQL();
-        return new SQLRunnerParameterWrapper<>(sql, query.where().getWhereParams());
+        return Tuples.of(sql, query.where().getWhereParams());
     }
 
     /**
@@ -196,7 +206,7 @@ public class BasicService<Entity> {
      */
     public final long _count(Query query) {
         var parameter = _buildCountParameter(query);
-        return ScxContext.sqlRunner().query(parameter.sql(), new ScalarHandler<>("count", Long.class), parameter.param());
+        return ScxContext.sqlRunner().query(parameter.value0(), new ScalarHandler<>("count", Long.class), parameter.value1());
     }
 
     /**
@@ -209,7 +219,7 @@ public class BasicService<Entity> {
      */
     public final long _count(Connection con, Query query) throws SQLException {
         var parameter = _buildCountParameter(query);
-        return SQLRunner.query(con, parameter.sql(), new ScalarHandler<>("count", Long.class), parameter.param());
+        return SQLRunner.query(con, parameter.value0(), new ScalarHandler<>("count", Long.class), parameter.value1());
     }
 
     /**
@@ -218,9 +228,9 @@ public class BasicService<Entity> {
      * @param query a
      * @return a
      */
-    private SQLRunnerParameterWrapper<Object[]> _buildCountParameter(Query query) {
+    private Tuple2<String, Object[]> _buildCountParameter(Query query) {
         var sql = SQLBuilder.Select("COUNT(*) AS count").From(scxDaoTableInfo.tableName()).Where(query.where()).GroupBy(query.groupBy()).GetSQL();
-        return new SQLRunnerParameterWrapper<>(sql, query.where().getWhereParams());
+        return Tuples.of(sql, query.where().getWhereParams());
     }
 
     /**
@@ -233,7 +243,7 @@ public class BasicService<Entity> {
      */
     public final long _update(Entity entity, Query query, UpdateFilter updateFilter) {
         var parameter = _buildUpdateParameter(entity, query, updateFilter);
-        return ScxContext.sqlRunner().update(parameter.sql(), parameter.param()).affectedLength();
+        return ScxContext.sqlRunner().update(parameter.value0(), parameter.value1()).affectedLength();
     }
 
     /**
@@ -248,7 +258,7 @@ public class BasicService<Entity> {
      */
     public final long _update(Connection con, Entity entity, Query query, UpdateFilter updateFilter) throws SQLException {
         var parameter = _buildUpdateParameter(entity, query, updateFilter);
-        return SQLRunner.update(con, parameter.sql(), parameter.param()).affectedLength();
+        return SQLRunner.update(con, parameter.value0(), parameter.value1()).affectedLength();
     }
 
     /**
@@ -259,7 +269,7 @@ public class BasicService<Entity> {
      * @param updateFilter a
      * @return a
      */
-    private SQLRunnerParameterWrapper<Object[]> _buildUpdateParameter(Entity entity, Query query, UpdateFilter updateFilter) {
+    private Tuple2<String, Object[]> _buildUpdateParameter(Entity entity, Query query, UpdateFilter updateFilter) {
         if (query == null || query.where().isEmpty()) {
             throw new IllegalArgumentException("更新数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
         }
@@ -267,7 +277,7 @@ public class BasicService<Entity> {
         var sql = SQLBuilder.Update(scxDaoTableInfo.tableName()).Set(updateSetColumnInfos).Where(query.where()).GetSQL();
         var entityParams = Arrays.stream(updateSetColumnInfos).map(c -> c.getFieldValue(entity)).collect(Collectors.toList());
         entityParams.addAll(List.of(query.where().getWhereParams()));
-        return new SQLRunnerParameterWrapper<>(sql, entityParams.toArray());
+        return Tuples.of(sql, entityParams.toArray());
     }
 
     /**
@@ -278,7 +288,7 @@ public class BasicService<Entity> {
      */
     public final long _delete(Query query) {
         var parameter = _buildDeleteParameter(query);
-        return ScxContext.sqlRunner().update(parameter.sql(), parameter.param()).affectedLength();
+        return ScxContext.sqlRunner().update(parameter.value0(), parameter.value1()).affectedLength();
     }
 
     /**
@@ -291,7 +301,7 @@ public class BasicService<Entity> {
      */
     public final long _delete(Connection connection, Query query) throws SQLException {
         var parameter = _buildDeleteParameter(query);
-        return SQLRunner.update(connection, parameter.sql(), parameter.param()).affectedLength();
+        return SQLRunner.update(connection, parameter.value0(), parameter.value1()).affectedLength();
     }
 
     /**
@@ -300,12 +310,12 @@ public class BasicService<Entity> {
      * @param query a
      * @return a
      */
-    private SQLRunnerParameterWrapper<Object[]> _buildDeleteParameter(Query query) {
+    private Tuple2<String, Object[]> _buildDeleteParameter(Query query) {
         if (query == null || query.where().isEmpty()) {
             throw new IllegalArgumentException("删除数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
         }
         var sql = SQLBuilder.Delete(scxDaoTableInfo.tableName()).Where(query.where()).GetSQL();
-        return new SQLRunnerParameterWrapper<>(sql, query.where().getWhereParams());
+        return Tuples.of(sql, query.where().getWhereParams());
     }
 
     /**
@@ -315,10 +325,6 @@ public class BasicService<Entity> {
      */
     public ScxDaoTableInfo _scxDaoTableInfo() {
         return scxDaoTableInfo;
-    }
-
-    private record SQLRunnerParameterWrapper<T>(String sql, T param) {
-
     }
 
 }

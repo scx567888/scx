@@ -2,7 +2,6 @@ package cool.scx.util;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.DecimalFormat;
@@ -21,87 +20,39 @@ public final class FileUtils {
      * 文件大小格式化 正则表达式
      */
     public final static Pattern DISPLAY_SIZE_PATTERN = Pattern.compile("^([+\\-]?\\d+)([a-zA-Z]{0,2})$");
+
     /**
      * Constant <code>WINDOWS_FILE_SEPARATOR="\\&quot;"</code>
      */
     private static final String WINDOWS_FILE_SEPARATOR = "\\";
+
     /**
      * Constant <code>UNIX_FILE_SEPARATOR="/"</code>
      */
     private static final String UNIX_FILE_SEPARATOR = "/";
+
     /**
      * Constant <code>FILE_EXTENSION="."</code>
      */
     private static final String FILE_EXTENSION = ".";
+
     /**
      * 文件大小格式化 映射表 方便计算使用
      */
-    private final static HashMap<String, Long> DISPLAY_SIZE_MAP = getDisplaySizeMap();
-
-    /**
-     * deleteFilesVisitor
-     */
-    private final static SimpleFileVisitor<Path> deleteFilesVisitor = getDeleteFilesVisitor();
-
-    /**
-     * deleteIfExistsVisitor
-     */
-    private final static SimpleFileVisitor<Path> deleteIfExistsVisitor = getDeleteIfExistsVisitor();
-
-    /**
-     * <p>Getter for the field <code>deleteFilesVisitor</code>.</p>
-     *
-     * @return a {@link java.nio.file.SimpleFileVisitor} object
-     */
-    private static SimpleFileVisitor<Path> getDeleteFilesVisitor() {
-        return new SimpleFileVisitor<>() {
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                Files.delete(file);
-                return FileVisitResult.CONTINUE;
-            }
-
-            @Override
-            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                Files.delete(dir);
-                return FileVisitResult.CONTINUE;
-            }
-        };
-    }
-
-    /**
-     * <p>Getter for the field <code>deleteIfExistsVisitor</code>.</p>
-     *
-     * @return a {@link java.nio.file.SimpleFileVisitor} object
-     */
-    private static SimpleFileVisitor<Path> getDeleteIfExistsVisitor() {
-        return new SimpleFileVisitor<>() {
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                Files.delete(file);
-                return FileVisitResult.CONTINUE;
-            }
-
-            @Override
-            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                Files.delete(dir);
-                return super.postVisitDirectory(dir, exc);
-            }
-        };
-    }
+    private final static HashMap<String, Long> DISPLAY_SIZE_MAP = initDisplaySizeMap();
 
     /**
      * <p>getDisplaySizeMap.</p>
      *
      * @return a {@link java.util.HashMap} object
      */
-    private static HashMap<String, Long> getDisplaySizeMap() {
+    private static HashMap<String, Long> initDisplaySizeMap() {
         var tempMap = new HashMap<String, Long>();
         tempMap.put("B", 1L);
         tempMap.put("KB", 1024L);
-        tempMap.put("MB", 1048576L);
-        tempMap.put("GB", 1073741824L);
-        tempMap.put("TB", 1099511627776L);
+        tempMap.put("MB", 1024 * 1024L);
+        tempMap.put("GB", 1024 * 1024 * 1024L);
+        tempMap.put("TB", 1024 * 1024 * 1024 * 1024L);
         return tempMap;
     }
 
@@ -129,7 +80,7 @@ public final class FileUtils {
     public static long displaySizeToLong(String str) {
         var matcher = DISPLAY_SIZE_PATTERN.matcher(str);
         if (!matcher.matches()) {
-            throw new RuntimeException(str + " : 无法转换为 long");
+            throw new IllegalArgumentException(str + " : 无法转换为 long");
         }
         var group = matcher.group(2);
         long amount = Long.parseLong(matcher.group(1));
@@ -138,86 +89,54 @@ public final class FileUtils {
     }
 
     /**
-     * 删除文件 若文件无法删除则返回 false
+     * 删除文件或文件夹(会删除文件树中所有内容)
      *
-     * @param path a {@link java.nio.file.Path} object.
-     * @return a boolean.
+     * @param start a {@link java.nio.file.Path} object.
      */
-    public static boolean deleteFiles(Path path) {
-        try {
-            Files.walkFileTree(path, deleteFilesVisitor);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+    public static void delete(Path start, FileUtilsOption... options) throws IOException {
+        var info = new FileUtilsOptionInfo(options);
+        Files.walkFileTree(start, new SimpleFileVisitor<>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                Files.delete(file);
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                var dontNeedDelete = info.excludeRoot() && Files.isSameFile(start, dir);
+                if (!dontNeedDelete) {
+                    Files.delete(dir);
+                }
+                return FileVisitResult.CONTINUE;
+            }
+        });
     }
 
     /**
-     * 删除文件
+     * a
      *
-     * @param path a {@link java.nio.file.Path} object.
-     * @throws java.io.IOException if any.
+     * @param source  a
+     * @param target  a
+     * @param options a
+     * @throws IOException a
      */
-    public static void deleteIfExists(Path path) throws IOException {
-        try {
-            Files.deleteIfExists(path);
-        } catch (DirectoryNotEmptyException e) {
-            Files.walkFileTree(path, deleteIfExistsVisitor);
-        }
-    }
-
-
-    /**
-     * 将一个文件移动到另一个位置
-     *
-     * @param moveFrom a {@link java.lang.String} object.
-     * @param moveTo   a {@link java.lang.String} object.
-     * @return a boolean.
-     */
-    public static boolean fileMove(Path moveFrom, Path moveTo) {
-        try {
-            Files.createDirectories(moveTo.getParent());
-            Files.move(moveFrom, moveTo, StandardCopyOption.REPLACE_EXISTING);
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+    public static void move(Path source, Path target, CopyOption... options) throws IOException {
+        var defaultOptions = new CopyOption[]{StandardCopyOption.REPLACE_EXISTING};
+        Files.createDirectories(target.getParent());
+        Files.move(source, target, options.length == 0 ? defaultOptions : options);
     }
 
     /**
-     * 追加 byte 到另一个文件中
-     *
-     * @param bytes    追加内容
-     * @param tempPath a {@link java.nio.file.Path} object
-     * @return a {@link java.lang.Boolean} object.
+     * @param path    a
+     * @param bytes   a
+     * @param options a
+     * @throws IOException a
      */
-    public static Boolean fileAppend(Path tempPath, byte[] bytes) {
-        try {
-            Files.createDirectories(tempPath.getParent());
-            //实现文件追加写入
-            Files.write(tempPath, bytes, StandardOpenOption.APPEND, StandardOpenOption.CREATE, StandardOpenOption.SYNC, StandardOpenOption.WRITE);
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    /**
-     * 将字符串写入文件
-     *
-     * @param filePath    文件路径
-     * @param fileContent 待写入的内容
-     */
-    public static void setFileContent(String filePath, String fileContent) {
-        try (var file = new RandomAccessFile(filePath, "rw")) {
-            var channel = file.getChannel();
-            var src = StandardCharsets.UTF_8.encode(fileContent);
-            channel.write(src);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public static void write(Path path, byte[] bytes, OpenOption... options) throws IOException {
+        var defaultOptions = new OpenOption[]{StandardOpenOption.APPEND, StandardOpenOption.CREATE, StandardOpenOption.SYNC, StandardOpenOption.WRITE};
+        Files.createDirectories(path.getParent());
+        Files.write(path, bytes, options.length == 0 ? defaultOptions : options);
     }
 
     /**
@@ -261,6 +180,36 @@ public final class FileUtils {
             var headByteArray = new byte[length];
             accessFile.read(headByteArray);
             return HexUtils.toHex(headByteArray);
+        }
+    }
+
+    public enum FileUtilsOption {
+
+        /**
+         * 实现清空文件夹的效果
+         * 排除根目录 (删除文件为 "文件" 时无效, "目录" 时有效)
+         * 比如 未使用此选项调用 delete("/user/test") 文件夹 则 test 文件夹会被删除
+         * 若使用此选项则 会清空 test 下所有文件 test 目录则会保留
+         */
+        EXCLUDE_ROOT
+    }
+
+    private static class FileUtilsOptionInfo {
+
+        public final boolean excludeRoot;
+
+        public FileUtilsOptionInfo(FileUtilsOption... options) {
+            var _excludeRoot = false;
+            for (var option : options) {
+                switch (option) {
+                    case EXCLUDE_ROOT -> _excludeRoot = true;
+                }
+            }
+            this.excludeRoot = _excludeRoot;
+        }
+
+        public boolean excludeRoot() {
+            return excludeRoot;
         }
     }
 

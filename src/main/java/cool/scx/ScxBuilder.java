@@ -1,10 +1,10 @@
 package cool.scx;
 
-import cool.scx.config.ScxConfigSource;
 import cool.scx.config.ScxFeatureConfig;
-import cool.scx.config.impl.ArgsConfigSource;
-import cool.scx.config.impl.JsonFileConfigSource;
-import cool.scx.config.impl.MapConfigSource;
+import cool.scx.config.source.ScxConfigSource;
+import cool.scx.config.source.impl.ArgsConfigSource;
+import cool.scx.config.source.impl.JsonFileConfigSource;
+import cool.scx.config.source.impl.MapConfigSource;
 import cool.scx.enumeration.ScxFeature;
 import cool.scx.util.StringUtils;
 

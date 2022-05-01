@@ -124,7 +124,7 @@ public final class Ansi {
     private static void buildEnabled(StringBuilder sb, Object[] elements) {
         boolean writingAnsi = false;
         boolean containsEncoding = false;
-        for (Object element : elements) {
+        for (var element : elements) {
             if (element instanceof AnsiElement) {
                 containsEncoding = true;
                 if (!writingAnsi) {
@@ -156,7 +156,7 @@ public final class Ansi {
      * @param elements a
      */
     private static void buildDisabled(StringBuilder sb, Object[] elements) {
-        for (Object element : elements) {
+        for (var element : elements) {
             if (!(element instanceof AnsiElement) && element != null) {
                 sb.append(element);
             }

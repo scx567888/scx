@@ -1,7 +1,7 @@
-package cool.scx.config.impl;
+package cool.scx.config.source.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import cool.scx.config.ScxConfigSource;
+import cool.scx.config.source.ScxConfigSource;
 import cool.scx.util.MapUtils;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.ansi.Ansi;

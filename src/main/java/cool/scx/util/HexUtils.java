@@ -46,7 +46,7 @@ public final class HexUtils {
     public static String toHex(final byte[] byteArray) {
         var charArray = new char[byteArray.length * 2];
         var index = 0;
-        for (byte b : byteArray) {
+        for (var b : byteArray) {
             charArray[index] = HEX_CHAR_POOL[b >>> 4 & 0xF];
             charArray[index + 1] = HEX_CHAR_POOL[b & 0xF];
             index = index + 2;
