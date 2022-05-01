@@ -3,8 +3,8 @@ package cool.scx.config.handler;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JavaType;
 import cool.scx.ScxHandlerR;
-import cool.scx.util.tuple.KeyValue;
 import cool.scx.util.ObjectUtils;
+import cool.scx.util.tuple.KeyValue;
 
 import java.util.Objects;
 

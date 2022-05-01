@@ -1,9 +1,9 @@
 package cool.scx.config;
 
+import cool.scx.ScxHandlerR;
 import cool.scx.config.handler.ConvertValueHandler;
 import cool.scx.config.handler.DefaultValueHandler;
 import cool.scx.config.source.ScxConfigSource;
-import cool.scx.ScxHandlerR;
 import cool.scx.util.tuple.KeyValue;
 import cool.scx.util.tuple.Tuples;
 

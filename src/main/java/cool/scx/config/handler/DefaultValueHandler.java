@@ -1,8 +1,8 @@
 package cool.scx.config.handler;
 
 import cool.scx.ScxHandlerR;
-import cool.scx.util.tuple.KeyValue;
 import cool.scx.util.ansi.Ansi;
+import cool.scx.util.tuple.KeyValue;
 
 /**
  * a

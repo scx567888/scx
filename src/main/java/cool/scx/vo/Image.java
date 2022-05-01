@@ -20,6 +20,19 @@ import java.util.Objects;
  */
 public abstract class Image implements BaseVo {
 
+    /**
+     * 用来校验 file 是否可用
+     *
+     * @param _file a {@link java.io.File} object.
+     */
+    protected Image(File _file) {
+        Objects.requireNonNull(_file, "图片文件不能为 null");
+        // 图片不存在 这里抛出不存在异常
+        if (!_file.exists()) {
+            throw new NotFoundException();
+        }
+    }
+
     public static Image of(File file) {
         return of(file, null, null, null);
     }
@@ -34,19 +47,6 @@ public abstract class Image implements BaseVo {
             }
         } else {
             return new SystemIconImage(file);
-        }
-    }
-
-    /**
-     * 用来校验 file 是否可用
-     *
-     * @param _file a {@link java.io.File} object.
-     */
-    protected Image(File _file) {
-        Objects.requireNonNull(_file, "图片文件不能为 null");
-        // 图片不存在 这里抛出不存在异常
-        if (!_file.exists()) {
-            throw new NotFoundException();
         }
     }
 
