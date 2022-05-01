@@ -1,7 +1,7 @@
 package cool.scx.http.handler;
 
 import cool.scx.type.UploadedEntity;
-import cool.scx.util.FileUtils;
+import cool.scx.util.file.FileUtils;
 import io.netty.handler.codec.DecoderException;
 import io.vertx.core.Handler;
 import io.vertx.core.buffer.Buffer;

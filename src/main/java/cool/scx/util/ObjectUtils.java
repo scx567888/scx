@@ -174,6 +174,12 @@ public final class ObjectUtils {
         return jsonMapper().getTypeFactory().constructType(typeRef);
     }
 
+    /**
+     * a
+     *
+     * @param source a
+     * @return a
+     */
     public static Object[] toObjectArray(Object source) {
         if (source instanceof Object[]) {
             return (Object[]) source;

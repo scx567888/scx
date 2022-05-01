@@ -46,7 +46,8 @@ public final class BeanListHandler<T> implements ScxHandlerRE<ResultSet, List<T>
                     field.setAccessible(true);
                     nameFieldMap.put(field.getName(), field);
                 }
-            } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            } catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
+                     InvocationTargetException e) {
                 throw new IllegalArgumentException("Class : " + type + " ;无法被实例化", e);
             }
         } else {
