@@ -1,6 +1,6 @@
 package cool.scx.sql.where;
 
-import cool.scx.tuple.Tuple2;
+import cool.scx.util.tuple.Tuple2;
 
 import static cool.scx.sql.where.WhereTypeHandler.*;
 

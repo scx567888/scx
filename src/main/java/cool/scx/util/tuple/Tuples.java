@@ -1,4 +1,4 @@
-package cool.scx.tuple;
+package cool.scx.util.tuple;
 
 /**
  * 一套简单的元组实现

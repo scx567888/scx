@@ -1,8 +1,8 @@
 package cool.scx.config.handler;
 
 import cool.scx.ScxEnvironment;
-import cool.scx.functional.ScxHandlerR;
-import cool.scx.tuple.KeyValue;
+import cool.scx.ScxHandlerR;
+import cool.scx.util.tuple.KeyValue;
 import cool.scx.util.ansi.Ansi;
 
 import java.io.File;

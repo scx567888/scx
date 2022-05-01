@@ -7,8 +7,8 @@ import cool.scx.sql.SQLBuilder;
 import cool.scx.sql.SQLRunner;
 import cool.scx.sql.handler.BeanListHandler;
 import cool.scx.sql.handler.ScalarHandler;
-import cool.scx.tuple.Tuple2;
-import cool.scx.tuple.Tuples;
+import cool.scx.util.tuple.Tuple2;
+import cool.scx.util.tuple.Tuples;
 
 import java.lang.reflect.ParameterizedType;
 import java.sql.Connection;

@@ -1,4 +1,4 @@
-package cool.scx.tuple;
+package cool.scx.util.tuple;
 
 /**
  * 和 {@link Tuple2} 行为完全一致 只作为语义上的区分

@@ -1,6 +1,6 @@
 package cool.scx.sql.handler;
 
-import cool.scx.functional.ScxHandlerRE;
+import cool.scx.ScxHandlerRE;
 import cool.scx.sql.SQLHelper;
 import cool.scx.util.ScanClassUtils;
 

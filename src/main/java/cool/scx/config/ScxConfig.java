@@ -3,9 +3,9 @@ package cool.scx.config;
 import cool.scx.config.handler.ConvertValueHandler;
 import cool.scx.config.handler.DefaultValueHandler;
 import cool.scx.config.source.ScxConfigSource;
-import cool.scx.functional.ScxHandlerR;
-import cool.scx.tuple.KeyValue;
-import cool.scx.tuple.Tuples;
+import cool.scx.ScxHandlerR;
+import cool.scx.util.tuple.KeyValue;
+import cool.scx.util.tuple.Tuples;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
