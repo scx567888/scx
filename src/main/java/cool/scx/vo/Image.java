@@ -33,10 +33,25 @@ public abstract class Image implements BaseVo {
         }
     }
 
+    /**
+     * a
+     *
+     * @param file a
+     * @return a
+     */
     public static Image of(File file) {
         return of(file, null, null, null);
     }
 
+    /**
+     * a
+     *
+     * @param file   a
+     * @param width  a
+     * @param height a
+     * @param type   a
+     * @return a
+     */
     public static Image of(File file, Integer width, Integer height, String type) {
         var contentType = MimeMapping.getMimeTypeForFilename(file.getName());
         if (contentType != null && contentType.startsWith("image")) {
@@ -64,6 +79,11 @@ public abstract class Image implements BaseVo {
         imageHandler(context);
     }
 
+    /**
+     * a
+     *
+     * @param context a
+     */
     public abstract void imageHandler(RoutingContext context);
 
 }

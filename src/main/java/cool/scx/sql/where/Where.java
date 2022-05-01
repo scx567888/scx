@@ -302,6 +302,11 @@ public final class Where {
         return stringStream.toArray(String[]::new);
     }
 
+    /**
+     * 获取 where 参数
+     *
+     * @return a
+     */
     public Object[] getWhereParams() {
         return Stream.concat(whereBodyList.stream().flatMap(w -> Arrays.stream(w.whereParams())), whereSQLParams.stream()).toArray();
     }

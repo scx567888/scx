@@ -15,6 +15,9 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * a
+ */
 public final class CroppedImage extends Image {
 
     /**
@@ -56,6 +59,14 @@ public final class CroppedImage extends Image {
      */
     private final Buffer buffer;
 
+    /**
+     * a
+     *
+     * @param file   a
+     * @param width  a
+     * @param height a
+     * @param type   a
+     */
     public CroppedImage(File file, Integer width, Integer height, String type) {
         super(file);
         this.contentType = MimeMapping.getMimeTypeForFilename(file.getName());

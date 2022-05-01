@@ -13,12 +13,17 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 
+/**
+ * a
+ */
 public final class SystemIconImage extends Image {
 
     private final Buffer buffer;
 
     /**
-     * <p>Constructor for Image.</p>
+     * a
+     *
+     * @param file a
      */
     public SystemIconImage(File file) {
         super(file);

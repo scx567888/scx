@@ -1,8 +1,9 @@
 package cool.scx.util;
 
+import cool.scx.util.exception.ScxExceptionHelper;
+
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -15,6 +16,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
@@ -26,8 +28,6 @@ import java.util.stream.Collectors;
  */
 public final class ScanClassUtils {
 
-    private static final String SEPARATOR_REGEX = "[/\\\\]";
-
     /**
      * 默认 classLoader
      */
@@ -38,26 +38,23 @@ public final class ScanClassUtils {
      *
      * @param jarFileURI jar
      * @return r
-     * @throws java.io.IOException r
+     * @throws IOException r
      */
     public static List<Class<?>> getClassListByJar(URI jarFileURI) throws IOException {
         //获取 jarFile
-        var jarFile = new JarFile(new File(jarFileURI));
-        //获取 jar 包的 classLoader
-        var jarClassLoader = new URLClassLoader(new URL[]{jarFileURI.toURL()});
-        //进行过滤处理
-        return jarFile.stream().filter(jarEntry -> !jarEntry.isDirectory() && jarEntry.getName().endsWith(".class"))
-                .map(jarEntry -> loadClass(pathToClassName(jarEntry.getName()), jarClassLoader))
-                .collect(Collectors.toList());
+        try (var jarFile = new JarFile(new File(jarFileURI)); var jarClassLoader = new URLClassLoader(new URL[]{jarFileURI.toURL()})) {
+            //进行过滤处理
+            return jarFile.stream().filter(jarEntry -> !jarEntry.isDirectory() && jarEntry.getName().endsWith(".class")).map(jarEntry -> loadClass(jarEntry, jarClassLoader)).collect(Collectors.toList());
+        }
     }
 
     /**
      * <p>getClassListByDir.</p>
      *
-     * @param classRootDir a {@link java.net.URI} object
-     * @param classLoader  a {@link java.lang.ClassLoader} object
-     * @return a {@link java.util.List} object
-     * @throws java.io.IOException if any.
+     * @param classRootDir a {@link URI} object
+     * @param classLoader  a {@link ClassLoader} object
+     * @return a {@link List} object
+     * @throws IOException if any.
      */
     public static List<Class<?>> getClassListByDir(URI classRootDir, ClassLoader classLoader) throws IOException {
         var classList = new ArrayList<Class<?>>();
@@ -66,9 +63,9 @@ public final class ScanClassUtils {
             @Override
             public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) {
                 //获取 class 的相对路径
-                var classRealPath = classRootPath.relativize(path).toString();
-                if (classRealPath.endsWith(".class")) {
-                    classList.add(loadClass(pathToClassName(classRealPath), classLoader));
+                if (path.toString().endsWith(".class")) {
+                    var classRealPath = classRootPath.relativize(path);
+                    classList.add(loadClass(classRealPath, classLoader));
                 }
                 return FileVisitResult.CONTINUE;
             }
@@ -77,11 +74,43 @@ public final class ScanClassUtils {
     }
 
     /**
+     * 从 JarEntry 加载 class
+     *
+     * @param jarEntry       a
+     * @param jarClassLoader a
+     * @return a
+     */
+    private static Class<?> loadClass(JarEntry jarEntry, ClassLoader jarClassLoader) {
+        var suffixLength = ".class".length();
+        //这里是可以保证 path 最后一定是 .class 所以在此处可以放心移除
+        var className = jarEntry.getName().substring(0, jarEntry.getName().length() - suffixLength).replace('/', '.');
+        return loadClass0(className, jarClassLoader);
+    }
+
+    /**
+     * 从 Path 加载 class
+     *
+     * @param classRealPath a
+     * @param classLoader   a
+     * @return a
+     */
+    private static Class<?> loadClass(Path classRealPath, ClassLoader classLoader) {
+        var suffixLength = ".class.".length();
+        var str = new StringBuilder();
+        for (var path : classRealPath) {
+            str.append(path.toString()).append(".");
+        }
+        //这里会在最后添加一个多余的 . 在这里移除
+        var className = str.substring(0, str.length() - suffixLength);
+        return loadClass0(className, classLoader);
+    }
+
+    /**
      * 根据 class 获取地址
      *
-     * @param source a {@link java.lang.Class} object.
+     * @param source a {@link Class} object.
      * @return 可能是 目录 也可能是 jar 文件
-     * @throws java.net.URISyntaxException if any.
+     * @throws URISyntaxException if any.
      */
     public static URI getClassSource(Class<?> source) throws URISyntaxException {
         return source.getProtectionDomain().getCodeSource().getLocation().toURI();
@@ -94,7 +123,7 @@ public final class ScanClassUtils {
      * @param classLoader c
      * @return c
      */
-    private static Class<?> loadClass(String className, ClassLoader classLoader) {
+    private static Class<?> loadClass0(String className, ClassLoader classLoader) {
         try {
             return DEFAULT_CLASS_LOADER.loadClass(className);
         } catch (Throwable t1) {
@@ -109,31 +138,18 @@ public final class ScanClassUtils {
     /**
      * 根据 basePackage 对 class 进行过滤
      *
-     * @param classList       a {@link java.util.List} object
-     * @param basePackageName a {@link java.lang.String} object
-     * @return a {@link java.util.List} object
+     * @param classList       a {@link List} object
+     * @param basePackageName a {@link String} object
+     * @return a {@link List} object
      */
     public static List<Class<?>> filterByBasePackage(List<Class<?>> classList, String basePackageName) {
         return classList.stream().filter(c -> c.getPackageName().startsWith(basePackageName)).collect(Collectors.toList());
     }
 
     /**
-     * 将路径转换为 class 名称
-     *
-     * @param fullPath p
-     * @return c
-     */
-    private static String pathToClassName(String fullPath) {
-        var suffixLength = ".class".length();
-        //这里是可以保证 path 最后一定是 .class 所以在此处可以放心移除
-        var path = fullPath.substring(0, fullPath.length() - suffixLength);
-        return String.join(".", path.split(SEPARATOR_REGEX));
-    }
-
-    /**
      * <p>isJar.</p>
      *
-     * @param file a {@link java.io.File} object
+     * @param file a {@link File} object
      * @return a boolean
      */
     public static boolean isJar(File file) {
@@ -148,16 +164,7 @@ public final class ScanClassUtils {
      */
     public static boolean isInstantiableClass(Class<?> c) {
         //既不是 接口也不是 抽象类
-        if (isNormalClass(c)) {
-            try {
-                //可以实例化
-                c.getConstructor().newInstance();
-                return true;
-            } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException ignored) {
-
-            }
-        }
-        return false;
+        return isNormalClass(c) && ScxExceptionHelper.noException(() -> c.getConstructor().newInstance());
     }
 
     /**

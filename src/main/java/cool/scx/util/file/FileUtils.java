@@ -1,4 +1,7 @@
-package cool.scx.util;
+package cool.scx.util.file;
+
+import cool.scx.util.HexUtils;
+import cool.scx.util.StringUtils;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -91,7 +94,9 @@ public final class FileUtils {
     /**
      * 删除文件或文件夹(会删除文件树中所有内容)
      *
-     * @param start a {@link java.nio.file.Path} object.
+     * @param start   a
+     * @param options a
+     * @throws IOException a
      */
     public static void delete(Path start, FileUtilsOption... options) throws IOException {
         var info = new FileUtilsOptionInfo(options);
@@ -180,36 +185,6 @@ public final class FileUtils {
             var headByteArray = new byte[length];
             accessFile.read(headByteArray);
             return HexUtils.toHex(headByteArray);
-        }
-    }
-
-    public enum FileUtilsOption {
-
-        /**
-         * 实现清空文件夹的效果
-         * 排除根目录 (删除文件为 "文件" 时无效, "目录" 时有效)
-         * 比如 未使用此选项调用 delete("/user/test") 文件夹 则 test 文件夹会被删除
-         * 若使用此选项则 会清空 test 下所有文件 test 目录则会保留
-         */
-        EXCLUDE_ROOT
-    }
-
-    private static class FileUtilsOptionInfo {
-
-        public final boolean excludeRoot;
-
-        public FileUtilsOptionInfo(FileUtilsOption... options) {
-            var _excludeRoot = false;
-            for (var option : options) {
-                switch (option) {
-                    case EXCLUDE_ROOT -> _excludeRoot = true;
-                }
-            }
-            this.excludeRoot = _excludeRoot;
-        }
-
-        public boolean excludeRoot() {
-            return excludeRoot;
         }
     }
 

@@ -5,10 +5,18 @@ import io.vertx.ext.web.RoutingContext;
 
 import java.io.File;
 
+/**
+ * a
+ */
 public final class OriginalImage extends Image {
 
     private final String filePath;
 
+    /**
+     * a
+     *
+     * @param file a
+     */
     public OriginalImage(File file) {
         super(file);
         this.filePath = file.getPath();
