@@ -1,15 +1,22 @@
 package cool.scx.sql;
 
 import com.mysql.cj.MysqlType;
+import com.mysql.cj.NativeQueryBindValue;
+import com.mysql.cj.NativeQueryBindings;
+import com.mysql.cj.PreparedQuery;
+import com.mysql.cj.jdbc.ClientPreparedStatement;
+import com.mysql.cj.protocol.a.NativeProtocol;
+import com.mysql.cj.protocol.a.StringValueEncoder;
 import cool.scx.util.CaseUtils;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
+import cool.scx.util.tuple.Tuple2;
+import cool.scx.util.tuple.Tuples;
+import org.slf4j.Logger;
 
-import java.io.InputStream;
 import java.lang.reflect.Type;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.time.*;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,49 +29,38 @@ import java.util.Map;
 public final class SQLHelper {
 
     /**
+     * 这里我们和 SQLRunner 公用一个 logger 方便管理
+     */
+    private static final Logger logger = SQLRunner.logger;
+
+    /**
      * 这里是直接从 mysql 驱动中复制出来的
      */
-    private static final Map<Class<?>, MysqlType> DEFAULT_MYSQL_TYPES = new HashMap<>();
+    private static final Map<Class<?>, MysqlType> DEFAULT_MYSQL_TYPES = initDefaultMySQLTypes();
 
-    static {
-
+    @SuppressWarnings("unchecked")
+    private static Map<Class<?>, MysqlType> initDefaultMySQLTypes() {
+        var tempMap = new HashMap<Class<?>, MysqlType>();
         //这里 我们在额外添加几个下表对应的基本类型或包装类型
-        DEFAULT_MYSQL_TYPES.put(byte.class, MysqlType.INT);
-        DEFAULT_MYSQL_TYPES.put(short.class, MysqlType.SMALLINT);
-        DEFAULT_MYSQL_TYPES.put(int.class, MysqlType.INT);
-        DEFAULT_MYSQL_TYPES.put(long.class, MysqlType.BIGINT);
-        DEFAULT_MYSQL_TYPES.put(float.class, MysqlType.FLOAT);
-        DEFAULT_MYSQL_TYPES.put(double.class, MysqlType.DOUBLE);
-        DEFAULT_MYSQL_TYPES.put(Byte[].class, MysqlType.BINARY);
-        DEFAULT_MYSQL_TYPES.put(boolean.class, MysqlType.BOOLEAN);
+        tempMap.put(byte.class, MysqlType.TINYINT);
+        tempMap.put(Byte[].class, MysqlType.BINARY);
+        tempMap.put(double.class, MysqlType.DOUBLE);
+        tempMap.put(float.class, MysqlType.FLOAT);
+        tempMap.put(int.class, MysqlType.INT);
+        tempMap.put(long.class, MysqlType.BIGINT);
+        tempMap.put(short.class, MysqlType.SMALLINT);
+        tempMap.put(boolean.class, MysqlType.BOOLEAN);
 
-        //这里是从 mysql 中直接复制出来的
-        DEFAULT_MYSQL_TYPES.put(String.class, MysqlType.VARCHAR);
-        DEFAULT_MYSQL_TYPES.put(java.sql.Date.class, MysqlType.DATE);
-        DEFAULT_MYSQL_TYPES.put(java.sql.Time.class, MysqlType.TIME);
-        DEFAULT_MYSQL_TYPES.put(java.sql.Timestamp.class, MysqlType.TIMESTAMP);
-        DEFAULT_MYSQL_TYPES.put(Byte.class, MysqlType.INT);
-        DEFAULT_MYSQL_TYPES.put(BigDecimal.class, MysqlType.DECIMAL);
-        DEFAULT_MYSQL_TYPES.put(Short.class, MysqlType.SMALLINT);
-        DEFAULT_MYSQL_TYPES.put(Integer.class, MysqlType.INT);
-        DEFAULT_MYSQL_TYPES.put(Long.class, MysqlType.BIGINT);
-        DEFAULT_MYSQL_TYPES.put(Float.class, MysqlType.FLOAT); // TODO check; was Types.FLOAT but should be Types.REAL to map to SQL FLOAT
-        DEFAULT_MYSQL_TYPES.put(Double.class, MysqlType.DOUBLE);
-        DEFAULT_MYSQL_TYPES.put(byte[].class, MysqlType.BINARY);
-        DEFAULT_MYSQL_TYPES.put(Boolean.class, MysqlType.BOOLEAN);
-        DEFAULT_MYSQL_TYPES.put(LocalDate.class, MysqlType.DATE);
-        DEFAULT_MYSQL_TYPES.put(LocalTime.class, MysqlType.TIME);
-        DEFAULT_MYSQL_TYPES.put(LocalDateTime.class, MysqlType.DATETIME); // default JDBC mapping is TIMESTAMP, see B-4
-        DEFAULT_MYSQL_TYPES.put(OffsetTime.class, MysqlType.TIME); // default JDBC mapping is TIME_WITH_TIMEZONE, see B-4
-        DEFAULT_MYSQL_TYPES.put(OffsetDateTime.class, MysqlType.TIMESTAMP); // default JDBC mapping is TIMESTAMP_WITH_TIMEZONE, see B-4
-        DEFAULT_MYSQL_TYPES.put(ZonedDateTime.class, MysqlType.TIMESTAMP); // no JDBC mapping is defined
-        DEFAULT_MYSQL_TYPES.put(Duration.class, MysqlType.TIME);
-        DEFAULT_MYSQL_TYPES.put(java.sql.Blob.class, MysqlType.BLOB);
-        DEFAULT_MYSQL_TYPES.put(java.sql.Clob.class, MysqlType.TEXT);
-        DEFAULT_MYSQL_TYPES.put(BigInteger.class, MysqlType.BIGINT);
-        DEFAULT_MYSQL_TYPES.put(java.util.Date.class, MysqlType.TIMESTAMP);
-        DEFAULT_MYSQL_TYPES.put(java.util.Calendar.class, MysqlType.TIMESTAMP);
-        DEFAULT_MYSQL_TYPES.put(InputStream.class, MysqlType.BLOB);
+        try {
+            //整合 mysql 驱动中的 DEFAULT_MYSQL_TYPES
+            var f = NativeQueryBindings.class.getDeclaredField("DEFAULT_MYSQL_TYPES");
+            f.setAccessible(true);
+            var mysqlDriverDefaultMysqlTypes = (Map<Class<?>, MysqlType>) f.get(null);
+            tempMap.putAll(mysqlDriverDefaultMysqlTypes);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+        return tempMap;
     }
 
     /**
@@ -119,7 +115,7 @@ public final class SQLHelper {
         try {
             return ObjectUtils.convertValue(o, String.class);
         } catch (Exception e) {
-            SQLRunner.logger.error("序列化时发生错误 , 已使用 NULL !!!", e);
+            logger.error("序列化时发生错误 , 已使用 NULL !!!", e);
             return null;
         }
     }
@@ -134,7 +130,7 @@ public final class SQLHelper {
         try {
             return ObjectUtils.toJson(o);
         } catch (Exception e) {
-            SQLRunner.logger.error("序列化时发生错误 , 已使用 NULL !!!", e);
+            logger.error("序列化时发生错误 , 已使用 NULL !!!", e);
             return null;
         }
     }
@@ -151,7 +147,7 @@ public final class SQLHelper {
             try {
                 return ObjectUtils.convertValue(o, filedType);
             } catch (Exception e) {
-                SQLRunner.logger.error("反序列化时发生错误 , 已使用 NULL !!!", e);
+                logger.error("反序列化时发生错误 , 已使用 NULL !!!", e);
             }
         }
         return null;
@@ -169,7 +165,7 @@ public final class SQLHelper {
             try {
                 return ObjectUtils.jsonMapper().readValue(json, ObjectUtils.constructType(genericType));
             } catch (Exception e) {
-                SQLRunner.logger.error("反序列化时发生错误 , 已使用 NULL !!!", e);
+                logger.error("反序列化时发生错误 , 已使用 NULL !!!", e);
             }
         }
         return null;
@@ -186,9 +182,9 @@ public final class SQLHelper {
     public static String getColumnName(String name, boolean useJsonExtract, boolean useOriginalName) {
         if (useJsonExtract) {
             var c = splitIntoColumnNameAndFieldPath(name);
-            if (StringUtils.isNotBlank(c.columnName()) && StringUtils.isNotBlank(c.fieldPath())) {
-                var jsonQueryColumnName = useOriginalName ? c.columnName() : CaseUtils.toSnake(c.columnName());
-                return jsonQueryColumnName + " -> " + "'$" + c.fieldPath() + "'";
+            if (StringUtils.isNotBlank(c.value0()) && StringUtils.isNotBlank(c.value1())) {
+                var jsonQueryColumnName = useOriginalName ? c.value0() : CaseUtils.toSnake(c.value0());
+                return jsonQueryColumnName + " -> " + "'$" + c.value1() + "'";
             } else {
                 throw new IllegalArgumentException("使用 USE_JSON_EXTRACT 时, 查询名称不合法 !!! 字段名 : " + name);
             }
@@ -203,7 +199,7 @@ public final class SQLHelper {
      * @param name a
      * @return a
      */
-    public static ColumnNameAndFieldPath splitIntoColumnNameAndFieldPath(String name) {
+    public static Tuple2<String, String> splitIntoColumnNameAndFieldPath(String name) {
         var charArray = name.toCharArray();
         var index = charArray.length;
         for (int i = 0; i < charArray.length; i++) {
@@ -215,16 +211,63 @@ public final class SQLHelper {
         }
         var columnName = name.substring(0, index);
         var fieldPath = name.substring(index);
-        return new ColumnNameAndFieldPath(columnName, fieldPath);
+        return Tuples.of(columnName, fieldPath);
     }
 
     /**
-     * a
+     * 　获取最终的 SQL
      *
-     * @param columnName a
-     * @param fieldPath  a
+     * @param preparedStatement a
+     * @return a
      */
-    public record ColumnNameAndFieldPath(String columnName, String fieldPath) {
+    public static String getFinalSQL(PreparedStatement preparedStatement) {
+        ClientPreparedStatement clientPreparedStatement;
+        try {
+            clientPreparedStatement = preparedStatement.unwrap(ClientPreparedStatement.class);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        //todo 这里处理 MySQL 8.0.29 中的 Bug 若以后版本的 MySql 修复则移除此代码
+        var queryBindings = clientPreparedStatement.getQueryBindings();
+        var bindValues = queryBindings.getBindValues();
+        for (int i = 0, len = bindValues.length; i < len; i++) {
+            var b = bindValues[i];
+            if (b.isNull()) {
+                bindValues[i] = new BugFixNullValueNativeQueryBindValue((NativeQueryBindValue) b);
+            }
+        }
+        var preparedQuery = ((PreparedQuery) clientPreparedStatement.getQuery());
+        var finalSQL = preparedQuery.asSql();
+        var batchedArgsSize = preparedQuery.getBatchedArgs() == null ? 0 : preparedQuery.getBatchedArgs().size();
+        return batchedArgsSize > 1 ? finalSQL + "... 额外的 " + (batchedArgsSize - 1) + " 项" : finalSQL;
+    }
+
+    /**
+     * 打印 SQL
+     *
+     * @param p a
+     * @return 方便函数式调用
+     */
+    public static PreparedStatement logSQL(PreparedStatement p) {
+        if (logger.isDebugEnabled()) {
+            logger.debug(SQLHelper.getFinalSQL(p));
+        }
+        return p;
+    }
+
+    private static class BugFixNullValueNativeQueryBindValue extends NativeQueryBindValue {
+
+        /**
+         * 在 mysql 8.0.29 中 当值为 null 时 {@link NativeProtocol#getValueEncoderSupplier}
+         * 返回的是 ByteArrayValueEncoder 这里应该返回 StringValueEncoder 所以在此处做一个特殊处理
+         *
+         * @param copyMe c
+         */
+        BugFixNullValueNativeQueryBindValue(NativeQueryBindValue copyMe) {
+            super(copyMe);
+            this.valueEncoder = new StringValueEncoder();
+        }
 
     }
 

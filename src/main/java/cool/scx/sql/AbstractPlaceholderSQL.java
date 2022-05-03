@@ -1,7 +1,5 @@
 package cool.scx.sql;
 
-import com.mysql.cj.jdbc.ClientPreparedStatement;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -46,22 +44,13 @@ public abstract class AbstractPlaceholderSQL<T> {
     }
 
     /**
-     * <p>normalSQL.</p>
-     *
-     * @return a {@link java.lang.String} object
-     */
-    public String normalSQL() {
-        return normalSQL;
-    }
-
-    /**
      * 填充 PreparedStatement
      *
      * @param preparedStatement a
      * @param params            a
      * @throws java.sql.SQLException a
      */
-    final void fillPreparedStatement(PreparedStatement preparedStatement, Object[] params) throws SQLException {
+    public static void fillPreparedStatement(PreparedStatement preparedStatement, Object[] params) throws SQLException {
         var index = 1;
         for (var tempValue : params) {
             if (tempValue != null) {
@@ -83,23 +72,13 @@ public abstract class AbstractPlaceholderSQL<T> {
         }
     }
 
-    void logBatchSQL(PreparedStatement preparedStatement) throws SQLException {
-        if (SQLRunner.logger.isDebugEnabled()) {
-            var size = batchParams.size();
-            var realSQL = preparedStatement.unwrap(ClientPreparedStatement.class).asSql();
-            if (size > 1) {
-                SQLRunner.logger.debug(realSQL + "... 额外的 " + (size - 1) + " 项");
-            } else {
-                SQLRunner.logger.debug(realSQL);
-            }
-        }
-    }
-
-    void logSQL(PreparedStatement preparedStatement) throws SQLException {
-        if (SQLRunner.logger.isDebugEnabled()) {
-            var realSQL = preparedStatement.unwrap(ClientPreparedStatement.class).asSql();
-            SQLRunner.logger.debug(realSQL);
-        }
+    /**
+     * <p>normalSQL.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
+    public String normalSQL() {
+        return normalSQL;
     }
 
     /**
@@ -109,7 +88,7 @@ public abstract class AbstractPlaceholderSQL<T> {
      * @return a
      * @throws SQLException a
      */
-    public abstract PreparedStatement getPreparedStatement1(Connection con) throws SQLException;
+    protected abstract PreparedStatement getPreparedStatementFromBatch(Connection con) throws SQLException;
 
     /**
      * a
@@ -118,7 +97,7 @@ public abstract class AbstractPlaceholderSQL<T> {
      * @return a
      * @throws SQLException a
      */
-    public abstract PreparedStatement getPreparedStatement0(Connection con) throws SQLException;
+    protected abstract PreparedStatement getPreparedStatementFromSingle(Connection con) throws SQLException;
 
     /**
      * a
@@ -128,7 +107,7 @@ public abstract class AbstractPlaceholderSQL<T> {
      * @throws SQLException a
      */
     public final PreparedStatement getPreparedStatement(Connection con) throws SQLException {
-        return isBatch ? getPreparedStatement1(con) : getPreparedStatement0(con);
+        return SQLHelper.logSQL(isBatch ? getPreparedStatementFromBatch(con) : getPreparedStatementFromSingle(con));
     }
 
 }
