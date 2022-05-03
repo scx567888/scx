@@ -40,13 +40,12 @@ public final class PlaceholderSQL extends AbstractPlaceholderSQL<Object[]> {
     }
 
     @Override
-    public PreparedStatement getPreparedStatement0(Connection con) throws SQLException {
+    public PreparedStatement getPreparedStatementFromSingle(Connection con) throws SQLException {
         var preparedStatement = con.prepareStatement(normalSQL, Statement.RETURN_GENERATED_KEYS);
         //单条数据
         if (params != null) {
             fillPreparedStatement(preparedStatement, params);
         }
-        logSQL(preparedStatement);
         return preparedStatement;
     }
 
@@ -58,16 +57,15 @@ public final class PlaceholderSQL extends AbstractPlaceholderSQL<Object[]> {
      * @throws SQLException c
      */
     @Override
-    public PreparedStatement getPreparedStatement1(Connection con) throws SQLException {
+    public PreparedStatement getPreparedStatementFromBatch(Connection con) throws SQLException {
         var preparedStatement = con.prepareStatement(normalSQL, Statement.RETURN_GENERATED_KEYS);
         //根据数据量, 判断是否使用 批量插入
-        for (var paramMap : batchParams) {
-            if (paramMap != null) {
-                fillPreparedStatement(preparedStatement, paramMap);
+        for (var paramArray : batchParams) {
+            if (paramArray != null) {
+                fillPreparedStatement(preparedStatement, paramArray);
                 preparedStatement.addBatch();
             }
         }
-        logBatchSQL(preparedStatement);
         return preparedStatement;
     }
 

@@ -69,13 +69,13 @@ interface WhereTypeHandler {
 
     WhereTypeHandler JSON_CONTAINS_HANDLER = (name, whereType, value1, value2, info) -> {
         var c = SQLHelper.splitIntoColumnNameAndFieldPath(name);
-        var columnName = info.useOriginalName() ? c.columnName() : CaseUtils.toSnake(c.columnName());
-        if (StringUtils.isNotBlank(c.columnName())) {
+        var columnName = info.useOriginalName() ? c.value0() : CaseUtils.toSnake(c.value0());
+        if (StringUtils.isNotBlank(c.value0())) {
             var jsonContainsParams = toArray(value1);
             var whereParams = new Object[]{jsonContainsParams};
             var whereClause = whereType.keyWord() + "(" + columnName;
-            if (StringUtils.isNotBlank(c.fieldPath())) {
-                whereClause = whereClause + ", ?, '$" + c.fieldPath() + "')";
+            if (StringUtils.isNotBlank(c.value1())) {
+                whereClause = whereClause + ", ?, '$" + c.value1() + "')";
             } else {
                 whereClause = whereClause + ", ?)";
             }
