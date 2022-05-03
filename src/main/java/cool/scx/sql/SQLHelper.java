@@ -182,11 +182,9 @@ public final class SQLHelper {
     public static String getColumnName(String name, boolean useJsonExtract, boolean useOriginalName) {
         if (useJsonExtract) {
             var c = splitIntoColumnNameAndFieldPath(name);
-            var columnName = c.value0();
-            var fieldPath = c.value1();
-            if (StringUtils.isNotBlank(columnName) && StringUtils.isNotBlank(fieldPath)) {
-                var jsonQueryColumnName = useOriginalName ? columnName : CaseUtils.toSnake(columnName);
-                return jsonQueryColumnName + " -> " + "'$" + fieldPath + "'";
+            if (StringUtils.isNotBlank(c.value0()) && StringUtils.isNotBlank(c.value1())) {
+                var jsonQueryColumnName = useOriginalName ? c.value0() : CaseUtils.toSnake(c.value0());
+                return jsonQueryColumnName + " -> " + "'$" + c.value1() + "'";
             } else {
                 throw new IllegalArgumentException("使用 USE_JSON_EXTRACT 时, 查询名称不合法 !!! 字段名 : " + name);
             }
