@@ -230,14 +230,6 @@ public final class SQLHelper {
             e.printStackTrace();
             return null;
         }
-        var preparedQuery = ((PreparedQuery) clientPreparedStatement.getQuery());
-        var isBatched = false;
-        var batchedArgsSize = 0;
-        var batchedArgs = preparedQuery.getBatchedArgs();
-        if (batchedArgs != null) {
-            isBatched = true;
-            batchedArgsSize = batchedArgs.size();
-        }
         //todo 这里处理 MySQL 8.0.29 中的 Bug 若以后版本的 MySql 修复则移除此代码
         var queryBindings = clientPreparedStatement.getQueryBindings();
         var bindValues = queryBindings.getBindValues();
@@ -247,8 +239,10 @@ public final class SQLHelper {
                 bindValues[i] = new BugFixNullValueNativeQueryBindValue((NativeQueryBindValue) b);
             }
         }
-        var finalSQL = ((PreparedQuery) clientPreparedStatement.getQuery()).asSql();
-        return isBatched ? finalSQL + "... 额外的 " + (batchedArgsSize - 1) + " 项" : finalSQL;
+        var preparedQuery = ((PreparedQuery) clientPreparedStatement.getQuery());
+        var finalSQL = preparedQuery.asSql();
+        var batchedArgsSize = preparedQuery.getBatchedArgs() == null ? 0 : preparedQuery.getBatchedArgs().size();
+        return batchedArgsSize > 1 ? finalSQL + "... 额外的 " + (batchedArgsSize - 1) + " 项" : finalSQL;
     }
 
     /**
