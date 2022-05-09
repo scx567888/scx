@@ -210,6 +210,27 @@ public final class SQLRunner {
     }
 
     /**
+     * a
+     *
+     * @param con     a
+     * @param handler a
+     * @param <T>     a
+     * @return a
+     * @throws Exception a
+     */
+    public static <T> T autoTransaction(Connection con, ScxHandlerRE<Connection, T, Exception> handler) throws Exception {
+        con.setAutoCommit(false);
+        try {
+            T result = handler.handle(con);
+            con.commit();
+            return result;
+        } catch (Exception e) {
+            con.rollback();
+            throw e;
+        }
+    }
+
+    /**
      * 查询 返回值为 map集合
      *
      * @param sql              a {@link java.lang.String} object.
@@ -345,6 +366,20 @@ public final class SQLRunner {
     public void autoTransaction(ScxHandlerE<Connection, Exception> handler) throws Exception {
         try (var con = dataSource.getConnection()) {
             autoTransaction(con, handler);
+        }
+    }
+
+    /**
+     * a
+     *
+     * @param handler a
+     * @param <T>     a
+     * @return a
+     * @throws Exception a
+     */
+    public <T> T autoTransaction(ScxHandlerRE<Connection, T, Exception> handler) throws Exception {
+        try (var con = dataSource.getConnection()) {
+            return autoTransaction(con, handler);
         }
     }
 
