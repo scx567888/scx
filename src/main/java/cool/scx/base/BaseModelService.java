@@ -508,7 +508,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
             throw new RuntimeException("根据 id 更新时 id 不能为空");
         }
         var l = this.update(con, entity, new Query().equal("id", entity.id), updateFilter);
-        return l == 1 ? this.get(entity.id) : null;
+        return l == 1 ? this.get(con, entity.id) : null;
     }
 
     /**
