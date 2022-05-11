@@ -1,6 +1,8 @@
 package cool.scx.sql.where;
 
 import cool.scx.sql.SQLHelper;
+import cool.scx.sql.exception.EmptyListParamWhenWhereTypeIsInOrNotIn;
+import cool.scx.sql.exception.NullInListWhenWhereTypeIsNotNull;
 import cool.scx.util.CaseUtils;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
@@ -50,6 +52,12 @@ interface WhereTypeHandler {
     WhereTypeHandler IN_HANDLER = (name, whereType, value1, value2, info) -> {
         var columnName = SQLHelper.getColumnName(name, info.useJsonExtract(), info.useOriginalName());
         var whereParams = toArray(value1);
+        if (!info.ignoreExceptionIfEmptyList() && whereParams.length == 0 && !info.skipIfEmptyList()) {
+            throw new EmptyListParamWhenWhereTypeIsInOrNotIn(whereType);
+        }
+        if (!info.ignoreExceptionIfNullInList() && whereType == WhereType.NOT_IN && hasNull(whereParams)) {
+            throw new NullInListWhenWhereTypeIsNotNull();
+        }
         var sList = new String[whereParams.length];
         Arrays.fill(sList, "?");
         var whereClause = columnName + " " + whereType.keyWord() + " (" + String.join(", ", sList) + ")";
@@ -96,6 +104,15 @@ interface WhereTypeHandler {
             return str.split(",");
         }
         return ObjectUtils.toObjectArray(value);
+    }
+
+    private static boolean hasNull(Object[] value) {
+        for (var o : value) {
+            if (o == null) {
+                return true;
+            }
+        }
+        return false;
     }
 
     Tuple2<Object[], String> getWhereParamsAndWhereClause(String name, WhereType whereType, Object value1, Object value2, WhereOptionInfo info);

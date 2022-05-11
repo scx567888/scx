@@ -1,5 +1,8 @@
 package cool.scx.sql.where;
 
+import cool.scx.sql.exception.EmptyListParamWhenWhereTypeIsInOrNotIn;
+import cool.scx.sql.exception.NullInListWhenWhereTypeIsNotNull;
+import cool.scx.sql.exception.WrongWhereTypeParamSizeException;
 import cool.scx.util.StringUtils;
 
 import java.util.ArrayList;
@@ -356,21 +359,31 @@ public final class Where {
      * @return a
      */
     private Where _add(String name, WhereType whereType, Object value1, Object value2, int needParamSize, WhereOption... options) {
-        //校验参数 并获取有效的参数数量(不为空的) 每检测到一个有效的(不为空的) 便加 1
-        var validParamSize = WhereBody.checkParamsAndGetValidParamSize(name, whereType, value1, value2, needParamSize);
         //创建 option 信息
         var info = new WhereOptionInfo(options);
-        //有效参数的数量和所需的参数数量不一致
-        if (whereType.paramSize() == validParamSize) {
-            // 是否使用原始名称 (即不进行转义)
+        try {
             var whereBody = new WhereBody(name, whereType, value1, value2, info);
+            //类型所需的参数数量和所传的参数数量必须一致
+            if (whereType.paramSize() != needParamSize) {
+                throw new IllegalArgumentException("Where 参数错误 : whereType 类型 : " + whereType + " , 参数数量必须为 " + whereType.paramSize());
+            }
             // 是否替换
             if (info.replace()) {
                 whereBodyList.removeIf(w -> whereBody.name().equals(w.name()));
             }
             whereBodyList.add(whereBody);
-        } else if (!info.skipIfNull()) { //根据是否跳过空进行校验
-            throw new IllegalArgumentException("Where 参数错误 : whereType 类型 : " + whereType + " , 参数列表不能为空 !!!");
+        } catch (WrongWhereTypeParamSizeException e) {
+            if (!info.skipIfNull()) {
+                throw e;
+            }
+        } catch (EmptyListParamWhenWhereTypeIsInOrNotIn e) {
+            if (!info.skipIfEmptyList()) {
+                throw e;
+            }
+        } catch (NullInListWhenWhereTypeIsNotNull e) {
+            if (!info.skipIfNullInList()) {
+                throw e;
+            }
         }
         return this;
     }
