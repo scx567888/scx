@@ -29,7 +29,7 @@ public final class UpdateFilter extends AbstractFilter<UpdateFilter> {
     }
 
     /**
-     * a
+     * 启用白名单模式 (当一个实体类所对应的 field 的值为 null 时, 会将此 field 所对应的列排除, 详情请看 {@link UpdateFilter#ofIncluded(boolean)})
      *
      * @return a
      */
@@ -38,7 +38,7 @@ public final class UpdateFilter extends AbstractFilter<UpdateFilter> {
     }
 
     /**
-     * a
+     * 启用黑名单模式 (当一个实体类所对应的 field 的值为 null 时, 会将此 field 所对应的列排除, 详情请看 {@link UpdateFilter#ofExcluded(boolean)})
      *
      * @return a
      */
@@ -47,9 +47,9 @@ public final class UpdateFilter extends AbstractFilter<UpdateFilter> {
     }
 
     /**
-     * a
+     * 启用白名单模式
      *
-     * @param excludeIfFieldValueIsNull a
+     * @param excludeIfFieldValueIsNull 当一个实体类所对应的 field 的值为 null 时, 是否将此 field 所对应的列排除
      * @return a
      */
     public static UpdateFilter ofIncluded(boolean excludeIfFieldValueIsNull) {
@@ -57,9 +57,9 @@ public final class UpdateFilter extends AbstractFilter<UpdateFilter> {
     }
 
     /**
-     * a
+     * 启动黑名单模式
      *
-     * @param excludeIfFieldValueIsNull a
+     * @param excludeIfFieldValueIsNull 当一个实体类所对应的 field 的值为 null 时, 是否将此 field 所对应的列排除
      * @return a
      */
     public static UpdateFilter ofExcluded(boolean excludeIfFieldValueIsNull) {
