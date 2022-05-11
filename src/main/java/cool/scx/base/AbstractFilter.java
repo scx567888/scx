@@ -125,8 +125,10 @@ public abstract class AbstractFilter<E extends AbstractFilter<E>> {
             case INCLUDED -> new ScxDaoColumnInfo[0];
             case EXCLUDED -> scxDaoColumnInfos;
         } : switch (this.filterMode) {
-            case INCLUDED -> Arrays.stream(scxDaoColumnInfos).filter(c -> this.fieldNames.contains(c.fieldName())).toArray(ScxDaoColumnInfo[]::new);
-            case EXCLUDED -> Arrays.stream(scxDaoColumnInfos).filter(c -> !this.fieldNames.contains(c.fieldName())).toArray(ScxDaoColumnInfo[]::new);
+            case INCLUDED ->
+                    Arrays.stream(scxDaoColumnInfos).filter(c -> this.fieldNames.contains(c.fieldName())).toArray(ScxDaoColumnInfo[]::new);
+            case EXCLUDED ->
+                    Arrays.stream(scxDaoColumnInfos).filter(c -> !this.fieldNames.contains(c.fieldName())).toArray(ScxDaoColumnInfo[]::new);
         };
     }
 
