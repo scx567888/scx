@@ -1,7 +1,7 @@
 package cool.scx.sql.where;
 
 import cool.scx.sql.exception.EmptyListParamWhenWhereTypeIsInOrNotIn;
-import cool.scx.sql.exception.NullInListWhenWhereTypeIsNotNull;
+import cool.scx.sql.exception.NullInListWhenWhereTypeIsNotIn;
 import cool.scx.sql.exception.WrongWhereTypeParamSizeException;
 import cool.scx.util.StringUtils;
 
@@ -380,7 +380,7 @@ public final class Where {
             if (!info.skipIfEmptyList()) {
                 throw e;
             }
-        } catch (NullInListWhenWhereTypeIsNotNull e) {
+        } catch (NullInListWhenWhereTypeIsNotIn e) {
             if (!info.skipIfNullInList()) {
                 throw e;
             }
