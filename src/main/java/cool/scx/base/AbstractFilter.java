@@ -40,7 +40,7 @@ public abstract class AbstractFilter<E extends AbstractFilter<E>> {
      * @param fieldNames 包含的列名 (注意是 java 字段名称 ,不是 数据库 字段名称)
      * @return this 方便链式调用
      */
-    public final E add(String... fieldNames) {
+    private E _addFieldNames(String... fieldNames) {
         this.fieldNames.addAll(Arrays.asList(fieldNames));
         return self();
     }
@@ -51,11 +51,57 @@ public abstract class AbstractFilter<E extends AbstractFilter<E>> {
      * @param fieldNames 包含的列名 (注意是 java 字段名称 ,不是 数据库 字段名称)
      * @return this 方便链式调用
      */
-    public final E remove(String... fieldNames) {
+    private E _removeFieldNames(String... fieldNames) {
         for (var fieldName : fieldNames) {
             this.fieldNames.remove(fieldName);
         }
         return self();
+    }
+
+    /**
+     * 添加 白名单
+     *
+     * @param fieldNames 包含的列名 (注意是 java 字段名称 ,不是 数据库 字段名称)
+     * @return this 方便链式调用
+     */
+    public final E addIncluded(String... fieldNames) {
+        return switch (filterMode) {
+            case INCLUDED -> _addFieldNames(fieldNames);
+            case EXCLUDED -> _removeFieldNames(fieldNames);
+        };
+    }
+
+    /**
+     * 添加 黑名单
+     *
+     * @param fieldNames 包含的列名 (注意是 java 字段名称 ,不是 数据库 字段名称)
+     * @return this 方便链式调用
+     */
+    public final E addExcluded(String... fieldNames) {
+        return switch (filterMode) {
+            case EXCLUDED -> _addFieldNames(fieldNames);
+            case INCLUDED -> _removeFieldNames(fieldNames);
+        };
+    }
+
+    /**
+     * 移除白名单
+     *
+     * @param fieldNames 包含的列名 (注意是 java 字段名称 ,不是 数据库 字段名称)
+     * @return this 方便链式调用
+     */
+    public final E removeIncluded(String... fieldNames) {
+        return addExcluded(fieldNames);
+    }
+
+    /**
+     * 移除黑名单
+     *
+     * @param fieldNames 包含的列名 (注意是 java 字段名称 ,不是 数据库 字段名称)
+     * @return this 方便链式调用
+     */
+    public final E removeExcluded(String... fieldNames) {
+        return addIncluded(fieldNames);
     }
 
     /**
@@ -79,10 +125,8 @@ public abstract class AbstractFilter<E extends AbstractFilter<E>> {
             case INCLUDED -> new ScxDaoColumnInfo[0];
             case EXCLUDED -> scxDaoColumnInfos;
         } : switch (this.filterMode) {
-            case INCLUDED ->
-                    Arrays.stream(scxDaoColumnInfos).filter(c -> this.fieldNames.contains(c.fieldName())).toArray(ScxDaoColumnInfo[]::new);
-            case EXCLUDED ->
-                    Arrays.stream(scxDaoColumnInfos).filter(c -> !this.fieldNames.contains(c.fieldName())).toArray(ScxDaoColumnInfo[]::new);
+            case INCLUDED -> Arrays.stream(scxDaoColumnInfos).filter(c -> this.fieldNames.contains(c.fieldName())).toArray(ScxDaoColumnInfo[]::new);
+            case EXCLUDED -> Arrays.stream(scxDaoColumnInfos).filter(c -> !this.fieldNames.contains(c.fieldName())).toArray(ScxDaoColumnInfo[]::new);
         };
     }
 

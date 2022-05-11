@@ -18,7 +18,7 @@ public final class SelectFilter extends AbstractFilter<SelectFilter> {
     }
 
     /**
-     * a
+     * 白名单模式
      *
      * @return a
      */
@@ -27,7 +27,7 @@ public final class SelectFilter extends AbstractFilter<SelectFilter> {
     }
 
     /**
-     * a
+     * 黑名单模式
      *
      * @return a
      */

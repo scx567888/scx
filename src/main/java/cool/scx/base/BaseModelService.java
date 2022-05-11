@@ -68,11 +68,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      */
     private static SelectFilter selectFilterProcessorForTombstone(SelectFilter selectFilter) {
         if (ScxContext.easyConfig().tombstone()) {
-            if (selectFilter.filterMode() == AbstractFilter.FilterMode.EXCLUDED) {
-                selectFilter.add("tombstone");
-            } else if (selectFilter.filterMode() == AbstractFilter.FilterMode.INCLUDED) {
-                selectFilter.remove("tombstone");
-            }
+            selectFilter.addExcluded("tombstone");
         }
         return selectFilter;
     }
@@ -83,12 +79,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param updateFilter u
      */
     private static UpdateFilter updateFilterProcessorWhenSave(UpdateFilter updateFilter) {
-        if (updateFilter.filterMode() == AbstractFilter.FilterMode.EXCLUDED) {
-            updateFilter.add("id", "updateDate", "createDate", "tombstone");
-        } else if (updateFilter.filterMode() == AbstractFilter.FilterMode.INCLUDED) {
-            updateFilter.remove("id", "updateDate", "createDate", "tombstone");
-        }
-        return updateFilter;
+        return updateFilter.addExcluded("id", "updateDate", "createDate", "tombstone");
     }
 
     /**
@@ -97,12 +88,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param updateFilter u
      */
     private static UpdateFilter updateFilterProcessorWhenUpdate(UpdateFilter updateFilter) {
-        if (updateFilter.filterMode() == AbstractFilter.FilterMode.EXCLUDED) {
-            updateFilter.add("id", "updateDate", "createDate");
-        } else if (updateFilter.filterMode() == AbstractFilter.FilterMode.INCLUDED) {
-            updateFilter.remove("id", "updateDate", "createDate");
-        }
-        return updateFilter;
+        return updateFilter.addExcluded("id", "updateDate", "createDate");
     }
 
     /**
@@ -567,7 +553,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
             needTombstoneEntity.tombstone = true;
             //关于 query 字段 :  tombstone 已经为 false 的不需要在进行处理了所以添加一个排除
             //关于 updateFilter : 这里已经明确 实体类的所需字段不为空 所以为了性能此处 UpdateFilter 关闭 excludeIfFieldValueIsNull 功能
-            return this._update(needTombstoneEntity, query.equal("tombstone", false, WhereOption.REPLACE), UpdateFilter.ofIncluded(false).add("tombstone"));
+            return this._update(needTombstoneEntity, query.equal("tombstone", false, WhereOption.REPLACE), UpdateFilter.ofIncluded(false).addIncluded("tombstone"));
         }
     }
 
@@ -600,7 +586,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
             needTombstoneEntity.tombstone = true;
             //关于 query 字段 :  tombstone 已经为 false 的不需要在进行处理了所以添加一个排除
             //关于 updateFilter : 这里已经明确 实体类的所需字段不为空 所以为了性能此处 UpdateFilter 关闭 excludeIfFieldValueIsNull 功能
-            return this._update(con, needTombstoneEntity, query.equal("tombstone", false, WhereOption.REPLACE), UpdateFilter.ofIncluded(false).add("tombstone"));
+            return this._update(con, needTombstoneEntity, query.equal("tombstone", false, WhereOption.REPLACE), UpdateFilter.ofIncluded(false).addIncluded("tombstone"));
         }
     }
 
@@ -628,7 +614,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
             needRevokeDeleteModel.tombstone = false;
             //关于 query 字段 :  恢复删除的必要条件是 已经被删除了 也就是 tombstone 为 true 所以在此做一个特殊处理
             //关于 updateFilter : 这里已经明确 实体类的所需字段不为空 所以为了性能此处 UpdateFilter 关闭 excludeIfFieldValueIsNull 功能
-            return this._update(needRevokeDeleteModel, query.equal("tombstone", true, WhereOption.REPLACE), UpdateFilter.ofIncluded(false).add("tombstone"));
+            return this._update(needRevokeDeleteModel, query.equal("tombstone", true, WhereOption.REPLACE), UpdateFilter.ofIncluded(false).addIncluded("tombstone"));
         }
     }
 
@@ -660,7 +646,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
             needRevokeDeleteModel.tombstone = false;
             //关于 query 字段 :  恢复删除的必要条件是 已经被删除了 也就是 tombstone 为 true 所以在此做一个特殊处理
             //关于 updateFilter : 这里已经明确 实体类的所需字段不为空 所以为了性能此处 UpdateFilter 关闭 excludeIfFieldValueIsNull 功能
-            return this._update(con, needRevokeDeleteModel, query.equal("tombstone", true, WhereOption.REPLACE), UpdateFilter.ofIncluded(false).add("tombstone"));
+            return this._update(con, needRevokeDeleteModel, query.equal("tombstone", true, WhereOption.REPLACE), UpdateFilter.ofIncluded(false).addIncluded("tombstone"));
         }
     }
 
