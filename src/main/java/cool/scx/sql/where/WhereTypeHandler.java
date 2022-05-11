@@ -2,7 +2,7 @@ package cool.scx.sql.where;
 
 import cool.scx.sql.SQLHelper;
 import cool.scx.sql.exception.EmptyListParamWhenWhereTypeIsInOrNotIn;
-import cool.scx.sql.exception.NullInListWhenWhereTypeIsNotNull;
+import cool.scx.sql.exception.NullInListWhenWhereTypeIsNotIn;
 import cool.scx.util.CaseUtils;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
@@ -56,7 +56,7 @@ interface WhereTypeHandler {
             throw new EmptyListParamWhenWhereTypeIsInOrNotIn(whereType);
         }
         if (!info.ignoreExceptionIfNullInList() && whereType == WhereType.NOT_IN && hasNull(whereParams)) {
-            throw new NullInListWhenWhereTypeIsNotNull();
+            throw new NullInListWhenWhereTypeIsNotIn();
         }
         var sList = new String[whereParams.length];
         Arrays.fill(sList, "?");
