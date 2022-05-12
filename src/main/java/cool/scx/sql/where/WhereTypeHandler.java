@@ -1,8 +1,7 @@
 package cool.scx.sql.where;
 
 import cool.scx.sql.SQLHelper;
-import cool.scx.sql.exception.EmptyListParamWhenWhereTypeIsInOrNotIn;
-import cool.scx.sql.exception.NullInListWhenWhereTypeIsNotIn;
+import cool.scx.sql.exception.ValidParamListIsEmptyException;
 import cool.scx.util.CaseUtils;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
@@ -10,6 +9,7 @@ import cool.scx.util.tuple.Tuple2;
 import cool.scx.util.tuple.Tuples;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 interface WhereTypeHandler {
 
@@ -51,12 +51,11 @@ interface WhereTypeHandler {
 
     WhereTypeHandler IN_HANDLER = (name, whereType, value1, value2, info) -> {
         var columnName = SQLHelper.getColumnName(name, info.useJsonExtract(), info.useOriginalName());
-        var whereParams = toArray(value1);
-        if (!info.ignoreExceptionIfEmptyList() && whereParams.length == 0 && !info.skipIfEmptyList()) {
-            throw new EmptyListParamWhenWhereTypeIsInOrNotIn(whereType);
-        }
-        if (!info.ignoreExceptionIfNullInList() && whereType == WhereType.NOT_IN && hasNull(whereParams)) {
-            throw new NullInListWhenWhereTypeIsNotIn();
+        //移除空值并去重
+        var whereParams = Arrays.stream(toArray(value1)).filter(Objects::nonNull).distinct().toArray();
+        //长度为空是抛异常
+        if (whereParams.length == 0) {
+            throw new ValidParamListIsEmptyException(whereType);
         }
         var sList = new String[whereParams.length];
         Arrays.fill(sList, "?");

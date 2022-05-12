@@ -9,48 +9,28 @@ package cool.scx.sql.where;
 public enum WhereOption {
 
     /**
-     * a
+     * 替换同名的 where 参数
      */
     REPLACE,
 
     /**
      * 如果查询的参数值为 null 则跳过添加而不是报错
+     * <br>
+     * 这里虽然叫做 SKIP_IF_NULL 但实际上表示的有效参数数量是不是和所接受的参数数量一致
+     * <br>
+     * 只是为了简化书写
      */
     SKIP_IF_NULL,
 
     /**
-     * 如果查询的参数值为 null 则忽略错误(不报错,但是可能会导致不合法的 SQL 语句出现)
+     * 在 in 或 not in 中 如果有效的参数条目 (指去除 null 后的) 为空 则跳过添加而不是报错
      * <br>
-     * 优先级大于  优先级大于  {@link WhereOption#SKIP_IF_NULL}
-     */
-    IGNORE_EXCEPTION_IF_NULL,
-
-    /**
-     * 在 in 或 not in 中 如果参数列表为空则跳过添加而不是报错
+     * 和 {@link  WhereOption#SKIP_IF_NULL} 相同 是为了简化书写 其实际意义为参数中去除非法数值(为 null)后的列表长度是否为 0
      */
     SKIP_IF_EMPTY_LIST,
 
     /**
-     * 在 in 或 not in 中 如果参数列表为空则忽略错误而不是报错,但是可能会导致不合法的 SQL 语句出现
-     * <br>
-     * 优先级大于  {@link WhereOption#SKIP_IF_EMPTY_LIST}
-     */
-    IGNORE_EXCEPTION_IF_EMPTY_LIST,
-
-    /**
-     * 在 not in 中 如果参数列表中有任何元素为 null ,则跳过添加而不是报错
-     */
-    SKIP_IF_NULL_IN_LIST,
-
-    /**
-     * 在 not in 中 如果参数列表中有任何元素为 null ,则忽略错误而不是报错,但是可能会导致不合法的 SQL 语句出现
-     * <br>
-     * 优先级大于  {@link WhereOption#SKIP_IF_NULL_IN_LIST}
-     */
-    IGNORE_EXCEPTION_IF_NULL_IN_LIST,
-
-    /**
-     * a
+     * 使用原始名称 (不进行转换)
      */
     USE_ORIGINAL_NAME,
 

@@ -47,7 +47,7 @@ public final class WhereBody {
         //校验参数 并获取有效的参数数量(不为空的) 每检测到一个有效的(不为空的) 便加 1
         var validParamSize = getValidParamSize(value1, value2);
         //类型所需的参数数量和所传的合法参数数量必须一致
-        if (!info.ignoreExceptionIfNull() && whereType.paramSize() != validParamSize) {
+        if (whereType.paramSize() != validParamSize) {
             throw new WrongWhereTypeParamSizeException(whereType);
         }
         this.name = name.trim();

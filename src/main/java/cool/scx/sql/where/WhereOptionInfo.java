@@ -9,26 +9,6 @@ package cool.scx.sql.where;
 final class WhereOptionInfo {
 
     /**
-     * a
-     */
-    private boolean ignoreExceptionIfNull;
-
-    /**
-     * a
-     */
-    private boolean ignoreExceptionIfEmptyList;
-
-    /**
-     * a
-     */
-    private boolean skipIfNullInList;
-
-    /**
-     * a
-     */
-    private boolean ignoreExceptionIfNullInList;
-
-    /**
      * 是否替换已有的相同名称的 WhereBody
      */
     private boolean replace = false;
@@ -39,7 +19,7 @@ final class WhereOptionInfo {
     private boolean skipIfNull = false;
 
     /**
-     * 在 in 或 not in 中 如果参数列表为空则跳过添加而不是报错
+     * a
      */
     private boolean skipIfEmptyList = false;
 
@@ -53,56 +33,66 @@ final class WhereOptionInfo {
      */
     private boolean useJsonExtract = false;
 
-    public WhereOptionInfo(WhereOption... whereOptions) {
+    /**
+     * a
+     *
+     * @param whereOptions a
+     */
+    WhereOptionInfo(WhereOption... whereOptions) {
         for (var option : whereOptions) {
             switch (option) {
                 case REPLACE -> this.replace = true;
                 case SKIP_IF_NULL -> this.skipIfNull = true;
                 case SKIP_IF_EMPTY_LIST -> this.skipIfEmptyList = true;
-                case SKIP_IF_NULL_IN_LIST -> this.skipIfNullInList = true;
-                case IGNORE_EXCEPTION_IF_NULL -> this.ignoreExceptionIfNull = true;
-                case IGNORE_EXCEPTION_IF_EMPTY_LIST -> this.ignoreExceptionIfEmptyList = true;
-                case IGNORE_EXCEPTION_IF_NULL_IN_LIST -> this.ignoreExceptionIfNullInList = true;
                 case USE_ORIGINAL_NAME -> this.useOriginalName = true;
                 case USE_JSON_EXTRACT -> this.useJsonExtract = true;
             }
         }
     }
 
-    public boolean replace() {
+    /**
+     * a
+     *
+     * @return a
+     */
+    boolean replace() {
         return replace;
     }
 
-    public boolean skipIfNull() {
+    /**
+     * a
+     *
+     * @return a
+     */
+    boolean skipIfNull() {
         return skipIfNull;
     }
 
-    public boolean useOriginalName() {
-        return useOriginalName;
-    }
-
-    public boolean useJsonExtract() {
-        return useJsonExtract;
-    }
-
-    public boolean skipIfEmptyList() {
+    /**
+     * a
+     *
+     * @return a
+     */
+    boolean skipIfEmptyList() {
         return skipIfEmptyList;
     }
 
-    public boolean ignoreExceptionIfNull() {
-        return ignoreExceptionIfNull;
+    /**
+     * a
+     *
+     * @return a
+     */
+    boolean useOriginalName() {
+        return useOriginalName;
     }
 
-    public boolean ignoreExceptionIfEmptyList() {
-        return ignoreExceptionIfEmptyList;
-    }
-
-    public boolean skipIfNullInList() {
-        return skipIfNullInList;
-    }
-
-    public boolean ignoreExceptionIfNullInList() {
-        return ignoreExceptionIfNullInList;
+    /**
+     * a
+     *
+     * @return a
+     */
+    boolean useJsonExtract() {
+        return useJsonExtract;
     }
 
 }
