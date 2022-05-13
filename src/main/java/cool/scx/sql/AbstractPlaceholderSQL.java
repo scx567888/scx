@@ -22,25 +22,31 @@ public abstract class AbstractPlaceholderSQL<T> {
     /**
      * a
      */
-    String normalSQL;
+    final String normalSQL;
 
     /**
      * a
      */
-    T params;
+    final T params;
 
     /**
      * a
      */
-    List<T> batchParams;
+    final List<T> batchParams;
 
     /**
      * a
      *
-     * @param isBatch a
+     * @param isBatch     a
+     * @param normalSQL   a
+     * @param params      a
+     * @param batchParams a
      */
-    protected AbstractPlaceholderSQL(boolean isBatch) {
+    protected AbstractPlaceholderSQL(boolean isBatch, String normalSQL, T params, List<T> batchParams) {
         this.isBatch = isBatch;
+        this.normalSQL = normalSQL;
+        this.params = params;
+        this.batchParams = batchParams;
     }
 
     /**
@@ -50,7 +56,7 @@ public abstract class AbstractPlaceholderSQL<T> {
      * @param params            a
      * @throws java.sql.SQLException a
      */
-    public static void fillPreparedStatement(PreparedStatement preparedStatement, Object[] params) throws SQLException {
+    protected static void fillPreparedStatement(PreparedStatement preparedStatement, Object[] params) throws SQLException {
         var index = 1;
         for (var tempValue : params) {
             if (tempValue != null) {

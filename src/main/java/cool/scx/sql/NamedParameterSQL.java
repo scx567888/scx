@@ -1,5 +1,8 @@
 package cool.scx.sql;
 
+import cool.scx.util.tuple.Tuple2;
+import cool.scx.util.tuple.Tuples;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -10,7 +13,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
- * a
+ * 具名参数 sql
  *
  * @author scx567888
  * @version 1.5.0
@@ -30,33 +33,51 @@ public final class NamedParameterSQL extends AbstractPlaceholderSQL<Map<String, 
     /**
      * a
      *
-     * @param namedParameterSQL a
-     * @param params            a
+     * @param isBatch                 a
+     * @param normalSQL               a
+     * @param params                  a
+     * @param batchParams             a
+     * @param namedParameterNameIndex a
      */
-    public NamedParameterSQL(String namedParameterSQL, Map<String, Object> params) {
-        super(false);
-        this.namedParameterNameIndex = initNamedParameterNameIndex(namedParameterSQL);
-        this.params = params;
+    private NamedParameterSQL(boolean isBatch, String normalSQL, Map<String, Object> params, List<Map<String, Object>> batchParams, String[] namedParameterNameIndex) {
+        super(isBatch, normalSQL, params, batchParams);
+        this.namedParameterNameIndex = namedParameterNameIndex;
     }
 
     /**
-     * 批量
+     * a
+     *
+     * @param namedParameterSQL a
+     * @param params            a
+     * @return a
+     */
+    public static NamedParameterSQL of(String namedParameterSQL, Map<String, Object> params) {
+        var t = initNamedParameterNameIndex(namedParameterSQL);
+        return new NamedParameterSQL(false, t.value0(), params, null, t.value1());
+    }
+
+    /**
+     * a
      *
      * @param namedParameterSQL a
      * @param batchParams       a
+     * @return a
      */
-    public NamedParameterSQL(String namedParameterSQL, List<Map<String, Object>> batchParams) {
-        super(true);
-        this.namedParameterNameIndex = initNamedParameterNameIndex(namedParameterSQL);
-        this.batchParams = batchParams != null ? batchParams : new ArrayList<>();
+    public static NamedParameterSQL ofBatch(String namedParameterSQL, List<Map<String, Object>> batchParams) {
+        if (batchParams == null) {
+            batchParams = new ArrayList<>();
+        }
+        var t = initNamedParameterNameIndex(namedParameterSQL);
+        return new NamedParameterSQL(true, t.value0(), null, batchParams, t.value1());
     }
 
     /**
      * 初始化 namedParameterSQL;
      *
      * @param namedParameterSQL a
+     * @return a
      */
-    private String[] initNamedParameterNameIndex(String namedParameterSQL) {
+    private static Tuple2<String, String[]> initNamedParameterNameIndex(String namedParameterSQL) {
         var matcher = NAMED_PARAMETER_PATTERN.matcher(namedParameterSQL);
         var normalSQL = new StringBuilder();
         var tempNameIndexList = new ArrayList<String>();
@@ -65,8 +86,7 @@ public final class NamedParameterSQL extends AbstractPlaceholderSQL<Map<String, 
             tempNameIndexList.add(matcher.group(1));
         }
         matcher.appendTail(normalSQL);
-        this.normalSQL = normalSQL.toString();
-        return tempNameIndexList.toArray(String[]::new);
+        return Tuples.of(normalSQL.toString(), tempNameIndexList.toArray(String[]::new));
     }
 
     /**
