@@ -79,11 +79,10 @@ public class BasicService<Entity> {
      *
      * @param entity       待插入的数据
      * @param updateFilter a
-     * @return 插入成功的主键 ID 如果插入失败则返回 null
+     * @return 插入成功的主键 ID 如果插入失败或数据没有主键则返回 null
      */
     public final Long _insert(Entity entity, UpdateFilter updateFilter) {
-        var updateResult = ScxContext.sqlRunner().update(_buildInsertSQL(entity, updateFilter));
-        return updateResult.generatedKeys().size() > 0 ? updateResult.generatedKeys().get(0) : null;
+        return ScxContext.sqlRunner().update(_buildInsertSQL(entity, updateFilter)).firstGeneratedKey();
     }
 
     /**
@@ -92,12 +91,11 @@ public class BasicService<Entity> {
      * @param entity       待插入的数据
      * @param con          外部传来的连接 (useInternalConnection 为 false 是使用)
      * @param updateFilter a
-     * @return 插入成功的主键 ID 如果插入失败则返回 null
+     * @return 插入成功的主键 ID 如果插入失败或数据没有主键则返回 null
      * @throws java.sql.SQLException if any.
      */
     public final Long _insert(Connection con, Entity entity, UpdateFilter updateFilter) throws SQLException {
-        var updateResult = SQLRunner.update(con, _buildInsertSQL(entity, updateFilter));
-        return updateResult.generatedKeys().size() > 0 ? updateResult.generatedKeys().get(0) : null;
+        return SQLRunner.update(con, _buildInsertSQL(entity, updateFilter)).firstGeneratedKey();
     }
 
     /**
