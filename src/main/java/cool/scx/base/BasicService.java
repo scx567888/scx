@@ -15,6 +15,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -132,7 +133,7 @@ public class BasicService<Entity> {
      * @return 保存成功的主键 (ID) 列表
      * @throws java.sql.SQLException if any.
      */
-    public final List<Long> _insertBatch(Connection con, List<Entity> entityList, UpdateFilter updateFilter) throws SQLException {
+    public final List<Long> _insertBatch(Connection con, Collection<Entity> entityList, UpdateFilter updateFilter) throws SQLException {
         var parameter = _buildInsertBatchParameter(entityList, updateFilter);
         return SQLRunner.updateBatch(con, new PlaceholderSQL(parameter.value0(), parameter.value1())).generatedKeys();
     }
@@ -144,16 +145,16 @@ public class BasicService<Entity> {
      * @param updateFilter a
      * @return a
      */
-    private Tuple2<String, List<Object[]>> _buildInsertBatchParameter(List<Entity> entityList, UpdateFilter updateFilter) {
+    private Tuple2<String, List<Object[]>> _buildInsertBatchParameter(Collection<Entity> entityList, UpdateFilter updateFilter) {
         var insertColumns = updateFilter != null ? updateFilter.filter(scxDaoTableInfo.columnInfos()) : scxDaoTableInfo.columnInfos();
         //将 entityList 转换为 objectArrayList
         var objectArrayList = new ArrayList<Object[]>();
         for (var entity : entityList) {
-            var o = new ArrayList<>();
-            for (var insertColumn : insertColumns) {
-                o.add(insertColumn.getFieldValue(entity));
+            var o = new Object[insertColumns.length];
+            for (int i = 0; i < insertColumns.length; i++) {
+                o[i] = insertColumns[i].getFieldValue(entity);
             }
-            objectArrayList.add(o.toArray());
+            objectArrayList.add(o);
         }
         var sql = SQLBuilder.Insert(scxDaoTableInfo.tableName(), insertColumns).Values(insertColumns).GetSQL();
         return Tuples.of(sql, objectArrayList);

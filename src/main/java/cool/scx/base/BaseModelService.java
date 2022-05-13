@@ -6,6 +6,7 @@ import cool.scx.sql.where.WhereOption;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -174,7 +175,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @return 插入成功的数据的自增主键列表
      * @throws java.sql.SQLException if any.
      */
-    public final List<Long> save(Connection con, List<Entity> entityList) throws SQLException {
+    public final List<Long> save(Connection con, Collection<Entity> entityList) throws SQLException {
         return save(con, entityList, UpdateFilter.ofExcluded());
     }
 
@@ -187,7 +188,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @return a
      * @throws SQLException a
      */
-    public List<Long> save(Connection con, List<Entity> entityList, UpdateFilter updateFilter) throws SQLException {
+    public List<Long> save(Connection con, Collection<Entity> entityList, UpdateFilter updateFilter) throws SQLException {
         if (entityList == null || entityList.size() == 0) {
             return new ArrayList<>();
         } else {
