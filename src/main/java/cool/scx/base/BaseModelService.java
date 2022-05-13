@@ -550,7 +550,10 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @throws SQLException e
      */
     public final long delete(Connection con, long... ids) throws SQLException {
-        return delete(con, new Query().in("id", ids));
+        if (ids.length == 0) {
+            throw new IllegalArgumentException("待删除的 ids 数量至少为 1 个");
+        }
+        return delete(con, ids.length == 1 ? new Query().equal("id", ids[0]) : new Query().in("id", ids));
     }
 
     /**
@@ -581,7 +584,10 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @return 恢复删除成功的数据条数
      */
     public final long revokeDelete(long... ids) {
-        return this.revokeDelete(new Query().in("id", ids));
+        if (ids.length == 0) {
+            throw new IllegalArgumentException("待恢复删除的 ids 数量至少为 1 个");
+        }
+        return this.revokeDelete(ids.length == 1 ? new Query().equal("id", ids[0]) : new Query().in("id", ids));
     }
 
     /**
@@ -611,7 +617,10 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @throws SQLException s
      */
     public final long revokeDelete(Connection con, long... ids) throws SQLException {
-        return this.revokeDelete(con, new Query().in("id", ids));
+        if (ids.length == 0) {
+            throw new IllegalArgumentException("待恢复删除的 ids 数量至少为 1 个");
+        }
+        return this.revokeDelete(con, ids.length == 1 ? new Query().equal("id", ids[0]) : new Query().in("id", ids));
     }
 
     /**
