@@ -12,7 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Map;
+import java.util.List;
 
 /**
  * SQLRunner 执行 sql 语句
@@ -45,19 +45,8 @@ public final class SQLRunner {
         }
     }
 
-    /**
-     * 查询 返回值为 map集合
-     *
-     * @param sql              a {@link java.lang.String} object.
-     * @param param            a {@link java.util.Map} object.
-     * @param con              a {@link java.sql.Connection} object
-     * @param resultSetHandler a  object
-     * @param <T>              a T class
-     * @return a map 集合
-     * @throws java.sql.SQLException if any.
-     */
-    public static <T> T query(Connection con, String sql, ScxHandlerRE<ResultSet, T, SQLException> resultSetHandler, Map<String, Object> param) throws SQLException {
-        try (var preparedStatement = new NamedParameterSQL(sql, param).getPreparedStatement(con)) {
+    public static <T> T query(Connection con, AbstractPlaceholderSQL<?> placeholderSQL, ScxHandlerRE<ResultSet, T, SQLException> resultSetHandler) throws SQLException {
+        try (var preparedStatement = placeholderSQL.getPreparedStatement(con)) {
             var resultSet = preparedStatement.executeQuery();
             return resultSetHandler.handle(resultSet);
         }
@@ -66,115 +55,24 @@ public final class SQLRunner {
     /**
      * a
      *
-     * @param con              a {@link java.sql.Connection} object
-     * @param sql              a
-     * @param resultSetHandler a
-     * @param sqlParameters    a
-     * @param <T>              a
+     * @param con            a
+     * @param placeholderSQL a
      * @return a
      * @throws java.sql.SQLException a
      */
-    public static <T> T query(Connection con, String sql, ScxHandlerRE<ResultSet, T, SQLException> resultSetHandler, Object... sqlParameters) throws SQLException {
-        try (var preparedStatement = new PlaceholderSQL(sql, sqlParameters).getPreparedStatement(con)) {
-            var resultSet = preparedStatement.executeQuery();
-            return resultSetHandler.handle(resultSet);
-        }
-    }
-
-    /**
-     * 执行 sql 语句
-     *
-     * @param sql   a {@link java.lang.String} object.
-     * @param param a {@link java.util.Map} object.
-     * @param con   a Connection object
-     * @return a 执行结果
-     * @throws java.sql.SQLException if any.
-     */
-    public static int execute(Connection con, String sql, Map<String, Object> param) throws SQLException {
-        try (var preparedStatement = new NamedParameterSQL(sql, param).getPreparedStatement(con)) {
+    public static long execute(Connection con, AbstractPlaceholderSQL<?> placeholderSQL) throws SQLException {
+        try (var preparedStatement = placeholderSQL.getPreparedStatement(con)) {
             preparedStatement.execute();
-            return preparedStatement.getUpdateCount();
+            return preparedStatement.getLargeUpdateCount();
         }
     }
 
-    /**
-     * a
-     *
-     * @param con           a
-     * @param sql           a
-     * @param sqlParameters a
-     * @return a
-     * @throws java.sql.SQLException a
-     */
-    public static int execute(Connection con, String sql, Object... sqlParameters) throws SQLException {
-        try (var preparedStatement = new PlaceholderSQL(sql, sqlParameters).getPreparedStatement(con)) {
-            preparedStatement.execute();
-            return preparedStatement.getUpdateCount();
+    public static UpdateResult update(Connection con, AbstractPlaceholderSQL<?> placeholderSQL) throws SQLException {
+        try (var preparedStatement = placeholderSQL.getPreparedStatement(con)) {
+            var affectedItemsCount = preparedStatement.executeLargeUpdate();
+            var generatedKeys = getGeneratedKeys(preparedStatement);
+            return new UpdateResult(affectedItemsCount, generatedKeys);
         }
-    }
-
-    /**
-     * 执行更新语句
-     *
-     * @param sql   a {@link java.lang.String} object.
-     * @param param a {@link java.util.Map} object.
-     * @param con   a Connection object
-     * @return a {@link cool.scx.sql.UpdateResult} object.
-     * @throws java.sql.SQLException if any.
-     */
-    public static UpdateResult update(Connection con, String sql, Map<String, Object> param) throws SQLException {
-        try (var preparedStatement = new NamedParameterSQL(sql, param).getPreparedStatement(con)) {
-            return getUpdateResult(preparedStatement);
-        }
-    }
-
-    /**
-     * a
-     *
-     * @param con           a
-     * @param sql           a
-     * @param sqlParameters a
-     * @return a
-     * @throws java.sql.SQLException a
-     */
-    public static UpdateResult update(Connection con, String sql, Object... sqlParameters) throws SQLException {
-        try (var preparedStatement = new PlaceholderSQL(sql, sqlParameters).getPreparedStatement(con)) {
-            return getUpdateResult(preparedStatement);
-        }
-    }
-
-    /**
-     * <p>getUpdateResult.</p>
-     *
-     * @param preparedStatement a PreparedStatement object
-     * @return a {@link cool.scx.sql.UpdateResult} object
-     * @throws java.sql.SQLException if any.
-     */
-    private static UpdateResult getUpdateResult(PreparedStatement preparedStatement) throws SQLException {
-        var affectedLength = preparedStatement.executeUpdate();
-        var resultSet = preparedStatement.getGeneratedKeys();
-        var ids = new ArrayList<Long>();
-        while (resultSet.next()) {
-            ids.add(resultSet.getLong(1));
-        }
-        return new UpdateResult(affectedLength, ids);
-    }
-
-    /**
-     * a
-     *
-     * @param preparedStatement a
-     * @return a
-     * @throws SQLException a
-     */
-    private static UpdateResult getBatchUpdateResult(PreparedStatement preparedStatement) throws SQLException {
-        var affectedLength = preparedStatement.executeBatch().length;
-        var resultSet = preparedStatement.getGeneratedKeys();
-        var ids = new ArrayList<Long>();
-        while (resultSet.next()) {
-            ids.add(resultSet.getLong(1));
-        }
-        return new UpdateResult(affectedLength, ids);
     }
 
     /**
@@ -187,7 +85,9 @@ public final class SQLRunner {
      */
     public static UpdateResult updateBatch(Connection con, AbstractPlaceholderSQL<?> placeholderSQL) throws SQLException {
         try (var preparedStatement = placeholderSQL.getPreparedStatement(con)) {
-            return getBatchUpdateResult(preparedStatement);
+            var affectedItemsCount = preparedStatement.executeLargeBatch().length;
+            var generatedKeys = getGeneratedKeys(preparedStatement);
+            return new UpdateResult(affectedItemsCount, generatedKeys);
         }
     }
 
@@ -231,35 +131,25 @@ public final class SQLRunner {
     }
 
     /**
-     * 查询 返回值为 map集合
+     * <p>getUpdateResult.</p>
      *
-     * @param sql              a {@link java.lang.String} object.
-     * @param param            a {@link java.util.Map} object.
-     * @param resultSetHandler a object
-     * @param <T>              a T class
-     * @return a map 集合
+     * @param preparedStatement a PreparedStatement object
+     * @return a {@link cool.scx.sql.UpdateResult} object
+     * @throws java.sql.SQLException if any.
      */
-    public <T> T query(String sql, ScxHandlerRE<ResultSet, T, SQLException> resultSetHandler, Map<String, Object> param) {
-        return ScxExceptionHelper.wrap(() -> {
-            try (var con = dataSource.getConnection()) {
-                return query(con, sql, resultSetHandler, param);
-            }
-        });
+    private static List<Long> getGeneratedKeys(PreparedStatement preparedStatement) throws SQLException {
+        var resultSet = preparedStatement.getGeneratedKeys();
+        var ids = new ArrayList<Long>();
+        while (resultSet.next()) {
+            ids.add(resultSet.getLong(1));
+        }
+        return ids;
     }
 
-    /**
-     * a
-     *
-     * @param sql              a
-     * @param resultSetHandler a
-     * @param sqlParameters    a
-     * @param <T>              a
-     * @return a
-     */
-    public <T> T query(String sql, ScxHandlerRE<ResultSet, T, SQLException> resultSetHandler, Object... sqlParameters) {
+    public <T> T query(AbstractPlaceholderSQL<?> placeholderSQL, ScxHandlerRE<ResultSet, T, SQLException> resultSetHandler) {
         return ScxExceptionHelper.wrap(() -> {
             try (var con = dataSource.getConnection()) {
-                return query(con, sql, resultSetHandler, sqlParameters);
+                return query(con, placeholderSQL, resultSetHandler);
             }
         });
     }
@@ -267,14 +157,13 @@ public final class SQLRunner {
     /**
      * 执行 sql 语句
      *
-     * @param sql   a {@link java.lang.String} object.
-     * @param param a {@link java.util.Map} object.
+     * @param placeholderSQL a {@link java.lang.String} object.
      * @return a 执行结果
      */
-    public int execute(String sql, Map<String, Object> param) {
+    public long execute(AbstractPlaceholderSQL<?> placeholderSQL) {
         return ScxExceptionHelper.wrap(() -> {
             try (var con = dataSource.getConnection()) {
-                return execute(con, sql, param);
+                return execute(con, placeholderSQL);
             }
         });
     }
@@ -282,44 +171,13 @@ public final class SQLRunner {
     /**
      * a
      *
-     * @param sql           a
-     * @param sqlParameters a
+     * @param placeholderSQL a
      * @return a
      */
-    public int execute(String sql, Object... sqlParameters) {
+    public UpdateResult update(AbstractPlaceholderSQL<?> placeholderSQL) {
         return ScxExceptionHelper.wrap(() -> {
             try (var con = dataSource.getConnection()) {
-                return execute(con, sql, sqlParameters);
-            }
-        });
-    }
-
-    /**
-     * 执行更新语句
-     *
-     * @param sql   a {@link java.lang.String} object.
-     * @param param a {@link java.util.Map} object.
-     * @return a {@link cool.scx.sql.UpdateResult} object.
-     */
-    public UpdateResult update(String sql, Map<String, Object> param) {
-        return ScxExceptionHelper.wrap(() -> {
-            try (var con = dataSource.getConnection()) {
-                return update(con, sql, param);
-            }
-        });
-    }
-
-    /**
-     * a
-     *
-     * @param sql           a
-     * @param sqlParameters a
-     * @return a
-     */
-    public UpdateResult update(String sql, Object... sqlParameters) {
-        return ScxExceptionHelper.wrap(() -> {
-            try (var con = dataSource.getConnection()) {
-                return update(con, sql, sqlParameters);
+                return update(con, placeholderSQL);
             }
         });
     }

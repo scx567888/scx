@@ -8,23 +8,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * a
+ * 标准 问号形式 (?) 的占位 SQL
  *
  * @author scx567888
  * @version 1.5.0
  */
 public final class PlaceholderSQL extends AbstractPlaceholderSQL<Object[]> {
 
+    private PlaceholderSQL(boolean isBatch, String normalSQL, Object[] params, List<Object[]> batchParams) {
+        super(isBatch, normalSQL, params, batchParams);
+    }
+
     /**
-     * 构建一个占位符 sql
+     * a
      *
      * @param normalSQL a
      * @param params    a
+     * @return a
      */
-    public PlaceholderSQL(String normalSQL, Object... params) {
-        super(false);
-        this.normalSQL = normalSQL;
-        this.params = params;
+    public static PlaceholderSQL of(String normalSQL, Object... params) {
+        return new PlaceholderSQL(false, normalSQL, params, null);
     }
 
     /**
@@ -32,11 +35,13 @@ public final class PlaceholderSQL extends AbstractPlaceholderSQL<Object[]> {
      *
      * @param normalSQL   a
      * @param batchParams a
+     * @return a
      */
-    public PlaceholderSQL(String normalSQL, List<Object[]> batchParams) {
-        super(true);
-        this.normalSQL = normalSQL;
-        this.batchParams = batchParams != null ? batchParams : new ArrayList<>();
+    public static PlaceholderSQL ofBatch(String normalSQL, List<Object[]> batchParams) {
+        if (batchParams == null) {
+            batchParams = new ArrayList<>();
+        }
+        return new PlaceholderSQL(true, normalSQL, null, batchParams);
     }
 
     @Override
