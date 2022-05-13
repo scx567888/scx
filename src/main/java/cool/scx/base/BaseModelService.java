@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import static cool.scx.base.BaseModelServiceHelper.*;
+
 /**
  * 提供一些针对 BaseModel 类型实体类 简单的 CRUD 操作的 service 类
  * <p>
@@ -62,7 +64,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @return 插入成功的主键 ID 如果插入失败或数据没有主键则返回 null
      */
     public Long save(Entity entity, UpdateFilter updateFilter) {
-        return this._insert(entity, BaseModelServiceHelper.updateFilterProcessor(updateFilter));
+        return this._insert(entity, updateFilterProcessor(updateFilter));
     }
 
     /**
@@ -84,7 +86,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @return a
      */
     public List<Long> save(Collection<Entity> entityList, UpdateFilter updateFilter) {
-        return this._insertBatch(entityList, BaseModelServiceHelper.updateFilterProcessor(updateFilter));
+        return this._insertBatch(entityList, updateFilterProcessor(updateFilter));
     }
 
     /**
@@ -109,7 +111,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @throws java.sql.SQLException if any.
      */
     public Long save(Connection con, Entity entity, UpdateFilter updateFilter) throws SQLException {
-        return this._insert(con, entity, BaseModelServiceHelper.updateFilterProcessor(updateFilter));
+        return this._insert(con, entity, updateFilterProcessor(updateFilter));
     }
 
     /**
@@ -137,7 +139,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
         if (entityList == null || entityList.size() == 0) {
             return new ArrayList<>();
         } else {
-            return this._insertBatch(con, entityList, BaseModelServiceHelper.updateFilterProcessor(updateFilter));
+            return this._insertBatch(con, entityList, updateFilterProcessor(updateFilter));
         }
     }
 
@@ -178,7 +180,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @return a
      */
     public List<Entity> list(Query query, SelectFilter selectFilter) {
-        return this._select(BaseModelServiceHelper.queryProcessorForTombstone(query), BaseModelServiceHelper.selectFilterProcessorForTombstone(selectFilter));
+        return this._select(queryProcessor(query), selectFilterProcessor(selectFilter));
     }
 
     /**
@@ -226,7 +228,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @throws SQLException a
      */
     public List<Entity> list(Connection con, Query query, SelectFilter selectFilter) throws SQLException {
-        return this._select(con, BaseModelServiceHelper.queryProcessorForTombstone(query), BaseModelServiceHelper.selectFilterProcessorForTombstone(selectFilter));
+        return this._select(con, queryProcessor(query), selectFilterProcessor(selectFilter));
     }
 
     /**
@@ -339,7 +341,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @return 数据条数
      */
     public long count(Query query) {
-        return this._count(BaseModelServiceHelper.queryProcessorForTombstone(query));
+        return this._count(queryProcessor(query));
     }
 
     /**
@@ -362,7 +364,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @throws SQLException s
      */
     public long count(Connection con, Query query) throws SQLException {
-        return this._count(con, BaseModelServiceHelper.queryProcessorForTombstone(query));
+        return this._count(con, queryProcessor(query));
     }
 
     /**
@@ -410,7 +412,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      */
     public long update(Entity entity, Query query, UpdateFilter updateFilter) {
         //更新成功的条数
-        return this._update(entity, BaseModelServiceHelper.queryProcessorForTombstone(query), BaseModelServiceHelper.updateFilterProcessor(updateFilter));
+        return this._update(entity, queryProcessor(query), updateFilterProcessor(updateFilter));
     }
 
     /**
@@ -466,7 +468,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      */
     public long update(Connection con, Entity entity, Query query, UpdateFilter updateFilter) throws SQLException {
         //更新成功的条数
-        return this._update(con, entity, BaseModelServiceHelper.queryProcessorForTombstone(query), BaseModelServiceHelper.updateFilterProcessor(updateFilter));
+        return this._update(con, entity, queryProcessor(query), updateFilterProcessor(updateFilter));
     }
 
     /**

@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 
+import static cool.scx.base.BaseModelServiceHelper.queryProcessor;
+
 /**
  * 增强版的 baseModelService 提供了 添加并获取 和 更新并获取 方法
  *
@@ -152,7 +154,7 @@ public class EnhancedBaseModelService<Entity extends BaseModel> extends BaseMode
      * @return 更新成功的数据条数
      */
     public final List<Entity> updateAndGet(Entity entity, Query query) {
-        BaseModelServiceHelper.queryProcessorForTombstone(query);
+        queryProcessor(query);
         //因为 id 是不允许更新的所以这里可以放心获取
         var ids = this.list(query, SelectFilter.ofIncluded().addIncluded("id")).stream().map(c -> c.id).toArray();
         this.update(entity, query);
@@ -169,7 +171,7 @@ public class EnhancedBaseModelService<Entity extends BaseModel> extends BaseMode
      * @return 受影响的条数
      */
     public final List<Entity> updateAndGet(Entity entity, Query query, UpdateFilter updateFilter) {
-        BaseModelServiceHelper.queryProcessorForTombstone(query);
+        queryProcessor(query);
         //因为 id 是不允许更新的所以这里可以放心获取
         var ids = this.list(query, SelectFilter.ofIncluded().addIncluded("id")).stream().map(c -> c.id).toArray();
         this.update(entity, query, updateFilter);
@@ -214,7 +216,7 @@ public class EnhancedBaseModelService<Entity extends BaseModel> extends BaseMode
      * @throws SQLException s
      */
     public final List<Entity> updateAndGet(Connection con, Entity entity, Query query) throws SQLException {
-        BaseModelServiceHelper.queryProcessorForTombstone(query);
+        queryProcessor(query);
         //因为 id 是不允许更新的所以这里可以放心获取
         var ids = this.list(con, query, SelectFilter.ofIncluded().addIncluded("id")).stream().map(c -> c.id).toArray();
         this.update(con, entity, query);
@@ -233,7 +235,7 @@ public class EnhancedBaseModelService<Entity extends BaseModel> extends BaseMode
      * @throws SQLException s
      */
     public final List<Entity> updateAndGet(Connection con, Entity entity, Query query, UpdateFilter updateFilter) throws SQLException {
-        BaseModelServiceHelper.queryProcessorForTombstone(query);
+        queryProcessor(query);
         //因为 id 是不允许更新的所以这里可以放心获取
         var ids = this.list(con, query, SelectFilter.ofIncluded().addIncluded("id")).stream().map(c -> c.id).toArray();
         this.update(con, entity, query, updateFilter);

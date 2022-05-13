@@ -17,7 +17,7 @@ final class BaseModelServiceHelper {
      *
      * @param query q
      */
-    static Query queryProcessorForTombstone(Query query) {
+    static Query queryProcessor(Query query) {
         if (ScxContext.easyConfig().tombstone()) {
             query.equal("tombstone", false, WhereOption.REPLACE);
         }
@@ -25,11 +25,11 @@ final class BaseModelServiceHelper {
     }
 
     /**
-     * 当 启用逻辑删除时 则不允许查询 tombstone 值 所以再次进行处理
+     * 当 启用逻辑删除时 则不允许查询 tombstone 值 所以在此进行处理
      *
      * @param selectFilter s
      */
-    static SelectFilter selectFilterProcessorForTombstone(SelectFilter selectFilter) {
+    static SelectFilter selectFilterProcessor(SelectFilter selectFilter) {
         if (ScxContext.easyConfig().tombstone()) {
             selectFilter.addExcluded("tombstone");
         }
