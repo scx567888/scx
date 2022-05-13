@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import static cool.scx.base.BaseModelServiceHelper.*;
+
 /**
  * 提供一些针对 BaseModel 类型实体类 简单的 CRUD 操作的 service 类
  * <p>
@@ -44,61 +46,12 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     }
 
     /**
-     * 处理墓碑机制的数据
-     * <br>
-     * 如果没有开启墓碑机制 : 不做任何处理
-     * <br>
-     * 如果开启墓碑机制 做以下处理
-     * 1, 在查询条件强制添加 tombstone 字段值等于 false
-     * <br>
-     * 2, 根据不同的 selectFilter 类型进行查询参数过滤 隐藏数据库中所有 tombstone 字段的信息
-     *
-     * @param query q
-     */
-    private static Query queryProcessorForTombstone(Query query) {
-        if (ScxContext.easyConfig().tombstone()) {
-            query.equal("tombstone", false, WhereOption.REPLACE);
-        }
-        return query;
-    }
-
-    /**
-     * 当 启用逻辑删除时 则不允许查询 tombstone 值 所以再次进行处理
-     *
-     * @param selectFilter s
-     */
-    private static SelectFilter selectFilterProcessorForTombstone(SelectFilter selectFilter) {
-        if (ScxContext.easyConfig().tombstone()) {
-            selectFilter.addExcluded("tombstone");
-        }
-        return selectFilter;
-    }
-
-    /**
-     * 处理 updateFilter  使在插入数据时永远过滤 "id", "updateDate", "createDate", "tombstone" 四个字段
-     *
-     * @param updateFilter u
-     */
-    private static UpdateFilter updateFilterProcessorWhenSave(UpdateFilter updateFilter) {
-        return updateFilter.addExcluded("id", "updateDate", "createDate", "tombstone");
-    }
-
-    /**
-     * 处理 updateFilter  使在更新数据时永远过滤 "id", "updateDate", "createDate" 三个字段
-     *
-     * @param updateFilter u
-     */
-    private static UpdateFilter updateFilterProcessorWhenUpdate(UpdateFilter updateFilter) {
-        return updateFilter.addExcluded("id", "updateDate", "createDate");
-    }
-
-    /**
      * 插入数据
      *
      * @param entity 待插入的数据
-     * @return 插入后的数据
+     * @return 插入成功的主键 ID 如果插入失败或数据没有主键则返回 null
      */
-    public final Entity save(Entity entity) {
+    public final Long save(Entity entity) {
         //此处使用一个默认的 UpdateFilter 用来过滤实体类中为空的字段
         return save(entity, UpdateFilter.ofExcluded());
     }
@@ -108,11 +61,10 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      *
      * @param entity       a
      * @param updateFilter a
-     * @return a
+     * @return 插入成功的主键 ID 如果插入失败或数据没有主键则返回 null
      */
-    public Entity save(Entity entity, UpdateFilter updateFilter) {
-        var newId = this._insert(entity, updateFilterProcessorWhenSave(updateFilter));
-        return this.get(newId);
+    public Long save(Entity entity, UpdateFilter updateFilter) {
+        return this._insert(entity, updateFilterProcessor(updateFilter));
     }
 
     /**
@@ -134,37 +86,32 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @return a
      */
     public List<Long> save(Collection<Entity> entityList, UpdateFilter updateFilter) {
-        if (entityList == null || entityList.size() == 0) {
-            return new ArrayList<>();
-        } else {
-            return this._insertBatch(entityList, updateFilterProcessorWhenSave(updateFilter));
-        }
+        return this._insertBatch(entityList, updateFilterProcessor(updateFilter));
     }
 
     /**
      * 插入数据 (不使用自动提交)
      *
+     * @param con    a {@link Connection} object
      * @param entity 待插入的数据
-     * @param con    a {@link java.sql.Connection} object
      * @return 插入后的数据
      * @throws java.sql.SQLException if any.
      */
-    public final Entity save(Connection con, Entity entity) throws SQLException {
+    public final Long save(Connection con, Entity entity) throws SQLException {
         return save(con, entity, UpdateFilter.ofExcluded());
     }
 
     /**
      * 插入数据 (不使用自动提交)
      *
+     * @param con          a {@link Connection} object
      * @param entity       待插入的数据
-     * @param con          a {@link java.sql.Connection} object
      * @param updateFilter u
      * @return 插入后的数据
      * @throws java.sql.SQLException if any.
      */
-    public Entity save(Connection con, Entity entity, UpdateFilter updateFilter) throws SQLException {
-        var newId = this._insert(con, entity, updateFilterProcessorWhenSave(updateFilter));
-        return this.get(con, newId);
+    public Long save(Connection con, Entity entity, UpdateFilter updateFilter) throws SQLException {
+        return this._insert(con, entity, updateFilterProcessor(updateFilter));
     }
 
     /**
@@ -192,7 +139,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
         if (entityList == null || entityList.size() == 0) {
             return new ArrayList<>();
         } else {
-            return this._insertBatch(con, entityList, updateFilterProcessorWhenSave(updateFilter));
+            return this._insertBatch(con, entityList, updateFilterProcessor(updateFilter));
         }
     }
 
@@ -233,7 +180,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @return a
      */
     public List<Entity> list(Query query, SelectFilter selectFilter) {
-        return this._select(queryProcessorForTombstone(query), selectFilterProcessorForTombstone(selectFilter));
+        return this._select(queryProcessor(query), selectFilterProcessor(selectFilter));
     }
 
     /**
@@ -281,7 +228,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @throws SQLException a
      */
     public List<Entity> list(Connection con, Query query, SelectFilter selectFilter) throws SQLException {
-        return this._select(con, queryProcessorForTombstone(query), selectFilterProcessorForTombstone(selectFilter));
+        return this._select(con, queryProcessor(query), selectFilterProcessor(selectFilter));
     }
 
     /**
@@ -394,7 +341,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @return 数据条数
      */
     public long count(Query query) {
-        return this._count(queryProcessorForTombstone(query));
+        return this._count(queryProcessor(query));
     }
 
     /**
@@ -417,7 +364,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @throws SQLException s
      */
     public long count(Connection con, Query query) throws SQLException {
-        return this._count(con, queryProcessorForTombstone(query));
+        return this._count(con, queryProcessor(query));
     }
 
     /**
@@ -426,7 +373,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param entity 待更新的数据 ( 注意: 请保证数据中 id 字段不为空 )
      * @return 更新成功后的数据
      */
-    public final Entity update(Entity entity) {
+    public final long update(Entity entity) {
         return update(entity, UpdateFilter.ofExcluded());
     }
 
@@ -437,12 +384,11 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param updateFilter a
      * @return a
      */
-    public final Entity update(Entity entity, UpdateFilter updateFilter) {
+    public final long update(Entity entity, UpdateFilter updateFilter) {
         if (entity.id == null) {
             throw new RuntimeException("根据 id 更新时 id 不能为空");
         }
-        var l = this.update(entity, new Query().equal("id", entity.id), updateFilter);
-        return l == 1 ? this.get(entity.id) : null;
+        return this.update(entity, new Query().equal("id", entity.id), updateFilter);
     }
 
     /**
@@ -462,40 +408,39 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param entity       a
      * @param query        a
      * @param updateFilter a
-     * @return a
+     * @return 受影响的条数
      */
     public long update(Entity entity, Query query, UpdateFilter updateFilter) {
         //更新成功的条数
-        return this._update(entity, queryProcessorForTombstone(query), updateFilterProcessorWhenUpdate(updateFilter));
+        return this._update(entity, queryProcessor(query), updateFilterProcessor(updateFilter));
     }
 
     /**
      * 根据  id 更新
      *
-     * @param con    a {@link java.sql.Connection} object
+     * @param con    a {@link Connection} object
      * @param entity 待更新的数据 ( 注意: 请保证数据中 id 字段不为空 )
      * @return 更新成功后的数据
      * @throws SQLException s
      */
-    public final Entity update(Connection con, Entity entity) throws SQLException {
+    public final long update(Connection con, Entity entity) throws SQLException {
         return update(con, entity, UpdateFilter.ofExcluded());
     }
 
     /**
      * a
      *
-     * @param con          a {@link java.sql.Connection} object
+     * @param con          a {@link Connection} object
      * @param entity       a
      * @param updateFilter a
-     * @return a
+     * @return 受影响的条数
      * @throws SQLException a
      */
-    public final Entity update(Connection con, Entity entity, UpdateFilter updateFilter) throws SQLException {
+    public final long update(Connection con, Entity entity, UpdateFilter updateFilter) throws SQLException {
         if (entity.id == null) {
             throw new RuntimeException("根据 id 更新时 id 不能为空");
         }
-        var l = this.update(con, entity, new Query().equal("id", entity.id), updateFilter);
-        return l == 1 ? this.get(con, entity.id) : null;
+        return this.update(con, entity, new Query().equal("id", entity.id), updateFilter);
     }
 
     /**
@@ -523,7 +468,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      */
     public long update(Connection con, Entity entity, Query query, UpdateFilter updateFilter) throws SQLException {
         //更新成功的条数
-        return this._update(con, entity, queryProcessorForTombstone(query), updateFilterProcessorWhenUpdate(updateFilter));
+        return this._update(con, entity, queryProcessor(query), updateFilterProcessor(updateFilter));
     }
 
     /**
