@@ -119,7 +119,7 @@ public class BasicService<Entity> {
      * @param updateFilter a
      * @return 保存成功的主键 (ID) 列表
      */
-    public final List<Long> _insertBatch(List<Entity> entityList, UpdateFilter updateFilter) {
+    public final List<Long> _insertBatch(Collection<Entity> entityList, UpdateFilter updateFilter) {
         var parameter = _buildInsertBatchParameter(entityList, updateFilter);
         return ScxContext.sqlRunner().updateBatch(new PlaceholderSQL(parameter.value0(), parameter.value1())).generatedKeys();
     }

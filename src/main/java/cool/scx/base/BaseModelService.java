@@ -121,7 +121,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param entityList 数据集合
      * @return 插入成功的数据的自增主键列表
      */
-    public final List<Long> save(List<Entity> entityList) {
+    public final List<Long> save(Collection<Entity> entityList) {
         //此处没有设置 f
         return save(entityList, UpdateFilter.ofExcluded());
     }
@@ -133,7 +133,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param updateFilter a
      * @return a
      */
-    public List<Long> save(List<Entity> entityList, UpdateFilter updateFilter) {
+    public List<Long> save(Collection<Entity> entityList, UpdateFilter updateFilter) {
         if (entityList == null || entityList.size() == 0) {
             return new ArrayList<>();
         } else {
