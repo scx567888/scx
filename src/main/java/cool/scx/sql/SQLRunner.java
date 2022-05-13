@@ -45,7 +45,7 @@ public final class SQLRunner {
         }
     }
 
-    public static <T> T query(Connection con, ScxHandlerRE<ResultSet, T, SQLException> resultSetHandler, AbstractPlaceholderSQL<?> placeholderSQL) throws SQLException {
+    public static <T> T query(Connection con, AbstractPlaceholderSQL<?> placeholderSQL, ScxHandlerRE<ResultSet, T, SQLException> resultSetHandler) throws SQLException {
         try (var preparedStatement = placeholderSQL.getPreparedStatement(con)) {
             var resultSet = preparedStatement.executeQuery();
             return resultSetHandler.handle(resultSet);
@@ -146,10 +146,10 @@ public final class SQLRunner {
         return ids;
     }
 
-    public <T> T query(ScxHandlerRE<ResultSet, T, SQLException> resultSetHandler, AbstractPlaceholderSQL<?> placeholderSQL) {
+    public <T> T query(AbstractPlaceholderSQL<?> placeholderSQL, ScxHandlerRE<ResultSet, T, SQLException> resultSetHandler) {
         return ScxExceptionHelper.wrap(() -> {
             try (var con = dataSource.getConnection()) {
-                return query(con, resultSetHandler, placeholderSQL);
+                return query(con, placeholderSQL, resultSetHandler);
             }
         });
     }
