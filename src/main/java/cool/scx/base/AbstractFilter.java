@@ -18,7 +18,7 @@ public abstract class AbstractFilter<E extends AbstractFilter<E>> {
     /**
      * 包含的列
      */
-    final Set<String> fieldNames = new HashSet<>();
+    private final Set<String> fieldNames = new HashSet<>();
 
     /**
      * 过滤器类型 分三种 禁用 : 0 ,包含模式 : 1 排除模式 : 2

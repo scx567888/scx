@@ -6,6 +6,7 @@ import cool.scx.sql.where.WhereOption;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -97,7 +98,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param entity 待插入的数据
      * @return 插入后的数据
      */
-    public Entity save(Entity entity) {
+    public final Entity save(Entity entity) {
         //此处使用一个默认的 UpdateFilter 用来过滤实体类中为空的字段
         return save(entity, UpdateFilter.ofExcluded());
     }
@@ -120,7 +121,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param entityList 数据集合
      * @return 插入成功的数据的自增主键列表
      */
-    public List<Long> save(List<Entity> entityList) {
+    public final List<Long> save(Collection<Entity> entityList) {
         //此处没有设置 f
         return save(entityList, UpdateFilter.ofExcluded());
     }
@@ -132,7 +133,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param updateFilter a
      * @return a
      */
-    public List<Long> save(List<Entity> entityList, UpdateFilter updateFilter) {
+    public List<Long> save(Collection<Entity> entityList, UpdateFilter updateFilter) {
         if (entityList == null || entityList.size() == 0) {
             return new ArrayList<>();
         } else {
@@ -148,7 +149,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @return 插入后的数据
      * @throws java.sql.SQLException if any.
      */
-    public Entity save(Connection con, Entity entity) throws SQLException {
+    public final Entity save(Connection con, Entity entity) throws SQLException {
         return save(con, entity, UpdateFilter.ofExcluded());
     }
 
@@ -174,7 +175,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @return 插入成功的数据的自增主键列表
      * @throws java.sql.SQLException if any.
      */
-    public List<Long> save(Connection con, List<Entity> entityList) throws SQLException {
+    public final List<Long> save(Connection con, Collection<Entity> entityList) throws SQLException {
         return save(con, entityList, UpdateFilter.ofExcluded());
     }
 
@@ -187,7 +188,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @return a
      * @throws SQLException a
      */
-    public List<Long> save(Connection con, List<Entity> entityList, UpdateFilter updateFilter) throws SQLException {
+    public List<Long> save(Connection con, Collection<Entity> entityList, UpdateFilter updateFilter) throws SQLException {
         if (entityList == null || entityList.size() == 0) {
             return new ArrayList<>();
         } else {
@@ -200,7 +201,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      *
      * @return 所有数据
      */
-    public List<Entity> list() {
+    public final List<Entity> list() {
         return list(SelectFilter.ofExcluded());
     }
 
@@ -210,7 +211,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param selectFilter a
      * @return a
      */
-    public List<Entity> list(SelectFilter selectFilter) {
+    public final List<Entity> list(SelectFilter selectFilter) {
         return list(new Query(), selectFilter);
     }
 
@@ -220,7 +221,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param query 聚合查询参数对象
      * @return 数据列表
      */
-    public List<Entity> list(Query query) {
+    public final List<Entity> list(Query query) {
         return list(query, SelectFilter.ofExcluded());
     }
 
@@ -242,7 +243,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @return a
      * @throws SQLException a
      */
-    public List<Entity> list(Connection con) throws SQLException {
+    public final List<Entity> list(Connection con) throws SQLException {
         return list(con, SelectFilter.ofExcluded());
     }
 
@@ -254,7 +255,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @return a
      * @throws SQLException a
      */
-    public List<Entity> list(Connection con, SelectFilter selectFilter) throws SQLException {
+    public final List<Entity> list(Connection con, SelectFilter selectFilter) throws SQLException {
         return list(con, new Query(), selectFilter);
     }
 
@@ -266,7 +267,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @return 数据列表
      * @throws SQLException s
      */
-    public List<Entity> list(Connection con, Query query) throws SQLException {
+    public final List<Entity> list(Connection con, Query query) throws SQLException {
         return list(con, query, SelectFilter.ofExcluded());
     }
 
@@ -289,7 +290,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param id id ( 主键 )
      * @return 查到多个则返回第一个 没有则返回 null
      */
-    public Entity get(long id) {
+    public final Entity get(long id) {
         return get(id, SelectFilter.ofExcluded());
     }
 
@@ -300,7 +301,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param selectFilter a
      * @return a
      */
-    public Entity get(long id, SelectFilter selectFilter) {
+    public final Entity get(long id, SelectFilter selectFilter) {
         return get(new Query().equal("id", id), selectFilter);
     }
 
@@ -310,7 +311,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param query 聚合查询参数对象
      * @return 查到多个则返回第一个 没有则返回 null
      */
-    public Entity get(Query query) {
+    public final Entity get(Query query) {
         return get(query, SelectFilter.ofExcluded());
     }
 
@@ -321,7 +322,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param selectFilter a
      * @return a
      */
-    public Entity get(Query query, SelectFilter selectFilter) {
+    public final Entity get(Query query, SelectFilter selectFilter) {
         var list = list(query.setPagination(1), selectFilter);
         return list.size() > 0 ? list.get(0) : null;
     }
@@ -334,7 +335,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @return 查到多个则返回第一个 没有则返回 null
      * @throws SQLException e
      */
-    public Entity get(Connection con, long id) throws SQLException {
+    public final Entity get(Connection con, long id) throws SQLException {
         return get(con, id, SelectFilter.ofExcluded());
     }
 
@@ -347,7 +348,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @return a
      * @throws SQLException a
      */
-    public Entity get(Connection con, long id, SelectFilter selectFilter) throws SQLException {
+    public final Entity get(Connection con, long id, SelectFilter selectFilter) throws SQLException {
         return get(con, new Query().equal("id", id), selectFilter);
     }
 
@@ -359,7 +360,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @return 查到多个则返回第一个 没有则返回 null
      * @throws SQLException s
      */
-    public Entity get(Connection con, Query query) throws SQLException {
+    public final Entity get(Connection con, Query query) throws SQLException {
         return get(con, query, SelectFilter.ofExcluded());
     }
 
@@ -372,7 +373,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @return a
      * @throws SQLException a
      */
-    public Entity get(Connection con, Query query, SelectFilter selectFilter) throws SQLException {
+    public final Entity get(Connection con, Query query, SelectFilter selectFilter) throws SQLException {
         var list = list(con, query.setPagination(1), selectFilter);
         return list.size() > 0 ? list.get(0) : null;
     }
@@ -382,7 +383,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      *
      * @return 所有数据的条数
      */
-    public long count() {
+    public final long count() {
         return count(new Query());
     }
 
@@ -403,7 +404,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @return 所有数据的条数
      * @throws SQLException s
      */
-    public long count(Connection con) throws SQLException {
+    public final long count(Connection con) throws SQLException {
         return count(con, new Query());
     }
 
@@ -425,7 +426,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param entity 待更新的数据 ( 注意: 请保证数据中 id 字段不为空 )
      * @return 更新成功后的数据
      */
-    public Entity update(Entity entity) {
+    public final Entity update(Entity entity) {
         return update(entity, UpdateFilter.ofExcluded());
     }
 
@@ -436,7 +437,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param updateFilter a
      * @return a
      */
-    public Entity update(Entity entity, UpdateFilter updateFilter) {
+    public final Entity update(Entity entity, UpdateFilter updateFilter) {
         if (entity.id == null) {
             throw new RuntimeException("根据 id 更新时 id 不能为空");
         }
@@ -451,7 +452,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param query  更新的条件
      * @return 更新成功的数据条数
      */
-    public long update(Entity entity, Query query) {
+    public final long update(Entity entity, Query query) {
         return update(entity, query, UpdateFilter.ofExcluded());
     }
 
@@ -476,7 +477,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @return 更新成功后的数据
      * @throws SQLException s
      */
-    public Entity update(Connection con, Entity entity) throws SQLException {
+    public final Entity update(Connection con, Entity entity) throws SQLException {
         return update(con, entity, UpdateFilter.ofExcluded());
     }
 
@@ -489,7 +490,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @return a
      * @throws SQLException a
      */
-    public Entity update(Connection con, Entity entity, UpdateFilter updateFilter) throws SQLException {
+    public final Entity update(Connection con, Entity entity, UpdateFilter updateFilter) throws SQLException {
         if (entity.id == null) {
             throw new RuntimeException("根据 id 更新时 id 不能为空");
         }
@@ -506,7 +507,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @return 更新成功的数据条数
      * @throws SQLException s
      */
-    public long update(Connection con, Entity entity, Query query) throws SQLException {
+    public final long update(Connection con, Entity entity, Query query) throws SQLException {
         return update(con, entity, query, UpdateFilter.ofExcluded());
     }
 
@@ -531,7 +532,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param ids 要删除的数据的 id 集合
      * @return 删除成功的数据条数
      */
-    public long delete(long... ids) {
+    public final long delete(long... ids) {
         if (ids.length == 0) {
             throw new IllegalArgumentException("待删除的 ids 数量至少为 1 个");
         }
@@ -565,7 +566,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @return 删除成功的数据条数
      * @throws SQLException e
      */
-    public long delete(Connection con, long... ids) throws SQLException {
+    public final long delete(Connection con, long... ids) throws SQLException {
         return delete(con, new Query().in("id", ids));
     }
 
@@ -596,7 +597,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param ids 待恢复的数据 id 集合
      * @return 恢复删除成功的数据条数
      */
-    public long revokeDelete(long... ids) {
+    public final long revokeDelete(long... ids) {
         return this.revokeDelete(new Query().in("id", ids));
     }
 
@@ -626,7 +627,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @return 恢复删除成功的数据条数
      * @throws SQLException s
      */
-    public long revokeDelete(Connection con, long... ids) throws SQLException {
+    public final long revokeDelete(Connection con, long... ids) throws SQLException {
         return this.revokeDelete(con, new Query().in("id", ids));
     }
 
