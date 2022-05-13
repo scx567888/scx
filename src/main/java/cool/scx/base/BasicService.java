@@ -323,7 +323,7 @@ public class BasicService<Entity> {
      *
      * @return a
      */
-    public ScxDaoTableInfo _scxDaoTableInfo() {
+    public final ScxDaoTableInfo _scxDaoTableInfo() {
         return scxDaoTableInfo;
     }
 
