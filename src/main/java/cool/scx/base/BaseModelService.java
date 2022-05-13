@@ -699,7 +699,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      */
     public final Entity saveAndGet(Connection con, Entity entity) throws SQLException {
         var newID = this.save(con, entity);
-        return newID != null ? this.get(newID) : null;
+        return newID != null ? this.get(con, newID) : null;
     }
 
     /**
@@ -713,7 +713,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      */
     public final Entity saveAndGet(Connection con, Entity entity, UpdateFilter updateFilter) throws SQLException {
         var newID = this.save(con, entity, updateFilter);
-        return newID != null ? this.get(newID) : null;
+        return newID != null ? this.get(con, newID) : null;
     }
 
     /**
@@ -726,7 +726,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      */
     public final List<Entity> saveAndGet(Connection con, Collection<Entity> entityList) throws SQLException {
         var newIDs = this.save(con, entityList);
-        return this.list(new Query().in("id", newIDs));
+        return this.list(con, new Query().in("id", newIDs));
     }
 
     /**
@@ -740,7 +740,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      */
     public final List<Entity> saveAndGet(Connection con, Collection<Entity> entityList, UpdateFilter updateFilter) throws SQLException {
         var newIDs = this.save(con, entityList, updateFilter);
-        return this.list(new Query().in("id", newIDs));
+        return this.list(con, new Query().in("id", newIDs));
     }
 
     /**
