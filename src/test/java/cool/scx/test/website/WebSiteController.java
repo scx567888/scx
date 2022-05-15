@@ -62,9 +62,9 @@ public class WebSiteController {
                 sb.append("现在插入 1 数据条数").append("</br>");
                 var u = new Car();
                 u.name = "唯一name";
-                bean.save( u);
+                bean.add(u);
                 sb.append("现在数据库中数据条数 : ").append(bean.list().size()).append("</br>");
-                bean.save( u);
+                bean.add(u);
             });
         } catch (Exception e) {
             sb.append("出错了 后滚后数据库中数据条数 : ").append(bean.list().size());
