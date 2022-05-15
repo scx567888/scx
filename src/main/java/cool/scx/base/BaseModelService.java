@@ -84,25 +84,25 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     }
 
     /**
-     * 插入数据
+     * 插入数据 (注意 !!! 这里会在插入之后根据主键再次进行一次查询, 若只是进行插入且对性能有要求请使用 {@link BasicService#_insert(Object, UpdateFilter)})
      *
      * @param entity 待插入的数据
-     * @return 插入成功的主键 ID 如果插入失败或数据没有主键则返回 null
+     * @return 插入成功的数据 如果插入失败或数据没有主键则返回 null
      */
-    public final Long add(Entity entity) {
-        //此处使用一个默认的 UpdateFilter 用来过滤实体类中为空的字段
+    public final Entity add(Entity entity) {
         return add(entity, UpdateFilter.ofExcluded());
     }
 
     /**
-     * a
+     * 插入数据 (注意 !!! 这里会在插入之后根据主键再次进行一次查询, 若只是进行插入且对性能有要求请使用 {@link BasicService#_insert(Object, UpdateFilter)})
      *
-     * @param entity       a
-     * @param updateFilter a
-     * @return 插入成功的主键 ID 如果插入失败或数据没有主键则返回 null
+     * @param entity       待插入的数据
+     * @param updateFilter 更新字段过滤器
+     * @return 插入成功的数据 如果插入失败或数据没有主键则返回 null
      */
-    public Long add(Entity entity, UpdateFilter updateFilter) {
-        return this._insert(entity, updateFilterProcessor(updateFilter));
+    public Entity add(Entity entity, UpdateFilter updateFilter) {
+        var newID = this._insert(entity, updateFilterProcessor(updateFilter));
+        return newID != null ? this.get(newID) : null;
     }
 
     /**
@@ -117,11 +117,11 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     }
 
     /**
-     * a
+     * 批量插入数据
      *
-     * @param entityList   a
-     * @param updateFilter a
-     * @return a
+     * @param entityList   数据集合
+     * @param updateFilter 更新字段过滤器
+     * @return 插入成功的数据的自增主键列表
      */
     public List<Long> add(Collection<Entity> entityList, UpdateFilter updateFilter) {
         return this._insertBatch(entityList, updateFilterProcessor(updateFilter));
@@ -137,10 +137,10 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     }
 
     /**
-     * a
+     * 获取所有数据 (使用查询过滤器)
      *
-     * @param selectFilter a
-     * @return a
+     * @param selectFilter 查询字段过滤器
+     * @return 所有数据
      */
     public final List<Entity> list(SelectFilter selectFilter) {
         return list(new Query(), selectFilter);
@@ -157,11 +157,11 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     }
 
     /**
-     * a
+     * 根据聚合查询条件 {@link cool.scx.base.Query} 获取数据列表
      *
-     * @param query        a
-     * @param selectFilter a
-     * @return a
+     * @param query        聚合查询参数对象
+     * @param selectFilter 查询字段过滤器
+     * @return 数据列表
      */
     public List<Entity> list(Query query, SelectFilter selectFilter) {
         return this._select(queryProcessor(query), selectFilterProcessor(selectFilter));
@@ -178,11 +178,11 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     }
 
     /**
-     * a
+     * 根据 ID (主键) 查询单条数据
      *
-     * @param id           a
-     * @param selectFilter a
-     * @return a
+     * @param id           id ( 主键 )
+     * @param selectFilter 查询字段过滤器
+     * @return 查到多个则返回第一个 没有则返回 null
      */
     public final Entity get(long id, SelectFilter selectFilter) {
         return get(new Query().equal("id", id), selectFilter);
@@ -199,11 +199,11 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     }
 
     /**
-     * a
+     * 根据聚合查询条件 {@link cool.scx.base.Query} 获取单条数据
      *
-     * @param query        a
-     * @param selectFilter a
-     * @return a
+     * @param query        聚合查询参数对象
+     * @param selectFilter 查询字段过滤器
+     * @return 查到多个则返回第一个 没有则返回 null
      */
     public final Entity get(Query query, SelectFilter selectFilter) {
         var list = list(query.setPagination(1), selectFilter);
@@ -230,27 +230,28 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     }
 
     /**
-     * 根据  id 更新
+     * 根据 ID 更新 (注意 !!! 这里会在更新之后根据主键再次进行一次查询, 若只是进行更新且对性能有要求请使用 {@link BasicService#_update(Object, Query, UpdateFilter)})
      *
      * @param entity 待更新的数据 ( 注意: 请保证数据中 id 字段不为空 )
      * @return 更新成功后的数据
      */
-    public final long update(Entity entity) {
+    public final Entity update(Entity entity) {
         return update(entity, UpdateFilter.ofExcluded());
     }
 
     /**
-     * a
+     * 根据 ID 更新 (注意 !!! 这里会在更新之后根据主键再次进行一次查询, 若只是进行更新且对性能有要求请使用 {@link BasicService#_update(Object, Query, UpdateFilter)})
      *
-     * @param entity       a
-     * @param updateFilter a
-     * @return a
+     * @param entity       待更新的数据 ( 注意: 请保证数据中 id 字段不为空 )
+     * @param updateFilter 更新字段过滤器
+     * @return 更新成功后的数据
      */
-    public final long update(Entity entity, UpdateFilter updateFilter) {
+    public Entity update(Entity entity, UpdateFilter updateFilter) {
         if (entity.id == null) {
             throw new RuntimeException("根据 id 更新时 id 不能为空");
         }
-        return this.update(entity, new Query().equal("id", entity.id), updateFilter);
+        this.update(entity, new Query().equal("id", entity.id), updateFilter);
+        return this.get(entity.id);
     }
 
     /**
@@ -265,15 +266,14 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     }
 
     /**
-     * a
+     * 根据指定条件更新数据
      *
-     * @param entity       a
-     * @param query        a
-     * @param updateFilter a
-     * @return 受影响的条数
+     * @param entity       待更新的数据
+     * @param query        更新的条件
+     * @param updateFilter 更新字段过滤器
+     * @return 更新成功的数据条数
      */
     public long update(Entity entity, Query query, UpdateFilter updateFilter) {
-        //更新成功的条数
         return this._update(entity, queryProcessor(query), updateFilterProcessor(updateFilter));
     }
 
@@ -338,108 +338,6 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
             //关于 updateFilter : 这里已经明确 实体类的所需字段不为空 所以为了性能此处 UpdateFilter 关闭 excludeIfFieldValueIsNull 功能
             return this._update(needRevokeDeleteModel, query.equal("tombstone", true, WhereOption.REPLACE), UpdateFilter.ofIncluded(false).addIncluded("tombstone"));
         }
-    }
-
-    /**
-     * 插入数据
-     *
-     * @param entity 待插入的数据
-     * @return 插入后的数据
-     */
-    public final Entity addAndGet(Entity entity) {
-        var newID = this.add(entity);
-        return newID != null ? this.get(newID) : null;
-    }
-
-    /**
-     * a
-     *
-     * @param entity       a
-     * @param updateFilter a
-     * @return a
-     */
-    public final Entity addAndGet(Entity entity, UpdateFilter updateFilter) {
-        var newID = this.add(entity, updateFilter);
-        return newID != null ? this.get(newID) : null;
-    }
-
-    /**
-     * 批量插入数据
-     *
-     * @param entityList 数据集合
-     * @return 插入成功的数据的自增主键列表
-     */
-    public final List<Entity> addAndGet(Collection<Entity> entityList) {
-        var newIDs = this.add(entityList);
-        return this.list(new Query().in("id", newIDs));
-    }
-
-    /**
-     * a
-     *
-     * @param entityList   a
-     * @param updateFilter a
-     * @return a
-     */
-    public final List<Entity> addAndGet(Collection<Entity> entityList, UpdateFilter updateFilter) {
-        var newIDs = this.add(entityList, updateFilter);
-        return this.list(new Query().in("id", newIDs));
-    }
-
-    /**
-     * 根据  id 更新
-     *
-     * @param entity 待更新的数据 ( 注意: 请保证数据中 id 字段不为空 )
-     * @return 更新成功后的数据
-     */
-    public final Entity updateAndGet(Entity entity) {
-        this.update(entity);
-        return this.get(entity.id);
-    }
-
-    /**
-     * a
-     *
-     * @param entity       a
-     * @param updateFilter a
-     * @return a
-     */
-    public final Entity updateAndGet(Entity entity, UpdateFilter updateFilter) {
-        this.update(entity, updateFilter);
-        return this.get(entity.id);
-    }
-
-    /**
-     * 根据指定条件更新数据
-     *
-     * @param entity 待更新的数据
-     * @param query  更新的条件
-     * @return 更新成功的数据条数
-     */
-    public final List<Entity> updateAndGet(Entity entity, Query query) {
-        queryProcessor(query);
-        //因为 id 是不允许更新的所以这里可以放心获取
-        var ids = this.list(query, SelectFilter.ofIncluded().addIncluded("id")).stream().map(c -> c.id).toArray();
-        this.update(entity, query);
-        //重新使用 id 查询数据
-        return this.list(new Query().in("id", ids));
-    }
-
-    /**
-     * a
-     *
-     * @param entity       a
-     * @param query        a
-     * @param updateFilter a
-     * @return 受影响的条数
-     */
-    public final List<Entity> updateAndGet(Entity entity, Query query, UpdateFilter updateFilter) {
-        queryProcessor(query);
-        //因为 id 是不允许更新的所以这里可以放心获取
-        var ids = this.list(query, SelectFilter.ofIncluded().addIncluded("id")).stream().map(c -> c.id).toArray();
-        this.update(entity, query, updateFilter);
-        //重新使用 id 查询数据
-        return this.list(new Query().in("id", ids));
     }
 
 }
