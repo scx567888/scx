@@ -2,6 +2,8 @@ package cool.scx.sql;
 
 import cool.scx.ScxHandlerE;
 import cool.scx.ScxHandlerRE;
+import cool.scx.ScxHandlerVE;
+import cool.scx.ScxHandlerVRE;
 import cool.scx.util.exception.ScxExceptionHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +15,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * SQLRunner 执行 sql 语句
@@ -21,6 +25,16 @@ import java.util.List;
  * @version 1.0.10
  */
 public final class SQLRunner {
+
+    /**
+     * a
+     */
+    private static final ExecutorService SQL_RUNNER_EXECUTOR_SERVICE = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+
+    /**
+     * a
+     */
+    private static final ThreadLocal<Connection> CONNECTION_THREAD_LOCAL = new ThreadLocal<>();
 
     /**
      * logger
@@ -38,11 +52,10 @@ public final class SQLRunner {
      * @param dataSource a DataSource object
      */
     public SQLRunner(DataSource dataSource) {
-        if (dataSource != null) {
-            this.dataSource = dataSource;
-        } else {
+        if (dataSource == null) {
             throw new IllegalArgumentException("数据源不能为空 !!!");
         }
+        this.dataSource = dataSource;
     }
 
     public static <T> T query(Connection con, AbstractPlaceholderSQL<?> placeholderSQL, ScxHandlerRE<ResultSet, T, SQLException> resultSetHandler) throws SQLException {
@@ -148,8 +161,13 @@ public final class SQLRunner {
 
     public <T> T query(AbstractPlaceholderSQL<?> placeholderSQL, ScxHandlerRE<ResultSet, T, SQLException> resultSetHandler) {
         return ScxExceptionHelper.wrap(() -> {
-            try (var con = dataSource.getConnection()) {
-                return query(con, placeholderSQL, resultSetHandler);
+            var connection = CONNECTION_THREAD_LOCAL.get();
+            if (connection != null) {
+                return query(connection, placeholderSQL, resultSetHandler);
+            } else {
+                try (var con = dataSource.getConnection()) {
+                    return query(con, placeholderSQL, resultSetHandler);
+                }
             }
         });
     }
@@ -162,8 +180,13 @@ public final class SQLRunner {
      */
     public long execute(AbstractPlaceholderSQL<?> placeholderSQL) {
         return ScxExceptionHelper.wrap(() -> {
-            try (var con = dataSource.getConnection()) {
-                return execute(con, placeholderSQL);
+            var connection = CONNECTION_THREAD_LOCAL.get();
+            if (connection != null) {
+                return execute(connection, placeholderSQL);
+            } else {
+                try (var con = dataSource.getConnection()) {
+                    return execute(con, placeholderSQL);
+                }
             }
         });
     }
@@ -176,8 +199,13 @@ public final class SQLRunner {
      */
     public UpdateResult update(AbstractPlaceholderSQL<?> placeholderSQL) {
         return ScxExceptionHelper.wrap(() -> {
-            try (var con = dataSource.getConnection()) {
-                return update(con, placeholderSQL);
+            var connection = CONNECTION_THREAD_LOCAL.get();
+            if (connection != null) {
+                return update(connection, placeholderSQL);
+            } else {
+                try (var con = dataSource.getConnection()) {
+                    return update(con, placeholderSQL);
+                }
             }
         });
     }
@@ -190,8 +218,13 @@ public final class SQLRunner {
      */
     public UpdateResult updateBatch(AbstractPlaceholderSQL<?> placeholderSQL) {
         return ScxExceptionHelper.wrap(() -> {
-            try (var con = dataSource.getConnection()) {
-                return updateBatch(con, placeholderSQL);
+            var connection = CONNECTION_THREAD_LOCAL.get();
+            if (connection != null) {
+                return updateBatch(connection, placeholderSQL);
+            } else {
+                try (var con = dataSource.getConnection()) {
+                    return updateBatch(con, placeholderSQL);
+                }
             }
         });
     }
@@ -221,10 +254,21 @@ public final class SQLRunner {
      * @param handler 连接消费者
      * @throws java.lang.Exception if any.
      */
-    public void autoTransaction(ScxHandlerE<Connection, Exception> handler) throws Exception {
-        try (var con = dataSource.getConnection()) {
-            autoTransaction(con, handler);
-        }
+    public void autoTransaction(ScxHandlerVE<?> handler) throws Exception {
+        SQL_RUNNER_EXECUTOR_SERVICE.submit(() -> {
+            try (var con = dataSource.getConnection()) {
+                CONNECTION_THREAD_LOCAL.set(con);
+                con.setAutoCommit(false);
+                try {
+                    handler.handle();
+                    con.commit();
+                } catch (Exception e) {
+                    con.rollback();
+                    throw e;
+                }
+                return null;
+            }
+        }).get();
     }
 
     /**
@@ -235,10 +279,21 @@ public final class SQLRunner {
      * @return a
      * @throws Exception a
      */
-    public <T> T autoTransaction(ScxHandlerRE<Connection, T, Exception> handler) throws Exception {
-        try (var con = dataSource.getConnection()) {
-            return autoTransaction(con, handler);
-        }
+    public <T> T autoTransaction(ScxHandlerVRE<T, ?> handler) throws Exception {
+        return SQL_RUNNER_EXECUTOR_SERVICE.submit(() -> {
+            try (var con = dataSource.getConnection()) {
+                CONNECTION_THREAD_LOCAL.set(con);
+                con.setAutoCommit(false);
+                try {
+                    T result = handler.handle();
+                    con.commit();
+                    return result;
+                } catch (Exception e) {
+                    con.rollback();
+                    throw e;
+                }
+            }
+        }).get();
     }
 
 }

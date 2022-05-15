@@ -111,15 +111,15 @@ public class TestModule implements ScxModule {
             //插入数据 方式2
             System.err.println("事务开始前数据库中 数据条数 : " + carService.count());
 
-            ScxContext.sqlRunner().autoTransaction(con -> {
+            carService.autoTransaction(() -> {
                 System.err.println("现在插入 1 数据条数");
                 var bb = new Car();
                 bb.name = "唯一ID";
                 bb.color = CarColor.values()[RandomUtils.getRandomNumber(0, 3)];
-                carService.save(con, bb);
-                System.err.println("现在数据库中数据条数 : " + carService.count(con));
+                carService.save( bb);
+                System.err.println("现在数据库中数据条数 : " + carService.count());
                 System.err.println("现在在插入 1 错误数据");
-                carService.save(con, bb);
+                carService.save( bb);
             });
         } catch (Exception e) {
             System.err.println("出错了 后滚后数据库中数据条数 : " + carService.count());
