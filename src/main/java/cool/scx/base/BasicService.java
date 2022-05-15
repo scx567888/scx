@@ -85,15 +85,14 @@ public class BasicService<Entity> {
     }
 
     /**
-     * a
+     * 构建 插入 SQL
      *
      * @param entity       a
      * @param updateFilter a
      * @return a
      */
     private AbstractPlaceholderSQL<?> _buildInsertSQL(Entity entity, UpdateFilter updateFilter) {
-        var insertColumns = updateFilter != null ? updateFilter.filter(entity, scxDaoTableInfo.columnInfos()) : scxDaoTableInfo.columnInfos();
-        //insert 允许空列所以这里不做判断
+        var insertColumns = updateFilter.filter(entity, scxDaoTableInfo.columnInfos());
         var sql = SQLBuilder.Insert(scxDaoTableInfo.tableName(), insertColumns).Values(insertColumns).GetSQL();
         return PlaceholderSQL.of(sql, Arrays.stream(insertColumns).map(c -> c.getFieldValue(entity)).toArray());
     }
@@ -117,8 +116,8 @@ public class BasicService<Entity> {
      * @return a
      */
     private AbstractPlaceholderSQL<?> _buildInsertBatchSQL(Collection<Entity> entityList, UpdateFilter updateFilter) {
-        var insertColumns = updateFilter != null ? updateFilter.filter(scxDaoTableInfo.columnInfos()) : scxDaoTableInfo.columnInfos();
-        //将 entityList 转换为 objectArrayList
+        var insertColumns = updateFilter.filter(scxDaoTableInfo.columnInfos());
+        //将 entityList 转换为 objectArrayList 这里因为 stream 实在太慢所以改为传统循环方式
         var objectArrayList = new ArrayList<Object[]>();
         for (var entity : entityList) {
             var o = new Object[insertColumns.length];
@@ -143,7 +142,7 @@ public class BasicService<Entity> {
     }
 
     /**
-     * a
+     * 构建查询 SQL
      *
      * @param query        a
      * @param selectFilter a
@@ -166,10 +165,10 @@ public class BasicService<Entity> {
     }
 
     /**
-     * a
+     * 构建 count SQL
      *
-     * @param query a
-     * @return a
+     * @param query query 对象
+     * @return sql
      */
     private AbstractPlaceholderSQL<?> _buildCountSQL(Query query) {
         var sql = SQLBuilder.Select("COUNT(*) AS count").From(scxDaoTableInfo.tableName()).Where(query.where()).GroupBy(query.groupBy()).GetSQL();
@@ -189,11 +188,11 @@ public class BasicService<Entity> {
     }
 
     /**
-     * a
+     * 构建更新 SQL
      *
-     * @param entity       a
-     * @param query        a
-     * @param updateFilter a
+     * @param entity       待更新的实体
+     * @param query        查询条件
+     * @param updateFilter filter
      * @return a
      */
     private AbstractPlaceholderSQL<?> _buildUpdateSQL(Entity entity, Query query, UpdateFilter updateFilter) {
@@ -211,17 +210,17 @@ public class BasicService<Entity> {
      * 删除数据
      *
      * @param query where 条件
-     * @return 受影响的条数
+     * @return 受影响的条数 (被成功删除的数据条数)
      */
     public final long _delete(Query query) {
         return ScxContext.sqlRunner().update(_buildDeleteSQL(query)).affectedItemsCount();
     }
 
     /**
-     * a
+     * 构建 删除 SQL
      *
-     * @param query a
-     * @return a
+     * @param query query
+     * @return sql
      */
     private AbstractPlaceholderSQL<?> _buildDeleteSQL(Query query) {
         if (query.where().isEmpty()) {
@@ -231,12 +230,18 @@ public class BasicService<Entity> {
         return PlaceholderSQL.of(sql, query.where().getWhereParams());
     }
 
+    /**
+     * 方便冗长的 调用
+     *
+     * @param handler handler
+     * @throws Exception e
+     */
     public final void autoTransaction(ScxHandlerVE<?> handler) throws Exception {
         ScxContext.sqlRunner().autoTransaction(handler);
     }
 
     /**
-     * a
+     * 方便冗长的 调用
      *
      * @param handler a
      * @param <T>     a
