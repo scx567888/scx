@@ -84,10 +84,10 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     }
 
     /**
-     * 插入数据
+     * 插入数据 (注意 !!! 这里会在插入之后根据主键进行一次查询, 若只是进行插入且对性能有要求请使用 {@link BasicService#_insert(Object, UpdateFilter)})
      *
      * @param entity 待插入的数据
-     * @return 插入成功的主键 ID 如果插入失败或数据没有主键则返回 null
+     * @return 插入成功的数据 如果插入失败或数据没有主键则返回 null
      */
     public final Entity add(Entity entity) {
         //此处使用一个默认的 UpdateFilter 用来过滤实体类中为空的字段
@@ -95,10 +95,10 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     }
 
     /**
-     * a
+     * 插入数据 (注意 !!! 这里会在插入之后根据主键进行一次查询, 若只是进行插入且对性能有要求请使用 {@link BasicService#_insert(Object, UpdateFilter)})
      *
-     * @param entity       a
-     * @param updateFilter a
+     * @param entity       待插入的数据
+     * @param updateFilter 更新字段过滤器
      * @return 插入成功的数据 如果插入失败或数据没有主键则返回 null
      */
     public Entity add(Entity entity, UpdateFilter updateFilter) {
@@ -118,11 +118,11 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     }
 
     /**
-     * a
+     * 批量插入数据
      *
-     * @param entityList   a
-     * @param updateFilter a
-     * @return a
+     * @param entityList   数据集合
+     * @param updateFilter 更新字段过滤器
+     * @return 插入成功的数据的自增主键列表
      */
     public List<Long> add(Collection<Entity> entityList, UpdateFilter updateFilter) {
         return this._insertBatch(entityList, updateFilterProcessor(updateFilter));
@@ -138,10 +138,10 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     }
 
     /**
-     * a
+     * 获取所有数据 (使用查询过滤器)
      *
-     * @param selectFilter a
-     * @return a
+     * @param selectFilter 查询字段过滤器
+     * @return 所有数据
      */
     public final List<Entity> list(SelectFilter selectFilter) {
         return list(new Query(), selectFilter);
@@ -158,11 +158,11 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     }
 
     /**
-     * a
+     * 根据聚合查询条件 {@link cool.scx.base.Query} 获取数据列表
      *
-     * @param query        a
-     * @param selectFilter a
-     * @return a
+     * @param query        聚合查询参数对象
+     * @param selectFilter 查询字段过滤器
+     * @return 数据列表
      */
     public List<Entity> list(Query query, SelectFilter selectFilter) {
         return this._select(queryProcessor(query), selectFilterProcessor(selectFilter));
@@ -179,11 +179,11 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     }
 
     /**
-     * a
+     * 根据 ID (主键) 查询单条数据
      *
-     * @param id           a
-     * @param selectFilter a
-     * @return a
+     * @param id           id ( 主键 )
+     * @param selectFilter 查询字段过滤器
+     * @return 查到多个则返回第一个 没有则返回 null
      */
     public final Entity get(long id, SelectFilter selectFilter) {
         return get(new Query().equal("id", id), selectFilter);
@@ -200,11 +200,11 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     }
 
     /**
-     * a
+     * 根据聚合查询条件 {@link cool.scx.base.Query} 获取单条数据
      *
-     * @param query        a
-     * @param selectFilter a
-     * @return a
+     * @param query        聚合查询参数对象
+     * @param selectFilter 查询字段过滤器
+     * @return 查到多个则返回第一个 没有则返回 null
      */
     public final Entity get(Query query, SelectFilter selectFilter) {
         var list = list(query.setPagination(1), selectFilter);
@@ -231,7 +231,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     }
 
     /**
-     * 根据  id 更新
+     * 根据 ID 更新
      *
      * @param entity 待更新的数据 ( 注意: 请保证数据中 id 字段不为空 )
      * @return 更新成功后的数据
@@ -241,11 +241,11 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     }
 
     /**
-     * a
+     * 根据 ID 更新
      *
-     * @param entity       a
-     * @param updateFilter a
-     * @return a
+     * @param entity       待更新的数据 ( 注意: 请保证数据中 id 字段不为空 )
+     * @param updateFilter 更新字段过滤器
+     * @return 更新成功后的数据
      */
     public Entity update(Entity entity, UpdateFilter updateFilter) {
         if (entity.id == null) {
@@ -267,12 +267,12 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     }
 
     /**
-     * a
+     * 根据指定条件更新数据
      *
-     * @param entity       a
-     * @param query        a
-     * @param updateFilter a
-     * @return 受影响的条数
+     * @param entity       待更新的数据
+     * @param query        更新的条件
+     * @param updateFilter 更新字段过滤器
+     * @return 更新成功的数据条数
      */
     public long update(Entity entity, Query query, UpdateFilter updateFilter) {
         return this._update(entity, queryProcessor(query), updateFilterProcessor(updateFilter));
