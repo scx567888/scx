@@ -92,7 +92,7 @@ public abstract class AbstractPlaceholderSQL<T> {
      *
      * @param con a
      * @return a
-     * @throws SQLException a
+     * @throws java.sql.SQLException a
      */
     protected abstract PreparedStatement getPreparedStatementFromBatch(Connection con) throws SQLException;
 
@@ -101,7 +101,7 @@ public abstract class AbstractPlaceholderSQL<T> {
      *
      * @param con a
      * @return a
-     * @throws SQLException a
+     * @throws java.sql.SQLException a
      */
     protected abstract PreparedStatement getPreparedStatementFromSingle(Connection con) throws SQLException;
 
@@ -110,7 +110,7 @@ public abstract class AbstractPlaceholderSQL<T> {
      *
      * @param con a
      * @return a
-     * @throws SQLException a
+     * @throws java.sql.SQLException a
      */
     public final PreparedStatement getPreparedStatement(Connection con) throws SQLException {
         return SQLHelper.logSQL(isBatch ? getPreparedStatementFromBatch(con) : getPreparedStatementFromSingle(con));

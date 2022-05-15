@@ -10,6 +10,11 @@ import java.util.List;
  */
 public record UpdateResult(long affectedItemsCount, List<Long> generatedKeys) {
 
+    /**
+     * a
+     *
+     * @return a
+     */
     public Long firstGeneratedKey() {
         return this.generatedKeys.size() > 0 ? this.generatedKeys.get(0) : null;
     }

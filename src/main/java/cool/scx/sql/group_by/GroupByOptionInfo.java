@@ -18,6 +18,11 @@ final class GroupByOptionInfo {
      */
     private final boolean useJsonExtract;
 
+    /**
+     * <p>Constructor for GroupByOptionInfo.</p>
+     *
+     * @param groupByOptions a {@link cool.scx.sql.group_by.GroupByOption} object
+     */
     public GroupByOptionInfo(GroupByOption... groupByOptions) {
         var _useOriginalName = false;// 是否使用原始名称
         var _useJsonExtract = false;// 是否使用 json 类型的查询
@@ -31,10 +36,20 @@ final class GroupByOptionInfo {
         this.useJsonExtract = _useJsonExtract;
     }
 
+    /**
+     * <p>useOriginalName.</p>
+     *
+     * @return a boolean
+     */
     public boolean useOriginalName() {
         return useOriginalName;
     }
 
+    /**
+     * <p>useJsonExtract.</p>
+     *
+     * @return a boolean
+     */
     public boolean useJsonExtract() {
         return useJsonExtract;
     }

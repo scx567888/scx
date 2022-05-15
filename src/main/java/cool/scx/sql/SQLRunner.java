@@ -177,6 +177,14 @@ public final class SQLRunner {
         return ids;
     }
 
+    /**
+     * a
+     *
+     * @param placeholderSQL   a
+     * @param resultSetHandler a
+     * @param <T>              a
+     * @return a
+     */
     public <T> T query(AbstractPlaceholderSQL<?> placeholderSQL, ScxHandlerRE<ResultSet, T, SQLException> resultSetHandler) {
         return ScxExceptionHelper.wrap(() -> {
             var connection = CONNECTION_THREAD_LOCAL.get();

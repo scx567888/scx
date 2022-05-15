@@ -267,7 +267,7 @@ public final class ScxContext {
      *
      * @param clazz a {@link java.lang.Class} object
      * @param <T>   a T class
-     * @return a {@link ScxModuleMetadata} object
+     * @return a {@link cool.scx.ScxModuleMetadata} object
      */
     public static <T extends ScxModule> T findScxModule(Class<T> clazz) {
         return scx().findScxModule(clazz);

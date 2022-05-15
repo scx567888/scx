@@ -11,12 +11,20 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
+ * <p>JsonFileConfigSource class.</p>
  *
+ * @author scx567888
+ * @version 1.14.4
  */
 public final class JsonFileConfigSource implements ScxConfigSource {
 
     private final LinkedHashMap<String, Object> configMapping = new LinkedHashMap<>();
 
+    /**
+     * <p>Constructor for JsonFileConfigSource.</p>
+     *
+     * @param jsonFile a {@link java.io.File} object
+     */
     private JsonFileConfigSource(File jsonFile) {
         if (jsonFile == null) {
             throw new IllegalArgumentException("jsonFile 不能为空 !!!");
@@ -49,6 +57,9 @@ public final class JsonFileConfigSource implements ScxConfigSource {
         return new JsonFileConfigSource(jsonFile);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Map<String, Object> getConfigMapping() {
         return configMapping;
