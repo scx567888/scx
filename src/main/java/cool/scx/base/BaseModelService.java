@@ -84,18 +84,17 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     }
 
     /**
-     * 插入数据 (注意 !!! 这里会在插入之后根据主键进行一次查询, 若只是进行插入且对性能有要求请使用 {@link BasicService#_insert(Object, UpdateFilter)})
+     * 插入数据 (注意 !!! 这里会在插入之后根据主键再次进行一次查询, 若只是进行插入且对性能有要求请使用 {@link BasicService#_insert(Object, UpdateFilter)})
      *
      * @param entity 待插入的数据
      * @return 插入成功的数据 如果插入失败或数据没有主键则返回 null
      */
     public final Entity add(Entity entity) {
-        //此处使用一个默认的 UpdateFilter 用来过滤实体类中为空的字段
         return add(entity, UpdateFilter.ofExcluded());
     }
 
     /**
-     * 插入数据 (注意 !!! 这里会在插入之后根据主键进行一次查询, 若只是进行插入且对性能有要求请使用 {@link BasicService#_insert(Object, UpdateFilter)})
+     * 插入数据 (注意 !!! 这里会在插入之后根据主键再次进行一次查询, 若只是进行插入且对性能有要求请使用 {@link BasicService#_insert(Object, UpdateFilter)})
      *
      * @param entity       待插入的数据
      * @param updateFilter 更新字段过滤器
@@ -231,7 +230,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     }
 
     /**
-     * 根据 ID 更新
+     * 根据 ID 更新 (注意 !!! 这里会在更新之后根据主键再次进行一次查询, 若只是进行更新且对性能有要求请使用 {@link BasicService#_update(Object, Query, UpdateFilter)})
      *
      * @param entity 待更新的数据 ( 注意: 请保证数据中 id 字段不为空 )
      * @return 更新成功后的数据
@@ -241,7 +240,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     }
 
     /**
-     * 根据 ID 更新
+     * 根据 ID 更新 (注意 !!! 这里会在更新之后根据主键再次进行一次查询, 若只是进行更新且对性能有要求请使用 {@link BasicService#_update(Object, Query, UpdateFilter)})
      *
      * @param entity       待更新的数据 ( 注意: 请保证数据中 id 字段不为空 )
      * @param updateFilter 更新字段过滤器
