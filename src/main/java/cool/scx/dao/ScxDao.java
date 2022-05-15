@@ -3,7 +3,6 @@ package cool.scx.dao;
 import com.mysql.cj.jdbc.MysqlDataSource;
 import com.zaxxer.hikari.HikariDataSource;
 import cool.scx.config.ScxEasyConfig;
-import cool.scx.config.ScxFeatureConfig;
 import cool.scx.sql.SQLRunner;
 import cool.scx.util.ConsoleUtils;
 import org.slf4j.Logger;
@@ -40,8 +39,8 @@ public final class ScxDao {
      * @param easyConfig       a
      * @param scxFeatureConfig a
      */
-    public ScxDao(ScxEasyConfig easyConfig, ScxFeatureConfig scxFeatureConfig) {
-        var mysqlDataSource = getMySQLDataSource(easyConfig, scxFeatureConfig);
+    public ScxDao(ScxEasyConfig easyConfig) {
+        var mysqlDataSource = getMySQLDataSource(easyConfig);
         this.dataSource = getHikariDataSource(mysqlDataSource);
         this.sqlRunner = new SQLRunner(this.dataSource);
     }
@@ -65,7 +64,7 @@ public final class ScxDao {
      * @param scxFeatureConfig a {@link cool.scx.config.ScxFeatureConfig} object
      * @return MySQL 数据源
      */
-    private static MysqlDataSource getMySQLDataSource(ScxEasyConfig scxEasyConfig, ScxFeatureConfig scxFeatureConfig) {
+    private static MysqlDataSource getMySQLDataSource(ScxEasyConfig scxEasyConfig) {
         var mysqlDataSource = new MysqlDataSource();
         mysqlDataSource.setServerName(scxEasyConfig.dataSourceHost());
         mysqlDataSource.setDatabaseName(scxEasyConfig.dataSourceDatabase());

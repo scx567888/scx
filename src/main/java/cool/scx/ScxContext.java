@@ -29,7 +29,7 @@ public final class ScxContext {
     /**
      * 路由上下文 THREAD_LOCAL
      */
-    private static final ThreadLocal<RoutingContext> ROUTING_CONTEXT_THREAD_LOCAL = new ThreadLocal<>();
+    private static final InheritableThreadLocal<RoutingContext> ROUTING_CONTEXT_THREAD_LOCAL = new InheritableThreadLocal<>();
 
     /**
      * 全局唯一的 SCX APP
@@ -55,8 +55,15 @@ public final class ScxContext {
      *
      * @param routingContext 要设置的 routingContext
      */
-    public static void routingContext(RoutingContext routingContext) {
+    public static void _routingContext(RoutingContext routingContext) {
         ROUTING_CONTEXT_THREAD_LOCAL.set(routingContext);
+    }
+
+    /**
+     * a
+     */
+    public static void _clearRoutingContext() {
+        ROUTING_CONTEXT_THREAD_LOCAL.remove();
     }
 
     /**

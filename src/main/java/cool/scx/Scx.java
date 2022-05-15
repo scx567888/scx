@@ -150,7 +150,7 @@ public final class Scx {
         //6, 初始化模板
         this.scxTemplate = new ScxTemplate(this.scxEasyConfig);
         //7, 初始化持久层
-        this.scxDao = new ScxDao(this.scxEasyConfig, this.scxFeatureConfig);
+        this.scxDao = new ScxDao(this.scxEasyConfig);
         //8, ScxMapping 配置类
         this.scxMappingConfiguration = new ScxMappingConfiguration();
         //9, 初始化任务调度器

@@ -5,6 +5,7 @@ import cool.scx.ScxHandlerVRE;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.concurrent.ExecutionException;
 
 /**
  * a
@@ -78,7 +79,7 @@ public final class ScxExceptionHelper {
      * @return a
      */
     public static Throwable getRootCause(Throwable throwable) {
-        if (throwable instanceof ScxWrappedRuntimeException) {
+        if (throwable instanceof ScxWrappedRuntimeException || throwable instanceof ExecutionException) {
             return getRootCause(throwable.getCause());
         }
         return throwable;

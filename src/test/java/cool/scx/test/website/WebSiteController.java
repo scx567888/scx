@@ -57,14 +57,14 @@ public class WebSiteController {
         var sb = new StringBuilder();
         CarService bean = ScxContext.getBean(CarService.class);
         try {
-            ScxContext.sqlRunner().autoTransaction((con) -> {
-                sb.append("事务开始前数据库中 数据条数 : ").append(bean.list(con).size()).append("</br>");
+            bean.autoTransaction(() -> {
+                sb.append("事务开始前数据库中 数据条数 : ").append(bean.list().size()).append("</br>");
                 sb.append("现在插入 1 数据条数").append("</br>");
                 var u = new Car();
                 u.name = "唯一name";
-                bean.save(con, u);
-                sb.append("现在数据库中数据条数 : ").append(bean.list(con).size()).append("</br>");
-                bean.save(con, u);
+                bean.add(u);
+                sb.append("现在数据库中数据条数 : ").append(bean.list().size()).append("</br>");
+                bean.add(u);
             });
         } catch (Exception e) {
             sb.append("出错了 后滚后数据库中数据条数 : ").append(bean.list().size());

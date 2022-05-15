@@ -1,17 +1,16 @@
 package cool.scx.base;
 
 import cool.scx.ScxContext;
+import cool.scx.ScxHandlerVE;
+import cool.scx.ScxHandlerVRE;
 import cool.scx.dao.ScxDaoTableInfo;
 import cool.scx.sql.AbstractPlaceholderSQL;
 import cool.scx.sql.PlaceholderSQL;
 import cool.scx.sql.SQLBuilder;
-import cool.scx.sql.SQLRunner;
 import cool.scx.sql.handler.BeanListHandler;
 import cool.scx.sql.handler.ScalarHandler;
 
 import java.lang.reflect.ParameterizedType;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -86,28 +85,14 @@ public class BasicService<Entity> {
     }
 
     /**
-     * 保存单条数据
-     *
-     * @param entity       待插入的数据
-     * @param con          外部传来的连接 (useInternalConnection 为 false 是使用)
-     * @param updateFilter a
-     * @return 插入成功的主键 ID 如果插入失败或数据没有主键则返回 null
-     * @throws java.sql.SQLException if any.
-     */
-    public final Long _insert(Connection con, Entity entity, UpdateFilter updateFilter) throws SQLException {
-        return SQLRunner.update(con, _buildInsertSQL(entity, updateFilter)).firstGeneratedKey();
-    }
-
-    /**
-     * a
+     * 构建 插入 SQL
      *
      * @param entity       a
      * @param updateFilter a
      * @return a
      */
     private AbstractPlaceholderSQL<?> _buildInsertSQL(Entity entity, UpdateFilter updateFilter) {
-        var insertColumns = updateFilter != null ? updateFilter.filter(entity, scxDaoTableInfo.columnInfos()) : scxDaoTableInfo.columnInfos();
-        //insert 允许空列所以这里不做判断
+        var insertColumns = updateFilter.filter(entity, scxDaoTableInfo.columnInfos());
         var sql = SQLBuilder.Insert(scxDaoTableInfo.tableName(), insertColumns).Values(insertColumns).GetSQL();
         return PlaceholderSQL.of(sql, Arrays.stream(insertColumns).map(c -> c.getFieldValue(entity)).toArray());
     }
@@ -124,19 +109,6 @@ public class BasicService<Entity> {
     }
 
     /**
-     * 保存多条数据
-     *
-     * @param entityList   待保存的列表
-     * @param con          外部传来的连接 (useInternalConnection 为 false 是使用)
-     * @param updateFilter a
-     * @return 保存成功的主键 (ID) 列表
-     * @throws java.sql.SQLException if any.
-     */
-    public final List<Long> _insertBatch(Connection con, Collection<Entity> entityList, UpdateFilter updateFilter) throws SQLException {
-        return SQLRunner.updateBatch(con, _buildInsertBatchSQL(entityList, updateFilter)).generatedKeys();
-    }
-
-    /**
      * a
      *
      * @param entityList   a
@@ -144,8 +116,8 @@ public class BasicService<Entity> {
      * @return a
      */
     private AbstractPlaceholderSQL<?> _buildInsertBatchSQL(Collection<Entity> entityList, UpdateFilter updateFilter) {
-        var insertColumns = updateFilter != null ? updateFilter.filter(scxDaoTableInfo.columnInfos()) : scxDaoTableInfo.columnInfos();
-        //将 entityList 转换为 objectArrayList
+        var insertColumns = updateFilter.filter(scxDaoTableInfo.columnInfos());
+        //将 entityList 转换为 objectArrayList 这里因为 stream 实在太慢所以改为传统循环方式
         var objectArrayList = new ArrayList<Object[]>();
         for (var entity : entityList) {
             var o = new Object[insertColumns.length];
@@ -170,27 +142,14 @@ public class BasicService<Entity> {
     }
 
     /**
-     * 获取列表
-     *
-     * @param query        查询过滤条件.
-     * @param con          外部传来的连接 (useInternalConnection 为 false 是使用)
-     * @param selectFilter a
-     * @return a {@link java.util.List} object.
-     * @throws java.sql.SQLException if any.
-     */
-    public final List<Entity> _select(Connection con, Query query, SelectFilter selectFilter) throws SQLException {
-        return SQLRunner.query(con, _buildSelectSQL(query, selectFilter), entityBeanListHandler);
-    }
-
-    /**
-     * a
+     * 构建查询 SQL
      *
      * @param query        a
      * @param selectFilter a
      * @return a
      */
     private AbstractPlaceholderSQL<?> _buildSelectSQL(Query query, SelectFilter selectFilter) {
-        var selectColumnInfos = selectFilter != null ? selectFilter.filter(scxDaoTableInfo.columnInfos()) : scxDaoTableInfo.columnInfos();
+        var selectColumnInfos = selectFilter.filter(scxDaoTableInfo.columnInfos());
         var sql = SQLBuilder.Select(selectColumnInfos).From(scxDaoTableInfo.tableName()).Where(query.where()).GroupBy(query.groupBy()).OrderBy(query.orderBy()).Limit(query.pagination()).GetSQL();
         return PlaceholderSQL.of(sql, query.where().getWhereParams());
     }
@@ -206,22 +165,10 @@ public class BasicService<Entity> {
     }
 
     /**
-     * 获取条数
+     * 构建 count SQL
      *
-     * @param query 查询条件
-     * @param con   外部传来的连接 (useInternalConnection 为 false 是使用)
-     * @return 条数
-     * @throws java.sql.SQLException if any.
-     */
-    public final long _count(Connection con, Query query) throws SQLException {
-        return SQLRunner.query(con, _buildCountSQL(query), countResultHandler);
-    }
-
-    /**
-     * a
-     *
-     * @param query a
-     * @return a
+     * @param query query 对象
+     * @return sql
      */
     private AbstractPlaceholderSQL<?> _buildCountSQL(Query query) {
         var sql = SQLBuilder.Select("COUNT(*) AS count").From(scxDaoTableInfo.tableName()).Where(query.where()).GroupBy(query.groupBy()).GetSQL();
@@ -241,32 +188,18 @@ public class BasicService<Entity> {
     }
 
     /**
-     * 更新数据
+     * 构建更新 SQL
      *
-     * @param entity       要更新的数据
-     * @param query        更新的过滤条件
-     * @param con          外部传来的连接 (useInternalConnection 为 false 是使用)
-     * @param updateFilter a
-     * @return 受影响的条数
-     * @throws java.sql.SQLException if any.
-     */
-    public final long _update(Connection con, Entity entity, Query query, UpdateFilter updateFilter) throws SQLException {
-        return SQLRunner.update(con, _buildUpdateSQL(entity, query, updateFilter)).affectedItemsCount();
-    }
-
-    /**
-     * a
-     *
-     * @param entity       a
-     * @param query        a
-     * @param updateFilter a
+     * @param entity       待更新的实体
+     * @param query        查询条件
+     * @param updateFilter filter
      * @return a
      */
     private AbstractPlaceholderSQL<?> _buildUpdateSQL(Entity entity, Query query, UpdateFilter updateFilter) {
-        if (query == null || query.where().isEmpty()) {
+        if (query.where().isEmpty()) {
             throw new IllegalArgumentException("更新数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
         }
-        var updateSetColumnInfos = updateFilter != null ? updateFilter.filter(entity, scxDaoTableInfo.columnInfos()) : scxDaoTableInfo.columnInfos();
+        var updateSetColumnInfos = updateFilter.filter(entity, scxDaoTableInfo.columnInfos());
         var sql = SQLBuilder.Update(scxDaoTableInfo.tableName()).Set(updateSetColumnInfos).Where(query.where()).GetSQL();
         var entityParams = Arrays.stream(updateSetColumnInfos).map(c -> c.getFieldValue(entity)).collect(Collectors.toList());
         entityParams.addAll(List.of(query.where().getWhereParams()));
@@ -277,36 +210,44 @@ public class BasicService<Entity> {
      * 删除数据
      *
      * @param query where 条件
-     * @return 受影响的条数
+     * @return 受影响的条数 (被成功删除的数据条数)
      */
     public final long _delete(Query query) {
         return ScxContext.sqlRunner().update(_buildDeleteSQL(query)).affectedItemsCount();
     }
 
     /**
-     * 删除数据
+     * 构建 删除 SQL
      *
-     * @param query      where 条件
-     * @param connection 外部传来的连接 (useInternalConnection 为 false 是使用)
-     * @return 受影响的条数
-     * @throws java.sql.SQLException if any.
-     */
-    public final long _delete(Connection connection, Query query) throws SQLException {
-        return SQLRunner.update(connection, _buildDeleteSQL(query)).affectedItemsCount();
-    }
-
-    /**
-     * a
-     *
-     * @param query a
-     * @return a
+     * @param query query
+     * @return sql
      */
     private AbstractPlaceholderSQL<?> _buildDeleteSQL(Query query) {
-        if (query == null || query.where().isEmpty()) {
+        if (query.where().isEmpty()) {
             throw new IllegalArgumentException("删除数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
         }
         var sql = SQLBuilder.Delete(scxDaoTableInfo.tableName()).Where(query.where()).GetSQL();
         return PlaceholderSQL.of(sql, query.where().getWhereParams());
+    }
+
+    /**
+     * 方便冗长的 调用
+     *
+     * @param handler handler
+     */
+    public final void autoTransaction(ScxHandlerVE<?> handler) {
+        ScxContext.sqlRunner().autoTransaction(handler);
+    }
+
+    /**
+     * 方便冗长的 调用
+     *
+     * @param handler a
+     * @param <T>     a
+     * @return a
+     */
+    public final <T> T autoTransaction(ScxHandlerVRE<T, ?> handler) {
+        return ScxContext.sqlRunner().autoTransaction(handler);
     }
 
     /**
