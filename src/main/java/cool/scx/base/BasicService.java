@@ -234,9 +234,8 @@ public class BasicService<Entity> {
      * 方便冗长的 调用
      *
      * @param handler handler
-     * @throws Exception e
      */
-    public final void autoTransaction(ScxHandlerVE<?> handler) throws Exception {
+    public final void autoTransaction(ScxHandlerVE<?> handler) {
         ScxContext.sqlRunner().autoTransaction(handler);
     }
 
@@ -246,9 +245,8 @@ public class BasicService<Entity> {
      * @param handler a
      * @param <T>     a
      * @return a
-     * @throws Exception a
      */
-    public final <T> T autoTransaction(ScxHandlerVRE<T, ?> handler) throws Exception {
+    public final <T> T autoTransaction(ScxHandlerVRE<T, ?> handler) {
         return ScxContext.sqlRunner().autoTransaction(handler);
     }
 

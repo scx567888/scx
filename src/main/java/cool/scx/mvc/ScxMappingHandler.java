@@ -166,7 +166,7 @@ public final class ScxMappingHandler implements Handler<RoutingContext> {
     @Override
     public void handle(RoutingContext context) {
         //0, 将 routingContext 注入到 ThreadLocal 中去 以方便后续从静态方法调用
-        ScxContext.routingContext(context);
+        ScxContext._routingContext(context);
         try {
             //1, 执行前置处理器 (一般用于校验权限之类)
             this.scxMappingConfiguration.scxMappingInterceptor().preHandle(context, this);
@@ -184,6 +184,8 @@ public final class ScxMappingHandler implements Handler<RoutingContext> {
             //2, 如果是包装类型异常 (ScxWrappedRuntimeException) 则使用其内部的异常
             var exception = ScxExceptionHelper.getRootCause(e instanceof InvocationTargetException ? e.getCause() : e);
             this.scxHttpRouter.findExceptionHandler(exception).handle(exception, context);
+        } finally {
+            ScxContext._clearRoutingContext();
         }
     }
 

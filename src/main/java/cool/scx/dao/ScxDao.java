@@ -3,7 +3,6 @@ package cool.scx.dao;
 import com.mysql.cj.jdbc.MysqlDataSource;
 import com.zaxxer.hikari.HikariDataSource;
 import cool.scx.config.ScxEasyConfig;
-import cool.scx.config.ScxFeatureConfig;
 import cool.scx.sql.SQLRunner;
 import cool.scx.util.ConsoleUtils;
 import org.slf4j.Logger;

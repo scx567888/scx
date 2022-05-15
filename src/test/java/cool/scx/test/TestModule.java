@@ -77,7 +77,7 @@ public class TestModule implements ScxModule {
                     c.tags = new String[]{"fast", "beautiful", "small", "big"};
                     l.add(c);
                 }
-                carService.save(l);
+                carService.add(l);
                 System.err.println("完成: 方式1 (批量) 插入 999条数据时间 :" + StopWatch.stopToMillis("save1"));
 
                 System.err.println("开始: 方式2 (循环单次) 插入");
@@ -88,7 +88,7 @@ public class TestModule implements ScxModule {
                     c.name = RandomUtils.getRandomString(10, false) + "😢";
                     c.color = CarColor.values()[RandomUtils.getRandomNumber(0, 3)];
                     c.owner = new CarOwner("David", i, new String[]{"987654321"});
-                    carService1.save(c);
+                    carService1.add(c);
                 }
                 System.err.println("方式2 (循环单次) 插入 999条数据时间 :" + StopWatch.stopToMillis("save2"));
             }
@@ -116,10 +116,10 @@ public class TestModule implements ScxModule {
                 var bb = new Car();
                 bb.name = "唯一ID";
                 bb.color = CarColor.values()[RandomUtils.getRandomNumber(0, 3)];
-                carService.save( bb);
+                carService.add(bb);
                 System.err.println("现在数据库中数据条数 : " + carService.count());
                 System.err.println("现在在插入 1 错误数据");
-                carService.save( bb);
+                carService.add(bb);
             });
         } catch (Exception e) {
             System.err.println("出错了 后滚后数据库中数据条数 : " + carService.count());

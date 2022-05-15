@@ -27,6 +27,11 @@ import java.util.concurrent.Executors;
 public final class SQLRunner {
 
     /**
+     * logger
+     */
+    static final Logger logger = LoggerFactory.getLogger(SQLRunner.class);
+
+    /**
      * a
      */
     private static final ExecutorService SQL_RUNNER_EXECUTOR_SERVICE = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
@@ -35,11 +40,6 @@ public final class SQLRunner {
      * a
      */
     private static final ThreadLocal<Connection> CONNECTION_THREAD_LOCAL = new ThreadLocal<>();
-
-    /**
-     * logger
-     */
-    static final Logger logger = LoggerFactory.getLogger(SQLRunner.class);
 
     /**
      * 数据源
@@ -58,6 +58,16 @@ public final class SQLRunner {
         this.dataSource = dataSource;
     }
 
+    /**
+     * a
+     *
+     * @param con              a
+     * @param placeholderSQL   a
+     * @param resultSetHandler a
+     * @param <T>              a
+     * @return a
+     * @throws SQLException a
+     */
     public static <T> T query(Connection con, AbstractPlaceholderSQL<?> placeholderSQL, ScxHandlerRE<ResultSet, T, SQLException> resultSetHandler) throws SQLException {
         try (var preparedStatement = placeholderSQL.getPreparedStatement(con)) {
             var resultSet = preparedStatement.executeQuery();
@@ -80,6 +90,14 @@ public final class SQLRunner {
         }
     }
 
+    /**
+     * a
+     *
+     * @param con            a
+     * @param placeholderSQL a
+     * @return a
+     * @throws SQLException a
+     */
     public static UpdateResult update(Connection con, AbstractPlaceholderSQL<?> placeholderSQL) throws SQLException {
         try (var preparedStatement = placeholderSQL.getPreparedStatement(con)) {
             var affectedItemsCount = preparedStatement.executeLargeUpdate();
@@ -231,6 +249,8 @@ public final class SQLRunner {
 
     /**
      * 自动处理事务并在产生异常时进行自动回滚
+     * 注意 其中的操作会在另一个线程中执行 所以需要注意线程的操作
+     * 当抛出异常时 请使用 {@link ScxExceptionHelper#getRootCause(Throwable)} 来获取真正的异常
      * 用法
      * <pre>{@code
      *      假设有以下结构的数据表
@@ -238,49 +258,51 @@ public final class SQLRunner {
      *          name varchar(32) null unique,
      *      );
      *      在连接消费者中传入要执行的操作
-     *      try {
-     *          sqlRunner.autoTransaction(con -> {
-     *              // 这句代码会正确执行
-     *              SQLRunner.execute(con, "insert into test(name) values('uniqueName') ", null);
-     *              // 这句会产生异常 这时上一个语句会进行回滚 (rollback) 同时将异常抛出
-     *              SQLRunner.execute(con, "insert into test(name) values('uniqueName') ", null);
-     *          });
-     *       } catch (Exception e) {
-     *          //这里会捕获 getConnection 可能产生的 SQLException 和 autoTransaction 代码块中产生的所有异常
-     *          e.printStackTrace();
-     *      }
+     *      SQLRunner sqlRunner = xxx;
+     *         try {
+     *             sqlRunner.autoTransaction(() -> {
+     *                 // 这句代码会正确执行
+     *                 sqlRunner.execute(NoParametersSQL.of("insert into test(name) values('uniqueName') "));
+     *                 // 这句会产生异常 这时上一个语句会进行回滚 (rollback) 同时将异常抛出
+     *                 sqlRunner.execute(NoParametersSQL.of("insert into test(name) values('uniqueName') "));
+     *             });
+     *         } catch (Exception e) {
+     *             //这里会捕获 getConnection 可能产生的 SQLException 和 autoTransaction 代码块中产生的所有异常
+     *             //因为会进行多层包裹 所以建议使用 ScxExceptionHelper.getRootCause(e); 来获取真正的异常
+     *             ScxExceptionHelper.getRootCause(e).printStackTrace();
+     *         }
      *  }</pre>
      *
      * @param handler 连接消费者
-     * @throws java.lang.Exception if any.
      */
-    public void autoTransaction(ScxHandlerVE<?> handler) throws Exception {
-        SQL_RUNNER_EXECUTOR_SERVICE.submit(() -> {
+    public void autoTransaction(ScxHandlerVE<?> handler) {
+        ScxExceptionHelper.wrap(() -> SQL_RUNNER_EXECUTOR_SERVICE.submit(() -> {
             try (var con = dataSource.getConnection()) {
                 CONNECTION_THREAD_LOCAL.set(con);
                 con.setAutoCommit(false);
                 try {
                     handler.handle();
                     con.commit();
+                    return null;
                 } catch (Exception e) {
                     con.rollback();
                     throw e;
+                } finally {
+                    CONNECTION_THREAD_LOCAL.remove();
                 }
-                return null;
             }
-        }).get();
+        }).get());
     }
 
     /**
-     * a
+     * 同上 {@link SQLRunner#autoTransaction(ScxHandlerVE)} 但是有返回值
      *
      * @param handler a
      * @param <T>     a
      * @return a
-     * @throws Exception a
      */
-    public <T> T autoTransaction(ScxHandlerVRE<T, ?> handler) throws Exception {
-        return SQL_RUNNER_EXECUTOR_SERVICE.submit(() -> {
+    public <T> T autoTransaction(ScxHandlerVRE<T, ?> handler) {
+        return ScxExceptionHelper.wrap(() -> SQL_RUNNER_EXECUTOR_SERVICE.submit(() -> {
             try (var con = dataSource.getConnection()) {
                 CONNECTION_THREAD_LOCAL.set(con);
                 con.setAutoCommit(false);
@@ -291,9 +313,11 @@ public final class SQLRunner {
                 } catch (Exception e) {
                     con.rollback();
                     throw e;
+                } finally {
+                    CONNECTION_THREAD_LOCAL.remove();
                 }
             }
-        }).get();
+        }).get());
     }
 
 }

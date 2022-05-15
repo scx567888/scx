@@ -86,9 +86,9 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param entity 待插入的数据
      * @return 插入成功的主键 ID 如果插入失败或数据没有主键则返回 null
      */
-    public final Long save(Entity entity) {
+    public final Long add(Entity entity) {
         //此处使用一个默认的 UpdateFilter 用来过滤实体类中为空的字段
-        return save(entity, UpdateFilter.ofExcluded());
+        return add(entity, UpdateFilter.ofExcluded());
     }
 
     /**
@@ -98,7 +98,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param updateFilter a
      * @return 插入成功的主键 ID 如果插入失败或数据没有主键则返回 null
      */
-    public Long save(Entity entity, UpdateFilter updateFilter) {
+    public Long add(Entity entity, UpdateFilter updateFilter) {
         return this._insert(entity, updateFilterProcessor(updateFilter));
     }
 
@@ -108,9 +108,9 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param entityList 数据集合
      * @return 插入成功的数据的自增主键列表
      */
-    public final List<Long> save(Collection<Entity> entityList) {
+    public final List<Long> add(Collection<Entity> entityList) {
         //此处没有设置 f
-        return save(entityList, UpdateFilter.ofExcluded());
+        return add(entityList, UpdateFilter.ofExcluded());
     }
 
     /**
@@ -120,7 +120,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param updateFilter a
      * @return a
      */
-    public List<Long> save(Collection<Entity> entityList, UpdateFilter updateFilter) {
+    public List<Long> add(Collection<Entity> entityList, UpdateFilter updateFilter) {
         return this._insertBatch(entityList, updateFilterProcessor(updateFilter));
     }
 
@@ -343,8 +343,8 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param entity 待插入的数据
      * @return 插入后的数据
      */
-    public final Entity saveAndGet(Entity entity) {
-        var newID = this.save(entity);
+    public final Entity addAndGet(Entity entity) {
+        var newID = this.add(entity);
         return newID != null ? this.get(newID) : null;
     }
 
@@ -355,8 +355,8 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param updateFilter a
      * @return a
      */
-    public final Entity saveAndGet(Entity entity, UpdateFilter updateFilter) {
-        var newID = this.save(entity, updateFilter);
+    public final Entity addAndGet(Entity entity, UpdateFilter updateFilter) {
+        var newID = this.add(entity, updateFilter);
         return newID != null ? this.get(newID) : null;
     }
 
@@ -366,8 +366,8 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param entityList 数据集合
      * @return 插入成功的数据的自增主键列表
      */
-    public final List<Entity> saveAndGet(Collection<Entity> entityList) {
-        var newIDs = this.save(entityList);
+    public final List<Entity> addAndGet(Collection<Entity> entityList) {
+        var newIDs = this.add(entityList);
         return this.list(new Query().in("id", newIDs));
     }
 
@@ -378,8 +378,8 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param updateFilter a
      * @return a
      */
-    public final List<Entity> saveAndGet(Collection<Entity> entityList, UpdateFilter updateFilter) {
-        var newIDs = this.save(entityList, updateFilter);
+    public final List<Entity> addAndGet(Collection<Entity> entityList, UpdateFilter updateFilter) {
+        var newIDs = this.add(entityList, updateFilter);
         return this.list(new Query().in("id", newIDs));
     }
 
