@@ -283,7 +283,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param ids 要删除的数据的 id 集合
      * @return 删除成功的数据条数
      */
-    public final long delete(long... ids) {
+    public long delete(long... ids) {
         if (ids.length == 0) {
             throw new IllegalArgumentException("待删除的 ids 数量至少为 1 个");
         }
@@ -315,7 +315,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param ids 待恢复的数据 id 集合
      * @return 恢复删除成功的数据条数
      */
-    public final long revokeDelete(long... ids) {
+    public long revokeDelete(long... ids) {
         if (ids.length == 0) {
             throw new IllegalArgumentException("待恢复删除的 ids 数量至少为 1 个");
         }
