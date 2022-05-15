@@ -13,7 +13,7 @@ import java.util.List;
  * <p>
  * 或手动创建 : new BaseModelService()
  * <p>
- * 注意和 {@link BasicService} 进行区分
+ * 注意和 {@link cool.scx.base.BasicService} 进行区分
  * <p>
  * '_' 下划线开头的方法为 BasicService 的实现方法, 其余为基于以上方法进行的封装以便使用
  * <p>
@@ -51,6 +51,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * 2, 根据不同的 selectFilter 类型进行查询参数过滤 隐藏数据库中所有 tombstone 字段的信息
      *
      * @param query q
+     * @return a {@link cool.scx.base.Query} object
      */
     private static Query queryProcessor(Query query) {
         if (ScxContext.easyConfig().tombstone()) {
@@ -63,6 +64,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * 当 启用逻辑删除时 则不允许查询 tombstone 值 所以在此进行处理
      *
      * @param selectFilter s
+     * @return a {@link cool.scx.base.SelectFilter} object
      */
     private static SelectFilter selectFilterProcessor(SelectFilter selectFilter) {
         if (ScxContext.easyConfig().tombstone()) {
@@ -75,6 +77,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * 处理 updateFilter  使在插入或更新数据时永远过滤 "id", "updateDate", "createDate", "tombstone" 四个字段
      *
      * @param updateFilter u
+     * @return a {@link cool.scx.base.UpdateFilter} object
      */
     private static UpdateFilter updateFilterProcessor(UpdateFilter updateFilter) {
         return updateFilter.addExcluded("id", "updateDate", "createDate", "tombstone");
@@ -144,7 +147,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     }
 
     /**
-     * 根据聚合查询条件 {@link Query} 获取数据列表
+     * 根据聚合查询条件 {@link cool.scx.base.Query} 获取数据列表
      *
      * @param query 聚合查询参数对象
      * @return 数据列表
@@ -186,7 +189,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     }
 
     /**
-     * 根据聚合查询条件 {@link Query} 获取单条数据
+     * 根据聚合查询条件 {@link cool.scx.base.Query} 获取单条数据
      *
      * @param query 聚合查询参数对象
      * @return 查到多个则返回第一个 没有则返回 null
@@ -217,7 +220,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     }
 
     /**
-     * 根据聚合查询条件 {@link Query} 获取数据条数
+     * 根据聚合查询条件 {@link cool.scx.base.Query} 获取数据条数
      *
      * @param query 聚合查询参数对象
      * @return 数据条数

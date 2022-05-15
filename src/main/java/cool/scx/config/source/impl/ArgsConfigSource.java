@@ -7,6 +7,9 @@ import java.util.Map;
 
 /**
  * a
+ *
+ * @author scx567888
+ * @version 1.14.4
  */
 public final class ArgsConfigSource implements ScxConfigSource {
 
@@ -38,6 +41,9 @@ public final class ArgsConfigSource implements ScxConfigSource {
         return new ArgsConfigSource(args);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Map<String, Object> getConfigMapping() {
         return configMapping;

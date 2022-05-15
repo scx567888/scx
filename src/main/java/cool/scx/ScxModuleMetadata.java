@@ -28,6 +28,9 @@ import java.util.stream.Collectors;
  */
 public final class ScxModuleMetadata<T extends ScxModule> implements Serializable {
 
+    /**
+     * Constant <code>beanFilterAnnotation</code>
+     */
     private static final List<Class<? extends Annotation>> beanFilterAnnotation = List.of(
             //scx 注解
             ScxComponent.class, ScxMapping.class, ScxModel.class, ScxService.class, ScxWebSocketMapping.class,

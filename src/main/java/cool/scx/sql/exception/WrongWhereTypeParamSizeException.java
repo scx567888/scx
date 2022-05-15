@@ -4,6 +4,9 @@ import cool.scx.sql.where.WhereType;
 
 /**
  * 错误的 WhereBody 参数长度异常
+ *
+ * @author scx567888
+ * @version 1.14.4
  */
 public final class WrongWhereTypeParamSizeException extends IllegalArgumentException {
 
