@@ -36,8 +36,7 @@ public final class ScxDao {
     /**
      * a
      *
-     * @param easyConfig       a
-     * @param scxFeatureConfig a
+     * @param easyConfig a
      */
     public ScxDao(ScxEasyConfig easyConfig) {
         var mysqlDataSource = getMySQLDataSource(easyConfig);
@@ -60,8 +59,7 @@ public final class ScxDao {
     /**
      * 初始化 MySQL 数据源
      *
-     * @param scxEasyConfig    a {@link cool.scx.config.ScxEasyConfig} object
-     * @param scxFeatureConfig a {@link cool.scx.config.ScxFeatureConfig} object
+     * @param scxEasyConfig a {@link cool.scx.config.ScxEasyConfig} object
      * @return MySQL 数据源
      */
     private static MysqlDataSource getMySQLDataSource(ScxEasyConfig scxEasyConfig) {

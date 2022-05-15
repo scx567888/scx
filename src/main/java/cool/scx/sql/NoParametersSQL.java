@@ -14,6 +14,12 @@ public final class NoParametersSQL extends AbstractPlaceholderSQL<Object> {
         super(false, noParametersSQL, null, null);
     }
 
+    /**
+     * a
+     *
+     * @param noParametersSQL a
+     * @return a
+     */
     public static NoParametersSQL of(String noParametersSQL) {
         return new NoParametersSQL(noParametersSQL);
     }
