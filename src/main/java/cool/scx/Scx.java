@@ -354,9 +354,13 @@ public final class Scx {
         this.vertxHttpServer.listen(port, http -> {
             if (http.succeeded()) {
                 var httpOrHttps = this.scxEasyConfig.isHttpsEnabled() ? "https" : "http";
-                Ansi.out().green("服务器启动成功... 用时 " + StopWatch.stopToMillis("ScxRun") + " ms").ln()
-                        .green("> 网络 : " + httpOrHttps + "://" + NetUtils.getLocalAddress() + ":" + this.vertxHttpServer.actualPort() + "/").ln()
-                        .green("> 本地 : " + httpOrHttps + "://localhost:" + this.vertxHttpServer.actualPort() + "/").println();
+                var o = Ansi.out().green("服务器启动成功... 用时 " + StopWatch.stopToMillis("ScxRun") + " ms").ln()
+                        .green("> 本地: " + httpOrHttps + "://localhost:" + this.vertxHttpServer.actualPort() + "/").ln();
+                var normalIP = NetUtils.getLocalIPAddress().getNormalIP();
+                for (var ip : normalIP) {
+                    o.green("> 网络: " + httpOrHttps + "://" + ip + ":" + this.vertxHttpServer.actualPort() + "/").ln();
+                }
+                o.print();
             } else {
                 var cause = http.cause();
                 if (cause instanceof BindException) {

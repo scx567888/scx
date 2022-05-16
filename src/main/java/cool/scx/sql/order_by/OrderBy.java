@@ -1,7 +1,5 @@
 package cool.scx.sql.order_by;
 
-import cool.scx.util.StringUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,13 +32,6 @@ public final class OrderBy {
      * @return 本身, 方便链式调用
      */
     public OrderBy add(String name, OrderByType orderByType, OrderByOption... options) {
-        //校验参数
-        if (StringUtils.isBlank(name)) {
-            throw new IllegalArgumentException("OrderBy 参数错误 : 名称 不能为空 !!!");
-        }
-        if (orderByType == null) {
-            throw new IllegalArgumentException("OrderBy 参数错误 : orderByType 不能为空 !!!");
-        }
         var info = new OrderByOptionInfo(options);
         // 是否使用原始名称 (即不进行转义)
         var orderByBody = new OrderByBody(name, orderByType, info);
@@ -60,7 +51,7 @@ public final class OrderBy {
      * @return a
      */
     public OrderBy asc(String name, OrderByOption... options) {
-        return add(name.trim(), OrderByType.ASC, options);
+        return add(name, OrderByType.ASC, options);
     }
 
     /**
@@ -71,7 +62,7 @@ public final class OrderBy {
      * @return a
      */
     public OrderBy desc(String name, OrderByOption... options) {
-        return add(name.trim(), OrderByType.DESC, options);
+        return add(name, OrderByType.DESC, options);
     }
 
     /**

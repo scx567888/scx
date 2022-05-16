@@ -1,6 +1,7 @@
 package cool.scx.sql.group_by;
 
 import cool.scx.sql.SQLHelper;
+import cool.scx.util.StringUtils;
 
 /**
  * <p>GroupByBody class.</p>
@@ -17,11 +18,14 @@ final class GroupByBody {
     /**
      * <p>Constructor for GroupByBody.</p>
      *
-     * @param _name a {@link java.lang.String} object
-     * @param info  a boolean
+     * @param name a {@link java.lang.String} object
+     * @param info a boolean
      */
-    GroupByBody(String _name, GroupByOptionInfo info) {
-        this.name = _name.trim();
+    GroupByBody(String name, GroupByOptionInfo info) {
+        if (StringUtils.isBlank(name)) {
+            throw new IllegalArgumentException("GroupBy 参数错误 : 名称 不能为空 !!!");
+        }
+        this.name = name.trim();
         this.groupByColumn = SQLHelper.getColumnName(this.name, info.useJsonExtract(), info.useOriginalName());
     }
 

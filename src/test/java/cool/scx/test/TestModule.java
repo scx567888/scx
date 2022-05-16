@@ -13,6 +13,7 @@ import cool.scx.test.car.Car;
 import cool.scx.test.car.CarColor;
 import cool.scx.test.car.CarOwner;
 import cool.scx.test.car.CarService;
+import cool.scx.util.NetUtils;
 import cool.scx.util.RandomUtils;
 import cool.scx.util.StopWatch;
 import cool.scx.util.URIBuilder;
@@ -129,11 +130,12 @@ public class TestModule implements ScxModule {
 
     @Test
     public static void test1() {
+        var ip= NetUtils.getLocalIPAddress().v4()[0];
         var logger = LoggerFactory.getLogger(TestModule.class);
         //测试 URIBuilder
         for (int i = 0; i < 1000; i++) {
             try {
-                var s = "http://127.0.0.1:8888/test0";
+                var s = "http://"+ip+":8888/test0";
                 var stringHttpResponse = HttpClientHelper.post(
                         new URIBuilder(s)
                                 .addParam("name", "小明😊123?!@%^&**()_特-殊 字=符")

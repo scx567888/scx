@@ -8,6 +8,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 
 /**
  * 针对 {@link java.net.http.HttpClient} 进行一些极其简单的封装
@@ -179,8 +180,7 @@ public final class HttpClientHelper {
             case POST -> httpRequestBuilder.POST(bodyPublisher).build();
             case DELETE -> httpRequestBuilder.DELETE().build();
             case PUT -> httpRequestBuilder.PUT(bodyPublisher).build();
-            default ->
-                    throw new IllegalArgumentException("method 只能为 [GET, POST, DELETE, PUT] 这四种 !!! method : " + method);
+            default -> throw new IllegalArgumentException("method 只能为 [GET, POST, DELETE, PUT] 这四种 !!! method : " + method);
         };
         return httpClient.send(httpRequest, DEFAULT_RESPONSE_BODY_HANDLER);
     }
@@ -229,6 +229,17 @@ public final class HttpClientHelper {
          */
         public Options header(String name, String value) {
             builder.header(name, value);
+            return this;
+        }
+
+        /**
+         * 超时时间
+         *
+         * @param duration a
+         * @return a
+         */
+        public Options timeout(Duration duration) {
+            builder.timeout(duration);
             return this;
         }
 

@@ -228,7 +228,7 @@ public final class ScxEasyConfig {
      */
     public void showEasyConfigInfo() {
         Ansi.out()
-                .green("Y 服务器 IP 地址                       \t -->\t " + NetUtils.getLocalAddress()).ln()
+                .green("Y 服务器 IP 地址                       \t -->\t " + NetUtils.getLocalIPAddress().v4ToString()).ln()
                 .green("Y 端口号                               \t -->\t " + port).ln()
                 .green("Y 数据库删除方式为                     \t -->\t " + (tombstone ? "逻辑删除" : "物理删除")).ln()
                 .green("Y 允许的请求源                         \t -->\t " + allowedOrigin).ln()

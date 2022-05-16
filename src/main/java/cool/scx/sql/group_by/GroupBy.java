@@ -1,7 +1,5 @@
 package cool.scx.sql.group_by;
 
-import cool.scx.util.StringUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,9 +31,6 @@ public final class GroupBy {
      * @return 本身, 方便链式调用
      */
     public GroupBy add(String name, GroupByOption... options) {
-        if (StringUtils.isBlank(name)) {
-            throw new IllegalArgumentException("GroupBy 参数错误 : 名称 不能为空 !!!");
-        }
         var info = new GroupByOptionInfo(options);
         var groupByBody = new GroupByBody(name, info);
         groupByBodyList.add(groupByBody);
