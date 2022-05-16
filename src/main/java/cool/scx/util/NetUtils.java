@@ -3,9 +3,13 @@ package cool.scx.util;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.ext.web.RoutingContext;
 
-import java.net.*;
+import java.net.Inet4Address;
+import java.net.Inet6Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.util.ArrayList;
-import java.util.Enumeration;
+import java.util.Collections;
+import java.util.stream.Stream;
 
 /**
  * 基本网络操作工具类
@@ -58,61 +62,46 @@ public final class NetUtils {
         return ip;
     }
 
-    /**
-     * 获取本机的 ip 地址
-     *
-     * @return ip
-     */
-    public static String getLocalAddress() {
+    public static IPAddress getLocalAddress() {
         try {
-            Enumeration<NetworkInterface> enumeration = NetworkInterface.getNetworkInterfaces();
-            ArrayList<String> ipv4Result = new ArrayList<>();
-            ArrayList<String> ipv6Result = new ArrayList<>();
-            while (enumeration.hasMoreElements()) {
-                final NetworkInterface networkInterface = enumeration.nextElement();
-                final Enumeration<InetAddress> en = networkInterface.getInetAddresses();
-                while (en.hasMoreElements()) {
-                    final InetAddress address = en.nextElement();
-                    if (!address.isLoopbackAddress()) {
-                        if (address instanceof Inet6Address) {
-                            ipv6Result.add(normalizeHostAddress(address));
-                        } else {
-                            ipv4Result.add(normalizeHostAddress(address));
-                        }
-                    }
-                }
-            }
-            if (!ipv4Result.isEmpty()) {
-                for (var ip : ipv4Result) {
-                    if (ip.startsWith("127.0") || ip.startsWith("192.168")) {
-                        continue;
-                    }
-                    return ip;
-                }
-                return ipv4Result.get(ipv4Result.size() - 1);
-            } else if (!ipv6Result.isEmpty()) {
-                return ipv6Result.get(0);
-            }
-            final InetAddress localHost = InetAddress.getLocalHost();
-            return normalizeHostAddress(localHost);
-        } catch (SocketException | UnknownHostException e) {
+            //所有非回环的地址
+            var allAddresses = Stream.concat(NetworkInterface.networkInterfaces().flatMap(NetworkInterface::inetAddresses), Stream.of(InetAddress.getLocalHost())).filter(c -> !c.isLoopbackAddress()).toList();
+            var ipv4AddressList = allAddresses.stream().filter(c -> c instanceof Inet4Address).map(InetAddress::getHostAddress).distinct().toArray(String[]::new);
+            var ipv6AddressList = allAddresses.stream().filter(c -> c instanceof Inet6Address).map(InetAddress::getHostAddress).distinct().toArray(String[]::new);
+            return new IPAddress(ipv4AddressList, ipv6AddressList);
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+        return new IPAddress(new String[0], new String[0]);
     }
 
-    /**
-     * <p>normalizeHostAddress.</p>
-     *
-     * @param localHost a {@link java.net.InetAddress} object.
-     * @return a {@link java.lang.String} object.
-     */
-    public static String normalizeHostAddress(final InetAddress localHost) {
-        if (localHost instanceof Inet6Address) {
-            return "[" + localHost.getHostAddress() + "]";
-        } else {
-            return localHost.getHostAddress();
+    public record IPAddress(String[] v4, String[] v6) {
+
+        /**
+         * 当 ipv4 地址列表不为空时返回 ipv4 列表 否则返回 ipv6 地址
+         *
+         * @return 标准的 IP
+         */
+        public String[] getNormalIP() {
+            return v4.length > 0 ? v4 : v6;
         }
+
+        public String v4ToString() {
+            return "[" + String.join(", ", v4) + "]";
+        }
+
+        public String v6ToString() {
+            return "[" + String.join(", ", v6) + "]";
+        }
+
+        @Override
+        public String toString() {
+            var l = new ArrayList<String>();
+            Collections.addAll(l, v4);
+            Collections.addAll(l, v6);
+            return "[" + String.join(", ", l) + "]";
+        }
+
     }
 
 }
