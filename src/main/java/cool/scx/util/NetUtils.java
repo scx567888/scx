@@ -62,6 +62,11 @@ public final class NetUtils {
         return ip;
     }
 
+    /**
+     * 获取本机的 IP 地址
+     *
+     * @return 本机的 IP 地址
+     */
     public static IPAddress getLocalAddress() {
         try {
             //所有非回环的地址
@@ -75,6 +80,12 @@ public final class NetUtils {
         return new IPAddress(new String[0], new String[0]);
     }
 
+    /**
+     * IP 地址包装类
+     *
+     * @param v4 所有 ipv4 地址
+     * @param v6 所有 ipv6 地址
+     */
     public record IPAddress(String[] v4, String[] v6) {
 
         /**
@@ -86,14 +97,29 @@ public final class NetUtils {
             return v4.length > 0 ? v4 : v6;
         }
 
+        /**
+         * 所有 ipv4 地址转字符串 (一般用于打印或日志记录使用)
+         *
+         * @return 字符串
+         */
         public String v4ToString() {
             return "[" + String.join(", ", v4) + "]";
         }
 
+        /**
+         * 所有 ipv6 地址转字符串 (一般用于打印或日志记录使用)
+         *
+         * @return 字符串
+         */
         public String v6ToString() {
             return "[" + String.join(", ", v6) + "]";
         }
 
+        /**
+         * 将所有的 ipv4 和 ipv6 地址转换为字符串 ipv4 在前, ipv6 在后, (一般用于打印或日志记录使用)
+         *
+         * @return 字符串
+         */
         @Override
         public String toString() {
             var l = new ArrayList<String>();
