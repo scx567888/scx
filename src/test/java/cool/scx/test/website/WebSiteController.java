@@ -10,6 +10,7 @@ import cool.scx.enumeration.RawType;
 import cool.scx.test.car.Car;
 import cool.scx.test.car.CarService;
 import cool.scx.type.UploadedEntity;
+import cool.scx.util.NetUtils;
 import cool.scx.util.RandomUtils;
 import cool.scx.util.digest.DigestUtils;
 import cool.scx.util.http.HttpClientHelper;
@@ -48,6 +49,7 @@ public class WebSiteController {
     public static Object test0(@FromQuery String name,
                                @FromQuery Integer age,
                                @FromUpload UploadedEntity content) {
+        System.out.println(NetUtils.getClientIPAddress(ScxContext.routingContext().request()));
         return Map.of("now", ScxConstant.DEFAULT_DATETIME_FORMATTER.format(LocalDateTime.now()),
                 "name", name, "age", age, "content", content.buffer().toString(StandardCharsets.UTF_8));
     }
