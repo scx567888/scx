@@ -11,32 +11,26 @@ final class OrderByOptionInfo {
     /**
      * 是否替换已有的相同名称的 WhereBody
      */
-    private final boolean replace;
+    private boolean replace = false;
 
     /**
      * 是否使用原始名称
      */
-    private final boolean useOriginalName;
+    private boolean useOriginalName = false;
 
     /**
      * 是否使用 json 类型的查询
      */
-    private final boolean useJsonExtract;
+    private boolean useJsonExtract = false;
 
     public OrderByOptionInfo(OrderByOption... orderByOptions) {
-        var _replace = false;// 是否替换已有的相同名称的 WhereBody
-        var _useOriginalName = false;// 是否使用原始名称
-        var _useJsonExtract = false;// 是否使用 json 类型的查询
         for (var option : orderByOptions) {
             switch (option) {
-                case REPLACE -> _replace = true;
-                case USE_ORIGINAL_NAME -> _useOriginalName = true;
-                case USE_JSON_EXTRACT -> _useJsonExtract = true;
+                case REPLACE -> this.replace = true;
+                case USE_ORIGINAL_NAME -> this.useOriginalName = true;
+                case USE_JSON_EXTRACT -> this.useJsonExtract = true;
             }
         }
-        this.replace = _replace;
-        this.useOriginalName = _useOriginalName;
-        this.useJsonExtract = _useJsonExtract;
     }
 
     public boolean replace() {

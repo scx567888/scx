@@ -1,6 +1,7 @@
 package cool.scx.sql.order_by;
 
 import cool.scx.sql.SQLHelper;
+import cool.scx.util.StringUtils;
 
 /**
  * OrderBy 封装体
@@ -17,12 +18,18 @@ final class OrderByBody {
     /**
      * <p>Constructor for OrderByBody.</p>
      *
-     * @param _name       a {@link String} object
+     * @param name        a {@link String} object
      * @param orderByType a {@link OrderByType} object
      * @param info        a boolean
      */
-    OrderByBody(String _name, OrderByType orderByType, OrderByOptionInfo info) {
-        this.name = _name.trim();
+    OrderByBody(String name, OrderByType orderByType, OrderByOptionInfo info) {
+        if (StringUtils.isBlank(name)) {
+            throw new IllegalArgumentException("OrderBy 参数错误 : 名称 不能为空 !!!");
+        }
+        if (orderByType == null) {
+            throw new IllegalArgumentException("OrderBy 参数错误 : orderByType 不能为空 !!!");
+        }
+        this.name = name.trim();
         var columnName = SQLHelper.getColumnName(this.name, info.useJsonExtract(), info.useOriginalName());
         this.orderByClause = columnName + " " + orderByType.name();
     }
