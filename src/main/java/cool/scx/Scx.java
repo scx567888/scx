@@ -356,7 +356,7 @@ public final class Scx {
                 var httpOrHttps = this.scxEasyConfig.isHttpsEnabled() ? "https" : "http";
                 var o = Ansi.out().green("服务器启动成功... 用时 " + StopWatch.stopToMillis("ScxRun") + " ms").ln()
                         .green("> 本地: " + httpOrHttps + "://localhost:" + this.vertxHttpServer.actualPort() + "/").ln();
-                var normalIP = NetUtils.getLocalAddress().getNormalIP();
+                var normalIP = NetUtils.getLocalIPAddress().getNormalIP();
                 for (var ip : normalIP) {
                     o.green("> 网络: " + httpOrHttps + "://" + ip + ":" + this.vertxHttpServer.actualPort() + "/").ln();
                 }

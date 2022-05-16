@@ -187,6 +187,7 @@ public final class SQLRunner {
      */
     public <T> T query(AbstractPlaceholderSQL<?> placeholderSQL, ScxHandlerRE<ResultSet, T, SQLException> resultSetHandler) {
         return ScxExceptionHelper.wrap(() -> {
+            //我们根据 CONNECTION_THREAD_LOCAL.get() 是否为 null 来判断是否处于 autoTransaction 中
             var connection = CONNECTION_THREAD_LOCAL.get();
             if (connection != null) {
                 return query(connection, placeholderSQL, resultSetHandler);
@@ -206,6 +207,7 @@ public final class SQLRunner {
      */
     public long execute(AbstractPlaceholderSQL<?> placeholderSQL) {
         return ScxExceptionHelper.wrap(() -> {
+            //我们根据 CONNECTION_THREAD_LOCAL.get() 是否为 null 来判断是否处于 autoTransaction 中
             var connection = CONNECTION_THREAD_LOCAL.get();
             if (connection != null) {
                 return execute(connection, placeholderSQL);
@@ -225,6 +227,7 @@ public final class SQLRunner {
      */
     public UpdateResult update(AbstractPlaceholderSQL<?> placeholderSQL) {
         return ScxExceptionHelper.wrap(() -> {
+            //我们根据 CONNECTION_THREAD_LOCAL.get() 是否为 null 来判断是否处于 autoTransaction 中
             var connection = CONNECTION_THREAD_LOCAL.get();
             if (connection != null) {
                 return update(connection, placeholderSQL);
@@ -244,6 +247,7 @@ public final class SQLRunner {
      */
     public UpdateResult updateBatch(AbstractPlaceholderSQL<?> placeholderSQL) {
         return ScxExceptionHelper.wrap(() -> {
+            //我们根据 CONNECTION_THREAD_LOCAL.get() 是否为 null 来判断是否处于 autoTransaction 中
             var connection = CONNECTION_THREAD_LOCAL.get();
             if (connection != null) {
                 return updateBatch(connection, placeholderSQL);

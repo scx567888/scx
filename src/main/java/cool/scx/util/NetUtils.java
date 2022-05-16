@@ -1,7 +1,6 @@
 package cool.scx.util;
 
 import io.vertx.core.http.HttpServerRequest;
-import io.vertx.ext.web.RoutingContext;
 
 import java.net.Inet4Address;
 import java.net.Inet6Address;
@@ -23,43 +22,36 @@ public final class NetUtils {
      * 获取访问者IP
      * <p>
      * 先从Header中获取X-Real-IP，如果不存在再从X-Forwarded-For获得第一个IP(用,分割)，
-     * 如果还不存在则调用 Request .remoteAddress()
+     * 如果还不存在则调用 HttpServerRequest.remoteAddress()
      *
-     * @param context a {@link io.vertx.ext.web.RoutingContext} object
+     * @param request a {@link io.vertx.ext.web.RoutingContext} object
      * @return IP
      */
-    public static String getIpAddress(RoutingContext context) {
-        if (context == null) {
-            return "";
+    public static String getClientIPAddress(HttpServerRequest request) {
+        var xRealIPStr = request.getHeader("X-Real-IP");
+        var xForwardedForStr = request.getHeader("X-Forwarded-For");
+        var remoteAddressStr = request.remoteAddress().hostAddress();
+        var xRealIP = "";
+        var xForwardedFor = new String[]{};
+        var remoteAddress = "";
+        if (StringUtils.isNotBlank(xRealIPStr) && !"unknown".equalsIgnoreCase(xRealIPStr)) {
+            xRealIP = xRealIPStr;
         }
-        HttpServerRequest request = context.request();
-        var ip = request.getHeader("X-Real-IP");
-        if (StringUtils.isNotBlank(ip) && !"unknown".equalsIgnoreCase(ip)) {
-            if (ip.contains("../") || ip.contains("..\\")) {
-                return "";
-            }
-            return ip;
+        if (StringUtils.isNotBlank(xForwardedForStr) && !"unknown".equalsIgnoreCase(xForwardedForStr)) {
+            xForwardedFor = xForwardedForStr.split(",");
         }
-        ip = request.getHeader("X-Forwarded-For");
-        if (StringUtils.isNotBlank(ip) && !"unknown".equalsIgnoreCase(ip)) {
-            // 多次反向代理后会有多个IP值，第一个为真实IP。
-            int index = ip.indexOf(',');
-            if (index != -1) {
-                ip = ip.substring(0, index);
-            }
-            if (ip.contains("../") || ip.contains("..\\")) {
-                return "";
-            }
+        if (remoteAddressStr.equals("0:0:0:0:0:0:0:1")) {
+            remoteAddress = "127.0.0.1";
         } else {
-            ip = request.remoteAddress().host();
-            if (ip.contains("../") || ip.contains("..\\")) {
-                return "";
-            }
-            if (ip.equals("0:0:0:0:0:0:0:1")) {
-                ip = "127.0.0.1";
-            }
+            remoteAddress = remoteAddressStr;
         }
-        return ip;
+        if (StringUtils.isNotBlank(xRealIP)) {
+            return xRealIP;
+        } else if (xForwardedFor.length > 0) {
+            return xForwardedFor[0];
+        } else {
+            return remoteAddress;
+        }
     }
 
     /**
@@ -67,7 +59,7 @@ public final class NetUtils {
      *
      * @return 本机的 IP 地址
      */
-    public static IPAddress getLocalAddress() {
+    public static IPAddress getLocalIPAddress() {
         try {
             //所有非回环的地址
             var allAddresses = Stream.concat(NetworkInterface.networkInterfaces().flatMap(NetworkInterface::inetAddresses), Stream.of(InetAddress.getLocalHost())).filter(c -> !c.isLoopbackAddress()).toList();
