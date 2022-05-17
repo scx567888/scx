@@ -20,12 +20,12 @@ public final class ScxLoggerFactory {
     /**
      * 日志级别
      */
-    private static ScxLoggingLevel defaultLevel = null;
+    private static ScxLoggingLevel defaultLevel = ScxLoggingLevel.ERROR;
 
     /**
      * 日志类型
      */
-    private static ScxLoggingType defaultType = null;
+    private static ScxLoggingType defaultType = ScxLoggingType.CONSOLE;
 
     /**
      * 存储目录
@@ -35,7 +35,7 @@ public final class ScxLoggerFactory {
     /**
      * 是否启用堆栈跟踪
      */
-    private static Boolean defaultStackTrace = null;
+    private static Boolean defaultStackTrace = false;
 
     /**
      * 获取默认级别
