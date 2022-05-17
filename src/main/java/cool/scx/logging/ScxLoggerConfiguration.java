@@ -5,6 +5,8 @@ import cool.scx.ScxEnvironment;
 import cool.scx.config.ScxConfig;
 import cool.scx.config.handler.AppRootHandler;
 import cool.scx.config.handler.ConvertValueHandler;
+import cool.scx.config.handler.DefaultValueHandler;
+import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
 
 import java.time.format.DateTimeFormatter;
@@ -31,27 +33,59 @@ public final class ScxLoggerConfiguration {
      * @param scxEnvironment a
      */
     public static void init(ScxConfig scxConfig, ScxEnvironment scxEnvironment) {
-        //先初始化好 DefaultScxLoggerInfo
-        var defaultLevel = ScxLoggingLevel.of(scxConfig.getOrDefault("scx.logging.default.level", "ERROR"));
-        var defaultType = ScxLoggingType.of(scxConfig.getOrDefault("scx.logging.default.type", "CONSOLE"));
-        var defaultStoredDirectory = scxConfig.get("scx.logging.default.stored-directory", new AppRootHandler("AppRoot:logs", scxEnvironment)).toPath();
-        ScxLoggerFactory.updateDefaultLevel(defaultLevel);
-        ScxLoggerFactory.updateDefaultType(defaultType);
-        ScxLoggerFactory.updateDefaultStoredDirectory(defaultStoredDirectory);
+        initDefault(scxConfig, scxEnvironment);
+        initLoggers(scxConfig, scxEnvironment);
+    }
 
+    private static void initDefault(ScxConfig scxConfig, ScxEnvironment scxEnvironment) {
+        //先初始化好 DefaultScxLoggerInfo
+        var defaultLevel = ScxLoggingLevel.of(scxConfig.get("scx.logging.default.level", String.class), ScxLoggingLevel.ERROR);
+        var defaultType = ScxLoggingType.of(scxConfig.get("scx.logging.default.type", String.class), ScxLoggingType.CONSOLE);
+        var defaultStoredDirectory = scxConfig.get("scx.logging.default.stored-directory", new AppRootHandler("AppRoot:logs", scxEnvironment)).toPath();
+        var defaultStackTrace = scxConfig.get("scx.logging.default.stack-trace", new DefaultValueHandler<>(false));
+        ScxLoggerFactory.updateDefaultInfo(defaultLevel, defaultType, defaultStoredDirectory, defaultStackTrace);
+    }
+
+    private static void initLoggers(ScxConfig scxConfig, ScxEnvironment scxEnvironment) {
         //以下日志若有缺少的属性则全部以 defaultScxLoggerInfo 为准
         var loggers = scxConfig.get("scx.logging.loggers", new ConvertValueHandler<>(new TypeReference<List<Map<String, String>>>() {
         }));
-        if (loggers == null) {
-            return;
+        if (loggers != null) {
+            for (var logger : loggers) {
+                var name = logger.get("name");
+                if (StringUtils.isNotBlank(name)) {
+                    var level = ScxLoggingLevel.of(logger.get("level"), null);
+                    var type = ScxLoggingType.of(logger.get("type"), null);
+                    var storedDirectory = StringUtils.isNotBlank(logger.get("stored-directory")) ? scxEnvironment.getFileByAppRoot(logger.get("stored-directory")).toPath() : null;
+                    var stackTrace = ObjectUtils.convertValue(logger.get("stack-trace"), Boolean.class);
+                    ScxLoggerFactory.updateLoggerInfo(name, level, type, storedDirectory, stackTrace);
+                }
+            }
         }
-        for (var logger : loggers) {
-            var name = logger.get("name");
-            var level = ScxLoggingLevel.of(logger.get("level"), defaultLevel);
-            var type = ScxLoggingType.of(logger.get("type"), defaultType);
-            var storedDirectory = StringUtils.isNotBlank(logger.get("stored-directory")) ? scxEnvironment.getFileByAppRoot(logger.get("stored-directory")).toPath() : defaultStoredDirectory;
-            if (StringUtils.isNotBlank(name)) {
-                ScxLoggerFactory.updateLogger(name, level, type, storedDirectory);
+    }
+
+    /**
+     * 是否为 日志 class 为了减少日志中噪声 我们把日志框架所属的类去除掉
+     *
+     * @param className className
+     * @return a
+     */
+    private static boolean isLoggerClass(String className) {
+        return !className.startsWith("cool.scx.logging")
+                && !className.startsWith("org.slf4j.helpers")
+                && !className.startsWith("org.apache.logging.log4j");
+    }
+
+    /**
+     * a
+     *
+     * @param stringBuilder a
+     */
+    static void getStackTraceInfo(StringBuilder stringBuilder) {
+        var trace = new Exception().getStackTrace();
+        for (var traceElement : trace) {
+            if (isLoggerClass(traceElement.getClassName())) {
+                stringBuilder.append("\t").append(traceElement).append(System.lineSeparator());
             }
         }
     }

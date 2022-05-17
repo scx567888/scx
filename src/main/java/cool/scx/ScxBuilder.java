@@ -94,6 +94,7 @@ public final class ScxBuilder {
         tempMap.put("scx.logging.default.level", "ERROR");
         tempMap.put("scx.logging.default.type", "CONSOLE");
         tempMap.put("scx.logging.default.stored-directory", "AppRoot:logs");
+        tempMap.put("scx.logging.default.stack-trace", false);
         return tempMap;
     }
 

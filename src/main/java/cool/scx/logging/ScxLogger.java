@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 /**
  * a
@@ -17,10 +16,30 @@ import java.util.Objects;
  */
 public final class ScxLogger {
 
+    /**
+     * 日志名称
+     */
     private final String name;
+
+    /**
+     * 日志级别
+     */
     private ScxLoggingLevel level = null;
+
+    /**
+     * 日志类型
+     */
     private ScxLoggingType type = null;
+
+    /**
+     * 存储目录
+     */
     private Path storedDirectory = null;
+
+    /**
+     * 是否启用堆栈跟踪
+     */
+    private Boolean stackTrace = null;
 
     /**
      * a
@@ -29,36 +48,6 @@ public final class ScxLogger {
      */
     public ScxLogger(String name) {
         this.name = name;
-    }
-
-    /**
-     * <p>level.</p>
-     *
-     * @param newLevel a {@link cool.scx.logging.ScxLoggingLevel} object
-     */
-    void level(ScxLoggingLevel newLevel) {
-        Objects.requireNonNull(newLevel);
-        this.level = newLevel;
-    }
-
-    /**
-     * <p>type.</p>
-     *
-     * @param newType a {@link cool.scx.logging.ScxLoggingType} object
-     */
-    void type(ScxLoggingType newType) {
-        Objects.requireNonNull(newType);
-        this.type = newType;
-    }
-
-    /**
-     * <p>storedDirectory.</p>
-     *
-     * @param newStoredDirectory a {@link java.nio.file.Path} object
-     */
-    void storedDirectory(Path newStoredDirectory) {
-        Objects.requireNonNull(newStoredDirectory);
-        this.storedDirectory = newStoredDirectory;
     }
 
     /**
@@ -75,7 +64,7 @@ public final class ScxLogger {
      *
      * @return a
      */
-    public ScxLoggingType type() {
+    private ScxLoggingType type() {
         return type != null ? type : ScxLoggerFactory.defaultType();
     }
 
@@ -84,8 +73,17 @@ public final class ScxLogger {
      *
      * @return a
      */
-    public Path storedDirectory() {
+    private Path storedDirectory() {
         return storedDirectory != null ? storedDirectory : ScxLoggerFactory.defaultStoredDirectory();
+    }
+
+    /**
+     * a
+     *
+     * @return a
+     */
+    private boolean stackTrace() {
+        return stackTrace != null ? stackTrace : ScxLoggerFactory.defaultStackTrace();
     }
 
     /**
@@ -108,6 +106,8 @@ public final class ScxLogger {
                 .append(System.lineSeparator());
         if (throwable != null) {
             stringBuilder.append(ScxExceptionHelper.getStackTraceString(throwable));
+        } else if (stackTrace()) {
+            ScxLoggerConfiguration.getStackTraceInfo(stringBuilder);
         }
         var finalMessage = stringBuilder.toString();
         if (type() == ScxLoggingType.CONSOLE || type() == ScxLoggingType.BOTH) {
@@ -125,6 +125,13 @@ public final class ScxLogger {
                 e.printStackTrace();
             }
         }
+    }
+
+    void update(ScxLoggingLevel newLevel, ScxLoggingType newType, Path newStoredDirectory, Boolean newStackTrace) {
+        this.level = newLevel;
+        this.type = newType;
+        this.storedDirectory = newStoredDirectory;
+        this.stackTrace = newStackTrace;
     }
 
 }

@@ -130,12 +130,12 @@ public class TestModule implements ScxModule {
 
     @Test
     public static void test1() {
-        var ip= NetUtils.getLocalIPAddress().v4()[0];
+        var ip = NetUtils.getLocalIPAddress().v4()[0];
         var logger = LoggerFactory.getLogger(TestModule.class);
         //测试 URIBuilder
         for (int i = 0; i < 1000; i++) {
             try {
-                var s = "http://"+ip+":8888/test0";
+                var s = "http://" + ip + ":8888/test0";
                 var stringHttpResponse = HttpClientHelper.post(
                         new URIBuilder(s)
                                 .addParam("name", "小明😊123?!@%^&**()_特-殊 字=符")
