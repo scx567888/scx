@@ -3,7 +3,6 @@ package cool.scx.logging;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * <p>ScxLoggerFactory class.</p>
@@ -19,22 +18,27 @@ public final class ScxLoggerFactory {
     private static final Map<String, ScxLogger> LOGGER_CACHE = new HashMap<>();
 
     /**
-     * Constant <code>defaultLevel</code>
+     * 日志级别
      */
     private static ScxLoggingLevel defaultLevel = ScxLoggingLevel.ERROR;
 
     /**
-     * Constant <code>defaultType</code>
+     * 日志类型
      */
     private static ScxLoggingType defaultType = ScxLoggingType.CONSOLE;
 
     /**
-     * Constant <code>defaultStoredDirectory</code>
+     * 存储目录
      */
     private static Path defaultStoredDirectory = null;
 
     /**
-     * <p>defaultLevel.</p>
+     * 是否启用堆栈跟踪
+     */
+    private static Boolean defaultStackTrace = false;
+
+    /**
+     * 获取默认级别
      *
      * @return a {@link cool.scx.logging.ScxLoggingLevel} object
      */
@@ -43,7 +47,7 @@ public final class ScxLoggerFactory {
     }
 
     /**
-     * <p>defaultType.</p>
+     * 获取默认类型
      *
      * @return a {@link cool.scx.logging.ScxLoggingType} object
      */
@@ -52,12 +56,21 @@ public final class ScxLoggerFactory {
     }
 
     /**
-     * <p>defaultStoredDirectory.</p>
+     * 获取默认存储目录
      *
      * @return a {@link java.nio.file.Path} object
      */
     static Path defaultStoredDirectory() {
         return defaultStoredDirectory;
+    }
+
+    /**
+     * 获取默认是否启用堆栈跟踪
+     *
+     * @return a
+     */
+    static Boolean defaultStackTrace() {
+        return defaultStackTrace;
     }
 
     /**
@@ -93,48 +106,25 @@ public final class ScxLoggerFactory {
      * @param level           a {@link cool.scx.logging.ScxLoggingLevel} object
      * @param type            a {@link cool.scx.logging.ScxLoggingType} object
      * @param storedDirectory a {@link java.nio.file.Path} object
+     * @param stackTrace      a {@link java.lang.Boolean} object
      */
-    static void updateLogger(String name, ScxLoggingLevel level, ScxLoggingType type, Path storedDirectory) {
-        var logger = getLogger(name);
-        if (level != null) {
-            logger.level(level);
-        }
-        if (type != null) {
-            logger.type(type);
-        }
-        if (storedDirectory != null) {
-            logger.storedDirectory(storedDirectory);
-        }
+    static void updateLogger(String name, ScxLoggingLevel level, ScxLoggingType type, Path storedDirectory, Boolean stackTrace) {
+        getLogger(name).update(level, type, storedDirectory, stackTrace);
     }
 
     /**
      * <p>updateDefaultLevel.</p>
      *
-     * @param newDefaultLevel a {@link cool.scx.logging.ScxLoggingLevel} object
-     */
-    static void updateDefaultLevel(ScxLoggingLevel newDefaultLevel) {
-        Objects.requireNonNull(newDefaultLevel);
-        defaultLevel = newDefaultLevel;
-    }
-
-    /**
-     * <p>updateDefaultType.</p>
-     *
-     * @param newDefaultType a {@link cool.scx.logging.ScxLoggingType} object
-     */
-    static void updateDefaultType(ScxLoggingType newDefaultType) {
-        Objects.requireNonNull(newDefaultType);
-        defaultType = newDefaultType;
-    }
-
-    /**
-     * <p>updateDefaultStoredDirectory.</p>
-     *
+     * @param newDefaultLevel           a {@link cool.scx.logging.ScxLoggingLevel} object
+     * @param newDefaultType            a {@link cool.scx.logging.ScxLoggingType} object
      * @param newDefaultStoredDirectory a {@link java.nio.file.Path} object
+     * @param newDefaultStackTrace      a {@link java.lang.Boolean} object
      */
-    static void updateDefaultStoredDirectory(Path newDefaultStoredDirectory) {
-        Objects.requireNonNull(newDefaultStoredDirectory);
+    static void updateDefault(ScxLoggingLevel newDefaultLevel, ScxLoggingType newDefaultType, Path newDefaultStoredDirectory, Boolean newDefaultStackTrace) {
+        defaultLevel = newDefaultLevel;
+        defaultType = newDefaultType;
         defaultStoredDirectory = newDefaultStoredDirectory;
+        defaultStackTrace = newDefaultStackTrace;
     }
 
 }

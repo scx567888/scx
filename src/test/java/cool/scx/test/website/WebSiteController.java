@@ -49,7 +49,7 @@ public class WebSiteController {
     public static Object test0(@FromQuery String name,
                                @FromQuery Integer age,
                                @FromUpload UploadedEntity content) {
-        System.out.println(NetUtils.getClientIPAddress(ScxContext.routingContext().request()));
+        System.err.println("客户端 IP :" + NetUtils.getClientIPAddress(ScxContext.routingContext().request()));
         return Map.of("now", ScxConstant.DEFAULT_DATETIME_FORMATTER.format(LocalDateTime.now()),
                 "name", name, "age", age, "content", content.buffer().toString(StandardCharsets.UTF_8));
     }
