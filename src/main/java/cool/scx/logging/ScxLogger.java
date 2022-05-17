@@ -127,6 +127,14 @@ public final class ScxLogger {
         }
     }
 
+    /**
+     * <p>update.</p>
+     *
+     * @param newLevel           a {@link cool.scx.logging.ScxLoggingLevel} object
+     * @param newType            a {@link cool.scx.logging.ScxLoggingType} object
+     * @param newStoredDirectory a {@link java.nio.file.Path} object
+     * @param newStackTrace      a {@link java.lang.Boolean} object
+     */
     void update(ScxLoggingLevel newLevel, ScxLoggingType newType, Path newStoredDirectory, Boolean newStackTrace) {
         this.level = newLevel;
         this.type = newType;

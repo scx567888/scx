@@ -37,6 +37,12 @@ public final class ScxLoggerConfiguration {
         initLoggers(scxConfig, scxEnvironment);
     }
 
+    /**
+     * <p>initDefault.</p>
+     *
+     * @param scxConfig      a {@link cool.scx.config.ScxConfig} object
+     * @param scxEnvironment a {@link cool.scx.ScxEnvironment} object
+     */
     private static void initDefault(ScxConfig scxConfig, ScxEnvironment scxEnvironment) {
         //先初始化好 DefaultScxLoggerInfo
         var defaultLevel = ScxLoggingLevel.of(scxConfig.get("scx.logging.default.level", String.class), ScxLoggingLevel.ERROR);
@@ -46,6 +52,12 @@ public final class ScxLoggerConfiguration {
         ScxLoggerFactory.updateDefaultInfo(defaultLevel, defaultType, defaultStoredDirectory, defaultStackTrace);
     }
 
+    /**
+     * <p>initLoggers.</p>
+     *
+     * @param scxConfig      a {@link cool.scx.config.ScxConfig} object
+     * @param scxEnvironment a {@link cool.scx.ScxEnvironment} object
+     */
     private static void initLoggers(ScxConfig scxConfig, ScxEnvironment scxEnvironment) {
         //以下日志若有缺少的属性则全部以 defaultScxLoggerInfo 为准
         var loggers = scxConfig.get("scx.logging.loggers", new ConvertValueHandler<>(new TypeReference<List<Map<String, String>>>() {
