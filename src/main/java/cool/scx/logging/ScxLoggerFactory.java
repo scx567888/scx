@@ -108,7 +108,7 @@ public final class ScxLoggerFactory {
      * @param storedDirectory a {@link java.nio.file.Path} object
      * @param stackTrace      a {@link java.lang.Boolean} object
      */
-    static void updateLoggerInfo(String name, ScxLoggingLevel level, ScxLoggingType type, Path storedDirectory, Boolean stackTrace) {
+    static void updateLogger(String name, ScxLoggingLevel level, ScxLoggingType type, Path storedDirectory, Boolean stackTrace) {
         getLogger(name).update(level, type, storedDirectory, stackTrace);
     }
 
@@ -120,7 +120,7 @@ public final class ScxLoggerFactory {
      * @param newDefaultStoredDirectory a {@link java.nio.file.Path} object
      * @param newDefaultStackTrace      a {@link java.lang.Boolean} object
      */
-    static void updateDefaultInfo(ScxLoggingLevel newDefaultLevel, ScxLoggingType newDefaultType, Path newDefaultStoredDirectory, Boolean newDefaultStackTrace) {
+    static void updateDefault(ScxLoggingLevel newDefaultLevel, ScxLoggingType newDefaultType, Path newDefaultStoredDirectory, Boolean newDefaultStackTrace) {
         defaultLevel = newDefaultLevel;
         defaultType = newDefaultType;
         defaultStoredDirectory = newDefaultStoredDirectory;
