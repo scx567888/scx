@@ -202,7 +202,7 @@ public final class SQLHelper {
     public static Tuple2<String, String> splitIntoColumnNameAndFieldPath(String name) {
         var charArray = name.toCharArray();
         var index = charArray.length;
-        for (int i = 0; i < charArray.length; i++) {
+        for (int i = 0; i < charArray.length; i = i + 1) {
             var c = charArray[i];
             if (c == '.' || c == '[') {
                 index = i;
@@ -231,7 +231,7 @@ public final class SQLHelper {
         //todo 这里处理 MySQL 8.0.29 中的 Bug 若以后版本的 MySql 修复则移除此代码
         var queryBindings = clientPreparedStatement.getQueryBindings();
         var bindValues = queryBindings.getBindValues();
-        for (int i = 0, len = bindValues.length; i < len; i++) {
+        for (int i = 0, len = bindValues.length; i < len; i = i + 1) {
             var b = bindValues[i];
             if (b.isNull()) {
                 bindValues[i] = new BugFixNullValueNativeQueryBindValue((NativeQueryBindValue) b);

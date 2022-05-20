@@ -170,7 +170,7 @@ public final class ScxMappingConfiguration {
         var scxMappingRoutingContextInfo = new ScxMappingRoutingContextInfo(context);
         var exceptionArrayList = new ArrayList<Exception>();
         var methodParameter = new Object[parameters.length];
-        for (int i = 0; i < methodParameter.length; i++) {
+        for (int i = 0; i < methodParameter.length; i = i + 1) {
             var methodParameterHandler = findMethodParameterHandler(parameters[i]);
             try {
                 methodParameter[i] = methodParameterHandler.handle(parameters[i], scxMappingRoutingContextInfo);

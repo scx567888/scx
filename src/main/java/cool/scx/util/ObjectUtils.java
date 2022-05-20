@@ -194,35 +194,35 @@ public final class ObjectUtils {
             var length = Array.getLength(source);
             var arr = new Object[length];
             if (source instanceof byte[] arrSource) {
-                for (int i = 0; i < length; i++) {
+                for (int i = 0; i < length; i = i + 1) {
                     arr[i] = arrSource[i];
                 }
             } else if (source instanceof short[] arrSource) {
-                for (int i = 0; i < length; i++) {
+                for (int i = 0; i < length; i = i + 1) {
                     arr[i] = arrSource[i];
                 }
             } else if (source instanceof int[] arrSource) {
-                for (int i = 0; i < length; i++) {
+                for (int i = 0; i < length; i = i + 1) {
                     arr[i] = arrSource[i];
                 }
             } else if (source instanceof long[] arrSource) {
-                for (int i = 0; i < length; i++) {
+                for (int i = 0; i < length; i = i + 1) {
                     arr[i] = arrSource[i];
                 }
             } else if (source instanceof float[] arrSource) {
-                for (int i = 0; i < length; i++) {
+                for (int i = 0; i < length; i = i + 1) {
                     arr[i] = arrSource[i];
                 }
             } else if (source instanceof double[] arrSource) {
-                for (int i = 0; i < length; i++) {
+                for (int i = 0; i < length; i = i + 1) {
                     arr[i] = arrSource[i];
                 }
             } else if (source instanceof boolean[] arrSource) {
-                for (int i = 0; i < length; i++) {
+                for (int i = 0; i < length; i = i + 1) {
                     arr[i] = arrSource[i];
                 }
             } else if (source instanceof char[] arrSource) {
-                for (int i = 0; i < length; i++) {
+                for (int i = 0; i < length; i = i + 1) {
                     arr[i] = arrSource[i];
                 }
             }

@@ -108,7 +108,7 @@ public class WebSiteController {
     @ScxMapping(value = "/download", method = HttpMethod.GET)
     public Download TestDownload() {
         StringBuilder s = new StringBuilder();
-        for (int i = 0; i < 9999; i++) {
+        for (int i = 0; i < 9999; i = i + 1) {
             s.append("这是文字 ").append(i).append(", ");
         }
         return new Download(s.toString().getBytes(StandardCharsets.UTF_8), "测试中 + - ~!文 a😊😂 🤣 ghj ❤😍😒👌.txt");
@@ -122,7 +122,7 @@ public class WebSiteController {
     @ScxMapping(value = "/raw", method = HttpMethod.GET)
     public BaseVo TestRaw() {
         StringBuilder s = new StringBuilder();
-        for (int i = 0; i < 9999; i++) {
+        for (int i = 0; i < 9999; i = i + 1) {
             s.append("这是文字 ").append(i).append(", ");
         }
         return new Raw(s.toString().getBytes(StandardCharsets.UTF_8), RawType.TXT);

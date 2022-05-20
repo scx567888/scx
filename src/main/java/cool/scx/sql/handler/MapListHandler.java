@@ -29,7 +29,7 @@ public final class MapListHandler implements ScxHandlerRE<ResultSet, List<Map<St
         var count = rsm.getColumnCount();
         while (rs.next()) {
             var s = new HashMap<String, Object>();
-            for (int i = 1; i <= count; i++) {
+            for (int i = 1; i <= count; i = i + 1) {
                 s.put(rsm.getColumnLabel(i), rs.getObject(i));
             }
             list.add(s);

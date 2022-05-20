@@ -32,7 +32,7 @@ public final class RandomUtils {
     public static String getRandomString(int size, boolean withLetter) {
         var code = new StringBuilder();
         var pool = withLetter ? NUMBER_AND_LETTER_POOL : NUMBER_POOL;
-        for (int j = 0; j < size; j++) {
+        for (int i = 0; i < size; i = i + 1) {
             code.append(pool[ThreadLocalRandom.current().nextInt(pool.length)]);
         }
         return code.toString();
