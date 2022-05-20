@@ -32,7 +32,7 @@ public final class OrderBy {
      * @return 本身, 方便链式调用
      */
     public OrderBy add(String name, OrderByType orderByType, OrderByOption... options) {
-        var info = new OrderByOptionInfo(options);
+        var info = new OrderByOption.Info(options);
         // 是否使用原始名称 (即不进行转义)
         var orderByBody = new OrderByBody(name, orderByType, info);
         // 是否替换

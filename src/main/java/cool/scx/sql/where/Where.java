@@ -359,7 +359,7 @@ public final class Where {
      */
     private Where _add(String name, WhereType whereType, Object value1, Object value2, int needParamSize, WhereOption... options) {
         //创建 option 信息
-        var info = new WhereOptionInfo(options);
+        var info = new WhereOption.Info(options);
         try {
             var whereBody = new WhereBody(name, whereType, value1, value2, info);
             //类型所需的参数数量和所传的参数数量必须一致

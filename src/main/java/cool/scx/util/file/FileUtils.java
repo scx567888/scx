@@ -99,7 +99,7 @@ public final class FileUtils {
      * @throws IOException a
      */
     public static void delete(Path start, FileUtilsOption... options) throws IOException {
-        var info = new FileUtilsOptionInfo(options);
+        var info = new FileUtilsOption.Info(options);
         Files.walkFileTree(start, new SimpleFileVisitor<>() {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {

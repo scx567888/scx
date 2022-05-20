@@ -112,6 +112,6 @@ interface WhereTypeHandler {
         return false;
     }
 
-    Tuple2<Object[], String> getWhereParamsAndWhereClause(String name, WhereType whereType, Object value1, Object value2, WhereOptionInfo info);
+    Tuple2<Object[], String> getWhereParamsAndWhereClause(String name, WhereType whereType, Object value1, Object value2, WhereOption.Info info);
 
 }
