@@ -158,38 +158,14 @@ public final class ScxBuilder {
     }
 
     /**
-     * 添加单个模块
-     *
-     * @param module m
-     * @return m
-     */
-    public ScxBuilder addModule(ScxModule module) {
-        scxModules.add(module);
-        return this;
-    }
-
-    /**
      * 添加多个模块
      *
      * @param modules a
      * @return a
      */
-    public ScxBuilder addModules(ScxModule... modules) {
+    public ScxBuilder addModule(ScxModule... modules) {
         for (var module : modules) {
-            this.addModule(module);
-        }
-        return this;
-    }
-
-    /**
-     * 添加多个模块
-     *
-     * @param modules a
-     * @return a
-     */
-    public ScxBuilder addModules(Iterable<? extends ScxModule> modules) {
-        for (var module : modules) {
-            this.addModule(module);
+            this.scxModules.add(module);
         }
         return this;
     }
