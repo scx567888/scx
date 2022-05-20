@@ -8,6 +8,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 
+import static java.nio.file.StandardOpenOption.*;
+
 /**
  * a
  *
@@ -120,7 +122,7 @@ public final class ScxLogger {
         if (type() == ScxLoggingType.FILE || type() == ScxLoggingType.BOTH) {
             var logStoredPath = storedDirectory().resolve(nowTimeStr.substring(0, 10) + ".log");
             try {
-                FileUtils.write(logStoredPath, finalMessage.getBytes(StandardCharsets.UTF_8));
+                FileUtils.write(logStoredPath, finalMessage.getBytes(StandardCharsets.UTF_8), APPEND, CREATE, SYNC, WRITE);
             } catch (IOException e) {
                 e.printStackTrace();
             }

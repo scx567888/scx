@@ -3,7 +3,7 @@ package cool.scx.util.file;
 /**
  * a
  */
-public enum FileUtilsOption {
+public enum DeleteOption {
 
     /**
      * 实现清空文件夹的效果
@@ -17,7 +17,7 @@ public enum FileUtilsOption {
 
         public boolean excludeRoot;
 
-        public Info(FileUtilsOption... options) {
+        public Info(DeleteOption... options) {
             for (var option : options) {
                 switch (option) {
                     case EXCLUDE_ROOT -> this.excludeRoot = true;
