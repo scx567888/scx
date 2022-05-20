@@ -64,14 +64,14 @@ public final class BeanListHandler<T> implements ScxHandlerRE<ResultSet, List<T>
         var rsm = rs.getMetaData();
         var count = rsm.getColumnCount();
         var allField = new Field[count + 1];
-        for (int i = 1; i <= count; i++) {
+        for (int i = 1; i <= count; i = i + 1) {
             allField[i] = nameFieldMap.getOrDefault(rsm.getColumnLabel(i), null);
         }
         var list = new ArrayList<T>();
         //从rs中取出数据，并且封装到ArrayList中
         while (rs.next()) {
             T t = newInstance();
-            for (int i = 1; i <= count; i++) {
+            for (int i = 1; i <= count; i = i + 1) {
                 var field = allField[i];
                 if (field != null) {
                     var filedType = field.getType();

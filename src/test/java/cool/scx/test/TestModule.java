@@ -70,7 +70,7 @@ public class TestModule implements ScxModule {
                 //插入数据 方式1
                 StopWatch.start("save1");
                 var l = new ArrayList<Car>();
-                for (int i = 0; i < 999; i++) {
+                for (int i = 0; i < 999; i = i + 1) {
                     var c = new Car();
                     c.name = RandomUtils.getRandomString(10, false) + "🤣";
                     c.color = CarColor.values()[RandomUtils.getRandomNumber(0, 3)];
@@ -84,7 +84,7 @@ public class TestModule implements ScxModule {
                 System.err.println("开始: 方式2 (循环单次) 插入");
                 //插入数据 方式2
                 StopWatch.start("save2");
-                for (int i = 0; i < 999; i++) {
+                for (int i = 0; i < 999; i = i + 1) {
                     var c = new Car();
                     c.name = RandomUtils.getRandomString(10, false) + "😢";
                     c.color = CarColor.values()[RandomUtils.getRandomNumber(0, 3)];
@@ -133,7 +133,7 @@ public class TestModule implements ScxModule {
         var ip = NetUtils.getLocalIPAddress().v4()[0];
         var logger = LoggerFactory.getLogger(TestModule.class);
         //测试 URIBuilder
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 1000; i = i + 1) {
             try {
                 var s = "http://" + ip + ":8888/test0";
                 var stringHttpResponse = HttpClientHelper.post(

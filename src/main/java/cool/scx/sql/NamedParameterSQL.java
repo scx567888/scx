@@ -134,8 +134,8 @@ public final class NamedParameterSQL extends AbstractPlaceholderSQL<Map<String, 
      */
     private Object[] mapToArray(Map<String, Object> objectMap) {
         var objectArray = new Object[namedParameterNameIndex.length];
-        for (int i1 = 0; i1 < namedParameterNameIndex.length; i1++) {
-            objectArray[i1] = objectMap.get(namedParameterNameIndex[i1]);
+        for (int i = 0; i < namedParameterNameIndex.length; i = i + 1) {
+            objectArray[i] = objectMap.get(namedParameterNameIndex[i]);
         }
         return objectArray;
     }

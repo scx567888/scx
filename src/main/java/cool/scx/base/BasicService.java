@@ -121,7 +121,7 @@ public class BasicService<Entity> {
         var objectArrayList = new ArrayList<Object[]>();
         for (var entity : entityList) {
             var o = new Object[insertColumns.length];
-            for (int i = 0; i < insertColumns.length; i++) {
+            for (int i = 0; i < insertColumns.length; i = i + 1) {
                 o[i] = insertColumns[i].getFieldValue(entity);
             }
             objectArrayList.add(o);
