@@ -100,7 +100,7 @@ public final class FileUtils {
      */
     public static void delete(Path start, DeleteOption... options) throws IOException {
         var info = new DeleteOption.Info(options);
-        Files.walkFileTree(start, new SimpleFileVisitor<>() {
+        var visitor = new SimpleFileVisitor<Path>() {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                 Files.delete(file);
@@ -115,7 +115,12 @@ public final class FileUtils {
                 }
                 return FileVisitResult.CONTINUE;
             }
-        });
+        };
+        try {
+            Files.walkFileTree(start, visitor);
+        } catch (NoSuchFileException ignore) {
+
+        }
     }
 
     /**
