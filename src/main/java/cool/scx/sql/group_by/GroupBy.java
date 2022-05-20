@@ -31,7 +31,7 @@ public final class GroupBy {
      * @return 本身, 方便链式调用
      */
     public GroupBy add(String name, GroupByOption... options) {
-        var info = new GroupByOptionInfo(options);
+        var info = new GroupByOption.Info(options);
         var groupByBody = new GroupByBody(name, info);
         groupByBodyList.add(groupByBody);
         return this;

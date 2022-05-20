@@ -22,7 +22,7 @@ final class OrderByBody {
      * @param orderByType a {@link OrderByType} object
      * @param info        a boolean
      */
-    OrderByBody(String name, OrderByType orderByType, OrderByOptionInfo info) {
+    OrderByBody(String name, OrderByType orderByType, OrderByOption.Info info) {
         if (StringUtils.isBlank(name)) {
             throw new IllegalArgumentException("OrderBy 参数错误 : 名称 不能为空 !!!");
         }

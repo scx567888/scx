@@ -21,7 +21,7 @@ final class GroupByBody {
      * @param name a {@link java.lang.String} object
      * @param info a boolean
      */
-    GroupByBody(String name, GroupByOptionInfo info) {
+    GroupByBody(String name, GroupByOption.Info info) {
         if (StringUtils.isBlank(name)) {
             throw new IllegalArgumentException("GroupBy 参数错误 : 名称 不能为空 !!!");
         }

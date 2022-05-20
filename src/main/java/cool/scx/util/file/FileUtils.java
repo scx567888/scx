@@ -98,9 +98,9 @@ public final class FileUtils {
      * @param options a
      * @throws IOException a
      */
-    public static void delete(Path start, FileUtilsOption... options) throws IOException {
-        var info = new FileUtilsOptionInfo(options);
-        Files.walkFileTree(start, new SimpleFileVisitor<>() {
+    public static void delete(Path start, DeleteOption... options) throws IOException {
+        var info = new DeleteOption.Info(options);
+        var visitor = new SimpleFileVisitor<Path>() {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                 Files.delete(file);
@@ -115,11 +115,16 @@ public final class FileUtils {
                 }
                 return FileVisitResult.CONTINUE;
             }
-        });
+        };
+        try {
+            Files.walkFileTree(start, visitor);
+        } catch (NoSuchFileException ignore) {
+
+        }
     }
 
     /**
-     * a
+     * 本质上就是调用 {@link Files#move(Path, Path, CopyOption...)} ,但是在之前会创建不存在的父目录
      *
      * @param source  a
      * @param target  a
@@ -127,25 +132,25 @@ public final class FileUtils {
      * @throws IOException a
      */
     public static void move(Path source, Path target, CopyOption... options) throws IOException {
-        var defaultOptions = new CopyOption[]{StandardCopyOption.REPLACE_EXISTING};
         Files.createDirectories(target.getParent());
-        Files.move(source, target, options.length == 0 ? defaultOptions : options);
+        Files.move(source, target, options);
     }
 
     /**
+     * 本质上就是调用 {@link Files#write(Path, byte[], OpenOption...)} ,但是在之前会创建不存在的父目录
+     *
      * @param path    a
      * @param bytes   a
      * @param options a
      * @throws IOException a
      */
     public static void write(Path path, byte[] bytes, OpenOption... options) throws IOException {
-        var defaultOptions = new OpenOption[]{StandardOpenOption.APPEND, StandardOpenOption.CREATE, StandardOpenOption.SYNC, StandardOpenOption.WRITE};
         Files.createDirectories(path.getParent());
-        Files.write(path, bytes, options.length == 0 ? defaultOptions : options);
+        Files.write(path, bytes, options);
     }
 
     /**
-     * 获取拓展名 (不包括 . )
+     * 获取拓展名 (不包括 . ) 例 : "cat.png" 会获得 "png"
      *
      * @param fileName a {@link java.lang.String} object
      * @return a {@link java.lang.String} object

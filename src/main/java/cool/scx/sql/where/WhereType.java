@@ -154,7 +154,7 @@ public enum WhereType {
         return keyWord;
     }
 
-    Tuple2<Object[], String> getWhereParamsAndWhereClause(String name, Object value1, Object value2, WhereOptionInfo info) {
+    Tuple2<Object[], String> getWhereParamsAndWhereClause(String name, Object value1, Object value2, WhereOption.Info info) {
         return whereTypeHandler.getWhereParamsAndWhereClause(name, this, value1, value2, info);
     }
 
