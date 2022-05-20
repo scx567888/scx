@@ -57,9 +57,7 @@ interface WhereTypeHandler {
         if (whereParams.length == 0) {
             throw new ValidParamListIsEmptyException(whereType);
         }
-        var sList = new String[whereParams.length];
-        Arrays.fill(sList, "?");
-        var whereClause = columnName + " " + whereType.keyWord() + " (" + String.join(", ", sList) + ")";
+        var whereClause = columnName + " " + whereType.keyWord() + " (" + StringUtils.repeat("?", whereParams.length, ", ") + ")";
         return Tuples.of(whereParams, whereClause);
     };
 
