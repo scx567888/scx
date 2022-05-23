@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * a
  */
-public class URIBuilder {
+public final class URIBuilder {
 
     /**
      * a

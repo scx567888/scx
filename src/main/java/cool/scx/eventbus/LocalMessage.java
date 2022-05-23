@@ -10,7 +10,7 @@ import io.vertx.core.eventbus.impl.MessageImpl;
  * @author scx567888
  * @version 1.7.3
  */
-class LocalMessage extends MessageImpl<Object, Object> {
+final class LocalMessage extends MessageImpl<Object, Object> {
 
     /**
      * <p>Constructor for LocalMessage.</p>

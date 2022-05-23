@@ -26,38 +26,34 @@ public final class StringUtils {
     /**
      * 创建重复字符串
      *
-     * @param str       源字符串
+     * @param sourceStr 源字符串
      * @param count     重复次数
      * @param delimiter 分隔符
      * @return 结果
      */
-    public static String repeat(final String str, final int count, final String delimiter) {
-        Objects.requireNonNull(str);
+    public static String repeat(String sourceStr, int count, String delimiter) {
+        Objects.requireNonNull(sourceStr);
         Objects.requireNonNull(delimiter);
         if (count <= 1) {
             if (count < 0) {
                 throw new IllegalArgumentException("无效的 count: " + count);
             }
-            return count == 0 ? "" : str;
+            return count == 0 ? "" : sourceStr;
         }
 
-        final int strLen = str.length();
-        final int delimiterLen = delimiter.length();
-        final int len = strLen + delimiterLen;
-        final long longSize = (long) len * (long) (count - 1) + strLen;
-        final int size = (int) longSize;
+        var element = sourceStr + delimiter;//我们将一个原始字符串和一个分隔符拼接为一个整体并称之为 element
+        var elementLength = element.length();
+        var longSize = (long) elementLength * count - delimiter.length();// 减去最后的分割符的长度即为总长度
+        var size = (int) longSize;
         if (size != longSize) {
-            throw new ArrayIndexOutOfBoundsException("所需数组 size 太大: " + longSize);
+            throw new ArrayIndexOutOfBoundsException("生成的字符串长度超出上限 : " + longSize);
         }
 
-        final char[] array = new char[size];
-        str.getChars(0, strLen, array, 0);
-        delimiter.getChars(0, delimiterLen, array, strLen);
-        int n;
-        for (n = len; n < size - n; n <<= 1) {
-            System.arraycopy(array, 0, array, n, n);
+        char[] array = new char[size];
+        element.getChars(0, elementLength, array, 0);//填充原始 char 数据
+        for (int n = elementLength; n < size; n = n * 2) {//指数增长的方式复制填充
+            System.arraycopy(array, 0, array, n, Math.min(n, size - n));
         }
-        System.arraycopy(array, 0, array, n, size - n);
         return new String(array);
     }
 

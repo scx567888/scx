@@ -39,6 +39,7 @@ public class TestModule implements ScxModule {
         runModule();
         test0();
         test1();
+        test2();
     }
 
     @BeforeTest
@@ -147,6 +148,16 @@ public class TestModule implements ScxModule {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Test
+    public static void test2() {
+        var car = new Car();
+        ScxContext.eventBus().consumer("test-event-bus", (c) -> {
+            System.out.println(c.hashCode());
+        });
+        System.out.println(car.hashCode());
+        ScxContext.eventBus().send("test-event-bus", car);
     }
 
     /**
