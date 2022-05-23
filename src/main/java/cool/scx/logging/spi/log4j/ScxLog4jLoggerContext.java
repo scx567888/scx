@@ -10,7 +10,7 @@ import org.apache.logging.log4j.spi.LoggerContext;
  * @author scx567888
  * @version 1.11.8
  */
-public class ScxLog4jLoggerContext implements LoggerContext {
+public final class ScxLog4jLoggerContext implements LoggerContext {
 
     /**
      * a

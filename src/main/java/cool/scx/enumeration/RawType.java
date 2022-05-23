@@ -7,6 +7,7 @@ package cool.scx.enumeration;
  * @version 1.3.4
  */
 public enum RawType {
+
     /**
      * 未知的 二进制类型
      */
