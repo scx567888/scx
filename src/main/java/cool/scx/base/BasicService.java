@@ -231,6 +231,15 @@ public class BasicService<Entity> {
     }
 
     /**
+     * 清空表中所有数据 慎用!!! 慎用!!! 慎用!!!
+     *
+     * @return 受影响的行数
+     */
+    public final long _truncate() {
+        return ScxContext.sqlRunner().execute(PlaceholderSQL.of("truncate ?", scxDaoTableInfo.tableName()));
+    }
+
+    /**
      * 方便冗长的 调用
      *
      * @param handler handler
