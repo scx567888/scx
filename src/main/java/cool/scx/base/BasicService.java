@@ -5,6 +5,7 @@ import cool.scx.ScxHandlerVE;
 import cool.scx.ScxHandlerVRE;
 import cool.scx.dao.ScxDaoTableInfo;
 import cool.scx.sql.AbstractPlaceholderSQL;
+import cool.scx.sql.NoParametersSQL;
 import cool.scx.sql.PlaceholderSQL;
 import cool.scx.sql.SQLBuilder;
 import cool.scx.sql.handler.BeanListHandler;
@@ -231,12 +232,10 @@ public class BasicService<Entity> {
     }
 
     /**
-     * 清空表中所有数据 慎用!!! 慎用!!! 慎用!!!
-     *
-     * @return 受影响的行数
+     * 清空表中所有数据 (慎用!!! 慎用!!! 慎用!!!)
      */
-    public final long _truncate() {
-        return ScxContext.sqlRunner().execute(PlaceholderSQL.of("truncate ?", scxDaoTableInfo.tableName()));
+    public final void _truncate() {
+        ScxContext.sqlRunner().execute(NoParametersSQL.of("truncate " + scxDaoTableInfo.tableName()));
     }
 
     /**
