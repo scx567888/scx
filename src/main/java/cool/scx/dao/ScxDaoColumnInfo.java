@@ -1,5 +1,6 @@
 package cool.scx.dao;
 
+import cool.scx.ScxContext;
 import cool.scx.annotation.Column;
 import cool.scx.sql.SQLHelper;
 import cool.scx.util.CaseUtils;
@@ -142,7 +143,11 @@ public final class ScxDaoColumnInfo {
             list.add("PRIMARY KEY (`" + name + "`)");
         }
         if (column.unique()) {
-            list.add("UNIQUE KEY `unique_" + name + "`(`" + name + "`)");
+            if (ScxContext.easyConfig().tombstone()) {
+                list.add("UNIQUE KEY `unique_" + name + "_tombstone`(`" + name + "`, `tombstone`)");
+            } else {
+                list.add("UNIQUE KEY `unique_" + name + "`(`" + name + "`)");
+            }
         }
         if (column.needIndex()) {
             list.add("KEY `index_" + name + "`(`" + name + "`)");
