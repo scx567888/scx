@@ -24,7 +24,7 @@ public @interface Column {
     String type() default "";
 
     /**
-     * 是否唯一
+     * 是否唯一 (注意 : 当 ScxContext.easyConfig().tombstone() 为 true 时) 会和 tombstone 字段 创建联合的唯一约束
      *
      * @return 是否唯一
      */
