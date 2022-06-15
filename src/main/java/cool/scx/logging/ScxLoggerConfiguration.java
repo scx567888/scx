@@ -28,6 +28,11 @@ public final class ScxLoggerConfiguration {
 
     /**
      * a
+     */
+    public static final StackWalker WALKER = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE);
+
+    /**
+     * a
      *
      * @param scxConfig      a
      * @param scxEnvironment a
@@ -82,7 +87,7 @@ public final class ScxLoggerConfiguration {
      * @param className className
      * @return a
      */
-    private static boolean isLoggerClass(String className) {
+    private static boolean notLoggerClass(String className) {
         return !className.startsWith("cool.scx.logging")
                 && !className.startsWith("org.slf4j.helpers")
                 && !className.startsWith("org.apache.logging.log4j");
@@ -94,11 +99,9 @@ public final class ScxLoggerConfiguration {
      * @param stringBuilder a
      */
     static void getStackTraceInfo(StringBuilder stringBuilder) {
-        var trace = new Exception().getStackTrace();
-        for (var traceElement : trace) {
-            if (isLoggerClass(traceElement.getClassName())) {
-                stringBuilder.append("\t").append(traceElement).append(System.lineSeparator());
-            }
+        var frames = WALKER.walk((s) -> s.filter(b -> notLoggerClass(b.getClassName())).toList());
+        for (var frame : frames) {
+            stringBuilder.append("\t").append(frame).append(System.lineSeparator());
         }
     }
 
