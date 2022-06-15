@@ -180,7 +180,7 @@ public final class HttpClientHelper {
             case POST -> httpRequestBuilder.POST(bodyPublisher).build();
             case DELETE -> httpRequestBuilder.DELETE().build();
             case PUT -> httpRequestBuilder.PUT(bodyPublisher).build();
-            default -> throw new IllegalArgumentException("method 只能为 [GET, POST, DELETE, PUT] 这四种 !!! method : " + method);
+            default -> throw new IllegalArgumentException("method 只能为 [GET, POST, DELETE, PUT], method : " + method);
         };
         return httpClient.send(httpRequest, DEFAULT_RESPONSE_BODY_HANDLER);
     }
