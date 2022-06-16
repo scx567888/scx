@@ -48,13 +48,15 @@ public final class ScxMappingRoutingContextInfo {
      */
     private static JsonNode initBody(RoutingContext ctx) {
         var contentType = ctx.request().headers().get(HttpHeaderNames.CONTENT_TYPE);
+        // bodyAsString
+        var bodyAsString = ctx.body().isEmpty() ? "" : ctx.body().asString();
         // contentType 不为空
         if (contentType != null) {
             contentType = contentType.toLowerCase();
             // json 类型的请求体
             if (contentType.startsWith(HttpHeaderValues.APPLICATION_JSON.toString())) {
                 try {
-                    return ObjectUtils.jsonMapper().readTree(ctx.body().asString());
+                    return ObjectUtils.jsonMapper().readTree(bodyAsString);
                 } catch (JsonProcessingException e) {
                     throw new BadRequestException(e);
                 }
@@ -69,14 +71,13 @@ public final class ScxMappingRoutingContextInfo {
             } else if (contentType.startsWith(HttpHeaderValues.APPLICATION_XML.toString())) {
                 //这里是 xml 的格式 (注意 : 如果 body 为空 则 xml 转换 也会失败 !!!)
                 try {
-                    return ObjectUtils.xmlMapper().readTree(ctx.body().asString());
+                    return ObjectUtils.xmlMapper().readTree(bodyAsString);
                 } catch (JsonProcessingException e) {
                     throw new BadRequestException(e);
                 }
             }
         }
         //走到这里标识以上的匹配全部失败 , 这里不知道 body 的具体格式 所以进行猜测转换
-        var bodyAsString = ctx.body().asString();
         //先尝试以 json 格式进行尝试转换
         try {
             return ObjectUtils.jsonMapper().readTree(bodyAsString);
