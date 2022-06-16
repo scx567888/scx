@@ -332,7 +332,7 @@ public final class Scx {
         if (this.scxEasyConfig.isHttpsEnabled()) {
             httpServerOptions.setSsl(true)
                     .setKeyStoreOptions(new JksOptions()
-                            .setPath(this.scxEasyConfig.sslPath().getPath())
+                            .setPath(this.scxEasyConfig.sslPath().toString())
                             .setPassword(this.scxEasyConfig.sslPassword()));
         }
         this.vertxHttpServer = vertx.createHttpServer(httpServerOptions);

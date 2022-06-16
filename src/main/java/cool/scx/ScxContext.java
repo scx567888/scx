@@ -15,7 +15,7 @@ import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServer;
 import io.vertx.ext.web.RoutingContext;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 
 /**
@@ -279,8 +279,8 @@ public final class ScxContext {
      * @param path a
      * @return a
      */
-    public static File getFileByAppRoot(String path) {
-        return environment().getFileByAppRoot(path);
+    public static Path getPathByAppRoot(String path) {
+        return environment().getPathByAppRoot(path);
     }
 
 }

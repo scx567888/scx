@@ -1,5 +1,7 @@
 package cool.scx;
 
+import cool.scx.util.file.FileUtils;
+
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -14,6 +16,11 @@ public final class ScxConstant {
      * SCX 版本号
      */
     public static final String SCX_VERSION = "1.15.0";
+
+    /**
+     * 默认 http 请求 body 限制大小
+     */
+    public static final long DEFAULT_BODY_LIMIT = FileUtils.displaySizeToLong("16384KB");
 
     /**
      * 默认 LocalDateTime 格式化类 注意!!! 所有前后台传输数据的序列化 , 数据库 Json 格式存储 均依赖此序列化格式

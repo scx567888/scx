@@ -2,7 +2,7 @@ package cool.scx;
 
 import cool.scx.util.ScanClassUtils;
 
-import java.io.File;
+import java.nio.file.Path;
 
 /**
  * 项目环境
@@ -16,7 +16,7 @@ public final class ScxEnvironment {
      * 项目根模块 所在路径
      * 默认取 所有自定义模块的最后一个 所在的文件根目录
      */
-    private final File appRootFile;
+    private final Path appRootFile;
 
     /**
      * 根据 class 推断 class 根目录
@@ -33,14 +33,14 @@ public final class ScxEnvironment {
      * @param mainClass m
      * @return f
      */
-    private static File initAppRoot(Class<?> mainClass) {
+    private static Path initAppRoot(Class<?> mainClass) {
         try {
-            var classSourceFile = new File(ScanClassUtils.getClassSource(mainClass));
+            var classSourcePath = Path.of(ScanClassUtils.getClassSource(mainClass));
             //判断当前是否处于 jar 包中
-            if (ScanClassUtils.isJar(classSourceFile)) {
-                return classSourceFile.getParentFile();
+            if (ScanClassUtils.isJar(classSourcePath.toFile())) {
+                return classSourcePath.getParent();
             } else {
-                return classSourceFile;
+                return classSourcePath;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -54,11 +54,11 @@ public final class ScxEnvironment {
      * @param path a {@link java.lang.String} object.
      * @return a {@link java.io.File} object.
      */
-    public File getFileByAppRoot(String path) {
+    public Path getPathByAppRoot(String path) {
         if (path.startsWith("AppRoot:")) {
-            return new File(appRootFile, path.substring("AppRoot:".length()));
+            return this.appRootFile.resolve(path.substring("AppRoot:".length()));
         } else {
-            return new File(path);
+            return Path.of(path);
         }
     }
 

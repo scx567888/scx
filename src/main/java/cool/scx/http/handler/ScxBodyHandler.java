@@ -1,11 +1,14 @@
 package cool.scx.http.handler;
 
+import cool.scx.ScxConstant;
 import cool.scx.type.UploadedEntity;
-import cool.scx.util.file.FileUtils;
 import io.netty.handler.codec.DecoderException;
 import io.vertx.core.Handler;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpHeaders;
+import io.vertx.core.http.HttpServerRequest;
+import io.vertx.core.http.HttpServerResponse;
+import io.vertx.core.http.HttpVersion;
 import io.vertx.core.http.impl.HttpUtils;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.impl.RoutingContextInternal;
@@ -15,6 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * <p>ScxBodyHandler class.</p>
+ * 使用内存暂存上传文件
  *
  * @author scx567888
  * @version 1.3.8
@@ -24,7 +28,7 @@ public final class ScxBodyHandler implements Handler<RoutingContext> {
     /**
      * 默认允许的最大请求体大小
      */
-    private long bodyLimit = FileUtils.displaySizeToLong("16384KB");
+    private long bodyLimit = ScxConstant.DEFAULT_BODY_LIMIT;
 
     /**
      * a
@@ -49,18 +53,74 @@ public final class ScxBodyHandler implements Handler<RoutingContext> {
      */
     @Override
     public void handle(RoutingContext context) {
-        var request = context.request();
-        if (request.headers().contains(HttpHeaders.UPGRADE, HttpHeaders.WEBSOCKET, true)) {
-            context.next();
-            return;
-        }
+        final HttpServerRequest request = context.request();
+        final HttpServerResponse response = context.response();
+
+        // we need to keep state since we can be called again on reroute
         if (!((RoutingContextInternal) context).seenHandler(RoutingContextInternal.BODY_HANDLER)) {
-            BHandler handler = new BHandler(context);
-            request.handler(handler);
-            request.endHandler(v -> handler.end());
             ((RoutingContextInternal) context).visitHandler(RoutingContextInternal.BODY_HANDLER);
+
+            // Check if a request has a request body.
+            // A request with a body __must__ either have `transfer-encoding`
+            // or `content-length` headers set.
+            // http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.3
+            final long parsedContentLength = parseContentLengthHeader(request);
+
+            if (!request.headers().contains(HttpHeaders.TRANSFER_ENCODING) && parsedContentLength == -1) {
+                // there is no "body", so we can skip this handler
+                context.next();
+                return;
+            }
+
+            // before parsing the body we can already discard a bad request just by inspecting the content-length against
+            // the body limit, this will reduce load, on the server by totally skipping parsing the request body
+            if (bodyLimit != -1 && parsedContentLength != -1) {
+                if (parsedContentLength > bodyLimit) {
+                    context.fail(413);
+                    return;
+                }
+            }
+
+            // handle expectations
+            // https://httpwg.org/specs/rfc7231.html#header.expect
+            final String expect = request.getHeader(HttpHeaders.EXPECT);
+            if (expect != null) {
+                // requirements validation
+                if (expect.equalsIgnoreCase("100-continue")) {
+                    // A server that receives a 100-continue expectation in an HTTP/1.0 request MUST ignore that expectation.
+                    if (request.version() != HttpVersion.HTTP_1_0) {
+                        // signal the client to continue
+                        response.writeContinue();
+                    }
+                } else {
+                    // the server cannot meet the expectation, we only know about 100-continue
+                    context.fail(417);
+                    return;
+                }
+            }
+
+            final BHandler handler = new BHandler(context);
+            request
+                    // resume the request (if paused)
+                    .resume()
+                    .handler(handler)
+                    .endHandler(v -> handler.end());
         } else {
             context.next();
+        }
+    }
+
+
+    private long parseContentLengthHeader(HttpServerRequest request) {
+        String contentLength = request.getHeader(HttpHeaders.CONTENT_LENGTH);
+        if (contentLength == null || contentLength.isEmpty()) {
+            return -1;
+        }
+        try {
+            long parsedContentLength = Long.parseLong(contentLength);
+            return parsedContentLength < 0 ? -1 : parsedContentLength;
+        } catch (NumberFormatException ex) {
+            return -1;
         }
     }
 
@@ -149,7 +209,7 @@ public final class ScxBodyHandler implements Handler<RoutingContext> {
 
         private void doEnd() {
             if (!failed) {
-                context.setBody(body);
+                ((RoutingContextInternal) context).setBody(body);
                 body = null;
                 context.next();
             }
