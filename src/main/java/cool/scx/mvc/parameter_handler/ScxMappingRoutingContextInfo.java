@@ -54,7 +54,7 @@ public final class ScxMappingRoutingContextInfo {
             // json 类型的请求体
             if (contentType.startsWith(HttpHeaderValues.APPLICATION_JSON.toString())) {
                 try {
-                    return ObjectUtils.jsonMapper().readTree(ctx.getBodyAsString());
+                    return ObjectUtils.jsonMapper().readTree(ctx.body().asString());
                 } catch (JsonProcessingException e) {
                     throw new BadRequestException(e);
                 }
@@ -69,14 +69,14 @@ public final class ScxMappingRoutingContextInfo {
             } else if (contentType.startsWith(HttpHeaderValues.APPLICATION_XML.toString())) {
                 //这里是 xml 的格式 (注意 : 如果 body 为空 则 xml 转换 也会失败 !!!)
                 try {
-                    return ObjectUtils.xmlMapper().readTree(ctx.getBodyAsString());
+                    return ObjectUtils.xmlMapper().readTree(ctx.body().asString());
                 } catch (JsonProcessingException e) {
                     throw new BadRequestException(e);
                 }
             }
         }
         //走到这里标识以上的匹配全部失败 , 这里不知道 body 的具体格式 所以进行猜测转换
-        var bodyAsString = ctx.getBodyAsString();
+        var bodyAsString = ctx.body().asString();
         //先尝试以 json 格式进行尝试转换
         try {
             return ObjectUtils.jsonMapper().readTree(bodyAsString);
