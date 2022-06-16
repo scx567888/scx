@@ -166,7 +166,7 @@ public class TestModule implements ScxModule {
     @Override
     public void start() {
         ScxContext.router().vertxRouter().route("/static/*")
-                .handler(StaticHandler.create(FileSystemAccess.ROOT, ScxContext.environment().getFileByAppRoot("AppRoot:c\\static").getPath())
+                .handler(StaticHandler.create(FileSystemAccess.ROOT, ScxContext.getPathByAppRoot("AppRoot:c\\static").toString())
                         .setFilesReadOnly(false));
         var logger = LoggerFactory.getLogger(TestModule.class);
         //测试定时任务
