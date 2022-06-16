@@ -56,7 +56,7 @@ public final class ScxEnvironment {
      */
     public Path getPathByAppRoot(String path) {
         if (path.startsWith("AppRoot:")) {
-            return this.appRootFile.resolve(path.substring("AppRoot:".length()));
+            return Path.of(this.appRootFile.toString(), path.substring("AppRoot:".length()));
         } else {
             return Path.of(path);
         }

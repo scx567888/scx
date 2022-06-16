@@ -27,6 +27,7 @@ import io.vertx.ext.web.handler.impl.FaviconHandlerImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.file.Path;
 import java.util.*;
 
 /**
@@ -78,7 +79,7 @@ public final class ScxHttpRouter {
         //绑定异常处理器
         bindErrorHandler(this.vertxRouter);
         //设置基本的 handler
-        this.faviconHandler = new FaviconHandlerImpl(vertx, scxEasyConfig.templateRoot().resolve("favicon.ico").toString());
+        this.faviconHandler = new FaviconHandlerImpl(vertx, Path.of(scxEasyConfig.templateRoot().toString(), "favicon.ico").toString());
         this.corsHandler = new CorsHandlerImpl(scxEasyConfig.allowedOrigin()).allowedHeaders(Set.of(HttpHeaderNames.ACCEPT.toString(), HttpHeaderNames.CONTENT_TYPE.toString())).allowedMethods(Set.of(HttpMethod.GET, HttpMethod.POST, HttpMethod.OPTIONS, HttpMethod.DELETE, HttpMethod.PATCH, HttpMethod.PUT)).allowCredentials(true);
         this.scxBodyHandler = new ScxBodyHandler();
         //注册路由
