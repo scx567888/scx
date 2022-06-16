@@ -6,7 +6,7 @@ import cool.scx.config.handler.DecryptValueHandler;
 import cool.scx.util.NetUtils;
 import cool.scx.util.ansi.Ansi;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -71,7 +71,7 @@ public final class ScxEasyConfig {
     /**
      * ssl 证书路径 字符串值
      */
-    private final File sslPath;
+    private final Path sslPath;
 
     /**
      * ssl 证书密码 (解密后)
@@ -81,7 +81,7 @@ public final class ScxEasyConfig {
     /**
      * 模板 根目录 字符串值
      */
-    private final File templateRoot;
+    private final Path templateRoot;
 
     /**
      * a
@@ -183,7 +183,7 @@ public final class ScxEasyConfig {
      *
      * @return a {@link java.io.File} object.
      */
-    public File sslPath() {
+    public Path sslPath() {
         return sslPath;
     }
 
@@ -210,7 +210,7 @@ public final class ScxEasyConfig {
      *
      * @return a {@link java.io.File} object.
      */
-    public File templateRoot() {
+    public Path templateRoot() {
         return templateRoot;
     }
 
@@ -232,9 +232,9 @@ public final class ScxEasyConfig {
                 .green("Y 端口号                               \t -->\t " + port).ln()
                 .green("Y 数据库删除方式为                     \t -->\t " + (tombstone ? "逻辑删除" : "物理删除")).ln()
                 .green("Y 允许的请求源                         \t -->\t " + allowedOrigin).ln()
-                .green("Y 模板根目录                           \t -->\t " + templateRoot.getPath()).ln()
+                .green("Y 模板根目录                           \t -->\t " + templateRoot.toString()).ln()
                 .green("Y 是否开启 https                       \t -->\t " + (httpsEnabled ? "是" : "否")).ln()
-                .green("Y 证书路径                            \t -->\t " + (sslPath != null ? sslPath.getPath() : "")).ln()
+                .green("Y 证书路径                            \t -->\t " + (sslPath != null ? sslPath.toString() : "")).ln()
                 .green("Y 证书密码                            \t -->\t *****").ln()
                 .green("Y 数据源 Host                          \t -->\t " + dataSourceHost).ln()
                 .green("Y 数据源 端口号                        \t -->\t " + dataSourcePort).ln()

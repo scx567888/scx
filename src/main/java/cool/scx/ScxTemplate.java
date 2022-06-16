@@ -46,9 +46,9 @@ public final class ScxTemplate {
         wrapperBuilder.setExposeFields(true);
         freemarkerConfig.setObjectWrapper(wrapperBuilder.build());
         try {
-            freemarkerConfig.setDirectoryForTemplateLoading(scxEasyConfig.templateRoot());
+            freemarkerConfig.setDirectoryForTemplateLoading(scxEasyConfig.templateRoot().toFile());
         } catch (Exception e) {
-            logger.error("模板目录不存在!!! {}", scxEasyConfig.templateRoot().getPath());
+            logger.error("模板目录不存在!!! {}", scxEasyConfig.templateRoot().toString());
         }
 
         //设置 字符集
