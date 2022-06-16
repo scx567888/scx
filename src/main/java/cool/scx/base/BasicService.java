@@ -232,7 +232,7 @@ public class BasicService<Entity> {
     }
 
     /**
-     * 清空表中所有数据 (慎用!!! 慎用!!! 慎用!!!)
+     * 清空表中所有数据 (注意此操作不受事务影响, 所以慎用!!!)
      */
     public final void _truncate() {
         ScxContext.sqlRunner().execute(NoParametersSQL.of("truncate " + scxDaoTableInfo.tableName()));
