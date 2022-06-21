@@ -183,6 +183,8 @@ public class BasicService<Entity> {
      *                 SelectFilter.ofExcluded()
      *      ));
      *  }</pre>
+     * <br>
+     * 注意 !!! 若同时使用 limit 和 in/not in 请使用 {@link BasicService#_buildSelectSQLWithAlias(Query, SelectFilter)}
      *
      * @param query        聚合查询参数对象
      * @param selectFilter 查询字段过滤器
