@@ -143,11 +143,49 @@ public class BasicService<Entity> {
     }
 
     /**
-     * 构建查询 SQL
+     * 构建 (根据聚合查询条件 {@link cool.scx.base.Query} 获取数据列表) 的SQL
+     * <br>
+     * 可用于另一条查询语句的 where 条件
+     * 用法<pre>{@code
+     *      // 假设有以下结构的两个实体类
+     *      public class Person {
      *
-     * @param query        a
-     * @param selectFilter a
-     * @return a
+     *          // ID
+     *          public Long id;
+     *
+     *          // 关联的 汽车 ID
+     *          public Long carID;
+     *
+     *          // 年龄
+     *          public Integer age;
+     *
+     *      }
+     *      public class Car {
+     *
+     *          // ID
+     *          public Long id;
+     *
+     *          // 汽车 名称
+     *          public String name;
+     *
+     *      }
+     *      // 现在想做如下查询 根据所有 person 表中年龄小于 100 的 carID 查询 car 表中的数据
+     *      // 可以按照如下写法
+     *      var cars = carService._select(new Query().in("id",
+     *                 personService._buildSelectSQL(new Query().lessThan("age", 100), SelectFilter.ofIncluded("carID")),
+     *                 SelectFilter.ofExcluded()
+     *      ));
+     *      // 同时也支持 whereSQL 方法
+     *      // 这个写法和上方完全相同
+     *      var cars1 = carService._select(new Query().whereSQL("id IN ",
+     *                 personService._buildSelectSQL(new Query().lessThan("age", 100), SelectFilter.ofIncluded("carID")),
+     *                 SelectFilter.ofExcluded()
+     *      ));
+     *  }</pre>
+     *
+     * @param query        聚合查询参数对象
+     * @param selectFilter 查询字段过滤器
+     * @return selectSQL
      */
     public final AbstractPlaceholderSQL<?> _buildSelectSQL(Query query, SelectFilter selectFilter) {
         var selectColumnInfos = selectFilter.filter(scxDaoTableInfo.columnInfos());

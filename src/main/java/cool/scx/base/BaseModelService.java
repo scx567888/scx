@@ -343,7 +343,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
 
     /**
      * @return listSQL
-     * @see BaseModelService#buildGetSQL(Query, SelectFilter)
+     * @see BasicService#_buildSelectSQL(Query, SelectFilter)
      * 构建 (获取所有数据) 的SQL
      * <br>
      * 可用于另一条查询语句的 where 条件
@@ -355,7 +355,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     /**
      * @param selectFilter 查询字段过滤器
      * @return listSQL
-     * @see BaseModelService#buildGetSQL(Query, SelectFilter)
+     * @see BasicService#_buildSelectSQL(Query, SelectFilter)
      * 构建 (获取所有数据 (使用查询过滤器)) 的SQL
      * <br>
      * 可用于另一条查询语句的 where 条件
@@ -367,7 +367,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     /**
      * @param query 聚合查询参数对象
      * @return listSQL
-     * @see BaseModelService#buildGetSQL(Query, SelectFilter)
+     * @see BasicService#_buildSelectSQL(Query, SelectFilter)
      * 构建 (根据聚合查询条件 {@link cool.scx.base.Query} 获取数据列表) 的SQL
      * <br>
      * 可用于另一条查询语句的 where 条件
@@ -380,38 +380,11 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * 构建 (根据聚合查询条件 {@link cool.scx.base.Query} 获取数据列表) 的SQL
      * <br>
      * 可用于另一条查询语句的 where 条件
-     * 用法<pre>{@code
-     *      假设有以下结构的两个实体类
-     *      public class Person extends BaseModel {
-     *
-     *          // 关联的 汽车 ID
-     *          public Long carID;
-     *
-     *          // 年龄
-     *          public Integer age;
-     *
-     *      }
-     *      public class Car extends BaseModel {
-     *
-     *          // 汽车 名称
-     *          public String name;
-     *
-     *      }
-     *      现在想做如下查询 根据所有 person 表中年龄小于 100 的 carID 查询 car 表中的数据
-     *      可以按照如下写法
-     *      var cars = carService.list(new Query().in("id",
-     *                 personService.buildListSQL(new Query().lessThan("age", 100), SelectFilter.ofIncluded("carID"))
-     *      ));
-     *      同时也支持 whereSQL 方法
-     *      // 这个写法和上方完全相同
-     *      var cars1 = carService.list(new Query().whereSQL("id IN ",
-     *                 personService.buildListSQL(new Query().lessThan("age", 100), SelectFilter.ofIncluded("carID"))
-     *      ));
-     *  }</pre>
      *
      * @param query        聚合查询参数对象
      * @param selectFilter 查询字段过滤器
      * @return listSQL
+     * @see BasicService#_buildSelectSQL(Query, SelectFilter)
      */
     public final AbstractPlaceholderSQL<?> buildListSQL(Query query, SelectFilter selectFilter) {
         return _buildSelectSQL(queryProcessor(query), selectFilterProcessor(selectFilter));
@@ -420,7 +393,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     /**
      * @param id id ( 主键 )
      * @return getSQL
-     * @see BaseModelService#buildGetSQL(Query, SelectFilter)
+     * @see BasicService#_buildSelectSQL(Query, SelectFilter)
      * 构建 根据 ID (主键) 查询单条数据 的SQL
      * <br>
      * 可用于另一条查询语句的 where 条件
@@ -433,7 +406,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param id           id ( 主键 )
      * @param selectFilter 查询字段过滤器
      * @return getSQL
-     * @see BaseModelService#buildGetSQL(Query, SelectFilter)
+     * @see BasicService#_buildSelectSQL(Query, SelectFilter)
      * 构建  根据 ID (主键) 查询单条数据 的SQL
      * <br>
      * 可用于另一条查询语句的 where 条件
@@ -445,7 +418,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     /**
      * @param query 聚合查询参数对象
      * @return getSQL
-     * @see BaseModelService#buildGetSQL(Query, SelectFilter)
+     * @see BasicService#_buildSelectSQL(Query, SelectFilter)
      * 构建 根据聚合查询条件 {@link cool.scx.base.Query} 获取单条数据 的SQL
      * <br>
      * 可用于另一条查询语句的 where 条件
@@ -458,7 +431,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param query        聚合查询参数对象
      * @param selectFilter 查询字段过滤器
      * @return getSQL
-     * @see BaseModelService#buildGetSQL(Query, SelectFilter)
+     * @see BasicService#_buildSelectSQL(Query, SelectFilter)
      * 构建 根据聚合查询条件 {@link cool.scx.base.Query} 获取单条数据 的SQL
      * <br>
      * 可用于另一条查询语句的 where 条件
