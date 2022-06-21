@@ -440,4 +440,103 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
         return buildListSQL(query.setPagination(1), selectFilter);
     }
 
+    /**
+     * @return listSQL
+     * @see BasicService#_buildSelectSQL(Query, SelectFilter)
+     * 构建 (获取所有数据) 的SQL
+     * <br>
+     * 可用于另一条查询语句的 where 条件
+     */
+    public final AbstractPlaceholderSQL<?> buildListSQLWithAlias() {
+        return buildListSQLWithAlias(SelectFilter.ofExcluded());
+    }
+
+    /**
+     * @param selectFilter 查询字段过滤器
+     * @return listSQL
+     * @see BasicService#_buildSelectSQL(Query, SelectFilter)
+     * 构建 (获取所有数据 (使用查询过滤器)) 的SQL
+     * <br>
+     * 可用于另一条查询语句的 where 条件
+     */
+    public final AbstractPlaceholderSQL<?> buildListSQLWithAlias(SelectFilter selectFilter) {
+        return buildListSQLWithAlias(new Query(), selectFilter);
+    }
+
+    /**
+     * @param query 聚合查询参数对象
+     * @return listSQL
+     * @see BasicService#_buildSelectSQL(Query, SelectFilter)
+     * 构建 (根据聚合查询条件 {@link cool.scx.base.Query} 获取数据列表) 的SQL
+     * <br>
+     * 可用于另一条查询语句的 where 条件
+     */
+    public final AbstractPlaceholderSQL<?> buildListSQLWithAlias(Query query) {
+        return buildListSQLWithAlias(query, SelectFilter.ofExcluded());
+    }
+
+    /**
+     * 构建 (根据聚合查询条件 {@link cool.scx.base.Query} 获取数据列表) 的SQL
+     * <br>
+     * 可用于另一条查询语句的 where 条件
+     *
+     * @param query        聚合查询参数对象
+     * @param selectFilter 查询字段过滤器
+     * @return listSQL
+     * @see BasicService#_buildSelectSQL(Query, SelectFilter)
+     */
+    public final AbstractPlaceholderSQL<?> buildListSQLWithAlias(Query query, SelectFilter selectFilter) {
+        return _buildSelectSQLWithAlias(queryProcessor(query), selectFilterProcessor(selectFilter));
+    }
+
+    /**
+     * @param id id ( 主键 )
+     * @return getSQL
+     * @see BasicService#_buildSelectSQL(Query, SelectFilter)
+     * 构建 根据 ID (主键) 查询单条数据 的SQL
+     * <br>
+     * 可用于另一条查询语句的 where 条件
+     */
+    public final AbstractPlaceholderSQL<?> buildGetSQLWithAlias(long id) {
+        return buildGetSQLWithAlias(id, SelectFilter.ofExcluded());
+    }
+
+    /**
+     * @param id           id ( 主键 )
+     * @param selectFilter 查询字段过滤器
+     * @return getSQL
+     * @see BasicService#_buildSelectSQL(Query, SelectFilter)
+     * 构建  根据 ID (主键) 查询单条数据 的SQL
+     * <br>
+     * 可用于另一条查询语句的 where 条件
+     */
+    public final AbstractPlaceholderSQL<?> buildGetSQLWithAlias(long id, SelectFilter selectFilter) {
+        return buildGetSQLWithAlias(new Query().equal("id", id), selectFilter);
+    }
+
+    /**
+     * @param query 聚合查询参数对象
+     * @return getSQL
+     * @see BasicService#_buildSelectSQL(Query, SelectFilter)
+     * 构建 根据聚合查询条件 {@link cool.scx.base.Query} 获取单条数据 的SQL
+     * <br>
+     * 可用于另一条查询语句的 where 条件
+     */
+    public final AbstractPlaceholderSQL<?> buildGetSQLWithAlias(Query query) {
+        return buildGetSQLWithAlias(query, SelectFilter.ofExcluded());
+    }
+
+    /**
+     * @param query        聚合查询参数对象
+     * @param selectFilter 查询字段过滤器
+     * @return getSQL
+     * @see BasicService#_buildSelectSQL(Query, SelectFilter)
+     * 构建 根据聚合查询条件 {@link cool.scx.base.Query} 获取单条数据 的SQL
+     * <br>
+     * 可用于另一条查询语句的 where 条件
+     */
+    public final AbstractPlaceholderSQL<?> buildGetSQLWithAlias(Query query, SelectFilter selectFilter) {
+        return buildListSQLWithAlias(query.setPagination(1), selectFilter);
+    }
+
 }
