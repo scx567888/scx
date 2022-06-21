@@ -35,4 +35,22 @@ public final class SelectFilter extends AbstractFilter<SelectFilter> {
         return new SelectFilter(FilterMode.EXCLUDED);
     }
 
+    /**
+     * 白名单模式
+     *
+     * @return a
+     */
+    public static SelectFilter ofIncluded(String... fieldNames) {
+        return ofIncluded().addIncluded(fieldNames);
+    }
+
+    /**
+     * 黑名单模式
+     *
+     * @return a
+     */
+    public static SelectFilter ofExcluded(String... fieldNames) {
+        return ofExcluded().addExcluded(fieldNames);
+    }
+
 }

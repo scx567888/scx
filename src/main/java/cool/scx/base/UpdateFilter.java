@@ -67,6 +67,42 @@ public final class UpdateFilter extends AbstractFilter<UpdateFilter> {
     }
 
     /**
+     * 白名单模式
+     *
+     * @return a
+     */
+    public static UpdateFilter ofIncluded(String... fieldNames) {
+        return ofIncluded().addIncluded(fieldNames);
+    }
+
+    /**
+     * 黑名单模式
+     *
+     * @return a
+     */
+    public static UpdateFilter ofExcluded(String... fieldNames) {
+        return ofExcluded().addExcluded(fieldNames);
+    }
+
+    /**
+     * 白名单模式
+     *
+     * @return a
+     */
+    public static UpdateFilter ofIncluded(boolean excludeIfFieldValueIsNull, String... fieldNames) {
+        return ofIncluded(excludeIfFieldValueIsNull).addIncluded(fieldNames);
+    }
+
+    /**
+     * 黑名单模式
+     *
+     * @return a
+     */
+    public static UpdateFilter ofExcluded(boolean excludeIfFieldValueIsNull, String... fieldNames) {
+        return ofExcluded(excludeIfFieldValueIsNull).addExcluded(fieldNames);
+    }
+
+    /**
      * 过滤
      *
      * @param entity            a
