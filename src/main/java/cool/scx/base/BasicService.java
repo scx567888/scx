@@ -10,6 +10,7 @@ import cool.scx.sql.PlaceholderSQL;
 import cool.scx.sql.SQLBuilder;
 import cool.scx.sql.handler.BeanListHandler;
 import cool.scx.sql.handler.ScalarHandler;
+import cool.scx.util.RandomUtils;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
@@ -182,6 +183,8 @@ public class BasicService<Entity> {
      *                 SelectFilter.ofExcluded()
      *      ));
      *  }</pre>
+     * <br>
+     * 注意 !!! 若同时使用 limit 和 in/not in 请使用 {@link BasicService#_buildSelectSQLWithAlias(Query, SelectFilter)}
      *
      * @param query        聚合查询参数对象
      * @param selectFilter 查询字段过滤器
@@ -191,6 +194,26 @@ public class BasicService<Entity> {
         var selectColumnInfos = selectFilter.filter(scxDaoTableInfo.columnInfos());
         var sql = SQLBuilder.Select(selectColumnInfos).From(scxDaoTableInfo.tableName()).Where(query.where()).GroupBy(query.groupBy()).OrderBy(query.orderBy()).Limit(query.pagination()).GetSQL();
         return PlaceholderSQL.of(sql, query.where().getWhereParams());
+    }
+
+    /**
+     * 在 mysql 中 不支持 in 子句中包含 limit 但是我们可以使用 一个嵌套的别名表来跳过检查
+     * 此方法便是用于生成嵌套的 sql 的
+     *
+     * @param query        q
+     * @param selectFilter s
+     * @return a
+     */
+    public final AbstractPlaceholderSQL<?> _buildSelectSQLWithAlias(Query query, SelectFilter selectFilter) {
+        //没有 limit 的时候不需要嵌套
+        if (query.pagination().rowCount() == null) {
+            return _buildSelectSQL(query, selectFilter);
+        } else {
+            var selectColumnInfos = selectFilter.filter(scxDaoTableInfo.columnInfos());
+            var sql0 = SQLBuilder.Select(selectColumnInfos).From(scxDaoTableInfo.tableName()).Where(query.where()).GroupBy(query.groupBy()).OrderBy(query.orderBy()).Limit(query.pagination()).GetSQL();
+            var sql = SQLBuilder.Select(selectColumnInfos).From("(" + sql0 + ")").GetSQL();
+            return PlaceholderSQL.of(sql + " AS " + scxDaoTableInfo.tableName() + "_" + RandomUtils.getRandomString(6, true), query.where().getWhereParams());
+        }
     }
 
     /**
