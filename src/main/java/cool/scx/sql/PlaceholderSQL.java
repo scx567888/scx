@@ -54,6 +54,11 @@ public final class PlaceholderSQL extends AbstractPlaceholderSQL<Object[]> {
         return preparedStatement;
     }
 
+    @Override
+    public Object[] objectArrayParams() {
+        return this.params;
+    }
+
     /**
      * a
      *

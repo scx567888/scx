@@ -116,4 +116,6 @@ public abstract class AbstractPlaceholderSQL<T> {
         return SQLHelper.logSQL(isBatch ? getPreparedStatementFromBatch(con) : getPreparedStatementFromSingle(con));
     }
 
+    public abstract Object[] objectArrayParams();
+
 }

@@ -36,6 +36,11 @@ public final class NoParametersSQL extends AbstractPlaceholderSQL<Object> {
         return con.prepareStatement(normalSQL, Statement.RETURN_GENERATED_KEYS);
     }
 
+    @Override
+    public Object[] objectArrayParams() {
+        return new Object[0];
+    }
+
     /**
      * 根据批量参数获取
      *

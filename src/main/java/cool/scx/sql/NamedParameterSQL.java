@@ -106,6 +106,11 @@ public final class NamedParameterSQL extends AbstractPlaceholderSQL<Map<String, 
         return preparedStatement;
     }
 
+    @Override
+    public Object[] objectArrayParams() {
+        return mapToArray(params);
+    }
+
     /**
      * 根据批量参数获取
      *
