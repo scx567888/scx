@@ -67,28 +67,6 @@ public final class UpdateFilter extends AbstractFilter<UpdateFilter> {
     }
 
     /**
-     * 过滤
-     *
-     * @param entity            a
-     * @param scxDaoColumnInfos 带过滤的列表
-     * @return 过滤后的列表
-     */
-    public ScxDaoColumnInfo[] filter(Object entity, ScxDaoColumnInfo... scxDaoColumnInfos) {
-        return this.excludeIfFieldValueIsNull ? excludeIfFieldValueIsNull(entity, filter(scxDaoColumnInfos)) : filter(scxDaoColumnInfos);
-    }
-
-    /**
-     * 过滤空值
-     *
-     * @param entity            e
-     * @param scxDaoColumnInfos s
-     * @return e
-     */
-    private ScxDaoColumnInfo[] excludeIfFieldValueIsNull(Object entity, ScxDaoColumnInfo... scxDaoColumnInfos) {
-        return Arrays.stream(scxDaoColumnInfos).filter(field -> field.getFieldValue(entity) != null).toArray(ScxDaoColumnInfo[]::new);
-    }
-
-    /**
      * 白名单模式
      *
      * @return a
@@ -122,6 +100,28 @@ public final class UpdateFilter extends AbstractFilter<UpdateFilter> {
      */
     public static UpdateFilter ofExcluded(boolean excludeIfFieldValueIsNull, String... fieldNames) {
         return ofExcluded(excludeIfFieldValueIsNull).addExcluded(fieldNames);
+    }
+
+    /**
+     * 过滤
+     *
+     * @param entity            a
+     * @param scxDaoColumnInfos 带过滤的列表
+     * @return 过滤后的列表
+     */
+    public ScxDaoColumnInfo[] filter(Object entity, ScxDaoColumnInfo... scxDaoColumnInfos) {
+        return this.excludeIfFieldValueIsNull ? excludeIfFieldValueIsNull(entity, filter(scxDaoColumnInfos)) : filter(scxDaoColumnInfos);
+    }
+
+    /**
+     * 过滤空值
+     *
+     * @param entity            e
+     * @param scxDaoColumnInfos s
+     * @return e
+     */
+    private ScxDaoColumnInfo[] excludeIfFieldValueIsNull(Object entity, ScxDaoColumnInfo... scxDaoColumnInfos) {
+        return Arrays.stream(scxDaoColumnInfos).filter(field -> field.getFieldValue(entity) != null).toArray(ScxDaoColumnInfo[]::new);
     }
 
 }
