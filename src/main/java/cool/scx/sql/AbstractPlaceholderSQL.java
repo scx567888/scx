@@ -116,6 +116,11 @@ public abstract class AbstractPlaceholderSQL<T> {
         return SQLHelper.logSQL(isBatch ? getPreparedStatementFromBatch(con) : getPreparedStatementFromSingle(con));
     }
 
+    /**
+     * 数组类型的参数值
+     *
+     * @return a
+     */
     public abstract Object[] objectArrayParams();
 
 }

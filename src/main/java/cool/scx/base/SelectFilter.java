@@ -38,6 +38,7 @@ public final class SelectFilter extends AbstractFilter<SelectFilter> {
     /**
      * 白名单模式
      *
+     * @param fieldNames a
      * @return a
      */
     public static SelectFilter ofIncluded(String... fieldNames) {
@@ -47,6 +48,7 @@ public final class SelectFilter extends AbstractFilter<SelectFilter> {
     /**
      * 黑名单模式
      *
+     * @param fieldNames a
      * @return a
      */
     public static SelectFilter ofExcluded(String... fieldNames) {
