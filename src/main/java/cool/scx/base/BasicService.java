@@ -149,7 +149,7 @@ public class BasicService<Entity> {
      * @param selectFilter a
      * @return a
      */
-    protected final AbstractPlaceholderSQL<?> _buildSelectSQL(Query query, SelectFilter selectFilter) {
+    public final AbstractPlaceholderSQL<?> _buildSelectSQL(Query query, SelectFilter selectFilter) {
         var selectColumnInfos = selectFilter.filter(scxDaoTableInfo.columnInfos());
         var sql = SQLBuilder.Select(selectColumnInfos).From(scxDaoTableInfo.tableName()).Where(query.where()).GroupBy(query.groupBy()).OrderBy(query.orderBy()).Limit(query.pagination()).GetSQL();
         return PlaceholderSQL.of(sql, query.where().getWhereParams());
