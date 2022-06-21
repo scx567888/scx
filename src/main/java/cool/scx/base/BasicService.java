@@ -3,6 +3,7 @@ package cool.scx.base;
 import cool.scx.ScxContext;
 import cool.scx.ScxHandlerVE;
 import cool.scx.ScxHandlerVRE;
+import cool.scx.dao.ScxDaoColumnInfo;
 import cool.scx.dao.ScxDaoTableInfo;
 import cool.scx.sql.AbstractPlaceholderSQL;
 import cool.scx.sql.NoParametersSQL;
@@ -211,7 +212,7 @@ public class BasicService<Entity> {
         } else {
             var selectColumnInfos = selectFilter.filter(scxDaoTableInfo.columnInfos());
             var sql0 = SQLBuilder.Select(selectColumnInfos).From(scxDaoTableInfo.tableName()).Where(query.where()).GroupBy(query.groupBy()).OrderBy(query.orderBy()).Limit(query.pagination()).GetSQL();
-            var sql = SQLBuilder.Select(selectColumnInfos).From("(" + sql0 + ")").GetSQL();
+            var sql = SQLBuilder.Select(Arrays.stream(selectColumnInfos).map(ScxDaoColumnInfo::fieldName).toArray(String[]::new)).From("(" + sql0 + ")").GetSQL();
             return PlaceholderSQL.of(sql + " AS " + scxDaoTableInfo.tableName() + "_" + RandomUtils.getRandomString(6, true), query.where().getWhereParams());
         }
     }
