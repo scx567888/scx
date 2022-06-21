@@ -69,6 +69,7 @@ public final class UpdateFilter extends AbstractFilter<UpdateFilter> {
     /**
      * 白名单模式
      *
+     * @param fieldNames a
      * @return a
      */
     public static UpdateFilter ofIncluded(String... fieldNames) {
@@ -78,6 +79,7 @@ public final class UpdateFilter extends AbstractFilter<UpdateFilter> {
     /**
      * 黑名单模式
      *
+     * @param fieldNames a
      * @return a
      */
     public static UpdateFilter ofExcluded(String... fieldNames) {
@@ -87,6 +89,8 @@ public final class UpdateFilter extends AbstractFilter<UpdateFilter> {
     /**
      * 白名单模式
      *
+     * @param excludeIfFieldValueIsNull a
+     * @param fieldNames                a
      * @return a
      */
     public static UpdateFilter ofIncluded(boolean excludeIfFieldValueIsNull, String... fieldNames) {
@@ -96,6 +100,8 @@ public final class UpdateFilter extends AbstractFilter<UpdateFilter> {
     /**
      * 黑名单模式
      *
+     * @param excludeIfFieldValueIsNull a
+     * @param fieldNames                a
      * @return a
      */
     public static UpdateFilter ofExcluded(boolean excludeIfFieldValueIsNull, String... fieldNames) {

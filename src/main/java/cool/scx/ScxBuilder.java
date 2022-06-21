@@ -164,9 +164,7 @@ public final class ScxBuilder {
      * @return a
      */
     public ScxBuilder addModule(ScxModule... modules) {
-        for (var module : modules) {
-            this.scxModules.add(module);
-        }
+        this.scxModules.addAll(Arrays.asList(modules));
         return this;
     }
 
