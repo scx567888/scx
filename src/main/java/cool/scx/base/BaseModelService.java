@@ -347,6 +347,8 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * 构建 (获取所有数据) 的SQL
      * <br>
      * 可用于另一条查询语句的 where 条件
+     * <br>
+     * 若同时使用 limit 和 in/not in 请使用 {@link BaseModelService#buildListSQLWithAlias()}
      */
     public final AbstractPlaceholderSQL<?> buildListSQL() {
         return buildListSQL(SelectFilter.ofExcluded());
@@ -359,6 +361,8 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * 构建 (获取所有数据 (使用查询过滤器)) 的SQL
      * <br>
      * 可用于另一条查询语句的 where 条件
+     * <br>
+     * 若同时使用 limit 和 in/not in 请使用 {@link BaseModelService#buildListSQLWithAlias()}
      */
     public final AbstractPlaceholderSQL<?> buildListSQL(SelectFilter selectFilter) {
         return buildListSQL(new Query(), selectFilter);
@@ -371,6 +375,8 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * 构建 (根据聚合查询条件 {@link cool.scx.base.Query} 获取数据列表) 的SQL
      * <br>
      * 可用于另一条查询语句的 where 条件
+     * <br>
+     * 若同时使用 limit 和 in/not in 请使用 {@link BaseModelService#buildListSQLWithAlias()}
      */
     public final AbstractPlaceholderSQL<?> buildListSQL(Query query) {
         return buildListSQL(query, SelectFilter.ofExcluded());
@@ -380,6 +386,8 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * 构建 (根据聚合查询条件 {@link cool.scx.base.Query} 获取数据列表) 的SQL
      * <br>
      * 可用于另一条查询语句的 where 条件
+     * <br>
+     * 若同时使用 limit 和 in/not in 请使用 {@link BaseModelService#buildListSQLWithAlias()}
      *
      * @param query        聚合查询参数对象
      * @param selectFilter 查询字段过滤器
@@ -397,6 +405,8 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * 构建 根据 ID (主键) 查询单条数据 的SQL
      * <br>
      * 可用于另一条查询语句的 where 条件
+     * <br>
+     * 若同时使用 limit 和 in/not in 请使用 {@link BaseModelService#buildListSQLWithAlias()}
      */
     public final AbstractPlaceholderSQL<?> buildGetSQL(long id) {
         return buildGetSQL(id, SelectFilter.ofExcluded());
@@ -410,6 +420,8 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * 构建  根据 ID (主键) 查询单条数据 的SQL
      * <br>
      * 可用于另一条查询语句的 where 条件
+     * <br>
+     * 若同时使用 limit 和 in/not in 请使用 {@link BaseModelService#buildListSQLWithAlias()}
      */
     public final AbstractPlaceholderSQL<?> buildGetSQL(long id, SelectFilter selectFilter) {
         return buildGetSQL(new Query().equal("id", id), selectFilter);
@@ -422,6 +434,8 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * 构建 根据聚合查询条件 {@link cool.scx.base.Query} 获取单条数据 的SQL
      * <br>
      * 可用于另一条查询语句的 where 条件
+     * <br>
+     * 若同时使用 limit 和 in/not in 请使用 {@link BaseModelService#buildListSQLWithAlias()}
      */
     public final AbstractPlaceholderSQL<?> buildGetSQL(Query query) {
         return buildGetSQL(query, SelectFilter.ofExcluded());
@@ -435,6 +449,8 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * 构建 根据聚合查询条件 {@link cool.scx.base.Query} 获取单条数据 的SQL
      * <br>
      * 可用于另一条查询语句的 where 条件
+     * <br>
+     * 若同时使用 limit 和 in/not in 请使用 {@link BaseModelService#buildListSQLWithAlias()}
      */
     public final AbstractPlaceholderSQL<?> buildGetSQL(Query query, SelectFilter selectFilter) {
         return buildListSQL(query.setPagination(1), selectFilter);
