@@ -1,0 +1,18 @@
+package cool.scx.test.person;
+
+import cool.scx.annotation.ScxModel;
+import cool.scx.base.BaseModel;
+
+@ScxModel(tablePrefix = "scx")
+public class Person extends BaseModel {
+    /**
+     * 关联的 汽车 ID
+     */
+    public Long carID;
+
+    /**
+     * 年龄
+     */
+    public Integer age;
+
+}

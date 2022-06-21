@@ -5,6 +5,7 @@ import cool.scx.ScxContext;
 import cool.scx.ScxModule;
 import cool.scx.base.BaseModelService;
 import cool.scx.base.Query;
+import cool.scx.base.SelectFilter;
 import cool.scx.base.UpdateFilter;
 import cool.scx.dao.ScxDaoHelper;
 import cool.scx.enumeration.ScxFeature;
@@ -13,6 +14,8 @@ import cool.scx.test.car.Car;
 import cool.scx.test.car.CarColor;
 import cool.scx.test.car.CarOwner;
 import cool.scx.test.car.CarService;
+import cool.scx.test.person.Person;
+import cool.scx.test.person.PersonService;
 import cool.scx.util.NetUtils;
 import cool.scx.util.RandomUtils;
 import cool.scx.util.StopWatch;
@@ -32,6 +35,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.List;
 
 public class TestModule implements ScxModule {
 
@@ -40,6 +44,7 @@ public class TestModule implements ScxModule {
         test0();
         test1();
         test2();
+        test3();
     }
 
     @BeforeTest
@@ -158,6 +163,35 @@ public class TestModule implements ScxModule {
         });
         System.out.println(car.hashCode());
         ScxContext.eventBus().send("test-event-bus", car);
+    }
+
+
+    @Test
+    public static void test3() {
+        var personService = ScxContext.getBean(PersonService.class);
+        var carService = ScxContext.getBean(CarService.class);
+        if (personService.count() < 200) {
+            List<Car> list = carService.list();
+            var ps = new ArrayList<Person>();
+            for (int i = 0; i < list.size(); i++) {
+                var p = new Person();
+                p.carID = list.get(i).id;
+                p.age = i;
+                ps.add(p);
+            }
+            personService.add(ps);
+        }
+        //根据所有 person 表中年龄小于 100 的 carID 查询 car 表中的数据
+        var cars = carService.list(new Query().in("id",
+                personService.buildListSQL(new Query().lessThan("age", 100), SelectFilter.ofIncluded("carID"))
+        ));
+        var logger = LoggerFactory.getLogger(TestModule.class);
+        logger.error("根据所有 person 表中年龄小于 100 的 carID 查询 car 表中的数据 总条数 {}", cars.size());
+        //根据所有 person 表中年龄小于 100 的 carID 查询 car 表中的数据
+        var cars1 = carService.list(new Query().whereSQL("id IN ",
+                personService.buildListSQL(new Query().lessThan("age", 100), SelectFilter.ofIncluded("carID"))
+        ));
+        logger.error("第二种方式 (whereSQL) : 根据所有 person 表中年龄小于 100 的 carID 查询 car 表中的数据 总条数 {}", cars1.size());
     }
 
     /**

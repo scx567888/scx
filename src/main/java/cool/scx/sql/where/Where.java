@@ -1,5 +1,6 @@
 package cool.scx.sql.where;
 
+import cool.scx.sql.AbstractPlaceholderSQL;
 import cool.scx.sql.exception.ValidParamListIsEmptyException;
 import cool.scx.sql.exception.WrongWhereTypeParamSizeException;
 import cool.scx.util.StringUtils;
@@ -324,7 +325,7 @@ public final class Where {
 
     /**
      * 设置 whereSQL 适用于 复杂查询的自定义 where 子句<br>
-     * 支持两种类型 String 和 WhereBody
+     * 支持三种类型 String , WhereBody 和 AbstractPlaceholderSQL
      * 在最终 sql 中会拼接到 where 子句的最后<br>
      * 注意 :  除特殊语法外不需要手动在头部添加 AND
      *
@@ -340,6 +341,9 @@ public final class Where {
             } else if (o instanceof WhereBody w) {
                 tempWhereSQL.append(w.whereClause());
                 whereSQLParams.addAll(List.of(w.whereParams()));
+            } else if (o instanceof AbstractPlaceholderSQL<?> a) {
+                tempWhereSQL.append("(").append(a.normalSQL()).append(")");
+                whereSQLParams.addAll(List.of(a.objectArrayParams()));
             }
         }
         this.whereSQL = tempWhereSQL.toString();
