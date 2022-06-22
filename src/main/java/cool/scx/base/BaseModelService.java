@@ -226,7 +226,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param query 聚合查询参数对象
      * @return 数据条数
      */
-    public long count(Query query) {
+    public final long count(Query query) {
         return this._count(queryProcessor(query));
     }
 
