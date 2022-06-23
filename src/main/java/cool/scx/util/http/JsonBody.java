@@ -9,7 +9,7 @@ import java.nio.charset.StandardCharsets;
 /**
  * a
  */
-public final class JsonBody implements HttpClientHelper.Body {
+public final class JsonBody implements Body {
 
     private final String bodyStr;
 

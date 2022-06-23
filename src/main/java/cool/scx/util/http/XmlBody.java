@@ -9,7 +9,7 @@ import java.nio.charset.StandardCharsets;
 /**
  * a
  */
-public final class XmlBody implements HttpClientHelper.Body {
+public final class XmlBody implements Body {
 
     private final String bodyStr;
 
