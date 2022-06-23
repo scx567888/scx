@@ -109,7 +109,7 @@ public final class StopWatch {
      * @return d
      */
     private static double nanosToSeconds(long duration) {
-        return new BigDecimal(duration / SECOND_SCALE).setScale(2, RoundingMode.HALF_UP).doubleValue();
+        return BigDecimal.valueOf(duration / SECOND_SCALE).setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 
 }

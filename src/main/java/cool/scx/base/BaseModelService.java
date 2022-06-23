@@ -346,7 +346,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * <br>
      * 可用于另一条查询语句的 where 条件
      * <br>
-     * 若同时使用 limit 和 in/not in 请使用 {@link BaseModelService#buildListSQLWithAlias(Query, SelectFilter)}
+     * 若同时使用 limit 和 in/not in 请使用 {@link cool.scx.base.BaseModelService#buildListSQLWithAlias(Query, SelectFilter)}
      *
      * @param query        聚合查询参数对象
      * @param selectFilter 查询字段过滤器
@@ -358,15 +358,16 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     }
 
     /**
-     * @param query        聚合查询参数对象
-     * @param selectFilter 查询字段过滤器
-     * @return getSQL
-     * @see BasicService#_buildSelectSQL(Query, SelectFilter)
      * 构建 根据聚合查询条件 {@link cool.scx.base.Query} 获取单条数据 的SQL
      * <br>
      * 可用于另一条查询语句的 where 条件
      * <br>
-     * 若同时使用 limit 和 in/not in 请使用 {@link BaseModelService#buildListSQLWithAlias(Query, SelectFilter)}
+     * 若同时使用 limit 和 in/not in 请使用 {@link cool.scx.base.BaseModelService#buildListSQLWithAlias(Query, SelectFilter)}
+     *
+     * @param query        聚合查询参数对象
+     * @param selectFilter 查询字段过滤器
+     * @return getSQL
+     * @see BasicService#_buildSelectSQL(Query, SelectFilter)
      */
     public final AbstractPlaceholderSQL<?> buildGetSQL(Query query, SelectFilter selectFilter) {
         return buildListSQL(query.setPagination(1), selectFilter);
@@ -387,13 +388,14 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     }
 
     /**
+     * 构建 根据聚合查询条件 {@link cool.scx.base.Query} 获取单条数据 的SQL
+     * <br>
+     * 可用于另一条查询语句的 where 条件
+     *
      * @param query        聚合查询参数对象
      * @param selectFilter 查询字段过滤器
      * @return getSQL
      * @see BasicService#_buildSelectSQL(Query, SelectFilter)
-     * 构建 根据聚合查询条件 {@link cool.scx.base.Query} 获取单条数据 的SQL
-     * <br>
-     * 可用于另一条查询语句的 where 条件
      */
     public final AbstractPlaceholderSQL<?> buildGetSQLWithAlias(Query query, SelectFilter selectFilter) {
         return buildListSQLWithAlias(query.setPagination(1), selectFilter);

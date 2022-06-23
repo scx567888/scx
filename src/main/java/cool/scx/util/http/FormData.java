@@ -19,7 +19,7 @@ import java.util.List;
  * @author scx567888
  * @version 1.11.8
  */
-public final class FormData implements HttpClientHelper.Body {
+public final class FormData implements Body {
 
     /**
      * a

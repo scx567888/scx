@@ -169,12 +169,13 @@ public final class SQLRunner {
      * @throws java.sql.SQLException if any.
      */
     private static List<Long> getGeneratedKeys(PreparedStatement preparedStatement) throws SQLException {
-        var resultSet = preparedStatement.getGeneratedKeys();
-        var ids = new ArrayList<Long>();
-        while (resultSet.next()) {
-            ids.add(resultSet.getLong(1));
+        try (var resultSet = preparedStatement.getGeneratedKeys()) {
+            var ids = new ArrayList<Long>();
+            while (resultSet.next()) {
+                ids.add(resultSet.getLong(1));
+            }
+            return ids;
         }
-        return ids;
     }
 
     /**
