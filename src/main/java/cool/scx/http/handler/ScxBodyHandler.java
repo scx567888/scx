@@ -110,7 +110,12 @@ public final class ScxBodyHandler implements Handler<RoutingContext> {
         }
     }
 
-
+    /**
+     * <p>parseContentLengthHeader.</p>
+     *
+     * @param request a {@link io.vertx.core.http.HttpServerRequest} object
+     * @return a long
+     */
     private long parseContentLengthHeader(HttpServerRequest request) {
         String contentLength = request.getHeader(HttpHeaders.CONTENT_LENGTH);
         if (contentLength == null || contentLength.isEmpty()) {

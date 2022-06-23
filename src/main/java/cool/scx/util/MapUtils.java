@@ -23,7 +23,7 @@ public final class MapUtils {
         var prefix = StringUtils.isBlank(parentKey) ? "" : parentKey + ".";
         sourceMap.forEach((key, value) -> {
             var newKey = prefix + key;
-            if (value instanceof Map m) {
+            if (value instanceof Map<?, ?> m) {
                 result.putAll(flatMap(m, newKey));
             } else {
                 result.put(newKey, value);
