@@ -7,7 +7,7 @@ import java.time.Duration;
 /**
  * a
  */
-public class Options {
+public final class Options {
 
     private final HttpRequest.Builder builder = HttpRequest.newBuilder();
 
