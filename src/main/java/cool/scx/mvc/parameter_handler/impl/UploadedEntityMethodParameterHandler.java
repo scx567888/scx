@@ -1,12 +1,12 @@
 package cool.scx.mvc.parameter_handler.impl;
 
-import cool.scx.ScxContext;
 import cool.scx.annotation.FromUpload;
 import cool.scx.mvc.parameter_handler.RequiredParamEmptyException;
 import cool.scx.mvc.parameter_handler.ScxMappingMethodParameterHandler;
 import cool.scx.mvc.parameter_handler.ScxMappingRoutingContextInfo;
 import cool.scx.type.UploadedEntity;
 import cool.scx.util.StringUtils;
+import io.vertx.ext.web.FileUpload;
 import io.vertx.ext.web.RoutingContext;
 
 import java.lang.reflect.Parameter;
@@ -24,12 +24,18 @@ public final class UploadedEntityMethodParameterHandler implements ScxMappingMet
      */
     public static final UploadedEntityMethodParameterHandler DEFAULT_INSTANCE = new UploadedEntityMethodParameterHandler();
 
-    private static UploadedEntity findUploadedEntityByName(RoutingContext routingContext, String name) {
+    /**
+     * 从 RoutingContext 查找 对应名称的 上传对象
+     *
+     * @param routingContext a
+     * @param name           a
+     * @return a
+     */
+    private static FileUpload findFileUploadByName(RoutingContext routingContext, String name) {
         var fileUploads = routingContext.fileUploads();
         for (var f : fileUploads) {
             if (name.equals(f.name())) {
-                var content = ScxContext.vertx().fileSystem().readFileBlocking(f.uploadedFileName());
-                return new UploadedEntity(f.name(), f.fileName(), f.size(), content, f.contentType(), f.charSet());
+                return f;
             }
         }
         return null;
@@ -40,7 +46,8 @@ public final class UploadedEntityMethodParameterHandler implements ScxMappingMet
      */
     @Override
     public boolean canHandle(Parameter parameter) {
-        return parameter.getParameterizedType() == UploadedEntity.class;
+        var type = parameter.getParameterizedType();
+        return type == UploadedEntity.class || type == FileUpload.class;
     }
 
     /**
@@ -58,12 +65,13 @@ public final class UploadedEntityMethodParameterHandler implements ScxMappingMet
             required = fromUpload.required();
         }
 
-        var v = findUploadedEntityByName(context.routingContext(), name);
+        var v = findFileUploadByName(context.routingContext(), name);
         //为空的时候做两个处理 即必填则报错 非必填则返回 null
         if (required && v == null) {
             throw new RequiredParamEmptyException("必填参数不能为空 !!! 参数名称 [" + name + "] , 参数来源 [FromUpload] , 参数类型 [" + parameter.getParameterizedType().getTypeName() + "]");
         }
-        return v;
+
+        return parameter.getParameterizedType() == UploadedEntity.class && v != null ? new UploadedEntity(v) : v;
     }
 
 }
