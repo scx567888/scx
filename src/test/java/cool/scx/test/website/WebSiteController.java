@@ -18,6 +18,7 @@ import cool.scx.util.zip.VirtualDirectory;
 import cool.scx.util.zip.VirtualFile;
 import cool.scx.util.zip.ZipAction;
 import cool.scx.vo.*;
+import io.vertx.ext.web.FileUpload;
 import io.vertx.ext.web.RoutingContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -48,10 +49,12 @@ public class WebSiteController {
     @ScxMapping(method = HttpMethod.POST)
     public static Object test0(@FromQuery String name,
                                @FromQuery Integer age,
-                               @FromUpload UploadedEntity content) {
+                               @FromUpload UploadedEntity content,
+                               @FromUpload FileUpload content1) {
         System.err.println("客户端 IP :" + NetUtils.getClientIPAddress(ScxContext.routingContext().request()));
         return Map.of("now", ScxConstant.DEFAULT_DATETIME_FORMATTER.format(LocalDateTime.now()),
-                "name", name, "age", age, "content", content.buffer().toString(StandardCharsets.UTF_8));
+                "name", name, "age", age, "content", content.buffer().toString(StandardCharsets.UTF_8),
+                "content1", ScxContext.vertx().fileSystem().readFileBlocking(content1.uploadedFileName()));
     }
 
     @ScxMapping(method = HttpMethod.GET)
