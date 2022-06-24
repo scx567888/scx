@@ -18,7 +18,7 @@ public final class URIBuilder {
     /**
      * a
      */
-    private final String uri;
+    private final String path;
 
     /**
      * a
@@ -28,15 +28,31 @@ public final class URIBuilder {
     /**
      * a
      *
-     * @param str a
+     * @param decoder a
      */
-    public URIBuilder(String str) {
-        var decoder = new QueryStringDecoder(str, StandardCharsets.UTF_8);
-        this.uri = decoder.path();
-        var decodedParams = decoder.parameters();
-        for (var s : decodedParams.entrySet()) {
-            this.queryParams.putAll(s.getKey(), s.getValue());
-        }
+    private URIBuilder(QueryStringDecoder decoder) {
+        this.path = decoder.path();
+        decoder.parameters().forEach(this.queryParams::putAll);
+    }
+
+    /**
+     * a
+     *
+     * @param str a
+     * @return a
+     */
+    public static URIBuilder of(String str) {
+        return new URIBuilder(new QueryStringDecoder(str, StandardCharsets.UTF_8));
+    }
+
+    /**
+     * a
+     *
+     * @param uri a
+     * @return a
+     */
+    public static URIBuilder of(URI uri) {
+        return new URIBuilder(new QueryStringDecoder(uri, StandardCharsets.UTF_8));
     }
 
     /**
@@ -102,7 +118,7 @@ public final class URIBuilder {
 
     @Override
     public String toString() {
-        var encoder = new QueryStringEncoder(uri, StandardCharsets.UTF_8);
+        var encoder = new QueryStringEncoder(path, StandardCharsets.UTF_8);
         queryParams.forEach(encoder::addParam);
         return encoder.toString();
     }

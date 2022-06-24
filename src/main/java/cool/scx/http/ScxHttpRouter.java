@@ -1,25 +1,22 @@
 package cool.scx.http;
 
-import cool.scx.ScxBeanFactory;
-import cool.scx.ScxModuleMetadata;
+import cool.scx.Scx;
+import cool.scx.ScxConstant;
 import cool.scx.annotation.ScxMapping;
-import cool.scx.config.ScxEasyConfig;
 import cool.scx.http.exception.ScxHttpException;
 import cool.scx.http.exception.impl.InternalServerErrorException;
 import cool.scx.http.exception_handler.ScxHttpRouterExceptionHandler;
 import cool.scx.http.exception_handler.impl.LastExceptionHandler;
 import cool.scx.http.exception_handler.impl.ScxHttpExceptionHandler;
-import cool.scx.http.handler.ScxBodyHandler;
-import cool.scx.mvc.ScxMappingConfiguration;
 import cool.scx.mvc.ScxMappingHandler;
 import cool.scx.util.exception.ScxExceptionHelper;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.vertx.core.Handler;
-import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
+import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.CorsHandler;
 import io.vertx.ext.web.handler.FaviconHandler;
 import io.vertx.ext.web.handler.impl.CorsHandlerImpl;
@@ -50,12 +47,12 @@ public final class ScxHttpRouter {
     //基本 handler
     private final FaviconHandler faviconHandler;
     private final CorsHandler corsHandler;
-    private final ScxBodyHandler scxBodyHandler;
+    private final BodyHandler bodyHandler;
 
     //基本 handler 对应的 路由
     private final Route faviconHandlerRoute;
     private final Route corsHandlerRoute;
-    private final Route scxBodyHandlerRoute;
+    private final Route bodyHandlerRoute;
 
     /**
      * 异常处理器列表
@@ -65,28 +62,24 @@ public final class ScxHttpRouter {
     /**
      * a
      *
-     * @param scxMappingConfiguration a
-     * @param scxEasyConfig           a
-     * @param vertx                   a
-     * @param metadataList            a
-     * @param scxBeanFactory          a
+     * @param scx a
      */
-    public ScxHttpRouter(ScxMappingConfiguration scxMappingConfiguration, ScxEasyConfig scxEasyConfig, Vertx vertx, List<ScxModuleMetadata<?>> metadataList, ScxBeanFactory scxBeanFactory) {
+    public ScxHttpRouter(Scx scx) {
         //初始化默认的异常处理器
         addExceptionHandler(ScxHttpExceptionHandler.DEFAULT_INSTANCE);
         //创建 vertxRouter 用来管理整个项目的路由
-        this.vertxRouter = Router.router(vertx);
+        this.vertxRouter = Router.router(scx.vertx());
         //绑定异常处理器
         bindErrorHandler(this.vertxRouter);
         //设置基本的 handler
-        this.faviconHandler = new FaviconHandlerImpl(vertx, Path.of(scxEasyConfig.templateRoot().toString(), "favicon.ico").toString());
-        this.corsHandler = new CorsHandlerImpl(scxEasyConfig.allowedOrigin()).allowedHeaders(Set.of(HttpHeaderNames.ACCEPT.toString(), HttpHeaderNames.CONTENT_TYPE.toString())).allowedMethods(Set.of(HttpMethod.GET, HttpMethod.POST, HttpMethod.OPTIONS, HttpMethod.DELETE, HttpMethod.PATCH, HttpMethod.PUT)).allowCredentials(true);
-        this.scxBodyHandler = new ScxBodyHandler();
+        this.faviconHandler = new FaviconHandlerImpl(scx.vertx(), Path.of(scx.scxEasyConfig().templateRoot().toString(), "favicon.ico").toString());
+        this.corsHandler = new CorsHandlerImpl(scx.scxEasyConfig().allowedOrigin()).allowedHeaders(Set.of(HttpHeaderNames.ACCEPT.toString(), HttpHeaderNames.CONTENT_TYPE.toString())).allowedMethods(Set.of(HttpMethod.GET, HttpMethod.POST, HttpMethod.OPTIONS, HttpMethod.DELETE, HttpMethod.PATCH, HttpMethod.PUT)).allowCredentials(true);
+        this.bodyHandler = BodyHandler.create(scx.scxEnvironment().getTempPath(BodyHandler.DEFAULT_UPLOADS_DIRECTORY).toString()).setBodyLimit(ScxConstant.DEFAULT_BODY_LIMIT).setMergeFormAttributes(false).setDeleteUploadedFilesOnEnd(true);
         //注册路由
         this.faviconHandlerRoute = this.vertxRouter.route().handler(faviconHandler);
         this.corsHandlerRoute = this.vertxRouter.route().handler(corsHandler);
-        this.scxBodyHandlerRoute = this.vertxRouter.route().handler(scxBodyHandler);
-        registerScxMappingHandler(scxBeanFactory, scxMappingConfiguration, metadataList);
+        this.bodyHandlerRoute = this.vertxRouter.route().handler(bodyHandler);
+        registerScxMappingHandler(scx);
     }
 
     /**
@@ -105,18 +98,17 @@ public final class ScxHttpRouter {
     /**
      * 扫描所有被 ScxMapping注解标记的方法 并封装为 ScxMappingHandler.
      *
-     * @param scxHttpRouterConfiguration s
-     * @param metadataList               a
-     * @param scxBeanFactory             a {@link cool.scx.ScxBeanFactory} object
+     * @param scx s
      */
-    private void registerScxMappingHandler(ScxBeanFactory scxBeanFactory, ScxMappingConfiguration scxHttpRouterConfiguration, List<ScxModuleMetadata<?>> metadataList) {
+    private void registerScxMappingHandler(Scx scx) {
+        var metadataList = scx.scxModuleMetadataList();
         SCX_MAPPING_HANDLER_LIST.clear();
         for (var m : metadataList) {
             for (var clazz : m.scxMappingClassList()) {
                 for (var method : clazz.getMethods()) {
                     if (method.isAnnotationPresent(ScxMapping.class)) {
                         //现根据 注解 和 方法等创建一个路由
-                        var s = new ScxMappingHandler(clazz, method, scxBeanFactory, scxHttpRouterConfiguration, this);
+                        var s = new ScxMappingHandler(clazz, method, scx, this);
                         //此处校验路由是否已经存在
                         if (!checkScxMappingHandlerRouteExists(s)) {
                             SCX_MAPPING_HANDLER_LIST.add(s);
@@ -198,8 +190,8 @@ public final class ScxHttpRouter {
      *
      * @return a
      */
-    public ScxBodyHandler scxBodyHandler() {
-        return scxBodyHandler;
+    public BodyHandler bodyHandler() {
+        return bodyHandler;
     }
 
     /**
@@ -225,8 +217,8 @@ public final class ScxHttpRouter {
      *
      * @return a
      */
-    public Route scxBodyHandlerRoute() {
-        return scxBodyHandlerRoute;
+    public Route bodyHandlerRoute() {
+        return bodyHandlerRoute;
     }
 
     /**
