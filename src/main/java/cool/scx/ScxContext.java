@@ -288,7 +288,7 @@ public final class ScxContext {
      *
      * @return a
      */
-    public Path getTempPath() {
+    public static Path getTempPath() {
         return environment().getTempPath();
     }
 
@@ -298,7 +298,7 @@ public final class ScxContext {
      * @param paths a
      * @return a
      */
-    public Path getTempPath(String... paths) {
+    public static Path getTempPath(String... paths) {
         return environment().getTempPath(paths);
     }
 

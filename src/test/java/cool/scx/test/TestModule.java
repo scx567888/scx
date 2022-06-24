@@ -20,6 +20,8 @@ import cool.scx.util.NetUtils;
 import cool.scx.util.RandomUtils;
 import cool.scx.util.StopWatch;
 import cool.scx.util.URIBuilder;
+import cool.scx.util.exception.ScxExceptionHelper;
+import cool.scx.util.file.FileUtils;
 import cool.scx.util.http.FormData;
 import cool.scx.util.http.HttpClientHelper;
 import io.vertx.ext.web.handler.FileSystemAccess;
@@ -29,6 +31,7 @@ import org.springframework.scheduling.support.CronTrigger;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
@@ -136,6 +139,7 @@ public class TestModule implements ScxModule {
 
     @Test
     public static void test1() {
+        ScxExceptionHelper.wrap(() -> FileUtils.write(ScxContext.getTempPath("test.txt"), "内容2内容2内容2内容2😂😂😂!!!".getBytes(StandardCharsets.UTF_8)));
         var ip = NetUtils.getLocalIPAddress().v4()[0];
         var logger = LoggerFactory.getLogger(TestModule.class);
         //测试 URIBuilder
@@ -146,7 +150,9 @@ public class TestModule implements ScxModule {
                         URIBuilder.of(s)
                                 .addParam("name", "小明😊123?!@%^&**()_特-殊 字=符")
                                 .addParam("age", 18).toString(),
-                        new FormData().addFile("content", "内容内容内容内容内容".getBytes(StandardCharsets.UTF_8), "", "")
+                        new FormData()
+                                .addFile("content", "内容内容内容内容内容".getBytes(StandardCharsets.UTF_8), "", "")
+                                .addFile("content1", new File(ScxContext.getTempPath("test.txt").toString()))
                 ).body();
                 logger.error("测试请求[{}] : {}", i, stringHttpResponse);
             } catch (IOException | InterruptedException e) {
