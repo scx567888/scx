@@ -316,7 +316,7 @@ public final class Scx {
             this.scxEasyConfig.showEasyConfigInfo();
         }
         //2, 初始化路由 (Http 和 WebSocket)
-        this.scxHttpRouter = new ScxHttpRouter(this.scxMappingConfiguration, this.scxEasyConfig, this.vertx, this.scxModuleMetadataList, this.scxBeanFactory);
+        this.scxHttpRouter = new ScxHttpRouter(this);
         this.scxWebSocketRouter = new ScxWebSocketRouter(this.scxModuleMetadataList, this.scxBeanFactory);
         //3, 依次执行 模块的 start 生命周期 , 在这里我们可以操作 scxRouteRegistry, vertxRouter 等对象 "手动注册新路由" 或其他任何操作
         this.startAllScxModules();

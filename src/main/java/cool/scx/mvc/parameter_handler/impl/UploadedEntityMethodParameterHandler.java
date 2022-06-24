@@ -1,11 +1,13 @@
 package cool.scx.mvc.parameter_handler.impl;
 
+import cool.scx.ScxContext;
 import cool.scx.annotation.FromUpload;
 import cool.scx.mvc.parameter_handler.RequiredParamEmptyException;
 import cool.scx.mvc.parameter_handler.ScxMappingMethodParameterHandler;
 import cool.scx.mvc.parameter_handler.ScxMappingRoutingContextInfo;
 import cool.scx.type.UploadedEntity;
 import cool.scx.util.StringUtils;
+import io.vertx.ext.web.RoutingContext;
 
 import java.lang.reflect.Parameter;
 
@@ -21,6 +23,17 @@ public final class UploadedEntityMethodParameterHandler implements ScxMappingMet
      * a
      */
     public static final UploadedEntityMethodParameterHandler DEFAULT_INSTANCE = new UploadedEntityMethodParameterHandler();
+
+    private static UploadedEntity findUploadedEntityByName(RoutingContext routingContext, String name) {
+        var fileUploads = routingContext.fileUploads();
+        for (var f : fileUploads) {
+            if (name.equals(f.name())) {
+                var content = ScxContext.vertx().fileSystem().readFileBlocking(f.uploadedFileName());
+                return new UploadedEntity(f.name(), f.fileName(), f.size(), content, f.contentType(), f.charSet());
+            }
+        }
+        return null;
+    }
 
     /**
      * {@inheritDoc}
@@ -45,7 +58,7 @@ public final class UploadedEntityMethodParameterHandler implements ScxMappingMet
             required = fromUpload.required();
         }
 
-        var v = context.uploadedEntityMap().get(name);
+        var v = findUploadedEntityByName(context.routingContext(), name);
         //为空的时候做两个处理 即必填则报错 非必填则返回 null
         if (required && v == null) {
             throw new RequiredParamEmptyException("必填参数不能为空 !!! 参数名称 [" + name + "] , 参数来源 [FromUpload] , 参数类型 [" + parameter.getParameterizedType().getTypeName() + "]");

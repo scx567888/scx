@@ -16,7 +16,12 @@ public final class ScxEnvironment {
      * 项目根模块 所在路径
      * 默认取 所有自定义模块的最后一个 所在的文件根目录
      */
-    private final Path appRootFile;
+    private final Path appRootPath;
+
+    /**
+     * 临时目录路径
+     */
+    private final Path tempPath;
 
     /**
      * 根据 class 推断 class 根目录
@@ -24,7 +29,8 @@ public final class ScxEnvironment {
      * @param mainClass class
      */
     public ScxEnvironment(Class<?> mainClass) {
-        this.appRootFile = initAppRoot(mainClass);
+        this.appRootPath = initAppRoot(mainClass);
+        this.tempPath = getPathByAppRoot("AppRoot:_TEMP");
     }
 
     /**
@@ -56,10 +62,29 @@ public final class ScxEnvironment {
      */
     public Path getPathByAppRoot(String path) {
         if (path.startsWith("AppRoot:")) {
-            return Path.of(this.appRootFile.toString(), path.substring("AppRoot:".length()));
+            return Path.of(this.appRootPath.toString(), path.substring("AppRoot:".length()));
         } else {
             return Path.of(path);
         }
+    }
+
+    /**
+     * 获取临时路径
+     *
+     * @return a
+     */
+    public Path getTempPath() {
+        return tempPath;
+    }
+
+    /**
+     * 获取临时路径
+     *
+     * @param paths a
+     * @return a
+     */
+    public Path getTempPath(String... paths) {
+        return Path.of(this.tempPath.toString(), paths);
     }
 
 }

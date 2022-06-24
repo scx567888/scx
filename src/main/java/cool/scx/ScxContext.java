@@ -283,4 +283,23 @@ public final class ScxContext {
         return environment().getPathByAppRoot(path);
     }
 
+    /**
+     * 获取临时路径
+     *
+     * @return a
+     */
+    public Path getTempPath() {
+        return environment().getTempPath();
+    }
+
+    /**
+     * 获取临时路径
+     *
+     * @param paths a
+     * @return a
+     */
+    public Path getTempPath(String... paths) {
+        return environment().getTempPath(paths);
+    }
+
 }

@@ -1,6 +1,6 @@
 package cool.scx.mvc;
 
-import cool.scx.ScxBeanFactory;
+import cool.scx.Scx;
 import cool.scx.ScxContext;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.enumeration.HttpMethod;
@@ -81,23 +81,22 @@ public final class ScxMappingHandler implements Handler<RoutingContext> {
     /**
      * a
      *
-     * @param clazz                      a
-     * @param method                     a
-     * @param scxBeanFactory             a
-     * @param scxHttpRouterConfiguration a
-     * @param scxHttpRouter              a
+     * @param clazz         a
+     * @param method        a
+     * @param scx           a
+     * @param scxHttpRouter a
      */
-    public ScxMappingHandler(Class<?> clazz, Method method, ScxBeanFactory scxBeanFactory, ScxMappingConfiguration scxHttpRouterConfiguration, ScxHttpRouter scxHttpRouter) {
+    public ScxMappingHandler(Class<?> clazz, Method method, Scx scx, ScxHttpRouter scxHttpRouter) {
         var methodScxMapping = method.getAnnotation(ScxMapping.class);
         var classScxMapping = clazz.getAnnotation(ScxMapping.class);
         this.clazz = clazz;
         this.method = method;
-        this.example = scxBeanFactory.getBean(clazz);
+        this.example = scx.scxBeanFactory().getBean(clazz);
         this.url = getUrl(classScxMapping, methodScxMapping);
         this.patternUrl = getPatternUrl(this.url);
         this.httpMethods = getHttpMethod(methodScxMapping);
         this.method.setAccessible(true);
-        this.scxMappingConfiguration = scxHttpRouterConfiguration;
+        this.scxMappingConfiguration = scx.scxMappingConfiguration();
         this.scxHttpRouter = scxHttpRouter;
     }
 

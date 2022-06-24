@@ -143,7 +143,7 @@ public class TestModule implements ScxModule {
             try {
                 var s = "http://" + ip + ":8888/test0";
                 var stringHttpResponse = HttpClientHelper.post(
-                        new URIBuilder(s)
+                        URIBuilder.of(s)
                                 .addParam("name", "小明😊123?!@%^&**()_特-殊 字=符")
                                 .addParam("age", 18).toString(),
                         new FormData().addFile("content", "内容内容内容内容内容".getBytes(StandardCharsets.UTF_8), "", "")
