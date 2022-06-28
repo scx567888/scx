@@ -15,7 +15,7 @@ public final class ScxConstant {
     /**
      * SCX 版本号
      */
-    public static final String SCX_VERSION = "1.15.5";
+    public static final String SCX_VERSION = "1.15.6";
 
     /**
      * 默认 http 请求 body 限制大小

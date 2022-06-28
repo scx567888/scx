@@ -1,7 +1,6 @@
 package cool.scx.util;
 
 import java.util.Arrays;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -13,18 +12,7 @@ import java.util.stream.Collectors;
 public final class StringUtils {
 
     /**
-     * 创建重复字符串
-     *
-     * @param str   源字符串
-     * @param count 重复次数
-     * @return 结果
-     */
-    public static String repeat(String str, int count) {
-        return repeat(str, count, "");
-    }
-
-    /**
-     * 创建重复字符串
+     * 创建重复字符串 (带分隔符)
      *
      * @param sourceStr 源字符串
      * @param count     重复次数
@@ -32,29 +20,9 @@ public final class StringUtils {
      * @return 结果
      */
     public static String repeat(String sourceStr, int count, String delimiter) {
-        Objects.requireNonNull(sourceStr);
-        Objects.requireNonNull(delimiter);
-        if (count <= 1) {
-            if (count < 0) {
-                throw new IllegalArgumentException("无效的 count: " + count);
-            }
-            return count == 0 ? "" : sourceStr;
-        }
-
-        var element = sourceStr + delimiter;//我们将一个原始字符串和一个分隔符拼接为一个整体并称之为 element
-        var elementLength = element.length();
-        var longSize = (long) elementLength * count - delimiter.length();// 减去最后的分割符的长度即为总长度
-        var size = (int) longSize;
-        if (size != longSize) {
-            throw new ArrayIndexOutOfBoundsException("生成的字符串长度超出上限 : " + longSize);
-        }
-
-        char[] array = new char[size];
-        element.getChars(0, elementLength, array, 0);//填充原始 char 数据
-        for (int n = elementLength; n < size; n = n * 2) {//指数增长的方式复制填充
-            System.arraycopy(array, 0, array, n, Math.min(n, size - n));
-        }
-        return new String(array);
+        var str = sourceStr + delimiter;
+        var result = str.repeat(count);
+        return result.substring(0, result.length() - delimiter.length());
     }
 
     /**
