@@ -6,9 +6,11 @@ import io.netty.handler.codec.http.QueryStringEncoder;
 
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * a
@@ -53,6 +55,16 @@ public final class URIBuilder {
      */
     public static URIBuilder of(URI uri) {
         return new URIBuilder(new QueryStringDecoder(uri, StandardCharsets.UTF_8));
+    }
+
+    /**
+     * 清理多个 uri 并拼接 清理前 : ["a/b/", "/c"] -- 清理后 : "/a/b/c"
+     *
+     * @param uris 需要清理的 uri 集合
+     * @return 拼接后的结果
+     */
+    public static String join(String... uris) {
+        return Arrays.stream(String.join("/", uris).split("/")).filter(StringUtils::notBlank).collect(Collectors.joining("/", "/", ""));
     }
 
     /**
