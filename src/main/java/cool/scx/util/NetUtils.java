@@ -34,10 +34,10 @@ public final class NetUtils {
         var xRealIP = "";
         var xForwardedFor = new String[]{};
         var remoteAddress = "";
-        if (StringUtils.isNotBlank(xRealIPStr) && !"unknown".equalsIgnoreCase(xRealIPStr)) {
+        if (StringUtils.notBlank(xRealIPStr) && !"unknown".equalsIgnoreCase(xRealIPStr)) {
             xRealIP = xRealIPStr;
         }
-        if (StringUtils.isNotBlank(xForwardedForStr) && !"unknown".equalsIgnoreCase(xForwardedForStr)) {
+        if (StringUtils.notBlank(xForwardedForStr) && !"unknown".equalsIgnoreCase(xForwardedForStr)) {
             xForwardedFor = xForwardedForStr.split(",");
         }
         if (remoteAddressStr.equals("0:0:0:0:0:0:0:1")) {
@@ -45,7 +45,7 @@ public final class NetUtils {
         } else {
             remoteAddress = remoteAddressStr;
         }
-        if (StringUtils.isNotBlank(xRealIP)) {
+        if (StringUtils.notBlank(xRealIP)) {
             return xRealIP;
         } else if (xForwardedFor.length > 0) {
             return xForwardedFor[0];

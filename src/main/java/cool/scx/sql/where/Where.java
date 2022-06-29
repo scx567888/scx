@@ -299,7 +299,7 @@ public final class Where {
      */
     public String[] getWhereClauses() {
         var stringStream = whereBodyList.stream().map(WhereBody::whereClause);
-        if (StringUtils.isNotBlank(this.whereSQL)) {
+        if (StringUtils.notBlank(this.whereSQL)) {
             stringStream = Stream.concat(stringStream, Stream.of(this.whereSQL));
         }
         return stringStream.toArray(String[]::new);

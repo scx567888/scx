@@ -3,7 +3,7 @@ package cool.scx.websocket;
 import cool.scx.ScxBeanFactory;
 import cool.scx.ScxModuleMetadata;
 import cool.scx.annotation.ScxWebSocketMapping;
-import cool.scx.util.StringUtils;
+import cool.scx.util.URIBuilder;
 import io.vertx.core.Handler;
 import io.vertx.core.http.ServerWebSocket;
 import org.slf4j.Logger;
@@ -39,7 +39,7 @@ public final class ScxWebSocketRouter implements Handler<ServerWebSocket> {
     public ScxWebSocketRouter(List<ScxModuleMetadata<?>> metadataList, ScxBeanFactory scxBeanFactory) {
         for (var m : metadataList) {
             for (var clazz : m.scxWebSocketRouteClassList()) {
-                var path = StringUtils.cleanHttpURL(clazz.getAnnotation(ScxWebSocketMapping.class).value());
+                var path = URIBuilder.join(clazz.getAnnotation(ScxWebSocketMapping.class).value());
                 var baseWebSocketHandler = scxBeanFactory.getBean(clazz);
                 addRoute(new ScxWebSocketRoute(path, baseWebSocketHandler));
             }

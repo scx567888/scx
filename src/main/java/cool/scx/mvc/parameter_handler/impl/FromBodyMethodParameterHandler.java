@@ -103,7 +103,7 @@ public final class FromBodyMethodParameterHandler implements ScxMappingMethodPar
         var fromBody = parameter.getAnnotation(FromBody.class);
         if (fromBody != null) {
             required = fromBody.required();
-            if (StringUtils.isNotBlank(fromBody.value())) {
+            if (StringUtils.notBlank(fromBody.value())) {
                 name = fromBody.value();
             }
             useAllBody = fromBody.useAllBody();

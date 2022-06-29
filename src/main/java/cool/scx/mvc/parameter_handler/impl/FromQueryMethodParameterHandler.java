@@ -78,7 +78,7 @@ public final class FromQueryMethodParameterHandler implements ScxMappingMethodPa
         var fromQuery = parameter.getAnnotation(FromQuery.class);
         if (fromQuery != null) {
             required = fromQuery.required();
-            if (StringUtils.isNotBlank(fromQuery.value())) {
+            if (StringUtils.notBlank(fromQuery.value())) {
                 name = fromQuery.value();
             }
             merge = fromQuery.merge();

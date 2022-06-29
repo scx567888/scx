@@ -83,7 +83,7 @@ interface WhereTypeHandler {
             if (whereParams.length == 0) {
                 throw new ValidParamListIsEmptyException(whereType);
             }
-            v1 = "(" + StringUtils.repeat("?", whereParams.length, ", ") + ")";
+            v1 = "(" + StringUtils.repeat("?", ", ", whereParams.length) + ")";
         }
         var whereClause = columnName + " " + whereType.keyWord() + " " + v1;
         return Tuples.of(whereParams, whereClause);
@@ -133,7 +133,7 @@ interface WhereTypeHandler {
             whereParams = new Object[]{jsonContainsParams};
         }
         var whereClause = whereType.keyWord() + "(" + columnName;
-        if (StringUtils.isNotBlank(c.value1())) {
+        if (StringUtils.notBlank(c.value1())) {
             whereClause = whereClause + ", " + v1 + ", '$" + c.value1() + "')";
         } else {
             whereClause = whereClause + ", " + v1 + ")";

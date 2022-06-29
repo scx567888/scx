@@ -55,10 +55,10 @@ public final class ScxDaoTableInfo {
      */
     private static String initTableName(Class<?> clazz) {
         var scxModel = clazz.getAnnotation(ScxModel.class);
-        if (scxModel != null && StringUtils.isNotBlank(scxModel.tableName())) {
+        if (scxModel != null && StringUtils.notBlank(scxModel.tableName())) {
             return scxModel.tableName();
         }
-        if (scxModel != null && StringUtils.isNotBlank(scxModel.tablePrefix())) {
+        if (scxModel != null && StringUtils.notBlank(scxModel.tablePrefix())) {
             return scxModel.tablePrefix() + "_" + CaseUtils.toSnake(clazz.getSimpleName());
         }
         //这里判断一下是否使用了数据库 如果使用 则表名省略掉 数据库限定名 否则的话则添加数据库限定名

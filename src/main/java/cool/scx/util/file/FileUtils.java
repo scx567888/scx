@@ -87,7 +87,7 @@ public final class FileUtils {
         }
         var group = matcher.group(2);
         long amount = Long.parseLong(matcher.group(1));
-        var s = StringUtils.isNotBlank(group) ? DISPLAY_SIZE_MAP.get(group) : DISPLAY_SIZE_MAP.get("B");
+        var s = StringUtils.notBlank(group) ? DISPLAY_SIZE_MAP.get(group) : DISPLAY_SIZE_MAP.get("B");
         return Math.multiplyExact(amount, s);
     }
 
