@@ -213,7 +213,7 @@ public class BasicService<Entity> {
             var selectColumnInfos = selectFilter.filter(scxDaoTableInfo.columnInfos());
             var sql0 = SQLBuilder.Select(selectColumnInfos).From(scxDaoTableInfo.tableName()).Where(query.where()).GroupBy(query.groupBy()).OrderBy(query.orderBy()).Limit(query.pagination()).GetSQL();
             var sql = SQLBuilder.Select(Arrays.stream(selectColumnInfos).map(ScxDaoColumnInfo::fieldName).toArray(String[]::new)).From("(" + sql0 + ")").GetSQL();
-            return PlaceholderSQL.of(sql + " AS " + scxDaoTableInfo.tableName() + "_" + RandomUtils.getRandomString(6, true), query.where().getWhereParams());
+            return PlaceholderSQL.of(sql + " AS " + scxDaoTableInfo.tableName() + "_" + RandomUtils.randomString(6), query.where().getWhereParams());
         }
     }
 

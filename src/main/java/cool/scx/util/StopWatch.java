@@ -47,7 +47,7 @@ public final class StopWatch {
      * @return a
      */
     public static String start() {
-        var randomName = RandomUtils.getRandomString(6, true);
+        var randomName = RandomUtils.randomString(6);
         start(randomName);
         return randomName;
     }
