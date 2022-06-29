@@ -65,10 +65,10 @@ public final class ScxLoggerConfiguration {
         if (loggers != null) {
             for (var logger : loggers) {
                 var name = logger.get("name");
-                if (StringUtils.isNotBlank(name)) {
+                if (StringUtils.notBlank(name)) {
                     var level = ScxLoggingLevel.of(logger.get("level"), null);
                     var type = ScxLoggingType.of(logger.get("type"), null);
-                    var storedDirectory = StringUtils.isNotBlank(logger.get("stored-directory")) ? scxEnvironment.getPathByAppRoot(logger.get("stored-directory")) : null;
+                    var storedDirectory = StringUtils.notBlank(logger.get("stored-directory")) ? scxEnvironment.getPathByAppRoot(logger.get("stored-directory")) : null;
                     var stackTrace = ObjectUtils.convertValue(logger.get("stack-trace"), Boolean.class);
                     ScxLoggerFactory.updateLogger(name, level, type, storedDirectory, stackTrace);
                 }

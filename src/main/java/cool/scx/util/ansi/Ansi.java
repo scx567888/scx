@@ -40,7 +40,7 @@ public final class Ansi {
     /**
      * 下一个颜色 做内部索引使用
      */
-    private static int nextPrintColor = RandomUtils.getRandomNumber(0, ANSI_COLORS.length);
+    private static int nextPrintColor = RandomUtils.randomNumber(0, ANSI_COLORS.length);
 
     /**
      * 是否开启颜色

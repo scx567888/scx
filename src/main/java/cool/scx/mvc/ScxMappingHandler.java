@@ -6,7 +6,7 @@ import cool.scx.annotation.ScxMapping;
 import cool.scx.enumeration.HttpMethod;
 import cool.scx.http.ScxHttpRouter;
 import cool.scx.util.CaseUtils;
-import cool.scx.util.StringUtils;
+import cool.scx.util.URIBuilder;
 import cool.scx.util.exception.ScxExceptionHelper;
 import io.vertx.core.Handler;
 import io.vertx.ext.web.RoutingContext;
@@ -127,7 +127,7 @@ public final class ScxMappingHandler implements Handler<RoutingContext> {
         } else {
             urlArray[1] = methodScxMapping.value();
         }
-        return StringUtils.cleanHttpURL(urlArray);
+        return URIBuilder.join(urlArray);
     }
 
     /**

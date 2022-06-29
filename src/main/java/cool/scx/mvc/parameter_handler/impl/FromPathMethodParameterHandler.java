@@ -77,7 +77,7 @@ public final class FromPathMethodParameterHandler implements ScxMappingMethodPar
         var fromPath = parameter.getAnnotation(FromPath.class);
         if (fromPath != null) {
             required = fromPath.required();
-            if (StringUtils.isNotBlank(fromPath.value())) {
+            if (StringUtils.notBlank(fromPath.value())) {
                 name = fromPath.value();
             }
             merge = fromPath.merge();

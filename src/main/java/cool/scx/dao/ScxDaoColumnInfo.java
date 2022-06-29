@@ -87,7 +87,7 @@ public final class ScxDaoColumnInfo {
         this.columnName = CaseUtils.toSnake(this.field.getName());
         var column = field.getAnnotation(Column.class);
         if (column != null) {
-            this.type = StringUtils.isNotBlank(column.type()) ? column.type() : SQLHelper.getMySQLTypeCreateName(field.getType());
+            this.type = StringUtils.notBlank(column.type()) ? column.type() : SQLHelper.getMySQLTypeCreateName(field.getType());
         } else {
             this.type = SQLHelper.getMySQLTypeCreateName(field.getType());
         }
@@ -115,10 +115,10 @@ public final class ScxDaoColumnInfo {
             if (column.autoIncrement()) {
                 tempList.add("AUTO_INCREMENT");
             }
-            if (StringUtils.isNotBlank(column.defaultValue())) {
+            if (StringUtils.notBlank(column.defaultValue())) {
                 tempList.add("DEFAULT " + column.defaultValue());
             }
-            if (StringUtils.isNotBlank(column.onUpdateValue())) {
+            if (StringUtils.notBlank(column.onUpdateValue())) {
                 tempList.add("ON UPDATE " + column.onUpdateValue());
             }
         } else {

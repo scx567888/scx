@@ -182,7 +182,7 @@ public final class SQLHelper {
     public static String getColumnName(String name, boolean useJsonExtract, boolean useOriginalName) {
         if (useJsonExtract) {
             var c = splitIntoColumnNameAndFieldPath(name);
-            if (StringUtils.isNotBlank(c.value0()) && StringUtils.isNotBlank(c.value1())) {
+            if (StringUtils.notBlank(c.value0()) && StringUtils.notBlank(c.value1())) {
                 var jsonQueryColumnName = useOriginalName ? c.value0() : CaseUtils.toSnake(c.value0());
                 return jsonQueryColumnName + " -> " + "'$" + c.value1() + "'";
             } else {

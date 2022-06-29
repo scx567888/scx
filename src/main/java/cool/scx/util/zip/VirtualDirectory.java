@@ -48,8 +48,8 @@ public final class VirtualDirectory extends AbstractVirtualFile {
      * @return a
      */
     private static String[] getValidPaths(String paths) {
-        if (StringUtils.isNotBlank(paths)) {
-            return Arrays.stream(paths.split("/")).filter(StringUtils::isNotBlank).toArray(String[]::new);
+        if (StringUtils.notBlank(paths)) {
+            return Arrays.stream(paths.split("/")).filter(StringUtils::notBlank).toArray(String[]::new);
         } else {
             throw new IllegalArgumentException("Path 不能为空");
         }

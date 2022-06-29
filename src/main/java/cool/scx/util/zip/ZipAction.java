@@ -103,7 +103,7 @@ public final class ZipAction {
                 @Override
                 public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
                     var zipEntryPath = sourceFilePath.relativize(dir).toString();
-                    if (StringUtils.isNotBlank(zipEntryPath)) {
+                    if (StringUtils.notBlank(zipEntryPath)) {
                         if (attrs.isDirectory()) {
                             var zipEntry = new ZipEntry(zipEntryPath + "/");
                             zos.putNextEntry(zipEntry);
@@ -116,7 +116,7 @@ public final class ZipAction {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                     var zipEntryPath = sourceFilePath.relativize(file).toString();
-                    if (StringUtils.isNotBlank(zipEntryPath)) {
+                    if (StringUtils.notBlank(zipEntryPath)) {
                         ZipEntry zipEntry;
                         if (attrs.isDirectory()) {
                             zipEntry = new ZipEntry(zipEntryPath + "/");

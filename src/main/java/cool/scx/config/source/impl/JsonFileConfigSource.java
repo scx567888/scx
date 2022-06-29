@@ -2,7 +2,6 @@ package cool.scx.config.source.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.config.source.ScxConfigSource;
-import cool.scx.util.MapUtils;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.ansi.Ansi;
 
@@ -34,7 +33,7 @@ public final class JsonFileConfigSource implements ScxConfigSource {
                 throw new JsonConfigFileMissingException();
             }
             var rawMap = ObjectUtils.jsonMapper().readValue(jsonFile, ObjectUtils.MAP_TYPE);
-            configMapping.putAll(MapUtils.flatMap(rawMap, null));
+            configMapping.putAll(ObjectUtils.flatMap(rawMap));
             Ansi.out().brightBlue("Y 已加载配置文件 : " + jsonFile.getPath()).println();
         } catch (Exception e) {
             if (e instanceof JsonConfigFileMissingException) {

@@ -9,6 +9,7 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -45,6 +46,56 @@ public final class ObjectUtils {
     private static final XmlMapper XML_MAPPER = JacksonHelper.setIgnoreJsonIgnore(JacksonHelper.initXmlMapper());
 
     /**
+     * 获取 jsonMapper
+     *
+     * @return a
+     */
+    public static JsonMapper jsonMapper() {
+        return JSON_MAPPER;
+    }
+
+    /**
+     * 获取 xmlMapper
+     *
+     * @return a
+     */
+    public static XmlMapper xmlMapper() {
+        return XML_MAPPER;
+    }
+
+    /**
+     * a
+     *
+     * @param type a
+     * @return a
+     */
+    public static JavaType constructType(Type type) {
+        return JSON_MAPPER.getTypeFactory().constructType(type);
+    }
+
+    /**
+     * a
+     *
+     * @param typeRef a
+     * @return a
+     */
+    public static JavaType constructType(TypeReference<?> typeRef) {
+        return constructType(typeRef.getType());
+    }
+
+    /**
+     * a
+     *
+     * @param fromValue a
+     * @param javaType  a
+     * @param <T>       a
+     * @return a
+     */
+    public static <T> T convertValue(Object fromValue, JavaType javaType) {
+        return JSON_MAPPER.convertValue(fromValue, javaType);
+    }
+
+    /**
      * a
      *
      * @param fromValue a
@@ -53,7 +104,7 @@ public final class ObjectUtils {
      * @return a
      */
     public static <T> T convertValue(Object fromValue, Class<T> tClass) {
-        return jsonMapper().convertValue(fromValue, tClass);
+        return convertValue(fromValue, constructType(tClass));
     }
 
     /**
@@ -65,7 +116,7 @@ public final class ObjectUtils {
      * @return a
      */
     public static <T> T convertValue(Object fromValue, Type toValueType) {
-        return jsonMapper().convertValue(fromValue, constructType(toValueType));
+        return convertValue(fromValue, constructType(toValueType));
     }
 
     /**
@@ -77,7 +128,7 @@ public final class ObjectUtils {
      * @return a
      */
     public static <T> T convertValue(Object fromValue, TypeReference<T> toValueTypeRef) {
-        return jsonMapper().convertValue(fromValue, toValueTypeRef);
+        return convertValue(fromValue, constructType(toValueTypeRef));
     }
 
     /**
@@ -122,7 +173,7 @@ public final class ObjectUtils {
      * @throws com.fasterxml.jackson.core.JsonProcessingException a
      */
     public static String toJson(Object value) throws JsonProcessingException {
-        return jsonMapper().writeValueAsString(value);
+        return JSON_MAPPER.writeValueAsString(value);
     }
 
     /**
@@ -133,45 +184,7 @@ public final class ObjectUtils {
      * @throws com.fasterxml.jackson.core.JsonProcessingException a
      */
     public static String toXml(Object value) throws JsonProcessingException {
-        return xmlMapper().writeValueAsString(value);
-    }
-
-    /**
-     * 获取 jsonMapper
-     *
-     * @return a
-     */
-    public static JsonMapper jsonMapper() {
-        return JSON_MAPPER;
-    }
-
-    /**
-     * 获取 xmlMapper
-     *
-     * @return a
-     */
-    public static XmlMapper xmlMapper() {
-        return XML_MAPPER;
-    }
-
-    /**
-     * a
-     *
-     * @param type a
-     * @return a
-     */
-    public static JavaType constructType(Type type) {
-        return jsonMapper().getTypeFactory().constructType(type);
-    }
-
-    /**
-     * a
-     *
-     * @param typeRef a
-     * @return a
-     */
-    public static JavaType constructType(TypeReference<?> typeRef) {
-        return jsonMapper().getTypeFactory().constructType(typeRef);
+        return XML_MAPPER.writeValueAsString(value);
     }
 
     /**
@@ -229,6 +242,37 @@ public final class ObjectUtils {
             return arr;
         }
         throw new IllegalArgumentException("源数据无法转换为数组对象 !!!");
+    }
+
+    /**
+     * 将嵌套的 map 扁平化
+     *
+     * @param sourceMap 源 map
+     * @param parentKey a {@link java.lang.String} object.
+     * @return 扁平化后的 map
+     */
+    private static Map<String, Object> flatMap0(Map<?, ?> sourceMap, String parentKey) {
+        var result = new LinkedHashMap<String, Object>();
+        var prefix = StringUtils.isBlank(parentKey) ? "" : parentKey + ".";
+        sourceMap.forEach((key, value) -> {
+            var newKey = prefix + key;
+            if (value instanceof Map<?, ?> m) {
+                result.putAll(flatMap0(m, newKey));
+            } else {
+                result.put(newKey, value);
+            }
+        });
+        return result;
+    }
+
+    /**
+     * 将嵌套的 map 扁平化
+     *
+     * @param sourceMap 源 map
+     * @return 扁平化后的 map
+     */
+    public static Map<String, Object> flatMap(Map<?, ?> sourceMap) {
+        return flatMap0(sourceMap, null);
     }
 
 }

@@ -81,8 +81,8 @@ public class TestModule implements ScxModule {
                 var l = new ArrayList<Car>();
                 for (int i = 0; i < 999; i = i + 1) {
                     var c = new Car();
-                    c.name = RandomUtils.getRandomString(10, false) + "🤣";
-                    c.color = CarColor.values()[RandomUtils.getRandomNumber(0, 3)];
+                    c.name = RandomUtils.randomString(10, false) + "🤣";
+                    c.color = CarColor.values()[RandomUtils.randomNumber(0, 3)];
                     c.owner = new CarOwner("Jack", i, new String[]{"123456789", "666666666"});
                     c.tags = new String[]{"fast", "beautiful", "small", "big"};
                     l.add(c);
@@ -95,8 +95,8 @@ public class TestModule implements ScxModule {
                 StopWatch.start("save2");
                 for (int i = 0; i < 999; i = i + 1) {
                     var c = new Car();
-                    c.name = RandomUtils.getRandomString(10, false) + "😢";
-                    c.color = CarColor.values()[RandomUtils.getRandomNumber(0, 3)];
+                    c.name = RandomUtils.randomString(10, false) + "😢";
+                    c.color = CarColor.values()[RandomUtils.randomNumber(0, 3)];
                     c.owner = new CarOwner("David", i, new String[]{"987654321"});
                     carService1.add(c);
                 }
@@ -125,7 +125,7 @@ public class TestModule implements ScxModule {
                 System.err.println("现在插入 1 数据条数");
                 var bb = new Car();
                 bb.name = "唯一ID";
-                bb.color = CarColor.values()[RandomUtils.getRandomNumber(0, 3)];
+                bb.color = CarColor.values()[RandomUtils.randomNumber(0, 3)];
                 carService.add(bb);
                 System.err.println("现在数据库中数据条数 : " + carService.count());
                 System.err.println("现在在插入 1 错误数据");

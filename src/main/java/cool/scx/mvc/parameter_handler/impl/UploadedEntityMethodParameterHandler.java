@@ -59,7 +59,7 @@ public final class UploadedEntityMethodParameterHandler implements ScxMappingMet
         var required = false;
         var fromUpload = parameter.getAnnotation(FromUpload.class);
         if (fromUpload != null) {
-            if (StringUtils.isNotBlank(fromUpload.value())) {
+            if (StringUtils.notBlank(fromUpload.value())) {
                 name = fromUpload.value();
             }
             required = fromUpload.required();

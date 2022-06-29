@@ -148,7 +148,7 @@ public class WebSiteController {
      */
     @ScxMapping(method = HttpMethod.GET)
     public String getRandomCode() {
-        return RandomUtils.getRandomString(9999, true);
+        return RandomUtils.randomString(9999);
     }
 
     /**

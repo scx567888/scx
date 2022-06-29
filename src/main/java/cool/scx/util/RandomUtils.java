@@ -4,7 +4,7 @@ import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * <p>RandomUtils class.</p>
+ * 用于生成简单的随机数
  *
  * @author scx567888
  * @version 1.7.3
@@ -29,7 +29,7 @@ public final class RandomUtils {
      * @param withLetter code 中是否包含字母
      * @return a {@link java.lang.String} object
      */
-    public static String getRandomString(int size, boolean withLetter) {
+    public static String randomString(int size, boolean withLetter) {
         var code = new StringBuilder();
         var pool = withLetter ? NUMBER_AND_LETTER_POOL : NUMBER_POOL;
         for (int i = 0; i < size; i = i + 1) {
@@ -39,13 +39,23 @@ public final class RandomUtils {
     }
 
     /**
+     * 获取随机的 Code (包含字母和数字)
+     *
+     * @param size code 的长度
+     * @return a
+     */
+    public static String randomString(int size) {
+        return randomString(size, true);
+    }
+
+    /**
      * 取一个指定区间的随机数 (包含两端)
      *
      * @param min 最小值
      * @param max 最大值
      * @return 随机数
      */
-    public static int getRandomNumber(int min, int max) {
+    public static int randomNumber(int min, int max) {
         return ThreadLocalRandom.current().nextInt(min, max + 1);
     }
 
@@ -54,7 +64,7 @@ public final class RandomUtils {
      *
      * @return a {@link java.lang.String} object.
      */
-    public static String getUUID() {
+    public static String randomUUID() {
         return UUID.randomUUID().toString();
     }
 

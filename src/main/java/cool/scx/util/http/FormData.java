@@ -130,7 +130,7 @@ public final class FormData implements Body {
      */
     @Override
     public HttpRequest.BodyPublisher getBodyPublisher(HttpRequest.Builder builder) {
-        final String boundary = FORM_BOUNDARY_PREFIX + RandomUtils.getRandomString(8, true);
+        final String boundary = FORM_BOUNDARY_PREFIX + RandomUtils.randomString(8);
         builder.setHeader("content-type", "multipart/form-data; boundary=" + boundary);
         var buffer = Buffer.buffer();
         for (var formDataItem : formDataItemList) {
