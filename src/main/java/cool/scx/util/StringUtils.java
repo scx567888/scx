@@ -1,8 +1,5 @@
 package cool.scx.util;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
 /**
  * String工具类
  *
@@ -12,16 +9,19 @@ import java.util.stream.Collectors;
 public final class StringUtils {
 
     /**
-     * 创建重复字符串 (带分隔符)
+     * 创建重复字符串 (带分隔符) 拓展了 {@link String#repeat(int)} 无法添加分隔符的功能
      *
-     * @param sourceStr 源字符串
-     * @param count     重复次数
+     * @param str       源字符串
      * @param delimiter 分隔符
+     * @param count     重复次数
      * @return 结果
      */
-    public static String repeat(String sourceStr, int count, String delimiter) {
-        var str = sourceStr + delimiter;
-        var result = str.repeat(count);
+    public static String repeat(String str, String delimiter, int count) {
+        if (count == 0) {
+            return "";
+        }
+        var element = str + delimiter;
+        var result = element.repeat(count);
         return result.substring(0, result.length() - delimiter.length());
     }
 
@@ -31,7 +31,7 @@ public final class StringUtils {
      * @param str 待检查的字符串
      * @return a boolean.
      */
-    public static boolean isNotBlank(String str) {
+    public static boolean notBlank(String str) {
         return !isBlank(str);
     }
 
@@ -51,7 +51,7 @@ public final class StringUtils {
      * @param str s
      * @return s
      */
-    public static boolean isNotEmpty(String str) {
+    public static boolean notEmpty(String str) {
         return !isEmpty(str);
     }
 
@@ -63,16 +63,6 @@ public final class StringUtils {
      */
     public static boolean isEmpty(String str) {
         return str == null || str.isEmpty();
-    }
-
-    /**
-     * 清理分隔符错误的路径如 清理前 : a/b//c -- 清理后 : /a/b/c
-     *
-     * @param url 需要清理的 url 集合
-     * @return 清理后的结果
-     */
-    public static String cleanHttpURL(String... url) {
-        return Arrays.stream(String.join("/", url).split("/")).filter(StringUtils::isNotBlank).collect(Collectors.joining("/", "/", ""));
     }
 
 }
