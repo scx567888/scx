@@ -58,7 +58,7 @@ public final class URIBuilder {
     }
 
     /**
-     * 清理多个 uri 并拼接 清理前 : ["a/b/", "/c"] -- 清理后 : "/a/b/c"
+     * 拼接多个 uri 并进行一些简单的清理  例 : 处理前 ["a/b/", "/c"] 处理后 "/a/b/c"
      *
      * @param uris 需要清理的 uri 集合
      * @return 拼接后的结果
