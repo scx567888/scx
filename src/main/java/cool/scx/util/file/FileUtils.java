@@ -187,9 +187,9 @@ public final class FileUtils {
      */
     public static String getHead(String filePath, int length) throws IOException {
         try (var accessFile = new RandomAccessFile(filePath, "r")) {
-            var headByteArray = new byte[length];
-            accessFile.read(headByteArray);
-            return HexUtils.toHex(headByteArray);
+            var headBytes = new byte[length];
+            accessFile.read(headBytes);
+            return HexUtils.toHex(headBytes);
         }
     }
 

@@ -1,8 +1,8 @@
 package cool.scx.util.zip;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 
 /**
  * 虚拟文件
@@ -83,9 +83,7 @@ public final class VirtualFile extends AbstractVirtualFile {
      */
     public byte[] getBytes() throws IOException {
         if (type == 0) {
-            try (var inputStream = new FileInputStream(this.physicalFile)) {
-                return inputStream.readAllBytes();
-            }
+            return Files.readAllBytes(this.physicalFile.toPath());
         } else {
             return bytes;
         }

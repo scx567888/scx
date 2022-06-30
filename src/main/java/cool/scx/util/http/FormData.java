@@ -33,7 +33,7 @@ public final class FormData implements Body {
     /**
      * Constant <code>lineSeparatorByteArray</code>
      */
-    private static final byte[] lineSeparatorByteArray = lineSeparator.getBytes(StandardCharsets.UTF_8);
+    private static final byte[] lineSeparatorBytes = lineSeparator.getBytes(StandardCharsets.UTF_8);
 
     private final List<FormDataItem> formDataItemList = new ArrayList<>();
 
@@ -136,7 +136,7 @@ public final class FormData implements Body {
         for (var formDataItem : formDataItemList) {
             buffer.appendBytes(getStart(formDataItem, boundary));
             buffer.appendBytes(getContent(formDataItem));
-            buffer.appendBytes(lineSeparatorByteArray);
+            buffer.appendBytes(lineSeparatorBytes);
         }
         buffer.appendBytes(getEnd(boundary));
         return HttpRequest.BodyPublishers.ofByteArray(buffer.getBytes());
