@@ -24,7 +24,7 @@ public final class HexUtils {
      * @param hex hex
      * @return r
      */
-    public static byte[] toByteArray(String hex) {
+    public static byte[] toBytes(String hex) {
         var charArray = hex.toCharArray();
         var byteArray = new byte[charArray.length / 2];
         int index = 0;
