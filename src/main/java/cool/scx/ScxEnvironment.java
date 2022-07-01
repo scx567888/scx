@@ -30,7 +30,7 @@ public final class ScxEnvironment {
      */
     public ScxEnvironment(Class<?> mainClass) {
         this.appRootPath = initAppRoot(mainClass);
-        this.tempPath = getPathByAppRoot("AppRoot:_TEMP");
+        this.tempPath = getPathByAppRoot("AppRoot:_temp");
     }
 
     /**
