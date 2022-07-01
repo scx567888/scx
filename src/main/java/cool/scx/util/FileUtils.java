@@ -1,14 +1,11 @@
-package cool.scx.util.file;
+package cool.scx.util;
 
-import cool.scx.util.HexUtils;
-import cool.scx.util.StringUtils;
-
+import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.DecimalFormat;
-import java.util.HashMap;
 import java.util.regex.Pattern;
 
 /**
@@ -22,42 +19,7 @@ public final class FileUtils {
     /**
      * 文件大小格式化 正则表达式
      */
-    public final static Pattern DISPLAY_SIZE_PATTERN = Pattern.compile("^([+\\-]?\\d+)([a-zA-Z]{0,2})$");
-
-    /**
-     * Constant <code>WINDOWS_FILE_SEPARATOR="\\&quot;"</code>
-     */
-    private static final String WINDOWS_FILE_SEPARATOR = "\\";
-
-    /**
-     * Constant <code>UNIX_FILE_SEPARATOR="/"</code>
-     */
-    private static final String UNIX_FILE_SEPARATOR = "/";
-
-    /**
-     * Constant <code>FILE_EXTENSION="."</code>
-     */
-    private static final String FILE_EXTENSION = ".";
-
-    /**
-     * 文件大小格式化 映射表 方便计算使用
-     */
-    private final static HashMap<String, Long> DISPLAY_SIZE_MAP = initDisplaySizeMap();
-
-    /**
-     * <p>getDisplaySizeMap.</p>
-     *
-     * @return a {@link java.util.HashMap} object
-     */
-    private static HashMap<String, Long> initDisplaySizeMap() {
-        var tempMap = new HashMap<String, Long>();
-        tempMap.put("B", 1L);
-        tempMap.put("KB", 1024L);
-        tempMap.put("MB", 1024 * 1024L);
-        tempMap.put("GB", 1024 * 1024 * 1024L);
-        tempMap.put("TB", 1024 * 1024 * 1024 * 1024L);
-        return tempMap;
-    }
+    private final static Pattern DISPLAY_SIZE_PATTERN = Pattern.compile("^([\\d.]+) *([a-zA-Z]{0,2})$");
 
     /**
      * 将 long 类型的文件大小 格式化(转换为人类可以看懂的形式)
@@ -67,8 +29,10 @@ public final class FileUtils {
      * @return a {@link java.lang.String} object.
      */
     public static String longToDisplaySize(long size) {
-        if (size <= 0) return "0";
-        final String[] units = new String[]{"B", "KB", "MB", "GB", "TB"};
+        if (size <= 0) {
+            return "0";
+        }
+        var units = new String[]{"B", "KB", "MB", "GB", "TB"};
         int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
         return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
     }
@@ -83,12 +47,19 @@ public final class FileUtils {
     public static long displaySizeToLong(String str) {
         var matcher = DISPLAY_SIZE_PATTERN.matcher(str);
         if (!matcher.matches()) {
-            throw new IllegalArgumentException(str + " : 无法转换为 long");
+            throw new IllegalArgumentException(str + " : 无法转换为 long !!!");
         }
-        var group = matcher.group(2);
-        long amount = Long.parseLong(matcher.group(1));
-        var s = StringUtils.notBlank(group) ? DISPLAY_SIZE_MAP.get(group) : DISPLAY_SIZE_MAP.get("B");
-        return Math.multiplyExact(amount, s);
+        var amount = Double.parseDouble(matcher.group(1));
+        var units = matcher.group(2);
+        var s = switch (units) {
+            case "", "B" -> 1L;
+            case "KB" -> 1024L;
+            case "MB" -> 1024 * 1024L;
+            case "GB" -> 1024 * 1024 * 1024L;
+            case "TB" -> 1024 * 1024 * 1024 * 1024L;
+            default -> throw new IllegalArgumentException(units + " : 未知的数据单位 !!!");
+        };
+        return (long) (amount * s);
     }
 
     /**
@@ -137,6 +108,19 @@ public final class FileUtils {
     }
 
     /**
+     * 本质上就是调用 {@link Files#copy(Path, Path, CopyOption...)} ,但是在之前会创建不存在的父目录
+     *
+     * @param source  a
+     * @param target  a
+     * @param options a
+     * @throws IOException a
+     */
+    public static void copy(Path source, Path target, CopyOption... options) throws IOException {
+        Files.createDirectories(target.getParent());
+        Files.copy(source, target, options);
+    }
+
+    /**
      * 本质上就是调用 {@link Files#write(Path, byte[], OpenOption...)} ,但是在之前会创建不存在的父目录
      *
      * @param path    a
@@ -152,29 +136,25 @@ public final class FileUtils {
     /**
      * 获取拓展名 (不包括 . ) 例 : "cat.png" 会获得 "png"
      *
-     * @param fileName a {@link java.lang.String} object
+     * @param file a {@link java.lang.String} object
      * @return a {@link java.lang.String} object
      */
-    public static String getExt(String fileName) {
-        if (fileName == null) {
-            return null;
-        }
-        String extension = "";
-        int indexOfLastExtension = fileName.lastIndexOf(FILE_EXTENSION);
+    public static String getFileExtension(String file) {
+        var fileName = new File(file).getName();
+        var dotIndex = fileName.lastIndexOf('.');
+        return dotIndex == -1 ? "" : fileName.substring(dotIndex + 1);
+    }
 
-        // check last file separator, windows and unix
-        int lastSeparatorPosWindows = fileName.lastIndexOf(WINDOWS_FILE_SEPARATOR);
-        int lastSeparatorPosUnix = fileName.lastIndexOf(UNIX_FILE_SEPARATOR);
-
-        // takes the greater of the two values, which mean last file separator
-        int indexOfLastSeparator = Math.max(lastSeparatorPosWindows, lastSeparatorPosUnix);
-
-        // make sure the file extension appear after the last file separator
-        if (indexOfLastExtension > indexOfLastSeparator) {
-            extension = fileName.substring(indexOfLastExtension + 1);
-        }
-
-        return extension;
+    /**
+     * 获取文件名 (不包括拓展名 ) 例 : "cat.png" 会获得 "cat"
+     *
+     * @param file a {@link java.lang.String} object
+     * @return a {@link java.lang.String} object
+     */
+    public static String getNameWithoutExtension(String file) {
+        var fileName = new File(file).getName();
+        var dotIndex = fileName.lastIndexOf('.');
+        return dotIndex == -1 ? fileName : fileName.substring(0, dotIndex);
     }
 
     /**
@@ -191,6 +171,39 @@ public final class FileUtils {
             accessFile.read(headBytes);
             return HexUtils.toHex(headBytes);
         }
+    }
+
+    /**
+     * a
+     */
+    public enum DeleteOption {
+
+        /**
+         * 实现清空文件夹的效果
+         * 排除根目录 (删除文件为 "文件" 时无效, "目录" 时有效)
+         * 比如 未使用此选项调用 delete("/user/test") 文件夹 则 test 文件夹会被删除
+         * 若使用此选项则 会清空 test 下所有文件 test 目录则会保留
+         */
+        EXCLUDE_ROOT;
+
+        static class Info {
+
+            boolean excludeRoot;
+
+            Info(DeleteOption... options) {
+                for (var option : options) {
+                    switch (option) {
+                        case EXCLUDE_ROOT -> this.excludeRoot = true;
+                    }
+                }
+            }
+
+            boolean excludeRoot() {
+                return excludeRoot;
+            }
+
+        }
+
     }
 
 }
