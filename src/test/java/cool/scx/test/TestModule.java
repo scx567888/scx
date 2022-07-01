@@ -222,8 +222,8 @@ public class TestModule implements ScxModule {
             ZipUtils.unzip(ScxContext.getTempPath("aaaaa.zip"), ScxContext.getTempPath("hhhh"));
             ZipUtils.zip(ScxContext.getTempPath("hhhh"), ScxContext.getTempPath("bbbbb.zip"));
             //重复一次
-            ZipUtils.unzip(ScxContext.getTempPath("bbbbb.zip"), ScxContext.getTempPath("gggggg"));
-            ZipUtils.zip(ScxContext.getTempPath("gggggg"), ScxContext.getTempPath("ccccc.zip"));
+            ZipUtils.unzip(ScxContext.getTempPath("bbbbb.zip"), ScxContext.getTempPath("gggggg"), ZipUtils.ZipOption.INCLUDE_ROOT);
+            ZipUtils.zip(ScxContext.getTempPath("gggggg"), ScxContext.getTempPath("ccccc.zip"), ZipUtils.ZipOption.INCLUDE_ROOT);
         } catch (Exception e) {
             e.printStackTrace();
         }
