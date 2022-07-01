@@ -1,6 +1,6 @@
 package cool.scx;
 
-import cool.scx.util.file.FileUtils;
+import cool.scx.util.FileUtils;
 
 import java.time.format.DateTimeFormatter;
 

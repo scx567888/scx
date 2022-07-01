@@ -1,6 +1,4 @@
-package cool.scx.util.digest;
-
-import cool.scx.util.HexUtils;
+package cool.scx.util;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,10 +29,10 @@ public final class DigestUtils {
      * <p>digest.</p>
      *
      * @param data       a {@link java.lang.String} object
-     * @param digestType a {@link cool.scx.util.digest.DigestType} object
+     * @param digestType s
      * @return a {@link java.lang.String} object
      */
-    private static String digest(final String data, DigestType digestType) {
+    private static String digest(final String data, String digestType) {
         return digest(data != null ? data.getBytes(StandardCharsets.UTF_8) : null, digestType);
     }
 
@@ -42,10 +40,10 @@ public final class DigestUtils {
      * <p>digest.</p>
      *
      * @param data       an array of {@link byte} objects
-     * @param digestType a {@link cool.scx.util.digest.DigestType} object
+     * @param digestType s
      * @return a {@link java.lang.String} object
      */
-    private static String digest(final byte[] data, DigestType digestType) {
+    private static String digest(final byte[] data, String digestType) {
         Objects.requireNonNull(data, "Data must not be empty !!!");
         return HexUtils.toHex(getDigest(digestType).digest(data));
     }
@@ -54,11 +52,11 @@ public final class DigestUtils {
      * <p>digest.</p>
      *
      * @param data       a {@link java.io.File} object
-     * @param digestType a {@link cool.scx.util.digest.DigestType} object
+     * @param digestType s
      * @return a {@link java.lang.String} object
      * @throws java.io.IOException if any.
      */
-    private static String digest(final File data, DigestType digestType) throws IOException {
+    private static String digest(final File data, String digestType) throws IOException {
         Objects.requireNonNull(data, "Data must not be empty !!!");
         var digest = getDigest(digestType);
         var buffer = new byte[CACHE_LENGTH];
@@ -78,7 +76,7 @@ public final class DigestUtils {
      * @return a {@link java.lang.String} object
      */
     public static String sha1(final String data) {
-        return digest(data, DigestType.SHA_1);
+        return digest(data, "SHA-1");
     }
 
     /**
@@ -88,7 +86,7 @@ public final class DigestUtils {
      * @return a {@link java.lang.String} object
      */
     public static String sha1(final byte[] data) {
-        return digest(data, DigestType.SHA_1);
+        return digest(data, "SHA-1");
     }
 
     /**
@@ -99,7 +97,7 @@ public final class DigestUtils {
      * @throws java.io.IOException if any.
      */
     public static String sha1(final File data) throws IOException {
-        return digest(data, DigestType.SHA_1);
+        return digest(data, "SHA-1");
     }
 
     /**
@@ -109,7 +107,7 @@ public final class DigestUtils {
      * @return a {@link java.lang.String} object
      */
     public static String sha256(final String data) {
-        return digest(data, DigestType.SHA_256);
+        return digest(data, "SHA-256");
     }
 
     /**
@@ -119,7 +117,7 @@ public final class DigestUtils {
      * @return a {@link java.lang.String} object
      */
     public static String sha256(final byte[] data) {
-        return digest(data, DigestType.SHA_256);
+        return digest(data, "SHA-256");
     }
 
     /**
@@ -130,7 +128,7 @@ public final class DigestUtils {
      * @throws java.io.IOException if any.
      */
     public static String sha256(final File data) throws IOException {
-        return digest(data, DigestType.SHA_256);
+        return digest(data, "SHA-256");
     }
 
     /**
@@ -140,7 +138,7 @@ public final class DigestUtils {
      * @return a {@link java.lang.String} object
      */
     public static String sha384(final String data) {
-        return digest(data, DigestType.SHA_384);
+        return digest(data, "SHA-384");
     }
 
     /**
@@ -150,7 +148,7 @@ public final class DigestUtils {
      * @return a {@link java.lang.String} object
      */
     public static String sha384(final byte[] data) {
-        return digest(data, DigestType.SHA_384);
+        return digest(data, "SHA-384");
     }
 
     /**
@@ -161,7 +159,7 @@ public final class DigestUtils {
      * @throws java.io.IOException if any.
      */
     public static String sha384(final File data) throws IOException {
-        return digest(data, DigestType.SHA_384);
+        return digest(data, "SHA-384");
     }
 
     /**
@@ -171,7 +169,7 @@ public final class DigestUtils {
      * @return a {@link java.lang.String} object
      */
     public static String sha512(final String data) {
-        return digest(data, DigestType.SHA_512);
+        return digest(data, "SHA-512");
     }
 
     /**
@@ -181,7 +179,7 @@ public final class DigestUtils {
      * @return a {@link java.lang.String} object
      */
     public static String sha512(final byte[] data) {
-        return digest(data, DigestType.SHA_512);
+        return digest(data, "SHA-512");
     }
 
     /**
@@ -192,7 +190,7 @@ public final class DigestUtils {
      * @throws java.io.IOException if any.
      */
     public static String sha512(final File data) throws IOException {
-        return digest(data, DigestType.SHA_512);
+        return digest(data, "SHA-512");
     }
 
     /**
@@ -202,7 +200,7 @@ public final class DigestUtils {
      * @return a {@link java.lang.String} object
      */
     public static String md5(final String data) {
-        return digest(data, DigestType.MD5);
+        return digest(data, "MD5");
     }
 
     /**
@@ -212,7 +210,7 @@ public final class DigestUtils {
      * @return a {@link java.lang.String} object
      */
     public static String md5(final byte[] data) {
-        return digest(data, DigestType.MD5);
+        return digest(data, "MD5");
     }
 
     /**
@@ -223,18 +221,18 @@ public final class DigestUtils {
      * @throws java.io.IOException if any.
      */
     public static String md5(final File data) throws IOException {
-        return digest(data, DigestType.MD5);
+        return digest(data, "MD5");
     }
 
     /**
      * <p>getDigest.</p>
      *
-     * @param digestType a {@link cool.scx.util.digest.DigestType} object
+     * @param digestType s
      * @return a {@link java.security.MessageDigest} object
      */
-    private static MessageDigest getDigest(final DigestType digestType) {
+    private static MessageDigest getDigest(final String digestType) {
         try {
-            return MessageDigest.getInstance(digestType.algorithmsName());
+            return MessageDigest.getInstance(digestType);
         } catch (NoSuchAlgorithmException exception) {
             throw new IllegalArgumentException(exception);
         }

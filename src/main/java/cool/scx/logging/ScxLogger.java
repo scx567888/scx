@@ -1,7 +1,7 @@
 package cool.scx.logging;
 
+import cool.scx.util.FileUtils;
 import cool.scx.util.exception.ScxExceptionHelper;
-import cool.scx.util.file.FileUtils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

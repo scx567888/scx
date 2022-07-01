@@ -16,14 +16,13 @@ import cool.scx.test.car.CarOwner;
 import cool.scx.test.car.CarService;
 import cool.scx.test.person.Person;
 import cool.scx.test.person.PersonService;
-import cool.scx.util.NetUtils;
-import cool.scx.util.RandomUtils;
-import cool.scx.util.StopWatch;
-import cool.scx.util.URIBuilder;
+import cool.scx.util.*;
 import cool.scx.util.exception.ScxExceptionHelper;
-import cool.scx.util.file.FileUtils;
 import cool.scx.util.http.FormData;
 import cool.scx.util.http.HttpClientHelper;
+import cool.scx.util.zip.VirtualDirectory;
+import cool.scx.util.zip.VirtualFile;
+import cool.scx.util.zip.ZipUtils;
 import io.vertx.ext.web.handler.FileSystemAccess;
 import io.vertx.ext.web.handler.StaticHandler;
 import org.slf4j.LoggerFactory;
@@ -34,6 +33,8 @@ import org.testng.annotations.Test;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -48,6 +49,7 @@ public class TestModule implements ScxModule {
         test1();
         test2();
         test3();
+        test4();
     }
 
     @BeforeTest
@@ -196,6 +198,36 @@ public class TestModule implements ScxModule {
                 personService.buildListSQL(new Query().lessThan("age", 100), SelectFilter.ofIncluded("carID"))
         ));
         logger.error("第二种方式 (whereSQL) : 根据所有 person 表中年龄小于 100 的 carID 查询 car 表中的数据 总条数 {}", cars1.size());
+    }
+
+    @Test
+    public static void test4() {
+        //创建一个压缩文件先
+        try {
+            var virtualDirectory = VirtualDirectory.of("第一个目录");
+            virtualDirectory.put("第二个目录", VirtualFile.of("第二个目录中的文件.txt", "文件内容".getBytes(StandardCharsets.UTF_8)));
+            virtualDirectory.getOrCreate("这是一系列空目录/这是一系列空目录/这是一系列空目录/这是一系列空目录/这是一系列空目录");
+            var orCreate = virtualDirectory.getOrCreate("这不是一系列空目录/这不是一系列空目录/这不是一系列空目录/这不是一系列空目录/这不是一系列空目录");
+            if (orCreate instanceof VirtualDirectory a) {
+                a.put(VirtualFile.of("一个文本文件.txt", "一些内容,一些内容,一些内容,一些内容 下😊😂🤣❤😍😒👌😘".getBytes(StandardCharsets.UTF_8)));
+            }
+            Path tempPath = ScxContext.getTempPath("aaaaa.zip");
+            byte[] bytes = virtualDirectory.toZipBytes();
+            Files.write(tempPath, bytes);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            //解压在压缩
+            ZipUtils.unzip(ScxContext.getTempPath("aaaaa.zip"), ScxContext.getTempPath("hhhh"));
+            ZipUtils.zip(ScxContext.getTempPath("hhhh"), ScxContext.getTempPath("bbbbb.zip"));
+            //重复一次
+            ZipUtils.unzip(ScxContext.getTempPath("bbbbb.zip"), ScxContext.getTempPath("gggggg"), ZipUtils.ZipOption.INCLUDE_ROOT);
+            ZipUtils.zip(ScxContext.getTempPath("gggggg"), ScxContext.getTempPath("ccccc.zip"), ZipUtils.ZipOption.INCLUDE_ROOT);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**

@@ -24,34 +24,34 @@ public final class HexUtils {
      * @param hex hex
      * @return r
      */
-    public static byte[] toByteArray(String hex) {
+    public static byte[] toBytes(String hex) {
         var charArray = hex.toCharArray();
-        var byteArray = new byte[charArray.length / 2];
+        var bytes = new byte[charArray.length / 2];
         int index = 0;
-        while (index < byteArray.length) {
+        while (index < bytes.length) {
             var highBit = HEX_CHAR_POOL_STR.indexOf(charArray[index * 2]);
             var lowBit = HEX_CHAR_POOL_STR.indexOf(charArray[index * 2 + 1]);
-            byteArray[index] = (byte) (highBit << 4 | lowBit);
+            bytes[index] = (byte) (highBit << 4 | lowBit);
             index = index + 1;
         }
-        return byteArray;
+        return bytes;
     }
 
     /**
      * 字节数组转十六进制
      *
-     * @param byteArray an array of {@link byte} objects.
+     * @param bytes an array of {@link byte} objects.
      * @return a {@link java.lang.String} object.
      */
-    public static String toHex(final byte[] byteArray) {
-        var charArray = new char[byteArray.length * 2];
+    public static String toHex(final byte[] bytes) {
+        var chars = new char[bytes.length * 2];
         var index = 0;
-        for (var b : byteArray) {
-            charArray[index] = HEX_CHAR_POOL[b >>> 4 & 0xF];
-            charArray[index + 1] = HEX_CHAR_POOL[b & 0xF];
+        for (var b : bytes) {
+            chars[index] = HEX_CHAR_POOL[b >>> 4 & 0xF];
+            chars[index + 1] = HEX_CHAR_POOL[b & 0xF];
             index = index + 2;
         }
-        return new String(charArray);
+        return new String(chars);
     }
 
 }

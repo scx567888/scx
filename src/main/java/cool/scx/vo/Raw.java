@@ -7,6 +7,7 @@ import io.vertx.core.http.impl.MimeMapping;
 import io.vertx.ext.web.RoutingContext;
 
 import java.io.File;
+import java.io.InputStream;
 
 /**
  * 原始文件 但不需要下载的 vo
@@ -71,6 +72,12 @@ public final class Raw implements BaseVo {
         this.voFileWriter = file != null ? new VoFileWriter(file) : null;
         this.rawType = rawType;
         this.isFromFile = isFromFile;
+    }
+
+    //todo 采用 静态方法获取 Raw 对象 同时 增加 对输入流的支持
+    // download 同理
+    public static Raw of(InputStream stream, RawType rawType) {
+        return null;
     }
 
     /**

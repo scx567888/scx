@@ -10,13 +10,12 @@ import cool.scx.enumeration.RawType;
 import cool.scx.test.car.Car;
 import cool.scx.test.car.CarService;
 import cool.scx.type.UploadedEntity;
+import cool.scx.util.DigestUtils;
 import cool.scx.util.NetUtils;
 import cool.scx.util.RandomUtils;
-import cool.scx.util.digest.DigestUtils;
 import cool.scx.util.http.HttpClientHelper;
 import cool.scx.util.zip.VirtualDirectory;
 import cool.scx.util.zip.VirtualFile;
-import cool.scx.util.zip.ZipAction;
 import cool.scx.vo.*;
 import io.vertx.ext.web.FileUpload;
 import io.vertx.ext.web.RoutingContext;
@@ -222,7 +221,7 @@ public class WebSiteController {
         if (orCreate instanceof VirtualDirectory a) {
             a.put(VirtualFile.of("一个文本文件.txt", "一些内容,一些内容,一些内容,一些内容 下😊😂🤣❤😍😒👌😘".getBytes(StandardCharsets.UTF_8)));
         }
-        byte[] bytes = ZipAction.toZipFileByteArray(virtualDirectory);
+        byte[] bytes = virtualDirectory.toZipBytes();
         return new Download(bytes, "测试压缩包.zip");
     }
 
