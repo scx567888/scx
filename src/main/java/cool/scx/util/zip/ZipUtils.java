@@ -26,7 +26,7 @@ public final class ZipUtils {
      * @param outputPath zip 输出路径
      * @throws java.io.IOException io
      */
-    public static void zipFile(Path sourcePath, Path outputPath) throws IOException {
+    public static void zip(Path sourcePath, Path outputPath) throws IOException {
         // 获取源路径 path 用于和后续文件进行相对路径的计算
         // 创建一个新的空的输出文件的临时文件
         Files.createDirectories(outputPath.getParent());
