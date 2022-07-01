@@ -10,12 +10,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.net.URISyntaxException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -93,7 +93,7 @@ public final class ScxModuleMetadata<T extends ScxModule> implements Serializabl
      * 如果模块是 jar 就获取 jar 所在目录
      * 如果 模块不是 jar 就获取 所在 class 的目录
      */
-    private final File moduleRootPath;
+    private final Path moduleRootPath;
 
     /**
      * 根据 scxModule 实例 创建 ScxModuleMetadata
@@ -109,16 +109,16 @@ public final class ScxModuleMetadata<T extends ScxModule> implements Serializabl
         this.scxModuleName = scxModuleExample.name();
         this.scxModuleExample = scxModuleExample;
         var classSource = ScanClassUtils.getClassSource(this.scxModuleClass);
-        var classSourceFile = new File(classSource);
+        var classSourcePath = Path.of(classSource);
         //判断当前是否处于 jar 包中
-        if (ScanClassUtils.isJar(classSourceFile)) {
+        if (ScanClassUtils.isJar(classSourcePath)) {
             var allClassList = ScanClassUtils.getClassListByJar(classSource);
             this.allClassList = ScanClassUtils.filterByBasePackage(allClassList, this.basePackage);
-            this.moduleRootPath = classSourceFile.getParentFile();
+            this.moduleRootPath = classSourcePath.getParent();
         } else {
             var allClassList = ScanClassUtils.getClassListByDir(classSource, this.scxModuleClass.getClassLoader());
             this.allClassList = ScanClassUtils.filterByBasePackage(allClassList, this.basePackage);
-            this.moduleRootPath = classSourceFile;
+            this.moduleRootPath = classSourcePath;
         }
         this.scxBaseModelClassList = initScxBaseModelClassList(this.allClassList);
         this.scxBaseModelServiceClassList = initScxBaseModelServiceClassList(this.allClassList);
@@ -256,7 +256,7 @@ public final class ScxModuleMetadata<T extends ScxModule> implements Serializabl
      *
      * @return a {@link java.io.File} object
      */
-    public File moduleRootPath() {
+    public Path moduleRootPath() {
         return moduleRootPath;
     }
 

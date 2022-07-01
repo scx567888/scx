@@ -43,11 +43,7 @@ public final class ScxEnvironment {
         try {
             var classSourcePath = Path.of(ScanClassUtils.getClassSource(mainClass));
             //判断当前是否处于 jar 包中
-            if (ScanClassUtils.isJar(classSourcePath.toFile())) {
-                return classSourcePath.getParent();
-            } else {
-                return classSourcePath;
-            }
+            return ScanClassUtils.isJar(classSourcePath) ? classSourcePath.getParent() : classSourcePath;
         } catch (Exception e) {
             e.printStackTrace();
         }
