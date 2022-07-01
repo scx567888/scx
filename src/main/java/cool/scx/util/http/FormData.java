@@ -148,7 +148,7 @@ public final class FormData implements Body {
 
     static final class FormDataItem {
         final FormDataItemType type;
-        String name;
+        final String name;
         File file;
         byte[] content;
         String filename;
