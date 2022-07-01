@@ -1,14 +1,13 @@
 package cool.scx.util.zip;
 
+import cool.scx.util.FileUtils;
 import cool.scx.util.StringUtils;
 
 import java.io.IOException;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 /**
@@ -26,10 +25,12 @@ public final class ZipUtils {
      * @param outputPath zip 输出路径
      * @throws java.io.IOException io
      */
-    public static void zip(Path sourcePath, Path outputPath) throws IOException {
+    public static void zip(Path sourcePath, Path outputPath, ZipOption... zipOptions) throws IOException {
         // 获取源路径 path 用于和后续文件进行相对路径的计算
         // 创建一个新的空的输出文件的临时文件
         Files.createDirectories(outputPath.getParent());
+        var info = new ZipOption.Info(zipOptions);
+        var rootPath = info.includeRoot() ? sourcePath.getFileName().toString() + "/" : "";
         try (var zos = new ZipOutputStream(Files.newOutputStream(outputPath))) {
             //遍历目录
             Files.walkFileTree(sourcePath, new SimpleFileVisitor<>() {
@@ -38,7 +39,7 @@ public final class ZipUtils {
                     var zipEntryPath = sourcePath.relativize(dir).toString();
                     if (StringUtils.notBlank(zipEntryPath)) {
                         if (attrs.isDirectory()) {
-                            var zipEntry = new ZipEntry(zipEntryPath + "/");
+                            var zipEntry = new ZipEntry(rootPath + zipEntryPath + "/");
                             zos.putNextEntry(zipEntry);
                             zos.closeEntry();
                         }
@@ -52,10 +53,10 @@ public final class ZipUtils {
                     if (StringUtils.notBlank(zipEntryPath)) {
                         ZipEntry zipEntry;
                         if (attrs.isDirectory()) {
-                            zipEntry = new ZipEntry(zipEntryPath + "/");
+                            zipEntry = new ZipEntry(rootPath + zipEntryPath + "/");
                             zos.putNextEntry(zipEntry);
                         } else {
-                            zipEntry = new ZipEntry(zipEntryPath);
+                            zipEntry = new ZipEntry(rootPath + zipEntryPath);
                             zos.putNextEntry(zipEntry);
                             Files.copy(file, zos);
                         }
@@ -66,6 +67,65 @@ public final class ZipUtils {
 
             });
         }
+    }
+
+    /**
+     * 解压
+     *
+     * @param zipFilePath zip文件
+     * @param outputPath  解压到的目录
+     */
+    public static void unzip(Path zipFilePath, Path outputPath, ZipOption... zipOptions) throws IOException {
+        Files.createDirectories(outputPath);
+        var info = new ZipOption.Info(zipOptions);
+        var rootPath = info.includeRoot() ? FileUtils.getNameWithoutExtension(zipFilePath.getFileName().toString()) + "/" : "";
+        try (var zis = new ZipInputStream(Files.newInputStream(zipFilePath))) {
+            // 遍历每一个文件
+            var zipEntry = zis.getNextEntry();
+            while (zipEntry != null) {
+                var unzipFilePath = outputPath.resolve(rootPath + zipEntry.getName());
+                if (zipEntry.isDirectory()) { // 文件夹
+                    Files.createDirectories(unzipFilePath);
+                } else { // 文件
+                    Files.createDirectories(unzipFilePath.getParent());
+                    Files.copy(zis, unzipFilePath, StandardCopyOption.REPLACE_EXISTING);
+                }
+                zis.closeEntry();
+                zipEntry = zis.getNextEntry();
+            }
+        }
+    }
+
+    /**
+     * a
+     */
+    public enum ZipOption {
+
+        /**
+         * 是否包含根目录
+         * 压缩时使用则会直接压缩整个文件夹, 否则相当于压缩文件内文件夹
+         * 解压时使用则会在待解压目录创建与压缩包名称相同的文件夹
+         */
+        INCLUDE_ROOT;
+
+        static class Info {
+
+            boolean includeRoot;
+
+            Info(ZipOption... options) {
+                for (var option : options) {
+                    switch (option) {
+                        case INCLUDE_ROOT -> this.includeRoot = true;
+                    }
+                }
+            }
+
+            boolean includeRoot() {
+                return includeRoot;
+            }
+
+        }
+
     }
 
 }
