@@ -113,7 +113,7 @@ public class WebSiteController {
         for (int i = 0; i < 9999; i = i + 1) {
             s.append("这是文字 ").append(i).append(", ");
         }
-        return new Download(s.toString().getBytes(StandardCharsets.UTF_8), "测试中 + - ~!文 a😊😂 🤣 ghj ❤😍😒👌.txt");
+        return Download.of(s.toString().getBytes(StandardCharsets.UTF_8), "测试中 + - ~!文 a😊😂 🤣 ghj ❤😍😒👌.txt");
     }
 
     /**
@@ -127,7 +127,7 @@ public class WebSiteController {
         for (int i = 0; i < 9999; i = i + 1) {
             s.append("这是文字 ").append(i).append(", ");
         }
-        return new Raw(s.toString().getBytes(StandardCharsets.UTF_8), RawType.TXT);
+        return Raw.of(s.toString().getBytes(StandardCharsets.UTF_8), RawType.TXT);
     }
 
     /**
@@ -222,7 +222,7 @@ public class WebSiteController {
             a.put(VirtualFile.of("一个文本文件.txt", "一些内容,一些内容,一些内容,一些内容 下😊😂🤣❤😍😒👌😘".getBytes(StandardCharsets.UTF_8)));
         }
         byte[] bytes = virtualDirectory.toZipBytes();
-        return new Download(bytes, "测试压缩包.zip");
+        return Download.of(bytes, "测试压缩包.zip");
     }
 
 }
