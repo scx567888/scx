@@ -122,7 +122,9 @@ public final class Raw implements BaseVo {
      * @param context a {@link io.vertx.ext.web.RoutingContext} object
      */
     void sendInputStream(RoutingContext context) {
-        var response = VoHelper.fillContentType(MimeMapping.getMimeTypeForExtension(rawType.name().toLowerCase()), context.request().response()).putHeader(HttpHeaderNames.CONTENT_DISPOSITION, "inline");
+        var response = VoHelper.fillContentType(MimeMapping.getMimeTypeForExtension(rawType.name().toLowerCase()), context.request().response())
+                .setChunked(true)
+                .putHeader(HttpHeaderNames.CONTENT_DISPOSITION, "inline");
         this.writeInputStream(response);
     }
 

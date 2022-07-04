@@ -84,6 +84,7 @@ public final class Download implements BaseVo {
      */
     private void sendInputStream(RoutingContext context) {
         var response = context.response()
+                .setChunked(true)
                 .putHeader(HttpHeaderNames.CONTENT_DISPOSITION, VoHelper.getDownloadContentDisposition(downloadName));
         raw.writeInputStream(response);
     }
