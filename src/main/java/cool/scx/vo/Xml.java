@@ -32,7 +32,7 @@ public final class Xml implements BaseVo {
      */
     @Override
     public void handle(RoutingContext context) {
-        VoHelper.fillXmlContentType(context.request().response()).end(toXml(""));
+        BaseVo.fillXmlContentType(context.request().response()).end(toXml(""));
     }
 
     /**
@@ -42,7 +42,7 @@ public final class Xml implements BaseVo {
      * @throws com.fasterxml.jackson.core.JsonProcessingException 转换失败
      */
     public String toXml() throws JsonProcessingException {
-        return VoHelper.toXml(this.data);
+        return BaseVo.toXml(this.data);
     }
 
     /**
@@ -52,7 +52,7 @@ public final class Xml implements BaseVo {
      * @return a
      */
     public String toXml(String defaultValue) {
-        return VoHelper.toXml(this.data, defaultValue);
+        return BaseVo.toXml(this.data, defaultValue);
     }
 
 }

@@ -73,7 +73,7 @@ public final class DataJson implements BaseVo {
      */
     @Override
     public void handle(RoutingContext context) {
-        VoHelper.fillJsonContentType(context.request().response()).end(toJson(""));
+        BaseVo.fillJsonContentType(context.request().response()).end(toJson(""));
     }
 
     /**
@@ -83,7 +83,7 @@ public final class DataJson implements BaseVo {
      * @throws com.fasterxml.jackson.core.JsonProcessingException 转换失败
      */
     public String toJson() throws JsonProcessingException {
-        return VoHelper.toJson(this.jsonBodyWrapper);
+        return BaseVo.toJson(this.jsonBodyWrapper);
     }
 
     /**
@@ -93,7 +93,7 @@ public final class DataJson implements BaseVo {
      * @return a
      */
     public String toJson(String defaultValue) {
-        return VoHelper.toJson(this.jsonBodyWrapper, defaultValue);
+        return BaseVo.toJson(this.jsonBodyWrapper, defaultValue);
     }
 
 }
