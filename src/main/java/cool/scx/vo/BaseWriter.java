@@ -56,31 +56,25 @@ class BaseWriter implements BaseVo {
 
     protected final String contentDisposition;
 
-    protected BaseWriter(InputStream inputStream, String contentType, String contentDisposition) {
+    private BaseWriter(InputStream inputStream, Path path, byte[] bytes, Type type, String contentType, String contentDisposition) {
         this.inputStream = inputStream;
+        this.path = path;
+        this.bytes = bytes;
+        this.type = type;
         this.contentType = contentType;
         this.contentDisposition = contentDisposition;
-        this.path = null;
-        this.bytes = new byte[]{};
-        this.type = Type.INPUT_STREAM;
+    }
+
+    protected BaseWriter(InputStream inputStream, String contentType, String contentDisposition) {
+        this(inputStream, null, null, Type.INPUT_STREAM, contentType, contentDisposition);
     }
 
     protected BaseWriter(Path path, String contentType, String contentDisposition) {
-        this.contentType = contentType;
-        this.contentDisposition = contentDisposition;
-        this.inputStream = null;
-        this.path = path;
-        this.bytes = new byte[]{};
-        this.type = Type.PATH;
+        this(null, path, null, Type.PATH, contentType, contentDisposition);
     }
 
     protected BaseWriter(byte[] bytes, String contentType, String contentDisposition) {
-        this.contentType = contentType;
-        this.contentDisposition = contentDisposition;
-        this.inputStream = null;
-        this.path = null;
-        this.bytes = bytes;
-        this.type = Type.BYTE_ARRAY;
+        this(null, null, bytes, Type.BYTE_ARRAY, contentType, contentDisposition);
     }
 
     /**
@@ -176,7 +170,7 @@ class BaseWriter implements BaseVo {
      */
     private void writeFile(RoutingContext context) throws NotFoundException {
         var file = path.toFile();
-        if (file == null || !file.exists()) {
+        if (!file.exists()) {
             throw new NotFoundException();
         }
         var request = context.request();
@@ -218,6 +212,7 @@ class BaseWriter implements BaseVo {
                     }
                 } catch (NumberFormatException | IndexOutOfBoundsException e) {
                     context.response().putHeader(HttpHeaderNames.CONTENT_RANGE, "bytes */" + file.length());
+                    context.request().resume();
                     context.fail(HttpResponseStatus.REQUESTED_RANGE_NOT_SATISFIABLE.code());
                     return;
                 }
@@ -245,6 +240,7 @@ class BaseWriter implements BaseVo {
 
                 response.sendFile(file.getPath(), finalOffset, finalLength, res2 -> {
                     if (res2.failed()) {
+                        context.request().resume();
                         context.fail(res2.cause());
                     }
                 });
@@ -252,6 +248,7 @@ class BaseWriter implements BaseVo {
 
                 response.sendFile(file.getPath(), res2 -> {
                     if (res2.failed()) {
+                        context.request().resume();
                         context.fail(res2.cause());
                     }
                 });
