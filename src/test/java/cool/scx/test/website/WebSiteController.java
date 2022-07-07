@@ -164,7 +164,7 @@ public class WebSiteController {
     @ScxMapping(method = HttpMethod.GET)
     public BaseVo bigXml() {
         var users = carService1.list();
-        return new Xml(users);
+        return Xml.of(users);
     }
 
     /**

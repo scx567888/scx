@@ -21,8 +21,12 @@ public final class Xml implements BaseVo {
      *
      * @param data 消息
      */
-    public Xml(Object data) {
+    private Xml(Object data) {
         this.data = data;
+    }
+
+    public static Xml of(Object data) {
+        return new Xml(data);
     }
 
     /**

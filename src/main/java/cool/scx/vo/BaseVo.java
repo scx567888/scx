@@ -9,8 +9,8 @@ import io.vertx.ext.web.RoutingContext;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
-import static cool.scx.vo.VoHelper.JSON_MAPPER;
-import static cool.scx.vo.VoHelper.XML_MAPPER;
+import static cool.scx.vo.BaseVoHelper.JSON_MAPPER;
+import static cool.scx.vo.BaseVoHelper.XML_MAPPER;
 
 /**
  * BaseVo 接口
@@ -21,6 +21,13 @@ import static cool.scx.vo.VoHelper.XML_MAPPER;
  */
 public interface BaseVo extends ScxHandlerE<RoutingContext, Exception> {
 
+    /**
+     * 填充 ContentType a
+     *
+     * @param contentType a
+     * @param response    a
+     * @return a
+     */
     static HttpServerResponse fillContentType(String contentType, HttpServerResponse response) {
         if (contentType != null) {
             if (contentType.startsWith("text")) {

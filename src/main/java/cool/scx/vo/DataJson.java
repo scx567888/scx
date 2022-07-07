@@ -62,7 +62,7 @@ public final class DataJson implements BaseVo {
      * @return json
      */
     public DataJson data(Object dataVal) {
-        jsonBodyWrapper.data = dataVal;
+        this.jsonBodyWrapper.data = dataVal;
         return this;
     }
 

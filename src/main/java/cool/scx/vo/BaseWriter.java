@@ -17,7 +17,10 @@ import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class VoWriter implements BaseVo {
+/**
+ * 基本写入程序 可以直接向相应体中写入数据
+ */
+class BaseWriter implements BaseVo {
 
     /**
      * 正则表达式 用于校验 RANGE 字段
@@ -49,21 +52,31 @@ public class VoWriter implements BaseVo {
      */
     protected final Type type;
 
-    protected VoWriter(InputStream inputStream) {
+    protected final String contentType;
+
+    protected final String contentDisposition;
+
+    protected BaseWriter(InputStream inputStream, String contentType, String contentDisposition) {
         this.inputStream = inputStream;
+        this.contentType = contentType;
+        this.contentDisposition = contentDisposition;
         this.path = null;
         this.bytes = new byte[]{};
         this.type = Type.INPUT_STREAM;
     }
 
-    protected VoWriter(Path path) {
+    protected BaseWriter(Path path, String contentType, String contentDisposition) {
+        this.contentType = contentType;
+        this.contentDisposition = contentDisposition;
         this.inputStream = null;
         this.path = path;
         this.bytes = new byte[]{};
         this.type = Type.PATH;
     }
 
-    protected VoWriter(byte[] bytes) {
+    protected BaseWriter(byte[] bytes, String contentType, String contentDisposition) {
+        this.contentType = contentType;
+        this.contentDisposition = contentDisposition;
         this.inputStream = null;
         this.path = null;
         this.bytes = bytes;
@@ -83,23 +96,13 @@ public class VoWriter implements BaseVo {
     }
 
     /**
-     * <p>sendFile.</p>
-     *
-     * @param context c
-     * @throws cool.scx.http.exception.impl.NotFoundException if any.
-     */
-    protected void sendFile(RoutingContext context) throws NotFoundException {
-        this.writeFile(context);
-    }
-
-    /**
      * <p>sendBytes.</p>
      *
      * @param context a {@link io.vertx.ext.web.RoutingContext} object
      */
     protected void sendBytes(RoutingContext context) {
-        var response = context.response().putHeader(HttpHeaderNames.CONTENT_LENGTH, String.valueOf(bytes.length));
-        this.writeBytes(response, 0);
+        BaseVo.fillContentType(contentType, context.request().response()).putHeader(HttpHeaderNames.CONTENT_DISPOSITION, contentDisposition);
+        this.writeBytes(context.response().putHeader(HttpHeaderNames.CONTENT_LENGTH, String.valueOf(this.bytes.length)), 0);
     }
 
     /**
@@ -108,28 +111,19 @@ public class VoWriter implements BaseVo {
      * @param context a {@link io.vertx.ext.web.RoutingContext} object
      */
     protected void sendInputStream(RoutingContext context) {
-        var response = context.response().setChunked(true);
-        this.writeInputStream(response);
+        BaseVo.fillContentType(contentType, context.request().response()).putHeader(HttpHeaderNames.CONTENT_DISPOSITION, contentDisposition);
+        this.writeInputStream(context.response().setChunked(true));
     }
 
     /**
-     * <p>writeBytes.</p>
+     * <p>sendFile.</p>
      *
-     * @param response response
+     * @param context c
+     * @throws cool.scx.http.exception.impl.NotFoundException if any.
      */
-    protected final void writeInputStream(HttpServerResponse response) {
-        var b = new byte[bucketSize];
-        var endIndex = ScxExceptionHelper.wrap(() -> inputStream.read(b));
-        //已经读取完毕
-        if (endIndex == -1) {
-            response.end();
-        } else {//还有数据
-            response.write(Buffer.buffer(Arrays.copyOfRange(b, 0, endIndex)), (r) -> {
-                if (r.succeeded()) {
-                    writeInputStream(response);
-                }
-            });
-        }
+    protected void sendFile(RoutingContext context) throws NotFoundException {
+        context.request().response().putHeader(HttpHeaderNames.CONTENT_DISPOSITION, contentDisposition);
+        this.writeFile(context);
     }
 
     /**
@@ -138,7 +132,7 @@ public class VoWriter implements BaseVo {
      * @param response   response
      * @param startIndex 起始索引
      */
-    protected final void writeBytes(HttpServerResponse response, int startIndex) {
+    private void writeBytes(HttpServerResponse response, int startIndex) {
         //当前分块的尾部索引
         var endIndex = startIndex + bucketSize;
         //尾部索引 大于等于 字节长度 说明是最后一个区块
@@ -154,6 +148,25 @@ public class VoWriter implements BaseVo {
         }
     }
 
+    /**
+     * <p>writeBytes.</p>
+     *
+     * @param response response
+     */
+    private void writeInputStream(HttpServerResponse response) {
+        var b = new byte[bucketSize];
+        var endIndex = ScxExceptionHelper.wrap(() -> inputStream.read(b));
+        //已经读取完毕
+        if (endIndex == -1) {
+            response.end();
+        } else {//还有数据
+            response.write(Buffer.buffer(Arrays.copyOfRange(b, 0, endIndex)), (r) -> {
+                if (r.succeeded()) {
+                    writeInputStream(response);
+                }
+            });
+        }
+    }
 
     /**
      * <p>writeFile.</p>
@@ -161,7 +174,7 @@ public class VoWriter implements BaseVo {
      * @param context a {@link HttpServerResponse} object
      * @throws NotFoundException if any.
      */
-    protected final void writeFile(RoutingContext context) throws NotFoundException {
+    private void writeFile(RoutingContext context) throws NotFoundException {
         var file = path.toFile();
         if (file == null || !file.exists()) {
             throw new NotFoundException();
@@ -247,7 +260,7 @@ public class VoWriter implements BaseVo {
         }
     }
 
-    private enum Type {
+    enum Type {
         PATH, INPUT_STREAM, BYTE_ARRAY,
     }
 
