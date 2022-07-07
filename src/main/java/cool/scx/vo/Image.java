@@ -97,7 +97,7 @@ public abstract class Image implements BaseVo {
     /**
      * a
      */
-    public static final class SystemIconImage extends Image {
+    private static final class SystemIconImage extends Image {
 
         private final Buffer buffer;
 
@@ -142,7 +142,7 @@ public abstract class Image implements BaseVo {
     /**
      * a
      */
-    public static final class OriginalImage extends Image {
+    private static final class OriginalImage extends Image {
 
         private final String filePath;
 
@@ -167,7 +167,7 @@ public abstract class Image implements BaseVo {
     /**
      * a
      */
-    public static final class CroppedImage extends Image {
+    private static final class CroppedImage extends Image {
 
         /**
          * type 和裁剪类型 映射表
