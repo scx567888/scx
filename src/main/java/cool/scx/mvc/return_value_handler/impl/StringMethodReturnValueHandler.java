@@ -2,7 +2,7 @@ package cool.scx.mvc.return_value_handler.impl;
 
 import cool.scx.mvc.return_value_handler.ScxMappingMethodReturnValueHandler;
 import cool.scx.util.ObjectUtils;
-import cool.scx.vo.VoHelper;
+import cool.scx.vo.BaseVo;
 import io.vertx.ext.web.RoutingContext;
 
 /**
@@ -31,7 +31,7 @@ public final class StringMethodReturnValueHandler implements ScxMappingMethodRet
      */
     @Override
     public void handle(Object result, RoutingContext context) {
-        VoHelper.fillTextPlainContentType(context.request().response())
+        BaseVo.fillTextPlainContentType(context.request().response())
                 .end(ObjectUtils.convertValue(result, String.class));
     }
 

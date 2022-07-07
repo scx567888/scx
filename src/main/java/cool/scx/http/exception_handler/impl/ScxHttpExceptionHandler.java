@@ -5,7 +5,7 @@ import cool.scx.enumeration.ScxFeature;
 import cool.scx.http.exception.ScxHttpException;
 import cool.scx.http.exception_handler.ScxHttpRouterExceptionHandler;
 import cool.scx.util.exception.ScxExceptionHelper;
-import cool.scx.vo.VoHelper;
+import cool.scx.vo.BaseVo;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.vertx.ext.web.RoutingContext;
 import org.slf4j.Logger;
@@ -89,14 +89,14 @@ public final class ScxHttpExceptionHandler implements ScxHttpRouterExceptionHand
         //根据 accept 返回不同的错误信息
         if (accept != null && accept.toLowerCase().contains("text/html")) {
             var htmlStr = String.format(htmlTemplate, title, statusCode, title, info);
-            VoHelper.fillHtmlContentType(routingContext.request().response().setStatusCode(statusCode)).end(htmlStr);
+            BaseVo.fillHtmlContentType(routingContext.request().response().setStatusCode(statusCode)).end(htmlStr);
         } else {
             var tempMap = new LinkedHashMap<>();
             tempMap.put("statusCode", statusCode);
             tempMap.put("title", title);
             tempMap.put("info", info);
-            var jsonStr = VoHelper.toJson(tempMap, "");
-            VoHelper.fillJsonContentType(routingContext.request().response().setStatusCode(statusCode)).end(jsonStr);
+            var jsonStr = BaseVo.toJson(tempMap, "");
+            BaseVo.fillJsonContentType(routingContext.request().response().setStatusCode(statusCode)).end(jsonStr);
         }
     }
 

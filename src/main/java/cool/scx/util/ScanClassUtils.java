@@ -149,11 +149,11 @@ public final class ScanClassUtils {
     /**
      * <p>isJar.</p>
      *
-     * @param file a {@link File} object
+     * @param path a {@link File} object
      * @return a boolean
      */
-    public static boolean isJar(File file) {
-        return !file.isDirectory() && file.getPath().endsWith(".jar");
+    public static boolean isJar(Path path) {
+        return !Files.isDirectory(path) && path.toString().endsWith(".jar");
     }
 
     /**

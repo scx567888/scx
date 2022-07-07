@@ -80,7 +80,7 @@ public final class Html implements BaseVo {
      */
     @Override
     public void handle(RoutingContext context) throws TemplateException, IOException {
-        var response = VoHelper.fillHtmlContentType(context.request().response());
+        var response = BaseVo.fillHtmlContentType(context.request().response());
         if (useTemplate) {
             var sw = new StringWriter();
             template.process(dataMap, sw);
