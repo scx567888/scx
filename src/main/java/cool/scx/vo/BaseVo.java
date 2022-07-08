@@ -9,8 +9,8 @@ import io.vertx.ext.web.RoutingContext;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
-import static cool.scx.vo.BaseVoHelper.JSON_MAPPER;
-import static cool.scx.vo.BaseVoHelper.XML_MAPPER;
+import static cool.scx.vo.BaseVo0.JSON_MAPPER;
+import static cool.scx.vo.BaseVo0.XML_MAPPER;
 
 /**
  * BaseVo 接口

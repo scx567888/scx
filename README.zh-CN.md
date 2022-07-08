@@ -41,10 +41,7 @@
         <img src="https://img.shields.io/badge/Jasypt-29aaf5" alt="Jasypt"/>
     </a>
     <a target="_blank" href="https://github.com/coobird/thumbnailator">
-        <img src="https://img.shields.io/badge/Thumbnailator-6269d3" alt="Thumbnailator"/>
-    </a>
-    <a target="_blank" href="https://github.com/google/guava">
-        <img src="https://img.shields.io/badge/Guava-9c27b0" alt="Guava"/>
+        <img src="https://img.shields.io/badge/Thumbnailator-9c27b0" alt="Thumbnailator"/>
     </a>
     <br/>
     <a target="_blank" href="https://github.com/mysql/mysql-connector-j">
