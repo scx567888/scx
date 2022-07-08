@@ -41,17 +41,17 @@
         <img src="https://img.shields.io/badge/Jasypt-29aaf5" alt="Jasypt"/>
     </a>
     <a target="_blank" href="https://github.com/coobird/thumbnailator">
-        <img src="https://img.shields.io/badge/Thumbnailator-6269d3" alt="Thumbnailator"/>
-    </a>
-    <a target="_blank" href="https://github.com/mysql/mysql-connector-j">
-        <img src="https://img.shields.io/badge/MySQL Connector/J-9c27b0" alt="MySQL Connector/J"/>
+        <img src="https://img.shields.io/badge/Thumbnailator-9c27b0" alt="Thumbnailator"/>
     </a>
     <br/>
+    <a target="_blank" href="https://github.com/mysql/mysql-connector-j">
+        <img src="https://img.shields.io/badge/MySQL Connector/J-f44336" alt="MySQL Connector/J"/>
+    </a>
     <a target="_blank" href="https://github.com/qos-ch/slf4j">
-        <img src="https://img.shields.io/badge/SLF4J-f44336" alt="SLF4J"/>
+        <img src="https://img.shields.io/badge/SLF4J-44be16" alt="SLF4J"/>
     </a>
     <a target="_blank" href="https://github.com/apache/logging-log4j2">
-        <img src="https://img.shields.io/badge/Apache Log4j 2-44be16" alt="Apache Log4j 2"/>
+        <img src="https://img.shields.io/badge/Apache Log4j 2-29aaf5" alt="Apache Log4j 2"/>
     </a> 
     <a target="_blank" href="https://github.com/cbeust/testng">
         <img src="https://img.shields.io/badge/TestNG-9c27b0" alt="TestNG"/>
