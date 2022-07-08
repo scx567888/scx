@@ -22,8 +22,19 @@ import java.util.zip.ZipOutputStream;
  */
 public abstract class AbstractVirtualFile implements ScxTree<AbstractVirtualFile> {
 
+    /**
+     * a
+     */
     protected final String name;
+
+    /**
+     * a
+     */
     protected final List<AbstractVirtualFile> children;
+
+    /**
+     * a
+     */
     protected AbstractVirtualFile parent;
 
     /**

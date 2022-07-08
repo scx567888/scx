@@ -3,6 +3,12 @@ package cool.scx.util;
 import java.util.*;
 import java.util.function.BiConsumer;
 
+/**
+ * a
+ *
+ * @param <K> a
+ * @param <V> a
+ */
 public final class MultiMap<K, V> {
 
     /**

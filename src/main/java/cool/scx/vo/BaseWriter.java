@@ -52,8 +52,14 @@ class BaseWriter implements BaseVo {
      */
     protected final Type type;
 
+    /**
+     * a
+     */
     protected final String contentType;
 
+    /**
+     * a
+     */
     protected final String contentDisposition;
 
     private BaseWriter(InputStream inputStream, Path path, byte[] bytes, Type type, String contentType, String contentDisposition) {

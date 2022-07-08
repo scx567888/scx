@@ -25,18 +25,45 @@ public final class Download extends BaseWriter {
         super(bytes, MimeMapping.getMimeTypeForFilename(downloadName.toLowerCase()), BaseVo.getDownloadContentDisposition(downloadName));
     }
 
+    /**
+     * a
+     *
+     * @param inputStream  a
+     * @param downloadName a
+     * @return a
+     */
     public static Download of(InputStream inputStream, String downloadName) {
         return new Download(inputStream, downloadName);
     }
 
+    /**
+     * a
+     *
+     * @param bytes        a
+     * @param downloadName a
+     * @return a
+     */
     public static Download of(byte[] bytes, String downloadName) {
         return new Download(bytes, downloadName);
     }
 
+    /**
+     * a
+     *
+     * @param path         a
+     * @param downloadName a
+     * @return a
+     */
     public static Download of(Path path, String downloadName) {
         return new Download(path, downloadName);
     }
 
+    /**
+     * a
+     *
+     * @param path a
+     * @return a
+     */
     public static Download of(Path path) {
         return new Download(path, path.getFileName().toString());
     }
