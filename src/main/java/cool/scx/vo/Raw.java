@@ -27,14 +27,34 @@ public final class Raw extends BaseWriter {
         super(bytes, MimeMapping.getMimeTypeForExtension(rawType.name().toLowerCase()), "inline");
     }
 
+    /**
+     * a
+     *
+     * @param bytes   a
+     * @param rawType a
+     * @return a
+     */
     public static Raw of(byte[] bytes, RawType rawType) {
         return new Raw(bytes, rawType);
     }
 
+    /**
+     * a
+     *
+     * @param path a
+     * @return a
+     */
     public static Raw of(Path path) {
         return new Raw(path);
     }
 
+    /**
+     * a
+     *
+     * @param inputStream a
+     * @param rawType     a
+     * @return a
+     */
     public static Raw of(InputStream inputStream, RawType rawType) {
         return new Raw(inputStream, rawType);
     }

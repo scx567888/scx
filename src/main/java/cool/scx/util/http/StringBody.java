@@ -3,10 +3,18 @@ package cool.scx.util.http;
 import java.net.http.HttpRequest;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * a
+ */
 public final class StringBody implements Body {
 
     private final String bodyStr;
 
+    /**
+     * a
+     *
+     * @param str a
+     */
     public StringBody(String str) {
         bodyStr = str;
     }
