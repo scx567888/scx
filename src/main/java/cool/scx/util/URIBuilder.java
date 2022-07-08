@@ -1,13 +1,11 @@
 package cool.scx.util;
 
-import com.google.common.collect.ArrayListMultimap;
 import io.netty.handler.codec.http.QueryStringDecoder;
 import io.netty.handler.codec.http.QueryStringEncoder;
 
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -25,7 +23,7 @@ public final class URIBuilder {
     /**
      * a
      */
-    private final ArrayListMultimap<String, String> queryParams = ArrayListMultimap.create();
+    private final MultiMap<String, String> queryParams = new MultiMap<>();
 
     /**
      * a
@@ -105,7 +103,7 @@ public final class URIBuilder {
      *
      * @return a
      */
-    public Map<String, Collection<String>> getAllParams() {
+    public Map<String, List<String>> getAllParams() {
         return queryParams.asMap();
     }
 
