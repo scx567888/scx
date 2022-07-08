@@ -7,7 +7,7 @@ import cool.scx.util.JacksonHelper;
 /**
  * 仅仅是为了不向外暴露常量
  */
-final class BaseVoHelper {
+final class BaseVo0 {
 
     /**
      * 普通的 jsonMapper 用于向前台发送 Json 数据使用
