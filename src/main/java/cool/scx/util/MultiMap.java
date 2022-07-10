@@ -2,6 +2,7 @@ package cool.scx.util;
 
 import java.util.*;
 import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
 
 /**
  * a
@@ -28,6 +29,35 @@ public final class MultiMap<K, V> {
      */
     public int size() {
         return size;
+    }
+
+    /**
+     * a
+     *
+     * @return a
+     */
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    /**
+     * a
+     *
+     * @param key a
+     * @return a
+     */
+    public boolean containsKey(K key) {
+        return map.containsKey(key);
+    }
+
+    /**
+     * a
+     *
+     * @param value a
+     * @return a
+     */
+    public boolean containsValue(V value) {
+        return map.values().stream().anyMatch(collection -> collection.contains(value));
     }
 
     /**
@@ -74,7 +104,11 @@ public final class MultiMap<K, V> {
      */
     public boolean remove(K key, V value) {
         var collection = map.get(key);
-        return collection != null && collection.remove(value);
+        if (collection != null && collection.remove(value)) {
+            size = size - 1;
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -103,6 +137,24 @@ public final class MultiMap<K, V> {
         }
         map.clear();
         size = 0;
+    }
+
+    /**
+     * a
+     *
+     * @return a
+     */
+    public Set<K> keySet() {
+        return map.keySet();
+    }
+
+    /**
+     * a
+     *
+     * @return a
+     */
+    public List<V> values() {
+        return map.values().stream().flatMap(Collection::stream).collect(Collectors.toList());
     }
 
     /**
