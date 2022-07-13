@@ -1,6 +1,6 @@
 package cool.scx.scheduler;
 
-import cool.scx.ScxHandler;
+import cool.scx.functional.ScxHandlerA;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.Trigger;
 
@@ -25,7 +25,7 @@ class CounterRunnable implements Runnable {
     /**
      * 执行 scxHandler
      */
-    final ScxHandler<ScheduleStatus> scxHandler;
+    final ScxHandlerA<ScheduleStatus> scxHandler;
 
     /**
      * ScheduledFuture 对象 用于手动取消
@@ -35,9 +35,9 @@ class CounterRunnable implements Runnable {
     /**
      * <p>Constructor for CounterRunnable.</p>
      *
-     * @param scxHandler a {@link cool.scx.ScxHandler} object
+     * @param scxHandler a {@link cool.scx.functional.ScxHandler} object
      */
-    public CounterRunnable(ScxHandler<ScheduleStatus> scxHandler) {
+    public CounterRunnable(ScxHandlerA<ScheduleStatus> scxHandler) {
         this.scxHandler = scxHandler;
     }
 

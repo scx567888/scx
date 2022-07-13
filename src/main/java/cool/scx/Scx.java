@@ -8,7 +8,6 @@ import cool.scx.dao.ScxDao;
 import cool.scx.enumeration.ScxFeature;
 import cool.scx.eventbus.ScxEventBus;
 import cool.scx.http.ScxHttpRouter;
-import cool.scx.logging.ScxLoggerConfiguration;
 import cool.scx.mvc.ScxMappingConfiguration;
 import cool.scx.scheduler.ScxScheduler;
 import cool.scx.util.ConsoleUtils;

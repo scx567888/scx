@@ -2,9 +2,9 @@ package cool.scx.config.handler;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JavaType;
-import cool.scx.ScxHandlerR;
+import cool.scx.functional.ScxHandlerAR;
+import cool.scx.tuple.KeyValue;
 import cool.scx.util.ObjectUtils;
-import cool.scx.util.tuple.KeyValue;
 
 import java.util.Objects;
 
@@ -15,7 +15,7 @@ import java.util.Objects;
  * @author scx567888
  * @version 1.11.8
  */
-public final class ConvertValueHandler<T> implements ScxHandlerR<KeyValue<String, Object>, T> {
+public final class ConvertValueHandler<T> implements ScxHandlerAR<KeyValue<String, Object>, T> {
 
     private final JavaType javaType;
 

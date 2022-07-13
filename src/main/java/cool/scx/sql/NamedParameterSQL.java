@@ -1,7 +1,7 @@
 package cool.scx.sql;
 
-import cool.scx.util.tuple.Tuple2;
-import cool.scx.util.tuple.Tuples;
+import cool.scx.tuple.Tuple2;
+import cool.scx.tuple.Tuples;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

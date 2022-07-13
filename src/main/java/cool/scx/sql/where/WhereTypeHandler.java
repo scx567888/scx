@@ -3,11 +3,11 @@ package cool.scx.sql.where;
 import cool.scx.sql.AbstractPlaceholderSQL;
 import cool.scx.sql.SQLHelper;
 import cool.scx.sql.exception.ValidParamListIsEmptyException;
+import cool.scx.tuple.Tuple2;
+import cool.scx.tuple.Tuples;
 import cool.scx.util.CaseUtils;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
-import cool.scx.util.tuple.Tuple2;
-import cool.scx.util.tuple.Tuples;
 
 import java.util.ArrayList;
 import java.util.Arrays;

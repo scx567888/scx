@@ -1,15 +1,15 @@
 package cool.scx.config.handler;
 
-import cool.scx.ScxHandlerR;
+import cool.scx.functional.ScxHandlerAR;
+import cool.scx.tuple.KeyValue;
 import cool.scx.util.ansi.Ansi;
-import cool.scx.util.tuple.KeyValue;
 
 /**
  * a
  *
  * @param <T> a
  */
-public record DefaultValueHandler<T>(T defaultVal) implements ScxHandlerR<KeyValue<String, Object>, T> {
+public record DefaultValueHandler<T>(T defaultVal) implements ScxHandlerAR<KeyValue<String, Object>, T> {
 
     @SuppressWarnings("unchecked")
     @Override

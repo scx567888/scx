@@ -1,6 +1,6 @@
 package cool.scx.sql.handler;
 
-import cool.scx.ScxHandlerRE;
+import cool.scx.functional.ScxHandlerARE;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,7 +15,7 @@ import java.util.Map;
  * @author scx567888
  * @version 1.5.0
  */
-public final class MapListHandler implements ScxHandlerRE<ResultSet, List<Map<String, Object>>, SQLException> {
+public final class MapListHandler implements ScxHandlerARE<ResultSet, List<Map<String, Object>>, SQLException> {
 
     /**
      * {@inheritDoc}

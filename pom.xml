@@ -76,6 +76,18 @@
     <dependencies>
 
         <dependency>
+            <groupId>cool.scx</groupId>
+            <artifactId>scx-functional</artifactId>
+            <version>0.0.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cool.scx</groupId>
+            <artifactId>scx-logging</artifactId>
+            <version>0.0.2</version>
+        </dependency>
+
+        <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-web</artifactId>
         </dependency>

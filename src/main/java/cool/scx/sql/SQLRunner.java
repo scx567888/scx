@@ -1,9 +1,9 @@
 package cool.scx.sql;
 
-import cool.scx.ScxHandlerE;
-import cool.scx.ScxHandlerRE;
-import cool.scx.ScxHandlerVE;
-import cool.scx.ScxHandlerVRE;
+import cool.scx.functional.ScxHandlerAE;
+import cool.scx.functional.ScxHandlerARE;
+import cool.scx.functional.ScxHandlerE;
+import cool.scx.functional.ScxHandlerRE;
 import cool.scx.util.exception.ScxExceptionHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,7 +68,7 @@ public final class SQLRunner {
      * @return a
      * @throws SQLException a
      */
-    public static <T> T query(Connection con, AbstractPlaceholderSQL<?> placeholderSQL, ScxHandlerRE<ResultSet, T, SQLException> resultSetHandler) throws SQLException {
+    public static <T> T query(Connection con, AbstractPlaceholderSQL<?> placeholderSQL, ScxHandlerARE<ResultSet, T, SQLException> resultSetHandler) throws SQLException {
         try (var preparedStatement = placeholderSQL.getPreparedStatement(con)) {
             var resultSet = preparedStatement.executeQuery();
             return resultSetHandler.handle(resultSet);
@@ -129,7 +129,7 @@ public final class SQLRunner {
      * @param handler handler
      * @throws java.lang.Exception e
      */
-    public static void autoTransaction(Connection con, ScxHandlerE<Connection, Exception> handler) throws Exception {
+    public static void autoTransaction(Connection con, ScxHandlerAE<Connection, Exception> handler) throws Exception {
         con.setAutoCommit(false);
         try {
             handler.handle(con);
@@ -149,7 +149,7 @@ public final class SQLRunner {
      * @return a
      * @throws Exception a
      */
-    public static <T> T autoTransaction(Connection con, ScxHandlerRE<Connection, T, Exception> handler) throws Exception {
+    public static <T> T autoTransaction(Connection con, ScxHandlerARE<Connection, T, Exception> handler) throws Exception {
         con.setAutoCommit(false);
         try {
             T result = handler.handle(con);
@@ -186,7 +186,7 @@ public final class SQLRunner {
      * @param <T>              a
      * @return a
      */
-    public <T> T query(AbstractPlaceholderSQL<?> placeholderSQL, ScxHandlerRE<ResultSet, T, SQLException> resultSetHandler) {
+    public <T> T query(AbstractPlaceholderSQL<?> placeholderSQL, ScxHandlerARE<ResultSet, T, SQLException> resultSetHandler) {
         return ScxExceptionHelper.wrap(() -> {
             //我们根据 CONNECTION_THREAD_LOCAL.get() 是否为 null 来判断是否处于 autoTransaction 中
             var connection = CONNECTION_THREAD_LOCAL.get();
@@ -288,7 +288,7 @@ public final class SQLRunner {
      *
      * @param handler 连接消费者
      */
-    public void autoTransaction(ScxHandlerVE<?> handler) {
+    public void autoTransaction(ScxHandlerE<?> handler) {
         ScxExceptionHelper.wrap(() -> SQL_RUNNER_EXECUTOR_SERVICE.submit(() -> {
             try (var con = dataSource.getConnection()) {
                 CONNECTION_THREAD_LOCAL.set(con);
@@ -308,13 +308,13 @@ public final class SQLRunner {
     }
 
     /**
-     * 同上 {@link SQLRunner#autoTransaction(ScxHandlerVE)} 但是有返回值
+     * 同上 {@link SQLRunner#autoTransaction(ScxHandlerE)} 但是有返回值
      *
      * @param handler a
      * @param <T>     a
      * @return a
      */
-    public <T> T autoTransaction(ScxHandlerVRE<T, ?> handler) {
+    public <T> T autoTransaction(ScxHandlerRE<T, ?> handler) {
         return ScxExceptionHelper.wrap(() -> SQL_RUNNER_EXECUTOR_SERVICE.submit(() -> {
             try (var con = dataSource.getConnection()) {
                 CONNECTION_THREAD_LOCAL.set(con);

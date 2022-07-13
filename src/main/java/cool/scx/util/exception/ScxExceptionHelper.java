@@ -1,7 +1,7 @@
 package cool.scx.util.exception;
 
-import cool.scx.ScxHandlerVE;
-import cool.scx.ScxHandlerVRE;
+import cool.scx.functional.ScxHandlerE;
+import cool.scx.functional.ScxHandlerRE;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -22,7 +22,7 @@ public final class ScxExceptionHelper {
      * @param <T>                    a
      * @return a
      */
-    public static <T> T wrap(ScxHandlerVRE<T, ?> exceptionScxHandlerVRE) {
+    public static <T> T wrap(ScxHandlerRE<T, ?> exceptionScxHandlerVRE) {
         try {
             return exceptionScxHandlerVRE.handle();
         } catch (Throwable throwable) {
@@ -35,7 +35,7 @@ public final class ScxExceptionHelper {
      *
      * @param exceptionScxHandlerVE a
      */
-    public static void wrap(ScxHandlerVE<?> exceptionScxHandlerVE) {
+    public static void wrap(ScxHandlerE<?> exceptionScxHandlerVE) {
         try {
             exceptionScxHandlerVE.handle();
         } catch (Throwable throwable) {
@@ -49,7 +49,7 @@ public final class ScxExceptionHelper {
      * @param exceptionScxHandlerVE a
      * @return a
      */
-    public static boolean noException(ScxHandlerVE<?> exceptionScxHandlerVE) {
+    public static boolean noException(ScxHandlerE<?> exceptionScxHandlerVE) {
         return noException(exceptionScxHandlerVE, false);
     }
 
@@ -60,7 +60,7 @@ public final class ScxExceptionHelper {
      * @param printStackTrace       是否打印异常信息
      * @return a
      */
-    public static boolean noException(ScxHandlerVE<?> exceptionScxHandlerVE, boolean printStackTrace) {
+    public static boolean noException(ScxHandlerE<?> exceptionScxHandlerVE, boolean printStackTrace) {
         try {
             exceptionScxHandlerVE.handle();
             return true;

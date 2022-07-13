@@ -1,6 +1,6 @@
 package cool.scx.sql.handler;
 
-import cool.scx.ScxHandlerRE;
+import cool.scx.functional.ScxHandlerARE;
 import cool.scx.sql.SQLHelper;
 import cool.scx.util.ScanClassUtils;
 
@@ -20,7 +20,7 @@ import java.util.Map;
  * @author scx567888
  * @version 1.7.3
  */
-public final class BeanListHandler<T> implements ScxHandlerRE<ResultSet, List<T>, SQLException> {
+public final class BeanListHandler<T> implements ScxHandlerARE<ResultSet, List<T>, SQLException> {
 
     /**
      * a

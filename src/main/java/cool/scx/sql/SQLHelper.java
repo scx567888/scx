@@ -7,11 +7,11 @@ import com.mysql.cj.PreparedQuery;
 import com.mysql.cj.jdbc.ClientPreparedStatement;
 import com.mysql.cj.protocol.a.NativeProtocol;
 import com.mysql.cj.protocol.a.StringValueEncoder;
+import cool.scx.tuple.Tuple2;
+import cool.scx.tuple.Tuples;
 import cool.scx.util.CaseUtils;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
-import cool.scx.util.tuple.Tuple2;
-import cool.scx.util.tuple.Tuples;
 import org.slf4j.Logger;
 
 import java.lang.reflect.Type;

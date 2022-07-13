@@ -1,10 +1,10 @@
 package cool.scx.base;
 
 import cool.scx.ScxContext;
-import cool.scx.ScxHandlerVE;
-import cool.scx.ScxHandlerVRE;
 import cool.scx.dao.ScxDaoColumnInfo;
 import cool.scx.dao.ScxDaoTableInfo;
+import cool.scx.functional.ScxHandlerE;
+import cool.scx.functional.ScxHandlerRE;
 import cool.scx.sql.AbstractPlaceholderSQL;
 import cool.scx.sql.NoParametersSQL;
 import cool.scx.sql.PlaceholderSQL;
@@ -305,7 +305,7 @@ public class BasicService<Entity> {
      *
      * @param handler handler
      */
-    public final void autoTransaction(ScxHandlerVE<?> handler) {
+    public final void autoTransaction(ScxHandlerE<?> handler) {
         ScxContext.sqlRunner().autoTransaction(handler);
     }
 
@@ -316,7 +316,7 @@ public class BasicService<Entity> {
      * @param <T>     a
      * @return a
      */
-    public final <T> T autoTransaction(ScxHandlerVRE<T, ?> handler) {
+    public final <T> T autoTransaction(ScxHandlerRE<T, ?> handler) {
         return ScxContext.sqlRunner().autoTransaction(handler);
     }
 

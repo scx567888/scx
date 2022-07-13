@@ -1,8 +1,8 @@
 package cool.scx.websocket;
 
-import cool.scx.ScxHandler;
-import cool.scx.ScxHandlerV;
 import cool.scx.base.BaseWebSocketHandler;
+import cool.scx.functional.ScxHandler;
+import cool.scx.functional.ScxHandlerA;
 import io.vertx.core.Handler;
 import io.vertx.core.http.ServerWebSocket;
 import io.vertx.core.http.WebSocketFrame;
@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
  * Scx WebSocket 路由
  */
 public record ScxWebSocketRoute(String path,
-                                BaseWebSocketHandler baseWebSocketHandler) implements ScxHandler<ServerWebSocket> {
+                                BaseWebSocketHandler baseWebSocketHandler) implements ScxHandlerA<ServerWebSocket> {
 
     /**
      * 日志
@@ -103,7 +103,7 @@ public record ScxWebSocketRoute(String path,
 
     }
 
-    private class OpenHandler implements ScxHandlerV {
+    private class OpenHandler implements ScxHandler {
 
         final ServerWebSocket serverWebSocket;
 
