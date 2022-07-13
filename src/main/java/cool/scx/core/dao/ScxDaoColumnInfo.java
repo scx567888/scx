@@ -143,7 +143,7 @@ public final class ScxDaoColumnInfo {
             list.add("PRIMARY KEY (`" + name + "`)");
         }
         if (column.unique()) {
-            if (ScxContext.easyConfig().tombstone()) {
+            if (ScxContext.coreConfig().tombstone()) {
                 list.add("UNIQUE KEY `unique_" + name + "_tombstone`(`" + name + "`, `tombstone`)");
             } else {
                 list.add("UNIQUE KEY `unique_" + name + "`(`" + name + "`)");

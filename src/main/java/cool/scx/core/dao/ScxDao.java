@@ -36,10 +36,10 @@ public final class ScxDao {
     /**
      * a
      *
-     * @param easyConfig a
+     * @param coreConfig a
      */
-    public ScxDao(ScxCoreConfig easyConfig) {
-        var mysqlDataSource = getMySQLDataSource(easyConfig);
+    public ScxDao(ScxCoreConfig coreConfig) {
+        var mysqlDataSource = getMySQLDataSource(coreConfig);
         this.dataSource = getHikariDataSource(mysqlDataSource);
         this.sqlRunner = new SQLRunner(this.dataSource);
     }

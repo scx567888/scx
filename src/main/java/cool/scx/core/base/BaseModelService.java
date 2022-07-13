@@ -55,7 +55,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @return a {@link cool.scx.core.base.Query} object
      */
     private static Query queryProcessor(Query query) {
-        if (ScxContext.easyConfig().tombstone()) {
+        if (ScxContext.coreConfig().tombstone()) {
             query.equal("tombstone", false, WhereOption.REPLACE);
         }
         return query;
@@ -68,7 +68,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @return a {@link cool.scx.core.base.SelectFilter} object
      */
     private static SelectFilter selectFilterProcessor(SelectFilter selectFilter) {
-        if (ScxContext.easyConfig().tombstone()) {
+        if (ScxContext.coreConfig().tombstone()) {
             selectFilter.addExcluded("tombstone");
         }
         return selectFilter;
@@ -299,7 +299,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      */
     public long delete(Query query) {
         //物理删除
-        if (!ScxContext.easyConfig().tombstone()) {
+        if (!ScxContext.coreConfig().tombstone()) {
             return this._delete(query);
         } else {//逻辑删除
             var needTombstoneEntity = ScxContext.getBean(entityClass);
@@ -330,7 +330,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @return 恢复删除成功的数据条数
      */
     public long revokeDelete(Query query) {
-        if (!ScxContext.easyConfig().tombstone()) {
+        if (!ScxContext.coreConfig().tombstone()) {
             throw new RuntimeException("物理删除模式下不允许恢复删除!!!");
         } else {
             var needRevokeDeleteModel = ScxContext.getBean(entityClass);

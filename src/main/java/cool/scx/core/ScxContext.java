@@ -174,8 +174,8 @@ public final class ScxContext {
      *
      * @return a
      */
-    public static ScxCoreConfig easyConfig() {
-        return scx().scxEasyConfig();
+    public static ScxCoreConfig coreConfig() {
+        return scx().scxCoreConfig();
     }
 
     /**

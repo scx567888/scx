@@ -12,7 +12,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * <p>ScxEasyConfig class.</p>
+ * <p>ScxCoreConfig class.</p>
  *
  * @author scx567888
  * @version 1.3.0
@@ -225,9 +225,9 @@ public final class ScxCoreConfig {
     }
 
     /**
-     * 打印 easyConfig 的信息
+     * 打印 coreConfig 的信息
      */
-    public void showEasyConfigInfo() {
+    public void showCoreConfigInfo() {
         Ansi.out()
                 .green("Y 服务器 IP 地址                       \t -->\t " + NetUtils.getLocalIPAddress().v4ToString()).ln()
                 .green("Y 端口号                               \t -->\t " + port).ln()

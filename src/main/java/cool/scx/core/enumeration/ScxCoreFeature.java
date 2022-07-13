@@ -16,9 +16,9 @@ public enum ScxCoreFeature implements ScxFeature<Boolean> {
     SHOW_BANNER(true),
 
     /**
-     * 显示 easyConfig 的信息
+     * 显示 coreConfig 的信息
      */
-    SHOW_EASY_CONFIG_INFO(true),
+    SHOW_CORE_CONFIG_INFO(true),
 
     /**
      * 显示模块生命周期信息

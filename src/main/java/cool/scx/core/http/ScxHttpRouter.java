@@ -72,8 +72,8 @@ public final class ScxHttpRouter {
         //绑定异常处理器
         bindErrorHandler(this.vertxRouter);
         //设置基本的 handler
-        this.faviconHandler = new FaviconHandlerImpl(scx.vertx(), Path.of(scx.scxEasyConfig().templateRoot().toString(), "favicon.ico").toString());
-        this.corsHandler = new CorsHandlerImpl(scx.scxEasyConfig().allowedOrigin()).allowedHeaders(Set.of(HttpHeaderNames.ACCEPT.toString(), HttpHeaderNames.CONTENT_TYPE.toString())).allowedMethods(Set.of(HttpMethod.GET, HttpMethod.POST, HttpMethod.OPTIONS, HttpMethod.DELETE, HttpMethod.PATCH, HttpMethod.PUT)).allowCredentials(true);
+        this.faviconHandler = new FaviconHandlerImpl(scx.vertx(), Path.of(scx.scxCoreConfig().templateRoot().toString(), "favicon.ico").toString());
+        this.corsHandler = new CorsHandlerImpl(scx.scxCoreConfig().allowedOrigin()).allowedHeaders(Set.of(HttpHeaderNames.ACCEPT.toString(), HttpHeaderNames.CONTENT_TYPE.toString())).allowedMethods(Set.of(HttpMethod.GET, HttpMethod.POST, HttpMethod.OPTIONS, HttpMethod.DELETE, HttpMethod.PATCH, HttpMethod.PUT)).allowCredentials(true);
         this.bodyHandler = BodyHandler.create(scx.scxEnvironment().getTempPath(BodyHandler.DEFAULT_UPLOADS_DIRECTORY).toString()).setBodyLimit(ScxConstant.DEFAULT_BODY_LIMIT).setMergeFormAttributes(false).setDeleteUploadedFilesOnEnd(true);
         //注册路由
         this.faviconHandlerRoute = this.vertxRouter.route().handler(faviconHandler);

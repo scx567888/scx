@@ -65,7 +65,7 @@ public final class Scx {
     private final List<ScxModuleMetadata<?>> scxModuleMetadataList;
 
     /**
-     * scxEasyConfig
+     * scxCoreConfig
      */
     private final ScxCoreConfig scxCoreConfig;
 
@@ -311,8 +311,8 @@ public final class Scx {
         if (this.scxFeatureConfig.get(ScxCoreFeature.SHOW_BANNER)) {
             printBanner();
         }
-        if (this.scxFeatureConfig.get(ScxCoreFeature.SHOW_EASY_CONFIG_INFO)) {
-            this.scxCoreConfig.showEasyConfigInfo();
+        if (this.scxFeatureConfig.get(ScxCoreFeature.SHOW_CORE_CONFIG_INFO)) {
+            this.scxCoreConfig.showCoreConfigInfo();
         }
         //2, 初始化路由 (Http 和 WebSocket)
         this.scxHttpRouter = new ScxHttpRouter(this);
@@ -431,7 +431,7 @@ public final class Scx {
      *
      * @return a
      */
-    public ScxCoreConfig scxEasyConfig() {
+    public ScxCoreConfig scxCoreConfig() {
         return scxCoreConfig;
     }
 

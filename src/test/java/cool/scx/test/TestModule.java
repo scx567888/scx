@@ -59,7 +59,7 @@ public class TestModule implements ScxModule {
                 .addModule(new TestModule())
                 .setArgs(args)
                 .configure(ScxCoreFeature.SHOW_BANNER, true)
-                .configure(ScxCoreFeature.SHOW_EASY_CONFIG_INFO, true)
+                .configure(ScxCoreFeature.SHOW_CORE_CONFIG_INFO, true)
                 .configure(ScxCoreFeature.SHOW_MODULE_LIFE_CYCLE_INFO, true)
                 .configure(ScxCoreFeature.SHOW_START_UP_INFO, true)
                 .configure(ScxCoreFeature.USE_DEVELOPMENT_ERROR_PAGE, true)
