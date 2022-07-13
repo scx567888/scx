@@ -1,22 +1,22 @@
 package cool.scx.test.website;
 
-import cool.scx.ScxConstant;
-import cool.scx.ScxContext;
-import cool.scx.annotation.FromQuery;
-import cool.scx.annotation.FromUpload;
-import cool.scx.annotation.ScxMapping;
-import cool.scx.enumeration.HttpMethod;
-import cool.scx.enumeration.RawType;
+import cool.scx.core.ScxConstant;
+import cool.scx.core.ScxContext;
+import cool.scx.core.annotation.FromQuery;
+import cool.scx.core.annotation.FromUpload;
+import cool.scx.core.annotation.ScxMapping;
+import cool.scx.core.enumeration.HttpMethod;
+import cool.scx.core.enumeration.RawType;
+import cool.scx.core.type.UploadedEntity;
+import cool.scx.core.vo.*;
 import cool.scx.test.car.Car;
 import cool.scx.test.car.CarService;
-import cool.scx.type.UploadedEntity;
 import cool.scx.util.DigestUtils;
 import cool.scx.util.NetUtils;
 import cool.scx.util.RandomUtils;
 import cool.scx.util.http.HttpClientHelper;
 import cool.scx.util.zip.VirtualDirectory;
 import cool.scx.util.zip.VirtualFile;
-import cool.scx.vo.*;
 import io.vertx.ext.web.FileUpload;
 import io.vertx.ext.web.RoutingContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,7 +94,7 @@ public class WebSiteController {
     /**
      * 测试!!!
      *
-     * @return a {@link cool.scx.vo.Html} object
+     * @return a {@link cool.scx.core.vo.Html} object
      */
     @ScxMapping(value = "/baidu", method = HttpMethod.GET)
     public Html TestHttpUtils() throws IOException, InterruptedException {
@@ -105,7 +105,7 @@ public class WebSiteController {
     /**
      * 测试!!!
      *
-     * @return a {@link cool.scx.vo.Download} object
+     * @return a {@link cool.scx.core.vo.Download} object
      */
     @ScxMapping(value = "/download", method = HttpMethod.GET)
     public Download TestDownload() {

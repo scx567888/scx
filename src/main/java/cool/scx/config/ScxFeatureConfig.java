@@ -1,6 +1,6 @@
 package cool.scx.config;
 
-import cool.scx.enumeration.ScxFeature;
+import cool.scx.core.enumeration.ScxFeature;
 
 import java.util.EnumMap;
 import java.util.Map;

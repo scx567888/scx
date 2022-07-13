@@ -1,6 +1,6 @@
 package cool.scx.sql;
 
-import cool.scx.dao.ScxDaoColumnInfo;
+import cool.scx.core.dao.ScxDaoColumnInfo;
 import cool.scx.sql.group_by.GroupBy;
 import cool.scx.sql.order_by.OrderBy;
 import cool.scx.sql.pagination.Pagination;

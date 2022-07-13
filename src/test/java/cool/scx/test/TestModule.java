@@ -1,14 +1,14 @@
 package cool.scx.test;
 
-import cool.scx.Scx;
-import cool.scx.ScxContext;
-import cool.scx.ScxModule;
-import cool.scx.base.BaseModelService;
-import cool.scx.base.Query;
-import cool.scx.base.SelectFilter;
-import cool.scx.base.UpdateFilter;
-import cool.scx.dao.ScxDaoHelper;
-import cool.scx.enumeration.ScxFeature;
+import cool.scx.core.Scx;
+import cool.scx.core.ScxContext;
+import cool.scx.core.ScxModule;
+import cool.scx.core.base.BaseModelService;
+import cool.scx.core.base.Query;
+import cool.scx.core.base.SelectFilter;
+import cool.scx.core.base.UpdateFilter;
+import cool.scx.core.dao.ScxDaoHelper;
+import cool.scx.core.enumeration.ScxFeature;
 import cool.scx.sql.where.WhereOption;
 import cool.scx.test.car.Car;
 import cool.scx.test.car.CarColor;

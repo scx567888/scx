@@ -10,7 +10,7 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import cool.scx.ScxConstant;
+import cool.scx.core.ScxConstant;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -71,7 +71,7 @@ public final class JacksonHelper {
     /**
      * 根据 MapperBuilder 获取 ObjectMapper 对象 并对默认属性进行一些设置,具体如下
      * 如需获得原始的 ObjectMapper 对象请使用 {@link com.fasterxml.jackson.databind.cfg.MapperBuilder}; 自行创建
-     * 1, 针对 LocalDateTime 类型设置默认的日期格式化格式 具体格式由 {@link cool.scx.ScxConstant#DEFAULT_DATETIME_FORMATTER} 决定
+     * 1, 针对 LocalDateTime 类型设置默认的日期格式化格式 具体格式由 {@link ScxConstant#DEFAULT_DATETIME_FORMATTER} 决定
      * 2, DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES 设置为  false
      * 3, SerializationFeature.FAIL_ON_EMPTY_BEANS          设置为  false
      * 4, NullKeySerializer                                 设置为  JacksonHelper.NULL_KEY_SERIALIZER

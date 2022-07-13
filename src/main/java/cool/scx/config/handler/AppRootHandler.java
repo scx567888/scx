@@ -1,6 +1,6 @@
 package cool.scx.config.handler;
 
-import cool.scx.ScxEnvironment;
+import cool.scx.core.ScxEnvironment;
 import cool.scx.functional.ScxHandlerAR;
 import cool.scx.tuple.KeyValue;
 import cool.scx.util.ansi.Ansi;

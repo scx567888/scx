@@ -1,6 +1,6 @@
 package cool.scx.util.http;
 
-import cool.scx.enumeration.HttpMethod;
+import cool.scx.core.enumeration.HttpMethod;
 
 import java.io.IOException;
 import java.net.URI;
