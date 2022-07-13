@@ -30,8 +30,6 @@ import org.springframework.scheduling.support.CronTrigger;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import java.io.File;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -146,20 +144,16 @@ public class TestModule implements ScxModule {
         var logger = LoggerFactory.getLogger(TestModule.class);
         //测试 URIBuilder
         for (int i = 0; i < 1000; i = i + 1) {
-            try {
-                var s = "http://" + ip + ":8888/test0";
-                var stringHttpResponse = HttpClientHelper.post(
-                        URIBuilder.of(s)
-                                .addParam("name", "小明😊123?!@%^&**()_特-殊 字=符")
-                                .addParam("age", 18).toString(),
-                        new FormData()
-                                .addFile("content", "内容内容内容内容内容".getBytes(StandardCharsets.UTF_8), "", "")
-                                .addFile("content1", new File(ScxContext.getTempPath("test.txt").toString()))
-                ).body();
-                logger.error("测试请求[{}] : {}", i, stringHttpResponse);
-            } catch (IOException | InterruptedException e) {
-                e.printStackTrace();
-            }
+            var s = "http://" + ip + ":8888/test0";
+            var stringHttpResponse = HttpClientHelper.post(
+                    URIBuilder.of(s)
+                            .addParam("name", "小明😊123?!@%^&**()_特-殊 字=符")
+                            .addParam("age", 18).toString(),
+                    new FormData()
+                            .addFile("content", "内容内容内容内容内容".getBytes(StandardCharsets.UTF_8), "", "")
+                            .addFile("content1", ScxContext.getTempPath("test.txt"))
+            ).body();
+            logger.error("测试请求[{}] : {}", i, stringHttpResponse);
         }
     }
 
