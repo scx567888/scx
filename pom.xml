@@ -120,7 +120,6 @@
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk18on</artifactId>
-            <version>1.71</version>
         </dependency>
 
         <dependency>
