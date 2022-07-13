@@ -10,7 +10,7 @@ import cool.scx.sql.NoParametersSQL;
 import cool.scx.sql.PlaceholderSQL;
 import cool.scx.sql.SQLBuilder;
 import cool.scx.sql.handler.BeanListHandler;
-import cool.scx.sql.handler.ScalarHandler;
+import cool.scx.sql.handler.ObjectHandler;
 import cool.scx.util.RandomUtils;
 
 import java.lang.reflect.ParameterizedType;
@@ -47,7 +47,7 @@ public class BasicService<Entity> {
     /**
      * 查询 count 所用的 handler
      */
-    protected final ScalarHandler<Long> countResultHandler = new ScalarHandler<>("count", Long.class);
+    protected final ObjectHandler<Long> countResultHandler = ObjectHandler.of("count", Long.class);
 
     /**
      * 从泛型中获取 entityClass
@@ -59,7 +59,7 @@ public class BasicService<Entity> {
             var typeArguments = ((ParameterizedType) genericSuperclass).getActualTypeArguments();
             this.entityClass = (Class<Entity>) typeArguments[0];
             this.scxDaoTableInfo = new ScxDaoTableInfo(this.entityClass);
-            this.entityBeanListHandler = new BeanListHandler<>(this.entityClass);
+            this.entityBeanListHandler = BeanListHandler.of(this.entityClass);
         } else {
             throw new IllegalArgumentException(this.getClass().getName() + " : 必须设置泛型参数 !!!");
         }
@@ -73,7 +73,47 @@ public class BasicService<Entity> {
     public BasicService(Class<Entity> entityClass) {
         this.entityClass = entityClass;
         this.scxDaoTableInfo = new ScxDaoTableInfo(this.entityClass);
-        this.entityBeanListHandler = new BeanListHandler<>(this.entityClass);
+        this.entityBeanListHandler = BeanListHandler.of(this.entityClass);
+    }
+
+    /**
+     * <p>insertConvert.</p>
+     *
+     * @param insertColumnInfos an array of {@link cool.scx.core.dao.ScxDaoColumnInfo} objects
+     * @return an array of {@link java.lang.String} objects
+     */
+    private static String[] insertConvert(ScxDaoColumnInfo[] insertColumnInfos) {
+        return Arrays.stream(insertColumnInfos).map(ScxDaoColumnInfo::columnName).toArray(String[]::new);
+    }
+
+    /**
+     * <p>setConvert.</p>
+     *
+     * @param updateSetColumnInfos an array of {@link cool.scx.core.dao.ScxDaoColumnInfo} objects
+     * @return an array of {@link java.lang.String} objects
+     */
+    private static String[] setConvert(ScxDaoColumnInfo[] updateSetColumnInfos) {
+        return Arrays.stream(updateSetColumnInfos).map(ScxDaoColumnInfo::updateSetSQL).toArray(String[]::new);
+    }
+
+    /**
+     * <p>selectConvert.</p>
+     *
+     * @param selectColumnInfos an array of {@link cool.scx.core.dao.ScxDaoColumnInfo} objects
+     * @return an array of {@link java.lang.String} objects
+     */
+    private static String[] selectConvert(ScxDaoColumnInfo[] selectColumnInfos) {
+        return Arrays.stream(selectColumnInfos).map(ScxDaoColumnInfo::selectSQL).toArray(String[]::new);
+    }
+
+    /**
+     * <p>valuesConvert.</p>
+     *
+     * @param insertColumnInfos an array of {@link cool.scx.core.dao.ScxDaoColumnInfo} objects
+     * @return an array of {@link java.lang.String} objects
+     */
+    private static String[] valuesConvert(ScxDaoColumnInfo[] insertColumnInfos) {
+        return Arrays.stream(insertColumnInfos).map(ScxDaoColumnInfo::insertValuesSQL).toArray(String[]::new);
     }
 
     /**
@@ -96,7 +136,7 @@ public class BasicService<Entity> {
      */
     private AbstractPlaceholderSQL<?> _buildInsertSQL(Entity entity, UpdateFilter updateFilter) {
         var insertColumns = updateFilter.filter(entity, scxDaoTableInfo.columnInfos());
-        var sql = SQLBuilder.Insert(scxDaoTableInfo.tableName(), insertColumns).Values(insertColumns).GetSQL();
+        var sql = SQLBuilder.Insert(scxDaoTableInfo.tableName(), insertConvert(insertColumns)).Values(valuesConvert(insertColumns)).GetSQL();
         return PlaceholderSQL.of(sql, Arrays.stream(insertColumns).map(c -> c.getFieldValue(entity)).toArray());
     }
 
@@ -129,7 +169,7 @@ public class BasicService<Entity> {
             }
             objectArrayList.add(o);
         }
-        var sql = SQLBuilder.Insert(scxDaoTableInfo.tableName(), insertColumns).Values(insertColumns).GetSQL();
+        var sql = SQLBuilder.Insert(scxDaoTableInfo.tableName(), insertConvert(insertColumns)).Values(valuesConvert(insertColumns)).GetSQL();
         return PlaceholderSQL.ofBatch(sql, objectArrayList);
     }
 
@@ -193,7 +233,7 @@ public class BasicService<Entity> {
      */
     public final AbstractPlaceholderSQL<?> _buildSelectSQL(Query query, SelectFilter selectFilter) {
         var selectColumnInfos = selectFilter.filter(scxDaoTableInfo.columnInfos());
-        var sql = SQLBuilder.Select(selectColumnInfos).From(scxDaoTableInfo.tableName()).Where(query.where()).GroupBy(query.groupBy()).OrderBy(query.orderBy()).Limit(query.pagination()).GetSQL();
+        var sql = SQLBuilder.Select(selectConvert(selectColumnInfos)).From(scxDaoTableInfo.tableName()).Where(query.where()).GroupBy(query.groupBy()).OrderBy(query.orderBy()).Limit(query.pagination()).GetSQL();
         return PlaceholderSQL.of(sql, query.where().getWhereParams());
     }
 
@@ -211,7 +251,7 @@ public class BasicService<Entity> {
             return _buildSelectSQL(query, selectFilter);
         } else {
             var selectColumnInfos = selectFilter.filter(scxDaoTableInfo.columnInfos());
-            var sql0 = SQLBuilder.Select(selectColumnInfos).From(scxDaoTableInfo.tableName()).Where(query.where()).GroupBy(query.groupBy()).OrderBy(query.orderBy()).Limit(query.pagination()).GetSQL();
+            var sql0 = SQLBuilder.Select(selectConvert(selectColumnInfos)).From(scxDaoTableInfo.tableName()).Where(query.where()).GroupBy(query.groupBy()).OrderBy(query.orderBy()).Limit(query.pagination()).GetSQL();
             var sql = SQLBuilder.Select(Arrays.stream(selectColumnInfos).map(ScxDaoColumnInfo::fieldName).toArray(String[]::new)).From("(" + sql0 + ")").GetSQL();
             return PlaceholderSQL.of(sql + " AS " + scxDaoTableInfo.tableName() + "_" + RandomUtils.randomString(6), query.where().getWhereParams());
         }
@@ -263,7 +303,7 @@ public class BasicService<Entity> {
             throw new IllegalArgumentException("更新数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
         }
         var updateSetColumnInfos = updateFilter.filter(entity, scxDaoTableInfo.columnInfos());
-        var sql = SQLBuilder.Update(scxDaoTableInfo.tableName()).Set(updateSetColumnInfos).Where(query.where()).GetSQL();
+        var sql = SQLBuilder.Update(scxDaoTableInfo.tableName()).Set(setConvert(updateSetColumnInfos)).Where(query.where()).GetSQL();
         var entityParams = Arrays.stream(updateSetColumnInfos).map(c -> c.getFieldValue(entity)).collect(Collectors.toList());
         entityParams.addAll(List.of(query.where().getWhereParams()));
         return PlaceholderSQL.of(sql, entityParams.toArray());
