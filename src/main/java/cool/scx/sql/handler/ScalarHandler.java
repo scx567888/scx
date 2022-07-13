@@ -1,6 +1,6 @@
 package cool.scx.sql.handler;
 
-import cool.scx.ScxHandlerRE;
+import cool.scx.functional.ScxHandlerARE;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,7 +12,7 @@ import java.sql.SQLException;
  * @author scx567888
  * @version 1.7.3
  */
-public class ScalarHandler<T> implements ScxHandlerRE<ResultSet, T, SQLException> {
+public class ScalarHandler<T> implements ScxHandlerARE<ResultSet, T, SQLException> {
 
     /**
      * a

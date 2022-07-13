@@ -1,7 +1,7 @@
 package cool.scx.vo;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import cool.scx.ScxHandlerE;
+import cool.scx.functional.ScxHandlerAE;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.RoutingContext;
@@ -19,7 +19,7 @@ import static cool.scx.vo.BaseVo0.XML_MAPPER;
  * @author scx567888
  * @version 0.5.0
  */
-public interface BaseVo extends ScxHandlerE<RoutingContext, Exception> {
+public interface BaseVo extends ScxHandlerAE<RoutingContext, Exception> {
 
     /**
      * 填充 ContentType a

@@ -1,11 +1,13 @@
-package cool.scx.logging;
+package cool.scx;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import cool.scx.ScxEnvironment;
 import cool.scx.config.ScxConfig;
 import cool.scx.config.handler.AppRootHandler;
 import cool.scx.config.handler.ConvertValueHandler;
 import cool.scx.config.handler.DefaultValueHandler;
+import cool.scx.logging.ScxLoggerFactory;
+import cool.scx.logging.ScxLoggingLevel;
+import cool.scx.logging.ScxLoggingType;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
 

@@ -1,11 +1,11 @@
 package cool.scx.config;
 
-import cool.scx.ScxHandlerR;
 import cool.scx.config.handler.ConvertValueHandler;
 import cool.scx.config.handler.DefaultValueHandler;
 import cool.scx.config.source.ScxConfigSource;
-import cool.scx.util.tuple.KeyValue;
-import cool.scx.util.tuple.Tuples;
+import cool.scx.functional.ScxHandlerAR;
+import cool.scx.tuple.KeyValue;
+import cool.scx.tuple.Tuples;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -69,7 +69,7 @@ public final class ScxConfig {
      * @param <T>      a
      * @return a
      */
-    public <T> T get(String keyPath, ScxHandlerR<KeyValue<String, Object>, T> handlerR) {
+    public <T> T get(String keyPath, ScxHandlerAR<KeyValue<String, Object>, T> handlerR) {
         return handlerR.handle(Tuples.keyValue(keyPath, get(keyPath)));
     }
 

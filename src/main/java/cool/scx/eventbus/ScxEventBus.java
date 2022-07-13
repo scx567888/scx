@@ -1,6 +1,6 @@
 package cool.scx.eventbus;
 
-import cool.scx.ScxHandler;
+import cool.scx.functional.ScxHandlerA;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.eventbus.impl.EventBusImpl;
@@ -36,7 +36,7 @@ public final class ScxEventBus {
      * @param address a
      * @param handler h
      */
-    public void consumer(String address, ScxHandler<Object> handler) {
+    public void consumer(String address, ScxHandlerA<Object> handler) {
         vertxEventBus.localConsumer(address, message -> handler.handle(message.body()));
     }
 

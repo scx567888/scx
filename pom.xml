@@ -13,7 +13,7 @@
     <packaging>jar</packaging>
     <name>scx</name>
 
-    <version>1.15.7</version>
+    <version>1.15.8</version>
 
     <description>A Web rapid development framework</description>
     <url>https://github.com/scx567888/scx</url>
@@ -74,6 +74,18 @@
     </build>
 
     <dependencies>
+
+        <dependency>
+            <groupId>cool.scx</groupId>
+            <artifactId>scx-functional</artifactId>
+            <version>0.0.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cool.scx</groupId>
+            <artifactId>scx-logging</artifactId>
+            <version>0.0.2</version>
+        </dependency>
 
         <dependency>
             <groupId>io.vertx</groupId>

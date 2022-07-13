@@ -1,9 +1,9 @@
 package cool.scx.config.handler;
 
 import cool.scx.ScxEnvironment;
-import cool.scx.ScxHandlerR;
+import cool.scx.functional.ScxHandlerAR;
+import cool.scx.tuple.KeyValue;
 import cool.scx.util.ansi.Ansi;
-import cool.scx.util.tuple.KeyValue;
 
 import java.nio.file.Path;
 
@@ -13,7 +13,7 @@ import java.nio.file.Path;
  * @author scx567888
  * @version 1.11.8
  */
-public final class AppRootHandler implements ScxHandlerR<KeyValue<String, Object>, Path> {
+public final class AppRootHandler implements ScxHandlerAR<KeyValue<String, Object>, Path> {
 
     /**
      * a
