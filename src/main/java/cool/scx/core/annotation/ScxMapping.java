@@ -1,0 +1,53 @@
+package cool.scx.core.annotation;
+
+import cool.scx.core.enumeration.HttpMethod;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/**
+ * ScxMapping
+ * 具体 http 请求映射
+ *
+ * @author scx567888
+ * @version 0.3.6
+ */
+@Target({ElementType.METHOD, ElementType.TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface ScxMapping {
+
+    /**
+     * 是否忽略类级别上的 ScxMapping 注解所定义的顶级 url
+     *
+     * @return 是否
+     */
+    boolean ignoreParentUrl() default false;
+
+    /**
+     * 映射的路径
+     *
+     * @return 路径
+     */
+    String value() default "";
+
+    /**
+     * 注意 : 仅当作用于方法时生效 !!!
+     * 是否使用方法名称作为 url 路径 <br>
+     * 仅当 value 为 "" 时生效 <br>
+     * 规则为 获取方法名称 然后转换为 短横线命名法 <br>
+     * 如 方法名为  getUserList 则 url 为 /user/get-user-list
+     *
+     * @return 标识
+     */
+    boolean useNameAsUrl() default true;
+
+    /**
+     * 请求标识 默认只支持 get 请求
+     *
+     * @return 方法
+     */
+    HttpMethod[] method() default {HttpMethod.GET};
+
+}

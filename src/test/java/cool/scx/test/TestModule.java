@@ -1,14 +1,14 @@
 package cool.scx.test;
 
-import cool.scx.Scx;
-import cool.scx.ScxContext;
-import cool.scx.ScxModule;
-import cool.scx.base.BaseModelService;
-import cool.scx.base.Query;
-import cool.scx.base.SelectFilter;
-import cool.scx.base.UpdateFilter;
-import cool.scx.dao.ScxDaoHelper;
-import cool.scx.enumeration.ScxFeature;
+import cool.scx.core.Scx;
+import cool.scx.core.ScxContext;
+import cool.scx.core.ScxModule;
+import cool.scx.core.base.BaseModelService;
+import cool.scx.core.base.Query;
+import cool.scx.core.base.SelectFilter;
+import cool.scx.core.base.UpdateFilter;
+import cool.scx.core.dao.ScxDaoHelper;
+import cool.scx.core.enumeration.ScxCoreFeature;
 import cool.scx.sql.where.WhereOption;
 import cool.scx.test.car.Car;
 import cool.scx.test.car.CarColor;
@@ -30,8 +30,6 @@ import org.springframework.scheduling.support.CronTrigger;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import java.io.File;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -60,12 +58,12 @@ public class TestModule implements ScxModule {
                 .setMainClass(TestModule.class)
                 .addModule(new TestModule())
                 .setArgs(args)
-                .configure(ScxFeature.SHOW_BANNER, true)
-                .configure(ScxFeature.SHOW_EASY_CONFIG_INFO, true)
-                .configure(ScxFeature.SHOW_MODULE_LIFE_CYCLE_INFO, true)
-                .configure(ScxFeature.SHOW_START_UP_INFO, true)
-                .configure(ScxFeature.USE_DEVELOPMENT_ERROR_PAGE, true)
-                .configure(ScxFeature.ENABLE_SCHEDULING_WITH_ANNOTATION, true)
+                .configure(ScxCoreFeature.SHOW_BANNER, true)
+                .configure(ScxCoreFeature.SHOW_CORE_CONFIG_INFO, true)
+                .configure(ScxCoreFeature.SHOW_MODULE_LIFE_CYCLE_INFO, true)
+                .configure(ScxCoreFeature.SHOW_START_UP_INFO, true)
+                .configure(ScxCoreFeature.USE_DEVELOPMENT_ERROR_PAGE, true)
+                .configure(ScxCoreFeature.ENABLE_SCHEDULING_WITH_ANNOTATION, true)
                 .run();
         //修复表
         ScxDaoHelper.fixTable();
@@ -146,20 +144,16 @@ public class TestModule implements ScxModule {
         var logger = LoggerFactory.getLogger(TestModule.class);
         //测试 URIBuilder
         for (int i = 0; i < 1000; i = i + 1) {
-            try {
-                var s = "http://" + ip + ":8888/test0";
-                var stringHttpResponse = HttpClientHelper.post(
-                        URIBuilder.of(s)
-                                .addParam("name", "小明😊123?!@%^&**()_特-殊 字=符")
-                                .addParam("age", 18).toString(),
-                        new FormData()
-                                .addFile("content", "内容内容内容内容内容".getBytes(StandardCharsets.UTF_8), "", "")
-                                .addFile("content1", new File(ScxContext.getTempPath("test.txt").toString()))
-                ).body();
-                logger.error("测试请求[{}] : {}", i, stringHttpResponse);
-            } catch (IOException | InterruptedException e) {
-                e.printStackTrace();
-            }
+            var s = "http://" + ip + ":8888/test0";
+            var stringHttpResponse = HttpClientHelper.post(
+                    URIBuilder.of(s)
+                            .addParam("name", "小明😊123?!@%^&**()_特-殊 字=符")
+                            .addParam("age", 18).toString(),
+                    new FormData()
+                            .addFile("content", "内容内容内容内容内容".getBytes(StandardCharsets.UTF_8), "", "")
+                            .addFile("content1", ScxContext.getTempPath("test.txt"))
+            ).body();
+            logger.error("测试请求[{}] : {}", i, stringHttpResponse);
         }
     }
 

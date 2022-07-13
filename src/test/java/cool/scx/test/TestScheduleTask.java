@@ -1,6 +1,6 @@
 package cool.scx.test;
 
-import cool.scx.annotation.ScxService;
+import cool.scx.core.annotation.ScxService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
