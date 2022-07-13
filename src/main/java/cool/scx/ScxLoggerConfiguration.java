@@ -11,7 +11,6 @@ import cool.scx.logging.ScxLoggingType;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
 
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -21,12 +20,7 @@ import java.util.Map;
  * @author scx567888
  * @version 1.11.8
  */
-public final class ScxLoggerConfiguration {
-
-    /**
-     * a
-     */
-    public static final DateTimeFormatter LOG_DATETIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+final class ScxLoggerConfiguration {
 
     /**
      * a
@@ -74,32 +68,6 @@ public final class ScxLoggerConfiguration {
                     var stackTrace = ObjectUtils.convertValue(logger.get("stack-trace"), Boolean.class);
                     ScxLoggerFactory.updateLogger(name, level, type, storedDirectory, stackTrace);
                 }
-            }
-        }
-    }
-
-    /**
-     * 是否为 日志 class 为了减少日志中噪声 我们把日志框架所属的类去除掉
-     *
-     * @param className className
-     * @return a
-     */
-    private static boolean isLoggerClass(String className) {
-        return !className.startsWith("cool.scx.logging")
-                && !className.startsWith("org.slf4j.helpers")
-                && !className.startsWith("org.apache.logging.log4j");
-    }
-
-    /**
-     * a
-     *
-     * @param stringBuilder a
-     */
-    static void getStackTraceInfo(StringBuilder stringBuilder) {
-        var trace = new Exception().getStackTrace();
-        for (var traceElement : trace) {
-            if (isLoggerClass(traceElement.getClassName())) {
-                stringBuilder.append("\t").append(traceElement).append(System.lineSeparator());
             }
         }
     }
