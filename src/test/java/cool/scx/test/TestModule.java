@@ -8,7 +8,7 @@ import cool.scx.core.base.Query;
 import cool.scx.core.base.SelectFilter;
 import cool.scx.core.base.UpdateFilter;
 import cool.scx.core.dao.ScxDaoHelper;
-import cool.scx.core.enumeration.ScxFeature;
+import cool.scx.core.enumeration.ScxCoreFeature;
 import cool.scx.sql.where.WhereOption;
 import cool.scx.test.car.Car;
 import cool.scx.test.car.CarColor;
@@ -58,12 +58,12 @@ public class TestModule implements ScxModule {
                 .setMainClass(TestModule.class)
                 .addModule(new TestModule())
                 .setArgs(args)
-                .configure(ScxFeature.SHOW_BANNER, true)
-                .configure(ScxFeature.SHOW_EASY_CONFIG_INFO, true)
-                .configure(ScxFeature.SHOW_MODULE_LIFE_CYCLE_INFO, true)
-                .configure(ScxFeature.SHOW_START_UP_INFO, true)
-                .configure(ScxFeature.USE_DEVELOPMENT_ERROR_PAGE, true)
-                .configure(ScxFeature.ENABLE_SCHEDULING_WITH_ANNOTATION, true)
+                .configure(ScxCoreFeature.SHOW_BANNER, true)
+                .configure(ScxCoreFeature.SHOW_EASY_CONFIG_INFO, true)
+                .configure(ScxCoreFeature.SHOW_MODULE_LIFE_CYCLE_INFO, true)
+                .configure(ScxCoreFeature.SHOW_START_UP_INFO, true)
+                .configure(ScxCoreFeature.USE_DEVELOPMENT_ERROR_PAGE, true)
+                .configure(ScxCoreFeature.ENABLE_SCHEDULING_WITH_ANNOTATION, true)
                 .run();
         //修复表
         ScxDaoHelper.fixTable();

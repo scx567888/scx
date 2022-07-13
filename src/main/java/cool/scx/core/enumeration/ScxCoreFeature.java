@@ -1,12 +1,14 @@
 package cool.scx.core.enumeration;
 
+import cool.scx.config.ScxFeature;
+
 /**
  * scx 特性枚举
  *
  * @author scx567888
  * @version 1.11.8
  */
-public enum ScxFeature {
+public enum ScxCoreFeature implements ScxFeature<Boolean> {
 
     /**
      * 显示 banner
@@ -57,16 +59,12 @@ public enum ScxFeature {
      *
      * @param defaultValue a boolean
      */
-    ScxFeature(boolean defaultValue) {
+    ScxCoreFeature(boolean defaultValue) {
         this._defaultValue = defaultValue;
     }
 
-    /**
-     * a
-     *
-     * @return a
-     */
-    public boolean defaultValue() {
+    @Override
+    public Boolean defaultValue() {
         return _defaultValue;
     }
 

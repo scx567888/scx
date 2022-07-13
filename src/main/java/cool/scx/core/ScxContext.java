@@ -1,10 +1,10 @@
 package cool.scx.core;
 
 import cool.scx.config.ScxConfig;
-import cool.scx.config.ScxEasyConfig;
+import cool.scx.config.ScxEnvironment;
 import cool.scx.config.ScxFeatureConfig;
 import cool.scx.core.dao.ScxDao;
-import cool.scx.core.enumeration.ScxFeature;
+import cool.scx.core.enumeration.ScxCoreFeature;
 import cool.scx.core.eventbus.ScxEventBus;
 import cool.scx.core.http.ScxHttpRouter;
 import cool.scx.core.mvc.ScxMappingConfiguration;
@@ -174,7 +174,7 @@ public final class ScxContext {
      *
      * @return a
      */
-    public static ScxEasyConfig easyConfig() {
+    public static ScxCoreConfig easyConfig() {
         return scx().scxEasyConfig();
     }
 
@@ -238,8 +238,8 @@ public final class ScxContext {
      * @param scxFeature a
      * @return a
      */
-    public static boolean getFeatureState(ScxFeature scxFeature) {
-        return featureConfig().getFeatureState(scxFeature);
+    public static boolean getFeatureState(ScxCoreFeature scxFeature) {
+        return featureConfig().get(scxFeature);
     }
 
     /**

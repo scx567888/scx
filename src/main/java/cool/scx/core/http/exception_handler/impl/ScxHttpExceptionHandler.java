@@ -1,7 +1,7 @@
 package cool.scx.core.http.exception_handler.impl;
 
 import cool.scx.core.ScxContext;
-import cool.scx.core.enumeration.ScxFeature;
+import cool.scx.core.enumeration.ScxCoreFeature;
 import cool.scx.core.http.exception.ScxHttpException;
 import cool.scx.core.http.exception_handler.ScxHttpRouterExceptionHandler;
 import cool.scx.core.vo.BaseVo;
@@ -58,7 +58,7 @@ public final class ScxHttpExceptionHandler implements ScxHttpRouterExceptionHand
     public static void handleScxHttpException(ScxHttpException scxHttpException, RoutingContext routingContext) {
         String info = null;
         //1, 这里根据是否开启了开发人员错误页面 进行相应的返回
-        if (ScxContext.getFeatureState(ScxFeature.USE_DEVELOPMENT_ERROR_PAGE)) {
+        if (ScxContext.getFeatureState(ScxCoreFeature.USE_DEVELOPMENT_ERROR_PAGE)) {
             var cause = ScxExceptionHelper.getRootCause(scxHttpException.getCause());
             if (cause == null) {
                 info = scxHttpException.getMessage();

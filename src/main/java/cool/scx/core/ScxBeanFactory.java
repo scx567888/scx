@@ -1,7 +1,7 @@
 package cool.scx.core;
 
 import cool.scx.config.ScxFeatureConfig;
-import cool.scx.core.enumeration.ScxFeature;
+import cool.scx.core.enumeration.ScxCoreFeature;
 import org.springframework.beans.factory.annotation.AnnotatedGenericBeanDefinition;
 import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
@@ -35,7 +35,7 @@ public final class ScxBeanFactory {
         beanPostProcessor.setBeanFactory(this.springBeanFactory);
         this.springBeanFactory.addBeanPostProcessor(beanPostProcessor);
         //只有 开启标识时才 启用定时任务 这里直接跳过 后置处理器
-        if (scxFeatureConfig.getFeatureState(ScxFeature.ENABLE_SCHEDULING_WITH_ANNOTATION)) {
+        if (scxFeatureConfig.get(ScxCoreFeature.ENABLE_SCHEDULING_WITH_ANNOTATION)) {
             //这里在添加一个 bean 的后置处理器 以便使用 定时任务 注解
             var scheduledAnnotationBeanPostProcessor = new ScheduledAnnotationBeanPostProcessor();
             scheduledAnnotationBeanPostProcessor.setBeanFactory(this.springBeanFactory);
@@ -44,7 +44,7 @@ public final class ScxBeanFactory {
             this.springBeanFactory.addBeanPostProcessor(scheduledAnnotationBeanPostProcessor);
         }
         //设置是否允许循环依赖 (默认禁止循环依赖)
-        this.springBeanFactory.setAllowCircularReferences(scxFeatureConfig.getFeatureState(ScxFeature.ALLOW_CIRCULAR_REFERENCES));
+        this.springBeanFactory.setAllowCircularReferences(scxFeatureConfig.get(ScxCoreFeature.ALLOW_CIRCULAR_REFERENCES));
     }
 
     /**

@@ -1,11 +1,11 @@
 package cool.scx.core;
 
 import cool.scx.config.ScxConfig;
-import cool.scx.config.ScxEasyConfig;
+import cool.scx.config.ScxConfigSource;
+import cool.scx.config.ScxEnvironment;
 import cool.scx.config.ScxFeatureConfig;
-import cool.scx.config.source.ScxConfigSource;
 import cool.scx.core.dao.ScxDao;
-import cool.scx.core.enumeration.ScxFeature;
+import cool.scx.core.enumeration.ScxCoreFeature;
 import cool.scx.core.eventbus.ScxEventBus;
 import cool.scx.core.http.ScxHttpRouter;
 import cool.scx.core.mvc.ScxMappingConfiguration;
@@ -67,7 +67,7 @@ public final class Scx {
     /**
      * scxEasyConfig
      */
-    private final ScxEasyConfig scxEasyConfig;
+    private final ScxCoreConfig scxCoreConfig;
 
     /**
      * vertx
@@ -137,7 +137,7 @@ public final class Scx {
         this.scxFeatureConfig = scxFeatureConfig;
         this.scxConfig = new ScxConfig(scxConfigSources);
         this.scxModuleMetadataList = initScxModuleMetadataList(scxModules);
-        this.scxEasyConfig = new ScxEasyConfig(this.scxConfig, this.scxEnvironment, this.appKey);
+        this.scxCoreConfig = new ScxCoreConfig(this.scxConfig, this.scxEnvironment, this.appKey);
         //2, 初始化 ScxLog 日志框架
         ScxLoggerConfiguration.init(this.scxConfig, this.scxEnvironment);
         //3, 初始化 Vertx 这里在 log4j2 之后初始化是因为 vertx 需要使用 log4j2 打印日志
@@ -147,9 +147,9 @@ public final class Scx {
         //5, 初始化 BeanFactory
         this.scxBeanFactory = initScxBeanFactory(this.scxModuleMetadataList, this.vertx.nettyEventLoopGroup(), this.scxFeatureConfig);
         //6, 初始化模板
-        this.scxTemplate = new ScxTemplate(this.scxEasyConfig);
+        this.scxTemplate = new ScxTemplate(this.scxCoreConfig);
         //7, 初始化持久层
-        this.scxDao = new ScxDao(this.scxEasyConfig);
+        this.scxDao = new ScxDao(this.scxCoreConfig);
         //8, ScxMapping 配置类
         this.scxMappingConfiguration = new ScxMappingConfiguration();
         //9, 初始化任务调度器
@@ -271,7 +271,7 @@ public final class Scx {
      * 执行模块启动的生命周期
      */
     private void startAllScxModules() {
-        if (this.scxFeatureConfig.getFeatureState(ScxFeature.SHOW_MODULE_LIFE_CYCLE_INFO)) {
+        if (this.scxFeatureConfig.get(ScxCoreFeature.SHOW_MODULE_LIFE_CYCLE_INFO)) {
             for (var m : scxModuleMetadataList) {
                 Ansi.out().brightWhite("[").brightGreen("Starting").brightWhite("] " + m.scxModuleName()).println();
                 m.scxModuleExample().start();
@@ -288,7 +288,7 @@ public final class Scx {
      * 执行模块结束的生命周期
      */
     private void stopAllScxModules() {
-        if (this.scxFeatureConfig.getFeatureState(ScxFeature.SHOW_MODULE_LIFE_CYCLE_INFO)) {
+        if (this.scxFeatureConfig.get(ScxCoreFeature.SHOW_MODULE_LIFE_CYCLE_INFO)) {
             for (var m : scxModuleMetadataList) {
                 Ansi.out().brightWhite("[").brightRed("Stopping").brightWhite("] " + m.scxModuleName()).println();
                 m.scxModuleExample().stop();
@@ -308,11 +308,11 @@ public final class Scx {
         //0, 启动 核心计时器
         StopWatch.start("ScxRun");
         //1, 根据配置打印一下 banner 或者配置文件信息之类
-        if (this.scxFeatureConfig.getFeatureState(ScxFeature.SHOW_BANNER)) {
+        if (this.scxFeatureConfig.get(ScxCoreFeature.SHOW_BANNER)) {
             printBanner();
         }
-        if (this.scxFeatureConfig.getFeatureState(ScxFeature.SHOW_EASY_CONFIG_INFO)) {
-            this.scxEasyConfig.showEasyConfigInfo();
+        if (this.scxFeatureConfig.get(ScxCoreFeature.SHOW_EASY_CONFIG_INFO)) {
+            this.scxCoreConfig.showEasyConfigInfo();
         }
         //2, 初始化路由 (Http 和 WebSocket)
         this.scxHttpRouter = new ScxHttpRouter(this);
@@ -320,7 +320,7 @@ public final class Scx {
         //3, 依次执行 模块的 start 生命周期 , 在这里我们可以操作 scxRouteRegistry, vertxRouter 等对象 "手动注册新路由" 或其他任何操作
         this.startAllScxModules();
         //4, 打印基本信息
-        if (this.scxFeatureConfig.getFeatureState(ScxFeature.SHOW_START_UP_INFO)) {
+        if (this.scxFeatureConfig.get(ScxCoreFeature.SHOW_START_UP_INFO)) {
             Ansi.out()
                     .color("已加载 " + this.scxBeanFactory.getBeanDefinitionNames().length + " 个 Bean !!!").ln()
                     .color("已加载 " + this.scxHttpRouter.vertxRouter().getRoutes().size() + " 个 Http 路由 !!!").ln()
@@ -328,18 +328,18 @@ public final class Scx {
         }
         //5, 初始化服务器
         var httpServerOptions = new HttpServerOptions();
-        if (this.scxEasyConfig.isHttpsEnabled()) {
+        if (this.scxCoreConfig.isHttpsEnabled()) {
             httpServerOptions.setSsl(true)
                     .setKeyStoreOptions(new JksOptions()
-                            .setPath(this.scxEasyConfig.sslPath().toString())
-                            .setPassword(this.scxEasyConfig.sslPassword()));
+                            .setPath(this.scxCoreConfig.sslPath().toString())
+                            .setPassword(this.scxCoreConfig.sslPassword()));
         }
         this.vertxHttpServer = vertx.createHttpServer(httpServerOptions);
         this.vertxHttpServer.requestHandler(this.scxHttpRouter.vertxRouter()).webSocketHandler(this.scxWebSocketRouter);
         //6, 添加程序停止时的钩子函数
         this.addShutdownHook();
         //7, 使用初始端口号 启动服务器
-        this.startServer(this.scxEasyConfig.port());
+        this.startServer(this.scxCoreConfig.port());
         //8, 此处刷新 scxBeanFactory 使其实例化所有符合条件的 Bean
         this.scxBeanFactory.refresh();
     }
@@ -352,7 +352,7 @@ public final class Scx {
     private void startServer(int port) {
         this.vertxHttpServer.listen(port, http -> {
             if (http.succeeded()) {
-                var httpOrHttps = this.scxEasyConfig.isHttpsEnabled() ? "https" : "http";
+                var httpOrHttps = this.scxCoreConfig.isHttpsEnabled() ? "https" : "http";
                 var o = Ansi.out().green("服务器启动成功... 用时 " + StopWatch.stopToMillis("ScxRun") + " ms").ln();
                 var normalIP = NetUtils.getLocalIPAddress().getNormalIP();
                 for (var ip : normalIP) {
@@ -431,8 +431,8 @@ public final class Scx {
      *
      * @return a
      */
-    public ScxEasyConfig scxEasyConfig() {
-        return scxEasyConfig;
+    public ScxCoreConfig scxEasyConfig() {
+        return scxCoreConfig;
     }
 
     /**

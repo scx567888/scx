@@ -1,11 +1,12 @@
 package cool.scx.core;
 
+import cool.scx.config.ScxConfigSource;
+import cool.scx.config.ScxEnvironment;
 import cool.scx.config.ScxFeatureConfig;
-import cool.scx.config.source.ScxConfigSource;
-import cool.scx.config.source.impl.ArgsConfigSource;
-import cool.scx.config.source.impl.JsonFileConfigSource;
-import cool.scx.config.source.impl.MapConfigSource;
-import cool.scx.core.enumeration.ScxFeature;
+import cool.scx.config.source_impl.ArgsConfigSource;
+import cool.scx.config.source_impl.JsonFileConfigSource;
+import cool.scx.config.source_impl.MapConfigSource;
+import cool.scx.core.enumeration.ScxCoreFeature;
 import cool.scx.util.StringUtils;
 
 import java.util.*;
@@ -148,7 +149,7 @@ public final class ScxBuilder {
         var scxEnvironment = new ScxEnvironment(mainClass);
         //配置源 注意顺序 以保证可以逐个覆盖
         var defaultMapConfigSource = MapConfigSource.of(DEFAULT_CONFIG_MAP);
-        var defaultJsonFileConfigSource = JsonFileConfigSource.of(scxEnvironment.getPathByAppRoot(DEFAULT_SCX_CONFIG_PATH).toFile());
+        var defaultJsonFileConfigSource = JsonFileConfigSource.of(scxEnvironment.getPathByAppRoot(DEFAULT_SCX_CONFIG_PATH));
         var defaultArgsConfigSource = ArgsConfigSource.of(args);
         scxConfigSources.add(defaultMapConfigSource);
         scxConfigSources.add(defaultJsonFileConfigSource);
@@ -208,8 +209,8 @@ public final class ScxBuilder {
      * @param state      s
      * @return a
      */
-    public ScxBuilder configure(ScxFeature scxFeature, boolean state) {
-        scxFeatureConfig.configure(scxFeature, state);
+    public ScxBuilder configure(ScxCoreFeature scxFeature, boolean state) {
+        scxFeatureConfig.set(scxFeature, state);
         return this;
     }
 

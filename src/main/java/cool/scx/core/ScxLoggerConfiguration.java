@@ -2,9 +2,10 @@ package cool.scx.core;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import cool.scx.config.ScxConfig;
-import cool.scx.config.handler.AppRootHandler;
-import cool.scx.config.handler.ConvertValueHandler;
-import cool.scx.config.handler.DefaultValueHandler;
+import cool.scx.config.ScxEnvironment;
+import cool.scx.config.handler_impl.AppRootHandler;
+import cool.scx.config.handler_impl.ConvertValueHandler;
+import cool.scx.config.handler_impl.DefaultValueHandler;
 import cool.scx.logging.ScxLoggerFactory;
 import cool.scx.logging.ScxLoggingLevel;
 import cool.scx.logging.ScxLoggingType;
@@ -43,8 +44,8 @@ final class ScxLoggerConfiguration {
         //先初始化好 DefaultScxLoggerInfo
         var defaultLevel = ScxLoggingLevel.of(scxConfig.get("scx.logging.default.level", String.class), ScxLoggingLevel.ERROR);
         var defaultType = ScxLoggingType.of(scxConfig.get("scx.logging.default.type", String.class), ScxLoggingType.CONSOLE);
-        var defaultStoredDirectory = scxConfig.get("scx.logging.default.stored-directory", new AppRootHandler("AppRoot:logs", scxEnvironment));
-        var defaultStackTrace = scxConfig.get("scx.logging.default.stack-trace", new DefaultValueHandler<>(false));
+        var defaultStoredDirectory = scxConfig.get("scx.logging.default.stored-directory", AppRootHandler.of(scxEnvironment, "AppRoot:logs"));
+        var defaultStackTrace = scxConfig.get("scx.logging.default.stack-trace", DefaultValueHandler.of(false));
         ScxLoggerFactory.updateDefault(defaultLevel, defaultType, defaultStoredDirectory, defaultStackTrace);
     }
 
@@ -56,7 +57,7 @@ final class ScxLoggerConfiguration {
      */
     private static void initLoggers(ScxConfig scxConfig, ScxEnvironment scxEnvironment) {
         //以下日志若有缺少的属性则全部以 defaultScxLoggerInfo 为准
-        var loggers = scxConfig.get("scx.logging.loggers", new ConvertValueHandler<>(new TypeReference<List<Map<String, String>>>() {
+        var loggers = scxConfig.get("scx.logging.loggers", ConvertValueHandler.of(new TypeReference<List<Map<String, String>>>() {
         }));
         if (loggers != null) {
             for (var logger : loggers) {

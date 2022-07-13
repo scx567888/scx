@@ -1,8 +1,9 @@
-package cool.scx.config;
+package cool.scx.core;
 
-import cool.scx.config.handler.AppRootHandler;
-import cool.scx.config.handler.DecryptValueHandler;
-import cool.scx.core.ScxEnvironment;
+import cool.scx.config.ScxConfig;
+import cool.scx.config.ScxEnvironment;
+import cool.scx.config.handler_impl.AppRootHandler;
+import cool.scx.config.handler_impl.DecryptValueHandler;
 import cool.scx.util.NetUtils;
 import cool.scx.util.ansi.Ansi;
 
@@ -16,7 +17,7 @@ import java.util.Set;
  * @author scx567888
  * @version 1.3.0
  */
-public final class ScxEasyConfig {
+public final class ScxCoreConfig {
 
     /**
      * 端口号
@@ -90,19 +91,19 @@ public final class ScxEasyConfig {
      * @param scxEnvironment a
      * @param appKey         a
      */
-    public ScxEasyConfig(ScxConfig scxConfig, ScxEnvironment scxEnvironment, String appKey) {
+    public ScxCoreConfig(ScxConfig scxConfig, ScxEnvironment scxEnvironment, String appKey) {
         port = scxConfig.getOrDefault("scx.port", 8080);
         tombstone = scxConfig.getOrDefault("scx.tombstone", false);
         allowedOrigin = scxConfig.getOrDefault("scx.allowed-origin", "*");
-        templateRoot = scxConfig.get("scx.template.root", new AppRootHandler("AppRoot:/c/", scxEnvironment));
+        templateRoot = scxConfig.get("scx.template.root", AppRootHandler.of(scxEnvironment, "AppRoot:/c/"));
         httpsEnabled = scxConfig.getOrDefault("scx.https.enabled", false);
-        sslPath = scxConfig.get("scx.https.ssl-path", new AppRootHandler(scxEnvironment));
-        sslPassword = scxConfig.get("scx.https.ssl-password", new DecryptValueHandler(appKey));
+        sslPath = scxConfig.get("scx.https.ssl-path", AppRootHandler.of(scxEnvironment));
+        sslPassword = scxConfig.get("scx.https.ssl-password", DecryptValueHandler.of(appKey));
         dataSourceHost = scxConfig.getOrDefault("scx.data-source.host", "127.0.0.1");
         dataSourcePort = scxConfig.getOrDefault("scx.data-source.port", 3306);
         dataSourceDatabase = scxConfig.get("scx.data-source.database", String.class);
         dataSourceUsername = scxConfig.get("scx.data-source.username", String.class);
-        dataSourcePassword = scxConfig.get("scx.data-source.password", new DecryptValueHandler(appKey));
+        dataSourcePassword = scxConfig.get("scx.data-source.password", DecryptValueHandler.of(appKey));
         dataSourceParameters = scxConfig.getOrDefault("scx.data-source.parameters", new HashSet<>());
     }
 
