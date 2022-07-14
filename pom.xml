@@ -77,24 +77,6 @@
 
         <dependency>
             <groupId>cool.scx</groupId>
-            <artifactId>scx-functional</artifactId>
-            <version>0.0.2</version>
-        </dependency>
-
-        <dependency>
-            <groupId>cool.scx</groupId>
-            <artifactId>scx-logging</artifactId>
-            <version>0.0.2</version>
-        </dependency>
-
-        <dependency>
-            <groupId>cool.scx</groupId>
-            <artifactId>scx-common</artifactId>
-            <version>0.0.1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>cool.scx</groupId>
             <artifactId>scx-config</artifactId>
             <version>0.0.1</version>
         </dependency>
