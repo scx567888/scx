@@ -90,7 +90,7 @@
         <dependency>
             <groupId>cool.scx</groupId>
             <artifactId>scx-logging</artifactId>
-            <version>0.0.3</version>
+            <version>0.0.4</version>
         </dependency>
 
         <dependency>
