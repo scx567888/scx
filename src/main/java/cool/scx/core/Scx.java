@@ -223,7 +223,7 @@ public final class Scx {
     private static ScxBeanFactory initScxBeanFactory(ScxModule[] modules, ScheduledExecutorService scheduledExecutorService, ScxFeatureConfig scxFeatureConfig) {
         var tempScxBeanFactory = new ScxBeanFactory(scheduledExecutorService, scxFeatureConfig);
         for (var m : modules) {
-            tempScxBeanFactory.registerBeanDefinition(m.beanClassList().toArray(Class[]::new));
+            tempScxBeanFactory.registerBeanDefinition(m.scxBeanClassList().toArray(Class[]::new));
         }
         return tempScxBeanFactory;
     }
