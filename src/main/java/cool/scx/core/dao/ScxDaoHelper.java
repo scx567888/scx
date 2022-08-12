@@ -71,7 +71,7 @@ public final class ScxDaoHelper {
      */
     private static List<Class<?>> getAllScxBaseModelClassList() {
         var allScxModelClassList = new ArrayList<Class<?>>();
-        for (var m : ScxContext.scxModuleMetadataList()) {
+        for (var m : ScxContext.scxModules()) {
             //只对 ScxModel 注解标识的了类进行数据表修复
             allScxModelClassList.addAll(m.scxBaseModelClassList());
         }

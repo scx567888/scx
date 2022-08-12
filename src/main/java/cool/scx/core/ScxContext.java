@@ -16,7 +16,6 @@ import io.vertx.core.http.HttpServer;
 import io.vertx.ext.web.RoutingContext;
 
 import java.nio.file.Path;
-import java.util.List;
 
 /**
  * 用来存储 整个项目的上下文
@@ -165,8 +164,8 @@ public final class ScxContext {
      *
      * @return a {@link java.util.List} object.
      */
-    public static List<ScxModuleMetadata<?>> scxModuleMetadataList() {
-        return scx().scxModuleMetadataList();
+    public static ScxModule[] scxModules() {
+        return scx().scxModules();
     }
 
     /**

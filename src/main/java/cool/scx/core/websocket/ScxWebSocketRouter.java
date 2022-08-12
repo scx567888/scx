@@ -1,7 +1,7 @@
 package cool.scx.core.websocket;
 
 import cool.scx.core.ScxBeanFactory;
-import cool.scx.core.ScxModuleMetadata;
+import cool.scx.core.ScxModule;
 import cool.scx.core.annotation.ScxWebSocketMapping;
 import cool.scx.util.URIBuilder;
 import io.vertx.core.Handler;
@@ -36,7 +36,7 @@ public final class ScxWebSocketRouter implements Handler<ServerWebSocket> {
      * @param metadataList   a
      * @param scxBeanFactory a
      */
-    public ScxWebSocketRouter(List<ScxModuleMetadata<?>> metadataList, ScxBeanFactory scxBeanFactory) {
+    public ScxWebSocketRouter(ScxModule[] metadataList, ScxBeanFactory scxBeanFactory) {
         for (var m : metadataList) {
             for (var clazz : m.scxWebSocketRouteClassList()) {
                 var path = URIBuilder.join(clazz.getAnnotation(ScxWebSocketMapping.class).value());
