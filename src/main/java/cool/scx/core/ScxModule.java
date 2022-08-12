@@ -25,35 +25,40 @@ import static cool.scx.util.exception.ScxExceptionHelper.wrap;
 public abstract class ScxModule {
 
     /**
+     * 默认名称
+     */
+    protected final String defaultName = this.getClass().getSimpleName();
+
+    /**
      * 模块中所有的 class
      */
-    protected final List<Class<?>> allClassList;
+    protected final List<Class<?>> defaultAllClassList;
 
     /**
      * 所有 标识 ScxModel 注解并且 继承自 BaseModel 的 class
      */
-    protected final List<Class<? extends BaseModel>> scxBaseModelClassList;
+    protected final List<Class<? extends BaseModel>> defaultScxBaseModelClassList;
 
     /**
      * 所有 标识 ScxService 注解并且 继承自 BaseModelService 且 泛型参数不为空 的 class
      */
-    protected final List<Class<? extends BaseModelService<?>>> scxBaseModelServiceClassList;
+    protected final List<Class<? extends BaseModelService<?>>> defaultScxBaseModelServiceClassList;
 
     /**
      * 所有 标识 ScxMapping 注解的 class
      */
-    protected final List<Class<?>> scxMappingClassList;
+    protected final List<Class<?>> defaultScxMappingClassList;
 
     /**
      * 所有 标识 ScxWebSocketRoute 注解并且 继承自 BaseWebSocketHandler 的 class
      */
-    protected final List<Class<? extends BaseWebSocketHandler>> scxWebSocketRouteClassList;
+    protected final List<Class<? extends BaseWebSocketHandler>> defaultScxWebSocketRouteClassList;
 
     /**
      * 所有 需要注册到 spring 中的 class
      * 一般就是 scxModelClassList, scxServiceClassList, scxMappingClassList, scxWebSocketRouteClassList 这些类的总和
      */
-    protected final List<Class<?>> beanClassList;
+    protected final List<Class<?>> defaultScxBeanClassList;
 
     /**
      * 模块根路径
@@ -69,18 +74,18 @@ public abstract class ScxModule {
         //判断当前是否处于 jar 包中
         if (isJar(classSourcePath)) {
             var allClassList = wrap(() -> getClassListByJar(classSource));
-            this.allClassList = filterByBasePackage(allClassList, basePackage);
+            this.defaultAllClassList = filterByBasePackage(allClassList, basePackage);
             this.rootPath = classSourcePath.getParent();
         } else {
             var allClassList = wrap(() -> getClassListByDir(classSource, getClass().getClassLoader()));
-            this.allClassList = filterByBasePackage(allClassList, basePackage);
+            this.defaultAllClassList = filterByBasePackage(allClassList, basePackage);
             this.rootPath = classSourcePath;
         }
-        this.scxBaseModelClassList = filterScxBaseModelClassList(this.allClassList);
-        this.scxBaseModelServiceClassList = filterScxBaseModelServiceClassList(this.allClassList);
-        this.scxMappingClassList = filterScxMappingClassList(this.allClassList);
-        this.scxWebSocketRouteClassList = filterScxWebSocketRouteClassList(this.allClassList);
-        this.beanClassList = ScxHelper.filterBeanClassList(this.allClassList);
+        this.defaultScxBaseModelClassList = filterScxBaseModelClassList(this.defaultAllClassList);
+        this.defaultScxBaseModelServiceClassList = filterScxBaseModelServiceClassList(this.defaultAllClassList);
+        this.defaultScxMappingClassList = filterScxMappingClassList(this.defaultAllClassList);
+        this.defaultScxWebSocketRouteClassList = filterScxWebSocketRouteClassList(this.defaultAllClassList);
+        this.defaultScxBeanClassList = ScxHelper.filterBeanClassList(this.defaultAllClassList);
     }
 
     /**
@@ -105,35 +110,35 @@ public abstract class ScxModule {
      * @return name
      */
     public String name() {
-        return this.getClass().getSimpleName();
+        return this.defaultName;
     }
 
     public final List<Class<?>> allClassList() {
-        return allClassList;
+        return defaultAllClassList;
     }
 
     public final Path rootPath() {
         return rootPath;
     }
 
-    public final List<Class<? extends BaseModel>> scxBaseModelClassList() {
-        return new ArrayList<>(scxBaseModelClassList);
+    public List<Class<? extends BaseModel>> scxBaseModelClassList() {
+        return new ArrayList<>(defaultScxBaseModelClassList);
     }
 
-    public final List<Class<? extends BaseModelService<?>>> scxBaseModelServiceClassList() {
-        return new ArrayList<>(scxBaseModelServiceClassList);
+    public List<Class<? extends BaseModelService<?>>> scxBaseModelServiceClassList() {
+        return new ArrayList<>(defaultScxBaseModelServiceClassList);
     }
 
-    public final List<Class<?>> scxMappingClassList() {
-        return new ArrayList<>(scxMappingClassList);
+    public List<Class<?>> scxMappingClassList() {
+        return new ArrayList<>(defaultScxMappingClassList);
     }
 
-    public final List<Class<? extends BaseWebSocketHandler>> scxWebSocketRouteClassList() {
-        return new ArrayList<>(scxWebSocketRouteClassList);
+    public List<Class<? extends BaseWebSocketHandler>> scxWebSocketRouteClassList() {
+        return new ArrayList<>(defaultScxWebSocketRouteClassList);
     }
 
-    public final List<Class<?>> beanClassList() {
-        return new ArrayList<>(beanClassList);
+    public List<Class<?>> scxBeanClassList() {
+        return new ArrayList<>(defaultScxBeanClassList);
     }
 
 }
