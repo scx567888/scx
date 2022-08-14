@@ -85,7 +85,7 @@ import cool.scx.enumeration.HttpMethod;
 // 注意 : 自定义的模块需要继承 ScxModule
 // 此处的 @ScxMapping 注解用来表示这是一个需要被扫描 WebHandler 的类
 @ScxMapping
-public class YourModule implements ScxModule {
+public class YourModule extends ScxModule {
 
     public static void main(String[] args) {
         // 使用 Scx 构建器 ,构建并运行 项目

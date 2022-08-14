@@ -38,7 +38,7 @@ final class ScxLoggerConfiguration {
      * <p>initDefault.</p>
      *
      * @param scxConfig      a {@link cool.scx.config.ScxConfig} object
-     * @param scxEnvironment a {@link ScxEnvironment} object
+     * @param scxEnvironment a {@link cool.scx.config.ScxEnvironment} object
      */
     private static void initDefault(ScxConfig scxConfig, ScxEnvironment scxEnvironment) {
         //先初始化好 DefaultScxLoggerInfo
@@ -53,7 +53,7 @@ final class ScxLoggerConfiguration {
      * <p>initLoggers.</p>
      *
      * @param scxConfig      a {@link cool.scx.config.ScxConfig} object
-     * @param scxEnvironment a {@link ScxEnvironment} object
+     * @param scxEnvironment a {@link cool.scx.config.ScxEnvironment} object
      */
     private static void initLoggers(ScxConfig scxConfig, ScxEnvironment scxEnvironment) {
         //以下日志若有缺少的属性则全部以 defaultScxLoggerInfo 为准

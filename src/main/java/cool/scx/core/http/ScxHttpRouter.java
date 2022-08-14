@@ -101,7 +101,7 @@ public final class ScxHttpRouter {
      * @param scx s
      */
     private void registerScxMappingHandler(Scx scx) {
-        var metadataList = scx.scxModuleMetadataList();
+        var metadataList = scx.scxModules();
         SCX_MAPPING_HANDLER_LIST.clear();
         for (var m : metadataList) {
             for (var clazz : m.scxMappingClassList()) {

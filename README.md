@@ -82,10 +82,10 @@ import cool.scx.ScxModule;
 import cool.scx.annotation.ScxMapping;
 import cool.scx.enumeration.HttpMethod;
 
-// Note : Custom modules need implements ScxModule
+// Note : Custom modules need extends ScxModule
 // This @ScxMapping indicate this class needs to be scanned by WebHandler
 @ScxMapping
-public class YourModule implements ScxModule {
+public class YourModule extends ScxModule {
 
     public static void main(String[] args) {
         // Use Scx Builder, build and run project

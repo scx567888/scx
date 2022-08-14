@@ -39,7 +39,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestModule implements ScxModule {
+public class TestModule extends ScxModule {
 
     public static void main(String[] args) {
         runModule();
@@ -164,7 +164,6 @@ public class TestModule implements ScxModule {
         System.out.println(car.hashCode());
         ScxContext.eventBus().send("test-event-bus", car);
     }
-
 
     @Test
     public static void test3() {

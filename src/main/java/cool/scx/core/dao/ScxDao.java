@@ -59,7 +59,7 @@ public final class ScxDao {
     /**
      * 初始化 MySQL 数据源
      *
-     * @param scxCoreConfig a {@link ScxCoreConfig} object
+     * @param scxCoreConfig a {@link cool.scx.core.ScxCoreConfig} object
      * @return MySQL 数据源
      */
     private static MysqlDataSource getMySQLDataSource(ScxCoreConfig scxCoreConfig) {

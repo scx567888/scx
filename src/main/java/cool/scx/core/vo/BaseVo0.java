@@ -6,6 +6,9 @@ import cool.scx.util.JacksonHelper;
 
 /**
  * 仅仅是为了不向外暴露常量
+ *
+ * @author scx567888
+ * @version 1.16.4
  */
 final class BaseVo0 {
 
