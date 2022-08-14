@@ -121,17 +121,8 @@ public abstract class ScxModule {
      *
      * @return a {@link java.util.List} object
      */
-    public final List<Class<?>> allClassList() {
-        return defaultAllClassList;
-    }
-
-    /**
-     * <p>rootPath.</p>
-     *
-     * @return a {@link java.nio.file.Path} object
-     */
-    public final Path rootPath() {
-        return rootPath;
+    public List<Class<?>> allClassList() {
+        return this.defaultAllClassList;
     }
 
     /**
@@ -140,7 +131,7 @@ public abstract class ScxModule {
      * @return a {@link java.util.List} object
      */
     public List<Class<? extends BaseModel>> scxBaseModelClassList() {
-        return new ArrayList<>(defaultScxBaseModelClassList);
+        return new ArrayList<>(this.defaultScxBaseModelClassList);
     }
 
     /**
@@ -149,7 +140,7 @@ public abstract class ScxModule {
      * @return a {@link java.util.List} object
      */
     public List<Class<? extends BaseModelService<?>>> scxBaseModelServiceClassList() {
-        return new ArrayList<>(defaultScxBaseModelServiceClassList);
+        return new ArrayList<>(this.defaultScxBaseModelServiceClassList);
     }
 
     /**
@@ -158,7 +149,7 @@ public abstract class ScxModule {
      * @return a {@link java.util.List} object
      */
     public List<Class<?>> scxMappingClassList() {
-        return new ArrayList<>(defaultScxMappingClassList);
+        return new ArrayList<>(this.defaultScxMappingClassList);
     }
 
     /**
@@ -167,7 +158,7 @@ public abstract class ScxModule {
      * @return a {@link java.util.List} object
      */
     public List<Class<? extends BaseWebSocketHandler>> scxWebSocketRouteClassList() {
-        return new ArrayList<>(defaultScxWebSocketRouteClassList);
+        return new ArrayList<>(this.defaultScxWebSocketRouteClassList);
     }
 
     /**
@@ -176,7 +167,16 @@ public abstract class ScxModule {
      * @return a {@link java.util.List} object
      */
     public List<Class<?>> scxBeanClassList() {
-        return new ArrayList<>(defaultScxBeanClassList);
+        return new ArrayList<>(this.defaultScxBeanClassList);
+    }
+
+    /**
+     * <p>rootPath.</p>
+     *
+     * @return a {@link java.nio.file.Path} object
+     */
+    public final Path rootPath() {
+        return this.rootPath;
     }
 
 }
