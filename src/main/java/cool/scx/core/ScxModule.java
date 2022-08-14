@@ -25,14 +25,21 @@ import static cool.scx.util.exception.ScxExceptionHelper.wrap;
 public abstract class ScxModule {
 
     /**
+     * 模块中所有的 class
+     */
+    protected final List<Class<?>> allClassList;
+
+    /**
+     * 模块根路径
+     * 如果模块是 jar 就获取 jar 所在目录
+     * 如果 模块不是 jar 就获取 所在 class 的目录
+     */
+    protected final Path rootPath;
+
+    /**
      * 默认名称
      */
     protected final String defaultName = this.getClass().getSimpleName();
-
-    /**
-     * 模块中所有的 class
-     */
-    protected final List<Class<?>> defaultAllClassList;
 
     /**
      * 所有 标识 ScxModel 注解并且 继承自 BaseModel 的 class
@@ -60,12 +67,6 @@ public abstract class ScxModule {
      */
     protected final List<Class<?>> defaultScxBeanClassList;
 
-    /**
-     * 模块根路径
-     * 如果模块是 jar 就获取 jar 所在目录
-     * 如果 模块不是 jar 就获取 所在 class 的目录
-     */
-    private final Path rootPath;
 
     /**
      * <p>Constructor for ScxModule.</p>
@@ -76,19 +77,19 @@ public abstract class ScxModule {
         var classSourcePath = Path.of(classSource);
         //判断当前是否处于 jar 包中
         if (isJar(classSourcePath)) {
-            var allClassList = wrap(() -> getClassListByJar(classSource));
-            this.defaultAllClassList = filterByBasePackage(allClassList, basePackage);
+            var list = wrap(() -> getClassListByJar(classSource));
+            this.allClassList = filterByBasePackage(list, basePackage);
             this.rootPath = classSourcePath.getParent();
         } else {
-            var allClassList = wrap(() -> getClassListByDir(classSource, getClass().getClassLoader()));
-            this.defaultAllClassList = filterByBasePackage(allClassList, basePackage);
+            var list = wrap(() -> getClassListByDir(classSource, getClass().getClassLoader()));
+            this.allClassList = filterByBasePackage(list, basePackage);
             this.rootPath = classSourcePath;
         }
-        this.defaultScxBaseModelClassList = filterScxBaseModelClassList(this.defaultAllClassList);
-        this.defaultScxBaseModelServiceClassList = filterScxBaseModelServiceClassList(this.defaultAllClassList);
-        this.defaultScxMappingClassList = filterScxMappingClassList(this.defaultAllClassList);
-        this.defaultScxWebSocketRouteClassList = filterScxWebSocketRouteClassList(this.defaultAllClassList);
-        this.defaultScxBeanClassList = ScxHelper.filterBeanClassList(this.defaultAllClassList);
+        this.defaultScxBaseModelClassList = filterScxBaseModelClassList(this.allClassList);
+        this.defaultScxBaseModelServiceClassList = filterScxBaseModelServiceClassList(this.allClassList);
+        this.defaultScxMappingClassList = filterScxMappingClassList(this.allClassList);
+        this.defaultScxWebSocketRouteClassList = filterScxWebSocketRouteClassList(this.allClassList);
+        this.defaultScxBeanClassList = ScxHelper.filterBeanClassList(this.allClassList);
     }
 
     /**
@@ -114,15 +115,6 @@ public abstract class ScxModule {
      */
     public String name() {
         return this.defaultName;
-    }
-
-    /**
-     * <p>allClassList.</p>
-     *
-     * @return a {@link java.util.List} object
-     */
-    public List<Class<?>> allClassList() {
-        return this.defaultAllClassList;
     }
 
     /**
@@ -168,6 +160,15 @@ public abstract class ScxModule {
      */
     public List<Class<?>> scxBeanClassList() {
         return new ArrayList<>(this.defaultScxBeanClassList);
+    }
+
+    /**
+     * <p>allClassList.</p>
+     *
+     * @return a {@link java.util.List} object
+     */
+    public final List<Class<?>> allClassList() {
+        return new ArrayList<>(this.allClassList);
     }
 
     /**
