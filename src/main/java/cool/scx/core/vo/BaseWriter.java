@@ -19,6 +19,9 @@ import java.util.regex.Pattern;
 
 /**
  * 基本写入程序 可以直接向相应体中写入数据
+ *
+ * @author scx567888
+ * @version 1.6.14
  */
 class BaseWriter implements BaseVo {
 
@@ -62,6 +65,16 @@ class BaseWriter implements BaseVo {
      */
     protected final String contentDisposition;
 
+    /**
+     * <p>Constructor for BaseWriter.</p>
+     *
+     * @param inputStream        a {@link java.io.InputStream} object
+     * @param path               a {@link java.nio.file.Path} object
+     * @param bytes              an array of {@link byte} objects
+     * @param type               a {@link cool.scx.core.vo.BaseWriter.Type} object
+     * @param contentType        a {@link java.lang.String} object
+     * @param contentDisposition a {@link java.lang.String} object
+     */
     private BaseWriter(InputStream inputStream, Path path, byte[] bytes, Type type, String contentType, String contentDisposition) {
         this.inputStream = inputStream;
         this.path = path;
@@ -71,14 +84,35 @@ class BaseWriter implements BaseVo {
         this.contentDisposition = contentDisposition;
     }
 
+    /**
+     * <p>Constructor for BaseWriter.</p>
+     *
+     * @param inputStream        a {@link java.io.InputStream} object
+     * @param contentType        a {@link java.lang.String} object
+     * @param contentDisposition a {@link java.lang.String} object
+     */
     protected BaseWriter(InputStream inputStream, String contentType, String contentDisposition) {
         this(inputStream, null, null, Type.INPUT_STREAM, contentType, contentDisposition);
     }
 
+    /**
+     * <p>Constructor for BaseWriter.</p>
+     *
+     * @param path               a {@link java.nio.file.Path} object
+     * @param contentType        a {@link java.lang.String} object
+     * @param contentDisposition a {@link java.lang.String} object
+     */
     protected BaseWriter(Path path, String contentType, String contentDisposition) {
         this(null, path, null, Type.PATH, contentType, contentDisposition);
     }
 
+    /**
+     * <p>Constructor for BaseWriter.</p>
+     *
+     * @param bytes              an array of {@link byte} objects
+     * @param contentType        a {@link java.lang.String} object
+     * @param contentDisposition a {@link java.lang.String} object
+     */
     protected BaseWriter(byte[] bytes, String contentType, String contentDisposition) {
         this(null, null, bytes, Type.BYTE_ARRAY, contentType, contentDisposition);
     }
@@ -171,8 +205,8 @@ class BaseWriter implements BaseVo {
     /**
      * <p>writeFile.</p>
      *
-     * @param context a {@link HttpServerResponse} object
-     * @throws NotFoundException if any.
+     * @param context a {@link io.vertx.core.http.HttpServerResponse} object
+     * @throws cool.scx.core.http.exception.impl.NotFoundException if any.
      */
     private void writeFile(RoutingContext context) throws NotFoundException {
         var file = path.toFile();

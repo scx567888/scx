@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.vertx.ext.web.RoutingContext;
 
 /**
- * Json 格式的返回值 (注意和 {@link Json} 区分, 此格式适合传递单个参数)
+ * Json 格式的返回值 (注意和 {@link cool.scx.core.vo.Json} 区分, 此格式适合传递单个参数)
  *
  * @author scx567888
  * @version 1.9.5

@@ -15,6 +15,12 @@ import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * <p>ScxHelper class.</p>
+ *
+ * @author scx567888
+ * @version 1.6.14
+ */
 public final class ScxHelper {
 
     /**

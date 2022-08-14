@@ -15,14 +15,31 @@ import java.nio.file.Path;
  */
 public final class Raw extends BaseWriter {
 
+    /**
+     * <p>Constructor for Raw.</p>
+     *
+     * @param inputStream a {@link java.io.InputStream} object
+     * @param rawType     a {@link cool.scx.core.enumeration.RawType} object
+     */
     private Raw(InputStream inputStream, RawType rawType) {
         super(inputStream, MimeMapping.getMimeTypeForExtension(rawType.name().toLowerCase()), "inline");
     }
 
+    /**
+     * <p>Constructor for Raw.</p>
+     *
+     * @param path a {@link java.nio.file.Path} object
+     */
     private Raw(Path path) {
         super(path, null, "inline");
     }
 
+    /**
+     * <p>Constructor for Raw.</p>
+     *
+     * @param bytes   an array of {@link byte} objects
+     * @param rawType a {@link cool.scx.core.enumeration.RawType} object
+     */
     private Raw(byte[] bytes, RawType rawType) {
         super(bytes, MimeMapping.getMimeTypeForExtension(rawType.name().toLowerCase()), "inline");
     }

@@ -67,6 +67,9 @@ public abstract class ScxModule {
      */
     private final Path rootPath;
 
+    /**
+     * <p>Constructor for ScxModule.</p>
+     */
     public ScxModule() {
         var basePackage = getClass().getPackageName();
         var classSource = wrap(() -> getClassSource(getClass()));
@@ -113,30 +116,65 @@ public abstract class ScxModule {
         return this.defaultName;
     }
 
+    /**
+     * <p>allClassList.</p>
+     *
+     * @return a {@link java.util.List} object
+     */
     public final List<Class<?>> allClassList() {
         return defaultAllClassList;
     }
 
+    /**
+     * <p>rootPath.</p>
+     *
+     * @return a {@link java.nio.file.Path} object
+     */
     public final Path rootPath() {
         return rootPath;
     }
 
+    /**
+     * <p>scxBaseModelClassList.</p>
+     *
+     * @return a {@link java.util.List} object
+     */
     public List<Class<? extends BaseModel>> scxBaseModelClassList() {
         return new ArrayList<>(defaultScxBaseModelClassList);
     }
 
+    /**
+     * <p>scxBaseModelServiceClassList.</p>
+     *
+     * @return a {@link java.util.List} object
+     */
     public List<Class<? extends BaseModelService<?>>> scxBaseModelServiceClassList() {
         return new ArrayList<>(defaultScxBaseModelServiceClassList);
     }
 
+    /**
+     * <p>scxMappingClassList.</p>
+     *
+     * @return a {@link java.util.List} object
+     */
     public List<Class<?>> scxMappingClassList() {
         return new ArrayList<>(defaultScxMappingClassList);
     }
 
+    /**
+     * <p>scxWebSocketRouteClassList.</p>
+     *
+     * @return a {@link java.util.List} object
+     */
     public List<Class<? extends BaseWebSocketHandler>> scxWebSocketRouteClassList() {
         return new ArrayList<>(defaultScxWebSocketRouteClassList);
     }
 
+    /**
+     * <p>scxBeanClassList.</p>
+     *
+     * @return a {@link java.util.List} object
+     */
     public List<Class<?>> scxBeanClassList() {
         return new ArrayList<>(defaultScxBeanClassList);
     }

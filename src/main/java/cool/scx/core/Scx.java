@@ -241,7 +241,7 @@ public final class Scx {
     /**
      * <p>initScxModuleMetadataList.</p>
      *
-     * @param scxModules an array of {@link ScxModule} objects
+     * @param scxModules an array of {@link cool.scx.core.ScxModule} objects
      * @return a {@link java.util.List} object
      */
     private static ScxModule[] initScxModuleMetadataList(ScxModule[] scxModules) {
@@ -399,7 +399,7 @@ public final class Scx {
      *
      * @param clazz a {@link java.lang.Class} object
      * @param <T>   a T class
-     * @return a {@link ScxModule} object
+     * @return a {@link cool.scx.core.ScxModule} object
      */
     @SuppressWarnings("unchecked")
     public <T extends ScxModule> T findScxModule(Class<T> clazz) {
