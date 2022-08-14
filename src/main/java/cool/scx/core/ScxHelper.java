@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  * <p>ScxHelper class.</p>
  *
  * @author scx567888
- * @version 1.6.14
+ * @version 1.16.4
  */
 public final class ScxHelper {
 

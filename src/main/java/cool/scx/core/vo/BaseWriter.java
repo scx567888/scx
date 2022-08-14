@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
  * 基本写入程序 可以直接向相应体中写入数据
  *
  * @author scx567888
- * @version 1.6.14
+ * @version 1.16.4
  */
 class BaseWriter implements BaseVo {
 
