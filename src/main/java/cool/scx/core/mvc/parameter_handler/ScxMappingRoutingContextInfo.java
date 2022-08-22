@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.NullNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import cool.scx.core.http.exception.impl.BadRequestException;
-import cool.scx.core.type.UploadedEntity;
 import cool.scx.util.ObjectUtils;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpHeaderValues;
@@ -26,7 +25,6 @@ public final class ScxMappingRoutingContextInfo {
     private final RoutingContext routingContext;
     private final JsonNode body;
     private final Map<String, Object> queryParams;
-    private final Map<String, UploadedEntity> uploadedEntityMap;
 
     /**
      * <p>Constructor for ScxMappingRequestParamInfo.</p>
@@ -37,7 +35,6 @@ public final class ScxMappingRoutingContextInfo {
         this.routingContext = ctx;
         this.body = initBody(ctx);
         this.queryParams = multiMapToMap(ctx.queryParams());
-        this.uploadedEntityMap = ctx.get("uploadedEntityMap") != null ? ctx.get("uploadedEntityMap") : new HashMap<>();
     }
 
     /**
@@ -112,15 +109,6 @@ public final class ScxMappingRoutingContextInfo {
      */
     public JsonNode getBody() {
         return body;
-    }
-
-    /**
-     * a
-     *
-     * @return a
-     */
-    public Map<String, UploadedEntity> uploadedEntityMap() {
-        return uploadedEntityMap;
     }
 
     /**
