@@ -1,7 +1,7 @@
 package cool.scx.core.dao;
 
 import cool.scx.core.ScxContext;
-import cool.scx.sql.NoParametersSQL;
+import cool.scx.sql.SQL;
 import cool.scx.sql.SQLRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -115,10 +115,10 @@ public final class ScxDaoHelper {
                 var nonExistentColumnNames = Stream.of(tableInfo.columnInfos()).filter(c -> !existingColumn.contains(c.columnName())).toList();
                 if (nonExistentColumnNames.size() > 0) {
                     var alertTableDDL = tableInfo.getAlertTableDDL(nonExistentColumnNames);
-                    SQLRunner.execute(con, NoParametersSQL.of(alertTableDDL));
+                    SQLRunner.execute(con, SQL.ofNormal(alertTableDDL));
                 }
             } else {// 没有这个表
-                SQLRunner.execute(con, NoParametersSQL.of(tableInfo.getCreateTableDDL()));
+                SQLRunner.execute(con, SQL.ofNormal(tableInfo.getCreateTableDDL()));
             }
         }
     }

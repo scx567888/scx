@@ -5,12 +5,9 @@ import cool.scx.core.dao.ScxDaoColumnInfo;
 import cool.scx.core.dao.ScxDaoTableInfo;
 import cool.scx.functional.ScxHandlerE;
 import cool.scx.functional.ScxHandlerRE;
-import cool.scx.sql.AbstractPlaceholderSQL;
-import cool.scx.sql.NoParametersSQL;
-import cool.scx.sql.PlaceholderSQL;
+import cool.scx.sql.ResultHandler;
+import cool.scx.sql.SQL;
 import cool.scx.sql.SQLBuilder;
-import cool.scx.sql.handler.BeanListHandler;
-import cool.scx.sql.handler.ObjectHandler;
 import cool.scx.util.RandomUtils;
 
 import java.lang.reflect.ParameterizedType;
@@ -42,12 +39,12 @@ public class BasicService<Entity> {
     /**
      * 实体类对应的 BeanListHandler
      */
-    protected final BeanListHandler<Entity> entityBeanListHandler;
+    protected final ResultHandler<List<Entity>> entityBeanListHandler;
 
     /**
      * 查询 count 所用的 handler
      */
-    protected final ObjectHandler<Long> countResultHandler = ObjectHandler.of("count", Long.class);
+    protected final ResultHandler<Long> countResultHandler = ResultHandler.ofObject("count", Long.class);
 
     /**
      * 从泛型中获取 entityClass
@@ -59,7 +56,7 @@ public class BasicService<Entity> {
             var typeArguments = ((ParameterizedType) genericSuperclass).getActualTypeArguments();
             this.entityClass = (Class<Entity>) typeArguments[0];
             this.scxDaoTableInfo = new ScxDaoTableInfo(this.entityClass);
-            this.entityBeanListHandler = BeanListHandler.of(this.entityClass);
+            this.entityBeanListHandler = ResultHandler.ofBeanList(this.entityClass);
         } else {
             throw new IllegalArgumentException(this.getClass().getName() + " : 必须设置泛型参数 !!!");
         }
@@ -73,7 +70,7 @@ public class BasicService<Entity> {
     public BasicService(Class<Entity> entityClass) {
         this.entityClass = entityClass;
         this.scxDaoTableInfo = new ScxDaoTableInfo(this.entityClass);
-        this.entityBeanListHandler = BeanListHandler.of(this.entityClass);
+        this.entityBeanListHandler = ResultHandler.ofBeanList(this.entityClass);
     }
 
     /**
@@ -134,10 +131,10 @@ public class BasicService<Entity> {
      * @param updateFilter a
      * @return a
      */
-    private AbstractPlaceholderSQL<?> _buildInsertSQL(Entity entity, UpdateFilter updateFilter) {
+    private SQL _buildInsertSQL(Entity entity, UpdateFilter updateFilter) {
         var insertColumns = updateFilter.filter(entity, scxDaoTableInfo.columnInfos());
         var sql = SQLBuilder.Insert(scxDaoTableInfo.tableName(), insertConvert(insertColumns)).Values(valuesConvert(insertColumns)).GetSQL();
-        return PlaceholderSQL.of(sql, Arrays.stream(insertColumns).map(c -> c.getFieldValue(entity)).toArray());
+        return SQL.ofPlaceholder(sql, Arrays.stream(insertColumns).map(c -> c.getFieldValue(entity)).toArray());
     }
 
     /**
@@ -158,7 +155,7 @@ public class BasicService<Entity> {
      * @param updateFilter a
      * @return a
      */
-    private AbstractPlaceholderSQL<?> _buildInsertBatchSQL(Collection<Entity> entityList, UpdateFilter updateFilter) {
+    private SQL _buildInsertBatchSQL(Collection<Entity> entityList, UpdateFilter updateFilter) {
         var insertColumns = updateFilter.filter(scxDaoTableInfo.columnInfos());
         //将 entityList 转换为 objectArrayList 这里因为 stream 实在太慢所以改为传统循环方式
         var objectArrayList = new ArrayList<Object[]>();
@@ -170,7 +167,7 @@ public class BasicService<Entity> {
             objectArrayList.add(o);
         }
         var sql = SQLBuilder.Insert(scxDaoTableInfo.tableName(), insertConvert(insertColumns)).Values(valuesConvert(insertColumns)).GetSQL();
-        return PlaceholderSQL.ofBatch(sql, objectArrayList);
+        return SQL.ofPlaceholder(sql, objectArrayList);
     }
 
     /**
@@ -231,10 +228,10 @@ public class BasicService<Entity> {
      * @param selectFilter 查询字段过滤器
      * @return selectSQL
      */
-    public final AbstractPlaceholderSQL<?> _buildSelectSQL(Query query, SelectFilter selectFilter) {
+    public final SQL _buildSelectSQL(Query query, SelectFilter selectFilter) {
         var selectColumnInfos = selectFilter.filter(scxDaoTableInfo.columnInfos());
         var sql = SQLBuilder.Select(selectConvert(selectColumnInfos)).From(scxDaoTableInfo.tableName()).Where(query.where()).GroupBy(query.groupBy()).OrderBy(query.orderBy()).Limit(query.pagination()).GetSQL();
-        return PlaceholderSQL.of(sql, query.where().getWhereParams());
+        return SQL.ofPlaceholder(sql, query.where().getWhereParams());
     }
 
     /**
@@ -245,7 +242,7 @@ public class BasicService<Entity> {
      * @param selectFilter s
      * @return a
      */
-    public final AbstractPlaceholderSQL<?> _buildSelectSQLWithAlias(Query query, SelectFilter selectFilter) {
+    public final SQL _buildSelectSQLWithAlias(Query query, SelectFilter selectFilter) {
         //没有 limit 的时候不需要嵌套
         if (query.pagination().rowCount() == null) {
             return _buildSelectSQL(query, selectFilter);
@@ -253,7 +250,7 @@ public class BasicService<Entity> {
             var selectColumnInfos = selectFilter.filter(scxDaoTableInfo.columnInfos());
             var sql0 = SQLBuilder.Select(selectConvert(selectColumnInfos)).From(scxDaoTableInfo.tableName()).Where(query.where()).GroupBy(query.groupBy()).OrderBy(query.orderBy()).Limit(query.pagination()).GetSQL();
             var sql = SQLBuilder.Select(Arrays.stream(selectColumnInfos).map(ScxDaoColumnInfo::fieldName).toArray(String[]::new)).From("(" + sql0 + ")").GetSQL();
-            return PlaceholderSQL.of(sql + " AS " + scxDaoTableInfo.tableName() + "_" + RandomUtils.randomString(6), query.where().getWhereParams());
+            return SQL.ofPlaceholder(sql + " AS " + scxDaoTableInfo.tableName() + "_" + RandomUtils.randomString(6), query.where().getWhereParams());
         }
     }
 
@@ -273,9 +270,9 @@ public class BasicService<Entity> {
      * @param query query 对象
      * @return sql
      */
-    private AbstractPlaceholderSQL<?> _buildCountSQL(Query query) {
+    private SQL _buildCountSQL(Query query) {
         var sql = SQLBuilder.Select("COUNT(*) AS count").From(scxDaoTableInfo.tableName()).Where(query.where()).GroupBy(query.groupBy()).GetSQL();
-        return PlaceholderSQL.of(sql, query.where().getWhereParams());
+        return SQL.ofPlaceholder(sql, query.where().getWhereParams());
     }
 
     /**
@@ -298,7 +295,7 @@ public class BasicService<Entity> {
      * @param updateFilter filter
      * @return a
      */
-    private AbstractPlaceholderSQL<?> _buildUpdateSQL(Entity entity, Query query, UpdateFilter updateFilter) {
+    private SQL _buildUpdateSQL(Entity entity, Query query, UpdateFilter updateFilter) {
         if (query.where().isEmpty()) {
             throw new IllegalArgumentException("更新数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
         }
@@ -306,7 +303,7 @@ public class BasicService<Entity> {
         var sql = SQLBuilder.Update(scxDaoTableInfo.tableName()).Set(setConvert(updateSetColumnInfos)).Where(query.where()).GetSQL();
         var entityParams = Arrays.stream(updateSetColumnInfos).map(c -> c.getFieldValue(entity)).collect(Collectors.toList());
         entityParams.addAll(List.of(query.where().getWhereParams()));
-        return PlaceholderSQL.of(sql, entityParams.toArray());
+        return SQL.ofPlaceholder(sql, entityParams.toArray());
     }
 
     /**
@@ -325,19 +322,19 @@ public class BasicService<Entity> {
      * @param query query
      * @return sql
      */
-    private AbstractPlaceholderSQL<?> _buildDeleteSQL(Query query) {
+    private SQL _buildDeleteSQL(Query query) {
         if (query.where().isEmpty()) {
             throw new IllegalArgumentException("删除数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
         }
         var sql = SQLBuilder.Delete(scxDaoTableInfo.tableName()).Where(query.where()).GetSQL();
-        return PlaceholderSQL.of(sql, query.where().getWhereParams());
+        return SQL.ofPlaceholder(sql, query.where().getWhereParams());
     }
 
     /**
      * 清空表中所有数据 (注意此操作不受事务影响, 所以慎用!!!)
      */
     public final void _truncate() {
-        ScxContext.sqlRunner().execute(NoParametersSQL.of("truncate " + scxDaoTableInfo.tableName()));
+        ScxContext.sqlRunner().execute(SQL.ofNormal("truncate " + scxDaoTableInfo.tableName()));
     }
 
     /**

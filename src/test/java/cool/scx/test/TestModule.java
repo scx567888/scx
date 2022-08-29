@@ -17,7 +17,6 @@ import cool.scx.test.car.CarService;
 import cool.scx.test.person.Person;
 import cool.scx.test.person.PersonService;
 import cool.scx.util.*;
-import cool.scx.util.exception.ScxExceptionHelper;
 import cool.scx.util.http.FormData;
 import cool.scx.util.http.HttpClientHelper;
 import cool.scx.util.zip.VirtualDirectory;

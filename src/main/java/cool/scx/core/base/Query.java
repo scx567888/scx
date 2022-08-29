@@ -23,28 +23,43 @@ public final class Query {
     /**
      * 排序的字段
      */
-    private final OrderBy orderBy = new OrderBy();
+    private final OrderBy orderBy;
 
     /**
      * 自定义分组 SQL 添加
      */
-    private final GroupBy groupBy = new GroupBy();
+    private final GroupBy groupBy;
 
     /**
      * 自定义WHERE 添加
      */
-    private final Where where = new Where();
+    private final Where where;
 
     /**
      * 分页参数
      */
-    private final Pagination pagination = new Pagination();
+    private final Pagination pagination;
 
     /**
      * 创建 Query 对象
      */
     public Query() {
+        this.orderBy = new OrderBy();
+        this.groupBy = new GroupBy();
+        this.where = new Where();
+        this.pagination = new Pagination();
+    }
 
+    /**
+     * a
+     *
+     * @param oldQuery a
+     */
+    public Query(Query oldQuery) {
+        this.orderBy = new OrderBy(oldQuery.orderBy);
+        this.groupBy = new GroupBy(oldQuery.groupBy);
+        this.where = new Where(oldQuery.where);
+        this.pagination = new Pagination(oldQuery.pagination);
     }
 
     /**

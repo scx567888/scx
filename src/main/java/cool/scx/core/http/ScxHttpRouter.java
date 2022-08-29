@@ -9,7 +9,7 @@ import cool.scx.core.http.exception_handler.ScxHttpRouterExceptionHandler;
 import cool.scx.core.http.exception_handler.impl.LastExceptionHandler;
 import cool.scx.core.http.exception_handler.impl.ScxHttpExceptionHandler;
 import cool.scx.core.mvc.ScxMappingHandler;
-import cool.scx.util.exception.ScxExceptionHelper;
+import cool.scx.util.ScxExceptionHelper;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpMethod;

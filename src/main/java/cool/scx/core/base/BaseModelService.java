@@ -1,7 +1,7 @@
 package cool.scx.core.base;
 
 import cool.scx.core.ScxContext;
-import cool.scx.sql.AbstractPlaceholderSQL;
+import cool.scx.sql.SQL;
 import cool.scx.sql.where.WhereOption;
 
 import java.util.Collection;
@@ -353,7 +353,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @return listSQL
      * @see BasicService#_buildSelectSQL(Query, SelectFilter)
      */
-    public final AbstractPlaceholderSQL<?> buildListSQL(Query query, SelectFilter selectFilter) {
+    public final SQL buildListSQL(Query query, SelectFilter selectFilter) {
         return _buildSelectSQL(queryProcessor(query), selectFilterProcessor(selectFilter));
     }
 
@@ -369,7 +369,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @return getSQL
      * @see BasicService#_buildSelectSQL(Query, SelectFilter)
      */
-    public final AbstractPlaceholderSQL<?> buildGetSQL(Query query, SelectFilter selectFilter) {
+    public final SQL buildGetSQL(Query query, SelectFilter selectFilter) {
         return buildListSQL(query.setPagination(1), selectFilter);
     }
 
@@ -383,7 +383,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @return listSQL
      * @see BasicService#_buildSelectSQL(Query, SelectFilter)
      */
-    public final AbstractPlaceholderSQL<?> buildListSQLWithAlias(Query query, SelectFilter selectFilter) {
+    public final SQL buildListSQLWithAlias(Query query, SelectFilter selectFilter) {
         return _buildSelectSQLWithAlias(queryProcessor(query), selectFilterProcessor(selectFilter));
     }
 
@@ -397,7 +397,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @return getSQL
      * @see BasicService#_buildSelectSQL(Query, SelectFilter)
      */
-    public final AbstractPlaceholderSQL<?> buildGetSQLWithAlias(Query query, SelectFilter selectFilter) {
+    public final SQL buildGetSQLWithAlias(Query query, SelectFilter selectFilter) {
         return buildListSQLWithAlias(query.setPagination(1), selectFilter);
     }
 
