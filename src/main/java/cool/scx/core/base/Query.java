@@ -52,6 +52,7 @@ public final class Query {
 
     /**
      * a
+     *
      * @param oldQuery a
      */
     public Query(Query oldQuery) {
