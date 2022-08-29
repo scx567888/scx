@@ -6,8 +6,8 @@ import cool.scx.core.annotation.ScxMapping;
 import cool.scx.core.enumeration.HttpMethod;
 import cool.scx.core.http.ScxHttpRouter;
 import cool.scx.util.CaseUtils;
+import cool.scx.util.ScxExceptionHelper;
 import cool.scx.util.URIBuilder;
-import cool.scx.util.exception.ScxExceptionHelper;
 import io.vertx.core.Handler;
 import io.vertx.ext.web.RoutingContext;
 

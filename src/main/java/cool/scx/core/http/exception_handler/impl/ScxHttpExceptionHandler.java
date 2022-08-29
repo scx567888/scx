@@ -5,7 +5,7 @@ import cool.scx.core.enumeration.ScxCoreFeature;
 import cool.scx.core.http.exception.ScxHttpException;
 import cool.scx.core.http.exception_handler.ScxHttpRouterExceptionHandler;
 import cool.scx.core.vo.BaseVo;
-import cool.scx.util.exception.ScxExceptionHelper;
+import cool.scx.util.ScxExceptionHelper;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.vertx.ext.web.RoutingContext;
 import org.slf4j.Logger;

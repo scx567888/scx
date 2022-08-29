@@ -10,7 +10,7 @@ import java.util.List;
 
 import static cool.scx.core.ScxHelper.*;
 import static cool.scx.util.ScanClassUtils.*;
-import static cool.scx.util.exception.ScxExceptionHelper.wrap;
+import static cool.scx.util.ScxExceptionHelper.wrap;
 
 /**
  * Scx 模块接口 , 自定义模块必须实现此接口
