@@ -77,10 +77,10 @@
 #### 1. 编写您自己的模块并运行 main 方法 。
 
 ``` java
-import cool.scx.Scx;
-import cool.scx.ScxModule;
-import cool.scx.annotation.ScxMapping;
-import cool.scx.enumeration.HttpMethod;
+import cool.scx.core.Scx;
+import cool.scx.core.ScxModule;
+import cool.scx.core.annotation.ScxMapping;
+import cool.scx.core.enumeration.HttpMethod;
 
 // 注意 : 自定义的模块需要继承 ScxModule
 // 此处的 @ScxMapping 注解用来表示这是一个需要被扫描 WebHandler 的类
