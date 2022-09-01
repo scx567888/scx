@@ -18,13 +18,10 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.CorsHandler;
-import io.vertx.ext.web.handler.FaviconHandler;
 import io.vertx.ext.web.handler.impl.CorsHandlerImpl;
-import io.vertx.ext.web.handler.impl.FaviconHandlerImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.nio.file.Path;
 import java.util.*;
 
 /**
@@ -45,12 +42,10 @@ public final class ScxHttpRouter {
     private final Router vertxRouter;
 
     //基本 handler
-    private final FaviconHandler faviconHandler;
     private final CorsHandler corsHandler;
     private final BodyHandler bodyHandler;
 
     //基本 handler 对应的 路由
-    private final Route faviconHandlerRoute;
     private final Route corsHandlerRoute;
     private final Route bodyHandlerRoute;
 
@@ -72,11 +67,9 @@ public final class ScxHttpRouter {
         //绑定异常处理器
         bindErrorHandler(this.vertxRouter);
         //设置基本的 handler
-        this.faviconHandler = new FaviconHandlerImpl(scx.vertx(), Path.of(scx.scxCoreConfig().templateRoot().toString(), "favicon.ico").toString());
         this.corsHandler = new CorsHandlerImpl(scx.scxCoreConfig().allowedOrigin()).allowedHeaders(Set.of(HttpHeaderNames.ACCEPT.toString(), HttpHeaderNames.CONTENT_TYPE.toString())).allowedMethods(Set.of(HttpMethod.GET, HttpMethod.POST, HttpMethod.OPTIONS, HttpMethod.DELETE, HttpMethod.PATCH, HttpMethod.PUT)).allowCredentials(true);
         this.bodyHandler = BodyHandler.create(scx.scxEnvironment().getTempPath(BodyHandler.DEFAULT_UPLOADS_DIRECTORY).toString()).setBodyLimit(ScxConstant.DEFAULT_BODY_LIMIT).setMergeFormAttributes(false).setDeleteUploadedFilesOnEnd(true);
         //注册路由
-        this.faviconHandlerRoute = this.vertxRouter.route().handler(faviconHandler);
         this.corsHandlerRoute = this.vertxRouter.route().handler(corsHandler);
         this.bodyHandlerRoute = this.vertxRouter.route().handler(bodyHandler);
         registerScxMappingHandler(scx);
@@ -172,15 +165,6 @@ public final class ScxHttpRouter {
      *
      * @return a
      */
-    public FaviconHandler faviconHandler() {
-        return faviconHandler;
-    }
-
-    /**
-     * a
-     *
-     * @return a
-     */
     public CorsHandler corsHandler() {
         return corsHandler;
     }
@@ -192,15 +176,6 @@ public final class ScxHttpRouter {
      */
     public BodyHandler bodyHandler() {
         return bodyHandler;
-    }
-
-    /**
-     * a
-     *
-     * @return a
-     */
-    public Route faviconHandlerRoute() {
-        return faviconHandlerRoute;
     }
 
     /**

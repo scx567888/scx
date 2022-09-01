@@ -72,4 +72,11 @@ public @interface Column {
      */
     boolean autoIncrement() default false;
 
+    /**
+     * 列的名称 默认取字段名并进行 驼峰 转下划线
+     *
+     * @return 列的名称
+     */
+    String columnName() default "";
+
 }
