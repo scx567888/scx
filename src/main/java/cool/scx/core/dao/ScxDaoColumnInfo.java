@@ -103,7 +103,7 @@ public final class ScxDaoColumnInfo {
     }
 
     private static String initColumnName(Field field, Column column) {
-        if (column != null && StringUtils.notBlank(column.type())) {
+        if (column != null && StringUtils.notBlank(column.columnName())) {
             return column.columnName();
         } else {
             return CaseUtils.toSnake(field.getName());
