@@ -84,18 +84,30 @@ public final class ScxDaoColumnInfo {
      */
     public ScxDaoColumnInfo(Field field) {
         this.field = field;
-        this.columnName = CaseUtils.toSnake(this.field.getName());
         var column = field.getAnnotation(Column.class);
-        if (column != null) {
-            this.type = StringUtils.notBlank(column.type()) ? column.type() : SQLHelper.getMySQLTypeCreateName(field.getType());
-        } else {
-            this.type = SQLHelper.getMySQLTypeCreateName(field.getType());
-        }
+        this.type = initType(field, column);
+        this.columnName = initColumnName(field, column);
         this.normalDDL = initNormalDDL(this.columnName, this.type, column);
         this.specialDDL = initSpecialDDL(this.columnName, column);
         this.updateSetSQL = this.columnName + " = ?";
         this.insertValuesSQL = "?";
         this.selectSQL = this.fieldName().equals(this.columnName) ? this.columnName : this.columnName + " AS " + this.fieldName();
+    }
+
+    private static String initType(Field field, Column column) {
+        if (column != null && StringUtils.notBlank(column.type())) {
+            return column.type();
+        } else {
+            return SQLHelper.getMySQLTypeCreateName(field.getType());
+        }
+    }
+
+    private static String initColumnName(Field field, Column column) {
+        if (column != null && StringUtils.notBlank(column.type())) {
+            return column.columnName();
+        } else {
+            return CaseUtils.toSnake(field.getName());
+        }
     }
 
     /**
