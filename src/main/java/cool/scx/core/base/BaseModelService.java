@@ -101,7 +101,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param updateFilter 更新字段过滤器
      * @return 插入成功的数据 如果插入失败或数据没有主键则返回 null
      */
-    public Entity add(Entity entity, UpdateFilter updateFilter) {
+    public final Entity add(Entity entity, UpdateFilter updateFilter) {
         var newID = this._insert(entity, updateFilterProcessor(updateFilter));
         return newID != null ? this.get(newID) : null;
     }
@@ -124,7 +124,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param updateFilter 更新字段过滤器
      * @return 插入成功的数据的自增主键列表
      */
-    public List<Long> add(Collection<Entity> entityList, UpdateFilter updateFilter) {
+    public final List<Long> add(Collection<Entity> entityList, UpdateFilter updateFilter) {
         return this._insertBatch(entityList, updateFilterProcessor(updateFilter));
     }
 
@@ -164,7 +164,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param selectFilter 查询字段过滤器
      * @return 数据列表
      */
-    public List<Entity> list(Query query, SelectFilter selectFilter) {
+    public final List<Entity> list(Query query, SelectFilter selectFilter) {
         return this._select(queryProcessor(query), selectFilterProcessor(selectFilter));
     }
 
@@ -247,7 +247,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param updateFilter 更新字段过滤器
      * @return 更新成功后的数据
      */
-    public Entity update(Entity entity, UpdateFilter updateFilter) {
+    public final Entity update(Entity entity, UpdateFilter updateFilter) {
         if (entity.id == null) {
             throw new RuntimeException("根据 id 更新时 id 不能为空");
         }
@@ -274,7 +274,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param updateFilter 更新字段过滤器
      * @return 更新成功的数据条数
      */
-    public long update(Entity entity, Query query, UpdateFilter updateFilter) {
+    public final long update(Entity entity, Query query, UpdateFilter updateFilter) {
         return this._update(entity, queryProcessor(query), updateFilterProcessor(updateFilter));
     }
 
@@ -284,7 +284,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param ids 要删除的数据的 id 集合
      * @return 删除成功的数据条数
      */
-    public long delete(long... ids) {
+    public final long delete(long... ids) {
         if (ids.length == 0) {
             throw new IllegalArgumentException("待删除的 ids 数量至少为 1 个");
         }
@@ -297,7 +297,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param query 删除条件
      * @return 被删除的数据条数
      */
-    public long delete(Query query) {
+    public final long delete(Query query) {
         //物理删除
         if (!ScxContext.coreConfig().tombstone()) {
             return this._delete(query);
@@ -316,7 +316,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param ids 待恢复的数据 id 集合
      * @return 恢复删除成功的数据条数
      */
-    public long revokeDelete(long... ids) {
+    public final long revokeDelete(long... ids) {
         if (ids.length == 0) {
             throw new IllegalArgumentException("待恢复删除的 ids 数量至少为 1 个");
         }
@@ -329,7 +329,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param query 指定的条件
      * @return 恢复删除成功的数据条数
      */
-    public long revokeDelete(Query query) {
+    public final long revokeDelete(Query query) {
         if (!ScxContext.coreConfig().tombstone()) {
             throw new RuntimeException("物理删除模式下不允许恢复删除!!!");
         } else {
