@@ -47,7 +47,7 @@ public final class ScxTemplate {
         try {
             freemarkerConfig.setDirectoryForTemplateLoading(scxCoreConfig.templateRoot().toFile());
         } catch (Exception e) {
-            logger.error("模板目录不存在!!! {}", scxCoreConfig.templateRoot().toString());
+            logger.info("模板目录不存在!!! {}", scxCoreConfig.templateRoot().toString());
         }
 
         //设置 字符集
