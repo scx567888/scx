@@ -148,6 +148,16 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     }
 
     /**
+     * 根据 id 获取数据
+     *
+     * @param ids id 列表
+     * @return 列表数据
+     */
+    public final List<Entity> list(long... ids) {
+        return list(ids.length == 1 ? new Query().equal("id", ids[0]) : new Query().in("id", ids));
+    }
+
+    /**
      * 根据聚合查询条件 {@link cool.scx.core.base.Query} 获取数据列表
      *
      * @param query 聚合查询参数对象
@@ -247,7 +257,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param updateFilter 更新字段过滤器
      * @return 更新成功后的数据
      */
-    public Entity update(Entity entity, UpdateFilter updateFilter) {
+    public final Entity update(Entity entity, UpdateFilter updateFilter) {
         if (entity.id == null) {
             throw new RuntimeException("根据 id 更新时 id 不能为空");
         }
@@ -284,7 +294,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param ids 要删除的数据的 id 集合
      * @return 删除成功的数据条数
      */
-    public long delete(long... ids) {
+    public final long delete(long... ids) {
         if (ids.length == 0) {
             throw new IllegalArgumentException("待删除的 ids 数量至少为 1 个");
         }
@@ -316,7 +326,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param ids 待恢复的数据 id 集合
      * @return 恢复删除成功的数据条数
      */
-    public long revokeDelete(long... ids) {
+    public final long revokeDelete(long... ids) {
         if (ids.length == 0) {
             throw new IllegalArgumentException("待恢复删除的 ids 数量至少为 1 个");
         }
