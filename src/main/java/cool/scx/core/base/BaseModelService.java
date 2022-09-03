@@ -101,7 +101,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param updateFilter 更新字段过滤器
      * @return 插入成功的数据 如果插入失败或数据没有主键则返回 null
      */
-    public final Entity add(Entity entity, UpdateFilter updateFilter) {
+    public Entity add(Entity entity, UpdateFilter updateFilter) {
         var newID = this._insert(entity, updateFilterProcessor(updateFilter));
         return newID != null ? this.get(newID) : null;
     }
@@ -124,7 +124,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param updateFilter 更新字段过滤器
      * @return 插入成功的数据的自增主键列表
      */
-    public final List<Long> add(Collection<Entity> entityList, UpdateFilter updateFilter) {
+    public List<Long> add(Collection<Entity> entityList, UpdateFilter updateFilter) {
         return this._insertBatch(entityList, updateFilterProcessor(updateFilter));
     }
 
@@ -148,6 +148,16 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
     }
 
     /**
+     * 根据 id 获取数据
+     *
+     * @param ids id 列表
+     * @return 列表数据
+     */
+    public final List<Entity> list(long... ids) {
+        return list(ids.length == 1 ? new Query().equal("id", ids[0]) : new Query().in("id", ids));
+    }
+
+    /**
      * 根据聚合查询条件 {@link cool.scx.core.base.Query} 获取数据列表
      *
      * @param query 聚合查询参数对象
@@ -164,7 +174,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param selectFilter 查询字段过滤器
      * @return 数据列表
      */
-    public final List<Entity> list(Query query, SelectFilter selectFilter) {
+    public List<Entity> list(Query query, SelectFilter selectFilter) {
         return this._select(queryProcessor(query), selectFilterProcessor(selectFilter));
     }
 
@@ -274,7 +284,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param updateFilter 更新字段过滤器
      * @return 更新成功的数据条数
      */
-    public final long update(Entity entity, Query query, UpdateFilter updateFilter) {
+    public long update(Entity entity, Query query, UpdateFilter updateFilter) {
         return this._update(entity, queryProcessor(query), updateFilterProcessor(updateFilter));
     }
 
@@ -297,7 +307,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param query 删除条件
      * @return 被删除的数据条数
      */
-    public final long delete(Query query) {
+    public long delete(Query query) {
         //物理删除
         if (!ScxContext.coreConfig().tombstone()) {
             return this._delete(query);
@@ -329,7 +339,7 @@ public class BaseModelService<Entity extends BaseModel> extends BasicService<Ent
      * @param query 指定的条件
      * @return 恢复删除成功的数据条数
      */
-    public final long revokeDelete(Query query) {
+    public long revokeDelete(Query query) {
         if (!ScxContext.coreConfig().tombstone()) {
             throw new RuntimeException("物理删除模式下不允许恢复删除!!!");
         } else {
