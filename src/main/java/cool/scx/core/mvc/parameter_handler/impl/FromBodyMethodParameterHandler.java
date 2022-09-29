@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
 
+import static cool.scx.util.ObjectUtils.*;
+
 /**
  * a
  *
@@ -79,7 +81,7 @@ public final class FromBodyMethodParameterHandler implements ScxMappingMethodPar
      * @throws java.io.IOException a
      */
     private static <T> T readValue(JsonNode jsonNode, Type type) throws IOException {
-        return ObjectUtils.jsonMapper().readerFor(ObjectUtils.constructType(type)).readValue(jsonNode);
+        return jsonMapper(Option.IGNORE_JSON_IGNORE).readerFor(constructType(type)).readValue(jsonNode);
     }
 
     /**
