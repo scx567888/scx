@@ -1,6 +1,5 @@
 package cool.scx.core.vo;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.functional.ScxHandlerAE;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.vertx.core.http.HttpServerResponse;
@@ -8,9 +7,6 @@ import io.vertx.ext.web.RoutingContext;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-
-import static cool.scx.core.vo.BaseVo0.JSON_MAPPER;
-import static cool.scx.core.vo.BaseVo0.XML_MAPPER;
 
 /**
  * BaseVo 接口
@@ -37,64 +33,6 @@ public interface BaseVo extends ScxHandlerAE<RoutingContext, Exception> {
             }
         } else {
             return response.putHeader(HttpHeaderNames.CONTENT_TYPE, "application/octet-stream");
-        }
-    }
-
-    /**
-     * 将 一个对象转换为 json 字符串 (这里本质上是调用了)
-     * <p>
-     * 所以其中标注的所有注解均会执行 , 包括 @JsonIgnore
-     * 也就是说如果想向前台发送一些 json 建议使用此方法进行序列化
-     * 以保证标注 @JsonIgnore 注解的属性可以被忽略 防止一些私密信息泄露
-     *
-     * @param value a
-     * @return a
-     * @throws com.fasterxml.jackson.core.JsonProcessingException a
-     */
-    static String toJson(Object value) throws JsonProcessingException {
-        return JSON_MAPPER.writeValueAsString(value);
-    }
-
-    /**
-     * a
-     *
-     * @param value        a
-     * @param defaultValue a
-     * @return a
-     */
-    static String toJson(Object value, String defaultValue) {
-        try {
-            return toJson(value);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            return defaultValue;
-        }
-    }
-
-    /**
-     * a
-     *
-     * @param value a
-     * @return a
-     * @throws com.fasterxml.jackson.core.JsonProcessingException a
-     */
-    static String toXml(Object value) throws JsonProcessingException {
-        return XML_MAPPER.writeValueAsString(value);
-    }
-
-    /**
-     * a
-     *
-     * @param value        a
-     * @param defaultValue a
-     * @return a
-     */
-    static String toXml(Object value, String defaultValue) {
-        try {
-            return toXml(value);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            return defaultValue;
         }
     }
 
