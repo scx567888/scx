@@ -47,7 +47,7 @@ public final class FromQueryMethodParameterHandler implements ScxMappingMethodPa
         }
 
         try {
-            return ObjectUtils.convertValue(v, javaType);
+            return ObjectUtils.convertValue(v, javaType, ObjectUtils.Option.IGNORE_JSON_IGNORE);
         } catch (Exception e) {
             //和上方类似 针对是否是必填项进行不同的处理
             if (required) {
