@@ -5,6 +5,7 @@ import cool.scx.core.enumeration.ScxCoreFeature;
 import cool.scx.core.http.exception.ScxHttpException;
 import cool.scx.core.http.exception_handler.ScxHttpRouterExceptionHandler;
 import cool.scx.core.vo.BaseVo;
+import cool.scx.util.ObjectUtils;
 import cool.scx.util.ScxExceptionHelper;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.vertx.ext.web.RoutingContext;
@@ -95,7 +96,7 @@ public final class ScxHttpExceptionHandler implements ScxHttpRouterExceptionHand
             tempMap.put("statusCode", statusCode);
             tempMap.put("title", title);
             tempMap.put("info", info);
-            var jsonStr = BaseVo.toJson(tempMap, "");
+            var jsonStr = ObjectUtils.toJson(tempMap, "");
             BaseVo.fillJsonContentType(routingContext.request().response().setStatusCode(statusCode)).end(jsonStr);
         }
     }

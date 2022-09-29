@@ -1,6 +1,7 @@
 package cool.scx.core.vo;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import cool.scx.util.ObjectUtils;
 import io.vertx.ext.web.RoutingContext;
 
 /**
@@ -52,7 +53,7 @@ public final class Xml implements BaseVo {
      * @throws com.fasterxml.jackson.core.JsonProcessingException 转换失败
      */
     public String toXml() throws JsonProcessingException {
-        return BaseVo.toXml(this.data);
+        return ObjectUtils.toXml(this.data);
     }
 
     /**
@@ -62,7 +63,7 @@ public final class Xml implements BaseVo {
      * @return a
      */
     public String toXml(String defaultValue) {
-        return BaseVo.toXml(this.data, defaultValue);
+        return ObjectUtils.toXml(this.data, defaultValue);
     }
 
 }
