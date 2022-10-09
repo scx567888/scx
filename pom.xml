@@ -13,7 +13,7 @@
     <packaging>jar</packaging>
     <name>scx</name>
 
-    <version>1.17.6</version>
+    <version>1.17.7</version>
 
     <description>A Web rapid development framework</description>
     <url>https://github.com/scx567888/scx</url>
@@ -66,7 +66,7 @@
                 <artifactId>maven-gpg-plugin</artifactId>
                 <configuration>
                     <!-- 这里启用签名 -->
-                    <skip>false</skip>
+                    <skip>true</skip>
                 </configuration>
             </plugin>
 
