@@ -426,6 +426,11 @@ public class BaseModelService<Entity extends BaseModel> {
         return buildListSQLWithAlias(query.setPagination(1), selectFilter);
     }
 
+    /**
+     * <p>baseDao.</p>
+     *
+     * @return a {@link cool.scx.sql.base.BaseDao} object
+     */
     public BaseDao<Entity> baseDao() {
         return baseDao;
     }

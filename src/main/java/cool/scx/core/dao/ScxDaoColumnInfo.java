@@ -95,6 +95,13 @@ public final class ScxDaoColumnInfo implements ColumnInfo {
         this.selectSQL = this.fieldName().equals(this.columnName) ? this.columnName : this.columnName + " AS " + this.fieldName();
     }
 
+    /**
+     * <p>initType.</p>
+     *
+     * @param field  a {@link java.lang.reflect.Field} object
+     * @param column a {@link cool.scx.core.annotation.Column} object
+     * @return a {@link java.lang.String} object
+     */
     private static String initType(Field field, Column column) {
         if (column != null && StringUtils.notBlank(column.type())) {
             return column.type();
@@ -103,6 +110,13 @@ public final class ScxDaoColumnInfo implements ColumnInfo {
         }
     }
 
+    /**
+     * <p>initColumnName.</p>
+     *
+     * @param field  a {@link java.lang.reflect.Field} object
+     * @param column a {@link cool.scx.core.annotation.Column} object
+     * @return a {@link java.lang.String} object
+     */
     private static String initColumnName(Field field, Column column) {
         if (column != null && StringUtils.notBlank(column.columnName())) {
             return column.columnName();
@@ -168,15 +182,18 @@ public final class ScxDaoColumnInfo implements ColumnInfo {
         return list.toArray(String[]::new);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Field javaField() {
         return field;
     }
 
     /**
+     * {@inheritDoc}
+     * <p>
      * a
-     *
-     * @return a
      */
     @Override
     public String selectSQL() {
@@ -184,9 +201,9 @@ public final class ScxDaoColumnInfo implements ColumnInfo {
     }
 
     /**
+     * {@inheritDoc}
+     * <p>
      * a
-     *
-     * @return a
      */
     @Override
     public String columnName() {
@@ -194,9 +211,9 @@ public final class ScxDaoColumnInfo implements ColumnInfo {
     }
 
     /**
+     * {@inheritDoc}
+     * <p>
      * a
-     *
-     * @return a
      */
     @Override
     public String updateSetSQL() {
@@ -204,9 +221,9 @@ public final class ScxDaoColumnInfo implements ColumnInfo {
     }
 
     /**
+     * {@inheritDoc}
+     * <p>
      * a
-     *
-     * @return a
      */
     @Override
     public String insertValuesSQL() {

@@ -102,9 +102,9 @@ public final class ScxDaoTableInfo implements TableInfo {
     }
 
     /**
+     * {@inheritDoc}
+     * <p>
      * a
-     *
-     * @return a
      */
     @Override
     public String tableName() {
@@ -112,9 +112,9 @@ public final class ScxDaoTableInfo implements TableInfo {
     }
 
     /**
+     * {@inheritDoc}
+     * <p>
      * a
-     *
-     * @return a
      */
     @Override
     public ScxDaoColumnInfo[] columnInfos() {
