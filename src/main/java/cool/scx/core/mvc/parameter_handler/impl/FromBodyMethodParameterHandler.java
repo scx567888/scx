@@ -6,7 +6,6 @@ import cool.scx.core.mvc.parameter_handler.ParamConvertException;
 import cool.scx.core.mvc.parameter_handler.RequiredParamEmptyException;
 import cool.scx.core.mvc.parameter_handler.ScxMappingMethodParameterHandler;
 import cool.scx.core.mvc.parameter_handler.ScxMappingRoutingContextInfo;
-import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
 
 import java.io.IOException;

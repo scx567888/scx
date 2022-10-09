@@ -2,6 +2,7 @@ package cool.scx.core.dao;
 
 import cool.scx.core.ScxContext;
 import cool.scx.core.annotation.Column;
+import cool.scx.sql.ColumnInfo;
 import cool.scx.sql.SQLHelper;
 import cool.scx.util.CaseUtils;
 import cool.scx.util.StringUtils;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
  * @author scx567888
  * @version 1.11.8
  */
-public final class ScxDaoColumnInfo {
+public final class ScxDaoColumnInfo implements ColumnInfo {
 
     /**
      * 对应 java 字段
@@ -167,13 +168,9 @@ public final class ScxDaoColumnInfo {
         return list.toArray(String[]::new);
     }
 
-    /**
-     * a
-     *
-     * @return a
-     */
-    public String fieldName() {
-        return field.getName();
+    @Override
+    public Field javaField() {
+        return field;
     }
 
     /**
@@ -181,6 +178,7 @@ public final class ScxDaoColumnInfo {
      *
      * @return a
      */
+    @Override
     public String selectSQL() {
         return selectSQL;
     }
@@ -190,6 +188,7 @@ public final class ScxDaoColumnInfo {
      *
      * @return a
      */
+    @Override
     public String columnName() {
         return columnName;
     }
@@ -199,6 +198,7 @@ public final class ScxDaoColumnInfo {
      *
      * @return a
      */
+    @Override
     public String updateSetSQL() {
         return updateSetSQL;
     }
@@ -208,23 +208,9 @@ public final class ScxDaoColumnInfo {
      *
      * @return a
      */
+    @Override
     public String insertValuesSQL() {
         return insertValuesSQL;
-    }
-
-    /**
-     * 获取字段值
-     *
-     * @param target 字段所属实例对象
-     * @return a
-     */
-    public Object getFieldValue(Object target) {
-        try {
-            return this.field.get(target);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 
     /**
