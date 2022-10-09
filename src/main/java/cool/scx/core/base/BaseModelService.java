@@ -431,7 +431,7 @@ public class BaseModelService<Entity extends BaseModel> {
      *
      * @return a {@link cool.scx.sql.base.BaseDao} object
      */
-    public BaseDao<Entity> baseDao() {
+    public BaseDao<Entity> _baseDao() {
         return baseDao;
     }
 
