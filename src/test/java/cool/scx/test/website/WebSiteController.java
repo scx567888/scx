@@ -61,7 +61,7 @@ public class WebSiteController {
         var sb = new StringBuilder();
         CarService bean = ScxContext.getBean(CarService.class);
         try {
-            bean.autoTransaction(() -> {
+            ScxContext.autoTransaction(() -> {
                 sb.append("事务开始前数据库中 数据条数 : ").append(bean.list().size()).append("</br>");
                 sb.append("现在插入 1 数据条数").append("</br>");
                 var u = new Car();

@@ -2,6 +2,7 @@ package cool.scx.core.dao;
 
 import cool.scx.core.annotation.NoColumn;
 import cool.scx.core.annotation.ScxModel;
+import cool.scx.sql.TableInfo;
 import cool.scx.util.CaseUtils;
 import cool.scx.util.StringUtils;
 
@@ -15,7 +16,7 @@ import java.util.stream.Stream;
  * @author scx567888
  * @version 0.5.0
  */
-public final class ScxDaoTableInfo {
+public final class ScxDaoTableInfo implements TableInfo {
 
     /**
      * 实体类型不含@NoColunm 注解的field
@@ -101,19 +102,21 @@ public final class ScxDaoTableInfo {
     }
 
     /**
+     * {@inheritDoc}
+     * <p>
      * a
-     *
-     * @return a
      */
+    @Override
     public String tableName() {
         return tableName;
     }
 
     /**
+     * {@inheritDoc}
+     * <p>
      * a
-     *
-     * @return a
      */
+    @Override
     public ScxDaoColumnInfo[] columnInfos() {
         return columnInfos;
     }

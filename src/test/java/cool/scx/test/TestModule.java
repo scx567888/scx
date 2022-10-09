@@ -4,11 +4,11 @@ import cool.scx.core.Scx;
 import cool.scx.core.ScxContext;
 import cool.scx.core.ScxModule;
 import cool.scx.core.base.BaseModelService;
-import cool.scx.core.base.Query;
-import cool.scx.core.base.SelectFilter;
-import cool.scx.core.base.UpdateFilter;
 import cool.scx.core.dao.ScxDaoHelper;
 import cool.scx.core.enumeration.ScxCoreFeature;
+import cool.scx.sql.base.Query;
+import cool.scx.sql.base.SelectFilter;
+import cool.scx.sql.base.UpdateFilter;
 import cool.scx.sql.where.WhereOption;
 import cool.scx.test.car.Car;
 import cool.scx.test.car.CarColor;
@@ -120,7 +120,7 @@ public class TestModule extends ScxModule {
             //插入数据 方式2
             System.err.println("事务开始前数据库中 数据条数 : " + carService.count());
 
-            carService.autoTransaction(() -> {
+            ScxContext.autoTransaction(() -> {
                 System.err.println("现在插入 1 数据条数");
                 var bb = new Car();
                 bb.name = "唯一ID";

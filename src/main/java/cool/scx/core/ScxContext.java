@@ -10,6 +10,8 @@ import cool.scx.core.http.ScxHttpRouter;
 import cool.scx.core.mvc.ScxMappingConfiguration;
 import cool.scx.core.scheduler.ScxScheduler;
 import cool.scx.core.websocket.ScxWebSocketRouter;
+import cool.scx.functional.ScxHandlerE;
+import cool.scx.functional.ScxHandlerRE;
 import cool.scx.sql.SQLRunner;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServer;
@@ -248,6 +250,26 @@ public final class ScxContext {
      */
     public static SQLRunner sqlRunner() {
         return dao().sqlRunner();
+    }
+
+    /**
+     * 避免冗长的 调用
+     *
+     * @param handler handler
+     */
+    public static void autoTransaction(ScxHandlerE<?> handler) {
+        sqlRunner().autoTransaction(handler);
+    }
+
+    /**
+     * 避免冗长的 调用
+     *
+     * @param handler a
+     * @param <T>     a
+     * @return a
+     */
+    public static <T> T autoTransaction(ScxHandlerRE<T, ?> handler) {
+        return sqlRunner().autoTransaction(handler);
     }
 
     /**

@@ -2,6 +2,7 @@ package cool.scx.core.dao;
 
 import cool.scx.core.ScxContext;
 import cool.scx.core.annotation.Column;
+import cool.scx.sql.ColumnInfo;
 import cool.scx.sql.SQLHelper;
 import cool.scx.util.CaseUtils;
 import cool.scx.util.StringUtils;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
  * @author scx567888
  * @version 1.11.8
  */
-public final class ScxDaoColumnInfo {
+public final class ScxDaoColumnInfo implements ColumnInfo {
 
     /**
      * 对应 java 字段
@@ -94,6 +95,13 @@ public final class ScxDaoColumnInfo {
         this.selectSQL = this.fieldName().equals(this.columnName) ? this.columnName : this.columnName + " AS " + this.fieldName();
     }
 
+    /**
+     * <p>initType.</p>
+     *
+     * @param field  a {@link java.lang.reflect.Field} object
+     * @param column a {@link cool.scx.core.annotation.Column} object
+     * @return a {@link java.lang.String} object
+     */
     private static String initType(Field field, Column column) {
         if (column != null && StringUtils.notBlank(column.type())) {
             return column.type();
@@ -102,6 +110,13 @@ public final class ScxDaoColumnInfo {
         }
     }
 
+    /**
+     * <p>initColumnName.</p>
+     *
+     * @param field  a {@link java.lang.reflect.Field} object
+     * @param column a {@link cool.scx.core.annotation.Column} object
+     * @return a {@link java.lang.String} object
+     */
     private static String initColumnName(Field field, Column column) {
         if (column != null && StringUtils.notBlank(column.columnName())) {
             return column.columnName();
@@ -168,63 +183,51 @@ public final class ScxDaoColumnInfo {
     }
 
     /**
-     * a
-     *
-     * @return a
+     * {@inheritDoc}
      */
-    public String fieldName() {
-        return field.getName();
+    @Override
+    public Field javaField() {
+        return field;
     }
 
     /**
+     * {@inheritDoc}
+     * <p>
      * a
-     *
-     * @return a
      */
+    @Override
     public String selectSQL() {
         return selectSQL;
     }
 
     /**
+     * {@inheritDoc}
+     * <p>
      * a
-     *
-     * @return a
      */
+    @Override
     public String columnName() {
         return columnName;
     }
 
     /**
+     * {@inheritDoc}
+     * <p>
      * a
-     *
-     * @return a
      */
+    @Override
     public String updateSetSQL() {
         return updateSetSQL;
     }
 
     /**
+     * {@inheritDoc}
+     * <p>
      * a
-     *
-     * @return a
      */
+    @Override
     public String insertValuesSQL() {
         return insertValuesSQL;
-    }
-
-    /**
-     * 获取字段值
-     *
-     * @param target 字段所属实例对象
-     * @return a
-     */
-    public Object getFieldValue(Object target) {
-        try {
-            return this.field.get(target);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 
     /**
