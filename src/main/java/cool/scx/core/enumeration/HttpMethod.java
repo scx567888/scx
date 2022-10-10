@@ -53,12 +53,20 @@ public enum HttpMethod {
      */
     OPTION;
 
+    /**
+     * <p>Constructor for HttpMethod.</p>
+     */
     private final io.vertx.core.http.HttpMethod vertxMethod;
 
     HttpMethod() {
         this.vertxMethod = io.vertx.core.http.HttpMethod.valueOf(this.name());
     }
 
+    /**
+     * <p>vertxMethod.</p>
+     *
+     * @return a {@link io.vertx.core.http.HttpMethod} object
+     */
     public io.vertx.core.http.HttpMethod vertxMethod() {
         return this.vertxMethod;
     }

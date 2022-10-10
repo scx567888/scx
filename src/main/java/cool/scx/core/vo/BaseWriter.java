@@ -153,7 +153,7 @@ class BaseWriter implements BaseVo {
      * <p>sendFile.</p>
      *
      * @param context c
-     * @throws NotFoundException if any.
+     * @throws cool.scx.core.http.exception.NotFoundException if any.
      */
     protected void sendFile(RoutingContext context) throws NotFoundException {
         context.request().response().putHeader(HttpHeaderNames.CONTENT_DISPOSITION, contentDisposition);
@@ -206,7 +206,7 @@ class BaseWriter implements BaseVo {
      * <p>writeFile.</p>
      *
      * @param context a {@link io.vertx.core.http.HttpServerResponse} object
-     * @throws NotFoundException if any.
+     * @throws cool.scx.core.http.exception.NotFoundException if any.
      */
     private void writeFile(RoutingContext context) throws NotFoundException {
         var file = path.toFile();

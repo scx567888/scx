@@ -9,6 +9,12 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * <p>ScxMappingRegistrar class.</p>
+ *
+ * @author scx567888
+ * @version 1.17.8
+ */
 public class ScxMappingRegistrar {
 
     private final List<ScxMappingHandler> scxMappingHandlers;
@@ -58,6 +64,11 @@ public class ScxMappingRegistrar {
         return false;
     }
 
+    /**
+     * <p>registerRoute.</p>
+     *
+     * @param router a {@link io.vertx.ext.web.Router} object
+     */
     public void registerRoute(Router router) {
         //todo 在注册路由前我们要进行一个排序 规则如下
         //1 若注解上标识了 order 则按照注解上的 order 进行插入
