@@ -82,13 +82,35 @@ public class WebSiteController {
      * @return 页面
      * @throws java.io.IOException if any.
      */
-    @ScxMapping(value = "/", method = HttpMethod.GET)
-    public Html TestIndex() throws IOException {
-        System.err.println("两个 carService 是否相等 " + (carService == carService1));
-        Html index = Html.of("index");
-        index.add("name", "小明");
-        index.add("age", 22);
-        return index;
+    @ScxMapping(value = "/", method = HttpMethod.GET, order = 10)
+    public Object TestIndex(RoutingContext c) throws IOException {
+        System.err.println("最后一次匹配的路由" + c.request().path());
+        return c.get("some");
+    }
+
+    /**
+     * 多个路由
+     *
+     * @param c a
+     * @throws IOException a
+     */
+    @ScxMapping(value = "/", method = HttpMethod.GET, order = 5)
+    public void TestIndex1(RoutingContext c) throws IOException {
+        System.err.println("第二个匹配的路由" + c.request().path());
+        c.put("some", "一些数据");
+        c.next();
+    }
+
+    /**
+     * 这里如果 order 小于其他的 order 根据 其会因其路径为(模糊路径) 在最后进行才进行匹配
+     *
+     * @param c a
+     * @throws IOException a
+     */
+    @ScxMapping(value = "/*", method = HttpMethod.GET, order = 1)
+    public void TestIndex1a(RoutingContext c) throws IOException {
+        System.err.println("第一个匹配的路由" + c.request().path());
+        c.next();
     }
 
     /**
@@ -192,7 +214,7 @@ public class WebSiteController {
      *
      * @return a {@link BaseVo} object
      */
-    @ScxMapping(value = "/v/:aaa", method = HttpMethod.GET)
+    @ScxMapping(value = "/v/:aaa", method = {HttpMethod.GET, HttpMethod.POST})
     public BaseVo c() {
         return Json.ok().put("items", "aaa");
     }
