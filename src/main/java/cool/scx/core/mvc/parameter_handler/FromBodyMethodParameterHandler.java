@@ -2,6 +2,7 @@ package cool.scx.core.mvc.parameter_handler;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.core.annotation.FromBody;
+import cool.scx.core.mvc.ScxMappingHandler;
 import cool.scx.core.mvc.ScxMappingMethodParameterHandler;
 import cool.scx.core.mvc.ScxMappingRoutingContextInfo;
 import cool.scx.core.mvc.exception.ParamConvertException;
@@ -95,7 +96,7 @@ public final class FromBodyMethodParameterHandler implements ScxMappingMethodPar
      * {@inheritDoc}
      */
     @Override
-    public Object handle(Parameter parameter, ScxMappingRoutingContextInfo scxMappingRoutingContextInfo) throws Exception {
+    public Object handle(Parameter parameter, ScxMappingRoutingContextInfo scxMappingRoutingContextInfo, ScxMappingHandler scxMappingHandler) throws Exception {
         var javaType = parameter.getParameterizedType();
         var required = false;
         var name = parameter.getName();

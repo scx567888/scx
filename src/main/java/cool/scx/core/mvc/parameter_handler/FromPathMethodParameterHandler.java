@@ -1,6 +1,7 @@
 package cool.scx.core.mvc.parameter_handler;
 
 import cool.scx.core.annotation.FromPath;
+import cool.scx.core.mvc.ScxMappingHandler;
 import cool.scx.core.mvc.ScxMappingMethodParameterHandler;
 import cool.scx.core.mvc.ScxMappingRoutingContextInfo;
 import cool.scx.core.mvc.exception.ParamConvertException;
@@ -68,7 +69,7 @@ public final class FromPathMethodParameterHandler implements ScxMappingMethodPar
      * {@inheritDoc}
      */
     @Override
-    public Object handle(Parameter parameter, ScxMappingRoutingContextInfo context) throws Exception {
+    public Object handle(Parameter parameter, ScxMappingRoutingContextInfo context, ScxMappingHandler scxMappingHandler) throws Exception {
         var javaType = parameter.getParameterizedType();
         var required = false;
         var name = parameter.getName();
