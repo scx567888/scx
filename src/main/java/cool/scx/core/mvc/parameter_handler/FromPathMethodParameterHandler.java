@@ -1,10 +1,10 @@
-package cool.scx.core.mvc.parameter_handler.impl;
+package cool.scx.core.mvc.parameter_handler;
 
 import cool.scx.core.annotation.FromPath;
-import cool.scx.core.mvc.parameter_handler.ParamConvertException;
-import cool.scx.core.mvc.parameter_handler.RequiredParamEmptyException;
-import cool.scx.core.mvc.parameter_handler.ScxMappingMethodParameterHandler;
-import cool.scx.core.mvc.parameter_handler.ScxMappingRoutingContextInfo;
+import cool.scx.core.mvc.exception.ParamConvertException;
+import cool.scx.core.mvc.exception.RequiredParamEmptyException;
+import cool.scx.core.mvc.ScxMappingMethodParameterHandler;
+import cool.scx.core.mvc.ScxMappingRoutingContextInfo;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
 
@@ -33,8 +33,8 @@ public final class FromPathMethodParameterHandler implements ScxMappingMethodPar
      * @param javaType       a
      * @param routingContext a
      * @return a
-     * @throws cool.scx.core.mvc.parameter_handler.RequiredParamEmptyException a
-     * @throws cool.scx.core.mvc.parameter_handler.ParamConvertException       a
+     * @throws RequiredParamEmptyException a
+     * @throws ParamConvertException       a
      */
     public static Object getValueFromPath(String name, boolean merge, boolean required, Type javaType, ScxMappingRoutingContextInfo routingContext) throws RequiredParamEmptyException, ParamConvertException {
         var v = merge ? routingContext.routingContext().pathParams() : routingContext.routingContext().pathParams().get(name);

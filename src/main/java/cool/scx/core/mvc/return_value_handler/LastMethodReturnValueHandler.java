@@ -1,7 +1,7 @@
-package cool.scx.core.mvc.return_value_handler.impl;
+package cool.scx.core.mvc.return_value_handler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import cool.scx.core.mvc.return_value_handler.ScxMappingMethodReturnValueHandler;
+import cool.scx.core.mvc.ScxMappingMethodReturnValueHandler;
 import cool.scx.core.vo.BaseVo;
 import cool.scx.util.ObjectUtils;
 import io.netty.handler.codec.http.HttpHeaderNames;
