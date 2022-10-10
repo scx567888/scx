@@ -1,6 +1,6 @@
 package cool.scx.core.vo;
 
-import cool.scx.core.http.exception.impl.NotFoundException;
+import cool.scx.core.http.exception.NotFoundException;
 import cool.scx.util.ScxExceptionHelper;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpResponseStatus;
@@ -153,7 +153,7 @@ class BaseWriter implements BaseVo {
      * <p>sendFile.</p>
      *
      * @param context c
-     * @throws cool.scx.core.http.exception.impl.NotFoundException if any.
+     * @throws NotFoundException if any.
      */
     protected void sendFile(RoutingContext context) throws NotFoundException {
         context.request().response().putHeader(HttpHeaderNames.CONTENT_DISPOSITION, contentDisposition);
@@ -206,7 +206,7 @@ class BaseWriter implements BaseVo {
      * <p>writeFile.</p>
      *
      * @param context a {@link io.vertx.core.http.HttpServerResponse} object
-     * @throws cool.scx.core.http.exception.impl.NotFoundException if any.
+     * @throws NotFoundException if any.
      */
     private void writeFile(RoutingContext context) throws NotFoundException {
         var file = path.toFile();

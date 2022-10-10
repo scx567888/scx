@@ -9,6 +9,7 @@ import cool.scx.core.enumeration.ScxCoreFeature;
 import cool.scx.core.eventbus.ScxEventBus;
 import cool.scx.core.http.ScxHttpRouter;
 import cool.scx.core.mvc.ScxMappingConfiguration;
+import cool.scx.core.mvc.ScxMappingRegistrar;
 import cool.scx.core.scheduler.ScxScheduler;
 import cool.scx.core.websocket.ScxWebSocketRouter;
 import cool.scx.util.ConsoleUtils;
@@ -302,16 +303,18 @@ public final class Scx {
         //2, 初始化路由 (Http 和 WebSocket)
         this.scxHttpRouter = new ScxHttpRouter(this);
         this.scxWebSocketRouter = new ScxWebSocketRouter(this.scxModules, this.scxBeanFactory);
-        //3, 依次执行 模块的 start 生命周期 , 在这里我们可以操作 scxRouteRegistry, vertxRouter 等对象 "手动注册新路由" 或其他任何操作
+        //3, 注册 ScxMapping 注解的 handler 到 路由中去
+        new ScxMappingRegistrar(this, this.scxHttpRouter).registerRoute(this.scxHttpRouter.vertxRouter());
+        //4, 依次执行 模块的 start 生命周期 , 在这里我们可以操作 scxRouteRegistry, vertxRouter 等对象 "手动注册新路由" 或其他任何操作
         this.startAllScxModules();
-        //4, 打印基本信息
+        //5, 打印基本信息
         if (this.scxFeatureConfig.get(ScxCoreFeature.SHOW_START_UP_INFO)) {
             Ansi.out()
                     .color("已加载 " + this.scxBeanFactory.getBeanDefinitionNames().length + " 个 Bean !!!").ln()
                     .color("已加载 " + this.scxHttpRouter.vertxRouter().getRoutes().size() + " 个 Http 路由 !!!").ln()
                     .color("已加载 " + this.scxWebSocketRouter.getRoutes().size() + " 个 WebSocket 路由 !!!").println();
         }
-        //5, 初始化服务器
+        //6, 初始化服务器
         var httpServerOptions = new HttpServerOptions();
         if (this.scxCoreConfig.isHttpsEnabled()) {
             httpServerOptions.setSsl(true)
@@ -321,11 +324,11 @@ public final class Scx {
         }
         this.vertxHttpServer = vertx.createHttpServer(httpServerOptions);
         this.vertxHttpServer.requestHandler(this.scxHttpRouter.vertxRouter()).webSocketHandler(this.scxWebSocketRouter);
-        //6, 添加程序停止时的钩子函数
+        //7, 添加程序停止时的钩子函数
         this.addShutdownHook();
-        //7, 使用初始端口号 启动服务器
+        //8, 使用初始端口号 启动服务器
         this.startServer(this.scxCoreConfig.port());
-        //8, 此处刷新 scxBeanFactory 使其实例化所有符合条件的 Bean
+        //9, 此处刷新 scxBeanFactory 使其实例化所有符合条件的 Bean
         this.scxBeanFactory.refresh();
     }
 

@@ -1,7 +1,8 @@
 package cool.scx.core.vo;
 
-import cool.scx.core.http.exception.impl.BadRequestException;
-import cool.scx.core.http.exception.impl.NotFoundException;
+import cool.scx.core.http.ScxHttpException;
+import cool.scx.core.http.exception.BadRequestException;
+import cool.scx.core.http.exception.NotFoundException;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.impl.MimeMapping;
@@ -115,7 +116,7 @@ public abstract class Image implements BaseVo {
          * 就不是普通的图片 我们就返回他在操作系统中的展示图标即可
          *
          * @return a {@link io.vertx.core.buffer.Buffer} object
-         * @throws cool.scx.core.http.exception.ScxHttpException if any.
+         * @throws ScxHttpException if any.
          */
         private Buffer getBuffer(File file) {
             try (var out = new ByteArrayOutputStream()) {
@@ -226,7 +227,7 @@ public abstract class Image implements BaseVo {
          * 裁剪后的图片
          *
          * @return a {@link io.vertx.core.buffer.Buffer} object
-         * @throws cool.scx.core.http.exception.ScxHttpException if any.
+         * @throws ScxHttpException if any.
          */
         private Buffer getBuffer(File file, Integer width, Integer height, String type) {
             try (var out = new ByteArrayOutputStream()) {
