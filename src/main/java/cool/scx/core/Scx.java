@@ -304,7 +304,7 @@ public final class Scx {
         this.scxHttpRouter = new ScxHttpRouter(this);
         this.scxWebSocketRouter = new ScxWebSocketRouter(this.scxModules, this.scxBeanFactory);
         //3, 注册 ScxMapping 注解的 handler 到 路由中去
-        new ScxMappingRegistrar(this, this.scxHttpRouter).registerRoute(this.scxHttpRouter.vertxRouter());
+        new ScxMappingRegistrar(this).registerRoute(this.scxHttpRouter.vertxRouter());
         //4, 依次执行 模块的 start 生命周期 , 在这里我们可以操作 scxRouteRegistry, vertxRouter 等对象 "手动注册新路由" 或其他任何操作
         this.startAllScxModules();
         //5, 打印基本信息

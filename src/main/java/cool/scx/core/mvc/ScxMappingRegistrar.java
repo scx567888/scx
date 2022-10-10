@@ -2,12 +2,20 @@ package cool.scx.core.mvc;
 
 import cool.scx.core.Scx;
 import cool.scx.core.annotation.ScxMapping;
-import cool.scx.core.http.ScxHttpRouter;
+import cool.scx.util.MultiMap;
+import cool.scx.util.ObjectUtils;
+import io.vertx.core.http.HttpMethod;
+import io.vertx.ext.web.MIMEHeader;
+import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
+import io.vertx.ext.web.impl.RouteImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * <p>ScxMappingRegistrar class.</p>
@@ -15,23 +23,101 @@ import java.util.List;
  * @author scx567888
  * @version 1.17.8
  */
-public class ScxMappingRegistrar {
-
+public final class ScxMappingRegistrar {
+    /**
+     * Constant <code>logger</code>
+     */
+    private static final Logger logger = LoggerFactory.getLogger(ScxMappingRegistrar.class);
+    private static final Method vertxRouteStateMethod = initVertxRouteStateMethod();
+    private static final Comparator<ScxMappingHandler> exactPathComparator = Comparator.comparing(routeState -> routeState.routeState().getExactPathOrder());
+    private static final Comparator<ScxMappingHandler> groupsComparator = Comparator.comparing(routeState -> routeState.routeState().getGroupsOrder());
+    private static final Comparator<ScxMappingHandler> orderComparator = Comparator.comparing(ScxMappingHandler::order);
     private final List<ScxMappingHandler> scxMappingHandlers;
 
     /**
      * 扫描所有被 ScxMapping注解标记的方法 并封装为 ScxMappingHandler.
      *
-     * @param scx           s
-     * @param scxHttpRouter s
+     * @param scx s
      */
-    public ScxMappingRegistrar(Scx scx, ScxHttpRouter scxHttpRouter) {
-        scxMappingHandlers = Arrays.stream(scx.scxModules())
+    public ScxMappingRegistrar(Scx scx) {
+        scxMappingHandlers = initScxMappingHandlers(scx);
+    }
+
+    private static Method initVertxRouteStateMethod() {
+        try {
+            var m = RouteImpl.class.getDeclaredMethod("state");
+            m.setAccessible(true);
+            return m;
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * 此处因为 vertx 包访问权限端原因 我们无法直接获取 RouteState 这里通过反射进行特殊处理 然后使用一个 类似的数据结构进行包装
+     *
+     * @param r t
+     * @return t
+     */
+    private static RouteState getRouteState(Route r) {
+        try {
+            return ObjectUtils.convertValue(vertxRouteStateMethod.invoke(r), RouteState.class);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * 在注册路由前我们要进行一个排序 规则如下
+     * <br>
+     * 1 若注解上标识了 order 则按照注解上的 order 进行插入 如下
+     * 0 > 5 > 13 > 199
+     * <br>
+     * 2 如果根据路径是否为精确路径 进行排序 如 如下
+     * /api/user > /api/*
+     * <br>
+     * 3 根据路径参数数量进行排序 (按照参数数量倒序排序) 如下
+     * /api/user/list > /api/user/:m > /api/:u/:m/
+     *
+     * @param scxMappingHandlers s
+     * @return s
+     */
+    private static List<ScxMappingHandler> sortedScxMappingHandlers(List<ScxMappingHandler> scxMappingHandlers) {
+        return scxMappingHandlers.stream()
+                .sorted(orderComparator.thenComparing(exactPathComparator).thenComparing(groupsComparator))
+                .toList();
+    }
+
+    /**
+     * 填充 routeState
+     *
+     * @param list a
+     * @param scx  a
+     * @return a
+     */
+    private static List<ScxMappingHandler> fillRouteState(List<ScxMappingHandler> list, Scx scx) {
+        var tempRouter = Router.router(scx.vertx());
+        return list.stream().peek(c -> c.setRouteState(getRouteState(tempRouter.route(c.originalUrl)))).toList();
+    }
+
+    /**
+     * a
+     *
+     * @param scx a
+     * @return a
+     */
+    private static List<ScxMappingHandler> initScxMappingHandlers(Scx scx) {
+        //获取所有的 handler
+        var allScxMappingHandlers = Arrays.stream(scx.scxModules())
                 .flatMap(c -> c.scxMappingClassList().stream())
                 .flatMap(c -> Arrays.stream(c.getMethods())
                         .filter(m -> m.isAnnotationPresent(ScxMapping.class))
-                        .map(m -> new ScxMappingHandler(c, m, scx, scxHttpRouter)))
+                        .map(m -> new ScxMappingHandler(c, m, scx)))
                 .toList();
+        //填充 routeState
+        var filledList = fillRouteState(allScxMappingHandlers, scx);
+        //返回排序后的 handlers
+        return sortedScxMappingHandlers(filledList);
     }
 
     /**
@@ -40,16 +126,38 @@ public class ScxMappingRegistrar {
      * @return 所有 handler
      */
     public List<ScxMappingHandler> scxMappingHandlers() {
-        return scxMappingHandlers;
+        return new ArrayList<>(scxMappingHandlers);
     }
 
     /**
      * 校验路由是否已经存在
      *
-     * @param handler h
      * @return true 为存在 false 为不存在
      */
-    private boolean checkScxMappingHandlerRouteExists(ScxMappingHandler handler) {
+    private boolean checkScxMappingHandlerRouteExists() {
+        var m = new MultiMap<String, ScxMappingHandler>();
+        for (var scxMappingHandler : scxMappingHandlers) {
+            var key = scxMappingHandler.routeState().pattern() != null
+                    ? scxMappingHandler.routeState().pattern().toString()
+                    : scxMappingHandler.routeState().path();
+            for (var httpMethod : scxMappingHandler.httpMethods) {
+                m.put(key + "_" + httpMethod, scxMappingHandler);
+            }
+        }
+        var map = m.asMap();
+        for (var v : map.values()) {
+            if (v.size() > 1) { //具有多个路由
+                var sb = new StringBuilder("检测到重复的路由!!! --> 相关 class 及方法如下 ▼")
+                        .append(System.lineSeparator());
+                for (var handler : v) {
+                    sb.append("\t")
+                            .append(handler.clazz.getName()).append(" : ").append(handler.method.getName())
+                            .append(System.lineSeparator());
+                }
+                logger.warn(sb.toString());
+            }
+        }
+//        System.out.println(scxMappingHandler.routeState().path() + "  " + scxMappingHandler.routeState().pattern());
 //        for (var a : SCX_MAPPING_HANDLER_LIST) {
 //            if (!a.patternUrl.equals(handler.patternUrl)) {
 //                continue;
@@ -70,26 +178,33 @@ public class ScxMappingRegistrar {
      * @param router a {@link io.vertx.ext.web.Router} object
      */
     public void registerRoute(Router router) {
-        //todo 在注册路由前我们要进行一个排序 规则如下
-        //1 若注解上标识了 order 则按照注解上的 order 进行插入
-        //2 若注解上的 order 为 -1 (默认) 则针对路由精确度进行匹配
-        //  如 /api/user/list > /api/user/:m > /api/:u/:m/ (按照参数数量倒序排序)
-        // todo 排序规则此处需要修改
-        //todo 校验路由是否已经存在 ? 规则 ?
-//        if (!checkScxMappingHandlerRouteExists(s)) {
-
-//        }
-        var sortedList = scxMappingHandlers.stream()
-                .sorted(Comparator.comparing(ScxMappingHandler::order)).toList();
-
-
+        // 检查重复路由 (这里只需给出警告即可)
+        checkScxMappingHandlerRouteExists();
         //循环添加到 vertxRouter 中
-        for (var c : sortedList) {
-            var r = router.route(c.url);
+        for (var c : scxMappingHandlers) {
+            var r = router.route(c.originalUrl);
             for (var httpMethod : c.httpMethods) {
                 r.method(httpMethod.vertxMethod());
             }
             r.handler(c);
+        }
+    }
+
+    /**
+     * 用于承载数据
+     */
+    record RouteState(Map<String, Object> metadata, String path, String name, int order, boolean enabled,
+                      Set<HttpMethod> methods, Set<MIMEHeader> consumes, boolean emptyBodyPermittedWithConsumes,
+                      Set<MIMEHeader> produces, boolean added, Pattern pattern, List<String> groups,
+                      boolean useNormalizedPath, Set<String> namedGroupsInRegex, Pattern virtualHostPattern,
+                      boolean pathEndsWithSlash, boolean exclusive, boolean exactPath) {
+
+        int getGroupsOrder() {
+            return this.groups == null ? 0 : this.groups.size();
+        }
+
+        int getExactPathOrder() {
+            return this.exactPath ? 0 : 1;
         }
 
     }
