@@ -59,27 +59,28 @@ public class ScxMappingRegistrar {
     }
 
     public void registerRoute(Router router) {
-        //在注册路由前我们要进行一个排序 规则如下
+        //todo 在注册路由前我们要进行一个排序 规则如下
         //1 若注解上标识了 order 则按照注解上的 order 进行插入
         //2 若注解上的 order 为 -1 (默认) 则针对路由精确度进行匹配
         //  如 /api/user/list > /api/user/:m > /api/:u/:m/ (按照参数数量倒序排序)
-        //
-
-
-        //此处校验路由是否已经存在
+        // todo 排序规则此处需要修改
+        //todo 校验路由是否已经存在 ? 规则 ?
 //        if (!checkScxMappingHandlerRouteExists(s)) {
 
 //        }
-        //此处排序的意义在于将 需要正则表达式匹配的 放在最后 防止匹配错误
-        scxMappingHandlers.stream().sorted(Comparator.comparing(ScxMappingHandler::order))
-                .forEachOrdered(c -> {
-                    var r = router.route(c.url);
-                    for (var httpMethod : c.httpMethods) {
-                        r.method(io.vertx.core.http.HttpMethod.valueOf(httpMethod.name()));
-                    }
-                    r.handler(c);
-                });
-        System.out.println();
+        var sortedList = scxMappingHandlers.stream()
+                .sorted(Comparator.comparing(ScxMappingHandler::order)).toList();
+
+
+        //循环添加到 vertxRouter 中
+        for (var c : sortedList) {
+            var r = router.route(c.url);
+            for (var httpMethod : c.httpMethods) {
+                r.method(httpMethod.vertxMethod());
+            }
+            r.handler(c);
+        }
+
     }
 
 }
