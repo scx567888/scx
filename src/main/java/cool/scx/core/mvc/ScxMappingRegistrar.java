@@ -25,30 +25,40 @@ import java.util.stream.Collectors;
  * @version 1.17.8
  */
 public final class ScxMappingRegistrar {
+
     /**
      * Constant <code>logger</code>
      */
     private static final Logger logger = LoggerFactory.getLogger(ScxMappingRegistrar.class);
+
     /**
      * Constant <code>vertxRouteStateMethod</code>
      */
     private static final Method vertxRouteStateMethod = initVertxRouteStateMethod();
+
     /**
      * Constant <code>exactPathComparator</code>
      */
     private static final Comparator<ScxMappingHandler> exactPathComparator = Comparator.comparing(routeState -> routeState.routeState().getExactPathOrder());
+
     /**
      * Constant <code>groupsComparator</code>
      */
     private static final Comparator<ScxMappingHandler> groupsComparator = Comparator.comparing(routeState -> routeState.routeState().getGroupsOrder());
+
     /**
      * Constant <code>orderComparator</code>
      */
     private static final Comparator<ScxMappingHandler> orderComparator = Comparator.comparing(ScxMappingHandler::order);
+
     /**
      * Constant <code>RE_TOKEN_SEARCH</code>
      */
     private static final Pattern RE_TOKEN_SEARCH = Pattern.compile(":(\\w+)");
+
+    /**
+     * a
+     */
     private final List<ScxMappingHandler> scxMappingHandlers;
 
     /**
