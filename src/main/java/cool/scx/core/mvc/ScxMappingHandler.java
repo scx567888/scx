@@ -126,7 +126,7 @@ public final class ScxMappingHandler implements Handler<RoutingContext> {
             //1, 执行前置处理器 (一般用于校验权限之类)
             this.scx.scxMappingConfiguration().scxMappingInterceptor().preHandle(context, this);
             //2, 根据 method 参数获取 invoke 时的参数
-            var methodParameters = this.scx.scxMappingConfiguration().buildMethodParameters(method.getParameters(), context, this);
+            var methodParameters = this.scx.scxMappingConfiguration().buildMethodParameters(method.getParameters(), context);
             //3, 执行具体方法 (用来从请求中获取参数并执行反射调用方法以获取返回值)
             var tempResult = this.method.invoke(this.example, methodParameters);
             //4, 执行后置处理器

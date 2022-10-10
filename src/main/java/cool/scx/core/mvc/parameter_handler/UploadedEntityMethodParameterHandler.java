@@ -1,7 +1,6 @@
 package cool.scx.core.mvc.parameter_handler;
 
 import cool.scx.core.annotation.FromUpload;
-import cool.scx.core.mvc.ScxMappingHandler;
 import cool.scx.core.mvc.ScxMappingMethodParameterHandler;
 import cool.scx.core.mvc.ScxMappingRoutingContextInfo;
 import cool.scx.core.mvc.exception.RequiredParamEmptyException;
@@ -55,7 +54,7 @@ public final class UploadedEntityMethodParameterHandler implements ScxMappingMet
      * {@inheritDoc}
      */
     @Override
-    public Object handle(Parameter parameter, ScxMappingRoutingContextInfo context, ScxMappingHandler scxMappingHandler) throws RequiredParamEmptyException {
+    public Object handle(Parameter parameter, ScxMappingRoutingContextInfo context) throws RequiredParamEmptyException {
         var name = parameter.getName();
         var required = false;
         var fromUpload = parameter.getAnnotation(FromUpload.class);

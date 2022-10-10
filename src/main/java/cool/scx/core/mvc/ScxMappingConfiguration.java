@@ -49,7 +49,6 @@ public final class ScxMappingConfiguration {
         addMethodReturnValueHandler(BaseVoMethodReturnValueHandler.DEFAULT_INSTANCE);
         //初始化默认的参数处理器
         addMethodParameterHandler(RoutingContextMethodParameterHandler.DEFAULT_INSTANCE);
-        addMethodParameterHandler(ScxMappingHandlerParameterHandler.DEFAULT_INSTANCE);
         addMethodParameterHandler(UploadedEntityMethodParameterHandler.DEFAULT_INSTANCE);
         addMethodParameterHandler(FromBodyMethodParameterHandler.DEFAULT_INSTANCE);
         addMethodParameterHandler(FromQueryMethodParameterHandler.DEFAULT_INSTANCE);
@@ -158,20 +157,19 @@ public final class ScxMappingConfiguration {
     /**
      * 构建方法参数
      *
-     * @param parameters        p
-     * @param context           c
-     * @param scxMappingHandler
+     * @param parameters p
+     * @param context    c
      * @return r
      * @throws java.lang.Exception r
      */
-    public Object[] buildMethodParameters(Parameter[] parameters, RoutingContext context, ScxMappingHandler scxMappingHandler) throws Exception {
+    public Object[] buildMethodParameters(Parameter[] parameters, RoutingContext context) throws Exception {
         var scxMappingRoutingContextInfo = new ScxMappingRoutingContextInfo(context);
         var exceptionArrayList = new ArrayList<Exception>();
         var methodParameter = new Object[parameters.length];
         for (int i = 0; i < methodParameter.length; i = i + 1) {
             var methodParameterHandler = findMethodParameterHandler(parameters[i]);
             try {
-                methodParameter[i] = methodParameterHandler.handle(parameters[i], scxMappingRoutingContextInfo, scxMappingHandler);
+                methodParameter[i] = methodParameterHandler.handle(parameters[i], scxMappingRoutingContextInfo);
             } catch (ParamConvertException | RequiredParamEmptyException e) {
                 exceptionArrayList.add(e);
             }

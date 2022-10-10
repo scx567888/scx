@@ -26,6 +26,6 @@ public interface ScxMappingMethodParameterHandler {
      * @return 处理后的结果
      * @throws java.lang.Exception e
      */
-    Object handle(Parameter parameter, ScxMappingRoutingContextInfo scxMappingRoutingContextInfo, ScxMappingHandler scxMappingHandler) throws Exception;
+    Object handle(Parameter parameter, ScxMappingRoutingContextInfo scxMappingRoutingContextInfo) throws Exception;
 
 }
