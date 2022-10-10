@@ -1,9 +1,9 @@
-package cool.scx.core.http.exception_handler;
+package cool.scx.core.http;
 
 import io.vertx.ext.web.RoutingContext;
 
 /**
- * a
+ * 路由异常处理器
  *
  * @author scx567888
  * @version 1.11.8

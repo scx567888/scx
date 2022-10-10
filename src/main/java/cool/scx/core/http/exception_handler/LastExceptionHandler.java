@@ -1,7 +1,7 @@
-package cool.scx.core.http.exception_handler.impl;
+package cool.scx.core.http.exception_handler;
 
-import cool.scx.core.http.exception.impl.InternalServerErrorException;
-import cool.scx.core.http.exception_handler.ScxHttpRouterExceptionHandler;
+import cool.scx.core.http.ScxHttpRouterExceptionHandler;
+import cool.scx.core.http.exception.InternalServerErrorException;
 import io.vertx.ext.web.RoutingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

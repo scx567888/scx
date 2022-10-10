@@ -2,13 +2,9 @@ package cool.scx.core.http;
 
 import cool.scx.core.Scx;
 import cool.scx.core.ScxConstant;
-import cool.scx.core.annotation.ScxMapping;
-import cool.scx.core.http.exception.ScxHttpException;
-import cool.scx.core.http.exception.impl.InternalServerErrorException;
-import cool.scx.core.http.exception_handler.ScxHttpRouterExceptionHandler;
-import cool.scx.core.http.exception_handler.impl.LastExceptionHandler;
-import cool.scx.core.http.exception_handler.impl.ScxHttpExceptionHandler;
-import cool.scx.core.mvc.ScxMappingHandler;
+import cool.scx.core.http.exception.InternalServerErrorException;
+import cool.scx.core.http.exception_handler.LastExceptionHandler;
+import cool.scx.core.http.exception_handler.ScxHttpExceptionHandler;
 import cool.scx.util.ScxExceptionHelper;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.vertx.core.Handler;
@@ -19,10 +15,10 @@ import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.CorsHandler;
 import io.vertx.ext.web.handler.impl.CorsHandlerImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * ScxHttp 路由 内部使用 vertxRouter 进行具体路由的处理
@@ -32,13 +28,7 @@ import java.util.*;
  */
 public final class ScxHttpRouter {
 
-    /**
-     * Constant <code>logger</code>
-     */
-    private static final Logger logger = LoggerFactory.getLogger(ScxHttpRouter.class);
-
-    private final List<ScxMappingHandler> SCX_MAPPING_HANDLER_LIST = new ArrayList<>();
-
+    //vertx 的路由
     private final Router vertxRouter;
 
     //基本 handler
@@ -72,7 +62,6 @@ public final class ScxHttpRouter {
         //注册路由
         this.corsHandlerRoute = this.vertxRouter.route().handler(corsHandler);
         this.bodyHandlerRoute = this.vertxRouter.route().handler(bodyHandler);
-        registerScxMappingHandler(scx);
     }
 
     /**
@@ -86,69 +75,6 @@ public final class ScxHttpRouter {
         for (var s : ScxHttpResponseStatus.values()) {
             vertxRouter.errorHandler(s.statusCode(), errorHandler);
         }
-    }
-
-    /**
-     * 扫描所有被 ScxMapping注解标记的方法 并封装为 ScxMappingHandler.
-     *
-     * @param scx s
-     */
-    private void registerScxMappingHandler(Scx scx) {
-        var metadataList = scx.scxModules();
-        SCX_MAPPING_HANDLER_LIST.clear();
-        for (var m : metadataList) {
-            for (var clazz : m.scxMappingClassList()) {
-                for (var method : clazz.getMethods()) {
-                    if (method.isAnnotationPresent(ScxMapping.class)) {
-                        //现根据 注解 和 方法等创建一个路由
-                        var s = new ScxMappingHandler(clazz, method, scx, this);
-                        //此处校验路由是否已经存在
-                        if (!checkScxMappingHandlerRouteExists(s)) {
-                            SCX_MAPPING_HANDLER_LIST.add(s);
-                        }
-                    }
-                }
-            }
-        }
-        //此处排序的意义在于将 需要正则表达式匹配的 放在最后 防止匹配错误
-        SCX_MAPPING_HANDLER_LIST.stream().sorted(Comparator.comparing(ScxMappingHandler::order))
-                .forEachOrdered(c -> {
-                    var r = this.vertxRouter.route(c.url);
-                    for (var httpMethod : c.httpMethods) {
-                        r.method(io.vertx.core.http.HttpMethod.valueOf(httpMethod.name()));
-                    }
-                    r.handler(c);
-                });
-    }
-
-    /**
-     * 获取所有被ScxMapping注解标记的方法的 handler
-     *
-     * @return 所有 handler
-     */
-    public List<ScxMappingHandler> getAllScxMappingHandler() {
-        return SCX_MAPPING_HANDLER_LIST;
-    }
-
-    /**
-     * 校验路由是否已经存在
-     *
-     * @param handler h
-     * @return true 为存在 false 为不存在
-     */
-    private boolean checkScxMappingHandlerRouteExists(ScxMappingHandler handler) {
-        for (var a : SCX_MAPPING_HANDLER_LIST) {
-            if (!a.patternUrl.equals(handler.patternUrl)) {
-                continue;
-            }
-            for (var h : handler.httpMethods) {
-                if (Arrays.stream(a.httpMethods).toList().contains(h)) {
-                    logger.error("检测到重复的路由!!! {} --> \"{}\" , 相关 class 及方法如下 ▼" + System.lineSeparator() + "\t{} : {}" + System.lineSeparator() + "\t{} : {}", h, handler.patternUrl, handler.clazz.getName(), handler.method.getName(), a.clazz.getName(), a.method.getName());
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     /**
