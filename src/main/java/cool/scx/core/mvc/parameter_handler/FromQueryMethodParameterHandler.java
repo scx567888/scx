@@ -1,10 +1,10 @@
-package cool.scx.core.mvc.parameter_handler.impl;
+package cool.scx.core.mvc.parameter_handler;
 
 import cool.scx.core.annotation.FromQuery;
-import cool.scx.core.mvc.parameter_handler.ParamConvertException;
-import cool.scx.core.mvc.parameter_handler.RequiredParamEmptyException;
-import cool.scx.core.mvc.parameter_handler.ScxMappingMethodParameterHandler;
-import cool.scx.core.mvc.parameter_handler.ScxMappingRoutingContextInfo;
+import cool.scx.core.mvc.ScxMappingMethodParameterHandler;
+import cool.scx.core.mvc.ScxMappingRoutingContextInfo;
+import cool.scx.core.mvc.exception.ParamConvertException;
+import cool.scx.core.mvc.exception.RequiredParamEmptyException;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
 
@@ -33,8 +33,8 @@ public final class FromQueryMethodParameterHandler implements ScxMappingMethodPa
      * @param javaType       a
      * @param routingContext a
      * @return a
-     * @throws cool.scx.core.mvc.parameter_handler.RequiredParamEmptyException a
-     * @throws cool.scx.core.mvc.parameter_handler.ParamConvertException       a
+     * @throws cool.scx.core.mvc.exception.RequiredParamEmptyException a
+     * @throws cool.scx.core.mvc.exception.ParamConvertException       a
      */
     public static Object getValueFromQuery(String name, boolean merge, boolean required, Type javaType, ScxMappingRoutingContextInfo routingContext) throws RequiredParamEmptyException, ParamConvertException {
         var v = merge ? routingContext.queryParams() : routingContext.queryParams().get(name);

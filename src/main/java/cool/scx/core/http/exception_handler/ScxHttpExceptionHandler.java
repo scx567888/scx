@@ -1,9 +1,9 @@
-package cool.scx.core.http.exception_handler.impl;
+package cool.scx.core.http.exception_handler;
 
 import cool.scx.core.ScxContext;
 import cool.scx.core.enumeration.ScxCoreFeature;
-import cool.scx.core.http.exception.ScxHttpException;
-import cool.scx.core.http.exception_handler.ScxHttpRouterExceptionHandler;
+import cool.scx.core.http.ScxHttpException;
+import cool.scx.core.http.ScxHttpRouterExceptionHandler;
 import cool.scx.core.vo.BaseVo;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.ScxExceptionHelper;

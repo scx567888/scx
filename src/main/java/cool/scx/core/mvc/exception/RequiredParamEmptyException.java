@@ -1,4 +1,4 @@
-package cool.scx.core.mvc.parameter_handler;
+package cool.scx.core.mvc.exception;
 
 /**
  * 必须参数缺失异常

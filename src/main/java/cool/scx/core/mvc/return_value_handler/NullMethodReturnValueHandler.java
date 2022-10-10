@@ -1,6 +1,6 @@
-package cool.scx.core.mvc.return_value_handler.impl;
+package cool.scx.core.mvc.return_value_handler;
 
-import cool.scx.core.mvc.return_value_handler.ScxMappingMethodReturnValueHandler;
+import cool.scx.core.mvc.ScxMappingMethodReturnValueHandler;
 import io.vertx.ext.web.RoutingContext;
 
 /**

@@ -1,6 +1,6 @@
-package cool.scx.core.mvc.interceptor.impl;
+package cool.scx.core.mvc.interceptor;
 
-import cool.scx.core.mvc.interceptor.ScxMappingInterceptor;
+import cool.scx.core.mvc.ScxMappingInterceptor;
 
 /**
  * 默认 ScxMapping 拦截器实现

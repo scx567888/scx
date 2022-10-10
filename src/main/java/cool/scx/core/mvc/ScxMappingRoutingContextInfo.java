@@ -1,10 +1,10 @@
-package cool.scx.core.mvc.parameter_handler;
+package cool.scx.core.mvc;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.NullNode;
 import com.fasterxml.jackson.databind.node.TextNode;
-import cool.scx.core.http.exception.impl.BadRequestException;
+import cool.scx.core.http.exception.BadRequestException;
 import cool.scx.util.ObjectUtils;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpHeaderValues;

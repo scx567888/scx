@@ -1,7 +1,7 @@
-package cool.scx.core.mvc.parameter_handler.impl;
+package cool.scx.core.mvc.parameter_handler;
 
-import cool.scx.core.mvc.parameter_handler.ScxMappingMethodParameterHandler;
-import cool.scx.core.mvc.parameter_handler.ScxMappingRoutingContextInfo;
+import cool.scx.core.mvc.ScxMappingMethodParameterHandler;
+import cool.scx.core.mvc.ScxMappingRoutingContextInfo;
 import io.vertx.ext.web.RoutingContext;
 
 import java.lang.reflect.Parameter;

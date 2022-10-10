@@ -1,11 +1,11 @@
-package cool.scx.core.mvc.parameter_handler.impl;
+package cool.scx.core.mvc.parameter_handler;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.core.annotation.FromBody;
-import cool.scx.core.mvc.parameter_handler.ParamConvertException;
-import cool.scx.core.mvc.parameter_handler.RequiredParamEmptyException;
-import cool.scx.core.mvc.parameter_handler.ScxMappingMethodParameterHandler;
-import cool.scx.core.mvc.parameter_handler.ScxMappingRoutingContextInfo;
+import cool.scx.core.mvc.ScxMappingMethodParameterHandler;
+import cool.scx.core.mvc.ScxMappingRoutingContextInfo;
+import cool.scx.core.mvc.exception.ParamConvertException;
+import cool.scx.core.mvc.exception.RequiredParamEmptyException;
 import cool.scx.util.StringUtils;
 
 import java.io.IOException;
@@ -36,8 +36,8 @@ public final class FromBodyMethodParameterHandler implements ScxMappingMethodPar
      * @param javaType                     a
      * @param scxMappingRoutingContextInfo a
      * @return a
-     * @throws cool.scx.core.mvc.parameter_handler.RequiredParamEmptyException a
-     * @throws cool.scx.core.mvc.parameter_handler.ParamConvertException       a
+     * @throws cool.scx.core.mvc.exception.RequiredParamEmptyException a
+     * @throws cool.scx.core.mvc.exception.ParamConvertException       a
      */
     public static Object getValueFromBody(String name, boolean useAllBody, boolean required, Type javaType, ScxMappingRoutingContextInfo scxMappingRoutingContextInfo) throws RequiredParamEmptyException, ParamConvertException {
         var tempValue = scxMappingRoutingContextInfo.getBody();

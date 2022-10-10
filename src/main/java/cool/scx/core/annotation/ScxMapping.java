@@ -44,10 +44,17 @@ public @interface ScxMapping {
     boolean useNameAsUrl() default true;
 
     /**
-     * 请求标识 默认只支持 get 请求
+     * 请求标识 默认匹配所有请求
      *
      * @return 方法
      */
-    HttpMethod[] method() default {HttpMethod.GET};
+    HttpMethod[] method() default {};
+
+    /**
+     * 排序
+     *
+     * @return a
+     */
+    int order() default Integer.MAX_VALUE;
 
 }
