@@ -161,7 +161,7 @@ public final class ScxMappingRegistrar {
         map.forEach((k, v) -> {
             if (v.size() > 1) { //具有多个路由
                 var content = v.stream().map(c -> "\t" + c.clazz.getName() + " : " + c.method.getName()).collect(Collectors.joining(System.lineSeparator()));
-                logger.error("检测到重复的路由!!! {} --> \"{}\" , 相关 class 及方法如下 ▼" + System.lineSeparator() + "{}",
+                logger.error("检测到重复的路由!!! {} --> \"{}\" , 相关 class 及 方法 如下 ▼" + System.lineSeparator() + "{}",
                         k.httpMethod, getPatternUrl(v.get(0).originalUrl), content);
             }
         });
