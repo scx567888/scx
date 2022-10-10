@@ -1,4 +1,4 @@
-package cool.scx.core.mvc.return_value_handler;
+package cool.scx.core.mvc;
 
 import io.vertx.ext.web.RoutingContext;
 

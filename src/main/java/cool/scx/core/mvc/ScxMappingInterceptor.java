@@ -1,4 +1,4 @@
-package cool.scx.core.mvc.interceptor;
+package cool.scx.core.mvc;
 
 import cool.scx.core.mvc.ScxMappingHandler;
 import io.vertx.ext.web.RoutingContext;
