@@ -29,10 +29,26 @@ public final class ScxMappingRegistrar {
      * Constant <code>logger</code>
      */
     private static final Logger logger = LoggerFactory.getLogger(ScxMappingRegistrar.class);
+    /**
+     * Constant <code>vertxRouteStateMethod</code>
+     */
     private static final Method vertxRouteStateMethod = initVertxRouteStateMethod();
+    /**
+     * Constant <code>exactPathComparator</code>
+     */
     private static final Comparator<ScxMappingHandler> exactPathComparator = Comparator.comparing(routeState -> routeState.routeState().getExactPathOrder());
+    /**
+     * Constant <code>groupsComparator</code>
+     */
     private static final Comparator<ScxMappingHandler> groupsComparator = Comparator.comparing(routeState -> routeState.routeState().getGroupsOrder());
+    /**
+     * Constant <code>orderComparator</code>
+     */
     private static final Comparator<ScxMappingHandler> orderComparator = Comparator.comparing(ScxMappingHandler::order);
+    /**
+     * Constant <code>RE_TOKEN_SEARCH</code>
+     */
+    private static final Pattern RE_TOKEN_SEARCH = Pattern.compile(":(\\w+)");
     private final List<ScxMappingHandler> scxMappingHandlers;
 
     /**
@@ -44,6 +60,11 @@ public final class ScxMappingRegistrar {
         scxMappingHandlers = initScxMappingHandlers(scx);
     }
 
+    /**
+     * <p>initVertxRouteStateMethod.</p>
+     *
+     * @return a {@link java.lang.reflect.Method} object
+     */
     private static Method initVertxRouteStateMethod() {
         try {
             var m = RouteImpl.class.getDeclaredMethod("state");
@@ -122,16 +143,9 @@ public final class ScxMappingRegistrar {
     }
 
     /**
-     * 获取所有被ScxMapping注解标记的方法的 handler
-     *
-     * @return 所有 handler
-     */
-    public List<ScxMappingHandler> scxMappingHandlers() {
-        return new ArrayList<>(scxMappingHandlers);
-    }
-
-    /**
      * 校验路由是否已经存在
+     *
+     * @param scxMappingHandlers a {@link java.util.List} object
      */
     private static void checkScxMappingHandlerRouteExists(List<ScxMappingHandler> scxMappingHandlers) {
         var m = new MultiMap<NormalPathInfo, ScxMappingHandler>();
@@ -151,6 +165,25 @@ public final class ScxMappingRegistrar {
                         k.httpMethod, getPatternUrl(v.get(0).originalUrl), content);
             }
         });
+    }
+
+    /**
+     * 获取美化后的去除路径参数的 url 主要用来在判断重复路径中进行展示
+     *
+     * @param path p
+     * @return r
+     */
+    private static String getPatternUrl(String path) {
+        return RE_TOKEN_SEARCH.matcher(path).replaceAll("?");
+    }
+
+    /**
+     * 获取所有被ScxMapping注解标记的方法的 handler
+     *
+     * @return 所有 handler
+     */
+    public List<ScxMappingHandler> scxMappingHandlers() {
+        return new ArrayList<>(scxMappingHandlers);
     }
 
     /**
@@ -192,18 +225,6 @@ public final class ScxMappingRegistrar {
 
     record NormalPathInfo(cool.scx.core.enumeration.HttpMethod httpMethod, String key) {
 
-    }
-
-    private static final Pattern RE_TOKEN_SEARCH = Pattern.compile(":(\\w+)");
-
-    /**
-     * 获取美化后的去除路径参数的 url 主要用来在判断重复路径中进行展示
-     *
-     * @param path p
-     * @return r
-     */
-    private static String getPatternUrl(String path) {
-        return RE_TOKEN_SEARCH.matcher(path).replaceAll("?");
     }
 
 }

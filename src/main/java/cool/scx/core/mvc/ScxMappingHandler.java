@@ -144,14 +144,29 @@ public final class ScxMappingHandler implements Handler<RoutingContext> {
         }
     }
 
+    /**
+     * <p>Setter for the field <code>routeState</code>.</p>
+     *
+     * @param route a {@link cool.scx.core.mvc.ScxMappingRegistrar.RouteState} object
+     */
     void setRouteState(ScxMappingRegistrar.RouteState route) {
         this.routeState = route;
     }
 
+    /**
+     * <p>routeState.</p>
+     *
+     * @return a {@link cool.scx.core.mvc.ScxMappingRegistrar.RouteState} object
+     */
     ScxMappingRegistrar.RouteState routeState() {
         return routeState;
     }
 
+    /**
+     * <p>order.</p>
+     *
+     * @return a int
+     */
     int order() {
         return order;
     }
