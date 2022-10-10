@@ -16,6 +16,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * <p>ScxMappingRegistrar class.</p>
@@ -131,45 +132,25 @@ public final class ScxMappingRegistrar {
 
     /**
      * 校验路由是否已经存在
-     *
-     * @return true 为存在 false 为不存在
      */
-    private boolean checkScxMappingHandlerRouteExists() {
-        var m = new MultiMap<String, ScxMappingHandler>();
+    private static void checkScxMappingHandlerRouteExists(List<ScxMappingHandler> scxMappingHandlers) {
+        var m = new MultiMap<NormalPathInfo, ScxMappingHandler>();
         for (var scxMappingHandler : scxMappingHandlers) {
             var key = scxMappingHandler.routeState().pattern() != null
                     ? scxMappingHandler.routeState().pattern().toString()
                     : scxMappingHandler.routeState().path();
             for (var httpMethod : scxMappingHandler.httpMethods) {
-                m.put(key + "_" + httpMethod, scxMappingHandler);
+                m.put(new NormalPathInfo(httpMethod, key), scxMappingHandler);
             }
         }
         var map = m.asMap();
-        for (var v : map.values()) {
+        map.forEach((k, v) -> {
             if (v.size() > 1) { //具有多个路由
-                var sb = new StringBuilder("检测到重复的路由!!! --> 相关 class 及方法如下 ▼")
-                        .append(System.lineSeparator());
-                for (var handler : v) {
-                    sb.append("\t")
-                            .append(handler.clazz.getName()).append(" : ").append(handler.method.getName())
-                            .append(System.lineSeparator());
-                }
-                logger.warn(sb.toString());
+                var content = v.stream().map(c -> "\t" + c.clazz.getName() + " : " + c.method.getName()).collect(Collectors.joining(System.lineSeparator()));
+                logger.error("检测到重复的路由!!! {} --> \"{}\" , 相关 class 及方法如下 ▼" + System.lineSeparator() + "{}",
+                        k.httpMethod, getPatternUrl(v.get(0).originalUrl), content);
             }
-        }
-//        System.out.println(scxMappingHandler.routeState().path() + "  " + scxMappingHandler.routeState().pattern());
-//        for (var a : SCX_MAPPING_HANDLER_LIST) {
-//            if (!a.patternUrl.equals(handler.patternUrl)) {
-//                continue;
-//            }
-//            for (var h : handler.httpMethods) {
-//                if (Arrays.stream(a.httpMethods).toList().contains(h)) {
-//                    logger.error("检测到重复的路由!!! {} --> \"{}\" , 相关 class 及方法如下 ▼" + System.lineSeparator() + "\t{} : {}" + System.lineSeparator() + "\t{} : {}", h, handler.patternUrl, handler.clazz.getName(), handler.method.getName(), a.clazz.getName(), a.method.getName());
-//                    return true;
-//                }
-//            }
-//        }
-        return false;
+        });
     }
 
     /**
@@ -179,7 +160,7 @@ public final class ScxMappingRegistrar {
      */
     public void registerRoute(Router router) {
         // 检查重复路由 (这里只需给出警告即可)
-        checkScxMappingHandlerRouteExists();
+        checkScxMappingHandlerRouteExists(scxMappingHandlers);
         //循环添加到 vertxRouter 中
         for (var c : scxMappingHandlers) {
             var r = router.route(c.originalUrl);
@@ -207,6 +188,22 @@ public final class ScxMappingRegistrar {
             return this.exactPath ? 0 : 1;
         }
 
+    }
+
+    record NormalPathInfo(cool.scx.core.enumeration.HttpMethod httpMethod, String key) {
+
+    }
+
+    private static final Pattern RE_TOKEN_SEARCH = Pattern.compile(":(\\w+)");
+
+    /**
+     * 获取美化后的去除路径参数的 url 主要用来在判断重复路径中进行展示
+     *
+     * @param path p
+     * @return r
+     */
+    private static String getPatternUrl(String path) {
+        return RE_TOKEN_SEARCH.matcher(path).replaceAll("?");
     }
 
 }
