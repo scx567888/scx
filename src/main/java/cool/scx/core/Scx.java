@@ -310,9 +310,9 @@ public final class Scx {
         //5, 打印基本信息
         if (this.scxFeatureConfig.get(ScxCoreFeature.SHOW_START_UP_INFO)) {
             Ansi.out()
-                    .color("已加载 " + this.scxBeanFactory.getBeanDefinitionNames().length + " 个 Bean !!!").ln()
-                    .color("已加载 " + this.scxHttpRouter.vertxRouter().getRoutes().size() + " 个 Http 路由 !!!").ln()
-                    .color("已加载 " + this.scxWebSocketRouter.getRoutes().size() + " 个 WebSocket 路由 !!!").println();
+                    .brightYellow("已加载 " + this.scxBeanFactory.getBeanDefinitionNames().length + " 个 Bean !!!").ln()
+                    .brightGreen("已加载 " + this.scxHttpRouter.vertxRouter().getRoutes().size() + " 个 Http 路由 !!!").ln()
+                    .brightBlue("已加载 " + this.scxWebSocketRouter.getRoutes().size() + " 个 WebSocket 路由 !!!").println();
         }
         //6, 初始化服务器
         var httpServerOptions = new HttpServerOptions();
