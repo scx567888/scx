@@ -6,6 +6,8 @@ import io.vertx.ext.web.RoutingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static cool.scx.core.ScxHelper.responseCanUse;
+
 /**
  * a
  *
@@ -38,7 +40,7 @@ public final class LastExceptionHandler implements ScxHttpRouterExceptionHandler
     @Override
     public void handle(Throwable throwable, RoutingContext context) {
         //1, 如果这时 response 还没有被关闭的话 就返回 500 错误信息
-        if (!context.request().response().ended() && !context.request().response().closed()) {
+        if (responseCanUse(context)) {
             //打印错误信息
             logger.error("ScxHttpRouter 发生异常 !!!", throwable);
             ScxHttpExceptionHandler.handleScxHttpException(new InternalServerErrorException(throwable), context);

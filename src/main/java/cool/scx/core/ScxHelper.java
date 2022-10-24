@@ -5,6 +5,7 @@ import cool.scx.core.base.BaseModel;
 import cool.scx.core.base.BaseModelService;
 import cool.scx.core.base.BaseWebSocketHandler;
 import cool.scx.util.ScanClassUtils;
+import io.vertx.ext.web.RoutingContext;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Repository;
@@ -111,6 +112,16 @@ public final class ScxHelper {
                         && ScanClassUtils.isInstantiableClass(c) // 是一个可以不需要其他参数直接生成实例化的对象
                         && BaseModel.class.isAssignableFrom(c))// 继承自 BaseModel
                 .map(c -> (Class<? extends BaseModel>) c).collect(Collectors.toList());
+    }
+
+    /**
+     * request 是否还可用 (可以写入数据)
+     *
+     * @param context ctx
+     * @return 是否可用
+     */
+    public static boolean responseCanUse(RoutingContext context) {
+        return !context.request().response().ended() && !context.request().response().closed();
     }
 
 }

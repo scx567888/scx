@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.LinkedHashMap;
 
+import static cool.scx.core.ScxHelper.responseCanUse;
+
 /**
  * a
  *
@@ -114,7 +116,7 @@ public final class ScxHttpExceptionHandler implements ScxHttpRouterExceptionHand
      */
     @Override
     public void handle(Throwable throwable, RoutingContext context) {
-        if (!context.request().response().ended() && !context.request().response().closed()) {
+        if (responseCanUse(context)) {
             //1, 这里根据是否开启了开发人员错误页面 进行相应的返回
             handleScxHttpException((ScxHttpException) throwable, context);
         } else {

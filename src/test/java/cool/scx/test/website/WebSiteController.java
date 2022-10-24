@@ -83,9 +83,12 @@ public class WebSiteController {
      * @throws java.io.IOException if any.
      */
     @ScxMapping(value = "/", method = HttpMethod.GET, order = 10)
-    public Object TestIndex(RoutingContext c) throws IOException {
+    public Html TestIndex(RoutingContext c) throws IOException {
         System.err.println("最后一次匹配的路由" + c.request().path());
-        return c.get("some");
+        Html index = Html.of("index");
+        index.add("name", c.get("name"));
+        index.add("age", 22);
+        return index;
     }
 
     /**
@@ -97,7 +100,7 @@ public class WebSiteController {
     @ScxMapping(value = "/", method = HttpMethod.GET, order = 5)
     public void TestIndex1(RoutingContext c) throws IOException {
         System.err.println("第二个匹配的路由" + c.request().path());
-        c.put("some", "一些数据");
+        c.put("name", "小明");
         c.next();
     }
 
@@ -109,6 +112,7 @@ public class WebSiteController {
      */
     @ScxMapping(value = "/*", method = HttpMethod.GET, order = 1)
     public void TestIndex1a(RoutingContext c) throws IOException {
+        System.err.println("两个 carService 是否相等 " + (carService == carService1));
         System.err.println("第一个匹配的路由" + c.request().path());
         c.next();
     }
