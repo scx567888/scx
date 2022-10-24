@@ -55,6 +55,6 @@ public @interface ScxMapping {
      *
      * @return a
      */
-    int order() default Integer.MAX_VALUE;
+    int order() default 0;
 
 }
