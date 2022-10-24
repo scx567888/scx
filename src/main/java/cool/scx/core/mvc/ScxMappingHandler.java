@@ -12,7 +12,10 @@ import io.vertx.ext.web.RoutingContext;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.stream.Stream;
+
+import static cool.scx.core.ScxHelper.responseCanUse;
 
 /**
  * <p>ScxRouteHandler class.</p>
@@ -26,6 +29,16 @@ public final class ScxMappingHandler implements Handler<RoutingContext> {
      * 方法
      */
     public final Method method;
+
+    /**
+     * 返回值类型为空
+     */
+    public final boolean isVoid;
+
+    /**
+     * 方法参数
+     */
+    public final Parameter[] parameters;
 
     /**
      * 实例
@@ -70,16 +83,29 @@ public final class ScxMappingHandler implements Handler<RoutingContext> {
      * @param scx    a
      */
     public ScxMappingHandler(Class<?> clazz, Method method, Scx scx) {
-        var methodScxMapping = method.getAnnotation(ScxMapping.class);
-        var classScxMapping = clazz.getAnnotation(ScxMapping.class);
         this.scx = scx;
         this.clazz = clazz;
         this.method = method;
-        this.example = this.scx.scxBeanFactory().getBean(clazz);
-        this.originalUrl = getUrl(classScxMapping, methodScxMapping);
-        this.httpMethods = getHttpMethod(methodScxMapping);
         this.method.setAccessible(true);
+        this.isVoid = method.getReturnType().equals(void.class);
+        this.parameters = method.getParameters();
+        this.example = this.scx.scxBeanFactory().getBean(clazz);
+        //根据注解初始化值
+        var classScxMapping = clazz.getAnnotation(ScxMapping.class);
+        var methodScxMapping = method.getAnnotation(ScxMapping.class);
+        this.originalUrl = initOriginalUrl(classScxMapping, methodScxMapping);
+        this.httpMethods = initHttpMethod(methodScxMapping);
         this.order = methodScxMapping.order();
+    }
+
+    /**
+     * <p>getHttpMethod.</p>
+     *
+     * @param methodScxMapping a {@link cool.scx.core.annotation.ScxMapping} object
+     * @return an array of {@link cool.scx.core.enumeration.HttpMethod} objects
+     */
+    private static HttpMethod[] initHttpMethod(ScxMapping methodScxMapping) {
+        return Stream.of(methodScxMapping.method()).distinct().toArray(HttpMethod[]::new);
     }
 
     /**
@@ -89,28 +115,18 @@ public final class ScxMappingHandler implements Handler<RoutingContext> {
      * @param methodScxMapping a {@link cool.scx.core.annotation.ScxMapping} object
      * @return a {@link java.lang.String} object
      */
-    private String getUrl(ScxMapping classScxMapping, ScxMapping methodScxMapping) {
+    private String initOriginalUrl(ScxMapping classScxMapping, ScxMapping methodScxMapping) {
         var urlArray = new String[]{"", ""};
         if (!methodScxMapping.ignoreParentUrl() && classScxMapping != null) {
             urlArray[0] = classScxMapping.value();
         }
         //获取方法的 url
         if (methodScxMapping.useNameAsUrl() && "".equals(methodScxMapping.value())) {
-            urlArray[1] = CaseUtils.toKebab(method.getName());
+            urlArray[1] = CaseUtils.toKebab(this.method.getName());
         } else {
             urlArray[1] = methodScxMapping.value();
         }
         return URIBuilder.join(urlArray);
-    }
-
-    /**
-     * <p>getHttpMethod.</p>
-     *
-     * @param methodScxMapping a {@link cool.scx.core.annotation.ScxMapping} object
-     * @return an array of {@link cool.scx.core.enumeration.HttpMethod} objects
-     */
-    private HttpMethod[] getHttpMethod(ScxMapping methodScxMapping) {
-        return Stream.of(methodScxMapping.method()).distinct().toArray(HttpMethod[]::new);
     }
 
     /**
@@ -126,12 +142,13 @@ public final class ScxMappingHandler implements Handler<RoutingContext> {
             //1, 执行前置处理器 (一般用于校验权限之类)
             this.scx.scxMappingConfiguration().scxMappingInterceptor().preHandle(context, this);
             //2, 根据 method 参数获取 invoke 时的参数
-            var methodParameters = this.scx.scxMappingConfiguration().buildMethodParameters(method.getParameters(), context);
+            var methodParameters = this.scx.scxMappingConfiguration().buildMethodParameters(this.parameters, context);
             //3, 执行具体方法 (用来从请求中获取参数并执行反射调用方法以获取返回值)
             var tempResult = this.method.invoke(this.example, methodParameters);
             //4, 执行后置处理器
             var finalResult = this.scx.scxMappingConfiguration().scxMappingInterceptor().postHandle(context, this, tempResult);
-            if (!context.request().response().ended() && !context.request().response().closed()) {
+            //5, 如果方法返回值不为 void 并且 response 可用 , 则调用返回值处理器
+            if (!isVoid && responseCanUse(context)) {
                 this.scx.scxMappingConfiguration().findMethodReturnValueHandler(finalResult).handle(finalResult, context);
             }
         } catch (Throwable e) {
