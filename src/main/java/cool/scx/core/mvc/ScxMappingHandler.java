@@ -99,6 +99,16 @@ public final class ScxMappingHandler implements Handler<RoutingContext> {
     }
 
     /**
+     * <p>getHttpMethod.</p>
+     *
+     * @param methodScxMapping a {@link cool.scx.core.annotation.ScxMapping} object
+     * @return an array of {@link cool.scx.core.enumeration.HttpMethod} objects
+     */
+    private static HttpMethod[] initHttpMethod(ScxMapping methodScxMapping) {
+        return Stream.of(methodScxMapping.method()).distinct().toArray(HttpMethod[]::new);
+    }
+
+    /**
      * <p>Getter for the field <code>url</code>.</p>
      *
      * @param classScxMapping  a {@link cool.scx.core.annotation.ScxMapping} object
@@ -117,16 +127,6 @@ public final class ScxMappingHandler implements Handler<RoutingContext> {
             urlArray[1] = methodScxMapping.value();
         }
         return URIBuilder.join(urlArray);
-    }
-
-    /**
-     * <p>getHttpMethod.</p>
-     *
-     * @param methodScxMapping a {@link cool.scx.core.annotation.ScxMapping} object
-     * @return an array of {@link cool.scx.core.enumeration.HttpMethod} objects
-     */
-    private static HttpMethod[] initHttpMethod(ScxMapping methodScxMapping) {
-        return Stream.of(methodScxMapping.method()).distinct().toArray(HttpMethod[]::new);
     }
 
     /**
