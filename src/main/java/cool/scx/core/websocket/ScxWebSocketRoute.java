@@ -9,17 +9,52 @@ import io.vertx.core.http.WebSocketFrame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.regex.Pattern;
+
 /**
  * Scx WebSocket 路由
+ *
+ * @author scx567888
+ * @version 1.17.11
  */
-public record ScxWebSocketRoute(String path,
-                                BaseWebSocketHandler baseWebSocketHandler) implements ScxHandlerA<ServerWebSocket> {
+public final class ScxWebSocketRoute implements ScxHandlerA<ServerWebSocket> {
 
     /**
      * 日志
      */
     private static final Logger logger = LoggerFactory.getLogger(ScxWebSocketRoute.class);
+    private final String path;
+    private final Pattern pattern;
+    private final BaseWebSocketHandler baseWebSocketHandler;
+    private final int order;
 
+    /**
+     * <p>Constructor for ScxWebSocketRoute.</p>
+     *
+     * @param path                 a {@link java.lang.String} object
+     * @param baseWebSocketHandler a {@link cool.scx.core.base.BaseWebSocketHandler} object
+     */
+    public ScxWebSocketRoute(String path, BaseWebSocketHandler baseWebSocketHandler) {
+        this(0, path, baseWebSocketHandler);
+    }
+
+    /**
+     * <p>Constructor for ScxWebSocketRoute.</p>
+     *
+     * @param order                a int
+     * @param path                 a {@link java.lang.String} object
+     * @param baseWebSocketHandler a {@link cool.scx.core.base.BaseWebSocketHandler} object
+     */
+    public ScxWebSocketRoute(int order, String path, BaseWebSocketHandler baseWebSocketHandler) {
+        this.order = order;
+        this.path = path;
+        this.pattern = Pattern.compile(path);
+        this.baseWebSocketHandler = baseWebSocketHandler;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void handle(ServerWebSocket serverWebSocket) {
         var openHandler = new OpenHandler(serverWebSocket);
@@ -37,7 +72,34 @@ public record ScxWebSocketRoute(String path,
      * @return a
      */
     public boolean matches(ServerWebSocket serverWebSocket) {
-        return this.path.equals(serverWebSocket.path());
+        return this.pattern.matcher(serverWebSocket.path()).matches();
+    }
+
+    /**
+     * <p>path.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
+    public String path() {
+        return path;
+    }
+
+    /**
+     * <p>baseWebSocketHandler.</p>
+     *
+     * @return a {@link cool.scx.core.base.BaseWebSocketHandler} object
+     */
+    public BaseWebSocketHandler baseWebSocketHandler() {
+        return baseWebSocketHandler;
+    }
+
+    /**
+     * <p>order.</p>
+     *
+     * @return a int
+     */
+    public int order() {
+        return order;
     }
 
     private class FrameHandler implements Handler<WebSocketFrame> {

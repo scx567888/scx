@@ -24,4 +24,11 @@ public @interface ScxWebSocketMapping {
      */
     String value();
 
+    /**
+     * 排序
+     *
+     * @return a
+     */
+    int order() default 0;
+
 }

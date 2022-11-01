@@ -22,6 +22,7 @@ import cool.scx.util.http.HttpClientHelper;
 import cool.scx.util.zip.VirtualDirectory;
 import cool.scx.util.zip.VirtualFile;
 import cool.scx.util.zip.ZipUtils;
+import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.ext.web.handler.FileSystemAccess;
 import io.vertx.ext.web.handler.StaticHandler;
 import org.slf4j.LoggerFactory;
@@ -37,6 +38,9 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+
+import static cool.scx.core.eventbus.ZeroCopyMessageCodec.ZERO_COPY_CODEC_NAME;
+import static org.testng.Assert.assertEquals;
 
 public class TestModule extends ScxModule {
 
@@ -159,9 +163,14 @@ public class TestModule extends ScxModule {
     @Test
     public static void test2() {
         var car = new Car();
-        ScxContext.eventBus().consumer("test-event-bus", (c) -> System.out.println(c.hashCode()));
-        System.out.println(car.hashCode());
-        ScxContext.eventBus().send("test-event-bus", car);
+        ScxContext.eventBus().consumer("test-event-bus", (c) -> {
+            c.reply(car, new DeliveryOptions().setCodecName(ZERO_COPY_CODEC_NAME));
+            assertEquals(c.body(), car);
+        });
+        ScxContext.eventBus().request("test-event-bus", car, new DeliveryOptions().setCodecName(ZERO_COPY_CODEC_NAME), c -> {
+            assertEquals(c.result().body(), car);
+        });
+        ScxContext.eventBus().send("test-event-bus", car, new DeliveryOptions().setCodecName(ZERO_COPY_CODEC_NAME));
     }
 
     @Test

@@ -5,7 +5,6 @@ import cool.scx.config.ScxEnvironment;
 import cool.scx.config.ScxFeatureConfig;
 import cool.scx.core.dao.ScxDao;
 import cool.scx.core.enumeration.ScxCoreFeature;
-import cool.scx.core.eventbus.ScxEventBus;
 import cool.scx.core.http.ScxHttpRouter;
 import cool.scx.core.mvc.ScxMappingConfiguration;
 import cool.scx.core.scheduler.ScxScheduler;
@@ -14,6 +13,7 @@ import cool.scx.functional.ScxHandlerE;
 import cool.scx.functional.ScxHandlerRE;
 import cool.scx.sql.SQLRunner;
 import io.vertx.core.Vertx;
+import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.http.HttpServer;
 import io.vertx.ext.web.RoutingContext;
 
@@ -130,8 +130,8 @@ public final class ScxContext {
      *
      * @return a
      */
-    public static ScxEventBus eventBus() {
-        return scx().scxEventBus();
+    public static EventBus eventBus() {
+        return scx().eventBus();
     }
 
     /**
