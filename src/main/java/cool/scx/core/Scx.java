@@ -299,7 +299,7 @@ public final class Scx {
         }
         //2, 初始化路由 (Http 和 WebSocket)
         this.scxHttpRouter = new ScxHttpRouter(this);
-        this.scxWebSocketRouter = new ScxWebSocketRouter(this);
+        this.scxWebSocketRouter = new ScxWebSocketRouter();
         //3, 注册 ScxMapping 和 ScxWebSocketMapping 注解的 handler 到 路由中去
         new ScxMappingRegistrar(this).registerRoute(this.scxHttpRouter.vertxRouter());
         new ScxWebSocketMappingRegistrar(this).registerRoute(this.scxWebSocketRouter);

@@ -1,9 +1,5 @@
 package cool.scx.core.websocket;
 
-import cool.scx.core.ScxBeanFactory;
-import cool.scx.core.ScxModule;
-import cool.scx.core.annotation.ScxWebSocketMapping;
-import cool.scx.util.URIBuilder;
 import io.vertx.core.Handler;
 import io.vertx.core.http.ServerWebSocket;
 import org.slf4j.Logger;
@@ -31,22 +27,6 @@ public final class ScxWebSocketRouter implements Handler<ServerWebSocket> {
     private final List<ScxWebSocketRoute> scxWebSocketRoutes = new ArrayList<>();
 
     /**
-     * a
-     *
-     * @param metadataList   a
-     * @param scxBeanFactory a
-     */
-    public ScxWebSocketRouter(ScxModule[] metadataList, ScxBeanFactory scxBeanFactory) {
-        for (var m : metadataList) {
-            for (var clazz : m.scxWebSocketRouteClassList()) {
-                var path = URIBuilder.join(clazz.getAnnotation(ScxWebSocketMapping.class).value());
-                var baseWebSocketHandler = scxBeanFactory.getBean(clazz);
-                addRoute(new ScxWebSocketRoute(path, baseWebSocketHandler));
-            }
-        }
-    }
-
-    /**
      * 添加一个路由
      *
      * @param scxRoute s
@@ -71,14 +51,17 @@ public final class ScxWebSocketRouter implements Handler<ServerWebSocket> {
      */
     @Override
     public void handle(ServerWebSocket serverWebSocket) {
+        boolean anyMatches = false;
         for (var route : scxWebSocketRoutes) {
             if (route.matches(serverWebSocket)) {
                 route.handle(serverWebSocket);
-                return;
+                anyMatches = true;
             }
         }
-        //没有任何路由匹配 , 此处拒绝此 websocket 连接 使用 404 意味没有找到
-        serverWebSocket.reject(404);
+        if (!anyMatches) {
+            //没有任何路由匹配 , 此处拒绝此 websocket 连接 使用 404 意味没有找到
+            serverWebSocket.reject(404);
+        }
     }
 
 }
