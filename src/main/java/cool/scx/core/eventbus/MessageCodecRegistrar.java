@@ -6,7 +6,7 @@ import io.vertx.core.eventbus.EventBus;
  * <p>MessageCodecRegistrar class.</p>
  *
  * @author scx567888
- * @version 1.17.11
+ * @version 1.18.0
  */
 public class MessageCodecRegistrar {
 

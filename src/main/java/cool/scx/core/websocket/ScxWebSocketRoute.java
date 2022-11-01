@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
  * Scx WebSocket 路由
  *
  * @author scx567888
- * @version 1.17.11
+ * @version 1.18.0
  */
 public final class ScxWebSocketRoute implements ScxHandlerA<ServerWebSocket> {
 
