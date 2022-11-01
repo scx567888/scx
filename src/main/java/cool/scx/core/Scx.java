@@ -6,11 +6,12 @@ import cool.scx.config.ScxEnvironment;
 import cool.scx.config.ScxFeatureConfig;
 import cool.scx.core.dao.ScxDao;
 import cool.scx.core.enumeration.ScxCoreFeature;
-import cool.scx.core.eventbus.ScxEventBus;
+import cool.scx.core.eventbus.MessageCodecRegistrar;
 import cool.scx.core.http.ScxHttpRouter;
 import cool.scx.core.mvc.ScxMappingConfiguration;
 import cool.scx.core.mvc.ScxMappingRegistrar;
 import cool.scx.core.scheduler.ScxScheduler;
+import cool.scx.core.websocket.ScxWebSocketMappingRegistrar;
 import cool.scx.core.websocket.ScxWebSocketRouter;
 import cool.scx.util.ConsoleUtils;
 import cool.scx.util.NetUtils;
@@ -18,6 +19,7 @@ import cool.scx.util.StopWatch;
 import cool.scx.util.ansi.Ansi;
 import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
+import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.net.JksOptions;
@@ -70,11 +72,6 @@ public final class Scx {
      * vertx
      */
     private final Vertx vertx;
-
-    /**
-     * s
-     */
-    private final ScxEventBus scxEventBus;
 
     /**
      * scxBeanFactory
@@ -139,8 +136,8 @@ public final class Scx {
         ScxLoggerConfiguration.init(this.scxConfig, this.scxEnvironment);
         //3, 初始化 Vertx 这里在 log4j2 之后初始化是因为 vertx 需要使用 log4j2 打印日志
         this.vertx = initVertx();
-        //4, 初始化事件总线 (这里的 ScxEventBus 其实只是针对 vertx 的 eventBus 进行一次包装)
-        this.scxEventBus = new ScxEventBus(this.vertx);
+        //4, 初始化事件总线
+        MessageCodecRegistrar.registerCodec(this.vertx.eventBus());
         //5, 初始化 BeanFactory
         this.scxBeanFactory = initScxBeanFactory(this.scxModules, this.vertx.nettyEventLoopGroup(), this.scxFeatureConfig);
         //6, 初始化模板
@@ -302,9 +299,10 @@ public final class Scx {
         }
         //2, 初始化路由 (Http 和 WebSocket)
         this.scxHttpRouter = new ScxHttpRouter(this);
-        this.scxWebSocketRouter = new ScxWebSocketRouter(this.scxModules, this.scxBeanFactory);
-        //3, 注册 ScxMapping 注解的 handler 到 路由中去
+        this.scxWebSocketRouter = new ScxWebSocketRouter(this);
+        //3, 注册 ScxMapping 和 ScxWebSocketMapping 注解的 handler 到 路由中去
         new ScxMappingRegistrar(this).registerRoute(this.scxHttpRouter.vertxRouter());
+        new ScxWebSocketMappingRegistrar(this).registerRoute(this.scxWebSocketRouter);
         //4, 依次执行 模块的 start 生命周期 , 在这里我们可以操作 scxRouteRegistry, vertxRouter 等对象 "手动注册新路由" 或其他任何操作
         this.startAllScxModules();
         //5, 打印基本信息
@@ -491,8 +489,8 @@ public final class Scx {
      *
      * @return ScxServer
      */
-    public ScxEventBus scxEventBus() {
-        return scxEventBus;
+    public EventBus eventBus() {
+        return vertx.eventBus();
     }
 
     /**
