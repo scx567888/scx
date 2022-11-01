@@ -38,7 +38,7 @@ public class ScxWebSocketMappingRegistrar {
      * @param scx a {@link cool.scx.core.Scx} object
      * @return a {@link java.util.List} object
      */
-    public static List<ScxWebSocketRoute> initScxWebSocketRoutes(Scx scx) {
+    private static List<ScxWebSocketRoute> initScxWebSocketRoutes(Scx scx) {
         //获取所有的 handler
         var list = Arrays.stream(scx.scxModules())
                 .flatMap(c -> c.scxWebSocketRouteClassList().stream())
