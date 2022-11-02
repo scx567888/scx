@@ -52,12 +52,11 @@ public final class ScxWebSocketRouter implements Handler<ServerWebSocket> {
     @Override
     public void handle(ServerWebSocket serverWebSocket) {
         if (anyMatch(serverWebSocket)) {
-            var ctx = new ScxWebSocketRoutingContext(serverWebSocket, scxWebSocketRoutes);
-            ctx.nextOnOpen();
+            new OnOpenRoutingContext(serverWebSocket, scxWebSocketRoutes).next();
             serverWebSocket
-                    .frameHandler(ctx::nextOnFrame)
-                    .exceptionHandler(ctx::nextOnException)
-                    .closeHandler(ctx::nextOnClose);
+                    .frameHandler(h -> new OnFrameRoutingContext(h, serverWebSocket, scxWebSocketRoutes).next())
+                    .exceptionHandler(e -> new OnExceptionRoutingContext(e, serverWebSocket, scxWebSocketRoutes).next())
+                    .closeHandler(v -> new OnCloseRoutingContext(serverWebSocket, scxWebSocketRoutes).next());
         }
     }
 
