@@ -1,5 +1,6 @@
 package cool.scx.core.base;
 
+import cool.scx.core.websocket.ScxWebSocketRoutingContext;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.ServerWebSocket;
 import io.vertx.core.http.WebSocketFrame;
@@ -15,55 +16,60 @@ public interface BaseWebSocketHandler {
     /**
      * 连接 打开 时
      *
-     * @param webSocket ServerWebSocket 连接对象
+     * @param webSocket                  ServerWebSocket 连接对象
+     * @param scxWebSocketRoutingContext s
      * @throws java.lang.Exception e
      */
-    default void onOpen(ServerWebSocket webSocket) throws Exception {
+    default void onOpen(ServerWebSocket webSocket, ScxWebSocketRoutingContext scxWebSocketRoutingContext) throws Exception {
 
     }
 
     /**
      * 发送 文本数据 时
      *
-     * @param textData  文本数据
-     * @param frame     帧对象
-     * @param webSocket ServerWebSocket 连接对象
+     * @param textData                   文本数据
+     * @param frame                      帧对象
+     * @param webSocket                  ServerWebSocket 连接对象
+     * @param scxWebSocketRoutingContext a
      * @throws java.lang.Exception e
      */
-    default void onTextMessage(String textData, WebSocketFrame frame, ServerWebSocket webSocket) throws Exception {
+    default void onTextMessage(String textData, WebSocketFrame frame, ServerWebSocket webSocket, ScxWebSocketRoutingContext scxWebSocketRoutingContext) throws Exception {
 
     }
 
     /**
      * 发送 二进制数据 时
      *
-     * @param binaryData 二进制数据
-     * @param frame      帧对象
-     * @param webSocket  ServerWebSocket 连接对象
+     * @param binaryData                 二进制数据
+     * @param frame                      帧对象
+     * @param webSocket                  ServerWebSocket 连接对象
+     * @param scxWebSocketRoutingContext a
      * @throws java.lang.Exception e
      */
-    default void onBinaryMessage(Buffer binaryData, WebSocketFrame frame, ServerWebSocket webSocket) throws Exception {
+    default void onBinaryMessage(Buffer binaryData, WebSocketFrame frame, ServerWebSocket webSocket, ScxWebSocketRoutingContext scxWebSocketRoutingContext) throws Exception {
 
     }
 
     /**
      * 连接 关闭 时
      *
-     * @param webSocket ServerWebSocket 连接对象
+     * @param webSocket                  ServerWebSocket 连接对象
+     * @param scxWebSocketRoutingContext a
      * @throws java.lang.Exception e
      */
-    default void onClose(ServerWebSocket webSocket) throws Exception {
+    default void onClose(ServerWebSocket webSocket, ScxWebSocketRoutingContext scxWebSocketRoutingContext) throws Exception {
 
     }
 
     /**
      * 连接 错误 时
      *
-     * @param event     发生的错误
-     * @param webSocket ServerWebSocket 连接对象
+     * @param event                      发生的错误
+     * @param webSocket                  ServerWebSocket 连接对象
+     * @param scxWebSocketRoutingContext s
      * @throws java.lang.Exception e
      */
-    default void onError(Throwable event, ServerWebSocket webSocket) throws Exception {
+    default void onError(Throwable event, ServerWebSocket webSocket, ScxWebSocketRoutingContext scxWebSocketRoutingContext) throws Exception {
 
     }
 
