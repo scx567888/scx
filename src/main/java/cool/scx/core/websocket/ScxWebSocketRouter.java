@@ -51,17 +51,28 @@ public final class ScxWebSocketRouter implements Handler<ServerWebSocket> {
      */
     @Override
     public void handle(ServerWebSocket serverWebSocket) {
-        boolean anyMatches = false;
-        for (var route : scxWebSocketRoutes) {
-            if (route.matches(serverWebSocket)) {
-                route.handle(serverWebSocket);
-                anyMatches = true;
-            }
+        if (anyMatch(serverWebSocket)) {
+            new OnOpenRoutingContext(serverWebSocket, scxWebSocketRoutes).next();
+            serverWebSocket
+                    .frameHandler(h -> new OnFrameRoutingContext(h, serverWebSocket, scxWebSocketRoutes).next())
+                    .exceptionHandler(e -> new OnExceptionRoutingContext(e, serverWebSocket, scxWebSocketRoutes).next())
+                    .closeHandler(v -> new OnCloseRoutingContext(serverWebSocket, scxWebSocketRoutes).next());
         }
-        if (!anyMatches) {
+    }
+
+    /**
+     * <p>anyMatch.</p>
+     *
+     * @param serverWebSocket a {@link io.vertx.core.http.ServerWebSocket} object
+     * @return a boolean
+     */
+    private boolean anyMatch(ServerWebSocket serverWebSocket) {
+        boolean anyMatch = scxWebSocketRoutes.stream().anyMatch(c -> c.matches(serverWebSocket));
+        if (!anyMatch) {
             //没有任何路由匹配 , 此处拒绝此 websocket 连接 使用 404 意味没有找到
             serverWebSocket.reject(404);
         }
+        return anyMatch;
     }
 
 }
