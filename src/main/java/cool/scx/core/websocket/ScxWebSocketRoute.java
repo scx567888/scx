@@ -1,11 +1,7 @@
 package cool.scx.core.websocket;
 
 import cool.scx.core.base.BaseWebSocketHandler;
-import cool.scx.functional.ScxHandler;
-import cool.scx.functional.ScxHandlerA;
-import io.vertx.core.Handler;
 import io.vertx.core.http.ServerWebSocket;
-import io.vertx.core.http.WebSocketFrame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -60,6 +60,12 @@ public final class ScxWebSocketRouter implements Handler<ServerWebSocket> {
         }
     }
 
+    /**
+     * <p>anyMatch.</p>
+     *
+     * @param serverWebSocket a {@link io.vertx.core.http.ServerWebSocket} object
+     * @return a boolean
+     */
     public boolean anyMatch(ServerWebSocket serverWebSocket) {
         boolean anyMatch = scxWebSocketRoutes.stream().anyMatch(c -> c.matches(serverWebSocket));
         if (!anyMatch) {

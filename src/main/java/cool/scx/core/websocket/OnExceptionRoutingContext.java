@@ -7,20 +7,39 @@ import org.slf4j.LoggerFactory;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * <p>OnExceptionRoutingContext class.</p>
+ *
+ * @author scx567888
+ * @version 1.18.1
+ */
 public class OnExceptionRoutingContext {
 
+    /**
+     * Constant <code>logger</code>
+     */
     private static final Logger logger = LoggerFactory.getLogger(OnExceptionRoutingContext.class);
 
     private final Throwable throwable;
     private final ServerWebSocket socket;
     private final Iterator<ScxWebSocketRoute> iter;
 
-    public OnExceptionRoutingContext(Throwable e, ServerWebSocket serverWebSocket, List<ScxWebSocketRoute> scxWebSocketRoutes) {
+    /**
+     * <p>Constructor for OnExceptionRoutingContext.</p>
+     *
+     * @param e                  a {@link java.lang.Throwable} object
+     * @param serverWebSocket    a {@link io.vertx.core.http.ServerWebSocket} object
+     * @param scxWebSocketRoutes a {@link java.util.List} object
+     */
+    OnExceptionRoutingContext(Throwable e, ServerWebSocket serverWebSocket, List<ScxWebSocketRoute> scxWebSocketRoutes) {
         this.throwable = e;
         this.socket = serverWebSocket;
         this.iter = scxWebSocketRoutes.iterator();
     }
 
+    /**
+     * <p>next.</p>
+     */
     public void next() {
         while (iter.hasNext()) {
             var next = iter.next();
