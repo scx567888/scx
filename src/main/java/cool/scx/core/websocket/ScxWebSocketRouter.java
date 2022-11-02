@@ -66,7 +66,7 @@ public final class ScxWebSocketRouter implements Handler<ServerWebSocket> {
      * @param serverWebSocket a {@link io.vertx.core.http.ServerWebSocket} object
      * @return a boolean
      */
-    public boolean anyMatch(ServerWebSocket serverWebSocket) {
+    private boolean anyMatch(ServerWebSocket serverWebSocket) {
         boolean anyMatch = scxWebSocketRoutes.stream().anyMatch(c -> c.matches(serverWebSocket));
         if (!anyMatch) {
             //没有任何路由匹配 , 此处拒绝此 websocket 连接 使用 404 意味没有找到
