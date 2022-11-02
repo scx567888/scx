@@ -24,7 +24,7 @@ public interface BaseWebSocketHandler {
      * @throws java.lang.Exception e
      */
     default void onOpen(ServerWebSocket webSocket, OnOpenRoutingContext context) throws Exception {
-
+        context.next();
     }
 
     /**
@@ -37,7 +37,7 @@ public interface BaseWebSocketHandler {
      * @throws java.lang.Exception e
      */
     default void onTextMessage(String textData, WebSocketFrame frame, ServerWebSocket webSocket, OnFrameRoutingContext context) throws Exception {
-
+        context.next();
     }
 
     /**
@@ -50,7 +50,7 @@ public interface BaseWebSocketHandler {
      * @throws java.lang.Exception e
      */
     default void onBinaryMessage(Buffer binaryData, WebSocketFrame frame, ServerWebSocket webSocket, OnFrameRoutingContext context) throws Exception {
-
+        context.next();
     }
 
     /**
@@ -61,7 +61,7 @@ public interface BaseWebSocketHandler {
      * @throws java.lang.Exception e
      */
     default void onClose(ServerWebSocket webSocket, OnCloseRoutingContext context) throws Exception {
-
+        context.next();
     }
 
     /**
@@ -73,7 +73,7 @@ public interface BaseWebSocketHandler {
      * @throws java.lang.Exception e
      */
     default void onError(Throwable event, ServerWebSocket webSocket, OnExceptionRoutingContext context) throws Exception {
-
+        context.next();
     }
 
 }
