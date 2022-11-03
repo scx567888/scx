@@ -1,6 +1,6 @@
 package cool.scx.core.http;
 
-import cool.scx.core.ScxConstant;
+import cool.scx.util.FileUtils;
 import io.netty5.handler.codec.http.HttpHeaderNames;
 import io.netty5.util.AsciiString;
 import io.vertx.core.http.HttpMethod;
@@ -25,7 +25,7 @@ class ScxHttpHelper {
     /**
      * Constant <code>defaultAllowedMethods</code>
      */
-    private static final Set<HttpMethod> defaultAllowedMethods = Set.of(
+    private static final Set<HttpMethod> DEFAULT_ALLOWED_METHODS = Set.of(
             HttpMethod.GET,
             HttpMethod.POST,
             HttpMethod.OPTIONS,
@@ -37,7 +37,7 @@ class ScxHttpHelper {
     /**
      * Constant <code>defaultAllowedHeaders</code>
      */
-    private static final Set<String> defaultAllowedHeaders = toSet(
+    private static final Set<String> DEFAULT_ALLOWED_HEADERS = toSet(
             HttpHeaderNames.ACCEPT,
             HttpHeaderNames.CONTENT_TYPE
     );
@@ -45,9 +45,14 @@ class ScxHttpHelper {
     /**
      * Constant <code>defaultExposedHeaders</code>
      */
-    private static final Set<String> defaultExposedHeaders = toSet(
+    private static final Set<String> DEFAULT_EXPOSED_HEADERS = toSet(
             HttpHeaderNames.CONTENT_DISPOSITION
     );
+
+    /**
+     * 默认 http 请求 body 限制大小
+     */
+    private static final long DEFAULT_BODY_LIMIT = FileUtils.displaySizeToLong("16384KB");
 
     /**
      * <p>toSet.</p>
@@ -67,9 +72,9 @@ class ScxHttpHelper {
      */
     static CorsHandler initCorsHandler(String allowedOriginPattern) {
         return new CorsHandlerImpl(allowedOriginPattern)
-                .allowedHeaders(defaultAllowedHeaders)
-                .allowedMethods(defaultAllowedMethods)
-                .exposedHeaders(defaultExposedHeaders)
+                .allowedHeaders(DEFAULT_ALLOWED_HEADERS)
+                .allowedMethods(DEFAULT_ALLOWED_METHODS)
+                .exposedHeaders(DEFAULT_EXPOSED_HEADERS)
                 .allowCredentials(true);
     }
 
@@ -81,7 +86,7 @@ class ScxHttpHelper {
      */
     static BodyHandler initBodyHandler(Path uploadDirectory) {
         return new BodyHandlerImpl(uploadDirectory.toString())
-                .setBodyLimit(ScxConstant.DEFAULT_BODY_LIMIT)
+                .setBodyLimit(DEFAULT_BODY_LIMIT)
                 .setMergeFormAttributes(false)
                 .setDeleteUploadedFilesOnEnd(true);
     }
