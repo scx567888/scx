@@ -1,24 +1,22 @@
 package cool.scx.core.http;
 
 import cool.scx.core.Scx;
-import cool.scx.core.ScxConstant;
 import cool.scx.core.http.exception.InternalServerErrorException;
 import cool.scx.core.http.exception_handler.LastExceptionHandler;
 import cool.scx.core.http.exception_handler.ScxHttpExceptionHandler;
 import cool.scx.util.ScxExceptionHelper;
-import io.netty.handler.codec.http.HttpHeaderNames;
 import io.vertx.core.Handler;
-import io.vertx.core.http.HttpMethod;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.CorsHandler;
-import io.vertx.ext.web.handler.impl.CorsHandlerImpl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+
+import static cool.scx.core.http.ScxHttpHelper.initBodyHandler;
+import static cool.scx.core.http.ScxHttpHelper.initCorsHandler;
 
 /**
  * ScxHttp 路由 内部使用 vertxRouter 进行具体路由的处理
@@ -57,8 +55,8 @@ public final class ScxHttpRouter {
         //绑定异常处理器
         bindErrorHandler(this.vertxRouter);
         //设置基本的 handler
-        this.corsHandler = new CorsHandlerImpl(scx.scxCoreConfig().allowedOrigin()).allowedHeaders(Set.of(HttpHeaderNames.ACCEPT.toString(), HttpHeaderNames.CONTENT_TYPE.toString())).allowedMethods(Set.of(HttpMethod.GET, HttpMethod.POST, HttpMethod.OPTIONS, HttpMethod.DELETE, HttpMethod.PATCH, HttpMethod.PUT)).allowCredentials(true);
-        this.bodyHandler = BodyHandler.create(scx.scxEnvironment().getTempPath(BodyHandler.DEFAULT_UPLOADS_DIRECTORY).toString()).setBodyLimit(ScxConstant.DEFAULT_BODY_LIMIT).setMergeFormAttributes(false).setDeleteUploadedFilesOnEnd(true);
+        this.corsHandler = initCorsHandler(scx.scxCoreConfig().allowedOrigin());
+        this.bodyHandler = initBodyHandler(scx.scxEnvironment().getTempPath(BodyHandler.DEFAULT_UPLOADS_DIRECTORY));
         //注册路由
         this.corsHandlerRoute = this.vertxRouter.route().handler(corsHandler);
         this.bodyHandlerRoute = this.vertxRouter.route().handler(bodyHandler);
