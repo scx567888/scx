@@ -60,6 +60,12 @@ public class ScxWebSocketMappingRegistrar {
         return sortedScxWebSocketRoutes(list);
     }
 
+    /**
+     * <p>isScxWebSocketRouteClass.</p>
+     *
+     * @param c a {@link java.lang.Class} object
+     * @return a boolean
+     */
     public static boolean isScxWebSocketRouteClass(Class<?> c) {
         return c.isAnnotationPresent(ScxWebSocketMapping.class) // 拥有注解
                 && ScanClassUtils.isNormalClass(c) // 是一个普通的类 (不是接口, 不是抽象类) ; 此处不要求有必须有无参构造函数 因为此类的创建会由 beanFactory 进行处理

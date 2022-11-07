@@ -69,6 +69,7 @@ public final class ScxBeanFactory {
      * <p>registerBean.</p>
      *
      * @param classList c
+     * @return a {@link cool.scx.core.ScxBeanFactory} object
      */
     public ScxBeanFactory registerBeanDefinition(Class<?>... classList) {
         for (var c : classList) {

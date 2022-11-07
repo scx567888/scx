@@ -4,7 +4,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import static cool.scx.core.ScxHelper.*;
 import static cool.scx.util.ScanClassUtils.*;
 import static cool.scx.util.ScxExceptionHelper.wrap;
 
