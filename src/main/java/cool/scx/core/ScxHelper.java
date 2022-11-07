@@ -2,7 +2,7 @@ package cool.scx.core;
 
 import cool.scx.core.annotation.*;
 import cool.scx.core.base.BaseModel;
-import cool.scx.util.ScanClassUtils;
+import cool.scx.util.ClassUtils;
 import io.vertx.ext.web.RoutingContext;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
@@ -53,7 +53,7 @@ public final class ScxHelper {
      */
     public static boolean isScxBaseModelClass(Class<?> c) {
         return c.isAnnotationPresent(ScxModel.class) // 拥有注解
-                && ScanClassUtils.isInstantiableClass(c) // 是一个可以不需要其他参数直接生成实例化的对象
+                && ClassUtils.isInstantiableClass(c) // 是一个可以不需要其他参数直接生成实例化的对象
                 && BaseModel.class.isAssignableFrom(c);
     }
 
@@ -65,7 +65,7 @@ public final class ScxHelper {
      */
     public static boolean isScxBaseModelServiceClass(Class<?> c) {
         return c.isAnnotationPresent(ScxService.class) // 拥有注解
-                && ScanClassUtils.isNormalClass(c) // 是一个普通的类 (不是接口, 不是抽象类) ; 此处不要求有必须有无参构造函数 因为此类的创建会由 beanFactory 进行处理
+                && ClassUtils.isNormalClass(c) // 是一个普通的类 (不是接口, 不是抽象类) ; 此处不要求有必须有无参构造函数 因为此类的创建会由 beanFactory 进行处理
                 && c.getGenericSuperclass() instanceof ParameterizedType t //需要有泛型参数
                 && t.getActualTypeArguments().length == 1; //并且泛型参数的数量必须是一个
     }

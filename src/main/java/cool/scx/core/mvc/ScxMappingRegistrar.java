@@ -4,7 +4,7 @@ import cool.scx.core.Scx;
 import cool.scx.core.annotation.ScxMapping;
 import cool.scx.util.MultiMap;
 import cool.scx.util.ObjectUtils;
-import cool.scx.util.ScanClassUtils;
+import cool.scx.util.ClassUtils;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.ext.web.MIMEHeader;
 import io.vertx.ext.web.Route;
@@ -165,7 +165,7 @@ public final class ScxMappingRegistrar {
      */
     public static boolean isScxMappingClass(Class<?> c) {
         return (c.isAnnotationPresent(ScxMapping.class) || c.isAnnotationPresent(Controller.class)) //拥有注解
-                && ScanClassUtils.isNormalClass(c); // 是一个普通的类 (不是接口, 不是抽象类) ; 此处不要求有必须有无参构造函数 因为此类的创建会由 beanFactory 进行处理
+                && ClassUtils.isNormalClass(c); // 是一个普通的类 (不是接口, 不是抽象类) ; 此处不要求有必须有无参构造函数 因为此类的创建会由 beanFactory 进行处理
     }
 
     /**

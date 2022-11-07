@@ -4,7 +4,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import static cool.scx.util.ScanClassUtils.*;
+import static cool.scx.util.ClassUtils.*;
 import static cool.scx.util.ScxExceptionHelper.wrap;
 
 /**
@@ -45,11 +45,11 @@ public abstract class ScxModule {
         var classSourcePath = Path.of(classSource);
         //判断当前是否处于 jar 包中
         if (isJar(classSourcePath)) {
-            var list = wrap(() -> getClassListByJar(classSource));
+            var list = wrap(() -> getClassListFromJar(classSource));
             this.classList = filterByBasePackage(list, basePackage);
             this.rootPath = classSourcePath.getParent();
         } else {
-            var list = wrap(() -> getClassListByDir(classSource, getClass().getClassLoader()));
+            var list = wrap(() -> getClassListFromDir(Path.of(classSource), getClass().getClassLoader()));
             this.classList = filterByBasePackage(list, basePackage);
             this.rootPath = classSourcePath;
         }
