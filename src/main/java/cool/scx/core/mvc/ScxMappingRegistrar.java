@@ -4,6 +4,7 @@ import cool.scx.core.Scx;
 import cool.scx.core.annotation.ScxMapping;
 import cool.scx.util.MultiMap;
 import cool.scx.util.ObjectUtils;
+import cool.scx.util.ScanClassUtils;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.ext.web.MIMEHeader;
 import io.vertx.ext.web.Route;
@@ -11,6 +12,7 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.impl.RouteImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -139,9 +141,12 @@ public final class ScxMappingRegistrar {
      * @return a
      */
     private static List<ScxMappingHandler> initScxMappingHandlers(Scx scx) {
+        var scxMappingClassList = Arrays.stream(scx.scxModules())
+                .flatMap(c -> c.classList().stream())
+                .filter(ScxMappingRegistrar::isScxMappingClass)
+                .toList();
         //获取所有的 handler
-        var allScxMappingHandlers = Arrays.stream(scx.scxModules())
-                .flatMap(c -> c.scxMappingClassList().stream())
+        var allScxMappingHandlers = scxMappingClassList.stream()
                 .flatMap(c -> Arrays.stream(c.getMethods())
                         .filter(m -> m.isAnnotationPresent(ScxMapping.class))
                         .map(m -> new ScxMappingHandler(c, m, scx)))
@@ -150,6 +155,17 @@ public final class ScxMappingRegistrar {
         var filledList = fillRouteState(allScxMappingHandlers, scx);
         //返回排序后的 handlers
         return sortedScxMappingHandlers(filledList);
+    }
+
+    /**
+     * 初始化 ScxMappingClassList
+     *
+     * @param c a
+     * @return a
+     */
+    public static boolean isScxMappingClass(Class<?> c) {
+        return (c.isAnnotationPresent(ScxMapping.class) || c.isAnnotationPresent(Controller.class)) //拥有注解
+                && ScanClassUtils.isNormalClass(c); // 是一个普通的类 (不是接口, 不是抽象类) ; 此处不要求有必须有无参构造函数 因为此类的创建会由 beanFactory 进行处理
     }
 
     /**

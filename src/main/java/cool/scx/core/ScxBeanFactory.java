@@ -70,13 +70,14 @@ public final class ScxBeanFactory {
      *
      * @param classList c
      */
-    public void registerBeanDefinition(Class<?>... classList) {
+    public ScxBeanFactory registerBeanDefinition(Class<?>... classList) {
         for (var c : classList) {
             var beanDefinition = new AnnotatedGenericBeanDefinition(c);
             //这里是为了兼容 spring context 的部分注解
             AnnotationConfigUtils.processCommonDefinitionAnnotations(beanDefinition);
             springBeanFactory.registerBeanDefinition(c.getName(), beanDefinition);
         }
+        return this;
     }
 
     /**
