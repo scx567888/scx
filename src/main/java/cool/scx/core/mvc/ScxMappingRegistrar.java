@@ -148,7 +148,7 @@ public final class ScxMappingRegistrar {
         //获取所有的 handler
         var allScxMappingHandlers = scxMappingClassList.stream()
                 .flatMap(c -> Arrays.stream(c.getMethods())
-                        .filter(m -> m.isAnnotationPresent(ScxMapping.class))
+                        .filter(ScxMappingRegistrar::isScxMappingMethod)
                         .map(m -> new ScxMappingHandler(c, m, scx)))
                 .toList();
         //填充 routeState
@@ -166,6 +166,17 @@ public final class ScxMappingRegistrar {
     public static boolean isScxMappingClass(Class<?> c) {
         return (c.isAnnotationPresent(ScxMapping.class) || c.isAnnotationPresent(Controller.class)) //拥有注解
                 && ScanClassUtils.isNormalClass(c); // 是一个普通的类 (不是接口, 不是抽象类) ; 此处不要求有必须有无参构造函数 因为此类的创建会由 beanFactory 进行处理
+    }
+
+    /**
+     * 判断是否为 ScxMapping 方法
+     *
+     * @param m a
+     * @return a
+     */
+    public static boolean isScxMappingMethod(Method m) {
+        return m.isAnnotationPresent(ScxMapping.class)  //拥有注解
+                && !m.isBridge(); // 不是桥接方法
     }
 
     /**
