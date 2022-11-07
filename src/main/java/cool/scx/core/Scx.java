@@ -219,11 +219,11 @@ public final class Scx {
      * @return r
      */
     private static ScxBeanFactory initScxBeanFactory(ScxModule[] modules, ScheduledExecutorService scheduledExecutorService, ScxFeatureConfig scxFeatureConfig) {
-        var tempScxBeanFactory = new ScxBeanFactory(scheduledExecutorService, scxFeatureConfig);
-        for (var m : modules) {
-            tempScxBeanFactory.registerBeanDefinition(m.scxBeanClassList().toArray(Class[]::new));
-        }
-        return tempScxBeanFactory;
+        var beanClass = Arrays.stream(modules)
+                .flatMap(c -> c.classList().stream())
+                .filter(ScxHelper::isBeanClass)
+                .toArray(Class<?>[]::new);
+        return new ScxBeanFactory(scheduledExecutorService, scxFeatureConfig).registerBeanDefinition(beanClass);
     }
 
     /**

@@ -1,6 +1,7 @@
 package cool.scx.core.dao;
 
 import cool.scx.core.ScxContext;
+import cool.scx.core.ScxHelper;
 import cool.scx.sql.SQL;
 import cool.scx.sql.SQLRunner;
 import org.slf4j.Logger;
@@ -9,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -70,12 +72,10 @@ public final class ScxDaoHelper {
      * @return s
      */
     private static List<Class<?>> getAllScxBaseModelClassList() {
-        var allScxModelClassList = new ArrayList<Class<?>>();
-        for (var m : ScxContext.scxModules()) {
-            //只对 ScxModel 注解标识的了类进行数据表修复
-            allScxModelClassList.addAll(m.scxBaseModelClassList());
-        }
-        return allScxModelClassList;
+        return Arrays.stream(ScxContext.scxModules())
+                .flatMap(c -> c.classList().stream())
+                .filter(ScxHelper::isScxBaseModelClass)// 继承自 BaseModel
+                .toList();
     }
 
     /**

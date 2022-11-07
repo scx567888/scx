@@ -69,14 +69,16 @@ public final class ScxBeanFactory {
      * <p>registerBean.</p>
      *
      * @param classList c
+     * @return a {@link cool.scx.core.ScxBeanFactory} object
      */
-    public void registerBeanDefinition(Class<?>... classList) {
+    public ScxBeanFactory registerBeanDefinition(Class<?>... classList) {
         for (var c : classList) {
             var beanDefinition = new AnnotatedGenericBeanDefinition(c);
             //这里是为了兼容 spring context 的部分注解
             AnnotationConfigUtils.processCommonDefinitionAnnotations(beanDefinition);
             springBeanFactory.registerBeanDefinition(c.getName(), beanDefinition);
         }
+        return this;
     }
 
     /**

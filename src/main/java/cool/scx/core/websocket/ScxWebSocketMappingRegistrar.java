@@ -2,6 +2,8 @@ package cool.scx.core.websocket;
 
 import cool.scx.core.Scx;
 import cool.scx.core.annotation.ScxWebSocketMapping;
+import cool.scx.core.base.BaseWebSocketHandler;
+import cool.scx.util.ScanClassUtils;
 import cool.scx.util.URIBuilder;
 
 import java.util.Arrays;
@@ -38,10 +40,15 @@ public class ScxWebSocketMappingRegistrar {
      * @param scx a {@link cool.scx.core.Scx} object
      * @return a {@link java.util.List} object
      */
+    @SuppressWarnings("unchecked")
     private static List<ScxWebSocketRoute> initScxWebSocketRoutes(Scx scx) {
+        var scxWebSocketRouteClassList = Arrays.stream(scx.scxModules())
+                .flatMap(c -> c.classList().stream())
+                .filter(ScxWebSocketMappingRegistrar::isScxWebSocketRouteClass)
+                .map(c -> (Class<? extends BaseWebSocketHandler>) c)
+                .toList();
         //获取所有的 handler
-        var list = Arrays.stream(scx.scxModules())
-                .flatMap(c -> c.scxWebSocketRouteClassList().stream())
+        var list = scxWebSocketRouteClassList.stream()
                 .map(c -> {
                     var scxWebSocketMapping = c.getAnnotation(ScxWebSocketMapping.class);
                     var path = URIBuilder.join(scxWebSocketMapping.value());
@@ -51,6 +58,18 @@ public class ScxWebSocketMappingRegistrar {
                 })
                 .toList();
         return sortedScxWebSocketRoutes(list);
+    }
+
+    /**
+     * <p>isScxWebSocketRouteClass.</p>
+     *
+     * @param c a {@link java.lang.Class} object
+     * @return a boolean
+     */
+    public static boolean isScxWebSocketRouteClass(Class<?> c) {
+        return c.isAnnotationPresent(ScxWebSocketMapping.class) // 拥有注解
+                && ScanClassUtils.isNormalClass(c) // 是一个普通的类 (不是接口, 不是抽象类) ; 此处不要求有必须有无参构造函数 因为此类的创建会由 beanFactory 进行处理
+                && BaseWebSocketHandler.class.isAssignableFrom(c); // 继承自 BaseWebSocketHandler
     }
 
     /**
