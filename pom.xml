@@ -84,7 +84,7 @@
         <dependency>
             <groupId>cool.scx</groupId>
             <artifactId>scx-sql</artifactId>
-            <version>0.1.5</version>
+            <version>0.1.6</version>
         </dependency>
 
         <dependency>
