@@ -30,11 +30,6 @@ public final class ScxCoreConfig {
     private final String allowedOrigin;
 
     /**
-     * 是否真实删除
-     */
-    private final boolean tombstone;
-
-    /**
      * 数据源地址
      */
     private final String dataSourceHost;
@@ -93,7 +88,6 @@ public final class ScxCoreConfig {
      */
     public ScxCoreConfig(ScxConfig scxConfig, ScxEnvironment scxEnvironment, String appKey) {
         port = scxConfig.getOrDefault("scx.port", 8080);
-        tombstone = scxConfig.getOrDefault("scx.tombstone", false);
         allowedOrigin = scxConfig.getOrDefault("scx.allowed-origin", "*");
         templateRoot = scxConfig.get("scx.template.root", AppRootHandler.of(scxEnvironment, "AppRoot:/c/"));
         httpsEnabled = scxConfig.getOrDefault("scx.https.enabled", false);
@@ -198,15 +192,6 @@ public final class ScxCoreConfig {
     }
 
     /**
-     * <p>realDelete.</p>
-     *
-     * @return a boolean.
-     */
-    public boolean tombstone() {
-        return tombstone;
-    }
-
-    /**
      * 获取模板根路径
      *
      * @return a {@link java.io.File} object.
@@ -231,7 +216,6 @@ public final class ScxCoreConfig {
         Ansi.out()
                 .green("Y 服务器 IP 地址                       \t -->\t " + NetUtils.getLocalIPAddress().v4ToString()).ln()
                 .green("Y 端口号                               \t -->\t " + port).ln()
-                .green("Y 数据库删除方式为                     \t -->\t " + (tombstone ? "逻辑删除" : "物理删除")).ln()
                 .green("Y 允许的请求源                         \t -->\t " + allowedOrigin).ln()
                 .green("Y 模板根目录                           \t -->\t " + templateRoot.toString()).ln()
                 .green("Y 是否开启 https                       \t -->\t " + (httpsEnabled ? "是" : "否")).ln()

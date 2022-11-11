@@ -1,6 +1,5 @@
 package cool.scx.core.base;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import cool.scx.core.annotation.Column;
 
 import java.time.LocalDateTime;
@@ -20,24 +19,15 @@ public abstract class BaseModel {
     public Long id;
 
     /**
-     * 修改时间
-     */
-    @Column(notNull = true, defaultValue = "CURRENT_TIMESTAMP", onUpdateValue = "CURRENT_TIMESTAMP", needIndex = true)
-    public LocalDateTime updateDate;
-
-    /**
      * 创建时间
      */
     @Column(notNull = true, defaultValue = "CURRENT_TIMESTAMP", needIndex = true)
-    public LocalDateTime createDate;
+    public LocalDateTime dateCreated;
 
     /**
-     * 墓碑
-     * <p>
-     * 用于标识逻辑删除的状态
+     * 修改时间
      */
-    @JsonIgnore
-    @Column(notNull = true, defaultValue = "false")
-    public Boolean tombstone;
+    @Column(notNull = true, defaultValue = "CURRENT_TIMESTAMP", onUpdateValue = "CURRENT_TIMESTAMP", needIndex = true)
+    public LocalDateTime dateModified;
 
 }

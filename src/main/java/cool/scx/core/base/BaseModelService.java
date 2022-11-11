@@ -7,7 +7,6 @@ import cool.scx.sql.base.BaseDao;
 import cool.scx.sql.base.Query;
 import cool.scx.sql.base.SelectFilter;
 import cool.scx.sql.base.UpdateFilter;
-import cool.scx.sql.where.WhereOption;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
@@ -57,46 +56,13 @@ public class BaseModelService<Entity extends BaseModel> {
     }
 
     /**
-     * 处理墓碑机制的数据
-     * <br>
-     * 如果没有开启墓碑机制 : 不做任何处理
-     * <br>
-     * 如果开启墓碑机制 做以下处理
-     * 1, 在查询条件强制添加 tombstone 字段值等于 false
-     * <br>
-     * 2, 根据不同的 selectFilter 类型进行查询参数过滤 隐藏数据库中所有 tombstone 字段的信息
-     *
-     * @param query q
-     * @return a {@link cool.scx.sql.base.Query} object
-     */
-    private static Query queryProcessor(Query query) {
-        if (ScxContext.coreConfig().tombstone()) {
-            query.equal("tombstone", false, WhereOption.REPLACE);
-        }
-        return query;
-    }
-
-    /**
-     * 当 启用逻辑删除时 则不允许查询 tombstone 值 所以在此进行处理
-     *
-     * @param selectFilter s
-     * @return a {@link cool.scx.sql.base.SelectFilter} object
-     */
-    private static SelectFilter selectFilterProcessor(SelectFilter selectFilter) {
-        if (ScxContext.coreConfig().tombstone()) {
-            selectFilter.addExcluded("tombstone");
-        }
-        return selectFilter;
-    }
-
-    /**
-     * 处理 updateFilter  使在插入或更新数据时永远过滤 "id", "updateDate", "createDate", "tombstone" 四个字段
+     * 处理 updateFilter  使在插入或更新数据时永远过滤 "id", "dateCreated", "dateModified" 三个字段
      *
      * @param updateFilter u
      * @return a {@link cool.scx.sql.base.UpdateFilter} object
      */
     private static UpdateFilter updateFilterProcessor(UpdateFilter updateFilter) {
-        return updateFilter.addExcluded("id", "updateDate", "createDate", "tombstone");
+        return updateFilter.addExcluded("id", "dateCreated", "dateModified");
     }
 
     /**
@@ -190,7 +156,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 数据列表
      */
     public List<Entity> list(Query query, SelectFilter selectFilter) {
-        return baseDao._select(queryProcessor(query), selectFilterProcessor(selectFilter));
+        return baseDao._select(query, selectFilter);
     }
 
     /**
@@ -252,7 +218,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 数据条数
      */
     public final long count(Query query) {
-        return baseDao._count(queryProcessor(query));
+        return baseDao._count(query);
     }
 
     /**
@@ -300,7 +266,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 更新成功的数据条数
      */
     public long update(Entity entity, Query query, UpdateFilter updateFilter) {
-        return baseDao._update(entity, queryProcessor(query), updateFilterProcessor(updateFilter));
+        return baseDao._update(entity, query, updateFilterProcessor(updateFilter));
     }
 
     /**
@@ -323,47 +289,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 被删除的数据条数
      */
     public long delete(Query query) {
-        //物理删除
-        if (!ScxContext.coreConfig().tombstone()) {
-            return baseDao._delete(query);
-        } else {//逻辑删除
-            var needTombstoneEntity = ScxContext.getBean(baseDao._entityClass());
-            needTombstoneEntity.tombstone = true;
-            //关于 query 字段 :  tombstone 已经为 false 的不需要在进行处理了所以添加一个排除
-            //关于 updateFilter : 这里已经明确 实体类的所需字段不为空 所以为了性能此处 UpdateFilter 关闭 excludeIfFieldValueIsNull 功能
-            return baseDao._update(needTombstoneEntity, query.equal("tombstone", false, WhereOption.REPLACE), UpdateFilter.ofIncluded(false).addIncluded("tombstone"));
-        }
-    }
-
-    /**
-     * 根据 ID 列表恢复删除的数据
-     *
-     * @param ids 待恢复的数据 id 集合
-     * @return 恢复删除成功的数据条数
-     */
-    public final long revokeDelete(long... ids) {
-        if (ids.length == 0) {
-            throw new IllegalArgumentException("待恢复删除的 ids 数量至少为 1 个");
-        }
-        return this.revokeDelete(ids.length == 1 ? new Query().equal("id", ids[0]) : new Query().in("id", ids));
-    }
-
-    /**
-     * 根据指定条件恢复删除的数据
-     *
-     * @param query 指定的条件
-     * @return 恢复删除成功的数据条数
-     */
-    public long revokeDelete(Query query) {
-        if (!ScxContext.coreConfig().tombstone()) {
-            throw new RuntimeException("物理删除模式下不允许恢复删除!!!");
-        } else {
-            var needRevokeDeleteModel = ScxContext.getBean(baseDao._entityClass());
-            needRevokeDeleteModel.tombstone = false;
-            //关于 query 字段 :  恢复删除的必要条件是 已经被删除了 也就是 tombstone 为 true 所以在此做一个特殊处理
-            //关于 updateFilter : 这里已经明确 实体类的所需字段不为空 所以为了性能此处 UpdateFilter 关闭 excludeIfFieldValueIsNull 功能
-            return baseDao._update(needRevokeDeleteModel, query.equal("tombstone", true, WhereOption.REPLACE), UpdateFilter.ofIncluded(false).addIncluded("tombstone"));
-        }
+        return baseDao._delete(query);
     }
 
     /**
@@ -379,7 +305,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @see BaseDao#_buildSelectSQL(Query, SelectFilter)
      */
     public final SQL buildListSQL(Query query, SelectFilter selectFilter) {
-        return baseDao._buildSelectSQL(queryProcessor(query), selectFilterProcessor(selectFilter));
+        return baseDao._buildSelectSQL(query, selectFilter);
     }
 
     /**
@@ -409,7 +335,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @see BaseDao#_buildSelectSQL(Query, SelectFilter)
      */
     public final SQL buildListSQLWithAlias(Query query, SelectFilter selectFilter) {
-        return baseDao._buildSelectSQLWithAlias(queryProcessor(query), selectFilterProcessor(selectFilter));
+        return baseDao._buildSelectSQLWithAlias(query, selectFilter);
     }
 
     /**
