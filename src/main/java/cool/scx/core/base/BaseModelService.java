@@ -56,13 +56,13 @@ public class BaseModelService<Entity extends BaseModel> {
     }
 
     /**
-     * 处理 updateFilter  使在插入或更新数据时永远过滤 "id", "dateCreated", "dateModified" 三个字段
+     * 处理 updateFilter  使在插入或更新数据时永远过滤 "id", "dateCreated", "dateUpdated" 三个字段
      *
      * @param updateFilter u
      * @return a {@link cool.scx.sql.base.UpdateFilter} object
      */
     private static UpdateFilter updateFilterProcessor(UpdateFilter updateFilter) {
-        return updateFilter.addExcluded("id", "dateCreated", "dateModified");
+        return updateFilter.addExcluded("id", "dateCreated", "dateUpdated");
     }
 
     /**

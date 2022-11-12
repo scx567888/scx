@@ -28,6 +28,6 @@ public abstract class BaseModel {
      * 修改时间
      */
     @Column(notNull = true, defaultValue = "CURRENT_TIMESTAMP", onUpdateValue = "CURRENT_TIMESTAMP", needIndex = true)
-    public LocalDateTime dateModified;
+    public LocalDateTime dateUpdated;
 
 }
