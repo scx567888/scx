@@ -62,7 +62,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return a {@link cool.scx.sql.base.UpdateFilter} object
      */
     private static UpdateFilter updateFilterProcessor(UpdateFilter updateFilter) {
-        return updateFilter.addExcluded("id", "dateCreated", "dateUpdated");
+        return updateFilter.addExcluded("id", "createdDate", "updatedDate");
     }
 
     /**

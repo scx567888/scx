@@ -22,12 +22,12 @@ public abstract class BaseModel {
      * 创建时间
      */
     @Column(notNull = true, defaultValue = "CURRENT_TIMESTAMP", needIndex = true)
-    public LocalDateTime dateCreated;
+    public LocalDateTime createdDate;
 
     /**
-     * 修改时间
+     * 最后修改时间
      */
     @Column(notNull = true, defaultValue = "CURRENT_TIMESTAMP", onUpdateValue = "CURRENT_TIMESTAMP", needIndex = true)
-    public LocalDateTime dateUpdated;
+    public LocalDateTime updatedDate;
 
 }
