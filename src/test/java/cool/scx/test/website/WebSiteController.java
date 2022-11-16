@@ -251,11 +251,11 @@ public class WebSiteController {
         var in = new PipedInputStream();
         var out = new PipedOutputStream(in);
 
-        ScxContext.scheduler().submit(() -> ScxExceptionHelper.wrap(() -> {
+        new Thread(() -> ScxExceptionHelper.wrap(() -> {
             try (var zos = new ZipOutputStream(out)) {
                 zipBuilder.writeToZipOutputStream(zos);
             }
-        }));
+        })).start();
 
         return Download.of(in, "测试压缩包.zip");
 

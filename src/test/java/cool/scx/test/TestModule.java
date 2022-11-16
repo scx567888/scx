@@ -202,8 +202,8 @@ public class TestModule extends ScxModule {
     public static void test4() {
         //创建一个压缩文件先
         try {
-            var zipBuilder=new ZipBuilder();
-            zipBuilder.put("第一个目录/第二个目录/第二个目录中的文件.txt","文件内容".getBytes(StandardCharsets.UTF_8));
+            var zipBuilder = new ZipBuilder();
+            zipBuilder.put("第一个目录/第二个目录/第二个目录中的文件.txt", "文件内容".getBytes(StandardCharsets.UTF_8));
             zipBuilder.put("第一个目录/这是一系列空目录/这是一系列空目录/这是一系列空目录/这是一系列空目录/这是一系列空目录");
             zipBuilder.put("第一个目录/这不是一系列空目录/这不是一系列空目录/这不是一系列空目录/这不是一系列空目录/这不是一系列空目录");
             zipBuilder.put("第一个目录/这不是一系列空目录/这不是一系列空目录/这不是一系列空目录/这不是一系列空目录/这不是一系列空目录/一个文本文件.txt", "一些内容,一些内容,一些内容,一些内容 下😊😂🤣❤😍😒👌😘".getBytes(StandardCharsets.UTF_8));
