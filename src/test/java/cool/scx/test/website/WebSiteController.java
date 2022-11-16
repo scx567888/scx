@@ -11,20 +11,19 @@ import cool.scx.core.type.UploadedEntity;
 import cool.scx.core.vo.*;
 import cool.scx.test.car.Car;
 import cool.scx.test.car.CarService;
-import cool.scx.util.DigestUtils;
-import cool.scx.util.NetUtils;
-import cool.scx.util.RandomUtils;
+import cool.scx.util.*;
 import cool.scx.util.http.HttpClientHelper;
-import cool.scx.util.zip.VirtualDirectory;
-import cool.scx.util.zip.VirtualFile;
 import io.vertx.ext.web.FileUpload;
 import io.vertx.ext.web.RoutingContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.zip.ZipOutputStream;
 
 /**
  * 简单测试
@@ -239,16 +238,27 @@ public class WebSiteController {
      * @return a {@link BaseVo} object
      */
     @ScxMapping(method = HttpMethod.GET)
-    public BaseVo zip() throws Exception {
-        var virtualDirectory = VirtualDirectory.of("第一个目录");
-        virtualDirectory.put("第二个目录", VirtualFile.of("第二个目录中的文件.txt", "文件内容".getBytes(StandardCharsets.UTF_8)));
-        virtualDirectory.getOrCreate("这是一系列空目录/这是一系列空目录/这是一系列空目录/这是一系列空目录/这是一系列空目录");
-        var orCreate = virtualDirectory.getOrCreate("这不是一系列空目录/这不是一系列空目录/这不是一系列空目录/这不是一系列空目录/这不是一系列空目录");
-        if (orCreate instanceof VirtualDirectory a) {
-            a.put(VirtualFile.of("一个文本文件.txt", "一些内容,一些内容,一些内容,一些内容 下😊😂🤣❤😍😒👌😘".getBytes(StandardCharsets.UTF_8)));
-        }
-        byte[] bytes = virtualDirectory.toZipBytes();
-        return Download.of(bytes, "测试压缩包.zip");
+    public Download zip() throws Exception {
+        var zipBuilder = new ZipBuilder();
+        zipBuilder.put("第一个目录/第二个目录/第二个目录中的文件.txt", "文件内容".getBytes(StandardCharsets.UTF_8));
+        zipBuilder.put("第一个目录/这是一系列空目录/这是一系列空目录/这是一系列空目录/这是一系列空目录/这是一系列空目录");
+        zipBuilder.put("第一个目录/这不是一系列空目录/这不是一系列空目录/这不是一系列空目录/这不是一系列空目录/这不是一系列空目录");
+        zipBuilder.put("第一个目录/这不是一系列空目录/这不是一系列空目录/这不是一系列空目录/这不是一系列空目录/这不是一系列空目录/一个文本文件.txt", "一些内容,一些内容,一些内容,一些内容 下😊😂🤣❤😍😒👌😘".getBytes(StandardCharsets.UTF_8));
+        zipBuilder.put("第三个目录/子目录");
+        zipBuilder.remove("第三个目录");
+
+        // 大型文件请使用这种方法下载
+        var in = new PipedInputStream();
+        var out = new PipedOutputStream(in);
+
+        ScxContext.scheduler().submit(() -> ScxExceptionHelper.wrap(() -> {
+            try (var zos = new ZipOutputStream(out)) {
+                zipBuilder.writeToZipOutputStream(zos);
+            }
+        }));
+
+        return Download.of(in, "测试压缩包.zip");
+
     }
 
 }
