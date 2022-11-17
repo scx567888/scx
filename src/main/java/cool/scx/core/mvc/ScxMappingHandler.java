@@ -126,7 +126,7 @@ public final class ScxMappingHandler implements Handler<RoutingContext> {
         } else {
             urlArray[1] = methodScxMapping.value();
         }
-        return URIBuilder.join(urlArray);
+        return URIBuilder.addSlashStart(URIBuilder.join(urlArray));
     }
 
     /**
