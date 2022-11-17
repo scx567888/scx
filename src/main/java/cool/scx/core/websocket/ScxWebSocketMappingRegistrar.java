@@ -51,7 +51,7 @@ public class ScxWebSocketMappingRegistrar {
         var list = scxWebSocketRouteClassList.stream()
                 .map(c -> {
                     var scxWebSocketMapping = c.getAnnotation(ScxWebSocketMapping.class);
-                    var path = URIBuilder.join(scxWebSocketMapping.value());
+                    var path = URIBuilder.addSlashStart(URIBuilder.join(scxWebSocketMapping.value()));
                     var order = scxWebSocketMapping.order();
                     var baseWebSocketHandler = scx.scxBeanFactory().getBean(c);
                     return new ScxWebSocketRoute(order, path, baseWebSocketHandler);
