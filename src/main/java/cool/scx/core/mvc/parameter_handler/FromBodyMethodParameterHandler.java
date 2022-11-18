@@ -51,23 +51,23 @@ public final class FromBodyMethodParameterHandler implements ScxMappingMethodPar
                 }
             }
         }
+        // 为了提高性能这里提前做一次校验
         if (tempValue == null || tempValue.isNull()) {
-            //为空的时候做两个处理 即必填则报错 非必填则返回 null
             if (required) {
                 throw new RequiredParamEmptyException("必填参数不能为空 !!! 参数名称 [" + name + "] , 参数来源 [FromBody, useAllBody=" + useAllBody + "] , 参数类型 [" + javaType.getTypeName() + "]");
             }
             return null;
         }
-
+        Object o;
         try {
-            return readValue(tempValue, javaType);
+            o = readValue(tempValue, javaType);
         } catch (Exception e) {
-            //和上方类似 针对是否是必填项进行不同的处理
-            if (required) {
-                throw new ParamConvertException("参数类型转换异常 !!! 参数名称 [" + name + "] , 参数来源 [FromBody, useAllBody=" + useAllBody + "] , 参数类型 [" + javaType.getTypeName() + "] , 详细错误信息 : " + e.getMessage());
-            }
+            throw new ParamConvertException("参数类型转换异常 !!! 参数名称 [" + name + "] , 参数来源 [FromBody, useAllBody=" + useAllBody + "] , 参数类型 [" + javaType.getTypeName() + "] , 详细错误信息 : " + e.getMessage());
         }
-        return null;
+        if (o == null && required) {
+            throw new RequiredParamEmptyException("必填参数不能为空 !!! 参数名称 [" + name + "] , 参数来源 [FromBody, useAllBody=" + useAllBody + "] , 参数类型 [" + javaType.getTypeName() + "]");
+        }
+        return o;
     }
 
     /**
