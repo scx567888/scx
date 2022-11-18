@@ -38,22 +38,23 @@ public final class FromPathMethodParameterHandler implements ScxMappingMethodPar
      */
     public static Object getValueFromPath(String name, boolean merge, boolean required, Type javaType, ScxMappingRoutingContextInfo routingContext) throws RequiredParamEmptyException, ParamConvertException {
         var v = merge ? routingContext.routingContext().pathParams() : routingContext.routingContext().pathParams().get(name);
+        // 为了提高性能这里提前做一次校验
         if (v == null) {
-            //为空的时候做两个处理 即必填则报错 非必填则返回 null
             if (required) {
                 throw new RequiredParamEmptyException("必填参数不能为空 !!! 参数名称 [" + name + "] , 参数来源 [FromPath, merge=" + merge + "] , 参数类型 [" + javaType.getTypeName() + "]");
             }
             return null;
         }
+        Object o;
         try {
-            return ObjectUtils.convertValue(v, javaType, ObjectUtils.Option.IGNORE_JSON_IGNORE);
+            o = ObjectUtils.convertValue(v, javaType, ObjectUtils.Option.IGNORE_JSON_IGNORE);
         } catch (Exception e) {
-            //和上方类似 针对是否是必填项进行不同的处理
-            if (required) {
-                throw new ParamConvertException("参数类型转换异常 !!! 参数名称 [" + name + "] , 参数来源 [FromPath, merge=" + merge + "] , 参数类型 [" + javaType.getTypeName() + "] , 详细错误信息 : " + e.getMessage());
-            }
+            throw new ParamConvertException("参数类型转换异常 !!! 参数名称 [" + name + "] , 参数来源 [FromPath, merge=" + merge + "] , 参数类型 [" + javaType.getTypeName() + "] , 详细错误信息 : " + e.getMessage());
         }
-        return null;
+        if (o == null && required) {
+            throw new RequiredParamEmptyException("必填参数不能为空 !!! 参数名称 [" + name + "] , 参数来源 [FromPath, merge=" + merge + "] , 参数类型 [" + javaType.getTypeName() + "]");
+        }
+        return o;
     }
 
     /**
