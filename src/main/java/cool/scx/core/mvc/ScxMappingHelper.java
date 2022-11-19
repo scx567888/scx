@@ -82,7 +82,7 @@ public class ScxMappingHelper {
                 }
             }
         }
-        return jsonNode;
+        return tempValue;
     }
 
 }
