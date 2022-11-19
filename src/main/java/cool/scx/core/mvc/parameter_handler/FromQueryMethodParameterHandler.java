@@ -3,7 +3,7 @@ package cool.scx.core.mvc.parameter_handler;
 import com.fasterxml.jackson.databind.JavaType;
 import cool.scx.core.annotation.FromQuery;
 import cool.scx.core.mvc.ScxMappingMethodParameterHandler;
-import cool.scx.core.mvc.ScxMappingRequestInfo;
+import cool.scx.core.mvc.ScxMappingRoutingContextInfo;
 import cool.scx.core.mvc.exception.ParamConvertException;
 import cool.scx.core.mvc.exception.RequiredParamEmptyException;
 import cool.scx.util.StringUtils;
@@ -29,17 +29,17 @@ public final class FromQueryMethodParameterHandler implements ScxMappingMethodPa
     /**
      * a
      *
-     * @param name        a
-     * @param merge       a
-     * @param required    a
-     * @param javaType    a
-     * @param requestInfo a
+     * @param name     a
+     * @param merge    a
+     * @param required a
+     * @param javaType a
+     * @param info     a
      * @return a
      * @throws cool.scx.core.mvc.exception.RequiredParamEmptyException a
      * @throws cool.scx.core.mvc.exception.ParamConvertException       a
      */
-    public static Object getValueFromQuery(String name, boolean merge, boolean required, JavaType javaType, ScxMappingRequestInfo requestInfo) throws RequiredParamEmptyException, ParamConvertException {
-        var tempValue = getFromMap(name, requestInfo.routingContext().queryParams(), merge, javaType);
+    public static Object getValueFromQuery(String name, boolean merge, boolean required, JavaType javaType, ScxMappingRoutingContextInfo info) throws RequiredParamEmptyException, ParamConvertException {
+        var tempValue = getFromMap(name, info.routingContext().queryParams(), merge, javaType);
         if (tempValue == null) {
             if (required) {
                 throw new RequiredParamEmptyException("必填参数不能为空 !!! 参数名称 [" + name + "] , 参数来源 [FromQuery, merge=" + merge + "] , 参数类型 [" + javaType.getTypeName() + "]");
@@ -70,7 +70,7 @@ public final class FromQueryMethodParameterHandler implements ScxMappingMethodPa
      * {@inheritDoc}
      */
     @Override
-    public Object handle(Parameter parameter, ScxMappingRequestInfo requestInfo) throws Exception {
+    public Object handle(Parameter parameter, ScxMappingRoutingContextInfo info) throws Exception {
         var javaType = constructType(parameter.getParameterizedType());
         var required = false;
         var name = parameter.getName();
@@ -85,7 +85,7 @@ public final class FromQueryMethodParameterHandler implements ScxMappingMethodPa
             merge = fromQuery.merge();
         }
 
-        return getValueFromQuery(name, merge, required, javaType, requestInfo);
+        return getValueFromQuery(name, merge, required, javaType, info);
     }
 
 }

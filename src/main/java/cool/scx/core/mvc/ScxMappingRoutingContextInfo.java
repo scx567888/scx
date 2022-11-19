@@ -8,7 +8,7 @@ import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpHeaderValues;
 import io.vertx.ext.web.RoutingContext;
 
-import static cool.scx.core.mvc.ScxMappingRequestInfo.ContentType.*;
+import static cool.scx.core.mvc.ScxMappingRoutingContextInfo.ContentType.*;
 import static cool.scx.util.ObjectUtils.jsonMapper;
 import static cool.scx.util.ObjectUtils.xmlMapper;
 
@@ -18,7 +18,7 @@ import static cool.scx.util.ObjectUtils.xmlMapper;
  * @author scx567888
  * @version 1.4.7
  */
-public final class ScxMappingRequestInfo {
+public final class ScxMappingRoutingContextInfo {
 
     private final RoutingContext routingContext;
     private final JsonNode body;
@@ -29,7 +29,7 @@ public final class ScxMappingRequestInfo {
      *
      * @param ctx a {@link io.vertx.ext.web.RoutingContext} object
      */
-    public ScxMappingRequestInfo(RoutingContext ctx) {
+    public ScxMappingRoutingContextInfo(RoutingContext ctx) {
         this.routingContext = ctx;
         this.contentType = initContentType(ctx);
         this.body = initBody(ctx, this.contentType);

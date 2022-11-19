@@ -2,7 +2,7 @@ package cool.scx.core.mvc.parameter_handler;
 
 import cool.scx.core.annotation.FromUpload;
 import cool.scx.core.mvc.ScxMappingMethodParameterHandler;
-import cool.scx.core.mvc.ScxMappingRequestInfo;
+import cool.scx.core.mvc.ScxMappingRoutingContextInfo;
 import cool.scx.core.mvc.exception.RequiredParamEmptyException;
 import cool.scx.core.type.UploadedEntity;
 import cool.scx.util.StringUtils;
@@ -54,7 +54,7 @@ public final class UploadedEntityMethodParameterHandler implements ScxMappingMet
      * {@inheritDoc}
      */
     @Override
-    public Object handle(Parameter parameter, ScxMappingRequestInfo requestInfo) throws RequiredParamEmptyException {
+    public Object handle(Parameter parameter, ScxMappingRoutingContextInfo info) throws RequiredParamEmptyException {
         var javaType = parameter.getParameterizedType();
         var name = parameter.getName();
         var required = false;
@@ -66,7 +66,7 @@ public final class UploadedEntityMethodParameterHandler implements ScxMappingMet
             required = fromUpload.required();
         }
 
-        var v = findFileUploadByName(requestInfo.routingContext(), name);
+        var v = findFileUploadByName(info.routingContext(), name);
         //为空的时候做两个处理 即必填则报错 非必填则返回 null
         if (v == null && required) {
             throw new RequiredParamEmptyException("必填参数不能为空 !!! 参数名称 [" + name + "] , 参数来源 [FromUpload] , 参数类型 [" + parameter.getParameterizedType().getTypeName() + "]");

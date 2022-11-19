@@ -1,7 +1,7 @@
 package cool.scx.core.mvc.parameter_handler;
 
 import cool.scx.core.mvc.ScxMappingMethodParameterHandler;
-import cool.scx.core.mvc.ScxMappingRequestInfo;
+import cool.scx.core.mvc.ScxMappingRoutingContextInfo;
 import cool.scx.util.ObjectUtils;
 
 import java.lang.reflect.Parameter;
@@ -36,7 +36,7 @@ public final class LastMethodParameterHandler implements ScxMappingMethodParamet
      * {@inheritDoc}
      */
     @Override
-    public Object handle(Parameter parameter, ScxMappingRequestInfo context) throws Exception {
+    public Object handle(Parameter parameter, ScxMappingRoutingContextInfo context) throws Exception {
         var javaType = ObjectUtils.constructType(parameter.getParameterizedType());
         var name = parameter.getName();
         //------ 这里针对没有注解的参数进行赋值猜测 ---------------
