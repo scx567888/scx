@@ -1,7 +1,7 @@
 package cool.scx.core.mvc.parameter_handler;
 
 import cool.scx.core.mvc.ScxMappingMethodParameterHandler;
-import cool.scx.core.mvc.ScxMappingRoutingContextInfo;
+import cool.scx.core.mvc.ScxMappingRequestInfo;
 import io.vertx.ext.web.RoutingContext;
 
 import java.lang.reflect.Parameter;
@@ -31,7 +31,7 @@ public final class RoutingContextMethodParameterHandler implements ScxMappingMet
      * {@inheritDoc}
      */
     @Override
-    public Object handle(Parameter paramInfo, ScxMappingRoutingContextInfo routingContext) {
+    public Object handle(Parameter paramInfo, ScxMappingRequestInfo routingContext) {
         return routingContext.routingContext();
     }
 

@@ -21,11 +21,11 @@ public interface ScxMappingMethodParameterHandler {
     /**
      * 将结果处理并返回
      *
-     * @param parameter                    方法参数
-     * @param scxMappingRoutingContextInfo 包装后的 RoutingContext
+     * @param parameter   方法参数
+     * @param requestInfo 包装后的 RoutingContext
      * @return 处理后的结果
      * @throws java.lang.Exception e
      */
-    Object handle(Parameter parameter, ScxMappingRoutingContextInfo scxMappingRoutingContextInfo) throws Exception;
+    Object handle(Parameter parameter, ScxMappingRequestInfo requestInfo) throws Exception;
 
 }
