@@ -1,6 +1,6 @@
 package cool.scx.core.mvc.parameter_handler;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.JavaType;
 import cool.scx.core.annotation.FromBody;
 import cool.scx.core.mvc.ScxMappingMethodParameterHandler;
 import cool.scx.core.mvc.ScxMappingRoutingContextInfo;
@@ -8,10 +8,10 @@ import cool.scx.core.mvc.exception.ParamConvertException;
 import cool.scx.core.mvc.exception.RequiredParamEmptyException;
 import cool.scx.util.StringUtils;
 
-import java.io.IOException;
 import java.lang.reflect.Parameter;
-import java.lang.reflect.Type;
 
+import static cool.scx.core.mvc.ScxMappingHelper.*;
+import static cool.scx.core.mvc.ScxMappingRoutingContextInfo.ContentType;
 import static cool.scx.util.ObjectUtils.*;
 
 /**
@@ -30,29 +30,39 @@ public final class FromBodyMethodParameterHandler implements ScxMappingMethodPar
     /**
      * a
      *
-     * @param name                         a
-     * @param useAllBody                   a
-     * @param required                     a
-     * @param javaType                     a
-     * @param scxMappingRoutingContextInfo a
+     * @param name       a
+     * @param useAllBody a
+     * @param required   a
+     * @param javaType   a
+     * @param info       a
      * @return a
      * @throws cool.scx.core.mvc.exception.RequiredParamEmptyException a
      * @throws cool.scx.core.mvc.exception.ParamConvertException       a
      */
-    public static Object getValueFromBody(String name, boolean useAllBody, boolean required, Type javaType, ScxMappingRoutingContextInfo scxMappingRoutingContextInfo) throws RequiredParamEmptyException, ParamConvertException {
-        var tempValue = scxMappingRoutingContextInfo.getBody();
-        if (!useAllBody) {
-            var split = name.split("\\.");
-            for (var s : split) {
-                if (tempValue != null) {
-                    tempValue = tempValue.get(s);
-                } else {
-                    break;
-                }
-            }
+    public static Object getValueFromBody(String name, boolean useAllBody, boolean required, JavaType javaType, ScxMappingRoutingContextInfo info) throws RequiredParamEmptyException, ParamConvertException {
+        if (info.contentType() == ContentType.FORM) {
+            return fromFormAttributes(name, useAllBody, required, javaType, info);
+        } else {
+            return fromBody(name, useAllBody, required, javaType, info);
         }
+    }
+
+    /**
+     * <p>fromBody.</p>
+     *
+     * @param name       a {@link java.lang.String} object
+     * @param useAllBody a boolean
+     * @param required   a boolean
+     * @param javaType   a {@link com.fasterxml.jackson.databind.JavaType} object
+     * @param info       a {@link cool.scx.core.mvc.ScxMappingRoutingContextInfo} object
+     * @return a {@link java.lang.Object} object
+     * @throws cool.scx.core.mvc.exception.RequiredParamEmptyException if any.
+     * @throws cool.scx.core.mvc.exception.ParamConvertException       if any.
+     */
+    private static Object fromBody(String name, boolean useAllBody, boolean required, JavaType javaType, ScxMappingRoutingContextInfo info) throws RequiredParamEmptyException, ParamConvertException {
+        var tempValue = getFromJsonNode(name, info.body(), useAllBody);
         // 为了提高性能这里提前做一次校验
-        if (tempValue == null || tempValue.isNull()) {
+        if (tempValue == null || tempValue.isNull() || tempValue.isMissingNode()) {
             if (required) {
                 throw new RequiredParamEmptyException("必填参数不能为空 !!! 参数名称 [" + name + "] , 参数来源 [FromBody, useAllBody=" + useAllBody + "] , 参数类型 [" + javaType.getTypeName() + "]");
             }
@@ -71,16 +81,35 @@ public final class FromBodyMethodParameterHandler implements ScxMappingMethodPar
     }
 
     /**
-     * a
+     * <p>fromFormAttributes.</p>
      *
-     * @param jsonNode a
-     * @param type     a
-     * @param <T>      a
-     * @return a
-     * @throws java.io.IOException a
+     * @param name       a {@link java.lang.String} object
+     * @param useAllBody a boolean
+     * @param required   a boolean
+     * @param javaType   a {@link com.fasterxml.jackson.databind.JavaType} object
+     * @param info       a {@link cool.scx.core.mvc.ScxMappingRoutingContextInfo} object
+     * @return a {@link java.lang.Object} object
+     * @throws cool.scx.core.mvc.exception.RequiredParamEmptyException if any.
+     * @throws cool.scx.core.mvc.exception.ParamConvertException       if any.
      */
-    private static <T> T readValue(JsonNode jsonNode, Type type) throws IOException {
-        return jsonMapper(Option.IGNORE_JSON_IGNORE).readerFor(constructType(type)).readValue(jsonNode);
+    private static Object fromFormAttributes(String name, boolean useAllBody, boolean required, JavaType javaType, ScxMappingRoutingContextInfo info) throws RequiredParamEmptyException, ParamConvertException {
+        var tempValue = getFromMap(name, info.routingContext().request().formAttributes(), useAllBody, javaType);
+        if (tempValue == null) {
+            if (required) {
+                throw new RequiredParamEmptyException("必填参数不能为空 !!! 参数名称 [" + name + "] , 参数来源 [FromBody, useAllBody=" + useAllBody + "] , 参数类型 [" + javaType.getTypeName() + "]");
+            }
+            return null;
+        }
+        Object o;
+        try {
+            o = convertValue(tempValue, javaType, Option.IGNORE_JSON_IGNORE);
+        } catch (Exception e) {
+            throw new ParamConvertException("参数类型转换异常 !!! 参数名称 [" + name + "] , 参数来源 [FromBody, useAllBody=" + useAllBody + "] , 参数类型 [" + javaType.getTypeName() + "] , 详细错误信息 : " + e.getMessage());
+        }
+        if (o == null && required) {
+            throw new RequiredParamEmptyException("必填参数不能为空 !!! 参数名称 [" + name + "] , 参数来源 [FromBody, useAllBody=" + useAllBody + "] , 参数类型 [" + javaType.getTypeName() + "]");
+        }
+        return o;
     }
 
     /**
@@ -95,8 +124,8 @@ public final class FromBodyMethodParameterHandler implements ScxMappingMethodPar
      * {@inheritDoc}
      */
     @Override
-    public Object handle(Parameter parameter, ScxMappingRoutingContextInfo scxMappingRoutingContextInfo) throws Exception {
-        var javaType = parameter.getParameterizedType();
+    public Object handle(Parameter parameter, ScxMappingRoutingContextInfo info) throws Exception {
+        var javaType = constructType(parameter.getParameterizedType());
         var required = false;
         var name = parameter.getName();
         var useAllBody = false;
@@ -110,7 +139,7 @@ public final class FromBodyMethodParameterHandler implements ScxMappingMethodPar
             useAllBody = fromBody.useAllBody();
         }
 
-        return getValueFromBody(name, useAllBody, required, javaType, scxMappingRoutingContextInfo);
+        return getValueFromBody(name, useAllBody, required, javaType, info);
     }
 
 }

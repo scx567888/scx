@@ -163,13 +163,13 @@ public final class ScxMappingConfiguration {
      * @throws java.lang.Exception r
      */
     public Object[] buildMethodParameters(Parameter[] parameters, RoutingContext context) throws Exception {
-        var scxMappingRoutingContextInfo = new ScxMappingRoutingContextInfo(context);
+        var info = new ScxMappingRoutingContextInfo(context);
         var exceptionArrayList = new ArrayList<Exception>();
         var methodParameter = new Object[parameters.length];
         for (int i = 0; i < methodParameter.length; i = i + 1) {
             var methodParameterHandler = findMethodParameterHandler(parameters[i]);
             try {
-                methodParameter[i] = methodParameterHandler.handle(parameters[i], scxMappingRoutingContextInfo);
+                methodParameter[i] = methodParameterHandler.handle(parameters[i], info);
             } catch (ParamConvertException | RequiredParamEmptyException e) {
                 exceptionArrayList.add(e);
             }
