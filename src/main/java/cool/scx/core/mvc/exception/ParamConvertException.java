@@ -17,8 +17,4 @@ public final class ParamConvertException extends Exception {
         super(message);
     }
 
-    public ParamConvertException(String message, Throwable throwable) {
-        super(message, throwable);
-    }
-
 }
