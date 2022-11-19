@@ -54,6 +54,12 @@ public final class ScxMappingRoutingContextInfo {
         };
     }
 
+    /**
+     * <p>readJson.</p>
+     *
+     * @param jsonStr a {@link java.lang.String} object
+     * @return a {@link com.fasterxml.jackson.databind.JsonNode} object
+     */
     public static JsonNode readJson(String jsonStr) {
         try {
             return jsonMapper().readTree(jsonStr);
@@ -62,6 +68,12 @@ public final class ScxMappingRoutingContextInfo {
         }
     }
 
+    /**
+     * <p>readXml.</p>
+     *
+     * @param xmlStr a {@link java.lang.String} object
+     * @return a {@link com.fasterxml.jackson.databind.JsonNode} object
+     */
     public static JsonNode readXml(String xmlStr) {
         try {
             return xmlMapper().readTree(xmlStr);
@@ -89,6 +101,12 @@ public final class ScxMappingRoutingContextInfo {
         }
     }
 
+    /**
+     * <p>initContentType.</p>
+     *
+     * @param ctx a {@link io.vertx.ext.web.RoutingContext} object
+     * @return a {@link cool.scx.core.mvc.ScxMappingRoutingContextInfo.ContentType} object
+     */
     public static ContentType initContentType(RoutingContext ctx) {
         var contentType = ctx.request().headers().get(HttpHeaderNames.CONTENT_TYPE);
         if (contentType != null) {
@@ -117,6 +135,11 @@ public final class ScxMappingRoutingContextInfo {
         return body;
     }
 
+    /**
+     * <p>contentType.</p>
+     *
+     * @return a {@link cool.scx.core.mvc.ScxMappingRoutingContextInfo.ContentType} object
+     */
     public ContentType contentType() {
         return contentType;
     }
