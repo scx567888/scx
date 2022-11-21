@@ -137,7 +137,7 @@
         <scx.mainClass>cool.scx.EmptyMain</scx.mainClass>
 
         <scx-config.version>0.1.4</scx-config.version>
-        <scx-sql.version>0.1.8</scx-sql.version>
+        <scx-sql.version>0.1.9</scx-sql.version>
         <scx-logging.version>0.0.7</scx-logging.version>
         <vertx.version>4.3.5</vertx.version>
         <spring-framework.version>6.0.0</spring-framework.version>
