@@ -6,14 +6,14 @@
     <parent>
         <groupId>cool.scx</groupId>
         <artifactId>scx-parent</artifactId>
-        <version>12</version>
+        <version>13</version>
     </parent>
 
     <artifactId>scx</artifactId>
     <packaging>jar</packaging>
     <name>scx</name>
 
-    <version>1.18.14</version>
+    <version>1.19.0</version>
 
     <description>A Web rapid development framework</description>
     <url>https://github.com/scx567888/scx</url>
@@ -126,7 +126,6 @@
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <version>${testng.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -144,7 +143,6 @@
         <hikaricp.version>5.0.1</hikaricp.version>
         <freemarker.version>2.3.31</freemarker.version>
         <thumbnailator.version>0.4.18</thumbnailator.version>
-        <testng.version>7.6.1</testng.version>
 
     </properties>
 
