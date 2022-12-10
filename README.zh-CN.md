@@ -5,8 +5,8 @@
     <a target="_blank" href="https://github.com/scx567888/scx/actions/workflows/ci.yml">
         <img src="https://github.com/scx567888/scx/actions/workflows/ci.yml/badge.svg" alt="CI"/>
     </a>
-    <a target="_blank" href="https://search.maven.org/artifact/cool.scx/scx">
-        <img src="https://img.shields.io/maven-central/v/cool.scx/scx?color=ff69b4" alt="maven-central"/>
+    <a target="_blank" href="https://search.maven.org/artifact/cool.scx/scx-core">
+        <img src="https://img.shields.io/maven-central/v/cool.scx/scx-core?color=ff69b4" alt="maven-central"/>
     </a>
     <a target="_blank" href="https://github.com/scx567888/scx">
         <img src="https://img.shields.io/github/languages/code-size/scx567888/scx?color=orange" alt="code-size"/>
@@ -29,23 +29,23 @@
         <img src="https://img.shields.io/badge/Spring Framework-d8b125" alt="Spring Framework"/>
     </a>
     <a target="_blank" href="https://github.com/brettwooldridge/HikariCP">
-        <img src="https://img.shields.io/badge/HikariCP-98c510" alt="HikariCP"/>
+        <img src="https://img.shields.io/badge/HikariCP-44be16" alt="HikariCP"/>
     </a>
     <a target="_blank" href="https://github.com/apache/freemarker">
-        <img src="https://img.shields.io/badge/FreeMarker-44be16" alt="FreeMarker"/>
-    </a>
-    <a target="_blank" href="https://github.com/bcgit/bc-java">
-        <img src="https://img.shields.io/badge/Bouncy Castle-37b484" alt="Bouncy Castle"/>
-    </a>
-    <a target="_blank" href="https://github.com/jasypt/jasypt">
-        <img src="https://img.shields.io/badge/Jasypt-29aaf5" alt="Jasypt"/>
+        <img src="https://img.shields.io/badge/FreeMarker-29aaf5" alt="FreeMarker"/>
     </a>
     <a target="_blank" href="https://github.com/coobird/thumbnailator">
         <img src="https://img.shields.io/badge/Thumbnailator-9c27b0" alt="Thumbnailator"/>
     </a>
     <br/>
+    <a target="_blank" href="https://github.com/jasypt/jasypt">
+        <img src="https://img.shields.io/badge/Jasypt-f44336" alt="Jasypt"/>
+    </a>
     <a target="_blank" href="https://github.com/mysql/mysql-connector-j">
-        <img src="https://img.shields.io/badge/MySQL Connector/J-f44336" alt="MySQL Connector/J"/>
+        <img src="https://img.shields.io/badge/MySQL Connector/J-ff8000" alt="MySQL Connector/J"/>
+    </a>
+    <a target="_blank" href="https://github.com/java-native-access/jna">
+        <img src="https://img.shields.io/badge/JNA-d8b125" alt="Java Native Access (JNA)"/>
     </a>
     <a target="_blank" href="https://github.com/qos-ch/slf4j">
         <img src="https://img.shields.io/badge/SLF4J-44be16" alt="SLF4J"/>
@@ -67,7 +67,7 @@
 ``` xml
 <dependency>
     <groupId>cool.scx</groupId>
-    <artifactId>scx</artifactId>
+    <artifactId>scx-core</artifactId>
     <version>{version}</version>
 </dependency>
 ```
