@@ -6,12 +6,12 @@
     <parent>
         <groupId>cool.scx</groupId>
         <artifactId>scx-parent</artifactId>
-        <version>14</version>
+        <version>15</version>
     </parent>
 
     <artifactId>scx</artifactId>
     <packaging>pom</packaging>
-    <version>2.0.2</version>
+    <version>2.0.3</version>
 
     <name>SCX</name>
     <url>https://github.com/scx567888/scx</url>
@@ -68,16 +68,6 @@
                         <!-- 默认 git 占位空文件 -->
                         <exclude>/.gitkeep/</exclude>
                     </excludes>
-                </configuration>
-            </plugin>
-
-            <!-- 对 jar 包等文件进行 gpg 签名  -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <configuration>
-                    <!-- 这里启用签名 -->
-                    <skip>${maven.gpg.skip}</skip>
                 </configuration>
             </plugin>
 
@@ -180,9 +170,6 @@
         <jasypt.version>1.9.3</jasypt.version>
         <mysql-connector-j.version>8.0.30</mysql-connector-j.version>
         <jna.version>5.12.1</jna.version>
-
-        <!-- ************************ 其他配置 ************************ -->
-        <maven.gpg.skip>false</maven.gpg.skip>
 
     </properties>
 
