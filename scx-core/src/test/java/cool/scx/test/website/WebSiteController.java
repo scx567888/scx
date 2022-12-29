@@ -13,6 +13,7 @@ import cool.scx.test.car.Car;
 import cool.scx.test.car.CarService;
 import cool.scx.util.*;
 import cool.scx.util.http.HttpClientHelper;
+import cool.scx.util.zip.ZipBuilder;
 import io.vertx.ext.web.FileUpload;
 import io.vertx.ext.web.RoutingContext;
 import org.springframework.beans.factory.annotation.Autowired;

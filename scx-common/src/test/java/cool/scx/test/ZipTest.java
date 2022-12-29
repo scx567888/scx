@@ -1,6 +1,6 @@
 package cool.scx.test;
 
-import cool.scx.util.ZipBuilder;
+import cool.scx.util.zip.ZipBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -19,7 +19,7 @@ public class ZipTest {
         v.put("///根目录\\scx.txt/", "scxscxscxscx".getBytes(StandardCharsets.UTF_8));
         v.put("根目录\\scx123.txt", "scxscxscxscx".getBytes(StandardCharsets.UTF_8));
         v.put("根目录\\第二层目录\\第三层目录\\\\\\\\\\文件.txt", "文件文件文件".getBytes(StandardCharsets.UTF_8));
-        Assert.assertEquals(615, v.toZipBytes().length);
+        Assert.assertEquals(615, v.toBytes().length);
     }
 
 }

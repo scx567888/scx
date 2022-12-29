@@ -19,6 +19,9 @@ import cool.scx.test.person.PersonService;
 import cool.scx.util.*;
 import cool.scx.util.http.FormData;
 import cool.scx.util.http.HttpClientHelper;
+import cool.scx.util.zip.UnZipBuilder;
+import cool.scx.util.zip.ZipBuilder;
+import cool.scx.util.zip.ZipOption;
 import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.ext.web.handler.FileSystemAccess;
 import io.vertx.ext.web.handler.StaticHandler;
@@ -36,6 +39,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
+import static cool.scx.core.ScxContext.*;
 import static cool.scx.core.eventbus.ZeroCopyMessageCodec.ZERO_COPY_CODEC_NAME;
 import static org.testng.Assert.assertEquals;
 
@@ -43,10 +47,10 @@ public class TestModule extends ScxModule {
 
     public static void main(String[] args) {
         runModule();
-        test0();
-        test1();
-        test2();
-        test3();
+//        test0();
+//        test1();
+//        test2();
+//        test3();
         test4();
     }
 
@@ -71,7 +75,7 @@ public class TestModule extends ScxModule {
 
     @Test
     public static void test0() {
-        var carService = ScxContext.getBean(CarService.class);
+        var carService = getBean(CarService.class);
         var carService1 = new BaseModelService<>(Car.class);
         try {
             if (carService1.count() < 1500) {
@@ -121,7 +125,7 @@ public class TestModule extends ScxModule {
             //插入数据 方式2
             System.err.println("事务开始前数据库中 数据条数 : " + carService.count());
 
-            ScxContext.autoTransaction(() -> {
+            autoTransaction(() -> {
                 System.err.println("现在插入 1 数据条数");
                 var bb = new Car();
                 bb.name = "唯一ID";
@@ -139,7 +143,7 @@ public class TestModule extends ScxModule {
 
     @Test
     public static void test1() {
-        ScxExceptionHelper.wrap(() -> FileUtils.write(ScxContext.getTempPath("test.txt"), "内容2内容2内容2内容2😂😂😂!!!".getBytes(StandardCharsets.UTF_8)));
+        ScxExceptionHelper.wrap(() -> FileUtils.write(getTempPath("test.txt"), "内容2内容2内容2内容2😂😂😂!!!".getBytes(StandardCharsets.UTF_8)));
         var ip = NetUtils.getLocalIPAddress().v4()[0];
         var logger = LoggerFactory.getLogger(TestModule.class);
         //测试 URIBuilder
@@ -151,7 +155,7 @@ public class TestModule extends ScxModule {
                             .addParam("age", 18).toString(),
                     new FormData()
                             .addFile("content", "内容内容内容内容内容".getBytes(StandardCharsets.UTF_8), "", "")
-                            .addFile("content1", ScxContext.getTempPath("test.txt"))
+                            .addFile("content1", getTempPath("test.txt"))
             ).body();
             logger.error("测试请求[{}] : {}", i, stringHttpResponse);
         }
@@ -160,20 +164,20 @@ public class TestModule extends ScxModule {
     @Test
     public static void test2() {
         var car = new Car();
-        ScxContext.eventBus().consumer("test-event-bus", (c) -> {
+        eventBus().consumer("test-event-bus", (c) -> {
             c.reply(car, new DeliveryOptions().setCodecName(ZERO_COPY_CODEC_NAME));
             assertEquals(c.body(), car);
         });
-        ScxContext.eventBus().request("test-event-bus", car, new DeliveryOptions().setCodecName(ZERO_COPY_CODEC_NAME), c -> {
+        eventBus().request("test-event-bus", car, new DeliveryOptions().setCodecName(ZERO_COPY_CODEC_NAME), c -> {
             assertEquals(c.result().body(), car);
         });
-        ScxContext.eventBus().send("test-event-bus", car, new DeliveryOptions().setCodecName(ZERO_COPY_CODEC_NAME));
+        eventBus().send("test-event-bus", car, new DeliveryOptions().setCodecName(ZERO_COPY_CODEC_NAME));
     }
 
     @Test
     public static void test3() {
-        var personService = ScxContext.getBean(PersonService.class);
-        var carService = ScxContext.getBean(CarService.class);
+        var personService = getBean(PersonService.class);
+        var carService = getBean(CarService.class);
         if (personService.count() < 200) {
             List<Car> list = carService.list();
             var ps = new ArrayList<Person>();
@@ -200,26 +204,22 @@ public class TestModule extends ScxModule {
 
     @Test
     public static void test4() {
-        //创建一个压缩文件先
+
         try {
+            //创建一个压缩文件先
             var zipBuilder = new ZipBuilder();
             zipBuilder.put("第一个目录/第二个目录/第二个目录中的文件.txt", "文件内容".getBytes(StandardCharsets.UTF_8));
             zipBuilder.put("第一个目录/这是一系列空目录/这是一系列空目录/这是一系列空目录/这是一系列空目录/这是一系列空目录");
             zipBuilder.put("第一个目录/这不是一系列空目录/这不是一系列空目录/这不是一系列空目录/这不是一系列空目录/这不是一系列空目录");
             zipBuilder.put("第一个目录/这不是一系列空目录/这不是一系列空目录/这不是一系列空目录/这不是一系列空目录/这不是一系列空目录/一个文本文件.txt", "一些内容,一些内容,一些内容,一些内容 下😊😂🤣❤😍😒👌😘".getBytes(StandardCharsets.UTF_8));
-            Path tempPath = ScxContext.getTempPath("aaaaa.zip");
-            byte[] bytes = zipBuilder.toZipBytes();
-            Files.write(tempPath, bytes);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            //解压在压缩
-            ZipUtils.unzip(ScxContext.getTempPath("aaaaa.zip"), ScxContext.getTempPath("hhhh"));
-            ZipUtils.zip(ScxContext.getTempPath("hhhh"), ScxContext.getTempPath("bbbbb.zip"));
+            zipBuilder.toFile(getTempPath("aaaaa.zip"));
+
+            //解压再压缩
+            new UnZipBuilder(getTempPath("aaaaa.zip")).toFile(getTempPath("hhhh"));
+            new ZipBuilder(getTempPath("hhhh")).toFile(getTempPath("bbbbb.zip"));
             //重复一次
-            ZipUtils.unzip(ScxContext.getTempPath("bbbbb.zip"), ScxContext.getTempPath("gggggg"), ZipUtils.ZipOption.INCLUDE_ROOT);
-            ZipUtils.zip(ScxContext.getTempPath("gggggg"), ScxContext.getTempPath("ccccc.zip"), ZipUtils.ZipOption.INCLUDE_ROOT);
+            new UnZipBuilder(getTempPath("bbbbb.zip")).toFile(getTempPath("gggggg"), ZipOption.INCLUDE_ROOT);
+            new ZipBuilder(getTempPath("gggggg"),ZipOption.INCLUDE_ROOT).toFile(getTempPath("ccccc.zip"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -231,22 +231,22 @@ public class TestModule extends ScxModule {
      */
     @Override
     public void start() {
-        ScxContext.router().vertxRouter().route("/static/*")
-                .handler(StaticHandler.create(FileSystemAccess.ROOT, ScxContext.getPathByAppRoot("AppRoot:c\\static").toString())
+        router().vertxRouter().route("/static/*")
+                .handler(StaticHandler.create(FileSystemAccess.ROOT, getPathByAppRoot("AppRoot:c\\static").toString())
                         .setFilesReadOnly(false));
         var logger = LoggerFactory.getLogger(TestModule.class);
         //测试定时任务
-        ScxContext.scheduler().scheduleAtFixedRate((a) -> {
+        scheduler().scheduleAtFixedRate((a) -> {
             //测试
             logger.error("这是通过 ScxContext.scheduleAtFixedRate() 打印的 : 一共 10 次 , 这时第 " + a.runCount() + " 次执行 !!!");
         }, Instant.now().plusSeconds(3), Duration.of(1, ChronoUnit.SECONDS), 10);
 
-        ScxContext.scheduler().schedule((a) -> {
+        scheduler().schedule((a) -> {
             //测试
             logger.error("这是通过 ScxContext.scheduler() 使用 Cron 表达式 打印的 : 这时第 " + a.runCount() + " 次执行 !!!");
         }, new CronTrigger("*/1 * * * * ?"));
 
-        ScxContext.scheduler().scheduleAtFixedRate((a) -> {
+        scheduler().scheduleAtFixedRate((a) -> {
             logger.error("这是通过 ScxContext.scheduleAtFixedRate() 打印的 : 不限次数 不过到 第 10 次手动取消 , 这是第 " + a.runCount() + " 次执行 !!!");
             if (a.runCount() >= 10) {
                 a.scheduledFuture().cancel(false);

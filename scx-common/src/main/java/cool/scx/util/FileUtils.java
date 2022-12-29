@@ -152,7 +152,7 @@ public final class FileUtils {
      * @return a {@link java.lang.String} object
      */
     public static String getNameWithoutExtension(String file) {
-        var fileName = new File(file).getName();
+        var fileName = Path.of(file).getFileName().toString();
         var dotIndex = fileName.lastIndexOf('.');
         return dotIndex == -1 ? fileName : fileName.substring(0, dotIndex);
     }
