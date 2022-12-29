@@ -47,10 +47,10 @@ public class TestModule extends ScxModule {
 
     public static void main(String[] args) {
         runModule();
-//        test0();
-//        test1();
-//        test2();
-//        test3();
+        test0();
+        test1();
+        test2();
+        test3();
         test4();
     }
 
