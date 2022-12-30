@@ -61,7 +61,7 @@ public class UnZipBuilder extends ZipDataSource {
     public String getRootPath(ZipOption... zipOptions) {
         var info = new ZipOption.Info(zipOptions);
         var fileName = path.getFileName().toString();
-        var fileNameWithoutExtension = FileUtils.getNameWithoutExtension(fileName);
+        var fileNameWithoutExtension = FileUtils.getFileNameWithoutExtension(fileName);
         return this.type == PATH && info.includeRoot() ? addSlashEnd(fileNameWithoutExtension) : "";
     }
 

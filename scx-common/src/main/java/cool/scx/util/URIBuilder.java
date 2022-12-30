@@ -96,7 +96,7 @@ public final class URIBuilder {
         int length = value.length;
         int st = findSlashStart(value);
         int len = findSlashEnd(value);
-        return st > 0 || len < length ? new String(Arrays.copyOfRange(value, st, len)) : uri;
+        return st > 0 || len < length ? new String(value, st, len) : uri;
     }
 
     /**
@@ -108,7 +108,7 @@ public final class URIBuilder {
     public static String trimSlashStart(String uri) {
         var value = uri.toCharArray();
         int st = findSlashStart(value);
-        return st > 0 ? new String(Arrays.copyOfRange(value, st, value.length)) : uri;
+        return st > 0 ? new String(value, st, value.length) : uri;
     }
 
     /**
@@ -120,7 +120,7 @@ public final class URIBuilder {
     public static String trimSlashEnd(String uri) {
         var value = uri.toCharArray();
         int len = findSlashEnd(value);
-        return len < value.length ? new String(Arrays.copyOfRange(value, 0, len)) : uri;
+        return len < value.length ? new String(value, 0, len) : uri;
     }
 
     /**
@@ -175,12 +175,28 @@ public final class URIBuilder {
 
     /**
      * 将 \ 分割的全部转换为 / 并清除多余的 /
-     *
+     * 如 a/b/c//d\\e\\f\\\\g/h
      * @param uri a
      * @return a
      */
     public static String normalize(String uri) {
-        return pathSeparator.matcher(uri).replaceAll("/");
+        var chars = uri.toCharArray();
+        var index = 0;
+        var isSeparator = false;
+        for (var c : chars) {
+            if (c == '/' || c == '\\') {
+                if (!isSeparator) {
+                    chars[index] = '/';
+                    index = index + 1;
+                }
+                isSeparator = true;
+            } else {
+                chars[index] = c;
+                index = index + 1;
+                isSeparator = false;
+            }
+        }
+        return new String(chars, 0, index);
     }
 
     /**
