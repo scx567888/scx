@@ -294,8 +294,8 @@ public final class Scx {
         if (this.scxFeatureConfig.get(ScxCoreFeature.SHOW_BANNER)) {
             printBanner();
         }
-        if (this.scxFeatureConfig.get(ScxCoreFeature.SHOW_CORE_CONFIG_INFO)) {
-            this.scxOptions.showCoreConfigInfo();
+        if (this.scxFeatureConfig.get(ScxCoreFeature.SHOW_OPTIONS_INFO)) {
+            this.scxOptions.printInfo();
         }
         //2, 初始化路由 (Http 和 WebSocket)
         this.scxHttpRouter = new ScxHttpRouter(this);

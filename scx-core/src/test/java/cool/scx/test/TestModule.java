@@ -31,8 +31,6 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -62,7 +60,7 @@ public class TestModule extends ScxModule {
                 .addModule(new TestModule())
                 .setArgs(args)
                 .configure(ScxCoreFeature.SHOW_BANNER, true)
-                .configure(ScxCoreFeature.SHOW_CORE_CONFIG_INFO, true)
+                .configure(ScxCoreFeature.SHOW_OPTIONS_INFO, true)
                 .configure(ScxCoreFeature.SHOW_MODULE_LIFE_CYCLE_INFO, true)
                 .configure(ScxCoreFeature.SHOW_START_UP_INFO, true)
                 .configure(ScxCoreFeature.USE_DEVELOPMENT_ERROR_PAGE, true)

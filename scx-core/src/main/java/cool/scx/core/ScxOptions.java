@@ -212,7 +212,7 @@ public final class ScxOptions {
     /**
      * 打印 coreConfig 的信息
      */
-    public void showCoreConfigInfo() {
+    public void printInfo() {
         Ansi.out()
                 .green("Y 服务器 IP 地址                       \t -->\t " + NetUtils.getLocalIPAddress().v4ToString()).ln()
                 .green("Y 端口号                               \t -->\t " + port).ln()

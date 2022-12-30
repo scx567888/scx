@@ -18,7 +18,7 @@ public enum ScxCoreFeature implements ScxFeature<Boolean> {
     /**
      * 显示 coreConfig 的信息
      */
-    SHOW_CORE_CONFIG_INFO(true),
+    SHOW_OPTIONS_INFO(true),
 
     /**
      * 显示模块生命周期信息
