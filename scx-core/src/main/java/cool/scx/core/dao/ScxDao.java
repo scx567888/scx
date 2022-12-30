@@ -2,7 +2,7 @@ package cool.scx.core.dao;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
 import com.zaxxer.hikari.HikariDataSource;
-import cool.scx.core.ScxCoreConfig;
+import cool.scx.core.ScxOptions;
 import cool.scx.sql.SQLRunner;
 import cool.scx.util.ConsoleUtils;
 import org.slf4j.Logger;
@@ -38,7 +38,7 @@ public final class ScxDao {
      *
      * @param coreConfig a
      */
-    public ScxDao(ScxCoreConfig coreConfig) {
+    public ScxDao(ScxOptions coreConfig) {
         var mysqlDataSource = getMySQLDataSource(coreConfig);
         this.dataSource = getHikariDataSource(mysqlDataSource);
         this.sqlRunner = new SQLRunner(this.dataSource);
@@ -59,18 +59,18 @@ public final class ScxDao {
     /**
      * 初始化 MySQL 数据源
      *
-     * @param scxCoreConfig a {@link cool.scx.core.ScxCoreConfig} object
+     * @param scxOptions a {@link ScxOptions} object
      * @return MySQL 数据源
      */
-    private static MysqlDataSource getMySQLDataSource(ScxCoreConfig scxCoreConfig) {
+    private static MysqlDataSource getMySQLDataSource(ScxOptions scxOptions) {
         var mysqlDataSource = new MysqlDataSource();
-        mysqlDataSource.setServerName(scxCoreConfig.dataSourceHost());
-        mysqlDataSource.setDatabaseName(scxCoreConfig.dataSourceDatabase());
-        mysqlDataSource.setUser(scxCoreConfig.dataSourceUsername());
-        mysqlDataSource.setPassword(scxCoreConfig.dataSourcePassword());
-        mysqlDataSource.setPort(scxCoreConfig.dataSourcePort());
+        mysqlDataSource.setServerName(scxOptions.dataSourceHost());
+        mysqlDataSource.setDatabaseName(scxOptions.dataSourceDatabase());
+        mysqlDataSource.setUser(scxOptions.dataSourceUsername());
+        mysqlDataSource.setPassword(scxOptions.dataSourcePassword());
+        mysqlDataSource.setPort(scxOptions.dataSourcePort());
         // 设置参数值
-        for (var parameter : scxCoreConfig.dataSourceParameters()) {
+        for (var parameter : scxOptions.dataSourceParameters()) {
             var p = parameter.split("=");
             if (p.length == 2) {
                 var property = mysqlDataSource.getProperty(p[0]);

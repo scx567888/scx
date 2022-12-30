@@ -107,7 +107,7 @@ public final class ScxDaoHelper {
      * @throws java.sql.SQLException a
      */
     private static void fixTable0(ScxDaoTableInfo tableInfo) throws SQLException {
-        var databaseName = ScxContext.coreConfig().dataSourceDatabase();
+        var databaseName = ScxContext.options().dataSourceDatabase();
         try (var con = ScxContext.dao().dataSource().getConnection()) {
             var existingColumn = getTableAllColumnNames(con, databaseName, tableInfo.tableName());
             if (existingColumn != null) {
@@ -131,7 +131,7 @@ public final class ScxDaoHelper {
      * @throws java.sql.SQLException e
      */
     private static boolean checkNeedFixTable0(ScxDaoTableInfo tableInfo) throws SQLException {
-        var databaseName = ScxContext.coreConfig().dataSourceDatabase();
+        var databaseName = ScxContext.options().dataSourceDatabase();
         try (var con = ScxContext.dao().dataSource().getConnection()) {
             var existingColumn = getTableAllColumnNames(con, databaseName, tableInfo.tableName());
             //这个表不存在

@@ -66,7 +66,7 @@ public final class Scx {
     /**
      * scxCoreConfig
      */
-    private final ScxCoreConfig scxCoreConfig;
+    private final ScxOptions scxOptions;
 
     /**
      * vertx
@@ -131,7 +131,7 @@ public final class Scx {
         this.scxFeatureConfig = scxFeatureConfig;
         this.scxConfig = new ScxConfig(scxConfigSources);
         this.scxModules = initScxModuleMetadataList(scxModules);
-        this.scxCoreConfig = new ScxCoreConfig(this.scxConfig, this.scxEnvironment, this.appKey);
+        this.scxOptions = new ScxOptions(this.scxConfig, this.scxEnvironment, this.appKey);
         //2, 初始化 ScxLog 日志框架
         ScxLoggerConfiguration.init(this.scxConfig, this.scxEnvironment);
         //3, 初始化 Vertx 这里在 log4j2 之后初始化是因为 vertx 需要使用 log4j2 打印日志
@@ -141,9 +141,9 @@ public final class Scx {
         //5, 初始化 BeanFactory
         this.scxBeanFactory = initScxBeanFactory(this.scxModules, this.vertx.nettyEventLoopGroup(), this.scxFeatureConfig);
         //6, 初始化模板
-        this.scxTemplate = new ScxTemplate(this.scxCoreConfig);
+        this.scxTemplate = new ScxTemplate(this.scxOptions);
         //7, 初始化持久层
-        this.scxDao = new ScxDao(this.scxCoreConfig);
+        this.scxDao = new ScxDao(this.scxOptions);
         //8, ScxMapping 配置类
         this.scxMappingConfiguration = new ScxMappingConfiguration();
         //9, 初始化任务调度器
@@ -295,7 +295,7 @@ public final class Scx {
             printBanner();
         }
         if (this.scxFeatureConfig.get(ScxCoreFeature.SHOW_CORE_CONFIG_INFO)) {
-            this.scxCoreConfig.showCoreConfigInfo();
+            this.scxOptions.showCoreConfigInfo();
         }
         //2, 初始化路由 (Http 和 WebSocket)
         this.scxHttpRouter = new ScxHttpRouter(this);
@@ -314,18 +314,18 @@ public final class Scx {
         }
         //6, 初始化服务器
         var httpServerOptions = new HttpServerOptions();
-        if (this.scxCoreConfig.isHttpsEnabled()) {
+        if (this.scxOptions.isHttpsEnabled()) {
             httpServerOptions.setSsl(true)
                     .setKeyStoreOptions(new JksOptions()
-                            .setPath(this.scxCoreConfig.sslPath().toString())
-                            .setPassword(this.scxCoreConfig.sslPassword()));
+                            .setPath(this.scxOptions.sslPath().toString())
+                            .setPassword(this.scxOptions.sslPassword()));
         }
         this.vertxHttpServer = vertx.createHttpServer(httpServerOptions);
         this.vertxHttpServer.requestHandler(this.scxHttpRouter.vertxRouter()).webSocketHandler(this.scxWebSocketRouter);
         //7, 添加程序停止时的钩子函数
         this.addShutdownHook();
         //8, 使用初始端口号 启动服务器
-        this.startServer(this.scxCoreConfig.port());
+        this.startServer(this.scxOptions.port());
         //9, 此处刷新 scxBeanFactory 使其实例化所有符合条件的 Bean
         this.scxBeanFactory.refresh();
     }
@@ -336,15 +336,15 @@ public final class Scx {
      * @param port a int
      */
     private void startServer(int port) {
-        var httpServerFuture = this.vertxHttpServer.listen(port);
-        httpServerFuture.onComplete(http -> {
-            var httpOrHttps = this.scxCoreConfig.isHttpsEnabled() ? "https" : "http";
+        var listenFuture = this.vertxHttpServer.listen(port);
+        listenFuture.onSuccess(server -> {
+            var httpOrHttps = this.scxOptions.isHttpsEnabled() ? "https" : "http";
             var o = Ansi.out().green("服务器启动成功... 用时 " + StopWatch.stopToMillis("ScxRun") + " ms").ln();
             var normalIP = NetUtils.getLocalIPAddress().getNormalIP();
             for (var ip : normalIP) {
-                o.green("> 网络: " + httpOrHttps + "://" + ip + ":" + this.vertxHttpServer.actualPort() + "/").ln();
+                o.green("> 网络: " + httpOrHttps + "://" + ip + ":" + server.actualPort() + "/").ln();
             }
-            o.green("> 本地: " + httpOrHttps + "://localhost:" + this.vertxHttpServer.actualPort() + "/").println();
+            o.green("> 本地: " + httpOrHttps + "://localhost:" + server.actualPort() + "/").println();
         }).onFailure(cause -> {
             if (cause instanceof BindException) {
                 //获取新的端口号然后 重新启动服务器
@@ -415,8 +415,8 @@ public final class Scx {
      *
      * @return a
      */
-    public ScxCoreConfig scxCoreConfig() {
-        return scxCoreConfig;
+    public ScxOptions scxOptions() {
+        return scxOptions;
     }
 
     /**

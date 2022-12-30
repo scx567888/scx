@@ -17,7 +17,7 @@ import java.util.Set;
  * @author scx567888
  * @version 1.3.0
  */
-public final class ScxCoreConfig {
+public final class ScxOptions {
 
     /**
      * 端口号
@@ -86,7 +86,7 @@ public final class ScxCoreConfig {
      * @param scxEnvironment a
      * @param appKey         a
      */
-    public ScxCoreConfig(ScxConfig scxConfig, ScxEnvironment scxEnvironment, String appKey) {
+    public ScxOptions(ScxConfig scxConfig, ScxEnvironment scxEnvironment, String appKey) {
         port = scxConfig.getOrDefault("scx.port", 8080);
         allowedOrigin = scxConfig.getOrDefault("scx.allowed-origin", "*");
         templateRoot = scxConfig.get("scx.template.root", AppRootHandler.of(scxEnvironment, "AppRoot:/c/"));
