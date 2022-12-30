@@ -176,6 +176,7 @@ public final class URIBuilder {
     /**
      * 将 \ 分割的全部转换为 / 并清除多余的 /
      * 如 a/b/c//d\\e\\f\\\\g/h
+     *
      * @param uri a
      * @return a
      */
