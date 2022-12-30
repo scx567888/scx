@@ -216,7 +216,7 @@ public class TestModule extends ScxModule {
             new ZipBuilder(ScxContext.getTempPath("hhhh")).toFile(ScxContext.getTempPath("bbbbb.zip"));
             //重复一次
             new UnZipBuilder(ScxContext.getTempPath("bbbbb.zip")).toFile(ScxContext.getTempPath("gggggg"), ZipOption.INCLUDE_ROOT);
-            new ZipBuilder(ScxContext.getTempPath("gggggg"),ZipOption.INCLUDE_ROOT).toFile(ScxContext.getTempPath("ccccc.zip"));
+            new ZipBuilder(ScxContext.getTempPath("gggggg"), ZipOption.INCLUDE_ROOT).toFile(ScxContext.getTempPath("ccccc.zip"));
         } catch (Exception e) {
             e.printStackTrace();
         }
