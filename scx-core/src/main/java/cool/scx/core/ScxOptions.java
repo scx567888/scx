@@ -17,7 +17,7 @@ import java.util.Set;
  * @author scx567888
  * @version 1.3.0
  */
-public final class ScxCoreConfig {
+public final class ScxOptions {
 
     /**
      * 端口号
@@ -86,7 +86,7 @@ public final class ScxCoreConfig {
      * @param scxEnvironment a
      * @param appKey         a
      */
-    public ScxCoreConfig(ScxConfig scxConfig, ScxEnvironment scxEnvironment, String appKey) {
+    public ScxOptions(ScxConfig scxConfig, ScxEnvironment scxEnvironment, String appKey) {
         port = scxConfig.getOrDefault("scx.port", 8080);
         allowedOrigin = scxConfig.getOrDefault("scx.allowed-origin", "*");
         templateRoot = scxConfig.get("scx.template.root", AppRootHandler.of(scxEnvironment, "AppRoot:/c/"));
@@ -212,7 +212,7 @@ public final class ScxCoreConfig {
     /**
      * 打印 coreConfig 的信息
      */
-    public void showCoreConfigInfo() {
+    public void printInfo() {
         Ansi.out()
                 .green("Y 服务器 IP 地址                       \t -->\t " + NetUtils.getLocalIPAddress().v4ToString()).ln()
                 .green("Y 端口号                               \t -->\t " + port).ln()

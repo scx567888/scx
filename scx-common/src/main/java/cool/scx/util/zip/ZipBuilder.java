@@ -1,0 +1,159 @@
+package cool.scx.util.zip;
+
+import cool.scx.functional.ScxHandlerR;
+import cool.scx.util.StringUtils;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.zip.ZipOutputStream;
+
+import static cool.scx.util.URIBuilder.normalize;
+
+/**
+ * 简化 zip 的创建
+ *
+ * @author scx567888
+ * @version 0.1.4
+ */
+public class ZipBuilder {
+
+    private final List<ZipBuilderItem> items = new ArrayList<>();
+
+    public ZipBuilder() {
+
+    }
+
+    public ZipBuilder(Path path, ZipOption... zipOptions) {
+        this.put(path, zipOptions);
+    }
+
+    /**
+     * <p>put.</p>
+     *
+     * @param zipPath a {@link java.lang.String} object
+     * @return a
+     */
+    public ZipBuilder put(String zipPath) {
+        items.add(new ZipBuilderItem(zipPath));
+        return this;
+    }
+
+    /**
+     * <p>put.</p>
+     *
+     * @param path       a {@link java.lang.String} object
+     * @param zipOptions a {@link java.io.File} object
+     * @return a
+     */
+    public ZipBuilder put(Path path, ZipOption... zipOptions) {
+        items.add(new ZipBuilderItem("", path, zipOptions));
+        return this;
+    }
+
+    /**
+     * <p>put.</p>
+     *
+     * @param path    a {@link java.lang.String} object
+     * @param zipPath a {@link java.io.File} object
+     * @return a
+     */
+    public ZipBuilder put(String zipPath, Path path, ZipOption... zipOptions) {
+        items.add(new ZipBuilderItem(zipPath, path, zipOptions));
+        return this;
+    }
+
+    /**
+     * <p>put.</p>
+     *
+     * @param zipPath a {@link java.lang.String} object
+     * @param bytes   an array of {@link byte} objects
+     * @return a
+     */
+    public ZipBuilder put(String zipPath, byte[] bytes) {
+        items.add(new ZipBuilderItem(zipPath, bytes));
+        return this;
+    }
+
+    /**
+     * <p>put.</p>
+     *
+     * @param zipPath       a {@link java.lang.String} object
+     * @param bytesSupplier a {@link cool.scx.functional.ScxHandlerR} object
+     * @return a {@link ZipBuilder} object
+     */
+    public ZipBuilder put(String zipPath, ScxHandlerR<byte[]> bytesSupplier) {
+        items.add(new ZipBuilderItem(zipPath, bytesSupplier));
+        return this;
+    }
+
+    /**
+     * <p>put.</p>
+     *
+     * @param zipPath     a {@link java.lang.String} object
+     * @param inputStream a {@link java.io.InputStream} object
+     * @return a {@link ZipBuilder} object
+     */
+    public ZipBuilder put(String zipPath, InputStream inputStream) {
+        items.add(new ZipBuilderItem(zipPath, inputStream));
+        return this;
+    }
+
+    /**
+     * <p>remove.</p>
+     *
+     * @param path a {@link java.lang.String} object
+     * @return a
+     */
+    public ZipBuilder remove(String path) {
+        var p = normalize(path);
+        if (StringUtils.notBlank(path)) {
+            items.removeIf(c -> c.path.startsWith(p));
+        }
+        return this;
+    }
+
+    /**
+     * <p>writeToZipOutputStream.</p>
+     *
+     * @param zos a {@link java.util.zip.ZipOutputStream} object
+     */
+    public void writeToZipOutputStream(ZipOutputStream zos) throws IOException {
+        for (var i : items) {
+            i.writeToZipOutputStream(zos);
+        }
+    }
+
+    /**
+     * 将 virtualFile 转换为 byte 数组 方便前台用户下载使用
+     *
+     * @return a
+     * @throws java.lang.Exception a
+     */
+    public byte[] toBytes() throws Exception {
+        var bo = new ByteArrayOutputStream();
+        try (var zos = new ZipOutputStream(bo)) {
+            //遍历目录
+            writeToZipOutputStream(zos);
+        }
+        return bo.toByteArray();
+    }
+
+    /**
+     * 将一个虚拟文件压缩
+     *
+     * @param outputPath a
+     */
+    public void toFile(Path outputPath) throws IOException {
+        // 创建一个新的空的输出文件的临时文件
+        Files.createDirectories(outputPath.getParent());
+        try (var zos = new ZipOutputStream(Files.newOutputStream(outputPath))) {
+            writeToZipOutputStream(zos);
+        }
+    }
+
+}

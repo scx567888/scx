@@ -175,8 +175,8 @@ public final class ScxContext {
      *
      * @return a
      */
-    public static ScxCoreConfig coreConfig() {
-        return scx().scxCoreConfig();
+    public static ScxOptions options() {
+        return scx().scxOptions();
     }
 
     /**

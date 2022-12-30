@@ -133,7 +133,7 @@ public final class URIBuilder {
         int length = value.length;
         int st = 0;
         while (st < length && (value[st] == '/' || value[st] == '\\')) {
-            st++;
+            st = st + 1;
         }
         return st;
     }
@@ -180,7 +180,23 @@ public final class URIBuilder {
      * @return a
      */
     public static String normalize(String uri) {
-        return pathSeparator.matcher(uri).replaceAll("/");
+        var chars = uri.toCharArray();
+        var index = 0;
+        var isSeparator = false;
+        for (var c : chars) {
+            if (c == '/' || c == '\\') {
+                if (!isSeparator) {
+                    chars[index] = '/';
+                    index = index + 1;
+                }
+                isSeparator = true;
+            } else {
+                chars[index] = c;
+                index = index + 1;
+                isSeparator = false;
+            }
+        }
+        return new String(chars, 0, index);
     }
 
     /**

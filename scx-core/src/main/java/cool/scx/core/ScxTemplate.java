@@ -36,18 +36,18 @@ public final class ScxTemplate {
     /**
      * <p>Constructor for ScxTemplate.</p>
      *
-     * @param scxCoreConfig a
+     * @param scxOptions a
      */
-    public ScxTemplate(ScxCoreConfig scxCoreConfig) {
+    public ScxTemplate(ScxOptions scxOptions) {
         // freemarker 配置文件版本
         var wrapperBuilder = new DefaultObjectWrapperBuilder(VERSION);
         //暴露 实体类的 fields 因为 此项目中的实体类没有 get set
         wrapperBuilder.setExposeFields(true);
         freemarkerConfig.setObjectWrapper(wrapperBuilder.build());
         try {
-            freemarkerConfig.setDirectoryForTemplateLoading(scxCoreConfig.templateRoot().toFile());
+            freemarkerConfig.setDirectoryForTemplateLoading(scxOptions.templateRoot().toFile());
         } catch (Exception e) {
-            logger.info("模板目录不存在!!! {}", scxCoreConfig.templateRoot().toString());
+            logger.info("模板目录不存在!!! {}", scxOptions.templateRoot().toString());
         }
 
         //设置 字符集

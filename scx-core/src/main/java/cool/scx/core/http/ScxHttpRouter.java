@@ -55,7 +55,7 @@ public final class ScxHttpRouter {
         //绑定异常处理器
         bindErrorHandler(this.vertxRouter);
         //设置基本的 handler
-        this.corsHandler = initCorsHandler(scx.scxCoreConfig().allowedOrigin());
+        this.corsHandler = initCorsHandler(scx.scxOptions().allowedOrigin());
         this.bodyHandler = initBodyHandler(scx.scxEnvironment().getTempPath(BodyHandler.DEFAULT_UPLOADS_DIRECTORY));
         //注册路由
         this.corsHandlerRoute = this.vertxRouter.route().handler(corsHandler);

@@ -19,6 +19,9 @@ import cool.scx.test.person.PersonService;
 import cool.scx.util.*;
 import cool.scx.util.http.FormData;
 import cool.scx.util.http.HttpClientHelper;
+import cool.scx.util.zip.UnZipBuilder;
+import cool.scx.util.zip.ZipBuilder;
+import cool.scx.util.zip.ZipOption;
 import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.ext.web.handler.FileSystemAccess;
 import io.vertx.ext.web.handler.StaticHandler;
@@ -28,8 +31,6 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -59,7 +60,7 @@ public class TestModule extends ScxModule {
                 .addModule(new TestModule())
                 .setArgs(args)
                 .configure(ScxCoreFeature.SHOW_BANNER, true)
-                .configure(ScxCoreFeature.SHOW_CORE_CONFIG_INFO, true)
+                .configure(ScxCoreFeature.SHOW_OPTIONS_INFO, true)
                 .configure(ScxCoreFeature.SHOW_MODULE_LIFE_CYCLE_INFO, true)
                 .configure(ScxCoreFeature.SHOW_START_UP_INFO, true)
                 .configure(ScxCoreFeature.USE_DEVELOPMENT_ERROR_PAGE, true)
@@ -200,26 +201,22 @@ public class TestModule extends ScxModule {
 
     @Test
     public static void test4() {
-        //创建一个压缩文件先
+
         try {
+            //创建一个压缩文件先
             var zipBuilder = new ZipBuilder();
             zipBuilder.put("第一个目录/第二个目录/第二个目录中的文件.txt", "文件内容".getBytes(StandardCharsets.UTF_8));
             zipBuilder.put("第一个目录/这是一系列空目录/这是一系列空目录/这是一系列空目录/这是一系列空目录/这是一系列空目录");
             zipBuilder.put("第一个目录/这不是一系列空目录/这不是一系列空目录/这不是一系列空目录/这不是一系列空目录/这不是一系列空目录");
             zipBuilder.put("第一个目录/这不是一系列空目录/这不是一系列空目录/这不是一系列空目录/这不是一系列空目录/这不是一系列空目录/一个文本文件.txt", "一些内容,一些内容,一些内容,一些内容 下😊😂🤣❤😍😒👌😘".getBytes(StandardCharsets.UTF_8));
-            Path tempPath = ScxContext.getTempPath("aaaaa.zip");
-            byte[] bytes = zipBuilder.toZipBytes();
-            Files.write(tempPath, bytes);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            //解压在压缩
-            ZipUtils.unzip(ScxContext.getTempPath("aaaaa.zip"), ScxContext.getTempPath("hhhh"));
-            ZipUtils.zip(ScxContext.getTempPath("hhhh"), ScxContext.getTempPath("bbbbb.zip"));
+            zipBuilder.toFile(ScxContext.getTempPath("aaaaa.zip"));
+
+            //解压再压缩
+            new UnZipBuilder(ScxContext.getTempPath("aaaaa.zip")).toFile(ScxContext.getTempPath("hhhh"));
+            new ZipBuilder(ScxContext.getTempPath("hhhh")).toFile(ScxContext.getTempPath("bbbbb.zip"));
             //重复一次
-            ZipUtils.unzip(ScxContext.getTempPath("bbbbb.zip"), ScxContext.getTempPath("gggggg"), ZipUtils.ZipOption.INCLUDE_ROOT);
-            ZipUtils.zip(ScxContext.getTempPath("gggggg"), ScxContext.getTempPath("ccccc.zip"), ZipUtils.ZipOption.INCLUDE_ROOT);
+            new UnZipBuilder(ScxContext.getTempPath("bbbbb.zip")).toFile(ScxContext.getTempPath("gggggg"), ZipOption.INCLUDE_ROOT);
+            new ZipBuilder(ScxContext.getTempPath("gggggg"), ZipOption.INCLUDE_ROOT).toFile(ScxContext.getTempPath("ccccc.zip"));
         } catch (Exception e) {
             e.printStackTrace();
         }

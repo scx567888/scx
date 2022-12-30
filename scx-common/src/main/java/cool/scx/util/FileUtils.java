@@ -133,14 +133,18 @@ public final class FileUtils {
         Files.write(path, bytes, options);
     }
 
+    public static String getFileName(String path) {
+        return new File(path).getName();
+    }
+
     /**
      * 获取拓展名 (不包括 . ) 例 : "cat.png" 会获得 "png"
      *
-     * @param file a {@link java.lang.String} object
+     * @param path a {@link java.lang.String} object
      * @return a {@link java.lang.String} object
      */
-    public static String getFileExtension(String file) {
-        var fileName = new File(file).getName();
+    public static String getExtension(String path) {
+        var fileName = getFileName(path);
         var dotIndex = fileName.lastIndexOf('.');
         return dotIndex == -1 ? "" : fileName.substring(dotIndex + 1);
     }
@@ -148,11 +152,11 @@ public final class FileUtils {
     /**
      * 获取文件名 (不包括拓展名 ) 例 : "cat.png" 会获得 "cat"
      *
-     * @param file a {@link java.lang.String} object
+     * @param path a {@link java.lang.String} object
      * @return a {@link java.lang.String} object
      */
-    public static String getNameWithoutExtension(String file) {
-        var fileName = new File(file).getName();
+    public static String getFileNameWithoutExtension(String path) {
+        var fileName = getFileName(path);
         var dotIndex = fileName.lastIndexOf('.');
         return dotIndex == -1 ? fileName : fileName.substring(0, dotIndex);
     }
