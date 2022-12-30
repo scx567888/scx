@@ -96,7 +96,7 @@ public final class URIBuilder {
         int length = value.length;
         int st = findSlashStart(value);
         int len = findSlashEnd(value);
-        return st > 0 || len < length ? new String(value, st, len) : uri;
+        return st > 0 || len < length ? new String(Arrays.copyOfRange(value, st, len)) : uri;
     }
 
     /**
@@ -108,7 +108,7 @@ public final class URIBuilder {
     public static String trimSlashStart(String uri) {
         var value = uri.toCharArray();
         int st = findSlashStart(value);
-        return st > 0 ? new String(value, st, value.length) : uri;
+        return st > 0 ? new String(Arrays.copyOfRange(value, st, value.length)) : uri;
     }
 
     /**
@@ -120,7 +120,7 @@ public final class URIBuilder {
     public static String trimSlashEnd(String uri) {
         var value = uri.toCharArray();
         int len = findSlashEnd(value);
-        return len < value.length ? new String(value, 0, len) : uri;
+        return len < value.length ? new String(Arrays.copyOfRange(value, 0, len)) : uri;
     }
 
     /**
@@ -133,7 +133,7 @@ public final class URIBuilder {
         int length = value.length;
         int st = 0;
         while (st < length && (value[st] == '/' || value[st] == '\\')) {
-            st++;
+            st = st + 1;
         }
         return st;
     }
