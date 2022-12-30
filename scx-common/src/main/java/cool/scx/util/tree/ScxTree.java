@@ -1,6 +1,6 @@
 package cool.scx.util.tree;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
  * 树接口 注意和 {@link cool.scx.util.tree.ScxTreeModel} 进行区分 两者用途不同
@@ -25,6 +25,6 @@ public interface ScxTree<T extends ScxTree<T>> {
      *
      * @return 子节点集合
      */
-    List<T> children();
+    Collection<T> children();
 
 }

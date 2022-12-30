@@ -336,25 +336,23 @@ public final class Scx {
      * @param port a int
      */
     private void startServer(int port) {
-        this.vertxHttpServer.listen(port, http -> {
-            if (http.succeeded()) {
-                var httpOrHttps = this.scxCoreConfig.isHttpsEnabled() ? "https" : "http";
-                var o = Ansi.out().green("服务器启动成功... 用时 " + StopWatch.stopToMillis("ScxRun") + " ms").ln();
-                var normalIP = NetUtils.getLocalIPAddress().getNormalIP();
-                for (var ip : normalIP) {
-                    o.green("> 网络: " + httpOrHttps + "://" + ip + ":" + this.vertxHttpServer.actualPort() + "/").ln();
+        var httpServerFuture = this.vertxHttpServer.listen(port);
+        httpServerFuture.onComplete(http -> {
+            var httpOrHttps = this.scxCoreConfig.isHttpsEnabled() ? "https" : "http";
+            var o = Ansi.out().green("服务器启动成功... 用时 " + StopWatch.stopToMillis("ScxRun") + " ms").ln();
+            var normalIP = NetUtils.getLocalIPAddress().getNormalIP();
+            for (var ip : normalIP) {
+                o.green("> 网络: " + httpOrHttps + "://" + ip + ":" + this.vertxHttpServer.actualPort() + "/").ln();
+            }
+            o.green("> 本地: " + httpOrHttps + "://localhost:" + this.vertxHttpServer.actualPort() + "/").println();
+        }).onFailure(cause -> {
+            if (cause instanceof BindException) {
+                //获取新的端口号然后 重新启动服务器
+                if (isUseNewPort(port)) {
+                    startServer(0);
                 }
-                o.green("> 本地: " + httpOrHttps + "://localhost:" + this.vertxHttpServer.actualPort() + "/").println();
             } else {
-                var cause = http.cause();
-                if (cause instanceof BindException) {
-                    //获取新的端口号然后 重新启动服务器
-                    if (isUseNewPort(port)) {
-                        startServer(0);
-                    }
-                } else {
-                    cause.printStackTrace();
-                }
+                cause.printStackTrace();
             }
         });
     }
