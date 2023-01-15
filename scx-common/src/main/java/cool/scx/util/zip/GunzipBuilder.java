@@ -1,10 +1,9 @@
 package cool.scx.util.zip;
 
-import cool.scx.functional.ScxHandlerR;
-
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.function.Supplier;
 import java.util.zip.GZIPInputStream;
 
 public class GunzipBuilder extends ZipDataSource {
@@ -17,7 +16,7 @@ public class GunzipBuilder extends ZipDataSource {
         super(bytes);
     }
 
-    public GunzipBuilder(ScxHandlerR<byte[]> bytesSupplier) {
+    public GunzipBuilder(Supplier<byte[]> bytesSupplier) {
         super(bytesSupplier);
     }
 

@@ -1,6 +1,5 @@
 package cool.scx.util.zip;
 
-import cool.scx.functional.ScxHandlerR;
 import cool.scx.util.FileUtils;
 
 import java.io.IOException;
@@ -8,6 +7,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.function.Supplier;
 import java.util.zip.ZipInputStream;
 
 import static cool.scx.util.URIBuilder.addSlashEnd;
@@ -23,7 +23,7 @@ public class UnZipBuilder extends ZipDataSource {
         super(bytes);
     }
 
-    public UnZipBuilder(ScxHandlerR<byte[]> bytesSupplier) {
+    public UnZipBuilder(Supplier<byte[]> bytesSupplier) {
         super(bytesSupplier);
     }
 

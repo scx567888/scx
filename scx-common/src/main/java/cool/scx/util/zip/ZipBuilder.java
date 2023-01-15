@@ -1,6 +1,5 @@
 package cool.scx.util.zip;
 
-import cool.scx.functional.ScxHandlerR;
 import cool.scx.util.StringUtils;
 
 import java.io.ByteArrayOutputStream;
@@ -10,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.zip.ZipOutputStream;
 
 import static cool.scx.util.URIBuilder.normalize;
@@ -83,10 +83,10 @@ public class ZipBuilder {
      * <p>put.</p>
      *
      * @param zipPath       a {@link java.lang.String} object
-     * @param bytesSupplier a {@link cool.scx.functional.ScxHandlerR} object
+     * @param bytesSupplier a {@link Supplier} object
      * @return a {@link ZipBuilder} object
      */
-    public ZipBuilder put(String zipPath, ScxHandlerR<byte[]> bytesSupplier) {
+    public ZipBuilder put(String zipPath, Supplier<byte[]> bytesSupplier) {
         items.add(new ZipBuilderItem(zipPath, bytesSupplier));
         return this;
     }

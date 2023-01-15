@@ -23,7 +23,7 @@ public class BeanHandler<T> implements ResultHandler<T> {
     }
 
     @Override
-    public T handle(ResultSet rs) throws SQLException {
+    public T apply(ResultSet rs) throws SQLException {
         var indexInfo = getIndexInfo(rs.getMetaData(), beanBuilder.fieldSetters());
         return rs.next() ? beanBuilder.createBean(rs, indexInfo) : null;
     }

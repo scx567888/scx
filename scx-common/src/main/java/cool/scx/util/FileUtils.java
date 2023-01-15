@@ -133,6 +133,12 @@ public final class FileUtils {
         Files.write(path, bytes, options);
     }
 
+    /**
+     * <p>getFileName.</p>
+     *
+     * @param path a {@link java.lang.String} object
+     * @return a {@link java.lang.String} object
+     */
     public static String getFileName(String path) {
         return new File(path).getName();
     }

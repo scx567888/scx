@@ -35,7 +35,7 @@ public class BeanListHandler<T> implements ResultHandler<List<T>> {
      * a
      */
     @Override
-    public List<T> handle(ResultSet rs) throws SQLException {
+    public List<T> apply(ResultSet rs) throws SQLException {
         var indexInfo = getIndexInfo(rs.getMetaData(), beanBuilder.fieldSetters());
         var list = new ArrayList<T>();
         //从rs中取出数据，并且封装到ArrayList中

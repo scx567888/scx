@@ -2,8 +2,6 @@ package cool.scx.sql.sql;
 
 
 import cool.scx.sql.SQL;
-import cool.scx.tuple.Tuple2;
-import cool.scx.tuple.Tuples;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -44,8 +42,8 @@ public final class NamedParameterSQL implements SQL {
      */
     public NamedParameterSQL(String namedParameterSQL, Map<String, Object> params) {
         var t = initNamedParameterNameIndex(namedParameterSQL);
-        var normalSQL = t.value0();
-        this.namedParameterNameIndex = t.value1();
+        var normalSQL = t.normalSQL();
+        this.namedParameterNameIndex = t.namedParameterNameIndex();
         this.placeholderSQL = new PlaceholderSQL(normalSQL, mapToArray(params));
     }
 
@@ -57,8 +55,8 @@ public final class NamedParameterSQL implements SQL {
      */
     public NamedParameterSQL(String namedParameterSQL, List<Map<String, Object>> batchParams) {
         var t = initNamedParameterNameIndex(namedParameterSQL);
-        var normalSQL = t.value0();
-        this.namedParameterNameIndex = t.value1();
+        var normalSQL = t.normalSQL();
+        this.namedParameterNameIndex = t.namedParameterNameIndex();
         this.placeholderSQL = new PlaceholderSQL(normalSQL, batchParams.stream().map(this::mapToArray).toList());
     }
 
@@ -68,7 +66,7 @@ public final class NamedParameterSQL implements SQL {
      * @param namedParameterSQL a
      * @return a
      */
-    private static Tuple2<String, String[]> initNamedParameterNameIndex(String namedParameterSQL) {
+    private static NormalSQLAndNamedParameterNameIndex initNamedParameterNameIndex(String namedParameterSQL) {
         var matcher = NAMED_PARAMETER_PATTERN.matcher(namedParameterSQL);
         var normalSQL = new StringBuilder();
         var tempNameIndexList = new ArrayList<String>();
@@ -77,7 +75,7 @@ public final class NamedParameterSQL implements SQL {
             tempNameIndexList.add(matcher.group(1));
         }
         matcher.appendTail(normalSQL);
-        return Tuples.of(normalSQL.toString(), tempNameIndexList.toArray(String[]::new));
+        return new NormalSQLAndNamedParameterNameIndex(normalSQL.toString(), tempNameIndexList.toArray(String[]::new));
     }
 
     @Override
@@ -107,6 +105,10 @@ public final class NamedParameterSQL implements SQL {
             objectArray[i] = objectMap.get(namedParameterNameIndex[i]);
         }
         return objectArray;
+    }
+
+    record NormalSQLAndNamedParameterNameIndex(String normalSQL, String[] namedParameterNameIndex) {
+
     }
 
 }

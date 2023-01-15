@@ -1,6 +1,5 @@
 package cool.scx.util.zip;
 
-import cool.scx.functional.ScxHandlerR;
 import cool.scx.util.StringUtils;
 
 import java.io.IOException;
@@ -10,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.function.Supplier;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -36,7 +36,7 @@ final class ZipBuilderItem extends ZipDataSource {
         this.zipPath = trimSlash(normalize(zipPath));
     }
 
-    ZipBuilderItem(String zipPath, ScxHandlerR<byte[]> bytesSupplier) {
+    ZipBuilderItem(String zipPath, Supplier<byte[]> bytesSupplier) {
         super(bytesSupplier);
         this.zipPath = trimSlash(normalize(zipPath));
     }

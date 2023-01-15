@@ -121,7 +121,7 @@ class BaseWriter implements BaseVo {
      * {@inheritDoc}
      */
     @Override
-    public final void handle(RoutingContext context) {
+    public final void accept(RoutingContext context) {
         switch (type) {
             case BYTE_ARRAY -> sendBytes(context);
             case PATH -> sendFile(context);

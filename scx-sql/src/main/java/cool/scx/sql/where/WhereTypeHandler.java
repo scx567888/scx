@@ -4,8 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.sql.SQL;
 import cool.scx.sql.SQLHelper;
 import cool.scx.sql.exception.ValidParamListIsEmptyException;
-import cool.scx.tuple.Tuple2;
-import cool.scx.tuple.Tuples;
 import cool.scx.util.CaseUtils;
 import cool.scx.util.StringUtils;
 
@@ -28,7 +26,7 @@ interface WhereTypeHandler {
         var columnName = SQLHelper.getColumnName(name, info.useJsonExtract(), info.useOriginalName());
         var whereParams = new Object[]{};
         var whereClause = columnName + " " + whereType.keyWord();
-        return Tuples.of(whereParams, whereClause);
+        return new WhereParamsAndWhereClause(whereParams, whereClause);
     };
 
     /**
@@ -49,7 +47,7 @@ interface WhereTypeHandler {
             whereParams = new Object[]{value1};
         }
         var whereClause = columnName + " " + whereType.keyWord() + " " + v1;
-        return Tuples.of(whereParams, whereClause);
+        return new WhereParamsAndWhereClause(whereParams, whereClause);
     };
 
     WhereTypeHandler NOT_EQUAL_HANDLER = EQUAL_HANDLER;
@@ -72,7 +70,7 @@ interface WhereTypeHandler {
             whereParams = new Object[]{value1};
         }
         var whereClause = columnName + " " + whereType.keyWord() + " CONCAT('%'," + v1 + ",'%')";
-        return Tuples.of(whereParams, whereClause);
+        return new WhereParamsAndWhereClause(whereParams, whereClause);
     };
 
     WhereTypeHandler NOT_LIKE_HANDLER = LIKE_HANDLER;
@@ -94,7 +92,7 @@ interface WhereTypeHandler {
             v1 = "(" + StringUtils.repeat("?", ", ", whereParams.length) + ")";
         }
         var whereClause = columnName + " " + whereType.keyWord() + " " + v1;
-        return Tuples.of(whereParams, whereClause);
+        return new WhereParamsAndWhereClause(whereParams, whereClause);
     };
 
     WhereTypeHandler NOT_IN_HANDLER = IN_HANDLER;
@@ -119,15 +117,15 @@ interface WhereTypeHandler {
             whereParams.add(value2);
         }
         var whereClause = columnName + " " + whereType.keyWord() + " " + v1 + " AND " + v2;
-        return Tuples.of(whereParams.toArray(), whereClause);
+        return new WhereParamsAndWhereClause(whereParams.toArray(), whereClause);
     };
 
     WhereTypeHandler NOT_BETWEEN_HANDLER = BETWEEN_HANDLER;
 
     WhereTypeHandler JSON_CONTAINS_HANDLER = (name, whereType, value1, value2, info) -> {
         var c = SQLHelper.splitIntoColumnNameAndFieldPath(name);
-        var columnName = info.useOriginalName() ? c.value0() : CaseUtils.toSnake(c.value0());
-        if (StringUtils.isBlank(c.value0())) {
+        var columnName = info.useOriginalName() ? c.columnName() : CaseUtils.toSnake(c.columnName());
+        if (StringUtils.isBlank(c.columnName())) {
             throw new IllegalArgumentException("使用 JSON_CONTAINS 时, 查询名称不合法 !!! 字段名 : " + name);
         }
         String v1;
@@ -148,14 +146,14 @@ interface WhereTypeHandler {
             }
         }
         var whereClause = whereType.keyWord() + "(" + columnName;
-        if (StringUtils.notBlank(c.value1())) {
-            whereClause = whereClause + ", " + v1 + ", '$" + c.value1() + "')";
+        if (StringUtils.notBlank(c.fieldPath())) {
+            whereClause = whereClause + ", " + v1 + ", '$" + c.fieldPath() + "')";
         } else {
             whereClause = whereClause + ", " + v1 + ")";
         }
-        return Tuples.of(whereParams, whereClause);
+        return new WhereParamsAndWhereClause(whereParams, whereClause);
     };
 
-    Tuple2<Object[], String> getWhereParamsAndWhereClause(String name, WhereType whereType, Object value1, Object value2, WhereOption.Info info);
+    WhereParamsAndWhereClause getWhereParamsAndWhereClause(String name, WhereType whereType, Object value1, Object value2, WhereOption.Info info);
 
 }

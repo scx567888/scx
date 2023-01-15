@@ -1,13 +1,12 @@
 package cool.scx.util.zip;
 
-import cool.scx.functional.ScxHandlerR;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.function.Supplier;
 
 import static cool.scx.util.zip.ZipDataSource.Type.*;
 
@@ -19,7 +18,7 @@ abstract class ZipDataSource {
     protected final ZipDataSource.Type type;
     protected Path path;
     protected byte[] bytes;
-    protected ScxHandlerR<byte[]> bytesSupplier;
+    protected Supplier<byte[]> bytesSupplier;
     protected InputStream inputStream;
 
     protected ZipDataSource(Path path) {
@@ -32,7 +31,7 @@ abstract class ZipDataSource {
         this.type = BYTES;
     }
 
-    protected ZipDataSource(ScxHandlerR<byte[]> bytesSupplier) {
+    protected ZipDataSource(Supplier<byte[]> bytesSupplier) {
         this.bytesSupplier = bytesSupplier;
         this.type = BYTES_SUPPLIER;
     }
@@ -52,7 +51,7 @@ abstract class ZipDataSource {
             }
             case PATH -> Files.copy(path, out);
             case BYTES -> out.write(bytes);
-            case BYTES_SUPPLIER -> out.write(bytesSupplier.handle());
+            case BYTES_SUPPLIER -> out.write(bytesSupplier.get());
             case INPUT_STREAM -> inputStream.transferTo(out);
         }
     }
@@ -62,7 +61,7 @@ abstract class ZipDataSource {
             case NULL -> InputStream.nullInputStream();
             case PATH -> Files.newInputStream(path);
             case BYTES -> new ByteArrayInputStream(bytes);
-            case BYTES_SUPPLIER -> new ByteArrayInputStream(bytesSupplier.handle());
+            case BYTES_SUPPLIER -> new ByteArrayInputStream(bytesSupplier.get());
             case INPUT_STREAM -> inputStream;
         };
     }

@@ -1,9 +1,8 @@
 package cool.scx.sql;
 
-import cool.scx.functional.ScxHandlerAE;
-import cool.scx.functional.ScxHandlerARE;
-import cool.scx.functional.ScxHandlerE;
-import cool.scx.functional.ScxHandlerRE;
+import cool.scx.functional.ScxConsumer;
+import cool.scx.functional.ScxFunction;
+import cool.scx.functional.ScxRunnable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ForkJoinPool;
 
 import static cool.scx.util.ScxExceptionHelper.wrap;
@@ -66,7 +66,7 @@ public final class SQLRunner {
         try (var preparedStatement = sql.getPreparedStatement(con)) {
             SQLHelper.logSQL(preparedStatement);
             var resultSet = preparedStatement.executeQuery();
-            return resultHandler.handle(resultSet);
+            return resultHandler.apply(resultSet);
         }
     }
 
@@ -127,10 +127,10 @@ public final class SQLRunner {
      * @param handler handler
      * @throws Exception e
      */
-    public static void autoTransaction(Connection con, ScxHandlerAE<Connection, Exception> handler) throws Exception {
+    public static void autoTransaction(Connection con, ScxConsumer<Connection, Exception> handler) throws Exception {
         con.setAutoCommit(false);
         try {
-            handler.handle(con);
+            handler.accept(con);
             con.commit();
         } catch (Exception e) {
             con.rollback();
@@ -147,10 +147,10 @@ public final class SQLRunner {
      * @return a
      * @throws Exception a
      */
-    public static <T> T autoTransaction(Connection con, ScxHandlerARE<Connection, T, Exception> handler) throws Exception {
+    public static <T> T autoTransaction(Connection con, ScxFunction<Connection, T, Exception> handler) throws Exception {
         con.setAutoCommit(false);
         try {
-            T result = handler.handle(con);
+            T result = handler.apply(con);
             con.commit();
             return result;
         } catch (Exception e) {
@@ -286,12 +286,12 @@ public final class SQLRunner {
      *
      * @param handler 连接消费者
      */
-    public void autoTransaction(ScxHandlerE<?> handler) {
+    public void autoTransaction(ScxRunnable<?> handler) {
         wrap(() -> ForkJoinPool.commonPool().submit(() -> {
             try (var con = getConnection(false)) {
                 CONNECTION_THREAD_LOCAL.set(con);
                 try {
-                    handler.handle();
+                    handler.run();
                     con.commit();
                     return null;
                 } catch (Exception e) {
@@ -305,18 +305,18 @@ public final class SQLRunner {
     }
 
     /**
-     * 同上 {@link SQLRunner#autoTransaction(ScxHandlerE)} 但是有返回值
+     * 同上 {@link SQLRunner#autoTransaction(ScxRunnable)} 但是有返回值
      *
      * @param handler a
      * @param <T>     a
      * @return a
      */
-    public <T> T autoTransaction(ScxHandlerRE<T, ?> handler) {
+    public <T> T autoTransaction(Callable<T> handler) {
         return wrap(() -> ForkJoinPool.commonPool().submit(() -> {
             try (var con = getConnection(false)) {
                 CONNECTION_THREAD_LOCAL.set(con);
                 try {
-                    T result = handler.handle();
+                    T result = handler.call();
                     con.commit();
                     return result;
                 } catch (Exception e) {

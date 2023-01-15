@@ -1,8 +1,5 @@
 package cool.scx.core.scheduler;
 
-import cool.scx.functional.ScxHandler;
-import cool.scx.functional.ScxHandlerA;
-import cool.scx.functional.ScxHandlerR;
 import io.netty.channel.EventLoopGroup;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.Trigger;
@@ -10,10 +7,8 @@ import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.concurrent.Future;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
+import java.util.function.Consumer;
 
 /**
  * 针对 spring 的 ${@link org.springframework.scheduling.TaskScheduler}  进行一些简单的封装
@@ -46,18 +41,18 @@ public final class ScxScheduler {
      * @param <R>  a
      * @return a
      */
-    public <R> Future<R> submit(ScxHandlerR<R> task) {
-        return scheduledExecutorService.submit(task::handle);
+    public <R> Future<R> submit(Callable<R> task) {
+        return scheduledExecutorService.submit(task);
     }
 
     /**
      * a
      *
-     * @param scxHandlerV a
+     * @param runnable a
      * @return a
      */
-    public Future<?> submit(ScxHandler scxHandlerV) {
-        return scheduledExecutorService.submit(scxHandlerV::handle);
+    public Future<?> submit(Runnable runnable) {
+        return scheduledExecutorService.submit(runnable);
     }
 
     /**
@@ -69,8 +64,8 @@ public final class ScxScheduler {
      * @param unit         a
      * @return a
      */
-    public <R> ScheduledFuture<R> schedule(ScxHandlerR<R> scxHandlerVR, long delay, TimeUnit unit) {
-        return scheduledExecutorService.schedule(scxHandlerVR::handle, delay, unit);
+    public <R> ScheduledFuture<R> schedule(Callable<R> scxHandlerVR, long delay, TimeUnit unit) {
+        return scheduledExecutorService.schedule(scxHandlerVR, delay, unit);
     }
 
     /**
@@ -80,13 +75,13 @@ public final class ScxScheduler {
      * <p>
      * 因为java无法做到特别精确的计时所以此处单位采取 毫秒
      *
-     * @param scxHandlerV 执行的事件
-     * @param delay       延时执行的时间  单位毫秒
-     * @param unit        a
+     * @param runnable 执行的事件
+     * @param delay    延时执行的时间  单位毫秒
+     * @param unit     a
      * @return a
      */
-    public ScheduledFuture<?> schedule(ScxHandler scxHandlerV, long delay, TimeUnit unit) {
-        return scheduledExecutorService.schedule(scxHandlerV::handle, delay, unit);
+    public ScheduledFuture<?> schedule(Runnable runnable, long delay, TimeUnit unit) {
+        return scheduledExecutorService.schedule(runnable, delay, unit);
     }
 
     /**
@@ -96,7 +91,7 @@ public final class ScxScheduler {
      * @param trigger    a
      * @return a
      */
-    public ScheduledFuture<?> schedule(ScxHandlerA<ScheduleStatus> scxHandler, Trigger trigger) {
+    public ScheduledFuture<?> schedule(Consumer<ScheduleStatus> scxHandler, Trigger trigger) {
         return new CounterRunnable(scxHandler).schedule(taskScheduler, trigger);
     }
 
@@ -108,7 +103,7 @@ public final class ScxScheduler {
      * @param delay      a
      * @return a
      */
-    public ScheduledFuture<?> scheduleWithFixedDelay(ScxHandlerA<ScheduleStatus> scxHandler, Instant startTime, Duration delay) {
+    public ScheduledFuture<?> scheduleWithFixedDelay(Consumer<ScheduleStatus> scxHandler, Instant startTime, Duration delay) {
         return new CounterRunnable(scxHandler).scheduleWithFixedDelay(taskScheduler, startTime, delay);
     }
 
@@ -120,7 +115,7 @@ public final class ScxScheduler {
      * @param delay      a
      * @return a
      */
-    public ScheduledFuture<?> scheduleAtFixedRate(ScxHandlerA<ScheduleStatus> scxHandler, Instant startTime, Duration delay) {
+    public ScheduledFuture<?> scheduleAtFixedRate(Consumer<ScheduleStatus> scxHandler, Instant startTime, Duration delay) {
         return new CounterRunnable(scxHandler).scheduleAtFixedRate(taskScheduler, startTime, delay);
     }
 
@@ -133,7 +128,7 @@ public final class ScxScheduler {
      * @param maxRunCount a
      * @return a
      */
-    public ScheduledFuture<?> scheduleWithFixedDelay(ScxHandlerA<ScheduleStatus> scxHandler, Instant startTime, Duration delay, long maxRunCount) {
+    public ScheduledFuture<?> scheduleWithFixedDelay(Consumer<ScheduleStatus> scxHandler, Instant startTime, Duration delay, long maxRunCount) {
         return new FixedRunCountRunnable(scxHandler, maxRunCount).scheduleWithFixedDelay(taskScheduler, startTime, delay);
     }
 
@@ -146,7 +141,7 @@ public final class ScxScheduler {
      * @param maxRunCount a
      * @return a
      */
-    public ScheduledFuture<?> scheduleAtFixedRate(ScxHandlerA<ScheduleStatus> scxHandler, Instant startTime, Duration delay, long maxRunCount) {
+    public ScheduledFuture<?> scheduleAtFixedRate(Consumer<ScheduleStatus> scxHandler, Instant startTime, Duration delay, long maxRunCount) {
         return new FixedRunCountRunnable(scxHandler, maxRunCount).scheduleAtFixedRate(taskScheduler, startTime, delay);
     }
 
@@ -157,7 +152,7 @@ public final class ScxScheduler {
      * @param delay      a
      * @return a
      */
-    public ScheduledFuture<?> scheduleWithFixedDelay(ScxHandlerA<ScheduleStatus> scxHandler, Duration delay) {
+    public ScheduledFuture<?> scheduleWithFixedDelay(Consumer<ScheduleStatus> scxHandler, Duration delay) {
         return new CounterRunnable(scxHandler).scheduleWithFixedDelay(taskScheduler, delay);
     }
 
@@ -168,7 +163,7 @@ public final class ScxScheduler {
      * @param delay      a
      * @return a
      */
-    public ScheduledFuture<?> scheduleAtFixedRate(ScxHandlerA<ScheduleStatus> scxHandler, Duration delay) {
+    public ScheduledFuture<?> scheduleAtFixedRate(Consumer<ScheduleStatus> scxHandler, Duration delay) {
         return new CounterRunnable(scxHandler).scheduleAtFixedRate(taskScheduler, delay);
     }
 
@@ -180,7 +175,7 @@ public final class ScxScheduler {
      * @param maxRunCount a
      * @return a
      */
-    public ScheduledFuture<?> scheduleWithFixedDelay(ScxHandlerA<ScheduleStatus> scxHandler, Duration delay, long maxRunCount) {
+    public ScheduledFuture<?> scheduleWithFixedDelay(Consumer<ScheduleStatus> scxHandler, Duration delay, long maxRunCount) {
         return new FixedRunCountRunnable(scxHandler, maxRunCount).scheduleWithFixedDelay(taskScheduler, delay);
     }
 
@@ -192,7 +187,7 @@ public final class ScxScheduler {
      * @param maxRunCount a
      * @return a
      */
-    public ScheduledFuture<?> scheduleAtFixedRate(ScxHandlerA<ScheduleStatus> scxHandler, Duration delay, long maxRunCount) {
+    public ScheduledFuture<?> scheduleAtFixedRate(Consumer<ScheduleStatus> scxHandler, Duration delay, long maxRunCount) {
         return new FixedRunCountRunnable(scxHandler, maxRunCount).scheduleAtFixedRate(taskScheduler, delay);
     }
 

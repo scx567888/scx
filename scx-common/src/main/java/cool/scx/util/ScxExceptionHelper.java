@@ -1,10 +1,10 @@
 package cool.scx.util;
 
-import cool.scx.functional.ScxHandlerE;
-import cool.scx.functional.ScxHandlerRE;
+import cool.scx.functional.ScxRunnable;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutionException;
 
@@ -23,9 +23,9 @@ public final class ScxExceptionHelper {
      * @param <T>     a
      * @return a
      */
-    public static <T> T wrap(ScxHandlerRE<T, ?> handler) {
+    public static <T> T wrap(Callable<T> handler) {
         try {
-            return handler.handle();
+            return handler.call();
         } catch (Throwable throwable) {
             throw new ScxWrappedRuntimeException(throwable);
         }
@@ -36,9 +36,9 @@ public final class ScxExceptionHelper {
      *
      * @param handler a
      */
-    public static void wrap(ScxHandlerE<?> handler) {
+    public static void wrap(ScxRunnable<?> handler) {
         try {
-            handler.handle();
+            handler.run();
         } catch (Throwable throwable) {
             throw new ScxWrappedRuntimeException(throwable);
         }
@@ -51,9 +51,9 @@ public final class ScxExceptionHelper {
      * @param <T>     a
      * @return a
      */
-    public static <T> T ignore(ScxHandlerRE<T, ?> handler) {
+    public static <T> T ignore(Callable<T> handler) {
         try {
-            return handler.handle();
+            return handler.call();
         } catch (Throwable throwable) {
             return null;
         }
@@ -67,9 +67,9 @@ public final class ScxExceptionHelper {
      * @param defaultVal a T object
      * @return a
      */
-    public static <T> T ignore(ScxHandlerRE<T, ?> handler, T defaultVal) {
+    public static <T> T ignore(Callable<T> handler, T defaultVal) {
         try {
-            return handler.handle();
+            return handler.call();
         } catch (Throwable throwable) {
             return defaultVal;
         }
@@ -80,9 +80,9 @@ public final class ScxExceptionHelper {
      *
      * @param handler a
      */
-    public static void ignore(ScxHandlerE<?> handler) {
+    public static void ignore(ScxRunnable<?> handler) {
         try {
-            handler.handle();
+            handler.run();
         } catch (Throwable ignored) {
 
         }
@@ -91,12 +91,12 @@ public final class ScxExceptionHelper {
     /**
      * 执行的操作是否有异常 (有异常时不打印信息)
      *
-     * @param exceptionScxHandlerVE a
+     * @param scxRunnable a
      * @return a
      */
-    public static boolean noException(ScxHandlerE<?> exceptionScxHandlerVE) {
+    public static boolean noException(ScxRunnable<?> scxRunnable) {
         try {
-            exceptionScxHandlerVE.handle();
+            scxRunnable.run();
             return true;
         } catch (Throwable throwable) {
             return false;
