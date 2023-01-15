@@ -12,6 +12,13 @@ package cool.scx.functional;
 @FunctionalInterface
 public interface ScxFunction<A, R, E extends Exception> {
 
+    /**
+     * <p>apply.</p>
+     *
+     * @param a a A object
+     * @return a R object
+     * @throws E if any.
+     */
     R apply(A a) throws E;
 
 }

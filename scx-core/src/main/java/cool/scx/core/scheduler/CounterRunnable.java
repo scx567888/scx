@@ -35,7 +35,7 @@ class CounterRunnable implements Runnable {
     /**
      * <p>Constructor for CounterRunnable.</p>
      *
-     * @param scxHandler a {@link Consumer} object
+     * @param scxHandler a {@link java.util.function.Consumer} object
      */
     public CounterRunnable(Consumer<ScheduleStatus> scxHandler) {
         this.scxHandler = scxHandler;

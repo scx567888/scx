@@ -11,6 +11,12 @@ package cool.scx.functional;
 @FunctionalInterface
 public interface ScxConsumer<A, E extends Exception> {
 
+    /**
+     * <p>accept.</p>
+     *
+     * @param a a A object
+     * @throws E if any.
+     */
     void accept(A a) throws E;
 
 }

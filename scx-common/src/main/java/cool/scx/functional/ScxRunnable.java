@@ -10,6 +10,11 @@ package cool.scx.functional;
 @FunctionalInterface
 public interface ScxRunnable<E extends Exception> {
 
+    /**
+     * <p>run.</p>
+     *
+     * @throws E if any.
+     */
     void run() throws E;
 
 }

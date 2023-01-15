@@ -18,7 +18,7 @@ final class FixedRunCountRunnable extends CounterRunnable {
     /**
      * <p>Constructor for FixedRunCountRunnable.</p>
      *
-     * @param scxHandler  a {@link Consumer} object
+     * @param scxHandler  a {@link java.util.function.Consumer} object
      * @param maxRunCount a long
      */
     public FixedRunCountRunnable(Consumer<ScheduleStatus> scxHandler, long maxRunCount) {
