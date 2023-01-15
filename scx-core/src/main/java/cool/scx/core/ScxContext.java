@@ -9,8 +9,7 @@ import cool.scx.core.http.ScxHttpRouter;
 import cool.scx.core.mvc.ScxMappingConfiguration;
 import cool.scx.core.scheduler.ScxScheduler;
 import cool.scx.core.websocket.ScxWebSocketRouter;
-import cool.scx.functional.ScxHandlerE;
-import cool.scx.functional.ScxHandlerRE;
+import cool.scx.functional.ScxRunnable;
 import cool.scx.sql.SQLRunner;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
@@ -18,6 +17,7 @@ import io.vertx.core.http.HttpServer;
 import io.vertx.ext.web.RoutingContext;
 
 import java.nio.file.Path;
+import java.util.concurrent.Callable;
 
 /**
  * 用来存储 整个项目的上下文
@@ -257,7 +257,7 @@ public final class ScxContext {
      *
      * @param handler handler
      */
-    public static void autoTransaction(ScxHandlerE<?> handler) {
+    public static void autoTransaction(ScxRunnable<?> handler) {
         sqlRunner().autoTransaction(handler);
     }
 
@@ -268,7 +268,7 @@ public final class ScxContext {
      * @param <T>     a
      * @return a
      */
-    public static <T> T autoTransaction(ScxHandlerRE<T, ?> handler) {
+    public static <T> T autoTransaction(Callable<T> handler) {
         return sqlRunner().autoTransaction(handler);
     }
 

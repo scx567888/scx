@@ -1,6 +1,5 @@
 package cool.scx.sql.result_handler;
 
-import cool.scx.functional.ScxHandlerR;
 import cool.scx.sql.ResultHandler;
 
 import java.sql.ResultSet;
@@ -9,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * a
@@ -26,7 +26,7 @@ public final class MapListHandler implements ResultHandler<List<Map<String, Obje
     /**
      * a
      */
-    private final ScxHandlerR<Map<String, Object>> mapSupplier;
+    private final Supplier<Map<String, Object>> mapSupplier;
 
     /**
      * <p>Constructor for MapListHandler.</p>
@@ -40,7 +40,7 @@ public final class MapListHandler implements ResultHandler<List<Map<String, Obje
      *
      * @param mapSupplier a
      */
-    public MapListHandler(ScxHandlerR<Map<String, Object>> mapSupplier) {
+    public MapListHandler(Supplier<Map<String, Object>> mapSupplier) {
         this.mapSupplier = mapSupplier;
     }
 
@@ -50,12 +50,12 @@ public final class MapListHandler implements ResultHandler<List<Map<String, Obje
      * a
      */
     @Override
-    public List<Map<String, Object>> handle(ResultSet rs) throws SQLException {
+    public List<Map<String, Object>> apply(ResultSet rs) throws SQLException {
         var list = new ArrayList<Map<String, Object>>();
         var rsm = rs.getMetaData();
         var count = rsm.getColumnCount();
         while (rs.next()) {
-            var map = mapSupplier.handle();
+            var map = mapSupplier.get();
             for (int i = 1; i <= count; i = i + 1) {
                 map.put(rsm.getColumnLabel(i), rs.getObject(i));
             }

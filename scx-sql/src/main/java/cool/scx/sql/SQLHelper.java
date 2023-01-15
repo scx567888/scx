@@ -5,11 +5,8 @@ import com.mysql.cj.MysqlType;
 import com.mysql.cj.NativeQueryBindings;
 import com.mysql.cj.PreparedQuery;
 import com.mysql.cj.jdbc.ClientPreparedStatement;
-import cool.scx.tuple.Tuple2;
-import cool.scx.tuple.Tuples;
 import cool.scx.util.CaseUtils;
 import cool.scx.util.ObjectUtils;
-import cool.scx.util.StringUtils;
 import org.slf4j.Logger;
 
 import java.lang.reflect.Type;
@@ -18,6 +15,8 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.HashMap;
 import java.util.Map;
+
+import static cool.scx.util.StringUtils.notBlank;
 
 /**
  * 构建 SQL 的助手(常用方法) 类
@@ -180,9 +179,9 @@ public final class SQLHelper {
     public static String getColumnName(String name, boolean useJsonExtract, boolean useOriginalName) {
         if (useJsonExtract) {
             var c = splitIntoColumnNameAndFieldPath(name);
-            if (StringUtils.notBlank(c.value0()) && StringUtils.notBlank(c.value1())) {
-                var jsonQueryColumnName = useOriginalName ? c.value0() : CaseUtils.toSnake(c.value0());
-                return jsonQueryColumnName + " -> " + "'$" + c.value1() + "'";
+            if (notBlank(c.columnName()) && notBlank(c.fieldPath())) {
+                var jsonQueryColumnName = useOriginalName ? c.columnName() : CaseUtils.toSnake(c.columnName());
+                return jsonQueryColumnName + " -> " + "'$" + c.fieldPath() + "'";
             } else {
                 throw new IllegalArgumentException("使用 USE_JSON_EXTRACT 时, 查询名称不合法 !!! 字段名 : " + name);
             }
@@ -197,7 +196,7 @@ public final class SQLHelper {
      * @param name a
      * @return a
      */
-    public static Tuple2<String, String> splitIntoColumnNameAndFieldPath(String name) {
+    public static ColumnNameAndFieldPath splitIntoColumnNameAndFieldPath(String name) {
         var charArray = name.toCharArray();
         var index = charArray.length;
         for (int i = 0; i < charArray.length; i = i + 1) {
@@ -209,7 +208,7 @@ public final class SQLHelper {
         }
         var columnName = name.substring(0, index);
         var fieldPath = name.substring(index);
-        return Tuples.of(columnName, fieldPath);
+        return new ColumnNameAndFieldPath(columnName, fieldPath);
     }
 
     /**

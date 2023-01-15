@@ -75,7 +75,7 @@ public final class Json implements BaseVo {
      * sendToClient
      */
     @Override
-    public void handle(RoutingContext context) {
+    public void accept(RoutingContext context) {
         BaseVo.fillJsonContentType(context.request().response()).end(toJson(""));
     }
 

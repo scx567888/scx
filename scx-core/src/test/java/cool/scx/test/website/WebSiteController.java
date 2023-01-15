@@ -11,7 +11,10 @@ import cool.scx.core.type.UploadedEntity;
 import cool.scx.core.vo.*;
 import cool.scx.test.car.Car;
 import cool.scx.test.car.CarService;
-import cool.scx.util.*;
+import cool.scx.util.DigestUtils;
+import cool.scx.util.NetUtils;
+import cool.scx.util.RandomUtils;
+import cool.scx.util.ScxExceptionHelper;
 import cool.scx.util.http.HttpClientHelper;
 import cool.scx.util.zip.ZipBuilder;
 import io.vertx.ext.web.FileUpload;
@@ -73,7 +76,7 @@ public class WebSiteController {
         } catch (Exception e) {
             sb.append("出错了 后滚后数据库中数据条数 : ").append(bean.list().size());
         }
-        Html.ofString(sb.toString()).handle(ctx);
+        Html.ofString(sb.toString()).accept(ctx);
     }
 
     /**

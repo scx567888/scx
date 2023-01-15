@@ -52,8 +52,8 @@ public final class WhereBody {
         }
         this.name = name.trim();
         var w = whereType.getWhereParamsAndWhereClause(this.name, value1, value2, info);
-        this.whereParams = w.value0();
-        this.whereClause = w.value1();
+        this.whereParams = w.whereParams();
+        this.whereClause = w.whereClause();
     }
 
     /**

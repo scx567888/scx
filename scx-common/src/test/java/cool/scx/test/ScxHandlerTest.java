@@ -1,6 +1,5 @@
 package cool.scx.test;
 
-import cool.scx.functional.ScxHandler;
 import org.testng.annotations.Test;
 
 public class ScxHandlerTest {
@@ -11,8 +10,8 @@ public class ScxHandlerTest {
 
     @Test
     public static void test1() {
-        ScxHandler handler = () -> System.out.println(123);
-        handler.handle();
+//        ScxHandler handler = () -> System.out.println(123);
+//        handler.handle();
     }
 
 }

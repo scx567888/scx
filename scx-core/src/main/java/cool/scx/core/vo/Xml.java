@@ -42,7 +42,7 @@ public final class Xml implements BaseVo {
      * sendToClient
      */
     @Override
-    public void handle(RoutingContext context) {
+    public void accept(RoutingContext context) {
         BaseVo.fillXmlContentType(context.request().response()).end(toXml(""));
     }
 

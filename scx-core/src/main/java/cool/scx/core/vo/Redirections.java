@@ -57,7 +57,7 @@ public final class Redirections implements BaseVo {
      * {@inheritDoc}
      */
     @Override
-    public void handle(RoutingContext routingContext) {
+    public void accept(RoutingContext routingContext) {
         routingContext.request().response().putHeader(HttpHeaderNames.LOCATION, location).setStatusCode(statusCode).end();
     }
 

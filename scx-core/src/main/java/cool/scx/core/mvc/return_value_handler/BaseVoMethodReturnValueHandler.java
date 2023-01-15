@@ -30,7 +30,7 @@ public final class BaseVoMethodReturnValueHandler implements ScxMappingMethodRet
      */
     @Override
     public void handle(Object result, RoutingContext context) throws Exception {
-        ((BaseVo) result).handle(context);
+        ((BaseVo) result).accept(context);
     }
 
 }

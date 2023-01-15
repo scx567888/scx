@@ -1,11 +1,10 @@
 package cool.scx.util.zip;
 
-import cool.scx.functional.ScxHandlerR;
-
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.function.Supplier;
 import java.util.zip.GZIPOutputStream;
 
 public class GzipBuilder extends ZipDataSource {
@@ -18,7 +17,7 @@ public class GzipBuilder extends ZipDataSource {
         super(bytes);
     }
 
-    public GzipBuilder(ScxHandlerR<byte[]> bytesSupplier) {
+    public GzipBuilder(Supplier<byte[]> bytesSupplier) {
         super(bytesSupplier);
     }
 

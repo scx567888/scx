@@ -79,7 +79,7 @@ public final class Html implements BaseVo {
      * sendToClient
      */
     @Override
-    public void handle(RoutingContext context) throws TemplateException, IOException {
+    public void accept(RoutingContext context) throws TemplateException, IOException {
         var response = BaseVo.fillHtmlContentType(context.request().response());
         if (useTemplate) {
             var sw = new StringWriter();

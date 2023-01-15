@@ -1,7 +1,6 @@
 package cool.scx.sql;
 
-import cool.scx.functional.ScxHandlerARE;
-import cool.scx.functional.ScxHandlerR;
+import cool.scx.functional.ScxFunction;
 import cool.scx.sql.result_handler.BeanListHandler;
 import cool.scx.sql.result_handler.MapListHandler;
 import cool.scx.sql.result_handler.SingleValueHandler;
@@ -10,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * <p>ResultHandler interface.</p>
@@ -17,7 +17,7 @@ import java.util.Map;
  * @author scx567888
  * @version 0.0.7
  */
-public interface ResultHandler<T> extends ScxHandlerARE<ResultSet, T, SQLException> {
+public interface ResultHandler<T> extends ScxFunction<ResultSet, T, SQLException> {
 
     /**
      * <p>ofBeanList.</p>
@@ -45,7 +45,7 @@ public interface ResultHandler<T> extends ScxHandlerARE<ResultSet, T, SQLExcepti
      * @param mapSupplier a
      * @return a
      */
-    static ResultHandler<List<Map<String, Object>>> ofMapList(ScxHandlerR<Map<String, Object>> mapSupplier) {
+    static ResultHandler<List<Map<String, Object>>> ofMapList(Supplier<Map<String, Object>> mapSupplier) {
         return new MapListHandler(mapSupplier);
     }
 
