@@ -64,6 +64,17 @@ public final class FormData {
         return encoder;
     }
 
+    private static void write0(HttpClientRequest clientRequest, HttpPostRequestEncoder encoder) throws Exception {
+        if (!encoder.isEndOfInput()) {
+            var chunk = encoder.readChunk(ALLOC);
+            var content = chunk.content();
+            var buff = Buffer.buffer(content);
+            clientRequest.write(buff).onSuccess(c -> wrap(() -> write0(clientRequest, encoder)));
+        } else {
+            clientRequest.end();
+        }
+    }
+
     public FormData attribute(String name, Object text) {
         this.items.add(new FormDataItem(name, text.toString()));
         return this;
@@ -116,15 +127,10 @@ public final class FormData {
         });
     }
 
-    private static void write0(HttpClientRequest clientRequest, HttpPostRequestEncoder encoder) throws Exception {
-        if (!encoder.isEndOfInput()) {
-            var chunk = encoder.readChunk(ALLOC);
-            var content = chunk.content();
-            var buff = Buffer.buffer(content);
-            clientRequest.write(buff).onSuccess(c -> wrap(() -> write0(clientRequest, encoder)));
-        } else {
-            clientRequest.end();
-        }
+    enum FormDataItemType {
+        ATTRIBUTE,
+        FILE_UPLOAD_PATH,
+        FILE_UPLOAD_BYTES,
     }
 
     static final class FormDataItem {
@@ -176,12 +182,6 @@ public final class FormData {
             this.contentType = notBlank(contentType) ? contentType : getMimeTypeForExtension("bin");
         }
 
-    }
-
-    enum FormDataItemType {
-        ATTRIBUTE,
-        FILE_UPLOAD_PATH,
-        FILE_UPLOAD_BYTES,
     }
 
 }
