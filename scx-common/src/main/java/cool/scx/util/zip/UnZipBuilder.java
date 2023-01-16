@@ -13,20 +13,46 @@ import java.util.zip.ZipInputStream;
 import static cool.scx.util.URIBuilder.addSlashEnd;
 import static cool.scx.util.zip.ZipDataSource.Type.PATH;
 
+/**
+ * <p>UnZipBuilder class.</p>
+ *
+ * @author scx567888
+ * @version 2.0.4
+ */
 public class UnZipBuilder extends ZipDataSource {
 
+    /**
+     * <p>Constructor for UnZipBuilder.</p>
+     *
+     * @param path a {@link java.nio.file.Path} object
+     */
     public UnZipBuilder(Path path) {
         super(path);
     }
 
+    /**
+     * <p>Constructor for UnZipBuilder.</p>
+     *
+     * @param bytes an array of {@link byte} objects
+     */
     public UnZipBuilder(byte[] bytes) {
         super(bytes);
     }
 
+    /**
+     * <p>Constructor for UnZipBuilder.</p>
+     *
+     * @param bytesSupplier a {@link java.util.function.Supplier} object
+     */
     public UnZipBuilder(Supplier<byte[]> bytesSupplier) {
         super(bytesSupplier);
     }
 
+    /**
+     * <p>Constructor for UnZipBuilder.</p>
+     *
+     * @param inputStream a {@link java.io.InputStream} object
+     */
     public UnZipBuilder(InputStream inputStream) {
         super(inputStream);
     }
@@ -58,6 +84,12 @@ public class UnZipBuilder extends ZipDataSource {
         }
     }
 
+    /**
+     * <p>getRootPath.</p>
+     *
+     * @param zipOptions a {@link cool.scx.util.zip.ZipOption} object
+     * @return a {@link java.lang.String} object
+     */
     public String getRootPath(ZipOption... zipOptions) {
         var info = new ZipOption.Info(zipOptions);
         var fileName = path.getFileName().toString();

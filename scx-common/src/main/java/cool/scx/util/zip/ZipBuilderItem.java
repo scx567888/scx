@@ -18,6 +18,9 @@ import static cool.scx.util.zip.ZipDataSource.Type.PATH;
 
 /**
  * a
+ *
+ * @author scx567888
+ * @version 2.0.4
  */
 final class ZipBuilderItem extends ZipDataSource {
 
@@ -26,31 +29,69 @@ final class ZipBuilderItem extends ZipDataSource {
      */
     final String zipPath;
 
+    /**
+     * <p>Constructor for ZipBuilderItem.</p>
+     *
+     * @param zipPath    a {@link java.lang.String} object
+     * @param path       a {@link java.nio.file.Path} object
+     * @param zipOptions a {@link cool.scx.util.zip.ZipOption} object
+     */
     ZipBuilderItem(String zipPath, Path path, ZipOption... zipOptions) {
         super(path);
         this.zipPath = getZipPathByPath(zipPath, path, zipOptions);
     }
 
+    /**
+     * <p>Constructor for ZipBuilderItem.</p>
+     *
+     * @param zipPath a {@link java.lang.String} object
+     * @param bytes   an array of {@link byte} objects
+     */
     ZipBuilderItem(String zipPath, byte[] bytes) {
         super(bytes);
         this.zipPath = trimSlash(normalize(zipPath));
     }
 
+    /**
+     * <p>Constructor for ZipBuilderItem.</p>
+     *
+     * @param zipPath       a {@link java.lang.String} object
+     * @param bytesSupplier a {@link java.util.function.Supplier} object
+     */
     ZipBuilderItem(String zipPath, Supplier<byte[]> bytesSupplier) {
         super(bytesSupplier);
         this.zipPath = trimSlash(normalize(zipPath));
     }
 
+    /**
+     * <p>Constructor for ZipBuilderItem.</p>
+     *
+     * @param zipPath     a {@link java.lang.String} object
+     * @param inputStream a {@link java.io.InputStream} object
+     */
     ZipBuilderItem(String zipPath, InputStream inputStream) {
         super(inputStream);
         this.zipPath = trimSlash(normalize(zipPath));
     }
 
+    /**
+     * <p>Constructor for ZipBuilderItem.</p>
+     *
+     * @param zipPath a {@link java.lang.String} object
+     */
     ZipBuilderItem(String zipPath) {
         super();
         this.zipPath = addSlashEnd(trimSlash(normalize(zipPath)));
     }
 
+    /**
+     * <p>getZipPathByPath.</p>
+     *
+     * @param zipPath    a {@link java.lang.String} object
+     * @param path       a {@link java.nio.file.Path} object
+     * @param zipOptions a {@link cool.scx.util.zip.ZipOption} object
+     * @return a {@link java.lang.String} object
+     */
     public static String getZipPathByPath(String zipPath, Path path, ZipOption... zipOptions) {
         var info = new ZipOption.Info(zipOptions);
         var fileName = path.getFileName().toString();
@@ -71,6 +112,12 @@ final class ZipBuilderItem extends ZipDataSource {
         }
     }
 
+    /**
+     * <p>writeToZipOutputStream.</p>
+     *
+     * @param zos a {@link java.util.zip.ZipOutputStream} object
+     * @throws java.io.IOException if any.
+     */
     public void writeToZipOutputStream(ZipOutputStream zos) throws IOException {
         //文件夹做特殊处理
         if (type == PATH && Files.isDirectory(path)) {
@@ -82,6 +129,12 @@ final class ZipBuilderItem extends ZipDataSource {
         }
     }
 
+    /**
+     * <p>writeToZipOutputStreamByDirectory.</p>
+     *
+     * @param zos a {@link java.util.zip.ZipOutputStream} object
+     * @throws java.io.IOException if any.
+     */
     public void writeToZipOutputStreamByDirectory(ZipOutputStream zos) throws IOException {
         Files.walkFileTree(path, new SimpleFileVisitor<>() {
 

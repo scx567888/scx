@@ -15,8 +15,8 @@ import cool.scx.util.DigestUtils;
 import cool.scx.util.NetUtils;
 import cool.scx.util.RandomUtils;
 import cool.scx.util.ScxExceptionHelper;
-import cool.scx.util.http.HttpClientHelper;
 import cool.scx.util.zip.ZipBuilder;
+import io.vertx.core.http.RequestOptions;
 import io.vertx.ext.web.FileUpload;
 import io.vertx.ext.web.RoutingContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +28,8 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.zip.ZipOutputStream;
+
+import static io.vertx.core.http.HttpMethod.GET;
 
 /**
  * 简单测试
@@ -126,9 +128,20 @@ public class WebSiteController {
      * @return a {@link cool.scx.core.vo.Html} object
      */
     @ScxMapping(value = "/baidu", method = HttpMethod.GET)
-    public Html TestHttpUtils() throws IOException, InterruptedException {
-        var baiduHtml = HttpClientHelper.get("https://www.baidu.com/").body();
-        return Html.ofString(baiduHtml);
+    public void TestHttpUtils() throws IOException, InterruptedException {
+        var ctx = ScxContext.routingContext();
+        var httpClient = ScxContext.vertx().createHttpClient();
+        //todo 回调地狱 急需一个 await https://github.com/vert-x3/vertx-virtual-threads-incubator
+        httpClient
+                .request(new RequestOptions().setAbsoluteURI("https://www.baidu.com/").setMethod(GET))
+                .onSuccess(c -> {
+                    c.end();
+                    c.response().onSuccess(b -> {
+                        b.body().onSuccess(bb -> {
+                            ScxExceptionHelper.wrap(() -> Html.ofString(bb.toString()).accept(ctx));
+                        });
+                    });
+                });
     }
 
     /**
