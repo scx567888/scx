@@ -169,7 +169,7 @@
         <thumbnailator.version>0.4.19</thumbnailator.version>
         <jasypt.version>1.9.3</jasypt.version>
         <mysql-connector-j.version>8.0.31</mysql-connector-j.version>
-        <jna.version>5.12.1</jna.version>
+        <jna.version>5.13.0</jna.version>
 
     </properties>
 
