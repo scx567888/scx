@@ -97,6 +97,7 @@ public final class FormData {
             var chunk = encoder.readChunk(ALLOC);
             var content = chunk.content();
             var buff = Buffer.buffer(content);
+            //todo 因为没有 await 所以只能用递归的方式写入 (可能造成栈溢出)
             clientRequest.write(buff).onSuccess(c -> wrap(() -> write0(clientRequest, encoder)));
         } else {
             clientRequest.end();
@@ -207,17 +208,16 @@ public final class FormData {
     /**
      * <p>write.</p>
      *
-     * @param clientRequest a {@link io.vertx.core.http.HttpClientRequest} object
+     * @param request a {@link io.vertx.core.http.HttpClientRequest} object
      */
-    public void write(HttpClientRequest clientRequest) {
+    public void write(HttpClientRequest request) {
         wrap(() -> {
-            clientRequest.setChunked(true);
+            request.setChunked(true);
             var tempRequest = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, "/");
             var encoder = initEncoder(this, tempRequest);
-            tempRequest.headers().forEach((k) -> {
-                clientRequest.putHeader(k.getKey(), k.getValue());
-            });
-            write0(clientRequest, encoder);
+            //这里主要是为了将 tempRequest 中的 content-type 同步写入到 request 中
+            tempRequest.headers().forEach((k) -> request.putHeader(k.getKey(), k.getValue()));
+            write0(request, encoder);
         });
     }
 
