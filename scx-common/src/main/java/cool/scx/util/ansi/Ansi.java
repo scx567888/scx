@@ -107,29 +107,12 @@ public final class Ansi {
     }
 
     /**
-     * Create a new ANSI string from the specified elements. Any {@link cool.scx.util.ansi.AnsiElement}s will
-     * be encoded as required.
-     *
-     * @param elements the elements to encode
-     * @return a string of the encoded elements
-     */
-    public static String toString(Object... elements) {
-        StringBuilder sb = new StringBuilder();
-        if (enabled) {
-            buildEnabled(sb, elements);
-        } else {
-            buildDisabled(sb, elements);
-        }
-        return sb.toString();
-    }
-
-    /**
      * a
      *
      * @param sb       a
      * @param elements a
      */
-    private static void buildEnabled(StringBuilder sb, Object[] elements) {
+    private static void buildEnabled(StringBuilder sb, List<Object> elements) {
         boolean writingAnsi = false;
         boolean containsEncoding = false;
         for (var element : elements) {
@@ -163,7 +146,7 @@ public final class Ansi {
      * @param sb       a
      * @param elements a
      */
-    private static void buildDisabled(StringBuilder sb, Object[] elements) {
+    private static void buildDisabled(StringBuilder sb, List<Object> elements) {
         for (var element : elements) {
             if (!(element instanceof AnsiElement) && element != null) {
                 sb.append(element);
@@ -458,7 +441,18 @@ public final class Ansi {
      * <p>print.</p>
      */
     public void print() {
-        System.out.print(toString(this.elements.toArray()));
+        System.out.print(this);
+    }
+
+    @Override
+    public String toString() {
+        var sb = new StringBuilder();
+        if (enabled) {
+            buildEnabled(sb, elements);
+        } else {
+            buildDisabled(sb, elements);
+        }
+        return sb.toString();
     }
 
     /**
