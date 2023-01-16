@@ -116,7 +116,7 @@ public final class FormData {
         });
     }
 
-    private void write0(HttpClientRequest clientRequest, HttpPostRequestEncoder encoder) throws Exception {
+    private static void write0(HttpClientRequest clientRequest, HttpPostRequestEncoder encoder) throws Exception {
         if (!encoder.isEndOfInput()) {
             var chunk = encoder.readChunk(ALLOC);
             var content = chunk.content();
