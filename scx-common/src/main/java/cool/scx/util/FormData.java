@@ -27,7 +27,9 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
 
 /**
- * a
+ * 使用 netty 的 HttpPostRequestEncoder 简化 FormData 的创建
+ * <p/>
+ * 可以直接调用 write() 进行写入 (异步)
  *
  * @author scx567888
  * @version 2.0.4
@@ -42,9 +44,9 @@ public final class FormData {
     private final List<FormDataItem> items = new ArrayList<>();
 
     /**
-     * <p>initEncoder.</p>
+     * 创建编码器
      *
-     * @param formData a {@link cool.scx.util.FormData} object
+     * @param formData FormData
      * @param request  a {@link io.netty.handler.codec.http.HttpRequest} object
      * @return a {@link io.netty.handler.codec.http.multipart.HttpPostRequestEncoder} object
      * @throws io.netty.handler.codec.http.multipart.HttpPostRequestEncoder.ErrorDataEncoderException if any.
@@ -54,19 +56,26 @@ public final class FormData {
         var encoder = new HttpPostRequestEncoder(new DefaultHttpDataFactory(), request, true, UTF_8, EncoderMode.HTML5);
         for (var formDataPart : formData.items) {
             switch (formDataPart.type) {
-                case ATTRIBUTE -> {
-                    encoder.addBodyAttribute(formDataPart.name, formDataPart.attributeValue);
-                }
-                case FILE_UPLOAD_PATH -> {
-                    encoder.addBodyFileUpload(formDataPart.name,
-                            formDataPart.filename, formDataPart.fileUploadPath.toFile(),
-                            formDataPart.contentType, false);
-                }
+                case ATTRIBUTE -> encoder.addBodyAttribute(
+                        formDataPart.name,
+                        formDataPart.attributeValue
+                );
+                case FILE_UPLOAD_PATH -> encoder.addBodyFileUpload(
+                        formDataPart.name,
+                        formDataPart.filename,
+                        formDataPart.fileUploadPath.toFile(),
+                        formDataPart.contentType,
+                        false
+                );
                 case FILE_UPLOAD_BYTES -> {
                     var fileUpload = new MemoryFileUpload(
                             formDataPart.name,
                             formDataPart.filename,
-                            formDataPart.contentType, null, null, formDataPart.fileUploadPathBytes.length);
+                            formDataPart.contentType,
+                            null,
+                            null,
+                            formDataPart.fileUploadPathBytes.length
+                    );
                     fileUpload.setContent(Unpooled.buffer().writeBytes(formDataPart.fileUploadPathBytes));
                     encoder.addBodyHttpData(fileUpload);
                 }
@@ -203,9 +212,9 @@ public final class FormData {
     public void write(HttpClientRequest clientRequest) {
         wrap(() -> {
             clientRequest.setChunked(true);
-            var request = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, "/");
-            var encoder = initEncoder(this, request);
-            request.headers().forEach((k) -> {
+            var tempRequest = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, "/");
+            var encoder = initEncoder(this, tempRequest);
+            tempRequest.headers().forEach((k) -> {
                 clientRequest.putHeader(k.getKey(), k.getValue());
             });
             write0(clientRequest, encoder);
