@@ -30,14 +30,26 @@ import static java.util.Objects.requireNonNull;
  * a
  *
  * @author scx567888
- * @version 0.0.1
+ * @version 2.0.4
  */
 public final class FormData {
 
+    /**
+     * Constant <code>ALLOC</code>
+     */
     private static final UnpooledByteBufAllocator ALLOC = new UnpooledByteBufAllocator(false);
 
     private final List<FormDataItem> items = new ArrayList<>();
 
+    /**
+     * <p>initEncoder.</p>
+     *
+     * @param formData a {@link cool.scx.util.FormData} object
+     * @param request  a {@link io.netty.handler.codec.http.HttpRequest} object
+     * @return a {@link io.netty.handler.codec.http.multipart.HttpPostRequestEncoder} object
+     * @throws io.netty.handler.codec.http.multipart.HttpPostRequestEncoder.ErrorDataEncoderException if any.
+     * @throws java.io.IOException                                                                    if any.
+     */
     private static HttpPostRequestEncoder initEncoder(FormData formData, HttpRequest request) throws ErrorDataEncoderException, IOException {
         var encoder = new HttpPostRequestEncoder(new DefaultHttpDataFactory(), request, true, UTF_8, EncoderMode.HTML5);
         for (var formDataPart : formData.items) {
@@ -64,6 +76,13 @@ public final class FormData {
         return encoder;
     }
 
+    /**
+     * <p>write0.</p>
+     *
+     * @param clientRequest a {@link io.vertx.core.http.HttpClientRequest} object
+     * @param encoder       a {@link io.netty.handler.codec.http.multipart.HttpPostRequestEncoder} object
+     * @throws java.lang.Exception if any.
+     */
     private static void write0(HttpClientRequest clientRequest, HttpPostRequestEncoder encoder) throws Exception {
         if (!encoder.isEndOfInput()) {
             var chunk = encoder.readChunk(ALLOC);
@@ -75,46 +94,112 @@ public final class FormData {
         }
     }
 
+    /**
+     * <p>attribute.</p>
+     *
+     * @param name a {@link java.lang.String} object
+     * @param text a {@link java.lang.Object} object
+     * @return a {@link cool.scx.util.FormData} object
+     */
     public FormData attribute(String name, Object text) {
         this.items.add(new FormDataItem(name, text.toString()));
         return this;
     }
 
+    /**
+     * <p>fileUpload.</p>
+     *
+     * @param name     a {@link java.lang.String} object
+     * @param fileByte an array of {@link byte} objects
+     * @return a {@link cool.scx.util.FormData} object
+     */
     public FormData fileUpload(String name, byte[] fileByte) {
         this.items.add(new FormDataItem(name, fileByte));
         return this;
     }
 
+    /**
+     * <p>fileUpload.</p>
+     *
+     * @param name     a {@link java.lang.String} object
+     * @param fileByte an array of {@link byte} objects
+     * @param filename a {@link java.lang.String} object
+     * @return a {@link cool.scx.util.FormData} object
+     */
     public FormData fileUpload(String name, byte[] fileByte, String filename) {
         this.items.add(new FormDataItem(name, fileByte, filename));
         return this;
     }
 
+    /**
+     * <p>fileUpload.</p>
+     *
+     * @param name        a {@link java.lang.String} object
+     * @param fileByte    an array of {@link byte} objects
+     * @param filename    a {@link java.lang.String} object
+     * @param contentType a {@link java.lang.String} object
+     * @return a {@link cool.scx.util.FormData} object
+     */
     public FormData fileUpload(String name, byte[] fileByte, String filename, String contentType) {
         this.items.add(new FormDataItem(name, fileByte, filename, contentType));
         return this;
     }
 
+    /**
+     * <p>fileUpload.</p>
+     *
+     * @param name     a {@link java.lang.String} object
+     * @param filePath a {@link java.nio.file.Path} object
+     * @return a {@link cool.scx.util.FormData} object
+     */
     public FormData fileUpload(String name, Path filePath) {
         this.items.add(new FormDataItem(name, filePath));
         return this;
     }
 
+    /**
+     * <p>fileUpload.</p>
+     *
+     * @param name     a {@link java.lang.String} object
+     * @param filePath a {@link java.nio.file.Path} object
+     * @param filename a {@link java.lang.String} object
+     * @return a {@link cool.scx.util.FormData} object
+     */
     public FormData fileUpload(String name, Path filePath, String filename) {
         this.items.add(new FormDataItem(name, filePath, filename));
         return this;
     }
 
+    /**
+     * <p>fileUpload.</p>
+     *
+     * @param name        a {@link java.lang.String} object
+     * @param filePath    a {@link java.nio.file.Path} object
+     * @param filename    a {@link java.lang.String} object
+     * @param contentType a {@link java.lang.String} object
+     * @return a {@link cool.scx.util.FormData} object
+     */
     public FormData fileUpload(String name, Path filePath, String filename, String contentType) {
         this.items.add(new FormDataItem(name, filePath, filename, contentType));
         return this;
     }
 
+    /**
+     * <p>remove.</p>
+     *
+     * @param name a {@link java.lang.String} object
+     * @return a {@link cool.scx.util.FormData} object
+     */
     public FormData remove(String name) {
         this.items.removeIf(formDataItem -> name.equals(formDataItem.name));
         return this;
     }
 
+    /**
+     * <p>write.</p>
+     *
+     * @param clientRequest a {@link io.vertx.core.http.HttpClientRequest} object
+     */
     public void write(HttpClientRequest clientRequest) {
         wrap(() -> {
             clientRequest.setChunked(true);

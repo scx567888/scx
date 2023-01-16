@@ -2,6 +2,9 @@ package cool.scx.util.zip;
 
 /**
  * a
+ *
+ * @author scx567888
+ * @version 2.0.4
  */
 public enum ZipOption {
 

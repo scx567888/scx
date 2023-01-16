@@ -24,10 +24,19 @@ public class ZipBuilder {
 
     private final List<ZipBuilderItem> items = new ArrayList<>();
 
+    /**
+     * <p>Constructor for ZipBuilder.</p>
+     */
     public ZipBuilder() {
 
     }
 
+    /**
+     * <p>Constructor for ZipBuilder.</p>
+     *
+     * @param path       a {@link java.nio.file.Path} object
+     * @param zipOptions a {@link cool.scx.util.zip.ZipOption} object
+     */
     public ZipBuilder(Path path, ZipOption... zipOptions) {
         this.put(path, zipOptions);
     }
@@ -58,8 +67,9 @@ public class ZipBuilder {
     /**
      * <p>put.</p>
      *
-     * @param path    a {@link java.lang.String} object
-     * @param zipPath a {@link java.io.File} object
+     * @param path       a {@link java.lang.String} object
+     * @param zipPath    a {@link java.io.File} object
+     * @param zipOptions a {@link cool.scx.util.zip.ZipOption} object
      * @return a
      */
     public ZipBuilder put(String zipPath, Path path, ZipOption... zipOptions) {
@@ -83,8 +93,8 @@ public class ZipBuilder {
      * <p>put.</p>
      *
      * @param zipPath       a {@link java.lang.String} object
-     * @param bytesSupplier a {@link Supplier} object
-     * @return a {@link ZipBuilder} object
+     * @param bytesSupplier a {@link java.util.function.Supplier} object
+     * @return a {@link cool.scx.util.zip.ZipBuilder} object
      */
     public ZipBuilder put(String zipPath, Supplier<byte[]> bytesSupplier) {
         items.add(new ZipBuilderItem(zipPath, bytesSupplier));
@@ -96,7 +106,7 @@ public class ZipBuilder {
      *
      * @param zipPath     a {@link java.lang.String} object
      * @param inputStream a {@link java.io.InputStream} object
-     * @return a {@link ZipBuilder} object
+     * @return a {@link cool.scx.util.zip.ZipBuilder} object
      */
     public ZipBuilder put(String zipPath, InputStream inputStream) {
         items.add(new ZipBuilderItem(zipPath, inputStream));
@@ -121,6 +131,7 @@ public class ZipBuilder {
      * <p>writeToZipOutputStream.</p>
      *
      * @param zos a {@link java.util.zip.ZipOutputStream} object
+     * @throws java.io.IOException if any.
      */
     public void writeToZipOutputStream(ZipOutputStream zos) throws IOException {
         for (var i : items) {
@@ -147,6 +158,7 @@ public class ZipBuilder {
      * 将一个虚拟文件压缩
      *
      * @param outputPath a
+     * @throws java.io.IOException if any.
      */
     public void toFile(Path outputPath) throws IOException {
         // 创建一个新的空的输出文件的临时文件
