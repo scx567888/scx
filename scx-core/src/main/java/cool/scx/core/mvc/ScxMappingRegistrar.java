@@ -260,7 +260,7 @@ public final class ScxMappingRegistrar {
 
     }
 
-    record NormalPathInfo(cool.scx.core.enumeration.HttpMethod httpMethod, String key) {
+    record NormalPathInfo(cool.scx.enumeration.HttpMethod httpMethod, String key) {
 
     }
 

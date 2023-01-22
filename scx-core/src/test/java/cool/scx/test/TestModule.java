@@ -6,6 +6,8 @@ import cool.scx.core.ScxModule;
 import cool.scx.core.base.BaseModelService;
 import cool.scx.core.dao.ScxDaoHelper;
 import cool.scx.core.enumeration.ScxCoreFeature;
+import cool.scx.http_client.ScxHttpClientHelper;
+import cool.scx.http_client.body.FormData;
 import cool.scx.sql.base.Query;
 import cool.scx.sql.base.SelectFilter;
 import cool.scx.sql.base.UpdateFilter;
@@ -21,8 +23,6 @@ import cool.scx.util.zip.UnZipBuilder;
 import cool.scx.util.zip.ZipBuilder;
 import cool.scx.util.zip.ZipOption;
 import io.vertx.core.eventbus.DeliveryOptions;
-import io.vertx.core.http.HttpMethod;
-import io.vertx.core.http.RequestOptions;
 import io.vertx.ext.web.handler.FileSystemAccess;
 import io.vertx.ext.web.handler.StaticHandler;
 import org.slf4j.LoggerFactory;
@@ -30,6 +30,7 @@ import org.springframework.scheduling.support.CronTrigger;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
@@ -143,27 +144,23 @@ public class TestModule extends ScxModule {
         ScxExceptionHelper.wrap(() -> FileUtils.write(ScxContext.getTempPath("test.txt"), "内容2内容2内容2内容2😂😂😂!!!".getBytes(StandardCharsets.UTF_8)));
         var ip = NetUtils.getLocalIPAddress().v4()[0];
         var logger = LoggerFactory.getLogger(TestModule.class);
-        var httpClient = ScxContext.vertx().createHttpClient();
         //测试 URIBuilder
         for (int i = 0; i < 1000; i = i + 1) {
             var s = "http://" + ip + ":8888/test0";
+            try {
+                var stringHttpResponse = ScxHttpClientHelper.post(
+                        URIBuilder.of(s)
+                                .addParam("name", "小明😊123?!@%^&**()_特-殊 字=符")
+                                .addParam("age", 18).toString(),
+                        new FormData()
+                                .fileUpload("content", "内容内容内容内容内容".getBytes(StandardCharsets.UTF_8), "", "")
+                                .fileUpload("content1", ScxContext.getTempPath("test.txt"))
+                ).body();
+                logger.error("测试请求[{}] : {}", i, stringHttpResponse);
+            } catch (IOException | InterruptedException ignored) {
 
-            var url = URIBuilder.of(s)
-                    .addParam("name", "小明😊123?!@%^&**()_特-殊 字=符")
-                    .addParam("age", 18).toString();
+            }
 
-            var formDataParts = new FormData()
-                    .fileUpload("content", "内容内容内容内容内容".getBytes(StandardCharsets.UTF_8))
-                    .fileUpload("content1", ScxContext.getTempPath("test.txt"));
-
-            int finalI = i;
-            httpClient.request(new RequestOptions().setAbsoluteURI(url).setMethod(HttpMethod.POST))
-                    .onSuccess(c -> {
-                        formDataParts.write(c);
-                        c.response().onSuccess(f -> f.body().onSuccess(b -> {
-                            logger.error("测试请求[{}] : {}", finalI, b.toString());
-                        }));
-                    });
         }
     }
 

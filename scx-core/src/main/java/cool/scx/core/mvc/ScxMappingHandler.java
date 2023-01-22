@@ -3,7 +3,7 @@ package cool.scx.core.mvc;
 import cool.scx.core.Scx;
 import cool.scx.core.ScxContext;
 import cool.scx.core.annotation.ScxMapping;
-import cool.scx.core.enumeration.HttpMethod;
+import cool.scx.enumeration.HttpMethod;
 import cool.scx.util.CaseUtils;
 import cool.scx.util.ScxExceptionHelper;
 import cool.scx.util.URIBuilder;
@@ -102,7 +102,7 @@ public final class ScxMappingHandler implements Handler<RoutingContext> {
      * <p>getHttpMethod.</p>
      *
      * @param methodScxMapping a {@link cool.scx.core.annotation.ScxMapping} object
-     * @return an array of {@link cool.scx.core.enumeration.HttpMethod} objects
+     * @return an array of {@link cool.scx.enumeration.HttpMethod} objects
      */
     private static HttpMethod[] initHttpMethod(ScxMapping methodScxMapping) {
         return Stream.of(methodScxMapping.method()).distinct().toArray(HttpMethod[]::new);
