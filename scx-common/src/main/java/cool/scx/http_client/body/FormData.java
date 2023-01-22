@@ -19,8 +19,6 @@ import static cool.scx.util.ScxExceptionHelper.wrap;
 
 /**
  * 使用 netty 的 HttpPostRequestEncoder 简化 FormData 的创建
- * <p>
- * 可以直接调用 write() 进行写入 (异步)
  *
  * @author scx567888
  * @version 2.0.4
