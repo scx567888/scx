@@ -30,6 +30,7 @@ import org.springframework.scheduling.support.CronTrigger;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
@@ -146,15 +147,20 @@ public class TestModule extends ScxModule {
         //测试 URIBuilder
         for (int i = 0; i < 1000; i = i + 1) {
             var s = "http://" + ip + ":8888/test0";
-            var stringHttpResponse = ScxHttpClientHelper.post(
-                    URIBuilder.of(s)
-                            .addParam("name", "小明😊123?!@%^&**()_特-殊 字=符")
-                            .addParam("age", 18).toString(),
-                    new FormData()
-                            .fileUpload("content", "内容内容内容内容内容".getBytes(StandardCharsets.UTF_8), "", "")
-                            .fileUpload("content1", ScxContext.getTempPath("test.txt"))
-            ).body();
-            logger.error("测试请求[{}] : {}", i, stringHttpResponse);
+            try {
+                var stringHttpResponse = ScxHttpClientHelper.post(
+                        URIBuilder.of(s)
+                                .addParam("name", "小明😊123?!@%^&**()_特-殊 字=符")
+                                .addParam("age", 18).toString(),
+                        new FormData()
+                                .fileUpload("content", "内容内容内容内容内容".getBytes(StandardCharsets.UTF_8), "", "")
+                                .fileUpload("content1", ScxContext.getTempPath("test.txt"))
+                ).body();
+                logger.error("测试请求[{}] : {}", i, stringHttpResponse);
+            } catch (IOException | InterruptedException ignored) {
+
+            }
+
         }
     }
 

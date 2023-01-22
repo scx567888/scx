@@ -1,10 +1,9 @@
 package cool.scx.http_client;
 
+import java.io.IOException;
 import java.net.http.HttpClient;
 import java.net.http.HttpResponse;
 import java.util.concurrent.CompletableFuture;
-
-import static cool.scx.util.ScxExceptionHelper.wrap;
 
 public class ScxHttpClient {
 
@@ -26,8 +25,8 @@ public class ScxHttpClient {
         throw new UnsupportedOperationException();
     }
 
-    public ScxHttpClientResponse request(ScxHttpClientRequest request) {
-        var response = wrap(() -> client.send(request.createHttpRequest(), HttpResponse.BodyHandlers.ofByteArray()));
+    public ScxHttpClientResponse request(ScxHttpClientRequest request) throws IOException, InterruptedException {
+        var response = client.send(request.createHttpRequest(), HttpResponse.BodyHandlers.ofByteArray());
         return new ScxHttpClientResponse(response);
     }
 

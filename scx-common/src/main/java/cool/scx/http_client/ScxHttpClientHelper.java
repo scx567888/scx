@@ -1,5 +1,6 @@
 package cool.scx.http_client;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.concurrent.CompletableFuture;
 
@@ -9,7 +10,7 @@ public final class ScxHttpClientHelper {
 
     private final static ScxHttpClient defaultClient = new ScxHttpClient();
 
-    public static ScxHttpClientResponse request(ScxHttpClientRequest request) {
+    public static ScxHttpClientResponse request(ScxHttpClientRequest request) throws IOException, InterruptedException {
         return defaultClient.request(request);
     }
 
@@ -17,7 +18,7 @@ public final class ScxHttpClientHelper {
         return defaultClient.requestAsync(request);
     }
 
-    public static ScxHttpClientResponse get(String uri) {
+    public static ScxHttpClientResponse get(String uri) throws IOException, InterruptedException {
         return request(new ScxHttpClientRequest().method(GET).uri(URI.create(uri)));
     }
 
@@ -25,7 +26,7 @@ public final class ScxHttpClientHelper {
         return requestAsync(new ScxHttpClientRequest().method(GET).uri(URI.create(uri)));
     }
 
-    public static ScxHttpClientResponse post(String uri, ScxHttpClientRequestBody body) {
+    public static ScxHttpClientResponse post(String uri, ScxHttpClientRequestBody body) throws IOException, InterruptedException {
         return request(new ScxHttpClientRequest().method(POST).body(body).uri(URI.create(uri)));
     }
 
@@ -33,7 +34,7 @@ public final class ScxHttpClientHelper {
         return requestAsync(new ScxHttpClientRequest().method(POST).body(body).uri(URI.create(uri)));
     }
 
-    public static ScxHttpClientResponse put(String uri, ScxHttpClientRequestBody body) {
+    public static ScxHttpClientResponse put(String uri, ScxHttpClientRequestBody body) throws IOException, InterruptedException {
         return request(new ScxHttpClientRequest().method(PUT).body(body).uri(URI.create(uri)));
     }
 
@@ -41,7 +42,7 @@ public final class ScxHttpClientHelper {
         return requestAsync(new ScxHttpClientRequest().method(PUT).body(body).uri(URI.create(uri)));
     }
 
-    public static ScxHttpClientResponse delete(String uri, ScxHttpClientRequestBody body) {
+    public static ScxHttpClientResponse delete(String uri, ScxHttpClientRequestBody body) throws IOException, InterruptedException {
         return request(new ScxHttpClientRequest().method(DELETE).body(body).uri(URI.create(uri)));
     }
 
