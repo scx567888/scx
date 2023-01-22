@@ -1,4 +1,4 @@
-package cool.scx.core.enumeration;
+package cool.scx.enumeration;
 
 /**
  * <p>HttpMethod class.</p>
@@ -8,50 +8,23 @@ package cool.scx.core.enumeration;
  */
 public enum HttpMethod {
 
-    /**
-     * a
-     */
-    POST,
+    OPTION,
 
-    /**
-     * a
-     */
     GET,
 
-    /**
-     * a
-     */
-    PUT,
-
-    /**
-     * a
-     */
-    DELETE,
-
-    /**
-     * a
-     */
     HEAD,
 
-    /**
-     * a
-     */
-    TRANCE,
+    POST,
 
-    /**
-     * a
-     */
-    CONNECT,
+    PUT,
 
-    /**
-     * a
-     */
     PATCH,
 
-    /**
-     * a
-     */
-    OPTION;
+    DELETE,
+
+    TRANCE,
+
+    CONNECT;
 
     private final io.vertx.core.http.HttpMethod vertxMethod;
 

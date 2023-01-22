@@ -1,6 +1,6 @@
 package cool.scx.core.annotation;
 
-import cool.scx.core.enumeration.HttpMethod;
+import cool.scx.enumeration.HttpMethod;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

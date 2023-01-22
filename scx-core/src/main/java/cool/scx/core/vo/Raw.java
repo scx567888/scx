@@ -1,7 +1,6 @@
 package cool.scx.core.vo;
 
-import cool.scx.core.enumeration.RawType;
-import io.vertx.core.http.impl.MimeMapping;
+import cool.scx.enumeration.RawType;
 
 import java.io.InputStream;
 import java.nio.file.Path;
@@ -19,10 +18,10 @@ public final class Raw extends BaseWriter {
      * <p>Constructor for Raw.</p>
      *
      * @param inputStream a {@link java.io.InputStream} object
-     * @param rawType     a {@link cool.scx.core.enumeration.RawType} object
+     * @param rawType     a {@link cool.scx.enumeration.RawType} object
      */
     private Raw(InputStream inputStream, RawType rawType) {
-        super(inputStream, MimeMapping.getMimeTypeForExtension(rawType.name().toLowerCase()), "inline");
+        super(inputStream, rawType.mimeType(), "inline");
     }
 
     /**
@@ -38,10 +37,10 @@ public final class Raw extends BaseWriter {
      * <p>Constructor for Raw.</p>
      *
      * @param bytes   an array of {@link byte} objects
-     * @param rawType a {@link cool.scx.core.enumeration.RawType} object
+     * @param rawType a {@link cool.scx.enumeration.RawType} object
      */
     private Raw(byte[] bytes, RawType rawType) {
-        super(bytes, MimeMapping.getMimeTypeForExtension(rawType.name().toLowerCase()), "inline");
+        super(bytes, rawType.mimeType(), "inline");
     }
 
     /**
