@@ -44,6 +44,10 @@ public class ScxHttpClientRequest {
         return this;
     }
 
+    public ScxHttpClientRequest uri(String uri) {
+        return this.uri(URI.create(uri));
+    }
+
     public ScxHttpClientRequest setHeader(String name, String value) {
         builder.header(name, value);
         return this;
