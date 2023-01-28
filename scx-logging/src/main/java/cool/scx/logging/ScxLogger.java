@@ -82,9 +82,9 @@ public class ScxLogger {
         if (needWriteToConsole(t)) {
             //错误级别的我们就采用 err 打印 其余的 正常输出
             if (level.toInt() <= ScxLoggingLevel.ERROR.toInt()) {
-//                System.err.print(message);
+                System.err.print(message);
             } else {
-//                System.out.print(message);
+                System.out.print(message);
             }
         }
 
