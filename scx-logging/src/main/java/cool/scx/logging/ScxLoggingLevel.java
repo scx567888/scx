@@ -3,7 +3,7 @@ package cool.scx.logging;
 import java.util.Objects;
 
 /**
- * a
+ * ScxLoggingLevel 日志级别
  *
  * @author scx567888
  * @version 0.0.1
@@ -11,89 +11,93 @@ import java.util.Objects;
 public enum ScxLoggingLevel {
 
     /**
-     * a
+     * OFF
      */
-    OFF(0, "OFF"),
+    OFF(0),
 
     /**
-     * a
+     * FATAL
      */
-    FATAL(10, "FATAL"),
+    FATAL(10),
 
     /**
-     * a
+     * ERROR
      */
-    ERROR(20, "ERROR"),
+    ERROR(20),
 
     /**
-     * a
+     * WARN
      */
-    WARN(30, "WARN"),
+    WARN(30),
 
     /**
-     * a
+     * INFO
      */
-    INFO(40, "INFO"),
+    INFO(40),
 
     /**
-     * a
+     * DEBUG
      */
-    DEBUG(50, "DEBUG"),
+    DEBUG(50),
 
     /**
-     * a
+     * TRACE
      */
-    TRACE(60, "TRACE"),
+    TRACE(60),
 
     /**
-     * a
+     * ALL
      */
-    ALL(70, "ALL");
+    ALL(70);
 
     /**
-     * a
+     * int 级别
      */
     private final int levelInt;
 
     /**
-     * a
+     * 定长名称 (5位), 不足的补齐空格 方便打印时更好的格式化
      */
-    private final String levelStr;
-
-    /**
-     * a
-     */
-    private final String fixedLengthStr;
+    private final String fixedLengthName;
 
     /**
      * <p>Constructor for ScxLoggingLevel.</p>
      *
      * @param i a int
-     * @param s a {@link String} object
      */
-    ScxLoggingLevel(int i, String s) {
-        levelInt = i;
-        levelStr = s;
-        fixedLengthStr = (levelStr + "  ").substring(0, 5);
+    ScxLoggingLevel(int i) {
+        this.levelInt = i;
+        this.fixedLengthName = (name() + "  ").substring(0, 5);
     }
 
     /**
-     * a
+     * 根据名称获取  ScxLoggingLevel 可使用简写
      *
-     * @param levelName a
-     * @return a
+     * @param levelName 名称 可选值 [OFF, FATAL, ERROR, WARN, INFO, DEBUG, TRACE, ALL]  以及对应的简写形式 [O, F, E, W, I, D, T, A]
+     * @return ScxLoggingLevel
      */
     public static ScxLoggingLevel of(String levelName) {
         Objects.requireNonNull(levelName, "levelName 不能为空 !!!");
-        return ScxLoggingLevel.valueOf(levelName.trim().toUpperCase());
+        var s = levelName.trim().toUpperCase();
+        return switch (s) {
+            case "OFF", "O" -> OFF;
+            case "FATAL", "F" -> FATAL;
+            case "ERROR", "E" -> ERROR;
+            case "WARN", "W" -> WARN;
+            case "INFO", "I" -> INFO;
+            case "DEBUG", "D" -> DEBUG;
+            case "TRACE", "T" -> TRACE;
+            case "ALL", "A" -> ALL;
+            default -> throw new IllegalArgumentException("levelName 值不合法 :" + levelName);
+        };
     }
 
     /**
-     * a
+     * 根据名称获取  ScxLoggingLevel 可使用简写 失败则采用默认值
      *
-     * @param levelName    a
-     * @param defaultLevel a
-     * @return a
+     * @param levelName    名称
+     * @param defaultLevel 默认的级别
+     * @return ScxLoggingLevel
      */
     public static ScxLoggingLevel of(String levelName, ScxLoggingLevel defaultLevel) {
         try {
@@ -104,7 +108,7 @@ public enum ScxLoggingLevel {
     }
 
     /**
-     * a
+     * levelInt
      *
      * @return a
      */
@@ -113,20 +117,12 @@ public enum ScxLoggingLevel {
     }
 
     /**
-     * a
+     * 定长名称 (5位), 不足的补齐空格 方便打印时更好的格式化
      *
      * @return a
      */
-    public String toFixedLengthString() {
-        return fixedLengthStr;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return levelStr;
+    public String fixedLengthName() {
+        return fixedLengthName;
     }
 
 }
