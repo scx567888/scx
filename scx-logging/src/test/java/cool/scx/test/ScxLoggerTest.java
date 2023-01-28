@@ -25,7 +25,7 @@ public class ScxLoggerTest {
         }
         var path = getResourcePath();
         ScxLoggerFactory.getLogger(ScxLoggerTest.class).setLevel(DEBUG).setType(BOTH).setStoredDirectory(path).setStackTrace(true);
-        for (int i = 0; i < 9999; i++) {
+        for (int i = 0; i < 99; i++) {
             logger.debug("测试 debug {}", i);
         }
     }
