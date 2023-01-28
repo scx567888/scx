@@ -1,6 +1,6 @@
 package cool.scx.test.website;
 
-import cool.scx.core.ScxConstant;
+import cool.scx.constant.ScxConstant;
 import cool.scx.core.ScxContext;
 import cool.scx.core.annotation.FromQuery;
 import cool.scx.core.annotation.FromUpload;
@@ -54,7 +54,7 @@ public class WebSiteController {
                                @FromUpload UploadedEntity content,
                                @FromUpload FileUpload content1) {
         System.err.println("客户端 IP :" + NetUtils.getClientIPAddress(ScxContext.routingContext().request()));
-        return Map.of("now", ScxConstant.DEFAULT_DATETIME_FORMATTER.format(LocalDateTime.now()),
+        return Map.of("now", ScxConstant.NORMAL_DATE_TIME.format(LocalDateTime.now()),
                 "name", name, "age", age, "content", content.buffer().toString(StandardCharsets.UTF_8),
                 "content1", ScxContext.vertx().fileSystem().readFileBlocking(content1.uploadedFileName()).toString(StandardCharsets.UTF_8));
     }

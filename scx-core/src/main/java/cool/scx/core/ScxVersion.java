@@ -1,0 +1,10 @@
+package cool.scx.core;
+
+public class ScxVersion {
+
+    /**
+     * SCX 版本号
+     */
+    public static final String SCX_VERSION = "2.0.6";
+
+}

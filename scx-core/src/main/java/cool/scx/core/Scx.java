@@ -29,6 +29,8 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.ScheduledExecutorService;
 
+import static cool.scx.core.ScxVersion.*;
+
 /**
  * 启动类
  *
@@ -162,7 +164,7 @@ public final class Scx {
                 .red("▀███████████ ").green("███        ").blue("   ████▀██▄     ").ln()
                 .red("         ███ ").green("███    █▄  ").blue("  ▐███  ▀███    ").ln()
                 .red("   ▄█    ███ ").green("███    ███ ").blue(" ▄███     ███▄  ").ln()
-                .red(" ▄████████▀  ").green("████████▀  ").blue("████       ███▄ ").cyan(" Version ").brightCyan(ScxConstant.SCX_VERSION).println();
+                .red(" ▄████████▀  ").green("████████▀  ").blue("████       ███▄ ").cyan(" Version ").brightCyan(SCX_VERSION).println();
     }
 
     /**
