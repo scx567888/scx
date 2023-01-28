@@ -52,7 +52,7 @@ public enum ScxLoggingType {
         return switch (s) {
             case "CONSOLE", "C" -> CONSOLE;
             case "FILE", "F" -> FILE;
-            case "B", "BOTH" -> BOTH;
+            case "BOTH", "B" -> BOTH;
             default -> throw new IllegalArgumentException("loggingTypeName 值不合法 :" + loggingTypeName);
         };
     }
