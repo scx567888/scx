@@ -32,6 +32,45 @@ public final class ScxLog4jLogger extends AbstractLogger {
     }
 
     /**
+     * Log4jLevel 转 ScxLoggingLevel
+     *
+     * @param level 级别
+     * @return ScxLoggingLevel
+     */
+    private static ScxLoggingLevel toScxLoggingLevel(Level level) {
+        return switch (level.toString()) {
+            case "OFF" -> ScxLoggingLevel.OFF;
+            case "FATAL" -> ScxLoggingLevel.FATAL;
+            case "ERROR" -> ScxLoggingLevel.ERROR;
+            case "WARN" -> ScxLoggingLevel.WARN;
+            case "INFO" -> ScxLoggingLevel.INFO;
+            case "DEBUG" -> ScxLoggingLevel.DEBUG;
+            case "TRACE" -> ScxLoggingLevel.TRACE;
+            case "ALL" -> ScxLoggingLevel.ALL;
+            default -> throw new IllegalArgumentException();
+        };
+    }
+
+    /**
+     * ScxLoggingLevel 转 Log4jLevel
+     *
+     * @param level level
+     * @return Level
+     */
+    private static Level toLog4jLevel(ScxLoggingLevel level) {
+        return switch (level) {
+            case OFF -> Level.OFF;
+            case FATAL -> Level.FATAL;
+            case ERROR -> Level.ERROR;
+            case WARN -> Level.WARN;
+            case INFO -> Level.INFO;
+            case DEBUG -> Level.DEBUG;
+            case TRACE -> Level.TRACE;
+            case ALL -> Level.ALL;
+        };
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -173,45 +212,6 @@ public final class ScxLog4jLogger extends AbstractLogger {
     @Override
     public Level getLevel() {
         return toLog4jLevel(this.scxLogger.level());
-    }
-
-    /**
-     * Log4jLevel 转 ScxLoggingLevel
-     *
-     * @param level 级别
-     * @return ScxLoggingLevel
-     */
-    private static ScxLoggingLevel toScxLoggingLevel(Level level) {
-        return switch (level.toString()) {
-            case "OFF" -> ScxLoggingLevel.OFF;
-            case "FATAL" -> ScxLoggingLevel.FATAL;
-            case "ERROR" -> ScxLoggingLevel.ERROR;
-            case "WARN" -> ScxLoggingLevel.WARN;
-            case "INFO" -> ScxLoggingLevel.INFO;
-            case "DEBUG" -> ScxLoggingLevel.DEBUG;
-            case "TRACE" -> ScxLoggingLevel.TRACE;
-            case "ALL" -> ScxLoggingLevel.ALL;
-            default -> throw new IllegalArgumentException();
-        };
-    }
-
-    /**
-     * ScxLoggingLevel 转 Log4jLevel
-     *
-     * @param level level
-     * @return Level
-     */
-    private static Level toLog4jLevel(ScxLoggingLevel level) {
-        return switch (level) {
-            case OFF -> Level.OFF;
-            case FATAL -> Level.FATAL;
-            case ERROR -> Level.ERROR;
-            case WARN -> Level.WARN;
-            case INFO -> Level.INFO;
-            case DEBUG -> Level.DEBUG;
-            case TRACE -> Level.TRACE;
-            case ALL -> Level.ALL;
-        };
     }
 
 }

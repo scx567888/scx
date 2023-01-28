@@ -32,6 +32,38 @@ public final class ScxSLF4JLogger extends LegacyAbstractLogger {
     }
 
     /**
+     * SLF4JLevel 转 ScxLoggingLevel
+     *
+     * @param level a {@link org.slf4j.event.Level} object
+     * @return a {@link cool.scx.logging.ScxLoggingLevel} object
+     */
+    private static ScxLoggingLevel toScxLoggingLevel(Level level) {
+        return switch (level) {
+            case ERROR -> ScxLoggingLevel.ERROR;
+            case WARN -> ScxLoggingLevel.WARN;
+            case INFO -> ScxLoggingLevel.INFO;
+            case DEBUG -> ScxLoggingLevel.DEBUG;
+            case TRACE -> ScxLoggingLevel.TRACE;
+        };
+    }
+
+    /**
+     * ScxLoggingLevel 转 SLF4JLevel
+     *
+     * @param level level
+     * @return Level
+     */
+    private static Level toSLF4JLevel(ScxLoggingLevel level) {
+        return switch (level) {
+            case OFF, FATAL, ERROR -> Level.ERROR;
+            case WARN -> Level.WARN;
+            case INFO -> Level.INFO;
+            case DEBUG -> Level.DEBUG;
+            case TRACE, ALL -> Level.TRACE;
+        };
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -94,38 +126,6 @@ public final class ScxSLF4JLogger extends LegacyAbstractLogger {
      */
     public Level getLevel() {
         return toSLF4JLevel(this.scxLogger.level());
-    }
-
-    /**
-     * SLF4JLevel 转 ScxLoggingLevel
-     *
-     * @param level a {@link org.slf4j.event.Level} object
-     * @return a {@link cool.scx.logging.ScxLoggingLevel} object
-     */
-    private static ScxLoggingLevel toScxLoggingLevel(Level level) {
-        return switch (level) {
-            case ERROR -> ScxLoggingLevel.ERROR;
-            case WARN -> ScxLoggingLevel.WARN;
-            case INFO -> ScxLoggingLevel.INFO;
-            case DEBUG -> ScxLoggingLevel.DEBUG;
-            case TRACE -> ScxLoggingLevel.TRACE;
-        };
-    }
-
-    /**
-     * ScxLoggingLevel 转 SLF4JLevel
-     *
-     * @param level level
-     * @return Level
-     */
-    private static Level toSLF4JLevel(ScxLoggingLevel level) {
-        return switch (level) {
-            case OFF, FATAL, ERROR -> Level.ERROR;
-            case WARN -> Level.WARN;
-            case INFO -> Level.INFO;
-            case DEBUG -> Level.DEBUG;
-            case TRACE, ALL -> Level.TRACE;
-        };
     }
 
 }

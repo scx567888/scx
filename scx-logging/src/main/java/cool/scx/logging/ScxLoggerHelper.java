@@ -16,6 +16,9 @@ final class ScxLoggerHelper {
      */
     private static final DateTimeFormatter LOG_DATE_TIME = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
+    /**
+     * Constant <code>LOG_FILE_NAME</code>
+     */
     private static final DateTimeFormatter LOG_FILE_NAME = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     /**
@@ -30,11 +33,12 @@ final class ScxLoggerHelper {
 
     /**
      * a
+     *
      * @param time w
      * @return a
      */
     public static String getLogFileName(LocalDateTime time) {
-        return LOG_FILE_NAME.format(time)+".log";
+        return LOG_FILE_NAME.format(time) + ".log";
     }
 
     /**
@@ -81,6 +85,7 @@ final class ScxLoggerHelper {
      * a
      *
      * @param e a
+     * @return a {@link java.lang.String} object
      */
     public static String getStackTraceInfo(Exception e) {
         var sb = new StringBuilder();

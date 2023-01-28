@@ -6,20 +6,13 @@ import java.time.LocalDateTime;
 
 import static cool.scx.logging.ScxLoggerHelper.getTimeStamp;
 
+/**
+ * 消息格式化器
+ *
+ * @author scx567888
+ * @version 2.0.6
+ */
 public interface ScxLoggerMessageFormatter {
-
-    /**
-     * 将参数格式化位 字符串以便展示和打印
-     *
-     * @param localDateTime  日志触发的时间
-     * @param level          日志级别
-     * @param name           日志名称
-     * @param message        消息
-     * @param throwable      错误信息 (可能为 null)
-     * @param stackTraceInfo 堆栈跟踪信息 (可能为 null)
-     * @return 字符串 注意需要自行设置结尾的换行
-     */
-    String format(LocalDateTime localDateTime, ScxLoggingLevel level, String name, String message, Throwable throwable, String stackTraceInfo);
 
     /**
      * 默认的 消息格式化器
@@ -42,5 +35,18 @@ public interface ScxLoggerMessageFormatter {
         }
         return sw.toString();
     };
+
+    /**
+     * 将参数格式化位 字符串以便展示和打印
+     *
+     * @param localDateTime  日志触发的时间
+     * @param level          日志级别
+     * @param name           日志名称
+     * @param message        消息
+     * @param throwable      错误信息 (可能为 null)
+     * @param stackTraceInfo 堆栈跟踪信息 (可能为 null)
+     * @return 字符串 注意需要自行设置结尾的换行
+     */
+    String format(LocalDateTime localDateTime, ScxLoggingLevel level, String name, String message, Throwable throwable, String stackTraceInfo);
 
 }

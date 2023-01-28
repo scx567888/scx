@@ -29,7 +29,7 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.ScheduledExecutorService;
 
-import static cool.scx.core.ScxVersion.*;
+import static cool.scx.core.ScxVersion.SCX_VERSION;
 
 /**
  * 启动类
