@@ -51,7 +51,7 @@ public class ScxLogger {
      *
      * @param name a
      */
-    ScxLogger(String name) {
+    public ScxLogger(String name) {
         this.name = name;
     }
 
