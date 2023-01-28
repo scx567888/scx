@@ -4,12 +4,15 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.util.function.Function;
 
 import static cool.scx.logging.ScxLoggerHelper.*;
 import static java.nio.file.StandardOpenOption.*;
 
 /**
  * ScxLogger
+ * 若仅仅是想自定义消息格式 只需设置 {@link ScxLogger#setMessageFormatter(ScxLoggerMessageFormatter)}
+ * 若是想在更高级别上自定义日志 如更改日志名称格式,增加写入到数据库等功能 ,则需要继承 {@link ScxLogger} 并设置 {@link ScxLoggerFactory#setLoggerSupplier(Function)}
  *
  * @author scx567888
  * @version 0.0.1
