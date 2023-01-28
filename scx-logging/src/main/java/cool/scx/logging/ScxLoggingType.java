@@ -1,9 +1,9 @@
 package cool.scx.logging;
 
-import java.util.Objects;
+import static java.util.Objects.requireNonNull;
 
 /**
- * a
+ * ScxLogging 的记录类型
  *
  * @author scx567888
  * @version 0.0.1
@@ -11,25 +11,25 @@ import java.util.Objects;
 public enum ScxLoggingType {
 
     /**
-     * a
+     * 打印到控制台
      */
     CONSOLE,
 
     /**
-     * a
+     * 写入到文件
      */
     FILE,
 
     /**
-     * a
+     * 既打印到控制台也同时写入到文件
      */
     BOTH;
 
     /**
-     * a
+     * 根据 名称 获取 ScxLoggingType
      *
-     * @param loggingTypeName    a
-     * @param defaultLoggingType a
+     * @param loggingTypeName    名称
+     * @param defaultLoggingType 默认值
      * @return a
      */
     public static ScxLoggingType of(String loggingTypeName, ScxLoggingType defaultLoggingType) {
@@ -41,14 +41,20 @@ public enum ScxLoggingType {
     }
 
     /**
-     * a
+     * 根据 名称 获取 ScxLoggingType
      *
-     * @param loggingTypeName a
-     * @return a
+     * @param loggingTypeName 名称 可选值 [CONSOLE, FILE, BOTH] 以及对应的简写形式  [C, F, B]
+     * @return ScxLoggingType
      */
     public static ScxLoggingType of(String loggingTypeName) {
-        Objects.requireNonNull(loggingTypeName, "loggingTypeName 不能为空 !!!");
-        return ScxLoggingType.valueOf(loggingTypeName.trim().toUpperCase());
+        requireNonNull(loggingTypeName, "loggingTypeName 不能为空 !!!");
+        var s = loggingTypeName.trim().toUpperCase();
+        return switch (s) {
+            case "CONSOLE", "C" -> CONSOLE;
+            case "FILE", "F" -> FILE;
+            case "BOTH", "B" -> BOTH;
+            default -> throw new IllegalArgumentException("loggingTypeName 值不合法 :" + loggingTypeName);
+        };
     }
 
 }

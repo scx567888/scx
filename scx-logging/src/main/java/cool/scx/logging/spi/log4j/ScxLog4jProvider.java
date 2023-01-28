@@ -3,7 +3,7 @@ package cool.scx.logging.spi.log4j;
 import org.apache.logging.log4j.spi.Provider;
 
 /**
- * a
+ * ScxLog4jProvider
  *
  * @author scx567888
  * @version 0.0.1

@@ -9,7 +9,7 @@ import org.apache.logging.log4j.message.Message;
 import org.apache.logging.log4j.spi.AbstractLogger;
 
 /**
- * a
+ * ScxLog4jLogger
  *
  * @author scx567888
  * @version 0.0.1
@@ -17,12 +17,12 @@ import org.apache.logging.log4j.spi.AbstractLogger;
 public final class ScxLog4jLogger extends AbstractLogger {
 
     /**
-     * a
+     * 内部的 scxLogger
      */
     private final ScxLogger scxLogger;
 
     /**
-     * a
+     * 名称
      *
      * @param name a
      */
@@ -32,10 +32,10 @@ public final class ScxLog4jLogger extends AbstractLogger {
     }
 
     /**
-     * <p>toScxLoggingLevel.</p>
+     * Log4jLevel 转 ScxLoggingLevel
      *
-     * @param level a {@link org.apache.logging.log4j.Level} object
-     * @return a {@link cool.scx.logging.ScxLoggingLevel} object
+     * @param level 级别
+     * @return ScxLoggingLevel
      */
     private static ScxLoggingLevel toScxLoggingLevel(Level level) {
         return switch (level.toString()) {
@@ -48,6 +48,25 @@ public final class ScxLog4jLogger extends AbstractLogger {
             case "TRACE" -> ScxLoggingLevel.TRACE;
             case "ALL" -> ScxLoggingLevel.ALL;
             default -> throw new IllegalArgumentException();
+        };
+    }
+
+    /**
+     * ScxLoggingLevel 转 Log4jLevel
+     *
+     * @param level level
+     * @return Level
+     */
+    private static Level toLog4jLevel(ScxLoggingLevel level) {
+        return switch (level) {
+            case OFF -> Level.OFF;
+            case FATAL -> Level.FATAL;
+            case ERROR -> Level.ERROR;
+            case WARN -> Level.WARN;
+            case INFO -> Level.INFO;
+            case DEBUG -> Level.DEBUG;
+            case TRACE -> Level.TRACE;
+            case ALL -> Level.ALL;
         };
     }
 
@@ -192,16 +211,7 @@ public final class ScxLog4jLogger extends AbstractLogger {
      */
     @Override
     public Level getLevel() {
-        return switch (this.scxLogger.level()) {
-            case OFF -> Level.OFF;
-            case FATAL -> Level.FATAL;
-            case ERROR -> Level.ERROR;
-            case WARN -> Level.WARN;
-            case INFO -> Level.INFO;
-            case DEBUG -> Level.DEBUG;
-            case TRACE -> Level.TRACE;
-            case ALL -> Level.ALL;
-        };
+        return toLog4jLevel(this.scxLogger.level());
     }
 
 }

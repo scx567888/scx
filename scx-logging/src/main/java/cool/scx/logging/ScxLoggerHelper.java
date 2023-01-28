@@ -14,7 +14,12 @@ final class ScxLoggerHelper {
     /**
      * 默认格式化时间的类型
      */
-    private static final DateTimeFormatter LOG_DATETIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+    private static final DateTimeFormatter LOG_DATE_TIME = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+
+    /**
+     * Constant <code>LOG_FILE_NAME</code>
+     */
+    private static final DateTimeFormatter LOG_FILE_NAME = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     /**
      * <p>getTimeStamp.</p>
@@ -23,7 +28,17 @@ final class ScxLoggerHelper {
      * @return a {@link java.lang.String} object
      */
     public static String getTimeStamp(LocalDateTime time) {
-        return LOG_DATETIME_FORMATTER.format(time);
+        return LOG_DATE_TIME.format(time);
+    }
+
+    /**
+     * a
+     *
+     * @param time w
+     * @return a
+     */
+    public static String getLogFileName(LocalDateTime time) {
+        return LOG_FILE_NAME.format(time) + ".log";
     }
 
     /**
@@ -64,6 +79,23 @@ final class ScxLoggerHelper {
      */
     public static boolean isLoggerClass(String className) {
         return !className.startsWith("cool.scx.logging") && !className.startsWith("org.slf4j.helpers") && !className.startsWith("org.apache.logging.log4j");
+    }
+
+    /**
+     * a
+     *
+     * @param e a
+     * @return a {@link java.lang.String} object
+     */
+    public static String getStackTraceInfo(Exception e) {
+        var sb = new StringBuilder();
+        var trace = e.getStackTrace();
+        for (var traceElement : trace) {
+            if (isLoggerClass(traceElement.getClassName())) {
+                sb.append("\t").append(traceElement).append(System.lineSeparator());
+            }
+        }
+        return sb.toString();
     }
 
 }

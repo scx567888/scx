@@ -8,7 +8,7 @@ import org.slf4j.spi.MDCAdapter;
 import org.slf4j.spi.SLF4JServiceProvider;
 
 /**
- * a
+ * ScxSLF4JServiceProvider
  *
  * @author scx567888
  * @version 0.0.1

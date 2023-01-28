@@ -46,7 +46,10 @@ final class ScxLoggerConfiguration {
         var defaultType = ScxLoggingType.of(scxConfig.get("scx.logging.default.type", String.class), ScxLoggingType.CONSOLE);
         var defaultStoredDirectory = scxConfig.get("scx.logging.default.stored-directory", AppRootHandler.of(scxEnvironment, "AppRoot:logs"));
         var defaultStackTrace = scxConfig.get("scx.logging.default.stack-trace", DefaultValueHandler.of(false));
-        ScxLoggerFactory.updateDefault(defaultLevel, defaultType, defaultStoredDirectory, defaultStackTrace);
+        ScxLoggerFactory.setDefaultLevel(defaultLevel);
+        ScxLoggerFactory.setDefaultType(defaultType);
+        ScxLoggerFactory.setDefaultStoredDirectory(defaultStoredDirectory);
+        ScxLoggerFactory.setDefaultStackTrace(defaultStackTrace);
     }
 
     /**
@@ -67,7 +70,7 @@ final class ScxLoggerConfiguration {
                     var type = ScxLoggingType.of(logger.get("type"), null);
                     var storedDirectory = StringUtils.notBlank(logger.get("stored-directory")) ? scxEnvironment.getPathByAppRoot(logger.get("stored-directory")) : null;
                     var stackTrace = ObjectUtils.convertValue(logger.get("stack-trace"), Boolean.class);
-                    ScxLoggerFactory.updateLogger(name, level, type, storedDirectory, stackTrace);
+                    ScxLoggerFactory.getLogger(name).setLevel(level).setType(type).setStoredDirectory(storedDirectory).setStackTrace(stackTrace);
                 }
             }
         }
