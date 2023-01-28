@@ -25,17 +25,12 @@ public interface ScxLoggerMessageFormatter {
      * 默认的 消息格式化器
      */
     ScxLoggerMessageFormatter DEFAULT_SCX_LOGGER_MESSAGE_FORMATTER = (now, level, name, message, throwable, stackTraceInfo) -> {
-        var nowTimeStr = getTimeStamp(now);
-        var currentThreadName = Thread.currentThread().getName();
-        var levelStr = level.fixedLengthName();
-
-        var sw = new StringWriter();
         // 创建初始的 message 格式如下
         // 时间戳                    线程名称  日志级别 日志名称                       具体内容
         // 2020-01-01 11:19:55.356 [main-1] ERROR cool.scx.xxx.TestController - 日志消息 !!!
-        sw.append(nowTimeStr)
-                .append(" [").append(currentThreadName).append("] ")
-                .append(levelStr)
+        var sw = new StringWriter().append(getTimeStamp(now))
+                .append(" [").append(Thread.currentThread().getName()).append("] ")
+                .append(level.fixedLengthName())
                 .append(" ").append(name).append(" - ")
                 .append(message).append(System.lineSeparator());
 

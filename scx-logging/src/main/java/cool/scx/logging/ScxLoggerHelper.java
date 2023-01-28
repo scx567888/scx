@@ -14,7 +14,9 @@ final class ScxLoggerHelper {
     /**
      * 默认格式化时间的类型
      */
-    private static final DateTimeFormatter LOG_DATETIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+    private static final DateTimeFormatter LOG_DATE_TIME = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+
+    private static final DateTimeFormatter LOG_FILE_NAME = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     /**
      * <p>getTimeStamp.</p>
@@ -23,7 +25,16 @@ final class ScxLoggerHelper {
      * @return a {@link java.lang.String} object
      */
     public static String getTimeStamp(LocalDateTime time) {
-        return LOG_DATETIME_FORMATTER.format(time);
+        return LOG_DATE_TIME.format(time);
+    }
+
+    /**
+     * a
+     * @param time w
+     * @return a
+     */
+    public static String getLogFileName(LocalDateTime time) {
+        return LOG_FILE_NAME.format(time)+".log";
     }
 
     /**

@@ -95,7 +95,7 @@ public class ScxLogger {
                 return;
             }
             try {
-                var logFileName = getTimeStamp(now).substring(0, 10) + ".log";
+                var logFileName = getLogFileName(now);
                 var path = directory.resolve(logFileName);
                 Files.createDirectories(path.getParent());
                 Files.writeString(path, message, APPEND, CREATE, SYNC, WRITE);
