@@ -5,7 +5,7 @@ import org.apache.logging.log4j.spi.ExtendedLogger;
 import org.apache.logging.log4j.spi.LoggerContext;
 
 /**
- * a
+ * ScxLog4jLoggerContext
  *
  * @author scx567888
  * @version 0.0.1
@@ -13,18 +13,11 @@ import org.apache.logging.log4j.spi.LoggerContext;
 public final class ScxLog4jLoggerContext implements LoggerContext {
 
     /**
-     * a
-     */
-    public ScxLog4jLoggerContext() {
-
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
     public ExtendedLogger getLogger(final String name) {
-        return this.getLogger(name, null);
+        return new ScxLog4jLogger(name);
     }
 
     /**
@@ -40,7 +33,7 @@ public final class ScxLog4jLoggerContext implements LoggerContext {
      */
     @Override
     public boolean hasLogger(final String name) {
-        return false;
+        return true;
     }
 
     /**
@@ -48,7 +41,7 @@ public final class ScxLog4jLoggerContext implements LoggerContext {
      */
     @Override
     public boolean hasLogger(final String name, final MessageFactory messageFactory) {
-        return false;
+        return true;
     }
 
     /**
@@ -56,7 +49,7 @@ public final class ScxLog4jLoggerContext implements LoggerContext {
      */
     @Override
     public boolean hasLogger(final String name, final Class<? extends MessageFactory> messageFactoryClass) {
-        return false;
+        return true;
     }
 
     /**

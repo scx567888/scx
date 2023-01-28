@@ -9,7 +9,7 @@ import org.slf4j.helpers.LegacyAbstractLogger;
 import org.slf4j.helpers.MessageFormatter;
 
 /**
- * a
+ * ScxSLF4JLogger
  *
  * @author scx567888
  * @version 0.0.1
@@ -17,7 +17,7 @@ import org.slf4j.helpers.MessageFormatter;
 public final class ScxSLF4JLogger extends LegacyAbstractLogger {
 
     /**
-     * a
+     * 内部的 scxLogger
      */
     private final ScxLogger scxLogger;
 
@@ -29,22 +29,6 @@ public final class ScxSLF4JLogger extends LegacyAbstractLogger {
     public ScxSLF4JLogger(String name) {
         this.name = name;
         this.scxLogger = ScxLoggerFactory.getLogger(name);
-    }
-
-    /**
-     * <p>toScxLoggingLevel.</p>
-     *
-     * @param level a {@link org.slf4j.event.Level} object
-     * @return a {@link cool.scx.logging.ScxLoggingLevel} object
-     */
-    private static ScxLoggingLevel toScxLoggingLevel(Level level) {
-        return switch (level) {
-            case ERROR -> ScxLoggingLevel.ERROR;
-            case WARN -> ScxLoggingLevel.WARN;
-            case INFO -> ScxLoggingLevel.INFO;
-            case DEBUG -> ScxLoggingLevel.DEBUG;
-            case TRACE -> ScxLoggingLevel.TRACE;
-        };
     }
 
     /**
@@ -104,12 +88,38 @@ public final class ScxSLF4JLogger extends LegacyAbstractLogger {
     }
 
     /**
-     * a
+     * 获取级别
      *
      * @return a
      */
     public Level getLevel() {
-        return switch (this.scxLogger.level()) {
+        return toSLF4JLevel(this.scxLogger.level());
+    }
+
+    /**
+     * SLF4JLevel 转 ScxLoggingLevel
+     *
+     * @param level a {@link org.slf4j.event.Level} object
+     * @return a {@link cool.scx.logging.ScxLoggingLevel} object
+     */
+    private static ScxLoggingLevel toScxLoggingLevel(Level level) {
+        return switch (level) {
+            case ERROR -> ScxLoggingLevel.ERROR;
+            case WARN -> ScxLoggingLevel.WARN;
+            case INFO -> ScxLoggingLevel.INFO;
+            case DEBUG -> ScxLoggingLevel.DEBUG;
+            case TRACE -> ScxLoggingLevel.TRACE;
+        };
+    }
+
+    /**
+     * ScxLoggingLevel 转 SLF4JLevel
+     *
+     * @param level level
+     * @return Level
+     */
+    private static Level toSLF4JLevel(ScxLoggingLevel level) {
+        return switch (level) {
             case OFF, FATAL, ERROR -> Level.ERROR;
             case WARN -> Level.WARN;
             case INFO -> Level.INFO;

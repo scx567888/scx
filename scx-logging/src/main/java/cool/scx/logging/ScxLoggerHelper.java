@@ -66,4 +66,20 @@ final class ScxLoggerHelper {
         return !className.startsWith("cool.scx.logging") && !className.startsWith("org.slf4j.helpers") && !className.startsWith("org.apache.logging.log4j");
     }
 
+    /**
+     * a
+     *
+     * @param e a
+     */
+    public static String getStackTraceInfo(Exception e) {
+        var sb = new StringBuilder();
+        var trace = e.getStackTrace();
+        for (var traceElement : trace) {
+            if (isLoggerClass(traceElement.getClassName())) {
+                sb.append("\t").append(traceElement).append(System.lineSeparator());
+            }
+        }
+        return sb.toString();
+    }
+
 }
