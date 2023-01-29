@@ -78,24 +78,12 @@ final class ScxLoggerConfiguration {
         }
     }
 
-    private enum LoggingType {
-
-        /**
-         * 打印到控制台
-         */
-        CONSOLE,
-
-        /**
-         * 写入到文件
-         */
-        FILE,
-
-        /**
-         * 既打印到控制台也同时写入到文件
-         */
-        BOTH;
-    }
-
+    /**
+     * <p>toLevel.</p>
+     *
+     * @param levelName a {@link java.lang.String} object
+     * @return a {@link cool.scx.logging.ScxLoggingLevel} object
+     */
     private static ScxLoggingLevel toLevel(String levelName) {
         Objects.requireNonNull(levelName, "levelName 不能为空 !!!");
         var s = levelName.trim().toUpperCase();
@@ -112,6 +100,12 @@ final class ScxLoggerConfiguration {
         };
     }
 
+    /**
+     * <p>toType.</p>
+     *
+     * @param loggingTypeName a {@link java.lang.String} object
+     * @return a {@link cool.scx.core.ScxLoggerConfiguration.LoggingType} object
+     */
     private static LoggingType toType(String loggingTypeName) {
         requireNonNull(loggingTypeName, "loggingTypeName 不能为空 !!!");
         var s = loggingTypeName.trim().toUpperCase();
@@ -121,6 +115,24 @@ final class ScxLoggerConfiguration {
             case "BOTH", "B" -> LoggingType.BOTH;
             default -> null;
         };
+    }
+
+    private enum LoggingType {
+
+        /**
+         * 打印到控制台
+         */
+        CONSOLE,
+
+        /**
+         * 写入到文件
+         */
+        FILE,
+
+        /**
+         * 既打印到控制台也同时写入到文件
+         */
+        BOTH;
     }
 
 }

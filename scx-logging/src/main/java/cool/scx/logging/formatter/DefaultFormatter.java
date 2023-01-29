@@ -11,9 +11,15 @@ import java.time.temporal.TemporalAccessor;
 
 /**
  * 默认格式化器
+ *
+ * @author scx567888
+ * @version 2.0.8
  */
 public final class DefaultFormatter implements ScxLogEventFormatter {
 
+    /**
+     * Constant <code>DEFAULT_INSTANCE</code>
+     */
     public static final ScxLogEventFormatter DEFAULT_INSTANCE = new DefaultFormatter();
 
     /**
@@ -31,6 +37,9 @@ public final class DefaultFormatter implements ScxLogEventFormatter {
         return DATE_TIME_FORMATTER.format(temporal);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String format(ScxLogEvent event) {
         // 创建初始的 message 格式如下

@@ -30,10 +30,20 @@ public enum ScxLoggingLevel {
         this.fixedLengthName = (name() + "  ").substring(0, 5);
     }
 
+    /**
+     * <p>intLevel.</p>
+     *
+     * @return a int
+     */
     public int intLevel() {
         return intLevel;
     }
 
+    /**
+     * <p>fixedLengthName.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String fixedLengthName() {
         return fixedLengthName;
     }

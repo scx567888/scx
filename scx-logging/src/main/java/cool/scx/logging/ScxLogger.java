@@ -18,6 +18,11 @@ public class ScxLogger {
 
     private final ScxLoggerConfig config;
 
+    /**
+     * <p>Constructor for ScxLogger.</p>
+     *
+     * @param name a {@link java.lang.String} object
+     */
     public ScxLogger(String name) {
         this.name = name;
         //所有 ScxLogger 的 config 的 父 config 都是 ScxLoggerFactory.defaultConfig()
@@ -49,22 +54,48 @@ public class ScxLogger {
 
     }
 
+    /**
+     * <p>shouldSkip.</p>
+     *
+     * @param level a {@link cool.scx.logging.ScxLoggingLevel} object
+     * @return a boolean
+     */
     protected boolean shouldSkip(ScxLoggingLevel level) {
         return level == ScxLoggingLevel.OFF;
     }
 
+    /**
+     * <p>config.</p>
+     *
+     * @return a {@link cool.scx.logging.ScxLoggerConfig} object
+     */
     public ScxLoggerConfig config() {
         return config;
     }
 
+    /**
+     * <p>level.</p>
+     *
+     * @return a {@link cool.scx.logging.ScxLoggingLevel} object
+     */
     public ScxLoggingLevel level() {
         return config.level();
     }
 
+    /**
+     * <p>stackTrace.</p>
+     *
+     * @return a boolean
+     */
     private boolean stackTrace() {
         return config.stackTrace();
     }
 
+    /**
+     * <p>recorders.</p>
+     *
+     * @return a {@link java.util.Set} object
+     */
     private Set<ScxLogRecorder> recorders() {
         return config.recorders();
     }
