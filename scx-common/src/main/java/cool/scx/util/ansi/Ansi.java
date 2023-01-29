@@ -444,6 +444,10 @@ public final class Ansi {
         System.out.print(this);
     }
 
+    public void print(boolean useAnsi) {
+        System.out.print(this.toString(useAnsi));
+    }
+
     @Override
     public String toString() {
         return toString(true);
@@ -473,6 +477,11 @@ public final class Ansi {
     public void println() {
         ln();
         print();
+    }
+
+    public void println(boolean useAnsi) {
+        ln();
+        print(useAnsi);
     }
 
 }
