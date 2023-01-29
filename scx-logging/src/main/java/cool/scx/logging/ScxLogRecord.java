@@ -13,12 +13,12 @@ import java.time.LocalDateTime;
  * @param throwable    错误信息 (可能为 null)
  * @param contextStack 上下文堆栈跟踪信息 (可能为 null)
  */
-public record ScxLogEvent(LocalDateTime timeStamp,
-                          ScxLoggingLevel level,
-                          String loggerName,
-                          String message,
-                          String threadName,
-                          Throwable throwable,
-                          StackTraceElement[] contextStack) {
+public record ScxLogRecord(LocalDateTime timeStamp,
+                           ScxLoggingLevel level,
+                           String loggerName,
+                           String message,
+                           String threadName,
+                           Throwable throwable,
+                           StackTraceElement[] contextStack) {
 
 }

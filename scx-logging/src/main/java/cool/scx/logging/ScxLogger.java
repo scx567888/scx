@@ -44,12 +44,12 @@ public class ScxLogger {
         //堆栈跟踪对象
         var contextStack = stackTrace() ? getFilteredStackTrace(new Exception()) : null;
         // 格式化 message
-        var logEvent = new ScxLogEvent(now, level, this.name, msg, Thread.currentThread().getName(), throwable, contextStack);
+        var logRecord = new ScxLogRecord(now, level, this.name, msg, Thread.currentThread().getName(), throwable, contextStack);
 
         var recorders = recorders();
 
         for (var r : recorders) {
-            r.record(logEvent);
+            r.record(logRecord);
         }
 
     }
@@ -87,7 +87,7 @@ public class ScxLogger {
      *
      * @return a boolean
      */
-    private boolean stackTrace() {
+    public boolean stackTrace() {
         return config.stackTrace();
     }
 
@@ -96,8 +96,17 @@ public class ScxLogger {
      *
      * @return a {@link java.util.Set} object
      */
-    private Set<ScxLogRecorder> recorders() {
+    public Set<ScxLogRecorder> recorders() {
         return config.recorders();
+    }
+
+    /**
+     * <p>name.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
+    public String name() {
+        return name;
     }
 
 }
