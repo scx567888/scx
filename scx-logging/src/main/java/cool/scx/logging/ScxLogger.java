@@ -100,4 +100,8 @@ public class ScxLogger {
         return config.recorders();
     }
 
+    public String name() {
+        return name;
+    }
+
 }
