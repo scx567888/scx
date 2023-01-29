@@ -1,5 +1,7 @@
 package cool.scx.logging;
 
+import cool.scx.logging.recorder.ConsoleRecorder;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -16,7 +18,7 @@ public final class ScxLoggerFactory {
 
     private static final Map<String, ScxLogger> LOGGER_MAP = new HashMap<>();
 
-    private static final ScxLoggerConfig DEFAULT_CONFIG = new ScxLoggerConfig(null);
+    private static final ScxLoggerConfig DEFAULT_CONFIG = new ScxLoggerConfig(null).addRecorder(new ConsoleRecorder());
 
     private static Function<String, ScxLogger> loggerSupplier = ScxLogger::new;
 

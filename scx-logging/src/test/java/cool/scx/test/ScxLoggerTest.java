@@ -1,13 +1,14 @@
 package cool.scx.test;
 
 import cool.scx.logging.ScxLoggerFactory;
+import cool.scx.logging.recorder.ConsoleRecorder;
+import cool.scx.logging.recorder.FileRecorder;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
 
 import java.nio.file.Path;
 
 import static cool.scx.logging.ScxLoggingLevel.DEBUG;
-import static cool.scx.logging.ScxLoggingType.BOTH;
 
 public class ScxLoggerTest {
 
@@ -24,7 +25,13 @@ public class ScxLoggerTest {
             logger.error("测试 {}", i, new RuntimeException("错误"));
         }
         var path = getResourcePath();
-        ScxLoggerFactory.getLogger(ScxLoggerTest.class).setLevel(DEBUG).setType(BOTH).setStoredDirectory(path).setStackTrace(true);
+        ScxLoggerFactory.getLogger(ScxLoggerTest.class).config()
+                .setLevel(DEBUG)
+                .addRecorder(
+                        new ConsoleRecorder().setFormatter((c) -> c.loggerName() + " : " + c.message() + System.lineSeparator()),
+                        new FileRecorder(path)
+                )
+                .setStackTrace(true);
         for (int i = 0; i < 99; i++) {
             logger.debug("测试 debug {}", i);
         }
