@@ -11,7 +11,7 @@ public interface ScxLogRecordFormatter {
     /**
      * 将 ScxLoggerEvent 格式化成字符串
      *
-     * @param event a {@link ScxLogRecord} object
+     * @param event a {@link cool.scx.logging.ScxLogRecord} object
      * @return a {@link java.lang.String} object
      */
     String format(ScxLogRecord event);

@@ -100,6 +100,11 @@ public class ScxLogger {
         return config.recorders();
     }
 
+    /**
+     * <p>name.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String name() {
         return name;
     }
