@@ -6,8 +6,8 @@ import cool.scx.logging.ScxLoggerHelper;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
 
 /**
  * 默认格式化器
@@ -19,16 +19,16 @@ public final class DefaultLayout implements ScxLogLayout {
     /**
      * 默认格式化时间的类型
      */
-    private static final DateTimeFormatter LOG_DATE_TIME = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
     /**
      * <p>getTimeStamp.</p>
      *
-     * @param time a {@link java.time.LocalDateTime} object
+     * @param temporal a {@link java.time.LocalDateTime} object
      * @return a {@link java.lang.String} object
      */
-    public static String formatTimeStamp(LocalDateTime time) {
-        return LOG_DATE_TIME.format(time);
+    public static String formatTimeStamp(TemporalAccessor temporal) {
+        return FORMATTER.format(temporal);
     }
 
     @Override

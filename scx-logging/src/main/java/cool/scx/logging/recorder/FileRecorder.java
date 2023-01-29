@@ -1,4 +1,4 @@
-package cool.scx.logging.appender;
+package cool.scx.logging.recorder;
 
 import cool.scx.logging.ScxLogEvent;
 import cool.scx.logging.ScxLogRecorder;
@@ -6,8 +6,8 @@ import cool.scx.logging.ScxLogRecorder;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
 
 import static java.nio.file.StandardOpenOption.*;
 
@@ -19,7 +19,7 @@ public class FileRecorder implements ScxLogRecorder {
     /**
      * Constant <code>LOG_FILE_NAME</code>
      */
-    private static final DateTimeFormatter LOG_FILE_NAME = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     private final Path storedDirectory;
 
@@ -49,8 +49,8 @@ public class FileRecorder implements ScxLogRecorder {
         return "FILE";
     }
 
-    public String getLogFileName(LocalDateTime time) {
-        return LOG_FILE_NAME.format(time) + ".log";
+    public String getLogFileName(TemporalAccessor temporal) {
+        return FORMATTER.format(temporal) + ".log";
     }
 
 }
