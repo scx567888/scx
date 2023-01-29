@@ -2,9 +2,8 @@ package cool.scx.logging.recorder;
 
 import cool.scx.logging.ScxLogRecord;
 import cool.scx.logging.ScxLogRecorder;
-import cool.scx.logging.ScxLoggingLevel;
 
-import static cool.scx.logging.ScxLoggingLevel.*;
+import static cool.scx.logging.ScxLoggingLevel.ERROR;
 
 /**
  * 控制台 记录器
