@@ -1,61 +1,32 @@
 package cool.scx.logging;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.LocalDateTime;
-import java.util.function.Function;
+import java.util.Set;
 
-import static cool.scx.logging.ScxLoggerHelper.*;
-import static java.nio.file.StandardOpenOption.*;
+import static cool.scx.logging.ScxLoggerFactory.defaultConfig;
+import static cool.scx.logging.ScxLoggerHelper.getFilteredStackTrace;
 
 /**
  * ScxLogger
- * 若仅仅是想自定义消息格式 只需设置 {@link ScxLogger#setMessageFormatter(ScxLoggerMessageFormatter)}
- * 若是想在更高级别上自定义日志 如更改日志名称格式,增加写入到数据库等功能 ,则需要继承 {@link ScxLogger} 并设置 {@link ScxLoggerFactory#setLoggerSupplier(Function)}
  *
  * @author scx567888
  * @version 0.0.1
  */
 public class ScxLogger {
 
-    /**
-     * 日志名称
-     */
     private final String name;
 
-    /**
-     * 日志级别
-     */
-    private ScxLoggingLevel level = null;
+    private final ScxLoggerConfig config;
 
     /**
-     * 日志类型
-     */
-    private ScxLoggingType type = null;
-
-    /**
-     * 存储目录
-     */
-    private Path storedDirectory = null;
-
-    /**
-     * 是否启用堆栈跟踪
-     */
-    private Boolean stackTrace = null;
-
-    /**
-     * 消息格式化器
-     */
-    private ScxLoggerMessageFormatter messageFormatter = null;
-
-    /**
-     * a
+     * <p>Constructor for ScxLogger.</p>
      *
-     * @param name a
+     * @param name a {@link java.lang.String} object
      */
     public ScxLogger(String name) {
         this.name = name;
+        //所有 ScxLogger 的 config 的 父 config 都是 ScxLoggerFactory.defaultConfig()
+        this.config = new ScxLoggerConfig(defaultConfig());
     }
 
     /**
@@ -66,147 +37,67 @@ public class ScxLogger {
      * @param throwable a
      */
     public void logMessage(ScxLoggingLevel level, String msg, Throwable throwable) {
-
-        //不需要打印直接返回
-        if (dontNeedLog(level)) {
+        if (shouldSkip(level)) {
             return;
         }
-
-        //当前时间
         var now = LocalDateTime.now();
         //堆栈跟踪对象
-        var stackTraceInfo = stackTrace() ? getStackTraceInfo(new Exception()) : null;
+        var contextStack = stackTrace() ? getFilteredStackTrace(new Exception()) : null;
         // 格式化 message
-        var message = messageFormatter().format(now, level, this.name, msg, throwable, stackTraceInfo);
+        var logEvent = new ScxLogEvent(now, level, this.name, msg, Thread.currentThread().getName(), throwable, contextStack);
 
-        var t = type();
+        var recorders = recorders();
 
-        //向控制台写入
-        if (needWriteToConsole(t)) {
-            //错误级别的我们就采用 err 打印 其余的 正常输出
-            if (level.toInt() <= ScxLoggingLevel.ERROR.toInt()) {
-                System.err.print(message);
-            } else {
-                System.out.print(message);
-            }
-        }
-
-        //向日志文件写入
-        if (needWriteToFile(t)) {
-            var directory = storedDirectory();
-            if (directory == null) {
-                return;
-            }
-            try {
-                var logFileName = getLogFileName(now);
-                var path = directory.resolve(logFileName);
-                Files.createDirectories(path.getParent());
-                Files.writeString(path, message, APPEND, CREATE, SYNC, WRITE);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        for (var r : recorders) {
+            r.record(logEvent);
         }
 
     }
 
     /**
-     * <p>Setter for the field <code>level</code>.</p>
+     * <p>shouldSkip.</p>
      *
-     * @param newLevel a {@link cool.scx.logging.ScxLoggingLevel} object
-     * @return a
+     * @param level a {@link cool.scx.logging.ScxLoggingLevel} object
+     * @return a boolean
      */
-    public final ScxLogger setLevel(ScxLoggingLevel newLevel) {
-        this.level = newLevel;
-        return this;
+    protected boolean shouldSkip(ScxLoggingLevel level) {
+        return level == ScxLoggingLevel.OFF;
     }
 
     /**
-     * <p>Setter for the field <code>type</code>.</p>
+     * <p>config.</p>
      *
-     * @param newType a {@link cool.scx.logging.ScxLoggingType} object
-     * @return a
+     * @return a {@link cool.scx.logging.ScxLoggerConfig} object
      */
-    public final ScxLogger setType(ScxLoggingType newType) {
-        this.type = newType;
-        return this;
+    public ScxLoggerConfig config() {
+        return config;
     }
 
     /**
-     * <p>Setter for the field <code>storedDirectory</code>.</p>
+     * <p>level.</p>
      *
-     * @param newStoredDirectory a {@link java.nio.file.Path} object
-     * @return a
+     * @return a {@link cool.scx.logging.ScxLoggingLevel} object
      */
-    public final ScxLogger setStoredDirectory(Path newStoredDirectory) {
-        this.storedDirectory = newStoredDirectory;
-        return this;
+    public ScxLoggingLevel level() {
+        return config.level();
     }
 
     /**
-     * <p>Setter for the field <code>stackTrace</code>.</p>
+     * <p>stackTrace.</p>
      *
-     * @param newStackTrace a {@link java.lang.Boolean} object
-     * @return a
+     * @return a boolean
      */
-    public final ScxLogger setStackTrace(Boolean newStackTrace) {
-        this.stackTrace = newStackTrace;
-        return this;
+    private boolean stackTrace() {
+        return config.stackTrace();
     }
 
     /**
-     * a
+     * <p>recorders.</p>
      *
-     * @param newMessageFormatter a
-     * @return a
+     * @return a {@link java.util.Set} object
      */
-    public final ScxLogger setMessageFormatter(ScxLoggerMessageFormatter newMessageFormatter) {
-        this.messageFormatter = newMessageFormatter;
-        return this;
-    }
-
-    /**
-     * a
-     *
-     * @return a
-     */
-    public final ScxLoggingLevel level() {
-        return level != null ? level : ScxLoggerFactory.defaultLevel();
-    }
-
-    /**
-     * a
-     *
-     * @return a
-     */
-    public final ScxLoggingType type() {
-        return type != null ? type : ScxLoggerFactory.defaultType();
-    }
-
-    /**
-     * a
-     *
-     * @return a
-     */
-    public final Path storedDirectory() {
-        return storedDirectory != null ? storedDirectory : ScxLoggerFactory.defaultStoredDirectory();
-    }
-
-    /**
-     * a
-     *
-     * @return a
-     */
-    public final boolean stackTrace() {
-        return stackTrace != null ? stackTrace : ScxLoggerFactory.defaultStackTrace();
-    }
-
-    /**
-     * a
-     *
-     * @return a
-     */
-    public final ScxLoggerMessageFormatter messageFormatter() {
-        return messageFormatter != null ? messageFormatter : ScxLoggerFactory.defaultMessageFormatter();
+    private Set<ScxLogRecorder> recorders() {
+        return config.recorders();
     }
 
 }
