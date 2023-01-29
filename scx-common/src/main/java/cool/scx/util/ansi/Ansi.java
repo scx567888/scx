@@ -444,10 +444,19 @@ public final class Ansi {
         System.out.print(this);
     }
 
+    public void print(boolean useAnsi) {
+        System.out.print(this.toString(useAnsi));
+    }
+
     @Override
     public String toString() {
+        return toString(true);
+    }
+
+    public String toString(boolean useAnsi) {
         var sb = new StringBuilder();
-        if (enabled) {
+        //系统支持 && 用户启用
+        if (enabled && useAnsi) {
             buildEnabled(sb, elements);
         } else {
             buildDisabled(sb, elements);
@@ -468,6 +477,11 @@ public final class Ansi {
     public void println() {
         ln();
         print();
+    }
+
+    public void println(boolean useAnsi) {
+        ln();
+        print(useAnsi);
     }
 
 }
