@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * @author scx567888
  * @version 0.0.1
  */
-public final class ScxLoggerHelper {
+final class ScxLoggerHelper {
 
     /**
      * 是否为 日志 class 为了减少日志中噪声 我们把日志框架所属的类去除掉
@@ -18,20 +18,6 @@ public final class ScxLoggerHelper {
      */
     public static boolean isLoggerClass(String className) {
         return !className.startsWith("cool.scx.logging") && !className.startsWith("org.slf4j.helpers") && !className.startsWith("org.apache.logging.log4j");
-    }
-
-    /**
-     * 获取过滤后的堆栈信息 (字符串形式)
-     *
-     * @param stackTraces a
-     * @return a {@link java.lang.String} object
-     */
-    public static String formatStackTrace(StackTraceElement[] stackTraces) {
-        var sb = new StringBuilder();
-        for (var traceElement : stackTraces) {
-            sb.append("\t").append(traceElement).append(System.lineSeparator());
-        }
-        return sb.toString();
     }
 
     /**

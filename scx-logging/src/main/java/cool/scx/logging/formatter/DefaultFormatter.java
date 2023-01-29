@@ -2,7 +2,6 @@ package cool.scx.logging.formatter;
 
 import cool.scx.logging.ScxLogEvent;
 import cool.scx.logging.ScxLogEventFormatter;
-import cool.scx.logging.ScxLoggerHelper;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -38,6 +37,20 @@ public final class DefaultFormatter implements ScxLogEventFormatter {
     }
 
     /**
+     * 获取过滤后的堆栈信息 (字符串形式)
+     *
+     * @param stackTraces a
+     * @return a {@link java.lang.String} object
+     */
+    public static String formatStackTrace(StackTraceElement[] stackTraces) {
+        var sb = new StringBuilder();
+        for (var traceElement : stackTraces) {
+            sb.append("\t").append(traceElement).append(System.lineSeparator());
+        }
+        return sb.toString();
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -55,7 +68,7 @@ public final class DefaultFormatter implements ScxLogEventFormatter {
         if (event.throwable() != null) {
             event.throwable().printStackTrace(new PrintWriter(sw));
         } else if (event.contextStack() != null) {
-            sw.append(ScxLoggerHelper.formatStackTrace(event.contextStack()));
+            sw.append(formatStackTrace(event.contextStack()));
         }
         return sw.toString();
     }

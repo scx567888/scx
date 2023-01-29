@@ -87,7 +87,7 @@ public class ScxLogger {
      *
      * @return a boolean
      */
-    private boolean stackTrace() {
+    public boolean stackTrace() {
         return config.stackTrace();
     }
 
@@ -96,7 +96,7 @@ public class ScxLogger {
      *
      * @return a {@link java.util.Set} object
      */
-    private Set<ScxLogRecorder> recorders() {
+    public Set<ScxLogRecorder> recorders() {
         return config.recorders();
     }
 
