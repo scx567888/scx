@@ -446,8 +446,13 @@ public final class Ansi {
 
     @Override
     public String toString() {
+        return toString(true);
+    }
+
+    public String toString(boolean useAnsi) {
         var sb = new StringBuilder();
-        if (enabled) {
+        //系统支持同时用户启用
+        if (enabled && useAnsi) {
             buildEnabled(sb, elements);
         } else {
             buildDisabled(sb, elements);
