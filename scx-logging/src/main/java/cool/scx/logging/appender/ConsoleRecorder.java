@@ -9,6 +9,8 @@ import cool.scx.logging.ScxLoggingLevel;
  */
 public class ConsoleRecorder implements ScxLogRecorder {
 
+    public static final ConsoleRecorder CONSOLE_RECORDER = new ConsoleRecorder();
+
     @Override
     public void record(ScxLogEvent event) {
         var data = getLayout().format(event);
@@ -24,7 +26,5 @@ public class ConsoleRecorder implements ScxLogRecorder {
     public String getName() {
         return "CONSOLE";
     }
-
-    public static final ConsoleRecorder CONSOLE_RECORDER = new ConsoleRecorder();
 
 }

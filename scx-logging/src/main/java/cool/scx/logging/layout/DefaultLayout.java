@@ -14,6 +14,8 @@ import java.time.format.DateTimeFormatter;
  */
 public final class DefaultLayout implements ScxLogLayout {
 
+    public static final ScxLogLayout DEFAULT_LAYOUT = new DefaultLayout();
+
     /**
      * 默认格式化时间的类型
      */
@@ -48,7 +50,5 @@ public final class DefaultLayout implements ScxLogLayout {
         }
         return sw.toString();
     }
-
-    public static final ScxLogLayout DEFAULT_LAYOUT = new DefaultLayout();
 
 }
