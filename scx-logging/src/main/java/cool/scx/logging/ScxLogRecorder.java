@@ -7,18 +7,18 @@ import cool.scx.logging.formatter.DefaultFormatter;
  */
 public abstract class ScxLogRecorder {
 
-    private ScxLogEventFormatter formatter;
+    private ScxLogRecordFormatter formatter;
 
-    public abstract void record(ScxLogEvent event);
+    public abstract void record(ScxLogRecord logRecord);
 
     public abstract String name();
 
-    public ScxLogRecorder setFormatter(ScxLogEventFormatter formatter) {
+    public ScxLogRecorder setFormatter(ScxLogRecordFormatter formatter) {
         this.formatter = formatter;
         return this;
     }
 
-    public ScxLogEventFormatter formatter() {
+    public ScxLogRecordFormatter formatter() {
         return formatter != null ? formatter : DefaultFormatter.DEFAULT_INSTANCE;
     }
 

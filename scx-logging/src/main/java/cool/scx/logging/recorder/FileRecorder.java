@@ -1,6 +1,6 @@
 package cool.scx.logging.recorder;
 
-import cool.scx.logging.ScxLogEvent;
+import cool.scx.logging.ScxLogRecord;
 import cool.scx.logging.ScxLogRecorder;
 
 import java.io.IOException;
@@ -28,13 +28,13 @@ public class FileRecorder extends ScxLogRecorder {
     }
 
     @Override
-    public void record(ScxLogEvent event) {
+    public void record(ScxLogRecord logRecord) {
         var directory = storedDirectory;
         if (directory == null) {
             return;
         }
-        var data = formatter().format(event);
-        var logFileName = getLogFileName(event.timeStamp());
+        var data = formatter().format(logRecord);
+        var logFileName = getLogFileName(logRecord.timeStamp());
         var path = directory.resolve(logFileName);
         try {
             Files.createDirectories(path.getParent());

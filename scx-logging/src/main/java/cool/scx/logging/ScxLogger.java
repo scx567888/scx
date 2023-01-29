@@ -44,12 +44,12 @@ public class ScxLogger {
         //堆栈跟踪对象
         var contextStack = stackTrace() ? getFilteredStackTrace(new Exception()) : null;
         // 格式化 message
-        var logEvent = new ScxLogEvent(now, level, this.name, msg, Thread.currentThread().getName(), throwable, contextStack);
+        var logRecord = new ScxLogRecord(now, level, this.name, msg, Thread.currentThread().getName(), throwable, contextStack);
 
         var recorders = recorders();
 
         for (var r : recorders) {
-            r.record(logEvent);
+            r.record(logRecord);
         }
 
     }

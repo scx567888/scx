@@ -6,14 +6,14 @@ package cool.scx.logging;
  * @author scx567888
  * @version 2.0.8
  */
-public interface ScxLogEventFormatter {
+public interface ScxLogRecordFormatter {
 
     /**
      * 将 ScxLoggerEvent 格式化成字符串
      *
-     * @param event a {@link cool.scx.logging.ScxLogEvent} object
+     * @param event a {@link ScxLogRecord} object
      * @return a {@link java.lang.String} object
      */
-    String format(ScxLogEvent event);
+    String format(ScxLogRecord event);
 
 }
