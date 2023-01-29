@@ -19,7 +19,7 @@ public class FileRecorder extends ScxLogRecorder {
     /**
      * Constant <code>LOG_FILE_NAME</code>
      */
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     private final Path storedDirectory;
 
@@ -50,7 +50,7 @@ public class FileRecorder extends ScxLogRecorder {
     }
 
     public String getLogFileName(TemporalAccessor temporal) {
-        return FORMATTER.format(temporal) + ".log";
+        return DATE_TIME_FORMATTER.format(temporal) + ".log";
     }
 
 }
