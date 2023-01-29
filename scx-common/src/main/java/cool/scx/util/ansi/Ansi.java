@@ -455,7 +455,7 @@ public final class Ansi {
 
     public String toString(boolean useAnsi) {
         var sb = new StringBuilder();
-        //系统支持同时用户启用
+        //系统支持 && 用户启用
         if (enabled && useAnsi) {
             buildEnabled(sb, elements);
         } else {
