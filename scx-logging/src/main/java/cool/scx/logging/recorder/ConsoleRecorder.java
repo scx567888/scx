@@ -7,13 +7,11 @@ import cool.scx.logging.ScxLoggingLevel;
 /**
  * 控制台 记录器
  */
-public class ConsoleRecorder implements ScxLogRecorder {
-
-    public static final ConsoleRecorder CONSOLE_RECORDER = new ConsoleRecorder();
+public class ConsoleRecorder extends ScxLogRecorder {
 
     @Override
     public void record(ScxLogEvent event) {
-        var data = getLayout().format(event);
+        var data = formatter().format(event);
         //错误级别的我们就采用 err 打印 其余的 正常输出
         if (event.level().intLevel() <= ScxLoggingLevel.ERROR.intLevel()) {
             System.err.print(data);
@@ -23,7 +21,7 @@ public class ConsoleRecorder implements ScxLogRecorder {
     }
 
     @Override
-    public String getName() {
+    public String name() {
         return "CONSOLE";
     }
 

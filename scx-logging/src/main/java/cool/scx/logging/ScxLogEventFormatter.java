@@ -1,9 +1,9 @@
 package cool.scx.logging;
 
 /**
- * ScxLogLayout
+ * ScxLogEventFormatter
  */
-public interface ScxLogLayout {
+public interface ScxLogEventFormatter {
 
     /**
      * 将 ScxLoggerEvent 格式化成字符串

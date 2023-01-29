@@ -1,18 +1,25 @@
 package cool.scx.logging;
 
-import cool.scx.logging.layout.DefaultLayout;
+import cool.scx.logging.formatter.DefaultFormatter;
 
 /**
  * 日志记录器
  */
-public interface ScxLogRecorder {
+public abstract class ScxLogRecorder {
 
-    void record(ScxLogEvent event);
+    private ScxLogEventFormatter formatter;
 
-    String getName();
+    public abstract void record(ScxLogEvent event);
 
-    default ScxLogLayout getLayout() {
-        return DefaultLayout.DEFAULT_LAYOUT;
+    public abstract String name();
+
+    public ScxLogRecorder setFormatter(ScxLogEventFormatter formatter) {
+        this.formatter = formatter;
+        return this;
+    }
+
+    public ScxLogEventFormatter formatter() {
+        return formatter != null ? formatter : DefaultFormatter.DEFAULT_INSTANCE;
     }
 
 }

@@ -1,7 +1,7 @@
-package cool.scx.logging.layout;
+package cool.scx.logging.formatter;
 
 import cool.scx.logging.ScxLogEvent;
-import cool.scx.logging.ScxLogLayout;
+import cool.scx.logging.ScxLogEventFormatter;
 import cool.scx.logging.ScxLoggerHelper;
 
 import java.io.PrintWriter;
@@ -12,14 +12,14 @@ import java.time.temporal.TemporalAccessor;
 /**
  * 默认格式化器
  */
-public final class DefaultLayout implements ScxLogLayout {
+public final class DefaultFormatter implements ScxLogEventFormatter {
 
-    public static final ScxLogLayout DEFAULT_LAYOUT = new DefaultLayout();
+    public static final ScxLogEventFormatter DEFAULT_INSTANCE = new DefaultFormatter();
 
     /**
      * 默认格式化时间的类型
      */
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
     /**
      * <p>getTimeStamp.</p>
@@ -28,7 +28,7 @@ public final class DefaultLayout implements ScxLogLayout {
      * @return a {@link java.lang.String} object
      */
     public static String formatTimeStamp(TemporalAccessor temporal) {
-        return FORMATTER.format(temporal);
+        return DATE_TIME_FORMATTER.format(temporal);
     }
 
     @Override

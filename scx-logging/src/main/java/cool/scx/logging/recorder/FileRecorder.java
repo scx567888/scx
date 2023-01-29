@@ -14,7 +14,7 @@ import static java.nio.file.StandardOpenOption.*;
 /**
  * 文件记录器
  */
-public class FileRecorder implements ScxLogRecorder {
+public class FileRecorder extends ScxLogRecorder {
 
     /**
      * Constant <code>LOG_FILE_NAME</code>
@@ -33,7 +33,7 @@ public class FileRecorder implements ScxLogRecorder {
         if (directory == null) {
             return;
         }
-        var data = getLayout().format(event);
+        var data = formatter().format(event);
         var logFileName = getLogFileName(event.timeStamp());
         var path = directory.resolve(logFileName);
         try {
@@ -45,7 +45,7 @@ public class FileRecorder implements ScxLogRecorder {
     }
 
     @Override
-    public String getName() {
+    public String name() {
         return "FILE";
     }
 
