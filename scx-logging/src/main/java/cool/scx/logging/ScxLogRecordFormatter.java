@@ -9,11 +9,11 @@ package cool.scx.logging;
 public interface ScxLogRecordFormatter {
 
     /**
-     * 将 ScxLoggerEvent 格式化成字符串
+     * 将 ScxLogRecord 格式化成字符串
      *
-     * @param event a {@link cool.scx.logging.ScxLogRecord} object
+     * @param logRecord a {@link cool.scx.logging.ScxLogRecord} object
      * @return a {@link java.lang.String} object
      */
-    String format(ScxLogRecord event);
+    String format(ScxLogRecord logRecord);
 
 }
