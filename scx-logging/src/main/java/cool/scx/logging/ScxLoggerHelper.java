@@ -1,7 +1,6 @@
 package cool.scx.logging;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 /**
  * <p>ScxLoggerHelper class.</p>
@@ -9,67 +8,7 @@ import java.time.format.DateTimeFormatter;
  * @author scx567888
  * @version 0.0.1
  */
-final class ScxLoggerHelper {
-
-    /**
-     * 默认格式化时间的类型
-     */
-    private static final DateTimeFormatter LOG_DATE_TIME = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
-
-    /**
-     * Constant <code>LOG_FILE_NAME</code>
-     */
-    private static final DateTimeFormatter LOG_FILE_NAME = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-    /**
-     * <p>getTimeStamp.</p>
-     *
-     * @param time a {@link java.time.LocalDateTime} object
-     * @return a {@link java.lang.String} object
-     */
-    public static String getTimeStamp(LocalDateTime time) {
-        return LOG_DATE_TIME.format(time);
-    }
-
-    /**
-     * a
-     *
-     * @param time w
-     * @return a
-     */
-    public static String getLogFileName(LocalDateTime time) {
-        return LOG_FILE_NAME.format(time) + ".log";
-    }
-
-    /**
-     * a
-     *
-     * @param type a
-     * @return a
-     */
-    public static boolean needWriteToConsole(ScxLoggingType type) {
-        return type == ScxLoggingType.CONSOLE || type == ScxLoggingType.BOTH;
-    }
-
-    /**
-     * a
-     *
-     * @param type a
-     * @return a
-     */
-    public static boolean needWriteToFile(ScxLoggingType type) {
-        return type == ScxLoggingType.FILE || type == ScxLoggingType.BOTH;
-    }
-
-    /**
-     * <p>dontNeedLog.</p>
-     *
-     * @param level a {@link cool.scx.logging.ScxLoggingLevel} object
-     * @return a boolean
-     */
-    public static boolean dontNeedLog(ScxLoggingLevel level) {
-        return level == ScxLoggingLevel.OFF;
-    }
+public final class ScxLoggerHelper {
 
     /**
      * 是否为 日志 class 为了减少日志中噪声 我们把日志框架所属的类去除掉
@@ -82,20 +21,33 @@ final class ScxLoggerHelper {
     }
 
     /**
-     * a
+     * 获取过滤后的堆栈信息 (字符串形式)
      *
-     * @param e a
+     * @param stackTraces a
      * @return a {@link java.lang.String} object
      */
-    public static String getStackTraceInfo(Exception e) {
+    public static String formatStackTrace(StackTraceElement[] stackTraces) {
         var sb = new StringBuilder();
-        var trace = e.getStackTrace();
-        for (var traceElement : trace) {
-            if (isLoggerClass(traceElement.getClassName())) {
-                sb.append("\t").append(traceElement).append(System.lineSeparator());
-            }
+        for (var traceElement : stackTraces) {
+            sb.append("\t").append(traceElement).append(System.lineSeparator());
         }
         return sb.toString();
+    }
+
+    /**
+     * 过滤掉 日志框架的堆栈信息
+     *
+     * @param e a
+     * @return a
+     */
+    public static StackTraceElement[] getFilteredStackTrace(Exception e) {
+        var list = new ArrayList<StackTraceElement>();
+        for (var traceElement : e.getStackTrace()) {
+            if (isLoggerClass(traceElement.getClassName())) {
+                list.add(traceElement);
+            }
+        }
+        return list.toArray(StackTraceElement[]::new);
     }
 
 }
