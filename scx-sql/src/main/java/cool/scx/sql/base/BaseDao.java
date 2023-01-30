@@ -80,7 +80,7 @@ public class BaseDao<Entity> {
     private SQL _buildInsertSQL(Entity entity, UpdateFilter updateFilter) {
         var insertColumns = updateFilter.filter(entity, tableInfo.columnInfos());
         var sql = SQLBuilder.Insert(tableInfo.tableName(), insertColumns).Values(insertColumns).GetSQL();
-        return SQL.ofPlaceholder(sql, Arrays.stream(insertColumns).map(c -> c.getFieldValue(entity)).toArray());
+        return SQL.ofPlaceholder(sql, Arrays.stream(insertColumns).map(c -> c.javaFieldValue(entity)).toArray());
     }
 
     /**
@@ -108,7 +108,7 @@ public class BaseDao<Entity> {
         for (var entity : entityList) {
             var o = new Object[insertColumns.length];
             for (int i = 0; i < insertColumns.length; i = i + 1) {
-                o[i] = insertColumns[i].getFieldValue(entity);
+                o[i] = insertColumns[i].javaFieldValue(entity);
             }
             objectArrayList.add(o);
         }
@@ -195,7 +195,7 @@ public class BaseDao<Entity> {
         } else {
             var selectColumnInfos = selectFilter.filter(tableInfo.columnInfos());
             var sql0 = SQLBuilder.Select(selectColumnInfos).From(tableInfo.tableName()).Where(query.where()).GroupBy(query.groupBy()).OrderBy(query.orderBy()).Limit(query.pagination()).GetSQL();
-            var sql = SQLBuilder.Select(Arrays.stream(selectColumnInfos).map(ColumnInfo::fieldName).toArray(String[]::new)).From("(" + sql0 + ")").GetSQL();
+            var sql = SQLBuilder.Select(Arrays.stream(selectColumnInfos).map(ColumnInfo::javaFieldName).toArray(String[]::new)).From("(" + sql0 + ")").GetSQL();
             return SQL.ofPlaceholder(sql + " AS " + tableInfo.tableName() + "_" + RandomUtils.randomString(6), query.where().getWhereParams());
         }
     }
@@ -247,7 +247,7 @@ public class BaseDao<Entity> {
         }
         var updateSetColumnInfos = updateFilter.filter(entity, tableInfo.columnInfos());
         var sql = SQLBuilder.Update(tableInfo.tableName()).Set(updateSetColumnInfos).Where(query.where()).GetSQL();
-        var entityParams = Arrays.stream(updateSetColumnInfos).map(c -> c.getFieldValue(entity)).collect(Collectors.toList());
+        var entityParams = Arrays.stream(updateSetColumnInfos).map(c -> c.javaFieldValue(entity)).collect(Collectors.toList());
         entityParams.addAll(List.of(query.where().getWhereParams()));
         return SQL.ofPlaceholder(sql, entityParams.toArray());
     }

@@ -127,7 +127,7 @@ public final class UpdateFilter extends ColumnInfoFilter<UpdateFilter> {
      * @return e
      */
     private ColumnInfo[] excludeIfFieldValueIsNull(Object entity, ColumnInfo... scxDaoColumnInfos) {
-        return Arrays.stream(scxDaoColumnInfos).filter(field -> field.getFieldValue(entity) != null).toArray(ColumnInfo[]::new);
+        return Arrays.stream(scxDaoColumnInfos).filter(field -> field.javaFieldValue(entity) != null).toArray(ColumnInfo[]::new);
     }
 
 }

@@ -1,7 +1,7 @@
 package cool.scx.core.dao;
 
 import cool.scx.core.annotation.Column;
-import cool.scx.sql.ColumnInfo;
+import cool.scx.sql.column_info.SimpleColumnInfo;
 
 import java.lang.reflect.Field;
 
@@ -15,9 +15,8 @@ import static cool.scx.util.StringUtils.notBlank;
  * @author scx567888
  * @version 1.11.8
  */
-public final class ScxDaoColumnInfo implements ColumnInfo {
+public final class ScxDaoColumnInfo extends SimpleColumnInfo {
 
-    private final Field javaField;
     private final String columnName;
     private final String type;
     private final boolean needIndex;
@@ -27,8 +26,6 @@ public final class ScxDaoColumnInfo implements ColumnInfo {
     private final boolean primaryKey;
     private final boolean autoIncrement;
     private final boolean notNull;
-    private final String updateSetSQLCache;
-    private final String selectSQLCache;
 
     /**
      * a
@@ -36,7 +33,7 @@ public final class ScxDaoColumnInfo implements ColumnInfo {
      * @param javaField a
      */
     public ScxDaoColumnInfo(Field javaField) {
-        this.javaField = javaField;
+        super(javaField);
         var column = javaField.getAnnotation(Column.class);
         if (column != null) {
             this.type = notBlank(column.type()) ? column.type() : getMySQLTypeCreateName(javaField.getType());
@@ -59,17 +56,6 @@ public final class ScxDaoColumnInfo implements ColumnInfo {
             this.autoIncrement = false;
             this.notNull = false;
         }
-        //缓存提高性能
-        this.updateSetSQLCache = ColumnInfo.super.updateSetSQL();
-        this.selectSQLCache = ColumnInfo.super.selectSQL();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Field javaField() {
-        return javaField;
     }
 
     @Override
@@ -98,19 +84,8 @@ public final class ScxDaoColumnInfo implements ColumnInfo {
     }
 
     @Override
-    public String selectSQL() {
-        return selectSQLCache;
-    }
-
-
-    @Override
     public String columnName() {
-        return columnName;
-    }
-
-    @Override
-    public String updateSetSQL() {
-        return updateSetSQLCache;
+        return this.columnName;
     }
 
     @Override

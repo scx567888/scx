@@ -126,9 +126,9 @@ public abstract class ColumnInfoFilter<E extends ColumnInfoFilter<E>> {
             case EXCLUDED -> scxDaoColumnInfos;
         } : switch (this.filterMode) {
             case INCLUDED ->
-                    Arrays.stream(scxDaoColumnInfos).filter(c -> this.fieldNames.contains(c.fieldName())).toArray(ColumnInfo[]::new);
+                    Arrays.stream(scxDaoColumnInfos).filter(c -> this.fieldNames.contains(c.javaFieldName())).toArray(ColumnInfo[]::new);
             case EXCLUDED ->
-                    Arrays.stream(scxDaoColumnInfos).filter(c -> !this.fieldNames.contains(c.fieldName())).toArray(ColumnInfo[]::new);
+                    Arrays.stream(scxDaoColumnInfos).filter(c -> !this.fieldNames.contains(c.javaFieldName())).toArray(ColumnInfo[]::new);
         };
     }
 

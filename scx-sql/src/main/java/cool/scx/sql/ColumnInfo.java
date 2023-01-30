@@ -1,7 +1,5 @@
 package cool.scx.sql;
 
-import java.lang.reflect.Field;
-
 /**
  * <p>ColumnInfo.</p>
  *
@@ -23,9 +21,7 @@ public interface ColumnInfo {
      *
      * @return a {@link java.lang.String} object
      */
-    default String selectSQL() {
-        return this.fieldName().equals(this.columnName()) ? this.columnName() : this.columnName() + " AS " + this.fieldName();
-    }
+    String selectSQL();
 
     /**
      * 更新时的 sql 片段 强烈建议提前生成好!!! 以提高性能
@@ -36,9 +32,7 @@ public interface ColumnInfo {
      * <br>
      * SQL : [ update user set user_name = :userName where id = 1 ]
      */
-    default String updateSetSQL() {
-        return this.columnName() + " = ?";
-    }
+    String updateSetSQL();
 
     /**
      * 插入时 的 sql 片段 强烈建议提前生成好!!! 以提高性能
@@ -49,32 +43,19 @@ public interface ColumnInfo {
      * <br>
      * SQL : [ insert into (user_name) values(:userName) ]
      */
-    default String insertValuesSQL() {
-        return "?";
-    }
+    String insertValuesSQL();
 
     /**
      * 列名称 (数据库中的列名称)
      */
-    default String columnName() {
-        return fieldName();
-    }
-
-    /**
-     * 对应 java 的 字段 (Field)
-     *
-     * @return a
-     */
-    Field javaField();
+    String columnName();
 
     /**
      * 对应 java 的字段的名称 用于过滤
      *
      * @return a
      */
-    default String fieldName() {
-        return javaField().getName();
-    }
+    String javaFieldName();
 
     /**
      * 获取字段值
@@ -82,14 +63,7 @@ public interface ColumnInfo {
      * @param target 字段所属实例对象
      * @return a
      */
-    default Object getFieldValue(Object target) {
-        try {
-            return javaField().get(target);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+    Object javaFieldValue(Object target);
 
     default boolean notNull() {
         return false;
