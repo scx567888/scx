@@ -11,7 +11,7 @@ import java.lang.reflect.Field;
 public interface ColumnInfo {
 
     /**
-     * 查询时(select) 的 sql 片段 提前生成好, 以提高性能
+     * 查询时(select) 的 sql 片段 强烈建议提前生成好 !!! 以提高性能
      * <br>
      * 举例 :
      * <br>
@@ -28,7 +28,7 @@ public interface ColumnInfo {
     }
 
     /**
-     * 更新时的 sql 片段 提前生成好,以提高性能
+     * 更新时的 sql 片段 强烈建议提前生成好!!! 以提高性能
      * <br>
      * 举例 :
      * <br>
@@ -41,7 +41,7 @@ public interface ColumnInfo {
     }
 
     /**
-     * 插入时 的 sql 片段 提前生成好,以提高性能
+     * 插入时 的 sql 片段 强烈建议提前生成好!!! 以提高性能
      * <br>
      * 举例 :
      * <br>
