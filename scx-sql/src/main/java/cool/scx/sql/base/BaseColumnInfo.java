@@ -1,16 +1,19 @@
-package cool.scx.sql.column_info;
+package cool.scx.sql.base;
 
 import cool.scx.sql.ColumnInfo;
 
 import java.lang.reflect.Field;
 
-public abstract class SimpleColumnInfo implements ColumnInfo {
+/**
+ * BaseColumnInfo
+ */
+public class BaseColumnInfo implements ColumnInfo {
 
     protected final Field javaField;
     protected String updateSetSQL;
     protected String selectSQL;
 
-    public SimpleColumnInfo(Field javaField) {
+    public BaseColumnInfo(Field javaField) {
         this.javaField = javaField;
     }
 
@@ -35,7 +38,7 @@ public abstract class SimpleColumnInfo implements ColumnInfo {
     }
 
     @Override
-    public final String insertValuesSQL() {
+    public String insertValuesSQL() {
         return "?";
     }
 
@@ -47,6 +50,11 @@ public abstract class SimpleColumnInfo implements ColumnInfo {
             e.printStackTrace();
             return null;
         }
+    }
+
+    @Override
+    public String columnName() {
+        return javaFieldName();
     }
 
     @Override
