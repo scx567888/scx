@@ -3,7 +3,7 @@ package cool.scx.sql;
 import java.lang.reflect.Field;
 
 /**
- * <p>ColumnInfo interface.</p>
+ * <p>ColumnInfo.</p>
  *
  * @author scx567888
  * @version 0.1.3
@@ -23,41 +23,45 @@ public interface ColumnInfo {
      *
      * @return a {@link java.lang.String} object
      */
-    String selectSQL();
+    default String selectSQL() {
+        return this.fieldName().equals(this.columnName()) ? this.columnName() : this.columnName() + " AS " + this.fieldName();
+    }
 
     /**
      * 更新时的 sql 片段 提前生成好,以提高性能
-     * <p>
+     * <br>
+     * 举例 :
+     * <br>
      * 片段 : [ user_name = :userName ]
      * <br>
      * SQL : [ update user set user_name = :userName where id = 1 ]
-     *
-     * @return a {@link java.lang.String} object
      */
-    String updateSetSQL();
+    default String updateSetSQL() {
+        return this.columnName() + " = ?";
+    }
 
     /**
      * 插入时 的 sql 片段 提前生成好,以提高性能
-     *
-     * @return a {@link java.lang.String} object
-     * <p>
+     * <br>
+     * 举例 :
+     * <br>
      * 片段 : [ :userName ]
      * <br>
      * SQL : [ insert into (user_name) values(:userName) ]
      */
-    String insertValuesSQL();
+    default String insertValuesSQL() {
+        return "?";
+    }
 
     /**
-     * 列名称
-     *
-     * @return a
+     * 列名称 (数据库中的列名称)
      */
     default String columnName() {
         return fieldName();
     }
 
     /**
-     * 对应 java 的 字段(Field)
+     * 对应 java 的 字段 (Field)
      *
      * @return a
      */
@@ -107,6 +111,9 @@ public interface ColumnInfo {
         return null;
     }
 
+    /**
+     * 类型  (数据库中的类型 , 目前仅在建表时使用)
+     */
     default String type() {
         return "VARCHAR(128)";
     }
