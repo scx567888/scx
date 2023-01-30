@@ -52,7 +52,9 @@ public interface ColumnInfo {
      *
      * @return a
      */
-    String columnName();
+    default String columnName() {
+        return fieldName();
+    }
 
     /**
      * 对应 java 的 字段(Field)
@@ -83,6 +85,38 @@ public interface ColumnInfo {
             e.printStackTrace();
             return null;
         }
+    }
+
+    default boolean notNull() {
+        return false;
+    }
+
+    default boolean primaryKey() {
+        return false;
+    }
+
+    default boolean autoIncrement() {
+        return false;
+    }
+
+    default String defaultValue() {
+        return null;
+    }
+
+    default String onUpdateValue() {
+        return null;
+    }
+
+    default String type() {
+        return "VARCHAR(128)";
+    }
+
+    default boolean unique() {
+        return false;
+    }
+
+    default boolean needIndex() {
+        return false;
     }
 
 }
