@@ -6,8 +6,6 @@ import cool.scx.sql.TableInfo;
 import cool.scx.util.CaseUtils;
 import cool.scx.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Stream;
 
 /**
