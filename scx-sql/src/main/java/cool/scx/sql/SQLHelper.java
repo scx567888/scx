@@ -304,7 +304,7 @@ public final class SQLHelper {
      * @param nonExistentColumnName java 字段的名称 (注意 : fieldNames 中存在但 allFields 中不存在的则会忽略)
      * @return a
      */
-    public static  String getAlertTableDDL(List<? extends ColumnInfo> nonExistentColumnName, String tableName) {
+    public static String getAlertTableDDL(List<? extends ColumnInfo> nonExistentColumnName, String tableName) {
         var alertTableDDL = new ArrayList<String>();
         for (var field : nonExistentColumnName) {
             var normalDDL = initNormalDDL(field);
