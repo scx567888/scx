@@ -67,41 +67,6 @@ public final class ScxDaoTableInfo implements TableInfo {
     }
 
     /**
-     * 获取建表语句
-     *
-     * @return s
-     */
-    public String getCreateTableDDL() {
-        var createTableDDL = new ArrayList<String>();
-        for (var columnInfo : columnInfos) {
-            createTableDDL.add(columnInfo.normalDDL());
-        }
-        for (var columnInfo : columnInfos) {
-            createTableDDL.addAll(List.of(columnInfo.specialDDL()));
-        }
-        return "CREATE TABLE `" + tableName + "` (" + String.join(", ", createTableDDL) + ");";
-    }
-
-    /**
-     * 获取修复表的语句
-     *
-     * @param nonExistentColumnName java 字段的名称 (注意 : fieldNames 中存在但 allFields 中不存在的则会忽略)
-     * @return a
-     */
-    public String getAlertTableDDL(List<ScxDaoColumnInfo> nonExistentColumnName) {
-        var alertTableDDL = new ArrayList<String>();
-        for (var field : nonExistentColumnName) {
-            alertTableDDL.add("ADD " + field.normalDDL());
-        }
-        for (var s : nonExistentColumnName) {
-            for (var s1 : s.specialDDL()) {
-                alertTableDDL.add("ADD " + s1);
-            }
-        }
-        return "ALTER TABLE `" + tableName + "` " + String.join(", ", alertTableDDL) + ";";
-    }
-
-    /**
      * {@inheritDoc}
      * <p>
      * a

@@ -2,12 +2,12 @@ package cool.scx.core.dao;
 
 import cool.scx.core.annotation.Column;
 import cool.scx.sql.ColumnInfo;
-import cool.scx.sql.SQLHelper;
-import cool.scx.util.CaseUtils;
-import cool.scx.util.StringUtils;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
+
+import static cool.scx.sql.SQLHelper.getMySQLTypeCreateName;
+import static cool.scx.util.CaseUtils.toSnake;
+import static cool.scx.util.StringUtils.notBlank;
 
 /**
  * a
@@ -31,16 +31,6 @@ public final class ScxDaoColumnInfo implements ColumnInfo {
      * 类型  (数据库中的类型 , 目前仅在建表时使用)
      */
     private final String type;
-
-    /**
-     * 当前列对象通常的 DDL 如设置 字段名 类型 是否可以为空 默认值等 (建表语句片段 , 需和 specialDDL 一起使用才完整)
-     */
-    private final String normalDDL;
-
-    /**
-     * 当前列对象特殊的 DDL 如设置是否为主键 是否创建索引 是否是唯一值 (建表语句片段 , 需和 normalDDL 一起使用才完整)
-     */
-    private final String[] specialDDL;
 
     /**
      * 更新时的 sql 片段 提前生成好,以提高性能
@@ -77,6 +67,14 @@ public final class ScxDaoColumnInfo implements ColumnInfo {
      */
     private final String selectSQL;
 
+    private final boolean needIndex;
+    private final boolean unique;
+    private final String onUpdateValue;
+    private final String defaultValue;
+    private final boolean primaryKey;
+    private final boolean autoIncrement;
+    private final boolean notNull;
+
     /**
      * a
      *
@@ -85,96 +83,30 @@ public final class ScxDaoColumnInfo implements ColumnInfo {
     public ScxDaoColumnInfo(Field field) {
         this.field = field;
         var column = field.getAnnotation(Column.class);
-        this.type = initType(field, column);
-        this.columnName = initColumnName(field, column);
-        this.normalDDL = initNormalDDL(this.columnName, this.type, column);
-        this.specialDDL = initSpecialDDL(this.columnName, column);
+        if (column != null) {
+            this.type = notBlank(column.type()) ? column.type() : getMySQLTypeCreateName(field.getType());
+            this.columnName = notBlank(column.columnName()) ? column.columnName() : toSnake(field.getName());
+            this.needIndex = column.needIndex();
+            this.unique = column.unique();
+            this.onUpdateValue = column.onUpdateValue();
+            this.defaultValue = column.defaultValue();
+            this.primaryKey = column.primaryKey();
+            this.autoIncrement = column.autoIncrement();
+            this.notNull = column.notNull();
+        } else {
+            this.type = getMySQLTypeCreateName(field.getType());
+            this.columnName = toSnake(field.getName());
+            this.needIndex = false;
+            this.unique = false;
+            this.onUpdateValue = null;
+            this.defaultValue = null;
+            this.primaryKey = false;
+            this.autoIncrement = false;
+            this.notNull = false;
+        }
         this.updateSetSQL = this.columnName + " = ?";
         this.insertValuesSQL = "?";
         this.selectSQL = this.fieldName().equals(this.columnName) ? this.columnName : this.columnName + " AS " + this.fieldName();
-    }
-
-    /**
-     * <p>initType.</p>
-     *
-     * @param field  a {@link java.lang.reflect.Field} object
-     * @param column a {@link cool.scx.core.annotation.Column} object
-     * @return a {@link java.lang.String} object
-     */
-    private static String initType(Field field, Column column) {
-        if (column != null && StringUtils.notBlank(column.type())) {
-            return column.type();
-        } else {
-            return SQLHelper.getMySQLTypeCreateName(field.getType());
-        }
-    }
-
-    /**
-     * <p>initColumnName.</p>
-     *
-     * @param field  a {@link java.lang.reflect.Field} object
-     * @param column a {@link cool.scx.core.annotation.Column} object
-     * @return a {@link java.lang.String} object
-     */
-    private static String initColumnName(Field field, Column column) {
-        if (column != null && StringUtils.notBlank(column.columnName())) {
-            return column.columnName();
-        } else {
-            return CaseUtils.toSnake(field.getName());
-        }
-    }
-
-    /**
-     * 获取通常的 ddl
-     *
-     * @param name   a {@link java.lang.String} object
-     * @param type   a {@link java.lang.String} object
-     * @param column a {@link cool.scx.core.annotation.Column} object
-     * @return a
-     */
-    private static String initNormalDDL(String name, String type, Column column) {
-        var tempList = new ArrayList<String>();
-        tempList.add("`" + name + "`");
-        tempList.add(type);
-        if (column != null) {
-            tempList.add(column.notNull() || column.primaryKey() ? "NOT NULL" : "NULL");
-            if (column.autoIncrement()) {
-                tempList.add("AUTO_INCREMENT");
-            }
-            if (StringUtils.notBlank(column.defaultValue())) {
-                tempList.add("DEFAULT " + column.defaultValue());
-            }
-            if (StringUtils.notBlank(column.onUpdateValue())) {
-                tempList.add("ON UPDATE " + column.onUpdateValue());
-            }
-        } else {
-            tempList.add("NULL");
-        }
-        return String.join(" ", tempList);
-    }
-
-    /**
-     * 获取特殊的 ddl 如是否为主键 是否是唯一键 是否添加 索引 等
-     *
-     * @param name   a {@link java.lang.String} object
-     * @param column a {@link cool.scx.core.annotation.Column} object
-     * @return a
-     */
-    private static String[] initSpecialDDL(String name, Column column) {
-        if (column == null) {
-            return new String[0];
-        }
-        var list = new ArrayList<String>();
-        if (column.primaryKey()) {
-            list.add("PRIMARY KEY (`" + name + "`)");
-        }
-        if (column.unique()) {
-            list.add("UNIQUE KEY `unique_" + name + "`(`" + name + "`)");
-        }
-        if (column.needIndex()) {
-            list.add("KEY `index_" + name + "`(`" + name + "`)");
-        }
-        return list.toArray(String[]::new);
     }
 
     /**
@@ -183,6 +115,31 @@ public final class ScxDaoColumnInfo implements ColumnInfo {
     @Override
     public Field javaField() {
         return field;
+    }
+
+    @Override
+    public boolean notNull() {
+        return this.notNull;
+    }
+
+    @Override
+    public boolean primaryKey() {
+        return this.primaryKey;
+    }
+
+    @Override
+    public boolean autoIncrement() {
+        return this.autoIncrement;
+    }
+
+    @Override
+    public String defaultValue() {
+        return this.defaultValue;
+    }
+
+    @Override
+    public String onUpdateValue() {
+        return this.onUpdateValue;
     }
 
     /**
@@ -230,26 +187,19 @@ public final class ScxDaoColumnInfo implements ColumnInfo {
      *
      * @return a
      */
-    public String normalDDL() {
-        return normalDDL;
-    }
-
-    /**
-     * a
-     *
-     * @return a
-     */
-    public String[] specialDDL() {
-        return specialDDL;
-    }
-
-    /**
-     * a
-     *
-     * @return a
-     */
+    @Override
     public String type() {
-        return type;
+        return this.type;
+    }
+
+    @Override
+    public boolean unique() {
+        return this.unique;
+    }
+
+    @Override
+    public boolean needIndex() {
+        return this.needIndex;
     }
 
 }

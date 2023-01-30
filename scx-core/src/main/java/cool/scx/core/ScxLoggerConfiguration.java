@@ -41,8 +41,8 @@ final class ScxLoggerConfiguration {
         var defaultStoredDirectory = scxConfig.get("scx.logging.default.stored-directory", AppRootHandler.of(scxEnvironment, "AppRoot:logs"));
         var defaultStackTrace = scxConfig.get("scx.logging.default.stack-trace", DefaultValueHandler.of(false));
 
-        //设置默认的 config
-        var defaultConfig = ScxLoggerFactory.defaultConfig();
+        //设置默认的 config 这里我们先清除所有的 Recorders
+        var defaultConfig = ScxLoggerFactory.defaultConfig().clearRecorders();
         defaultConfig.setLevel(defaultLevel);
         if (defaultType == LoggingType.CONSOLE || defaultType == LoggingType.BOTH) {
             defaultConfig.addRecorder(new ConsoleRecorder());

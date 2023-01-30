@@ -8,6 +8,7 @@ import cool.scx.core.dao.ScxDaoHelper;
 import cool.scx.core.enumeration.ScxCoreFeature;
 import cool.scx.http_client.ScxHttpClientHelper;
 import cool.scx.http_client.body.FormData;
+import cool.scx.sql.SQL;
 import cool.scx.sql.base.Query;
 import cool.scx.sql.base.SelectFilter;
 import cool.scx.sql.base.UpdateFilter;
@@ -68,6 +69,7 @@ public class TestModule extends ScxModule {
                 .configure(ScxCoreFeature.ENABLE_SCHEDULING_WITH_ANNOTATION, true)
                 .run();
         //修复表
+        ScxContext.sqlRunner().execute(SQL.ofNormal("drop database if exists scx_test; create database scx_test; use scx_test"));
         ScxDaoHelper.fixTable();
     }
 
