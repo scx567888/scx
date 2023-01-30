@@ -283,7 +283,7 @@ public final class SQLHelper {
      *
      * @return s
      */
-    public static String getCreateTableDDL(TableInfo tableInfo) {
+    public static String getCreateTableDDL(TableInfo<?> tableInfo) {
         var createTableDDL = new ArrayList<String>();
         var columnInfos = tableInfo.columnInfos();
         var tableName = tableInfo.tableName();
@@ -304,7 +304,7 @@ public final class SQLHelper {
      * @param nonExistentColumnName java 字段的名称 (注意 : fieldNames 中存在但 allFields 中不存在的则会忽略)
      * @return a
      */
-    public static String getAlertTableDDL(List<ColumnInfo> nonExistentColumnName, String tableName) {
+    public static  String getAlertTableDDL(List<? extends ColumnInfo> nonExistentColumnName, String tableName) {
         var alertTableDDL = new ArrayList<String>();
         for (var field : nonExistentColumnName) {
             var normalDDL = initNormalDDL(field);
@@ -366,7 +366,7 @@ public final class SQLHelper {
      * @param tableInfo a
      * @throws java.sql.SQLException a
      */
-    public static void fixTable(TableInfo tableInfo, String databaseName, DataSource dataSource) throws SQLException {
+    public static void fixTable(TableInfo<?> tableInfo, String databaseName, DataSource dataSource) throws SQLException {
         try (var con = dataSource.getConnection()) {
             var existingColumn = getTableAllColumnNames(con, databaseName, tableInfo.tableName());
             if (existingColumn != null) {
@@ -414,7 +414,7 @@ public final class SQLHelper {
      * @return true 需要 false 不需要
      * @throws java.sql.SQLException e
      */
-    public static boolean checkNeedFixTable(TableInfo tableInfo, String databaseName, DataSource dataSource) throws SQLException {
+    public static boolean checkNeedFixTable(TableInfo<?> tableInfo, String databaseName, DataSource dataSource) throws SQLException {
         try (var con = dataSource.getConnection()) {
             var existingColumn = getTableAllColumnNames(con, databaseName, tableInfo.tableName());
             //这个表不存在

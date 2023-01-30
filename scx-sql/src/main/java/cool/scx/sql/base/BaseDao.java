@@ -22,7 +22,7 @@ public class BaseDao<Entity> {
     /**
      * 实体类对应的 table 结构
      */
-    protected final TableInfo tableInfo;
+    protected final TableInfo<? extends BaseColumnInfo> tableInfo;
 
     /**
      * 实体类 class 用于泛型转换
@@ -47,11 +47,11 @@ public class BaseDao<Entity> {
     /**
      * a
      *
-     * @param tableInfo   a
+     * @param tableInfo   因为其使用 SQL.ofPlaceholder 的方式进行参数填充 所以必须是 BaseColumnInfo 才可以
      * @param entityClass a
      * @param sqlRunner   a
      */
-    public BaseDao(TableInfo tableInfo, Class<Entity> entityClass, SQLRunner sqlRunner) {
+    public BaseDao(TableInfo<? extends BaseColumnInfo> tableInfo, Class<Entity> entityClass, SQLRunner sqlRunner) {
         this.tableInfo = tableInfo;
         this.entityClass = entityClass;
         this.sqlRunner = sqlRunner;
@@ -288,7 +288,7 @@ public class BaseDao<Entity> {
      *
      * @return a
      */
-    public final TableInfo _tableInfo() {
+    public final TableInfo<? extends BaseColumnInfo> _tableInfo() {
         return tableInfo;
     }
 

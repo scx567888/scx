@@ -38,7 +38,7 @@ public class BaseColumnInfo implements ColumnInfo {
     }
 
     @Override
-    public String insertValuesSQL() {
+    public final String insertValuesSQL() {
         return "?";
     }
 

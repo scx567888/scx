@@ -132,7 +132,7 @@ final class ScxLoggerConfiguration {
         /**
          * 既打印到控制台也同时写入到文件
          */
-        BOTH;
+        BOTH
     }
 
 }

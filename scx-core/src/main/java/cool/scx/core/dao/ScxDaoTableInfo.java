@@ -14,7 +14,7 @@ import java.util.stream.Stream;
  * @author scx567888
  * @version 0.5.0
  */
-public final class ScxDaoTableInfo implements TableInfo {
+public final class ScxDaoTableInfo implements TableInfo<ScxDaoColumnInfo> {
 
     /**
      * 实体类型不含@NoColunm 注解的field
