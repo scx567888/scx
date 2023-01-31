@@ -1,14 +1,14 @@
-package cool.scx.core.mvc;
+package cool.scx.mvc;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.TextNode;
-import cool.scx.core.http.exception.BadRequestException;
+import cool.scx.mvc.http.exception.BadRequestException;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpHeaderValues;
 import io.vertx.ext.web.RoutingContext;
 
-import static cool.scx.core.mvc.ScxMappingRoutingContextInfo.ContentType.*;
+import static cool.scx.mvc.ScxMappingRoutingContextInfo.ContentType.*;
 import static cool.scx.util.ObjectUtils.jsonMapper;
 import static cool.scx.util.ObjectUtils.xmlMapper;
 
@@ -105,7 +105,7 @@ public final class ScxMappingRoutingContextInfo {
      * <p>initContentType.</p>
      *
      * @param ctx a {@link io.vertx.ext.web.RoutingContext} object
-     * @return a {@link cool.scx.core.mvc.ScxMappingRoutingContextInfo.ContentType} object
+     * @return a {@link ScxMappingRoutingContextInfo.ContentType} object
      */
     public static ContentType initContentType(RoutingContext ctx) {
         var contentType = ctx.request().headers().get(HttpHeaderNames.CONTENT_TYPE);
@@ -138,7 +138,7 @@ public final class ScxMappingRoutingContextInfo {
     /**
      * <p>contentType.</p>
      *
-     * @return a {@link cool.scx.core.mvc.ScxMappingRoutingContextInfo.ContentType} object
+     * @return a {@link ScxMappingRoutingContextInfo.ContentType} object
      */
     public ContentType contentType() {
         return contentType;

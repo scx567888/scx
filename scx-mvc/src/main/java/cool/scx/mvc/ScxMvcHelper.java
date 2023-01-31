@@ -1,4 +1,4 @@
-package cool.scx.core.mvc;
+package cool.scx.mvc;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -10,13 +10,7 @@ import java.util.Map;
 
 import static cool.scx.util.ObjectUtils.jsonMapper;
 
-/**
- * <p>ScxMappingHelper class.</p>
- *
- * @author scx567888
- * @version 1.18.12
- */
-public class ScxMappingHelper {
+public class ScxMvcHelper {
 
     /**
      * <p>getFromMap.</p>
