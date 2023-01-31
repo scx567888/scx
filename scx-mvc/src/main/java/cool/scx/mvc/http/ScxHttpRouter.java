@@ -1,9 +1,9 @@
-package cool.scx.core.http;
+package cool.scx.mvc.http;
 
-import cool.scx.core.Scx;
-import cool.scx.core.http.exception.InternalServerErrorException;
-import cool.scx.core.http.exception_handler.LastExceptionHandler;
-import cool.scx.core.http.exception_handler.ScxHttpExceptionHandler;
+import cool.scx.mvc.ScxMvc;
+import cool.scx.mvc.http.exception.InternalServerErrorException;
+import cool.scx.mvc.http.exception_handler.LastExceptionHandler;
+import cool.scx.mvc.http.exception_handler.ScxHttpExceptionHandler;
 import cool.scx.util.ScxExceptionHelper;
 import io.vertx.core.Handler;
 import io.vertx.ext.web.Route;
@@ -15,8 +15,8 @@ import io.vertx.ext.web.handler.CorsHandler;
 import java.util.ArrayList;
 import java.util.List;
 
-import static cool.scx.core.http.ScxHttpHelper.initBodyHandler;
-import static cool.scx.core.http.ScxHttpHelper.initCorsHandler;
+import static cool.scx.mvc.http.ScxHttpHelper.initBodyHandler;
+import static cool.scx.mvc.http.ScxHttpHelper.initCorsHandler;
 
 /**
  * ScxHttp 路由 内部使用 vertxRouter 进行具体路由的处理
@@ -41,22 +41,24 @@ public final class ScxHttpRouter {
      * 异常处理器列表
      */
     private final List<ScxHttpRouterExceptionHandler> scxHttpRouterExceptionHandlers = new ArrayList<>();
+    private final LastExceptionHandler lastExceptionHandler;
 
     /**
      * a
      *
-     * @param scx a
+     * @param scxMvc a
      */
-    public ScxHttpRouter(Scx scx) {
+    public ScxHttpRouter(ScxMvc scxMvc) {
         //初始化默认的异常处理器
-        addExceptionHandler(ScxHttpExceptionHandler.DEFAULT_INSTANCE);
+        addExceptionHandler(new ScxHttpExceptionHandler(scxMvc.options().useDevelopmentErrorPage()));
+        this.lastExceptionHandler = new LastExceptionHandler(scxMvc.options().useDevelopmentErrorPage());
         //创建 vertxRouter 用来管理整个项目的路由
-        this.vertxRouter = Router.router(scx.vertx());
+        this.vertxRouter = Router.router(scxMvc.vertx());
         //绑定异常处理器
         bindErrorHandler(this.vertxRouter);
         //设置基本的 handler
-        this.corsHandler = initCorsHandler(scx.scxOptions().allowedOrigin());
-        this.bodyHandler = initBodyHandler(scx.scxEnvironment().getTempPath(BodyHandler.DEFAULT_UPLOADS_DIRECTORY));
+        this.corsHandler = initCorsHandler(scxMvc.options().allowedOrigin());
+        this.bodyHandler = initBodyHandler(scxMvc.options().uploadsDirectory(), scxMvc.options().bodyLimit());
         //注册路由
         this.corsHandlerRoute = this.vertxRouter.route().handler(corsHandler);
         this.bodyHandlerRoute = this.vertxRouter.route().handler(bodyHandler);
@@ -155,7 +157,7 @@ public final class ScxHttpRouter {
                 return handler;
             }
         }
-        return LastExceptionHandler.DEFAULT_INSTANCE;
+        return lastExceptionHandler;
     }
 
     private record ErrorHandler(ScxHttpRouter scxHttpRouter) implements Handler<RoutingContext> {

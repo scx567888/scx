@@ -1,9 +1,9 @@
-package cool.scx.core.mvc;
+package cool.scx.mvc;
 
-import cool.scx.core.Scx;
-import cool.scx.core.ScxContext;
-import cool.scx.core.annotation.ScxMapping;
 import cool.scx.enumeration.HttpMethod;
+import cool.scx.mvc.annotation.ScxMapping;
+import cool.scx.mvc.registrar.RouteState;
+import cool.scx.mvc.registrar.ScxMappingRegistrar;
 import cool.scx.util.CaseUtils;
 import cool.scx.util.ScxExceptionHelper;
 import cool.scx.util.URIBuilder;
@@ -15,7 +15,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.stream.Stream;
 
-import static cool.scx.core.ScxHelper.responseCanUse;
+import static cool.scx.mvc.http.ScxHttpHelper.responseCanUse;
 
 /**
  * <p>ScxRouteHandler class.</p>
@@ -63,7 +63,7 @@ public final class ScxMappingHandler implements Handler<RoutingContext> {
     /**
      * scxMappingConfiguration 配置
      */
-    private final Scx scx;
+    private final ScxMvc scxMvc;
 
     /**
      * ScxMapping 排序 优先级最高
@@ -73,23 +73,23 @@ public final class ScxMappingHandler implements Handler<RoutingContext> {
     /**
      * a
      */
-    private ScxMappingRegistrar.RouteState routeState;
+    private RouteState routeState;
 
     /**
      * a
      *
      * @param clazz  a
      * @param method a
-     * @param scx    a
+     * @param scxMvc a
      */
-    public ScxMappingHandler(Class<?> clazz, Method method, Scx scx) {
-        this.scx = scx;
+    public <T> ScxMappingHandler(Class<T> clazz, Method method, ScxMvc scxMvc) {
+        this.scxMvc = scxMvc;
         this.clazz = clazz;
         this.method = method;
         this.method.setAccessible(true);
         this.isVoid = method.getReturnType().equals(void.class);
         this.parameters = method.getParameters();
-        this.example = this.scx.scxBeanFactory().getBean(clazz);
+        this.example = this.scxMvc.beanFactory().getBean(clazz);
         //根据注解初始化值
         var classScxMapping = clazz.getAnnotation(ScxMapping.class);
         var methodScxMapping = method.getAnnotation(ScxMapping.class);
@@ -101,7 +101,7 @@ public final class ScxMappingHandler implements Handler<RoutingContext> {
     /**
      * <p>getHttpMethod.</p>
      *
-     * @param methodScxMapping a {@link cool.scx.core.annotation.ScxMapping} object
+     * @param methodScxMapping a {@link ScxMapping} object
      * @return an array of {@link cool.scx.enumeration.HttpMethod} objects
      */
     private static HttpMethod[] initHttpMethod(ScxMapping methodScxMapping) {
@@ -111,8 +111,8 @@ public final class ScxMappingHandler implements Handler<RoutingContext> {
     /**
      * <p>Getter for the field <code>url</code>.</p>
      *
-     * @param classScxMapping  a {@link cool.scx.core.annotation.ScxMapping} object
-     * @param methodScxMapping a {@link cool.scx.core.annotation.ScxMapping} object
+     * @param classScxMapping  a {@link ScxMapping} object
+     * @param methodScxMapping a {@link ScxMapping} object
      * @return a {@link java.lang.String} object
      */
     private String initOriginalUrl(ScxMapping classScxMapping, ScxMapping methodScxMapping) {
@@ -137,45 +137,45 @@ public final class ScxMappingHandler implements Handler<RoutingContext> {
     @Override
     public void handle(RoutingContext context) {
         //0, 将 routingContext 注入到 ThreadLocal 中去 以方便后续从静态方法调用
-        ScxContext._routingContext(context);
+        ScxMvcContext._routingContext(context);
         try {
             //1, 执行前置处理器 (一般用于校验权限之类)
-            this.scx.scxMappingConfiguration().scxMappingInterceptor().preHandle(context, this);
+            this.scxMvc.scxMappingInterceptor().preHandle(context, this);
             //2, 根据 method 参数获取 invoke 时的参数
-            var methodParameters = this.scx.scxMappingConfiguration().buildMethodParameters(this.parameters, context);
+            var methodParameters = this.scxMvc.buildMethodParameters(this.parameters, context);
             //3, 执行具体方法 (用来从请求中获取参数并执行反射调用方法以获取返回值)
             var tempResult = this.method.invoke(this.example, methodParameters);
             //4, 执行后置处理器
-            var finalResult = this.scx.scxMappingConfiguration().scxMappingInterceptor().postHandle(context, this, tempResult);
+            var finalResult = this.scxMvc.scxMappingInterceptor().postHandle(context, this, tempResult);
             //5, 如果方法返回值不为 void 并且 response 可用 , 则调用返回值处理器
             if (!isVoid && responseCanUse(context)) {
-                this.scx.scxMappingConfiguration().findMethodReturnValueHandler(finalResult).handle(finalResult, context);
+                this.scxMvc.findMethodReturnValueHandler(finalResult).handle(finalResult, context);
             }
         } catch (Throwable e) {
             //1, 如果是反射调用时发生异常 则使用反射异常的内部异常 否则使用异常
             //2, 如果是包装类型异常 (ScxWrappedRuntimeException) 则使用其内部的异常
             var exception = ScxExceptionHelper.getRootCause(e instanceof InvocationTargetException ? e.getCause() : e);
-            this.scx.scxHttpRouter().findExceptionHandler(exception).handle(exception, context);
+            this.scxMvc.scxHttpRouter().findExceptionHandler(exception).handle(exception, context);
         } finally {
-            ScxContext._clearRoutingContext();
+            ScxMvcContext._clearRoutingContext();
         }
     }
 
     /**
      * <p>Setter for the field <code>routeState</code>.</p>
      *
-     * @param route a {@link cool.scx.core.mvc.ScxMappingRegistrar.RouteState} object
+     * @param route a {@link ScxMappingRegistrar.RouteState} object
      */
-    void setRouteState(ScxMappingRegistrar.RouteState route) {
+    public void setRouteState(RouteState route) {
         this.routeState = route;
     }
 
     /**
      * <p>routeState.</p>
      *
-     * @return a {@link cool.scx.core.mvc.ScxMappingRegistrar.RouteState} object
+     * @return a {@link ScxMappingRegistrar.RouteState} object
      */
-    ScxMappingRegistrar.RouteState routeState() {
+    public RouteState routeState() {
         return routeState;
     }
 
@@ -184,7 +184,7 @@ public final class ScxMappingHandler implements Handler<RoutingContext> {
      *
      * @return a int
      */
-    int order() {
+    public int order() {
         return order;
     }
 

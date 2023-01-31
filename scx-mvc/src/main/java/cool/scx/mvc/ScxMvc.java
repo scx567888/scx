@@ -1,14 +1,20 @@
-package cool.scx.core.mvc;
+package cool.scx.mvc;
 
-import cool.scx.core.http.exception.BadRequestException;
-import cool.scx.core.mvc.exception.ParamConvertException;
-import cool.scx.core.mvc.exception.RequiredParamEmptyException;
-import cool.scx.core.mvc.interceptor.ScxMappingInterceptorImpl;
-import cool.scx.core.mvc.parameter_handler.*;
-import cool.scx.core.mvc.return_value_handler.BaseVoMethodReturnValueHandler;
-import cool.scx.core.mvc.return_value_handler.LastMethodReturnValueHandler;
-import cool.scx.core.mvc.return_value_handler.NullMethodReturnValueHandler;
-import cool.scx.core.mvc.return_value_handler.StringMethodReturnValueHandler;
+import cool.scx.beans.ScxBeanFactory;
+import cool.scx.mvc.Interceptor.ScxMappingInterceptorImpl;
+import cool.scx.mvc.http.ScxHttpRouter;
+import cool.scx.mvc.http.exception.BadRequestException;
+import cool.scx.mvc.parameter_handler.*;
+import cool.scx.mvc.parameter_handler.exception.ParamConvertException;
+import cool.scx.mvc.parameter_handler.exception.RequiredParamEmptyException;
+import cool.scx.mvc.registrar.ScxMappingRegistrar;
+import cool.scx.mvc.registrar.ScxWebSocketMappingRegistrar;
+import cool.scx.mvc.return_value_handler.BaseVoMethodReturnValueHandler;
+import cool.scx.mvc.return_value_handler.LastMethodReturnValueHandler;
+import cool.scx.mvc.return_value_handler.NullMethodReturnValueHandler;
+import cool.scx.mvc.return_value_handler.StringMethodReturnValueHandler;
+import cool.scx.mvc.websocket.ScxWebSocketRouter;
+import io.vertx.core.Vertx;
 import io.vertx.ext.web.RoutingContext;
 
 import java.lang.reflect.Parameter;
@@ -16,33 +22,66 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * ScxMappingConfiguration 配置类 再此处可配置 [前置后置拦截器,参数处理器,返回值处理器等]
- *
- * @author scx567888
- * @version 1.11.8
- */
-public final class ScxMappingConfiguration {
+public class ScxMvc {
 
+    private final ScxMvcOptions options;
+    private final Vertx vertx;
+    private final ScxBeanFactory beanFactory;
+    private final ScxHttpRouter scxHttpRouter;
+    private final ScxWebSocketRouter scxWebSocketRouter;
     /**
      * 方法返回值处理器
      */
     private final List<ScxMappingMethodReturnValueHandler> scxMappingMethodReturnValueHandlers = new ArrayList<>();
-
     /**
      * 方法参数处理器
      */
     private final List<ScxMappingMethodParameterHandler> scxMappingMethodParameterHandlers = new ArrayList<>();
-
     /**
      * 拦截器
      */
     private ScxMappingInterceptor scxMappingInterceptor = new ScxMappingInterceptorImpl();
 
+    public ScxMvc(ScxMvcOptions options, Vertx vertx, ScxBeanFactory beanFactory) {
+        this.options = options;
+        this.vertx = vertx;
+        this.beanFactory = beanFactory;
+        this.scxHttpRouter = new ScxHttpRouter(this);
+        this.scxWebSocketRouter = new ScxWebSocketRouter();
+        //3, 注册 ScxMapping 和 ScxWebSocketMapping 注解的 handler 到 路由中去
+        new ScxMappingRegistrar(this, options.classList()).registerRoute(this.scxHttpRouter.vertxRouter());
+        new ScxWebSocketMappingRegistrar(this, options.classList()).registerRoute(this.scxWebSocketRouter);
+        init();
+    }
+
+    public ScxWebSocketRouter scxWebSocketRouter() {
+        return scxWebSocketRouter;
+    }
+
+    public Vertx vertx() {
+        return vertx;
+    }
+
+    public ScxMvcOptions options() {
+        return options;
+    }
+
+    public ScxBeanFactory beanFactory() {
+        return beanFactory;
+    }
+
+    public ScxTemplate template() {
+        return null;
+    }
+
+    public ScxHttpRouter scxHttpRouter() {
+        return scxHttpRouter;
+    }
+
     /**
      * a
      */
-    public ScxMappingConfiguration() {
+    public void init() {
         //初始化默认的返回值处理器
         addMethodReturnValueHandler(NullMethodReturnValueHandler.DEFAULT_INSTANCE);
         addMethodReturnValueHandler(StringMethodReturnValueHandler.DEFAULT_INSTANCE);
@@ -61,7 +100,7 @@ public final class ScxMappingConfiguration {
      * @param scxMappingInterceptor a
      * @return a
      */
-    public ScxMappingConfiguration setScxMappingInterceptor(ScxMappingInterceptor scxMappingInterceptor) {
+    public ScxMvc setScxMappingInterceptor(ScxMappingInterceptor scxMappingInterceptor) {
         if (scxMappingInterceptor == null) {
             throw new IllegalArgumentException("ScxMappingInterceptor must not be empty !!!");
         }
@@ -84,7 +123,7 @@ public final class ScxMappingConfiguration {
      * @param scxMappingMethodParameterHandler a
      * @return a
      */
-    public ScxMappingConfiguration addMethodParameterHandler(ScxMappingMethodParameterHandler scxMappingMethodParameterHandler) {
+    public ScxMvc addMethodParameterHandler(ScxMappingMethodParameterHandler scxMappingMethodParameterHandler) {
         scxMappingMethodParameterHandlers.add(scxMappingMethodParameterHandler);
         return this;
     }
@@ -95,7 +134,7 @@ public final class ScxMappingConfiguration {
      * @param returnValueHandler a
      * @return a
      */
-    public ScxMappingConfiguration addMethodReturnValueHandler(ScxMappingMethodReturnValueHandler returnValueHandler) {
+    public ScxMvc addMethodReturnValueHandler(ScxMappingMethodReturnValueHandler returnValueHandler) {
         scxMappingMethodReturnValueHandlers.add(returnValueHandler);
         return this;
     }
@@ -107,7 +146,7 @@ public final class ScxMappingConfiguration {
      * @param scxMappingMethodParameterHandler a
      * @return a
      */
-    public ScxMappingConfiguration addMethodParameterHandler(int index, ScxMappingMethodParameterHandler scxMappingMethodParameterHandler) {
+    public ScxMvc addMethodParameterHandler(int index, ScxMappingMethodParameterHandler scxMappingMethodParameterHandler) {
         scxMappingMethodParameterHandlers.add(index, scxMappingMethodParameterHandler);
         return this;
     }
@@ -119,7 +158,7 @@ public final class ScxMappingConfiguration {
      * @param returnValueHandler a
      * @return a
      */
-    public ScxMappingConfiguration addMethodReturnValueHandler(int index, ScxMappingMethodReturnValueHandler returnValueHandler) {
+    public ScxMvc addMethodReturnValueHandler(int index, ScxMappingMethodReturnValueHandler returnValueHandler) {
         scxMappingMethodReturnValueHandlers.add(index, returnValueHandler);
         return this;
     }

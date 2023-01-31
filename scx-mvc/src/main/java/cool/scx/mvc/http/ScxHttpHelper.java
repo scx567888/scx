@@ -1,9 +1,9 @@
-package cool.scx.core.http;
+package cool.scx.mvc.http;
 
-import cool.scx.util.FileUtils;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.util.AsciiString;
 import io.vertx.core.http.HttpMethod;
+import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.CorsHandler;
 import io.vertx.ext.web.handler.impl.BodyHandlerImpl;
@@ -20,7 +20,7 @@ import java.util.stream.Stream;
  * @author scx567888
  * @version 1.18.2
  */
-class ScxHttpHelper {
+public class ScxHttpHelper {
 
     /**
      * Constant <code>defaultAllowedMethods</code>
@@ -49,10 +49,6 @@ class ScxHttpHelper {
             HttpHeaderNames.CONTENT_DISPOSITION
     );
 
-    /**
-     * 默认 http 请求 body 限制大小
-     */
-    private static final long DEFAULT_BODY_LIMIT = FileUtils.displaySizeToLong("16384KB");
 
     /**
      * <p>toSet.</p>
@@ -84,11 +80,21 @@ class ScxHttpHelper {
      * @param uploadDirectory a {@link java.nio.file.Path} object
      * @return a {@link io.vertx.ext.web.handler.BodyHandler} object
      */
-    static BodyHandler initBodyHandler(Path uploadDirectory) {
-        return new BodyHandlerImpl(uploadDirectory.toString())
-                .setBodyLimit(DEFAULT_BODY_LIMIT)
+    static BodyHandler initBodyHandler(Path uploadDirectory, long bodyLimit) {
+        return new BodyHandlerImpl(uploadDirectory != null ? uploadDirectory.toString() : null)
+                .setBodyLimit(bodyLimit)
                 .setMergeFormAttributes(false)
                 .setDeleteUploadedFilesOnEnd(true);
+    }
+
+    /**
+     * request 是否还可用 (可以写入数据)
+     *
+     * @param context ctx
+     * @return 是否可用
+     */
+    public static boolean responseCanUse(RoutingContext context) {
+        return !context.request().response().ended() && !context.request().response().closed();
     }
 
 }

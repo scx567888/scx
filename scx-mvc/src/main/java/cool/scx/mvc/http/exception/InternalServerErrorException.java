@@ -1,8 +1,8 @@
-package cool.scx.core.http.exception;
+package cool.scx.mvc.http.exception;
 
-import cool.scx.core.http.ScxHttpException;
+import cool.scx.mvc.http.ScxHttpException;
 
-import static cool.scx.core.http.ScxHttpResponseStatus.INTERNAL_SERVER_ERROR;
+import static cool.scx.mvc.http.ScxHttpResponseStatus.INTERNAL_SERVER_ERROR;
 
 /**
  * 服务器内部异常

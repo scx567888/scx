@@ -1,8 +1,8 @@
-package cool.scx.core.http.exception;
+package cool.scx.mvc.http.exception;
 
-import cool.scx.core.http.ScxHttpException;
+import cool.scx.mvc.http.ScxHttpException;
 
-import static cool.scx.core.http.ScxHttpResponseStatus.BAD_REQUEST;
+import static cool.scx.mvc.http.ScxHttpResponseStatus.BAD_REQUEST;
 
 /**
  * 请求错误异常

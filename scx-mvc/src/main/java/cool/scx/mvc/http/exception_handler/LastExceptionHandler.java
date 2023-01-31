@@ -1,12 +1,11 @@
-package cool.scx.core.http.exception_handler;
+package cool.scx.mvc.http.exception_handler;
 
-import cool.scx.core.http.ScxHttpRouterExceptionHandler;
-import cool.scx.core.http.exception.InternalServerErrorException;
+import cool.scx.mvc.http.exception.InternalServerErrorException;
 import io.vertx.ext.web.RoutingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static cool.scx.core.ScxHelper.responseCanUse;
+import static cool.scx.mvc.http.ScxHttpHelper.responseCanUse;
 
 /**
  * a
@@ -14,17 +13,16 @@ import static cool.scx.core.ScxHelper.responseCanUse;
  * @author scx567888
  * @version 1.11.8
  */
-public final class LastExceptionHandler implements ScxHttpRouterExceptionHandler {
-
-    /**
-     * a
-     */
-    public static final LastExceptionHandler DEFAULT_INSTANCE = new LastExceptionHandler();
+public final class LastExceptionHandler extends ScxHttpExceptionHandler {
 
     /**
      * a
      */
     private static final Logger logger = LoggerFactory.getLogger(LastExceptionHandler.class);
+
+    public LastExceptionHandler(boolean useDevelopmentErrorPage) {
+        super(useDevelopmentErrorPage);
+    }
 
     /**
      * {@inheritDoc}
@@ -43,7 +41,7 @@ public final class LastExceptionHandler implements ScxHttpRouterExceptionHandler
         if (responseCanUse(context)) {
             //打印错误信息
             logger.error("ScxHttpRouter 发生异常 !!!", throwable);
-            ScxHttpExceptionHandler.handleScxHttpException(new InternalServerErrorException(throwable), context);
+            this.handleScxHttpException(new InternalServerErrorException(throwable), context);
         } else {
             logger.error("ScxHttpRouter 发生异常 !!!, 因为请求已被相应, 所以错误信息可能没有正确返回给客户端 !!!", throwable);
         }

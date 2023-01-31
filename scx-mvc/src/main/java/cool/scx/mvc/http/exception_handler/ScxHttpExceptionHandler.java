@@ -1,10 +1,9 @@
-package cool.scx.core.http.exception_handler;
+package cool.scx.mvc.http.exception_handler;
 
-import cool.scx.core.ScxContext;
-import cool.scx.core.enumeration.ScxCoreFeature;
-import cool.scx.core.http.ScxHttpException;
-import cool.scx.core.http.ScxHttpRouterExceptionHandler;
-import cool.scx.core.vo.BaseVo;
+
+import cool.scx.mvc.http.ScxHttpException;
+import cool.scx.mvc.http.ScxHttpRouterExceptionHandler;
+import cool.scx.mvc.vo.BaseVo;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.ScxExceptionHelper;
 import io.netty.handler.codec.http.HttpHeaderNames;
@@ -14,7 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.LinkedHashMap;
 
-import static cool.scx.core.ScxHelper.responseCanUse;
+import static cool.scx.mvc.http.ScxHttpHelper.responseCanUse;
 
 /**
  * a
@@ -22,12 +21,7 @@ import static cool.scx.core.ScxHelper.responseCanUse;
  * @author scx567888
  * @version 1.11.8
  */
-public final class ScxHttpExceptionHandler implements ScxHttpRouterExceptionHandler {
-
-    /**
-     * a
-     */
-    public static final ScxHttpExceptionHandler DEFAULT_INSTANCE = new ScxHttpExceptionHandler();
+public class ScxHttpExceptionHandler implements ScxHttpRouterExceptionHandler {
 
     /**
      * 默认 html 模板
@@ -52,24 +46,10 @@ public final class ScxHttpExceptionHandler implements ScxHttpRouterExceptionHand
      */
     private static final Logger logger = LoggerFactory.getLogger(ScxHttpExceptionHandler.class);
 
-    /**
-     * a
-     *
-     * @param scxHttpException a
-     * @param routingContext   a
-     */
-    public static void handleScxHttpException(ScxHttpException scxHttpException, RoutingContext routingContext) {
-        String info = null;
-        //1, 这里根据是否开启了开发人员错误页面 进行相应的返回
-        if (ScxContext.getFeatureState(ScxCoreFeature.USE_DEVELOPMENT_ERROR_PAGE)) {
-            var cause = ScxExceptionHelper.getRootCause(scxHttpException.getCause());
-            if (cause == null) {
-                info = scxHttpException.getMessage();
-            } else {
-                info = ScxExceptionHelper.getStackTraceString(cause);
-            }
-        }
-        sendToClient(scxHttpException.statusCode(), scxHttpException.title(), info, routingContext);
+    private final boolean useDevelopmentErrorPage;
+
+    public ScxHttpExceptionHandler(boolean useDevelopmentErrorPage) {
+        this.useDevelopmentErrorPage = useDevelopmentErrorPage;
     }
 
     /**
@@ -104,6 +84,26 @@ public final class ScxHttpExceptionHandler implements ScxHttpRouterExceptionHand
     }
 
     /**
+     * a
+     *
+     * @param scxHttpException a
+     * @param routingContext   a
+     */
+    public void handleScxHttpException(ScxHttpException scxHttpException, RoutingContext routingContext) {
+        String info = null;
+        //1, 这里根据是否开启了开发人员错误页面 进行相应的返回
+        if (useDevelopmentErrorPage) {
+            var cause = ScxExceptionHelper.getRootCause(scxHttpException.getCause());
+            if (cause == null) {
+                info = scxHttpException.getMessage();
+            } else {
+                info = ScxExceptionHelper.getStackTraceString(cause);
+            }
+        }
+        sendToClient(scxHttpException.statusCode(), scxHttpException.title(), info, routingContext);
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -118,7 +118,7 @@ public final class ScxHttpExceptionHandler implements ScxHttpRouterExceptionHand
     public void handle(Throwable throwable, RoutingContext context) {
         if (responseCanUse(context)) {
             //1, 这里根据是否开启了开发人员错误页面 进行相应的返回
-            handleScxHttpException((ScxHttpException) throwable, context);
+            this.handleScxHttpException((ScxHttpException) throwable, context);
         } else {
             logger.error("捕获到 ScxHttpException 异常 !!!, 因为请求已被相应, 所以错误信息可能没有正确返回给客户端 !!!", throwable);
         }

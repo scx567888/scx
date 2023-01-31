@@ -57,6 +57,7 @@ public final class Html implements BaseVo {
      * @throws java.io.IOException if any.
      */
     public static Html of(ScxMvc scxMvc, String templatePath) throws IOException {
+        //todo 这里应该重构
         var template = scxMvc.template().getTemplateByPath(templatePath);
         return new Html(template, null, true);
     }

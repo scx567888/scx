@@ -1,8 +1,8 @@
-package cool.scx.core.http.exception;
+package cool.scx.mvc.http.exception;
 
-import cool.scx.core.http.ScxHttpException;
+import cool.scx.mvc.http.ScxHttpException;
 
-import static cool.scx.core.http.ScxHttpResponseStatus.UNSUPPORTED_MEDIA_TYPE;
+import static cool.scx.mvc.http.ScxHttpResponseStatus.UNSUPPORTED_MEDIA_TYPE;
 
 /**
  * 415 参数异常
