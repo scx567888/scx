@@ -1,18 +1,21 @@
 package cool.scx.core;
 
+import cool.scx.beans.ScxBeanFactory;
+import cool.scx.beans.ScxBeanFactoryOptions;
 import cool.scx.config.ScxConfig;
 import cool.scx.config.ScxConfigSource;
 import cool.scx.config.ScxEnvironment;
 import cool.scx.config.ScxFeatureConfig;
-import cool.scx.core.dao.ScxDao;
 import cool.scx.core.enumeration.ScxCoreFeature;
 import cool.scx.core.eventbus.MessageCodecRegistrar;
-import cool.scx.core.http.ScxHttpRouter;
-import cool.scx.core.mvc.ScxMappingConfiguration;
-import cool.scx.core.mvc.ScxMappingRegistrar;
 import cool.scx.core.scheduler.ScxScheduler;
-import cool.scx.core.websocket.ScxWebSocketMappingRegistrar;
-import cool.scx.core.websocket.ScxWebSocketRouter;
+import cool.scx.mvc.ScxMvc;
+import cool.scx.mvc.ScxMvcOptions;
+import cool.scx.mvc.ScxTemplate;
+import cool.scx.mvc.http.ScxHttpRouter;
+import cool.scx.mvc.registrar.ScxMappingRegistrar;
+import cool.scx.mvc.registrar.ScxWebSocketMappingRegistrar;
+import cool.scx.mvc.websocket.ScxWebSocketRouter;
 import cool.scx.util.ConsoleUtils;
 import cool.scx.util.NetUtils;
 import cool.scx.util.StopWatch;
@@ -23,6 +26,7 @@ import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.net.JksOptions;
+import io.vertx.ext.web.handler.BodyHandler;
 
 import java.net.BindException;
 import java.util.Arrays;
@@ -93,7 +97,7 @@ public final class Scx {
     /**
      * a
      */
-    private final ScxMappingConfiguration scxMappingConfiguration;
+    private final ScxMvc scxMvc;
 
     /**
      * 任务调度器
@@ -143,11 +147,13 @@ public final class Scx {
         //5, 初始化 BeanFactory
         this.scxBeanFactory = initScxBeanFactory(this.scxModules, this.vertx.nettyEventLoopGroup(), this.scxFeatureConfig);
         //6, 初始化模板
-        this.scxTemplate = new ScxTemplate(this.scxOptions);
+        this.scxTemplate = new ScxTemplate(this.scxOptions.templateRoot());
         //7, 初始化持久层
         this.scxDao = new ScxDao(this.scxOptions);
         //8, ScxMapping 配置类
-        this.scxMappingConfiguration = new ScxMappingConfiguration();
+        this.scxMvc = new ScxMvc(new ScxMvcOptions().uploadsDirectory(
+                scxEnvironment().getTempPath(BodyHandler.DEFAULT_UPLOADS_DIRECTORY)
+        ), vertx, scxBeanFactory);
         //9, 初始化任务调度器
         this.scxScheduler = new ScxScheduler(this.vertx.nettyEventLoopGroup());
     }
@@ -225,7 +231,12 @@ public final class Scx {
                 .flatMap(c -> c.classList().stream())
                 .filter(ScxHelper::isBeanClass)
                 .toArray(Class<?>[]::new);
-        return new ScxBeanFactory(scheduledExecutorService, scxFeatureConfig).registerBeanDefinition(beanClass);
+        return new ScxBeanFactory(
+                new ScxBeanFactoryOptions()
+                        .scheduler(scheduledExecutorService)
+                        .allowCircularReferences(scxFeatureConfig.get(ScxCoreFeature.ALLOW_CIRCULAR_REFERENCES))
+                        .enableSchedulingWithAnnotation(scxFeatureConfig.get(ScxCoreFeature.ENABLE_SCHEDULING_WITH_ANNOTATION))
+        ).register(beanClass);
     }
 
     /**
@@ -300,11 +311,13 @@ public final class Scx {
             this.scxOptions.printInfo();
         }
         //2, 初始化路由 (Http 和 WebSocket)
-        this.scxHttpRouter = new ScxHttpRouter(this);
+        this.scxHttpRouter = new ScxHttpRouter(this.scxMvc);
         this.scxWebSocketRouter = new ScxWebSocketRouter();
+        //todo scxMvc 和 ScxMappingRegistrar  ScxWebSocketMappingRegistrar 的关系需要重写梳理
+        var classList = Arrays.stream(this.scxModules()).flatMap(c -> c.classList().stream()).toList();
         //3, 注册 ScxMapping 和 ScxWebSocketMapping 注解的 handler 到 路由中去
-        new ScxMappingRegistrar(this).registerRoute(this.scxHttpRouter.vertxRouter());
-        new ScxWebSocketMappingRegistrar(this).registerRoute(this.scxWebSocketRouter);
+        new ScxMappingRegistrar(this.scxMvc, classList).registerRoute(this.scxHttpRouter.vertxRouter());
+        new ScxWebSocketMappingRegistrar(this.scxMvc, classList).registerRoute(this.scxWebSocketRouter);
         //4, 依次执行 模块的 start 生命周期 , 在这里我们可以操作 scxRouteRegistry, vertxRouter 等对象 "手动注册新路由" 或其他任何操作
         this.startAllScxModules();
         //5, 打印基本信息
@@ -507,8 +520,8 @@ public final class Scx {
      *
      * @return a
      */
-    public ScxMappingConfiguration scxMappingConfiguration() {
-        return scxMappingConfiguration;
+    public ScxMvc scxMvc() {
+        return scxMvc;
     }
 
     /**

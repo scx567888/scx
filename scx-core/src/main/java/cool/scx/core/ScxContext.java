@@ -1,20 +1,20 @@
 package cool.scx.core;
 
+import cool.scx.beans.ScxBeanFactory;
 import cool.scx.config.ScxConfig;
 import cool.scx.config.ScxEnvironment;
 import cool.scx.config.ScxFeatureConfig;
-import cool.scx.core.dao.ScxDao;
 import cool.scx.core.enumeration.ScxCoreFeature;
-import cool.scx.core.http.ScxHttpRouter;
-import cool.scx.core.mvc.ScxMappingConfiguration;
 import cool.scx.core.scheduler.ScxScheduler;
-import cool.scx.core.websocket.ScxWebSocketRouter;
 import cool.scx.functional.ScxRunnable;
+import cool.scx.mvc.ScxMvc;
+import cool.scx.mvc.ScxTemplate;
+import cool.scx.mvc.http.ScxHttpRouter;
+import cool.scx.mvc.websocket.ScxWebSocketRouter;
 import cool.scx.sql.SQLRunner;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.http.HttpServer;
-import io.vertx.ext.web.RoutingContext;
 
 import java.nio.file.Path;
 import java.util.concurrent.Callable;
@@ -27,10 +27,6 @@ import java.util.concurrent.Callable;
  */
 public final class ScxContext {
 
-    /**
-     * 路由上下文 THREAD_LOCAL
-     */
-    private static final InheritableThreadLocal<RoutingContext> ROUTING_CONTEXT_THREAD_LOCAL = new InheritableThreadLocal<>();
 
     /**
      * 全局唯一的 SCX APP
@@ -40,32 +36,6 @@ public final class ScxContext {
      */
     private static Scx GLOBAL_SCX = null;
 
-    /**
-     * 获取当前线程的 RoutingContext (只限在 scx mapping 注解的方法及其调用链上)
-     *
-     * @return 当前线程的 RoutingContext
-     */
-    public static RoutingContext routingContext() {
-        return ROUTING_CONTEXT_THREAD_LOCAL.get();
-    }
-
-    /**
-     * 设置当前线程的 routingContext
-     * 此方法正常之给 scxMappingHandler 调用
-     * 若无特殊需求 不必调用此方法
-     *
-     * @param routingContext 要设置的 routingContext
-     */
-    public static void _routingContext(RoutingContext routingContext) {
-        ROUTING_CONTEXT_THREAD_LOCAL.set(routingContext);
-    }
-
-    /**
-     * a
-     */
-    public static void _clearRoutingContext() {
-        ROUTING_CONTEXT_THREAD_LOCAL.remove();
-    }
 
     /**
      * 设置全局的 Scx
@@ -229,8 +199,8 @@ public final class ScxContext {
      *
      * @return a
      */
-    public static ScxMappingConfiguration scxMappingConfiguration() {
-        return scx().scxMappingConfiguration();
+    public static ScxMvc scxMvc() {
+        return scx().scxMvc();
     }
 
     /**

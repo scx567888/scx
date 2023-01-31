@@ -2,14 +2,15 @@ package cool.scx.test.website;
 
 import cool.scx.constant.ScxConstant;
 import cool.scx.core.ScxContext;
-import cool.scx.core.annotation.FromQuery;
-import cool.scx.core.annotation.FromUpload;
-import cool.scx.core.annotation.ScxMapping;
-import cool.scx.core.type.UploadedEntity;
-import cool.scx.core.vo.*;
 import cool.scx.enumeration.HttpMethod;
 import cool.scx.enumeration.RawType;
 import cool.scx.http_client.ScxHttpClientHelper;
+import cool.scx.mvc.ScxMvcContext;
+import cool.scx.mvc.annotation.FromQuery;
+import cool.scx.mvc.annotation.FromUpload;
+import cool.scx.mvc.annotation.ScxMapping;
+import cool.scx.mvc.type.UploadedEntity;
+import cool.scx.mvc.vo.*;
 import cool.scx.test.car.Car;
 import cool.scx.test.car.CarService;
 import cool.scx.util.DigestUtils;
@@ -53,7 +54,7 @@ public class WebSiteController {
                                @FromQuery Integer age,
                                @FromUpload UploadedEntity content,
                                @FromUpload FileUpload content1) {
-        System.err.println("客户端 IP :" + NetUtils.getClientIPAddress(ScxContext.routingContext().request()));
+        System.err.println("客户端 IP :" + NetUtils.getClientIPAddress(ScxMvcContext.routingContext().request()));
         return Map.of("now", ScxConstant.NORMAL_DATE_TIME.format(LocalDateTime.now()),
                 "name", name, "age", age, "content", content.buffer().toString(StandardCharsets.UTF_8),
                 "content1", ScxContext.vertx().fileSystem().readFileBlocking(content1.uploadedFileName()).toString(StandardCharsets.UTF_8));
@@ -88,7 +89,7 @@ public class WebSiteController {
     @ScxMapping(value = "/", method = HttpMethod.GET, order = 10)
     public Html TestIndex(RoutingContext c) throws IOException {
         System.err.println("最后一次匹配的路由" + c.request().path());
-        Html index = Html.of("index");
+        Html index = Html.ofString("index");
         index.add("name", c.get("name"));
         index.add("age", 22);
         return index;

@@ -1,6 +1,6 @@
 package cool.scx.test.person;
 
-import cool.scx.core.annotation.ScxModel;
+import cool.scx.dao.annotation.ScxModel;
 import cool.scx.core.base.BaseModel;
 
 @ScxModel(tablePrefix = "scx")

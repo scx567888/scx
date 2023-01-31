@@ -46,13 +46,19 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>scx-mvc</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>scx-config</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>scx-sql</artifactId>
+            <artifactId>scx-dao</artifactId>
             <version>${project.version}</version>
         </dependency>
 

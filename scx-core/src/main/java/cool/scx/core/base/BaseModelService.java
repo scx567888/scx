@@ -1,12 +1,8 @@
 package cool.scx.core.base;
 
 import cool.scx.core.ScxContext;
-import cool.scx.core.dao.ScxDaoTableInfo;
+import cool.scx.dao.*;
 import cool.scx.sql.SQL;
-import cool.scx.sql.base.BaseDao;
-import cool.scx.sql.base.Query;
-import cool.scx.sql.base.SelectFilter;
-import cool.scx.sql.base.UpdateFilter;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
@@ -15,7 +11,7 @@ import java.util.List;
 /**
  * 提供一些针对 BaseModel 类型实体类 简单的 CRUD 操作的 service 类
  * <p>
- * 业务 service 可以继承此类 (注意 : 如需要被 beanFactory 扫描到 请标注 {@link cool.scx.core.annotation.ScxService} 注解)
+ * 业务 service 可以继承此类 (注意 : 如需要被 beanFactory 扫描到 请标注 {@link ScxService} 注解)
  * <p>
  * 或手动创建 : new BaseModelService()
  * <p>
@@ -49,7 +45,7 @@ public class BaseModelService<Entity extends BaseModel> {
     /**
      * 手动创建 entityClass
      *
-     * @param entityClass 继承自 {@link cool.scx.core.base.BaseModel} 的实体类 class
+     * @param entityClass 继承自 {@link BaseModel} 的实体类 class
      */
     public BaseModelService(Class<Entity> entityClass) {
         this.baseDao = new BaseDao<>(new ScxDaoTableInfo(entityClass), entityClass, ScxContext.sqlRunner());
@@ -59,14 +55,14 @@ public class BaseModelService<Entity extends BaseModel> {
      * 处理 updateFilter  使在插入或更新数据时永远过滤 "id", "dateCreated", "dateUpdated" 三个字段
      *
      * @param updateFilter u
-     * @return a {@link cool.scx.sql.base.UpdateFilter} object
+     * @return a {@link UpdateFilter} object
      */
     private static UpdateFilter updateFilterProcessor(UpdateFilter updateFilter) {
         return updateFilter.addExcluded("id", "createdDate", "updatedDate");
     }
 
     /**
-     * 插入数据 (注意 !!! 这里会在插入之后根据主键再次进行一次查询, 若只是进行插入且对性能有要求请使用 {@link cool.scx.sql.base.BaseDao#_insert(Object, UpdateFilter)})
+     * 插入数据 (注意 !!! 这里会在插入之后根据主键再次进行一次查询, 若只是进行插入且对性能有要求请使用 {@link cool.scx.dao.BaseDao#_insert(Object, UpdateFilter)})
      *
      * @param entity 待插入的数据
      * @return 插入成功的数据 如果插入失败或数据没有主键则返回 null
@@ -139,7 +135,7 @@ public class BaseModelService<Entity extends BaseModel> {
     }
 
     /**
-     * 根据聚合查询条件 {@link cool.scx.sql.base.Query} 获取数据列表
+     * 根据聚合查询条件 {@link Query} 获取数据列表
      *
      * @param query 聚合查询参数对象
      * @return 数据列表
@@ -149,7 +145,7 @@ public class BaseModelService<Entity extends BaseModel> {
     }
 
     /**
-     * 根据聚合查询条件 {@link cool.scx.sql.base.Query} 获取数据列表
+     * 根据聚合查询条件 {@link Query} 获取数据列表
      *
      * @param query        聚合查询参数对象
      * @param selectFilter 查询字段过滤器
@@ -181,7 +177,7 @@ public class BaseModelService<Entity extends BaseModel> {
     }
 
     /**
-     * 根据聚合查询条件 {@link cool.scx.sql.base.Query} 获取单条数据
+     * 根据聚合查询条件 {@link Query} 获取单条数据
      *
      * @param query 聚合查询参数对象
      * @return 查到多个则返回第一个 没有则返回 null
@@ -191,7 +187,7 @@ public class BaseModelService<Entity extends BaseModel> {
     }
 
     /**
-     * 根据聚合查询条件 {@link cool.scx.sql.base.Query} 获取单条数据
+     * 根据聚合查询条件 {@link Query} 获取单条数据
      *
      * @param query        聚合查询参数对象
      * @param selectFilter 查询字段过滤器
@@ -212,7 +208,7 @@ public class BaseModelService<Entity extends BaseModel> {
     }
 
     /**
-     * 根据聚合查询条件 {@link cool.scx.sql.base.Query} 获取数据条数
+     * 根据聚合查询条件 {@link Query} 获取数据条数
      *
      * @param query 聚合查询参数对象
      * @return 数据条数
@@ -293,11 +289,11 @@ public class BaseModelService<Entity extends BaseModel> {
     }
 
     /**
-     * 构建 (根据聚合查询条件 {@link cool.scx.sql.base.Query} 获取数据列表) 的SQL
+     * 构建 (根据聚合查询条件 {@link Query} 获取数据列表) 的SQL
      * <br>
      * 可用于另一条查询语句的 where 条件
      * <br>
-     * 若同时使用 limit 和 in/not in 请使用 {@link cool.scx.core.base.BaseModelService#buildListSQLWithAlias(Query, SelectFilter)}
+     * 若同时使用 limit 和 in/not in 请使用 {@link BaseModelService#buildListSQLWithAlias(Query, SelectFilter)}
      *
      * @param query        聚合查询参数对象
      * @param selectFilter 查询字段过滤器
@@ -309,11 +305,11 @@ public class BaseModelService<Entity extends BaseModel> {
     }
 
     /**
-     * 构建 根据聚合查询条件 {@link cool.scx.sql.base.Query} 获取单条数据 的SQL
+     * 构建 根据聚合查询条件 {@link Query} 获取单条数据 的SQL
      * <br>
      * 可用于另一条查询语句的 where 条件
      * <br>
-     * 若同时使用 limit 和 in/not in 请使用 {@link cool.scx.core.base.BaseModelService#buildListSQLWithAlias(Query, SelectFilter)}
+     * 若同时使用 limit 和 in/not in 请使用 {@link BaseModelService#buildListSQLWithAlias(Query, SelectFilter)}
      *
      * @param query        聚合查询参数对象
      * @param selectFilter 查询字段过滤器
@@ -325,7 +321,7 @@ public class BaseModelService<Entity extends BaseModel> {
     }
 
     /**
-     * 构建 (根据聚合查询条件 {@link cool.scx.sql.base.Query} 获取数据列表) 的SQL
+     * 构建 (根据聚合查询条件 {@link Query} 获取数据列表) 的SQL
      * <br>
      * 可用于另一条查询语句的 where 条件
      *
@@ -339,7 +335,7 @@ public class BaseModelService<Entity extends BaseModel> {
     }
 
     /**
-     * 构建 根据聚合查询条件 {@link cool.scx.sql.base.Query} 获取单条数据 的SQL
+     * 构建 根据聚合查询条件 {@link Query} 获取单条数据 的SQL
      * <br>
      * 可用于另一条查询语句的 where 条件
      *
@@ -355,7 +351,7 @@ public class BaseModelService<Entity extends BaseModel> {
     /**
      * <p>baseDao.</p>
      *
-     * @return a {@link cool.scx.sql.base.BaseDao} object
+     * @return a {@link BaseDao} object
      */
     public BaseDao<Entity> _baseDao() {
         return baseDao;

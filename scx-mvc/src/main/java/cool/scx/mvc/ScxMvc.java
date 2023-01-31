@@ -46,12 +46,13 @@ public class ScxMvc {
         this.options = options;
         this.vertx = vertx;
         this.beanFactory = beanFactory;
+        init();
         this.scxHttpRouter = new ScxHttpRouter(this);
         this.scxWebSocketRouter = new ScxWebSocketRouter();
         //3, 注册 ScxMapping 和 ScxWebSocketMapping 注解的 handler 到 路由中去
         new ScxMappingRegistrar(this, options.classList()).registerRoute(this.scxHttpRouter.vertxRouter());
         new ScxWebSocketMappingRegistrar(this, options.classList()).registerRoute(this.scxWebSocketRouter);
-        init();
+
     }
 
     public ScxWebSocketRouter scxWebSocketRouter() {

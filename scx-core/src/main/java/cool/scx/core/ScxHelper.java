@@ -2,8 +2,10 @@ package cool.scx.core;
 
 import cool.scx.core.annotation.*;
 import cool.scx.core.base.BaseModel;
+import cool.scx.dao.annotation.ScxModel;
+import cool.scx.mvc.annotation.ScxMapping;
+import cool.scx.mvc.annotation.ScxWebSocketMapping;
 import cool.scx.util.ClassUtils;
-import io.vertx.ext.web.RoutingContext;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Repository;
@@ -70,14 +72,5 @@ public final class ScxHelper {
                 && t.getActualTypeArguments().length == 1; //并且泛型参数的数量必须是一个
     }
 
-    /**
-     * request 是否还可用 (可以写入数据)
-     *
-     * @param context ctx
-     * @return 是否可用
-     */
-    public static boolean responseCanUse(RoutingContext context) {
-        return !context.request().response().ended() && !context.request().response().closed();
-    }
 
 }

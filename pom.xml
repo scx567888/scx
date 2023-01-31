@@ -41,10 +41,13 @@
     </scm>
 
     <modules>
+        <module>scx-beans</module>
         <module>scx-common</module>
         <module>scx-config</module>
         <module>scx-core</module>
+        <module>scx-dao</module>
         <module>scx-logging</module>
+        <module>scx-mvc</module>
         <module>scx-sql</module>
     </modules>
 
@@ -66,7 +69,7 @@
                     <!-- 所以在这里手动排除资源文件 , 具体文件说明见下方 -->
                     <excludes>
                         <!-- 默认 git 占位空文件 -->
-                        <exclude>/.gitkeep/</exclude>
+                        <exclude>/.gitkeep</exclude>
                     </excludes>
                 </configuration>
             </plugin>
