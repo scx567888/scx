@@ -1,0 +1,38 @@
+package cool.scx.mvc.return_value_handler;
+
+import cool.scx.mvc.ScxMappingMethodReturnValueHandler;
+import cool.scx.mvc.vo.BaseVo;
+import cool.scx.util.ObjectUtils;
+import io.vertx.ext.web.RoutingContext;
+
+/**
+ * a
+ *
+ * @author scx567888
+ * @version 1.11.8
+ */
+public final class StringMethodReturnValueHandler implements ScxMappingMethodReturnValueHandler {
+
+    /**
+     * a
+     */
+    public static final StringMethodReturnValueHandler DEFAULT_INSTANCE = new StringMethodReturnValueHandler();
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean canHandle(Object o) {
+        return o instanceof String;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void handle(Object result, RoutingContext context) {
+        BaseVo.fillTextPlainContentType(context.request().response())
+                .end(ObjectUtils.convertValue(result, String.class));
+    }
+
+}
