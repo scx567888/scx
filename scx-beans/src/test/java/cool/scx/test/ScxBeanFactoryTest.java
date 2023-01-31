@@ -12,7 +12,7 @@ public class ScxBeanFactoryTest {
     @Test
     public static void test1() {
         var beanFactory = new ScxBeanFactory();
-        beanFactory.registerBeanDefinition(A.class, B.class, C.class).refresh();
+        beanFactory.register(A.class, B.class, C.class).refresh();
         var a = beanFactory.getBean(A.class);
         System.out.println(a.b.c.d);
     }

@@ -74,7 +74,7 @@ public final class ScxBeanFactory {
      * @param classList c
      * @return a
      */
-    public ScxBeanFactory registerBeanDefinition(Class<?>... classList) {
+    public ScxBeanFactory register(Class<?>... classList) {
         for (var c : classList) {
             var beanDefinition = new AnnotatedGenericBeanDefinition(c);
             //这里是为了兼容 spring context 的部分注解
