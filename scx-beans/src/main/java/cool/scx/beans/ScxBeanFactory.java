@@ -19,14 +19,28 @@ public final class ScxBeanFactory {
      */
     private final DefaultListableBeanFactory springBeanFactory;
 
+    /**
+     * <p>Constructor for ScxBeanFactory.</p>
+     */
     public ScxBeanFactory() {
         this(new ScxBeanFactoryOptions());
     }
 
+    /**
+     * <p>Constructor for ScxBeanFactory.</p>
+     *
+     * @param options a {@link cool.scx.beans.ScxBeanFactoryOptions} object
+     */
     public ScxBeanFactory(ScxBeanFactoryOptions options) {
         this.springBeanFactory = initBeanFactory(options);
     }
 
+    /**
+     * <p>initBeanFactory.</p>
+     *
+     * @param options a {@link cool.scx.beans.ScxBeanFactoryOptions} object
+     * @return a {@link org.springframework.beans.factory.support.DefaultListableBeanFactory} object
+     */
     private static DefaultListableBeanFactory initBeanFactory(ScxBeanFactoryOptions options) {
         var beanFactory = new DefaultListableBeanFactory();
         //这里添加一个 bean 的后置处理器以便可以使用 @Autowired 注解

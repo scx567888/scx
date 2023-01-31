@@ -1,6 +1,7 @@
 package cool.scx.core;
 
-import cool.scx.core.annotation.*;
+import cool.scx.core.annotation.ScxComponent;
+import cool.scx.core.annotation.ScxService;
 import cool.scx.core.base.BaseModel;
 import cool.scx.dao.annotation.ScxModel;
 import cool.scx.mvc.annotation.ScxMapping;
