@@ -1,4 +1,4 @@
-package cool.scx.core.mvc;
+package cool.scx.mvc;
 
 import java.lang.reflect.Parameter;
 
