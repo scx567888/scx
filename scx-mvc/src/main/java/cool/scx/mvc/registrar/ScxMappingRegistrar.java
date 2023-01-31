@@ -1,12 +1,11 @@
-package cool.scx.core.mvc;
+package cool.scx.mvc.registrar;
 
-import cool.scx.core.Scx;
-import cool.scx.core.annotation.ScxMapping;
+import cool.scx.mvc.ScxMappingHandler;
+import cool.scx.mvc.ScxMvc;
+import cool.scx.mvc.annotation.ScxMapping;
 import cool.scx.util.ClassUtils;
 import cool.scx.util.MultiMap;
 import cool.scx.util.ObjectUtils;
-import io.vertx.core.http.HttpMethod;
-import io.vertx.ext.web.MIMEHeader;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.impl.RouteImpl;
@@ -16,7 +15,10 @@ import org.springframework.stereotype.Controller;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -65,11 +67,9 @@ public final class ScxMappingRegistrar {
 
     /**
      * 扫描所有被 ScxMapping注解标记的方法 并封装为 ScxMappingHandler.
-     *
-     * @param scx s
      */
-    public ScxMappingRegistrar(Scx scx) {
-        scxMappingHandlers = initScxMappingHandlers(scx);
+    public ScxMappingRegistrar(ScxMvc scxMvc, List<Class<?>> classList) {
+        scxMappingHandlers = initScxMappingHandlers(scxMvc, classList);
     }
 
     /**
@@ -129,30 +129,23 @@ public final class ScxMappingRegistrar {
      * @param scx  a
      * @return a
      */
-    private static List<ScxMappingHandler> fillRouteState(List<ScxMappingHandler> list, Scx scx) {
+    private static List<ScxMappingHandler> fillRouteState(List<ScxMappingHandler> list, ScxMvc scx) {
         var tempRouter = Router.router(scx.vertx());
         return list.stream().peek(c -> c.setRouteState(getRouteState(tempRouter.route(c.originalUrl)))).toList();
     }
 
-    /**
-     * a
-     *
-     * @param scx a
-     * @return a
-     */
-    private static List<ScxMappingHandler> initScxMappingHandlers(Scx scx) {
-        var scxMappingClassList = Arrays.stream(scx.scxModules())
-                .flatMap(c -> c.classList().stream())
+    private static List<ScxMappingHandler> initScxMappingHandlers(ScxMvc scxMvc, List<Class<?>> classList) {
+        var scxMappingClassList = classList.stream()
                 .filter(ScxMappingRegistrar::isScxMappingClass)
                 .toList();
         //获取所有的 handler
         var allScxMappingHandlers = scxMappingClassList.stream()
                 .flatMap(c -> Arrays.stream(c.getMethods())
                         .filter(ScxMappingRegistrar::isScxMappingMethod)
-                        .map(m -> new ScxMappingHandler(c, m, scx)))
+                        .map(m -> new ScxMappingHandler(c, m, scxMvc)))
                 .toList();
         //填充 routeState
-        var filledList = fillRouteState(allScxMappingHandlers, scx);
+        var filledList = fillRouteState(allScxMappingHandlers, scxMvc);
         //返回排序后的 handlers
         return sortedScxMappingHandlers(filledList);
     }
@@ -199,7 +192,7 @@ public final class ScxMappingRegistrar {
             if (v.size() > 1) { //具有多个路由
                 var content = v.stream().map(c -> "\t" + c.clazz.getName() + " : " + c.method.getName()).collect(Collectors.joining(System.lineSeparator()));
                 logger.error("检测到重复的路由!!! {} --> \"{}\" , 相关 class 及 方法 如下 ▼" + System.lineSeparator() + "{}",
-                        k.httpMethod, getPatternUrl(v.get(0).originalUrl), content);
+                        k.httpMethod(), getPatternUrl(v.get(0).originalUrl), content);
             }
         });
     }
@@ -239,29 +232,6 @@ public final class ScxMappingRegistrar {
             }
             r.handler(c);
         }
-    }
-
-    /**
-     * 用于承载数据
-     */
-    record RouteState(Map<String, Object> metadata, String path, String name, int order, boolean enabled,
-                      Set<HttpMethod> methods, Set<MIMEHeader> consumes, boolean emptyBodyPermittedWithConsumes,
-                      Set<MIMEHeader> produces, boolean added, Pattern pattern, List<String> groups,
-                      boolean useNormalizedPath, Set<String> namedGroupsInRegex, Pattern virtualHostPattern,
-                      boolean pathEndsWithSlash, boolean exclusive, boolean exactPath) {
-
-        int getGroupsOrder() {
-            return this.groups == null ? 0 : this.groups.size();
-        }
-
-        int getExactPathOrder() {
-            return this.exactPath ? 0 : 1;
-        }
-
-    }
-
-    record NormalPathInfo(cool.scx.enumeration.HttpMethod httpMethod, String key) {
-
     }
 
 }

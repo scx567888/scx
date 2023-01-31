@@ -1,12 +1,13 @@
-package cool.scx.core.websocket;
+package cool.scx.mvc.registrar;
 
-import cool.scx.core.Scx;
-import cool.scx.core.annotation.ScxWebSocketMapping;
-import cool.scx.core.base.BaseWebSocketHandler;
+import cool.scx.mvc.ScxMvc;
+import cool.scx.mvc.annotation.ScxWebSocketMapping;
+import cool.scx.mvc.base.BaseWebSocketHandler;
+import cool.scx.mvc.websocket.ScxWebSocketRoute;
+import cool.scx.mvc.websocket.ScxWebSocketRouter;
 import cool.scx.util.ClassUtils;
 import cool.scx.util.URIBuilder;
 
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -25,25 +26,13 @@ public class ScxWebSocketMappingRegistrar {
 
     private final List<ScxWebSocketRoute> scxWebSocketRoutes;
 
-    /**
-     * <p>Constructor for ScxWebSocketMappingRegistrar.</p>
-     *
-     * @param scx a {@link cool.scx.core.Scx} object
-     */
-    public ScxWebSocketMappingRegistrar(Scx scx) {
-        this.scxWebSocketRoutes = initScxWebSocketRoutes(scx);
+    public ScxWebSocketMappingRegistrar(ScxMvc scxMvc, List<Class<?>> classList) {
+        this.scxWebSocketRoutes = initScxWebSocketRoutes(scxMvc, classList);
     }
 
-    /**
-     * <p>initScxWebSocketRoutes.</p>
-     *
-     * @param scx a {@link cool.scx.core.Scx} object
-     * @return a {@link java.util.List} object
-     */
     @SuppressWarnings("unchecked")
-    private static List<ScxWebSocketRoute> initScxWebSocketRoutes(Scx scx) {
-        var scxWebSocketRouteClassList = Arrays.stream(scx.scxModules())
-                .flatMap(c -> c.classList().stream())
+    private static List<ScxWebSocketRoute> initScxWebSocketRoutes(ScxMvc scxMvc, List<Class<?>> classList) {
+        var scxWebSocketRouteClassList = classList.stream()
                 .filter(ScxWebSocketMappingRegistrar::isScxWebSocketRouteClass)
                 .map(c -> (Class<? extends BaseWebSocketHandler>) c)
                 .toList();
@@ -53,7 +42,7 @@ public class ScxWebSocketMappingRegistrar {
                     var scxWebSocketMapping = c.getAnnotation(ScxWebSocketMapping.class);
                     var path = URIBuilder.addSlashStart(URIBuilder.join(scxWebSocketMapping.value()));
                     var order = scxWebSocketMapping.order();
-                    var baseWebSocketHandler = scx.scxBeanFactory().getBean(c);
+                    var baseWebSocketHandler = scxMvc.beanFactory().getBean(c);
                     return new ScxWebSocketRoute(order, path, baseWebSocketHandler);
                 })
                 .toList();
@@ -85,7 +74,7 @@ public class ScxWebSocketMappingRegistrar {
     /**
      * <p>registerRoute.</p>
      *
-     * @param scxWebSocketRouter a {@link cool.scx.core.websocket.ScxWebSocketRouter} object
+     * @param scxWebSocketRouter a {@link ScxWebSocketRouter} object
      */
     public void registerRoute(ScxWebSocketRouter scxWebSocketRouter) {
         for (var route : scxWebSocketRoutes) {
