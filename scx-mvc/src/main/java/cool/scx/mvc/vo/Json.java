@@ -1,4 +1,4 @@
-package cool.scx.core.vo;
+package cool.scx.mvc.vo;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.util.ObjectUtils;
@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Json 格式的返回值 (注意 {@link cool.scx.core.vo.DataJson} 进行区分, 此格式适合传递多个参数)
+ * Json 格式的返回值 (注意 {@link DataJson} 进行区分, 此格式适合传递多个参数)
  *
  * @author scx567888
  * @version 0.3.6

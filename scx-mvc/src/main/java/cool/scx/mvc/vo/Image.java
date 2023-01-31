@@ -1,8 +1,8 @@
-package cool.scx.core.vo;
+package cool.scx.mvc.vo;
 
-import cool.scx.core.http.ScxHttpException;
-import cool.scx.core.http.exception.BadRequestException;
-import cool.scx.core.http.exception.NotFoundException;
+import cool.scx.mvc.http.ScxHttpException;
+import cool.scx.mvc.http.exception.BadRequestException;
+import cool.scx.mvc.http.exception.NotFoundException;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.impl.MimeMapping;

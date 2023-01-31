@@ -1,6 +1,6 @@
-package cool.scx.core.vo;
+package cool.scx.mvc.vo;
 
-import cool.scx.core.http.exception.NotFoundException;
+import cool.scx.mvc.http.exception.NotFoundException;
 import cool.scx.util.ScxExceptionHelper;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpResponseStatus;
@@ -71,7 +71,7 @@ class BaseWriter implements BaseVo {
      * @param inputStream        a {@link java.io.InputStream} object
      * @param path               a {@link java.nio.file.Path} object
      * @param bytes              an array of {@link byte} objects
-     * @param type               a {@link cool.scx.core.vo.BaseWriter.Type} object
+     * @param type               a {@link BaseWriter.Type} object
      * @param contentType        a {@link java.lang.String} object
      * @param contentDisposition a {@link java.lang.String} object
      */
@@ -153,7 +153,7 @@ class BaseWriter implements BaseVo {
      * <p>sendFile.</p>
      *
      * @param context c
-     * @throws cool.scx.core.http.exception.NotFoundException if any.
+     * @throws NotFoundException if any.
      */
     protected void sendFile(RoutingContext context) throws NotFoundException {
         context.request().response().putHeader(HttpHeaderNames.CONTENT_DISPOSITION, contentDisposition);
@@ -206,7 +206,7 @@ class BaseWriter implements BaseVo {
      * <p>writeFile.</p>
      *
      * @param context a {@link io.vertx.core.http.HttpServerResponse} object
-     * @throws cool.scx.core.http.exception.NotFoundException if any.
+     * @throws NotFoundException if any.
      */
     private void writeFile(RoutingContext context) throws NotFoundException {
         var file = path.toFile();

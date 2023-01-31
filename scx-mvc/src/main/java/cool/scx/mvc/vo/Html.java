@@ -1,6 +1,6 @@
-package cool.scx.core.vo;
+package cool.scx.mvc.vo;
 
-import cool.scx.core.ScxContext;
+import cool.scx.mvc.ScxMvc;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import io.vertx.ext.web.RoutingContext;
@@ -43,7 +43,7 @@ public final class Html implements BaseVo {
      * <p>ofString.</p>
      *
      * @param htmlStr a {@link java.lang.String} object
-     * @return a {@link cool.scx.core.vo.Html} object
+     * @return a {@link Html} object
      */
     public static Html ofString(String htmlStr) {
         return new Html(null, htmlStr, false);
@@ -53,11 +53,11 @@ public final class Html implements BaseVo {
      * <p>ofTemplate.</p>
      *
      * @param templatePath a {@link java.lang.String} object
-     * @return a {@link cool.scx.core.vo.Html} object
+     * @return a {@link Html} object
      * @throws java.io.IOException if any.
      */
-    public static Html of(String templatePath) throws IOException {
-        var template = ScxContext.template().getTemplateByPath(templatePath);
+    public static Html of(ScxMvc scxMvc, String templatePath) throws IOException {
+        var template = scxMvc.template().getTemplateByPath(templatePath);
         return new Html(template, null, true);
     }
 
@@ -66,7 +66,7 @@ public final class Html implements BaseVo {
      *
      * @param key   a {@link java.lang.String} object.
      * @param value a {@link java.lang.Object} object.
-     * @return a {@link cool.scx.core.vo.Html} object.
+     * @return a {@link Html} object.
      */
     public Html add(String key, Object value) {
         dataMap.put(key, value);

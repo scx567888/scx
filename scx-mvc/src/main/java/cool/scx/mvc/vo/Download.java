@@ -1,4 +1,4 @@
-package cool.scx.core.vo;
+package cool.scx.mvc.vo;
 
 import io.vertx.core.http.impl.MimeMapping;
 

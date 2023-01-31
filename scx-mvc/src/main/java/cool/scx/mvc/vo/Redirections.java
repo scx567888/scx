@@ -1,4 +1,4 @@
-package cool.scx.core.vo;
+package cool.scx.mvc.vo;
 
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.vertx.ext.web.RoutingContext;

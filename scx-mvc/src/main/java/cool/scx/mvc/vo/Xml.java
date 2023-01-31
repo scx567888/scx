@@ -1,4 +1,4 @@
-package cool.scx.core.vo;
+package cool.scx.mvc.vo;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.util.ObjectUtils;
