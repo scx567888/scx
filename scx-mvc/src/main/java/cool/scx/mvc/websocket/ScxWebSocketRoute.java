@@ -1,6 +1,6 @@
-package cool.scx.core.websocket;
+package cool.scx.mvc.websocket;
 
-import cool.scx.core.base.BaseWebSocketHandler;
+import cool.scx.mvc.base.BaseWebSocketHandler;
 import io.vertx.core.http.ServerWebSocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +28,7 @@ public final class ScxWebSocketRoute {
      * <p>Constructor for ScxWebSocketRoute.</p>
      *
      * @param path                 a {@link java.lang.String} object
-     * @param baseWebSocketHandler a {@link cool.scx.core.base.BaseWebSocketHandler} object
+     * @param baseWebSocketHandler a {@link BaseWebSocketHandler} object
      */
     public ScxWebSocketRoute(String path, BaseWebSocketHandler baseWebSocketHandler) {
         this(0, path, baseWebSocketHandler);
@@ -39,7 +39,7 @@ public final class ScxWebSocketRoute {
      *
      * @param order                a int
      * @param path                 a {@link java.lang.String} object
-     * @param baseWebSocketHandler a {@link cool.scx.core.base.BaseWebSocketHandler} object
+     * @param baseWebSocketHandler a {@link BaseWebSocketHandler} object
      */
     public ScxWebSocketRoute(int order, String path, BaseWebSocketHandler baseWebSocketHandler) {
         this.order = order;
@@ -70,7 +70,7 @@ public final class ScxWebSocketRoute {
     /**
      * <p>baseWebSocketHandler.</p>
      *
-     * @return a {@link cool.scx.core.base.BaseWebSocketHandler} object
+     * @return a {@link BaseWebSocketHandler} object
      */
     public BaseWebSocketHandler baseWebSocketHandler() {
         return baseWebSocketHandler;

@@ -1,4 +1,4 @@
-package cool.scx.core.websocket;
+package cool.scx.mvc.websocket;
 
 import io.vertx.core.Handler;
 import io.vertx.core.http.ServerWebSocket;
