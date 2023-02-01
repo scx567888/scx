@@ -1,8 +1,6 @@
 package cool.scx.mvc.exception;
 
-
-import cool.scx.mvc.ScxHttpException;
-import cool.scx.mvc.ScxHttpResponseStatus;
+import static cool.scx.enumeration.HttpStatus.NO_PERM;
 
 /**
  * 登录了但是没权限
@@ -16,7 +14,7 @@ public class NoPermException extends ScxHttpException {
      * a
      */
     public NoPermException() {
-        super(ScxHttpResponseStatus.NO_PERM.statusCode(), ScxHttpResponseStatus.NO_PERM.reasonPhrase());
+        super(NO_PERM.statusCode(), NO_PERM.reasonPhrase());
     }
 
     /**
@@ -25,7 +23,7 @@ public class NoPermException extends ScxHttpException {
      * @param info a
      */
     public NoPermException(String info) {
-        super(ScxHttpResponseStatus.NO_PERM.statusCode(), ScxHttpResponseStatus.NO_PERM.reasonPhrase(), info);
+        super(NO_PERM.statusCode(), NO_PERM.reasonPhrase(), info);
     }
 
     /**
@@ -34,7 +32,7 @@ public class NoPermException extends ScxHttpException {
      * @param throwable a
      */
     public NoPermException(Throwable throwable) {
-        super(ScxHttpResponseStatus.NO_PERM.statusCode(), ScxHttpResponseStatus.NO_PERM.reasonPhrase(), throwable);
+        super(NO_PERM.statusCode(), NO_PERM.reasonPhrase(), throwable);
     }
 
     /**
@@ -44,7 +42,7 @@ public class NoPermException extends ScxHttpException {
      * @param throwable a
      */
     public NoPermException(String info, Throwable throwable) {
-        super(ScxHttpResponseStatus.NO_PERM.statusCode(), ScxHttpResponseStatus.NO_PERM.reasonPhrase(), info, throwable);
+        super(NO_PERM.statusCode(), NO_PERM.reasonPhrase(), info, throwable);
     }
 
 }

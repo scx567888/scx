@@ -1,8 +1,7 @@
 package cool.scx.mvc.exception;
 
 
-import cool.scx.mvc.ScxHttpException;
-import cool.scx.mvc.ScxHttpResponseStatus;
+import static cool.scx.enumeration.HttpStatus.INTERNAL_SERVER_ERROR;
 
 /**
  * 服务器内部异常
@@ -16,7 +15,7 @@ public class InternalServerErrorException extends ScxHttpException {
      * a
      */
     public InternalServerErrorException() {
-        super(ScxHttpResponseStatus.INTERNAL_SERVER_ERROR.statusCode(), ScxHttpResponseStatus.INTERNAL_SERVER_ERROR.reasonPhrase());
+        super(INTERNAL_SERVER_ERROR.statusCode(), INTERNAL_SERVER_ERROR.reasonPhrase());
     }
 
     /**
@@ -25,7 +24,7 @@ public class InternalServerErrorException extends ScxHttpException {
      * @param info a
      */
     public InternalServerErrorException(String info) {
-        super(ScxHttpResponseStatus.INTERNAL_SERVER_ERROR.statusCode(), ScxHttpResponseStatus.INTERNAL_SERVER_ERROR.reasonPhrase(), info);
+        super(INTERNAL_SERVER_ERROR.statusCode(), INTERNAL_SERVER_ERROR.reasonPhrase(), info);
     }
 
     /**
@@ -34,7 +33,7 @@ public class InternalServerErrorException extends ScxHttpException {
      * @param throwable a
      */
     public InternalServerErrorException(Throwable throwable) {
-        super(ScxHttpResponseStatus.INTERNAL_SERVER_ERROR.statusCode(), ScxHttpResponseStatus.INTERNAL_SERVER_ERROR.reasonPhrase(), throwable);
+        super(INTERNAL_SERVER_ERROR.statusCode(), INTERNAL_SERVER_ERROR.reasonPhrase(), throwable);
     }
 
     /**
@@ -44,7 +43,7 @@ public class InternalServerErrorException extends ScxHttpException {
      * @param throwable a
      */
     public InternalServerErrorException(String info, Throwable throwable) {
-        super(ScxHttpResponseStatus.INTERNAL_SERVER_ERROR.statusCode(), ScxHttpResponseStatus.INTERNAL_SERVER_ERROR.reasonPhrase(), info, throwable);
+        super(INTERNAL_SERVER_ERROR.statusCode(), INTERNAL_SERVER_ERROR.reasonPhrase(), info, throwable);
     }
 
 }

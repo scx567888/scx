@@ -1,8 +1,7 @@
 package cool.scx.mvc.exception;
 
 
-import cool.scx.mvc.ScxHttpException;
-import cool.scx.mvc.ScxHttpResponseStatus;
+import static cool.scx.enumeration.HttpStatus.METHOD_NOT_ALLOWED;
 
 /**
  * 方法不被允许
@@ -16,7 +15,7 @@ public class MethodNotAllowedException extends ScxHttpException {
      * a
      */
     public MethodNotAllowedException() {
-        super(ScxHttpResponseStatus.METHOD_NOT_ALLOWED.statusCode(), ScxHttpResponseStatus.METHOD_NOT_ALLOWED.reasonPhrase());
+        super(METHOD_NOT_ALLOWED.statusCode(), METHOD_NOT_ALLOWED.reasonPhrase());
     }
 
     /**
@@ -25,7 +24,7 @@ public class MethodNotAllowedException extends ScxHttpException {
      * @param info a
      */
     public MethodNotAllowedException(String info) {
-        super(ScxHttpResponseStatus.METHOD_NOT_ALLOWED.statusCode(), ScxHttpResponseStatus.METHOD_NOT_ALLOWED.reasonPhrase(), info);
+        super(METHOD_NOT_ALLOWED.statusCode(), METHOD_NOT_ALLOWED.reasonPhrase(), info);
     }
 
     /**
@@ -34,7 +33,7 @@ public class MethodNotAllowedException extends ScxHttpException {
      * @param throwable a
      */
     public MethodNotAllowedException(Throwable throwable) {
-        super(ScxHttpResponseStatus.METHOD_NOT_ALLOWED.statusCode(), ScxHttpResponseStatus.METHOD_NOT_ALLOWED.reasonPhrase(), throwable);
+        super(METHOD_NOT_ALLOWED.statusCode(), METHOD_NOT_ALLOWED.reasonPhrase(), throwable);
     }
 
     /**
@@ -44,7 +43,7 @@ public class MethodNotAllowedException extends ScxHttpException {
      * @param throwable a
      */
     public MethodNotAllowedException(String info, Throwable throwable) {
-        super(ScxHttpResponseStatus.METHOD_NOT_ALLOWED.statusCode(), ScxHttpResponseStatus.METHOD_NOT_ALLOWED.reasonPhrase(), info, throwable);
+        super(METHOD_NOT_ALLOWED.statusCode(), METHOD_NOT_ALLOWED.reasonPhrase(), info, throwable);
     }
 
 }

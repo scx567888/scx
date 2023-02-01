@@ -1,8 +1,6 @@
 package cool.scx.mvc.exception;
 
-
-import cool.scx.mvc.ScxHttpException;
-import cool.scx.mvc.ScxHttpResponseStatus;
+import static cool.scx.enumeration.HttpStatus.UNAUTHORIZED;
 
 /**
  * 未认证异常 (未登录)
@@ -16,7 +14,7 @@ public class UnauthorizedException extends ScxHttpException {
      * a
      */
     public UnauthorizedException() {
-        super(ScxHttpResponseStatus.UNAUTHORIZED.statusCode(), ScxHttpResponseStatus.UNAUTHORIZED.reasonPhrase());
+        super(UNAUTHORIZED.statusCode(), UNAUTHORIZED.reasonPhrase());
     }
 
     /**
@@ -25,7 +23,7 @@ public class UnauthorizedException extends ScxHttpException {
      * @param info a
      */
     public UnauthorizedException(String info) {
-        super(ScxHttpResponseStatus.UNAUTHORIZED.statusCode(), ScxHttpResponseStatus.UNAUTHORIZED.reasonPhrase(), info);
+        super(UNAUTHORIZED.statusCode(), UNAUTHORIZED.reasonPhrase(), info);
     }
 
     /**
@@ -34,7 +32,7 @@ public class UnauthorizedException extends ScxHttpException {
      * @param throwable a
      */
     public UnauthorizedException(Throwable throwable) {
-        super(ScxHttpResponseStatus.UNAUTHORIZED.statusCode(), ScxHttpResponseStatus.UNAUTHORIZED.reasonPhrase(), throwable);
+        super(UNAUTHORIZED.statusCode(), UNAUTHORIZED.reasonPhrase(), throwable);
     }
 
     /**
@@ -44,7 +42,7 @@ public class UnauthorizedException extends ScxHttpException {
      * @param throwable a
      */
     public UnauthorizedException(String info, Throwable throwable) {
-        super(ScxHttpResponseStatus.UNAUTHORIZED.statusCode(), ScxHttpResponseStatus.UNAUTHORIZED.reasonPhrase(), info, throwable);
+        super(UNAUTHORIZED.statusCode(), UNAUTHORIZED.reasonPhrase(), info, throwable);
     }
 
 }

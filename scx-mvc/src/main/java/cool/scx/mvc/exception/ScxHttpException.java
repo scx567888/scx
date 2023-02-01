@@ -1,4 +1,4 @@
-package cool.scx.mvc;
+package cool.scx.mvc.exception;
 
 /**
  * 在 ScxMapping 注解标记的方法中抛出此异常会被ScxMappingHandler 进行截获并进行处理

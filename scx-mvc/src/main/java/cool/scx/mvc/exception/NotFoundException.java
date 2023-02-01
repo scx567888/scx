@@ -1,8 +1,7 @@
 package cool.scx.mvc.exception;
 
 
-import cool.scx.mvc.ScxHttpException;
-import cool.scx.mvc.ScxHttpResponseStatus;
+import static cool.scx.enumeration.HttpStatus.NOT_FOUND;
 
 /**
  * 404 not found 未找到异常
@@ -16,7 +15,7 @@ public class NotFoundException extends ScxHttpException {
      * a
      */
     public NotFoundException() {
-        super(ScxHttpResponseStatus.NOT_FOUND.statusCode(), ScxHttpResponseStatus.NOT_FOUND.reasonPhrase());
+        super(NOT_FOUND.statusCode(), NOT_FOUND.reasonPhrase());
     }
 
     /**
@@ -25,7 +24,7 @@ public class NotFoundException extends ScxHttpException {
      * @param info a
      */
     public NotFoundException(String info) {
-        super(ScxHttpResponseStatus.NOT_FOUND.statusCode(), ScxHttpResponseStatus.NOT_FOUND.reasonPhrase(), info);
+        super(NOT_FOUND.statusCode(), NOT_FOUND.reasonPhrase(), info);
     }
 
     /**
@@ -34,7 +33,7 @@ public class NotFoundException extends ScxHttpException {
      * @param throwable a
      */
     public NotFoundException(Throwable throwable) {
-        super(ScxHttpResponseStatus.NOT_FOUND.statusCode(), ScxHttpResponseStatus.NOT_FOUND.reasonPhrase(), throwable);
+        super(NOT_FOUND.statusCode(), NOT_FOUND.reasonPhrase(), throwable);
     }
 
     /**
@@ -44,7 +43,7 @@ public class NotFoundException extends ScxHttpException {
      * @param throwable a
      */
     public NotFoundException(String info, Throwable throwable) {
-        super(ScxHttpResponseStatus.NOT_FOUND.statusCode(), ScxHttpResponseStatus.NOT_FOUND.reasonPhrase(), info, throwable);
+        super(NOT_FOUND.statusCode(), NOT_FOUND.reasonPhrase(), info, throwable);
     }
 
 }

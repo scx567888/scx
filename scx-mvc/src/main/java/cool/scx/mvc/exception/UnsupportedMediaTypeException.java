@@ -1,8 +1,6 @@
 package cool.scx.mvc.exception;
 
-
-import cool.scx.mvc.ScxHttpException;
-import cool.scx.mvc.ScxHttpResponseStatus;
+import static cool.scx.enumeration.HttpStatus.UNSUPPORTED_MEDIA_TYPE;
 
 /**
  * 415 参数异常
@@ -16,7 +14,7 @@ public class UnsupportedMediaTypeException extends ScxHttpException {
      * a
      */
     public UnsupportedMediaTypeException() {
-        super(ScxHttpResponseStatus.UNSUPPORTED_MEDIA_TYPE.statusCode(), ScxHttpResponseStatus.UNSUPPORTED_MEDIA_TYPE.reasonPhrase());
+        super(UNSUPPORTED_MEDIA_TYPE.statusCode(), UNSUPPORTED_MEDIA_TYPE.reasonPhrase());
     }
 
     /**
@@ -25,7 +23,7 @@ public class UnsupportedMediaTypeException extends ScxHttpException {
      * @param info a
      */
     public UnsupportedMediaTypeException(String info) {
-        super(ScxHttpResponseStatus.UNSUPPORTED_MEDIA_TYPE.statusCode(), ScxHttpResponseStatus.UNSUPPORTED_MEDIA_TYPE.reasonPhrase(), info);
+        super(UNSUPPORTED_MEDIA_TYPE.statusCode(), UNSUPPORTED_MEDIA_TYPE.reasonPhrase(), info);
     }
 
     /**
@@ -34,7 +32,7 @@ public class UnsupportedMediaTypeException extends ScxHttpException {
      * @param throwable a
      */
     public UnsupportedMediaTypeException(Throwable throwable) {
-        super(ScxHttpResponseStatus.UNSUPPORTED_MEDIA_TYPE.statusCode(), ScxHttpResponseStatus.UNSUPPORTED_MEDIA_TYPE.reasonPhrase(), throwable);
+        super(UNSUPPORTED_MEDIA_TYPE.statusCode(), UNSUPPORTED_MEDIA_TYPE.reasonPhrase(), throwable);
     }
 
     /**
@@ -44,7 +42,7 @@ public class UnsupportedMediaTypeException extends ScxHttpException {
      * @param throwable a
      */
     public UnsupportedMediaTypeException(String info, Throwable throwable) {
-        super(ScxHttpResponseStatus.UNSUPPORTED_MEDIA_TYPE.statusCode(), ScxHttpResponseStatus.UNSUPPORTED_MEDIA_TYPE.reasonPhrase(), info, throwable);
+        super(UNSUPPORTED_MEDIA_TYPE.statusCode(), UNSUPPORTED_MEDIA_TYPE.reasonPhrase(), info, throwable);
     }
 
 }
