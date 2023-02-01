@@ -1,7 +1,7 @@
 package cool.scx.mvc.exception;
 
 
-import static cool.scx.enumeration.HttpStatus.METHOD_NOT_ALLOWED;
+import static cool.scx.enumeration.HttpResponseStatus.METHOD_NOT_ALLOWED;
 
 /**
  * 方法不被允许

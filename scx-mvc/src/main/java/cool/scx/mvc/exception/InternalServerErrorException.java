@@ -1,7 +1,7 @@
 package cool.scx.mvc.exception;
 
 
-import static cool.scx.enumeration.HttpStatus.INTERNAL_SERVER_ERROR;
+import static cool.scx.enumeration.HttpResponseStatus.INTERNAL_SERVER_ERROR;
 
 /**
  * 服务器内部异常

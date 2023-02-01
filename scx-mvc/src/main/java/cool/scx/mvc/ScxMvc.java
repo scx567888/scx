@@ -1,6 +1,6 @@
 package cool.scx.mvc;
 
-import cool.scx.enumeration.HttpStatus;
+import cool.scx.enumeration.HttpResponseStatus;
 import cool.scx.mvc.Interceptor.ScxMappingInterceptorImpl;
 import cool.scx.mvc.exception.BadRequestException;
 import cool.scx.mvc.exception.InternalServerErrorException;
@@ -188,9 +188,10 @@ public final class ScxMvc {
 
     public ScxMvc bindErrorHandler(Router vertxRouter) {
         var errorHandler = new ErrorHandler(this);
-        // 因为 ScxHttpResponseStatus 中所有的错误状态 都处在可以处理的范围内 所以我们 按照 ScxHttpResponseStatus 的值进行批量设置
-        for (var s : HttpStatus.values()) {
-            vertxRouter.errorHandler(s.statusCode(), errorHandler);
+        for (var s : HttpResponseStatus.values()) {
+            if (s.statusCode() >= 400) {
+                vertxRouter.errorHandler(s.statusCode(), errorHandler);
+            }
         }
         return this;
     }
@@ -205,8 +206,8 @@ public final class ScxMvc {
                 scxMvc.findExceptionHandler(cause).handle(cause, routingContext);
             } else {
                 //不是 500 的话 根据状态码 我们看一下是否能需要进行一次包装
-                var byStatusCode = HttpStatus.of(statusCode);
-                var scxHttpException = byStatusCode != null ? new ScxHttpException(byStatusCode.statusCode(), byStatusCode.reasonPhrase(), cause) : new InternalServerErrorException(cause);
+                var status = HttpResponseStatus.of(statusCode);
+                var scxHttpException = status != null ? new ScxHttpException(status.statusCode(), status.reasonPhrase(), cause) : new InternalServerErrorException(cause);
                 scxMvc.findExceptionHandler(scxHttpException).handle(scxHttpException, routingContext);
             }
         }

@@ -1,7 +1,7 @@
 package cool.scx.mvc.exception;
 
 
-import static cool.scx.enumeration.HttpStatus.NOT_FOUND;
+import static cool.scx.enumeration.HttpResponseStatus.NOT_FOUND;
 
 /**
  * 404 not found 未找到异常
