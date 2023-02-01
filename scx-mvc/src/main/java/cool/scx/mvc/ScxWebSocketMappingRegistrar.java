@@ -17,7 +17,7 @@ import java.util.List;
  * @author scx567888
  * @version 1.18.0
  */
-public class ScxWebSocketMappingRegistrar {
+public final class ScxWebSocketMappingRegistrar {
 
     private static final Comparator<ScxWebSocketRoute> orderComparator = Comparator.comparing(ScxWebSocketRoute::order);
 
@@ -27,23 +27,26 @@ public class ScxWebSocketMappingRegistrar {
         this.scxWebSocketRoutes = initScxWebSocketRoutes(beanFactory, classList);
     }
 
-    @SuppressWarnings("unchecked")
     private static List<ScxWebSocketRoute> initScxWebSocketRoutes(BeanFactory beanFactory, List<Class<?>> classList) {
-        var scxWebSocketRouteClassList = classList.stream()
+        var filteredClassList = filterClass(classList);
+        var routeList = filteredClassList.stream().map(c -> createScxWebSocketRoute(beanFactory, c)).toList();
+        return sortedScxWebSocketRoutes(routeList);
+    }
+
+    public static ScxWebSocketRoute createScxWebSocketRoute(BeanFactory beanFactory, Class<? extends BaseWebSocketHandler> c) {
+        var scxWebSocketMapping = c.getAnnotation(ScxWebSocketMapping.class);
+        var path = URIBuilder.addSlashStart(URIBuilder.join(scxWebSocketMapping.value()));
+        var order = scxWebSocketMapping.order();
+        var baseWebSocketHandler = beanFactory.getBean(c);
+        return new ScxWebSocketRoute(order, path, baseWebSocketHandler);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static List<? extends Class<? extends BaseWebSocketHandler>> filterClass(List<Class<?>> classList) {
+        return classList.stream()
                 .filter(ScxWebSocketMappingRegistrar::isScxWebSocketRouteClass)
                 .map(c -> (Class<? extends BaseWebSocketHandler>) c)
                 .toList();
-        //获取所有的 handler
-        var list = scxWebSocketRouteClassList.stream()
-                .map(c -> {
-                    var scxWebSocketMapping = c.getAnnotation(ScxWebSocketMapping.class);
-                    var path = URIBuilder.addSlashStart(URIBuilder.join(scxWebSocketMapping.value()));
-                    var order = scxWebSocketMapping.order();
-                    var baseWebSocketHandler = beanFactory.getBean(c);
-                    return new ScxWebSocketRoute(order, path, baseWebSocketHandler);
-                })
-                .toList();
-        return sortedScxWebSocketRoutes(list);
     }
 
     public static boolean isScxWebSocketRouteClass(Class<?> c) {
