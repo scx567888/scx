@@ -26,6 +26,6 @@ public interface ScxMvcParameterHandler {
      * @return 处理后的结果
      * @throws java.lang.Exception e
      */
-    Object handle(Parameter parameter, ScxMappingRoutingContextInfo info) throws Exception;
+    Object handle(Parameter parameter, ScxMvcRequestInfo info) throws Exception;
 
 }
