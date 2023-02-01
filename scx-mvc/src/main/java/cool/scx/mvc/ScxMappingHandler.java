@@ -6,11 +6,16 @@ import cool.scx.util.CaseUtils;
 import cool.scx.util.ScxExceptionHelper;
 import cool.scx.util.URIBuilder;
 import io.vertx.core.Handler;
+import io.vertx.ext.web.MIMEHeader;
 import io.vertx.ext.web.RoutingContext;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static cool.scx.mvc.ScxMvcHelper.responseCanUse;
@@ -41,7 +46,7 @@ public final class ScxMappingHandler implements Handler<RoutingContext> {
     /**
      * 实例
      */
-    public final Object example;
+    public final Object instance;
 
     /**
      * clazz 对象
@@ -71,24 +76,23 @@ public final class ScxMappingHandler implements Handler<RoutingContext> {
     /**
      * a
      */
-    private ScxMappingRegistrar.RouteState routeState;
+    private RouteState routeState;
 
     /**
      * a
      *
-     * @param clazz  a
-     * @param method a
-     * @param scxMvc a
-     * @param ex     ex
+     * @param method   a
+     * @param scxMvc   a
+     * @param instance ex
      */
-    <T> ScxMappingHandler(Class<T> clazz, Method method, Object ex, ScxMvc scxMvc) {
+    ScxMappingHandler(Method method, Object instance, ScxMvc scxMvc) {
         this.scxMvc = scxMvc;
-        this.clazz = clazz;
+        this.clazz = method.getDeclaringClass();
         this.method = method;
         this.method.setAccessible(true);
         this.isVoid = method.getReturnType().equals(void.class);
         this.parameters = method.getParameters();
-        this.example = ex;
+        this.instance = instance;
         //根据注解初始化值
         var classScxMapping = clazz.getAnnotation(ScxMapping.class);
         var methodScxMapping = method.getAnnotation(ScxMapping.class);
@@ -123,14 +127,14 @@ public final class ScxMappingHandler implements Handler<RoutingContext> {
     @Override
     public void handle(RoutingContext context) {
         //0, 将 routingContext 注入到 ThreadLocal 中去 以方便后续从静态方法调用
-        ScxMvcContext._routingContext(context);
+        ScxMvc._routingContext(context);
         try {
             //1, 执行前置处理器 (一般用于校验权限之类)
             this.scxMvc.interceptor().preHandle(context, this);
             //2, 根据 method 参数获取 invoke 时的参数
             var methodParameters = this.scxMvc.buildMethodParameters(this.parameters, context);
             //3, 执行具体方法 (用来从请求中获取参数并执行反射调用方法以获取返回值)
-            var tempResult = this.method.invoke(this.example, methodParameters);
+            var tempResult = this.method.invoke(this.instance, methodParameters);
             //4, 执行后置处理器
             var finalResult = this.scxMvc.interceptor().postHandle(context, this, tempResult);
             //5, 如果方法返回值不为 void 并且 response 可用 , 则调用返回值处理器
@@ -141,15 +145,15 @@ public final class ScxMappingHandler implements Handler<RoutingContext> {
             //1, 如果是反射调用时发生异常 则使用反射异常的内部异常 否则使用异常
             throw new ScxExceptionHelper.ScxWrappedRuntimeException(e instanceof InvocationTargetException ? e.getCause() : e);
         } finally {
-            ScxMvcContext._clearRoutingContext();
+            ScxMvc._clearRoutingContext();
         }
     }
 
-    void setRouteState(ScxMappingRegistrar.RouteState route) {
+    void setRouteState(RouteState route) {
         this.routeState = route;
     }
 
-    ScxMappingRegistrar.RouteState routeState() {
+    RouteState routeState() {
         return routeState;
     }
 
@@ -160,6 +164,25 @@ public final class ScxMappingHandler implements Handler<RoutingContext> {
      */
     public int order() {
         return order;
+    }
+
+    /**
+     * 用于承载数据
+     */
+    record RouteState(Map<String, Object> metadata, String path, String name, int order, boolean enabled,
+                      Set<HttpMethod> methods, Set<MIMEHeader> consumes, boolean emptyBodyPermittedWithConsumes,
+                      Set<MIMEHeader> produces, boolean added, Pattern pattern, List<String> groups,
+                      boolean useNormalizedPath, Set<String> namedGroupsInRegex, Pattern virtualHostPattern,
+                      boolean pathEndsWithSlash, boolean exclusive, boolean exactPath) {
+
+        int getGroupsOrder() {
+            return this.groups == null ? 0 : this.groups.size();
+        }
+
+        int getExactPathOrder() {
+            return this.exactPath ? 0 : 1;
+        }
+
     }
 
 }
