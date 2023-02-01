@@ -1,7 +1,7 @@
 package cool.scx.mvc.parameter_handler;
 
-import cool.scx.mvc.ScxMvcRequestInfo;
 import cool.scx.mvc.ScxMvcParameterHandler;
+import cool.scx.mvc.ScxMvcRequestInfo;
 import cool.scx.util.ObjectUtils;
 
 import java.lang.reflect.Parameter;

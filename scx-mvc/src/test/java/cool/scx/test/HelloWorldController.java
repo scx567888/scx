@@ -1,7 +1,7 @@
 package cool.scx.test;
 
 import cool.scx.mvc.annotation.ScxMapping;
-import cool.scx.mvc.exception.NoPermException;
+import cool.scx.mvc.exception.ForbiddenException;
 import cool.scx.mvc.vo.DataJson;
 
 import java.util.Map;
@@ -16,7 +16,7 @@ public class HelloWorldController {
 
     @ScxMapping("no-perm")
     public Object noPerm() {
-        throw new NoPermException();
+        throw new ForbiddenException();
     }
 
 }

@@ -2,7 +2,8 @@ package cool.scx.test;
 
 import cool.scx.beans.ScxBeanFactory;
 import cool.scx.mvc.ScxMvc;
-import cool.scx.mvc.exception.NoPermException;
+import cool.scx.mvc.ScxMvcOptions;
+import cool.scx.mvc.exception.ForbiddenException;
 import io.vertx.core.Vertx;
 import io.vertx.ext.web.Router;
 import org.testng.annotations.Test;
@@ -29,11 +30,16 @@ public class ScxMvcTest {
         var router = Router.router(vertx);
 
         //绑定异常处理器后可以直接再 handler 中抛出异常
-        new ScxMvc().bindErrorHandler(router);
+        new ScxMvc(new ScxMvcOptions().useDevelopmentErrorPage(true)).bindErrorHandler(router);
 
         router.route("/no-perm").handler(c -> {
-            //这里直接抛出会由 ScxMvc 进行处理
-            throw new NoPermException();
+            //这里可以直接抛出 异常
+            throw new ForbiddenException(new RuntimeException("你没有权限 !!!"));
+        });
+
+        router.route("/no-perm2").handler(c -> {
+            //或者用这种 vertx 的形式 和上方是一样的
+            c.fail(403, new RuntimeException("你没有权限 !!!"));
         });
 
         vertx.createHttpServer()
@@ -41,6 +47,7 @@ public class ScxMvcTest {
                 .listen(8080)
                 .onSuccess(c -> {
                     System.out.println("http://127.0.0.1:8080/no-perm");
+                    System.out.println("http://127.0.0.1:8080/no-perm2");
                 });
     }
 
