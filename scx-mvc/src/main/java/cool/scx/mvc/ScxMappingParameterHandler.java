@@ -8,7 +8,7 @@ import java.lang.reflect.Parameter;
  * @author scx567888
  * @version 1.11.8
  */
-public interface ScxMappingMethodParameterHandler {
+public interface ScxMappingParameterHandler {
 
     /**
      * 判断是否可以处理这个参数类型
