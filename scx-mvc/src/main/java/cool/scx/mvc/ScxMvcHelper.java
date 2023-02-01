@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.util.ObjectUtils;
 import io.vertx.core.MultiMap;
+import io.vertx.ext.web.RoutingContext;
 
 import java.io.IOException;
 import java.util.Map;
@@ -77,6 +78,10 @@ public class ScxMvcHelper {
             }
         }
         return tempValue;
+    }
+
+    public static boolean responseCanUse(RoutingContext context) {
+        return !context.request().response().ended() && !context.request().response().closed();
     }
 
 }

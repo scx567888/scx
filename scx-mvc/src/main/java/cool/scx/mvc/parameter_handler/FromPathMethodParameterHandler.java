@@ -1,8 +1,8 @@
 package cool.scx.mvc.parameter_handler;
 
 import com.fasterxml.jackson.databind.JavaType;
-import cool.scx.mvc.ScxMappingMethodParameterHandler;
 import cool.scx.mvc.ScxMappingRoutingContextInfo;
+import cool.scx.mvc.ScxMvcParameterHandler;
 import cool.scx.mvc.annotation.FromPath;
 import cool.scx.mvc.parameter_handler.exception.ParamConvertException;
 import cool.scx.mvc.parameter_handler.exception.RequiredParamEmptyException;
@@ -19,12 +19,7 @@ import static cool.scx.util.ObjectUtils.*;
  * @author scx567888
  * @version 1.11.8
  */
-public final class FromPathMethodParameterHandler implements ScxMappingMethodParameterHandler {
-
-    /**
-     * a
-     */
-    public static final FromPathMethodParameterHandler DEFAULT_INSTANCE = new FromPathMethodParameterHandler();
+public final class FromPathMethodParameterHandler implements ScxMvcParameterHandler {
 
     /**
      * a

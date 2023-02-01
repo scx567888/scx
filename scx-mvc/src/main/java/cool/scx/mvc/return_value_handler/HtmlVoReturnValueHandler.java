@@ -1,10 +1,13 @@
-package cool.scx.mvc;
+package cool.scx.mvc.return_value_handler;
 
+import cool.scx.mvc.ScxMvcReturnValueHandler;
 import cool.scx.mvc.base.BaseTemplateDirective;
+import cool.scx.mvc.vo.Html;
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapperBuilder;
 import freemarker.template.Template;
 import freemarker.template.Version;
+import io.vertx.ext.web.RoutingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,12 +20,12 @@ import java.nio.file.Path;
  * @author scx567888
  * @version 0.3.6
  */
-public final class ScxTemplate {
+public final class HtmlVoReturnValueHandler implements ScxMvcReturnValueHandler {
 
     /**
      * Constant <code>logger</code>
      */
-    private static final Logger logger = LoggerFactory.getLogger(ScxTemplate.class);
+    private static final Logger logger = LoggerFactory.getLogger(HtmlVoReturnValueHandler.class);
 
     /**
      * Freemarker 默认引擎版本
@@ -35,7 +38,7 @@ public final class ScxTemplate {
     private final Configuration freemarkerConfig = new Configuration(VERSION);
 
 
-    public ScxTemplate(Path templateRoot) {
+    public HtmlVoReturnValueHandler(Path templateRoot) {
         // freemarker 配置文件版本
         var wrapperBuilder = new DefaultObjectWrapperBuilder(VERSION);
         //暴露 实体类的 fields 因为 此项目中的实体类没有 get set
@@ -44,7 +47,7 @@ public final class ScxTemplate {
         try {
             freemarkerConfig.setDirectoryForTemplateLoading(templateRoot.toFile());
         } catch (Exception e) {
-            logger.info("模板目录不存在!!! {}", templateRoot.toString());
+            logger.info("模板目录不存在!!! {}", templateRoot);
         }
 
         //设置 字符集
@@ -71,6 +74,18 @@ public final class ScxTemplate {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public boolean canHandle(Object result) {
+        return result instanceof Html;
+    }
+
+    @Override
+    public void handle(Object result, RoutingContext context) throws Exception {
+        Html html = (Html) result;
+        html.setHandler(this);
+        html.accept(context);
     }
 
 }

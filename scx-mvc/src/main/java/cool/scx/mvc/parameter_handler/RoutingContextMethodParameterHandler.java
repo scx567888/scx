@@ -1,7 +1,7 @@
 package cool.scx.mvc.parameter_handler;
 
-import cool.scx.mvc.ScxMappingMethodParameterHandler;
 import cool.scx.mvc.ScxMappingRoutingContextInfo;
+import cool.scx.mvc.ScxMvcParameterHandler;
 import io.vertx.ext.web.RoutingContext;
 
 import java.lang.reflect.Parameter;
@@ -12,12 +12,7 @@ import java.lang.reflect.Parameter;
  * @author scx567888
  * @version 1.11.8
  */
-public final class RoutingContextMethodParameterHandler implements ScxMappingMethodParameterHandler {
-
-    /**
-     * 默认实例
-     */
-    public static final RoutingContextMethodParameterHandler DEFAULT_INSTANCE = new RoutingContextMethodParameterHandler();
+public final class RoutingContextMethodParameterHandler implements ScxMvcParameterHandler {
 
     /**
      * {@inheritDoc}

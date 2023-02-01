@@ -2,8 +2,6 @@ package cool.scx.mvc;
 
 import cool.scx.enumeration.HttpMethod;
 import cool.scx.mvc.annotation.ScxMapping;
-import cool.scx.mvc.registrar.RouteState;
-import cool.scx.mvc.registrar.ScxMappingRegistrar;
 import cool.scx.util.CaseUtils;
 import cool.scx.util.ScxExceptionHelper;
 import cool.scx.util.URIBuilder;
@@ -15,7 +13,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.stream.Stream;
 
-import static cool.scx.mvc.http.ScxHttpHelper.responseCanUse;
+import static cool.scx.mvc.ScxMvcHelper.responseCanUse;
 
 /**
  * <p>ScxRouteHandler class.</p>
@@ -73,7 +71,7 @@ public final class ScxMappingHandler implements Handler<RoutingContext> {
     /**
      * a
      */
-    private RouteState routeState;
+    private ScxMappingRegistrar.RouteState routeState;
 
     /**
      * a
@@ -81,15 +79,16 @@ public final class ScxMappingHandler implements Handler<RoutingContext> {
      * @param clazz  a
      * @param method a
      * @param scxMvc a
+     * @param ex     ex
      */
-    public <T> ScxMappingHandler(Class<T> clazz, Method method, ScxMvc scxMvc) {
+    <T> ScxMappingHandler(Class<T> clazz, Method method, Object ex, ScxMvc scxMvc) {
         this.scxMvc = scxMvc;
         this.clazz = clazz;
         this.method = method;
         this.method.setAccessible(true);
         this.isVoid = method.getReturnType().equals(void.class);
         this.parameters = method.getParameters();
-        this.example = this.scxMvc.beanFactory().getBean(clazz);
+        this.example = ex;
         //根据注解初始化值
         var classScxMapping = clazz.getAnnotation(ScxMapping.class);
         var methodScxMapping = method.getAnnotation(ScxMapping.class);
@@ -98,23 +97,10 @@ public final class ScxMappingHandler implements Handler<RoutingContext> {
         this.order = methodScxMapping.order();
     }
 
-    /**
-     * <p>getHttpMethod.</p>
-     *
-     * @param methodScxMapping a {@link ScxMapping} object
-     * @return an array of {@link cool.scx.enumeration.HttpMethod} objects
-     */
     private static HttpMethod[] initHttpMethod(ScxMapping methodScxMapping) {
         return Stream.of(methodScxMapping.method()).distinct().toArray(HttpMethod[]::new);
     }
 
-    /**
-     * <p>Getter for the field <code>url</code>.</p>
-     *
-     * @param classScxMapping  a {@link ScxMapping} object
-     * @param methodScxMapping a {@link ScxMapping} object
-     * @return a {@link java.lang.String} object
-     */
     private String initOriginalUrl(ScxMapping classScxMapping, ScxMapping methodScxMapping) {
         var urlArray = new String[]{"", ""};
         if (!methodScxMapping.ignoreParentUrl() && classScxMapping != null) {
@@ -140,42 +126,30 @@ public final class ScxMappingHandler implements Handler<RoutingContext> {
         ScxMvcContext._routingContext(context);
         try {
             //1, 执行前置处理器 (一般用于校验权限之类)
-            this.scxMvc.scxMappingInterceptor().preHandle(context, this);
+            this.scxMvc.interceptor().preHandle(context, this);
             //2, 根据 method 参数获取 invoke 时的参数
             var methodParameters = this.scxMvc.buildMethodParameters(this.parameters, context);
             //3, 执行具体方法 (用来从请求中获取参数并执行反射调用方法以获取返回值)
             var tempResult = this.method.invoke(this.example, methodParameters);
             //4, 执行后置处理器
-            var finalResult = this.scxMvc.scxMappingInterceptor().postHandle(context, this, tempResult);
+            var finalResult = this.scxMvc.interceptor().postHandle(context, this, tempResult);
             //5, 如果方法返回值不为 void 并且 response 可用 , 则调用返回值处理器
             if (!isVoid && responseCanUse(context)) {
-                this.scxMvc.findMethodReturnValueHandler(finalResult).handle(finalResult, context);
+                this.scxMvc.findReturnValueHandler(finalResult).handle(finalResult, context);
             }
         } catch (Throwable e) {
             //1, 如果是反射调用时发生异常 则使用反射异常的内部异常 否则使用异常
-            //2, 如果是包装类型异常 (ScxWrappedRuntimeException) 则使用其内部的异常
-            var exception = ScxExceptionHelper.getRootCause(e instanceof InvocationTargetException ? e.getCause() : e);
-            this.scxMvc.scxHttpRouter().findExceptionHandler(exception).handle(exception, context);
+            throw new ScxExceptionHelper.ScxWrappedRuntimeException(e instanceof InvocationTargetException ? e.getCause() : e);
         } finally {
             ScxMvcContext._clearRoutingContext();
         }
     }
 
-    /**
-     * <p>Setter for the field <code>routeState</code>.</p>
-     *
-     * @param route a {@link ScxMappingRegistrar.RouteState} object
-     */
-    public void setRouteState(RouteState route) {
+    void setRouteState(ScxMappingRegistrar.RouteState route) {
         this.routeState = route;
     }
 
-    /**
-     * <p>routeState.</p>
-     *
-     * @return a {@link ScxMappingRegistrar.RouteState} object
-     */
-    public RouteState routeState() {
+    ScxMappingRegistrar.RouteState routeState() {
         return routeState;
     }
 

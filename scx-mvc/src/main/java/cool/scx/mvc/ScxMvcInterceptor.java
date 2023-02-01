@@ -8,7 +8,7 @@ import io.vertx.ext.web.RoutingContext;
  * @author scx567888
  * @version 1.3.14
  */
-public interface ScxMappingInterceptor {
+public interface ScxMvcInterceptor {
 
     /**
      * 前置处理器 在 ScxMappingHandler 所对应的方法执行前调用

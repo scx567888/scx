@@ -1,11 +1,11 @@
-package cool.scx.mvc.http.exception_handler;
+package cool.scx.mvc.exception_handler;
 
-import cool.scx.mvc.http.exception.InternalServerErrorException;
+import cool.scx.mvc.exception.InternalServerErrorException;
 import io.vertx.ext.web.RoutingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static cool.scx.mvc.http.ScxHttpHelper.responseCanUse;
+import static cool.scx.mvc.ScxMvcHelper.responseCanUse;
 
 /**
  * a

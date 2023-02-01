@@ -1,24 +1,23 @@
-package cool.scx.mvc.registrar;
+package cool.scx.mvc;
 
-import cool.scx.mvc.ScxMappingHandler;
-import cool.scx.mvc.ScxMvc;
+import cool.scx.enumeration.HttpMethod;
 import cool.scx.mvc.annotation.ScxMapping;
 import cool.scx.util.ClassUtils;
 import cool.scx.util.MultiMap;
 import cool.scx.util.ObjectUtils;
+import io.vertx.core.Vertx;
+import io.vertx.ext.web.MIMEHeader;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.impl.RouteImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.stereotype.Controller;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -68,8 +67,8 @@ public final class ScxMappingRegistrar {
     /**
      * 扫描所有被 ScxMapping注解标记的方法 并封装为 ScxMappingHandler.
      */
-    public ScxMappingRegistrar(ScxMvc scxMvc, List<Class<?>> classList) {
-        scxMappingHandlers = initScxMappingHandlers(scxMvc, classList);
+    public ScxMappingRegistrar(ScxMvc scxMvc, BeanFactory beanFactory, List<Class<?>> classList) {
+        scxMappingHandlers = initScxMappingHandlers(scxMvc, beanFactory, classList);
     }
 
     /**
@@ -126,26 +125,30 @@ public final class ScxMappingRegistrar {
      * 填充 routeState
      *
      * @param list a
-     * @param scx  a
      * @return a
      */
-    private static List<ScxMappingHandler> fillRouteState(List<ScxMappingHandler> list, ScxMvc scx) {
-        var tempRouter = Router.router(scx.vertx());
+    private static List<ScxMappingHandler> fillRouteState(List<ScxMappingHandler> list) {
+        var tempRouter = Router.router(Vertx.vertx());
         return list.stream().peek(c -> c.setRouteState(getRouteState(tempRouter.route(c.originalUrl)))).toList();
     }
 
-    private static List<ScxMappingHandler> initScxMappingHandlers(ScxMvc scxMvc, List<Class<?>> classList) {
+    private static List<ScxMappingHandler> initScxMappingHandlers(ScxMvc scxMvc, BeanFactory beanFactory, List<Class<?>> classList) {
         var scxMappingClassList = classList.stream()
                 .filter(ScxMappingRegistrar::isScxMappingClass)
                 .toList();
         //获取所有的 handler
-        var allScxMappingHandlers = scxMappingClassList.stream()
-                .flatMap(c -> Arrays.stream(c.getMethods())
-                        .filter(ScxMappingRegistrar::isScxMappingMethod)
-                        .map(m -> new ScxMappingHandler(c, m, scxMvc)))
-                .toList();
+        var allScxMappingHandlers = new ArrayList<ScxMappingHandler>();
+        for (var clazz : scxMappingClassList) {
+            var bean = beanFactory.getBean(clazz);
+            for (var method : clazz.getMethods()) {
+                if (isScxMappingMethod(method)) {
+                    ScxMappingHandler scxMappingHandler = new ScxMappingHandler(clazz, method, bean, scxMvc);
+                    allScxMappingHandlers.add(scxMappingHandler);
+                }
+            }
+        }
         //填充 routeState
-        var filledList = fillRouteState(allScxMappingHandlers, scxMvc);
+        var filledList = fillRouteState(allScxMappingHandlers);
         //返回排序后的 handlers
         return sortedScxMappingHandlers(filledList);
     }
@@ -220,8 +223,9 @@ public final class ScxMappingRegistrar {
      * <p>registerRoute.</p>
      *
      * @param router a {@link io.vertx.ext.web.Router} object
+     * @return
      */
-    public void registerRoute(Router router) {
+    public Router registerRoute(Router router) {
         // 检查重复路由 (这里只需给出警告即可)
         checkScxMappingHandlerRouteExists(scxMappingHandlers);
         //循环添加到 vertxRouter 中
@@ -232,6 +236,30 @@ public final class ScxMappingRegistrar {
             }
             r.handler(c);
         }
+        return router;
+    }
+
+    /**
+     * 用于承载数据
+     */
+    public record RouteState(Map<String, Object> metadata, String path, String name, int order, boolean enabled,
+                             Set<HttpMethod> methods, Set<MIMEHeader> consumes, boolean emptyBodyPermittedWithConsumes,
+                             Set<MIMEHeader> produces, boolean added, Pattern pattern, List<String> groups,
+                             boolean useNormalizedPath, Set<String> namedGroupsInRegex, Pattern virtualHostPattern,
+                             boolean pathEndsWithSlash, boolean exclusive, boolean exactPath) {
+
+        int getGroupsOrder() {
+            return this.groups == null ? 0 : this.groups.size();
+        }
+
+        int getExactPathOrder() {
+            return this.exactPath ? 0 : 1;
+        }
+
+    }
+
+    private record NormalPathInfo(HttpMethod httpMethod, String key) {
+
     }
 
 }

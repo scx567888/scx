@@ -8,7 +8,7 @@ import io.vertx.ext.web.RoutingContext;
  * @author scx567888
  * @version 1.11.8
  */
-public interface ScxMappingReturnValueHandler {
+public interface ScxMvcReturnValueHandler {
 
     /**
      * a

@@ -1,7 +1,7 @@
 package cool.scx.mvc.return_value_handler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import cool.scx.mvc.ScxMappingMethodReturnValueHandler;
+import cool.scx.mvc.ScxMvcReturnValueHandler;
 import cool.scx.mvc.vo.BaseVo;
 import cool.scx.util.ObjectUtils;
 import io.netty.handler.codec.http.HttpHeaderNames;
@@ -14,12 +14,7 @@ import io.vertx.ext.web.RoutingContext;
  * @author scx567888
  * @version 1.11.8
  */
-public final class LastMethodReturnValueHandler implements ScxMappingMethodReturnValueHandler {
-
-    /**
-     * a
-     */
-    public static final LastMethodReturnValueHandler DEFAULT_INSTANCE = new LastMethodReturnValueHandler();
+public final class LastReturnValueHandler implements ScxMvcReturnValueHandler {
 
     /**
      * {@inheritDoc}

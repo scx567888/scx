@@ -1,22 +1,20 @@
 package cool.scx.mvc.http;
 
-import cool.scx.mvc.ScxMvc;
-import cool.scx.mvc.http.exception.InternalServerErrorException;
-import cool.scx.mvc.http.exception_handler.LastExceptionHandler;
-import cool.scx.mvc.http.exception_handler.ScxHttpExceptionHandler;
-import cool.scx.util.ScxExceptionHelper;
-import io.vertx.core.Handler;
+import io.netty.handler.codec.http.HttpHeaderNames;
+import io.netty.util.AsciiString;
+import io.vertx.core.Vertx;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.ext.web.Route;
-import io.vertx.ext.web.Router;
-import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.CorsHandler;
+import io.vertx.ext.web.handler.impl.BodyHandlerImpl;
+import io.vertx.ext.web.handler.impl.CorsHandlerImpl;
+import io.vertx.ext.web.impl.RouterImpl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static cool.scx.mvc.http.ScxHttpHelper.initBodyHandler;
-import static cool.scx.mvc.http.ScxHttpHelper.initCorsHandler;
+import java.nio.file.Path;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * ScxHttp 路由 内部使用 vertxRouter 进行具体路由的处理
@@ -24,66 +22,84 @@ import static cool.scx.mvc.http.ScxHttpHelper.initCorsHandler;
  * @author scx567888
  * @version 1.11.8
  */
-public final class ScxHttpRouter {
+public final class ScxHttpRouter extends RouterImpl {
 
-    //vertx 的路由
-    private final Router vertxRouter;
-
+    /**
+     * Constant <code>defaultAllowedMethods</code>
+     */
+    private static final Set<HttpMethod> DEFAULT_ALLOWED_METHODS = Set.of(
+            HttpMethod.GET,
+            HttpMethod.POST,
+            HttpMethod.OPTIONS,
+            HttpMethod.DELETE,
+            HttpMethod.PATCH,
+            HttpMethod.PUT
+    );
+    /**
+     * Constant <code>defaultAllowedHeaders</code>
+     */
+    private static final Set<String> DEFAULT_ALLOWED_HEADERS = toSet(
+            HttpHeaderNames.ACCEPT,
+            HttpHeaderNames.CONTENT_TYPE
+    );
+    /**
+     * Constant <code>defaultExposedHeaders</code>
+     */
+    private static final Set<String> DEFAULT_EXPOSED_HEADERS = toSet(
+            HttpHeaderNames.CONTENT_DISPOSITION
+    );
     //基本 handler
     private final CorsHandler corsHandler;
     private final BodyHandler bodyHandler;
-
     //基本 handler 对应的 路由
     private final Route corsHandlerRoute;
     private final Route bodyHandlerRoute;
 
-    /**
-     * 异常处理器列表
-     */
-    private final List<ScxHttpRouterExceptionHandler> scxHttpRouterExceptionHandlers = new ArrayList<>();
-    private final LastExceptionHandler lastExceptionHandler;
-
-    /**
-     * a
-     *
-     * @param scxMvc a
-     */
-    public ScxHttpRouter(ScxMvc scxMvc) {
-        //初始化默认的异常处理器
-        addExceptionHandler(new ScxHttpExceptionHandler(scxMvc.options().useDevelopmentErrorPage()));
-        this.lastExceptionHandler = new LastExceptionHandler(scxMvc.options().useDevelopmentErrorPage());
-        //创建 vertxRouter 用来管理整个项目的路由
-        this.vertxRouter = Router.router(scxMvc.vertx());
-        //绑定异常处理器
-        bindErrorHandler(this.vertxRouter);
+    public ScxHttpRouter(Vertx vertx, ScxHttpRouterOptions options) {
+        super(vertx);
         //设置基本的 handler
-        this.corsHandler = initCorsHandler(scxMvc.options().allowedOrigin());
-        this.bodyHandler = initBodyHandler(scxMvc.options().uploadsDirectory(), scxMvc.options().bodyLimit());
+        this.corsHandler = initCorsHandler(options.allowedOrigin());
+        this.bodyHandler = initBodyHandler(options.uploadsDirectory(), options.bodyLimit());
         //注册路由
-        this.corsHandlerRoute = this.vertxRouter.route().handler(corsHandler);
-        this.bodyHandlerRoute = this.vertxRouter.route().handler(bodyHandler);
+        this.corsHandlerRoute = this.route().handler(corsHandler);
+        this.bodyHandlerRoute = this.route().handler(bodyHandler);
     }
 
     /**
-     * <p>bindErrorHandler.</p>
+     * <p>toSet.</p>
      *
-     * @param vertxRouter a {@link io.vertx.ext.web.Router} object
+     * @param values a {@link io.netty.util.AsciiString} object
+     * @return a {@link java.util.Set} object
      */
-    private void bindErrorHandler(Router vertxRouter) {
-        var errorHandler = new ErrorHandler(this);
-        // 因为 ScxHttpResponseStatus 中所有的错误状态 都处在可以处理的范围内 所以我们 按照 ScxHttpResponseStatus 的值进行批量设置
-        for (var s : ScxHttpResponseStatus.values()) {
-            vertxRouter.errorHandler(s.statusCode(), errorHandler);
-        }
+    private static Set<String> toSet(AsciiString... values) {
+        return Stream.of(values).map(AsciiString::toString).collect(Collectors.toSet());
     }
 
     /**
-     * a
+     * <p>initCorsHandler.</p>
      *
-     * @return a
+     * @param allowedOriginPattern a {@link java.lang.String} object
+     * @return a {@link io.vertx.ext.web.handler.CorsHandler} object
      */
-    public Router vertxRouter() {
-        return vertxRouter;
+    static CorsHandler initCorsHandler(String allowedOriginPattern) {
+        return new CorsHandlerImpl().addOrigin(allowedOriginPattern)
+                .allowedHeaders(DEFAULT_ALLOWED_HEADERS)
+                .allowedMethods(DEFAULT_ALLOWED_METHODS)
+                .exposedHeaders(DEFAULT_EXPOSED_HEADERS)
+                .allowCredentials(true);
+    }
+
+    /**
+     * <p>initBodyHandler.</p>
+     *
+     * @param uploadDirectory a {@link java.nio.file.Path} object
+     * @return a {@link io.vertx.ext.web.handler.BodyHandler} object
+     */
+    static BodyHandler initBodyHandler(Path uploadDirectory, long bodyLimit) {
+        return new BodyHandlerImpl(uploadDirectory != null ? uploadDirectory.toString() : null)
+                .setBodyLimit(bodyLimit)
+                .setMergeFormAttributes(false)
+                .setDeleteUploadedFilesOnEnd(true);
     }
 
     /**
@@ -120,62 +136,6 @@ public final class ScxHttpRouter {
      */
     public Route bodyHandlerRoute() {
         return bodyHandlerRoute;
-    }
-
-    /**
-     * 添加一个 异常处理器
-     *
-     * @param scxHttpRouterExceptionHandler s
-     * @return s
-     */
-    public ScxHttpRouter addExceptionHandler(ScxHttpRouterExceptionHandler scxHttpRouterExceptionHandler) {
-        scxHttpRouterExceptionHandlers.add(scxHttpRouterExceptionHandler);
-        return this;
-    }
-
-    /**
-     * 添加一个 异常处理器
-     *
-     * @param index                         索引
-     * @param scxHttpRouterExceptionHandler s
-     * @return s
-     */
-    public ScxHttpRouter addExceptionHandler(int index, ScxHttpRouterExceptionHandler scxHttpRouterExceptionHandler) {
-        scxHttpRouterExceptionHandlers.add(index, scxHttpRouterExceptionHandler);
-        return this;
-    }
-
-    /**
-     * a
-     *
-     * @param throwable a
-     * @return a
-     */
-    public ScxHttpRouterExceptionHandler findExceptionHandler(Throwable throwable) {
-        for (var handler : scxHttpRouterExceptionHandlers) {
-            if (handler.canHandle(throwable)) {
-                return handler;
-            }
-        }
-        return lastExceptionHandler;
-    }
-
-    private record ErrorHandler(ScxHttpRouter scxHttpRouter) implements Handler<RoutingContext> {
-
-        @Override
-        public void handle(RoutingContext routingContext) {
-            var routingContextException = ScxExceptionHelper.getRootCause(routingContext.failure());
-            var routingContextStatusCode = routingContext.statusCode();
-            if (routingContextStatusCode == 500) { // vertx 会将所有为声明状态码的异常归类为 500 其中就包括 我们的 ScxHttpException
-                scxHttpRouter.findExceptionHandler(routingContextException).handle(routingContextException, routingContext);
-            } else {
-                //不是 500 的话 根据状态码 我们看一下是否能需要进行一次包装
-                var byStatusCode = ScxHttpResponseStatus.findByStatusCode(routingContextStatusCode);
-                var scxHttpException = byStatusCode != null ? new ScxHttpException(byStatusCode.statusCode(), byStatusCode.reasonPhrase(), routingContextException) : new InternalServerErrorException(routingContextException);
-                scxHttpRouter.findExceptionHandler(scxHttpException).handle(scxHttpException, routingContext);
-            }
-        }
-
     }
 
 }

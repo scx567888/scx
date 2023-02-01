@@ -3,7 +3,7 @@ package cool.scx.mvc;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.TextNode;
-import cool.scx.mvc.http.exception.BadRequestException;
+import cool.scx.mvc.exception.BadRequestException;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpHeaderValues;
 import io.vertx.ext.web.RoutingContext;

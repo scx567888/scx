@@ -1,4 +1,4 @@
-package cool.scx.mvc.http;
+package cool.scx.mvc;
 
 /**
  * 规定一些常见的 http 相应状态

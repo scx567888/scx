@@ -1,7 +1,8 @@
-package cool.scx.mvc.http.exception;
+package cool.scx.mvc.exception;
 
-import cool.scx.mvc.http.ScxHttpException;
-import cool.scx.mvc.http.ScxHttpResponseStatus;
+
+import cool.scx.mvc.ScxHttpException;
+import cool.scx.mvc.ScxHttpResponseStatus;
 
 /**
  * 方法不被允许

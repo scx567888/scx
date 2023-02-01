@@ -1,7 +1,7 @@
 package cool.scx.mvc.parameter_handler;
 
-import cool.scx.mvc.ScxMappingMethodParameterHandler;
 import cool.scx.mvc.ScxMappingRoutingContextInfo;
+import cool.scx.mvc.ScxMvcParameterHandler;
 import cool.scx.util.ObjectUtils;
 
 import java.lang.reflect.Parameter;
@@ -17,12 +17,7 @@ import static cool.scx.util.ScxExceptionHelper.ignore;
  * @author scx567888
  * @version 1.11.8
  */
-public final class LastMethodParameterHandler implements ScxMappingMethodParameterHandler {
-
-    /**
-     * a
-     */
-    public static final LastMethodParameterHandler DEFAULT_INSTANCE = new LastMethodParameterHandler();
+public final class LastParameterHandler implements ScxMvcParameterHandler {
 
     /**
      * {@inheritDoc}
