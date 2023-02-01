@@ -1,8 +1,10 @@
 package cool.scx.mvc;
 
+import cool.scx.enumeration.HttpStatus;
 import cool.scx.mvc.Interceptor.ScxMappingInterceptorImpl;
 import cool.scx.mvc.exception.BadRequestException;
 import cool.scx.mvc.exception.InternalServerErrorException;
+import cool.scx.mvc.exception.ScxHttpException;
 import cool.scx.mvc.exception_handler.LastExceptionHandler;
 import cool.scx.mvc.exception_handler.ScxHttpExceptionHandler;
 import cool.scx.mvc.parameter_handler.*;
@@ -23,20 +25,17 @@ import java.util.stream.Collectors;
 
 public final class ScxMvc {
 
+    /**
+     * 路由上下文 THREAD_LOCAL
+     */
+    private static final InheritableThreadLocal<RoutingContext> ROUTING_CONTEXT_THREAD_LOCAL = new InheritableThreadLocal<>();
     private final List<ScxHttpRouterExceptionHandler> exceptionHandlers = new ArrayList<>();
-
     private final LastExceptionHandler lastExceptionHandler;
-
     private final List<ScxMvcReturnValueHandler> returnValueHandlers = new ArrayList<>();
-
     private final LastReturnValueHandler lastReturnValueHandler;
-
     private final List<ScxMvcParameterHandler> parameterHandlers = new ArrayList<>();
-
     private final LastParameterHandler lastParameterHandler;
-
     private final ScxMvcOptions options;
-
     private ScxMvcInterceptor interceptor = new ScxMappingInterceptorImpl();
 
     public ScxMvc() {
@@ -55,12 +54,39 @@ public final class ScxMvc {
         addReturnValueHandler(new BaseVoReturnValueHandler());
         this.lastReturnValueHandler = new LastReturnValueHandler();
         //初始化默认的参数处理器
-        addParameterHandler(new RoutingContextMethodParameterHandler());
-        addParameterHandler(new UploadedEntityMethodParameterHandler());
-        addParameterHandler(new FromBodyMethodParameterHandler());
-        addParameterHandler(new FromQueryMethodParameterHandler());
-        addParameterHandler(new FromPathMethodParameterHandler());
+        addParameterHandler(new RoutingContextParameterHandler());
+        addParameterHandler(new UploadedEntityParameterHandler());
+        addParameterHandler(new FromBodyParameterHandler());
+        addParameterHandler(new FromQueryParameterHandler());
+        addParameterHandler(new FromPathParameterHandler());
         this.lastParameterHandler = new LastParameterHandler();
+    }
+
+    /**
+     * 获取当前线程的 RoutingContext (只限在 scx mapping 注解的方法及其调用链上)
+     *
+     * @return 当前线程的 RoutingContext
+     */
+    public static RoutingContext routingContext() {
+        return ROUTING_CONTEXT_THREAD_LOCAL.get();
+    }
+
+    /**
+     * 设置当前线程的 routingContext
+     * 此方法正常之给 scxMappingHandler 调用
+     * 若无特殊需求 不必调用此方法
+     *
+     * @param routingContext 要设置的 routingContext
+     */
+    static void _routingContext(RoutingContext routingContext) {
+        ROUTING_CONTEXT_THREAD_LOCAL.set(routingContext);
+    }
+
+    /**
+     * a
+     */
+    static void _clearRoutingContext() {
+        ROUTING_CONTEXT_THREAD_LOCAL.remove();
     }
 
     public ScxMvc registerHttpRoutes(Router router, BeanFactory beanFactory, List<Class<?>> classList) {
@@ -143,7 +169,7 @@ public final class ScxMvc {
     }
 
     Object[] buildMethodParameters(Parameter[] parameters, RoutingContext context) throws Exception {
-        var info = new ScxMappingRoutingContextInfo(context);
+        var info = new ScxMvcRequestInfo(context);
         var exceptionArrayList = new ArrayList<Exception>();
         var methodParameter = new Object[parameters.length];
         for (int i = 0; i < methodParameter.length; i = i + 1) {
@@ -163,7 +189,7 @@ public final class ScxMvc {
     public ScxMvc bindErrorHandler(Router vertxRouter) {
         var errorHandler = new ErrorHandler(this);
         // 因为 ScxHttpResponseStatus 中所有的错误状态 都处在可以处理的范围内 所以我们 按照 ScxHttpResponseStatus 的值进行批量设置
-        for (var s : ScxHttpResponseStatus.values()) {
+        for (var s : HttpStatus.values()) {
             vertxRouter.errorHandler(s.statusCode(), errorHandler);
         }
         return this;
@@ -173,14 +199,14 @@ public final class ScxMvc {
 
         @Override
         public void handle(RoutingContext routingContext) {
-            var routingContextException = ScxExceptionHelper.getRootCause(routingContext.failure());
-            var routingContextStatusCode = routingContext.statusCode();
-            if (routingContextStatusCode == 500) { // vertx 会将所有为声明状态码的异常归类为 500 其中就包括 我们的 ScxHttpException
-                scxMvc.findExceptionHandler(routingContextException).handle(routingContextException, routingContext);
+            var cause = ScxExceptionHelper.getRootCause(routingContext.failure());
+            var statusCode = routingContext.statusCode();
+            if (statusCode == 500) { // vertx 会将所有为声明状态码的异常归类为 500 其中就包括 我们的 ScxHttpException
+                scxMvc.findExceptionHandler(cause).handle(cause, routingContext);
             } else {
                 //不是 500 的话 根据状态码 我们看一下是否能需要进行一次包装
-                var byStatusCode = ScxHttpResponseStatus.findByStatusCode(routingContextStatusCode);
-                var scxHttpException = byStatusCode != null ? new ScxHttpException(byStatusCode.statusCode(), byStatusCode.reasonPhrase(), routingContextException) : new InternalServerErrorException(routingContextException);
+                var byStatusCode = HttpStatus.of(statusCode);
+                var scxHttpException = byStatusCode != null ? new ScxHttpException(byStatusCode.statusCode(), byStatusCode.reasonPhrase(), cause) : new InternalServerErrorException(cause);
                 scxMvc.findExceptionHandler(scxHttpException).handle(scxHttpException, routingContext);
             }
         }
