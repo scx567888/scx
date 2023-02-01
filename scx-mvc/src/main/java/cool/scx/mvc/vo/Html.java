@@ -1,7 +1,6 @@
 package cool.scx.mvc.vo;
 
-import cool.scx.mvc.ScxMvc;
-import freemarker.template.Template;
+import cool.scx.mvc.return_value_handler.HtmlVoReturnValueHandler;
 import freemarker.template.TemplateException;
 import io.vertx.ext.web.RoutingContext;
 
@@ -20,21 +19,23 @@ public final class Html implements BaseVo {
 
     private final boolean useTemplate;
 
-    private final Template template;
+    private final String templatePath;
 
     private final String htmlStr;
 
     private final Map<String, Object> dataMap = new HashMap<>();
 
+    private HtmlVoReturnValueHandler handler;
+
     /**
      * <p>Constructor for Html.</p>
      *
-     * @param template    a {@link freemarker.template.Template} object
-     * @param htmlStr     a {@link java.lang.String} object
-     * @param useTemplate a boolean
+     * @param templatePath a {@link freemarker.template.Template} object
+     * @param htmlStr      a {@link java.lang.String} object
+     * @param useTemplate  a boolean
      */
-    private Html(Template template, String htmlStr, boolean useTemplate) {
-        this.template = template;
+    private Html(String templatePath, String htmlStr, boolean useTemplate) {
+        this.templatePath = templatePath;
         this.htmlStr = htmlStr;
         this.useTemplate = useTemplate;
     }
@@ -56,10 +57,8 @@ public final class Html implements BaseVo {
      * @return a {@link Html} object
      * @throws java.io.IOException if any.
      */
-    public static Html of(ScxMvc scxMvc, String templatePath) throws IOException {
-        //todo 这里应该重构
-        var template = scxMvc.template().getTemplateByPath(templatePath);
-        return new Html(template, null, true);
+    public static Html of(String templatePath) throws IOException {
+        return new Html(templatePath, null, true);
     }
 
     /**
@@ -81,14 +80,32 @@ public final class Html implements BaseVo {
      */
     @Override
     public void accept(RoutingContext context) throws TemplateException, IOException {
-        var response = BaseVo.fillHtmlContentType(context.request().response());
         if (useTemplate) {
-            var sw = new StringWriter();
-            template.process(dataMap, sw);
-            response.end(sw.toString());
+            sendTemplate(context, this.handler);
         } else {
-            response.end(htmlStr);
+            sendHtmlStr(context);
         }
+    }
+
+    public void sendHtmlStr(RoutingContext context) {
+        var response = BaseVo.fillHtmlContentType(context.request().response());
+        response.end(htmlStr);
+    }
+
+    public void sendTemplate(RoutingContext context, HtmlVoReturnValueHandler handler) throws IOException, TemplateException {
+        if (handler == null) {
+            throw new NullPointerException("handler 不能为空 !!!");
+        }
+        var response = BaseVo.fillHtmlContentType(context.request().response());
+        var sw = new StringWriter();
+        var template = handler.getTemplateByPath(templatePath);
+        template.process(dataMap, sw);
+        response.end(sw.toString());
+    }
+
+    public Html setHandler(HtmlVoReturnValueHandler htmlVoReturnValueHandler) {
+        this.handler = htmlVoReturnValueHandler;
+        return this;
     }
 
 }

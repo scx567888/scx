@@ -1,6 +1,6 @@
 package cool.scx.mvc.vo;
 
-import cool.scx.mvc.http.exception.NotFoundException;
+import cool.scx.mvc.exception.NotFoundException;
 import cool.scx.util.ScxExceptionHelper;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpResponseStatus;
