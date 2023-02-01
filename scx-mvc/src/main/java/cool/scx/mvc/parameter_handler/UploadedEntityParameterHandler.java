@@ -1,6 +1,6 @@
 package cool.scx.mvc.parameter_handler;
 
-import cool.scx.mvc.ScxMappingRoutingContextInfo;
+import cool.scx.mvc.ScxMvcRequestInfo;
 import cool.scx.mvc.ScxMvcParameterHandler;
 import cool.scx.mvc.annotation.FromUpload;
 import cool.scx.mvc.parameter_handler.exception.RequiredParamEmptyException;
@@ -17,7 +17,7 @@ import java.lang.reflect.Parameter;
  * @author scx567888
  * @version 1.11.8
  */
-public final class UploadedEntityMethodParameterHandler implements ScxMvcParameterHandler {
+public final class UploadedEntityParameterHandler implements ScxMvcParameterHandler {
 
     /**
      * 从 RoutingContext 查找 对应名称的 上传对象
@@ -49,7 +49,7 @@ public final class UploadedEntityMethodParameterHandler implements ScxMvcParamet
      * {@inheritDoc}
      */
     @Override
-    public Object handle(Parameter parameter, ScxMappingRoutingContextInfo info) throws RequiredParamEmptyException {
+    public Object handle(Parameter parameter, ScxMvcRequestInfo info) throws RequiredParamEmptyException {
         var javaType = parameter.getParameterizedType();
         var name = parameter.getName();
         var required = false;

@@ -1,14 +1,14 @@
 package cool.scx.mvc.parameter_handler;
 
-import cool.scx.mvc.ScxMappingRoutingContextInfo;
+import cool.scx.mvc.ScxMvcRequestInfo;
 import cool.scx.mvc.ScxMvcParameterHandler;
 import cool.scx.util.ObjectUtils;
 
 import java.lang.reflect.Parameter;
 
-import static cool.scx.mvc.parameter_handler.FromBodyMethodParameterHandler.getValueFromBody;
-import static cool.scx.mvc.parameter_handler.FromPathMethodParameterHandler.getValueFromPath;
-import static cool.scx.mvc.parameter_handler.FromQueryMethodParameterHandler.getValueFromQuery;
+import static cool.scx.mvc.parameter_handler.FromBodyParameterHandler.getValueFromBody;
+import static cool.scx.mvc.parameter_handler.FromPathParameterHandler.getValueFromPath;
+import static cool.scx.mvc.parameter_handler.FromQueryParameterHandler.getValueFromQuery;
 import static cool.scx.util.ScxExceptionHelper.ignore;
 
 /**
@@ -31,7 +31,7 @@ public final class LastParameterHandler implements ScxMvcParameterHandler {
      * {@inheritDoc}
      */
     @Override
-    public Object handle(Parameter parameter, ScxMappingRoutingContextInfo context) throws Exception {
+    public Object handle(Parameter parameter, ScxMvcRequestInfo context) throws Exception {
         var javaType = ObjectUtils.constructType(parameter.getParameterizedType());
         var name = parameter.getName();
         //------ 这里针对没有注解的参数进行赋值猜测 ---------------

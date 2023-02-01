@@ -1,7 +1,6 @@
 package cool.scx.mvc.exception_handler;
 
-
-import cool.scx.mvc.ScxHttpException;
+import cool.scx.mvc.exception.ScxHttpException;
 import cool.scx.mvc.ScxHttpRouterExceptionHandler;
 import cool.scx.util.HttpUtils;
 import cool.scx.util.ObjectUtils;

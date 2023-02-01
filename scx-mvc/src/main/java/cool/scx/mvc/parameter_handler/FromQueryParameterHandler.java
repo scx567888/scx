@@ -1,7 +1,7 @@
 package cool.scx.mvc.parameter_handler;
 
 import com.fasterxml.jackson.databind.JavaType;
-import cool.scx.mvc.ScxMappingRoutingContextInfo;
+import cool.scx.mvc.ScxMvcRequestInfo;
 import cool.scx.mvc.ScxMvcParameterHandler;
 import cool.scx.mvc.annotation.FromQuery;
 import cool.scx.mvc.parameter_handler.exception.ParamConvertException;
@@ -19,7 +19,7 @@ import static cool.scx.util.ObjectUtils.*;
  * @author scx567888
  * @version 1.11.8
  */
-public final class FromQueryMethodParameterHandler implements ScxMvcParameterHandler {
+public final class FromQueryParameterHandler implements ScxMvcParameterHandler {
 
     /**
      * a
@@ -33,7 +33,7 @@ public final class FromQueryMethodParameterHandler implements ScxMvcParameterHan
      * @throws RequiredParamEmptyException a
      * @throws ParamConvertException       a
      */
-    public static Object getValueFromQuery(String name, boolean merge, boolean required, JavaType javaType, ScxMappingRoutingContextInfo info) throws RequiredParamEmptyException, ParamConvertException {
+    public static Object getValueFromQuery(String name, boolean merge, boolean required, JavaType javaType, ScxMvcRequestInfo info) throws RequiredParamEmptyException, ParamConvertException {
         var tempValue = getFromMap(name, info.routingContext().queryParams(), merge, javaType);
         if (tempValue == null) {
             if (required) {
@@ -65,7 +65,7 @@ public final class FromQueryMethodParameterHandler implements ScxMvcParameterHan
      * {@inheritDoc}
      */
     @Override
-    public Object handle(Parameter parameter, ScxMappingRoutingContextInfo info) throws Exception {
+    public Object handle(Parameter parameter, ScxMvcRequestInfo info) throws Exception {
         var javaType = constructType(parameter.getParameterizedType());
         var required = false;
         var name = parameter.getName();

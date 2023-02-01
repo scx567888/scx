@@ -1,8 +1,8 @@
 package cool.scx.mvc.parameter_handler;
 
 import com.fasterxml.jackson.databind.JavaType;
-import cool.scx.mvc.ScxMappingRoutingContextInfo;
 import cool.scx.mvc.ScxMvcParameterHandler;
+import cool.scx.mvc.ScxMvcRequestInfo;
 import cool.scx.mvc.annotation.FromBody;
 import cool.scx.mvc.parameter_handler.exception.ParamConvertException;
 import cool.scx.mvc.parameter_handler.exception.RequiredParamEmptyException;
@@ -10,8 +10,8 @@ import cool.scx.util.StringUtils;
 
 import java.lang.reflect.Parameter;
 
-import static cool.scx.mvc.ScxMappingRoutingContextInfo.ContentType;
 import static cool.scx.mvc.ScxMvcHelper.*;
+import static cool.scx.mvc.ScxMvcRequestInfo.ContentType;
 import static cool.scx.util.ObjectUtils.*;
 
 /**
@@ -20,7 +20,7 @@ import static cool.scx.util.ObjectUtils.*;
  * @author scx567888
  * @version 1.11.8
  */
-public final class FromBodyMethodParameterHandler implements ScxMvcParameterHandler {
+public final class FromBodyParameterHandler implements ScxMvcParameterHandler {
 
     /**
      * a
@@ -34,7 +34,7 @@ public final class FromBodyMethodParameterHandler implements ScxMvcParameterHand
      * @throws RequiredParamEmptyException a
      * @throws ParamConvertException       a
      */
-    public static Object getValueFromBody(String name, boolean useAllBody, boolean required, JavaType javaType, ScxMappingRoutingContextInfo info) throws RequiredParamEmptyException, ParamConvertException {
+    public static Object getValueFromBody(String name, boolean useAllBody, boolean required, JavaType javaType, ScxMvcRequestInfo info) throws RequiredParamEmptyException, ParamConvertException {
         if (info.contentType() == ContentType.FORM) {
             return fromFormAttributes(name, useAllBody, required, javaType, info);
         } else {
@@ -49,12 +49,12 @@ public final class FromBodyMethodParameterHandler implements ScxMvcParameterHand
      * @param useAllBody a boolean
      * @param required   a boolean
      * @param javaType   a {@link com.fasterxml.jackson.databind.JavaType} object
-     * @param info       a {@link ScxMappingRoutingContextInfo} object
+     * @param info       a {@link ScxMvcRequestInfo} object
      * @return a {@link java.lang.Object} object
      * @throws RequiredParamEmptyException if any.
      * @throws ParamConvertException       if any.
      */
-    private static Object fromBody(String name, boolean useAllBody, boolean required, JavaType javaType, ScxMappingRoutingContextInfo info) throws RequiredParamEmptyException, ParamConvertException {
+    private static Object fromBody(String name, boolean useAllBody, boolean required, JavaType javaType, ScxMvcRequestInfo info) throws RequiredParamEmptyException, ParamConvertException {
         var tempValue = getFromJsonNode(name, info.body(), useAllBody);
         // 为了提高性能这里提前做一次校验
         if (tempValue == null || tempValue.isNull() || tempValue.isMissingNode()) {
@@ -82,12 +82,12 @@ public final class FromBodyMethodParameterHandler implements ScxMvcParameterHand
      * @param useAllBody a boolean
      * @param required   a boolean
      * @param javaType   a {@link com.fasterxml.jackson.databind.JavaType} object
-     * @param info       a {@link ScxMappingRoutingContextInfo} object
+     * @param info       a {@link ScxMvcRequestInfo} object
      * @return a {@link java.lang.Object} object
      * @throws RequiredParamEmptyException if any.
      * @throws ParamConvertException       if any.
      */
-    private static Object fromFormAttributes(String name, boolean useAllBody, boolean required, JavaType javaType, ScxMappingRoutingContextInfo info) throws RequiredParamEmptyException, ParamConvertException {
+    private static Object fromFormAttributes(String name, boolean useAllBody, boolean required, JavaType javaType, ScxMvcRequestInfo info) throws RequiredParamEmptyException, ParamConvertException {
         var tempValue = getFromMap(name, info.routingContext().request().formAttributes(), useAllBody, javaType);
         if (tempValue == null) {
             if (required) {
@@ -119,7 +119,7 @@ public final class FromBodyMethodParameterHandler implements ScxMvcParameterHand
      * {@inheritDoc}
      */
     @Override
-    public Object handle(Parameter parameter, ScxMappingRoutingContextInfo info) throws Exception {
+    public Object handle(Parameter parameter, ScxMvcRequestInfo info) throws Exception {
         var javaType = constructType(parameter.getParameterizedType());
         var required = false;
         var name = parameter.getName();
