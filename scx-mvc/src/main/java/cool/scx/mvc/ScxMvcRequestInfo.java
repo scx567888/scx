@@ -8,7 +8,7 @@ import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpHeaderValues;
 import io.vertx.ext.web.RoutingContext;
 
-import static cool.scx.mvc.ScxMappingRoutingContextInfo.ContentType.*;
+import static cool.scx.mvc.ScxMvcRequestInfo.ContentType.*;
 import static cool.scx.util.ObjectUtils.jsonMapper;
 import static cool.scx.util.ObjectUtils.xmlMapper;
 
@@ -18,18 +18,13 @@ import static cool.scx.util.ObjectUtils.xmlMapper;
  * @author scx567888
  * @version 1.4.7
  */
-public final class ScxMappingRoutingContextInfo {
+public final class ScxMvcRequestInfo {
 
     private final RoutingContext routingContext;
     private final JsonNode body;
     private final ContentType contentType;
 
-    /**
-     * <p>Constructor for ScxMappingRequestParamInfo.</p>
-     *
-     * @param ctx a {@link io.vertx.ext.web.RoutingContext} object
-     */
-    public ScxMappingRoutingContextInfo(RoutingContext ctx) {
+    public ScxMvcRequestInfo(RoutingContext ctx) {
         this.routingContext = ctx;
         this.contentType = initContentType(ctx);
         this.body = initBody(ctx, this.contentType);
@@ -105,7 +100,7 @@ public final class ScxMappingRoutingContextInfo {
      * <p>initContentType.</p>
      *
      * @param ctx a {@link io.vertx.ext.web.RoutingContext} object
-     * @return a {@link ScxMappingRoutingContextInfo.ContentType} object
+     * @return a {@link ScxMvcRequestInfo.ContentType} object
      */
     public static ContentType initContentType(RoutingContext ctx) {
         var contentType = ctx.request().headers().get(HttpHeaderNames.CONTENT_TYPE);
@@ -126,29 +121,14 @@ public final class ScxMappingRoutingContextInfo {
         }
     }
 
-    /**
-     * a
-     *
-     * @return a
-     */
     public JsonNode body() {
         return body;
     }
 
-    /**
-     * <p>contentType.</p>
-     *
-     * @return a {@link ScxMappingRoutingContextInfo.ContentType} object
-     */
     public ContentType contentType() {
         return contentType;
     }
 
-    /**
-     * a
-     *
-     * @return a
-     */
     public RoutingContext routingContext() {
         return routingContext;
     }
