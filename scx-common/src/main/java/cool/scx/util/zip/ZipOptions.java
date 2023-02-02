@@ -3,6 +3,8 @@ package cool.scx.util.zip;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
+import static java.util.zip.Deflater.DEFAULT_COMPRESSION;
+
 /**
  * a
  *
@@ -34,11 +36,16 @@ public class ZipOptions {
      */
     private int level;
 
+    /**
+     * 注释
+     */
+    private String comment;
+
     public ZipOptions() {
         this.includeRoot = false;
         this.useOriginalFileName = false;
         this.charset = StandardCharsets.UTF_8;
-        this.level = 6;
+        this.level = DEFAULT_COMPRESSION;
     }
 
     public boolean includeRoot() {
@@ -55,6 +62,10 @@ public class ZipOptions {
 
     public int level() {
         return level;
+    }
+
+    public String comment() {
+        return comment;
     }
 
     public ZipOptions setIncludeRoot(boolean includeRoot) {
@@ -74,6 +85,11 @@ public class ZipOptions {
 
     public ZipOptions setLevel(int level) {
         this.level = level;
+        return this;
+    }
+
+    public ZipOptions setComment(String comment) {
+        this.comment = comment;
         return this;
     }
 

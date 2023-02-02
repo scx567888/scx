@@ -142,6 +142,8 @@ public class ZipBuilder {
     public byte[] toBytes(ZipOptions zipOptions) throws Exception {
         var bo = new ByteArrayOutputStream();
         try (var zos = new ZipOutputStream(bo, zipOptions.charset())) {
+            zos.setComment(zipOptions.comment());
+            zos.setLevel(zipOptions.level());
             //遍历目录
             writeToZipOutputStream(zos);
         }
@@ -162,18 +164,22 @@ public class ZipBuilder {
      * 将一个虚拟文件压缩
      *
      * @param outputPath a
+     * @return
      * @throws java.io.IOException if any.
      */
-    public void toFile(Path outputPath, ZipOptions zipOptions) throws IOException {
+    public Path toFile(Path outputPath, ZipOptions zipOptions) throws IOException {
         // 创建一个新的空的输出文件的临时文件
         Files.createDirectories(outputPath.getParent());
         try (var zos = new ZipOutputStream(Files.newOutputStream(outputPath), zipOptions.charset())) {
+            zos.setComment(zipOptions.comment());
+            zos.setLevel(zipOptions.level());
             writeToZipOutputStream(zos);
         }
+        return outputPath;
     }
 
-    public void toFile(Path outputPath) throws IOException {
-        toFile(outputPath, new ZipOptions());
+    public Path toFile(Path outputPath) throws IOException {
+        return toFile(outputPath, new ZipOptions());
     }
 
 }
