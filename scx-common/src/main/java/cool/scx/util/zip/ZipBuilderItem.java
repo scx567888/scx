@@ -34,9 +34,9 @@ final class ZipBuilderItem extends ZipDataSource {
      *
      * @param zipPath    a {@link java.lang.String} object
      * @param path       a {@link java.nio.file.Path} object
-     * @param zipOptions a {@link cool.scx.util.zip.ZipOption} object
+     * @param zipOptions a {@link cool.scx.util.zip.ZipOptions} object
      */
-    ZipBuilderItem(String zipPath, Path path, ZipOption... zipOptions) {
+    ZipBuilderItem(String zipPath, Path path, ZipOptions zipOptions) {
         super(path);
         this.zipPath = getZipPathByPath(zipPath, path, zipOptions);
     }
@@ -89,22 +89,21 @@ final class ZipBuilderItem extends ZipDataSource {
      *
      * @param zipPath    a {@link java.lang.String} object
      * @param path       a {@link java.nio.file.Path} object
-     * @param zipOptions a {@link cool.scx.util.zip.ZipOption} object
+     * @param zipOptions a {@link cool.scx.util.zip.ZipOptions} object
      * @return a {@link java.lang.String} object
      */
-    public static String getZipPathByPath(String zipPath, Path path, ZipOption... zipOptions) {
-        var info = new ZipOption.Info(zipOptions);
+    public static String getZipPathByPath(String zipPath, Path path, ZipOptions zipOptions) {
         var fileName = path.getFileName().toString();
         var normalizeZipPath = trimSlash(normalize(zipPath));
 
         if (Files.isDirectory(path)) {//文件夹特殊处理 根据 info 判断是否拼接 文件夹名称
-            var dirName = info.includeRoot() ? fileName : "";
+            var dirName = zipOptions.includeRoot() ? fileName : "";
             var rootPath = join(normalizeZipPath, dirName); //判断是否有自定义目录并进行拼接
             return StringUtils.isEmpty(rootPath) ? rootPath : addSlashEnd(rootPath);
         } else {
             if (StringUtils.isEmpty(normalizeZipPath)) { //zipPath 为空时, 我们直接将文件名设置为 zipPath
                 return fileName;
-            } else if (info.useOriginalFileName()) {
+            } else if (zipOptions.useOriginalFileName()) {
                 return join(normalizeZipPath, fileName);
             } else {
                 return normalizeZipPath;
