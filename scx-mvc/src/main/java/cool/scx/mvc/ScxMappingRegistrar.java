@@ -158,7 +158,7 @@ final class ScxMappingRegistrar {
                 m.put(new NormalPathInfo(httpMethod, key), scxMappingHandler);
             }
         }
-        var map = m.asMap();
+        var map = m.toMultiValueMap();
         map.forEach((k, v) -> {
             if (v.size() > 1) { //具有多个路由
                 var content = v.stream().map(c -> "\t" + c.clazz.getName() + " : " + c.method.getName()).collect(Collectors.joining(System.lineSeparator()));
