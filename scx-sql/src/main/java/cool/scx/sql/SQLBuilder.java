@@ -1,14 +1,9 @@
 package cool.scx.sql;
 
-import cool.scx.sql.group_by.GroupBy;
-import cool.scx.sql.order_by.OrderBy;
-import cool.scx.sql.pagination.Pagination;
-import cool.scx.sql.where.Where;
-
 import java.util.Arrays;
 
 /**
- * 此 SQLBuilder 并不用于构建 {@link cool.scx.sql.SQL} 只是用于构建普通的 SQL 语句
+ * 此 SQLBuilder 并不用于构建 {@link SQL} 只是用于构建普通的 SQL 语句
  *
  * @author scx567888
  * @version 0.0.1
@@ -83,7 +78,7 @@ public final class SQLBuilder {
      * a
      *
      * @param selectColumns a {@link String} object
-     * @return a {@link cool.scx.sql.SQLBuilder} object
+     * @return a {@link SQLBuilder} object
      */
     public static SQLBuilder Select(String... selectColumns) {
         return new SQLBuilder(SQLBuilderType.SELECT)._Select(selectColumns);
@@ -92,19 +87,9 @@ public final class SQLBuilder {
     /**
      * a
      *
-     * @param selectColumnInfos a {@link java.lang.String} object
-     * @return a
-     */
-    public static SQLBuilder Select(ColumnInfo... selectColumnInfos) {
-        return Select(Arrays.stream(selectColumnInfos).map(ColumnInfo::selectSQL).toArray(String[]::new));
-    }
-
-    /**
-     * a
-     *
      * @param tableName     a {@link String} object
      * @param insertColumns a {@link String} object
-     * @return a {@link cool.scx.sql.SQLBuilder} object
+     * @return a {@link SQLBuilder} object
      */
     public static SQLBuilder Insert(String tableName, String... insertColumns) {
         return new SQLBuilder(SQLBuilderType.INSERT)._Insert(tableName, insertColumns);
@@ -113,9 +98,9 @@ public final class SQLBuilder {
     /**
      * a
      *
-     * @param tableName         a {@link java.lang.String} object
+     * @param tableName         a {@link String} object
      * @param insertColumnInfos a {@link java.lang.reflect.Field} object
-     * @return a {@link cool.scx.sql.SQLBuilder} object
+     * @return a {@link SQLBuilder} object
      */
     public static SQLBuilder Insert(String tableName, ColumnInfo... insertColumnInfos) {
         return Insert(tableName, Arrays.stream(insertColumnInfos).map(ColumnInfo::columnName).toArray(String[]::new));
@@ -125,7 +110,7 @@ public final class SQLBuilder {
      * a
      *
      * @param tableName a {@link String} object
-     * @return a {@link cool.scx.sql.SQLBuilder} object
+     * @return a {@link SQLBuilder} object
      */
     public static SQLBuilder Update(String tableName) {
         return new SQLBuilder(SQLBuilderType.UPDATE)._Update(tableName);
@@ -135,7 +120,7 @@ public final class SQLBuilder {
      * a
      *
      * @param tableName a {@link String} object
-     * @return a {@link cool.scx.sql.SQLBuilder} object
+     * @return a {@link SQLBuilder} object
      */
     public static SQLBuilder Delete(String tableName) {
         return new SQLBuilder(SQLBuilderType.DELETE)._Delete(tableName);
@@ -145,7 +130,7 @@ public final class SQLBuilder {
      * a
      *
      * @param selectColumns a {@link String} object
-     * @return a {@link cool.scx.sql.SQLBuilder} object
+     * @return a {@link SQLBuilder} object
      */
     private SQLBuilder _Select(String... selectColumns) {
         if (selectColumns.length == 0) {
@@ -159,7 +144,7 @@ public final class SQLBuilder {
      * a
      *
      * @param tableName a {@link String} object
-     * @return a {@link cool.scx.sql.SQLBuilder} object
+     * @return a {@link SQLBuilder} object
      */
     public SQLBuilder From(String tableName) {
         this.tableName = tableName;
@@ -170,7 +155,7 @@ public final class SQLBuilder {
      * a
      *
      * @param whereClauses a {@link String} object
-     * @return a {@link cool.scx.sql.SQLBuilder} object
+     * @return a {@link SQLBuilder} object
      */
     public SQLBuilder Where(String... whereClauses) {
         this.whereClauses = whereClauses;
@@ -181,7 +166,7 @@ public final class SQLBuilder {
      * a
      *
      * @param groupByColumns a {@link String} object
-     * @return a {@link cool.scx.sql.SQLBuilder} object
+     * @return a {@link SQLBuilder} object
      */
     public SQLBuilder GroupBy(String... groupByColumns) {
         this.groupByColumns = groupByColumns;
@@ -192,7 +177,7 @@ public final class SQLBuilder {
      * a
      *
      * @param orderByClauses a {@link String} object
-     * @return a {@link cool.scx.sql.SQLBuilder} object
+     * @return a {@link SQLBuilder} object
      */
     public SQLBuilder OrderBy(String... orderByClauses) {
         this.orderByClauses = orderByClauses;
@@ -204,14 +189,14 @@ public final class SQLBuilder {
      *
      * @param offset   a int
      * @param rowCount a int
-     * @return a {@link cool.scx.sql.SQLBuilder} object
+     * @return a {@link SQLBuilder} object
      */
     public SQLBuilder Limit(Integer offset, Integer rowCount) {
-        if (offset == null || offset < 0) {
-            throw new IllegalArgumentException("分页参数错误 : offset (偏移量) 不能为空或小于 0 !!!");
+        if (offset != null && offset < 0) {
+            throw new IllegalArgumentException("分页参数错误 : offset (偏移量) 不能小于 0 !!!");
         }
-        if (rowCount == null || rowCount < 0) {
-            throw new IllegalArgumentException("分页参数错误 : rowCount (每页数量) 不能为空或小于 0 !!!");
+        if (rowCount != null && rowCount < 0) {
+            throw new IllegalArgumentException("分页参数错误 : rowCount (每页数量) 不能小于 0 !!!");
         }
         this.offset = offset;
         this.rowCount = rowCount;
@@ -231,62 +216,9 @@ public final class SQLBuilder {
     /**
      * a
      *
-     * @param where a {@link cool.scx.sql.where.Where} object
-     * @return a {@link cool.scx.sql.SQLBuilder} object
-     */
-    public SQLBuilder Where(Where where) {
-        if (where != null) {
-            this.whereClauses = where.getWhereClauses();
-        }
-        return this;
-    }
-
-    /**
-     * a
-     *
-     * @param groupBy a {@link cool.scx.sql.group_by.GroupBy} object
-     * @return a {@link cool.scx.sql.SQLBuilder} object
-     */
-    public SQLBuilder GroupBy(GroupBy groupBy) {
-        if (groupBy != null) {
-            this.groupByColumns = groupBy.getGroupByColumns();
-        }
-        return this;
-    }
-
-    /**
-     * a
-     *
-     * @param orderBy a {@link cool.scx.sql.order_by.OrderBy} object
-     * @return a {@link cool.scx.sql.SQLBuilder} object
-     */
-    public SQLBuilder OrderBy(OrderBy orderBy) {
-        if (orderBy != null) {
-            this.orderByClauses = orderBy.getOrderByClauses();
-        }
-        return this;
-    }
-
-    /**
-     * a
-     *
-     * @param pagination a {@link cool.scx.sql.pagination.Pagination} object
-     * @return a {@link cool.scx.sql.SQLBuilder} object
-     */
-    public SQLBuilder Limit(Pagination pagination) {
-        if (pagination != null) {
-            this.offset = pagination.offset();
-            this.rowCount = pagination.rowCount();
-        }
-        return this;
-    }
-
-    /**
-     * a
-     *
      * @param tableName     a {@link String} object
      * @param insertColumns a {@link String} object
-     * @return a {@link cool.scx.sql.SQLBuilder} object
+     * @return a {@link SQLBuilder} object
      */
     private SQLBuilder _Insert(String tableName, String... insertColumns) {
         this.tableName = tableName;
@@ -298,7 +230,7 @@ public final class SQLBuilder {
      * a
      *
      * @param insertValues a {@link String} object
-     * @return a {@link cool.scx.sql.SQLBuilder} object
+     * @return a {@link SQLBuilder} object
      */
     public SQLBuilder Values(String... insertValues) {
         this.insertValues = insertValues;
@@ -308,18 +240,8 @@ public final class SQLBuilder {
     /**
      * a
      *
-     * @param insertColumnInfos a {@link java.lang.reflect.Field} object
-     * @return a {@link cool.scx.sql.SQLBuilder} object
-     */
-    public SQLBuilder Values(ColumnInfo... insertColumnInfos) {
-        return Values(Arrays.stream(insertColumnInfos).map(ColumnInfo::insertValuesSQL).toArray(String[]::new));
-    }
-
-    /**
-     * a
-     *
      * @param tableName a {@link String} object
-     * @return a {@link cool.scx.sql.SQLBuilder} object
+     * @return a {@link SQLBuilder} object
      */
     private SQLBuilder _Update(String tableName) {
         this.tableName = tableName;
@@ -330,7 +252,7 @@ public final class SQLBuilder {
      * a
      *
      * @param updateSetColumns a {@link String} object
-     * @return a {@link cool.scx.sql.SQLBuilder} object
+     * @return a {@link SQLBuilder} object
      */
     public SQLBuilder Set(String... updateSetColumns) {
         if (updateSetColumns.length == 0) {
@@ -343,18 +265,8 @@ public final class SQLBuilder {
     /**
      * a
      *
-     * @param updateSetColumnInfos a {@link java.lang.reflect.Field} object
-     * @return a {@link cool.scx.sql.SQLBuilder} object
-     */
-    public SQLBuilder Set(ColumnInfo... updateSetColumnInfos) {
-        return Set(Arrays.stream(updateSetColumnInfos).map(ColumnInfo::updateSetSQL).toArray(String[]::new));
-    }
-
-    /**
-     * a
-     *
      * @param tableName a {@link String} object
-     * @return a {@link cool.scx.sql.SQLBuilder} object
+     * @return a {@link SQLBuilder} object
      */
     public SQLBuilder _Delete(String tableName) {
         this.tableName = tableName;
