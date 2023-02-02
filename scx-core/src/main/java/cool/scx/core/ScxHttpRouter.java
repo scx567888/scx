@@ -102,7 +102,7 @@ public final class ScxHttpRouter extends RouterImpl {
      * @return a {@link io.vertx.ext.web.handler.BodyHandler} object
      */
     static BodyHandler initBodyHandler(Path uploadDirectory) {
-        return new BodyHandlerImpl(uploadDirectory != null ? uploadDirectory.toString() : null)
+        return new BodyHandlerImpl(uploadDirectory.toString())
                 .setBodyLimit(DEFAULT_BODY_LIMIT)
                 .setMergeFormAttributes(false)
                 .setDeleteUploadedFilesOnEnd(true);
