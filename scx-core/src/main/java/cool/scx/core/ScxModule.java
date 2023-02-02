@@ -59,7 +59,7 @@ public abstract class ScxModule {
      * 核心模块初始化完成调用
      * 注意请不要阻塞此方法
      */
-    public void start() {
+    public void start(Scx scx) {
 
     }
 
@@ -67,7 +67,7 @@ public abstract class ScxModule {
      * 项目停止或结束时调用
      * 注意请不要阻塞此方法
      */
-    public void stop() {
+    public void stop(Scx scx) {
 
     }
 

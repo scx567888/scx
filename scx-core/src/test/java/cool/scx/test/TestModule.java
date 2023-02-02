@@ -2,7 +2,6 @@ package cool.scx.test;
 
 import cool.scx.core.Scx;
 import cool.scx.core.ScxContext;
-import cool.scx.core.ScxDaoHelper;
 import cool.scx.core.ScxModule;
 import cool.scx.core.base.BaseModelService;
 import cool.scx.core.enumeration.ScxCoreFeature;
@@ -70,7 +69,7 @@ public class TestModule extends ScxModule {
                 .run();
         //修复表
         ScxContext.sqlRunner().execute(SQL.ofNormal("drop database if exists scx_test; create database scx_test; use scx_test"));
-        ScxDaoHelper.fixTable();
+        ScxContext.scx().fixTable();
     }
 
     @Test
@@ -235,23 +234,23 @@ public class TestModule extends ScxModule {
      * {@inheritDoc}
      */
     @Override
-    public void start() {
-        ScxContext.router().route("/static/*")
-                .handler(StaticHandler.create(FileSystemAccess.ROOT, ScxContext.getPathByAppRoot("AppRoot:c\\static").toString())
+    public void start(Scx scx) {
+        scx.scxHttpRouter().route("/static/*")
+                .handler(StaticHandler.create(FileSystemAccess.ROOT, scx.scxEnvironment().getPathByAppRoot("AppRoot:c\\static").toString())
                         .setFilesReadOnly(false));
         var logger = LoggerFactory.getLogger(TestModule.class);
         //测试定时任务
-        ScxContext.scheduler().scheduleAtFixedRate((a) -> {
+        scx.scxScheduler().scheduleAtFixedRate((a) -> {
             //测试
             logger.error("这是通过 ScxContext.scheduleAtFixedRate() 打印的 : 一共 10 次 , 这时第 " + a.runCount() + " 次执行 !!!");
         }, Instant.now().plusSeconds(3), Duration.of(1, ChronoUnit.SECONDS), 10);
 
-        ScxContext.scheduler().schedule((a) -> {
+        scx.scxScheduler().schedule((a) -> {
             //测试
             logger.error("这是通过 ScxContext.scheduler() 使用 Cron 表达式 打印的 : 这时第 " + a.runCount() + " 次执行 !!!");
         }, new CronTrigger("*/1 * * * * ?"));
 
-        ScxContext.scheduler().scheduleAtFixedRate((a) -> {
+        scx.scxScheduler().scheduleAtFixedRate((a) -> {
             logger.error("这是通过 ScxContext.scheduleAtFixedRate() 打印的 : 不限次数 不过到 第 10 次手动取消 , 这是第 " + a.runCount() + " 次执行 !!!");
             if (a.runCount() >= 10) {
                 a.scheduledFuture().cancel(false);

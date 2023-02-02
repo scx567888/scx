@@ -1,5 +1,7 @@
 package cool.scx.core;
 
+import com.mysql.cj.jdbc.MysqlDataSource;
+import com.zaxxer.hikari.HikariDataSource;
 import cool.scx.config.ScxConfig;
 import cool.scx.config.ScxConfigSource;
 import cool.scx.config.ScxEnvironment;
@@ -7,9 +9,12 @@ import cool.scx.config.ScxFeatureConfig;
 import cool.scx.core.enumeration.ScxCoreFeature;
 import cool.scx.core.eventbus.MessageCodecRegistrar;
 import cool.scx.core.scheduler.ScxScheduler;
+import cool.scx.dao.ScxDaoTableInfo;
 import cool.scx.mvc.ScxMvc;
 import cool.scx.mvc.ScxMvcOptions;
 import cool.scx.mvc.websocket.ScxWebSocketRouter;
+import cool.scx.sql.SQLHelper;
+import cool.scx.sql.SQLRunner;
 import cool.scx.util.ConsoleUtils;
 import cool.scx.util.NetUtils;
 import cool.scx.util.StopWatch;
@@ -20,14 +25,18 @@ import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.net.JksOptions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.AnnotatedGenericBeanDefinition;
 import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.annotation.AnnotationConfigUtils;
 import org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor;
 
+import javax.sql.DataSource;
 import java.net.BindException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -41,86 +50,38 @@ import static cool.scx.core.ScxVersion.SCX_VERSION;
  */
 public final class Scx {
 
-    /**
-     * 项目根模块 所在路径
-     * 默认取 所有自定义模块的最后一个 所在的文件根目录
-     */
+    private static final Logger logger = LoggerFactory.getLogger(Scx.class);
+
     private final ScxEnvironment scxEnvironment;
 
-    /**
-     * 项目的 appKey
-     */
     private final String appKey;
 
-    /**
-     * Scx 特性配置文件
-     */
     private final ScxFeatureConfig scxFeatureConfig;
 
-    /**
-     * scxConfig
-     */
     private final ScxConfig scxConfig;
 
-    /**
-     * ScxModule 集合
-     */
     private final ScxModule[] scxModules;
 
-    /**
-     * scxCoreConfig
-     */
     private final ScxOptions scxOptions;
 
-    /**
-     * vertx
-     */
     private final Vertx vertx;
 
-    /**
-     * scxBeanFactory
-     */
     private final DefaultListableBeanFactory beanFactory;
 
-    /**
-     * dao
-     */
-    private final ScxDao scxDao;
+    private final DataSource dataSource;
 
-    /**
-     * a
-     */
+    private final SQLRunner sqlRunner;
+
     private final ScxMvc scxMvc;
 
-    /**
-     * 任务调度器
-     */
     private final ScxScheduler scxScheduler;
 
-    /**
-     * 路由
-     */
     private ScxHttpRouter scxHttpRouter = null;
 
-    /**
-     * websocket 路由
-     */
     private ScxWebSocketRouter scxWebSocketRouter = null;
 
-    /**
-     * 后台服务器
-     */
     private HttpServer vertxHttpServer = null;
 
-    /**
-     * 初始化 Scx
-     *
-     * @param scxEnvironment   m
-     * @param appKey           a
-     * @param scxFeatureConfig f
-     * @param scxConfigSources f
-     * @param scxModules       s
-     */
     Scx(ScxEnvironment scxEnvironment, String appKey, ScxFeatureConfig scxFeatureConfig, ScxConfigSource[] scxConfigSources, ScxModule[] scxModules) {
         //0, 赋值到全局
         ScxContext.scx(this);
@@ -140,7 +101,9 @@ public final class Scx {
         //5, 初始化 BeanFactory
         this.beanFactory = initBeanFactory(this.scxModules, this.vertx.nettyEventLoopGroup(), this.scxFeatureConfig);
         //6, 初始化持久层
-        this.scxDao = new ScxDao(this.scxOptions);
+        this.dataSource = getHikariDataSource(getMySQLDataSource(this.scxOptions));
+        this.sqlRunner = new SQLRunner(this.dataSource);
+        this.beanFactory.registerSingleton("sqlRunner", sqlRunner);
         //7, 初始化 MVC
         this.scxMvc = new ScxMvc(new ScxMvcOptions().templateRoot(scxOptions.templateRoot()).useDevelopmentErrorPage(scxFeatureConfig.get(ScxCoreFeature.USE_DEVELOPMENT_ERROR_PAGE)));
         //8, 初始化任务调度器
@@ -272,18 +235,90 @@ public final class Scx {
     }
 
     /**
+     * HikariDataSource 初始化 HikariDataSource 数据源 （此处内部使用连接池提高性能）
+     *
+     * @param mysqlDataSource s
+     * @return s
+     */
+    private static DataSource getHikariDataSource(MysqlDataSource mysqlDataSource) {
+        var hikariDataSource = new HikariDataSource();
+        hikariDataSource.setDataSource(mysqlDataSource);
+        return hikariDataSource;
+    }
+
+    /**
+     * 初始化 MySQL 数据源
+     *
+     * @param scxOptions a {@link cool.scx.core.ScxOptions} object
+     * @return MySQL 数据源
+     */
+    private static MysqlDataSource getMySQLDataSource(ScxOptions scxOptions) {
+        var mysqlDataSource = new MysqlDataSource();
+        mysqlDataSource.setServerName(scxOptions.dataSourceHost());
+        mysqlDataSource.setDatabaseName(scxOptions.dataSourceDatabase());
+        mysqlDataSource.setUser(scxOptions.dataSourceUsername());
+        mysqlDataSource.setPassword(scxOptions.dataSourcePassword());
+        mysqlDataSource.setPort(scxOptions.dataSourcePort());
+        // 设置参数值
+        for (var parameter : scxOptions.dataSourceParameters()) {
+            var p = parameter.split("=");
+            if (p.length == 2) {
+                var property = mysqlDataSource.getProperty(p[0]);
+                property.setValue(property.getPropertyDefinition().parseObject(p[1], null));
+            }
+        }
+        return mysqlDataSource;
+    }
+
+    /**
+     * 数据源连接异常
+     *
+     * @param e a {@link java.lang.Exception} object.
+     */
+    public static void dataSourceExceptionHandler(Exception e) {
+        while (true) {
+            var errMessage = """
+                    **************************************************************
+                    *                                                            *
+                    *           X 数据源连接失败 !!! 是否忽略错误并继续运行 ?            *
+                    *                                                            *
+                    *        [Y] 忽略错误并继续运行    |     [N] 退出程序              *
+                    *                                                            *
+                    **************************************************************
+                    """;
+            System.err.println(errMessage);
+            var result = ConsoleUtils.readLine().trim();
+            if ("Y".equalsIgnoreCase(result)) {
+                var ignoreMessage = """
+                        *******************************************
+                        *                                         *
+                        *       N 数据源链接错误,用户已忽略 !!!         *
+                        *                                         *
+                        *******************************************
+                        """;
+                System.err.println(ignoreMessage);
+                break;
+            } else if ("N".equalsIgnoreCase(result)) {
+                e.printStackTrace();
+                System.exit(-1);
+                break;
+            }
+        }
+    }
+
+    /**
      * 执行模块启动的生命周期
      */
     private void startAllScxModules() {
         if (this.scxFeatureConfig.get(ScxCoreFeature.SHOW_MODULE_LIFE_CYCLE_INFO)) {
             for (var m : scxModules) {
                 Ansi.out().brightWhite("[").brightGreen("Starting").brightWhite("] " + m.name()).println();
-                m.start();
+                m.start(this);
                 Ansi.out().brightWhite("[").brightGreen("Start OK").brightWhite("] " + m.name()).println();
             }
         } else {
             for (var m : scxModules) {
-                m.start();
+                m.start(this);
             }
         }
     }
@@ -295,12 +330,12 @@ public final class Scx {
         if (this.scxFeatureConfig.get(ScxCoreFeature.SHOW_MODULE_LIFE_CYCLE_INFO)) {
             for (var m : scxModules) {
                 Ansi.out().brightWhite("[").brightRed("Stopping").brightWhite("] " + m.name()).println();
-                m.stop();
+                m.stop(this);
                 Ansi.out().brightWhite("[").brightRed("Stop  OK").brightWhite("] " + m.name()).println();
             }
         } else {
             for (var m : scxModules) {
-                m.stop();
+                m.stop(this);
             }
         }
     }
@@ -378,49 +413,104 @@ public final class Scx {
         });
     }
 
-    /**
-     * a
-     *
-     * @return a
-     */
-    public ScxEnvironment scxEnvironment() {
-        return scxEnvironment;
+    private void addShutdownHook() {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            this.stopAllScxModules();
+            Ansi.out().red("项目正在停止!!!").println();
+        }));
     }
 
     /**
-     * a
+     * 检查数据源是否可用
      *
-     * @return a
+     * @return b
      */
-    public Vertx vertx() {
-        return vertx;
+    public boolean checkDataSource() {
+        try (var conn = dataSource.getConnection()) {
+            var dm = conn.getMetaData();
+            logger.debug("数据源连接成功 : 类型 [{}]  版本 [{}]", dm.getDatabaseProductName(), dm.getDatabaseProductVersion());
+            return true;
+        } catch (Exception e) {
+            dataSourceExceptionHandler(e);
+            return false;
+        }
     }
 
     /**
-     * a
-     *
-     * @return a
+     * <p>fixTable.</p>
      */
-    public String appKey() {
-        return appKey;
+    public void fixTable() {
+        logger.debug("修复数据表结构中...");
+        var databaseName = this.scxOptions.dataSourceDatabase();
+        //修复成功的表
+        var fixSuccess = 0;
+        //修复失败的表
+        var fixFail = 0;
+        //不需要修复的表
+        var noNeedToFix = 0;
+        for (var v : getAllScxBaseModelClassList()) {
+            //根据 class 获取 tableInfo
+            var tableInfo = new ScxDaoTableInfo(v);
+            try {
+                if (SQLHelper.checkNeedFixTable(tableInfo, databaseName, dataSource)) {
+                    SQLHelper.fixTable(tableInfo, databaseName, dataSource);
+                    fixSuccess = fixSuccess + 1;
+                } else {
+                    noNeedToFix = noNeedToFix + 1;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                fixFail = fixFail + 1;
+            }
+        }
+
+        if (fixSuccess != 0) {
+            logger.debug("修复成功 {} 张表...", fixSuccess);
+        }
+        if (fixFail != 0) {
+            logger.warn("修复失败 {} 张表...", fixFail);
+        }
+        if (fixSuccess + fixFail == 0) {
+            logger.debug("没有表需要修复...");
+        }
+
     }
 
     /**
-     * a
+     * 获取所有 class
      *
-     * @return a
+     * @return s
      */
-    public ScxModule[] scxModules() {
-        return Arrays.copyOf(scxModules, scxModules.length);
+    private List<Class<?>> getAllScxBaseModelClassList() {
+        return Arrays.stream(scxModules)
+                .flatMap(c -> c.classList().stream())
+                .filter(ScxHelper::isScxBaseModelClass)// 继承自 BaseModel
+                .toList();
     }
 
     /**
-     * <p>findScxModule.</p>
+     * 检查是否有任何 (BaseModel) 类需要修复表
      *
-     * @param clazz a {@link java.lang.Class} object
-     * @param <T>   a T class
-     * @return a {@link cool.scx.core.ScxModule} object
+     * @return 是否有
      */
+    public boolean checkNeedFixTable() {
+        logger.debug("检查数据表结构中...");
+        var databaseName = this.scxOptions.dataSourceDatabase();
+        for (var v : getAllScxBaseModelClassList()) {
+            //根据 class 获取 tableInfo
+            var tableInfo = new ScxDaoTableInfo(v);
+            try {
+                //有任何需要修复的直接 返回 true
+                if (SQLHelper.checkNeedFixTable(tableInfo, databaseName, dataSource)) {
+                    return true;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
     @SuppressWarnings("unchecked")
     public <T extends ScxModule> T findScxModule(Class<T> clazz) {
         for (var m : this.scxModules) {
@@ -431,112 +521,66 @@ public final class Scx {
         return null;
     }
 
-    /**
-     * a
-     *
-     * @return a
-     */
+    public ScxModule[] scxModules() {
+        return Arrays.copyOf(scxModules, scxModules.length);
+    }
+
+    public ScxEnvironment scxEnvironment() {
+        return scxEnvironment;
+    }
+
+    public Vertx vertx() {
+        return vertx;
+    }
+
+    public String appKey() {
+        return appKey;
+    }
+
     public ScxOptions scxOptions() {
         return scxOptions;
     }
 
-    /**
-     * a
-     *
-     * @return a
-     */
     public DefaultListableBeanFactory beanFactory() {
         return beanFactory;
     }
 
-    /**
-     * a
-     *
-     * @return a
-     */
     public ScxHttpRouter scxHttpRouter() {
         return this.scxHttpRouter;
     }
 
-    /**
-     * a
-     *
-     * @return a
-     */
     public ScxConfig scxConfig() {
         return scxConfig;
     }
 
-    /**
-     * 获取特性的值 如果没有显式设置 则返回默认值
-     *
-     * @return s
-     */
     public ScxFeatureConfig scxFeatureConfig() {
         return scxFeatureConfig;
     }
 
-    /**
-     * dao
-     *
-     * @return dao
-     */
-    public ScxDao scxDao() {
-        return scxDao;
+    public DataSource dataSource() {
+        return dataSource;
     }
 
-    /**
-     * server
-     *
-     * @return vertxHttpServer
-     */
+    public SQLRunner sqlRunner() {
+        return sqlRunner;
+    }
+
     public HttpServer vertxHttpServer() {
         return vertxHttpServer;
     }
 
-    /**
-     * server
-     *
-     * @return ScxServer
-     */
     public EventBus eventBus() {
         return vertx.eventBus();
     }
 
-    /**
-     * web
-     *
-     * @return w
-     */
     public ScxWebSocketRouter scxWebSocketRouter() {
         return scxWebSocketRouter;
     }
 
-    /**
-     * a
-     *
-     * @return a
-     */
     public ScxMvc scxMvc() {
         return scxMvc;
     }
 
-    /**
-     * 添加监听事件
-     * 目前只监听项目停止事件
-     */
-    private void addShutdownHook() {
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            this.stopAllScxModules();
-            Ansi.out().red("项目正在停止!!!").println();
-        }));
-    }
-
-    /**
-     * a
-     *
-     * @return a
-     */
     public ScxScheduler scxScheduler() {
         return scxScheduler;
     }

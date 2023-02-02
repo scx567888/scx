@@ -14,6 +14,7 @@ import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.http.HttpServer;
 import org.springframework.beans.factory.BeanFactory;
 
+import javax.sql.DataSource;
 import java.nio.file.Path;
 import java.util.concurrent.Callable;
 
@@ -80,8 +81,8 @@ public final class ScxContext {
      *
      * @return d
      */
-    public static ScxDao dao() {
-        return scx().scxDao();
+    public static DataSource dataSource() {
+        return scx().dataSource();
     }
 
     /**
@@ -208,7 +209,7 @@ public final class ScxContext {
      * @return a
      */
     public static SQLRunner sqlRunner() {
-        return dao().sqlRunner();
+        return scx().sqlRunner();
     }
 
     /**
