@@ -1,6 +1,6 @@
-package cool.scx.sql.where;
+package cool.scx.dao.where;
 
-import cool.scx.sql.exception.WrongWhereTypeParamSizeException;
+import cool.scx.dao.where.exception.WrongWhereTypeParamSizeException;
 import cool.scx.util.StringUtils;
 
 /**

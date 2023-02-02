@@ -1,9 +1,9 @@
-package cool.scx.sql.where;
+package cool.scx.dao.where;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import cool.scx.dao.where.exception.ValidParamListIsEmptyException;
 import cool.scx.sql.SQL;
 import cool.scx.sql.SQLHelper;
-import cool.scx.sql.exception.ValidParamListIsEmptyException;
 import cool.scx.util.CaseUtils;
 import cool.scx.util.StringUtils;
 

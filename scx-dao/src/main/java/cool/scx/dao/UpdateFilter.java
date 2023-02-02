@@ -1,7 +1,5 @@
 package cool.scx.dao;
 
-import cool.scx.sql.ColumnInfo;
-
 import java.util.Arrays;
 
 /**
@@ -115,7 +113,7 @@ public final class UpdateFilter extends ColumnInfoFilter<UpdateFilter> {
      * @param scxDaoColumnInfos 带过滤的列表
      * @return 过滤后的列表
      */
-    public ColumnInfo[] filter(Object entity, ColumnInfo... scxDaoColumnInfos) {
+    public BaseDaoColumnInfo[] filter(Object entity, BaseDaoColumnInfo... scxDaoColumnInfos) {
         return this.excludeIfFieldValueIsNull ? excludeIfFieldValueIsNull(entity, filter(scxDaoColumnInfos)) : filter(scxDaoColumnInfos);
     }
 
@@ -126,8 +124,8 @@ public final class UpdateFilter extends ColumnInfoFilter<UpdateFilter> {
      * @param scxDaoColumnInfos s
      * @return e
      */
-    private ColumnInfo[] excludeIfFieldValueIsNull(Object entity, ColumnInfo... scxDaoColumnInfos) {
-        return Arrays.stream(scxDaoColumnInfos).filter(field -> field.javaFieldValue(entity) != null).toArray(ColumnInfo[]::new);
+    private BaseDaoColumnInfo[] excludeIfFieldValueIsNull(Object entity, BaseDaoColumnInfo... scxDaoColumnInfos) {
+        return Arrays.stream(scxDaoColumnInfos).filter(field -> field.javaFieldValue(entity) != null).toArray(BaseDaoColumnInfo[]::new);
     }
 
 }

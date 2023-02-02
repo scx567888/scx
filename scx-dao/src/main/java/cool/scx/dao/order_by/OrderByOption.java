@@ -1,4 +1,4 @@
-package cool.scx.sql.group_by;
+package cool.scx.dao.order_by;
 
 /**
  * a
@@ -6,7 +6,12 @@ package cool.scx.sql.group_by;
  * @author scx567888
  * @version 0.0.1
  */
-public enum GroupByOption {
+public enum OrderByOption {
+
+    /**
+     * a
+     */
+    REPLACE,
 
     /**
      * a
@@ -14,10 +19,9 @@ public enum GroupByOption {
     USE_ORIGINAL_NAME,
 
     /**
-     * a
+     * 使用 json 查询
      */
     USE_JSON_EXTRACT;
-
 
     /**
      * a
@@ -26,6 +30,11 @@ public enum GroupByOption {
      * @version 0.0.1
      */
     static final class Info {
+
+        /**
+         * 是否替换已有的相同名称的 WhereBody
+         */
+        private boolean replace = false;
 
         /**
          * 是否使用原始名称
@@ -37,34 +46,24 @@ public enum GroupByOption {
          */
         private boolean useJsonExtract = false;
 
-        /**
-         * <p>Constructor for GroupByOptionInfo.</p>
-         *
-         * @param groupByOptions a {@link cool.scx.sql.group_by.GroupByOption} object
-         */
-        public Info(GroupByOption... groupByOptions) {
-            for (var option : groupByOptions) {
+        public Info(OrderByOption... orderByOptions) {
+            for (var option : orderByOptions) {
                 switch (option) {
+                    case REPLACE -> this.replace = true;
                     case USE_ORIGINAL_NAME -> this.useOriginalName = true;
                     case USE_JSON_EXTRACT -> this.useJsonExtract = true;
                 }
             }
         }
 
-        /**
-         * <p>useOriginalName.</p>
-         *
-         * @return a boolean
-         */
+        public boolean replace() {
+            return replace;
+        }
+
         public boolean useOriginalName() {
             return useOriginalName;
         }
 
-        /**
-         * <p>useJsonExtract.</p>
-         *
-         * @return a boolean
-         */
         public boolean useJsonExtract() {
             return useJsonExtract;
         }

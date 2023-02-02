@@ -1,6 +1,6 @@
-package cool.scx.sql.exception;
+package cool.scx.dao.where.exception;
 
-import cool.scx.sql.where.WhereType;
+import cool.scx.dao.where.WhereType;
 
 /**
  * 错误的 WhereBody 参数长度异常

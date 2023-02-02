@@ -1,6 +1,6 @@
-package cool.scx.sql.where;
+package cool.scx.dao.where;
 
-import static cool.scx.sql.where.WhereTypeHandler.*;
+import static cool.scx.dao.where.WhereTypeHandler.*;
 
 /**
  * WhereType <br>

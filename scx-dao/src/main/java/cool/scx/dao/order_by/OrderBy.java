@@ -1,4 +1,4 @@
-package cool.scx.sql.order_by;
+package cool.scx.dao.order_by;
 
 import java.util.ArrayList;
 import java.util.List;

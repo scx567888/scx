@@ -1,13 +1,13 @@
 package cool.scx.dao;
 
-import cool.scx.sql.group_by.GroupBy;
-import cool.scx.sql.group_by.GroupByOption;
-import cool.scx.sql.order_by.OrderBy;
-import cool.scx.sql.order_by.OrderByOption;
-import cool.scx.sql.order_by.OrderByType;
-import cool.scx.sql.pagination.Pagination;
-import cool.scx.sql.where.Where;
-import cool.scx.sql.where.WhereOption;
+import cool.scx.dao.group_by.GroupBy;
+import cool.scx.dao.group_by.GroupByOption;
+import cool.scx.dao.order_by.OrderBy;
+import cool.scx.dao.order_by.OrderByOption;
+import cool.scx.dao.order_by.OrderByType;
+import cool.scx.dao.pagination.Pagination;
+import cool.scx.dao.where.Where;
+import cool.scx.dao.where.WhereOption;
 
 /**
  * 查询参数类<br>
@@ -65,7 +65,7 @@ public final class Query {
     /**
      * <p>orderBy.</p>
      *
-     * @return a {@link cool.scx.sql.order_by.OrderBy} object
+     * @return a {@link OrderBy} object
      */
     public OrderBy orderBy() {
         return orderBy;
@@ -74,7 +74,7 @@ public final class Query {
     /**
      * <p>groupBy.</p>
      *
-     * @return a {@link cool.scx.sql.group_by.GroupBy} object
+     * @return a {@link GroupBy} object
      */
     public GroupBy groupBy() {
         return groupBy;
@@ -83,7 +83,7 @@ public final class Query {
     /**
      * <p>where.</p>
      *
-     * @return a {@link cool.scx.sql.where.Where} object
+     * @return a {@link Where} object
      */
     public Where where() {
         return where;
@@ -92,7 +92,7 @@ public final class Query {
     /**
      * <p>pagination.</p>
      *
-     * @return a {@link cool.scx.sql.pagination.Pagination} object
+     * @return a {@link Pagination} object
      */
     public Pagination pagination() {
         return pagination;

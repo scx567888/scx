@@ -1,4 +1,4 @@
-package cool.scx.sql.group_by;
+package cool.scx.dao.group_by;
 
 import cool.scx.sql.SQLHelper;
 import cool.scx.util.StringUtils;

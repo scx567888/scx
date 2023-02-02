@@ -1,4 +1,4 @@
-package cool.scx.sql.order_by;
+package cool.scx.dao.order_by;
 
 /**
  * 排序类型

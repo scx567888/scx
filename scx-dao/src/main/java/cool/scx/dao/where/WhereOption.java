@@ -1,4 +1,4 @@
-package cool.scx.sql.where;
+package cool.scx.dao.where;
 
 /**
  * a

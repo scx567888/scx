@@ -1,4 +1,4 @@
-package cool.scx.sql.pagination;
+package cool.scx.dao.pagination;
 
 /**
  * 分页参数

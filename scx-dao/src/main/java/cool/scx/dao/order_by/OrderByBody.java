@@ -1,4 +1,4 @@
-package cool.scx.sql.order_by;
+package cool.scx.dao.order_by;
 
 import cool.scx.sql.SQLHelper;
 import cool.scx.util.StringUtils;
@@ -19,7 +19,7 @@ final class OrderByBody {
      * <p>Constructor for OrderByBody.</p>
      *
      * @param name        a {@link java.lang.String} object
-     * @param orderByType a {@link cool.scx.sql.order_by.OrderByType} object
+     * @param orderByType a {@link OrderByType} object
      * @param info        a boolean
      */
     OrderByBody(String name, OrderByType orderByType, OrderByOption.Info info) {
