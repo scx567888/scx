@@ -1,5 +1,6 @@
 package cool.scx.core;
 
+import cool.scx.util.FileUtils;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.util.AsciiString;
 import io.vertx.core.http.HttpMethod;
@@ -22,6 +23,11 @@ import java.util.stream.Stream;
  * @version 1.11.8
  */
 public final class ScxHttpRouter extends RouterImpl {
+
+    /**
+     * 默认 http 请求 body 限制大小
+     */
+    private static final long DEFAULT_BODY_LIMIT = FileUtils.displaySizeToLong("16384KB");
 
     /**
      * Constant <code>defaultAllowedMethods</code>
@@ -58,7 +64,7 @@ public final class ScxHttpRouter extends RouterImpl {
         super(scx.vertx());
         //设置基本的 handler
         this.corsHandler = initCorsHandler(scx.scxOptions().allowedOrigin());
-        this.bodyHandler = initBodyHandler(scx.scxEnvironment().getTempPath(BodyHandler.DEFAULT_UPLOADS_DIRECTORY), 1000);
+        this.bodyHandler = initBodyHandler(scx.scxEnvironment().getTempPath(BodyHandler.DEFAULT_UPLOADS_DIRECTORY));
         //注册路由
         this.corsHandlerRoute = this.route().handler(corsHandler);
         this.bodyHandlerRoute = this.route().handler(bodyHandler);
@@ -94,9 +100,9 @@ public final class ScxHttpRouter extends RouterImpl {
      * @param uploadDirectory a {@link java.nio.file.Path} object
      * @return a {@link io.vertx.ext.web.handler.BodyHandler} object
      */
-    static BodyHandler initBodyHandler(Path uploadDirectory, long bodyLimit) {
+    static BodyHandler initBodyHandler(Path uploadDirectory) {
         return new BodyHandlerImpl(uploadDirectory != null ? uploadDirectory.toString() : null)
-                .setBodyLimit(bodyLimit)
+                .setBodyLimit(DEFAULT_BODY_LIMIT)
                 .setMergeFormAttributes(false)
                 .setDeleteUploadedFilesOnEnd(true);
     }
