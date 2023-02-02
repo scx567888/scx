@@ -36,6 +36,7 @@ public final class ScxMvc {
     private final List<ScxMvcParameterHandler> parameterHandlers = new ArrayList<>();
     private final LastParameterHandler lastParameterHandler;
     private final ScxMvcOptions options;
+    private final ScxTemplateHandler templateHandler;
     private ScxMvcInterceptor interceptor = new ScxMappingInterceptorImpl();
 
     public ScxMvc() {
@@ -44,13 +45,14 @@ public final class ScxMvc {
 
     public ScxMvc(ScxMvcOptions options) {
         this.options = options;
+        this.templateHandler = new ScxTemplateHandler(options.templateRoot());
         //初始化默认的异常处理器
         addExceptionHandler(new ScxHttpExceptionHandler(options.useDevelopmentErrorPage()));
         this.lastExceptionHandler = new LastExceptionHandler(options.useDevelopmentErrorPage());
         //初始化默认的返回值处理器
         addReturnValueHandler(new NullReturnValueHandler());
         addReturnValueHandler(new StringReturnValueHandler());
-        addReturnValueHandler(new HtmlVoReturnValueHandler(options.templateRoot()));
+        addReturnValueHandler(new HtmlVoReturnValueHandler(this.templateHandler));
         addReturnValueHandler(new BaseVoReturnValueHandler());
         this.lastReturnValueHandler = new LastReturnValueHandler();
         //初始化默认的参数处理器
@@ -139,6 +141,10 @@ public final class ScxMvc {
 
     ScxMvcInterceptor interceptor() {
         return interceptor;
+    }
+
+    public ScxTemplateHandler templateHandler() {
+        return this.templateHandler;
     }
 
     public ScxHttpRouterExceptionHandler findExceptionHandler(Throwable throwable) {

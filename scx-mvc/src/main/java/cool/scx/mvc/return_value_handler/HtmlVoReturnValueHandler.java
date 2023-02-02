@@ -1,18 +1,9 @@
 package cool.scx.mvc.return_value_handler;
 
 import cool.scx.mvc.ScxMvcReturnValueHandler;
-import cool.scx.mvc.base.BaseTemplateDirective;
+import cool.scx.mvc.ScxTemplateHandler;
 import cool.scx.mvc.vo.Html;
-import freemarker.template.Configuration;
-import freemarker.template.DefaultObjectWrapperBuilder;
-import freemarker.template.Template;
-import freemarker.template.Version;
 import io.vertx.ext.web.RoutingContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.nio.file.Path;
 
 /**
  * 用于渲染 freemarker
@@ -22,58 +13,10 @@ import java.nio.file.Path;
  */
 public final class HtmlVoReturnValueHandler implements ScxMvcReturnValueHandler {
 
-    /**
-     * Constant <code>logger</code>
-     */
-    private static final Logger logger = LoggerFactory.getLogger(HtmlVoReturnValueHandler.class);
+    private final ScxTemplateHandler templateHandler;
 
-    /**
-     * Freemarker 默认引擎版本
-     */
-    private static final Version VERSION = Configuration.VERSION_2_3_31;
-
-    /**
-     * Constant <code>freemarkerConfig</code>
-     */
-    private final Configuration freemarkerConfig = new Configuration(VERSION);
-
-
-    public HtmlVoReturnValueHandler(Path templateRoot) {
-        // freemarker 配置文件版本
-        var wrapperBuilder = new DefaultObjectWrapperBuilder(VERSION);
-        //暴露 实体类的 fields 因为 此项目中的实体类没有 get set
-        wrapperBuilder.setExposeFields(true);
-        freemarkerConfig.setObjectWrapper(wrapperBuilder.build());
-        try {
-            freemarkerConfig.setDirectoryForTemplateLoading(templateRoot.toFile());
-        } catch (Exception e) {
-            logger.info("模板目录不存在!!! {}", templateRoot);
-        }
-
-        //设置 字符集
-        freemarkerConfig.setDefaultEncoding("UTF-8");
-        //设置 语法 为自动检测
-        freemarkerConfig.setTagSyntax(Configuration.AUTO_DETECT_TAG_SYNTAX);
-    }
-
-    /**
-     * <p>getTemplateByPath.</p>
-     *
-     * @param pagePath a {@link java.lang.String} object.
-     * @return a {@link freemarker.template.Template} object.
-     * @throws java.io.IOException if any.
-     */
-    public Template getTemplateByPath(String pagePath) throws IOException {
-        return freemarkerConfig.getTemplate(pagePath + ".html");
-    }
-
-    public void addDirective(BaseTemplateDirective myDirective) {
-        try {
-            logger.debug("已添加自定义 Freemarker 标签 [{}] Class -> {}", myDirective.directiveName(), myDirective.getClass().getName());
-            freemarkerConfig.setSharedVariable(myDirective.directiveName(), myDirective);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public HtmlVoReturnValueHandler(ScxTemplateHandler templateHandler) {
+        this.templateHandler = templateHandler;
     }
 
     @Override
@@ -84,8 +27,7 @@ public final class HtmlVoReturnValueHandler implements ScxMvcReturnValueHandler 
     @Override
     public void handle(Object result, RoutingContext context) throws Exception {
         Html html = (Html) result;
-        html.setHandler(this);
-        html.accept(context);
+        html.accept(context, this.templateHandler);
     }
 
 }

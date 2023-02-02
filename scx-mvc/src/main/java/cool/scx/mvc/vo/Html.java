@@ -1,6 +1,6 @@
 package cool.scx.mvc.vo;
 
-import cool.scx.mvc.return_value_handler.HtmlVoReturnValueHandler;
+import cool.scx.mvc.ScxTemplateHandler;
 import freemarker.template.TemplateException;
 import io.vertx.ext.web.RoutingContext;
 
@@ -15,7 +15,7 @@ import java.util.Map;
  * @author scx567888
  * @version 0.3.6
  */
-public final class Html implements BaseVo {
+public final class Html {
 
     private final boolean useTemplate;
 
@@ -24,8 +24,6 @@ public final class Html implements BaseVo {
     private final String htmlStr;
 
     private final Map<String, Object> dataMap = new HashMap<>();
-
-    private HtmlVoReturnValueHandler handler;
 
     /**
      * <p>Constructor for Html.</p>
@@ -78,10 +76,9 @@ public final class Html implements BaseVo {
      * <p>
      * sendToClient
      */
-    @Override
-    public void accept(RoutingContext context) throws TemplateException, IOException {
+    public void accept(RoutingContext context, ScxTemplateHandler templateHandler) throws TemplateException, IOException {
         if (useTemplate) {
-            sendTemplate(context, this.handler);
+            sendTemplate(context, templateHandler);
         } else {
             sendHtmlStr(context);
         }
@@ -92,20 +89,15 @@ public final class Html implements BaseVo {
         response.end(htmlStr);
     }
 
-    public void sendTemplate(RoutingContext context, HtmlVoReturnValueHandler handler) throws IOException, TemplateException {
-        if (handler == null) {
+    public void sendTemplate(RoutingContext context, ScxTemplateHandler templateHandler) throws IOException, TemplateException {
+        if (templateHandler == null) {
             throw new NullPointerException("handler 不能为空 !!!");
         }
         var response = BaseVo.fillHtmlContentType(context.request().response());
         var sw = new StringWriter();
-        var template = handler.getTemplateByPath(templatePath);
+        var template = templateHandler.getTemplateByPath(templatePath);
         template.process(dataMap, sw);
         response.end(sw.toString());
-    }
-
-    public Html setHandler(HtmlVoReturnValueHandler htmlVoReturnValueHandler) {
-        this.handler = htmlVoReturnValueHandler;
-        return this;
     }
 
 }
