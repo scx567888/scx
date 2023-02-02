@@ -66,9 +66,6 @@ public enum HttpResponseStatus {
     NOT_EXTENDED(510, "Not Extended"),
     NETWORK_AUTHENTICATION_REQUIRED(511, "Network Authentication Required");
 
-    /**
-     * a
-     */
     private final int statusCode;
 
     private final String reasonPhrase;

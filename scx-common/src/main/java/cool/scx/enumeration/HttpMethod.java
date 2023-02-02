@@ -26,9 +26,6 @@ public enum HttpMethod {
 
     CONNECT;
 
-    /**
-     * <p>Constructor for HttpMethod.</p>
-     */
     private final io.vertx.core.http.HttpMethod vertxMethod;
 
     HttpMethod() {

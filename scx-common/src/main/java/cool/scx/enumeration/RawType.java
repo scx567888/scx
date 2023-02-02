@@ -46,9 +46,6 @@ public enum RawType {
 
     MP4;
 
-    /**
-     * <p>Constructor for RawType.</p>
-     */
     private final String mimeType;
 
     RawType() {
