@@ -1,7 +1,12 @@
 package cool.scx.test;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
-import cool.scx.dao.*;
+import cool.scx.dao.BaseDao;
+import cool.scx.dao.Query;
+import cool.scx.dao.SelectFilter;
+import cool.scx.dao.UpdateFilter;
+import cool.scx.dao.impl.AnnotationConfigTableInfo;
+import cool.scx.dao.where.WhereBody;
 import cool.scx.logging.ScxLoggerFactory;
 import cool.scx.logging.ScxLoggingLevel;
 import cool.scx.sql.SQLHelper;
@@ -51,8 +56,10 @@ public class ScxDaoTest {
         }
         var newIds = userDao.insertBatch(list, UpdateFilter.ofExcluded());
         System.out.println("插入 : " + newIds);
-        var users = userDao.select(new Query().greaterThan("id", 300), SelectFilter.ofExcluded());
-        System.out.println("查询 : " + users.size());
+        var a1 = userDao.select(new Query().greaterThan("id", 300), SelectFilter.ofExcluded());
+        System.out.println("查询 : " + a1.size());
+        var a2 = userDao.select(new Query().whereSQL("( not_id > 300 or ", WhereBody.equal("age", "123"), " )"), SelectFilter.ofExcluded());
+        System.out.println("查询 : " + a2.size());
     }
 
     private static MysqlDataSource getMySQLDataSource() {

@@ -448,7 +448,7 @@ public final class Query {
      *
      * @return this 方便链式调用
      */
-    public String whereSQL() {
+    public Object[] whereSQL() {
         return this.where.whereSQL();
     }
 

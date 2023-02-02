@@ -1,9 +1,6 @@
 package cool.scx.dao;
 
-import cool.scx.sql.ResultHandler;
-import cool.scx.sql.SQL;
-import cool.scx.sql.SQLRunner;
-import cool.scx.sql.TableInfo;
+import cool.scx.sql.*;
 import cool.scx.sql.result_handler.BeanListHandler;
 import cool.scx.sql.result_handler.SingleValueHandler;
 import cool.scx.util.RandomUtils;
@@ -84,9 +81,10 @@ public class BaseDao<Entity> {
      */
     private SQL _buildInsertSQL(Entity entity, UpdateFilter updateFilter) {
         var insertColumnInfos = updateFilter.filter(entity, tableInfo.columnInfos());
-        var insertColumns = Arrays.stream(insertColumnInfos).map(BaseDaoColumnInfo::insertValuesSQL).toArray(String[]::new);
+        var insertColumns = Arrays.stream(insertColumnInfos).map(ColumnInfo::columnName).toArray(String[]::new);
+        var insertValues = Arrays.stream(insertColumnInfos).map(BaseDaoColumnInfo::insertValuesSQL).toArray(String[]::new);
         var sql = Insert(tableInfo.tableName(), insertColumns)
-                .Values(insertColumns)
+                .Values(insertValues)
                 .GetSQL();
         var objectArray = Arrays.stream(insertColumnInfos).map(c -> c.javaFieldValue(entity)).toArray();
         return SQL.ofPlaceholder(sql, objectArray);
@@ -121,9 +119,10 @@ public class BaseDao<Entity> {
             }
             objectArrayList.add(o);
         }
-        var insertColumns = Arrays.stream(insertColumnInfos).map(BaseDaoColumnInfo::insertValuesSQL).toArray(String[]::new);
+        var insertColumns = Arrays.stream(insertColumnInfos).map(ColumnInfo::columnName).toArray(String[]::new);
+        var insertValues = Arrays.stream(insertColumnInfos).map(BaseDaoColumnInfo::insertValuesSQL).toArray(String[]::new);
         var sql = Insert(tableInfo.tableName(), insertColumns)
-                .Values(insertColumns)
+                .Values(insertValues)
                 .GetSQL();
         return SQL.ofPlaceholder(sql, objectArrayList);
     }

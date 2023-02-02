@@ -1,5 +1,6 @@
 package cool.scx.dao.where;
 
+import cool.scx.dao.BaseDaoTableInfo;
 import cool.scx.dao.where.exception.ValidParamListIsEmptyException;
 import cool.scx.dao.where.exception.WrongWhereTypeParamSizeException;
 import cool.scx.sql.SQL;
@@ -8,7 +9,6 @@ import cool.scx.util.StringUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * where 查询条件封装类
@@ -24,22 +24,16 @@ public final class Where {
     private final List<WhereBody> whereBodyList;
 
     /**
-     * 自定义的查询语句的参数
-     */
-    private final List<Object> whereSQLParams;
-
-    /**
      * 自定义的查询语句
      */
-    private String whereSQL;
+    private Object[] whereSQL;
 
     /**
      * 创建一个 Where 对象
      */
     public Where() {
-        this.whereSQLParams = new ArrayList<>();
         this.whereBodyList = new ArrayList<>();
-        this.whereSQL = null;
+        this.whereSQL = new Object[0];
     }
 
     /**
@@ -48,9 +42,8 @@ public final class Where {
      * @param oldWhere 旧的 Where
      */
     public Where(Where oldWhere) {
-        this.whereSQLParams = new ArrayList<>(oldWhere.whereSQLParams);
         this.whereBodyList = new ArrayList<>(oldWhere.whereBodyList);
-        this.whereSQL = oldWhere.whereSQL;
+        this.whereSQL = Arrays.copyOf(oldWhere.whereSQL, oldWhere.whereSQL.length);
     }
 
     /**
@@ -306,33 +299,11 @@ public final class Where {
     }
 
     /**
-     * 获取 where 语句
-     *
-     * @return w
-     */
-    public String[] getWhereClauses() {
-        var stringStream = whereBodyList.stream().map(WhereBody::whereClause);
-        if (StringUtils.notBlank(this.whereSQL)) {
-            stringStream = Stream.concat(stringStream, Stream.of(this.whereSQL));
-        }
-        return stringStream.toArray(String[]::new);
-    }
-
-    /**
-     * 获取 where 参数
-     *
-     * @return a
-     */
-    public Object[] getWhereParams() {
-        return Stream.concat(whereBodyList.stream().flatMap(w -> Arrays.stream(w.whereParams())), whereSQLParams.stream()).toArray();
-    }
-
-    /**
      * <p>Getter for the field <code>whereSQL</code>.</p>
      *
      * @return a {@link String} object
      */
-    public String whereSQL() {
+    public Object[] whereSQL() {
         return whereSQL;
     }
 
@@ -346,20 +317,7 @@ public final class Where {
      * @return 本身 , 方便链式调用
      */
     public Where whereSQL(Object... whereSQL) {
-        clearWhereSQL();
-        var tempWhereSQL = new StringBuilder();
-        for (var o : whereSQL) {
-            if (o instanceof String s) {
-                tempWhereSQL.append(s);
-            } else if (o instanceof WhereBody w) {
-                tempWhereSQL.append(w.whereClause());
-                whereSQLParams.addAll(List.of(w.whereParams()));
-            } else if (o instanceof SQL a) {
-                tempWhereSQL.append("(").append(a.sql()).append(")");
-                whereSQLParams.addAll(List.of(a.params()));
-            }
-        }
-        this.whereSQL = tempWhereSQL.toString();
+        this.whereSQL = whereSQL;
         return this;
     }
 
@@ -427,8 +385,7 @@ public final class Where {
      * @return this 方便链式调用
      */
     public Where clearWhereSQL() {
-        whereSQL = null;
-        whereSQLParams.clear();
+        whereSQL = new Object[0];
         return this;
     }
 
@@ -441,6 +398,36 @@ public final class Where {
         clear();
         clearWhereSQL();
         return this;
+    }
+
+    public WhereParamsAndWhereClauses getWhereParamsAndWhereClauses(BaseDaoTableInfo<?> tableInfo) {
+        //先处理 whereBodyList
+        var whereClauses = new ArrayList<String>();
+        var whereParams = new ArrayList<>();
+        for (WhereBody whereBody : whereBodyList) {
+            var whereParamsAndWhereClause = whereBody.getWhereParamsAndWhereClause(tableInfo);
+            whereClauses.add(whereParamsAndWhereClause.whereClause());
+            whereParams.addAll(List.of(whereParamsAndWhereClause.whereParams()));
+        }
+        //再处理 whereSQL
+        var tempWhereSQL = new StringBuilder();
+        for (var o : whereSQL) {
+            if (o instanceof String s) {
+                tempWhereSQL.append(s);
+            } else if (o instanceof WhereBody w) {
+                var whereParamsAndWhereClause = w.getWhereParamsAndWhereClause(tableInfo);
+                tempWhereSQL.append(whereParamsAndWhereClause.whereClause());
+                whereParams.addAll(List.of(whereParamsAndWhereClause.whereParams()));
+            } else if (o instanceof SQL a) {
+                tempWhereSQL.append("(").append(a.sql()).append(")");
+                whereParams.addAll(List.of(a.params()));
+            }
+        }
+        var whereSQL = tempWhereSQL.toString();
+        if (StringUtils.notBlank(whereSQL)) {
+            whereClauses.add(whereSQL);
+        }
+        return new WhereParamsAndWhereClauses(whereParams.toArray(), whereClauses.toArray(String[]::new));
     }
 
 }
