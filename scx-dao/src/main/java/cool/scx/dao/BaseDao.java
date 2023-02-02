@@ -1,6 +1,9 @@
 package cool.scx.dao;
 
-import cool.scx.sql.*;
+import cool.scx.sql.ResultHandler;
+import cool.scx.sql.SQL;
+import cool.scx.sql.SQLRunner;
+import cool.scx.sql.TableInfo;
 import cool.scx.sql.result_handler.BeanListHandler;
 import cool.scx.sql.result_handler.SingleValueHandler;
 import cool.scx.util.RandomUtils;
@@ -22,7 +25,7 @@ public class BaseDao<Entity> {
     /**
      * 实体类对应的 table 结构
      */
-    protected final TableInfo<? extends BaseColumnInfo> tableInfo;
+    protected final TableInfo<? extends BaseDaoColumnInfo> tableInfo;
 
     /**
      * 实体类 class 用于泛型转换
@@ -51,7 +54,7 @@ public class BaseDao<Entity> {
      * @param entityClass a
      * @param sqlRunner   a
      */
-    public BaseDao(TableInfo<? extends BaseColumnInfo> tableInfo, Class<Entity> entityClass, SQLRunner sqlRunner) {
+    public BaseDao(TableInfo<? extends BaseDaoColumnInfo> tableInfo, Class<Entity> entityClass, SQLRunner sqlRunner) {
         this.tableInfo = tableInfo;
         this.entityClass = entityClass;
         this.sqlRunner = sqlRunner;
@@ -79,7 +82,7 @@ public class BaseDao<Entity> {
      */
     private SQL _buildInsertSQL(Entity entity, UpdateFilter updateFilter) {
         var insertColumns = updateFilter.filter(entity, tableInfo.columnInfos());
-        var sql = SQLBuilder.Insert(tableInfo.tableName(), insertColumns).Values(insertColumns).GetSQL();
+        var sql = BaseDaoSQLBuilder.Insert(tableInfo.tableName(), insertColumns).Values(insertColumns).GetSQL();
         return SQL.ofPlaceholder(sql, Arrays.stream(insertColumns).map(c -> c.javaFieldValue(entity)).toArray());
     }
 
@@ -112,7 +115,7 @@ public class BaseDao<Entity> {
             }
             objectArrayList.add(o);
         }
-        var sql = SQLBuilder.Insert(tableInfo.tableName(), insertColumns).Values(insertColumns).GetSQL();
+        var sql = BaseDaoSQLBuilder.Insert(tableInfo.tableName(), insertColumns).Values(insertColumns).GetSQL();
         return SQL.ofPlaceholder(sql, objectArrayList);
     }
 
@@ -176,7 +179,7 @@ public class BaseDao<Entity> {
      */
     public final SQL _buildSelectSQL(Query query, SelectFilter selectFilter) {
         var selectColumnInfos = selectFilter.filter(tableInfo.columnInfos());
-        var sql = SQLBuilder.Select(selectColumnInfos).From(tableInfo.tableName()).Where(query.where()).GroupBy(query.groupBy()).OrderBy(query.orderBy()).Limit(query.pagination()).GetSQL();
+        var sql = BaseDaoSQLBuilder.Select(selectColumnInfos).From(tableInfo.tableName()).Where(query.where()).GroupBy(query.groupBy()).OrderBy(query.orderBy()).Limit(query.pagination()).GetSQL();
         return SQL.ofPlaceholder(sql, query.where().getWhereParams());
     }
 
@@ -194,8 +197,8 @@ public class BaseDao<Entity> {
             return _buildSelectSQL(query, selectFilter);
         } else {
             var selectColumnInfos = selectFilter.filter(tableInfo.columnInfos());
-            var sql0 = SQLBuilder.Select(selectColumnInfos).From(tableInfo.tableName()).Where(query.where()).GroupBy(query.groupBy()).OrderBy(query.orderBy()).Limit(query.pagination()).GetSQL();
-            var sql = SQLBuilder.Select(Arrays.stream(selectColumnInfos).map(ColumnInfo::javaFieldName).toArray(String[]::new)).From("(" + sql0 + ")").GetSQL();
+            var sql0 = BaseDaoSQLBuilder.Select(selectColumnInfos).From(tableInfo.tableName()).Where(query.where()).GroupBy(query.groupBy()).OrderBy(query.orderBy()).Limit(query.pagination()).GetSQL();
+            var sql = BaseDaoSQLBuilder.Select(Arrays.stream(selectColumnInfos).map(BaseDaoColumnInfo::javaFieldName).toArray(String[]::new)).From("(" + sql0 + ")").GetSQL();
             return SQL.ofPlaceholder(sql + " AS " + tableInfo.tableName() + "_" + RandomUtils.randomString(6), query.where().getWhereParams());
         }
     }
@@ -217,7 +220,7 @@ public class BaseDao<Entity> {
      * @return sql
      */
     private SQL _buildCountSQL(Query query) {
-        var sql = SQLBuilder.Select("COUNT(*) AS count").From(tableInfo.tableName()).Where(query.where()).GroupBy(query.groupBy()).GetSQL();
+        var sql = BaseDaoSQLBuilder.Select("COUNT(*) AS count").From(tableInfo.tableName()).Where(query.where()).GroupBy(query.groupBy()).GetSQL();
         return SQL.ofPlaceholder(sql, query.where().getWhereParams());
     }
 
@@ -246,7 +249,7 @@ public class BaseDao<Entity> {
             throw new IllegalArgumentException("更新数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
         }
         var updateSetColumnInfos = updateFilter.filter(entity, tableInfo.columnInfos());
-        var sql = SQLBuilder.Update(tableInfo.tableName()).Set(updateSetColumnInfos).Where(query.where()).GetSQL();
+        var sql = BaseDaoSQLBuilder.Update(tableInfo.tableName()).Set(updateSetColumnInfos).Where(query.where()).GetSQL();
         var entityParams = Arrays.stream(updateSetColumnInfos).map(c -> c.javaFieldValue(entity)).collect(Collectors.toList());
         entityParams.addAll(List.of(query.where().getWhereParams()));
         return SQL.ofPlaceholder(sql, entityParams.toArray());
@@ -272,7 +275,7 @@ public class BaseDao<Entity> {
         if (query.where().isEmpty()) {
             throw new IllegalArgumentException("删除数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
         }
-        var sql = SQLBuilder.Delete(tableInfo.tableName()).Where(query.where()).GetSQL();
+        var sql = BaseDaoSQLBuilder.Delete(tableInfo.tableName()).Where(query.where()).GetSQL();
         return SQL.ofPlaceholder(sql, query.where().getWhereParams());
     }
 
@@ -288,7 +291,7 @@ public class BaseDao<Entity> {
      *
      * @return a
      */
-    public final TableInfo<? extends BaseColumnInfo> _tableInfo() {
+    public final TableInfo<? extends BaseDaoColumnInfo> _tableInfo() {
         return tableInfo;
     }
 

@@ -9,12 +9,12 @@ import static cool.scx.util.CaseUtils.toSnake;
 import static cool.scx.util.StringUtils.notBlank;
 
 /**
- * a
+ * 通过注解配置的 column
  *
  * @author scx567888
  * @version 1.11.8
  */
-public final class ScxDaoColumnInfo extends BaseColumnInfo {
+public final class AnnotationConfigColumnInfo extends BaseDaoColumnInfo {
 
     private final String columnName;
     private final String type;
@@ -31,7 +31,7 @@ public final class ScxDaoColumnInfo extends BaseColumnInfo {
      *
      * @param javaField a
      */
-    public ScxDaoColumnInfo(Field javaField) {
+    public AnnotationConfigColumnInfo(Field javaField) {
         super(javaField);
         var column = javaField.getAnnotation(Column.class);
         if (column != null) {

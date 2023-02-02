@@ -9,17 +9,17 @@ import cool.scx.util.StringUtils;
 import java.util.stream.Stream;
 
 /**
- * 用于描述根据 class 构建的对应的数据表结构
+ * 通过注解配置的 TableInfo
  *
  * @author scx567888
  * @version 0.5.0
  */
-public final class ScxDaoTableInfo implements TableInfo<ScxDaoColumnInfo> {
+public final class AnnotationConfigTableInfo implements TableInfo<AnnotationConfigColumnInfo> {
 
     /**
-     * 实体类型不含@NoColunm 注解的field
+     * 实体类型不含 @NoColumn 注解的field
      */
-    private final ScxDaoColumnInfo[] columnInfos;
+    private final AnnotationConfigColumnInfo[] columnInfos;
 
     /**
      * 表名
@@ -31,7 +31,7 @@ public final class ScxDaoTableInfo implements TableInfo<ScxDaoColumnInfo> {
      *
      * @param clazz a {@link java.lang.Class} object.
      */
-    public ScxDaoTableInfo(Class<?> clazz) {
+    public AnnotationConfigTableInfo(Class<?> clazz) {
         this.tableName = initTableName(clazz);
         this.columnInfos = initAllColumnInfos(clazz);
     }
@@ -42,8 +42,8 @@ public final class ScxDaoTableInfo implements TableInfo<ScxDaoColumnInfo> {
      * @param clazz a
      * @return a
      */
-    private static ScxDaoColumnInfo[] initAllColumnInfos(Class<?> clazz) {
-        return Stream.of(clazz.getFields()).filter(field -> !field.isAnnotationPresent(NoColumn.class)).map(ScxDaoColumnInfo::new).toArray(ScxDaoColumnInfo[]::new);
+    private static AnnotationConfigColumnInfo[] initAllColumnInfos(Class<?> clazz) {
+        return Stream.of(clazz.getFields()).filter(field -> !field.isAnnotationPresent(NoColumn.class)).map(AnnotationConfigColumnInfo::new).toArray(AnnotationConfigColumnInfo[]::new);
     }
 
     /**
@@ -80,7 +80,7 @@ public final class ScxDaoTableInfo implements TableInfo<ScxDaoColumnInfo> {
      * a
      */
     @Override
-    public ScxDaoColumnInfo[] columnInfos() {
+    public AnnotationConfigColumnInfo[] columnInfos() {
         return columnInfos;
     }
 

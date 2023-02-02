@@ -36,7 +36,7 @@ public class BaseModelService<Entity extends BaseModel> {
         if (genericSuperclass instanceof ParameterizedType) {
             var typeArguments = ((ParameterizedType) genericSuperclass).getActualTypeArguments();
             var entityClass = (Class<Entity>) typeArguments[0];
-            this.baseDao = new BaseDao<>(new ScxDaoTableInfo(entityClass), entityClass, ScxContext.sqlRunner());
+            this.baseDao = new BaseDao<>(new AnnotationConfigTableInfo(entityClass), entityClass, ScxContext.sqlRunner());
         } else {
             throw new IllegalArgumentException(this.getClass().getName() + " : 必须设置泛型参数 !!!");
         }
@@ -48,7 +48,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @param entityClass 继承自 {@link BaseModel} 的实体类 class
      */
     public BaseModelService(Class<Entity> entityClass) {
-        this.baseDao = new BaseDao<>(new ScxDaoTableInfo(entityClass), entityClass, ScxContext.sqlRunner());
+        this.baseDao = new BaseDao<>(new AnnotationConfigTableInfo(entityClass), entityClass, ScxContext.sqlRunner());
     }
 
     /**
@@ -62,7 +62,7 @@ public class BaseModelService<Entity extends BaseModel> {
     }
 
     /**
-     * 插入数据 (注意 !!! 这里会在插入之后根据主键再次进行一次查询, 若只是进行插入且对性能有要求请使用 {@link cool.scx.dao.BaseDao#_insert(Object, UpdateFilter)})
+     * 插入数据 (注意 !!! 这里会在插入之后根据主键再次进行一次查询, 若只是进行插入且对性能有要求请使用 {@link BaseDao#_insert(Object, UpdateFilter)})
      *
      * @param entity 待插入的数据
      * @return 插入成功的数据 如果插入失败或数据没有主键则返回 null
