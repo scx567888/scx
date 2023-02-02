@@ -152,8 +152,8 @@ public enum WhereType {
         return keyWord;
     }
 
-    WhereParamsAndWhereClause getWhereParamsAndWhereClause(String name, Object value1, Object value2, WhereOption.Info info) {
-        return whereTypeHandler.getWhereParamsAndWhereClause(name, this, value1, value2, info);
+    public WhereTypeHandler whereTypeHandler() {
+        return whereTypeHandler;
     }
 
 }

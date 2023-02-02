@@ -1,41 +1,19 @@
 package cool.scx.dao.where;
 
+import cool.scx.dao.AnnotationConfigTableInfo;
 import cool.scx.dao.where.exception.WrongWhereTypeParamSizeException;
 import cool.scx.util.StringUtils;
 
 /**
  * where 封装体
  *
+ * @param name a
  * @author scx567888
  * @version 0.0.1
  */
-public final class WhereBody {
+public record WhereBody(String name, WhereType whereType, Object value1, Object value2, WhereOption.Info info) {
 
-    /**
-     * a
-     */
-    private final String name;
-
-    /**
-     * a
-     */
-    private final String whereClause;
-
-    /**
-     * 根据 where 条件对象生成的 map 防止 cool.scx.sql 注入
-     */
-    private final Object[] whereParams;
-
-    /**
-     * a
-     *
-     * @param name      a
-     * @param whereType a
-     * @param value1    a
-     * @param value2    a
-     * @param info      a
-     */
-    WhereBody(String name, WhereType whereType, Object value1, Object value2, WhereOption.Info info) {
+    public WhereBody(String name, WhereType whereType, Object value1, Object value2, WhereOption.Info info) {
         //名称不能为空
         if (StringUtils.isBlank(name)) {
             throw new IllegalArgumentException("Where 参数错误 : 名称 不能为空 !!!");
@@ -51,9 +29,10 @@ public final class WhereBody {
             throw new WrongWhereTypeParamSizeException(whereType);
         }
         this.name = name.trim();
-        var w = whereType.getWhereParamsAndWhereClause(this.name, value1, value2, info);
-        this.whereParams = w.whereParams();
-        this.whereClause = w.whereClause();
+        this.whereType = whereType;
+        this.value1 = value1;
+        this.value2 = value2;
+        this.info = info;
     }
 
     /**
@@ -279,31 +258,8 @@ public final class WhereBody {
         return validParamSize;
     }
 
-    /**
-     * a
-     *
-     * @return a
-     */
-    String name() {
-        return name;
-    }
-
-    /**
-     * a
-     *
-     * @return a
-     */
-    String whereClause() {
-        return whereClause;
-    }
-
-    /**
-     * a
-     *
-     * @return a
-     */
-    Object[] whereParams() {
-        return whereParams;
+    public WhereParamsAndWhereClause getWhereParamsAndWhereClause(AnnotationConfigTableInfo tableInfo) {
+        return whereType.whereTypeHandler().getWhereParamsAndWhereClause(tableInfo, this.name, this.whereType, this.value1, this.value2, this.info);
     }
 
 }
