@@ -124,7 +124,7 @@ public class WebSiteController {
     /**
      * 测试!!!
      *
-     * @return a {@link cool.scx.core.vo.Html} object
+     * @return a
      */
     @ScxMapping(value = "/baidu", method = HttpMethod.GET)
     public Html TestHttpUtils() throws IOException, InterruptedException {
@@ -135,7 +135,7 @@ public class WebSiteController {
     /**
      * 测试!!!
      *
-     * @return a {@link cool.scx.core.vo.Download} object
+     * @return a
      */
     @ScxMapping(value = "/download", method = HttpMethod.GET)
     public Download TestDownload() {

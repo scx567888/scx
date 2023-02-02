@@ -315,12 +315,6 @@ public final class ScxHelper {
         };
     }
 
-    /**
-     * <p>toType.</p>
-     *
-     * @param loggingTypeName a {@link java.lang.String} object
-     * @return a {@link cool.scx.core.ScxLoggerConfiguration.LoggingType} object
-     */
     private static LoggingType toType(String loggingTypeName) {
         requireNonNull(loggingTypeName, "loggingTypeName 不能为空 !!!");
         var s = loggingTypeName.trim().toUpperCase();
