@@ -82,7 +82,7 @@ public class TestModule extends ScxModule {
                 //插入数据 方式1
                 StopWatch.start("save1");
                 var l = new ArrayList<Car>();
-                for (int i = 0; i < 999; i = i + 1) {
+                for (int i = 0; i < 99; i = i + 1) {
                     var c = new Car();
                     c.name = RandomUtils.randomString(10, false) + "🤣";
                     c.color = CarColor.values()[RandomUtils.randomNumber(0, 3)];
@@ -91,19 +91,19 @@ public class TestModule extends ScxModule {
                     l.add(c);
                 }
                 carService.add(l);
-                System.err.println("完成: 方式1 (批量) 插入 999条数据时间 :" + StopWatch.stopToMillis("save1"));
+                System.err.println("完成: 方式1 (批量) 插入 99条数据时间 :" + StopWatch.stopToMillis("save1"));
 
                 System.err.println("开始: 方式2 (循环单次) 插入");
                 //插入数据 方式2
                 StopWatch.start("save2");
-                for (int i = 0; i < 999; i = i + 1) {
+                for (int i = 0; i < 99; i = i + 1) {
                     var c = new Car();
                     c.name = RandomUtils.randomString(10, false) + "😢";
                     c.color = CarColor.values()[RandomUtils.randomNumber(0, 3)];
                     c.owner = new CarOwner("David", i, new String[]{"987654321"});
                     carService1.add(c);
                 }
-                System.err.println("方式2 (循环单次) 插入 999条数据时间 :" + StopWatch.stopToMillis("save2"));
+                System.err.println("方式2 (循环单次) 插入 99条数据时间 :" + StopWatch.stopToMillis("save2"));
             }
 
             System.err.println("将 id 大于 200 的 name 设置为空 !!!");
