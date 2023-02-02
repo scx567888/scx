@@ -63,7 +63,7 @@ public final class SQLRunner {
      * @throws SQLException a
      */
     public static <T> T query(Connection con, SQL sql, ResultHandler<T> resultHandler) throws SQLException {
-        try (var preparedStatement = sql.getPreparedStatement(con)) {
+        try (var preparedStatement = sql.prepareStatement(con)) {
             SQLHelper.logSQL(preparedStatement);
             var resultSet = preparedStatement.executeQuery();
             return resultHandler.apply(resultSet);
@@ -79,7 +79,7 @@ public final class SQLRunner {
      * @throws SQLException a
      */
     public static long execute(Connection con, SQL sql) throws SQLException {
-        try (var preparedStatement = sql.getPreparedStatement(con)) {
+        try (var preparedStatement = sql.prepareStatement(con)) {
             SQLHelper.logSQL(preparedStatement);
             preparedStatement.execute();
             return preparedStatement.getLargeUpdateCount();
@@ -95,7 +95,7 @@ public final class SQLRunner {
      * @throws SQLException a
      */
     public static UpdateResult update(Connection con, SQL sql) throws SQLException {
-        try (var preparedStatement = sql.getPreparedStatement(con)) {
+        try (var preparedStatement = sql.prepareStatement(con)) {
             SQLHelper.logSQL(preparedStatement);
             var affectedItemsCount = preparedStatement.executeLargeUpdate();
             var generatedKeys = getGeneratedKeys(preparedStatement);
@@ -112,7 +112,7 @@ public final class SQLRunner {
      * @throws SQLException if any.
      */
     public static UpdateResult updateBatch(Connection con, SQL sql) throws SQLException {
-        try (var preparedStatement = sql.getPreparedStatement(con)) {
+        try (var preparedStatement = sql.prepareStatement(con)) {
             SQLHelper.logSQL(preparedStatement);
             var affectedItemsCount = preparedStatement.executeLargeBatch().length;
             var generatedKeys = getGeneratedKeys(preparedStatement);

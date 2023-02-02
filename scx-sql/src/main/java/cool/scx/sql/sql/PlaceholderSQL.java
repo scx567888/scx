@@ -106,7 +106,7 @@ public final class PlaceholderSQL implements SQL {
     }
 
     @Override
-    public PreparedStatement getPreparedStatement(Connection con) throws SQLException {
+    public PreparedStatement prepareStatement(Connection con) throws SQLException {
         return isBatch ? getPreparedStatementFromBatch(con) : getPreparedStatementFromSingle(con);
     }
 

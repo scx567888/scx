@@ -30,7 +30,7 @@ public final class NormalSQL implements SQL {
     }
 
     @Override
-    public PreparedStatement getPreparedStatement(Connection con) throws SQLException {
+    public PreparedStatement prepareStatement(Connection con) throws SQLException {
         return con.prepareStatement(normalSQL, Statement.RETURN_GENERATED_KEYS);
     }
 
