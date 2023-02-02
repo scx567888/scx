@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * 提供一些针对 BaseModel 类型实体类 简单的 CRUD 操作的 service 类
  * <p>
- * 业务 service 可以继承此类 (注意 : 如需要被 beanFactory 扫描到 请标注 {@link ScxService} 注解)
+ * 业务 service 可以继承此类 (注意 : 如需要被 beanFactory 扫描到 请标注 {@link cool.scx.core.annotation.ScxService} 注解)
  * <p>
  * 或手动创建 : new BaseModelService()
  * <p>
@@ -76,7 +76,7 @@ public class BaseModelService<Entity extends BaseModel> {
     }
 
     /**
-     * 插入数据 (注意 !!! 这里会在插入之后根据主键再次进行一次查询, 若只是进行插入且对性能有要求请使用 {@link cool.scx.sql.base.BaseDao#_insert(Object, UpdateFilter)})
+     * 插入数据 (注意 !!! 这里会在插入之后根据主键再次进行一次查询, 若只是进行插入且对性能有要求请使用 {@link cool.scx.dao.BaseDao#insert(Object, UpdateFilter)})
      *
      * @param entity       待插入的数据
      * @param updateFilter 更新字段过滤器
@@ -222,7 +222,7 @@ public class BaseModelService<Entity extends BaseModel> {
     }
 
     /**
-     * 根据 ID 更新 (注意 !!! 这里会在更新之后根据主键再次进行一次查询, 若只是进行更新且对性能有要求请使用 {@link cool.scx.sql.base.BaseDao#_update(Object, Query, UpdateFilter)})
+     * 根据 ID 更新 (注意 !!! 这里会在更新之后根据主键再次进行一次查询, 若只是进行更新且对性能有要求请使用 {@link cool.scx.dao.BaseDao#update(Object, Query, UpdateFilter)})
      *
      * @param entity 待更新的数据 ( 注意: 请保证数据中 id 字段不为空 )
      * @return 更新成功后的数据
@@ -232,7 +232,7 @@ public class BaseModelService<Entity extends BaseModel> {
     }
 
     /**
-     * 根据 ID 更新 (注意 !!! 这里会在更新之后根据主键再次进行一次查询, 若只是进行更新且对性能有要求请使用 {@link cool.scx.sql.base.BaseDao#_update(Object, Query, UpdateFilter)})
+     * 根据 ID 更新 (注意 !!! 这里会在更新之后根据主键再次进行一次查询, 若只是进行更新且对性能有要求请使用 {@link cool.scx.dao.BaseDao#update(Object, Query, UpdateFilter)})
      *
      * @param entity       待更新的数据 ( 注意: 请保证数据中 id 字段不为空 )
      * @param updateFilter 更新字段过滤器
