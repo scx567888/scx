@@ -1,6 +1,5 @@
 package cool.scx.core;
 
-import cool.scx.beans.ScxBeanFactory;
 import cool.scx.config.ScxConfig;
 import cool.scx.config.ScxEnvironment;
 import cool.scx.config.ScxFeatureConfig;
@@ -8,13 +7,12 @@ import cool.scx.core.enumeration.ScxCoreFeature;
 import cool.scx.core.scheduler.ScxScheduler;
 import cool.scx.functional.ScxRunnable;
 import cool.scx.mvc.ScxMvc;
-import cool.scx.mvc.ScxTemplate;
-import cool.scx.mvc.http.ScxHttpRouter;
 import cool.scx.mvc.websocket.ScxWebSocketRouter;
 import cool.scx.sql.SQLRunner;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.http.HttpServer;
+import org.springframework.beans.factory.BeanFactory;
 
 import java.nio.file.Path;
 import java.util.concurrent.Callable;
@@ -154,8 +152,8 @@ public final class ScxContext {
      *
      * @return a
      */
-    public static ScxBeanFactory beanFactory() {
-        return scx().scxBeanFactory();
+    public static BeanFactory beanFactory() {
+        return scx().beanFactory();
     }
 
     /**
@@ -165,15 +163,6 @@ public final class ScxContext {
      */
     public static ScxHttpRouter router() {
         return scx().scxHttpRouter();
-    }
-
-    /**
-     * 返回当前运行的 scx 实例的 template
-     *
-     * @return a
-     */
-    public static ScxTemplate template() {
-        return scx().scxTemplate();
     }
 
     /**

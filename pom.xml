@@ -41,7 +41,6 @@
     </scm>
 
     <modules>
-        <module>scx-beans</module>
         <module>scx-common</module>
         <module>scx-config</module>
         <module>scx-core</module>

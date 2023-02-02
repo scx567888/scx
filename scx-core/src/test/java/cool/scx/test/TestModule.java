@@ -22,7 +22,7 @@ import cool.scx.test.person.PersonService;
 import cool.scx.util.*;
 import cool.scx.util.zip.UnZipBuilder;
 import cool.scx.util.zip.ZipBuilder;
-import cool.scx.util.zip.ZipOption;
+import cool.scx.util.zip.ZipOptions;
 import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.ext.web.handler.FileSystemAccess;
 import io.vertx.ext.web.handler.StaticHandler;
@@ -223,8 +223,8 @@ public class TestModule extends ScxModule {
             new UnZipBuilder(ScxContext.getTempPath("aaaaa.zip")).toFile(ScxContext.getTempPath("hhhh"));
             new ZipBuilder(ScxContext.getTempPath("hhhh")).toFile(ScxContext.getTempPath("bbbbb.zip"));
             //重复一次
-            new UnZipBuilder(ScxContext.getTempPath("bbbbb.zip")).toFile(ScxContext.getTempPath("gggggg"), ZipOption.INCLUDE_ROOT);
-            new ZipBuilder(ScxContext.getTempPath("gggggg"), ZipOption.INCLUDE_ROOT).toFile(ScxContext.getTempPath("ccccc.zip"));
+            new UnZipBuilder(ScxContext.getTempPath("bbbbb.zip")).toFile(ScxContext.getTempPath("gggggg"), new ZipOptions().setIncludeRoot(true));
+            new ZipBuilder(ScxContext.getTempPath("gggggg"), new ZipOptions().setIncludeRoot(true)).toFile(ScxContext.getTempPath("ccccc.zip"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -236,7 +236,7 @@ public class TestModule extends ScxModule {
      */
     @Override
     public void start() {
-        ScxContext.router().vertxRouter().route("/static/*")
+        ScxContext.router().route("/static/*")
                 .handler(StaticHandler.create(FileSystemAccess.ROOT, ScxContext.getPathByAppRoot("AppRoot:c\\static").toString())
                         .setFilesReadOnly(false));
         var logger = LoggerFactory.getLogger(TestModule.class);

@@ -1,7 +1,5 @@
 package cool.scx.core;
 
-import cool.scx.beans.ScxBeanFactory;
-import cool.scx.beans.ScxBeanFactoryOptions;
 import cool.scx.config.ScxConfig;
 import cool.scx.config.ScxConfigSource;
 import cool.scx.config.ScxEnvironment;
@@ -11,10 +9,6 @@ import cool.scx.core.eventbus.MessageCodecRegistrar;
 import cool.scx.core.scheduler.ScxScheduler;
 import cool.scx.mvc.ScxMvc;
 import cool.scx.mvc.ScxMvcOptions;
-import cool.scx.mvc.ScxTemplate;
-import cool.scx.mvc.http.ScxHttpRouter;
-import cool.scx.mvc.registrar.ScxMappingRegistrar;
-import cool.scx.mvc.registrar.ScxWebSocketMappingRegistrar;
 import cool.scx.mvc.websocket.ScxWebSocketRouter;
 import cool.scx.util.ConsoleUtils;
 import cool.scx.util.NetUtils;
@@ -26,7 +20,11 @@ import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.net.JksOptions;
-import io.vertx.ext.web.handler.BodyHandler;
+import org.springframework.beans.factory.annotation.AnnotatedGenericBeanDefinition;
+import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.context.annotation.AnnotationConfigUtils;
+import org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor;
 
 import java.net.BindException;
 import java.util.Arrays;
@@ -82,12 +80,7 @@ public final class Scx {
     /**
      * scxBeanFactory
      */
-    private final ScxBeanFactory scxBeanFactory;
-
-    /**
-     * 模板对象
-     */
-    private final ScxTemplate scxTemplate;
+    private final DefaultListableBeanFactory beanFactory;
 
     /**
      * dao
@@ -145,16 +138,12 @@ public final class Scx {
         //4, 初始化事件总线
         MessageCodecRegistrar.registerCodec(this.vertx.eventBus());
         //5, 初始化 BeanFactory
-        this.scxBeanFactory = initScxBeanFactory(this.scxModules, this.vertx.nettyEventLoopGroup(), this.scxFeatureConfig);
-        //6, 初始化模板
-        this.scxTemplate = new ScxTemplate(this.scxOptions.templateRoot());
-        //7, 初始化持久层
+        this.beanFactory = initBeanFactory(this.scxModules, this.vertx.nettyEventLoopGroup(), this.scxFeatureConfig);
+        //6, 初始化持久层
         this.scxDao = new ScxDao(this.scxOptions);
-        //8, ScxMapping 配置类
-        this.scxMvc = new ScxMvc(new ScxMvcOptions().uploadsDirectory(
-                scxEnvironment().getTempPath(BodyHandler.DEFAULT_UPLOADS_DIRECTORY)
-        ), vertx, scxBeanFactory);
-        //9, 初始化任务调度器
+        //7, 初始化 MVC
+        this.scxMvc = new ScxMvc(new ScxMvcOptions().templateRoot(scxOptions.templateRoot()).useDevelopmentErrorPage(scxFeatureConfig.get(ScxCoreFeature.USE_DEVELOPMENT_ERROR_PAGE)));
+        //8, 初始化任务调度器
         this.scxScheduler = new ScxScheduler(this.vertx.nettyEventLoopGroup());
     }
 
@@ -226,17 +215,36 @@ public final class Scx {
      * @param scxFeatureConfig         a
      * @return r
      */
-    private static ScxBeanFactory initScxBeanFactory(ScxModule[] modules, ScheduledExecutorService scheduledExecutorService, ScxFeatureConfig scxFeatureConfig) {
+    private static DefaultListableBeanFactory initBeanFactory(ScxModule[] modules, ScheduledExecutorService scheduledExecutorService, ScxFeatureConfig scxFeatureConfig) {
+        var beanFactory = new DefaultListableBeanFactory();
+        //这里添加一个 bean 的后置处理器以便可以使用 @Autowired 注解
+        var beanPostProcessor = new AutowiredAnnotationBeanPostProcessor();
+        beanPostProcessor.setBeanFactory(beanFactory);
+        beanFactory.addBeanPostProcessor(beanPostProcessor);
+        //只有 开启标识时才 启用定时任务 这里直接跳过 后置处理器
+        if (scxFeatureConfig.get(ScxCoreFeature.ENABLE_SCHEDULING_WITH_ANNOTATION)) {
+            //这里在添加一个 bean 的后置处理器 以便使用 定时任务 注解
+            var scheduledAnnotationBeanPostProcessor = new ScheduledAnnotationBeanPostProcessor();
+            scheduledAnnotationBeanPostProcessor.setBeanFactory(beanFactory);
+            scheduledAnnotationBeanPostProcessor.setScheduler(scheduledExecutorService);
+            scheduledAnnotationBeanPostProcessor.afterSingletonsInstantiated();
+            beanFactory.addBeanPostProcessor(scheduledAnnotationBeanPostProcessor);
+        }
+        //设置是否允许循环依赖 (默认禁止循环依赖)
+        beanFactory.setAllowCircularReferences(scxFeatureConfig.get(ScxCoreFeature.ALLOW_CIRCULAR_REFERENCES));
+        //注册 bean
         var beanClass = Arrays.stream(modules)
                 .flatMap(c -> c.classList().stream())
                 .filter(ScxHelper::isBeanClass)
                 .toArray(Class<?>[]::new);
-        return new ScxBeanFactory(
-                new ScxBeanFactoryOptions()
-                        .scheduler(scheduledExecutorService)
-                        .allowCircularReferences(scxFeatureConfig.get(ScxCoreFeature.ALLOW_CIRCULAR_REFERENCES))
-                        .enableSchedulingWithAnnotation(scxFeatureConfig.get(ScxCoreFeature.ENABLE_SCHEDULING_WITH_ANNOTATION))
-        ).register(beanClass);
+
+        for (var c : beanClass) {
+            var beanDefinition = new AnnotatedGenericBeanDefinition(c);
+            //这里是为了兼容 spring context 的部分注解
+            AnnotationConfigUtils.processCommonDefinitionAnnotations(beanDefinition);
+            beanFactory.registerBeanDefinition(c.getName(), beanDefinition);
+        }
+        return beanFactory;
     }
 
     /**
@@ -311,20 +319,18 @@ public final class Scx {
             this.scxOptions.printInfo();
         }
         //2, 初始化路由 (Http 和 WebSocket)
-        this.scxHttpRouter = new ScxHttpRouter(this.scxMvc);
+        this.scxHttpRouter = new ScxHttpRouter(this);
         this.scxWebSocketRouter = new ScxWebSocketRouter();
-        //todo scxMvc 和 ScxMappingRegistrar  ScxWebSocketMappingRegistrar 的关系需要重写梳理
-        var classList = Arrays.stream(this.scxModules()).flatMap(c -> c.classList().stream()).toList();
         //3, 注册 ScxMapping 和 ScxWebSocketMapping 注解的 handler 到 路由中去
-        new ScxMappingRegistrar(this.scxMvc, classList).registerRoute(this.scxHttpRouter.vertxRouter());
-        new ScxWebSocketMappingRegistrar(this.scxMvc, classList).registerRoute(this.scxWebSocketRouter);
+        var classList = Arrays.stream(this.scxModules()).flatMap(c -> c.classList().stream()).toList();
+        this.scxMvc.bindErrorHandler(this.scxHttpRouter).registerHttpRoutes(scxHttpRouter, beanFactory, classList).registerWebSocketRoutes(scxWebSocketRouter, beanFactory, classList);
         //4, 依次执行 模块的 start 生命周期 , 在这里我们可以操作 scxRouteRegistry, vertxRouter 等对象 "手动注册新路由" 或其他任何操作
         this.startAllScxModules();
         //5, 打印基本信息
         if (this.scxFeatureConfig.get(ScxCoreFeature.SHOW_START_UP_INFO)) {
             Ansi.out()
-                    .brightYellow("已加载 " + this.scxBeanFactory.getBeanDefinitionNames().length + " 个 Bean !!!").ln()
-                    .brightGreen("已加载 " + this.scxHttpRouter.vertxRouter().getRoutes().size() + " 个 Http 路由 !!!").ln()
+                    .brightYellow("已加载 " + this.beanFactory.getBeanDefinitionNames().length + " 个 Bean !!!").ln()
+                    .brightGreen("已加载 " + this.scxHttpRouter.getRoutes().size() + " 个 Http 路由 !!!").ln()
                     .brightBlue("已加载 " + this.scxWebSocketRouter.getRoutes().size() + " 个 WebSocket 路由 !!!").println();
         }
         //6, 初始化服务器
@@ -336,13 +342,13 @@ public final class Scx {
                             .setPassword(this.scxOptions.sslPassword()));
         }
         this.vertxHttpServer = vertx.createHttpServer(httpServerOptions);
-        this.vertxHttpServer.requestHandler(this.scxHttpRouter.vertxRouter()).webSocketHandler(this.scxWebSocketRouter);
+        this.vertxHttpServer.requestHandler(this.scxHttpRouter).webSocketHandler(this.scxWebSocketRouter);
         //7, 添加程序停止时的钩子函数
         this.addShutdownHook();
         //8, 使用初始端口号 启动服务器
         this.startServer(this.scxOptions.port());
         //9, 此处刷新 scxBeanFactory 使其实例化所有符合条件的 Bean
-        this.scxBeanFactory.refresh();
+        this.beanFactory.preInstantiateSingletons();
     }
 
     /**
@@ -439,8 +445,8 @@ public final class Scx {
      *
      * @return a
      */
-    public ScxBeanFactory scxBeanFactory() {
-        return scxBeanFactory;
+    public DefaultListableBeanFactory beanFactory() {
+        return beanFactory;
     }
 
     /**
@@ -450,15 +456,6 @@ public final class Scx {
      */
     public ScxHttpRouter scxHttpRouter() {
         return this.scxHttpRouter;
-    }
-
-    /**
-     * a
-     *
-     * @return a
-     */
-    public ScxTemplate scxTemplate() {
-        return scxTemplate;
     }
 
     /**

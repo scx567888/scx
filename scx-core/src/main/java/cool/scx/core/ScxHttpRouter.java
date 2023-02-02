@@ -1,8 +1,7 @@
-package cool.scx.mvc.http;
+package cool.scx.core;
 
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.util.AsciiString;
-import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.handler.BodyHandler;
@@ -55,11 +54,11 @@ public final class ScxHttpRouter extends RouterImpl {
     private final Route corsHandlerRoute;
     private final Route bodyHandlerRoute;
 
-    public ScxHttpRouter(Vertx vertx, ScxHttpRouterOptions options) {
-        super(vertx);
+    public ScxHttpRouter(Scx scx) {
+        super(scx.vertx());
         //设置基本的 handler
-        this.corsHandler = initCorsHandler(options.allowedOrigin());
-        this.bodyHandler = initBodyHandler(options.uploadsDirectory(), options.bodyLimit());
+        this.corsHandler = initCorsHandler(scx.scxOptions().allowedOrigin());
+        this.bodyHandler = initBodyHandler(scx.scxEnvironment().getTempPath(BodyHandler.DEFAULT_UPLOADS_DIRECTORY), 1000);
         //注册路由
         this.corsHandlerRoute = this.route().handler(corsHandler);
         this.bodyHandlerRoute = this.route().handler(bodyHandler);

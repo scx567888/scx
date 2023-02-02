@@ -31,6 +31,10 @@ public class ZipBuilder {
 
     }
 
+    public ZipBuilder(Path path) {
+        this.put(path);
+    }
+
     /**
      * <p>Constructor for ZipBuilder.</p>
      *
@@ -62,6 +66,10 @@ public class ZipBuilder {
     public ZipBuilder put(Path path, ZipOptions zipOptions) {
         items.add(new ZipBuilderItem("", path, zipOptions));
         return this;
+    }
+
+    public ZipBuilder put(Path path) {
+        return this.put(path, new ZipOptions());
     }
 
     /**
@@ -116,13 +124,13 @@ public class ZipBuilder {
     /**
      * <p>remove.</p>
      *
-     * @param path a {@link java.lang.String} object
+     * @param zipPath a {@link java.lang.String} object
      * @return a
      */
-    public ZipBuilder remove(String path) {
-        var p = normalize(path);
-        if (StringUtils.notBlank(path)) {
-            items.removeIf(c -> c.path.startsWith(p));
+    public ZipBuilder remove(String zipPath) {
+        var p = normalize(zipPath);
+        if (StringUtils.notBlank(zipPath)) {
+            items.removeIf(c -> c.zipPath.startsWith(p));
         }
         return this;
     }
