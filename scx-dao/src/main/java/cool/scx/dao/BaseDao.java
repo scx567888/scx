@@ -69,7 +69,7 @@ public class BaseDao<Entity> {
      * @param updateFilter a
      * @return 插入成功的主键 ID 如果插入失败或数据没有主键则返回 null
      */
-    public final Long _insert(Entity entity, UpdateFilter updateFilter) {
+    public final Long insert(Entity entity, UpdateFilter updateFilter) {
         return sqlRunner.update(_buildInsertSQL(entity, updateFilter)).firstGeneratedKey();
     }
 
@@ -93,8 +93,8 @@ public class BaseDao<Entity> {
      * @param updateFilter a
      * @return 保存成功的主键 (ID) 列表
      */
-    public final List<Long> _insertBatch(Collection<Entity> entityList, UpdateFilter updateFilter) {
-        return sqlRunner.updateBatch(_buildInsertBatchSQL(entityList, updateFilter)).generatedKeys();
+    public final List<Long> insertBatch(Collection<Entity> entityList, UpdateFilter updateFilter) {
+        return sqlRunner.updateBatch(buildInsertBatchSQL(entityList, updateFilter)).generatedKeys();
     }
 
     /**
@@ -104,7 +104,7 @@ public class BaseDao<Entity> {
      * @param updateFilter a
      * @return a
      */
-    private SQL _buildInsertBatchSQL(Collection<Entity> entityList, UpdateFilter updateFilter) {
+    private SQL buildInsertBatchSQL(Collection<Entity> entityList, UpdateFilter updateFilter) {
         var insertColumns = updateFilter.filter(tableInfo.columnInfos());
         //将 entityList 转换为 objectArrayList 这里因为 stream 实在太慢所以改为传统循环方式
         var objectArrayList = new ArrayList<Object[]>();
@@ -126,8 +126,8 @@ public class BaseDao<Entity> {
      * @param selectFilter a
      * @return a {@link java.util.List} object.
      */
-    public final List<Entity> _select(Query query, SelectFilter selectFilter) {
-        return sqlRunner.query(_buildSelectSQL(query, selectFilter), entityBeanListHandler);
+    public final List<Entity> select(Query query, SelectFilter selectFilter) {
+        return sqlRunner.query(buildSelectSQL(query, selectFilter), entityBeanListHandler);
     }
 
     /**
@@ -171,13 +171,13 @@ public class BaseDao<Entity> {
      *      ));
      *  }</pre>
      * <br>
-     * 注意 !!! 若同时使用 limit 和 in/not in 请使用 {@link BaseDao#_buildSelectSQLWithAlias(Query, SelectFilter)}
+     * 注意 !!! 若同时使用 limit 和 in/not in 请使用 {@link BaseDao#buildSelectSQLWithAlias(Query, SelectFilter)}
      *
      * @param query        聚合查询参数对象
      * @param selectFilter 查询字段过滤器
      * @return selectSQL
      */
-    public final SQL _buildSelectSQL(Query query, SelectFilter selectFilter) {
+    public final SQL buildSelectSQL(Query query, SelectFilter selectFilter) {
         var selectColumnInfos = selectFilter.filter(tableInfo.columnInfos());
         var sql = BaseDaoSQLBuilder.Select(selectColumnInfos).From(tableInfo.tableName()).Where(query.where()).GroupBy(query.groupBy()).OrderBy(query.orderBy()).Limit(query.pagination()).GetSQL();
         return SQL.ofPlaceholder(sql, query.where().getWhereParams());
@@ -191,10 +191,10 @@ public class BaseDao<Entity> {
      * @param selectFilter s
      * @return a
      */
-    public final SQL _buildSelectSQLWithAlias(Query query, SelectFilter selectFilter) {
+    public final SQL buildSelectSQLWithAlias(Query query, SelectFilter selectFilter) {
         //没有 limit 的时候不需要嵌套
         if (query.pagination().rowCount() == null) {
-            return _buildSelectSQL(query, selectFilter);
+            return buildSelectSQL(query, selectFilter);
         } else {
             var selectColumnInfos = selectFilter.filter(tableInfo.columnInfos());
             var sql0 = BaseDaoSQLBuilder.Select(selectColumnInfos).From(tableInfo.tableName()).Where(query.where()).GroupBy(query.groupBy()).OrderBy(query.orderBy()).Limit(query.pagination()).GetSQL();
@@ -209,8 +209,8 @@ public class BaseDao<Entity> {
      * @param query 查询条件
      * @return 条数
      */
-    public final long _count(Query query) {
-        return sqlRunner.query(_buildCountSQL(query), countResultHandler);
+    public final long count(Query query) {
+        return sqlRunner.query(buildCountSQL(query), countResultHandler);
     }
 
     /**
@@ -219,7 +219,7 @@ public class BaseDao<Entity> {
      * @param query query 对象
      * @return sql
      */
-    private SQL _buildCountSQL(Query query) {
+    private SQL buildCountSQL(Query query) {
         var sql = BaseDaoSQLBuilder.Select("COUNT(*) AS count").From(tableInfo.tableName()).Where(query.where()).GroupBy(query.groupBy()).GetSQL();
         return SQL.ofPlaceholder(sql, query.where().getWhereParams());
     }
@@ -232,8 +232,8 @@ public class BaseDao<Entity> {
      * @param updateFilter a
      * @return 受影响的条数
      */
-    public final long _update(Entity entity, Query query, UpdateFilter updateFilter) {
-        return sqlRunner.update(_buildUpdateSQL(entity, query, updateFilter)).affectedItemsCount();
+    public final long update(Entity entity, Query query, UpdateFilter updateFilter) {
+        return sqlRunner.update(buildUpdateSQL(entity, query, updateFilter)).affectedItemsCount();
     }
 
     /**
@@ -244,7 +244,7 @@ public class BaseDao<Entity> {
      * @param updateFilter filter
      * @return a
      */
-    private SQL _buildUpdateSQL(Entity entity, Query query, UpdateFilter updateFilter) {
+    private SQL buildUpdateSQL(Entity entity, Query query, UpdateFilter updateFilter) {
         if (query.where().isEmpty()) {
             throw new IllegalArgumentException("更新数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
         }
@@ -261,8 +261,8 @@ public class BaseDao<Entity> {
      * @param query where 条件
      * @return 受影响的条数 (被成功删除的数据条数)
      */
-    public final long _delete(Query query) {
-        return sqlRunner.update(_buildDeleteSQL(query)).affectedItemsCount();
+    public final long delete(Query query) {
+        return sqlRunner.update(buildDeleteSQL(query)).affectedItemsCount();
     }
 
     /**
@@ -271,7 +271,7 @@ public class BaseDao<Entity> {
      * @param query query
      * @return sql
      */
-    private SQL _buildDeleteSQL(Query query) {
+    private SQL buildDeleteSQL(Query query) {
         if (query.where().isEmpty()) {
             throw new IllegalArgumentException("删除数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
         }

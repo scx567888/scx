@@ -62,7 +62,7 @@ public class BaseModelService<Entity extends BaseModel> {
     }
 
     /**
-     * 插入数据 (注意 !!! 这里会在插入之后根据主键再次进行一次查询, 若只是进行插入且对性能有要求请使用 {@link BaseDao#_insert(Object, UpdateFilter)})
+     * 插入数据 (注意 !!! 这里会在插入之后根据主键再次进行一次查询, 若只是进行插入且对性能有要求请使用 {@link BaseDao#insert(Object, UpdateFilter)})
      *
      * @param entity 待插入的数据
      * @return 插入成功的数据 如果插入失败或数据没有主键则返回 null
@@ -79,7 +79,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 插入成功的数据 如果插入失败或数据没有主键则返回 null
      */
     public Entity add(Entity entity, UpdateFilter updateFilter) {
-        var newID = baseDao._insert(entity, updateFilterProcessor(updateFilter));
+        var newID = baseDao.insert(entity, updateFilterProcessor(updateFilter));
         return newID != null ? this.get(newID) : null;
     }
 
@@ -102,7 +102,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 插入成功的数据的自增主键列表
      */
     public List<Long> add(Collection<Entity> entityList, UpdateFilter updateFilter) {
-        return baseDao._insertBatch(entityList, updateFilterProcessor(updateFilter));
+        return baseDao.insertBatch(entityList, updateFilterProcessor(updateFilter));
     }
 
     /**
@@ -152,7 +152,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 数据列表
      */
     public List<Entity> list(Query query, SelectFilter selectFilter) {
-        return baseDao._select(query, selectFilter);
+        return baseDao.select(query, selectFilter);
     }
 
     /**
@@ -214,7 +214,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 数据条数
      */
     public final long count(Query query) {
-        return baseDao._count(query);
+        return baseDao.count(query);
     }
 
     /**
@@ -262,7 +262,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 更新成功的数据条数
      */
     public long update(Entity entity, Query query, UpdateFilter updateFilter) {
-        return baseDao._update(entity, query, updateFilterProcessor(updateFilter));
+        return baseDao.update(entity, query, updateFilterProcessor(updateFilter));
     }
 
     /**
@@ -285,7 +285,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 被删除的数据条数
      */
     public long delete(Query query) {
-        return baseDao._delete(query);
+        return baseDao.delete(query);
     }
 
     /**
@@ -298,10 +298,10 @@ public class BaseModelService<Entity extends BaseModel> {
      * @param query        聚合查询参数对象
      * @param selectFilter 查询字段过滤器
      * @return listSQL
-     * @see BaseDao#_buildSelectSQL(Query, SelectFilter)
+     * @see BaseDao#buildSelectSQL(Query, SelectFilter)
      */
     public final SQL buildListSQL(Query query, SelectFilter selectFilter) {
-        return baseDao._buildSelectSQL(query, selectFilter);
+        return baseDao.buildSelectSQL(query, selectFilter);
     }
 
     /**
@@ -314,7 +314,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @param query        聚合查询参数对象
      * @param selectFilter 查询字段过滤器
      * @return getSQL
-     * @see BaseDao#_buildSelectSQL(Query, SelectFilter)
+     * @see BaseDao#buildSelectSQL(Query, SelectFilter)
      */
     public final SQL buildGetSQL(Query query, SelectFilter selectFilter) {
         return buildListSQL(query.setPagination(1), selectFilter);
@@ -328,10 +328,10 @@ public class BaseModelService<Entity extends BaseModel> {
      * @param query        聚合查询参数对象
      * @param selectFilter 查询字段过滤器
      * @return listSQL
-     * @see BaseDao#_buildSelectSQL(Query, SelectFilter)
+     * @see BaseDao#buildSelectSQL(Query, SelectFilter)
      */
     public final SQL buildListSQLWithAlias(Query query, SelectFilter selectFilter) {
-        return baseDao._buildSelectSQLWithAlias(query, selectFilter);
+        return baseDao.buildSelectSQLWithAlias(query, selectFilter);
     }
 
     /**
@@ -342,7 +342,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @param query        聚合查询参数对象
      * @param selectFilter 查询字段过滤器
      * @return getSQL
-     * @see BaseDao#_buildSelectSQL(Query, SelectFilter)
+     * @see BaseDao#buildSelectSQL(Query, SelectFilter)
      */
     public final SQL buildGetSQLWithAlias(Query query, SelectFilter selectFilter) {
         return buildListSQLWithAlias(query.setPagination(1), selectFilter);

@@ -1,68 +1,59 @@
 package cool.scx.test;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
+import cool.scx.dao.*;
 import cool.scx.logging.ScxLoggerFactory;
 import cool.scx.logging.ScxLoggingLevel;
-import cool.scx.sql.SQL;
+import cool.scx.sql.SQLHelper;
 import cool.scx.sql.SQLRunner;
-import cool.scx.sql.UpdateResult;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import javax.sql.DataSource;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import static com.mysql.cj.conf.PropertyKey.*;
 import static cool.scx.sql.SQL.ofNormal;
 
 public class ScxDaoTest {
 
-    private static final String databaseName = "scx_sql_test";
+    private static final String databaseName = "scx_dao_test";
     private static final DataSource dataSource = getMySQLDataSource();
     private static final SQLRunner sqlRunner = new SQLRunner(dataSource);
-    private static final String tableName = "`scx_sql_test`.`t1`";
 
     static {
         ScxLoggerFactory.defaultConfig().setLevel(ScxLoggingLevel.DEBUG);
     }
 
-    public static void main(String[] args) {
-        beforeTest();
+    public static void main(String[] args) throws SQLException {
         test1();
     }
 
-    @BeforeTest
-    public static void beforeTest() {
-        try {
-            sqlRunner.execute(ofNormal("drop table if exists " + tableName + ";" + " create table " + tableName + "(`name` varchar(32) unique ,`age` integer,`sex` boolean )"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     @Test
-    public static void test1() {
-        var sql = "insert into " + tableName + "(name, age, sex) values (:name, :age, :sex)";
-        var m = new HashMap<String, Object>();
-        m.put("age", 18);
-        m.put("name", "小明");
-        m.put("sex", 1);
-        UpdateResult update = sqlRunner.update(SQL.ofNamedParameter(sql, m));
-        System.out.println("具名参数插入单条数据 : " + update);
-        var ms = new ArrayList<Map<String, Object>>();
-        for (int i = 0; i < 999; i = i + 1) {
-            var m1 = new HashMap<String, Object>();
-            m1.put("age", 18 + i);
-            m1.put("sex", 0);
-            m1.put("name", "小明" + i);
-            ms.add(m1);
-        }
-        UpdateResult update1 = sqlRunner.updateBatch(SQL.ofNamedParameter(sql, ms));
-        System.out.println("具名参数批量插入多条数据 : " + update1);
-    }
+    public static void test1() throws SQLException {
+        //创建 tableInfo
+        var userTableInfo = new AnnotationConfigTableInfo(User.class);
+        //删除原有的表数据
+        sqlRunner.execute(ofNormal("drop table if exists " + userTableInfo.tableName() + ";"));
+        //根据 tableInfo 生成表结构
+        SQLHelper.fixTable(userTableInfo, databaseName, getMySQLDataSource());
+        //开始使用
+        var userDao = new BaseDao<>(userTableInfo, User.class, sqlRunner);
+        var list = new ArrayList<User>();
 
+        for (int i = 0; i < 999; i = i + 1) {
+            var m1 = new User();
+            m1.age = i;
+            m1.name = "小明" + i;
+            m1.createDate = LocalDateTime.now();
+            list.add(m1);
+        }
+        var newIds = userDao.insertBatch(list, UpdateFilter.ofExcluded());
+        System.out.println("插入 : " + newIds);
+        var users = userDao.select(new Query().greaterThan("id", 300), SelectFilter.ofExcluded());
+        System.out.println("查询 : " + users.size());
+    }
 
     private static MysqlDataSource getMySQLDataSource() {
         var mysqlDataSource = new MysqlDataSource();
