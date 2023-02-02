@@ -1,10 +1,9 @@
 package cool.scx.dao.where;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import cool.scx.dao.AnnotationConfigTableInfo;
 import cool.scx.dao.where.exception.ValidParamListIsEmptyException;
 import cool.scx.sql.SQL;
-import cool.scx.sql.SQLHelper;
-import cool.scx.util.CaseUtils;
 import cool.scx.util.StringUtils;
 
 import java.util.ArrayList;
@@ -12,6 +11,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
 
+import static cool.scx.dao.ColumnNameParser.parseColumnName;
+import static cool.scx.dao.ColumnNameParser.splitIntoColumnNameAndFieldPath;
 import static cool.scx.util.ObjectUtils.*;
 
 /**
@@ -22,8 +23,8 @@ import static cool.scx.util.ObjectUtils.*;
  */
 interface WhereTypeHandler {
 
-    WhereTypeHandler IS_NULL_HANDLER = (name, whereType, value1, value2, info) -> {
-        var columnName = SQLHelper.getColumnName(name, info.useJsonExtract(), info.useOriginalName());
+    WhereTypeHandler IS_NULL_HANDLER = (tableInfo, name, whereType, value1, value2, info) -> {
+        var columnName = parseColumnName(tableInfo, name, info.useJsonExtract(), info.useOriginalName());
         var whereParams = new Object[]{};
         var whereClause = columnName + " " + whereType.keyWord();
         return new WhereParamsAndWhereClause(whereParams, whereClause);
@@ -34,8 +35,8 @@ interface WhereTypeHandler {
      */
     WhereTypeHandler IS_NOT_NULL_HANDLER = IS_NULL_HANDLER;
 
-    WhereTypeHandler EQUAL_HANDLER = (name, whereType, value1, value2, info) -> {
-        var columnName = SQLHelper.getColumnName(name, info.useJsonExtract(), info.useOriginalName());
+    WhereTypeHandler EQUAL_HANDLER = (tableInfo, name, whereType, value1, value2, info) -> {
+        var columnName = parseColumnName(tableInfo, name, info.useJsonExtract(), info.useOriginalName());
         String v1;
         Object[] whereParams;
         //针对 参数类型是 AbstractPlaceholderSQL 的情况进行特殊处理 下同
@@ -58,8 +59,8 @@ interface WhereTypeHandler {
     WhereTypeHandler LIKE_REGEX_HANDLER = EQUAL_HANDLER;
     WhereTypeHandler NOT_LIKE_REGEX_HANDLER = EQUAL_HANDLER;
 
-    WhereTypeHandler LIKE_HANDLER = (name, whereType, value1, value2, info) -> {
-        var columnName = SQLHelper.getColumnName(name, info.useJsonExtract(), info.useOriginalName());
+    WhereTypeHandler LIKE_HANDLER = (tableInfo, name, whereType, value1, value2, info) -> {
+        var columnName = parseColumnName(tableInfo, name, info.useJsonExtract(), info.useOriginalName());
         String v1;
         Object[] whereParams;
         if (value1 instanceof SQL a) {
@@ -75,8 +76,8 @@ interface WhereTypeHandler {
 
     WhereTypeHandler NOT_LIKE_HANDLER = LIKE_HANDLER;
 
-    WhereTypeHandler IN_HANDLER = (name, whereType, value1, value2, info) -> {
-        var columnName = SQLHelper.getColumnName(name, info.useJsonExtract(), info.useOriginalName());
+    WhereTypeHandler IN_HANDLER = (tableInfo, name, whereType, value1, value2, info) -> {
+        var columnName = parseColumnName(tableInfo, name, info.useJsonExtract(), info.useOriginalName());
         String v1;
         Object[] whereParams;
         if (value1 instanceof SQL a) {
@@ -97,8 +98,8 @@ interface WhereTypeHandler {
 
     WhereTypeHandler NOT_IN_HANDLER = IN_HANDLER;
 
-    WhereTypeHandler BETWEEN_HANDLER = (name, whereType, value1, value2, info) -> {
-        var columnName = SQLHelper.getColumnName(name, info.useJsonExtract(), info.useOriginalName());
+    WhereTypeHandler BETWEEN_HANDLER = (tableInfo, name, whereType, value1, value2, info) -> {
+        var columnName = parseColumnName(tableInfo, name, info.useJsonExtract(), info.useOriginalName());
         String v1;
         String v2;
         var whereParams = new ArrayList<>();
@@ -122,9 +123,9 @@ interface WhereTypeHandler {
 
     WhereTypeHandler NOT_BETWEEN_HANDLER = BETWEEN_HANDLER;
 
-    WhereTypeHandler JSON_CONTAINS_HANDLER = (name, whereType, value1, value2, info) -> {
-        var c = SQLHelper.splitIntoColumnNameAndFieldPath(name);
-        var columnName = info.useOriginalName() ? c.columnName() : CaseUtils.toSnake(c.columnName());
+    WhereTypeHandler JSON_CONTAINS_HANDLER = (tableInfo, name, whereType, value1, value2, info) -> {
+        var c = splitIntoColumnNameAndFieldPath(name);
+        var columnName = info.useOriginalName() ? c.columnName() : tableInfo.getColumnInfo(c.columnName()).columnName();
         if (StringUtils.isBlank(c.columnName())) {
             throw new IllegalArgumentException("使用 JSON_CONTAINS 时, 查询名称不合法 !!! 字段名 : " + name);
         }
@@ -154,6 +155,6 @@ interface WhereTypeHandler {
         return new WhereParamsAndWhereClause(whereParams, whereClause);
     };
 
-    WhereParamsAndWhereClause getWhereParamsAndWhereClause(String name, WhereType whereType, Object value1, Object value2, WhereOption.Info info);
+    WhereParamsAndWhereClause getWhereParamsAndWhereClause(AnnotationConfigTableInfo tableInfo, String name, WhereType whereType, Object value1, Object value2, WhereOption.Info info);
 
 }
