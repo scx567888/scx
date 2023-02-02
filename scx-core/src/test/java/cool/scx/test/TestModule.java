@@ -4,14 +4,14 @@ import cool.scx.core.Scx;
 import cool.scx.core.ScxContext;
 import cool.scx.core.ScxModule;
 import cool.scx.core.base.BaseModelService;
-import cool.scx.core.dao.ScxDaoHelper;
 import cool.scx.core.enumeration.ScxCoreFeature;
+import cool.scx.dao.Query;
+import cool.scx.dao.SelectFilter;
+import cool.scx.dao.UpdateFilter;
+import cool.scx.dao.where.WhereOption;
 import cool.scx.http_client.ScxHttpClientHelper;
 import cool.scx.http_client.body.FormData;
-import cool.scx.sql.base.Query;
-import cool.scx.sql.base.SelectFilter;
-import cool.scx.sql.base.UpdateFilter;
-import cool.scx.sql.where.WhereOption;
+import cool.scx.sql.SQL;
 import cool.scx.test.car.Car;
 import cool.scx.test.car.CarColor;
 import cool.scx.test.car.CarOwner;
@@ -21,7 +21,7 @@ import cool.scx.test.person.PersonService;
 import cool.scx.util.*;
 import cool.scx.util.zip.UnZipBuilder;
 import cool.scx.util.zip.ZipBuilder;
-import cool.scx.util.zip.ZipOption;
+import cool.scx.util.zip.ZipOptions;
 import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.ext.web.handler.FileSystemAccess;
 import io.vertx.ext.web.handler.StaticHandler;
@@ -68,7 +68,8 @@ public class TestModule extends ScxModule {
                 .configure(ScxCoreFeature.ENABLE_SCHEDULING_WITH_ANNOTATION, true)
                 .run();
         //修复表
-        ScxDaoHelper.fixTable();
+        ScxContext.sqlRunner().execute(SQL.ofNormal("drop database if exists scx_test; create database scx_test; use scx_test"));
+        ScxContext.scx().fixTable();
     }
 
     @Test
@@ -81,7 +82,7 @@ public class TestModule extends ScxModule {
                 //插入数据 方式1
                 StopWatch.start("save1");
                 var l = new ArrayList<Car>();
-                for (int i = 0; i < 999; i = i + 1) {
+                for (int i = 0; i < 99; i = i + 1) {
                     var c = new Car();
                     c.name = RandomUtils.randomString(10, false) + "🤣";
                     c.color = CarColor.values()[RandomUtils.randomNumber(0, 3)];
@@ -90,19 +91,19 @@ public class TestModule extends ScxModule {
                     l.add(c);
                 }
                 carService.add(l);
-                System.err.println("完成: 方式1 (批量) 插入 999条数据时间 :" + StopWatch.stopToMillis("save1"));
+                System.err.println("完成: 方式1 (批量) 插入 99条数据时间 :" + StopWatch.stopToMillis("save1"));
 
                 System.err.println("开始: 方式2 (循环单次) 插入");
                 //插入数据 方式2
                 StopWatch.start("save2");
-                for (int i = 0; i < 999; i = i + 1) {
+                for (int i = 0; i < 99; i = i + 1) {
                     var c = new Car();
                     c.name = RandomUtils.randomString(10, false) + "😢";
                     c.color = CarColor.values()[RandomUtils.randomNumber(0, 3)];
                     c.owner = new CarOwner("David", i, new String[]{"987654321"});
                     carService1.add(c);
                 }
-                System.err.println("方式2 (循环单次) 插入 999条数据时间 :" + StopWatch.stopToMillis("save2"));
+                System.err.println("方式2 (循环单次) 插入 99条数据时间 :" + StopWatch.stopToMillis("save2"));
             }
 
             System.err.println("将 id 大于 200 的 name 设置为空 !!!");
@@ -221,8 +222,8 @@ public class TestModule extends ScxModule {
             new UnZipBuilder(ScxContext.getTempPath("aaaaa.zip")).toFile(ScxContext.getTempPath("hhhh"));
             new ZipBuilder(ScxContext.getTempPath("hhhh")).toFile(ScxContext.getTempPath("bbbbb.zip"));
             //重复一次
-            new UnZipBuilder(ScxContext.getTempPath("bbbbb.zip")).toFile(ScxContext.getTempPath("gggggg"), ZipOption.INCLUDE_ROOT);
-            new ZipBuilder(ScxContext.getTempPath("gggggg"), ZipOption.INCLUDE_ROOT).toFile(ScxContext.getTempPath("ccccc.zip"));
+            new UnZipBuilder(ScxContext.getTempPath("bbbbb.zip")).toFile(ScxContext.getTempPath("gggggg"), new ZipOptions().setIncludeRoot(true));
+            new ZipBuilder(ScxContext.getTempPath("gggggg"), new ZipOptions().setIncludeRoot(true)).toFile(ScxContext.getTempPath("ccccc.zip"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -233,23 +234,23 @@ public class TestModule extends ScxModule {
      * {@inheritDoc}
      */
     @Override
-    public void start() {
-        ScxContext.router().vertxRouter().route("/static/*")
-                .handler(StaticHandler.create(FileSystemAccess.ROOT, ScxContext.getPathByAppRoot("AppRoot:c\\static").toString())
+    public void start(Scx scx) {
+        scx.scxHttpRouter().route("/static/*")
+                .handler(StaticHandler.create(FileSystemAccess.ROOT, scx.scxEnvironment().getPathByAppRoot("AppRoot:c\\static").toString())
                         .setFilesReadOnly(false));
         var logger = LoggerFactory.getLogger(TestModule.class);
         //测试定时任务
-        ScxContext.scheduler().scheduleAtFixedRate((a) -> {
+        scx.scxScheduler().scheduleAtFixedRate((a) -> {
             //测试
             logger.error("这是通过 ScxContext.scheduleAtFixedRate() 打印的 : 一共 10 次 , 这时第 " + a.runCount() + " 次执行 !!!");
         }, Instant.now().plusSeconds(3), Duration.of(1, ChronoUnit.SECONDS), 10);
 
-        ScxContext.scheduler().schedule((a) -> {
+        scx.scxScheduler().schedule((a) -> {
             //测试
             logger.error("这是通过 ScxContext.scheduler() 使用 Cron 表达式 打印的 : 这时第 " + a.runCount() + " 次执行 !!!");
         }, new CronTrigger("*/1 * * * * ?"));
 
-        ScxContext.scheduler().scheduleAtFixedRate((a) -> {
+        scx.scxScheduler().scheduleAtFixedRate((a) -> {
             logger.error("这是通过 ScxContext.scheduleAtFixedRate() 打印的 : 不限次数 不过到 第 10 次手动取消 , 这是第 " + a.runCount() + " 次执行 !!!");
             if (a.runCount() >= 10) {
                 a.scheduledFuture().cancel(false);

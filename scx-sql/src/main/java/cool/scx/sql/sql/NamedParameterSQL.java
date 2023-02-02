@@ -84,8 +84,8 @@ public final class NamedParameterSQL implements SQL {
     }
 
     @Override
-    public PreparedStatement getPreparedStatement(Connection con) throws SQLException {
-        return placeholderSQL.getPreparedStatement(con);
+    public PreparedStatement prepareStatement(Connection con) throws SQLException {
+        return placeholderSQL.prepareStatement(con);
     }
 
     @Override

@@ -1,12 +1,12 @@
 package cool.scx.core.base;
 
 import cool.scx.core.ScxContext;
-import cool.scx.core.dao.ScxDaoTableInfo;
+import cool.scx.dao.BaseDao;
+import cool.scx.dao.Query;
+import cool.scx.dao.SelectFilter;
+import cool.scx.dao.UpdateFilter;
+import cool.scx.dao.impl.AnnotationConfigTableInfo;
 import cool.scx.sql.SQL;
-import cool.scx.sql.base.BaseDao;
-import cool.scx.sql.base.Query;
-import cool.scx.sql.base.SelectFilter;
-import cool.scx.sql.base.UpdateFilter;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
@@ -40,7 +40,7 @@ public class BaseModelService<Entity extends BaseModel> {
         if (genericSuperclass instanceof ParameterizedType) {
             var typeArguments = ((ParameterizedType) genericSuperclass).getActualTypeArguments();
             var entityClass = (Class<Entity>) typeArguments[0];
-            this.baseDao = new BaseDao<>(new ScxDaoTableInfo(entityClass), entityClass, ScxContext.sqlRunner());
+            this.baseDao = new BaseDao<>(new AnnotationConfigTableInfo(entityClass), entityClass, ScxContext.sqlRunner());
         } else {
             throw new IllegalArgumentException(this.getClass().getName() + " : 必须设置泛型参数 !!!");
         }
@@ -49,24 +49,24 @@ public class BaseModelService<Entity extends BaseModel> {
     /**
      * 手动创建 entityClass
      *
-     * @param entityClass 继承自 {@link cool.scx.core.base.BaseModel} 的实体类 class
+     * @param entityClass 继承自 {@link BaseModel} 的实体类 class
      */
     public BaseModelService(Class<Entity> entityClass) {
-        this.baseDao = new BaseDao<>(new ScxDaoTableInfo(entityClass), entityClass, ScxContext.sqlRunner());
+        this.baseDao = new BaseDao<>(new AnnotationConfigTableInfo(entityClass), entityClass, ScxContext.sqlRunner());
     }
 
     /**
      * 处理 updateFilter  使在插入或更新数据时永远过滤 "id", "dateCreated", "dateUpdated" 三个字段
      *
      * @param updateFilter u
-     * @return a {@link cool.scx.sql.base.UpdateFilter} object
+     * @return a {@link UpdateFilter} object
      */
     private static UpdateFilter updateFilterProcessor(UpdateFilter updateFilter) {
         return updateFilter.addExcluded("id", "createdDate", "updatedDate");
     }
 
     /**
-     * 插入数据 (注意 !!! 这里会在插入之后根据主键再次进行一次查询, 若只是进行插入且对性能有要求请使用 {@link cool.scx.sql.base.BaseDao#_insert(Object, UpdateFilter)})
+     * 插入数据 (注意 !!! 这里会在插入之后根据主键再次进行一次查询, 若只是进行插入且对性能有要求请使用 {@link BaseDao#insert(Object, UpdateFilter)})
      *
      * @param entity 待插入的数据
      * @return 插入成功的数据 如果插入失败或数据没有主键则返回 null
@@ -76,14 +76,14 @@ public class BaseModelService<Entity extends BaseModel> {
     }
 
     /**
-     * 插入数据 (注意 !!! 这里会在插入之后根据主键再次进行一次查询, 若只是进行插入且对性能有要求请使用 {@link cool.scx.sql.base.BaseDao#_insert(Object, UpdateFilter)})
+     * 插入数据 (注意 !!! 这里会在插入之后根据主键再次进行一次查询, 若只是进行插入且对性能有要求请使用 {@link cool.scx.dao.BaseDao#insert(Object, UpdateFilter)})
      *
      * @param entity       待插入的数据
      * @param updateFilter 更新字段过滤器
      * @return 插入成功的数据 如果插入失败或数据没有主键则返回 null
      */
     public Entity add(Entity entity, UpdateFilter updateFilter) {
-        var newID = baseDao._insert(entity, updateFilterProcessor(updateFilter));
+        var newID = baseDao.insert(entity, updateFilterProcessor(updateFilter));
         return newID != null ? this.get(newID) : null;
     }
 
@@ -106,7 +106,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 插入成功的数据的自增主键列表
      */
     public List<Long> add(Collection<Entity> entityList, UpdateFilter updateFilter) {
-        return baseDao._insertBatch(entityList, updateFilterProcessor(updateFilter));
+        return baseDao.insertBatch(entityList, updateFilterProcessor(updateFilter));
     }
 
     /**
@@ -139,7 +139,7 @@ public class BaseModelService<Entity extends BaseModel> {
     }
 
     /**
-     * 根据聚合查询条件 {@link cool.scx.sql.base.Query} 获取数据列表
+     * 根据聚合查询条件 {@link Query} 获取数据列表
      *
      * @param query 聚合查询参数对象
      * @return 数据列表
@@ -149,14 +149,14 @@ public class BaseModelService<Entity extends BaseModel> {
     }
 
     /**
-     * 根据聚合查询条件 {@link cool.scx.sql.base.Query} 获取数据列表
+     * 根据聚合查询条件 {@link Query} 获取数据列表
      *
      * @param query        聚合查询参数对象
      * @param selectFilter 查询字段过滤器
      * @return 数据列表
      */
     public List<Entity> list(Query query, SelectFilter selectFilter) {
-        return baseDao._select(query, selectFilter);
+        return baseDao.select(query, selectFilter);
     }
 
     /**
@@ -181,7 +181,7 @@ public class BaseModelService<Entity extends BaseModel> {
     }
 
     /**
-     * 根据聚合查询条件 {@link cool.scx.sql.base.Query} 获取单条数据
+     * 根据聚合查询条件 {@link Query} 获取单条数据
      *
      * @param query 聚合查询参数对象
      * @return 查到多个则返回第一个 没有则返回 null
@@ -191,7 +191,7 @@ public class BaseModelService<Entity extends BaseModel> {
     }
 
     /**
-     * 根据聚合查询条件 {@link cool.scx.sql.base.Query} 获取单条数据
+     * 根据聚合查询条件 {@link Query} 获取单条数据
      *
      * @param query        聚合查询参数对象
      * @param selectFilter 查询字段过滤器
@@ -212,17 +212,17 @@ public class BaseModelService<Entity extends BaseModel> {
     }
 
     /**
-     * 根据聚合查询条件 {@link cool.scx.sql.base.Query} 获取数据条数
+     * 根据聚合查询条件 {@link Query} 获取数据条数
      *
      * @param query 聚合查询参数对象
      * @return 数据条数
      */
     public final long count(Query query) {
-        return baseDao._count(query);
+        return baseDao.count(query);
     }
 
     /**
-     * 根据 ID 更新 (注意 !!! 这里会在更新之后根据主键再次进行一次查询, 若只是进行更新且对性能有要求请使用 {@link cool.scx.sql.base.BaseDao#_update(Object, Query, UpdateFilter)})
+     * 根据 ID 更新 (注意 !!! 这里会在更新之后根据主键再次进行一次查询, 若只是进行更新且对性能有要求请使用 {@link cool.scx.dao.BaseDao#update(Object, Query, UpdateFilter)})
      *
      * @param entity 待更新的数据 ( 注意: 请保证数据中 id 字段不为空 )
      * @return 更新成功后的数据
@@ -232,7 +232,7 @@ public class BaseModelService<Entity extends BaseModel> {
     }
 
     /**
-     * 根据 ID 更新 (注意 !!! 这里会在更新之后根据主键再次进行一次查询, 若只是进行更新且对性能有要求请使用 {@link cool.scx.sql.base.BaseDao#_update(Object, Query, UpdateFilter)})
+     * 根据 ID 更新 (注意 !!! 这里会在更新之后根据主键再次进行一次查询, 若只是进行更新且对性能有要求请使用 {@link cool.scx.dao.BaseDao#update(Object, Query, UpdateFilter)})
      *
      * @param entity       待更新的数据 ( 注意: 请保证数据中 id 字段不为空 )
      * @param updateFilter 更新字段过滤器
@@ -266,7 +266,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 更新成功的数据条数
      */
     public long update(Entity entity, Query query, UpdateFilter updateFilter) {
-        return baseDao._update(entity, query, updateFilterProcessor(updateFilter));
+        return baseDao.update(entity, query, updateFilterProcessor(updateFilter));
     }
 
     /**
@@ -289,64 +289,64 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 被删除的数据条数
      */
     public long delete(Query query) {
-        return baseDao._delete(query);
+        return baseDao.delete(query);
     }
 
     /**
-     * 构建 (根据聚合查询条件 {@link cool.scx.sql.base.Query} 获取数据列表) 的SQL
+     * 构建 (根据聚合查询条件 {@link Query} 获取数据列表) 的SQL
      * <br>
      * 可用于另一条查询语句的 where 条件
      * <br>
-     * 若同时使用 limit 和 in/not in 请使用 {@link cool.scx.core.base.BaseModelService#buildListSQLWithAlias(Query, SelectFilter)}
+     * 若同时使用 limit 和 in/not in 请使用 {@link BaseModelService#buildListSQLWithAlias(Query, SelectFilter)}
      *
      * @param query        聚合查询参数对象
      * @param selectFilter 查询字段过滤器
      * @return listSQL
-     * @see BaseDao#_buildSelectSQL(Query, SelectFilter)
+     * @see BaseDao#buildSelectSQL(Query, SelectFilter)
      */
     public final SQL buildListSQL(Query query, SelectFilter selectFilter) {
-        return baseDao._buildSelectSQL(query, selectFilter);
+        return baseDao.buildSelectSQL(query, selectFilter);
     }
 
     /**
-     * 构建 根据聚合查询条件 {@link cool.scx.sql.base.Query} 获取单条数据 的SQL
+     * 构建 根据聚合查询条件 {@link Query} 获取单条数据 的SQL
      * <br>
      * 可用于另一条查询语句的 where 条件
      * <br>
-     * 若同时使用 limit 和 in/not in 请使用 {@link cool.scx.core.base.BaseModelService#buildListSQLWithAlias(Query, SelectFilter)}
+     * 若同时使用 limit 和 in/not in 请使用 {@link BaseModelService#buildListSQLWithAlias(Query, SelectFilter)}
      *
      * @param query        聚合查询参数对象
      * @param selectFilter 查询字段过滤器
      * @return getSQL
-     * @see BaseDao#_buildSelectSQL(Query, SelectFilter)
+     * @see BaseDao#buildSelectSQL(Query, SelectFilter)
      */
     public final SQL buildGetSQL(Query query, SelectFilter selectFilter) {
         return buildListSQL(query.setPagination(1), selectFilter);
     }
 
     /**
-     * 构建 (根据聚合查询条件 {@link cool.scx.sql.base.Query} 获取数据列表) 的SQL
+     * 构建 (根据聚合查询条件 {@link Query} 获取数据列表) 的SQL
      * <br>
      * 可用于另一条查询语句的 where 条件
      *
      * @param query        聚合查询参数对象
      * @param selectFilter 查询字段过滤器
      * @return listSQL
-     * @see BaseDao#_buildSelectSQL(Query, SelectFilter)
+     * @see BaseDao#buildSelectSQL(Query, SelectFilter)
      */
     public final SQL buildListSQLWithAlias(Query query, SelectFilter selectFilter) {
-        return baseDao._buildSelectSQLWithAlias(query, selectFilter);
+        return baseDao.buildSelectSQLWithAlias(query, selectFilter);
     }
 
     /**
-     * 构建 根据聚合查询条件 {@link cool.scx.sql.base.Query} 获取单条数据 的SQL
+     * 构建 根据聚合查询条件 {@link Query} 获取单条数据 的SQL
      * <br>
      * 可用于另一条查询语句的 where 条件
      *
      * @param query        聚合查询参数对象
      * @param selectFilter 查询字段过滤器
      * @return getSQL
-     * @see BaseDao#_buildSelectSQL(Query, SelectFilter)
+     * @see BaseDao#buildSelectSQL(Query, SelectFilter)
      */
     public final SQL buildGetSQLWithAlias(Query query, SelectFilter selectFilter) {
         return buildListSQLWithAlias(query.setPagination(1), selectFilter);
@@ -355,7 +355,7 @@ public class BaseModelService<Entity extends BaseModel> {
     /**
      * <p>baseDao.</p>
      *
-     * @return a {@link cool.scx.sql.base.BaseDao} object
+     * @return a {@link BaseDao} object
      */
     public BaseDao<Entity> _baseDao() {
         return baseDao;

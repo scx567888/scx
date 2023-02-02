@@ -1,6 +1,6 @@
 package cool.scx.core.base;
 
-import cool.scx.core.annotation.Column;
+import cool.scx.dao.annotation.Column;
 
 import java.time.LocalDateTime;
 

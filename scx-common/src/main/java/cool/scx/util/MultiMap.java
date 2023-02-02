@@ -164,8 +164,16 @@ public final class MultiMap<K, V> {
      *
      * @return a
      */
-    public Map<K, List<V>> asMap() {
+    public Map<K, List<V>> toMultiValueMap() {
         return map;
+    }
+
+    public HashMap<K, V> toSingleValueMap() {
+        var tempMap = new HashMap<K, V>();
+        for (var e : map.entrySet()) {
+            tempMap.put(e.getKey(), e.getValue().get(0));
+        }
+        return tempMap;
     }
 
     /**

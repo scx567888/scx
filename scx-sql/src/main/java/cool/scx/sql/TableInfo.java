@@ -6,10 +6,10 @@ package cool.scx.sql;
  * @author scx567888
  * @version 0.1.3
  */
-public interface TableInfo {
+public interface TableInfo<T extends ColumnInfo> {
 
     String tableName();
 
-    ColumnInfo[] columnInfos();
+    T[] columnInfos();
 
 }

@@ -4,32 +4,33 @@ import cool.scx.config.ScxConfig;
 import cool.scx.config.ScxConfigSource;
 import cool.scx.config.ScxEnvironment;
 import cool.scx.config.ScxFeatureConfig;
-import cool.scx.core.dao.ScxDao;
 import cool.scx.core.enumeration.ScxCoreFeature;
 import cool.scx.core.eventbus.MessageCodecRegistrar;
-import cool.scx.core.http.ScxHttpRouter;
-import cool.scx.core.mvc.ScxMappingConfiguration;
-import cool.scx.core.mvc.ScxMappingRegistrar;
 import cool.scx.core.scheduler.ScxScheduler;
-import cool.scx.core.websocket.ScxWebSocketMappingRegistrar;
-import cool.scx.core.websocket.ScxWebSocketRouter;
-import cool.scx.util.ConsoleUtils;
+import cool.scx.dao.impl.AnnotationConfigTableInfo;
+import cool.scx.mvc.ScxMvc;
+import cool.scx.mvc.ScxMvcOptions;
+import cool.scx.mvc.websocket.ScxWebSocketRouter;
+import cool.scx.sql.SQLHelper;
+import cool.scx.sql.SQLRunner;
 import cool.scx.util.NetUtils;
 import cool.scx.util.StopWatch;
 import cool.scx.util.ansi.Ansi;
 import io.vertx.core.Vertx;
-import io.vertx.core.VertxOptions;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.net.JksOptions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
+import javax.sql.DataSource;
 import java.net.BindException;
 import java.util.Arrays;
-import java.util.Objects;
-import java.util.concurrent.ScheduledExecutorService;
+import java.util.List;
 
-import static cool.scx.core.ScxVersion.SCX_VERSION;
+import static cool.scx.core.ScxHelper.*;
 
 /**
  * 启动类
@@ -39,91 +40,38 @@ import static cool.scx.core.ScxVersion.SCX_VERSION;
  */
 public final class Scx {
 
-    /**
-     * 项目根模块 所在路径
-     * 默认取 所有自定义模块的最后一个 所在的文件根目录
-     */
+    private static final Logger logger = LoggerFactory.getLogger(Scx.class);
+
     private final ScxEnvironment scxEnvironment;
 
-    /**
-     * 项目的 appKey
-     */
     private final String appKey;
 
-    /**
-     * Scx 特性配置文件
-     */
     private final ScxFeatureConfig scxFeatureConfig;
 
-    /**
-     * scxConfig
-     */
     private final ScxConfig scxConfig;
 
-    /**
-     * ScxModule 集合
-     */
     private final ScxModule[] scxModules;
 
-    /**
-     * scxCoreConfig
-     */
     private final ScxOptions scxOptions;
 
-    /**
-     * vertx
-     */
     private final Vertx vertx;
 
-    /**
-     * scxBeanFactory
-     */
-    private final ScxBeanFactory scxBeanFactory;
+    private final DefaultListableBeanFactory beanFactory;
 
-    /**
-     * 模板对象
-     */
-    private final ScxTemplate scxTemplate;
+    private final DataSource dataSource;
 
-    /**
-     * dao
-     */
-    private final ScxDao scxDao;
+    private final SQLRunner sqlRunner;
 
-    /**
-     * a
-     */
-    private final ScxMappingConfiguration scxMappingConfiguration;
+    private final ScxMvc scxMvc;
 
-    /**
-     * 任务调度器
-     */
     private final ScxScheduler scxScheduler;
 
-    /**
-     * 路由
-     */
     private ScxHttpRouter scxHttpRouter = null;
 
-    /**
-     * websocket 路由
-     */
     private ScxWebSocketRouter scxWebSocketRouter = null;
 
-    /**
-     * 后台服务器
-     */
     private HttpServer vertxHttpServer = null;
 
-    /**
-     * 初始化 Scx
-     *
-     * @param scxEnvironment   m
-     * @param appKey           a
-     * @param scxFeatureConfig f
-     * @param scxConfigSources f
-     * @param scxModules       s
-     */
     Scx(ScxEnvironment scxEnvironment, String appKey, ScxFeatureConfig scxFeatureConfig, ScxConfigSource[] scxConfigSources, ScxModule[] scxModules) {
         //0, 赋值到全局
         ScxContext.scx(this);
@@ -135,121 +83,24 @@ public final class Scx {
         this.scxModules = initScxModuleMetadataList(scxModules);
         this.scxOptions = new ScxOptions(this.scxConfig, this.scxEnvironment, this.appKey);
         //2, 初始化 ScxLog 日志框架
-        ScxLoggerConfiguration.init(this.scxConfig, this.scxEnvironment);
+        initScxLoggerFactory(this.scxConfig, this.scxEnvironment);
         //3, 初始化 Vertx 这里在 log4j2 之后初始化是因为 vertx 需要使用 log4j2 打印日志
         this.vertx = initVertx();
         //4, 初始化事件总线
         MessageCodecRegistrar.registerCodec(this.vertx.eventBus());
         //5, 初始化 BeanFactory
-        this.scxBeanFactory = initScxBeanFactory(this.scxModules, this.vertx.nettyEventLoopGroup(), this.scxFeatureConfig);
-        //6, 初始化模板
-        this.scxTemplate = new ScxTemplate(this.scxOptions);
-        //7, 初始化持久层
-        this.scxDao = new ScxDao(this.scxOptions);
-        //8, ScxMapping 配置类
-        this.scxMappingConfiguration = new ScxMappingConfiguration();
-        //9, 初始化任务调度器
+        this.beanFactory = initBeanFactory(this.scxModules, this.vertx.nettyEventLoopGroup(), this.scxFeatureConfig);
+        //6, 初始化数据源及 sqlRunner
+        this.dataSource = initDataSource(this.scxOptions);
+        this.sqlRunner = new SQLRunner(this.dataSource);
+        //7, 初始化 MVC
+        this.scxMvc = new ScxMvc(new ScxMvcOptions().templateRoot(scxOptions.templateRoot()).useDevelopmentErrorPage(scxFeatureConfig.get(ScxCoreFeature.USE_DEVELOPMENT_ERROR_PAGE)));
+        //8, 初始化任务调度器
         this.scxScheduler = new ScxScheduler(this.vertx.nettyEventLoopGroup());
     }
 
-    /**
-     * 在控制台上打印 banner
-     */
-    static void printBanner() {
-        Ansi.out()
-                .red("   ▄████████ ").green(" ▄████████ ").blue("▀████    ▐████▀ ").ln()
-                .red("  ███    ███ ").green("███    ███ ").blue("  ███▌   ████▀  ").ln()
-                .red("  ███    █▀  ").green("███    █▀  ").blue("   ███  ▐███    ").ln()
-                .red("  ███        ").green("███        ").blue("   ▀███▄███▀    ").ln()
-                .red("▀███████████ ").green("███        ").blue("   ████▀██▄     ").ln()
-                .red("         ███ ").green("███    █▄  ").blue("  ▐███  ▀███    ").ln()
-                .red("   ▄█    ███ ").green("███    ███ ").blue(" ▄███     ███▄  ").ln()
-                .red(" ▄████████▀  ").green("████████▀  ").blue("████       ███▄ ").cyan(" Version ").brightCyan(SCX_VERSION).println();
-    }
-
-    /**
-     * 返回一个 builder 对象
-     *
-     * @return b
-     */
     public static ScxBuilder builder() {
         return new ScxBuilder();
-    }
-
-    /**
-     * 获取新的可用的端口号 (使用弹窗让用户进行选择)
-     *
-     * @param port a
-     * @return a
-     */
-    private static boolean isUseNewPort(int port) {
-        while (true) {
-            var errMessage = """
-                    *******************************************************
-                    *                                                     *
-                    *         端口号 [ %s ] 已被占用, 是否采用新端口号 ?       *
-                    *                                                     *
-                    *                [Y]es    |    [N]o                   *
-                    *                                                     *
-                    *******************************************************
-                    """;
-            System.err.printf((errMessage) + System.lineSeparator(), port);
-            var result = ConsoleUtils.readLine().trim();
-            if ("Y".equalsIgnoreCase(result)) {
-                return true;
-            } else if ("N".equalsIgnoreCase(result)) {
-                var ignoreMessage = """
-                        *******************************************
-                        *                                         *
-                        *     N 端口号被占用!!! 服务器启动失败 !!!      *
-                        *                                         *
-                        *******************************************
-                        """;
-                System.err.println(ignoreMessage);
-                System.exit(-1);
-                return false;
-            }
-        }
-    }
-
-    /**
-     * 初始化 bean 工厂
-     *
-     * @param modules                  s
-     * @param scheduledExecutorService s
-     * @param scxFeatureConfig         a
-     * @return r
-     */
-    private static ScxBeanFactory initScxBeanFactory(ScxModule[] modules, ScheduledExecutorService scheduledExecutorService, ScxFeatureConfig scxFeatureConfig) {
-        var beanClass = Arrays.stream(modules)
-                .flatMap(c -> c.classList().stream())
-                .filter(ScxHelper::isBeanClass)
-                .toArray(Class<?>[]::new);
-        return new ScxBeanFactory(scheduledExecutorService, scxFeatureConfig).registerBeanDefinition(beanClass);
-    }
-
-    /**
-     * <p>initVertx.</p>
-     *
-     * @return a {@link io.vertx.core.Vertx} object
-     */
-    private static Vertx initVertx() {
-        var vertxOptions = new VertxOptions();
-        return Vertx.vertx(vertxOptions);
-    }
-
-    /**
-     * <p>initScxModuleMetadataList.</p>
-     *
-     * @param scxModules an array of {@link cool.scx.core.ScxModule} objects
-     * @return a {@link java.util.List} object
-     */
-    private static ScxModule[] initScxModuleMetadataList(ScxModule[] scxModules) {
-        //2, 检查模块参数是否正确
-        if (scxModules == null || Arrays.stream(scxModules).noneMatch(Objects::nonNull)) {
-            throw new IllegalArgumentException("Modules must not be empty !!!");
-        }
-        return scxModules;
     }
 
     /**
@@ -259,12 +110,12 @@ public final class Scx {
         if (this.scxFeatureConfig.get(ScxCoreFeature.SHOW_MODULE_LIFE_CYCLE_INFO)) {
             for (var m : scxModules) {
                 Ansi.out().brightWhite("[").brightGreen("Starting").brightWhite("] " + m.name()).println();
-                m.start();
+                m.start(this);
                 Ansi.out().brightWhite("[").brightGreen("Start OK").brightWhite("] " + m.name()).println();
             }
         } else {
             for (var m : scxModules) {
-                m.start();
+                m.start(this);
             }
         }
     }
@@ -276,12 +127,12 @@ public final class Scx {
         if (this.scxFeatureConfig.get(ScxCoreFeature.SHOW_MODULE_LIFE_CYCLE_INFO)) {
             for (var m : scxModules) {
                 Ansi.out().brightWhite("[").brightRed("Stopping").brightWhite("] " + m.name()).println();
-                m.stop();
+                m.stop(this);
                 Ansi.out().brightWhite("[").brightRed("Stop  OK").brightWhite("] " + m.name()).println();
             }
         } else {
             for (var m : scxModules) {
-                m.stop();
+                m.stop(this);
             }
         }
     }
@@ -294,7 +145,7 @@ public final class Scx {
         StopWatch.start("ScxRun");
         //1, 根据配置打印一下 banner 或者配置文件信息之类
         if (this.scxFeatureConfig.get(ScxCoreFeature.SHOW_BANNER)) {
-            printBanner();
+            ScxVersion.printBanner();
         }
         if (this.scxFeatureConfig.get(ScxCoreFeature.SHOW_OPTIONS_INFO)) {
             this.scxOptions.printInfo();
@@ -303,15 +154,15 @@ public final class Scx {
         this.scxHttpRouter = new ScxHttpRouter(this);
         this.scxWebSocketRouter = new ScxWebSocketRouter();
         //3, 注册 ScxMapping 和 ScxWebSocketMapping 注解的 handler 到 路由中去
-        new ScxMappingRegistrar(this).registerRoute(this.scxHttpRouter.vertxRouter());
-        new ScxWebSocketMappingRegistrar(this).registerRoute(this.scxWebSocketRouter);
+        var classList = Arrays.stream(this.scxModules()).flatMap(c -> c.classList().stream()).toList();
+        this.scxMvc.bindErrorHandler(this.scxHttpRouter).registerHttpRoutes(scxHttpRouter, beanFactory, classList).registerWebSocketRoutes(scxWebSocketRouter, beanFactory, classList);
         //4, 依次执行 模块的 start 生命周期 , 在这里我们可以操作 scxRouteRegistry, vertxRouter 等对象 "手动注册新路由" 或其他任何操作
         this.startAllScxModules();
         //5, 打印基本信息
         if (this.scxFeatureConfig.get(ScxCoreFeature.SHOW_START_UP_INFO)) {
             Ansi.out()
-                    .brightYellow("已加载 " + this.scxBeanFactory.getBeanDefinitionNames().length + " 个 Bean !!!").ln()
-                    .brightGreen("已加载 " + this.scxHttpRouter.vertxRouter().getRoutes().size() + " 个 Http 路由 !!!").ln()
+                    .brightYellow("已加载 " + this.beanFactory.getBeanDefinitionNames().length + " 个 Bean !!!").ln()
+                    .brightGreen("已加载 " + this.scxHttpRouter.getRoutes().size() + " 个 Http 路由 !!!").ln()
                     .brightBlue("已加载 " + this.scxWebSocketRouter.getRoutes().size() + " 个 WebSocket 路由 !!!").println();
         }
         //6, 初始化服务器
@@ -323,13 +174,13 @@ public final class Scx {
                             .setPassword(this.scxOptions.sslPassword()));
         }
         this.vertxHttpServer = vertx.createHttpServer(httpServerOptions);
-        this.vertxHttpServer.requestHandler(this.scxHttpRouter.vertxRouter()).webSocketHandler(this.scxWebSocketRouter);
+        this.vertxHttpServer.requestHandler(this.scxHttpRouter).webSocketHandler(this.scxWebSocketRouter);
         //7, 添加程序停止时的钩子函数
         this.addShutdownHook();
         //8, 使用初始端口号 启动服务器
         this.startServer(this.scxOptions.port());
         //9, 此处刷新 scxBeanFactory 使其实例化所有符合条件的 Bean
-        this.scxBeanFactory.refresh();
+        this.beanFactory.preInstantiateSingletons();
     }
 
     /**
@@ -359,49 +210,104 @@ public final class Scx {
         });
     }
 
-    /**
-     * a
-     *
-     * @return a
-     */
-    public ScxEnvironment scxEnvironment() {
-        return scxEnvironment;
+    private void addShutdownHook() {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            this.stopAllScxModules();
+            Ansi.out().red("项目正在停止!!!").println();
+        }));
     }
 
     /**
-     * a
+     * 检查数据源是否可用
      *
-     * @return a
+     * @return b
      */
-    public Vertx vertx() {
-        return vertx;
+    public boolean checkDataSource() {
+        try (var conn = dataSource.getConnection()) {
+            var dm = conn.getMetaData();
+            logger.debug("数据源连接成功 : 类型 [{}]  版本 [{}]", dm.getDatabaseProductName(), dm.getDatabaseProductVersion());
+            return true;
+        } catch (Exception e) {
+            dataSourceExceptionHandler(e);
+            return false;
+        }
     }
 
     /**
-     * a
-     *
-     * @return a
+     * <p>fixTable.</p>
      */
-    public String appKey() {
-        return appKey;
+    public void fixTable() {
+        logger.debug("修复数据表结构中...");
+        var databaseName = this.scxOptions.dataSourceDatabase();
+        //修复成功的表
+        var fixSuccess = 0;
+        //修复失败的表
+        var fixFail = 0;
+        //不需要修复的表
+        var noNeedToFix = 0;
+        for (var v : getAllScxBaseModelClassList()) {
+            //根据 class 获取 tableInfo
+            var tableInfo = new AnnotationConfigTableInfo(v);
+            try {
+                if (SQLHelper.checkNeedFixTable(tableInfo, databaseName, dataSource)) {
+                    SQLHelper.fixTable(tableInfo, databaseName, dataSource);
+                    fixSuccess = fixSuccess + 1;
+                } else {
+                    noNeedToFix = noNeedToFix + 1;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                fixFail = fixFail + 1;
+            }
+        }
+
+        if (fixSuccess != 0) {
+            logger.debug("修复成功 {} 张表...", fixSuccess);
+        }
+        if (fixFail != 0) {
+            logger.warn("修复失败 {} 张表...", fixFail);
+        }
+        if (fixSuccess + fixFail == 0) {
+            logger.debug("没有表需要修复...");
+        }
+
     }
 
     /**
-     * a
+     * 获取所有 class
      *
-     * @return a
+     * @return s
      */
-    public ScxModule[] scxModules() {
-        return Arrays.copyOf(scxModules, scxModules.length);
+    private List<Class<?>> getAllScxBaseModelClassList() {
+        return Arrays.stream(scxModules)
+                .flatMap(c -> c.classList().stream())
+                .filter(ScxHelper::isScxBaseModelClass)// 继承自 BaseModel
+                .toList();
     }
 
     /**
-     * <p>findScxModule.</p>
+     * 检查是否有任何 (BaseModel) 类需要修复表
      *
-     * @param clazz a {@link java.lang.Class} object
-     * @param <T>   a T class
-     * @return a {@link cool.scx.core.ScxModule} object
+     * @return 是否有
      */
+    public boolean checkNeedFixTable() {
+        logger.debug("检查数据表结构中...");
+        var databaseName = this.scxOptions.dataSourceDatabase();
+        for (var v : getAllScxBaseModelClassList()) {
+            //根据 class 获取 tableInfo
+            var tableInfo = new AnnotationConfigTableInfo(v);
+            try {
+                //有任何需要修复的直接 返回 true
+                if (SQLHelper.checkNeedFixTable(tableInfo, databaseName, dataSource)) {
+                    return true;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
     @SuppressWarnings("unchecked")
     public <T extends ScxModule> T findScxModule(Class<T> clazz) {
         for (var m : this.scxModules) {
@@ -412,121 +318,66 @@ public final class Scx {
         return null;
     }
 
-    /**
-     * a
-     *
-     * @return a
-     */
+    public ScxModule[] scxModules() {
+        return Arrays.copyOf(scxModules, scxModules.length);
+    }
+
+    public ScxEnvironment scxEnvironment() {
+        return scxEnvironment;
+    }
+
+    public Vertx vertx() {
+        return vertx;
+    }
+
+    public String appKey() {
+        return appKey;
+    }
+
     public ScxOptions scxOptions() {
         return scxOptions;
     }
 
-    /**
-     * a
-     *
-     * @return a
-     */
-    public ScxBeanFactory scxBeanFactory() {
-        return scxBeanFactory;
+    public DefaultListableBeanFactory beanFactory() {
+        return beanFactory;
     }
 
-    /**
-     * a
-     *
-     * @return a
-     */
     public ScxHttpRouter scxHttpRouter() {
         return this.scxHttpRouter;
     }
 
-    /**
-     * a
-     *
-     * @return a
-     */
-    public ScxTemplate scxTemplate() {
-        return scxTemplate;
-    }
-
-    /**
-     * a
-     *
-     * @return a
-     */
     public ScxConfig scxConfig() {
         return scxConfig;
     }
 
-    /**
-     * 获取特性的值 如果没有显式设置 则返回默认值
-     *
-     * @return s
-     */
     public ScxFeatureConfig scxFeatureConfig() {
         return scxFeatureConfig;
     }
 
-    /**
-     * dao
-     *
-     * @return dao
-     */
-    public ScxDao scxDao() {
-        return scxDao;
+    public DataSource dataSource() {
+        return dataSource;
     }
 
-    /**
-     * server
-     *
-     * @return vertxHttpServer
-     */
+    public SQLRunner sqlRunner() {
+        return sqlRunner;
+    }
+
     public HttpServer vertxHttpServer() {
         return vertxHttpServer;
     }
 
-    /**
-     * server
-     *
-     * @return ScxServer
-     */
     public EventBus eventBus() {
         return vertx.eventBus();
     }
 
-    /**
-     * web
-     *
-     * @return w
-     */
     public ScxWebSocketRouter scxWebSocketRouter() {
         return scxWebSocketRouter;
     }
 
-    /**
-     * a
-     *
-     * @return a
-     */
-    public ScxMappingConfiguration scxMappingConfiguration() {
-        return scxMappingConfiguration;
+    public ScxMvc scxMvc() {
+        return scxMvc;
     }
 
-    /**
-     * 添加监听事件
-     * 目前只监听项目停止事件
-     */
-    private void addShutdownHook() {
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            this.stopAllScxModules();
-            Ansi.out().red("项目正在停止!!!").println();
-        }));
-    }
-
-    /**
-     * a
-     *
-     * @return a
-     */
     public ScxScheduler scxScheduler() {
         return scxScheduler;
     }

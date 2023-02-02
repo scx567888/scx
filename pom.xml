@@ -11,7 +11,7 @@
 
     <artifactId>scx</artifactId>
     <packaging>pom</packaging>
-    <version>2.0.8</version>
+    <version>2.0.9</version>
 
     <name>SCX</name>
     <url>https://github.com/scx567888/scx</url>
@@ -44,7 +44,9 @@
         <module>scx-common</module>
         <module>scx-config</module>
         <module>scx-core</module>
+        <module>scx-dao</module>
         <module>scx-logging</module>
+        <module>scx-mvc</module>
         <module>scx-sql</module>
     </modules>
 
@@ -66,7 +68,7 @@
                     <!-- 所以在这里手动排除资源文件 , 具体文件说明见下方 -->
                     <excludes>
                         <!-- 默认 git 占位空文件 -->
-                        <exclude>/.gitkeep/</exclude>
+                        <exclude>/.gitkeep</exclude>
                     </excludes>
                 </configuration>
             </plugin>

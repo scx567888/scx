@@ -31,13 +31,17 @@ public class ZipBuilder {
 
     }
 
+    public ZipBuilder(Path path) {
+        this.put(path);
+    }
+
     /**
      * <p>Constructor for ZipBuilder.</p>
      *
      * @param path       a {@link java.nio.file.Path} object
-     * @param zipOptions a {@link cool.scx.util.zip.ZipOption} object
+     * @param zipOptions a {@link cool.scx.util.zip.ZipOptions} object
      */
-    public ZipBuilder(Path path, ZipOption... zipOptions) {
+    public ZipBuilder(Path path, ZipOptions zipOptions) {
         this.put(path, zipOptions);
     }
 
@@ -59,9 +63,13 @@ public class ZipBuilder {
      * @param zipOptions a {@link java.io.File} object
      * @return a
      */
-    public ZipBuilder put(Path path, ZipOption... zipOptions) {
+    public ZipBuilder put(Path path, ZipOptions zipOptions) {
         items.add(new ZipBuilderItem("", path, zipOptions));
         return this;
+    }
+
+    public ZipBuilder put(Path path) {
+        return this.put(path, new ZipOptions());
     }
 
     /**
@@ -69,10 +77,10 @@ public class ZipBuilder {
      *
      * @param path       a {@link java.lang.String} object
      * @param zipPath    a {@link java.io.File} object
-     * @param zipOptions a {@link cool.scx.util.zip.ZipOption} object
+     * @param zipOptions a {@link cool.scx.util.zip.ZipOptions} object
      * @return a
      */
-    public ZipBuilder put(String zipPath, Path path, ZipOption... zipOptions) {
+    public ZipBuilder put(String zipPath, Path path, ZipOptions zipOptions) {
         items.add(new ZipBuilderItem(zipPath, path, zipOptions));
         return this;
     }
@@ -116,13 +124,13 @@ public class ZipBuilder {
     /**
      * <p>remove.</p>
      *
-     * @param path a {@link java.lang.String} object
+     * @param zipPath a {@link java.lang.String} object
      * @return a
      */
-    public ZipBuilder remove(String path) {
-        var p = normalize(path);
-        if (StringUtils.notBlank(path)) {
-            items.removeIf(c -> c.path.startsWith(p));
+    public ZipBuilder remove(String zipPath) {
+        var p = normalize(zipPath);
+        if (StringUtils.notBlank(zipPath)) {
+            items.removeIf(c -> c.zipPath.startsWith(p));
         }
         return this;
     }
@@ -139,15 +147,11 @@ public class ZipBuilder {
         }
     }
 
-    /**
-     * 将 virtualFile 转换为 byte 数组 方便前台用户下载使用
-     *
-     * @return a
-     * @throws java.lang.Exception a
-     */
-    public byte[] toBytes() throws Exception {
+    public byte[] toBytes(ZipOptions zipOptions) throws Exception {
         var bo = new ByteArrayOutputStream();
-        try (var zos = new ZipOutputStream(bo)) {
+        try (var zos = new ZipOutputStream(bo, zipOptions.charset())) {
+            zos.setComment(zipOptions.comment());
+            zos.setLevel(zipOptions.level());
             //遍历目录
             writeToZipOutputStream(zos);
         }
@@ -155,17 +159,35 @@ public class ZipBuilder {
     }
 
     /**
+     * 将 virtualFile 转换为 byte 数组 方便前台用户下载使用
+     *
+     * @return a
+     * @throws java.lang.Exception a
+     */
+    public byte[] toBytes() throws Exception {
+        return toBytes(new ZipOptions());
+    }
+
+    /**
      * 将一个虚拟文件压缩
      *
      * @param outputPath a
+     * @return a
      * @throws java.io.IOException if any.
      */
-    public void toFile(Path outputPath) throws IOException {
+    public Path toFile(Path outputPath, ZipOptions zipOptions) throws IOException {
         // 创建一个新的空的输出文件的临时文件
         Files.createDirectories(outputPath.getParent());
-        try (var zos = new ZipOutputStream(Files.newOutputStream(outputPath))) {
+        try (var zos = new ZipOutputStream(Files.newOutputStream(outputPath), zipOptions.charset())) {
+            zos.setComment(zipOptions.comment());
+            zos.setLevel(zipOptions.level());
             writeToZipOutputStream(zos);
         }
+        return outputPath;
+    }
+
+    public Path toFile(Path outputPath) throws IOException {
+        return toFile(outputPath, new ZipOptions());
     }
 
 }

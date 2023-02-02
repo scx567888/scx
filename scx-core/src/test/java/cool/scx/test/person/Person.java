@@ -1,9 +1,9 @@
 package cool.scx.test.person;
 
-import cool.scx.core.annotation.ScxModel;
 import cool.scx.core.base.BaseModel;
+import cool.scx.dao.annotation.Table;
 
-@ScxModel(tablePrefix = "scx")
+@Table(tablePrefix = "scx")
 public class Person extends BaseModel {
     /**
      * 关联的 汽车 ID

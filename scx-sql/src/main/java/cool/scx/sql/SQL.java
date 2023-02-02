@@ -52,7 +52,7 @@ public interface SQL {
      * @return a
      * @throws java.sql.SQLException a
      */
-    PreparedStatement getPreparedStatement(Connection con) throws SQLException;
+    PreparedStatement prepareStatement(Connection con) throws SQLException;
 
     /**
      * 数组类型的参数值

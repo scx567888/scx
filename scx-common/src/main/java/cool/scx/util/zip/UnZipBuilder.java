@@ -64,10 +64,10 @@ public class UnZipBuilder extends ZipDataSource {
      * @param zipOptions a
      * @throws java.io.IOException a
      */
-    public void toFile(Path outputPath, ZipOption... zipOptions) throws IOException {
+    public void toFile(Path outputPath, ZipOptions zipOptions) throws IOException {
         Files.createDirectories(outputPath);
         var rootPath = getRootPath(zipOptions);
-        try (var zis = new ZipInputStream(toInputStream())) {
+        try (var zis = new ZipInputStream(toInputStream(), zipOptions.charset())) {
             // 遍历每一个文件
             var zipEntry = zis.getNextEntry();
             while (zipEntry != null) {
@@ -84,17 +84,20 @@ public class UnZipBuilder extends ZipDataSource {
         }
     }
 
+    public void toFile(Path outputPath) throws IOException {
+        toFile(outputPath, new ZipOptions());
+    }
+
     /**
      * <p>getRootPath.</p>
      *
-     * @param zipOptions a {@link cool.scx.util.zip.ZipOption} object
+     * @param zipOptions a {@link cool.scx.util.zip.ZipOptions} object
      * @return a {@link java.lang.String} object
      */
-    public String getRootPath(ZipOption... zipOptions) {
-        var info = new ZipOption.Info(zipOptions);
+    public String getRootPath(ZipOptions zipOptions) {
         var fileName = path.getFileName().toString();
         var fileNameWithoutExtension = FileUtils.getFileNameWithoutExtension(fileName);
-        return this.type == PATH && info.includeRoot() ? addSlashEnd(fileNameWithoutExtension) : "";
+        return this.type == PATH && zipOptions.includeRoot() ? addSlashEnd(fileNameWithoutExtension) : "";
     }
 
 }
