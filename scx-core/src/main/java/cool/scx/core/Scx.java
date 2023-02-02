@@ -1,7 +1,5 @@
 package cool.scx.core;
 
-import com.mysql.cj.jdbc.MysqlDataSource;
-import com.zaxxer.hikari.HikariDataSource;
 import cool.scx.config.ScxConfig;
 import cool.scx.config.ScxConfigSource;
 import cool.scx.config.ScxEnvironment;
@@ -15,32 +13,24 @@ import cool.scx.mvc.ScxMvcOptions;
 import cool.scx.mvc.websocket.ScxWebSocketRouter;
 import cool.scx.sql.SQLHelper;
 import cool.scx.sql.SQLRunner;
-import cool.scx.util.ConsoleUtils;
 import cool.scx.util.NetUtils;
 import cool.scx.util.StopWatch;
 import cool.scx.util.ansi.Ansi;
 import io.vertx.core.Vertx;
-import io.vertx.core.VertxOptions;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.net.JksOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.AnnotatedGenericBeanDefinition;
-import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
-import org.springframework.context.annotation.AnnotationConfigUtils;
-import org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor;
 
 import javax.sql.DataSource;
 import java.net.BindException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.ScheduledExecutorService;
 
-import static cool.scx.core.ScxVersion.SCX_VERSION;
+import static cool.scx.core.ScxHelper.*;
 
 /**
  * 启动类
@@ -93,217 +83,24 @@ public final class Scx {
         this.scxModules = initScxModuleMetadataList(scxModules);
         this.scxOptions = new ScxOptions(this.scxConfig, this.scxEnvironment, this.appKey);
         //2, 初始化 ScxLog 日志框架
-        ScxLoggerConfiguration.init(this.scxConfig, this.scxEnvironment);
+        initScxLoggerFactory(this.scxConfig, this.scxEnvironment);
         //3, 初始化 Vertx 这里在 log4j2 之后初始化是因为 vertx 需要使用 log4j2 打印日志
         this.vertx = initVertx();
         //4, 初始化事件总线
         MessageCodecRegistrar.registerCodec(this.vertx.eventBus());
         //5, 初始化 BeanFactory
         this.beanFactory = initBeanFactory(this.scxModules, this.vertx.nettyEventLoopGroup(), this.scxFeatureConfig);
-        //6, 初始化持久层
-        this.dataSource = getHikariDataSource(getMySQLDataSource(this.scxOptions));
+        //6, 初始化数据源及 sqlRunner
+        this.dataSource = initDataSource(this.scxOptions);
         this.sqlRunner = new SQLRunner(this.dataSource);
-        this.beanFactory.registerSingleton("sqlRunner", sqlRunner);
         //7, 初始化 MVC
         this.scxMvc = new ScxMvc(new ScxMvcOptions().templateRoot(scxOptions.templateRoot()).useDevelopmentErrorPage(scxFeatureConfig.get(ScxCoreFeature.USE_DEVELOPMENT_ERROR_PAGE)));
         //8, 初始化任务调度器
         this.scxScheduler = new ScxScheduler(this.vertx.nettyEventLoopGroup());
     }
 
-    /**
-     * 在控制台上打印 banner
-     */
-    static void printBanner() {
-        Ansi.out()
-                .red("   ▄████████ ").green(" ▄████████ ").blue("▀████    ▐████▀ ").ln()
-                .red("  ███    ███ ").green("███    ███ ").blue("  ███▌   ████▀  ").ln()
-                .red("  ███    █▀  ").green("███    █▀  ").blue("   ███  ▐███    ").ln()
-                .red("  ███        ").green("███        ").blue("   ▀███▄███▀    ").ln()
-                .red("▀███████████ ").green("███        ").blue("   ████▀██▄     ").ln()
-                .red("         ███ ").green("███    █▄  ").blue("  ▐███  ▀███    ").ln()
-                .red("   ▄█    ███ ").green("███    ███ ").blue(" ▄███     ███▄  ").ln()
-                .red(" ▄████████▀  ").green("████████▀  ").blue("████       ███▄ ").cyan(" Version ").brightCyan(SCX_VERSION).println();
-    }
-
-    /**
-     * 返回一个 builder 对象
-     *
-     * @return b
-     */
     public static ScxBuilder builder() {
         return new ScxBuilder();
-    }
-
-    /**
-     * 获取新的可用的端口号 (使用弹窗让用户进行选择)
-     *
-     * @param port a
-     * @return a
-     */
-    private static boolean isUseNewPort(int port) {
-        while (true) {
-            var errMessage = """
-                    *******************************************************
-                    *                                                     *
-                    *         端口号 [ %s ] 已被占用, 是否采用新端口号 ?       *
-                    *                                                     *
-                    *                [Y]es    |    [N]o                   *
-                    *                                                     *
-                    *******************************************************
-                    """;
-            System.err.printf((errMessage) + System.lineSeparator(), port);
-            var result = ConsoleUtils.readLine().trim();
-            if ("Y".equalsIgnoreCase(result)) {
-                return true;
-            } else if ("N".equalsIgnoreCase(result)) {
-                var ignoreMessage = """
-                        *******************************************
-                        *                                         *
-                        *     N 端口号被占用!!! 服务器启动失败 !!!      *
-                        *                                         *
-                        *******************************************
-                        """;
-                System.err.println(ignoreMessage);
-                System.exit(-1);
-                return false;
-            }
-        }
-    }
-
-    /**
-     * 初始化 bean 工厂
-     *
-     * @param modules                  s
-     * @param scheduledExecutorService s
-     * @param scxFeatureConfig         a
-     * @return r
-     */
-    private static DefaultListableBeanFactory initBeanFactory(ScxModule[] modules, ScheduledExecutorService scheduledExecutorService, ScxFeatureConfig scxFeatureConfig) {
-        var beanFactory = new DefaultListableBeanFactory();
-        //这里添加一个 bean 的后置处理器以便可以使用 @Autowired 注解
-        var beanPostProcessor = new AutowiredAnnotationBeanPostProcessor();
-        beanPostProcessor.setBeanFactory(beanFactory);
-        beanFactory.addBeanPostProcessor(beanPostProcessor);
-        //只有 开启标识时才 启用定时任务 这里直接跳过 后置处理器
-        if (scxFeatureConfig.get(ScxCoreFeature.ENABLE_SCHEDULING_WITH_ANNOTATION)) {
-            //这里在添加一个 bean 的后置处理器 以便使用 定时任务 注解
-            var scheduledAnnotationBeanPostProcessor = new ScheduledAnnotationBeanPostProcessor();
-            scheduledAnnotationBeanPostProcessor.setBeanFactory(beanFactory);
-            scheduledAnnotationBeanPostProcessor.setScheduler(scheduledExecutorService);
-            scheduledAnnotationBeanPostProcessor.afterSingletonsInstantiated();
-            beanFactory.addBeanPostProcessor(scheduledAnnotationBeanPostProcessor);
-        }
-        //设置是否允许循环依赖 (默认禁止循环依赖)
-        beanFactory.setAllowCircularReferences(scxFeatureConfig.get(ScxCoreFeature.ALLOW_CIRCULAR_REFERENCES));
-        //注册 bean
-        var beanClass = Arrays.stream(modules)
-                .flatMap(c -> c.classList().stream())
-                .filter(ScxHelper::isBeanClass)
-                .toArray(Class<?>[]::new);
-
-        for (var c : beanClass) {
-            var beanDefinition = new AnnotatedGenericBeanDefinition(c);
-            //这里是为了兼容 spring context 的部分注解
-            AnnotationConfigUtils.processCommonDefinitionAnnotations(beanDefinition);
-            beanFactory.registerBeanDefinition(c.getName(), beanDefinition);
-        }
-        return beanFactory;
-    }
-
-    /**
-     * <p>initVertx.</p>
-     *
-     * @return a {@link io.vertx.core.Vertx} object
-     */
-    private static Vertx initVertx() {
-        var vertxOptions = new VertxOptions();
-        return Vertx.vertx(vertxOptions);
-    }
-
-    /**
-     * <p>initScxModuleMetadataList.</p>
-     *
-     * @param scxModules an array of {@link cool.scx.core.ScxModule} objects
-     * @return a {@link java.util.List} object
-     */
-    private static ScxModule[] initScxModuleMetadataList(ScxModule[] scxModules) {
-        //2, 检查模块参数是否正确
-        if (scxModules == null || Arrays.stream(scxModules).noneMatch(Objects::nonNull)) {
-            throw new IllegalArgumentException("Modules must not be empty !!!");
-        }
-        return scxModules;
-    }
-
-    /**
-     * HikariDataSource 初始化 HikariDataSource 数据源 （此处内部使用连接池提高性能）
-     *
-     * @param mysqlDataSource s
-     * @return s
-     */
-    private static DataSource getHikariDataSource(MysqlDataSource mysqlDataSource) {
-        var hikariDataSource = new HikariDataSource();
-        hikariDataSource.setDataSource(mysqlDataSource);
-        return hikariDataSource;
-    }
-
-    /**
-     * 初始化 MySQL 数据源
-     *
-     * @param scxOptions a {@link cool.scx.core.ScxOptions} object
-     * @return MySQL 数据源
-     */
-    private static MysqlDataSource getMySQLDataSource(ScxOptions scxOptions) {
-        var mysqlDataSource = new MysqlDataSource();
-        mysqlDataSource.setServerName(scxOptions.dataSourceHost());
-        mysqlDataSource.setDatabaseName(scxOptions.dataSourceDatabase());
-        mysqlDataSource.setUser(scxOptions.dataSourceUsername());
-        mysqlDataSource.setPassword(scxOptions.dataSourcePassword());
-        mysqlDataSource.setPort(scxOptions.dataSourcePort());
-        // 设置参数值
-        for (var parameter : scxOptions.dataSourceParameters()) {
-            var p = parameter.split("=");
-            if (p.length == 2) {
-                var property = mysqlDataSource.getProperty(p[0]);
-                property.setValue(property.getPropertyDefinition().parseObject(p[1], null));
-            }
-        }
-        return mysqlDataSource;
-    }
-
-    /**
-     * 数据源连接异常
-     *
-     * @param e a {@link java.lang.Exception} object.
-     */
-    public static void dataSourceExceptionHandler(Exception e) {
-        while (true) {
-            var errMessage = """
-                    **************************************************************
-                    *                                                            *
-                    *           X 数据源连接失败 !!! 是否忽略错误并继续运行 ?            *
-                    *                                                            *
-                    *        [Y] 忽略错误并继续运行    |     [N] 退出程序              *
-                    *                                                            *
-                    **************************************************************
-                    """;
-            System.err.println(errMessage);
-            var result = ConsoleUtils.readLine().trim();
-            if ("Y".equalsIgnoreCase(result)) {
-                var ignoreMessage = """
-                        *******************************************
-                        *                                         *
-                        *       N 数据源链接错误,用户已忽略 !!!         *
-                        *                                         *
-                        *******************************************
-                        """;
-                System.err.println(ignoreMessage);
-                break;
-            } else if ("N".equalsIgnoreCase(result)) {
-                e.printStackTrace();
-                System.exit(-1);
-                break;
-            }
-        }
     }
 
     /**
@@ -348,7 +145,7 @@ public final class Scx {
         StopWatch.start("ScxRun");
         //1, 根据配置打印一下 banner 或者配置文件信息之类
         if (this.scxFeatureConfig.get(ScxCoreFeature.SHOW_BANNER)) {
-            printBanner();
+            ScxVersion.printBanner();
         }
         if (this.scxFeatureConfig.get(ScxCoreFeature.SHOW_OPTIONS_INFO)) {
             this.scxOptions.printInfo();
