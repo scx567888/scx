@@ -1,7 +1,7 @@
 package cool.scx.dao;
 
 import cool.scx.dao.annotation.NoColumn;
-import cool.scx.dao.annotation.ScxModel;
+import cool.scx.dao.annotation.Table;
 import cool.scx.sql.TableInfo;
 import cool.scx.util.CaseUtils;
 import cool.scx.util.StringUtils;
@@ -53,7 +53,7 @@ public final class ScxDaoTableInfo implements TableInfo<ScxDaoColumnInfo> {
      * @return a
      */
     private static String initTableName(Class<?> clazz) {
-        var scxModel = clazz.getAnnotation(ScxModel.class);
+        var scxModel = clazz.getAnnotation(Table.class);
         if (scxModel != null && StringUtils.notBlank(scxModel.tableName())) {
             return scxModel.tableName();
         }

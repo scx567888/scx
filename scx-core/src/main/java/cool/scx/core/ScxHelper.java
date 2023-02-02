@@ -3,7 +3,7 @@ package cool.scx.core;
 import cool.scx.core.annotation.ScxComponent;
 import cool.scx.core.annotation.ScxService;
 import cool.scx.core.base.BaseModel;
-import cool.scx.dao.annotation.ScxModel;
+import cool.scx.dao.annotation.Table;
 import cool.scx.mvc.annotation.ScxMapping;
 import cool.scx.mvc.annotation.ScxWebSocketMapping;
 import cool.scx.util.ClassUtils;
@@ -29,7 +29,7 @@ public final class ScxHelper {
      */
     private static final List<Class<? extends Annotation>> beanFilterAnnotation = List.of(
             //scx 注解
-            ScxComponent.class, ScxMapping.class, ScxModel.class, ScxService.class, ScxWebSocketMapping.class,
+            ScxComponent.class, ScxMapping.class, Table.class, ScxService.class, ScxWebSocketMapping.class,
             //兼容 spring 注解
             Component.class, Controller.class, Service.class, Repository.class);
 
@@ -55,7 +55,7 @@ public final class ScxHelper {
      * @return a
      */
     public static boolean isScxBaseModelClass(Class<?> c) {
-        return c.isAnnotationPresent(ScxModel.class) // 拥有注解
+        return c.isAnnotationPresent(Table.class) // 拥有注解
                 && ClassUtils.isInstantiableClass(c) // 是一个可以不需要其他参数直接生成实例化的对象
                 && BaseModel.class.isAssignableFrom(c);
     }

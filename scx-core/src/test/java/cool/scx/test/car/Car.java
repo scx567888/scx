@@ -2,9 +2,9 @@ package cool.scx.test.car;
 
 import cool.scx.core.base.BaseModel;
 import cool.scx.dao.annotation.Column;
-import cool.scx.dao.annotation.ScxModel;
+import cool.scx.dao.annotation.Table;
 
-@ScxModel(tablePrefix = "test")
+@Table(tablePrefix = "test")
 public class Car extends BaseModel {
 
     @Column(unique = true)
