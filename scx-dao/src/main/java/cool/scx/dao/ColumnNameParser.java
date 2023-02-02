@@ -2,9 +2,9 @@ package cool.scx.dao;
 
 import static cool.scx.util.StringUtils.notBlank;
 
-public class ColumnNameParser {
+public final class ColumnNameParser {
 
-    public static String parseColumnName(AnnotationConfigTableInfo tableInfo, String name, boolean useJsonExtract, boolean useOriginalName) {
+    public static String parseColumnName(BaseDaoTableInfo<?> tableInfo, String name, boolean useJsonExtract, boolean useOriginalName) {
         if (useJsonExtract) {
             var c = splitIntoColumnNameAndFieldPath(name);
             if (notBlank(c.columnName()) && notBlank(c.fieldPath())) {
