@@ -79,8 +79,8 @@ English | [简体中文](./README.zh-CN.md)
 ``` java
 import cool.scx.core.Scx;
 import cool.scx.core.ScxModule;
-import cool.scx.core.annotation.ScxMapping;
-import cool.scx.core.enumeration.HttpMethod;
+import cool.scx.enumeration.HttpMethod;
+import cool.scx.mvc.annotation.ScxMapping;
 
 // Note : Custom modules need extends ScxModule
 // This @ScxMapping indicate this class needs to be scanned by WebHandler
