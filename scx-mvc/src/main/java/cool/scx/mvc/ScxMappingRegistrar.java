@@ -109,7 +109,7 @@ final class ScxMappingRegistrar {
      * @return a
      */
     private static List<ScxMappingHandler> fillRouteState(List<ScxMappingHandler> list) {
-        var tempRouter = Router.router(Vertx.vertx());
+        var tempRouter = Router.router(null);
         return list.stream().peek(c -> c.setRouteState(getRouteState(tempRouter.route(c.originalUrl)))).toList();
     }
 
