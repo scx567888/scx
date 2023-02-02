@@ -1,6 +1,9 @@
 package cool.scx.dao;
 
-import cool.scx.sql.*;
+import cool.scx.sql.ColumnInfo;
+import cool.scx.sql.ResultHandler;
+import cool.scx.sql.SQL;
+import cool.scx.sql.SQLRunner;
 import cool.scx.sql.result_handler.BeanListHandler;
 import cool.scx.sql.result_handler.SingleValueHandler;
 import cool.scx.util.RandomUtils;
@@ -328,7 +331,7 @@ public class BaseDao<Entity> {
         this.sqlRunner.execute(SQL.ofNormal("truncate " + tableInfo.tableName()));
     }
 
-    public final TableInfo<? extends BaseDaoColumnInfo> _tableInfo() {
+    public final BaseDaoTableInfo<?> _tableInfo() {
         return this.tableInfo;
     }
 

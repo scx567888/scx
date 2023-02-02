@@ -52,8 +52,14 @@ final class ScxMappingRegistrar {
     }
 
     private static List<ScxMappingHandler> initScxMappingHandlers(ScxMvc scxMvc, BeanFactory beanFactory, List<Class<?>> classList) {
-        var filteredMethod = filterMethod(classList);
-        var handlers = filteredMethod.stream().map(m -> createScxMappingHandler(beanFactory, m, scxMvc)).toList();
+        var filteredClassList = filterClass(classList);
+        var handlers = new ArrayList<ScxMappingHandler>();
+        for (var c : filteredClassList) {
+            var methods = filterMethod(c);
+            for (var m : methods) {
+                handlers.add(createScxMappingHandler(m, c, beanFactory, scxMvc));
+            }
+        }
         return sortedScxMappingHandlers(handlers);
     }
 
@@ -112,13 +118,17 @@ final class ScxMappingRegistrar {
         return list.stream().peek(c -> c.setRouteState(getRouteState(tempRouter.route(c.originalUrl)))).toList();
     }
 
-    private static ScxMappingHandler createScxMappingHandler(BeanFactory beanFactory, Method m, ScxMvc scxMvc) {
-        var bean = beanFactory.getBean(m.getDeclaringClass());
-        return new ScxMappingHandler(m, bean, scxMvc);
+    private static ScxMappingHandler createScxMappingHandler(Method m, Class<?> c, BeanFactory beanFactory, ScxMvc scxMvc) {
+        var bean = beanFactory.getBean(c);
+        return new ScxMappingHandler(m, c, bean, scxMvc);
     }
 
-    private static List<Method> filterMethod(List<Class<?>> classList) {
-        return classList.stream().filter(ScxMappingRegistrar::isScxMappingClass).flatMap(c -> Arrays.stream(c.getMethods())).filter(ScxMappingRegistrar::isScxMappingMethod).toList();
+    private static List<Class<?>> filterClass(List<Class<?>> classList) {
+        return classList.stream().filter(ScxMappingRegistrar::isScxMappingClass).toList();
+    }
+
+    private static List<Method> filterMethod(Class<?> clazz) {
+        return Arrays.stream(clazz.getMethods()).filter(ScxMappingRegistrar::isScxMappingMethod).toList();
     }
 
     /**
