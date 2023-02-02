@@ -25,11 +25,6 @@ import java.util.stream.Stream;
 public final class ScxHttpRouter extends RouterImpl {
 
     /**
-     * 默认 http 请求 body 限制大小
-     */
-    private static final long DEFAULT_BODY_LIMIT = FileUtils.displaySizeToLong("16384KB");
-
-    /**
      * Constant <code>defaultAllowedMethods</code>
      */
     private static final Set<HttpMethod> DEFAULT_ALLOWED_METHODS = Set.of(
@@ -53,6 +48,12 @@ public final class ScxHttpRouter extends RouterImpl {
     private static final Set<String> DEFAULT_EXPOSED_HEADERS = toSet(
             HttpHeaderNames.CONTENT_DISPOSITION
     );
+
+    /**
+     * 默认 http 请求 body 限制大小
+     */
+    private static final long DEFAULT_BODY_LIMIT = FileUtils.displaySizeToLong("16384KB");
+
     //基本 handler
     private final CorsHandler corsHandler;
     private final BodyHandler bodyHandler;
