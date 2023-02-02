@@ -248,7 +248,7 @@ public final class URIBuilder {
      * @return a
      */
     public Map<String, List<String>> getAllParams() {
-        return queryParams.asMap();
+        return queryParams.toMultiValueMap();
     }
 
     /**
