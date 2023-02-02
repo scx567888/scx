@@ -1,5 +1,6 @@
-package cool.scx.dao;
+package cool.scx.dao.impl;
 
+import cool.scx.dao.BaseDaoColumnInfo;
 import cool.scx.dao.annotation.Column;
 
 import java.lang.reflect.Field;

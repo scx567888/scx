@@ -1,6 +1,6 @@
 package cool.scx.dao.group_by;
 
-import cool.scx.dao.AnnotationConfigTableInfo;
+import cool.scx.dao.BaseDaoTableInfo;
 import cool.scx.util.StringUtils;
 
 import static cool.scx.dao.ColumnNameParser.parseColumnName;
@@ -21,7 +21,7 @@ record GroupByBody(String name, GroupByOption.Info info) {
         this.info = info;
     }
 
-    String groupByColumn(AnnotationConfigTableInfo tableInfo) {
+    String groupByColumn(BaseDaoTableInfo<?> tableInfo) {
         return parseColumnName(tableInfo, this.name, info.useJsonExtract(), info.useOriginalName());
     }
 
