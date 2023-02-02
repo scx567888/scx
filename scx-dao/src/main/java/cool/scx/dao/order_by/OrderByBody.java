@@ -1,6 +1,6 @@
 package cool.scx.dao.order_by;
 
-import cool.scx.dao.AnnotationConfigTableInfo;
+import cool.scx.dao.BaseDaoTableInfo;
 import cool.scx.util.StringUtils;
 
 import static cool.scx.dao.ColumnNameParser.parseColumnName;
@@ -25,7 +25,7 @@ record OrderByBody(String name, OrderByType orderByType, OrderByOption.Info info
         this.info = info;
     }
 
-    String orderByClause(AnnotationConfigTableInfo tableInfo) {
+    String orderByClause(BaseDaoTableInfo<?> tableInfo) {
         var columnName = parseColumnName(tableInfo, this.name, info.useJsonExtract(), info.useOriginalName());
         return columnName + " " + orderByType.name();
     }
