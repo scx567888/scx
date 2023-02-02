@@ -1,7 +1,9 @@
 package cool.scx.dao.order_by;
 
-import cool.scx.sql.SQLHelper;
+import cool.scx.dao.AnnotationConfigTableInfo;
 import cool.scx.util.StringUtils;
+
+import static cool.scx.dao.ColumnNameParser.parseColumnName;
 
 /**
  * OrderBy 封装体
@@ -9,19 +11,8 @@ import cool.scx.util.StringUtils;
  * @author scx567888
  * @version 0.0.1
  */
-final class OrderByBody {
+record OrderByBody(String name, OrderByType orderByType, OrderByOption.Info info) {
 
-    private final String name;
-
-    private final String orderByClause;
-
-    /**
-     * <p>Constructor for OrderByBody.</p>
-     *
-     * @param name        a {@link java.lang.String} object
-     * @param orderByType a {@link OrderByType} object
-     * @param info        a boolean
-     */
     OrderByBody(String name, OrderByType orderByType, OrderByOption.Info info) {
         if (StringUtils.isBlank(name)) {
             throw new IllegalArgumentException("OrderBy 参数错误 : 名称 不能为空 !!!");
@@ -30,26 +21,13 @@ final class OrderByBody {
             throw new IllegalArgumentException("OrderBy 参数错误 : orderByType 不能为空 !!!");
         }
         this.name = name.trim();
-        var columnName = SQLHelper.getColumnName(this.name, info.useJsonExtract(), info.useOriginalName());
-        this.orderByClause = columnName + " " + orderByType.name();
+        this.orderByType = orderByType;
+        this.info = info;
     }
 
-    /**
-     * <p>name.</p>
-     *
-     * @return a {@link java.lang.String} object
-     */
-    String name() {
-        return name;
-    }
-
-    /**
-     * <p>orderByClause.</p>
-     *
-     * @return a {@link java.lang.String} object
-     */
-    String orderByClause() {
-        return orderByClause;
+    String orderByClause(AnnotationConfigTableInfo tableInfo) {
+        var columnName = parseColumnName(tableInfo, this.name, info.useJsonExtract(), info.useOriginalName());
+        return columnName + " " + orderByType.name();
     }
 
 }

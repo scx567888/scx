@@ -1,5 +1,7 @@
 package cool.scx.dao.group_by;
 
+import cool.scx.dao.AnnotationConfigTableInfo;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,9 +74,9 @@ public final class GroupBy {
      *
      * @return an array of {@link java.lang.String} objects
      */
-    public String[] getGroupByColumns() {
+    public String[] getGroupByColumns(AnnotationConfigTableInfo tableInfo) {
         //此处去重
-        return groupByBodyList.stream().map(GroupByBody::groupByColumn).distinct().toArray(String[]::new);
+        return groupByBodyList.stream().map(c -> c.groupByColumn(tableInfo)).distinct().toArray(String[]::new);
     }
 
 }
