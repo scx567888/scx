@@ -1,11 +1,14 @@
 package cool.scx.test;
 
-import cool.scx.beans.ScxBeanFactory;
 import cool.scx.mvc.ScxMvc;
 import cool.scx.mvc.ScxMvcOptions;
 import cool.scx.mvc.exception.ForbiddenException;
 import io.vertx.core.Vertx;
 import io.vertx.ext.web.Router;
+import org.springframework.beans.factory.annotation.AnnotatedGenericBeanDefinition;
+import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.context.annotation.AnnotationConfigUtils;
 import org.testng.annotations.Test;
 
 import java.util.List;
@@ -56,7 +59,7 @@ public class ScxMvcTest {
      */
     public static void test1() {
         List<Class<?>> classList = List.of(HelloWorldController.class);
-        var beanFactory = new ScxBeanFactory().register(classList.toArray(Class[]::new)).refresh().springBeanFactory();
+        var beanFactory = getBeanFactory(classList);
 
         var vertx = Vertx.vertx();
 
@@ -80,6 +83,25 @@ public class ScxMvcTest {
                     System.out.println("http://127.0.0.1:8080/no-perm");
                     System.out.println("http://127.0.0.1:8080/vertx-route");
                 });
+    }
+
+    private static DefaultListableBeanFactory getBeanFactory(List<Class<?>> classList) {
+        var beanFactory = new DefaultListableBeanFactory();
+        //这里添加一个 bean 的后置处理器以便可以使用 @Autowired 注解
+        var beanPostProcessor = new AutowiredAnnotationBeanPostProcessor();
+        beanPostProcessor.setBeanFactory(beanFactory);
+        beanFactory.addBeanPostProcessor(beanPostProcessor);
+
+        //设置是否允许循环依赖 (默认禁止循环依赖)
+        beanFactory.setAllowCircularReferences(true);
+
+        for (var c : classList) {
+            var beanDefinition = new AnnotatedGenericBeanDefinition(c);
+            //这里是为了兼容 spring context 的部分注解
+            AnnotationConfigUtils.processCommonDefinitionAnnotations(beanDefinition);
+            beanFactory.registerBeanDefinition(c.getName(), beanDefinition);
+        }
+        return beanFactory;
     }
 
 }

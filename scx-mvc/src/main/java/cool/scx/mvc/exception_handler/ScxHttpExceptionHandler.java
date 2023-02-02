@@ -2,7 +2,7 @@ package cool.scx.mvc.exception_handler;
 
 import cool.scx.mvc.ScxHttpRouterExceptionHandler;
 import cool.scx.mvc.exception.ScxHttpException;
-import cool.scx.util.HttpUtils;
+import cool.scx.mvc.vo.BaseVo;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.ScxExceptionHelper;
 import io.netty.handler.codec.http.HttpHeaderNames;
@@ -71,14 +71,14 @@ public class ScxHttpExceptionHandler implements ScxHttpRouterExceptionHandler {
         //根据 accept 返回不同的错误信息
         if (accept != null && accept.toLowerCase().contains("text/html")) {
             var htmlStr = String.format(htmlTemplate, title, statusCode, title, info);
-            HttpUtils.fillHtmlContentType(routingContext.request().response().setStatusCode(statusCode)).end(htmlStr);
+            BaseVo.fillHtmlContentType(routingContext.request().response().setStatusCode(statusCode)).end(htmlStr);
         } else {
             var tempMap = new LinkedHashMap<>();
             tempMap.put("statusCode", statusCode);
             tempMap.put("title", title);
             tempMap.put("info", info);
             var jsonStr = ObjectUtils.toJson(tempMap, "");
-            HttpUtils.fillJsonContentType(routingContext.request().response().setStatusCode(statusCode)).end(jsonStr);
+            BaseVo.fillJsonContentType(routingContext.request().response().setStatusCode(statusCode)).end(jsonStr);
         }
     }
 

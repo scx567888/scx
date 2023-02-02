@@ -27,9 +27,8 @@
         </dependency>
 
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>scx-beans</artifactId>
-            <version>${project.version}</version>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
         </dependency>
 
         <dependency>
