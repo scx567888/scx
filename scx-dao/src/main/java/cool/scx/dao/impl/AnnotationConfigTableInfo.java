@@ -77,7 +77,7 @@ public final class AnnotationConfigTableInfo extends BaseDaoTableInfo<Annotation
         for (var entry : map.entrySet()) {
             var v = entry.getValue();
             if (v.size() > 1) { //具有多个相同的 columnName 值
-                throw new IllegalArgumentException("重复的 columnName Class -> " + clazz.getName() + ", " + v);
+                throw new IllegalArgumentException("重复的 columnName !!! Class -> " + clazz.getName() + ", Field -> " + v.stream().map(BaseDaoColumnInfo::javaFieldName).toList());
             }
         }
     }
