@@ -35,7 +35,6 @@ public final class ScxMvc {
     private final LastReturnValueHandler lastReturnValueHandler;
     private final List<ScxMvcParameterHandler> parameterHandlers = new ArrayList<>();
     private final LastParameterHandler lastParameterHandler;
-    private final ScxMvcOptions options;
     private final ScxTemplateHandler templateHandler;
     private ScxMvcInterceptor interceptor = new ScxMappingInterceptorImpl();
 
@@ -44,7 +43,6 @@ public final class ScxMvc {
     }
 
     public ScxMvc(ScxMvcOptions options) {
-        this.options = options;
         this.templateHandler = new ScxTemplateHandler(options.templateRoot());
         //初始化默认的异常处理器
         addExceptionHandler(new ScxHttpExceptionHandler(options.useDevelopmentErrorPage()));
