@@ -1,5 +1,6 @@
 package cool.scx.sql.field_setter;
 
+import cool.scx.sql.ColumnInfo;
 import cool.scx.sql.FieldSetter;
 
 import java.lang.reflect.Field;
@@ -14,8 +15,8 @@ import java.sql.SQLException;
  */
 public class NormalFieldSetter extends FieldSetter {
 
-    public NormalFieldSetter(Field field) {
-        super(field);
+    public NormalFieldSetter(Field field, ColumnInfo columnInfo) {
+        super(field, columnInfo);
     }
 
     @Override

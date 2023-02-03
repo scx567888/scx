@@ -14,36 +14,16 @@ import java.sql.SQLException;
  */
 public interface BeanBuilder<T> {
 
-    /**
-     * <p>of.</p>
-     *
-     * @param type a {@link java.lang.Class} object
-     * @param <T>  a T class
-     * @return a {@link cool.scx.sql.BeanBuilder} object
-     */
     static <T> BeanBuilder<T> of(Class<T> type) {
-        if (type.isRecord()) {
-            return new RecordBeanBuilder<>(type);
-        } else {
-            return new NormalBeanBuilder<>(type);
-        }
+        return type.isRecord() ? new RecordBeanBuilder<>(type) : new NormalBeanBuilder<>(type);
     }
 
-    /**
-     * <p>createBean.</p>
-     *
-     * @param rs        a ResultSet object
-     * @param indexInfo an array of {@link int} objects
-     * @return a T object
-     * @throws java.sql.SQLException if any.
-     */
+    static <T> BeanBuilder<T> of(Class<T> type, TableInfo<?> tableInfo) {
+        return type.isRecord() ? new RecordBeanBuilder<>(type, tableInfo) : new NormalBeanBuilder<>(type, tableInfo);
+    }
+
     T createBean(ResultSet rs, int[] indexInfo) throws SQLException;
 
-    /**
-     * <p>fieldSetters.</p>
-     *
-     * @return an array of {@link cool.scx.sql.FieldSetter} objects
-     */
     FieldSetter[] fieldSetters();
 
 }

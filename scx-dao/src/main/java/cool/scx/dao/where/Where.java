@@ -1,9 +1,9 @@
 package cool.scx.dao.where;
 
-import cool.scx.dao.BaseDaoTableInfo;
 import cool.scx.dao.where.exception.ValidParamListIsEmptyException;
 import cool.scx.dao.where.exception.WrongWhereTypeParamSizeException;
 import cool.scx.sql.SQL;
+import cool.scx.sql.TableInfo;
 import cool.scx.util.StringUtils;
 
 import java.util.ArrayList;
@@ -400,7 +400,7 @@ public final class Where {
         return this;
     }
 
-    public WhereParamsAndWhereClauses getWhereParamsAndWhereClauses(BaseDaoTableInfo<?> tableInfo) {
+    public WhereParamsAndWhereClauses getWhereParamsAndWhereClauses(TableInfo<?> tableInfo) {
         //先处理 whereBodyList
         var whereClauses = new ArrayList<String>();
         var whereParams = new ArrayList<>();

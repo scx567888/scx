@@ -16,18 +16,10 @@ import java.util.function.Supplier;
  */
 public final class MapHandler implements ResultHandler<Map<String, Object>> {
 
-    /**
-     * Constant <code>DEFAULT_MAP_LIST_HANDLER</code>
-     */
-    public static final MapHandler DEFAULT_MAP_HANDLER = new MapHandler();
-
-    /**
-     * a
-     */
     public final Supplier<Map<String, Object>> mapSupplier;
 
     public MapHandler() {
-        this.mapSupplier = HashMap::new;
+        this(HashMap::new);
     }
 
     public MapHandler(Supplier<Map<String, Object>> mapSupplier) {

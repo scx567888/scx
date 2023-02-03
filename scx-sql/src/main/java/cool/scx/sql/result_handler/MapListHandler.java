@@ -18,28 +18,12 @@ import java.util.function.Supplier;
  */
 public final class MapListHandler implements ResultHandler<List<Map<String, Object>>> {
 
-    /**
-     * Constant <code>DEFAULT_MAP_LIST_HANDLER</code>
-     */
-    public static final MapListHandler DEFAULT_MAP_LIST_HANDLER = new MapListHandler();
-
-    /**
-     * a
-     */
     private final Supplier<Map<String, Object>> mapSupplier;
 
-    /**
-     * <p>Constructor for MapListHandler.</p>
-     */
     public MapListHandler() {
-        this.mapSupplier = HashMap::new;
+        this(HashMap::new);
     }
 
-    /**
-     * a
-     *
-     * @param mapSupplier a
-     */
     public MapListHandler(Supplier<Map<String, Object>> mapSupplier) {
         this.mapSupplier = mapSupplier;
     }

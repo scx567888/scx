@@ -5,6 +5,7 @@ import cool.scx.dao.BaseDao;
 import cool.scx.dao.Query;
 import cool.scx.dao.SelectFilter;
 import cool.scx.dao.UpdateFilter;
+import cool.scx.dao._old.OldBaseDao;
 import cool.scx.dao.impl.AnnotationConfigTableInfo;
 import cool.scx.dao.where.WhereBody;
 import cool.scx.logging.ScxLoggerFactory;
@@ -60,6 +61,15 @@ public class ScxDaoTest {
         System.out.println("查询 : " + a1.size());
         var a2 = userDao.select(new Query().whereSQL("( not_id > 300 or ", WhereBody.equal("age", "123"), " )"), SelectFilter.ofExcluded());
         System.out.println("查询 : " + a2.size());
+
+        //旧版 BaseDao
+        var oldUserDao = new OldBaseDao<>(userTableInfo, User.class, sqlRunner);
+        var newIds2 = oldUserDao.insertBatch(list, UpdateFilter.ofExcluded());
+        System.out.println("Old 插入 : " + newIds2);
+        var a12 = oldUserDao.select(new Query().greaterThan("id", 300), SelectFilter.ofExcluded());
+        System.out.println("Old 查询 : " + a12.size());
+        var a22 = oldUserDao.select(new Query().whereSQL("( not_id > 300 or ", WhereBody.equal("age", "123"), " )"), SelectFilter.ofExcluded());
+        System.out.println("Old 查询 : " + a22.size());
     }
 
     private static MysqlDataSource getMySQLDataSource() {

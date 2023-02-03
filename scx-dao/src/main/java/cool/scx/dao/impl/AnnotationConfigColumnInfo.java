@@ -1,6 +1,6 @@
 package cool.scx.dao.impl;
 
-import cool.scx.dao.BaseDaoColumnInfo;
+import cool.scx.dao._old.OldBaseDaoColumnInfo;
 import cool.scx.dao.annotation.Column;
 
 import java.lang.reflect.Field;
@@ -15,8 +15,9 @@ import static cool.scx.util.StringUtils.notBlank;
  * @author scx567888
  * @version 1.11.8
  */
-public final class AnnotationConfigColumnInfo extends BaseDaoColumnInfo {
+public final class AnnotationConfigColumnInfo extends OldBaseDaoColumnInfo {
 
+    private final Field javaField;
     private final String columnName;
     private final String type;
     private final boolean needIndex;
@@ -33,7 +34,7 @@ public final class AnnotationConfigColumnInfo extends BaseDaoColumnInfo {
      * @param javaField a
      */
     public AnnotationConfigColumnInfo(Field javaField) {
-        super(javaField);
+        this.javaField = javaField;
         var column = javaField.getAnnotation(Column.class);
         if (column != null) {
             this.type = notBlank(column.type()) ? column.type() : getMySQLTypeCreateName(javaField.getType());
@@ -56,6 +57,11 @@ public final class AnnotationConfigColumnInfo extends BaseDaoColumnInfo {
             this.autoIncrement = false;
             this.notNull = false;
         }
+    }
+
+    @Override
+    public Field javaField() {
+        return javaField;
     }
 
     @Override

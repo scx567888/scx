@@ -1,6 +1,5 @@
 package cool.scx.sql.result_handler;
 
-
 import cool.scx.sql.BeanBuilder;
 import cool.scx.sql.ResultHandler;
 
@@ -21,13 +20,8 @@ public class BeanListHandler<T> implements ResultHandler<List<T>> {
 
     protected final BeanBuilder<T> beanBuilder;
 
-    /**
-     * a
-     *
-     * @param type a
-     */
-    public BeanListHandler(Class<T> type) {
-        this.beanBuilder = BeanBuilder.of(type);
+    public BeanListHandler(BeanBuilder<T> beanBuilder) {
+        this.beanBuilder = beanBuilder;
     }
 
     /**

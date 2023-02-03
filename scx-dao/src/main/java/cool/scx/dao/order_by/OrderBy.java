@@ -1,6 +1,6 @@
 package cool.scx.dao.order_by;
 
-import cool.scx.dao.BaseDaoTableInfo;
+import cool.scx.sql.TableInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +81,7 @@ public final class OrderBy {
      *
      * @return an array of {@link java.lang.String} objects
      */
-    public String[] getOrderByClauses(BaseDaoTableInfo<?> tableInfo) {
+    public String[] getOrderByClauses(TableInfo<?> tableInfo) {
         return orderByBodyList.stream().map(c -> c.orderByClause(tableInfo)).toArray(String[]::new);
     }
 

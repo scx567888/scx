@@ -18,8 +18,8 @@ public class BeanHandler<T> implements ResultHandler<T> {
 
     protected final BeanBuilder<T> beanBuilder;
 
-    public BeanHandler(Class<T> type) {
-        this.beanBuilder = BeanBuilder.of(type);
+    public BeanHandler(BeanBuilder<T> beanBuilder) {
+        this.beanBuilder = beanBuilder;
     }
 
     @Override

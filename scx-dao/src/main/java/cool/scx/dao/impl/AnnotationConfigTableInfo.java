@@ -1,9 +1,9 @@
 package cool.scx.dao.impl;
 
-import cool.scx.dao.BaseDaoColumnInfo;
-import cool.scx.dao.BaseDaoTableInfo;
 import cool.scx.dao.annotation.NoColumn;
 import cool.scx.dao.annotation.Table;
+import cool.scx.sql.ColumnInfo;
+import cool.scx.sql.TableInfo;
 import cool.scx.util.CaseUtils;
 import cool.scx.util.MultiMap;
 import cool.scx.util.StringUtils;
@@ -19,7 +19,7 @@ import java.util.stream.Stream;
  * @author scx567888
  * @version 0.5.0
  */
-public final class AnnotationConfigTableInfo extends BaseDaoTableInfo<AnnotationConfigColumnInfo> {
+public final class AnnotationConfigTableInfo implements TableInfo<AnnotationConfigColumnInfo> {
 
     /**
      * 实体类型不含 @NoColumn 注解的field
@@ -59,7 +59,7 @@ public final class AnnotationConfigTableInfo extends BaseDaoTableInfo<Annotation
                 .map(AnnotationConfigColumnInfo::new)
                 .toList();
         checkDuplicateColumnName(list, clazz);
-        return list.stream().collect(Collectors.toMap(BaseDaoColumnInfo::javaFieldName, c -> c));
+        return list.stream().collect(Collectors.toMap(ColumnInfo::javaFieldName, c -> c));
     }
 
     /**
@@ -77,7 +77,7 @@ public final class AnnotationConfigTableInfo extends BaseDaoTableInfo<Annotation
         for (var entry : map.entrySet()) {
             var v = entry.getValue();
             if (v.size() > 1) { //具有多个相同的 columnName 值
-                throw new IllegalArgumentException("重复的 columnName !!! Class -> " + clazz.getName() + ", Field -> " + v.stream().map(BaseDaoColumnInfo::javaFieldName).toList());
+                throw new IllegalArgumentException("重复的 columnName !!! Class -> " + clazz.getName() + ", Field -> " + v.stream().map(ColumnInfo::javaFieldName).toList());
             }
         }
     }

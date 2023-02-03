@@ -1,5 +1,7 @@
 package cool.scx.sql;
 
+import java.lang.reflect.Field;
+
 /**
  * <p>ColumnInfo.</p>
  *
@@ -8,10 +10,27 @@ package cool.scx.sql;
  */
 public interface ColumnInfo {
 
+    Field javaField();
+
+    default String javaFieldName() {
+        return this.javaField().getName();
+    }
+
+    default Object javaFieldValue(Object target) {
+        try {
+            return this.javaField().get(target);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     /**
      * 列名称 (数据库中的列名称)
      */
-    String columnName();
+    default String columnName() {
+        return javaFieldName();
+    }
 
     default boolean notNull() {
         return false;

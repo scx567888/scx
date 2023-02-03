@@ -1,21 +1,14 @@
-package cool.scx.dao;
+package cool.scx.dao._old;
 
 import cool.scx.sql.ColumnInfo;
-
-import java.lang.reflect.Field;
 
 /**
  * BaseDaoColumnInfo
  */
-public class BaseDaoColumnInfo implements ColumnInfo {
+public abstract class OldBaseDaoColumnInfo implements ColumnInfo {
 
-    protected final Field javaField;
     protected String updateSetSQL;
     protected String selectSQL;
-
-    public BaseDaoColumnInfo(Field javaField) {
-        this.javaField = javaField;
-    }
 
     /**
      * 更新时的 sql 片段 强烈建议提前生成好!!! 以提高性能
@@ -68,34 +61,6 @@ public class BaseDaoColumnInfo implements ColumnInfo {
      */
     public final String insertValuesSQL() {
         return "?";
-    }
-
-    /**
-     * 对应 java 的字段的名称 用于过滤
-     *
-     * @return a
-     */
-    public Object javaFieldValue(Object target) {
-        try {
-            return this.javaField.get(target);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    @Override
-    public String columnName() {
-        return javaFieldName();
-    }
-
-    /**
-     * 获取字段值
-     *
-     * @return a
-     */
-    public String javaFieldName() {
-        return this.javaField.getName();
     }
 
 }
