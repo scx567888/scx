@@ -2,6 +2,7 @@ package cool.scx.sql.bean_builder;
 
 import cool.scx.sql.BeanBuilder;
 import cool.scx.sql.FieldSetter;
+import cool.scx.sql.TableInfo;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -19,6 +20,11 @@ public final class NormalBeanBuilder<T> implements BeanBuilder<T> {
     private final Constructor<T> constructor;
 
     private final FieldSetter[] fieldSetters;
+
+    public NormalBeanBuilder(Class<T> type, TableInfo<?> tableInfo) {
+        this.constructor = findConstructor(type);
+        this.fieldSetters = FieldSetter.ofArray(type.getFields(), tableInfo);
+    }
 
     public NormalBeanBuilder(Class<T> type) {
         this.constructor = findConstructor(type);

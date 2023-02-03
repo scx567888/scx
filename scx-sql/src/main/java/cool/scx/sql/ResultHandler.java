@@ -26,6 +26,10 @@ public interface ResultHandler<T> extends ScxFunction<ResultSet, T, SQLException
      * @param <T>  a T class
      * @return a {@link cool.scx.sql.ResultHandler} object
      */
+    static <T> ResultHandler<List<T>> ofBeanList(Class<T> type, TableInfo<?> tableInfo) {
+        return new BeanListHandler<>(type, tableInfo);
+    }
+
     static <T> ResultHandler<List<T>> ofBeanList(Class<T> type) {
         return new BeanListHandler<>(type);
     }

@@ -21,11 +21,13 @@ import java.util.Map;
 public abstract class FieldSetter {
 
     protected final Field field;
+    protected final String columnName;
 
     protected final Type fieldGenericType;
 
-    public FieldSetter(Field field) {
+    public FieldSetter(Field field, ColumnInfo columnInfo) {
         this.field = field;
+        this.columnName = columnInfo == null ? field.getName() : columnInfo.columnName();
         this.fieldGenericType = field.getGenericType();
         this.field.setAccessible(true);
     }
@@ -46,7 +48,7 @@ public abstract class FieldSetter {
         }
         var indexInfo = new int[fieldSetters.length];
         for (int i = 0; i < fieldSetters.length; i = i + 1) {
-            indexInfo[i] = nameIndexMap.getOrDefault(fieldSetters[i].getName(), -1);
+            indexInfo[i] = nameIndexMap.getOrDefault(fieldSetters[i].columnName(), -1);
         }
         return indexInfo;
     }
@@ -59,6 +61,22 @@ public abstract class FieldSetter {
         return map;
     }
 
+    public static Map<String, FieldSetter> ofMap(Field[] fields, TableInfo<?> tableInfo) {
+        var map = new HashMap<String, FieldSetter>();
+        for (var field : fields) {
+            map.put(field.getName(), of(field, tableInfo.getColumnInfo(field.getName())));
+        }
+        return map;
+    }
+
+    public static FieldSetter[] ofArray(Field[] fields, TableInfo<?> tableInfo) {
+        var arr = new FieldSetter[fields.length];
+        for (int i = 0; i < fields.length; i = i + 1) {
+            arr[i] = of(fields[i], tableInfo.getColumnInfo(fields[i].getName()));
+        }
+        return arr;
+    }
+
     public static FieldSetter[] ofArray(Field[] fields) {
         var arr = new FieldSetter[fields.length];
         for (int i = 0; i < fields.length; i = i + 1) {
@@ -67,15 +85,19 @@ public abstract class FieldSetter {
         return arr;
     }
 
-    public static FieldSetter of(Field field) {
+    public static FieldSetter of(Field field, ColumnInfo columnInfo) {
         var filedType = field.getType();
         if (SQLHelper.getMySQLType(filedType) != null) {
-            return new NormalFieldSetter(field);
+            return new NormalFieldSetter(field, columnInfo);
         } else if (filedType.isEnum()) {
-            return new EnumFieldSetter(field);
+            return new EnumFieldSetter(field, columnInfo);
         } else {
-            return new JsonFieldSetter(field);
+            return new JsonFieldSetter(field, columnInfo);
         }
+    }
+
+    public static FieldSetter of(Field field) {
+        return of(field, null);
     }
 
     public void set(Object t, ResultSet s, int index) throws SQLException {
@@ -89,8 +111,8 @@ public abstract class FieldSetter {
         }
     }
 
-    public String getName() {
-        return field.getName();
+    public String columnName() {
+        return columnName;
     }
 
     public abstract Object getObject(ResultSet s, int index) throws SQLException;

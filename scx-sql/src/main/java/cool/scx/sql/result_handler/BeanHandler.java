@@ -2,6 +2,7 @@ package cool.scx.sql.result_handler;
 
 import cool.scx.sql.BeanBuilder;
 import cool.scx.sql.ResultHandler;
+import cool.scx.sql.TableInfo;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,8 +19,8 @@ public class BeanHandler<T> implements ResultHandler<T> {
 
     protected final BeanBuilder<T> beanBuilder;
 
-    public BeanHandler(Class<T> type) {
-        this.beanBuilder = BeanBuilder.of(type);
+    public BeanHandler(Class<T> type, TableInfo<?> tableInfo) {
+        this.beanBuilder = BeanBuilder.of(type, tableInfo);
     }
 
     @Override

@@ -1,9 +1,9 @@
 package cool.scx.dao.where;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import cool.scx.dao.BaseDaoTableInfo;
 import cool.scx.dao.where.exception.ValidParamListIsEmptyException;
 import cool.scx.sql.SQL;
+import cool.scx.sql.TableInfo;
 import cool.scx.util.StringUtils;
 
 import java.util.ArrayList;
@@ -155,6 +155,6 @@ interface WhereTypeHandler {
         return new WhereParamsAndWhereClause(whereParams, whereClause);
     };
 
-    WhereParamsAndWhereClause getWhereParamsAndWhereClause(BaseDaoTableInfo<?> tableInfo, String name, WhereType whereType, Object value1, Object value2, WhereOption.Info info);
+    WhereParamsAndWhereClause getWhereParamsAndWhereClause(TableInfo<?> tableInfo, String name, WhereType whereType, Object value1, Object value2, WhereOption.Info info);
 
 }

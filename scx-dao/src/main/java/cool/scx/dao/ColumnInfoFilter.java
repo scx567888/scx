@@ -1,5 +1,7 @@
 package cool.scx.dao;
 
+import cool.scx.sql.ColumnInfo;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -118,15 +120,15 @@ public abstract class ColumnInfoFilter<E extends ColumnInfoFilter<E>> {
      * @param scxDaoColumnInfos 带过滤的列表
      * @return 过滤后的列表
      */
-    public final BaseDaoColumnInfo[] filter(BaseDaoColumnInfo... scxDaoColumnInfos) {
+    public final ColumnInfo[] filter(ColumnInfo... scxDaoColumnInfos) {
         return this.fieldNames.size() == 0 ? switch (this.filterMode) {
-            case INCLUDED -> new BaseDaoColumnInfo[0];
+            case INCLUDED -> new ColumnInfo[0];
             case EXCLUDED -> scxDaoColumnInfos;
         } : switch (this.filterMode) {
             case INCLUDED ->
-                    Arrays.stream(scxDaoColumnInfos).filter(c -> this.fieldNames.contains(c.javaFieldName())).toArray(BaseDaoColumnInfo[]::new);
+                    Arrays.stream(scxDaoColumnInfos).filter(c -> this.fieldNames.contains(c.javaFieldName())).toArray(ColumnInfo[]::new);
             case EXCLUDED ->
-                    Arrays.stream(scxDaoColumnInfos).filter(c -> !this.fieldNames.contains(c.javaFieldName())).toArray(BaseDaoColumnInfo[]::new);
+                    Arrays.stream(scxDaoColumnInfos).filter(c -> !this.fieldNames.contains(c.javaFieldName())).toArray(ColumnInfo[]::new);
         };
     }
 

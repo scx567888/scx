@@ -12,4 +12,6 @@ public interface TableInfo<T extends ColumnInfo> {
 
     T[] columnInfos();
 
+    T getColumnInfo(String javaFieldName);
+
 }

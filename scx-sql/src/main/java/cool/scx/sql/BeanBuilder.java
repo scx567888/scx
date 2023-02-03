@@ -29,6 +29,14 @@ public interface BeanBuilder<T> {
         }
     }
 
+    static <T> BeanBuilder<T> of(Class<T> type, TableInfo<?> tableInfo) {
+        if (type.isRecord()) {
+            return new RecordBeanBuilder<>(type, tableInfo);
+        } else {
+            return new NormalBeanBuilder<>(type, tableInfo);
+        }
+    }
+
     /**
      * <p>createBean.</p>
      *
