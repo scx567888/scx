@@ -25,7 +25,6 @@ public final class ConstructorUtils {
         if (noArgsConstructor == null) {
             throw new IllegalArgumentException("寻找 无参 构造函数失败, type " + type.getName());
         }
-        noArgsConstructor.setAccessible(true);
         return (Constructor<T>) noArgsConstructor;
     }
 
@@ -48,7 +47,6 @@ public final class ConstructorUtils {
         if (canonicalConstructor == null) {
             throw new IllegalArgumentException("寻找 Record 规范构造函数失败, type " + type.getName());
         }
-        canonicalConstructor.setAccessible(true);
         return (Constructor<T>) canonicalConstructor;
     }
 
