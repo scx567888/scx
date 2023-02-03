@@ -3,9 +3,12 @@ package cool.scx.test;
 import com.mysql.cj.jdbc.MysqlDataSource;
 import cool.scx.logging.ScxLoggerFactory;
 import cool.scx.logging.ScxLoggingLevel;
+import cool.scx.sql.BeanBuilder;
 import cool.scx.sql.SQL;
 import cool.scx.sql.SQLRunner;
 import cool.scx.sql.UpdateResult;
+import cool.scx.sql.result_handler.BeanListHandler;
+import cool.scx.sql.result_handler.MapListHandler;
 import cool.scx.test.bean.Student;
 import cool.scx.test.bean.StudentRecord;
 import cool.scx.util.ObjectUtils;
@@ -20,8 +23,6 @@ import java.util.List;
 import java.util.Map;
 
 import static com.mysql.cj.conf.PropertyKey.*;
-import static cool.scx.sql.ResultHandler.ofBeanList;
-import static cool.scx.sql.ResultHandler.ofMapList;
 import static cool.scx.sql.SQL.ofNormal;
 
 public class SQlRunnerTest {
@@ -90,17 +91,17 @@ public class SQlRunnerTest {
 
     @Test
     public static void test3() {
-        List<Student> query = sqlRunner.query(ofNormal("select * from " + tableName), ofBeanList(Student.class));
+        List<Student> query = sqlRunner.query(ofNormal("select * from " + tableName), new BeanListHandler<>(BeanBuilder.of(Student.class)));
         System.out.println("查询 使用 BeanList 总条数: " + query.size());
         System.out.println("查询 使用 BeanList 第一条内容: " + ObjectUtils.toJson(query.get(0), ""));
-        List<Map<String, Object>> query1 = sqlRunner.query(ofNormal("select * from `t1`"), ofMapList());
+        List<Map<String, Object>> query1 = sqlRunner.query(ofNormal("select * from `t1`"), new MapListHandler());
         System.out.println("查询 使用 MapList 总条数: " + query1.size());
         System.out.println("查询 使用 MapList 第一条内容: " + ObjectUtils.toJson(query1.get(0), ""));
     }
 
     @Test
     public static void test4() {
-        List<Student> query = sqlRunner.query(ofNormal("select * from " + tableName), ofBeanList(Student.class));
+        List<Student> query = sqlRunner.query(ofNormal("select * from " + tableName), new BeanListHandler<>(BeanBuilder.of(Student.class)));
         System.out.println("当前总条数: " + query.size());
         try {
             sqlRunner.autoTransaction(() -> {
@@ -109,7 +110,7 @@ public class SQlRunnerTest {
                 var m = new Object[]{"小李", 22, 1};
 
                 sqlRunner.update(SQL.ofPlaceholder(sql, m));
-                List<Student> query1 = sqlRunner.query(ofNormal("select * from " + tableName), ofBeanList(Student.class));
+                List<Student> query1 = sqlRunner.query(ofNormal("select * from " + tableName), new BeanListHandler<>(BeanBuilder.of(Student.class)));
                 System.out.println("当前总条数: " + query1.size());
 
                 sqlRunner.update(SQL.ofPlaceholder(sql, m));
@@ -117,7 +118,7 @@ public class SQlRunnerTest {
         } catch (Exception e) {
             ScxExceptionHelper.getRootCause(e).printStackTrace();
         }
-        List<StudentRecord> query2 = sqlRunner.query(ofNormal("select * from " + tableName), ofBeanList(StudentRecord.class));
+        List<StudentRecord> query2 = sqlRunner.query(ofNormal("select * from " + tableName), new BeanListHandler<>(BeanBuilder.of(StudentRecord.class)));
         System.out.println("回滚后总条数: " + query2.size());
     }
 

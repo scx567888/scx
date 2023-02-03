@@ -5,6 +5,7 @@ import cool.scx.sql.FieldSetter;
 import cool.scx.sql.TableInfo;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,12 +24,12 @@ public final class NormalBeanBuilder<T> implements BeanBuilder<T> {
 
     public NormalBeanBuilder(Class<T> type, TableInfo<?> tableInfo) {
         this.constructor = findConstructor(type);
-        this.fieldSetters = FieldSetter.ofArray(type.getFields(), tableInfo);
+        this.fieldSetters = ofArray(type.getFields(), tableInfo);
     }
 
     public NormalBeanBuilder(Class<T> type) {
         this.constructor = findConstructor(type);
-        this.fieldSetters = FieldSetter.ofArray(type.getFields());
+        this.fieldSetters = ofArray(type.getFields());
     }
 
     @SuppressWarnings("unchecked")
@@ -46,6 +47,22 @@ public final class NormalBeanBuilder<T> implements BeanBuilder<T> {
         }
         defaultConstructor.setAccessible(true);
         return (Constructor<T>) defaultConstructor;
+    }
+
+    private static FieldSetter[] ofArray(Field[] fields, TableInfo<?> tableInfo) {
+        var arr = new FieldSetter[fields.length];
+        for (int i = 0; i < fields.length; i = i + 1) {
+            arr[i] = FieldSetter.of(fields[i], tableInfo.getColumnInfo(fields[i].getName()));
+        }
+        return arr;
+    }
+
+    private static FieldSetter[] ofArray(Field[] fields) {
+        var arr = new FieldSetter[fields.length];
+        for (int i = 0; i < fields.length; i = i + 1) {
+            arr[i] = FieldSetter.of(fields[i]);
+        }
+        return arr;
     }
 
     @Override

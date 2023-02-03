@@ -5,10 +5,12 @@ import cool.scx.sql.FieldSetter;
 import cool.scx.sql.TableInfo;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Parameter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -25,12 +27,12 @@ public final class RecordBeanBuilder<T> implements BeanBuilder<T> {
 
     public RecordBeanBuilder(Class<T> type, TableInfo<?> tableInfo) {
         this.constructor = findConstructor(type);
-        this.fieldSetters = initFieldSetters(this.constructor.getParameters(), FieldSetter.ofMap(type.getDeclaredFields(), tableInfo));
+        this.fieldSetters = initFieldSetters(this.constructor.getParameters(), ofMap(type.getDeclaredFields(), tableInfo));
     }
 
     public RecordBeanBuilder(Class<T> type) {
         this.constructor = findConstructor(type);
-        this.fieldSetters = initFieldSetters(this.constructor.getParameters(), FieldSetter.ofMap(type.getDeclaredFields()));
+        this.fieldSetters = initFieldSetters(this.constructor.getParameters(), ofMap(type.getDeclaredFields()));
     }
 
     /**
@@ -62,6 +64,22 @@ public final class RecordBeanBuilder<T> implements BeanBuilder<T> {
             temp[i] = map.get(parameters[i].getName());
         }
         return temp;
+    }
+
+    private static Map<String, FieldSetter> ofMap(Field[] fields) {
+        var map = new HashMap<String, FieldSetter>();
+        for (var field : fields) {
+            map.put(field.getName(), FieldSetter.of(field));
+        }
+        return map;
+    }
+
+    private static Map<String, FieldSetter> ofMap(Field[] fields, TableInfo<?> tableInfo) {
+        var map = new HashMap<String, FieldSetter>();
+        for (var field : fields) {
+            map.put(field.getName(), FieldSetter.of(field, tableInfo.getColumnInfo(field.getName())));
+        }
+        return map;
     }
 
     @Override

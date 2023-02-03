@@ -10,7 +10,6 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * <p>BeanBuilder interface.</p>
@@ -22,7 +21,6 @@ public abstract class FieldSetter {
 
     protected final Field field;
     protected final String columnName;
-
     protected final Type fieldGenericType;
 
     public FieldSetter(Field field, ColumnInfo columnInfo) {
@@ -53,38 +51,6 @@ public abstract class FieldSetter {
         return indexInfo;
     }
 
-    public static Map<String, FieldSetter> ofMap(Field[] fields) {
-        var map = new HashMap<String, FieldSetter>();
-        for (var field : fields) {
-            map.put(field.getName(), of(field));
-        }
-        return map;
-    }
-
-    public static Map<String, FieldSetter> ofMap(Field[] fields, TableInfo<?> tableInfo) {
-        var map = new HashMap<String, FieldSetter>();
-        for (var field : fields) {
-            map.put(field.getName(), of(field, tableInfo.getColumnInfo(field.getName())));
-        }
-        return map;
-    }
-
-    public static FieldSetter[] ofArray(Field[] fields, TableInfo<?> tableInfo) {
-        var arr = new FieldSetter[fields.length];
-        for (int i = 0; i < fields.length; i = i + 1) {
-            arr[i] = of(fields[i], tableInfo.getColumnInfo(fields[i].getName()));
-        }
-        return arr;
-    }
-
-    public static FieldSetter[] ofArray(Field[] fields) {
-        var arr = new FieldSetter[fields.length];
-        for (int i = 0; i < fields.length; i = i + 1) {
-            arr[i] = of(fields[i]);
-        }
-        return arr;
-    }
-
     public static FieldSetter of(Field field, ColumnInfo columnInfo) {
         var filedType = field.getType();
         if (SQLHelper.getMySQLType(filedType) != null) {
@@ -100,7 +66,7 @@ public abstract class FieldSetter {
         return of(field, null);
     }
 
-    public void set(Object t, ResultSet s, int index) throws SQLException {
+    public final void set(Object t, ResultSet s, int index) throws SQLException {
         var o = getObject(s, index);
         if (o != null) {
             try {
@@ -111,7 +77,7 @@ public abstract class FieldSetter {
         }
     }
 
-    public String columnName() {
+    public final String columnName() {
         return columnName;
     }
 
