@@ -1,7 +1,7 @@
 package cool.scx.dao.impl;
 
+import cool.scx.dao._old.OldBaseDaoColumnInfo;
 import cool.scx.dao.annotation.Column;
-import cool.scx.sql.ColumnInfo;
 
 import java.lang.reflect.Field;
 
@@ -15,7 +15,7 @@ import static cool.scx.util.StringUtils.notBlank;
  * @author scx567888
  * @version 1.11.8
  */
-public final class AnnotationConfigColumnInfo implements ColumnInfo {
+public final class AnnotationConfigColumnInfo extends OldBaseDaoColumnInfo {
 
     private final Field javaField;
     private final String columnName;
