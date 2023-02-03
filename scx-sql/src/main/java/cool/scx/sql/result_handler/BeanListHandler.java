@@ -2,7 +2,6 @@ package cool.scx.sql.result_handler;
 
 import cool.scx.sql.BeanBuilder;
 import cool.scx.sql.ResultHandler;
-import cool.scx.sql.TableInfo;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,18 +20,8 @@ public class BeanListHandler<T> implements ResultHandler<List<T>> {
 
     protected final BeanBuilder<T> beanBuilder;
 
-    /**
-     * a
-     *
-     * @param type      a
-     * @param tableInfo a
-     */
-    public BeanListHandler(Class<T> type, TableInfo<?> tableInfo) {
-        this.beanBuilder = BeanBuilder.of(type, tableInfo);
-    }
-
-    public BeanListHandler(Class<T> type) {
-        this.beanBuilder = BeanBuilder.of(type);
+    public BeanListHandler(BeanBuilder<T> beanBuilder) {
+        this.beanBuilder = beanBuilder;
     }
 
     /**
