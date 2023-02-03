@@ -143,7 +143,10 @@ public final class ScxMappingHandler implements Handler<RoutingContext> {
             }
         } catch (Throwable e) {
             //1, 如果是反射调用时发生异常 则使用反射异常的内部异常 否则使用异常
-            throw new ScxExceptionHelper.ScxWrappedRuntimeException(e instanceof InvocationTargetException ? e.getCause() : e);
+            //2, 如果是包装类型异常 (ScxWrappedRuntimeException) 则使用其内部的异常
+            var exception = ScxExceptionHelper.getRootCause(e instanceof InvocationTargetException ? e.getCause() : e);
+            // 注意 这里也可以直接 throw exception 并交由 VertxRouter 处理 , 但是我们直接先在内部处理掉, 防止多余的错误信息打印
+            this.scxMvc.findExceptionHandler(exception).handle(exception, context);
         } finally {
             ScxMvc._clearRoutingContext();
         }
