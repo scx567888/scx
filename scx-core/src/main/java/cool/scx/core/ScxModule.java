@@ -4,7 +4,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import static cool.scx.util.ClassUtils.*;
+import static cool.scx.util.reflect.ClassUtils.*;
 import static cool.scx.util.ScxExceptionHelper.wrap;
 
 /**

@@ -2,7 +2,7 @@ package cool.scx.mvc;
 
 import cool.scx.enumeration.HttpMethod;
 import cool.scx.mvc.annotation.ScxMapping;
-import cool.scx.util.ClassUtils;
+import cool.scx.util.reflect.ClassUtils;
 import cool.scx.util.MultiMap;
 import cool.scx.util.ObjectUtils;
 import io.vertx.ext.web.Route;

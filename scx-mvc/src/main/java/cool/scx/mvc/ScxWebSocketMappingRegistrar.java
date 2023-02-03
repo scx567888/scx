@@ -4,7 +4,7 @@ import cool.scx.mvc.annotation.ScxWebSocketMapping;
 import cool.scx.mvc.base.BaseWebSocketHandler;
 import cool.scx.mvc.websocket.ScxWebSocketRoute;
 import cool.scx.mvc.websocket.ScxWebSocketRouter;
-import cool.scx.util.ClassUtils;
+import cool.scx.util.reflect.ClassUtils;
 import cool.scx.util.URIBuilder;
 import org.springframework.beans.factory.BeanFactory;
 

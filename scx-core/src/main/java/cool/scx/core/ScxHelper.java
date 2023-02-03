@@ -20,7 +20,7 @@ import cool.scx.logging.recorder.ConsoleRecorder;
 import cool.scx.logging.recorder.FileRecorder;
 import cool.scx.mvc.annotation.ScxMapping;
 import cool.scx.mvc.annotation.ScxWebSocketMapping;
-import cool.scx.util.ClassUtils;
+import cool.scx.util.reflect.ClassUtils;
 import cool.scx.util.ConsoleUtils;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
