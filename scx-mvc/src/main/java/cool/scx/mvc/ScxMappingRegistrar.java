@@ -5,6 +5,7 @@ import cool.scx.mvc.annotation.ScxMapping;
 import cool.scx.util.MultiMap;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.reflect.ClassUtils;
+import cool.scx.util.reflect.MethodUtils;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.impl.RouteImpl;
@@ -128,7 +129,7 @@ final class ScxMappingRegistrar {
     }
 
     private static List<Method> filterMethod(Class<?> clazz) {
-        return Arrays.stream(clazz.getMethods()).filter(ScxMappingRegistrar::isScxMappingMethod).toList();
+        return Arrays.stream(MethodUtils.findMethods(clazz)).filter(ScxMappingRegistrar::isScxMappingMethod).toList();
     }
 
     /**

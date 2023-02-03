@@ -7,6 +7,7 @@ import cool.scx.sql.TableInfo;
 import cool.scx.util.CaseUtils;
 import cool.scx.util.MultiMap;
 import cool.scx.util.StringUtils;
+import cool.scx.util.reflect.FieldUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -54,7 +55,7 @@ public final class AnnotationConfigTableInfo implements TableInfo<AnnotationConf
      * @return a
      */
     private static Map<String, AnnotationConfigColumnInfo> initAllColumnInfoMap(Class<?> clazz) {
-        var list = Stream.of(clazz.getFields())
+        var list = Stream.of(FieldUtils.findFields(clazz))
                 .filter(field -> !field.isAnnotationPresent(NoColumn.class))
                 .map(AnnotationConfigColumnInfo::new)
                 .toList();
