@@ -1,6 +1,5 @@
 package cool.scx.sql.field_setter;
 
-import cool.scx.sql.ColumnInfo;
 import cool.scx.sql.FieldSetter;
 import cool.scx.sql.SQLHelper;
 
@@ -16,13 +15,13 @@ import java.sql.SQLException;
  */
 public class EnumFieldSetter extends FieldSetter {
 
-    public EnumFieldSetter(Field field, ColumnInfo columnInfo) {
-        super(field, columnInfo);
+    public EnumFieldSetter(Field field, String columnName) {
+        super(field, columnName);
     }
 
     @Override
     public Object getObject(ResultSet rs, int index) throws SQLException {
-        return SQLHelper.readFromValueOrNull(rs.getString(index), field.getType());
+        return SQLHelper.readFromValueOrNull(rs.getString(index), javaField.getType());
     }
 
 }

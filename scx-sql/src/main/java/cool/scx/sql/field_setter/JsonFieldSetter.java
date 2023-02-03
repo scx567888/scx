@@ -1,6 +1,5 @@
 package cool.scx.sql.field_setter;
 
-import cool.scx.sql.ColumnInfo;
 import cool.scx.sql.FieldSetter;
 import cool.scx.sql.SQLHelper;
 
@@ -16,8 +15,8 @@ import java.sql.SQLException;
  */
 public class JsonFieldSetter extends FieldSetter {
 
-    public JsonFieldSetter(Field field, ColumnInfo columnInfo) {
-        super(field, columnInfo);
+    public JsonFieldSetter(Field field, String columnName) {
+        super(field, columnName);
     }
 
     @Override

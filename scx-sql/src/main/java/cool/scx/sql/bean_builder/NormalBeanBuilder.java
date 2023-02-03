@@ -5,10 +5,12 @@ import cool.scx.sql.FieldSetter;
 import cool.scx.sql.TableInfo;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import static cool.scx.sql.FieldSetter.ofArray;
+import static cool.scx.util.reflect.ConstructorUtils.findNoArgsConstructor;
 
 /**
  * <p>BeanBuilder interface.</p>
@@ -23,46 +25,13 @@ public final class NormalBeanBuilder<T> implements BeanBuilder<T> {
     private final FieldSetter[] fieldSetters;
 
     public NormalBeanBuilder(Class<T> type, TableInfo<?> tableInfo) {
-        this.constructor = findConstructor(type);
-        this.fieldSetters = ofArray(type.getFields(), tableInfo);
+        this.constructor = findNoArgsConstructor(type);
+        this.fieldSetters = ofArray(type, tableInfo);
+        this.constructor.setAccessible(true);
     }
 
     public NormalBeanBuilder(Class<T> type) {
-        this.constructor = findConstructor(type);
-        this.fieldSetters = ofArray(type.getFields());
-    }
-
-    @SuppressWarnings("unchecked")
-    private static <T> Constructor<T> findConstructor(Class<T> clazz) {
-        var constructors = clazz.getConstructors();
-        Constructor<?> defaultConstructor = null;
-        for (var constructor : constructors) {
-            if (constructor.getParameterCount() == 0) {
-                defaultConstructor = constructor;
-                break;
-            }
-        }
-        if (defaultConstructor == null) {
-            throw new RuntimeException(clazz + " : 必须有一个无参构造函数 !!!");
-        }
-        defaultConstructor.setAccessible(true);
-        return (Constructor<T>) defaultConstructor;
-    }
-
-    private static FieldSetter[] ofArray(Field[] fields, TableInfo<?> tableInfo) {
-        var arr = new FieldSetter[fields.length];
-        for (int i = 0; i < fields.length; i = i + 1) {
-            arr[i] = FieldSetter.of(fields[i], tableInfo.getColumnInfo(fields[i].getName()));
-        }
-        return arr;
-    }
-
-    private static FieldSetter[] ofArray(Field[] fields) {
-        var arr = new FieldSetter[fields.length];
-        for (int i = 0; i < fields.length; i = i + 1) {
-            arr[i] = FieldSetter.of(fields[i]);
-        }
-        return arr;
+        this(type, null);
     }
 
     @Override
