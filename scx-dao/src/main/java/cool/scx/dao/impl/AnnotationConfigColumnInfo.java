@@ -57,6 +57,7 @@ public final class AnnotationConfigColumnInfo extends OldBaseDaoColumnInfo {
             this.autoIncrement = false;
             this.notNull = false;
         }
+        this.javaField.setAccessible(true);
     }
 
     @Override

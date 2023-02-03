@@ -1,4 +1,6 @@
-package cool.scx.util;
+package cool.scx.util.reflect;
+
+import cool.scx.util.ScxExceptionHelper;
 
 import java.io.File;
 import java.io.IOException;

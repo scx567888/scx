@@ -3,6 +3,7 @@ package cool.scx.sql;
 import cool.scx.sql.field_setter.EnumFieldSetter;
 import cool.scx.sql.field_setter.JsonFieldSetter;
 import cool.scx.sql.field_setter.NormalFieldSetter;
+import cool.scx.util.reflect.FieldUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
@@ -19,15 +20,15 @@ import java.util.HashMap;
  */
 public abstract class FieldSetter {
 
-    protected final Field field;
+    protected final Field javaField;
     protected final String columnName;
     protected final Type fieldGenericType;
 
-    public FieldSetter(Field field, ColumnInfo columnInfo) {
-        this.field = field;
-        this.columnName = columnInfo == null ? field.getName() : columnInfo.columnName();
+    public FieldSetter(Field field, String columnName) {
+        this.javaField = field;
+        this.columnName = columnName;
         this.fieldGenericType = field.getGenericType();
-        this.field.setAccessible(true);
+        this.javaField.setAccessible(true);
     }
 
     /**
@@ -51,14 +52,30 @@ public abstract class FieldSetter {
         return indexInfo;
     }
 
+    public static FieldSetter[] ofArray(Class<?> type, TableInfo<?> tableInfo) {
+        var fields = FieldUtils.findFields(type);
+        var fieldSetters = new FieldSetter[fields.length];
+        if (tableInfo == null) {
+            for (int i = 0; i < fields.length; i = i + 1) {
+                fieldSetters[i] = of(fields[i]);
+            }
+        } else {
+            for (int i = 0; i < fields.length; i = i + 1) {
+                fieldSetters[i] = of(fields[i], tableInfo.getColumnInfo(fields[i].getName()));
+            }
+        }
+        return fieldSetters;
+    }
+
     public static FieldSetter of(Field field, ColumnInfo columnInfo) {
+        var columnName = columnInfo == null ? field.getName() : columnInfo.columnName();
         var filedType = field.getType();
         if (SQLHelper.getMySQLType(filedType) != null) {
-            return new NormalFieldSetter(field, columnInfo);
+            return new NormalFieldSetter(field, columnName);
         } else if (filedType.isEnum()) {
-            return new EnumFieldSetter(field, columnInfo);
+            return new EnumFieldSetter(field, columnName);
         } else {
-            return new JsonFieldSetter(field, columnInfo);
+            return new JsonFieldSetter(field, columnName);
         }
     }
 
@@ -70,7 +87,7 @@ public abstract class FieldSetter {
         var o = getObject(s, index);
         if (o != null) {
             try {
-                this.field.set(t, o);
+                this.javaField.set(t, o);
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
@@ -79,6 +96,10 @@ public abstract class FieldSetter {
 
     public final String columnName() {
         return columnName;
+    }
+
+    public Field javaField() {
+        return javaField;
     }
 
     public abstract Object getObject(ResultSet s, int index) throws SQLException;

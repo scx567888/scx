@@ -1,6 +1,6 @@
 package cool.scx.config;
 
-import cool.scx.util.ClassUtils;
+import cool.scx.util.reflect.ClassUtils;
 
 import java.nio.file.Path;
 
