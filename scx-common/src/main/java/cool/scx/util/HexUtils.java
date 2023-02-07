@@ -68,8 +68,8 @@ public final class HexUtils {
         int bytesIndex = 0;
         while (bytesIndex < bytes.length) {
             var b = bytes[bytesIndex];
-            chars[charsIndex] = HEX_CHAR_POOL[b >>> 4 & 0xF];
-            chars[charsIndex + 1] = HEX_CHAR_POOL[b & 0xF];
+            chars[charsIndex] = HEX_CHAR_POOL[b >>> 4 & 0b1111];
+            chars[charsIndex + 1] = HEX_CHAR_POOL[b & 0b1111];
             charsIndex = charsIndex + 2;
             bytesIndex = bytesIndex + 1;
         }
