@@ -83,4 +83,8 @@ public final class ScxEnvironment {
         return Path.of(this.tempPath.toString(), paths);
     }
 
+    public Path appRootPath() {
+        return appRootPath;
+    }
+
 }
