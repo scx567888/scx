@@ -17,23 +17,18 @@ public final class HexUtils {
     private static final byte[] HEX_CHAR_POOL = new byte[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 
     /**
-     * 代替 MAP 实现更高的性能 索引为 char, 值为 byte
+     * 代替 MAP 实现更高的性能 索引为 char, 值为 byte, 因数组较小, 所以此处直接硬编码
+     * <br>
+     * 数据获得方法如下
+     * <pre>{@code
+     *  var CHAR_BYTE_MAP = new byte['F' + 1];
+     *  Arrays.fill(CHAR_BYTE_MAP, (byte) -1);
+     *  for (int i = 0; i < HEX_CHAR_POOL.length; i = i + 1) {
+     *      CHAR_BYTE_MAP[HEX_CHAR_POOL[i]] = (byte) i;
+     *  }
+     * }</pre>
      */
-    private static final byte[] CHAR_BYTE_MAP = initCharByteMap();
-
-    /**
-     * 初始化
-     *
-     * @return a
-     */
-    private static byte[] initCharByteMap() {
-        var chars = new byte['F' + 1];
-        Arrays.fill(chars, (byte) -1);
-        for (int i = 0; i < HEX_CHAR_POOL.length; i = i + 1) {
-            chars[HEX_CHAR_POOL[i]] = (byte) i;
-        }
-        return chars;
-    }
+    private static final byte[] CHAR_BYTE_MAP = new byte[]{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, -1, -1, -1, -1, -1, -1, -1, 10, 11, 12, 13, 14, 15};
 
     /**
      * 十六进制转字节数组
