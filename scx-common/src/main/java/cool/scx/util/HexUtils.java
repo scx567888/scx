@@ -1,7 +1,6 @@
 package cool.scx.util;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 
 /**
  * <p>HexUtils class.</p>
