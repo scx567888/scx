@@ -68,6 +68,11 @@ public final class HexUtils {
         int bytesIndex = 0;
         while (bytesIndex < bytes.length) {
             var b = bytes[bytesIndex];
+            // 此处需要做一次掩码计算, 因为在 java 中, byte 在位移时会先转换为 int 再计算 .
+            // 如 10 进制数 -123,  [1000_0101] -> [1111_1111_1111_1111_1111_1111_1000_0101] (前端被补 1) .
+            // b >>> 4 则为 [0000_1111_1111_1111_1111_1111_1111_1000] (最前端补0), 而不是理想的 [0000_1000] .
+            // 掩码计算便是为了去除高位的 0 .
+            // chars[charsIndex] = HEX_CHAR_POOL[(b & 0b1111_1111) >>> 4]; // 这种形式亦可 .
             chars[charsIndex] = HEX_CHAR_POOL[b >>> 4 & 0b1111];
             chars[charsIndex + 1] = HEX_CHAR_POOL[b & 0b1111];
             charsIndex = charsIndex + 2;
