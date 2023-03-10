@@ -125,14 +125,7 @@ public final class ClassUtils {
      */
     public static Path getAppRoot(URI codeSource) {
         var path = Path.of(codeSource);
-        var scheme = codeSource.getScheme();
-        if ("file".equalsIgnoreCase(scheme)) {
-            return path;
-        } else if ("jar".equalsIgnoreCase(scheme)) {
-            return path.getParent();
-        } else {
-            return path;
-        }
+        return Files.isDirectory(path) ? path : path.getParent();
     }
 
     /**
