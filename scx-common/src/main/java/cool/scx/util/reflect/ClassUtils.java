@@ -111,6 +111,7 @@ public final class ClassUtils {
      *
      * @param source a {@link java.lang.Class} object.
      * @return 可能是 目录 也可能是 jar 文件
+     * @throws java.net.URISyntaxException if any.
      */
     public static URI getCodeSource(Class<?> source) throws URISyntaxException {
         return source.getProtectionDomain().getCodeSource().getLocation().toURI();
