@@ -9,9 +9,9 @@ import cool.scx.util.MultiMap;
 import cool.scx.util.StringUtils;
 import cool.scx.util.reflect.FieldUtils;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -44,8 +44,8 @@ public final class AnnotationConfigTableInfo implements TableInfo<AnnotationConf
      */
     public AnnotationConfigTableInfo(Class<?> clazz) {
         this.tableName = initTableName(clazz);
-        this.columnInfoMap = initAllColumnInfoMap(clazz);
-        this.columnInfos = this.columnInfoMap.values().toArray(AnnotationConfigColumnInfo[]::new);
+        this.columnInfos = initAllColumnInfos(clazz);
+        this.columnInfoMap = initAllColumnInfoMap(columnInfos);
     }
 
     /**
@@ -54,13 +54,25 @@ public final class AnnotationConfigTableInfo implements TableInfo<AnnotationConf
      * @param clazz a
      * @return a
      */
-    private static Map<String, AnnotationConfigColumnInfo> initAllColumnInfoMap(Class<?> clazz) {
+    private static AnnotationConfigColumnInfo[] initAllColumnInfos(Class<?> clazz) {
         var list = Stream.of(FieldUtils.findFields(clazz))
                 .filter(field -> !field.isAnnotationPresent(NoColumn.class))
                 .map(AnnotationConfigColumnInfo::new)
                 .toList();
         checkDuplicateColumnName(list, clazz);
-        return list.stream().collect(Collectors.toMap(ColumnInfo::javaFieldName, c -> c));
+        return list.toArray(AnnotationConfigColumnInfo[]::new);
+    }
+
+    private static Map<String, AnnotationConfigColumnInfo> initAllColumnInfoMap(AnnotationConfigColumnInfo[] infos) {
+        var map = new HashMap<String, AnnotationConfigColumnInfo>();
+        for (var info : infos) {
+            map.put(info.columnName(), info);
+        }
+        // javaFieldName 的优先级大于 columnName 所以允许覆盖
+        for (var info : infos) {
+            map.put(info.javaFieldName(), info);
+        }
+        return map;
     }
 
     /**

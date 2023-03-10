@@ -22,6 +22,7 @@ import static cool.scx.sql.SQLBuilder.*;
  * @author scx567888
  * @version 0.1.3
  */
+@Deprecated
 public class OldBaseDao<Entity> {
 
     /**

@@ -80,7 +80,7 @@ public class BaseDao<Entity> {
      * @return a
      */
     private SQL _buildInsertSQL(Entity entity, UpdateFilter updateFilter) {
-        var insertColumnInfos = updateFilter.filter(entity, tableInfo.columnInfos());
+        var insertColumnInfos = updateFilter.filter(entity, tableInfo);
         var insertColumns = Arrays.stream(insertColumnInfos).map(ColumnInfo::columnName).toArray(String[]::new);
         var insertValues = Arrays.stream(insertColumnInfos).map(columnInfo -> "?").toArray(String[]::new);
         var sql = Insert(tableInfo.tableName(), insertColumns)
@@ -109,7 +109,7 @@ public class BaseDao<Entity> {
      * @return a
      */
     private SQL buildInsertBatchSQL(Collection<Entity> entityList, UpdateFilter updateFilter) {
-        var insertColumnInfos = updateFilter.filter(tableInfo.columnInfos());
+        var insertColumnInfos = updateFilter.filter(tableInfo);
         //将 entityList 转换为 objectArrayList 这里因为 stream 实在太慢所以改为传统循环方式
         var objectArrayList = new ArrayList<Object[]>();
         for (var entity : entityList) {
@@ -186,7 +186,7 @@ public class BaseDao<Entity> {
      * @return selectSQL
      */
     public final SQL buildSelectSQL(Query query, SelectFilter selectFilter) {
-        var selectColumnInfos = selectFilter.filter(tableInfo.columnInfos());
+        var selectColumnInfos = selectFilter.filter(tableInfo);
         var selectColumns = Arrays.stream(selectColumnInfos).map(ColumnInfo::columnName).toArray(String[]::new);
         var whereParamsAndWhereClauses = query.where().getWhereParamsAndWhereClauses(tableInfo);
         var groupByColumns = query.groupBy().getGroupByColumns(tableInfo);
@@ -214,7 +214,7 @@ public class BaseDao<Entity> {
         if (query.pagination().rowCount() == null) {
             return buildSelectSQL(query, selectFilter);
         } else {
-            var selectColumnInfos = selectFilter.filter(tableInfo.columnInfos());
+            var selectColumnInfos = selectFilter.filter(tableInfo);
             var selectColumns = Arrays.stream(selectColumnInfos).map(ColumnInfo::columnName).toArray(String[]::new);
             var whereParamsAndWhereClauses = query.where().getWhereParamsAndWhereClauses(tableInfo);
             var groupByColumns = query.groupBy().getGroupByColumns(tableInfo);
@@ -282,7 +282,7 @@ public class BaseDao<Entity> {
         if (query.where().isEmpty()) {
             throw new IllegalArgumentException("更新数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
         }
-        var updateSetColumnInfos = updateFilter.filter(entity, tableInfo.columnInfos());
+        var updateSetColumnInfos = updateFilter.filter(entity, tableInfo);
         var updateSetColumns = Arrays.stream(updateSetColumnInfos).map(c -> c.columnName() + " = ?").toArray(String[]::new);
         var whereParamsAndWhereClauses = query.where().getWhereParamsAndWhereClauses(tableInfo);
         var sql = Update(tableInfo.tableName())

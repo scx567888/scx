@@ -1,7 +1,9 @@
 package cool.scx.dao;
 
 import cool.scx.sql.ColumnInfo;
+import cool.scx.sql.TableInfo;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -117,9 +119,32 @@ public abstract class ColumnInfoFilter<E extends ColumnInfoFilter<E>> {
     /**
      * 过滤
      *
-     * @param scxDaoColumnInfos 带过滤的列表
+     * @param tableInfo 带过滤的列表
      * @return 过滤后的列表
      */
+    public final ColumnInfo[] filter(TableInfo<?> tableInfo) {
+        return this.fieldNames.size() == 0 ? switch (this.filterMode) {
+            case INCLUDED -> new ColumnInfo[0];
+            case EXCLUDED -> tableInfo.columnInfos();
+        } : switch (this.filterMode) {
+            case INCLUDED -> {
+                var list = new ArrayList<ColumnInfo>();
+                for (var fieldName : this.fieldNames) {
+                    list.add(tableInfo.getColumnInfo(fieldName));
+                }
+                yield list.toArray(ColumnInfo[]::new);
+            }
+            case EXCLUDED -> {
+                var objects = new ArrayList<>(Arrays.asList(tableInfo.columnInfos()));
+                for (var fieldName : this.fieldNames) {
+                    objects.remove(tableInfo.getColumnInfo(fieldName));
+                }
+                yield objects.toArray(ColumnInfo[]::new);
+            }
+        };
+    }
+
+    @Deprecated
     public final ColumnInfo[] filter(ColumnInfo... scxDaoColumnInfos) {
         return this.fieldNames.size() == 0 ? switch (this.filterMode) {
             case INCLUDED -> new ColumnInfo[0];
