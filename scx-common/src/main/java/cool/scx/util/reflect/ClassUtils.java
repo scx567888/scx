@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.stream.Collectors;
 
 import static cool.scx.util.StringUtils.endsWithIgnoreCase;
 
@@ -123,10 +124,13 @@ public final class ClassUtils {
      */
     public static Path getAppRoot(URI codeSource) {
         var path = Path.of(codeSource);
-        if ("file".equalsIgnoreCase(codeSource.getScheme())) {
+        var scheme = codeSource.getScheme();
+        if ("file".equalsIgnoreCase(scheme)) {
             return path;
-        } else {
+        } else if ("jar".equalsIgnoreCase(scheme)) {
             return path.getParent();
+        } else {
+            return path;
         }
     }
 
