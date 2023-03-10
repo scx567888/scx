@@ -112,7 +112,7 @@ public final class UpdateFilter extends ColumnInfoFilter<UpdateFilter> {
     /**
      * 过滤
      *
-     * @param entity            a
+     * @param entity    a
      * @param tableInfo 带过滤的列表
      * @return 过滤后的列表
      */
