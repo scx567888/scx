@@ -226,7 +226,7 @@ public class BaseDao<Entity> {
                     .OrderBy(orderByClauses)
                     .Limit(query.pagination().offset(), query.pagination().rowCount())
                     .GetSQL();
-            var sql = Select(Arrays.stream(selectColumnInfos).map(ColumnInfo::javaFieldName).toArray(String[]::new)).From("(" + sql0 + ")").GetSQL();
+            var sql = Select("*").From("(" + sql0 + ")").GetSQL();
             return SQL.ofPlaceholder(sql + " AS " + tableInfo.tableName() + "_" + RandomUtils.randomString(6), whereParamsAndWhereClauses.whereParams());
         }
     }

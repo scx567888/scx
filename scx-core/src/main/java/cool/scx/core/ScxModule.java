@@ -41,7 +41,7 @@ public abstract class ScxModule {
      */
     public ScxModule() {
         var basePackage = getClass().getPackageName();
-        var classSource = wrap(() -> getClassSource(getClass()));
+        var classSource = wrap(() -> getCodeSource(getClass()));
         var classSourcePath = Path.of(classSource);
         //判断当前是否处于 jar 包中
         if (isJar(classSourcePath)) {
