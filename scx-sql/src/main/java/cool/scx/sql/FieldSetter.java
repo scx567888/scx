@@ -1,12 +1,8 @@
 package cool.scx.sql;
 
-import cool.scx.sql.field_setter.EnumFieldSetter;
-import cool.scx.sql.field_setter.JsonFieldSetter;
-import cool.scx.sql.field_setter.NormalFieldSetter;
 import cool.scx.util.reflect.FieldUtils;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Type;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -18,17 +14,18 @@ import java.util.HashMap;
  * @author scx567888
  * @version 0.2.1
  */
-public abstract class FieldSetter {
+public final class FieldSetter {
 
-    protected final Field javaField;
-    protected final String columnName;
-    protected final Type fieldGenericType;
+    private final Field javaField;
+    private final String columnName;
+    private final TypeHandler<?> typeHandler;
 
     public FieldSetter(Field field, String columnName) {
         this.javaField = field;
         this.columnName = columnName;
-        this.fieldGenericType = field.getGenericType();
+        var fieldGenericType = field.getGenericType();
         this.javaField.setAccessible(true);
+        this.typeHandler = TypeHandlerRegistry.getTypeHandler(fieldGenericType);
     }
 
     /**
@@ -68,15 +65,7 @@ public abstract class FieldSetter {
     }
 
     public static FieldSetter of(Field field, ColumnInfo columnInfo) {
-        var columnName = columnInfo == null ? field.getName() : columnInfo.columnName();
-        var filedType = field.getType();
-        if (SQLHelper.getMySQLType(filedType) != null) {
-            return new NormalFieldSetter(field, columnName);
-        } else if (filedType.isEnum()) {
-            return new EnumFieldSetter(field, columnName);
-        } else {
-            return new JsonFieldSetter(field, columnName);
-        }
+        return new FieldSetter(field, columnInfo == null ? field.getName() : columnInfo.columnName());
     }
 
     public static FieldSetter of(Field field) {
@@ -94,7 +83,7 @@ public abstract class FieldSetter {
         }
     }
 
-    public final String columnName() {
+    public String columnName() {
         return columnName;
     }
 
@@ -102,6 +91,8 @@ public abstract class FieldSetter {
         return javaField;
     }
 
-    public abstract Object getObject(ResultSet s, int index) throws SQLException;
+    public Object getObject(ResultSet s, int index) throws SQLException {
+        return typeHandler.getObject(s, index);
+    }
 
 }
