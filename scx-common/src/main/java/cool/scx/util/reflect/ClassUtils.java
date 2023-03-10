@@ -18,7 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.stream.Collectors;
+
+import static cool.scx.util.StringUtils.endsWithIgnoreCase;
 
 /**
  * 扫描类工具类
@@ -109,10 +110,24 @@ public final class ClassUtils {
      *
      * @param source a {@link java.lang.Class} object.
      * @return 可能是 目录 也可能是 jar 文件
-     * @throws java.net.URISyntaxException if any.
      */
-    public static URI getClassSource(Class<?> source) throws URISyntaxException {
+    public static URI getCodeSource(Class<?> source) throws URISyntaxException {
         return source.getProtectionDomain().getCodeSource().getLocation().toURI();
+    }
+
+    /**
+     * 根据 codeSource 获取 app 根路径
+     *
+     * @param codeSource {@link ClassUtils#getCodeSource(Class)}
+     * @return a
+     */
+    public static Path getAppRoot(URI codeSource) {
+        var path = Path.of(codeSource);
+        if ("file".equalsIgnoreCase(codeSource.getScheme())) {
+            return path;
+        } else {
+            return path.getParent();
+        }
     }
 
     /**
@@ -156,7 +171,7 @@ public final class ClassUtils {
      * @return a boolean
      */
     public static boolean isJar(Path path) {
-        return !Files.isDirectory(path) && path.toString().endsWith(".jar");
+        return !Files.isDirectory(path) && endsWithIgnoreCase(path.toString(), ".jar");
     }
 
     /**

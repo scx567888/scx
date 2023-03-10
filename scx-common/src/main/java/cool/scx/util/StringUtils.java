@@ -65,4 +65,12 @@ public final class StringUtils {
         return str == null || str.isEmpty();
     }
 
+    public static boolean startsWithIgnoreCase(String str, String prefix) {
+        return str.length() >= prefix.length() && str.regionMatches(true, 0, prefix, 0, prefix.length());
+    }
+
+    public static boolean endsWithIgnoreCase(String str, String suffix) {
+        return str.length() >= suffix.length() && str.regionMatches(true, str.length() - suffix.length(), suffix, 0, suffix.length());
+    }
+
 }
