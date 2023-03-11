@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-//todo 使用 objectUtils 支持大小写
+
 public class EnumTypeHandler<E extends Enum<E>> implements TypeHandler<E> {
 
     private static final Logger logger = LoggerFactory.getLogger(EnumTypeHandler.class);

@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Type;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -15,25 +16,11 @@ public class ObjectTypeHandler implements TypeHandler<Object> {
     private static final Logger logger = LoggerFactory.getLogger(ObjectTypeHandler.class);
 
     private static final ObjectMapper objectMapper = ObjectUtils.jsonMapper(ObjectUtils.Option.IGNORE_JSON_IGNORE);
+
     private final Type type;
 
     public ObjectTypeHandler(Type type) {
         this.type = type;
-    }
-
-    /**
-     * a
-     *
-     * @param o a
-     * @return a
-     */
-    public static String convertToStringOrNull(Object o) {
-        try {
-            return objectMapper.convertValue(o, String.class);
-        } catch (Exception e) {
-            logger.error("序列化时发生错误 , 已使用 NULL !!!", e);
-            return null;
-        }
     }
 
     /**
@@ -49,24 +36,6 @@ public class ObjectTypeHandler implements TypeHandler<Object> {
             logger.error("序列化时发生错误 , 已使用 NULL !!!", e);
             return null;
         }
-    }
-
-    /**
-     * a
-     *
-     * @param o         a
-     * @param filedType a
-     * @return a
-     */
-    public static Object readFromValueOrNull(String o, Class<?> filedType) {
-        if (o != null) {
-            try {
-                return objectMapper.convertValue(o, filedType);
-            } catch (Exception e) {
-                logger.error("反序列化时发生错误 , 已使用 NULL !!!", e);
-            }
-        }
-        return null;
     }
 
     /**
@@ -90,6 +59,11 @@ public class ObjectTypeHandler implements TypeHandler<Object> {
     @Override
     public Object getObject(ResultSet rs, int index) throws SQLException {
         return readFromJsonValueOrNull(rs.getString(index), type);
+    }
+
+    @Override
+    public void setObject(PreparedStatement ps, int i, Object parameter, JdbcType jdbcType) throws SQLException {
+        ps.setString(i, convertToJsonOrNull(parameter));
     }
 
 }
