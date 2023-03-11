@@ -3,8 +3,6 @@ package cool.scx.sql;
 import cool.scx.functional.ScxConsumer;
 import cool.scx.functional.ScxFunction;
 import cool.scx.functional.ScxRunnable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -24,11 +22,6 @@ import static cool.scx.util.ScxExceptionHelper.wrap;
  * @version 0.0.1
  */
 public final class SQLRunner {
-
-    /**
-     * logger
-     */
-    static final Logger logger = LoggerFactory.getLogger(SQLRunner.class);
 
     /**
      * a
@@ -64,7 +57,6 @@ public final class SQLRunner {
      */
     public static <T> T query(Connection con, SQL sql, ResultHandler<T> resultHandler) throws SQLException {
         try (var preparedStatement = sql.prepareStatement(con)) {
-            SQLHelper.logSQL(preparedStatement);
             var resultSet = preparedStatement.executeQuery();
             return resultHandler.apply(resultSet);
         }
@@ -80,7 +72,6 @@ public final class SQLRunner {
      */
     public static long execute(Connection con, SQL sql) throws SQLException {
         try (var preparedStatement = sql.prepareStatement(con)) {
-            SQLHelper.logSQL(preparedStatement);
             preparedStatement.execute();
             return preparedStatement.getLargeUpdateCount();
         }
@@ -96,7 +87,6 @@ public final class SQLRunner {
      */
     public static UpdateResult update(Connection con, SQL sql) throws SQLException {
         try (var preparedStatement = sql.prepareStatement(con)) {
-            SQLHelper.logSQL(preparedStatement);
             var affectedItemsCount = preparedStatement.executeLargeUpdate();
             var generatedKeys = getGeneratedKeys(preparedStatement);
             return new UpdateResult(affectedItemsCount, generatedKeys);
@@ -113,7 +103,6 @@ public final class SQLRunner {
      */
     public static UpdateResult updateBatch(Connection con, SQL sql) throws SQLException {
         try (var preparedStatement = sql.prepareStatement(con)) {
-            SQLHelper.logSQL(preparedStatement);
             var affectedItemsCount = preparedStatement.executeLargeBatch().length;
             var generatedKeys = getGeneratedKeys(preparedStatement);
             return new UpdateResult(affectedItemsCount, generatedKeys);

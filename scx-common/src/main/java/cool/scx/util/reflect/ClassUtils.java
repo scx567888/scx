@@ -194,4 +194,8 @@ public final class ClassUtils {
         return !c.isInterface() && !Modifier.isAbstract(c.getModifiers());
     }
 
+    public static boolean isEnum(Class<?> c) {
+        return Enum.class.isAssignableFrom(c);
+    }
+
 }
