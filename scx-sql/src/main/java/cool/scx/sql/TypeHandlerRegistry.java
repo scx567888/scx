@@ -12,6 +12,8 @@ import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static cool.scx.util.reflect.ClassUtils.isEnum;
+
 public final class TypeHandlerRegistry {
 
     private static final Map<Type, TypeHandler<?>> TYPE_HANDLER_MAP = new ConcurrentHashMap<>();
@@ -68,7 +70,7 @@ public final class TypeHandlerRegistry {
     @SuppressWarnings("unchecked")
     private static <E extends Enum<E>> TypeHandler<?> createTypeHandler(Type type) {
         if (type instanceof Class<?> clazz) {
-            if (Enum.class.isAssignableFrom(clazz)) {
+            if (isEnum(clazz)) {
                 var enumClass = clazz.isAnonymousClass() ? clazz.getSuperclass() : clazz;
                 return new EnumTypeHandler<>((Class<E>) enumClass);
             } else {
