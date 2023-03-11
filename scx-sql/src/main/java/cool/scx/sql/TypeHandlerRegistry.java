@@ -56,26 +56,23 @@ public final class TypeHandlerRegistry {
         TYPE_HANDLER_MAP.put(char.class, new CharacterTypeHandler());
     }
 
-
-    public static boolean hasTypeHandler(Type javaType) {
-        return getTypeHandler(javaType) != null;
+    @SuppressWarnings("unchecked")
+    public static <T> TypeHandler<T> getTypeHandler(Type type) {
+        var handler = TYPE_HANDLER_MAP.computeIfAbsent(type, TypeHandlerRegistry::createTypeHandler);
+        if (handler == null) {
+            throw new IllegalArgumentException("未找到合适的 TypeHandler !!! : " + type);
+        }
+        return (TypeHandler<T>) handler;
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> TypeHandler<T> getTypeHandler(Type type) {
-        TypeHandler<?> handler = TYPE_HANDLER_MAP.get(type);
-        if (handler != null) {
-            return (TypeHandler<T>) handler;
-        }
+    private static <E extends Enum<E>> TypeHandler<?> createTypeHandler(Type type) {
         if (type instanceof Class<?> clazz) {
-            if (clazz.isEnum()) {
-                var enumTypeHandler = new EnumTypeHandler<>((Class<Enum>) clazz);
-                TYPE_HANDLER_MAP.put(clazz, enumTypeHandler);
-                return (TypeHandler<T>) enumTypeHandler;
+            if (Enum.class.isAssignableFrom(clazz)) {
+                var enumClass = clazz.isAnonymousClass() ? clazz.getSuperclass() : clazz;
+                return new EnumTypeHandler<>((Class<E>) enumClass);
             } else {
-                var objectTypeHandler = new ObjectTypeHandler(clazz);
-                TYPE_HANDLER_MAP.put(clazz, objectTypeHandler);
-                return (TypeHandler<T>) objectTypeHandler;
+                return new ObjectTypeHandler(clazz);
             }
         }
         return null;
