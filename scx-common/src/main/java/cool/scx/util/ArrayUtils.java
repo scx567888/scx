@@ -43,20 +43,39 @@ public final class ArrayUtils {
         return -1;
     }
 
-    public static byte[] convertToPrimitiveArray(Byte[] objects) {
-        final byte[] bytes = new byte[objects.length];
-        for (int i = 0; i < objects.length; i = i + 1) {
-            bytes[i] = objects[i];
+    public static byte[] toPrimitive(Byte[] w) {
+        var p = new byte[w.length];
+        for (int i = 0; i < w.length; i = i + 1) {
+            p[i] = w[i];
         }
-        return bytes;
+        return p;
     }
 
-    public static Byte[] convertToObjectArray(byte[] bytes) {
-        final Byte[] objects = new Byte[bytes.length];
-        for (int i = 0; i < bytes.length; i = i + 1) {
-            objects[i] = bytes[i];
+    public static long[] toPrimitive(Long[] w) {
+        var p = new long[w.length];
+        for (int i = 0; i < w.length; i = i + 1) {
+            p[i] = w[i];
         }
-        return objects;
+        return p;
+    }
+
+    public static Byte[] toWrapper(byte[] p) {
+        var w = new Byte[p.length];
+        for (int i = 0; i < p.length; i = i + 1) {
+            w[i] = p[i];
+        }
+        return w;
+    }
+
+    public static long[] toLongArray(int[] intArray) {
+        if (intArray == null) {
+            return null;
+        }
+        long[] longArray = new long[intArray.length];
+        for (int i = 0; i < intArray.length; i = i + 1) {
+            longArray[i] = intArray[i];
+        }
+        return longArray;
     }
 
 }
