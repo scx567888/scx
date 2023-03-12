@@ -1,5 +1,6 @@
 package cool.scx.util;
 
+import java.util.List;
 import java.util.Objects;
 
 public final class ArrayUtils {
@@ -55,6 +56,14 @@ public final class ArrayUtils {
         var p = new long[w.length];
         for (int i = 0; i < w.length; i = i + 1) {
             p[i] = w[i];
+        }
+        return p;
+    }
+
+    public static long[] toPrimitive(List<Long> w) {
+        var p = new long[w.size()];
+        for (int i = 0; i < w.size(); i = i + 1) {
+            p[i] = w.get(i);
         }
         return p;
     }

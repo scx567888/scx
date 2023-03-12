@@ -3,13 +3,13 @@ package cool.scx.sql;
 import cool.scx.functional.ScxConsumer;
 import cool.scx.functional.ScxFunction;
 import cool.scx.functional.ScxRunnable;
+import cool.scx.util.ArrayUtils;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ForkJoinPool;
 
@@ -155,13 +155,13 @@ public final class SQLRunner {
      * @return a {@link cool.scx.sql.UpdateResult} object
      * @throws SQLException if any.
      */
-    private static List<Long> getGeneratedKeys(PreparedStatement preparedStatement) throws SQLException {
+    private static long[] getGeneratedKeys(PreparedStatement preparedStatement) throws SQLException {
         try (var resultSet = preparedStatement.getGeneratedKeys()) {
             var ids = new ArrayList<Long>();
             while (resultSet.next()) {
                 ids.add(resultSet.getLong(1));
             }
-            return ids;
+            return ArrayUtils.toPrimitive(ids);
         }
     }
 

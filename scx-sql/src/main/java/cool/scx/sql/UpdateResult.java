@@ -1,22 +1,20 @@
 package cool.scx.sql;
 
-import java.util.List;
-
 /**
  * 数据库更新结果
  *
  * @author scx567888
  * @version 0.0.1
  */
-public record UpdateResult(long affectedItemsCount, List<Long> generatedKeys) {
+public record UpdateResult(long affectedItemsCount, long[] generatedKeys) {
 
     /**
-     * a
+     * 返回第一个主键
      *
-     * @return a
+     * @return 主键
      */
     public Long firstGeneratedKey() {
-        return this.generatedKeys.size() > 0 ? this.generatedKeys.get(0) : null;
+        return this.generatedKeys.length > 0 ? this.generatedKeys[0] : null;
     }
 
 }
