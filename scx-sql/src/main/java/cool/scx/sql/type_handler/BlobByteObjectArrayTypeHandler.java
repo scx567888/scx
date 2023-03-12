@@ -16,7 +16,7 @@ public class BlobByteObjectArrayTypeHandler implements TypeHandler<Byte[]> {
 
     @Override
     public void setObject(PreparedStatement ps, int i, Byte[] parameter, JdbcType jdbcType) throws SQLException {
-        ByteArrayInputStream bis = new ByteArrayInputStream(ArrayUtils.convertToPrimitiveArray(parameter));
+        ByteArrayInputStream bis = new ByteArrayInputStream(ArrayUtils.toPrimitive(parameter));
         ps.setBinaryStream(i, bis, parameter.length);
     }
 
@@ -26,7 +26,7 @@ public class BlobByteObjectArrayTypeHandler implements TypeHandler<Byte[]> {
         if (blob == null) {
             return null;
         }
-        return ArrayUtils.convertToObjectArray(blob.getBytes(1, (int) blob.length()));
+        return ArrayUtils.toWrapper(blob.getBytes(1, (int) blob.length()));
     }
 
 }

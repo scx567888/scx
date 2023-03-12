@@ -13,7 +13,7 @@ public class ByteObjectArrayTypeHandler implements TypeHandler<Byte[]> {
 
     @Override
     public void setObject(PreparedStatement ps, int i, Byte[] parameter, JdbcType jdbcType) throws SQLException {
-        ps.setBytes(i, ArrayUtils.convertToPrimitiveArray(parameter));
+        ps.setBytes(i, ArrayUtils.toPrimitive(parameter));
     }
 
     @Override
@@ -22,7 +22,7 @@ public class ByteObjectArrayTypeHandler implements TypeHandler<Byte[]> {
         if (bytes == null) {
             return null;
         }
-        return ArrayUtils.convertToObjectArray(bytes);
+        return ArrayUtils.toWrapper(bytes);
     }
 
 }

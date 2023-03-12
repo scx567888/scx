@@ -1,10 +1,9 @@
 package cool.scx.test.bean;
 
 public class Student {
-    public sssss name;
+    public String name;
     public Integer age;
     public Boolean sex;
-    public sssss sssss;
     public Integer a;
     public Boolean b;
     public Boolean c;
@@ -25,7 +24,7 @@ public class Student {
     public Student() {
     }
 
-    public Student(sssss name, Integer age, Boolean sex, Integer a, Boolean b, Boolean c, Boolean d, Boolean e, Boolean f, Boolean g, Boolean h, Boolean i, Boolean j, Boolean k, Boolean l, Boolean m, Boolean n, Boolean o, Boolean p) {
+    public Student(String name, Integer age, Boolean sex, Integer a, Boolean b, Boolean c, Boolean d, Boolean e, Boolean f, Boolean g, Boolean h, Boolean i, Boolean j, Boolean k, Boolean l, Boolean m, Boolean n, Boolean o, Boolean p) {
         this.name = name;
         this.age = age;
         this.sex = sex;
