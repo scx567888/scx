@@ -2,7 +2,6 @@ package cool.scx.dao;
 
 import cool.scx.dao.annotation.Column;
 import cool.scx.sql.ColumnInfo;
-import cool.scx.sql.JDBCHelperRegistry;
 
 import java.lang.reflect.Field;
 

@@ -6,16 +6,17 @@ import cool.scx.logging.ScxLogRecordFormatter;
 import cool.scx.logging.ScxLoggerFactory;
 import cool.scx.logging.ScxLoggingLevel;
 import cool.scx.logging.recorder.ConsoleRecorder;
-import cool.scx.sql.*;
+import cool.scx.sql.BeanBuilder;
+import cool.scx.sql.SQL;
+import cool.scx.sql.SQLRunner;
+import cool.scx.sql.UpdateResult;
 import cool.scx.sql.result_handler.BeanListHandler;
 import cool.scx.sql.result_handler.MapListHandler;
-import cool.scx.sql.spy.JDBCSpy;
 import cool.scx.sql.spy.event.LoggingEventListener;
 import cool.scx.test.bean.Student;
 import cool.scx.test.bean.StudentRecord;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.ScxExceptionHelper;
-import org.sqlite.SQLiteDataSource;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
@@ -35,9 +36,9 @@ import static cool.scx.sql.SQL.ofNormal;
 public class SQlRunnerTest {
 
     private static final String databaseName = "scx_sql_test";
-    private static final DataSource dataSource = getSQLiteDataSource();
+    private static final DataSource dataSource = getMySQLDataSource();
     private static final SQLRunner sqlRunner = new SQLRunner(dataSource);
-    private static final String tableName = "`t1`";
+    private static final String tableName = "t1";
 
     static {
         ScxLoggerFactory.defaultConfig().setLevel(ScxLoggingLevel.DEBUG);
@@ -163,13 +164,6 @@ public class SQlRunnerTest {
         mysqlDataSource.getProperty(rewriteBatchedStatements).setValue(true);
         mysqlDataSource.getProperty(createDatabaseIfNotExist).setValue(true);
         return mysqlDataSource;
-    }
-
-    private static DataSource getSQLiteDataSource() {
-        SQLiteDataSource sqLiteDataSource = new SQLiteDataSource();
-        sqLiteDataSource.setUrl("jdbc:sqlite:aaaa.sqlite");
-//        sqLiteDataSource.setDatabaseName("main");
-        return JDBCSpy.wrap(sqLiteDataSource);
     }
 
 }

@@ -11,7 +11,7 @@ import cool.scx.dao.AnnotationConfigTableInfo;
 import cool.scx.mvc.ScxMvc;
 import cool.scx.mvc.ScxMvcOptions;
 import cool.scx.mvc.websocket.ScxWebSocketRouter;
-import cool.scx.sql.JDBCHelper;
+import cool.scx.dao.JDBCHelper;
 import cool.scx.sql.SQLRunner;
 import cool.scx.util.NetUtils;
 import cool.scx.util.StopWatch;

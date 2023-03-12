@@ -10,8 +10,7 @@ import cool.scx.dao.base_dao.OldMySQLDaoTableInfo;
 import cool.scx.dao.where.WhereBody;
 import cool.scx.logging.ScxLoggerFactory;
 import cool.scx.logging.ScxLoggingLevel;
-import cool.scx.sql.JDBCHelper;
-import cool.scx.sql.JDBCHelperRegistry;
+import cool.scx.dao.JDBCHelperRegistry;
 import cool.scx.sql.SQLRunner;
 import org.testng.annotations.Test;
 

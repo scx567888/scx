@@ -1,4 +1,4 @@
-package cool.scx.sql;
+package cool.scx.dao;
 
 import javax.sql.DataSource;
 import java.sql.Connection;

@@ -1,8 +1,9 @@
-package cool.scx.sql.jdbc_helper;
+package cool.scx.dao.jdbc_helper;
 
 import com.mysql.cj.PreparedQuery;
 import com.mysql.cj.jdbc.ClientPreparedStatement;
 import com.mysql.cj.jdbc.MysqlDataSource;
+import cool.scx.dao.JDBCHelper;
 import cool.scx.sql.*;
 
 import javax.sql.DataSource;

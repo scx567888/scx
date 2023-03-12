@@ -1,6 +1,4 @@
-package cool.scx.sql;
-
-import com.mysql.cj.jdbc.MysqlDataSource;
+package cool.scx.dao;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
