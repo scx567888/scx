@@ -1,5 +1,6 @@
-package cool.scx.dao._old;
+package cool.scx.dao.base_dao;
 
+import cool.scx.dao.BaseDao;
 import cool.scx.dao.Query;
 import cool.scx.dao.SelectFilter;
 import cool.scx.dao.UpdateFilter;
@@ -14,7 +15,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static cool.scx.sql.SQLBuilder.*;
+import static cool.scx.dao.SQLBuilder.*;
 
 /**
  * 最基本的 可以实现 实体类 CRUD 的 DAO
@@ -22,13 +23,12 @@ import static cool.scx.sql.SQLBuilder.*;
  * @author scx567888
  * @version 0.1.3
  */
-@Deprecated
-public class OldBaseDao<Entity> {
+public class MySQLDao<Entity> implements BaseDao<Entity> {
 
     /**
      * 实体类对应的 table 结构
      */
-    protected final TableInfo<? extends OldBaseDaoColumnInfo> tableInfo;
+    protected final TableInfo<?> tableInfo;
 
     /**
      * 实体类 class 用于泛型转换
@@ -57,11 +57,11 @@ public class OldBaseDao<Entity> {
      * @param entityClass a
      * @param sqlRunner   a
      */
-    public OldBaseDao(TableInfo<? extends OldBaseDaoColumnInfo> tableInfo, Class<Entity> entityClass, SQLRunner sqlRunner) {
+    public MySQLDao(TableInfo<?> tableInfo, Class<Entity> entityClass, SQLRunner sqlRunner) {
         this.tableInfo = tableInfo;
         this.entityClass = entityClass;
         this.sqlRunner = sqlRunner;
-        this.entityBeanListHandler = new BeanListHandler<>(BeanBuilder.of(this.entityClass));
+        this.entityBeanListHandler = new BeanListHandler<>(BeanBuilder.of(this.entityClass, this.tableInfo));
         this.countResultHandler = new SingleValueHandler<>("count", Long.class);
     }
 
@@ -72,6 +72,7 @@ public class OldBaseDao<Entity> {
      * @param updateFilter a
      * @return 插入成功的主键 ID 如果插入失败或数据没有主键则返回 null
      */
+    @Override
     public final Long insert(Entity entity, UpdateFilter updateFilter) {
         return sqlRunner.update(_buildInsertSQL(entity, updateFilter)).firstGeneratedKey();
     }
@@ -84,9 +85,9 @@ public class OldBaseDao<Entity> {
      * @return a
      */
     private SQL _buildInsertSQL(Entity entity, UpdateFilter updateFilter) {
-        var insertColumnInfos = (OldBaseDaoColumnInfo[]) updateFilter.filter(entity, tableInfo.columnInfos());
+        var insertColumnInfos = updateFilter.filter(entity, tableInfo);
         var insertColumns = Arrays.stream(insertColumnInfos).map(ColumnInfo::columnName).toArray(String[]::new);
-        var insertValues = Arrays.stream(insertColumnInfos).map(OldBaseDaoColumnInfo::insertValuesSQL).toArray(String[]::new);
+        var insertValues = Arrays.stream(insertColumnInfos).map(columnInfo -> "?").toArray(String[]::new);
         var sql = Insert(tableInfo.tableName(), insertColumns)
                 .Values(insertValues)
                 .GetSQL();
@@ -101,6 +102,7 @@ public class OldBaseDao<Entity> {
      * @param updateFilter a
      * @return 保存成功的主键 (ID) 列表
      */
+    @Override
     public final List<Long> insertBatch(Collection<Entity> entityList, UpdateFilter updateFilter) {
         return sqlRunner.updateBatch(buildInsertBatchSQL(entityList, updateFilter)).generatedKeys();
     }
@@ -113,7 +115,7 @@ public class OldBaseDao<Entity> {
      * @return a
      */
     private SQL buildInsertBatchSQL(Collection<Entity> entityList, UpdateFilter updateFilter) {
-        var insertColumnInfos = (OldBaseDaoColumnInfo[]) updateFilter.filter(tableInfo.columnInfos());
+        var insertColumnInfos = updateFilter.filter(tableInfo);
         //将 entityList 转换为 objectArrayList 这里因为 stream 实在太慢所以改为传统循环方式
         var objectArrayList = new ArrayList<Object[]>();
         for (var entity : entityList) {
@@ -124,7 +126,7 @@ public class OldBaseDao<Entity> {
             objectArrayList.add(o);
         }
         var insertColumns = Arrays.stream(insertColumnInfos).map(ColumnInfo::columnName).toArray(String[]::new);
-        var insertValues = Arrays.stream(insertColumnInfos).map(OldBaseDaoColumnInfo::insertValuesSQL).toArray(String[]::new);
+        var insertValues = Arrays.stream(insertColumnInfos).map(c -> "?").toArray(String[]::new);
         var sql = Insert(tableInfo.tableName(), insertColumns)
                 .Values(insertValues)
                 .GetSQL();
@@ -138,6 +140,7 @@ public class OldBaseDao<Entity> {
      * @param selectFilter a
      * @return a {@link java.util.List} object.
      */
+    @Override
     public final List<Entity> select(Query query, SelectFilter selectFilter) {
         return sqlRunner.query(buildSelectSQL(query, selectFilter), entityBeanListHandler);
     }
@@ -183,15 +186,15 @@ public class OldBaseDao<Entity> {
      *      ));
      *  }</pre>
      * <br>
-     * 注意 !!! 若同时使用 limit 和 in/not in 请使用 {@link OldBaseDao#buildSelectSQLWithAlias(Query, SelectFilter)}
+     * 注意 !!! 若同时使用 limit 和 in/not in 请使用 {@link BaseDao#buildSelectSQLWithAlias(Query, SelectFilter)}
      *
      * @param query        聚合查询参数对象
      * @param selectFilter 查询字段过滤器
      * @return selectSQL
      */
     public final SQL buildSelectSQL(Query query, SelectFilter selectFilter) {
-        var selectColumnInfos = (OldBaseDaoColumnInfo[]) selectFilter.filter(tableInfo.columnInfos());
-        var selectColumns = Arrays.stream(selectColumnInfos).map(OldBaseDaoColumnInfo::selectSQL).toArray(String[]::new);
+        var selectColumnInfos = selectFilter.filter(tableInfo);
+        var selectColumns = Arrays.stream(selectColumnInfos).map(ColumnInfo::columnName).toArray(String[]::new);
         var whereParamsAndWhereClauses = query.where().getWhereParamsAndWhereClauses(tableInfo);
         var groupByColumns = query.groupBy().getGroupByColumns(tableInfo);
         var orderByClauses = query.orderBy().getOrderByClauses(tableInfo);
@@ -218,8 +221,8 @@ public class OldBaseDao<Entity> {
         if (query.pagination().rowCount() == null) {
             return buildSelectSQL(query, selectFilter);
         } else {
-            var selectColumnInfos = (OldBaseDaoColumnInfo[]) selectFilter.filter(tableInfo.columnInfos());
-            var selectColumns = Arrays.stream(selectColumnInfos).map(OldBaseDaoColumnInfo::selectSQL).toArray(String[]::new);
+            var selectColumnInfos = selectFilter.filter(tableInfo);
+            var selectColumns = Arrays.stream(selectColumnInfos).map(ColumnInfo::columnName).toArray(String[]::new);
             var whereParamsAndWhereClauses = query.where().getWhereParamsAndWhereClauses(tableInfo);
             var groupByColumns = query.groupBy().getGroupByColumns(tableInfo);
             var orderByClauses = query.orderBy().getOrderByClauses(tableInfo);
@@ -230,7 +233,7 @@ public class OldBaseDao<Entity> {
                     .OrderBy(orderByClauses)
                     .Limit(query.pagination().offset(), query.pagination().rowCount())
                     .GetSQL();
-            var sql = Select(Arrays.stream(selectColumnInfos).map(OldBaseDaoColumnInfo::javaFieldName).toArray(String[]::new)).From("(" + sql0 + ")").GetSQL();
+            var sql = Select("*").From("(" + sql0 + ")").GetSQL();
             return SQL.ofPlaceholder(sql + " AS " + tableInfo.tableName() + "_" + RandomUtils.randomString(6), whereParamsAndWhereClauses.whereParams());
         }
     }
@@ -241,6 +244,7 @@ public class OldBaseDao<Entity> {
      * @param query 查询条件
      * @return 条数
      */
+    @Override
     public final long count(Query query) {
         return sqlRunner.query(buildCountSQL(query), countResultHandler);
     }
@@ -270,6 +274,7 @@ public class OldBaseDao<Entity> {
      * @param updateFilter a
      * @return 受影响的条数
      */
+    @Override
     public final long update(Entity entity, Query query, UpdateFilter updateFilter) {
         return sqlRunner.update(buildUpdateSQL(entity, query, updateFilter)).affectedItemsCount();
     }
@@ -286,8 +291,8 @@ public class OldBaseDao<Entity> {
         if (query.where().isEmpty()) {
             throw new IllegalArgumentException("更新数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
         }
-        var updateSetColumnInfos = (OldBaseDaoColumnInfo[]) updateFilter.filter(entity, tableInfo.columnInfos());
-        var updateSetColumns = Arrays.stream(updateSetColumnInfos).map(OldBaseDaoColumnInfo::updateSetSQL).toArray(String[]::new);
+        var updateSetColumnInfos = updateFilter.filter(entity, tableInfo);
+        var updateSetColumns = Arrays.stream(updateSetColumnInfos).map(c -> c.columnName() + " = ?").toArray(String[]::new);
         var whereParamsAndWhereClauses = query.where().getWhereParamsAndWhereClauses(tableInfo);
         var sql = Update(tableInfo.tableName())
                 .Set(updateSetColumns)
@@ -304,6 +309,7 @@ public class OldBaseDao<Entity> {
      * @param query where 条件
      * @return 受影响的条数 (被成功删除的数据条数)
      */
+    @Override
     public final long delete(Query query) {
         return sqlRunner.update(buildDeleteSQL(query)).affectedItemsCount();
     }
@@ -328,18 +334,22 @@ public class OldBaseDao<Entity> {
     /**
      * 清空表中所有数据 (注意此操作不受事务影响, 所以慎用!!!)
      */
+    @Override
     public final void _truncate() {
         this.sqlRunner.execute(SQL.ofNormal("truncate " + tableInfo.tableName()));
     }
 
-    public final TableInfo<? extends OldBaseDaoColumnInfo> _tableInfo() {
+    @Override
+    public final TableInfo<?> _tableInfo() {
         return this.tableInfo;
     }
 
+    @Override
     public final Class<Entity> _entityClass() {
         return this.entityClass;
     }
 
+    @Override
     public final SQLRunner _sqlRunner() {
         return this.sqlRunner;
     }

@@ -7,11 +7,11 @@ import cool.scx.config.ScxFeatureConfig;
 import cool.scx.core.enumeration.ScxCoreFeature;
 import cool.scx.core.eventbus.MessageCodecRegistrar;
 import cool.scx.core.scheduler.ScxScheduler;
-import cool.scx.dao.impl.AnnotationConfigTableInfo;
+import cool.scx.dao.AnnotationConfigTableInfo;
 import cool.scx.mvc.ScxMvc;
 import cool.scx.mvc.ScxMvcOptions;
 import cool.scx.mvc.websocket.ScxWebSocketRouter;
-import cool.scx.sql.SQLHelper;
+import cool.scx.sql.JDBCHelper;
 import cool.scx.sql.SQLRunner;
 import cool.scx.util.NetUtils;
 import cool.scx.util.StopWatch;
@@ -249,8 +249,8 @@ public final class Scx {
             //根据 class 获取 tableInfo
             var tableInfo = new AnnotationConfigTableInfo(v);
             try {
-                if (SQLHelper.checkNeedFixTable(tableInfo, databaseName, dataSource)) {
-                    SQLHelper.fixTable(tableInfo, databaseName, dataSource);
+                if (JDBCHelper.checkNeedFixTable(tableInfo, databaseName, dataSource)) {
+                    JDBCHelper.fixTable(tableInfo, databaseName, dataSource);
                     fixSuccess = fixSuccess + 1;
                 } else {
                     noNeedToFix = noNeedToFix + 1;
@@ -298,7 +298,7 @@ public final class Scx {
             var tableInfo = new AnnotationConfigTableInfo(v);
             try {
                 //有任何需要修复的直接 返回 true
-                if (SQLHelper.checkNeedFixTable(tableInfo, databaseName, dataSource)) {
+                if (JDBCHelper.checkNeedFixTable(tableInfo, databaseName, dataSource)) {
                     return true;
                 }
             } catch (Exception e) {

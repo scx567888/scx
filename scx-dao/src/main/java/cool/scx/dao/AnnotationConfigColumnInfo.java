@@ -1,11 +1,11 @@
-package cool.scx.dao.impl;
+package cool.scx.dao;
 
-import cool.scx.dao._old.OldBaseDaoColumnInfo;
 import cool.scx.dao.annotation.Column;
+import cool.scx.sql.ColumnInfo;
+import cool.scx.sql.JDBCHelperRegistry;
 
 import java.lang.reflect.Field;
 
-import static cool.scx.sql.SQLHelper.getMySQLTypeCreateName;
 import static cool.scx.util.CaseUtils.toSnake;
 import static cool.scx.util.StringUtils.notBlank;
 
@@ -15,7 +15,7 @@ import static cool.scx.util.StringUtils.notBlank;
  * @author scx567888
  * @version 1.11.8
  */
-public final class AnnotationConfigColumnInfo extends OldBaseDaoColumnInfo {
+public class AnnotationConfigColumnInfo implements ColumnInfo {
 
     private final Field javaField;
     private final String columnName;
@@ -37,7 +37,7 @@ public final class AnnotationConfigColumnInfo extends OldBaseDaoColumnInfo {
         this.javaField = javaField;
         var column = javaField.getAnnotation(Column.class);
         if (column != null) {
-            this.type = notBlank(column.type()) ? column.type() : getMySQLTypeCreateName(javaField.getType());
+            this.type = notBlank(column.type()) ? column.type() : JDBCHelperRegistry.getMySQLTypeCreateName(javaField.getType());
             this.columnName = notBlank(column.columnName()) ? column.columnName() : toSnake(javaField.getName());
             this.needIndex = column.needIndex();
             this.unique = column.unique();
@@ -47,7 +47,7 @@ public final class AnnotationConfigColumnInfo extends OldBaseDaoColumnInfo {
             this.autoIncrement = column.autoIncrement();
             this.notNull = column.notNull();
         } else {
-            this.type = getMySQLTypeCreateName(javaField.getType());
+            this.type = JDBCHelperRegistry.getMySQLTypeCreateName(javaField.getType());
             this.columnName = toSnake(javaField.getName());
             this.needIndex = false;
             this.unique = false;

@@ -2,6 +2,7 @@ package cool.scx.sql.jdbc_helper;
 
 import com.mysql.cj.PreparedQuery;
 import com.mysql.cj.jdbc.ClientPreparedStatement;
+import com.mysql.cj.jdbc.MysqlDataSource;
 import cool.scx.sql.*;
 
 import javax.sql.DataSource;
@@ -174,6 +175,15 @@ public class MySQLHelper implements JDBCHelper {
     public boolean canHandler(Statement preparedStatement) {
         try {
             return preparedStatement.isWrapperFor(ClientPreparedStatement.class);
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean canHandler(DataSource dataSource) {
+        try {
+            return dataSource.isWrapperFor(MysqlDataSource.class);
         } catch (SQLException e) {
             return false;
         }

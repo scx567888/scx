@@ -31,4 +31,6 @@ public @interface Table {
      */
     String tablePrefix() default "";
 
+    String databaseName() default "";
+
 }

@@ -5,7 +5,8 @@ import cool.scx.dao.BaseDao;
 import cool.scx.dao.Query;
 import cool.scx.dao.SelectFilter;
 import cool.scx.dao.UpdateFilter;
-import cool.scx.dao.impl.AnnotationConfigTableInfo;
+import cool.scx.dao.AnnotationConfigTableInfo;
+import cool.scx.dao.base_dao.MySQLDao;
 import cool.scx.sql.SQL;
 
 import java.lang.reflect.ParameterizedType;
@@ -40,7 +41,7 @@ public class BaseModelService<Entity extends BaseModel> {
         if (genericSuperclass instanceof ParameterizedType) {
             var typeArguments = ((ParameterizedType) genericSuperclass).getActualTypeArguments();
             var entityClass = (Class<Entity>) typeArguments[0];
-            this.baseDao = new BaseDao<>(new AnnotationConfigTableInfo(entityClass), entityClass, ScxContext.sqlRunner());
+            this.baseDao = new MySQLDao<>(new AnnotationConfigTableInfo(entityClass), entityClass, ScxContext.sqlRunner());
         } else {
             throw new IllegalArgumentException(this.getClass().getName() + " : 必须设置泛型参数 !!!");
         }
@@ -52,7 +53,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @param entityClass 继承自 {@link BaseModel} 的实体类 class
      */
     public BaseModelService(Class<Entity> entityClass) {
-        this.baseDao = new BaseDao<>(new AnnotationConfigTableInfo(entityClass), entityClass, ScxContext.sqlRunner());
+        this.baseDao = new MySQLDao<>(new AnnotationConfigTableInfo(entityClass), entityClass, ScxContext.sqlRunner());
     }
 
     /**

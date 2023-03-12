@@ -66,6 +66,8 @@ public interface JDBCHelper {
 
     boolean canHandler(Statement preparedStatement);
 
+    boolean canHandler(DataSource dataSource);
+
     default String getSQL(Statement preparedStatement){
         return preparedStatement.toString();
     }

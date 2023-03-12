@@ -1,4 +1,4 @@
-package cool.scx.dao.impl;
+package cool.scx.dao;
 
 import cool.scx.dao.annotation.NoColumn;
 import cool.scx.dao.annotation.Table;
@@ -20,7 +20,7 @@ import java.util.stream.Stream;
  * @author scx567888
  * @version 0.5.0
  */
-public final class AnnotationConfigTableInfo implements TableInfo<AnnotationConfigColumnInfo> {
+public class AnnotationConfigTableInfo implements TableInfo<AnnotationConfigColumnInfo> {
 
     /**
      * 实体类型不含 @NoColumn 注解的field

@@ -1,5 +1,9 @@
 package cool.scx.sql;
 
+import com.mysql.cj.jdbc.MysqlDataSource;
+
+import javax.sql.DataSource;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 import java.util.ServiceLoader;
@@ -20,6 +24,18 @@ public class JDBCHelperRegistry {
             }
         }
         return statement.toString();
+    }
+
+    public static void fixTable(TableInfo<?> userTableInfo, String databaseName, DataSource mySQLDataSource) throws SQLException {
+        for (var scxSpySQLHelper : LIST) {
+            if (scxSpySQLHelper.canHandler(mySQLDataSource)) {
+                scxSpySQLHelper.fixTable(userTableInfo, databaseName, mySQLDataSource);
+            }
+        }
+    }
+
+    public static String getMySQLTypeCreateName(Class<?> type) {
+        return null;
     }
 
 }

@@ -54,6 +54,10 @@ public class SQLiteHelper implements JDBCHelper {
         return preparedStatement instanceof JDBC4PreparedStatement;
     }
 
+    @Override
+    public boolean canHandler(DataSource dataSource) {
+        return false;
+    }
 
 
 }
