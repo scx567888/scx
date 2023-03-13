@@ -22,6 +22,7 @@ public final class TypeHandlerRegistry {
         //Calendar
         //Blob
         //Duration
+        //基本类型
         TYPE_HANDLER_MAP.put(boolean.class, new BooleanTypeHandler());
         TYPE_HANDLER_MAP.put(char.class, new CharacterTypeHandler());
         TYPE_HANDLER_MAP.put(byte.class, new ByteTypeHandler());
@@ -42,15 +43,23 @@ public final class TypeHandlerRegistry {
         TYPE_HANDLER_MAP.put(Byte[].class, new ByteObjectArrayTypeHandler());
         TYPE_HANDLER_MAP.put(byte[].class, new ByteArrayTypeHandler());
 
+
+
+        // 大数字
         TYPE_HANDLER_MAP.put(BigInteger.class, new BigIntegerTypeHandler());
         TYPE_HANDLER_MAP.put(BigDecimal.class, new BigDecimalTypeHandler());
 
-        TYPE_HANDLER_MAP.put(InputStream.class, new BlobInputStreamTypeHandler());
-        TYPE_HANDLER_MAP.put(Date.class, new DateTypeHandler());
-        TYPE_HANDLER_MAP.put(Instant.class, new InstantTypeHandler());
+
+        // LocalDateTime
         TYPE_HANDLER_MAP.put(LocalDateTime.class, new LocalDateTimeTypeHandler());
         TYPE_HANDLER_MAP.put(LocalDate.class, new LocalDateTypeHandler());
         TYPE_HANDLER_MAP.put(LocalTime.class, new LocalTimeTypeHandler());
+
+
+        //todo 未测试
+        TYPE_HANDLER_MAP.put(InputStream.class, new BlobInputStreamTypeHandler());
+        TYPE_HANDLER_MAP.put(Date.class, new DateTypeHandler());
+        TYPE_HANDLER_MAP.put(Instant.class, new InstantTypeHandler());
         TYPE_HANDLER_MAP.put(OffsetDateTime.class, new OffsetDateTimeTypeHandler());
         TYPE_HANDLER_MAP.put(OffsetTime.class, new OffsetTimeTypeHandler());
         TYPE_HANDLER_MAP.put(ZonedDateTime.class, new ZonedDateTimeTypeHandler());
