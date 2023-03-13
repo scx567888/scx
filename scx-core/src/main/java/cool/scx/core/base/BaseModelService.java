@@ -1,11 +1,11 @@
 package cool.scx.core.base;
 
 import cool.scx.core.ScxContext;
-import cool.scx.dao.impl.MySQLDao;
 import cool.scx.dao.Query;
 import cool.scx.dao.SelectFilter;
 import cool.scx.dao.UpdateFilter;
 import cool.scx.dao.impl.AnnotationConfigTableInfo;
+import cool.scx.dao.impl.MySQLDao;
 import cool.scx.sql.SQL;
 
 import java.lang.reflect.ParameterizedType;

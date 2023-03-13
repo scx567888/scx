@@ -28,11 +28,6 @@ public class MySQLXDao<Entity> implements BaseDao<Entity> {
         this.collection = collection;
     }
 
-    static class User {
-        public String name;
-        public Integer age;
-    }
-
     @Override
     public Long insert(Entity entity, UpdateFilter updateFilter) {
         String json = null;

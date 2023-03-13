@@ -1,10 +1,10 @@
 package cool.scx.test;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
-import cool.scx.dao.impl.MySQLDao;
 import cool.scx.dao.Query;
 import cool.scx.dao.SelectFilter;
 import cool.scx.dao.UpdateFilter;
+import cool.scx.dao.impl.MySQLDao;
 import cool.scx.dao.impl.OldMySQLDao;
 import cool.scx.dao.impl.OldMySQLTableInfo;
 import cool.scx.dao.where.WhereBody;
