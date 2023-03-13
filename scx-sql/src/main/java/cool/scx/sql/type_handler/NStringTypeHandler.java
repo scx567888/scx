@@ -10,7 +10,7 @@ public class NStringTypeHandler implements TypeHandler<String> {
 
 
     @Override
-    public void setObject(PreparedStatement ps, int i, String parameter, JdbcType jdbcType) throws SQLException {
+    public void setObject(PreparedStatement ps, int i, String parameter) throws SQLException {
         ps.setNString(i, parameter);
     }
 

@@ -15,7 +15,7 @@ public class NClobTypeHandler implements TypeHandler<String> {
     }
 
     @Override
-    public void setObject(PreparedStatement ps, int i, String parameter, JdbcType jdbcType) throws SQLException {
+    public void setObject(PreparedStatement ps, int i, String parameter) throws SQLException {
         StringReader reader = new StringReader(parameter);
         ps.setCharacterStream(i, reader, parameter.length());
     }

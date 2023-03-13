@@ -9,7 +9,7 @@ import java.sql.SQLException;
 public class DoubleTypeHandler implements TypeHandler<Double> {
 
     @Override
-    public void setObject(PreparedStatement ps, int i, Double parameter, JdbcType jdbcType) throws SQLException {
+    public void setObject(PreparedStatement ps, int i, Double parameter) throws SQLException {
         ps.setDouble(i, parameter);
     }
 

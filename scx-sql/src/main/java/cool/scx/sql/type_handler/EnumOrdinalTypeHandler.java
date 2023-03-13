@@ -31,7 +31,7 @@ public class EnumOrdinalTypeHandler<E extends Enum<E>> implements TypeHandler<E>
     }
 
     @Override
-    public void setObject(PreparedStatement ps, int i, E parameter, JdbcType jdbcType) throws SQLException {
+    public void setObject(PreparedStatement ps, int i, E parameter) throws SQLException {
         ps.setInt(i, parameter.ordinal());
     }
 

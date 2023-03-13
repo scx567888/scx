@@ -9,7 +9,7 @@ import java.sql.SQLException;
 public class ByteTypeHandler implements TypeHandler<Byte> {
 
     @Override
-    public void setObject(PreparedStatement ps, int i, Byte parameter, JdbcType jdbcType) throws SQLException {
+    public void setObject(PreparedStatement ps, int i, Byte parameter) throws SQLException {
         ps.setByte(i, parameter);
     }
 

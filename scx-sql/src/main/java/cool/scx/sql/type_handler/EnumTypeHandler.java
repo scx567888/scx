@@ -22,7 +22,7 @@ public class EnumTypeHandler<E extends Enum<E>> implements TypeHandler<E> {
     }
 
     @Override
-    public void setObject(PreparedStatement ps, int i, E parameter, JdbcType jdbcType) throws SQLException {
+    public void setObject(PreparedStatement ps, int i, E parameter) throws SQLException {
         ps.setString(i, parameter.name());
     }
 

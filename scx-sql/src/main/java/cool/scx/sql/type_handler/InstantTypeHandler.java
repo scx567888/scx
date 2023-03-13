@@ -20,7 +20,7 @@ public class InstantTypeHandler implements TypeHandler<Instant> {
 
 
     @Override
-    public void setObject(PreparedStatement ps, int i, Instant parameter, JdbcType jdbcType) throws SQLException {
+    public void setObject(PreparedStatement ps, int i, Instant parameter) throws SQLException {
         ps.setTimestamp(i, Timestamp.from(parameter));
     }
 

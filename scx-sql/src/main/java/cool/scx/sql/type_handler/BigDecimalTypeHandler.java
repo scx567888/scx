@@ -10,7 +10,7 @@ import java.sql.SQLException;
 public class BigDecimalTypeHandler implements TypeHandler<BigDecimal> {
 
     @Override
-    public void setObject(PreparedStatement ps, int i, BigDecimal parameter, JdbcType jdbcType) throws SQLException {
+    public void setObject(PreparedStatement ps, int i, BigDecimal parameter) throws SQLException {
         ps.setBigDecimal(i, parameter);
     }
 

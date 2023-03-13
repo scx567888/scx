@@ -62,7 +62,7 @@ public class ObjectTypeHandler implements TypeHandler<Object> {
     }
 
     @Override
-    public void setObject(PreparedStatement ps, int i, Object parameter, JdbcType jdbcType) throws SQLException {
+    public void setObject(PreparedStatement ps, int i, Object parameter) throws SQLException {
         ps.setString(i, convertToJsonOrNull(parameter));
     }
 

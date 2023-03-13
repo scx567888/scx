@@ -11,7 +11,7 @@ import java.util.Date;
 public class TimeOnlyTypeHandler implements TypeHandler<Date> {
 
     @Override
-    public void setObject(PreparedStatement ps, int i, Date parameter, JdbcType jdbcType) throws SQLException {
+    public void setObject(PreparedStatement ps, int i, Date parameter) throws SQLException {
         ps.setTime(i, new Time(parameter.getTime()));
     }
 

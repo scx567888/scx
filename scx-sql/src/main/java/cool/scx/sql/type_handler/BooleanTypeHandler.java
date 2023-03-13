@@ -9,7 +9,7 @@ import java.sql.SQLException;
 public class BooleanTypeHandler implements TypeHandler<Boolean> {
 
     @Override
-    public void setObject(PreparedStatement ps, int i, Boolean parameter, JdbcType jdbcType) throws SQLException {
+    public void setObject(PreparedStatement ps, int i, Boolean parameter) throws SQLException {
         ps.setBoolean(i, parameter);
     }
 

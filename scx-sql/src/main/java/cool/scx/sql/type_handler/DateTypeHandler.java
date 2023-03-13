@@ -12,7 +12,7 @@ public class DateTypeHandler implements TypeHandler<Date> {
 
 
     @Override
-    public void setObject(PreparedStatement ps, int i, Date parameter, JdbcType jdbcType) throws SQLException {
+    public void setObject(PreparedStatement ps, int i, Date parameter) throws SQLException {
         ps.setTimestamp(i, new Timestamp(parameter.getTime()));
     }
 

@@ -21,10 +21,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.OffsetDateTime;
 
-/**
- * @author Tomas Rohovsky
- * @since 3.4.5
- */
 public class OffsetDateTimeTypeHandler implements TypeHandler<OffsetDateTime> {
 
     @Override

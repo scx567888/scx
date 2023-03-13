@@ -9,7 +9,7 @@ import java.sql.SQLException;
 public class ByteArrayTypeHandler implements TypeHandler<byte[]> {
 
     @Override
-    public void setObject(PreparedStatement ps, int i, byte[] parameter, JdbcType jdbcType) throws SQLException {
+    public void setObject(PreparedStatement ps, int i, byte[] parameter) throws SQLException {
         ps.setBytes(i, parameter);
     }
 

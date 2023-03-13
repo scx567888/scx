@@ -9,7 +9,7 @@ import java.sql.SQLException;
 public class IntegerTypeHandler implements TypeHandler<Integer> {
 
     @Override
-    public void setObject(PreparedStatement ps, int i, Integer parameter, JdbcType jdbcType) throws SQLException {
+    public void setObject(PreparedStatement ps, int i, Integer parameter) throws SQLException {
         ps.setInt(i, parameter);
     }
 

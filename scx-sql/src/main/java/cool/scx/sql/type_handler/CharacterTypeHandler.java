@@ -9,7 +9,7 @@ import java.sql.SQLException;
 public class CharacterTypeHandler implements TypeHandler<Character> {
 
     @Override
-    public void setObject(PreparedStatement ps, int i, Character parameter, JdbcType jdbcType) throws SQLException {
+    public void setObject(PreparedStatement ps, int i, Character parameter) throws SQLException {
         ps.setString(i, parameter.toString());
     }
 

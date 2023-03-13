@@ -10,7 +10,7 @@ import java.sql.SQLException;
 public class ClobReaderTypeHandler implements TypeHandler<Reader> {
 
     @Override
-    public void setObject(PreparedStatement ps, int i, Reader parameter, JdbcType jdbcType) throws SQLException {
+    public void setObject(PreparedStatement ps, int i, Reader parameter) throws SQLException {
         ps.setClob(i, parameter);
     }
 

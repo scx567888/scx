@@ -9,7 +9,7 @@ import java.sql.SQLException;
 public class ShortTypeHandler implements TypeHandler<Short> {
 
     @Override
-    public void setObject(PreparedStatement ps, int i, Short parameter, JdbcType jdbcType) throws SQLException {
+    public void setObject(PreparedStatement ps, int i, Short parameter) throws SQLException {
         ps.setShort(i, parameter);
     }
 

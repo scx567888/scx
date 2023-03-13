@@ -10,7 +10,7 @@ import java.time.Year;
 public class YearTypeHandler implements TypeHandler<Year> {
 
     @Override
-    public void setObject(PreparedStatement ps, int i, Year parameter, JdbcType jdbcType) throws SQLException {
+    public void setObject(PreparedStatement ps, int i, Year parameter) throws SQLException {
         ps.setInt(i, parameter.getValue());
     }
 

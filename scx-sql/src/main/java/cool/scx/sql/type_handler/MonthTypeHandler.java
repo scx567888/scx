@@ -10,7 +10,7 @@ import java.time.Month;
 public class MonthTypeHandler implements TypeHandler<Month> {
 
     @Override
-    public void setObject(PreparedStatement ps, int i, Month parameter, JdbcType jdbcType) throws SQLException {
+    public void setObject(PreparedStatement ps, int i, Month parameter) throws SQLException {
         ps.setInt(i, parameter.getValue());
     }
 

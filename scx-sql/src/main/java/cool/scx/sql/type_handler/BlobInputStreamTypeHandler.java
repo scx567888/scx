@@ -10,7 +10,7 @@ import java.sql.SQLException;
 public class BlobInputStreamTypeHandler implements TypeHandler<InputStream> {
 
     @Override
-    public void setObject(PreparedStatement ps, int i, InputStream parameter, JdbcType jdbcType) throws SQLException {
+    public void setObject(PreparedStatement ps, int i, InputStream parameter) throws SQLException {
         ps.setBlob(i, parameter);
     }
 

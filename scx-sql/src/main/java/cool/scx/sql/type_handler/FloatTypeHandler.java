@@ -9,7 +9,7 @@ import java.sql.SQLException;
 public class FloatTypeHandler implements TypeHandler<Float> {
 
     @Override
-    public void setObject(PreparedStatement ps, int i, Float parameter, JdbcType jdbcType) throws SQLException {
+    public void setObject(PreparedStatement ps, int i, Float parameter) throws SQLException {
         ps.setFloat(i, parameter);
     }
 

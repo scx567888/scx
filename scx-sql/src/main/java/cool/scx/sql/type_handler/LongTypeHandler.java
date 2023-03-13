@@ -9,7 +9,7 @@ import java.sql.SQLException;
 public class LongTypeHandler implements TypeHandler<Long> {
 
     @Override
-    public void setObject(PreparedStatement ps, int i, Long parameter, JdbcType jdbcType) throws SQLException {
+    public void setObject(PreparedStatement ps, int i, Long parameter) throws SQLException {
         ps.setLong(i, parameter);
     }
 

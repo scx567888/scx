@@ -10,7 +10,7 @@ import java.time.YearMonth;
 public class YearMonthTypeHandler implements TypeHandler<YearMonth> {
 
     @Override
-    public void setObject(PreparedStatement ps, int i, YearMonth parameter, JdbcType jdbcType) throws SQLException {
+    public void setObject(PreparedStatement ps, int i, YearMonth parameter) throws SQLException {
         ps.setString(i, parameter.toString());
     }
 

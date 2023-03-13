@@ -11,7 +11,7 @@ import java.sql.SQLException;
 public class BigIntegerTypeHandler implements TypeHandler<BigInteger> {
 
     @Override
-    public void setObject(PreparedStatement ps, int i, BigInteger parameter, JdbcType jdbcType) throws SQLException {
+    public void setObject(PreparedStatement ps, int i, BigInteger parameter) throws SQLException {
         ps.setBigDecimal(i, new BigDecimal(parameter));
     }
 
