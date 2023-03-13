@@ -23,7 +23,7 @@ import static cool.scx.util.reflect.ClassUtils.isEnum;
 
 public final class TypeHandlerRegistry {
 
-    private static final Map<Class<?>, TypeHandler<?>> TYPE_HANDLER_MAP = new ConcurrentHashMap<>();
+    private static final Map<Type, TypeHandler<?>> TYPE_HANDLER_MAP = new ConcurrentHashMap<>();
 
     static {
         //基本类型
@@ -74,29 +74,25 @@ public final class TypeHandlerRegistry {
 
     @SuppressWarnings("unchecked")
     public static <T> TypeHandler<T> getTypeHandler(Type type) {
-        if (type instanceof Class<?> clazz) {
-            return (TypeHandler<T>) TYPE_HANDLER_MAP.computeIfAbsent(clazz, TypeHandlerRegistry::createTypeHandler);
-        }
-        return null;
+        return (TypeHandler<T>) TYPE_HANDLER_MAP.computeIfAbsent(type, TypeHandlerRegistry::createTypeHandler);
     }
 
     @SuppressWarnings("unchecked")
-    private static <E extends Enum<E>> TypeHandler<?> createTypeHandler(Class<?> clazz) {
-        if (isEnum(clazz)) {
-            var enumClass = clazz.isAnonymousClass() ? clazz.getSuperclass() : clazz;
-            return new EnumTypeHandler<>((Class<E>) enumClass);
-        } else {
-            //判断是否为可识别类型的子类
-            var mysqlType = TYPE_HANDLER_MAP.entrySet()
-                    .stream().filter(m -> m.getKey().isAssignableFrom(clazz))
-                    .map(Map.Entry::getValue).findFirst();
-            if (mysqlType.isPresent()) {
-                return mysqlType.get();
+    private static <E extends Enum<E>> TypeHandler<?> createTypeHandler(Type type) {
+        if (type instanceof Class<?> clazz) {
+            if (isEnum(clazz)) {
+                var enumClass = clazz.isAnonymousClass() ? clazz.getSuperclass() : clazz;
+                return new EnumTypeHandler<>((Class<E>) enumClass);
             } else {
-                //采用 json 存储
-                return new ObjectTypeHandler(clazz);
+                //判断是否为可识别类型的子类
+                for (var entry : TYPE_HANDLER_MAP.entrySet()) {
+                    if (entry.getKey() instanceof Class<?> c && c.isAssignableFrom(clazz)) {
+                        return entry.getValue();
+                    }
+                }
             }
         }
+        return new ObjectTypeHandler(type);
     }
 
 }
