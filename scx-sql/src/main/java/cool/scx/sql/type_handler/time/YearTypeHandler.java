@@ -1,4 +1,4 @@
-package cool.scx.sql.type_handler;
+package cool.scx.sql.type_handler.time;
 
 import cool.scx.sql.TypeHandler;
 

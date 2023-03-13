@@ -11,6 +11,7 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.SQLType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -84,7 +85,7 @@ public final class SQLHelper {
      * @param javaType 需要判断的类型
      * @return r
      */
-    public static MysqlType getMySQLType(Class<?> javaType) {
+    public static SQLType getMySQLType(Class<?> javaType) {
         var mysqlType = DEFAULT_MYSQL_TYPES.get(javaType);
         if (mysqlType == null) {
             return DEFAULT_MYSQL_TYPES.entrySet().stream()

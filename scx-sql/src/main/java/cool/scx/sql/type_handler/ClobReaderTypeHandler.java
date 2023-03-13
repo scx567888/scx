@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+//todo 在驱动不支持时 转换为 string 或者 byte[] 存储 ?
 public class ClobReaderTypeHandler implements TypeHandler<Reader> {
 
     @Override
@@ -17,10 +18,7 @@ public class ClobReaderTypeHandler implements TypeHandler<Reader> {
     @Override
     public Reader getObject(ResultSet rs, int index) throws SQLException {
         var clob = rs.getClob(index);
-        if (clob == null) {
-            return null;
-        }
-        return clob.getCharacterStream();
+        return clob == null ? null : clob.getCharacterStream();
     }
 
 }

@@ -1,4 +1,4 @@
-package cool.scx.sql.type_handler;
+package cool.scx.sql.type_handler.time;
 
 import cool.scx.sql.TypeHandler;
 
@@ -8,6 +8,17 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Date;
 
+/**
+ * 此处因为 jdbc 的设计非常混乱 所以说明一下
+ * <br>
+ * {@link java.sql.Date} 是指 只有日期没有时间
+ * <br>
+ * {@link java.sql.Time} 是指 只有时间没有日期
+ * <br>
+ * {@link java.sql.Timestamp} 是指既有日期又有时间
+ * <br>
+ * 我们此处使用 {@link java.sql.Timestamp} 进行存储, 同时建议用户使用 {@link  java.time.LocalDateTime} 等替换 {@link  java.util.Date}
+ */
 public class DateTypeHandler implements TypeHandler<Date> {
 
     @Override
@@ -18,10 +29,7 @@ public class DateTypeHandler implements TypeHandler<Date> {
     @Override
     public Date getObject(ResultSet rs, int index) throws SQLException {
         Timestamp sqlTimestamp = rs.getTimestamp(index);
-        if (sqlTimestamp != null) {
-            return new Date(sqlTimestamp.getTime());
-        }
-        return null;
+        return sqlTimestamp == null ? null : new Date(sqlTimestamp.getTime());
     }
 
 }

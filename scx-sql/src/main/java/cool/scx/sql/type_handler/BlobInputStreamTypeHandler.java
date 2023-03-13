@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+//todo 在驱动不支持时 转换为 string 或者 byte[] 存储 ?
 public class BlobInputStreamTypeHandler implements TypeHandler<InputStream> {
 
     @Override
@@ -17,10 +18,7 @@ public class BlobInputStreamTypeHandler implements TypeHandler<InputStream> {
     @Override
     public InputStream getObject(ResultSet rs, int index) throws SQLException {
         var blob = rs.getBlob(index);
-        if (blob == null) {
-            return null;
-        }
-        return blob.getBinaryStream();
+        return blob == null ? null : blob.getBinaryStream();
     }
 
 }

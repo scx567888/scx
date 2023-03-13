@@ -1,4 +1,4 @@
-package cool.scx.sql.type_handler;
+package cool.scx.sql.type_handler.base;
 
 import cool.scx.sql.TypeHandler;
 
@@ -16,7 +16,7 @@ public class BooleanTypeHandler implements TypeHandler<Boolean> {
     @Override
     public Boolean getObject(ResultSet rs, int index) throws SQLException {
         boolean result = rs.getBoolean(index);
-        return !result && rs.wasNull() ? null : result;
+        return rs.wasNull() ? null : result;
     }
 
 }

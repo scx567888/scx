@@ -1,4 +1,4 @@
-package cool.scx.sql.type_handler;
+package cool.scx.sql.type_handler.base;
 
 import cool.scx.sql.TypeHandler;
 
@@ -16,7 +16,7 @@ public class IntegerTypeHandler implements TypeHandler<Integer> {
     @Override
     public Integer getObject(ResultSet rs, int index) throws SQLException {
         int result = rs.getInt(index);
-        return result == 0 && rs.wasNull() ? null : result;
+        return rs.wasNull() ? null : result;
     }
 
 }

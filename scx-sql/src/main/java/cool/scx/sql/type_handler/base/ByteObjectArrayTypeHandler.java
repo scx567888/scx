@@ -1,28 +1,25 @@
-package cool.scx.sql.type_handler;
+package cool.scx.sql.type_handler.base;
 
 import cool.scx.sql.TypeHandler;
-import cool.scx.util.ArrayUtils;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static cool.scx.util.ArrayUtils.toPrimitive;
+import static cool.scx.util.ArrayUtils.toWrapper;
 
 public class ByteObjectArrayTypeHandler implements TypeHandler<Byte[]> {
 
-
     @Override
     public void setObject(PreparedStatement ps, int i, Byte[] parameter) throws SQLException {
-        ps.setBytes(i, ArrayUtils.toPrimitive(parameter));
+        ps.setBytes(i, toPrimitive(parameter));
     }
 
     @Override
     public Byte[] getObject(ResultSet rs, int index) throws SQLException {
         byte[] bytes = rs.getBytes(index);
-        if (bytes == null) {
-            return null;
-        }
-        return ArrayUtils.toWrapper(bytes);
+        return bytes == null ? null : toWrapper(bytes);
     }
 
 }
