@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+//todo test
 public class EnumTypeHandler<E extends Enum<E>> implements TypeHandler<E> {
 
     private static final Logger logger = LoggerFactory.getLogger(EnumTypeHandler.class);

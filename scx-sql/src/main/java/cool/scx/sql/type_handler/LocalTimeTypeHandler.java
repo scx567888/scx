@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalTime;
 
+//todo test
 public class LocalTimeTypeHandler implements TypeHandler<LocalTime> {
 
     @Override

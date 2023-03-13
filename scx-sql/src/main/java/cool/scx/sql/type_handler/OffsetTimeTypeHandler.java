@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.OffsetTime;
 
+//todo test
 public class OffsetTimeTypeHandler implements TypeHandler<OffsetTime> {
 
     @Override

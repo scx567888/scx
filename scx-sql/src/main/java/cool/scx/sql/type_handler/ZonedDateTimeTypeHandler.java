@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.ZonedDateTime;
 
+//todo test
 public class ZonedDateTimeTypeHandler implements TypeHandler<ZonedDateTime> {
 
     @Override

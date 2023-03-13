@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+//todo test
 public class ObjectTypeHandler implements TypeHandler<Object> {
 
     private static final Logger logger = LoggerFactory.getLogger(ObjectTypeHandler.class);
