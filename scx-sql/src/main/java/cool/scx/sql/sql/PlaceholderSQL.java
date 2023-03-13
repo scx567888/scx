@@ -1,14 +1,10 @@
 package cool.scx.sql.sql;
 
 import cool.scx.sql.SQL;
+import cool.scx.sql.SQLHelper;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.List;
-
-import static cool.scx.sql.SQLHelper.fillPreparedStatement;
 
 /**
  * 标准 问号形式 (?) 的占位 SQL
@@ -108,6 +104,35 @@ public final class PlaceholderSQL implements SQL {
     @Override
     public PreparedStatement prepareStatement(Connection con) throws SQLException {
         return isBatch ? getPreparedStatementFromBatch(con) : getPreparedStatementFromSingle(con);
+    }
+
+    /**
+     * 填充 PreparedStatement
+     *
+     * @param preparedStatement a
+     * @param params            a
+     * @throws SQLException a
+     */
+    public static void fillPreparedStatement(PreparedStatement preparedStatement, Object[] params) throws SQLException {
+        var index = 1;
+        for (var tempValue : params) {
+            if (tempValue != null) {
+                var tempValueClass = tempValue.getClass();
+                //判断是否为数据库(MySQL)直接支持的数据类型
+                var mysqlType = SQLHelper.getMySQLType(tempValueClass);
+                if (mysqlType != null) {
+                    preparedStatement.setObject(index, tempValue, mysqlType);
+                } else if (tempValueClass.isEnum()) {//不是则转换做一下特殊处理 枚举我们直接存名称
+                    preparedStatement.setString(index, SQLHelper.convertToStringOrNull(tempValue));
+                } else {//否则存 json
+                    preparedStatement.setString(index, SQLHelper.convertToJsonOrNull(tempValue));
+                }
+            } else {
+                //这里的 Types.NULL 其实内部并没有使用
+                preparedStatement.setNull(index, Types.NULL);
+            }
+            index = index + 1;
+        }
     }
 
 }

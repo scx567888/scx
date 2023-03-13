@@ -9,13 +9,13 @@ import cool.scx.sql.mapping.ColumnInfo;
 import cool.scx.sql.mapping.TableInfo;
 import cool.scx.util.ObjectUtils;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,7 +35,7 @@ public final class SQLHelper {
     /**
      * 这里我们和 SQLRunner 公用一个 logger 方便管理
      */
-    private static final Logger logger = SQLRunner.logger;
+    private static final Logger logger = LoggerFactory.getLogger(SQLHelper.class);
 
     private static final Map<Class<?>, MysqlType> DEFAULT_MYSQL_TYPES = initDefaultMySQLTypes();
 
@@ -192,48 +192,6 @@ public final class SQLHelper {
         var finalSQL = preparedQuery.asSql();
         var batchedArgsSize = preparedQuery.getBatchedArgs() == null ? 0 : preparedQuery.getBatchedArgs().size();
         return batchedArgsSize > 1 ? finalSQL + "... 额外的 " + (batchedArgsSize - 1) + " 项" : finalSQL;
-    }
-
-    /**
-     * 打印 SQL
-     *
-     * @param p a
-     * @return 方便函数式调用
-     */
-    public static PreparedStatement logSQL(PreparedStatement p) {
-        if (logger.isDebugEnabled()) {
-            logger.debug(SQLHelper.getFinalSQL(p));
-        }
-        return p;
-    }
-
-    /**
-     * 填充 PreparedStatement
-     *
-     * @param preparedStatement a
-     * @param params            a
-     * @throws SQLException a
-     */
-    public static void fillPreparedStatement(PreparedStatement preparedStatement, Object[] params) throws SQLException {
-        var index = 1;
-        for (var tempValue : params) {
-            if (tempValue != null) {
-                var tempValueClass = tempValue.getClass();
-                //判断是否为数据库(MySQL)直接支持的数据类型
-                var mysqlType = SQLHelper.getMySQLType(tempValueClass);
-                if (mysqlType != null) {
-                    preparedStatement.setObject(index, tempValue, mysqlType);
-                } else if (tempValueClass.isEnum()) {//不是则转换做一下特殊处理 枚举我们直接存名称
-                    preparedStatement.setString(index, SQLHelper.convertToStringOrNull(tempValue));
-                } else {//否则存 json
-                    preparedStatement.setString(index, SQLHelper.convertToJsonOrNull(tempValue));
-                }
-            } else {
-                //这里的 Types.NULL 其实内部并没有使用
-                preparedStatement.setNull(index, Types.NULL);
-            }
-            index = index + 1;
-        }
     }
 
     /**
