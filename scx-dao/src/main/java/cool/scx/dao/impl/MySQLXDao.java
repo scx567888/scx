@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-//todo 功能未完成
+//todo 功能未完成 待测试
 public class MySQLXDao<Entity> implements BaseDao<Entity, String> {
 
     private final Session session;
@@ -49,8 +49,17 @@ public class MySQLXDao<Entity> implements BaseDao<Entity, String> {
     public List<Entity> select(Query query, SelectFilter selectFilter) {
         WhereParamsAndWhereClauses whereParamsAndWhereClauses = query.where().getWhereParamsAndWhereClauses(tableInfo);
         String findStr = String.join(" AND ", whereParamsAndWhereClauses.whereClause());
-        DocResult docs = this.collection.find(findStr).bind(whereParamsAndWhereClauses.whereParams()).execute();
-        List<DbDoc> dbDocs = docs.fetchAll();
+        var findStatement = this.collection.find(findStr).bind(whereParamsAndWhereClauses.whereParams());
+        //todo 此处可能需要重新设计 Pagination
+        // todo 支持 两种描述类型 第一个是 第几页 每页数量 第二个是 偏移量及 limit
+        if (query.pagination().offset() != null) {
+            findStatement.offset(query.pagination().offset());
+        }
+        if (query.pagination().rowCount() != null) {
+            findStatement.limit(query.pagination().rowCount());
+        }
+        var docResult = findStatement.execute();
+        List<DbDoc> dbDocs = docResult.fetchAll();
         var s = new ArrayList<Entity>();
         for (DbDoc dbDoc : dbDocs) {
             s.add(toEntity(dbDoc));
@@ -60,24 +69,30 @@ public class MySQLXDao<Entity> implements BaseDao<Entity, String> {
 
     @Override
     public long update(Entity entity, Query query, UpdateFilter updateFilter) {
-//        DocResult docs = this.collection.modify().set().execute();
-//        List<DbDoc> dbDocs = docs.fetchAll();
-//        var s=new ArrayList<Entity>();
-//        for (DbDoc dbDoc : dbDocs) {
-//            s.add( ObjectUtils.convertValue(dbDoc,_entityClass()));
-//        }
-//        return s;
-        return 0;
+        //todo 这样是正确的 ? 待测试
+        WhereParamsAndWhereClauses whereParamsAndWhereClauses = query.where().getWhereParamsAndWhereClauses(tableInfo);
+        String findStr = String.join(" AND ", whereParamsAndWhereClauses.whereClause());
+        DbDoc newDoc = toDbDoc(entity, updateFilter);
+        var result = this.collection.modify(findStr).bind(whereParamsAndWhereClauses.whereParams()).patch(newDoc).execute();
+        return result.getAffectedItemsCount();
     }
 
     @Override
     public long delete(Query query) {
-        return 0;
+        //todo 这样是正确的 ? 待测试
+        WhereParamsAndWhereClauses whereParamsAndWhereClauses = query.where().getWhereParamsAndWhereClauses(tableInfo);
+        String findStr = String.join(" AND ", whereParamsAndWhereClauses.whereClause());
+        var result = this.collection.remove(findStr).bind(whereParamsAndWhereClauses.whereParams()).execute();
+        return result.getAffectedItemsCount();
     }
 
     @Override
     public long count(Query query) {
-        return 0;
+        //todo 这样是正确的 ? 待测试
+        WhereParamsAndWhereClauses whereParamsAndWhereClauses = query.where().getWhereParamsAndWhereClauses(tableInfo);
+        String findStr = String.join(" AND ", whereParamsAndWhereClauses.whereClause());
+        var findStatement = this.collection.find(findStr).bind(whereParamsAndWhereClauses.whereParams());
+        return findStatement.execute().count();
     }
 
     @Override
