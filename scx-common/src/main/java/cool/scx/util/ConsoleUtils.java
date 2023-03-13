@@ -18,7 +18,7 @@ public final class ConsoleUtils {
     /**
      * <p>readLine.</p>
      *
-     * @return a {@link java.lang.String} object
+     * @return a {@link String} object
      */
     public static String readLine() {
         return scanner.nextLine();

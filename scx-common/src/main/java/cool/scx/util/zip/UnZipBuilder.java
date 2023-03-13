@@ -24,7 +24,7 @@ public class UnZipBuilder extends ZipDataSource {
     /**
      * <p>Constructor for UnZipBuilder.</p>
      *
-     * @param path a {@link java.nio.file.Path} object
+     * @param path a {@link Path} object
      */
     public UnZipBuilder(Path path) {
         super(path);
@@ -42,7 +42,7 @@ public class UnZipBuilder extends ZipDataSource {
     /**
      * <p>Constructor for UnZipBuilder.</p>
      *
-     * @param bytesSupplier a {@link java.util.function.Supplier} object
+     * @param bytesSupplier a {@link Supplier} object
      */
     public UnZipBuilder(Supplier<byte[]> bytesSupplier) {
         super(bytesSupplier);
@@ -51,7 +51,7 @@ public class UnZipBuilder extends ZipDataSource {
     /**
      * <p>Constructor for UnZipBuilder.</p>
      *
-     * @param inputStream a {@link java.io.InputStream} object
+     * @param inputStream a {@link InputStream} object
      */
     public UnZipBuilder(InputStream inputStream) {
         super(inputStream);
@@ -62,7 +62,7 @@ public class UnZipBuilder extends ZipDataSource {
      *
      * @param outputPath 解压到的目录
      * @param zipOptions a
-     * @throws java.io.IOException a
+     * @throws IOException a
      */
     public void toFile(Path outputPath, ZipOptions zipOptions) throws IOException {
         Files.createDirectories(outputPath);
@@ -91,8 +91,8 @@ public class UnZipBuilder extends ZipDataSource {
     /**
      * <p>getRootPath.</p>
      *
-     * @param zipOptions a {@link cool.scx.util.zip.ZipOptions} object
-     * @return a {@link java.lang.String} object
+     * @param zipOptions a {@link ZipOptions} object
+     * @return a {@link String} object
      */
     public String getRootPath(ZipOptions zipOptions) {
         var fileName = path.getFileName().toString();

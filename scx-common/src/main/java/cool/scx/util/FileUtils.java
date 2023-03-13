@@ -26,7 +26,7 @@ public final class FileUtils {
      * 如 1024 转换为 1KB
      *
      * @param size a long.
-     * @return a {@link java.lang.String} object.
+     * @return a {@link String} object.
      */
     public static String longToDisplaySize(long size) {
         if (size <= 0) {
@@ -67,7 +67,7 @@ public final class FileUtils {
      *
      * @param start   a
      * @param options a
-     * @throws java.io.IOException a
+     * @throws IOException a
      */
     public static void delete(Path start, DeleteOption... options) throws IOException {
         var info = new DeleteOption.Info(options);
@@ -95,12 +95,12 @@ public final class FileUtils {
     }
 
     /**
-     * 本质上就是调用 {@link java.nio.file.Files#move(Path, Path, CopyOption...)} ,但是在之前会创建不存在的父目录
+     * 本质上就是调用 {@link Files#move(Path, Path, CopyOption...)} ,但是在之前会创建不存在的父目录
      *
      * @param source  a
      * @param target  a
      * @param options a
-     * @throws java.io.IOException a
+     * @throws IOException a
      */
     public static void move(Path source, Path target, CopyOption... options) throws IOException {
         Files.createDirectories(target.getParent());
@@ -108,12 +108,12 @@ public final class FileUtils {
     }
 
     /**
-     * 本质上就是调用 {@link java.nio.file.Files#copy(Path, Path, CopyOption...)} ,但是在之前会创建不存在的父目录
+     * 本质上就是调用 {@link Files#copy(Path, Path, CopyOption...)} ,但是在之前会创建不存在的父目录
      *
      * @param source  a
      * @param target  a
      * @param options a
-     * @throws java.io.IOException a
+     * @throws IOException a
      */
     public static void copy(Path source, Path target, CopyOption... options) throws IOException {
         Files.createDirectories(target.getParent());
@@ -121,12 +121,12 @@ public final class FileUtils {
     }
 
     /**
-     * 本质上就是调用 {@link java.nio.file.Files#write(Path, byte[], OpenOption...)} ,但是在之前会创建不存在的父目录
+     * 本质上就是调用 {@link Files#write(Path, byte[], OpenOption...)} ,但是在之前会创建不存在的父目录
      *
      * @param path    a
      * @param bytes   a
      * @param options a
-     * @throws java.io.IOException a
+     * @throws IOException a
      */
     public static void write(Path path, byte[] bytes, OpenOption... options) throws IOException {
         Files.createDirectories(path.getParent());
@@ -136,8 +136,8 @@ public final class FileUtils {
     /**
      * <p>getFileName.</p>
      *
-     * @param path a {@link java.lang.String} object
-     * @return a {@link java.lang.String} object
+     * @param path a {@link String} object
+     * @return a {@link String} object
      */
     public static String getFileName(String path) {
         return new File(path).getName();
@@ -146,8 +146,8 @@ public final class FileUtils {
     /**
      * 获取拓展名 (不包括 . ) 例 : "cat.png" 会获得 "png"
      *
-     * @param path a {@link java.lang.String} object
-     * @return a {@link java.lang.String} object
+     * @param path a {@link String} object
+     * @return a {@link String} object
      */
     public static String getExtension(String path) {
         var fileName = getFileName(path);
@@ -158,8 +158,8 @@ public final class FileUtils {
     /**
      * 获取文件名 (不包括拓展名 ) 例 : "cat.png" 会获得 "cat"
      *
-     * @param path a {@link java.lang.String} object
-     * @return a {@link java.lang.String} object
+     * @param path a {@link String} object
+     * @return a {@link String} object
      */
     public static String getFileNameWithoutExtension(String path) {
         var fileName = getFileName(path);
@@ -173,7 +173,7 @@ public final class FileUtils {
      * @param filePath f
      * @param length   a int
      * @return r
-     * @throws java.io.IOException if any.
+     * @throws IOException if any.
      */
     public static String getHead(String filePath, int length) throws IOException {
         try (var accessFile = new RandomAccessFile(filePath, "r")) {

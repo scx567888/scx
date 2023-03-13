@@ -1,6 +1,11 @@
 package cool.scx.dao;
 
-import cool.scx.sql.*;
+import cool.scx.sql.BeanBuilder;
+import cool.scx.sql.ResultHandler;
+import cool.scx.sql.SQL;
+import cool.scx.sql.SQLRunner;
+import cool.scx.sql.mapping.ColumnInfo;
+import cool.scx.sql.mapping.TableInfo;
 import cool.scx.sql.result_handler.BeanListHandler;
 import cool.scx.sql.result_handler.SingleValueHandler;
 import cool.scx.util.RandomUtils;

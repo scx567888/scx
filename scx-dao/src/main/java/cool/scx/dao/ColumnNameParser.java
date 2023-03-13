@@ -1,6 +1,6 @@
 package cool.scx.dao;
 
-import cool.scx.sql.TableInfo;
+import cool.scx.sql.mapping.TableInfo;
 
 import static cool.scx.util.StringUtils.notBlank;
 

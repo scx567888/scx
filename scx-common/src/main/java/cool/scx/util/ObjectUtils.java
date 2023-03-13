@@ -78,7 +78,7 @@ public final class ObjectUtils {
     /**
      * 获取 jsonMapper
      *
-     * @param options a {@link cool.scx.util.ObjectUtils.Option} object
+     * @param options a {@link Option} object
      * @return a
      */
     public static JsonMapper jsonMapper(Option... options) {
@@ -97,7 +97,7 @@ public final class ObjectUtils {
     /**
      * 获取 xmlMapper
      *
-     * @param options a {@link cool.scx.util.ObjectUtils.Option} object
+     * @param options a {@link Option} object
      * @return a
      */
     public static XmlMapper xmlMapper(Option... options) {
@@ -139,7 +139,7 @@ public final class ObjectUtils {
      * @param fromValue a
      * @param javaType  a
      * @param <T>       a
-     * @param options   a {@link cool.scx.util.ObjectUtils.Option} object
+     * @param options   a {@link Option} object
      * @return a
      */
     public static <T> T convertValue(Object fromValue, JavaType javaType, Option... options) {
@@ -152,7 +152,7 @@ public final class ObjectUtils {
      * @param fromValue a
      * @param tClass    a
      * @param <T>       a
-     * @param options   a {@link cool.scx.util.ObjectUtils.Option} object
+     * @param options   a {@link Option} object
      * @return a
      */
     public static <T> T convertValue(Object fromValue, Class<T> tClass, Option... options) {
@@ -165,7 +165,7 @@ public final class ObjectUtils {
      * @param fromValue   a
      * @param toValueType a
      * @param <T>         a
-     * @param options     a {@link cool.scx.util.ObjectUtils.Option} object
+     * @param options     a {@link Option} object
      * @return a
      */
     public static <T> T convertValue(Object fromValue, Type toValueType, Option... options) {
@@ -178,7 +178,7 @@ public final class ObjectUtils {
      * @param fromValue      a
      * @param toValueTypeRef a
      * @param <T>            a
-     * @param options        a {@link cool.scx.util.ObjectUtils.Option} object
+     * @param options        a {@link Option} object
      * @return a
      */
     public static <T> T convertValue(Object fromValue, TypeReference<T> toValueTypeRef, Option... options) {
@@ -189,10 +189,10 @@ public final class ObjectUtils {
      * 将对象转 json 底层调用 JSON_MAPPER.writeValueAsString()
      * 所以会忽略 JsonIgnore 注解 同时如果转换失败则在其内部消化异常 (打印) 并返回 ""
      *
-     * @param value        a {@link java.lang.Object} object.
-     * @param defaultValue a {@link java.lang.Object} object.
-     * @param options      a {@link cool.scx.util.ObjectUtils.Option} object
-     * @return a {@link java.lang.String} object.
+     * @param value        a {@link Object} object.
+     * @param defaultValue a {@link Object} object.
+     * @param options      a {@link Option} object
+     * @return a {@link String} object.
      */
     public static String toJson(Object value, String defaultValue, Option... options) {
         try {
@@ -207,10 +207,10 @@ public final class ObjectUtils {
      * 将对象转 xml 底层调用 XML_MAPPER.writeValueAsString()
      * 所以会忽略 JsonIgnore 注解 同时如果转换失败则在其内部消化异常 (打印) 并返回 ""
      *
-     * @param value        a {@link java.lang.Object} object.
-     * @param defaultValue a {@link java.lang.Object} object.
-     * @param options      a {@link cool.scx.util.ObjectUtils.Option} object
-     * @return a {@link java.lang.String} object.
+     * @param value        a {@link Object} object.
+     * @param defaultValue a {@link Object} object.
+     * @param options      a {@link Option} object
+     * @return a {@link String} object.
      */
     public static String toXml(Object value, String defaultValue, Option... options) {
         try {
@@ -225,9 +225,9 @@ public final class ObjectUtils {
      * a
      *
      * @param value   a
-     * @param options a {@link cool.scx.util.ObjectUtils.Option} object
+     * @param options a {@link Option} object
      * @return a
-     * @throws com.fasterxml.jackson.core.JsonProcessingException a
+     * @throws JsonProcessingException a
      */
     public static String toJson(Object value, Option... options) throws JsonProcessingException {
         return jsonMapper(options).writeValueAsString(value);
@@ -237,9 +237,9 @@ public final class ObjectUtils {
      * a
      *
      * @param value   a
-     * @param options a {@link cool.scx.util.ObjectUtils.Option} object
+     * @param options a {@link Option} object
      * @return a
-     * @throws com.fasterxml.jackson.core.JsonProcessingException a
+     * @throws JsonProcessingException a
      */
     public static String toXml(Object value, Option... options) throws JsonProcessingException {
         return xmlMapper(options).writeValueAsString(value);
@@ -306,7 +306,7 @@ public final class ObjectUtils {
      * 将嵌套的 map 扁平化
      *
      * @param sourceMap 源 map
-     * @param parentKey a {@link java.lang.String} object.
+     * @param parentKey a {@link String} object.
      * @return 扁平化后的 map
      */
     private static Map<String, Object> flatMap0(Map<?, ?> sourceMap, String parentKey) {

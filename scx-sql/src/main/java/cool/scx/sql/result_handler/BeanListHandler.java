@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static cool.scx.sql.FieldSetter.getIndexInfo;
+import static cool.scx.sql.result_handler.BeanHandler.getIndexInfo;
 
 /**
  * a

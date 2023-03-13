@@ -1,6 +1,6 @@
 package cool.scx.dao._old;
 
-import cool.scx.sql.ColumnInfo;
+import cool.scx.sql.mapping.ColumnInfo;
 
 /**
  * BaseDaoColumnInfo

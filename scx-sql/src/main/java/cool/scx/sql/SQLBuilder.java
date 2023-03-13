@@ -1,5 +1,7 @@
 package cool.scx.sql;
 
+import cool.scx.sql.mapping.ColumnInfo;
+
 import java.util.Arrays;
 
 /**

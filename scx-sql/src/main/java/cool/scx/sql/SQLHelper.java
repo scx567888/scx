@@ -5,6 +5,8 @@ import com.mysql.cj.MysqlType;
 import com.mysql.cj.NativeQueryBindings;
 import com.mysql.cj.PreparedQuery;
 import com.mysql.cj.jdbc.ClientPreparedStatement;
+import cool.scx.sql.mapping.ColumnInfo;
+import cool.scx.sql.mapping.TableInfo;
 import cool.scx.util.ObjectUtils;
 import org.slf4j.Logger;
 

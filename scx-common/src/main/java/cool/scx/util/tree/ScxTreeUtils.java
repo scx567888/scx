@@ -15,7 +15,7 @@ import java.util.List;
 public final class ScxTreeUtils {
 
     /**
-     * walk 的另一种写法 稍慢于 walk (必须实现 {@link cool.scx.util.tree.ScxTree#parent()})
+     * walk 的另一种写法 稍慢于 walk (必须实现 {@link ScxTree#parent()})
      *
      * @param scxTree a
      * @param visitor a
@@ -43,7 +43,7 @@ public final class ScxTreeUtils {
      * <p>walk.</p>
      *
      * @param scxTree a T object
-     * @param visitor a {@link cool.scx.util.tree.ScxTreeVisitor} object
+     * @param visitor a {@link ScxTreeVisitor} object
      * @param <T>     a T class
      */
     public static <T extends ScxTree<T>> void walk(final T scxTree, final ScxTreeVisitor<T> visitor) {
@@ -53,9 +53,9 @@ public final class ScxTreeUtils {
     /**
      * <p>walk0.</p>
      *
-     * @param parents        a {@link java.util.List} object
+     * @param parents        a {@link List} object
      * @param currentScxTree a T object
-     * @param visitor        a {@link cool.scx.util.tree.ScxTreeVisitor} object
+     * @param visitor        a {@link ScxTreeVisitor} object
      * @param <T>            a T class
      */
     private static <T extends ScxTree<T>> void _walk(final List<T> parents, final T currentScxTree, final ScxTreeVisitor<T> visitor) {

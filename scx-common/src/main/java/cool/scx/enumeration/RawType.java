@@ -55,7 +55,7 @@ public enum RawType {
     /**
      * <p>mimeType.</p>
      *
-     * @return a {@link java.lang.String} object
+     * @return a {@link String} object
      */
     public String mimeType() {
         return mimeType;

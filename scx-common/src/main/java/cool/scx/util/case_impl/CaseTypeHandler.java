@@ -11,16 +11,16 @@ interface CaseTypeHandler {
     /**
      * <p>getSourceStrings.</p>
      *
-     * @param s a {@link java.lang.String} object
-     * @return an array of {@link java.lang.String} objects
+     * @param s a {@link String} object
+     * @return an array of {@link String} objects
      */
     String[] getSourceStrings(String s);
 
     /**
      * <p>getString.</p>
      *
-     * @param s an array of {@link java.lang.String} objects
-     * @return a {@link java.lang.String} object
+     * @param s an array of {@link String} objects
+     * @return a {@link String} object
      */
     String getString(String[] s);
 

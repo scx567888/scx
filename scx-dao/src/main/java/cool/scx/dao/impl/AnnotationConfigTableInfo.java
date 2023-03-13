@@ -2,8 +2,8 @@ package cool.scx.dao.impl;
 
 import cool.scx.dao.annotation.NoColumn;
 import cool.scx.dao.annotation.Table;
-import cool.scx.sql.ColumnInfo;
-import cool.scx.sql.TableInfo;
+import cool.scx.sql.mapping.ColumnInfo;
+import cool.scx.sql.mapping.TableInfo;
 import cool.scx.util.CaseUtils;
 import cool.scx.util.MultiMap;
 import cool.scx.util.StringUtils;
