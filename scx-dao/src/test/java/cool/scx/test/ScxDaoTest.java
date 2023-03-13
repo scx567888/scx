@@ -1,10 +1,13 @@
 package cool.scx.test;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
+import com.mysql.cj.xdevapi.Session;
+import com.mysql.cj.xdevapi.SessionFactory;
 import cool.scx.dao.Query;
 import cool.scx.dao.SelectFilter;
 import cool.scx.dao.UpdateFilter;
 import cool.scx.dao.impl.MySQLDao;
+import cool.scx.dao.impl.MySQLXDao;
 import cool.scx.dao.impl.OldMySQLDao;
 import cool.scx.dao.impl.OldMySQLTableInfo;
 import cool.scx.dao.where.WhereBody;
@@ -42,6 +45,7 @@ public class ScxDaoTest {
         var userTableInfo = new OldMySQLTableInfo(User.class);
         //删除原有的表数据
         sqlRunner.execute(ofNormal("drop table if exists " + userTableInfo.tableName() + ";"));
+        sqlRunner.execute(ofNormal("drop table if exists " + userTableInfo.tableName() + "_doc;"));
         //根据 tableInfo 生成表结构
         SQLHelper.fixTable(userTableInfo, databaseName, getMySQLDataSource());
         //开始使用
@@ -70,6 +74,16 @@ public class ScxDaoTest {
         System.out.println("Old 查询 : " + a12.size());
         var a22 = oldUserDao.select(new Query().whereSQL("( not_id > 300 or ", WhereBody.equal("age", "123"), " )"), SelectFilter.ofExcluded());
         System.out.println("Old 查询 : " + a22.size());
+
+        SessionFactory xFactory = new SessionFactory();
+        Session session1 = xFactory.getSession("mysqlx://127.0.0.1:33060/" + databaseName + "?user=root&password=root");
+        var mySQLXDao = new MySQLXDao<>(userTableInfo.tableName()+"_doc", User.class, session1);
+        var newIds3 = mySQLXDao.insertBatch(list, UpdateFilter.ofExcluded());
+        System.out.println("MySQLX 插入 : " + newIds3);
+        var a13 = mySQLXDao.select(new Query().greaterThan("age", 300), SelectFilter.ofExcluded());
+        System.out.println("MySQLX 查询 : " + a13.size());
+        var a23 = mySQLXDao.select(new Query().whereSQL("( age > 400 or ", WhereBody.equal("name", "小明1"), " )"), SelectFilter.ofExcluded());
+        System.out.println("MySQLX 查询 : " + a23.size());
     }
 
     private static MysqlDataSource getMySQLDataSource() {

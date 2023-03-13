@@ -28,7 +28,7 @@ import static cool.scx.sql.SQLBuilder.*;
  * @author scx567888
  * @version 0.1.3
  */
-public class MySQLDao<Entity> implements BaseDao<Entity> {
+public class MySQLDao<Entity> implements BaseDao<Entity, Long> {
 
     /**
      * 实体类对应的 table 结构

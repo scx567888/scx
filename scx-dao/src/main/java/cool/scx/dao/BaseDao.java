@@ -9,7 +9,7 @@ import java.util.List;
  * @author scx567888
  * @version 0.1.3
  */
-public interface BaseDao<Entity> {
+public interface BaseDao<Entity, ID> {
 
     /**
      * 插入
@@ -18,7 +18,7 @@ public interface BaseDao<Entity> {
      * @param updateFilter 过滤器
      * @return 主键 ID (无主键则为 null)
      */
-    Long insert(Entity entity, UpdateFilter updateFilter);
+    ID insert(Entity entity, UpdateFilter updateFilter);
 
     /**
      * 批量插入
@@ -27,7 +27,7 @@ public interface BaseDao<Entity> {
      * @param updateFilter 过滤器
      * @return 主键 ID 列表
      */
-    List<Long> insertBatch(Collection<Entity> entityList, UpdateFilter updateFilter);
+    List<ID> insertBatch(Collection<Entity> entityList, UpdateFilter updateFilter);
 
     /**
      * 查询
