@@ -1,6 +1,6 @@
 package cool.scx.dao.group_by;
 
-import cool.scx.sql.TableInfo;
+import cool.scx.sql.mapping.TableInfo;
 
 import java.util.ArrayList;
 import java.util.List;

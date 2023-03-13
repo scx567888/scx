@@ -1,7 +1,7 @@
 package cool.scx.dao;
 
-import cool.scx.sql.ColumnInfo;
-import cool.scx.sql.TableInfo;
+import cool.scx.sql.mapping.ColumnInfo;
+import cool.scx.sql.mapping.TableInfo;
 
 import java.util.Arrays;
 

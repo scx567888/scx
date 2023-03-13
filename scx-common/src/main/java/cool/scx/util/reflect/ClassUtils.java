@@ -125,14 +125,7 @@ public final class ClassUtils {
      */
     public static Path getAppRoot(URI codeSource) {
         var path = Path.of(codeSource);
-        var scheme = codeSource.getScheme();
-        if ("file".equalsIgnoreCase(scheme)) {
-            return path;
-        } else if ("jar".equalsIgnoreCase(scheme)) {
-            return path.getParent();
-        } else {
-            return path;
-        }
+        return Files.isDirectory(path) ? path : path.getParent();
     }
 
     /**
@@ -199,6 +192,10 @@ public final class ClassUtils {
     public static boolean isNormalClass(Class<?> c) {
         //既不是 接口也不是 抽象类
         return !c.isInterface() && !Modifier.isAbstract(c.getModifiers());
+    }
+
+    public static boolean isEnum(Class<?> c) {
+        return Enum.class.isAssignableFrom(c);
     }
 
 }

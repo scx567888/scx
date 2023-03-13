@@ -1,6 +1,6 @@
 package cool.scx.dao.order_by;
 
-import cool.scx.sql.TableInfo;
+import cool.scx.sql.mapping.TableInfo;
 import cool.scx.util.StringUtils;
 
 import static cool.scx.dao.ColumnNameParser.parseColumnName;

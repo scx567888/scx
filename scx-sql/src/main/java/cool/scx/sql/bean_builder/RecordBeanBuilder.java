@@ -2,7 +2,7 @@ package cool.scx.sql.bean_builder;
 
 import cool.scx.sql.BeanBuilder;
 import cool.scx.sql.FieldSetter;
-import cool.scx.sql.TableInfo;
+import cool.scx.sql.mapping.TableInfo;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -11,7 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 
-import static cool.scx.sql.FieldSetter.ofArray;
+import static cool.scx.sql.bean_builder.NormalBeanBuilder.ofArray;
 import static cool.scx.util.reflect.ConstructorUtils.findRecordConstructor;
 
 /**

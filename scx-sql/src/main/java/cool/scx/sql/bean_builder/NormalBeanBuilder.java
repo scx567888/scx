@@ -2,14 +2,14 @@ package cool.scx.sql.bean_builder;
 
 import cool.scx.sql.BeanBuilder;
 import cool.scx.sql.FieldSetter;
-import cool.scx.sql.TableInfo;
+import cool.scx.sql.mapping.TableInfo;
+import cool.scx.util.reflect.FieldUtils;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static cool.scx.sql.FieldSetter.ofArray;
 import static cool.scx.util.reflect.ConstructorUtils.findNoArgsConstructor;
 
 /**
@@ -32,6 +32,27 @@ public final class NormalBeanBuilder<T> implements BeanBuilder<T> {
 
     public NormalBeanBuilder(Class<T> type) {
         this(type, null);
+    }
+
+    static FieldSetter[] ofArray(Class<?> type, TableInfo<?> tableInfo) {
+        var fields = FieldUtils.findFields(type);
+        var fieldSetters = new FieldSetter[fields.length];
+        if (tableInfo == null) {
+            for (int i = 0; i < fields.length; i = i + 1) {
+                fieldSetters[i] = new FieldSetter(fields[i]);
+            }
+        } else {
+            for (int i = 0; i < fields.length; i = i + 1) {
+                var columnInfo = tableInfo.getColumnInfo(fields[i].getName());
+                if (columnInfo == null) {
+                    fieldSetters[i] = new FieldSetter(fields[i]);
+                } else {
+                    fieldSetters[i] = new FieldSetter(fields[i], columnInfo.columnName());
+                }
+
+            }
+        }
+        return fieldSetters;
     }
 
     @Override

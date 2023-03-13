@@ -1,7 +1,7 @@
 package cool.scx.dao.where;
 
 import cool.scx.dao.where.exception.WrongWhereTypeParamSizeException;
-import cool.scx.sql.TableInfo;
+import cool.scx.sql.mapping.TableInfo;
 import cool.scx.util.StringUtils;
 
 /**

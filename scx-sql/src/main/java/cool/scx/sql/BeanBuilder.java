@@ -2,6 +2,7 @@ package cool.scx.sql;
 
 import cool.scx.sql.bean_builder.NormalBeanBuilder;
 import cool.scx.sql.bean_builder.RecordBeanBuilder;
+import cool.scx.sql.mapping.TableInfo;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

@@ -1,5 +1,6 @@
 package cool.scx.util;
 
+import java.util.List;
 import java.util.Objects;
 
 public final class ArrayUtils {
@@ -41,6 +42,49 @@ public final class ArrayUtils {
             }
         }
         return -1;
+    }
+
+    public static byte[] toPrimitive(Byte[] w) {
+        var p = new byte[w.length];
+        for (int i = 0; i < w.length; i = i + 1) {
+            p[i] = w[i];
+        }
+        return p;
+    }
+
+    public static long[] toPrimitive(Long[] w) {
+        var p = new long[w.length];
+        for (int i = 0; i < w.length; i = i + 1) {
+            p[i] = w[i];
+        }
+        return p;
+    }
+
+    public static long[] toPrimitive(List<Long> w) {
+        var p = new long[w.size()];
+        for (int i = 0; i < w.size(); i = i + 1) {
+            p[i] = w.get(i);
+        }
+        return p;
+    }
+
+    public static Byte[] toWrapper(byte[] p) {
+        var w = new Byte[p.length];
+        for (int i = 0; i < p.length; i = i + 1) {
+            w[i] = p[i];
+        }
+        return w;
+    }
+
+    public static long[] toLongArray(int[] intArray) {
+        if (intArray == null) {
+            return null;
+        }
+        long[] longArray = new long[intArray.length];
+        for (int i = 0; i < intArray.length; i = i + 1) {
+            longArray[i] = intArray[i];
+        }
+        return longArray;
     }
 
 }
