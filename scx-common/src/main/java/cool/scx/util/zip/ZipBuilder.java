@@ -38,8 +38,8 @@ public class ZipBuilder {
     /**
      * <p>Constructor for ZipBuilder.</p>
      *
-     * @param path       a {@link Path} object
-     * @param zipOptions a {@link ZipOptions} object
+     * @param path       a {@link java.nio.file.Path} object
+     * @param zipOptions a {@link cool.scx.util.zip.ZipOptions} object
      */
     public ZipBuilder(Path path, ZipOptions zipOptions) {
         this.put(path, zipOptions);
@@ -48,7 +48,7 @@ public class ZipBuilder {
     /**
      * <p>put.</p>
      *
-     * @param zipPath a {@link String} object
+     * @param zipPath a {@link java.lang.String} object
      * @return a
      */
     public ZipBuilder put(String zipPath) {
@@ -59,7 +59,7 @@ public class ZipBuilder {
     /**
      * <p>put.</p>
      *
-     * @param path       a {@link String} object
+     * @param path       a {@link java.lang.String} object
      * @param zipOptions a {@link java.io.File} object
      * @return a
      */
@@ -75,9 +75,9 @@ public class ZipBuilder {
     /**
      * <p>put.</p>
      *
-     * @param path       a {@link String} object
+     * @param path       a {@link java.lang.String} object
      * @param zipPath    a {@link java.io.File} object
-     * @param zipOptions a {@link ZipOptions} object
+     * @param zipOptions a {@link cool.scx.util.zip.ZipOptions} object
      * @return a
      */
     public ZipBuilder put(String zipPath, Path path, ZipOptions zipOptions) {
@@ -88,7 +88,7 @@ public class ZipBuilder {
     /**
      * <p>put.</p>
      *
-     * @param zipPath a {@link String} object
+     * @param zipPath a {@link java.lang.String} object
      * @param bytes   an array of {@link byte} objects
      * @return a
      */
@@ -100,9 +100,9 @@ public class ZipBuilder {
     /**
      * <p>put.</p>
      *
-     * @param zipPath       a {@link String} object
-     * @param bytesSupplier a {@link Supplier} object
-     * @return a {@link ZipBuilder} object
+     * @param zipPath       a {@link java.lang.String} object
+     * @param bytesSupplier a {@link java.util.function.Supplier} object
+     * @return a {@link cool.scx.util.zip.ZipBuilder} object
      */
     public ZipBuilder put(String zipPath, Supplier<byte[]> bytesSupplier) {
         items.add(new ZipBuilderItem(zipPath, bytesSupplier));
@@ -112,9 +112,9 @@ public class ZipBuilder {
     /**
      * <p>put.</p>
      *
-     * @param zipPath     a {@link String} object
-     * @param inputStream a {@link InputStream} object
-     * @return a {@link ZipBuilder} object
+     * @param zipPath     a {@link java.lang.String} object
+     * @param inputStream a {@link java.io.InputStream} object
+     * @return a {@link cool.scx.util.zip.ZipBuilder} object
      */
     public ZipBuilder put(String zipPath, InputStream inputStream) {
         items.add(new ZipBuilderItem(zipPath, inputStream));
@@ -124,7 +124,7 @@ public class ZipBuilder {
     /**
      * <p>remove.</p>
      *
-     * @param zipPath a {@link String} object
+     * @param zipPath a {@link java.lang.String} object
      * @return a
      */
     public ZipBuilder remove(String zipPath) {
@@ -138,8 +138,8 @@ public class ZipBuilder {
     /**
      * <p>writeToZipOutputStream.</p>
      *
-     * @param zos a {@link ZipOutputStream} object
-     * @throws IOException if any.
+     * @param zos a {@link java.util.zip.ZipOutputStream} object
+     * @throws java.io.IOException if any.
      */
     public void writeToZipOutputStream(ZipOutputStream zos) throws IOException {
         for (var i : items) {
@@ -162,7 +162,7 @@ public class ZipBuilder {
      * 将 virtualFile 转换为 byte 数组 方便前台用户下载使用
      *
      * @return a
-     * @throws Exception a
+     * @throws java.lang.Exception a
      */
     public byte[] toBytes() throws Exception {
         return toBytes(new ZipOptions());
@@ -173,7 +173,7 @@ public class ZipBuilder {
      *
      * @param outputPath a
      * @return a
-     * @throws IOException if any.
+     * @throws java.io.IOException if any.
      */
     public Path toFile(Path outputPath, ZipOptions zipOptions) throws IOException {
         // 创建一个新的空的输出文件的临时文件

@@ -18,7 +18,7 @@ import static cool.scx.util.zip.ZipDataSource.Type.*;
  */
 abstract class ZipDataSource {
 
-    protected final Type type;
+    protected final ZipDataSource.Type type;
     protected Path path;
     protected byte[] bytes;
     protected Supplier<byte[]> bytesSupplier;
@@ -27,7 +27,7 @@ abstract class ZipDataSource {
     /**
      * <p>Constructor for ZipDataSource.</p>
      *
-     * @param path a {@link Path} object
+     * @param path a {@link java.nio.file.Path} object
      */
     protected ZipDataSource(Path path) {
         this.path = path;
@@ -47,7 +47,7 @@ abstract class ZipDataSource {
     /**
      * <p>Constructor for ZipDataSource.</p>
      *
-     * @param bytesSupplier a {@link Supplier} object
+     * @param bytesSupplier a {@link java.util.function.Supplier} object
      */
     protected ZipDataSource(Supplier<byte[]> bytesSupplier) {
         this.bytesSupplier = bytesSupplier;
@@ -57,7 +57,7 @@ abstract class ZipDataSource {
     /**
      * <p>Constructor for ZipDataSource.</p>
      *
-     * @param inputStream a {@link InputStream} object
+     * @param inputStream a {@link java.io.InputStream} object
      */
     protected ZipDataSource(InputStream inputStream) {
         this.inputStream = inputStream;
@@ -74,8 +74,8 @@ abstract class ZipDataSource {
     /**
      * <p>writeToOutputStream.</p>
      *
-     * @param out a {@link OutputStream} object
-     * @throws IOException if any.
+     * @param out a {@link java.io.OutputStream} object
+     * @throws java.io.IOException if any.
      */
     public void writeToOutputStream(OutputStream out) throws IOException {
         switch (type) {
@@ -91,8 +91,8 @@ abstract class ZipDataSource {
     /**
      * <p>toInputStream.</p>
      *
-     * @return a {@link InputStream} object
-     * @throws IOException if any.
+     * @return a {@link java.io.InputStream} object
+     * @throws java.io.IOException if any.
      */
     public InputStream toInputStream() throws IOException {
         return switch (type) {

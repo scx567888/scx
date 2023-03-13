@@ -18,7 +18,7 @@ public class GzipBuilder extends ZipDataSource {
     /**
      * <p>Constructor for GzipBuilder.</p>
      *
-     * @param path a {@link Path} object
+     * @param path a {@link java.nio.file.Path} object
      */
     public GzipBuilder(Path path) {
         super(path);
@@ -36,7 +36,7 @@ public class GzipBuilder extends ZipDataSource {
     /**
      * <p>Constructor for GzipBuilder.</p>
      *
-     * @param bytesSupplier a {@link Supplier} object
+     * @param bytesSupplier a {@link java.util.function.Supplier} object
      */
     public GzipBuilder(Supplier<byte[]> bytesSupplier) {
         super(bytesSupplier);
@@ -45,7 +45,7 @@ public class GzipBuilder extends ZipDataSource {
     /**
      * <p>Constructor for GzipBuilder.</p>
      *
-     * @param inputStream a {@link InputStream} object
+     * @param inputStream a {@link java.io.InputStream} object
      */
     public GzipBuilder(InputStream inputStream) {
         super(inputStream);
@@ -55,7 +55,7 @@ public class GzipBuilder extends ZipDataSource {
      * <p>toBytes.</p>
      *
      * @return an array of {@link byte} objects
-     * @throws Exception if any.
+     * @throws java.lang.Exception if any.
      */
     public byte[] toBytes() throws Exception {
         var bo = new ByteArrayOutputStream();
@@ -68,8 +68,8 @@ public class GzipBuilder extends ZipDataSource {
     /**
      * <p>toFile.</p>
      *
-     * @param outputPath a {@link Path} object
-     * @throws Exception if any.
+     * @param outputPath a {@link java.nio.file.Path} object
+     * @throws java.lang.Exception if any.
      */
     public void toFile(Path outputPath) throws Exception {
         Files.createDirectories(outputPath.getParent());

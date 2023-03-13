@@ -54,7 +54,7 @@ public final class HexUtils {
      * 字节数组转十六进制
      *
      * @param bytes an array of {@link byte} objects.
-     * @return a {@link String} object.
+     * @return a {@link java.lang.String} object.
      */
     public static String toHex(final byte[] bytes) {
         var chars = new byte[bytes.length * 2];

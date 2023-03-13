@@ -40,7 +40,7 @@ public final class ClassUtils {
      *
      * @param jarFileURI jar
      * @return r
-     * @throws IOException r
+     * @throws java.io.IOException r
      */
     public static List<Class<?>> getClassListFromJar(URI jarFileURI) throws IOException {
         //获取 jarFile
@@ -53,10 +53,10 @@ public final class ClassUtils {
     /**
      * <p>getClassListByDir.</p>
      *
-     * @param classRootPath a {@link URI} object
-     * @param classLoader   a {@link ClassLoader} object
-     * @return a {@link List} object
-     * @throws IOException if any.
+     * @param classRootPath a {@link java.net.URI} object
+     * @param classLoader   a {@link java.lang.ClassLoader} object
+     * @return a {@link java.util.List} object
+     * @throws java.io.IOException if any.
      */
     public static List<Class<?>> getClassListFromDir(Path classRootPath, ClassLoader classLoader) throws IOException {
         var classList = new ArrayList<Class<?>>();
@@ -109,9 +109,9 @@ public final class ClassUtils {
     /**
      * 根据 class 获取地址
      *
-     * @param source a {@link Class} object.
+     * @param source a {@link java.lang.Class} object.
      * @return 可能是 目录 也可能是 jar 文件
-     * @throws URISyntaxException if any.
+     * @throws java.net.URISyntaxException if any.
      */
     public static URI getCodeSource(Class<?> source) throws URISyntaxException {
         return source.getProtectionDomain().getCodeSource().getLocation().toURI();
@@ -125,7 +125,14 @@ public final class ClassUtils {
      */
     public static Path getAppRoot(URI codeSource) {
         var path = Path.of(codeSource);
-        return Files.isDirectory(path) ? path : path.getParent();
+        var scheme = codeSource.getScheme();
+        if ("file".equalsIgnoreCase(scheme)) {
+            return path;
+        } else if ("jar".equalsIgnoreCase(scheme)) {
+            return path.getParent();
+        } else {
+            return path;
+        }
     }
 
     /**
@@ -150,9 +157,9 @@ public final class ClassUtils {
     /**
      * 根据 basePackage 对 class 进行过滤
      *
-     * @param classList       a {@link List} object
-     * @param basePackageName a {@link String} object
-     * @return a {@link List} object
+     * @param classList       a {@link java.util.List} object
+     * @param basePackageName a {@link java.lang.String} object
+     * @return a {@link java.util.List} object
      */
     public static List<Class<?>> filterByBasePackage(List<Class<?>> classList, String basePackageName) {
         var p = basePackageName + ".";
@@ -165,7 +172,7 @@ public final class ClassUtils {
     /**
      * <p>isJar.</p>
      *
-     * @param path a {@link File} object
+     * @param path a {@link java.io.File} object
      * @return a boolean
      */
     public static boolean isJar(Path path) {
@@ -192,10 +199,6 @@ public final class ClassUtils {
     public static boolean isNormalClass(Class<?> c) {
         //既不是 接口也不是 抽象类
         return !c.isInterface() && !Modifier.isAbstract(c.getModifiers());
-    }
-
-    public static boolean isEnum(Class<?> c) {
-        return Enum.class.isAssignableFrom(c);
     }
 
 }

@@ -56,7 +56,7 @@ public final class CaseUtils {
      * 转换为驼峰命名法 getNameByAge
      *
      * @param str      s
-     * @param caseType a {@link CaseType} object
+     * @param caseType a {@link cool.scx.util.case_impl.CaseType} object
      * @return r
      */
     public static String toCamel(String str, CaseType caseType) {
@@ -68,7 +68,7 @@ public final class CaseUtils {
      * 转换为匈牙利命名法 GetNameByAge
      *
      * @param str      s
-     * @param caseType a {@link CaseType} object
+     * @param caseType a {@link cool.scx.util.case_impl.CaseType} object
      * @return r
      */
     public static String toPascal(String str, CaseType caseType) {
@@ -79,7 +79,7 @@ public final class CaseUtils {
      * 转换为短横线命名法 get-name-by-age
      *
      * @param str      s
-     * @param caseType a {@link CaseType} object
+     * @param caseType a {@link cool.scx.util.case_impl.CaseType} object
      * @return r
      */
     public static String toKebab(String str, CaseType caseType) {
@@ -90,7 +90,7 @@ public final class CaseUtils {
      * 转换为蛇形命名法 get_name_by_age
      *
      * @param str      s
-     * @param caseType a {@link CaseType} object
+     * @param caseType a {@link cool.scx.util.case_impl.CaseType} object
      * @return r
      */
     public static String toSnake(String str, CaseType caseType) {
@@ -101,8 +101,8 @@ public final class CaseUtils {
      * 推断原来的命名是啥 并返回切割后的源字符串
      *
      * @param str  源字符串
-     * @param to   a {@link CaseType} object
-     * @param from a {@link CaseType} object
+     * @param to   a {@link cool.scx.util.case_impl.CaseType} object
+     * @param from a {@link cool.scx.util.case_impl.CaseType} object
      * @return 分割后的数组
      */
     private static String convert(String str, CaseType to, CaseType from) {

@@ -13,7 +13,7 @@ public interface ScxTreeVisitor<T extends ScxTree<T>> {
     /**
      * <p>handle.</p>
      *
-     * @param parents        a {@link List} object
+     * @param parents        a {@link java.util.List} object
      * @param currentScxTree a T object
      */
     void handle(List<T> parents, T currentScxTree);

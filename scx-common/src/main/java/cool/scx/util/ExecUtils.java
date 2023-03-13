@@ -15,10 +15,10 @@ public final class ExecUtils {
     /**
      * <p>exec.</p>
      *
-     * @param cmdArray a {@link String} object
-     * @return a {@link String} object
-     * @throws IOException          if any.
-     * @throws InterruptedException if any.
+     * @param cmdArray a {@link java.lang.String} object
+     * @return a {@link java.lang.String} object
+     * @throws java.io.IOException            if any.
+     * @throws java.lang.InterruptedException if any.
      */
     public static String exec(String... cmdArray) throws IOException, InterruptedException {
         var process = Runtime.getRuntime().exec(cmdArray);
