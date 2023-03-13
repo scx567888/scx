@@ -29,7 +29,7 @@ import static cool.scx.sql.SQLBuilder.*;
  * @version 0.1.3
  */
 @Deprecated
-public class OldMySQLDao<Entity> implements BaseDao<Entity,Long> {
+public class OldMySQLDao<Entity> implements BaseDao<Entity, Long> {
 
     /**
      * 实体类对应的 table 结构

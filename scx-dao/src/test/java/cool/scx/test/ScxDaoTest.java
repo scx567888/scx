@@ -77,7 +77,7 @@ public class ScxDaoTest {
 
         SessionFactory xFactory = new SessionFactory();
         Session session1 = xFactory.getSession("mysqlx://127.0.0.1:33060/" + databaseName + "?user=root&password=root");
-        var mySQLXDao = new MySQLXDao<>(userTableInfo.tableName()+"_doc", User.class, session1);
+        var mySQLXDao = new MySQLXDao<>(userTableInfo.tableName() + "_doc", User.class, session1);
         var newIds3 = mySQLXDao.insertBatch(list, UpdateFilter.ofExcluded());
         System.out.println("MySQLX 插入 : " + newIds3);
         var a13 = mySQLXDao.select(new Query().greaterThan("age", 300), SelectFilter.ofExcluded());
