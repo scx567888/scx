@@ -8,7 +8,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-//todo test
 public class EnumTypeHandler<E extends Enum<E>> implements TypeHandler<E> {
 
     private static final Logger logger = LoggerFactory.getLogger(EnumTypeHandler.class);
@@ -29,12 +28,12 @@ public class EnumTypeHandler<E extends Enum<E>> implements TypeHandler<E> {
 
     @Override
     public E getObject(ResultSet rs, int index) throws SQLException {
-        String s = rs.getString(index);
-        if (s == null) {
+        String name = rs.getString(index);
+        if (name == null) {
             return null;
         }
         try {
-            return Enum.valueOf(type, s);
+            return Enum.valueOf(type, name);
         } catch (Exception e) {
             logger.error("枚举转换出现错误 : ", e);
             return null;

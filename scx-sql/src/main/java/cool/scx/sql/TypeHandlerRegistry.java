@@ -1,6 +1,13 @@
 package cool.scx.sql;
 
-import cool.scx.sql.type_handler.*;
+import cool.scx.sql.type_handler.BlobInputStreamTypeHandler;
+import cool.scx.sql.type_handler.ClobReaderTypeHandler;
+import cool.scx.sql.type_handler.EnumTypeHandler;
+import cool.scx.sql.type_handler.ObjectTypeHandler;
+import cool.scx.sql.type_handler.base.*;
+import cool.scx.sql.type_handler.math.BigDecimalTypeHandler;
+import cool.scx.sql.type_handler.math.BigIntegerTypeHandler;
+import cool.scx.sql.type_handler.time.*;
 
 import java.io.InputStream;
 import java.io.Reader;
@@ -19,9 +26,6 @@ public final class TypeHandlerRegistry {
     private static final Map<Class<?>, TypeHandler<?>> TYPE_HANDLER_MAP = new ConcurrentHashMap<>();
 
     static {
-        //Calendar
-        //Blob
-        //Duration
         //基本类型
         TYPE_HANDLER_MAP.put(boolean.class, new BooleanTypeHandler());
         TYPE_HANDLER_MAP.put(char.class, new CharacterTypeHandler());
@@ -44,28 +48,28 @@ public final class TypeHandlerRegistry {
         TYPE_HANDLER_MAP.put(byte[].class, new ByteArrayTypeHandler());
 
 
-
         // 大数字
         TYPE_HANDLER_MAP.put(BigInteger.class, new BigIntegerTypeHandler());
         TYPE_HANDLER_MAP.put(BigDecimal.class, new BigDecimalTypeHandler());
 
 
-        // LocalDateTime
+        // 时间
         TYPE_HANDLER_MAP.put(LocalDateTime.class, new LocalDateTimeTypeHandler());
         TYPE_HANDLER_MAP.put(LocalDate.class, new LocalDateTypeHandler());
         TYPE_HANDLER_MAP.put(LocalTime.class, new LocalTimeTypeHandler());
-
-
-        //todo 未测试
-        TYPE_HANDLER_MAP.put(InputStream.class, new BlobInputStreamTypeHandler());
-        TYPE_HANDLER_MAP.put(Date.class, new DateTypeHandler());
-        TYPE_HANDLER_MAP.put(Instant.class, new InstantTypeHandler());
         TYPE_HANDLER_MAP.put(OffsetDateTime.class, new OffsetDateTimeTypeHandler());
         TYPE_HANDLER_MAP.put(OffsetTime.class, new OffsetTimeTypeHandler());
         TYPE_HANDLER_MAP.put(ZonedDateTime.class, new ZonedDateTimeTypeHandler());
         TYPE_HANDLER_MAP.put(Month.class, new MonthTypeHandler());
         TYPE_HANDLER_MAP.put(Year.class, new YearTypeHandler());
         TYPE_HANDLER_MAP.put(YearMonth.class, new YearMonthTypeHandler());
+        TYPE_HANDLER_MAP.put(Date.class, new DateTypeHandler());
+        TYPE_HANDLER_MAP.put(Instant.class, new InstantTypeHandler());
+        TYPE_HANDLER_MAP.put(Duration.class, new DurationTypeHandler());
+
+        //clob and blow
+        TYPE_HANDLER_MAP.put(InputStream.class, new BlobInputStreamTypeHandler());
+        TYPE_HANDLER_MAP.put(Reader.class, new ClobReaderTypeHandler());
     }
 
     @SuppressWarnings("unchecked")

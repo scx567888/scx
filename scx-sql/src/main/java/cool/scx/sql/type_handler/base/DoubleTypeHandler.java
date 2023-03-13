@@ -1,4 +1,4 @@
-package cool.scx.sql.type_handler;
+package cool.scx.sql.type_handler.base;
 
 import cool.scx.sql.TypeHandler;
 

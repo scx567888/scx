@@ -1,4 +1,4 @@
-package cool.scx.sql.type_handler;
+package cool.scx.sql.type_handler.time;
 
 import cool.scx.sql.TypeHandler;
 
@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Year;
 
-//todo test
 public class YearTypeHandler implements TypeHandler<Year> {
 
     @Override
