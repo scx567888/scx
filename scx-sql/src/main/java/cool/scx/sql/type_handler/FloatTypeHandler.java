@@ -16,7 +16,7 @@ public class FloatTypeHandler implements TypeHandler<Float> {
     @Override
     public Float getObject(ResultSet rs, int index) throws SQLException {
         float result = rs.getFloat(index);
-        return result == 0 && rs.wasNull() ? null : result;
+        return rs.wasNull() ? null : result;
     }
 
 }

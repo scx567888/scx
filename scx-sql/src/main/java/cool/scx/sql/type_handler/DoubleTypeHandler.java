@@ -16,7 +16,7 @@ public class DoubleTypeHandler implements TypeHandler<Double> {
     @Override
     public Double getObject(ResultSet rs, int index) throws SQLException {
         double result = rs.getDouble(index);
-        return result == 0 && rs.wasNull() ? null : result;
+        return rs.wasNull() ? null : result;
     }
 
 }
