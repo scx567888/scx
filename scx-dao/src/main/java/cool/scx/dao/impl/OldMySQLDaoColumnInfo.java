@@ -1,14 +1,24 @@
-package cool.scx.dao._old;
+package cool.scx.dao.impl;
 
-import cool.scx.sql.mapping.ColumnInfo;
+import java.lang.reflect.Field;
 
 /**
  * BaseDaoColumnInfo
  */
-public abstract class OldBaseDaoColumnInfo implements ColumnInfo {
+@Deprecated
+public class OldMySQLDaoColumnInfo extends AnnotationConfigColumnInfo {
 
-    protected String updateSetSQL;
-    protected String selectSQL;
+    private String updateSetSQL;
+    private String selectSQL;
+
+    /**
+     * a
+     *
+     * @param javaField a
+     */
+    public OldMySQLDaoColumnInfo(Field javaField) {
+        super(javaField);
+    }
 
     /**
      * 更新时的 sql 片段 强烈建议提前生成好!!! 以提高性能
