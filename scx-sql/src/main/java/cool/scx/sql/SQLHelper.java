@@ -1,21 +1,16 @@
 package cool.scx.sql;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mysql.cj.MysqlType;
 import com.mysql.cj.NativeQueryBindings;
 import com.mysql.cj.PreparedQuery;
 import com.mysql.cj.jdbc.ClientPreparedStatement;
 import cool.scx.sql.mapping.ColumnInfo;
 import cool.scx.sql.mapping.TableInfo;
-import cool.scx.util.ObjectUtils;
-import org.slf4j.Logger;
 
 import javax.sql.DataSource;
-import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,14 +27,7 @@ import static cool.scx.util.StringUtils.notBlank;
  */
 public final class SQLHelper {
 
-    /**
-     * 这里我们和 SQLRunner 公用一个 logger 方便管理
-     */
-    private static final Logger logger = SQLRunner.logger;
-
     private static final Map<Class<?>, MysqlType> DEFAULT_MYSQL_TYPES = initDefaultMySQLTypes();
-
-    private static final ObjectMapper objectMapper = ObjectUtils.jsonMapper(ObjectUtils.Option.IGNORE_JSON_IGNORE);
 
     @SuppressWarnings("unchecked")
     private static Map<Class<?>, MysqlType> initDefaultMySQLTypes() {
@@ -109,72 +97,7 @@ public final class SQLHelper {
     }
 
     /**
-     * a
-     *
-     * @param o a
-     * @return a
-     */
-    public static String convertToStringOrNull(Object o) {
-        try {
-            return objectMapper.convertValue(o, String.class);
-        } catch (Exception e) {
-            logger.error("序列化时发生错误 , 已使用 NULL !!!", e);
-            return null;
-        }
-    }
-
-    /**
-     * a
-     *
-     * @param o a
-     * @return a
-     */
-    public static String convertToJsonOrNull(Object o) {
-        try {
-            return objectMapper.writeValueAsString(o);
-        } catch (Exception e) {
-            logger.error("序列化时发生错误 , 已使用 NULL !!!", e);
-            return null;
-        }
-    }
-
-    /**
-     * a
-     *
-     * @param o         a
-     * @param filedType a
-     * @return a
-     */
-    public static Object readFromValueOrNull(String o, Class<?> filedType) {
-        if (o != null) {
-            try {
-                return objectMapper.convertValue(o, filedType);
-            } catch (Exception e) {
-                logger.error("反序列化时发生错误 , 已使用 NULL !!!", e);
-            }
-        }
-        return null;
-    }
-
-    /**
-     * 读取 json 值 或者返回 null
-     *
-     * @param json        s
-     * @param genericType g
-     * @return r
-     */
-    public static Object readFromJsonValueOrNull(String json, Type genericType) {
-        if (json != null) {
-            try {
-                return objectMapper.readValue(json, ObjectUtils.constructType(genericType));
-            } catch (Exception e) {
-                logger.error("反序列化时发生错误 , 已使用 NULL !!!", e);
-            }
-        }
-        return null;
-    }
-
-    /**
+     * todo 这里需要支持不同的数据库
      * 　获取最终的 SQL
      *
      * @param preparedStatement a
@@ -192,48 +115,6 @@ public final class SQLHelper {
         var finalSQL = preparedQuery.asSql();
         var batchedArgsSize = preparedQuery.getBatchedArgs() == null ? 0 : preparedQuery.getBatchedArgs().size();
         return batchedArgsSize > 1 ? finalSQL + "... 额外的 " + (batchedArgsSize - 1) + " 项" : finalSQL;
-    }
-
-    /**
-     * 打印 SQL
-     *
-     * @param p a
-     * @return 方便函数式调用
-     */
-    public static PreparedStatement logSQL(PreparedStatement p) {
-        if (logger.isDebugEnabled()) {
-            logger.debug(SQLHelper.getFinalSQL(p));
-        }
-        return p;
-    }
-
-    /**
-     * 填充 PreparedStatement
-     *
-     * @param preparedStatement a
-     * @param params            a
-     * @throws SQLException a
-     */
-    public static void fillPreparedStatement(PreparedStatement preparedStatement, Object[] params) throws SQLException {
-        var index = 1;
-        for (var tempValue : params) {
-            if (tempValue != null) {
-                var tempValueClass = tempValue.getClass();
-                //判断是否为数据库(MySQL)直接支持的数据类型
-                var mysqlType = SQLHelper.getMySQLType(tempValueClass);
-                if (mysqlType != null) {
-                    preparedStatement.setObject(index, tempValue, mysqlType);
-                } else if (tempValueClass.isEnum()) {//不是则转换做一下特殊处理 枚举我们直接存名称
-                    preparedStatement.setString(index, SQLHelper.convertToStringOrNull(tempValue));
-                } else {//否则存 json
-                    preparedStatement.setString(index, SQLHelper.convertToJsonOrNull(tempValue));
-                }
-            } else {
-                //这里的 Types.NULL 其实内部并没有使用
-                preparedStatement.setNull(index, Types.NULL);
-            }
-            index = index + 1;
-        }
     }
 
     /**

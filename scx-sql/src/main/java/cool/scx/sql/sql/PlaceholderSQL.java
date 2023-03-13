@@ -1,14 +1,10 @@
 package cool.scx.sql.sql;
 
 import cool.scx.sql.SQL;
+import cool.scx.sql.TypeHandlerRegistry;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.List;
-
-import static cool.scx.sql.SQLHelper.fillPreparedStatement;
 
 /**
  * 标准 问号形式 (?) 的占位 SQL
@@ -56,6 +52,27 @@ public final class PlaceholderSQL implements SQL {
         this.normalSQL = normalSQL;
         this.params = null;
         this.batchParams = batchParams;
+    }
+
+    /**
+     * 填充 PreparedStatement
+     *
+     * @param preparedStatement a
+     * @param params            a
+     * @throws SQLException a
+     */
+    public static void fillPreparedStatement(PreparedStatement preparedStatement, Object[] params) throws SQLException {
+        var index = 1;
+        for (var tempValue : params) {
+            if (tempValue != null) {
+                var typeHandler = TypeHandlerRegistry.getTypeHandler(tempValue.getClass());
+                typeHandler.setObject(preparedStatement, index, tempValue);
+            } else {
+                //这里的 Types.NULL 其实内部并没有使用
+                preparedStatement.setNull(index, Types.NULL);
+            }
+            index = index + 1;
+        }
     }
 
     /**
