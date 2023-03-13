@@ -177,6 +177,19 @@ public final class SQLRunner {
     }
 
     /**
+     * 打印 SQL
+     *
+     * @param p a
+     * @return 方便函数式调用
+     */
+    private static PreparedStatement logSQL(PreparedStatement p) {
+        if (logger.isDebugEnabled()) {
+            logger.debug(SQLHelper.getFinalSQL(p));
+        }
+        return p;
+    }
+
+    /**
      * a
      *
      * @param sql           a
@@ -350,19 +363,6 @@ public final class SQLRunner {
         var con = dataSource.getConnection();
         con.setAutoCommit(autoCommit);
         return con;
-    }
-
-    /**
-     * 打印 SQL
-     *
-     * @param p a
-     * @return 方便函数式调用
-     */
-    private static PreparedStatement logSQL(PreparedStatement p) {
-        if (logger.isDebugEnabled()) {
-            logger.debug(SQLHelper.getFinalSQL(p));
-        }
-        return p;
     }
 
 }
