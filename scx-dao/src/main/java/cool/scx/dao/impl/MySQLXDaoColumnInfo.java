@@ -6,7 +6,6 @@ import cool.scx.sql.mapping.ColumnInfo;
 import java.lang.reflect.Field;
 
 import static cool.scx.sql.SQLHelper.getMySQLTypeCreateName;
-import static cool.scx.util.CaseUtils.toSnake;
 import static cool.scx.util.StringUtils.notBlank;
 
 /**
@@ -15,7 +14,7 @@ import static cool.scx.util.StringUtils.notBlank;
  * @author scx567888
  * @version 1.11.8
  */
-public class AnnotationConfigColumnInfo implements ColumnInfo {
+public class MySQLXDaoColumnInfo implements ColumnInfo {
 
     private final Field javaField;
     private final String columnName;
@@ -33,12 +32,12 @@ public class AnnotationConfigColumnInfo implements ColumnInfo {
      *
      * @param javaField a
      */
-    public AnnotationConfigColumnInfo(Field javaField) {
+    public MySQLXDaoColumnInfo(Field javaField) {
         this.javaField = javaField;
         var column = javaField.getAnnotation(Column.class);
         if (column != null) {
             this.type = notBlank(column.type()) ? column.type() : getMySQLTypeCreateName(javaField.getType());
-            this.columnName = notBlank(column.columnName()) ? column.columnName() : toSnake(javaField.getName());
+            this.columnName = javaField.getName();
             this.needIndex = column.needIndex();
             this.unique = column.unique();
             this.onUpdateValue = column.onUpdateValue();
@@ -48,7 +47,7 @@ public class AnnotationConfigColumnInfo implements ColumnInfo {
             this.notNull = column.notNull();
         } else {
             this.type = getMySQLTypeCreateName(javaField.getType());
-            this.columnName = toSnake(javaField.getName());
+            this.columnName = javaField.getName();
             this.needIndex = false;
             this.unique = false;
             this.onUpdateValue = null;
