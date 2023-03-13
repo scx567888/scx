@@ -10,7 +10,6 @@ import java.util.Date;
 
 public class DateTypeHandler implements TypeHandler<Date> {
 
-
     @Override
     public void setObject(PreparedStatement ps, int i, Date parameter) throws SQLException {
         ps.setTimestamp(i, new Timestamp(parameter.getTime()));

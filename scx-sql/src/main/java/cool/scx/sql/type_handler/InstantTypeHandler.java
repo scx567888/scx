@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Instant;
 
-
 public class InstantTypeHandler implements TypeHandler<Instant> {
 
     private static Instant getInstant(Timestamp timestamp) {
