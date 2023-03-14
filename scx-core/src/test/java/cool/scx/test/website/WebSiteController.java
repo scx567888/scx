@@ -8,7 +8,7 @@ import cool.scx.http_client.ScxHttpClientHelper;
 import cool.scx.mvc.ScxMvc;
 import cool.scx.mvc.annotation.FromQuery;
 import cool.scx.mvc.annotation.FromUpload;
-import cool.scx.mvc.annotation.ScxMapping;
+import cool.scx.mvc.annotation.ScxRoute;
 import cool.scx.mvc.type.UploadedEntity;
 import cool.scx.mvc.vo.*;
 import cool.scx.test.car.Car;
@@ -37,7 +37,7 @@ import java.util.zip.ZipOutputStream;
  * @version 0.3.6
  * @since 1.3.14
  */
-@ScxMapping
+@ScxRoute
 public class WebSiteController {
 
     final CarService carService;
@@ -49,7 +49,7 @@ public class WebSiteController {
         this.carService = carService;
     }
 
-    @ScxMapping(method = HttpMethod.POST)
+    @ScxRoute(methods = HttpMethod.POST)
     public static Object test0(@FromQuery String name,
                                @FromQuery Integer age,
                                @FromUpload UploadedEntity content,
@@ -60,7 +60,7 @@ public class WebSiteController {
                 "content1", ScxContext.vertx().fileSystem().readFileBlocking(content1.uploadedFileName()).toString(StandardCharsets.UTF_8));
     }
 
-    @ScxMapping(method = HttpMethod.GET)
+    @ScxRoute(methods = HttpMethod.GET)
     public static void TestTransaction(RoutingContext ctx) throws Exception {
         var sb = new StringBuilder();
         CarService bean = ScxContext.getBean(CarService.class);
@@ -86,7 +86,7 @@ public class WebSiteController {
      * @return 页面
      * @throws java.io.IOException if any.
      */
-    @ScxMapping(value = "/", method = HttpMethod.GET, order = 10)
+    @ScxRoute(value = "/", methods = HttpMethod.GET, order = 10)
     public Html TestIndex(RoutingContext c) throws IOException {
         System.err.println("最后一次匹配的路由" + c.request().path());
         Html index = Html.of("index");
@@ -101,7 +101,7 @@ public class WebSiteController {
      * @param c a
      * @throws IOException a
      */
-    @ScxMapping(value = "/", method = HttpMethod.GET, order = 5)
+    @ScxRoute(value = "/", methods = HttpMethod.GET, order = 5)
     public void TestIndex1(RoutingContext c) throws IOException {
         System.err.println("第二个匹配的路由" + c.request().path());
         c.put("name", "小明");
@@ -114,7 +114,7 @@ public class WebSiteController {
      * @param c a
      * @throws IOException a
      */
-    @ScxMapping(value = "/*", method = HttpMethod.GET, order = 1)
+    @ScxRoute(value = "/*", methods = HttpMethod.GET, order = 1)
     public void TestIndex1a(RoutingContext c) throws IOException {
         System.err.println("两个 carService 是否相等 " + (carService == carService1));
         System.err.println("第一个匹配的路由" + c.request().path());
@@ -126,7 +126,7 @@ public class WebSiteController {
      *
      * @return a
      */
-    @ScxMapping(value = "/baidu", method = HttpMethod.GET)
+    @ScxRoute(value = "/baidu", methods = HttpMethod.GET)
     public Html TestHttpUtils() throws IOException, InterruptedException {
         var baiduHtml = ScxHttpClientHelper.get("https://www.baidu.com/").body().toString();
         return Html.ofString(baiduHtml);
@@ -137,7 +137,7 @@ public class WebSiteController {
      *
      * @return a
      */
-    @ScxMapping(value = "/download", method = HttpMethod.GET)
+    @ScxRoute(value = "/download", methods = HttpMethod.GET)
     public Download TestDownload() {
         StringBuilder s = new StringBuilder();
         for (int i = 0; i < 9999; i = i + 1) {
@@ -151,7 +151,7 @@ public class WebSiteController {
      *
      * @return a {@link BaseVo} object
      */
-    @ScxMapping(value = "/raw", method = HttpMethod.GET)
+    @ScxRoute(value = "/raw", methods = HttpMethod.GET)
     public BaseVo TestRaw() {
         StringBuilder s = new StringBuilder();
         for (int i = 0; i < 9999; i = i + 1) {
@@ -165,7 +165,7 @@ public class WebSiteController {
      *
      * @return a {@link java.lang.String} object
      */
-    @ScxMapping(value = "/md5", method = HttpMethod.GET)
+    @ScxRoute(value = "/md5", methods = HttpMethod.GET)
     public String TestMd5() {
         return DigestUtils.md5("123");
     }
@@ -175,7 +175,7 @@ public class WebSiteController {
      *
      * @return a {@link java.lang.String} object
      */
-    @ScxMapping(method = HttpMethod.GET)
+    @ScxRoute(methods = HttpMethod.GET)
     public String getRandomCode() {
         return RandomUtils.randomString(9999);
     }
@@ -185,13 +185,13 @@ public class WebSiteController {
      *
      * @return a {@link BaseVo} object
      */
-    @ScxMapping(method = HttpMethod.GET)
+    @ScxRoute(methods = HttpMethod.GET)
     public BaseVo bigJson() {
         var users = carService1.list();
         return Json.ok().put("items", users);
     }
 
-    @ScxMapping(method = HttpMethod.GET)
+    @ScxRoute(methods = HttpMethod.GET)
     public BaseVo bigXml() {
         var users = carService1.list();
         return Xml.of(users);
@@ -202,7 +202,7 @@ public class WebSiteController {
      *
      * @return a {@link BaseVo} object
      */
-    @ScxMapping(method = HttpMethod.GET)
+    @ScxRoute(methods = HttpMethod.GET)
     public BaseVo a() {
         return Json.ok().put("items", "a");
     }
@@ -212,7 +212,7 @@ public class WebSiteController {
      *
      * @return a {@link BaseVo} object
      */
-    @ScxMapping(value = "a", method = HttpMethod.GET)
+    @ScxRoute(value = "a", methods = HttpMethod.GET)
     public BaseVo b() {
         return Json.ok().put("items", "b");
     }
@@ -222,7 +222,7 @@ public class WebSiteController {
      *
      * @return a {@link BaseVo} object
      */
-    @ScxMapping(value = "/v/:aaa", method = {HttpMethod.GET, HttpMethod.POST})
+    @ScxRoute(value = "/v/:aaa", methods = {HttpMethod.GET, HttpMethod.POST})
     public BaseVo c() {
         return Json.ok().put("items", "aaa");
     }
@@ -232,7 +232,7 @@ public class WebSiteController {
      *
      * @return a {@link BaseVo} object
      */
-    @ScxMapping(value = "/v/:bbb", method = HttpMethod.GET)
+    @ScxRoute(value = "/v/:bbb", methods = HttpMethod.GET)
     public BaseVo d() {
         return Json.ok().put("items", "bbb");
     }
@@ -242,7 +242,7 @@ public class WebSiteController {
      *
      * @return a {@link BaseVo} object
      */
-    @ScxMapping(method = HttpMethod.GET)
+    @ScxRoute(methods = HttpMethod.GET)
     public Download zip() throws Exception {
         var zipBuilder = new ZipBuilder();
         zipBuilder.put("第一个目录/第二个目录/第二个目录中的文件.txt", "文件内容".getBytes(StandardCharsets.UTF_8));

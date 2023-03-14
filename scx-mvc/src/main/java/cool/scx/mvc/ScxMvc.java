@@ -1,7 +1,7 @@
 package cool.scx.mvc;
 
 import cool.scx.enumeration.HttpResponseStatus;
-import cool.scx.mvc.Interceptor.ScxMappingInterceptorImpl;
+import cool.scx.mvc.Interceptor.DefaultInterceptorImpl;
 import cool.scx.mvc.exception.BadRequestException;
 import cool.scx.mvc.exception.InternalServerErrorException;
 import cool.scx.mvc.exception.ScxHttpException;
@@ -11,7 +11,7 @@ import cool.scx.mvc.parameter_handler.*;
 import cool.scx.mvc.parameter_handler.exception.ParamConvertException;
 import cool.scx.mvc.parameter_handler.exception.RequiredParamEmptyException;
 import cool.scx.mvc.return_value_handler.*;
-import cool.scx.mvc.websocket.ScxWebSocketRouter;
+import cool.scx.mvc.websocket.WebSocketRouter;
 import cool.scx.util.ScxExceptionHelper;
 import io.vertx.core.Handler;
 import io.vertx.ext.web.Router;
@@ -36,7 +36,7 @@ public final class ScxMvc {
     private final List<ScxMvcParameterHandler> parameterHandlers = new ArrayList<>();
     private final LastParameterHandler lastParameterHandler;
     private final ScxTemplateHandler templateHandler;
-    private ScxMvcInterceptor interceptor = new ScxMappingInterceptorImpl();
+    private ScxMvcInterceptor interceptor = new DefaultInterceptorImpl();
 
     public ScxMvc() {
         this(new ScxMvcOptions());
@@ -90,20 +90,20 @@ public final class ScxMvc {
     }
 
     public ScxMvc registerHttpRoutes(Router router, BeanFactory beanFactory, List<Class<?>> classList) {
-        new ScxMappingRegistrar(this, beanFactory, classList).registerRoute(router);
+        new ScxRouteRegistrar(this, beanFactory, classList).registerRoute(router);
         return this;
     }
 
-    public ScxMvc registerWebSocketRoutes(ScxWebSocketRouter router, BeanFactory beanFactory, List<Class<?>> classList) {
-        new ScxWebSocketMappingRegistrar(beanFactory, classList).registerRoute(router);
+    public ScxMvc registerWebSocketRoutes(WebSocketRouter router, BeanFactory beanFactory, List<Class<?>> classList) {
+        new ScxWebSocketRouteRegistrar(beanFactory, classList).registerRoute(router);
         return this;
     }
 
-    public ScxMvc setInterceptor(ScxMvcInterceptor scxMappingInterceptor) {
-        if (scxMappingInterceptor == null) {
-            throw new IllegalArgumentException("ScxMappingInterceptor must not be empty !!!");
+    public ScxMvc setInterceptor(ScxMvcInterceptor newInterceptor) {
+        if (newInterceptor == null) {
+            throw new IllegalArgumentException("ScxMvcInterceptor must not be empty !!!");
         }
-        this.interceptor = scxMappingInterceptor;
+        this.interceptor = newInterceptor;
         return this;
     }
 
@@ -112,8 +112,8 @@ public final class ScxMvc {
         return this;
     }
 
-    public ScxMvc addParameterHandler(ScxMvcParameterHandler scxMappingMethodParameterHandler) {
-        parameterHandlers.add(scxMappingMethodParameterHandler);
+    public ScxMvc addParameterHandler(ScxMvcParameterHandler handler) {
+        parameterHandlers.add(handler);
         return this;
     }
 
@@ -122,13 +122,13 @@ public final class ScxMvc {
         return this;
     }
 
-    public ScxMvc addExceptionHandler(int index, ScxHttpRouterExceptionHandler scxHttpRouterExceptionHandler) {
-        exceptionHandlers.add(index, scxHttpRouterExceptionHandler);
+    public ScxMvc addExceptionHandler(int index, ScxHttpRouterExceptionHandler handler) {
+        exceptionHandlers.add(index, handler);
         return this;
     }
 
-    public ScxMvc addParameterHandler(int index, ScxMvcParameterHandler scxMappingMethodParameterHandler) {
-        parameterHandlers.add(index, scxMappingMethodParameterHandler);
+    public ScxMvc addParameterHandler(int index, ScxMvcParameterHandler handler) {
+        parameterHandlers.add(index, handler);
         return this;
     }
 

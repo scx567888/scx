@@ -80,11 +80,11 @@
 import cool.scx.core.Scx;
 import cool.scx.core.ScxModule;
 import cool.scx.enumeration.HttpMethod;
-import cool.scx.mvc.annotation.ScxMapping;
+import cool.scx.mvc.annotation.ScxRoute;
 
 // 注意 : 自定义的模块需要继承 ScxModule
-// 此处的 @ScxMapping 注解用来表示这是一个需要被扫描 WebHandler 的类
-@ScxMapping
+// 此处的 @ScxRoute 注解用来表示这是一个需要被扫描 WebHandler 的类
+@ScxRoute
 public class YourModule extends ScxModule {
 
     public static void main(String[] args) {
@@ -96,9 +96,9 @@ public class YourModule extends ScxModule {
                 .run();                         // 4, 构建并运行项目
     }
 
-    // 此处的 @ScxMapping 注解用来表示这是一个具体的 WebHandler
+    // 此处的 @ScxRoute 注解用来表示这是一个具体的 WebHandler
     // 路径为 "/" , 请求方法为 GET
-    @ScxMapping(value = "/", method = HttpMethod.GET)
+    @ScxRoute(value = "/", methods = HttpMethod.GET)
     public String helloWorld() {
         // 向页面返回的具体内容
         return "Hello World";

@@ -1,6 +1,6 @@
 package cool.scx.mvc.base;
 
-import cool.scx.mvc.annotation.ScxWebSocketMapping;
+import cool.scx.mvc.annotation.ScxWebSocketRoute;
 import cool.scx.mvc.websocket.OnCloseRoutingContext;
 import cool.scx.mvc.websocket.OnExceptionRoutingContext;
 import cool.scx.mvc.websocket.OnFrameRoutingContext;
@@ -10,7 +10,7 @@ import io.vertx.core.http.ServerWebSocket;
 import io.vertx.core.http.WebSocketFrame;
 
 /**
- * BaseWebSocketHandler 基本接口 请与 {@link ScxWebSocketMapping} 配合使用
+ * BaseWebSocketHandler 基本接口 请与 {@link ScxWebSocketRoute} 配合使用
  *
  * @author scx567888
  * @version 1.0.10

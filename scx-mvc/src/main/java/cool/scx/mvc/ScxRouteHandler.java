@@ -1,7 +1,7 @@
 package cool.scx.mvc;
 
 import cool.scx.enumeration.HttpMethod;
-import cool.scx.mvc.annotation.ScxMapping;
+import cool.scx.mvc.annotation.ScxRoute;
 import cool.scx.util.CaseUtils;
 import cool.scx.util.ScxExceptionHelper;
 import cool.scx.util.URIBuilder;
@@ -12,11 +12,11 @@ import io.vertx.ext.web.RoutingContext;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
 import static cool.scx.mvc.ScxMvcHelper.responseCanUse;
 
@@ -26,7 +26,7 @@ import static cool.scx.mvc.ScxMvcHelper.responseCanUse;
  * @author scx567888
  * @version 0.3.6
  */
-public final class ScxMappingHandler implements Handler<RoutingContext> {
+public final class ScxRouteHandler implements Handler<RoutingContext> {
 
     /**
      * 方法
@@ -63,13 +63,17 @@ public final class ScxMappingHandler implements Handler<RoutingContext> {
      */
     public final HttpMethod[] httpMethods;
 
+    public final String[] consumes;
+
+    public final String[] produces;
+
     /**
-     * scxMappingConfiguration 配置
+     * 配置
      */
     private final ScxMvc scxMvc;
 
     /**
-     * ScxMapping 排序 优先级最高
+     * 排序 优先级最高
      */
     private final int order;
 
@@ -85,7 +89,7 @@ public final class ScxMappingHandler implements Handler<RoutingContext> {
      * @param scxMvc   a
      * @param instance ex
      */
-    ScxMappingHandler(Method method, Class<?> clazz, Object instance, ScxMvc scxMvc) {
+    ScxRouteHandler(Method method, Class<?> clazz, Object instance, ScxMvc scxMvc) {
         this.scxMvc = scxMvc;
         this.clazz = clazz;
         this.method = method;
@@ -94,27 +98,33 @@ public final class ScxMappingHandler implements Handler<RoutingContext> {
         this.parameters = method.getParameters();
         this.instance = instance;
         //根据注解初始化值
-        var classScxMapping = clazz.getAnnotation(ScxMapping.class);
-        var methodScxMapping = method.getAnnotation(ScxMapping.class);
-        this.originalUrl = initOriginalUrl(classScxMapping, methodScxMapping);
-        this.httpMethods = initHttpMethod(methodScxMapping);
-        this.order = methodScxMapping.order();
+        var clazzAnnotation = clazz.getAnnotation(ScxRoute.class);
+        var methodAnnotation = method.getAnnotation(ScxRoute.class);
+        this.originalUrl = initOriginalUrl(clazzAnnotation, methodAnnotation);
+        this.consumes = distinct(methodAnnotation.consumes());
+        this.produces = distinct(methodAnnotation.produces());
+        this.httpMethods = distinct(methodAnnotation.methods());
+        this.order = methodAnnotation.order();
     }
 
-    private static HttpMethod[] initHttpMethod(ScxMapping methodScxMapping) {
-        return Stream.of(methodScxMapping.method()).distinct().toArray(HttpMethod[]::new);
+    private static HttpMethod[] distinct(HttpMethod[] methods) {
+        return Arrays.stream(methods).distinct().toArray(HttpMethod[]::new);
     }
 
-    private String initOriginalUrl(ScxMapping classScxMapping, ScxMapping methodScxMapping) {
+    private static String[] distinct(String[] strings) {
+        return Arrays.stream(strings).distinct().toArray(String[]::new);
+    }
+
+    private String initOriginalUrl(ScxRoute classAnnotation, ScxRoute methodAnnotation) {
         var urlArray = new String[]{"", ""};
-        if (!methodScxMapping.ignoreParentUrl() && classScxMapping != null) {
-            urlArray[0] = classScxMapping.value();
+        if (!classAnnotation.ignoreParentUrl() && classAnnotation != null) {
+            urlArray[0] = classAnnotation.value();
         }
         //获取方法的 url
-        if (methodScxMapping.useNameAsUrl() && "".equals(methodScxMapping.value())) {
+        if (methodAnnotation.useNameAsUrl() && "".equals(methodAnnotation.value())) {
             urlArray[1] = CaseUtils.toKebab(this.method.getName());
         } else {
-            urlArray[1] = methodScxMapping.value();
+            urlArray[1] = methodAnnotation.value();
         }
         return URIBuilder.addSlashStart(URIBuilder.join(urlArray));
     }

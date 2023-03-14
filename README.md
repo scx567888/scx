@@ -80,11 +80,11 @@ English | [简体中文](./README.zh-CN.md)
 import cool.scx.core.Scx;
 import cool.scx.core.ScxModule;
 import cool.scx.enumeration.HttpMethod;
-import cool.scx.mvc.annotation.ScxMapping;
+import cool.scx.mvc.annotation.ScxRoute;
 
 // Note : Custom modules need extends ScxModule
-// This @ScxMapping indicate this class needs to be scanned by WebHandler
-@ScxMapping
+// This @ScxRoute indicate this class needs to be scanned by WebHandler
+@ScxRoute
 public class YourModule extends ScxModule {
 
     public static void main(String[] args) {
@@ -96,9 +96,9 @@ public class YourModule extends ScxModule {
                 .run();                         // 4, Build and run project
     }
 
-    // This @ScxMapping indicate this method is a WebHandler 
+    // This @ScxRoute indicate this method is a WebHandler 
     // The path is "/" and the request method is GET
-    @ScxMapping(value = "/", method = HttpMethod.GET)
+    @ScxRoute(value = "/", methods = HttpMethod.GET)
     public String helloWorld() {
         // The content that will be sent to the client 
         return "Hello World";

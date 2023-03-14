@@ -7,7 +7,7 @@ import cool.scx.core.enumeration.ScxCoreFeature;
 import cool.scx.core.scheduler.ScxScheduler;
 import cool.scx.functional.ScxRunnable;
 import cool.scx.mvc.ScxMvc;
-import cool.scx.mvc.websocket.ScxWebSocketRouter;
+import cool.scx.mvc.websocket.WebSocketRouter;
 import cool.scx.sql.SQLRunner;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
@@ -108,8 +108,8 @@ public final class ScxContext {
      *
      * @return a
      */
-    public static ScxWebSocketRouter webSocketRouter() {
-        return scx().scxWebSocketRouter();
+    public static WebSocketRouter webSocketRouter() {
+        return scx().webSocketRouter();
     }
 
     /**

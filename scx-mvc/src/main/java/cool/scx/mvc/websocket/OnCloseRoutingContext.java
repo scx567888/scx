@@ -21,7 +21,7 @@ public class OnCloseRoutingContext {
     private static final Logger logger = LoggerFactory.getLogger(OnCloseRoutingContext.class);
 
     private final ServerWebSocket socket;
-    private final Iterator<ScxWebSocketRoute> iter;
+    private final Iterator<WebSocketRoute> iter;
 
     /**
      * <p>Constructor for OnCloseRoutingContext.</p>
@@ -29,7 +29,7 @@ public class OnCloseRoutingContext {
      * @param serverWebSocket    a {@link io.vertx.core.http.ServerWebSocket} object
      * @param scxWebSocketRoutes a {@link java.util.List} object
      */
-    OnCloseRoutingContext(ServerWebSocket serverWebSocket, List<ScxWebSocketRoute> scxWebSocketRoutes) {
+    OnCloseRoutingContext(ServerWebSocket serverWebSocket, List<WebSocketRoute> scxWebSocketRoutes) {
         this.socket = serverWebSocket;
         this.iter = scxWebSocketRoutes.iterator();
     }

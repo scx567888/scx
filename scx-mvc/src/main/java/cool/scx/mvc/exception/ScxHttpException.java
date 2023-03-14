@@ -1,7 +1,7 @@
 package cool.scx.mvc.exception;
 
 /**
- * 在 ScxMapping 注解标记的方法中抛出此异常会被ScxMappingHandler 进行截获并进行处理
+ * 在 {@link cool.scx.mvc.annotation.ScxRoute}  注解标记的方法中抛出此异常会被 {@link cool.scx.mvc.ScxRouteHandler} 进行截获并进行处理
  * <p>
  * 当我们的代码中有需要向客户端返回错误信息的时候
  * <p>

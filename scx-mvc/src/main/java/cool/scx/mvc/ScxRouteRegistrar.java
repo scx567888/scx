@@ -1,7 +1,7 @@
 package cool.scx.mvc;
 
 import cool.scx.enumeration.HttpMethod;
-import cool.scx.mvc.annotation.ScxMapping;
+import cool.scx.mvc.annotation.ScxRoute;
 import cool.scx.util.MultiMap;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.reflect.ClassUtils;
@@ -24,44 +24,44 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
- * <p>ScxMappingRegistrar class.</p>
+ * 路由管理器
  *
  * @author scx567888
  * @version 1.17.8
  */
-final class ScxMappingRegistrar {
+final class ScxRouteRegistrar {
 
-    private static final Logger logger = LoggerFactory.getLogger(ScxMappingRegistrar.class);
+    private static final Logger logger = LoggerFactory.getLogger(ScxRouteRegistrar.class);
 
     private static final Method vertxRouteStateMethod = initVertxRouteStateMethod();
 
-    private static final Comparator<ScxMappingHandler> exactPathComparator = Comparator.comparing(routeState -> routeState.routeState().getExactPathOrder());
+    private static final Comparator<ScxRouteHandler> exactPathComparator = Comparator.comparing(routeState -> routeState.routeState().getExactPathOrder());
 
-    private static final Comparator<ScxMappingHandler> groupsComparator = Comparator.comparing(routeState -> routeState.routeState().getGroupsOrder());
+    private static final Comparator<ScxRouteHandler> groupsComparator = Comparator.comparing(routeState -> routeState.routeState().getGroupsOrder());
 
-    private static final Comparator<ScxMappingHandler> orderComparator = Comparator.comparing(ScxMappingHandler::order);
+    private static final Comparator<ScxRouteHandler> orderComparator = Comparator.comparing(ScxRouteHandler::order);
 
     private static final Pattern RE_TOKEN_SEARCH = Pattern.compile(":(\\w+)");
 
-    private final List<ScxMappingHandler> scxMappingHandlers;
+    private final List<ScxRouteHandler> scxRouteHandlers;
 
     /**
      * 扫描所有被 ScxMapping注解标记的方法 并封装为 ScxMappingHandler.
      */
-    public ScxMappingRegistrar(ScxMvc scxMvc, BeanFactory beanFactory, List<Class<?>> classList) {
-        this.scxMappingHandlers = initScxMappingHandlers(scxMvc, beanFactory, classList);
+    public ScxRouteRegistrar(ScxMvc scxMvc, BeanFactory beanFactory, List<Class<?>> classList) {
+        this.scxRouteHandlers = initScxRouteHandlers(scxMvc, beanFactory, classList);
     }
 
-    private static List<ScxMappingHandler> initScxMappingHandlers(ScxMvc scxMvc, BeanFactory beanFactory, List<Class<?>> classList) {
+    private static List<ScxRouteHandler> initScxRouteHandlers(ScxMvc scxMvc, BeanFactory beanFactory, List<Class<?>> classList) {
         var filteredClassList = filterClass(classList);
-        var handlers = new ArrayList<ScxMappingHandler>();
+        var handlers = new ArrayList<ScxRouteHandler>();
         for (var c : filteredClassList) {
             var methods = filterMethod(c);
             for (var m : methods) {
-                handlers.add(createScxMappingHandler(m, c, beanFactory, scxMvc));
+                handlers.add(createScxRouteHandler(m, c, beanFactory, scxMvc));
             }
         }
-        return sortedScxMappingHandlers(handlers);
+        return sortedScxRouteHandlers(handlers);
     }
 
     private static Method initVertxRouteStateMethod() {
@@ -80,9 +80,9 @@ final class ScxMappingRegistrar {
      * @param r t
      * @return t
      */
-    private static ScxMappingHandler.RouteState getRouteState(Route r) {
+    private static ScxRouteHandler.RouteState getRouteState(Route r) {
         try {
-            return ObjectUtils.convertValue(vertxRouteStateMethod.invoke(r), ScxMappingHandler.RouteState.class);
+            return ObjectUtils.convertValue(vertxRouteStateMethod.invoke(r), ScxRouteHandler.RouteState.class);
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
@@ -103,7 +103,7 @@ final class ScxMappingRegistrar {
      * @param handlers s
      * @return s
      */
-    private static List<ScxMappingHandler> sortedScxMappingHandlers(List<ScxMappingHandler> handlers) {
+    private static List<ScxRouteHandler> sortedScxRouteHandlers(List<ScxRouteHandler> handlers) {
         var list = fillRouteState(handlers);
         return list.stream().sorted(orderComparator.thenComparing(exactPathComparator).thenComparing(groupsComparator)).toList();
     }
@@ -114,22 +114,22 @@ final class ScxMappingRegistrar {
      * @param list a
      * @return a
      */
-    private static List<ScxMappingHandler> fillRouteState(List<ScxMappingHandler> list) {
+    private static List<ScxRouteHandler> fillRouteState(List<ScxRouteHandler> list) {
         var tempRouter = Router.router(null);
         return list.stream().peek(c -> c.setRouteState(getRouteState(tempRouter.route(c.originalUrl)))).toList();
     }
 
-    private static ScxMappingHandler createScxMappingHandler(Method m, Class<?> c, BeanFactory beanFactory, ScxMvc scxMvc) {
+    private static ScxRouteHandler createScxRouteHandler(Method m, Class<?> c, BeanFactory beanFactory, ScxMvc scxMvc) {
         var bean = beanFactory.getBean(c);
-        return new ScxMappingHandler(m, c, bean, scxMvc);
+        return new ScxRouteHandler(m, c, bean, scxMvc);
     }
 
     private static List<Class<?>> filterClass(List<Class<?>> classList) {
-        return classList.stream().filter(ScxMappingRegistrar::isScxMappingClass).toList();
+        return classList.stream().filter(ScxRouteRegistrar::isRoute).toList();
     }
 
     private static List<Method> filterMethod(Class<?> clazz) {
-        return Arrays.stream(MethodUtils.findMethods(clazz)).filter(ScxMappingRegistrar::isScxMappingMethod).toList();
+        return Arrays.stream(MethodUtils.findMethods(clazz)).filter(ScxRouteRegistrar::isRoute).toList();
     }
 
     /**
@@ -138,8 +138,8 @@ final class ScxMappingRegistrar {
      * @param c a
      * @return a
      */
-    public static boolean isScxMappingClass(Class<?> c) {
-        return (c.isAnnotationPresent(ScxMapping.class) || c.isAnnotationPresent(Controller.class)) //拥有注解
+    public static boolean isRoute(Class<?> c) {
+        return (c.isAnnotationPresent(ScxRoute.class) || c.isAnnotationPresent(Controller.class)) //拥有注解
                 && ClassUtils.isNormalClass(c); // 是一个普通的类 (不是接口, 不是抽象类) ; 此处不要求有必须有无参构造函数 因为此类的创建会由 beanFactory 进行处理
     }
 
@@ -149,24 +149,24 @@ final class ScxMappingRegistrar {
      * @param m a
      * @return a
      */
-    public static boolean isScxMappingMethod(Method m) {
-        return m.isAnnotationPresent(ScxMapping.class)  //拥有注解
+    public static boolean isRoute(Method m) {
+        return m.isAnnotationPresent(ScxRoute.class)  //拥有注解
                 && !m.isBridge(); // 不是桥接方法
     }
 
     /**
      * 校验路由是否已经存在
      *
-     * @param scxMappingHandlers a {@link java.util.List} object
+     * @param handlers a {@link java.util.List} object
      */
-    private static void checkScxMappingHandlerRouteExists(List<ScxMappingHandler> scxMappingHandlers) {
-        var m = new MultiMap<NormalPathInfo, ScxMappingHandler>();
-        for (var scxMappingHandler : scxMappingHandlers) {
-            var key = scxMappingHandler.routeState().pattern() != null
-                    ? scxMappingHandler.routeState().pattern().toString()
-                    : scxMappingHandler.routeState().path();
-            for (var httpMethod : scxMappingHandler.httpMethods) {
-                m.put(new NormalPathInfo(httpMethod, key), scxMappingHandler);
+    private static void checkRouteExists(List<ScxRouteHandler> handlers) {
+        var m = new MultiMap<NormalPathInfo, ScxRouteHandler>();
+        for (var handler : handlers) {
+            var key = handler.routeState().pattern() != null
+                    ? handler.routeState().pattern().toString()
+                    : handler.routeState().path();
+            for (var httpMethod : handler.httpMethods) {
+                m.put(new NormalPathInfo(httpMethod, key), handler);
             }
         }
         var map = m.toMultiValueMap();
@@ -194,8 +194,8 @@ final class ScxMappingRegistrar {
      *
      * @return 所有 handler
      */
-    public List<ScxMappingHandler> scxMappingHandlers() {
-        return new ArrayList<>(scxMappingHandlers);
+    public List<ScxRouteHandler> scxRouteHandlers() {
+        return new ArrayList<>(scxRouteHandlers);
     }
 
     /**
@@ -206,12 +206,18 @@ final class ScxMappingRegistrar {
      */
     public Router registerRoute(Router router) {
         // 检查重复路由 (这里只需给出警告即可)
-        checkScxMappingHandlerRouteExists(scxMappingHandlers);
+        checkRouteExists(scxRouteHandlers);
         //循环添加到 vertxRouter 中
-        for (var c : scxMappingHandlers) {
+        for (var c : scxRouteHandlers) {
             var r = router.route(c.originalUrl);
             for (var httpMethod : c.httpMethods) {
                 r.method(httpMethod.vertxMethod());
+            }
+            for (var consumes : c.consumes) {
+                r.consumes(consumes);
+            }
+            for (var produces : c.produces) {
+                r.produces(produces);
             }
             r.handler(c);
         }
