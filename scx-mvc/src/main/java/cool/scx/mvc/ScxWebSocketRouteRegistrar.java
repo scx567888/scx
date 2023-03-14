@@ -21,10 +21,10 @@ public final class ScxWebSocketRouteRegistrar {
 
     private static final Comparator<WebSocketRoute> orderComparator = Comparator.comparing(WebSocketRoute::order);
 
-    private final List<WebSocketRoute> scxWebSocketRoutes;
+    private final List<WebSocketRoute> routes;
 
     public ScxWebSocketRouteRegistrar(BeanFactory beanFactory, List<Class<?>> classList) {
-        this.scxWebSocketRoutes = initScxWebSocketRoutes(beanFactory, classList);
+        this.routes = initScxWebSocketRoutes(beanFactory, classList);
     }
 
     private static List<WebSocketRoute> initScxWebSocketRoutes(BeanFactory beanFactory, List<Class<?>> classList) {
@@ -60,7 +60,7 @@ public final class ScxWebSocketRouteRegistrar {
     }
 
     public WebSocketRouter registerRoute(WebSocketRouter scxWebSocketRouter) {
-        for (var route : scxWebSocketRoutes) {
+        for (var route : routes) {
             scxWebSocketRouter.addRoute(route);
         }
         return scxWebSocketRouter;
