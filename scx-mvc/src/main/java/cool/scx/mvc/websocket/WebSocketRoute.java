@@ -13,12 +13,12 @@ import java.util.regex.Pattern;
  * @author scx567888
  * @version 1.18.0
  */
-public final class ScxWebSocketRoute {
+public final class WebSocketRoute {
 
     /**
      * 日志
      */
-    private static final Logger logger = LoggerFactory.getLogger(ScxWebSocketRoute.class);
+    private static final Logger logger = LoggerFactory.getLogger(WebSocketRoute.class);
     private final String path;
     private final Pattern pattern;
     private final BaseWebSocketHandler baseWebSocketHandler;
@@ -30,7 +30,7 @@ public final class ScxWebSocketRoute {
      * @param path                 a {@link java.lang.String} object
      * @param baseWebSocketHandler a {@link BaseWebSocketHandler} object
      */
-    public ScxWebSocketRoute(String path, BaseWebSocketHandler baseWebSocketHandler) {
+    public WebSocketRoute(String path, BaseWebSocketHandler baseWebSocketHandler) {
         this(0, path, baseWebSocketHandler);
     }
 
@@ -41,7 +41,7 @@ public final class ScxWebSocketRoute {
      * @param path                 a {@link java.lang.String} object
      * @param baseWebSocketHandler a {@link BaseWebSocketHandler} object
      */
-    public ScxWebSocketRoute(int order, String path, BaseWebSocketHandler baseWebSocketHandler) {
+    public WebSocketRoute(int order, String path, BaseWebSocketHandler baseWebSocketHandler) {
         this.order = order;
         this.path = path;
         this.pattern = Pattern.compile(path);

@@ -14,17 +14,17 @@ import java.util.List;
  * @author scx567888
  * @version 1.11.8
  */
-public final class ScxWebSocketRouter implements Handler<ServerWebSocket> {
+public final class WebSocketRouter implements Handler<ServerWebSocket> {
 
     /**
      * 日志
      */
-    private static final Logger logger = LoggerFactory.getLogger(ScxWebSocketRouter.class);
+    private static final Logger logger = LoggerFactory.getLogger(WebSocketRouter.class);
 
     /**
      * a
      */
-    private final List<ScxWebSocketRoute> scxWebSocketRoutes = new ArrayList<>();
+    private final List<WebSocketRoute> routes = new ArrayList<>();
 
     /**
      * 添加一个路由
@@ -32,8 +32,8 @@ public final class ScxWebSocketRouter implements Handler<ServerWebSocket> {
      * @param scxRoute s
      * @return s
      */
-    public ScxWebSocketRouter addRoute(ScxWebSocketRoute scxRoute) {
-        scxWebSocketRoutes.add(scxRoute);
+    public WebSocketRouter addRoute(WebSocketRoute scxRoute) {
+        routes.add(scxRoute);
         return this;
     }
 
@@ -42,8 +42,8 @@ public final class ScxWebSocketRouter implements Handler<ServerWebSocket> {
      *
      * @return a
      */
-    public List<ScxWebSocketRoute> getRoutes() {
-        return new ArrayList<>(scxWebSocketRoutes);
+    public List<WebSocketRoute> getRoutes() {
+        return new ArrayList<>(routes);
     }
 
     /**
@@ -52,11 +52,11 @@ public final class ScxWebSocketRouter implements Handler<ServerWebSocket> {
     @Override
     public void handle(ServerWebSocket serverWebSocket) {
         if (anyMatch(serverWebSocket)) {
-            new OnOpenRoutingContext(serverWebSocket, scxWebSocketRoutes).next();
+            new OnOpenRoutingContext(serverWebSocket, routes).next();
             serverWebSocket
-                    .frameHandler(h -> new OnFrameRoutingContext(h, serverWebSocket, scxWebSocketRoutes).next())
-                    .exceptionHandler(e -> new OnExceptionRoutingContext(e, serverWebSocket, scxWebSocketRoutes).next())
-                    .closeHandler(v -> new OnCloseRoutingContext(serverWebSocket, scxWebSocketRoutes).next());
+                    .frameHandler(h -> new OnFrameRoutingContext(h, serverWebSocket, routes).next())
+                    .exceptionHandler(e -> new OnExceptionRoutingContext(e, serverWebSocket, routes).next())
+                    .closeHandler(v -> new OnCloseRoutingContext(serverWebSocket, routes).next());
         }
     }
 
@@ -67,7 +67,7 @@ public final class ScxWebSocketRouter implements Handler<ServerWebSocket> {
      * @return a boolean
      */
     private boolean anyMatch(ServerWebSocket serverWebSocket) {
-        boolean anyMatch = scxWebSocketRoutes.stream().anyMatch(c -> c.matches(serverWebSocket));
+        boolean anyMatch = routes.stream().anyMatch(c -> c.matches(serverWebSocket));
         if (!anyMatch) {
             //没有任何路由匹配 , 此处拒绝此 websocket 连接 使用 404 意味没有找到
             serverWebSocket.reject(404);

@@ -2,7 +2,8 @@ package cool.scx.mvc;
 
 import cool.scx.mvc.annotation.ScxWebSocketRoute;
 import cool.scx.mvc.base.BaseWebSocketHandler;
-import cool.scx.mvc.websocket.ScxWebSocketRouter;
+import cool.scx.mvc.websocket.WebSocketRoute;
+import cool.scx.mvc.websocket.WebSocketRouter;
 import cool.scx.util.URIBuilder;
 import cool.scx.util.reflect.ClassUtils;
 import org.springframework.beans.factory.BeanFactory;
@@ -18,26 +19,26 @@ import java.util.List;
  */
 public final class ScxWebSocketRouteRegistrar {
 
-    private static final Comparator<cool.scx.mvc.websocket.ScxWebSocketRoute> orderComparator = Comparator.comparing(cool.scx.mvc.websocket.ScxWebSocketRoute::order);
+    private static final Comparator<WebSocketRoute> orderComparator = Comparator.comparing(WebSocketRoute::order);
 
-    private final List<cool.scx.mvc.websocket.ScxWebSocketRoute> scxWebSocketRoutes;
+    private final List<WebSocketRoute> scxWebSocketRoutes;
 
     public ScxWebSocketRouteRegistrar(BeanFactory beanFactory, List<Class<?>> classList) {
         this.scxWebSocketRoutes = initScxWebSocketRoutes(beanFactory, classList);
     }
 
-    private static List<cool.scx.mvc.websocket.ScxWebSocketRoute> initScxWebSocketRoutes(BeanFactory beanFactory, List<Class<?>> classList) {
+    private static List<WebSocketRoute> initScxWebSocketRoutes(BeanFactory beanFactory, List<Class<?>> classList) {
         var filteredClassList = filterClass(classList);
         var routeList = filteredClassList.stream().map(c -> createScxWebSocketRoute(beanFactory, c)).toList();
         return sortedScxWebSocketRoutes(routeList);
     }
 
-    public static cool.scx.mvc.websocket.ScxWebSocketRoute createScxWebSocketRoute(BeanFactory beanFactory, Class<? extends BaseWebSocketHandler> c) {
+    public static WebSocketRoute createScxWebSocketRoute(BeanFactory beanFactory, Class<? extends BaseWebSocketHandler> c) {
         var scxWebSocketMapping = c.getAnnotation(ScxWebSocketRoute.class);
         var path = URIBuilder.addSlashStart(URIBuilder.join(scxWebSocketMapping.value()));
         var order = scxWebSocketMapping.order();
         var baseWebSocketHandler = beanFactory.getBean(c);
-        return new cool.scx.mvc.websocket.ScxWebSocketRoute(order, path, baseWebSocketHandler);
+        return new WebSocketRoute(order, path, baseWebSocketHandler);
     }
 
     @SuppressWarnings("unchecked")
@@ -54,11 +55,11 @@ public final class ScxWebSocketRouteRegistrar {
                 && BaseWebSocketHandler.class.isAssignableFrom(c); // 继承自 BaseWebSocketHandler
     }
 
-    private static List<cool.scx.mvc.websocket.ScxWebSocketRoute> sortedScxWebSocketRoutes(List<cool.scx.mvc.websocket.ScxWebSocketRoute> list) {
+    private static List<WebSocketRoute> sortedScxWebSocketRoutes(List<WebSocketRoute> list) {
         return list.stream().sorted(orderComparator).toList();
     }
 
-    public ScxWebSocketRouter registerRoute(ScxWebSocketRouter scxWebSocketRouter) {
+    public WebSocketRouter registerRoute(WebSocketRouter scxWebSocketRouter) {
         for (var route : scxWebSocketRoutes) {
             scxWebSocketRouter.addRoute(route);
         }

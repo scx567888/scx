@@ -23,7 +23,7 @@ public class OnFrameRoutingContext {
 
     private final WebSocketFrame socketFrame;
     private final ServerWebSocket socket;
-    private final Iterator<ScxWebSocketRoute> iter;
+    private final Iterator<WebSocketRoute> iter;
 
     /**
      * <p>Constructor for OnFrameRoutingContext.</p>
@@ -32,7 +32,7 @@ public class OnFrameRoutingContext {
      * @param socket      a {@link io.vertx.core.http.ServerWebSocket} object
      * @param routes      a {@link java.util.List} object
      */
-    OnFrameRoutingContext(WebSocketFrame socketFrame, ServerWebSocket socket, List<ScxWebSocketRoute> routes) {
+    OnFrameRoutingContext(WebSocketFrame socketFrame, ServerWebSocket socket, List<WebSocketRoute> routes) {
         this.socketFrame = socketFrame;
         this.socket = socket;
         this.iter = routes.iterator();

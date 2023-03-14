@@ -22,7 +22,7 @@ public class OnExceptionRoutingContext {
 
     private final Throwable throwable;
     private final ServerWebSocket socket;
-    private final Iterator<ScxWebSocketRoute> iter;
+    private final Iterator<WebSocketRoute> iter;
 
     /**
      * <p>Constructor for OnExceptionRoutingContext.</p>
@@ -31,7 +31,7 @@ public class OnExceptionRoutingContext {
      * @param serverWebSocket    a {@link io.vertx.core.http.ServerWebSocket} object
      * @param scxWebSocketRoutes a {@link java.util.List} object
      */
-    OnExceptionRoutingContext(Throwable e, ServerWebSocket serverWebSocket, List<ScxWebSocketRoute> scxWebSocketRoutes) {
+    OnExceptionRoutingContext(Throwable e, ServerWebSocket serverWebSocket, List<WebSocketRoute> scxWebSocketRoutes) {
         this.throwable = e;
         this.socket = serverWebSocket;
         this.iter = scxWebSocketRoutes.iterator();

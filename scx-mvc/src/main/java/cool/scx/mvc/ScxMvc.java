@@ -11,7 +11,7 @@ import cool.scx.mvc.parameter_handler.*;
 import cool.scx.mvc.parameter_handler.exception.ParamConvertException;
 import cool.scx.mvc.parameter_handler.exception.RequiredParamEmptyException;
 import cool.scx.mvc.return_value_handler.*;
-import cool.scx.mvc.websocket.ScxWebSocketRouter;
+import cool.scx.mvc.websocket.WebSocketRouter;
 import cool.scx.util.ScxExceptionHelper;
 import io.vertx.core.Handler;
 import io.vertx.ext.web.Router;
@@ -94,7 +94,7 @@ public final class ScxMvc {
         return this;
     }
 
-    public ScxMvc registerWebSocketRoutes(ScxWebSocketRouter router, BeanFactory beanFactory, List<Class<?>> classList) {
+    public ScxMvc registerWebSocketRoutes(WebSocketRouter router, BeanFactory beanFactory, List<Class<?>> classList) {
         new ScxWebSocketRouteRegistrar(beanFactory, classList).registerRoute(router);
         return this;
     }
