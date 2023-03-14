@@ -150,10 +150,10 @@ public final class Scx {
         if (this.scxFeatureConfig.get(ScxCoreFeature.SHOW_OPTIONS_INFO)) {
             this.scxOptions.printInfo();
         }
-        //2, 初始化路由 (Http 和 WebSocket)
+        //2, 初始化路由器 (Http 和 WebSocket)
         this.scxHttpRouter = new ScxHttpRouter(this);
         this.scxWebSocketRouter = new ScxWebSocketRouter();
-        //3, 注册 ScxMapping 和 ScxWebSocketMapping 注解的 handler 到 路由中去
+        //3, 注册 路由
         var classList = Arrays.stream(this.scxModules()).flatMap(c -> c.classList().stream()).toList();
         this.scxMvc.bindErrorHandler(this.scxHttpRouter).registerHttpRoutes(scxHttpRouter, beanFactory, classList).registerWebSocketRoutes(scxWebSocketRouter, beanFactory, classList);
         //4, 依次执行 模块的 start 生命周期 , 在这里我们可以操作 scxRouteRegistry, vertxRouter 等对象 "手动注册新路由" 或其他任何操作

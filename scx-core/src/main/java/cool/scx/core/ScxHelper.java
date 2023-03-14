@@ -18,8 +18,8 @@ import cool.scx.logging.ScxLoggerFactory;
 import cool.scx.logging.ScxLoggingLevel;
 import cool.scx.logging.recorder.ConsoleRecorder;
 import cool.scx.logging.recorder.FileRecorder;
-import cool.scx.mvc.annotation.ScxMapping;
-import cool.scx.mvc.annotation.ScxWebSocketMapping;
+import cool.scx.mvc.annotation.ScxRoute;
+import cool.scx.mvc.annotation.ScxWebSocketRoute;
 import cool.scx.util.ConsoleUtils;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
@@ -61,7 +61,7 @@ public final class ScxHelper {
      */
     private static final List<Class<? extends Annotation>> beanFilterAnnotation = List.of(
             //scx 注解
-            ScxComponent.class, ScxMapping.class, Table.class, ScxService.class, ScxWebSocketMapping.class,
+            ScxComponent.class, ScxRoute.class, Table.class, ScxService.class, ScxWebSocketRoute.class,
             //兼容 spring 注解
             Component.class, Controller.class, Service.class, Repository.class);
 
