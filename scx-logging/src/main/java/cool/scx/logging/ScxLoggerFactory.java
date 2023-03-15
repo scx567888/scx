@@ -2,8 +2,8 @@ package cool.scx.logging;
 
 import cool.scx.logging.recorder.ConsoleRecorder;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 import static java.util.Objects.requireNonNull;
@@ -19,7 +19,7 @@ public final class ScxLoggerFactory {
     /**
      * Constant <code>LOGGER_MAP</code>
      */
-    private static final Map<String, ScxLogger> LOGGER_MAP = new HashMap<>();
+    private static final Map<String, ScxLogger> LOGGER_MAP = new ConcurrentHashMap<>();
 
     /**
      * Constant <code>DEFAULT_CONFIG</code>
