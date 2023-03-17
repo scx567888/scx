@@ -382,4 +382,8 @@ public final class Scx {
         return scxScheduler;
     }
 
+    public <T> T getBean(Class<T> requiredType) {
+        return beanFactory.getBean(requiredType);
+    }
+
 }
