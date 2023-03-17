@@ -240,7 +240,7 @@ public final class ScxContext {
      * @return r
      */
     public static <T> T getBean(Class<T> requiredType) {
-        return beanFactory().getBean(requiredType);
+        return scx().getBean(requiredType);
     }
 
     /**
