@@ -64,6 +64,12 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>scx-spy</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>scx-logging</artifactId>
             <version>${project.version}</version>
         </dependency>

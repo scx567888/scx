@@ -9,13 +9,13 @@
         <version>2.0.19</version>
     </parent>
 
-    <artifactId>scx-sql</artifactId>
+    <artifactId>scx-spy</artifactId>
     <packaging>jar</packaging>
 
-    <name>SCX SQL</name>
+    <name>SCX SPY</name>
     <url>https://github.com/scx567888/scx</url>
     <description>
-        SCX SQL
+        SCX SPY
     </description>
 
     <dependencies>
@@ -34,20 +34,6 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>scx-logging</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>scx-spy</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
         </dependency>
 
         <dependency>

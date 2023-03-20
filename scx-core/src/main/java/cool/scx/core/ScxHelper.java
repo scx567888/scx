@@ -20,6 +20,7 @@ import cool.scx.logging.recorder.ConsoleRecorder;
 import cool.scx.logging.recorder.FileRecorder;
 import cool.scx.mvc.annotation.ScxRoute;
 import cool.scx.mvc.annotation.ScxWebSocketRoute;
+import cool.scx.spy.JDBCSpy;
 import cool.scx.util.ConsoleUtils;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
@@ -159,7 +160,7 @@ public final class ScxHelper {
         //使用 HikariDataSource 进行包装
         var hikariDataSource = new HikariDataSource();
         hikariDataSource.setDataSource(mysqlDataSource);
-        return hikariDataSource;
+        return JDBCSpy.wrap(hikariDataSource);
     }
 
     static ScxModule[] initScxModuleMetadataList(ScxModule[] scxModules) {
