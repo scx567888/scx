@@ -13,4 +13,10 @@ public class User {
     public String name;
     public Integer age;
     public LocalDateTime createDate;
+    public UserInfo userInfo;
+
+    static class UserInfo{
+        public String email;
+    }
+
 }

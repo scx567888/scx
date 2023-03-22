@@ -11,6 +11,7 @@ import cool.scx.dao.impl.MySQLXDao;
 import cool.scx.dao.impl.OldMySQLDao;
 import cool.scx.dao.impl.OldMySQLTableInfo;
 import cool.scx.dao.where.WhereBody;
+import cool.scx.dao.where.WhereOption;
 import cool.scx.logging.ScxLoggerFactory;
 import cool.scx.logging.ScxLoggingLevel;
 import cool.scx.sql.SQLHelper;
@@ -57,6 +58,9 @@ public class ScxDaoTest {
             m1.age = i;
             m1.name = "小明" + i;
             m1.createDate = LocalDateTime.now();
+            var userInfo = new User.UserInfo();
+            userInfo.email = i + "@test.com";
+            m1.userInfo = userInfo;
             list.add(m1);
         }
         var newIds = userDao.insertBatch(list, UpdateFilter.ofExcluded());
@@ -65,6 +69,8 @@ public class ScxDaoTest {
         System.out.println("查询 : " + a1.size());
         var a2 = userDao.select(new Query().whereSQL("( not_id > 300 or ", WhereBody.equal("age", "123"), " )"), SelectFilter.ofExcluded());
         System.out.println("查询 : " + a2.size());
+        var a3 = userDao.select(new Query().equal("userInfo.email", "88@test.com", WhereOption.USE_JSON_EXTRACT), SelectFilter.ofExcluded());
+        System.out.println("查询 : " + a3.size());
 
         //旧版 BaseDao
         var oldUserDao = new OldMySQLDao<>(userTableInfo, User.class, sqlRunner);
