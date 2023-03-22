@@ -10,7 +10,7 @@ public final class ColumnNameParser {
         if (useJsonExtract) {
             var c = splitIntoColumnNameAndFieldPath(name);
             if (notBlank(c.columnName()) && notBlank(c.fieldPath())) {
-                var jsonQueryColumnName = useOriginalName ? c.columnName() : tableInfo.getColumnInfo(name).columnName();
+                var jsonQueryColumnName = useOriginalName ? c.columnName() : tableInfo.getColumnInfo(c.columnName()).columnName();
                 return jsonQueryColumnName + " -> " + "'$" + c.fieldPath() + "'";
             } else {
                 throw new IllegalArgumentException("使用 USE_JSON_EXTRACT 时, 查询名称不合法 !!! 字段名 : " + name);
