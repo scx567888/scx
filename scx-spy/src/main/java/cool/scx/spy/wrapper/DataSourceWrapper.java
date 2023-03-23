@@ -1,6 +1,6 @@
 package cool.scx.spy.wrapper;
 
-import cool.scx.spy.JDBCEventListener;
+import cool.scx.spy.SpyEventListener;
 import cool.scx.spy.event.LoggingEventListener;
 
 import javax.sql.DataSource;
@@ -11,9 +11,9 @@ import java.util.logging.Logger;
 public class DataSourceWrapper implements DataSource {
 
     private final DataSource dataSource;
-    private final JDBCEventListener eventListener;
+    private final SpyEventListener eventListener;
 
-    public DataSourceWrapper(DataSource dataSource, JDBCEventListener eventListener) {
+    public DataSourceWrapper(DataSource dataSource, SpyEventListener eventListener) {
         this.dataSource = dataSource;
         this.eventListener = eventListener;
     }

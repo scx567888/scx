@@ -1,6 +1,6 @@
 package cool.scx.spy.wrapper;
 
-import cool.scx.spy.JDBCEventListener;
+import cool.scx.spy.SpyEventListener;
 
 import java.io.InputStream;
 import java.io.Reader;
@@ -14,7 +14,7 @@ public class PreparedStatementWrapper extends StatementWrapper implements Prepar
 
     private final PreparedStatement preparedStatement;
 
-    protected PreparedStatementWrapper(PreparedStatement preparedStatement, JDBCEventListener eventListener) {
+    protected PreparedStatementWrapper(PreparedStatement preparedStatement, SpyEventListener eventListener) {
         super(preparedStatement, eventListener);
         this.preparedStatement = preparedStatement;
     }

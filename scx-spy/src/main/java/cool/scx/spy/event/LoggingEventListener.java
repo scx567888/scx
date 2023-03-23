@@ -15,6 +15,27 @@ public class LoggingEventListener extends SimpleJdbcEventListener {
     public static final LoggingEventListener INSTANCE = new LoggingEventListener();
     private static final Logger logger = LoggerFactory.getLogger(LoggingEventListener.class);
 
+    /**
+     * todo 这里需要支持不同的数据库
+     * 　获取最终的 SQL
+     *
+     * @param preparedStatement a
+     * @return a
+     */
+    public static String getFinalSQL(Statement preparedStatement) {
+        ClientPreparedStatement clientPreparedStatement;
+        try {
+            clientPreparedStatement = preparedStatement.unwrap(ClientPreparedStatement.class);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        var preparedQuery = ((PreparedQuery) clientPreparedStatement.getQuery());
+        var finalSQL = preparedQuery.asSql();
+        var batchedArgsSize = preparedQuery.getBatchedArgs() == null ? 0 : preparedQuery.getBatchedArgs().size();
+        return batchedArgsSize > 1 ? finalSQL + "... 额外的 " + (batchedArgsSize - 1) + " 项" : finalSQL;
+    }
+
     @Override
     public void onBeforeAnyExecute(Statement statement) {
         if (logger.isDebugEnabled()) {
@@ -37,28 +58,6 @@ public class LoggingEventListener extends SimpleJdbcEventListener {
     @Override
     public void onAfterAnyAddBatch(Statement Statement, long timeElapsedNanos, SQLException e) {
         super.onAfterAnyAddBatch(Statement, timeElapsedNanos, e);
-    }
-
-
-    /**
-     * todo 这里需要支持不同的数据库
-     * 　获取最终的 SQL
-     *
-     * @param preparedStatement a
-     * @return a
-     */
-    public static String getFinalSQL(Statement preparedStatement) {
-        ClientPreparedStatement clientPreparedStatement;
-        try {
-            clientPreparedStatement = preparedStatement.unwrap(ClientPreparedStatement.class);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
-        var preparedQuery = ((PreparedQuery) clientPreparedStatement.getQuery());
-        var finalSQL = preparedQuery.asSql();
-        var batchedArgsSize = preparedQuery.getBatchedArgs() == null ? 0 : preparedQuery.getBatchedArgs().size();
-        return batchedArgsSize > 1 ? finalSQL + "... 额外的 " + (batchedArgsSize - 1) + " 项" : finalSQL;
     }
 
 }

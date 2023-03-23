@@ -1,14 +1,14 @@
 package cool.scx.spy.event;
 
 
-import cool.scx.spy.JDBCEventListener;
+import cool.scx.spy.SpyEventListener;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 
-public abstract class SimpleJdbcEventListener implements JDBCEventListener {
+public abstract class SimpleJdbcEventListener implements SpyEventListener {
 
     public void onBeforeAnyExecute(Statement Statement) {
 

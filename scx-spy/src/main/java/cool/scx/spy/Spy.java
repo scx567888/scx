@@ -4,7 +4,7 @@ import cool.scx.spy.wrapper.DataSourceWrapper;
 
 import javax.sql.DataSource;
 
-public class JDBCSpy {
+public class Spy {
 
     public static DataSource wrap(DataSource dataSource) {
         return new DataSourceWrapper(dataSource);

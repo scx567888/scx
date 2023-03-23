@@ -3,6 +3,7 @@ package cool.scx.test;
 import com.mysql.cj.jdbc.MysqlDataSource;
 import cool.scx.logging.ScxLoggerFactory;
 import cool.scx.logging.ScxLoggingLevel;
+import cool.scx.spy.Spy;
 import cool.scx.sql.BeanBuilder;
 import cool.scx.sql.SQL;
 import cool.scx.sql.SQLRunner;
@@ -122,7 +123,7 @@ public class SQlRunnerTest {
         System.out.println("回滚后总条数: " + query2.size());
     }
 
-    private static MysqlDataSource getMySQLDataSource() {
+    private static DataSource getMySQLDataSource() {
         var mysqlDataSource = new MysqlDataSource();
         mysqlDataSource.setServerName("127.0.0.1");
         mysqlDataSource.setDatabaseName(databaseName);
@@ -133,7 +134,7 @@ public class SQlRunnerTest {
         mysqlDataSource.getProperty(allowMultiQueries).setValue(true);
         mysqlDataSource.getProperty(rewriteBatchedStatements).setValue(true);
         mysqlDataSource.getProperty(createDatabaseIfNotExist).setValue(true);
-        return mysqlDataSource;
+        return Spy.wrap(mysqlDataSource);
     }
 
 }

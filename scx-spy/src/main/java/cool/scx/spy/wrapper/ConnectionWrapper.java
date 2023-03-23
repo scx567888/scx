@@ -1,6 +1,6 @@
 package cool.scx.spy.wrapper;
 
-import cool.scx.spy.JDBCEventListener;
+import cool.scx.spy.SpyEventListener;
 
 import java.sql.*;
 import java.util.Map;
@@ -11,9 +11,9 @@ public class ConnectionWrapper implements Connection {
 
     private final Connection connection;
 
-    private final JDBCEventListener eventListener;
+    private final SpyEventListener eventListener;
 
-    public ConnectionWrapper(Connection connection, JDBCEventListener eventListener) {
+    public ConnectionWrapper(Connection connection, SpyEventListener eventListener) {
         this.connection = connection;
         this.eventListener = eventListener;
     }

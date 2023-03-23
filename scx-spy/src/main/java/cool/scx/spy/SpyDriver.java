@@ -7,11 +7,11 @@ import java.sql.*;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-public class JDBCSpyDriver implements Driver {
+public class SpyDriver implements Driver {
 
     static {
         try {
-            DriverManager.registerDriver(new JDBCSpyDriver());
+            DriverManager.registerDriver(new SpyDriver());
         } catch (SQLException e) {
             throw new IllegalStateException("Could not register ScxSpyDriver with DriverManager", e);
         }

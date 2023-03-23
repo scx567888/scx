@@ -4,7 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public interface JDBCEventListener {
+public interface SpyEventListener {
 
     default void onBeforeAddBatch(PreparedStatement statementInformation) {
 

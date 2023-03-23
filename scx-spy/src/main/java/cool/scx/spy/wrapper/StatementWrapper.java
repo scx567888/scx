@@ -1,7 +1,7 @@
 package cool.scx.spy.wrapper;
 
 
-import cool.scx.spy.JDBCEventListener;
+import cool.scx.spy.SpyEventListener;
 import cool.scx.util.ArrayUtils;
 
 import java.sql.*;
@@ -9,11 +9,11 @@ import java.sql.*;
 
 public class StatementWrapper implements Statement {
 
-    protected final JDBCEventListener eventListener;
+    protected final SpyEventListener eventListener;
 
     private final Statement statement;
 
-    protected StatementWrapper(Statement delegate, JDBCEventListener eventListener) {
+    protected StatementWrapper(Statement delegate, SpyEventListener eventListener) {
         this.statement = delegate;
         this.eventListener = eventListener;
     }
