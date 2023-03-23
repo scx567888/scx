@@ -13,7 +13,7 @@ import java.sql.Statement;
 public class LoggingEventListener extends SimpleJdbcEventListener {
 
     public static final LoggingEventListener INSTANCE = new LoggingEventListener();
-    private static final Logger logger = LoggerFactory.getLogger(LoggingEventListener.class);
+    private static final Logger logger = LoggerFactory.getLogger("ScxSpy");
 
     /**
      * todo 这里需要支持不同的数据库
