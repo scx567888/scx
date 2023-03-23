@@ -1,7 +1,7 @@
-package cool.scx.spy.wrapper;
+package cool.scx.dao.spy.wrapper;
 
-import cool.scx.spy.SpyEventListener;
-import cool.scx.spy.event.LoggingEventListener;
+import cool.scx.dao.spy.SpyEventListener;
+import cool.scx.dao.spy.event.LoggingEventListener;
 
 import javax.sql.DataSource;
 import java.io.PrintWriter;

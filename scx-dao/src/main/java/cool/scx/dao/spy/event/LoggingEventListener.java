@@ -1,4 +1,4 @@
-package cool.scx.spy.event;
+package cool.scx.dao.spy.event;
 
 
 import com.mysql.cj.PreparedQuery;
@@ -39,14 +39,15 @@ public class LoggingEventListener extends SimpleJdbcEventListener {
     @Override
     public void onBeforeAnyExecute(Statement statement) {
         if (logger.isDebugEnabled()) {
-            logger.debug(getFinalSQL(statement));
+//            logger.debug(getFinalSQL(statement));
         }
     }
 
     @Override
     public void onAfterAnyExecute(Statement statement, long timeElapsedNanos, SQLException e) {
         if (logger.isDebugEnabled()) {
-            logger.debug("耗时 : " + timeElapsedNanos / 1000_000 + " ms ," + getFinalSQL(statement));
+//            logger.debug("耗时 : " + timeElapsedNanos / 1000_000 + " ms ," + getFinalSQL(statement));
+            logger.debug(getFinalSQL(statement));
         }
     }
 

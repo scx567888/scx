@@ -1,6 +1,6 @@
-package cool.scx.spy.wrapper;
+package cool.scx.dao.spy.wrapper;
 
-import cool.scx.spy.SpyEventListener;
+import cool.scx.dao.spy.SpyEventListener;
 
 import java.sql.*;
 import java.util.Map;
