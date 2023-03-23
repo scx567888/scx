@@ -1,7 +1,7 @@
 package cool.scx.dao.spy;
 
-import cool.scx.dao.spy.wrapper.ConnectionWrapper;
 import cool.scx.dao.spy.event.LoggingEventListener;
+import cool.scx.dao.spy.wrapper.ConnectionWrapper;
 
 import java.sql.*;
 import java.util.Properties;

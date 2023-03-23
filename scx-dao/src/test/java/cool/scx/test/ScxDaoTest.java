@@ -11,11 +11,11 @@ import cool.scx.dao.impl.MySQLXDao;
 import cool.scx.dao.impl.OldMySQLDao;
 import cool.scx.dao.impl.OldMySQLTableInfo;
 import cool.scx.dao.schema.SQLHelper;
+import cool.scx.dao.spy.Spy;
 import cool.scx.dao.where.WhereBody;
 import cool.scx.dao.where.WhereOption;
 import cool.scx.logging.ScxLoggerFactory;
 import cool.scx.logging.ScxLoggingLevel;
-import cool.scx.dao.spy.Spy;
 import cool.scx.sql.SQLRunner;
 import org.testng.annotations.Test;
 

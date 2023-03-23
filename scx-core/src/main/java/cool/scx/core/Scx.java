@@ -91,7 +91,7 @@ public final class Scx {
         //5, 初始化 BeanFactory
         this.beanFactory = initBeanFactory(this.scxModules, this.vertx.nettyEventLoopGroup(), this.scxFeatureConfig);
         //6, 初始化数据源及 sqlRunner
-        this.dataSource = initDataSource(this.scxOptions);
+        this.dataSource = initDataSource(this.scxOptions, this.scxFeatureConfig);
         this.sqlRunner = new SQLRunner(this.dataSource);
         //7, 初始化 MVC
         this.scxMvc = new ScxMvc(new ScxMvcOptions().templateRoot(scxOptions.templateRoot()).useDevelopmentErrorPage(scxFeatureConfig.get(ScxCoreFeature.USE_DEVELOPMENT_ERROR_PAGE)));

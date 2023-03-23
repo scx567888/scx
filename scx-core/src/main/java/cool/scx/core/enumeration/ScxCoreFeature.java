@@ -47,7 +47,12 @@ public enum ScxCoreFeature implements ScxFeature<Boolean> {
     /**
      * 是否允许 bean 之间的循环依赖 默认 false
      */
-    ALLOW_CIRCULAR_REFERENCES(false);
+    ALLOW_CIRCULAR_REFERENCES(false),
+
+    /**
+     * 是否使用 SPY 进行 SQL 监控 (注意 !!! 开启会影响性能)
+     */
+    USE_SPY(false);
 
     /**
      * a

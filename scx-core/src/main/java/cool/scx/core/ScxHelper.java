@@ -14,13 +14,13 @@ import cool.scx.core.annotation.ScxService;
 import cool.scx.core.base.BaseModel;
 import cool.scx.core.enumeration.ScxCoreFeature;
 import cool.scx.dao.annotation.Table;
+import cool.scx.dao.spy.Spy;
 import cool.scx.logging.ScxLoggerFactory;
 import cool.scx.logging.ScxLoggingLevel;
 import cool.scx.logging.recorder.ConsoleRecorder;
 import cool.scx.logging.recorder.FileRecorder;
 import cool.scx.mvc.annotation.ScxRoute;
 import cool.scx.mvc.annotation.ScxWebSocketRoute;
-import cool.scx.dao.spy.Spy;
 import cool.scx.util.ConsoleUtils;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
@@ -142,7 +142,7 @@ public final class ScxHelper {
         }
     }
 
-    static DataSource initDataSource(ScxOptions scxOptions) {
+    static DataSource initDataSource(ScxOptions scxOptions, ScxFeatureConfig scxFeatureConfig) {
         var mysqlDataSource = new MysqlDataSource();
         mysqlDataSource.setServerName(scxOptions.dataSourceHost());
         mysqlDataSource.setDatabaseName(scxOptions.dataSourceDatabase());
@@ -160,7 +160,7 @@ public final class ScxHelper {
         //使用 HikariDataSource 进行包装
         var hikariDataSource = new HikariDataSource();
         hikariDataSource.setDataSource(mysqlDataSource);
-        return Spy.wrap(hikariDataSource);
+        return scxFeatureConfig.get(ScxCoreFeature.USE_SPY) ? Spy.wrap(hikariDataSource) : hikariDataSource;
     }
 
     static ScxModule[] initScxModuleMetadataList(ScxModule[] scxModules) {
