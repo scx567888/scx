@@ -32,6 +32,10 @@ public class DataSourceWrapper implements DataSource {
         return new ConnectionWrapper(dataSource.getConnection(username, password), eventListener);
     }
 
+    // ***********
+    // 以下为委托方法
+    // ***********
+
     @Override
     public PrintWriter getLogWriter() throws SQLException {
         return dataSource.getLogWriter();

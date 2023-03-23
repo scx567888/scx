@@ -6,8 +6,6 @@ import cool.scx.util.ArrayUtils;
 
 import java.sql.*;
 
-import static cool.scx.util.ArrayUtils.toLongArray;
-
 
 public class StatementWrapper implements Statement {
 
@@ -308,6 +306,10 @@ public class StatementWrapper implements Statement {
         }
     }
 
+    // ***********
+    // 以下为委托方法
+    // ***********
+
     @Override
     public int getMaxFieldSize() throws SQLException {
         return statement.getMaxFieldSize();
@@ -374,23 +376,23 @@ public class StatementWrapper implements Statement {
     }
 
     @Override
-    public int getFetchDirection() throws SQLException {
-        return statement.getFetchDirection();
-    }
-
-    @Override
     public void setFetchDirection(int direction) throws SQLException {
         statement.setFetchDirection(direction);
     }
 
     @Override
-    public int getFetchSize() throws SQLException {
-        return statement.getFetchSize();
+    public int getFetchDirection() throws SQLException {
+        return statement.getFetchDirection();
     }
 
     @Override
     public void setFetchSize(int rows) throws SQLException {
         statement.setFetchSize(rows);
+    }
+
+    @Override
+    public int getFetchSize() throws SQLException {
+        return statement.getFetchSize();
     }
 
     @Override
@@ -402,6 +404,7 @@ public class StatementWrapper implements Statement {
     public int getResultSetType() throws SQLException {
         return statement.getResultSetType();
     }
+
 
     @Override
     public void clearBatch() throws SQLException {
@@ -434,13 +437,13 @@ public class StatementWrapper implements Statement {
     }
 
     @Override
-    public boolean isPoolable() throws SQLException {
-        return statement.isPoolable();
+    public void setPoolable(boolean poolable) throws SQLException {
+        statement.setPoolable(poolable);
     }
 
     @Override
-    public void setPoolable(boolean poolable) throws SQLException {
-        statement.setPoolable(poolable);
+    public boolean isPoolable() throws SQLException {
+        return statement.isPoolable();
     }
 
     @Override
@@ -454,13 +457,18 @@ public class StatementWrapper implements Statement {
     }
 
     @Override
-    public <T> T unwrap(Class<T> iface) throws SQLException {
-        return statement.unwrap(iface);
+    public long getLargeUpdateCount() throws SQLException {
+        return statement.getLargeUpdateCount();
     }
 
     @Override
-    public boolean isWrapperFor(Class<?> iface) throws SQLException {
-        return statement.isWrapperFor(iface);
+    public void setLargeMaxRows(long max) throws SQLException {
+        statement.setLargeMaxRows(max);
+    }
+
+    @Override
+    public long getLargeMaxRows() throws SQLException {
+        return statement.getLargeMaxRows();
     }
 
     @Override
@@ -484,19 +492,13 @@ public class StatementWrapper implements Statement {
     }
 
     @Override
-    public long getLargeUpdateCount() throws SQLException {
-        return statement.getLargeUpdateCount();
+    public <T> T unwrap(Class<T> iface) throws SQLException {
+        return statement.unwrap(iface);
     }
 
     @Override
-    public long getLargeMaxRows() throws SQLException {
-        return statement.getLargeMaxRows();
+    public boolean isWrapperFor(Class<?> iface) throws SQLException {
+        return statement.isWrapperFor(iface);
     }
-
-    @Override
-    public void setLargeMaxRows(long max) throws SQLException {
-        statement.setLargeMaxRows(max);
-    }
-
 
 }
