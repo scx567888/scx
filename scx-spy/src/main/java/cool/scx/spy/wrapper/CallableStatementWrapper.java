@@ -20,6 +20,10 @@ public class CallableStatementWrapper extends PreparedStatementWrapper implement
         this.callableStatement = callableStatement;
     }
 
+    // ***********
+    // 以下为委托方法
+    // ***********
+
     @Override
     public void registerOutParameter(int parameterIndex, int sqlType) throws SQLException {
         callableStatement.registerOutParameter(parameterIndex, sqlType);
