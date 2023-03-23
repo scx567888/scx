@@ -35,7 +35,7 @@ public class ConnectionWrapper implements Connection {
 
     @Override
     public Statement createStatement(int resultSetType, int resultSetConcurrency) throws SQLException {
-        return new StatementWrapper(connection.createStatement(), eventListener);
+        return new StatementWrapper(connection.createStatement(resultSetType, resultSetConcurrency), eventListener);
     }
 
     @Override
@@ -78,6 +78,89 @@ public class ConnectionWrapper implements Connection {
         return new PreparedStatementWrapper(connection.prepareStatement(sql, columnNames), eventListener);
     }
 
+    // ***********
+    // 以下为委托方法
+    // ***********
+    @Override
+    public String nativeSQL(String sql) throws SQLException {
+        return connection.nativeSQL(sql);
+    }
+
+    @Override
+    public void setAutoCommit(boolean autoCommit) throws SQLException {
+        connection.setAutoCommit(autoCommit);
+    }
+
+    @Override
+    public boolean getAutoCommit() throws SQLException {
+        return connection.getAutoCommit();
+    }
+
+    @Override
+    public void commit() throws SQLException {
+        connection.commit();
+    }
+
+    @Override
+    public void rollback() throws SQLException {
+        connection.rollback();
+    }
+
+    @Override
+    public void close() throws SQLException {
+        connection.close();
+    }
+
+    @Override
+    public boolean isClosed() throws SQLException {
+        return connection.isClosed();
+    }
+
+    @Override
+    public DatabaseMetaData getMetaData() throws SQLException {
+        return connection.getMetaData();
+    }
+
+    @Override
+    public void setReadOnly(boolean readOnly) throws SQLException {
+        connection.setReadOnly(readOnly);
+    }
+
+    @Override
+    public boolean isReadOnly() throws SQLException {
+        return connection.isReadOnly();
+    }
+
+    @Override
+    public void setCatalog(String catalog) throws SQLException {
+        connection.setCatalog(catalog);
+    }
+
+    @Override
+    public String getCatalog() throws SQLException {
+        return connection.getCatalog();
+    }
+
+    @Override
+    public void setTransactionIsolation(int level) throws SQLException {
+        connection.setTransactionIsolation(level);
+    }
+
+    @Override
+    public int getTransactionIsolation() throws SQLException {
+        return connection.getTransactionIsolation();
+    }
+
+    @Override
+    public SQLWarning getWarnings() throws SQLException {
+        return connection.getWarnings();
+    }
+
+    @Override
+    public void clearWarnings() throws SQLException {
+        connection.clearWarnings();
+    }
+
     @Override
     public Map<String, Class<?>> getTypeMap() throws SQLException {
         return connection.getTypeMap();
@@ -89,13 +172,13 @@ public class ConnectionWrapper implements Connection {
     }
 
     @Override
-    public int getHoldability() throws SQLException {
-        return connection.getHoldability();
+    public void setHoldability(int holdability) throws SQLException {
+        connection.setHoldability(holdability);
     }
 
     @Override
-    public void setHoldability(int holdability) throws SQLException {
-        connection.setHoldability(holdability);
+    public int getHoldability() throws SQLException {
+        return connection.getHoldability();
     }
 
     @Override
@@ -105,12 +188,12 @@ public class ConnectionWrapper implements Connection {
 
     @Override
     public Savepoint setSavepoint(String name) throws SQLException {
-        return connection.setSavepoint();
+        return connection.setSavepoint(name);
     }
 
     @Override
     public void rollback(Savepoint savepoint) throws SQLException {
-        connection.rollback();
+        connection.rollback(savepoint);
     }
 
     @Override
@@ -120,7 +203,7 @@ public class ConnectionWrapper implements Connection {
 
     @Override
     public Clob createClob() throws SQLException {
-        return connection.createNClob();
+        return connection.createClob();
     }
 
     @Override
@@ -149,6 +232,11 @@ public class ConnectionWrapper implements Connection {
     }
 
     @Override
+    public void setClientInfo(Properties properties) throws SQLClientInfoException {
+        connection.setClientInfo(properties);
+    }
+
+    @Override
     public String getClientInfo(String name) throws SQLException {
         return connection.getClientInfo(name);
     }
@@ -156,11 +244,6 @@ public class ConnectionWrapper implements Connection {
     @Override
     public Properties getClientInfo() throws SQLException {
         return connection.getClientInfo();
-    }
-
-    @Override
-    public void setClientInfo(Properties properties) throws SQLClientInfoException {
-        connection.setClientInfo(properties);
     }
 
     @Override
@@ -174,13 +257,13 @@ public class ConnectionWrapper implements Connection {
     }
 
     @Override
-    public String getSchema() throws SQLException {
-        return connection.getSchema();
+    public void setSchema(String schema) throws SQLException {
+        connection.setSchema(schema);
     }
 
     @Override
-    public void setSchema(String schema) throws SQLException {
-        connection.setSchema(schema);
+    public String getSchema() throws SQLException {
+        return connection.getSchema();
     }
 
     @Override
@@ -196,16 +279,6 @@ public class ConnectionWrapper implements Connection {
     @Override
     public int getNetworkTimeout() throws SQLException {
         return connection.getNetworkTimeout();
-    }
-
-    @Override
-    public <T> T unwrap(Class<T> iface) throws SQLException {
-        return connection.unwrap(iface);
-    }
-
-    @Override
-    public boolean isWrapperFor(Class<?> iface) throws SQLException {
-        return connection.isWrapperFor(iface);
     }
 
     @Override
@@ -238,85 +311,14 @@ public class ConnectionWrapper implements Connection {
         connection.setShardingKey(shardingKey);
     }
 
-
     @Override
-    public String nativeSQL(String sql) throws SQLException {
-        return connection.nativeSQL(sql);
+    public <T> T unwrap(Class<T> iface) throws SQLException {
+        return connection.unwrap(iface);
     }
 
     @Override
-    public boolean getAutoCommit() throws SQLException {
-        return connection.getAutoCommit();
-    }
-
-    @Override
-    public void setAutoCommit(boolean autoCommit) throws SQLException {
-        connection.setAutoCommit(autoCommit);
-    }
-
-    @Override
-    public void commit() throws SQLException {
-        connection.commit();
-    }
-
-    @Override
-    public void rollback() throws SQLException {
-        connection.rollback();
-    }
-
-    @Override
-    public void close() throws SQLException {
-        connection.close();
-    }
-
-    @Override
-    public boolean isClosed() throws SQLException {
-        return connection.isClosed();
-    }
-
-    @Override
-    public DatabaseMetaData getMetaData() throws SQLException {
-        return connection.getMetaData();
-    }
-
-    @Override
-    public boolean isReadOnly() throws SQLException {
-        return connection.isReadOnly();
-    }
-
-    @Override
-    public void setReadOnly(boolean readOnly) throws SQLException {
-        connection.setReadOnly(readOnly);
-    }
-
-    @Override
-    public String getCatalog() throws SQLException {
-        return connection.getCatalog();
-    }
-
-    @Override
-    public void setCatalog(String catalog) throws SQLException {
-        connection.setCatalog(catalog);
-    }
-
-    @Override
-    public int getTransactionIsolation() throws SQLException {
-        return connection.getTransactionIsolation();
-    }
-
-    @Override
-    public void setTransactionIsolation(int level) throws SQLException {
-        connection.setTransactionIsolation(level);
-    }
-
-    @Override
-    public SQLWarning getWarnings() throws SQLException {
-        return connection.getWarnings();
-    }
-
-    @Override
-    public void clearWarnings() throws SQLException {
-        connection.clearWarnings();
+    public boolean isWrapperFor(Class<?> iface) throws SQLException {
+        return connection.isWrapperFor(iface);
     }
 
 }
