@@ -25,7 +25,7 @@ import java.util.Map;
 import static com.mysql.cj.conf.PropertyKey.*;
 import static cool.scx.sql.SQL.ofNormal;
 
-public class SQlRunnerTest {
+public class SQLRunnerTest {
 
     private static final String databaseName = "scx_sql_test";
     private static final DataSource dataSource = getMySQLDataSource();

@@ -1,15 +1,14 @@
-package cool.scx.sql;
+package cool.scx.dao.schema;
 
 import com.mysql.cj.MysqlType;
 import com.mysql.cj.NativeQueryBindings;
-import com.mysql.cj.PreparedQuery;
-import com.mysql.cj.jdbc.ClientPreparedStatement;
+import cool.scx.sql.SQL;
+import cool.scx.sql.SQLRunner;
 import cool.scx.sql.mapping.ColumnInfo;
 import cool.scx.sql.mapping.TableInfo;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.SQLType;
 import java.util.ArrayList;
@@ -21,56 +20,38 @@ import java.util.stream.Stream;
 import static cool.scx.util.StringUtils.notBlank;
 
 /**
- * 构建 SQL 的助手(常用方法) 类
- *
- * @author scx567888
- * @version 0.0.1
+ * todo 数据库 DDL 创建工具
  */
 public final class SQLHelper {
 
     private static final Map<Class<?>, MysqlType> DEFAULT_MYSQL_TYPES = initDefaultMySQLTypes();
 
-    @SuppressWarnings("unchecked")
-    private static Map<Class<?>, MysqlType> initDefaultMySQLTypes() {
-        var tempMap = new HashMap<Class<?>, MysqlType>();
-        //这里 我们在额外添加几个下表对应的基本类型或包装类型
-        tempMap.put(byte.class, MysqlType.TINYINT);
-        tempMap.put(Byte[].class, MysqlType.BINARY);
-        tempMap.put(double.class, MysqlType.DOUBLE);
-        tempMap.put(float.class, MysqlType.FLOAT);
-        tempMap.put(int.class, MysqlType.INT);
-        tempMap.put(long.class, MysqlType.BIGINT);
-        tempMap.put(short.class, MysqlType.SMALLINT);
-        tempMap.put(boolean.class, MysqlType.BOOLEAN);
-
-        try {
-            //整合 mysql 驱动中的 DEFAULT_MYSQL_TYPES
-            var f = NativeQueryBindings.class.getDeclaredField("DEFAULT_MYSQL_TYPES");
-            f.setAccessible(true);
-            var mysqlDriverDefaultMysqlTypes = (Map<Class<?>, MysqlType>) f.get(null);
-            tempMap.putAll(mysqlDriverDefaultMysqlTypes);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(e);
+    /**
+     * 获取建表语句
+     *
+     * @return s
+     */
+    public static String getCreateTableDDL(TableInfo<?> tableInfo) {
+        var createTableDDL = new ArrayList<String>();
+        var columnInfos = tableInfo.columnInfos();
+        var tableName = tableInfo.tableName();
+        for (var columnInfo : columnInfos) {
+            var normalDDL = initNormalDDL(columnInfo);
+            createTableDDL.add(normalDDL);
         }
-        return tempMap;
+        for (var columnInfo : columnInfos) {
+            var specialDDL = initSpecialDDL(columnInfo);
+            createTableDDL.addAll(List.of(specialDDL));
+        }
+        return "CREATE TABLE `" + tableName + "` (" + String.join(", ", createTableDDL) + ");";
     }
 
-    /**
-     * 根据 class 获取对应的 SQLType 类型 如果没有则返回 JSON
-     *
-     * @param javaType 需要获取的类型
-     * @return a {@link String} object.
-     */
-    public static String getMySQLTypeCreateName(Class<?> javaType) {
-        var mysqlType = getMySQLType(javaType);
-        if (mysqlType == null) {
-            if (javaType.isEnum()) {
-                mysqlType = MysqlType.VARCHAR;
-            } else {
-                mysqlType = MysqlType.JSON;
-            }
-        }
-        return mysqlType == MysqlType.VARCHAR ? mysqlType.getName() + "(128)" : mysqlType.getName();
+    public static String getMigrateSQL(TableInfo oldTable, TableInfo newTable) {
+        return "";
+    }
+
+    public static SchemaVerifyResult verify(TableInfo oldTable, TableInfo newTable) {
+        return new SchemaVerifyResult();
     }
 
     /**
@@ -95,47 +76,6 @@ public final class SQLHelper {
                     .orElse(null);
         }
         return mysqlType;
-    }
-
-    /**
-     * todo 这里需要支持不同的数据库
-     * 　获取最终的 SQL
-     *
-     * @param preparedStatement a
-     * @return a
-     */
-    public static String getFinalSQL(PreparedStatement preparedStatement) {
-        ClientPreparedStatement clientPreparedStatement;
-        try {
-            clientPreparedStatement = preparedStatement.unwrap(ClientPreparedStatement.class);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
-        var preparedQuery = ((PreparedQuery) clientPreparedStatement.getQuery());
-        var finalSQL = preparedQuery.asSql();
-        var batchedArgsSize = preparedQuery.getBatchedArgs() == null ? 0 : preparedQuery.getBatchedArgs().size();
-        return batchedArgsSize > 1 ? finalSQL + "... 额外的 " + (batchedArgsSize - 1) + " 项" : finalSQL;
-    }
-
-    /**
-     * 获取建表语句
-     *
-     * @return s
-     */
-    public static String getCreateTableDDL(TableInfo<?> tableInfo) {
-        var createTableDDL = new ArrayList<String>();
-        var columnInfos = tableInfo.columnInfos();
-        var tableName = tableInfo.tableName();
-        for (var columnInfo : columnInfos) {
-            var normalDDL = initNormalDDL(columnInfo);
-            createTableDDL.add(normalDDL);
-        }
-        for (var columnInfo : columnInfos) {
-            var specialDDL = initSpecialDDL(columnInfo);
-            createTableDDL.addAll(List.of(specialDDL));
-        }
-        return "CREATE TABLE `" + tableName + "` (" + String.join(", ", createTableDDL) + ");";
     }
 
     /**
@@ -182,7 +122,7 @@ public final class SQLHelper {
     /**
      * 当前列对象特殊的 DDL 如设置是否为主键 是否创建索引 是否是唯一值 (建表语句片段 , 需和 normalDDL 一起使用才完整)
      */
-    private static String[] initSpecialDDL(ColumnInfo column) {
+    public static String[] initSpecialDDL(ColumnInfo column) {
         if (column == null) {
             return new String[0];
         }
@@ -246,7 +186,6 @@ public final class SQLHelper {
         }
     }
 
-
     /**
      * 检查是否需要修复表
      *
@@ -267,5 +206,49 @@ public final class SQLHelper {
             }
         }
     }
+
+    @SuppressWarnings("unchecked")
+    private static Map<Class<?>, MysqlType> initDefaultMySQLTypes() {
+        var tempMap = new HashMap<Class<?>, MysqlType>();
+        //这里 我们在额外添加几个下表对应的基本类型或包装类型
+        tempMap.put(byte.class, MysqlType.TINYINT);
+        tempMap.put(Byte[].class, MysqlType.BINARY);
+        tempMap.put(double.class, MysqlType.DOUBLE);
+        tempMap.put(float.class, MysqlType.FLOAT);
+        tempMap.put(int.class, MysqlType.INT);
+        tempMap.put(long.class, MysqlType.BIGINT);
+        tempMap.put(short.class, MysqlType.SMALLINT);
+        tempMap.put(boolean.class, MysqlType.BOOLEAN);
+
+        try {
+            //整合 mysql 驱动中的 DEFAULT_MYSQL_TYPES
+            var f = NativeQueryBindings.class.getDeclaredField("DEFAULT_MYSQL_TYPES");
+            f.setAccessible(true);
+            var mysqlDriverDefaultMysqlTypes = (Map<Class<?>, MysqlType>) f.get(null);
+            tempMap.putAll(mysqlDriverDefaultMysqlTypes);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+        return tempMap;
+    }
+
+    /**
+     * 根据 class 获取对应的 SQLType 类型 如果没有则返回 JSON
+     *
+     * @param javaType 需要获取的类型
+     * @return a {@link String} object.
+     */
+    public static String getMySQLTypeCreateName(Class<?> javaType) {
+        var mysqlType = getMySQLType(javaType);
+        if (mysqlType == null) {
+            if (javaType.isEnum()) {
+                mysqlType = MysqlType.VARCHAR;
+            } else {
+                mysqlType = MysqlType.JSON;
+            }
+        }
+        return mysqlType == MysqlType.VARCHAR ? mysqlType.getName() + "(128)" : mysqlType.getName();
+    }
+
 
 }

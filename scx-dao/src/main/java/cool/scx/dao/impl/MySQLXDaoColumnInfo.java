@@ -5,7 +5,7 @@ import cool.scx.sql.mapping.ColumnInfo;
 
 import java.lang.reflect.Field;
 
-import static cool.scx.sql.SQLHelper.getMySQLTypeCreateName;
+import static cool.scx.dao.schema.SQLHelper.getMySQLTypeCreateName;
 import static cool.scx.util.StringUtils.notBlank;
 
 /**

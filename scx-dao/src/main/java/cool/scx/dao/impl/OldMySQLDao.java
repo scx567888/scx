@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static cool.scx.sql.SQLBuilder.*;
+import static cool.scx.dao.SQLBuilder.*;
 
 /**
  * 最基本的 可以实现 实体类 CRUD 的 DAO

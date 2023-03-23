@@ -10,11 +10,12 @@ import cool.scx.dao.impl.MySQLDao;
 import cool.scx.dao.impl.MySQLXDao;
 import cool.scx.dao.impl.OldMySQLDao;
 import cool.scx.dao.impl.OldMySQLTableInfo;
+import cool.scx.dao.schema.SQLHelper;
 import cool.scx.dao.where.WhereBody;
 import cool.scx.dao.where.WhereOption;
 import cool.scx.logging.ScxLoggerFactory;
 import cool.scx.logging.ScxLoggingLevel;
-import cool.scx.sql.SQLHelper;
+import cool.scx.dao.spy.Spy;
 import cool.scx.sql.SQLRunner;
 import org.testng.annotations.Test;
 
@@ -92,7 +93,7 @@ public class ScxDaoTest {
         System.out.println("MySQLX 查询 : " + a23.size());
     }
 
-    private static MysqlDataSource getMySQLDataSource() {
+    private static DataSource getMySQLDataSource() {
         var mysqlDataSource = new MysqlDataSource();
         mysqlDataSource.setServerName("127.0.0.1");
         mysqlDataSource.setDatabaseName(databaseName);
@@ -103,7 +104,7 @@ public class ScxDaoTest {
         mysqlDataSource.getProperty(allowMultiQueries).setValue(true);
         mysqlDataSource.getProperty(rewriteBatchedStatements).setValue(true);
         mysqlDataSource.getProperty(createDatabaseIfNotExist).setValue(true);
-        return mysqlDataSource;
+        return Spy.wrap(mysqlDataSource);
     }
 
 }
