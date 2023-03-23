@@ -33,8 +33,8 @@ public abstract class Data implements BaseVo {
      *
      * @return json
      */
-    public static DataOfData fail() {
-        return new DataOfData("fail", null);
+    public static DataOfMap fail() {
+        return new DataOfMap("fail");
     }
 
     /**
@@ -43,8 +43,8 @@ public abstract class Data implements BaseVo {
      * @param failMessage 自定义的错误信息
      * @return json
      */
-    public static DataOfData fail(String failMessage) {
-        return new DataOfData(failMessage, null);
+    public static DataOfMap fail(String failMessage) {
+        return new DataOfMap(failMessage);
     }
 
     /**
