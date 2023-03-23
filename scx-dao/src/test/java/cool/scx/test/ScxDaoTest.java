@@ -17,6 +17,7 @@ import cool.scx.dao.where.WhereOption;
 import cool.scx.logging.ScxLoggerFactory;
 import cool.scx.logging.ScxLoggingLevel;
 import cool.scx.sql.SQLRunner;
+import org.sqlite.SQLiteDataSource;
 import org.testng.annotations.Test;
 
 import javax.sql.DataSource;
@@ -49,7 +50,7 @@ public class ScxDaoTest {
         sqlRunner.execute(ofNormal("drop table if exists " + userTableInfo.tableName() + ";"));
         sqlRunner.execute(ofNormal("drop table if exists " + userTableInfo.tableName() + "_doc;"));
         //根据 tableInfo 生成表结构
-        SQLHelper.fixTable(userTableInfo, databaseName, getMySQLDataSource());
+        SQLHelper.fixTable(userTableInfo, databaseName, getSQLiteDataSource());
         //开始使用
         var userDao = new MySQLDao<>(userTableInfo, User.class, sqlRunner);
         var list = new ArrayList<User>();
@@ -105,6 +106,12 @@ public class ScxDaoTest {
         mysqlDataSource.getProperty(rewriteBatchedStatements).setValue(true);
         mysqlDataSource.getProperty(createDatabaseIfNotExist).setValue(true);
         return Spy.wrap(mysqlDataSource);
+    }
+
+    private static DataSource getSQLiteDataSource() {
+        SQLiteDataSource sqLiteDataSource=new SQLiteDataSource();
+        sqLiteDataSource.setUrl("jdbc:sqlite:aaa.sqlite");
+        return Spy.wrap(sqLiteDataSource);
     }
 
 }
