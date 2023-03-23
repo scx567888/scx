@@ -4,11 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.util.ObjectUtils;
 import io.vertx.ext.web.RoutingContext;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
- * Json 格式的返回值 (注意 {@link DataJson} 进行区分, 此格式适合传递多个参数)
+ * Json 格式的返回值
  *
  * @author scx567888
  * @version 0.3.6
@@ -18,55 +15,25 @@ public final class Json implements BaseVo {
     /**
      * 内部结构
      */
-    private final JsonBodyWrapper<Map<String, Object>> jsonBodyWrapper;
+    private final Object data;
 
     /**
      * 全参构造
      *
-     * @param message 消息
+     * @param data 消息
      */
-    private Json(String message) {
-        jsonBodyWrapper = new JsonBodyWrapper<>(message, new HashMap<>());
+    private Json(Object data) {
+        this.data = data;
     }
 
     /**
-     * 操作成功
+     * a
      *
-     * @return json
+     * @param data a
+     * @return a
      */
-    public static Json ok() {
-        return new Json("ok");
-    }
-
-    /**
-     * 操作失败
-     *
-     * @return json
-     */
-    public static Json fail() {
-        return new Json("fail");
-    }
-
-    /**
-     * 返回操作失败的 Json 带有消息
-     *
-     * @param failMessage 自定义的错误信息
-     * @return json
-     */
-    public static Json fail(String failMessage) {
-        return new Json(failMessage);
-    }
-
-    /**
-     * 设置操作返回的数据，数据使用自定义的key存储
-     *
-     * @param dataKey 自定义的key
-     * @param dataVal 值
-     * @return json
-     */
-    public Json put(String dataKey, Object dataVal) {
-        jsonBodyWrapper.data.put(dataKey, dataVal);
-        return this;
+    public static Json of(Object data) {
+        return new Json(data);
     }
 
     /**
@@ -86,7 +53,7 @@ public final class Json implements BaseVo {
      * @throws com.fasterxml.jackson.core.JsonProcessingException 转换失败
      */
     public String toJson() throws JsonProcessingException {
-        return ObjectUtils.toJson(this.jsonBodyWrapper);
+        return ObjectUtils.toJson(this.data);
     }
 
     /**
@@ -96,7 +63,7 @@ public final class Json implements BaseVo {
      * @return a
      */
     public String toJson(String defaultValue) {
-        return ObjectUtils.toJson(this.jsonBodyWrapper, defaultValue);
+        return ObjectUtils.toJson(this.data, defaultValue);
     }
 
 }

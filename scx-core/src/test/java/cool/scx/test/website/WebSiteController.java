@@ -188,7 +188,7 @@ public class WebSiteController {
     @ScxRoute(methods = HttpMethod.GET)
     public BaseVo bigJson() {
         var users = carService1.list();
-        return Json.ok().put("items", users);
+        return Data.ok().put("items", users);
     }
 
     @ScxRoute(methods = HttpMethod.GET)
@@ -204,7 +204,7 @@ public class WebSiteController {
      */
     @ScxRoute(methods = HttpMethod.GET)
     public BaseVo a() {
-        return Json.ok().put("items", "a");
+        return Data.ok().put("items", "a");
     }
 
     /**
@@ -214,7 +214,7 @@ public class WebSiteController {
      */
     @ScxRoute(value = "a", methods = HttpMethod.GET)
     public BaseVo b() {
-        return Json.ok().put("items", "b");
+        return Data.ok().put("items", "b");
     }
 
     /**
@@ -224,7 +224,7 @@ public class WebSiteController {
      */
     @ScxRoute(value = "/v/:aaa", methods = {HttpMethod.GET, HttpMethod.POST})
     public BaseVo c() {
-        return Json.ok().put("items", "aaa");
+        return Data.ok().put("items", "aaa");
     }
 
     /**
@@ -234,7 +234,7 @@ public class WebSiteController {
      */
     @ScxRoute(value = "/v/:bbb", methods = HttpMethod.GET)
     public BaseVo d() {
-        return Json.ok().put("items", "bbb");
+        return Data.ok().put("items", "bbb");
     }
 
     /**

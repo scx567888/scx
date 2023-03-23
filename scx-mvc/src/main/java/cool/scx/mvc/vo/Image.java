@@ -9,7 +9,7 @@ import io.vertx.core.http.impl.MimeMapping;
 import io.vertx.ext.web.RoutingContext;
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.geometry.AbsoluteSize;
-import net.coobird.thumbnailator.geometry.Positions;
+import net.coobird.thumbnailator.geometry.Position;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -17,8 +17,6 @@ import javax.swing.filechooser.FileSystemView;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -55,19 +53,19 @@ public abstract class Image implements BaseVo {
     /**
      * a
      *
-     * @param file   a
-     * @param width  a
-     * @param height a
-     * @param type   a
+     * @param file     a
+     * @param width    a
+     * @param height   a
+     * @param position a
      * @return a
      */
-    public static Image of(File file, Integer width, Integer height, String type) {
+    public static Image of(File file, Integer width, Integer height, Position position) {
         var contentType = MimeMapping.getMimeTypeForFilename(file.getName());
         if (contentType != null && contentType.startsWith("image")) {
             if (height == null && width == null) {
                 return new OriginalImage(file);
             } else {
-                return new CroppedImage(file, width, height, type);
+                return new CroppedImage(file, width, height, position);
             }
         } else {
             return new SystemIconImage(file);
@@ -171,35 +169,6 @@ public abstract class Image implements BaseVo {
     private static final class CroppedImage extends Image {
 
         /**
-         * type 和裁剪类型 映射表
-         */
-        private static final Map<String, Positions> TYPE_POSITIONS_MAP = new HashMap<>();
-
-        static {
-            TYPE_POSITIONS_MAP.put("top-left", Positions.TOP_LEFT);
-            TYPE_POSITIONS_MAP.put("top-center", Positions.TOP_CENTER);
-            TYPE_POSITIONS_MAP.put("top-right", Positions.TOP_RIGHT);
-            TYPE_POSITIONS_MAP.put("center-left", Positions.CENTER_LEFT);
-            TYPE_POSITIONS_MAP.put("center", Positions.CENTER);
-            TYPE_POSITIONS_MAP.put("center-center", Positions.CENTER);
-            TYPE_POSITIONS_MAP.put("center-right", Positions.CENTER_RIGHT);
-            TYPE_POSITIONS_MAP.put("bottom-left", Positions.BOTTOM_LEFT);
-            TYPE_POSITIONS_MAP.put("bottom-center", Positions.BOTTOM_CENTER);
-            TYPE_POSITIONS_MAP.put("bottom-right", Positions.BOTTOM_RIGHT);
-            //简写
-            TYPE_POSITIONS_MAP.put("tl", Positions.TOP_LEFT);
-            TYPE_POSITIONS_MAP.put("tc", Positions.TOP_CENTER);
-            TYPE_POSITIONS_MAP.put("tr", Positions.TOP_RIGHT);
-            TYPE_POSITIONS_MAP.put("cl", Positions.CENTER_LEFT);
-            TYPE_POSITIONS_MAP.put("c", Positions.CENTER);
-            TYPE_POSITIONS_MAP.put("cc", Positions.CENTER);
-            TYPE_POSITIONS_MAP.put("cr", Positions.CENTER_RIGHT);
-            TYPE_POSITIONS_MAP.put("bl", Positions.BOTTOM_LEFT);
-            TYPE_POSITIONS_MAP.put("bc", Positions.BOTTOM_CENTER);
-            TYPE_POSITIONS_MAP.put("br", Positions.BOTTOM_RIGHT);
-        }
-
-        /**
          * a
          */
         private final String contentType;
@@ -212,15 +181,15 @@ public abstract class Image implements BaseVo {
         /**
          * a
          *
-         * @param file   a
-         * @param width  a
-         * @param height a
-         * @param type   a
+         * @param file     a
+         * @param width    a
+         * @param height   a
+         * @param position a
          */
-        public CroppedImage(File file, Integer width, Integer height, String type) {
+        public CroppedImage(File file, Integer width, Integer height, Position position) {
             super(file);
             this.contentType = MimeMapping.getMimeTypeForFilename(file.getName());
-            this.buffer = getBuffer(file, width, height, type == null ? "z" : type);
+            this.buffer = getBuffer(file, width, height, position);
         }
 
         /**
@@ -229,7 +198,7 @@ public abstract class Image implements BaseVo {
          * @return a {@link io.vertx.core.buffer.Buffer} object
          * @throws ScxHttpException if any.
          */
-        private Buffer getBuffer(File file, Integer width, Integer height, String type) {
+        private Buffer getBuffer(File file, Integer width, Integer height, Position position) {
             try (var out = new ByteArrayOutputStream()) {
                 var image = Thumbnails.of(file).scale(1.0).asBufferedImage();
                 var imageHeight = image.getHeight();
@@ -239,9 +208,8 @@ public abstract class Image implements BaseVo {
                 var croppedWidth = (width == null || width > imageHeight || width <= 0) ? imageWidth : width;
 
                 var absoluteSize = new AbsoluteSize(croppedWidth, croppedHeight);
-                var positions = TYPE_POSITIONS_MAP.get(type.toLowerCase());
-                if (positions != null) {
-                    Thumbnails.of(file).sourceRegion(positions, absoluteSize).size(croppedWidth, croppedHeight).keepAspectRatio(false).toOutputStream(out);
+                if (position != null) {
+                    Thumbnails.of(file).sourceRegion(position, absoluteSize).size(croppedWidth, croppedHeight).keepAspectRatio(false).toOutputStream(out);
                 } else {
                     Thumbnails.of(file).size(croppedWidth, croppedHeight).keepAspectRatio(false).toOutputStream(out);
                 }
