@@ -98,27 +98,6 @@ public final class SQLHelper {
     }
 
     /**
-     * todo 这里需要支持不同的数据库
-     * 　获取最终的 SQL
-     *
-     * @param preparedStatement a
-     * @return a
-     */
-    public static String getFinalSQL(PreparedStatement preparedStatement) {
-        ClientPreparedStatement clientPreparedStatement;
-        try {
-            clientPreparedStatement = preparedStatement.unwrap(ClientPreparedStatement.class);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
-        var preparedQuery = ((PreparedQuery) clientPreparedStatement.getQuery());
-        var finalSQL = preparedQuery.asSql();
-        var batchedArgsSize = preparedQuery.getBatchedArgs() == null ? 0 : preparedQuery.getBatchedArgs().size();
-        return batchedArgsSize > 1 ? finalSQL + "... 额外的 " + (batchedArgsSize - 1) + " 项" : finalSQL;
-    }
-
-    /**
      * 获取建表语句
      *
      * @return s

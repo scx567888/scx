@@ -64,7 +64,6 @@ public final class SQLRunner {
      */
     public static <T> T query(Connection con, SQL sql, ResultHandler<T> resultHandler) throws SQLException {
         try (var preparedStatement = sql.prepareStatement(con)) {
-            logSQL(preparedStatement);
             var resultSet = preparedStatement.executeQuery();
             return resultHandler.apply(resultSet);
         }
@@ -80,7 +79,6 @@ public final class SQLRunner {
      */
     public static long execute(Connection con, SQL sql) throws SQLException {
         try (var preparedStatement = sql.prepareStatement(con)) {
-            logSQL(preparedStatement);
             preparedStatement.execute();
             return preparedStatement.getLargeUpdateCount();
         }
@@ -96,7 +94,6 @@ public final class SQLRunner {
      */
     public static UpdateResult update(Connection con, SQL sql) throws SQLException {
         try (var preparedStatement = sql.prepareStatement(con)) {
-            logSQL(preparedStatement);
             var affectedItemsCount = preparedStatement.executeLargeUpdate();
             var generatedKeys = getGeneratedKeys(preparedStatement);
             return new UpdateResult(affectedItemsCount, generatedKeys);
@@ -113,7 +110,6 @@ public final class SQLRunner {
      */
     public static UpdateResult updateBatch(Connection con, SQL sql) throws SQLException {
         try (var preparedStatement = sql.prepareStatement(con)) {
-            logSQL(preparedStatement);
             var affectedItemsCount = preparedStatement.executeLargeBatch().length;
             var generatedKeys = getGeneratedKeys(preparedStatement);
             return new UpdateResult(affectedItemsCount, generatedKeys);
@@ -174,19 +170,6 @@ public final class SQLRunner {
             }
             return ids;
         }
-    }
-
-    /**
-     * 打印 SQL
-     *
-     * @param p a
-     * @return 方便函数式调用
-     */
-    private static PreparedStatement logSQL(PreparedStatement p) {
-        if (logger.isDebugEnabled()) {
-            logger.debug(SQLHelper.getFinalSQL(p));
-        }
-        return p;
     }
 
     /**
