@@ -2,7 +2,7 @@ package cool.scx.test;
 
 import cool.scx.mvc.annotation.ScxRoute;
 import cool.scx.mvc.exception.ForbiddenException;
-import cool.scx.mvc.vo.DataJson;
+import cool.scx.mvc.vo.Data;
 
 import java.util.Map;
 
@@ -11,7 +11,7 @@ public class HelloWorldController {
 
     @ScxRoute("hello")
     public Object hello() {
-        return DataJson.ok().data(Map.of("name", "scx567888😁"));
+        return Data.ok().put("name", "scx567888😁");
     }
 
     @ScxRoute("no-perm")
