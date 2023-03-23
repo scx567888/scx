@@ -15,7 +15,7 @@ public class User {
     public LocalDateTime createDate;
     public UserInfo userInfo;
 
-    static class UserInfo{
+    static class UserInfo {
         public String email;
     }
 

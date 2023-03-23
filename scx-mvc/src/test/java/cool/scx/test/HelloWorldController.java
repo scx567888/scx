@@ -4,8 +4,6 @@ import cool.scx.mvc.annotation.ScxRoute;
 import cool.scx.mvc.exception.ForbiddenException;
 import cool.scx.mvc.vo.Data;
 
-import java.util.Map;
-
 @ScxRoute
 public class HelloWorldController {
 
