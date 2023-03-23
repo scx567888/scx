@@ -43,18 +43,28 @@ public class DataSourceWrapper implements DataSource {
     }
 
     @Override
-    public int getLoginTimeout() throws SQLException {
-        return dataSource.getLoginTimeout();
-    }
-
-    @Override
     public void setLoginTimeout(int seconds) throws SQLException {
         dataSource.setLoginTimeout(seconds);
     }
 
     @Override
+    public int getLoginTimeout() throws SQLException {
+        return dataSource.getLoginTimeout();
+    }
+
+    @Override
+    public ConnectionBuilder createConnectionBuilder() throws SQLException {
+        return dataSource.createConnectionBuilder();
+    }
+
+    @Override
     public Logger getParentLogger() throws SQLFeatureNotSupportedException {
         return dataSource.getParentLogger();
+    }
+
+    @Override
+    public ShardingKeyBuilder createShardingKeyBuilder() throws SQLException {
+        return dataSource.createShardingKeyBuilder();
     }
 
     @Override
@@ -66,16 +76,5 @@ public class DataSourceWrapper implements DataSource {
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
         return dataSource.isWrapperFor(iface);
     }
-
-    @Override
-    public ConnectionBuilder createConnectionBuilder() throws SQLException {
-        return dataSource.createConnectionBuilder();
-    }
-
-    @Override
-    public ShardingKeyBuilder createShardingKeyBuilder() throws SQLException {
-        return dataSource.createShardingKeyBuilder();
-    }
-
 
 }
