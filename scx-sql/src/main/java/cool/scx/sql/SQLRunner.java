@@ -3,8 +3,6 @@ package cool.scx.sql;
 import cool.scx.functional.ScxConsumer;
 import cool.scx.functional.ScxFunction;
 import cool.scx.functional.ScxRunnable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -24,11 +22,6 @@ import static cool.scx.util.ScxExceptionHelper.wrap;
  * @version 0.0.1
  */
 public final class SQLRunner {
-
-    /**
-     * logger
-     */
-    private static final Logger logger = LoggerFactory.getLogger(SQLRunner.class);
 
     /**
      * a
