@@ -66,6 +66,7 @@ public class TestModule extends ScxModule {
                 .configure(ScxCoreFeature.SHOW_START_UP_INFO, true)
                 .configure(ScxCoreFeature.USE_DEVELOPMENT_ERROR_PAGE, true)
                 .configure(ScxCoreFeature.ENABLE_SCHEDULING_WITH_ANNOTATION, true)
+                .configure(ScxCoreFeature.USE_SPY, true)
                 .run();
         //修复表
         ScxContext.sqlRunner().execute(SQL.ofNormal("drop database if exists scx_test; create database scx_test; use scx_test"));
