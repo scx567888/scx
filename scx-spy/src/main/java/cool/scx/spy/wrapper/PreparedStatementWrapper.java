@@ -15,7 +15,6 @@ public class PreparedStatementWrapper extends StatementWrapper implements Prepar
     private final PreparedStatement preparedStatement;
 
     protected PreparedStatementWrapper(PreparedStatement preparedStatement, JDBCEventListener eventListener) {
-
         super(preparedStatement, eventListener);
         this.preparedStatement = preparedStatement;
     }
@@ -51,7 +50,6 @@ public class PreparedStatementWrapper extends StatementWrapper implements Prepar
             eventListener.onAfterExecuteUpdate(preparedStatement, System.nanoTime() - start, rowCount, e);
         }
     }
-
 
     @Override
     public long executeLargeUpdate() throws SQLException {
@@ -100,6 +98,111 @@ public class PreparedStatementWrapper extends StatementWrapper implements Prepar
         }
     }
 
+    // ***********
+    // 以下为委托方法
+    // ***********
+
+    @Override
+    public void setNull(int parameterIndex, int sqlType) throws SQLException {
+        preparedStatement.setNull(parameterIndex, sqlType);
+    }
+
+    @Override
+    public void setBoolean(int parameterIndex, boolean x) throws SQLException {
+        preparedStatement.setBoolean(parameterIndex, x);
+    }
+
+    @Override
+    public void setByte(int parameterIndex, byte x) throws SQLException {
+        preparedStatement.setByte(parameterIndex, x);
+    }
+
+    @Override
+    public void setShort(int parameterIndex, short x) throws SQLException {
+        preparedStatement.setShort(parameterIndex, x);
+    }
+
+    @Override
+    public void setInt(int parameterIndex, int x) throws SQLException {
+        preparedStatement.setInt(parameterIndex, x);
+    }
+
+    @Override
+    public void setLong(int parameterIndex, long x) throws SQLException {
+        preparedStatement.setLong(parameterIndex, x);
+    }
+
+    @Override
+    public void setFloat(int parameterIndex, float x) throws SQLException {
+        preparedStatement.setFloat(parameterIndex, x);
+    }
+
+    @Override
+    public void setDouble(int parameterIndex, double x) throws SQLException {
+        preparedStatement.setDouble(parameterIndex, x);
+    }
+
+    @Override
+    public void setBigDecimal(int parameterIndex, BigDecimal x) throws SQLException {
+        preparedStatement.setBigDecimal(parameterIndex, x);
+    }
+
+    @Override
+    public void setString(int parameterIndex, String x) throws SQLException {
+        preparedStatement.setString(parameterIndex, x);
+    }
+
+    @Override
+    public void setBytes(int parameterIndex, byte[] x) throws SQLException {
+        preparedStatement.setBytes(parameterIndex, x);
+    }
+
+    @Override
+    public void setDate(int parameterIndex, Date x) throws SQLException {
+        preparedStatement.setDate(parameterIndex, x);
+    }
+
+    @Override
+    public void setTime(int parameterIndex, Time x) throws SQLException {
+        preparedStatement.setTime(parameterIndex, x);
+    }
+
+    @Override
+    public void setTimestamp(int parameterIndex, Timestamp x) throws SQLException {
+        preparedStatement.setTimestamp(parameterIndex, x);
+    }
+
+    @Override
+    public void setAsciiStream(int parameterIndex, InputStream x, int length) throws SQLException {
+        preparedStatement.setAsciiStream(parameterIndex, x, length);
+    }
+
+    @Override
+    @Deprecated(since = "1.2")
+    public void setUnicodeStream(int parameterIndex, InputStream x, int length) throws SQLException {
+        preparedStatement.setUnicodeStream(parameterIndex, x, length);
+    }
+
+    @Override
+    public void setBinaryStream(int parameterIndex, InputStream x, int length) throws SQLException {
+        preparedStatement.setBinaryStream(parameterIndex, x, length);
+    }
+
+    @Override
+    public void clearParameters() throws SQLException {
+        preparedStatement.clearParameters();
+    }
+
+    @Override
+    public void setObject(int parameterIndex, Object x, int targetSqlType) throws SQLException {
+        preparedStatement.setObject(parameterIndex, x, targetSqlType);
+    }
+
+    @Override
+    public void setObject(int parameterIndex, Object x) throws SQLException {
+        preparedStatement.setObject(parameterIndex, x);
+    }
+
     @Override
     public void setCharacterStream(int parameterIndex, Reader reader, int length) throws SQLException {
         preparedStatement.setCharacterStream(parameterIndex, reader, length);
@@ -126,6 +229,11 @@ public class PreparedStatementWrapper extends StatementWrapper implements Prepar
     }
 
     @Override
+    public ResultSetMetaData getMetaData() throws SQLException {
+        return preparedStatement.getMetaData();
+    }
+
+    @Override
     public void setDate(int parameterIndex, Date x, Calendar cal) throws SQLException {
         preparedStatement.setDate(parameterIndex, x, cal);
     }
@@ -148,6 +256,11 @@ public class PreparedStatementWrapper extends StatementWrapper implements Prepar
     @Override
     public void setURL(int parameterIndex, URL x) throws SQLException {
         preparedStatement.setURL(parameterIndex, x);
+    }
+
+    @Override
+    public ParameterMetaData getParameterMetaData() throws SQLException {
+        return preparedStatement.getParameterMetaData();
     }
 
     @Override
@@ -253,118 +366,6 @@ public class PreparedStatementWrapper extends StatementWrapper implements Prepar
     @Override
     public void setObject(int parameterIndex, Object x, SQLType targetSqlType) throws SQLException {
         preparedStatement.setObject(parameterIndex, x, targetSqlType);
-    }
-
-    @Override
-    public void setNull(int parameterIndex, int sqlType) throws SQLException {
-        preparedStatement.setNull(parameterIndex, sqlType);
-    }
-
-    @Override
-    public void setBoolean(int parameterIndex, boolean x) throws SQLException {
-        preparedStatement.setBoolean(parameterIndex, x);
-    }
-
-    @Override
-    public void setByte(int parameterIndex, byte x) throws SQLException {
-        preparedStatement.setByte(parameterIndex, x);
-    }
-
-    @Override
-    public void setShort(int parameterIndex, short x) throws SQLException {
-        preparedStatement.setShort(parameterIndex, x);
-    }
-
-    @Override
-    public void setInt(int parameterIndex, int x) throws SQLException {
-        preparedStatement.setInt(parameterIndex, x);
-    }
-
-    @Override
-    public void setLong(int parameterIndex, long x) throws SQLException {
-        preparedStatement.setLong(parameterIndex, x);
-    }
-
-    @Override
-    public void setFloat(int parameterIndex, float x) throws SQLException {
-        preparedStatement.setFloat(parameterIndex, x);
-    }
-
-    @Override
-    public void setDouble(int parameterIndex, double x) throws SQLException {
-        preparedStatement.setDouble(parameterIndex, x);
-    }
-
-    @Override
-    public void setBigDecimal(int parameterIndex, BigDecimal x) throws SQLException {
-        preparedStatement.setBigDecimal(parameterIndex, x);
-    }
-
-    @Override
-    public void setString(int parameterIndex, String x) throws SQLException {
-        preparedStatement.setString(parameterIndex, x);
-    }
-
-    @Override
-    public void setBytes(int parameterIndex, byte[] x) throws SQLException {
-        preparedStatement.setBytes(parameterIndex, x);
-    }
-
-    @Override
-    public void setDate(int parameterIndex, Date x) throws SQLException {
-        preparedStatement.setDate(parameterIndex, x);
-    }
-
-    @Override
-    public void setTime(int parameterIndex, Time x) throws SQLException {
-        preparedStatement.setTime(parameterIndex, x);
-    }
-
-    @Override
-    public void setTimestamp(int parameterIndex, Timestamp x) throws SQLException {
-        preparedStatement.setTimestamp(parameterIndex, x);
-    }
-
-    @Override
-    public ParameterMetaData getParameterMetaData() throws SQLException {
-        return preparedStatement.getParameterMetaData();
-    }
-
-    @Override
-    public ResultSetMetaData getMetaData() throws SQLException {
-        return preparedStatement.getMetaData();
-    }
-
-
-    @Override
-    public void setAsciiStream(int parameterIndex, InputStream x, int length) throws SQLException {
-        preparedStatement.setAsciiStream(parameterIndex, x, length);
-    }
-
-    @Override
-    @Deprecated
-    public void setUnicodeStream(int parameterIndex, InputStream x, int length) throws SQLException {
-        preparedStatement.setUnicodeStream(parameterIndex, x, length);
-    }
-
-    @Override
-    public void setBinaryStream(int parameterIndex, InputStream x, int length) throws SQLException {
-        preparedStatement.setBinaryStream(parameterIndex, x, length);
-    }
-
-    @Override
-    public void clearParameters() throws SQLException {
-        preparedStatement.clearParameters();
-    }
-
-    @Override
-    public void setObject(int parameterIndex, Object x, int targetSqlType) throws SQLException {
-        preparedStatement.setObject(parameterIndex, x, targetSqlType);
-    }
-
-    @Override
-    public void setObject(int parameterIndex, Object x) throws SQLException {
-        preparedStatement.setObject(parameterIndex, x);
     }
 
 }
