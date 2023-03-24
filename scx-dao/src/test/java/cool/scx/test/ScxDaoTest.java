@@ -27,8 +27,6 @@ import static cool.scx.sql.SQL.ofNormal;
 public class ScxDaoTest {
 
     private static final String databaseName = "scx_dao_test";
-    private static final DataSource dataSource = getSQLiteDataSource();
-    private static final SQLRunner sqlRunner = new SQLRunner(dataSource);
 
     static {
         ScxLoggerFactory.defaultConfig().setLevel(ScxLoggingLevel.DEBUG);
@@ -40,6 +38,12 @@ public class ScxDaoTest {
 
     @Test
     public static void test1() throws SQLException {
+        test1_1(getMySQLDataSource());
+        test1_1(getSQLiteDataSource());
+    }
+
+    public static void test1_1(DataSource dataSource) throws SQLException {
+        SQLRunner sqlRunner = new SQLRunner(dataSource);
         //创建 tableInfo
         var userTableInfo = new OldMySQLTableInfo(User.class);
         //删除原有的表数据
