@@ -7,13 +7,14 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
-public class ConnectionWrapper implements Connection {
+public class ConnectionWrapper extends AbstractWrapper implements Connection {
 
     private final Connection connection;
 
     private final SpyEventListener eventListener;
 
     public ConnectionWrapper(Connection connection, SpyEventListener eventListener) {
+        super(connection);
         this.connection = connection;
         this.eventListener = eventListener;
     }
@@ -310,16 +311,6 @@ public class ConnectionWrapper implements Connection {
     @Override
     public void setShardingKey(ShardingKey shardingKey) throws SQLException {
         connection.setShardingKey(shardingKey);
-    }
-
-    @Override
-    public <T> T unwrap(Class<T> iface) throws SQLException {
-        return connection.unwrap(iface);
-    }
-
-    @Override
-    public boolean isWrapperFor(Class<?> iface) throws SQLException {
-        return connection.isWrapperFor(iface);
     }
 
 }

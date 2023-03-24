@@ -7,13 +7,14 @@ import cool.scx.util.ArrayUtils;
 import java.sql.*;
 
 
-public class StatementWrapper implements Statement {
+public class StatementWrapper extends AbstractWrapper implements Statement {
 
     protected final SpyEventListener eventListener;
 
     private final Statement statement;
 
     protected StatementWrapper(Statement delegate, SpyEventListener eventListener) {
+        super(delegate);
         this.statement = delegate;
         this.eventListener = eventListener;
     }
@@ -489,16 +490,6 @@ public class StatementWrapper implements Statement {
     @Override
     public String enquoteNCharLiteral(String val) throws SQLException {
         return statement.enquoteNCharLiteral(val);
-    }
-
-    @Override
-    public <T> T unwrap(Class<T> iface) throws SQLException {
-        return statement.unwrap(iface);
-    }
-
-    @Override
-    public boolean isWrapperFor(Class<?> iface) throws SQLException {
-        return statement.isWrapperFor(iface);
     }
 
 }
