@@ -2,10 +2,11 @@ package cool.scx.sql;
 
 import cool.scx.sql.bean_builder.NormalBeanBuilder;
 import cool.scx.sql.bean_builder.RecordBeanBuilder;
-import cool.scx.sql.mapping.TableInfo;
 
+import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.function.Function;
 
 /**
  * <p>BeanBuilder interface.</p>
@@ -19,8 +20,8 @@ public interface BeanBuilder<T> {
         return type.isRecord() ? new RecordBeanBuilder<>(type) : new NormalBeanBuilder<>(type);
     }
 
-    static <T> BeanBuilder<T> of(Class<T> type, TableInfo<?> tableInfo) {
-        return type.isRecord() ? new RecordBeanBuilder<>(type, tableInfo) : new NormalBeanBuilder<>(type, tableInfo);
+    static <T> BeanBuilder<T> of(Class<T> type, Function<Field, String> columnNameMapping) {
+        return type.isRecord() ? new RecordBeanBuilder<>(type, columnNameMapping) : new NormalBeanBuilder<>(type, columnNameMapping);
     }
 
     T createBean(ResultSet rs, int[] indexInfo) throws SQLException;
