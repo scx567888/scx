@@ -2,6 +2,7 @@ package cool.scx.core;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.mysql.cj.jdbc.MysqlDataSource;
+import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import cool.scx.config.ScxConfig;
 import cool.scx.config.ScxEnvironment;
@@ -158,8 +159,9 @@ public final class ScxHelper {
             }
         }
         //使用 HikariDataSource 进行包装
-        var hikariDataSource = new HikariDataSource();
-        hikariDataSource.setDataSource(mysqlDataSource);
+        var hikariConfig = new HikariConfig();
+        hikariConfig.setDataSource(mysqlDataSource);
+        var hikariDataSource = new HikariDataSource(hikariConfig);
         return scxFeatureConfig.get(ScxCoreFeature.USE_SPY) ? Spy.wrap(hikariDataSource) : hikariDataSource;
     }
 
