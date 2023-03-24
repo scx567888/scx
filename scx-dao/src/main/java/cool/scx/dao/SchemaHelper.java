@@ -1,7 +1,7 @@
-package cool.scx.dao.schema;
+package cool.scx.dao;
 
-import cool.scx.dao.dialect.Dialect;
 import cool.scx.dao.mapping.TableInfo;
+import cool.scx.dao.schema.SchemaVerifyResult;
 import cool.scx.sql.BeanBuilder;
 import cool.scx.sql.SQL;
 import cool.scx.sql.SQLRunner;

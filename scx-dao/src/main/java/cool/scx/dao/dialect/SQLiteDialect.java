@@ -1,5 +1,6 @@
 package cool.scx.dao.dialect;
 
+import cool.scx.dao.Dialect;
 import cool.scx.dao.mapping.ColumnInfo;
 import cool.scx.dao.mapping.TableInfo;
 import org.sqlite.SQLiteDataSource;

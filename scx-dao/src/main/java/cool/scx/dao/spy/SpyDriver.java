@@ -1,6 +1,6 @@
 package cool.scx.dao.spy;
 
-import cool.scx.dao.schema.SchemaHelper;
+import cool.scx.dao.SchemaHelper;
 import cool.scx.dao.spy.event.LoggingEventListener;
 import cool.scx.dao.spy.wrapper.ConnectionWrapper;
 
