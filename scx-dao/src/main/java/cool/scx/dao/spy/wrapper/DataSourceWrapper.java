@@ -1,5 +1,6 @@
 package cool.scx.dao.spy.wrapper;
 
+import cool.scx.dao.schema.SchemaHelper;
 import cool.scx.dao.spy.SpyEventListener;
 import cool.scx.dao.spy.event.LoggingEventListener;
 
@@ -19,7 +20,7 @@ public class DataSourceWrapper implements DataSource {
     }
 
     public DataSourceWrapper(DataSource dataSource) {
-        this(dataSource, LoggingEventListener.INSTANCE);
+        this(dataSource, new LoggingEventListener(SchemaHelper.findDialect(dataSource)));
     }
 
     @Override

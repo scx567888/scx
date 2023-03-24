@@ -1,5 +1,6 @@
 package cool.scx.dao.spy;
 
+import cool.scx.dao.schema.SchemaHelper;
 import cool.scx.dao.spy.event.LoggingEventListener;
 import cool.scx.dao.spy.wrapper.ConnectionWrapper;
 
@@ -21,7 +22,7 @@ public class SpyDriver implements Driver {
     public Connection connect(String url, Properties info) throws SQLException {
         var realUrl = extractRealUrl(url);
         var realDriver = DriverManager.getDriver(realUrl);
-        return new ConnectionWrapper(realDriver.connect(realUrl, info), LoggingEventListener.INSTANCE);
+        return new ConnectionWrapper(realDriver.connect(realUrl, info), new LoggingEventListener(SchemaHelper.findDialect(realDriver)));
     }
 
     @Override
