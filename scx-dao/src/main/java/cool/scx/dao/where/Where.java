@@ -1,9 +1,9 @@
 package cool.scx.dao.where;
 
+import cool.scx.dao.mapping.TableInfo;
 import cool.scx.dao.where.exception.ValidParamListIsEmptyException;
 import cool.scx.dao.where.exception.WrongWhereTypeParamSizeException;
 import cool.scx.sql.SQL;
-import cool.scx.dao.mapping.TableInfo;
 import cool.scx.util.StringUtils;
 
 import java.util.ArrayList;

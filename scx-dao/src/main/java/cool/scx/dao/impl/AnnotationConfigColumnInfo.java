@@ -1,7 +1,7 @@
 package cool.scx.dao.impl;
 
 import cool.scx.dao.annotation.Column;
-import cool.scx.sql.mapping.ColumnInfo;
+import cool.scx.dao.mapping.ColumnInfo;
 
 import java.lang.reflect.Field;
 

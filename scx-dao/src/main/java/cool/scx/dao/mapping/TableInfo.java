@@ -1,4 +1,4 @@
-package cool.scx.sql.mapping;
+package cool.scx.dao.mapping;
 
 /**
  * TableInfo

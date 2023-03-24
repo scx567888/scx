@@ -10,7 +10,7 @@ import cool.scx.dao.impl.MySQLDao;
 import cool.scx.dao.impl.MySQLXDao;
 import cool.scx.dao.impl.OldMySQLDao;
 import cool.scx.dao.impl.OldMySQLTableInfo;
-import cool.scx.dao.schema.SQLHelper;
+import cool.scx.dao.schema.SchemaHelper;
 import cool.scx.dao.spy.Spy;
 import cool.scx.dao.where.WhereBody;
 import cool.scx.dao.where.WhereOption;
@@ -31,7 +31,7 @@ import static cool.scx.sql.SQL.ofNormal;
 public class ScxDaoTest {
 
     private static final String databaseName = "scx_dao_test";
-    private static final DataSource dataSource = getMySQLDataSource();
+    private static final DataSource dataSource = getSQLiteDataSource();
     private static final SQLRunner sqlRunner = new SQLRunner(dataSource);
 
     static {
@@ -50,7 +50,7 @@ public class ScxDaoTest {
         sqlRunner.execute(ofNormal("drop table if exists " + userTableInfo.tableName() + ";"));
         sqlRunner.execute(ofNormal("drop table if exists " + userTableInfo.tableName() + "_doc;"));
         //根据 tableInfo 生成表结构
-        SQLHelper.fixTable(userTableInfo, databaseName, getSQLiteDataSource());
+        SchemaHelper.fixTable(userTableInfo, databaseName, dataSource);
         //开始使用
         var userDao = new MySQLDao<>(userTableInfo, User.class, sqlRunner);
         var list = new ArrayList<User>();
@@ -109,7 +109,7 @@ public class ScxDaoTest {
     }
 
     private static DataSource getSQLiteDataSource() {
-        SQLiteDataSource sqLiteDataSource=new SQLiteDataSource();
+        SQLiteDataSource sqLiteDataSource = new SQLiteDataSource();
         sqLiteDataSource.setUrl("jdbc:sqlite:aaa.sqlite");
         return Spy.wrap(sqLiteDataSource);
     }
