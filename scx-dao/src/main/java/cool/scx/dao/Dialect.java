@@ -7,6 +7,7 @@ import javax.sql.DataSource;
 import java.sql.Driver;
 import java.sql.SQLType;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,7 +43,7 @@ public interface Dialect {
      * @return s
      */
     default String getCreateTableDDL(TableInfo<?> tableInfo) {
-        var columnDefinitions = getColumnDefinitions(tableInfo);
+        var columnDefinitions = getColumnDefinitions(tableInfo.columnInfos());
         var str = columnDefinitions.stream().map(c -> "    " + c).collect(Collectors.joining(",\n"));
         return "CREATE TABLE `" + tableInfo.tableName() + "`\n" +
                 "(\n" +
@@ -50,15 +51,19 @@ public interface Dialect {
                 "\n);";
     }
 
-    List<String> getColumnDefinitions(TableInfo<?> tableInfo);
-
     /**
      * todo
      *
      * @param nonExistentColumnNames a
      * @param tableName              a
      */
-    String getAlertTableDDL(List<? extends ColumnInfo> nonExistentColumnNames, String tableName);
+    default String getAlertTableDDL(ColumnInfo[] nonExistentColumnNames, String tableName){
+        var columnDefinitions = getColumnDefinitions(nonExistentColumnNames);
+        var alertTableDDL = columnDefinitions.stream().map(columnDefinition -> "ADD " + columnDefinition).collect(Collectors.joining(", "));
+        return "ALTER TABLE `" + tableName + "` " + alertTableDDL + ";";
+    }
+
+    List<String> getColumnDefinitions(ColumnInfo[] tableInfo);
 
 
     /**

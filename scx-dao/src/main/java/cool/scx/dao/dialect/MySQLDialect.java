@@ -7,7 +7,6 @@ import com.mysql.cj.jdbc.ClientPreparedStatement;
 import com.mysql.cj.jdbc.MysqlDataSource;
 import cool.scx.dao.Dialect;
 import cool.scx.dao.mapping.ColumnInfo;
-import cool.scx.dao.mapping.TableInfo;
 
 import javax.sql.DataSource;
 import java.sql.Driver;
@@ -121,9 +120,8 @@ public class MySQLDialect implements Dialect {
     }
 
     @Override
-    public List<String> getColumnDefinitions(TableInfo<?> tableInfo) {
+    public List<String> getColumnDefinitions(ColumnInfo[] columnInfos) {
         var createTableDDL = new ArrayList<String>();
-        var columnInfos = tableInfo.columnInfos();
         for (var columnInfo : columnInfos) {
             var normalDDL = initNormalDDL(columnInfo);
             createTableDDL.add(normalDDL);

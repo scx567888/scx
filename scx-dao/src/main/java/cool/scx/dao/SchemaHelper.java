@@ -1,6 +1,8 @@
 package cool.scx.dao;
 
+import cool.scx.dao.mapping.ColumnInfo;
 import cool.scx.dao.mapping.TableInfo;
+import cool.scx.dao.schema.DataBaseMetaData;
 import cool.scx.dao.schema.SchemaVerifyResult;
 import cool.scx.sql.BeanBuilder;
 import cool.scx.sql.SQL;
@@ -73,8 +75,8 @@ public final class SchemaHelper {
             var existingColumn = getTableAllColumnNames(con, databaseName, tableInfo.tableName());
             if (existingColumn != null) {
                 //获取不存在的字段
-                var nonExistentColumnNames = Stream.of(tableInfo.columnInfos()).filter(c -> !existingColumn.contains(c.columnName())).toList();
-                if (nonExistentColumnNames.size() > 0) {
+                var nonExistentColumnNames = Stream.of(tableInfo.columnInfos()).filter(c -> !existingColumn.contains(c.columnName())).toArray(ColumnInfo[]::new);
+                if (nonExistentColumnNames.length > 0) {
                     var alertTableDDL = dialect.getAlertTableDDL(nonExistentColumnNames, tableInfo.tableName());
                     SQLRunner.execute(con, SQL.ofNormal(alertTableDDL));
                 }
@@ -133,64 +135,14 @@ public final class SchemaHelper {
     }
 
     public static TableInfo<?>[] getTableInfoFromDataSource(String databaseName, DataSource dataSource) throws SQLException {
+        var mapListHandler = new MapListHandler();
         try (var con = dataSource.getConnection()) {
-            var dbMetaData = con.getMetaData();
-            ResultSet tables = dbMetaData.getTables(databaseName, databaseName, null, new String[]{"TABLE"});
-            var beanHandler = new BeanListHandler<>(BeanBuilder.of(_Table.class));
-
-            var apply = beanHandler.apply(tables);
-            for (var c : apply) {
-                var nowColumns = dbMetaData.getColumns(databaseName, databaseName, c.TABLE_NAME, null);
-                List<Map<String, Object>> apply1 = new MapListHandler().apply(nowColumns);
-                System.out.println();
-            }
-            var tableInfos = new ArrayList<>();
-//            for (Map<String, Object> stringObjectMap : apply) {
-//                System.out.println(stringObjectMap);
-//                tableInfos.add(new PhysicsTableInfo());
-//            }
+            var n=new DataBaseMetaData(con.getMetaData());
             System.out.println();
         }
 
 //        var nowTable = dbMetaData.getTables(databaseName, databaseName, tableName, new String[]{"TABLE"});
         return null;
     }
-
-    record _Table(String TABLE_CAT, String TABLE_NAME, String SELF_REFERENCING_COL_NAME, String TABLE_SCHEM,
-                  String TYPE_SCHEM, String TYPE_CAT, String TABLE_TYPE, String REMARKS, String REF_GENERATION,
-                  String TYPE_NAME) {
-
-    }
-
-
-    record _Column(
-            String SCOPE_TABLE,
-            String TABLE_CAT,
-            Integer BUFFER_LENGTH,
-            String IS_NULLABLE,
-            String TABLE_NAME,
-            String COLUMN_DEF,
-            String SCOPE_CATALOG,
-            String TABLE_SCHEM,
-            String COLUMN_NAME,
-            Integer NULLABLE,
-            String REMARKS,
-            Integer DECIMAL_DIGITS,
-            Integer NUM_PREC_RADIX,
-            Integer SQL_DATETIME_SUB,
-            String IS_GENERATEDCOLUMN,
-            String IS_AUTOINCREMENT,
-            Integer SQL_DATA_TYPE,
-            Integer CHAR_OCTET_LENGTH,
-            Integer ORDINAL_POSITION,
-            String SCOPE_SCHEMA,
-            String SOURCE_DATA_TYPE,
-            Integer DATA_TYPE,
-            String TYPE_NAME,
-            Integer COLUMN_SIZE
-    ) {
-
-    }
-
 
 }

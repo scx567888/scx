@@ -2,7 +2,6 @@ package cool.scx.dao.dialect;
 
 import cool.scx.dao.Dialect;
 import cool.scx.dao.mapping.ColumnInfo;
-import cool.scx.dao.mapping.TableInfo;
 import org.sqlite.SQLiteDataSource;
 import org.sqlite.core.CorePreparedStatement;
 import org.sqlite.core.CoreStatement;
@@ -108,10 +107,8 @@ public class SQLiteDialect implements Dialect {
     }
 
     @Override
-    public List<String> getColumnDefinitions(TableInfo<?> tableInfo) {
+    public List<String> getColumnDefinitions(ColumnInfo[] columnInfos) {
         var columnDefinitions = new ArrayList<String>();
-        var columnInfos = tableInfo.columnInfos();
-        var tableName = tableInfo.tableName();
         for (var columnInfo : columnInfos) {
             var normalDDL = getColumnDefinition(columnInfo);
             columnDefinitions.add(normalDDL);
@@ -121,23 +118,6 @@ public class SQLiteDialect implements Dialect {
             columnDefinitions.addAll(List.of(specialDDL));
         }
         return columnDefinitions;
-    }
-
-
-    @Override
-    public String getAlertTableDDL(List<? extends ColumnInfo> nonExistentColumnNames, String tableName) {
-        var alertTableDDL = new ArrayList<String>();
-        for (var field : nonExistentColumnNames) {
-            var normalDDL = getColumnDefinition(field);
-            alertTableDDL.add("ADD " + normalDDL);
-        }
-        for (var s : nonExistentColumnNames) {
-            var specialDDL = initSpecialDDL(s);
-            for (var s1 : specialDDL) {
-                alertTableDDL.add("ADD " + s1);
-            }
-        }
-        return "ALTER TABLE `" + tableName + "` " + String.join(", ", alertTableDDL) + ";";
     }
 
     @Override
