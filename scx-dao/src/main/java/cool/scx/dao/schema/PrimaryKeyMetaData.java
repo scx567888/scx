@@ -1,19 +1,15 @@
 package cool.scx.dao.schema;
 
-import java.sql.DatabaseMetaData;
+public record PrimaryKeyMetaData(String columnName, _PrimaryKey _primaryKey) {
 
-public class PrimaryKeyMetaData {
-
-    private final TableMetaData._PrimaryKey _primaryKey;
-    private final String columnName;
-
-    public PrimaryKeyMetaData(TableMetaData tableMetaData, DatabaseMetaData dbMetaData, TableMetaData._PrimaryKey primaryKey) {
-        this.columnName = primaryKey.COLUMN_NAME();
-        this._primaryKey = primaryKey;
+    public static PrimaryKeyMetaData of(_PrimaryKey _primaryKey) {
+        var columnName = _primaryKey.COLUMN_NAME();
+        return new PrimaryKeyMetaData(columnName, _primaryKey);
     }
 
-    public String columnName() {
-        return columnName;
+    public record _PrimaryKey(String TABLE_CAT, String TABLE_SCHEM, String TABLE_NAME, String COLUMN_NAME,
+                              Short KEY_SEQ, String PK_NAME) {
+
     }
 
 }

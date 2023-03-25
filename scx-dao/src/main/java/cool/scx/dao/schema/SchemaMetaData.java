@@ -9,53 +9,28 @@ import java.util.List;
 
 import static cool.scx.sql.ResultHandler.ofBeanList;
 
-public class SchemaMetaData {
+public record SchemaMetaData(String schemaName, TableMetaData[] tables) {
 
-    private static final ResultHandler<List<_Table>> handler = ofBeanList(_Table.class);
-    private final TableMetaData[] tables;
-    private final String schemaName;
-    private final CatalogMetaData catalog;
+    private static final ResultHandler<List<TableMetaData._Table>> TABLE_LIST_HANDLER = ofBeanList(TableMetaData._Table.class);
 
-    public SchemaMetaData(CatalogMetaData catalog, DatabaseMetaData dbMetaData, String schemaName) {
-        this.catalog = catalog;
-        this.schemaName = schemaName;
-        this.tables = initTables(dbMetaData);
+    public static SchemaMetaData of(DatabaseMetaData dbMetaData, String catalog, String schemaName) {
+        var tables = getTables(dbMetaData, catalog, schemaName, null, null);
+        return new SchemaMetaData(schemaName, tables);
     }
 
-    public SchemaMetaData(CatalogMetaData catalog, DatabaseMetaData dbMetaData) {
-        this(catalog, dbMetaData, null);
-    }
-
-    public static List<_Table> getTables(DatabaseMetaData dbMetaData, String catalogName, String schemaName) throws SQLException {
-        return handler.apply(dbMetaData.getTables(catalogName, schemaName, null, null));
-    }
-
-    private TableMetaData[] initTables(DatabaseMetaData dbMetaData) {
+    public static TableMetaData[] getTables(DatabaseMetaData dbMetaData, String catalog, String schemaPattern, String tableNamePattern, String types[]) {
         try {
-            var tables = getTables(dbMetaData, this.catalog.catalogName(), this.schemaName);
+            var tables = TABLE_LIST_HANDLER.apply(dbMetaData.getTables(catalog, schemaPattern, tableNamePattern, types));
             return tables.stream()
-                    .map(table -> new TableMetaData(this, dbMetaData, table))
+                    .map(table -> TableMetaData.of(dbMetaData, table))
                     .toArray(TableMetaData[]::new);
-        } catch (SQLException e) {
-            return new TableMetaData[]{};
+        } catch (SQLException ignored) {
+
         }
+        return new TableMetaData[]{};
     }
 
-    public TableMetaData[] tables() {
-        return tables;
-    }
-
-    public CatalogMetaData catalog() {
-        return catalog;
-    }
-
-    public String schemaName() {
-        return schemaName;
-    }
-
-    public record _Table(String TABLE_CAT, String TABLE_NAME, String SELF_REFERENCING_COL_NAME, String TABLE_SCHEM,
-                         String TYPE_SCHEM, String TYPE_CAT, String TABLE_TYPE, String REMARKS, String REF_GENERATION,
-                         String TYPE_NAME) {
+    public record _Schema(String TABLE_SCHEM, String TABLE_CATALOG) {
 
     }
 
