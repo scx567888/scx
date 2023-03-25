@@ -9,8 +9,8 @@ public class ColumnMetaData {
     private final String columnName;
     private final String typeName;
     private final Integer columnSize;
-    private final boolean isNullable;
-    private final boolean isAutoincrement;
+    private final Boolean isNullable;
+    private final Boolean isAutoincrement;
     private final TableMetaData._Column _column;
     private final String remarks;
 
@@ -32,4 +32,21 @@ public class ColumnMetaData {
     public String typeName() {
         return typeName;
     }
+
+    public Integer columnSize() {
+        return columnSize;
+    }
+
+    public Boolean isAutoincrement() {
+        return isAutoincrement;
+    }
+
+    public Boolean isNullable() {
+        return isNullable;
+    }
+
+    public String remarks() {
+        return remarks;
+    }
+
 }

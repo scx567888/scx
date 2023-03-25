@@ -28,7 +28,7 @@ public class SchemaMetaData {
 
     private TableMetaData[] initTables(DatabaseMetaData dbMetaData) {
         try {
-            var tables = handler.apply(dbMetaData.getTables(this.catalog.catalogName(), this.schemaName, null, new String[]{"TABLE"}));
+            var tables = handler.apply(dbMetaData.getTables(this.catalog.catalogName(), this.schemaName, null, null));
             return tables.stream()
                     .map(table -> new TableMetaData(this, dbMetaData, table))
                     .toArray(TableMetaData[]::new);

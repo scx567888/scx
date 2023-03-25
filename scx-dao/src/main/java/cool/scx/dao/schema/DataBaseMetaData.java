@@ -21,9 +21,13 @@ public class DataBaseMetaData {
     private static CatalogMetaData[] initCatalogs(DatabaseMetaData dbMetaData) {
         try {
             var catalogs = handler.apply(dbMetaData.getCatalogs());
-            return catalogs.stream()
-                    .map(catalog -> new CatalogMetaData(dbMetaData, catalog.TABLE_CAT))
-                    .toArray(CatalogMetaData[]::new);
+            if (catalogs.size() > 0) {
+                return catalogs.stream()
+                        .map(catalog -> new CatalogMetaData(dbMetaData, catalog.TABLE_CAT))
+                        .toArray(CatalogMetaData[]::new);
+            } else {
+                return new CatalogMetaData[]{new CatalogMetaData(dbMetaData)};
+            }
         } catch (SQLException e) {
             return new CatalogMetaData[]{new CatalogMetaData(dbMetaData)};
         }

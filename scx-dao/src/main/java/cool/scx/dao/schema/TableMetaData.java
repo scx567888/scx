@@ -33,7 +33,7 @@ public class TableMetaData {
         try {
             var primaryKeys = handler2.apply(dbMetaData.getPrimaryKeys(this.schema.catalog().catalogName(), this.schema.schemaName(), this.tableName));
             return primaryKeys.stream()
-                    .map(primaryKey -> new PrimaryKeyMetaData(this, dbMetaData, primaryKeys))
+                    .map(primaryKey -> new PrimaryKeyMetaData(this, dbMetaData, primaryKey))
                     .toArray(PrimaryKeyMetaData[]::new);
         } catch (SQLException e) {
             return new PrimaryKeyMetaData[]{};
