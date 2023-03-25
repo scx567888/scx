@@ -8,80 +8,44 @@ import java.util.List;
 
 import static cool.scx.sql.ResultHandler.ofBeanList;
 
-public class TableMetaData {
+public record TableMetaData(String tableName, String remarks, ColumnMetaData[] columns,
+                            PrimaryKeyMetaData[] primaryKeys, _Table _table) {
 
-    private static final ResultHandler<List<_Column>> handler = ofBeanList(_Column.class);
-    private static final ResultHandler<List<_PrimaryKey>> handler2 = ofBeanList(_PrimaryKey.class);
+    private static final ResultHandler<List<ColumnMetaData._Column>> COLUMN_LIST_HANDLER = ofBeanList(ColumnMetaData._Column.class);
 
-    private final String tableName;
-    private final ColumnMetaData[] columns;
-    private final SchemaMetaData schema;
-    private final SchemaMetaData._Table _table;
-    private final String remarks;
-    private final PrimaryKeyMetaData[] primaryKeys;
+    private static final ResultHandler<List<PrimaryKeyMetaData._PrimaryKey>> PRIMARY_KEY_LIST_HANDLER = ofBeanList(PrimaryKeyMetaData._PrimaryKey.class);
 
-    public TableMetaData(SchemaMetaData schema, DatabaseMetaData dbMetaData, SchemaMetaData._Table table) {
-        this.schema = schema;
-        this._table = table;
-        this.tableName = table.TABLE_NAME();
-        this.remarks = table.REMARKS();
-        this.columns = initColumns(dbMetaData);
-        this.primaryKeys = initPrimaryKeys(dbMetaData);
-    }
-
-    private PrimaryKeyMetaData[] initPrimaryKeys(DatabaseMetaData dbMetaData) {
+    public static ColumnMetaData[] getColumns(DatabaseMetaData dbMetaData, String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern) {
         try {
-            var primaryKeys = handler2.apply(dbMetaData.getPrimaryKeys(this.schema.catalog().catalogName(), this.schema.schemaName(), this.tableName));
-            return primaryKeys.stream()
-                    .map(primaryKey -> new PrimaryKeyMetaData(this, dbMetaData, primaryKey))
-                    .toArray(PrimaryKeyMetaData[]::new);
-        } catch (SQLException e) {
-            return new PrimaryKeyMetaData[]{};
-        }
-    }
-
-    private ColumnMetaData[] initColumns(DatabaseMetaData dbMetaData) {
-        try {
-            var columns = handler.apply(dbMetaData.getColumns(this.schema.catalog().catalogName(), this.schema.schemaName(), this.tableName, null));
-            return columns.stream()
-                    .map(column -> new ColumnMetaData(this, dbMetaData, column))
-                    .toArray(ColumnMetaData[]::new);
+            var columns = COLUMN_LIST_HANDLER.apply(dbMetaData.getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern));
+            return columns.stream().map(ColumnMetaData::of).toArray(ColumnMetaData[]::new);
         } catch (SQLException e) {
             return new ColumnMetaData[]{};
         }
     }
 
-    public ColumnMetaData[] columns() {
-        return columns;
+    public static PrimaryKeyMetaData[] getPrimaryKeys(DatabaseMetaData dbMetaData, String catalog, String schemaPattern, String tableNamePattern) {
+        try {
+            var primaryKeys = PRIMARY_KEY_LIST_HANDLER.apply(dbMetaData.getPrimaryKeys(catalog, schemaPattern, tableNamePattern));
+            return primaryKeys.stream().map(PrimaryKeyMetaData::of).toArray(PrimaryKeyMetaData[]::new);
+        } catch (SQLException e) {
+            return new PrimaryKeyMetaData[]{};
+        }
     }
 
-    public PrimaryKeyMetaData[] primaryKeys() {
-        return primaryKeys;
+    public static TableMetaData of(DatabaseMetaData dbMetaData, _Table _table) {
+        var catalog = _table.TABLE_CAT();
+        var schema = _table.TABLE_SCHEM();
+        var tableName = _table.TABLE_NAME();
+        var remarks = _table.REMARKS();
+        var columns = getColumns(dbMetaData, catalog, schema, tableName, null);
+        var primaryKeys = getPrimaryKeys(dbMetaData, catalog, schema, tableName);
+        return new TableMetaData(tableName, remarks, columns, primaryKeys, _table);
     }
 
-    public String remarks() {
-        return remarks;
-    }
-
-    public String tableName() {
-        return tableName;
-    }
-
-    public record _PrimaryKey(String TABLE_CAT, String TABLE_SCHEM, String TABLE_NAME, String COLUMN_NAME,
-                              Short KEY_SEQ,
-                              String PK_NAME) {
-
-    }
-
-    public record _Column(String SCOPE_TABLE, String TABLE_CAT, Integer BUFFER_LENGTH, String IS_NULLABLE,
-                          String TABLE_NAME,
-                          String COLUMN_DEF, String SCOPE_CATALOG, String TABLE_SCHEM, String COLUMN_NAME,
-                          Integer NULLABLE,
-                          String REMARKS, Integer DECIMAL_DIGITS, Integer NUM_PREC_RADIX, Integer SQL_DATETIME_SUB,
-                          String IS_GENERATEDCOLUMN, String IS_AUTOINCREMENT, Integer SQL_DATA_TYPE,
-                          Integer CHAR_OCTET_LENGTH,
-                          Integer ORDINAL_POSITION, String SCOPE_SCHEMA, String SOURCE_DATA_TYPE, Integer DATA_TYPE,
-                          String TYPE_NAME, Integer COLUMN_SIZE) {
+    public record _Table(String TABLE_CAT, String TABLE_NAME, String SELF_REFERENCING_COL_NAME, String TABLE_SCHEM,
+                         String TYPE_SCHEM, String TYPE_CAT, String TABLE_TYPE, String REMARKS, String REF_GENERATION,
+                         String TYPE_NAME) {
 
     }
 
