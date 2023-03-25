@@ -2,22 +2,19 @@ package cool.scx.dao;
 
 import cool.scx.dao.mapping.ColumnInfo;
 import cool.scx.dao.mapping.TableInfo;
+import cool.scx.dao.schema.CatalogMetaData;
 import cool.scx.dao.schema.DataBaseMetaData;
 import cool.scx.dao.schema.SchemaVerifyResult;
-import cool.scx.sql.BeanBuilder;
 import cool.scx.sql.SQL;
 import cool.scx.sql.SQLRunner;
-import cool.scx.sql.result_handler.BeanListHandler;
 import cool.scx.sql.result_handler.MapListHandler;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.Driver;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.stream.Stream;
 
@@ -137,12 +134,18 @@ public final class SchemaHelper {
     public static TableInfo<?>[] getTableInfoFromDataSource(String databaseName, DataSource dataSource) throws SQLException {
         var mapListHandler = new MapListHandler();
         try (var con = dataSource.getConnection()) {
-            var n=new DataBaseMetaData(con.getMetaData());
+            var n = new CatalogMetaData(con.getMetaData(), databaseName);
             System.out.println();
         }
 
 //        var nowTable = dbMetaData.getTables(databaseName, databaseName, tableName, new String[]{"TABLE"});
         return null;
+    }
+
+    public static DataBaseMetaData getDataBaseMetaData(DataSource dataSource) throws SQLException {
+        try (var con = dataSource.getConnection()) {
+            return new DataBaseMetaData(con.getMetaData());
+        }
     }
 
 }

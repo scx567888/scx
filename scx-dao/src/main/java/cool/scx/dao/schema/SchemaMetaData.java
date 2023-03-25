@@ -37,7 +37,7 @@ public class SchemaMetaData {
         }
     }
 
-    TableMetaData[] tables() {
+    public TableMetaData[] tables() {
         return tables;
     }
 

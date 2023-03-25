@@ -7,7 +7,6 @@ import javax.sql.DataSource;
 import java.sql.Driver;
 import java.sql.SQLType;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -57,7 +56,7 @@ public interface Dialect {
      * @param nonExistentColumnNames a
      * @param tableName              a
      */
-    default String getAlertTableDDL(ColumnInfo[] nonExistentColumnNames, String tableName){
+    default String getAlertTableDDL(ColumnInfo[] nonExistentColumnNames, String tableName) {
         var columnDefinitions = getColumnDefinitions(nonExistentColumnNames);
         var alertTableDDL = columnDefinitions.stream().map(columnDefinition -> "ADD " + columnDefinition).collect(Collectors.joining(", "));
         return "ALTER TABLE `" + tableName + "` " + alertTableDDL + ";";

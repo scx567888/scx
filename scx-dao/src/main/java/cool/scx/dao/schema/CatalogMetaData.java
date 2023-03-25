@@ -11,19 +11,19 @@ import static cool.scx.sql.ResultHandler.ofBeanList;
 public class CatalogMetaData {
 
     private static final ResultHandler<List<_Schema>> handler = ofBeanList(_Schema.class);
-    private final SchemaMetaData[] schemaInfos;
+    private final SchemaMetaData[] schemas;
     private final String catalogName;
 
     public CatalogMetaData(DatabaseMetaData dbMetaData, String catalogName) {
         this.catalogName = catalogName;
-        this.schemaInfos = initSchemaInfos(dbMetaData);
+        this.schemas = initSchemas(dbMetaData);
     }
 
     public CatalogMetaData(DatabaseMetaData dbMetaData) {
         this(dbMetaData, null);
     }
 
-    private SchemaMetaData[] initSchemaInfos(DatabaseMetaData dbMetaData) {
+    private SchemaMetaData[] initSchemas(DatabaseMetaData dbMetaData) {
         try {
             var schemas = handler.apply(dbMetaData.getSchemas(this.catalogName, null));
             if (schemas.size() > 0) {
@@ -37,8 +37,8 @@ public class CatalogMetaData {
         }
     }
 
-    SchemaMetaData[] schemaInfos() {
-        return schemaInfos;
+    public SchemaMetaData[] schemas() {
+        return schemas;
     }
 
     public String catalogName() {

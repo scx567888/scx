@@ -10,6 +10,7 @@ public class ColumnMetaData {
     private final String typeName;
     private final Integer columnSize;
     private final boolean isNullable;
+    private final boolean isAutoincrement;
     private final TableMetaData._Column _column;
     private final String remarks;
 
@@ -20,7 +21,15 @@ public class ColumnMetaData {
         this.columnSize = column.COLUMN_SIZE();
         this.remarks = column.REMARKS();
         this.isNullable = Objects.equals("YES", column.IS_NULLABLE());
+        this.isAutoincrement = Objects.equals("YES", column.IS_AUTOINCREMENT());
         this._column = column;
     }
 
+    public String columnName() {
+        return columnName;
+    }
+
+    public String typeName() {
+        return typeName;
+    }
 }

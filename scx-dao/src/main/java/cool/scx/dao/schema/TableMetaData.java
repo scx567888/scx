@@ -68,7 +68,7 @@ public class TableMetaData {
     }
 
     record _PrimaryKey(String TABLE_CAT, String TABLE_SCHEM, String TABLE_NAME, String COLUMN_NAME, Short KEY_SEQ,
-                   String PK_NAME) {
+                       String PK_NAME) {
 
     }
 
