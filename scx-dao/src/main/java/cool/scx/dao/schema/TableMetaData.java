@@ -67,17 +67,21 @@ public class TableMetaData {
         return tableName;
     }
 
-    record _PrimaryKey(String TABLE_CAT, String TABLE_SCHEM, String TABLE_NAME, String COLUMN_NAME, Short KEY_SEQ,
-                       String PK_NAME) {
+    public record _PrimaryKey(String TABLE_CAT, String TABLE_SCHEM, String TABLE_NAME, String COLUMN_NAME,
+                              Short KEY_SEQ,
+                              String PK_NAME) {
 
     }
 
-    record _Column(String SCOPE_TABLE, String TABLE_CAT, Integer BUFFER_LENGTH, String IS_NULLABLE, String TABLE_NAME,
-                   String COLUMN_DEF, String SCOPE_CATALOG, String TABLE_SCHEM, String COLUMN_NAME, Integer NULLABLE,
-                   String REMARKS, Integer DECIMAL_DIGITS, Integer NUM_PREC_RADIX, Integer SQL_DATETIME_SUB,
-                   String IS_GENERATEDCOLUMN, String IS_AUTOINCREMENT, Integer SQL_DATA_TYPE, Integer CHAR_OCTET_LENGTH,
-                   Integer ORDINAL_POSITION, String SCOPE_SCHEMA, String SOURCE_DATA_TYPE, Integer DATA_TYPE,
-                   String TYPE_NAME, Integer COLUMN_SIZE) {
+    public record _Column(String SCOPE_TABLE, String TABLE_CAT, Integer BUFFER_LENGTH, String IS_NULLABLE,
+                          String TABLE_NAME,
+                          String COLUMN_DEF, String SCOPE_CATALOG, String TABLE_SCHEM, String COLUMN_NAME,
+                          Integer NULLABLE,
+                          String REMARKS, Integer DECIMAL_DIGITS, Integer NUM_PREC_RADIX, Integer SQL_DATETIME_SUB,
+                          String IS_GENERATEDCOLUMN, String IS_AUTOINCREMENT, Integer SQL_DATA_TYPE,
+                          Integer CHAR_OCTET_LENGTH,
+                          Integer ORDINAL_POSITION, String SCOPE_SCHEMA, String SOURCE_DATA_TYPE, Integer DATA_TYPE,
+                          String TYPE_NAME, Integer COLUMN_SIZE) {
 
     }
 

@@ -20,7 +20,7 @@ public class DataBaseMetaData {
 
     private static CatalogMetaData[] initCatalogs(DatabaseMetaData dbMetaData) {
         try {
-            var catalogs = handler.apply(dbMetaData.getCatalogs());
+            var catalogs = getCatalogs(dbMetaData);
             if (catalogs.size() > 0) {
                 return catalogs.stream()
                         .map(catalog -> new CatalogMetaData(dbMetaData, catalog.TABLE_CAT))
@@ -33,11 +33,15 @@ public class DataBaseMetaData {
         }
     }
 
+    public static List<_Catalog> getCatalogs(DatabaseMetaData dbMetaData) throws SQLException {
+        return handler.apply(dbMetaData.getCatalogs());
+    }
+
     public CatalogMetaData[] catalogs() {
         return catalogs;
     }
 
-    record _Catalog(String TABLE_CAT) {
+    public record _Catalog(String TABLE_CAT) {
 
     }
 

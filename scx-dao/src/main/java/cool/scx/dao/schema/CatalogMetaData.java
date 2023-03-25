@@ -23,9 +23,13 @@ public class CatalogMetaData {
         this(dbMetaData, null);
     }
 
+    public static List<_Schema> getSchemas(DatabaseMetaData dbMetaData, String catalogName) throws SQLException {
+        return handler.apply(dbMetaData.getSchemas(catalogName, null));
+    }
+
     private SchemaMetaData[] initSchemas(DatabaseMetaData dbMetaData) {
         try {
-            var schemas = handler.apply(dbMetaData.getSchemas(this.catalogName, null));
+            var schemas = getSchemas(dbMetaData, this.catalogName);
             if (schemas.size() > 0) {
                 return schemas.stream()
                         .map(schema -> new SchemaMetaData(this, dbMetaData, schema.TABLE_SCHEM))
@@ -45,7 +49,7 @@ public class CatalogMetaData {
         return catalogName;
     }
 
-    record _Schema(String TABLE_SCHEM, String TABLE_CATALOG) {
+    public record _Schema(String TABLE_SCHEM, String TABLE_CATALOG) {
 
     }
 

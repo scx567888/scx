@@ -26,9 +26,13 @@ public class SchemaMetaData {
         this(catalog, dbMetaData, null);
     }
 
+    public static List<_Table> getTables(DatabaseMetaData dbMetaData, String catalogName, String schemaName) throws SQLException {
+        return handler.apply(dbMetaData.getTables(catalogName, schemaName, null, null));
+    }
+
     private TableMetaData[] initTables(DatabaseMetaData dbMetaData) {
         try {
-            var tables = handler.apply(dbMetaData.getTables(this.catalog.catalogName(), this.schemaName, null, null));
+            var tables = getTables(dbMetaData, this.catalog.catalogName(), this.schemaName);
             return tables.stream()
                     .map(table -> new TableMetaData(this, dbMetaData, table))
                     .toArray(TableMetaData[]::new);
@@ -49,9 +53,9 @@ public class SchemaMetaData {
         return schemaName;
     }
 
-    record _Table(String TABLE_CAT, String TABLE_NAME, String SELF_REFERENCING_COL_NAME, String TABLE_SCHEM,
-                  String TYPE_SCHEM, String TYPE_CAT, String TABLE_TYPE, String REMARKS, String REF_GENERATION,
-                  String TYPE_NAME) {
+    public record _Table(String TABLE_CAT, String TABLE_NAME, String SELF_REFERENCING_COL_NAME, String TABLE_SCHEM,
+                         String TYPE_SCHEM, String TYPE_CAT, String TABLE_TYPE, String REMARKS, String REF_GENERATION,
+                         String TYPE_NAME) {
 
     }
 
