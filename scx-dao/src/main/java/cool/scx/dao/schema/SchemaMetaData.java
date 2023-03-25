@@ -9,16 +9,20 @@ import java.util.List;
 
 import static cool.scx.sql.ResultHandler.ofBeanList;
 
-public record SchemaMetaData(String schemaName, TableMetaData[] tables) {
+public record SchemaMetaData(String catalog, String schemaName, TableMetaData[] tables) {
 
     private static final ResultHandler<List<TableMetaData._Table>> TABLE_LIST_HANDLER = ofBeanList(TableMetaData._Table.class);
 
     public static SchemaMetaData of(DatabaseMetaData dbMetaData, String catalog, String schemaName) {
         var tables = getTables(dbMetaData, catalog, schemaName, null, null);
-        return new SchemaMetaData(schemaName, tables);
+        return new SchemaMetaData(catalog, schemaName, tables);
     }
 
-    public static TableMetaData[] getTables(DatabaseMetaData dbMetaData, String catalog, String schemaPattern, String tableNamePattern, String types[]) {
+    public static SchemaMetaData of(DatabaseMetaData dbMetaData, _Schema _schema) {
+        return of(dbMetaData, _schema.TABLE_CATALOG(), _schema.TABLE_SCHEM());
+    }
+
+    public static TableMetaData[] getTables(DatabaseMetaData dbMetaData, String catalog, String schemaPattern, String tableNamePattern, String[] types) {
         try {
             var tables = TABLE_LIST_HANDLER.apply(dbMetaData.getTables(catalog, schemaPattern, tableNamePattern, types));
             return tables.stream()

@@ -8,7 +8,7 @@ import java.util.List;
 
 import static cool.scx.sql.ResultHandler.ofBeanList;
 
-public record TableMetaData(String tableName, String remarks, ColumnMetaData[] columns,
+public record TableMetaData(String catalog, String schema, String tableName, String remarks, ColumnMetaData[] columns,
                             PrimaryKeyMetaData[] primaryKeys, _Table _table) {
 
     private static final ResultHandler<List<ColumnMetaData._Column>> COLUMN_LIST_HANDLER = ofBeanList(ColumnMetaData._Column.class);
@@ -40,7 +40,7 @@ public record TableMetaData(String tableName, String remarks, ColumnMetaData[] c
         var remarks = _table.REMARKS();
         var columns = getColumns(dbMetaData, catalog, schema, tableName, null);
         var primaryKeys = getPrimaryKeys(dbMetaData, catalog, schema, tableName);
-        return new TableMetaData(tableName, remarks, columns, primaryKeys, _table);
+        return new TableMetaData(catalog, schema, tableName, remarks, columns, primaryKeys, _table);
     }
 
     public record _Table(String TABLE_CAT, String TABLE_NAME, String SELF_REFERENCING_COL_NAME, String TABLE_SCHEM,

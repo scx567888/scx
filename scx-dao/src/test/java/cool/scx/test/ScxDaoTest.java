@@ -1,9 +1,11 @@
 package cool.scx.test;
 
-import com.mysql.cj.jdbc.MysqlDataSource;
 import com.mysql.cj.xdevapi.Session;
 import com.mysql.cj.xdevapi.SessionFactory;
-import cool.scx.dao.*;
+import cool.scx.dao.Query;
+import cool.scx.dao.SchemaHelper;
+import cool.scx.dao.SelectFilter;
+import cool.scx.dao.UpdateFilter;
 import cool.scx.dao.impl.MySQLDao;
 import cool.scx.dao.impl.MySQLXDao;
 import cool.scx.dao.impl.OldMySQLDao;
@@ -13,7 +15,6 @@ import cool.scx.dao.where.WhereOption;
 import cool.scx.logging.ScxLoggerFactory;
 import cool.scx.logging.ScxLoggingLevel;
 import cool.scx.sql.SQLRunner;
-import org.sqlite.SQLiteDataSource;
 import org.testng.annotations.Test;
 
 import javax.sql.DataSource;
@@ -21,12 +22,10 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-import static com.mysql.cj.conf.PropertyKey.*;
 import static cool.scx.sql.SQL.ofNormal;
+import static cool.scx.test.SchemaHelperTest.*;
 
 public class ScxDaoTest {
-
-    private static final String databaseName = "scx_dao_test";
 
     static {
         ScxLoggerFactory.defaultConfig().setLevel(ScxLoggingLevel.DEBUG);
@@ -38,7 +37,8 @@ public class ScxDaoTest {
 
     @Test
     public static void test1() throws SQLException {
-        test1_1(getMySQLDataSource());
+        DataSource mySQLDataSource = getMySQLDataSource();
+        test1_1(mySQLDataSource);
         test1_1(getSQLiteDataSource());
     }
 
@@ -92,26 +92,6 @@ public class ScxDaoTest {
         System.out.println("MySQLX 查询 : " + a13.size());
         var a23 = mySQLXDao.select(new Query().whereSQL("( age > 400 or ", WhereBody.equal("name", "小明1"), " )"), SelectFilter.ofExcluded());
         System.out.println("MySQLX 查询 : " + a23.size());
-    }
-
-    private static DataSource getMySQLDataSource() {
-        var mysqlDataSource = new MysqlDataSource();
-        mysqlDataSource.setServerName("127.0.0.1");
-        mysqlDataSource.setDatabaseName(databaseName);
-        mysqlDataSource.setUser("root");
-        mysqlDataSource.setPassword("root");
-        mysqlDataSource.setPort(3306);
-        // 设置参数值
-        mysqlDataSource.getProperty(allowMultiQueries).setValue(true);
-        mysqlDataSource.getProperty(rewriteBatchedStatements).setValue(true);
-        mysqlDataSource.getProperty(createDatabaseIfNotExist).setValue(true);
-        return Spy.wrap(mysqlDataSource);
-    }
-
-    private static DataSource getSQLiteDataSource() {
-        SQLiteDataSource sqLiteDataSource = new SQLiteDataSource();
-        sqLiteDataSource.setUrl("jdbc:sqlite:aaa.sqlite");
-        return Spy.wrap(sqLiteDataSource);
     }
 
 }

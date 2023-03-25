@@ -23,8 +23,9 @@ import static com.mysql.cj.conf.PropertyKey.*;
 
 public class SchemaHelperTest {
 
-    private static final Path TempSQLite;
-    static Path AppRoot;
+    public static final Path TempSQLite;
+    public static final String databaseName = "scx_dao_test";
+    public static Path AppRoot;
 
     static {
         try {
@@ -42,6 +43,7 @@ public class SchemaHelperTest {
         mysqlDataSource.setUser("root");
         mysqlDataSource.setPassword("root");
         mysqlDataSource.setPort(3306);
+        mysqlDataSource.setDatabaseName(databaseName);
         // 设置参数值
         mysqlDataSource.getProperty(allowMultiQueries).setValue(true);
         mysqlDataSource.getProperty(rewriteBatchedStatements).setValue(true);
@@ -63,6 +65,7 @@ public class SchemaHelperTest {
     @Test
     public static void test1(DataSource dataSource) throws SQLException, JsonProcessingException {
         var dataBaseMetaData = SchemaHelper.getDataBaseMetaData(dataSource);
+        var metaData = SchemaHelper.getTableMetaData(dataSource,"mysql",null,null,null);
         for (CatalogMetaData catalog : dataBaseMetaData.catalogs()) {
             System.out.println(catalog.catalogName() + " : ");
             System.out.println("{");

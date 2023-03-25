@@ -8,41 +8,27 @@ import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.List;
 
-public class DataBaseMetaData {
+public record DataBaseMetaData(CatalogMetaData[] catalogs) {
 
-    private static final ResultHandler<List<_Catalog>> handler = new BeanListHandler<>(BeanBuilder.of(_Catalog.class));
+    private static final ResultHandler<List<CatalogMetaData._Catalog>> CATALOG_LIST_HANDLER = new BeanListHandler<>(BeanBuilder.of(CatalogMetaData._Catalog.class));
 
-    private final CatalogMetaData[] catalogs;
-
-    public DataBaseMetaData(DatabaseMetaData dbMetaData) {
-        this.catalogs = initCatalogs(dbMetaData);
+    public static DataBaseMetaData of(DatabaseMetaData dbMetaData) {
+        var catalogs = initCatalogs(dbMetaData);
+        return new DataBaseMetaData(catalogs);
     }
 
     private static CatalogMetaData[] initCatalogs(DatabaseMetaData dbMetaData) {
         try {
-            var catalogs = getCatalogs(dbMetaData);
+            var catalogs = CATALOG_LIST_HANDLER.apply(dbMetaData.getCatalogs());
             if (catalogs.size() > 0) {
                 return catalogs.stream()
-                        .map(catalog -> new CatalogMetaData(dbMetaData, catalog.TABLE_CAT))
+                        .map(catalog -> CatalogMetaData.of(dbMetaData, catalog))
                         .toArray(CatalogMetaData[]::new);
-            } else {
-                return new CatalogMetaData[]{new CatalogMetaData(dbMetaData)};
             }
-        } catch (SQLException e) {
-            return new CatalogMetaData[]{new CatalogMetaData(dbMetaData)};
+        } catch (SQLException ignored) {
+
         }
-    }
-
-    public static List<_Catalog> getCatalogs(DatabaseMetaData dbMetaData) throws SQLException {
-        return handler.apply(dbMetaData.getCatalogs());
-    }
-
-    public CatalogMetaData[] catalogs() {
-        return catalogs;
-    }
-
-    public record _Catalog(String TABLE_CAT) {
-
+        return new CatalogMetaData[]{CatalogMetaData.of(dbMetaData, (String) null)};
     }
 
 }

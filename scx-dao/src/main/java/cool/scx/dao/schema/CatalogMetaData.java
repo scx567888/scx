@@ -8,48 +8,34 @@ import java.util.List;
 
 import static cool.scx.sql.ResultHandler.ofBeanList;
 
-public class CatalogMetaData {
+public record CatalogMetaData(String catalogName, SchemaMetaData[] schemas) {
 
-    private static final ResultHandler<List<_Schema>> handler = ofBeanList(_Schema.class);
-    private final SchemaMetaData[] schemas;
-    private final String catalogName;
+    private static final ResultHandler<List<SchemaMetaData._Schema>> SCHEMA_LIST_HANDLER = ofBeanList(SchemaMetaData._Schema.class);
 
-    public CatalogMetaData(DatabaseMetaData dbMetaData, String catalogName) {
-        this.catalogName = catalogName;
-        this.schemas = initSchemas(dbMetaData);
+    public static CatalogMetaData of(DatabaseMetaData dbMetaData, _Catalog _catalog) {
+        return of(dbMetaData, _catalog.TABLE_CAT());
     }
 
-    public CatalogMetaData(DatabaseMetaData dbMetaData) {
-        this(dbMetaData, null);
+    public static CatalogMetaData of(DatabaseMetaData dbMetaData, String catalogName) {
+        var schemas = getSchemas(dbMetaData, catalogName, null);
+        return new CatalogMetaData(catalogName, schemas);
     }
 
-    public static List<_Schema> getSchemas(DatabaseMetaData dbMetaData, String catalogName) throws SQLException {
-        return handler.apply(dbMetaData.getSchemas(catalogName, null));
-    }
-
-    private SchemaMetaData[] initSchemas(DatabaseMetaData dbMetaData) {
+    public static SchemaMetaData[] getSchemas(DatabaseMetaData dbMetaData, String catalog, String schemaPattern) {
         try {
-            var schemas = getSchemas(dbMetaData, this.catalogName);
+            var schemas = SCHEMA_LIST_HANDLER.apply(dbMetaData.getSchemas(catalog, schemaPattern));
             if (schemas.size() > 0) {
                 return schemas.stream()
-                        .map(schema -> new SchemaMetaData(this, dbMetaData, schema.TABLE_SCHEM))
+                        .map(schema -> SchemaMetaData.of(dbMetaData, schema))
                         .toArray(SchemaMetaData[]::new);
             }
-            return new SchemaMetaData[]{new SchemaMetaData(this, dbMetaData)};
-        } catch (SQLException e) {
-            return new SchemaMetaData[]{new SchemaMetaData(this, dbMetaData)};
+        } catch (SQLException ignored) {
+
         }
+        return new SchemaMetaData[]{SchemaMetaData.of(dbMetaData, catalog, null)};
     }
 
-    public SchemaMetaData[] schemas() {
-        return schemas;
-    }
-
-    public String catalogName() {
-        return catalogName;
-    }
-
-    public record _Schema(String TABLE_SCHEM, String TABLE_CATALOG) {
+    public record _Catalog(String TABLE_CAT) {
 
     }
 

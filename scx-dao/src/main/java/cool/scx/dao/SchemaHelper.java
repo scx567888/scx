@@ -2,9 +2,7 @@ package cool.scx.dao;
 
 import cool.scx.dao.mapping.ColumnInfo;
 import cool.scx.dao.mapping.TableInfo;
-import cool.scx.dao.schema.CatalogMetaData;
-import cool.scx.dao.schema.DataBaseMetaData;
-import cool.scx.dao.schema.SchemaVerifyResult;
+import cool.scx.dao.schema.*;
 import cool.scx.sql.SQL;
 import cool.scx.sql.SQLRunner;
 import cool.scx.sql.result_handler.MapListHandler;
@@ -95,6 +93,8 @@ public final class SchemaHelper {
      * @throws java.sql.SQLException s
      */
     public static List<String> getTableAllColumnNames(Connection con, String databaseName, String tableName) throws SQLException {
+//        List<TableMetaData._Column> columns = TableMetaData.getColumns(con.getMetaData(), databaseName, databaseName, tableName);
+
         var dbMetaData = con.getMetaData();
         var nowTable = dbMetaData.getTables(databaseName, databaseName, tableName, new String[]{"TABLE"});
         if (nowTable.next()) { //有这个表
@@ -117,7 +117,6 @@ public final class SchemaHelper {
      * @throws java.sql.SQLException e
      */
     public static boolean checkNeedFixTable(TableInfo<?> tableInfo, String databaseName, DataSource dataSource) throws SQLException {
-        getTableInfoFromDataSource(databaseName, dataSource);
         try (var con = dataSource.getConnection()) {
             var existingColumn = getTableAllColumnNames(con, databaseName, tableInfo.tableName());
             //这个表不存在
@@ -134,17 +133,21 @@ public final class SchemaHelper {
     public static TableInfo<?>[] getTableInfoFromDataSource(String databaseName, DataSource dataSource) throws SQLException {
         var mapListHandler = new MapListHandler();
         try (var con = dataSource.getConnection()) {
-            var n = new CatalogMetaData(con.getMetaData(), databaseName);
+            var n = CatalogMetaData.of(con.getMetaData(), databaseName);
             System.out.println();
         }
-
-//        var nowTable = dbMetaData.getTables(databaseName, databaseName, tableName, new String[]{"TABLE"});
         return null;
     }
 
     public static DataBaseMetaData getDataBaseMetaData(DataSource dataSource) throws SQLException {
         try (var con = dataSource.getConnection()) {
-            return new DataBaseMetaData(con.getMetaData());
+            return DataBaseMetaData.of(con.getMetaData());
+        }
+    }
+
+    public static TableMetaData[] getTableMetaData(DataSource dataSource, String catalog, String schemaPattern, String tableNamePattern, String[] types) throws SQLException {
+        try (var con = dataSource.getConnection()) {
+            return SchemaMetaData.getTables(con.getMetaData(), catalog, schemaPattern, tableNamePattern, types);
         }
     }
 

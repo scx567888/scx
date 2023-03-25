@@ -122,7 +122,13 @@ public class SQLiteDialect implements Dialect {
 
     @Override
     public String getDataTypeDefinitionByClass(Class<?> javaType) {
-        return "integer";
+        if (javaType==Integer.class){
+            return "INTEGER";
+        } else if (javaType == String.class) {
+            return "TEXT";
+        }else{
+            return  "BLOB";
+        }
     }
 
     @Override
