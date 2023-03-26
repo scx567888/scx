@@ -5,7 +5,6 @@ import com.mysql.cj.NativeQueryBindings;
 import com.mysql.cj.PreparedQuery;
 import com.mysql.cj.jdbc.ClientPreparedStatement;
 import com.mysql.cj.jdbc.MysqlDataSource;
-import cool.scx.dao.Dialect;
 import cool.scx.dao.mapping.ColumnInfo;
 
 import javax.sql.DataSource;

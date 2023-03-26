@@ -1,6 +1,10 @@
 package cool.scx.dao.impl;
 
-import cool.scx.dao.*;
+import cool.scx.dao.BaseDao;
+import cool.scx.dao.Query;
+import cool.scx.dao.SelectFilter;
+import cool.scx.dao.UpdateFilter;
+import cool.scx.dao.dialect.Dialect;
 import cool.scx.dao.mapping.ColumnInfo;
 import cool.scx.dao.mapping.TableInfo;
 import cool.scx.sql.BeanBuilder;

@@ -1,5 +1,6 @@
 package cool.scx.dao;
 
+import cool.scx.dao.dialect.Dialect;
 import cool.scx.dao.mapping.ColumnInfo;
 import cool.scx.sql.SQL;
 
