@@ -84,11 +84,6 @@ public class MySQLXDaoColumnInfo implements ColumnInfo {
     }
 
     @Override
-    public String tableName() {
-        return null;
-    }
-
-    @Override
     public String columnName() {
         return this.columnName;
     }

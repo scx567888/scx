@@ -109,16 +109,6 @@ public class OldMySQLTableInfo implements TableInfo<OldMySQLDaoColumnInfo> {
         return "scx_" + CaseUtils.toSnake(clazz.getSimpleName());
     }
 
-    @Override
-    public String catalog() {
-        return null;
-    }
-
-    @Override
-    public String schema() {
-        return null;
-    }
-
     /**
      * {@inheritDoc}
      * <p>

@@ -2,7 +2,9 @@ package cool.scx.sql.mapping;
 
 public interface ColumnMapping {
 
-    String tableName();
+    default String tableName() {
+        return null;
+    }
 
     String columnName();
 

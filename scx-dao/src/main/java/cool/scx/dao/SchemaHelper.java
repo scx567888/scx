@@ -7,12 +7,9 @@ import cool.scx.sql.SQL;
 import cool.scx.sql.SQLRunner;
 import cool.scx.sql.mapping.ColumnMapping;
 import cool.scx.sql.mapping.TableMapping;
-import cool.scx.sql.meta_data.ColumnMetaData;
-import cool.scx.sql.meta_data.SchemaMetaData;
 import cool.scx.sql.meta_data.TableMetaData;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -20,7 +17,7 @@ import java.util.List;
 import java.util.ServiceLoader;
 
 /**
- * 架构管理工具
+ * 架构管理工具 todo 待重构
  */
 public final class SchemaHelper {
 
@@ -104,24 +101,6 @@ public final class SchemaHelper {
     }
 
     /**
-     * 根据连接 获取数据库中所有的字段
-     *
-     * @param con          连接
-     * @param databaseName 数据库名称
-     * @param tableName    表名称
-     * @return 如果表存在返回所有字段的名称 否则返回 null
-     * @throws java.sql.SQLException s
-     */
-    public static ColumnMetaData[] getTableAllColumnNames(Connection con, String databaseName, String tableName) throws SQLException {
-        var schemaMetaData = new SchemaMetaData(databaseName, databaseName).refreshTables(con.getMetaData());
-        for (TableMetaData table : schemaMetaData.tables()) {
-
-        }
-        var tableMetaData = new TableMetaData(databaseName, databaseName, tableName, null, null).refreshColumns(con.getMetaData()).refreshPrimaryKeys(con.getMetaData());
-        return tableMetaData.columns();
-    }
-
-    /**
      * 检查是否需要修复表
      *
      * @param tableInfo a
@@ -130,26 +109,28 @@ public final class SchemaHelper {
      */
     public static boolean checkNeedFixTable(TableInfo<?> tableInfo, String databaseName, DataSource dataSource) throws SQLException {
         try (var con = dataSource.getConnection()) {
-            TableMetaData[] tableMetaDataList = MetaDataHelper.initTables(con.getMetaData(), databaseName, databaseName, tableInfo.tableName(), null);
-            var tableMetaData = new TableMetaData(databaseName, databaseName, tableInfo.tableName(), null, null).refreshColumns(con.getMetaData()).refreshPrimaryKeys(con.getMetaData());
-            var existingColumn = getTableAllColumnNames(con, databaseName, tableInfo.tableName());
-            //这个表不存在
-            if (existingColumn != null) {
+            var map = MetaDataHelper.toTablesMap(MetaDataHelper.initTables(con.getMetaData(), databaseName, databaseName, tableInfo.tableName(), null));
+            var tableMetaData = map.get(tableInfo.tableName());
+            if (tableMetaData != null) {
+                tableMetaData.refreshColumns(con.getMetaData()).refreshPrimaryKeys(con.getMetaData());
+                var verify = verify(tableMetaData, tableInfo);
                 //获取不存在的字段
-//                var nonExistentColumnNames = Stream.of(tableInfo.columnInfos()).filter(c -> !existingColumn.contains(c.columnName())).toList();
-//                return nonExistentColumnNames.size() != 0;
-                return false;
-            } else {
+                var needAdd = verify.getNeedAdd();
+                if (needAdd.length > 0) {
+                    return true;
+                }
+            } else {// 没有这个表
                 return true;
             }
         }
+        return false;
     }
 
 
     /**
      * todo
      */
-    public class SchemaVerifyResult {
+    public static class SchemaVerifyResult {
 
         private final ColumnInfo[] needAdd;
         private final ArrayList<ColumnMapping> needRemove;

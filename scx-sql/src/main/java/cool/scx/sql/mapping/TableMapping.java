@@ -2,9 +2,13 @@ package cool.scx.sql.mapping;
 
 public interface TableMapping<C extends ColumnMapping, P extends PrimaryKeyMapping> {
 
-    String catalog();
+    default String catalog() {
+        return null;
+    }
 
-    String schema();
+    default String schema() {
+        return null;
+    }
 
     String tableName();
 
