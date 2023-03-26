@@ -14,4 +14,6 @@ public interface ColumnMapping {
 
     Boolean isAutoincrement();
 
+    String defaultValue();
+
 }

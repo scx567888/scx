@@ -74,7 +74,7 @@ public class MetaDataTest {
                         System.out.println("        " + table.tableName() + " : ");
                         System.out.println("        {");
                         for (var column : table.columns()) {
-                            System.out.println("            " + column.columnName() + " " + column.typeName() + "(" + column.columnSize() + ")" + (column.isNullable() ? " NULL" : " NOT NULL") + (column.isAutoincrement() ? " AUTOINCREMENT" : "") + " " + column.remarks());
+                            System.out.println("            " + column.columnName() + " " + column.typeName() + "(" + column.columnSize() + ")" + (column.isNullable() ? " NULL" : " NOT NULL") + (column.isAutoincrement() ? " AUTOINCREMENT" : "") + " DEFAULT : " + column.defaultValue() + ", REMARKS" + column.remarks());
                         }
                         for (var primaryKey : table.primaryKeys()) {
                             System.out.println("            " + primaryKey.columnName() + " primaryKeys ");
@@ -104,7 +104,7 @@ public class MetaDataTest {
                         System.out.println("        " + table.tableName() + " : ");
                         System.out.println("        {");
                         for (var column : table.refreshColumns(con.getMetaData()).columns()) {
-                            System.out.println("            " + column.columnName() + " " + column.typeName() + "(" + column.columnSize() + ")" + (column.isNullable() ? " NULL" : " NOT NULL") + (column.isAutoincrement() ? " AUTOINCREMENT" : "") + " " + column.remarks());
+                            System.out.println("            " + column.columnName() + " " + column.typeName() + "(" + column.columnSize() + ")" + (column.isNullable() ? " NULL" : " NOT NULL") + (column.isAutoincrement() ? " AUTOINCREMENT" : "") + " DEFAULT : " + column.defaultValue() + ", REMARKS" + column.remarks());
                         }
                         for (var primaryKey : table.refreshPrimaryKeys(con.getMetaData()).primaryKeys()) {
                             System.out.println("            " + primaryKey.columnName() + " primaryKeys ");

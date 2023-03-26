@@ -109,6 +109,13 @@ public final class MetaDataHelper {
         return map;
     }
 
+    public static Map<String, TableMetaData> toTablesMap(TableMetaData[] columns) {
+        var map = new HashMap<String, TableMetaData>();
+        for (var column : columns) {
+            map.put(column.tableName(), column);
+        }
+        return map;
+    }
 
     public record _Catalog(String TABLE_CAT) {
 
@@ -147,7 +154,7 @@ public final class MetaDataHelper {
         public ColumnMetaData toColumnMetaData() {
             var isNullable = Objects.equals("YES", IS_NULLABLE());
             var isAutoincrement = Objects.equals("YES", IS_AUTOINCREMENT());
-            return new ColumnMetaData(TABLE_NAME, COLUMN_NAME, TYPE_NAME, COLUMN_SIZE, isNullable, isAutoincrement, REMARKS, this);
+            return new ColumnMetaData(TABLE_NAME, COLUMN_NAME, TYPE_NAME, COLUMN_SIZE, isNullable, isAutoincrement, COLUMN_DEF, REMARKS, this);
         }
 
     }
