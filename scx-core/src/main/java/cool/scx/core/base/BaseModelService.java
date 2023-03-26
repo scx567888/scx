@@ -40,7 +40,7 @@ public class BaseModelService<Entity extends BaseModel> {
         if (genericSuperclass instanceof ParameterizedType) {
             var typeArguments = ((ParameterizedType) genericSuperclass).getActualTypeArguments();
             var entityClass = (Class<Entity>) typeArguments[0];
-            this.baseDao = new SQLDao<>(new AnnotationConfigTableInfo(entityClass), entityClass, ScxContext.dataSource());
+            this.baseDao = new SQLDao<>(entityClass, new AnnotationConfigTableInfo(entityClass), ScxContext.dataSource());
         } else {
             throw new IllegalArgumentException(this.getClass().getName() + " : 必须设置泛型参数 !!!");
         }
@@ -52,7 +52,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @param entityClass 继承自 {@link BaseModel} 的实体类 class
      */
     public BaseModelService(Class<Entity> entityClass) {
-        this.baseDao = new SQLDao<>(new AnnotationConfigTableInfo(entityClass), entityClass, ScxContext.dataSource());
+        this.baseDao = new SQLDao<>(entityClass, new AnnotationConfigTableInfo(entityClass), ScxContext.dataSource());
     }
 
     /**

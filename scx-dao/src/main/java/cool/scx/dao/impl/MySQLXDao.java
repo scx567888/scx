@@ -22,7 +22,7 @@ public class MySQLXDao<Entity> implements BaseDao<Entity, String> {
     private final Class<Entity> entityClass;
     private final MySQLXDaoTableInfo tableInfo;
 
-    public MySQLXDao(String tableName, Class<Entity> entityClass, Session session) {
+    public MySQLXDao(Class<Entity> entityClass, String tableName, Session session) {
         this.entityClass = entityClass;
         this.session = session;
         this.schema = session.getDefaultSchema();

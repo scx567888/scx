@@ -86,7 +86,7 @@ public class ScxDaoTest {
         //根据 tableInfo 生成表结构
         SchemaHelper.fixTable(userTableInfo, databaseName, dataSource);
         //开始使用
-        var userDao = new SQLDao<>(userTableInfo, User.class, dataSource);
+        var userDao = new SQLDao<>(User.class, userTableInfo, dataSource);
         var list = new ArrayList<User>();
 
         for (int i = 0; i < 999; i = i + 1) {
@@ -110,7 +110,7 @@ public class ScxDaoTest {
 
         SessionFactory xFactory = new SessionFactory();
         Session session1 = xFactory.getSession("mysqlx://127.0.0.1:33060/" + databaseName + "?user=root&password=root");
-        var mySQLXDao = new MySQLXDao<>(userTableInfo.tableName() + "_doc", User.class, session1);
+        var mySQLXDao = new MySQLXDao<>(User.class, userTableInfo.tableName() + "_doc", session1);
         var newIds3 = mySQLXDao.insertBatch(list, UpdateFilter.ofExcluded());
         System.out.println("MySQLX 插入 : " + newIds3);
         var a13 = mySQLXDao.select(new Query().greaterThan("age", 300), SelectFilter.ofExcluded());

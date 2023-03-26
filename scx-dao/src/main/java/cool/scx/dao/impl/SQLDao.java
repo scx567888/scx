@@ -63,9 +63,9 @@ public class SQLDao<Entity> implements BaseDao<Entity, Long> {
      * @param entityClass a
      * @param dataSource  a
      */
-    public SQLDao(TableInfo<?> tableInfo, Class<Entity> entityClass, DataSource dataSource) {
-        this.tableInfo = tableInfo;
+    public SQLDao(Class<Entity> entityClass, TableInfo<?> tableInfo, DataSource dataSource) {
         this.entityClass = entityClass;
+        this.tableInfo = tableInfo;
         this.sqlRunner = new SQLRunner(dataSource);
         this.dialect = findDialect(dataSource);
         this.entityBeanListHandler = new BeanListHandler<>(BeanBuilder.of(this.entityClass, (field) -> {
