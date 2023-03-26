@@ -152,9 +152,9 @@ public final class MetaDataHelper {
                           String TYPE_NAME, Integer COLUMN_SIZE) {
 
         public ColumnMetaData toColumnMetaData() {
-            var isNullable = Objects.equals("YES", IS_NULLABLE());
+            var isNullable = Objects.equals("NO", IS_NULLABLE());
             var isAutoincrement = Objects.equals("YES", IS_AUTOINCREMENT());
-            return new ColumnMetaData(TABLE_NAME, COLUMN_NAME, TYPE_NAME, COLUMN_SIZE, isNullable, isAutoincrement, COLUMN_DEF, REMARKS, this);
+            return new ColumnMetaData(TABLE_NAME, COLUMN_NAME, TYPE_NAME, COLUMN_SIZE, isNullable, isAutoincrement, false, COLUMN_DEF, null, REMARKS, this);
         }
 
     }
