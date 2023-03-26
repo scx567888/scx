@@ -142,6 +142,12 @@ public class SQLiteDialect implements Dialect {
         return null;
     }
 
+    @Override
+    public String getLimitSQL(String sql, Integer rowCount, Integer offset) {
+        var limitClauses = rowCount == null ? "" : offset == null || offset == 0 ? " LIMIT " + rowCount : " LIMIT " + offset + "," + rowCount;
+        return sql + limitClauses;
+    }
+
     /**
      * 当前列对象通常的 DDL 如设置 字段名 类型 是否可以为空 默认值等 (建表语句片段 , 需和 specialDDL 一起使用才完整)
      */

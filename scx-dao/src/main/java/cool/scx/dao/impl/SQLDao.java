@@ -1,9 +1,6 @@
 package cool.scx.dao.impl;
 
-import cool.scx.dao.BaseDao;
-import cool.scx.dao.Query;
-import cool.scx.dao.SelectFilter;
-import cool.scx.dao.UpdateFilter;
+import cool.scx.dao.*;
 import cool.scx.dao.mapping.ColumnInfo;
 import cool.scx.dao.mapping.TableInfo;
 import cool.scx.sql.BeanBuilder;
@@ -14,6 +11,7 @@ import cool.scx.sql.result_handler.BeanListHandler;
 import cool.scx.sql.result_handler.SingleValueHandler;
 import cool.scx.util.RandomUtils;
 
+import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -21,6 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static cool.scx.dao.SQLBuilder.*;
+import static cool.scx.dao.SchemaHelper.findDialect;
 
 /**
  * 最基本的 可以实现 实体类 CRUD 的 DAO
@@ -28,7 +27,7 @@ import static cool.scx.dao.SQLBuilder.*;
  * @author scx567888
  * @version 0.1.3
  */
-public class MySQLDao<Entity> implements BaseDao<Entity, Long> {
+public class SQLDao<Entity> implements BaseDao<Entity, Long> {
 
     /**
      * 实体类对应的 table 结构
@@ -55,17 +54,20 @@ public class MySQLDao<Entity> implements BaseDao<Entity, Long> {
      */
     protected final ResultHandler<Long> countResultHandler;
 
+    protected final Dialect dialect;
+
     /**
      * a
      *
      * @param tableInfo   因为其使用 SQL.ofPlaceholder 的方式进行参数填充 所以必须是 BaseColumnInfo 才可以
      * @param entityClass a
-     * @param sqlRunner   a
+     * @param dataSource  a
      */
-    public MySQLDao(TableInfo<?> tableInfo, Class<Entity> entityClass, SQLRunner sqlRunner) {
+    public SQLDao(TableInfo<?> tableInfo, Class<Entity> entityClass, DataSource dataSource) {
         this.tableInfo = tableInfo;
         this.entityClass = entityClass;
-        this.sqlRunner = sqlRunner;
+        this.sqlRunner = new SQLRunner(dataSource);
+        this.dialect = findDialect(dataSource);
         this.entityBeanListHandler = new BeanListHandler<>(BeanBuilder.of(this.entityClass, (field) -> {
             var columnInfo = this.tableInfo.getColumn(field.getName());
             return columnInfo == null ? null : columnInfo.columnName();
@@ -96,7 +98,7 @@ public class MySQLDao<Entity> implements BaseDao<Entity, Long> {
         var insertColumnInfos = updateFilter.filter(entity, tableInfo);
         var insertColumns = Arrays.stream(insertColumnInfos).map(ColumnInfo::columnName).toArray(String[]::new);
         var insertValues = Arrays.stream(insertColumnInfos).map(columnInfo -> "?").toArray(String[]::new);
-        var sql = Insert(tableInfo.tableName(), insertColumns)
+        var sql = Insert(this.dialect, tableInfo.tableName(), insertColumns)
                 .Values(insertValues)
                 .GetSQL();
         var objectArray = Arrays.stream(insertColumnInfos).map(c -> c.javaFieldValue(entity)).toArray();
@@ -135,7 +137,7 @@ public class MySQLDao<Entity> implements BaseDao<Entity, Long> {
         }
         var insertColumns = Arrays.stream(insertColumnInfos).map(ColumnInfo::columnName).toArray(String[]::new);
         var insertValues = Arrays.stream(insertColumnInfos).map(c -> "?").toArray(String[]::new);
-        var sql = Insert(tableInfo.tableName(), insertColumns)
+        var sql = Insert(this.dialect, tableInfo.tableName(), insertColumns)
                 .Values(insertValues)
                 .GetSQL();
         return SQL.ofPlaceholder(sql, objectArrayList);
@@ -194,7 +196,7 @@ public class MySQLDao<Entity> implements BaseDao<Entity, Long> {
      *      ));
      *  }</pre>
      * <br>
-     * 注意 !!! 若同时使用 limit 和 in/not in 请使用 {@link MySQLDao#buildSelectSQLWithAlias(Query, SelectFilter)}
+     * 注意 !!! 若同时使用 limit 和 in/not in 请使用 {@link SQLDao#buildSelectSQLWithAlias(Query, SelectFilter)}
      *
      * @param query        聚合查询参数对象
      * @param selectFilter 查询字段过滤器
@@ -206,7 +208,7 @@ public class MySQLDao<Entity> implements BaseDao<Entity, Long> {
         var whereParamsAndWhereClauses = query.where().getWhereParamsAndWhereClauses(tableInfo);
         var groupByColumns = query.groupBy().getGroupByColumns(tableInfo);
         var orderByClauses = query.orderBy().getOrderByClauses(tableInfo);
-        var sql = Select(selectColumns)
+        var sql = Select(this.dialect, selectColumns)
                 .From(tableInfo.tableName())
                 .Where(whereParamsAndWhereClauses.whereClause())
                 .GroupBy(groupByColumns)
@@ -234,14 +236,14 @@ public class MySQLDao<Entity> implements BaseDao<Entity, Long> {
             var whereParamsAndWhereClauses = query.where().getWhereParamsAndWhereClauses(tableInfo);
             var groupByColumns = query.groupBy().getGroupByColumns(tableInfo);
             var orderByClauses = query.orderBy().getOrderByClauses(tableInfo);
-            var sql0 = Select(selectColumns)
+            var sql0 = Select(this.dialect, selectColumns)
                     .From(tableInfo.tableName())
                     .Where(whereParamsAndWhereClauses.whereClause())
                     .GroupBy(groupByColumns)
                     .OrderBy(orderByClauses)
                     .Limit(query.pagination().offset(), query.pagination().rowCount())
                     .GetSQL();
-            var sql = Select("*").From("(" + sql0 + ")").GetSQL();
+            var sql = Select(this.dialect, "*").From("(" + sql0 + ")").GetSQL();
             return SQL.ofPlaceholder(sql + " AS " + tableInfo.tableName() + "_" + RandomUtils.randomString(6), whereParamsAndWhereClauses.whereParams());
         }
     }
@@ -266,7 +268,7 @@ public class MySQLDao<Entity> implements BaseDao<Entity, Long> {
     private SQL buildCountSQL(Query query) {
         var whereParamsAndWhereClauses = query.where().getWhereParamsAndWhereClauses(tableInfo);
         var groupByColumns = query.groupBy().getGroupByColumns(tableInfo);
-        var sql = Select("COUNT(*) AS count")
+        var sql = Select(this.dialect, "COUNT(*) AS count")
                 .From(tableInfo.tableName())
                 .Where(whereParamsAndWhereClauses.whereClause())
                 .GroupBy(groupByColumns)
@@ -302,7 +304,7 @@ public class MySQLDao<Entity> implements BaseDao<Entity, Long> {
         var updateSetColumnInfos = updateFilter.filter(entity, tableInfo);
         var updateSetColumns = Arrays.stream(updateSetColumnInfos).map(c -> c.columnName() + " = ?").toArray(String[]::new);
         var whereParamsAndWhereClauses = query.where().getWhereParamsAndWhereClauses(tableInfo);
-        var sql = Update(tableInfo.tableName())
+        var sql = Update(this.dialect, tableInfo.tableName())
                 .Set(updateSetColumns)
                 .Where(whereParamsAndWhereClauses.whereClause())
                 .GetSQL();
@@ -333,7 +335,7 @@ public class MySQLDao<Entity> implements BaseDao<Entity, Long> {
             throw new IllegalArgumentException("删除数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
         }
         var whereParamsAndWhereClauses = query.where().getWhereParamsAndWhereClauses(tableInfo);
-        var sql = Delete(tableInfo.tableName())
+        var sql = Delete(this.dialect, tableInfo.tableName())
                 .Where(whereParamsAndWhereClauses.whereClause())
                 .GetSQL();
         return SQL.ofPlaceholder(sql, whereParamsAndWhereClauses.whereParams());

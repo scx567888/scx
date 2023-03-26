@@ -18,6 +18,8 @@ public final class SQLBuilder {
      */
     private final SQLBuilderType sqlBuilderType;
 
+    private final Dialect dialect;
+
     /**
      * a
      */
@@ -73,7 +75,8 @@ public final class SQLBuilder {
      *
      * @param sqlBuilderType cool.scx.sql 类型
      */
-    private SQLBuilder(SQLBuilderType sqlBuilderType) {
+    private SQLBuilder(Dialect dialect, SQLBuilderType sqlBuilderType) {
+        this.dialect = dialect;
         this.sqlBuilderType = sqlBuilderType;
     }
 
@@ -83,8 +86,8 @@ public final class SQLBuilder {
      * @param selectColumns a {@link String} object
      * @return a {@link SQLBuilder} object
      */
-    public static SQLBuilder Select(String... selectColumns) {
-        return new SQLBuilder(SQLBuilderType.SELECT)._Select(selectColumns);
+    public static SQLBuilder Select(Dialect dialect, String... selectColumns) {
+        return new SQLBuilder(dialect, SQLBuilderType.SELECT)._Select(selectColumns);
     }
 
     /**
@@ -94,8 +97,8 @@ public final class SQLBuilder {
      * @param insertColumns a {@link String} object
      * @return a {@link SQLBuilder} object
      */
-    public static SQLBuilder Insert(String tableName, String... insertColumns) {
-        return new SQLBuilder(SQLBuilderType.INSERT)._Insert(tableName, insertColumns);
+    public static SQLBuilder Insert(Dialect dialect, String tableName, String... insertColumns) {
+        return new SQLBuilder(dialect, SQLBuilderType.INSERT)._Insert(tableName, insertColumns);
     }
 
     /**
@@ -105,8 +108,8 @@ public final class SQLBuilder {
      * @param insertColumnInfos a {@link java.lang.reflect.Field} object
      * @return a {@link SQLBuilder} object
      */
-    public static SQLBuilder Insert(String tableName, ColumnInfo... insertColumnInfos) {
-        return Insert(tableName, Arrays.stream(insertColumnInfos).map(ColumnInfo::columnName).toArray(String[]::new));
+    public static SQLBuilder Insert(Dialect dialect, String tableName, ColumnInfo... insertColumnInfos) {
+        return Insert(dialect, tableName, Arrays.stream(insertColumnInfos).map(ColumnInfo::columnName).toArray(String[]::new));
     }
 
     /**
@@ -115,8 +118,8 @@ public final class SQLBuilder {
      * @param tableName a {@link String} object
      * @return a {@link SQLBuilder} object
      */
-    public static SQLBuilder Update(String tableName) {
-        return new SQLBuilder(SQLBuilderType.UPDATE)._Update(tableName);
+    public static SQLBuilder Update(Dialect dialect, String tableName) {
+        return new SQLBuilder(dialect, SQLBuilderType.UPDATE)._Update(tableName);
     }
 
     /**
@@ -125,8 +128,8 @@ public final class SQLBuilder {
      * @param tableName a {@link String} object
      * @return a {@link SQLBuilder} object
      */
-    public static SQLBuilder Delete(String tableName) {
-        return new SQLBuilder(SQLBuilderType.DELETE)._Delete(tableName);
+    public static SQLBuilder Delete(Dialect dialect, String tableName) {
+        return new SQLBuilder(dialect, SQLBuilderType.DELETE)._Delete(tableName);
     }
 
     /**
@@ -323,7 +326,8 @@ public final class SQLBuilder {
      * @return s
      */
     private String GetSelectSQL() {
-        return "SELECT " + String.join(", ", selectColumns) + " FROM " + tableName + getWhereSQL() + getGroupBySQL() + getOrderBySQL() + getLimitSQL();
+        var sql = "SELECT " + String.join(", ", selectColumns) + " FROM " + tableName + getWhereSQL() + getGroupBySQL() + getOrderBySQL();
+        return dialect.getLimitSQL(sql, rowCount, offset);
     }
 
     /**
@@ -333,10 +337,6 @@ public final class SQLBuilder {
      */
     private String getWhereSQL() {
         return whereClauses != null && whereClauses.length > 0 ? " WHERE " + String.join(" AND ", whereClauses) : "";
-    }
-
-    private String getLimitSQL() {
-        return rowCount == null ? "" : offset == null || offset == 0 ? " LIMIT " + rowCount : " LIMIT " + offset + "," + rowCount;
     }
 
     private String getGroupBySQL() {

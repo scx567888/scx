@@ -159,6 +159,12 @@ public class MySQLDialect implements Dialect {
         return mysqlType;
     }
 
+    @Override
+    public String getLimitSQL(String sql, Integer rowCount, Integer offset) {
+        var limitClauses = rowCount == null ? "" : offset == null || offset == 0 ? " LIMIT " + rowCount : " LIMIT " + offset + "," + rowCount;
+        return sql + limitClauses;
+    }
+
     public String getDataTypeDefinition(ColumnInfo column) {
         if (notEmpty(column.type())) {
             return column.type();
