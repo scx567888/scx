@@ -10,10 +10,39 @@ public interface ColumnMapping {
 
     Integer columnSize();
 
-    Boolean isNullable();
+    /**
+     * 非 Null
+     *
+     * @return 是否 非 Null
+     */
+    boolean notNull();
 
-    Boolean isAutoincrement();
+    /**
+     * 自动递增
+     *
+     * @return 是否 自动递增
+     */
+    boolean autoIncrement();
 
+    /**
+     * 唯一
+     *
+     * @return 是否唯一
+     */
+    boolean unique();
+
+    /**
+     * 默认值
+     *
+     * @return 默认值
+     */
     String defaultValue();
+
+    /**
+     * 更新时
+     *
+     * @return 更新时
+     */
+    String onUpdateValue();
 
 }
