@@ -4,12 +4,12 @@ import cool.scx.dao.BaseDao;
 import cool.scx.dao.Query;
 import cool.scx.dao.SelectFilter;
 import cool.scx.dao.UpdateFilter;
+import cool.scx.dao.mapping.ColumnInfo;
+import cool.scx.dao.mapping.TableInfo;
 import cool.scx.sql.BeanBuilder;
 import cool.scx.sql.ResultHandler;
 import cool.scx.sql.SQL;
 import cool.scx.sql.SQLRunner;
-import cool.scx.sql.mapping.ColumnInfo;
-import cool.scx.sql.mapping.TableInfo;
 import cool.scx.sql.result_handler.BeanListHandler;
 import cool.scx.sql.result_handler.SingleValueHandler;
 import cool.scx.util.RandomUtils;
@@ -66,7 +66,10 @@ public class MySQLDao<Entity> implements BaseDao<Entity, Long> {
         this.tableInfo = tableInfo;
         this.entityClass = entityClass;
         this.sqlRunner = sqlRunner;
-        this.entityBeanListHandler = new BeanListHandler<>(BeanBuilder.of(this.entityClass, this.tableInfo));
+        this.entityBeanListHandler = new BeanListHandler<>(BeanBuilder.of(this.entityClass, (field) -> {
+            var columnInfo = this.tableInfo.getColumn(field.getName());
+            return columnInfo == null ? null : columnInfo.columnName();
+        }));
         this.countResultHandler = new SingleValueHandler<>("count", Long.class);
     }
 

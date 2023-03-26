@@ -1,7 +1,7 @@
 package cool.scx.dao;
 
-import cool.scx.sql.mapping.ColumnInfo;
-import cool.scx.sql.mapping.TableInfo;
+import cool.scx.dao.mapping.ColumnInfo;
+import cool.scx.dao.mapping.TableInfo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -125,19 +125,19 @@ public abstract class ColumnInfoFilter<E extends ColumnInfoFilter<E>> {
     public final ColumnInfo[] filter(TableInfo<?> tableInfo) {
         return this.fieldNames.size() == 0 ? switch (this.filterMode) {
             case INCLUDED -> new ColumnInfo[0];
-            case EXCLUDED -> tableInfo.columnInfos();
+            case EXCLUDED -> tableInfo.columns();
         } : switch (this.filterMode) {
             case INCLUDED -> {
                 var list = new ArrayList<ColumnInfo>();
                 for (var fieldName : this.fieldNames) {
-                    list.add(tableInfo.getColumnInfo(fieldName));
+                    list.add(tableInfo.getColumn(fieldName));
                 }
                 yield list.toArray(ColumnInfo[]::new);
             }
             case EXCLUDED -> {
-                var objects = new ArrayList<>(Arrays.asList(tableInfo.columnInfos()));
+                var objects = new ArrayList<>(Arrays.asList(tableInfo.columns()));
                 for (var fieldName : this.fieldNames) {
-                    objects.remove(tableInfo.getColumnInfo(fieldName));
+                    objects.remove(tableInfo.getColumn(fieldName));
                 }
                 yield objects.toArray(ColumnInfo[]::new);
             }

@@ -1,4 +1,4 @@
-package cool.scx.dao.spy;
+package cool.scx.dao;
 
 import cool.scx.dao.spy.wrapper.DataSourceWrapper;
 

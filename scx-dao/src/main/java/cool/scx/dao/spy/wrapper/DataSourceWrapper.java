@@ -1,5 +1,6 @@
 package cool.scx.dao.spy.wrapper;
 
+import cool.scx.dao.SchemaHelper;
 import cool.scx.dao.spy.SpyEventListener;
 import cool.scx.dao.spy.event.LoggingEventListener;
 
@@ -8,18 +9,19 @@ import java.io.PrintWriter;
 import java.sql.*;
 import java.util.logging.Logger;
 
-public class DataSourceWrapper implements DataSource {
+public class DataSourceWrapper extends AbstractWrapper implements DataSource {
 
     private final DataSource dataSource;
     private final SpyEventListener eventListener;
 
     public DataSourceWrapper(DataSource dataSource, SpyEventListener eventListener) {
+        super(dataSource);
         this.dataSource = dataSource;
         this.eventListener = eventListener;
     }
 
     public DataSourceWrapper(DataSource dataSource) {
-        this(dataSource, LoggingEventListener.INSTANCE);
+        this(dataSource, new LoggingEventListener(SchemaHelper.findDialect(dataSource)));
     }
 
     @Override
@@ -69,16 +71,6 @@ public class DataSourceWrapper implements DataSource {
     @Override
     public ShardingKeyBuilder createShardingKeyBuilder() throws SQLException {
         return dataSource.createShardingKeyBuilder();
-    }
-
-    @Override
-    public <T> T unwrap(Class<T> iface) throws SQLException {
-        return dataSource.unwrap(iface);
-    }
-
-    @Override
-    public boolean isWrapperFor(Class<?> iface) throws SQLException {
-        return dataSource.isWrapperFor(iface);
     }
 
 }

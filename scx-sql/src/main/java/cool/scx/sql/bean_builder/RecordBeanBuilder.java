@@ -2,14 +2,15 @@ package cool.scx.sql.bean_builder;
 
 import cool.scx.sql.BeanBuilder;
 import cool.scx.sql.FieldSetter;
-import cool.scx.sql.mapping.TableInfo;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Parameter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.function.Function;
 
 import static cool.scx.sql.bean_builder.NormalBeanBuilder.ofArray;
 import static cool.scx.util.reflect.ConstructorUtils.findRecordConstructor;
@@ -26,15 +27,14 @@ public final class RecordBeanBuilder<T> implements BeanBuilder<T> {
 
     private final FieldSetter[] fieldSetters;
 
-    public RecordBeanBuilder(Class<T> type, TableInfo<?> tableInfo) {
-        var tempFieldSetters = ofArray(type, tableInfo);
+    public RecordBeanBuilder(Class<T> type, Function<Field, String> columnNameMapping) {
         this.constructor = findRecordConstructor(type);
-        this.fieldSetters = sortFieldSetters(this.constructor.getParameters(), tempFieldSetters);
         this.constructor.setAccessible(true);
+        this.fieldSetters = sortFieldSetters(this.constructor.getParameters(), ofArray(type, columnNameMapping));
     }
 
     public RecordBeanBuilder(Class<T> type) {
-        this(type, null);
+        this(type, Field::getName);
     }
 
     /**

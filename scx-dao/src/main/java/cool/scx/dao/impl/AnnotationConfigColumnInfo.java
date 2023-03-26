@@ -1,11 +1,10 @@
 package cool.scx.dao.impl;
 
 import cool.scx.dao.annotation.Column;
-import cool.scx.sql.mapping.ColumnInfo;
+import cool.scx.dao.mapping.ColumnInfo;
 
 import java.lang.reflect.Field;
 
-import static cool.scx.dao.schema.SQLHelper.getMySQLTypeCreateName;
 import static cool.scx.util.CaseUtils.toSnake;
 import static cool.scx.util.StringUtils.notBlank;
 
@@ -37,7 +36,7 @@ public class AnnotationConfigColumnInfo implements ColumnInfo {
         this.javaField = javaField;
         var column = javaField.getAnnotation(Column.class);
         if (column != null) {
-            this.type = notBlank(column.type()) ? column.type() : getMySQLTypeCreateName(javaField.getType());
+            this.type = notBlank(column.type()) ? column.type() : null;
             this.columnName = notBlank(column.columnName()) ? column.columnName() : toSnake(javaField.getName());
             this.needIndex = column.needIndex();
             this.unique = column.unique();
@@ -47,7 +46,7 @@ public class AnnotationConfigColumnInfo implements ColumnInfo {
             this.autoIncrement = column.autoIncrement();
             this.notNull = column.notNull();
         } else {
-            this.type = getMySQLTypeCreateName(javaField.getType());
+            this.type = null;
             this.columnName = toSnake(javaField.getName());
             this.needIndex = false;
             this.unique = false;
@@ -93,6 +92,16 @@ public class AnnotationConfigColumnInfo implements ColumnInfo {
     @Override
     public String columnName() {
         return this.columnName;
+    }
+
+    @Override
+    public String typeName() {
+        return null;
+    }
+
+    @Override
+    public Integer columnSize() {
+        return null;
     }
 
     @Override

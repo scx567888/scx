@@ -1,4 +1,6 @@
-package cool.scx.sql.mapping;
+package cool.scx.dao.mapping;
+
+import cool.scx.sql.mapping.ColumnMapping;
 
 import java.lang.reflect.Field;
 
@@ -8,7 +10,7 @@ import java.lang.reflect.Field;
  * @author scx567888
  * @version 0.1.3
  */
-public interface ColumnInfo {
+public interface ColumnInfo extends ColumnMapping {
 
     Field javaField();
 
@@ -32,35 +34,15 @@ public interface ColumnInfo {
         return javaFieldName();
     }
 
-    default boolean notNull() {
-        return false;
-    }
-
     default boolean primaryKey() {
         return false;
     }
 
-    default boolean autoIncrement() {
-        return false;
-    }
-
-    default String defaultValue() {
-        return null;
-    }
-
-    default String onUpdateValue() {
-        return null;
-    }
-
     /**
-     * 类型  (数据库中的类型 , 目前仅在建表时使用)
+     * 用户指定的类型
      */
     default String type() {
         return "VARCHAR(128)";
-    }
-
-    default boolean unique() {
-        return false;
     }
 
     default boolean needIndex() {

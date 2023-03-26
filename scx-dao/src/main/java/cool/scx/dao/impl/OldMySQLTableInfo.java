@@ -2,8 +2,9 @@ package cool.scx.dao.impl;
 
 import cool.scx.dao.annotation.NoColumn;
 import cool.scx.dao.annotation.Table;
-import cool.scx.sql.mapping.ColumnInfo;
-import cool.scx.sql.mapping.TableInfo;
+import cool.scx.dao.mapping.ColumnInfo;
+import cool.scx.dao.mapping.TableInfo;
+import cool.scx.sql.meta_data.PrimaryKeyMetaData;
 import cool.scx.util.CaseUtils;
 import cool.scx.util.MultiMap;
 import cool.scx.util.StringUtils;
@@ -119,12 +120,17 @@ public class OldMySQLTableInfo implements TableInfo<OldMySQLDaoColumnInfo> {
     }
 
     @Override
-    public OldMySQLDaoColumnInfo[] columnInfos() {
+    public OldMySQLDaoColumnInfo[] columns() {
         return columnInfos;
     }
 
     @Override
-    public OldMySQLDaoColumnInfo getColumnInfo(String javaFieldName) {
+    public PrimaryKeyMetaData[] primaryKeys() {
+        return new PrimaryKeyMetaData[0];
+    }
+
+    @Override
+    public OldMySQLDaoColumnInfo getColumn(String javaFieldName) {
         return columnInfoMap.get(javaFieldName);
     }
 

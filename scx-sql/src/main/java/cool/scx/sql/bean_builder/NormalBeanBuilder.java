@@ -2,13 +2,14 @@ package cool.scx.sql.bean_builder;
 
 import cool.scx.sql.BeanBuilder;
 import cool.scx.sql.FieldSetter;
-import cool.scx.sql.mapping.TableInfo;
 import cool.scx.util.reflect.FieldUtils;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.function.Function;
 
 import static cool.scx.util.reflect.ConstructorUtils.findNoArgsConstructor;
 
@@ -24,33 +25,24 @@ public final class NormalBeanBuilder<T> implements BeanBuilder<T> {
 
     private final FieldSetter[] fieldSetters;
 
-    public NormalBeanBuilder(Class<T> type, TableInfo<?> tableInfo) {
+    public NormalBeanBuilder(Class<T> type, Function<Field, String> columnNameMapping) {
         this.constructor = findNoArgsConstructor(type);
-        this.fieldSetters = ofArray(type, tableInfo);
         this.constructor.setAccessible(true);
+        this.fieldSetters = ofArray(type, columnNameMapping);
     }
 
     public NormalBeanBuilder(Class<T> type) {
-        this(type, null);
+        this(type, Field::getName);
     }
 
-    static FieldSetter[] ofArray(Class<?> type, TableInfo<?> tableInfo) {
+    static FieldSetter[] ofArray(Class<?> type, Function<Field, String> columnNameMapping) {
         var fields = FieldUtils.findFields(type);
         var fieldSetters = new FieldSetter[fields.length];
-        if (tableInfo == null) {
-            for (int i = 0; i < fields.length; i = i + 1) {
-                fieldSetters[i] = new FieldSetter(fields[i]);
-            }
-        } else {
-            for (int i = 0; i < fields.length; i = i + 1) {
-                var columnInfo = tableInfo.getColumnInfo(fields[i].getName());
-                if (columnInfo == null) {
-                    fieldSetters[i] = new FieldSetter(fields[i]);
-                } else {
-                    fieldSetters[i] = new FieldSetter(fields[i], columnInfo.columnName());
-                }
-
-            }
+        for (int i = 0; i < fields.length; i = i + 1) {
+            var field = fields[i];
+            var columnName = columnNameMapping.apply(field);
+            //若 columnNameMapping 提供空值, 则回退到 field.getName()
+            fieldSetters[i] = new FieldSetter(field, columnName != null ? columnName : field.getName());
         }
         return fieldSetters;
     }

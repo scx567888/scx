@@ -1,9 +1,9 @@
 package cool.scx.dao.where;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import cool.scx.dao.mapping.TableInfo;
 import cool.scx.dao.where.exception.ValidParamListIsEmptyException;
 import cool.scx.sql.SQL;
-import cool.scx.sql.mapping.TableInfo;
 import cool.scx.util.StringUtils;
 
 import java.util.ArrayList;
@@ -125,7 +125,7 @@ interface WhereTypeHandler {
 
     WhereTypeHandler JSON_CONTAINS_HANDLER = (tableInfo, name, whereType, value1, value2, info) -> {
         var c = splitIntoColumnNameAndFieldPath(name);
-        var columnName = info.useOriginalName() ? c.columnName() : tableInfo.getColumnInfo(c.columnName()).columnName();
+        var columnName = info.useOriginalName() ? c.columnName() : tableInfo.getColumn(c.columnName()).columnName();
         if (StringUtils.isBlank(c.columnName())) {
             throw new IllegalArgumentException("使用 JSON_CONTAINS 时, 查询名称不合法 !!! 字段名 : " + name);
         }

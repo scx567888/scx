@@ -24,10 +24,6 @@ public final class FieldSetter {
         this.typeHandler = TypeHandlerRegistry.getTypeHandler(fieldGenericType);
     }
 
-    public FieldSetter(Field field) {
-        this(field, field.getName());
-    }
-
     public void set(Object t, ResultSet s, int index) throws SQLException {
         var o = getObject(s, index);
         if (o != null) {

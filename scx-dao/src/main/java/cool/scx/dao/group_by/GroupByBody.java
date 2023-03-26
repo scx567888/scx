@@ -1,6 +1,6 @@
 package cool.scx.dao.group_by;
 
-import cool.scx.sql.mapping.TableInfo;
+import cool.scx.dao.mapping.TableInfo;
 import cool.scx.util.StringUtils;
 
 import static cool.scx.dao.ColumnNameParser.parseColumnName;
