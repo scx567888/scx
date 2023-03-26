@@ -93,8 +93,7 @@ public final class SchemaHelper {
                     SQLRunner.execute(con, SQL.ofNormal(alertTableDDL));
                 }
             } else {// 没有这个表
-                String createTableDDL = dialect.getCreateTableDDL(tableInfo);
-                System.out.println(createTableDDL);
+                var createTableDDL = dialect.getCreateTableDDL(tableInfo);
                 SQLRunner.execute(con, SQL.ofNormal(createTableDDL));
             }
         }
