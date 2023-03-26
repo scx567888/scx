@@ -1,10 +1,10 @@
-package cool.scx.sql.schema.impl;
+package cool.scx.sql.meta_data;
 
-import cool.scx.sql.SchemaHelper;
-import cool.scx.sql.schema.Column;
+import cool.scx.sql.MetaDataHelper._Column;
+import cool.scx.sql.mapping.ColumnMapping;
 
 public record ColumnMetaData(String tableName, String columnName, String typeName, Integer columnSize,
                              Boolean isNullable, Boolean isAutoincrement, String remarks,
-                             SchemaHelper._Column _column) implements Column {
+                             _Column _column) implements ColumnMapping {
 
 }

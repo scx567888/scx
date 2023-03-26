@@ -2,7 +2,7 @@ package cool.scx.test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mysql.cj.jdbc.MysqlDataSource;
-import cool.scx.sql.schema.impl.DataSourceMetaData;
+import cool.scx.sql.meta_data.DataSourceMetaData;
 import cool.scx.util.reflect.ClassUtils;
 import org.sqlite.SQLiteDataSource;
 import org.testng.annotations.Test;
@@ -16,7 +16,7 @@ import java.sql.SQLException;
 
 import static com.mysql.cj.conf.PropertyKey.*;
 
-public class SchemaHelperTest {
+public class MetaDataTest {
 
     public static final Path TempSQLite;
     public static final String databaseName = "scx_sql_test";
@@ -24,7 +24,7 @@ public class SchemaHelperTest {
 
     static {
         try {
-            AppRoot = ClassUtils.getAppRoot(ClassUtils.getCodeSource(SchemaHelperTest.class));
+            AppRoot = ClassUtils.getAppRoot(ClassUtils.getCodeSource(MetaDataTest.class));
             TempSQLite = AppRoot.resolve("temp").resolve("temp.sqlite");
             Files.createDirectories(TempSQLite.getParent());
         } catch (URISyntaxException | IOException e) {

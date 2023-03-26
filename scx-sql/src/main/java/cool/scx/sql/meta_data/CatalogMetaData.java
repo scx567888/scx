@@ -1,11 +1,12 @@
-package cool.scx.sql.schema.impl;
+package cool.scx.sql.meta_data;
 
-import cool.scx.sql.SchemaHelper;
-import cool.scx.sql.schema.Catalog;
+import cool.scx.sql.mapping.CatalogMapping;
 
 import java.sql.DatabaseMetaData;
 
-public final class CatalogMetaData implements Catalog {
+import static cool.scx.sql.MetaDataHelper.initSchemas;
+
+public final class CatalogMetaData implements CatalogMapping {
 
     private final String catalogName;
 
@@ -30,7 +31,7 @@ public final class CatalogMetaData implements Catalog {
     }
 
     public CatalogMetaData refreshSchemas(DatabaseMetaData dbMetaData, boolean deep) {
-        schemas = SchemaHelper.initSchemas(dbMetaData, this.catalogName, null);
+        schemas = initSchemas(dbMetaData, this.catalogName, null);
         if (deep) {
             for (var schema : schemas) {
                 schema.refreshTables(dbMetaData, deep);

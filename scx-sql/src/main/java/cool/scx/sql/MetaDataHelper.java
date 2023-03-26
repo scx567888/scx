@@ -1,18 +1,17 @@
 package cool.scx.sql;
 
-import cool.scx.sql.schema.impl.*;
+import cool.scx.sql.meta_data.*;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import static cool.scx.sql.ResultHandler.ofBeanList;
 
-/**
- * 架构管理工具
- */
-public final class SchemaHelper {
+public final class MetaDataHelper {
 
     private static final ResultHandler<List<_Catalog>> CATALOG_LIST_HANDLER = ofBeanList(_Catalog.class);
     private static final ResultHandler<List<_Schema>> SCHEMA_LIST_HANDLER = ofBeanList(_Schema.class);
@@ -24,16 +23,17 @@ public final class SchemaHelper {
         var catalogs = CATALOG_LIST_HANDLER.apply(dbMetaData.getCatalogs());
         // 因为存在一些数据库没有 Catalog 所以这里默认返回虚拟的一个 Catalog
         if (catalogs.size() == 0) {
-            catalogs = List.of(new SchemaHelper._Catalog(null));
+            catalogs = List.of(new _Catalog(null));
         }
         return catalogs;
     }
+
 
     public static List<_Schema> getSchemas(DatabaseMetaData dbMetaData, String catalog, String schemaPattern) throws SQLException {
         var schemas = SCHEMA_LIST_HANDLER.apply(dbMetaData.getSchemas(catalog, schemaPattern));
         // 因为存在一些数据库没有 Schema 所以这里默认返回虚拟的一个 Schema
         if (schemas.size() == 0) {
-            schemas = List.of(new SchemaHelper._Schema(null, catalog));
+            schemas = List.of(new _Schema(null, catalog));
         }
         return schemas;
     }
@@ -42,12 +42,45 @@ public final class SchemaHelper {
         return TABLE_LIST_HANDLER.apply(dbMetaData.getTables(catalog, schemaPattern, tableNamePattern, types));
     }
 
+
     public static List<_Column> getColumns(DatabaseMetaData dbMetaData, String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern) throws SQLException {
         return COLUMN_LIST_HANDLER.apply(dbMetaData.getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern));
     }
 
     public static List<_PrimaryKey> getPrimaryKeys(DatabaseMetaData dbMetaData, String catalog, String schemaPattern, String tableNamePattern) throws SQLException {
         return PRIMARY_KEY_LIST_HANDLER.apply(dbMetaData.getPrimaryKeys(catalog, schemaPattern, tableNamePattern));
+    }
+
+    public static CatalogMetaData[] initCatalogs(DatabaseMetaData dbMetaData) {
+        try {
+            var catalogs = getCatalogs(dbMetaData);
+            if (catalogs.size() > 0) {
+                return catalogs.stream().map(_Catalog::toCatalogMetaData).toArray(CatalogMetaData[]::new);
+            }
+        } catch (SQLException ignored) {
+
+        }
+        return new CatalogMetaData[]{new CatalogMetaData(null)};
+    }
+
+    public static SchemaMetaData[] initSchemas(DatabaseMetaData dbMetaData, String catalog, String schemaPattern) {
+        try {
+            var schemas = getSchemas(dbMetaData, catalog, schemaPattern);
+            return schemas.stream().map(_Schema::toSchemaMetaData).toArray(SchemaMetaData[]::new);
+        } catch (SQLException ignored) {
+
+        }
+        return new SchemaMetaData[]{new SchemaMetaData(catalog, null)};
+    }
+
+    public static TableMetaData[] initTables(DatabaseMetaData dbMetaData, String catalog, String schemaPattern, String tableNamePattern, String[] types) {
+        try {
+            var tables = getTables(dbMetaData, catalog, schemaPattern, tableNamePattern, types);
+            return tables.stream().map(_Table::toTableMetaData).toArray(TableMetaData[]::new);
+        } catch (SQLException ignored) {
+
+        }
+        return new TableMetaData[]{};
     }
 
     public static ColumnMetaData[] initColumns(DatabaseMetaData dbMetaData, String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern) {
@@ -68,39 +101,14 @@ public final class SchemaHelper {
         }
     }
 
-    public static CatalogMetaData[] initCatalogs(DatabaseMetaData dbMetaData) {
-        try {
-            var catalogs = SchemaHelper.getCatalogs(dbMetaData);
-            if (catalogs.size() > 0) {
-                return catalogs.stream().map(_Catalog::toCatalogMetaData).toArray(CatalogMetaData[]::new);
-            }
-        } catch (SQLException ignored) {
-
+    public static Map<String, ColumnMetaData> toColumnsMap(ColumnMetaData[] columns) {
+        var map = new HashMap<String, ColumnMetaData>();
+        for (var column : columns) {
+            map.put(column.columnName(), column);
         }
-        return new CatalogMetaData[]{new CatalogMetaData(null)};
+        return map;
     }
 
-    public static TableMetaData[] initTables(DatabaseMetaData dbMetaData, String catalog, String schemaPattern, String tableNamePattern, String[] types) {
-        try {
-            var tables = getTables(dbMetaData, catalog, schemaPattern, tableNamePattern, types);
-            return tables.stream()
-                    .map(_Table::toTableMetaData)
-                    .toArray(TableMetaData[]::new);
-        } catch (SQLException ignored) {
-
-        }
-        return new TableMetaData[]{};
-    }
-
-    public static SchemaMetaData[] initSchemas(DatabaseMetaData dbMetaData, String catalog, String schemaPattern) {
-        try {
-            var schemas = getSchemas(dbMetaData, catalog, schemaPattern);
-            return schemas.stream().map(_Schema::toSchemaMetaData).toArray(SchemaMetaData[]::new);
-        } catch (SQLException ignored) {
-
-        }
-        return new SchemaMetaData[]{new SchemaMetaData(catalog, null)};
-    }
 
     public record _Catalog(String TABLE_CAT) {
 

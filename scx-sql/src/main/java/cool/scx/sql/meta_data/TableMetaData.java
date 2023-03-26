@@ -1,21 +1,26 @@
-package cool.scx.sql.schema.impl;
+package cool.scx.sql.meta_data;
 
-import cool.scx.sql.SchemaHelper;
-import cool.scx.sql.schema.Table;
+import cool.scx.sql.mapping.ColumnMapping;
+import cool.scx.sql.mapping.TableMapping;
 
 import java.sql.DatabaseMetaData;
+import java.util.HashMap;
+import java.util.Map;
 
-public final class TableMetaData implements Table {
+import static cool.scx.sql.MetaDataHelper.*;
+
+public final class TableMetaData implements TableMapping {
 
     private final String catalog;
     private final String schema;
     private final String tableName;
     private final String remarks;
-    private final SchemaHelper._Table _table;
+    private final _Table _table;
     private ColumnMetaData[] columns;
+    private Map<String, ColumnMetaData> columnsMap = new HashMap<>();
     private PrimaryKeyMetaData[] primaryKeys;
 
-    public TableMetaData(String catalog, String schema, String tableName, String remarks, SchemaHelper._Table _table) {
+    public TableMetaData(String catalog, String schema, String tableName, String remarks, _Table _table) {
         this.catalog = catalog;
         this.schema = schema;
         this.tableName = tableName;
@@ -48,12 +53,13 @@ public final class TableMetaData implements Table {
     }
 
     public TableMetaData refreshColumns(DatabaseMetaData dbMetaData) {
-        columns = SchemaHelper.initColumns(dbMetaData, this.catalog, this.schema, this.tableName, null);
+        columns = initColumns(dbMetaData, this.catalog, this.schema, this.tableName, null);
+        columnsMap = toColumnsMap(columns);
         return this;
     }
 
     public TableMetaData refreshPrimaryKeys(DatabaseMetaData dbMetaData) {
-        primaryKeys = SchemaHelper.initPrimaryKeys(dbMetaData, this.catalog, this.schema, this.tableName);
+        primaryKeys = initPrimaryKeys(dbMetaData, this.catalog, this.schema, this.tableName);
         return this;
     }
 
@@ -62,7 +68,12 @@ public final class TableMetaData implements Table {
         return primaryKeys;
     }
 
-    public SchemaHelper._Table _table() {
+    @Override
+    public ColumnMapping getColumn(String column) {
+        return columnsMap.get(column);
+    }
+
+    public _Table _table() {
         return _table;
     }
 

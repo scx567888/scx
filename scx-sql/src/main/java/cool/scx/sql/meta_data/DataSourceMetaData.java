@@ -1,11 +1,12 @@
-package cool.scx.sql.schema.impl;
+package cool.scx.sql.meta_data;
 
-import cool.scx.sql.SchemaHelper;
-import cool.scx.sql.schema.DataSource;
+import cool.scx.sql.mapping.DataSourceMapping;
 
 import java.sql.DatabaseMetaData;
 
-public final class DataSourceMetaData implements DataSource {
+import static cool.scx.sql.MetaDataHelper.initCatalogs;
+
+public final class DataSourceMetaData implements DataSourceMapping {
 
     private CatalogMetaData[] catalogs;
 
@@ -19,7 +20,7 @@ public final class DataSourceMetaData implements DataSource {
     }
 
     public DataSourceMetaData refreshCatalogs(DatabaseMetaData dbMetaData, boolean deep) {
-        catalogs = SchemaHelper.initCatalogs(dbMetaData);
+        catalogs = initCatalogs(dbMetaData);
         if (deep) {
             for (var catalog : catalogs) {
                 catalog.refreshSchemas(dbMetaData, deep);

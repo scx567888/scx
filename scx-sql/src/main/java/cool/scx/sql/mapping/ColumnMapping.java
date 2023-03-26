@@ -1,6 +1,6 @@
-package cool.scx.sql.schema;
+package cool.scx.sql.mapping;
 
-public interface Column {
+public interface ColumnMapping {
 
     String tableName();
 

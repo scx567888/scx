@@ -1,11 +1,12 @@
-package cool.scx.sql.schema.impl;
+package cool.scx.sql.meta_data;
 
-import cool.scx.sql.SchemaHelper;
-import cool.scx.sql.schema.Schema;
+import cool.scx.sql.mapping.SchemaMapping;
 
 import java.sql.DatabaseMetaData;
 
-public final class SchemaMetaData implements Schema {
+import static cool.scx.sql.MetaDataHelper.initTables;
+
+public final class SchemaMetaData implements SchemaMapping {
 
     private final String catalog;
     private final String schemaName;
@@ -36,7 +37,7 @@ public final class SchemaMetaData implements Schema {
     }
 
     public SchemaMetaData refreshTables(DatabaseMetaData dbMetaData, boolean deep) {
-        tables = SchemaHelper.initTables(dbMetaData, this.catalog, this.schemaName, null, null);
+        tables = initTables(dbMetaData, this.catalog, this.schemaName, null, null);
         if (deep) {
             for (var table : tables) {
                 table.refreshColumns(dbMetaData);
