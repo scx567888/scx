@@ -74,11 +74,6 @@ public class MySQLXDaoColumnInfo implements ColumnInfo {
     }
 
     @Override
-    public boolean autoIncrement() {
-        return this.autoIncrement;
-    }
-
-    @Override
     public String defaultValue() {
         return this.defaultValue;
     }
@@ -89,13 +84,28 @@ public class MySQLXDaoColumnInfo implements ColumnInfo {
     }
 
     @Override
+    public String tableName() {
+        return null;
+    }
+
+    @Override
     public String columnName() {
         return this.columnName;
     }
 
     @Override
-    public String type() {
+    public String typeName() {
         return this.type;
+    }
+
+    @Override
+    public Integer columnSize() {
+        return null;
+    }
+
+    @Override
+    public boolean autoIncrement() {
+        return this.autoIncrement;
     }
 
     @Override

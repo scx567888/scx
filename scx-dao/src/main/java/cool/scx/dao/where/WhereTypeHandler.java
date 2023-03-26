@@ -125,7 +125,7 @@ interface WhereTypeHandler {
 
     WhereTypeHandler JSON_CONTAINS_HANDLER = (tableInfo, name, whereType, value1, value2, info) -> {
         var c = splitIntoColumnNameAndFieldPath(name);
-        var columnName = info.useOriginalName() ? c.columnName() : tableInfo.getColumnInfo(c.columnName()).columnName();
+        var columnName = info.useOriginalName() ? c.columnName() : tableInfo.getColumn(c.columnName()).columnName();
         if (StringUtils.isBlank(c.columnName())) {
             throw new IllegalArgumentException("使用 JSON_CONTAINS 时, 查询名称不合法 !!! 字段名 : " + name);
         }

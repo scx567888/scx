@@ -91,7 +91,7 @@ public class OldMySQLDao<Entity> implements BaseDao<Entity, Long> {
      * @return a
      */
     private SQL _buildInsertSQL(Entity entity, UpdateFilter updateFilter) {
-        var insertColumnInfos = (OldMySQLDaoColumnInfo[]) updateFilter.filter(entity, tableInfo.columnInfos());
+        var insertColumnInfos = (OldMySQLDaoColumnInfo[]) updateFilter.filter(entity, tableInfo.columns());
         var insertColumns = Arrays.stream(insertColumnInfos).map(ColumnInfo::columnName).toArray(String[]::new);
         var insertValues = Arrays.stream(insertColumnInfos).map(OldMySQLDaoColumnInfo::insertValuesSQL).toArray(String[]::new);
         var sql = Insert(tableInfo.tableName(), insertColumns)
@@ -121,7 +121,7 @@ public class OldMySQLDao<Entity> implements BaseDao<Entity, Long> {
      * @return a
      */
     private SQL buildInsertBatchSQL(Collection<Entity> entityList, UpdateFilter updateFilter) {
-        var insertColumnInfos = (OldMySQLDaoColumnInfo[]) updateFilter.filter(tableInfo.columnInfos());
+        var insertColumnInfos = (OldMySQLDaoColumnInfo[]) updateFilter.filter(tableInfo.columns());
         //将 entityList 转换为 objectArrayList 这里因为 stream 实在太慢所以改为传统循环方式
         var objectArrayList = new ArrayList<Object[]>();
         for (var entity : entityList) {
@@ -199,7 +199,7 @@ public class OldMySQLDao<Entity> implements BaseDao<Entity, Long> {
      * @return selectSQL
      */
     public final SQL buildSelectSQL(Query query, SelectFilter selectFilter) {
-        var selectColumnInfos = (OldMySQLDaoColumnInfo[]) selectFilter.filter(tableInfo.columnInfos());
+        var selectColumnInfos = (OldMySQLDaoColumnInfo[]) selectFilter.filter(tableInfo.columns());
         var selectColumns = Arrays.stream(selectColumnInfos).map(OldMySQLDaoColumnInfo::selectSQL).toArray(String[]::new);
         var whereParamsAndWhereClauses = query.where().getWhereParamsAndWhereClauses(tableInfo);
         var groupByColumns = query.groupBy().getGroupByColumns(tableInfo);
@@ -227,7 +227,7 @@ public class OldMySQLDao<Entity> implements BaseDao<Entity, Long> {
         if (query.pagination().rowCount() == null) {
             return buildSelectSQL(query, selectFilter);
         } else {
-            var selectColumnInfos = (OldMySQLDaoColumnInfo[]) selectFilter.filter(tableInfo.columnInfos());
+            var selectColumnInfos = (OldMySQLDaoColumnInfo[]) selectFilter.filter(tableInfo.columns());
             var selectColumns = Arrays.stream(selectColumnInfos).map(OldMySQLDaoColumnInfo::selectSQL).toArray(String[]::new);
             var whereParamsAndWhereClauses = query.where().getWhereParamsAndWhereClauses(tableInfo);
             var groupByColumns = query.groupBy().getGroupByColumns(tableInfo);
@@ -297,7 +297,7 @@ public class OldMySQLDao<Entity> implements BaseDao<Entity, Long> {
         if (query.where().isEmpty()) {
             throw new IllegalArgumentException("更新数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
         }
-        var updateSetColumnInfos = (OldMySQLDaoColumnInfo[]) updateFilter.filter(entity, tableInfo.columnInfos());
+        var updateSetColumnInfos = (OldMySQLDaoColumnInfo[]) updateFilter.filter(entity, tableInfo.columns());
         var updateSetColumns = Arrays.stream(updateSetColumnInfos).map(OldMySQLDaoColumnInfo::updateSetSQL).toArray(String[]::new);
         var whereParamsAndWhereClauses = query.where().getWhereParamsAndWhereClauses(tableInfo);
         var sql = Update(tableInfo.tableName())

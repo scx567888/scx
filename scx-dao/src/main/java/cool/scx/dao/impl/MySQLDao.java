@@ -67,7 +67,7 @@ public class MySQLDao<Entity> implements BaseDao<Entity, Long> {
         this.entityClass = entityClass;
         this.sqlRunner = sqlRunner;
         this.entityBeanListHandler = new BeanListHandler<>(BeanBuilder.of(this.entityClass, (field) -> {
-            var columnInfo = this.tableInfo.getColumnInfo(field.getName());
+            var columnInfo = this.tableInfo.getColumn(field.getName());
             return columnInfo == null ? null : columnInfo.columnName();
         }));
         this.countResultHandler = new SingleValueHandler<>("count", Long.class);

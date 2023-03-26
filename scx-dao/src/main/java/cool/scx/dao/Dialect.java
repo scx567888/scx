@@ -42,7 +42,7 @@ public interface Dialect {
      * @return s
      */
     default String getCreateTableDDL(TableInfo<?> tableInfo) {
-        var columnDefinitions = getColumnDefinitions(tableInfo.columnInfos());
+        var columnDefinitions = getColumnDefinitions(tableInfo.columns());
         var str = columnDefinitions.stream().map(c -> "    " + c).collect(Collectors.joining(",\n"));
         return "CREATE TABLE `" + tableInfo.tableName() + "`\n" +
                 "(\n" +
@@ -71,7 +71,7 @@ public interface Dialect {
      * @param javaType 需要获取的类型
      * @return a {@link String} object.
      */
-    public String getDataTypeDefinitionByClass(Class<?> javaType);
+    String getDataTypeDefinitionByClass(Class<?> javaType);
 
     /**
      * 获取 mysql 类型
@@ -85,6 +85,6 @@ public interface Dialect {
      * @param javaType 需要判断的类型
      * @return r
      */
-    public SQLType getSQLType(Class<?> javaType);
+    SQLType getSQLType(Class<?> javaType);
 
 }

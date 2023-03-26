@@ -4,6 +4,7 @@ import cool.scx.dao.annotation.NoColumn;
 import cool.scx.dao.annotation.Table;
 import cool.scx.dao.mapping.ColumnInfo;
 import cool.scx.dao.mapping.TableInfo;
+import cool.scx.sql.meta_data.PrimaryKeyMetaData;
 import cool.scx.util.CaseUtils;
 import cool.scx.util.MultiMap;
 import cool.scx.util.StringUtils;
@@ -113,6 +114,16 @@ public final class AnnotationConfigTableInfo implements TableInfo<AnnotationConf
         return "scx_" + CaseUtils.toSnake(clazz.getSimpleName());
     }
 
+    @Override
+    public String catalog() {
+        return null;
+    }
+
+    @Override
+    public String schema() {
+        return null;
+    }
+
     /**
      * {@inheritDoc}
      * <p>
@@ -124,12 +135,17 @@ public final class AnnotationConfigTableInfo implements TableInfo<AnnotationConf
     }
 
     @Override
-    public AnnotationConfigColumnInfo[] columnInfos() {
+    public PrimaryKeyMetaData[] primaryKeys() {
+        return new PrimaryKeyMetaData[0];
+    }
+
+    @Override
+    public AnnotationConfigColumnInfo[] columns() {
         return columnInfos;
     }
 
     @Override
-    public AnnotationConfigColumnInfo getColumnInfo(String javaFieldName) {
+    public AnnotationConfigColumnInfo getColumn(String javaFieldName) {
         return columnInfoMap.get(javaFieldName);
     }
 

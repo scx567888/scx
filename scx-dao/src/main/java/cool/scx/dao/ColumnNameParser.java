@@ -10,13 +10,13 @@ public final class ColumnNameParser {
         if (useJsonExtract) {
             var c = splitIntoColumnNameAndFieldPath(name);
             if (notBlank(c.columnName()) && notBlank(c.fieldPath())) {
-                var jsonQueryColumnName = useOriginalName ? c.columnName() : tableInfo.getColumnInfo(c.columnName()).columnName();
+                var jsonQueryColumnName = useOriginalName ? c.columnName() : tableInfo.getColumn(c.columnName()).columnName();
                 return jsonQueryColumnName + " -> " + "'$" + c.fieldPath() + "'";
             } else {
                 throw new IllegalArgumentException("使用 USE_JSON_EXTRACT 时, 查询名称不合法 !!! 字段名 : " + name);
             }
         } else {// 这里就是普通的判断一下是否使用 原始名称即可
-            return useOriginalName ? name : tableInfo.getColumnInfo(name).columnName();
+            return useOriginalName ? name : tableInfo.getColumn(name).columnName();
         }
     }
 

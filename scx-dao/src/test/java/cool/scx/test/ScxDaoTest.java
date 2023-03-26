@@ -1,11 +1,9 @@
 package cool.scx.test;
 
+import com.mysql.cj.jdbc.MysqlDataSource;
 import com.mysql.cj.xdevapi.Session;
 import com.mysql.cj.xdevapi.SessionFactory;
-import cool.scx.dao.Query;
-import cool.scx.dao.SchemaHelper;
-import cool.scx.dao.SelectFilter;
-import cool.scx.dao.UpdateFilter;
+import cool.scx.dao.*;
 import cool.scx.dao.impl.MySQLDao;
 import cool.scx.dao.impl.MySQLXDao;
 import cool.scx.dao.impl.OldMySQLDao;
@@ -15,20 +13,57 @@ import cool.scx.dao.where.WhereOption;
 import cool.scx.logging.ScxLoggerFactory;
 import cool.scx.logging.ScxLoggingLevel;
 import cool.scx.sql.SQLRunner;
+import cool.scx.util.reflect.ClassUtils;
+import org.sqlite.SQLiteDataSource;
 import org.testng.annotations.Test;
 
 import javax.sql.DataSource;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+import static com.mysql.cj.conf.PropertyKey.*;
 import static cool.scx.sql.SQL.ofNormal;
-import static cool.scx.test.SchemaHelperTest.*;
 
 public class ScxDaoTest {
 
+    public static final Path TempSQLite;
+    public static final String databaseName = "scx_dao_test";
+    public static Path AppRoot;
+
     static {
         ScxLoggerFactory.defaultConfig().setLevel(ScxLoggingLevel.DEBUG);
+        try {
+            AppRoot = ClassUtils.getAppRoot(ClassUtils.getCodeSource(ScxDaoTest.class));
+            TempSQLite = AppRoot.resolve("temp").resolve("temp.sqlite");
+            Files.createDirectories(TempSQLite.getParent());
+        } catch (URISyntaxException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static DataSource getMySQLDataSource() {
+        var mysqlDataSource = new MysqlDataSource();
+        mysqlDataSource.setServerName("127.0.0.1");
+        mysqlDataSource.setUser("root");
+        mysqlDataSource.setPassword("root");
+        mysqlDataSource.setPort(3306);
+        mysqlDataSource.setDatabaseName(databaseName);
+        // 设置参数值
+        mysqlDataSource.getProperty(allowMultiQueries).setValue(true);
+        mysqlDataSource.getProperty(rewriteBatchedStatements).setValue(true);
+        mysqlDataSource.getProperty(createDatabaseIfNotExist).setValue(true);
+        return Spy.wrap(mysqlDataSource);
+    }
+
+    public static DataSource getSQLiteDataSource() {
+        SQLiteDataSource sqLiteDataSource = new SQLiteDataSource();
+        sqLiteDataSource.setUrl("jdbc:sqlite:" + TempSQLite);
+        return Spy.wrap(sqLiteDataSource);
     }
 
     public static void main(String[] args) throws SQLException {

@@ -2,6 +2,7 @@ package cool.scx.dao.dialect;
 
 import cool.scx.dao.Dialect;
 import cool.scx.dao.mapping.ColumnInfo;
+import cool.scx.dao.mapping.TableInfo;
 import org.sqlite.SQLiteDataSource;
 import org.sqlite.core.CorePreparedStatement;
 import org.sqlite.core.CoreStatement;
@@ -107,6 +108,11 @@ public class SQLiteDialect implements Dialect {
     }
 
     @Override
+    public String getCreateTableDDL(TableInfo<?> tableInfo) {
+        return Dialect.super.getCreateTableDDL(tableInfo);
+    }
+
+    @Override
     public List<String> getColumnDefinitions(ColumnInfo[] columnInfos) {
         var columnDefinitions = new ArrayList<String>();
         for (var columnInfo : columnInfos) {
@@ -122,12 +128,12 @@ public class SQLiteDialect implements Dialect {
 
     @Override
     public String getDataTypeDefinitionByClass(Class<?> javaType) {
-        if (javaType==Integer.class){
+        if (javaType == Integer.class || javaType == Long.class) {
             return "INTEGER";
         } else if (javaType == String.class) {
             return "TEXT";
-        }else{
-            return  "BLOB";
+        } else {
+            return "BLOB";
         }
     }
 

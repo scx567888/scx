@@ -133,27 +133,6 @@ public class MySQLDialect implements Dialect {
         return createTableDDL;
     }
 
-    /**
-     * 获取修复表的语句
-     *
-     * @param nonExistentColumnName java 字段的名称 (注意 : fieldNames 中存在但 allFields 中不存在的则会忽略)
-     * @return a
-     */
-    public String getAlertTableDDL(List<? extends ColumnInfo> nonExistentColumnName, String tableName) {
-        var alertTableDDL = new ArrayList<String>();
-        for (var field : nonExistentColumnName) {
-            var normalDDL = initNormalDDL(field);
-            alertTableDDL.add("ADD " + normalDDL);
-        }
-        for (var s : nonExistentColumnName) {
-            var specialDDL = initSpecialDDL(s);
-            for (var s1 : specialDDL) {
-                alertTableDDL.add("ADD " + s1);
-            }
-        }
-        return "ALTER TABLE `" + tableName + "` " + String.join(", ", alertTableDDL) + ";";
-    }
-
     @Override
     public String getDataTypeDefinitionByClass(Class<?> javaType) {
         var mysqlType = getSQLType(javaType);

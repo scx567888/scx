@@ -90,8 +90,23 @@ public class AnnotationConfigColumnInfo implements ColumnInfo {
     }
 
     @Override
+    public String tableName() {
+        return null;
+    }
+
+    @Override
     public String columnName() {
         return this.columnName;
+    }
+
+    @Override
+    public String typeName() {
+        return null;
+    }
+
+    @Override
+    public Integer columnSize() {
+        return null;
     }
 
     @Override
