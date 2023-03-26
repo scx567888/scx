@@ -1,6 +1,6 @@
 package cool.scx.sql.mapping;
 
-public interface TableMapping {
+public interface TableMapping<C extends ColumnMapping, P extends PrimaryKeyMapping> {
 
     String catalog();
 
@@ -8,10 +8,10 @@ public interface TableMapping {
 
     String tableName();
 
-    ColumnMapping[] columns();
+    C[] columns();
 
-    PrimaryKeyMapping[] primaryKeys();
+    P[] primaryKeys();
 
-    ColumnMapping getColumn(String column);
+    C getColumn(String column);
 
 }

@@ -1,6 +1,5 @@
 package cool.scx.sql.meta_data;
 
-import cool.scx.sql.mapping.ColumnMapping;
 import cool.scx.sql.mapping.TableMapping;
 
 import java.sql.DatabaseMetaData;
@@ -9,7 +8,7 @@ import java.util.Map;
 
 import static cool.scx.sql.MetaDataHelper.*;
 
-public final class TableMetaData implements TableMapping {
+public final class TableMetaData implements TableMapping<ColumnMetaData, PrimaryKeyMetaData> {
 
     private final String catalog;
     private final String schema;
@@ -69,7 +68,7 @@ public final class TableMetaData implements TableMapping {
     }
 
     @Override
-    public ColumnMapping getColumn(String column) {
+    public ColumnMetaData getColumn(String column) {
         return columnsMap.get(column);
     }
 
