@@ -53,14 +53,18 @@ public class MetaDataTest {
     }
 
     public static void main(String[] args) throws SQLException, JsonProcessingException {
-        test1(getMySQLDataSource());
-        test1(getSQLiteDataSource());
-        test2(getMySQLDataSource());
-        test2(getSQLiteDataSource());
+        test1();
     }
 
     @Test
-    public static void test1(DataSource dataSource) throws SQLException, JsonProcessingException {
+    public static void test1() throws SQLException, JsonProcessingException {
+        test1_1(getMySQLDataSource());
+        test1_1(getSQLiteDataSource());
+        test1_2(getMySQLDataSource());
+        test1_2(getSQLiteDataSource());
+    }
+
+    public static void test1_1(DataSource dataSource) throws SQLException, JsonProcessingException {
         System.out.println("完全内省 !!!");
         try (var con = dataSource.getConnection()) {
             var dataSourceMetaData = new DataSourceMetaData().refreshCatalogs(con.getMetaData(), true);
@@ -89,8 +93,8 @@ public class MetaDataTest {
 
     }
 
-    @Test
-    public static void test2(DataSource dataSource) throws SQLException, JsonProcessingException {
+
+    public static void test1_2(DataSource dataSource) throws SQLException, JsonProcessingException {
         System.out.println("按需内省 !!!");
         try (var con = dataSource.getConnection()) {
             var dataSourceMetaData = new DataSourceMetaData().refreshCatalogs(con.getMetaData());
