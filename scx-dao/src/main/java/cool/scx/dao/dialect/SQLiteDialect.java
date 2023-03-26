@@ -48,12 +48,12 @@ public class SQLiteDialect implements Dialect {
         }
         var name = column.columnName();
         var list = new ArrayList<String>();
-        if (column.unique()) {
-            list.add("UNIQUE KEY `unique_" + name + "`(`" + name + "`)");
-        }
-        if (column.needIndex()) {
-            list.add("KEY `index_" + name + "`(`" + name + "`)");
-        }
+//        if (column.unique()) {
+//            list.add("UNIQUE KEY `unique_" + name + "`(`" + name + "`)");
+//        }
+//        if (column.needIndex()) {
+//            list.add("KEY `index_" + name + "`(`" + name + "`)");
+//        }
         return list.toArray(String[]::new);
     }
 
@@ -159,9 +159,9 @@ public class SQLiteDialect implements Dialect {
         if (notBlank(column.defaultValue())) {
             list.add("DEFAULT " + column.defaultValue());
         }
-        if (notBlank(column.onUpdateValue())) {
-            list.add("ON UPDATE " + column.onUpdateValue());
-        }
+//        if (notBlank(column.onUpdateValue())) {
+//            list.add("ON UPDATE " + column.onUpdateValue());
+//        }
         return String.join(" ", list);
     }
 
