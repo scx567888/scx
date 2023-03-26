@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static cool.scx.dao.SQLBuilder.*;
-import static cool.scx.dao.SchemaHelper.findDialect;
+import static cool.scx.dao.dialect.DialectSelector.findDialect;
 
 /**
  * 最基本的 可以实现 实体类 CRUD 的 DAO
