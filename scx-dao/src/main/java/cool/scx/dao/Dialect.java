@@ -87,4 +87,6 @@ public interface Dialect {
      */
     SQLType getSQLType(Class<?> javaType);
 
+    String getLimitSQL(String sql, Integer rowCount, Integer offset);
+
 }

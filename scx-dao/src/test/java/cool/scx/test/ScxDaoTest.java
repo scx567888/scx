@@ -4,10 +4,9 @@ import com.mysql.cj.jdbc.MysqlDataSource;
 import com.mysql.cj.xdevapi.Session;
 import com.mysql.cj.xdevapi.SessionFactory;
 import cool.scx.dao.*;
-import cool.scx.dao.impl.MySQLDao;
+import cool.scx.dao.impl.AnnotationConfigTableInfo;
 import cool.scx.dao.impl.MySQLXDao;
-import cool.scx.dao.impl.OldMySQLDao;
-import cool.scx.dao.impl.OldMySQLTableInfo;
+import cool.scx.dao.impl.SQLDao;
 import cool.scx.dao.where.WhereBody;
 import cool.scx.dao.where.WhereOption;
 import cool.scx.logging.ScxLoggerFactory;
@@ -80,14 +79,14 @@ public class ScxDaoTest {
     public static void test1_1(DataSource dataSource) throws SQLException {
         SQLRunner sqlRunner = new SQLRunner(dataSource);
         //创建 tableInfo
-        var userTableInfo = new OldMySQLTableInfo(User.class);
+        var userTableInfo = new AnnotationConfigTableInfo(User.class);
         //删除原有的表数据
         sqlRunner.execute(ofNormal("drop table if exists " + userTableInfo.tableName() + ";"));
         sqlRunner.execute(ofNormal("drop table if exists " + userTableInfo.tableName() + "_doc;"));
         //根据 tableInfo 生成表结构
         SchemaHelper.fixTable(userTableInfo, databaseName, dataSource);
         //开始使用
-        var userDao = new MySQLDao<>(userTableInfo, User.class, sqlRunner);
+        var userDao = new SQLDao<>(User.class, userTableInfo, dataSource);
         var list = new ArrayList<User>();
 
         for (int i = 0; i < 999; i = i + 1) {
@@ -109,18 +108,9 @@ public class ScxDaoTest {
         var a3 = userDao.select(new Query().equal("userInfo.email", "88@test.com", WhereOption.USE_JSON_EXTRACT), SelectFilter.ofExcluded());
         System.out.println("查询 : " + a3.size());
 
-        //旧版 BaseDao
-        var oldUserDao = new OldMySQLDao<>(userTableInfo, User.class, sqlRunner);
-        var newIds2 = oldUserDao.insertBatch(list, UpdateFilter.ofExcluded());
-        System.out.println("Old 插入 : " + newIds2);
-        var a12 = oldUserDao.select(new Query().greaterThan("id", 300), SelectFilter.ofExcluded());
-        System.out.println("Old 查询 : " + a12.size());
-        var a22 = oldUserDao.select(new Query().whereSQL("( not_id > 300 or ", WhereBody.equal("age", "123"), " )"), SelectFilter.ofExcluded());
-        System.out.println("Old 查询 : " + a22.size());
-
         SessionFactory xFactory = new SessionFactory();
         Session session1 = xFactory.getSession("mysqlx://127.0.0.1:33060/" + databaseName + "?user=root&password=root");
-        var mySQLXDao = new MySQLXDao<>(userTableInfo.tableName() + "_doc", User.class, session1);
+        var mySQLXDao = new MySQLXDao<>(User.class, userTableInfo.tableName() + "_doc", session1);
         var newIds3 = mySQLXDao.insertBatch(list, UpdateFilter.ofExcluded());
         System.out.println("MySQLX 插入 : " + newIds3);
         var a13 = mySQLXDao.select(new Query().greaterThan("age", 300), SelectFilter.ofExcluded());
