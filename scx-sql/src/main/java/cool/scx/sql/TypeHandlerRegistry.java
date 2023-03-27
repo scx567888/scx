@@ -1,12 +1,9 @@
 package cool.scx.sql;
 
-import cool.scx.sql.type_handler.BlobInputStreamTypeHandler;
-import cool.scx.sql.type_handler.ClobReaderTypeHandler;
-import cool.scx.sql.type_handler.EnumTypeHandler;
-import cool.scx.sql.type_handler.ObjectTypeHandler;
-import cool.scx.sql.type_handler.base.*;
+import cool.scx.sql.type_handler.*;
 import cool.scx.sql.type_handler.math.BigDecimalTypeHandler;
 import cool.scx.sql.type_handler.math.BigIntegerTypeHandler;
+import cool.scx.sql.type_handler.primitive.*;
 import cool.scx.sql.type_handler.time.*;
 
 import java.io.InputStream;
@@ -27,22 +24,22 @@ public final class TypeHandlerRegistry {
 
     static {
         //基本类型
-        TYPE_HANDLER_MAP.put(boolean.class, new BooleanTypeHandler());
-        TYPE_HANDLER_MAP.put(char.class, new CharacterTypeHandler());
-        TYPE_HANDLER_MAP.put(byte.class, new ByteTypeHandler());
-        TYPE_HANDLER_MAP.put(short.class, new ShortTypeHandler());
-        TYPE_HANDLER_MAP.put(int.class, new IntegerTypeHandler());
-        TYPE_HANDLER_MAP.put(long.class, new LongTypeHandler());
-        TYPE_HANDLER_MAP.put(float.class, new FloatTypeHandler());
-        TYPE_HANDLER_MAP.put(double.class, new DoubleTypeHandler());
-        TYPE_HANDLER_MAP.put(Boolean.class, new BooleanTypeHandler());
-        TYPE_HANDLER_MAP.put(Character.class, new CharacterTypeHandler());
-        TYPE_HANDLER_MAP.put(Byte.class, new ByteTypeHandler());
-        TYPE_HANDLER_MAP.put(Short.class, new ShortTypeHandler());
-        TYPE_HANDLER_MAP.put(Integer.class, new IntegerTypeHandler());
-        TYPE_HANDLER_MAP.put(Long.class, new LongTypeHandler());
-        TYPE_HANDLER_MAP.put(Float.class, new FloatTypeHandler());
-        TYPE_HANDLER_MAP.put(Double.class, new DoubleTypeHandler());
+        TYPE_HANDLER_MAP.put(boolean.class, new BooleanTypeHandler(true));
+        TYPE_HANDLER_MAP.put(char.class, new CharTypeHandler(true));
+        TYPE_HANDLER_MAP.put(byte.class, new ByteTypeHandler(true));
+        TYPE_HANDLER_MAP.put(short.class, new ShortTypeHandler(true));
+        TYPE_HANDLER_MAP.put(int.class, new IntTypeHandler(true));
+        TYPE_HANDLER_MAP.put(long.class, new LongTypeHandler(true));
+        TYPE_HANDLER_MAP.put(float.class, new FloatTypeHandler(true));
+        TYPE_HANDLER_MAP.put(double.class, new DoubleTypeHandler(true));
+        TYPE_HANDLER_MAP.put(Boolean.class, new BooleanTypeHandler(false));
+        TYPE_HANDLER_MAP.put(Character.class, new CharTypeHandler(false));
+        TYPE_HANDLER_MAP.put(Byte.class, new ByteTypeHandler(false));
+        TYPE_HANDLER_MAP.put(Short.class, new ShortTypeHandler(false));
+        TYPE_HANDLER_MAP.put(Integer.class, new IntTypeHandler(false));
+        TYPE_HANDLER_MAP.put(Long.class, new LongTypeHandler(false));
+        TYPE_HANDLER_MAP.put(Float.class, new FloatTypeHandler(false));
+        TYPE_HANDLER_MAP.put(Double.class, new DoubleTypeHandler(false));
         TYPE_HANDLER_MAP.put(String.class, new StringTypeHandler());
         TYPE_HANDLER_MAP.put(Byte[].class, new ByteObjectArrayTypeHandler());
         TYPE_HANDLER_MAP.put(byte[].class, new ByteArrayTypeHandler());

@@ -41,7 +41,6 @@ public final class SchemaMetaData implements SchemaMapping {
         if (deep) {
             for (var table : tables) {
                 table.refreshColumns(dbMetaData);
-                table.refreshPrimaryKeys(dbMetaData);
             }
         }
         return this;

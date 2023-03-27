@@ -64,12 +64,12 @@ public final class PlaceholderSQL implements SQL {
     public static void fillPreparedStatement(PreparedStatement preparedStatement, Object[] params) throws SQLException {
         var index = 1;
         for (var tempValue : params) {
-            if (tempValue != null) {
-                var typeHandler = TypeHandlerRegistry.getTypeHandler(tempValue.getClass());
-                typeHandler.setObject(preparedStatement, index, tempValue);
-            } else {
+            if (tempValue == null) {
                 //这里的 Types.NULL 其实内部并没有使用
                 preparedStatement.setNull(index, Types.NULL);
+            } else {
+                var typeHandler = TypeHandlerRegistry.getTypeHandler(tempValue.getClass());
+                typeHandler.setObject(preparedStatement, index, tempValue);
             }
             index = index + 1;
         }

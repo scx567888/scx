@@ -18,6 +18,7 @@ public final class MetaDataHelper {
     private static final ResultHandler<List<_Table>> TABLE_LIST_HANDLER = ofBeanList(_Table.class);
     private static final ResultHandler<List<_Column>> COLUMN_LIST_HANDLER = ofBeanList(_Column.class);
     private static final ResultHandler<List<_PrimaryKey>> PRIMARY_KEY_LIST_HANDLER = ofBeanList(_PrimaryKey.class);
+    private static final ResultHandler<List<_IndexInfo>> INDEX_INFO_LIST_HANDLER = ofBeanList(_IndexInfo.class);
 
     public static List<_Catalog> getCatalogs(DatabaseMetaData dbMetaData) throws SQLException {
         var catalogs = CATALOG_LIST_HANDLER.apply(dbMetaData.getCatalogs());
@@ -49,6 +50,11 @@ public final class MetaDataHelper {
 
     public static List<_PrimaryKey> getPrimaryKeys(DatabaseMetaData dbMetaData, String catalog, String schemaPattern, String tableNamePattern) throws SQLException {
         return PRIMARY_KEY_LIST_HANDLER.apply(dbMetaData.getPrimaryKeys(catalog, schemaPattern, tableNamePattern));
+    }
+
+    public static List<_IndexInfo> getIndexInfo(DatabaseMetaData dbMetaData, String catalog, String schema, String table, boolean unique, boolean approximate) throws SQLException {
+        var s = ResultHandler.ofMap().apply(dbMetaData.getIndexInfo(catalog, schema, table, unique, approximate));
+        return INDEX_INFO_LIST_HANDLER.apply(dbMetaData.getIndexInfo(catalog, schema, table, unique, approximate));
     }
 
     public static CatalogMetaData[] initCatalogs(DatabaseMetaData dbMetaData) {
@@ -101,6 +107,15 @@ public final class MetaDataHelper {
         }
     }
 
+    public static IndexInfoMetaData[] initIndexInfo(DatabaseMetaData dbMetaData, String catalog, String schema, String table, boolean unique, boolean approximate) {
+        try {
+            var indexInfo = getIndexInfo(dbMetaData, catalog, schema, table, unique, approximate);
+            return indexInfo.stream().map(_IndexInfo::toIndexInfoMetaData).toArray(IndexInfoMetaData[]::new);
+        } catch (SQLException e) {
+            return new IndexInfoMetaData[]{};
+        }
+    }
+
     public static Map<String, ColumnMetaData> toColumnsMap(ColumnMetaData[] columns) {
         var map = new HashMap<String, ColumnMetaData>();
         for (var column : columns) {
@@ -117,15 +132,23 @@ public final class MetaDataHelper {
         return map;
     }
 
+
+    /**
+     * @see DatabaseMetaData#getCatalogs()
+     */
     public record _Catalog(String TABLE_CAT) {
 
         public CatalogMetaData toCatalogMetaData() {
-            return new CatalogMetaData(TABLE_CAT());
+            return new CatalogMetaData(TABLE_CAT);
         }
 
     }
 
-    public record _Schema(String TABLE_SCHEM, String TABLE_CATALOG) {
+    /**
+     * @see DatabaseMetaData#getSchemas(String, String)
+     */
+    public record _Schema(String TABLE_SCHEM,
+                          String TABLE_CATALOG) {
 
         public SchemaMetaData toSchemaMetaData() {
             return new SchemaMetaData(TABLE_CATALOG, TABLE_SCHEM);
@@ -133,9 +156,19 @@ public final class MetaDataHelper {
 
     }
 
-    public record _Table(String TABLE_CAT, String TABLE_NAME, String SELF_REFERENCING_COL_NAME, String TABLE_SCHEM,
-                         String TYPE_SCHEM, String TYPE_CAT, String TABLE_TYPE, String REMARKS, String REF_GENERATION,
-                         String TYPE_NAME) {
+    /**
+     * @see DatabaseMetaData#getTables(String, String, String, String[])
+     */
+    public record _Table(String TABLE_CAT,
+                         String TABLE_SCHEM,
+                         String TABLE_NAME,
+                         String TABLE_TYPE,
+                         String REMARKS,
+                         String TYPE_CAT,
+                         String TYPE_SCHEM,
+                         String TYPE_NAME,
+                         String SELF_REFERENCING_COL_NAME,
+                         String REF_GENERATION) {
 
         public TableMetaData toTableMetaData() {
             return new TableMetaData(TABLE_CAT, TABLE_SCHEM, TABLE_NAME, REMARKS, this);
@@ -143,13 +176,33 @@ public final class MetaDataHelper {
 
     }
 
-    public record _Column(String SCOPE_TABLE, String TABLE_CAT, Integer BUFFER_LENGTH, String IS_NULLABLE,
-                          String TABLE_NAME, String COLUMN_DEF, String SCOPE_CATALOG, String TABLE_SCHEM,
-                          String COLUMN_NAME, Integer NULLABLE, String REMARKS, Integer DECIMAL_DIGITS,
-                          Integer NUM_PREC_RADIX, Integer SQL_DATETIME_SUB, String IS_GENERATEDCOLUMN,
-                          String IS_AUTOINCREMENT, Integer SQL_DATA_TYPE, Integer CHAR_OCTET_LENGTH,
-                          Integer ORDINAL_POSITION, String SCOPE_SCHEMA, String SOURCE_DATA_TYPE, Integer DATA_TYPE,
-                          String TYPE_NAME, Integer COLUMN_SIZE) {
+    /**
+     * @see DatabaseMetaData#getColumns(String, String, String, String)
+     */
+    public record _Column(String TABLE_CAT,
+                          String TABLE_SCHEM,
+                          String TABLE_NAME,
+                          String COLUMN_NAME,
+                          int DATA_TYPE,
+                          String TYPE_NAME,
+                          int COLUMN_SIZE,
+                          String BUFFER_LENGTH,//is not used.
+                          int DECIMAL_DIGITS,
+                          int NUM_PREC_RADIX,
+                          int NULLABLE,
+                          String REMARKS,
+                          String COLUMN_DEF,
+                          int SQL_DATA_TYPE,//unused
+                          int SQL_DATETIME_SUB,//unused
+                          int CHAR_OCTET_LENGTH,
+                          int ORDINAL_POSITION,
+                          String IS_NULLABLE,
+                          String SCOPE_CATALOG,
+                          String SCOPE_SCHEMA,
+                          String SCOPE_TABLE,
+                          short SOURCE_DATA_TYPE,
+                          String IS_AUTOINCREMENT,
+                          String IS_GENERATEDCOLUMN) {
 
         public ColumnMetaData toColumnMetaData() {
             var isNullable = Objects.equals("NO", IS_NULLABLE());
@@ -159,11 +212,41 @@ public final class MetaDataHelper {
 
     }
 
-    public record _PrimaryKey(String TABLE_CAT, String TABLE_SCHEM, String TABLE_NAME, String COLUMN_NAME,
-                              Short KEY_SEQ, String PK_NAME) {
+    /**
+     * @see DatabaseMetaData#getPrimaryKeys(String, String, String)
+     */
+    public record _PrimaryKey(String TABLE_CAT,
+                              String TABLE_SCHEM,
+                              String TABLE_NAME,
+                              String COLUMN_NAME,
+                              short KEY_SEQ,
+                              String PK_NAME) {
 
         public PrimaryKeyMetaData toPrimaryKeyMetaData() {
             return new PrimaryKeyMetaData(COLUMN_NAME, this);
+        }
+
+    }
+
+    /**
+     * @see DatabaseMetaData#getIndexInfo(String, String, String, boolean, boolean)
+     */
+    public record _IndexInfo(String TABLE_CAT,
+                             String TABLE_SCHEM,
+                             String TABLE_NAME,
+                             boolean NON_UNIQUE,
+                             String INDEX_QUALIFIER,
+                             String INDEX_NAME,
+                             short TYPE,
+                             short ORDINAL_POSITION,
+                             String COLUMN_NAME,
+                             String ASC_OR_DESC,
+                             long CARDINALITY,
+                             long PAGES,
+                             String FILTER_CONDITION) {
+
+        public IndexInfoMetaData toIndexInfoMetaData() {
+            return new IndexInfoMetaData(this);
         }
 
     }
