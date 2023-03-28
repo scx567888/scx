@@ -1,8 +1,7 @@
 package cool.scx.sql.result_handler;
 
-import cool.scx.sql.BeanBuilder;
 import cool.scx.sql.FieldSetter;
-import cool.scx.sql.ResultHandler;
+import cool.scx.sql.bean_builder.BeanBuilder;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -15,13 +14,7 @@ import java.util.HashMap;
  * @author scx567888
  * @version 0.2.1
  */
-public class BeanHandler<T> implements ResultHandler<T> {
-
-    protected final BeanBuilder<T> beanBuilder;
-
-    public BeanHandler(BeanBuilder<T> beanBuilder) {
-        this.beanBuilder = beanBuilder;
-    }
+record BeanHandler<T>(BeanBuilder<T> beanBuilder) implements ResultHandler<T> {
 
     /**
      * 返回 fieldSetters 索引对应的 rsm 的索引数组 若无对应则使用 -1 占位

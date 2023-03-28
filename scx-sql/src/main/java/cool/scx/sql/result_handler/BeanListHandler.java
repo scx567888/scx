@@ -1,7 +1,6 @@
 package cool.scx.sql.result_handler;
 
-import cool.scx.sql.BeanBuilder;
-import cool.scx.sql.ResultHandler;
+import cool.scx.sql.bean_builder.BeanBuilder;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,13 +15,7 @@ import static cool.scx.sql.result_handler.BeanHandler.getIndexInfo;
  * @author scx567888
  * @version 0.0.1
  */
-public class BeanListHandler<T> implements ResultHandler<List<T>> {
-
-    protected final BeanBuilder<T> beanBuilder;
-
-    public BeanListHandler(BeanBuilder<T> beanBuilder) {
-        this.beanBuilder = beanBuilder;
-    }
+record BeanListHandler<T>(BeanBuilder<T> beanBuilder) implements ResultHandler<List<T>> {
 
     /**
      * {@inheritDoc}

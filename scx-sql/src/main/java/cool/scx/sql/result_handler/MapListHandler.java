@@ -1,7 +1,5 @@
 package cool.scx.sql.result_handler;
 
-import cool.scx.sql.ResultHandler;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -16,7 +14,9 @@ import java.util.function.Supplier;
  * @author scx567888
  * @version 0.0.1
  */
-public final class MapListHandler implements ResultHandler<List<Map<String, Object>>> {
+final class MapListHandler implements ResultHandler<List<Map<String, Object>>> {
+
+    static final MapListHandler INSTANCE = new MapListHandler();
 
     private final Supplier<Map<String, Object>> mapSupplier;
 
