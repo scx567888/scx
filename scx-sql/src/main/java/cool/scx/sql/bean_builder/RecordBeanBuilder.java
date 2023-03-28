@@ -1,8 +1,5 @@
 package cool.scx.sql.bean_builder;
 
-import cool.scx.sql.BeanBuilder;
-import cool.scx.sql.FieldSetter;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -12,7 +9,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.function.Function;
 
-import static cool.scx.sql.bean_builder.NormalBeanBuilder.ofArray;
+import static cool.scx.sql.bean_builder.FieldSetter.ofArray;
 import static cool.scx.util.reflect.ConstructorUtils.findRecordConstructor;
 
 /**
@@ -64,7 +61,9 @@ public final class RecordBeanBuilder<T> implements BeanBuilder<T> {
         var objs = new Object[fieldSetters.length];
         for (int i = 0; i < fieldSetters.length; i = i + 1) {
             if (indexInfo[i] != -1) {// -1 需要跳过
-                objs[i] = fieldSetters[i].getObject(rs, indexInfo[i]);
+                objs[i] = fieldSetters[i].typeHandler().getObject(rs, indexInfo[i]);
+            } else {// 这里我们使用 nullValue 用来处理基本类型(byte,short,int...)的问题
+                objs[i] = fieldSetters[i].typeHandler().getNullValue();
             }
         }
         return newInstance(objs);
