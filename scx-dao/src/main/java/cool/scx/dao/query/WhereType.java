@@ -1,6 +1,4 @@
-package cool.scx.dao.where;
-
-import static cool.scx.dao.where.WhereTypeHandler.*;
+package cool.scx.dao.query;
 
 /**
  * WhereType <br>
@@ -14,87 +12,87 @@ public enum WhereType {
     /**
      * 为空
      */
-    IS_NULL(0, "IS NULL", IS_NULL_HANDLER),
+    IS_NULL(0, "IS NULL"),
 
     /**
      * 不为空
      */
-    IS_NOT_NULL(0, "IS NOT NULL", IS_NOT_NULL_HANDLER),
+    IS_NOT_NULL(0, "IS NOT NULL"),
 
     /**
      * 等于
      */
-    EQUAL(1, "=", EQUAL_HANDLER),
+    EQUAL(1, "="),
 
     /**
      * 不等于
      */
-    NOT_EQUAL(1, "<>", NOT_EQUAL_HANDLER),
+    NOT_EQUAL(1, "<>"),
 
     /**
      * 小于
      */
-    LESS_THAN(1, "<", LESS_THAN_HANDLER),
+    LESS_THAN(1, "<"),
 
     /**
      * 小于等于
      */
-    LESS_THAN_OR_EQUAL(1, "<=", LESS_THAN_OR_EQUAL_HANDLER),
+    LESS_THAN_OR_EQUAL(1, "<="),
 
     /**
      * 大于
      */
-    GREATER_THAN(1, ">", GREATER_THAN_HANDLER),
+    GREATER_THAN(1, ">"),
 
     /**
      * 大于等于
      */
-    GREATER_THAN_OR_EQUAL(1, ">=", GREATER_THAN_OR_EQUAL_HANDLER),
+    GREATER_THAN_OR_EQUAL(1, ">="),
 
     /**
      * Like
      */
-    LIKE(1, "LIKE", LIKE_HANDLER),
+    LIKE(1, "LIKE"),
 
     /**
      * Not Like
      */
-    NOT_LIKE(1, "NOT LIKE", NOT_LIKE_HANDLER),
+    NOT_LIKE(1, "NOT LIKE"),
 
     /**
      * Like 正则表达式
      */
-    LIKE_REGEX(1, "LIKE", LIKE_REGEX_HANDLER),
+    LIKE_REGEX(1, "LIKE"),
 
     /**
      * Like 正则表达式
      */
-    NOT_LIKE_REGEX(1, "NOT LIKE", NOT_LIKE_REGEX_HANDLER),
+    NOT_LIKE_REGEX(1, "NOT LIKE"),
 
     /**
      * IN
      */
-    IN(1, "IN", IN_HANDLER),
+    IN(1, "IN"),
 
     /**
      * NOT IN
      */
-    NOT_IN(1, "NOT IN", NOT_IN_HANDLER),
+    NOT_IN(1, "NOT IN"),
 
     /**
      * 在之间
      */
-    BETWEEN(2, "BETWEEN", BETWEEN_HANDLER),
+    BETWEEN(2, "BETWEEN"),
 
     /**
      * 不在之间
      */
-    NOT_BETWEEN(2, "NOT BETWEEN", NOT_BETWEEN_HANDLER),
+    NOT_BETWEEN(2, "NOT BETWEEN"),
 
     /**
      * json 包含 一般用于 数组判断
      */
-    JSON_CONTAINS(1, "JSON_CONTAINS", JSON_CONTAINS_HANDLER);
+    JSON_CONTAINS(1, "JSON_CONTAINS");
 
     /**
      * 参数数量 用于校验
@@ -107,21 +105,14 @@ public enum WhereType {
     private final String keyWord;
 
     /**
-     * handler
-     */
-    private final WhereTypeHandler whereTypeHandler;
-
-    /**
      * 设置 参数数量 和关键字
      *
-     * @param paramSize        p
-     * @param keyWord          k
-     * @param whereTypeHandler a
+     * @param paramSize p
+     * @param keyWord   k
      */
-    WhereType(int paramSize, String keyWord, WhereTypeHandler whereTypeHandler) {
+    WhereType(int paramSize, String keyWord) {
         this.paramSize = paramSize;
         this.keyWord = keyWord;
-        this.whereTypeHandler = whereTypeHandler;
     }
 
     /**
@@ -150,10 +141,6 @@ public enum WhereType {
      */
     public String keyWord() {
         return keyWord;
-    }
-
-    public WhereTypeHandler whereTypeHandler() {
-        return whereTypeHandler;
     }
 
 }

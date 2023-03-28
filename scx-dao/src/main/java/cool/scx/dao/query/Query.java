@@ -1,13 +1,4 @@
-package cool.scx.dao;
-
-import cool.scx.dao.group_by.GroupBy;
-import cool.scx.dao.group_by.GroupByOption;
-import cool.scx.dao.order_by.OrderBy;
-import cool.scx.dao.order_by.OrderByOption;
-import cool.scx.dao.order_by.OrderByType;
-import cool.scx.dao.pagination.Pagination;
-import cool.scx.dao.where.Where;
-import cool.scx.dao.where.WhereOption;
+package cool.scx.dao.query;
 
 /**
  * 查询参数类<br>
@@ -38,7 +29,7 @@ public final class Query {
     /**
      * 分页参数
      */
-    private final Pagination pagination;
+    private final Limit limit;
 
     /**
      * 创建 Query 对象
@@ -47,7 +38,7 @@ public final class Query {
         this.orderBy = new OrderBy();
         this.groupBy = new GroupBy();
         this.where = new Where();
-        this.pagination = new Pagination();
+        this.limit = new Limit();
     }
 
     /**
@@ -59,7 +50,7 @@ public final class Query {
         this.orderBy = new OrderBy(oldQuery.orderBy);
         this.groupBy = new GroupBy(oldQuery.groupBy);
         this.where = new Where(oldQuery.where);
-        this.pagination = new Pagination(oldQuery.pagination);
+        this.limit = new Limit(oldQuery.limit);
     }
 
     /**
@@ -92,10 +83,10 @@ public final class Query {
     /**
      * <p>pagination.</p>
      *
-     * @return a {@link Pagination} object
+     * @return a {@link Limit} object
      */
-    public Pagination pagination() {
-        return pagination;
+    public Limit limit() {
+        return limit;
     }
 
     /**
@@ -134,23 +125,23 @@ public final class Query {
     /**
      * 设置分页参数
      *
-     * @param currentPage 分页页码
-     * @param pageSize    每页数量
+     * @param offset   偏移量
+     * @param rowCount 长度
      * @return p
      */
-    public Query setPagination(Integer currentPage, Integer pageSize) {
-        pagination.set(currentPage, pageSize);
+    public Query setLimit(Integer offset, Integer rowCount) {
+        limit.set(offset, rowCount);
         return this;
     }
 
     /**
      * 设置分页 默认 第一页
      *
-     * @param pageSize a {@link java.lang.Integer} object.
+     * @param rowCount a {@link java.lang.Integer} object.
      * @return a 当前实例
      */
-    public Query setPagination(Integer pageSize) {
-        pagination.set(pageSize);
+    public Query setLimit(Integer rowCount) {
+        limit.set(rowCount);
         return this;
     }
 
@@ -159,8 +150,8 @@ public final class Query {
      *
      * @return a
      */
-    public Query clearPagination() {
-        pagination.clear();
+    public Query clearLimit() {
+        limit.clear();
         return this;
     }
 

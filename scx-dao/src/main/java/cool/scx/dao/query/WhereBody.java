@@ -1,7 +1,6 @@
-package cool.scx.dao.where;
+package cool.scx.dao.query;
 
-import cool.scx.dao.mapping.TableInfo;
-import cool.scx.dao.where.exception.WrongWhereTypeParamSizeException;
+import cool.scx.dao.query.exception.WrongWhereTypeParamSizeException;
 import cool.scx.util.StringUtils;
 
 /**
@@ -256,10 +255,6 @@ public record WhereBody(String name, WhereType whereType, Object value1, Object 
             validParamSize = validParamSize + 1;
         }
         return validParamSize;
-    }
-
-    public WhereParamsAndWhereClause getWhereParamsAndWhereClause(TableInfo<?> tableInfo) {
-        return whereType.whereTypeHandler().getWhereParamsAndWhereClause(tableInfo, this.name, this.whereType, this.value1, this.value2, this.info);
     }
 
 }

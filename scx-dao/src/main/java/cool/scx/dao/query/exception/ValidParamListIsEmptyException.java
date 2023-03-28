@@ -1,6 +1,6 @@
-package cool.scx.dao.where.exception;
+package cool.scx.dao.query.exception;
 
-import cool.scx.dao.where.WhereType;
+import cool.scx.dao.query.WhereType;
 
 /**
  * 当 whereType 为 in 或 not in 时 有效的参数条目 (指去除 null 后的) 为空

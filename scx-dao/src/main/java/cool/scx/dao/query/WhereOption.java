@@ -1,4 +1,4 @@
-package cool.scx.dao.where;
+package cool.scx.dao.query;
 
 /**
  * a
@@ -60,7 +60,7 @@ public enum WhereOption {
      * @author scx567888
      * @version 0.0.1
      */
-    static final class Info {
+    public static final class Info {
 
         /**
          * 是否替换已有的相同名称的 WhereBody
@@ -143,7 +143,7 @@ public enum WhereOption {
          *
          * @return a
          */
-        boolean useOriginalName() {
+        public boolean useOriginalName() {
             return useOriginalName;
         }
 
@@ -152,11 +152,11 @@ public enum WhereOption {
          *
          * @return a
          */
-        boolean useJsonExtract() {
+        public boolean useJsonExtract() {
             return useJsonExtract;
         }
 
-        boolean useOriginalValue() {
+        public boolean useOriginalValue() {
             return useOriginalValue;
         }
 

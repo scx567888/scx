@@ -1,6 +1,4 @@
-package cool.scx.dao.order_by;
-
-import cool.scx.dao.mapping.TableInfo;
+package cool.scx.dao.query;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,15 +75,6 @@ public final class OrderBy {
     }
 
     /**
-     * <p>getOrderByClauses.</p>
-     *
-     * @return an array of {@link java.lang.String} objects
-     */
-    public String[] getOrderByClauses(TableInfo<?> tableInfo) {
-        return orderByBodyList.stream().map(c -> c.orderByClause(tableInfo)).toArray(String[]::new);
-    }
-
-    /**
      * a
      *
      * @param name a
@@ -104,6 +93,10 @@ public final class OrderBy {
     public OrderBy clear() {
         orderByBodyList.clear();
         return this;
+    }
+
+    public List<OrderByBody> orderByBodyList() {
+        return orderByBodyList;
     }
 
 }

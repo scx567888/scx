@@ -1,29 +1,29 @@
-package cool.scx.dao.pagination;
+package cool.scx.dao.query;
 
 /**
- * 分页参数
+ * 条数限制
  *
  * @author scx567888
  * @version 0.0.1
  */
-public final class Pagination {
+public final class Limit {
 
     /**
      * 当前页 页码 默认为空 即不设置页码
      */
-    private Integer currentPage;
+    private Integer offset;
 
     /**
      * 每页数量分页 每页数量 默认为空 即不设置分页内容
      */
-    private Integer pageSize;
+    private Integer rowCount;
 
     /**
      * 创建一个 Pagination 对象
      */
-    public Pagination() {
-        this.currentPage = null;
-        this.pageSize = null;
+    public Limit() {
+        this.offset = null;
+        this.rowCount = null;
     }
 
     /**
@@ -31,38 +31,38 @@ public final class Pagination {
      *
      * @param oldPagination 旧的 Pagination
      */
-    public Pagination(Pagination oldPagination) {
-        this.currentPage = oldPagination.currentPage;
-        this.pageSize = oldPagination.pageSize;
+    public Limit(Limit oldPagination) {
+        this.offset = oldPagination.offset;
+        this.rowCount = oldPagination.rowCount;
     }
 
     /**
      * 设置分页参数
      *
-     * @param currentPage 分页页码 注意从 0 开始
-     * @param pageSize    每页数量
+     * @param offset   偏移量
+     * @param rowCount 长度
      * @return p
      */
-    public Pagination set(Integer currentPage, Integer pageSize) {
-        if (currentPage == null || currentPage < 0) {
+    public Limit set(Integer offset, Integer rowCount) {
+        if (offset == null || offset < 0) {
             throw new IllegalArgumentException("分页参数错误 : currentPage (分页页码) 不能为空或小于 0 !!!");
         }
-        if (pageSize == null || pageSize < 0) {
+        if (rowCount == null || rowCount < 0) {
             throw new IllegalArgumentException("分页参数错误 : pageSize (每页数量) 不能为空或小于 0 !!!");
         }
-        this.currentPage = currentPage;
-        this.pageSize = pageSize;
+        this.offset = offset;
+        this.rowCount = rowCount;
         return this;
     }
 
     /**
      * 设置每页数量
      *
-     * @param pageSize s
+     * @param rowCount 长度
      * @return s
      */
-    public Pagination set(Integer pageSize) {
-        return set(0, pageSize);
+    public Limit set(Integer rowCount) {
+        return set(0, rowCount);
     }
 
     /**
@@ -71,7 +71,7 @@ public final class Pagination {
      * @return a int
      */
     public Integer offset() {
-        return pageSize != null && currentPage != null ? pageSize * currentPage : null;
+        return offset;
     }
 
     /**
@@ -80,7 +80,7 @@ public final class Pagination {
      * @return rowCount
      */
     public Integer rowCount() {
-        return pageSize;
+        return rowCount;
     }
 
     /**
@@ -88,9 +88,9 @@ public final class Pagination {
      *
      * @return a
      */
-    public Pagination clear() {
-        this.currentPage = null;
-        this.pageSize = null;
+    public Limit clear() {
+        this.offset = null;
+        this.rowCount = null;
         return this;
     }
 

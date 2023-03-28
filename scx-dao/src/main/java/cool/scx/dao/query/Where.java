@@ -1,10 +1,7 @@
-package cool.scx.dao.where;
+package cool.scx.dao.query;
 
-import cool.scx.dao.mapping.TableInfo;
-import cool.scx.dao.where.exception.ValidParamListIsEmptyException;
-import cool.scx.dao.where.exception.WrongWhereTypeParamSizeException;
-import cool.scx.sql.sql.SQL;
-import cool.scx.util.StringUtils;
+import cool.scx.dao.query.exception.ValidParamListIsEmptyException;
+import cool.scx.dao.query.exception.WrongWhereTypeParamSizeException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -400,34 +397,8 @@ public final class Where {
         return this;
     }
 
-    public WhereParamsAndWhereClauses getWhereParamsAndWhereClauses(TableInfo<?> tableInfo) {
-        //先处理 whereBodyList
-        var whereClauses = new ArrayList<String>();
-        var whereParams = new ArrayList<>();
-        for (WhereBody whereBody : whereBodyList) {
-            var whereParamsAndWhereClause = whereBody.getWhereParamsAndWhereClause(tableInfo);
-            whereClauses.add(whereParamsAndWhereClause.whereClause());
-            whereParams.addAll(List.of(whereParamsAndWhereClause.whereParams()));
-        }
-        //再处理 whereSQL
-        var tempWhereSQL = new StringBuilder();
-        for (var o : whereSQL) {
-            if (o instanceof String s) {
-                tempWhereSQL.append(s);
-            } else if (o instanceof WhereBody w) {
-                var whereParamsAndWhereClause = w.getWhereParamsAndWhereClause(tableInfo);
-                tempWhereSQL.append(whereParamsAndWhereClause.whereClause());
-                whereParams.addAll(List.of(whereParamsAndWhereClause.whereParams()));
-            } else if (o instanceof SQL a) {
-                tempWhereSQL.append("(").append(a.sql()).append(")");
-                whereParams.addAll(List.of(a.params()));
-            }
-        }
-        var whereSQL = tempWhereSQL.toString();
-        if (StringUtils.notBlank(whereSQL)) {
-            whereClauses.add(whereSQL);
-        }
-        return new WhereParamsAndWhereClauses(whereParams.toArray(), whereClauses.toArray(String[]::new));
+    public List<WhereBody> whereBodyList() {
+        return whereBodyList;
     }
 
 }

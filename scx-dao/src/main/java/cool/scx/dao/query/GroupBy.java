@@ -1,6 +1,4 @@
-package cool.scx.dao.group_by;
-
-import cool.scx.dao.mapping.TableInfo;
+package cool.scx.dao.query;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,14 +67,8 @@ public final class GroupBy {
         return this;
     }
 
-    /**
-     * <p>getGroupByColumns.</p>
-     *
-     * @return an array of {@link java.lang.String} objects
-     */
-    public String[] getGroupByColumns(TableInfo<?> tableInfo) {
-        //此处去重
-        return groupByBodyList.stream().map(c -> c.groupByColumn(tableInfo)).distinct().toArray(String[]::new);
+    public List<GroupByBody> groupByBodyList() {
+        return groupByBodyList;
     }
 
 }
