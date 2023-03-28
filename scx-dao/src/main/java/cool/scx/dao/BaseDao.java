@@ -64,6 +64,11 @@ public interface BaseDao<Entity, ID> {
      */
     long count(Query query);
 
+    /**
+     * 获取 类
+     *
+     * @return a
+     */
     Class<Entity> _entityClass();
 
 }

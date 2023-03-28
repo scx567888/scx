@@ -43,7 +43,7 @@ public final class ColumnFilter {
     }
 
     /**
-     * 启用白名单模式 (当一个实体类所对应的 field 的值为 null 时, 会将此 field 所对应的列排除, 详情请看 {@link UpdateFilter#ofIncluded(boolean)})
+     * 启用白名单模式 (当一个实体类所对应的 field 的值为 null 时, 会将此 field 所对应的列排除, 详情请看 {@link ColumnFilter#ofIncluded(boolean)})
      *
      * @return a
      */
@@ -83,7 +83,7 @@ public final class ColumnFilter {
     }
 
     /**
-     * 启用黑名单模式 (当一个实体类所对应的 field 的值为 null 时, 会将此 field 所对应的列排除, 详情请看 {@link UpdateFilter#ofExcluded(boolean)})
+     * 启用黑名单模式 (当一个实体类所对应的 field 的值为 null 时, 会将此 field 所对应的列排除, 详情请看 {@link ColumnFilter#ofExcluded(boolean)})
      *
      * @return a
      */

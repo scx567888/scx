@@ -1,4 +1,6 @@
-package cool.scx.dao.query;
+package cool.scx.dao;
+
+import cool.scx.dao.query.*;
 
 /**
  * 查询参数类<br>
