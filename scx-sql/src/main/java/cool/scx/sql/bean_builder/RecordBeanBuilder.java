@@ -18,7 +18,7 @@ import static cool.scx.util.reflect.ConstructorUtils.findRecordConstructor;
  * @author scx567888
  * @version 0.2.1
  */
-public final class RecordBeanBuilder<T> implements BeanBuilder<T> {
+final class RecordBeanBuilder<T> implements BeanBuilder<T> {
 
     private final Constructor<T> constructor;
 

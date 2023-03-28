@@ -16,7 +16,7 @@ import static cool.scx.util.reflect.ConstructorUtils.findNoArgsConstructor;
  * @author scx567888
  * @version 0.2.1
  */
-public final class NormalBeanBuilder<T> implements BeanBuilder<T> {
+final class NormalBeanBuilder<T> implements BeanBuilder<T> {
 
     private final Constructor<T> constructor;
 
