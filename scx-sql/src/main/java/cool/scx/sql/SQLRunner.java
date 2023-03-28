@@ -3,6 +3,8 @@ package cool.scx.sql;
 import cool.scx.functional.ScxConsumer;
 import cool.scx.functional.ScxFunction;
 import cool.scx.functional.ScxRunnable;
+import cool.scx.sql.result_handler.ResultHandler;
+import cool.scx.sql.sql.SQL;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
