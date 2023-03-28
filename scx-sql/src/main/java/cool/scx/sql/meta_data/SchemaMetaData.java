@@ -4,7 +4,7 @@ import cool.scx.sql.mapping.SchemaMapping;
 
 import java.sql.DatabaseMetaData;
 
-import static cool.scx.sql.MetaDataHelper.initTables;
+import static cool.scx.sql.meta_data.MetaDataHelper.initTables;
 
 public final class SchemaMetaData implements SchemaMapping {
 

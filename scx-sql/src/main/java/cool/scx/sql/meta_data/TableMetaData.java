@@ -6,7 +6,7 @@ import java.sql.DatabaseMetaData;
 import java.util.HashMap;
 import java.util.Map;
 
-import static cool.scx.sql.MetaDataHelper.*;
+import static cool.scx.sql.meta_data.MetaDataHelper.*;
 
 public final class TableMetaData implements TableMapping<ColumnMetaData, PrimaryKeyMetaData> {
 

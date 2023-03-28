@@ -1,6 +1,6 @@
-package cool.scx.sql;
+package cool.scx.sql.meta_data;
 
-import cool.scx.sql.meta_data.*;
+import cool.scx.sql.result_handler.ResultHandler;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static cool.scx.sql.ResultHandler.ofBeanList;
+import static cool.scx.sql.result_handler.ResultHandler.ofBeanList;
 
 public final class MetaDataHelper {
 
