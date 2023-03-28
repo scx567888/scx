@@ -7,8 +7,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static cool.scx.sql.result_handler.BeanHandler.getIndexInfo;
-
 /**
  * a
  *
@@ -23,7 +21,7 @@ record BeanListHandler<T>(BeanBuilder<T> beanBuilder) implements ResultHandler<L
      */
     @Override
     public List<T> apply(ResultSet rs) throws SQLException {
-        var indexInfo = getIndexInfo(rs.getMetaData(), beanBuilder.fieldSetters());
+        var indexInfo = beanBuilder.getIndexInfo(rs.getMetaData());
         var list = new ArrayList<T>();
         //从rs中取出数据，并且封装到ArrayList中
         while (rs.next()) {
