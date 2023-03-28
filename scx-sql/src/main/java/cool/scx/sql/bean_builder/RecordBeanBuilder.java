@@ -62,8 +62,8 @@ final class RecordBeanBuilder<T> implements BeanBuilder<T> {
         for (int i = 0; i < fieldSetters.length; i = i + 1) {
             if (indexInfo[i] != -1) {// -1 需要跳过
                 objs[i] = fieldSetters[i].typeHandler().getObject(rs, indexInfo[i]);
-            } else {// 这里我们使用 nullValue 用来处理基本类型(byte,short,int...)的问题
-                objs[i] = fieldSetters[i].typeHandler().getNullValue();
+            } else {// 这里我们使用 默认值
+                objs[i] = fieldSetters[i].typeHandler().getDefaultValue();
             }
         }
         return newInstance(objs);

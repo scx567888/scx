@@ -13,11 +13,11 @@ public interface TypeHandler<T> {
     T getObject(ResultSet rs, int index) throws SQLException;
 
     /**
-     * primary 值需要返回 非空值
+     * 类型的默认值
      *
      * @return nullValue
      */
-    default T getNullValue() {
+    default T getDefaultValue() {
         return null;
     }
 

@@ -9,12 +9,12 @@ abstract class _PrimitiveTypeHandler<T> implements TypeHandler<T> {
 
     final boolean isPrimitive;
 
-    final T nullValue;
+    final T defaultValue;
 
-    _PrimitiveTypeHandler(boolean isPrimitive, T nullValue) {
+    _PrimitiveTypeHandler(boolean isPrimitive, T defaultValue) {
         this.isPrimitive = isPrimitive;
-        //包装类我们采用 null, 只有基类则采用 nullValue
-        this.nullValue = isPrimitive ? nullValue : null;
+        // 处理基类以外全使用 null
+        this.defaultValue = isPrimitive ? defaultValue : null;
     }
 
     @Override
@@ -23,15 +23,16 @@ abstract class _PrimitiveTypeHandler<T> implements TypeHandler<T> {
         if (rs.wasNull()) {
             object = null;
         }
+        // 基类不允许为空 所以我们在检测到基类为空时 返回默认值
         if (isPrimitive && object == null) {
-            return nullValue;
+            return defaultValue;
         }
         return object;
     }
 
     @Override
-    public T getNullValue() {
-        return nullValue;
+    public T getDefaultValue() {
+        return defaultValue;
     }
 
     public abstract T getObject0(ResultSet rs, int index) throws SQLException;
