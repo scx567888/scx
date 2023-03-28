@@ -13,7 +13,8 @@ abstract class _PrimitiveTypeHandler<T> implements TypeHandler<T> {
 
     _PrimitiveTypeHandler(boolean isPrimitive, T nullValue) {
         this.isPrimitive = isPrimitive;
-        this.nullValue = nullValue;
+        //包装类我们采用 null, 只有基类则采用 nullValue
+        this.nullValue = isPrimitive ? nullValue : null;
     }
 
     @Override
