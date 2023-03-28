@@ -1,7 +1,6 @@
-package cool.scx.sql;
+package cool.scx.sql.bean_builder;
 
-import cool.scx.sql.bean_builder.NormalBeanBuilder;
-import cool.scx.sql.bean_builder.RecordBeanBuilder;
+import cool.scx.sql.FieldSetter;
 
 import java.lang.reflect.Field;
 import java.sql.ResultSet;
