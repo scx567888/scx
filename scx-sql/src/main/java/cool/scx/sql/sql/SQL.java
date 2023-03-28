@@ -1,8 +1,4 @@
-package cool.scx.sql;
-
-import cool.scx.sql.sql.NamedParameterSQL;
-import cool.scx.sql.sql.NormalSQL;
-import cool.scx.sql.sql.PlaceholderSQL;
+package cool.scx.sql.sql;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

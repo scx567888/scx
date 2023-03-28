@@ -1,7 +1,6 @@
 package cool.scx.sql.sql;
 
-import cool.scx.sql.SQL;
-import cool.scx.sql.TypeHandlerRegistry;
+import cool.scx.sql.type_handler.TypeHandlerSelector;
 
 import java.sql.*;
 import java.util.List;
@@ -12,7 +11,7 @@ import java.util.List;
  * @author scx567888
  * @version 0.0.1
  */
-public final class PlaceholderSQL implements SQL {
+final class PlaceholderSQL implements SQL {
 
     /**
      * 是否为批量数据
@@ -68,7 +67,7 @@ public final class PlaceholderSQL implements SQL {
                 //这里的 Types.NULL 其实内部并没有使用
                 preparedStatement.setNull(index, Types.NULL);
             } else {
-                var typeHandler = TypeHandlerRegistry.getTypeHandler(tempValue.getClass());
+                var typeHandler = TypeHandlerSelector.findTypeHandler(tempValue.getClass());
                 typeHandler.setObject(preparedStatement, index, tempValue);
             }
             index = index + 1;

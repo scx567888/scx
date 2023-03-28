@@ -11,7 +11,7 @@ import cool.scx.dao.UpdateFilter;
 import cool.scx.dao.where.WhereOption;
 import cool.scx.http_client.ScxHttpClientHelper;
 import cool.scx.http_client.body.FormData;
-import cool.scx.sql.SQL;
+import cool.scx.sql.sql.SQL;
 import cool.scx.test.car.Car;
 import cool.scx.test.car.CarColor;
 import cool.scx.test.car.CarOwner;

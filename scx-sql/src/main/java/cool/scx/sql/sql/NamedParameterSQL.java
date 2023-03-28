@@ -1,8 +1,6 @@
 package cool.scx.sql.sql;
 
 
-import cool.scx.sql.SQL;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -17,7 +15,7 @@ import java.util.regex.Pattern;
  * @author scx567888
  * @version 0.0.1
  */
-public final class NamedParameterSQL implements SQL {
+final class NamedParameterSQL implements SQL {
 
     /**
      * 具名参数匹配的正则表达式

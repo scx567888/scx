@@ -1,7 +1,5 @@
 package cool.scx.sql.sql;
 
-import cool.scx.sql.SQL;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -13,7 +11,7 @@ import java.sql.Statement;
  * @author scx567888
  * @version 0.0.7
  */
-public final class NormalSQL implements SQL {
+final class NormalSQL implements SQL {
 
     /**
      * a
