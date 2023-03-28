@@ -4,7 +4,7 @@ import cool.scx.sql.mapping.CatalogMapping;
 
 import java.sql.DatabaseMetaData;
 
-import static cool.scx.sql.MetaDataHelper.initSchemas;
+import static cool.scx.sql.meta_data.MetaDataHelper.initSchemas;
 
 public final class CatalogMetaData implements CatalogMapping {
 

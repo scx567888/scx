@@ -1,14 +1,11 @@
 package cool.scx.sql.result_handler;
 
-import cool.scx.sql.BeanBuilder;
-import cool.scx.sql.ResultHandler;
+import cool.scx.sql.bean_builder.BeanBuilder;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import static cool.scx.sql.result_handler.BeanHandler.getIndexInfo;
 
 /**
  * a
@@ -16,13 +13,7 @@ import static cool.scx.sql.result_handler.BeanHandler.getIndexInfo;
  * @author scx567888
  * @version 0.0.1
  */
-public class BeanListHandler<T> implements ResultHandler<List<T>> {
-
-    protected final BeanBuilder<T> beanBuilder;
-
-    public BeanListHandler(BeanBuilder<T> beanBuilder) {
-        this.beanBuilder = beanBuilder;
-    }
+record BeanListHandler<T>(BeanBuilder<T> beanBuilder) implements ResultHandler<List<T>> {
 
     /**
      * {@inheritDoc}
@@ -30,7 +21,7 @@ public class BeanListHandler<T> implements ResultHandler<List<T>> {
      */
     @Override
     public List<T> apply(ResultSet rs) throws SQLException {
-        var indexInfo = getIndexInfo(rs.getMetaData(), beanBuilder.fieldSetters());
+        var indexInfo = beanBuilder.getIndexInfo(rs.getMetaData());
         var list = new ArrayList<T>();
         //从rs中取出数据，并且封装到ArrayList中
         while (rs.next()) {

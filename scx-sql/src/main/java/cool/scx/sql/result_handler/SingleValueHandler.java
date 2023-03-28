@@ -1,7 +1,5 @@
 package cool.scx.sql.result_handler;
 
-import cool.scx.sql.ResultHandler;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -12,7 +10,7 @@ import java.sql.SQLException;
  * @author scx567888
  * @version 0.0.1
  */
-public final class SingleValueHandler<T> implements ResultHandler<T> {
+final class SingleValueHandler<T> implements ResultHandler<T> {
 
     /**
      * 列索引

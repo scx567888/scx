@@ -4,7 +4,7 @@ import cool.scx.sql.mapping.SchemaMapping;
 
 import java.sql.DatabaseMetaData;
 
-import static cool.scx.sql.MetaDataHelper.initTables;
+import static cool.scx.sql.meta_data.MetaDataHelper.initTables;
 
 public final class SchemaMetaData implements SchemaMapping {
 
@@ -41,7 +41,6 @@ public final class SchemaMetaData implements SchemaMapping {
         if (deep) {
             for (var table : tables) {
                 table.refreshColumns(dbMetaData);
-                table.refreshPrimaryKeys(dbMetaData);
             }
         }
         return this;

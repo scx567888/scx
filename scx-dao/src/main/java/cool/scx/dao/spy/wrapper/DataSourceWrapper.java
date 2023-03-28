@@ -1,6 +1,5 @@
 package cool.scx.dao.spy.wrapper;
 
-import cool.scx.dao.SchemaHelper;
 import cool.scx.dao.spy.SpyEventListener;
 import cool.scx.dao.spy.event.LoggingEventListener;
 
@@ -8,6 +7,8 @@ import javax.sql.DataSource;
 import java.io.PrintWriter;
 import java.sql.*;
 import java.util.logging.Logger;
+
+import static cool.scx.dao.dialect.DialectSelector.findDialect;
 
 public class DataSourceWrapper extends AbstractWrapper implements DataSource {
 
@@ -21,7 +22,7 @@ public class DataSourceWrapper extends AbstractWrapper implements DataSource {
     }
 
     public DataSourceWrapper(DataSource dataSource) {
-        this(dataSource, new LoggingEventListener(SchemaHelper.findDialect(dataSource)));
+        this(dataSource, new LoggingEventListener(findDialect(dataSource)));
     }
 
     @Override

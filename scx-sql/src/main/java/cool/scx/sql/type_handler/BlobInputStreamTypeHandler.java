@@ -1,7 +1,5 @@
 package cool.scx.sql.type_handler;
 
-import cool.scx.sql.TypeHandler;
-
 import java.io.InputStream;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

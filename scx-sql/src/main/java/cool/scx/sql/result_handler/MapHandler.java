@@ -1,7 +1,5 @@
 package cool.scx.sql.result_handler;
 
-import cool.scx.sql.ResultHandler;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -14,7 +12,9 @@ import java.util.function.Supplier;
  * @author scx567888
  * @version 0.2.1
  */
-public final class MapHandler implements ResultHandler<Map<String, Object>> {
+final class MapHandler implements ResultHandler<Map<String, Object>> {
+
+    static final MapHandler INSTANCE = new MapHandler();
 
     public final Supplier<Map<String, Object>> mapSupplier;
 

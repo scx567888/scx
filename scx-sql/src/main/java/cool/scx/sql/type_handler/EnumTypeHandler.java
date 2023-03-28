@@ -1,6 +1,5 @@
 package cool.scx.sql.type_handler;
 
-import cool.scx.sql.TypeHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

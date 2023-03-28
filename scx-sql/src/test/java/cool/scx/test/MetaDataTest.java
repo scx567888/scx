@@ -110,7 +110,7 @@ public class MetaDataTest {
                         for (var column : table.refreshColumns(con.getMetaData()).columns()) {
                             System.out.println("            " + column.columnName() + " " + column.typeName() + "(" + column.columnSize() + ")" + (column.notNull() ? " NOT NULL" : " NULL") + (column.autoIncrement() ? " AUTOINCREMENT" : "") + " DEFAULT : " + column.defaultValue() + ", REMARKS : " + column.remarks());
                         }
-                        for (var primaryKey : table.refreshPrimaryKeys(con.getMetaData()).primaryKeys()) {
+                        for (var primaryKey : table.primaryKeys()) {
                             System.out.println("            " + primaryKey.columnName() + " primaryKeys ");
                         }
                         System.out.println("        }");

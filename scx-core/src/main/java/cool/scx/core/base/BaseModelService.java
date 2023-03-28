@@ -6,7 +6,7 @@ import cool.scx.dao.SelectFilter;
 import cool.scx.dao.UpdateFilter;
 import cool.scx.dao.impl.AnnotationConfigTableInfo;
 import cool.scx.dao.impl.SQLDao;
-import cool.scx.sql.SQL;
+import cool.scx.sql.sql.SQL;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.Collection;

@@ -1,6 +1,4 @@
-package cool.scx.sql.type_handler.base;
-
-import cool.scx.sql.TypeHandler;
+package cool.scx.sql.type_handler;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

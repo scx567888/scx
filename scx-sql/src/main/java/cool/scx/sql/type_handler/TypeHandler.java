@@ -1,4 +1,4 @@
-package cool.scx.sql;
+package cool.scx.sql.type_handler;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,5 +11,14 @@ public interface TypeHandler<T> {
     }
 
     T getObject(ResultSet rs, int index) throws SQLException;
+
+    /**
+     * 类型的默认值
+     *
+     * @return nullValue
+     */
+    default T getDefaultValue() {
+        return null;
+    }
 
 }

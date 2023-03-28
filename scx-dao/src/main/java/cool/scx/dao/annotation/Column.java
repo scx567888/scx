@@ -17,6 +17,13 @@ import java.lang.annotation.Target;
 public @interface Column {
 
     /**
+     * 列的名称 默认取字段名并进行 驼峰 转下划线
+     *
+     * @return 列的名称
+     */
+    String columnName() default "";
+
+    /**
      * 数据库字段类型 仅用于 创建或修复表时
      *
      * @return 字段类型
@@ -71,12 +78,5 @@ public @interface Column {
      * @return 是否为自增
      */
     boolean autoIncrement() default false;
-
-    /**
-     * 列的名称 默认取字段名并进行 驼峰 转下划线
-     *
-     * @return 列的名称
-     */
-    String columnName() default "";
 
 }

@@ -1,4 +1,4 @@
-package cool.scx.dao;
+package cool.scx.dao.dialect;
 
 import cool.scx.dao.mapping.ColumnInfo;
 import cool.scx.dao.mapping.TableInfo;

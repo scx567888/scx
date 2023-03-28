@@ -6,7 +6,7 @@ import java.sql.DatabaseMetaData;
 import java.util.HashMap;
 import java.util.Map;
 
-import static cool.scx.sql.MetaDataHelper.*;
+import static cool.scx.sql.meta_data.MetaDataHelper.*;
 
 public final class TableMetaData implements TableMapping<ColumnMetaData, PrimaryKeyMetaData> {
 
@@ -18,6 +18,7 @@ public final class TableMetaData implements TableMapping<ColumnMetaData, Primary
     private ColumnMetaData[] columns;
     private Map<String, ColumnMetaData> columnsMap = new HashMap<>();
     private PrimaryKeyMetaData[] primaryKeys;
+    private IndexInfoMetaData[] indexInfo;
 
     public TableMetaData(String catalog, String schema, String tableName, String remarks, _Table _table) {
         this.catalog = catalog;
@@ -54,11 +55,8 @@ public final class TableMetaData implements TableMapping<ColumnMetaData, Primary
     public TableMetaData refreshColumns(DatabaseMetaData dbMetaData) {
         columns = initColumns(dbMetaData, this.catalog, this.schema, this.tableName, null);
         columnsMap = toColumnsMap(columns);
-        return this;
-    }
-
-    public TableMetaData refreshPrimaryKeys(DatabaseMetaData dbMetaData) {
         primaryKeys = initPrimaryKeys(dbMetaData, this.catalog, this.schema, this.tableName);
+        indexInfo = initIndexInfo(dbMetaData, this.catalog, this.schema, this.tableName, false, false);
         return this;
     }
 

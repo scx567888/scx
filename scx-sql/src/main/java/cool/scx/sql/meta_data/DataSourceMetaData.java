@@ -4,7 +4,7 @@ import cool.scx.sql.mapping.DataSourceMapping;
 
 import java.sql.DatabaseMetaData;
 
-import static cool.scx.sql.MetaDataHelper.initCatalogs;
+import static cool.scx.sql.meta_data.MetaDataHelper.initCatalogs;
 
 public final class DataSourceMetaData implements DataSourceMapping {
 

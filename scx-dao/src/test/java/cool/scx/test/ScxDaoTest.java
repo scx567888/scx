@@ -3,10 +3,14 @@ package cool.scx.test;
 import com.mysql.cj.jdbc.MysqlDataSource;
 import com.mysql.cj.xdevapi.Session;
 import com.mysql.cj.xdevapi.SessionFactory;
-import cool.scx.dao.*;
+import cool.scx.dao.Query;
+import cool.scx.dao.SchemaHelper;
+import cool.scx.dao.SelectFilter;
+import cool.scx.dao.UpdateFilter;
 import cool.scx.dao.impl.AnnotationConfigTableInfo;
 import cool.scx.dao.impl.MySQLXDao;
 import cool.scx.dao.impl.SQLDao;
+import cool.scx.dao.spy.Spy;
 import cool.scx.dao.where.WhereBody;
 import cool.scx.dao.where.WhereOption;
 import cool.scx.logging.ScxLoggerFactory;
@@ -26,7 +30,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import static com.mysql.cj.conf.PropertyKey.*;
-import static cool.scx.sql.SQL.ofNormal;
+import static cool.scx.sql.sql.SQL.ofNormal;
 
 public class ScxDaoTest {
 

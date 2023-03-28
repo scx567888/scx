@@ -1,53 +1,25 @@
 package cool.scx.dao;
 
+import cool.scx.dao.dialect.Dialect;
 import cool.scx.dao.mapping.ColumnInfo;
 import cool.scx.dao.mapping.TableInfo;
-import cool.scx.sql.MetaDataHelper;
-import cool.scx.sql.SQL;
 import cool.scx.sql.SQLRunner;
 import cool.scx.sql.mapping.ColumnMapping;
 import cool.scx.sql.mapping.TableMapping;
+import cool.scx.sql.meta_data.MetaDataHelper;
 import cool.scx.sql.meta_data.TableMetaData;
+import cool.scx.sql.sql.SQL;
 
 import javax.sql.DataSource;
-import java.sql.Driver;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.ServiceLoader;
+
+import static cool.scx.dao.dialect.DialectSelector.findDialect;
 
 /**
  * 架构管理工具 todo 待重构
  */
 public final class SchemaHelper {
-
-    private static final List<Dialect> DIALECT_LIST;
-
-    static {
-        DIALECT_LIST = new ArrayList<>();
-        var loader = ServiceLoader.load(Dialect.class);
-        for (var dialect : loader) {
-            DIALECT_LIST.add(dialect);
-        }
-    }
-
-    public static Dialect findDialect(Driver realDriver) {
-        for (Dialect dialect : DIALECT_LIST) {
-            if (dialect.canHandle(realDriver)) {
-                return dialect;
-            }
-        }
-        throw new IllegalArgumentException("未找到对应的方言 !!! " + realDriver.getClass().getName());
-    }
-
-    public static Dialect findDialect(DataSource dataSource) {
-        for (Dialect dialect : DIALECT_LIST) {
-            if (dialect.canHandle(dataSource)) {
-                return dialect;
-            }
-        }
-        throw new IllegalArgumentException("未找到对应的方言 !!! " + dataSource.getClass().getName());
-    }
 
     public static String getMigrateSQL(TableInfo<?> oldTable, TableInfo<?> newTable) {
         return "";
@@ -84,7 +56,7 @@ public final class SchemaHelper {
             var map = MetaDataHelper.toTablesMap(MetaDataHelper.initTables(con.getMetaData(), databaseName, databaseName, tableInfo.tableName(), null));
             TableMetaData tableMetaData = map.get(tableInfo.tableName());
             if (tableMetaData != null) {
-                tableMetaData.refreshColumns(con.getMetaData()).refreshPrimaryKeys(con.getMetaData());
+                tableMetaData.refreshColumns(con.getMetaData());
                 SchemaVerifyResult verify = verify(tableMetaData, tableInfo);
                 //获取不存在的字段
                 var needAdd = verify.getNeedAdd();
@@ -111,7 +83,7 @@ public final class SchemaHelper {
             var map = MetaDataHelper.toTablesMap(MetaDataHelper.initTables(con.getMetaData(), databaseName, databaseName, tableInfo.tableName(), null));
             var tableMetaData = map.get(tableInfo.tableName());
             if (tableMetaData != null) {
-                tableMetaData.refreshColumns(con.getMetaData()).refreshPrimaryKeys(con.getMetaData());
+                tableMetaData.refreshColumns(con.getMetaData());
                 var verify = verify(tableMetaData, tableInfo);
                 //获取不存在的字段
                 var needAdd = verify.getNeedAdd();
