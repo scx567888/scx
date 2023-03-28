@@ -1,6 +1,6 @@
 package cool.scx.sql.type_handler.math;
 
-import cool.scx.sql.TypeHandler;
+import cool.scx.sql.type_handler.TypeHandler;
 
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;

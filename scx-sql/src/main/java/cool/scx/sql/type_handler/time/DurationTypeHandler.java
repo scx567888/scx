@@ -1,6 +1,6 @@
 package cool.scx.sql.type_handler.time;
 
-import cool.scx.sql.TypeHandler;
+import cool.scx.sql.type_handler.TypeHandler;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

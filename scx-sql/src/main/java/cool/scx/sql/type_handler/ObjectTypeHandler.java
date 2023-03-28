@@ -3,7 +3,6 @@ package cool.scx.sql.type_handler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import cool.scx.sql.TypeHandler;
 import cool.scx.util.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
