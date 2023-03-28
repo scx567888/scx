@@ -1,12 +1,14 @@
-package cool.scx.sql.type_handler.base;
-
-import cool.scx.sql.TypeHandler;
+package cool.scx.sql.type_handler.primitive;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class CharacterTypeHandler implements TypeHandler<Character> {
+public class CharacterTypeHandler extends _PrimitiveTypeHandler<Character> {
+
+    public CharacterTypeHandler(boolean isPrimitive) {
+        super(isPrimitive, (char) 0);
+    }
 
     @Override
     public void setObject(PreparedStatement ps, int i, Character parameter) throws SQLException {
@@ -14,7 +16,7 @@ public class CharacterTypeHandler implements TypeHandler<Character> {
     }
 
     @Override
-    public Character getObject(ResultSet rs, int index) throws SQLException {
+    public Character getObject0(ResultSet rs, int index) throws SQLException {
         String columnValue = rs.getString(index);
         if (columnValue == null || columnValue.isEmpty()) {
             return null;
