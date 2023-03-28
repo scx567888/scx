@@ -3,12 +3,12 @@ package cool.scx.dao;
 import cool.scx.dao.dialect.Dialect;
 import cool.scx.dao.mapping.ColumnInfo;
 import cool.scx.dao.mapping.TableInfo;
-import cool.scx.sql.MetaDataHelper;
-import cool.scx.sql.SQL;
 import cool.scx.sql.SQLRunner;
 import cool.scx.sql.mapping.ColumnMapping;
 import cool.scx.sql.mapping.TableMapping;
+import cool.scx.sql.meta_data.MetaDataHelper;
 import cool.scx.sql.meta_data.TableMetaData;
+import cool.scx.sql.sql.SQL;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;

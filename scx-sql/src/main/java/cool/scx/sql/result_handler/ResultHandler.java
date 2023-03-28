@@ -3,10 +3,12 @@ package cool.scx.sql.result_handler;
 import cool.scx.functional.ScxFunction;
 import cool.scx.sql.bean_builder.BeanBuilder;
 
+import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -37,8 +39,16 @@ public interface ResultHandler<T> extends ScxFunction<ResultSet, T, SQLException
         return new BeanHandler<>(BeanBuilder.of(clazz));
     }
 
+    static <C> ResultHandler<C> ofBean(Class<C> clazz, Function<Field, String> columnNameMapping) {
+        return new BeanHandler<>(BeanBuilder.of(clazz, columnNameMapping));
+    }
+
     static <C> ResultHandler<List<C>> ofBeanList(Class<C> clazz) {
         return new BeanListHandler<>(BeanBuilder.of(clazz));
+    }
+
+    static <C> ResultHandler<List<C>> ofBeanList(Class<C> clazz, Function<Field, String> columnNameMapping) {
+        return new BeanListHandler<>(BeanBuilder.of(clazz, columnNameMapping));
     }
 
     static <C> ResultHandler<C> ofSingleValue(String columnName, Class<C> clazz) {

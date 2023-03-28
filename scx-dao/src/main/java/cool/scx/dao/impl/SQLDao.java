@@ -7,12 +7,9 @@ import cool.scx.dao.UpdateFilter;
 import cool.scx.dao.dialect.Dialect;
 import cool.scx.dao.mapping.ColumnInfo;
 import cool.scx.dao.mapping.TableInfo;
-import cool.scx.sql.BeanBuilder;
-import cool.scx.sql.ResultHandler;
-import cool.scx.sql.SQL;
 import cool.scx.sql.SQLRunner;
-import cool.scx.sql.result_handler.BeanListHandler;
-import cool.scx.sql.result_handler.SingleValueHandler;
+import cool.scx.sql.result_handler.ResultHandler;
+import cool.scx.sql.sql.SQL;
 import cool.scx.util.RandomUtils;
 
 import javax.sql.DataSource;
@@ -24,6 +21,8 @@ import java.util.stream.Collectors;
 
 import static cool.scx.dao.SQLBuilder.*;
 import static cool.scx.dao.dialect.DialectSelector.findDialect;
+import static cool.scx.sql.result_handler.ResultHandler.ofBeanList;
+import static cool.scx.sql.result_handler.ResultHandler.ofSingleValue;
 
 /**
  * 最基本的 可以实现 实体类 CRUD 的 DAO
@@ -72,11 +71,11 @@ public class SQLDao<Entity> implements BaseDao<Entity, Long> {
         this.tableInfo = tableInfo;
         this.sqlRunner = new SQLRunner(dataSource);
         this.dialect = findDialect(dataSource);
-        this.entityBeanListHandler = new BeanListHandler<>(BeanBuilder.of(this.entityClass, (field) -> {
+        this.entityBeanListHandler = ofBeanList(this.entityClass, (field) -> {
             var columnInfo = this.tableInfo.getColumn(field.getName());
             return columnInfo == null ? null : columnInfo.columnName();
-        }));
-        this.countResultHandler = new SingleValueHandler<>("count", Long.class);
+        });
+        this.countResultHandler = ofSingleValue("count", Long.class);
     }
 
     /**

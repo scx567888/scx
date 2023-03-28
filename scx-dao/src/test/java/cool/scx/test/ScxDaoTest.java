@@ -30,7 +30,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import static com.mysql.cj.conf.PropertyKey.*;
-import static cool.scx.sql.SQL.ofNormal;
+import static cool.scx.sql.sql.SQL.ofNormal;
 
 public class ScxDaoTest {
 
