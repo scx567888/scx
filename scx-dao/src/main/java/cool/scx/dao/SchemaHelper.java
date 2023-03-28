@@ -56,7 +56,7 @@ public final class SchemaHelper {
             var map = MetaDataHelper.toTablesMap(MetaDataHelper.initTables(con.getMetaData(), databaseName, databaseName, tableInfo.tableName(), null));
             TableMetaData tableMetaData = map.get(tableInfo.tableName());
             if (tableMetaData != null) {
-                tableMetaData.refreshColumns(con.getMetaData()).refreshPrimaryKeys(con.getMetaData());
+                tableMetaData.refreshColumns(con.getMetaData());
                 SchemaVerifyResult verify = verify(tableMetaData, tableInfo);
                 //获取不存在的字段
                 var needAdd = verify.getNeedAdd();
@@ -83,7 +83,7 @@ public final class SchemaHelper {
             var map = MetaDataHelper.toTablesMap(MetaDataHelper.initTables(con.getMetaData(), databaseName, databaseName, tableInfo.tableName(), null));
             var tableMetaData = map.get(tableInfo.tableName());
             if (tableMetaData != null) {
-                tableMetaData.refreshColumns(con.getMetaData()).refreshPrimaryKeys(con.getMetaData());
+                tableMetaData.refreshColumns(con.getMetaData());
                 var verify = verify(tableMetaData, tableInfo);
                 //获取不存在的字段
                 var needAdd = verify.getNeedAdd();
