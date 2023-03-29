@@ -29,7 +29,7 @@ public enum OrderByOption {
      * @author scx567888
      * @version 0.0.1
      */
-   public static final class Info {
+    public static final class Info {
 
         /**
          * 是否替换已有的相同名称的 WhereBody
