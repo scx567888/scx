@@ -14,9 +14,13 @@ public interface Table<C extends Column> {
 
     C[] columns();
 
-    Key[] keys();
+    default Key[] keys(){
+        return new Key[]{};
+    }
 
-    Index[] indexes();
+    default Index[] indexes(){
+        return new Index[]{};
+    }
 
     C getColumn(String column);
 
