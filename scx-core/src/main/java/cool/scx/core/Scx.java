@@ -7,8 +7,8 @@ import cool.scx.config.ScxFeatureConfig;
 import cool.scx.core.enumeration.ScxCoreFeature;
 import cool.scx.core.eventbus.MessageCodecRegistrar;
 import cool.scx.core.scheduler.ScxScheduler;
+import cool.scx.dao.AnnotationConfigTable;
 import cool.scx.dao.SchemaHelper;
-import cool.scx.dao.impl.AnnotationConfigTableInfo;
 import cool.scx.mvc.ScxMvc;
 import cool.scx.mvc.ScxMvcOptions;
 import cool.scx.mvc.websocket.WebSocketRouter;
@@ -247,7 +247,7 @@ public final class Scx {
         var noNeedToFix = 0;
         for (var v : getAllScxBaseModelClassList()) {
             //根据 class 获取 tableInfo
-            var tableInfo = new AnnotationConfigTableInfo(v);
+            var tableInfo = new AnnotationConfigTable(v);
             try {
                 if (SchemaHelper.checkNeedFixTable(tableInfo, databaseName, dataSource)) {
                     SchemaHelper.fixTable(tableInfo, databaseName, dataSource);
@@ -295,7 +295,7 @@ public final class Scx {
         var databaseName = this.scxOptions.dataSourceDatabase();
         for (var v : getAllScxBaseModelClassList()) {
             //根据 class 获取 tableInfo
-            var tableInfo = new AnnotationConfigTableInfo(v);
+            var tableInfo = new AnnotationConfigTable(v);
             try {
                 //有任何需要修复的直接 返回 true
                 if (SchemaHelper.checkNeedFixTable(tableInfo, databaseName, dataSource)) {

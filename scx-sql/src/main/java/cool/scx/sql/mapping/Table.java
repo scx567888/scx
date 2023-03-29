@@ -14,11 +14,11 @@ public interface Table<C extends Column> {
 
     C[] columns();
 
-    default Key[] keys(){
+    default Key[] keys() {
         return new Key[]{};
     }
 
-    default Index[] indexes(){
+    default Index[] indexes() {
         return new Index[]{};
     }
 

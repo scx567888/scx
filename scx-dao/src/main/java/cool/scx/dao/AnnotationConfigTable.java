@@ -35,7 +35,7 @@ public class AnnotationConfigTable implements Table<AnnotationConfigColumn> {
         this.columnMap = initAllColumnMap(columns);
     }
 
-    private static String initTableName(Class<?> clazz) {
+    public static String initTableName(Class<?> clazz) {
         var scxModel = clazz.getAnnotation(cool.scx.dao.annotation.Table.class);
         if (scxModel != null && StringUtils.notBlank(scxModel.tableName())) {
             return scxModel.tableName();

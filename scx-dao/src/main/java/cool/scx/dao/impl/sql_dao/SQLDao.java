@@ -75,13 +75,97 @@ public class SQLDao<Entity> implements BaseDao<Entity, Long> {
     public SQLDao(Class<Entity> entityClass, DataSource dataSource) {
         this.entityClass = entityClass;
         this.dialect = findDialect(dataSource);
-        this.tableInfo = new AnnotationConfigTable( entityClass);
+        this.tableInfo = new AnnotationConfigTable(entityClass);
         this.sqlRunner = new SQLRunner(dataSource);
         this.entityBeanListHandler = ofBeanList(this.entityClass, (field) -> {
             var columnInfo = this.tableInfo.getColumn(field.getName());
             return columnInfo == null ? null : columnInfo.name();
         });
         this.countResultHandler = ofSingleValue("count", Long.class);
+    }
+
+    /**
+     * <p>getGroupByColumns.</p>
+     *
+     * @return an array of {@link java.lang.String} objects
+     */
+    public static String[] getGroupByColumns(GroupBy groupBy, Table<?> tableInfo) {
+        //此处去重
+        return groupBy.groupByBodyList().stream().map(c -> groupByColumn(c, tableInfo)).distinct().toArray(String[]::new);
+    }
+
+    static String groupByColumn(GroupByBody body, Table<?> tableInfo) {
+        return parseColumnName(tableInfo, body.name(), body.info().useJsonExtract(), body.info().useOriginalName());
+    }
+
+    /**
+     * <p>getOrderByClauses.</p>
+     *
+     * @return an array of {@link java.lang.String} objects
+     */
+    public static String[] getOrderByClauses(OrderBy orderBy, Table<?> tableInfo) {
+        return orderBy.orderByBodyList().stream().map(c -> orderByClause(c, tableInfo)).toArray(String[]::new);
+    }
+
+    static String orderByClause(OrderByBody body, Table<?> tableInfo) {
+        var columnName = parseColumnName(tableInfo, body.name(), body.info().useJsonExtract(), body.info().useOriginalName());
+        return columnName + " " + body.orderByType().name();
+    }
+
+    public static WhereParamsAndWhereClauses getWhereParamsAndWhereClauses(Where where, Table<?> tableInfo) {
+        //先处理 whereBodyList
+        var whereClauses = new ArrayList<String>();
+        var whereParams = new ArrayList<>();
+        for (WhereBody whereBody : where.whereBodyList()) {
+            var whereParamsAndWhereClause = getWhereParamsAndWhereClause(whereBody, tableInfo);
+            whereClauses.add(whereParamsAndWhereClause.whereClause());
+            whereParams.addAll(List.of(whereParamsAndWhereClause.whereParams()));
+        }
+        //再处理 whereSQL
+        var tempWhereSQL = new StringBuilder();
+        for (var o : where.whereSQL()) {
+            if (o instanceof String s) {
+                tempWhereSQL.append(s);
+            } else if (o instanceof WhereBody w) {
+                var whereParamsAndWhereClause = getWhereParamsAndWhereClause(w, tableInfo);
+                tempWhereSQL.append(whereParamsAndWhereClause.whereClause());
+                whereParams.addAll(List.of(whereParamsAndWhereClause.whereParams()));
+            } else if (o instanceof SQL a) {
+                tempWhereSQL.append("(").append(a.sql()).append(")");
+                whereParams.addAll(List.of(a.params()));
+            }
+        }
+        var whereSQL = tempWhereSQL.toString();
+        if (StringUtils.notBlank(whereSQL)) {
+            whereClauses.add(whereSQL);
+        }
+        return new WhereParamsAndWhereClauses(whereParams.toArray(), whereClauses.toArray(String[]::new));
+    }
+
+    public static WhereParamsAndWhereClause getWhereParamsAndWhereClause(WhereBody body, Table<?> tableInfo) {
+        return findWhereTypeHandler(body.whereType()).getWhereParamsAndWhereClause(tableInfo, body.name(), body.whereType(), body.value1(), body.value2(), body.info());
+    }
+
+    static WhereTypeHandler findWhereTypeHandler(WhereType whereType) {
+        return switch (whereType) {
+            case IS_NULL -> IS_NULL_HANDLER;
+            case IS_NOT_NULL -> IS_NOT_NULL_HANDLER;
+            case EQUAL -> EQUAL_HANDLER;
+            case NOT_EQUAL -> NOT_EQUAL_HANDLER;
+            case LESS_THAN -> LESS_THAN_HANDLER;
+            case LESS_THAN_OR_EQUAL -> LESS_THAN_OR_EQUAL_HANDLER;
+            case GREATER_THAN -> GREATER_THAN_HANDLER;
+            case GREATER_THAN_OR_EQUAL -> GREATER_THAN_OR_EQUAL_HANDLER;
+            case LIKE -> LIKE_HANDLER;
+            case NOT_LIKE -> NOT_LIKE_HANDLER;
+            case LIKE_REGEX -> LIKE_REGEX_HANDLER;
+            case NOT_LIKE_REGEX -> NOT_LIKE_REGEX_HANDLER;
+            case IN -> IN_HANDLER;
+            case NOT_IN -> NOT_IN_HANDLER;
+            case BETWEEN -> BETWEEN_HANDLER;
+            case NOT_BETWEEN -> NOT_BETWEEN_HANDLER;
+            case JSON_CONTAINS -> JSON_CONTAINS_HANDLER;
+        };
     }
 
     /**
@@ -368,95 +452,6 @@ public class SQLDao<Entity> implements BaseDao<Entity, Long> {
 
     public final SQLRunner _sqlRunner() {
         return this.sqlRunner;
-    }
-
-
-    /**
-     * <p>getGroupByColumns.</p>
-     *
-     * @return an array of {@link java.lang.String} objects
-     */
-    public static String[] getGroupByColumns(GroupBy groupBy, Table<?> tableInfo) {
-        //此处去重
-        return groupBy.groupByBodyList().stream().map(c -> groupByColumn(c, tableInfo)).distinct().toArray(String[]::new);
-    }
-
-
-    static String groupByColumn(GroupByBody body, Table<?> tableInfo) {
-        return parseColumnName(tableInfo, body.name(), body.info().useJsonExtract(), body.info().useOriginalName());
-    }
-
-    /**
-     * <p>getOrderByClauses.</p>
-     *
-     * @return an array of {@link java.lang.String} objects
-     */
-    public static String[] getOrderByClauses(OrderBy orderBy, Table<?> tableInfo) {
-        return orderBy.orderByBodyList().stream().map(c -> orderByClause(c, tableInfo)).toArray(String[]::new);
-    }
-
-    static String orderByClause(OrderByBody body, Table<?> tableInfo) {
-        var columnName = parseColumnName(tableInfo, body.name(), body.info().useJsonExtract(), body.info().useOriginalName());
-        return columnName + " " + body.orderByType().name();
-    }
-
-
-    public static WhereParamsAndWhereClauses getWhereParamsAndWhereClauses(Where where, Table<?> tableInfo) {
-        //先处理 whereBodyList
-        var whereClauses = new ArrayList<String>();
-        var whereParams = new ArrayList<>();
-        for (WhereBody whereBody : where.whereBodyList()) {
-            var whereParamsAndWhereClause = getWhereParamsAndWhereClause(whereBody, tableInfo);
-            whereClauses.add(whereParamsAndWhereClause.whereClause());
-            whereParams.addAll(List.of(whereParamsAndWhereClause.whereParams()));
-        }
-        //再处理 whereSQL
-        var tempWhereSQL = new StringBuilder();
-        for (var o : where.whereSQL()) {
-            if (o instanceof String s) {
-                tempWhereSQL.append(s);
-            } else if (o instanceof WhereBody w) {
-                var whereParamsAndWhereClause = getWhereParamsAndWhereClause(w, tableInfo);
-                tempWhereSQL.append(whereParamsAndWhereClause.whereClause());
-                whereParams.addAll(List.of(whereParamsAndWhereClause.whereParams()));
-            } else if (o instanceof SQL a) {
-                tempWhereSQL.append("(").append(a.sql()).append(")");
-                whereParams.addAll(List.of(a.params()));
-            }
-        }
-        var whereSQL = tempWhereSQL.toString();
-        if (StringUtils.notBlank(whereSQL)) {
-            whereClauses.add(whereSQL);
-        }
-        return new WhereParamsAndWhereClauses(whereParams.toArray(), whereClauses.toArray(String[]::new));
-    }
-
-
-    public static WhereParamsAndWhereClause getWhereParamsAndWhereClause(WhereBody body, Table<?> tableInfo) {
-        return findWhereTypeHandler(body.whereType()).getWhereParamsAndWhereClause(tableInfo, body.name(), body.whereType(), body.value1(), body.value2(), body.info());
-    }
-
-
-    static WhereTypeHandler findWhereTypeHandler(WhereType whereType) {
-        return switch (whereType) {
-            case IS_NULL -> IS_NULL_HANDLER;
-            case IS_NOT_NULL -> IS_NOT_NULL_HANDLER;
-            case EQUAL -> EQUAL_HANDLER;
-            case NOT_EQUAL -> NOT_EQUAL_HANDLER;
-            case LESS_THAN -> LESS_THAN_HANDLER;
-            case LESS_THAN_OR_EQUAL -> LESS_THAN_OR_EQUAL_HANDLER;
-            case GREATER_THAN -> GREATER_THAN_HANDLER;
-            case GREATER_THAN_OR_EQUAL -> GREATER_THAN_OR_EQUAL_HANDLER;
-            case LIKE -> LIKE_HANDLER;
-            case NOT_LIKE -> NOT_LIKE_HANDLER;
-            case LIKE_REGEX -> LIKE_REGEX_HANDLER;
-            case NOT_LIKE_REGEX -> NOT_LIKE_REGEX_HANDLER;
-            case IN -> IN_HANDLER;
-            case NOT_IN -> NOT_IN_HANDLER;
-            case BETWEEN -> BETWEEN_HANDLER;
-            case NOT_BETWEEN -> NOT_BETWEEN_HANDLER;
-            case JSON_CONTAINS -> JSON_CONTAINS_HANDLER;
-        };
     }
 
 }
