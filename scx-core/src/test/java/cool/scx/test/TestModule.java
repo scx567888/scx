@@ -6,9 +6,7 @@ import cool.scx.core.ScxModule;
 import cool.scx.core.base.BaseModelService;
 import cool.scx.core.enumeration.ScxCoreFeature;
 import cool.scx.dao.Query;
-import cool.scx.dao.SelectFilter;
-import cool.scx.dao.UpdateFilter;
-import cool.scx.dao.where.WhereOption;
+import cool.scx.dao.query.WhereOption;
 import cool.scx.http_client.ScxHttpClientHelper;
 import cool.scx.http_client.body.FormData;
 import cool.scx.sql.sql.SQL;
@@ -39,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static cool.scx.core.eventbus.ZeroCopyMessageCodec.ZERO_COPY_CODEC_NAME;
+import static cool.scx.dao.ColumnFilter.ofIncluded;
 import static org.testng.Assert.assertEquals;
 
 public class TestModule extends ScxModule {
@@ -110,7 +109,7 @@ public class TestModule extends ScxModule {
             System.err.println("将 id 大于 200 的 name 设置为空 !!!");
             var c = new Car();
             c.name = null;
-            carService.update(c, new Query().greaterThan("id", 200), UpdateFilter.ofIncluded(false).addIncluded("name"));
+            carService.update(c, new Query().greaterThan("id", 200), ofIncluded(false).addIncluded("name"));
 
             System.err.println("查询所有数据条数 !!! : " + carService.list().size());
             System.err.println("查询所有 id 大于 200 条数 !!! : " + carService.list(new Query().greaterThan("id", 200)).size());
@@ -196,13 +195,13 @@ public class TestModule extends ScxModule {
         }
         //根据所有 person 表中年龄小于 100 的 carID 查询 car 表中的数据
         var cars = carService.list(new Query().in("id",
-                personService.buildListSQL(new Query().lessThan("age", 100), SelectFilter.ofIncluded("carID"))
+                personService.buildListSQL(new Query().lessThan("age", 100), ofIncluded("carID"))
         ));
         var logger = LoggerFactory.getLogger(TestModule.class);
         logger.error("根据所有 person 表中年龄小于 100 的 carID 查询 car 表中的数据 总条数 {}", cars.size());
         //根据所有 person 表中年龄小于 100 的 carID 查询 car 表中的数据
         var cars1 = carService.list(new Query().whereSQL("id IN ",
-                personService.buildListSQL(new Query().lessThan("age", 100), SelectFilter.ofIncluded("carID"))
+                personService.buildListSQL(new Query().lessThan("age", 100), ofIncluded("carID"))
         ));
         logger.error("第二种方式 (whereSQL) : 根据所有 person 表中年龄小于 100 的 carID 查询 car 表中的数据 总条数 {}", cars1.size());
     }

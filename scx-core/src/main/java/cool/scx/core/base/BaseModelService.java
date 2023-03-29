@@ -1,16 +1,16 @@
 package cool.scx.core.base;
 
 import cool.scx.core.ScxContext;
+import cool.scx.dao.ColumnFilter;
 import cool.scx.dao.Query;
-import cool.scx.dao.SelectFilter;
-import cool.scx.dao.UpdateFilter;
-import cool.scx.dao.impl.AnnotationConfigTableInfo;
 import cool.scx.dao.impl.SQLDao;
 import cool.scx.sql.sql.SQL;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
 import java.util.List;
+
+import static cool.scx.dao.ColumnFilter.ofExcluded;
 
 /**
  * 提供一些针对 BaseModel 类型实体类 简单的 CRUD 操作的 service 类
@@ -40,7 +40,7 @@ public class BaseModelService<Entity extends BaseModel> {
         if (genericSuperclass instanceof ParameterizedType) {
             var typeArguments = ((ParameterizedType) genericSuperclass).getActualTypeArguments();
             var entityClass = (Class<Entity>) typeArguments[0];
-            this.baseDao = new SQLDao<>(entityClass, new AnnotationConfigTableInfo(entityClass), ScxContext.dataSource());
+            this.baseDao = new SQLDao<>(entityClass, ScxContext.dataSource());
         } else {
             throw new IllegalArgumentException(this.getClass().getName() + " : 必须设置泛型参数 !!!");
         }
@@ -52,37 +52,37 @@ public class BaseModelService<Entity extends BaseModel> {
      * @param entityClass 继承自 {@link BaseModel} 的实体类 class
      */
     public BaseModelService(Class<Entity> entityClass) {
-        this.baseDao = new SQLDao<>(entityClass, new AnnotationConfigTableInfo(entityClass), ScxContext.dataSource());
+        this.baseDao = new SQLDao<>(entityClass, ScxContext.dataSource());
     }
 
     /**
      * 处理 updateFilter  使在插入或更新数据时永远过滤 "id", "dateCreated", "dateUpdated" 三个字段
      *
      * @param updateFilter u
-     * @return a {@link UpdateFilter} object
+     * @return a {@link ColumnFilter} object
      */
-    private static UpdateFilter updateFilterProcessor(UpdateFilter updateFilter) {
+    private static ColumnFilter updateFilterProcessor(ColumnFilter updateFilter) {
         return updateFilter.addExcluded("id", "createdDate", "updatedDate");
     }
 
     /**
-     * 插入数据 (注意 !!! 这里会在插入之后根据主键再次进行一次查询, 若只是进行插入且对性能有要求请使用 {@link SQLDao#insert(Object, UpdateFilter)})
+     * 插入数据 (注意 !!! 这里会在插入之后根据主键再次进行一次查询, 若只是进行插入且对性能有要求请使用 {@link SQLDao#insert(Object, ColumnFilter)})
      *
      * @param entity 待插入的数据
      * @return 插入成功的数据 如果插入失败或数据没有主键则返回 null
      */
     public final Entity add(Entity entity) {
-        return add(entity, UpdateFilter.ofExcluded());
+        return add(entity, ofExcluded());
     }
 
     /**
-     * 插入数据 (注意 !!! 这里会在插入之后根据主键再次进行一次查询, 若只是进行插入且对性能有要求请使用 {@link SQLDao#insert(Object, UpdateFilter)})
+     * 插入数据 (注意 !!! 这里会在插入之后根据主键再次进行一次查询, 若只是进行插入且对性能有要求请使用 {@link SQLDao#insert(Object, ColumnFilter)})
      *
      * @param entity       待插入的数据
      * @param updateFilter 更新字段过滤器
      * @return 插入成功的数据 如果插入失败或数据没有主键则返回 null
      */
-    public Entity add(Entity entity, UpdateFilter updateFilter) {
+    public Entity add(Entity entity, ColumnFilter updateFilter) {
         var newID = baseDao.insert(entity, updateFilterProcessor(updateFilter));
         return newID != null ? this.get(newID) : null;
     }
@@ -95,7 +95,7 @@ public class BaseModelService<Entity extends BaseModel> {
      */
     public final List<Long> add(Collection<Entity> entityList) {
         //此处没有设置 f
-        return add(entityList, UpdateFilter.ofExcluded());
+        return add(entityList, ofExcluded());
     }
 
     /**
@@ -105,7 +105,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @param updateFilter 更新字段过滤器
      * @return 插入成功的数据的自增主键列表
      */
-    public List<Long> add(Collection<Entity> entityList, UpdateFilter updateFilter) {
+    public List<Long> add(Collection<Entity> entityList, ColumnFilter updateFilter) {
         return baseDao.insertBatch(entityList, updateFilterProcessor(updateFilter));
     }
 
@@ -115,7 +115,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 所有数据
      */
     public final List<Entity> list() {
-        return list(SelectFilter.ofExcluded());
+        return list(ofExcluded());
     }
 
     /**
@@ -124,7 +124,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @param selectFilter 查询字段过滤器
      * @return 所有数据
      */
-    public final List<Entity> list(SelectFilter selectFilter) {
+    public final List<Entity> list(ColumnFilter selectFilter) {
         return list(new Query(), selectFilter);
     }
 
@@ -145,7 +145,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 数据列表
      */
     public final List<Entity> list(Query query) {
-        return list(query, SelectFilter.ofExcluded());
+        return list(query, ofExcluded());
     }
 
     /**
@@ -155,7 +155,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @param selectFilter 查询字段过滤器
      * @return 数据列表
      */
-    public List<Entity> list(Query query, SelectFilter selectFilter) {
+    public List<Entity> list(Query query, ColumnFilter selectFilter) {
         return baseDao.select(query, selectFilter);
     }
 
@@ -166,7 +166,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 查到多个则返回第一个 没有则返回 null
      */
     public final Entity get(long id) {
-        return get(id, SelectFilter.ofExcluded());
+        return get(id, ofExcluded());
     }
 
     /**
@@ -176,7 +176,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @param selectFilter 查询字段过滤器
      * @return 查到多个则返回第一个 没有则返回 null
      */
-    public final Entity get(long id, SelectFilter selectFilter) {
+    public final Entity get(long id, ColumnFilter selectFilter) {
         return get(new Query().equal("id", id), selectFilter);
     }
 
@@ -187,7 +187,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 查到多个则返回第一个 没有则返回 null
      */
     public final Entity get(Query query) {
-        return get(query, SelectFilter.ofExcluded());
+        return get(query, ofExcluded());
     }
 
     /**
@@ -197,8 +197,8 @@ public class BaseModelService<Entity extends BaseModel> {
      * @param selectFilter 查询字段过滤器
      * @return 查到多个则返回第一个 没有则返回 null
      */
-    public final Entity get(Query query, SelectFilter selectFilter) {
-        var list = list(query.setPagination(1), selectFilter);
+    public final Entity get(Query query, ColumnFilter selectFilter) {
+        var list = list(query.setLimit(1), selectFilter);
         return list.size() > 0 ? list.get(0) : null;
     }
 
@@ -222,23 +222,23 @@ public class BaseModelService<Entity extends BaseModel> {
     }
 
     /**
-     * 根据 ID 更新 (注意 !!! 这里会在更新之后根据主键再次进行一次查询, 若只是进行更新且对性能有要求请使用 {@link SQLDao#update(Object, Query, UpdateFilter)})
+     * 根据 ID 更新 (注意 !!! 这里会在更新之后根据主键再次进行一次查询, 若只是进行更新且对性能有要求请使用 {@link SQLDao#update(Object, Query, ColumnFilter)})
      *
      * @param entity 待更新的数据 ( 注意: 请保证数据中 id 字段不为空 )
      * @return 更新成功后的数据
      */
     public final Entity update(Entity entity) {
-        return update(entity, UpdateFilter.ofExcluded());
+        return update(entity, ofExcluded());
     }
 
     /**
-     * 根据 ID 更新 (注意 !!! 这里会在更新之后根据主键再次进行一次查询, 若只是进行更新且对性能有要求请使用 {@link SQLDao#update(Object, Query, UpdateFilter)})
+     * 根据 ID 更新 (注意 !!! 这里会在更新之后根据主键再次进行一次查询, 若只是进行更新且对性能有要求请使用 {@link SQLDao#update(Object, Query, ColumnFilter)})
      *
      * @param entity       待更新的数据 ( 注意: 请保证数据中 id 字段不为空 )
      * @param updateFilter 更新字段过滤器
      * @return 更新成功后的数据
      */
-    public final Entity update(Entity entity, UpdateFilter updateFilter) {
+    public final Entity update(Entity entity, ColumnFilter updateFilter) {
         if (entity.id == null) {
             throw new RuntimeException("根据 id 更新时 id 不能为空");
         }
@@ -254,7 +254,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 更新成功的数据条数
      */
     public final long update(Entity entity, Query query) {
-        return update(entity, query, UpdateFilter.ofExcluded());
+        return update(entity, query, ofExcluded());
     }
 
     /**
@@ -265,7 +265,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @param updateFilter 更新字段过滤器
      * @return 更新成功的数据条数
      */
-    public long update(Entity entity, Query query, UpdateFilter updateFilter) {
+    public long update(Entity entity, Query query, ColumnFilter updateFilter) {
         return baseDao.update(entity, query, updateFilterProcessor(updateFilter));
     }
 
@@ -297,14 +297,14 @@ public class BaseModelService<Entity extends BaseModel> {
      * <br>
      * 可用于另一条查询语句的 where 条件
      * <br>
-     * 若同时使用 limit 和 in/not in 请使用 {@link BaseModelService#buildListSQLWithAlias(Query, SelectFilter)}
+     * 若同时使用 limit 和 in/not in 请使用 {@link BaseModelService#buildListSQLWithAlias(Query, ColumnFilter)}
      *
      * @param query        聚合查询参数对象
      * @param selectFilter 查询字段过滤器
      * @return listSQL
-     * @see SQLDao#buildSelectSQL(Query, SelectFilter)
+     * @see SQLDao#buildSelectSQL(Query, ColumnFilter)
      */
-    public final SQL buildListSQL(Query query, SelectFilter selectFilter) {
+    public final SQL buildListSQL(Query query, ColumnFilter selectFilter) {
         return baseDao.buildSelectSQL(query, selectFilter);
     }
 
@@ -313,15 +313,15 @@ public class BaseModelService<Entity extends BaseModel> {
      * <br>
      * 可用于另一条查询语句的 where 条件
      * <br>
-     * 若同时使用 limit 和 in/not in 请使用 {@link BaseModelService#buildListSQLWithAlias(Query, SelectFilter)}
+     * 若同时使用 limit 和 in/not in 请使用 {@link BaseModelService#buildListSQLWithAlias(Query, ColumnFilter)}
      *
      * @param query        聚合查询参数对象
      * @param selectFilter 查询字段过滤器
      * @return getSQL
-     * @see SQLDao#buildSelectSQL(Query, SelectFilter)
+     * @see SQLDao#buildSelectSQL(Query, ColumnFilter)
      */
-    public final SQL buildGetSQL(Query query, SelectFilter selectFilter) {
-        return buildListSQL(query.setPagination(1), selectFilter);
+    public final SQL buildGetSQL(Query query, ColumnFilter selectFilter) {
+        return buildListSQL(query.setLimit(1), selectFilter);
     }
 
     /**
@@ -332,9 +332,9 @@ public class BaseModelService<Entity extends BaseModel> {
      * @param query        聚合查询参数对象
      * @param selectFilter 查询字段过滤器
      * @return listSQL
-     * @see SQLDao#buildSelectSQL(Query, SelectFilter)
+     * @see SQLDao#buildSelectSQL(Query, ColumnFilter)
      */
-    public final SQL buildListSQLWithAlias(Query query, SelectFilter selectFilter) {
+    public final SQL buildListSQLWithAlias(Query query, ColumnFilter selectFilter) {
         return baseDao.buildSelectSQLWithAlias(query, selectFilter);
     }
 
@@ -346,10 +346,10 @@ public class BaseModelService<Entity extends BaseModel> {
      * @param query        聚合查询参数对象
      * @param selectFilter 查询字段过滤器
      * @return getSQL
-     * @see SQLDao#buildSelectSQL(Query, SelectFilter)
+     * @see SQLDao#buildSelectSQL(Query, ColumnFilter)
      */
-    public final SQL buildGetSQLWithAlias(Query query, SelectFilter selectFilter) {
-        return buildListSQLWithAlias(query.setPagination(1), selectFilter);
+    public final SQL buildGetSQLWithAlias(Query query, ColumnFilter selectFilter) {
+        return buildListSQLWithAlias(query.setLimit(1), selectFilter);
     }
 
     /**

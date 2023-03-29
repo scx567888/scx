@@ -89,37 +89,37 @@ public final class MetaDataHelper {
         return new TableMetaData[]{};
     }
 
-    public static ColumnMetaData[] initColumns(DatabaseMetaData dbMetaData, String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern) {
+    public static ColumnMetaData[] initColumns(DatabaseMetaData dbMetaData, String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern, TableMetaData tableMetaData) {
         try {
             var columns = getColumns(dbMetaData, catalog, schemaPattern, tableNamePattern, columnNamePattern);
-            return columns.stream().map(_Column::toColumnMetaData).toArray(ColumnMetaData[]::new);
+            return columns.stream().map(column -> column.toColumnMetaData(tableMetaData)).toArray(ColumnMetaData[]::new);
         } catch (SQLException e) {
             return new ColumnMetaData[]{};
         }
     }
 
-    public static PrimaryKeyMetaData[] initPrimaryKeys(DatabaseMetaData dbMetaData, String catalog, String schemaPattern, String tableNamePattern) {
+    public static KeyMetaData[] initPrimaryKeys(DatabaseMetaData dbMetaData, String catalog, String schemaPattern, String tableNamePattern) {
         try {
             var primaryKeys = getPrimaryKeys(dbMetaData, catalog, schemaPattern, tableNamePattern);
-            return primaryKeys.stream().map(_PrimaryKey::toPrimaryKeyMetaData).toArray(PrimaryKeyMetaData[]::new);
+            return primaryKeys.stream().map(_PrimaryKey::toPrimaryKeyMetaData).toArray(KeyMetaData[]::new);
         } catch (SQLException e) {
-            return new PrimaryKeyMetaData[]{};
+            return new KeyMetaData[]{};
         }
     }
 
-    public static IndexInfoMetaData[] initIndexInfo(DatabaseMetaData dbMetaData, String catalog, String schema, String table, boolean unique, boolean approximate) {
+    public static IndexMetaData[] initIndexInfo(DatabaseMetaData dbMetaData, String catalog, String schema, String table, boolean unique, boolean approximate) {
         try {
             var indexInfo = getIndexInfo(dbMetaData, catalog, schema, table, unique, approximate);
-            return indexInfo.stream().map(_IndexInfo::toIndexInfoMetaData).toArray(IndexInfoMetaData[]::new);
+            return indexInfo.stream().map(_IndexInfo::toIndexInfoMetaData).toArray(IndexMetaData[]::new);
         } catch (SQLException e) {
-            return new IndexInfoMetaData[]{};
+            return new IndexMetaData[]{};
         }
     }
 
     public static Map<String, ColumnMetaData> toColumnsMap(ColumnMetaData[] columns) {
         var map = new HashMap<String, ColumnMetaData>();
         for (var column : columns) {
-            map.put(column.columnName(), column);
+            map.put(column.name(), column);
         }
         return map;
     }
@@ -127,11 +127,28 @@ public final class MetaDataHelper {
     public static Map<String, TableMetaData> toTablesMap(TableMetaData[] columns) {
         var map = new HashMap<String, TableMetaData>();
         for (var column : columns) {
-            map.put(column.tableName(), column);
+            map.put(column.name(), column);
         }
         return map;
     }
 
+    public static boolean checkPrimaryKey(TableMetaData table, String columnName) {
+        for (var primaryKey : table.keys()) {
+            if (Objects.equals(primaryKey.columnName(), columnName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static IndexMetaData checkIndex(TableMetaData table, String columnName) {
+        for (var indexInfoMetaData : table.indexes()) {
+            if (Objects.equals(indexInfoMetaData.columnName(), columnName)) {
+                return indexInfoMetaData;
+            }
+        }
+        return null;
+    }
 
     /**
      * @see DatabaseMetaData#getCatalogs()
@@ -171,7 +188,7 @@ public final class MetaDataHelper {
                          String REF_GENERATION) {
 
         public TableMetaData toTableMetaData() {
-            return new TableMetaData(TABLE_CAT, TABLE_SCHEM, TABLE_NAME, REMARKS, this);
+            return new TableMetaData(TABLE_CAT, TABLE_SCHEM, TABLE_NAME, REMARKS);
         }
 
     }
@@ -204,10 +221,32 @@ public final class MetaDataHelper {
                           String IS_AUTOINCREMENT,
                           String IS_GENERATEDCOLUMN) {
 
-        public ColumnMetaData toColumnMetaData() {
-            var isNullable = Objects.equals("NO", IS_NULLABLE());
-            var isAutoincrement = Objects.equals("YES", IS_AUTOINCREMENT());
-            return new ColumnMetaData(TABLE_NAME, COLUMN_NAME, TYPE_NAME, COLUMN_SIZE, isNullable, isAutoincrement, false, COLUMN_DEF, null, REMARKS, this);
+        public ColumnMetaData toColumnMetaData(TableMetaData tableMetaData) {
+            var notNull = Objects.equals("NO", IS_NULLABLE);
+            var isAutoincrement = Objects.equals("YES", IS_AUTOINCREMENT);
+            var primaryKey = checkPrimaryKey(tableMetaData, COLUMN_NAME);
+            boolean index = false;
+            boolean unique = false;
+            var indexMetaData = checkIndex(tableMetaData, COLUMN_NAME);
+            if (indexMetaData != null) {
+                index = true;
+                if (indexMetaData.unique()) {
+                    unique = true;
+                }
+            }
+            return new ColumnMetaData(
+                    TABLE_NAME,
+                    COLUMN_NAME,
+                    TYPE_NAME,
+                    COLUMN_SIZE,
+                    notNull,
+                    isAutoincrement,
+                    unique,
+                    primaryKey,
+                    index,
+                    COLUMN_DEF,
+                    null,
+                    REMARKS);
         }
 
     }
@@ -222,8 +261,8 @@ public final class MetaDataHelper {
                               short KEY_SEQ,
                               String PK_NAME) {
 
-        public PrimaryKeyMetaData toPrimaryKeyMetaData() {
-            return new PrimaryKeyMetaData(COLUMN_NAME, this);
+        public KeyMetaData toPrimaryKeyMetaData() {
+            return new KeyMetaData(PK_NAME, COLUMN_NAME, true);
         }
 
     }
@@ -245,8 +284,8 @@ public final class MetaDataHelper {
                              long PAGES,
                              String FILTER_CONDITION) {
 
-        public IndexInfoMetaData toIndexInfoMetaData() {
-            return new IndexInfoMetaData(this);
+        public IndexMetaData toIndexInfoMetaData() {
+            return new IndexMetaData(INDEX_NAME, COLUMN_NAME, !NON_UNIQUE);
         }
 
     }

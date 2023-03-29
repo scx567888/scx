@@ -1,14 +1,17 @@
 package cool.scx.dao.dialect;
 
-import cool.scx.dao.mapping.ColumnInfo;
-import cool.scx.dao.mapping.TableInfo;
+import cool.scx.dao.ColumnMapping;
+import cool.scx.sql.mapping.Column;
+import cool.scx.sql.mapping.Table;
 
 import javax.sql.DataSource;
 import java.sql.Driver;
-import java.sql.SQLType;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static cool.scx.util.StringUtils.notEmpty;
 
 public interface Dialect {
 
@@ -37,33 +40,88 @@ public interface Dialect {
     String getFinalSQL(Statement statement);
 
     /**
+     * 获取分页 SQL
+     *
+     * @param sql      原始 SQL
+     * @param rowCount 行数
+     * @param offset   偏移量
+     * @return SQL 语句
+     */
+    String getLimitSQL(String sql, Integer offset, Integer rowCount);
+
+    /**
      * 获取建表语句
      *
      * @return s
      */
-    default String getCreateTableDDL(TableInfo<?> tableInfo) {
-        var columnDefinitions = getColumnDefinitions(tableInfo.columns());
-        var str = columnDefinitions.stream().map(c -> "    " + c).collect(Collectors.joining(",\n"));
-        return "CREATE TABLE `" + tableInfo.tableName() + "`\n" +
-                "(\n" +
-                str +
-                "\n);";
+    default String getCreateTableDDL(Table<?> tableInfo) {
+        var s = new StringBuilder();
+        s.append("CREATE TABLE ");
+        if (notEmpty(tableInfo.schema())) {
+            s.append(tableInfo.schema()).append(".");
+        }
+        s.append(tableInfo.name()).append("\n");
+        s.append("(\n");
+
+        // 创建子句
+        var createDefinitionStr = getCreateDefinition(tableInfo).stream()
+                .map(c -> "    " + c)
+                .collect(Collectors.joining(",\n"));
+        s.append(createDefinitionStr);
+
+        s.append("\n);");
+        return s.toString();
     }
 
-    /**
-     * todo
-     *
-     * @param nonExistentColumnNames a
-     * @param tableName              a
-     */
-    default String getAlertTableDDL(ColumnInfo[] nonExistentColumnNames, String tableName) {
-        var columnDefinitions = getColumnDefinitions(nonExistentColumnNames);
-        var alertTableDDL = columnDefinitions.stream().map(columnDefinition -> "ADD " + columnDefinition).collect(Collectors.joining(", "));
-        return "ALTER TABLE `" + tableName + "` " + alertTableDDL + ";";
+    default List<String> getCreateDefinition(Table<?> table) {
+        var createDefinitions = new ArrayList<String>();
+        createDefinitions.addAll(getColumnDefinitions(table.columns()));
+        createDefinitions.addAll(getTableConstraint(table));
+        return createDefinitions;
     }
 
-    List<String> getColumnDefinitions(ColumnInfo[] tableInfo);
+    default List<String> getColumnDefinitions(Column[] columns) {
+        var list = new ArrayList<String>();
+        for (var column : columns) {
+            list.add(getColumnDefinition(column));
+        }
+        return list;
+    }
 
+    default List<String> getTableConstraint(Table<?> table) {
+        return new ArrayList<>();
+    }
+
+    default String getColumnDefinition(Column column) {
+        var s = new StringBuilder();
+        s.append(column.name()).append(" ");// 列名
+        var dataTypeDefinition = getDataTypeDefinition(column);
+        if (dataTypeDefinition != null) {
+            s.append(dataTypeDefinition).append(" ");
+        }
+        // 限制条件
+        var columnConstraintStr = String.join(" ", getColumnConstraint(column));
+        s.append(columnConstraintStr);
+        return s.toString();
+    }
+
+    default String getDataTypeDefinition(Column column) {
+        if (column.typeName() != null) {
+            if (column.columnSize() != null) {
+                return column.typeName() + "(" + column.columnSize() + ")";
+            } else {
+                return column.typeName();
+            }
+        } else {
+            if (column instanceof ColumnMapping m) {
+                return getDataTypeDefinitionByClass(m.javaField().getType());
+            } else {
+                return defaultDateType();
+            }
+        }
+    }
+
+    List<String> getColumnConstraint(Column columns);
 
     /**
      * 根据 class 获取对应的 SQLType 类型 如果没有则返回 JSON
@@ -74,19 +132,35 @@ public interface Dialect {
     String getDataTypeDefinitionByClass(Class<?> javaType);
 
     /**
-     * 获取 mysql 类型
-     * 用于后续判断类型是否可以由 JDBC 进行 SQLType 到 JavaType 的直接转换
-     * <p>
-     * 例子 :
-     * String 可以由 varchar 直接转换 true
-     * Integer 可以由 int 直接转换 true
-     * User 不可以由 json 直接转换 false
+     * 默认值
      *
-     * @param javaType 需要判断的类型
-     * @return r
+     * @return 默认类型值
      */
-    SQLType getSQLType(Class<?> javaType);
+    default String defaultDateType() {
+        return null;
+    }
 
-    String getLimitSQL(String sql, Integer rowCount, Integer offset);
+    /**
+     * todo
+     *
+     * @param needAdds  a
+     * @param tableInfo a
+     */
+    default String getAlertTableDDL(Column[] needAdds, Table<?> tableInfo) {
+        var s = new StringBuilder();
+        s.append("ALTER TABLE ");
+        if (notEmpty(tableInfo.schema())) {
+            s.append(tableInfo.schema()).append(".");
+        }
+        s.append(tableInfo.name()).append("`\n");
+
+        var columnDefinitionStr = getColumnDefinitions(needAdds).stream()
+                .map(c -> "    ADD COLUMN" + c)
+                .collect(Collectors.joining(",\n"));
+
+        s.append(columnDefinitionStr);
+        s.append("\n;");
+        return s.toString();
+    }
 
 }

@@ -5,7 +5,8 @@ import com.mysql.cj.NativeQueryBindings;
 import com.mysql.cj.PreparedQuery;
 import com.mysql.cj.jdbc.ClientPreparedStatement;
 import com.mysql.cj.jdbc.MysqlDataSource;
-import cool.scx.dao.mapping.ColumnInfo;
+import cool.scx.sql.mapping.Column;
+import cool.scx.sql.mapping.Table;
 
 import javax.sql.DataSource;
 import java.sql.Driver;
@@ -18,8 +19,10 @@ import java.util.List;
 import java.util.Map;
 
 import static cool.scx.util.StringUtils.notBlank;
-import static cool.scx.util.StringUtils.notEmpty;
 
+/**
+ * @see <a href="https://dev.mysql.com/doc/refman/8.0/en/create-table.html">https://dev.mysql.com/doc/refman/8.0/en/create-table.html</a>
+ */
 public class MySQLDialect implements Dialect {
 
     private static final Map<Class<?>, MysqlType> DEFAULT_MYSQL_TYPES;
@@ -49,24 +52,27 @@ public class MySQLDialect implements Dialect {
     }
 
     /**
-     * 当前列对象特殊的 DDL 如设置是否为主键 是否创建索引 是否是唯一值 (建表语句片段 , 需和 normalDDL 一起使用才完整)
+     * 获取 mysql 类型
+     * 用于后续判断类型是否可以由 JDBC 进行 SQLType 到 JavaType 的直接转换
+     * <p>
+     * 例子 :
+     * String 可以由 varchar 直接转换 true
+     * Integer 可以由 int 直接转换 true
+     * User 不可以由 json 直接转换 false
+     *
+     * @param javaType 需要判断的类型
+     * @return r
      */
-    public static String[] initSpecialDDL(ColumnInfo column) {
-        if (column == null) {
-            return new String[0];
+    private static SQLType getSQLType(Class<?> javaType) {
+        var mysqlType = DEFAULT_MYSQL_TYPES.get(javaType);
+        if (mysqlType == null) {
+            return DEFAULT_MYSQL_TYPES.entrySet().stream()
+                    .filter(entry -> entry.getKey().isAssignableFrom(javaType))
+                    .findFirst()
+                    .map(Map.Entry::getValue)
+                    .orElse(null);
         }
-        var name = column.columnName();
-        var list = new ArrayList<String>();
-        if (column.primaryKey()) {
-            list.add("PRIMARY KEY (`" + name + "`)");
-        }
-        if (column.unique()) {
-            list.add("UNIQUE KEY `unique_" + name + "`(`" + name + "`)");
-        }
-        if (column.needIndex()) {
-            list.add("KEY `index_" + name + "`(`" + name + "`)");
-        }
-        return list.toArray(String[]::new);
+        return mysqlType;
     }
 
     @Override
@@ -98,38 +104,29 @@ public class MySQLDialect implements Dialect {
         return batchedArgsSize > 1 ? finalSQL + "... 额外的 " + (batchedArgsSize - 1) + " 项" : finalSQL;
     }
 
+    @Override
+    public String getLimitSQL(String sql, Integer offset, Integer rowCount) {
+        var limitClauses = rowCount == null ? "" : offset == null || offset == 0 ? " LIMIT " + rowCount : " LIMIT " + offset + "," + rowCount;
+        return sql + limitClauses;
+    }
+
     /**
      * 当前列对象通常的 DDL 如设置 字段名 类型 是否可以为空 默认值等 (建表语句片段 , 需和 specialDDL 一起使用才完整)
      */
-    private String initNormalDDL(ColumnInfo column) {
-        var tempList = new ArrayList<String>();
-        tempList.add("`" + column.columnName() + "`");
-        tempList.add(getDataTypeDefinition(column));
-        tempList.add(column.notNull() || column.primaryKey() ? "NOT NULL" : "NULL");
+    @Override
+    public List<String> getColumnConstraint(Column column) {
+        var list = new ArrayList<String>();
+        list.add(column.notNull() || column.primaryKey() ? "NOT NULL" : "NULL");
         if (column.autoIncrement()) {
-            tempList.add("AUTO_INCREMENT");
+            list.add("AUTO_INCREMENT");
         }
         if (notBlank(column.defaultValue())) {
-            tempList.add("DEFAULT " + column.defaultValue());
+            list.add("DEFAULT " + column.defaultValue());
         }
         if (notBlank(column.onUpdateValue())) {
-            tempList.add("ON UPDATE " + column.onUpdateValue());
+            list.add("ON UPDATE " + column.onUpdateValue());
         }
-        return String.join(" ", tempList);
-    }
-
-    @Override
-    public List<String> getColumnDefinitions(ColumnInfo[] columnInfos) {
-        var createTableDDL = new ArrayList<String>();
-        for (var columnInfo : columnInfos) {
-            var normalDDL = initNormalDDL(columnInfo);
-            createTableDDL.add(normalDDL);
-        }
-        for (var columnInfo : columnInfos) {
-            var specialDDL = initSpecialDDL(columnInfo);
-            createTableDDL.addAll(List.of(specialDDL));
-        }
-        return createTableDDL;
+        return list;
     }
 
     @Override
@@ -146,30 +143,26 @@ public class MySQLDialect implements Dialect {
     }
 
     @Override
-    public SQLType getSQLType(Class<?> javaType) {
-        var mysqlType = DEFAULT_MYSQL_TYPES.get(javaType);
-        if (mysqlType == null) {
-            return DEFAULT_MYSQL_TYPES.entrySet().stream()
-                    .filter(entry -> entry.getKey().isAssignableFrom(javaType))
-                    .findFirst()
-                    .map(Map.Entry::getValue)
-                    .orElse(null);
+    public List<String> getTableConstraint(Table<?> table) {
+        var list = new ArrayList<String>();
+        for (var column : table.columns()) {
+            var name = column.name();
+            if (column.primaryKey()) {
+                list.add("PRIMARY KEY (`" + name + "`)");
+            }
+            if (column.unique()) {
+                list.add("UNIQUE KEY `unique_" + name + "`(`" + name + "`)");
+            }
+            if (column.index()) {
+                list.add("KEY `index_" + name + "`(`" + name + "`)");
+            }
         }
-        return mysqlType;
+        return list;
     }
 
     @Override
-    public String getLimitSQL(String sql, Integer rowCount, Integer offset) {
-        var limitClauses = rowCount == null ? "" : offset == null || offset == 0 ? " LIMIT " + rowCount : " LIMIT " + offset + "," + rowCount;
-        return sql + limitClauses;
-    }
-
-    public String getDataTypeDefinition(ColumnInfo column) {
-        if (notEmpty(column.type())) {
-            return column.type();
-        } else {
-            return getDataTypeDefinitionByClass(column.javaField().getType());
-        }
+    public String defaultDateType() {
+        return "VARCHAR(128)";
     }
 
 }

@@ -1,7 +1,6 @@
 package cool.scx.dao.dialect;
 
-import cool.scx.dao.mapping.ColumnInfo;
-import cool.scx.dao.mapping.TableInfo;
+import cool.scx.sql.mapping.Column;
 import org.sqlite.SQLiteDataSource;
 import org.sqlite.core.CorePreparedStatement;
 import org.sqlite.core.CoreStatement;
@@ -11,14 +10,15 @@ import javax.sql.DataSource;
 import java.lang.reflect.Field;
 import java.sql.Driver;
 import java.sql.SQLException;
-import java.sql.SQLType;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 import static cool.scx.util.StringUtils.notBlank;
-import static cool.scx.util.StringUtils.notEmpty;
 
+/**
+ * @see <a href="https://www.sqlite.org/lang_createtable.html">https://www.sqlite.org/lang_createtable.html</a>
+ */
 public class SQLiteDialect implements Dialect {
 
     static final Field CoreStatement_sql;
@@ -36,24 +36,6 @@ public class SQLiteDialect implements Dialect {
         } catch (NoSuchFieldException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    /**
-     * 当前列对象特殊的 DDL 如设置是否为主键 是否创建索引 是否是唯一值 (建表语句片段 , 需和 normalDDL 一起使用才完整)
-     */
-    public static String[] initSpecialDDL(ColumnInfo column) {
-        if (column == null) {
-            return new String[0];
-        }
-        var name = column.columnName();
-        var list = new ArrayList<String>();
-//        if (column.unique()) {
-//            list.add("UNIQUE KEY `unique_" + name + "`(`" + name + "`)");
-//        }
-//        if (column.needIndex()) {
-//            list.add("KEY `index_" + name + "`(`" + name + "`)");
-//        }
-        return list.toArray(String[]::new);
     }
 
     @Override
@@ -107,22 +89,9 @@ public class SQLiteDialect implements Dialect {
     }
 
     @Override
-    public String getCreateTableDDL(TableInfo<?> tableInfo) {
-        return Dialect.super.getCreateTableDDL(tableInfo);
-    }
-
-    @Override
-    public List<String> getColumnDefinitions(ColumnInfo[] columnInfos) {
-        var columnDefinitions = new ArrayList<String>();
-        for (var columnInfo : columnInfos) {
-            var normalDDL = getColumnDefinition(columnInfo);
-            columnDefinitions.add(normalDDL);
-        }
-        for (var columnInfo : columnInfos) {
-            var specialDDL = initSpecialDDL(columnInfo);
-            columnDefinitions.addAll(List.of(specialDDL));
-        }
-        return columnDefinitions;
+    public String getLimitSQL(String sql, Integer offset, Integer rowCount) {
+        var limitClauses = rowCount == null ? "" : offset == null || offset == 0 ? " LIMIT " + rowCount : " LIMIT " + offset + "," + rowCount;
+        return sql + limitClauses;
     }
 
     @Override
@@ -136,46 +105,23 @@ public class SQLiteDialect implements Dialect {
         }
     }
 
-    @Override
-    public SQLType getSQLType(Class<?> javaType) {
-        return null;
-    }
-
-    @Override
-    public String getLimitSQL(String sql, Integer rowCount, Integer offset) {
-        var limitClauses = rowCount == null ? "" : offset == null || offset == 0 ? " LIMIT " + rowCount : " LIMIT " + offset + "," + rowCount;
-        return sql + limitClauses;
-    }
-
     /**
      * 当前列对象通常的 DDL 如设置 字段名 类型 是否可以为空 默认值等 (建表语句片段 , 需和 specialDDL 一起使用才完整)
      */
-    private String getColumnDefinition(ColumnInfo column) {
+    @Override
+    public List<String> getColumnConstraint(Column column) {
         var list = new ArrayList<String>();
-        list.add("`" + column.columnName() + "`");
-        list.add(getDataTypeDefinition(column));
-        list.add(column.notNull() || column.primaryKey() ? "NOT NULL" : "NULL");
         if (column.primaryKey() && column.autoIncrement()) {
             list.add("PRIMARY KEY AUTOINCREMENT");
         }
+        list.add(column.notNull() || column.primaryKey() ? "NOT NULL" : "NULL");
         if (column.unique()) {
-            list.add("UNIQUE ");
+            list.add("UNIQUE");
         }
         if (notBlank(column.defaultValue())) {
             list.add("DEFAULT " + column.defaultValue());
         }
-//        if (notBlank(column.onUpdateValue())) {
-//            list.add("ON UPDATE " + column.onUpdateValue());
-//        }
-        return String.join(" ", list);
-    }
-
-    public String getDataTypeDefinition(ColumnInfo column) {
-        if (notEmpty(column.type())) {
-            return column.type();
-        } else {
-            return getDataTypeDefinitionByClass(column.javaField().getType());
-        }
+        return list;
     }
 
 }

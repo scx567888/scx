@@ -1,6 +1,6 @@
 package cool.scx.sql.meta_data;
 
-import cool.scx.sql.mapping.TableMapping;
+import cool.scx.sql.mapping.Table;
 
 import java.sql.DatabaseMetaData;
 import java.util.HashMap;
@@ -8,24 +8,22 @@ import java.util.Map;
 
 import static cool.scx.sql.meta_data.MetaDataHelper.*;
 
-public final class TableMetaData implements TableMapping<ColumnMetaData, PrimaryKeyMetaData> {
+public final class TableMetaData implements Table<ColumnMetaData> {
 
     private final String catalog;
     private final String schema;
-    private final String tableName;
+    private final String name;
     private final String remarks;
-    private final _Table _table;
     private ColumnMetaData[] columns;
     private Map<String, ColumnMetaData> columnsMap = new HashMap<>();
-    private PrimaryKeyMetaData[] primaryKeys;
-    private IndexInfoMetaData[] indexInfo;
+    private KeyMetaData[] keys;
+    private IndexMetaData[] indexes;
 
-    public TableMetaData(String catalog, String schema, String tableName, String remarks, _Table _table) {
+    public TableMetaData(String catalog, String schema, String name, String remarks) {
         this.catalog = catalog;
         this.schema = schema;
-        this.tableName = tableName;
+        this.name = name;
         this.remarks = remarks;
-        this._table = _table;
     }
 
     @Override
@@ -39,8 +37,8 @@ public final class TableMetaData implements TableMapping<ColumnMetaData, Primary
     }
 
     @Override
-    public String tableName() {
-        return tableName;
+    public String name() {
+        return name;
     }
 
     public String remarks() {
@@ -53,25 +51,26 @@ public final class TableMetaData implements TableMapping<ColumnMetaData, Primary
     }
 
     public TableMetaData refreshColumns(DatabaseMetaData dbMetaData) {
-        columns = initColumns(dbMetaData, this.catalog, this.schema, this.tableName, null);
-        columnsMap = toColumnsMap(columns);
-        primaryKeys = initPrimaryKeys(dbMetaData, this.catalog, this.schema, this.tableName);
-        indexInfo = initIndexInfo(dbMetaData, this.catalog, this.schema, this.tableName, false, false);
+        this.keys = initPrimaryKeys(dbMetaData, this.catalog, this.schema, this.name);
+        this.indexes = initIndexInfo(dbMetaData, this.catalog, this.schema, this.name, false, false);
+        this.columns = initColumns(dbMetaData, this.catalog, this.schema, this.name, null, this);
+        this.columnsMap = toColumnsMap(this.columns);
         return this;
     }
 
     @Override
-    public PrimaryKeyMetaData[] primaryKeys() {
-        return primaryKeys;
+    public KeyMetaData[] keys() {
+        return keys;
+    }
+
+    @Override
+    public IndexMetaData[] indexes() {
+        return indexes;
     }
 
     @Override
     public ColumnMetaData getColumn(String column) {
         return columnsMap.get(column);
-    }
-
-    public _Table _table() {
-        return _table;
     }
 
 }
