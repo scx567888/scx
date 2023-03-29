@@ -63,7 +63,7 @@ public final class SchemaHelper {
                 // 获取不存在的字段
                 var needAdd = verify.needAdd();
                 if (needAdd.length > 0) {
-                    var alertTableDDL = findDialect(dataSource).getAlertTableDDL(needAdd, tableInfo.name());
+                    var alertTableDDL = findDialect(dataSource).getAlertTableDDL(needAdd, tableInfo);
                     SQLRunner.execute(con, SQL.ofNormal(alertTableDDL));
                 }
             }

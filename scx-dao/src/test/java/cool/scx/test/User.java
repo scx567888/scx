@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 public class User {
     @Column(primaryKey = true, autoIncrement = true, columnName = "not_id")
     public Long id;
-    @Column(columnName = "not_name")
+    @Column(columnName = "not_name", unique = true, needIndex = true)
     public String name;
     public Integer age;
     public LocalDateTime createDate;
