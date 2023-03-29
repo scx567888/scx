@@ -1,7 +1,7 @@
-package cool.scx.dao;
+package cool.scx.dao.impl.sql_dao;
 
 import cool.scx.dao.dialect.Dialect;
-import cool.scx.dao.mapping.ColumnInfo;
+import cool.scx.sql.mapping.Column;
 import cool.scx.sql.sql.SQL;
 
 import java.util.Arrays;
@@ -12,7 +12,7 @@ import java.util.Arrays;
  * @author scx567888
  * @version 0.0.1
  */
-public final class SQLBuilder {
+final class SQLBuilder {
 
     /**
      * a
@@ -109,8 +109,8 @@ public final class SQLBuilder {
      * @param insertColumnInfos a {@link java.lang.reflect.Field} object
      * @return a {@link SQLBuilder} object
      */
-    public static SQLBuilder Insert(Dialect dialect, String tableName, ColumnInfo... insertColumnInfos) {
-        return Insert(dialect, tableName, Arrays.stream(insertColumnInfos).map(ColumnInfo::columnName).toArray(String[]::new));
+    public static SQLBuilder Insert(Dialect dialect, String tableName, Column... insertColumnInfos) {
+        return Insert(dialect, tableName, Arrays.stream(insertColumnInfos).map(Column::name).toArray(String[]::new));
     }
 
     /**
