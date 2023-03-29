@@ -9,7 +9,7 @@ import java.util.Objects;
 
 import static cool.scx.sql.meta_data.MetaDataHelper.*;
 
-public final class TableMetaData implements Table {
+public final class TableMetaData implements Table<ColumnMetaData> {
 
     private final String catalog;
     private final String schema;

@@ -1,6 +1,6 @@
 package cool.scx.sql.mapping;
 
-public interface Table {
+public interface Table<C extends Column> {
 
     default String catalog() {
         return null;
@@ -12,12 +12,12 @@ public interface Table {
 
     String name();
 
-    Column[] columns();
+    C[] columns();
 
     Key[] keys();
 
     Index[] indexes();
 
-    Column getColumn(String column);
+    C getColumn(String column);
 
 }
