@@ -45,10 +45,10 @@ public final class Limit {
      */
     public Limit set(Integer offset, Integer rowCount) {
         if (offset == null || offset < 0) {
-            throw new IllegalArgumentException("分页参数错误 : currentPage (分页页码) 不能为空或小于 0 !!!");
+            throw new IllegalArgumentException("分页参数错误 : offset (偏移量) 不能为空或小于 0 !!!");
         }
         if (rowCount == null || rowCount < 0) {
-            throw new IllegalArgumentException("分页参数错误 : pageSize (每页数量) 不能为空或小于 0 !!!");
+            throw new IllegalArgumentException("分页参数错误 : rowCount (行长度) 不能为空或小于 0 !!!");
         }
         this.offset = offset;
         this.rowCount = rowCount;
