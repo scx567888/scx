@@ -41,7 +41,7 @@ public final class SchemaHelper {
                 needAdd.add(newColumn);
             }
         }
-        return new SchemaVerifyResult(needAdd, needRemove, needChange);
+        return new SchemaVerifyResult(needAdd.toArray(Column[]::new), needRemove, needChange);
     }
 
     /**
@@ -62,7 +62,7 @@ public final class SchemaHelper {
                 var verify = verify(tableMetaData.refreshColumns(con.getMetaData()), tableInfo);
                 // 获取不存在的字段
                 var needAdd = verify.needAdd();
-                if (needAdd.size() > 0) {
+                if (needAdd.length > 0) {
                     var alertTableDDL = findDialect(dataSource).getAlertTableDDL(needAdd, tableInfo.name());
                     SQLRunner.execute(con, SQL.ofNormal(alertTableDDL));
                 }
@@ -88,7 +88,7 @@ public final class SchemaHelper {
                 var verify = verify(tableMetaData.refreshColumns(con.getMetaData()), tableInfo);
                 //获取不存在的字段
                 var needAdd = verify.needAdd();
-                if (needAdd.size() > 0) {
+                if (needAdd.length > 0) {
                     return true;
                 }
             }
@@ -96,7 +96,7 @@ public final class SchemaHelper {
         return false;
     }
 
-    public record SchemaVerifyResult(List<Column> needAdd, List<Column> needRemove, List<Column> needChange) {
+    public record SchemaVerifyResult(Column[] needAdd, List<Column> needRemove, List<Column> needChange) {
 
     }
 

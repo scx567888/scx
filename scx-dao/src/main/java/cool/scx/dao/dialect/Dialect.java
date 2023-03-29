@@ -43,7 +43,7 @@ public interface Dialect {
      * @return s
      */
     default String getCreateTableDDL(Table<?> tableInfo) {
-        var columnDefinitions = getColumnDefinitions(List.of(tableInfo.columns()));
+        var columnDefinitions = getColumnDefinitions(tableInfo.columns());
         var str = columnDefinitions.stream().map(c -> "    " + c).collect(Collectors.joining(",\n"));
         return "CREATE TABLE `" + tableInfo.name() + "`\n" +
                 "(\n" +
@@ -51,7 +51,7 @@ public interface Dialect {
                 "\n);";
     }
 
-    List<String> getColumnDefinitions(List<Column> columns);
+    List<String> getColumnDefinitions(Column[] columns);
 
     /**
      * todo
@@ -59,7 +59,7 @@ public interface Dialect {
      * @param nonExistentColumnNames a
      * @param tableName              a
      */
-    default String getAlertTableDDL(List<Column> nonExistentColumnNames, String tableName) {
+    default String getAlertTableDDL(Column[] nonExistentColumnNames, String tableName) {
         var columnDefinitions = getColumnDefinitions(nonExistentColumnNames);
         var alertTableDDL = columnDefinitions.stream().map(columnDefinition -> "ADD " + columnDefinition).collect(Collectors.joining(", "));
         return "ALTER TABLE `" + tableName + "` " + alertTableDDL + ";";

@@ -111,7 +111,7 @@ public class SQLiteDialect implements Dialect {
     }
 
     @Override
-    public List<String> getColumnDefinitions(List<Column> columnInfos) {
+    public List<String> getColumnDefinitions(Column[] columnInfos) {
         var columnDefinitions = new ArrayList<String>();
         for (var columnInfo : columnInfos) {
             var normalDDL = getColumnDefinition(columnInfo);

@@ -118,7 +118,7 @@ public class MySQLDialect implements Dialect {
     }
 
     @Override
-    public List<String> getColumnDefinitions(List<Column> columnInfos) {
+    public List<String> getColumnDefinitions(Column[] columnInfos) {
         var createTableDDL = new ArrayList<String>();
         for (var columnInfo : columnInfos) {
             var normalDDL = initNormalDDL(columnInfo);
