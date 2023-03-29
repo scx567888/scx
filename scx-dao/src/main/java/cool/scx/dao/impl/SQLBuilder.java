@@ -328,7 +328,7 @@ final class SQLBuilder {
      */
     private String GetSelectSQL() {
         var sql = "SELECT " + String.join(", ", selectColumns) + " FROM " + tableName + getWhereSQL() + getGroupBySQL() + getOrderBySQL();
-        return dialect.getLimitSQL(sql, rowCount, offset);
+        return dialect.getLimitSQL(sql, offset, rowCount);
     }
 
     /**
