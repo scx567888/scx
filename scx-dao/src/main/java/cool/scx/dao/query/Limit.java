@@ -27,13 +27,13 @@ public final class Limit {
     }
 
     /**
-     * 根据旧的 Pagination 创建一个 Pagination 对象
+     * 根据旧的 Limit 创建一个 Limit 对象
      *
-     * @param oldPagination 旧的 Pagination
+     * @param limit 旧的 Limit
      */
-    public Limit(Limit oldPagination) {
-        this.offset = oldPagination.offset;
-        this.rowCount = oldPagination.rowCount;
+    public Limit(Limit limit) {
+        this.offset = limit.offset;
+        this.rowCount = limit.rowCount;
     }
 
     /**
