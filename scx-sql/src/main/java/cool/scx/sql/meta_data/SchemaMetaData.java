@@ -1,20 +1,20 @@
 package cool.scx.sql.meta_data;
 
-import cool.scx.sql.mapping.SchemaMapping;
+import cool.scx.sql.mapping.Schema;
 
 import java.sql.DatabaseMetaData;
 
 import static cool.scx.sql.meta_data.MetaDataHelper.initTables;
 
-public final class SchemaMetaData implements SchemaMapping {
+public final class SchemaMetaData implements Schema {
 
     private final String catalog;
-    private final String schemaName;
+    private final String name;
     private TableMetaData[] tables;
 
-    public SchemaMetaData(String catalog, String schemaName) {
+    public SchemaMetaData(String catalog, String name) {
         this.catalog = catalog;
-        this.schemaName = schemaName;
+        this.name = name;
     }
 
     @Override
@@ -23,8 +23,8 @@ public final class SchemaMetaData implements SchemaMapping {
     }
 
     @Override
-    public String schemaName() {
-        return schemaName;
+    public String name() {
+        return name;
     }
 
     @Override
@@ -37,7 +37,7 @@ public final class SchemaMetaData implements SchemaMapping {
     }
 
     public SchemaMetaData refreshTables(DatabaseMetaData dbMetaData, boolean deep) {
-        tables = initTables(dbMetaData, this.catalog, this.schemaName, null, null);
+        this.tables = initTables(dbMetaData, this.catalog, this.name, null, null);
         if (deep) {
             for (var table : tables) {
                 table.refreshColumns(dbMetaData);
