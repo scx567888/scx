@@ -1,7 +1,8 @@
 package cool.scx.dao.dialect;
 
-import cool.scx.dao.mapping.ColumnInfo;
-import cool.scx.dao.mapping.TableInfo;
+import cool.scx.dao.ColumnMapping;
+import cool.scx.sql.mapping.Column;
+import cool.scx.sql.mapping.Table;
 
 import javax.sql.DataSource;
 import java.sql.Driver;
@@ -41,14 +42,16 @@ public interface Dialect {
      *
      * @return s
      */
-    default String getCreateTableDDL(TableInfo<?> tableInfo) {
-        var columnDefinitions = getColumnDefinitions(tableInfo.columns());
+    default String getCreateTableDDL(Table<?> tableInfo) {
+        var columnDefinitions = getColumnDefinitions(List.of(tableInfo.columns()));
         var str = columnDefinitions.stream().map(c -> "    " + c).collect(Collectors.joining(",\n"));
-        return "CREATE TABLE `" + tableInfo.tableName() + "`\n" +
+        return "CREATE TABLE `" + tableInfo.name() + "`\n" +
                 "(\n" +
                 str +
                 "\n);";
     }
+
+    List<String> getColumnDefinitions(List<Column> columns);
 
     /**
      * todo
@@ -56,13 +59,11 @@ public interface Dialect {
      * @param nonExistentColumnNames a
      * @param tableName              a
      */
-    default String getAlertTableDDL(ColumnInfo[] nonExistentColumnNames, String tableName) {
+    default String getAlertTableDDL(List<Column> nonExistentColumnNames, String tableName) {
         var columnDefinitions = getColumnDefinitions(nonExistentColumnNames);
         var alertTableDDL = columnDefinitions.stream().map(columnDefinition -> "ADD " + columnDefinition).collect(Collectors.joining(", "));
         return "ALTER TABLE `" + tableName + "` " + alertTableDDL + ";";
     }
-
-    List<String> getColumnDefinitions(ColumnInfo[] tableInfo);
 
 
     /**
@@ -88,5 +89,23 @@ public interface Dialect {
     SQLType getSQLType(Class<?> javaType);
 
     String getLimitSQL(String sql, Integer rowCount, Integer offset);
+
+    default String getDataTypeDefinition(Column column) {
+        if (column.typeName() != null) {
+            if (column.columnSize() != null) {
+                return column.typeName() + "(" + column.columnSize() + ")";
+            } else {
+                return column.typeName();
+            }
+        } else {
+            if (column instanceof ColumnMapping m) {
+                return getDataTypeDefinitionByClass(m.javaField().getType());
+            } else {
+                return defaultDateType();
+            }
+        }
+    }
+
+    String defaultDateType();
 
 }

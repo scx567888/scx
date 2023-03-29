@@ -5,7 +5,7 @@ import com.mysql.cj.NativeQueryBindings;
 import com.mysql.cj.PreparedQuery;
 import com.mysql.cj.jdbc.ClientPreparedStatement;
 import com.mysql.cj.jdbc.MysqlDataSource;
-import cool.scx.dao.mapping.ColumnInfo;
+import cool.scx.sql.mapping.Column;
 
 import javax.sql.DataSource;
 import java.sql.Driver;
@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 
 import static cool.scx.util.StringUtils.notBlank;
-import static cool.scx.util.StringUtils.notEmpty;
 
 public class MySQLDialect implements Dialect {
 
@@ -51,11 +50,11 @@ public class MySQLDialect implements Dialect {
     /**
      * 当前列对象特殊的 DDL 如设置是否为主键 是否创建索引 是否是唯一值 (建表语句片段 , 需和 normalDDL 一起使用才完整)
      */
-    public static String[] initSpecialDDL(ColumnInfo column) {
+    public static String[] initSpecialDDL(Column column) {
         if (column == null) {
             return new String[0];
         }
-        var name = column.columnName();
+        var name = column.name();
         var list = new ArrayList<String>();
         if (column.primaryKey()) {
             list.add("PRIMARY KEY (`" + name + "`)");
@@ -63,7 +62,7 @@ public class MySQLDialect implements Dialect {
         if (column.unique()) {
             list.add("UNIQUE KEY `unique_" + name + "`(`" + name + "`)");
         }
-        if (column.needIndex()) {
+        if (column.index()) {
             list.add("KEY `index_" + name + "`(`" + name + "`)");
         }
         return list.toArray(String[]::new);
@@ -101,9 +100,9 @@ public class MySQLDialect implements Dialect {
     /**
      * 当前列对象通常的 DDL 如设置 字段名 类型 是否可以为空 默认值等 (建表语句片段 , 需和 specialDDL 一起使用才完整)
      */
-    private String initNormalDDL(ColumnInfo column) {
+    private String initNormalDDL(Column column) {
         var tempList = new ArrayList<String>();
-        tempList.add("`" + column.columnName() + "`");
+        tempList.add("`" + column.name() + "`");
         tempList.add(getDataTypeDefinition(column));
         tempList.add(column.notNull() || column.primaryKey() ? "NOT NULL" : "NULL");
         if (column.autoIncrement()) {
@@ -119,7 +118,7 @@ public class MySQLDialect implements Dialect {
     }
 
     @Override
-    public List<String> getColumnDefinitions(ColumnInfo[] columnInfos) {
+    public List<String> getColumnDefinitions(List<Column> columnInfos) {
         var createTableDDL = new ArrayList<String>();
         for (var columnInfo : columnInfos) {
             var normalDDL = initNormalDDL(columnInfo);
@@ -164,12 +163,9 @@ public class MySQLDialect implements Dialect {
         return sql + limitClauses;
     }
 
-    public String getDataTypeDefinition(ColumnInfo column) {
-        if (notEmpty(column.type())) {
-            return column.type();
-        } else {
-            return getDataTypeDefinitionByClass(column.javaField().getType());
-        }
+    @Override
+    public String defaultDateType() {
+        return "varchar(128)";
     }
 
 }

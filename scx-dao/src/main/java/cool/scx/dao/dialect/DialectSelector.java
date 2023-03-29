@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ServiceLoader;
 
-public class DialectSelector {
+public final class DialectSelector {
 
     private static final List<Dialect> DIALECT_LIST;
 

@@ -1,7 +1,7 @@
 package cool.scx.dao.dialect;
 
-import cool.scx.dao.mapping.ColumnInfo;
-import cool.scx.dao.mapping.TableInfo;
+import cool.scx.sql.mapping.Column;
+import cool.scx.sql.mapping.Table;
 import org.sqlite.SQLiteDataSource;
 import org.sqlite.core.CorePreparedStatement;
 import org.sqlite.core.CoreStatement;
@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static cool.scx.util.StringUtils.notBlank;
-import static cool.scx.util.StringUtils.notEmpty;
 
 public class SQLiteDialect implements Dialect {
 
@@ -41,18 +40,18 @@ public class SQLiteDialect implements Dialect {
     /**
      * 当前列对象特殊的 DDL 如设置是否为主键 是否创建索引 是否是唯一值 (建表语句片段 , 需和 normalDDL 一起使用才完整)
      */
-    public static String[] initSpecialDDL(ColumnInfo column) {
+    public static String[] initSpecialDDL(Column column) {
         if (column == null) {
             return new String[0];
         }
-        var name = column.columnName();
+        var name = column.name();
         var list = new ArrayList<String>();
-//        if (column.unique()) {
-//            list.add("UNIQUE KEY `unique_" + name + "`(`" + name + "`)");
-//        }
-//        if (column.needIndex()) {
-//            list.add("KEY `index_" + name + "`(`" + name + "`)");
-//        }
+        if (column.unique()) {
+            list.add("UNIQUE KEY `unique_" + name + "`(`" + name + "`)");
+        }
+        if (column.index()) {
+            list.add("KEY `index_" + name + "`(`" + name + "`)");
+        }
         return list.toArray(String[]::new);
     }
 
@@ -107,12 +106,12 @@ public class SQLiteDialect implements Dialect {
     }
 
     @Override
-    public String getCreateTableDDL(TableInfo<?> tableInfo) {
+    public String getCreateTableDDL(Table<?> tableInfo) {
         return Dialect.super.getCreateTableDDL(tableInfo);
     }
 
     @Override
-    public List<String> getColumnDefinitions(ColumnInfo[] columnInfos) {
+    public List<String> getColumnDefinitions(List<Column> columnInfos) {
         var columnDefinitions = new ArrayList<String>();
         for (var columnInfo : columnInfos) {
             var normalDDL = getColumnDefinition(columnInfo);
@@ -147,12 +146,17 @@ public class SQLiteDialect implements Dialect {
         return sql + limitClauses;
     }
 
+    @Override
+    public String defaultDateType() {
+        return "Text";
+    }
+
     /**
      * 当前列对象通常的 DDL 如设置 字段名 类型 是否可以为空 默认值等 (建表语句片段 , 需和 specialDDL 一起使用才完整)
      */
-    private String getColumnDefinition(ColumnInfo column) {
+    private String getColumnDefinition(Column column) {
         var list = new ArrayList<String>();
-        list.add("`" + column.columnName() + "`");
+        list.add("`" + column.name() + "`");
         list.add(getDataTypeDefinition(column));
         list.add(column.notNull() || column.primaryKey() ? "NOT NULL" : "NULL");
         if (column.primaryKey() && column.autoIncrement()) {
@@ -164,18 +168,7 @@ public class SQLiteDialect implements Dialect {
         if (notBlank(column.defaultValue())) {
             list.add("DEFAULT " + column.defaultValue());
         }
-//        if (notBlank(column.onUpdateValue())) {
-//            list.add("ON UPDATE " + column.onUpdateValue());
-//        }
         return String.join(" ", list);
-    }
-
-    public String getDataTypeDefinition(ColumnInfo column) {
-        if (notEmpty(column.type())) {
-            return column.type();
-        } else {
-            return getDataTypeDefinitionByClass(column.javaField().getType());
-        }
     }
 
 }
