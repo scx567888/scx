@@ -132,6 +132,23 @@ public final class MetaDataHelper {
         return map;
     }
 
+    public static boolean checkPrimaryKey(TableMetaData table, String columnName) {
+        for (var primaryKey : table.keys()) {
+            if (Objects.equals(primaryKey.columnName(), columnName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static IndexMetaData checkIndex(TableMetaData table, String columnName) {
+        for (var indexInfoMetaData : table.indexes()) {
+            if (Objects.equals(indexInfoMetaData.columnName(), columnName)) {
+                return indexInfoMetaData;
+            }
+        }
+        return null;
+    }
 
     /**
      * @see DatabaseMetaData#getCatalogs()
@@ -207,8 +224,16 @@ public final class MetaDataHelper {
         public ColumnMetaData toColumnMetaData(TableMetaData tableMetaData) {
             var notNull = Objects.equals("NO", IS_NULLABLE);
             var isAutoincrement = Objects.equals("YES", IS_AUTOINCREMENT);
-            var unique = tableMetaData.checkUnique(COLUMN_NAME);
-            var primaryKey = tableMetaData.checkPrimaryKey(COLUMN_NAME);
+            var primaryKey = checkPrimaryKey(tableMetaData, COLUMN_NAME);
+            boolean index = false;
+            boolean unique = false;
+            var indexMetaData = checkIndex(tableMetaData, COLUMN_NAME);
+            if (indexMetaData != null) {
+                index = true;
+                if (indexMetaData.unique()) {
+                    unique = true;
+                }
+            }
             return new ColumnMetaData(
                     TABLE_NAME,
                     COLUMN_NAME,
@@ -218,6 +243,7 @@ public final class MetaDataHelper {
                     isAutoincrement,
                     unique,
                     primaryKey,
+                    index,
                     COLUMN_DEF,
                     null,
                     REMARKS);

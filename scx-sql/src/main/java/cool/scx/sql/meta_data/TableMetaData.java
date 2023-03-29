@@ -5,7 +5,6 @@ import cool.scx.sql.mapping.Table;
 import java.sql.DatabaseMetaData;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 import static cool.scx.sql.meta_data.MetaDataHelper.*;
 
@@ -72,24 +71,6 @@ public final class TableMetaData implements Table<ColumnMetaData> {
     @Override
     public ColumnMetaData getColumn(String column) {
         return columnsMap.get(column);
-    }
-
-    public boolean checkPrimaryKey(String columnName) {
-        for (var primaryKey : keys) {
-            if (Objects.equals(primaryKey.columnName(), columnName)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean checkUnique(String columnName) {
-        for (var indexInfoMetaData : indexes) {
-            if (Objects.equals(indexInfoMetaData.columnName(), columnName)) {
-                return indexInfoMetaData.unique();
-            }
-        }
-        return false;
     }
 
 }

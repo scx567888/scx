@@ -74,4 +74,11 @@ public interface Column {
      */
     boolean primaryKey();
 
+    /**
+     * 有索引
+     *
+     * @return 有索引
+     */
+    boolean index();
+
 }

@@ -10,6 +10,7 @@ public record ColumnMetaData(String table,
                              boolean autoIncrement,
                              boolean unique,
                              boolean primaryKey,
+                             boolean index,
                              String defaultValue,
                              String onUpdateValue,
                              String remarks) implements Column {
