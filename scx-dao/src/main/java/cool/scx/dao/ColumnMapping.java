@@ -1,5 +1,7 @@
 package cool.scx.dao;
 
+import cool.scx.sql.mapping.Column;
+
 import java.lang.reflect.Field;
 
 /**
@@ -8,7 +10,7 @@ import java.lang.reflect.Field;
  * @author scx567888
  * @version 0.1.3
  */
-public interface ColumnMapping extends cool.scx.sql.mapping.Column {
+public interface ColumnMapping extends Column {
 
     Field javaField();
 
