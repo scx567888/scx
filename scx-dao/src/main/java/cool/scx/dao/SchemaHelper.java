@@ -1,42 +1,42 @@
 package cool.scx.dao;
 
 import cool.scx.dao.dialect.Dialect;
-import cool.scx.dao.mapping.ColumnInfo;
-import cool.scx.dao.mapping.TableInfo;
 import cool.scx.sql.SQLRunner;
-import cool.scx.sql.mapping.ColumnMapping;
-import cool.scx.sql.mapping.TableMapping;
-import cool.scx.sql.meta_data.MetaDataHelper;
-import cool.scx.sql.meta_data.TableMetaData;
+import cool.scx.sql.mapping.Column;
+import cool.scx.sql.mapping.Table;
 import cool.scx.sql.sql.SQL;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import static cool.scx.dao.dialect.DialectSelector.findDialect;
+import static cool.scx.sql.meta_data.MetaDataHelper.initTables;
+import static cool.scx.sql.meta_data.MetaDataHelper.toTablesMap;
 
 /**
- * 架构管理工具 todo 待重构
+ * 架构管理工具
  */
 public final class SchemaHelper {
 
-    public static String getMigrateSQL(TableInfo<?> oldTable, TableInfo<?> newTable) {
+    // todo
+    public static String getMigrateSQL(Table<?> oldTable, Table<?> newTable, Dialect dialect) {
         return "";
     }
 
-    public static SchemaVerifyResult verify(TableMapping<?, ?> oldTable, TableInfo<?> newTable) {
-        var needAdd = new ArrayList<ColumnInfo>();
-        var needRemove = new ArrayList<ColumnMapping>();
-        var needChange = new ArrayList<ColumnMapping>();
+    public static SchemaVerifyResult verify(Table<?> oldTable, Table<?> newTable) {
+        var needAdd = new ArrayList<Column>();
+        var needRemove = new ArrayList<Column>();
+        var needChange = new ArrayList<Column>();
         for (var oldColumn : oldTable.columns()) {
-            var column = newTable.getColumn(oldColumn.columnName());
+            var column = newTable.getColumn(oldColumn.name());
             if (column == null) {
                 needRemove.add(oldColumn);
             }
         }
-        for (ColumnInfo newColumn : newTable.columns()) {
-            var column = oldTable.getColumn(newColumn.columnName());
+        for (var newColumn : newTable.columns()) {
+            var column = oldTable.getColumn(newColumn.name());
             if (column == null) {
                 needAdd.add(newColumn);
             }
@@ -50,23 +50,22 @@ public final class SchemaHelper {
      * @param tableInfo a
      * @throws java.sql.SQLException a
      */
-    public static void fixTable(TableInfo<?> tableInfo, String databaseName, DataSource dataSource) throws SQLException {
-        Dialect dialect = findDialect(dataSource);
+    public static void fixTable(Table<?> tableInfo, String databaseName, DataSource dataSource) throws SQLException {
         try (var con = dataSource.getConnection()) {
-            var map = MetaDataHelper.toTablesMap(MetaDataHelper.initTables(con.getMetaData(), databaseName, databaseName, tableInfo.tableName(), null));
-            TableMetaData tableMetaData = map.get(tableInfo.tableName());
-            if (tableMetaData != null) {
-                tableMetaData.refreshColumns(con.getMetaData());
-                SchemaVerifyResult verify = verify(tableMetaData, tableInfo);
-                //获取不存在的字段
-                var needAdd = verify.getNeedAdd();
-                if (needAdd.length > 0) {
-                    var alertTableDDL = dialect.getAlertTableDDL(needAdd, tableInfo.tableName());
+            // 查找同名表
+            var map = toTablesMap(initTables(con.getMetaData(), databaseName, databaseName, tableInfo.name(), null));
+            var tableMetaData = map.get(tableInfo.name());
+            if (tableMetaData == null) {// 没有这个表
+                var createTableDDL = findDialect(dataSource).getCreateTableDDL(tableInfo);
+                SQLRunner.execute(con, SQL.ofNormal(createTableDDL));
+            } else {// 有表, 接下来校验字段
+                var verify = verify(tableMetaData.refreshColumns(con.getMetaData()), tableInfo);
+                // 获取不存在的字段
+                var needAdd = verify.needAdd();
+                if (needAdd.size() > 0) {
+                    var alertTableDDL = findDialect(dataSource).getAlertTableDDL(needAdd, tableInfo.name());
                     SQLRunner.execute(con, SQL.ofNormal(alertTableDDL));
                 }
-            } else {// 没有这个表
-                var createTableDDL = dialect.getCreateTableDDL(tableInfo);
-                SQLRunner.execute(con, SQL.ofNormal(createTableDDL));
             }
         }
     }
@@ -78,52 +77,26 @@ public final class SchemaHelper {
      * @return true 需要 false 不需要
      * @throws java.sql.SQLException e
      */
-    public static boolean checkNeedFixTable(TableInfo<?> tableInfo, String databaseName, DataSource dataSource) throws SQLException {
+    public static boolean checkNeedFixTable(Table<?> tableInfo, String databaseName, DataSource dataSource) throws SQLException {
         try (var con = dataSource.getConnection()) {
-            var map = MetaDataHelper.toTablesMap(MetaDataHelper.initTables(con.getMetaData(), databaseName, databaseName, tableInfo.tableName(), null));
-            var tableMetaData = map.get(tableInfo.tableName());
-            if (tableMetaData != null) {
-                tableMetaData.refreshColumns(con.getMetaData());
-                var verify = verify(tableMetaData, tableInfo);
+            // 查找同名表
+            var map = toTablesMap(initTables(con.getMetaData(), databaseName, databaseName, tableInfo.name(), null));
+            var tableMetaData = map.get(tableInfo.name());
+            if (tableMetaData == null) {// 没有这个表
+                return true;
+            } else {// 有表, 接下来校验字段
+                var verify = verify(tableMetaData.refreshColumns(con.getMetaData()), tableInfo);
                 //获取不存在的字段
-                var needAdd = verify.getNeedAdd();
-                if (needAdd.length > 0) {
+                var needAdd = verify.needAdd();
+                if (needAdd.size() > 0) {
                     return true;
                 }
-            } else {// 没有这个表
-                return true;
             }
         }
         return false;
     }
 
-
-    /**
-     * todo
-     */
-    public static class SchemaVerifyResult {
-
-        private final ColumnInfo[] needAdd;
-        private final ArrayList<ColumnMapping> needRemove;
-        private final ArrayList<ColumnMapping> needChange;
-
-        public SchemaVerifyResult(ArrayList<ColumnInfo> needAdd, ArrayList<ColumnMapping> needRemove, ArrayList<ColumnMapping> needChange) {
-            this.needAdd = needAdd.toArray(ColumnInfo[]::new);
-            this.needRemove = needRemove;
-            this.needChange = needChange;
-        }
-
-        public ColumnInfo[] getNeedAdd() {
-            return needAdd;
-        }
-
-        public ArrayList<ColumnMapping> getNeedRemove() {
-            return needRemove;
-        }
-
-        public ArrayList<ColumnMapping> getNeedChange() {
-            return needChange;
-        }
+    public record SchemaVerifyResult(List<Column> needAdd, List<Column> needRemove, List<Column> needChange) {
 
     }
 
