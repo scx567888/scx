@@ -1,4 +1,4 @@
-package cool.scx.dao.impl.sql_dao;
+package cool.scx.dao.impl;
 
 import cool.scx.dao.dialect.Dialect;
 import cool.scx.sql.mapping.Column;

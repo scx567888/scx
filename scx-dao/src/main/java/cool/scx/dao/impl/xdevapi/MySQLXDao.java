@@ -1,12 +1,12 @@
-package cool.scx.dao.impl.xdevapi_dao;
+package cool.scx.dao.impl.xdevapi;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mysql.cj.xdevapi.*;
 import cool.scx.dao.BaseDao;
 import cool.scx.dao.ColumnFilter;
 import cool.scx.dao.Query;
-import cool.scx.dao.impl.sql_dao.WhereParamsAndWhereClause;
-import cool.scx.dao.impl.sql_dao.WhereParamsAndWhereClauses;
+import cool.scx.dao.impl.WhereParamsAndWhereClause;
+import cool.scx.dao.impl.WhereParamsAndWhereClauses;
 import cool.scx.dao.query.Where;
 import cool.scx.dao.query.WhereBody;
 import cool.scx.sql.sql.SQL;
@@ -18,7 +18,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static cool.scx.dao.AnnotationConfigTable.initTableName;
-import static cool.scx.dao.impl.xdevapi_dao.WhereTypeHandler.findWhereTypeHandler;
+import static cool.scx.dao.impl.xdevapi.WhereTypeHandler.findWhereTypeHandler;
 
 public class MySQLXDao<Entity> implements BaseDao<Entity, String> {
 

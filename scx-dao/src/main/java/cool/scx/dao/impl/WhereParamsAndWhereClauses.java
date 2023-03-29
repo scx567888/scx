@@ -1,4 +1,4 @@
-package cool.scx.dao.impl.sql_dao;
+package cool.scx.dao.impl;
 
 public record WhereParamsAndWhereClauses(Object[] whereParams, String[] whereClause) {
 

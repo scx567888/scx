@@ -3,7 +3,7 @@ package cool.scx.core.base;
 import cool.scx.core.ScxContext;
 import cool.scx.dao.ColumnFilter;
 import cool.scx.dao.Query;
-import cool.scx.dao.impl.sql_dao.SQLDao;
+import cool.scx.dao.impl.SQLDao;
 import cool.scx.sql.sql.SQL;
 
 import java.lang.reflect.ParameterizedType;

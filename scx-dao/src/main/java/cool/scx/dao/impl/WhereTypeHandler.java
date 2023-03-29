@@ -1,4 +1,4 @@
-package cool.scx.dao.impl.sql_dao;
+package cool.scx.dao.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.dao.query.WhereOption;
@@ -13,8 +13,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
 
-import static cool.scx.dao.impl.sql_dao.ColumnNameParser.parseColumnName;
-import static cool.scx.dao.impl.sql_dao.ColumnNameParser.splitIntoColumnNameAndFieldPath;
+import static cool.scx.dao.impl.ColumnNameParser.parseColumnName;
+import static cool.scx.dao.impl.ColumnNameParser.splitIntoColumnNameAndFieldPath;
 import static cool.scx.util.ObjectUtils.*;
 
 /**
@@ -156,6 +156,28 @@ interface WhereTypeHandler {
         }
         return new WhereParamsAndWhereClause(whereParams, whereClause);
     };
+
+    static WhereTypeHandler findWhereTypeHandler(WhereType whereType) {
+        return switch (whereType) {
+            case IS_NULL -> IS_NULL_HANDLER;
+            case IS_NOT_NULL -> IS_NOT_NULL_HANDLER;
+            case EQUAL -> EQUAL_HANDLER;
+            case NOT_EQUAL -> NOT_EQUAL_HANDLER;
+            case LESS_THAN -> LESS_THAN_HANDLER;
+            case LESS_THAN_OR_EQUAL -> LESS_THAN_OR_EQUAL_HANDLER;
+            case GREATER_THAN -> GREATER_THAN_HANDLER;
+            case GREATER_THAN_OR_EQUAL -> GREATER_THAN_OR_EQUAL_HANDLER;
+            case LIKE -> LIKE_HANDLER;
+            case NOT_LIKE -> NOT_LIKE_HANDLER;
+            case LIKE_REGEX -> LIKE_REGEX_HANDLER;
+            case NOT_LIKE_REGEX -> NOT_LIKE_REGEX_HANDLER;
+            case IN -> IN_HANDLER;
+            case NOT_IN -> NOT_IN_HANDLER;
+            case BETWEEN -> BETWEEN_HANDLER;
+            case NOT_BETWEEN -> NOT_BETWEEN_HANDLER;
+            case JSON_CONTAINS -> JSON_CONTAINS_HANDLER;
+        };
+    }
 
     WhereParamsAndWhereClause getWhereParamsAndWhereClause(Table<?> tableInfo, String name, WhereType whereType, Object value1, Object value2, WhereOption.Info info);
 

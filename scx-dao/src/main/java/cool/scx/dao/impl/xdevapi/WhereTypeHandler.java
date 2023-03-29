@@ -1,7 +1,7 @@
-package cool.scx.dao.impl.xdevapi_dao;
+package cool.scx.dao.impl.xdevapi;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import cool.scx.dao.impl.sql_dao.WhereParamsAndWhereClause;
+import cool.scx.dao.impl.WhereParamsAndWhereClause;
 import cool.scx.dao.query.WhereOption;
 import cool.scx.dao.query.WhereType;
 import cool.scx.dao.query.exception.ValidParamListIsEmptyException;
