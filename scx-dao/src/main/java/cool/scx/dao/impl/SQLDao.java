@@ -1,9 +1,6 @@
 package cool.scx.dao.impl;
 
-import cool.scx.dao.AnnotationConfigTable;
-import cool.scx.dao.BaseDao;
-import cool.scx.dao.ColumnFilter;
-import cool.scx.dao.Query;
+import cool.scx.dao.*;
 import cool.scx.dao.dialect.Dialect;
 import cool.scx.dao.query.*;
 import cool.scx.sql.SQLRunner;
@@ -419,7 +416,7 @@ public class SQLDao<Entity> implements BaseDao<Entity, Long> {
         this.sqlRunner.execute(SQL.ofNormal("truncate " + tableInfo.name()));
     }
 
-    public final Table<?> _tableInfo() {
+    public final Table<? extends ColumnMapping> _tableInfo() {
         return this.tableInfo;
     }
 
