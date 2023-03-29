@@ -69,18 +69,18 @@ public class MetaDataTest {
         try (var con = dataSource.getConnection()) {
             var dataSourceMetaData = new DataSourceMetaData().refreshCatalogs(con.getMetaData(), true);
             for (var catalog : dataSourceMetaData.catalogs()) {
-                System.out.println(catalog.catalogName() + " : ");
+                System.out.println(catalog.name() + " : ");
                 System.out.println("{");
                 for (var schema : catalog.schemas()) {
-                    System.out.println("    " + schema.schemaName() + " : ");
+                    System.out.println("    " + schema.name() + " : ");
                     System.out.println("    {");
                     for (var table : schema.tables()) {
-                        System.out.println("        " + table.tableName() + " : ");
+                        System.out.println("        " + table.name() + " : ");
                         System.out.println("        {");
                         for (var column : table.columns()) {
-                            System.out.println("            " + column.columnName() + " " + column.typeName() + "(" + column.columnSize() + ")" + (column.notNull() ? " NOT NULL" : " NULL") + (column.autoIncrement() ? " AUTOINCREMENT" : "") + " DEFAULT : " + column.defaultValue() + ", REMARKS : " + column.remarks());
+                            System.out.println("            " + column.name() + " " + column.typeName() + "(" + column.columnSize() + ")" + (column.notNull() ? " NOT NULL" : " NULL") + (column.autoIncrement() ? " AUTOINCREMENT" : "") + " DEFAULT : " + column.defaultValue() + ", REMARKS : " + column.remarks());
                         }
-                        for (var primaryKey : table.primaryKeys()) {
+                        for (var primaryKey : table.keys()) {
                             System.out.println("            " + primaryKey.columnName() + " primaryKeys ");
                         }
                         System.out.println("        }");
@@ -99,18 +99,18 @@ public class MetaDataTest {
         try (var con = dataSource.getConnection()) {
             var dataSourceMetaData = new DataSourceMetaData().refreshCatalogs(con.getMetaData());
             for (var catalog : dataSourceMetaData.catalogs()) {
-                System.out.println(catalog.catalogName() + " : ");
+                System.out.println(catalog.name() + " : ");
                 System.out.println("{");
                 for (var schema : catalog.refreshSchemas(con.getMetaData()).schemas()) {
-                    System.out.println("    " + schema.schemaName() + " : ");
+                    System.out.println("    " + schema.name() + " : ");
                     System.out.println("    {");
                     for (var table : schema.refreshTables(con.getMetaData()).tables()) {
-                        System.out.println("        " + table.tableName() + " : ");
+                        System.out.println("        " + table.name() + " : ");
                         System.out.println("        {");
                         for (var column : table.refreshColumns(con.getMetaData()).columns()) {
-                            System.out.println("            " + column.columnName() + " " + column.typeName() + "(" + column.columnSize() + ")" + (column.notNull() ? " NOT NULL" : " NULL") + (column.autoIncrement() ? " AUTOINCREMENT" : "") + " DEFAULT : " + column.defaultValue() + ", REMARKS : " + column.remarks());
+                            System.out.println("            " + column.name() + " " + column.typeName() + "(" + column.columnSize() + ")" + (column.notNull() ? " NOT NULL" : " NULL") + (column.autoIncrement() ? " AUTOINCREMENT" : "") + " DEFAULT : " + column.defaultValue() + ", REMARKS : " + column.remarks());
                         }
-                        for (var primaryKey : table.primaryKeys()) {
+                        for (var primaryKey : table.keys()) {
                             System.out.println("            " + primaryKey.columnName() + " primaryKeys ");
                         }
                         System.out.println("        }");
