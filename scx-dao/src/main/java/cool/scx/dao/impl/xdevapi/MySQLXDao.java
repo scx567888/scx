@@ -1,7 +1,10 @@
 package cool.scx.dao.impl.xdevapi;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.mysql.cj.xdevapi.*;
+import com.mysql.cj.xdevapi.DbDoc;
+import com.mysql.cj.xdevapi.JsonParser;
+import com.mysql.cj.xdevapi.Schema;
+import com.mysql.cj.xdevapi.Session;
 import cool.scx.dao.BaseDao;
 import cool.scx.dao.ColumnFilter;
 import cool.scx.dao.Query;
@@ -143,7 +146,6 @@ public class MySQLXDao<Entity> implements BaseDao<Entity, String> {
     }
 
     public DbDoc toDbDoc(Object entity, ColumnFilter updateFilter) {
-        DbDoc doc = new DbDocImpl();
         String json = null;
         try {
             json = ObjectUtils.toJson(entity);

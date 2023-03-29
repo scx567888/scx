@@ -1,4 +1,4 @@
-package cool.scx.mvc.Interceptor;
+package cool.scx.mvc.interceptor;
 
 import cool.scx.mvc.ScxMvcInterceptor;
 

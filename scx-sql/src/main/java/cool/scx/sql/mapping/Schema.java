@@ -6,6 +6,6 @@ public interface Schema {
 
     String name();
 
-    Table[] tables();
+    Table<?>[] tables();
 
 }
