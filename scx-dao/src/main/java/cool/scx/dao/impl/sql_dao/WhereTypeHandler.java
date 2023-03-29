@@ -1,8 +1,10 @@
-package cool.scx.dao.where;
+package cool.scx.dao.impl.sql_dao;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import cool.scx.dao.mapping.TableInfo;
-import cool.scx.dao.where.exception.ValidParamListIsEmptyException;
+import cool.scx.dao.query.WhereOption;
+import cool.scx.dao.query.WhereType;
+import cool.scx.dao.query.exception.ValidParamListIsEmptyException;
+import cool.scx.sql.mapping.Table;
 import cool.scx.sql.sql.SQL;
 import cool.scx.util.StringUtils;
 
@@ -11,8 +13,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
 
-import static cool.scx.dao.ColumnNameParser.parseColumnName;
-import static cool.scx.dao.ColumnNameParser.splitIntoColumnNameAndFieldPath;
+import static cool.scx.dao.impl.sql_dao.ColumnNameParser.parseColumnName;
+import static cool.scx.dao.impl.sql_dao.ColumnNameParser.splitIntoColumnNameAndFieldPath;
 import static cool.scx.util.ObjectUtils.*;
 
 /**
@@ -125,7 +127,7 @@ interface WhereTypeHandler {
 
     WhereTypeHandler JSON_CONTAINS_HANDLER = (tableInfo, name, whereType, value1, value2, info) -> {
         var c = splitIntoColumnNameAndFieldPath(name);
-        var columnName = info.useOriginalName() ? c.columnName() : tableInfo.getColumn(c.columnName()).columnName();
+        var columnName = info.useOriginalName() ? c.columnName() : tableInfo.getColumn(c.columnName()).name();
         if (StringUtils.isBlank(c.columnName())) {
             throw new IllegalArgumentException("使用 JSON_CONTAINS 时, 查询名称不合法 !!! 字段名 : " + name);
         }
@@ -155,6 +157,6 @@ interface WhereTypeHandler {
         return new WhereParamsAndWhereClause(whereParams, whereClause);
     };
 
-    WhereParamsAndWhereClause getWhereParamsAndWhereClause(TableInfo<?> tableInfo, String name, WhereType whereType, Object value1, Object value2, WhereOption.Info info);
+    WhereParamsAndWhereClause getWhereParamsAndWhereClause(Table<?> tableInfo, String name, WhereType whereType, Object value1, Object value2, WhereOption.Info info);
 
 }

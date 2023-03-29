@@ -64,7 +64,7 @@ public class AnnotationConfigColumn implements ColumnMapping {
 
     @Override
     public Integer columnSize() {
-        return 0;
+        return null;
     }
 
     @Override

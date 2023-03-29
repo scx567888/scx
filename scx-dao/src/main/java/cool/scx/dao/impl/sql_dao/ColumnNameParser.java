@@ -1,22 +1,23 @@
-package cool.scx.dao;
+package cool.scx.dao.impl.sql_dao;
 
-import cool.scx.dao.mapping.TableInfo;
+
+import cool.scx.sql.mapping.Table;
 
 import static cool.scx.util.StringUtils.notBlank;
 
-public final class ColumnNameParser {
+final class ColumnNameParser {
 
-    public static String parseColumnName(TableInfo<?> tableInfo, String name, boolean useJsonExtract, boolean useOriginalName) {
+    public static String parseColumnName(Table<?> tableInfo, String name, boolean useJsonExtract, boolean useOriginalName) {
         if (useJsonExtract) {
             var c = splitIntoColumnNameAndFieldPath(name);
             if (notBlank(c.columnName()) && notBlank(c.fieldPath())) {
-                var jsonQueryColumnName = useOriginalName ? c.columnName() : tableInfo.getColumn(c.columnName()).columnName();
+                var jsonQueryColumnName = useOriginalName ? c.columnName() : tableInfo.getColumn(c.columnName()).name();
                 return jsonQueryColumnName + " -> " + "'$" + c.fieldPath() + "'";
             } else {
                 throw new IllegalArgumentException("使用 USE_JSON_EXTRACT 时, 查询名称不合法 !!! 字段名 : " + name);
             }
         } else {// 这里就是普通的判断一下是否使用 原始名称即可
-            return useOriginalName ? name : tableInfo.getColumn(name).columnName();
+            return useOriginalName ? name : tableInfo.getColumn(name).name();
         }
     }
 
