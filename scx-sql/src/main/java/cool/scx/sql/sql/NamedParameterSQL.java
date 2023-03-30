@@ -1,7 +1,6 @@
 package cool.scx.sql.sql;
 
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -82,13 +81,13 @@ final class NamedParameterSQL implements SQL {
     }
 
     @Override
-    public PreparedStatement prepareStatement(Connection con) throws SQLException {
-        return placeholderSQL.prepareStatement(con);
+    public Object[] params() {
+        return placeholderSQL.params();
     }
 
     @Override
-    public Object[] params() {
-        return placeholderSQL.params();
+    public PreparedStatement fillParams(PreparedStatement preparedStatement) throws SQLException {
+        return placeholderSQL.fillParams(preparedStatement);
     }
 
     /**
