@@ -5,6 +5,7 @@ import cool.scx.logging.ScxLoggerFactory;
 import cool.scx.logging.ScxLoggingLevel;
 import cool.scx.sql.SQLRunner;
 import cool.scx.sql.UpdateResult;
+import cool.scx.sql.result_handler.ResultHandler;
 import cool.scx.sql.sql.SQL;
 import cool.scx.test.bean.Student;
 import cool.scx.test.bean.StudentRecord;
@@ -14,10 +15,7 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import javax.sql.DataSource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.mysql.cj.conf.PropertyKey.*;
 import static cool.scx.sql.result_handler.ResultHandler.ofBeanList;
@@ -41,6 +39,7 @@ public class SQLRunnerTest {
         test2();
         test3();
         test4();
+        test5();
     }
 
     @BeforeTest
@@ -119,6 +118,67 @@ public class SQLRunnerTest {
         }
         List<StudentRecord> query2 = sqlRunner.query(ofNormal("select * from " + tableName), ofBeanList(StudentRecord.class));
         System.out.println("回滚后总条数: " + query2.size());
+    }
+
+    @Test
+    public static void test5() {
+        var sql = ofNormal("select * from " + tableName);
+        //测试多种 ResultHandler
+
+        //查询单个
+        var ofMap = sqlRunner.query(sql, ResultHandler.ofMap());
+        System.out.println("ofMap " + ofMap);
+        var ofMap1 = sqlRunner.query(sql, ResultHandler.ofMap(LinkedHashMap::new));
+        System.out.println("ofMap1 " + ofMap1);
+        var ofBean = sqlRunner.query(sql, ResultHandler.ofBean(StudentRecord.class));
+        System.out.println("ofBean " + ofBean);
+        var ofBean1 = sqlRunner.query(sql, ResultHandler.ofBean(StudentRecord.class, (c) -> null));
+        System.out.println("ofBean1 " + ofBean1);
+
+
+        //查询多个
+        var ofMapList = sqlRunner.query(sql, ResultHandler.ofMapList());
+        System.out.println("ofMapList " + ofMapList);
+        var ofMapList1 = sqlRunner.query(sql, ResultHandler.ofMapList(LinkedHashMap::new));
+        System.out.println("ofMapList1 " + ofMapList1);
+        var ofBeanList = sqlRunner.query(sql, ResultHandler.ofBeanList(StudentRecord.class));
+        System.out.println("ofBeanList " + ofBeanList);
+        var ofBeanList1 = sqlRunner.query(sql, ResultHandler.ofBeanList(StudentRecord.class, (c) -> null));
+        System.out.println("ofBeanList1 " + ofBeanList1);
+
+
+        //使用 消费者 直接处理
+        sqlRunner.query(sql, ResultHandler.ofMapConsumer(x -> System.out.println("ofMapConsumer " + x)));
+        sqlRunner.query(sql, ResultHandler.ofMapConsumer(LinkedHashMap::new, x -> System.out.println("ofMapConsumer1 " + x)));
+        sqlRunner.query(sql, ResultHandler.ofBeanConsumer(StudentRecord.class, x -> System.out.println("ofBeanConsumer " + x)));
+        sqlRunner.query(sql, ResultHandler.ofBeanConsumer(StudentRecord.class, (c) -> null, x -> System.out.println("ofBeanConsumer1 " + x)));
+
+        //使用 流式接受 (注意必须在同一个事务中 进行循环)
+        sqlRunner.autoTransaction(() -> {
+            var ofMapStream = sqlRunner.query(sql, ResultHandler.ofMapStream());
+            for (var v : ofMapStream) {
+                System.out.println("ofMapStream " + v);
+            }
+        });
+        sqlRunner.autoTransaction(() -> {
+            var ofMapStream1 = sqlRunner.query(sql, ResultHandler.ofMapStream(LinkedHashMap::new));
+            for (var v : ofMapStream1) {
+                System.out.println("ofMapStream1 " + v);
+            }
+        });
+        sqlRunner.autoTransaction(() -> {
+            var ofBeanStream = sqlRunner.query(sql, ResultHandler.ofBeanStream(StudentRecord.class));
+            for (var v : ofBeanStream) {
+                System.out.println("ofBeanStream " + v);
+            }
+        });
+        sqlRunner.autoTransaction(() -> {
+            var ofBeanStream1 = sqlRunner.query(sql, ResultHandler.ofBeanStream(StudentRecord.class, (c) -> null));
+            for (var v : ofBeanStream1) {
+                System.out.println("ofBeanStream1 " + v);
+            }
+        });
+
     }
 
     private static MysqlDataSource getMySQLDataSource() {

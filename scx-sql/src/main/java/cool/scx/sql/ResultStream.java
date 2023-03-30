@@ -12,7 +12,7 @@ import java.util.Iterator;
  *
  * @param <T>
  */
-public final class ResultStream<T> implements Iterable<T>, Iterator<T>, AutoCloseable {
+public final class ResultStream<T> implements Iterable<T>, Iterator<T>{
 
     private final ScxFunction<ResultSet, T, SQLException> converter;
     private final ResultSet resultSet;
@@ -54,7 +54,6 @@ public final class ResultStream<T> implements Iterable<T>, Iterator<T>, AutoClos
         return temp;
     }
 
-    @Override
     public void close() throws SQLException {
         if (isClosed) {
             return;
