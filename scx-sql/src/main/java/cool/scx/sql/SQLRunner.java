@@ -16,6 +16,9 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ForkJoinPool;
 
 import static cool.scx.util.ScxExceptionHelper.wrap;
+import static java.sql.ResultSet.CONCUR_READ_ONLY;
+import static java.sql.ResultSet.TYPE_FORWARD_ONLY;
+import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
 /**
  * SQLRunner 执行 cool.scx.sql 语句
@@ -53,15 +56,16 @@ public final class SQLRunner {
      * @param con           a
      * @param sql           a
      * @param resultHandler a
-     * @param <T>           a
      * @return a
      * @throws SQLException a
      */
     public static <T> T query(Connection con, SQL sql, ResultHandler<T> resultHandler) throws SQLException {
-        try (var preparedStatement = sql.prepareStatement(con)) {
-            var resultSet = preparedStatement.executeQuery();
-            return resultHandler.apply(resultSet);
-        }
+        // PreparedStatement 由 resultHandler 负责 close
+        var preparedStatement = con.prepareStatement(sql.sql(), TYPE_FORWARD_ONLY, CONCUR_READ_ONLY);
+        sql.fillParams(preparedStatement);
+        resultHandler.beforeExecuteQuery(preparedStatement);
+        var resultSet = preparedStatement.executeQuery();
+        return resultHandler.apply(resultSet);
     }
 
     /**
@@ -73,7 +77,8 @@ public final class SQLRunner {
      * @throws SQLException a
      */
     public static long execute(Connection con, SQL sql) throws SQLException {
-        try (var preparedStatement = sql.prepareStatement(con)) {
+        try (var preparedStatement = con.prepareStatement(sql.sql(), RETURN_GENERATED_KEYS)) {
+            sql.fillParams(preparedStatement);
             preparedStatement.execute();
             return preparedStatement.getLargeUpdateCount();
         }
@@ -88,7 +93,8 @@ public final class SQLRunner {
      * @throws SQLException a
      */
     public static UpdateResult update(Connection con, SQL sql) throws SQLException {
-        try (var preparedStatement = sql.prepareStatement(con)) {
+        try (var preparedStatement = con.prepareStatement(sql.sql(), RETURN_GENERATED_KEYS)) {
+            sql.fillParams(preparedStatement);
             var affectedItemsCount = preparedStatement.executeLargeUpdate();
             var generatedKeys = getGeneratedKeys(preparedStatement);
             return new UpdateResult(affectedItemsCount, generatedKeys);
@@ -104,7 +110,8 @@ public final class SQLRunner {
      * @throws SQLException if any.
      */
     public static UpdateResult updateBatch(Connection con, SQL sql) throws SQLException {
-        try (var preparedStatement = sql.prepareStatement(con)) {
+        try (var preparedStatement = con.prepareStatement(sql.sql(), RETURN_GENERATED_KEYS)) {
+            sql.fillParams(preparedStatement);
             var affectedItemsCount = preparedStatement.executeLargeBatch().length;
             var generatedKeys = getGeneratedKeys(preparedStatement);
             return new UpdateResult(affectedItemsCount, generatedKeys);

@@ -14,18 +14,12 @@ import java.util.function.Supplier;
  * @author scx567888
  * @version 0.0.1
  */
-final class MapListHandler implements ResultHandler<List<Map<String, Object>>> {
+record MapListHandler(Supplier<Map<String, Object>> mapSupplier) implements ResultHandler<List<Map<String, Object>>> {
 
     static final MapListHandler INSTANCE = new MapListHandler();
 
-    private final Supplier<Map<String, Object>> mapSupplier;
-
     public MapListHandler() {
         this(HashMap::new);
-    }
-
-    public MapListHandler(Supplier<Map<String, Object>> mapSupplier) {
-        this.mapSupplier = mapSupplier;
     }
 
     /**

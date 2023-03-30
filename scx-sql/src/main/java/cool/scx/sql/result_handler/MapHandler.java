@@ -12,18 +12,12 @@ import java.util.function.Supplier;
  * @author scx567888
  * @version 0.2.1
  */
-final class MapHandler implements ResultHandler<Map<String, Object>> {
+record MapHandler(Supplier<Map<String, Object>> mapSupplier) implements ResultHandler<Map<String, Object>> {
 
     static final MapHandler INSTANCE = new MapHandler();
 
-    public final Supplier<Map<String, Object>> mapSupplier;
-
     public MapHandler() {
         this(HashMap::new);
-    }
-
-    public MapHandler(Supplier<Map<String, Object>> mapSupplier) {
-        this.mapSupplier = mapSupplier;
     }
 
     @Override

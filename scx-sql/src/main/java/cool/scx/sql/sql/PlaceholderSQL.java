@@ -2,7 +2,9 @@ package cool.scx.sql.sql;
 
 import cool.scx.sql.type_handler.TypeHandlerSelector;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Types;
 import java.util.List;
 
 /**
@@ -77,12 +79,10 @@ final class PlaceholderSQL implements SQL {
     /**
      * a
      *
-     * @param con a
      * @return a
      * @throws SQLException a
      */
-    private PreparedStatement getPreparedStatementFromSingle(Connection con) throws SQLException {
-        var preparedStatement = con.prepareStatement(normalSQL, Statement.RETURN_GENERATED_KEYS);
+    private PreparedStatement fillSingle(PreparedStatement preparedStatement) throws SQLException {
         //单条数据
         if (params != null) {
             fillPreparedStatement(preparedStatement, params);
@@ -90,20 +90,13 @@ final class PlaceholderSQL implements SQL {
         return preparedStatement;
     }
 
-    @Override
-    public Object[] params() {
-        return this.params;
-    }
-
     /**
      * a
      *
-     * @param con c
      * @return c
      * @throws SQLException c
      */
-    private PreparedStatement getPreparedStatementFromBatch(Connection con) throws SQLException {
-        var preparedStatement = con.prepareStatement(normalSQL, Statement.RETURN_GENERATED_KEYS);
+    private PreparedStatement fillBatch(PreparedStatement preparedStatement) throws SQLException {
         if (batchParams != null) {
             //根据数据量, 判断是否使用 批量插入
             for (var paramArray : batchParams) {
@@ -117,13 +110,18 @@ final class PlaceholderSQL implements SQL {
     }
 
     @Override
-    public String sql() {
-        return normalSQL;
+    public Object[] params() {
+        return this.params;
     }
 
     @Override
-    public PreparedStatement prepareStatement(Connection con) throws SQLException {
-        return isBatch ? getPreparedStatementFromBatch(con) : getPreparedStatementFromSingle(con);
+    public PreparedStatement fillParams(PreparedStatement preparedStatement) throws SQLException {
+        return isBatch ? fillBatch(preparedStatement) : fillSingle(preparedStatement);
+    }
+
+    @Override
+    public String sql() {
+        return normalSQL;
     }
 
 }

@@ -1,6 +1,5 @@
 package cool.scx.sql.sql;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
@@ -42,19 +41,23 @@ public interface SQL {
     String sql();
 
     /**
-     * a
-     *
-     * @param con a
-     * @return a
-     * @throws java.sql.SQLException a
-     */
-    PreparedStatement prepareStatement(Connection con) throws SQLException;
-
-    /**
      * 数组类型的参数值
      *
      * @return a
      */
-    Object[] params();
+    default Object[] params() {
+        return new Object[0];
+    }
+
+    /**
+     * 填充参数
+     *
+     * @param preparedStatement p
+     * @return PreparedStatement 方便链式调用
+     * @throws SQLException a
+     */
+    default PreparedStatement fillParams(PreparedStatement preparedStatement) throws SQLException {
+        return preparedStatement;
+    }
 
 }
