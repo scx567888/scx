@@ -1,6 +1,7 @@
 package cool.scx.sql;
 
 import cool.scx.functional.ScxFunction;
+import cool.scx.functional.ScxRunnable;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,15 +12,18 @@ import java.util.Iterator;
  *
  * @param <T>
  */
-public final class ResultStream<T> implements Iterable<T>, Iterator<T> {
+public final class ResultStream<T> implements Iterable<T>, Iterator<T>, AutoCloseable {
 
     private final ScxFunction<ResultSet, T, SQLException> converter;
     private final ResultSet resultSet;
+    private ScxRunnable<SQLException> onClose;
+    private boolean isClosed;
     private T next;
 
     public ResultStream(ScxFunction<ResultSet, T, SQLException> converter, ResultSet resultSet) {
         this.converter = converter;
         this.resultSet = resultSet;
+        this.isClosed = false;
         this.next();
     }
 
@@ -41,11 +45,29 @@ public final class ResultStream<T> implements Iterable<T>, Iterator<T> {
                 next = converter.apply(resultSet);
             } else {
                 next = null;
+                //读取不到了 这里调用 close
+                close();
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         return temp;
+    }
+
+    @Override
+    public void close() throws SQLException {
+        if (isClosed) {
+            return;
+        }
+        if (onClose != null) {
+            onClose.run();
+        }
+        isClosed = true;
+    }
+
+    public ResultStream<T> onClose(ScxRunnable<SQLException> onClose) {
+        this.onClose = onClose;
+        return this;
     }
 
 }

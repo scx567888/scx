@@ -1,5 +1,6 @@
 package cool.scx.sql.result_handler;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -37,6 +38,12 @@ record MapConsumerHandler(Supplier<Map<String, Object>> mapSupplier,
             consumer.accept(map);
         }
         return null;
+    }
+
+    @Override
+    public PreparedStatement beforeExecuteQuery(PreparedStatement preparedStatement) throws SQLException {
+        preparedStatement.setFetchSize(Integer.MIN_VALUE);
+        return preparedStatement;
     }
 
 }

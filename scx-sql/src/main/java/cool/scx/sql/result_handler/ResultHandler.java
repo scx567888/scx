@@ -114,7 +114,7 @@ public interface ResultHandler<T> extends ScxFunction<ResultSet, T, SQLException
      * @throws SQLException a
      */
     default T apply(ResultSet resultSet, PreparedStatement preparedStatement) throws SQLException {
-        try (preparedStatement) {
+        try (preparedStatement; resultSet) {
             return this.apply(resultSet);
         }
     }

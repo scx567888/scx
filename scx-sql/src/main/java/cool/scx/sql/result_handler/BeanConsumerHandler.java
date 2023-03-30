@@ -2,6 +2,7 @@ package cool.scx.sql.result_handler;
 
 import cool.scx.sql.bean_builder.BeanBuilder;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.function.Consumer;
@@ -22,6 +23,12 @@ record BeanConsumerHandler<T>(BeanBuilder<T> beanBuilder, Consumer<T> consumer) 
             consumer.accept(t);
         }
         return null;
+    }
+
+    @Override
+    public PreparedStatement beforeExecuteQuery(PreparedStatement preparedStatement) throws SQLException {
+        preparedStatement.setFetchSize(Integer.MIN_VALUE);
+        return preparedStatement;
     }
 
 }
