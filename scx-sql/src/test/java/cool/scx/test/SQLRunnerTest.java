@@ -16,6 +16,7 @@ import org.testng.annotations.Test;
 
 import javax.sql.DataSource;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.mysql.cj.conf.PropertyKey.*;
 import static cool.scx.sql.result_handler.ResultHandler.ofBeanList;
@@ -45,7 +46,7 @@ public class SQLRunnerTest {
     @BeforeTest
     public static void beforeTest() {
         try {
-            sqlRunner.execute(ofNormal("drop table if exists " + tableName + ";" + " create table " + tableName + "(`name` varchar(32) unique ,`age` integer,`sex` boolean )"));
+            sqlRunner.execute(ofNormal("drop table if exists " + tableName + ";" + " create table " + tableName + "(`name` varchar(32) ,`age` integer,`sex` boolean )"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -61,7 +62,7 @@ public class SQLRunnerTest {
         UpdateResult update = sqlRunner.update(SQL.ofNamedParameter(sql, m));
         System.out.println("具名参数插入单条数据 : " + update);
         var ms = new ArrayList<Map<String, Object>>();
-        for (int i = 0; i < 999; i = i + 1) {
+        for (int i = 0; i < 999999; i = i + 1) {
             var m1 = new HashMap<String, Object>();
             m1.put("age", 18 + i);
             m1.put("sex", 0);
@@ -79,7 +80,7 @@ public class SQLRunnerTest {
         UpdateResult update = sqlRunner.update(SQL.ofPlaceholder(sql, m));
         System.out.println("占位符参数插入单条数据 : " + update);
         var ms = new ArrayList<Object[]>();
-        for (int i = 0; i < 999; i = i + 1) {
+        for (int i = 0; i < 999999; i = i + 1) {
             var m1 = new Object[]{"小蓝" + i, 22 + i, 0};
             ms.add(m1);
         }
@@ -138,45 +139,60 @@ public class SQLRunnerTest {
 
         //查询多个
         var ofMapList = sqlRunner.query(sql, ResultHandler.ofMapList());
-        System.out.println("ofMapList " + ofMapList);
+        System.out.println("ofMapList " + ofMapList.size());
         var ofMapList1 = sqlRunner.query(sql, ResultHandler.ofMapList(LinkedHashMap::new));
-        System.out.println("ofMapList1 " + ofMapList1);
+        System.out.println("ofMapList1 " + ofMapList1.size());
         var ofBeanList = sqlRunner.query(sql, ResultHandler.ofBeanList(StudentRecord.class));
-        System.out.println("ofBeanList " + ofBeanList);
+        System.out.println("ofBeanList " + ofBeanList.size());
         var ofBeanList1 = sqlRunner.query(sql, ResultHandler.ofBeanList(StudentRecord.class, (c) -> null));
-        System.out.println("ofBeanList1 " + ofBeanList1);
+        System.out.println("ofBeanList1 " + ofBeanList1.size());
 
-
+        var size = new AtomicInteger();
         //使用 消费者 直接处理
-        sqlRunner.query(sql, ResultHandler.ofMapConsumer(x -> System.out.println("ofMapConsumer " + x)));
-        sqlRunner.query(sql, ResultHandler.ofMapConsumer(LinkedHashMap::new, x -> System.out.println("ofMapConsumer1 " + x)));
-        sqlRunner.query(sql, ResultHandler.ofBeanConsumer(StudentRecord.class, x -> System.out.println("ofBeanConsumer " + x)));
-        sqlRunner.query(sql, ResultHandler.ofBeanConsumer(StudentRecord.class, (c) -> null, x -> System.out.println("ofBeanConsumer1 " + x)));
+        sqlRunner.query(sql, ResultHandler.ofMapConsumer(x -> size.getAndIncrement()));
+        System.out.println("ofMapConsumer " + size);
+        size.set(0);
+        sqlRunner.query(sql, ResultHandler.ofMapConsumer(LinkedHashMap::new, x -> size.getAndIncrement()));
+        System.out.println("ofMapConsumer1 " + size);
+        size.set(0);
+        sqlRunner.query(sql, ResultHandler.ofBeanConsumer(StudentRecord.class, x -> size.getAndIncrement()));
+        System.out.println("ofBeanConsumer " + size);
+        size.set(0);
+        sqlRunner.query(sql, ResultHandler.ofBeanConsumer(StudentRecord.class, (c) -> null, x -> size.getAndIncrement()));
+        System.out.println("ofBeanConsumer1 " + size);
 
         //使用 流式接受 (注意必须在同一个事务中 进行循环)
         sqlRunner.autoTransaction(() -> {
             var ofMapStream = sqlRunner.query(sql, ResultHandler.ofMapStream());
+            var i = 0;
             for (var v : ofMapStream) {
-                System.out.println("ofMapStream " + v);
+                i = i + 1;
             }
+            System.out.println("ofMapStream " + i);
         });
         sqlRunner.autoTransaction(() -> {
             var ofMapStream1 = sqlRunner.query(sql, ResultHandler.ofMapStream(LinkedHashMap::new));
+            var i = 0;
             for (var v : ofMapStream1) {
-                System.out.println("ofMapStream1 " + v);
+                i = i + 1;
             }
+            System.out.println("ofMapStream1 " + i);
         });
         sqlRunner.autoTransaction(() -> {
             var ofBeanStream = sqlRunner.query(sql, ResultHandler.ofBeanStream(StudentRecord.class));
+            var i = 0;
             for (var v : ofBeanStream) {
-                System.out.println("ofBeanStream " + v);
+                i = i + 1;
             }
+            System.out.println("ofBeanStream " + i);
         });
         sqlRunner.autoTransaction(() -> {
             var ofBeanStream1 = sqlRunner.query(sql, ResultHandler.ofBeanStream(StudentRecord.class, (c) -> null));
+            var i = 0;
             for (var v : ofBeanStream1) {
-                System.out.println("ofBeanStream1 " + v);
+                i = i + 1;
             }
+            System.out.println("ofBeanStream1 " + i);
         });
 
     }
