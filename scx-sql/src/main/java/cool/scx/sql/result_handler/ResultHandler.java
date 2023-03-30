@@ -5,6 +5,7 @@ import cool.scx.sql.ResultStream;
 import cool.scx.sql.bean_builder.BeanBuilder;
 
 import java.lang.reflect.Field;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -91,6 +92,31 @@ public interface ResultHandler<T> extends ScxFunction<ResultSet, T, SQLException
 
     static <C> ResultHandler<C> ofSingleValue(int columnIndex, Class<C> clazz) {
         return new SingleValueHandler<>(columnIndex, clazz);
+    }
+
+    /**
+     * 执行前
+     *
+     * @param preparedStatement a
+     * @return a
+     * @throws SQLException a
+     */
+    default PreparedStatement beforeExecuteQuery(PreparedStatement preparedStatement) throws SQLException {
+        return preparedStatement;
+    }
+
+    /**
+     * a
+     *
+     * @param resultSet         a
+     * @param preparedStatement a
+     * @return a
+     * @throws SQLException a
+     */
+    default T apply(ResultSet resultSet, PreparedStatement preparedStatement) throws SQLException {
+        try (preparedStatement) {
+            return this.apply(resultSet);
+        }
     }
 
 }

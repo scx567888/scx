@@ -2,6 +2,7 @@ package cool.scx.sql.result_handler;
 
 import cool.scx.sql.ResultStream;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -33,6 +34,17 @@ record MapStreamHandler(
             }
             return map;
         }, rs);
+    }
+
+    @Override
+    public PreparedStatement beforeExecuteQuery(PreparedStatement preparedStatement) throws SQLException {
+        preparedStatement.setFetchSize(Integer.MIN_VALUE);
+        return preparedStatement;
+    }
+
+    @Override
+    public ResultStream<Map<String, Object>> apply(ResultSet rs, PreparedStatement preparedStatement) throws SQLException {
+        return apply(rs).onClose(preparedStatement::close);
     }
 
 }
