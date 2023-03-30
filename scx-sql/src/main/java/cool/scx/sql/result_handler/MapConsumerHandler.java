@@ -2,24 +2,22 @@ package cool.scx.sql.result_handler;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
- * a
+ * <p>BeanBuilder interface.</p>
  *
  * @author scx567888
- * @version 0.0.1
+ * @version 0.2.1
  */
-record MapListHandler(Supplier<Map<String, Object>> mapSupplier) implements ResultHandler<List<Map<String, Object>>> {
+record MapConsumerHandler(Supplier<Map<String, Object>> mapSupplier,
+                          Consumer<Map<String, Object>> consumer) implements ResultHandler<Void> {
 
-    static final MapListHandler INSTANCE = new MapListHandler();
-
-    public MapListHandler() {
-        this(HashMap::new);
+    public MapConsumerHandler(Consumer<Map<String, Object>> consumer) {
+        this(HashMap::new, consumer);
     }
 
     /**
@@ -28,8 +26,7 @@ record MapListHandler(Supplier<Map<String, Object>> mapSupplier) implements Resu
      * a
      */
     @Override
-    public List<Map<String, Object>> apply(ResultSet rs) throws SQLException {
-        var list = new ArrayList<Map<String, Object>>();
+    public Void apply(ResultSet rs) throws SQLException {
         var rsm = rs.getMetaData();
         var count = rsm.getColumnCount();
         while (rs.next()) {
@@ -37,9 +34,9 @@ record MapListHandler(Supplier<Map<String, Object>> mapSupplier) implements Resu
             for (int i = 1; i <= count; i = i + 1) {
                 map.put(rsm.getColumnLabel(i), rs.getObject(i));
             }
-            list.add(map);
+            consumer.accept(map);
         }
-        return list;
+        return null;
     }
 
 }
