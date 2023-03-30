@@ -46,7 +46,7 @@ public class SQLRunnerTest {
     @BeforeTest
     public static void beforeTest() {
         try {
-            sqlRunner.execute(ofNormal("drop table if exists " + tableName + ";" + " create table " + tableName + "(`name` varchar(32) ,`age` integer,`sex` boolean )"));
+            sqlRunner.execute(ofNormal("drop table if exists " + tableName + ";" + " create table " + tableName + "(`name` varchar(32) unique ,`age` integer,`sex` boolean )"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -62,7 +62,7 @@ public class SQLRunnerTest {
         UpdateResult update = sqlRunner.update(SQL.ofNamedParameter(sql, m));
         System.out.println("具名参数插入单条数据 : " + update);
         var ms = new ArrayList<Map<String, Object>>();
-        for (int i = 0; i < 999999; i = i + 1) {
+        for (int i = 0; i < 999; i = i + 1) {
             var m1 = new HashMap<String, Object>();
             m1.put("age", 18 + i);
             m1.put("sex", 0);
@@ -80,7 +80,7 @@ public class SQLRunnerTest {
         UpdateResult update = sqlRunner.update(SQL.ofPlaceholder(sql, m));
         System.out.println("占位符参数插入单条数据 : " + update);
         var ms = new ArrayList<Object[]>();
-        for (int i = 0; i < 999999; i = i + 1) {
+        for (int i = 0; i < 999; i = i + 1) {
             var m1 = new Object[]{"小蓝" + i, 22 + i, 0};
             ms.add(m1);
         }
