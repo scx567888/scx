@@ -1,7 +1,6 @@
 package cool.scx.sql.result_handler;
 
 import cool.scx.functional.ScxFunction;
-import cool.scx.sql.ResultStream;
 import cool.scx.sql.bean_builder.BeanBuilder;
 
 import java.lang.reflect.Field;
@@ -70,22 +69,6 @@ public interface ResultHandler<T> extends ScxFunction<ResultSet, T, SQLException
         return new MapConsumerHandler(mapSupplier, consumer);
     }
 
-    static <C> ResultHandler<ResultStream<C>> ofBeanStream(Class<C> clazz) {
-        return new BeanStreamHandler<>(BeanBuilder.of(clazz));
-    }
-
-    static <C> ResultHandler<ResultStream<C>> ofBeanStream(Class<C> clazz, Function<Field, String> columnNameMapping) {
-        return new BeanStreamHandler<>(BeanBuilder.of(clazz, columnNameMapping));
-    }
-
-    static ResultHandler<ResultStream<Map<String, Object>>> ofMapStream() {
-        return MapStreamHandler.INSTANCE;
-    }
-
-    static ResultHandler<ResultStream<Map<String, Object>>> ofMapStream(Supplier<Map<String, Object>> mapSupplier) {
-        return new MapStreamHandler(mapSupplier);
-    }
-
     static <C> ResultHandler<C> ofSingleValue(String columnName, Class<C> clazz) {
         return new SingleValueHandler<>(columnName, clazz);
     }
@@ -103,20 +86,6 @@ public interface ResultHandler<T> extends ScxFunction<ResultSet, T, SQLException
      */
     default PreparedStatement beforeExecuteQuery(PreparedStatement preparedStatement) throws SQLException {
         return preparedStatement;
-    }
-
-    /**
-     * a
-     *
-     * @param resultSet         a
-     * @param preparedStatement a
-     * @return a
-     * @throws SQLException a
-     */
-    default T apply(ResultSet resultSet, PreparedStatement preparedStatement) throws SQLException {
-        try (preparedStatement; resultSet) {
-            return this.apply(resultSet);
-        }
     }
 
 }
