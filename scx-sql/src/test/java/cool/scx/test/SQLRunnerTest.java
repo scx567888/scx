@@ -163,40 +163,6 @@ public class SQLRunnerTest {
         sqlRunner.query(sql, ResultHandler.ofBeanConsumer(StudentRecord.class, (c) -> null, x -> size.getAndIncrement()));
         System.out.println("ofBeanConsumer1 " + size);
 
-        //使用 流式接受 (注意必须在同一个事务中 进行循环)
-        sqlRunner.autoTransaction(() -> {
-            var ofMapStream = sqlRunner.query(sql, ResultHandler.ofMapStream());
-            var i = 0;
-            for (var v : ofMapStream) {
-                i = i + 1;
-            }
-            System.out.println("ofMapStream " + i);
-        });
-        sqlRunner.autoTransaction(() -> {
-            var ofMapStream1 = sqlRunner.query(sql, ResultHandler.ofMapStream(LinkedHashMap::new));
-            var i = 0;
-            for (var v : ofMapStream1) {
-                i = i + 1;
-            }
-            System.out.println("ofMapStream1 " + i);
-        });
-        sqlRunner.autoTransaction(() -> {
-            var ofBeanStream = sqlRunner.query(sql, ResultHandler.ofBeanStream(StudentRecord.class));
-            var i = 0;
-            for (var v : ofBeanStream) {
-                i = i + 1;
-            }
-            System.out.println("ofBeanStream " + i);
-        });
-        sqlRunner.autoTransaction(() -> {
-            var ofBeanStream1 = sqlRunner.query(sql, ResultHandler.ofBeanStream(StudentRecord.class, (c) -> null));
-            var i = 0;
-            for (var v : ofBeanStream1) {
-                i = i + 1;
-            }
-            System.out.println("ofBeanStream1 " + i);
-        });
-
     }
 
     @Test
@@ -229,21 +195,6 @@ public class SQLRunnerTest {
             var s = System.nanoTime();
             var ofBeanList = sqlRunner.query(sql, ResultHandler.ofBeanList(StudentRecord.class));
             System.out.println("ofBeanList 耗时 : " + (System.nanoTime() - s) / 1000_000 + " 内存占用 : " + FileUtils.longToDisplaySize(Runtime.getRuntime().totalMemory()) + " ; " + ofBeanList.size());
-        }
-
-        Runtime.getRuntime().gc();
-
-        for (int i = 0; i < 10; i++) {
-            var s = System.nanoTime();
-            var size1 = sqlRunner.autoTransaction(() -> {
-                var size = 0;
-                var ofBeanStream = sqlRunner.query(sql, ResultHandler.ofBeanStream(StudentRecord.class));
-                for (var studentRecord : ofBeanStream) {
-                    size = size + 1;
-                }
-                return size;
-            });
-            System.out.println("ofBeanStream 耗时 : " + (System.nanoTime() - s) / 1000_000 + " 内存占用 : " + FileUtils.longToDisplaySize(Runtime.getRuntime().totalMemory()) + " ; " + size1);
         }
 
         Runtime.getRuntime().gc();

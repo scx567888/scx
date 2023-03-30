@@ -60,12 +60,12 @@ public final class SQLRunner {
      * @throws SQLException a
      */
     public static <T> T query(Connection con, SQL sql, ResultHandler<T> resultHandler) throws SQLException {
-        // PreparedStatement 由 resultHandler 负责 close
-        var preparedStatement = con.prepareStatement(sql.sql(), TYPE_FORWARD_ONLY, CONCUR_READ_ONLY);
-        sql.fillParams(preparedStatement);
-        resultHandler.beforeExecuteQuery(preparedStatement);
-        var resultSet = preparedStatement.executeQuery();
-        return resultHandler.apply(resultSet);
+        try (var preparedStatement = con.prepareStatement(sql.sql(), TYPE_FORWARD_ONLY, CONCUR_READ_ONLY)) {
+            sql.fillParams(preparedStatement);
+            resultHandler.beforeExecuteQuery(preparedStatement);
+            var resultSet = preparedStatement.executeQuery();
+            return resultHandler.apply(resultSet);
+        }
     }
 
     /**
