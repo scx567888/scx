@@ -9,6 +9,7 @@ import cool.scx.sql.result_handler.ResultHandler;
 import cool.scx.sql.sql.SQL;
 import cool.scx.test.bean.Student;
 import cool.scx.test.bean.StudentRecord;
+import cool.scx.util.FileUtils;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.ScxExceptionHelper;
 import org.testng.annotations.BeforeTest;
@@ -41,6 +42,7 @@ public class SQLRunnerTest {
         test3();
         test4();
         test5();
+        test6();
     }
 
     @BeforeTest
@@ -194,6 +196,66 @@ public class SQLRunnerTest {
             }
             System.out.println("ofBeanStream1 " + i);
         });
+
+    }
+
+    @Test
+    public static void test6() {
+        try { // 准备大量数据 200万条 进行测试
+            sqlRunner.execute(ofNormal("drop table if exists " + tableName + ";" + " create table " + tableName + "(`name` varchar(32) ,`age` integer,`sex` boolean )"));
+            var sql = "insert into " + tableName + "(name, age, sex) values (:name, :age, :sex)";
+            for (int j = 0; j < 20; j++) {
+                var ms = new ArrayList<Map<String, Object>>();
+                for (int i = 0; i < 99999; i = i + 1) {
+                    var m1 = new HashMap<String, Object>();
+                    m1.put("age", 18 + i);
+                    m1.put("sex", 0);
+                    m1.put("name", "小明" + i);
+                    ms.add(m1);
+                }
+                UpdateResult update1 = sqlRunner.updateBatch(SQL.ofNamedParameter(sql, ms));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        var sql = ofNormal("select * from " + tableName);
+
+        Runtime.getRuntime().gc();
+
+        //测试内存占用
+
+        for (int i = 0; i < 10; i++) {
+            var s = System.nanoTime();
+            var ofBeanList = sqlRunner.query(sql, ResultHandler.ofBeanList(StudentRecord.class));
+            System.out.println("ofBeanList 耗时 : " + (System.nanoTime() - s) / 1000_000 + " 内存占用 : " + FileUtils.longToDisplaySize(Runtime.getRuntime().totalMemory()) + " ; " + ofBeanList.size());
+        }
+
+        Runtime.getRuntime().gc();
+
+        for (int i = 0; i < 10; i++) {
+            var s = System.nanoTime();
+            var size1 = sqlRunner.autoTransaction(() -> {
+                var size = 0;
+                var ofBeanStream = sqlRunner.query(sql, ResultHandler.ofBeanStream(StudentRecord.class));
+                for (var studentRecord : ofBeanStream) {
+                    size = size + 1;
+                }
+                return size;
+            });
+            System.out.println("ofBeanStream 耗时 : " + (System.nanoTime() - s) / 1000_000 + " 内存占用 : " + FileUtils.longToDisplaySize(Runtime.getRuntime().totalMemory()) + " ; " + size1);
+        }
+
+        Runtime.getRuntime().gc();
+
+        for (int i = 0; i < 10; i++) {
+            var s = System.nanoTime();
+            var size = new AtomicInteger();
+            sqlRunner.query(sql, ResultHandler.ofBeanConsumer(StudentRecord.class, x -> {
+                size.set(size.get() + 1);
+            }));
+            System.out.println("ofBeanConsumer 耗时 : " + (System.nanoTime() - s) / 1000_000 + " 内存占用 : " + FileUtils.longToDisplaySize(Runtime.getRuntime().totalMemory()) + " ; " + size);
+        }
 
     }
 
