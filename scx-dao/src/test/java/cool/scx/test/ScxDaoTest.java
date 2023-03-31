@@ -7,6 +7,8 @@ import cool.scx.dao.Query;
 import cool.scx.dao.SchemaHelper;
 import cool.scx.dao.impl.SQLDao;
 import cool.scx.dao.impl.xdevapi.MySQLXDao;
+import cool.scx.dao.query.AND;
+import cool.scx.dao.query.OR;
 import cool.scx.dao.query.WhereBody;
 import cool.scx.dao.query.WhereOption;
 import cool.scx.dao.spy.Spy;
@@ -103,8 +105,9 @@ public class ScxDaoTest {
 
         //创建 query
         var query1 = new Query().greaterThan("age", 300);
-        var query2 = new Query().whereSQL("( age > 400 or ", WhereBody.equal("name", "小明1"), " )");
-        var query3 = new Query().equal("userInfo.email", "88@test.com", WhereOption.USE_JSON_EXTRACT);
+        var query2 = new Query().whereSQL("(age > 400 OR ", WhereBody.equal("name", "小明1"), ")");
+        var query3 = new Query().equal("age", 10).whereSQL(" and ", new OR("age > 400", WhereBody.equal("name", "小明1"), new AND(WhereBody.in("name", new String[]{"小明2", "小明3"}))));
+        var query4 = new Query().equal("userInfo.email", "88@test.com", WhereOption.USE_JSON_EXTRACT);
 
         //开始使用
         var userDao = new SQLDao<>(User.class, dataSource);
@@ -135,6 +138,11 @@ public class ScxDaoTest {
         System.out.println("查询 3 : " + a3.size());
         var a33 = userDao.select(query3, ofExcluded());
         System.out.println("MySQLX 查询 3 : " + a33.size());
+
+        var a4 = userDao.select(query4, ofExcluded());
+        System.out.println("查询 4 : " + a4.size());
+        var a34 = userDao.select(query4, ofExcluded());
+        System.out.println("MySQLX 查询 4 : " + a34.size());
     }
 
 }
