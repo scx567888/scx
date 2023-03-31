@@ -6,6 +6,8 @@ import cool.scx.sql.sql.SQL;
 
 import java.util.Arrays;
 
+import static cool.scx.util.StringUtils.notEmpty;
+
 /**
  * 此 SQLBuilder 并不用于构建 {@link SQL} 只是用于构建普通的 SQL 语句
  *
@@ -34,7 +36,7 @@ final class SQLBuilder {
     /**
      * a
      */
-    private String[] whereClauses = null;
+    private String whereClause = null;
 
     /**
      * a
@@ -161,11 +163,11 @@ final class SQLBuilder {
     /**
      * a
      *
-     * @param whereClauses a {@link String} object
+     * @param whereClause a {@link String} object
      * @return a {@link SQLBuilder} object
      */
-    public SQLBuilder Where(String... whereClauses) {
-        this.whereClauses = whereClauses;
+    public SQLBuilder Where(String whereClause) {
+        this.whereClause = whereClause;
         return this;
     }
 
@@ -309,7 +311,7 @@ final class SQLBuilder {
      * @return a {@link String} object
      */
     private String GetUpdateSQL() {
-        return "UPDATE " + tableName + " SET " + String.join(", ", updateSetColumns) + getWhereSQL();
+        return "UPDATE " + tableName + " SET " + String.join(", ", updateSetColumns) + getWhereClause();
     }
 
     /**
@@ -318,7 +320,7 @@ final class SQLBuilder {
      * @return a {@link String} object
      */
     private String GetDeleteSQL() {
-        return "DELETE FROM " + tableName + getWhereSQL();
+        return "DELETE FROM " + tableName + getWhereClause();
     }
 
     /**
@@ -327,7 +329,7 @@ final class SQLBuilder {
      * @return s
      */
     private String GetSelectSQL() {
-        var sql = "SELECT " + String.join(", ", selectColumns) + " FROM " + tableName + getWhereSQL() + getGroupBySQL() + getOrderBySQL();
+        var sql = "SELECT " + String.join(", ", selectColumns) + " FROM " + tableName + getWhereClause() + getGroupByClause() + getOrderByClause();
         return dialect.getLimitSQL(sql, offset, rowCount);
     }
 
@@ -336,15 +338,15 @@ final class SQLBuilder {
      *
      * @return w
      */
-    private String getWhereSQL() {
-        return whereClauses != null && whereClauses.length > 0 ? " WHERE " + String.join(" AND ", whereClauses) : "";
+    private String getWhereClause() {
+        return notEmpty(whereClause) ? " WHERE " + whereClause : "";
     }
 
-    private String getGroupBySQL() {
+    private String getGroupByClause() {
         return groupByColumns != null && groupByColumns.length != 0 ? " GROUP BY " + String.join(", ", groupByColumns) : "";
     }
 
-    private String getOrderBySQL() {
+    private String getOrderByClause() {
         return orderByClauses != null && orderByClauses.length != 0 ? " ORDER BY " + String.join(", ", orderByClauses) : "";
     }
 

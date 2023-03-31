@@ -2,14 +2,16 @@ package cool.scx.dao.impl;
 
 import cool.scx.dao.*;
 import cool.scx.dao.dialect.Dialect;
-import cool.scx.dao.query.*;
+import cool.scx.dao.query.GroupBy;
+import cool.scx.dao.query.GroupByBody;
+import cool.scx.dao.query.OrderBy;
+import cool.scx.dao.query.OrderByBody;
 import cool.scx.sql.SQLRunner;
 import cool.scx.sql.mapping.Column;
 import cool.scx.sql.mapping.Table;
 import cool.scx.sql.result_handler.ResultHandler;
 import cool.scx.sql.sql.SQL;
 import cool.scx.util.RandomUtils;
-import cool.scx.util.StringUtils;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
@@ -21,7 +23,6 @@ import java.util.stream.Collectors;
 import static cool.scx.dao.dialect.DialectSelector.findDialect;
 import static cool.scx.dao.impl.ColumnNameParser.parseColumnName;
 import static cool.scx.dao.impl.SQLBuilder.*;
-import static cool.scx.dao.impl.WhereTypeHandler.findWhereTypeHandler;
 import static cool.scx.sql.result_handler.ResultHandler.ofBeanList;
 import static cool.scx.sql.result_handler.ResultHandler.ofSingleValue;
 
@@ -64,6 +65,11 @@ public class SQLDao<Entity> implements BaseDao<Entity, Long> {
     protected final Dialect dialect;
 
     /**
+     * where 解析器
+     */
+    protected final SQLDaoWhereParser whereParser;
+
+    /**
      * a
      *
      * @param entityClass a
@@ -79,6 +85,7 @@ public class SQLDao<Entity> implements BaseDao<Entity, Long> {
             return columnInfo == null ? null : columnInfo.name();
         });
         this.countResultHandler = ofSingleValue("count", Long.class);
+        this.whereParser = new SQLDaoWhereParser(tableInfo);
     }
 
     /**
@@ -107,40 +114,6 @@ public class SQLDao<Entity> implements BaseDao<Entity, Long> {
     static String orderByClause(OrderByBody body, Table<?> tableInfo) {
         var columnName = parseColumnName(tableInfo, body.name(), body.info().useJsonExtract(), body.info().useOriginalName());
         return columnName + " " + body.orderByType().name();
-    }
-
-    public static WhereParamsAndWhereClauses getWhereParamsAndWhereClauses(Where where, Table<?> tableInfo) {
-        //先处理 whereBodyList
-        var whereClauses = new ArrayList<String>();
-        var whereParams = new ArrayList<>();
-        for (WhereBody whereBody : where.whereBodyList()) {
-            var whereParamsAndWhereClause = getWhereParamsAndWhereClause(whereBody, tableInfo);
-            whereClauses.add(whereParamsAndWhereClause.whereClause());
-            whereParams.addAll(List.of(whereParamsAndWhereClause.whereParams()));
-        }
-        //再处理 whereSQL
-        var tempWhereSQL = new StringBuilder();
-        for (var o : where.whereSQL()) {
-            if (o instanceof String s) {
-                tempWhereSQL.append(s);
-            } else if (o instanceof WhereBody w) {
-                var whereParamsAndWhereClause = getWhereParamsAndWhereClause(w, tableInfo);
-                tempWhereSQL.append(whereParamsAndWhereClause.whereClause());
-                whereParams.addAll(List.of(whereParamsAndWhereClause.whereParams()));
-            } else if (o instanceof SQL a) {
-                tempWhereSQL.append("(").append(a.sql()).append(")");
-                whereParams.addAll(List.of(a.params()));
-            }
-        }
-        var whereSQL = tempWhereSQL.toString();
-        if (StringUtils.notBlank(whereSQL)) {
-            whereClauses.add(whereSQL);
-        }
-        return new WhereParamsAndWhereClauses(whereParams.toArray(), whereClauses.toArray(String[]::new));
-    }
-
-    public static WhereParamsAndWhereClause getWhereParamsAndWhereClause(WhereBody body, Table<?> tableInfo) {
-        return findWhereTypeHandler(body.whereType()).getWhereParamsAndWhereClause(tableInfo, body.name(), body.whereType(), body.value1(), body.value2(), body.info());
     }
 
     /**
@@ -273,17 +246,17 @@ public class SQLDao<Entity> implements BaseDao<Entity, Long> {
     public final SQL buildSelectSQL(Query query, ColumnFilter selectFilter) {
         var selectColumnInfos = selectFilter.filter(tableInfo);
         var selectColumns = Arrays.stream(selectColumnInfos).map(Column::name).toArray(String[]::new);
-        var whereParamsAndWhereClauses = getWhereParamsAndWhereClauses(query.where(), tableInfo);
+        var whereClauseAndWhereParams = whereParser.parseWhere(query.where());
         var groupByColumns = getGroupByColumns(query.groupBy(), tableInfo);
         var orderByClauses = getOrderByClauses(query.orderBy(), tableInfo);
         var sql = Select(this.dialect, selectColumns)
                 .From(tableInfo.name())
-                .Where(whereParamsAndWhereClauses.whereClause())
+                .Where(whereClauseAndWhereParams.whereClause())
                 .GroupBy(groupByColumns)
                 .OrderBy(orderByClauses)
                 .Limit(query.limit().offset(), query.limit().rowCount())
                 .GetSQL();
-        return SQL.ofPlaceholder(sql, whereParamsAndWhereClauses.whereParams());
+        return SQL.ofPlaceholder(sql, whereClauseAndWhereParams.whereParams());
     }
 
     /**
@@ -301,18 +274,18 @@ public class SQLDao<Entity> implements BaseDao<Entity, Long> {
         } else {
             var selectColumnInfos = selectFilter.filter(tableInfo);
             var selectColumns = Arrays.stream(selectColumnInfos).map(cool.scx.dao.ColumnMapping::name).toArray(String[]::new);
-            var whereParamsAndWhereClauses = getWhereParamsAndWhereClauses(query.where(), tableInfo);
+            var whereClauseAndWhereParams = whereParser.parseWhere(query.where());
             var groupByColumns = getGroupByColumns(query.groupBy(), tableInfo);
             var orderByClauses = getOrderByClauses(query.orderBy(), tableInfo);
             var sql0 = Select(this.dialect, selectColumns)
                     .From(tableInfo.name())
-                    .Where(whereParamsAndWhereClauses.whereClause())
+                    .Where(whereClauseAndWhereParams.whereClause())
                     .GroupBy(groupByColumns)
                     .OrderBy(orderByClauses)
                     .Limit(query.limit().offset(), query.limit().rowCount())
                     .GetSQL();
             var sql = Select(this.dialect, "*").From("(" + sql0 + ")").GetSQL();
-            return SQL.ofPlaceholder(sql + " AS " + tableInfo.name() + "_" + RandomUtils.randomString(6), whereParamsAndWhereClauses.whereParams());
+            return SQL.ofPlaceholder(sql + " AS " + tableInfo.name() + "_" + RandomUtils.randomString(6), whereClauseAndWhereParams.whereParams());
         }
     }
 
@@ -334,14 +307,14 @@ public class SQLDao<Entity> implements BaseDao<Entity, Long> {
      * @return sql
      */
     private SQL buildCountSQL(Query query) {
-        var whereParamsAndWhereClauses = getWhereParamsAndWhereClauses(query.where(), tableInfo);
+        var whereClauseAndWhereParams = whereParser.parseWhere(query.where());
         var groupByColumns = getGroupByColumns(query.groupBy(), tableInfo);
         var sql = Select(this.dialect, "COUNT(*) AS count")
                 .From(tableInfo.name())
-                .Where(whereParamsAndWhereClauses.whereClause())
+                .Where(whereClauseAndWhereParams.whereClause())
                 .GroupBy(groupByColumns)
                 .GetSQL();
-        return SQL.ofPlaceholder(sql, whereParamsAndWhereClauses.whereParams());
+        return SQL.ofPlaceholder(sql, whereClauseAndWhereParams.whereParams());
     }
 
     /**
@@ -371,13 +344,13 @@ public class SQLDao<Entity> implements BaseDao<Entity, Long> {
         }
         var updateSetColumnInfos = updateFilter.filter(entity, tableInfo);
         var updateSetColumns = Arrays.stream(updateSetColumnInfos).map(c -> c.name() + " = ?").toArray(String[]::new);
-        var whereParamsAndWhereClauses = getWhereParamsAndWhereClauses(query.where(), tableInfo);
+        var whereClauseAndWhereParams = whereParser.parseWhere(query.where());
         var sql = Update(this.dialect, tableInfo.name())
                 .Set(updateSetColumns)
-                .Where(whereParamsAndWhereClauses.whereClause())
+                .Where(whereClauseAndWhereParams.whereClause())
                 .GetSQL();
         var entityParams = Arrays.stream(updateSetColumnInfos).map(c -> c.javaFieldValue(entity)).collect(Collectors.toList());
-        entityParams.addAll(List.of(whereParamsAndWhereClauses.whereParams()));
+        entityParams.addAll(List.of(whereClauseAndWhereParams.whereParams()));
         return SQL.ofPlaceholder(sql, entityParams.toArray());
     }
 
@@ -402,11 +375,11 @@ public class SQLDao<Entity> implements BaseDao<Entity, Long> {
         if (query.where().isEmpty()) {
             throw new IllegalArgumentException("删除数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
         }
-        var whereParamsAndWhereClauses = getWhereParamsAndWhereClauses(query.where(), tableInfo);
+        var whereClauseAndWhereParams = whereParser.parseWhere(query.where());
         var sql = Delete(this.dialect, tableInfo.name())
-                .Where(whereParamsAndWhereClauses.whereClause())
+                .Where(whereClauseAndWhereParams.whereClause())
                 .GetSQL();
-        return SQL.ofPlaceholder(sql, whereParamsAndWhereClauses.whereParams());
+        return SQL.ofPlaceholder(sql, whereClauseAndWhereParams.whereParams());
     }
 
     /**

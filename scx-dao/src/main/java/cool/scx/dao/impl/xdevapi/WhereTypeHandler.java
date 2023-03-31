@@ -1,10 +1,10 @@
 package cool.scx.dao.impl.xdevapi;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import cool.scx.dao.impl.WhereParamsAndWhereClause;
 import cool.scx.dao.query.WhereOption;
 import cool.scx.dao.query.WhereType;
 import cool.scx.dao.query.exception.ValidParamListIsEmptyException;
+import cool.scx.dao.query.parser.WhereClauseAndWhereParams;
 import cool.scx.util.StringUtils;
 
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ interface WhereTypeHandler {
     WhereTypeHandler IS_NULL_HANDLER = (name, whereType, value1, value2, info) -> {
         var whereParams = new Object[]{};
         var whereClause = name + " " + whereType.keyWord();
-        return new WhereParamsAndWhereClause(whereParams, whereClause);
+        return new WhereClauseAndWhereParams(whereClause, whereParams);
     };
 
     /**
@@ -36,7 +36,7 @@ interface WhereTypeHandler {
         Object[] whereParams = new Object[]{value1};
         String v1 = "?";
         var whereClause = name + " " + whereType.keyWord() + " " + v1;
-        return new WhereParamsAndWhereClause(whereParams, whereClause);
+        return new WhereClauseAndWhereParams(whereClause, whereParams);
     };
 
     WhereTypeHandler NOT_EQUAL_HANDLER = EQUAL_HANDLER;
@@ -53,7 +53,7 @@ interface WhereTypeHandler {
         v1 = "?";
         whereParams = new Object[]{value1};
         var whereClause = name + " " + whereType.keyWord() + " CONCAT('%'," + v1 + ",'%')";
-        return new WhereParamsAndWhereClause(whereParams, whereClause);
+        return new WhereClauseAndWhereParams(whereClause, whereParams);
     };
 
     WhereTypeHandler NOT_LIKE_HANDLER = LIKE_HANDLER;
@@ -69,7 +69,7 @@ interface WhereTypeHandler {
         }
         v1 = "(" + StringUtils.repeat("?", ", ", whereParams.length) + ")";
         var whereClause = name + " " + whereType.keyWord() + " " + v1;
-        return new WhereParamsAndWhereClause(whereParams, whereClause);
+        return new WhereClauseAndWhereParams(whereClause, whereParams);
     };
 
     WhereTypeHandler NOT_IN_HANDLER = IN_HANDLER;
@@ -83,7 +83,7 @@ interface WhereTypeHandler {
         v2 = "?";
         whereParams.add(value2);
         var whereClause = name + " " + whereType.keyWord() + " " + v1 + " AND " + v2;
-        return new WhereParamsAndWhereClause(whereParams.toArray(), whereClause);
+        return new WhereClauseAndWhereParams(whereClause, whereParams.toArray());
     };
 
     WhereTypeHandler NOT_BETWEEN_HANDLER = BETWEEN_HANDLER;
@@ -109,31 +109,10 @@ interface WhereTypeHandler {
 //        } else {
         whereClause = whereClause + ", " + v1 + ")";
 //        }
-        return new WhereParamsAndWhereClause(whereParams, whereClause);
+        return new WhereClauseAndWhereParams(whereClause, whereParams);
     };
 
-    static WhereTypeHandler findWhereTypeHandler(WhereType whereType) {
-        return switch (whereType) {
-            case IS_NULL -> IS_NULL_HANDLER;
-            case IS_NOT_NULL -> IS_NOT_NULL_HANDLER;
-            case EQUAL -> EQUAL_HANDLER;
-            case NOT_EQUAL -> NOT_EQUAL_HANDLER;
-            case LESS_THAN -> LESS_THAN_HANDLER;
-            case LESS_THAN_OR_EQUAL -> LESS_THAN_OR_EQUAL_HANDLER;
-            case GREATER_THAN -> GREATER_THAN_HANDLER;
-            case GREATER_THAN_OR_EQUAL -> GREATER_THAN_OR_EQUAL_HANDLER;
-            case LIKE -> LIKE_HANDLER;
-            case NOT_LIKE -> NOT_LIKE_HANDLER;
-            case LIKE_REGEX -> LIKE_REGEX_HANDLER;
-            case NOT_LIKE_REGEX -> NOT_LIKE_REGEX_HANDLER;
-            case IN -> IN_HANDLER;
-            case NOT_IN -> NOT_IN_HANDLER;
-            case BETWEEN -> BETWEEN_HANDLER;
-            case NOT_BETWEEN -> NOT_BETWEEN_HANDLER;
-            case JSON_CONTAINS -> JSON_CONTAINS_HANDLER;
-        };
-    }
 
-    WhereParamsAndWhereClause getWhereParamsAndWhereClause(String name, WhereType whereType, Object value1, Object value2, WhereOption.Info info);
+    WhereClauseAndWhereParams getWhereClauseAndWhereParams(String name, WhereType whereType, Object value1, Object value2, WhereOption.Info info);
 
 }
