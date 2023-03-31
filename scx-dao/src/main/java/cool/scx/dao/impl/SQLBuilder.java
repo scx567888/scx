@@ -6,6 +6,8 @@ import cool.scx.sql.sql.SQL;
 
 import java.util.Arrays;
 
+import static cool.scx.util.StringUtils.notEmpty;
+
 /**
  * 此 SQLBuilder 并不用于构建 {@link SQL} 只是用于构建普通的 SQL 语句
  *
@@ -337,7 +339,7 @@ final class SQLBuilder {
      * @return w
      */
     private String getWhereClause() {
-        return whereClause != null ? " WHERE " + whereClause : "";
+        return notEmpty(whereClause) ? " WHERE " + whereClause : "";
     }
 
     private String getGroupByClause() {
