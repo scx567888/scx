@@ -8,7 +8,7 @@ import cool.scx.core.scheduler.ScxScheduler;
 import cool.scx.functional.ScxRunnable;
 import cool.scx.mvc.ScxMvc;
 import cool.scx.mvc.websocket.WebSocketRouter;
-import cool.scx.sql.SQLRunner;
+import cool.scx.orm.jdbc.SQLRunner;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.http.HttpServer;

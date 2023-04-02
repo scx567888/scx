@@ -1,7 +1,7 @@
 package cool.scx.test.person;
 
 import cool.scx.core.base.BaseModel;
-import cool.scx.dao.annotation.Table;
+import cool.scx.orm.annotation.Table;
 
 @Table(tablePrefix = "scx")
 public class Person extends BaseModel {

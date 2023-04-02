@@ -1,0 +1,22 @@
+package cool.scx.orm.test;
+
+import cool.scx.orm.annotation.Column;
+import cool.scx.orm.annotation.Table;
+
+import java.time.LocalDateTime;
+
+@Table(tablePrefix = "scx_dao")
+public class User {
+    @Column(primaryKey = true, autoIncrement = true, columnName = "not_id")
+    public Long id;
+    @Column(columnName = "not_name", unique = true, needIndex = true)
+    public String name;
+    public Integer age;
+    public LocalDateTime createDate;
+    public UserInfo userInfo;
+
+    static class UserInfo {
+        public String email;
+    }
+
+}
