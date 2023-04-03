@@ -1,7 +1,6 @@
 package cool.scx.dao.jdbc;
 
 import cool.scx.dao.AnnotationConfigTable;
-import cool.scx.dao.query.GroupByBody;
 import cool.scx.dao.query.OrderByBody;
 import cool.scx.dao.query.parser.OrderByParser;
 
