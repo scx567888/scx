@@ -63,11 +63,7 @@ public abstract class WhereParser {
         //先处理 whereBodyList 默认我们将其全部用 AND 进行拼接
         var w1 = this.parse(new AND(where.whereBodyList().toArray()));
         var w2 = this.parseAll(where.whereSQL());
-        var whereClause = w1.whereClause() + w2.whereClause();
-        var whereParams = new ArrayList<>();
-        whereParams.addAll(List.of(w1.whereParams()));
-        whereParams.addAll(List.of(w2.whereParams()));
-        return new WhereClauseAndWhereParams(whereClause, whereParams.toArray());
+        return w1.concat(w2);
     }
 
 }
