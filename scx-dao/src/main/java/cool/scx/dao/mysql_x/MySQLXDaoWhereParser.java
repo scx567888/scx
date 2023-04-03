@@ -1,11 +1,11 @@
-package cool.scx.dao.impl.xdevapi;
+package cool.scx.dao.mysql_x;
 
 import cool.scx.dao.query.WhereBody;
 import cool.scx.dao.query.WhereType;
 import cool.scx.dao.query.parser.WhereClauseAndWhereParams;
 import cool.scx.dao.query.parser.WhereParser;
 
-import static cool.scx.dao.impl.xdevapi.WhereTypeHandler.*;
+import static cool.scx.dao.mysql_x.WhereTypeHandler.*;
 
 public class MySQLXDaoWhereParser extends WhereParser {
 

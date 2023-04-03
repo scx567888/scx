@@ -1,4 +1,4 @@
-package cool.scx.dao.impl;
+package cool.scx.dao.jdbc;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.dao.query.WhereOption;
@@ -14,8 +14,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
 
-import static cool.scx.dao.impl.ColumnNameParser.parseColumnName;
-import static cool.scx.dao.impl.ColumnNameParser.splitIntoColumnNameAndFieldPath;
+import static cool.scx.dao.jdbc.ColumnNameParser.parseColumnName;
+import static cool.scx.dao.jdbc.ColumnNameParser.splitIntoColumnNameAndFieldPath;
 import static cool.scx.util.ObjectUtils.*;
 
 /**

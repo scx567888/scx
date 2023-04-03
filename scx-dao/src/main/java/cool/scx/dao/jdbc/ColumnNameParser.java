@@ -1,4 +1,4 @@
-package cool.scx.dao.impl;
+package cool.scx.dao.jdbc;
 
 
 import cool.scx.sql.mapping.Table;

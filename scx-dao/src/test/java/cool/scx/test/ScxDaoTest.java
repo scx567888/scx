@@ -5,8 +5,8 @@ import com.mysql.cj.xdevapi.SessionFactory;
 import cool.scx.dao.AnnotationConfigTable;
 import cool.scx.dao.Query;
 import cool.scx.dao.SchemaHelper;
-import cool.scx.dao.impl.SQLDao;
-import cool.scx.dao.impl.xdevapi.MySQLXDao;
+import cool.scx.dao.jdbc.JDBCDao;
+import cool.scx.dao.mysql_x.MySQLXDao;
 import cool.scx.dao.query.AND;
 import cool.scx.dao.query.OR;
 import cool.scx.dao.query.WhereBody;
@@ -110,7 +110,7 @@ public class ScxDaoTest {
         var query4 = new Query().equal("userInfo.email", "88@test.com", WhereOption.USE_JSON_EXTRACT);
 
         //开始使用
-        var userDao = new SQLDao<>(User.class, dataSource);
+        var userDao = new JDBCDao<>(User.class, dataSource);
 
         var xFactory = new SessionFactory();
         var session1 = xFactory.getSession("mysqlx://127.0.0.1:33060/" + databaseName + "?user=root&password=root");

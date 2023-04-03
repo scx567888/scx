@@ -73,4 +73,21 @@ public final class StringUtils {
         return str.length() >= suffix.length() && str.regionMatches(true, str.length() - suffix.length(), suffix, 0, suffix.length());
     }
 
+    /**
+     * 联接字符串 但是不连接空
+     *
+     * @param str1 str1
+     * @param str2 str2
+     * @return str
+     */
+    public static String concat(String str1, String str2) {
+        if (str1 == null) {
+            return str2;
+        }
+        if (str2 == null) {
+            return str1;
+        }
+        return str1 + str2;
+    }
+
 }

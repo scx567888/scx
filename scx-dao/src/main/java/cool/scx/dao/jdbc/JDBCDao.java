@@ -1,4 +1,4 @@
-package cool.scx.dao.impl;
+package cool.scx.dao.jdbc;
 
 import cool.scx.dao.*;
 import cool.scx.dao.dialect.Dialect;
@@ -21,8 +21,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static cool.scx.dao.dialect.DialectSelector.findDialect;
-import static cool.scx.dao.impl.ColumnNameParser.parseColumnName;
-import static cool.scx.dao.impl.SQLBuilder.*;
+import static cool.scx.dao.jdbc.ColumnNameParser.parseColumnName;
+import static cool.scx.dao.jdbc.SQLBuilder.*;
 import static cool.scx.sql.result_handler.ResultHandler.ofBeanList;
 import static cool.scx.sql.result_handler.ResultHandler.ofSingleValue;
 
@@ -32,7 +32,7 @@ import static cool.scx.sql.result_handler.ResultHandler.ofSingleValue;
  * @author scx567888
  * @version 0.1.3
  */
-public class SQLDao<Entity> implements BaseDao<Entity, Long> {
+public class JDBCDao<Entity> implements BaseDao<Entity, Long> {
 
     /**
      * 实体类对应的 table 结构
@@ -67,7 +67,7 @@ public class SQLDao<Entity> implements BaseDao<Entity, Long> {
     /**
      * where 解析器
      */
-    protected final SQLDaoWhereParser whereParser;
+    protected final JDBCDaoWhereParser whereParser;
 
     /**
      * a
@@ -75,7 +75,7 @@ public class SQLDao<Entity> implements BaseDao<Entity, Long> {
      * @param entityClass a
      * @param dataSource  a
      */
-    public SQLDao(Class<Entity> entityClass, DataSource dataSource) {
+    public JDBCDao(Class<Entity> entityClass, DataSource dataSource) {
         this.entityClass = entityClass;
         this.dialect = findDialect(dataSource);
         this.tableInfo = new AnnotationConfigTable(entityClass);
@@ -85,7 +85,7 @@ public class SQLDao<Entity> implements BaseDao<Entity, Long> {
             return columnInfo == null ? null : columnInfo.name();
         });
         this.countResultHandler = ofSingleValue("count", Long.class);
-        this.whereParser = new SQLDaoWhereParser(tableInfo);
+        this.whereParser = new JDBCDaoWhereParser(tableInfo);
     }
 
     /**
@@ -237,7 +237,7 @@ public class SQLDao<Entity> implements BaseDao<Entity, Long> {
      *      ));
      *  }</pre>
      * <br>
-     * 注意 !!! 若同时使用 limit 和 in/not in 请使用 {@link SQLDao#buildSelectSQLWithAlias(Query, ColumnFilter)}
+     * 注意 !!! 若同时使用 limit 和 in/not in 请使用 {@link JDBCDao#buildSelectSQLWithAlias(Query, ColumnFilter)}
      *
      * @param query        聚合查询参数对象
      * @param selectFilter 查询字段过滤器
