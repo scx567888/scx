@@ -152,10 +152,10 @@ public interface Dialect {
         if (notEmpty(tableInfo.schema())) {
             s.append(tableInfo.schema()).append(".");
         }
-        s.append(tableInfo.name()).append("`\n");
+        s.append(tableInfo.name()).append("\n");
 
         var columnDefinitionStr = getColumnDefinitions(needAdds).stream()
-                .map(c -> "    ADD COLUMN" + c)
+                .map(c -> "    ADD COLUMN " + c)
                 .collect(Collectors.joining(",\n"));
 
         s.append(columnDefinitionStr);
