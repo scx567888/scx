@@ -47,7 +47,7 @@ public interface Dialect {
      * @param offset   偏移量
      * @return SQL 语句
      */
-    String getLimitSQL(String sql, Integer offset, Integer rowCount);
+    String getLimitSQL(String sql, Long offset, Long rowCount);
 
     /**
      * 获取建表语句

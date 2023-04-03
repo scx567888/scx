@@ -131,7 +131,7 @@ public final class Query {
      * @param rowCount 长度
      * @return p
      */
-    public Query setLimit(Integer offset, Integer rowCount) {
+    public Query setLimit(Long offset, Long rowCount) {
         limit.set(offset, rowCount);
         return this;
     }
@@ -142,7 +142,7 @@ public final class Query {
      * @param rowCount a {@link java.lang.Integer} object.
      * @return a 当前实例
      */
-    public Query setLimit(Integer rowCount) {
+    public Query setLimit(Long rowCount) {
         limit.set(rowCount);
         return this;
     }

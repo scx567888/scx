@@ -198,7 +198,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 查到多个则返回第一个 没有则返回 null
      */
     public final Entity get(Query query, ColumnFilter selectFilter) {
-        var list = list(query.setLimit(1), selectFilter);
+        var list = list(query.setLimit(1L), selectFilter);
         return list.size() > 0 ? list.get(0) : null;
     }
 
@@ -321,7 +321,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @see JDBCDao#buildSelectSQL(Query, ColumnFilter)
      */
     public final SQL buildGetSQL(Query query, ColumnFilter selectFilter) {
-        return buildListSQL(query.setLimit(1), selectFilter);
+        return buildListSQL(query.setLimit(1L), selectFilter);
     }
 
     /**
@@ -349,7 +349,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @see JDBCDao#buildSelectSQL(Query, ColumnFilter)
      */
     public final SQL buildGetSQLWithAlias(Query query, ColumnFilter selectFilter) {
-        return buildListSQLWithAlias(query.setLimit(1), selectFilter);
+        return buildListSQLWithAlias(query.setLimit(1L), selectFilter);
     }
 
     /**

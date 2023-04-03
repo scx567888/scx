@@ -51,12 +51,12 @@ final class SQLBuilder {
     /**
      * a
      */
-    private Integer offset = null;
+    private Long offset = null;
 
     /**
      * a
      */
-    private Integer rowCount = null;
+    private Long rowCount = null;
 
     /**
      * a
@@ -200,7 +200,7 @@ final class SQLBuilder {
      * @param rowCount a int
      * @return a {@link SQLBuilder} object
      */
-    public SQLBuilder Limit(Integer offset, Integer rowCount) {
+    public SQLBuilder Limit(Long offset, Long rowCount) {
         if (offset != null && offset < 0) {
             throw new IllegalArgumentException("分页参数错误 : offset (偏移量) 不能小于 0 !!!");
         }
@@ -218,8 +218,8 @@ final class SQLBuilder {
      * @param size a
      * @return a
      */
-    public SQLBuilder Limit(Integer size) {
-        return Limit(0, size);
+    public SQLBuilder Limit(Long size) {
+        return Limit(0L, size);
     }
 
     /**
