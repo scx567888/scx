@@ -2,10 +2,6 @@ package cool.scx.dao.jdbc;
 
 import cool.scx.dao.*;
 import cool.scx.dao.dialect.Dialect;
-import cool.scx.dao.query.GroupBy;
-import cool.scx.dao.query.GroupByBody;
-import cool.scx.dao.query.OrderBy;
-import cool.scx.dao.query.OrderByBody;
 import cool.scx.sql.SQLRunner;
 import cool.scx.sql.mapping.Column;
 import cool.scx.sql.mapping.Table;
@@ -18,13 +14,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static cool.scx.dao.dialect.DialectSelector.findDialect;
-import static cool.scx.dao.jdbc.ColumnNameParser.parseColumnName;
 import static cool.scx.dao.jdbc.SQLBuilder.*;
 import static cool.scx.sql.result_handler.ResultHandler.ofBeanList;
 import static cool.scx.sql.result_handler.ResultHandler.ofSingleValue;
+import static cool.scx.util.ArrayUtils.concat;
 
 /**
  * 使用 JDBC 接口, 通过 SQL 操作关系型数据库的 DAO
@@ -69,6 +64,10 @@ public class JDBCDao<Entity> implements BaseDao<Entity, Long> {
      */
     protected final JDBCDaoWhereParser whereParser;
 
+    protected final JDBCDaoGroupByParser groupByParser;
+
+    protected final JDBCDaoOrderByParser orderByParser;
+
     /**
      * a
      *
@@ -86,34 +85,8 @@ public class JDBCDao<Entity> implements BaseDao<Entity, Long> {
         });
         this.countResultHandler = ofSingleValue("count", Long.class);
         this.whereParser = new JDBCDaoWhereParser(tableInfo);
-    }
-
-    /**
-     * <p>getGroupByColumns.</p>
-     *
-     * @return an array of {@link java.lang.String} objects
-     */
-    public static String[] getGroupByColumns(GroupBy groupBy, Table<?> tableInfo) {
-        //此处去重
-        return groupBy.groupByBodyList().stream().map(c -> groupByColumn(c, tableInfo)).distinct().toArray(String[]::new);
-    }
-
-    static String groupByColumn(GroupByBody body, Table<?> tableInfo) {
-        return parseColumnName(tableInfo, body.name(), body.info().useJsonExtract(), body.info().useOriginalName());
-    }
-
-    /**
-     * <p>getOrderByClauses.</p>
-     *
-     * @return an array of {@link java.lang.String} objects
-     */
-    public static String[] getOrderByClauses(OrderBy orderBy, Table<?> tableInfo) {
-        return orderBy.orderByBodyList().stream().map(c -> orderByClause(c, tableInfo)).toArray(String[]::new);
-    }
-
-    static String orderByClause(OrderByBody body, Table<?> tableInfo) {
-        var columnName = parseColumnName(tableInfo, body.name(), body.info().useJsonExtract(), body.info().useOriginalName());
-        return columnName + " " + body.orderByType().name();
+        this.groupByParser = new JDBCDaoGroupByParser(tableInfo);
+        this.orderByParser = new JDBCDaoOrderByParser(tableInfo);
     }
 
     /**
@@ -139,9 +112,9 @@ public class JDBCDao<Entity> implements BaseDao<Entity, Long> {
         var insertColumnInfos = updateFilter.filter(entity, tableInfo);
         var insertColumns = Arrays.stream(insertColumnInfos).map(Column::name).toArray(String[]::new);
         var insertValues = Arrays.stream(insertColumnInfos).map(columnInfo -> "?").toArray(String[]::new);
-        var sql = Insert(this.dialect, tableInfo.name(), insertColumns)
+        var sql = Insert(tableInfo.name(), insertColumns)
                 .Values(insertValues)
-                .GetSQL();
+                .GetSQL(this.dialect);
         var objectArray = Arrays.stream(insertColumnInfos).map(c -> c.javaFieldValue(entity)).toArray();
         return SQL.ofPlaceholder(sql, objectArray);
     }
@@ -178,9 +151,9 @@ public class JDBCDao<Entity> implements BaseDao<Entity, Long> {
         }
         var insertColumns = Arrays.stream(insertColumnInfos).map(Column::name).toArray(String[]::new);
         var insertValues = Arrays.stream(insertColumnInfos).map(c -> "?").toArray(String[]::new);
-        var sql = Insert(this.dialect, tableInfo.name(), insertColumns)
+        var sql = Insert(tableInfo.name(), insertColumns)
                 .Values(insertValues)
-                .GetSQL();
+                .GetSQL(this.dialect);
         return SQL.ofPlaceholder(sql, objectArrayList);
     }
 
@@ -247,15 +220,15 @@ public class JDBCDao<Entity> implements BaseDao<Entity, Long> {
         var selectColumnInfos = selectFilter.filter(tableInfo);
         var selectColumns = Arrays.stream(selectColumnInfos).map(Column::name).toArray(String[]::new);
         var whereClauseAndWhereParams = whereParser.parseWhere(query.where());
-        var groupByColumns = getGroupByColumns(query.groupBy(), tableInfo);
-        var orderByClauses = getOrderByClauses(query.orderBy(), tableInfo);
-        var sql = Select(this.dialect, selectColumns)
+        var groupByColumns = groupByParser.parseGroupBy(query.groupBy());
+        var orderByClauses = orderByParser.parseOrderBy(query.orderBy());
+        var sql = Select(selectColumns)
                 .From(tableInfo.name())
                 .Where(whereClauseAndWhereParams.whereClause())
                 .GroupBy(groupByColumns)
                 .OrderBy(orderByClauses)
                 .Limit(query.limit().offset(), query.limit().rowCount())
-                .GetSQL();
+                .GetSQL(this.dialect);
         return SQL.ofPlaceholder(sql, whereClauseAndWhereParams.whereParams());
     }
 
@@ -275,16 +248,16 @@ public class JDBCDao<Entity> implements BaseDao<Entity, Long> {
             var selectColumnInfos = selectFilter.filter(tableInfo);
             var selectColumns = Arrays.stream(selectColumnInfos).map(cool.scx.dao.ColumnMapping::name).toArray(String[]::new);
             var whereClauseAndWhereParams = whereParser.parseWhere(query.where());
-            var groupByColumns = getGroupByColumns(query.groupBy(), tableInfo);
-            var orderByClauses = getOrderByClauses(query.orderBy(), tableInfo);
-            var sql0 = Select(this.dialect, selectColumns)
+            var groupByColumns = groupByParser.parseGroupBy(query.groupBy());
+            var orderByClauses = orderByParser.parseOrderBy(query.orderBy());
+            var sql0 = Select(selectColumns)
                     .From(tableInfo.name())
                     .Where(whereClauseAndWhereParams.whereClause())
                     .GroupBy(groupByColumns)
                     .OrderBy(orderByClauses)
                     .Limit(query.limit().offset(), query.limit().rowCount())
-                    .GetSQL();
-            var sql = Select(this.dialect, "*").From("(" + sql0 + ")").GetSQL();
+                    .GetSQL(this.dialect);
+            var sql = Select("*").From("(" + sql0 + ")").GetSQL(this.dialect);
             return SQL.ofPlaceholder(sql + " AS " + tableInfo.name() + "_" + RandomUtils.randomString(6), whereClauseAndWhereParams.whereParams());
         }
     }
@@ -308,12 +281,12 @@ public class JDBCDao<Entity> implements BaseDao<Entity, Long> {
      */
     private SQL buildCountSQL(Query query) {
         var whereClauseAndWhereParams = whereParser.parseWhere(query.where());
-        var groupByColumns = getGroupByColumns(query.groupBy(), tableInfo);
-        var sql = Select(this.dialect, "COUNT(*) AS count")
+        var groupByColumns = groupByParser.parseGroupBy(query.groupBy());
+        var sql = Select("COUNT(*) AS count")
                 .From(tableInfo.name())
                 .Where(whereClauseAndWhereParams.whereClause())
                 .GroupBy(groupByColumns)
-                .GetSQL();
+                .GetSQL(this.dialect);
         return SQL.ofPlaceholder(sql, whereClauseAndWhereParams.whereParams());
     }
 
@@ -345,13 +318,12 @@ public class JDBCDao<Entity> implements BaseDao<Entity, Long> {
         var updateSetColumnInfos = updateFilter.filter(entity, tableInfo);
         var updateSetColumns = Arrays.stream(updateSetColumnInfos).map(c -> c.name() + " = ?").toArray(String[]::new);
         var whereClauseAndWhereParams = whereParser.parseWhere(query.where());
-        var sql = Update(this.dialect, tableInfo.name())
+        var sql = Update(tableInfo.name())
                 .Set(updateSetColumns)
                 .Where(whereClauseAndWhereParams.whereClause())
-                .GetSQL();
-        var entityParams = Arrays.stream(updateSetColumnInfos).map(c -> c.javaFieldValue(entity)).collect(Collectors.toList());
-        entityParams.addAll(List.of(whereClauseAndWhereParams.whereParams()));
-        return SQL.ofPlaceholder(sql, entityParams.toArray());
+                .GetSQL(this.dialect);
+        var entityParams = Arrays.stream(updateSetColumnInfos).map(c -> c.javaFieldValue(entity)).toArray();
+        return SQL.ofPlaceholder(sql, concat(entityParams, whereClauseAndWhereParams.whereParams()));
     }
 
     /**
@@ -376,9 +348,9 @@ public class JDBCDao<Entity> implements BaseDao<Entity, Long> {
             throw new IllegalArgumentException("删除数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
         }
         var whereClauseAndWhereParams = whereParser.parseWhere(query.where());
-        var sql = Delete(this.dialect, tableInfo.name())
+        var sql = Delete(tableInfo.name())
                 .Where(whereClauseAndWhereParams.whereClause())
-                .GetSQL();
+                .GetSQL(this.dialect);
         return SQL.ofPlaceholder(sql, whereClauseAndWhereParams.whereParams());
     }
 
