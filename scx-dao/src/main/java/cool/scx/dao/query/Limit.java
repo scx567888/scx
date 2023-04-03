@@ -11,12 +11,12 @@ public final class Limit {
     /**
      * 当前页 页码 默认为空 即不设置页码
      */
-    private Integer offset;
+    private Long offset;
 
     /**
      * 每页数量分页 每页数量 默认为空 即不设置分页内容
      */
-    private Integer rowCount;
+    private Long rowCount;
 
     /**
      * 创建一个 Pagination 对象
@@ -43,7 +43,7 @@ public final class Limit {
      * @param rowCount 长度
      * @return p
      */
-    public Limit set(Integer offset, Integer rowCount) {
+    public Limit set(Long offset, Long rowCount) {
         if (offset == null || offset < 0) {
             throw new IllegalArgumentException("分页参数错误 : offset (偏移量) 不能为空或小于 0 !!!");
         }
@@ -61,8 +61,8 @@ public final class Limit {
      * @param rowCount 长度
      * @return s
      */
-    public Limit set(Integer rowCount) {
-        return set(0, rowCount);
+    public Limit set(Long rowCount) {
+        return set(0L, rowCount);
     }
 
     /**
@@ -70,7 +70,7 @@ public final class Limit {
      *
      * @return a int
      */
-    public Integer offset() {
+    public Long offset() {
         return offset;
     }
 
@@ -79,7 +79,7 @@ public final class Limit {
      *
      * @return rowCount
      */
-    public Integer rowCount() {
+    public Long rowCount() {
         return rowCount;
     }
 
