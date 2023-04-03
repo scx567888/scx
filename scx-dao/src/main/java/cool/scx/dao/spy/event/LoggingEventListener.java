@@ -1,7 +1,7 @@
-package cool.scx.dao.jdbc.spy.event;
+package cool.scx.dao.spy.event;
 
 
-import cool.scx.dao.jdbc.dialect.Dialect;
+import cool.scx.dao.dialect.Dialect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

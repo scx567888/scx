@@ -1,4 +1,4 @@
-package cool.scx.dao.jdbc.spy;
+package cool.scx.dao.spy;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

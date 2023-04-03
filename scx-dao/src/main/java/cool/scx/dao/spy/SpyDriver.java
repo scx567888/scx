@@ -1,13 +1,13 @@
-package cool.scx.dao.jdbc.spy;
+package cool.scx.dao.spy;
 
-import cool.scx.dao.jdbc.spy.event.LoggingEventListener;
-import cool.scx.dao.jdbc.spy.wrapper.ConnectionWrapper;
+import cool.scx.dao.spy.event.LoggingEventListener;
+import cool.scx.dao.spy.wrapper.ConnectionWrapper;
 
 import java.sql.*;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import static cool.scx.dao.jdbc.dialect.DialectSelector.findDialect;
+import static cool.scx.dao.dialect.DialectSelector.findDialect;
 
 public class SpyDriver implements Driver {
 

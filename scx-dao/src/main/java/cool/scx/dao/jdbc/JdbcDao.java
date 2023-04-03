@@ -1,7 +1,7 @@
 package cool.scx.dao.jdbc;
 
 import cool.scx.dao.*;
-import cool.scx.dao.jdbc.dialect.Dialect;
+import cool.scx.dao.dialect.Dialect;
 import cool.scx.dao.query.GroupBy;
 import cool.scx.dao.query.GroupByBody;
 import cool.scx.dao.query.OrderBy;
@@ -20,9 +20,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static cool.scx.dao.dialect.DialectSelector.findDialect;
 import static cool.scx.dao.jdbc.ColumnNameParser.parseColumnName;
 import static cool.scx.dao.jdbc.SQLBuilder.*;
-import static cool.scx.dao.jdbc.dialect.DialectSelector.findDialect;
 import static cool.scx.sql.result_handler.ResultHandler.ofBeanList;
 import static cool.scx.sql.result_handler.ResultHandler.ofSingleValue;
 

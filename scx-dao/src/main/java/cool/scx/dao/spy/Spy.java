@@ -1,6 +1,6 @@
-package cool.scx.dao.jdbc.spy;
+package cool.scx.dao.spy;
 
-import cool.scx.dao.jdbc.spy.wrapper.DataSourceWrapper;
+import cool.scx.dao.spy.wrapper.DataSourceWrapper;
 
 import javax.sql.DataSource;
 

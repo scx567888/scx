@@ -15,7 +15,7 @@ import cool.scx.core.annotation.ScxService;
 import cool.scx.core.base.BaseModel;
 import cool.scx.core.enumeration.ScxCoreFeature;
 import cool.scx.dao.annotation.Table;
-import cool.scx.dao.jdbc.spy.Spy;
+import cool.scx.dao.spy.Spy;
 import cool.scx.logging.ScxLoggerFactory;
 import cool.scx.logging.ScxLoggingLevel;
 import cool.scx.logging.recorder.ConsoleRecorder;

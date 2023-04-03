@@ -8,7 +8,7 @@ import cool.scx.core.enumeration.ScxCoreFeature;
 import cool.scx.core.eventbus.MessageCodecRegistrar;
 import cool.scx.core.scheduler.ScxScheduler;
 import cool.scx.dao.AnnotationConfigTable;
-import cool.scx.dao.jdbc.SchemaHelper;
+import cool.scx.dao.SchemaHelper;
 import cool.scx.mvc.ScxMvc;
 import cool.scx.mvc.ScxMvcOptions;
 import cool.scx.mvc.websocket.WebSocketRouter;

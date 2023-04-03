@@ -1,4 +1,4 @@
-package cool.scx.dao.jdbc.spy.wrapper;
+package cool.scx.dao.spy.wrapper;
 
 import java.sql.SQLException;
 import java.sql.Wrapper;

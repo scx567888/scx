@@ -1,6 +1,6 @@
-package cool.scx.dao.jdbc;
+package cool.scx.dao;
 
-import cool.scx.dao.jdbc.dialect.Dialect;
+import cool.scx.dao.dialect.Dialect;
 import cool.scx.sql.SQLRunner;
 import cool.scx.sql.mapping.Column;
 import cool.scx.sql.mapping.Table;
@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static cool.scx.dao.jdbc.dialect.DialectSelector.findDialect;
+import static cool.scx.dao.dialect.DialectSelector.findDialect;
 import static cool.scx.sql.meta_data.MetaDataHelper.initTables;
 import static cool.scx.sql.meta_data.MetaDataHelper.toTablesMap;
 
