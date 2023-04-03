@@ -6,7 +6,7 @@ import cool.scx.dao.query.OrderByBody;
 public abstract class OrderByParser {
 
     public final String[] parseOrderBy(OrderBy orderBy) {
-        return orderBy.orderByBodyList().stream().map(this::parseOrderByBody).distinct().toArray(String[]::new);
+        return orderBy.orderByBodyList().stream().map(this::parseOrderByBody).toArray(String[]::new);
     }
 
     protected abstract String parseOrderByBody(OrderByBody body);
