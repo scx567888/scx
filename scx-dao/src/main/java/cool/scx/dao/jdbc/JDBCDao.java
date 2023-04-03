@@ -27,7 +27,7 @@ import static cool.scx.sql.result_handler.ResultHandler.ofBeanList;
 import static cool.scx.sql.result_handler.ResultHandler.ofSingleValue;
 
 /**
- * 通过 SQL 操作关系型数据库的 DAO
+ * 使用 JDBC 接口, 通过 SQL 操作关系型数据库的 DAO
  *
  * @author scx567888
  * @version 0.1.3
