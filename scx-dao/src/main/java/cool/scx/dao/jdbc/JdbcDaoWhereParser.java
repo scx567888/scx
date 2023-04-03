@@ -5,6 +5,7 @@ import cool.scx.dao.query.WhereBody;
 import cool.scx.dao.query.WhereType;
 import cool.scx.dao.query.parser.WhereClauseAndWhereParams;
 import cool.scx.dao.query.parser.WhereParser;
+import cool.scx.sql.sql.SQL;
 
 import static cool.scx.dao.jdbc.WhereTypeHandler.*;
 
@@ -36,6 +37,18 @@ public class JdbcDaoWhereParser extends WhereParser {
             case NOT_BETWEEN -> NOT_BETWEEN_HANDLER;
             case JSON_CONTAINS -> JSON_CONTAINS_HANDLER;
         };
+    }
+
+    @Override
+    public final WhereClauseAndWhereParams parse(Object obj) {
+        if (obj instanceof SQL s) {
+            return parseSQL(s);
+        }
+        return super.parse(obj);
+    }
+
+    public final WhereClauseAndWhereParams parseSQL(SQL sql) {
+        return new WhereClauseAndWhereParams("(" + sql.sql() + ")", sql.params());
     }
 
     @Override

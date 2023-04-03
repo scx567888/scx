@@ -4,7 +4,6 @@ import cool.scx.dao.query.AND;
 import cool.scx.dao.query.Logic;
 import cool.scx.dao.query.Where;
 import cool.scx.dao.query.WhereBody;
-import cool.scx.sql.sql.SQL;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,13 +23,11 @@ public abstract class WhereParser {
         return new WhereClauseAndWhereParams(whereClause.toString(), whereParams.toArray());
     }
 
-    public final WhereClauseAndWhereParams parse(Object obj) {
+    public WhereClauseAndWhereParams parse(Object obj) {
         if (obj instanceof String str) {
             return parseString(str);
         } else if (obj instanceof WhereBody whereBody) {
             return parseWhereBody(whereBody);
-        } else if (obj instanceof SQL s) {
-            return parseSQL(s);
         } else if (obj instanceof Logic l) {
             return parseLogic(l);
         } else {
@@ -43,10 +40,6 @@ public abstract class WhereParser {
     }
 
     public abstract WhereClauseAndWhereParams parseWhereBody(WhereBody body);
-
-    public final WhereClauseAndWhereParams parseSQL(SQL sql) {
-        return new WhereClauseAndWhereParams("(" + sql.sql() + ")", sql.params());
-    }
 
     public final WhereClauseAndWhereParams parseLogic(Logic l) {
         var clauses = new ArrayList<String>();

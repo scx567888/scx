@@ -5,8 +5,8 @@ import com.mysql.cj.xdevapi.DbDoc;
 import com.mysql.cj.xdevapi.JsonParser;
 import com.mysql.cj.xdevapi.Schema;
 import com.mysql.cj.xdevapi.Session;
-import cool.scx.dao.BaseDao;
 import cool.scx.dao.ColumnFilter;
+import cool.scx.dao.Dao;
 import cool.scx.dao.Query;
 import cool.scx.util.ObjectUtils;
 
@@ -16,7 +16,7 @@ import java.util.List;
 
 import static cool.scx.dao.AnnotationConfigTable.initTableName;
 
-public class MySQLXCollectionDao<Entity> implements BaseDao<Entity, String> {
+public class MySQLXCollectionDao<Entity> implements Dao<Entity, String> {
 
     private final Session session;
     private final Schema schema;

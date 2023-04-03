@@ -9,7 +9,7 @@ import java.util.List;
  * @author scx567888
  * @version 0.1.3
  */
-public interface BaseDao<Entity, ID> {
+public interface Dao<Entity, ID> {
 
     /**
      * 插入

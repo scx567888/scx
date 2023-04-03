@@ -20,9 +20,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static cool.scx.dao.jdbc.dialect.DialectSelector.findDialect;
 import static cool.scx.dao.jdbc.ColumnNameParser.parseColumnName;
 import static cool.scx.dao.jdbc.SQLBuilder.*;
+import static cool.scx.dao.jdbc.dialect.DialectSelector.findDialect;
 import static cool.scx.sql.result_handler.ResultHandler.ofBeanList;
 import static cool.scx.sql.result_handler.ResultHandler.ofSingleValue;
 
@@ -32,7 +32,7 @@ import static cool.scx.sql.result_handler.ResultHandler.ofSingleValue;
  * @author scx567888
  * @version 0.1.3
  */
-public class JdbcDao<Entity> implements BaseDao<Entity, Long> {
+public class JdbcDao<Entity> implements Dao<Entity, Long> {
 
     /**
      * 实体类对应的 table 结构
