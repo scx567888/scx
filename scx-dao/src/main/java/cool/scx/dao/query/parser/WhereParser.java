@@ -42,8 +42,6 @@ public abstract class WhereParser {
         return new WhereClauseAndWhereParams(str, new Object[]{});
     }
 
-    public abstract WhereClauseAndWhereParams parseWhereBody(WhereBody body);
-
     public final WhereClauseAndWhereParams parseSQL(SQL sql) {
         return new WhereClauseAndWhereParams("(" + sql.sql() + ")", sql.params());
     }
@@ -72,5 +70,7 @@ public abstract class WhereParser {
         var w2 = this.parseAll(where.whereSQL());
         return w1.concat(w2);
     }
+
+    public abstract WhereClauseAndWhereParams parseWhereBody(WhereBody body);
 
 }
