@@ -1,4 +1,4 @@
-package cool.scx.dao.dialect;
+package cool.scx.dao.jdbc.dialect;
 
 import com.mysql.cj.MysqlType;
 import com.mysql.cj.NativeQueryBindings;

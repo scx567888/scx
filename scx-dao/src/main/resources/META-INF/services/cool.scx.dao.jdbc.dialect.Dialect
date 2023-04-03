@@ -1,0 +1,2 @@
+cool.scx.dao.jdbc.dialect.MySQLDialect
+cool.scx.dao.jdbc.dialect.SQLiteDialect

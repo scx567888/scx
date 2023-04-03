@@ -1,4 +1,4 @@
-package cool.scx.dao.dialect;
+package cool.scx.dao.jdbc.dialect;
 
 import javax.sql.DataSource;
 import java.sql.Driver;

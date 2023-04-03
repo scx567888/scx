@@ -1,7 +1,7 @@
-package cool.scx.dao.spy.event;
+package cool.scx.dao.jdbc.spy.event;
 
 
-import cool.scx.dao.spy.SpyEventListener;
+import cool.scx.dao.jdbc.spy.SpyEventListener;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

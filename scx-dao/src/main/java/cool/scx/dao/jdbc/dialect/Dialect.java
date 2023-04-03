@@ -1,4 +1,4 @@
-package cool.scx.dao.dialect;
+package cool.scx.dao.jdbc.dialect;
 
 import cool.scx.dao.ColumnMapping;
 import cool.scx.sql.mapping.Column;

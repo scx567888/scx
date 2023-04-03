@@ -1,4 +1,4 @@
-package cool.scx.dao.impl.xdevapi;
+package cool.scx.dao.mysql_x;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.dao.query.WhereOption;

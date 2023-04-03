@@ -1,15 +1,22 @@
-package cool.scx.dao.impl.xdevapi;
+package cool.scx.dao.jdbc;
 
+import cool.scx.dao.AnnotationConfigTable;
 import cool.scx.dao.query.WhereBody;
 import cool.scx.dao.query.WhereType;
 import cool.scx.dao.query.parser.WhereClauseAndWhereParams;
 import cool.scx.dao.query.parser.WhereParser;
 
-import static cool.scx.dao.impl.xdevapi.WhereTypeHandler.*;
+import static cool.scx.dao.jdbc.WhereTypeHandler.*;
 
-public class MySQLXDaoWhereParser extends WhereParser {
+public class JdbcDaoWhereParser extends WhereParser {
 
-    static WhereTypeHandler findWhereTypeHandler(WhereType whereType) {
+    private final AnnotationConfigTable tableInfo;
+
+    public JdbcDaoWhereParser(AnnotationConfigTable tableInfo) {
+        this.tableInfo = tableInfo;
+    }
+
+    private static WhereTypeHandler findWhereTypeHandler(WhereType whereType) {
         return switch (whereType) {
             case IS_NULL -> IS_NULL_HANDLER;
             case IS_NOT_NULL -> IS_NOT_NULL_HANDLER;
@@ -33,7 +40,7 @@ public class MySQLXDaoWhereParser extends WhereParser {
 
     @Override
     public WhereClauseAndWhereParams parseWhereBody(WhereBody body) {
-        return findWhereTypeHandler(body.whereType()).getWhereClauseAndWhereParams(body.name(), body.whereType(), body.value1(), body.value2(), body.info());
+        return findWhereTypeHandler(body.whereType()).getWhereParamsAndWhereClause(tableInfo, body.name(), body.whereType(), body.value1(), body.value2(), body.info());
     }
 
 }

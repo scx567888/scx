@@ -1,14 +1,14 @@
-package cool.scx.dao.spy.wrapper;
+package cool.scx.dao.jdbc.spy.wrapper;
 
-import cool.scx.dao.spy.SpyEventListener;
-import cool.scx.dao.spy.event.LoggingEventListener;
+import cool.scx.dao.jdbc.spy.SpyEventListener;
+import cool.scx.dao.jdbc.spy.event.LoggingEventListener;
 
 import javax.sql.DataSource;
 import java.io.PrintWriter;
 import java.sql.*;
 import java.util.logging.Logger;
 
-import static cool.scx.dao.dialect.DialectSelector.findDialect;
+import static cool.scx.dao.jdbc.dialect.DialectSelector.findDialect;
 
 public class DataSourceWrapper extends AbstractWrapper implements DataSource {
 

@@ -1,4 +1,4 @@
-package cool.scx.dao.impl.xdevapi;
+package cool.scx.dao.mysql_x;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mysql.cj.xdevapi.DbDoc;
@@ -16,7 +16,7 @@ import java.util.List;
 
 import static cool.scx.dao.AnnotationConfigTable.initTableName;
 
-public class MySQLXDao<Entity> implements BaseDao<Entity, String> {
+public class MySQLXCollectionDao<Entity> implements BaseDao<Entity, String> {
 
     private final Session session;
     private final Schema schema;
@@ -24,7 +24,7 @@ public class MySQLXDao<Entity> implements BaseDao<Entity, String> {
     private final Class<Entity> entityClass;
     private final MySQLXDaoWhereParser whereParser;
 
-    public MySQLXDao(Class<Entity> entityClass, Session session, String tableName) {
+    public MySQLXCollectionDao(Class<Entity> entityClass, Session session, String tableName) {
         this.entityClass = entityClass;
         this.session = session;
         this.schema = session.getDefaultSchema();
@@ -32,7 +32,7 @@ public class MySQLXDao<Entity> implements BaseDao<Entity, String> {
         this.whereParser = new MySQLXDaoWhereParser();
     }
 
-    public MySQLXDao(Class<Entity> entityClass, Session session) {
+    public MySQLXCollectionDao(Class<Entity> entityClass, Session session) {
         this(entityClass, session, initTableName(entityClass));
     }
 
