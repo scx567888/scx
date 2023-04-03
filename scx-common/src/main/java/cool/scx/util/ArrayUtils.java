@@ -1,5 +1,6 @@
 package cool.scx.util;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -85,6 +86,18 @@ public final class ArrayUtils {
             longArray[i] = intArray[i];
         }
         return longArray;
+    }
+
+    public static <T> T[] concat(T[] first, T[] second) {
+        if (first == null) {
+            return second;
+        }
+        if (second == null) {
+            return first;
+        }
+        T[] result = Arrays.copyOf(first, first.length + second.length);
+        System.arraycopy(second, 0, result, first.length, second.length);
+        return result;
     }
 
 }

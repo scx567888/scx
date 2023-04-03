@@ -1,4 +1,4 @@
-package cool.scx.dao.impl.xdevapi;
+package cool.scx.dao.mysql_x;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mysql.cj.xdevapi.DbDoc;
@@ -16,6 +16,11 @@ import java.util.List;
 
 import static cool.scx.dao.AnnotationConfigTable.initTableName;
 
+/**
+ * 使用 MySQL X Dev Api 通过 MySQL X 协议, 操作 MySQL 的 Dao
+ *
+ * @param <Entity>
+ */
 public class MySQLXDao<Entity> implements BaseDao<Entity, String> {
 
     private final Session session;

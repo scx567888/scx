@@ -1,4 +1,4 @@
-package cool.scx.dao.impl;
+package cool.scx.dao.jdbc;
 
 import cool.scx.dao.AnnotationConfigTable;
 import cool.scx.dao.query.WhereBody;
@@ -6,13 +6,13 @@ import cool.scx.dao.query.WhereType;
 import cool.scx.dao.query.parser.WhereClauseAndWhereParams;
 import cool.scx.dao.query.parser.WhereParser;
 
-import static cool.scx.dao.impl.WhereTypeHandler.*;
+import static cool.scx.dao.jdbc.WhereTypeHandler.*;
 
-public class SQLDaoWhereParser extends WhereParser {
+public class JDBCDaoWhereParser extends WhereParser {
 
     private final AnnotationConfigTable tableInfo;
 
-    public SQLDaoWhereParser(AnnotationConfigTable tableInfo) {
+    public JDBCDaoWhereParser(AnnotationConfigTable tableInfo) {
         this.tableInfo = tableInfo;
     }
 
