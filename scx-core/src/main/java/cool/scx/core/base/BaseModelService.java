@@ -3,7 +3,7 @@ package cool.scx.core.base;
 import cool.scx.core.ScxContext;
 import cool.scx.dao.ColumnFilter;
 import cool.scx.dao.Query;
-import cool.scx.dao.jdbc.JdbcDao;
+import cool.scx.dao.jdbc.JDBCDao;
 import cool.scx.sql.sql.SQL;
 
 import java.lang.reflect.ParameterizedType;
@@ -29,7 +29,7 @@ public class BaseModelService<Entity extends BaseModel> {
     /**
      * BaseDao
      */
-    protected final JdbcDao<Entity> baseDao;
+    protected final JDBCDao<Entity> dao;
 
     /**
      * 从泛型中获取 entityClass
@@ -40,7 +40,7 @@ public class BaseModelService<Entity extends BaseModel> {
         if (genericSuperclass instanceof ParameterizedType) {
             var typeArguments = ((ParameterizedType) genericSuperclass).getActualTypeArguments();
             var entityClass = (Class<Entity>) typeArguments[0];
-            this.baseDao = new JdbcDao<>(entityClass, ScxContext.dataSource());
+            this.dao = new JDBCDao<>(entityClass, ScxContext.dataSource());
         } else {
             throw new IllegalArgumentException(this.getClass().getName() + " : 必须设置泛型参数 !!!");
         }
@@ -52,7 +52,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @param entityClass 继承自 {@link BaseModel} 的实体类 class
      */
     public BaseModelService(Class<Entity> entityClass) {
-        this.baseDao = new JdbcDao<>(entityClass, ScxContext.dataSource());
+        this.dao = new JDBCDao<>(entityClass, ScxContext.dataSource());
     }
 
     /**
@@ -66,7 +66,7 @@ public class BaseModelService<Entity extends BaseModel> {
     }
 
     /**
-     * 插入数据 (注意 !!! 这里会在插入之后根据主键再次进行一次查询, 若只是进行插入且对性能有要求请使用 {@link JdbcDao#insert(Object, ColumnFilter)})
+     * 插入数据 (注意 !!! 这里会在插入之后根据主键再次进行一次查询, 若只是进行插入且对性能有要求请使用 {@link JDBCDao#insert(Object, ColumnFilter)})
      *
      * @param entity 待插入的数据
      * @return 插入成功的数据 如果插入失败或数据没有主键则返回 null
@@ -76,14 +76,14 @@ public class BaseModelService<Entity extends BaseModel> {
     }
 
     /**
-     * 插入数据 (注意 !!! 这里会在插入之后根据主键再次进行一次查询, 若只是进行插入且对性能有要求请使用 {@link JdbcDao#insert(Object, ColumnFilter)})
+     * 插入数据 (注意 !!! 这里会在插入之后根据主键再次进行一次查询, 若只是进行插入且对性能有要求请使用 {@link JDBCDao#insert(Object, ColumnFilter)})
      *
      * @param entity       待插入的数据
      * @param updateFilter 更新字段过滤器
      * @return 插入成功的数据 如果插入失败或数据没有主键则返回 null
      */
     public Entity add(Entity entity, ColumnFilter updateFilter) {
-        var newID = baseDao.insert(entity, updateFilterProcessor(updateFilter));
+        var newID = dao.insert(entity, updateFilterProcessor(updateFilter));
         return newID != null ? this.get(newID) : null;
     }
 
@@ -106,7 +106,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 插入成功的数据的自增主键列表
      */
     public List<Long> add(Collection<Entity> entityList, ColumnFilter updateFilter) {
-        return baseDao.insertBatch(entityList, updateFilterProcessor(updateFilter));
+        return dao.insertBatch(entityList, updateFilterProcessor(updateFilter));
     }
 
     /**
@@ -156,7 +156,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 数据列表
      */
     public List<Entity> list(Query query, ColumnFilter selectFilter) {
-        return baseDao.select(query, selectFilter);
+        return dao.select(query, selectFilter);
     }
 
     /**
@@ -218,11 +218,11 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 数据条数
      */
     public final long count(Query query) {
-        return baseDao.count(query);
+        return dao.count(query);
     }
 
     /**
-     * 根据 ID 更新 (注意 !!! 这里会在更新之后根据主键再次进行一次查询, 若只是进行更新且对性能有要求请使用 {@link JdbcDao#update(Object, Query, ColumnFilter)})
+     * 根据 ID 更新 (注意 !!! 这里会在更新之后根据主键再次进行一次查询, 若只是进行更新且对性能有要求请使用 {@link JDBCDao#update(Object, Query, ColumnFilter)})
      *
      * @param entity 待更新的数据 ( 注意: 请保证数据中 id 字段不为空 )
      * @return 更新成功后的数据
@@ -232,7 +232,7 @@ public class BaseModelService<Entity extends BaseModel> {
     }
 
     /**
-     * 根据 ID 更新 (注意 !!! 这里会在更新之后根据主键再次进行一次查询, 若只是进行更新且对性能有要求请使用 {@link JdbcDao#update(Object, Query, ColumnFilter)})
+     * 根据 ID 更新 (注意 !!! 这里会在更新之后根据主键再次进行一次查询, 若只是进行更新且对性能有要求请使用 {@link JDBCDao#update(Object, Query, ColumnFilter)})
      *
      * @param entity       待更新的数据 ( 注意: 请保证数据中 id 字段不为空 )
      * @param updateFilter 更新字段过滤器
@@ -266,7 +266,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 更新成功的数据条数
      */
     public long update(Entity entity, Query query, ColumnFilter updateFilter) {
-        return baseDao.update(entity, query, updateFilterProcessor(updateFilter));
+        return dao.update(entity, query, updateFilterProcessor(updateFilter));
     }
 
     /**
@@ -289,7 +289,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 被删除的数据条数
      */
     public long delete(Query query) {
-        return baseDao.delete(query);
+        return dao.delete(query);
     }
 
     /**
@@ -302,10 +302,10 @@ public class BaseModelService<Entity extends BaseModel> {
      * @param query        聚合查询参数对象
      * @param selectFilter 查询字段过滤器
      * @return listSQL
-     * @see JdbcDao#buildSelectSQL(Query, ColumnFilter)
+     * @see JDBCDao#buildSelectSQL(Query, ColumnFilter)
      */
     public final SQL buildListSQL(Query query, ColumnFilter selectFilter) {
-        return baseDao.buildSelectSQL(query, selectFilter);
+        return dao.buildSelectSQL(query, selectFilter);
     }
 
     /**
@@ -318,7 +318,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @param query        聚合查询参数对象
      * @param selectFilter 查询字段过滤器
      * @return getSQL
-     * @see JdbcDao#buildSelectSQL(Query, ColumnFilter)
+     * @see JDBCDao#buildSelectSQL(Query, ColumnFilter)
      */
     public final SQL buildGetSQL(Query query, ColumnFilter selectFilter) {
         return buildListSQL(query.setLimit(1), selectFilter);
@@ -332,10 +332,10 @@ public class BaseModelService<Entity extends BaseModel> {
      * @param query        聚合查询参数对象
      * @param selectFilter 查询字段过滤器
      * @return listSQL
-     * @see JdbcDao#buildSelectSQL(Query, ColumnFilter)
+     * @see JDBCDao#buildSelectSQL(Query, ColumnFilter)
      */
     public final SQL buildListSQLWithAlias(Query query, ColumnFilter selectFilter) {
-        return baseDao.buildSelectSQLWithAlias(query, selectFilter);
+        return dao.buildSelectSQLWithAlias(query, selectFilter);
     }
 
     /**
@@ -346,7 +346,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @param query        聚合查询参数对象
      * @param selectFilter 查询字段过滤器
      * @return getSQL
-     * @see JdbcDao#buildSelectSQL(Query, ColumnFilter)
+     * @see JDBCDao#buildSelectSQL(Query, ColumnFilter)
      */
     public final SQL buildGetSQLWithAlias(Query query, ColumnFilter selectFilter) {
         return buildListSQLWithAlias(query.setLimit(1), selectFilter);
@@ -355,10 +355,10 @@ public class BaseModelService<Entity extends BaseModel> {
     /**
      * <p>baseDao.</p>
      *
-     * @return a {@link JdbcDao} object
+     * @return a {@link JDBCDao} object
      */
-    public JdbcDao<Entity> _baseDao() {
-        return baseDao;
+    public JDBCDao<Entity> _dao() {
+        return dao;
     }
 
 }

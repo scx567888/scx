@@ -27,12 +27,12 @@ import static cool.scx.sql.result_handler.ResultHandler.ofBeanList;
 import static cool.scx.sql.result_handler.ResultHandler.ofSingleValue;
 
 /**
- * 通过 SQL 操作关系型数据库的 DAO
+ * 使用 JDBC 接口, 通过 SQL 操作关系型数据库的 DAO
  *
  * @author scx567888
  * @version 0.1.3
  */
-public class JdbcDao<Entity> implements Dao<Entity, Long> {
+public class JDBCDao<Entity> implements Dao<Entity, Long> {
 
     /**
      * 实体类对应的 table 结构
@@ -67,7 +67,7 @@ public class JdbcDao<Entity> implements Dao<Entity, Long> {
     /**
      * where 解析器
      */
-    protected final JdbcDaoWhereParser whereParser;
+    protected final JDBCDaoWhereParser whereParser;
 
     /**
      * a
@@ -75,7 +75,7 @@ public class JdbcDao<Entity> implements Dao<Entity, Long> {
      * @param entityClass a
      * @param dataSource  a
      */
-    public JdbcDao(Class<Entity> entityClass, DataSource dataSource) {
+    public JDBCDao(Class<Entity> entityClass, DataSource dataSource) {
         this.entityClass = entityClass;
         this.dialect = findDialect(dataSource);
         this.tableInfo = new AnnotationConfigTable(entityClass);
@@ -85,7 +85,7 @@ public class JdbcDao<Entity> implements Dao<Entity, Long> {
             return columnInfo == null ? null : columnInfo.name();
         });
         this.countResultHandler = ofSingleValue("count", Long.class);
-        this.whereParser = new JdbcDaoWhereParser(tableInfo);
+        this.whereParser = new JDBCDaoWhereParser(tableInfo);
     }
 
     /**
@@ -237,7 +237,7 @@ public class JdbcDao<Entity> implements Dao<Entity, Long> {
      *      ));
      *  }</pre>
      * <br>
-     * 注意 !!! 若同时使用 limit 和 in/not in 请使用 {@link JdbcDao#buildSelectSQLWithAlias(Query, ColumnFilter)}
+     * 注意 !!! 若同时使用 limit 和 in/not in 请使用 {@link JDBCDao#buildSelectSQLWithAlias(Query, ColumnFilter)}
      *
      * @param query        聚合查询参数对象
      * @param selectFilter 查询字段过滤器

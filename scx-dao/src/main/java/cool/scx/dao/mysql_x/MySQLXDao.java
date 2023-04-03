@@ -16,7 +16,12 @@ import java.util.List;
 
 import static cool.scx.dao.AnnotationConfigTable.initTableName;
 
-public class MySQLXCollectionDao<Entity> implements Dao<Entity, String> {
+/**
+ * 使用 MySQL X Dev Api 通过 MySQL X 协议, 操作 MySQL 的 Dao
+ *
+ * @param <Entity>
+ */
+public class MySQLXDao<Entity> implements Dao<Entity, String> {
 
     private final Session session;
     private final Schema schema;
@@ -24,7 +29,7 @@ public class MySQLXCollectionDao<Entity> implements Dao<Entity, String> {
     private final Class<Entity> entityClass;
     private final MySQLXDaoWhereParser whereParser;
 
-    public MySQLXCollectionDao(Class<Entity> entityClass, Session session, String tableName) {
+    public MySQLXDao(Class<Entity> entityClass, Session session, String tableName) {
         this.entityClass = entityClass;
         this.session = session;
         this.schema = session.getDefaultSchema();
@@ -32,7 +37,7 @@ public class MySQLXCollectionDao<Entity> implements Dao<Entity, String> {
         this.whereParser = new MySQLXDaoWhereParser();
     }
 
-    public MySQLXCollectionDao(Class<Entity> entityClass, Session session) {
+    public MySQLXDao(Class<Entity> entityClass, Session session) {
         this(entityClass, session, initTableName(entityClass));
     }
 

@@ -9,11 +9,11 @@ import cool.scx.sql.sql.SQL;
 
 import static cool.scx.dao.jdbc.WhereTypeHandler.*;
 
-public class JdbcDaoWhereParser extends WhereParser {
+public class JDBCDaoWhereParser extends WhereParser {
 
     private final AnnotationConfigTable tableInfo;
 
-    public JdbcDaoWhereParser(AnnotationConfigTable tableInfo) {
+    public JDBCDaoWhereParser(AnnotationConfigTable tableInfo) {
         this.tableInfo = tableInfo;
     }
 
