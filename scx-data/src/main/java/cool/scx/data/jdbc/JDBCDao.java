@@ -1,12 +1,15 @@
 package cool.scx.data.jdbc;
 
 import cool.scx.data.*;
-import cool.scx.data.dialect.Dialect;
-import cool.scx.sql.SQLRunner;
-import cool.scx.sql.mapping.Column;
-import cool.scx.sql.mapping.Table;
-import cool.scx.sql.result_handler.ResultHandler;
-import cool.scx.sql.sql.SQL;
+import cool.scx.data.jdbc.dialect.Dialect;
+import cool.scx.data.jdbc.mapping.Column;
+import cool.scx.data.jdbc.mapping.Table;
+import cool.scx.data.jdbc.parser.JDBCDaoGroupByParser;
+import cool.scx.data.jdbc.parser.JDBCDaoOrderByParser;
+import cool.scx.data.jdbc.parser.JDBCDaoWhereParser;
+import cool.scx.data.jdbc.result_handler.ResultHandler;
+import cool.scx.data.jdbc.sql.SQL;
+import cool.scx.data.jdbc.sql.SQLRunner;
 import cool.scx.util.RandomUtils;
 
 import javax.sql.DataSource;
@@ -15,10 +18,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import static cool.scx.data.dialect.DialectSelector.findDialect;
-import static cool.scx.data.jdbc.SQLBuilder.*;
-import static cool.scx.sql.result_handler.ResultHandler.ofBeanList;
-import static cool.scx.sql.result_handler.ResultHandler.ofSingleValue;
+import static cool.scx.data.jdbc.dialect.DialectSelector.findDialect;
+import static cool.scx.data.jdbc.result_handler.ResultHandler.ofBeanList;
+import static cool.scx.data.jdbc.result_handler.ResultHandler.ofSingleValue;
+import static cool.scx.data.jdbc.sql.SQLBuilder.*;
 import static cool.scx.util.ArrayUtils.concat;
 
 /**

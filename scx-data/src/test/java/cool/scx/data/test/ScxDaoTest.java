@@ -4,17 +4,17 @@ import com.mysql.cj.jdbc.MysqlDataSource;
 import com.mysql.cj.xdevapi.SessionFactory;
 import cool.scx.data.AnnotationConfigTable;
 import cool.scx.data.Query;
-import cool.scx.data.SchemaHelper;
 import cool.scx.data.jdbc.JDBCDao;
+import cool.scx.data.jdbc.SchemaHelper;
+import cool.scx.data.jdbc.spy.Spy;
+import cool.scx.data.jdbc.sql.SQLRunner;
 import cool.scx.data.mysql_x.MySQLXDao;
 import cool.scx.data.query.AND;
 import cool.scx.data.query.OR;
 import cool.scx.data.query.WhereBody;
 import cool.scx.data.query.WhereOption;
-import cool.scx.data.spy.Spy;
 import cool.scx.logging.ScxLoggerFactory;
 import cool.scx.logging.ScxLoggingLevel;
-import cool.scx.sql.SQLRunner;
 import cool.scx.util.reflect.ClassUtils;
 import org.sqlite.SQLiteDataSource;
 import org.testng.annotations.Test;
@@ -30,7 +30,7 @@ import java.util.ArrayList;
 
 import static com.mysql.cj.conf.PropertyKey.*;
 import static cool.scx.data.ColumnFilter.ofExcluded;
-import static cool.scx.sql.sql.SQL.ofNormal;
+import static cool.scx.data.jdbc.sql.SQL.ofNormal;
 
 public class ScxDaoTest {
 

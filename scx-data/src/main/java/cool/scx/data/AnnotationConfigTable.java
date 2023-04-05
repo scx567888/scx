@@ -1,7 +1,7 @@
 package cool.scx.data;
 
 import cool.scx.data.annotation.NoColumn;
-import cool.scx.sql.mapping.Table;
+import cool.scx.data.jdbc.mapping.Table;
 import cool.scx.util.CaseUtils;
 import cool.scx.util.MultiMap;
 import cool.scx.util.StringUtils;

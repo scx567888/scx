@@ -4,7 +4,8 @@ import cool.scx.core.ScxContext;
 import cool.scx.data.ColumnFilter;
 import cool.scx.data.Query;
 import cool.scx.data.jdbc.JDBCDao;
-import cool.scx.sql.sql.SQL;
+import cool.scx.data.jdbc.sql.SQL;
+import cool.scx.data.jdbc.sql.SQLRunner;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
@@ -19,7 +20,7 @@ import static cool.scx.data.ColumnFilter.ofExcluded;
  * <p>
  * 或手动创建 : new BaseModelService()
  * <p>
- * 如果还是无法满足需求, 可以考虑使用 {@link cool.scx.sql.SQLRunner}
+ * 如果还是无法满足需求, 可以考虑使用 {@link SQLRunner}
  *
  * @author scx567888
  * @version 0.3.6

@@ -1,6 +1,6 @@
 package cool.scx.data;
 
-import cool.scx.sql.mapping.Table;
+import cool.scx.data.jdbc.mapping.Table;
 
 import java.util.ArrayList;
 import java.util.Arrays;

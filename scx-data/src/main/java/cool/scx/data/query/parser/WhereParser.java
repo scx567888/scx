@@ -1,10 +1,10 @@
 package cool.scx.data.query.parser;
 
+import cool.scx.data.jdbc.sql.SQL;
 import cool.scx.data.query.AND;
 import cool.scx.data.query.Logic;
 import cool.scx.data.query.Where;
 import cool.scx.data.query.WhereBody;
-import cool.scx.sql.sql.SQL;
 
 import java.util.ArrayList;
 import java.util.List;
