@@ -45,10 +45,9 @@
         <module>scx-common</module>
         <module>scx-config</module>
         <module>scx-core</module>
-        <module>scx-dao</module>
+        <module>scx-data</module>
         <module>scx-logging</module>
         <module>scx-mvc</module>
-        <module>scx-sql</module>
     </modules>
 
     <build>

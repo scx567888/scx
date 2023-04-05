@@ -58,7 +58,7 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>scx-dao</artifactId>
+            <artifactId>scx-data</artifactId>
             <version>${project.version}</version>
         </dependency>
 

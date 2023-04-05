@@ -5,8 +5,8 @@ import cool.scx.core.ScxContext;
 import cool.scx.core.ScxModule;
 import cool.scx.core.base.BaseModelService;
 import cool.scx.core.enumeration.ScxCoreFeature;
-import cool.scx.dao.Query;
-import cool.scx.dao.query.WhereOption;
+import cool.scx.data.Query;
+import cool.scx.data.query.WhereOption;
 import cool.scx.http_client.ScxHttpClientHelper;
 import cool.scx.http_client.body.FormData;
 import cool.scx.sql.sql.SQL;
@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static cool.scx.core.eventbus.ZeroCopyMessageCodec.ZERO_COPY_CODEC_NAME;
-import static cool.scx.dao.ColumnFilter.ofIncluded;
+import static cool.scx.data.ColumnFilter.ofIncluded;
 import static org.testng.Assert.assertEquals;
 
 public class TestModule extends ScxModule {
