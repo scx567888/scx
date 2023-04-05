@@ -20,13 +20,6 @@
 
     <dependencies>
 
-        <!-- https://mvnrepository.com/artifact/org.springframework.data/spring-data-jdbc -->
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-jdbc</artifactId>
-            <version>3.0.4</version>
-        </dependency>
-
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>scx-common</artifactId>
