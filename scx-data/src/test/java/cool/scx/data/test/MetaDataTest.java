@@ -2,7 +2,7 @@ package cool.scx.data.test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mysql.cj.jdbc.MysqlDataSource;
-import cool.scx.sql.meta_data.DataSourceMetaData;
+import cool.scx.data.jdbc.meta_data.DataSourceMetaData;
 import cool.scx.util.reflect.ClassUtils;
 import org.sqlite.SQLiteDataSource;
 import org.testng.annotations.Test;

@@ -1,0 +1,42 @@
+package cool.scx.data.jdbc.type_handler;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class EnumTypeHandler<E extends Enum<E>> implements TypeHandler<E> {
+
+    private static final Logger logger = LoggerFactory.getLogger(EnumTypeHandler.class);
+
+    private final Class<E> type;
+
+    public EnumTypeHandler(Class<E> type) {
+        if (type == null) {
+            throw new IllegalArgumentException("Type argument cannot be null");
+        }
+        this.type = type;
+    }
+
+    @Override
+    public void setObject(PreparedStatement ps, int i, E parameter) throws SQLException {
+        ps.setString(i, parameter.name());
+    }
+
+    @Override
+    public E getObject(ResultSet rs, int index) throws SQLException {
+        String name = rs.getString(index);
+        if (name == null) {
+            return null;
+        }
+        try {
+            return Enum.valueOf(type, name);
+        } catch (Exception e) {
+            logger.error("枚举转换出现错误 : ", e);
+            return null;
+        }
+    }
+
+}

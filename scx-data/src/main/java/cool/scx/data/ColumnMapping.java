@@ -1,6 +1,6 @@
 package cool.scx.data;
 
-import cool.scx.sql.mapping.Column;
+import cool.scx.data.jdbc.mapping.Column;
 
 import java.lang.reflect.Field;
 

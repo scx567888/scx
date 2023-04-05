@@ -1,14 +1,14 @@
 package cool.scx.data.test;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
+import cool.scx.data.jdbc.result_handler.ResultHandler;
+import cool.scx.data.jdbc.sql.SQL;
+import cool.scx.data.jdbc.sql.SQLRunner;
+import cool.scx.data.jdbc.sql.UpdateResult;
 import cool.scx.data.test.bean.Student;
 import cool.scx.data.test.bean.StudentRecord;
 import cool.scx.logging.ScxLoggerFactory;
 import cool.scx.logging.ScxLoggingLevel;
-import cool.scx.sql.SQLRunner;
-import cool.scx.sql.UpdateResult;
-import cool.scx.sql.result_handler.ResultHandler;
-import cool.scx.sql.sql.SQL;
 import cool.scx.util.FileUtils;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.ScxExceptionHelper;
@@ -20,9 +20,9 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.mysql.cj.conf.PropertyKey.*;
-import static cool.scx.sql.result_handler.ResultHandler.ofBeanList;
-import static cool.scx.sql.result_handler.ResultHandler.ofMapList;
-import static cool.scx.sql.sql.SQL.ofNormal;
+import static cool.scx.data.jdbc.result_handler.ResultHandler.ofBeanList;
+import static cool.scx.data.jdbc.result_handler.ResultHandler.ofMapList;
+import static cool.scx.data.jdbc.sql.SQL.ofNormal;
 
 public class SQLRunnerTest {
 

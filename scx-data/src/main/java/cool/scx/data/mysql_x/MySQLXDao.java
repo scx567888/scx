@@ -8,6 +8,7 @@ import com.mysql.cj.xdevapi.Session;
 import cool.scx.data.BaseDao;
 import cool.scx.data.ColumnFilter;
 import cool.scx.data.Query;
+import cool.scx.data.mysql_x.parser.MySQLXDaoWhereParser;
 import cool.scx.util.ObjectUtils;
 
 import java.util.ArrayList;
