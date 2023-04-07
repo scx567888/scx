@@ -8,6 +8,14 @@ public abstract class Logic {
         this.clauses = clauses;
     }
 
+    public static Logic and(Object... clauses) {
+        return new AND(clauses);
+    }
+
+    public static Logic or(Object... clauses) {
+        return new OR(clauses);
+    }
+
     public abstract String keyWord();
 
     public final Object[] clauses() {
