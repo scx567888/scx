@@ -1,4 +1,4 @@
-package cool.scx.test;
+package cool.scx.core.test;
 
 import cool.scx.core.annotation.ScxService;
 import org.slf4j.Logger;

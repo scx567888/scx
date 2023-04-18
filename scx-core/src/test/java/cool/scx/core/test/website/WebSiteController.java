@@ -1,7 +1,9 @@
-package cool.scx.test.website;
+package cool.scx.core.test.website;
 
 import cool.scx.constant.ScxConstant;
 import cool.scx.core.ScxContext;
+import cool.scx.core.test.car.Car;
+import cool.scx.core.test.car.CarService;
 import cool.scx.enumeration.HttpMethod;
 import cool.scx.enumeration.RawType;
 import cool.scx.http_client.ScxHttpClientHelper;
@@ -11,8 +13,6 @@ import cool.scx.mvc.annotation.FromUpload;
 import cool.scx.mvc.annotation.ScxRoute;
 import cool.scx.mvc.type.UploadedEntity;
 import cool.scx.mvc.vo.*;
-import cool.scx.test.car.Car;
-import cool.scx.test.car.CarService;
 import cool.scx.util.DigestUtils;
 import cool.scx.util.NetUtils;
 import cool.scx.util.RandomUtils;

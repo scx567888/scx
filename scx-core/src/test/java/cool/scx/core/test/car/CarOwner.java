@@ -1,4 +1,4 @@
-package cool.scx.test.car;
+package cool.scx.core.test.car;
 
 /**
  * 车主

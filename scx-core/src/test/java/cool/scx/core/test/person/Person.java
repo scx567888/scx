@@ -1,4 +1,4 @@
-package cool.scx.test.person;
+package cool.scx.core.test.person;
 
 import cool.scx.core.base.BaseModel;
 import cool.scx.data.annotation.Table;

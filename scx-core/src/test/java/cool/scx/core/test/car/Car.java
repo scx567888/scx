@@ -1,4 +1,4 @@
-package cool.scx.test.car;
+package cool.scx.core.test.car;
 
 import cool.scx.core.base.BaseModel;
 import cool.scx.data.annotation.Column;
