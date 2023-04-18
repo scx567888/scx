@@ -1,4 +1,4 @@
-package cool.scx.test;
+package cool.scx.mvc.test;
 
 import cool.scx.mvc.ScxMvc;
 import cool.scx.mvc.ScxMvcOptions;
@@ -17,10 +17,8 @@ import java.util.List;
 public class ScxMvcTest {
 
     public static void main(String[] args) {
-
-//        test0();
+        test0();
         test1();
-
     }
 
     /**
@@ -77,11 +75,11 @@ public class ScxMvcTest {
 
         vertx.createHttpServer()
                 .requestHandler(router)
-                .listen(8080)
+                .listen(8081)
                 .onSuccess(c -> {
-                    System.out.println("http://127.0.0.1:8080/hello");
-                    System.out.println("http://127.0.0.1:8080/no-perm");
-                    System.out.println("http://127.0.0.1:8080/vertx-route");
+                    System.out.println("http://127.0.0.1:8081/hello");
+                    System.out.println("http://127.0.0.1:8081/no-perm");
+                    System.out.println("http://127.0.0.1:8081/vertx-route");
                 });
     }
 

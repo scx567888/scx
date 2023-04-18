@@ -1,4 +1,4 @@
-package cool.scx.test;
+package cool.scx.mvc.test;
 
 import cool.scx.mvc.annotation.ScxRoute;
 import cool.scx.mvc.exception.ForbiddenException;
