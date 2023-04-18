@@ -11,9 +11,11 @@ public class AnsiTest {
 
     @Test
     public static void test1() {
+        var ansi = Ansi.out();
         for (int i = 0; i < 99; i++) {
-            Ansi.out().color("■").print();
+            ansi.color("■");
         }
+        ansi.println();
     }
 
 }
