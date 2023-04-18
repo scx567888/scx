@@ -105,7 +105,7 @@ public final class CaseUtils {
      * @param from a {@link cool.scx.util.case_impl.CaseType} object
      * @return 分割后的数组
      */
-    private static String convert(String str, CaseType to, CaseType from) {
+    public static String convert(String str, CaseType to, CaseType from) {
         return from == to ? str : to.getString(from.getSourceStrings(str));
     }
 
