@@ -1,7 +1,8 @@
-package cool.scx.test;
+package cool.scx.utils.test;
 
 import cool.scx.util.tree.ScxTreeModel;
 import cool.scx.util.tree.ScxTreeUtils;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
@@ -14,7 +15,6 @@ public class ScxTreeTest {
 
     public static void main(String[] args) throws Exception {
         test1();
-        System.out.println("所有测试通过 !!!");
     }
 
     @Test
@@ -36,7 +36,19 @@ public class ScxTreeTest {
                 m.put(fullPath, self);
             });
         }
-        m.forEach((k, v) -> System.out.println(k + "  -----  " + v.name));
+        var sb = new StringBuilder();
+        m.forEach((k, v) -> sb.append(k).append("  -----  ").append(v.name).append("\n"));
+        var s = """
+                根节点/子节点2/子节点3  -----  子节点3
+                根节点/子节点2/子节点4  -----  子节点4
+                根节点  -----  根节点
+                根节点/子节点5  -----  子节点5
+                根节点/子节点1  -----  子节点1
+                根节点/子节点1/子节点7  -----  子节点7
+                根节点/子节点1/子节点6  -----  子节点6
+                根节点/子节点2  -----  子节点2
+                """;
+        Assert.assertEquals(sb.toString(), s);
     }
 
 

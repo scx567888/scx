@@ -1,4 +1,4 @@
-package cool.scx.test;
+package cool.scx.utils.test;
 
 import cool.scx.util.StringUtils;
 import org.testng.annotations.Test;
@@ -11,7 +11,6 @@ public class StringUtilsTest {
         test1();
         test2();
         test3();
-        System.out.println("所有测试通过 !!!");
     }
 
     @Test

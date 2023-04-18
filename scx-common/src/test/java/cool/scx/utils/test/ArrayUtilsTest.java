@@ -1,4 +1,4 @@
-package cool.scx.test;
+package cool.scx.utils.test;
 
 import cool.scx.util.ArrayUtils;
 import org.testng.Assert;

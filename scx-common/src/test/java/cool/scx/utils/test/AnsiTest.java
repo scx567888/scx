@@ -1,4 +1,4 @@
-package cool.scx.test;
+package cool.scx.utils.test;
 
 import cool.scx.util.ansi.Ansi;
 import org.testng.annotations.Test;
@@ -12,7 +12,7 @@ public class AnsiTest {
     @Test
     public static void test1() {
         for (int i = 0; i < 99; i++) {
-            Ansi.out().color(i).print();
+            Ansi.out().color("■").print();
         }
     }
 

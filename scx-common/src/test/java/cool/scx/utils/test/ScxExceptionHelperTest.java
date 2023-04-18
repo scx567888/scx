@@ -1,6 +1,7 @@
-package cool.scx.test;
+package cool.scx.utils.test;
 
 import cool.scx.util.ScxExceptionHelper;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.concurrent.CompletableFuture;
@@ -16,12 +17,13 @@ public class ScxExceptionHelperTest {
     @Test
     public static void test1() {
         try {
+
             ScxExceptionHelper.wrap(() -> CompletableFuture.runAsync(() -> {
                 var i = 1 / 0;
             }).get());
         } catch (Exception e) {
             var rootCause = ScxExceptionHelper.getRootCause(e);
-            rootCause.printStackTrace();
+            Assert.assertEquals(ArithmeticException.class, rootCause.getClass());
         }
     }
 
@@ -33,7 +35,7 @@ public class ScxExceptionHelperTest {
             }).join());
         } catch (Exception e) {
             var rootCause = ScxExceptionHelper.getRootCause(e);
-            rootCause.printStackTrace();
+            Assert.assertEquals(ArithmeticException.class, rootCause.getClass());
         }
 
     }
@@ -46,7 +48,7 @@ public class ScxExceptionHelperTest {
             });
         } catch (Exception e) {
             var rootCause = ScxExceptionHelper.getRootCause(e);
-            rootCause.printStackTrace();
+            Assert.assertEquals(ArithmeticException.class, rootCause.getClass());
         }
     }
 

@@ -1,4 +1,4 @@
-package cool.scx.test;
+package cool.scx.utils.test;
 
 import cool.scx.util.CaseUtils;
 import org.testng.Assert;
@@ -13,22 +13,19 @@ public class CaseUtilsTest {
     @Test
     public static void test1() {
         var s = "userNameID";
-        for (int i = 0; i < 99; i++) {
+
+        for (int i = 0; i < 10; i++) {
             s = CaseUtils.toCamel(s);
             Assert.assertEquals(s, "userNameId");
-            System.out.println(s);
 
             s = CaseUtils.toKebab(s);
             Assert.assertEquals(s, "user-name-id");
-            System.out.println(s);
 
             s = CaseUtils.toSnake(s);
             Assert.assertEquals(s, "user_name_id");
-            System.out.println(s);
 
             s = CaseUtils.toPascal(s);
             Assert.assertEquals(s, "UserNameId");
-            System.out.println(s);
         }
 
     }
