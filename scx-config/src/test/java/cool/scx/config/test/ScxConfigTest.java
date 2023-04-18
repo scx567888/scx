@@ -1,4 +1,4 @@
-package cool.scx.test;
+package cool.scx.config.test;
 
 import cool.scx.config.ScxConfig;
 import cool.scx.config.ScxEnvironment;
