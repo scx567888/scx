@@ -1,4 +1,4 @@
-package cool.scx.test;
+package cool.scx.logging.test;
 
 import cool.scx.logging.ScxLoggerFactory;
 import cool.scx.logging.recorder.ConsoleRecorder;
@@ -19,12 +19,12 @@ public class ScxLoggerTest {
     @Test
     public static void test1() {
         var logger = LoggerFactory.getLogger(ScxLoggerTest.class);
-        for (int i = 0; i < 99; i++) {
+        for (int i = 0; i < 10; i++) {
             logger.debug("测试 debug {}", i);
             logger.error("测试 error {}", i);
             logger.error("测试 {}", i, new RuntimeException("错误"));
         }
-        var path = getResourcePath();
+        var path = getAppRoot();
         ScxLoggerFactory.getLogger(ScxLoggerTest.class).config()
                 .setLevel(DEBUG)
                 .addRecorder(
@@ -32,14 +32,14 @@ public class ScxLoggerTest {
                         new FileRecorder(path)
                 )
                 .setStackTrace(true);
-        for (int i = 0; i < 99; i++) {
+        for (int i = 0; i < 10; i++) {
             logger.debug("测试 debug {}", i);
         }
     }
 
-    public static Path getResourcePath() {
+    public static Path getAppRoot() {
         try {
-            return Path.of(ScxLoggerTest.class.getResource("/").toURI());
+            return Path.of(ScxLoggerTest.class.getProtectionDomain().getCodeSource().getLocation().toURI());
         } catch (Exception e) {
             return null;
         }
