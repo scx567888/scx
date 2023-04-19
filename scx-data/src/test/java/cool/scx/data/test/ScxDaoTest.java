@@ -2,8 +2,8 @@ package cool.scx.data.test;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
 import com.mysql.cj.xdevapi.SessionFactory;
-import cool.scx.data.AnnotationConfigTable;
 import cool.scx.data.Query;
+import cool.scx.data.jdbc.AnnotationConfigTable;
 import cool.scx.data.jdbc.JDBCDao;
 import cool.scx.data.jdbc.SchemaHelper;
 import cool.scx.data.jdbc.spy.Spy;
@@ -115,7 +115,9 @@ public class ScxDaoTest {
 
         var xFactory = new SessionFactory();
         var session1 = xFactory.getSession("mysqlx://127.0.0.1:33060/" + databaseName + "?user=root&password=root");
-        var mySQLXDao = new MySQLXDao<>(User.class, session1, userTableInfo.name() + "_doc");
+        var schema = session1.getDefaultSchema();
+        var collection = schema.createCollection(userTableInfo.name() + "_doc", true);
+        var mySQLXDao = new MySQLXDao<>(User.class, collection);
 
         var newIds = userDao.insertBatch(list, ofExcluded());
         System.out.println("插入 : " + newIds);

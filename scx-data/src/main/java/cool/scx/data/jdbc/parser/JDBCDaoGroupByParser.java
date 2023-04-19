@@ -1,6 +1,6 @@
 package cool.scx.data.jdbc.parser;
 
-import cool.scx.data.AnnotationConfigTable;
+import cool.scx.data.jdbc.AnnotationConfigTable;
 import cool.scx.data.query.GroupByBody;
 import cool.scx.data.query.parser.GroupByParser;
 

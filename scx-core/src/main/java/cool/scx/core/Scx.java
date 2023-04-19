@@ -7,7 +7,7 @@ import cool.scx.config.ScxFeatureConfig;
 import cool.scx.core.enumeration.ScxCoreFeature;
 import cool.scx.core.eventbus.MessageCodecRegistrar;
 import cool.scx.core.scheduler.ScxScheduler;
-import cool.scx.data.AnnotationConfigTable;
+import cool.scx.data.jdbc.AnnotationConfigTable;
 import cool.scx.data.jdbc.SchemaHelper;
 import cool.scx.data.jdbc.sql.SQLRunner;
 import cool.scx.mvc.ScxMvc;

@@ -1,8 +1,8 @@
 package cool.scx.core.test.car;
 
 import cool.scx.core.base.BaseModel;
-import cool.scx.data.annotation.Column;
-import cool.scx.data.annotation.Table;
+import cool.scx.data.jdbc.annotation.Column;
+import cool.scx.data.jdbc.annotation.Table;
 
 @Table(tablePrefix = "test")
 public class Car extends BaseModel {

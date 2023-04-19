@@ -1,4 +1,4 @@
-package cool.scx.data.annotation;
+package cool.scx.data.jdbc.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
