@@ -34,6 +34,13 @@
         <!-- ****************** 以下为测试依赖 ****************** -->
 
         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>scx-logging</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <scope>test</scope>
