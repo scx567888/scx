@@ -1,5 +1,6 @@
 package cool.scx.data.test;
 
+import cool.scx.data.jdbc.JDBCContext;
 import cool.scx.data.jdbc.result_handler.ResultHandler;
 import cool.scx.data.jdbc.sql.SQL;
 import cool.scx.data.jdbc.sql.SQLRunner;
@@ -27,8 +28,8 @@ public class SQLRunnerTest {
 
     private static final String databaseName = "scx_sql_test";
     private static final DataSource dataSource = getSQLiteDataSource();
-    private static final SQLRunner sqlRunner = new SQLRunner(dataSource);
-    private static final String tableName = "`scx_sql_test`.`t1`";
+    private static final SQLRunner sqlRunner = new JDBCContext(dataSource).sqlRunner();
+    private static final String tableName = "t1";
 
     static {
         ScxLoggerFactory.defaultConfig().setLevel(ScxLoggingLevel.DEBUG);
@@ -47,7 +48,8 @@ public class SQLRunnerTest {
     @BeforeTest
     public static void beforeTest() {
         try {
-            sqlRunner.execute(ofNormal("drop table if exists " + tableName + ";" + " create table " + tableName + "(`name` varchar(32) unique ,`age` integer,`sex` boolean )"));
+            sqlRunner.execute(ofNormal("drop table if exists " + tableName + ";"));
+            sqlRunner.execute(ofNormal(" create table " + tableName + "(`name` varchar(32) unique ,`age` integer,`sex` boolean )"));
         } catch (Exception e) {
             e.printStackTrace();
         }

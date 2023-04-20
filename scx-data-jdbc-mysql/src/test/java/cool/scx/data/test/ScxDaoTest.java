@@ -3,10 +3,10 @@ package cool.scx.data.test;
 import com.mysql.cj.jdbc.MysqlDataSource;
 import cool.scx.data.Query;
 import cool.scx.data.jdbc.AnnotationConfigTable;
+import cool.scx.data.jdbc.JDBCContext;
 import cool.scx.data.jdbc.JDBCDao;
 import cool.scx.data.jdbc.SchemaHelper;
 import cool.scx.data.jdbc.spy.Spy;
-import cool.scx.data.jdbc.sql.SQLRunner;
 import cool.scx.data.query.WhereBody;
 import cool.scx.data.query.WhereOption;
 import cool.scx.logging.ScxLoggerFactory;
@@ -72,7 +72,8 @@ public class ScxDaoTest {
     }
 
     public static void test1_1(DataSource dataSource) throws SQLException {
-        SQLRunner sqlRunner = new SQLRunner(dataSource);
+        var jdbcContext = new JDBCContext(dataSource);
+        var sqlRunner = jdbcContext.sqlRunner();
         //创建 tableInfo
         var userTableInfo = new AnnotationConfigTable(User.class);
         //删除原有的表数据
@@ -101,7 +102,7 @@ public class ScxDaoTest {
         var query4 = new Query().equal("userInfo.email", "88@test.com", WhereOption.USE_JSON_EXTRACT);
 
         //开始使用
-        var userDao = new JDBCDao<>(User.class, dataSource);
+        var userDao = new JDBCDao<>(User.class, jdbcContext);
 
         var newIds = userDao.insertBatch(list, ofExcluded());
         System.out.println("插入 : " + newIds);
