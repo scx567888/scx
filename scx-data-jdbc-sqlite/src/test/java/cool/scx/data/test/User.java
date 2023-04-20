@@ -5,7 +5,6 @@ import cool.scx.data.jdbc.annotation.Table;
 
 import java.time.LocalDateTime;
 
-
 @Table(tablePrefix = "scx_dao")
 public class User {
     @Column(primaryKey = true, autoIncrement = true, columnName = "not_id")

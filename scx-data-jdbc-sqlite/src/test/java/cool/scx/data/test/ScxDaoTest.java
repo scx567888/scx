@@ -1,7 +1,5 @@
 package cool.scx.data.test;
 
-import com.mysql.cj.jdbc.MysqlDataSource;
-import com.mysql.cj.xdevapi.SessionFactory;
 import cool.scx.data.Query;
 import cool.scx.data.jdbc.AnnotationConfigTable;
 import cool.scx.data.jdbc.JDBCDao;
@@ -25,7 +23,6 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-import static com.mysql.cj.conf.PropertyKey.*;
 import static cool.scx.data.jdbc.ColumnFilter.ofExcluded;
 import static cool.scx.data.jdbc.sql.SQL.ofNormal;
 import static cool.scx.data.query.Logic.and;
@@ -49,20 +46,6 @@ public class ScxDaoTest {
         }
     }
 
-    public static DataSource getMySQLDataSource() {
-        var mysqlDataSource = new MysqlDataSource();
-        mysqlDataSource.setServerName("127.0.0.1");
-        mysqlDataSource.setUser("root");
-        mysqlDataSource.setPassword("root");
-        mysqlDataSource.setPort(3306);
-        mysqlDataSource.setDatabaseName(databaseName);
-        // 设置参数值
-        mysqlDataSource.getProperty(allowMultiQueries).setValue(true);
-        mysqlDataSource.getProperty(rewriteBatchedStatements).setValue(true);
-        mysqlDataSource.getProperty(createDatabaseIfNotExist).setValue(true);
-        return Spy.wrap(mysqlDataSource);
-    }
-
     public static DataSource getSQLiteDataSource() {
         SQLiteDataSource sqLiteDataSource = new SQLiteDataSource();
         sqLiteDataSource.setUrl("jdbc:sqlite:" + TempSQLite);
@@ -75,8 +58,6 @@ public class ScxDaoTest {
 
     @Test
     public static void test1() throws SQLException {
-        DataSource mySQLDataSource = getMySQLDataSource();
-        test1_1(mySQLDataSource);
         test1_1(getSQLiteDataSource());
     }
 
@@ -111,11 +92,6 @@ public class ScxDaoTest {
 
         //开始使用
         var userDao = new JDBCDao<>(User.class, dataSource);
-
-        var xFactory = new SessionFactory();
-        var session1 = xFactory.getSession("mysqlx://127.0.0.1:33060/" + databaseName + "?user=root&password=root");
-        var schema = session1.getDefaultSchema();
-        var collection = schema.createCollection(userTableInfo.name() + "_doc", true);
 
         var newIds = userDao.insertBatch(list, ofExcluded());
         System.out.println("插入 : " + newIds);

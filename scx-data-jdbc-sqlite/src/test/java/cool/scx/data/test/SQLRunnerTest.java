@@ -1,6 +1,5 @@
 package cool.scx.data.test;
 
-import com.mysql.cj.jdbc.MysqlDataSource;
 import cool.scx.data.jdbc.result_handler.ResultHandler;
 import cool.scx.data.jdbc.sql.SQL;
 import cool.scx.data.jdbc.sql.SQLRunner;
@@ -19,15 +18,15 @@ import javax.sql.DataSource;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.mysql.cj.conf.PropertyKey.*;
 import static cool.scx.data.jdbc.result_handler.ResultHandler.ofBeanList;
 import static cool.scx.data.jdbc.result_handler.ResultHandler.ofMapList;
 import static cool.scx.data.jdbc.sql.SQL.ofNormal;
+import static cool.scx.data.test.MetaDataTest.getSQLiteDataSource;
 
 public class SQLRunnerTest {
 
     private static final String databaseName = "scx_sql_test";
-    private static final DataSource dataSource = getMySQLDataSource();
+    private static final DataSource dataSource = getSQLiteDataSource();
     private static final SQLRunner sqlRunner = new SQLRunner(dataSource);
     private static final String tableName = "`scx_sql_test`.`t1`";
 
@@ -208,20 +207,6 @@ public class SQLRunnerTest {
             System.out.println("ofBeanConsumer 耗时 : " + (System.nanoTime() - s) / 1000_000 + " 内存占用 : " + FileUtils.longToDisplaySize(Runtime.getRuntime().totalMemory()) + " ; " + size);
         }
 
-    }
-
-    private static MysqlDataSource getMySQLDataSource() {
-        var mysqlDataSource = new MysqlDataSource();
-        mysqlDataSource.setServerName("127.0.0.1");
-        mysqlDataSource.setDatabaseName(databaseName);
-        mysqlDataSource.setUser("root");
-        mysqlDataSource.setPassword("root");
-        mysqlDataSource.setPort(3306);
-        // 设置参数值
-        mysqlDataSource.getProperty(allowMultiQueries).setValue(true);
-        mysqlDataSource.getProperty(rewriteBatchedStatements).setValue(true);
-        mysqlDataSource.getProperty(createDatabaseIfNotExist).setValue(true);
-        return mysqlDataSource;
     }
 
 }
