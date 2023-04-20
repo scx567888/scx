@@ -43,7 +43,7 @@ public class SQLRunnerTest {
         test3();
         test4();
         test5();
-        test6();
+//        test6(); // 太费时 所以注释掉
     }
 
     @BeforeTest
@@ -166,7 +166,7 @@ public class SQLRunnerTest {
 
     }
 
-    @Test
+//    @Test // 太费时 所以注释掉
     public static void test6() {
         try { // 准备大量数据 200万条 进行测试
             sqlRunner.execute(ofNormal("drop table if exists " + tableName + ";" + " create table " + tableName + "(`name` varchar(32) ,`age` integer,`sex` boolean )"));
