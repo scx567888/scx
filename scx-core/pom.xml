@@ -64,6 +64,18 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>scx-data-jdbc-meta-data</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>scx-data-jdbc-spy</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>scx-logging</artifactId>
             <version>${project.version}</version>
         </dependency>

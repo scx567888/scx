@@ -4,7 +4,7 @@ import cool.scx.data.Query;
 import cool.scx.data.jdbc.AnnotationConfigTable;
 import cool.scx.data.jdbc.JDBCContext;
 import cool.scx.data.jdbc.JDBCDao;
-import cool.scx.data.jdbc.SchemaHelper;
+import cool.scx.data.jdbc.meta_data.SchemaHelper;
 import cool.scx.data.jdbc.spy.Spy;
 import cool.scx.data.query.WhereBody;
 import cool.scx.data.query.WhereOption;
