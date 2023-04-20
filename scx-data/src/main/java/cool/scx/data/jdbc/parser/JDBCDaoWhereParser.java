@@ -1,6 +1,7 @@
 package cool.scx.data.jdbc.parser;
 
 import cool.scx.data.jdbc.AnnotationConfigTable;
+import cool.scx.data.jdbc.sql.SQL;
 import cool.scx.data.query.WhereBody;
 import cool.scx.data.query.WhereType;
 import cool.scx.data.query.parser.WhereClauseAndWhereParams;
@@ -9,6 +10,18 @@ import cool.scx.data.query.parser.WhereParser;
 import static cool.scx.data.jdbc.parser.WhereTypeHandler.*;
 
 public class JDBCDaoWhereParser extends WhereParser {
+
+    @Override
+    public WhereClauseAndWhereParams parse(Object obj) {
+        if (obj instanceof SQL sql) {
+            return parseSQL(sql);
+        }
+        return super.parse(obj);
+    }
+
+    public final WhereClauseAndWhereParams parseSQL(SQL sql) {
+        return new WhereClauseAndWhereParams("(" + sql.sql() + ")", sql.params());
+    }
 
     private final AnnotationConfigTable tableInfo;
 
