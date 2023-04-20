@@ -1,9 +1,6 @@
 package cool.scx.data.jdbc;
 
-import cool.scx.data.BaseDao;
-import cool.scx.data.ColumnFilter;
-import cool.scx.data.ColumnMapping;
-import cool.scx.data.Query;
+import cool.scx.data.*;
 import cool.scx.data.jdbc.dialect.Dialect;
 import cool.scx.data.jdbc.mapping.Column;
 import cool.scx.data.jdbc.mapping.Table;
@@ -96,56 +93,6 @@ public class JDBCDao<Entity> implements BaseDao<Entity, Long> {
     }
 
     /**
-     * 过滤
-     *
-     * @param entity    a
-     * @param tableInfo 带过滤的列表
-     * @return 过滤后的列表
-     */
-    private static ColumnMapping[] filter(ColumnFilter filter, Object entity, Table<? extends ColumnMapping> tableInfo) {
-        return filter.excludeIfFieldValueIsNull() ? excludeIfFieldValueIsNull(entity, filter(filter, tableInfo)) : filter(filter, tableInfo);
-    }
-
-    /**
-     * 过滤空值
-     *
-     * @param entity            e
-     * @param scxDaoColumnInfos s
-     * @return e
-     */
-    private static ColumnMapping[] excludeIfFieldValueIsNull(Object entity, ColumnMapping... scxDaoColumnInfos) {
-        return Arrays.stream(scxDaoColumnInfos).filter(field -> field.javaFieldValue(entity) != null).toArray(ColumnMapping[]::new);
-    }
-
-    /**
-     * 过滤
-     *
-     * @param tableInfo 带过滤的列表
-     * @return 过滤后的列表
-     */
-    private static ColumnMapping[] filter(ColumnFilter filter, Table<? extends ColumnMapping> tableInfo) {
-        return filter.fieldNames().size() == 0 ? switch (filter.filterMode()) {
-            case INCLUDED -> new ColumnMapping[0];
-            case EXCLUDED -> tableInfo.columns();
-        } : switch (filter.filterMode()) {
-            case INCLUDED -> {
-                var list = new ArrayList<ColumnMapping>();
-                for (var fieldName : filter.fieldNames()) {
-                    list.add(tableInfo.getColumn(fieldName));
-                }
-                yield list.toArray(ColumnMapping[]::new);
-            }
-            case EXCLUDED -> {
-                var objects = new ArrayList<>(Arrays.asList(tableInfo.columns()));
-                for (var fieldName : filter.fieldNames()) {
-                    objects.remove(tableInfo.getColumn(fieldName));
-                }
-                yield objects.toArray(ColumnMapping[]::new);
-            }
-        };
-    }
-
-    /**
      * 保存单条数据
      *
      * @param entity       待插入的数据
@@ -165,7 +112,7 @@ public class JDBCDao<Entity> implements BaseDao<Entity, Long> {
      * @return a
      */
     private SQL _buildInsertSQL(Entity entity, ColumnFilter updateFilter) {
-        var insertColumnInfos = filter(updateFilter, entity, tableInfo);
+        var insertColumnInfos = updateFilter.filter(entity, tableInfo);
         var insertColumns = Arrays.stream(insertColumnInfos).map(Column::name).toArray(String[]::new);
         var insertValues = Arrays.stream(insertColumnInfos).map(columnInfo -> "?").toArray(String[]::new);
         var sql = Insert(tableInfo.name(), insertColumns)
@@ -195,7 +142,7 @@ public class JDBCDao<Entity> implements BaseDao<Entity, Long> {
      * @return a
      */
     private SQL buildInsertBatchSQL(Collection<Entity> entityList, ColumnFilter updateFilter) {
-        var insertColumnInfos = filter(updateFilter, tableInfo);
+        var insertColumnInfos = updateFilter.filter(tableInfo);
         //将 entityList 转换为 objectArrayList 这里因为 stream 实在太慢所以改为传统循环方式
         var objectArrayList = new ArrayList<Object[]>();
         for (var entity : entityList) {
@@ -255,14 +202,14 @@ public class JDBCDao<Entity> implements BaseDao<Entity, Long> {
      *      // 现在想做如下查询 根据所有 person 表中年龄小于 100 的 carID 查询 car 表中的数据
      *      // 可以按照如下写法
      *      var cars = carService._select(new Query().in("id",
-     *                 personService._buildSelectSQL(new Query().lessThan("age", 100), FieldFilter.ofIncluded("carID")),
-     *                 FieldFilter.ofExcluded()
+     *                 personService._buildSelectSQL(new Query().lessThan("age", 100), ColumnFilter.ofIncluded("carID")),
+     *                 ColumnFilter.ofExcluded()
      *      ));
      *      // 同时也支持 whereSQL 方法
      *      // 这个写法和上方完全相同
      *      var cars1 = carService._select(new Query().whereSQL("id IN ",
-     *                 personService._buildSelectSQL(new Query().lessThan("age", 100), FieldFilter.ofIncluded("carID")),
-     *                 FieldFilter.ofExcluded()
+     *                 personService._buildSelectSQL(new Query().lessThan("age", 100), ColumnFilter.ofIncluded("carID")),
+     *                 ColumnFilter.ofExcluded()
      *      ));
      *  }</pre>
      * <br>
@@ -273,7 +220,7 @@ public class JDBCDao<Entity> implements BaseDao<Entity, Long> {
      * @return selectSQL
      */
     public final SQL buildSelectSQL(Query query, ColumnFilter selectFilter) {
-        var selectColumnInfos = filter(selectFilter, tableInfo);
+        var selectColumnInfos = selectFilter.filter(tableInfo);
         var selectColumns = Arrays.stream(selectColumnInfos).map(Column::name).toArray(String[]::new);
         var whereClauseAndWhereParams = whereParser.parseWhere(query.where());
         var groupByColumns = groupByParser.parseGroupBy(query.groupBy());
@@ -301,7 +248,7 @@ public class JDBCDao<Entity> implements BaseDao<Entity, Long> {
         if (query.limit().rowCount() == null) {
             return buildSelectSQL(query, selectFilter);
         } else {
-            var selectColumnInfos = filter(selectFilter, tableInfo);
+            var selectColumnInfos = selectFilter.filter(tableInfo);
             var selectColumns = Arrays.stream(selectColumnInfos).map(cool.scx.data.ColumnMapping::name).toArray(String[]::new);
             var whereClauseAndWhereParams = whereParser.parseWhere(query.where());
             var groupByColumns = groupByParser.parseGroupBy(query.groupBy());
@@ -371,7 +318,7 @@ public class JDBCDao<Entity> implements BaseDao<Entity, Long> {
         if (query.where().isEmpty()) {
             throw new IllegalArgumentException("更新数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
         }
-        var updateSetColumnInfos = filter(updateFilter, entity, tableInfo);
+        var updateSetColumnInfos = updateFilter.filter(entity, tableInfo);
         var updateSetColumns = Arrays.stream(updateSetColumnInfos).map(c -> c.name() + " = ?").toArray(String[]::new);
         var whereClauseAndWhereParams = whereParser.parseWhere(query.where());
         var sql = Update(tableInfo.name())

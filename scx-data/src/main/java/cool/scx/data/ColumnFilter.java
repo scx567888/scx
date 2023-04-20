@@ -1,7 +1,9 @@
 package cool.scx.data;
 
 import cool.scx.data.column_filter.FilterMode;
+import cool.scx.data.jdbc.mapping.Table;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -215,6 +217,57 @@ public final class ColumnFilter {
 
     public boolean excludeIfFieldValueIsNull() {
         return excludeIfFieldValueIsNull;
+    }
+
+    /**
+     * 过滤
+     *
+     * @param entity    a
+     * @param tableInfo 带过滤的列表
+     * @return 过滤后的列表
+     */
+    public ColumnMapping[] filter(Object entity, Table<? extends ColumnMapping> tableInfo) {
+        return this.excludeIfFieldValueIsNull ? excludeIfFieldValueIsNull(entity, filter(tableInfo)) : filter(tableInfo);
+    }
+
+    /**
+     * 过滤空值
+     *
+     * @param entity            e
+     * @param scxDaoColumnInfos s
+     * @return e
+     */
+    private ColumnMapping[] excludeIfFieldValueIsNull(Object entity, ColumnMapping... scxDaoColumnInfos) {
+        return Arrays.stream(scxDaoColumnInfos).filter(field -> field.javaFieldValue(entity) != null).toArray(ColumnMapping[]::new);
+    }
+
+
+    /**
+     * 过滤
+     *
+     * @param tableInfo 带过滤的列表
+     * @return 过滤后的列表
+     */
+    public ColumnMapping[] filter(Table<? extends ColumnMapping> tableInfo) {
+        return this.fieldNames.size() == 0 ? switch (this.filterMode) {
+            case INCLUDED -> new ColumnMapping[0];
+            case EXCLUDED -> tableInfo.columns();
+        } : switch (this.filterMode) {
+            case INCLUDED -> {
+                var list = new ArrayList<ColumnMapping>();
+                for (var fieldName : this.fieldNames) {
+                    list.add(tableInfo.getColumn(fieldName));
+                }
+                yield list.toArray(ColumnMapping[]::new);
+            }
+            case EXCLUDED -> {
+                var objects = new ArrayList<>(Arrays.asList(tableInfo.columns()));
+                for (var fieldName : this.fieldNames) {
+                    objects.remove(tableInfo.getColumn(fieldName));
+                }
+                yield objects.toArray(ColumnMapping[]::new);
+            }
+        };
     }
 
 }
