@@ -1,6 +1,5 @@
 package cool.scx.data.jdbc.sqlite.type_handler;
 
-import cool.scx.data.jdbc.sqlite.SQLiteDialect;
 import cool.scx.data.jdbc.type_handler.time.LocalDateTimeTypeHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +12,7 @@ import java.time.LocalDateTime;
 
 public class SQLiteLocalDateTimeTypeHandler extends LocalDateTimeTypeHandler {
 
-    public static final Logger logger = LoggerFactory.getLogger(SQLiteLocalDateTimeTypeHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(SQLiteLocalDateTimeTypeHandler.class);
 
     @Override
     public void setObject(PreparedStatement ps, int i, LocalDateTime parameter) throws SQLException {
