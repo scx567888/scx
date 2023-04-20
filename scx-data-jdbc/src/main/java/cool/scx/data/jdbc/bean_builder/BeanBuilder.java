@@ -54,6 +54,7 @@ public abstract class BeanBuilder<T> {
 
     /**
      * 刷新 fieldSetter 对应的 TypeHandler
+     * todo 此处设计不合理
      *
      * @param typeHandlerSelector t
      */
