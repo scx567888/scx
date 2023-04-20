@@ -1,5 +1,7 @@
 package cool.scx.data.jdbc.sql;
 
+import cool.scx.data.jdbc.JDBCContext;
+import cool.scx.data.jdbc.dialect.Dialect;
 import cool.scx.data.jdbc.result_handler.ResultHandler;
 import cool.scx.functional.ScxConsumer;
 import cool.scx.functional.ScxFunction;
@@ -37,16 +39,16 @@ public final class SQLRunner {
      */
     private final DataSource dataSource;
 
+    private final Dialect dialect;
+
     /**
      * 根据数据源构建一个 SQLRunner
      *
-     * @param dataSource a DataSource object
+     * @param jdbcContext a DataSource object
      */
-    public SQLRunner(DataSource dataSource) {
-        if (dataSource == null) {
-            throw new IllegalArgumentException("数据源不能为空 !!!");
-        }
-        this.dataSource = dataSource;
+    public SQLRunner(JDBCContext jdbcContext) {
+        this.dataSource = jdbcContext.dataSource();
+        this.dialect = jdbcContext.dialect();
     }
 
     /**

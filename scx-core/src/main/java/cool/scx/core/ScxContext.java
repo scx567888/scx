@@ -5,6 +5,7 @@ import cool.scx.config.ScxEnvironment;
 import cool.scx.config.ScxFeatureConfig;
 import cool.scx.core.enumeration.ScxCoreFeature;
 import cool.scx.core.scheduler.ScxScheduler;
+import cool.scx.data.jdbc.JDBCContext;
 import cool.scx.data.jdbc.sql.SQLRunner;
 import cool.scx.functional.ScxRunnable;
 import cool.scx.mvc.ScxMvc;
@@ -281,6 +282,10 @@ public final class ScxContext {
      */
     public static Path getTempPath(String... paths) {
         return environment().getTempPath(paths);
+    }
+
+    public static JDBCContext jdbcContext() {
+        return scx().jdbcContext();
     }
 
 }

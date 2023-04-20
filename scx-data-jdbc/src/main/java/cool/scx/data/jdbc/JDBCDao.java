@@ -2,7 +2,6 @@ package cool.scx.data.jdbc;
 
 import cool.scx.data.Dao;
 import cool.scx.data.Query;
-import cool.scx.data.jdbc.dialect.Dialect;
 import cool.scx.data.jdbc.mapping.Column;
 import cool.scx.data.jdbc.mapping.Table;
 import cool.scx.data.jdbc.parser.JDBCDaoGroupByParser;
@@ -13,14 +12,12 @@ import cool.scx.data.jdbc.sql.SQL;
 import cool.scx.data.jdbc.sql.SQLRunner;
 import cool.scx.util.RandomUtils;
 
-import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
 import static cool.scx.data.jdbc.ColumnFilter.ofExcluded;
-import static cool.scx.data.jdbc.dialect.DialectSelector.findDialect;
 import static cool.scx.data.jdbc.result_handler.ResultHandler.ofBeanList;
 import static cool.scx.data.jdbc.result_handler.ResultHandler.ofSingleValue;
 import static cool.scx.data.jdbc.sql.SQLBuilder.*;
@@ -60,11 +57,6 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
     protected final ResultHandler<Long> countResultHandler;
 
     /**
-     * 方言
-     */
-    protected final Dialect dialect;
-
-    /**
      * where 解析器
      */
     protected final JDBCDaoWhereParser whereParser;
@@ -73,17 +65,18 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
 
     protected final JDBCDaoOrderByParser orderByParser;
 
+    private final JDBCContext jdbcContext;
+
     /**
      * a
      *
      * @param entityClass a
-     * @param dataSource  a
      */
-    public JDBCDao(Class<Entity> entityClass, DataSource dataSource) {
+    public JDBCDao(Class<Entity> entityClass, JDBCContext jdbcContext) {
         this.entityClass = entityClass;
-        this.dialect = findDialect(dataSource);
+        this.jdbcContext = jdbcContext;
+        this.sqlRunner = jdbcContext.sqlRunner();
         this.tableInfo = new AnnotationConfigTable(entityClass);
-        this.sqlRunner = new SQLRunner(dataSource);
         this.entityBeanListHandler = ofBeanList(this.entityClass, (field) -> {
             var columnInfo = this.tableInfo.getColumn(field.getName());
             return columnInfo == null ? null : columnInfo.name();
@@ -123,7 +116,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
         var insertValues = Arrays.stream(insertColumnInfos).map(columnInfo -> "?").toArray(String[]::new);
         var sql = Insert(tableInfo.name(), insertColumns)
                 .Values(insertValues)
-                .GetSQL(this.dialect);
+                .GetSQL(jdbcContext.dialect());
         var objectArray = Arrays.stream(insertColumnInfos).map(c -> c.javaFieldValue(entity)).toArray();
         return SQL.ofPlaceholder(sql, objectArray);
     }
@@ -166,7 +159,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
         var insertValues = Arrays.stream(insertColumnInfos).map(c -> "?").toArray(String[]::new);
         var sql = Insert(tableInfo.name(), insertColumns)
                 .Values(insertValues)
-                .GetSQL(this.dialect);
+                .GetSQL(jdbcContext.dialect());
         return SQL.ofPlaceholder(sql, objectArrayList);
     }
 
@@ -245,7 +238,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
                 .GroupBy(groupByColumns)
                 .OrderBy(orderByClauses)
                 .Limit(query.limit().offset(), query.limit().rowCount())
-                .GetSQL(this.dialect);
+                .GetSQL(jdbcContext.dialect());
         return SQL.ofPlaceholder(sql, whereClauseAndWhereParams.whereParams());
     }
 
@@ -273,8 +266,8 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
                     .GroupBy(groupByColumns)
                     .OrderBy(orderByClauses)
                     .Limit(query.limit().offset(), query.limit().rowCount())
-                    .GetSQL(this.dialect);
-            var sql = Select("*").From("(" + sql0 + ")").GetSQL(this.dialect);
+                    .GetSQL(jdbcContext.dialect());
+            var sql = Select("*").From("(" + sql0 + ")").GetSQL(jdbcContext.dialect());
             return SQL.ofPlaceholder(sql + " AS " + tableInfo.name() + "_" + RandomUtils.randomString(6), whereClauseAndWhereParams.whereParams());
         }
     }
@@ -303,7 +296,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
                 .From(tableInfo.name())
                 .Where(whereClauseAndWhereParams.whereClause())
                 .GroupBy(groupByColumns)
-                .GetSQL(this.dialect);
+                .GetSQL(jdbcContext.dialect());
         return SQL.ofPlaceholder(sql, whereClauseAndWhereParams.whereParams());
     }
 
@@ -342,7 +335,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
         var sql = Update(tableInfo.name())
                 .Set(updateSetColumns)
                 .Where(whereClauseAndWhereParams.whereClause())
-                .GetSQL(this.dialect);
+                .GetSQL(jdbcContext.dialect());
         var entityParams = Arrays.stream(updateSetColumnInfos).map(c -> c.javaFieldValue(entity)).toArray();
         return SQL.ofPlaceholder(sql, concat(entityParams, whereClauseAndWhereParams.whereParams()));
     }
@@ -371,7 +364,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
         var whereClauseAndWhereParams = whereParser.parseWhere(query.where());
         var sql = Delete(tableInfo.name())
                 .Where(whereClauseAndWhereParams.whereClause())
-                .GetSQL(this.dialect);
+                .GetSQL(jdbcContext.dialect());
         return SQL.ofPlaceholder(sql, whereClauseAndWhereParams.whereParams());
     }
 
