@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 
 public class SQLiteLocalDateTimeTypeHandler extends LocalDateTimeTypeHandler {
 
-    public static final Logger logger = LoggerFactory.getLogger(SQLiteDialect.class);
+    public static final Logger logger = LoggerFactory.getLogger(SQLiteLocalDateTimeTypeHandler.class);
 
     @Override
     public void setObject(PreparedStatement ps, int i, LocalDateTime parameter) throws SQLException {
