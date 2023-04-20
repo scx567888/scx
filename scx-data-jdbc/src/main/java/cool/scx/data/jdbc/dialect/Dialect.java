@@ -248,12 +248,12 @@ public abstract class Dialect {
     }
 
     @SuppressWarnings("unchecked")
-    public <T> TypeHandler<T> findTypeHandler(Type type) {
+    public final <T> TypeHandler<T> findTypeHandler(Type type) {
         return (TypeHandler<T>) TYPE_HANDLER_MAP.computeIfAbsent(type, this::createTypeHandler);
     }
 
     @SuppressWarnings("unchecked")
-    private <E extends Enum<E>> TypeHandler<?> createTypeHandler(Type type) {
+    public final <E extends Enum<E>> TypeHandler<?> createTypeHandler(Type type) {
         if (type instanceof Class<?> clazz) {
             if (isEnum(clazz)) {
                 var enumClass = clazz.isAnonymousClass() ? clazz.getSuperclass() : clazz;
