@@ -1,8 +1,8 @@
 package cool.scx.core.base;
 
 import cool.scx.core.ScxContext;
-import cool.scx.data.ColumnFilter;
 import cool.scx.data.Query;
+import cool.scx.data.jdbc.ColumnFilter;
 import cool.scx.data.jdbc.JDBCDao;
 import cool.scx.data.jdbc.sql.SQL;
 import cool.scx.data.jdbc.sql.SQLRunner;
@@ -11,7 +11,7 @@ import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
 import java.util.List;
 
-import static cool.scx.data.ColumnFilter.ofExcluded;
+import static cool.scx.data.jdbc.ColumnFilter.ofExcluded;
 
 /**
  * 提供一些针对 BaseModel 类型实体类 简单的 CRUD 操作的 service 类
