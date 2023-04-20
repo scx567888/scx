@@ -253,7 +253,7 @@ public abstract class Dialect {
     }
 
     @SuppressWarnings("unchecked")
-    public final <E extends Enum<E>> TypeHandler<?> createTypeHandler(Type type) {
+    private <E extends Enum<E>> TypeHandler<?> createTypeHandler(Type type) {
         if (type instanceof Class<?> clazz) {
             if (isEnum(clazz)) {
                 var enumClass = clazz.isAnonymousClass() ? clazz.getSuperclass() : clazz;
