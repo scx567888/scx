@@ -22,7 +22,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static cool.scx.data.jdbc.result_handler.ResultHandler.ofBeanList;
 import static cool.scx.data.jdbc.result_handler.ResultHandler.ofMapList;
 import static cool.scx.data.jdbc.sql.SQL.ofNormal;
-import static cool.scx.data.jdbc.sqlite.test.MetaDataTest.getSQLiteDataSource;
+import static cool.scx.data.jdbc.sqlite.test.ScxDaoTest.getSQLiteDataSource;
 
 public class SQLRunnerTest {
 
