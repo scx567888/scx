@@ -1,5 +1,7 @@
 package cool.scx.data.jdbc.result_handler;
 
+import cool.scx.data.jdbc.type_handler.TypeHandlerSelector;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -21,7 +23,7 @@ record MapHandler(Supplier<Map<String, Object>> mapSupplier) implements ResultHa
     }
 
     @Override
-    public Map<String, Object> apply(ResultSet rs) throws SQLException {
+    public Map<String, Object> apply(ResultSet rs, TypeHandlerSelector typeHandlerSelector) throws SQLException {
         var rsm = rs.getMetaData();
         var count = rsm.getColumnCount();
         if (rs.next()) {

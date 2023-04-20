@@ -1,6 +1,7 @@
 package cool.scx.data.jdbc.result_handler;
 
 import cool.scx.data.jdbc.bean_builder.BeanBuilder;
+import cool.scx.data.jdbc.type_handler.TypeHandlerSelector;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,7 +15,8 @@ import java.sql.SQLException;
 record BeanHandler<T>(BeanBuilder<T> beanBuilder) implements ResultHandler<T> {
 
     @Override
-    public T apply(ResultSet rs) throws SQLException {
+    public T apply(ResultSet rs, TypeHandlerSelector typeHandlerSelector) throws SQLException {
+        beanBuilder.setTypeHandlerSelector(typeHandlerSelector);
         var indexInfo = beanBuilder.getIndexInfo(rs.getMetaData());
         return rs.next() ? beanBuilder.createBean(rs, indexInfo) : null;
     }

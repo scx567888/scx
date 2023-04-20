@@ -1,8 +1,8 @@
 package cool.scx.data.jdbc.result_handler;
 
 import cool.scx.data.jdbc.bean_builder.BeanBuilder;
+import cool.scx.data.jdbc.type_handler.TypeHandlerSelector;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.function.Consumer;
@@ -16,19 +16,14 @@ import java.util.function.Consumer;
 record BeanConsumerHandler<T>(BeanBuilder<T> beanBuilder, Consumer<T> consumer) implements ResultHandler<Void> {
 
     @Override
-    public Void apply(ResultSet rs) throws SQLException {
+    public Void apply(ResultSet rs, TypeHandlerSelector typeHandlerSelector) throws SQLException {
+        beanBuilder.setTypeHandlerSelector(typeHandlerSelector);
         var indexInfo = beanBuilder.getIndexInfo(rs.getMetaData());
         while (rs.next()) {
             T t = beanBuilder.createBean(rs, indexInfo);
             consumer.accept(t);
         }
         return null;
-    }
-
-    @Override
-    public PreparedStatement beforeExecuteQuery(PreparedStatement preparedStatement) throws SQLException {
-        preparedStatement.setFetchSize(Integer.MIN_VALUE);
-        return preparedStatement;
     }
 
 }

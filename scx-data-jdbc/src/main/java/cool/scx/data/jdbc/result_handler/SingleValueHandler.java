@@ -1,5 +1,7 @@
 package cool.scx.data.jdbc.result_handler;
 
+import cool.scx.data.jdbc.type_handler.TypeHandlerSelector;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -65,7 +67,7 @@ final class SingleValueHandler<T> implements ResultHandler<T> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public T apply(ResultSet rs) throws SQLException {
+    public T apply(ResultSet rs, TypeHandlerSelector typeHandlerSelector) throws SQLException {
         if (rs.next()) {
             if (this.clazz == null) {
                 return (T) (this.useName ? rs.getObject(this.columnName) : rs.getObject(this.columnIndex));

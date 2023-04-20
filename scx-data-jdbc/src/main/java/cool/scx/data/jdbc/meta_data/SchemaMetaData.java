@@ -2,7 +2,8 @@ package cool.scx.data.jdbc.meta_data;
 
 import cool.scx.data.jdbc.mapping.Schema;
 
-import java.sql.DatabaseMetaData;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public final class SchemaMetaData implements Schema {
 
@@ -30,15 +31,15 @@ public final class SchemaMetaData implements Schema {
         return tables;
     }
 
-    public SchemaMetaData refreshTables(DatabaseMetaData dbMetaData) {
-        return refreshTables(dbMetaData, false);
+    public SchemaMetaData refreshTables(Connection connection) throws SQLException {
+        return refreshTables(connection, false);
     }
 
-    public SchemaMetaData refreshTables(DatabaseMetaData dbMetaData, boolean deep) {
-        this.tables = MetaDataHelper.initTables(dbMetaData, this.catalog, this.name, null, null);
+    public SchemaMetaData refreshTables(Connection connection, boolean deep) throws SQLException {
+        this.tables = MetaDataHelper.initTables(connection, this.catalog, this.name, null, null);
         if (deep) {
             for (var table : tables) {
-                table.refreshColumns(dbMetaData);
+                table.refreshColumns(connection);
             }
         }
         return this;

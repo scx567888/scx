@@ -1,5 +1,7 @@
 package cool.scx.data.jdbc.bean_builder;
 
+import cool.scx.data.jdbc.type_handler.TypeHandlerSelector;
+
 import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -13,19 +15,21 @@ import java.util.function.Function;
  * @author scx567888
  * @version 0.2.1
  */
-public interface BeanBuilder<T> {
+public abstract class BeanBuilder<T> {
 
-    static <T> BeanBuilder<T> of(Class<T> type) {
+    private TypeHandlerSelector lastTypeHandlerSelector;
+
+    public static <T> BeanBuilder<T> of(Class<T> type) {
         return type.isRecord() ? new RecordBeanBuilder<>(type) : new NormalBeanBuilder<>(type);
     }
 
-    static <T> BeanBuilder<T> of(Class<T> type, Function<Field, String> columnNameMapping) {
+    public static <T> BeanBuilder<T> of(Class<T> type, Function<Field, String> columnNameMapping) {
         return type.isRecord() ? new RecordBeanBuilder<>(type, columnNameMapping) : new NormalBeanBuilder<>(type, columnNameMapping);
     }
 
-    T createBean(ResultSet rs, int[] indexInfo) throws SQLException;
+    public abstract T createBean(ResultSet rs, int[] indexInfo) throws SQLException;
 
-    FieldSetter[] fieldSetters();
+    public abstract FieldSetter[] fieldSetters();
 
     /**
      * 返回 fieldSetters 索引对应的 rsm 的索引数组 若无对应则使用 -1 占位
@@ -34,7 +38,7 @@ public interface BeanBuilder<T> {
      * @return f
      * @throws SQLException f
      */
-    default int[] getIndexInfo(ResultSetMetaData rsm) throws SQLException {
+    public final int[] getIndexInfo(ResultSetMetaData rsm) throws SQLException {
         var count = rsm.getColumnCount();
         var nameIndexMap = new HashMap<String, Integer>();
         for (int i = 1; i <= count; i = i + 1) {
@@ -46,6 +50,21 @@ public interface BeanBuilder<T> {
             indexInfo[i] = nameIndexMap.getOrDefault(setters[i].columnName(), -1);
         }
         return indexInfo;
+    }
+
+    /**
+     * 刷新 fieldSetter 对应的 TypeHandler
+     *
+     * @param typeHandlerSelector t
+     */
+    public final void setTypeHandlerSelector(TypeHandlerSelector typeHandlerSelector) {
+        if (lastTypeHandlerSelector != typeHandlerSelector) {
+            lastTypeHandlerSelector = typeHandlerSelector;
+            for (var fieldSetter : fieldSetters()) {
+                var typeHandler = lastTypeHandlerSelector.findTypeHandler(fieldSetter.javaField().getGenericType());
+                fieldSetter.setTypeHandler(typeHandler);
+            }
+        }
     }
 
 }

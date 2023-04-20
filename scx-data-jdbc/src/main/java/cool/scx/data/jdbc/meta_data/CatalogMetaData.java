@@ -2,7 +2,8 @@ package cool.scx.data.jdbc.meta_data;
 
 import cool.scx.data.jdbc.mapping.Catalog;
 
-import java.sql.DatabaseMetaData;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public final class CatalogMetaData implements Catalog {
 
@@ -24,15 +25,15 @@ public final class CatalogMetaData implements Catalog {
         return schemas;
     }
 
-    public CatalogMetaData refreshSchemas(DatabaseMetaData dbMetaData) {
-        return refreshSchemas(dbMetaData, false);
+    public CatalogMetaData refreshSchemas(Connection connection) throws SQLException {
+        return refreshSchemas(connection, false);
     }
 
-    public CatalogMetaData refreshSchemas(DatabaseMetaData dbMetaData, boolean deep) {
-        schemas = MetaDataHelper.initSchemas(dbMetaData, this.name, null);
+    public CatalogMetaData refreshSchemas(Connection connection, boolean deep) throws SQLException {
+        schemas = MetaDataHelper.initSchemas(connection, this.name, null);
         if (deep) {
             for (var schema : schemas) {
-                schema.refreshTables(dbMetaData, deep);
+                schema.refreshTables(connection, deep);
             }
         }
         return this;

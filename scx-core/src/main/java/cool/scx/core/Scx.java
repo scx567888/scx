@@ -251,7 +251,7 @@ public final class Scx {
             var tableInfo = new AnnotationConfigTable(v);
             try {
                 if (SchemaHelper.checkNeedFixTable(tableInfo, databaseName, dataSource)) {
-                    SchemaHelper.fixTable(tableInfo, databaseName, dataSource);
+                    SchemaHelper.fixTable(tableInfo, databaseName, jdbcContext);
                     fixSuccess = fixSuccess + 1;
                 } else {
                     noNeedToFix = noNeedToFix + 1;

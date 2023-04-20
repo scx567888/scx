@@ -1,13 +1,11 @@
 package cool.scx.data.jdbc.sql;
 
 import cool.scx.data.jdbc.JDBCContext;
-import cool.scx.data.jdbc.dialect.Dialect;
 import cool.scx.data.jdbc.result_handler.ResultHandler;
 import cool.scx.functional.ScxConsumer;
 import cool.scx.functional.ScxFunction;
 import cool.scx.functional.ScxRunnable;
 
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -34,12 +32,7 @@ public final class SQLRunner {
      */
     private static final InheritableThreadLocal<Connection> CONNECTION_THREAD_LOCAL = new InheritableThreadLocal<>();
 
-    /**
-     * 数据源
-     */
-    private final DataSource dataSource;
-
-    private final Dialect dialect;
+    private final JDBCContext jdbcContext;
 
     /**
      * 根据数据源构建一个 SQLRunner
@@ -47,76 +40,7 @@ public final class SQLRunner {
      * @param jdbcContext a DataSource object
      */
     public SQLRunner(JDBCContext jdbcContext) {
-        this.dataSource = jdbcContext.dataSource();
-        this.dialect = jdbcContext.dialect();
-    }
-
-    /**
-     * a
-     *
-     * @param con           a
-     * @param sql           a
-     * @param resultHandler a
-     * @return a
-     * @throws SQLException a
-     */
-    public static <T> T query(Connection con, SQL sql, ResultHandler<T> resultHandler) throws SQLException {
-        try (var preparedStatement = con.prepareStatement(sql.sql(), TYPE_FORWARD_ONLY, CONCUR_READ_ONLY)) {
-            sql.fillParams(preparedStatement);
-            resultHandler.beforeExecuteQuery(preparedStatement);
-            var resultSet = preparedStatement.executeQuery();
-            return resultHandler.apply(resultSet);
-        }
-    }
-
-    /**
-     * a
-     *
-     * @param con a
-     * @param sql a
-     * @return a
-     * @throws SQLException a
-     */
-    public static long execute(Connection con, SQL sql) throws SQLException {
-        try (var preparedStatement = con.prepareStatement(sql.sql(), RETURN_GENERATED_KEYS)) {
-            sql.fillParams(preparedStatement);
-            preparedStatement.execute();
-            return preparedStatement.getLargeUpdateCount();
-        }
-    }
-
-    /**
-     * a
-     *
-     * @param con a
-     * @param sql a
-     * @return a
-     * @throws SQLException a
-     */
-    public static UpdateResult update(Connection con, SQL sql) throws SQLException {
-        try (var preparedStatement = con.prepareStatement(sql.sql(), RETURN_GENERATED_KEYS)) {
-            sql.fillParams(preparedStatement);
-            var affectedItemsCount = preparedStatement.executeLargeUpdate();
-            var generatedKeys = getGeneratedKeys(preparedStatement);
-            return new UpdateResult(affectedItemsCount, generatedKeys);
-        }
-    }
-
-    /**
-     * 批量执行更新语句
-     *
-     * @param sql cool.scx.sql
-     * @param con a Connection object
-     * @return r
-     * @throws SQLException if any.
-     */
-    public static UpdateResult updateBatch(Connection con, SQL sql) throws SQLException {
-        try (var preparedStatement = con.prepareStatement(sql.sql(), RETURN_GENERATED_KEYS)) {
-            sql.fillParams(preparedStatement);
-            var affectedItemsCount = preparedStatement.executeLargeBatch().length;
-            var generatedKeys = getGeneratedKeys(preparedStatement);
-            return new UpdateResult(affectedItemsCount, generatedKeys);
-        }
+        this.jdbcContext = jdbcContext;
     }
 
     /**
@@ -172,6 +96,74 @@ public final class SQLRunner {
                 ids.add(resultSet.getLong(1));
             }
             return ids;
+        }
+    }
+
+    /**
+     * a
+     *
+     * @param con           a
+     * @param sql           a
+     * @param resultHandler a
+     * @return a
+     * @throws SQLException a
+     */
+    public <T> T query(Connection con, SQL sql, ResultHandler<T> resultHandler) throws SQLException {
+        try (var preparedStatement = con.prepareStatement(sql.sql(), TYPE_FORWARD_ONLY, CONCUR_READ_ONLY)) {
+            sql.fillParams(preparedStatement, jdbcContext.typeHandlerSelector());
+            jdbcContext.dialect().beforeExecuteQuery(preparedStatement);
+            var resultSet = preparedStatement.executeQuery();
+            return resultHandler.apply(resultSet, jdbcContext.typeHandlerSelector());
+        }
+    }
+
+    /**
+     * a
+     *
+     * @param con a
+     * @param sql a
+     * @return a
+     * @throws SQLException a
+     */
+    public long execute(Connection con, SQL sql) throws SQLException {
+        try (var preparedStatement = con.prepareStatement(sql.sql(), RETURN_GENERATED_KEYS)) {
+            sql.fillParams(preparedStatement, jdbcContext.typeHandlerSelector());
+            preparedStatement.execute();
+            return preparedStatement.getLargeUpdateCount();
+        }
+    }
+
+    /**
+     * a
+     *
+     * @param con a
+     * @param sql a
+     * @return a
+     * @throws SQLException a
+     */
+    public UpdateResult update(Connection con, SQL sql) throws SQLException {
+        try (var preparedStatement = con.prepareStatement(sql.sql(), RETURN_GENERATED_KEYS)) {
+            sql.fillParams(preparedStatement, jdbcContext.typeHandlerSelector());
+            var affectedItemsCount = preparedStatement.executeLargeUpdate();
+            var generatedKeys = getGeneratedKeys(preparedStatement);
+            return new UpdateResult(affectedItemsCount, generatedKeys);
+        }
+    }
+
+    /**
+     * 批量执行更新语句
+     *
+     * @param sql cool.scx.sql
+     * @param con a Connection object
+     * @return r
+     * @throws SQLException if any.
+     */
+    public UpdateResult updateBatch(Connection con, SQL sql) throws SQLException {
+        try (var preparedStatement = con.prepareStatement(sql.sql(), RETURN_GENERATED_KEYS)) {
+            sql.fillParams(preparedStatement, jdbcContext.typeHandlerSelector());
+            var affectedItemsCount = preparedStatement.executeLargeBatch().length;
+            var generatedKeys = getGeneratedKeys(preparedStatement);
+            return new UpdateResult(affectedItemsCount, generatedKeys);
         }
     }
 
@@ -346,7 +338,7 @@ public final class SQLRunner {
      * @throws SQLException a
      */
     private Connection getConnection(boolean autoCommit) throws SQLException {
-        var con = dataSource.getConnection();
+        var con = jdbcContext.dataSource().getConnection();
         con.setAutoCommit(autoCommit);
         return con;
     }

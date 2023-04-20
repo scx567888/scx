@@ -5,8 +5,8 @@ import cool.scx.data.jdbc.mapping.Column;
 import cool.scx.data.jdbc.mapping.Table;
 
 import javax.sql.DataSource;
-import java.sql.Driver;
-import java.sql.Statement;
+import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,6 +30,14 @@ public interface Dialect {
      * @return 是否可以处理
      */
     boolean canHandle(Driver driver);
+
+    /**
+     * 是否可以处理
+     *
+     * @param connection 连接
+     * @return 是否可以处理
+     */
+    boolean canHandle(Connection connection);
 
     /**
      * 　获取最终的 SQL, 一般用于 Debug
@@ -161,6 +169,25 @@ public interface Dialect {
         s.append(columnDefinitionStr);
         s.append("\n;");
         return s.toString();
+    }
+
+    /**
+     * 执行前
+     *
+     * @param preparedStatement a
+     * @return a
+     * @throws SQLException a
+     */
+    default PreparedStatement beforeExecuteQuery(PreparedStatement preparedStatement) throws SQLException {
+        return preparedStatement;
+    }
+
+    default void setLocalDateTime(PreparedStatement ps, int i, LocalDateTime parameter) throws SQLException {
+        ps.setObject(i, parameter);
+    }
+
+    default LocalDateTime getLocalDateTime(ResultSet rs, int index) throws SQLException {
+        return rs.getObject(index, LocalDateTime.class);
     }
 
 }

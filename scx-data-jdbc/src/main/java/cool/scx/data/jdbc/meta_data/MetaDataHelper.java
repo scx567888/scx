@@ -1,7 +1,10 @@
 package cool.scx.data.jdbc.meta_data;
 
+import cool.scx.data.jdbc.dialect.DialectSelector;
 import cool.scx.data.jdbc.result_handler.ResultHandler;
+import cool.scx.data.jdbc.type_handler.TypeHandlerSelector;
 
+import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -18,8 +21,12 @@ public final class MetaDataHelper {
     private static final ResultHandler<List<_PrimaryKey>> PRIMARY_KEY_LIST_HANDLER = ResultHandler.ofBeanList(_PrimaryKey.class);
     private static final ResultHandler<List<_IndexInfo>> INDEX_INFO_LIST_HANDLER = ResultHandler.ofBeanList(_IndexInfo.class);
 
-    public static List<_Catalog> getCatalogs(DatabaseMetaData dbMetaData) throws SQLException {
-        var catalogs = CATALOG_LIST_HANDLER.apply(dbMetaData.getCatalogs());
+    private static TypeHandlerSelector findTypeHandlerSelector(Connection connection) {
+        return new TypeHandlerSelector(DialectSelector.findDialect(connection));
+    }
+
+    public static List<_Catalog> getCatalogs(Connection connection) throws SQLException {
+        var catalogs = CATALOG_LIST_HANDLER.apply(connection.getMetaData().getCatalogs(), findTypeHandlerSelector(connection));
         // 因为存在一些数据库没有 Catalog 所以这里默认返回虚拟的一个 Catalog
         if (catalogs.size() == 0) {
             catalogs = List.of(new _Catalog(null));
@@ -27,9 +34,9 @@ public final class MetaDataHelper {
         return catalogs;
     }
 
-
-    public static List<_Schema> getSchemas(DatabaseMetaData dbMetaData, String catalog, String schemaPattern) throws SQLException {
-        var schemas = SCHEMA_LIST_HANDLER.apply(dbMetaData.getSchemas(catalog, schemaPattern));
+    public static List<_Schema> getSchemas(Connection connection, String catalog, String schemaPattern) throws SQLException {
+        var resultSet = connection.getMetaData().getSchemas(catalog, schemaPattern);
+        var schemas = SCHEMA_LIST_HANDLER.apply(resultSet, findTypeHandlerSelector(connection));
         // 因为存在一些数据库没有 Schema 所以这里默认返回虚拟的一个 Schema
         if (schemas.size() == 0) {
             schemas = List.of(new _Schema(null, catalog));
@@ -37,27 +44,25 @@ public final class MetaDataHelper {
         return schemas;
     }
 
-    public static List<_Table> getTables(DatabaseMetaData dbMetaData, String catalog, String schemaPattern, String tableNamePattern, String[] types) throws SQLException {
-        return TABLE_LIST_HANDLER.apply(dbMetaData.getTables(catalog, schemaPattern, tableNamePattern, types));
+    public static List<_Table> getTables(Connection connection, String catalog, String schemaPattern, String tableNamePattern, String[] types) throws SQLException {
+        return TABLE_LIST_HANDLER.apply(connection.getMetaData().getTables(catalog, schemaPattern, tableNamePattern, types), findTypeHandlerSelector(connection));
     }
 
-
-    public static List<_Column> getColumns(DatabaseMetaData dbMetaData, String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern) throws SQLException {
-        return COLUMN_LIST_HANDLER.apply(dbMetaData.getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern));
+    public static List<_Column> getColumns(Connection connection, String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern) throws SQLException {
+        return COLUMN_LIST_HANDLER.apply(connection.getMetaData().getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern), findTypeHandlerSelector(connection));
     }
 
-    public static List<_PrimaryKey> getPrimaryKeys(DatabaseMetaData dbMetaData, String catalog, String schemaPattern, String tableNamePattern) throws SQLException {
-        return PRIMARY_KEY_LIST_HANDLER.apply(dbMetaData.getPrimaryKeys(catalog, schemaPattern, tableNamePattern));
+    public static List<_PrimaryKey> getPrimaryKeys(Connection connection, String catalog, String schemaPattern, String tableNamePattern) throws SQLException {
+        return PRIMARY_KEY_LIST_HANDLER.apply(connection.getMetaData().getPrimaryKeys(catalog, schemaPattern, tableNamePattern), findTypeHandlerSelector(connection));
     }
 
-    public static List<_IndexInfo> getIndexInfo(DatabaseMetaData dbMetaData, String catalog, String schema, String table, boolean unique, boolean approximate) throws SQLException {
-        var s = ResultHandler.ofMap().apply(dbMetaData.getIndexInfo(catalog, schema, table, unique, approximate));
-        return INDEX_INFO_LIST_HANDLER.apply(dbMetaData.getIndexInfo(catalog, schema, table, unique, approximate));
+    public static List<_IndexInfo> getIndexInfo(Connection connection, String catalog, String schema, String table, boolean unique, boolean approximate) throws SQLException {
+        return INDEX_INFO_LIST_HANDLER.apply(connection.getMetaData().getIndexInfo(catalog, schema, table, unique, approximate), findTypeHandlerSelector(connection));
     }
 
-    public static CatalogMetaData[] initCatalogs(DatabaseMetaData dbMetaData) {
+    public static CatalogMetaData[] initCatalogs(Connection connection) {
         try {
-            var catalogs = getCatalogs(dbMetaData);
+            var catalogs = getCatalogs(connection);
             if (catalogs.size() > 0) {
                 return catalogs.stream().map(_Catalog::toCatalogMetaData).toArray(CatalogMetaData[]::new);
             }
@@ -67,9 +72,9 @@ public final class MetaDataHelper {
         return new CatalogMetaData[]{new CatalogMetaData(null)};
     }
 
-    public static SchemaMetaData[] initSchemas(DatabaseMetaData dbMetaData, String catalog, String schemaPattern) {
+    public static SchemaMetaData[] initSchemas(Connection connection, String catalog, String schemaPattern) {
         try {
-            var schemas = getSchemas(dbMetaData, catalog, schemaPattern);
+            var schemas = getSchemas(connection, catalog, schemaPattern);
             return schemas.stream().map(_Schema::toSchemaMetaData).toArray(SchemaMetaData[]::new);
         } catch (SQLException ignored) {
 
@@ -77,9 +82,9 @@ public final class MetaDataHelper {
         return new SchemaMetaData[]{new SchemaMetaData(catalog, null)};
     }
 
-    public static TableMetaData[] initTables(DatabaseMetaData dbMetaData, String catalog, String schemaPattern, String tableNamePattern, String[] types) {
+    public static TableMetaData[] initTables(Connection connection, String catalog, String schemaPattern, String tableNamePattern, String[] types) {
         try {
-            var tables = getTables(dbMetaData, catalog, schemaPattern, tableNamePattern, types);
+            var tables = getTables(connection, catalog, schemaPattern, tableNamePattern, types);
             return tables.stream().map(_Table::toTableMetaData).toArray(TableMetaData[]::new);
         } catch (SQLException ignored) {
 
@@ -87,27 +92,27 @@ public final class MetaDataHelper {
         return new TableMetaData[]{};
     }
 
-    public static ColumnMetaData[] initColumns(DatabaseMetaData dbMetaData, String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern, TableMetaData tableMetaData) {
+    public static ColumnMetaData[] initColumns(Connection connection, String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern, TableMetaData tableMetaData) {
         try {
-            var columns = getColumns(dbMetaData, catalog, schemaPattern, tableNamePattern, columnNamePattern);
+            var columns = getColumns(connection, catalog, schemaPattern, tableNamePattern, columnNamePattern);
             return columns.stream().map(column -> column.toColumnMetaData(tableMetaData)).toArray(ColumnMetaData[]::new);
         } catch (SQLException e) {
             return new ColumnMetaData[]{};
         }
     }
 
-    public static KeyMetaData[] initPrimaryKeys(DatabaseMetaData dbMetaData, String catalog, String schemaPattern, String tableNamePattern) {
+    public static KeyMetaData[] initPrimaryKeys(Connection connection, String catalog, String schemaPattern, String tableNamePattern) {
         try {
-            var primaryKeys = getPrimaryKeys(dbMetaData, catalog, schemaPattern, tableNamePattern);
+            var primaryKeys = getPrimaryKeys(connection, catalog, schemaPattern, tableNamePattern);
             return primaryKeys.stream().map(_PrimaryKey::toPrimaryKeyMetaData).toArray(KeyMetaData[]::new);
         } catch (SQLException e) {
             return new KeyMetaData[]{};
         }
     }
 
-    public static IndexMetaData[] initIndexInfo(DatabaseMetaData dbMetaData, String catalog, String schema, String table, boolean unique, boolean approximate) {
+    public static IndexMetaData[] initIndexInfo(Connection connection, String catalog, String schema, String table, boolean unique, boolean approximate) {
         try {
-            var indexInfo = getIndexInfo(dbMetaData, catalog, schema, table, unique, approximate);
+            var indexInfo = getIndexInfo(connection, catalog, schema, table, unique, approximate);
             return indexInfo.stream().map(_IndexInfo::toIndexInfoMetaData).toArray(IndexMetaData[]::new);
         } catch (SQLException e) {
             return new IndexMetaData[]{};

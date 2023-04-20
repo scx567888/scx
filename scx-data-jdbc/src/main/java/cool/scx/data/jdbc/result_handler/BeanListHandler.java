@@ -1,6 +1,7 @@
 package cool.scx.data.jdbc.result_handler;
 
 import cool.scx.data.jdbc.bean_builder.BeanBuilder;
+import cool.scx.data.jdbc.type_handler.TypeHandlerSelector;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,7 +21,8 @@ record BeanListHandler<T>(BeanBuilder<T> beanBuilder) implements ResultHandler<L
      * a
      */
     @Override
-    public List<T> apply(ResultSet rs) throws SQLException {
+    public List<T> apply(ResultSet rs, TypeHandlerSelector typeHandlerSelector) throws SQLException {
+        beanBuilder.setTypeHandlerSelector(typeHandlerSelector);
         var indexInfo = beanBuilder.getIndexInfo(rs.getMetaData());
         var list = new ArrayList<T>();
         //从rs中取出数据，并且封装到ArrayList中

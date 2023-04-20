@@ -1,6 +1,7 @@
 package cool.scx.data.jdbc.dialect;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
 import java.sql.Driver;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,15 @@ public final class DialectSelector {
             }
         }
         throw new IllegalArgumentException("未找到对应的方言 !!! " + dataSource.getClass().getName());
+    }
+
+    public static Dialect findDialect(Connection connection) {
+        for (Dialect dialect : DIALECT_LIST) {
+            if (dialect.canHandle(connection)) {
+                return dialect;
+            }
+        }
+        throw new IllegalArgumentException("未找到对应的方言 !!! " + connection.getClass().getName());
     }
 
 }

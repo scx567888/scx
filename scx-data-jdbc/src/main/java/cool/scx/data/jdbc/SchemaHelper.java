@@ -4,7 +4,6 @@ import cool.scx.data.jdbc.dialect.Dialect;
 import cool.scx.data.jdbc.mapping.Column;
 import cool.scx.data.jdbc.mapping.Table;
 import cool.scx.data.jdbc.sql.SQL;
-import cool.scx.data.jdbc.sql.SQLRunner;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
@@ -50,21 +49,23 @@ public final class SchemaHelper {
      * @param tableInfo a
      * @throws java.sql.SQLException a
      */
-    public static void fixTable(Table<?> tableInfo, String databaseName, DataSource dataSource) throws SQLException {
+    public static void fixTable(Table<?> tableInfo, String databaseName, JDBCContext jdbcContext) throws SQLException {
+        var dataSource = jdbcContext.dataSource();
+        var sqlRunner = jdbcContext.sqlRunner();
         try (var con = dataSource.getConnection()) {
             // 查找同名表
-            var map = toTablesMap(initTables(con.getMetaData(), databaseName, databaseName, tableInfo.name(), null));
+            var map = toTablesMap(initTables(con, databaseName, databaseName, tableInfo.name(), null));
             var tableMetaData = map.get(tableInfo.name());
             if (tableMetaData == null) {// 没有这个表
                 var createTableDDL = findDialect(dataSource).getCreateTableDDL(tableInfo);
-                SQLRunner.execute(con, SQL.ofNormal(createTableDDL));
+                sqlRunner.execute(con, SQL.ofNormal(createTableDDL));
             } else {// 有表, 接下来校验字段
-                var verify = verify(tableMetaData.refreshColumns(con.getMetaData()), tableInfo);
+                var verify = verify(tableMetaData.refreshColumns(con), tableInfo);
                 // 获取不存在的字段
                 var needAdd = verify.needAdd();
                 if (needAdd.length > 0) {
                     var alertTableDDL = findDialect(dataSource).getAlertTableDDL(needAdd, tableInfo);
-                    SQLRunner.execute(con, SQL.ofNormal(alertTableDDL));
+                    sqlRunner.execute(con, SQL.ofNormal(alertTableDDL));
                 }
             }
         }
@@ -80,12 +81,12 @@ public final class SchemaHelper {
     public static boolean checkNeedFixTable(Table<?> tableInfo, String databaseName, DataSource dataSource) throws SQLException {
         try (var con = dataSource.getConnection()) {
             // 查找同名表
-            var map = toTablesMap(initTables(con.getMetaData(), databaseName, databaseName, tableInfo.name(), null));
+            var map = toTablesMap(initTables(con, databaseName, databaseName, tableInfo.name(), null));
             var tableMetaData = map.get(tableInfo.name());
             if (tableMetaData == null) {// 没有这个表
                 return true;
             } else {// 有表, 接下来校验字段
-                var verify = verify(tableMetaData.refreshColumns(con.getMetaData()), tableInfo);
+                var verify = verify(tableMetaData.refreshColumns(con), tableInfo);
                 //获取不存在的字段
                 var needAdd = verify.needAdd();
                 if (needAdd.length > 0) {

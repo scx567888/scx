@@ -2,7 +2,7 @@ package cool.scx.data.jdbc.meta_data;
 
 import cool.scx.data.jdbc.mapping.Table;
 
-import java.sql.DatabaseMetaData;
+import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,10 +48,10 @@ public final class TableMetaData implements Table<ColumnMetaData> {
         return columns;
     }
 
-    public TableMetaData refreshColumns(DatabaseMetaData dbMetaData) {
-        this.keys = MetaDataHelper.initPrimaryKeys(dbMetaData, this.catalog, this.schema, this.name);
-        this.indexes = MetaDataHelper.initIndexInfo(dbMetaData, this.catalog, this.schema, this.name, false, false);
-        this.columns = MetaDataHelper.initColumns(dbMetaData, this.catalog, this.schema, this.name, null, this);
+    public TableMetaData refreshColumns(Connection connection) {
+        this.keys = MetaDataHelper.initPrimaryKeys(connection, this.catalog, this.schema, this.name);
+        this.indexes = MetaDataHelper.initIndexInfo(connection, this.catalog, this.schema, this.name, false, false);
+        this.columns = MetaDataHelper.initColumns(connection, this.catalog, this.schema, this.name, null, this);
         this.columnsMap = MetaDataHelper.toColumnsMap(this.columns);
         return this;
     }

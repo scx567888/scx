@@ -62,14 +62,14 @@ final class PlaceholderSQL implements SQL {
      * @param params            a
      * @throws SQLException a
      */
-    public static void fillPreparedStatement(PreparedStatement preparedStatement, Object[] params) throws SQLException {
+    public static void fillPreparedStatement(PreparedStatement preparedStatement, Object[] params, TypeHandlerSelector typeHandlerSelector) throws SQLException {
         var index = 1;
         for (var tempValue : params) {
             if (tempValue == null) {
                 //这里的 Types.NULL 其实内部并没有使用
                 preparedStatement.setNull(index, Types.NULL);
             } else {
-                var typeHandler = TypeHandlerSelector.findTypeHandler(tempValue.getClass());
+                var typeHandler = typeHandlerSelector.findTypeHandler(tempValue.getClass());
                 typeHandler.setObject(preparedStatement, index, tempValue);
             }
             index = index + 1;
@@ -82,10 +82,10 @@ final class PlaceholderSQL implements SQL {
      * @return a
      * @throws SQLException a
      */
-    private PreparedStatement fillSingle(PreparedStatement preparedStatement) throws SQLException {
+    private PreparedStatement fillSingle(PreparedStatement preparedStatement, TypeHandlerSelector typeHandlerSelector) throws SQLException {
         //单条数据
         if (params != null) {
-            fillPreparedStatement(preparedStatement, params);
+            fillPreparedStatement(preparedStatement, params, typeHandlerSelector);
         }
         return preparedStatement;
     }
@@ -96,12 +96,12 @@ final class PlaceholderSQL implements SQL {
      * @return c
      * @throws SQLException c
      */
-    private PreparedStatement fillBatch(PreparedStatement preparedStatement) throws SQLException {
+    private PreparedStatement fillBatch(PreparedStatement preparedStatement, TypeHandlerSelector typeHandlerSelector) throws SQLException {
         if (batchParams != null) {
             //根据数据量, 判断是否使用 批量插入
             for (var paramArray : batchParams) {
                 if (paramArray != null) {
-                    fillPreparedStatement(preparedStatement, paramArray);
+                    fillPreparedStatement(preparedStatement, paramArray, typeHandlerSelector);
                     preparedStatement.addBatch();
                 }
             }
@@ -115,8 +115,8 @@ final class PlaceholderSQL implements SQL {
     }
 
     @Override
-    public PreparedStatement fillParams(PreparedStatement preparedStatement) throws SQLException {
-        return isBatch ? fillBatch(preparedStatement) : fillSingle(preparedStatement);
+    public PreparedStatement fillParams(PreparedStatement preparedStatement, TypeHandlerSelector typeHandlerSelector) throws SQLException {
+        return isBatch ? fillBatch(preparedStatement, typeHandlerSelector) : fillSingle(preparedStatement, typeHandlerSelector);
     }
 
     @Override

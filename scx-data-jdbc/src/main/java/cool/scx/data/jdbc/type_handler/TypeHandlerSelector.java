@@ -1,5 +1,6 @@
 package cool.scx.data.jdbc.type_handler;
 
+import cool.scx.data.jdbc.dialect.Dialect;
 import cool.scx.data.jdbc.type_handler.math.BigDecimalTypeHandler;
 import cool.scx.data.jdbc.type_handler.math.BigIntegerTypeHandler;
 import cool.scx.data.jdbc.type_handler.primitive.*;
@@ -19,9 +20,10 @@ import static cool.scx.util.reflect.ClassUtils.isEnum;
 
 public final class TypeHandlerSelector {
 
-    private static final Map<Type, TypeHandler<?>> TYPE_HANDLER_MAP = new ConcurrentHashMap<>();
+    private final Map<Type, TypeHandler<?>> TYPE_HANDLER_MAP = new ConcurrentHashMap<>();
 
-    static {
+    public TypeHandlerSelector(Dialect dialect) {
+
         // 基本类型
         TYPE_HANDLER_MAP.put(boolean.class, new BooleanTypeHandler(true));
         TYPE_HANDLER_MAP.put(char.class, new CharacterTypeHandler(true));
@@ -53,7 +55,7 @@ public final class TypeHandlerSelector {
 
 
         // 时间
-        TYPE_HANDLER_MAP.put(LocalDateTime.class, new LocalDateTimeTypeHandler());
+        TYPE_HANDLER_MAP.put(LocalDateTime.class, new LocalDateTimeTypeHandler(dialect));
         TYPE_HANDLER_MAP.put(LocalDate.class, new LocalDateTypeHandler());
         TYPE_HANDLER_MAP.put(LocalTime.class, new LocalTimeTypeHandler());
         TYPE_HANDLER_MAP.put(OffsetDateTime.class, new OffsetDateTimeTypeHandler());
@@ -72,12 +74,12 @@ public final class TypeHandlerSelector {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> TypeHandler<T> findTypeHandler(Type type) {
-        return (TypeHandler<T>) TYPE_HANDLER_MAP.computeIfAbsent(type, TypeHandlerSelector::createTypeHandler);
+    public <T> TypeHandler<T> findTypeHandler(Type type) {
+        return (TypeHandler<T>) TYPE_HANDLER_MAP.computeIfAbsent(type, this::createTypeHandler);
     }
 
     @SuppressWarnings("unchecked")
-    private static <E extends Enum<E>> TypeHandler<?> createTypeHandler(Type type) {
+    private <E extends Enum<E>> TypeHandler<?> createTypeHandler(Type type) {
         if (type instanceof Class<?> clazz) {
             if (isEnum(clazz)) {
                 var enumClass = clazz.isAnonymousClass() ? clazz.getSuperclass() : clazz;

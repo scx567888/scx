@@ -1,10 +1,9 @@
 package cool.scx.data.jdbc.result_handler;
 
 import cool.scx.data.jdbc.bean_builder.BeanBuilder;
-import cool.scx.functional.ScxFunction;
+import cool.scx.data.jdbc.type_handler.TypeHandlerSelector;
 
 import java.lang.reflect.Field;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -19,7 +18,7 @@ import java.util.function.Supplier;
  * @author scx567888
  * @version 0.0.7
  */
-public interface ResultHandler<T> extends ScxFunction<ResultSet, T, SQLException> {
+public interface ResultHandler<T> {
 
     static ResultHandler<Map<String, Object>> ofMap() {
         return MapHandler.INSTANCE;
@@ -77,15 +76,6 @@ public interface ResultHandler<T> extends ScxFunction<ResultSet, T, SQLException
         return new SingleValueHandler<>(columnIndex, clazz);
     }
 
-    /**
-     * 执行前
-     *
-     * @param preparedStatement a
-     * @return a
-     * @throws SQLException a
-     */
-    default PreparedStatement beforeExecuteQuery(PreparedStatement preparedStatement) throws SQLException {
-        return preparedStatement;
-    }
+    T apply(ResultSet rs, TypeHandlerSelector typeHandlerSelector) throws SQLException;
 
 }

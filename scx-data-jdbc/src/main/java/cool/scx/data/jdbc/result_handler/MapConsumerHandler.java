@@ -1,6 +1,7 @@
 package cool.scx.data.jdbc.result_handler;
 
-import java.sql.PreparedStatement;
+import cool.scx.data.jdbc.type_handler.TypeHandlerSelector;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -27,7 +28,7 @@ record MapConsumerHandler(Supplier<Map<String, Object>> mapSupplier,
      * a
      */
     @Override
-    public Void apply(ResultSet rs) throws SQLException {
+    public Void apply(ResultSet rs, TypeHandlerSelector typeHandlerSelector) throws SQLException {
         var rsm = rs.getMetaData();
         var count = rsm.getColumnCount();
         while (rs.next()) {
@@ -38,12 +39,6 @@ record MapConsumerHandler(Supplier<Map<String, Object>> mapSupplier,
             consumer.accept(map);
         }
         return null;
-    }
-
-    @Override
-    public PreparedStatement beforeExecuteQuery(PreparedStatement preparedStatement) throws SQLException {
-        preparedStatement.setFetchSize(Integer.MIN_VALUE);
-        return preparedStatement;
     }
 
 }
