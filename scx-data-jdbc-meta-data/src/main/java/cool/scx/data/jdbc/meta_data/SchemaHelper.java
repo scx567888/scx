@@ -1,5 +1,6 @@
-package cool.scx.data.jdbc;
+package cool.scx.data.jdbc.meta_data;
 
+import cool.scx.data.jdbc.JDBCContext;
 import cool.scx.data.jdbc.dialect.Dialect;
 import cool.scx.data.jdbc.mapping.Column;
 import cool.scx.data.jdbc.mapping.Table;

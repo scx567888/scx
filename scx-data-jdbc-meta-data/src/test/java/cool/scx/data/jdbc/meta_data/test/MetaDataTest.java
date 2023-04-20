@@ -1,6 +1,8 @@
-package cool.scx.data.jdbc.sqlite.test;
+package cool.scx.data.jdbc.meta_data.test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.mysql.cj.conf.PropertyKey;
+import com.mysql.cj.jdbc.MysqlDataSource;
 import cool.scx.data.jdbc.meta_data.DataSourceMetaData;
 import cool.scx.util.reflect.ClassUtils;
 import org.sqlite.SQLiteDataSource;
@@ -15,8 +17,8 @@ import java.sql.SQLException;
 
 public class MetaDataTest {
 
-    public static final Path TempSQLite;
     public static final String databaseName = "scx_sql_test";
+    public static final Path TempSQLite;
     public static Path AppRoot;
 
     static {
@@ -28,6 +30,21 @@ public class MetaDataTest {
             throw new RuntimeException(e);
         }
     }
+
+    public static DataSource getMySQLDataSource() {
+        var mysqlDataSource = new MysqlDataSource();
+        mysqlDataSource.setServerName("127.0.0.1");
+        mysqlDataSource.setUser("root");
+        mysqlDataSource.setPassword("root");
+        mysqlDataSource.setPort(3306);
+        mysqlDataSource.setDatabaseName(databaseName);
+        // 设置参数值
+        mysqlDataSource.getProperty(PropertyKey.allowMultiQueries).setValue(true);
+        mysqlDataSource.getProperty(PropertyKey.rewriteBatchedStatements).setValue(true);
+        mysqlDataSource.getProperty(PropertyKey.createDatabaseIfNotExist).setValue(true);
+        return mysqlDataSource;
+    }
+
 
     public static DataSource getSQLiteDataSource() {
         SQLiteDataSource sqLiteDataSource = new SQLiteDataSource();
@@ -41,6 +58,8 @@ public class MetaDataTest {
 
     @Test
     public static void test1() throws SQLException, JsonProcessingException {
+        test1_1(getMySQLDataSource());
+        test1_2(getMySQLDataSource());
         test1_1(getSQLiteDataSource());
         test1_2(getSQLiteDataSource());
     }
