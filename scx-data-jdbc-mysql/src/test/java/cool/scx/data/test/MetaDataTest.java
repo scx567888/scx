@@ -16,20 +16,8 @@ import java.sql.SQLException;
 import static com.mysql.cj.conf.PropertyKey.*;
 
 public class MetaDataTest {
-
-    public static final Path TempSQLite;
+    
     public static final String databaseName = "scx_sql_test";
-    public static Path AppRoot;
-
-    static {
-        try {
-            AppRoot = ClassUtils.getAppRoot(ClassUtils.getCodeSource(MetaDataTest.class));
-            TempSQLite = AppRoot.resolve("temp").resolve("temp.sqlite");
-            Files.createDirectories(TempSQLite.getParent());
-        } catch (URISyntaxException | IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     public static DataSource getMySQLDataSource() {
         var mysqlDataSource = new MysqlDataSource();
