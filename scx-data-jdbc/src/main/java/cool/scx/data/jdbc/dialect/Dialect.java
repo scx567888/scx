@@ -102,14 +102,6 @@ public abstract class Dialect {
     public abstract boolean canHandle(Driver driver);
 
     /**
-     * 是否可以处理
-     *
-     * @param connection 连接
-     * @return 是否可以处理
-     */
-    public abstract boolean canHandle(Connection connection);
-
-    /**
      * 　获取最终的 SQL, 一般用于 Debug
      *
      * @param statement s

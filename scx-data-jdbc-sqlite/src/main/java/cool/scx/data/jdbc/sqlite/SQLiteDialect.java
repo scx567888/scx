@@ -62,15 +62,6 @@ public class SQLiteDialect extends Dialect {
     }
 
     @Override
-    public boolean canHandle(Connection connection) {
-        try {
-            return connection instanceof SQLiteConnection || connection.isWrapperFor(SQLiteConnection.class);
-        } catch (SQLException e) {
-            return false;
-        }
-    }
-
-    @Override
     public String getFinalSQL(Statement statement) {
         CorePreparedStatement corePreparedStatement;
         try {

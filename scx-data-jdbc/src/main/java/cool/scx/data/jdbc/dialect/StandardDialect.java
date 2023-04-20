@@ -27,11 +27,6 @@ public final class StandardDialect extends Dialect {
     }
 
     @Override
-    public boolean canHandle(Connection connection) {
-        return false;
-    }
-
-    @Override
     public String getFinalSQL(Statement statement) {
         return null;
     }

@@ -89,15 +89,6 @@ public class MySQLDialect extends Dialect {
     }
 
     @Override
-    public boolean canHandle(Connection connection) {
-        try {
-            return connection instanceof JdbcConnection || connection.isWrapperFor(JdbcConnection.class);
-        } catch (SQLException e) {
-            return false;
-        }
-    }
-
-    @Override
     public String getFinalSQL(Statement preparedStatement) {
         ClientPreparedStatement clientPreparedStatement;
         try {
