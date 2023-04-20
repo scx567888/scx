@@ -20,6 +20,11 @@ import static cool.scx.util.reflect.ClassUtils.isEnum;
 
 public final class TypeHandlerSelector {
 
+    /**
+     * 最基本的 未提供任何拓展能力的 TypeHandlerSelector (只支持基础类型)
+     */
+    public static final TypeHandlerSelector BASIC_TYPE_HANDLER_SELECTOR = new TypeHandlerSelector(null);
+
     private final Map<Type, TypeHandler<?>> TYPE_HANDLER_MAP = new ConcurrentHashMap<>();
 
     public TypeHandlerSelector(Dialect dialect) {
