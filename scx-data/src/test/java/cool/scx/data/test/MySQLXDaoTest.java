@@ -69,8 +69,8 @@ public class MySQLXDaoTest {
         var query4 = new Query().equal("userInfo.email", "88@test.com", WhereOption.USE_JSON_EXTRACT);
 
         var sessionFactory = new SessionFactory();
-        var session = sessionFactory.getSession("mysqlx://127.0.0.1:33060/" + databaseName + "?user=root&password=root");
-        var schema = session.getDefaultSchema();
+        var session = sessionFactory.getSession("mysqlx://127.0.0.1:33060?user=root&password=root");
+        var schema = session.createSchema(databaseName, true);
         var mySQLXDao = new MySQLXDao<>(User.class, schema);
 
         mySQLXDao._clear();
