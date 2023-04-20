@@ -15,6 +15,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
 
+import static com.mysql.cj.conf.PropertyKey.*;
+
 public class MetaDataTest {
 
     public static final String databaseName = "scx_sql_test";
@@ -39,9 +41,9 @@ public class MetaDataTest {
         mysqlDataSource.setPort(3306);
         mysqlDataSource.setDatabaseName(databaseName);
         // 设置参数值
-        mysqlDataSource.getProperty(PropertyKey.allowMultiQueries).setValue(true);
-        mysqlDataSource.getProperty(PropertyKey.rewriteBatchedStatements).setValue(true);
-        mysqlDataSource.getProperty(PropertyKey.createDatabaseIfNotExist).setValue(true);
+        mysqlDataSource.getProperty(allowMultiQueries).setValue(true);
+        mysqlDataSource.getProperty(rewriteBatchedStatements).setValue(true);
+        mysqlDataSource.getProperty(createDatabaseIfNotExist).setValue(true);
         return mysqlDataSource;
     }
 
