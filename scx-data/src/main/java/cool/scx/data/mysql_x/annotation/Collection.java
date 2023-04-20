@@ -1,4 +1,4 @@
-package cool.scx.data.annotation;
+package cool.scx.data.mysql_x.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -15,20 +15,20 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Table {
+public @interface Collection {
 
     /**
      * 表名称
      *
      * @return 表全限定名称
      */
-    String tableName() default "";
+    String name() default "";
 
     /**
      * 表名称前缀
      *
      * @return 表前缀
      */
-    String tablePrefix() default "";
+    String prefix() default "";
 
 }

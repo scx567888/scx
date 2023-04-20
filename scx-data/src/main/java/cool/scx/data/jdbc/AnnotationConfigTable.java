@@ -1,6 +1,6 @@
-package cool.scx.data;
+package cool.scx.data.jdbc;
 
-import cool.scx.data.annotation.NoColumn;
+import cool.scx.data.jdbc.annotation.NoColumn;
 import cool.scx.data.jdbc.mapping.Table;
 import cool.scx.util.CaseUtils;
 import cool.scx.util.MultiMap;
@@ -36,7 +36,7 @@ public class AnnotationConfigTable implements Table<AnnotationConfigColumn> {
     }
 
     public static String initTableName(Class<?> clazz) {
-        var scxModel = clazz.getAnnotation(cool.scx.data.annotation.Table.class);
+        var scxModel = clazz.getAnnotation(cool.scx.data.jdbc.annotation.Table.class);
         if (scxModel != null && StringUtils.notBlank(scxModel.tableName())) {
             return scxModel.tableName();
         }

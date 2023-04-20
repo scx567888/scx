@@ -112,7 +112,6 @@ interface WhereTypeHandler {
         return new WhereClauseAndWhereParams(whereClause, whereParams);
     };
 
-
     WhereClauseAndWhereParams getWhereClauseAndWhereParams(String name, WhereType whereType, Object value1, Object value2, WhereOption.Info info);
 
 }

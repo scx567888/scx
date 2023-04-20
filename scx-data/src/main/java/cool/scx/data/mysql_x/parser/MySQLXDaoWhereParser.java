@@ -9,6 +9,8 @@ import static cool.scx.data.mysql_x.parser.WhereTypeHandler.*;
 
 public class MySQLXDaoWhereParser extends WhereParser {
 
+    public static final MySQLXDaoWhereParser WHERE_PARSER = new MySQLXDaoWhereParser();
+
     static WhereTypeHandler findWhereTypeHandler(WhereType whereType) {
         return switch (whereType) {
             case IS_NULL -> IS_NULL_HANDLER;

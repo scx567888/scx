@@ -65,6 +65,11 @@ public interface BaseDao<Entity, ID> {
     long count(Query query);
 
     /**
+     * 清空整个映射对象 (慎用)
+     */
+    void _clear();
+
+    /**
      * 获取 类
      *
      * @return a

@@ -1,6 +1,5 @@
 package cool.scx.data.query.parser;
 
-import cool.scx.data.jdbc.sql.SQL;
 import cool.scx.data.query.AND;
 import cool.scx.data.query.Logic;
 import cool.scx.data.query.Where;
@@ -24,13 +23,11 @@ public abstract class WhereParser {
         return new WhereClauseAndWhereParams(whereClause.toString(), whereParams.toArray());
     }
 
-    public final WhereClauseAndWhereParams parse(Object obj) {
+    public WhereClauseAndWhereParams parse(Object obj) {
         if (obj instanceof String str) {
             return parseString(str);
         } else if (obj instanceof WhereBody whereBody) {
             return parseWhereBody(whereBody);
-        } else if (obj instanceof SQL s) {
-            return parseSQL(s);
         } else if (obj instanceof Logic l) {
             return parseLogic(l);
         } else {
@@ -40,10 +37,6 @@ public abstract class WhereParser {
 
     public final WhereClauseAndWhereParams parseString(String str) {
         return new WhereClauseAndWhereParams(str, new Object[]{});
-    }
-
-    public final WhereClauseAndWhereParams parseSQL(SQL sql) {
-        return new WhereClauseAndWhereParams("(" + sql.sql() + ")", sql.params());
     }
 
     public final WhereClauseAndWhereParams parseLogic(Logic l) {

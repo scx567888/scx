@@ -360,7 +360,8 @@ public class JDBCDao<Entity> implements BaseDao<Entity, Long> {
     /**
      * 清空表中所有数据 (注意此操作不受事务影响, 所以慎用!!!)
      */
-    public final void _truncate() {
+    @Override
+    public final void _clear() {
         this.sqlRunner.execute(SQL.ofNormal("truncate " + tableInfo.name()));
     }
 

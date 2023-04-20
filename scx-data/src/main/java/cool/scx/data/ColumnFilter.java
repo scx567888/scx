@@ -1,5 +1,6 @@
 package cool.scx.data;
 
+import cool.scx.data.column_filter.FilterMode;
 import cool.scx.data.jdbc.mapping.Table;
 
 import java.util.ArrayList;
@@ -260,31 +261,13 @@ public final class ColumnFilter {
         return Arrays.stream(scxDaoColumnInfos).filter(field -> field.javaFieldValue(entity) != null).toArray(ColumnMapping[]::new);
     }
 
-    /**
-     * 过滤模式
-     */
-    public enum FilterMode {
 
-        /**
-         * 包含模式
-         */
-        INCLUDED,
+    public Set<String> fieldNames() {
+        return fieldNames;
+    }
 
-        /**
-         * 排除模式
-         */
-        EXCLUDED;
-
-        /**
-         * a
-         *
-         * @param filterModeStr a
-         * @return a
-         */
-        public static FilterMode of(String filterModeStr) {
-            return valueOf(filterModeStr.trim().toUpperCase());
-        }
-
+    public boolean excludeIfFieldValueIsNull() {
+        return excludeIfFieldValueIsNull;
     }
 
 }
