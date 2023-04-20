@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static cool.scx.core.eventbus.ZeroCopyMessageCodec.ZERO_COPY_CODEC_NAME;
-import static cool.scx.data.ColumnFilter.ofIncluded;
+import static cool.scx.data.jdbc.ColumnFilter.ofIncluded;
 import static org.testng.Assert.assertEquals;
 
 public class TestModule extends ScxModule {

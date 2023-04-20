@@ -1,0 +1,36 @@
+package cool.scx.data.jdbc.result_handler;
+
+import cool.scx.data.jdbc.bean_builder.BeanBuilder;
+import cool.scx.data.jdbc.dialect.Dialect;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * a
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
+record BeanListHandler<T>(BeanBuilder<T> beanBuilder) implements ResultHandler<List<T>> {
+
+    /**
+     * {@inheritDoc}
+     * a
+     */
+    @Override
+    public List<T> apply(ResultSet rs, Dialect dialect) throws SQLException {
+        beanBuilder.setTypeHandlerSelector(dialect);
+        var indexInfo = beanBuilder.getIndexInfo(rs.getMetaData());
+        var list = new ArrayList<T>();
+        //从rs中取出数据，并且封装到ArrayList中
+        while (rs.next()) {
+            T t = beanBuilder.createBean(rs, indexInfo);
+            list.add(t);
+        }
+        return list;
+    }
+
+}

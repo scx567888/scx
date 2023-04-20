@@ -1,8 +1,8 @@
 package cool.scx.core.base;
 
 import cool.scx.core.ScxContext;
-import cool.scx.data.ColumnFilter;
 import cool.scx.data.Query;
+import cool.scx.data.jdbc.ColumnFilter;
 import cool.scx.data.jdbc.JDBCDao;
 import cool.scx.data.jdbc.sql.SQL;
 import cool.scx.data.jdbc.sql.SQLRunner;
@@ -11,7 +11,7 @@ import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
 import java.util.List;
 
-import static cool.scx.data.ColumnFilter.ofExcluded;
+import static cool.scx.data.jdbc.ColumnFilter.ofExcluded;
 
 /**
  * 提供一些针对 BaseModel 类型实体类 简单的 CRUD 操作的 service 类
@@ -41,7 +41,7 @@ public class BaseModelService<Entity extends BaseModel> {
         if (genericSuperclass instanceof ParameterizedType) {
             var typeArguments = ((ParameterizedType) genericSuperclass).getActualTypeArguments();
             var entityClass = (Class<Entity>) typeArguments[0];
-            this.baseDao = new JDBCDao<>(entityClass, ScxContext.dataSource());
+            this.baseDao = new JDBCDao<>(entityClass, ScxContext.jdbcContext());
         } else {
             throw new IllegalArgumentException(this.getClass().getName() + " : 必须设置泛型参数 !!!");
         }
@@ -53,7 +53,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @param entityClass 继承自 {@link BaseModel} 的实体类 class
      */
     public BaseModelService(Class<Entity> entityClass) {
-        this.baseDao = new JDBCDao<>(entityClass, ScxContext.dataSource());
+        this.baseDao = new JDBCDao<>(entityClass, ScxContext.jdbcContext());
     }
 
     /**

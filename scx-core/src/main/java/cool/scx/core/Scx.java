@@ -8,7 +8,8 @@ import cool.scx.core.enumeration.ScxCoreFeature;
 import cool.scx.core.eventbus.MessageCodecRegistrar;
 import cool.scx.core.scheduler.ScxScheduler;
 import cool.scx.data.jdbc.AnnotationConfigTable;
-import cool.scx.data.jdbc.SchemaHelper;
+import cool.scx.data.jdbc.JDBCContext;
+import cool.scx.data.jdbc.meta_data.SchemaHelper;
 import cool.scx.data.jdbc.sql.SQLRunner;
 import cool.scx.mvc.ScxMvc;
 import cool.scx.mvc.ScxMvcOptions;
@@ -60,7 +61,7 @@ public final class Scx {
 
     private final DataSource dataSource;
 
-    private final SQLRunner sqlRunner;
+    private final JDBCContext jdbcContext;
 
     private final ScxMvc scxMvc;
 
@@ -92,7 +93,7 @@ public final class Scx {
         this.beanFactory = initBeanFactory(this.scxModules, this.vertx.nettyEventLoopGroup(), this.scxFeatureConfig);
         //6, 初始化数据源及 sqlRunner
         this.dataSource = initDataSource(this.scxOptions, this.scxFeatureConfig);
-        this.sqlRunner = new SQLRunner(this.dataSource);
+        this.jdbcContext = new JDBCContext(dataSource);
         //7, 初始化 MVC
         this.scxMvc = new ScxMvc(new ScxMvcOptions().templateRoot(scxOptions.templateRoot()).useDevelopmentErrorPage(scxFeatureConfig.get(ScxCoreFeature.USE_DEVELOPMENT_ERROR_PAGE)));
         //8, 初始化任务调度器
@@ -250,7 +251,7 @@ public final class Scx {
             var tableInfo = new AnnotationConfigTable(v);
             try {
                 if (SchemaHelper.checkNeedFixTable(tableInfo, databaseName, dataSource)) {
-                    SchemaHelper.fixTable(tableInfo, databaseName, dataSource);
+                    SchemaHelper.fixTable(tableInfo, databaseName, jdbcContext);
                     fixSuccess = fixSuccess + 1;
                 } else {
                     noNeedToFix = noNeedToFix + 1;
@@ -359,7 +360,11 @@ public final class Scx {
     }
 
     public SQLRunner sqlRunner() {
-        return sqlRunner;
+        return jdbcContext.sqlRunner();
+    }
+
+    public JDBCContext jdbcContext() {
+        return jdbcContext;
     }
 
     public HttpServer vertxHttpServer() {

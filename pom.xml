@@ -46,6 +46,13 @@
         <module>scx-config</module>
         <module>scx-core</module>
         <module>scx-data</module>
+        <module>scx-data-jdbc</module>
+        <module>scx-data-jdbc-meta-data</module>
+        <module>scx-data-jdbc-mysql</module>
+        <module>scx-data-jdbc-spy</module>
+        <module>scx-data-jdbc-sqlite</module>
+        <module>scx-data-mongodb</module>
+        <module>scx-data-mysql-x</module>
         <module>scx-logging</module>
         <module>scx-mvc</module>
     </modules>
