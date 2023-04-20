@@ -58,7 +58,7 @@ public class MetaDataTest {
     public static void test1_1(DataSource dataSource) throws SQLException, JsonProcessingException {
         System.out.println("完全内省 !!!");
         try (var con = dataSource.getConnection()) {
-            var dataSourceMetaData = new DataSourceMetaData().refreshCatalogs(con.getMetaData(), true);
+            var dataSourceMetaData = new DataSourceMetaData().refreshCatalogs(con, true);
             for (var catalog : dataSourceMetaData.catalogs()) {
                 System.out.println(catalog.name() + " : ");
                 System.out.println("{");
@@ -88,17 +88,17 @@ public class MetaDataTest {
     public static void test1_2(DataSource dataSource) throws SQLException, JsonProcessingException {
         System.out.println("按需内省 !!!");
         try (var con = dataSource.getConnection()) {
-            var dataSourceMetaData = new DataSourceMetaData().refreshCatalogs(con.getMetaData());
+            var dataSourceMetaData = new DataSourceMetaData().refreshCatalogs(con);
             for (var catalog : dataSourceMetaData.catalogs()) {
                 System.out.println(catalog.name() + " : ");
                 System.out.println("{");
-                for (var schema : catalog.refreshSchemas(con.getMetaData()).schemas()) {
+                for (var schema : catalog.refreshSchemas(con).schemas()) {
                     System.out.println("    " + schema.name() + " : ");
                     System.out.println("    {");
-                    for (var table : schema.refreshTables(con.getMetaData()).tables()) {
+                    for (var table : schema.refreshTables(con).tables()) {
                         System.out.println("        " + table.name() + " : ");
                         System.out.println("        {");
-                        for (var column : table.refreshColumns(con.getMetaData()).columns()) {
+                        for (var column : table.refreshColumns(con).columns()) {
                             System.out.println("            " + column.name() + " " + column.typeName() + "(" + column.columnSize() + ")" + (column.notNull() ? " NOT NULL" : " NULL") + (column.autoIncrement() ? " AUTOINCREMENT" : "") + " DEFAULT : " + column.defaultValue() + ", REMARKS : " + column.remarks());
                         }
                         for (var primaryKey : table.keys()) {

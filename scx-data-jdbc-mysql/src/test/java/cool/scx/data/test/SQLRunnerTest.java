@@ -1,6 +1,7 @@
 package cool.scx.data.test;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
+import cool.scx.data.jdbc.JDBCContext;
 import cool.scx.data.jdbc.result_handler.ResultHandler;
 import cool.scx.data.jdbc.sql.SQL;
 import cool.scx.data.jdbc.sql.SQLRunner;
@@ -28,7 +29,7 @@ public class SQLRunnerTest {
 
     private static final String databaseName = "scx_sql_test";
     private static final DataSource dataSource = getMySQLDataSource();
-    private static final SQLRunner sqlRunner = new SQLRunner(dataSource);
+    private static final SQLRunner sqlRunner = new JDBCContext(dataSource).sqlRunner();
     private static final String tableName = "`scx_sql_test`.`t1`";
 
     static {

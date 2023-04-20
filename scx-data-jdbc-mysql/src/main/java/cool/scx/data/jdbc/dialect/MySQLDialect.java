@@ -4,15 +4,13 @@ import com.mysql.cj.MysqlType;
 import com.mysql.cj.NativeQueryBindings;
 import com.mysql.cj.PreparedQuery;
 import com.mysql.cj.jdbc.ClientPreparedStatement;
+import com.mysql.cj.jdbc.JdbcConnection;
 import com.mysql.cj.jdbc.MysqlDataSource;
 import cool.scx.data.jdbc.mapping.Column;
 import cool.scx.data.jdbc.mapping.Table;
 
 import javax.sql.DataSource;
-import java.sql.Driver;
-import java.sql.SQLException;
-import java.sql.SQLType;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -90,6 +88,15 @@ public class MySQLDialect implements Dialect {
     }
 
     @Override
+    public boolean canHandle(Connection connection) {
+        try {
+            return connection instanceof JdbcConnection || connection.isWrapperFor(JdbcConnection.class);
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+
+    @Override
     public String getFinalSQL(Statement preparedStatement) {
         ClientPreparedStatement clientPreparedStatement;
         try {
@@ -163,6 +170,12 @@ public class MySQLDialect implements Dialect {
     @Override
     public String defaultDateType() {
         return "VARCHAR(128)";
+    }
+
+    @Override
+    public PreparedStatement beforeExecuteQuery(PreparedStatement preparedStatement) throws SQLException {
+        preparedStatement.setFetchSize(Integer.MIN_VALUE);
+        return preparedStatement;
     }
 
 }
