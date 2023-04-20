@@ -3,7 +3,6 @@ package cool.scx.data.jdbc.dialect;
 import cool.scx.data.jdbc.mapping.Column;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.Statement;
 import java.util.List;

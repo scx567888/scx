@@ -1,7 +1,6 @@
 package cool.scx.data.jdbc.dialect;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
 import java.sql.Driver;
 import java.util.ArrayList;
 import java.util.List;

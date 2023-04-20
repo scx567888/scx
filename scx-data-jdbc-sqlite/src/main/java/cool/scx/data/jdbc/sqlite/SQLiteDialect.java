@@ -5,7 +5,6 @@ import cool.scx.data.jdbc.mapping.Column;
 import cool.scx.data.jdbc.sqlite.type_handler.SQLiteLocalDateTimeTypeHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sqlite.SQLiteConnection;
 import org.sqlite.SQLiteDataSource;
 import org.sqlite.core.CorePreparedStatement;
 import org.sqlite.core.CoreStatement;
@@ -13,7 +12,6 @@ import org.sqlite.jdbc4.JDBC4PreparedStatement;
 
 import javax.sql.DataSource;
 import java.lang.reflect.Field;
-import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.SQLException;
 import java.sql.Statement;

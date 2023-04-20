@@ -4,7 +4,6 @@ import com.mysql.cj.MysqlType;
 import com.mysql.cj.NativeQueryBindings;
 import com.mysql.cj.PreparedQuery;
 import com.mysql.cj.jdbc.ClientPreparedStatement;
-import com.mysql.cj.jdbc.JdbcConnection;
 import com.mysql.cj.jdbc.MysqlDataSource;
 import cool.scx.data.jdbc.dialect.Dialect;
 import cool.scx.data.jdbc.mapping.Column;
