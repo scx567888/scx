@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mysql.cj.jdbc.MysqlDataSource;
 import cool.scx.data.jdbc.meta_data.DataSourceMetaData;
 import cool.scx.util.reflect.ClassUtils;
-import org.sqlite.SQLiteDataSource;
 import org.testng.annotations.Test;
 
 import javax.sql.DataSource;
@@ -46,12 +45,6 @@ public class MetaDataTest {
         return mysqlDataSource;
     }
 
-    public static DataSource getSQLiteDataSource() {
-        SQLiteDataSource sqLiteDataSource = new SQLiteDataSource();
-        sqLiteDataSource.setUrl("jdbc:sqlite:" + TempSQLite);
-        return sqLiteDataSource;
-    }
-
     public static void main(String[] args) throws SQLException, JsonProcessingException {
         test1();
     }
@@ -59,9 +52,7 @@ public class MetaDataTest {
     @Test
     public static void test1() throws SQLException, JsonProcessingException {
         test1_1(getMySQLDataSource());
-        test1_1(getSQLiteDataSource());
         test1_2(getMySQLDataSource());
-        test1_2(getSQLiteDataSource());
     }
 
     public static void test1_1(DataSource dataSource) throws SQLException, JsonProcessingException {
