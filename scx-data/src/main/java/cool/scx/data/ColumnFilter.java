@@ -211,14 +211,6 @@ public final class ColumnFilter {
         return filterMode;
     }
 
-    public Set<String> fieldNames() {
-        return fieldNames;
-    }
-
-    public boolean excludeIfFieldValueIsNull() {
-        return excludeIfFieldValueIsNull;
-    }
-
     /**
      * 过滤
      *
@@ -268,6 +260,14 @@ public final class ColumnFilter {
                 yield objects.toArray(ColumnMapping[]::new);
             }
         };
+    }
+
+    public Set<String> fieldNames() {
+        return fieldNames;
+    }
+
+    public boolean excludeIfFieldValueIsNull() {
+        return excludeIfFieldValueIsNull;
     }
 
 }
