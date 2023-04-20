@@ -201,7 +201,7 @@ public final class ColumnFilter {
         this.fieldNames.clear();
         return this;
     }
-    
+
     /**
      * 过滤
      *
