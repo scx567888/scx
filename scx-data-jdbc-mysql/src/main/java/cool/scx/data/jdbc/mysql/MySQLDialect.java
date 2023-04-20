@@ -22,7 +22,7 @@ import static cool.scx.util.StringUtils.notBlank;
 /**
  * @see <a href="https://dev.mysql.com/doc/refman/8.0/en/create-table.html">https://dev.mysql.com/doc/refman/8.0/en/create-table.html</a>
  */
-public class MySQLDialect implements Dialect {
+public class MySQLDialect extends Dialect {
 
     private static final Map<Class<?>, MysqlType> DEFAULT_MYSQL_TYPES;
 

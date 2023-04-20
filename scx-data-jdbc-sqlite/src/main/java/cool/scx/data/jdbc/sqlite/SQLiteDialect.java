@@ -2,6 +2,7 @@ package cool.scx.data.jdbc.sqlite;
 
 import cool.scx.data.jdbc.dialect.Dialect;
 import cool.scx.data.jdbc.mapping.Column;
+import cool.scx.data.jdbc.sqlite.type_handler.SQLiteLocalDateTimeTypeHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sqlite.SQLiteConnection;
@@ -12,7 +13,10 @@ import org.sqlite.jdbc4.JDBC4PreparedStatement;
 
 import javax.sql.DataSource;
 import java.lang.reflect.Field;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.Driver;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +26,7 @@ import static cool.scx.util.StringUtils.notBlank;
 /**
  * @see <a href="https://www.sqlite.org/lang_createtable.html">https://www.sqlite.org/lang_createtable.html</a>
  */
-public class SQLiteDialect implements Dialect {
+public class SQLiteDialect extends Dialect {
 
     public static final Logger logger = LoggerFactory.getLogger(SQLiteDialect.class);
 
@@ -139,16 +143,9 @@ public class SQLiteDialect implements Dialect {
     }
 
     @Override
-    public void setLocalDateTime(PreparedStatement ps, int i, LocalDateTime parameter) throws SQLException {
-        logger.warn("当前驱动不支持 LocalDateTime, 尝试使用 Timestamp 进行转换 !!!");
-        ps.setTimestamp(i, Timestamp.valueOf(parameter));
-    }
-
-    @Override
-    public LocalDateTime getLocalDateTime(ResultSet rs, int index) throws SQLException {
-        logger.warn("当前驱动不支持 LocalDateTime, 尝试使用 Timestamp 进行转换 !!!");
-        var timestamp = rs.getTimestamp(index);
-        return timestamp != null ? timestamp.toLocalDateTime() : null;
+    public void initTypeHandler() {
+        super.initTypeHandler();
+        TYPE_HANDLER_MAP.put(LocalDateTime.class, new SQLiteLocalDateTimeTypeHandler());
     }
 
 }

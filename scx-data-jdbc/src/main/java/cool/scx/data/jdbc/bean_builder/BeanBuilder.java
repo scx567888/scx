@@ -1,6 +1,6 @@
 package cool.scx.data.jdbc.bean_builder;
 
-import cool.scx.data.jdbc.type_handler.TypeHandlerSelector;
+import cool.scx.data.jdbc.dialect.Dialect;
 
 import java.lang.reflect.Field;
 import java.sql.ResultSet;
@@ -17,7 +17,7 @@ import java.util.function.Function;
  */
 public abstract class BeanBuilder<T> {
 
-    private TypeHandlerSelector lastTypeHandlerSelector;
+    private Dialect lastTypeHandlerSelector;
 
     public static <T> BeanBuilder<T> of(Class<T> type) {
         return type.isRecord() ? new RecordBeanBuilder<>(type) : new NormalBeanBuilder<>(type);
@@ -57,7 +57,7 @@ public abstract class BeanBuilder<T> {
      *
      * @param typeHandlerSelector t
      */
-    public final void setTypeHandlerSelector(TypeHandlerSelector typeHandlerSelector) {
+    public final void setTypeHandlerSelector(Dialect typeHandlerSelector) {
         if (lastTypeHandlerSelector != typeHandlerSelector) {
             lastTypeHandlerSelector = typeHandlerSelector;
             for (var fieldSetter : fieldSetters()) {

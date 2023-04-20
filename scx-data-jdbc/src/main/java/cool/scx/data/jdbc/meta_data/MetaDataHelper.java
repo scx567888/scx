@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static cool.scx.data.jdbc.type_handler.TypeHandlerSelector.BASIC_TYPE_HANDLER_SELECTOR;
+import static cool.scx.data.jdbc.dialect.StandardDialect.STANDARD_DIALECT;
 
 public final class MetaDataHelper {
 
@@ -22,7 +22,7 @@ public final class MetaDataHelper {
     private static final ResultHandler<List<_IndexInfo>> INDEX_INFO_LIST_HANDLER = ResultHandler.ofBeanList(_IndexInfo.class);
 
     public static List<_Catalog> getCatalogs(Connection connection) throws SQLException {
-        var catalogs = CATALOG_LIST_HANDLER.apply(connection.getMetaData().getCatalogs(), BASIC_TYPE_HANDLER_SELECTOR);
+        var catalogs = CATALOG_LIST_HANDLER.apply(connection.getMetaData().getCatalogs(), STANDARD_DIALECT);
         // 因为存在一些数据库没有 Catalog 所以这里默认返回虚拟的一个 Catalog
         if (catalogs.size() == 0) {
             catalogs = List.of(new _Catalog(null));
@@ -32,7 +32,7 @@ public final class MetaDataHelper {
 
     public static List<_Schema> getSchemas(Connection connection, String catalog, String schemaPattern) throws SQLException {
         var resultSet = connection.getMetaData().getSchemas(catalog, schemaPattern);
-        var schemas = SCHEMA_LIST_HANDLER.apply(resultSet, BASIC_TYPE_HANDLER_SELECTOR);
+        var schemas = SCHEMA_LIST_HANDLER.apply(resultSet, STANDARD_DIALECT);
         // 因为存在一些数据库没有 Schema 所以这里默认返回虚拟的一个 Schema
         if (schemas.size() == 0) {
             schemas = List.of(new _Schema(null, catalog));
@@ -41,19 +41,19 @@ public final class MetaDataHelper {
     }
 
     public static List<_Table> getTables(Connection connection, String catalog, String schemaPattern, String tableNamePattern, String[] types) throws SQLException {
-        return TABLE_LIST_HANDLER.apply(connection.getMetaData().getTables(catalog, schemaPattern, tableNamePattern, types), BASIC_TYPE_HANDLER_SELECTOR);
+        return TABLE_LIST_HANDLER.apply(connection.getMetaData().getTables(catalog, schemaPattern, tableNamePattern, types), STANDARD_DIALECT);
     }
 
     public static List<_Column> getColumns(Connection connection, String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern) throws SQLException {
-        return COLUMN_LIST_HANDLER.apply(connection.getMetaData().getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern), BASIC_TYPE_HANDLER_SELECTOR);
+        return COLUMN_LIST_HANDLER.apply(connection.getMetaData().getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern), STANDARD_DIALECT);
     }
 
     public static List<_PrimaryKey> getPrimaryKeys(Connection connection, String catalog, String schemaPattern, String tableNamePattern) throws SQLException {
-        return PRIMARY_KEY_LIST_HANDLER.apply(connection.getMetaData().getPrimaryKeys(catalog, schemaPattern, tableNamePattern), BASIC_TYPE_HANDLER_SELECTOR);
+        return PRIMARY_KEY_LIST_HANDLER.apply(connection.getMetaData().getPrimaryKeys(catalog, schemaPattern, tableNamePattern), STANDARD_DIALECT);
     }
 
     public static List<_IndexInfo> getIndexInfo(Connection connection, String catalog, String schema, String table, boolean unique, boolean approximate) throws SQLException {
-        return INDEX_INFO_LIST_HANDLER.apply(connection.getMetaData().getIndexInfo(catalog, schema, table, unique, approximate), BASIC_TYPE_HANDLER_SELECTOR);
+        return INDEX_INFO_LIST_HANDLER.apply(connection.getMetaData().getIndexInfo(catalog, schema, table, unique, approximate), STANDARD_DIALECT);
     }
 
     public static CatalogMetaData[] initCatalogs(Connection connection) {

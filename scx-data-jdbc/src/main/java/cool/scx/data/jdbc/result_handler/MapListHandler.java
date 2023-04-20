@@ -1,6 +1,6 @@
 package cool.scx.data.jdbc.result_handler;
 
-import cool.scx.data.jdbc.type_handler.TypeHandlerSelector;
+import cool.scx.data.jdbc.dialect.Dialect;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -30,7 +30,7 @@ record MapListHandler(Supplier<Map<String, Object>> mapSupplier) implements Resu
      * a
      */
     @Override
-    public List<Map<String, Object>> apply(ResultSet rs, TypeHandlerSelector typeHandlerSelector) throws SQLException {
+    public List<Map<String, Object>> apply(ResultSet rs, Dialect typeHandlerSelector) throws SQLException {
         var list = new ArrayList<Map<String, Object>>();
         var rsm = rs.getMetaData();
         var count = rsm.getColumnCount();

@@ -1,7 +1,7 @@
 package cool.scx.data.jdbc.sql;
 
 
-import cool.scx.data.jdbc.type_handler.TypeHandlerSelector;
+import cool.scx.data.jdbc.dialect.Dialect;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -88,7 +88,7 @@ final class NamedParameterSQL implements SQL {
     }
 
     @Override
-    public PreparedStatement fillParams(PreparedStatement preparedStatement, TypeHandlerSelector typeHandlerSelector) throws SQLException {
+    public PreparedStatement fillParams(PreparedStatement preparedStatement, Dialect typeHandlerSelector) throws SQLException {
         return placeholderSQL.fillParams(preparedStatement, typeHandlerSelector);
     }
 

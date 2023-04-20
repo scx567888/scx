@@ -1,4 +1,4 @@
-package cool.scx.data.test.bean;
+package cool.scx.data.jdbc.sqlite.test.bean;
 
 public record StudentRecord(String name, Integer age, Boolean sex) {
 

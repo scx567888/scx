@@ -1,4 +1,4 @@
-package cool.scx.data.test;
+package cool.scx.data.jdbc.sqlite.test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.data.jdbc.meta_data.DataSourceMetaData;

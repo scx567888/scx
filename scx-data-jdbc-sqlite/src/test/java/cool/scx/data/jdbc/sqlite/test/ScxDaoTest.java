@@ -1,4 +1,4 @@
-package cool.scx.data.test;
+package cool.scx.data.jdbc.sqlite.test;
 
 import cool.scx.data.Query;
 import cool.scx.data.jdbc.AnnotationConfigTable;

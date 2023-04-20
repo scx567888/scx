@@ -1,6 +1,5 @@
 package cool.scx.data.jdbc.type_handler.time;
 
-import cool.scx.data.jdbc.dialect.Dialect;
 import cool.scx.data.jdbc.type_handler.TypeHandler;
 
 import java.sql.PreparedStatement;
@@ -13,20 +12,14 @@ import java.time.LocalDateTime;
  */
 public class LocalDateTimeTypeHandler implements TypeHandler<LocalDateTime> {
 
-    private final Dialect dialect;
-
-    public LocalDateTimeTypeHandler(Dialect dialect) {
-        this.dialect = dialect;
-    }
-
     @Override
     public void setObject(PreparedStatement ps, int i, LocalDateTime parameter) throws SQLException {
-        dialect.setLocalDateTime(ps, i, parameter);
+        ps.setObject(i, parameter);
     }
 
     @Override
     public LocalDateTime getObject(ResultSet rs, int index) throws SQLException {
-        return dialect.getLocalDateTime(rs, index);
+        return rs.getObject(index, LocalDateTime.class);
     }
 
 }

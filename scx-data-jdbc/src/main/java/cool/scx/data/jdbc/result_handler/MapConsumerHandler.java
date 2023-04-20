@@ -1,6 +1,6 @@
 package cool.scx.data.jdbc.result_handler;
 
-import cool.scx.data.jdbc.type_handler.TypeHandlerSelector;
+import cool.scx.data.jdbc.dialect.Dialect;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -28,7 +28,7 @@ record MapConsumerHandler(Supplier<Map<String, Object>> mapSupplier,
      * a
      */
     @Override
-    public Void apply(ResultSet rs, TypeHandlerSelector typeHandlerSelector) throws SQLException {
+    public Void apply(ResultSet rs, Dialect typeHandlerSelector) throws SQLException {
         var rsm = rs.getMetaData();
         var count = rsm.getColumnCount();
         while (rs.next()) {

@@ -3,17 +3,87 @@ package cool.scx.data.jdbc.dialect;
 import cool.scx.data.jdbc.ColumnMapping;
 import cool.scx.data.jdbc.mapping.Column;
 import cool.scx.data.jdbc.mapping.Table;
+import cool.scx.data.jdbc.type_handler.*;
+import cool.scx.data.jdbc.type_handler.math.BigDecimalTypeHandler;
+import cool.scx.data.jdbc.type_handler.math.BigIntegerTypeHandler;
+import cool.scx.data.jdbc.type_handler.primitive.*;
+import cool.scx.data.jdbc.type_handler.time.*;
 
 import javax.sql.DataSource;
+import java.io.InputStream;
+import java.io.Reader;
+import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.sql.*;
-import java.time.LocalDateTime;
+import java.time.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import static cool.scx.util.StringUtils.notEmpty;
+import static cool.scx.util.reflect.ClassUtils.isEnum;
 
-public interface Dialect {
+public abstract class Dialect {
+
+    protected final Map<Type, TypeHandler<?>> TYPE_HANDLER_MAP = new ConcurrentHashMap<>();
+
+    public Dialect() {
+        initTypeHandler();
+    }
+
+    public void initTypeHandler() {
+        // 基本类型
+        TYPE_HANDLER_MAP.put(boolean.class, new BooleanTypeHandler(true));
+        TYPE_HANDLER_MAP.put(char.class, new CharacterTypeHandler(true));
+        TYPE_HANDLER_MAP.put(byte.class, new ByteTypeHandler(true));
+        TYPE_HANDLER_MAP.put(short.class, new ShortTypeHandler(true));
+        TYPE_HANDLER_MAP.put(int.class, new IntegerTypeHandler(true));
+        TYPE_HANDLER_MAP.put(long.class, new LongTypeHandler(true));
+        TYPE_HANDLER_MAP.put(float.class, new FloatTypeHandler(true));
+        TYPE_HANDLER_MAP.put(double.class, new DoubleTypeHandler(true));
+        TYPE_HANDLER_MAP.put(Boolean.class, new BooleanTypeHandler(false));
+        TYPE_HANDLER_MAP.put(Character.class, new CharacterTypeHandler(false));
+        TYPE_HANDLER_MAP.put(Byte.class, new ByteTypeHandler(false));
+        TYPE_HANDLER_MAP.put(Short.class, new ShortTypeHandler(false));
+        TYPE_HANDLER_MAP.put(Integer.class, new IntegerTypeHandler(false));
+        TYPE_HANDLER_MAP.put(Long.class, new LongTypeHandler(false));
+        TYPE_HANDLER_MAP.put(Float.class, new FloatTypeHandler(false));
+        TYPE_HANDLER_MAP.put(Double.class, new DoubleTypeHandler(false));
+
+
+        // 常用类型
+        TYPE_HANDLER_MAP.put(String.class, new StringTypeHandler());
+        TYPE_HANDLER_MAP.put(Byte[].class, new ByteObjectArrayTypeHandler());
+        TYPE_HANDLER_MAP.put(byte[].class, new ByteArrayTypeHandler());
+
+
+        // 大数字
+        TYPE_HANDLER_MAP.put(BigInteger.class, new BigIntegerTypeHandler());
+        TYPE_HANDLER_MAP.put(BigDecimal.class, new BigDecimalTypeHandler());
+
+
+        // 时间
+        TYPE_HANDLER_MAP.put(LocalDateTime.class, new LocalDateTimeTypeHandler());
+        TYPE_HANDLER_MAP.put(LocalDate.class, new LocalDateTypeHandler());
+        TYPE_HANDLER_MAP.put(LocalTime.class, new LocalTimeTypeHandler());
+        TYPE_HANDLER_MAP.put(OffsetDateTime.class, new OffsetDateTimeTypeHandler());
+        TYPE_HANDLER_MAP.put(OffsetTime.class, new OffsetTimeTypeHandler());
+        TYPE_HANDLER_MAP.put(ZonedDateTime.class, new ZonedDateTimeTypeHandler());
+        TYPE_HANDLER_MAP.put(Month.class, new MonthTypeHandler());
+        TYPE_HANDLER_MAP.put(Year.class, new YearTypeHandler());
+        TYPE_HANDLER_MAP.put(YearMonth.class, new YearMonthTypeHandler());
+        TYPE_HANDLER_MAP.put(Date.class, new DateTypeHandler());
+        TYPE_HANDLER_MAP.put(Instant.class, new InstantTypeHandler());
+        TYPE_HANDLER_MAP.put(Duration.class, new DurationTypeHandler());
+
+        //clob and blow
+        TYPE_HANDLER_MAP.put(InputStream.class, new BlobInputStreamTypeHandler());
+        TYPE_HANDLER_MAP.put(Reader.class, new ClobReaderTypeHandler());
+    }
 
     /**
      * 是否可以处理
@@ -21,7 +91,7 @@ public interface Dialect {
      * @param dataSource 数据源
      * @return 是否可以处理
      */
-    boolean canHandle(DataSource dataSource);
+    public abstract boolean canHandle(DataSource dataSource);
 
     /**
      * 是否可以处理
@@ -29,7 +99,7 @@ public interface Dialect {
      * @param driver 驱动
      * @return 是否可以处理
      */
-    boolean canHandle(Driver driver);
+    public abstract boolean canHandle(Driver driver);
 
     /**
      * 是否可以处理
@@ -37,7 +107,7 @@ public interface Dialect {
      * @param connection 连接
      * @return 是否可以处理
      */
-    boolean canHandle(Connection connection);
+    public abstract boolean canHandle(Connection connection);
 
     /**
      * 　获取最终的 SQL, 一般用于 Debug
@@ -45,7 +115,7 @@ public interface Dialect {
      * @param statement s
      * @return SQL 语句
      */
-    String getFinalSQL(Statement statement);
+    public abstract String getFinalSQL(Statement statement);
 
     /**
      * 获取分页 SQL
@@ -55,14 +125,14 @@ public interface Dialect {
      * @param offset   偏移量
      * @return SQL 语句
      */
-    String getLimitSQL(String sql, Long offset, Long rowCount);
+    public abstract String getLimitSQL(String sql, Long offset, Long rowCount);
 
     /**
      * 获取建表语句
      *
      * @return s
      */
-    default String getCreateTableDDL(Table<?> tableInfo) {
+    public String getCreateTableDDL(Table<?> tableInfo) {
         var s = new StringBuilder();
         s.append("CREATE TABLE ");
         if (notEmpty(tableInfo.schema())) {
@@ -81,14 +151,14 @@ public interface Dialect {
         return s.toString();
     }
 
-    default List<String> getCreateDefinition(Table<?> table) {
+    public List<String> getCreateDefinition(Table<?> table) {
         var createDefinitions = new ArrayList<String>();
         createDefinitions.addAll(getColumnDefinitions(table.columns()));
         createDefinitions.addAll(getTableConstraint(table));
         return createDefinitions;
     }
 
-    default List<String> getColumnDefinitions(Column[] columns) {
+    public List<String> getColumnDefinitions(Column[] columns) {
         var list = new ArrayList<String>();
         for (var column : columns) {
             list.add(getColumnDefinition(column));
@@ -96,11 +166,11 @@ public interface Dialect {
         return list;
     }
 
-    default List<String> getTableConstraint(Table<?> table) {
+    public List<String> getTableConstraint(Table<?> table) {
         return new ArrayList<>();
     }
 
-    default String getColumnDefinition(Column column) {
+    public String getColumnDefinition(Column column) {
         var s = new StringBuilder();
         s.append(column.name()).append(" ");// 列名
         var dataTypeDefinition = getDataTypeDefinition(column);
@@ -113,7 +183,7 @@ public interface Dialect {
         return s.toString();
     }
 
-    default String getDataTypeDefinition(Column column) {
+    public String getDataTypeDefinition(Column column) {
         if (column.typeName() != null) {
             if (column.columnSize() != null) {
                 return column.typeName() + "(" + column.columnSize() + ")";
@@ -129,7 +199,7 @@ public interface Dialect {
         }
     }
 
-    List<String> getColumnConstraint(Column columns);
+    public abstract List<String> getColumnConstraint(Column columns);
 
     /**
      * 根据 class 获取对应的 SQLType 类型 如果没有则返回 JSON
@@ -137,14 +207,14 @@ public interface Dialect {
      * @param javaType 需要获取的类型
      * @return a {@link String} object.
      */
-    String getDataTypeDefinitionByClass(Class<?> javaType);
+    public abstract String getDataTypeDefinitionByClass(Class<?> javaType);
 
     /**
      * 默认值
      *
      * @return 默认类型值
      */
-    default String defaultDateType() {
+    public String defaultDateType() {
         return null;
     }
 
@@ -154,7 +224,7 @@ public interface Dialect {
      * @param needAdds  a
      * @param tableInfo a
      */
-    default String getAlertTableDDL(Column[] needAdds, Table<?> tableInfo) {
+    public String getAlertTableDDL(Column[] needAdds, Table<?> tableInfo) {
         var s = new StringBuilder();
         s.append("ALTER TABLE ");
         if (notEmpty(tableInfo.schema())) {
@@ -178,16 +248,31 @@ public interface Dialect {
      * @return a
      * @throws SQLException a
      */
-    default PreparedStatement beforeExecuteQuery(PreparedStatement preparedStatement) throws SQLException {
+    public PreparedStatement beforeExecuteQuery(PreparedStatement preparedStatement) throws SQLException {
         return preparedStatement;
     }
 
-    default void setLocalDateTime(PreparedStatement ps, int i, LocalDateTime parameter) throws SQLException {
-        ps.setObject(i, parameter);
+    @SuppressWarnings("unchecked")
+    public <T> TypeHandler<T> findTypeHandler(Type type) {
+        return (TypeHandler<T>) TYPE_HANDLER_MAP.computeIfAbsent(type, this::createTypeHandler);
     }
 
-    default LocalDateTime getLocalDateTime(ResultSet rs, int index) throws SQLException {
-        return rs.getObject(index, LocalDateTime.class);
+    @SuppressWarnings("unchecked")
+    private <E extends Enum<E>> TypeHandler<?> createTypeHandler(Type type) {
+        if (type instanceof Class<?> clazz) {
+            if (isEnum(clazz)) {
+                var enumClass = clazz.isAnonymousClass() ? clazz.getSuperclass() : clazz;
+                return new EnumTypeHandler<>((Class<E>) enumClass);
+            } else {
+                //判断是否为可识别类型的子类
+                for (var entry : TYPE_HANDLER_MAP.entrySet()) {
+                    if (entry.getKey() instanceof Class<?> c && c.isAssignableFrom(clazz)) {
+                        return entry.getValue();
+                    }
+                }
+            }
+        }
+        return new ObjectTypeHandler(type);
     }
 
 }

@@ -1,7 +1,7 @@
 package cool.scx.data.jdbc.result_handler;
 
 import cool.scx.data.jdbc.bean_builder.BeanBuilder;
-import cool.scx.data.jdbc.type_handler.TypeHandlerSelector;
+import cool.scx.data.jdbc.dialect.Dialect;
 
 import java.lang.reflect.Field;
 import java.sql.ResultSet;
@@ -76,6 +76,6 @@ public interface ResultHandler<T> {
         return new SingleValueHandler<>(columnIndex, clazz);
     }
 
-    T apply(ResultSet rs, TypeHandlerSelector typeHandlerSelector) throws SQLException;
+    T apply(ResultSet rs, Dialect dialect) throws SQLException;
 
 }

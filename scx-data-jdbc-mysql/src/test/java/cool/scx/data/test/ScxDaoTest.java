@@ -80,7 +80,7 @@ public class ScxDaoTest {
         sqlRunner.execute(ofNormal("drop table if exists " + userTableInfo.name() + ";"));
         sqlRunner.execute(ofNormal("drop table if exists " + userTableInfo.name() + "_doc;"));
         //根据 tableInfo 生成表结构
-        SchemaHelper.fixTable(userTableInfo, databaseName, dataSource);
+        SchemaHelper.fixTable(userTableInfo, databaseName, jdbcContext);
 
         var list = new ArrayList<User>();
 

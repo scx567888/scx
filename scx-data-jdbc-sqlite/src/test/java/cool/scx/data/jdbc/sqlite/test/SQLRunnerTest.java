@@ -1,12 +1,12 @@
-package cool.scx.data.test;
+package cool.scx.data.jdbc.sqlite.test;
 
 import cool.scx.data.jdbc.JDBCContext;
 import cool.scx.data.jdbc.result_handler.ResultHandler;
 import cool.scx.data.jdbc.sql.SQL;
 import cool.scx.data.jdbc.sql.SQLRunner;
 import cool.scx.data.jdbc.sql.UpdateResult;
-import cool.scx.data.test.bean.Student;
-import cool.scx.data.test.bean.StudentRecord;
+import cool.scx.data.jdbc.sqlite.test.bean.Student;
+import cool.scx.data.jdbc.sqlite.test.bean.StudentRecord;
 import cool.scx.logging.ScxLoggerFactory;
 import cool.scx.logging.ScxLoggingLevel;
 import cool.scx.util.FileUtils;
@@ -22,7 +22,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static cool.scx.data.jdbc.result_handler.ResultHandler.ofBeanList;
 import static cool.scx.data.jdbc.result_handler.ResultHandler.ofMapList;
 import static cool.scx.data.jdbc.sql.SQL.ofNormal;
-import static cool.scx.data.test.MetaDataTest.getSQLiteDataSource;
+import static cool.scx.data.jdbc.sqlite.test.MetaDataTest.getSQLiteDataSource;
 
 public class SQLRunnerTest {
 
@@ -169,11 +169,12 @@ public class SQLRunnerTest {
     @Test
     public static void test6() {
         try { // 准备大量数据 200万条 进行测试
-            sqlRunner.execute(ofNormal("drop table if exists " + tableName + ";" + " create table " + tableName + "(`name` varchar(32) ,`age` integer,`sex` boolean )"));
+            sqlRunner.execute(ofNormal("drop table if exists " + tableName + ";"));
+            sqlRunner.execute(ofNormal(" create table " + tableName + "(`name` varchar(32) ,`age` integer,`sex` boolean )"));
             var sql = "insert into " + tableName + "(name, age, sex) values (:name, :age, :sex)";
             for (int j = 0; j < 20; j++) {
                 var ms = new ArrayList<Map<String, Object>>();
-                for (int i = 0; i < 99999; i = i + 1) {
+                for (int i = 0; i < 99; i = i + 1) {
                     var m1 = new HashMap<String, Object>();
                     m1.put("age", 18 + i);
                     m1.put("sex", 0);

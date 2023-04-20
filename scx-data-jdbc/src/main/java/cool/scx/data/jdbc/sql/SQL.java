@@ -1,6 +1,6 @@
 package cool.scx.data.jdbc.sql;
 
-import cool.scx.data.jdbc.type_handler.TypeHandlerSelector;
+import cool.scx.data.jdbc.dialect.Dialect;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -58,7 +58,7 @@ public interface SQL {
      * @return PreparedStatement 方便链式调用
      * @throws SQLException a
      */
-    default PreparedStatement fillParams(PreparedStatement preparedStatement, TypeHandlerSelector typeHandlerSelector) throws SQLException {
+    default PreparedStatement fillParams(PreparedStatement preparedStatement, Dialect typeHandlerSelector) throws SQLException {
         return preparedStatement;
     }
 

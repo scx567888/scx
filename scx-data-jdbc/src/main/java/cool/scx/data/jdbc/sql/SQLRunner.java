@@ -110,10 +110,10 @@ public final class SQLRunner {
      */
     public <T> T query(Connection con, SQL sql, ResultHandler<T> resultHandler) throws SQLException {
         try (var preparedStatement = con.prepareStatement(sql.sql(), TYPE_FORWARD_ONLY, CONCUR_READ_ONLY)) {
-            sql.fillParams(preparedStatement, jdbcContext.typeHandlerSelector());
+            sql.fillParams(preparedStatement, jdbcContext.dialect());
             jdbcContext.dialect().beforeExecuteQuery(preparedStatement);
             var resultSet = preparedStatement.executeQuery();
-            return resultHandler.apply(resultSet, jdbcContext.typeHandlerSelector());
+            return resultHandler.apply(resultSet, jdbcContext.dialect());
         }
     }
 
@@ -127,7 +127,7 @@ public final class SQLRunner {
      */
     public long execute(Connection con, SQL sql) throws SQLException {
         try (var preparedStatement = con.prepareStatement(sql.sql(), RETURN_GENERATED_KEYS)) {
-            sql.fillParams(preparedStatement, jdbcContext.typeHandlerSelector());
+            sql.fillParams(preparedStatement, jdbcContext.dialect());
             preparedStatement.execute();
             return preparedStatement.getLargeUpdateCount();
         }
@@ -143,7 +143,7 @@ public final class SQLRunner {
      */
     public UpdateResult update(Connection con, SQL sql) throws SQLException {
         try (var preparedStatement = con.prepareStatement(sql.sql(), RETURN_GENERATED_KEYS)) {
-            sql.fillParams(preparedStatement, jdbcContext.typeHandlerSelector());
+            sql.fillParams(preparedStatement, jdbcContext.dialect());
             var affectedItemsCount = preparedStatement.executeLargeUpdate();
             var generatedKeys = getGeneratedKeys(preparedStatement);
             return new UpdateResult(affectedItemsCount, generatedKeys);
@@ -160,7 +160,7 @@ public final class SQLRunner {
      */
     public UpdateResult updateBatch(Connection con, SQL sql) throws SQLException {
         try (var preparedStatement = con.prepareStatement(sql.sql(), RETURN_GENERATED_KEYS)) {
-            sql.fillParams(preparedStatement, jdbcContext.typeHandlerSelector());
+            sql.fillParams(preparedStatement, jdbcContext.dialect());
             var affectedItemsCount = preparedStatement.executeLargeBatch().length;
             var generatedKeys = getGeneratedKeys(preparedStatement);
             return new UpdateResult(affectedItemsCount, generatedKeys);

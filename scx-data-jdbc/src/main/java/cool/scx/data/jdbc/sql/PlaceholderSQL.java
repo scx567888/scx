@@ -1,6 +1,6 @@
 package cool.scx.data.jdbc.sql;
 
-import cool.scx.data.jdbc.type_handler.TypeHandlerSelector;
+import cool.scx.data.jdbc.dialect.Dialect;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -62,7 +62,7 @@ final class PlaceholderSQL implements SQL {
      * @param params            a
      * @throws SQLException a
      */
-    public static void fillPreparedStatement(PreparedStatement preparedStatement, Object[] params, TypeHandlerSelector typeHandlerSelector) throws SQLException {
+    public static void fillPreparedStatement(PreparedStatement preparedStatement, Object[] params, Dialect typeHandlerSelector) throws SQLException {
         var index = 1;
         for (var tempValue : params) {
             if (tempValue == null) {
@@ -82,7 +82,7 @@ final class PlaceholderSQL implements SQL {
      * @return a
      * @throws SQLException a
      */
-    private PreparedStatement fillSingle(PreparedStatement preparedStatement, TypeHandlerSelector typeHandlerSelector) throws SQLException {
+    private PreparedStatement fillSingle(PreparedStatement preparedStatement, Dialect typeHandlerSelector) throws SQLException {
         //单条数据
         if (params != null) {
             fillPreparedStatement(preparedStatement, params, typeHandlerSelector);
@@ -96,7 +96,7 @@ final class PlaceholderSQL implements SQL {
      * @return c
      * @throws SQLException c
      */
-    private PreparedStatement fillBatch(PreparedStatement preparedStatement, TypeHandlerSelector typeHandlerSelector) throws SQLException {
+    private PreparedStatement fillBatch(PreparedStatement preparedStatement, Dialect typeHandlerSelector) throws SQLException {
         if (batchParams != null) {
             //根据数据量, 判断是否使用 批量插入
             for (var paramArray : batchParams) {
@@ -115,7 +115,7 @@ final class PlaceholderSQL implements SQL {
     }
 
     @Override
-    public PreparedStatement fillParams(PreparedStatement preparedStatement, TypeHandlerSelector typeHandlerSelector) throws SQLException {
+    public PreparedStatement fillParams(PreparedStatement preparedStatement, Dialect typeHandlerSelector) throws SQLException {
         return isBatch ? fillBatch(preparedStatement, typeHandlerSelector) : fillSingle(preparedStatement, typeHandlerSelector);
     }
 
