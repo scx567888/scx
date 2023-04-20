@@ -201,6 +201,34 @@ public final class ColumnFilter {
         this.fieldNames.clear();
         return this;
     }
+    
+    /**
+     * 过滤
+     *
+     * @param tableInfo 带过滤的列表
+     * @return 过滤后的列表
+     */
+    public ColumnMapping[] filter(Table<? extends ColumnMapping> tableInfo) {
+        return this.fieldNames.size() == 0 ? switch (this.filterMode) {
+            case INCLUDED -> new ColumnMapping[0];
+            case EXCLUDED -> tableInfo.columns();
+        } : switch (this.filterMode) {
+            case INCLUDED -> {
+                var list = new ArrayList<ColumnMapping>();
+                for (var fieldName : this.fieldNames) {
+                    list.add(tableInfo.getColumn(fieldName));
+                }
+                yield list.toArray(ColumnMapping[]::new);
+            }
+            case EXCLUDED -> {
+                var objects = new ArrayList<>(Arrays.asList(tableInfo.columns()));
+                for (var fieldName : this.fieldNames) {
+                    objects.remove(tableInfo.getColumn(fieldName));
+                }
+                yield objects.toArray(ColumnMapping[]::new);
+            }
+        };
+    }
 
     /**
      * 获取当前模式
@@ -233,34 +261,6 @@ public final class ColumnFilter {
         return Arrays.stream(scxDaoColumnInfos).filter(field -> field.javaFieldValue(entity) != null).toArray(ColumnMapping[]::new);
     }
 
-
-    /**
-     * 过滤
-     *
-     * @param tableInfo 带过滤的列表
-     * @return 过滤后的列表
-     */
-    public ColumnMapping[] filter(Table<? extends ColumnMapping> tableInfo) {
-        return this.fieldNames.size() == 0 ? switch (this.filterMode) {
-            case INCLUDED -> new ColumnMapping[0];
-            case EXCLUDED -> tableInfo.columns();
-        } : switch (this.filterMode) {
-            case INCLUDED -> {
-                var list = new ArrayList<ColumnMapping>();
-                for (var fieldName : this.fieldNames) {
-                    list.add(tableInfo.getColumn(fieldName));
-                }
-                yield list.toArray(ColumnMapping[]::new);
-            }
-            case EXCLUDED -> {
-                var objects = new ArrayList<>(Arrays.asList(tableInfo.columns()));
-                for (var fieldName : this.fieldNames) {
-                    objects.remove(tableInfo.getColumn(fieldName));
-                }
-                yield objects.toArray(ColumnMapping[]::new);
-            }
-        };
-    }
 
     public Set<String> fieldNames() {
         return fieldNames;
