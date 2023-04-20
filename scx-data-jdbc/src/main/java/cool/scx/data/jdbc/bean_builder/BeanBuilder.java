@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.function.Function;
 
 /**
+ * todo 此处设计不合理
  * <p>BeanBuilder interface.</p>
  *
  * @author scx567888
