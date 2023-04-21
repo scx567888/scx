@@ -2,6 +2,7 @@ package cool.scx.data.jdbc.result_handler;
 
 import cool.scx.data.jdbc.bean_builder.BeanBuilder;
 import cool.scx.data.jdbc.dialect.Dialect;
+import cool.scx.data.jdbc.dialect.StandardDialect;
 
 import java.lang.reflect.Field;
 import java.sql.ResultSet;
@@ -77,5 +78,9 @@ public interface ResultHandler<T> {
     }
 
     T apply(ResultSet rs, Dialect dialect) throws SQLException;
+
+    default T apply(ResultSet rs) throws SQLException {
+        return apply(rs, StandardDialect.STANDARD_DIALECT);
+    }
 
 }
