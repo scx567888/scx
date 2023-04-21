@@ -108,9 +108,6 @@ public class MySQLDialect extends Dialect {
         return sql + limitClauses;
     }
 
-    /**
-     * 当前列对象通常的 DDL 如设置 字段名 类型 是否可以为空 默认值等 (建表语句片段 , 需和 specialDDL 一起使用才完整)
-     */
     @Override
     public List<String> getColumnConstraint(Column column) {
         var list = new ArrayList<String>();
