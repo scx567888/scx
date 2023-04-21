@@ -157,7 +157,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 数据列表
      */
     public List<Entity> list(Query query, ColumnFilter selectFilter) {
-        return dao.select(query, selectFilter);
+        return dao.find(query, selectFilter);
     }
 
     /**

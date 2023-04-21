@@ -178,13 +178,13 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
      * @param selectFilter a
      * @return a {@link java.util.List} object.
      */
-    public final List<Entity> select(Query query, ColumnFilter selectFilter) {
+    public final List<Entity> find(Query query, ColumnFilter selectFilter) {
         return sqlRunner.query(buildSelectSQL(query, selectFilter), entityBeanListHandler);
     }
 
     @Override
     public final List<Entity> find(Query query) {
-        return select(query, ofExcluded());
+        return find(query, ofExcluded());
     }
 
     @Override

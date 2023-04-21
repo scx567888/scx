@@ -108,18 +108,18 @@ public class ScxDaoTest {
         System.out.println("插入 : " + newIds);
 
         //标准查询
-        var a1 = userDao.select(query1, ofExcluded());
+        var a1 = userDao.find(query1, ofExcluded());
         System.out.println("查询 1 : " + a1.size());
 
         //拼接查询
-        var a2 = userDao.select(query2, ofExcluded());
+        var a2 = userDao.find(query2, ofExcluded());
         System.out.println("查询 2 : " + a2.size());
 
         // json 查询
-        var a3 = userDao.select(query3, ofExcluded());
+        var a3 = userDao.find(query3, ofExcluded());
         System.out.println("查询 3 : " + a3.size());
 
-        var a4 = userDao.select(query4, ofExcluded());
+        var a4 = userDao.find(query4, ofExcluded());
         System.out.println("查询 4 : " + a4.size());
 
     }
