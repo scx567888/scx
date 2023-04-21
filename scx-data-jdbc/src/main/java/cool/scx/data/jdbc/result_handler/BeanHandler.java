@@ -16,7 +16,7 @@ record BeanHandler<T>(BeanBuilder<T> beanBuilder) implements ResultHandler<T> {
 
     @Override
     public T apply(ResultSet rs, Dialect dialect) throws SQLException {
-        beanBuilder.setDialect(dialect);
+        beanBuilder.bindDialect(dialect);
         var indexInfo = beanBuilder.getIndexInfo(rs.getMetaData());
         return rs.next() ? beanBuilder.createBean(rs, indexInfo) : null;
     }

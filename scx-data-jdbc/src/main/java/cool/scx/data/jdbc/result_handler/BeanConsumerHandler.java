@@ -17,7 +17,7 @@ record BeanConsumerHandler<T>(BeanBuilder<T> beanBuilder, Consumer<T> consumer) 
 
     @Override
     public Void apply(ResultSet rs, Dialect dialect) throws SQLException {
-        beanBuilder.setDialect(dialect);
+        beanBuilder.bindDialect(dialect);
         var indexInfo = beanBuilder.getIndexInfo(rs.getMetaData());
         while (rs.next()) {
             T t = beanBuilder.createBean(rs, indexInfo);

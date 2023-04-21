@@ -1,4 +1,4 @@
-package cool.scx.data.test;
+package cool.scx.data.jdbc.mysql.test;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
 import cool.scx.data.Query;

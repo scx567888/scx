@@ -1,13 +1,13 @@
-package cool.scx.data.test;
+package cool.scx.data.jdbc.mysql.test;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
 import cool.scx.data.jdbc.JDBCContext;
+import cool.scx.data.jdbc.mysql.test.bean.Student;
+import cool.scx.data.jdbc.mysql.test.bean.StudentRecord;
 import cool.scx.data.jdbc.result_handler.ResultHandler;
 import cool.scx.data.jdbc.sql.SQL;
 import cool.scx.data.jdbc.sql.SQLRunner;
 import cool.scx.data.jdbc.sql.UpdateResult;
-import cool.scx.data.test.bean.Student;
-import cool.scx.data.test.bean.StudentRecord;
 import cool.scx.logging.ScxLoggerFactory;
 import cool.scx.logging.ScxLoggingLevel;
 import cool.scx.util.FileUtils;
