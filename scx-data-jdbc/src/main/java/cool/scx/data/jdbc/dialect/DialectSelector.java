@@ -18,8 +18,14 @@ public final class DialectSelector {
         }
     }
 
+    /**
+     * 根据驱动查找
+     *
+     * @param realDriver realDriver
+     * @return a
+     */
     public static Dialect findDialect(Driver realDriver) {
-        for (Dialect dialect : DIALECT_LIST) {
+        for (var dialect : DIALECT_LIST) {
             if (dialect.canHandle(realDriver)) {
                 return dialect;
             }
@@ -27,13 +33,34 @@ public final class DialectSelector {
         throw new IllegalArgumentException("未找到对应的方言 !!! " + realDriver.getClass().getName());
     }
 
+    /**
+     * 根据数据源去查找
+     *
+     * @param dataSource da
+     * @return a
+     */
     public static Dialect findDialect(DataSource dataSource) {
-        for (Dialect dialect : DIALECT_LIST) {
+        for (var dialect : DIALECT_LIST) {
             if (dialect.canHandle(dataSource)) {
                 return dialect;
             }
         }
         throw new IllegalArgumentException("未找到对应的方言 !!! " + dataSource.getClass().getName());
+    }
+
+    /**
+     * 根据数据库连接 URL 去找
+     *
+     * @param url a
+     * @return a
+     */
+    public static Dialect findDialect(String url) {
+        for (var dialect : DIALECT_LIST) {
+            if (dialect.canHandle(url)) {
+                return dialect;
+            }
+        }
+        throw new IllegalArgumentException("未找到对应的方言 !!! " + url);
     }
 
 }

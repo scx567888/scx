@@ -25,6 +25,14 @@ public abstract class Dialect {
     /**
      * 是否可以处理
      *
+     * @param url 数据连接地址
+     * @return 是否可以处理
+     */
+    public abstract boolean canHandle(String url);
+
+    /**
+     * 是否可以处理
+     *
      * @param dataSource 数据源
      * @return 是否可以处理
      */
@@ -55,6 +63,17 @@ public abstract class Dialect {
      * @return SQL 语句
      */
     public abstract String getLimitSQL(String sql, Long offset, Long rowCount);
+
+    /**
+     * 创建数据源
+     *
+     * @param url
+     * @param username
+     * @param password
+     * @param parameters
+     * @return
+     */
+    public abstract DataSource createDataSource(String url, String username, String password, String[] parameters);
 
     /**
      * 获取建表语句
