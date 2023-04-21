@@ -68,9 +68,7 @@ public class TestModule extends ScxModule {
                 .configure(ScxCoreFeature.USE_SPY, true)
                 .run();
         //修复表
-        ScxContext.sqlRunner().execute(SQL.ofNormal("drop database if exists scx_test;"));
-        ScxContext.sqlRunner().execute(SQL.ofNormal("create database scx_test;"));
-        ScxContext.sqlRunner().execute(SQL.ofNormal("use scx_test;"));
+        ScxContext.sqlRunner().execute(SQL.ofNormal("drop database if exists scx_test; create database scx_test; use scx_test"));
         ScxContext.scx().fixTable();
     }
 
