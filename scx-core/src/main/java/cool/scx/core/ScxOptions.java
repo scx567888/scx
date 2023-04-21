@@ -34,11 +34,6 @@ public final class ScxOptions {
     private final String dataSourceUrl;
 
     /**
-     * 数据源 数据库名称
-     */
-    private final String dataSourceDatabase;
-
-    /**
      * 数据源 用户名
      */
     private final String dataSourceUsername;
@@ -88,7 +83,6 @@ public final class ScxOptions {
         sslPath = scxConfig.get("scx.https.ssl-path", AppRootHandler.of(scxEnvironment));
         sslPassword = scxConfig.get("scx.https.ssl-password", DecryptValueHandler.of(appKey));
         dataSourceUrl = scxConfig.getOrDefault("scx.data-source.url", "");
-        dataSourceDatabase = scxConfig.get("scx.data-source.database", String.class);
         dataSourceUsername = scxConfig.get("scx.data-source.username", String.class);
         dataSourcePassword = scxConfig.get("scx.data-source.password", DecryptValueHandler.of(appKey));
         dataSourceParameters = scxConfig.getOrDefault("scx.data-source.parameters", new String[]{});
@@ -96,15 +90,6 @@ public final class ScxOptions {
 
     public String dataSourceUrl() {
         return dataSourceUrl;
-    }
-
-    /**
-     * <p>dataSourceDatabase.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
-    public String dataSourceDatabase() {
-        return dataSourceDatabase;
     }
 
     /**
@@ -201,7 +186,6 @@ public final class ScxOptions {
                 .green("Y 证书路径                            \t -->\t " + (sslPath != null ? sslPath.toString() : "")).ln()
                 .green("Y 证书密码                            \t -->\t *****").ln()
                 .green("Y 数据源 URL                           \t -->\t " + dataSourceUrl).ln()
-                .green("Y 数据源 数据库名称                    \t -->\t " + dataSourceDatabase).ln()
                 .green("Y 数据源 用户名                        \t -->\t " + dataSourceUsername).ln()
                 .green("Y 数据源 连接密码                      \t -->\t *****").ln()
                 .green("Y 数据源 连接参数                      \t -->\t " + Arrays.toString(dataSourceParameters)).println();
