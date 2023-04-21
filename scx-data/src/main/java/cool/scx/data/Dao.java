@@ -4,39 +4,49 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * 最基本的 可以实现 实体类 CRUD 的 DAO
+ * 用于定义数据访问层的规范
  *
+ * @param <Entity>
+ * @param <ID>
  * @author scx567888
  * @version 0.1.3
  */
 public interface Dao<Entity, ID> {
 
     /**
-     * 插入
+     * 像数据源中添加一条数据
      *
      * @param entity 实体类
      * @return 主键 ID (无主键则为 null)
      */
-    ID insert(Entity entity);
+    ID add(Entity entity);
 
     /**
-     * 批量插入
+     * 像数据源中添加多条数据
      *
      * @param entityList 实体类
-     * @return 主键 ID 列表
+     * @return 主键 ID 列表 (无主键则为 null)
      */
-    List<ID> insertBatch(Collection<Entity> entityList);
+    List<ID> addAll(Collection<Entity> entityList);
 
     /**
-     * 查询
+     * 查询多条数据
      *
      * @param query 查询条件
      * @return 数据列表
      */
-    List<Entity> select(Query query);
+    List<Entity> find(Query query);
 
     /**
-     * 更新
+     * 查询单条数据
+     *
+     * @param query 查询条件
+     * @return 数据列表
+     */
+    Entity get(Query query);
+
+    /**
+     * 更新数据
      *
      * @param entity 需要更新的数据
      * @param query  查询条件
@@ -61,7 +71,7 @@ public interface Dao<Entity, ID> {
     long count(Query query);
 
     /**
-     * 清空整个映射对象 (慎用)
+     * 清空整个数据源 (慎用)
      */
     void _clear();
 
