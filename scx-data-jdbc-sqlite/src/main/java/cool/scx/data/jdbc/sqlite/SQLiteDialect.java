@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static cool.scx.util.StringUtils.notBlank;
+import static cool.scx.util.StringUtils.startsWithIgnoreCase;
 
 /**
  * @see <a href="https://www.sqlite.org/lang_createtable.html">https://www.sqlite.org/lang_createtable.html</a>
@@ -48,6 +49,11 @@ public class SQLiteDialect extends Dialect {
     public SQLiteDialect() {
         // 注册自定义的 TypeHandler       
         typeHandlerSelector.registerTypeHandler(LocalDateTime.class, new SQLiteLocalDateTimeTypeHandler());
+    }
+
+    @Override
+    public boolean canHandle(String url) {
+        return startsWithIgnoreCase(url, "jdbc:sqlite:");
     }
 
     @Override
@@ -104,6 +110,13 @@ public class SQLiteDialect extends Dialect {
     public String getLimitSQL(String sql, Long offset, Long rowCount) {
         var limitClauses = rowCount == null ? "" : offset == null || offset == 0 ? " LIMIT " + rowCount : " LIMIT " + offset + "," + rowCount;
         return sql + limitClauses;
+    }
+
+    @Override
+    public DataSource createDataSource(String url, String username, String password, String[] parameters) {
+        SQLiteDataSource sqLiteDataSource = new SQLiteDataSource();
+        sqLiteDataSource.setUrl(url);
+        return sqLiteDataSource;
     }
 
     @Override

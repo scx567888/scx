@@ -1,7 +1,6 @@
 package cool.scx.core;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.mysql.cj.jdbc.MysqlDataSource;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import cool.scx.config.ScxConfig;
@@ -15,6 +14,7 @@ import cool.scx.core.annotation.ScxService;
 import cool.scx.core.base.BaseModel;
 import cool.scx.core.enumeration.ScxCoreFeature;
 import cool.scx.data.jdbc.annotation.Table;
+import cool.scx.data.jdbc.dialect.DialectSelector;
 import cool.scx.data.jdbc.spy.Spy;
 import cool.scx.logging.ScxLoggerFactory;
 import cool.scx.logging.ScxLoggingLevel;
@@ -144,23 +144,12 @@ public final class ScxHelper {
     }
 
     static DataSource initDataSource(ScxOptions scxOptions, ScxFeatureConfig scxFeatureConfig) {
-        var mysqlDataSource = new MysqlDataSource();
-        mysqlDataSource.setServerName(scxOptions.dataSourceHost());
-        mysqlDataSource.setDatabaseName(scxOptions.dataSourceDatabase());
-        mysqlDataSource.setUser(scxOptions.dataSourceUsername());
-        mysqlDataSource.setPassword(scxOptions.dataSourcePassword());
-        mysqlDataSource.setPort(scxOptions.dataSourcePort());
-        // 设置参数值
-        for (var parameter : scxOptions.dataSourceParameters()) {
-            var p = parameter.split("=");
-            if (p.length == 2) {
-                var property = mysqlDataSource.getProperty(p[0]);
-                property.setValue(property.getPropertyDefinition().parseObject(p[1], null));
-            }
-        }
+        var url = scxOptions.dataSourceUrl();
+        var dialect = DialectSelector.findDialect(url);
+        var realDataSource = dialect.createDataSource(url, scxOptions.dataSourceUsername(), scxOptions.dataSourcePassword(), scxOptions.dataSourceParameters());
         //使用 HikariDataSource 进行包装
         var hikariConfig = new HikariConfig();
-        hikariConfig.setDataSource(mysqlDataSource);
+        hikariConfig.setDataSource(realDataSource);
         var hikariDataSource = new HikariDataSource(hikariConfig);
         return scxFeatureConfig.get(ScxCoreFeature.USE_SPY) ? Spy.wrap(hikariDataSource) : hikariDataSource;
     }

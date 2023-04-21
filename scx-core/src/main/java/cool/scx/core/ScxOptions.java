@@ -8,8 +8,7 @@ import cool.scx.util.NetUtils;
 import cool.scx.util.ansi.Ansi;
 
 import java.nio.file.Path;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Arrays;
 
 /**
  * <p>ScxCoreConfig class.</p>
@@ -32,12 +31,7 @@ public final class ScxOptions {
     /**
      * 数据源地址
      */
-    private final String dataSourceHost;
-
-    /**
-     * 数据源端口
-     */
-    private final Integer dataSourcePort;
+    private final String dataSourceUrl;
 
     /**
      * 数据源 数据库名称
@@ -57,7 +51,7 @@ public final class ScxOptions {
     /**
      * 其他连接参数
      */
-    private final Set<String> dataSourceParameters;
+    private final String[] dataSourceParameters;
 
     /**
      * 是否开启 https
@@ -93,30 +87,15 @@ public final class ScxOptions {
         httpsEnabled = scxConfig.getOrDefault("scx.https.enabled", false);
         sslPath = scxConfig.get("scx.https.ssl-path", AppRootHandler.of(scxEnvironment));
         sslPassword = scxConfig.get("scx.https.ssl-password", DecryptValueHandler.of(appKey));
-        dataSourceHost = scxConfig.getOrDefault("scx.data-source.host", "127.0.0.1");
-        dataSourcePort = scxConfig.getOrDefault("scx.data-source.port", 3306);
+        dataSourceUrl = scxConfig.getOrDefault("scx.data-source.url", "");
         dataSourceDatabase = scxConfig.get("scx.data-source.database", String.class);
         dataSourceUsername = scxConfig.get("scx.data-source.username", String.class);
         dataSourcePassword = scxConfig.get("scx.data-source.password", DecryptValueHandler.of(appKey));
-        dataSourceParameters = scxConfig.getOrDefault("scx.data-source.parameters", new HashSet<>());
+        dataSourceParameters = scxConfig.getOrDefault("scx.data-source.parameters", new String[]{});
     }
 
-    /**
-     * <p>dataSourceHost.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
-    public String dataSourceHost() {
-        return dataSourceHost;
-    }
-
-    /**
-     * <p>dataSourcePort.</p>
-     *
-     * @return a int.
-     */
-    public int dataSourcePort() {
-        return dataSourcePort;
+    public String dataSourceUrl() {
+        return dataSourceUrl;
     }
 
     /**
@@ -133,7 +112,7 @@ public final class ScxOptions {
      *
      * @return a {@link java.util.Set} object.
      */
-    public Set<String> dataSourceParameters() {
+    public String[] dataSourceParameters() {
         return dataSourceParameters;
     }
 
@@ -221,12 +200,11 @@ public final class ScxOptions {
                 .green("Y 是否开启 https                       \t -->\t " + (httpsEnabled ? "是" : "否")).ln()
                 .green("Y 证书路径                            \t -->\t " + (sslPath != null ? sslPath.toString() : "")).ln()
                 .green("Y 证书密码                            \t -->\t *****").ln()
-                .green("Y 数据源 Host                          \t -->\t " + dataSourceHost).ln()
-                .green("Y 数据源 端口号                        \t -->\t " + dataSourcePort).ln()
+                .green("Y 数据源 URL                           \t -->\t " + dataSourceUrl).ln()
                 .green("Y 数据源 数据库名称                    \t -->\t " + dataSourceDatabase).ln()
                 .green("Y 数据源 用户名                        \t -->\t " + dataSourceUsername).ln()
                 .green("Y 数据源 连接密码                      \t -->\t *****").ln()
-                .green("Y 数据源 连接参数                      \t -->\t " + dataSourceParameters.toString()).println();
+                .green("Y 数据源 连接参数                      \t -->\t " + Arrays.toString(dataSourceParameters)).println();
     }
 
 }
