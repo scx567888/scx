@@ -33,7 +33,6 @@ import static cool.scx.data.query.WhereBody.equal;
 public class ScxDaoTestForSQLite {
 
     public static final Path TempSQLite;
-    public static final String databaseName = "scx_dao_test";
     public static Path AppRoot;
 
     static {
@@ -70,7 +69,7 @@ public class ScxDaoTestForSQLite {
         //删除原有的表数据
         sqlRunner.execute(ofNormal("drop table if exists " + userTableInfo.name() + ";"));
         //根据 tableInfo 生成表结构
-        SchemaHelper.fixTable(userTableInfo, databaseName, jdbcContext);
+        SchemaHelper.fixTable(userTableInfo, jdbcContext);
 
         //开始使用
         var userDao = new JDBCDao<>(User.class, jdbcContext);

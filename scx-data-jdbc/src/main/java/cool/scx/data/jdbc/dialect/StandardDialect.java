@@ -16,6 +16,11 @@ public final class StandardDialect extends Dialect {
     }
 
     @Override
+    public boolean canHandle(String url) {
+        return false;
+    }
+
+    @Override
     public boolean canHandle(DataSource dataSource) {
         return false;
     }
@@ -32,6 +37,11 @@ public final class StandardDialect extends Dialect {
 
     @Override
     public String getLimitSQL(String sql, Long offset, Long rowCount) {
+        return null;
+    }
+
+    @Override
+    public DataSource createDataSource(String url, String username, String password, String[] parameters) {
         return null;
     }
 

@@ -66,7 +66,7 @@ public class ScxDaoTestForMySQL {
         //删除原有的表数据
         sqlRunner.execute(ofNormal("drop table if exists " + userTableInfo.name() + ";"));
         //根据 tableInfo 生成表结构
-        SchemaHelper.fixTable(userTableInfo, databaseName, jdbcContext);
+        SchemaHelper.fixTable(userTableInfo, jdbcContext);
 
         //开始使用
         var userDao = new JDBCDao<>(User.class, jdbcContext);

@@ -8,6 +8,7 @@ import com.mysql.cj.jdbc.MysqlDataSource;
 import cool.scx.data.jdbc.dialect.Dialect;
 import cool.scx.data.jdbc.mapping.Column;
 import cool.scx.data.jdbc.mapping.Table;
+import cool.scx.util.StringUtils;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -74,6 +75,11 @@ public class MySQLDialect extends Dialect {
     }
 
     @Override
+    public boolean canHandle(String url) {
+        return StringUtils.startsWithIgnoreCase(url, "jdbc:mysql:");
+    }
+
+    @Override
     public boolean canHandle(DataSource dataSource) {
         try {
             return dataSource instanceof MysqlDataSource || dataSource.isWrapperFor(MysqlDataSource.class);
@@ -106,6 +112,23 @@ public class MySQLDialect extends Dialect {
     public String getLimitSQL(String sql, Long offset, Long rowCount) {
         var limitClauses = rowCount == null ? "" : offset == null || offset == 0 ? " LIMIT " + rowCount : " LIMIT " + offset + "," + rowCount;
         return sql + limitClauses;
+    }
+
+    @Override
+    public DataSource createDataSource(String url, String username, String password, String[] parameters) {
+        var mysqlDataSource = new MysqlDataSource();
+        mysqlDataSource.setUrl(url);
+        mysqlDataSource.setUser(username);
+        mysqlDataSource.setPassword(password);
+        // 设置参数值
+        for (var parameter : parameters) {
+            var p = parameter.split("=");
+            if (p.length == 2) {
+                var property = mysqlDataSource.getProperty(p[0]);
+                property.setValue(property.getPropertyDefinition().parseObject(p[1], null));
+            }
+        }
+        return mysqlDataSource;
     }
 
     @Override

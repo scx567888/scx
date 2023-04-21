@@ -239,7 +239,6 @@ public final class Scx {
      */
     public void fixTable() {
         logger.debug("修复数据表结构中...");
-        var databaseName = this.scxOptions.dataSourceDatabase();
         //修复成功的表
         var fixSuccess = 0;
         //修复失败的表
@@ -250,8 +249,8 @@ public final class Scx {
             //根据 class 获取 tableInfo
             var tableInfo = new AnnotationConfigTable(v);
             try {
-                if (SchemaHelper.checkNeedFixTable(tableInfo, databaseName, dataSource)) {
-                    SchemaHelper.fixTable(tableInfo, databaseName, jdbcContext);
+                if (SchemaHelper.checkNeedFixTable(tableInfo, dataSource)) {
+                    SchemaHelper.fixTable(tableInfo, jdbcContext);
                     fixSuccess = fixSuccess + 1;
                 } else {
                     noNeedToFix = noNeedToFix + 1;
@@ -293,13 +292,12 @@ public final class Scx {
      */
     public boolean checkNeedFixTable() {
         logger.debug("检查数据表结构中...");
-        var databaseName = this.scxOptions.dataSourceDatabase();
         for (var v : getAllScxBaseModelClassList()) {
             //根据 class 获取 tableInfo
             var tableInfo = new AnnotationConfigTable(v);
             try {
                 //有任何需要修复的直接 返回 true
-                if (SchemaHelper.checkNeedFixTable(tableInfo, databaseName, dataSource)) {
+                if (SchemaHelper.checkNeedFixTable(tableInfo, dataSource)) {
                     return true;
                 }
             } catch (Exception e) {

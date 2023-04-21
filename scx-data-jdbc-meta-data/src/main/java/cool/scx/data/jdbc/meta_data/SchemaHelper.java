@@ -50,12 +50,14 @@ public final class SchemaHelper {
      * @param tableInfo a
      * @throws java.sql.SQLException a
      */
-    public static void fixTable(Table<?> tableInfo, String databaseName, JDBCContext jdbcContext) throws SQLException {
+    public static void fixTable(Table<?> tableInfo, JDBCContext jdbcContext) throws SQLException {
         var dataSource = jdbcContext.dataSource();
         var sqlRunner = jdbcContext.sqlRunner();
         try (var con = dataSource.getConnection()) {
+            var catalog = con.getCatalog();
+            var schema = con.getSchema();
             // 查找同名表
-            var map = toTablesMap(initTables(con, databaseName, databaseName, tableInfo.name(), null));
+            var map = toTablesMap(initTables(con, catalog, schema, tableInfo.name(), null));
             var tableMetaData = map.get(tableInfo.name());
             if (tableMetaData == null) {// 没有这个表
                 var createTableDDL = findDialect(dataSource).getCreateTableDDL(tableInfo);
@@ -79,10 +81,12 @@ public final class SchemaHelper {
      * @return true 需要 false 不需要
      * @throws java.sql.SQLException e
      */
-    public static boolean checkNeedFixTable(Table<?> tableInfo, String databaseName, DataSource dataSource) throws SQLException {
+    public static boolean checkNeedFixTable(Table<?> tableInfo, DataSource dataSource) throws SQLException {
         try (var con = dataSource.getConnection()) {
+            var catalog = con.getCatalog();
+            var schema = con.getSchema();
             // 查找同名表
-            var map = toTablesMap(initTables(con, databaseName, databaseName, tableInfo.name(), null));
+            var map = toTablesMap(initTables(con, catalog, schema, tableInfo.name(), null));
             var tableMetaData = map.get(tableInfo.name());
             if (tableMetaData == null) {// 没有这个表
                 return true;
