@@ -67,11 +67,11 @@ public abstract class Dialect {
     /**
      * 创建数据源
      *
-     * @param url
-     * @param username
-     * @param password
-     * @param parameters
-     * @return
+     * @param url        a
+     * @param username   a
+     * @param password   a
+     * @param parameters a
+     * @return a
      */
     public abstract DataSource createDataSource(String url, String username, String password, String[] parameters);
 

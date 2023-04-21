@@ -41,7 +41,7 @@ public final class StandardDialect extends Dialect {
     }
 
     @Override
-    public DataSource createDataSource(String url, String username, String password, String[] p) {
+    public DataSource createDataSource(String url, String username, String password, String[] parameters) {
         return null;
     }
 
