@@ -22,6 +22,7 @@ import java.nio.file.Path;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 import static cool.scx.data.jdbc.ColumnFilter.ofExcluded;
 import static cool.scx.data.jdbc.sql.SQL.ofNormal;
@@ -68,9 +69,11 @@ public class ScxDaoTestForSQLite {
         var userTableInfo = new AnnotationConfigTable(User.class);
         //删除原有的表数据
         sqlRunner.execute(ofNormal("drop table if exists " + userTableInfo.name() + ";"));
-        sqlRunner.execute(ofNormal("drop table if exists " + userTableInfo.name() + "_doc;"));
         //根据 tableInfo 生成表结构
         SchemaHelper.fixTable(userTableInfo, databaseName, jdbcContext);
+
+        //开始使用
+        var userDao = new JDBCDao<>(User.class, jdbcContext);
 
         var list = new ArrayList<User>();
 
@@ -79,39 +82,45 @@ public class ScxDaoTestForSQLite {
             m1.age = i;
             m1.name = "小明" + i;
             m1.createDate = LocalDateTime.now();
+            m1.tags = new String[]{"abc", String.valueOf(i)};
             var userInfo = new User.UserInfo();
             userInfo.email = i + "@test.com";
             m1.userInfo = userInfo;
-            m1.tags = new String[]{"abc", String.valueOf(i)};
             list.add(m1);
         }
+
+        var newIds = userDao.addAll(list, ofExcluded());
+
+        System.out.println("JDBCDao-SQLite 插入 : " + newIds.size());
 
         //创建 query
         var query1 = new Query().greaterThan("age", 300);
         var query2 = new Query().whereSQL("(age > 400 OR ", equal("name", "小明1"), ")");
         var query3 = new Query().equal("age", 10).whereSQL(" and ", or("age > 400", equal("name", "小明1"), and(WhereBody.in("name", new String[]{"小明2", "小明3"}))));
         var query4 = new Query().equal("userInfo.email", "88@test.com", WhereOption.USE_JSON_EXTRACT);
-
-        //开始使用
-        var userDao = new JDBCDao<>(User.class, jdbcContext);
-
-        var newIds = userDao.addAll(list, ofExcluded());
-        System.out.println("插入 : " + newIds);
+        var query5 = new Query().jsonContains("tags", List.of("abc"));
 
         //标准查询
-        var a1 = userDao.find(query1, ofExcluded());
-        System.out.println("查询 1 : " + a1.size());
+        var a1 = userDao.find(query1);
+        System.out.println("JDBCDao-SQLite 查询 1 : " + a1.size());
 
         //拼接查询
-        var a2 = userDao.find(query2, ofExcluded());
-        System.out.println("查询 2 : " + a2.size());
+        var a2 = userDao.find(query2);
+        System.out.println("JDBCDao-SQLite 查询 2 : " + a2.size());
 
         // json 查询
-        var a3 = userDao.find(query3, ofExcluded());
-        System.out.println("查询 3 : " + a3.size());
+        var a3 = userDao.find(query3);
+        System.out.println("JDBCDao-SQLite 查询 3 : " + a3.size());
 
-        var a4 = userDao.find(query4, ofExcluded());
-        System.out.println("查询 4 : " + a4.size());
+        var a4 = userDao.find(query4);
+        System.out.println("JDBCDao-SQLite 查询 4 : " + a4.size());
+
+        try {
+            var a5 = userDao.find(query5);
+            System.out.println("JDBCDao-SQLite 查询 5 : " + a5.size());
+        } catch (Exception e) {
+            System.out.println("SQLite 不支持 jsonContains ");
+        }
 
     }
 
