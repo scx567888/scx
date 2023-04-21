@@ -87,7 +87,7 @@ public class MySQLXDao<Entity> implements Dao<Entity, String> {
         return addAll(entityList, ofExcluded());
     }
 
-    public List<Entity> select(Query query, FieldFilter selectFilter) {
+    public List<Entity> find(Query query, FieldFilter selectFilter) {
         var whereClauseAndWhereParams = WHERE_PARSER.parseWhere(query.where());
         var findStatement = this.collection
                 .find(whereClauseAndWhereParams.whereClause())
@@ -109,7 +109,7 @@ public class MySQLXDao<Entity> implements Dao<Entity, String> {
 
     @Override
     public List<Entity> find(Query query) {
-        return select(query, ofExcluded());
+        return find(query, ofExcluded());
     }
 
     public Entity get(Query query, FieldFilter fieldFilter) {
