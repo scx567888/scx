@@ -62,14 +62,14 @@ final class PlaceholderSQL implements SQL {
      * @param params            a
      * @throws SQLException a
      */
-    public static void fillPreparedStatement(PreparedStatement preparedStatement, Object[] params, Dialect typeHandlerSelector) throws SQLException {
+    public static void fillPreparedStatement(PreparedStatement preparedStatement, Object[] params, Dialect dialect) throws SQLException {
         var index = 1;
         for (var tempValue : params) {
             if (tempValue == null) {
                 //这里的 Types.NULL 其实内部并没有使用
                 preparedStatement.setNull(index, Types.NULL);
             } else {
-                var typeHandler = typeHandlerSelector.findTypeHandler(tempValue.getClass());
+                var typeHandler = dialect.findTypeHandler(tempValue.getClass());
                 typeHandler.setObject(preparedStatement, index, tempValue);
             }
             index = index + 1;

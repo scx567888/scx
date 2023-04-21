@@ -30,7 +30,7 @@ record MapListHandler(Supplier<Map<String, Object>> mapSupplier) implements Resu
      * a
      */
     @Override
-    public List<Map<String, Object>> apply(ResultSet rs, Dialect typeHandlerSelector) throws SQLException {
+    public List<Map<String, Object>> apply(ResultSet rs, Dialect dialect) throws SQLException {
         var list = new ArrayList<Map<String, Object>>();
         var rsm = rs.getMetaData();
         var count = rsm.getColumnCount();

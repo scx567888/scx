@@ -1,4 +1,4 @@
-package cool.scx.data.test;
+package cool.scx.data.jdbc.mysql.test;
 
 import cool.scx.data.jdbc.annotation.Column;
 import cool.scx.data.jdbc.annotation.Table;

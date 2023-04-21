@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import static cool.scx.data.mysql_x.FieldFilter.ofExcluded;
 import static cool.scx.data.mysql_x.JsonHelper.*;
 import static cool.scx.data.mysql_x.parser.MySQLXDaoWhereParser.WHERE_PARSER;
 
@@ -58,7 +59,7 @@ public class MySQLXDao<Entity> implements Dao<Entity, String> {
         throw new IllegalArgumentException("jsonNode 类型不为 ObjectNode !!!");
     }
 
-    public String insert(Entity entity, FieldFilter updateFilter) {
+    public String add(Entity entity, FieldFilter updateFilter) {
         var dbDoc = toDbDoc(entity, updateFilter.addExcluded("_id"));
         var addResult = this.collection.add(dbDoc).execute();
         var generatedIds = addResult.getGeneratedIds();
@@ -66,11 +67,11 @@ public class MySQLXDao<Entity> implements Dao<Entity, String> {
     }
 
     @Override
-    public String insert(Entity entity) {
-        return insert(entity, FieldFilter.ofExcluded());
+    public String add(Entity entity) {
+        return add(entity, ofExcluded());
     }
 
-    public List<String> insertBatch(Collection<Entity> entityList, FieldFilter updateFilter) {
+    public List<String> addAll(Collection<Entity> entityList, FieldFilter updateFilter) {
         var dbDocs = new DbDoc[entityList.size()];
         var index = 0;
         for (var entity : entityList) {
@@ -82,11 +83,11 @@ public class MySQLXDao<Entity> implements Dao<Entity, String> {
     }
 
     @Override
-    public List<String> insertBatch(Collection<Entity> entityList) {
-        return insertBatch(entityList, FieldFilter.ofExcluded());
+    public List<String> addAll(Collection<Entity> entityList) {
+        return addAll(entityList, ofExcluded());
     }
 
-    public List<Entity> select(Query query, FieldFilter selectFilter) {
+    public List<Entity> find(Query query, FieldFilter selectFilter) {
         var whereClauseAndWhereParams = WHERE_PARSER.parseWhere(query.where());
         var findStatement = this.collection
                 .find(whereClauseAndWhereParams.whereClause())
@@ -107,8 +108,26 @@ public class MySQLXDao<Entity> implements Dao<Entity, String> {
     }
 
     @Override
-    public List<Entity> select(Query query) {
-        return select(query, FieldFilter.ofExcluded());
+    public List<Entity> find(Query query) {
+        return find(query, ofExcluded());
+    }
+
+    public Entity get(Query query, FieldFilter fieldFilter) {
+        var whereClauseAndWhereParams = WHERE_PARSER.parseWhere(query.where());
+        var findStatement = this.collection
+                .find(whereClauseAndWhereParams.whereClause())
+                .bind(whereClauseAndWhereParams.whereParams())
+                .limit(1);
+
+        var docResult = findStatement.execute();
+        var dbDoc = docResult.fetchOne();
+
+        return toEntity(dbDoc, fieldFilter);
+    }
+
+    @Override
+    public Entity get(Query query) {
+        return get(query, ofExcluded());
     }
 
     public long update(Entity entity, Query query, FieldFilter updateFilter) {
@@ -124,7 +143,7 @@ public class MySQLXDao<Entity> implements Dao<Entity, String> {
 
     @Override
     public long update(Entity entity, Query query) {
-        return update(entity, query, FieldFilter.ofExcluded());
+        return update(entity, query, ofExcluded());
     }
 
     @Override

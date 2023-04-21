@@ -43,12 +43,12 @@ public final class Limit {
      * @param rowCount 长度
      * @return p
      */
-    public Limit set(Long offset, Long rowCount) {
-        if (offset == null || offset < 0) {
-            throw new IllegalArgumentException("分页参数错误 : offset (偏移量) 不能为空或小于 0 !!!");
+    public Limit set(long offset, long rowCount) {
+        if (offset < 0) {
+            throw new IllegalArgumentException("分页参数错误 : offset (偏移量) 不能小于 0 !!!");
         }
-        if (rowCount == null || rowCount < 0) {
-            throw new IllegalArgumentException("分页参数错误 : rowCount (行长度) 不能为空或小于 0 !!!");
+        if (rowCount < 0) {
+            throw new IllegalArgumentException("分页参数错误 : rowCount (行长度) 不能小于 0 !!!");
         }
         this.offset = offset;
         this.rowCount = rowCount;
@@ -61,8 +61,8 @@ public final class Limit {
      * @param rowCount 长度
      * @return s
      */
-    public Limit set(Long rowCount) {
-        return set(0L, rowCount);
+    public Limit set(long rowCount) {
+        return set(0, rowCount);
     }
 
     /**

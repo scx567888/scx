@@ -30,7 +30,7 @@ public class BaseModelService<Entity extends BaseModel> {
     /**
      * BaseDao
      */
-    protected final JDBCDao<Entity> baseDao;
+    protected final JDBCDao<Entity> dao;
 
     /**
      * 从泛型中获取 entityClass
@@ -41,7 +41,7 @@ public class BaseModelService<Entity extends BaseModel> {
         if (genericSuperclass instanceof ParameterizedType) {
             var typeArguments = ((ParameterizedType) genericSuperclass).getActualTypeArguments();
             var entityClass = (Class<Entity>) typeArguments[0];
-            this.baseDao = new JDBCDao<>(entityClass, ScxContext.jdbcContext());
+            this.dao = new JDBCDao<>(entityClass, ScxContext.jdbcContext());
         } else {
             throw new IllegalArgumentException(this.getClass().getName() + " : 必须设置泛型参数 !!!");
         }
@@ -53,7 +53,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @param entityClass 继承自 {@link BaseModel} 的实体类 class
      */
     public BaseModelService(Class<Entity> entityClass) {
-        this.baseDao = new JDBCDao<>(entityClass, ScxContext.jdbcContext());
+        this.dao = new JDBCDao<>(entityClass, ScxContext.jdbcContext());
     }
 
     /**
@@ -67,7 +67,7 @@ public class BaseModelService<Entity extends BaseModel> {
     }
 
     /**
-     * 插入数据 (注意 !!! 这里会在插入之后根据主键再次进行一次查询, 若只是进行插入且对性能有要求请使用 {@link JDBCDao#insert(Object, ColumnFilter)})
+     * 插入数据 (注意 !!! 这里会在插入之后根据主键再次进行一次查询, 若只是进行插入且对性能有要求请使用 {@link JDBCDao#add(Object, ColumnFilter)})
      *
      * @param entity 待插入的数据
      * @return 插入成功的数据 如果插入失败或数据没有主键则返回 null
@@ -77,14 +77,14 @@ public class BaseModelService<Entity extends BaseModel> {
     }
 
     /**
-     * 插入数据 (注意 !!! 这里会在插入之后根据主键再次进行一次查询, 若只是进行插入且对性能有要求请使用 {@link JDBCDao#insert(Object, ColumnFilter)})
+     * 插入数据 (注意 !!! 这里会在插入之后根据主键再次进行一次查询, 若只是进行插入且对性能有要求请使用 {@link JDBCDao#add(Object, ColumnFilter)})
      *
      * @param entity       待插入的数据
      * @param updateFilter 更新字段过滤器
      * @return 插入成功的数据 如果插入失败或数据没有主键则返回 null
      */
     public Entity add(Entity entity, ColumnFilter updateFilter) {
-        var newID = baseDao.insert(entity, updateFilterProcessor(updateFilter));
+        var newID = dao.add(entity, updateFilterProcessor(updateFilter));
         return newID != null ? this.get(newID) : null;
     }
 
@@ -107,7 +107,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 插入成功的数据的自增主键列表
      */
     public List<Long> add(Collection<Entity> entityList, ColumnFilter updateFilter) {
-        return baseDao.insertBatch(entityList, updateFilterProcessor(updateFilter));
+        return dao.addAll(entityList, updateFilterProcessor(updateFilter));
     }
 
     /**
@@ -157,7 +157,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 数据列表
      */
     public List<Entity> list(Query query, ColumnFilter selectFilter) {
-        return baseDao.select(query, selectFilter);
+        return dao.find(query, selectFilter);
     }
 
     /**
@@ -199,8 +199,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 查到多个则返回第一个 没有则返回 null
      */
     public final Entity get(Query query, ColumnFilter selectFilter) {
-        var list = list(query.setLimit(1L), selectFilter);
-        return list.size() > 0 ? list.get(0) : null;
+        return this.dao.get(query, selectFilter);
     }
 
     /**
@@ -219,7 +218,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 数据条数
      */
     public final long count(Query query) {
-        return baseDao.count(query);
+        return dao.count(query);
     }
 
     /**
@@ -267,7 +266,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 更新成功的数据条数
      */
     public long update(Entity entity, Query query, ColumnFilter updateFilter) {
-        return baseDao.update(entity, query, updateFilterProcessor(updateFilter));
+        return dao.update(entity, query, updateFilterProcessor(updateFilter));
     }
 
     /**
@@ -290,7 +289,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 被删除的数据条数
      */
     public long delete(Query query) {
-        return baseDao.delete(query);
+        return dao.delete(query);
     }
 
     /**
@@ -306,7 +305,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @see JDBCDao#buildSelectSQL(Query, ColumnFilter)
      */
     public final SQL buildListSQL(Query query, ColumnFilter selectFilter) {
-        return baseDao.buildSelectSQL(query, selectFilter);
+        return dao.buildSelectSQL(query, selectFilter);
     }
 
     /**
@@ -336,7 +335,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @see JDBCDao#buildSelectSQL(Query, ColumnFilter)
      */
     public final SQL buildListSQLWithAlias(Query query, ColumnFilter selectFilter) {
-        return baseDao.buildSelectSQLWithAlias(query, selectFilter);
+        return dao.buildSelectSQLWithAlias(query, selectFilter);
     }
 
     /**
@@ -358,8 +357,8 @@ public class BaseModelService<Entity extends BaseModel> {
      *
      * @return a {@link JDBCDao} object
      */
-    public JDBCDao<Entity> _baseDao() {
-        return baseDao;
+    public JDBCDao<Entity> _dao() {
+        return dao;
     }
 
 }

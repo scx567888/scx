@@ -3,90 +3,24 @@ package cool.scx.data.jdbc.dialect;
 import cool.scx.data.jdbc.ColumnMapping;
 import cool.scx.data.jdbc.mapping.Column;
 import cool.scx.data.jdbc.mapping.Table;
-import cool.scx.data.jdbc.type_handler.*;
-import cool.scx.data.jdbc.type_handler.math.BigDecimalTypeHandler;
-import cool.scx.data.jdbc.type_handler.math.BigIntegerTypeHandler;
-import cool.scx.data.jdbc.type_handler.primitive.*;
-import cool.scx.data.jdbc.type_handler.time.*;
+import cool.scx.data.jdbc.type_handler.TypeHandler;
+import cool.scx.data.jdbc.type_handler.TypeHandlerSelector;
 
 import javax.sql.DataSource;
-import java.io.InputStream;
-import java.io.Reader;
 import java.lang.reflect.Type;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.sql.Driver;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import static cool.scx.util.StringUtils.notEmpty;
-import static cool.scx.util.reflect.ClassUtils.isEnum;
 
 public abstract class Dialect {
 
-    protected final Map<Type, TypeHandler<?>> TYPE_HANDLER_MAP = new ConcurrentHashMap<>();
-
-    public Dialect() {
-        initTypeHandler();
-    }
-
-    public void initTypeHandler() {
-        // 基本类型
-        TYPE_HANDLER_MAP.put(boolean.class, new BooleanTypeHandler(true));
-        TYPE_HANDLER_MAP.put(char.class, new CharacterTypeHandler(true));
-        TYPE_HANDLER_MAP.put(byte.class, new ByteTypeHandler(true));
-        TYPE_HANDLER_MAP.put(short.class, new ShortTypeHandler(true));
-        TYPE_HANDLER_MAP.put(int.class, new IntegerTypeHandler(true));
-        TYPE_HANDLER_MAP.put(long.class, new LongTypeHandler(true));
-        TYPE_HANDLER_MAP.put(float.class, new FloatTypeHandler(true));
-        TYPE_HANDLER_MAP.put(double.class, new DoubleTypeHandler(true));
-        TYPE_HANDLER_MAP.put(Boolean.class, new BooleanTypeHandler(false));
-        TYPE_HANDLER_MAP.put(Character.class, new CharacterTypeHandler(false));
-        TYPE_HANDLER_MAP.put(Byte.class, new ByteTypeHandler(false));
-        TYPE_HANDLER_MAP.put(Short.class, new ShortTypeHandler(false));
-        TYPE_HANDLER_MAP.put(Integer.class, new IntegerTypeHandler(false));
-        TYPE_HANDLER_MAP.put(Long.class, new LongTypeHandler(false));
-        TYPE_HANDLER_MAP.put(Float.class, new FloatTypeHandler(false));
-        TYPE_HANDLER_MAP.put(Double.class, new DoubleTypeHandler(false));
-
-
-        // 常用类型
-        TYPE_HANDLER_MAP.put(String.class, new StringTypeHandler());
-        TYPE_HANDLER_MAP.put(Byte[].class, new ByteObjectArrayTypeHandler());
-        TYPE_HANDLER_MAP.put(byte[].class, new ByteArrayTypeHandler());
-
-
-        // 大数字
-        TYPE_HANDLER_MAP.put(BigInteger.class, new BigIntegerTypeHandler());
-        TYPE_HANDLER_MAP.put(BigDecimal.class, new BigDecimalTypeHandler());
-
-
-        // 时间
-        TYPE_HANDLER_MAP.put(LocalDateTime.class, new LocalDateTimeTypeHandler());
-        TYPE_HANDLER_MAP.put(LocalDate.class, new LocalDateTypeHandler());
-        TYPE_HANDLER_MAP.put(LocalTime.class, new LocalTimeTypeHandler());
-        TYPE_HANDLER_MAP.put(OffsetDateTime.class, new OffsetDateTimeTypeHandler());
-        TYPE_HANDLER_MAP.put(OffsetTime.class, new OffsetTimeTypeHandler());
-        TYPE_HANDLER_MAP.put(ZonedDateTime.class, new ZonedDateTimeTypeHandler());
-        TYPE_HANDLER_MAP.put(Month.class, new MonthTypeHandler());
-        TYPE_HANDLER_MAP.put(Year.class, new YearTypeHandler());
-        TYPE_HANDLER_MAP.put(YearMonth.class, new YearMonthTypeHandler());
-        TYPE_HANDLER_MAP.put(Date.class, new DateTypeHandler());
-        TYPE_HANDLER_MAP.put(Instant.class, new InstantTypeHandler());
-        TYPE_HANDLER_MAP.put(Duration.class, new DurationTypeHandler());
-
-        //clob and blow
-        TYPE_HANDLER_MAP.put(InputStream.class, new BlobInputStreamTypeHandler());
-        TYPE_HANDLER_MAP.put(Reader.class, new ClobReaderTypeHandler());
-    }
+    protected final TypeHandlerSelector typeHandlerSelector = new TypeHandlerSelector();
 
     /**
      * 是否可以处理
@@ -127,7 +61,7 @@ public abstract class Dialect {
      *
      * @return s
      */
-    public String getCreateTableDDL(Table<?> tableInfo) {
+    public final String getCreateTableDDL(Table<?> tableInfo) {
         var s = new StringBuilder();
         s.append("CREATE TABLE ");
         if (notEmpty(tableInfo.schema())) {
@@ -146,14 +80,14 @@ public abstract class Dialect {
         return s.toString();
     }
 
-    public List<String> getCreateDefinition(Table<?> table) {
+    public final List<String> getCreateDefinition(Table<?> table) {
         var createDefinitions = new ArrayList<String>();
         createDefinitions.addAll(getColumnDefinitions(table.columns()));
         createDefinitions.addAll(getTableConstraint(table));
         return createDefinitions;
     }
 
-    public List<String> getColumnDefinitions(Column[] columns) {
+    public final List<String> getColumnDefinitions(Column[] columns) {
         var list = new ArrayList<String>();
         for (var column : columns) {
             list.add(getColumnDefinition(column));
@@ -165,7 +99,7 @@ public abstract class Dialect {
         return new ArrayList<>();
     }
 
-    public String getColumnDefinition(Column column) {
+    public final String getColumnDefinition(Column column) {
         var s = new StringBuilder();
         s.append(column.name()).append(" ");// 列名
         var dataTypeDefinition = getDataTypeDefinition(column);
@@ -178,7 +112,7 @@ public abstract class Dialect {
         return s.toString();
     }
 
-    public String getDataTypeDefinition(Column column) {
+    public final String getDataTypeDefinition(Column column) {
         if (column.typeName() != null) {
             if (column.columnSize() != null) {
                 return column.typeName() + "(" + column.columnSize() + ")";
@@ -194,6 +128,9 @@ public abstract class Dialect {
         }
     }
 
+    /**
+     * 当前列对象通常的 DDL 如设置 字段名 类型 是否可以为空 默认值等 (建表语句片段 , 需和 specialDDL 一起使用才完整)
+     */
     public abstract List<String> getColumnConstraint(Column columns);
 
     /**
@@ -214,12 +151,13 @@ public abstract class Dialect {
     }
 
     /**
-     * todo
+     * todo 暂时只支持添加新字段 需要同时支持 删除或修改
+     * 获取 AlertTableDDL
      *
      * @param needAdds  a
      * @param tableInfo a
      */
-    public String getAlertTableDDL(Column[] needAdds, Table<?> tableInfo) {
+    public final String getAlertTableDDL(Column[] needAdds, Table<?> tableInfo) {
         var s = new StringBuilder();
         s.append("ALTER TABLE ");
         if (notEmpty(tableInfo.schema())) {
@@ -247,27 +185,8 @@ public abstract class Dialect {
         return preparedStatement;
     }
 
-    @SuppressWarnings("unchecked")
     public final <T> TypeHandler<T> findTypeHandler(Type type) {
-        return (TypeHandler<T>) TYPE_HANDLER_MAP.computeIfAbsent(type, this::createTypeHandler);
-    }
-
-    @SuppressWarnings("unchecked")
-    private <E extends Enum<E>> TypeHandler<?> createTypeHandler(Type type) {
-        if (type instanceof Class<?> clazz) {
-            if (isEnum(clazz)) {
-                var enumClass = clazz.isAnonymousClass() ? clazz.getSuperclass() : clazz;
-                return new EnumTypeHandler<>((Class<E>) enumClass);
-            } else {
-                //判断是否为可识别类型的子类
-                for (var entry : TYPE_HANDLER_MAP.entrySet()) {
-                    if (entry.getKey() instanceof Class<?> c && c.isAssignableFrom(clazz)) {
-                        return entry.getValue();
-                    }
-                }
-            }
-        }
-        return new ObjectTypeHandler(type);
+        return typeHandlerSelector.findTypeHandler(type);
     }
 
 }

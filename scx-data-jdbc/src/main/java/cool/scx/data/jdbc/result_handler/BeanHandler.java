@@ -15,8 +15,8 @@ import java.sql.SQLException;
 record BeanHandler<T>(BeanBuilder<T> beanBuilder) implements ResultHandler<T> {
 
     @Override
-    public T apply(ResultSet rs, Dialect typeHandlerSelector) throws SQLException {
-        beanBuilder.setTypeHandlerSelector(typeHandlerSelector);
+    public T apply(ResultSet rs, Dialect dialect) throws SQLException {
+        beanBuilder.bindDialect(dialect);
         var indexInfo = beanBuilder.getIndexInfo(rs.getMetaData());
         return rs.next() ? beanBuilder.createBean(rs, indexInfo) : null;
     }

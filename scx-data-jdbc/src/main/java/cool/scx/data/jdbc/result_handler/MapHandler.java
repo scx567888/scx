@@ -23,7 +23,7 @@ record MapHandler(Supplier<Map<String, Object>> mapSupplier) implements ResultHa
     }
 
     @Override
-    public Map<String, Object> apply(ResultSet rs, Dialect typeHandlerSelector) throws SQLException {
+    public Map<String, Object> apply(ResultSet rs, Dialect dialect) throws SQLException {
         var rsm = rs.getMetaData();
         var count = rsm.getColumnCount();
         if (rs.next()) {

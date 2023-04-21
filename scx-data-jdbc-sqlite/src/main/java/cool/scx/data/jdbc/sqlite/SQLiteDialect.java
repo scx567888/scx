@@ -45,6 +45,11 @@ public class SQLiteDialect extends Dialect {
         }
     }
 
+    public SQLiteDialect() {
+        // 注册自定义的 TypeHandler       
+        typeHandlerSelector.registerTypeHandler(LocalDateTime.class, new SQLiteLocalDateTimeTypeHandler());
+    }
+
     @Override
     public boolean canHandle(DataSource dataSource) {
         try {
@@ -129,12 +134,6 @@ public class SQLiteDialect extends Dialect {
             list.add("DEFAULT " + column.defaultValue());
         }
         return list;
-    }
-
-    @Override
-    public void initTypeHandler() {
-        super.initTypeHandler();
-        TYPE_HANDLER_MAP.put(LocalDateTime.class, new SQLiteLocalDateTimeTypeHandler());
     }
 
 }

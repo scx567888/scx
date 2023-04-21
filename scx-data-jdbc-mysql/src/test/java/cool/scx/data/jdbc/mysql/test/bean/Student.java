@@ -1,4 +1,4 @@
-package cool.scx.data.test.bean;
+package cool.scx.data.jdbc.mysql.test.bean;
 
 public class Student {
     public String name;

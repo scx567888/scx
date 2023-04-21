@@ -46,7 +46,7 @@ final class FieldSetter {
         return fieldSetters;
     }
 
-    public void setTypeHandler(TypeHandler<Object> typeHandler) {
+    public void bindTypeHandler(TypeHandler<Object> typeHandler) {
         this.typeHandler = typeHandler;
     }
 

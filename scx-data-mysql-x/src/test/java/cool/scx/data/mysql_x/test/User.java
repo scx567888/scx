@@ -1,4 +1,4 @@
-package cool.scx.data.test;
+package cool.scx.data.mysql_x.test;
 
 import cool.scx.data.mysql_x.annotation.Collection;
 
