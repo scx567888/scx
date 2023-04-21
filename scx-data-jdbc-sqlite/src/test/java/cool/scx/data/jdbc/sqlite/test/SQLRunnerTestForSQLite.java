@@ -22,9 +22,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static cool.scx.data.jdbc.result_handler.ResultHandler.ofBeanList;
 import static cool.scx.data.jdbc.result_handler.ResultHandler.ofMapList;
 import static cool.scx.data.jdbc.sql.SQL.ofNormal;
-import static cool.scx.data.jdbc.sqlite.test.ScxDaoTest.getSQLiteDataSource;
+import static cool.scx.data.jdbc.sqlite.test.ScxDaoTestForSQLite.getSQLiteDataSource;
 
-public class SQLRunnerTest {
+public class SQLRunnerTestForSQLite {
 
     private static final String databaseName = "scx_sql_test";
     private static final DataSource dataSource = getSQLiteDataSource();

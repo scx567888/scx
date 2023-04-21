@@ -12,14 +12,15 @@ import cool.scx.data.jdbc.sql.SQL;
 import cool.scx.data.jdbc.sql.SQLRunner;
 import cool.scx.util.RandomUtils;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Function;
 
 import static cool.scx.data.jdbc.ColumnFilter.ofExcluded;
-import static cool.scx.data.jdbc.result_handler.ResultHandler.ofBeanList;
-import static cool.scx.data.jdbc.result_handler.ResultHandler.ofSingleValue;
+import static cool.scx.data.jdbc.result_handler.ResultHandler.*;
 import static cool.scx.data.jdbc.sql.SQLBuilder.*;
 import static cool.scx.util.ArrayUtils.concat;
 
@@ -52,6 +53,11 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
     protected final ResultHandler<List<Entity>> entityBeanListHandler;
 
     /**
+     * 实体类对应的 BeanListHandler
+     */
+    protected final ResultHandler<Entity> entityBeanHandler;
+
+    /**
      * 查询 count 所用的 handler
      */
     protected final ResultHandler<Long> countResultHandler;
@@ -77,10 +83,12 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
         this.jdbcContext = jdbcContext;
         this.sqlRunner = jdbcContext.sqlRunner();
         this.tableInfo = new AnnotationConfigTable(entityClass);
-        this.entityBeanListHandler = ofBeanList(this.entityClass, (field) -> {
+        var columnNameMapping = (Function<Field, String>) field -> {
             var columnInfo = this.tableInfo.getColumn(field.getName());
             return columnInfo == null ? null : columnInfo.name();
-        });
+        };
+        this.entityBeanListHandler = ofBeanList(this.entityClass, columnNameMapping);
+        this.entityBeanHandler = ofBean(this.entityClass, columnNameMapping);
         this.countResultHandler = ofSingleValue("count", Long.class);
         this.whereParser = new JDBCDaoWhereParser(tableInfo);
         this.groupByParser = new JDBCDaoGroupByParser(tableInfo);
@@ -94,13 +102,13 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
      * @param updateFilter a
      * @return 插入成功的主键 ID 如果插入失败或数据没有主键则返回 null
      */
-    public final Long insert(Entity entity, ColumnFilter updateFilter) {
+    public final Long add(Entity entity, ColumnFilter updateFilter) {
         return sqlRunner.update(_buildInsertSQL(entity, updateFilter)).firstGeneratedKey();
     }
 
     @Override
-    public final Long insert(Entity entity) {
-        return insert(entity, ofExcluded());
+    public final Long add(Entity entity) {
+        return add(entity, ofExcluded());
     }
 
     /**
@@ -128,13 +136,13 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
      * @param updateFilter a
      * @return 保存成功的主键 (ID) 列表
      */
-    public final List<Long> insertBatch(Collection<Entity> entityList, ColumnFilter updateFilter) {
+    public final List<Long> addAll(Collection<Entity> entityList, ColumnFilter updateFilter) {
         return sqlRunner.updateBatch(buildInsertBatchSQL(entityList, updateFilter)).generatedKeys();
     }
 
     @Override
-    public final List<Long> insertBatch(Collection<Entity> entityList) {
-        return insertBatch(entityList, ofExcluded());
+    public final List<Long> addAll(Collection<Entity> entityList) {
+        return addAll(entityList, ofExcluded());
     }
 
     /**
@@ -144,7 +152,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
      * @param updateFilter a
      * @return a
      */
-    private SQL buildInsertBatchSQL(Collection<Entity> entityList, ColumnFilter updateFilter) {
+    private SQL buildInsertBatchSQL(Collection<? extends Entity> entityList, ColumnFilter updateFilter) {
         var insertColumnInfos = updateFilter.filter(tableInfo);
         //将 entityList 转换为 objectArrayList 这里因为 stream 实在太慢所以改为传统循环方式
         var objectArrayList = new ArrayList<Object[]>();
@@ -175,8 +183,17 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
     }
 
     @Override
-    public final List<Entity> select(Query query) {
+    public final List<Entity> find(Query query) {
         return select(query, ofExcluded());
+    }
+
+    @Override
+    public Entity get(Query query) {
+        return get(query, ofExcluded());
+    }
+
+    public Entity get(Query query, ColumnFilter columnFilter) {
+        return sqlRunner.query(buildSelectSQL(query.setLimit(1), columnFilter), entityBeanHandler);
     }
 
     /**

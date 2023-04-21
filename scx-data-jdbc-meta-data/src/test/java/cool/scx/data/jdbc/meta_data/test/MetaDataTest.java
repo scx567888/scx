@@ -1,7 +1,6 @@
 package cool.scx.data.jdbc.meta_data.test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.mysql.cj.conf.PropertyKey;
 import com.mysql.cj.jdbc.MysqlDataSource;
 import cool.scx.data.jdbc.meta_data.DataSourceMetaData;
 import cool.scx.util.reflect.ClassUtils;

@@ -104,7 +104,7 @@ public class ScxDaoTest {
         //开始使用
         var userDao = new JDBCDao<>(User.class, jdbcContext);
 
-        var newIds = userDao.insertBatch(list, ofExcluded());
+        var newIds = userDao.addAll(list, ofExcluded());
         System.out.println("插入 : " + newIds);
 
         //标准查询
@@ -118,13 +118,10 @@ public class ScxDaoTest {
         // json 查询
         var a3 = userDao.select(query3, ofExcluded());
         System.out.println("查询 3 : " + a3.size());
-        var a33 = userDao.select(query3, ofExcluded());
-        System.out.println("MySQLX 查询 3 : " + a33.size());
 
         var a4 = userDao.select(query4, ofExcluded());
         System.out.println("查询 4 : " + a4.size());
-        var a34 = userDao.select(query4, ofExcluded());
-        System.out.println("MySQLX 查询 4 : " + a34.size());
+
     }
 
 }

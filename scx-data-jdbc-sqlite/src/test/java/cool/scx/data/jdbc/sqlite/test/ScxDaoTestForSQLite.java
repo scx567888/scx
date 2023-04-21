@@ -29,7 +29,7 @@ import static cool.scx.data.query.Logic.and;
 import static cool.scx.data.query.Logic.or;
 import static cool.scx.data.query.WhereBody.equal;
 
-public class ScxDaoTest {
+public class ScxDaoTestForSQLite {
 
     public static final Path TempSQLite;
     public static final String databaseName = "scx_dao_test";
@@ -38,7 +38,7 @@ public class ScxDaoTest {
     static {
         ScxLoggerFactory.defaultConfig().setLevel(ScxLoggingLevel.DEBUG);
         try {
-            AppRoot = ClassUtils.getAppRoot(ClassUtils.getCodeSource(ScxDaoTest.class));
+            AppRoot = ClassUtils.getAppRoot(ClassUtils.getCodeSource(ScxDaoTestForSQLite.class));
             TempSQLite = AppRoot.resolve("temp").resolve("temp.sqlite");
             Files.createDirectories(TempSQLite.getParent());
         } catch (URISyntaxException | IOException e) {
@@ -95,7 +95,7 @@ public class ScxDaoTest {
         //开始使用
         var userDao = new JDBCDao<>(User.class, jdbcContext);
 
-        var newIds = userDao.insertBatch(list, ofExcluded());
+        var newIds = userDao.addAll(list, ofExcluded());
         System.out.println("插入 : " + newIds);
 
         //标准查询
