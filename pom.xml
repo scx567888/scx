@@ -51,7 +51,6 @@
         <module>scx-data-jdbc-mysql</module>
         <module>scx-data-jdbc-spy</module>
         <module>scx-data-jdbc-sqlite</module>
-        <module>scx-data-mongodb</module>
         <module>scx-data-mysql-x</module>
         <module>scx-logging</module>
         <module>scx-mvc</module>
