@@ -67,7 +67,7 @@ final class SingleValueHandler<T> implements ResultHandler<T> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public T apply(ResultSet rs, Dialect typeHandlerSelector) throws SQLException {
+    public T apply(ResultSet rs, Dialect dialect) throws SQLException {
         if (rs.next()) {
             if (this.clazz == null) {
                 return (T) (this.useName ? rs.getObject(this.columnName) : rs.getObject(this.columnIndex));

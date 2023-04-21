@@ -28,7 +28,7 @@ record MapConsumerHandler(Supplier<Map<String, Object>> mapSupplier,
      * a
      */
     @Override
-    public Void apply(ResultSet rs, Dialect typeHandlerSelector) throws SQLException {
+    public Void apply(ResultSet rs, Dialect dialect) throws SQLException {
         var rsm = rs.getMetaData();
         var count = rsm.getColumnCount();
         while (rs.next()) {

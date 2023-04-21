@@ -16,8 +16,8 @@ import java.util.function.Consumer;
 record BeanConsumerHandler<T>(BeanBuilder<T> beanBuilder, Consumer<T> consumer) implements ResultHandler<Void> {
 
     @Override
-    public Void apply(ResultSet rs, Dialect typeHandlerSelector) throws SQLException {
-        beanBuilder.setTypeHandlerSelector(typeHandlerSelector);
+    public Void apply(ResultSet rs, Dialect dialect) throws SQLException {
+        beanBuilder.setDialect(dialect);
         var indexInfo = beanBuilder.getIndexInfo(rs.getMetaData());
         while (rs.next()) {
             T t = beanBuilder.createBean(rs, indexInfo);

@@ -22,7 +22,7 @@ record BeanListHandler<T>(BeanBuilder<T> beanBuilder) implements ResultHandler<L
      */
     @Override
     public List<T> apply(ResultSet rs, Dialect dialect) throws SQLException {
-        beanBuilder.setTypeHandlerSelector(dialect);
+        beanBuilder.setDialect(dialect);
         var indexInfo = beanBuilder.getIndexInfo(rs.getMetaData());
         var list = new ArrayList<T>();
         //从rs中取出数据，并且封装到ArrayList中

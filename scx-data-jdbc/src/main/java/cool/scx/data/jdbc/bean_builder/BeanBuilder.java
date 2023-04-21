@@ -18,7 +18,7 @@ import java.util.function.Function;
  */
 public abstract class BeanBuilder<T> {
 
-    private Dialect lastTypeHandlerSelector;
+    private Dialect lastDialect;
 
     public static <T> BeanBuilder<T> of(Class<T> type) {
         return type.isRecord() ? new RecordBeanBuilder<>(type) : new NormalBeanBuilder<>(type);
@@ -57,13 +57,13 @@ public abstract class BeanBuilder<T> {
      * 刷新 fieldSetter 对应的 TypeHandler
      * todo 此处设计不合理
      *
-     * @param typeHandlerSelector t
+     * @param dialect t
      */
-    public final void setTypeHandlerSelector(Dialect typeHandlerSelector) {
-        if (lastTypeHandlerSelector != typeHandlerSelector) {
-            lastTypeHandlerSelector = typeHandlerSelector;
+    public final void setDialect(Dialect dialect) {
+        if (lastDialect != dialect) {
+            lastDialect = dialect;
             for (var fieldSetter : fieldSetters()) {
-                var typeHandler = lastTypeHandlerSelector.findTypeHandler(fieldSetter.javaField().getGenericType());
+                var typeHandler = lastDialect.findTypeHandler(fieldSetter.javaField().getGenericType());
                 fieldSetter.setTypeHandler(typeHandler);
             }
         }

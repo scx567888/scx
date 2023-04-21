@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static cool.scx.data.jdbc.dialect.StandardDialect.STANDARD_DIALECT;
-
 public final class MetaDataHelper {
 
     private static final ResultHandler<List<_Catalog>> CATALOG_LIST_HANDLER = ResultHandler.ofBeanList(_Catalog.class);
