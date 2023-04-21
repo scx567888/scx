@@ -75,7 +75,7 @@ public class MySQLXDaoTest {
 
         mySQLXDao._clear();
 
-        var newIds3 = mySQLXDao.insertBatch(list, ofExcluded());
+        var newIds3 = mySQLXDao.addAll(list, ofExcluded());
         System.out.println("MySQLX 插入 : " + newIds3);
 
         //标准查询

@@ -10,22 +10,27 @@ import java.util.List;
 public class MongoDao<Entity> implements Dao<Entity, String> {
 
     @Override
-    public String insert(Object o) {
+    public String add(Entity entity) {
         return null;
     }
 
     @Override
-    public List<String> insertBatch(Collection<Entity> entityList) {
+    public List<String> addAll(Collection<Entity> entityList) {
         return null;
     }
 
     @Override
-    public List<Entity> select(Query query) {
+    public List<Entity> find(Query query) {
         return null;
     }
 
     @Override
-    public long update(Object o, Query query) {
+    public Entity get(Query query) {
+        return null;
+    }
+
+    @Override
+    public long update(Entity entity, Query query) {
         return 0;
     }
 
