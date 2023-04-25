@@ -99,6 +99,12 @@
                 <version>${vertx.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+
             <!-- Jackson 数据类型拓展包 针对 (jsr310)[https://jcp.org/en/jsr/detail?id=310] -->
             <!-- 添加了对新的时间和日期Api (LocalDateTime、DateTimeFormatter) 等的支持 -->
             <dependency>
