@@ -242,14 +242,15 @@ public enum HttpResponseStatus {
     /**
      * 存储 code 和 对应枚举的映射
      */
-    private static final HttpResponseStatus[] MAP;
+    private static final HttpResponseStatus[] MAP = initMap();
 
-    static {
-        MAP = new HttpResponseStatus[506];
+    private static HttpResponseStatus[] initMap() {
+        var m = new HttpResponseStatus[506];
         var values = HttpResponseStatus.values();
         for (var v : values) {
-            MAP[v.statusCode] = v;
+            m[v.statusCode] = v;
         }
+        return m;
     }
 
     private final int statusCode;
