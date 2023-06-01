@@ -27,10 +27,11 @@ public class LoggingEventListener extends SimpleJdbcEventListener {
 
     @Override
     public void onAfterAnyExecute(Statement statement, long timeElapsedNanos, SQLException e) {
-        if (logger.isDebugEnabled()) {
+//        todo 需要处理(是否需要在 语句执行后执行此方法)
+//        if (logger.isDebugEnabled()) {
 //            logger.debug("耗时 : " + timeElapsedNanos / 1000_000 + " ms ," + getFinalSQL(statement));
 //            logger.debug(dialect.getFinalSQL(statement));
-        }
+//        }
     }
 
     @Override
