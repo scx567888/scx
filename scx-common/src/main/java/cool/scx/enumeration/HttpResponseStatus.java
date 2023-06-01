@@ -244,6 +244,15 @@ public enum HttpResponseStatus {
      */
     private static final HttpResponseStatus[] MAP = initMap();
 
+    private final int statusCode;
+    
+    private final String reasonPhrase;
+    
+    HttpResponseStatus(int statusCode, String reasonPhrase) {
+        this.statusCode = statusCode;
+        this.reasonPhrase = reasonPhrase;
+    }
+
     private static HttpResponseStatus[] initMap() {
         var m = new HttpResponseStatus[506];
         var values = HttpResponseStatus.values();
@@ -251,14 +260,6 @@ public enum HttpResponseStatus {
             m[v.statusCode] = v;
         }
         return m;
-    }
-
-    private final int statusCode;
-    private final String reasonPhrase;
-
-    HttpResponseStatus(int statusCode, String reasonPhrase) {
-        this.statusCode = statusCode;
-        this.reasonPhrase = reasonPhrase;
     }
 
     public static HttpResponseStatus of(int code) {
