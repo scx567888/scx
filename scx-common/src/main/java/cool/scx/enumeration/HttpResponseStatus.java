@@ -245,9 +245,9 @@ public enum HttpResponseStatus {
     private static final HttpResponseStatus[] MAP = initMap();
 
     private final int statusCode;
-    
+
     private final String reasonPhrase;
-    
+
     HttpResponseStatus(int statusCode, String reasonPhrase) {
         this.statusCode = statusCode;
         this.reasonPhrase = reasonPhrase;
