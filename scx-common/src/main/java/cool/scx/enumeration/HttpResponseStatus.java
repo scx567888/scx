@@ -5,7 +5,7 @@ package cool.scx.enumeration;
  *
  * @author scx567888
  * @version 1.11.8
- * @see <a href="https://httpwg.org/specs/rfc9110.html">https://httpwg.org/specs/rfc9110.html</a>
+ * @see <a href="https://www.rfc-editor.org/rfc/rfc9110">https://www.rfc-editor.org/rfc/rfc9110</a>
  */
 public enum HttpResponseStatus {
 
@@ -200,6 +200,16 @@ public enum HttpResponseStatus {
     UPGRADE_REQUIRED(426, "Upgrade Required"),
 
     /**
+     * 表示在一定的时间内用户发送了太多的请求，即超出了“频次限制”。
+     */
+    TOO_MANY_REQUESTS(429, "Too Many Requests"),
+
+    /**
+     * 表示由于请求中的首部字段的值过大，服务器拒绝接受客户端的请求。客户端可以在缩减首部字段的体积后再次发送请求。
+     */
+    REQUEST_HEADER_FIELDS_TOO_LARGE(431, "Request Header Fields Too Large"),
+
+    /**
      * 服务器遇到了不知道如何处理的情况。
      */
     INTERNAL_SERVER_ERROR(500, "Internal Server Error"),
@@ -242,20 +252,19 @@ public enum HttpResponseStatus {
         }
     }
 
-    public static HttpResponseStatus of(int code) {
-        if (code < 0 || code > 505) {
-            return null;
-        }
-        return MAP[code];
-    }
-
     private final int statusCode;
-
     private final String reasonPhrase;
 
     HttpResponseStatus(int statusCode, String reasonPhrase) {
         this.statusCode = statusCode;
         this.reasonPhrase = reasonPhrase;
+    }
+
+    public static HttpResponseStatus of(int code) {
+        if (code < 0 || code > 505) {
+            return null;
+        }
+        return MAP[code];
     }
 
     public int statusCode() {

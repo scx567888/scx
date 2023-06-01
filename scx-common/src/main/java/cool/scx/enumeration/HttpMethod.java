@@ -5,6 +5,7 @@ package cool.scx.enumeration;
  *
  * @author scx567888
  * @version 0.3.6
+ * @see <a href="https://www.rfc-editor.org/rfc/rfc9110">https://www.rfc-editor.org/rfc/rfc9110</a>
  */
 public enum HttpMethod {
 
