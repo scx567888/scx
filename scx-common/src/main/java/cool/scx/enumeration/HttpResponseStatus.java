@@ -5,10 +5,9 @@ package cool.scx.enumeration;
  *
  * @author scx567888
  * @version 1.11.8
+ * @see <a href="https://httpwg.org/specs/rfc9110.html">https://httpwg.org/specs/rfc9110.html</a>
  */
 public enum HttpResponseStatus {
-
-    //************** 信息响应 ****************
 
     /**
      * 这个临时响应表明，迄今为止的所有内容都是可行的，客户端应该继续请求，如果已经完成，则忽略它。
@@ -19,19 +18,6 @@ public enum HttpResponseStatus {
      * 该代码是响应客户端的 Upgrade (en-US) 请求头发送的，指明服务器即将切换的协议。
      */
     SWITCHING_PROTOCOLS(101, "Switching Protocols"),
-
-    /**
-     * 此代码表示服务器已收到并正在处理该请求，但当前没有响应可用。
-     */
-    @Deprecated
-    PROCESSING(102, "Processing"),
-
-    /**
-     * 此状态代码主要用于与 Link 链接头一起使用，以允许用户代理在服务器准备响应阶段时开始预加载 preloading 资源。
-     */
-    EARLY_HINTS(103, "Early Hints"),
-
-    //************** 成功响应 ****************
 
     /**
      * 请求成功。成功的含义取决于 HTTP 方法：
@@ -74,13 +60,6 @@ public enum HttpResponseStatus {
     PARTIAL_CONTENT(206, "Partial Content"),
 
     /**
-     * 对于多个状态代码都可能合适的情况，传输有关多个资源的信息。
-     */
-    MULTI_STATUS(207, "Multi-Status"),
-
-    //************** 重定向消息 ****************
-
-    /**
      * 请求拥有多个可能的响应。用户代理或者用户应当从中选择一个。（没有标准化的方法来选择其中一个响应，但是建议使用指向可能性的 HTML 链接，以便用户可以选择。）
      */
     MULTIPLE_CHOICES(300, "Multiple Choices"),
@@ -106,18 +85,6 @@ public enum HttpResponseStatus {
     NOT_MODIFIED(304, "Not Modified"),
 
     /**
-     * 在 HTTP 规范中定义，以指示请求的响应必须被代理访问。由于对代理的带内配置的安全考虑，它已被弃用。
-     */
-    @Deprecated
-    USE_PROXY(305, "Use Proxy"),
-
-    /**
-     * 此响应代码不再使用；它只是保留。它曾在 HTTP/1.1 规范的早期版本中使用过。
-     */
-    @Deprecated
-    UNUSED_306(306, "Use Proxy"),
-
-    /**
      * 服务器发送此响应，以指示客户端使用在前一个请求中使用的相同方法在另一个 URI 上获取所请求的资源。这与 302 Found HTTP 响应代码具有相同的语义，但用户代理 不能 更改所使用的 HTTP 方法：如果在第一个请求中使用了 POST，则在第二个请求中必须使用 POST
      */
     TEMPORARY_REDIRECT(307, "Temporary Redirect"),
@@ -126,8 +93,6 @@ public enum HttpResponseStatus {
      * 这意味着资源现在永久位于由Location: HTTP Response 标头指定的另一个 URI。这与 301 Moved Permanently HTTP 响应代码具有相同的语义，但用户代理不能更改所使用的 HTTP 方法：如果在第一个请求中使用 POST，则必须在第二个请求中使用 POST。
      */
     PERMANENT_REDIRECT(308, "Permanent Redirect"),
-
-    //************** 客户端错误响应 ****************
 
     /**
      * 由于被认为是客户端错误（例如，错误的请求语法、无效的请求消息帧或欺骗性的请求路由），服务器无法或不会处理请求。
@@ -197,7 +162,7 @@ public enum HttpResponseStatus {
     /**
      * 请求实体大于服务器定义的限制。服务器可能会关闭连接，或在标头字段后返回重试 Retry-After。
      */
-    PAYLOAD_TOO_LARGE(413, "Payload Too Large"),
+    CONTENT_TOO_LARGE(413, "Content Too Large"),
 
     /**
      * 客户端请求的 URI 比服务器愿意接收的长度长。
@@ -212,7 +177,7 @@ public enum HttpResponseStatus {
     /**
      * 无法满足请求中 Range 标头字段指定的范围。该范围可能超出了目标 URI 数据的大小。
      */
-    REQUESTED_RANGE_NOT_SATISFIABLE(416, "Requested Range Not Satisfiable"),
+    RANGE_NOT_SATISFIABLE(416, "Range Not Satisfiable"),
 
     /**
      * 此响应代码表示服务器无法满足 Expect 请求标头字段所指示的期望。
@@ -227,49 +192,12 @@ public enum HttpResponseStatus {
     /**
      * 请求格式正确，但由于语义错误而无法遵循。
      */
-    UNPROCESSABLE_ENTITY(422, "Unprocessable Entity"),
-
-    /**
-     * 正在访问的资源已锁定。
-     */
-    LOCKED(423, "Locked"),
-
-    /**
-     * 由于前一个请求失败，请求失败。
-     */
-    FAILED_DEPENDENCY(424, "Failed Dependency"),
-
-    /**
-     * 表示服务器不愿意冒险处理可能被重播的请求。
-     */
-    TOO_EARLY(425, "Unordered Collection"),
+    UNPROCESSABLE_CONTENT(422, "Unprocessable Content"),
 
     /**
      * 服务器拒绝使用当前协议执行请求，但在客户端升级到其他协议后可能愿意这样做。 服务端发送带有Upgrade (en-US) 字段的 426 响应 来表明它所需的协议（们）。
      */
     UPGRADE_REQUIRED(426, "Upgrade Required"),
-
-    /**
-     * 源服务器要求请求是有条件的。此响应旨在防止'丢失更新'问题，即当第三方修改服务器上的状态时，客户端 GET 获取资源的状态，对其进行修改并将其 PUT 放回服务器，从而导致冲突。
-     */
-    PRECONDITION_REQUIRED(428, "Precondition Required"),
-
-    /**
-     * 用户在给定的时间内发送了太多请求（"限制请求速率"）
-     */
-    TOO_MANY_REQUESTS(429, "Too Many Requests"),
-
-    /**
-     * 服务器不愿意处理请求，因为其头字段太大。在减小请求头字段的大小后，可以重新提交请求。
-     */
-    REQUEST_HEADER_FIELDS_TOO_LARGE(431, "Request Header Fields Too Large"),
-
-    /**
-     * 用户代理请求了无法合法提供的资源，例如政府审查的网页。
-     */
-    UNAVAILABLE_FOR_LEGAL_REASONS(451, "Unavailable For Legal Reasons"),
-
-    //************** 服务端错误响应 ****************
 
     /**
      * 服务器遇到了不知道如何处理的情况。
@@ -299,32 +227,27 @@ public enum HttpResponseStatus {
     /**
      * 服务器不支持请求中使用的 HTTP 版本。
      */
-    HTTP_VERSION_NOT_SUPPORTED(505, "HTTP Version Not Supported"),
+    HTTP_VERSION_NOT_SUPPORTED(505, "HTTP Version Not Supported");
 
     /**
-     * 服务器存在内部配置错误：所选的变体资源被配置为参与透明内容协商本身，因此不是协商过程中的适当终点。
+     * 存储 code 和 对应枚举的映射
      */
-    VARIANT_ALSO_NEGOTIATES(506, "Variant Also Negotiates"),
+    private static final HttpResponseStatus[] MAP;
 
-    /**
-     * 无法在资源上执行该方法，因为服务器无法存储成功完成请求所需的表示。
-     */
-    INSUFFICIENT_STORAGE(507, "Insufficient Storage"),
+    static {
+        MAP = new HttpResponseStatus[506];
+        var values = HttpResponseStatus.values();
+        for (var v : values) {
+            MAP[v.statusCode] = v;
+        }
+    }
 
-    /**
-     * 服务器在处理请求时检测到无限循环。
-     */
-    LOOP_DETECTED(508, "Loop Detected"),
-
-    /**
-     * 服务器需要对请求进行进一步扩展才能完成请求。
-     */
-    NOT_EXTENDED(510, "Not Extended"),
-
-    /**
-     * 指示客户端需要进行身份验证才能获得网络访问权限。
-     */
-    NETWORK_AUTHENTICATION_REQUIRED(511, "Network Authentication Required");
+    public static HttpResponseStatus of(int code) {
+        if (code < 0 || code > 505) {
+            return null;
+        }
+        return MAP[code];
+    }
 
     private final int statusCode;
 
@@ -333,71 +256,6 @@ public enum HttpResponseStatus {
     HttpResponseStatus(int statusCode, String reasonPhrase) {
         this.statusCode = statusCode;
         this.reasonPhrase = reasonPhrase;
-    }
-
-    public static HttpResponseStatus of(int code) {
-        return switch (code) {
-            case 100 -> CONTINUE;
-            case 101 -> SWITCHING_PROTOCOLS;
-            case 102 -> PROCESSING;
-            case 103 -> EARLY_HINTS;
-            case 200 -> OK;
-            case 201 -> CREATED;
-            case 202 -> ACCEPTED;
-            case 203 -> NON_AUTHORITATIVE_INFORMATION;
-            case 204 -> NO_CONTENT;
-            case 205 -> RESET_CONTENT;
-            case 206 -> PARTIAL_CONTENT;
-            case 207 -> MULTI_STATUS;
-            case 300 -> MULTIPLE_CHOICES;
-            case 301 -> MOVED_PERMANENTLY;
-            case 302 -> FOUND;
-            case 303 -> SEE_OTHER;
-            case 304 -> NOT_MODIFIED;
-            case 305 -> USE_PROXY;
-            case 306 -> UNUSED_306;
-            case 307 -> TEMPORARY_REDIRECT;
-            case 308 -> PERMANENT_REDIRECT;
-            case 400 -> BAD_REQUEST;
-            case 401 -> UNAUTHORIZED;
-            case 402 -> PAYMENT_REQUIRED;
-            case 403 -> FORBIDDEN;
-            case 404 -> NOT_FOUND;
-            case 405 -> METHOD_NOT_ALLOWED;
-            case 406 -> NOT_ACCEPTABLE;
-            case 407 -> PROXY_AUTHENTICATION_REQUIRED;
-            case 408 -> REQUEST_TIMEOUT;
-            case 409 -> CONFLICT;
-            case 410 -> GONE;
-            case 411 -> LENGTH_REQUIRED;
-            case 412 -> PRECONDITION_FAILED;
-            case 413 -> REQUEST_ENTITY_TOO_LARGE;
-            case 414 -> REQUEST_URI_TOO_LONG;
-            case 415 -> UNSUPPORTED_MEDIA_TYPE;
-            case 416 -> REQUESTED_RANGE_NOT_SATISFIABLE;
-            case 417 -> EXPECTATION_FAILED;
-            case 421 -> MISDIRECTED_REQUEST;
-            case 422 -> UNPROCESSABLE_ENTITY;
-            case 423 -> LOCKED;
-            case 424 -> FAILED_DEPENDENCY;
-            case 425 -> UNORDERED_COLLECTION;
-            case 426 -> UPGRADE_REQUIRED;
-            case 428 -> PRECONDITION_REQUIRED;
-            case 429 -> TOO_MANY_REQUESTS;
-            case 431 -> REQUEST_HEADER_FIELDS_TOO_LARGE;
-            case 500 -> INTERNAL_SERVER_ERROR;
-            case 501 -> NOT_IMPLEMENTED;
-            case 502 -> BAD_GATEWAY;
-            case 503 -> SERVICE_UNAVAILABLE;
-            case 504 -> GATEWAY_TIMEOUT;
-            case 505 -> HTTP_VERSION_NOT_SUPPORTED;
-            case 506 -> VARIANT_ALSO_NEGOTIATES;
-            case 507 -> INSUFFICIENT_STORAGE;
-            case 508 -> LOOP_DETECTED;
-            case 510 -> NOT_EXTENDED;
-            case 511 -> NETWORK_AUTHENTICATION_REQUIRED;
-            default -> null;
-        };
     }
 
     public int statusCode() {
