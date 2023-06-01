@@ -3,22 +3,23 @@ package cool.scx.functional;
 /**
  * 支持显式抛出异常的 Function.
  *
- * @param <A> 参数类型
+ * @param <T> 参数类型
  * @param <R> 返回值类型
  * @param <E> 异常类型
  * @author scx567888
  * @version 0.0.1
+ * @see java.util.function.Function
  */
 @FunctionalInterface
-public interface ScxFunction<A, R, E extends Exception> {
+public interface ScxFunction<T, R, E extends Exception> {
 
     /**
      * <p>apply.</p>
      *
-     * @param a a A object
-     * @return a R object
-     * @throws E if any.
+     * @param t 方法参数
+     * @return 方法结果
+     * @throws E 异常
      */
-    R apply(A a) throws E;
+    R apply(T t) throws E;
 
 }
