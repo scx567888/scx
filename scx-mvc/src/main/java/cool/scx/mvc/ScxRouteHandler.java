@@ -117,7 +117,7 @@ public final class ScxRouteHandler implements Handler<RoutingContext> {
 
     private String initOriginalUrl(ScxRoute classAnnotation, ScxRoute methodAnnotation) {
         var urlArray = new String[]{"", ""};
-        if (!classAnnotation.ignoreParentUrl() && classAnnotation != null) {
+        if (classAnnotation != null && !classAnnotation.ignoreParentUrl()) {
             urlArray[0] = classAnnotation.value();
         }
         //获取方法的 url
