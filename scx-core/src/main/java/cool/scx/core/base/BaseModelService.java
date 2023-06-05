@@ -358,11 +358,15 @@ public class BaseModelService<Entity extends BaseModel> {
      *
      * @return a {@link JDBCDao} object
      */
-    public JDBCDao<Entity> _dao() {
+    public final JDBCDao<Entity> _dao() {
         if (dao == null) {
             this.dao = new JDBCDao<>(entityClass, ScxContext.jdbcContext());
         }
         return dao;
+    }
+
+    public final Class<Entity> _entityClass() {
+        return this.entityClass;
     }
 
 }
