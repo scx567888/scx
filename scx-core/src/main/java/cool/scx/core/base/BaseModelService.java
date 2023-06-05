@@ -30,7 +30,9 @@ public class BaseModelService<Entity extends BaseModel> {
     /**
      * BaseDao
      */
-    protected final JDBCDao<Entity> dao;
+    protected final Class<Entity> entityClass;
+
+    private JDBCDao<Entity> dao;
 
     /**
      * 从泛型中获取 entityClass
@@ -40,8 +42,7 @@ public class BaseModelService<Entity extends BaseModel> {
         var genericSuperclass = this.getClass().getGenericSuperclass();
         if (genericSuperclass instanceof ParameterizedType) {
             var typeArguments = ((ParameterizedType) genericSuperclass).getActualTypeArguments();
-            var entityClass = (Class<Entity>) typeArguments[0];
-            this.dao = new JDBCDao<>(entityClass, ScxContext.jdbcContext());
+            this.entityClass = (Class<Entity>) typeArguments[0];
         } else {
             throw new IllegalArgumentException(this.getClass().getName() + " : 必须设置泛型参数 !!!");
         }
@@ -53,7 +54,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @param entityClass 继承自 {@link BaseModel} 的实体类 class
      */
     public BaseModelService(Class<Entity> entityClass) {
-        this.dao = new JDBCDao<>(entityClass, ScxContext.jdbcContext());
+        this.entityClass = entityClass;
     }
 
     /**
@@ -84,7 +85,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 插入成功的数据 如果插入失败或数据没有主键则返回 null
      */
     public Entity add(Entity entity, ColumnFilter updateFilter) {
-        var newID = dao.add(entity, updateFilterProcessor(updateFilter));
+        var newID = _dao().add(entity, updateFilterProcessor(updateFilter));
         return newID != null ? this.get(newID) : null;
     }
 
@@ -107,7 +108,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 插入成功的数据的自增主键列表
      */
     public List<Long> add(Collection<Entity> entityList, ColumnFilter updateFilter) {
-        return dao.addAll(entityList, updateFilterProcessor(updateFilter));
+        return _dao().addAll(entityList, updateFilterProcessor(updateFilter));
     }
 
     /**
@@ -157,7 +158,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 数据列表
      */
     public List<Entity> list(Query query, ColumnFilter selectFilter) {
-        return dao.find(query, selectFilter);
+        return _dao().find(query, selectFilter);
     }
 
     /**
@@ -199,7 +200,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 查到多个则返回第一个 没有则返回 null
      */
     public final Entity get(Query query, ColumnFilter selectFilter) {
-        return this.dao.get(query, selectFilter);
+        return this._dao().get(query, selectFilter);
     }
 
     /**
@@ -218,7 +219,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 数据条数
      */
     public final long count(Query query) {
-        return dao.count(query);
+        return _dao().count(query);
     }
 
     /**
@@ -266,7 +267,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 更新成功的数据条数
      */
     public long update(Entity entity, Query query, ColumnFilter updateFilter) {
-        return dao.update(entity, query, updateFilterProcessor(updateFilter));
+        return _dao().update(entity, query, updateFilterProcessor(updateFilter));
     }
 
     /**
@@ -289,7 +290,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 被删除的数据条数
      */
     public long delete(Query query) {
-        return dao.delete(query);
+        return _dao().delete(query);
     }
 
     /**
@@ -305,7 +306,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @see JDBCDao#buildSelectSQL(Query, ColumnFilter)
      */
     public final SQL buildListSQL(Query query, ColumnFilter selectFilter) {
-        return dao.buildSelectSQL(query, selectFilter);
+        return _dao().buildSelectSQL(query, selectFilter);
     }
 
     /**
@@ -335,7 +336,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @see JDBCDao#buildSelectSQL(Query, ColumnFilter)
      */
     public final SQL buildListSQLWithAlias(Query query, ColumnFilter selectFilter) {
-        return dao.buildSelectSQLWithAlias(query, selectFilter);
+        return _dao().buildSelectSQLWithAlias(query, selectFilter);
     }
 
     /**
@@ -357,8 +358,15 @@ public class BaseModelService<Entity extends BaseModel> {
      *
      * @return a {@link JDBCDao} object
      */
-    public JDBCDao<Entity> _dao() {
+    public final JDBCDao<Entity> _dao() {
+        if (dao == null) {
+            this.dao = new JDBCDao<>(entityClass, ScxContext.jdbcContext());
+        }
         return dao;
+    }
+
+    public final Class<Entity> _entityClass() {
+        return this.entityClass;
     }
 
 }

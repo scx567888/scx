@@ -59,13 +59,11 @@ public final class Scx {
 
     private final DefaultListableBeanFactory beanFactory;
 
-    private final DataSource dataSource;
-
-    private final JDBCContext jdbcContext;
-
     private final ScxMvc scxMvc;
 
     private final ScxScheduler scxScheduler;
+
+    private JDBCContext jdbcContext = null;
 
     private ScxHttpRouter scxHttpRouter = null;
 
@@ -91,9 +89,6 @@ public final class Scx {
         MessageCodecRegistrar.registerCodec(this.vertx.eventBus());
         //5, 初始化 BeanFactory
         this.beanFactory = initBeanFactory(this.scxModules, this.vertx.nettyEventLoopGroup(), this.scxFeatureConfig);
-        //6, 初始化数据源及 sqlRunner
-        this.dataSource = initDataSource(this.scxOptions, this.scxFeatureConfig);
-        this.jdbcContext = new JDBCContext(dataSource);
         //7, 初始化 MVC
         this.scxMvc = new ScxMvc(new ScxMvcOptions().templateRoot(scxOptions.templateRoot()).useDevelopmentErrorPage(scxFeatureConfig.get(ScxCoreFeature.USE_DEVELOPMENT_ERROR_PAGE)));
         //8, 初始化任务调度器
@@ -224,7 +219,7 @@ public final class Scx {
      * @return b
      */
     public boolean checkDataSource() {
-        try (var conn = dataSource.getConnection()) {
+        try (var conn = dataSource().getConnection()) {
             var dm = conn.getMetaData();
             logger.debug("数据源连接成功 : 类型 [{}]  版本 [{}]", dm.getDatabaseProductName(), dm.getDatabaseProductVersion());
             return true;
@@ -249,7 +244,7 @@ public final class Scx {
             //根据 class 获取 tableInfo
             var tableInfo = new AnnotationConfigTable(v);
             try {
-                if (SchemaHelper.checkNeedFixTable(tableInfo, dataSource)) {
+                if (SchemaHelper.checkNeedFixTable(tableInfo, dataSource())) {
                     SchemaHelper.fixTable(tableInfo, jdbcContext);
                     fixSuccess = fixSuccess + 1;
                 } else {
@@ -297,7 +292,7 @@ public final class Scx {
             var tableInfo = new AnnotationConfigTable(v);
             try {
                 //有任何需要修复的直接 返回 true
-                if (SchemaHelper.checkNeedFixTable(tableInfo, dataSource)) {
+                if (SchemaHelper.checkNeedFixTable(tableInfo, dataSource())) {
                     return true;
                 }
             } catch (Exception e) {
@@ -354,14 +349,19 @@ public final class Scx {
     }
 
     public DataSource dataSource() {
-        return dataSource;
+        return jdbcContext().dataSource();
     }
 
     public SQLRunner sqlRunner() {
-        return jdbcContext.sqlRunner();
+        return jdbcContext().sqlRunner();
     }
 
     public JDBCContext jdbcContext() {
+        if (jdbcContext == null) {
+            //1, 初始化数据源及 sqlRunner
+            var dataSource = initDataSource(this.scxOptions, this.scxFeatureConfig);
+            this.jdbcContext = new JDBCContext(dataSource);
+        }
         return jdbcContext;
     }
 
