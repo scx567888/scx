@@ -1,6 +1,5 @@
 package cool.scx.core.test.website;
 
-import cool.scx.constant.ScxDateTimeFormatter;
 import cool.scx.core.ScxContext;
 import cool.scx.core.test.car.Car;
 import cool.scx.core.test.car.CarService;
