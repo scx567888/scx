@@ -2,12 +2,18 @@ package cool.scx.data.jdbc.type_handler.time;
 
 import cool.scx.data.jdbc.type_handler.TypeHandler;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.time.OffsetTime;
 
 public class OffsetTimeTypeHandler implements TypeHandler<OffsetTime> {
+
+    @Override
+    public void setObject(PreparedStatement ps, int i, OffsetTime parameter) throws SQLException {
+        ps.setObject(i, parameter);
+    }
 
     @Override
     public OffsetTime getObject(ResultSet rs, int index) throws SQLException {

@@ -28,7 +28,7 @@ public class DateTypeHandler implements TypeHandler<Date> {
 
     @Override
     public Date getObject(ResultSet rs, int index) throws SQLException {
-        Timestamp sqlTimestamp = rs.getTimestamp(index);
+        var sqlTimestamp = rs.getTimestamp(index);
         return sqlTimestamp == null ? null : new Date(sqlTimestamp.getTime());
     }
 

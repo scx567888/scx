@@ -31,7 +31,7 @@ abstract class _PrimitiveTypeHandler<T> implements TypeHandler<T> {
     }
 
     @Override
-    public T getDefaultValue() {
+    public final T getDefaultValue() {
         return defaultValue;
     }
 
