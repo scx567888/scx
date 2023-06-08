@@ -6,9 +6,7 @@ import java.sql.SQLException;
 
 public interface TypeHandler<T> {
 
-    default void setObject(PreparedStatement ps, int i, T parameter) throws SQLException {
-        ps.setObject(i, parameter);
-    }
+    void setObject(PreparedStatement ps, int i, T parameter) throws SQLException;
 
     T getObject(ResultSet rs, int index) throws SQLException;
 

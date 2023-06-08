@@ -17,7 +17,7 @@ public class BigIntegerTypeHandler implements TypeHandler<BigInteger> {
 
     @Override
     public BigInteger getObject(ResultSet rs, int index) throws SQLException {
-        BigDecimal bigDecimal = rs.getBigDecimal(index);
+        var bigDecimal = rs.getBigDecimal(index);
         return bigDecimal == null ? null : bigDecimal.toBigInteger();
     }
 
