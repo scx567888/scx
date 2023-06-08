@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import static cool.scx.constant.ScxDateTimeFormatter.yyyy_MM_dd_HH_mm_ss;
+
 /**
  * a
  *
@@ -28,11 +30,6 @@ public final class JacksonHelper {
      * 默认的 NullKey 序列化器
      */
     private static final NullKeySerializer DEFAULT_NULL_KEY_SERIALIZER = new NullKeySerializer();
-
-    /**
-     * 默认的 [ 序列化 / 反序列化 ] 的时间格式
-     */
-    private static final DateTimeFormatter DEFAULT_DATETIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     /**
      * 获取针对日期处理的 jackson module;
@@ -68,7 +65,7 @@ public final class JacksonHelper {
      * @return a
      */
     public static JsonMapper initJsonMapper() {
-        return initJsonMapper(DEFAULT_DATETIME_FORMATTER);
+        return initJsonMapper(yyyy_MM_dd_HH_mm_ss);
     }
 
     /**
@@ -87,13 +84,13 @@ public final class JacksonHelper {
      * @return a
      */
     public static XmlMapper initXmlMapper() {
-        return initXmlMapper(DEFAULT_DATETIME_FORMATTER);
+        return initXmlMapper(yyyy_MM_dd_HH_mm_ss);
     }
 
     /**
      * 根据 MapperBuilder 获取 ObjectMapper 对象 并对默认属性进行一些设置,具体如下
      * 如需获得原始的 ObjectMapper 对象请使用 {@link com.fasterxml.jackson.databind.cfg.MapperBuilder}; 自行创建
-     * 1, 针对 LocalDateTime 类型设置默认的日期格式化格式 默认为 {@link cool.scx.util.JacksonHelper#DEFAULT_DATETIME_FORMATTER} 决定
+     * 1, 针对 LocalDateTime 类型设置默认的日期格式化格式 默认为 {@link cool.scx.constant.ScxDateTimeFormatter#yyyy_MM_dd_HH_mm_ss} 决定
      * 2, DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES 设置为  false
      * 3, SerializationFeature.FAIL_ON_EMPTY_BEANS          设置为  false
      * 4, NullKeySerializer                                 设置为  JacksonHelper.NULL_KEY_SERIALIZER
