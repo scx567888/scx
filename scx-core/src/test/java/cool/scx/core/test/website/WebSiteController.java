@@ -1,6 +1,6 @@
 package cool.scx.core.test.website;
 
-import cool.scx.constant.ScxConstant;
+import cool.scx.constant.ScxDateTimeFormatter;
 import cool.scx.core.ScxContext;
 import cool.scx.core.test.car.Car;
 import cool.scx.core.test.car.CarService;
@@ -30,6 +30,8 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.zip.ZipOutputStream;
 
+import static cool.scx.constant.ScxDateTimeFormatter.yyyy_MM_dd_HH_mm_ss;
+
 /**
  * 简单测试
  *
@@ -55,7 +57,7 @@ public class WebSiteController {
                                @FromUpload UploadedEntity content,
                                @FromUpload FileUpload content1) {
         System.err.println("客户端 IP :" + NetUtils.getClientIPAddress(ScxMvc.routingContext().request()));
-        return Map.of("now", ScxConstant.NORMAL_DATE_TIME.format(LocalDateTime.now()),
+        return Map.of("now", yyyy_MM_dd_HH_mm_ss.format(LocalDateTime.now()),
                 "name", name, "age", age, "content", content.buffer().toString(StandardCharsets.UTF_8),
                 "content1", ScxContext.vertx().fileSystem().readFileBlocking(content1.uploadedFileName()).toString(StandardCharsets.UTF_8));
     }
