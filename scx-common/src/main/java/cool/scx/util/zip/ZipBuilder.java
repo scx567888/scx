@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 import static cool.scx.util.URIBuilder.normalize;
@@ -30,6 +31,11 @@ public class ZipBuilder {
      */
     public ZipBuilder() {
 
+    }
+
+    public ZipBuilder(ZipFile zipFile) {
+        var list = zipFile.stream().map(zipEntry -> new ZipBuilderItem(zipEntry, zipFile)).toList();
+        items.addAll(list);
     }
 
     public ZipBuilder(Path path) {
@@ -134,6 +140,18 @@ public class ZipBuilder {
             items.removeIf(c -> c.zipPath.startsWith(p));
         }
         return this;
+    }
+
+    public ZipBuilderItem get(String zipPath) {
+        var p = normalize(zipPath);
+        if (StringUtils.notBlank(zipPath)) {
+            return items.stream().filter(c -> c.zipPath.startsWith(p)).findAny().orElse(null);
+        }
+        return null;
+    }
+
+    public List<ZipBuilderItem> items() {
+        return items;
     }
 
     /**

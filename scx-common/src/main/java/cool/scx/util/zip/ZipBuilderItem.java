@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.function.Supplier;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 import static cool.scx.util.URIBuilder.*;
@@ -78,10 +79,19 @@ public class ZipBuilderItem {
         this.zipDataSource = ZipDataSource.of();
     }
 
+    ZipBuilderItem(ZipEntry zipEntry, ZipFile zipFile) {
+        this.zipPath = trimSlash(normalize(zipEntry.getName()));
+        this.zipDataSource = ZipDataSource.of(zipEntry, zipFile);
+    }
+
     public void writeToZipOutputStream(ZipOutputStream zos) throws IOException {
         zos.putNextEntry(new ZipEntry(this.zipPath));
         this.zipDataSource.writeToOutputStream(zos);
         zos.closeEntry();
+    }
+
+    public ZipDataSource zipDataSource() {
+        return zipDataSource;
     }
 
 }
