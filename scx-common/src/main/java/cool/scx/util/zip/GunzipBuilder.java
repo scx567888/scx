@@ -1,10 +1,5 @@
 package cool.scx.util.zip;
 
-import cool.scx.util.zip.zip_data_source.BytesSupplierZipDataSource;
-import cool.scx.util.zip.zip_data_source.BytesZipDataSource;
-import cool.scx.util.zip.zip_data_source.InputStreamZipDataSource;
-import cool.scx.util.zip.zip_data_source.PathZipDataSource;
-
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -17,32 +12,52 @@ import java.util.zip.GZIPInputStream;
  * @author scx567888
  * @version 2.0.4
  */
-public class GunzipBuilder {
+public class GunzipBuilder extends ZipDataSource {
 
-    private final ZipDataSource zipDataSource;
-
-    public GunzipBuilder(ZipDataSource zipDataSource) {
-        this.zipDataSource = zipDataSource;
-    }
-
+    /**
+     * <p>Constructor for GunzipBuilder.</p>
+     *
+     * @param path a {@link java.nio.file.Path} object
+     */
     public GunzipBuilder(Path path) {
-        this(new PathZipDataSource(path));
+        super(path);
     }
 
+    /**
+     * <p>Constructor for GunzipBuilder.</p>
+     *
+     * @param bytes an array of {@link byte} objects
+     */
     public GunzipBuilder(byte[] bytes) {
-        this(new BytesZipDataSource(bytes));
+        super(bytes);
     }
 
+    /**
+     * <p>Constructor for GunzipBuilder.</p>
+     *
+     * @param bytesSupplier a {@link java.util.function.Supplier} object
+     */
     public GunzipBuilder(Supplier<byte[]> bytesSupplier) {
-        this(new BytesSupplierZipDataSource(bytesSupplier));
+        super(bytesSupplier);
     }
 
+    /**
+     * <p>Constructor for GunzipBuilder.</p>
+     *
+     * @param inputStream a {@link java.io.InputStream} object
+     */
     public GunzipBuilder(InputStream inputStream) {
-        this(new InputStreamZipDataSource(inputStream));
+        super(inputStream);
     }
 
+    /**
+     * <p>toBytes.</p>
+     *
+     * @return an array of {@link byte} objects
+     * @throws java.lang.Exception if any.
+     */
     public byte[] toBytes() throws Exception {
-        try (var zos = new GZIPInputStream(this.zipDataSource.toInputStream())) {
+        try (var zos = new GZIPInputStream(toInputStream())) {
             return zos.readAllBytes();
         }
     }
@@ -55,7 +70,7 @@ public class GunzipBuilder {
      */
     public void toFile(Path outputPath) throws Exception {
         Files.createDirectories(outputPath.getParent());
-        try (var zos = new GZIPInputStream(this.zipDataSource.toInputStream())) {
+        try (var zos = new GZIPInputStream(toInputStream())) {
             zos.transferTo(Files.newOutputStream(outputPath));
         }
     }
