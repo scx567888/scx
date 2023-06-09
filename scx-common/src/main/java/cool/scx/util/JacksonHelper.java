@@ -6,8 +6,6 @@ import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.cfg.MapperBuilder;
 import com.fasterxml.jackson.databind.introspect.AnnotatedMember;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
-import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
@@ -17,7 +15,6 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 import static cool.scx.constant.ScxDateTimeFormatter.yyyy_MM_dd;
 import static cool.scx.constant.ScxDateTimeFormatter.yyyy_MM_dd_HH_mm_ss;
@@ -28,7 +25,7 @@ import static cool.scx.constant.ScxDateTimeFormatter.yyyy_MM_dd_HH_mm_ss;
  * @author scx567888
  * @version 0.0.1
  */
-public final class JacksonHelper {
+final class JacksonHelper {
 
     /**
      * 默认的 NullKey 序列化器
@@ -57,44 +54,6 @@ public final class JacksonHelper {
     }
 
     /**
-     * 获取 jsonMapper
-     *
-     * @param formatter a
-     * @return jsonMapper
-     */
-    public static JsonMapper initJsonMapper(DateTimeFormatter formatter) {
-        return initObjectMapper(JsonMapper.builder(), formatter);
-    }
-
-    /**
-     * a
-     *
-     * @return a
-     */
-    public static JsonMapper initJsonMapper() {
-        return initJsonMapper(yyyy_MM_dd_HH_mm_ss);
-    }
-
-    /**
-     * 获取 xmlMapper
-     *
-     * @param formatter a
-     * @return xmlMapper
-     */
-    public static XmlMapper initXmlMapper(DateTimeFormatter formatter) {
-        return initObjectMapper(XmlMapper.builder(), formatter);
-    }
-
-    /**
-     * a
-     *
-     * @return a
-     */
-    public static XmlMapper initXmlMapper() {
-        return initXmlMapper(yyyy_MM_dd_HH_mm_ss);
-    }
-
-    /**
      * 根据 MapperBuilder 获取 ObjectMapper 对象 并对默认属性进行一些设置,具体如下
      * 如需获得原始的 ObjectMapper 对象请使用 {@link com.fasterxml.jackson.databind.cfg.MapperBuilder}; 自行创建
      * 1, 针对 LocalDateTime 类型设置默认的日期格式化格式 默认为 {@link cool.scx.constant.ScxDateTimeFormatter#yyyy_MM_dd_HH_mm_ss} 决定
@@ -105,10 +64,9 @@ public final class JacksonHelper {
      * @param <M>           a M class
      * @param <B>           a B class
      * @param mapperBuilder a {@link com.fasterxml.jackson.databind.cfg.MapperBuilder} object
-     * @param formatter     a {@link java.time.format.DateTimeFormatter} object
      * @return a {@link com.fasterxml.jackson.databind.ObjectMapper} object
      */
-    static <M extends ObjectMapper, B extends MapperBuilder<M, B>> M initObjectMapper(MapperBuilder<M, B> mapperBuilder, DateTimeFormatter formatter) {
+    static <M extends ObjectMapper, B extends MapperBuilder<M, B>> M initObjectMapper(MapperBuilder<M, B> mapperBuilder) {
         // 初始化一个 JsonMapper 构建器
         var objectMapper = mapperBuilder
                 // 注册 module 用来识别一些特定的类型
@@ -152,6 +110,7 @@ public final class JacksonHelper {
      * 针对 HashMap 中可能出现的 null key 这里做特殊处理
      */
     private static class NullKeySerializer extends JsonSerializer<Object> {
+
         public static final String NULL_KEY = "";
 
         @Override

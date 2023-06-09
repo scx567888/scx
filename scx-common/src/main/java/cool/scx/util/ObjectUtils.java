@@ -28,6 +28,7 @@ public final class ObjectUtils {
      * 此类为 Map 类型
      */
     public static final TypeReference<Map<String, Object>> MAP_TYPE = new TypeReference<>() {
+
     };
 
     /**
@@ -38,42 +39,42 @@ public final class ObjectUtils {
     /**
      * Constant <code>JSON_MAPPER</code>
      */
-    private static final JsonMapper JSON_MAPPER = initJsonMapper();
+    private static final JsonMapper JSON_MAPPER = initObjectMapper(JsonMapper.builder());
 
     /**
      * Constant <code>XML_MAPPER</code>
      */
-    private static final XmlMapper XML_MAPPER = initXmlMapper();
+    private static final XmlMapper XML_MAPPER = initObjectMapper(XmlMapper.builder());
 
     /**
      * Constant <code>JSON_MAPPER_IGNORE_JSON_IGNORE</code>
      */
-    private static final JsonMapper JSON_MAPPER_IGNORE_JSON_IGNORE = setIgnoreJsonIgnore(initJsonMapper());
+    private static final JsonMapper JSON_MAPPER_IGNORE_JSON_IGNORE = setIgnoreJsonIgnore(initObjectMapper(JsonMapper.builder()));
 
     /**
      * Constant <code>XML_MAPPER_IGNORE_JSON_IGNORE</code>
      */
-    private static final XmlMapper XML_MAPPER_IGNORE_JSON_IGNORE = setIgnoreJsonIgnore(initXmlMapper());
+    private static final XmlMapper XML_MAPPER_IGNORE_JSON_IGNORE = setIgnoreJsonIgnore(initObjectMapper(XmlMapper.builder()));
 
     /**
      * Constant <code>JSON_MAPPER_IGNORE_NULL_VALUE</code>
      */
-    private static final JsonMapper JSON_MAPPER_IGNORE_NULL_VALUE = setIgnoreNullValue(initJsonMapper());
+    private static final JsonMapper JSON_MAPPER_IGNORE_NULL_VALUE = setIgnoreNullValue(initObjectMapper(JsonMapper.builder()));
 
     /**
      * Constant <code>XML_MAPPER_IGNORE_NULL_VALUE</code>
      */
-    private static final XmlMapper XML_MAPPER_IGNORE_NULL_VALUE = setIgnoreNullValue(initXmlMapper());
+    private static final XmlMapper XML_MAPPER_IGNORE_NULL_VALUE = setIgnoreNullValue(initObjectMapper(XmlMapper.builder()));
 
     /**
      * Constant <code>JSON_MAPPER_IGNORE_NULL_VALUE_AND_IGNORE_JSON_IGNORE</code>
      */
-    private static final JsonMapper JSON_MAPPER_IGNORE_NULL_VALUE_AND_IGNORE_JSON_IGNORE = setIgnoreJsonIgnore(setIgnoreNullValue(initJsonMapper()));
+    private static final JsonMapper JSON_MAPPER_IGNORE_NULL_VALUE_AND_IGNORE_JSON_IGNORE = setIgnoreJsonIgnore(setIgnoreNullValue(initObjectMapper(JsonMapper.builder())));
 
     /**
      * Constant <code>XML_MAPPER_IGNORE_NULL_VALUE_AND_IGNORE_JSON_IGNORE</code>
      */
-    private static final XmlMapper XML_MAPPER_IGNORE_NULL_VALUE_AND_IGNORE_JSON_IGNORE = setIgnoreJsonIgnore(setIgnoreNullValue(initXmlMapper()));
+    private static final XmlMapper XML_MAPPER_IGNORE_NULL_VALUE_AND_IGNORE_JSON_IGNORE = setIgnoreJsonIgnore(setIgnoreNullValue(initObjectMapper(XmlMapper.builder())));
 
     /**
      * 获取 jsonMapper

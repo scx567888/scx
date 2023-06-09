@@ -81,11 +81,11 @@ public class SQLiteDialect extends Dialect {
         }
         final String sql;
         final Object[] batch;
-        final int batchQuertCount;
+        final int batchQueryCount;
         try {
             sql = (String) CoreStatement_sql.get(corePreparedStatement);
             batch = (Object[]) CoreStatement_batch.get(corePreparedStatement);
-            batchQuertCount = (int) CorePreparedStatement_batchQueryCount.get(corePreparedStatement);
+            batchQueryCount = (int) CorePreparedStatement_batchQueryCount.get(corePreparedStatement);
         } catch (IllegalAccessException e) {
             return null;
         }
@@ -103,7 +103,7 @@ public class SQLiteDialect extends Dialect {
             }
         }
         var finalSQL = sb.toString();
-        return batchQuertCount > 1 ? finalSQL + "... 额外的 " + (batchQuertCount - 1) + " 项" : finalSQL;
+        return batchQueryCount > 1 ? finalSQL + "... 额外的 " + (batchQueryCount - 1) + " 项" : finalSQL;
     }
 
     @Override

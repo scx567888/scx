@@ -171,7 +171,7 @@ public final class FileUtils {
      * 获取 文件 head
      *
      * @param filePath f
-     * @param length   a int
+     * @param length   长度
      * @return r
      * @throws java.io.IOException if any.
      */
