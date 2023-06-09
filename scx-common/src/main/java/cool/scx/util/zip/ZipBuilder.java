@@ -1,6 +1,7 @@
 package cool.scx.util.zip;
 
 import cool.scx.util.StringUtils;
+import cool.scx.util.zip.zip_builder_item.PathZipBuilderItem;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -64,7 +65,7 @@ public class ZipBuilder {
      * @return a
      */
     public ZipBuilder put(Path path, ZipOptions zipOptions) {
-        items.add(new ZipBuilderItem("", path, zipOptions));
+        items.add(new PathZipBuilderItem("", path, zipOptions));
         return this;
     }
 
@@ -81,7 +82,7 @@ public class ZipBuilder {
      * @return a
      */
     public ZipBuilder put(String zipPath, Path path, ZipOptions zipOptions) {
-        items.add(new ZipBuilderItem(zipPath, path, zipOptions));
+        items.add(new PathZipBuilderItem(zipPath, path, zipOptions));
         return this;
     }
 
