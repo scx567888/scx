@@ -94,10 +94,13 @@ public class UnZipBuilder extends ZipDataSource {
      * @param zipOptions a {@link cool.scx.util.zip.ZipOptions} object
      * @return a {@link java.lang.String} object
      */
-    public String getRootPath(ZipOptions zipOptions) {
-        var fileName = path.getFileName().toString();
-        var fileNameWithoutExtension = FileUtils.getFileNameWithoutExtension(fileName);
-        return this.type == PATH && zipOptions.includeRoot() ? addSlashEnd(fileNameWithoutExtension) : "";
+    private String getRootPath(ZipOptions zipOptions) {
+        if (this.type == PATH && zipOptions.includeRoot()) {
+            var fileName = path.getFileName().toString();
+            var fileNameWithoutExtension = FileUtils.getFileNameWithoutExtension(fileName);
+            return addSlashEnd(fileNameWithoutExtension);
+        }
+        return "";
     }
 
 }
