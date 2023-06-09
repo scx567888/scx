@@ -8,7 +8,7 @@ import java.nio.file.Path;
 import java.util.function.Supplier;
 import java.util.zip.GZIPInputStream;
 
-import static cool.scx.util.zip.zip_data_source.ZipDataSource.*;
+import static cool.scx.util.zip.zip_data_source.ZipDataSource.of;
 
 /**
  * <p>GunzipBuilder class.</p>

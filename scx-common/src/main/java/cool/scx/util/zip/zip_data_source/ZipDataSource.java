@@ -14,6 +14,10 @@ import java.util.function.Supplier;
  */
 public interface ZipDataSource {
 
+    static ZipDataSource of() {
+        return new NullZipDataSource();
+    }
+
     static ZipDataSource of(Path path) {
         return new PathZipDataSource(path);
     }
