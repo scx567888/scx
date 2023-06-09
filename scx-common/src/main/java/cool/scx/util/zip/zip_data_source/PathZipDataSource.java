@@ -16,6 +16,10 @@ public final class PathZipDataSource implements ZipDataSource {
         this.path = path;
     }
 
+    public Path getPath() {
+        return path;
+    }
+
     @Override
     public InputStream toInputStream() throws IOException {
         return Files.newInputStream(path);

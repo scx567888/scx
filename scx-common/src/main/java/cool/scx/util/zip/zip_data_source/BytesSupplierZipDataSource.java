@@ -16,6 +16,10 @@ public final class BytesSupplierZipDataSource implements ZipDataSource {
         this.bytesSupplier = bytesSupplier;
     }
 
+    public Supplier<byte[]> getBytesSupplier() {
+        return bytesSupplier;
+    }
+
     @Override
     public InputStream toInputStream() throws IOException {
         return new ByteArrayInputStream(bytesSupplier.get());

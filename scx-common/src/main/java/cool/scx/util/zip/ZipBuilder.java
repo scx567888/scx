@@ -1,6 +1,11 @@
 package cool.scx.util.zip;
 
 import cool.scx.util.StringUtils;
+import cool.scx.util.zip.zip_builder_item.PathZipBuilderItem;
+import cool.scx.util.zip.zip_data_source.BytesSupplierZipDataSource;
+import cool.scx.util.zip.zip_data_source.BytesZipDataSource;
+import cool.scx.util.zip.zip_data_source.InputStreamZipDataSource;
+import cool.scx.util.zip.zip_data_source.NullZipDataSource;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -12,7 +17,7 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.zip.ZipOutputStream;
 
-import static cool.scx.util.URIBuilder.normalize;
+import static cool.scx.util.URIBuilder.*;
 
 /**
  * 简化 zip 的创建
@@ -52,7 +57,7 @@ public class ZipBuilder {
      * @return a
      */
     public ZipBuilder put(String zipPath) {
-        items.add(new ZipBuilderItem(zipPath));
+        items.add(new ZipBuilderItem(addSlashEnd(trimSlash(normalize(zipPath))), new NullZipDataSource()));
         return this;
     }
 
@@ -64,7 +69,7 @@ public class ZipBuilder {
      * @return a
      */
     public ZipBuilder put(Path path, ZipOptions zipOptions) {
-        items.add(new ZipBuilderItem("", path, zipOptions));
+        items.add(new PathZipBuilderItem("", path, zipOptions));
         return this;
     }
 
@@ -81,7 +86,7 @@ public class ZipBuilder {
      * @return a
      */
     public ZipBuilder put(String zipPath, Path path, ZipOptions zipOptions) {
-        items.add(new ZipBuilderItem(zipPath, path, zipOptions));
+        items.add(new PathZipBuilderItem(zipPath, path, zipOptions));
         return this;
     }
 
@@ -93,7 +98,7 @@ public class ZipBuilder {
      * @return a
      */
     public ZipBuilder put(String zipPath, byte[] bytes) {
-        items.add(new ZipBuilderItem(zipPath, bytes));
+        items.add(new ZipBuilderItem(trimSlash(normalize(zipPath)), new BytesZipDataSource(bytes)));
         return this;
     }
 
@@ -105,7 +110,7 @@ public class ZipBuilder {
      * @return a {@link cool.scx.util.zip.ZipBuilder} object
      */
     public ZipBuilder put(String zipPath, Supplier<byte[]> bytesSupplier) {
-        items.add(new ZipBuilderItem(zipPath, bytesSupplier));
+        items.add(new ZipBuilderItem(trimSlash(normalize(zipPath)), new BytesSupplierZipDataSource(bytesSupplier)));
         return this;
     }
 
@@ -117,7 +122,7 @@ public class ZipBuilder {
      * @return a {@link cool.scx.util.zip.ZipBuilder} object
      */
     public ZipBuilder put(String zipPath, InputStream inputStream) {
-        items.add(new ZipBuilderItem(zipPath, inputStream));
+        items.add(new ZipBuilderItem(trimSlash(normalize(zipPath)), new InputStreamZipDataSource(inputStream)));
         return this;
     }
 

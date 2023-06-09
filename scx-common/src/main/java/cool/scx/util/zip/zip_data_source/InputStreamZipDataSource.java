@@ -24,4 +24,7 @@ public final class InputStreamZipDataSource implements ZipDataSource {
         inputStream.transferTo(out);
     }
 
+    public InputStream getInputStream() {
+        return inputStream;
+    }
 }
