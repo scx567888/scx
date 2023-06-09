@@ -1,5 +1,10 @@
 package cool.scx.util.zip;
 
+import cool.scx.util.zip.zip_data_source.BytesSupplierZipDataSource;
+import cool.scx.util.zip.zip_data_source.BytesZipDataSource;
+import cool.scx.util.zip.zip_data_source.InputStreamZipDataSource;
+import cool.scx.util.zip.zip_data_source.PathZipDataSource;
+
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -13,42 +18,28 @@ import java.util.zip.GZIPOutputStream;
  * @author scx567888
  * @version 2.0.4
  */
-public class GzipBuilder extends ZipDataSource {
+public class GzipBuilder {
 
-    /**
-     * <p>Constructor for GzipBuilder.</p>
-     *
-     * @param path a {@link java.nio.file.Path} object
-     */
+    private final ZipDataSource zipDataSource;
+
+    public GzipBuilder(ZipDataSource zipDataSource) {
+        this.zipDataSource = zipDataSource;
+    }
+
     public GzipBuilder(Path path) {
-        super(path);
+        this(new PathZipDataSource(path));
     }
 
-    /**
-     * <p>Constructor for GzipBuilder.</p>
-     *
-     * @param bytes an array of {@link byte} objects
-     */
     public GzipBuilder(byte[] bytes) {
-        super(bytes);
+        this(new BytesZipDataSource(bytes));
     }
 
-    /**
-     * <p>Constructor for GzipBuilder.</p>
-     *
-     * @param bytesSupplier a {@link java.util.function.Supplier} object
-     */
     public GzipBuilder(Supplier<byte[]> bytesSupplier) {
-        super(bytesSupplier);
+        this(new BytesSupplierZipDataSource(bytesSupplier));
     }
 
-    /**
-     * <p>Constructor for GzipBuilder.</p>
-     *
-     * @param inputStream a {@link java.io.InputStream} object
-     */
     public GzipBuilder(InputStream inputStream) {
-        super(inputStream);
+        this(new InputStreamZipDataSource(inputStream));
     }
 
     /**
@@ -60,7 +51,7 @@ public class GzipBuilder extends ZipDataSource {
     public byte[] toBytes() throws Exception {
         var bo = new ByteArrayOutputStream();
         try (var zos = new GZIPOutputStream(bo)) {
-            this.writeToOutputStream(zos);
+            this.zipDataSource.writeToOutputStream(zos);
         }
         return bo.toByteArray();
     }
@@ -74,7 +65,7 @@ public class GzipBuilder extends ZipDataSource {
     public void toFile(Path outputPath) throws Exception {
         Files.createDirectories(outputPath.getParent());
         try (var zos = new GZIPOutputStream(Files.newOutputStream(outputPath))) {
-            this.writeToOutputStream(zos);
+            this.zipDataSource.writeToOutputStream(zos);
         }
     }
 
