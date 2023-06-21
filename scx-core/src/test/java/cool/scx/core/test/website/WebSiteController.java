@@ -12,7 +12,7 @@ import cool.scx.mvc.annotation.FromUpload;
 import cool.scx.mvc.annotation.ScxRoute;
 import cool.scx.mvc.type.UploadedEntity;
 import cool.scx.mvc.vo.*;
-import cool.scx.util.DigestUtils;
+import cool.scx.util.HashUtils;
 import cool.scx.util.NetUtils;
 import cool.scx.util.RandomUtils;
 import cool.scx.util.ScxExceptionHelper;
@@ -168,7 +168,7 @@ public class WebSiteController {
      */
     @ScxRoute(value = "/md5", methods = HttpMethod.GET)
     public String TestMd5() {
-        return DigestUtils.md5("123");
+        return HashUtils.md5("123");
     }
 
     /**
