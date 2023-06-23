@@ -182,7 +182,7 @@
     <properties>
 
         <!-- *********************** 以下为依赖包版本 *********************** -->
-        <vertx.version>4.4.3</vertx.version>
+        <vertx.version>4.4.4</vertx.version>
         <jackson.version>2.15.2</jackson.version>
         <spring-framework.version>6.0.10</spring-framework.version>
         <hikaricp.version>5.0.1</hikaricp.version>
