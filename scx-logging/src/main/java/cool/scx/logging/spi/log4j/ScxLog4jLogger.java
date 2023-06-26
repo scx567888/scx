@@ -2,11 +2,12 @@ package cool.scx.logging.spi.log4j;
 
 import cool.scx.logging.ScxLogger;
 import cool.scx.logging.ScxLoggerFactory;
-import cool.scx.logging.ScxLoggingLevel;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.message.Message;
 import org.apache.logging.log4j.spi.AbstractLogger;
+
+import static org.apache.logging.log4j.Level.*;
 
 /**
  * ScxLog4jLogger
@@ -37,18 +38,29 @@ public final class ScxLog4jLogger extends AbstractLogger {
      * @param level 级别
      * @return ScxLoggingLevel
      */
-    private static ScxLoggingLevel toScxLoggingLevel(Level level) {
-        return switch (level.toString()) {
-            case "OFF" -> ScxLoggingLevel.OFF;
-            case "FATAL" -> ScxLoggingLevel.FATAL;
-            case "ERROR" -> ScxLoggingLevel.ERROR;
-            case "WARN" -> ScxLoggingLevel.WARN;
-            case "INFO" -> ScxLoggingLevel.INFO;
-            case "DEBUG" -> ScxLoggingLevel.DEBUG;
-            case "TRACE" -> ScxLoggingLevel.TRACE;
-            case "ALL" -> ScxLoggingLevel.ALL;
-            default -> throw new IllegalArgumentException();
-        };
+    private static System.Logger.Level toJDKLevel(Level level) {
+        if (level == OFF) {
+            return System.Logger.Level.OFF;
+        }
+        if (level == FATAL || level == ERROR) {
+            return System.Logger.Level.ERROR;
+        }
+        if (level == WARN) {
+            return System.Logger.Level.WARNING;
+        }
+        if (level == INFO) {
+            return System.Logger.Level.INFO;
+        }
+        if (level == DEBUG) {
+            return System.Logger.Level.DEBUG;
+        }
+        if (level == TRACE) {
+            return System.Logger.Level.TRACE;
+        }
+        if (level == ALL) {
+            return System.Logger.Level.ALL;
+        }
+        throw new IllegalArgumentException();
     }
 
     /**
@@ -57,12 +69,11 @@ public final class ScxLog4jLogger extends AbstractLogger {
      * @param level level
      * @return Level
      */
-    private static Level toLog4jLevel(ScxLoggingLevel level) {
+    private static Level toLog4jLevel(System.Logger.Level level) {
         return switch (level) {
             case OFF -> Level.OFF;
-            case FATAL -> Level.FATAL;
             case ERROR -> Level.ERROR;
-            case WARN -> Level.WARN;
+            case WARNING -> Level.WARN;
             case INFO -> Level.INFO;
             case DEBUG -> Level.DEBUG;
             case TRACE -> Level.TRACE;
@@ -203,7 +214,7 @@ public final class ScxLog4jLogger extends AbstractLogger {
      */
     @Override
     public void logMessage(final String fqcn, final Level mgsLevel, final Marker marker, final Message message, final Throwable throwable) {
-        this.scxLogger.logMessage(toScxLoggingLevel(mgsLevel), message.getFormattedMessage(), throwable);
+        this.scxLogger.logMessage(toJDKLevel(mgsLevel), message.getFormattedMessage(), throwable);
     }
 
     /**
