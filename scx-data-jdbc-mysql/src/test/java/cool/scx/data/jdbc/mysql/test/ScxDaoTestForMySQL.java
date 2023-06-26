@@ -10,7 +10,6 @@ import cool.scx.data.jdbc.spy.Spy;
 import cool.scx.data.query.WhereBody;
 import cool.scx.data.query.WhereOption;
 import cool.scx.logging.ScxLoggerFactory;
-import cool.scx.logging.ScxLoggingLevel;
 import org.testng.annotations.Test;
 
 import javax.sql.DataSource;
@@ -25,13 +24,14 @@ import static cool.scx.data.jdbc.sql.SQL.ofNormal;
 import static cool.scx.data.query.Logic.and;
 import static cool.scx.data.query.Logic.or;
 import static cool.scx.data.query.WhereBody.equal;
+import static java.lang.System.Logger.Level.DEBUG;
 
 public class ScxDaoTestForMySQL {
 
     public static final String databaseName = "scx_dao_test";
 
     static {
-        ScxLoggerFactory.defaultConfig().setLevel(ScxLoggingLevel.DEBUG);
+        ScxLoggerFactory.defaultConfig().setLevel(DEBUG);
     }
 
     public static DataSource getMySQLDataSource() {
