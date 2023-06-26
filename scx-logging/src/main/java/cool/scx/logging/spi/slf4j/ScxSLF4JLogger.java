@@ -2,7 +2,6 @@ package cool.scx.logging.spi.slf4j;
 
 import cool.scx.logging.ScxLogger;
 import cool.scx.logging.ScxLoggerFactory;
-import cool.scx.logging.ScxLoggingLevel;
 import org.slf4j.Marker;
 import org.slf4j.event.Level;
 import org.slf4j.helpers.LegacyAbstractLogger;
@@ -35,15 +34,15 @@ public final class ScxSLF4JLogger extends LegacyAbstractLogger {
      * SLF4JLevel 转 ScxLoggingLevel
      *
      * @param level a {@link org.slf4j.event.Level} object
-     * @return a {@link cool.scx.logging.ScxLoggingLevel} object
+     * @return a
      */
-    private static ScxLoggingLevel toScxLoggingLevel(Level level) {
+    private static System.Logger.Level toJDKLevel(Level level) {
         return switch (level) {
-            case ERROR -> ScxLoggingLevel.ERROR;
-            case WARN -> ScxLoggingLevel.WARN;
-            case INFO -> ScxLoggingLevel.INFO;
-            case DEBUG -> ScxLoggingLevel.DEBUG;
-            case TRACE -> ScxLoggingLevel.TRACE;
+            case ERROR -> System.Logger.Level.ERROR;
+            case WARN -> System.Logger.Level.WARNING;
+            case INFO -> System.Logger.Level.INFO;
+            case DEBUG -> System.Logger.Level.DEBUG;
+            case TRACE -> System.Logger.Level.TRACE;
         };
     }
 
@@ -53,10 +52,10 @@ public final class ScxSLF4JLogger extends LegacyAbstractLogger {
      * @param level level
      * @return Level
      */
-    private static Level toSLF4JLevel(ScxLoggingLevel level) {
+    private static Level toSLF4JLevel(System.Logger.Level level) {
         return switch (level) {
-            case OFF, FATAL, ERROR -> Level.ERROR;
-            case WARN -> Level.WARN;
+            case OFF, ERROR -> Level.ERROR;
+            case WARNING -> Level.WARN;
             case INFO -> Level.INFO;
             case DEBUG -> Level.DEBUG;
             case TRACE, ALL -> Level.TRACE;
@@ -76,7 +75,7 @@ public final class ScxSLF4JLogger extends LegacyAbstractLogger {
      */
     @Override
     protected void handleNormalizedLoggingCall(Level level, Marker marker, String message, Object[] arguments, Throwable throwable) {
-        this.scxLogger.logMessage(toScxLoggingLevel(level), MessageFormatter.arrayFormat(message, arguments).getMessage(), throwable);
+        this.scxLogger.logMessage(toJDKLevel(level), MessageFormatter.arrayFormat(message, arguments).getMessage(), throwable);
     }
 
     /**
