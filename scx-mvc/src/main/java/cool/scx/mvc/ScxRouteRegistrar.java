@@ -174,7 +174,7 @@ final class ScxRouteRegistrar {
         map.forEach((k, v) -> {
             if (v.size() > 1) { //具有多个路由
                 var content = v.stream().map(c -> "\t" + c.clazz.getName() + " : " + c.method.getName()).collect(Collectors.joining(System.lineSeparator()));
-                logger.log(WARNING, "检测到重复的路由!!! {} --> \"{}\" , 相关 class 及 方法 如下 ▼" + System.lineSeparator() + "{}",
+                logger.log(WARNING, "检测到重复的路由!!! {0} --> \"{1}\" , 相关 class 及 方法 如下 ▼" + System.lineSeparator() + "{2}",
                         k.httpMethod(), getPatternUrl(v.get(0).originalUrl), content);
             }
         });
