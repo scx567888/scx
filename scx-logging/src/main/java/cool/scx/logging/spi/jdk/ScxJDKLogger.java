@@ -3,11 +3,8 @@ package cool.scx.logging.spi.jdk;
 import cool.scx.logging.ScxLogger;
 import cool.scx.logging.ScxLoggerFactory;
 
+import java.text.MessageFormat;
 import java.util.ResourceBundle;
-
-import static org.slf4j.helpers.MessageFormatter.arrayFormat;
-import static org.slf4j.helpers.NormalizedParameters.getThrowableCandidate;
-import static org.slf4j.helpers.NormalizedParameters.trimmedCopy;
 
 public class ScxJDKLogger implements System.Logger {
 
@@ -15,6 +12,29 @@ public class ScxJDKLogger implements System.Logger {
 
     public ScxJDKLogger(String name) {
         this.scxLogger = ScxLoggerFactory.getLogger(name);
+    }
+
+    public static Object[] trimmedCopy(Object[] argArray) {
+        if (argArray != null && argArray.length != 0) {
+            int trimmedLen = argArray.length - 1;
+            Object[] trimmed = new Object[trimmedLen];
+            if (trimmedLen > 0) {
+                System.arraycopy(argArray, 0, trimmed, 0, trimmedLen);
+            }
+
+            return trimmed;
+        } else {
+            throw new IllegalStateException("non-sensical empty or null argument array");
+        }
+    }
+
+    public static Throwable getThrowableCandidate(Object[] argArray) {
+        if (argArray != null && argArray.length != 0) {
+            Object lastEntry = argArray[argArray.length - 1];
+            return lastEntry instanceof Throwable ? (Throwable) lastEntry : null;
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -40,9 +60,9 @@ public class ScxJDKLogger implements System.Logger {
             var throwableCandidate = getThrowableCandidate(params);
             if (throwableCandidate != null) {
                 var trimmedCopy = trimmedCopy(params);
-                this.scxLogger.log(level, arrayFormat(format, trimmedCopy).getMessage(), throwableCandidate);
+                this.scxLogger.log(level, MessageFormat.format(format, trimmedCopy), throwableCandidate);
             } else {
-                this.scxLogger.log(level, arrayFormat(format, params).getMessage(), null);
+                this.scxLogger.log(level, MessageFormat.format(format, params), null);
             }
         }
     }
