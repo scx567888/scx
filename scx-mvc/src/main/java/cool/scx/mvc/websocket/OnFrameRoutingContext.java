@@ -2,11 +2,12 @@ package cool.scx.mvc.websocket;
 
 import io.vertx.core.http.ServerWebSocket;
 import io.vertx.core.http.WebSocketFrame;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import java.lang.System.Logger;
 import java.util.Iterator;
 import java.util.List;
+
+import static java.lang.System.Logger.Level.ERROR;
 
 /**
  * <p>OnFrameRoutingContext class.</p>
@@ -19,7 +20,7 @@ public class OnFrameRoutingContext {
     /**
      * Constant <code>logger</code>
      */
-    private static final Logger logger = LoggerFactory.getLogger(OnFrameRoutingContext.class);
+    private static final Logger logger = System.getLogger(OnFrameRoutingContext.class.getName());
 
     private final WebSocketFrame socketFrame;
     private final ServerWebSocket socket;
@@ -49,13 +50,13 @@ public class OnFrameRoutingContext {
                     try {
                         next.baseWebSocketHandler().onTextMessage(socketFrame.textData(), socketFrame, this.socket, this);
                     } catch (Exception e) {
-                        logger.error("ScxWebSocketRoute : onTextMessage 发生异常 !!!", e);
+                        logger.log(ERROR, "ScxWebSocketRoute : onTextMessage 发生异常 !!!", e);
                     }
                 } else if (socketFrame.isBinary()) {
                     try {
                         next.baseWebSocketHandler().onBinaryMessage(socketFrame.binaryData(), socketFrame, this.socket, this);
                     } catch (Exception e) {
-                        logger.error("ScxWebSocketRoute : onBinaryMessage 发生异常 !!!", e);
+                        logger.log(ERROR, "ScxWebSocketRoute : onBinaryMessage 发生异常 !!!", e);
                     }
                 }
                 return;

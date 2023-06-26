@@ -9,11 +9,10 @@ import cool.scx.util.reflect.MethodUtils;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.impl.RouteImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.stereotype.Controller;
 
+import java.lang.System.Logger;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -23,6 +22,8 @@ import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import static java.lang.System.Logger.Level.WARNING;
+
 /**
  * 路由管理器
  *
@@ -31,7 +32,7 @@ import java.util.stream.Collectors;
  */
 final class ScxRouteRegistrar {
 
-    private static final Logger logger = LoggerFactory.getLogger(ScxRouteRegistrar.class);
+    private static final Logger logger = System.getLogger(ScxRouteRegistrar.class.getName());
 
     private static final Method vertxRouteStateMethod = initVertxRouteStateMethod();
 
@@ -173,7 +174,7 @@ final class ScxRouteRegistrar {
         map.forEach((k, v) -> {
             if (v.size() > 1) { //具有多个路由
                 var content = v.stream().map(c -> "\t" + c.clazz.getName() + " : " + c.method.getName()).collect(Collectors.joining(System.lineSeparator()));
-                logger.warn("检测到重复的路由!!! {} --> \"{}\" , 相关 class 及 方法 如下 ▼" + System.lineSeparator() + "{}",
+                logger.log(WARNING, "检测到重复的路由!!! {} --> \"{}\" , 相关 class 及 方法 如下 ▼" + System.lineSeparator() + "{}",
                         k.httpMethod(), getPatternUrl(v.get(0).originalUrl), content);
             }
         });

@@ -9,7 +9,6 @@ import cool.scx.data.jdbc.spy.Spy;
 import cool.scx.data.query.WhereBody;
 import cool.scx.data.query.WhereOption;
 import cool.scx.logging.ScxLoggerFactory;
-import cool.scx.logging.ScxLoggingLevel;
 import cool.scx.util.reflect.ClassUtils;
 import org.sqlite.SQLiteDataSource;
 import org.testng.annotations.Test;
@@ -29,6 +28,7 @@ import static cool.scx.data.jdbc.sql.SQL.ofNormal;
 import static cool.scx.data.query.Logic.and;
 import static cool.scx.data.query.Logic.or;
 import static cool.scx.data.query.WhereBody.equal;
+import static java.lang.System.Logger.Level.DEBUG;
 
 public class ScxDaoTestForSQLite {
 
@@ -36,7 +36,7 @@ public class ScxDaoTestForSQLite {
     public static Path AppRoot;
 
     static {
-        ScxLoggerFactory.defaultConfig().setLevel(ScxLoggingLevel.DEBUG);
+        ScxLoggerFactory.defaultConfig().setLevel(DEBUG);
         try {
             AppRoot = ClassUtils.getAppRoot(ClassUtils.getCodeSource(ScxDaoTestForSQLite.class));
             TempSQLite = AppRoot.resolve("temp").resolve("temp.sqlite");

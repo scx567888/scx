@@ -6,11 +6,13 @@ import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapperBuilder;
 import freemarker.template.Template;
 import freemarker.template.Version;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.lang.System.Logger;
 import java.nio.file.Path;
+
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.INFO;
 
 /**
  * 模板处理器
@@ -20,7 +22,7 @@ public final class ScxTemplateHandler {
     /**
      * Constant <code>logger</code>
      */
-    private static final Logger logger = LoggerFactory.getLogger(HtmlVoReturnValueHandler.class);
+    private static final Logger logger = System.getLogger(HtmlVoReturnValueHandler.class.getName());
 
     /**
      * Freemarker 默认引擎版本
@@ -41,7 +43,7 @@ public final class ScxTemplateHandler {
         try {
             freemarkerConfig.setDirectoryForTemplateLoading(templateRoot.toFile());
         } catch (Exception e) {
-            logger.info("模板目录不存在!!! {}", templateRoot);
+            logger.log(INFO, "模板目录不存在!!! {}", templateRoot);
         }
 
         //设置 字符集
@@ -63,7 +65,7 @@ public final class ScxTemplateHandler {
 
     public void addDirective(BaseTemplateDirective myDirective) {
         try {
-            logger.debug("已添加自定义 Freemarker 标签 [{}] Class -> {}", myDirective.directiveName(), myDirective.getClass().getName());
+            logger.log(DEBUG, "已添加自定义 Freemarker 标签 [{}] Class -> {}", myDirective.directiveName(), myDirective.getClass().getName());
             freemarkerConfig.setSharedVariable(myDirective.directiveName(), myDirective);
         } catch (Exception e) {
             e.printStackTrace();

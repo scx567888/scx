@@ -7,12 +7,12 @@ import cool.scx.util.ObjectUtils;
 import cool.scx.util.ScxExceptionHelper;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.vertx.ext.web.RoutingContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import java.lang.System.Logger;
 import java.util.LinkedHashMap;
 
 import static cool.scx.mvc.ScxMvcHelper.responseCanUse;
+import static java.lang.System.Logger.Level.ERROR;
 
 /**
  * a
@@ -43,7 +43,7 @@ public class ScxHttpExceptionHandler implements ScxHttpRouterExceptionHandler {
     /**
      * a
      */
-    private static final Logger logger = LoggerFactory.getLogger(ScxHttpExceptionHandler.class);
+    private static final Logger logger = System.getLogger(ScxHttpExceptionHandler.class.getName());
 
     private final boolean useDevelopmentErrorPage;
 
@@ -119,7 +119,7 @@ public class ScxHttpExceptionHandler implements ScxHttpRouterExceptionHandler {
             //1, 这里根据是否开启了开发人员错误页面 进行相应的返回
             this.handleScxHttpException((ScxHttpException) throwable, context);
         } else {
-            logger.error("捕获到 ScxHttpException 异常 !!!, 因为请求已被相应, 所以错误信息可能没有正确返回给客户端 !!!", throwable);
+            logger.log(ERROR, "捕获到 ScxHttpException 异常 !!!, 因为请求已被相应, 所以错误信息可能没有正确返回给客户端 !!!", throwable);
         }
     }
 

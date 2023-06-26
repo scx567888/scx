@@ -6,7 +6,6 @@ import cool.scx.data.mysql_x.MySQLXDao;
 import cool.scx.data.query.WhereBody;
 import cool.scx.data.query.WhereOption;
 import cool.scx.logging.ScxLoggerFactory;
-import cool.scx.logging.ScxLoggingLevel;
 import org.testng.annotations.Test;
 
 import java.time.LocalDateTime;
@@ -16,13 +15,14 @@ import java.util.List;
 import static cool.scx.data.query.Logic.and;
 import static cool.scx.data.query.Logic.or;
 import static cool.scx.data.query.WhereBody.equal;
+import static java.lang.System.Logger.Level.DEBUG;
 
 public class MySQLXDaoTest {
 
     public static final String databaseName = "scx_dao_test";
 
     static {
-        ScxLoggerFactory.defaultConfig().setLevel(ScxLoggingLevel.DEBUG);
+        ScxLoggerFactory.defaultConfig().setLevel(DEBUG);
     }
 
     public static void main(String[] args) {

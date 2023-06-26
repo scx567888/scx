@@ -8,7 +8,7 @@ import org.testng.annotations.Test;
 
 import java.nio.file.Path;
 
-import static cool.scx.logging.ScxLoggingLevel.DEBUG;
+import static java.lang.System.Logger.Level.DEBUG;
 
 public class ScxLoggerTest {
 

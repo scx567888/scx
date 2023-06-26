@@ -4,8 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cool.scx.util.ObjectUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Type;
 import java.sql.PreparedStatement;
@@ -13,9 +11,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
+import static java.lang.System.Logger.Level.ERROR;
+
 public class ObjectTypeHandler implements TypeHandler<Object> {
 
-    private static final Logger logger = LoggerFactory.getLogger(ObjectTypeHandler.class);
+    private static final System.Logger logger = System.getLogger(ObjectTypeHandler.class.getName());
 
     private static final ObjectMapper objectMapper = ObjectUtils.jsonMapper(ObjectUtils.Option.IGNORE_JSON_IGNORE);
 
@@ -31,7 +31,7 @@ public class ObjectTypeHandler implements TypeHandler<Object> {
             var json = objectMapper.writeValueAsString(parameter);
             ps.setString(i, json);
         } catch (JsonProcessingException e) {
-            logger.error("序列化时发生错误 , 已使用 NULL !!!", e);
+            logger.log(ERROR, "序列化时发生错误 , 已使用 NULL !!!", e);
             ps.setNull(i, Types.NULL);
         }
     }
@@ -45,7 +45,7 @@ public class ObjectTypeHandler implements TypeHandler<Object> {
         try {
             return objectMapper.readValue(json, javaType);
         } catch (JsonProcessingException e) {
-            logger.error("反序列化时发生错误 , 已使用 NULL !!!", e);
+            logger.log(ERROR, "反序列化时发生错误 , 已使用 NULL !!!", e);
             return null;
         }
     }

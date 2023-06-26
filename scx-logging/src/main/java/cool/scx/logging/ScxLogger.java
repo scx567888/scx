@@ -5,6 +5,7 @@ import java.util.Set;
 
 import static cool.scx.logging.ScxLoggerFactory.defaultConfig;
 import static cool.scx.logging.ScxLoggerHelper.getFilteredStackTrace;
+import static java.lang.System.Logger.Level;
 
 /**
  * ScxLogger
@@ -36,7 +37,7 @@ public class ScxLogger {
      * @param msg       a
      * @param throwable a
      */
-    public void logMessage(ScxLoggingLevel level, String msg, Throwable throwable) {
+    public void log(Level level, String msg, Throwable throwable) {
         if (shouldSkip(level)) {
             return;
         }
@@ -57,11 +58,11 @@ public class ScxLogger {
     /**
      * <p>shouldSkip.</p>
      *
-     * @param level a {@link cool.scx.logging.ScxLoggingLevel} object
+     * @param level a
      * @return a boolean
      */
-    protected boolean shouldSkip(ScxLoggingLevel level) {
-        return level == ScxLoggingLevel.OFF;
+    protected boolean shouldSkip(Level level) {
+        return level == Level.OFF;
     }
 
     /**
@@ -74,11 +75,11 @@ public class ScxLogger {
     }
 
     /**
-     * <p>level.</p>
+     * a
      *
-     * @return a {@link cool.scx.logging.ScxLoggingLevel} object
+     * @return a
      */
-    public ScxLoggingLevel level() {
+    public Level level() {
         return config.level();
     }
 

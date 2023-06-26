@@ -17,7 +17,6 @@ import cool.scx.data.jdbc.annotation.Table;
 import cool.scx.data.jdbc.dialect.DialectSelector;
 import cool.scx.data.jdbc.spy.Spy;
 import cool.scx.logging.ScxLoggerFactory;
-import cool.scx.logging.ScxLoggingLevel;
 import cool.scx.logging.recorder.ConsoleRecorder;
 import cool.scx.logging.recorder.FileRecorder;
 import cool.scx.mvc.annotation.ScxRoute;
@@ -47,7 +46,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ScheduledExecutorService;
 
-import static cool.scx.logging.ScxLoggingLevel.*;
+import static java.lang.System.Logger.Level.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -289,16 +288,15 @@ public final class ScxHelper {
      * <p>toLevel.</p>
      *
      * @param levelName a {@link java.lang.String} object
-     * @return a {@link cool.scx.logging.ScxLoggingLevel} object
+     * @return a
      */
-    private static ScxLoggingLevel toLevel(String levelName) {
+    private static System.Logger.Level toLevel(String levelName) {
         Objects.requireNonNull(levelName, "levelName 不能为空 !!!");
         var s = levelName.trim().toUpperCase();
         return switch (s) {
             case "OFF", "O" -> OFF;
-            case "FATAL", "F" -> FATAL;
             case "ERROR", "E" -> ERROR;
-            case "WARN", "W" -> WARN;
+            case "WARN", "WARNING", "W" -> WARNING;
             case "INFO", "I" -> INFO;
             case "DEBUG", "D" -> DEBUG;
             case "TRACE", "T" -> TRACE;

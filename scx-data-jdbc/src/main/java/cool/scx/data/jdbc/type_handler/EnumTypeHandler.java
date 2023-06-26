@@ -1,15 +1,14 @@
 package cool.scx.data.jdbc.type_handler;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static java.lang.System.Logger.Level.ERROR;
+
 public class EnumTypeHandler<E extends Enum<E>> implements TypeHandler<E> {
 
-    private static final Logger logger = LoggerFactory.getLogger(EnumTypeHandler.class);
+    private static final System.Logger logger = System.getLogger(EnumTypeHandler.class.getName());
 
     private final Class<E> type;
 
@@ -34,7 +33,7 @@ public class EnumTypeHandler<E extends Enum<E>> implements TypeHandler<E> {
         try {
             return Enum.valueOf(type, name);
         } catch (Exception e) {
-            logger.error("枚举转换出现错误 : ", e);
+            logger.log(ERROR, "枚举转换出现错误 : ", e);
             return null;
         }
     }
