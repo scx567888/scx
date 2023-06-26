@@ -8,7 +8,6 @@ import cool.scx.data.jdbc.sql.UpdateResult;
 import cool.scx.data.jdbc.sqlite.test.bean.Student;
 import cool.scx.data.jdbc.sqlite.test.bean.StudentRecord;
 import cool.scx.logging.ScxLoggerFactory;
-import cool.scx.logging.ScxLoggingLevel;
 import cool.scx.util.FileUtils;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.ScxExceptionHelper;
@@ -23,6 +22,7 @@ import static cool.scx.data.jdbc.result_handler.ResultHandler.ofBeanList;
 import static cool.scx.data.jdbc.result_handler.ResultHandler.ofMapList;
 import static cool.scx.data.jdbc.sql.SQL.ofNormal;
 import static cool.scx.data.jdbc.sqlite.test.ScxDaoTestForSQLite.getSQLiteDataSource;
+import static java.lang.System.Logger.Level.DEBUG;
 
 public class SQLRunnerTestForSQLite {
 
@@ -32,7 +32,7 @@ public class SQLRunnerTestForSQLite {
     private static final String tableName = "t1";
 
     static {
-        ScxLoggerFactory.defaultConfig().setLevel(ScxLoggingLevel.DEBUG);
+        ScxLoggerFactory.defaultConfig().setLevel(DEBUG);
     }
 
     public static void main(String[] args) {
