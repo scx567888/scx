@@ -1,11 +1,12 @@
 package cool.scx.mvc.websocket;
 
 import io.vertx.core.http.ServerWebSocket;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import java.lang.System.Logger;
 import java.util.Iterator;
 import java.util.List;
+
+import static java.lang.System.Logger.Level.ERROR;
 
 /**
  * <p>OnCloseRoutingContext class.</p>
@@ -18,7 +19,7 @@ public class OnCloseRoutingContext {
     /**
      * Constant <code>logger</code>
      */
-    private static final Logger logger = LoggerFactory.getLogger(OnCloseRoutingContext.class);
+    private static final Logger logger = System.getLogger(OnCloseRoutingContext.class.getName());
 
     private final ServerWebSocket socket;
     private final Iterator<WebSocketRoute> iter;
@@ -44,7 +45,7 @@ public class OnCloseRoutingContext {
                 try {
                     next.baseWebSocketHandler().onClose(this.socket, this);
                 } catch (Exception e) {
-                    logger.error("ScxWebSocketRoute : onClose 发生异常 !!!", e);
+                    logger.log(ERROR, "ScxWebSocketRoute : onClose 发生异常 !!!", e);
                 }
                 return;
             }
