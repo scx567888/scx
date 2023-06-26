@@ -1,9 +1,13 @@
 package cool.scx.util;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * 提供一些 Array 的方法, 也有一些 List 相关的方法
+ */
 public final class ArrayUtils {
 
     /**
@@ -97,6 +101,48 @@ public final class ArrayUtils {
         }
         T[] result = Arrays.copyOf(first, first.length + second.length);
         System.arraycopy(second, 0, result, first.length, second.length);
+        return result;
+    }
+
+    /**
+     * 按照指定份数切割 List, 注意和 {@link ArrayUtils#splitList(List, int)} 进行区分
+     *
+     * @param list list
+     * @param n    份数
+     * @param <T>  T
+     * @return 切割后的 list
+     */
+    public static <T> List<List<T>> splitListN(List<T> list, int n) {
+        List<List<T>> result = new ArrayList<>();
+        int rem = list.size() % n;
+        int size = list.size() / n;
+        int idx = 0;
+        for (int i = 0; i < n; i = i + 1) {
+            int curSize = size;
+            if (rem > 0) {
+                curSize = curSize + 1;
+                rem = rem - 1;
+            }
+            result.add(list.subList(idx, idx + curSize));
+            idx = idx + curSize;
+        }
+        return result;
+    }
+
+    /**
+     * 按照指定长度切割 List, 注意和 {@link ArrayUtils#splitListN(List, int)}} 进行区分
+     *
+     * @param list list
+     * @param size 每份的长度
+     * @param <T>  T
+     * @return 切割后的 list
+     */
+    public static <T> List<List<T>> splitList(List<T> list, int size) {
+        List<List<T>> result = new ArrayList<>();
+        for (int i = 0; i < list.size(); i = i + size) {
+            int end = Math.min(i + size, list.size());
+            result.add(list.subList(i, end));
+        }
         return result;
     }
 
