@@ -1,5 +1,6 @@
 package cool.scx.logging;
 
+import java.lang.System.Logger.Level;
 import java.time.LocalDateTime;
 
 /**
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
  * @param contextStack 上下文堆栈跟踪信息 (可能为 null)
  */
 public record ScxLogRecord(LocalDateTime timeStamp,
-                           ScxLoggingLevel level,
+                           Level level,
                            String loggerName,
                            String message,
                            String threadName,

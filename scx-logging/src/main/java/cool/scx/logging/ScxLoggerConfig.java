@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static java.lang.System.Logger.Level;
+
 /**
  * <p>ScxLoggerConfig class.</p>
  *
@@ -14,7 +16,7 @@ public class ScxLoggerConfig {
 
     private final ScxLoggerConfig parent;
 
-    private ScxLoggingLevel level = null;
+    private Level level = null;
 
     private Boolean stackTrace = null;
 
@@ -30,12 +32,12 @@ public class ScxLoggerConfig {
     }
 
     /**
-     * <p>level.</p>
+     * a
      *
-     * @return a {@link cool.scx.logging.ScxLoggingLevel} object
+     * @return a
      */
-    public final ScxLoggingLevel level() {
-        return level != null ? level : parent != null ? parent.level() : ScxLoggingLevel.ERROR;
+    public final Level level() {
+        return level != null ? level : parent != null ? parent.level() : Level.ERROR;
     }
 
     /**
@@ -57,12 +59,12 @@ public class ScxLoggerConfig {
     }
 
     /**
-     * <p>Setter for the field <code>level</code>.</p>
+     * a
      *
-     * @param newLevel a {@link cool.scx.logging.ScxLoggingLevel} object
-     * @return a {@link cool.scx.logging.ScxLoggerConfig} object
+     * @param newLevel a
+     * @return a
      */
-    public final ScxLoggerConfig setLevel(ScxLoggingLevel newLevel) {
+    public final ScxLoggerConfig setLevel(Level newLevel) {
         this.level = newLevel;
         return this;
     }
