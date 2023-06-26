@@ -2,9 +2,8 @@ package cool.scx.mvc.websocket;
 
 import cool.scx.mvc.base.BaseWebSocketHandler;
 import io.vertx.core.http.ServerWebSocket;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import java.lang.System.Logger;
 import java.util.regex.Pattern;
 
 /**
@@ -18,7 +17,7 @@ public final class WebSocketRoute {
     /**
      * 日志
      */
-    private static final Logger logger = LoggerFactory.getLogger(WebSocketRoute.class);
+    private static final Logger logger = System.getLogger(WebSocketRoute.class.getName());
     private final String path;
     private final Pattern pattern;
     private final BaseWebSocketHandler baseWebSocketHandler;
