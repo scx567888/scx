@@ -43,7 +43,7 @@ public final class ScxTemplateHandler {
         try {
             freemarkerConfig.setDirectoryForTemplateLoading(templateRoot.toFile());
         } catch (Exception e) {
-            logger.log(INFO, "模板目录不存在!!! {}", templateRoot);
+            logger.log(INFO, "模板目录不存在!!! {0}", templateRoot);
         }
 
         //设置 字符集
@@ -65,7 +65,7 @@ public final class ScxTemplateHandler {
 
     public void addDirective(BaseTemplateDirective myDirective) {
         try {
-            logger.log(DEBUG, "已添加自定义 Freemarker 标签 [{}] Class -> {}", myDirective.directiveName(), myDirective.getClass().getName());
+            logger.log(DEBUG, "已添加自定义 Freemarker 标签 [{0}] Class -> {1}", myDirective.directiveName(), myDirective.getClass().getName());
             freemarkerConfig.setSharedVariable(myDirective.directiveName(), myDirective);
         } catch (Exception e) {
             e.printStackTrace();

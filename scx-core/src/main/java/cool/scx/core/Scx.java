@@ -222,7 +222,7 @@ public final class Scx {
     public boolean checkDataSource() {
         try (var conn = dataSource().getConnection()) {
             var dm = conn.getMetaData();
-            logger.log(DEBUG, "数据源连接成功 : 类型 [{}]  版本 [{}]", dm.getDatabaseProductName(), dm.getDatabaseProductVersion());
+            logger.log(DEBUG, "数据源连接成功 : 类型 [{0}]  版本 [{1}]", dm.getDatabaseProductName(), dm.getDatabaseProductVersion());
             return true;
         } catch (Exception e) {
             dataSourceExceptionHandler(e);
@@ -258,10 +258,10 @@ public final class Scx {
         }
 
         if (fixSuccess != 0) {
-            logger.log(DEBUG, "修复成功 {} 张表...", fixSuccess);
+            logger.log(DEBUG, "修复成功 {0} 张表...", fixSuccess);
         }
         if (fixFail != 0) {
-            logger.log(WARNING, "修复失败 {} 张表...", fixFail);
+            logger.log(WARNING, "修复失败 {0} 张表...", fixFail);
         }
         if (fixSuccess + fixFail == 0) {
             logger.log(DEBUG, "没有表需要修复...");
