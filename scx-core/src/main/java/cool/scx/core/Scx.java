@@ -22,16 +22,17 @@ import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.net.JksOptions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 import javax.sql.DataSource;
+import java.lang.System.Logger;
 import java.net.BindException;
 import java.util.Arrays;
 import java.util.List;
 
 import static cool.scx.core.ScxHelper.*;
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.WARNING;
 
 /**
  * 启动类
@@ -41,7 +42,7 @@ import static cool.scx.core.ScxHelper.*;
  */
 public final class Scx {
 
-    private static final Logger logger = LoggerFactory.getLogger(Scx.class);
+    private static final Logger logger = System.getLogger(Scx.class.getName());
 
     private final ScxEnvironment scxEnvironment;
 
@@ -221,7 +222,7 @@ public final class Scx {
     public boolean checkDataSource() {
         try (var conn = dataSource().getConnection()) {
             var dm = conn.getMetaData();
-            logger.debug("数据源连接成功 : 类型 [{}]  版本 [{}]", dm.getDatabaseProductName(), dm.getDatabaseProductVersion());
+            logger.log(DEBUG, "数据源连接成功 : 类型 [{}]  版本 [{}]", dm.getDatabaseProductName(), dm.getDatabaseProductVersion());
             return true;
         } catch (Exception e) {
             dataSourceExceptionHandler(e);
@@ -233,7 +234,7 @@ public final class Scx {
      * <p>fixTable.</p>
      */
     public void fixTable() {
-        logger.debug("修复数据表结构中...");
+        logger.log(DEBUG, "修复数据表结构中...");
         //修复成功的表
         var fixSuccess = 0;
         //修复失败的表
@@ -257,13 +258,13 @@ public final class Scx {
         }
 
         if (fixSuccess != 0) {
-            logger.debug("修复成功 {} 张表...", fixSuccess);
+            logger.log(DEBUG, "修复成功 {} 张表...", fixSuccess);
         }
         if (fixFail != 0) {
-            logger.warn("修复失败 {} 张表...", fixFail);
+            logger.log(WARNING, "修复失败 {} 张表...", fixFail);
         }
         if (fixSuccess + fixFail == 0) {
-            logger.debug("没有表需要修复...");
+            logger.log(DEBUG, "没有表需要修复...");
         }
 
     }
@@ -286,7 +287,7 @@ public final class Scx {
      * @return 是否有
      */
     public boolean checkNeedFixTable() {
-        logger.debug("检查数据表结构中...");
+        logger.log(DEBUG, "检查数据表结构中...");
         for (var v : getAllScxBaseModelClassList()) {
             //根据 class 获取 tableInfo
             var tableInfo = new AnnotationConfigTable(v);

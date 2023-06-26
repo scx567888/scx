@@ -37,7 +37,7 @@ public class ScxLogger {
      * @param msg       a
      * @param throwable a
      */
-    public void logMessage(Level level, String msg, Throwable throwable) {
+    public void log(Level level, String msg, Throwable throwable) {
         if (shouldSkip(level)) {
             return;
         }

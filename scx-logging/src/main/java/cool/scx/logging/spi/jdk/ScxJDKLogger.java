@@ -30,7 +30,7 @@ public class ScxJDKLogger implements System.Logger {
     @Override
     public void log(Level level, ResourceBundle bundle, String msg, Throwable thrown) {
         if (isLoggable(level)) {
-            this.scxLogger.logMessage(level, msg, thrown);
+            this.scxLogger.log(level, msg, thrown);
         }
     }
 
@@ -40,9 +40,9 @@ public class ScxJDKLogger implements System.Logger {
             var throwableCandidate = getThrowableCandidate(params);
             if (throwableCandidate != null) {
                 var trimmedCopy = trimmedCopy(params);
-                this.scxLogger.logMessage(level, arrayFormat(format, trimmedCopy).getMessage(), throwableCandidate);
+                this.scxLogger.log(level, arrayFormat(format, trimmedCopy).getMessage(), throwableCandidate);
             } else {
-                this.scxLogger.logMessage(level, arrayFormat(format, params).getMessage(), null);
+                this.scxLogger.log(level, arrayFormat(format, params).getMessage(), null);
             }
         }
     }

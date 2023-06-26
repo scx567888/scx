@@ -75,7 +75,7 @@ public final class ScxSLF4JLogger extends LegacyAbstractLogger {
      */
     @Override
     protected void handleNormalizedLoggingCall(Level level, Marker marker, String message, Object[] arguments, Throwable throwable) {
-        this.scxLogger.logMessage(toJDKLevel(level), MessageFormatter.arrayFormat(message, arguments).getMessage(), throwable);
+        this.scxLogger.log(toJDKLevel(level), MessageFormatter.arrayFormat(message, arguments).getMessage(), throwable);
     }
 
     /**

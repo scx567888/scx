@@ -214,7 +214,7 @@ public final class ScxLog4jLogger extends AbstractLogger {
      */
     @Override
     public void logMessage(final String fqcn, final Level mgsLevel, final Marker marker, final Message message, final Throwable throwable) {
-        this.scxLogger.logMessage(toJDKLevel(mgsLevel), message.getFormattedMessage(), throwable);
+        this.scxLogger.log(toJDKLevel(mgsLevel), message.getFormattedMessage(), throwable);
     }
 
     /**
