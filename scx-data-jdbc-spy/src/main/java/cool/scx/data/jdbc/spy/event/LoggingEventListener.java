@@ -1,17 +1,16 @@
 package cool.scx.data.jdbc.spy.event;
 
-
 import cool.scx.data.jdbc.dialect.Dialect;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import java.lang.System.Logger;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import static java.lang.System.Logger.Level.DEBUG;
 
 public class LoggingEventListener extends SimpleJdbcEventListener {
 
-    private static final Logger logger = LoggerFactory.getLogger("ScxSpy");
+    private static final Logger logger = System.getLogger("ScxSpy");
     private final Dialect dialect;
 
     public LoggingEventListener(Dialect dialect) {
@@ -20,8 +19,8 @@ public class LoggingEventListener extends SimpleJdbcEventListener {
 
     @Override
     public void onBeforeAnyExecute(Statement statement) {
-        if (logger.isDebugEnabled()) {
-            logger.debug(dialect.getFinalSQL(statement));
+        if (logger.isLoggable(DEBUG)) {
+            logger.log(DEBUG, dialect.getFinalSQL(statement));
         }
     }
 
