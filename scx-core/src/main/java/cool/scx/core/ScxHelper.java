@@ -288,7 +288,7 @@ public final class ScxHelper {
      * <p>toLevel.</p>
      *
      * @param levelName a {@link java.lang.String} object
-     * @return a 
+     * @return a
      */
     private static System.Logger.Level toLevel(String levelName) {
         Objects.requireNonNull(levelName, "levelName 不能为空 !!!");

@@ -33,7 +33,7 @@ public class EnumTypeHandler<E extends Enum<E>> implements TypeHandler<E> {
         try {
             return Enum.valueOf(type, name);
         } catch (Exception e) {
-            logger.log(ERROR,"枚举转换出现错误 : ", e);
+            logger.log(ERROR, "枚举转换出现错误 : ", e);
             return null;
         }
     }
