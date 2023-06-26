@@ -22,7 +22,7 @@
     },
     "logging": {
       "default": {
-        "level": "DEBUG",
+        "level": "ERROR",
         "type": "BOTH",
         "stored-directory": "AppRoot:logs",
         "stack-trace": false
