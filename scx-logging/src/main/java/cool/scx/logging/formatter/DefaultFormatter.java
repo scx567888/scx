@@ -50,6 +50,18 @@ public final class DefaultFormatter implements ScxLogRecordFormatter {
         return sb.toString();
     }
 
+    public static String getFixedLengthLevelName(System.Logger.Level level) {
+        return switch (level) {
+            case ALL -> "ALL  ";
+            case TRACE -> "TRACE";
+            case DEBUG -> "DEBUG";
+            case INFO -> "INFO ";
+            case WARNING -> "WARN ";
+            case ERROR -> "ERROR";
+            case OFF -> "OFF  ";
+        };
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -60,7 +72,7 @@ public final class DefaultFormatter implements ScxLogRecordFormatter {
         // 2020-01-01 11:19:55.356 [main-1] ERROR cool.scx.xxx.TestController - 日志消息 !!!
         var sw = new StringWriter().append(formatTimeStamp(event.timeStamp()))
                 .append(" [").append(event.threadName()).append("] ")
-                .append(event.level().fixedLengthName())
+                .append(getFixedLengthLevelName(event.level()))
                 .append(" ").append(event.loggerName()).append(" - ")
                 .append(event.message()).append(System.lineSeparator());
 
