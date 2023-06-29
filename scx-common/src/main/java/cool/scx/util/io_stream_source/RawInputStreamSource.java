@@ -1,4 +1,4 @@
-package cool.scx.util.input_stream_source;
+package cool.scx.util.io_stream_source;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,6 +20,11 @@ final class RawInputStreamSource implements InputStreamSource {
     @Override
     public void writeToOutputStream(OutputStream out) throws IOException {
         inputStream.transferTo(out);
+    }
+
+    @Override
+    public byte[] toBytes() throws IOException {
+        return inputStream.readAllBytes();
     }
 
 }

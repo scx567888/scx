@@ -1,4 +1,4 @@
-package cool.scx.util.input_stream_source;
+package cool.scx.util.io_stream_source;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,7 +14,7 @@ import java.util.zip.ZipFile;
  * @author scx567888
  * @version 2.0.4
  */
-public interface InputStreamSource {
+public interface InputStreamSource extends OutputStreamSource {
 
     static InputStreamSource of() {
         return new NullSource();
@@ -41,19 +41,25 @@ public interface InputStreamSource {
     }
 
     /**
-     * 写入到指定输出流
-     *
-     * @param out 输出流
-     * @throws IOException e
-     */
-    void writeToOutputStream(OutputStream out) throws IOException;
-
-    /**
      * 转换为  InputStream
      *
      * @return InputStream
      * @throws IOException e
      */
     InputStream toInputStream() throws IOException;
+
+    @Override
+    default byte[] toBytes() throws IOException {
+        try (var inputStream = toInputStream()) {
+            return inputStream.readAllBytes();
+        }
+    }
+
+    @Override
+    default void writeToOutputStream(OutputStream out) throws IOException {
+        try (var inputStream = toInputStream()) {
+            inputStream.transferTo(out);
+        }
+    }
 
 }
