@@ -1,15 +1,17 @@
-package cool.scx.util.zip.zip_data_source;
+package cool.scx.util.io_stream_source;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
-final class BytesZipDataSource implements ZipDataSource {
+final class BytesSource implements InputStreamSource {
 
     private final byte[] bytes;
 
-    public BytesZipDataSource(byte[] bytes) {
+    public BytesSource(byte[] bytes) {
         this.bytes = bytes;
     }
 
@@ -21,6 +23,16 @@ final class BytesZipDataSource implements ZipDataSource {
     @Override
     public void writeToOutputStream(OutputStream out) throws IOException {
         out.write(bytes);
+    }
+
+    @Override
+    public byte[] toBytes() throws IOException {
+        return bytes;
+    }
+
+    @Override
+    public void toFile(Path outputPath) throws IOException {
+        Files.write(outputPath, bytes);
     }
 
 }

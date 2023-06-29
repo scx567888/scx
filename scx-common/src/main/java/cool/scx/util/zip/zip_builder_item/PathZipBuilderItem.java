@@ -1,9 +1,9 @@
 package cool.scx.util.zip.zip_builder_item;
 
 import cool.scx.util.StringUtils;
+import cool.scx.util.io_stream_source.InputStreamSource;
 import cool.scx.util.zip.ZipBuilderItem;
 import cool.scx.util.zip.ZipOptions;
-import cool.scx.util.zip.zip_data_source.ZipDataSource;
 
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
@@ -21,7 +21,7 @@ public final class PathZipBuilderItem extends ZipBuilderItem {
     private final Path path;
 
     public PathZipBuilderItem(String zipPath, Path path, ZipOptions zipOptions) {
-        super(getZipPathByPath(zipPath, path, zipOptions), ZipDataSource.of(path));
+        super(getZipPathByPath(zipPath, path, zipOptions), InputStreamSource.of(path));
         this.path = path;
     }
 

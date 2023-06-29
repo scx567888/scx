@@ -1,14 +1,14 @@
 package cool.scx.util.zip;
 
-import cool.scx.util.zip.zip_data_source.ZipDataSource;
+import cool.scx.util.io_stream_source.InputStreamSource;
 
+import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Supplier;
 import java.util.zip.GZIPInputStream;
 
-import static cool.scx.util.zip.zip_data_source.ZipDataSource.of;
+import static cool.scx.util.io_stream_source.InputStreamSource.of;
 
 /**
  * <p>GunzipBuilder class.</p>
@@ -16,12 +16,12 @@ import static cool.scx.util.zip.zip_data_source.ZipDataSource.of;
  * @author scx567888
  * @version 2.0.4
  */
-public final class GunzipBuilder {
+public final class GunzipBuilder implements InputStreamSource {
 
-    private final ZipDataSource zipDataSource;
+    private final InputStreamSource source;
 
-    public GunzipBuilder(ZipDataSource zipDataSource) {
-        this.zipDataSource = zipDataSource;
+    public GunzipBuilder(InputStreamSource source) {
+        this.source = source;
     }
 
     public GunzipBuilder(Path path) {
@@ -40,17 +40,9 @@ public final class GunzipBuilder {
         this(of(inputStream));
     }
 
-    public byte[] toBytes() throws Exception {
-        try (var zos = new GZIPInputStream(this.zipDataSource.toInputStream())) {
-            return zos.readAllBytes();
-        }
-    }
-
-    public void toFile(Path outputPath) throws Exception {
-        Files.createDirectories(outputPath.getParent());
-        try (var zos = new GZIPInputStream(this.zipDataSource.toInputStream())) {
-            zos.transferTo(Files.newOutputStream(outputPath));
-        }
+    @Override
+    public InputStream toInputStream() throws IOException {
+        return new GZIPInputStream(this.source.toInputStream());
     }
 
 }
