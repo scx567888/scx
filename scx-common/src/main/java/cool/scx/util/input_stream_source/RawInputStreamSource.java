@@ -1,14 +1,14 @@
-package cool.scx.util.zip.zip_data_source;
+package cool.scx.util.input_stream_source;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-final class InputStreamZipDataSource implements ZipDataSource {
+final class RawInputStreamSource implements InputStreamSource {
 
     private final InputStream inputStream;
 
-    public InputStreamZipDataSource(InputStream inputStream) {
+    public RawInputStreamSource(InputStream inputStream) {
         this.inputStream = inputStream;
     }
 

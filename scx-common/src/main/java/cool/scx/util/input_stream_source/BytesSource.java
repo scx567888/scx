@@ -1,15 +1,15 @@
-package cool.scx.util.zip.zip_data_source;
+package cool.scx.util.input_stream_source;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-final class BytesZipDataSource implements ZipDataSource {
+final class BytesSource implements InputStreamSource {
 
     private final byte[] bytes;
 
-    public BytesZipDataSource(byte[] bytes) {
+    public BytesSource(byte[] bytes) {
         this.bytes = bytes;
     }
 
