@@ -48,6 +48,12 @@ public interface InputStreamSource extends OutputStreamSource {
      */
     InputStream toInputStream() throws IOException;
 
+    /**
+     * 这样默认会比 {@link OutputStreamSource#toBytes()} 性能更高一些
+     *
+     * @return bytes
+     * @throws IOException e
+     */
     @Override
     default byte[] toBytes() throws IOException {
         try (var inputStream = toInputStream()) {
