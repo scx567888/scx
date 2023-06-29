@@ -1,7 +1,7 @@
 package cool.scx.util.zip.zip_builder_item;
 
 import cool.scx.util.StringUtils;
-import cool.scx.util.input_stream_source.InputStreamSource;
+import cool.scx.util.io_stream_source.InputStreamSource;
 import cool.scx.util.zip.ZipBuilderItem;
 import cool.scx.util.zip.ZipOptions;
 

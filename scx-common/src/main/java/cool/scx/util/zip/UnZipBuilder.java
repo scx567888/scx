@@ -1,7 +1,7 @@
 package cool.scx.util.zip;
 
 import cool.scx.util.FileUtils;
-import cool.scx.util.input_stream_source.InputStreamSource;
+import cool.scx.util.io_stream_source.InputStreamSource;
 
 import java.io.IOException;
 import java.io.InputStream;
