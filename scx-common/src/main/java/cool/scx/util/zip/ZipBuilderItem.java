@@ -1,6 +1,6 @@
 package cool.scx.util.zip;
 
-import cool.scx.util.zip.zip_data_source.ZipDataSource;
+import cool.scx.util.input_stream_source.InputStreamSource;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,16 +24,16 @@ public class ZipBuilderItem {
      */
     protected final String zipPath;
 
-    protected final ZipDataSource zipDataSource;
+    protected final InputStreamSource source;
 
     /**
      * <p>Constructor for ZipBuilderItem.</p>
      *
      * @param zipPath a {@link java.lang.String} object
      */
-    protected ZipBuilderItem(String zipPath, ZipDataSource zipDataSource) {
+    protected ZipBuilderItem(String zipPath, InputStreamSource source) {
         this.zipPath = zipPath;
-        this.zipDataSource = zipDataSource;
+        this.source = source;
     }
 
     /**
@@ -44,7 +44,7 @@ public class ZipBuilderItem {
      */
     ZipBuilderItem(String zipPath, byte[] bytes) {
         this.zipPath = trimSlash(normalize(zipPath));
-        this.zipDataSource = ZipDataSource.of(bytes);
+        this.source = InputStreamSource.of(bytes);
     }
 
     /**
@@ -55,7 +55,7 @@ public class ZipBuilderItem {
      */
     ZipBuilderItem(String zipPath, Supplier<byte[]> bytesSupplier) {
         this.zipPath = trimSlash(normalize(zipPath));
-        this.zipDataSource = ZipDataSource.of(bytesSupplier);
+        this.source = InputStreamSource.of(bytesSupplier);
     }
 
     /**
@@ -66,7 +66,7 @@ public class ZipBuilderItem {
      */
     ZipBuilderItem(String zipPath, InputStream inputStream) {
         this.zipPath = trimSlash(normalize(zipPath));
-        this.zipDataSource = ZipDataSource.of(inputStream);
+        this.source = InputStreamSource.of(inputStream);
     }
 
     /**
@@ -76,22 +76,22 @@ public class ZipBuilderItem {
      */
     ZipBuilderItem(String zipPath) {
         this.zipPath = addSlashEnd(trimSlash(normalize(zipPath)));
-        this.zipDataSource = ZipDataSource.of();
+        this.source = InputStreamSource.of();
     }
 
     ZipBuilderItem(ZipEntry zipEntry, ZipFile zipFile) {
         this.zipPath = trimSlash(normalize(zipEntry.getName()));
-        this.zipDataSource = ZipDataSource.of(zipEntry, zipFile);
+        this.source = InputStreamSource.of(zipEntry, zipFile);
     }
 
     public void writeToZipOutputStream(ZipOutputStream zos) throws IOException {
         zos.putNextEntry(new ZipEntry(this.zipPath));
-        this.zipDataSource.writeToOutputStream(zos);
+        this.source.writeToOutputStream(zos);
         zos.closeEntry();
     }
 
-    public ZipDataSource zipDataSource() {
-        return zipDataSource;
+    public InputStreamSource zipDataSource() {
+        return source;
     }
 
 }
