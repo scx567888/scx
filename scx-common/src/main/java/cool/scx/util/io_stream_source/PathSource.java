@@ -1,4 +1,4 @@
-package cool.scx.util.input_stream_source;
+package cool.scx.util.io_stream_source;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,6 +22,16 @@ final class PathSource implements InputStreamSource {
     @Override
     public void writeToOutputStream(OutputStream out) throws IOException {
         Files.copy(path, out);
+    }
+
+    @Override
+    public void toFile(Path outputPath) throws IOException {
+        Files.copy(path, outputPath);
+    }
+
+    @Override
+    public byte[] toBytes() throws IOException {
+        return Files.readAllBytes(path);
     }
 
 }
