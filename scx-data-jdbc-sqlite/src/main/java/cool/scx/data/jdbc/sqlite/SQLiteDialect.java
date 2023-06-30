@@ -50,6 +50,23 @@ public class SQLiteDialect extends Dialect {
         typeHandlerSelector.registerTypeHandler(LocalDateTime.class, new SQLiteLocalDateTimeTypeHandler());
     }
 
+    private static String getFinalSQL0(String sql, Object[] batch) {
+        final StringBuilder sb = new StringBuilder();
+        int currentParameter = 0;
+        for (int pos = 0; pos < sql.length(); pos++) {
+            char character = sql.charAt(pos);
+            if (character == '?' && currentParameter <= batch.length) {
+                // 替换 ?
+                Object value = batch[currentParameter];
+                sb.append(value != null ? value.toString() : "NULL");
+                currentParameter = currentParameter + 1;
+            } else {
+                sb.append(character);
+            }
+        }
+        return sb.toString();
+    }
+
     @Override
     public boolean canHandle(String url) {
         return startsWithIgnoreCase(url, "jdbc:sqlite:");
@@ -88,20 +105,7 @@ public class SQLiteDialect extends Dialect {
         } catch (IllegalAccessException e) {
             return null;
         }
-        final StringBuilder sb = new StringBuilder();
-        int currentParameter = 0;
-        for (int pos = 0; pos < sql.length(); pos++) {
-            char character = sql.charAt(pos);
-            if (character == '?' && currentParameter <= batch.length) {
-                // 替换 ?
-                Object value = batch[currentParameter];
-                sb.append(value != null ? value.toString() : "NULL");
-                currentParameter = currentParameter + 1;
-            } else {
-                sb.append(character);
-            }
-        }
-        var finalSQL = sb.toString();
+        var finalSQL = getFinalSQL0(sql, batch);
         return batchQueryCount > 1 ? finalSQL + "... 额外的 " + (batchQueryCount - 1) + " 项" : finalSQL;
     }
 

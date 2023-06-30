@@ -95,7 +95,7 @@ public abstract class Result implements BaseVo {
         return ObjectUtils.toJson(this.body(), defaultValue);
     }
 
-    record Body<T>(String message, T data) {
+    public record Body<T>(String message, T data) {
 
     }
 

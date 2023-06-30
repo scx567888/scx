@@ -29,7 +29,7 @@ public abstract class BeanBuilder<T> {
 
     public abstract T createBean(ResultSet rs, int[] indexInfo) throws SQLException;
 
-    public abstract FieldSetter[] fieldSetters();
+    abstract FieldSetter[] fieldSetters();
 
     /**
      * 返回 fieldSetters 索引对应的 rsm 的索引数组 若无对应则使用 -1 占位

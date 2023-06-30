@@ -67,7 +67,7 @@ public final class FormDataItem {
         return attributeValue;
     }
 
-    public FormDataItemType type() {
+    FormDataItemType type() {
         return type;
     }
 
