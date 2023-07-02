@@ -16,7 +16,7 @@ public abstract class Logic {
         return new OR(clauses);
     }
 
-    public abstract String keyWord();
+    public abstract LogicType type();
 
     public final Object[] clauses() {
         return clauses;
