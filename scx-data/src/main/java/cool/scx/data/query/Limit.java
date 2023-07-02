@@ -19,7 +19,7 @@ public final class Limit {
     private Long rowCount;
 
     /**
-     * 创建一个 Pagination 对象
+     * 创建一个 Limit 对象
      */
     public Limit() {
         this.offset = null;
@@ -29,11 +29,49 @@ public final class Limit {
     /**
      * 根据旧的 Limit 创建一个 Limit 对象
      *
-     * @param limit 旧的 Limit
+     * @param oldLimit 旧的 Limit
      */
-    public Limit(Limit limit) {
-        this.offset = limit.offset;
-        this.rowCount = limit.rowCount;
+    public Limit(Limit oldLimit) {
+        this.offset = oldLimit.offset;
+        this.rowCount = oldLimit.rowCount;
+    }
+
+    /**
+     * Limit
+     *
+     * @param offset   偏移量
+     * @param rowCount 长度
+     */
+    public Limit(long offset, long rowCount) {
+        set(offset, rowCount);
+    }
+
+    /**
+     * setOffset
+     *
+     * @param offset offset (偏移量)
+     * @return self
+     */
+    public Limit setOffset(long offset) {
+        if (offset < 0) {
+            throw new IllegalArgumentException("Limit 参数错误 : offset (偏移量) 不能小于 0 !!!");
+        }
+        this.offset = offset;
+        return this;
+    }
+
+    /**
+     * setRowCount
+     *
+     * @param rowCount rowCount (行长度)
+     * @return self
+     */
+    public Limit setRowCount(long rowCount) {
+        if (rowCount < 0) {
+            throw new IllegalArgumentException("Limit 参数错误 : rowCount (行长度) 不能小于 0 !!!");
+        }
+        this.rowCount = rowCount;
+        return this;
     }
 
     /**
@@ -41,28 +79,43 @@ public final class Limit {
      *
      * @param offset   偏移量
      * @param rowCount 长度
-     * @return p
+     * @return self
      */
     public Limit set(long offset, long rowCount) {
-        if (offset < 0) {
-            throw new IllegalArgumentException("分页参数错误 : offset (偏移量) 不能小于 0 !!!");
-        }
-        if (rowCount < 0) {
-            throw new IllegalArgumentException("分页参数错误 : rowCount (行长度) 不能小于 0 !!!");
-        }
-        this.offset = offset;
-        this.rowCount = rowCount;
+        setOffset(offset);
+        setRowCount(rowCount);
         return this;
     }
 
     /**
-     * 设置每页数量
+     * clearOffset
      *
-     * @param rowCount 长度
-     * @return s
+     * @return self
      */
-    public Limit set(long rowCount) {
-        return set(0, rowCount);
+    public Limit clearOffset() {
+        this.offset = null;
+        return this;
+    }
+
+    /**
+     * clearRowCount
+     *
+     * @return self
+     */
+    public Limit clearRowCount() {
+        this.rowCount = null;
+        return this;
+    }
+
+    /**
+     * clear
+     *
+     * @return self
+     */
+    public Limit clear() {
+        clearOffset();
+        clearRowCount();
+        return this;
     }
 
     /**
@@ -81,17 +134,6 @@ public final class Limit {
      */
     public Long rowCount() {
         return rowCount;
-    }
-
-    /**
-     * a
-     *
-     * @return a
-     */
-    public Limit clear() {
-        this.offset = null;
-        this.rowCount = null;
-        return this;
     }
 
 }
