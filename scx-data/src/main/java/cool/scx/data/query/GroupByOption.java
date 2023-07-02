@@ -9,12 +9,12 @@ package cool.scx.data.query;
 public enum GroupByOption {
 
     /**
-     * a
+     * 使用原始名称
      */
     USE_ORIGINAL_NAME,
 
     /**
-     * a
+     * 使用 json 表达式
      */
     USE_JSON_EXTRACT;
 

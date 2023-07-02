@@ -1,5 +1,7 @@
 package cool.scx.data.query;
 
+import cool.scx.data.query.GroupByOption.Info;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +42,7 @@ public final class GroupBy {
      * @return 本身, 方便链式调用
      */
     public GroupBy add(String name, GroupByOption... options) {
-        var info = new GroupByOption.Info(options);
+        var info = new Info(options);
         var groupByBody = new GroupByBody(name, info);
         groupByBodyList.add(groupByBody);
         return this;
@@ -67,6 +69,11 @@ public final class GroupBy {
         return this;
     }
 
+    /**
+     * groupByBodyList
+     *
+     * @return groupByBodyList
+     */
     public List<GroupByBody> groupByBodyList() {
         return groupByBodyList;
     }

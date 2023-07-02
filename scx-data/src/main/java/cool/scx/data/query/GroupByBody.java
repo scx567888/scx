@@ -1,6 +1,6 @@
 package cool.scx.data.query;
 
-import cool.scx.util.StringUtils;
+import static cool.scx.util.StringUtils.isBlank;
 
 /**
  * <p>GroupByBody class.</p>
@@ -11,7 +11,7 @@ import cool.scx.util.StringUtils;
 public record GroupByBody(String name, GroupByOption.Info info) {
 
     public GroupByBody(String name, GroupByOption.Info info) {
-        if (StringUtils.isBlank(name)) {
+        if (isBlank(name)) {
             throw new IllegalArgumentException("GroupBy 参数错误 : 名称 不能为空 !!!");
         }
         this.name = name.trim();
