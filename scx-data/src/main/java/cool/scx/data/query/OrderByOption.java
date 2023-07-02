@@ -9,12 +9,12 @@ package cool.scx.data.query;
 public enum OrderByOption {
 
     /**
-     * a
+     * 替换现有同名字段
      */
     REPLACE,
 
     /**
-     * a
+     * 使用原始名称
      */
     USE_ORIGINAL_NAME,
 
