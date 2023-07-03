@@ -103,7 +103,6 @@ public enum WhereType {
      * 设置 参数数量
      *
      * @param paramSize p
-     * 
      */
     WhereType(int paramSize) {
         this.paramSize = paramSize;

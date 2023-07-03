@@ -1,9 +1,6 @@
 package cool.scx.data.query.parser;
 
-import cool.scx.data.query.AND;
-import cool.scx.data.query.Logic;
-import cool.scx.data.query.Where;
-import cool.scx.data.query.WhereBody;
+import cool.scx.data.query.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +46,7 @@ public abstract class WhereParser {
                 whereParams.addAll(List.of(w.whereParams()));
             }
         }
-        var clause = String.join(" " + l.keyWord() + " ", clauses);
+        var clause = String.join(" " + getKeyWord(l.type()) + " ", clauses);
         //只有 子句数量 大于 1 时, 我们才在两端拼接 括号
         if (clauses.size() > 1) {
             clause = "(" + clause + ")";
@@ -65,5 +62,12 @@ public abstract class WhereParser {
     }
 
     public abstract WhereClauseAndWhereParams parseWhereBody(WhereBody body);
+
+    public String getKeyWord(LogicType logicType) {
+        return switch (logicType) {
+            case OR -> "OR";
+            case AND -> "AND";
+        };
+    }
 
 }
