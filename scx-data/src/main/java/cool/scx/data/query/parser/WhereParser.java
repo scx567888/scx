@@ -7,6 +7,12 @@ import java.util.List;
 
 public abstract class WhereParser {
 
+    /**
+     * 解析全部内容
+     *
+     * @param objs o
+     * @return o
+     */
     public final WhereClauseAndWhereParams parseAll(Object[] objs) {
         var whereClause = new StringBuilder();
         var whereParams = new ArrayList<>();
@@ -20,6 +26,12 @@ public abstract class WhereParser {
         return new WhereClauseAndWhereParams(whereClause.toString(), whereParams.toArray());
     }
 
+    /**
+     * 解析单个
+     *
+     * @param obj o
+     * @return o
+     */
     public WhereClauseAndWhereParams parse(Object obj) {
         if (obj instanceof String str) {
             return parseString(str);
@@ -46,7 +58,7 @@ public abstract class WhereParser {
                 whereParams.addAll(List.of(w.whereParams()));
             }
         }
-        var clause = String.join(" " + getKeyWord(l.type()) + " ", clauses);
+        var clause = String.join(" " + getLogicKeyWord(l.type()) + " ", clauses);
         //只有 子句数量 大于 1 时, 我们才在两端拼接 括号
         if (clauses.size() > 1) {
             clause = "(" + clause + ")";
@@ -63,7 +75,7 @@ public abstract class WhereParser {
 
     public abstract WhereClauseAndWhereParams parseWhereBody(WhereBody body);
 
-    public String getKeyWord(LogicType logicType) {
+    public String getLogicKeyWord(LogicType logicType) {
         return switch (logicType) {
             case OR -> "OR";
             case AND -> "AND";
