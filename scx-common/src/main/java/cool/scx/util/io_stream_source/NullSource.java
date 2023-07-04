@@ -6,7 +6,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-final class NullSource implements InputStreamSource {
+public class NullSource implements InputStreamSource {
 
     public NullSource() {
 

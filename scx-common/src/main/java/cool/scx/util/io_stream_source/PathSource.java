@@ -6,7 +6,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-final class PathSource implements InputStreamSource {
+public class PathSource implements InputStreamSource {
 
     private final Path path;
 

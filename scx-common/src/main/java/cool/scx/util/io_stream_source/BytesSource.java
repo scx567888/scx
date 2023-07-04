@@ -7,7 +7,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-final class BytesSource implements InputStreamSource {
+public class BytesSource implements InputStreamSource {
 
     private final byte[] bytes;
 

@@ -8,7 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Supplier;
 
-final class BytesSupplierSource implements InputStreamSource {
+public class BytesSupplierSource implements InputStreamSource {
 
     private final Supplier<byte[]> bytesSupplier;
 

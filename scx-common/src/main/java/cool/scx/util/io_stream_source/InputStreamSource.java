@@ -3,6 +3,7 @@ package cool.scx.util.io_stream_source;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.function.Supplier;
 import java.util.zip.ZipEntry;
@@ -66,6 +67,10 @@ public interface InputStreamSource extends OutputStreamSource {
         try (var inputStream = toInputStream()) {
             inputStream.transferTo(out);
         }
+    }
+
+    default String toString(Charset charset) throws IOException {
+        return new String(toBytes(), charset);
     }
 
 }
