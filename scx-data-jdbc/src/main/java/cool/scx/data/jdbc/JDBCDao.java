@@ -90,7 +90,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
         this.entityBeanListHandler = ofBeanList(this.entityClass, columnNameMapping);
         this.entityBeanHandler = ofBean(this.entityClass, columnNameMapping);
         this.countResultHandler = ofSingleValue("count", Long.class);
-        this.whereParser = new JDBCDaoWhereParser(tableInfo);
+        this.whereParser = new JDBCDaoWhereParser(tableInfo, jdbcContext.dialect());
         this.groupByParser = new JDBCDaoGroupByParser(tableInfo);
         this.orderByParser = new JDBCDaoOrderByParser(tableInfo);
     }
@@ -193,7 +193,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
     }
 
     public Entity get(Query query, ColumnFilter columnFilter) {
-        return sqlRunner.query(buildSelectSQL(query.setLimit(1), columnFilter), entityBeanHandler);
+        return sqlRunner.query(buildSelectSQL(query.setLimitRowCount(1), columnFilter), entityBeanHandler);
     }
 
     /**
