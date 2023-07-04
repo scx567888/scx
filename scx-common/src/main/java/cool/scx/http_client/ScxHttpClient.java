@@ -2,7 +2,6 @@ package cool.scx.http_client;
 
 import java.io.IOException;
 import java.net.http.HttpClient;
-import java.net.http.HttpResponse;
 import java.util.concurrent.CompletableFuture;
 
 import static java.net.http.HttpResponse.BodyHandlers.ofInputStream;
