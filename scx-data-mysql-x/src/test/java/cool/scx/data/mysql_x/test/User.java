@@ -16,7 +16,7 @@ public class User {
 
     public String[] tags;
 
-    static class UserInfo {
+    public static class UserInfo {
         public String email;
     }
 

@@ -12,87 +12,87 @@ public enum WhereType {
     /**
      * 为空
      */
-    IS_NULL(0, "IS NULL"),
+    IS_NULL(0),
 
     /**
      * 不为空
      */
-    IS_NOT_NULL(0, "IS NOT NULL"),
+    IS_NOT_NULL(0),
 
     /**
      * 等于
      */
-    EQUAL(1, "="),
+    EQUAL(1),
 
     /**
      * 不等于
      */
-    NOT_EQUAL(1, "<>"),
+    NOT_EQUAL(1),
 
     /**
      * 小于
      */
-    LESS_THAN(1, "<"),
+    LESS_THAN(1),
 
     /**
      * 小于等于
      */
-    LESS_THAN_OR_EQUAL(1, "<="),
+    LESS_THAN_OR_EQUAL(1),
 
     /**
      * 大于
      */
-    GREATER_THAN(1, ">"),
+    GREATER_THAN(1),
 
     /**
      * 大于等于
      */
-    GREATER_THAN_OR_EQUAL(1, ">="),
+    GREATER_THAN_OR_EQUAL(1),
 
     /**
      * Like
      */
-    LIKE(1, "LIKE"),
+    LIKE(1),
 
     /**
      * Not Like
      */
-    NOT_LIKE(1, "NOT LIKE"),
+    NOT_LIKE(1),
 
     /**
      * Like 正则表达式
      */
-    LIKE_REGEX(1, "LIKE"),
+    LIKE_REGEX(1),
 
     /**
      * Like 正则表达式
      */
-    NOT_LIKE_REGEX(1, "NOT LIKE"),
+    NOT_LIKE_REGEX(1),
 
     /**
      * IN
      */
-    IN(1, "IN"),
+    IN(1),
 
     /**
      * NOT IN
      */
-    NOT_IN(1, "NOT IN"),
+    NOT_IN(1),
 
     /**
      * 在之间
      */
-    BETWEEN(2, "BETWEEN"),
+    BETWEEN(2),
 
     /**
      * 不在之间
      */
-    NOT_BETWEEN(2, "NOT BETWEEN"),
+    NOT_BETWEEN(2),
 
     /**
      * json 包含 一般用于 数组判断
      */
-    JSON_CONTAINS(1, "JSON_CONTAINS");
+    JSON_CONTAINS(1);
 
     /**
      * 参数数量 用于校验
@@ -100,19 +100,12 @@ public enum WhereType {
     private final int paramSize;
 
     /**
-     * 关键词
-     */
-    private final String keyWord;
-
-    /**
-     * 设置 参数数量 和关键字
+     * 设置 参数数量
      *
      * @param paramSize p
-     * @param keyWord   k
      */
-    WhereType(int paramSize, String keyWord) {
+    WhereType(int paramSize) {
         this.paramSize = paramSize;
-        this.keyWord = keyWord;
     }
 
     /**
@@ -132,15 +125,6 @@ public enum WhereType {
      */
     public int paramSize() {
         return paramSize;
-    }
-
-    /**
-     * 获取关键词
-     *
-     * @return key
-     */
-    public String keyWord() {
-        return keyWord;
     }
 
 }

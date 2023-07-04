@@ -1,7 +1,12 @@
 package cool.scx.data.query;
 
+import cool.scx.data.query.OrderByOption.Info;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import static cool.scx.data.query.OrderByType.ASC;
+import static cool.scx.data.query.OrderByType.DESC;
 
 /**
  * 排序
@@ -41,7 +46,7 @@ public final class OrderBy {
      * @return 本身, 方便链式调用
      */
     public OrderBy add(String name, OrderByType orderByType, OrderByOption... options) {
-        var info = new OrderByOption.Info(options);
+        var info = new Info(options);
         // 是否使用原始名称 (即不进行转义)
         var orderByBody = new OrderByBody(name, orderByType, info);
         // 是否替换
@@ -60,7 +65,7 @@ public final class OrderBy {
      * @return a
      */
     public OrderBy asc(String name, OrderByOption... options) {
-        return add(name, OrderByType.ASC, options);
+        return add(name, ASC, options);
     }
 
     /**
@@ -71,7 +76,7 @@ public final class OrderBy {
      * @return a
      */
     public OrderBy desc(String name, OrderByOption... options) {
-        return add(name, OrderByType.DESC, options);
+        return add(name, DESC, options);
     }
 
     /**
@@ -86,15 +91,20 @@ public final class OrderBy {
     }
 
     /**
-     * a
+     * clear
      *
-     * @return a
+     * @return self
      */
     public OrderBy clear() {
         orderByBodyList.clear();
         return this;
     }
 
+    /**
+     * orderByBodyList
+     *
+     * @return orderByBodyList
+     */
     public List<OrderByBody> orderByBodyList() {
         return orderByBodyList;
     }

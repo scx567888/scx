@@ -1,5 +1,7 @@
 package cool.scx.data.query;
 
+import static cool.scx.data.query.LogicType.OR;
+
 public final class OR extends Logic {
 
     public OR(Object... clauses) {
@@ -7,8 +9,8 @@ public final class OR extends Logic {
     }
 
     @Override
-    public String keyWord() {
-        return "OR";
+    public LogicType type() {
+        return OR;
     }
 
 }

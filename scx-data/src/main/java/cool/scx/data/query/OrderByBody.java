@@ -1,6 +1,7 @@
 package cool.scx.data.query;
 
-import cool.scx.util.StringUtils;
+import static cool.scx.data.query.OrderByOption.Info;
+import static cool.scx.util.StringUtils.isBlank;
 
 /**
  * OrderBy 封装体
@@ -8,10 +9,10 @@ import cool.scx.util.StringUtils;
  * @author scx567888
  * @version 0.0.1
  */
-public record OrderByBody(String name, OrderByType orderByType, OrderByOption.Info info) {
+public record OrderByBody(String name, OrderByType orderByType, Info info) {
 
-    public OrderByBody(String name, OrderByType orderByType, OrderByOption.Info info) {
-        if (StringUtils.isBlank(name)) {
+    public OrderByBody(String name, OrderByType orderByType, Info info) {
+        if (isBlank(name)) {
             throw new IllegalArgumentException("OrderBy 参数错误 : 名称 不能为空 !!!");
         }
         if (orderByType == null) {

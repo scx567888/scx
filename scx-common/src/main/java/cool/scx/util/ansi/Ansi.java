@@ -1,8 +1,11 @@
 package cool.scx.util.ansi;
 
+import cool.scx.util.CycleIterator;
+
 import java.util.*;
 
 import static cool.scx.util.ansi.AnsiHelper.detectIfAnsiCapable;
+import static cool.scx.util.ansi.AnsiHelper.initCycleColor;
 
 /**
  * 向控制台打印彩色
@@ -36,6 +39,11 @@ public final class Ansi {
      * 是否开启颜色
      */
     private static final boolean enabled = detectIfAnsiCapable();
+
+    /**
+     * 循环颜色
+     */
+    private static final CycleIterator<AnsiColor> CYCLE_COLOR = initCycleColor();
 
     /**
      * 待输出的数据
@@ -361,7 +369,7 @@ public final class Ansi {
      * @return a {@link cool.scx.util.ansi.Ansi} object.
      */
     public Ansi color(Object o, AnsiElement... ansiElements) {
-        add(o, filterAnsiElement(ansiElements, CycleColors.next()));
+        add(o, filterAnsiElement(ansiElements, CYCLE_COLOR.next()));
         return this;
     }
 
