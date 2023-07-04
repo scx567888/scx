@@ -193,7 +193,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
     }
 
     public Entity get(Query query, ColumnFilter columnFilter) {
-        return sqlRunner.query(buildSelectSQL(query.setLimitRowCount(1), columnFilter), entityBeanHandler);
+        return sqlRunner.query(buildSelectSQL(query.setLimit(1), columnFilter), entityBeanHandler);
     }
 
     /**
