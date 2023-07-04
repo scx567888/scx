@@ -26,12 +26,12 @@ public class ScxHttpClient {
     }
 
     public ScxHttpClientResponse request(ScxHttpClientRequest request) throws IOException, InterruptedException {
-        var response = client.send(request.createHttpRequest(), HttpResponse.BodyHandlers.ofByteArray());
+        var response = client.send(request.createHttpRequest(), HttpResponse.BodyHandlers.ofInputStream());
         return new ScxHttpClientResponse(response);
     }
 
     public CompletableFuture<ScxHttpClientResponse> requestAsync(ScxHttpClientRequest request) {
-        var future = client.sendAsync(request.createHttpRequest(), HttpResponse.BodyHandlers.ofByteArray());
+        var future = client.sendAsync(request.createHttpRequest(), HttpResponse.BodyHandlers.ofInputStream());
         return future.thenApply(ScxHttpClientResponse::new);
     }
 
