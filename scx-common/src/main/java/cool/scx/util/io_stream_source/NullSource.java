@@ -4,9 +4,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.nio.file.OpenOption;
 import java.nio.file.Path;
 
-final class NullSource implements InputStreamSource {
+public class NullSource implements InputStreamSource {
 
     public NullSource() {
 
@@ -28,7 +29,7 @@ final class NullSource implements InputStreamSource {
     }
 
     @Override
-    public void toFile(Path outputPath) throws IOException {
+    public void toFile(Path outputPath, OpenOption... options) throws IOException {
         Files.createFile(outputPath);
     }
 

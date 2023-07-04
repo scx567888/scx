@@ -1,6 +1,7 @@
 package cool.scx.http_client;
 
 import javax.net.ssl.SSLSession;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpHeaders;
@@ -10,11 +11,11 @@ import java.util.Optional;
 
 public class ScxHttpClientResponse {
 
-    private final HttpResponse<byte[]> response;
+    private final HttpResponse<?> response;
 
     private final ScxHttpClientResponseBody body;
 
-    public ScxHttpClientResponse(HttpResponse<byte[]> response) {
+    public ScxHttpClientResponse(HttpResponse<InputStream> response) {
         this.response = response;
         this.body = new ScxHttpClientResponseBody(response.body());
     }

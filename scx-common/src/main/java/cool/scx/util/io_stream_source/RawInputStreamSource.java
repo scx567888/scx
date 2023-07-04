@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-final class RawInputStreamSource implements InputStreamSource {
+public class RawInputStreamSource implements InputStreamSource {
 
     private final InputStream inputStream;
 
@@ -13,7 +13,7 @@ final class RawInputStreamSource implements InputStreamSource {
     }
 
     @Override
-    public InputStream toInputStream() throws IOException {
+    public InputStream toInputStream() {
         return inputStream;
     }
 

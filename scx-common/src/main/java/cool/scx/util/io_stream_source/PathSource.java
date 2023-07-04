@@ -4,9 +4,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.nio.file.OpenOption;
 import java.nio.file.Path;
 
-final class PathSource implements InputStreamSource {
+public class PathSource implements InputStreamSource {
 
     private final Path path;
 
@@ -25,7 +26,7 @@ final class PathSource implements InputStreamSource {
     }
 
     @Override
-    public void toFile(Path outputPath) throws IOException {
+    public void toFile(Path outputPath, OpenOption... options) throws IOException {
         Files.copy(path, outputPath);
     }
 

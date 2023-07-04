@@ -5,10 +5,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.util.function.Supplier;
 
-final class BytesSupplierSource implements InputStreamSource {
+public class BytesSupplierSource implements InputStreamSource {
 
     private final Supplier<byte[]> bytesSupplier;
 
@@ -32,8 +33,8 @@ final class BytesSupplierSource implements InputStreamSource {
     }
 
     @Override
-    public void toFile(Path outputPath) throws IOException {
-        Files.write(outputPath, bytesSupplier.get());
+    public void toFile(Path outputPath, OpenOption... options) throws IOException {
+        Files.write(outputPath, bytesSupplier.get(), options);
     }
 
 }
