@@ -10,7 +10,6 @@ import cool.scx.data.query.WhereType;
 import cool.scx.data.query.exception.ValidParamListIsEmptyException;
 import cool.scx.data.query.parser.WhereClauseAndWhereParams;
 import cool.scx.data.query.parser.WhereParser;
-import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
 
 import java.util.ArrayList;
@@ -20,6 +19,8 @@ import java.util.Objects;
 
 import static cool.scx.data.jdbc.parser.ColumnNameParser.parseColumnName;
 import static cool.scx.data.jdbc.parser.ColumnNameParser.splitIntoColumnNameAndFieldPath;
+import static cool.scx.util.ObjectUtils.Option.IGNORE_JSON_IGNORE;
+import static cool.scx.util.ObjectUtils.Option.IGNORE_NULL_VALUE;
 import static cool.scx.util.ObjectUtils.toJson;
 import static cool.scx.util.ObjectUtils.toObjectArray;
 
@@ -131,7 +132,7 @@ public class JDBCDaoWhereParser extends WhereParser {
                 whereParams = new Object[]{value1};
             } else {
                 try {
-                    whereParams = new Object[]{toJson(value1, ObjectUtils.Option.IGNORE_JSON_IGNORE, ObjectUtils.Option.IGNORE_NULL_VALUE)};
+                    whereParams = new Object[]{toJson(value1, IGNORE_JSON_IGNORE, IGNORE_NULL_VALUE)};
                 } catch (JsonProcessingException e) {
                     throw new IllegalArgumentException("使用 JSON_CONTAINS 时, 查询参数不合法(无法正确转换为 JSON) !!! 字段名 : " + name, e);
                 }
