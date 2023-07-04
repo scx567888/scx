@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.data.jdbc.AnnotationConfigTable;
 import cool.scx.data.jdbc.dialect.Dialect;
 import cool.scx.data.jdbc.sql.SQL;
-import cool.scx.data.query.WhereBody;
 import cool.scx.data.query.WhereOption;
 import cool.scx.data.query.WhereType;
 import cool.scx.data.query.exception.ValidParamListIsEmptyException;
@@ -34,13 +33,15 @@ public class JDBCDaoWhereParser extends WhereParser {
         this.dialect = dialect;
     }
 
+    @Override
     public WhereClauseAndWhereParams parseIsNull(String name, WhereType whereType, Object value1, Object value2, WhereOption.Info info) {
         var columnName = parseColumnName(tableInfo, name, info.useJsonExtract(), info.useOriginalName());
         var whereParams = new Object[]{};
-        var whereClause = columnName + " " + dialect.getWhereKeyWord(whereType);
+        var whereClause = columnName + " " + getWhereKeyWord(whereType);
         return new WhereClauseAndWhereParams(whereClause, whereParams);
     }
 
+    @Override
     public WhereClauseAndWhereParams parseEqual(String name, WhereType whereType, Object value1, Object value2, WhereOption.Info info) {
         var columnName = parseColumnName(tableInfo, name, info.useJsonExtract(), info.useOriginalName());
         String v1;
@@ -53,10 +54,11 @@ public class JDBCDaoWhereParser extends WhereParser {
             v1 = "?";
             whereParams = new Object[]{value1};
         }
-        var whereClause = columnName + " " + dialect.getWhereKeyWord(whereType) + " " + v1;
+        var whereClause = columnName + " " + getWhereKeyWord(whereType) + " " + v1;
         return new WhereClauseAndWhereParams(whereClause, whereParams);
     }
 
+    @Override
     public WhereClauseAndWhereParams parseLike(String name, WhereType whereType, Object value1, Object value2, WhereOption.Info info) {
         var columnName = parseColumnName(tableInfo, name, info.useJsonExtract(), info.useOriginalName());
         String v1;
@@ -68,10 +70,11 @@ public class JDBCDaoWhereParser extends WhereParser {
             v1 = "?";
             whereParams = new Object[]{value1};
         }
-        var whereClause = columnName + " " + dialect.getWhereKeyWord(whereType) + " CONCAT('%'," + v1 + ",'%')";
+        var whereClause = columnName + " " + getWhereKeyWord(whereType) + " CONCAT('%'," + v1 + ",'%')";
         return new WhereClauseAndWhereParams(whereClause, whereParams);
     }
 
+    @Override
     public WhereClauseAndWhereParams parseIn(String name, WhereType whereType, Object value1, Object value2, WhereOption.Info info) {
         var columnName = parseColumnName(tableInfo, name, info.useJsonExtract(), info.useOriginalName());
         String v1;
@@ -88,10 +91,11 @@ public class JDBCDaoWhereParser extends WhereParser {
             }
             v1 = "(" + StringUtils.repeat("?", ", ", whereParams.length) + ")";
         }
-        var whereClause = columnName + " " + dialect.getWhereKeyWord(whereType) + " " + v1;
+        var whereClause = columnName + " " + getWhereKeyWord(whereType) + " " + v1;
         return new WhereClauseAndWhereParams(whereClause, whereParams);
     }
 
+    @Override
     public WhereClauseAndWhereParams parseBetween(String name, WhereType whereType, Object value1, Object value2, WhereOption.Info info) {
         var columnName = parseColumnName(tableInfo, name, info.useJsonExtract(), info.useOriginalName());
         String v1;
@@ -111,10 +115,11 @@ public class JDBCDaoWhereParser extends WhereParser {
             v2 = "?";
             whereParams.add(value2);
         }
-        var whereClause = columnName + " " + dialect.getWhereKeyWord(whereType) + " " + v1 + " AND " + v2;
+        var whereClause = columnName + " " + getWhereKeyWord(whereType) + " " + v1 + " AND " + v2;
         return new WhereClauseAndWhereParams(whereClause, whereParams.toArray());
     }
 
+    @Override
     public WhereClauseAndWhereParams parseJsonContains(String name, WhereType whereType, Object value1, Object value2, WhereOption.Info info) {
         var c = splitIntoColumnNameAndFieldPath(name);
         var columnName = info.useOriginalName() ? c.columnName() : tableInfo.getColumn(c.columnName()).name();
@@ -138,7 +143,7 @@ public class JDBCDaoWhereParser extends WhereParser {
                 }
             }
         }
-        var whereClause = dialect.getWhereKeyWord(whereType) + "(" + columnName;
+        var whereClause = getWhereKeyWord(whereType) + "(" + columnName;
         if (StringUtils.notBlank(c.fieldPath())) {
             whereClause = whereClause + ", " + v1 + ", '$" + c.fieldPath() + "')";
         } else {
@@ -160,21 +165,8 @@ public class JDBCDaoWhereParser extends WhereParser {
     }
 
     @Override
-    public WhereClauseAndWhereParams parseWhereBody(WhereBody body) {
-        var name = body.name();
-        var whereType = body.whereType();
-        var value1 = body.value1();
-        var value2 = body.value2();
-        var info = body.info();
-        return switch (whereType) {
-            case IS_NULL, IS_NOT_NULL -> parseIsNull(name, whereType, value1, value2, info);
-            case EQUAL, NOT_EQUAL, LESS_THAN, LESS_THAN_OR_EQUAL, GREATER_THAN, GREATER_THAN_OR_EQUAL, LIKE_REGEX, NOT_LIKE_REGEX ->
-                    parseEqual(name, whereType, value1, value2, info);
-            case LIKE, NOT_LIKE -> parseLike(name, whereType, value1, value2, info);
-            case IN, NOT_IN -> parseIn(name, whereType, value1, value2, info);
-            case BETWEEN, NOT_BETWEEN -> parseBetween(name, whereType, value1, value2, info);
-            case JSON_CONTAINS -> parseJsonContains(name, whereType, value1, value2, info);
-        };
+    public String getWhereKeyWord(WhereType whereType) {
+        return dialect.getWhereKeyWord(whereType);
     }
 
 }
