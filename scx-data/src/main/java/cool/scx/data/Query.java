@@ -139,42 +139,11 @@ public final class Query {
     /**
      * 设置分页 默认 第一页
      *
-     * @param offset a {@link java.lang.Integer} object.
-     * @return a 当前实例
-     */
-    public Query setLimitOffset(long offset) {
-        limit.setOffset(offset);
-        return this;
-    }
-
-    /**
-     * 设置分页 默认 第一页
-     *
      * @param rowCount a {@link java.lang.Integer} object.
      * @return a 当前实例
      */
-    public Query setLimitRowCount(long rowCount) {
-        limit.setRowCount(rowCount);
-        return this;
-    }
-
-    /**
-     * a
-     *
-     * @return a
-     */
-    public Query clearLimitOffset() {
-        limit.clearOffset();
-        return this;
-    }
-
-    /**
-     * a
-     *
-     * @return a
-     */
-    public Query clearLimitRowCount() {
-        limit.clearRowCount();
+    public Query setLimit(long rowCount) {
+        limit.set(rowCount);
         return this;
     }
 
