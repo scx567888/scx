@@ -1,5 +1,6 @@
 package cool.scx.data.jdbc.parser;
 
+
 import cool.scx.data.jdbc.mapping.Table;
 
 import static cool.scx.util.StringUtils.notBlank;
@@ -33,6 +34,10 @@ public final class ColumnNameParser {
         var columnName = name.substring(0, index);
         var fieldPath = name.substring(index);
         return new ColumnNameAndFieldPath(columnName, fieldPath);
+    }
+
+    public record ColumnNameAndFieldPath(String columnName, String fieldPath) {
+
     }
 
 }
