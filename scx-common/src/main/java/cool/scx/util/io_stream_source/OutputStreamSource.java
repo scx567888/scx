@@ -4,13 +4,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.nio.file.OpenOption;
 import java.nio.file.Path;
 
 public interface OutputStreamSource {
 
-    default void toFile(Path outputPath) throws IOException {
+    default void toFile(Path outputPath, OpenOption... options) throws IOException {
         Files.createDirectories(outputPath.getParent());
-        try (var fo = Files.newOutputStream(outputPath)) {
+        try (var fo = Files.newOutputStream(outputPath, options)) {
             writeToOutputStream(fo);
         }
     }

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.nio.file.OpenOption;
 import java.nio.file.Path;
 
 public class BytesSource implements InputStreamSource {
@@ -31,8 +32,8 @@ public class BytesSource implements InputStreamSource {
     }
 
     @Override
-    public void toFile(Path outputPath) throws IOException {
-        Files.write(outputPath, bytes);
+    public void toFile(Path outputPath, OpenOption... options) throws IOException {
+        Files.write(outputPath, bytes, options);
     }
 
 }
