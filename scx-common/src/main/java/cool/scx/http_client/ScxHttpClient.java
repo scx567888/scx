@@ -5,6 +5,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpResponse;
 import java.util.concurrent.CompletableFuture;
 
+import static java.net.http.HttpResponse.BodyHandlers.ofInputStream;
+
 public class ScxHttpClient {
 
     private final HttpClient client;
@@ -26,12 +28,12 @@ public class ScxHttpClient {
     }
 
     public ScxHttpClientResponse request(ScxHttpClientRequest request) throws IOException, InterruptedException {
-        var response = client.send(request.createHttpRequest(), HttpResponse.BodyHandlers.ofInputStream());
+        var response = client.send(request.createHttpRequest(), ofInputStream());
         return new ScxHttpClientResponse(response);
     }
 
     public CompletableFuture<ScxHttpClientResponse> requestAsync(ScxHttpClientRequest request) {
-        var future = client.sendAsync(request.createHttpRequest(), HttpResponse.BodyHandlers.ofInputStream());
+        var future = client.sendAsync(request.createHttpRequest(), ofInputStream());
         return future.thenApply(ScxHttpClientResponse::new);
     }
 
