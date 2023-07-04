@@ -7,12 +7,6 @@ import java.util.List;
 
 public abstract class WhereParser {
 
-    /**
-     * 解析全部内容
-     *
-     * @param objs o
-     * @return o
-     */
     public final WhereClauseAndWhereParams parseAll(Object[] objs) {
         var whereClause = new StringBuilder();
         var whereParams = new ArrayList<>();
@@ -26,12 +20,6 @@ public abstract class WhereParser {
         return new WhereClauseAndWhereParams(whereClause.toString(), whereParams.toArray());
     }
 
-    /**
-     * 解析单个
-     *
-     * @param obj o
-     * @return o
-     */
     public WhereClauseAndWhereParams parse(Object obj) {
         if (obj instanceof String str) {
             return parseString(str);
