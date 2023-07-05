@@ -9,12 +9,12 @@ import java.util.Iterator;
  */
 public final class CycleIterator<T> implements Iterator<T> {
 
-    private Node<T> currentNode;
-    private Node<T> firstNode;
+    private Node<T> last;
+    private Node<T> first;
 
     @Override
     public boolean hasNext() {
-        return currentNode != null;
+        return last != null;
     }
 
     /**
@@ -24,20 +24,20 @@ public final class CycleIterator<T> implements Iterator<T> {
      */
     @Override
     public T next() {
-        var currentItem = currentNode.item;
-        currentNode = currentNode.next;
+        var currentItem = last.item;
+        last = last.next;
         return currentItem;
     }
 
     public void add(T item) {
-        if (currentNode == null) {
-            currentNode = new Node<>(item);
-            firstNode = currentNode;
+        if (last == null) {
+            last = new Node<>(item);
+            first = last;
         } else {
-            currentNode.next = new Node<>(item);
-            currentNode = currentNode.next;
+            last.next = new Node<>(item);
+            last = last.next;
         }
-        currentNode.next = firstNode;
+        last.next = first;
     }
 
     private static class Node<E> {
