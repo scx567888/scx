@@ -24,9 +24,9 @@ public final class CycleIterator<T> implements Iterator<T> {
      */
     @Override
     public T next() {
-        var currentItem = last.item;
+        var item = last.item;
         last = last.next;
-        return currentItem;
+        return item;
     }
 
     public void add(T item) {
