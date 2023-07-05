@@ -31,22 +31,22 @@ public final class CycleIterator<T> implements Iterator<T> {
 
     public void add(T item) {
         if (currentNode == null) {
-            currentNode = new Node<>();
-            currentNode.item = item;
-            currentNode.next = currentNode;
+            currentNode = new Node<>(item);
             firstNode = currentNode;
         } else {
-            var node = new Node<T>();
-            node.item = item;
-            currentNode.next = node;
-            currentNode = node;
-            currentNode.next = firstNode;
+            currentNode.next = new Node<>(item);
+            currentNode = currentNode.next;
         }
+        currentNode.next = firstNode;
     }
 
     private static class Node<E> {
-        private E item;
+        private final E item;
         private Node<E> next;
+
+        private Node(E item) {
+            this.item = item;
+        }
     }
 
 }
