@@ -16,34 +16,25 @@ import static java.lang.System.Logger.Level.ERROR;
  */
 public class OnOpenRoutingContext {
 
-    /**
-     * Constant <code>logger</code>
-     */
     private static final Logger logger = System.getLogger(OnOpenRoutingContext.class.getName());
-
-    private final ServerWebSocket socket;
+    private final ServerWebSocket webSocket;
     private final Iterator<WebSocketRoute> iter;
 
-    /**
-     * <p>Constructor for OnOpenRoutingContext.</p>
-     *
-     * @param socket a {@link io.vertx.core.http.ServerWebSocket} object
-     * @param routes a {@link java.util.List} object
-     */
-    OnOpenRoutingContext(ServerWebSocket socket, List<WebSocketRoute> routes) {
-        this.socket = socket;
+    OnOpenRoutingContext(ServerWebSocket webSocket, List<WebSocketRoute> routes) {
+        this.webSocket = webSocket;
         this.iter = routes.iterator();
     }
 
-    /**
-     * <p>next.</p>
-     */
+    public ServerWebSocket webSocket() {
+        return webSocket;
+    }
+
     public void next() {
         while (iter.hasNext()) {
             var next = iter.next();
-            if (next.matches(socket)) {
+            if (next.matches(webSocket)) {
                 try {
-                    next.baseWebSocketHandler().onOpen(socket, this);
+                    next.baseWebSocketHandler().onOpen(this);
                 } catch (Exception e) {
                     logger.log(ERROR, "ScxWebSocketRoute : onOpen 发生异常 !!!", e);
                 }
