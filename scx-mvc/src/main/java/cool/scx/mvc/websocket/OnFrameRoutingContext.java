@@ -1,5 +1,6 @@
 package cool.scx.mvc.websocket;
 
+import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.ServerWebSocket;
 import io.vertx.core.http.WebSocketFrame;
 
@@ -17,26 +18,26 @@ import static java.lang.System.Logger.Level.ERROR;
  */
 public class OnFrameRoutingContext {
 
-    /**
-     * Constant <code>logger</code>
-     */
     private static final Logger logger = System.getLogger(OnFrameRoutingContext.class.getName());
-
-    private final WebSocketFrame socketFrame;
-    private final ServerWebSocket socket;
+    private final WebSocketFrame frame;
+    private final ServerWebSocket webSocket;
     private final Iterator<WebSocketRoute> iter;
 
     /**
      * <p>Constructor for OnFrameRoutingContext.</p>
      *
-     * @param socketFrame a {@link io.vertx.core.http.WebSocketFrame} object
-     * @param socket      a {@link io.vertx.core.http.ServerWebSocket} object
-     * @param routes      a {@link java.util.List} object
+     * @param frame     a {@link io.vertx.core.http.WebSocketFrame} object
+     * @param webSocket a {@link io.vertx.core.http.ServerWebSocket} object
+     * @param routes    a {@link java.util.List} object
      */
-    OnFrameRoutingContext(WebSocketFrame socketFrame, ServerWebSocket socket, List<WebSocketRoute> routes) {
-        this.socketFrame = socketFrame;
-        this.socket = socket;
+    OnFrameRoutingContext(WebSocketFrame frame, ServerWebSocket webSocket, List<WebSocketRoute> routes) {
+        this.frame = frame;
+        this.webSocket = webSocket;
         this.iter = routes.iterator();
+    }
+
+    public ServerWebSocket webSocket() {
+        return webSocket;
     }
 
     /**
@@ -45,16 +46,16 @@ public class OnFrameRoutingContext {
     public void next() {
         while (iter.hasNext()) {
             var next = iter.next();
-            if (next.matches(socket)) {
-                if (socketFrame.isText()) {
+            if (next.matches(webSocket)) {
+                if (frame.isText()) {
                     try {
-                        next.baseWebSocketHandler().onTextMessage(socketFrame.textData(), socketFrame, this.socket, this);
+                        next.baseWebSocketHandler().onTextMessage(this);
                     } catch (Exception e) {
                         logger.log(ERROR, "ScxWebSocketRoute : onTextMessage 发生异常 !!!", e);
                     }
-                } else if (socketFrame.isBinary()) {
+                } else if (frame.isBinary()) {
                     try {
-                        next.baseWebSocketHandler().onBinaryMessage(socketFrame.binaryData(), socketFrame, this.socket, this);
+                        next.baseWebSocketHandler().onBinaryMessage(this);
                     } catch (Exception e) {
                         logger.log(ERROR, "ScxWebSocketRoute : onBinaryMessage 发生异常 !!!", e);
                     }
@@ -62,6 +63,18 @@ public class OnFrameRoutingContext {
                 return;
             }
         }
+    }
+
+    public WebSocketFrame frame() {
+        return frame;
+    }
+
+    public String textData() {
+        return frame.textData();
+    }
+
+    public Buffer binaryData() {
+        return frame.binaryData();
     }
 
 }

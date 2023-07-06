@@ -17,43 +17,37 @@ import static java.lang.System.getLogger;
  */
 public class OnExceptionRoutingContext {
 
-    /**
-     * Constant <code>logger</code>
-     */
     private static final Logger logger = getLogger(OnExceptionRoutingContext.class.getName());
-
-    private final Throwable throwable;
-    private final ServerWebSocket socket;
+    private final Throwable cause;
+    private final ServerWebSocket webSocket;
     private final Iterator<WebSocketRoute> iter;
 
-    /**
-     * <p>Constructor for OnExceptionRoutingContext.</p>
-     *
-     * @param e                  a {@link java.lang.Throwable} object
-     * @param serverWebSocket    a {@link io.vertx.core.http.ServerWebSocket} object
-     * @param scxWebSocketRoutes a {@link java.util.List} object
-     */
-    OnExceptionRoutingContext(Throwable e, ServerWebSocket serverWebSocket, List<WebSocketRoute> scxWebSocketRoutes) {
-        this.throwable = e;
-        this.socket = serverWebSocket;
+    OnExceptionRoutingContext(Throwable cause, ServerWebSocket webSocket, List<WebSocketRoute> scxWebSocketRoutes) {
+        this.cause = cause;
+        this.webSocket = webSocket;
         this.iter = scxWebSocketRoutes.iterator();
     }
 
-    /**
-     * <p>next.</p>
-     */
+    public ServerWebSocket webSocket() {
+        return webSocket;
+    }
+
     public void next() {
         while (iter.hasNext()) {
             var next = iter.next();
-            if (next.matches(socket)) {
+            if (next.matches(webSocket)) {
                 try {
-                    next.baseWebSocketHandler().onError(throwable, this.socket, this);
+                    next.baseWebSocketHandler().onError(this);
                 } catch (Exception e) {
                     logger.log(ERROR, "ScxWebSocketRoute : onError 发生异常 !!!", e);
                 }
                 return;
             }
         }
+    }
+
+    public Throwable cause() {
+        return cause;
     }
 
 }

@@ -16,34 +16,25 @@ import static java.lang.System.Logger.Level.ERROR;
  */
 public class OnCloseRoutingContext {
 
-    /**
-     * Constant <code>logger</code>
-     */
     private static final Logger logger = System.getLogger(OnCloseRoutingContext.class.getName());
-
-    private final ServerWebSocket socket;
+    private final ServerWebSocket webSocket;
     private final Iterator<WebSocketRoute> iter;
 
-    /**
-     * <p>Constructor for OnCloseRoutingContext.</p>
-     *
-     * @param serverWebSocket    a {@link io.vertx.core.http.ServerWebSocket} object
-     * @param scxWebSocketRoutes a {@link java.util.List} object
-     */
-    OnCloseRoutingContext(ServerWebSocket serverWebSocket, List<WebSocketRoute> scxWebSocketRoutes) {
-        this.socket = serverWebSocket;
+    OnCloseRoutingContext(ServerWebSocket webSocket, List<WebSocketRoute> scxWebSocketRoutes) {
+        this.webSocket = webSocket;
         this.iter = scxWebSocketRoutes.iterator();
     }
 
-    /**
-     * <p>next.</p>
-     */
+    public ServerWebSocket webSocket() {
+        return webSocket;
+    }
+
     public void next() {
         while (iter.hasNext()) {
             var next = iter.next();
-            if (next.matches(socket)) {
+            if (next.matches(webSocket)) {
                 try {
-                    next.baseWebSocketHandler().onClose(this.socket, this);
+                    next.baseWebSocketHandler().onClose(this);
                 } catch (Exception e) {
                     logger.log(ERROR, "ScxWebSocketRoute : onClose 发生异常 !!!", e);
                 }
