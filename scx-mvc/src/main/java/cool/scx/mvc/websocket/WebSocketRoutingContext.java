@@ -33,7 +33,7 @@ public abstract class WebSocketRoutingContext implements Handler<WebSocketRoute>
         }
     }
 
-    private MultiMap<String, String> getQueryParams() {
+    public MultiMap<String, String> queryParams() {
         if (this.queryParams == null) {
             this.queryParams = new MultiMap<>();
             new QueryStringDecoder(this.webSocket.uri())
@@ -41,10 +41,6 @@ public abstract class WebSocketRoutingContext implements Handler<WebSocketRoute>
                     .forEach((key, value) -> this.queryParams.putAll(key, value));
         }
         return this.queryParams;
-    }
-
-    public MultiMap<String, String> queryParams() {
-        return this.getQueryParams();
     }
 
     public List<String> queryParam(String query) {
