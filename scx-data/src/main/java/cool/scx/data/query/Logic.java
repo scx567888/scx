@@ -10,6 +10,14 @@ public interface Logic {
         return new OR(clauses);
     }
 
+    static WhereBodySet andSet() {
+        return new WhereBodySet(LogicType.AND);
+    }
+
+    static WhereBodySet orSet() {
+        return new WhereBodySet(LogicType.OR);
+    }
+
     LogicType type();
 
     Object[] clauses();
