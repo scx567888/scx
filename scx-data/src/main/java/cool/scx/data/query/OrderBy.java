@@ -1,5 +1,7 @@
 package cool.scx.data.query;
 
+import java.util.Arrays;
+
 /**
  * 排序
  *
@@ -26,7 +28,7 @@ public final class OrderBy {
      * @param oldOrderBy 旧的 OrderBy
      */
     public OrderBy(OrderBy oldOrderBy) {
-        this.orderByBodyList = oldOrderBy.orderByBodyList();
+        this.orderByBodyList = Arrays.copyOf(oldOrderBy.orderByBodyList, oldOrderBy.orderByBodyList.length);
     }
 
     /**

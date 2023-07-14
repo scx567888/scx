@@ -1,5 +1,7 @@
 package cool.scx.data.query;
 
+import java.util.Arrays;
+
 /**
  * 分组
  *
@@ -26,7 +28,7 @@ public final class GroupBy {
      * @param oldGroupBy 旧的 GroupBy
      */
     public GroupBy(GroupBy oldGroupBy) {
-        this.groupByBodyList = oldGroupBy.groupByBodyList;
+        this.groupByBodyList = Arrays.copyOf(oldGroupBy.groupByBodyList, oldGroupBy.groupByBodyList.length);
     }
 
     /**

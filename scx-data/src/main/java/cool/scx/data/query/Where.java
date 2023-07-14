@@ -1,5 +1,7 @@
 package cool.scx.data.query;
 
+import java.util.Arrays;
+
 /**
  * where 查询条件封装类
  *
@@ -26,7 +28,7 @@ public final class Where {
      * @param oldWhere 旧的 Where
      */
     public Where(Where oldWhere) {
-        this.whereBodyList = oldWhere.whereBodyList();
+        this.whereBodyList = Arrays.copyOf(oldWhere.whereBodyList, oldWhere.whereBodyList.length);
     }
 
     /**
