@@ -29,14 +29,6 @@ public final class WhereBodySet implements Logic {
         this.whereBodyList = new ArrayList<>();
     }
 
-    public static WhereBodySet and() {
-        return new WhereBodySet(LogicType.AND);
-    }
-
-    public static WhereBodySet or() {
-        return new WhereBodySet(LogicType.OR);
-    }
-
     /**
      * 添加一个查询条件
      *
