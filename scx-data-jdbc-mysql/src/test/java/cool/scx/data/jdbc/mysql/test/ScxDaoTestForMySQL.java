@@ -7,7 +7,6 @@ import cool.scx.data.jdbc.JDBCContext;
 import cool.scx.data.jdbc.JDBCDao;
 import cool.scx.data.jdbc.meta_data.SchemaHelper;
 import cool.scx.data.jdbc.spy.Spy;
-import cool.scx.data.query.WhereOption;
 import cool.scx.logging.ScxLoggerFactory;
 import org.testng.annotations.Test;
 

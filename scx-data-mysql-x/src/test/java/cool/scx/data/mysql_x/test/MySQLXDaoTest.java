@@ -3,7 +3,6 @@ package cool.scx.data.mysql_x.test;
 import com.mysql.cj.xdevapi.SessionFactory;
 import cool.scx.data.Query;
 import cool.scx.data.mysql_x.MySQLXDao;
-import cool.scx.data.query.WhereOption;
 import cool.scx.logging.ScxLoggerFactory;
 import org.testng.annotations.Test;
 
