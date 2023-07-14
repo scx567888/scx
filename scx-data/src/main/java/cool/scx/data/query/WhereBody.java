@@ -1,7 +1,9 @@
 package cool.scx.data.query;
 
 import cool.scx.data.query.exception.WrongWhereTypeParamSizeException;
-import cool.scx.util.StringUtils;
+
+import static cool.scx.data.query.WhereType.*;
+import static cool.scx.util.StringUtils.isBlank;
 
 /**
  * where 封装体
@@ -14,7 +16,7 @@ public record WhereBody(String name, WhereType whereType, Object value1, Object 
 
     public WhereBody(String name, WhereType whereType, Object value1, Object value2, WhereOption.Info info) {
         //名称不能为空
-        if (StringUtils.isBlank(name)) {
+        if (isBlank(name)) {
             throw new IllegalArgumentException("Where 参数错误 : 名称 不能为空 !!!");
         }
         //类型也不能为空
@@ -42,7 +44,7 @@ public record WhereBody(String name, WhereType whereType, Object value1, Object 
      * @return this 方便链式调用
      */
     public static WhereBody isNull(String fieldName, WhereOption... options) {
-        return new WhereBody(fieldName, WhereType.IS_NULL, null, null, new WhereOption.Info(options));
+        return new WhereBody(fieldName, IS_NULL, null, null, new WhereOption.Info(options));
     }
 
     /**
@@ -53,7 +55,7 @@ public record WhereBody(String name, WhereType whereType, Object value1, Object 
      * @return this 方便链式调用
      */
     public static WhereBody isNotNull(String fieldName, WhereOption... options) {
-        return new WhereBody(fieldName, WhereType.IS_NOT_NULL, null, null, new WhereOption.Info(options));
+        return new WhereBody(fieldName, IS_NOT_NULL, null, null, new WhereOption.Info(options));
     }
 
     /**
@@ -65,7 +67,7 @@ public record WhereBody(String name, WhereType whereType, Object value1, Object 
      * @return this 方便链式调用
      */
     public static WhereBody equal(String fieldName, Object value, WhereOption... options) {
-        return new WhereBody(fieldName, WhereType.EQUAL, value, null, new WhereOption.Info(options));
+        return new WhereBody(fieldName, EQUAL, value, null, new WhereOption.Info(options));
     }
 
     /**
@@ -77,7 +79,7 @@ public record WhereBody(String name, WhereType whereType, Object value1, Object 
      * @return this 方便链式调用
      */
     public static WhereBody notEqual(String fieldName, Object value, WhereOption... options) {
-        return new WhereBody(fieldName, WhereType.NOT_EQUAL, value, null, new WhereOption.Info(options));
+        return new WhereBody(fieldName, NOT_EQUAL, value, null, new WhereOption.Info(options));
     }
 
     /**
@@ -89,7 +91,7 @@ public record WhereBody(String name, WhereType whereType, Object value1, Object 
      * @return this 方便链式调用
      */
     public static WhereBody greaterThan(String fieldName, Object value, WhereOption... options) {
-        return new WhereBody(fieldName, WhereType.GREATER_THAN, value, null, new WhereOption.Info(options));
+        return new WhereBody(fieldName, GREATER_THAN, value, null, new WhereOption.Info(options));
     }
 
     /**
@@ -101,7 +103,7 @@ public record WhereBody(String name, WhereType whereType, Object value1, Object 
      * @return this 方便链式调用
      */
     public static WhereBody greaterThanOrEqual(String fieldName, Object value, WhereOption... options) {
-        return new WhereBody(fieldName, WhereType.GREATER_THAN_OR_EQUAL, value, null, new WhereOption.Info(options));
+        return new WhereBody(fieldName, GREATER_THAN_OR_EQUAL, value, null, new WhereOption.Info(options));
     }
 
     /**
@@ -113,7 +115,7 @@ public record WhereBody(String name, WhereType whereType, Object value1, Object 
      * @return this 方便链式调用
      */
     public static WhereBody lessThan(String fieldName, Object value, WhereOption... options) {
-        return new WhereBody(fieldName, WhereType.LESS_THAN, value, null, new WhereOption.Info(options));
+        return new WhereBody(fieldName, LESS_THAN, value, null, new WhereOption.Info(options));
     }
 
     /**
@@ -125,7 +127,7 @@ public record WhereBody(String name, WhereType whereType, Object value1, Object 
      * @return this 方便链式调用
      */
     public static WhereBody lessThanOrEqual(String fieldName, Object value, WhereOption... options) {
-        return new WhereBody(fieldName, WhereType.LESS_THAN_OR_EQUAL, value, null, new WhereOption.Info(options));
+        return new WhereBody(fieldName, LESS_THAN_OR_EQUAL, value, null, new WhereOption.Info(options));
     }
 
     /**
@@ -138,7 +140,7 @@ public record WhereBody(String name, WhereType whereType, Object value1, Object 
      * @return this 方便链式调用
      */
     public static WhereBody between(String fieldName, Object value1, Object value2, WhereOption... options) {
-        return new WhereBody(fieldName, WhereType.BETWEEN, value1, value2, new WhereOption.Info(options));
+        return new WhereBody(fieldName, BETWEEN, value1, value2, new WhereOption.Info(options));
     }
 
     /**
@@ -151,7 +153,7 @@ public record WhereBody(String name, WhereType whereType, Object value1, Object 
      * @return this 方便链式调用
      */
     public static WhereBody notBetween(String fieldName, Object value1, Object value2, WhereOption... options) {
-        return new WhereBody(fieldName, WhereType.NOT_BETWEEN, value1, value2, new WhereOption.Info(options));
+        return new WhereBody(fieldName, NOT_BETWEEN, value1, value2, new WhereOption.Info(options));
     }
 
     /**
@@ -163,7 +165,7 @@ public record WhereBody(String name, WhereType whereType, Object value1, Object 
      * @return this 方便链式调用
      */
     public static WhereBody likeRegex(String fieldName, String value, WhereOption... options) {
-        return new WhereBody(fieldName, WhereType.LIKE_REGEX, value, null, new WhereOption.Info(options));
+        return new WhereBody(fieldName, LIKE_REGEX, value, null, new WhereOption.Info(options));
     }
 
     /**
@@ -175,7 +177,7 @@ public record WhereBody(String name, WhereType whereType, Object value1, Object 
      * @return this 方便链式调用
      */
     public static WhereBody notLikeRegex(String fieldName, String value, WhereOption... options) {
-        return new WhereBody(fieldName, WhereType.NOT_LIKE_REGEX, value, null, new WhereOption.Info(options));
+        return new WhereBody(fieldName, NOT_LIKE_REGEX, value, null, new WhereOption.Info(options));
     }
 
     /**
@@ -187,7 +189,7 @@ public record WhereBody(String name, WhereType whereType, Object value1, Object 
      * @return this 方便链式调用
      */
     public static WhereBody like(String fieldName, Object value, WhereOption... options) {
-        return new WhereBody(fieldName, WhereType.LIKE, value, null, new WhereOption.Info(options));
+        return new WhereBody(fieldName, LIKE, value, null, new WhereOption.Info(options));
     }
 
     /**
@@ -199,7 +201,7 @@ public record WhereBody(String name, WhereType whereType, Object value1, Object 
      * @return this 方便链式调用
      */
     public static WhereBody notLike(String fieldName, Object value, WhereOption... options) {
-        return new WhereBody(fieldName, WhereType.NOT_LIKE, value, null, new WhereOption.Info(options));
+        return new WhereBody(fieldName, NOT_LIKE, value, null, new WhereOption.Info(options));
     }
 
     /**
@@ -211,7 +213,7 @@ public record WhereBody(String name, WhereType whereType, Object value1, Object 
      * @return this 方便链式调用
      */
     public static WhereBody jsonContains(String fieldName, Object value, WhereOption... options) {
-        return new WhereBody(fieldName, WhereType.JSON_CONTAINS, value, null, new WhereOption.Info(options));
+        return new WhereBody(fieldName, JSON_CONTAINS, value, null, new WhereOption.Info(options));
     }
 
     /**
@@ -223,7 +225,7 @@ public record WhereBody(String name, WhereType whereType, Object value1, Object 
      * @return this 方便链式调用
      */
     public static WhereBody in(String fieldName, Object value, WhereOption... options) {
-        return new WhereBody(fieldName, WhereType.IN, value, null, new WhereOption.Info(options));
+        return new WhereBody(fieldName, IN, value, null, new WhereOption.Info(options));
     }
 
     /**
@@ -235,7 +237,7 @@ public record WhereBody(String name, WhereType whereType, Object value1, Object 
      * @return this 方便链式调用
      */
     public static WhereBody notIn(String fieldName, Object value, WhereOption... options) {
-        return new WhereBody(fieldName, WhereType.NOT_IN, value, null, new WhereOption.Info(options));
+        return new WhereBody(fieldName, NOT_IN, value, null, new WhereOption.Info(options));
     }
 
     /**
@@ -245,7 +247,7 @@ public record WhereBody(String name, WhereType whereType, Object value1, Object 
      * @param value2 a
      * @return a
      */
-    static int getValidParamSize(Object value1, Object value2) {
+    private static int getValidParamSize(Object value1, Object value2) {
         //有效的参数数量(不为空的) 每检测到一个有效的(不为空的) 便加 1
         var validParamSize = 0;
         if (value1 != null) {

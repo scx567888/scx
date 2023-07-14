@@ -19,4 +19,8 @@ public record GroupByBody(String name, Info info) {
         this.info = info;
     }
 
+    public GroupByBody(String name, GroupByOption... options) {
+        this(name, new Info(options));
+    }
+
 }

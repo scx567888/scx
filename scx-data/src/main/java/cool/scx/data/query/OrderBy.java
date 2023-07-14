@@ -1,12 +1,6 @@
 package cool.scx.data.query;
 
-import cool.scx.data.query.OrderByOption.Info;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static cool.scx.data.query.OrderByType.ASC;
-import static cool.scx.data.query.OrderByType.DESC;
+import java.util.Arrays;
 
 /**
  * 排序
@@ -19,13 +13,13 @@ public final class OrderBy {
     /**
      * 存储排序的字段
      */
-    private final List<OrderByBody> orderByBodyList;
+    private OrderByBody[] orderByBodyList;
 
     /**
      * 创建一个 OrderBy 对象
      */
     public OrderBy() {
-        this.orderByBodyList = new ArrayList<>();
+        this.orderByBodyList = new OrderByBody[]{};
     }
 
     /**
@@ -34,60 +28,25 @@ public final class OrderBy {
      * @param oldOrderBy 旧的 OrderBy
      */
     public OrderBy(OrderBy oldOrderBy) {
-        this.orderByBodyList = new ArrayList<>(oldOrderBy.orderByBodyList);
+        this.orderByBodyList = Arrays.copyOf(oldOrderBy.orderByBodyList, oldOrderBy.orderByBodyList.length);
     }
 
     /**
-     * 添加一个排序字段
+     * set
      *
-     * @param name        排序字段的名称 (默认是实体类的字段名 , 不是数据库中的字段名)
-     * @param orderByType 排序类型 正序或倒序
-     * @param options     配置
-     * @return 本身, 方便链式调用
+     * @param orderByClauses a
      */
-    public OrderBy add(String name, OrderByType orderByType, OrderByOption... options) {
-        var info = new Info(options);
-        // 是否使用原始名称 (即不进行转义)
-        var orderByBody = new OrderByBody(name, orderByType, info);
-        // 是否替换
-        if (info.replace()) {
-            orderByBodyList.removeIf(w -> orderByBody.name().equals(w.name()));
-        }
-        orderByBodyList.add(orderByBody);
-        return this;
+    public void set(OrderByBody... orderByClauses) {
+        orderByBodyList = orderByClauses;
     }
 
     /**
-     * 正序 : 也就是从小到大 (1,2,3,4,5,6)
+     * orderByBodyList
      *
-     * @param name    a
-     * @param options 配置
-     * @return a
+     * @return orderByBodyList
      */
-    public OrderBy asc(String name, OrderByOption... options) {
-        return add(name, ASC, options);
-    }
-
-    /**
-     * 倒序 : 也就是从大到小 (6,5,4,3,2,1)
-     *
-     * @param name    a
-     * @param options 配置
-     * @return a
-     */
-    public OrderBy desc(String name, OrderByOption... options) {
-        return add(name, DESC, options);
-    }
-
-    /**
-     * a
-     *
-     * @param name a
-     * @return a
-     */
-    public OrderBy remove(String name) {
-        orderByBodyList.removeIf(w -> w.name().equals(name.trim()));
-        return this;
+    public OrderByBody[] orderByBodyList() {
+        return orderByBodyList;
     }
 
     /**
@@ -96,17 +55,8 @@ public final class OrderBy {
      * @return self
      */
     public OrderBy clear() {
-        orderByBodyList.clear();
+        orderByBodyList = new OrderByBody[]{};
         return this;
-    }
-
-    /**
-     * orderByBodyList
-     *
-     * @return orderByBodyList
-     */
-    public List<OrderByBody> orderByBodyList() {
-        return orderByBodyList;
     }
 
 }

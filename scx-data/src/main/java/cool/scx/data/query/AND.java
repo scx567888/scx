@@ -2,11 +2,7 @@ package cool.scx.data.query;
 
 import static cool.scx.data.query.LogicType.AND;
 
-public final class AND extends Logic {
-
-    public AND(Object... clauses) {
-        super(clauses);
-    }
+record AND(Object... clauses) implements Logic {
 
     @Override
     public LogicType type() {

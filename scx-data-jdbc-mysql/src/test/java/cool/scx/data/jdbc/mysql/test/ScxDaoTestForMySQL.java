@@ -7,7 +7,6 @@ import cool.scx.data.jdbc.JDBCContext;
 import cool.scx.data.jdbc.JDBCDao;
 import cool.scx.data.jdbc.meta_data.SchemaHelper;
 import cool.scx.data.jdbc.spy.Spy;
-import cool.scx.data.query.WhereBody;
 import cool.scx.data.query.WhereOption;
 import cool.scx.logging.ScxLoggerFactory;
 import org.testng.annotations.Test;
@@ -23,7 +22,8 @@ import static cool.scx.data.jdbc.ColumnFilter.ofExcluded;
 import static cool.scx.data.jdbc.sql.SQL.ofNormal;
 import static cool.scx.data.query.Logic.and;
 import static cool.scx.data.query.Logic.or;
-import static cool.scx.data.query.WhereBody.equal;
+import static cool.scx.data.query.WhereBody.*;
+import static cool.scx.data.query.WhereOption.USE_JSON_EXTRACT;
 import static java.lang.System.Logger.Level.DEBUG;
 
 public class ScxDaoTestForMySQL {
@@ -90,11 +90,11 @@ public class ScxDaoTestForMySQL {
         System.out.println("JDBCDao-MySQL 插入 : " + newIds.size());
 
         //创建 query
-        var query1 = new Query().greaterThan("age", 300);
-        var query2 = new Query().whereSQL("(age > 400 OR ", equal("name", "小明1"), ")");
-        var query3 = new Query().equal("age", 10).whereSQL(" and ", or("age > 400", equal("name", "小明1"), and(WhereBody.in("name", new String[]{"小明2", "小明3"}))));
-        var query4 = new Query().equal("userInfo.email", "88@test.com", WhereOption.USE_JSON_EXTRACT);
-        var query5 = new Query().jsonContains("tags", List.of("abc"));
+        var query1 = new Query().where(greaterThan("age", 300));
+        var query2 = new Query().where("(age > 400 OR ", equal("name", "小明1"), ")");
+        var query3 = new Query().where(equal("age", 10), " and ", or("age > 400", equal("name", "小明1"), and(in("name", new String[]{"小明2", "小明3"}))));
+        var query4 = new Query().where(equal("userInfo.email", "88@test.com", USE_JSON_EXTRACT));
+        var query5 = new Query().where(jsonContains("tags", List.of("abc")));
 
         //标准查询
         var a1 = userDao.find(query1);

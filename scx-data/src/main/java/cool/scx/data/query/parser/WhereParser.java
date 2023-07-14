@@ -55,10 +55,7 @@ public abstract class WhereParser {
     }
 
     public final WhereClauseAndWhereParams parseWhere(Where where) {
-        //先处理 whereBodyList 默认我们将其全部用 AND 进行拼接
-        var w1 = this.parse(new AND(where.whereBodyList().toArray()));
-        var w2 = this.parseAll(where.whereSQL());
-        return w1.concat(w2);
+        return this.parseAll(where.whereBodyList());
     }
 
     public WhereClauseAndWhereParams parseWhereBody(WhereBody body) {
