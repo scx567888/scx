@@ -95,7 +95,7 @@ public class ScxDaoTestForSQLite {
         //创建 query
         var query1 = new Query().where(greaterThan("age", 300));
         var query2 = new Query().where("(age > 400 OR ", equal("name", "小明1"), ")");
-        var query3 = new Query().where(equal("age", 10)," and ", or("age > 400", equal("name", "小明1"), and(Where.in("name", new String[]{"小明2", "小明3"}))));
+        var query3 = new Query().where(equal("age", 10), " and ", or("age > 400", equal("name", "小明1"), and(Where.in("name", new String[]{"小明2", "小明3"}))));
         var query4 = new Query().where(equal("userInfo.email", "88@test.com", WhereOption.USE_JSON_EXTRACT));
         var query5 = new Query().where(jsonContains("tags", List.of("abc")));
 
