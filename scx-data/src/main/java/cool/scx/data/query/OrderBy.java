@@ -70,6 +70,11 @@ public final class OrderBy {
         return of(name, DESC, options);
     }
 
+    /**
+     * set
+     *
+     * @param orderByClauses
+     */
     public void set(OrderByBody... orderByClauses) {
         orderByBodyList = orderByClauses;
     }

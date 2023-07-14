@@ -2,9 +2,6 @@ package cool.scx.data.query;
 
 import cool.scx.data.query.GroupByOption.Info;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * 分组
  *
@@ -16,13 +13,13 @@ public final class GroupBy {
     /**
      * 分组字段列表
      */
-    private final List<GroupByBody> groupByBodyList;
+    private Object[] groupByBodyList;
 
     /**
      * 创建一个 OrderBy 对象
      */
     public GroupBy() {
-        this.groupByBodyList = new ArrayList<>();
+        this.groupByBodyList = new Object[]{};
     }
 
     /**
@@ -31,41 +28,26 @@ public final class GroupBy {
      * @param oldGroupBy 旧的 GroupBy
      */
     public GroupBy(GroupBy oldGroupBy) {
-        this.groupByBodyList = new ArrayList<>(oldGroupBy.groupByBodyList);
+        this.groupByBodyList = oldGroupBy.groupByBodyList;
     }
 
     /**
-     * 添加一个 分组字段
-     *
-     * @param name    分组字段的名称 (默认是实体类的字段名 , 不是数据库中的字段名)
-     * @param options 配置
-     * @return 本身, 方便链式调用
+     * @param name
+     * @param options
+     * @return
      */
-    public GroupBy add(String name, GroupByOption... options) {
-        var info = new Info(options);
-        var groupByBody = new GroupByBody(name, info);
-        groupByBodyList.add(groupByBody);
-        return this;
+    public static GroupByBody of(String name, GroupByOption... options) {
+        return new GroupByBody(name, new Info(options));
     }
 
     /**
-     * a
+     * set
      *
-     * @param name a
-     * @return a
+     * @param groupByClauses
+     * @return
      */
-    public GroupBy remove(String name) {
-        groupByBodyList.removeIf(w -> w.name().equals(name.trim()));
-        return this;
-    }
-
-    /**
-     * a
-     *
-     * @return a
-     */
-    public GroupBy clear() {
-        groupByBodyList.clear();
+    public GroupBy set(Object... groupByClauses) {
+        groupByBodyList = groupByClauses;
         return this;
     }
 
@@ -74,8 +56,18 @@ public final class GroupBy {
      *
      * @return groupByBodyList
      */
-    public List<GroupByBody> groupByBodyList() {
+    public Object[] groupByBodyList() {
         return groupByBodyList;
+    }
+
+    /**
+     * clear
+     *
+     * @return self
+     */
+    public GroupBy clear() {
+        groupByBodyList = new Object[]{};
+        return this;
     }
 
 }
