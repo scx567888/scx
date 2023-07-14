@@ -12,8 +12,8 @@ import java.util.Collection;
 import java.util.List;
 
 import static cool.scx.data.jdbc.ColumnFilter.ofExcluded;
-import static cool.scx.data.query.Where.equal;
-import static cool.scx.data.query.Where.in;
+import static cool.scx.data.query.WhereBody.equal;
+import static cool.scx.data.query.WhereBody.in;
 
 /**
  * 提供一些针对 BaseModel 类型实体类 简单的 CRUD 操作的 service 类

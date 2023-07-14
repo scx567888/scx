@@ -4,7 +4,7 @@ import cool.scx.data.Query;
 
 import java.util.Arrays;
 
-import static cool.scx.data.query.Where.equal;
+import static cool.scx.data.query.WhereBody.equal;
 
 public class QueryTest {
 

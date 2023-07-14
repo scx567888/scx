@@ -38,7 +38,7 @@ import java.util.List;
 
 import static cool.scx.core.eventbus.ZeroCopyMessageCodec.ZERO_COPY_CODEC_NAME;
 import static cool.scx.data.jdbc.ColumnFilter.ofIncluded;
-import static cool.scx.data.query.Where.*;
+import static cool.scx.data.query.WhereBody.*;
 import static org.testng.Assert.assertEquals;
 
 public class TestModule extends ScxModule {

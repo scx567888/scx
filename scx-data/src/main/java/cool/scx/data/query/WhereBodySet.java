@@ -12,7 +12,7 @@ import java.util.List;
  * @author scx567888
  * @version 0.0.1
  */
-public final class WhereSet implements Logic {
+public final class WhereBodySet implements Logic {
 
     /**
      * 存储查询条件 key 为 fieldName ,采用 map 而不是 list 是为了保证重复添加的会直接覆盖
@@ -24,9 +24,17 @@ public final class WhereSet implements Logic {
     /**
      * 创建一个 Where 对象
      */
-    public WhereSet(LogicType type) {
+    public WhereBodySet(LogicType type) {
         this.type = type;
         this.whereBodyList = new ArrayList<>();
+    }
+
+    public static WhereBodySet and() {
+        return new WhereBodySet(LogicType.AND);
+    }
+
+    public static WhereBodySet or() {
+        return new WhereBodySet(LogicType.OR);
     }
 
     /**
@@ -39,7 +47,7 @@ public final class WhereSet implements Logic {
      * @param options   配置
      * @return 本身 , 方便链式调用
      */
-    public WhereSet add2(String name, WhereType whereType, Object value1, Object value2, WhereOption... options) {
+    public WhereBodySet add2(String name, WhereType whereType, Object value1, Object value2, WhereOption... options) {
         return _add(name, whereType, value1, value2, 2, options);
     }
 
@@ -52,7 +60,7 @@ public final class WhereSet implements Logic {
      * @param options   配置
      * @return 本身 , 方便链式调用
      */
-    public WhereSet add1(String name, WhereType whereType, Object value1, WhereOption... options) {
+    public WhereBodySet add1(String name, WhereType whereType, Object value1, WhereOption... options) {
         return _add(name, whereType, value1, null, 1, options);
     }
 
@@ -64,7 +72,7 @@ public final class WhereSet implements Logic {
      * @param options   配置
      * @return 本身 , 方便链式调用
      */
-    public WhereSet add0(String name, WhereType whereType, WhereOption... options) {
+    public WhereBodySet add0(String name, WhereType whereType, WhereOption... options) {
         return _add(name, whereType, null, null, 0, options);
     }
 
@@ -84,7 +92,7 @@ public final class WhereSet implements Logic {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public WhereSet isNull(String fieldName, WhereOption... options) {
+    public WhereBodySet isNull(String fieldName, WhereOption... options) {
         return add0(fieldName, WhereType.IS_NULL, options);
     }
 
@@ -95,7 +103,7 @@ public final class WhereSet implements Logic {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public WhereSet isNotNull(String fieldName, WhereOption... options) {
+    public WhereBodySet isNotNull(String fieldName, WhereOption... options) {
         return add0(fieldName, WhereType.IS_NOT_NULL, options);
     }
 
@@ -107,7 +115,7 @@ public final class WhereSet implements Logic {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public WhereSet equal(String fieldName, Object value, WhereOption... options) {
+    public WhereBodySet equal(String fieldName, Object value, WhereOption... options) {
         return add1(fieldName, WhereType.EQUAL, value, options);
     }
 
@@ -119,7 +127,7 @@ public final class WhereSet implements Logic {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public WhereSet notEqual(String fieldName, Object value, WhereOption... options) {
+    public WhereBodySet notEqual(String fieldName, Object value, WhereOption... options) {
         return add1(fieldName, WhereType.NOT_EQUAL, value, options);
     }
 
@@ -131,7 +139,7 @@ public final class WhereSet implements Logic {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public WhereSet greaterThan(String fieldName, Object value, WhereOption... options) {
+    public WhereBodySet greaterThan(String fieldName, Object value, WhereOption... options) {
         return add1(fieldName, WhereType.GREATER_THAN, value, options);
     }
 
@@ -143,7 +151,7 @@ public final class WhereSet implements Logic {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public WhereSet greaterThanOrEqual(String fieldName, Object value, WhereOption... options) {
+    public WhereBodySet greaterThanOrEqual(String fieldName, Object value, WhereOption... options) {
         return add1(fieldName, WhereType.GREATER_THAN_OR_EQUAL, value, options);
     }
 
@@ -155,7 +163,7 @@ public final class WhereSet implements Logic {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public WhereSet lessThan(String fieldName, Object value, WhereOption... options) {
+    public WhereBodySet lessThan(String fieldName, Object value, WhereOption... options) {
         return add1(fieldName, WhereType.LESS_THAN, value, options);
     }
 
@@ -167,7 +175,7 @@ public final class WhereSet implements Logic {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public WhereSet lessThanOrEqual(String fieldName, Object value, WhereOption... options) {
+    public WhereBodySet lessThanOrEqual(String fieldName, Object value, WhereOption... options) {
         return add1(fieldName, WhereType.LESS_THAN_OR_EQUAL, value, options);
     }
 
@@ -180,7 +188,7 @@ public final class WhereSet implements Logic {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public WhereSet between(String fieldName, Object value1, Object value2, WhereOption... options) {
+    public WhereBodySet between(String fieldName, Object value1, Object value2, WhereOption... options) {
         return add2(fieldName, WhereType.BETWEEN, value1, value2, options);
     }
 
@@ -193,7 +201,7 @@ public final class WhereSet implements Logic {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public WhereSet notBetween(String fieldName, Object value1, Object value2, WhereOption... options) {
+    public WhereBodySet notBetween(String fieldName, Object value1, Object value2, WhereOption... options) {
         return add2(fieldName, WhereType.NOT_BETWEEN, value1, value2, options);
     }
 
@@ -205,7 +213,7 @@ public final class WhereSet implements Logic {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public WhereSet likeRegex(String fieldName, String value, WhereOption... options) {
+    public WhereBodySet likeRegex(String fieldName, String value, WhereOption... options) {
         return add1(fieldName, WhereType.LIKE_REGEX, value, options);
     }
 
@@ -217,7 +225,7 @@ public final class WhereSet implements Logic {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public WhereSet notLikeRegex(String fieldName, String value, WhereOption... options) {
+    public WhereBodySet notLikeRegex(String fieldName, String value, WhereOption... options) {
         return add1(fieldName, WhereType.NOT_LIKE_REGEX, value, options);
     }
 
@@ -229,7 +237,7 @@ public final class WhereSet implements Logic {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public WhereSet like(String fieldName, Object value, WhereOption... options) {
+    public WhereBodySet like(String fieldName, Object value, WhereOption... options) {
         return add1(fieldName, WhereType.LIKE, value, options);
     }
 
@@ -241,7 +249,7 @@ public final class WhereSet implements Logic {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public WhereSet notLike(String fieldName, Object value, WhereOption... options) {
+    public WhereBodySet notLike(String fieldName, Object value, WhereOption... options) {
         return add1(fieldName, WhereType.NOT_LIKE, value, options);
     }
 
@@ -253,7 +261,7 @@ public final class WhereSet implements Logic {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public WhereSet jsonContains(String fieldName, Object value, WhereOption... options) {
+    public WhereBodySet jsonContains(String fieldName, Object value, WhereOption... options) {
         return add1(fieldName, WhereType.JSON_CONTAINS, value, options);
     }
 
@@ -265,7 +273,7 @@ public final class WhereSet implements Logic {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public WhereSet in(String fieldName, Object value, WhereOption... options) {
+    public WhereBodySet in(String fieldName, Object value, WhereOption... options) {
         return add1(fieldName, WhereType.IN, value, options);
     }
 
@@ -277,7 +285,7 @@ public final class WhereSet implements Logic {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public WhereSet notIn(String fieldName, Object value, WhereOption... options) {
+    public WhereBodySet notIn(String fieldName, Object value, WhereOption... options) {
         return add1(fieldName, WhereType.NOT_IN, value, options);
     }
 
@@ -292,7 +300,7 @@ public final class WhereSet implements Logic {
      * @param needParamSize a int
      * @return a
      */
-    private WhereSet _add(String name, WhereType whereType, Object value1, Object value2, int needParamSize, WhereOption... options) {
+    private WhereBodySet _add(String name, WhereType whereType, Object value1, Object value2, int needParamSize, WhereOption... options) {
         //创建 option 信息
         var info = new WhereOption.Info(options);
         try {
@@ -324,7 +332,7 @@ public final class WhereSet implements Logic {
      * @param name a
      * @return a
      */
-    public WhereSet remove(String name) {
+    public WhereBodySet remove(String name) {
         whereBodyList.removeIf(w -> w.name().equals(name.trim()));
         return this;
     }
@@ -334,7 +342,7 @@ public final class WhereSet implements Logic {
      *
      * @return this 方便链式调用
      */
-    public WhereSet clear() {
+    public WhereBodySet clear() {
         whereBodyList.clear();
         return this;
     }

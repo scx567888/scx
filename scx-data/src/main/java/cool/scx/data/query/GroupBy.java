@@ -1,7 +1,5 @@
 package cool.scx.data.query;
 
-import cool.scx.data.query.GroupByOption.Info;
-
 /**
  * 分组
  *
@@ -32,19 +30,10 @@ public final class GroupBy {
     }
 
     /**
-     * @param name
-     * @param options
-     * @return
-     */
-    public static GroupByBody of(String name, GroupByOption... options) {
-        return new GroupByBody(name, new Info(options));
-    }
-
-    /**
      * set
      *
-     * @param groupByClauses
-     * @return
+     * @param groupByClauses a
+     * @return a
      */
     public GroupBy set(Object... groupByClauses) {
         groupByBodyList = groupByClauses;
