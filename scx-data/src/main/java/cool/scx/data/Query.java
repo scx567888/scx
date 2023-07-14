@@ -1,9 +1,6 @@
 package cool.scx.data;
 
-import cool.scx.data.query.GroupBy;
-import cool.scx.data.query.Limit;
-import cool.scx.data.query.OrderBy;
-import cool.scx.data.query.Where;
+import cool.scx.data.query.*;
 
 /**
  * 查询参数类<br>
@@ -63,12 +60,12 @@ public final class Query {
         return this;
     }
 
-    public Query groupBy(Object... groupBy) {
-        this.groupBy.set(groupBy);
+    public Query groupBy(Object... groupByClauses) {
+        this.groupBy.set(groupByClauses);
         return this;
     }
 
-    public Query orderBy(Object... orderByClauses) {
+    public Query orderBy(OrderByBody... orderByClauses) {
         this.orderBy.set(orderByClauses);
         return this;
     }
@@ -96,6 +93,22 @@ public final class Query {
         return this;
     }
 
+    public Where getWhere() {
+        return where;
+    }
+
+    public GroupBy getGroupBy() {
+        return groupBy;
+    }
+
+    public OrderBy getOrderBy() {
+        return orderBy;
+    }
+
+    public Limit getLimit() {
+        return limit;
+    }
+
     public Query clearWhere() {
         where.clear();
         return this;
@@ -114,22 +127,6 @@ public final class Query {
     public Query clearLimit() {
         limit.clear();
         return this;
-    }
-
-    public Where getWhere() {
-        return where;
-    }
-
-    public GroupBy getGroupBy() {
-        return groupBy;
-    }
-
-    public OrderBy getOrderBy() {
-        return orderBy;
-    }
-
-    public Limit getLimit() {
-        return limit;
     }
 
 }
