@@ -2,8 +2,7 @@ package cool.scx.data.query;
 
 import cool.scx.data.query.OrderByOption.Info;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 import static cool.scx.data.query.OrderByType.ASC;
 import static cool.scx.data.query.OrderByType.DESC;
@@ -19,13 +18,13 @@ public final class OrderBy {
     /**
      * 存储排序的字段
      */
-    private final List<OrderByBody> orderByBodyList;
+    private OrderByBody[] orderByBodyList;
 
     /**
      * 创建一个 OrderBy 对象
      */
     public OrderBy() {
-        this.orderByBodyList = new ArrayList<>();
+        this.orderByBodyList = new OrderByBody[]{};
     }
 
     /**
@@ -34,7 +33,7 @@ public final class OrderBy {
      * @param oldOrderBy 旧的 OrderBy
      */
     public OrderBy(OrderBy oldOrderBy) {
-        this.orderByBodyList = new ArrayList<>(oldOrderBy.orderByBodyList);
+        this.orderByBodyList = Arrays.stream(oldOrderBy.orderByBodyList()).toArray(OrderByBody[]::new);
     }
 
     /**
@@ -45,16 +44,8 @@ public final class OrderBy {
      * @param options     配置
      * @return 本身, 方便链式调用
      */
-    public OrderBy add(String name, OrderByType orderByType, OrderByOption... options) {
-        var info = new Info(options);
-        // 是否使用原始名称 (即不进行转义)
-        var orderByBody = new OrderByBody(name, orderByType, info);
-        // 是否替换
-        if (info.replace()) {
-            orderByBodyList.removeIf(w -> orderByBody.name().equals(w.name()));
-        }
-        orderByBodyList.add(orderByBody);
-        return this;
+    public static OrderByBody of(String name, OrderByType orderByType, OrderByOption... options) {
+        return new OrderByBody(name, orderByType, new Info(options));
     }
 
     /**
@@ -64,8 +55,8 @@ public final class OrderBy {
      * @param options 配置
      * @return a
      */
-    public OrderBy asc(String name, OrderByOption... options) {
-        return add(name, ASC, options);
+    public static OrderByBody asc(String name, OrderByOption... options) {
+        return of(name, ASC, options);
     }
 
     /**
@@ -75,19 +66,21 @@ public final class OrderBy {
      * @param options 配置
      * @return a
      */
-    public OrderBy desc(String name, OrderByOption... options) {
-        return add(name, DESC, options);
+    public static OrderByBody desc(String name, OrderByOption... options) {
+        return of(name, DESC, options);
+    }
+
+    public void set(OrderByBody... orderByClauses) {
+        orderByBodyList = orderByClauses;
     }
 
     /**
-     * a
+     * orderByBodyList
      *
-     * @param name a
-     * @return a
+     * @return orderByBodyList
      */
-    public OrderBy remove(String name) {
-        orderByBodyList.removeIf(w -> w.name().equals(name.trim()));
-        return this;
+    public OrderByBody[] orderByBodyList() {
+        return orderByBodyList;
     }
 
     /**
@@ -96,17 +89,8 @@ public final class OrderBy {
      * @return self
      */
     public OrderBy clear() {
-        orderByBodyList.clear();
+        orderByBodyList = new OrderByBody[]{};
         return this;
-    }
-
-    /**
-     * orderByBodyList
-     *
-     * @return orderByBodyList
-     */
-    public List<OrderByBody> orderByBodyList() {
-        return orderByBodyList;
     }
 
 }
