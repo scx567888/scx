@@ -1,25 +1,25 @@
 package cool.scx.data.query;
 
-public abstract class Logic {
+public interface Logic {
 
-    protected final Object[] clauses;
-
-    public Logic(Object... clauses) {
-        this.clauses = clauses;
-    }
-
-    public static Logic and(Object... clauses) {
+    static Logic and(Object... clauses) {
         return new AND(clauses);
     }
 
-    public static Logic or(Object... clauses) {
+    static Logic or(Object... clauses) {
         return new OR(clauses);
     }
 
-    public abstract LogicType type();
-
-    public final Object[] clauses() {
-        return clauses;
+    static WhereSet andSet() {
+        return new WhereSet(LogicType.AND);
     }
+
+    static WhereSet orSet() {
+        return new WhereSet(LogicType.OR);
+    }
+
+    LogicType type();
+
+    Object[] clauses();
 
 }

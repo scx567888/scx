@@ -1,11 +1,6 @@
 package cool.scx.data.query;
 
-import cool.scx.data.query.exception.ValidParamListIsEmptyException;
-import cool.scx.data.query.exception.WrongWhereTypeParamSizeException;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import cool.scx.data.query.WhereOption.Info;
 
 import static cool.scx.data.query.WhereType.*;
 
@@ -18,21 +13,15 @@ import static cool.scx.data.query.WhereType.*;
 public final class Where {
 
     /**
-     * 存储查询条件 key 为 fieldName ,采用 map 而不是 list 是为了保证重复添加的会直接覆盖
-     */
-    private final List<WhereBody> whereBodyList;
-
-    /**
      * 自定义的查询语句
      */
-    private Object[] whereSQL;
+    private Object[] whereBodyList;
 
     /**
      * 创建一个 Where 对象
      */
     public Where() {
-        this.whereBodyList = new ArrayList<>();
-        this.whereSQL = new Object[0];
+        this.whereBodyList = new Object[]{};
     }
 
     /**
@@ -41,56 +30,7 @@ public final class Where {
      * @param oldWhere 旧的 Where
      */
     public Where(Where oldWhere) {
-        this.whereBodyList = new ArrayList<>(oldWhere.whereBodyList);
-        this.whereSQL = Arrays.copyOf(oldWhere.whereSQL, oldWhere.whereSQL.length);
-    }
-
-    /**
-     * 添加一个查询条件 (注意 : 此处添加的所有条件都会以 and 拼接 , 如需使用 or 请考虑使用 {@link #whereSQL(Object...)} })
-     *
-     * @param name      名称 (注意 : 默认为字段名称 , 不是数据库名称)
-     * @param whereType where 类型
-     * @param value1    参数1
-     * @param value2    参数2
-     * @param options   配置
-     * @return 本身 , 方便链式调用
-     */
-    public Where add2(String name, WhereType whereType, Object value1, Object value2, WhereOption... options) {
-        return _add(name, whereType, value1, value2, 2, options);
-    }
-
-    /**
-     * 添加一个查询条件 (注意 : 此处添加的所有条件都会以 and 拼接 , 如需使用 or 请考虑使用 {@link #whereSQL(Object...)} })
-     *
-     * @param name      名称 (注意 : 默认为字段名称 , 不是数据库名称)
-     * @param whereType where 类型
-     * @param value1    参数1
-     * @param options   配置
-     * @return 本身 , 方便链式调用
-     */
-    public Where add1(String name, WhereType whereType, Object value1, WhereOption... options) {
-        return _add(name, whereType, value1, null, 1, options);
-    }
-
-    /**
-     * 添加一个查询条件 (注意 : 此处添加的所有条件都会以 and 拼接 , 如需使用 or 请考虑使用 {@link #whereSQL(Object...)} })
-     *
-     * @param name      名称 (注意 : 默认为字段名称 , 不是数据库名称)
-     * @param whereType where 类型
-     * @param options   配置
-     * @return 本身 , 方便链式调用
-     */
-    public Where add0(String name, WhereType whereType, WhereOption... options) {
-        return _add(name, whereType, null, null, 0, options);
-    }
-
-    /**
-     * 查询条件是否为空
-     *
-     * @return a boolean
-     */
-    public boolean isEmpty() {
-        return whereBodyList.size() == 0 && whereSQL == null;
+        this.whereBodyList = oldWhere.whereBodyList();
     }
 
     /**
@@ -100,8 +40,8 @@ public final class Where {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public Where isNull(String fieldName, WhereOption... options) {
-        return add0(fieldName, IS_NULL, options);
+    public static WhereBody isNull(String fieldName, WhereOption... options) {
+        return new WhereBody(fieldName, IS_NULL, null, null, new Info(options));
     }
 
     /**
@@ -111,8 +51,8 @@ public final class Where {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public Where isNotNull(String fieldName, WhereOption... options) {
-        return add0(fieldName, IS_NOT_NULL, options);
+    public static WhereBody isNotNull(String fieldName, WhereOption... options) {
+        return new WhereBody(fieldName, IS_NOT_NULL, null, null, new Info(options));
     }
 
     /**
@@ -123,8 +63,8 @@ public final class Where {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public Where equal(String fieldName, Object value, WhereOption... options) {
-        return add1(fieldName, EQUAL, value, options);
+    public static WhereBody equal(String fieldName, Object value, WhereOption... options) {
+        return new WhereBody(fieldName, EQUAL, value, null, new Info(options));
     }
 
     /**
@@ -135,8 +75,8 @@ public final class Where {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public Where notEqual(String fieldName, Object value, WhereOption... options) {
-        return add1(fieldName, NOT_EQUAL, value, options);
+    public static WhereBody notEqual(String fieldName, Object value, WhereOption... options) {
+        return new WhereBody(fieldName, NOT_EQUAL, value, null, new Info(options));
     }
 
     /**
@@ -147,8 +87,8 @@ public final class Where {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public Where greaterThan(String fieldName, Object value, WhereOption... options) {
-        return add1(fieldName, GREATER_THAN, value, options);
+    public static WhereBody greaterThan(String fieldName, Object value, WhereOption... options) {
+        return new WhereBody(fieldName, GREATER_THAN, value, null, new Info(options));
     }
 
     /**
@@ -159,8 +99,8 @@ public final class Where {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public Where greaterThanOrEqual(String fieldName, Object value, WhereOption... options) {
-        return add1(fieldName, GREATER_THAN_OR_EQUAL, value, options);
+    public static WhereBody greaterThanOrEqual(String fieldName, Object value, WhereOption... options) {
+        return new WhereBody(fieldName, GREATER_THAN_OR_EQUAL, value, null, new Info(options));
     }
 
     /**
@@ -171,8 +111,8 @@ public final class Where {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public Where lessThan(String fieldName, Object value, WhereOption... options) {
-        return add1(fieldName, LESS_THAN, value, options);
+    public static WhereBody lessThan(String fieldName, Object value, WhereOption... options) {
+        return new WhereBody(fieldName, LESS_THAN, value, null, new Info(options));
     }
 
     /**
@@ -183,8 +123,8 @@ public final class Where {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public Where lessThanOrEqual(String fieldName, Object value, WhereOption... options) {
-        return add1(fieldName, LESS_THAN_OR_EQUAL, value, options);
+    public static WhereBody lessThanOrEqual(String fieldName, Object value, WhereOption... options) {
+        return new WhereBody(fieldName, LESS_THAN_OR_EQUAL, value, null, new Info(options));
     }
 
     /**
@@ -196,8 +136,8 @@ public final class Where {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public Where between(String fieldName, Object value1, Object value2, WhereOption... options) {
-        return add2(fieldName, BETWEEN, value1, value2, options);
+    public static WhereBody between(String fieldName, Object value1, Object value2, WhereOption... options) {
+        return new WhereBody(fieldName, BETWEEN, value1, value2, new Info(options));
     }
 
     /**
@@ -209,8 +149,8 @@ public final class Where {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public Where notBetween(String fieldName, Object value1, Object value2, WhereOption... options) {
-        return add2(fieldName, NOT_BETWEEN, value1, value2, options);
+    public static WhereBody notBetween(String fieldName, Object value1, Object value2, WhereOption... options) {
+        return new WhereBody(fieldName, NOT_BETWEEN, value1, value2, new Info(options));
     }
 
     /**
@@ -221,8 +161,8 @@ public final class Where {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public Where likeRegex(String fieldName, String value, WhereOption... options) {
-        return add1(fieldName, LIKE_REGEX, value, options);
+    public static WhereBody likeRegex(String fieldName, String value, WhereOption... options) {
+        return new WhereBody(fieldName, LIKE_REGEX, value, null, new Info(options));
     }
 
     /**
@@ -233,8 +173,8 @@ public final class Where {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public Where notLikeRegex(String fieldName, String value, WhereOption... options) {
-        return add1(fieldName, NOT_LIKE_REGEX, value, options);
+    public static WhereBody notLikeRegex(String fieldName, String value, WhereOption... options) {
+        return new WhereBody(fieldName, NOT_LIKE_REGEX, value, null, new Info(options));
     }
 
     /**
@@ -245,8 +185,8 @@ public final class Where {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public Where like(String fieldName, Object value, WhereOption... options) {
-        return add1(fieldName, LIKE, value, options);
+    public static WhereBody like(String fieldName, Object value, WhereOption... options) {
+        return new WhereBody(fieldName, LIKE, value, null, new Info(options));
     }
 
     /**
@@ -257,8 +197,8 @@ public final class Where {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public Where notLike(String fieldName, Object value, WhereOption... options) {
-        return add1(fieldName, NOT_LIKE, value, options);
+    public static WhereBody notLike(String fieldName, Object value, WhereOption... options) {
+        return new WhereBody(fieldName, NOT_LIKE, value, null, new Info(options));
     }
 
     /**
@@ -269,8 +209,8 @@ public final class Where {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public Where jsonContains(String fieldName, Object value, WhereOption... options) {
-        return add1(fieldName, JSON_CONTAINS, value, options);
+    public static WhereBody jsonContains(String fieldName, Object value, WhereOption... options) {
+        return new WhereBody(fieldName, JSON_CONTAINS, value, null, new Info(options));
     }
 
     /**
@@ -281,8 +221,8 @@ public final class Where {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public Where in(String fieldName, Object value, WhereOption... options) {
-        return add1(fieldName, IN, value, options);
+    public static WhereBody in(String fieldName, Object value, WhereOption... options) {
+        return new WhereBody(fieldName, IN, value, null, new Info(options));
     }
 
     /**
@@ -293,17 +233,17 @@ public final class Where {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public Where notIn(String fieldName, Object value, WhereOption... options) {
-        return add1(fieldName, NOT_IN, value, options);
+    public static WhereBody notIn(String fieldName, Object value, WhereOption... options) {
+        return new WhereBody(fieldName, NOT_IN, value, null, new Info(options));
     }
 
     /**
-     * <p>Getter for the field <code>whereSQL</code>.</p>
+     * 查询条件是否为空
      *
-     * @return a {@link String} object
+     * @return a boolean
      */
-    public Object[] whereSQL() {
-        return whereSQL;
+    public boolean isEmpty() {
+        return whereBodyList.length == 0;
     }
 
     /**
@@ -312,60 +252,16 @@ public final class Where {
      * 在最终 cool.scx.sql 中会拼接到 where 子句的最后<br>
      * 注意 :  除特殊语法外不需要手动在头部添加 AND
      *
-     * @param whereSQL cool.scx.sql 语句
+     * @param whereClauses cool.scx.sql 语句
      * @return 本身 , 方便链式调用
      */
-    public Where whereSQL(Object... whereSQL) {
-        this.whereSQL = whereSQL;
+    public Where set(Object... whereClauses) {
+        this.whereBodyList = whereClauses;
         return this;
     }
 
-    /**
-     * a
-     *
-     * @param name          a
-     * @param whereType     a
-     * @param value1        a
-     * @param value2        a
-     * @param options       a
-     * @param needParamSize a int
-     * @return a
-     */
-    private Where _add(String name, WhereType whereType, Object value1, Object value2, int needParamSize, WhereOption... options) {
-        //创建 option 信息
-        var info = new WhereOption.Info(options);
-        try {
-            var whereBody = new WhereBody(name, whereType, value1, value2, info);
-            //类型所需的参数数量和所传的参数数量必须一致
-            if (whereType.paramSize() != needParamSize) {
-                throw new IllegalArgumentException("Where 参数错误 : whereType 类型 : " + whereType + " , 参数数量必须为 " + whereType.paramSize());
-            }
-            // 是否替换
-            if (info.replace()) {
-                whereBodyList.removeIf(w -> whereBody.name().equals(w.name()));
-            }
-            whereBodyList.add(whereBody);
-        } catch (WrongWhereTypeParamSizeException e) {
-            if (!info.skipIfNull()) {
-                throw e;
-            }
-        } catch (ValidParamListIsEmptyException e) {
-            if (!info.skipIfEmptyList()) {
-                throw e;
-            }
-        }
-        return this;
-    }
-
-    /**
-     * a
-     *
-     * @param name a
-     * @return a
-     */
-    public Where remove(String name) {
-        whereBodyList.removeIf(w -> w.name().equals(name.trim()));
-        return this;
+    public Object[] whereBodyList() {
+        return whereBodyList;
     }
 
     /**
@@ -374,33 +270,8 @@ public final class Where {
      * @return this 方便链式调用
      */
     public Where clear() {
-        whereBodyList.clear();
+        whereBodyList = new Object[]{};
         return this;
-    }
-
-    /**
-     * 清楚 where 条件中的 whereSQL
-     *
-     * @return this 方便链式调用
-     */
-    public Where clearWhereSQL() {
-        whereSQL = new Object[0];
-        return this;
-    }
-
-    /**
-     * 清除所有 where 条件 (包括 whereSQL)
-     *
-     * @return this 方便链式调用
-     */
-    public Where clearAll() {
-        clear();
-        clearWhereSQL();
-        return this;
-    }
-
-    public List<WhereBody> whereBodyList() {
-        return whereBodyList;
     }
 
 }
