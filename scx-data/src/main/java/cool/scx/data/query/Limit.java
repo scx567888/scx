@@ -52,7 +52,7 @@ public final class Limit {
      * @param offset offset (偏移量)
      * @return self
      */
-    public Limit setOffset(long offset) {
+    public Limit offset(long offset) {
         if (offset < 0) {
             throw new IllegalArgumentException("Limit 参数错误 : offset (偏移量) 不能小于 0 !!!");
         }
@@ -66,14 +66,13 @@ public final class Limit {
      * @param rowCount rowCount (行长度)
      * @return self
      */
-    public Limit setRowCount(long rowCount) {
+    public Limit rowCount(long rowCount) {
         if (rowCount < 0) {
             throw new IllegalArgumentException("Limit 参数错误 : rowCount (行长度) 不能小于 0 !!!");
         }
         this.rowCount = rowCount;
         return this;
     }
-
 
     /**
      * 设置分页参数
@@ -83,8 +82,8 @@ public final class Limit {
      * @return self
      */
     public Limit set(long offset, long rowCount) {
-        setOffset(offset);
-        setRowCount(rowCount);
+        offset(offset);
+        rowCount(rowCount);
         return this;
     }
 
