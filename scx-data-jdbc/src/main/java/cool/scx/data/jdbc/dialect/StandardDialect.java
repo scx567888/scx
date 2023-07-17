@@ -36,7 +36,7 @@ public final class StandardDialect extends Dialect {
     }
 
     @Override
-    public String getLimitSQL(String sql, Long offset, Long rowCount) {
+    public String getLimitSQL(String sql, Long offset, Long limit) {
         return null;
     }
 

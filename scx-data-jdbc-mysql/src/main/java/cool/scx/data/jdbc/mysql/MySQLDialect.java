@@ -109,8 +109,8 @@ public class MySQLDialect extends Dialect {
     }
 
     @Override
-    public String getLimitSQL(String sql, Long offset, Long rowCount) {
-        var limitClauses = rowCount == null ? "" : offset == null || offset == 0 ? " LIMIT " + rowCount : " LIMIT " + offset + "," + rowCount;
+    public String getLimitSQL(String sql, Long offset, Long limit) {
+        var limitClauses = limit == null ? "" : offset == null || offset == 0 ? " LIMIT " + limit : " LIMIT " + offset + "," + limit;
         return sql + limitClauses;
     }
 

@@ -51,14 +51,14 @@ public final class Limit {
     }
 
     /**
-     * setRowCount
+     * setLimit
      *
-     * @param numberOfRows rowCount (行长度)
+     * @param numberOfRows limit (行长度)
      * @return self
      */
     public Limit limit(long numberOfRows) {
         if (numberOfRows < 0) {
-            throw new IllegalArgumentException("Limit 参数错误 : rowCount (行长度) 不能小于 0 !!!");
+            throw new IllegalArgumentException("Limit 参数错误 : limit (行长度) 不能小于 0 !!!");
         }
         this.limit = numberOfRows;
         return this;
@@ -76,7 +76,7 @@ public final class Limit {
     /**
      * 获取分页大小 (这里分页大小即等于行数 所以直接返回 pageSize)
      *
-     * @return rowCount
+     * @return limit
      */
     public Long getLimit() {
         return limit;
@@ -93,7 +93,7 @@ public final class Limit {
     }
 
     /**
-     * clearRowCount
+     * clearLimit
      *
      * @return self
      */
