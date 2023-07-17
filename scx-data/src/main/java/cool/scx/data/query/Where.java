@@ -8,18 +8,18 @@ import java.util.Arrays;
  * @author scx567888
  * @version 0.0.1
  */
-public final class Where {
+public final class Where implements ClauseSet<Object> {
 
     /**
      * 自定义的查询语句
      */
-    private Object[] whereBodyList;
+    private Object[] whereClause;
 
     /**
      * 创建一个 Where 对象
      */
     public Where() {
-        this.whereBodyList = new Object[]{};
+        this.whereClause = new Object[]{};
     }
 
     /**
@@ -28,7 +28,7 @@ public final class Where {
      * @param oldWhere 旧的 Where
      */
     public Where(Where oldWhere) {
-        this.whereBodyList = Arrays.copyOf(oldWhere.whereBodyList, oldWhere.whereBodyList.length);
+        this.whereClause = Arrays.copyOf(oldWhere.whereClause, oldWhere.whereClause.length);
     }
 
     /**
@@ -37,7 +37,7 @@ public final class Where {
      * @return a boolean
      */
     public boolean isEmpty() {
-        return whereBodyList.length == 0;
+        return whereClause.length == 0;
     }
 
     /**
@@ -50,12 +50,13 @@ public final class Where {
      * @return 本身 , 方便链式调用
      */
     public Where set(Object... whereClauses) {
-        this.whereBodyList = whereClauses;
+        this.whereClause = whereClauses;
         return this;
     }
 
-    public Object[] whereBodyList() {
-        return whereBodyList;
+    @Override
+    public Object[] clauses() {
+        return whereClause;
     }
 
     /**
@@ -64,7 +65,7 @@ public final class Where {
      * @return this 方便链式调用
      */
     public Where clear() {
-        whereBodyList = new Object[]{};
+        whereClause = new Object[]{};
         return this;
     }
 
