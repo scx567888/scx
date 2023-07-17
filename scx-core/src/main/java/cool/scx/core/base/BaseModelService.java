@@ -324,7 +324,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @see JDBCDao#buildSelectSQL(Query, ColumnFilter)
      */
     public final SQL buildGetSQL(Query query, ColumnFilter selectFilter) {
-        return buildListSQL(query.clearOffset().rowCount(1L), selectFilter);
+        return buildListSQL(query.clearOffset().limit(1L), selectFilter);
     }
 
     /**
@@ -352,7 +352,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @see JDBCDao#buildSelectSQL(Query, ColumnFilter)
      */
     public final SQL buildGetSQLWithAlias(Query query, ColumnFilter selectFilter) {
-        return buildListSQLWithAlias(query.clearOffset().rowCount(1L), selectFilter);
+        return buildListSQLWithAlias(query.clearOffset().limit(1L), selectFilter);
     }
 
     /**

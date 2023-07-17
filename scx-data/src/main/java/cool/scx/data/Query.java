@@ -70,31 +70,19 @@ public final class Query {
         return this;
     }
 
-    public Query offset(long offset) {
-        limit.offset(offset);
-        return this;
-    }
-
-    /**
-     * setRowCount
-     *
-     * @param rowCount rowCount (行长度)
-     * @return self
-     */
-    public Query rowCount(long rowCount) {
-        limit.rowCount(rowCount);
+    public Query offset(long limitOffset) {
+        limit.offset(limitOffset);
         return this;
     }
 
     /**
      * 设置分页参数
      *
-     * @param offset   偏移量
-     * @param rowCount 长度
+     * @param numberOfRows 长度
      * @return p
      */
-    public Query limit(long offset, long rowCount) {
-        limit.set(offset, rowCount);
+    public Query limit(long numberOfRows) {
+        limit.limit(numberOfRows);
         return this;
     }
 
@@ -134,13 +122,8 @@ public final class Query {
         return this;
     }
 
-    public Query clearRowCount() {
-        limit.clearRowCount();
-        return this;
-    }
-
     public Query clearLimit() {
-        limit.clear();
+        limit.clearLimit();
         return this;
     }
 

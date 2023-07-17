@@ -53,7 +53,7 @@ public final class SQLBuilder {
     /**
      * a
      */
-    private Long rowCount = null;
+    private Long limit = null;
 
     /**
      * a
@@ -192,19 +192,19 @@ public final class SQLBuilder {
     /**
      * a
      *
-     * @param offset   a int
-     * @param rowCount a int
+     * @param offset a int
+     * @param limit  a int
      * @return a {@link SQLBuilder} object
      */
-    public SQLBuilder Limit(Long offset, Long rowCount) {
+    public SQLBuilder Limit(Long offset, Long limit) {
         if (offset != null && offset < 0) {
             throw new IllegalArgumentException("分页参数错误 : offset (偏移量) 不能小于 0 !!!");
         }
-        if (rowCount != null && rowCount < 0) {
-            throw new IllegalArgumentException("分页参数错误 : rowCount (每页数量) 不能小于 0 !!!");
+        if (limit != null && limit < 0) {
+            throw new IllegalArgumentException("分页参数错误 : limit (每页数量) 不能小于 0 !!!");
         }
         this.offset = offset;
-        this.rowCount = rowCount;
+        this.limit = limit;
         return this;
     }
 
@@ -326,7 +326,7 @@ public final class SQLBuilder {
      */
     private String GetSelectSQL(Dialect dialect) {
         var sql = "SELECT " + String.join(", ", selectColumns) + " FROM " + tableName + getWhereClause() + getGroupByClause() + getOrderByClause();
-        return dialect.getLimitSQL(sql, offset, rowCount);
+        return dialect.getLimitSQL(sql, offset, limit);
     }
 
     /**

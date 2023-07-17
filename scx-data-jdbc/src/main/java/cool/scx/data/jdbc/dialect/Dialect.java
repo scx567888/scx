@@ -58,12 +58,12 @@ public abstract class Dialect {
     /**
      * 获取分页 SQL
      *
-     * @param sql      原始 SQL
-     * @param rowCount 行数
-     * @param offset   偏移量
+     * @param sql    原始 SQL
+     * @param offset 偏移量
+     * @param limit  行数
      * @return SQL 语句
      */
-    public abstract String getLimitSQL(String sql, Long offset, Long rowCount);
+    public abstract String getLimitSQL(String sql, Long offset, Long limit);
 
     /**
      * 创建数据源

@@ -95,8 +95,8 @@ public class MySQLXDao<Entity> implements Dao<Entity, String> {
         if (query.getLimit().getOffset() != null) {
             findStatement.offset(query.getLimit().getOffset());
         }
-        if (query.getLimit().getRowCount() != null) {
-            findStatement.limit(query.getLimit().getRowCount());
+        if (query.getLimit().getLimit() != null) {
+            findStatement.limit(query.getLimit().getLimit());
         }
         var docResult = findStatement.execute();
         var dbDocs = docResult.fetchAll();
