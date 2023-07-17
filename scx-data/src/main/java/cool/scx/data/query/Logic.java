@@ -1,6 +1,6 @@
 package cool.scx.data.query;
 
-public interface Logic {
+public interface Logic extends ClauseSet<Object> {
 
     static Logic and(Object... clauses) {
         return new AND(clauses);
@@ -19,7 +19,5 @@ public interface Logic {
     }
 
     LogicType type();
-
-    Object[] clauses();
 
 }
