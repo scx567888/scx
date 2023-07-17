@@ -6,7 +6,7 @@ import cool.scx.data.query.OrderByBody;
 public abstract class OrderByParser {
 
     public final String[] parseOrderBy(OrderBy orderBy) {
-        return parseAll(orderBy.orderByBodyList());
+        return parseAll(orderBy.clauses());
     }
 
     public final String[] parseAll(OrderByBody[] objs) {

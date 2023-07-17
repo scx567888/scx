@@ -8,7 +8,7 @@ import java.util.Arrays;
 public abstract class GroupByParser {
 
     public final String[] parseGroupBy(GroupBy groupBy) {
-        var all = parseAll(groupBy.groupByBodyList());
+        var all = parseAll(groupBy.clauses());
         //此处去重
         return Arrays.stream(all).distinct().toArray(String[]::new);
     }

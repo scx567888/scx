@@ -55,7 +55,7 @@ public abstract class WhereParser {
     }
 
     public final WhereClauseAndWhereParams parseWhere(Where where) {
-        return this.parseAll(where.whereBodyList());
+        return this.parseAll(where.clauses());
     }
 
     public WhereClauseAndWhereParams parseWhereBody(WhereBody body) {
