@@ -70,6 +70,22 @@ public final class Query {
         return this;
     }
 
+    public Query offset(long offset) {
+        limit.offset(offset);
+        return this;
+    }
+
+    /**
+     * setRowCount
+     *
+     * @param rowCount rowCount (行长度)
+     * @return self
+     */
+    public Query rowCount(long rowCount) {
+        limit.rowCount(rowCount);
+        return this;
+    }
+
     /**
      * 设置分页参数
      *
@@ -79,17 +95,6 @@ public final class Query {
      */
     public Query limit(long offset, long rowCount) {
         limit.set(offset, rowCount);
-        return this;
-    }
-
-    /**
-     * 设置分页 默认 第一页
-     *
-     * @param rowCount a {@link java.lang.Integer} object.
-     * @return a 当前实例
-     */
-    public Query limit(long rowCount) {
-        limit.set(rowCount);
         return this;
     }
 
@@ -121,6 +126,16 @@ public final class Query {
 
     public Query clearOrderBy() {
         orderBy.clear();
+        return this;
+    }
+
+    public Query clearOffset() {
+        limit.clearOffset();
+        return this;
+    }
+
+    public Query clearRowCount() {
+        limit.clearRowCount();
         return this;
     }
 

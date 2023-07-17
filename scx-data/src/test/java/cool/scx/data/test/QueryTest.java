@@ -10,7 +10,7 @@ public class QueryTest {
 
     public static void main(String[] args) {
         var query = new Query().where(equal("name", "abc"));
-        System.out.println(Arrays.toString(query.getWhere().whereBodyList()));
+        System.out.println(Arrays.toString(query.getWhere().clauses()));
     }
 
 }
