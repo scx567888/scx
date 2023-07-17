@@ -8,18 +8,18 @@ import java.util.Arrays;
  * @author scx567888
  * @version 0.0.1
  */
-public final class GroupBy {
+public final class GroupBy implements ClauseSet<Object> {
 
     /**
      * 分组字段列表
      */
-    private Object[] groupByBodyList;
+    private Object[] groupByClauses;
 
     /**
      * 创建一个 OrderBy 对象
      */
     public GroupBy() {
-        this.groupByBodyList = new Object[]{};
+        this.groupByClauses = new Object[]{};
     }
 
     /**
@@ -28,7 +28,7 @@ public final class GroupBy {
      * @param oldGroupBy 旧的 GroupBy
      */
     public GroupBy(GroupBy oldGroupBy) {
-        this.groupByBodyList = Arrays.copyOf(oldGroupBy.groupByBodyList, oldGroupBy.groupByBodyList.length);
+        this.groupByClauses = Arrays.copyOf(oldGroupBy.groupByClauses, oldGroupBy.groupByClauses.length);
     }
 
     /**
@@ -38,17 +38,13 @@ public final class GroupBy {
      * @return a
      */
     public GroupBy set(Object... groupByClauses) {
-        groupByBodyList = groupByClauses;
+        this.groupByClauses = groupByClauses;
         return this;
     }
 
-    /**
-     * groupByBodyList
-     *
-     * @return groupByBodyList
-     */
-    public Object[] groupByBodyList() {
-        return groupByBodyList;
+    @Override
+    public Object[] clauses() {
+        return this.groupByClauses;
     }
 
     /**
@@ -57,7 +53,7 @@ public final class GroupBy {
      * @return self
      */
     public GroupBy clear() {
-        groupByBodyList = new Object[]{};
+        this.groupByClauses = new Object[]{};
         return this;
     }
 
