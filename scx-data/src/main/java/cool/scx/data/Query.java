@@ -66,7 +66,7 @@ public final class Query {
     }
 
     public Query orderBy(OrderByBody... orderByClauses) {
-        orderBy.set(orderByClauses);
+        this.orderBy.set(orderByClauses);
         return this;
     }
 
