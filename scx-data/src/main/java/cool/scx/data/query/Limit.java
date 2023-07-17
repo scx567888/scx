@@ -16,14 +16,14 @@ public final class Limit {
     /**
      * 每页数量分页 每页数量 默认为空 即不设置分页内容
      */
-    private Long rowCount;
+    private Long limit;
 
     /**
      * 创建一个 Limit 对象
      */
     public Limit() {
         this.offset = null;
-        this.rowCount = null;
+        this.limit = null;
     }
 
     /**
@@ -33,57 +33,34 @@ public final class Limit {
      */
     public Limit(Limit oldLimit) {
         this.offset = oldLimit.offset;
-        this.rowCount = oldLimit.rowCount;
-    }
-
-    /**
-     * Limit
-     *
-     * @param offset   偏移量
-     * @param rowCount 长度
-     */
-    public Limit(long offset, long rowCount) {
-        set(offset, rowCount);
+        this.limit = oldLimit.limit;
     }
 
     /**
      * setOffset
      *
-     * @param offset offset (偏移量)
+     * @param limitOffset offset (偏移量)
      * @return self
      */
-    public Limit offset(long offset) {
-        if (offset < 0) {
+    public Limit offset(long limitOffset) {
+        if (limitOffset < 0) {
             throw new IllegalArgumentException("Limit 参数错误 : offset (偏移量) 不能小于 0 !!!");
         }
-        this.offset = offset;
+        this.offset = limitOffset;
         return this;
     }
 
     /**
      * setRowCount
      *
-     * @param rowCount rowCount (行长度)
+     * @param numberOfRows rowCount (行长度)
      * @return self
      */
-    public Limit rowCount(long rowCount) {
-        if (rowCount < 0) {
+    public Limit limit(long numberOfRows) {
+        if (numberOfRows < 0) {
             throw new IllegalArgumentException("Limit 参数错误 : rowCount (行长度) 不能小于 0 !!!");
         }
-        this.rowCount = rowCount;
-        return this;
-    }
-
-    /**
-     * 设置分页参数
-     *
-     * @param offset   偏移量
-     * @param rowCount 长度
-     * @return self
-     */
-    public Limit set(long offset, long rowCount) {
-        offset(offset);
-        rowCount(rowCount);
+        this.limit = numberOfRows;
         return this;
     }
 
@@ -101,8 +78,8 @@ public final class Limit {
      *
      * @return rowCount
      */
-    public Long getRowCount() {
-        return rowCount;
+    public Long getLimit() {
+        return limit;
     }
 
     /**
@@ -120,19 +97,8 @@ public final class Limit {
      *
      * @return self
      */
-    public Limit clearRowCount() {
-        this.rowCount = null;
-        return this;
-    }
-
-    /**
-     * clear
-     *
-     * @return self
-     */
-    public Limit clear() {
-        clearOffset();
-        clearRowCount();
+    public Limit clearLimit() {
+        this.limit = null;
         return this;
     }
 

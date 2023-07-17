@@ -193,7 +193,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
     }
 
     public Entity get(Query query, ColumnFilter columnFilter) {
-        return sqlRunner.query(buildSelectSQL(query.clearOffset().rowCount(1), columnFilter), entityBeanHandler);
+        return sqlRunner.query(buildSelectSQL(query.clearOffset().limit(1), columnFilter), entityBeanHandler);
     }
 
     /**
@@ -254,7 +254,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
                 .Where(whereClauseAndWhereParams.whereClause())
                 .GroupBy(groupByColumns)
                 .OrderBy(orderByClauses)
-                .Limit(query.getLimit().getOffset(), query.getLimit().getRowCount())
+                .Limit(query.getLimit().getOffset(), query.getLimit().getLimit())
                 .GetSQL(jdbcContext.dialect());
         return SQL.ofPlaceholder(sql, whereClauseAndWhereParams.whereParams());
     }
@@ -269,7 +269,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
      */
     public final SQL buildSelectSQLWithAlias(Query query, ColumnFilter selectFilter) {
         //没有 limit 的时候不需要嵌套
-        if (query.getLimit().getRowCount() == null) {
+        if (query.getLimit().getLimit() == null) {
             return buildSelectSQL(query, selectFilter);
         } else {
             var selectColumnInfos = selectFilter.filter(tableInfo);
@@ -282,7 +282,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
                     .Where(whereClauseAndWhereParams.whereClause())
                     .GroupBy(groupByColumns)
                     .OrderBy(orderByClauses)
-                    .Limit(query.getLimit().getOffset(), query.getLimit().getRowCount())
+                    .Limit(query.getLimit().getOffset(), query.getLimit().getLimit())
                     .GetSQL(jdbcContext.dialect());
             var sql = Select("*").From("(" + sql0 + ")").GetSQL(jdbcContext.dialect());
             return SQL.ofPlaceholder(sql + " AS " + tableInfo.name() + "_" + RandomUtils.randomString(6), whereClauseAndWhereParams.whereParams());
