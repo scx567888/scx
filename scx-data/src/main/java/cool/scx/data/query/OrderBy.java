@@ -8,7 +8,7 @@ import java.util.Arrays;
  * @author scx567888
  * @version 0.0.1
  */
-public final class OrderBy implements ClauseSet<OrderByBody> {
+public final class OrderBy {
 
     /**
      * 存储排序的字段
@@ -40,7 +40,6 @@ public final class OrderBy implements ClauseSet<OrderByBody> {
         this.orderByClauses = orderByClauses;
     }
 
-    @Override
     public OrderByBody[] clauses() {
         return this.orderByClauses;
     }

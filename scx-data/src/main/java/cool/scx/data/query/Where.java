@@ -8,7 +8,7 @@ import java.util.Arrays;
  * @author scx567888
  * @version 0.0.1
  */
-public final class Where implements ClauseSet<Object> {
+public final class Where {
 
     /**
      * 自定义的查询语句
@@ -54,9 +54,8 @@ public final class Where implements ClauseSet<Object> {
         return this;
     }
 
-    @Override
     public Object[] clauses() {
-        return whereClause;
+        return this.whereClause;
     }
 
     /**

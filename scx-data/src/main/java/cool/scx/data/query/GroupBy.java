@@ -8,7 +8,7 @@ import java.util.Arrays;
  * @author scx567888
  * @version 0.0.1
  */
-public final class GroupBy implements ClauseSet<Object> {
+public final class GroupBy {
 
     /**
      * 分组字段列表
@@ -42,7 +42,6 @@ public final class GroupBy implements ClauseSet<Object> {
         return this;
     }
 
-    @Override
     public Object[] clauses() {
         return this.groupByClauses;
     }
