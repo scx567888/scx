@@ -251,7 +251,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
         var orderByClauses = orderByParser.parseOrderBy(query.getOrderBy());
         var sql = Select(selectColumns)
                 .From(tableInfo.name())
-                .Where(whereClause.clause())
+                .Where(whereClause.whereClause())
                 .GroupBy(groupByColumns)
                 .OrderBy(orderByClauses)
                 .Limit(query.getLimit().getOffset(), query.getLimit().getLimit())
@@ -279,7 +279,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
             var orderByClauses = orderByParser.parseOrderBy(query.getOrderBy());
             var sql0 = Select(selectColumns)
                     .From(tableInfo.name())
-                    .Where(whereClause.clause())
+                    .Where(whereClause.whereClause())
                     .GroupBy(groupByColumns)
                     .OrderBy(orderByClauses)
                     .Limit(query.getLimit().getOffset(), query.getLimit().getLimit())
@@ -311,7 +311,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
         var groupByColumns = groupByParser.parseGroupBy(query.getGroupBy());
         var sql = Select("COUNT(*) AS count")
                 .From(tableInfo.name())
-                .Where(whereClause.clause())
+                .Where(whereClause.whereClause())
                 .GroupBy(groupByColumns)
                 .GetSQL(jdbcContext.dialect());
         return SQL.ofPlaceholder(sql, whereClause.params());
@@ -351,7 +351,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
         var whereClause = whereParser.parseWhere(query.getWhere());
         var sql = Update(tableInfo.name())
                 .Set(updateSetColumns)
-                .Where(whereClause.clause())
+                .Where(whereClause.whereClause())
                 .GetSQL(jdbcContext.dialect());
         var entityParams = Arrays.stream(updateSetColumnInfos).map(c -> c.javaFieldValue(entity)).toArray();
         return SQL.ofPlaceholder(sql, concat(entityParams, whereClause.params()));
@@ -380,7 +380,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
         }
         var whereClause = whereParser.parseWhere(query.getWhere());
         var sql = Delete(tableInfo.name())
-                .Where(whereClause.clause())
+                .Where(whereClause.whereClause())
                 .GetSQL(jdbcContext.dialect());
         return SQL.ofPlaceholder(sql, whereClause.params());
     }
