@@ -246,17 +246,17 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
     public final SQL buildSelectSQL(Query query, ColumnFilter selectFilter) {
         var selectColumnInfos = selectFilter.filter(tableInfo);
         var selectColumns = Arrays.stream(selectColumnInfos).map(Column::name).toArray(String[]::new);
-        var whereClauseAndWhereParams = whereParser.parseWhere(query.getWhere());
+        var whereClause = whereParser.parseWhere(query.getWhere());
         var groupByColumns = groupByParser.parseGroupBy(query.getGroupBy());
         var orderByClauses = orderByParser.parseOrderBy(query.getOrderBy());
         var sql = Select(selectColumns)
                 .From(tableInfo.name())
-                .Where(whereClauseAndWhereParams.whereClause())
+                .Where(whereClause.clause())
                 .GroupBy(groupByColumns)
                 .OrderBy(orderByClauses)
                 .Limit(query.getLimit().getOffset(), query.getLimit().getLimit())
                 .GetSQL(jdbcContext.dialect());
-        return SQL.ofPlaceholder(sql, whereClauseAndWhereParams.whereParams());
+        return SQL.ofPlaceholder(sql, whereClause.params());
     }
 
     /**
@@ -274,18 +274,18 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
         } else {
             var selectColumnInfos = selectFilter.filter(tableInfo);
             var selectColumns = Arrays.stream(selectColumnInfos).map(ColumnMapping::name).toArray(String[]::new);
-            var whereClauseAndWhereParams = whereParser.parseWhere(query.getWhere());
+            var whereClause = whereParser.parseWhere(query.getWhere());
             var groupByColumns = groupByParser.parseGroupBy(query.getGroupBy());
             var orderByClauses = orderByParser.parseOrderBy(query.getOrderBy());
             var sql0 = Select(selectColumns)
                     .From(tableInfo.name())
-                    .Where(whereClauseAndWhereParams.whereClause())
+                    .Where(whereClause.clause())
                     .GroupBy(groupByColumns)
                     .OrderBy(orderByClauses)
                     .Limit(query.getLimit().getOffset(), query.getLimit().getLimit())
                     .GetSQL(jdbcContext.dialect());
             var sql = Select("*").From("(" + sql0 + ")").GetSQL(jdbcContext.dialect());
-            return SQL.ofPlaceholder(sql + " AS " + tableInfo.name() + "_" + RandomUtils.randomString(6), whereClauseAndWhereParams.whereParams());
+            return SQL.ofPlaceholder(sql + " AS " + tableInfo.name() + "_" + RandomUtils.randomString(6), whereClause.params());
         }
     }
 
@@ -307,14 +307,14 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
      * @return sql
      */
     private SQL buildCountSQL(Query query) {
-        var whereClauseAndWhereParams = whereParser.parseWhere(query.getWhere());
+        var whereClause = whereParser.parseWhere(query.getWhere());
         var groupByColumns = groupByParser.parseGroupBy(query.getGroupBy());
         var sql = Select("COUNT(*) AS count")
                 .From(tableInfo.name())
-                .Where(whereClauseAndWhereParams.whereClause())
+                .Where(whereClause.clause())
                 .GroupBy(groupByColumns)
                 .GetSQL(jdbcContext.dialect());
-        return SQL.ofPlaceholder(sql, whereClauseAndWhereParams.whereParams());
+        return SQL.ofPlaceholder(sql, whereClause.params());
     }
 
     /**
@@ -348,13 +348,13 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
         }
         var updateSetColumnInfos = updateFilter.filter(entity, tableInfo);
         var updateSetColumns = Arrays.stream(updateSetColumnInfos).map(c -> c.name() + " = ?").toArray(String[]::new);
-        var whereClauseAndWhereParams = whereParser.parseWhere(query.getWhere());
+        var whereClause = whereParser.parseWhere(query.getWhere());
         var sql = Update(tableInfo.name())
                 .Set(updateSetColumns)
-                .Where(whereClauseAndWhereParams.whereClause())
+                .Where(whereClause.clause())
                 .GetSQL(jdbcContext.dialect());
         var entityParams = Arrays.stream(updateSetColumnInfos).map(c -> c.javaFieldValue(entity)).toArray();
-        return SQL.ofPlaceholder(sql, concat(entityParams, whereClauseAndWhereParams.whereParams()));
+        return SQL.ofPlaceholder(sql, concat(entityParams, whereClause.params()));
     }
 
     /**
@@ -378,11 +378,11 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
         if (query.getWhere().isEmpty()) {
             throw new IllegalArgumentException("删除数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
         }
-        var whereClauseAndWhereParams = whereParser.parseWhere(query.getWhere());
+        var whereClause = whereParser.parseWhere(query.getWhere());
         var sql = Delete(tableInfo.name())
-                .Where(whereClauseAndWhereParams.whereClause())
+                .Where(whereClause.clause())
                 .GetSQL(jdbcContext.dialect());
-        return SQL.ofPlaceholder(sql, whereClauseAndWhereParams.whereParams());
+        return SQL.ofPlaceholder(sql, whereClause.params());
     }
 
     /**
