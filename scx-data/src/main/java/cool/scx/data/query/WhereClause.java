@@ -16,7 +16,7 @@ public record WhereClause(String whereClause, Object... params) {
     }
 
     public boolean isEmpty() {
-        return (whereClause == null|| whereClause.isEmpty()) && (params == null || params.length == 0);
+        return (whereClause == null || whereClause.isEmpty()) && (params == null || params.length == 0);
     }
 
 }
