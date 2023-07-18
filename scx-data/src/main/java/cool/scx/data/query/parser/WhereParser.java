@@ -14,7 +14,7 @@ public abstract class WhereParser {
         for (var obj : objs) {
             var w = parse(obj);
             if (w != null && !w.isEmpty()) {
-                whereClause.append(w.clause());
+                whereClause.append(w.whereClause());
                 whereParams.addAll(List.of(w.params()));
             }
         }
@@ -45,7 +45,7 @@ public abstract class WhereParser {
         for (var c : l.clauses()) {
             var w = parse(c);
             if (w != null && !w.isEmpty()) {
-                clauses.add(w.clause());
+                clauses.add(w.whereClause());
                 whereParams.addAll(List.of(w.params()));
             }
         }
