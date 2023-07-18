@@ -5,6 +5,10 @@ import cool.scx.util.StringUtils;
 
 public record WhereClause(String whereClause, Object... params) {
 
+    public static WhereClause whereClause(String whereClause, Object... params) {
+        return new WhereClause(whereClause, params);
+    }
+
     /**
      * 拼接
      *
