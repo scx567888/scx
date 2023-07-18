@@ -1,10 +1,10 @@
 package cool.scx.data.mysql_x.parser;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import cool.scx.data.query.WhereOption;
+import cool.scx.data.query.WhereClause;
+import cool.scx.data.query.WhereOption.Info;
 import cool.scx.data.query.WhereType;
 import cool.scx.data.query.exception.ValidParamListIsEmptyException;
-import cool.scx.data.query.parser.WhereClauseAndWhereParams;
 import cool.scx.data.query.parser.WhereParser;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
@@ -20,28 +20,28 @@ public class MySQLXDaoWhereParser extends WhereParser {
     public static final MySQLXDaoWhereParser WHERE_PARSER = new MySQLXDaoWhereParser();
 
     @Override
-    public WhereClauseAndWhereParams parseIsNull(String name, WhereType whereType, Object value1, Object value2, WhereOption.Info info) {
+    public WhereClause parseIsNull(String name, WhereType whereType, Object value1, Object value2, Info info) {
         var whereParams = new Object[]{};
         var whereClause = name + " " + getWhereKeyWord(whereType);
-        return new WhereClauseAndWhereParams(whereClause, whereParams);
+        return new WhereClause(whereClause, whereParams);
     }
 
     @Override
-    public WhereClauseAndWhereParams parseEqual(String name, WhereType whereType, Object value1, Object value2, WhereOption.Info info) {
+    public WhereClause parseEqual(String name, WhereType whereType, Object value1, Object value2, Info info) {
         var whereParams = new Object[]{value1};
         var whereClause = name + " " + getWhereKeyWord(whereType) + " ?";
-        return new WhereClauseAndWhereParams(whereClause, whereParams);
+        return new WhereClause(whereClause, whereParams);
     }
 
     @Override
-    public WhereClauseAndWhereParams parseLike(String name, WhereType whereType, Object value1, Object value2, WhereOption.Info info) {
+    public WhereClause parseLike(String name, WhereType whereType, Object value1, Object value2, Info info) {
         var whereParams = new Object[]{value1};
         var whereClause = name + " " + getWhereKeyWord(whereType) + " '%?%'";
-        return new WhereClauseAndWhereParams(whereClause, whereParams);
+        return new WhereClause(whereClause, whereParams);
     }
 
     @Override
-    public WhereClauseAndWhereParams parseIn(String name, WhereType whereType, Object value1, Object value2, WhereOption.Info info) {
+    public WhereClause parseIn(String name, WhereType whereType, Object value1, Object value2, Info info) {
         //移除空值并去重
         var whereParams = Arrays.stream(toObjectArray(value1)).filter(Objects::nonNull).distinct().toArray();
         //长度为空是抛异常
@@ -50,18 +50,18 @@ public class MySQLXDaoWhereParser extends WhereParser {
         }
         var v1 = "(" + StringUtils.repeat("?", ", ", whereParams.length) + ")";
         var whereClause = name + " " + getWhereKeyWord(whereType) + " " + v1;
-        return new WhereClauseAndWhereParams(whereClause, whereParams);
+        return new WhereClause(whereClause, whereParams);
     }
 
     @Override
-    public WhereClauseAndWhereParams parseBetween(String name, WhereType whereType, Object value1, Object value2, WhereOption.Info info) {
+    public WhereClause parseBetween(String name, WhereType whereType, Object value1, Object value2, Info info) {
         var whereParams = new Object[]{value1, value2};
         var whereClause = name + " " + getWhereKeyWord(whereType) + " ? AND ?";
-        return new WhereClauseAndWhereParams(whereClause, whereParams);
+        return new WhereClause(whereClause, whereParams);
     }
 
     @Override
-    public WhereClauseAndWhereParams parseJsonContains(String name, WhereType whereType, Object value1, Object value2, WhereOption.Info info) {
+    public WhereClause parseJsonContains(String name, WhereType whereType, Object value1, Object value2, Info info) {
         Object[] whereParams;
         String v1 = "?";
         if (info.useOriginalValue()) {
@@ -80,7 +80,7 @@ public class MySQLXDaoWhereParser extends WhereParser {
 //        } else {
         whereClause = whereClause + ", " + v1 + ")";
 //        }
-        return new WhereClauseAndWhereParams(whereClause, whereParams);
+        return new WhereClause(whereClause, whereParams);
     }
 
 }
