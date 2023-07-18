@@ -4,10 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.data.jdbc.AnnotationConfigTable;
 import cool.scx.data.jdbc.dialect.Dialect;
 import cool.scx.data.jdbc.sql.SQL;
-import cool.scx.data.query.WhereOption;
+import cool.scx.data.query.WhereClause;
+import cool.scx.data.query.WhereOption.Info;
 import cool.scx.data.query.WhereType;
 import cool.scx.data.query.exception.ValidParamListIsEmptyException;
-import cool.scx.data.query.parser.WhereClauseAndWhereParams;
 import cool.scx.data.query.parser.WhereParser;
 import cool.scx.util.StringUtils;
 
@@ -34,15 +34,15 @@ public class JDBCDaoWhereParser extends WhereParser {
     }
 
     @Override
-    public WhereClauseAndWhereParams parseIsNull(String name, WhereType whereType, Object value1, Object value2, WhereOption.Info info) {
+    public WhereClause parseIsNull(String name, WhereType whereType, Object value1, Object value2, Info info) {
         var columnName = parseColumnName(tableInfo, name, info.useJsonExtract(), info.useOriginalName());
         var whereParams = new Object[]{};
         var whereClause = columnName + " " + getWhereKeyWord(whereType);
-        return new WhereClauseAndWhereParams(whereClause, whereParams);
+        return new WhereClause(whereClause, whereParams);
     }
 
     @Override
-    public WhereClauseAndWhereParams parseEqual(String name, WhereType whereType, Object value1, Object value2, WhereOption.Info info) {
+    public WhereClause parseEqual(String name, WhereType whereType, Object value1, Object value2, Info info) {
         var columnName = parseColumnName(tableInfo, name, info.useJsonExtract(), info.useOriginalName());
         String v1;
         Object[] whereParams;
@@ -55,11 +55,11 @@ public class JDBCDaoWhereParser extends WhereParser {
             whereParams = new Object[]{value1};
         }
         var whereClause = columnName + " " + getWhereKeyWord(whereType) + " " + v1;
-        return new WhereClauseAndWhereParams(whereClause, whereParams);
+        return new WhereClause(whereClause, whereParams);
     }
 
     @Override
-    public WhereClauseAndWhereParams parseLike(String name, WhereType whereType, Object value1, Object value2, WhereOption.Info info) {
+    public WhereClause parseLike(String name, WhereType whereType, Object value1, Object value2, Info info) {
         var columnName = parseColumnName(tableInfo, name, info.useJsonExtract(), info.useOriginalName());
         String v1;
         Object[] whereParams;
@@ -71,11 +71,11 @@ public class JDBCDaoWhereParser extends WhereParser {
             whereParams = new Object[]{value1};
         }
         var whereClause = columnName + " " + getWhereKeyWord(whereType) + " CONCAT('%'," + v1 + ",'%')";
-        return new WhereClauseAndWhereParams(whereClause, whereParams);
+        return new WhereClause(whereClause, whereParams);
     }
 
     @Override
-    public WhereClauseAndWhereParams parseIn(String name, WhereType whereType, Object value1, Object value2, WhereOption.Info info) {
+    public WhereClause parseIn(String name, WhereType whereType, Object value1, Object value2, Info info) {
         var columnName = parseColumnName(tableInfo, name, info.useJsonExtract(), info.useOriginalName());
         String v1;
         Object[] whereParams;
@@ -92,11 +92,11 @@ public class JDBCDaoWhereParser extends WhereParser {
             v1 = "(" + StringUtils.repeat("?", ", ", whereParams.length) + ")";
         }
         var whereClause = columnName + " " + getWhereKeyWord(whereType) + " " + v1;
-        return new WhereClauseAndWhereParams(whereClause, whereParams);
+        return new WhereClause(whereClause, whereParams);
     }
 
     @Override
-    public WhereClauseAndWhereParams parseBetween(String name, WhereType whereType, Object value1, Object value2, WhereOption.Info info) {
+    public WhereClause parseBetween(String name, WhereType whereType, Object value1, Object value2, Info info) {
         var columnName = parseColumnName(tableInfo, name, info.useJsonExtract(), info.useOriginalName());
         String v1;
         String v2;
@@ -116,11 +116,11 @@ public class JDBCDaoWhereParser extends WhereParser {
             whereParams.add(value2);
         }
         var whereClause = columnName + " " + getWhereKeyWord(whereType) + " " + v1 + " AND " + v2;
-        return new WhereClauseAndWhereParams(whereClause, whereParams.toArray());
+        return new WhereClause(whereClause, whereParams.toArray());
     }
 
     @Override
-    public WhereClauseAndWhereParams parseJsonContains(String name, WhereType whereType, Object value1, Object value2, WhereOption.Info info) {
+    public WhereClause parseJsonContains(String name, WhereType whereType, Object value1, Object value2, Info info) {
         var c = splitIntoColumnNameAndFieldPath(name);
         var columnName = info.useOriginalName() ? c.columnName() : tableInfo.getColumn(c.columnName()).name();
         if (StringUtils.isBlank(c.columnName())) {
@@ -149,19 +149,19 @@ public class JDBCDaoWhereParser extends WhereParser {
         } else {
             whereClause = whereClause + ", " + v1 + ")";
         }
-        return new WhereClauseAndWhereParams(whereClause, whereParams);
+        return new WhereClause(whereClause, whereParams);
     }
 
     @Override
-    public WhereClauseAndWhereParams parse(Object obj) {
+    public WhereClause parse(Object obj) {
         if (obj instanceof SQL sql) {
             return parseSQL(sql);
         }
         return super.parse(obj);
     }
 
-    public final WhereClauseAndWhereParams parseSQL(SQL sql) {
-        return new WhereClauseAndWhereParams("(" + sql.sql() + ")", sql.params());
+    public final WhereClause parseSQL(SQL sql) {
+        return new WhereClause("(" + sql.sql() + ")", sql.params());
     }
 
     @Override

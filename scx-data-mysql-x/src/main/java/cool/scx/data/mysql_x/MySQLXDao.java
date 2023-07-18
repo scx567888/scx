@@ -88,10 +88,10 @@ public class MySQLXDao<Entity> implements Dao<Entity, String> {
     }
 
     public List<Entity> find(Query query, FieldFilter selectFilter) {
-        var whereClauseAndWhereParams = WHERE_PARSER.parseWhere(query.getWhere());
+        var whereClause = WHERE_PARSER.parseWhere(query.getWhere());
         var findStatement = this.collection
-                .find(whereClauseAndWhereParams.whereClause())
-                .bind(whereClauseAndWhereParams.whereParams());
+                .find(whereClause.whereClause())
+                .bind(whereClause.params());
         if (query.getLimit().getOffset() != null) {
             findStatement.offset(query.getLimit().getOffset());
         }
@@ -113,10 +113,10 @@ public class MySQLXDao<Entity> implements Dao<Entity, String> {
     }
 
     public Entity get(Query query, FieldFilter fieldFilter) {
-        var whereClauseAndWhereParams = WHERE_PARSER.parseWhere(query.getWhere());
+        var whereClause = WHERE_PARSER.parseWhere(query.getWhere());
         var findStatement = this.collection
-                .find(whereClauseAndWhereParams.whereClause())
-                .bind(whereClauseAndWhereParams.whereParams())
+                .find(whereClause.whereClause())
+                .bind(whereClause.params())
                 .limit(1);
 
         var docResult = findStatement.execute();
@@ -131,11 +131,11 @@ public class MySQLXDao<Entity> implements Dao<Entity, String> {
     }
 
     public long update(Entity entity, Query query, FieldFilter updateFilter) {
-        var whereClauseAndWhereParams = WHERE_PARSER.parseWhere(query.getWhere());
+        var whereClause = WHERE_PARSER.parseWhere(query.getWhere());
         var newDoc = toDbDoc(entity, updateFilter.addExcluded("_id"));
         var result = this.collection
-                .modify(whereClauseAndWhereParams.whereClause())
-                .bind(whereClauseAndWhereParams.whereParams())
+                .modify(whereClause.whereClause())
+                .bind(whereClause.params())
                 .patch(newDoc)
                 .execute();
         return result.getAffectedItemsCount();
@@ -148,20 +148,20 @@ public class MySQLXDao<Entity> implements Dao<Entity, String> {
 
     @Override
     public long delete(Query query) {
-        var whereClauseAndWhereParams = WHERE_PARSER.parseWhere(query.getWhere());
+        var whereClause = WHERE_PARSER.parseWhere(query.getWhere());
         var result = this.collection
-                .remove(whereClauseAndWhereParams.whereClause())
-                .bind(whereClauseAndWhereParams.whereParams())
+                .remove(whereClause.whereClause())
+                .bind(whereClause.params())
                 .execute();
         return result.getAffectedItemsCount();
     }
 
     @Override
     public long count(Query query) {
-        var whereClauseAndWhereParams = WHERE_PARSER.parseWhere(query.getWhere());
+        var whereClause = WHERE_PARSER.parseWhere(query.getWhere());
         var docResult = this.collection
-                .find(whereClauseAndWhereParams.whereClause())
-                .bind(whereClauseAndWhereParams.whereParams())
+                .find(whereClause.whereClause())
+                .bind(whereClause.params())
                 .execute();
         return docResult.count();
     }
