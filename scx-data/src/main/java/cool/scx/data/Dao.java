@@ -1,7 +1,6 @@
 package cool.scx.data;
 
 import cool.scx.data.query.FieldFilter;
-import cool.scx.data.query.Where;
 
 import java.util.Collection;
 import java.util.List;
@@ -71,22 +70,10 @@ public interface Dao<Entity, ID> {
      * 更新数据
      *
      * @param entity 需要更新的数据
-     * @param where  查询条件
+     * @param query  查询条件
      * @return 更新成功的条数
      */
-    default long update(Entity entity, Where where) {
-        return update(entity, where, ofExcluded());
-    }
-
-    /**
-     * 更新数据
-     *
-     * @param entity      需要更新的数据
-     * @param where       查询条件
-     * @param fieldFilter 列过滤器
-     * @return 更新成功的条数
-     */
-    long update(Entity entity, Where where, FieldFilter fieldFilter);
+    long update(Entity entity, Query query);
 
     /**
      * 删除

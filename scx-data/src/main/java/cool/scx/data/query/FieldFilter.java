@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import static cool.scx.data.query.FieldFilterOption.EXCLUDE_IF_FIELD_VALUE_IS_NULL;
 import static cool.scx.data.query.FilterMode.EXCLUDED;
 
 /**
@@ -26,38 +25,38 @@ public final class FieldFilter {
     private final FilterMode filterMode;
 
     /**
-     * Info
+     * 当一个实体类所对应的 field 的值为 null 时, 是否将此 field 所对应的列排除 默认启用
      */
-    private final FieldFilterOption.Info info;
+    private final boolean excludeIfFieldValueIsNull;
 
     /**
      * a
      *
-     * @param filterMode a
-     * @param options    a
+     * @param filterMode                a
+     * @param excludeIfFieldValueIsNull a
      */
-    private FieldFilter(FilterMode filterMode, FieldFilterOption... options) {
+    private FieldFilter(FilterMode filterMode, boolean excludeIfFieldValueIsNull) {
         this.filterMode = filterMode;
-        this.info = new FieldFilterOption.Info(options);
+        this.excludeIfFieldValueIsNull = excludeIfFieldValueIsNull;
     }
 
     /**
-     * 启用白名单模式 (当一个实体类所对应的 field 的值为 null 时, 会将此 field 所对应的列排除, 详情请看 {@link FieldFilter#ofIncluded(FieldFilterOption...)})
+     * 启用白名单模式 (当一个实体类所对应的 field 的值为 null 时, 会将此 field 所对应的列排除, 详情请看 {@link FieldFilter#ofIncluded(boolean)})
      *
      * @return a
      */
     public static FieldFilter ofIncluded() {
-        return ofIncluded(EXCLUDE_IF_FIELD_VALUE_IS_NULL);
+        return ofIncluded(true);
     }
 
     /**
      * 启用白名单模式
      *
-     * @param options options
+     * @param excludeIfFieldValueIsNull 当一个实体类所对应的 field 的值为 null 时, 是否将此 field 所对应的列排除
      * @return a
      */
-    public static FieldFilter ofIncluded(FieldFilterOption... options) {
-        return new FieldFilter(FilterMode.INCLUDED, options);
+    public static FieldFilter ofIncluded(boolean excludeIfFieldValueIsNull) {
+        return new FieldFilter(FilterMode.INCLUDED, excludeIfFieldValueIsNull);
     }
 
     /**
@@ -73,31 +72,31 @@ public final class FieldFilter {
     /**
      * 白名单模式
      *
-     * @param options    a
-     * @param fieldNames a
+     * @param excludeIfFieldValueIsNull a
+     * @param fieldNames                a
      * @return a
      */
-    public static FieldFilter ofIncluded(FieldFilterOption[] options, String... fieldNames) {
-        return ofIncluded(options).addIncluded(fieldNames);
+    public static FieldFilter ofIncluded(boolean excludeIfFieldValueIsNull, String... fieldNames) {
+        return ofIncluded(excludeIfFieldValueIsNull).addIncluded(fieldNames);
     }
 
     /**
-     * 启用黑名单模式 (当一个实体类所对应的 field 的值为 null 时, 会将此 field 所对应的列排除, 详情请看 {@link FieldFilter#ofExcluded(FieldFilterOption...)})
+     * 启用黑名单模式 (当一个实体类所对应的 field 的值为 null 时, 会将此 field 所对应的列排除, 详情请看 {@link FieldFilter#ofExcluded(boolean)})
      *
      * @return a
      */
     public static FieldFilter ofExcluded() {
-        return ofExcluded(EXCLUDE_IF_FIELD_VALUE_IS_NULL);
+        return ofExcluded(true);
     }
 
     /**
      * 启动黑名单模式
      *
-     * @param options 当一个实体类所对应的 field 的值为 null 时, 是否将此 field 所对应的列排除
+     * @param excludeIfFieldValueIsNull 当一个实体类所对应的 field 的值为 null 时, 是否将此 field 所对应的列排除
      * @return a
      */
-    public static FieldFilter ofExcluded(FieldFilterOption... options) {
-        return new FieldFilter(EXCLUDED, options);
+    public static FieldFilter ofExcluded(boolean excludeIfFieldValueIsNull) {
+        return new FieldFilter(EXCLUDED, excludeIfFieldValueIsNull);
     }
 
     /**
@@ -113,12 +112,12 @@ public final class FieldFilter {
     /**
      * 黑名单模式
      *
-     * @param options    a
-     * @param fieldNames a
+     * @param excludeIfFieldValueIsNull a
+     * @param fieldNames                a
      * @return a
      */
-    public static FieldFilter ofExcluded(FieldFilterOption[] options, String... fieldNames) {
-        return ofExcluded(options).addExcluded(fieldNames);
+    public static FieldFilter ofExcluded(boolean excludeIfFieldValueIsNull, String... fieldNames) {
+        return ofExcluded(excludeIfFieldValueIsNull).addExcluded(fieldNames);
     }
 
     /**
@@ -215,8 +214,8 @@ public final class FieldFilter {
         return fieldNames;
     }
 
-    public FieldFilterOption.Info info() {
-        return info;
+    public boolean excludeIfFieldValueIsNull() {
+        return excludeIfFieldValueIsNull;
     }
 
 }

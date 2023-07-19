@@ -3,6 +3,7 @@ package cool.scx.data;
 import cool.scx.data.query.*;
 
 import static cool.scx.data.query.FieldFilter.ofExcluded;
+import static cool.scx.data.query.FieldFilter.ofIncluded;
 
 /**
  * 查询参数类<br>
@@ -97,6 +98,11 @@ public final class Query {
 
     public Query fieldFilter(FieldFilter fieldFilter) {
         this.fieldFilter = fieldFilter;
+        return this;
+    }
+
+    public Query fieldFilter(String... fieldNames) {
+        this.fieldFilter = ofIncluded(fieldNames);
         return this;
     }
 
