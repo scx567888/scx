@@ -21,20 +21,20 @@ public final class FieldsFilterHelper {
      * @return 过滤后的列表
      */
     public static ColumnMapping[] filter(FieldFilter fieldFilter, Table<? extends ColumnMapping> tableInfo) {
-        return fieldFilter.fieldNames().size() == 0 ? switch (fieldFilter.filterMode()) {
+        return fieldFilter.getFieldNames().size() == 0 ? switch (fieldFilter.getFilterMode()) {
             case INCLUDED -> new ColumnMapping[0];
             case EXCLUDED -> tableInfo.columns();
-        } : switch (fieldFilter.filterMode()) {
+        } : switch (fieldFilter.getFilterMode()) {
             case INCLUDED -> {
                 var list = new ArrayList<ColumnMapping>();
-                for (var fieldName : fieldFilter.fieldNames()) {
+                for (var fieldName : fieldFilter.getFieldNames()) {
                     list.add(tableInfo.getColumn(fieldName));
                 }
                 yield list.toArray(ColumnMapping[]::new);
             }
             case EXCLUDED -> {
                 var objects = new ArrayList<>(Arrays.asList(tableInfo.columns()));
-                for (var fieldName : fieldFilter.fieldNames()) {
+                for (var fieldName : fieldFilter.getFieldNames()) {
                     objects.remove(tableInfo.getColumn(fieldName));
                 }
                 yield objects.toArray(ColumnMapping[]::new);
@@ -50,7 +50,7 @@ public final class FieldsFilterHelper {
      * @return 过滤后的列表
      */
     public static ColumnMapping[] filter(FieldFilter fieldFilter, Object entity, Table<? extends ColumnMapping> tableInfo) {
-        return fieldFilter.excludeIfFieldValueIsNull() ? excludeIfFieldValueIsNull(entity, filter(fieldFilter, tableInfo)) : filter(fieldFilter, tableInfo);
+        return fieldFilter.getExcludeIfFieldValueIsNull() ? excludeIfFieldValueIsNull(entity, filter(fieldFilter, tableInfo)) : filter(fieldFilter, tableInfo);
     }
 
     /**

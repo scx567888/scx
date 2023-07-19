@@ -110,7 +110,7 @@ public class TestModule extends ScxModule {
             System.err.println("将 id 大于 200 的 name 设置为空 !!!");
             var c = new Car();
             c.name = null;
-            carService.update(c, new Query().where(greaterThan("id", 200)).fieldFilter(ofIncluded(false).addIncluded("name")));
+            carService.update(c, new Query().where(greaterThan("id", 200)).fieldFilter(ofIncluded("name").excludeIfFieldValueIsNull(false)));
 
             System.err.println("查询所有数据条数 !!! : " + carService.list().size());
             System.err.println("查询所有 id 大于 200 条数 !!! : " + carService.list(new Query().where(greaterThan("id", 200))).size());
