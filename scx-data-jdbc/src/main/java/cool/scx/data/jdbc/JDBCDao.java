@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 
-import static cool.scx.data.jdbc.FieldsFilterHelper.filter;
+import static cool.scx.data.jdbc.FieldFilterHelper.filter;
 import static cool.scx.data.jdbc.result_handler.ResultHandler.*;
 import static cool.scx.data.jdbc.sql.SQLBuilder.*;
 import static cool.scx.util.ArrayUtils.concat;

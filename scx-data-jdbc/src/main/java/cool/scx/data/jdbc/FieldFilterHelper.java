@@ -12,7 +12,7 @@ import java.util.Arrays;
  * @author scx567888
  * @version 0.1.3
  */
-public final class FieldsFilterHelper {
+public final class FieldFilterHelper {
 
     /**
      * 过滤
