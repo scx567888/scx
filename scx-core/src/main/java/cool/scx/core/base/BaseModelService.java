@@ -188,10 +188,21 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 更新成功后的数据
      */
     public final Entity update(Entity entity) {
+        return update(entity, ofExcluded());
+    }
+
+    /**
+     * 根据 ID 更新
+     *
+     * @param entity       待更新的数据 ( 注意: 请保证数据中 id 字段不为空 )
+     * @param updateFilter 更新的条件
+     * @return a
+     */
+    public final Entity update(Entity entity, FieldFilter updateFilter) {
         if (entity.id == null) {
             throw new RuntimeException("根据 id 更新时 id 不能为空");
         }
-        this.update(entity, new Query().where(equal("id", entity.id)));
+        this.update(entity, new Query().where(equal("id", entity.id)).fieldFilter(updateFilter));
         return this.get(entity.id);
     }
 
