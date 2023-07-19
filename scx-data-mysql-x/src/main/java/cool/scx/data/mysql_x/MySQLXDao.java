@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.mysql.cj.xdevapi.DbDoc;
 import com.mysql.cj.xdevapi.Schema;
 import cool.scx.data.Dao;
+import cool.scx.data.FieldFilter;
 import cool.scx.data.Query;
-import cool.scx.data.query.FieldFilter;
 import cool.scx.util.CaseUtils;
 import cool.scx.util.StringUtils;
 
@@ -60,19 +60,19 @@ public class MySQLXDao<Entity> implements Dao<Entity, String> {
     }
 
     @Override
-    public String add(Entity entity, FieldFilter fieldFilter) {
-        var dbDoc = toDbDoc(entity, fieldFilter.addExcluded("_id"));
+    public String add(Entity entity, FieldFilter updateFilter) {
+        var dbDoc = toDbDoc(entity, updateFilter.addExcluded("_id"));
         var addResult = this.collection.add(dbDoc).execute();
         var generatedIds = addResult.getGeneratedIds();
         return generatedIds.get(0);
     }
 
     @Override
-    public List<String> addAll(Collection<Entity> entityList, FieldFilter fieldFilter) {
+    public List<String> addAll(Collection<Entity> entityList, FieldFilter updateFilter) {
         var dbDocs = new DbDoc[entityList.size()];
         var index = 0;
         for (var entity : entityList) {
-            dbDocs[index] = toDbDoc(entity, fieldFilter.addExcluded("_id"));
+            dbDocs[index] = toDbDoc(entity, updateFilter.addExcluded("_id"));
             index = index + 1;
         }
         var addResult = this.collection.add(dbDocs).execute();
@@ -80,7 +80,7 @@ public class MySQLXDao<Entity> implements Dao<Entity, String> {
     }
 
     @Override
-    public List<Entity> find(Query query) {
+    public List<Entity> find(Query query, FieldFilter selectFilter) {
         var whereClause = WHERE_PARSER.parseWhere(query.getWhere());
         var findStatement = this.collection
                 .find(whereClause.whereClause())
@@ -95,13 +95,13 @@ public class MySQLXDao<Entity> implements Dao<Entity, String> {
         var dbDocs = docResult.fetchAll();
         var list = new ArrayList<Entity>();
         for (var dbDoc : dbDocs) {
-            list.add(toEntity(dbDoc, query.getFieldFilter()));
+            list.add(toEntity(dbDoc, selectFilter));
         }
         return list;
     }
 
     @Override
-    public Entity get(Query query) {
+    public Entity get(Query query, FieldFilter fieldFilter) {
         var whereClause = WHERE_PARSER.parseWhere(query.getWhere());
         var findStatement = this.collection
                 .find(whereClause.whereClause())
@@ -111,13 +111,13 @@ public class MySQLXDao<Entity> implements Dao<Entity, String> {
         var docResult = findStatement.execute();
         var dbDoc = docResult.fetchOne();
 
-        return toEntity(dbDoc, query.getFieldFilter());
+        return toEntity(dbDoc, fieldFilter);
     }
 
     @Override
-    public long update(Entity entity, Query query) {
+    public long update(Entity entity, Query query, FieldFilter updateFilter) {
         var whereClause = WHERE_PARSER.parseWhere(query.getWhere());
-        var newDoc = toDbDoc(entity, query.getFieldFilter().addExcluded("_id"));
+        var newDoc = toDbDoc(entity, updateFilter.addExcluded("_id"));
         var result = this.collection
                 .modify(whereClause.whereClause())
                 .bind(whereClause.params())

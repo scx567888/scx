@@ -1,11 +1,13 @@
-package cool.scx.data.query;
+package cool.scx.data;
+
+import cool.scx.data.field_filter.FilterMode;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static cool.scx.data.query.FilterMode.EXCLUDED;
-import static cool.scx.data.query.FilterMode.INCLUDED;
+import static cool.scx.data.field_filter.FilterMode.EXCLUDED;
+import static cool.scx.data.field_filter.FilterMode.INCLUDED;
 
 /**
  * 列过滤器
