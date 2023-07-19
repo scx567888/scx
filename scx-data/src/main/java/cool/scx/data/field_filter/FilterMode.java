@@ -1,4 +1,4 @@
-package cool.scx.data.query;
+package cool.scx.data.field_filter;
 
 /**
  * 过滤模式

@@ -1,11 +1,9 @@
 package cool.scx.data;
 
-import cool.scx.data.query.FieldFilter;
-
 import java.util.Collection;
 import java.util.List;
 
-import static cool.scx.data.query.FieldFilter.ofExcluded;
+import static cool.scx.data.FieldFilter.ofExcluded;
 
 /**
  * 用于定义数据访问层的规范
@@ -53,10 +51,18 @@ public interface Dao<Entity, ID> {
      * @param query 查询条件
      * @return 数据列表
      */
-    List<Entity> find(Query query);
+    List<Entity> find(Query query, FieldFilter fieldFilter);
+
+    default List<Entity> find(Query query) {
+        return find(query, ofExcluded());
+    }
+
+    default List<Entity> find(FieldFilter fieldFilter) {
+        return find(new Query(), fieldFilter);
+    }
 
     default List<Entity> find() {
-        return find(new Query());
+        return find(new Query(), ofExcluded());
     }
 
     /**
@@ -65,9 +71,10 @@ public interface Dao<Entity, ID> {
      * @param query 查询条件
      * @return 数据列表
      */
+    Entity get(Query query, FieldFilter fieldFilter);
+
     default Entity get(Query query) {
-        var list = find(query);
-        return list.size() > 0 ? list.get(0) : null;
+        return get(query, ofExcluded());
     }
 
     /**
@@ -77,7 +84,18 @@ public interface Dao<Entity, ID> {
      * @param query  查询条件
      * @return 更新成功的条数
      */
-    long update(Entity entity, Query query);
+    long update(Entity entity, Query query, FieldFilter fieldFilter);
+
+    /**
+     * 更新数据
+     *
+     * @param entity 需要更新的数据
+     * @param query  查询条件
+     * @return 更新成功的条数
+     */
+    default long update(Entity entity, Query query) {
+        return update(entity, query, ofExcluded());
+    }
 
     /**
      * 删除
