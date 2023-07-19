@@ -96,97 +96,122 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
         this.orderByParser = new JDBCDaoOrderByParser(tableInfo);
     }
 
-    /**
-     * 保存单条数据
-     *
-     * @param entity       待插入的数据
-     * @param updateFilter a
-     * @return 插入成功的主键 ID 如果插入失败或数据没有主键则返回 null
-     */
     @Override
-    public final Long add(Entity entity, FieldFilter updateFilter) {
-        return sqlRunner.update(_buildInsertSQL(entity, updateFilter)).firstGeneratedKey();
+    public Long add(Entity entity, FieldFilter fieldFilter) {
+        return sqlRunner.update(_buildInsertSQL(entity, fieldFilter)).firstGeneratedKey();
     }
 
     @Override
-    public final Long add(Entity entity) {
-        return Dao.super.add(entity);
-    }
-
-    /**
-     * 构建 插入 SQL
-     *
-     * @param entity       a
-     * @param updateFilter a
-     * @return a
-     */
-    private SQL _buildInsertSQL(Entity entity, FieldFilter updateFilter) {
-        var insertColumnInfos = filter(updateFilter, entity, tableInfo);
-        var insertColumns = Arrays.stream(insertColumnInfos).map(Column::name).toArray(String[]::new);
-        var insertValues = Arrays.stream(insertColumnInfos).map(columnInfo -> "?").toArray(String[]::new);
-        var sql = Insert(tableInfo.name(), insertColumns)
-                .Values(insertValues)
-                .GetSQL(jdbcContext.dialect());
-        var objectArray = Arrays.stream(insertColumnInfos).map(c -> c.javaFieldValue(entity)).toArray();
-        return SQL.ofPlaceholder(sql, objectArray);
-    }
-
-    /**
-     * 保存多条数据
-     *
-     * @param entityList   待保存的列表
-     * @param updateFilter a
-     * @return 保存成功的主键 (ID) 列表
-     */
-    public final List<Long> addAll(Collection<Entity> entityList, FieldFilter updateFilter) {
-        return sqlRunner.updateBatch(buildInsertBatchSQL(entityList, updateFilter)).generatedKeys();
+    public List<Long> addAll(Collection<Entity> entityList, FieldFilter fieldFilter) {
+        return sqlRunner.updateBatch(buildInsertBatchSQL(entityList, fieldFilter)).generatedKeys();
     }
 
     @Override
-    public List<Long> addAll(Collection<Entity> entityList) {
-        return Dao.super.addAll(entityList);
-    }
-
-    /**
-     * a
-     *
-     * @param entityList   a
-     * @param updateFilter a
-     * @return a
-     */
-    private SQL buildInsertBatchSQL(Collection<? extends Entity> entityList, FieldFilter updateFilter) {
-        var insertColumnInfos = filter(updateFilter, tableInfo);
-        //将 entityList 转换为 objectArrayList 这里因为 stream 实在太慢所以改为传统循环方式
-        var objectArrayList = new ArrayList<Object[]>();
-        for (var entity : entityList) {
-            var o = new Object[insertColumnInfos.length];
-            for (int i = 0; i < insertColumnInfos.length; i = i + 1) {
-                o[i] = insertColumnInfos[i].javaFieldValue(entity);
-            }
-            objectArrayList.add(o);
-        }
-        var insertColumns = Arrays.stream(insertColumnInfos).map(Column::name).toArray(String[]::new);
-        var insertValues = Arrays.stream(insertColumnInfos).map(c -> "?").toArray(String[]::new);
-        var sql = Insert(tableInfo.name(), insertColumns)
-                .Values(insertValues)
-                .GetSQL(jdbcContext.dialect());
-        return SQL.ofPlaceholder(sql, objectArrayList);
-    }
-
-    /**
-     * 获取列表
-     *
-     * @param query 查询过滤条件.
-     * @return a {@link java.util.List} object.
-     */
-    @Override
-    public final List<Entity> find(Query query) {
+    public List<Entity> find(Query query) {
         return sqlRunner.query(buildSelectSQL(query), entityBeanListHandler);
     }
 
     @Override
-    public final Entity get(Query query) {
+    public Entity get(Query query) {
         return sqlRunner.query(buildSelectSQL(query.clearOffset().limit(1)), entityBeanHandler);
+    }
+
+    @Override
+    public long update(Entity entity, Query query) {
+        return sqlRunner.update(buildUpdateSQL(entity, query)).affectedItemsCount();
+    }
+
+    @Override
+    public long delete(Query query) {
+        return sqlRunner.update(buildDeleteSQL(query)).affectedItemsCount();
+    }
+
+    @Override
+    public long count(Query query) {
+        return sqlRunner.query(buildCountSQL(query), countResultHandler);
+    }
+
+    @Override
+    public void _clear() {
+        this.sqlRunner.execute(SQL.ofNormal("truncate " + tableInfo.name()));
+    }
+
+    @Override
+    public Class<Entity> _entityClass() {
+        return this.entityClass;
+    }
+
+    public final Table<? extends ColumnMapping> _tableInfo() {
+        return this.tableInfo;
+    }
+
+    public final SQLRunner _sqlRunner() {
+        return this.sqlRunner;
+    }
+
+
+    /**
+     * 构建 删除 SQL
+     *
+     * @param query query
+     * @return sql
+     */
+    private SQL buildDeleteSQL(Query query) {
+        if (query.getWhere().isEmpty()) {
+            throw new IllegalArgumentException("删除数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
+        }
+        var whereClause = whereParser.parseWhere(query.getWhere());
+        var orderByClauses = orderByParser.parseOrderBy(query.getOrderBy());
+        var sql = Delete(tableInfo.name())
+                .Where(whereClause.whereClause())
+                .OrderBy(orderByClauses)
+                .Limit(null, query.getLimit().getLimit())
+                .GetSQL(jdbcContext.dialect());
+        return SQL.ofPlaceholder(sql, whereClause.params());
+    }
+
+
+    /**
+     * 构建更新 SQL
+     *
+     * @param entity 待更新的实体
+     * @param query  查询条件
+     * @return a
+     */
+    private SQL buildUpdateSQL(Entity entity, Query query) {
+        if (query.getWhere().isEmpty()) {
+            throw new IllegalArgumentException("更新数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
+        }
+        var updateSetColumnInfos = filter(query.getFieldFilter(), entity, tableInfo);
+        var updateSetColumns = Arrays.stream(updateSetColumnInfos).map(c -> c.name() + " = ?").toArray(String[]::new);
+        var whereClause = whereParser.parseWhere(query.getWhere());
+        var orderByClauses = orderByParser.parseOrderBy(query.getOrderBy());
+        var sql = Update(tableInfo.name())
+                .Set(updateSetColumns)
+                .Where(whereClause.whereClause())
+                .OrderBy(orderByClauses)
+                .Limit(null, query.getLimit().getLimit())
+                .GetSQL(jdbcContext.dialect());
+        var entityParams = Arrays.stream(updateSetColumnInfos).map(c -> c.javaFieldValue(entity)).toArray();
+        return SQL.ofPlaceholder(sql, concat(entityParams, whereClause.params()));
+    }
+
+
+    /**
+     * 构建 count SQL
+     *
+     * @param query query 对象
+     * @return sql
+     */
+    private SQL buildCountSQL(Query query) {
+        var whereClause = whereParser.parseWhere(query.getWhere());
+        var groupByColumns = groupByParser.parseGroupBy(query.getGroupBy());
+        var sql = Select("COUNT(*) AS count")
+                .From(tableInfo.name())
+                .Where(whereClause.whereClause())
+                .GroupBy(groupByColumns)
+                .GetSQL(jdbcContext.dialect());
+        return SQL.ofPlaceholder(sql, whereClause.params());
     }
 
     /**
@@ -280,121 +305,49 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
         }
     }
 
-    /**
-     * 获取条数
-     *
-     * @param query 查询条件
-     * @return 条数
-     */
-    @Override
-    public final long count(Query query) {
-        return sqlRunner.query(buildCountSQL(query), countResultHandler);
-    }
 
     /**
-     * 构建 count SQL
+     * a
      *
-     * @param query query 对象
-     * @return sql
-     */
-    private SQL buildCountSQL(Query query) {
-        var whereClause = whereParser.parseWhere(query.getWhere());
-        var groupByColumns = groupByParser.parseGroupBy(query.getGroupBy());
-        var sql = Select("COUNT(*) AS count")
-                .From(tableInfo.name())
-                .Where(whereClause.whereClause())
-                .GroupBy(groupByColumns)
-                .GetSQL(jdbcContext.dialect());
-        return SQL.ofPlaceholder(sql, whereClause.params());
-    }
-
-    /**
-     * 更新数据
-     *
-     * @param entity 要更新的数据
-     * @param query  更新的过滤条件
-     * @return 受影响的条数
-     */
-    @Override
-    public final long update(Entity entity, Query query) {
-        return sqlRunner.update(buildUpdateSQL(entity, query)).affectedItemsCount();
-    }
-
-    /**
-     * 构建更新 SQL
-     *
-     * @param entity 待更新的实体
-     * @param query  查询条件
+     * @param entityList   a
+     * @param updateFilter a
      * @return a
      */
-    private SQL buildUpdateSQL(Entity entity, Query query) {
-        if (query.getWhere().isEmpty()) {
-            throw new IllegalArgumentException("更新数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
+    private SQL buildInsertBatchSQL(Collection<? extends Entity> entityList, FieldFilter updateFilter) {
+        var insertColumnInfos = filter(updateFilter, tableInfo);
+        //将 entityList 转换为 objectArrayList 这里因为 stream 实在太慢所以改为传统循环方式
+        var objectArrayList = new ArrayList<Object[]>();
+        for (var entity : entityList) {
+            var o = new Object[insertColumnInfos.length];
+            for (int i = 0; i < insertColumnInfos.length; i = i + 1) {
+                o[i] = insertColumnInfos[i].javaFieldValue(entity);
+            }
+            objectArrayList.add(o);
         }
-        var updateSetColumnInfos = filter(query.getFieldFilter(), entity, tableInfo);
-        var updateSetColumns = Arrays.stream(updateSetColumnInfos).map(c -> c.name() + " = ?").toArray(String[]::new);
-        var whereClause = whereParser.parseWhere(query.getWhere());
-        var orderByClauses = orderByParser.parseOrderBy(query.getOrderBy());
-        var sql = Update(tableInfo.name())
-                .Set(updateSetColumns)
-                .Where(whereClause.whereClause())
-                .OrderBy(orderByClauses)
-                .Limit(null, query.getLimit().getLimit())
+        var insertColumns = Arrays.stream(insertColumnInfos).map(Column::name).toArray(String[]::new);
+        var insertValues = Arrays.stream(insertColumnInfos).map(c -> "?").toArray(String[]::new);
+        var sql = Insert(tableInfo.name(), insertColumns)
+                .Values(insertValues)
                 .GetSQL(jdbcContext.dialect());
-        var entityParams = Arrays.stream(updateSetColumnInfos).map(c -> c.javaFieldValue(entity)).toArray();
-        return SQL.ofPlaceholder(sql, concat(entityParams, whereClause.params()));
+        return SQL.ofPlaceholder(sql, objectArrayList);
     }
 
     /**
-     * 删除数据
+     * 构建 插入 SQL
      *
-     * @param query where 条件
-     * @return 受影响的条数 (被成功删除的数据条数)
+     * @param entity       a
+     * @param updateFilter a
+     * @return a
      */
-    @Override
-    public final long delete(Query query) {
-        return sqlRunner.update(buildDeleteSQL(query)).affectedItemsCount();
-    }
-
-    /**
-     * 构建 删除 SQL
-     *
-     * @param query query
-     * @return sql
-     */
-    private SQL buildDeleteSQL(Query query) {
-        if (query.getWhere().isEmpty()) {
-            throw new IllegalArgumentException("删除数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
-        }
-        var whereClause = whereParser.parseWhere(query.getWhere());
-        var orderByClauses = orderByParser.parseOrderBy(query.getOrderBy());
-        var sql = Delete(tableInfo.name())
-                .Where(whereClause.whereClause())
-                .OrderBy(orderByClauses)
-                .Limit(null, query.getLimit().getLimit())
+    private SQL _buildInsertSQL(Entity entity, FieldFilter updateFilter) {
+        var insertColumnInfos = filter(updateFilter, entity, tableInfo);
+        var insertColumns = Arrays.stream(insertColumnInfos).map(Column::name).toArray(String[]::new);
+        var insertValues = Arrays.stream(insertColumnInfos).map(columnInfo -> "?").toArray(String[]::new);
+        var sql = Insert(tableInfo.name(), insertColumns)
+                .Values(insertValues)
                 .GetSQL(jdbcContext.dialect());
-        return SQL.ofPlaceholder(sql, whereClause.params());
-    }
-
-    /**
-     * 清空表中所有数据 (注意此操作不受事务影响, 所以慎用!!!)
-     */
-    @Override
-    public final void _clear() {
-        this.sqlRunner.execute(SQL.ofNormal("truncate " + tableInfo.name()));
-    }
-
-    public final Table<? extends ColumnMapping> _tableInfo() {
-        return this.tableInfo;
-    }
-
-    @Override
-    public final Class<Entity> _entityClass() {
-        return this.entityClass;
-    }
-
-    public final SQLRunner _sqlRunner() {
-        return this.sqlRunner;
+        var objectArray = Arrays.stream(insertColumnInfos).map(c -> c.javaFieldValue(entity)).toArray();
+        return SQL.ofPlaceholder(sql, objectArray);
     }
 
 }
