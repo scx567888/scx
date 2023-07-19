@@ -55,6 +55,10 @@ public interface Dao<Entity, ID> {
      */
     List<Entity> find(Query query);
 
+    default List<Entity> find() {
+        return find(new Query());
+    }
+
     /**
      * 查询单条数据
      *
