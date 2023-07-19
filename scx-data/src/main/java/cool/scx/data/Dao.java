@@ -17,6 +17,8 @@ import static cool.scx.data.query.FieldFilter.ofExcluded;
  */
 public interface Dao<Entity, ID> {
 
+    ID add(Entity entity, FieldFilter fieldFilter);
+
     /**
      * 像数据源中添加一条数据
      *
@@ -27,7 +29,13 @@ public interface Dao<Entity, ID> {
         return add(entity, ofExcluded());
     }
 
-    ID add(Entity entity, FieldFilter fieldFilter);
+    /**
+     * 像数据源中添加多条数据
+     *
+     * @param entityList 实体类
+     * @return 主键 ID 列表 (无主键则为 null)
+     */
+    List<ID> addAll(Collection<Entity> entityList, FieldFilter fieldFilter);
 
     /**
      * 像数据源中添加多条数据
@@ -38,14 +46,6 @@ public interface Dao<Entity, ID> {
     default List<ID> addAll(Collection<Entity> entityList) {
         return addAll(entityList, ofExcluded());
     }
-
-    /**
-     * 像数据源中添加多条数据
-     *
-     * @param entityList 实体类
-     * @return 主键 ID 列表 (无主键则为 null)
-     */
-    List<ID> addAll(Collection<Entity> entityList, FieldFilter fieldFilter);
 
     /**
      * 查询多条数据

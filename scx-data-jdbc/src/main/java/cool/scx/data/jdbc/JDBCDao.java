@@ -10,6 +10,7 @@ import cool.scx.data.jdbc.parser.JDBCDaoWhereParser;
 import cool.scx.data.jdbc.result_handler.ResultHandler;
 import cool.scx.data.jdbc.sql.SQL;
 import cool.scx.data.jdbc.sql.SQLRunner;
+import cool.scx.data.query.FieldFilter;
 import cool.scx.util.RandomUtils;
 
 import java.lang.reflect.Field;
@@ -19,7 +20,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 
-import static cool.scx.data.jdbc.ColumnFilter.ofExcluded;
+import static cool.scx.data.jdbc.FieldsFilterHelper.filter;
 import static cool.scx.data.jdbc.result_handler.ResultHandler.*;
 import static cool.scx.data.jdbc.sql.SQLBuilder.*;
 import static cool.scx.util.ArrayUtils.concat;
@@ -102,13 +103,14 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
      * @param updateFilter a
      * @return 插入成功的主键 ID 如果插入失败或数据没有主键则返回 null
      */
-    public final Long add(Entity entity, ColumnFilter updateFilter) {
+    @Override
+    public final Long add(Entity entity, FieldFilter updateFilter) {
         return sqlRunner.update(_buildInsertSQL(entity, updateFilter)).firstGeneratedKey();
     }
 
     @Override
     public final Long add(Entity entity) {
-        return add(entity, ofExcluded());
+        return Dao.super.add(entity);
     }
 
     /**
@@ -118,8 +120,8 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
      * @param updateFilter a
      * @return a
      */
-    private SQL _buildInsertSQL(Entity entity, ColumnFilter updateFilter) {
-        var insertColumnInfos = updateFilter.filter(entity, tableInfo);
+    private SQL _buildInsertSQL(Entity entity, FieldFilter updateFilter) {
+        var insertColumnInfos = filter(updateFilter, entity, tableInfo);
         var insertColumns = Arrays.stream(insertColumnInfos).map(Column::name).toArray(String[]::new);
         var insertValues = Arrays.stream(insertColumnInfos).map(columnInfo -> "?").toArray(String[]::new);
         var sql = Insert(tableInfo.name(), insertColumns)
@@ -136,13 +138,13 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
      * @param updateFilter a
      * @return 保存成功的主键 (ID) 列表
      */
-    public final List<Long> addAll(Collection<Entity> entityList, ColumnFilter updateFilter) {
+    public final List<Long> addAll(Collection<Entity> entityList, FieldFilter updateFilter) {
         return sqlRunner.updateBatch(buildInsertBatchSQL(entityList, updateFilter)).generatedKeys();
     }
 
     @Override
-    public final List<Long> addAll(Collection<Entity> entityList) {
-        return addAll(entityList, ofExcluded());
+    public List<Long> addAll(Collection<Entity> entityList) {
+        return Dao.super.addAll(entityList);
     }
 
     /**
@@ -152,8 +154,8 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
      * @param updateFilter a
      * @return a
      */
-    private SQL buildInsertBatchSQL(Collection<? extends Entity> entityList, ColumnFilter updateFilter) {
-        var insertColumnInfos = updateFilter.filter(tableInfo);
+    private SQL buildInsertBatchSQL(Collection<? extends Entity> entityList, FieldFilter updateFilter) {
+        var insertColumnInfos = filter(updateFilter, tableInfo);
         //将 entityList 转换为 objectArrayList 这里因为 stream 实在太慢所以改为传统循环方式
         var objectArrayList = new ArrayList<Object[]>();
         for (var entity : entityList) {
@@ -174,26 +176,17 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
     /**
      * 获取列表
      *
-     * @param query        查询过滤条件.
-     * @param selectFilter a
+     * @param query 查询过滤条件.
      * @return a {@link java.util.List} object.
      */
-    public final List<Entity> find(Query query, ColumnFilter selectFilter) {
-        return sqlRunner.query(buildSelectSQL(query, selectFilter), entityBeanListHandler);
-    }
-
     @Override
     public final List<Entity> find(Query query) {
-        return find(query, ofExcluded());
+        return sqlRunner.query(buildSelectSQL(query), entityBeanListHandler);
     }
 
     @Override
-    public Entity get(Query query) {
-        return get(query, ofExcluded());
-    }
-
-    public Entity get(Query query, ColumnFilter columnFilter) {
-        return sqlRunner.query(buildSelectSQL(query.clearOffset().limit(1), columnFilter), entityBeanHandler);
+    public final Entity get(Query query) {
+        return sqlRunner.query(buildSelectSQL(query.clearOffset().limit(1)), entityBeanHandler);
     }
 
     /**
@@ -237,14 +230,13 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
      *      ));
      *  }</pre>
      * <br>
-     * 注意 !!! 若同时使用 limit 和 in/not in 请使用 {@link JDBCDao#buildSelectSQLWithAlias(Query, ColumnFilter)}
+     * 注意 !!! 若同时使用 limit 和 in/not in 请使用 {@link JDBCDao#buildSelectSQLWithAlias(Query)}
      *
-     * @param query        聚合查询参数对象
-     * @param selectFilter 查询字段过滤器
+     * @param query 聚合查询参数对象
      * @return selectSQL
      */
-    public final SQL buildSelectSQL(Query query, ColumnFilter selectFilter) {
-        var selectColumnInfos = selectFilter.filter(tableInfo);
+    public final SQL buildSelectSQL(Query query) {
+        var selectColumnInfos = filter(query.getFieldFilter(), tableInfo);
         var selectColumns = Arrays.stream(selectColumnInfos).map(Column::name).toArray(String[]::new);
         var whereClause = whereParser.parseWhere(query.getWhere());
         var groupByColumns = groupByParser.parseGroupBy(query.getGroupBy());
@@ -263,16 +255,15 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
      * 在 mysql 中 不支持 in 子句中包含 limit 但是我们可以使用 一个嵌套的别名表来跳过检查
      * 此方法便是用于生成嵌套的 sql 的
      *
-     * @param query        q
-     * @param selectFilter s
+     * @param query q
      * @return a
      */
-    public final SQL buildSelectSQLWithAlias(Query query, ColumnFilter selectFilter) {
+    public final SQL buildSelectSQLWithAlias(Query query) {
         //没有 limit 的时候不需要嵌套
         if (query.getLimit().getLimit() == null) {
-            return buildSelectSQL(query, selectFilter);
+            return buildSelectSQL(query);
         } else {
-            var selectColumnInfos = selectFilter.filter(tableInfo);
+            var selectColumnInfos = filter(query.getFieldFilter(), tableInfo);
             var selectColumns = Arrays.stream(selectColumnInfos).map(ColumnMapping::name).toArray(String[]::new);
             var whereClause = whereParser.parseWhere(query.getWhere());
             var groupByColumns = groupByParser.parseGroupBy(query.getGroupBy());
@@ -320,38 +311,35 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
     /**
      * 更新数据
      *
-     * @param entity       要更新的数据
-     * @param query        更新的过滤条件
-     * @param updateFilter a
+     * @param entity 要更新的数据
+     * @param query  更新的过滤条件
      * @return 受影响的条数
      */
-    public final long update(Entity entity, Query query, ColumnFilter updateFilter) {
-        return sqlRunner.update(buildUpdateSQL(entity, query, updateFilter)).affectedItemsCount();
-    }
-
     @Override
     public final long update(Entity entity, Query query) {
-        return update(entity, query, ofExcluded());
+        return sqlRunner.update(buildUpdateSQL(entity, query)).affectedItemsCount();
     }
 
     /**
      * 构建更新 SQL
      *
-     * @param entity       待更新的实体
-     * @param query        查询条件
-     * @param updateFilter filter
+     * @param entity 待更新的实体
+     * @param query  查询条件
      * @return a
      */
-    private SQL buildUpdateSQL(Entity entity, Query query, ColumnFilter updateFilter) {
+    private SQL buildUpdateSQL(Entity entity, Query query) {
         if (query.getWhere().isEmpty()) {
             throw new IllegalArgumentException("更新数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
         }
-        var updateSetColumnInfos = updateFilter.filter(entity, tableInfo);
+        var updateSetColumnInfos = filter(query.getFieldFilter(), entity, tableInfo);
         var updateSetColumns = Arrays.stream(updateSetColumnInfos).map(c -> c.name() + " = ?").toArray(String[]::new);
         var whereClause = whereParser.parseWhere(query.getWhere());
+        var orderByClauses = orderByParser.parseOrderBy(query.getOrderBy());
         var sql = Update(tableInfo.name())
                 .Set(updateSetColumns)
                 .Where(whereClause.whereClause())
+                .OrderBy(orderByClauses)
+                .Limit(null, query.getLimit().getLimit())
                 .GetSQL(jdbcContext.dialect());
         var entityParams = Arrays.stream(updateSetColumnInfos).map(c -> c.javaFieldValue(entity)).toArray();
         return SQL.ofPlaceholder(sql, concat(entityParams, whereClause.params()));
@@ -379,8 +367,11 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
             throw new IllegalArgumentException("删除数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
         }
         var whereClause = whereParser.parseWhere(query.getWhere());
+        var orderByClauses = orderByParser.parseOrderBy(query.getOrderBy());
         var sql = Delete(tableInfo.name())
                 .Where(whereClause.whereClause())
+                .OrderBy(orderByClauses)
+                .Limit(null, query.getLimit().getLimit())
                 .GetSQL(jdbcContext.dialect());
         return SQL.ofPlaceholder(sql, whereClause.params());
     }
