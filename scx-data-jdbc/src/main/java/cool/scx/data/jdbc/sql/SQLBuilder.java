@@ -286,8 +286,8 @@ public final class SQLBuilder {
     public String GetSQL(Dialect dialect) {
         return switch (this.sqlBuilderType) {
             case INSERT -> GetInsertSQL();
-            case UPDATE -> GetUpdateSQL();
-            case DELETE -> GetDeleteSQL();
+            case UPDATE -> GetUpdateSQL(dialect);
+            case DELETE -> GetDeleteSQL(dialect);
             case SELECT -> GetSelectSQL(dialect);
         };
     }
@@ -302,21 +302,23 @@ public final class SQLBuilder {
     }
 
     /**
-     * a
+     * 更新时 limit 不能有 offset (偏移量)
      *
      * @return a {@link String} object
      */
-    private String GetUpdateSQL() {
-        return "UPDATE " + tableName + " SET " + String.join(", ", updateSetColumns) + getWhereClause();
+    private String GetUpdateSQL(Dialect dialect) {
+        var sql = "UPDATE " + tableName + " SET " + String.join(", ", updateSetColumns) + getWhereClause() + getOrderByClause();
+        return dialect.getLimitSQL(sql, null, limit);
     }
 
     /**
-     * a
+     * 删除时 limit 不能有 offset (偏移量)
      *
      * @return a {@link String} object
      */
-    private String GetDeleteSQL() {
-        return "DELETE FROM " + tableName + getWhereClause();
+    private String GetDeleteSQL(Dialect dialect) {
+        var sql = "DELETE FROM " + tableName + getWhereClause() + getOrderByClause();
+        return dialect.getLimitSQL(sql, null, limit);
     }
 
     /**
