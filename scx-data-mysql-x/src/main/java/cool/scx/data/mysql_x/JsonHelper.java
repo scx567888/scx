@@ -47,16 +47,16 @@ class JsonHelper {
     }
 
     public static ObjectNode filterObjectNode(ObjectNode objectNode, FieldFilter filter) {
-        return switch (filter.filterMode()) {
+        return switch (filter.getFilterMode()) {
             case EXCLUDED -> {
-                for (String s : filter.fieldNames()) {
+                for (String s : filter.getFieldNames()) {
                     objectNode.remove(s);
                 }
                 yield objectNode;
             }
             case INCLUDED -> {
                 var newObjectNode = OBJECT_MAPPER.createObjectNode();
-                for (var s : filter.fieldNames()) {
+                for (var s : filter.getFieldNames()) {
                     newObjectNode.set(s, objectNode.get(s));
                 }
                 yield newObjectNode;
@@ -65,16 +65,16 @@ class JsonHelper {
     }
 
     public static DbDoc filterDbDoc(DbDoc dbDoc, FieldFilter filter) {
-        return switch (filter.filterMode()) {
+        return switch (filter.getFilterMode()) {
             case EXCLUDED -> {
-                for (String s : filter.fieldNames()) {
+                for (String s : filter.getFieldNames()) {
                     dbDoc.remove(s);
                 }
                 yield dbDoc;
             }
             case INCLUDED -> {
                 var newDbDoc = new DbDocImpl();
-                for (var s : filter.fieldNames()) {
+                for (var s : filter.getFieldNames()) {
                     newDbDoc.put(s, dbDoc.get(s));
                 }
                 yield newDbDoc;
