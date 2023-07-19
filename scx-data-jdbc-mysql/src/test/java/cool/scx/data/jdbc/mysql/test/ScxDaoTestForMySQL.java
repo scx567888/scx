@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.mysql.cj.conf.PropertyKey.*;
-import static cool.scx.data.jdbc.ColumnFilter.ofExcluded;
 import static cool.scx.data.jdbc.sql.SQL.ofNormal;
 import static cool.scx.data.query.Logic.and;
 import static cool.scx.data.query.Logic.or;
@@ -84,7 +83,7 @@ public class ScxDaoTestForMySQL {
             list.add(m1);
         }
 
-        var newIds = userDao.addAll(list, ofExcluded());
+        var newIds = userDao.addAll(list);
 
         System.out.println("JDBCDao-MySQL 插入 : " + newIds.size());
 
