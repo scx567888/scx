@@ -330,9 +330,12 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
         var updateSetColumnInfos = filter(updateFilter, entity, tableInfo);
         var updateSetColumns = Arrays.stream(updateSetColumnInfos).map(c -> c.name() + " = ?").toArray(String[]::new);
         var whereClause = whereParser.parseWhere(query.getWhere());
+        var orderByClauses = orderByParser.parseOrderBy(query.getOrderBy());
         var sql = Update(tableInfo.name())
                 .Set(updateSetColumns)
                 .Where(whereClause.whereClause())
+                .OrderBy(orderByClauses)
+                .Limit(null, query.getLimit().getLimit())
                 .GetSQL(jdbcContext.dialect());
         var entityParams = Arrays.stream(updateSetColumnInfos).map(c -> c.javaFieldValue(entity)).toArray();
         return SQL.ofPlaceholder(sql, concat(entityParams, whereClause.params()));
@@ -360,8 +363,11 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
             throw new IllegalArgumentException("删除数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
         }
         var whereClause = whereParser.parseWhere(query.getWhere());
+        var orderByClauses = orderByParser.parseOrderBy(query.getOrderBy());
         var sql = Delete(tableInfo.name())
                 .Where(whereClause.whereClause())
+                .OrderBy(orderByClauses)
+                .Limit(null, query.getLimit().getLimit())
                 .GetSQL(jdbcContext.dialect());
         return SQL.ofPlaceholder(sql, whereClause.params());
     }
