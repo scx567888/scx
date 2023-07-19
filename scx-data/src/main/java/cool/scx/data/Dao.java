@@ -1,7 +1,11 @@
 package cool.scx.data;
 
+import cool.scx.data.query.FieldFilter;
+
 import java.util.Collection;
 import java.util.List;
+
+import static cool.scx.data.query.FieldFilter.ofExcluded;
 
 /**
  * 用于定义数据访问层的规范
@@ -13,13 +17,17 @@ import java.util.List;
  */
 public interface Dao<Entity, ID> {
 
+    ID add(Entity entity, FieldFilter fieldFilter);
+
     /**
      * 像数据源中添加一条数据
      *
      * @param entity 实体类
      * @return 主键 ID (无主键则为 null)
      */
-    ID add(Entity entity);
+    default ID add(Entity entity) {
+        return add(entity, ofExcluded());
+    }
 
     /**
      * 像数据源中添加多条数据
@@ -27,7 +35,17 @@ public interface Dao<Entity, ID> {
      * @param entityList 实体类
      * @return 主键 ID 列表 (无主键则为 null)
      */
-    List<ID> addAll(Collection<Entity> entityList);
+    List<ID> addAll(Collection<Entity> entityList, FieldFilter fieldFilter);
+
+    /**
+     * 像数据源中添加多条数据
+     *
+     * @param entityList 实体类
+     * @return 主键 ID 列表 (无主键则为 null)
+     */
+    default List<ID> addAll(Collection<Entity> entityList) {
+        return addAll(entityList, ofExcluded());
+    }
 
     /**
      * 查询多条数据
@@ -37,13 +55,20 @@ public interface Dao<Entity, ID> {
      */
     List<Entity> find(Query query);
 
+    default List<Entity> find() {
+        return find(new Query());
+    }
+
     /**
      * 查询单条数据
      *
      * @param query 查询条件
      * @return 数据列表
      */
-    Entity get(Query query);
+    default Entity get(Query query) {
+        var list = find(query);
+        return list.size() > 0 ? list.get(0) : null;
+    }
 
     /**
      * 更新数据

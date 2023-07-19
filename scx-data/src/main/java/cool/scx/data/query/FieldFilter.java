@@ -1,11 +1,10 @@
-package cool.scx.data.jdbc;
+package cool.scx.data.query;
 
-import cool.scx.data.jdbc.mapping.Table;
-
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+
+import static cool.scx.data.query.FilterMode.EXCLUDED;
 
 /**
  * 列过滤器
@@ -13,7 +12,7 @@ import java.util.Set;
  * @author scx567888
  * @version 0.1.3
  */
-public final class ColumnFilter {
+public final class FieldFilter {
 
     /**
      * 包含的列
@@ -36,17 +35,17 @@ public final class ColumnFilter {
      * @param filterMode                a
      * @param excludeIfFieldValueIsNull a
      */
-    private ColumnFilter(FilterMode filterMode, boolean excludeIfFieldValueIsNull) {
+    private FieldFilter(FilterMode filterMode, boolean excludeIfFieldValueIsNull) {
         this.filterMode = filterMode;
         this.excludeIfFieldValueIsNull = excludeIfFieldValueIsNull;
     }
 
     /**
-     * 启用白名单模式 (当一个实体类所对应的 field 的值为 null 时, 会将此 field 所对应的列排除, 详情请看 {@link ColumnFilter#ofIncluded(boolean)})
+     * 启用白名单模式 (当一个实体类所对应的 field 的值为 null 时, 会将此 field 所对应的列排除, 详情请看 {@link FieldFilter#ofIncluded(boolean)})
      *
      * @return a
      */
-    public static ColumnFilter ofIncluded() {
+    public static FieldFilter ofIncluded() {
         return ofIncluded(true);
     }
 
@@ -56,8 +55,8 @@ public final class ColumnFilter {
      * @param excludeIfFieldValueIsNull 当一个实体类所对应的 field 的值为 null 时, 是否将此 field 所对应的列排除
      * @return a
      */
-    public static ColumnFilter ofIncluded(boolean excludeIfFieldValueIsNull) {
-        return new ColumnFilter(FilterMode.INCLUDED, excludeIfFieldValueIsNull);
+    public static FieldFilter ofIncluded(boolean excludeIfFieldValueIsNull) {
+        return new FieldFilter(FilterMode.INCLUDED, excludeIfFieldValueIsNull);
     }
 
     /**
@@ -66,7 +65,7 @@ public final class ColumnFilter {
      * @param fieldNames a
      * @return a
      */
-    public static ColumnFilter ofIncluded(String... fieldNames) {
+    public static FieldFilter ofIncluded(String... fieldNames) {
         return ofIncluded().addIncluded(fieldNames);
     }
 
@@ -77,16 +76,16 @@ public final class ColumnFilter {
      * @param fieldNames                a
      * @return a
      */
-    public static ColumnFilter ofIncluded(boolean excludeIfFieldValueIsNull, String... fieldNames) {
+    public static FieldFilter ofIncluded(boolean excludeIfFieldValueIsNull, String... fieldNames) {
         return ofIncluded(excludeIfFieldValueIsNull).addIncluded(fieldNames);
     }
 
     /**
-     * 启用黑名单模式 (当一个实体类所对应的 field 的值为 null 时, 会将此 field 所对应的列排除, 详情请看 {@link ColumnFilter#ofExcluded(boolean)})
+     * 启用黑名单模式 (当一个实体类所对应的 field 的值为 null 时, 会将此 field 所对应的列排除, 详情请看 {@link FieldFilter#ofExcluded(boolean)})
      *
      * @return a
      */
-    public static ColumnFilter ofExcluded() {
+    public static FieldFilter ofExcluded() {
         return ofExcluded(true);
     }
 
@@ -96,8 +95,8 @@ public final class ColumnFilter {
      * @param excludeIfFieldValueIsNull 当一个实体类所对应的 field 的值为 null 时, 是否将此 field 所对应的列排除
      * @return a
      */
-    public static ColumnFilter ofExcluded(boolean excludeIfFieldValueIsNull) {
-        return new ColumnFilter(FilterMode.EXCLUDED, excludeIfFieldValueIsNull);
+    public static FieldFilter ofExcluded(boolean excludeIfFieldValueIsNull) {
+        return new FieldFilter(EXCLUDED, excludeIfFieldValueIsNull);
     }
 
     /**
@@ -106,7 +105,7 @@ public final class ColumnFilter {
      * @param fieldNames a
      * @return a
      */
-    public static ColumnFilter ofExcluded(String... fieldNames) {
+    public static FieldFilter ofExcluded(String... fieldNames) {
         return ofExcluded().addExcluded(fieldNames);
     }
 
@@ -117,7 +116,7 @@ public final class ColumnFilter {
      * @param fieldNames                a
      * @return a
      */
-    public static ColumnFilter ofExcluded(boolean excludeIfFieldValueIsNull, String... fieldNames) {
+    public static FieldFilter ofExcluded(boolean excludeIfFieldValueIsNull, String... fieldNames) {
         return ofExcluded(excludeIfFieldValueIsNull).addExcluded(fieldNames);
     }
 
@@ -127,7 +126,7 @@ public final class ColumnFilter {
      * @param fieldNames 包含的列名 (注意是 java 字段名称 ,不是 数据库 字段名称)
      * @return this 方便链式调用
      */
-    private ColumnFilter _addFieldNames(String... fieldNames) {
+    private FieldFilter _addFieldNames(String... fieldNames) {
         this.fieldNames.addAll(Arrays.asList(fieldNames));
         return this;
     }
@@ -138,7 +137,7 @@ public final class ColumnFilter {
      * @param fieldNames 包含的列名 (注意是 java 字段名称 ,不是 数据库 字段名称)
      * @return this 方便链式调用
      */
-    private ColumnFilter _removeFieldNames(String... fieldNames) {
+    private FieldFilter _removeFieldNames(String... fieldNames) {
         for (var fieldName : fieldNames) {
             this.fieldNames.remove(fieldName);
         }
@@ -151,7 +150,7 @@ public final class ColumnFilter {
      * @param fieldNames 包含的列名 (注意是 java 字段名称 ,不是 数据库 字段名称)
      * @return this 方便链式调用
      */
-    public ColumnFilter addIncluded(String... fieldNames) {
+    public FieldFilter addIncluded(String... fieldNames) {
         return switch (filterMode) {
             case INCLUDED -> _addFieldNames(fieldNames);
             case EXCLUDED -> _removeFieldNames(fieldNames);
@@ -164,7 +163,7 @@ public final class ColumnFilter {
      * @param fieldNames 包含的列名 (注意是 java 字段名称 ,不是 数据库 字段名称)
      * @return this 方便链式调用
      */
-    public ColumnFilter addExcluded(String... fieldNames) {
+    public FieldFilter addExcluded(String... fieldNames) {
         return switch (filterMode) {
             case EXCLUDED -> _addFieldNames(fieldNames);
             case INCLUDED -> _removeFieldNames(fieldNames);
@@ -177,7 +176,7 @@ public final class ColumnFilter {
      * @param fieldNames 包含的列名 (注意是 java 字段名称 ,不是 数据库 字段名称)
      * @return this 方便链式调用
      */
-    public ColumnFilter removeIncluded(String... fieldNames) {
+    public FieldFilter removeIncluded(String... fieldNames) {
         return addExcluded(fieldNames);
     }
 
@@ -187,7 +186,7 @@ public final class ColumnFilter {
      * @param fieldNames 包含的列名 (注意是 java 字段名称 ,不是 数据库 字段名称)
      * @return this 方便链式调用
      */
-    public ColumnFilter removeExcluded(String... fieldNames) {
+    public FieldFilter removeExcluded(String... fieldNames) {
         return addIncluded(fieldNames);
     }
 
@@ -196,37 +195,9 @@ public final class ColumnFilter {
      *
      * @return this 方便链式调用
      */
-    public ColumnFilter clear() {
+    public FieldFilter clear() {
         this.fieldNames.clear();
         return this;
-    }
-
-    /**
-     * 过滤
-     *
-     * @param tableInfo 带过滤的列表
-     * @return 过滤后的列表
-     */
-    public ColumnMapping[] filter(Table<? extends ColumnMapping> tableInfo) {
-        return this.fieldNames.size() == 0 ? switch (this.filterMode) {
-            case INCLUDED -> new ColumnMapping[0];
-            case EXCLUDED -> tableInfo.columns();
-        } : switch (this.filterMode) {
-            case INCLUDED -> {
-                var list = new ArrayList<ColumnMapping>();
-                for (var fieldName : this.fieldNames) {
-                    list.add(tableInfo.getColumn(fieldName));
-                }
-                yield list.toArray(ColumnMapping[]::new);
-            }
-            case EXCLUDED -> {
-                var objects = new ArrayList<>(Arrays.asList(tableInfo.columns()));
-                for (var fieldName : this.fieldNames) {
-                    objects.remove(tableInfo.getColumn(fieldName));
-                }
-                yield objects.toArray(ColumnMapping[]::new);
-            }
-        };
     }
 
     /**
@@ -238,28 +209,6 @@ public final class ColumnFilter {
         return filterMode;
     }
 
-    /**
-     * 过滤
-     *
-     * @param entity    a
-     * @param tableInfo 带过滤的列表
-     * @return 过滤后的列表
-     */
-    public ColumnMapping[] filter(Object entity, Table<? extends ColumnMapping> tableInfo) {
-        return this.excludeIfFieldValueIsNull ? excludeIfFieldValueIsNull(entity, filter(tableInfo)) : filter(tableInfo);
-    }
-
-    /**
-     * 过滤空值
-     *
-     * @param entity            e
-     * @param scxDaoColumnInfos s
-     * @return e
-     */
-    private ColumnMapping[] excludeIfFieldValueIsNull(Object entity, ColumnMapping... scxDaoColumnInfos) {
-        return Arrays.stream(scxDaoColumnInfos).filter(field -> field.javaFieldValue(entity) != null).toArray(ColumnMapping[]::new);
-    }
-
 
     public Set<String> fieldNames() {
         return fieldNames;
@@ -267,34 +216,6 @@ public final class ColumnFilter {
 
     public boolean excludeIfFieldValueIsNull() {
         return excludeIfFieldValueIsNull;
-    }
-
-
-    /**
-     * 过滤模式
-     */
-    public enum FilterMode {
-
-        /**
-         * 包含模式
-         */
-        INCLUDED,
-
-        /**
-         * 排除模式
-         */
-        EXCLUDED;
-
-        /**
-         * a
-         *
-         * @param filterModeStr a
-         * @return a
-         */
-        public static FilterMode of(String filterModeStr) {
-            return valueOf(filterModeStr.trim().toUpperCase());
-        }
-
     }
 
 }
