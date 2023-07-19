@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static cool.scx.core.eventbus.ZeroCopyMessageCodec.ZERO_COPY_CODEC_NAME;
-import static cool.scx.data.jdbc.ColumnFilter.ofIncluded;
+import static cool.scx.data.query.FieldFilter.ofIncluded;
 import static cool.scx.data.query.WhereBody.*;
 import static org.testng.Assert.assertEquals;
 
@@ -110,7 +110,7 @@ public class TestModule extends ScxModule {
             System.err.println("将 id 大于 200 的 name 设置为空 !!!");
             var c = new Car();
             c.name = null;
-            carService.update(c, new Query().where(greaterThan("id", 200)), ofIncluded(false).addIncluded("name"));
+            carService.update(c, new Query().where(greaterThan("id", 200)).fieldFilter(ofIncluded(false).addIncluded("name")));
 
             System.err.println("查询所有数据条数 !!! : " + carService.list().size());
             System.err.println("查询所有 id 大于 200 条数 !!! : " + carService.list(new Query().where(greaterThan("id", 200))).size());
@@ -196,13 +196,13 @@ public class TestModule extends ScxModule {
         }
         //根据所有 person 表中年龄小于 100 的 carID 查询 car 表中的数据
         var cars = carService.list(new Query().where(in("id",
-                personService.buildListSQL(new Query().where(lessThan("age", 100)), ofIncluded("carID"))
+                personService.buildListSQL(new Query().where(lessThan("age", 100)).fieldFilter("carID"))
         )));
         var logger = LoggerFactory.getLogger(TestModule.class);
         logger.error("根据所有 person 表中年龄小于 100 的 carID 查询 car 表中的数据 总条数 {}", cars.size());
         //根据所有 person 表中年龄小于 100 的 carID 查询 car 表中的数据
         var cars1 = carService.list(new Query().where("id IN ",
-                personService.buildListSQL(new Query().where(lessThan("age", 100)), ofIncluded("carID"))
+                personService.buildListSQL(new Query().where(lessThan("age", 100)).fieldFilter("carID"))
         ));
         logger.error("第二种方式 (whereSQL) : 根据所有 person 表中年龄小于 100 的 carID 查询 car 表中的数据 总条数 {}", cars1.size());
     }
