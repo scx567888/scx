@@ -149,7 +149,18 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 查到多个则返回第一个 没有则返回 null
      */
     public final Entity get(long id) {
-        return get(new Query().where(equal("id", id)));
+        return get(id, ofExcluded());
+    }
+
+    /**
+     * 根据 ID (主键) 查询单条数据
+     *
+     * @param id           id ( 主键 )
+     * @param selectFilter 查询字段过滤器
+     * @return 查到多个则返回第一个 没有则返回 null
+     */
+    public final Entity get(long id, FieldFilter selectFilter) {
+        return get(new Query().where(equal("id", id)).fieldFilter(selectFilter));
     }
 
     /**
