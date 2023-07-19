@@ -21,7 +21,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static cool.scx.data.jdbc.ColumnFilter.ofExcluded;
 import static cool.scx.data.jdbc.sql.SQL.ofNormal;
 import static cool.scx.data.query.Logic.and;
 import static cool.scx.data.query.Logic.or;
@@ -87,7 +86,7 @@ public class ScxDaoTestForSQLite {
             list.add(m1);
         }
 
-        var newIds = userDao.addAll(list, ofExcluded());
+        var newIds = userDao.addAll(list);
 
         System.out.println("JDBCDao-SQLite 插入 : " + newIds.size());
 

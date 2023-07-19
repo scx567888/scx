@@ -53,7 +53,7 @@ public class SQLiteDialect extends Dialect {
     private static String getFinalSQL0(String sql, Object[] batch) {
         final StringBuilder sb = new StringBuilder();
         int currentParameter = 0;
-        for (int pos = 0; pos < sql.length(); pos++) {
+        for (int pos = 0; pos < sql.length(); pos = pos + 1) {
             char character = sql.charAt(pos);
             if (character == '?' && currentParameter <= batch.length) {
                 // 替换 ?
