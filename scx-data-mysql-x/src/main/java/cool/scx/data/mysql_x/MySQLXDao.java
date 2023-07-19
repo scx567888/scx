@@ -5,6 +5,7 @@ import com.mysql.cj.xdevapi.DbDoc;
 import com.mysql.cj.xdevapi.Schema;
 import cool.scx.data.Dao;
 import cool.scx.data.Query;
+import cool.scx.data.query.FieldFilter;
 import cool.scx.util.CaseUtils;
 import cool.scx.util.StringUtils;
 
@@ -13,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static cool.scx.data.mysql_x.FieldFilter.ofExcluded;
 import static cool.scx.data.mysql_x.JsonHelper.*;
 import static cool.scx.data.mysql_x.parser.MySQLXDaoWhereParser.WHERE_PARSER;
 
@@ -59,23 +59,20 @@ public class MySQLXDao<Entity> implements Dao<Entity, String> {
         throw new IllegalArgumentException("jsonNode 类型不为 ObjectNode !!!");
     }
 
-    public String add(Entity entity, FieldFilter updateFilter) {
-        var dbDoc = toDbDoc(entity, updateFilter.addExcluded("_id"));
+    @Override
+    public String add(Entity entity, FieldFilter fieldFilter) {
+        var dbDoc = toDbDoc(entity, fieldFilter.addExcluded("_id"));
         var addResult = this.collection.add(dbDoc).execute();
         var generatedIds = addResult.getGeneratedIds();
         return generatedIds.get(0);
     }
 
     @Override
-    public String add(Entity entity) {
-        return add(entity, ofExcluded());
-    }
-
-    public List<String> addAll(Collection<Entity> entityList, FieldFilter updateFilter) {
+    public List<String> addAll(Collection<Entity> entityList, FieldFilter fieldFilter) {
         var dbDocs = new DbDoc[entityList.size()];
         var index = 0;
         for (var entity : entityList) {
-            dbDocs[index] = toDbDoc(entity, updateFilter.addExcluded("_id"));
+            dbDocs[index] = toDbDoc(entity, fieldFilter.addExcluded("_id"));
             index = index + 1;
         }
         var addResult = this.collection.add(dbDocs).execute();
@@ -83,11 +80,7 @@ public class MySQLXDao<Entity> implements Dao<Entity, String> {
     }
 
     @Override
-    public List<String> addAll(Collection<Entity> entityList) {
-        return addAll(entityList, ofExcluded());
-    }
-
-    public List<Entity> find(Query query, FieldFilter selectFilter) {
+    public List<Entity> find(Query query) {
         var whereClause = WHERE_PARSER.parseWhere(query.getWhere());
         var findStatement = this.collection
                 .find(whereClause.whereClause())
@@ -102,17 +95,13 @@ public class MySQLXDao<Entity> implements Dao<Entity, String> {
         var dbDocs = docResult.fetchAll();
         var list = new ArrayList<Entity>();
         for (var dbDoc : dbDocs) {
-            list.add(toEntity(dbDoc, selectFilter));
+            list.add(toEntity(dbDoc, query.getFieldFilter()));
         }
         return list;
     }
 
     @Override
-    public List<Entity> find(Query query) {
-        return find(query, ofExcluded());
-    }
-
-    public Entity get(Query query, FieldFilter fieldFilter) {
+    public Entity get(Query query) {
         var whereClause = WHERE_PARSER.parseWhere(query.getWhere());
         var findStatement = this.collection
                 .find(whereClause.whereClause())
@@ -122,28 +111,19 @@ public class MySQLXDao<Entity> implements Dao<Entity, String> {
         var docResult = findStatement.execute();
         var dbDoc = docResult.fetchOne();
 
-        return toEntity(dbDoc, fieldFilter);
+        return toEntity(dbDoc, query.getFieldFilter());
     }
 
     @Override
-    public Entity get(Query query) {
-        return get(query, ofExcluded());
-    }
-
-    public long update(Entity entity, Query query, FieldFilter updateFilter) {
+    public long update(Entity entity, Query query) {
         var whereClause = WHERE_PARSER.parseWhere(query.getWhere());
-        var newDoc = toDbDoc(entity, updateFilter.addExcluded("_id"));
+        var newDoc = toDbDoc(entity, query.getFieldFilter().addExcluded("_id"));
         var result = this.collection
                 .modify(whereClause.whereClause())
                 .bind(whereClause.params())
                 .patch(newDoc)
                 .execute();
         return result.getAffectedItemsCount();
-    }
-
-    @Override
-    public long update(Entity entity, Query query) {
-        return update(entity, query, ofExcluded());
     }
 
     @Override
