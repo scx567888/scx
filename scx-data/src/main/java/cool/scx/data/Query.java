@@ -2,6 +2,8 @@ package cool.scx.data;
 
 import cool.scx.data.query.*;
 
+import static cool.scx.data.query.FieldFilter.ofExcluded;
+
 /**
  * 查询参数类<br>
  * 针对  GroupBy , OrderBy , Limit , Where 等进行的简单封装 <br>
@@ -34,6 +36,11 @@ public final class Query {
     private final Limit limit;
 
     /**
+     * field 过滤器
+     */
+    private FieldFilter fieldFilter;
+
+    /**
      * 创建 Query 对象
      */
     public Query() {
@@ -41,6 +48,7 @@ public final class Query {
         this.groupBy = new GroupBy();
         this.orderBy = new OrderBy();
         this.limit = new Limit();
+        this.fieldFilter = ofExcluded();
     }
 
     /**
@@ -53,6 +61,7 @@ public final class Query {
         this.groupBy = new GroupBy(oldQuery.groupBy);
         this.orderBy = new OrderBy(oldQuery.orderBy);
         this.limit = new Limit(oldQuery.limit);
+        this.fieldFilter = oldQuery.fieldFilter;
     }
 
     public Query where(Object... whereClauses) {
@@ -86,6 +95,11 @@ public final class Query {
         return this;
     }
 
+    public Query fieldFilter(FieldFilter fieldFilter) {
+        this.fieldFilter = fieldFilter;
+        return this;
+    }
+
     public Where getWhere() {
         return where;
     }
@@ -100,6 +114,10 @@ public final class Query {
 
     public Limit getLimit() {
         return limit;
+    }
+
+    public FieldFilter getFieldFilter() {
+        return fieldFilter;
     }
 
     public Query clearWhere() {
@@ -124,6 +142,11 @@ public final class Query {
 
     public Query clearLimit() {
         limit.clearLimit();
+        return this;
+    }
+
+    public Query clearFieldFilter() {
+        fieldFilter = ofExcluded();
         return this;
     }
 
