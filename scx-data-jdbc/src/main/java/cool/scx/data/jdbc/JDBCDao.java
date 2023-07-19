@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 
+import static cool.scx.data.jdbc.FieldFilterHelper.filter;
 import static cool.scx.data.jdbc.result_handler.ResultHandler.*;
 import static cool.scx.data.jdbc.sql.SQLBuilder.*;
 import static cool.scx.util.ArrayUtils.concat;
@@ -115,7 +116,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
      * @return a
      */
     private SQL _buildInsertSQL(Entity entity, FieldFilter updateFilter) {
-        var insertColumnInfos = FieldFilterHelper.filter(updateFilter, entity, tableInfo);
+        var insertColumnInfos = filter(updateFilter, entity, tableInfo);
         var insertColumns = Arrays.stream(insertColumnInfos).map(Column::name).toArray(String[]::new);
         var insertValues = Arrays.stream(insertColumnInfos).map(columnInfo -> "?").toArray(String[]::new);
         var sql = Insert(tableInfo.name(), insertColumns)
@@ -145,7 +146,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
      * @return a
      */
     private SQL buildInsertBatchSQL(Collection<? extends Entity> entityList, FieldFilter updateFilter) {
-        var insertColumnInfos = FieldFilterHelper.filter(updateFilter,tableInfo);
+        var insertColumnInfos = filter(updateFilter, tableInfo);
         //将 entityList 转换为 objectArrayList 这里因为 stream 实在太慢所以改为传统循环方式
         var objectArrayList = new ArrayList<Object[]>();
         for (var entity : entityList) {
@@ -228,7 +229,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
      * @return selectSQL
      */
     public final SQL buildSelectSQL(Query query, FieldFilter selectFilter) {
-        var selectColumnInfos =FieldFilterHelper.filter( selectFilter,tableInfo);
+        var selectColumnInfos = filter(selectFilter, tableInfo);
         var selectColumns = Arrays.stream(selectColumnInfos).map(Column::name).toArray(String[]::new);
         var whereClause = whereParser.parseWhere(query.getWhere());
         var groupByColumns = groupByParser.parseGroupBy(query.getGroupBy());
@@ -256,7 +257,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
         if (query.getLimit().getLimit() == null) {
             return buildSelectSQL(query, selectFilter);
         } else {
-            var selectColumnInfos =FieldFilterHelper.filter( selectFilter,tableInfo);
+            var selectColumnInfos = filter(selectFilter, tableInfo);
             var selectColumns = Arrays.stream(selectColumnInfos).map(ColumnMapping::name).toArray(String[]::new);
             var whereClause = whereParser.parseWhere(query.getWhere());
             var groupByColumns = groupByParser.parseGroupBy(query.getGroupBy());
@@ -322,11 +323,11 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
      * @param updateFilter filter
      * @return a
      */
-    private SQL buildUpdateSQL(Entity entity, Query query,FieldFilter updateFilter) {
+    private SQL buildUpdateSQL(Entity entity, Query query, FieldFilter updateFilter) {
         if (query.getWhere().isEmpty()) {
             throw new IllegalArgumentException("更新数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
         }
-        var updateSetColumnInfos =FieldFilterHelper.filter(updateFilter,entity, tableInfo);
+        var updateSetColumnInfos = filter(updateFilter, entity, tableInfo);
         var updateSetColumns = Arrays.stream(updateSetColumnInfos).map(c -> c.name() + " = ?").toArray(String[]::new);
         var whereClause = whereParser.parseWhere(query.getWhere());
         var sql = Update(tableInfo.name())
