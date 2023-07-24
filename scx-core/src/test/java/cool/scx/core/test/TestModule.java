@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static cool.scx.core.eventbus.ZeroCopyMessageCodec.ZERO_COPY_CODEC_NAME;
+import static cool.scx.core.eventbus.ZeroCopyMessageWrapper.zeroCopyMessage;
 import static cool.scx.data.FieldFilter.ofIncluded;
 import static cool.scx.data.query.WhereBody.*;
 import static org.testng.Assert.assertEquals;
@@ -176,7 +177,12 @@ public class TestModule extends ScxModule {
         ScxContext.eventBus().request("test-event-bus", car, new DeliveryOptions().setCodecName(ZERO_COPY_CODEC_NAME), c -> {
             assertEquals(c.result().body(), car);
         });
+        //通过指定 ZERO_COPY_CODEC_NAME 实现 0 拷贝
         ScxContext.eventBus().send("test-event-bus", car, new DeliveryOptions().setCodecName(ZERO_COPY_CODEC_NAME));
+        //通过 @ZeroCopyMessage 注解实现 零拷贝
+        ScxContext.eventBus().publish("test-event-bus", car);
+        //通过 zeroCopyMessage() 包装器实现 零拷贝 (会自动脱壳)
+        ScxContext.eventBus().send("test-event-bus", zeroCopyMessage(car));
     }
 
     @Test
