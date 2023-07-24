@@ -34,7 +34,7 @@ public final class ZeroCopyMessageCodec<T> implements MessageCodec<T, Object> {
      * {@inheritDoc}
      */
     @Override
-    public void encodeToWire(Buffer buffer, Object o) {
+    public void encodeToWire(Buffer buffer, T o) {
         throw new UnsupportedOperationException("集群模式下无法使用 ZeroCopyMessageCodec !!!");
     }
 
@@ -42,7 +42,7 @@ public final class ZeroCopyMessageCodec<T> implements MessageCodec<T, Object> {
      * {@inheritDoc}
      */
     @Override
-    public Object decodeFromWire(int pos, Buffer buffer) {
+    public T decodeFromWire(int pos, Buffer buffer) {
         throw new UnsupportedOperationException("集群模式下无法使用 ZeroCopyMessageCodec !!!");
     }
 
@@ -50,7 +50,8 @@ public final class ZeroCopyMessageCodec<T> implements MessageCodec<T, Object> {
      * {@inheritDoc}
      */
     @Override
-    public Object transform(Object o) {
+    public Object transform(T o) {
+        //针对 ZeroCopyMessageWrapper 进行脱壳
         if (o instanceof ZeroCopyMessageWrapper<?> z) {
             return z.message();
         }
