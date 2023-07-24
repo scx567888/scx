@@ -12,10 +12,10 @@ import java.util.function.Function;
  * @author scx567888
  * @version 1.18.0
  */
-public class ZeroCopyMessageCodec implements MessageCodec<Object, Object> {
+public final class ZeroCopyMessageCodec implements MessageCodec<Object, Object> {
 
     /**
-     * Constant <code>ZERO_COPY_CODEC_NAME="ZeroCopyMessageCodec.class.getName()"</code>
+     * ZERO_COPY_CODEC_NAME
      */
     public static final String ZERO_COPY_CODEC_NAME = ZeroCopyMessageCodec.class.getName();
 
@@ -41,7 +41,7 @@ public class ZeroCopyMessageCodec implements MessageCodec<Object, Object> {
      */
     @Override
     public void encodeToWire(Buffer buffer, Object o) {
-        throw new UnsupportedOperationException("集群模式下无法使用 ZeroCopyMessageCodec");
+        throw new UnsupportedOperationException("集群模式下无法使用 ZeroCopyMessageCodec !!!");
     }
 
     /**
@@ -49,7 +49,7 @@ public class ZeroCopyMessageCodec implements MessageCodec<Object, Object> {
      */
     @Override
     public Object decodeFromWire(int pos, Buffer buffer) {
-        throw new UnsupportedOperationException("集群模式下无法使用 ZeroCopyMessageCodec");
+        throw new UnsupportedOperationException("集群模式下无法使用 ZeroCopyMessageCodec !!!");
     }
 
     /**
