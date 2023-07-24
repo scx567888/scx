@@ -5,7 +5,7 @@ import cool.scx.config.ScxConfigSource;
 import cool.scx.config.ScxEnvironment;
 import cool.scx.config.ScxFeatureConfig;
 import cool.scx.core.enumeration.ScxCoreFeature;
-import cool.scx.core.eventbus.MessageCodecRegistrar;
+import cool.scx.core.eventbus.ZeroCopyMessageCodec;
 import cool.scx.core.scheduler.ScxScheduler;
 import cool.scx.data.jdbc.AnnotationConfigTable;
 import cool.scx.data.jdbc.JDBCContext;
@@ -87,7 +87,7 @@ public final class Scx {
         //3, 初始化 Vertx 这里在 log4j2 之后初始化是因为 vertx 需要使用 log4j2 打印日志
         this.vertx = initVertx();
         //4, 初始化事件总线
-        MessageCodecRegistrar.registerCodec(this.vertx.eventBus());
+        ZeroCopyMessageCodec.registerCodec(this.vertx.eventBus());
         //5, 初始化 BeanFactory
         this.beanFactory = initBeanFactory(this.scxModules, this.vertx.nettyEventLoopGroup(), this.scxFeatureConfig);
         //7, 初始化 MVC

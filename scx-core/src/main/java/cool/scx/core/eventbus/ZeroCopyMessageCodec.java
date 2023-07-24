@@ -1,6 +1,7 @@
 package cool.scx.core.eventbus;
 
 import io.vertx.core.buffer.Buffer;
+import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.MessageCodec;
 
 /**
@@ -9,39 +10,51 @@ import io.vertx.core.eventbus.MessageCodec;
  * @author scx567888
  * @version 1.18.0
  */
-public class ZeroCopyMessageCodec implements MessageCodec<Object, Object> {
+public final class ZeroCopyMessageCodec<T> implements MessageCodec<T, Object> {
 
     /**
-     * Constant <code>ZERO_COPY_CODEC_NAME="ZeroCopyMessageCodec.class.getName()"</code>
+     * ZERO_COPY_CODEC_NAME
      */
     public static final String ZERO_COPY_CODEC_NAME = ZeroCopyMessageCodec.class.getName();
 
     /**
-     * Constant <code>DEFAULT_INSTANCE</code>
+     * <p>registerCodec.</p>
+     *
+     * @param eventBus a {@link io.vertx.core.eventbus.EventBus} object
      */
-    public static final ZeroCopyMessageCodec DEFAULT_INSTANCE = new ZeroCopyMessageCodec();
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void encodeToWire(Buffer buffer, Object o) {
-        throw new UnsupportedOperationException("集群模式下无法使用 ZeroCopyMessageCodec");
+    public static void registerCodec(EventBus eventBus) {
+        eventBus.registerDefaultCodec(ZeroCopyMessageWrapper.class, new ZeroCopyMessageCodec<>());
+        eventBus.codecSelector(o -> {
+            var zeroCopyMessage = o.getClass().getAnnotation(ZeroCopyMessage.class);
+            return zeroCopyMessage != null ? ZERO_COPY_CODEC_NAME : null;
+        });
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Object decodeFromWire(int pos, Buffer buffer) {
-        throw new UnsupportedOperationException("集群模式下无法使用 ZeroCopyMessageCodec");
+    public void encodeToWire(Buffer buffer, T o) {
+        throw new UnsupportedOperationException("集群模式下无法使用 ZeroCopyMessageCodec !!!");
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Object transform(Object o) {
+    public T decodeFromWire(int pos, Buffer buffer) {
+        throw new UnsupportedOperationException("集群模式下无法使用 ZeroCopyMessageCodec !!!");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Object transform(T o) {
+        //针对 ZeroCopyMessageWrapper 进行脱壳
+        if (o instanceof ZeroCopyMessageWrapper<?> z) {
+            return z.message();
+        }
         return o;
     }
 
