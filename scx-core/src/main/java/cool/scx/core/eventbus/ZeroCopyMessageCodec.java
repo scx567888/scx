@@ -1,7 +1,10 @@
 package cool.scx.core.eventbus;
 
 import io.vertx.core.buffer.Buffer;
+import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.MessageCodec;
+
+import java.util.function.Function;
 
 /**
  * 零拷贝编解码器 (因为并不适用于集群模式,所以此处不实现 encodeToWire和decodeFromWire)
@@ -16,10 +19,22 @@ public class ZeroCopyMessageCodec implements MessageCodec<Object, Object> {
      */
     public static final String ZERO_COPY_CODEC_NAME = ZeroCopyMessageCodec.class.getName();
 
+    private static final ZeroCopyMessageCodec DEFAULT_INSTANCE = new ZeroCopyMessageCodec();
+
+    private static final Function<Object, String> CODEC_SELECTOR = o -> {
+        var zeroCopyMessage = o.getClass().getAnnotation(ZeroCopyMessage.class);
+        return zeroCopyMessage != null ? ZERO_COPY_CODEC_NAME : null;
+    };
+
     /**
-     * Constant <code>DEFAULT_INSTANCE</code>
+     * <p>registerCodec.</p>
+     *
+     * @param eventBus a {@link io.vertx.core.eventbus.EventBus} object
      */
-    public static final ZeroCopyMessageCodec DEFAULT_INSTANCE = new ZeroCopyMessageCodec();
+    public static void registerCodec(EventBus eventBus) {
+        eventBus.registerCodec(DEFAULT_INSTANCE);
+        eventBus.codecSelector(CODEC_SELECTOR);
+    }
 
     /**
      * {@inheritDoc}
