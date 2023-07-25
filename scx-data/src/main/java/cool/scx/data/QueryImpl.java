@@ -108,7 +108,7 @@ public class QueryImpl implements Query {
     public Long getOffset() {
         return limit.getOffset();
     }
-    
+
     @Override
     public Long getLimit() {
         return limit.getLimit();
