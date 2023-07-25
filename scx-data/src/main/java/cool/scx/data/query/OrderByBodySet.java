@@ -1,10 +1,12 @@
 package cool.scx.data.query;
 
+import cool.scx.data.ReadableQuery;
 import cool.scx.data.query.OrderByOption.Info;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static cool.scx.data.query.OrderBy.orderBy;
 import static cool.scx.data.query.OrderByType.ASC;
 import static cool.scx.data.query.OrderByType.DESC;
 
@@ -14,7 +16,7 @@ import static cool.scx.data.query.OrderByType.DESC;
  * @author scx567888
  * @version 0.0.1
  */
-public final class OrderByBodySet {
+public final class OrderByBodySet implements ReadableQuery {
 
     /**
      * 存储排序的字段
@@ -102,6 +104,11 @@ public final class OrderByBodySet {
      */
     public Object[] clauses() {
         return orderByBodyList.toArray();
+    }
+
+    @Override
+    public OrderBy getOrderBy() {
+        return orderBy(this);
     }
 
 }
