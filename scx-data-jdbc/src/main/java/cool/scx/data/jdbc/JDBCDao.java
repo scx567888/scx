@@ -211,7 +211,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
             return buildSelectSQL(query, selectFilter);
         } else {
             var selectColumnInfos = filter(selectFilter, tableInfo);
-            var selectColumns = Arrays.stream(selectColumnInfos).map(ColumnMapping::name).toArray(String[]::new);
+            var selectColumns = Arrays.stream(selectColumnInfos).map(Column::name).toArray(String[]::new);
             var whereClause = whereParser.parseWhere(query.getWhere());
             var groupByColumns = groupByParser.parseGroupBy(query.getGroupBy());
             var orderByClauses = orderByParser.parseOrderBy(query.getOrderBy());
@@ -305,7 +305,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
             return buildSelectSQL(query, selectFilter);
         } else {
             var selectColumnInfos = filter(selectFilter, tableInfo);
-            var selectColumns = Arrays.stream(selectColumnInfos).map(ColumnMapping::name).toArray(String[]::new);
+            var selectColumns = Arrays.stream(selectColumnInfos).map(Column::name).toArray(String[]::new);
             var whereClause = whereParser.parseWhere(query.getWhere());
             var groupByColumns = groupByParser.parseGroupBy(query.getGroupBy());
             var orderByClauses = orderByParser.parseOrderBy(query.getOrderBy());
