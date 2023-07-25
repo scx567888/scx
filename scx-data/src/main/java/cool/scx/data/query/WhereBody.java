@@ -1,7 +1,9 @@
 package cool.scx.data.query;
 
+import cool.scx.data.ReadableQuery;
 import cool.scx.data.query.exception.WrongWhereTypeParamSizeException;
 
+import static cool.scx.data.query.Where.where;
 import static cool.scx.data.query.WhereType.*;
 import static cool.scx.util.StringUtils.isBlank;
 
@@ -12,7 +14,8 @@ import static cool.scx.util.StringUtils.isBlank;
  * @author scx567888
  * @version 0.0.1
  */
-public record WhereBody(String name, WhereType whereType, Object value1, Object value2, WhereOption.Info info) {
+public record WhereBody(String name, WhereType whereType, Object value1, Object value2,
+                        WhereOption.Info info) implements ReadableQuery {
 
     public WhereBody(String name, WhereType whereType, Object value1, Object value2, WhereOption.Info info) {
         //名称不能为空
@@ -257,6 +260,11 @@ public record WhereBody(String name, WhereType whereType, Object value1, Object 
             validParamSize = validParamSize + 1;
         }
         return validParamSize;
+    }
+
+    @Override
+    public Where getWhere() {
+        return where(this);
     }
 
 }
