@@ -1,6 +1,9 @@
 package cool.scx.data;
 
-import cool.scx.data.query.*;
+import cool.scx.data.query.GroupBy;
+import cool.scx.data.query.Limit;
+import cool.scx.data.query.OrderBy;
+import cool.scx.data.query.Where;
 
 /**
  * 查询参数类<br>
