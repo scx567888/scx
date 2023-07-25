@@ -13,7 +13,6 @@ import cool.scx.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Objects;
 
 import static cool.scx.data.jdbc.parser.ColumnNameParser.parseColumnName;
