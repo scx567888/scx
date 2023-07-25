@@ -1,10 +1,10 @@
 package cool.scx.logging;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import static java.lang.System.Logger.Level;
+import static java.util.Collections.addAll;
 
 /**
  * <p>ScxLoggerConfig class.</p>
@@ -92,7 +92,7 @@ public class ScxLoggerConfig {
             this.recorders = new HashSet<>();
         }
         this.recorders.add(recorder);
-        this.recorders.addAll(List.of(recorders));
+        addAll(this.recorders, recorders);
         return this;
     }
 
