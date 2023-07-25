@@ -1,6 +1,8 @@
 package cool.scx.data.query;
 
-public interface Logic {
+import cool.scx.data.ReadableQuery;
+
+public interface Logic extends ReadableQuery {
 
     static Logic and(Object... clauses) {
         return new AND(clauses);
@@ -21,5 +23,10 @@ public interface Logic {
     LogicType type();
 
     Object[] clauses();
+
+    @Override
+    default Where getWhere() {
+        return new Where().set(this);
+    }
 
 }

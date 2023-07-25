@@ -14,7 +14,7 @@ import cool.scx.data.query.Where;
  * @author scx567888
  * @version 0.1.3
  */
-public class Query {
+public class Query implements ReadableQuery {
 
     /**
      * 自定义WHERE 添加
@@ -89,18 +89,22 @@ public class Query {
         return this;
     }
 
+    @Override
     public Where getWhere() {
         return where;
     }
 
+    @Override
     public GroupBy getGroupBy() {
         return groupBy;
     }
 
+    @Override
     public OrderBy getOrderBy() {
         return orderBy;
     }
 
+    @Override
     public Limit getLimit() {
         return limit;
     }
