@@ -1,5 +1,7 @@
 package cool.scx.data.query;
 
+import cool.scx.data.ReadableQuery;
+
 import java.util.Arrays;
 
 /**
@@ -8,7 +10,7 @@ import java.util.Arrays;
  * @author scx567888
  * @version 0.0.1
  */
-public final class GroupBy {
+public final class GroupBy implements ReadableQuery {
 
     /**
      * 分组字段列表
@@ -29,6 +31,10 @@ public final class GroupBy {
      */
     public GroupBy(GroupBy oldGroupBy) {
         this.groupByClauses = Arrays.copyOf(oldGroupBy.groupByClauses, oldGroupBy.groupByClauses.length);
+    }
+
+    public static GroupBy groupBy(Object... groupByClauses) {
+        return new GroupBy().set(groupByClauses);
     }
 
     /**
@@ -53,6 +59,11 @@ public final class GroupBy {
      */
     public GroupBy clear() {
         this.groupByClauses = new Object[]{};
+        return this;
+    }
+
+    @Override
+    public GroupBy getGroupBy() {
         return this;
     }
 
