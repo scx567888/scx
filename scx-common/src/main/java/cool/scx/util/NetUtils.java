@@ -7,8 +7,9 @@ import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.stream.Stream;
+
+import static java.util.Collections.addAll;
 
 /**
  * 基本网络操作工具类
@@ -115,8 +116,8 @@ public final class NetUtils {
         @Override
         public String toString() {
             var l = new ArrayList<String>();
-            Collections.addAll(l, v4);
-            Collections.addAll(l, v6);
+            addAll(l, v4);
+            addAll(l, v6);
             return "[" + String.join(", ", l) + "]";
         }
 
