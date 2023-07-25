@@ -2,6 +2,8 @@ package cool.scx.data.query;
 
 import cool.scx.data.Query;
 
+import static cool.scx.data.Query.where;
+
 public interface Logic extends Query {
 
     static Logic and(Object... clauses) {
@@ -26,7 +28,7 @@ public interface Logic extends Query {
 
     @Override
     default Where getWhere() {
-        return new Where().set(this);
+        return where(this);
     }
 
 }
