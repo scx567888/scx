@@ -70,5 +70,5 @@ public interface SQL extends Query {
     default Where getWhere() {
         return where(this);
     }
-    
+
 }
