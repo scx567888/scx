@@ -3,11 +3,11 @@ package cool.scx.data;
 import cool.scx.data.field_filter.FilterMode;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import static cool.scx.data.field_filter.FilterMode.EXCLUDED;
 import static cool.scx.data.field_filter.FilterMode.INCLUDED;
+import static java.util.Collections.addAll;
 
 /**
  * 列过滤器
@@ -64,7 +64,7 @@ public class FieldFilter {
      * @return this 方便链式调用
      */
     private FieldFilter _addFieldNames(String... fieldNames) {
-        this.fieldNames.addAll(List.of(fieldNames));
+        addAll(this.fieldNames, fieldNames);
         return this;
     }
 

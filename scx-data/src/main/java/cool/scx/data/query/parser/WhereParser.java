@@ -4,7 +4,8 @@ import cool.scx.data.query.*;
 import cool.scx.data.query.WhereOption.Info;
 
 import java.util.ArrayList;
-import java.util.List;
+
+import static java.util.Collections.addAll;
 
 public abstract class WhereParser {
 
@@ -15,7 +16,7 @@ public abstract class WhereParser {
             var w = parse(obj);
             if (w != null && !w.isEmpty()) {
                 whereClause.append(w.whereClause());
-                whereParams.addAll(List.of(w.params()));
+                addAll(whereParams, w.params());
             }
         }
         return new WhereClause(whereClause.toString(), whereParams.toArray());
@@ -30,6 +31,8 @@ public abstract class WhereParser {
             return parseLogic(l);
         } else if (obj instanceof WhereClause w) {
             return w;
+        } else if (obj instanceof Where w) {
+            return parseWhere(w);
         } else {
             return null;
         }
@@ -46,7 +49,7 @@ public abstract class WhereParser {
             var w = parse(c);
             if (w != null && !w.isEmpty()) {
                 clauses.add(w.whereClause());
-                whereParams.addAll(List.of(w.params()));
+                addAll(whereParams, w.params());
             }
         }
         var clause = String.join(" " + getLogicKeyWord(l.type()) + " ", clauses);

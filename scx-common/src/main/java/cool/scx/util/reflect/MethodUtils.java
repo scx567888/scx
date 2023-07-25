@@ -2,15 +2,16 @@ package cool.scx.util.reflect;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.List;
+
+import static java.util.Collections.addAll;
 
 public class MethodUtils {
 
     public static Method[] findMethods(Class<?> clazz) {
         var list = new ArrayList<Method>();
         while (clazz != null) {
-            var fields = clazz.getDeclaredMethods();
-            list.addAll(List.of(fields));
+            var methods = clazz.getDeclaredMethods();
+            addAll(list, methods);
             clazz = clazz.getSuperclass();
         }
         return list.toArray(Method[]::new);

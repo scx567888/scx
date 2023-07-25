@@ -13,7 +13,6 @@ import cool.scx.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Objects;
 
 import static cool.scx.data.jdbc.parser.ColumnNameParser.parseColumnName;
@@ -22,6 +21,7 @@ import static cool.scx.util.ObjectUtils.Option.IGNORE_JSON_IGNORE;
 import static cool.scx.util.ObjectUtils.Option.IGNORE_NULL_VALUE;
 import static cool.scx.util.ObjectUtils.toJson;
 import static cool.scx.util.ObjectUtils.toObjectArray;
+import static java.util.Collections.addAll;
 
 public class JDBCDaoWhereParser extends WhereParser {
 
@@ -103,14 +103,14 @@ public class JDBCDaoWhereParser extends WhereParser {
         var whereParams = new ArrayList<>();
         if (value1 instanceof SQL a) {
             v1 = "(" + a.sql() + ")";
-            Collections.addAll(whereParams, a.params());
+            addAll(whereParams, a.params());
         } else {
             v1 = "?";
             whereParams.add(value1);
         }
         if (value2 instanceof SQL a) {
             v2 = "(" + a.sql() + ")";
-            Collections.addAll(whereParams, a.params());
+            addAll(whereParams, a.params());
         } else {
             v2 = "?";
             whereParams.add(value2);
