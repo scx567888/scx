@@ -65,7 +65,7 @@ public class Query {
         return this;
     }
 
-    public Query orderBy(OrderByBody... orderByClauses) {
+    public Query orderBy(Object... orderByClauses) {
         this.orderBy.set(orderByClauses);
         return this;
     }
