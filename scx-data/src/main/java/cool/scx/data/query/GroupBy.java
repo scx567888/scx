@@ -1,5 +1,7 @@
 package cool.scx.data.query;
 
+import cool.scx.data.Query;
+
 import java.util.Arrays;
 
 /**
@@ -8,7 +10,7 @@ import java.util.Arrays;
  * @author scx567888
  * @version 0.0.1
  */
-public final class GroupBy {
+public final class GroupBy implements Query {
 
     /**
      * 分组字段列表
@@ -53,6 +55,11 @@ public final class GroupBy {
      */
     public GroupBy clear() {
         this.groupByClauses = new Object[]{};
+        return this;
+    }
+
+    @Override
+    public GroupBy getGroupBy() {
         return this;
     }
 

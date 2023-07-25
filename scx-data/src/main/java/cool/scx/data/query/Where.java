@@ -1,5 +1,7 @@
 package cool.scx.data.query;
 
+import cool.scx.data.Query;
+
 import java.util.Arrays;
 
 /**
@@ -8,7 +10,7 @@ import java.util.Arrays;
  * @author scx567888
  * @version 0.0.1
  */
-public final class Where {
+public final class Where implements Query {
 
     /**
      * 自定义的查询语句
@@ -65,6 +67,11 @@ public final class Where {
      */
     public Where clear() {
         whereClause = new Object[]{};
+        return this;
+    }
+
+    @Override
+    public Where getWhere() {
         return this;
     }
 

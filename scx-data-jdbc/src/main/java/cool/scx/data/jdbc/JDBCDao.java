@@ -178,8 +178,55 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
 
     @Override
     public Entity get(Query query, FieldFilter columnFilter) {
-        return sqlRunner.query(buildSelectSQL(query.clearOffset().limit(1), columnFilter), entityBeanHandler);
+        return sqlRunner.query(buildGetSQL(query, columnFilter), entityBeanHandler);
     }
+
+    public final SQL buildGetSQL(Query query, FieldFilter selectFilter) {
+        var selectColumnInfos = filter(selectFilter, tableInfo);
+        var selectColumns = Arrays.stream(selectColumnInfos).map(Column::name).toArray(String[]::new);
+        var whereClause = whereParser.parseWhere(query.getWhere());
+        var groupByColumns = groupByParser.parseGroupBy(query.getGroupBy());
+        var orderByClauses = orderByParser.parseOrderBy(query.getOrderBy());
+        var sql = Select(selectColumns)
+                .From(tableInfo.name())
+                .Where(whereClause.whereClause())
+                .GroupBy(groupByColumns)
+                .OrderBy(orderByClauses)
+                .Limit(null, 1L)
+                .GetSQL(jdbcContext.dialect());
+        return SQL.ofPlaceholder(sql, whereClause.params());
+    }
+
+    /**
+     * 在 mysql 中 不支持 in 子句中包含 limit 但是我们可以使用 一个嵌套的别名表来跳过检查
+     * 此方法便是用于生成嵌套的 sql 的
+     *
+     * @param query        q
+     * @param selectFilter s
+     * @return a
+     */
+    public final SQL buildGetSQLWithAlias(Query query, FieldFilter selectFilter) {
+        //没有 limit 的时候不需要嵌套
+        if (query.getLimit() == null) {
+            return buildSelectSQL(query, selectFilter);
+        } else {
+            var selectColumnInfos = filter(selectFilter, tableInfo);
+            var selectColumns = Arrays.stream(selectColumnInfos).map(Column::name).toArray(String[]::new);
+            var whereClause = whereParser.parseWhere(query.getWhere());
+            var groupByColumns = groupByParser.parseGroupBy(query.getGroupBy());
+            var orderByClauses = orderByParser.parseOrderBy(query.getOrderBy());
+            var sql0 = Select(selectColumns)
+                    .From(tableInfo.name())
+                    .Where(whereClause.whereClause())
+                    .GroupBy(groupByColumns)
+                    .OrderBy(orderByClauses)
+                    .Limit(null, 1L)
+                    .GetSQL(jdbcContext.dialect());
+            var sql = Select("*").From("(" + sql0 + ")").GetSQL(jdbcContext.dialect());
+            return SQL.ofPlaceholder(sql + " AS " + tableInfo.name() + "_" + RandomUtils.randomString(6), whereClause.params());
+        }
+    }
+
 
     /**
      * 构建 (根据聚合查询条件 {@link Query} 获取数据列表) 的SQL
@@ -239,7 +286,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
                 .Where(whereClause.whereClause())
                 .GroupBy(groupByColumns)
                 .OrderBy(orderByClauses)
-                .Limit(query.getLimit().getOffset(), query.getLimit().getLimit())
+                .Limit(query.getOffset(), query.getLimit())
                 .GetSQL(jdbcContext.dialect());
         return SQL.ofPlaceholder(sql, whereClause.params());
     }
@@ -254,11 +301,11 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
      */
     public final SQL buildSelectSQLWithAlias(Query query, FieldFilter selectFilter) {
         //没有 limit 的时候不需要嵌套
-        if (query.getLimit().getLimit() == null) {
+        if (query.getLimit() == null) {
             return buildSelectSQL(query, selectFilter);
         } else {
             var selectColumnInfos = filter(selectFilter, tableInfo);
-            var selectColumns = Arrays.stream(selectColumnInfos).map(ColumnMapping::name).toArray(String[]::new);
+            var selectColumns = Arrays.stream(selectColumnInfos).map(Column::name).toArray(String[]::new);
             var whereClause = whereParser.parseWhere(query.getWhere());
             var groupByColumns = groupByParser.parseGroupBy(query.getGroupBy());
             var orderByClauses = orderByParser.parseOrderBy(query.getOrderBy());
@@ -267,7 +314,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
                     .Where(whereClause.whereClause())
                     .GroupBy(groupByColumns)
                     .OrderBy(orderByClauses)
-                    .Limit(query.getLimit().getOffset(), query.getLimit().getLimit())
+                    .Limit(query.getOffset(), query.getLimit())
                     .GetSQL(jdbcContext.dialect());
             var sql = Select("*").From("(" + sql0 + ")").GetSQL(jdbcContext.dialect());
             return SQL.ofPlaceholder(sql + " AS " + tableInfo.name() + "_" + RandomUtils.randomString(6), whereClause.params());
@@ -335,7 +382,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
                 .Set(updateSetColumns)
                 .Where(whereClause.whereClause())
                 .OrderBy(orderByClauses)
-                .Limit(null, query.getLimit().getLimit())
+                .Limit(null, query.getLimit())
                 .GetSQL(jdbcContext.dialect());
         var entityParams = Arrays.stream(updateSetColumnInfos).map(c -> c.javaFieldValue(entity)).toArray();
         return SQL.ofPlaceholder(sql, concat(entityParams, whereClause.params()));
@@ -367,7 +414,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
         var sql = Delete(tableInfo.name())
                 .Where(whereClause.whereClause())
                 .OrderBy(orderByClauses)
-                .Limit(null, query.getLimit().getLimit())
+                .Limit(null, query.getLimit())
                 .GetSQL(jdbcContext.dialect());
         return SQL.ofPlaceholder(sql, whereClause.params());
     }

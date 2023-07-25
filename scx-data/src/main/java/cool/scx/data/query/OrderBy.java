@@ -1,5 +1,7 @@
 package cool.scx.data.query;
 
+import cool.scx.data.Query;
+
 import java.util.Arrays;
 
 /**
@@ -8,7 +10,7 @@ import java.util.Arrays;
  * @author scx567888
  * @version 0.0.1
  */
-public final class OrderBy {
+public final class OrderBy implements Query {
 
     /**
      * 存储排序的字段
@@ -35,9 +37,11 @@ public final class OrderBy {
      * set
      *
      * @param orderByClauses a
+     * @return self
      */
-    public void set(Object... orderByClauses) {
+    public OrderBy set(Object... orderByClauses) {
         this.orderByClauses = orderByClauses;
+        return this;
     }
 
     public Object[] clauses() {
@@ -51,6 +55,11 @@ public final class OrderBy {
      */
     public OrderBy clear() {
         this.orderByClauses = new Object[]{};
+        return this;
+    }
+
+    @Override
+    public OrderBy getOrderBy() {
         return this;
     }
 

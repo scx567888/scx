@@ -85,11 +85,11 @@ public class MySQLXDao<Entity> implements Dao<Entity, String> {
         var findStatement = this.collection
                 .find(whereClause.whereClause())
                 .bind(whereClause.params());
-        if (query.getLimit().getOffset() != null) {
-            findStatement.offset(query.getLimit().getOffset());
+        if (query.getOffset() != null) {
+            findStatement.offset(query.getOffset());
         }
-        if (query.getLimit().getLimit() != null) {
-            findStatement.limit(query.getLimit().getLimit());
+        if (query.getLimit() != null) {
+            findStatement.limit(query.getLimit());
         }
         var docResult = findStatement.execute();
         var dbDocs = docResult.fetchAll();

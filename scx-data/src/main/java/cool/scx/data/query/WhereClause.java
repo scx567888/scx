@@ -1,9 +1,12 @@
 package cool.scx.data.query;
 
+import cool.scx.data.Query;
 import cool.scx.util.ArrayUtils;
 import cool.scx.util.StringUtils;
 
-public record WhereClause(String whereClause, Object... params) {
+import static cool.scx.data.Query.where;
+
+public record WhereClause(String whereClause, Object... params) implements Query {
 
     public static WhereClause whereClause(String whereClause, Object... params) {
         return new WhereClause(whereClause, params);
@@ -21,6 +24,11 @@ public record WhereClause(String whereClause, Object... params) {
 
     public boolean isEmpty() {
         return (whereClause == null || whereClause.isEmpty()) && (params == null || params.length == 0);
+    }
+
+    @Override
+    public Where getWhere() {
+        return where(this);
     }
 
 }

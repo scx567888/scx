@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static cool.scx.data.FieldFilter.ofExcluded;
+import static cool.scx.data.Query.query;
 
 /**
  * 用于定义数据访问层的规范
@@ -58,11 +59,11 @@ public interface Dao<Entity, ID> {
     }
 
     default List<Entity> find(FieldFilter fieldFilter) {
-        return find(new Query(), fieldFilter);
+        return find(query(), fieldFilter);
     }
 
     default List<Entity> find() {
-        return find(new Query(), ofExcluded());
+        return find(query(), ofExcluded());
     }
 
     /**

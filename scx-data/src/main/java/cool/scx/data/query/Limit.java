@@ -1,12 +1,14 @@
 package cool.scx.data.query;
 
+import cool.scx.data.Query;
+
 /**
  * 条数限制
  *
  * @author scx567888
  * @version 0.0.1
  */
-public final class Limit {
+public final class Limit implements Query {
 
     /**
      * 当前页 页码 默认为空 即不设置页码
@@ -69,6 +71,7 @@ public final class Limit {
      *
      * @return a int
      */
+    @Override
     public Long getOffset() {
         return offset;
     }
@@ -78,6 +81,7 @@ public final class Limit {
      *
      * @return limit
      */
+    @Override
     public Long getLimit() {
         return limit;
     }

@@ -1,11 +1,15 @@
 package cool.scx.data.jdbc.sql;
 
+import cool.scx.data.Query;
 import cool.scx.data.jdbc.dialect.Dialect;
+import cool.scx.data.query.Where;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+
+import static cool.scx.data.Query.where;
 
 /**
  * 可包含参数的 SQL
@@ -13,7 +17,7 @@ import java.util.Map;
  * @author scx567888
  * @version 0.0.1
  */
-public interface SQL {
+public interface SQL extends Query {
 
     static SQL ofNormal(String normalSQL) {
         return new NormalSQL(normalSQL);
@@ -60,6 +64,11 @@ public interface SQL {
      */
     default PreparedStatement fillParams(PreparedStatement preparedStatement, Dialect typeHandlerSelector) throws SQLException {
         return preparedStatement;
+    }
+
+    @Override
+    default Where getWhere() {
+        return where(this);
     }
 
 }
