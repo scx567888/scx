@@ -1,6 +1,6 @@
 package cool.scx.data.query;
 
-import cool.scx.data.Query0;
+import cool.scx.data.Query;
 
 import java.util.Arrays;
 
@@ -10,7 +10,7 @@ import java.util.Arrays;
  * @author scx567888
  * @version 0.0.1
  */
-public final class Where implements Query0 {
+public final class Where implements Query {
 
     /**
      * 自定义的查询语句
@@ -31,10 +31,6 @@ public final class Where implements Query0 {
      */
     public Where(Where oldWhere) {
         this.whereClause = Arrays.copyOf(oldWhere.whereClause, oldWhere.whereClause.length);
-    }
-
-    public static Where where(Object... whereClauses) {
-        return new Where().set(whereClauses);
     }
 
     /**

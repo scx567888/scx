@@ -1,6 +1,6 @@
 package cool.scx.data.query;
 
-import cool.scx.data.Query0;
+import cool.scx.data.Query;
 
 import java.util.Arrays;
 
@@ -10,7 +10,7 @@ import java.util.Arrays;
  * @author scx567888
  * @version 0.0.1
  */
-public final class OrderBy implements Query0 {
+public final class OrderBy implements Query {
 
     /**
      * 存储排序的字段
@@ -31,10 +31,6 @@ public final class OrderBy implements Query0 {
      */
     public OrderBy(OrderBy oldOrderBy) {
         this.orderByClauses = Arrays.copyOf(oldOrderBy.orderByClauses, oldOrderBy.orderByClauses.length);
-    }
-
-    public static OrderBy orderBy(Object... orderByClauses) {
-        return new OrderBy().set(orderByClauses);
     }
 
     /**

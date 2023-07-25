@@ -1,6 +1,6 @@
 package cool.scx.data.query;
 
-import cool.scx.data.Query0;
+import cool.scx.data.Query;
 
 import java.util.Arrays;
 
@@ -10,7 +10,7 @@ import java.util.Arrays;
  * @author scx567888
  * @version 0.0.1
  */
-public final class GroupBy implements Query0 {
+public final class GroupBy implements Query {
 
     /**
      * 分组字段列表
@@ -31,10 +31,6 @@ public final class GroupBy implements Query0 {
      */
     public GroupBy(GroupBy oldGroupBy) {
         this.groupByClauses = Arrays.copyOf(oldGroupBy.groupByClauses, oldGroupBy.groupByClauses.length);
-    }
-
-    public static GroupBy groupBy(Object... groupByClauses) {
-        return new GroupBy().set(groupByClauses);
     }
 
     /**
