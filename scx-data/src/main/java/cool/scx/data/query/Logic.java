@@ -1,8 +1,8 @@
 package cool.scx.data.query;
 
-import cool.scx.data.Query0;
+import cool.scx.data.Query;
 
-public interface Logic extends Query0 {
+public interface Logic extends Query {
 
     static Logic and(Object... clauses) {
         return new AND(clauses);

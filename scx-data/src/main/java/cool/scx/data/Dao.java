@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static cool.scx.data.FieldFilter.ofExcluded;
+import static cool.scx.data.Query.query;
 
 /**
  * 用于定义数据访问层的规范
@@ -51,18 +52,18 @@ public interface Dao<Entity, ID> {
      * @param query 查询条件
      * @return 数据列表
      */
-    List<Entity> find(Query0 query, FieldFilter fieldFilter);
+    List<Entity> find(Query query, FieldFilter fieldFilter);
 
-    default List<Entity> find(Query0 query) {
+    default List<Entity> find(Query query) {
         return find(query, ofExcluded());
     }
 
     default List<Entity> find(FieldFilter fieldFilter) {
-        return find(new Query(), fieldFilter);
+        return find(query(), fieldFilter);
     }
 
     default List<Entity> find() {
-        return find(new Query(), ofExcluded());
+        return find(query(), ofExcluded());
     }
 
     /**
@@ -71,9 +72,9 @@ public interface Dao<Entity, ID> {
      * @param query 查询条件
      * @return 数据列表
      */
-    Entity get(Query0 query, FieldFilter fieldFilter);
+    Entity get(Query query, FieldFilter fieldFilter);
 
-    default Entity get(Query0 query) {
+    default Entity get(Query query) {
         return get(query, ofExcluded());
     }
 
@@ -84,7 +85,7 @@ public interface Dao<Entity, ID> {
      * @param query  查询条件
      * @return 更新成功的条数
      */
-    long update(Entity entity, Query0 query, FieldFilter fieldFilter);
+    long update(Entity entity, Query query, FieldFilter fieldFilter);
 
     /**
      * 更新数据
@@ -93,7 +94,7 @@ public interface Dao<Entity, ID> {
      * @param query  查询条件
      * @return 更新成功的条数
      */
-    default long update(Entity entity, Query0 query) {
+    default long update(Entity entity, Query query) {
         return update(entity, query, ofExcluded());
     }
 
@@ -103,7 +104,7 @@ public interface Dao<Entity, ID> {
      * @param query 查询条件
      * @return 删除成功的条数
      */
-    long delete(Query0 query);
+    long delete(Query query);
 
     /**
      * 查询行数
@@ -111,7 +112,7 @@ public interface Dao<Entity, ID> {
      * @param query 查询条件
      * @return 符合条件的行数
      */
-    long count(Query0 query);
+    long count(Query query);
 
     /**
      * 清空整个数据源 (慎用)
