@@ -2,6 +2,11 @@ package cool.scx.data.query.parser;
 
 import cool.scx.data.query.OrderBy;
 import cool.scx.data.query.OrderByBody;
+import cool.scx.data.query.OrderByBodySet;
+
+import java.util.ArrayList;
+
+import static java.util.Collections.addAll;
 
 public abstract class OrderByParser {
 
@@ -9,16 +14,27 @@ public abstract class OrderByParser {
         return parseAll(orderBy.clauses());
     }
 
-    public final String[] parseAll(OrderByBody[] objs) {
-        var str = new String[objs.length];
-        for (int i = 0; i < objs.length; i = i + 1) {
-            str[i] = parse(objs[i]);
+    public final String[] parseAll(Object[] objs) {
+        var list = new ArrayList<String>();
+        for (var obj : objs) {
+            var s = parse(obj);
+            addAll(list, s);
         }
-        return str;
+        return list.toArray(String[]::new);
     }
 
-    public String parse(OrderByBody obj) {
-        return parseOrderByBody(obj);
+    public String[] parse(Object obj) {
+        if (obj instanceof OrderByBody o) {
+            return new String[]{parseOrderByBody(o)};
+        } else if (obj instanceof String s) {
+            return new String[]{s};
+        } else if (obj instanceof OrderByBodySet s) {
+            return parseAll(s.clauses());
+        } else if (obj instanceof OrderBy s) {
+            return parseAll(s.clauses());
+        } else {
+            return null;
+        }
     }
 
     protected abstract String parseOrderByBody(OrderByBody body);
