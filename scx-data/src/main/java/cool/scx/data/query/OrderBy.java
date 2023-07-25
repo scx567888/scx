@@ -13,13 +13,13 @@ public final class OrderBy {
     /**
      * 存储排序的字段
      */
-    private OrderByBody[] orderByClauses;
+    private Object[] orderByClauses;
 
     /**
      * 创建一个 OrderBy 对象
      */
     public OrderBy() {
-        this.orderByClauses = new OrderByBody[]{};
+        this.orderByClauses = new Object[]{};
     }
 
     /**
@@ -36,11 +36,11 @@ public final class OrderBy {
      *
      * @param orderByClauses a
      */
-    public void set(OrderByBody... orderByClauses) {
+    public void set(Object... orderByClauses) {
         this.orderByClauses = orderByClauses;
     }
 
-    public OrderByBody[] clauses() {
+    public Object[] clauses() {
         return this.orderByClauses;
     }
 
@@ -50,7 +50,7 @@ public final class OrderBy {
      * @return self
      */
     public OrderBy clear() {
-        this.orderByClauses = new OrderByBody[]{};
+        this.orderByClauses = new Object[]{};
         return this;
     }
 

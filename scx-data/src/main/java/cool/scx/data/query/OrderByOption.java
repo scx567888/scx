@@ -9,6 +9,11 @@ package cool.scx.data.query;
 public enum OrderByOption {
 
     /**
+     * 替换现有同名字段
+     */
+    REPLACE,
+
+    /**
      * 使用原始名称
      */
     USE_ORIGINAL_NAME,
@@ -27,6 +32,11 @@ public enum OrderByOption {
     public static final class Info {
 
         /**
+         * 是否替换已有的相同名称的 WhereBody
+         */
+        private boolean replace = false;
+
+        /**
          * 是否使用原始名称
          */
         private boolean useOriginalName = false;
@@ -39,10 +49,15 @@ public enum OrderByOption {
         public Info(OrderByOption... orderByOptions) {
             for (var option : orderByOptions) {
                 switch (option) {
+                    case REPLACE -> this.replace = true;
                     case USE_ORIGINAL_NAME -> this.useOriginalName = true;
                     case USE_JSON_EXTRACT -> this.useJsonExtract = true;
                 }
             }
+        }
+
+        public boolean replace() {
+            return replace;
         }
 
         public boolean useOriginalName() {
