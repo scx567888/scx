@@ -1,6 +1,6 @@
 package cool.scx.data.query;
 
-import cool.scx.data.ReadableQuery;
+import cool.scx.data.Query0;
 
 import static cool.scx.data.query.OrderBy.orderBy;
 import static cool.scx.data.query.OrderByOption.Info;
@@ -14,7 +14,7 @@ import static cool.scx.util.StringUtils.isBlank;
  * @author scx567888
  * @version 0.0.1
  */
-public record OrderByBody(String name, OrderByType orderByType, Info info) implements ReadableQuery {
+public record OrderByBody(String name, OrderByType orderByType, Info info) implements Query0 {
 
     public OrderByBody(String name, OrderByType orderByType, Info info) {
         if (isBlank(name)) {

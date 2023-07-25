@@ -1,12 +1,12 @@
 package cool.scx.data.query;
 
-import cool.scx.data.ReadableQuery;
+import cool.scx.data.Query0;
 import cool.scx.util.ArrayUtils;
 import cool.scx.util.StringUtils;
 
 import static cool.scx.data.query.Where.where;
 
-public record WhereClause(String whereClause, Object... params) implements ReadableQuery {
+public record WhereClause(String whereClause, Object... params) implements Query0 {
 
     public static WhereClause whereClause(String whereClause, Object... params) {
         return new WhereClause(whereClause, params);

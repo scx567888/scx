@@ -1,6 +1,6 @@
 package cool.scx.data.query;
 
-import cool.scx.data.ReadableQuery;
+import cool.scx.data.Query0;
 import cool.scx.data.query.exception.WrongWhereTypeParamSizeException;
 
 import static cool.scx.data.query.Where.where;
@@ -15,7 +15,7 @@ import static cool.scx.util.StringUtils.isBlank;
  * @version 0.0.1
  */
 public record WhereBody(String name, WhereType whereType, Object value1, Object value2,
-                        WhereOption.Info info) implements ReadableQuery {
+                        WhereOption.Info info) implements Query0 {
 
     public WhereBody(String name, WhereType whereType, Object value1, Object value2, WhereOption.Info info) {
         //名称不能为空

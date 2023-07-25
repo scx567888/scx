@@ -51,9 +51,9 @@ public interface Dao<Entity, ID> {
      * @param query 查询条件
      * @return 数据列表
      */
-    List<Entity> find(ReadableQuery query, FieldFilter fieldFilter);
+    List<Entity> find(Query0 query, FieldFilter fieldFilter);
 
-    default List<Entity> find(ReadableQuery query) {
+    default List<Entity> find(Query0 query) {
         return find(query, ofExcluded());
     }
 
@@ -71,9 +71,9 @@ public interface Dao<Entity, ID> {
      * @param query 查询条件
      * @return 数据列表
      */
-    Entity get(ReadableQuery query, FieldFilter fieldFilter);
+    Entity get(Query0 query, FieldFilter fieldFilter);
 
-    default Entity get(ReadableQuery query) {
+    default Entity get(Query0 query) {
         return get(query, ofExcluded());
     }
 
@@ -84,7 +84,7 @@ public interface Dao<Entity, ID> {
      * @param query  查询条件
      * @return 更新成功的条数
      */
-    long update(Entity entity, ReadableQuery query, FieldFilter fieldFilter);
+    long update(Entity entity, Query0 query, FieldFilter fieldFilter);
 
     /**
      * 更新数据
@@ -93,7 +93,7 @@ public interface Dao<Entity, ID> {
      * @param query  查询条件
      * @return 更新成功的条数
      */
-    default long update(Entity entity, ReadableQuery query) {
+    default long update(Entity entity, Query0 query) {
         return update(entity, query, ofExcluded());
     }
 
@@ -103,7 +103,7 @@ public interface Dao<Entity, ID> {
      * @param query 查询条件
      * @return 删除成功的条数
      */
-    long delete(ReadableQuery query);
+    long delete(Query0 query);
 
     /**
      * 查询行数
@@ -111,7 +111,7 @@ public interface Dao<Entity, ID> {
      * @param query 查询条件
      * @return 符合条件的行数
      */
-    long count(ReadableQuery query);
+    long count(Query0 query);
 
     /**
      * 清空整个数据源 (慎用)

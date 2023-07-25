@@ -1,6 +1,6 @@
 package cool.scx.data.query;
 
-import cool.scx.data.ReadableQuery;
+import cool.scx.data.Query0;
 import cool.scx.data.query.OrderByOption.Info;
 
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ import static cool.scx.data.query.OrderByType.DESC;
  * @author scx567888
  * @version 0.0.1
  */
-public final class OrderByBodySet implements ReadableQuery {
+public final class OrderByBodySet implements Query0 {
 
     /**
      * 存储排序的字段

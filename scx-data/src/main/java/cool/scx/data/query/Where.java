@@ -1,6 +1,6 @@
 package cool.scx.data.query;
 
-import cool.scx.data.ReadableQuery;
+import cool.scx.data.Query0;
 
 import java.util.Arrays;
 
@@ -10,7 +10,7 @@ import java.util.Arrays;
  * @author scx567888
  * @version 0.0.1
  */
-public final class Where implements ReadableQuery {
+public final class Where implements Query0 {
 
     /**
      * 自定义的查询语句

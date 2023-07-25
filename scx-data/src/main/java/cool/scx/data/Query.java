@@ -14,7 +14,7 @@ import cool.scx.data.query.Where;
  * @author scx567888
  * @version 0.1.3
  */
-public class Query implements ReadableQuery {
+public class Query implements Query0 {
 
     /**
      * 自定义WHERE 添加
@@ -56,6 +56,14 @@ public class Query implements ReadableQuery {
         this.groupBy = new GroupBy(oldQuery.groupBy);
         this.orderBy = new OrderBy(oldQuery.orderBy);
         this.limit = new Limit(oldQuery.limit);
+    }
+
+    public static Query query() {
+        return new Query();
+    }
+
+    public static Query query(Query oldQuery) {
+        return new Query(oldQuery);
     }
 
     public Query where(Object... whereClauses) {
