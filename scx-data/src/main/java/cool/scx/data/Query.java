@@ -5,141 +5,55 @@ import cool.scx.data.query.Limit;
 import cool.scx.data.query.OrderBy;
 import cool.scx.data.query.Where;
 
-/**
- * 查询参数类<br>
- * 针对  GroupBy , OrderBy , Limit , Where 等进行的简单封装 <br>
- * 同时附带一些简单的参数校验 <br>
- * 只是 为了方便传递参数使用<br>
- *
- * @author scx567888
- * @version 0.1.3
- */
-public class Query implements Query0 {
+public interface Query {
 
-    /**
-     * 自定义WHERE 添加
-     */
-    private final Where where;
-
-    /**
-     * 自定义分组 SQL 添加
-     */
-    private final GroupBy groupBy;
-
-    /**
-     * 排序的字段
-     */
-    private final OrderBy orderBy;
-
-    /**
-     * 分页参数
-     */
-    private final Limit limit;
-
-    /**
-     * 创建 Query 对象
-     */
-    public Query() {
-        this.where = new Where();
-        this.groupBy = new GroupBy();
-        this.orderBy = new OrderBy();
-        this.limit = new Limit();
+    static QueryImpl query() {
+        return new QueryImpl();
     }
 
-    /**
-     * a
-     *
-     * @param oldQuery a
-     */
-    public Query(Query oldQuery) {
-        this.where = new Where(oldQuery.where);
-        this.groupBy = new GroupBy(oldQuery.groupBy);
-        this.orderBy = new OrderBy(oldQuery.orderBy);
-        this.limit = new Limit(oldQuery.limit);
+    static QueryImpl query(QueryImpl oldQuery) {
+        return new QueryImpl(oldQuery);
     }
 
-    public static Query query() {
-        return new Query();
+    static Where where(Object... whereClauses) {
+        return new Where().set(whereClauses);
     }
 
-    public static Query query(Query oldQuery) {
-        return new Query(oldQuery);
+    static GroupBy groupBy(Object... groupByClauses) {
+        return new GroupBy().set(groupByClauses);
     }
 
-    public Query where(Object... whereClauses) {
-        this.where.set(whereClauses);
-        return this;
+    static OrderBy orderBy(Object... orderByClauses) {
+        return new OrderBy().set(orderByClauses);
     }
 
-    public Query groupBy(Object... groupByClauses) {
-        this.groupBy.set(groupByClauses);
-        return this;
+    static Limit offset(long limitOffset) {
+        return new Limit().offset(limitOffset);
     }
 
-    public Query orderBy(Object... orderByClauses) {
-        this.orderBy.set(orderByClauses);
-        return this;
+    static Limit limit(long numberOfRows) {
+        return new Limit().limit(numberOfRows);
     }
 
-    public Query offset(long limitOffset) {
-        limit.offset(limitOffset);
-        return this;
+    default Where getWhere() {
+        return new Where();
     }
 
-    /**
-     * 设置分页参数
-     *
-     * @param numberOfRows 长度
-     * @return p
-     */
-    public Query limit(long numberOfRows) {
-        limit.limit(numberOfRows);
-        return this;
+    default GroupBy getGroupBy() {
+        return new GroupBy();
     }
 
-    @Override
-    public Where getWhere() {
-        return where;
+    default OrderBy getOrderBy() {
+        return new OrderBy();
     }
 
-    @Override
-    public GroupBy getGroupBy() {
-        return groupBy;
+    default Long getOffset() {
+        return null;
     }
 
-    @Override
-    public OrderBy getOrderBy() {
-        return orderBy;
+    default Long getLimit() {
+        return null;
     }
 
-    @Override
-    public Limit getLimit() {
-        return limit;
-    }
-
-    public Query clearWhere() {
-        where.clear();
-        return this;
-    }
-
-    public Query clearGroupBy() {
-        groupBy.clear();
-        return this;
-    }
-
-    public Query clearOrderBy() {
-        orderBy.clear();
-        return this;
-    }
-
-    public Query clearOffset() {
-        limit.clearOffset();
-        return this;
-    }
-
-    public Query clearLimit() {
-        limit.clearLimit();
-        return this;
-    }
 
 }
