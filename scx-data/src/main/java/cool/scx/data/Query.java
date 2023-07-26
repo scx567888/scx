@@ -1,7 +1,7 @@
 package cool.scx.data;
 
 import cool.scx.data.query.GroupBy;
-import cool.scx.data.query.Limit;
+import cool.scx.data.query.LimitInfo;
 import cool.scx.data.query.OrderBy;
 import cool.scx.data.query.Where;
 
@@ -11,7 +11,7 @@ public interface Query {
         return new QueryImpl();
     }
 
-    static QueryImpl query(QueryImpl oldQuery) {
+    static QueryImpl query(Query oldQuery) {
         return new QueryImpl(oldQuery);
     }
 
@@ -27,12 +27,12 @@ public interface Query {
         return new OrderBy().set(orderByClauses);
     }
 
-    static Limit offset(long limitOffset) {
-        return new Limit().offset(limitOffset);
+    static LimitInfo offset(long limitOffset) {
+        return new LimitInfo().offset(limitOffset);
     }
 
-    static Limit limit(long numberOfRows) {
-        return new Limit().limit(numberOfRows);
+    static LimitInfo limit(long numberOfRows) {
+        return new LimitInfo().limit(numberOfRows);
     }
 
     default Where getWhere() {
@@ -55,5 +55,8 @@ public interface Query {
         return null;
     }
 
+    default LimitInfo getLimitInfo() {
+        return new LimitInfo();
+    }
 
 }

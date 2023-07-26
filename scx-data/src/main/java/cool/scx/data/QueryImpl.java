@@ -1,7 +1,7 @@
 package cool.scx.data;
 
 import cool.scx.data.query.GroupBy;
-import cool.scx.data.query.Limit;
+import cool.scx.data.query.LimitInfo;
 import cool.scx.data.query.OrderBy;
 import cool.scx.data.query.Where;
 
@@ -34,7 +34,7 @@ public class QueryImpl implements Query {
     /**
      * 分页参数
      */
-    private final Limit limit;
+    private final LimitInfo limitInfo;
 
     /**
      * 创建 Query 对象
@@ -43,7 +43,7 @@ public class QueryImpl implements Query {
         this.where = new Where();
         this.groupBy = new GroupBy();
         this.orderBy = new OrderBy();
-        this.limit = new Limit();
+        this.limitInfo = new LimitInfo();
     }
 
     /**
@@ -51,11 +51,11 @@ public class QueryImpl implements Query {
      *
      * @param oldQuery a
      */
-    public QueryImpl(QueryImpl oldQuery) {
-        this.where = new Where(oldQuery.where);
-        this.groupBy = new GroupBy(oldQuery.groupBy);
-        this.orderBy = new OrderBy(oldQuery.orderBy);
-        this.limit = new Limit(oldQuery.limit);
+    public QueryImpl(Query oldQuery) {
+        this.where = new Where(oldQuery.getWhere());
+        this.groupBy = new GroupBy(oldQuery.getGroupBy());
+        this.orderBy = new OrderBy(oldQuery.getOrderBy());
+        this.limitInfo = new LimitInfo(oldQuery.getLimitInfo());
     }
 
     public QueryImpl where(Object... whereClauses) {
@@ -74,7 +74,7 @@ public class QueryImpl implements Query {
     }
 
     public QueryImpl offset(long limitOffset) {
-        limit.offset(limitOffset);
+        limitInfo.offset(limitOffset);
         return this;
     }
 
@@ -85,7 +85,7 @@ public class QueryImpl implements Query {
      * @return p
      */
     public QueryImpl limit(long numberOfRows) {
-        limit.limit(numberOfRows);
+        limitInfo.limit(numberOfRows);
         return this;
     }
 
@@ -106,12 +106,17 @@ public class QueryImpl implements Query {
 
     @Override
     public Long getOffset() {
-        return limit.getOffset();
+        return limitInfo.getOffset();
     }
 
     @Override
     public Long getLimit() {
-        return limit.getLimit();
+        return limitInfo.getLimit();
+    }
+
+    @Override
+    public LimitInfo getLimitInfo() {
+        return limitInfo;
     }
 
     public QueryImpl clearWhere() {
@@ -130,12 +135,12 @@ public class QueryImpl implements Query {
     }
 
     public QueryImpl clearOffset() {
-        limit.clearOffset();
+        limitInfo.clearOffset();
         return this;
     }
 
     public QueryImpl clearLimit() {
-        limit.clearLimit();
+        limitInfo.clearLimit();
         return this;
     }
 
