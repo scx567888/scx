@@ -8,7 +8,7 @@ import cool.scx.data.Query;
  * @author scx567888
  * @version 0.0.1
  */
-public final class Limit implements Query {
+public final class LimitInfo implements Query {
 
     /**
      * 当前页 页码 默认为空 即不设置页码
@@ -23,7 +23,7 @@ public final class Limit implements Query {
     /**
      * 创建一个 Limit 对象
      */
-    public Limit() {
+    public LimitInfo() {
         this.offset = null;
         this.limit = null;
     }
@@ -33,7 +33,7 @@ public final class Limit implements Query {
      *
      * @param oldLimit 旧的 Limit
      */
-    public Limit(Limit oldLimit) {
+    public LimitInfo(LimitInfo oldLimit) {
         this.offset = oldLimit.offset;
         this.limit = oldLimit.limit;
     }
@@ -44,7 +44,7 @@ public final class Limit implements Query {
      * @param limitOffset offset (偏移量)
      * @return self
      */
-    public Limit offset(long limitOffset) {
+    public LimitInfo offset(long limitOffset) {
         if (limitOffset < 0) {
             throw new IllegalArgumentException("Limit 参数错误 : offset (偏移量) 不能小于 0 !!!");
         }
@@ -58,7 +58,7 @@ public final class Limit implements Query {
      * @param numberOfRows limit (行长度)
      * @return self
      */
-    public Limit limit(long numberOfRows) {
+    public LimitInfo limit(long numberOfRows) {
         if (numberOfRows < 0) {
             throw new IllegalArgumentException("Limit 参数错误 : limit (行长度) 不能小于 0 !!!");
         }
@@ -91,7 +91,7 @@ public final class Limit implements Query {
      *
      * @return self
      */
-    public Limit clearOffset() {
+    public LimitInfo clearOffset() {
         this.offset = null;
         return this;
     }
@@ -101,8 +101,13 @@ public final class Limit implements Query {
      *
      * @return self
      */
-    public Limit clearLimit() {
+    public LimitInfo clearLimit() {
         this.limit = null;
+        return this;
+    }
+
+    @Override
+    public LimitInfo getLimitInfo() {
         return this;
     }
 
