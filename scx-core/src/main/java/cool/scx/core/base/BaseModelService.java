@@ -111,7 +111,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 插入成功的数据的自增主键列表
      */
     public List<Long> add(Collection<Entity> entityList, FieldFilter updateFilter) {
-        return _dao().addAll(entityList, updateFilterProcessor(updateFilter));
+        return _dao().add(entityList, updateFilterProcessor(updateFilter));
     }
 
     /**

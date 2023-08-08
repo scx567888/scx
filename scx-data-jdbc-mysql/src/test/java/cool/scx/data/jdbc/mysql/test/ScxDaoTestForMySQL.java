@@ -83,7 +83,7 @@ public class ScxDaoTestForMySQL {
             list.add(m1);
         }
 
-        var newIds = userDao.addAll(list);
+        var newIds = userDao.add(list);
 
         System.out.println("JDBCDao-MySQL 插入 : " + newIds.size());
 

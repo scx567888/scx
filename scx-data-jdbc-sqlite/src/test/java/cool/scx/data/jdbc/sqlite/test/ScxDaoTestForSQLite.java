@@ -86,7 +86,7 @@ public class ScxDaoTestForSQLite {
             list.add(m1);
         }
 
-        var newIds = userDao.addAll(list);
+        var newIds = userDao.add(list);
 
         System.out.println("JDBCDao-SQLite 插入 : " + newIds.size());
 

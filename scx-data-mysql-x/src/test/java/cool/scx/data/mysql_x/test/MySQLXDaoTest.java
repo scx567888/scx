@@ -37,7 +37,7 @@ public class MySQLXDaoTest {
         var mySQLXDao = new MySQLXDao<>(User.class, schema);
 
         //清空旧数据
-        mySQLXDao._clear();
+        mySQLXDao.clear();
 
         var list = new ArrayList<User>();
 
