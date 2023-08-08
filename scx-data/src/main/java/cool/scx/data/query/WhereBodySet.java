@@ -107,7 +107,7 @@ public final class WhereBodySet implements Logic {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public WhereBodySet equal(String fieldName, Object value, WhereOption... options) {
+    public WhereBodySet eq(String fieldName, Object value, WhereOption... options) {
         return add1(fieldName, WhereType.EQUAL, value, options);
     }
 
@@ -119,7 +119,7 @@ public final class WhereBodySet implements Logic {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public WhereBodySet notEqual(String fieldName, Object value, WhereOption... options) {
+    public WhereBodySet ne(String fieldName, Object value, WhereOption... options) {
         return add1(fieldName, WhereType.NOT_EQUAL, value, options);
     }
 
@@ -131,7 +131,7 @@ public final class WhereBodySet implements Logic {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public WhereBodySet greaterThan(String fieldName, Object value, WhereOption... options) {
+    public WhereBodySet gt(String fieldName, Object value, WhereOption... options) {
         return add1(fieldName, WhereType.GREATER_THAN, value, options);
     }
 
@@ -143,7 +143,7 @@ public final class WhereBodySet implements Logic {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public WhereBodySet greaterThanOrEqual(String fieldName, Object value, WhereOption... options) {
+    public WhereBodySet ge(String fieldName, Object value, WhereOption... options) {
         return add1(fieldName, WhereType.GREATER_THAN_OR_EQUAL, value, options);
     }
 
@@ -155,7 +155,7 @@ public final class WhereBodySet implements Logic {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public WhereBodySet lessThan(String fieldName, Object value, WhereOption... options) {
+    public WhereBodySet lt(String fieldName, Object value, WhereOption... options) {
         return add1(fieldName, WhereType.LESS_THAN, value, options);
     }
 
@@ -167,7 +167,7 @@ public final class WhereBodySet implements Logic {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public WhereBodySet lessThanOrEqual(String fieldName, Object value, WhereOption... options) {
+    public WhereBodySet le(String fieldName, Object value, WhereOption... options) {
         return add1(fieldName, WhereType.LESS_THAN_OR_EQUAL, value, options);
     }
 
