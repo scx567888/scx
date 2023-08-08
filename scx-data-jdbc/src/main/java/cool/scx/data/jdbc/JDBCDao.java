@@ -11,6 +11,7 @@ import cool.scx.data.jdbc.parser.JDBCDaoWhereParser;
 import cool.scx.data.jdbc.result_handler.ResultHandler;
 import cool.scx.data.jdbc.sql.SQL;
 import cool.scx.data.jdbc.sql.SQLRunner;
+import cool.scx.data.query.WhereClause;
 import cool.scx.util.RandomUtils;
 
 import java.lang.reflect.Field;
@@ -72,7 +73,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
 
     protected final JDBCDaoOrderByParser orderByParser;
 
-    private final JDBCContext jdbcContext;
+    protected final JDBCContext jdbcContext;
 
     /**
      * a
@@ -96,55 +97,74 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
         this.orderByParser = new JDBCDaoOrderByParser(tableInfo);
     }
 
-    /**
-     * 保存单条数据
-     *
-     * @param entity       待插入的数据
-     * @param updateFilter a
-     * @return 插入成功的主键 ID 如果插入失败或数据没有主键则返回 null
-     */
     @Override
     public final Long add(Entity entity, FieldFilter updateFilter) {
-        return sqlRunner.update(_buildInsertSQL(entity, updateFilter)).firstGeneratedKey();
+        return sqlRunner.update(buildInsertSQL(entity, updateFilter)).firstGeneratedKey();
     }
 
-    /**
-     * 构建 插入 SQL
-     *
-     * @param entity       a
-     * @param updateFilter a
-     * @return a
-     */
-    private SQL _buildInsertSQL(Entity entity, FieldFilter updateFilter) {
-        var insertColumnInfos = filter(updateFilter, entity, tableInfo);
-        var insertColumns = Arrays.stream(insertColumnInfos).map(Column::name).toArray(String[]::new);
-        var insertValues = Arrays.stream(insertColumnInfos).map(columnInfo -> "?").toArray(String[]::new);
-        var sql = Insert(tableInfo.name(), insertColumns)
-                .Values(insertValues)
-                .GetSQL(jdbcContext.dialect());
-        var objectArray = Arrays.stream(insertColumnInfos).map(c -> c.javaFieldValue(entity)).toArray();
-        return SQL.ofPlaceholder(sql, objectArray);
-    }
-
-    /**
-     * 保存多条数据
-     *
-     * @param entityList   待保存的列表
-     * @param updateFilter a
-     * @return 保存成功的主键 (ID) 列表
-     */
     @Override
     public final List<Long> add(Collection<Entity> entityList, FieldFilter updateFilter) {
         return sqlRunner.updateBatch(buildInsertBatchSQL(entityList, updateFilter)).generatedKeys();
     }
 
-    /**
-     * a
-     *
-     * @param entityList   a
-     * @param updateFilter a
-     * @return a
-     */
+    @Override
+    public final List<Entity> find(Query query, FieldFilter selectFilter) {
+        return sqlRunner.query(buildSelectSQL(query, selectFilter), entityBeanListHandler);
+    }
+
+    @Override
+    public Entity get(Query query, FieldFilter columnFilter) {
+        return sqlRunner.query(buildGetSQL(query, columnFilter), entityBeanHandler);
+    }
+
+    @Override
+    public final long update(Entity entity, Query query, FieldFilter updateFilter) {
+        return sqlRunner.update(buildUpdateSQL(entity, query, updateFilter)).affectedItemsCount();
+    }
+
+    @Override
+    public final long delete(Query query) {
+        return sqlRunner.update(buildDeleteSQL(query)).affectedItemsCount();
+    }
+
+    @Override
+    public final long count(Query query) {
+        return sqlRunner.query(buildCountSQL(query), countResultHandler);
+    }
+
+    @Override
+    public final void clear() {
+        this.sqlRunner.execute(SQL.ofNormal("truncate " + tableInfo.name()));
+    }
+
+    @Override
+    public final Class<Entity> entityClass() {
+        return this.entityClass;
+    }
+
+    public final Table<? extends ColumnMapping> tableInfo() {
+        return this.tableInfo;
+    }
+
+    public final SQLRunner sqlRunner() {
+        return this.sqlRunner;
+    }
+
+    private String _buildInsertSQL0(ColumnMapping[] insertColumnInfos) {
+        var insertColumns = Arrays.stream(insertColumnInfos).map(Column::name).toArray(String[]::new);
+        var insertValues = Arrays.stream(insertColumnInfos).map(columnInfo -> "?").toArray(String[]::new);
+        return Insert(tableInfo.name(), insertColumns)
+                .Values(insertValues)
+                .GetSQL(jdbcContext.dialect());
+    }
+
+    private SQL buildInsertSQL(Entity entity, FieldFilter updateFilter) {
+        var insertColumnInfos = filter(updateFilter, entity, tableInfo);
+        var sql = _buildInsertSQL0(insertColumnInfos);
+        var objectArray = Arrays.stream(insertColumnInfos).map(c -> c.javaFieldValue(entity)).toArray();
+        return SQL.ofPlaceholder(sql, objectArray);
+    }
+
     private SQL buildInsertBatchSQL(Collection<? extends Entity> entityList, FieldFilter updateFilter) {
         var insertColumnInfos = filter(updateFilter, tableInfo);
         //将 entityList 转换为 objectArrayList 这里因为 stream 实在太慢所以改为传统循环方式
@@ -156,77 +176,23 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
             }
             objectArrayList.add(o);
         }
-        var insertColumns = Arrays.stream(insertColumnInfos).map(Column::name).toArray(String[]::new);
-        var insertValues = Arrays.stream(insertColumnInfos).map(c -> "?").toArray(String[]::new);
-        var sql = Insert(tableInfo.name(), insertColumns)
-                .Values(insertValues)
-                .GetSQL(jdbcContext.dialect());
+        var sql = _buildInsertSQL0(insertColumnInfos);
         return SQL.ofPlaceholder(sql, objectArrayList);
     }
 
-    /**
-     * 获取列表
-     *
-     * @param query        查询过滤条件.
-     * @param selectFilter a
-     * @return a {@link java.util.List} object.
-     */
-    @Override
-    public final List<Entity> find(Query query, FieldFilter selectFilter) {
-        return sqlRunner.query(buildSelectSQL(query, selectFilter), entityBeanListHandler);
-    }
-
-    @Override
-    public Entity get(Query query, FieldFilter columnFilter) {
-        return sqlRunner.query(buildGetSQL(query, columnFilter), entityBeanHandler);
-    }
-
-    public final SQL buildGetSQL(Query query, FieldFilter selectFilter) {
+    private String _buildSelectSQL0(Query query, FieldFilter selectFilter, WhereClause whereClause) {
         var selectColumnInfos = filter(selectFilter, tableInfo);
         var selectColumns = Arrays.stream(selectColumnInfos).map(Column::name).toArray(String[]::new);
-        var whereClause = whereParser.parseWhere(query.getWhere());
         var groupByColumns = groupByParser.parseGroupBy(query.getGroupBy());
         var orderByClauses = orderByParser.parseOrderBy(query.getOrderBy());
-        var sql = Select(selectColumns)
+        return Select(selectColumns)
                 .From(tableInfo.name())
                 .Where(whereClause.whereClause())
                 .GroupBy(groupByColumns)
                 .OrderBy(orderByClauses)
-                .Limit(null, 1L)
+                .Limit(query.getOffset(), query.getLimit())
                 .GetSQL(jdbcContext.dialect());
-        return SQL.ofPlaceholder(sql, whereClause.params());
     }
-
-    /**
-     * 在 mysql 中 不支持 in 子句中包含 limit 但是我们可以使用 一个嵌套的别名表来跳过检查
-     * 此方法便是用于生成嵌套的 sql 的
-     *
-     * @param query        q
-     * @param selectFilter s
-     * @return a
-     */
-    public final SQL buildGetSQLWithAlias(Query query, FieldFilter selectFilter) {
-        //没有 limit 的时候不需要嵌套
-        if (query.getLimit() == null) {
-            return buildGetSQL(query, selectFilter);
-        } else {
-            var selectColumnInfos = filter(selectFilter, tableInfo);
-            var selectColumns = Arrays.stream(selectColumnInfos).map(Column::name).toArray(String[]::new);
-            var whereClause = whereParser.parseWhere(query.getWhere());
-            var groupByColumns = groupByParser.parseGroupBy(query.getGroupBy());
-            var orderByClauses = orderByParser.parseOrderBy(query.getOrderBy());
-            var sql0 = Select(selectColumns)
-                    .From(tableInfo.name())
-                    .Where(whereClause.whereClause())
-                    .GroupBy(groupByColumns)
-                    .OrderBy(orderByClauses)
-                    .Limit(null, 1L)
-                    .GetSQL(jdbcContext.dialect());
-            var sql = Select("*").From("(" + sql0 + ")").GetSQL(jdbcContext.dialect());
-            return SQL.ofPlaceholder(sql + " AS " + tableInfo.name() + "_" + RandomUtils.randomString(6), whereClause.params());
-        }
-    }
-
 
     /**
      * 构建 (根据聚合查询条件 {@link Query} 获取数据列表) 的SQL
@@ -276,18 +242,8 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
      * @return selectSQL
      */
     public final SQL buildSelectSQL(Query query, FieldFilter selectFilter) {
-        var selectColumnInfos = filter(selectFilter, tableInfo);
-        var selectColumns = Arrays.stream(selectColumnInfos).map(Column::name).toArray(String[]::new);
         var whereClause = whereParser.parseWhere(query.getWhere());
-        var groupByColumns = groupByParser.parseGroupBy(query.getGroupBy());
-        var orderByClauses = orderByParser.parseOrderBy(query.getOrderBy());
-        var sql = Select(selectColumns)
-                .From(tableInfo.name())
-                .Where(whereClause.whereClause())
-                .GroupBy(groupByColumns)
-                .OrderBy(orderByClauses)
-                .Limit(query.getOffset(), query.getLimit())
-                .GetSQL(jdbcContext.dialect());
+        var sql = _buildSelectSQL0(query, selectFilter, whereClause);
         return SQL.ofPlaceholder(sql, whereClause.params());
     }
 
@@ -300,66 +256,45 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
      * @return a
      */
     public final SQL buildSelectSQLWithAlias(Query query, FieldFilter selectFilter) {
-        //没有 limit 的时候不需要嵌套
-        if (query.getLimit() == null) {
-            return buildSelectSQL(query, selectFilter);
-        } else {
-            var selectColumnInfos = filter(selectFilter, tableInfo);
-            var selectColumns = Arrays.stream(selectColumnInfos).map(Column::name).toArray(String[]::new);
-            var whereClause = whereParser.parseWhere(query.getWhere());
-            var groupByColumns = groupByParser.parseGroupBy(query.getGroupBy());
-            var orderByClauses = orderByParser.parseOrderBy(query.getOrderBy());
-            var sql0 = Select(selectColumns)
-                    .From(tableInfo.name())
-                    .Where(whereClause.whereClause())
-                    .GroupBy(groupByColumns)
-                    .OrderBy(orderByClauses)
-                    .Limit(query.getOffset(), query.getLimit())
-                    .GetSQL(jdbcContext.dialect());
-            var sql = Select("*").From("(" + sql0 + ")").GetSQL(jdbcContext.dialect());
-            return SQL.ofPlaceholder(sql + " AS " + tableInfo.name() + "_" + RandomUtils.randomString(6), whereClause.params());
-        }
-    }
-
-    /**
-     * 获取条数
-     *
-     * @param query 查询条件
-     * @return 条数
-     */
-    @Override
-    public final long count(Query query) {
-        return sqlRunner.query(buildCountSQL(query), countResultHandler);
-    }
-
-    /**
-     * 构建 count SQL
-     *
-     * @param query query 对象
-     * @return sql
-     */
-    private SQL buildCountSQL(Query query) {
         var whereClause = whereParser.parseWhere(query.getWhere());
+        var sql0 = _buildSelectSQL0(query, selectFilter, whereClause);
+        var sql = Select("*").From("(" + sql0 + ")").GetSQL(jdbcContext.dialect());
+        return SQL.ofPlaceholder(sql + " AS " + tableInfo.name() + "_" + RandomUtils.randomString(6), whereClause.params());
+    }
+
+    private String _buildGetSQL0(Query query, FieldFilter selectFilter, WhereClause whereClause) {
+        var selectColumnInfos = filter(selectFilter, tableInfo);
+        var selectColumns = Arrays.stream(selectColumnInfos).map(Column::name).toArray(String[]::new);
         var groupByColumns = groupByParser.parseGroupBy(query.getGroupBy());
-        var sql = Select("COUNT(*) AS count")
+        var orderByClauses = orderByParser.parseOrderBy(query.getOrderBy());
+        return Select(selectColumns)
                 .From(tableInfo.name())
                 .Where(whereClause.whereClause())
                 .GroupBy(groupByColumns)
+                .OrderBy(orderByClauses)
+                .Limit(null, 1L)
                 .GetSQL(jdbcContext.dialect());
+    }
+
+    public final SQL buildGetSQL(Query query, FieldFilter selectFilter) {
+        var whereClause = whereParser.parseWhere(query.getWhere());
+        var sql = _buildGetSQL0(query, selectFilter, whereClause);
         return SQL.ofPlaceholder(sql, whereClause.params());
     }
 
     /**
-     * 更新数据
+     * 在 mysql 中 不支持 in 子句中包含 limit 但是我们可以使用 一个嵌套的别名表来跳过检查
+     * 此方法便是用于生成嵌套的 sql 的
      *
-     * @param entity       要更新的数据
-     * @param query        更新的过滤条件
-     * @param updateFilter a
-     * @return 受影响的条数
+     * @param query        q
+     * @param selectFilter s
+     * @return a
      */
-    @Override
-    public final long update(Entity entity, Query query, FieldFilter updateFilter) {
-        return sqlRunner.update(buildUpdateSQL(entity, query, updateFilter)).affectedItemsCount();
+    public final SQL buildGetSQLWithAlias(Query query, FieldFilter selectFilter) {
+        var whereClause = whereParser.parseWhere(query.getWhere());
+        var sql0 = _buildGetSQL0(query, selectFilter, whereClause);
+        var sql = Select("*").From("(" + sql0 + ")").GetSQL(jdbcContext.dialect());
+        return SQL.ofPlaceholder(sql + " AS " + tableInfo.name() + "_" + RandomUtils.randomString(6), whereClause.params());
     }
 
     /**
@@ -389,17 +324,6 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
     }
 
     /**
-     * 删除数据
-     *
-     * @param query where 条件
-     * @return 受影响的条数 (被成功删除的数据条数)
-     */
-    @Override
-    public final long delete(Query query) {
-        return sqlRunner.update(buildDeleteSQL(query)).affectedItemsCount();
-    }
-
-    /**
      * 构建 删除 SQL
      *
      * @param query query
@@ -420,24 +344,20 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
     }
 
     /**
-     * 清空表中所有数据 (注意此操作不受事务影响, 所以慎用!!!)
+     * 构建 count SQL
+     *
+     * @param query query 对象
+     * @return sql
      */
-    @Override
-    public final void clear() {
-        this.sqlRunner.execute(SQL.ofNormal("truncate " + tableInfo.name()));
-    }
-
-    public final Table<? extends ColumnMapping> _tableInfo() {
-        return this.tableInfo;
-    }
-
-    @Override
-    public final Class<Entity> entityClass() {
-        return this.entityClass;
-    }
-
-    public final SQLRunner _sqlRunner() {
-        return this.sqlRunner;
+    private SQL buildCountSQL(Query query) {
+        var whereClause = whereParser.parseWhere(query.getWhere());
+        var groupByColumns = groupByParser.parseGroupBy(query.getGroupBy());
+        var sql = Select("COUNT(*) AS count")
+                .From(tableInfo.name())
+                .Where(whereClause.whereClause())
+                .GroupBy(groupByColumns)
+                .GetSQL(jdbcContext.dialect());
+        return SQL.ofPlaceholder(sql, whereClause.params());
     }
 
 }
