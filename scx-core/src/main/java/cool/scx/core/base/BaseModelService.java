@@ -4,6 +4,7 @@ import cool.scx.core.ScxContext;
 import cool.scx.data.FieldFilter;
 import cool.scx.data.Query;
 import cool.scx.data.jdbc.JDBCDao;
+import cool.scx.data.jdbc.sql.SQL;
 import cool.scx.data.jdbc.sql.SQLRunner;
 
 import java.lang.reflect.ParameterizedType;
@@ -345,6 +346,22 @@ public class BaseModelService<Entity extends BaseModel> {
 
     public final Class<Entity> entityClass() {
         return this.entityClass;
+    }
+
+    public final SQL buildListSQL(Query query, FieldFilter selectFilter) {
+        return dao().buildSelectSQL(query, selectFilter);
+    }
+    
+    public final SQL buildGetSQL(Query query, FieldFilter selectFilter) {
+        return dao().buildGetSQL(query, selectFilter);
+    }
+
+    public final SQL buildListSQLWithAlias(Query query, FieldFilter selectFilter) {
+        return dao().buildSelectSQLWithAlias(query, selectFilter);
+    }
+
+    public final SQL buildGetSQLWithAlias(Query query, FieldFilter selectFilter) {
+        return dao().buildGetSQLWithAlias(query, selectFilter);
     }
 
 }
