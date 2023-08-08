@@ -134,7 +134,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
      * @return 保存成功的主键 (ID) 列表
      */
     @Override
-    public final List<Long> addAll(Collection<Entity> entityList, FieldFilter updateFilter) {
+    public final List<Long> add(Collection<Entity> entityList, FieldFilter updateFilter) {
         return sqlRunner.updateBatch(buildInsertBatchSQL(entityList, updateFilter)).generatedKeys();
     }
 
@@ -423,7 +423,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
      * 清空表中所有数据 (注意此操作不受事务影响, 所以慎用!!!)
      */
     @Override
-    public final void _clear() {
+    public final void clear() {
         this.sqlRunner.execute(SQL.ofNormal("truncate " + tableInfo.name()));
     }
 
@@ -432,7 +432,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
     }
 
     @Override
-    public final Class<Entity> _entityClass() {
+    public final Class<Entity> entityClass() {
         return this.entityClass;
     }
 

@@ -16,90 +16,54 @@ import static cool.scx.data.Query.query;
  */
 public interface Dao<Entity, ID> {
 
+    /**
+     * 添加一条数据
+     *
+     * @param entity      数据
+     * @param fieldFilter 列过滤器
+     * @return 主键 ID (无主键则为 null)
+     */
     ID add(Entity entity, FieldFilter fieldFilter);
 
     /**
-     * 像数据源中添加一条数据
+     * 添加多条数据
      *
-     * @param entity 实体类
-     * @return 主键 ID (无主键则为 null)
-     */
-    default ID add(Entity entity) {
-        return add(entity, ofExcluded());
-    }
-
-    /**
-     * 像数据源中添加多条数据
-     *
-     * @param entityList 实体类
+     * @param entityList  数据
+     * @param fieldFilter 列过滤器
      * @return 主键 ID 列表 (无主键则为 null)
      */
-    List<ID> addAll(Collection<Entity> entityList, FieldFilter fieldFilter);
-
-    /**
-     * 像数据源中添加多条数据
-     *
-     * @param entityList 实体类
-     * @return 主键 ID 列表 (无主键则为 null)
-     */
-    default List<ID> addAll(Collection<Entity> entityList) {
-        return addAll(entityList, ofExcluded());
-    }
+    List<ID> add(Collection<Entity> entityList, FieldFilter fieldFilter);
 
     /**
      * 查询多条数据
      *
-     * @param query 查询条件
+     * @param query       查询条件
+     * @param fieldFilter 列过滤器
      * @return 数据列表
      */
     List<Entity> find(Query query, FieldFilter fieldFilter);
 
-    default List<Entity> find(Query query) {
-        return find(query, ofExcluded());
-    }
-
-    default List<Entity> find(FieldFilter fieldFilter) {
-        return find(query(), fieldFilter);
-    }
-
-    default List<Entity> find() {
-        return find(query(), ofExcluded());
-    }
-
     /**
      * 查询单条数据
      *
-     * @param query 查询条件
-     * @return 数据列表
+     * @param query       查询条件
+     * @param fieldFilter 列过滤器
+     * @return 数据
      */
     Entity get(Query query, FieldFilter fieldFilter);
-
-    default Entity get(Query query) {
-        return get(query, ofExcluded());
-    }
 
     /**
      * 更新数据
      *
-     * @param entity 需要更新的数据
-     * @param query  查询条件
+     * @param entity      需要更新的数据
+     * @param query       查询条件
+     * @param fieldFilter 列过滤器
      * @return 更新成功的条数
      */
     long update(Entity entity, Query query, FieldFilter fieldFilter);
 
     /**
-     * 更新数据
-     *
-     * @param entity 需要更新的数据
-     * @param query  查询条件
-     * @return 更新成功的条数
-     */
-    default long update(Entity entity, Query query) {
-        return update(entity, query, ofExcluded());
-    }
-
-    /**
-     * 删除
+     * 删除数据
      *
      * @param query 查询条件
      * @return 删除成功的条数
@@ -117,13 +81,41 @@ public interface Dao<Entity, ID> {
     /**
      * 清空整个数据源 (慎用)
      */
-    void _clear();
+    void clear();
 
     /**
      * 获取 类
      *
      * @return a
      */
-    Class<Entity> _entityClass();
+    Class<Entity> entityClass();
+
+    default ID add(Entity entity) {
+        return add(entity, ofExcluded());
+    }
+
+    default List<ID> add(Collection<Entity> entityList) {
+        return add(entityList, ofExcluded());
+    }
+
+    default List<Entity> find(Query query) {
+        return find(query, ofExcluded());
+    }
+
+    default List<Entity> find(FieldFilter fieldFilter) {
+        return find(query(), fieldFilter);
+    }
+
+    default List<Entity> find() {
+        return find(query(), ofExcluded());
+    }
+
+    default Entity get(Query query) {
+        return get(query, ofExcluded());
+    }
+
+    default long update(Entity entity, Query query) {
+        return update(entity, query, ofExcluded());
+    }
 
 }

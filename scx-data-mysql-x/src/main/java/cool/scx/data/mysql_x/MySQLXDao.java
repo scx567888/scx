@@ -68,7 +68,7 @@ public class MySQLXDao<Entity> implements Dao<Entity, String> {
     }
 
     @Override
-    public List<String> addAll(Collection<Entity> entityList, FieldFilter updateFilter) {
+    public List<String> add(Collection<Entity> entityList, FieldFilter updateFilter) {
         var dbDocs = new DbDoc[entityList.size()];
         var index = 0;
         for (var entity : entityList) {
@@ -147,12 +147,12 @@ public class MySQLXDao<Entity> implements Dao<Entity, String> {
     }
 
     @Override
-    public void _clear() {
+    public void clear() {
         this.collection.remove("TRUE").execute();
     }
 
     @Override
-    public Class<Entity> _entityClass() {
+    public Class<Entity> entityClass() {
         return entityClass;
     }
 

@@ -69,7 +69,7 @@ public record WhereBody(String name, WhereType whereType, Object value1, Object 
      * @param options   配置
      * @return this 方便链式调用
      */
-    public static WhereBody equal(String fieldName, Object value, WhereOption... options) {
+    public static WhereBody eq(String fieldName, Object value, WhereOption... options) {
         return new WhereBody(fieldName, EQUAL, value, null, new Info(options));
     }
 
@@ -81,7 +81,7 @@ public record WhereBody(String name, WhereType whereType, Object value1, Object 
      * @param options   配置
      * @return this 方便链式调用
      */
-    public static WhereBody notEqual(String fieldName, Object value, WhereOption... options) {
+    public static WhereBody ne(String fieldName, Object value, WhereOption... options) {
         return new WhereBody(fieldName, NOT_EQUAL, value, null, new Info(options));
     }
 
@@ -93,7 +93,7 @@ public record WhereBody(String name, WhereType whereType, Object value1, Object 
      * @param options   配置
      * @return this 方便链式调用
      */
-    public static WhereBody greaterThan(String fieldName, Object value, WhereOption... options) {
+    public static WhereBody gt(String fieldName, Object value, WhereOption... options) {
         return new WhereBody(fieldName, GREATER_THAN, value, null, new Info(options));
     }
 
@@ -105,7 +105,7 @@ public record WhereBody(String name, WhereType whereType, Object value1, Object 
      * @param options   配置
      * @return this 方便链式调用
      */
-    public static WhereBody greaterThanOrEqual(String fieldName, Object value, WhereOption... options) {
+    public static WhereBody ge(String fieldName, Object value, WhereOption... options) {
         return new WhereBody(fieldName, GREATER_THAN_OR_EQUAL, value, null, new Info(options));
     }
 
@@ -117,7 +117,7 @@ public record WhereBody(String name, WhereType whereType, Object value1, Object 
      * @param options   配置
      * @return this 方便链式调用
      */
-    public static WhereBody lessThan(String fieldName, Object value, WhereOption... options) {
+    public static WhereBody lt(String fieldName, Object value, WhereOption... options) {
         return new WhereBody(fieldName, LESS_THAN, value, null, new Info(options));
     }
 
@@ -129,7 +129,7 @@ public record WhereBody(String name, WhereType whereType, Object value1, Object 
      * @param options   配置
      * @return this 方便链式调用
      */
-    public static WhereBody lessThanOrEqual(String fieldName, Object value, WhereOption... options) {
+    public static WhereBody le(String fieldName, Object value, WhereOption... options) {
         return new WhereBody(fieldName, LESS_THAN_OR_EQUAL, value, null, new Info(options));
     }
 
