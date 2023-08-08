@@ -13,7 +13,7 @@ import java.util.List;
 
 import static cool.scx.data.FieldFilter.ofExcluded;
 import static cool.scx.data.Query.query;
-import static cool.scx.data.query.WhereBody.equal;
+import static cool.scx.data.query.WhereBody.eq;
 import static cool.scx.data.query.WhereBody.in;
 
 /**
@@ -140,7 +140,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 列表数据
      */
     public final List<Entity> list(long... ids) {
-        return list(ids.length == 1 ? equal("id", ids[0]) : in("id", ids));
+        return list(ids.length == 1 ? eq("id", ids[0]) : in("id", ids));
     }
 
     /**
@@ -182,7 +182,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 查到多个则返回第一个 没有则返回 null
      */
     public final Entity get(long id, FieldFilter selectFilter) {
-        return get(equal("id", id), selectFilter);
+        return get(eq("id", id), selectFilter);
     }
 
     /**
@@ -246,7 +246,7 @@ public class BaseModelService<Entity extends BaseModel> {
         if (entity.id == null) {
             throw new RuntimeException("根据 id 更新时 id 不能为空");
         }
-        this.update(entity, equal("id", entity.id), updateFilter);
+        this.update(entity, eq("id", entity.id), updateFilter);
         return this.get(entity.id);
     }
 
@@ -283,7 +283,7 @@ public class BaseModelService<Entity extends BaseModel> {
         if (ids.length == 0) {
             throw new IllegalArgumentException("待删除的 ids 数量至少为 1 个");
         }
-        return delete(ids.length == 1 ? equal("id", ids[0]) : in("id", ids));
+        return delete(ids.length == 1 ? eq("id", ids[0]) : in("id", ids));
     }
 
     /**

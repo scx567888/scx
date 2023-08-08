@@ -111,15 +111,15 @@ public class TestModule extends ScxModule {
             System.err.println("将 id 大于 200 的 name 设置为空 !!!");
             var c = new Car();
             c.name = null;
-            carService.update(c, query().where(greaterThan("id", 200)), ofIncluded("name").excludeIfFieldValueIsNull(false));
+            carService.update(c, query().where(gt("id", 200)), ofIncluded("name").excludeIfFieldValueIsNull(false));
 
             System.err.println("查询所有数据条数 !!! : " + carService.list().size());
-            System.err.println("查询所有 id 大于 200 条数 !!! : " + carService.list(query().where(greaterThan("id", 200))).size());
-            System.err.println("查询所有 name 为空 条数 !!! : " + carService.list(query().where(isNull("name"))).size());
-            System.err.println("查询所有 车主为 Jack 的条数 !!! : " + carService.list(query().where(equal("owner.name", "Jack", WhereOption.USE_JSON_EXTRACT))).size());
-            System.err.println("查询所有 车主年龄大于 18 的条数 !!! : " + carService.list(query().where(greaterThan("owner.age", 18, WhereOption.USE_JSON_EXTRACT))).size());
-            System.err.println("查询所有 拥有 fast 和 big 标签的条数 !!! : " + carService.list(query().where(jsonContains("tags", "fast,big"))).size());
-            System.err.println("查询所有 汽车 中 车主 的 电话号 中 包含 666666666 的条数 !!! : " + carService.list(query().where(jsonContains("owner.phoneNumber", "666666666"))).size());
+            System.err.println("查询所有 id 大于 200 条数 !!! : " + carService.list(gt("id", 200)).size());
+            System.err.println("查询所有 name 为空 条数 !!! : " + carService.list(isNull("name")).size());
+            System.err.println("查询所有 车主为 Jack 的条数 !!! : " + carService.list(eq("owner.name", "Jack", WhereOption.USE_JSON_EXTRACT)).size());
+            System.err.println("查询所有 车主年龄大于 18 的条数 !!! : " + carService.list(gt("owner.age", 18, WhereOption.USE_JSON_EXTRACT)).size());
+            System.err.println("查询所有 拥有 fast 和 big 标签的条数 !!! : " + carService.list(jsonContains("tags", "fast,big")).size());
+            System.err.println("查询所有 汽车 中 车主 的 电话号 中 包含 666666666 的条数 !!! : " + carService.list(jsonContains("owner.phoneNumber", "666666666")).size());
 
             System.err.println("------------------------- 测试事务 --------------------------------");
             // 测试事务
@@ -202,13 +202,13 @@ public class TestModule extends ScxModule {
         }
         //根据所有 person 表中年龄小于 100 的 carID 查询 car 表中的数据
         var cars = carService.list(query().where(in("id",
-                personService.buildListSQL(query().where(lessThan("age", 100)), ofIncluded("carID"))
+                personService.buildListSQL(query().where(lt("age", 100)), ofIncluded("carID"))
         )));
         var logger = LoggerFactory.getLogger(TestModule.class);
         logger.error("根据所有 person 表中年龄小于 100 的 carID 查询 car 表中的数据 总条数 {}", cars.size());
         //根据所有 person 表中年龄小于 100 的 carID 查询 car 表中的数据
         var cars1 = carService.list(query().where("id IN ",
-                personService.buildListSQL(query().where(lessThan("age", 100)), ofIncluded("carID"))
+                personService.buildListSQL(query().where(lt("age", 100)), ofIncluded("carID"))
         ));
         logger.error("第二种方式 (whereSQL) : 根据所有 person 表中年龄小于 100 的 carID 查询 car 表中的数据 总条数 {}", cars1.size());
     }
