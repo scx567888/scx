@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static cool.scx.data.mysql_x.JsonHelper.*;
 import static cool.scx.data.mysql_x.parser.MySQLXDaoWhereParser.WHERE_PARSER;
@@ -98,6 +99,24 @@ public class MySQLXDao<Entity> implements Dao<Entity, String> {
             list.add(toEntity(dbDoc, selectFilter));
         }
         return list;
+    }
+
+    @Override
+    public void find(Query query, FieldFilter fieldFilter, Consumer<Entity> consumer) {
+        var whereClause = WHERE_PARSER.parseWhere(query.getWhere());
+        var findStatement = this.collection
+                .find(whereClause.whereClause())
+                .bind(whereClause.params());
+        if (query.getOffset() != null) {
+            findStatement.offset(query.getOffset());
+        }
+        if (query.getLimit() != null) {
+            findStatement.limit(query.getLimit());
+        }
+        var docResult = findStatement.execute();
+        for (var dbDoc : docResult) {
+            consumer.accept(toEntity(dbDoc, fieldFilter));
+        }
     }
 
     @Override
