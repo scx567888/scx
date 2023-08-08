@@ -208,7 +208,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
     public final SQL buildGetSQLWithAlias(Query query, FieldFilter selectFilter) {
         //没有 limit 的时候不需要嵌套
         if (query.getLimit() == null) {
-            return buildSelectSQL(query, selectFilter);
+            return buildGetSQL(query, selectFilter);
         } else {
             var selectColumnInfos = filter(selectFilter, tableInfo);
             var selectColumns = Arrays.stream(selectColumnInfos).map(Column::name).toArray(String[]::new);
