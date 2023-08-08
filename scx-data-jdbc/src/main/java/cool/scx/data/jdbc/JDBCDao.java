@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static cool.scx.data.jdbc.FieldFilterHelper.filter;
@@ -74,6 +75,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
     protected final JDBCDaoOrderByParser orderByParser;
 
     protected final JDBCContext jdbcContext;
+    protected final Function<Field, String> columnNameMapping;
 
     /**
      * a
@@ -85,7 +87,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
         this.jdbcContext = jdbcContext;
         this.sqlRunner = jdbcContext.sqlRunner();
         this.tableInfo = new AnnotationConfigTable(entityClass);
-        var columnNameMapping = (Function<Field, String>) field -> {
+        this.columnNameMapping = field -> {
             var columnInfo = this.tableInfo.getColumn(field.getName());
             return columnInfo == null ? null : columnInfo.name();
         };
@@ -110,6 +112,11 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
     @Override
     public final List<Entity> find(Query query, FieldFilter selectFilter) {
         return sqlRunner.query(buildSelectSQL(query, selectFilter), entityBeanListHandler);
+    }
+
+    @Override
+    public void find(Query query, FieldFilter fieldFilter, Consumer<Entity> consumer) {
+        sqlRunner.query(buildSelectSQL(query, fieldFilter), ofBeanConsumer(entityClass, columnNameMapping, consumer));
     }
 
     @Override
@@ -296,7 +303,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
         var sql = Select("*").From("(" + sql0 + ")").GetSQL(jdbcContext.dialect());
         return SQL.ofPlaceholder(sql + " AS " + tableInfo.name() + "_" + RandomUtils.randomString(6), whereClause.params());
     }
-    
+
     private SQL buildUpdateSQL(Entity entity, Query query, FieldFilter updateFilter) {
         if (query.getWhere().isEmpty()) {
             throw new IllegalArgumentException("更新数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");

@@ -4,12 +4,12 @@ import cool.scx.core.ScxContext;
 import cool.scx.data.FieldFilter;
 import cool.scx.data.Query;
 import cool.scx.data.jdbc.JDBCDao;
-import cool.scx.data.jdbc.sql.SQL;
 import cool.scx.data.jdbc.sql.SQLRunner;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static cool.scx.data.FieldFilter.ofExcluded;
 import static cool.scx.data.Query.query;
@@ -88,7 +88,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 插入成功的数据 如果插入失败或数据没有主键则返回 null
      */
     public Entity add(Entity entity, FieldFilter updateFilter) {
-        var newID = _dao().add(entity, updateFilterProcessor(updateFilter));
+        var newID = dao().add(entity, updateFilterProcessor(updateFilter));
         return newID != null ? this.get(newID) : null;
     }
 
@@ -111,7 +111,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 插入成功的数据的自增主键列表
      */
     public List<Long> add(Collection<Entity> entityList, FieldFilter updateFilter) {
-        return _dao().add(entityList, updateFilterProcessor(updateFilter));
+        return dao().add(entityList, updateFilterProcessor(updateFilter));
     }
 
     /**
@@ -120,7 +120,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 所有数据
      */
     public final List<Entity> list() {
-        return list(ofExcluded());
+        return list(query(), ofExcluded());
     }
 
     /**
@@ -131,16 +131,6 @@ public class BaseModelService<Entity extends BaseModel> {
      */
     public final List<Entity> list(FieldFilter selectFilter) {
         return list(query(), selectFilter);
-    }
-
-    /**
-     * 根据 id 获取数据
-     *
-     * @param ids id 列表
-     * @return 列表数据
-     */
-    public final List<Entity> list(long... ids) {
-        return list(ids.length == 1 ? eq("id", ids[0]) : in("id", ids));
     }
 
     /**
@@ -161,7 +151,52 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 数据列表
      */
     public List<Entity> list(Query query, FieldFilter selectFilter) {
-        return _dao().find(query, selectFilter);
+        return dao().find(query, selectFilter);
+    }
+
+    /**
+     * 获取所有数据
+     */
+    public final void list(Consumer<Entity> consumer) {
+        list(query(), ofExcluded(), consumer);
+    }
+
+    /**
+     * 获取所有数据 (使用查询过滤器)
+     *
+     * @param selectFilter 查询字段过滤器
+     */
+    public final void list(FieldFilter selectFilter, Consumer<Entity> consumer) {
+        list(query(), selectFilter, consumer);
+    }
+
+    /**
+     * 根据聚合查询条件 {@link Query} 获取数据列表
+     *
+     * @param query 聚合查询参数对象
+     */
+    public final void list(Query query, Consumer<Entity> consumer) {
+        list(query, ofExcluded(), consumer);
+    }
+
+    /**
+     * 根据聚合查询条件 {@link Query} 获取数据列表
+     *
+     * @param query        聚合查询参数对象
+     * @param selectFilter 查询字段过滤器
+     */
+    public void list(Query query, FieldFilter selectFilter, Consumer<Entity> consumer) {
+        dao().find(query, selectFilter, consumer);
+    }
+
+    /**
+     * 根据 id 获取数据
+     *
+     * @param ids id 列表
+     * @return 列表数据
+     */
+    public final List<Entity> list(long... ids) {
+        return list(ids.length == 1 ? eq("id", ids[0]) : in("id", ids));
     }
 
     /**
@@ -203,7 +238,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 查到多个则返回第一个 没有则返回 null
      */
     public final Entity get(Query query, FieldFilter selectFilter) {
-        return this._dao().get(query, selectFilter);
+        return this.dao().get(query, selectFilter);
     }
 
     /**
@@ -222,7 +257,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 数据条数
      */
     public final long count(Query query) {
-        return _dao().count(query);
+        return dao().count(query);
     }
 
     /**
@@ -270,7 +305,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 更新成功的数据条数
      */
     public long update(Entity entity, Query query, FieldFilter updateFilter) {
-        return _dao().update(entity, query, updateFilterProcessor(updateFilter));
+        return dao().update(entity, query, updateFilterProcessor(updateFilter));
     }
 
     /**
@@ -293,67 +328,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @return 被删除的数据条数
      */
     public long delete(Query query) {
-        return _dao().delete(query);
-    }
-
-    /**
-     * 构建 (根据聚合查询条件 {@link Query} 获取数据列表) 的SQL
-     * <br>
-     * 可用于另一条查询语句的 where 条件
-     * <br>
-     * 若同时使用 limit 和 in/not in 请使用 {@link BaseModelService#buildListSQLWithAlias(Query, FieldFilter)}
-     *
-     * @param query        聚合查询参数对象
-     * @param selectFilter 查询字段过滤器
-     * @return listSQL
-     * @see JDBCDao#buildSelectSQL(Query, FieldFilter)
-     */
-    public final SQL buildListSQL(Query query, FieldFilter selectFilter) {
-        return _dao().buildSelectSQL(query, selectFilter);
-    }
-
-    /**
-     * 构建 根据聚合查询条件 {@link Query} 获取单条数据 的SQL
-     * <br>
-     * 可用于另一条查询语句的 where 条件
-     * <br>
-     * 若同时使用 limit 和 in/not in 请使用 {@link BaseModelService#buildListSQLWithAlias(Query, FieldFilter)}
-     *
-     * @param query        聚合查询参数对象
-     * @param selectFilter 查询字段过滤器
-     * @return getSQL
-     * @see JDBCDao#buildSelectSQL(Query, FieldFilter)
-     */
-    public final SQL buildGetSQL(Query query, FieldFilter selectFilter) {
-        return _dao().buildGetSQL(query, selectFilter);
-    }
-
-    /**
-     * 构建 (根据聚合查询条件 {@link Query} 获取数据列表) 的SQL
-     * <br>
-     * 可用于另一条查询语句的 where 条件
-     *
-     * @param query        聚合查询参数对象
-     * @param selectFilter 查询字段过滤器
-     * @return listSQL
-     * @see JDBCDao#buildSelectSQL(Query, FieldFilter)
-     */
-    public final SQL buildListSQLWithAlias(Query query, FieldFilter selectFilter) {
-        return _dao().buildSelectSQLWithAlias(query, selectFilter);
-    }
-
-    /**
-     * 构建 根据聚合查询条件 {@link Query} 获取单条数据 的SQL
-     * <br>
-     * 可用于另一条查询语句的 where 条件
-     *
-     * @param query        聚合查询参数对象
-     * @param selectFilter 查询字段过滤器
-     * @return getSQL
-     * @see JDBCDao#buildSelectSQL(Query, FieldFilter)
-     */
-    public final SQL buildGetSQLWithAlias(Query query, FieldFilter selectFilter) {
-        return _dao().buildGetSQLWithAlias(query, selectFilter);
+        return dao().delete(query);
     }
 
     /**
@@ -361,14 +336,14 @@ public class BaseModelService<Entity extends BaseModel> {
      *
      * @return a {@link JDBCDao} object
      */
-    public final JDBCDao<Entity> _dao() {
+    public final JDBCDao<Entity> dao() {
         if (dao == null) {
             this.dao = new JDBCDao<>(entityClass, ScxContext.jdbcContext());
         }
         return dao;
     }
 
-    public final Class<Entity> _entityClass() {
+    public final Class<Entity> entityClass() {
         return this.entityClass;
     }
 

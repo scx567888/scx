@@ -2,6 +2,7 @@ package cool.scx.data;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static cool.scx.data.FieldFilter.ofExcluded;
 import static cool.scx.data.Query.query;
@@ -42,6 +43,15 @@ public interface Dao<Entity, ID> {
      * @return 数据列表
      */
     List<Entity> find(Query query, FieldFilter fieldFilter);
+
+    /**
+     * 查询多条数据
+     *
+     * @param query       查询条件
+     * @param fieldFilter 列过滤器
+     * @param consumer    消费者
+     */
+    void find(Query query, FieldFilter fieldFilter, Consumer<Entity> consumer);
 
     /**
      * 查询单条数据
@@ -108,6 +118,18 @@ public interface Dao<Entity, ID> {
 
     default List<Entity> find() {
         return find(query(), ofExcluded());
+    }
+
+    default void find(Query query, Consumer<Entity> consumer) {
+        find(query, ofExcluded(), consumer);
+    }
+
+    default void find(FieldFilter fieldFilter, Consumer<Entity> consumer) {
+        find(query(), fieldFilter, consumer);
+    }
+
+    default void find(Consumer<Entity> consumer) {
+        find(query(), ofExcluded(), consumer);
     }
 
     default Entity get(Query query) {
