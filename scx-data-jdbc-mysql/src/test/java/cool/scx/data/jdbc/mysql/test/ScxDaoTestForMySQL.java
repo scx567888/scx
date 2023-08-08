@@ -88,10 +88,10 @@ public class ScxDaoTestForMySQL {
         System.out.println("JDBCDao-MySQL 插入 : " + newIds.size());
 
         //创建 query
-        var query1 = query().where(greaterThan("age", 300));
-        var query2 = query().where("(age > 400 OR ", equal("name", "小明1"), ")");
-        var query3 = query().where(equal("age", 10), " and ", or("age > 400", equal("name", "小明1"), and(in("name", new String[]{"小明2", "小明3"}))));
-        var query4 = query().where(equal("userInfo.email", "88@test.com", USE_JSON_EXTRACT));
+        var query1 = query().where(gt("age", 300));
+        var query2 = query().where("(age > 400 OR ", eq("name", "小明1"), ")");
+        var query3 = query().where(eq("age", 10), " and ", or("age > 400", eq("name", "小明1"), and(in("name", new String[]{"小明2", "小明3"}))));
+        var query4 = query().where(eq("userInfo.email", "88@test.com", USE_JSON_EXTRACT));
         var query5 = query().where(jsonContains("tags", List.of("abc")));
 
         //标准查询
