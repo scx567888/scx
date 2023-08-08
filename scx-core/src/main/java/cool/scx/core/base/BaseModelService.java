@@ -120,8 +120,8 @@ public class BaseModelService<Entity extends BaseModel> {
      *
      * @return 所有数据
      */
-    public final List<Entity> list() {
-        return list(query(), ofExcluded());
+    public final List<Entity> find() {
+        return find(query(), ofExcluded());
     }
 
     /**
@@ -130,8 +130,8 @@ public class BaseModelService<Entity extends BaseModel> {
      * @param selectFilter 查询字段过滤器
      * @return 所有数据
      */
-    public final List<Entity> list(FieldFilter selectFilter) {
-        return list(query(), selectFilter);
+    public final List<Entity> find(FieldFilter selectFilter) {
+        return find(query(), selectFilter);
     }
 
     /**
@@ -140,8 +140,8 @@ public class BaseModelService<Entity extends BaseModel> {
      * @param query 聚合查询参数对象
      * @return 数据列表
      */
-    public final List<Entity> list(Query query) {
-        return list(query, ofExcluded());
+    public final List<Entity> find(Query query) {
+        return find(query, ofExcluded());
     }
 
     /**
@@ -151,15 +151,15 @@ public class BaseModelService<Entity extends BaseModel> {
      * @param selectFilter 查询字段过滤器
      * @return 数据列表
      */
-    public List<Entity> list(Query query, FieldFilter selectFilter) {
+    public List<Entity> find(Query query, FieldFilter selectFilter) {
         return dao().find(query, selectFilter);
     }
 
     /**
      * 获取所有数据
      */
-    public final void list(Consumer<Entity> consumer) {
-        list(query(), ofExcluded(), consumer);
+    public final void find(Consumer<Entity> consumer) {
+        find(query(), ofExcluded(), consumer);
     }
 
     /**
@@ -167,8 +167,8 @@ public class BaseModelService<Entity extends BaseModel> {
      *
      * @param selectFilter 查询字段过滤器
      */
-    public final void list(FieldFilter selectFilter, Consumer<Entity> consumer) {
-        list(query(), selectFilter, consumer);
+    public final void find(FieldFilter selectFilter, Consumer<Entity> consumer) {
+        find(query(), selectFilter, consumer);
     }
 
     /**
@@ -176,8 +176,8 @@ public class BaseModelService<Entity extends BaseModel> {
      *
      * @param query 聚合查询参数对象
      */
-    public final void list(Query query, Consumer<Entity> consumer) {
-        list(query, ofExcluded(), consumer);
+    public final void find(Query query, Consumer<Entity> consumer) {
+        find(query, ofExcluded(), consumer);
     }
 
     /**
@@ -186,7 +186,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @param query        聚合查询参数对象
      * @param selectFilter 查询字段过滤器
      */
-    public void list(Query query, FieldFilter selectFilter, Consumer<Entity> consumer) {
+    public void find(Query query, FieldFilter selectFilter, Consumer<Entity> consumer) {
         dao().find(query, selectFilter, consumer);
     }
 
@@ -196,8 +196,8 @@ public class BaseModelService<Entity extends BaseModel> {
      * @param ids id 列表
      * @return 列表数据
      */
-    public final List<Entity> list(long... ids) {
-        return list(ids.length == 1 ? eq("id", ids[0]) : in("id", ids));
+    public final List<Entity> find(long... ids) {
+        return find(ids.length == 1 ? eq("id", ids[0]) : in("id", ids));
     }
 
     /**
@@ -240,25 +240,6 @@ public class BaseModelService<Entity extends BaseModel> {
      */
     public final Entity get(Query query, FieldFilter selectFilter) {
         return this.dao().get(query, selectFilter);
-    }
-
-    /**
-     * 获取所有数据的条数
-     *
-     * @return 所有数据的条数
-     */
-    public final long count() {
-        return count(query());
-    }
-
-    /**
-     * 根据聚合查询条件 {@link Query} 获取数据条数
-     *
-     * @param query 聚合查询参数对象
-     * @return 数据条数
-     */
-    public final long count(Query query) {
-        return dao().count(query);
     }
 
     /**
@@ -332,6 +313,26 @@ public class BaseModelService<Entity extends BaseModel> {
         return dao().delete(query);
     }
 
+
+    /**
+     * 获取所有数据的条数
+     *
+     * @return 所有数据的条数
+     */
+    public final long count() {
+        return count(query());
+    }
+
+    /**
+     * 根据聚合查询条件 {@link Query} 获取数据条数
+     *
+     * @param query 聚合查询参数对象
+     * @return 数据条数
+     */
+    public final long count(Query query) {
+        return dao().count(query);
+    }
+
     /**
      * <p>baseDao.</p>
      *
@@ -351,7 +352,7 @@ public class BaseModelService<Entity extends BaseModel> {
     public final SQL buildListSQL(Query query, FieldFilter selectFilter) {
         return dao().buildSelectSQL(query, selectFilter);
     }
-    
+
     public final SQL buildGetSQL(Query query, FieldFilter selectFilter) {
         return dao().buildGetSQL(query, selectFilter);
     }

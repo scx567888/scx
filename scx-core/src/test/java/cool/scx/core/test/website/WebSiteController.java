@@ -67,16 +67,16 @@ public class WebSiteController {
         CarService bean = ScxContext.getBean(CarService.class);
         try {
             ScxContext.autoTransaction(() -> {
-                sb.append("事务开始前数据库中 数据条数 : ").append(bean.list().size()).append("</br>");
+                sb.append("事务开始前数据库中 数据条数 : ").append(bean.find().size()).append("</br>");
                 sb.append("现在插入 1 数据条数").append("</br>");
                 var u = new Car();
                 u.name = "唯一name";
                 bean.add(u);
-                sb.append("现在数据库中数据条数 : ").append(bean.list().size()).append("</br>");
+                sb.append("现在数据库中数据条数 : ").append(bean.find().size()).append("</br>");
                 bean.add(u);
             });
         } catch (Exception e) {
-            sb.append("出错了 后滚后数据库中数据条数 : ").append(bean.list().size());
+            sb.append("出错了 后滚后数据库中数据条数 : ").append(bean.find().size());
         }
         Html.ofString(sb.toString()).accept(ctx, ScxContext.scxMvc().templateHandler());
     }
@@ -188,13 +188,13 @@ public class WebSiteController {
      */
     @ScxRoute(methods = HttpMethod.GET)
     public BaseVo bigJson() {
-        var users = carService1.list();
+        var users = carService1.find();
         return Result.ok().put("items", users);
     }
 
     @ScxRoute(methods = HttpMethod.GET)
     public BaseVo bigXml() {
-        var users = carService1.list();
+        var users = carService1.find();
         return Xml.of(users);
     }
 
