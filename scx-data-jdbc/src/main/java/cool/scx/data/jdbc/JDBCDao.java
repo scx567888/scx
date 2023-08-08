@@ -296,15 +296,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
         var sql = Select("*").From("(" + sql0 + ")").GetSQL(jdbcContext.dialect());
         return SQL.ofPlaceholder(sql + " AS " + tableInfo.name() + "_" + RandomUtils.randomString(6), whereClause.params());
     }
-
-    /**
-     * 构建更新 SQL
-     *
-     * @param entity       待更新的实体
-     * @param query        查询条件
-     * @param updateFilter filter
-     * @return a
-     */
+    
     private SQL buildUpdateSQL(Entity entity, Query query, FieldFilter updateFilter) {
         if (query.getWhere().isEmpty()) {
             throw new IllegalArgumentException("更新数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
@@ -323,12 +315,6 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
         return SQL.ofPlaceholder(sql, concat(entityParams, whereClause.params()));
     }
 
-    /**
-     * 构建 删除 SQL
-     *
-     * @param query query
-     * @return sql
-     */
     private SQL buildDeleteSQL(Query query) {
         if (query.getWhere().isEmpty()) {
             throw new IllegalArgumentException("删除数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
@@ -343,12 +329,6 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
         return SQL.ofPlaceholder(sql, whereClause.params());
     }
 
-    /**
-     * 构建 count SQL
-     *
-     * @param query query 对象
-     * @return sql
-     */
     private SQL buildCountSQL(Query query) {
         var whereClause = whereParser.parseWhere(query.getWhere());
         var groupByColumns = groupByParser.parseGroupBy(query.getGroupBy());
