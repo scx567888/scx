@@ -75,6 +75,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
     protected final JDBCDaoOrderByParser orderByParser;
 
     protected final JDBCContext jdbcContext;
+
     protected final Function<Field, String> columnNameMapping;
 
     /**
@@ -119,7 +120,6 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
         sqlRunner.query(buildSelectSQL(query, fieldFilter), ofBeanConsumer(entityClass, columnNameMapping, consumer));
     }
 
-    @Override
     public Entity get(Query query, FieldFilter columnFilter) {
         return sqlRunner.query(buildGetSQL(query, columnFilter), entityBeanHandler);
     }
