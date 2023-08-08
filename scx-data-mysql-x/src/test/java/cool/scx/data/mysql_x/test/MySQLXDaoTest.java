@@ -53,7 +53,7 @@ public class MySQLXDaoTest {
             list.add(m1);
         }
 
-        var newIDs = mySQLXDao.addAll(list);
+        var newIDs = mySQLXDao.add(list);
 
         System.out.println("MySQLX 插入 : " + newIDs.size());
 
