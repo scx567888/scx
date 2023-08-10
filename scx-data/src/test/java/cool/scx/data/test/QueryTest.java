@@ -2,8 +2,8 @@ package cool.scx.data.test;
 
 import java.util.Arrays;
 
+import static cool.scx.data.Query.eq;
 import static cool.scx.data.Query.query;
-import static cool.scx.data.query.WhereBody.eq;
 
 public class QueryTest {
 

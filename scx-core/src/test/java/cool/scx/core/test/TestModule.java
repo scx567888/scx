@@ -38,8 +38,7 @@ import java.util.List;
 import static cool.scx.core.eventbus.ZeroCopyMessageCodec.ZERO_COPY_CODEC_NAME;
 import static cool.scx.core.eventbus.ZeroCopyMessageWrapper.zeroCopyMessage;
 import static cool.scx.data.FieldFilter.ofIncluded;
-import static cool.scx.data.Query.query;
-import static cool.scx.data.query.WhereBody.*;
+import static cool.scx.data.Query.*;
 import static org.testng.Assert.assertEquals;
 
 public class TestModule extends ScxModule {
