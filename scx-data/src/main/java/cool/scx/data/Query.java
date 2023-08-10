@@ -1,9 +1,6 @@
 package cool.scx.data;
 
-import cool.scx.data.query.GroupBy;
-import cool.scx.data.query.LimitInfo;
-import cool.scx.data.query.OrderBy;
-import cool.scx.data.query.Where;
+import cool.scx.data.query.*;
 
 public interface Query {
 
@@ -33,6 +30,22 @@ public interface Query {
 
     static LimitInfo limit(long numberOfRows) {
         return new LimitInfo().limit(numberOfRows);
+    }
+
+    static Logic and(Object... clauses) {
+        return new AND(clauses);
+    }
+
+    static Logic or(Object... clauses) {
+        return new OR(clauses);
+    }
+
+    static WhereBodySet andSet() {
+        return new WhereBodySet(LogicType.AND);
+    }
+
+    static WhereBodySet orSet() {
+        return new WhereBodySet(LogicType.OR);
     }
 
     default Where getWhere() {
