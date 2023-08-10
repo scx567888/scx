@@ -30,10 +30,6 @@ public final class OrderByBodySet implements Query {
         this.orderByBodyList = new ArrayList<>();
     }
 
-    public static OrderByBodySet orderBySet() {
-        return new OrderByBodySet();
-    }
-
     /**
      * 添加一个排序字段
      *

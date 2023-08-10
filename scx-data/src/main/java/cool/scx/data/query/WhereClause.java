@@ -8,10 +8,6 @@ import static cool.scx.data.Query.where;
 
 public record WhereClause(String whereClause, Object... params) implements Query {
 
-    public static WhereClause whereClause(String whereClause, Object... params) {
-        return new WhereClause(whereClause, params);
-    }
-
     /**
      * 拼接
      *

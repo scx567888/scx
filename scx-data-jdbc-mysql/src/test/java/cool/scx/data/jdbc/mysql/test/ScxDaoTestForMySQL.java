@@ -16,11 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.mysql.cj.conf.PropertyKey.*;
-import static cool.scx.data.Query.query;
+import static cool.scx.data.Query.*;
 import static cool.scx.data.jdbc.sql.SQL.ofNormal;
-import static cool.scx.data.query.Logic.and;
-import static cool.scx.data.query.Logic.or;
-import static cool.scx.data.query.WhereBody.*;
 import static cool.scx.data.query.WhereOption.USE_JSON_EXTRACT;
 import static java.lang.System.Logger.Level.DEBUG;
 
