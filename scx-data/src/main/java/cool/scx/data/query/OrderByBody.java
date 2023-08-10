@@ -26,14 +26,12 @@ public record OrderByBody(String name, OrderByType orderByType, Info info) imple
         this.info = info;
     }
 
-
     /**
      * 添加一个排序字段
      *
      * @param name        排序字段的名称 (默认是实体类的字段名 , 不是数据库中的字段名)
      * @param orderByType 排序类型 正序或倒序
      * @param options     配置
-     * 
      */
     public OrderByBody(String name, OrderByType orderByType, OrderByOption... options) {
         this(name, orderByType, new Info(options));
