@@ -51,11 +51,11 @@ public final class WebSocketRouter implements Handler<ServerWebSocket> {
     @Override
     public void handle(ServerWebSocket serverWebSocket) {
         if (anyMatch(serverWebSocket)) {
-            new OnOpenRoutingContext(serverWebSocket, routes).next();
             serverWebSocket
                     .frameHandler(h -> new OnFrameRoutingContext(h, serverWebSocket, routes).next())
                     .exceptionHandler(e -> new OnExceptionRoutingContext(e, serverWebSocket, routes).next())
                     .closeHandler(v -> new OnCloseRoutingContext(serverWebSocket, routes).next());
+            new OnOpenRoutingContext(serverWebSocket, routes).next();
         }
     }
 
