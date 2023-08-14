@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+import static cool.scx.util.RandomUtils.nextInt;
+
 /**
  * 提供一些 Array 的方法, 也有一些 List 相关的方法
  */
@@ -144,6 +146,30 @@ public final class ArrayUtils {
             result.add(list.subList(i, end));
         }
         return result;
+    }
+
+    /***
+     * shuffle
+     * @param arr a
+     */
+    public static void shuffle(Object[] arr) {
+        int size = arr.length;
+        for (int i = size; i > 1; i = i - 1) {
+            swap(arr, i - 1, nextInt(i));
+        }
+    }
+
+    /**
+     * 交换元素
+     *
+     * @param arr a
+     * @param i   a
+     * @param j   a
+     */
+    public static void swap(Object[] arr, int i, int j) {
+        var tmp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = tmp;
     }
 
 }

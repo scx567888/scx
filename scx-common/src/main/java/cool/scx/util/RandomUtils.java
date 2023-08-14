@@ -1,7 +1,9 @@
 package cool.scx.util;
 
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+
+import static cool.scx.util.ArrayUtils.shuffle;
 
 /**
  * 用于生成简单的随机数
@@ -33,7 +35,7 @@ public final class RandomUtils {
         var code = new StringBuilder();
         var pool = withLetter ? NUMBER_AND_LETTER_POOL : NUMBER_POOL;
         for (int i = 0; i < size; i = i + 1) {
-            code.append(pool[ThreadLocalRandom.current().nextInt(pool.length)]);
+            code.append(pool[nextInt(pool.length)]);
         }
         return code.toString();
     }
@@ -56,7 +58,7 @@ public final class RandomUtils {
      * @return 随机数
      */
     public static int randomNumber(int min, int max) {
-        return ThreadLocalRandom.current().nextInt(min, max + 1);
+        return nextInt(min, max + 1);
     }
 
     /**
@@ -66,6 +68,73 @@ public final class RandomUtils {
      */
     public static String randomUUID() {
         return UUID.randomUUID().toString();
+    }
+
+    /**
+     * 随机从数组中取出一个元素
+     *
+     * @param array 数组
+     * @param <T>   T
+     * @return 随机的元素
+     */
+    @SafeVarargs
+    public static <T> T randomGet(T... array) {
+        int i = nextInt(0, array.length);
+        return array[i];
+    }
+
+    /**
+     * 随机从列表中取出一个元素
+     *
+     * @param list 列表
+     * @param <T>  T
+     * @return 随机的元素
+     */
+    public static <T> T randomGet(List<T> list) {
+        int i = nextInt(0, list.size());
+        return list.get(i);
+    }
+
+    /**
+     * 随机从数组中取出 多个元素 (不会重复)
+     *
+     * @param array 数组
+     * @param size  长度
+     * @param <T>   t
+     * @return a
+     */
+    public static <T> T[] randomGet(T[] array, int size) {
+        if (size > array.length) {
+            throw new IndexOutOfBoundsException("取出 Array 的长度必须小于 原 Array 的长度 !!!");
+        }
+        T[] t = Arrays.copyOf(array, array.length);
+        shuffle(t);
+        return Arrays.copyOf(t, size);
+    }
+
+    /**
+     * 随机从数组中取出 多个元素 (不会重复)
+     *
+     * @param list 数组
+     * @param size 长度
+     * @param <T>  a
+     * @return a
+     */
+    public static <T> List<T> randomGet(List<T> list, int size) {
+        if (size > list.size()) {
+            throw new IndexOutOfBoundsException("取出 List 的长度必须小于 原 List 的长度 !!!");
+        }
+        var r = new ArrayList<>(list);
+        Collections.shuffle(r);
+        return r.subList(0, size);
+    }
+
+    public static int nextInt(int bound) {
+        return ThreadLocalRandom.current().nextInt(bound);
+    }
+
+    public static int nextInt(int origin, int bound) {
+        return ThreadLocalRandom.current().nextInt(origin, bound);
     }
 
 }
