@@ -1,6 +1,9 @@
 package cool.scx.util;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 import static cool.scx.util.RandomUtils.nextInt;
 
