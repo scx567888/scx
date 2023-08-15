@@ -222,12 +222,14 @@ public final class ScxBuilder {
         return this;
     }
 
-    public void vertxOptions(VertxOptions options) {
+    public ScxBuilder setVertxOptions(VertxOptions options) {
         this.vertxOptions = options;
+        return this;
     }
 
-    public void defaultHttpServerOptions(HttpServerOptions options) {
+    public ScxBuilder setDefaultHttpServerOptions(HttpServerOptions options) {
         this.defaultHttpServerOptions = options;
+        return this;
     }
 
 }
