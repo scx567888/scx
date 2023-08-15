@@ -1,5 +1,6 @@
 package cool.scx.core;
 
+import cool.scx.config.ScxConfig;
 import cool.scx.config.ScxConfigSource;
 import cool.scx.config.ScxEnvironment;
 import cool.scx.config.ScxFeatureConfig;
@@ -8,6 +9,8 @@ import cool.scx.config.source_impl.JsonFileConfigSource;
 import cool.scx.config.source_impl.MapConfigSource;
 import cool.scx.core.enumeration.ScxCoreFeature;
 import cool.scx.util.StringUtils;
+import io.vertx.core.VertxOptions;
+import io.vertx.core.http.HttpServerOptions;
 
 import java.util.*;
 
@@ -63,12 +66,16 @@ public final class ScxBuilder {
      * 用来存储临时待添加的 appKey
      */
     private String appKey = DEFAULT_APP_KEY;
+    private VertxOptions vertxOptions;
+    private HttpServerOptions defaultHttpServerOptions;
 
     /**
      * 构造函数
      */
     public ScxBuilder() {
-
+        appKey = DEFAULT_APP_KEY;
+        vertxOptions = new VertxOptions();
+        defaultHttpServerOptions = new HttpServerOptions();
     }
 
     /**
@@ -155,7 +162,8 @@ public final class ScxBuilder {
         scxConfigSources.add(defaultJsonFileConfigSource);
         scxConfigSources.add(defaultArgsConfigSource);
         //创建 scx 实例
-        return new Scx(scxEnvironment, appKey, scxFeatureConfig, scxConfigSources.toArray(ScxConfigSource[]::new), scxModules.toArray(ScxModule[]::new));
+        var scxConfig = new ScxConfig(scxConfigSources.toArray(ScxConfigSource[]::new));
+        return new Scx(scxEnvironment, appKey, scxFeatureConfig, scxConfig, scxModules.toArray(ScxModule[]::new), vertxOptions, defaultHttpServerOptions);
     }
 
     /**
@@ -212,6 +220,14 @@ public final class ScxBuilder {
     public ScxBuilder configure(ScxCoreFeature scxFeature, boolean state) {
         scxFeatureConfig.set(scxFeature, state);
         return this;
+    }
+
+    public void vertxOptions(VertxOptions options) {
+        this.vertxOptions = options;
+    }
+
+    public void defaultHttpServerOptions(HttpServerOptions options) {
+        this.defaultHttpServerOptions = options;
     }
 
 }

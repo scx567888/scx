@@ -161,11 +161,6 @@ public final class ScxHelper {
         return scxModules;
     }
 
-    static Vertx initVertx() {
-        var vertxOptions = new VertxOptions();
-        return Vertx.vertx(vertxOptions);
-    }
-
     static DefaultListableBeanFactory initBeanFactory(ScxModule[] modules, ScheduledExecutorService scheduledExecutorService, ScxFeatureConfig scxFeatureConfig) {
         var beanFactory = new DefaultListableBeanFactory();
         //这里添加一个 bean 的后置处理器以便可以使用 @Autowired 注解
