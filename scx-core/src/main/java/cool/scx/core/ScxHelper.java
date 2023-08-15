@@ -25,8 +25,6 @@ import cool.scx.util.ConsoleUtils;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
 import cool.scx.util.reflect.ClassUtils;
-import io.vertx.core.Vertx;
-import io.vertx.core.VertxOptions;
 import org.springframework.beans.factory.annotation.AnnotatedGenericBeanDefinition;
 import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
