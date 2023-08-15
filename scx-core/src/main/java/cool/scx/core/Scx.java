@@ -1,7 +1,6 @@
 package cool.scx.core;
 
 import cool.scx.config.ScxConfig;
-import cool.scx.config.ScxConfigSource;
 import cool.scx.config.ScxEnvironment;
 import cool.scx.config.ScxFeatureConfig;
 import cool.scx.core.enumeration.ScxCoreFeature;
@@ -18,6 +17,7 @@ import cool.scx.util.NetUtils;
 import cool.scx.util.StopWatch;
 import cool.scx.util.ansi.Ansi;
 import io.vertx.core.Vertx;
+import io.vertx.core.VertxOptions;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
@@ -64,6 +64,8 @@ public final class Scx {
 
     private final ScxScheduler scxScheduler;
 
+    private final HttpServerOptions defaultHttpServerOptions;
+
     private JDBCContext jdbcContext = null;
 
     private ScxHttpRouter scxHttpRouter = null;
@@ -72,20 +74,21 @@ public final class Scx {
 
     private HttpServer vertxHttpServer = null;
 
-    Scx(ScxEnvironment scxEnvironment, String appKey, ScxFeatureConfig scxFeatureConfig, ScxConfigSource[] scxConfigSources, ScxModule[] scxModules) {
+    Scx(ScxEnvironment scxEnvironment, String appKey, ScxFeatureConfig scxFeatureConfig, ScxConfig scxConfig, ScxModule[] scxModules, VertxOptions vertxOptions, HttpServerOptions defaultHttpServerOptions) {
         //0, 赋值到全局
         ScxContext.scx(this);
         //1, 初始化基本参数
         this.scxEnvironment = scxEnvironment;
         this.appKey = appKey;
         this.scxFeatureConfig = scxFeatureConfig;
-        this.scxConfig = new ScxConfig(scxConfigSources);
+        this.scxConfig = scxConfig;
         this.scxModules = initScxModuleMetadataList(scxModules);
         this.scxOptions = new ScxOptions(this.scxConfig, this.scxEnvironment, this.appKey);
+        this.defaultHttpServerOptions = defaultHttpServerOptions;
         //2, 初始化 ScxLog 日志框架
         initScxLoggerFactory(this.scxConfig, this.scxEnvironment);
         //3, 初始化 Vertx 这里在 log4j2 之后初始化是因为 vertx 需要使用 log4j2 打印日志
-        this.vertx = initVertx();
+        this.vertx = Vertx.vertx(vertxOptions);
         //4, 初始化事件总线
         ZeroCopyMessageCodec.registerCodec(this.vertx.eventBus());
         //5, 初始化 BeanFactory
@@ -163,7 +166,7 @@ public final class Scx {
                     .brightBlue("已加载 " + this.webSocketRouter.getRoutes().size() + " 个 WebSocket 路由 !!!").println();
         }
         //6, 初始化服务器
-        var httpServerOptions = new HttpServerOptions();
+        var httpServerOptions = new HttpServerOptions(this.defaultHttpServerOptions);
         if (this.scxOptions.isHttpsEnabled()) {
             httpServerOptions.setSsl(true)
                     .setKeyStoreOptions(new JksOptions()

@@ -25,8 +25,6 @@ import cool.scx.util.ConsoleUtils;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.StringUtils;
 import cool.scx.util.reflect.ClassUtils;
-import io.vertx.core.Vertx;
-import io.vertx.core.VertxOptions;
 import org.springframework.beans.factory.annotation.AnnotatedGenericBeanDefinition;
 import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
@@ -159,11 +157,6 @@ public final class ScxHelper {
             throw new IllegalArgumentException("Modules must not be empty !!!");
         }
         return scxModules;
-    }
-
-    static Vertx initVertx() {
-        var vertxOptions = new VertxOptions();
-        return Vertx.vertx(vertxOptions);
     }
 
     static DefaultListableBeanFactory initBeanFactory(ScxModule[] modules, ScheduledExecutorService scheduledExecutorService, ScxFeatureConfig scxFeatureConfig) {
