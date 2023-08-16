@@ -1,9 +1,6 @@
 package cool.scx.util.multi_map;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.BiConsumer;
 
 /**
@@ -32,7 +29,7 @@ public interface MultiMap<K, V> {
      *
      * @return a
      */
-    Collection<V> values();
+    List<V> values();
 
     /**
      * 获取

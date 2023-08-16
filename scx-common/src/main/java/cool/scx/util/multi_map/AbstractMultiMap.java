@@ -38,7 +38,7 @@ abstract class AbstractMultiMap<K, V, C extends Collection<V>> implements MultiM
     }
 
     @Override
-    public Collection<V> values() {
+    public List<V> values() {
         return map.values().stream().flatMap(Collection::stream).collect(Collectors.toList());
     }
 
