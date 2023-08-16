@@ -3,8 +3,8 @@ package cool.scx.data.jdbc;
 import cool.scx.data.jdbc.annotation.NoColumn;
 import cool.scx.data.jdbc.mapping.Table;
 import cool.scx.util.CaseUtils;
-import cool.scx.util.MultiMap;
 import cool.scx.util.StringUtils;
+import cool.scx.util.multi_map.ListMultiMap;
 import cool.scx.util.reflect.FieldUtils;
 
 import java.util.HashMap;
@@ -75,7 +75,7 @@ public class AnnotationConfigTable implements Table<AnnotationConfigColumn> {
      * @param clazz a
      */
     private static void checkDuplicateColumnName(List<AnnotationConfigColumn> list, Class<?> clazz) {
-        var multiMap = new MultiMap<String, AnnotationConfigColumn>();
+        var multiMap = new ListMultiMap<String, AnnotationConfigColumn>();
         for (var info : list) {
             multiMap.put(info.name(), info);
         }
