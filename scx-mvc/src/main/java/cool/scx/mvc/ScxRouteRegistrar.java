@@ -2,8 +2,8 @@ package cool.scx.mvc;
 
 import cool.scx.enumeration.HttpMethod;
 import cool.scx.mvc.annotation.ScxRoute;
-import cool.scx.util.MultiMap;
 import cool.scx.util.ObjectUtils;
+import cool.scx.util.multi_map.ListMultiMap;
 import cool.scx.util.reflect.ClassUtils;
 import cool.scx.util.reflect.MethodUtils;
 import io.vertx.ext.web.Route;
@@ -161,7 +161,7 @@ final class ScxRouteRegistrar {
      * @param handlers a {@link java.util.List} object
      */
     private static void checkRouteExists(List<ScxRouteHandler> handlers) {
-        var m = new MultiMap<NormalPathInfo, ScxRouteHandler>();
+        var m = new ListMultiMap<NormalPathInfo, ScxRouteHandler>();
         for (var handler : handlers) {
             var key = handler.routeState().pattern() != null
                     ? handler.routeState().pattern().toString()
