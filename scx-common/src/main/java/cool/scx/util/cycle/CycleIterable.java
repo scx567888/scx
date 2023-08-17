@@ -1,5 +1,7 @@
 package cool.scx.util.cycle;
 
+import java.util.Objects;
+
 public class CycleIterable<T> implements Iterable<T> {
 
     private Node<T> first;
@@ -34,6 +36,12 @@ public class CycleIterable<T> implements Iterable<T> {
         var prev = node.prev;
         next.prev = prev;
         prev.next = next;
+        if (node == first) {
+            first = next;
+        }
+        if (node == last) {
+            last = prev;
+        }
         node.next = null;
         node.prev = null;
         node.item = null;
@@ -51,16 +59,31 @@ public class CycleIterable<T> implements Iterable<T> {
     }
 
     public boolean remove(T o) {
+        var node = node(o);
+        if (node == null) {
+            return false;
+        }
+        unlink(node);
+        size = size - 1;
+        if (size == 0) {
+            first = last = null;
+        }
+        return true;
+    }
+
+    public Node<T> node(T o) {
+        if (first == null) {
+            return null;
+        }
         var x = first;
-        while (x != null) {
-            if (o.equals(x.item)) {
-                unlink(x);
-                size = size - 1;
-                return true;
+        do {
+            if (Objects.equals(o, x.item)) {
+                return x;
             }
             x = x.next;
         }
-        return false;
+        while (x != first);
+        return null;
     }
 
     @Override
