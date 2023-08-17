@@ -1,4 +1,4 @@
-package cool.scx.util.cycle;
+package cool.scx.util.cycle_iterable;
 
 import java.util.Iterator;
 

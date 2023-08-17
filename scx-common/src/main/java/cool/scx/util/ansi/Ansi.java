@@ -1,7 +1,5 @@
 package cool.scx.util.ansi;
 
-import cool.scx.util.CycleIterator;
-
 import java.util.*;
 
 import static cool.scx.util.ansi.AnsiHelper.detectIfAnsiCapable;
@@ -43,7 +41,7 @@ public final class Ansi {
     /**
      * 循环颜色
      */
-    private static final CycleIterator<AnsiColor> CYCLE_COLOR = initCycleColor();
+    private static final Iterator<AnsiColor> CYCLE_COLOR = initCycleColor();
 
     /**
      * 待输出的数据

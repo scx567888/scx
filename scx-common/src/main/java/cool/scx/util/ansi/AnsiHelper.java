@@ -3,7 +3,9 @@ package cool.scx.util.ansi;
 import com.sun.jna.Function;
 import com.sun.jna.platform.win32.WinDef;
 import com.sun.jna.platform.win32.WinNT;
-import cool.scx.util.CycleIterator;
+import cool.scx.util.cycle_iterable.CycleIterable;
+
+import java.util.Iterator;
 
 class AnsiHelper {
 
@@ -62,12 +64,12 @@ class AnsiHelper {
         }
     }
 
-    public static CycleIterator<AnsiColor> initCycleColor() {
-        var cycleIterator = new CycleIterator<AnsiColor>();
+    public static Iterator<AnsiColor> initCycleColor() {
+        var cycleIterator = new CycleIterable<AnsiColor>();
         for (var allColor : AnsiColor.values()) {
             cycleIterator.add(allColor);
         }
-        return cycleIterator;
+        return cycleIterator.iterator();
     }
 
 }

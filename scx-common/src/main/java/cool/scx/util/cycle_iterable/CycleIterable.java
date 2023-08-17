@@ -1,5 +1,7 @@
-package cool.scx.util.cycle;
+package cool.scx.util.cycle_iterable;
 
+import java.lang.reflect.Array;
+import java.util.Iterator;
 import java.util.Objects;
 
 public class CycleIterable<T> implements Iterable<T> {
@@ -48,7 +50,7 @@ public class CycleIterable<T> implements Iterable<T> {
         return item;
     }
 
-    public void add(T item) {
+    public boolean add(T item) {
         var node = new Node<>(item);
         if (last == null) {
             first = last = node.prev = node.next = node;
@@ -56,9 +58,10 @@ public class CycleIterable<T> implements Iterable<T> {
             link(node);
         }
         size = size + 1;
+        return true;
     }
 
-    public boolean remove(T o) {
+    public boolean remove(Object o) {
         var node = node(o);
         if (node == null) {
             return false;
@@ -71,7 +74,20 @@ public class CycleIterable<T> implements Iterable<T> {
         return true;
     }
 
-    public Node<T> node(T o) {
+    public void clear() {
+        var x = first;
+        while (x != null) {
+            var next = x.next;
+            x.item = null;
+            x.next = null;
+            x.prev = null;
+            x = next;
+        }
+        first = last = null;
+        size = 0;
+    }
+
+    public Node<T> node(Object o) {
         if (first == null) {
             return null;
         }
@@ -89,6 +105,48 @@ public class CycleIterable<T> implements Iterable<T> {
     @Override
     public CycleIterator<T> iterator() {
         return new CycleIterator<>(first);
+    }
+
+    public Object[] toArray() {
+        Object[] result = new Object[size];
+        int i = 0;
+        var x = first;
+        do {
+            result[i] = x.item;
+            i = i + 1;
+            x = x.next;
+        }
+        while (x != first);
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <E> E[] toArray(E[] a) {
+        if (a.length < size) {
+            a = (E[]) Array.newInstance(a.getClass().getComponentType(), size);
+        }
+        Object[] result = a;
+        int i = 0;
+        var x = first;
+        do {
+            result[i] = x.item;
+            i = i + 1;
+            x = x.next;
+        }
+        while (x != first);
+        if (a.length > size) {
+            a[size] = null;
+        }
+        return a;
+    }
+
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    public boolean contains(Object o) {
+        var node = node(o);
+        return node != null;
     }
 
     public CycleReverseIterable<T> reverse() {

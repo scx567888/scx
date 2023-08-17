@@ -1,17 +1,17 @@
-package cool.scx.util.cycle;
+package cool.scx.util.cycle_iterable;
 
 import java.util.Iterator;
 
 /**
- * 无限循环的迭代器
+ * 无限循环的迭代器 (倒转)
  *
  * @param <T>
  */
-public final class CycleIterator<T> implements Iterator<T> {
+public final class CycleReverseIterator<T> implements Iterator<T> {
 
     private Node<T> now;
 
-    CycleIterator(Node<T> now) {
+    CycleReverseIterator(Node<T> now) {
         this.now = now;
     }
 
@@ -23,13 +23,13 @@ public final class CycleIterator<T> implements Iterator<T> {
     @Override
     public T next() {
         var item = now.item;
-        now = now.next;
+        now = now.prev;
         return item;
     }
 
     public T prev() {
         var item = now.item;
-        now = now.prev;
+        now = now.next;
         return item;
     }
 
