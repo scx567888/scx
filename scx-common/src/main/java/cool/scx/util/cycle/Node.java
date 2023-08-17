@@ -1,6 +1,6 @@
 package cool.scx.util.cycle;
 
-class Node<E> {
+public class Node<E> {
 
     E item;
     Node<E> next;
@@ -8,6 +8,18 @@ class Node<E> {
 
     Node(E item) {
         this.item = item;
+    }
+
+    public E item() {
+        return item;
+    }
+
+    public Node<E> next() {
+        return next;
+    }
+
+    public Node<E> prev() {
+        return prev;
     }
 
 }
