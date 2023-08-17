@@ -1,7 +1,6 @@
 package cool.scx.util.cycle_iterable;
 
 import java.lang.reflect.Array;
-import java.util.Iterator;
 import java.util.Objects;
 
 public class CycleIterable<T> implements Iterable<T> {
