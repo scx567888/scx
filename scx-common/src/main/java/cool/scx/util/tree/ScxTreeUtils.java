@@ -1,6 +1,6 @@
 package cool.scx.util.tree;
 
-import cool.scx.util.multi_map.ListMultiMap;
+import cool.scx.util.MultiMap;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -94,7 +94,7 @@ public final class ScxTreeUtils {
             throw new IllegalArgumentException("listToTree : 数据不能为空 !!!");
         }
         var idMap = new HashMap<>(list.size());
-        var parentIDMap = new ListMultiMap<Object, T>();
+        var parentIDMap = new MultiMap<Object, T>();
         for (T t : list) {
             idMap.put(t.id(), t);
             parentIDMap.put(t.parentID(), t);

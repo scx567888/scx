@@ -1,6 +1,6 @@
 package cool.scx.mvc.websocket;
 
-import cool.scx.util.multi_map.ListMultiMap;
+import cool.scx.util.MultiMap;
 import io.netty.handler.codec.http.QueryStringDecoder;
 import io.vertx.core.Handler;
 import io.vertx.core.http.ServerWebSocket;
@@ -12,7 +12,7 @@ public abstract class WebSocketRoutingContext implements Handler<WebSocketRoute>
 
     protected final ServerWebSocket webSocket;
     protected final Iterator<WebSocketRoute> iter;
-    private ListMultiMap<String, String> queryParams;
+    private MultiMap<String, String> queryParams;
 
     public WebSocketRoutingContext(ServerWebSocket webSocket, List<WebSocketRoute> webSocketRoutes) {
         this.webSocket = webSocket;
@@ -33,9 +33,9 @@ public abstract class WebSocketRoutingContext implements Handler<WebSocketRoute>
         }
     }
 
-    public ListMultiMap<String, String> queryParams() {
+    public MultiMap<String, String> queryParams() {
         if (this.queryParams == null) {
-            this.queryParams = new ListMultiMap<>();
+            this.queryParams = new MultiMap<>();
             new QueryStringDecoder(this.webSocket.uri())
                     .parameters()
                     .forEach((key, value) -> this.queryParams.putAll(key, value));

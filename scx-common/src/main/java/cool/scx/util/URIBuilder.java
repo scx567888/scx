@@ -1,6 +1,5 @@
 package cool.scx.util;
 
-import cool.scx.util.multi_map.ListMultiMap;
 import io.netty.handler.codec.http.QueryStringDecoder;
 import io.netty.handler.codec.http.QueryStringEncoder;
 
@@ -33,7 +32,7 @@ public final class URIBuilder {
     /**
      * a
      */
-    private final ListMultiMap<String, String> queryParams = new ListMultiMap<>();
+    private final MultiMap<String, String> queryParams = new MultiMap<>();
 
     /**
      * a
