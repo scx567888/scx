@@ -2,6 +2,7 @@ package cool.scx.util;
 
 import java.util.*;
 import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -14,9 +15,28 @@ import java.util.stream.Collectors;
  */
 public final class MultiMap<K, V> {
 
-    private final Map<K, List<V>> map = new LinkedHashMap<>();
+    private final Map<K, List<V>> map;
+
+    private final Supplier<List<V>> listSupplier;
 
     private int size = 0;
+
+    public MultiMap(Map<K, List<V>> map, Supplier<List<V>> listSupplier) {
+        this.map = map;
+        this.listSupplier = listSupplier;
+    }
+
+    public MultiMap(Supplier<List<V>> listSupplier) {
+        this(new HashMap<>(), listSupplier);
+    }
+
+    public MultiMap(Map<K, List<V>> map) {
+        this(map, ArrayList::new);
+    }
+
+    public MultiMap() {
+        this(new HashMap<>(), ArrayList::new);
+    }
 
     public Map<K, List<V>> toMultiValueMap() {
         return map;
@@ -39,7 +59,7 @@ public final class MultiMap<K, V> {
     }
 
     public List<V> get(K key) {
-        return map.computeIfAbsent(key, k -> new ArrayList<>());
+        return map.computeIfAbsent(key, k -> listSupplier.get());
     }
 
     public boolean remove(K key, V value) {
