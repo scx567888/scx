@@ -3,7 +3,6 @@ package cool.scx.util;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 /**
  * MultiMap
@@ -18,8 +17,6 @@ public final class MultiMap<K, V> {
     private final Map<K, List<V>> map;
 
     private final Supplier<List<V>> listSupplier;
-
-    private int size = 0;
 
     public MultiMap(Map<K, List<V>> map, Supplier<List<V>> listSupplier) {
         this.map = map;
@@ -42,10 +39,14 @@ public final class MultiMap<K, V> {
         return map;
     }
 
-    public HashMap<K, V> toSingleValueMap() {
-        var tempMap = new HashMap<K, V>();
+    public Map<K, V> toSingleValueMap() {
+        var tempMap = new LinkedHashMap<K, V>();
         for (var e : map.entrySet()) {
-            tempMap.put(e.getKey(), e.getValue().get(0));
+            var key = e.getKey();
+            var value = e.getValue();
+            if (value != null && !value.isEmpty()) {
+                tempMap.put(key, value.get(0));
+            }
         }
         return tempMap;
     }
@@ -55,47 +56,67 @@ public final class MultiMap<K, V> {
     }
 
     public List<V> values() {
-        return map.values().stream().flatMap(Collection::stream).collect(Collectors.toList());
+        var list = listSupplier.get();
+        for (var vs : map.values()) {
+            list.addAll(vs);
+        }
+        return list;
     }
 
     public List<V> get(K key) {
-        return map.computeIfAbsent(key, k -> listSupplier.get());
+        return map.get(key);
+    }
+
+    public V getFirst(K key) {
+        var values = map.get(key);
+        return values == null || values.isEmpty() ? null : values.get(0);
     }
 
     public boolean remove(K key, V value) {
-        var collection = map.get(key);
-        if (collection != null && collection.remove(value)) {
-            size = size - 1;
+        var v = map.get(key);
+        if (v != null && v.remove(value)) {
+            if (v.isEmpty()) {
+                map.remove(key);
+            }
             return true;
         }
         return false;
     }
 
     public List<V> removeAll(K key) {
-        var collection = map.remove(key);
-        if (collection == null) {
-            return Collections.emptyList();
-        }
-        var output = new ArrayList<>(collection);
-        size = size - collection.size();
-        collection.clear();
-        return Collections.unmodifiableList(output);
+        return map.remove(key);
     }
 
     public boolean put(K key, V value) {
-        var collection = get(key);
-        collection.add(value);
-        size = size + 1;
-        return true;
+        var v = map.computeIfAbsent(key, k -> listSupplier.get());
+        return v.add(value);
     }
 
     public boolean putAll(K key, Collection<? extends V> values) {
-        var collection = get(key);
-        var add = collection.addAll(values);
-        if (add) {
-            size = size + values.size();
+        var v = map.computeIfAbsent(key, k -> listSupplier.get());
+        return v.addAll(values);
+    }
+
+    public void putAll(Map<? extends K, ? extends V> v) {
+        v.forEach(this::put);
+    }
+
+    public void putAll(MultiMap<? extends K, ? extends V> v) {
+        for (var entry : v.map.entrySet()) {
+            var key = entry.getKey();
+            var values = entry.getValue();
+            putAll(key, values);
         }
-        return add;
+    }
+
+    public void set(K key, V value) {
+        var values = listSupplier.get();
+        values.add(value);
+        this.map.put(key, values);
+    }
+
+    public void setAll(Map<? extends K, ? extends V> values) {
+        values.forEach(this::set);
     }
 
     public boolean containsKey(K key) {
@@ -103,27 +124,46 @@ public final class MultiMap<K, V> {
     }
 
     public boolean containsValue(V value) {
-        return map.values().stream().anyMatch(collection -> collection.contains(value));
+        for (var values : map.values()) {
+            if (values.contains(value)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void clear() {
-        for (var collection : map.values()) {
-            collection.clear();
+        for (var value : map.values()) {
+            value.clear();
         }
         map.clear();
-        size = 0;
     }
 
     public boolean isEmpty() {
-        return size == 0;
+        return size() == 0L;
     }
 
-    public int size() {
+    public long size() {
+        var size = 0L;
+        for (var value : map.values()) {
+            size = size + value.size();
+        }
         return size;
     }
 
     public void forEach(BiConsumer<? super K, ? super V> action) {
-        map.forEach((key, valueCollection) -> valueCollection.forEach(value -> action.accept(key, value)));
+        for (var entry : map.entrySet()) {
+            var key = entry.getKey();
+            var values = entry.getValue();
+            for (var value : values) {
+                action.accept(key, value);
+            }
+        }
+    }
+
+    @Override
+    public String toString() {
+        return this.map.toString();
     }
 
 }
