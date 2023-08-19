@@ -63,8 +63,13 @@ public final class MultiMap<K, V> {
         return list;
     }
 
+    /**
+     * 永不返回 null
+     * @param key a
+     * @return a
+     */
     public List<V> get(K key) {
-        return map.get(key);
+        return map.getOrDefault(key, listSupplier.get());
     }
 
     public V getFirst(K key) {
