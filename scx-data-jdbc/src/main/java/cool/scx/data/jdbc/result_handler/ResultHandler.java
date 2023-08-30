@@ -45,6 +45,10 @@ public interface ResultHandler<T> {
         return new BeanHandler<>(BeanBuilder.of(clazz, columnNameMapping));
     }
 
+    static <C> ResultHandler<C> ofBean(BeanBuilder<C> beanBuilder) {
+        return new BeanHandler<>(beanBuilder);
+    }
+
     static <C> ResultHandler<List<C>> ofBeanList(Class<C> clazz) {
         return new BeanListHandler<>(BeanBuilder.of(clazz));
     }
@@ -53,12 +57,20 @@ public interface ResultHandler<T> {
         return new BeanListHandler<>(BeanBuilder.of(clazz, columnNameMapping));
     }
 
+    static <C> ResultHandler<List<C>> ofBeanList(BeanBuilder<C> beanBuilder) {
+        return new BeanListHandler<>(beanBuilder);
+    }
+
     static <C> ResultHandler<Void> ofBeanConsumer(Class<C> clazz, Consumer<C> consumer) {
         return new BeanConsumerHandler<>(BeanBuilder.of(clazz), consumer);
     }
 
     static <C> ResultHandler<Void> ofBeanConsumer(Class<C> clazz, Function<Field, String> columnNameMapping, Consumer<C> consumer) {
         return new BeanConsumerHandler<>(BeanBuilder.of(clazz, columnNameMapping), consumer);
+    }
+
+    static <C> ResultHandler<Void> ofBeanConsumer(BeanBuilder<C> beanBuilder, Consumer<C> consumer) {
+        return new BeanConsumerHandler<>(beanBuilder, consumer);
     }
 
     static ResultHandler<Void> ofMapConsumer(Consumer<Map<String, Object>> consumer) {

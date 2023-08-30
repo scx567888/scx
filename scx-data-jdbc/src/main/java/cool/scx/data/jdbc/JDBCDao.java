@@ -3,6 +3,7 @@ package cool.scx.data.jdbc;
 import cool.scx.data.Dao;
 import cool.scx.data.FieldFilter;
 import cool.scx.data.Query;
+import cool.scx.data.jdbc.bean_builder.BeanBuilder;
 import cool.scx.data.jdbc.mapping.Column;
 import cool.scx.data.jdbc.mapping.Table;
 import cool.scx.data.jdbc.parser.JDBCDaoGroupByParser;
@@ -78,6 +79,8 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
 
     protected final Function<Field, String> columnNameMapping;
 
+    protected final BeanBuilder<Entity> beanBuilder;
+
     /**
      * a
      *
@@ -92,8 +95,9 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
             var columnInfo = this.tableInfo.getColumn(field.getName());
             return columnInfo == null ? null : columnInfo.name();
         };
-        this.entityBeanListHandler = ofBeanList(this.entityClass, columnNameMapping);
-        this.entityBeanHandler = ofBean(this.entityClass, columnNameMapping);
+        this.beanBuilder = BeanBuilder.of(this.entityClass, columnNameMapping);
+        this.entityBeanListHandler = ofBeanList(this.beanBuilder);
+        this.entityBeanHandler = ofBean(this.beanBuilder);
         this.countResultHandler = ofSingleValue("count", Long.class);
         this.whereParser = new JDBCDaoWhereParser(tableInfo, jdbcContext.dialect());
         this.groupByParser = new JDBCDaoGroupByParser(tableInfo);
@@ -117,7 +121,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
 
     @Override
     public void find(Query query, FieldFilter fieldFilter, Consumer<Entity> consumer) {
-        sqlRunner.query(buildSelectSQL(query, fieldFilter), ofBeanConsumer(entityClass, columnNameMapping, consumer));
+        sqlRunner.query(buildSelectSQL(query, fieldFilter), ofBeanConsumer(beanBuilder, consumer));
     }
 
     public Entity get(Query query, FieldFilter columnFilter) {
