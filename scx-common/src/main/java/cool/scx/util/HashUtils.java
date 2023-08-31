@@ -1,241 +1,211 @@
 package cool.scx.util;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Objects;
+import java.util.HexFormat;
+import java.util.function.Supplier;
+import java.util.zip.CRC32;
+import java.util.zip.CRC32C;
+import java.util.zip.Checksum;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.security.MessageDigest.getInstance;
+import static java.util.Objects.requireNonNull;
 
 /**
- * 摘要算法工具类<br>
- * 只是针对 jdk 中自带的 {@link java.security.MessageDigest} 进行的简单封装<br>
- * 注意 : SHA 和 MD5 为单向散列函数,
- * 只适用于防篡改 或单项加密(如密码) 等 .
- * 如有加密后需要解密的需求 , 建议使用 {@link cool.scx.util.CryptoUtils}
+ * HASH 工具类
  *
  * @author scx567888
- * @version 0.0.1
+ * @version 3.0.0
  */
 public final class HashUtils {
 
     /**
-     * 缓冲区大小
+     * 此缓冲区大小在内存和速度的综合测试中表现最优
      */
-    static final int CACHE_LENGTH = 256 * 1024;
+    private static final int DEFAULT_BUFFER_SIZE = 1024 * 64;
 
-    /**
-     * <p>digest.</p>
-     *
-     * @param data       a {@link java.lang.String} object
-     * @param digestType s
-     * @return a {@link java.lang.String} object
-     */
-    private static String digest(final String data, String digestType) {
-        return digest(data != null ? data.getBytes(StandardCharsets.UTF_8) : null, digestType);
+    private static final HexFormat HEX_FORMAT = HexFormat.of().withUpperCase();
+
+    public static String hash(byte[] data, String algorithm) throws NoSuchAlgorithmException {
+        requireNonNull(data, "Data must not be empty !!!");
+        return HEX_FORMAT.formatHex(getInstance(algorithm).digest(data));
     }
 
-    /**
-     * <p>digest.</p>
-     *
-     * @param data       an array of {@link byte} objects
-     * @param digestType s
-     * @return a {@link java.lang.String} object
-     */
-    private static String digest(final byte[] data, String digestType) {
-        Objects.requireNonNull(data, "Data must not be empty !!!");
-        return HexUtils.toHex(getDigest(digestType).digest(data));
+    public static String hash(String data, String algorithm) throws NoSuchAlgorithmException {
+        requireNonNull(data, "Data must not be empty !!!");
+        return HEX_FORMAT.formatHex(getInstance(algorithm).digest(data.getBytes(UTF_8)));
     }
 
-    /**
-     * <p>digest.</p>
-     *
-     * @param data       a {@link java.io.File} object
-     * @param digestType s
-     * @return a {@link java.lang.String} object
-     * @throws java.io.IOException if any.
-     */
-    private static String digest(final File data, String digestType) throws IOException {
-        Objects.requireNonNull(data, "Data must not be empty !!!");
-        var digest = getDigest(digestType);
-        var buffer = new byte[CACHE_LENGTH];
+    public static String hash(File data, String algorithm) throws IOException, NoSuchAlgorithmException {
+        requireNonNull(data, "Data must not be empty !!!");
+        var messageDigest = getInstance(algorithm);
+        var buffer = new byte[DEFAULT_BUFFER_SIZE];
         int read;
-        try (var file = new RandomAccessFile(data, "r")) {
-            while ((read = file.read(buffer, 0, CACHE_LENGTH)) != -1) {
-                digest.update(buffer, 0, read);
+        try (var inputStream = new FileInputStream(data)) {
+            while ((read = inputStream.read(buffer)) != -1) {
+                messageDigest.update(buffer, 0, read);
             }
         }
-        return HexUtils.toHex(digest.digest());
+        return HEX_FORMAT.formatHex(messageDigest.digest());
     }
 
     /**
-     * <p>sha1.</p>
+     * 此方法假定 指定算法一定存在 所以不向外显式抛出 {@link NoSuchAlgorithmException} 异常
      *
-     * @param data a {@link java.lang.String} object
-     * @return a {@link java.lang.String} object
+     * @param data      data
+     * @param algorithm algorithm
+     * @return hash
      */
-    public static String sha1(final String data) {
-        return digest(data, "SHA-1");
-    }
-
-    /**
-     * <p>sha1.</p>
-     *
-     * @param data an array of {@link byte} objects
-     * @return a {@link java.lang.String} object
-     */
-    public static String sha1(final byte[] data) {
-        return digest(data, "SHA-1");
-    }
-
-    /**
-     * <p>sha1.</p>
-     *
-     * @param data a {@link java.io.File} object
-     * @return a {@link java.lang.String} object
-     * @throws java.io.IOException if any.
-     */
-    public static String sha1(final File data) throws IOException {
-        return digest(data, "SHA-1");
-    }
-
-    /**
-     * <p>sha256.</p>
-     *
-     * @param data a {@link java.lang.String} object
-     * @return a {@link java.lang.String} object
-     */
-    public static String sha256(final String data) {
-        return digest(data, "SHA-256");
-    }
-
-    /**
-     * <p>sha256.</p>
-     *
-     * @param data an array of {@link byte} objects
-     * @return a {@link java.lang.String} object
-     */
-    public static String sha256(final byte[] data) {
-        return digest(data, "SHA-256");
-    }
-
-    /**
-     * <p>sha256.</p>
-     *
-     * @param data a {@link java.io.File} object
-     * @return a {@link java.lang.String} object
-     * @throws java.io.IOException if any.
-     */
-    public static String sha256(final File data) throws IOException {
-        return digest(data, "SHA-256");
-    }
-
-    /**
-     * <p>sha384.</p>
-     *
-     * @param data a {@link java.lang.String} object
-     * @return a {@link java.lang.String} object
-     */
-    public static String sha384(final String data) {
-        return digest(data, "SHA-384");
-    }
-
-    /**
-     * <p>sha384.</p>
-     *
-     * @param data an array of {@link byte} objects
-     * @return a {@link java.lang.String} object
-     */
-    public static String sha384(final byte[] data) {
-        return digest(data, "SHA-384");
-    }
-
-    /**
-     * <p>sha384.</p>
-     *
-     * @param data a {@link java.io.File} object
-     * @return a {@link java.lang.String} object
-     * @throws java.io.IOException if any.
-     */
-    public static String sha384(final File data) throws IOException {
-        return digest(data, "SHA-384");
-    }
-
-    /**
-     * <p>sha512.</p>
-     *
-     * @param data a {@link java.lang.String} object
-     * @return a {@link java.lang.String} object
-     */
-    public static String sha512(final String data) {
-        return digest(data, "SHA-512");
-    }
-
-    /**
-     * <p>sha512.</p>
-     *
-     * @param data an array of {@link byte} objects
-     * @return a {@link java.lang.String} object
-     */
-    public static String sha512(final byte[] data) {
-        return digest(data, "SHA-512");
-    }
-
-    /**
-     * <p>sha512.</p>
-     *
-     * @param data a {@link java.io.File} object
-     * @return a {@link java.lang.String} object
-     * @throws java.io.IOException if any.
-     */
-    public static String sha512(final File data) throws IOException {
-        return digest(data, "SHA-512");
-    }
-
-    /**
-     * <p>md5.</p>
-     *
-     * @param data a {@link java.lang.String} object
-     * @return a {@link java.lang.String} object
-     */
-    public static String md5(final String data) {
-        return digest(data, "MD5");
-    }
-
-    /**
-     * <p>md5.</p>
-     *
-     * @param data an array of {@link byte} objects
-     * @return a {@link java.lang.String} object
-     */
-    public static String md5(final byte[] data) {
-        return digest(data, "MD5");
-    }
-
-    /**
-     * 计算 md5
-     *
-     * @param data a {@link java.io.File} object
-     * @return a {@link java.lang.String} object
-     * @throws java.io.IOException if any.
-     */
-    public static String md5(final File data) throws IOException {
-        return digest(data, "MD5");
-    }
-
-    /**
-     * <p>getDigest.</p>
-     *
-     * @param digestType s
-     * @return a {@link java.security.MessageDigest} object
-     */
-    private static MessageDigest getDigest(final String digestType) {
+    private static String hash0(byte[] data, String algorithm) {
         try {
-            return MessageDigest.getInstance(digestType);
-        } catch (NoSuchAlgorithmException exception) {
-            throw new IllegalArgumentException(exception);
+            return hash(data, algorithm);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * 此方法假定 指定算法一定存在 所以不向外显式抛出 {@link NoSuchAlgorithmException} 异常
+     *
+     * @param data      data
+     * @param algorithm algorithm
+     * @return hash
+     */
+    private static String hash0(String data, String algorithm) {
+        try {
+            return hash(data, algorithm);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * 此方法假定 指定算法一定存在 所以不向外显式抛出 {@link NoSuchAlgorithmException} 异常
+     *
+     * @param data      data
+     * @param algorithm algorithm
+     * @return hash
+     */
+    private static String hash0(File data, String algorithm) throws IOException {
+        try {
+            return hash(data, algorithm);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static String sha1(byte[] data) {
+        return hash0(data, "SHA-1");
+    }
+
+    public static String sha1(String data) {
+        return hash0(data, "SHA-1");
+    }
+
+    public static String sha1(File data) throws IOException {
+        return hash0(data, "SHA-1");
+    }
+
+    public static String sha256(byte[] data) {
+        return hash0(data, "SHA-256");
+    }
+
+    public static String sha256(String data) {
+        return hash0(data, "SHA-256");
+    }
+
+    public static String sha256(File data) throws IOException {
+        return hash0(data, "SHA-256");
+    }
+
+    public static String sha384(byte[] data) {
+        return hash0(data, "SHA-384");
+    }
+
+    public static String sha384(String data) {
+        return hash0(data, "SHA-384");
+    }
+
+    public static String sha384(File data) throws IOException {
+        return hash0(data, "SHA-384");
+    }
+
+    public static String sha512(byte[] data) {
+        return hash0(data, "SHA-512");
+    }
+
+    public static String sha512(String data) {
+        return hash0(data, "SHA-512");
+    }
+
+    public static String sha512(File data) throws IOException {
+        return hash0(data, "SHA-512");
+    }
+
+    public static String md5(byte[] data) {
+        return hash0(data, "MD5");
+    }
+
+    public static String md5(String data) {
+        return hash0(data, "MD5");
+    }
+
+    public static String md5(File data) throws IOException {
+        return hash0(data, "MD5");
+    }
+
+    public static String hash(byte[] data, Supplier<Checksum> checksumSupplier) {
+        requireNonNull(data, "Data must not be empty !!!");
+        var checksum = checksumSupplier.get();
+        checksum.update(data);
+        return HEX_FORMAT.toHexDigits((int) checksum.getValue());
+    }
+
+    public static String hash(String data, Supplier<Checksum> checksumSupplier) {
+        requireNonNull(data, "Data must not be empty !!!");
+        var checksum = checksumSupplier.get();
+        checksum.update(data.getBytes(UTF_8));
+        return HEX_FORMAT.toHexDigits((int) checksum.getValue());
+    }
+
+    public static String hash(File data, Supplier<Checksum> checksumSupplier) throws IOException {
+        requireNonNull(data, "Data must not be empty !!!");
+        var checksum = checksumSupplier.get();
+        var buffer = new byte[DEFAULT_BUFFER_SIZE];
+        int read;
+        try (var inputStream = new FileInputStream(data)) {
+            while ((read = inputStream.read(buffer)) != -1) {
+                checksum.update(buffer, 0, read);
+            }
+        }
+        return HEX_FORMAT.toHexDigits((int) checksum.getValue());
+    }
+
+    public static String crc32(String data) {
+        return hash(data, CRC32::new);
+    }
+
+    public static String crc32(byte[] data) {
+        return hash(data, CRC32::new);
+    }
+
+    public static String crc32(File data) throws IOException {
+        return hash(data, CRC32::new);
+    }
+
+    public static String crc32c(String data) {
+        return hash(data, CRC32C::new);
+    }
+
+    public static String crc32c(byte[] data) {
+        return hash(data, CRC32C::new);
+    }
+
+    public static String crc32c(File data) throws IOException {
+        return hash(data, CRC32C::new);
     }
 
 }
