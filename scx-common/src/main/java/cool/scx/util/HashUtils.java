@@ -1,9 +1,7 @@
 package cool.scx.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HexFormat;
 import java.util.function.Supplier;
@@ -30,6 +28,24 @@ public final class HashUtils {
 
     private static final HexFormat HEX_FORMAT = HexFormat.of().withUpperCase();
 
+    public static MessageDigest updateDigest(MessageDigest digest, File data) throws IOException {
+        try (var inputStream = new FileInputStream(data)) {
+            return updateDigest(digest, inputStream);
+        }
+    }
+
+    public static MessageDigest updateDigest(MessageDigest messageDigest, InputStream inputStream) throws IOException {
+
+        var buffer = new byte[DEFAULT_BUFFER_SIZE];
+        int read = inputStream.read(buffer);
+        while (read != -1) {
+            messageDigest.update(buffer, 0, read);
+            read = inputStream.read(buffer);
+        }
+
+        return messageDigest;
+    }
+
     public static String hash(byte[] data, String algorithm) throws NoSuchAlgorithmException {
         requireNonNull(data, "Data must not be empty !!!");
         return HEX_FORMAT.formatHex(getInstance(algorithm).digest(data));
@@ -40,15 +56,13 @@ public final class HashUtils {
         return HEX_FORMAT.formatHex(getInstance(algorithm).digest(data.getBytes(UTF_8)));
     }
 
-    public static String hash(InputStream data, String algorithm) throws IOException, NoSuchAlgorithmException {
+    public static byte[] hash(InputStream data, String algorithm) throws IOException, NoSuchAlgorithmException {
         requireNonNull(data, "Data must not be empty !!!");
-        var messageDigest = getInstance(algorithm);
-        var buffer = new byte[DEFAULT_BUFFER_SIZE];
-        int read;
-        while ((read = data.read(buffer)) != -1) {
-            messageDigest.update(buffer, 0, read);
-        }
-        return HEX_FORMAT.formatHex(messageDigest.digest());
+        return updateDigest(getInstance(algorithm), data).digest();
+    }
+
+    public static String hashAsHex(InputStream data, String algorithm) throws IOException, NoSuchAlgorithmException {
+        return HEX_FORMAT.formatHex(hash(data, algorithm));
     }
 
     public static String hash(File data, String algorithm) throws IOException, NoSuchAlgorithmException {
@@ -188,8 +202,12 @@ public final class HashUtils {
         return hash0(data, "SHA-512");
     }
 
-    public static String md5(byte[] data) {
-        return hash0(data, "MD5");
+    public static byte[] md5(byte[] data) {
+        return getMD5Digest().digest(data);
+    }
+
+    public static byte[] md5Hex(byte[] data) {
+        return HEX_FORMAT.formatHex(md5());
     }
 
     public static String md5(String data) {
@@ -272,6 +290,18 @@ public final class HashUtils {
 
     public static String crc32c(File data) throws IOException {
         return hash(data, CRC32C::new);
+    }
+
+    public static MessageDigest getMD5Digest() {
+        return getDigest("MD5");
+    }
+
+    public static MessageDigest getDigest(final String algorithm) {
+        try {
+            return MessageDigest.getInstance(algorithm);
+        } catch (final NoSuchAlgorithmException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 
 }
