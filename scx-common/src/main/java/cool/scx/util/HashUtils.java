@@ -15,7 +15,7 @@ import static java.security.MessageDigest.getInstance;
 import static java.util.Objects.requireNonNull;
 
 /**
- * HASH 工具类
+ * HASH 工具类 (注意 !!! 返回的十六进制均为大写格式)
  *
  * @author scx567888
  * @version 3.0.0
