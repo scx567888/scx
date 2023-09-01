@@ -12,13 +12,13 @@ public class HashUtilsTest {
 
     @Test
     public static void test1() {
-        var sha1 = HashUtils.sha1("123");
-        var sha256 = HashUtils.sha256("123");
-        var sha384 = HashUtils.sha384("123");
-        var sha512 = HashUtils.sha512("123");
-        var md5 = HashUtils.md5("123");
-        var crc32 = HashUtils.crc32("123");
-        var crc32c = HashUtils.crc32c("123");
+        var sha1 = HashUtils.sha1Hex("123");
+        var sha256 = HashUtils.sha256Hex("123");
+        var sha384 = HashUtils.sha384Hex("123");
+        var sha512 = HashUtils.sha512Hex("123");
+        var md5 = HashUtils.md5Hex("123");
+        var crc32 = HashUtils.crc32Hex("123");
+        var crc32c = HashUtils.crc32cHex("123");
         Assert.assertEquals(sha1, "40BD001563085FC35165329EA1FF5C5ECBDBBEEF");
         Assert.assertEquals(sha256, "A665A45920422F9D417E4867EFDC4FB8A04A1F3FFF1FA07E998E86F7F7A27AE3");
         Assert.assertEquals(sha384, "9A0A82F0C0CF31470D7AFFEDE3406CC9AA8410671520B727044EDA15B4C25532A9B5CD8AAF9CEC4919D76255B6BFB00F");

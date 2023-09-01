@@ -415,7 +415,7 @@ public final class HashUtils {
         try {
             return hash(data, algorithm);
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException(e);
         }
     }
 
@@ -423,7 +423,7 @@ public final class HashUtils {
         try {
             return hash(data, algorithm);
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException(e);
         }
     }
 
@@ -438,7 +438,7 @@ public final class HashUtils {
         try {
             return hash(data, algorithm);
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException(e);
         }
     }
 
@@ -446,7 +446,7 @@ public final class HashUtils {
         try {
             return hash(data, algorithm);
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException(e);
         }
     }
 
@@ -454,7 +454,7 @@ public final class HashUtils {
         try {
             return hash(data, algorithm, options);
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException(e);
         }
     }
 
@@ -462,7 +462,7 @@ public final class HashUtils {
         try {
             return hashAsHex(data, algorithm);
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException(e);
         }
     }
 
@@ -470,7 +470,7 @@ public final class HashUtils {
         try {
             return hashAsHex(data, algorithm);
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException(e);
         }
     }
 
@@ -478,7 +478,7 @@ public final class HashUtils {
         try {
             return hashAsHex(data, algorithm);
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException(e);
         }
     }
 
@@ -486,7 +486,7 @@ public final class HashUtils {
         try {
             return hashAsHex(data, algorithm);
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException(e);
         }
     }
 
@@ -494,7 +494,7 @@ public final class HashUtils {
         try {
             return hashAsHex(data, algorithm, options);
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException(e);
         }
     }
 
