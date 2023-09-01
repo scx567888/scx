@@ -6,6 +6,7 @@ import java.io.RandomAccessFile;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.DecimalFormat;
+import java.util.HexFormat;
 import java.util.regex.Pattern;
 
 /**
@@ -179,7 +180,7 @@ public final class FileUtils {
         try (var accessFile = new RandomAccessFile(filePath, "r")) {
             var headBytes = new byte[length];
             accessFile.read(headBytes);
-            return HexUtils.toHex(headBytes);
+            return HexFormat.of().formatHex(headBytes);
         }
     }
 
