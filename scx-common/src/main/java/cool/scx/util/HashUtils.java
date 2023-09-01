@@ -405,7 +405,7 @@ public final class HashUtils {
     }
 
     /**
-     * 此方法假定 指定算法一定存在 所以不向外显式抛出 {@link NoSuchAlgorithmException} 异常
+     * 此方法假定 指定算法一定存在 所以不向外显式抛出 {@link NoSuchAlgorithmException} 异常 . 下同
      *
      * @param data      data
      * @param algorithm algorithm
@@ -427,13 +427,6 @@ public final class HashUtils {
         }
     }
 
-    /**
-     * 此方法假定 指定算法一定存在 所以不向外显式抛出 {@link NoSuchAlgorithmException} 异常
-     *
-     * @param data      data
-     * @param algorithm algorithm
-     * @return hash
-     */
     private static byte[] hash0(InputStream data, String algorithm) throws IOException {
         try {
             return hash(data, algorithm);
