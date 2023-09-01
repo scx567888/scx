@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -53,6 +54,11 @@ public final class HashUtils {
         return updateDigest(getInstance(algorithm), data).digest();
     }
 
+    public static byte[] hash(Path data, String algorithm, OpenOption... options) throws IOException, NoSuchAlgorithmException {
+        requireNonNull(data, "Data must not be empty !!!");
+        return updateDigest(getInstance(algorithm), data, options).digest();
+    }
+
     public static long hash(byte[] data, Supplier<Checksum> checksumSupplier) {
         requireNonNull(data, "Data must not be empty !!!");
         return updateChecksum(checksumSupplier.get(), data).getValue();
@@ -73,6 +79,11 @@ public final class HashUtils {
         return updateChecksum(checksumSupplier.get(), data).getValue();
     }
 
+    public static long hash(Path data, Supplier<Checksum> checksumSupplier, OpenOption... options) throws IOException {
+        requireNonNull(data, "Data must not be empty !!!");
+        return updateChecksum(checksumSupplier.get(), data, options).getValue();
+    }
+
     public static String hashAsHex(byte[] data, String algorithm) throws NoSuchAlgorithmException {
         return HEX_FORMAT.formatHex(hash(data, algorithm));
     }
@@ -87,6 +98,10 @@ public final class HashUtils {
 
     public static String hashAsHex(File data, String algorithm) throws IOException, NoSuchAlgorithmException {
         return HEX_FORMAT.formatHex(hash(data, algorithm));
+    }
+
+    public static String hashAsHex(Path data, String algorithm, OpenOption... options) throws IOException, NoSuchAlgorithmException {
+        return HEX_FORMAT.formatHex(hash(data, algorithm, options));
     }
 
     public static String hashAsHex(byte[] data, Supplier<Checksum> checksumSupplier) {
@@ -105,6 +120,10 @@ public final class HashUtils {
         return HEX_FORMAT.toHexDigits((int) hash(data, checksumSupplier));
     }
 
+    public static String hashAsHex(Path data, Supplier<Checksum> checksumSupplier, OpenOption... options) throws IOException {
+        return HEX_FORMAT.toHexDigits((int) hash(data, checksumSupplier, options));
+    }
+
     public static byte[] sha1(byte[] data) {
         return hash0(data, "SHA-1");
     }
@@ -119,6 +138,10 @@ public final class HashUtils {
 
     public static byte[] sha1(File data) throws IOException {
         return hash0(data, "SHA-1");
+    }
+
+    public static byte[] sha1(Path data, OpenOption... options) throws IOException {
+        return hash0(data, "SHA-1", options);
     }
 
     public static String sha1Hex(byte[] data) {
@@ -137,6 +160,10 @@ public final class HashUtils {
         return hashAsHex0(data, "SHA-1");
     }
 
+    public static String sha1Hex(Path data, OpenOption... options) throws IOException {
+        return hashAsHex0(data, "SHA-1", options);
+    }
+
     public static byte[] sha256(byte[] data) {
         return hash0(data, "SHA-256");
     }
@@ -151,6 +178,10 @@ public final class HashUtils {
 
     public static byte[] sha256(File data) throws IOException {
         return hash0(data, "SHA-256");
+    }
+
+    public static byte[] sha256(Path data, OpenOption... options) throws IOException {
+        return hash0(data, "SHA-256", options);
     }
 
     public static String sha256Hex(byte[] data) {
@@ -169,6 +200,10 @@ public final class HashUtils {
         return hashAsHex0(data, "SHA-256");
     }
 
+    public static String sha256Hex(Path data, OpenOption... options) throws IOException {
+        return hashAsHex0(data, "SHA-256", options);
+    }
+
     public static byte[] sha384(byte[] data) {
         return hash0(data, "SHA-384");
     }
@@ -183,6 +218,10 @@ public final class HashUtils {
 
     public static byte[] sha384(File data) throws IOException {
         return hash0(data, "SHA-384");
+    }
+
+    public static byte[] sha384(Path data, OpenOption... options) throws IOException {
+        return hash0(data, "SHA-384", options);
     }
 
     public static String sha384Hex(byte[] data) {
@@ -201,6 +240,10 @@ public final class HashUtils {
         return hashAsHex0(data, "SHA-384");
     }
 
+    public static String sha384Hex(Path data, OpenOption... options) throws IOException {
+        return hashAsHex0(data, "SHA-384", options);
+    }
+
     public static byte[] sha512(byte[] data) {
         return hash0(data, "SHA-512");
     }
@@ -215,6 +258,10 @@ public final class HashUtils {
 
     public static byte[] sha512(File data) throws IOException {
         return hash0(data, "SHA-512");
+    }
+
+    public static byte[] sha512(Path data, OpenOption... options) throws IOException {
+        return hash0(data, "SHA-512", options);
     }
 
     public static String sha512Hex(byte[] data) {
@@ -233,6 +280,10 @@ public final class HashUtils {
         return hashAsHex0(data, "SHA-512");
     }
 
+    public static String sha512Hex(Path data, OpenOption... options) throws IOException {
+        return hashAsHex0(data, "SHA-512", options);
+    }
+
     public static byte[] md5(byte[] data) {
         return hash0(data, "MD5");
     }
@@ -247,6 +298,10 @@ public final class HashUtils {
 
     public static byte[] md5(File data) throws IOException {
         return hash0(data, "MD5");
+    }
+
+    public static byte[] md5(Path data, OpenOption... options) throws IOException {
+        return hash0(data, "MD5", options);
     }
 
     public static String md5Hex(byte[] data) {
@@ -265,6 +320,10 @@ public final class HashUtils {
         return hashAsHex0(data, "MD5");
     }
 
+    public static String md5Hex(Path data, OpenOption... options) throws IOException {
+        return hashAsHex0(data, "MD5", options);
+    }
+
     public static long crc32(byte[] data) {
         return hash(data, CRC32::new);
     }
@@ -279,6 +338,10 @@ public final class HashUtils {
 
     public static long crc32(File data) throws IOException {
         return hash(data, CRC32::new);
+    }
+
+    public static long crc32(Path data, OpenOption... options) throws IOException {
+        return hash(data, CRC32::new, options);
     }
 
     public static String crc32Hex(byte[] data) {
@@ -297,6 +360,10 @@ public final class HashUtils {
         return hashAsHex(data, CRC32::new);
     }
 
+    public static String crc32Hex(Path data, OpenOption... options) throws IOException {
+        return hashAsHex(data, CRC32::new, options);
+    }
+
     public static long crc32c(byte[] data) {
         return hash(data, CRC32C::new);
     }
@@ -313,6 +380,10 @@ public final class HashUtils {
         return hash(data, CRC32C::new);
     }
 
+    public static long crc32c(Path data, OpenOption... options) throws IOException {
+        return hash(data, CRC32C::new, options);
+    }
+
     public static String crc32cHex(byte[] data) {
         return hashAsHex(data, CRC32C::new);
     }
@@ -327,6 +398,10 @@ public final class HashUtils {
 
     public static String crc32cHex(File data) throws IOException {
         return hashAsHex(data, CRC32C::new);
+    }
+
+    public static String crc32cHex(Path data, OpenOption... options) throws IOException {
+        return hashAsHex(data, CRC32C::new, options);
     }
 
     /**
@@ -375,6 +450,14 @@ public final class HashUtils {
         }
     }
 
+    private static byte[] hash0(Path data, String algorithm, OpenOption... options) throws IOException {
+        try {
+            return hash(data, algorithm, options);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private static String hashAsHex0(byte[] data, String algorithm) {
         try {
             return hashAsHex(data, algorithm);
@@ -407,6 +490,14 @@ public final class HashUtils {
         }
     }
 
+    private static String hashAsHex0(Path data, String algorithm, OpenOption... options) throws IOException {
+        try {
+            return hashAsHex(data, algorithm, options);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private static MessageDigest updateDigest(MessageDigest messageDigest, byte[] data) {
         messageDigest.update(data);
         return messageDigest;
@@ -433,6 +524,12 @@ public final class HashUtils {
         }
     }
 
+    private static MessageDigest updateDigest(MessageDigest digest, Path data, OpenOption... options) throws IOException {
+        try (var inputStream = Files.newInputStream(data, options)) {
+            return updateDigest(digest, inputStream);
+        }
+    }
+
     private static Checksum updateChecksum(Checksum checksum, byte[] data) {
         checksum.update(data);
         return checksum;
@@ -455,6 +552,12 @@ public final class HashUtils {
 
     private static Checksum updateChecksum(Checksum checksum, File data) throws IOException {
         try (var inputStream = new FileInputStream(data)) {
+            return updateChecksum(checksum, inputStream);
+        }
+    }
+
+    private static Checksum updateChecksum(Checksum checksum, Path data, OpenOption... options) throws IOException {
+        try (var inputStream = Files.newInputStream(data, options)) {
             return updateChecksum(checksum, inputStream);
         }
     }
