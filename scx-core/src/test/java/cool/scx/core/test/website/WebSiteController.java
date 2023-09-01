@@ -168,7 +168,7 @@ public class WebSiteController {
      */
     @ScxRoute(value = "/md5", methods = HttpMethod.GET)
     public String TestMd5() {
-        return HashUtils.md5("123");
+        return HashUtils.md5Hex("123");
     }
 
     /**
