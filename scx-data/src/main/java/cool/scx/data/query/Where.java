@@ -1,10 +1,6 @@
 package cool.scx.data.query;
 
-import cool.scx.data.Query;
-
 import java.util.Arrays;
-
-import static cool.scx.data.QueryBuilder.query;
 
 /**
  * where 查询条件封装类
@@ -73,8 +69,8 @@ public final class Where extends LazyQuery {
     }
 
     @Override
-    protected Query getQuery() {
-        return query().where(whereClause);
+    protected QueryImpl getQuery() {
+        return new QueryImpl(this);
     }
 
 }
