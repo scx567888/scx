@@ -1,5 +1,7 @@
 package cool.scx.data.query;
 
+import cool.scx.util.ArrayUtils;
+
 import java.util.Arrays;
 
 /**
@@ -39,6 +41,11 @@ public final class OrderBy extends LazyQuery {
      */
     public OrderBy set(Object... orderByClauses) {
         this.orderByClauses = orderByClauses;
+        return this;
+    }
+
+    public OrderBy add(Object... orderByClauses) {
+        this.orderByClauses = ArrayUtils.concat(this.orderByClauses,orderByClauses);
         return this;
     }
 

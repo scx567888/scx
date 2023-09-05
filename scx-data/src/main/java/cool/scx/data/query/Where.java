@@ -1,5 +1,7 @@
 package cool.scx.data.query;
 
+import cool.scx.util.ArrayUtils;
+
 import java.util.Arrays;
 
 /**
@@ -13,13 +15,13 @@ public final class Where extends LazyQuery {
     /**
      * 自定义的查询语句
      */
-    private Object[] whereClause;
+    private Object[] whereClauses;
 
     /**
      * 创建一个 Where 对象
      */
     public Where() {
-        this.whereClause = new Object[]{};
+        this.whereClauses = new Object[]{};
     }
 
     /**
@@ -28,7 +30,7 @@ public final class Where extends LazyQuery {
      * @param oldWhere 旧的 Where
      */
     public Where(Where oldWhere) {
-        this.whereClause = Arrays.copyOf(oldWhere.whereClause, oldWhere.whereClause.length);
+        this.whereClauses = Arrays.copyOf(oldWhere.whereClauses, oldWhere.whereClauses.length);
     }
 
     /**
@@ -37,7 +39,7 @@ public final class Where extends LazyQuery {
      * @return a boolean
      */
     public boolean isEmpty() {
-        return whereClause.length == 0;
+        return whereClauses.length == 0;
     }
 
     /**
@@ -50,12 +52,17 @@ public final class Where extends LazyQuery {
      * @return 本身 , 方便链式调用
      */
     public Where set(Object... whereClauses) {
-        this.whereClause = whereClauses;
+        this.whereClauses = whereClauses;
+        return this;
+    }
+
+    public Where add(Object... whereClauses) {
+        this.whereClauses = ArrayUtils.concat(this.whereClauses, whereClauses);
         return this;
     }
 
     public Object[] clauses() {
-        return this.whereClause;
+        return this.whereClauses;
     }
 
     /**
@@ -64,7 +71,7 @@ public final class Where extends LazyQuery {
      * @return this 方便链式调用
      */
     public Where clear() {
-        whereClause = new Object[]{};
+        whereClauses = new Object[]{};
         return this;
     }
 

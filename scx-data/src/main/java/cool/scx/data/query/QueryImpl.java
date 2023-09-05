@@ -92,6 +92,24 @@ public class QueryImpl implements Query {
     }
 
     @Override
+    public QueryImpl addWhere(Object... whereClauses) {
+        this.where.add(whereClauses);
+        return this;
+    }
+
+    @Override
+    public QueryImpl addGroupBy(Object... groupByClauses) {
+        this.groupBy.add(groupByClauses);
+        return this;
+    }
+
+    @Override
+    public QueryImpl addOrderBy(Object... orderByClauses) {
+        this.orderBy.add(orderByClauses);
+        return this;
+    }
+
+    @Override
     public QueryImpl offset(long limitOffset) {
         limitInfo.offset(limitOffset);
         return this;

@@ -31,6 +31,21 @@ abstract class LazyQuery implements Query {
     }
 
     @Override
+    public Query addWhere(Object... whereClauses) {
+        return query().addWhere(whereClauses);
+    }
+
+    @Override
+    public Query addGroupBy(Object... groupByClauses) {
+        return query().addGroupBy(groupByClauses);
+    }
+
+    @Override
+    public Query addOrderBy(Object... orderByClauses) {
+        return query().addOrderBy(orderByClauses);
+    }
+
+    @Override
     public Query offset(long limitOffset) {
         return query().offset(limitOffset);
     }

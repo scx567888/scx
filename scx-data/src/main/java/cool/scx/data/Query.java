@@ -13,6 +13,12 @@ public interface Query {
 
     Query orderBy(Object... orderByClauses);
 
+    Query addWhere(Object... whereClauses);
+
+    Query addGroupBy(Object... groupByClauses);
+
+    Query addOrderBy(Object... orderByClauses);
+
     Query offset(long limitOffset);
 
     Query limit(long numberOfRows);

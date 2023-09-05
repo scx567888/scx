@@ -1,5 +1,7 @@
 package cool.scx.data.query;
 
+import cool.scx.util.ArrayUtils;
+
 import java.util.Arrays;
 
 /**
@@ -39,6 +41,11 @@ public final class GroupBy extends LazyQuery {
      */
     public GroupBy set(Object... groupByClauses) {
         this.groupByClauses = groupByClauses;
+        return this;
+    }
+
+    public GroupBy add(Object... groupByClauses) {
+        this.groupByClauses = ArrayUtils.concat(this.groupByClauses,groupByClauses);
         return this;
     }
 

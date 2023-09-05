@@ -20,6 +20,21 @@ public interface BridgeQuery extends Query {
     }
 
     @Override
+    default Query addWhere(Object... whereClauses) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    default Query addGroupBy(Object... groupByClauses) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    default Query addOrderBy(Object... orderByClauses) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     default Query offset(long limitOffset) {
         throw new UnsupportedOperationException();
     }
