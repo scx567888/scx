@@ -4,13 +4,15 @@ import cool.scx.data.Query;
 
 import java.util.Arrays;
 
+import static cool.scx.data.QueryBuilder.query;
+
 /**
  * 排序
  *
  * @author scx567888
  * @version 0.0.1
  */
-public final class OrderBy implements Query {
+public final class OrderBy extends LazyQuery {
 
     /**
      * 存储排序的字段
@@ -59,8 +61,8 @@ public final class OrderBy implements Query {
     }
 
     @Override
-    public OrderBy getOrderBy() {
-        return this;
+    protected Query getQuery() {
+        return query().orderBy(orderByClauses);
     }
 
 }
