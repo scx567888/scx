@@ -1,5 +1,6 @@
 package cool.scx.data.query.parser;
 
+import cool.scx.data.Query;
 import cool.scx.data.query.*;
 import cool.scx.data.query.WhereOption.Info;
 
@@ -33,6 +34,8 @@ public abstract class WhereParser {
             return w;
         } else if (obj instanceof Where w) {
             return parseWhere(w);
+        } else if (obj instanceof Query q) {
+            return parseWhere(q.getWhere());
         } else {
             return null;
         }

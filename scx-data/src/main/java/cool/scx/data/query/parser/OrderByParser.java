@@ -1,5 +1,6 @@
 package cool.scx.data.query.parser;
 
+import cool.scx.data.Query;
 import cool.scx.data.query.OrderBy;
 import cool.scx.data.query.OrderByBody;
 import cool.scx.data.query.OrderByBodySet;
@@ -32,6 +33,8 @@ public abstract class OrderByParser {
             return parseAll(s.clauses());
         } else if (obj instanceof OrderBy s) {
             return parseAll(s.clauses());
+        } else if (obj instanceof Query q) {
+            return parseAll(q.getOrderBy().clauses());
         } else {
             return null;
         }

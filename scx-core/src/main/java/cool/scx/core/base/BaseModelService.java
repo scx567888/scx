@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import static cool.scx.data.FieldFilter.ofExcluded;
-import static cool.scx.data.Query.*;
+import static cool.scx.data.QueryBuilder.*;
 
 /**
  * 提供一些针对 BaseModel 类型实体类 简单的 CRUD 操作的 service 类

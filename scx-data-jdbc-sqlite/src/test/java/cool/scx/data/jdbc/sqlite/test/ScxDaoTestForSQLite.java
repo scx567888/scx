@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static cool.scx.data.Query.*;
+import static cool.scx.data.QueryBuilder.*;
 import static cool.scx.data.jdbc.sql.SQL.ofNormal;
 import static cool.scx.data.query.WhereOption.USE_JSON_EXTRACT;
 import static java.lang.System.Logger.Level.DEBUG;

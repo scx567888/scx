@@ -141,7 +141,7 @@ final class ScxRouteRegistrar {
      */
     public static boolean isRoute(Class<?> c) {
         return (c.isAnnotationPresent(ScxRoute.class) || c.isAnnotationPresent(Controller.class)) //拥有注解
-                && ClassUtils.isNormalClass(c); // 是一个普通的类 (不是接口, 不是抽象类) ; 此处不要求有必须有无参构造函数 因为此类的创建会由 beanFactory 进行处理
+               && ClassUtils.isNormalClass(c); // 是一个普通的类 (不是接口, 不是抽象类) ; 此处不要求有必须有无参构造函数 因为此类的创建会由 beanFactory 进行处理
     }
 
     /**
@@ -152,7 +152,7 @@ final class ScxRouteRegistrar {
      */
     public static boolean isRoute(Method m) {
         return m.isAnnotationPresent(ScxRoute.class)  //拥有注解
-                && !m.isBridge(); // 不是桥接方法
+               && !m.isBridge(); // 不是桥接方法
     }
 
     /**
