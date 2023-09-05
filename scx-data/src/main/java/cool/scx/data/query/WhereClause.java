@@ -3,8 +3,6 @@ package cool.scx.data.query;
 import cool.scx.util.ArrayUtils;
 import cool.scx.util.StringUtils;
 
-import static cool.scx.data.QueryBuilder.query;
-
 public final class WhereClause extends LazyQuery {
 
     private final String whereClause;
@@ -39,7 +37,7 @@ public final class WhereClause extends LazyQuery {
 
     @Override
     protected QueryImpl getQuery() {
-        return query().where(this);
+        return new QueryImpl().where(this);
     }
 
 }
