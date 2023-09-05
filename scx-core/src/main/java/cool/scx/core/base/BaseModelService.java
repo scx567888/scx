@@ -236,7 +236,7 @@ public class BaseModelService<Entity extends BaseModel> {
      * @param selectFilter 查询字段过滤器
      * @return 查到多个则返回第一个 没有则返回 null
      */
-    public final Entity get(Query query, FieldFilter selectFilter) {
+    public Entity get(Query query, FieldFilter selectFilter) {
         return this.dao().get(query, selectFilter);
     }
 
