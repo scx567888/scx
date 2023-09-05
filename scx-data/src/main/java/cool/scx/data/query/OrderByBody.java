@@ -1,8 +1,5 @@
 package cool.scx.data.query;
 
-import cool.scx.data.Query;
-
-import static cool.scx.data.Query.orderBy;
 import static cool.scx.data.query.OrderByOption.Info;
 import static cool.scx.util.StringUtils.isBlank;
 
@@ -12,7 +9,11 @@ import static cool.scx.util.StringUtils.isBlank;
  * @author scx567888
  * @version 0.0.1
  */
-public record OrderByBody(String name, OrderByType orderByType, Info info) implements Query {
+public final class OrderByBody extends LazyQuery {
+
+    private final String name;
+    private final OrderByType orderByType;
+    private final Info info;
 
     public OrderByBody(String name, OrderByType orderByType, Info info) {
         if (isBlank(name)) {
@@ -37,9 +38,21 @@ public record OrderByBody(String name, OrderByType orderByType, Info info) imple
         this(name, orderByType, new Info(options));
     }
 
+    public String name() {
+        return name;
+    }
+
+    public OrderByType orderByType() {
+        return orderByType;
+    }
+
+    public Info info() {
+        return info;
+    }
+
     @Override
-    public OrderBy getOrderBy() {
-        return orderBy(this);
+    protected QueryImpl convertToQuery() {
+        return new QueryImpl().orderBy(this);
     }
 
 }

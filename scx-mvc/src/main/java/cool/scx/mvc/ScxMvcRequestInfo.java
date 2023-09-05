@@ -114,7 +114,7 @@ public final class ScxMvcRequestInfo {
         } else if (contentType.startsWith(HttpHeaderValues.APPLICATION_XML.toString())) {
             return XML;
         } else if (contentType.startsWith(HttpHeaderValues.MULTIPART_FORM_DATA.toString())
-                || contentType.startsWith(HttpHeaderValues.APPLICATION_X_WWW_FORM_URLENCODED.toString())) {
+                   || contentType.startsWith(HttpHeaderValues.APPLICATION_X_WWW_FORM_URLENCODED.toString())) {
             return FORM;
         } else {
             return OTHER;

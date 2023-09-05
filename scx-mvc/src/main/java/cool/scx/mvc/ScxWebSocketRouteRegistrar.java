@@ -51,8 +51,8 @@ public final class ScxWebSocketRouteRegistrar {
 
     public static boolean isScxWebSocketRouteClass(Class<?> c) {
         return c.isAnnotationPresent(ScxWebSocketRoute.class) // 拥有注解
-                && ClassUtils.isNormalClass(c) // 是一个普通的类 (不是接口, 不是抽象类) ; 此处不要求有必须有无参构造函数 因为此类的创建会由 beanFactory 进行处理
-                && BaseWebSocketHandler.class.isAssignableFrom(c); // 继承自 BaseWebSocketHandler
+               && ClassUtils.isNormalClass(c) // 是一个普通的类 (不是接口, 不是抽象类) ; 此处不要求有必须有无参构造函数 因为此类的创建会由 beanFactory 进行处理
+               && BaseWebSocketHandler.class.isAssignableFrom(c); // 继承自 BaseWebSocketHandler
     }
 
     private static List<WebSocketRoute> sortedScxWebSocketRoutes(List<WebSocketRoute> list) {

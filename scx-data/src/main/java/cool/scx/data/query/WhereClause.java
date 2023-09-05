@@ -1,12 +1,17 @@
 package cool.scx.data.query;
 
-import cool.scx.data.Query;
 import cool.scx.util.ArrayUtils;
 import cool.scx.util.StringUtils;
 
-import static cool.scx.data.Query.where;
+public final class WhereClause extends LazyQuery {
 
-public record WhereClause(String whereClause, Object... params) implements Query {
+    private final String whereClause;
+    private final Object[] params;
+
+    public WhereClause(String whereClause, Object... params) {
+        this.whereClause = whereClause;
+        this.params = params;
+    }
 
     /**
      * 拼接
@@ -22,9 +27,17 @@ public record WhereClause(String whereClause, Object... params) implements Query
         return (whereClause == null || whereClause.isEmpty()) && (params == null || params.length == 0);
     }
 
+    public String whereClause() {
+        return whereClause;
+    }
+
+    public Object[] params() {
+        return params;
+    }
+
     @Override
-    public Where getWhere() {
-        return where(this);
+    protected QueryImpl convertToQuery() {
+        return new QueryImpl().where(this);
     }
 
 }

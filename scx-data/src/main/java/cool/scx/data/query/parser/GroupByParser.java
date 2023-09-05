@@ -1,9 +1,13 @@
 package cool.scx.data.query.parser;
 
+import cool.scx.data.Query;
 import cool.scx.data.query.GroupBy;
 import cool.scx.data.query.GroupByBody;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+
+import static java.util.Collections.addAll;
 
 public abstract class GroupByParser {
 
@@ -14,18 +18,21 @@ public abstract class GroupByParser {
     }
 
     public final String[] parseAll(Object[] objs) {
-        var str = new String[objs.length];
-        for (int i = 0; i < objs.length; i = i + 1) {
-            str[i] = parse(objs[i]);
+        var list = new ArrayList<String>();
+        for (var obj : objs) {
+            var s = parse(obj);
+            addAll(list, s);
         }
-        return str;
+        return list.toArray(String[]::new);
     }
 
-    public String parse(Object obj) {
+    public String[] parse(Object obj) {
         if (obj instanceof String str) {
-            return parseString(str);
+            return new String[]{parseString(str)};
         } else if (obj instanceof GroupByBody groupByBody) {
-            return parseGroupByBody(groupByBody);
+            return new String[]{parseGroupByBody(groupByBody)};
+        } else if (obj instanceof Query q) {
+            return parseAll(q.getGroupBy().clauses());
         } else {
             return null;
         }

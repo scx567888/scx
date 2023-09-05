@@ -1,7 +1,8 @@
 package cool.scx.data.jdbc.sql;
 
-import cool.scx.data.Query;
+import cool.scx.data.QueryBuilder;
 import cool.scx.data.jdbc.dialect.Dialect;
+import cool.scx.data.query.BridgeQuery;
 import cool.scx.data.query.Where;
 
 import java.sql.PreparedStatement;
@@ -9,15 +10,13 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
-import static cool.scx.data.Query.where;
-
 /**
  * 可包含参数的 SQL
  *
  * @author scx567888
  * @version 0.0.1
  */
-public interface SQL extends Query {
+public interface SQL extends BridgeQuery {
 
     static SQL ofNormal(String normalSQL) {
         return new NormalSQL(normalSQL);
@@ -68,7 +67,7 @@ public interface SQL extends Query {
 
     @Override
     default Where getWhere() {
-        return where(this);
+        return QueryBuilder.where(this);
     }
 
 }

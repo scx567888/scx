@@ -1,20 +1,23 @@
 package cool.scx.data.query;
 
-import cool.scx.data.Query;
 import cool.scx.data.query.exception.WrongWhereTypeParamSizeException;
 
-import static cool.scx.data.Query.where;
 import static cool.scx.data.query.WhereOption.Info;
 import static cool.scx.util.StringUtils.isBlank;
 
 /**
  * where 封装体
  *
- * @param name a
  * @author scx567888
  * @version 0.0.1
  */
-public record WhereBody(String name, WhereType whereType, Object value1, Object value2, Info info) implements Query {
+public final class WhereBody extends LazyQuery {
+
+    private final String name;
+    private final WhereType whereType;
+    private final Object value1;
+    private final Object value2;
+    private final Info info;
 
     public WhereBody(String name, WhereType whereType, Object value1, Object value2, Info info) {
         //名称不能为空
@@ -61,9 +64,29 @@ public record WhereBody(String name, WhereType whereType, Object value1, Object 
         return validParamSize;
     }
 
+    public String name() {
+        return name;
+    }
+
+    public WhereType whereType() {
+        return whereType;
+    }
+
+    public Object value1() {
+        return value1;
+    }
+
+    public Object value2() {
+        return value2;
+    }
+
+    public Info info() {
+        return info;
+    }
+
     @Override
-    public Where getWhere() {
-        return where(this);
+    protected QueryImpl convertToQuery() {
+        return new QueryImpl().where(this);
     }
 
 }

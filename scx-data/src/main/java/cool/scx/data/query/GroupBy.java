@@ -1,6 +1,6 @@
 package cool.scx.data.query;
 
-import cool.scx.data.Query;
+import cool.scx.util.ArrayUtils;
 
 import java.util.Arrays;
 
@@ -10,7 +10,7 @@ import java.util.Arrays;
  * @author scx567888
  * @version 0.0.1
  */
-public final class GroupBy implements Query {
+public final class GroupBy extends LazyQuery {
 
     /**
      * 分组字段列表
@@ -44,6 +44,11 @@ public final class GroupBy implements Query {
         return this;
     }
 
+    public GroupBy add(Object... groupByClauses) {
+        this.groupByClauses = ArrayUtils.concat(this.groupByClauses, groupByClauses);
+        return this;
+    }
+
     public Object[] clauses() {
         return this.groupByClauses;
     }
@@ -59,8 +64,8 @@ public final class GroupBy implements Query {
     }
 
     @Override
-    public GroupBy getGroupBy() {
-        return this;
+    protected QueryImpl convertToQuery() {
+        return new QueryImpl(this);
     }
 
 }

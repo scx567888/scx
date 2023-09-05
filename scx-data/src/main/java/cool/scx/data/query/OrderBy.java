@@ -1,6 +1,6 @@
 package cool.scx.data.query;
 
-import cool.scx.data.Query;
+import cool.scx.util.ArrayUtils;
 
 import java.util.Arrays;
 
@@ -10,7 +10,7 @@ import java.util.Arrays;
  * @author scx567888
  * @version 0.0.1
  */
-public final class OrderBy implements Query {
+public final class OrderBy extends LazyQuery {
 
     /**
      * 存储排序的字段
@@ -44,6 +44,11 @@ public final class OrderBy implements Query {
         return this;
     }
 
+    public OrderBy add(Object... orderByClauses) {
+        this.orderByClauses = ArrayUtils.concat(this.orderByClauses, orderByClauses);
+        return this;
+    }
+
     public Object[] clauses() {
         return this.orderByClauses;
     }
@@ -59,8 +64,8 @@ public final class OrderBy implements Query {
     }
 
     @Override
-    public OrderBy getOrderBy() {
-        return this;
+    protected QueryImpl convertToQuery() {
+        return new QueryImpl(this);
     }
 
 }
