@@ -2,7 +2,7 @@ package cool.scx.data.query;
 
 import cool.scx.data.Query;
 
-public interface BridgeQuery extends Query {
+public interface QueryBridge extends Query {
 
     @Override
     default Query where(Object... whereClauses) {

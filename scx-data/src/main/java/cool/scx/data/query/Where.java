@@ -1,5 +1,6 @@
 package cool.scx.data.query;
 
+import cool.scx.data.Query;
 import cool.scx.util.ArrayUtils;
 
 import java.util.Arrays;
@@ -10,7 +11,7 @@ import java.util.Arrays;
  * @author scx567888
  * @version 0.0.1
  */
-public final class Where extends LazyQuery {
+public final class Where extends QueryLike {
 
     /**
      * 自定义的查询语句
@@ -76,7 +77,7 @@ public final class Where extends LazyQuery {
     }
 
     @Override
-    protected QueryImpl convertToQuery() {
+    public Query toQuery() {
         return new QueryImpl(this);
     }
 

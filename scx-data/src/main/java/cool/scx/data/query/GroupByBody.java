@@ -1,5 +1,7 @@
 package cool.scx.data.query;
 
+import cool.scx.data.Query;
+
 import static cool.scx.data.query.GroupByOption.Info;
 import static cool.scx.util.StringUtils.isBlank;
 
@@ -9,7 +11,7 @@ import static cool.scx.util.StringUtils.isBlank;
  * @author scx567888
  * @version 0.0.1
  */
-public final class GroupByBody extends LazyQuery {
+public final class GroupByBody extends QueryLike {
     private final String name;
     private final Info info;
 
@@ -34,7 +36,7 @@ public final class GroupByBody extends LazyQuery {
     }
 
     @Override
-    protected QueryImpl convertToQuery() {
+    public Query toQuery() {
         return new QueryImpl().groupBy(this);
     }
 

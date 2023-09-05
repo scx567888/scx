@@ -1,12 +1,14 @@
 package cool.scx.data.query;
 
+import cool.scx.data.Query;
+
 /**
  * 条数限制
  *
  * @author scx567888
  * @version 0.0.1
  */
-public final class LimitInfo extends LazyQuery {
+public final class LimitInfo extends QueryLike {
 
     /**
      * 当前页 页码 默认为空 即不设置页码
@@ -114,7 +116,7 @@ public final class LimitInfo extends LazyQuery {
     }
 
     @Override
-    protected QueryImpl convertToQuery() {
+    public Query toQuery() {
         return new QueryImpl(this);
     }
 

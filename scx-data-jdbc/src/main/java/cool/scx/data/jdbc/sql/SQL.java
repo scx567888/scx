@@ -2,7 +2,7 @@ package cool.scx.data.jdbc.sql;
 
 import cool.scx.data.QueryBuilder;
 import cool.scx.data.jdbc.dialect.Dialect;
-import cool.scx.data.query.BridgeQuery;
+import cool.scx.data.query.QueryBridge;
 import cool.scx.data.query.Where;
 
 import java.sql.PreparedStatement;
@@ -16,7 +16,7 @@ import java.util.Map;
  * @author scx567888
  * @version 0.0.1
  */
-public interface SQL extends BridgeQuery {
+public interface SQL extends QueryBridge {
 
     static SQL ofNormal(String normalSQL) {
         return new NormalSQL(normalSQL);

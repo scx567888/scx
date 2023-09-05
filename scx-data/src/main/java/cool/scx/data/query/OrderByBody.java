@@ -1,5 +1,7 @@
 package cool.scx.data.query;
 
+import cool.scx.data.Query;
+
 import static cool.scx.data.query.OrderByOption.Info;
 import static cool.scx.util.StringUtils.isBlank;
 
@@ -9,7 +11,7 @@ import static cool.scx.util.StringUtils.isBlank;
  * @author scx567888
  * @version 0.0.1
  */
-public final class OrderByBody extends LazyQuery {
+public final class OrderByBody extends QueryLike {
 
     private final String name;
     private final OrderByType orderByType;
@@ -51,7 +53,7 @@ public final class OrderByBody extends LazyQuery {
     }
 
     @Override
-    protected QueryImpl convertToQuery() {
+    public Query toQuery() {
         return new QueryImpl().orderBy(this);
     }
 

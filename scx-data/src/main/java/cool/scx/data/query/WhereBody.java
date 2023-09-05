@@ -1,5 +1,6 @@
 package cool.scx.data.query;
 
+import cool.scx.data.Query;
 import cool.scx.data.query.exception.WrongWhereTypeParamSizeException;
 
 import static cool.scx.data.query.WhereOption.Info;
@@ -11,7 +12,7 @@ import static cool.scx.util.StringUtils.isBlank;
  * @author scx567888
  * @version 0.0.1
  */
-public final class WhereBody extends LazyQuery {
+public final class WhereBody extends QueryLike {
 
     private final String name;
     private final WhereType whereType;
@@ -85,7 +86,7 @@ public final class WhereBody extends LazyQuery {
     }
 
     @Override
-    protected QueryImpl convertToQuery() {
+    public Query toQuery() {
         return new QueryImpl().where(this);
     }
 
