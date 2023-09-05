@@ -8,11 +8,11 @@ import static cool.scx.data.query.WhereType.*;
 
 public final class QueryBuilder {
 
-    public static QueryImpl query() {
+    public static Query query() {
         return new QueryImpl();
     }
 
-    public static QueryImpl query(Query oldQuery) {
+    public static Query query(Query oldQuery) {
         return new QueryImpl(oldQuery);
     }
 
