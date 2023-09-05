@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import static cool.scx.data.FieldFilter.ofExcluded;
-import static cool.scx.data.Query.query;
+import static cool.scx.data.QueryBuilder.query;
 
 /**
  * 用于定义数据访问层的规范
