@@ -4,13 +4,15 @@ import cool.scx.data.Query;
 
 import java.util.Arrays;
 
+import static cool.scx.data.QueryBuilder.query;
+
 /**
  * 分组
  *
  * @author scx567888
  * @version 0.0.1
  */
-public final class GroupBy implements Query {
+public final class GroupBy extends LazyQuery {
 
     /**
      * 分组字段列表
@@ -59,8 +61,8 @@ public final class GroupBy implements Query {
     }
 
     @Override
-    public GroupBy getGroupBy() {
-        return this;
+    protected Query getQuery() {
+        return query().groupBy(groupByClauses);
     }
 
 }

@@ -1,5 +1,8 @@
 package cool.scx.data.query;
 
+import cool.scx.data.Query;
+import cool.scx.data.QueryBuilder;
+
 import static cool.scx.data.query.GroupByOption.Info;
 import static cool.scx.util.StringUtils.isBlank;
 
@@ -9,7 +12,9 @@ import static cool.scx.util.StringUtils.isBlank;
  * @author scx567888
  * @version 0.0.1
  */
-public record GroupByBody(String name, Info info) {
+public final class GroupByBody extends LazyQuery {
+    private final String name;
+    private final Info info;
 
     public GroupByBody(String name, Info info) {
         if (isBlank(name)) {
@@ -21,6 +26,19 @@ public record GroupByBody(String name, Info info) {
 
     public GroupByBody(String name, GroupByOption... options) {
         this(name, new Info(options));
+    }
+
+    public String name() {
+        return name;
+    }
+
+    public Info info() {
+        return info;
+    }
+
+    @Override
+    protected Query getQuery() {
+        return QueryBuilder.query().groupBy(this);
     }
 
 }
