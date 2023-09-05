@@ -1,8 +1,5 @@
 package cool.scx.data.query;
 
-import cool.scx.data.Query;
-
-import static cool.scx.data.QueryBuilder.query;
 import static cool.scx.data.query.LogicType.AND;
 
 public final class AND extends LazyQuery implements Logic {
@@ -24,8 +21,8 @@ public final class AND extends LazyQuery implements Logic {
     }
 
     @Override
-    protected Query getQuery() {
-        return query().where(this);
+    protected QueryImpl getQuery() {
+        return new QueryImpl().where(this);
     }
 
 }
