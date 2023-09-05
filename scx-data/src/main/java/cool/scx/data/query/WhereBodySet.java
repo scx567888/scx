@@ -6,8 +6,6 @@ import cool.scx.data.query.exception.WrongWhereTypeParamSizeException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static cool.scx.data.QueryBuilder.query;
-
 /**
  * where 查询条件封装类
  *
@@ -353,7 +351,7 @@ public final class WhereBodySet extends LazyQuery implements Logic {
 
     @Override
     protected QueryImpl convertToQuery() {
-        return query().where(this);
+        return new QueryImpl().where(this);
     }
-    
+
 }

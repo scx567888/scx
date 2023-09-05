@@ -1,6 +1,5 @@
 package cool.scx.data.query;
 
-import static cool.scx.data.QueryBuilder.query;
 import static cool.scx.data.query.OrderByOption.Info;
 import static cool.scx.util.StringUtils.isBlank;
 

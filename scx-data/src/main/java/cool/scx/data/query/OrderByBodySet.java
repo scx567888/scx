@@ -5,7 +5,6 @@ import cool.scx.data.query.OrderByOption.Info;
 import java.util.ArrayList;
 import java.util.List;
 
-import static cool.scx.data.QueryBuilder.query;
 import static cool.scx.data.query.OrderByType.ASC;
 import static cool.scx.data.query.OrderByType.DESC;
 
