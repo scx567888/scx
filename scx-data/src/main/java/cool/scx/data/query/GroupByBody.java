@@ -1,8 +1,5 @@
 package cool.scx.data.query;
 
-import cool.scx.data.Query;
-import cool.scx.data.QueryBuilder;
-
 import static cool.scx.data.query.GroupByOption.Info;
 import static cool.scx.util.StringUtils.isBlank;
 
@@ -37,8 +34,8 @@ public final class GroupByBody extends LazyQuery {
     }
 
     @Override
-    protected Query getQuery() {
-        return QueryBuilder.query().groupBy(this);
+    protected QueryImpl getQuery() {
+        return new QueryImpl().groupBy(this);
     }
 
 }
