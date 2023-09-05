@@ -21,7 +21,7 @@ public final class AND extends LazyQuery implements Logic {
     }
 
     @Override
-    protected QueryImpl getQuery() {
+    protected QueryImpl convertToQuery() {
         return new QueryImpl().where(this);
     }
 

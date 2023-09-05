@@ -52,7 +52,7 @@ public final class OrderByBody extends LazyQuery {
     }
 
     @Override
-    protected QueryImpl getQuery() {
+    protected QueryImpl convertToQuery() {
         return new QueryImpl().orderBy(this);
     }
 

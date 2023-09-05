@@ -352,7 +352,7 @@ public final class WhereBodySet extends LazyQuery implements Logic {
     }
 
     @Override
-    protected QueryImpl getQuery() {
+    protected QueryImpl convertToQuery() {
         return query().where(this);
     }
     

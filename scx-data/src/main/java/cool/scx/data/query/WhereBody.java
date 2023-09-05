@@ -86,7 +86,7 @@ public final class WhereBody extends LazyQuery {
     }
 
     @Override
-    protected QueryImpl getQuery() {
+    protected QueryImpl convertToQuery() {
         return query().where(this);
     }
 

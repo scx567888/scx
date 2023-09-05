@@ -36,7 +36,7 @@ public final class WhereClause extends LazyQuery {
     }
 
     @Override
-    protected QueryImpl getQuery() {
+    protected QueryImpl convertToQuery() {
         return new QueryImpl().where(this);
     }
 

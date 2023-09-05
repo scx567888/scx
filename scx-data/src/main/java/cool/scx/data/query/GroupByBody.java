@@ -34,7 +34,7 @@ public final class GroupByBody extends LazyQuery {
     }
 
     @Override
-    protected QueryImpl getQuery() {
+    protected QueryImpl convertToQuery() {
         return new QueryImpl().groupBy(this);
     }
 

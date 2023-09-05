@@ -69,7 +69,7 @@ public final class Where extends LazyQuery {
     }
 
     @Override
-    protected QueryImpl getQuery() {
+    protected QueryImpl convertToQuery() {
         return new QueryImpl(this);
     }
 

@@ -102,7 +102,7 @@ public final class OrderByBodySet extends LazyQuery {
     }
 
     @Override
-    protected QueryImpl getQuery() {
+    protected QueryImpl convertToQuery() {
         return new QueryImpl().orderBy(this);
     }
 

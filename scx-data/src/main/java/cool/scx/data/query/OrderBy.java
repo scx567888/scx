@@ -57,7 +57,7 @@ public final class OrderBy extends LazyQuery {
     }
 
     @Override
-    protected QueryImpl getQuery() {
+    protected QueryImpl convertToQuery() {
         return new QueryImpl(this);
     }
 

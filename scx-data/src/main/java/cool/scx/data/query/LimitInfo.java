@@ -114,7 +114,7 @@ public final class LimitInfo extends LazyQuery {
     }
 
     @Override
-    protected QueryImpl getQuery() {
+    protected QueryImpl convertToQuery() {
         return new QueryImpl(this);
     }
 
