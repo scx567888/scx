@@ -45,7 +45,7 @@ public final class OrderBy extends LazyQuery {
     }
 
     public OrderBy add(Object... orderByClauses) {
-        this.orderByClauses = ArrayUtils.concat(this.orderByClauses,orderByClauses);
+        this.orderByClauses = ArrayUtils.concat(this.orderByClauses, orderByClauses);
         return this;
     }
 

@@ -45,7 +45,7 @@ public final class GroupBy extends LazyQuery {
     }
 
     public GroupBy add(Object... groupByClauses) {
-        this.groupByClauses = ArrayUtils.concat(this.groupByClauses,groupByClauses);
+        this.groupByClauses = ArrayUtils.concat(this.groupByClauses, groupByClauses);
         return this;
     }
 
