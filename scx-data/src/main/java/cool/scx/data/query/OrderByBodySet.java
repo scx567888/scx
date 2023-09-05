@@ -1,6 +1,5 @@
 package cool.scx.data.query;
 
-import cool.scx.data.Query;
 import cool.scx.data.query.OrderByOption.Info;
 
 import java.util.ArrayList;
@@ -103,8 +102,8 @@ public final class OrderByBodySet extends LazyQuery {
     }
 
     @Override
-    protected Query getQuery() {
-        return query().orderBy(this);
+    protected QueryImpl getQuery() {
+        return new QueryImpl().orderBy(this);
     }
 
 }

@@ -1,10 +1,6 @@
 package cool.scx.data.query;
 
-import cool.scx.data.Query;
-
 import java.util.Arrays;
-
-import static cool.scx.data.QueryBuilder.query;
 
 /**
  * 排序
@@ -61,8 +57,8 @@ public final class OrderBy extends LazyQuery {
     }
 
     @Override
-    protected Query getQuery() {
-        return query().orderBy(orderByClauses);
+    protected QueryImpl getQuery() {
+        return new QueryImpl(this);
     }
 
 }
