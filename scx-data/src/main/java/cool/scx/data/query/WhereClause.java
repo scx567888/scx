@@ -1,9 +1,10 @@
 package cool.scx.data.query;
 
+import cool.scx.data.Query;
 import cool.scx.util.ArrayUtils;
 import cool.scx.util.StringUtils;
 
-public final class WhereClause extends LazyQuery {
+public final class WhereClause extends QueryLike {
 
     private final String whereClause;
     private final Object[] params;
@@ -36,7 +37,7 @@ public final class WhereClause extends LazyQuery {
     }
 
     @Override
-    protected QueryImpl convertToQuery() {
+    public Query toQuery() {
         return new QueryImpl().where(this);
     }
 

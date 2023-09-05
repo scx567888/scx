@@ -2,15 +2,13 @@ package cool.scx.data.query;
 
 import cool.scx.data.Query;
 
-abstract class LazyQuery implements Query {
+public abstract class QueryLike implements Query {
 
-    private QueryImpl query;
-
-    protected abstract QueryImpl convertToQuery();
+    private Query query;
 
     private Query query() {
         if (query == null) {
-            query = convertToQuery();
+            query = toQuery();
         }
         return query;
     }
@@ -109,5 +107,7 @@ abstract class LazyQuery implements Query {
     public Query clearLimit() {
         return query().clearLimit();
     }
+
+    public abstract Query toQuery();
 
 }

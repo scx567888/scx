@@ -1,5 +1,6 @@
 package cool.scx.data.query;
 
+import cool.scx.data.Query;
 import cool.scx.data.query.exception.ValidParamListIsEmptyException;
 import cool.scx.data.query.exception.WrongWhereTypeParamSizeException;
 
@@ -12,7 +13,7 @@ import java.util.List;
  * @author scx567888
  * @version 0.0.1
  */
-public final class WhereBodySet extends LazyQuery implements Logic {
+public final class WhereBodySet extends QueryLike implements Logic {
 
     /**
      * 存储查询条件 key 为 fieldName ,采用 map 而不是 list 是为了保证重复添加的会直接覆盖
@@ -350,7 +351,7 @@ public final class WhereBodySet extends LazyQuery implements Logic {
     }
 
     @Override
-    protected QueryImpl convertToQuery() {
+    public Query toQuery() {
         return new QueryImpl().where(this);
     }
 

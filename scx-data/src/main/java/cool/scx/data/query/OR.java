@@ -1,8 +1,10 @@
 package cool.scx.data.query;
 
+import cool.scx.data.Query;
+
 import static cool.scx.data.query.LogicType.OR;
 
-public final class OR extends LazyQuery implements Logic {
+public final class OR extends QueryLike implements Logic {
 
     private final Object[] clauses;
 
@@ -21,7 +23,7 @@ public final class OR extends LazyQuery implements Logic {
     }
 
     @Override
-    protected QueryImpl convertToQuery() {
+    public Query toQuery() {
         return new QueryImpl().where(this);
     }
 
