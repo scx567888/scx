@@ -1,14 +1,12 @@
 package cool.scx.data.query;
 
-import cool.scx.data.Query;
-
 /**
  * 条数限制
  *
  * @author scx567888
  * @version 0.0.1
  */
-public final class LimitInfo implements Query {
+public final class LimitInfo extends LazyQuery {
 
     /**
      * 当前页 页码 默认为空 即不设置页码
@@ -44,6 +42,7 @@ public final class LimitInfo implements Query {
      * @param limitOffset offset (偏移量)
      * @return self
      */
+    @Override
     public LimitInfo offset(long limitOffset) {
         if (limitOffset < 0) {
             throw new IllegalArgumentException("Limit 参数错误 : offset (偏移量) 不能小于 0 !!!");
@@ -58,6 +57,7 @@ public final class LimitInfo implements Query {
      * @param numberOfRows limit (行长度)
      * @return self
      */
+    @Override
     public LimitInfo limit(long numberOfRows) {
         if (numberOfRows < 0) {
             throw new IllegalArgumentException("Limit 参数错误 : limit (行长度) 不能小于 0 !!!");
@@ -91,6 +91,7 @@ public final class LimitInfo implements Query {
      *
      * @return self
      */
+    @Override
     public LimitInfo clearOffset() {
         this.offset = null;
         return this;
@@ -101,6 +102,7 @@ public final class LimitInfo implements Query {
      *
      * @return self
      */
+    @Override
     public LimitInfo clearLimit() {
         this.limit = null;
         return this;
@@ -109,6 +111,11 @@ public final class LimitInfo implements Query {
     @Override
     public LimitInfo getLimitInfo() {
         return this;
+    }
+
+    @Override
+    protected QueryImpl getQuery() {
+        return new QueryImpl(this);
     }
 
 }
