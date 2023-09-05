@@ -4,13 +4,15 @@ import cool.scx.data.Query;
 
 import java.util.Arrays;
 
+import static cool.scx.data.QueryBuilder.query;
+
 /**
  * where 查询条件封装类
  *
  * @author scx567888
  * @version 0.0.1
  */
-public final class Where implements Query {
+public final class Where extends LazyQuery {
 
     /**
      * 自定义的查询语句
@@ -71,8 +73,8 @@ public final class Where implements Query {
     }
 
     @Override
-    public Where getWhere() {
-        return this;
+    protected Query getQuery() {
+        return query().where(whereClause);
     }
 
 }
