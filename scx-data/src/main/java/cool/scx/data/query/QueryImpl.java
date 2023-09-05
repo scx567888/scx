@@ -1,9 +1,6 @@
-package cool.scx.data;
+package cool.scx.data.query;
 
-import cool.scx.data.query.GroupBy;
-import cool.scx.data.query.LimitInfo;
-import cool.scx.data.query.OrderBy;
-import cool.scx.data.query.Where;
+import cool.scx.data.Query;
 
 /**
  * 查询参数类<br>
@@ -58,21 +55,25 @@ public class QueryImpl implements Query {
         this.limitInfo = new LimitInfo(oldQuery.getLimitInfo());
     }
 
+    @Override
     public QueryImpl where(Object... whereClauses) {
         this.where.set(whereClauses);
         return this;
     }
 
+    @Override
     public QueryImpl groupBy(Object... groupByClauses) {
         this.groupBy.set(groupByClauses);
         return this;
     }
 
+    @Override
     public QueryImpl orderBy(Object... orderByClauses) {
         this.orderBy.set(orderByClauses);
         return this;
     }
 
+    @Override
     public QueryImpl offset(long limitOffset) {
         limitInfo.offset(limitOffset);
         return this;
@@ -84,6 +85,7 @@ public class QueryImpl implements Query {
      * @param numberOfRows 长度
      * @return p
      */
+    @Override
     public QueryImpl limit(long numberOfRows) {
         limitInfo.limit(numberOfRows);
         return this;
@@ -119,26 +121,31 @@ public class QueryImpl implements Query {
         return limitInfo;
     }
 
+    @Override
     public QueryImpl clearWhere() {
         where.clear();
         return this;
     }
 
+    @Override
     public QueryImpl clearGroupBy() {
         groupBy.clear();
         return this;
     }
 
+    @Override
     public QueryImpl clearOrderBy() {
         orderBy.clear();
         return this;
     }
 
+    @Override
     public QueryImpl clearOffset() {
         limitInfo.clearOffset();
         return this;
     }
 
+    @Override
     public QueryImpl clearLimit() {
         limitInfo.clearLimit();
         return this;
