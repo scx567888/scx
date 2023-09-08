@@ -36,5 +36,5 @@ class TestWhereParser extends WhereParser {
     public WhereClause parseIsNull(String name, WhereType whereType, Object value1, Object value2, WhereOption.Info info) {
         return parseEqual(name, whereType, value1, value2, info);
     }
-    
+
 }
