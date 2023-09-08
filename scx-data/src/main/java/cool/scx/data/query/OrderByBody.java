@@ -11,7 +11,7 @@ import static cool.scx.util.StringUtils.isBlank;
  * @author scx567888
  * @version 0.0.1
  */
-public final class OrderByBody extends QueryLike {
+public final class OrderByBody extends QueryLike<OrderByBody> {
 
     private final String name;
     private final OrderByType orderByType;

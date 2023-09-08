@@ -11,7 +11,7 @@ import java.util.Arrays;
  * @author scx567888
  * @version 0.0.1
  */
-public final class OrderBy extends QueryLike {
+public final class OrderBy extends QueryLike<OrderBy> {
 
     /**
      * 存储排序的字段

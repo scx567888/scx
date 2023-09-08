@@ -15,7 +15,7 @@ import static cool.scx.data.query.OrderByType.DESC;
  * @author scx567888
  * @version 0.0.1
  */
-public final class OrderByBodySet extends QueryLike {
+public final class OrderByBodySet extends QueryLike<OrderByBodySet> {
 
     /**
      * 存储排序的字段

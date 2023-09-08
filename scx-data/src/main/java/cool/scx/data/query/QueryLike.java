@@ -2,7 +2,8 @@ package cool.scx.data.query;
 
 import cool.scx.data.Query;
 
-public abstract class QueryLike implements Query {
+@SuppressWarnings("unchecked")
+public abstract class QueryLike<QL extends QueryLike<QL>> implements Query {
 
     private Query query;
 
@@ -14,43 +15,51 @@ public abstract class QueryLike implements Query {
     }
 
     @Override
-    public Query where(Object... whereClauses) {
-        return query().where(whereClauses);
+    public QL where(Object... whereClauses) {
+        query().where(whereClauses);
+        return (QL) this;
     }
 
     @Override
-    public Query groupBy(Object... groupByClauses) {
-        return query().groupBy(groupByClauses);
+    public QL groupBy(Object... groupByClauses) {
+        query().groupBy(groupByClauses);
+        return (QL) this;
     }
 
     @Override
-    public Query orderBy(Object... orderByClauses) {
-        return query().orderBy(orderByClauses);
+    public QL orderBy(Object... orderByClauses) {
+        query().orderBy(orderByClauses);
+        return (QL) this;
     }
 
     @Override
-    public Query addWhere(Object... whereClauses) {
-        return query().addWhere(whereClauses);
+    public QL addWhere(Object... whereClauses) {
+        query().addWhere(whereClauses);
+        return (QL) this;
     }
 
     @Override
-    public Query addGroupBy(Object... groupByClauses) {
-        return query().addGroupBy(groupByClauses);
+    public QL addGroupBy(Object... groupByClauses) {
+        query().addGroupBy(groupByClauses);
+        return (QL) this;
     }
 
     @Override
-    public Query addOrderBy(Object... orderByClauses) {
-        return query().addOrderBy(orderByClauses);
+    public QL addOrderBy(Object... orderByClauses) {
+        query().addOrderBy(orderByClauses);
+        return (QL) this;
     }
 
     @Override
-    public Query offset(long limitOffset) {
-        return query().offset(limitOffset);
+    public QL offset(long limitOffset) {
+        query().offset(limitOffset);
+        return (QL) this;
     }
 
     @Override
-    public Query limit(long numberOfRows) {
-        return query().limit(numberOfRows);
+    public QL limit(long numberOfRows) {
+        query().limit(numberOfRows);
+        return (QL) this;
     }
 
     @Override
@@ -84,28 +93,33 @@ public abstract class QueryLike implements Query {
     }
 
     @Override
-    public Query clearWhere() {
-        return query().clearWhere();
+    public QL clearWhere() {
+        query().clearWhere();
+        return (QL) this;
     }
 
     @Override
-    public Query clearGroupBy() {
-        return query().clearGroupBy();
+    public QL clearGroupBy() {
+        query().clearGroupBy();
+        return (QL) this;
     }
 
     @Override
-    public Query clearOrderBy() {
-        return query().clearOrderBy();
+    public QL clearOrderBy() {
+        query().clearOrderBy();
+        return (QL) this;
     }
 
     @Override
-    public Query clearOffset() {
-        return query().clearOffset();
+    public QL clearOffset() {
+        query().clearOffset();
+        return (QL) this;
     }
 
     @Override
-    public Query clearLimit() {
-        return query().clearLimit();
+    public QL clearLimit() {
+        query().clearLimit();
+        return (QL) this;
     }
 
     public abstract Query toQuery();

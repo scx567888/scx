@@ -36,11 +36,11 @@ public final class QueryBuilder {
         return new LimitInfo().limit(numberOfRows);
     }
 
-    public static Logic and(Object... clauses) {
+    public static AND and(Object... clauses) {
         return new AND(clauses);
     }
 
-    public static Logic or(Object... clauses) {
+    public static OR or(Object... clauses) {
         return new OR(clauses);
     }
 

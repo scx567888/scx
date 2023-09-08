@@ -4,7 +4,7 @@ import cool.scx.data.Query;
 
 import static cool.scx.data.query.LogicType.AND;
 
-public final class AND extends QueryLike implements Logic {
+public final class AND extends QueryLike<AND> implements Logic {
 
     private final Object[] clauses;
 

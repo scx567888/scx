@@ -8,7 +8,7 @@ import cool.scx.data.Query;
  * @author scx567888
  * @version 0.0.1
  */
-public final class LimitInfo extends QueryLike {
+public final class LimitInfo extends QueryLike<LimitInfo> {
 
     /**
      * 当前页 页码 默认为空 即不设置页码

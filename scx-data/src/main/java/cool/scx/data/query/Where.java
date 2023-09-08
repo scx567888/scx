@@ -11,7 +11,7 @@ import java.util.Arrays;
  * @author scx567888
  * @version 0.0.1
  */
-public final class Where extends QueryLike {
+public final class Where extends QueryLike<Where> {
 
     /**
      * 自定义的查询语句
