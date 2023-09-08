@@ -11,7 +11,7 @@ import java.util.Arrays;
  * @author scx567888
  * @version 0.0.1
  */
-public final class GroupBy extends QueryLike {
+public final class GroupBy extends QueryLike<GroupBy> {
 
     /**
      * 分组字段列表

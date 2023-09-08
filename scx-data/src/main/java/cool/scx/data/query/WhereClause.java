@@ -4,7 +4,7 @@ import cool.scx.data.Query;
 import cool.scx.util.ArrayUtils;
 import cool.scx.util.StringUtils;
 
-public final class WhereClause extends QueryLike {
+public final class WhereClause extends QueryLike<WhereClause> {
 
     private final String whereClause;
     private final Object[] params;

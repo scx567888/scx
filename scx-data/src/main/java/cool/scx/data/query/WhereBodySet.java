@@ -13,7 +13,7 @@ import java.util.List;
  * @author scx567888
  * @version 0.0.1
  */
-public final class WhereBodySet extends QueryLike implements Logic {
+public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic {
 
     /**
      * 存储查询条件 key 为 fieldName ,采用 map 而不是 list 是为了保证重复添加的会直接覆盖

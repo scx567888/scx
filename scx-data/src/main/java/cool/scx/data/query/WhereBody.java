@@ -12,7 +12,7 @@ import static cool.scx.util.StringUtils.isBlank;
  * @author scx567888
  * @version 0.0.1
  */
-public final class WhereBody extends QueryLike {
+public final class WhereBody extends QueryLike<WhereBody> {
 
     private final String name;
     private final WhereType whereType;

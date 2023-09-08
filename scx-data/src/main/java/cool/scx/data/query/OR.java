@@ -4,7 +4,7 @@ import cool.scx.data.Query;
 
 import static cool.scx.data.query.LogicType.OR;
 
-public final class OR extends QueryLike implements Logic {
+public final class OR extends QueryLike<OR> implements Logic {
 
     private final Object[] clauses;
 

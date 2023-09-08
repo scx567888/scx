@@ -11,7 +11,7 @@ import static cool.scx.util.StringUtils.isBlank;
  * @author scx567888
  * @version 0.0.1
  */
-public final class GroupByBody extends QueryLike {
+public final class GroupByBody extends QueryLike<GroupByBody> {
     private final String name;
     private final Info info;
 
