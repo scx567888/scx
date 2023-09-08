@@ -13,7 +13,7 @@ public class ScxVersion {
     /**
      * SCX 版本号
      */
-    public static final String SCX_VERSION = "2.4.6";
+    public static final String SCX_VERSION = "2.4.7";
 
     /**
      * 在控制台上打印 banner
