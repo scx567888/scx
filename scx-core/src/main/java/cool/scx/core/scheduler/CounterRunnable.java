@@ -5,7 +5,9 @@ import org.springframework.scheduling.Trigger;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 
@@ -49,65 +51,48 @@ class CounterRunnable implements Runnable {
         scxHandler.accept(new ScheduleStatus(runCount.getAndIncrement(), scheduledFuture));
     }
 
-    /**
-     * <p>schedule.</p>
-     *
-     * @param executor a {@link org.springframework.scheduling.TaskScheduler} object
-     * @param trigger  a {@link org.springframework.scheduling.Trigger} object
-     * @return a {@link java.util.concurrent.ScheduledFuture} object
-     */
     public ScheduledFuture<?> schedule(TaskScheduler executor, Trigger trigger) {
         this.scheduledFuture = executor.schedule(this, trigger);
         return this.scheduledFuture;
     }
 
-    /**
-     * <p>scheduleWithFixedDelay.</p>
-     *
-     * @param executor  a {@link org.springframework.scheduling.TaskScheduler} object
-     * @param startTime a {@link java.time.Instant} object
-     * @param delay     a {@link java.time.Duration} object
-     * @return a {@link java.util.concurrent.ScheduledFuture} object
-     */
-    public ScheduledFuture<?> scheduleWithFixedDelay(TaskScheduler executor, Instant startTime, Duration delay) {
-        this.scheduledFuture = executor.scheduleWithFixedDelay(this, startTime, delay);
+    public ScheduledFuture<?> schedule(TaskScheduler executor, Instant startTime) {
+        this.scheduledFuture = executor.schedule(this, startTime);
         return this.scheduledFuture;
     }
 
-    /**
-     * <p>scheduleAtFixedRate.</p>
-     *
-     * @param executor  a {@link org.springframework.scheduling.TaskScheduler} object
-     * @param startTime a {@link java.time.Instant} object
-     * @param delay     a {@link java.time.Duration} object
-     * @return a {@link java.util.concurrent.ScheduledFuture} object
-     */
     public ScheduledFuture<?> scheduleAtFixedRate(TaskScheduler executor, Instant startTime, Duration delay) {
         this.scheduledFuture = executor.scheduleAtFixedRate(this, startTime, delay);
         return this.scheduledFuture;
     }
 
-    /**
-     * <p>scheduleWithFixedDelay.</p>
-     *
-     * @param executor a {@link org.springframework.scheduling.TaskScheduler} object
-     * @param delay    a {@link java.time.Duration} object
-     * @return a {@link java.util.concurrent.ScheduledFuture} object
-     */
+    public ScheduledFuture<?> scheduleAtFixedRate(TaskScheduler executor, Duration delay) {
+        this.scheduledFuture = executor.scheduleAtFixedRate(this, delay);
+        return this.scheduledFuture;
+    }
+
+    public ScheduledFuture<?> scheduleWithFixedDelay(TaskScheduler executor, Instant startTime, Duration delay) {
+        this.scheduledFuture = executor.scheduleWithFixedDelay(this, startTime, delay);
+        return this.scheduledFuture;
+    }
+
     public ScheduledFuture<?> scheduleWithFixedDelay(TaskScheduler executor, Duration delay) {
         this.scheduledFuture = executor.scheduleWithFixedDelay(this, delay);
         return this.scheduledFuture;
     }
 
-    /**
-     * <p>scheduleAtFixedRate.</p>
-     *
-     * @param executor a {@link org.springframework.scheduling.TaskScheduler} object
-     * @param delay    a {@link java.time.Duration} object
-     * @return a {@link java.util.concurrent.ScheduledFuture} object
-     */
-    public ScheduledFuture<?> scheduleAtFixedRate(TaskScheduler executor, Duration delay) {
-        this.scheduledFuture = executor.scheduleAtFixedRate(this, delay);
+    public ScheduledFuture<?> schedule(ScheduledExecutorService taskScheduler, long delay, TimeUnit unit) {
+        this.scheduledFuture = taskScheduler.schedule(this, delay, unit);
+        return this.scheduledFuture;
+    }
+
+    public ScheduledFuture<?> scheduleAtFixedRate(ScheduledExecutorService taskScheduler, long initialDelay, long period, TimeUnit unit) {
+        this.scheduledFuture = taskScheduler.scheduleAtFixedRate(this, initialDelay, period, unit);
+        return this.scheduledFuture;
+    }
+
+    public ScheduledFuture<?> scheduleWithFixedDelay(ScheduledExecutorService taskScheduler, long initialDelay, long delay, TimeUnit unit) {
+        this.scheduledFuture = taskScheduler.scheduleWithFixedDelay(this, initialDelay, delay, unit);
         return this.scheduledFuture;
     }
 
