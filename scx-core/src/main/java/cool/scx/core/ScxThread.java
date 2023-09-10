@@ -16,5 +16,5 @@ public class ScxThread extends Thread {
     public Scx scx() {
         return scxThreadFactory.scx();
     }
-    
+
 }

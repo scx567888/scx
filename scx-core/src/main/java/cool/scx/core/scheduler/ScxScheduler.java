@@ -1,6 +1,5 @@
 package cool.scx.core.scheduler;
 
-import io.netty.channel.EventLoopGroup;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.Trigger;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
