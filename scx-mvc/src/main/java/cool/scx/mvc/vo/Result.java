@@ -50,6 +50,25 @@ public abstract class Result implements BaseVo {
     }
 
     /**
+     * 返回操作失败的 Json 带有消息
+     *
+     * @param failMessage 自定义的错误信息
+     * @param object      错误内容
+     * @return json
+     */
+    public static ResultOfData fail(String failMessage, Object object) {
+        return new ResultOfData(failMessage, object);
+    }
+
+    public static ResultOfMap of(String message) {
+        return new ResultOfMap(message);
+    }
+
+    public static ResultOfData of(String message, Object object) {
+        return new ResultOfData(message, object);
+    }
+
+    /**
      * {@inheritDoc}
      * <p>
      * sendToClient
@@ -65,7 +84,7 @@ public abstract class Result implements BaseVo {
         }
     }
 
-    protected abstract Body<?> body();
+    public abstract Body<?> body();
 
     /**
      * 将内部的 JsonBody 转换为 json 字符串
@@ -108,7 +127,7 @@ public abstract class Result implements BaseVo {
         }
 
         @Override
-        protected Body<?> body() {
+        public Body<?> body() {
             return this.body;
         }
     }
@@ -133,8 +152,13 @@ public abstract class Result implements BaseVo {
             return this;
         }
 
+        public ResultOfMap remove(String dataKey, Object dataVal) {
+            body.data.remove(dataKey, dataVal);
+            return this;
+        }
+
         @Override
-        protected Body<?> body() {
+        public Body<?> body() {
             return body;
         }
 
