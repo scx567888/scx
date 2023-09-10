@@ -2,7 +2,6 @@ package cool.scx.http_client.body.form_data;
 
 import io.netty.buffer.UnpooledByteBufAllocator;
 import io.netty.handler.codec.http.multipart.HttpPostRequestEncoder;
-import io.vertx.core.buffer.Buffer;
 
 import java.util.Iterator;
 
@@ -28,7 +27,9 @@ class FormDataIterator implements Iterator<byte[]> {
         return wrap(() -> {
             var chunk = encoder.readChunk(ALLOC);
             var content = chunk.content();
-            return Buffer.buffer(content).getBytes();
+            byte[] arr = new byte[content.writerIndex()];
+            content.getBytes(0, arr);
+            return arr;
         });
     }
 
