@@ -60,12 +60,12 @@ public abstract class Result implements BaseVo {
         return new ResultOfData(failMessage, object);
     }
 
-    public static ResultOfMap of(String failMessage) {
-        return new ResultOfMap(failMessage);
+    public static ResultOfMap of(String message) {
+        return new ResultOfMap(message);
     }
 
-    public static ResultOfData of(String failMessage, Object object) {
-        return new ResultOfData(failMessage, object);
+    public static ResultOfData of(String message, Object object) {
+        return new ResultOfData(message, object);
     }
 
     /**
