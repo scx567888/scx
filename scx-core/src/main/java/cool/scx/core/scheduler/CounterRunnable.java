@@ -56,11 +56,6 @@ class CounterRunnable implements Runnable {
         return this.scheduledFuture;
     }
 
-    public ScheduledFuture<?> schedule(TaskScheduler executor, Instant startTime) {
-        this.scheduledFuture = executor.schedule(this, startTime);
-        return this.scheduledFuture;
-    }
-
     public ScheduledFuture<?> scheduleAtFixedRate(TaskScheduler executor, Instant startTime, Duration delay) {
         this.scheduledFuture = executor.scheduleAtFixedRate(this, startTime, delay);
         return this.scheduledFuture;
@@ -78,11 +73,6 @@ class CounterRunnable implements Runnable {
 
     public ScheduledFuture<?> scheduleWithFixedDelay(TaskScheduler executor, Duration delay) {
         this.scheduledFuture = executor.scheduleWithFixedDelay(this, delay);
-        return this.scheduledFuture;
-    }
-
-    public ScheduledFuture<?> schedule(ScheduledExecutorService taskScheduler, long delay, TimeUnit unit) {
-        this.scheduledFuture = taskScheduler.schedule(this, delay, unit);
         return this.scheduledFuture;
     }
 
