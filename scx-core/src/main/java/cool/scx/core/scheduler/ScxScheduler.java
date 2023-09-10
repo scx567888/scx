@@ -19,7 +19,7 @@ import java.util.function.Consumer;
  * 同时实现了一些支持自我取消的 任务调度
  *
  * @author scx567888
- * @version 1.11.8
+ * @version 2.4.8
  */
 public final class ScxScheduler implements ScheduledExecutorService, TaskScheduler {
 
