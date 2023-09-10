@@ -29,6 +29,7 @@ import java.lang.System.Logger;
 import java.net.BindException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Executors;
 
 import static cool.scx.core.ScxHelper.*;
 import static java.lang.System.Logger.Level.DEBUG;
@@ -56,13 +57,13 @@ public final class Scx {
 
     private final ScxOptions scxOptions;
 
+    private final ScxScheduler scxScheduler;
+
     private final Vertx vertx;
 
     private final DefaultListableBeanFactory beanFactory;
 
     private final ScxMvc scxMvc;
-
-    private final ScxScheduler scxScheduler;
 
     private final HttpServerOptions defaultHttpServerOptions;
 
@@ -87,16 +88,16 @@ public final class Scx {
         this.defaultHttpServerOptions = defaultHttpServerOptions;
         //2, 初始化 ScxLog 日志框架
         initScxLoggerFactory(this.scxConfig, this.scxEnvironment);
-        //3, 初始化 Vertx 这里在 log4j2 之后初始化是因为 vertx 需要使用 log4j2 打印日志
+        //3, 初始化任务调度器 这是核心调度器
+        this.scxScheduler = new ScxScheduler(Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors() * 2, new ScxThreadFactory(this)));
+        //4, 初始化 Vertx 这里在 log4j2 之后初始化是因为 vertx 需要使用 log4j2 打印日志
         this.vertx = Vertx.vertx(vertxOptions);
-        //4, 初始化事件总线
+        //5, 初始化事件总线
         ZeroCopyMessageCodec.registerCodec(this.vertx.eventBus());
-        //5, 初始化 BeanFactory
-        this.beanFactory = initBeanFactory(this.scxModules, this.vertx.nettyEventLoopGroup(), this.scxFeatureConfig);
+        //6, 初始化 BeanFactory
+        this.beanFactory = initBeanFactory(this.scxModules, scxScheduler, this.scxFeatureConfig);
         //7, 初始化 MVC
         this.scxMvc = new ScxMvc(new ScxMvcOptions().templateRoot(scxOptions.templateRoot()).useDevelopmentErrorPage(scxFeatureConfig.get(ScxCoreFeature.USE_DEVELOPMENT_ERROR_PAGE)));
-        //8, 初始化任务调度器
-        this.scxScheduler = new ScxScheduler(this.vertx.nettyEventLoopGroup());
     }
 
     public static ScxBuilder builder() {
@@ -140,7 +141,7 @@ public final class Scx {
     /**
      * 运行项目
      */
-    public void run() {
+    public Scx run() {
         //0, 启动 核心计时器
         StopWatch.start("ScxRun");
         //1, 根据配置打印一下 banner 或者配置文件信息之类
@@ -181,6 +182,7 @@ public final class Scx {
         this.startServer(this.scxOptions.port());
         //9, 此处刷新 scxBeanFactory 使其实例化所有符合条件的 Bean
         this.beanFactory.preInstantiateSingletons();
+        return this;
     }
 
     /**
