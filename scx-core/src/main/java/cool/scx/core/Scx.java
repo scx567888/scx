@@ -30,7 +30,6 @@ import java.net.BindException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
 import static cool.scx.core.ScxHelper.*;
 import static java.lang.System.Logger.Level.DEBUG;
@@ -58,17 +57,13 @@ public final class Scx {
 
     private final ScxOptions scxOptions;
 
+    private final ScxScheduler scxScheduler;
+
     private final Vertx vertx;
-
-    private final ScxThreadFactory scxThreadFactory;
-
-    private final ScheduledExecutorService scheduledExecutorService;
 
     private final DefaultListableBeanFactory beanFactory;
 
     private final ScxMvc scxMvc;
-
-    private final ScxScheduler scxScheduler;
 
     private final HttpServerOptions defaultHttpServerOptions;
 
@@ -93,18 +88,16 @@ public final class Scx {
         this.defaultHttpServerOptions = defaultHttpServerOptions;
         //2, 初始化 ScxLog 日志框架
         initScxLoggerFactory(this.scxConfig, this.scxEnvironment);
-        //3, 初始化 Vertx 这里在 log4j2 之后初始化是因为 vertx 需要使用 log4j2 打印日志
+        //3, 初始化任务调度器 这是核心调度器
+        this.scxScheduler = new ScxScheduler(Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors() * 2, new ScxThreadFactory(this)));
+        //4, 初始化 Vertx 这里在 log4j2 之后初始化是因为 vertx 需要使用 log4j2 打印日志
         this.vertx = Vertx.vertx(vertxOptions);
-        this.scxThreadFactory = new ScxThreadFactory(this);
-        this.scheduledExecutorService = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors() * 2, scxThreadFactory);
-        //4, 初始化事件总线
+        //5, 初始化事件总线
         ZeroCopyMessageCodec.registerCodec(this.vertx.eventBus());
-        //5, 初始化 BeanFactory
-        this.beanFactory = initBeanFactory(this.scxModules, scheduledExecutorService, this.scxFeatureConfig);
+        //6, 初始化 BeanFactory
+        this.beanFactory = initBeanFactory(this.scxModules, scxScheduler, this.scxFeatureConfig);
         //7, 初始化 MVC
         this.scxMvc = new ScxMvc(new ScxMvcOptions().templateRoot(scxOptions.templateRoot()).useDevelopmentErrorPage(scxFeatureConfig.get(ScxCoreFeature.USE_DEVELOPMENT_ERROR_PAGE)));
-        //8, 初始化任务调度器
-        this.scxScheduler = new ScxScheduler(scheduledExecutorService);
     }
 
     public static ScxBuilder builder() {

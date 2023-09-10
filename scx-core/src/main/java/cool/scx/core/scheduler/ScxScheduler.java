@@ -13,9 +13,10 @@ import java.util.concurrent.*;
 import java.util.function.Consumer;
 
 /**
- * 针对 spring 的 ${@link org.springframework.scheduling.TaskScheduler}  进行一些简单的封装
+ * Scx 核心调度器 只是 同时代理了 {@link ScheduledExecutorService} 和 {@link org.springframework.scheduling.TaskScheduler}
+ *
  * <br>
- * 以便可以实现一些简单的任务调度
+ * 同时实现了一些支持自取消的 任务调度
  * todo 一些方法 不需要提供 ScheduleStatus 方法
  *
  * @author scx567888

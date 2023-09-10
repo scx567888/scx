@@ -65,7 +65,7 @@ public final class ScxBuilder {
     /**
      * 用来存储临时待添加的 appKey
      */
-    private String appKey = DEFAULT_APP_KEY;
+    private String appKey;
     private VertxOptions vertxOptions;
     private HttpServerOptions defaultHttpServerOptions;
 
