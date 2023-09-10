@@ -16,11 +16,10 @@ import java.util.function.Consumer;
  * Scx 核心调度器 只是 同时代理了 {@link ScheduledExecutorService} 和 {@link org.springframework.scheduling.TaskScheduler}
  *
  * <br>
- * 同时实现了一些支持自取消的 任务调度
- * todo 一些方法 不需要提供 ScheduleStatus 方法
+ * 同时实现了一些支持自我取消和固定次数的 任务调度
  *
  * @author scx567888
- * @version 1.11.8
+ * @version 2.4.8
  */
 public final class ScxScheduler implements ScheduledExecutorService, TaskScheduler {
 
@@ -166,10 +165,6 @@ public final class ScxScheduler implements ScheduledExecutorService, TaskSchedul
         return new CounterRunnable(scxHandler).schedule(taskScheduler, trigger);
     }
 
-    public ScheduledFuture<?> schedule(Consumer<ScheduleStatus> scxHandler, Instant startTime) {
-        return new CounterRunnable(scxHandler).schedule(taskScheduler, startTime);
-    }
-
     public ScheduledFuture<?> scheduleAtFixedRate(Consumer<ScheduleStatus> scxHandler, Instant startTime, Duration delay) {
         return new CounterRunnable(scxHandler).scheduleAtFixedRate(taskScheduler, startTime, delay);
     }
@@ -188,11 +183,6 @@ public final class ScxScheduler implements ScheduledExecutorService, TaskSchedul
 
     //****************** ScxScheduler For ScheduledExecutorService ***************
 
-
-    public ScheduledFuture<?> schedule(Consumer<ScheduleStatus> scxHandler, long delay, TimeUnit unit) {
-        return new CounterRunnable(scxHandler).schedule(scheduledExecutorService, delay, unit);
-    }
-
     public ScheduledFuture<?> scheduleAtFixedRate(Consumer<ScheduleStatus> scxHandler, long initialDelay, long period, TimeUnit unit) {
         return new CounterRunnable(scxHandler).scheduleAtFixedRate(scheduledExecutorService, initialDelay, period, unit);
     }
@@ -205,10 +195,6 @@ public final class ScxScheduler implements ScheduledExecutorService, TaskSchedul
 
     public ScheduledFuture<?> schedule(Consumer<ScheduleStatus> scxHandler, Trigger trigger, long maxRunCount) {
         return new FixedRunCountRunnable(scxHandler, maxRunCount).schedule(taskScheduler, trigger);
-    }
-
-    public ScheduledFuture<?> schedule(Consumer<ScheduleStatus> scxHandler, Instant startTime, long maxRunCount) {
-        return new FixedRunCountRunnable(scxHandler, maxRunCount).schedule(taskScheduler, startTime);
     }
 
     public ScheduledFuture<?> scheduleAtFixedRate(Consumer<ScheduleStatus> scxHandler, Instant startTime, Duration delay, long maxRunCount) {
@@ -225,10 +211,6 @@ public final class ScxScheduler implements ScheduledExecutorService, TaskSchedul
 
     public ScheduledFuture<?> scheduleWithFixedDelay(Consumer<ScheduleStatus> scxHandler, Duration delay, long maxRunCount) {
         return new FixedRunCountRunnable(scxHandler, maxRunCount).scheduleWithFixedDelay(taskScheduler, delay);
-    }
-
-    public ScheduledFuture<?> schedule(Consumer<ScheduleStatus> scxHandler, long delay, TimeUnit unit, long maxRunCount) {
-        return new FixedRunCountRunnable(scxHandler, maxRunCount).schedule(scheduledExecutorService, delay, unit);
     }
 
     public ScheduledFuture<?> scheduleAtFixedRate(Consumer<ScheduleStatus> scxHandler, long initialDelay, long period, TimeUnit unit, long maxRunCount) {
