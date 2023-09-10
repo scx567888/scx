@@ -138,8 +138,8 @@ public final class ScxBuilder {
     /**
      * a
      */
-    public void run() {
-        this.build().run();
+    public Scx run() {
+        return this.build().run();
     }
 
     /**

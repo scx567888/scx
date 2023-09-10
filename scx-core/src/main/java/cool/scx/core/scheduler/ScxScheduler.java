@@ -29,7 +29,7 @@ public final class ScxScheduler {
      *
      * @param eventLoopGroup a
      */
-    public ScxScheduler(EventLoopGroup eventLoopGroup) {
+    public ScxScheduler(ScheduledExecutorService eventLoopGroup) {
         this.scheduledExecutorService = eventLoopGroup;
         this.taskScheduler = new ConcurrentTaskScheduler(this.scheduledExecutorService);
     }
