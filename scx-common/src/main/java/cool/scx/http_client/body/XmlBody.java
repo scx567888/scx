@@ -2,13 +2,15 @@ package cool.scx.http_client.body;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.http_client.ScxHttpClientRequestBody;
-import cool.scx.util.ObjectUtils;
 
-import java.net.http.HttpRequest;
-import java.nio.charset.StandardCharsets;
+import java.net.http.HttpRequest.BodyPublisher;
+import java.net.http.HttpRequest.Builder;
 
+import static cool.scx.util.ObjectUtils.toXml;
 import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_TYPE;
 import static io.netty.handler.codec.http.HttpHeaderValues.APPLICATION_XML;
+import static java.net.http.HttpRequest.BodyPublishers.ofByteArray;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * a
@@ -17,20 +19,18 @@ public final class XmlBody implements ScxHttpClientRequestBody {
 
     private final String bodyStr;
 
-    /**
-     * a
-     *
-     * @param o a
-     * @throws JsonProcessingException a
-     */
     public XmlBody(Object o) throws JsonProcessingException {
-        bodyStr = ObjectUtils.toXml(o);
+        bodyStr = toXml(o);
+    }
+
+    public XmlBody(String xml) {
+        bodyStr = xml;
     }
 
     @Override
-    public HttpRequest.BodyPublisher bodyPublisher(HttpRequest.Builder builder) {
+    public BodyPublisher bodyPublisher(Builder builder) {
         builder.setHeader(CONTENT_TYPE.toString(), APPLICATION_XML + "; charset=utf-8");
-        return HttpRequest.BodyPublishers.ofByteArray(bodyStr.getBytes(StandardCharsets.UTF_8));
+        return ofByteArray(bodyStr.getBytes(UTF_8));
     }
 
 }

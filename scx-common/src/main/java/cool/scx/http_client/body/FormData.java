@@ -7,8 +7,7 @@ import io.netty.handler.codec.http.DefaultFullHttpRequest;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpVersion;
 
-import java.net.http.HttpRequest;
-import java.net.http.HttpRequest.BodyPublishers;
+import java.net.http.HttpRequest.BodyPublisher;
 import java.net.http.HttpRequest.Builder;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -16,6 +15,7 @@ import java.util.List;
 
 import static cool.scx.http_client.body.form_data.FormDataHelper.initEncoder;
 import static cool.scx.util.ScxExceptionHelper.wrap;
+import static java.net.http.HttpRequest.BodyPublishers.ofByteArrays;
 
 /**
  * 使用 netty 的 HttpPostRequestEncoder 简化 FormData 的创建
@@ -133,13 +133,13 @@ public final class FormData implements ScxHttpClientRequestBody {
     }
 
     @Override
-    public HttpRequest.BodyPublisher bodyPublisher(Builder builder) {
+    public BodyPublisher bodyPublisher(Builder builder) {
         var tempRequest = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, "/");
         var encoder = wrap(() -> initEncoder(this, tempRequest));
         //这里主要是为了将 tempRequest 中的 content-type 同步写入到 request 中
         tempRequest.headers().forEach((k) -> builder.header(k.getKey(), k.getValue()));
         var formDataIterable = new FormDataIterable(encoder);
-        return BodyPublishers.ofByteArrays(formDataIterable);
+        return ofByteArrays(formDataIterable);
     }
 
 }

@@ -1,7 +1,9 @@
 package cool.scx.http_client;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.http.HttpClient;
+import java.net.http.WebSocket;
 import java.util.concurrent.CompletableFuture;
 
 import static java.net.http.HttpResponse.BodyHandlers.ofInputStream;
@@ -22,8 +24,8 @@ public class ScxHttpClient {
         this.client = builder.build();
     }
 
-    public ScxHttpClientWebSocket webSocket() {
-        throw new UnsupportedOperationException();
+    public CompletableFuture<WebSocket> webSocket(URI uri, WebSocket.Listener listener) {
+        return client.newWebSocketBuilder().buildAsync(uri, listener);
     }
 
     public ScxHttpClientResponse request(ScxHttpClientRequest request) throws IOException, InterruptedException {

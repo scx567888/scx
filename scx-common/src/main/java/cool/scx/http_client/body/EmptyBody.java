@@ -2,7 +2,10 @@ package cool.scx.http_client.body;
 
 import cool.scx.http_client.ScxHttpClientRequestBody;
 
-import java.net.http.HttpRequest;
+import java.net.http.HttpRequest.BodyPublisher;
+import java.net.http.HttpRequest.Builder;
+
+import static java.net.http.HttpRequest.BodyPublishers.noBody;
 
 /**
  * <p>EmptyBody class.</p>
@@ -16,8 +19,8 @@ public final class EmptyBody implements ScxHttpClientRequestBody {
      * {@inheritDoc}
      */
     @Override
-    public HttpRequest.BodyPublisher bodyPublisher(HttpRequest.Builder builder) {
-        return HttpRequest.BodyPublishers.noBody();
+    public BodyPublisher bodyPublisher(Builder builder) {
+        return noBody();
     }
 
 }
