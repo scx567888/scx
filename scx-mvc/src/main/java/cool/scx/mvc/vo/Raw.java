@@ -18,7 +18,7 @@ public final class Raw extends BaseWriter {
      * <p>Constructor for Raw.</p>
      *
      * @param inputStream a {@link java.io.InputStream} object
-     * @param fileFormat     a {@link FileFormat} object
+     * @param fileFormat  a {@link FileFormat} object
      */
     private Raw(InputStream inputStream, FileFormat fileFormat) {
         super(inputStream, fileFormat.mimeType(), "inline");
@@ -36,7 +36,7 @@ public final class Raw extends BaseWriter {
     /**
      * <p>Constructor for Raw.</p>
      *
-     * @param bytes   an array of {@link byte} objects
+     * @param bytes      an array of {@link byte} objects
      * @param fileFormat a {@link FileFormat} object
      */
     private Raw(byte[] bytes, FileFormat fileFormat) {
@@ -46,7 +46,7 @@ public final class Raw extends BaseWriter {
     /**
      * a
      *
-     * @param bytes   a
+     * @param bytes      a
      * @param fileFormat a
      * @return a
      */
@@ -68,7 +68,7 @@ public final class Raw extends BaseWriter {
      * a
      *
      * @param inputStream a
-     * @param fileFormat     a
+     * @param fileFormat  a
      * @return a
      */
     public static Raw of(InputStream inputStream, FileFormat fileFormat) {
