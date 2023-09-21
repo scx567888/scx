@@ -13,7 +13,7 @@ package cool.scx.functional;
 public interface ScxConsumer<T, E extends Exception> {
 
     /**
-     * <p>accept.</p>
+     * accept
      *
      * @param t 方法参数
      * @throws E 异常
