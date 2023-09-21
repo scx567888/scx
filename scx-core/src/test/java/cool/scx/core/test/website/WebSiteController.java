@@ -1,7 +1,6 @@
 package cool.scx.core.test.website;
 
 import cool.scx.core.ScxContext;
-import cool.scx.core.test.car.Car;
 import cool.scx.core.test.car.CarService;
 import cool.scx.core.test.person.Person;
 import cool.scx.core.test.person.PersonService;
