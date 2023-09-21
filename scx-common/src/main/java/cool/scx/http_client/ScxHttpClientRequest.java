@@ -49,7 +49,7 @@ public class ScxHttpClientRequest {
     }
 
     public ScxHttpClientRequest setHeader(String name, String value) {
-        builder.header(name, value);
+        builder.setHeader(name, value);
         return this;
     }
 
