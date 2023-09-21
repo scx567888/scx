@@ -15,4 +15,14 @@ public class Person extends BaseModel {
      */
     public Integer age;
 
+    /**
+     * 钱
+     */
+    public Long money;
+
+    public Person setMoney(long money) {
+        this.money = money;
+        return this;
+    }
+
 }
