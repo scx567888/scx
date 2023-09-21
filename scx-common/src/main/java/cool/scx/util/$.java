@@ -1,6 +1,12 @@
 package cool.scx.util;
 
+import cool.scx.functional.ScxRunnable;
+
+import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
+
+import static cool.scx.util.ScxExceptionHelper.getRootCause;
 
 /**
  * 未分类方法
@@ -12,6 +18,40 @@ public final class $ {
             Thread.sleep(millis);
         } catch (InterruptedException ignored) {
 
+        }
+    }
+
+    public static CompletableFuture<Void> async(ScxRunnable<?> runnable) {
+        var promise = new CompletableFuture<Void>();
+        Thread.ofVirtual().start(() -> {
+            try {
+                runnable.run();
+                promise.complete(null);
+            } catch (Throwable e) {
+                promise.completeExceptionally(e);
+            }
+        });
+        return promise;
+    }
+
+    public static <T> CompletableFuture<T> async(Callable<T> callable) {
+        var promise = new CompletableFuture<T>();
+        Thread.ofVirtual().start(() -> {
+            try {
+                var t = callable.call();
+                promise.complete(t);
+            } catch (Throwable e) {
+                promise.completeExceptionally(e);
+            }
+        });
+        return promise;
+    }
+
+    public static <T> T await(CompletableFuture<T> promise) throws Throwable {
+        try {
+            return promise.get();
+        } catch (Exception e) {
+            throw getRootCause(e);
         }
     }
 
