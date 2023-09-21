@@ -4,7 +4,7 @@ import cool.scx.core.ScxContext;
 import cool.scx.core.test.car.Car;
 import cool.scx.core.test.car.CarService;
 import cool.scx.enumeration.HttpMethod;
-import cool.scx.enumeration.RawType;
+import cool.scx.enumeration.FileFormat;
 import cool.scx.http_client.ScxHttpClientHelper;
 import cool.scx.mvc.ScxMvc;
 import cool.scx.mvc.annotation.FromQuery;
@@ -158,7 +158,7 @@ public class WebSiteController {
         for (int i = 0; i < 9999; i = i + 1) {
             s.append("这是文字 ").append(i).append(", ");
         }
-        return Raw.of(s.toString().getBytes(StandardCharsets.UTF_8), RawType.TXT);
+        return Raw.of(s.toString().getBytes(StandardCharsets.UTF_8), FileFormat.TXT);
     }
 
     /**

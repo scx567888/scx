@@ -4,7 +4,7 @@ import cool.scx.config.ScxConfig;
 import cool.scx.config.ScxEnvironment;
 import cool.scx.config.ScxFeatureConfig;
 import cool.scx.core.enumeration.ScxCoreFeature;
-import cool.scx.core.scheduler.ScxScheduler;
+import cool.scx.scheduler.ScxScheduler;
 import cool.scx.data.jdbc.JDBCContext;
 import cool.scx.data.jdbc.sql.SQLRunner;
 import cool.scx.functional.ScxRunnable;

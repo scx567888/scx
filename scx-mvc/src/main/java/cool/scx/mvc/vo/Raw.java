@@ -1,6 +1,6 @@
 package cool.scx.mvc.vo;
 
-import cool.scx.enumeration.RawType;
+import cool.scx.enumeration.FileFormat;
 
 import java.io.InputStream;
 import java.nio.file.Path;
@@ -18,10 +18,10 @@ public final class Raw extends BaseWriter {
      * <p>Constructor for Raw.</p>
      *
      * @param inputStream a {@link java.io.InputStream} object
-     * @param rawType     a {@link cool.scx.enumeration.RawType} object
+     * @param fileFormat     a {@link FileFormat} object
      */
-    private Raw(InputStream inputStream, RawType rawType) {
-        super(inputStream, rawType.mimeType(), "inline");
+    private Raw(InputStream inputStream, FileFormat fileFormat) {
+        super(inputStream, fileFormat.mimeType(), "inline");
     }
 
     /**
@@ -37,21 +37,21 @@ public final class Raw extends BaseWriter {
      * <p>Constructor for Raw.</p>
      *
      * @param bytes   an array of {@link byte} objects
-     * @param rawType a {@link cool.scx.enumeration.RawType} object
+     * @param fileFormat a {@link FileFormat} object
      */
-    private Raw(byte[] bytes, RawType rawType) {
-        super(bytes, rawType.mimeType(), "inline");
+    private Raw(byte[] bytes, FileFormat fileFormat) {
+        super(bytes, fileFormat.mimeType(), "inline");
     }
 
     /**
      * a
      *
      * @param bytes   a
-     * @param rawType a
+     * @param fileFormat a
      * @return a
      */
-    public static Raw of(byte[] bytes, RawType rawType) {
-        return new Raw(bytes, rawType);
+    public static Raw of(byte[] bytes, FileFormat fileFormat) {
+        return new Raw(bytes, fileFormat);
     }
 
     /**
@@ -68,11 +68,11 @@ public final class Raw extends BaseWriter {
      * a
      *
      * @param inputStream a
-     * @param rawType     a
+     * @param fileFormat     a
      * @return a
      */
-    public static Raw of(InputStream inputStream, RawType rawType) {
-        return new Raw(inputStream, rawType);
+    public static Raw of(InputStream inputStream, FileFormat fileFormat) {
+        return new Raw(inputStream, fileFormat);
     }
 
 }
