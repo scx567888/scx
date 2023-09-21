@@ -1,11 +1,11 @@
 package cool.scx.enumeration;
 
 /**
- * 规定一些常见的 http 相应状态
+ * HttpResponseStatus
  *
  * @author scx567888
  * @version 1.11.8
- * @see <a href="https://www.rfc-editor.org/rfc/rfc9110">https://www.rfc-editor.org/rfc/rfc9110</a>
+ * @see <a href="https://www.rfc-editor.org/rfc/rfc9110#name-status-codes">https://www.rfc-editor.org/rfc/rfc9110#name-status-codes</a>
  */
 public enum HttpResponseStatus {
 

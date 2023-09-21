@@ -19,7 +19,6 @@ public enum FileFormat {
     JSON("application/json"),
     ZIP("application/zip"),
     PDF("application/pdf"),
-    EPUB("application/epub+zip"),
     DOC("application/msword"),
     XLS("application/vnd.ms-excel"),
     PPT("application/vnd.ms-powerpoint"),
