@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.CompletableFuture;
 
 import static cool.scx.util.ScxExceptionHelper.wrap;
 import static java.sql.ResultSet.CONCUR_READ_ONLY;
@@ -278,21 +278,25 @@ public final class SQLRunner {
      * @param handler 连接消费者
      */
     public void autoTransaction(ScxRunnable<?> handler) {
-        wrap(() -> ForkJoinPool.commonPool().submit(() -> {
+        var promise = new CompletableFuture<Void>();
+        Thread.ofVirtual().name("autoTransaction-thread").start(() -> {
             try (var con = getConnection(false)) {
                 CONNECTION_THREAD_LOCAL.set(con);
                 try {
                     handler.run();
                     con.commit();
-                    return null;
+                    promise.complete(null);
                 } catch (Exception e) {
                     con.rollback();
                     throw e;
                 } finally {
                     CONNECTION_THREAD_LOCAL.remove();
                 }
+            } catch (Exception e) {
+                promise.completeExceptionally(e);
             }
-        }).get());
+        });
+        wrap(() -> promise.get());
     }
 
     /**
@@ -303,21 +307,25 @@ public final class SQLRunner {
      * @return a
      */
     public <T> T autoTransaction(Callable<T> handler) {
-        return wrap(() -> ForkJoinPool.commonPool().submit(() -> {
+        var promise = new CompletableFuture<T>();
+        Thread.ofVirtual().name("autoTransaction-thread").start(() -> {
             try (var con = getConnection(false)) {
                 CONNECTION_THREAD_LOCAL.set(con);
                 try {
                     T result = handler.call();
                     con.commit();
-                    return result;
+                    promise.complete(result);
                 } catch (Exception e) {
                     con.rollback();
                     throw e;
                 } finally {
                     CONNECTION_THREAD_LOCAL.remove();
                 }
+            } catch (Exception e) {
+                promise.completeExceptionally(e);
             }
-        }).get());
+        });
+        return wrap(() -> promise.get());
     }
 
     /**
