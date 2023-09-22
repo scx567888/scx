@@ -17,7 +17,8 @@ public class ScxConfigTest {
         var jsonPath = scxEnvironment.getPathByAppRoot("AppRoot:scx-config.json");
         var scxConfig = new ScxConfig(JsonFileConfigSource.of(jsonPath));
         var m = scxConfig.configMapping();
-        m.forEach((k, v) -> System.out.println(k + "  ---->  " + v));
+        System.out.println(m.toPrettyString());
+        System.out.println(scxConfig.get("scx.port"));
     }
 
 }
