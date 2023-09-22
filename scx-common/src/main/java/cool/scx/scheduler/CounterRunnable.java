@@ -1,4 +1,4 @@
-package cool.scx.core.scheduler;
+package cool.scx.scheduler;
 
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.Trigger;

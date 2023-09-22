@@ -14,7 +14,7 @@ package cool.scx.functional;
 public interface ScxFunction<T, R, E extends Exception> {
 
     /**
-     * <p>apply.</p>
+     * apply
      *
      * @param t 方法参数
      * @return 方法结果

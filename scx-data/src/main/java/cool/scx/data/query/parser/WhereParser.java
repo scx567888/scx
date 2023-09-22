@@ -24,21 +24,15 @@ public abstract class WhereParser {
     }
 
     public WhereClause parse(Object obj) {
-        if (obj instanceof String str) {
-            return parseString(str);
-        } else if (obj instanceof WhereBody whereBody) {
-            return parseWhereBody(whereBody);
-        } else if (obj instanceof Logic l) {
-            return parseLogic(l);
-        } else if (obj instanceof WhereClause w) {
-            return w;
-        } else if (obj instanceof Where w) {
-            return parseWhere(w);
-        } else if (obj instanceof Query q) {
-            return parseWhere(q.getWhere());
-        } else {
-            return null;
-        }
+        return switch (obj) {
+            case String str -> parseString(str);
+            case WhereBody whereBody -> parseWhereBody(whereBody);
+            case Logic l -> parseLogic(l);
+            case WhereClause w -> w;
+            case Where w -> parseWhere(w);
+            case Query q -> parseWhere(q.getWhere());
+            case null, default -> null;
+        };
     }
 
     public final WhereClause parseString(String str) {

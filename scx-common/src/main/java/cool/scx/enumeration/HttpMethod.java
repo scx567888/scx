@@ -1,11 +1,11 @@
 package cool.scx.enumeration;
 
 /**
- * <p>HttpMethod class.</p>
+ * HttpMethod
  *
  * @author scx567888
  * @version 0.3.6
- * @see <a href="https://www.rfc-editor.org/rfc/rfc9110">https://www.rfc-editor.org/rfc/rfc9110</a>
+ * @see <a href="https://www.rfc-editor.org/rfc/rfc9110#name-method-definitions">https://www.rfc-editor.org/rfc/rfc9110#name-method-definitions</a>
  */
 public enum HttpMethod {
 

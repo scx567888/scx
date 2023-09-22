@@ -12,9 +12,9 @@ package cool.scx.functional;
 public interface ScxRunnable<E extends Exception> {
 
     /**
-     * <p>run.</p>
+     * run
      *
-     * @throws E if any.
+     * @throws E 异常
      */
     void run() throws E;
 

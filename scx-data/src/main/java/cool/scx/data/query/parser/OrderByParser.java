@@ -25,19 +25,14 @@ public abstract class OrderByParser {
     }
 
     public String[] parse(Object obj) {
-        if (obj instanceof OrderByBody o) {
-            return new String[]{parseOrderByBody(o)};
-        } else if (obj instanceof String s) {
-            return new String[]{s};
-        } else if (obj instanceof OrderByBodySet s) {
-            return parseAll(s.clauses());
-        } else if (obj instanceof OrderBy s) {
-            return parseAll(s.clauses());
-        } else if (obj instanceof Query q) {
-            return parseAll(q.getOrderBy().clauses());
-        } else {
-            return null;
-        }
+        return switch (obj) {
+            case OrderByBody o -> new String[]{parseOrderByBody(o)};
+            case String s -> new String[]{s};
+            case OrderByBodySet s -> parseAll(s.clauses());
+            case OrderBy s -> parseAll(s.clauses());
+            case Query q -> parseAll(q.getOrderBy().clauses());
+            case null, default -> null;
+        };
     }
 
     protected abstract String parseOrderByBody(OrderByBody body);

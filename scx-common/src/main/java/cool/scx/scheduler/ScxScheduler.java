@@ -1,6 +1,5 @@
-package cool.scx.core.scheduler;
+package cool.scx.scheduler;
 
-import org.springframework.lang.Nullable;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.Trigger;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
@@ -32,11 +31,9 @@ public final class ScxScheduler implements ScheduledExecutorService, TaskSchedul
         this.taskScheduler = new ConcurrentTaskScheduler(this.scheduledExecutorService);
     }
 
-
     //************* TaskScheduler *********
 
     @Override
-    @Nullable
     public ScheduledFuture<?> schedule(Runnable task, Trigger trigger) {
         return taskScheduler.schedule(task, trigger);
     }

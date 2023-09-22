@@ -27,15 +27,12 @@ public abstract class GroupByParser {
     }
 
     public String[] parse(Object obj) {
-        if (obj instanceof String str) {
-            return new String[]{parseString(str)};
-        } else if (obj instanceof GroupByBody groupByBody) {
-            return new String[]{parseGroupByBody(groupByBody)};
-        } else if (obj instanceof Query q) {
-            return parseAll(q.getGroupBy().clauses());
-        } else {
-            return null;
-        }
+        return switch (obj) {
+            case String str -> new String[]{parseString(str)};
+            case GroupByBody groupByBody -> new String[]{parseGroupByBody(groupByBody)};
+            case Query q -> parseAll(q.getGroupBy().clauses());
+            case null, default -> null;
+        };
     }
 
     private String parseString(String str) {

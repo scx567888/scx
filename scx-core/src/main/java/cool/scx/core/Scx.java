@@ -5,7 +5,6 @@ import cool.scx.config.ScxEnvironment;
 import cool.scx.config.ScxFeatureConfig;
 import cool.scx.core.enumeration.ScxCoreFeature;
 import cool.scx.core.eventbus.ZeroCopyMessageCodec;
-import cool.scx.core.scheduler.ScxScheduler;
 import cool.scx.data.jdbc.AnnotationConfigTable;
 import cool.scx.data.jdbc.JDBCContext;
 import cool.scx.data.jdbc.meta_data.SchemaHelper;
@@ -13,7 +12,9 @@ import cool.scx.data.jdbc.sql.SQLRunner;
 import cool.scx.mvc.ScxMvc;
 import cool.scx.mvc.ScxMvcOptions;
 import cool.scx.mvc.websocket.WebSocketRouter;
+import cool.scx.scheduler.ScxScheduler;
 import cool.scx.util.NetUtils;
+import cool.scx.util.ScxVirtualThreadFactory;
 import cool.scx.util.StopWatch;
 import cool.scx.util.ansi.Ansi;
 import io.vertx.core.Vertx;
@@ -29,11 +30,11 @@ import java.lang.System.Logger;
 import java.net.BindException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.Executors;
 
 import static cool.scx.core.ScxHelper.*;
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.WARNING;
+import static java.util.concurrent.Executors.newScheduledThreadPool;
 
 /**
  * 启动类
@@ -89,7 +90,7 @@ public final class Scx {
         //2, 初始化 ScxLog 日志框架
         initScxLoggerFactory(this.scxConfig, this.scxEnvironment);
         //3, 初始化任务调度器 这是核心调度器
-        this.scxScheduler = new ScxScheduler(Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors() * 2, new ScxThreadFactory(this)));
+        this.scxScheduler = new ScxScheduler(newScheduledThreadPool(Integer.MAX_VALUE, new ScxVirtualThreadFactory()));
         //4, 初始化 Vertx 这里在 log4j2 之后初始化是因为 vertx 需要使用 log4j2 打印日志
         this.vertx = Vertx.vertx(vertxOptions);
         //5, 初始化事件总线

@@ -1,10 +1,11 @@
 package cool.scx.core.test.website;
 
 import cool.scx.core.ScxContext;
-import cool.scx.core.test.car.Car;
 import cool.scx.core.test.car.CarService;
+import cool.scx.core.test.person.Person;
+import cool.scx.core.test.person.PersonService;
+import cool.scx.enumeration.FileFormat;
 import cool.scx.enumeration.HttpMethod;
-import cool.scx.enumeration.RawType;
 import cool.scx.http_client.ScxHttpClientHelper;
 import cool.scx.mvc.ScxMvc;
 import cool.scx.mvc.annotation.FromQuery;
@@ -63,20 +64,35 @@ public class WebSiteController {
 
     @ScxRoute(methods = HttpMethod.GET)
     public static void TestTransaction(RoutingContext ctx) throws Exception {
+        var personService = ScxContext.getBean(PersonService.class);
+        var p1 = personService.add(new Person().setMoney(100));
+        var p2 = personService.add(new Person().setMoney(200));
         var sb = new StringBuilder();
-        CarService bean = ScxContext.getBean(CarService.class);
+        sb.append("转账开始前: ").append("p1(").append(p1.money).append(") p2(").append(p2.money).append(")</br>");
         try {
+            //模拟 转账
             ScxContext.autoTransaction(() -> {
-                sb.append("事务开始前数据库中 数据条数 : ").append(bean.find().size()).append("</br>");
-                sb.append("现在插入 1 数据条数").append("</br>");
-                var u = new Car();
-                u.name = "唯一name";
-                bean.add(u);
-                sb.append("现在数据库中数据条数 : ").append(bean.find().size()).append("</br>");
-                bean.add(u);
+
+                // todo 此处需要支持并发处理 及 同时执行 给 p1 扣钱 和 给 p2 加钱                 
+                //给 p1 扣钱
+                p1.money = p1.money - 50;
+                var p11 = personService.update(p1);
+
+                //给 p2 加钱
+                p2.money = p2.money + 50;
+                var p21 = personService.update(p2);
+
+                sb.append("转账中: ").append("p1(")
+                        .append(p11.money)
+                        .append(") p2(")
+                        .append(p21.money).append(")</br>");
+
+                throw new RuntimeException("模拟发生异常 !!!");
             });
         } catch (Exception e) {
-            sb.append("出错了 后滚后数据库中数据条数 : ").append(bean.find().size());
+            var p11 = personService.get(p1.id);
+            var p21 = personService.get(p2.id);
+            sb.append("出错了 回滚后: ").append("p1(").append(p11.money).append(") p2(").append(p21.money).append(")</br>");
         }
         Html.ofString(sb.toString()).accept(ctx, ScxContext.scxMvc().templateHandler());
     }
@@ -158,7 +174,7 @@ public class WebSiteController {
         for (int i = 0; i < 9999; i = i + 1) {
             s.append("这是文字 ").append(i).append(", ");
         }
-        return Raw.of(s.toString().getBytes(StandardCharsets.UTF_8), RawType.TXT);
+        return Raw.of(s.toString().getBytes(StandardCharsets.UTF_8), FileFormat.TXT);
     }
 
     /**
