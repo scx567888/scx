@@ -281,7 +281,7 @@ public final class SQLRunner {
      */
     public void autoTransaction(ScxRunnable<?> handler) {
         var promise = new CompletableFuture<Void>();
-        Thread.ofVirtual().name("scx-auto-transaction-thread-",threadNumber.getAndIncrement()).start(() -> {
+        Thread.ofVirtual().name("scx-auto-transaction-thread-", threadNumber.getAndIncrement()).start(() -> {
             try (var con = getConnection(false)) {
                 CONNECTION_THREAD_LOCAL.set(con);
                 try {
@@ -310,7 +310,7 @@ public final class SQLRunner {
      */
     public <T> T autoTransaction(Callable<T> handler) {
         var promise = new CompletableFuture<T>();
-        Thread.ofVirtual().name("scx-auto-transaction-thread-",threadNumber.getAndIncrement()).start(() -> {
+        Thread.ofVirtual().name("scx-auto-transaction-thread-", threadNumber.getAndIncrement()).start(() -> {
             try (var con = getConnection(false)) {
                 CONNECTION_THREAD_LOCAL.set(con);
                 try {
