@@ -1,14 +1,14 @@
 package cool.scx.config.source_impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import cool.scx.config.ScxConfigSource;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.ansi.Ansi;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * <p>JsonFileConfigSource class.</p>
@@ -18,7 +18,7 @@ import java.util.Map;
  */
 public final class JsonFileConfigSource implements ScxConfigSource {
 
-    private final LinkedHashMap<String, Object> configMapping = new LinkedHashMap<>();
+    private final ObjectNode configMapping = JsonNodeFactory.instance.objectNode();
 
     /**
      * <p>Constructor for JsonFileConfigSource.</p>
@@ -33,16 +33,22 @@ public final class JsonFileConfigSource implements ScxConfigSource {
             if (Files.notExists(jsonPath)) {
                 throw new JsonConfigFileMissingException();
             }
-            var rawMap = ObjectUtils.jsonMapper().readValue(jsonPath.toFile(), ObjectUtils.MAP_TYPE);
-            configMapping.putAll(ObjectUtils.flatMap(rawMap));
-            Ansi.out().brightBlue("Y 已加载配置文件 : " + jsonPath).println();
-        } catch (Exception e) {
-            if (e instanceof JsonConfigFileMissingException) {
-                Ansi.out().red("N 配置文件已丢失!!! 请确保配置文件存在 : " + jsonPath).println();
-            } else if (e instanceof JsonProcessingException) {
-                Ansi.out().red("N 配置文件已损坏!!! 请确保配置文件格式正确 : " + jsonPath).println();
+            var rawMap = ObjectUtils.jsonMapper().readTree(jsonPath.toFile());
+            if (rawMap instanceof ObjectNode objectNode) {
+                configMapping.setAll(objectNode);
+                Ansi.out().brightBlue("Y 已加载配置文件 : " + jsonPath).println();
             } else {
-                e.printStackTrace();
+                throw new JsonConfigFileNotObjectException();
+            }
+        } catch (Exception e) {
+            switch (e) {
+                case JsonConfigFileMissingException jsonConfigFileMissingException ->
+                        Ansi.out().red("N 配置文件已丢失!!! 请确保配置文件存在 : " + jsonPath).println();
+                case JsonProcessingException jsonProcessingException ->
+                        Ansi.out().red("N 配置文件已损坏!!! 请确保配置文件格式正确 : " + jsonPath).println();
+                case JsonConfigFileNotObjectException jsonConfigFileNotObjectException ->
+                        Ansi.out().red("N 配置文件必须为 Object 格式!!! 请确保配置文件格式正确 : " + jsonPath).println();
+                default -> e.printStackTrace();
             }
         }
     }
@@ -57,11 +63,8 @@ public final class JsonFileConfigSource implements ScxConfigSource {
         return new JsonFileConfigSource(jsonPath);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public Map<String, Object> getConfigMapping() {
+    public ObjectNode configMapping() {
         return configMapping;
     }
 
@@ -69,6 +72,10 @@ public final class JsonFileConfigSource implements ScxConfigSource {
      * 配置文件丢失异常
      */
     private static class JsonConfigFileMissingException extends Exception {
+
+    }
+
+    private static class JsonConfigFileNotObjectException extends Exception {
 
     }
 

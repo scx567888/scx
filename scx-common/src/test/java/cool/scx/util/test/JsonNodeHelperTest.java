@@ -6,7 +6,7 @@ import cool.scx.util.ObjectUtils;
 import org.testng.annotations.Test;
 
 public class JsonNodeHelperTest {
-    
+
     public static void main(String[] args) {
         test1();
     }
@@ -14,9 +14,9 @@ public class JsonNodeHelperTest {
     @Test
     public static void test1() {
         ObjectNode objectNode = ObjectUtils.jsonMapper().createObjectNode();
-        JsonNodeHelper.set(objectNode,"a.b.c.d.e.f",new int[]{1,2,3,4});
+        JsonNodeHelper.set(objectNode, "a.b.c.d.e.f", new int[]{1, 2, 3, 4});
         System.out.println(objectNode);
-        System.out.println(JsonNodeHelper.get(objectNode,"a.b.c"));
+        System.out.println(JsonNodeHelper.get(objectNode, "a.b.c"));
     }
-    
+
 }

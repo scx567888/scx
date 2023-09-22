@@ -3,6 +3,10 @@ package cool.scx.util;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import java.io.IOException;
+
+import static cool.scx.util.ObjectUtils.jsonMapper;
+
 /**
  * 简易版 JsonPath
  */
@@ -30,7 +34,12 @@ public class JsonNodeHelper {
             if (i == paths.length - 1) {
                 put(jsonNode, path, object);
             } else {
-                jsonNode = jsonNode.putObject(path);
+                var n = jsonNode.get(path);
+                jsonNode = switch (n) {
+                    case null -> jsonNode.putObject(path);
+                    case ObjectNode nn -> nn;
+                    default -> throw new RuntimeException("路径中已有数据且不为 Object, 无法 set");
+                };
             }
         }
         return objectNode;
@@ -38,6 +47,14 @@ public class JsonNodeHelper {
 
     private static void put(ObjectNode objectNode, String fieldName, Object object) {
         objectNode.set(fieldName, ObjectUtils.convertValue(object, JsonNode.class));
+    }
+
+    public static void merge(ObjectNode a, ObjectNode b) {
+        try {
+            jsonMapper().readerForUpdating(a).readValue(b);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

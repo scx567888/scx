@@ -1,9 +1,9 @@
 package cool.scx.config.source_impl;
 
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import cool.scx.config.ScxConfigSource;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
+import cool.scx.util.JsonNodeHelper;
 
 /**
  * a
@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public final class ArgsConfigSource implements ScxConfigSource {
 
-    private final Map<String, Object> configMapping = new LinkedHashMap<>();
+    private final ObjectNode configMapping = JsonNodeFactory.instance.objectNode();
 
     /**
      * a
@@ -25,7 +25,7 @@ public final class ArgsConfigSource implements ScxConfigSource {
             if (arg.startsWith("--")) {
                 var strings = arg.substring(2).split("=");
                 if (strings.length == 2) {
-                    configMapping.put(strings[0], strings[1]);
+                    JsonNodeHelper.set(configMapping, strings[0], strings[1]);
                 }
             }
         }
@@ -41,11 +41,8 @@ public final class ArgsConfigSource implements ScxConfigSource {
         return new ArgsConfigSource(args);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public Map<String, Object> getConfigMapping() {
+    public ObjectNode configMapping() {
         return configMapping;
     }
 

@@ -1,6 +1,6 @@
 package cool.scx.config;
 
-import java.util.Map;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * 配置源
@@ -10,11 +10,6 @@ import java.util.Map;
  */
 public interface ScxConfigSource {
 
-    /**
-     * a
-     *
-     * @return a
-     */
-    Map<String, Object> getConfigMapping();
+    ObjectNode configMapping();
 
 }
