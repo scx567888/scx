@@ -207,7 +207,7 @@
         <!-- *********************** 以下为依赖包版本 *********************** -->
         <vertx.version>4.4.5</vertx.version>
         <jackson.version>2.15.2</jackson.version>
-        <spring-framework.version>6.0.11</spring-framework.version>
+        <spring-framework.version>6.0.12</spring-framework.version>
         <hikaricp.version>5.0.1</hikaricp.version>
         <freemarker.version>2.3.32</freemarker.version>
         <thumbnailator.version>0.4.20</thumbnailator.version>
