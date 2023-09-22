@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static cool.scx.util.ScxExceptionHelper.wrap;
 import static java.sql.ResultSet.CONCUR_READ_ONLY;
@@ -31,6 +32,7 @@ public final class SQLRunner {
      * a
      */
     private static final InheritableThreadLocal<Connection> CONNECTION_THREAD_LOCAL = new InheritableThreadLocal<>();
+    private final AtomicLong threadNumber = new AtomicLong(0);
 
     private final JDBCContext jdbcContext;
 
@@ -279,7 +281,7 @@ public final class SQLRunner {
      */
     public void autoTransaction(ScxRunnable<?> handler) {
         var promise = new CompletableFuture<Void>();
-        Thread.ofVirtual().name("autoTransaction-thread").start(() -> {
+        Thread.ofVirtual().name("scx-auto-transaction-thread-",threadNumber.getAndIncrement()).start(() -> {
             try (var con = getConnection(false)) {
                 CONNECTION_THREAD_LOCAL.set(con);
                 try {
@@ -308,7 +310,7 @@ public final class SQLRunner {
      */
     public <T> T autoTransaction(Callable<T> handler) {
         var promise = new CompletableFuture<T>();
-        Thread.ofVirtual().name("autoTransaction-thread").start(() -> {
+        Thread.ofVirtual().name("scx-auto-transaction-thread-",threadNumber.getAndIncrement()).start(() -> {
             try (var con = getConnection(false)) {
                 CONNECTION_THREAD_LOCAL.set(con);
                 try {
