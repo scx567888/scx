@@ -2,6 +2,7 @@ package cool.scx.mvc;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
+import cool.scx.util.JsonNodeHelper;
 import cool.scx.util.ObjectUtils;
 import io.vertx.core.MultiMap;
 import io.vertx.ext.web.RoutingContext;
@@ -66,18 +67,7 @@ public class ScxMvcHelper {
      * @return a {@link com.fasterxml.jackson.databind.JsonNode} object
      */
     public static JsonNode getFromJsonNode(String name, JsonNode jsonNode, boolean useAll) {
-        var tempValue = jsonNode;
-        if (!useAll) {
-            var split = name.split("\\.");
-            for (var s : split) {
-                if (tempValue != null) {
-                    tempValue = tempValue.get(s);
-                } else {
-                    break;
-                }
-            }
-        }
-        return tempValue;
+        return useAll ? jsonNode : JsonNodeHelper.get(jsonNode, name);
     }
 
     public static boolean responseCanUse(RoutingContext context) {
