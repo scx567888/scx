@@ -109,15 +109,13 @@ public final class Scx {
      * 执行模块启动的生命周期
      */
     private void startAllScxModules() {
-        if (this.scxFeatureConfig.get(ScxCoreFeature.SHOW_MODULE_LIFE_CYCLE_INFO)) {
-            for (var m : scxModules) {
+        for (var m : scxModules) {
+            if (this.scxFeatureConfig.get(ScxCoreFeature.SHOW_MODULE_LIFE_CYCLE_INFO)) {
                 Ansi.out().brightWhite("[").brightGreen("Starting").brightWhite("] " + m.name()).println();
-                m.start(this);
-                Ansi.out().brightWhite("[").brightGreen("Start OK").brightWhite("] " + m.name()).println();
             }
-        } else {
-            for (var m : scxModules) {
-                m.start(this);
+            m.start(this);
+            if (this.scxFeatureConfig.get(ScxCoreFeature.SHOW_MODULE_LIFE_CYCLE_INFO)) {
+                Ansi.out().brightWhite("[").brightGreen("Start OK").brightWhite("] " + m.name()).println();
             }
         }
     }
