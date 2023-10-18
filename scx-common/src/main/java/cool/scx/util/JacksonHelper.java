@@ -9,15 +9,17 @@ import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
-import static cool.scx.constant.ScxDateTimeFormatter.yyyy_MM_dd;
-import static cool.scx.constant.ScxDateTimeFormatter.yyyy_MM_dd_HH_mm_ss;
+import static cool.scx.constant.ScxDateTimeFormatter.*;
 
 /**
  * a
@@ -50,6 +52,9 @@ final class JacksonHelper {
 
         javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(yyyy_MM_dd));
         javaTimeModule.addDeserializer(LocalDate.class, new LocalDateDeserializer(yyyy_MM_dd));
+
+        javaTimeModule.addSerializer(LocalTime.class, new LocalTimeSerializer(HH_mm_ss));
+        javaTimeModule.addDeserializer(LocalTime.class, new LocalTimeDeserializer(HH_mm_ss));
         return javaTimeModule;
     }
 
