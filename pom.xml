@@ -206,7 +206,7 @@
         <vertx.version>4.4.6</vertx.version>
         <jackson.version>2.15.3</jackson.version>
         <spring-framework.version>6.0.13</spring-framework.version>
-        <hikaricp.version>5.0.1</hikaricp.version>
+        <hikaricp.version>5.1.0</hikaricp.version>
         <freemarker.version>2.3.32</freemarker.version>
         <thumbnailator.version>0.4.20</thumbnailator.version>
         <jasypt.version>1.9.3</jasypt.version>
