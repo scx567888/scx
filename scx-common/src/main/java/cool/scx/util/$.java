@@ -21,6 +21,24 @@ public final class $ {
         }
     }
 
+    /**
+     * 延时执行代码 , 这种简单的方式 相比 ScheduledExecutorService , 一般能实现更低的内存占用
+     *
+     * @param r 待运行的内容
+     * @param l 延时 (毫秒)
+     * @return 虚拟线程 可用 interrupt 实现终止
+     */
+    public static Thread setTimeout(Runnable r, long l) {
+        return Thread.ofVirtual().start(() -> {
+            try {
+                Thread.sleep(l);
+                r.run();
+            } catch (InterruptedException ignored) {
+
+            }
+        });
+    }
+
     public static CompletableFuture<Void> async(ScxRunnable<?> runnable) {
         var promise = new CompletableFuture<Void>();
         Thread.ofVirtual().start(() -> {
