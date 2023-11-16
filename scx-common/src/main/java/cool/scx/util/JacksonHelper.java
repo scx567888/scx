@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.cfg.MapperBuilder;
 import com.fasterxml.jackson.databind.introspect.AnnotatedMember;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
@@ -38,24 +39,24 @@ final class JacksonHelper {
      * 获取针对日期处理的 jackson module;
      * <br>
      * 仅仅是在 jackson-datatype-jsr310 包的基础上 添加了一些自定义的日期序列化格式
-     *
-     * @return a {@link com.fasterxml.jackson.datatype.jsr310.JavaTimeModule} object
      */
-    private static JavaTimeModule initJavaTimeModule() {
-        var javaTimeModule = new JavaTimeModule();
-        //因为其内部默认使用 ISO-8601 标准 作为日期处理格式
-        //如 DateTimeFormatter.ISO_LOCAL_DATE_TIME , DateTimeFormatter.ISO_LOCAL_TIME
-        //但是这里我们需要针对一些 常见的日期格式 如 [LocalDateTime] 进行更友好的序列化格式处理 所以这里使用 自定义的 DateTimeFormatter
+    private static class MyJavaTimeModule extends SimpleModule {
 
-        javaTimeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(yyyy_MM_dd_HH_mm_ss));
-        javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(yyyy_MM_dd_HH_mm_ss));
+        public MyJavaTimeModule() {
+            //因为其内部默认使用 ISO-8601 标准 作为日期处理格式
+            //如 DateTimeFormatter.ISO_LOCAL_DATE_TIME , DateTimeFormatter.ISO_LOCAL_TIME
+            //但是这里我们需要针对一些 常见的日期格式 如 [LocalDateTime] 进行更友好的序列化格式处理 所以这里使用 自定义的 DateTimeFormatter
 
-        javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(yyyy_MM_dd));
-        javaTimeModule.addDeserializer(LocalDate.class, new LocalDateDeserializer(yyyy_MM_dd));
+            this.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(yyyy_MM_dd_HH_mm_ss));
+            this.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(yyyy_MM_dd_HH_mm_ss));
 
-        javaTimeModule.addSerializer(LocalTime.class, new LocalTimeSerializer(HH_mm_ss));
-        javaTimeModule.addDeserializer(LocalTime.class, new LocalTimeDeserializer(HH_mm_ss));
-        return javaTimeModule;
+            this.addSerializer(LocalDate.class, new LocalDateSerializer(yyyy_MM_dd));
+            this.addDeserializer(LocalDate.class, new LocalDateDeserializer(yyyy_MM_dd));
+
+            this.addSerializer(LocalTime.class, new LocalTimeSerializer(HH_mm_ss));
+            this.addDeserializer(LocalTime.class, new LocalTimeDeserializer(HH_mm_ss));
+        }
+
     }
 
     /**
@@ -75,7 +76,8 @@ final class JacksonHelper {
         // 初始化一个 JsonMapper 构建器
         var objectMapper = mapperBuilder
                 // 注册 module 用来识别一些特定的类型
-                .addModule(initJavaTimeModule())
+                .addModule(new JavaTimeModule())
+                .addModule(new MyJavaTimeModule())
                 // 遇到未知属性是否抛出异常 (默认为 : true) 例如 json 中包含的属性 bean 中没有 这时会抛出异常
                 // 在此设置 false 表示遇到上述情况时不抛出异常
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
