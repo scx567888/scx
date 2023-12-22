@@ -29,7 +29,7 @@ import static java.lang.System.Logger.Level.WARNING;
  * @author scx567888
  * @version 1.17.8
  */
-final class ScxRouteRegistrar {
+public final class ScxRouteRegistrar {
 
     private static final Logger logger = System.getLogger(ScxRouteRegistrar.class.getName());
 
@@ -53,9 +53,9 @@ final class ScxRouteRegistrar {
     }
 
     private static List<ScxRouteHandler> initScxRouteHandlers(ScxMvc scxMvc, Object... objects) {
-        var filteredClassList = filterClass(objects);
+        var filteredObjectList = filterObject(objects);
         var handlers = new ArrayList<ScxRouteHandler>();
-        for (var c : filteredClassList) {
+        for (var c : filteredObjectList) {
             var methods = filterMethod(c);
             for (var m : methods) {
                 handlers.add(createScxRouteHandler(m, c, scxMvc));
@@ -123,8 +123,12 @@ final class ScxRouteRegistrar {
         return new ScxRouteHandler(m, bean, scxMvc);
     }
 
-    private static List<Object> filterClass(Object... objects) {
+    private static List<Object> filterObject(Object... objects) {
         return Arrays.stream(objects).filter(o -> isRoute(o.getClass())).toList();
+    }
+
+    public static List<Class<?>> filterClass(List<Class<?>> classList) {
+        return classList.stream().filter(ScxRouteRegistrar::isRoute).toList();
     }
 
     private static List<Method> filterMethod(Object object) {

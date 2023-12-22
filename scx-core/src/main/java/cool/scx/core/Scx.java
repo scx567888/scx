@@ -11,6 +11,8 @@ import cool.scx.data.jdbc.meta_data.SchemaHelper;
 import cool.scx.data.jdbc.sql.SQLRunner;
 import cool.scx.mvc.ScxMvc;
 import cool.scx.mvc.ScxMvcOptions;
+import cool.scx.mvc.ScxRouteRegistrar;
+import cool.scx.mvc.ScxWebSocketRouteRegistrar;
 import cool.scx.mvc.websocket.WebSocketRouter;
 import cool.scx.scheduler.ScxScheduler;
 import cool.scx.util.NetUtils;
@@ -155,7 +157,9 @@ public final class Scx {
         this.webSocketRouter = new WebSocketRouter();
         //3, 注册 路由
         var classList = Arrays.stream(this.scxModules()).flatMap(c -> c.classList().stream()).toList();
-        this.scxMvc.bindErrorHandler(this.scxHttpRouter).registerHttpRoutes(scxHttpRouter, beanFactory, classList).registerWebSocketRoutes(webSocketRouter, beanFactory, classList);
+        var httpRoutes = ScxRouteRegistrar.filterClass(classList).stream().map(beanFactory::getBean).toArray();
+        var webSocketRoutes = ScxWebSocketRouteRegistrar.filterClass(classList).stream().map(beanFactory::getBean).toArray();
+        this.scxMvc.bindErrorHandler(this.scxHttpRouter).registerHttpRoutes(scxHttpRouter, httpRoutes).registerWebSocketRoutes(webSocketRouter, webSocketRoutes);
         //4, 依次执行 模块的 start 生命周期 , 在这里我们可以操作 scxRouteRegistry, vertxRouter 等对象 "手动注册新路由" 或其他任何操作
         this.startAllScxModules();
         //5, 打印基本信息

@@ -28,8 +28,8 @@ public final class ScxWebSocketRouteRegistrar {
     }
 
     private static List<WebSocketRoute> initScxWebSocketRoutes(Object... objects) {
-        var filteredClassList = filterClass(objects);
-        var routeList = filteredClassList.stream().map(ScxWebSocketRouteRegistrar::createScxWebSocketRoute).toList();
+        var filteredObjectList = filterObject(objects);
+        var routeList = filteredObjectList.stream().map(ScxWebSocketRouteRegistrar::createScxWebSocketRoute).toList();
         return sortedScxWebSocketRoutes(routeList);
     }
 
@@ -41,10 +41,18 @@ public final class ScxWebSocketRouteRegistrar {
         return new WebSocketRoute(order, path, o);
     }
 
-    public static List<BaseWebSocketHandler> filterClass(Object... classList) {
+    public static List<BaseWebSocketHandler> filterObject(Object... classList) {
         return Arrays.stream(classList)
                 .filter(o -> isScxWebSocketRouteClass(o.getClass()))
                 .map(c -> (BaseWebSocketHandler) c)
+                .toList();
+    }
+
+    @SuppressWarnings("unchecked")
+    public static List<? extends Class<? extends BaseWebSocketHandler>> filterClass(List<Class<?>> classList) {
+        return classList.stream()
+                .filter(ScxWebSocketRouteRegistrar::isScxWebSocketRouteClass)
+                .map(c -> (Class<? extends BaseWebSocketHandler>) c)
                 .toList();
     }
 
