@@ -6,8 +6,8 @@ import cool.scx.mvc.websocket.WebSocketRoute;
 import cool.scx.mvc.websocket.WebSocketRouter;
 import cool.scx.util.URIBuilder;
 import cool.scx.util.reflect.ClassUtils;
-import org.springframework.beans.factory.BeanFactory;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -23,22 +23,29 @@ public final class ScxWebSocketRouteRegistrar {
 
     private final List<WebSocketRoute> routes;
 
-    public ScxWebSocketRouteRegistrar(BeanFactory beanFactory, List<Class<?>> classList) {
-        this.routes = initScxWebSocketRoutes(beanFactory, classList);
+    public ScxWebSocketRouteRegistrar(Object... objects) {
+        this.routes = initScxWebSocketRoutes(objects);
     }
 
-    private static List<WebSocketRoute> initScxWebSocketRoutes(BeanFactory beanFactory, List<Class<?>> classList) {
-        var filteredClassList = filterClass(classList);
-        var routeList = filteredClassList.stream().map(c -> createScxWebSocketRoute(beanFactory, c)).toList();
+    private static List<WebSocketRoute> initScxWebSocketRoutes(Object... objects) {
+        var filteredObjectList = filterObject(objects);
+        var routeList = filteredObjectList.stream().map(ScxWebSocketRouteRegistrar::createScxWebSocketRoute).toList();
         return sortedScxWebSocketRoutes(routeList);
     }
 
-    public static WebSocketRoute createScxWebSocketRoute(BeanFactory beanFactory, Class<? extends BaseWebSocketHandler> c) {
+    public static WebSocketRoute createScxWebSocketRoute(BaseWebSocketHandler o) {
+        var c = o.getClass();
         var scxWebSocketMapping = c.getAnnotation(ScxWebSocketRoute.class);
         var path = URIBuilder.addSlashStart(URIBuilder.join(scxWebSocketMapping.value()));
         var order = scxWebSocketMapping.order();
-        var baseWebSocketHandler = beanFactory.getBean(c);
-        return new WebSocketRoute(order, path, baseWebSocketHandler);
+        return new WebSocketRoute(order, path, o);
+    }
+
+    public static List<BaseWebSocketHandler> filterObject(Object... classList) {
+        return Arrays.stream(classList)
+                .filter(o -> isScxWebSocketRouteClass(o.getClass()))
+                .map(c -> (BaseWebSocketHandler) c)
+                .toList();
     }
 
     @SuppressWarnings("unchecked")
