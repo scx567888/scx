@@ -12,7 +12,7 @@
 
     <artifactId>scx</artifactId>
     <packaging>pom</packaging>
-    <version>2.5.0</version>
+    <version>2.5.1</version>
 
     <name>SCX</name>
     <url>https://github.com/scx567888/scx</url>
@@ -52,7 +52,6 @@
         <module>scx-data-jdbc-spy</module>
         <module>scx-data-jdbc-sqlite</module>
         <module>scx-data-mysql-x</module>
-        <module>scx-logging</module>
         <module>scx-mvc</module>
     </modules>
 
@@ -190,6 +189,12 @@
                 <version>${log4j2.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>cool.scx</groupId>
+                <artifactId>scx-logging</artifactId>
+                <version>${scx-logging.version}</version>
+            </dependency>
+
             <!-- TestNG 测试包 -->
             <dependency>
                 <groupId>org.testng</groupId>
@@ -203,18 +208,19 @@
     <properties>
 
         <!-- *********************** 以下为依赖包版本 *********************** -->
-        <vertx.version>4.5.0</vertx.version>
+        <vertx.version>4.5.1</vertx.version>
         <jackson.version>2.16.0</jackson.version>
-        <spring-framework.version>6.1.0</spring-framework.version>
+        <spring-framework.version>6.1.2</spring-framework.version>
         <hikaricp.version>5.1.0</hikaricp.version>
         <freemarker.version>2.3.32</freemarker.version>
         <thumbnailator.version>0.4.20</thumbnailator.version>
         <jasypt.version>1.9.3</jasypt.version>
         <mysql-connector-j.version>8.2.0</mysql-connector-j.version>
-        <sqlite-jdbc.version>3.44.0.0</sqlite-jdbc.version>
-        <jna.version>5.13.0</jna.version>
+        <sqlite-jdbc.version>3.44.1.0</sqlite-jdbc.version>
+        <jna.version>5.14.0</jna.version>
         <slf4j.version>2.0.9</slf4j.version>
         <log4j2.version>2.22.0</log4j2.version>
+        <scx-logging.version>2.5.0</scx-logging.version>
         <testng.version>7.8.0</testng.version>
 
     </properties>

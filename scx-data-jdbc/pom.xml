@@ -6,7 +6,7 @@
     <parent>
         <groupId>cool.scx</groupId>
         <artifactId>scx</artifactId>
-        <version>2.5.0</version>
+        <version>2.5.1</version>
     </parent>
 
     <artifactId>scx-data-jdbc</artifactId>
@@ -29,9 +29,8 @@
         <!-- ****************** 以下为测试依赖 ****************** -->
 
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>cool.scx</groupId>
             <artifactId>scx-logging</artifactId>
-            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
 
