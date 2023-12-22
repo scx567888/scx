@@ -52,7 +52,6 @@
         <module>scx-data-jdbc-spy</module>
         <module>scx-data-jdbc-sqlite</module>
         <module>scx-data-mysql-x</module>
-        <module>scx-logging</module>
         <module>scx-mvc</module>
     </modules>
 
@@ -190,6 +189,12 @@
                 <version>${log4j2.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>cool.scx</groupId>
+                <artifactId>scx-logging</artifactId>
+                <version>${scx-logging.version}</version>
+            </dependency>
+
             <!-- TestNG 测试包 -->
             <dependency>
                 <groupId>org.testng</groupId>
@@ -215,6 +220,7 @@
         <jna.version>5.13.0</jna.version>
         <slf4j.version>2.0.9</slf4j.version>
         <log4j2.version>2.21.1</log4j2.version>
+        <scx-logging.version>2.5.0</scx-logging.version>
         <testng.version>7.8.0</testng.version>
 
     </properties>
