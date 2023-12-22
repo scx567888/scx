@@ -89,9 +89,9 @@ public final class ScxRouteHandler implements Handler<RoutingContext> {
      * @param scxMvc   a
      * @param instance ex
      */
-    ScxRouteHandler(Method method, Class<?> clazz, Object instance, ScxMvc scxMvc) {
+    ScxRouteHandler(Method method, Object instance, ScxMvc scxMvc) {
         this.scxMvc = scxMvc;
-        this.clazz = clazz;
+        this.clazz = instance.getClass();
         this.method = method;
         this.method.setAccessible(true);
         this.isVoid = method.getReturnType().equals(void.class);

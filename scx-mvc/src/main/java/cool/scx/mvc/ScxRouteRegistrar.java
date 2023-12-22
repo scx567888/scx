@@ -9,7 +9,6 @@ import cool.scx.util.reflect.MethodUtils;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.impl.RouteImpl;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.stereotype.Controller;
 
 import java.lang.System.Logger;
@@ -49,17 +48,17 @@ final class ScxRouteRegistrar {
     /**
      * 扫描所有被 ScxMapping注解标记的方法 并封装为 ScxMappingHandler.
      */
-    public ScxRouteRegistrar(ScxMvc scxMvc, BeanFactory beanFactory, List<Class<?>> classList) {
-        this.scxRouteHandlers = initScxRouteHandlers(scxMvc, beanFactory, classList);
+    public ScxRouteRegistrar(ScxMvc scxMvc, Object... objects) {
+        this.scxRouteHandlers = initScxRouteHandlers(scxMvc, objects);
     }
 
-    private static List<ScxRouteHandler> initScxRouteHandlers(ScxMvc scxMvc, BeanFactory beanFactory, List<Class<?>> classList) {
-        var filteredClassList = filterClass(classList);
+    private static List<ScxRouteHandler> initScxRouteHandlers(ScxMvc scxMvc, Object... objects) {
+        var filteredClassList = filterClass(objects);
         var handlers = new ArrayList<ScxRouteHandler>();
         for (var c : filteredClassList) {
             var methods = filterMethod(c);
             for (var m : methods) {
-                handlers.add(createScxRouteHandler(m, c, beanFactory, scxMvc));
+                handlers.add(createScxRouteHandler(m, c, scxMvc));
             }
         }
         return sortedScxRouteHandlers(handlers);
@@ -120,17 +119,16 @@ final class ScxRouteRegistrar {
         return list.stream().peek(c -> c.setRouteState(getRouteState(tempRouter.route(c.originalUrl)))).toList();
     }
 
-    private static ScxRouteHandler createScxRouteHandler(Method m, Class<?> c, BeanFactory beanFactory, ScxMvc scxMvc) {
-        var bean = beanFactory.getBean(c);
-        return new ScxRouteHandler(m, c, bean, scxMvc);
+    private static ScxRouteHandler createScxRouteHandler(Method m, Object bean, ScxMvc scxMvc) {
+        return new ScxRouteHandler(m, bean, scxMvc);
     }
 
-    private static List<Class<?>> filterClass(List<Class<?>> classList) {
-        return classList.stream().filter(ScxRouteRegistrar::isRoute).toList();
+    private static List<Object> filterClass(Object... objects) {
+        return Arrays.stream(objects).filter(o -> isRoute(o.getClass())).toList();
     }
 
-    private static List<Method> filterMethod(Class<?> clazz) {
-        return Arrays.stream(MethodUtils.findMethods(clazz)).filter(ScxRouteRegistrar::isRoute).toList();
+    private static List<Method> filterMethod(Object object) {
+        return Arrays.stream(MethodUtils.findMethods(object.getClass())).filter(ScxRouteRegistrar::isRoute).toList();
     }
 
     /**

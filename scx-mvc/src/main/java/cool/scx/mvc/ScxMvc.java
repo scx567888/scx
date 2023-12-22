@@ -16,7 +16,6 @@ import cool.scx.util.ScxExceptionHelper;
 import io.vertx.core.Handler;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
-import org.springframework.beans.factory.BeanFactory;
 
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
@@ -89,13 +88,13 @@ public final class ScxMvc {
         ROUTING_CONTEXT_THREAD_LOCAL.remove();
     }
 
-    public ScxMvc registerHttpRoutes(Router router, BeanFactory beanFactory, List<Class<?>> classList) {
-        new ScxRouteRegistrar(this, beanFactory, classList).registerRoute(router);
+    public ScxMvc registerHttpRoutes(Router router, Object... objects) {
+        new ScxRouteRegistrar(this, objects).registerRoute(router);
         return this;
     }
 
-    public ScxMvc registerWebSocketRoutes(WebSocketRouter router, BeanFactory beanFactory, List<Class<?>> classList) {
-        new ScxWebSocketRouteRegistrar(beanFactory, classList).registerRoute(router);
+    public ScxMvc registerWebSocketRoutes(WebSocketRouter router, Object... objects) {
+        new ScxWebSocketRouteRegistrar(objects).registerRoute(router);
         return this;
     }
 
