@@ -226,7 +226,7 @@
         <slf4j.version>2.0.9</slf4j.version>
         <log4j2.version>2.22.0</log4j2.version>
         <scx-common.version>2.5.0</scx-common.version>
-        <scx-logging.version>2.5.0</scx-logging.version>
+        <scx-logging.version>2.5.2</scx-logging.version>
         <testng.version>7.8.0</testng.version>
 
     </properties>
