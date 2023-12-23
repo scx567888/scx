@@ -51,7 +51,6 @@
         <module>scx-data-jdbc-spy</module>
         <module>scx-data-jdbc-sqlite</module>
         <module>scx-data-mysql-x</module>
-        <module>scx-mvc</module>
     </modules>
 
     <build>
@@ -196,6 +195,12 @@
 
             <dependency>
                 <groupId>cool.scx</groupId>
+                <artifactId>scx-mvc</artifactId>
+                <version>${scx-mvc.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cool.scx</groupId>
                 <artifactId>scx-logging</artifactId>
                 <version>${scx-logging.version}</version>
             </dependency>
@@ -226,6 +231,7 @@
         <slf4j.version>2.0.9</slf4j.version>
         <log4j2.version>2.22.0</log4j2.version>
         <scx-common.version>2.5.1</scx-common.version>
+        <scx-mvc.version>2.5.1</scx-mvc.version>
         <scx-logging.version>2.5.2</scx-logging.version>
         <testng.version>7.8.0</testng.version>
 
