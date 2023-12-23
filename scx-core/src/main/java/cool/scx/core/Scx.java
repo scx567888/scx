@@ -173,7 +173,7 @@ public final class Scx {
         var httpServerOptions = new HttpServerOptions(this.defaultHttpServerOptions);
         if (this.scxOptions.isHttpsEnabled()) {
             httpServerOptions.setSsl(true)
-                    .setKeyStoreOptions(new JksOptions()
+                    .setKeyCertOptions(new JksOptions()
                             .setPath(this.scxOptions.sslPath().toString())
                             .setPassword(this.scxOptions.sslPassword()));
         }
