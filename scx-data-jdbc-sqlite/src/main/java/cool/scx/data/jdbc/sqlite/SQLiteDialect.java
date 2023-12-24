@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static cool.scx.util.StringUtils.notBlank;
-import static cool.scx.util.StringUtils.startsWithIgnoreCase;
 
 /**
  * @see <a href="https://www.sqlite.org/lang_createtable.html">https://www.sqlite.org/lang_createtable.html</a>
@@ -31,6 +30,7 @@ public class SQLiteDialect extends Dialect {
     static final Field CoreStatement_sql;
     static final Field CoreStatement_batch;
     static final Field CorePreparedStatement_batchQueryCount;
+    private static final org.sqlite.JDBC DRIVER;
 
     static {
         try {
@@ -41,6 +41,11 @@ public class SQLiteDialect extends Dialect {
             CoreStatement_batch.setAccessible(true);
             CorePreparedStatement_batchQueryCount.setAccessible(true);
         } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            DRIVER = new org.sqlite.JDBC();
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -69,7 +74,7 @@ public class SQLiteDialect extends Dialect {
 
     @Override
     public boolean canHandle(String url) {
-        return startsWithIgnoreCase(url, "jdbc:sqlite:");
+        return DRIVER.acceptsURL(url);
     }
 
     @Override

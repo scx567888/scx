@@ -8,8 +8,11 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 import static cool.scx.data.jdbc.dialect.DialectSelector.findDialect;
+import static cool.scx.util.StringUtils.startsWithIgnoreCase;
 
 public class SpyDriver implements Driver {
+
+    public static final String PREFIX = "ScxSpy:";
 
     static {
         try {
@@ -28,7 +31,7 @@ public class SpyDriver implements Driver {
 
     @Override
     public boolean acceptsURL(String url) {
-        return url != null && url.startsWith("ScxSpy:");
+        return url != null && startsWithIgnoreCase(url, PREFIX);
     }
 
     @Override
@@ -57,7 +60,7 @@ public class SpyDriver implements Driver {
     }
 
     private String extractRealUrl(String url) {
-        return acceptsURL(url) ? url.replace("ScxSpy:", "") : url;
+        return acceptsURL(url) ? url.substring(0, PREFIX.length()) : url;
     }
 
 }
