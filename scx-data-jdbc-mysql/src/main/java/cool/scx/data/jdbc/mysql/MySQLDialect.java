@@ -8,7 +8,6 @@ import com.mysql.cj.jdbc.MysqlDataSource;
 import cool.scx.data.jdbc.dialect.Dialect;
 import cool.scx.data.jdbc.mapping.Column;
 import cool.scx.data.jdbc.mapping.Table;
-import cool.scx.util.StringUtils;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -25,6 +24,7 @@ import static cool.scx.util.StringUtils.notBlank;
 public class MySQLDialect extends Dialect {
 
     private static final Map<Class<?>, MysqlType> DEFAULT_MYSQL_TYPES;
+    private static final com.mysql.cj.jdbc.NonRegisteringDriver DRIVER;
 
     static {
         DEFAULT_MYSQL_TYPES = new HashMap<>();
@@ -46,6 +46,12 @@ public class MySQLDialect extends Dialect {
             var mysqlDriverDefaultMysqlTypes = (Map<Class<?>, MysqlType>) f.get(null);
             DEFAULT_MYSQL_TYPES.putAll(mysqlDriverDefaultMysqlTypes);
         } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+
+        try {
+            DRIVER = new com.mysql.cj.jdbc.NonRegisteringDriver();
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
@@ -76,7 +82,11 @@ public class MySQLDialect extends Dialect {
 
     @Override
     public boolean canHandle(String url) {
-        return StringUtils.startsWithIgnoreCase(url, "jdbc:mysql:");
+        try {
+            return DRIVER.acceptsURL(url);
+        } catch (SQLException e) {
+            return false;
+        }
     }
 
     @Override
