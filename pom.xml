@@ -233,7 +233,7 @@
         <scx-common.version>2.5.1</scx-common.version>
         <scx-mvc.version>2.5.1</scx-mvc.version>
         <scx-logging.version>2.5.2</scx-logging.version>
-        <testng.version>7.8.0</testng.version>
+        <testng.version>7.9.0</testng.version>
 
     </properties>
 
