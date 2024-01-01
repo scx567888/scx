@@ -16,6 +16,7 @@ import cool.scx.core.enumeration.ScxCoreFeature;
 import cool.scx.data.jdbc.annotation.Table;
 import cool.scx.data.jdbc.dialect.DialectSelector;
 import cool.scx.data.jdbc.spy.Spy;
+import cool.scx.logging.ScxLoggerConfig;
 import cool.scx.logging.ScxLoggerFactory;
 import cool.scx.logging.recorder.ConsoleRecorder;
 import cool.scx.logging.recorder.FileRecorder;
@@ -241,7 +242,7 @@ public final class ScxHelper {
         var defaultStackTrace = scxConfig.get("scx.logging.default.stack-trace", DefaultValueHandler.of(false));
 
         //设置默认的 config 这里我们先清除所有的 Recorders
-        var defaultConfig = ScxLoggerFactory.defaultConfig().clearRecorders();
+        var defaultConfig = ScxLoggerFactory.rootConfig().clearRecorders();
         defaultConfig.setLevel(defaultLevel);
         if (defaultType == LoggingType.CONSOLE || defaultType == LoggingType.BOTH) {
             defaultConfig.addRecorder(new ConsoleRecorder());
@@ -262,7 +263,7 @@ public final class ScxHelper {
                     var type = toType(logger.get("type"));
                     var storedDirectory = StringUtils.notBlank(logger.get("stored-directory")) ? scxEnvironment.getPathByAppRoot(logger.get("stored-directory")) : null;
                     var stackTrace = ObjectUtils.convertValue(logger.get("stack-trace"), Boolean.class);
-                    var config = ScxLoggerFactory.getLogger(name).config();
+                    var config = new ScxLoggerConfig();
                     config.setLevel(level);
                     if (type == LoggingType.CONSOLE || type == LoggingType.BOTH) {
                         config.addRecorder(new ConsoleRecorder());
@@ -272,6 +273,7 @@ public final class ScxHelper {
                         config.addRecorder(new FileRecorder(storedDirectory != null ? storedDirectory : defaultStoredDirectory));
                     }
                     config.setStackTrace(stackTrace);
+                    ScxLoggerFactory.setConfig(name, config);
                 }
             }
         }

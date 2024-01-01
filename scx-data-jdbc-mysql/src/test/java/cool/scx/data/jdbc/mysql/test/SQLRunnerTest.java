@@ -33,7 +33,7 @@ public class SQLRunnerTest {
     private static final String tableName = "`scx_sql_test`.`t1`";
 
     static {
-        ScxLoggerFactory.defaultConfig().setLevel(DEBUG);
+        ScxLoggerFactory.rootConfig().setLevel(DEBUG);
     }
 
     public static void main(String[] args) {

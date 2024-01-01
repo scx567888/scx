@@ -18,7 +18,7 @@ public class MySQLXDaoTest {
     public static final String databaseName = "scx_dao_test";
 
     static {
-        ScxLoggerFactory.defaultConfig().setLevel(DEBUG);
+        ScxLoggerFactory.rootConfig().setLevel(DEBUG);
     }
 
     public static void main(String[] args) {
