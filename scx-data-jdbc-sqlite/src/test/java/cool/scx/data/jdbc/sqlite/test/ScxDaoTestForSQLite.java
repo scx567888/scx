@@ -31,7 +31,7 @@ public class ScxDaoTestForSQLite {
     public static Path AppRoot;
 
     static {
-        ScxLoggerFactory.defaultConfig().setLevel(DEBUG);
+        ScxLoggerFactory.rootConfig().setLevel(DEBUG);
         try {
             AppRoot = ClassUtils.getAppRoot(ClassUtils.getCodeSource(ScxDaoTestForSQLite.class));
             TempSQLite = AppRoot.resolve("temp").resolve("temp.sqlite");

@@ -32,7 +32,7 @@ public class SQLRunnerTestForSQLite {
     private static final String tableName = "t1";
 
     static {
-        ScxLoggerFactory.defaultConfig().setLevel(DEBUG);
+        ScxLoggerFactory.rootConfig().setLevel(DEBUG);
     }
 
     public static void main(String[] args) {
