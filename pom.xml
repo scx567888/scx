@@ -228,7 +228,7 @@
         <mysql-connector-j.version>8.2.0</mysql-connector-j.version>
         <sqlite-jdbc.version>3.44.1.0</sqlite-jdbc.version>
         <jna.version>5.14.0</jna.version>
-        <slf4j.version>2.0.10</slf4j.version>
+        <slf4j.version>2.0.11</slf4j.version>
         <log4j2.version>2.22.1</log4j2.version>
         <scx-common.version>2.6.1</scx-common.version>
         <scx-mvc.version>2.6.2</scx-mvc.version>
