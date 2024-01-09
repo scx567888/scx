@@ -103,7 +103,7 @@ public class WebSiteController {
      * @return 页面
      * @throws java.io.IOException if any.
      */
-    @ScxRoute(value = "/", methods = HttpMethod.GET, order = 10)
+    @ScxRoute(value = "", methods = HttpMethod.GET, order = 10)
     public Html TestIndex(RoutingContext c) throws IOException {
         System.err.println("最后一次匹配的路由" + c.request().path());
         Html index = Html.of("index");
@@ -118,7 +118,7 @@ public class WebSiteController {
      * @param c a
      * @throws IOException a
      */
-    @ScxRoute(value = "/", methods = HttpMethod.GET, order = 5)
+    @ScxRoute(value = "", methods = HttpMethod.GET, order = 5)
     public void TestIndex1(RoutingContext c) throws IOException {
         System.err.println("第二个匹配的路由" + c.request().path());
         c.put("name", "小明");

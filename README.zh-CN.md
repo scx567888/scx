@@ -97,8 +97,8 @@ public class YourModule extends ScxModule {
     }
 
     // 此处的 @ScxRoute 注解用来表示这是一个具体的 WebHandler
-    // 路径为 "/" , 请求方法为 GET
-    @ScxRoute(value = "/", methods = HttpMethod.GET)
+    // 路径为 "" , 请求方法为 GET
+    @ScxRoute(value = "", methods = HttpMethod.GET)
     public String helloWorld() {
         // 向页面返回的具体内容
         return "Hello World";
