@@ -97,8 +97,8 @@ public class YourModule extends ScxModule {
     }
 
     // This @ScxRoute indicate this method is a WebHandler 
-    // The path is "/" and the request method is GET
-    @ScxRoute(value = "/", methods = HttpMethod.GET)
+    // The path is "" and the request method is GET
+    @ScxRoute(value = "", methods = HttpMethod.GET)
     public String helloWorld() {
         // The content that will be sent to the client 
         return "Hello World";
