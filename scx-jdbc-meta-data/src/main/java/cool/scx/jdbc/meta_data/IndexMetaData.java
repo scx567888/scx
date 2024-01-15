@@ -1,4 +1,4 @@
-package cool.scx.data.jdbc.meta_data;
+package cool.scx.jdbc.meta_data;
 
 import cool.scx.jdbc.mapping.Index;
 

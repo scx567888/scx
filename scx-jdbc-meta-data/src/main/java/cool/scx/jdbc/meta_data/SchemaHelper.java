@@ -1,4 +1,4 @@
-package cool.scx.data.jdbc.meta_data;
+package cool.scx.jdbc.meta_data;
 
 import cool.scx.jdbc.JDBCContext;
 import cool.scx.jdbc.dialect.Dialect;
@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static cool.scx.jdbc.dialect.DialectSelector.findDialect;
-import static cool.scx.data.jdbc.meta_data.MetaDataHelper.initTables;
-import static cool.scx.data.jdbc.meta_data.MetaDataHelper.toTablesMap;
+import static cool.scx.jdbc.meta_data.MetaDataHelper.initTables;
+import static cool.scx.jdbc.meta_data.MetaDataHelper.toTablesMap;
 
 /**
  * 架构管理工具

@@ -12,10 +12,10 @@
     <artifactId>scx-jdbc-meta-data</artifactId>
     <packaging>jar</packaging>
 
-    <name>SCX Data JDBC Meta Data</name>
+    <name>SCX JDBC Meta Data</name>
     <url>https://github.com/scx567888/scx</url>
     <description>
-        SCX Data JDBC Meta Data
+        SCX JDBC Meta Data
     </description>
 
     <dependencies>
