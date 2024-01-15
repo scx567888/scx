@@ -1,4 +1,4 @@
-package cool.scx.data.jdbc.sql;
+package cool.scx.jdbc.sql;
 
 /**
  * 无参数的 cool.scx.sql
