@@ -1,13 +1,13 @@
-package cool.scx.data.jdbc.mysql.test;
+package cool.scx.jdbc.mysql.test;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
-import cool.scx.data.jdbc.JDBCContext;
-import cool.scx.data.jdbc.mysql.test.bean.Student;
-import cool.scx.data.jdbc.mysql.test.bean.StudentRecord;
-import cool.scx.data.jdbc.result_handler.ResultHandler;
-import cool.scx.data.jdbc.sql.SQL;
-import cool.scx.data.jdbc.sql.SQLRunner;
-import cool.scx.data.jdbc.sql.UpdateResult;
+import cool.scx.jdbc.JDBCContext;
+import cool.scx.jdbc.mysql.test.bean.Student;
+import cool.scx.jdbc.mysql.test.bean.StudentRecord;
+import cool.scx.jdbc.result_handler.ResultHandler;
+import cool.scx.jdbc.sql.SQL;
+import cool.scx.jdbc.sql.SQLRunner;
+import cool.scx.jdbc.sql.UpdateResult;
 import cool.scx.logging.ScxLoggerFactory;
 import cool.scx.util.FileUtils;
 import cool.scx.util.ObjectUtils;
@@ -20,12 +20,12 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.mysql.cj.conf.PropertyKey.*;
-import static cool.scx.data.jdbc.result_handler.ResultHandler.ofBeanList;
-import static cool.scx.data.jdbc.result_handler.ResultHandler.ofMapList;
-import static cool.scx.data.jdbc.sql.SQL.ofNormal;
+import static cool.scx.jdbc.result_handler.ResultHandler.ofBeanList;
+import static cool.scx.jdbc.result_handler.ResultHandler.ofMapList;
+import static cool.scx.jdbc.sql.SQL.ofNormal;
 import static java.lang.System.Logger.Level.DEBUG;
 
-public class SQLRunnerTest {
+public class SQLRunnerTestForMySQL {
 
     private static final String databaseName = "scx_sql_test";
     private static final DataSource dataSource = getMySQLDataSource();

@@ -1,4 +1,4 @@
-package cool.scx.data.jdbc.mysql.test.bean;
+package cool.scx.jdbc.mysql.test.bean;
 
 public record StudentRecord(String name, Integer age, Boolean sex) {
 
