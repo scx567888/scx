@@ -1,6 +1,6 @@
-package cool.scx.data.jdbc.result_handler;
+package cool.scx.jdbc.result_handler;
 
-import cool.scx.data.jdbc.dialect.Dialect;
+import cool.scx.jdbc.dialect.Dialect;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
