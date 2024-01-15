@@ -45,11 +45,12 @@
         <module>scx-config</module>
         <module>scx-core</module>
         <module>scx-data-jdbc</module>
-        <module>scx-data-jdbc-meta-data</module>
-        <module>scx-data-jdbc-mysql</module>
-        <module>scx-data-jdbc-spy</module>
-        <module>scx-data-jdbc-sqlite</module>
         <module>scx-data-mysql-x</module>
+        <module>scx-jdbc</module>
+        <module>scx-jdbc-meta-data</module>
+        <module>scx-jdbc-spy</module>
+        <module>scx-jdbc-mysql</module>
+        <module>scx-jdbc-sqlite</module>
     </modules>
 
     <build>

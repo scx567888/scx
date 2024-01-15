@@ -11,7 +11,7 @@ import cool.scx.core.test.car.CarOwner;
 import cool.scx.core.test.car.CarService;
 import cool.scx.core.test.person.Person;
 import cool.scx.core.test.person.PersonService;
-import cool.scx.data.jdbc.sql.SQL;
+import cool.scx.jdbc.sql.SQL;
 import cool.scx.data.query.WhereOption;
 import cool.scx.http_client.ScxHttpClientHelper;
 import cool.scx.http_client.body.FormData;

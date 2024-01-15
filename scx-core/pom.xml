@@ -63,13 +63,13 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>scx-data-jdbc-meta-data</artifactId>
+            <artifactId>scx-jdbc-meta-data</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>scx-data-jdbc-spy</artifactId>
+            <artifactId>scx-jdbc-spy</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -87,14 +87,14 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>scx-data-jdbc-mysql</artifactId>
+            <artifactId>scx-jdbc-mysql</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>scx-data-jdbc-sqlite</artifactId>
+            <artifactId>scx-jdbc-sqlite</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>

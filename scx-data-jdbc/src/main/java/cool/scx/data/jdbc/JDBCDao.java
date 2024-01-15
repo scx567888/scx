@@ -3,15 +3,17 @@ package cool.scx.data.jdbc;
 import cool.scx.data.Dao;
 import cool.scx.data.FieldFilter;
 import cool.scx.data.Query;
-import cool.scx.data.jdbc.bean_builder.BeanBuilder;
-import cool.scx.data.jdbc.mapping.Column;
-import cool.scx.data.jdbc.mapping.Table;
+import cool.scx.jdbc.ColumnMapping;
+import cool.scx.jdbc.JDBCContext;
+import cool.scx.jdbc.bean_builder.BeanBuilder;
+import cool.scx.jdbc.mapping.Column;
+import cool.scx.jdbc.mapping.Table;
 import cool.scx.data.jdbc.parser.JDBCDaoGroupByParser;
 import cool.scx.data.jdbc.parser.JDBCDaoOrderByParser;
 import cool.scx.data.jdbc.parser.JDBCDaoWhereParser;
-import cool.scx.data.jdbc.result_handler.ResultHandler;
-import cool.scx.data.jdbc.sql.SQL;
-import cool.scx.data.jdbc.sql.SQLRunner;
+import cool.scx.jdbc.result_handler.ResultHandler;
+import cool.scx.jdbc.sql.SQL;
+import cool.scx.jdbc.sql.SQLRunner;
 import cool.scx.data.query.WhereClause;
 import cool.scx.util.RandomUtils;
 
@@ -24,8 +26,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static cool.scx.data.jdbc.FieldFilterHelper.filter;
-import static cool.scx.data.jdbc.result_handler.ResultHandler.*;
-import static cool.scx.data.jdbc.sql.SQLBuilder.*;
+import static cool.scx.jdbc.result_handler.ResultHandler.*;
+import static cool.scx.jdbc.sql.SQLBuilder.*;
 import static cool.scx.util.ArrayUtils.concat;
 
 /**
