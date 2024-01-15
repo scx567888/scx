@@ -44,7 +44,6 @@
     <modules>
         <module>scx-config</module>
         <module>scx-core</module>
-        <module>scx-data</module>
         <module>scx-data-jdbc</module>
         <module>scx-data-jdbc-meta-data</module>
         <module>scx-data-jdbc-mysql</module>
@@ -205,6 +204,12 @@
                 <version>${scx-logging.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>cool.scx</groupId>
+                <artifactId>scx-data</artifactId>
+                <version>${scx-data.version}</version>
+            </dependency>
+
             <!-- TestNG 测试包 -->
             <dependency>
                 <groupId>org.testng</groupId>
@@ -233,6 +238,7 @@
         <scx-common.version>2.6.2</scx-common.version>
         <scx-mvc.version>2.6.3</scx-mvc.version>
         <scx-logging.version>2.6.0</scx-logging.version>
+        <scx-data.version>2.5.5</scx-data.version>
         <testng.version>7.9.0</testng.version>
 
     </properties>
