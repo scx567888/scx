@@ -1,6 +1,6 @@
-package cool.scx.data.jdbc.sql;
+package cool.scx.jdbc.sql;
 
-import cool.scx.data.jdbc.dialect.Dialect;
+import cool.scx.jdbc.dialect.Dialect;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
