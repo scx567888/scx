@@ -1,4 +1,4 @@
-package cool.scx.data.jdbc.mapping;
+package cool.scx.jdbc.mapping;
 
 public interface Catalog {
 

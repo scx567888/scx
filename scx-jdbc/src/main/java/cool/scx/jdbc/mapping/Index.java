@@ -1,11 +1,11 @@
-package cool.scx.data.jdbc.mapping;
+package cool.scx.jdbc.mapping;
 
-public interface Key {
+public interface Index {
 
     /**
-     * key 名称
+     * 索引名称
      *
-     * @return a
+     * @return index
      */
     String name();
 
@@ -17,10 +17,10 @@ public interface Key {
     String columnName();
 
     /**
-     * 是否为主键
+     * 是否唯一值
      *
      * @return a
      */
-    boolean primaryKey();
+    boolean unique();
 
 }
