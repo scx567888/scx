@@ -1,11 +1,10 @@
-package cool.scx.data.jdbc.dialect;
+package cool.scx.jdbc.dialect;
 
-import cool.scx.data.jdbc.ColumnMapping;
-import cool.scx.data.jdbc.mapping.Column;
-import cool.scx.data.jdbc.mapping.Table;
-import cool.scx.data.jdbc.type_handler.TypeHandler;
-import cool.scx.data.jdbc.type_handler.TypeHandlerSelector;
-import cool.scx.data.query.WhereType;
+import cool.scx.jdbc.ColumnMapping;
+import cool.scx.jdbc.mapping.Column;
+import cool.scx.jdbc.mapping.Table;
+import cool.scx.jdbc.type_handler.TypeHandler;
+import cool.scx.jdbc.type_handler.TypeHandlerSelector;
 
 import javax.sql.DataSource;
 import java.lang.reflect.Type;
@@ -207,26 +206,6 @@ public abstract class Dialect {
 
     public final <T> TypeHandler<T> findTypeHandler(Type type) {
         return typeHandlerSelector.findTypeHandler(type);
-    }
-
-    public String getWhereKeyWord(WhereType whereType) {
-        return switch (whereType) {
-            case IS_NULL -> "IS NULL";
-            case IS_NOT_NULL -> "IS NOT NULL";
-            case EQUAL -> "=";
-            case NOT_EQUAL -> "<>";
-            case LESS_THAN -> "<";
-            case LESS_THAN_OR_EQUAL -> "<=";
-            case GREATER_THAN -> ">";
-            case GREATER_THAN_OR_EQUAL -> ">=";
-            case LIKE, LIKE_REGEX -> "LIKE";
-            case NOT_LIKE, NOT_LIKE_REGEX -> "NOT LIKE";
-            case IN -> "IN";
-            case NOT_IN -> "NOT IN";
-            case BETWEEN -> "BETWEEN";
-            case NOT_BETWEEN -> "NOT BETWEEN";
-            case JSON_CONTAINS -> "JSON_CONTAINS";
-        };
     }
 
 }

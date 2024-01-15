@@ -1,6 +1,6 @@
-package cool.scx.data.jdbc.dialect;
+package cool.scx.jdbc.dialect;
 
-import cool.scx.data.jdbc.mapping.Column;
+import cool.scx.jdbc.mapping.Column;
 
 import javax.sql.DataSource;
 import java.sql.Driver;
