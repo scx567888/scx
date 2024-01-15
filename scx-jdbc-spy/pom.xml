@@ -21,9 +21,8 @@
     <dependencies>
 
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>cool.scx</groupId>
             <artifactId>scx-jdbc</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <!-- ****************** 以下为测试依赖 ****************** -->
