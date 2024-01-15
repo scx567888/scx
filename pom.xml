@@ -46,8 +46,6 @@
         <module>scx-core</module>
         <module>scx-data-jdbc</module>
         <module>scx-data-mysql-x</module>
-        <module>scx-jdbc-meta-data</module>
-        <module>scx-jdbc-spy</module>
         <module>scx-jdbc-mysql</module>
         <module>scx-jdbc-sqlite</module>
     </modules>
@@ -216,6 +214,18 @@
                 <version>${scx-jdbc.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>cool.scx</groupId>
+                <artifactId>scx-jdbc-meta-data</artifactId>
+                <version>${scx-jdbc-meta-data.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cool.scx</groupId>
+                <artifactId>scx-jdbc-spy</artifactId>
+                <version>${scx-jdbc-spy.version}</version>
+            </dependency>
+
             <!-- TestNG 测试包 -->
             <dependency>
                 <groupId>org.testng</groupId>
@@ -246,6 +256,8 @@
         <scx-logging.version>2.6.0</scx-logging.version>
         <scx-data.version>2.5.5</scx-data.version>
         <scx-jdbc.version>0.0.1</scx-jdbc.version>
+        <scx-jdbc-meta-data.version>0.0.1</scx-jdbc-meta-data.version>
+        <scx-jdbc-spy.version>0.0.1</scx-jdbc-spy.version>
         <testng.version>7.9.0</testng.version>
 
     </properties>
