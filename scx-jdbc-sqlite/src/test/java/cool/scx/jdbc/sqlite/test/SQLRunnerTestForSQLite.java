@@ -1,38 +1,52 @@
-package cool.scx.data.jdbc.sqlite.test;
+package cool.scx.jdbc.sqlite.test;
 
-import cool.scx.data.jdbc.JDBCContext;
-import cool.scx.data.jdbc.result_handler.ResultHandler;
-import cool.scx.data.jdbc.sql.SQL;
-import cool.scx.data.jdbc.sql.SQLRunner;
-import cool.scx.data.jdbc.sql.UpdateResult;
-import cool.scx.data.jdbc.sqlite.test.bean.Student;
-import cool.scx.data.jdbc.sqlite.test.bean.StudentRecord;
+import cool.scx.jdbc.JDBCContext;
+import cool.scx.jdbc.result_handler.ResultHandler;
+import cool.scx.jdbc.sql.SQL;
+import cool.scx.jdbc.sql.SQLRunner;
+import cool.scx.jdbc.sql.UpdateResult;
+import cool.scx.jdbc.sqlite.test.bean.Student;
+import cool.scx.jdbc.sqlite.test.bean.StudentRecord;
 import cool.scx.logging.ScxLoggerFactory;
 import cool.scx.util.FileUtils;
 import cool.scx.util.ObjectUtils;
 import cool.scx.util.ScxExceptionHelper;
+import cool.scx.util.reflect.ClassUtils;
+import org.sqlite.SQLiteDataSource;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import javax.sql.DataSource;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static cool.scx.data.jdbc.result_handler.ResultHandler.ofBeanList;
-import static cool.scx.data.jdbc.result_handler.ResultHandler.ofMapList;
-import static cool.scx.data.jdbc.sql.SQL.ofNormal;
-import static cool.scx.data.jdbc.sqlite.test.ScxDaoTestForSQLite.getSQLiteDataSource;
+import static cool.scx.jdbc.result_handler.ResultHandler.ofBeanList;
+import static cool.scx.jdbc.result_handler.ResultHandler.ofMapList;
+import static cool.scx.jdbc.sql.SQL.ofNormal;
 import static java.lang.System.Logger.Level.DEBUG;
 
 public class SQLRunnerTestForSQLite {
 
+    public static final Path TempSQLite;
     private static final String databaseName = "scx_sql_test";
     private static final DataSource dataSource = getSQLiteDataSource();
     private static final SQLRunner sqlRunner = new JDBCContext(dataSource).sqlRunner();
     private static final String tableName = "t1";
+    public static Path AppRoot;
 
     static {
         ScxLoggerFactory.rootConfig().setLevel(DEBUG);
+        try {
+            AppRoot = ClassUtils.getAppRoot(ClassUtils.getCodeSource(SQLRunnerTestForSQLite.class));
+            TempSQLite = AppRoot.resolve("temp").resolve("temp.sqlite");
+            Files.createDirectories(TempSQLite.getParent());
+        } catch (URISyntaxException | IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static void main(String[] args) {
@@ -43,6 +57,12 @@ public class SQLRunnerTestForSQLite {
         test4();
         test5();
         test6();
+    }
+
+    public static DataSource getSQLiteDataSource() {
+        SQLiteDataSource sqLiteDataSource = new SQLiteDataSource();
+        sqLiteDataSource.setUrl("jdbc:sqlite:" + TempSQLite);
+        return sqLiteDataSource;
     }
 
     @BeforeTest

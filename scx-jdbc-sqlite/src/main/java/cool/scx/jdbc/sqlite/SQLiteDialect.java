@@ -1,8 +1,8 @@
-package cool.scx.data.jdbc.sqlite;
+package cool.scx.jdbc.sqlite;
 
-import cool.scx.data.jdbc.dialect.Dialect;
-import cool.scx.data.jdbc.mapping.Column;
-import cool.scx.data.jdbc.sqlite.type_handler.SQLiteLocalDateTimeTypeHandler;
+import cool.scx.jdbc.dialect.Dialect;
+import cool.scx.jdbc.mapping.Column;
+import cool.scx.jdbc.sqlite.type_handler.SQLiteLocalDateTimeTypeHandler;
 import org.sqlite.SQLiteDataSource;
 import org.sqlite.core.CorePreparedStatement;
 import org.sqlite.core.CoreStatement;

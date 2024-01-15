@@ -1,4 +1,4 @@
-package cool.scx.data.jdbc.sqlite.test.bean;
+package cool.scx.jdbc.sqlite.test.bean;
 
 public class Student {
     public String name;

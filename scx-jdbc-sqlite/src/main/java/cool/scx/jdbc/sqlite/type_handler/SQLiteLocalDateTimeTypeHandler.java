@@ -1,6 +1,6 @@
-package cool.scx.data.jdbc.sqlite.type_handler;
+package cool.scx.jdbc.sqlite.type_handler;
 
-import cool.scx.data.jdbc.type_handler.time.LocalDateTimeTypeHandler;
+import cool.scx.jdbc.type_handler.time.LocalDateTimeTypeHandler;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

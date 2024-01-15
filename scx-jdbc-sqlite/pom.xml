@@ -9,20 +9,20 @@
         <version>2.5.5</version>
     </parent>
 
-    <artifactId>scx-data-jdbc-sqlite</artifactId>
+    <artifactId>scx-jdbc-sqlite</artifactId>
     <packaging>jar</packaging>
 
-    <name>SCX Data JDBC SQLite</name>
+    <name>SCX JDBC SQLite</name>
     <url>https://github.com/scx567888/scx</url>
     <description>
-        SCX Data JDBC SQLite
+        SCX JDBC SQLite
     </description>
 
     <dependencies>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>scx-data-jdbc</artifactId>
+            <artifactId>scx-jdbc</artifactId>
             <version>${project.version}</version>
         </dependency>
 
