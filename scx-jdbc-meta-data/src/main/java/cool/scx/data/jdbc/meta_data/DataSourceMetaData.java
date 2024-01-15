@@ -1,6 +1,6 @@
 package cool.scx.data.jdbc.meta_data;
 
-import cool.scx.data.jdbc.mapping.DataSource;
+import cool.scx.jdbc.mapping.DataSource;
 
 import java.sql.Connection;
 import java.sql.SQLException;

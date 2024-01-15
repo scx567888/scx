@@ -1,6 +1,6 @@
 package cool.scx.data.jdbc.meta_data;
 
-import cool.scx.data.jdbc.mapping.Column;
+import cool.scx.jdbc.mapping.Column;
 
 public record ColumnMetaData(String table,
                              String name,

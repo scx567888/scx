@@ -1,6 +1,6 @@
 package cool.scx.data.jdbc.meta_data;
 
-import cool.scx.data.jdbc.result_handler.ResultHandler;
+import cool.scx.jdbc.result_handler.ResultHandler;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;

@@ -1,6 +1,6 @@
 package cool.scx.data.jdbc.meta_data;
 
-import cool.scx.data.jdbc.mapping.Table;
+import cool.scx.jdbc.mapping.Table;
 
 import java.sql.Connection;
 import java.util.HashMap;

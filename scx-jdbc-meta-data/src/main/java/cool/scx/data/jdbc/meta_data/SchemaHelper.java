@@ -1,17 +1,17 @@
 package cool.scx.data.jdbc.meta_data;
 
-import cool.scx.data.jdbc.JDBCContext;
-import cool.scx.data.jdbc.dialect.Dialect;
-import cool.scx.data.jdbc.mapping.Column;
-import cool.scx.data.jdbc.mapping.Table;
-import cool.scx.data.jdbc.sql.SQL;
+import cool.scx.jdbc.JDBCContext;
+import cool.scx.jdbc.dialect.Dialect;
+import cool.scx.jdbc.mapping.Column;
+import cool.scx.jdbc.mapping.Table;
+import cool.scx.jdbc.sql.SQL;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static cool.scx.data.jdbc.dialect.DialectSelector.findDialect;
+import static cool.scx.jdbc.dialect.DialectSelector.findDialect;
 import static cool.scx.data.jdbc.meta_data.MetaDataHelper.initTables;
 import static cool.scx.data.jdbc.meta_data.MetaDataHelper.toTablesMap;
 
