@@ -1,7 +1,7 @@
-package cool.scx.data.jdbc.sql;
+package cool.scx.jdbc.sql;
 
-import cool.scx.data.jdbc.JDBCContext;
-import cool.scx.data.jdbc.result_handler.ResultHandler;
+import cool.scx.jdbc.JDBCContext;
+import cool.scx.jdbc.result_handler.ResultHandler;
 import cool.scx.functional.ScxConsumer;
 import cool.scx.functional.ScxFunction;
 import cool.scx.functional.ScxRunnable;
