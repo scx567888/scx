@@ -2,8 +2,8 @@ package cool.scx.data.jdbc.parser;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.data.jdbc.AnnotationConfigTable;
-import cool.scx.data.jdbc.dialect.Dialect;
-import cool.scx.data.jdbc.sql.SQL;
+import cool.scx.jdbc.dialect.Dialect;
+import cool.scx.jdbc.sql.SQL;
 import cool.scx.data.query.WhereClause;
 import cool.scx.data.query.WhereOption.Info;
 import cool.scx.data.query.WhereType;
@@ -166,7 +166,23 @@ public class JDBCDaoWhereParser extends WhereParser {
 
     @Override
     public String getWhereKeyWord(WhereType whereType) {
-        return dialect.getWhereKeyWord(whereType);
+        return switch (whereType) {
+            case IS_NULL -> "IS NULL";
+            case IS_NOT_NULL -> "IS NOT NULL";
+            case EQUAL -> "=";
+            case NOT_EQUAL -> "<>";
+            case LESS_THAN -> "<";
+            case LESS_THAN_OR_EQUAL -> "<=";
+            case GREATER_THAN -> ">";
+            case GREATER_THAN_OR_EQUAL -> ">=";
+            case LIKE, LIKE_REGEX -> "LIKE";
+            case NOT_LIKE, NOT_LIKE_REGEX -> "NOT LIKE";
+            case IN -> "IN";
+            case NOT_IN -> "NOT IN";
+            case BETWEEN -> "BETWEEN";
+            case NOT_BETWEEN -> "NOT BETWEEN";
+            case JSON_CONTAINS -> "JSON_CONTAINS";
+        };
     }
 
 }

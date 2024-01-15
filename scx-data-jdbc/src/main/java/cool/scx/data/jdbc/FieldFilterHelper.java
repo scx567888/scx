@@ -1,7 +1,8 @@
 package cool.scx.data.jdbc;
 
 import cool.scx.data.FieldFilter;
-import cool.scx.data.jdbc.mapping.Table;
+import cool.scx.jdbc.ColumnMapping;
+import cool.scx.jdbc.mapping.Table;
 
 import java.util.ArrayList;
 import java.util.Arrays;

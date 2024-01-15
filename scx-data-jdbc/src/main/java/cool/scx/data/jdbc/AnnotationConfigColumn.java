@@ -1,6 +1,7 @@
 package cool.scx.data.jdbc;
 
 import cool.scx.data.jdbc.annotation.Column;
+import cool.scx.jdbc.ColumnMapping;
 
 import java.lang.reflect.Field;
 

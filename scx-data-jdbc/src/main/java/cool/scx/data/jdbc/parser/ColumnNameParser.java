@@ -1,7 +1,7 @@
 package cool.scx.data.jdbc.parser;
 
 
-import cool.scx.data.jdbc.mapping.Table;
+import cool.scx.jdbc.mapping.Table;
 
 import static cool.scx.util.StringUtils.notBlank;
 
