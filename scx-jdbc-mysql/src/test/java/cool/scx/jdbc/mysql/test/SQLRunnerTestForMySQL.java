@@ -1,7 +1,7 @@
 package cool.scx.jdbc.mysql.test;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
-import cool.scx.data.jdbc.spy.Spy;
+import cool.scx.jdbc.spy.Spy;
 import cool.scx.jdbc.JDBCContext;
 import cool.scx.jdbc.mysql.test.bean.Student;
 import cool.scx.jdbc.mysql.test.bean.StudentRecord;
