@@ -1,4 +1,4 @@
-package cool.scx.data.jdbc.bean_builder;
+package cool.scx.jdbc.bean_builder;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;

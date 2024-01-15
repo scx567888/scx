@@ -1,6 +1,6 @@
-package cool.scx.data.jdbc.bean_builder;
+package cool.scx.jdbc.bean_builder;
 
-import cool.scx.data.jdbc.type_handler.TypeHandler;
+import cool.scx.jdbc.type_handler.TypeHandler;
 import cool.scx.util.reflect.FieldUtils;
 
 import java.lang.reflect.Field;

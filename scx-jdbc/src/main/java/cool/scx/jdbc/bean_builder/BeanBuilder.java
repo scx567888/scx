@@ -1,6 +1,6 @@
-package cool.scx.data.jdbc.bean_builder;
+package cool.scx.jdbc.bean_builder;
 
-import cool.scx.data.jdbc.dialect.Dialect;
+import cool.scx.jdbc.dialect.Dialect;
 
 import java.lang.reflect.Field;
 import java.sql.ResultSet;
