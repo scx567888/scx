@@ -1,4 +1,4 @@
-package cool.scx.data.jdbc.sql;
+package cool.scx.jdbc.sql;
 
 import java.util.List;
 

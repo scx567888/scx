@@ -1,7 +1,7 @@
-package cool.scx.data.jdbc.sql;
+package cool.scx.jdbc.sql;
 
-import cool.scx.data.jdbc.dialect.Dialect;
-import cool.scx.data.jdbc.mapping.Column;
+import cool.scx.jdbc.dialect.Dialect;
+import cool.scx.jdbc.mapping.Column;
 
 import java.util.Arrays;
 
