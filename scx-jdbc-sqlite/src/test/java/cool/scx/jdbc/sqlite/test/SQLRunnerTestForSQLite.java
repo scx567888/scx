@@ -1,5 +1,6 @@
 package cool.scx.jdbc.sqlite.test;
 
+import cool.scx.data.jdbc.spy.Spy;
 import cool.scx.jdbc.JDBCContext;
 import cool.scx.jdbc.result_handler.ResultHandler;
 import cool.scx.jdbc.sql.SQL;
@@ -62,7 +63,7 @@ public class SQLRunnerTestForSQLite {
     public static DataSource getSQLiteDataSource() {
         SQLiteDataSource sqLiteDataSource = new SQLiteDataSource();
         sqLiteDataSource.setUrl("jdbc:sqlite:" + TempSQLite);
-        return sqLiteDataSource;
+        return Spy.wrap(sqLiteDataSource) ;
     }
 
     @BeforeTest

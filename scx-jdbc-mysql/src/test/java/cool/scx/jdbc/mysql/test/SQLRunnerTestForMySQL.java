@@ -1,6 +1,7 @@
 package cool.scx.jdbc.mysql.test;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
+import cool.scx.data.jdbc.spy.Spy;
 import cool.scx.jdbc.JDBCContext;
 import cool.scx.jdbc.mysql.test.bean.Student;
 import cool.scx.jdbc.mysql.test.bean.StudentRecord;
@@ -211,7 +212,7 @@ public class SQLRunnerTestForMySQL {
 
     }
 
-    private static MysqlDataSource getMySQLDataSource() {
+    private static DataSource getMySQLDataSource() {
         var mysqlDataSource = new MysqlDataSource();
         mysqlDataSource.setServerName("127.0.0.1");
         mysqlDataSource.setDatabaseName(databaseName);
@@ -222,7 +223,7 @@ public class SQLRunnerTestForMySQL {
         mysqlDataSource.getProperty(allowMultiQueries).setValue(true);
         mysqlDataSource.getProperty(rewriteBatchedStatements).setValue(true);
         mysqlDataSource.getProperty(createDatabaseIfNotExist).setValue(true);
-        return mysqlDataSource;
+        return Spy.wrap(mysqlDataSource);
     }
 
 }
