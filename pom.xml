@@ -50,6 +50,7 @@
         <module>scx-data-jdbc-spy</module>
         <module>scx-data-jdbc-sqlite</module>
         <module>scx-data-mysql-x</module>
+        <module>scx-jdbc</module>
     </modules>
 
     <build>
