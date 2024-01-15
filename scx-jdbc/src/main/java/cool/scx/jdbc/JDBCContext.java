@@ -1,11 +1,11 @@
-package cool.scx.data.jdbc;
+package cool.scx.jdbc;
 
-import cool.scx.data.jdbc.dialect.Dialect;
-import cool.scx.data.jdbc.sql.SQLRunner;
+import cool.scx.jdbc.dialect.Dialect;
+import cool.scx.jdbc.sql.SQLRunner;
 
 import javax.sql.DataSource;
 
-import static cool.scx.data.jdbc.dialect.DialectSelector.findDialect;
+import static cool.scx.jdbc.dialect.DialectSelector.findDialect;
 
 public class JDBCContext {
 
