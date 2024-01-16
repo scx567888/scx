@@ -44,8 +44,6 @@
     <modules>
         <module>scx-config</module>
         <module>scx-core</module>
-        <module>scx-data-mysql-x</module>
-        <module>scx-jdbc-sqlite</module>
     </modules>
 
     <build>
@@ -236,6 +234,12 @@
                 <version>${scx-jdbc-mysql.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>cool.scx</groupId>
+                <artifactId>scx-jdbc-sqlite</artifactId>
+                <version>${scx-jdbc-sqlite.version}</version>
+            </dependency>
+
             <!-- TestNG 测试包 -->
             <dependency>
                 <groupId>org.testng</groupId>
@@ -270,6 +274,7 @@
         <scx-jdbc-meta-data.version>0.0.1</scx-jdbc-meta-data.version>
         <scx-jdbc-spy.version>0.0.1</scx-jdbc-spy.version>
         <scx-jdbc-mysql.version>0.0.1</scx-jdbc-mysql.version>
+        <scx-jdbc-sqlite.version>0.0.1</scx-jdbc-sqlite.version>
         <testng.version>7.9.0</testng.version>
 
     </properties>
