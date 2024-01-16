@@ -226,7 +226,7 @@
         <scx-common.version>2.6.2</scx-common.version>
         <scx-mvc.version>2.6.3</scx-mvc.version>
         <scx-logging.version>2.6.0</scx-logging.version>
-        <scx-data.version>2.5.5</scx-data.version>
+        <scx-data.version>2.5.6</scx-data.version>
         <scx-jdbc.version>0.0.1</scx-jdbc.version>
         <scx-data-jdbc.version>2.5.6</scx-data-jdbc.version>
         <scx-jdbc-meta-data.version>0.0.1</scx-jdbc-meta-data.version>
