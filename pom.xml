@@ -44,7 +44,6 @@
     <modules>
         <module>scx-config</module>
         <module>scx-core</module>
-        <module>scx-data-jdbc</module>
         <module>scx-data-mysql-x</module>
         <module>scx-jdbc-sqlite</module>
     </modules>
@@ -215,6 +214,12 @@
 
             <dependency>
                 <groupId>cool.scx</groupId>
+                <artifactId>scx-data-jdbc</artifactId>
+                <version>${scx-data-jdbc.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cool.scx</groupId>
                 <artifactId>scx-jdbc-meta-data</artifactId>
                 <version>${scx-jdbc-meta-data.version}</version>
             </dependency>
@@ -261,6 +266,7 @@
         <scx-logging.version>2.6.0</scx-logging.version>
         <scx-data.version>2.5.5</scx-data.version>
         <scx-jdbc.version>0.0.1</scx-jdbc.version>
+        <scx-data-jdbc.version>2.5.6</scx-data-jdbc.version>
         <scx-jdbc-meta-data.version>0.0.1</scx-jdbc-meta-data.version>
         <scx-jdbc-spy.version>0.0.1</scx-jdbc-spy.version>
         <scx-jdbc-mysql.version>0.0.1</scx-jdbc-mysql.version>
