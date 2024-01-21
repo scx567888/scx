@@ -15,19 +15,19 @@ public abstract class BaseModel {
     /**
      * id
      */
-    @Column(primaryKey = true, autoIncrement = true)
+    @Column(primary = true, autoIncrement = true)
     public Long id;
 
     /**
      * 创建时间
      */
-    @Column(notNull = true, defaultValue = "CURRENT_TIMESTAMP", needIndex = true)
+    @Column(notNull = true, defaultExpression = "CURRENT_TIMESTAMP", index = true)
     public LocalDateTime createdDate;
 
     /**
      * 最后修改时间
      */
-    @Column(notNull = true, defaultValue = "CURRENT_TIMESTAMP", onUpdateValue = "CURRENT_TIMESTAMP", needIndex = true)
+    @Column(notNull = true, defaultExpression = "CURRENT_TIMESTAMP", onUpdate = "CURRENT_TIMESTAMP", index = true)
     public LocalDateTime updatedDate;
 
 }
