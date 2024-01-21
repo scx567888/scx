@@ -12,7 +12,7 @@
 
     <artifactId>scx</artifactId>
     <packaging>pom</packaging>
-    <version>2.5.7</version>
+    <version>2.5.8</version>
 
     <name>SCX</name>
     <url>https://github.com/scx567888/scx</url>
@@ -145,8 +145,8 @@
         <scx-common.version>2.6.3</scx-common.version>
         <scx-mvc.version>2.6.3</scx-mvc.version>
         <scx-logging.version>2.6.0</scx-logging.version>
-        <scx-data-jdbc.version>2.5.8</scx-data-jdbc.version>
-        <scx-jdbc-mysql.version>0.1.0</scx-jdbc-mysql.version>
+        <scx-data-jdbc.version>2.6.0</scx-data-jdbc.version>
+        <scx-jdbc-mysql.version>0.1.1</scx-jdbc-mysql.version>
         <testng.version>7.9.0</testng.version>
 
     </properties>
