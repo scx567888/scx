@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>scx</artifactId>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
     <version>2.5.8</version>
 
     <name>SCX</name>
@@ -41,10 +41,6 @@
         <url>https://github.com/scx567888/scx</url>
     </scm>
 
-    <modules>
-        <module>scx-core</module>
-    </modules>
-
     <build>
         <plugins>
 
@@ -62,8 +58,12 @@
                     <!-- 此处因为没有类似 maven-source-plugin 插件中 excludeResources 的选项 -->
                     <!-- 所以在这里手动排除资源文件 , 具体文件说明见下方 -->
                     <excludes>
-                        <!-- 默认 git 占位空文件 -->
-                        <exclude>/.gitkeep</exclude>
+                        <!-- 默认模板测试文件 -->
+                        <exclude>/c/</exclude>
+                        <!-- 默认 ssl 占位空文件 -->
+                        <exclude>/ssl/</exclude>
+                        <!-- 默认 配置文件 -->
+                        <exclude>/*.json</exclude>
                     </excludes>
                 </configuration>
             </plugin>
@@ -71,87 +71,81 @@
         </plugins>
     </build>
 
-    <dependencyManagement>
-        <dependencies>
+    <dependencies>
 
-            <!-- 数据库连接池 用于减少数据库连接创建时的性能消耗 -->
-            <dependency>
-                <groupId>com.zaxxer</groupId>
-                <artifactId>HikariCP</artifactId>
-                <version>${hikaricp.version}</version>
-            </dependency>
+        <dependency>
+            <groupId>cool.scx</groupId>
+            <artifactId>scx-mvc</artifactId>
+            <version>${scx-mvc.version}</version>
+        </dependency>
 
-            <!-- slf4j 日志框架 -->
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>${slf4j.version}</version>
-            </dependency>
+        <dependency>
+            <groupId>cool.scx</groupId>
+            <artifactId>scx-config</artifactId>
+            <version>${scx-config.version}</version>
+        </dependency>
 
-            <!-- log4j2 -->
-            <dependency>
-                <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-api</artifactId>
-                <version>${log4j2.version}</version>
-            </dependency>
+        <dependency>
+            <groupId>cool.scx</groupId>
+            <artifactId>scx-logging</artifactId>
+            <version>${scx-logging.version}</version>
+        </dependency>
 
-            <dependency>
-                <groupId>cool.scx</groupId>
-                <artifactId>scx-common</artifactId>
-                <version>${scx-common.version}</version>
-            </dependency>
+        <dependency>
+            <groupId>cool.scx</groupId>
+            <artifactId>scx-data-jdbc</artifactId>
+            <version>${scx-data-jdbc.version}</version>
+        </dependency>
 
-            <dependency>
-                <groupId>cool.scx</groupId>
-                <artifactId>scx-mvc</artifactId>
-                <version>${scx-mvc.version}</version>
-            </dependency>
+        <!-- 数据库连接池 用于减少数据库连接创建时的性能消耗 -->
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>${hikaricp.version}</version>
+        </dependency>
 
-            <dependency>
-                <groupId>cool.scx</groupId>
-                <artifactId>scx-config</artifactId>
-                <version>${scx-config.version}</version>
-            </dependency>
+        <!-- slf4j 日志框架 -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
 
-            <dependency>
-                <groupId>cool.scx</groupId>
-                <artifactId>scx-logging</artifactId>
-                <version>${scx-logging.version}</version>
-            </dependency>
+        <!-- log4j2 -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j2.version}</version>
+        </dependency>
 
-            <dependency>
-                <groupId>cool.scx</groupId>
-                <artifactId>scx-data-jdbc</artifactId>
-                <version>${scx-data-jdbc.version}</version>
-            </dependency>
+        <dependency>
+            <groupId>cool.scx</groupId>
+            <artifactId>scx-jdbc-mysql</artifactId>
+            <version>${scx-jdbc-mysql.version}</version>
+            <scope>test</scope>
+        </dependency>
 
-            <dependency>
-                <groupId>cool.scx</groupId>
-                <artifactId>scx-jdbc-mysql</artifactId>
-                <version>${scx-jdbc-mysql.version}</version>
-            </dependency>
+        <!-- TestNG 测试包 -->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>${testng.version}</version>
+            <scope>test</scope>
+        </dependency>
 
-            <!-- TestNG 测试包 -->
-            <dependency>
-                <groupId>org.testng</groupId>
-                <artifactId>testng</artifactId>
-                <version>${testng.version}</version>
-            </dependency>
+    </dependencies>
 
-        </dependencies>
-    </dependencyManagement>
 
     <properties>
 
         <!-- *********************** 以下为依赖包版本 *********************** -->
-        <hikaricp.version>5.1.0</hikaricp.version>
-        <slf4j.version>2.0.11</slf4j.version>
-        <log4j2.version>2.22.1</log4j2.version>
-        <scx-common.version>2.6.3</scx-common.version>
         <scx-mvc.version>2.6.3</scx-mvc.version>
         <scx-config.version>2.5.8</scx-config.version>
         <scx-logging.version>2.6.0</scx-logging.version>
         <scx-data-jdbc.version>2.6.0</scx-data-jdbc.version>
+        <hikaricp.version>5.1.0</hikaricp.version>
+        <slf4j.version>2.0.11</slf4j.version>
+        <log4j2.version>2.22.1</log4j2.version>
         <scx-jdbc-mysql.version>0.1.1</scx-jdbc-mysql.version>
         <testng.version>7.9.0</testng.version>
 
