@@ -42,7 +42,6 @@
     </scm>
 
     <modules>
-        <module>scx-config</module>
         <module>scx-core</module>
     </modules>
 
@@ -110,6 +109,12 @@
 
             <dependency>
                 <groupId>cool.scx</groupId>
+                <artifactId>scx-config</artifactId>
+                <version>${scx-config.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cool.scx</groupId>
                 <artifactId>scx-logging</artifactId>
                 <version>${scx-logging.version}</version>
             </dependency>
@@ -144,6 +149,7 @@
         <log4j2.version>2.22.1</log4j2.version>
         <scx-common.version>2.6.3</scx-common.version>
         <scx-mvc.version>2.6.3</scx-mvc.version>
+        <scx-config.version>2.5.8</scx-config.version>
         <scx-logging.version>2.6.0</scx-logging.version>
         <scx-data-jdbc.version>2.6.0</scx-data-jdbc.version>
         <scx-jdbc-mysql.version>0.1.1</scx-jdbc-mysql.version>
