@@ -81,6 +81,12 @@
 
         <dependency>
             <groupId>cool.scx</groupId>
+            <artifactId>scx-data-jdbc</artifactId>
+            <version>${scx-data-jdbc.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cool.scx</groupId>
             <artifactId>scx-config</artifactId>
             <version>${scx-config.version}</version>
         </dependency>
@@ -91,11 +97,6 @@
             <version>${scx-logging.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>cool.scx</groupId>
-            <artifactId>scx-data-jdbc</artifactId>
-            <version>${scx-data-jdbc.version}</version>
-        </dependency>
 
         <!-- 数据库连接池 用于减少数据库连接创建时的性能消耗 -->
         <dependency>
@@ -104,19 +105,7 @@
             <version>${hikaricp.version}</version>
         </dependency>
 
-        <!-- slf4j 日志框架 -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
-
-        <!-- log4j2 -->
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
-            <version>${log4j2.version}</version>
-        </dependency>
+        <!-- ****************** 以下为测试依赖 ****************** -->
 
         <dependency>
             <groupId>cool.scx</groupId>
@@ -140,12 +129,10 @@
 
         <!-- *********************** 以下为依赖包版本 *********************** -->
         <scx-mvc.version>2.6.3</scx-mvc.version>
+        <scx-data-jdbc.version>2.6.0</scx-data-jdbc.version>
         <scx-config.version>2.5.8</scx-config.version>
         <scx-logging.version>2.6.0</scx-logging.version>
-        <scx-data-jdbc.version>2.6.0</scx-data-jdbc.version>
         <hikaricp.version>5.1.0</hikaricp.version>
-        <slf4j.version>2.0.11</slf4j.version>
-        <log4j2.version>2.22.1</log4j2.version>
         <scx-jdbc-mysql.version>0.1.1</scx-jdbc-mysql.version>
         <testng.version>7.9.0</testng.version>
 

@@ -19,40 +19,21 @@
     </a>
 </p>
 <p align="center">
-    <a target="_blank" href="https://github.com/eclipse-vertx/vert.x">
-        <img src="https://img.shields.io/badge/Vert.x-f44336" alt="Vert.x"/>
+    <a target="_blank" href="https://github.com/scx567888/scx-mvc">
+        <img src="https://img.shields.io/badge/SCX MVC-f44336" alt="SCX MVC"/>
     </a>
-    <a target="_blank" href="https://github.com/FasterXML/jackson">
-        <img src="https://img.shields.io/badge/Jackson-ff8000" alt="Jackson"/>
+    <a target="_blank" href="https://github.com/scx567888/scx-data-jdbc">
+        <img src="https://img.shields.io/badge/SCX Data JDBC-ff8000" alt="SCX Data JDBC"/>
     </a>
-    <a target="_blank" href="https://github.com/spring-projects/spring-framework">
-        <img src="https://img.shields.io/badge/Spring Framework-d8b125" alt="Spring Framework"/>
+    <a target="_blank" href="https://github.com/scx567888/scx-config">
+        <img src="https://img.shields.io/badge/SCX Config-d8b125" alt="SCX Config"/>
+    </a>
+    <a target="_blank" href="https://github.com/scx567888/scx-logging">
+        <img src="https://img.shields.io/badge/SCX Logging-44be16" alt="SCX Logging"/>
     </a>
     <a target="_blank" href="https://github.com/brettwooldridge/HikariCP">
-        <img src="https://img.shields.io/badge/HikariCP-44be16" alt="HikariCP"/>
+        <img src="https://img.shields.io/badge/HikariCP-29aaf5" alt="HikariCP"/>
     </a>
-    <a target="_blank" href="https://github.com/apache/freemarker">
-        <img src="https://img.shields.io/badge/FreeMarker-29aaf5" alt="FreeMarker"/>
-    </a>
-    <a target="_blank" href="https://github.com/coobird/thumbnailator">
-        <img src="https://img.shields.io/badge/Thumbnailator-9c27b0" alt="Thumbnailator"/>
-    </a>
-    <br/>
-    <a target="_blank" href="https://github.com/jasypt/jasypt">
-        <img src="https://img.shields.io/badge/Jasypt-f44336" alt="Jasypt"/>
-    </a>
-    <a target="_blank" href="https://github.com/mysql/mysql-connector-j">
-        <img src="https://img.shields.io/badge/MySQL Connector/J-ff8000" alt="MySQL Connector/J"/>
-    </a>
-    <a target="_blank" href="https://github.com/java-native-access/jna">
-        <img src="https://img.shields.io/badge/JNA-d8b125" alt="Java Native Access (JNA)"/>
-    </a>
-    <a target="_blank" href="https://github.com/qos-ch/slf4j">
-        <img src="https://img.shields.io/badge/SLF4J-44be16" alt="SLF4J"/>
-    </a>
-    <a target="_blank" href="https://github.com/apache/logging-log4j2">
-        <img src="https://img.shields.io/badge/Apache Log4j 2-29aaf5" alt="Apache Log4j 2"/>
-    </a> 
     <a target="_blank" href="https://github.com/cbeust/testng">
         <img src="https://img.shields.io/badge/TestNG-9c27b0" alt="TestNG"/>
     </a>
@@ -67,7 +48,7 @@ English | [简体中文](./README.zh-CN.md)
 ``` xml
 <dependency>
     <groupId>cool.scx</groupId>
-    <artifactId>scx-core</artifactId>
+    <artifactId>scx</artifactId>
     <version>{version}</version>
 </dependency>
 ```
