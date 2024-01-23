@@ -104,20 +104,6 @@
             <version>${hikaricp.version}</version>
         </dependency>
 
-        <!-- slf4j 日志框架 -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
-
-        <!-- log4j2 -->
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
-            <version>${log4j2.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>cool.scx</groupId>
             <artifactId>scx-jdbc-mysql</artifactId>
@@ -144,8 +130,6 @@
         <scx-logging.version>2.6.0</scx-logging.version>
         <scx-data-jdbc.version>2.6.0</scx-data-jdbc.version>
         <hikaricp.version>5.1.0</hikaricp.version>
-        <slf4j.version>2.0.11</slf4j.version>
-        <log4j2.version>2.22.1</log4j2.version>
         <scx-jdbc-mysql.version>0.1.1</scx-jdbc-mysql.version>
         <testng.version>7.9.0</testng.version>
 
