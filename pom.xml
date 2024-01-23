@@ -130,7 +130,7 @@
         <!-- *********************** 以下为依赖包版本 *********************** -->
         <scx-mvc.version>2.6.3</scx-mvc.version>
         <scx-data-jdbc.version>2.6.0</scx-data-jdbc.version>
-        <scx-config.version>2.5.8</scx-config.version>
+        <scx-config.version>2.6.0</scx-config.version>
         <scx-logging.version>2.6.0</scx-logging.version>
         <hikaricp.version>5.1.0</hikaricp.version>
         <scx-jdbc-mysql.version>0.1.1</scx-jdbc-mysql.version>
