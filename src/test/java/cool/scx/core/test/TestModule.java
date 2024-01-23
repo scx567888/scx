@@ -22,7 +22,6 @@ import cool.scx.util.zip.ZipOptions;
 import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.ext.web.handler.FileSystemAccess;
 import io.vertx.ext.web.handler.StaticHandler;
-import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.support.CronTrigger;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -39,6 +38,7 @@ import static cool.scx.core.eventbus.ZeroCopyMessageCodec.ZERO_COPY_CODEC_NAME;
 import static cool.scx.core.eventbus.ZeroCopyMessageWrapper.zeroCopyMessage;
 import static cool.scx.data.FieldFilter.ofIncluded;
 import static cool.scx.data.QueryBuilder.*;
+import static java.lang.System.Logger.Level.ERROR;
 import static org.testng.Assert.assertEquals;
 
 public class TestModule extends ScxModule {
@@ -145,7 +145,7 @@ public class TestModule extends ScxModule {
     public static void test1() {
         ScxExceptionHelper.wrap(() -> FileUtils.write(ScxContext.getTempPath("test.txt"), "内容2内容2内容2内容2😂😂😂!!!".getBytes(StandardCharsets.UTF_8)));
         var ip = NetUtils.getLocalIPAddress().v4()[0];
-        var logger = LoggerFactory.getLogger(TestModule.class);
+        var logger = System.getLogger(TestModule.class.getName());
         //测试 URIBuilder
         for (int i = 0; i < 1000; i = i + 1) {
             var s = "http://" + ip + ":8888/test0";
@@ -158,7 +158,7 @@ public class TestModule extends ScxModule {
                                 .fileUpload("content", "内容内容内容内容内容".getBytes(StandardCharsets.UTF_8), "", "")
                                 .fileUpload("content1", ScxContext.getTempPath("test.txt"))
                 ).body();
-                logger.error("测试请求[{}] : {}", i, stringHttpResponse);
+                logger.log(ERROR, "测试请求[{0}] : {1}", i, stringHttpResponse);
             } catch (IOException | InterruptedException ignored) {
 
             }
@@ -203,13 +203,13 @@ public class TestModule extends ScxModule {
         var cars = carService.find(query().where(in("id",
                 personService.buildListSQL(query().where(lt("age", 100)), ofIncluded("carID"))
         )));
-        var logger = LoggerFactory.getLogger(TestModule.class);
-        logger.error("根据所有 person 表中年龄小于 100 的 carID 查询 car 表中的数据 总条数 {}", cars.size());
+        var logger = System.getLogger(TestModule.class.getName());
+        logger.log(ERROR, "根据所有 person 表中年龄小于 100 的 carID 查询 car 表中的数据 总条数 {0}", cars.size());
         //根据所有 person 表中年龄小于 100 的 carID 查询 car 表中的数据
         var cars1 = carService.find(query().where("id IN ",
                 personService.buildListSQL(query().where(lt("age", 100)), ofIncluded("carID"))
         ));
-        logger.error("第二种方式 (whereSQL) : 根据所有 person 表中年龄小于 100 的 carID 查询 car 表中的数据 总条数 {}", cars1.size());
+        logger.log(ERROR, "第二种方式 (whereSQL) : 根据所有 person 表中年龄小于 100 的 carID 查询 car 表中的数据 总条数 {0}", cars1.size());
     }
 
     @Test
@@ -244,20 +244,20 @@ public class TestModule extends ScxModule {
         scx.scxHttpRouter().route("/static/*")
                 .handler(StaticHandler.create(FileSystemAccess.ROOT, scx.scxEnvironment().getPathByAppRoot("AppRoot:c\\static").toString())
                         .setFilesReadOnly(false));
-        var logger = LoggerFactory.getLogger(TestModule.class);
+        var logger = System.getLogger(TestModule.class.getName());
         //测试定时任务
         scx.scxScheduler().scheduleAtFixedRate((a) -> {
             //测试
-            logger.error("这是通过 ScxContext.scheduleAtFixedRate() 打印的 : 一共 10 次 , 这时第 " + a.runCount() + " 次执行 !!!");
+            logger.log(ERROR, "这是通过 ScxContext.scheduleAtFixedRate() 打印的 : 一共 10 次 , 这时第 " + a.runCount() + " 次执行 !!!");
         }, Instant.now().plusSeconds(3), Duration.of(1, ChronoUnit.SECONDS), 10);
 
         scx.scxScheduler().schedule((a) -> {
             //测试
-            logger.error("这是通过 ScxContext.scheduler() 使用 Cron 表达式 打印的 : 这时第 " + a.runCount() + " 次执行 !!!");
+            logger.log(ERROR, "这是通过 ScxContext.scheduler() 使用 Cron 表达式 打印的 : 这时第 " + a.runCount() + " 次执行 !!!");
         }, new CronTrigger("*/1 * * * * ?"));
 
         scx.scxScheduler().scheduleAtFixedRate((a) -> {
-            logger.error("这是通过 ScxContext.scheduleAtFixedRate() 打印的 : 不限次数 不过到 第 10 次手动取消 , 这是第 " + a.runCount() + " 次执行 !!!");
+            logger.log(ERROR, "这是通过 ScxContext.scheduleAtFixedRate() 打印的 : 不限次数 不过到 第 10 次手动取消 , 这是第 " + a.runCount() + " 次执行 !!!");
             if (a.runCount() >= 10) {
                 a.scheduledFuture().cancel(false);
             }
