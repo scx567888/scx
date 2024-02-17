@@ -1,4 +1,4 @@
-package cool.scx.util.cycle_iterable;
+package cool.scx.util.circular_iterable;
 
 public class Node<E> {
 
