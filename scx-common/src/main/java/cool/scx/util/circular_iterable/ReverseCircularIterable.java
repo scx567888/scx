@@ -75,7 +75,7 @@ final class ReverseCircularIterable<T> implements ICircularIterable<T> {
 
     @Override
     public boolean contains(Object o) {
-        return cycleIterable.remove(o);
+        return cycleIterable.contains(o);
     }
 
     @Override
