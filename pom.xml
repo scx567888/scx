@@ -203,7 +203,7 @@
         <jasypt.version>1.9.3</jasypt.version>
         <mysql-connector-j.version>8.3.0</mysql-connector-j.version>
         <jna.version>5.14.0</jna.version>
-        <slf4j.version>2.0.11</slf4j.version>
+        <slf4j.version>2.0.12</slf4j.version>
         <log4j2.version>2.22.1</log4j2.version>
         <testng.version>7.9.0</testng.version>
 
