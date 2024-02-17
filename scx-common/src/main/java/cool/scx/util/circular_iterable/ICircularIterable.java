@@ -1,5 +1,7 @@
 package cool.scx.util.circular_iterable;
 
+import java.util.function.IntFunction;
+
 public interface ICircularIterable<T> extends Iterable<T> {
 
     T first();
@@ -25,7 +27,7 @@ public interface ICircularIterable<T> extends Iterable<T> {
 
     Object[] toArray();
 
-    <E> E[] toArray(E[] a);
+    T[] toArray(IntFunction<T[]> generator);
 
     boolean isEmpty();
 

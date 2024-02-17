@@ -1,7 +1,7 @@
 package cool.scx.util.circular_iterable;
 
-import java.lang.reflect.Array;
 import java.util.Objects;
+import java.util.function.IntFunction;
 
 public class CircularIterable<T> implements ICircularIterable<T> {
 
@@ -123,39 +123,29 @@ public class CircularIterable<T> implements ICircularIterable<T> {
         return new CircularIterator<>(first);
     }
 
-    @Override
-    public Object[] toArray() {
-        Object[] result = new Object[size];
+    private void fillArray(Object[] arr) {
         int i = 0;
         var x = first;
         do {
-            result[i] = x.item;
+            arr[i] = x.item;
             i = i + 1;
             x = x.next;
         }
         while (x != first);
-        return result;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public <E> E[] toArray(E[] a) {
-        if (a.length < size) {
-            a = (E[]) Array.newInstance(a.getClass().getComponentType(), size);
-        }
-        Object[] result = a;
-        int i = 0;
-        var x = first;
-        do {
-            result[i] = x.item;
-            i = i + 1;
-            x = x.next;
-        }
-        while (x != first);
-        if (a.length > size) {
-            a[size] = null;
-        }
-        return a;
+    public Object[] toArray() {
+        var arr = new Object[size];
+        fillArray(arr);
+        return arr;
+    }
+
+    @Override
+    public T[] toArray(IntFunction<T[]> generator) {
+        var arr = generator.apply(size);
+        fillArray(arr);
+        return arr;
     }
 
     @Override

@@ -1,5 +1,7 @@
 package cool.scx.util.circular_iterable;
 
+import java.util.function.IntFunction;
+
 final class ReverseCircularIterable<T> implements ICircularIterable<T> {
 
     private final CircularIterable<T> cycleIterable;
@@ -64,8 +66,8 @@ final class ReverseCircularIterable<T> implements ICircularIterable<T> {
     }
 
     @Override
-    public <E> E[] toArray(E[] a) {
-        return cycleIterable.toArray(a);
+    public T[] toArray(IntFunction<T[]> generator) {
+        return cycleIterable.toArray(generator);
     }
 
     @Override
