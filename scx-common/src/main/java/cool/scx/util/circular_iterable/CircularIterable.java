@@ -1,9 +1,9 @@
-package cool.scx.util.cycle_iterable;
+package cool.scx.util.circular_iterable;
 
 import java.lang.reflect.Array;
 import java.util.Objects;
 
-public class CycleIterable<T> implements Iterable<T> {
+public class CircularIterable<T> implements ICircularIterable<T> {
 
     private Node<T> first;
 
@@ -11,14 +11,27 @@ public class CycleIterable<T> implements Iterable<T> {
 
     private int size;
 
-    public Node<T> first() {
+    @Override
+    public T first() {
+        return first.item;
+    }
+
+    @Override
+    public T last() {
+        return last.item;
+    }
+
+    @Override
+    public Node<T> firstNode() {
         return first;
     }
 
-    public Node<T> last() {
+    @Override
+    public Node<T> lastNode() {
         return last;
     }
 
+    @Override
     public int size() {
         return size;
     }
@@ -49,6 +62,7 @@ public class CycleIterable<T> implements Iterable<T> {
         return item;
     }
 
+    @Override
     public boolean add(T item) {
         var node = new Node<>(item);
         if (last == null) {
@@ -60,6 +74,7 @@ public class CycleIterable<T> implements Iterable<T> {
         return true;
     }
 
+    @Override
     public boolean remove(Object o) {
         var node = node(o);
         if (node == null) {
@@ -73,6 +88,7 @@ public class CycleIterable<T> implements Iterable<T> {
         return true;
     }
 
+    @Override
     public void clear() {
         var x = first;
         while (x != null) {
@@ -86,6 +102,7 @@ public class CycleIterable<T> implements Iterable<T> {
         size = 0;
     }
 
+    @Override
     public Node<T> node(Object o) {
         if (first == null) {
             return null;
@@ -102,10 +119,11 @@ public class CycleIterable<T> implements Iterable<T> {
     }
 
     @Override
-    public CycleIterator<T> iterator() {
-        return new CycleIterator<>(first);
+    public CircularIterator<T> iterator() {
+        return new CircularIterator<>(first);
     }
 
+    @Override
     public Object[] toArray() {
         Object[] result = new Object[size];
         int i = 0;
@@ -119,6 +137,7 @@ public class CycleIterable<T> implements Iterable<T> {
         return result;
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public <E> E[] toArray(E[] a) {
         if (a.length < size) {
@@ -139,17 +158,20 @@ public class CycleIterable<T> implements Iterable<T> {
         return a;
     }
 
+    @Override
     public boolean isEmpty() {
         return size == 0;
     }
 
+    @Override
     public boolean contains(Object o) {
         var node = node(o);
         return node != null;
     }
 
-    public CycleReverseIterable<T> reverse() {
-        return new CycleReverseIterable<>(this);
+    @Override
+    public ICircularIterable<T> reversed() {
+        return new ReverseCircularIterable<>(this);
     }
 
 }
