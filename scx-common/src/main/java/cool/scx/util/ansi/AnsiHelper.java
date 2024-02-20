@@ -3,9 +3,12 @@ package cool.scx.util.ansi;
 import com.sun.jna.Function;
 import com.sun.jna.platform.win32.WinDef;
 import com.sun.jna.platform.win32.WinNT;
+import cool.scx.util.OSHelper;
 import cool.scx.util.circular_iterable.CircularIterable;
 
 import java.util.Iterator;
+
+import static cool.scx.util.OSHelper.OSType.WINDOWS;
 
 class AnsiHelper {
 
@@ -45,10 +48,9 @@ class AnsiHelper {
      * @return ansi
      */
     static boolean detectIfAnsiCapable() {
-        String currentOS = System.getProperty("os.name");
-        if (currentOS.startsWith("Windows")) {
-            var winVersion = System.getProperty("os.version");
-            if (winVersion.startsWith("10") || winVersion.startsWith("11")) {
+        var osInfo = OSHelper.getOSInfo();
+        if (osInfo.type() == WINDOWS) {
+            if (osInfo.version().startsWith("10") || osInfo.version().startsWith("11")) {
                 try {
                     enableWindows10AnsiSupport();
                     return true;

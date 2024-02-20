@@ -164,25 +164,4 @@ public class JDBCDaoWhereParser extends WhereParser {
         return new WhereClause("(" + sql.sql() + ")", sql.params());
     }
 
-    @Override
-    public String getWhereKeyWord(WhereType whereType) {
-        return switch (whereType) {
-            case IS_NULL -> "IS NULL";
-            case IS_NOT_NULL -> "IS NOT NULL";
-            case EQUAL -> "=";
-            case NOT_EQUAL -> "<>";
-            case LESS_THAN -> "<";
-            case LESS_THAN_OR_EQUAL -> "<=";
-            case GREATER_THAN -> ">";
-            case GREATER_THAN_OR_EQUAL -> ">=";
-            case LIKE, LIKE_REGEX -> "LIKE";
-            case NOT_LIKE, NOT_LIKE_REGEX -> "NOT LIKE";
-            case IN -> "IN";
-            case NOT_IN -> "NOT IN";
-            case BETWEEN -> "BETWEEN";
-            case NOT_BETWEEN -> "NOT BETWEEN";
-            case JSON_CONTAINS -> "JSON_CONTAINS";
-        };
-    }
-
 }
