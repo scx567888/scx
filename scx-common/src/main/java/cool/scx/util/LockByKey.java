@@ -2,6 +2,7 @@ package cool.scx.util;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
 /**
@@ -11,7 +12,7 @@ import java.util.function.Function;
  */
 public final class LockByKey<T> {
 
-    private final ConcurrentHashMap<T, Semaphore> semaphoreMap = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<T, LockWrapper> lockMap = new ConcurrentHashMap<>();
 
     private final Function<T, Semaphore> semaphoreBuilder;
 
@@ -24,18 +25,36 @@ public final class LockByKey<T> {
     }
 
     public void lock(T key) {
-        var semaphore = semaphoreMap.computeIfAbsent(key, semaphoreBuilder);
-        semaphore.acquireUninterruptibly();
+        var l = lockMap.computeIfAbsent(key, (k) -> new LockWrapper(semaphoreBuilder.apply(k)));
+        l.queueLength.incrementAndGet();
+        l.lock.acquireUninterruptibly();
     }
 
     public void unlock(T key) {
-        var semaphore = semaphoreMap.get(key);
-        if (semaphore != null) {
-            semaphore.release();
-            if (semaphore.getQueueLength() == 0) {
-                semaphoreMap.remove(key, semaphore);
+        var l = lockMap.get(key);
+        if (l != null) {
+            l.lock.release();
+            if (l.queueLength.decrementAndGet() == 0) {
+                System.out.println("移除了");
+                lockMap.remove(key, l);
             }
         }
+    }
+
+    private static class LockWrapper {
+
+        private final Semaphore lock;
+
+        /**
+         * 因为 Semaphore 的 getQueueLength() 不保证并发 所以这里使用 单独的计数器
+         */
+        private final AtomicInteger queueLength;
+
+        private LockWrapper(Semaphore lock) {
+            this.lock = lock;
+            this.queueLength = new AtomicInteger(0);
+        }
+
     }
 
 }
