@@ -35,7 +35,6 @@ public final class LockByKey<T> {
         if (l != null) {
             l.lock.release();
             if (l.queueLength.decrementAndGet() == 0) {
-                System.out.println("移除了");
                 lockMap.remove(key, l);
             }
         }
