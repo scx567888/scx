@@ -50,16 +50,16 @@ public final class PlatformHelper {
         return osInfo.type == WINDOWS;
     }
 
-    public record OSInfo(OSType type, String version) {
-
-    }
-
     public enum OSType {
         MAC,
         LINUX,
         WINDOWS,
         ANDROID,
         UNKNOWN
+    }
+
+    public record OSInfo(OSType type, String version) {
+
     }
 
 }
