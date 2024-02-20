@@ -1,6 +1,6 @@
 package cool.scx.util.test;
 
-import cool.scx.util.PlatformHelper;
+import cool.scx.util.OSHelper;
 import cool.scx.util.WindowsProxyHelper;
 import org.testng.annotations.Test;
 
@@ -13,7 +13,7 @@ public class WindowsProxyHelperTest {
     @Test
     public static void test1() {
         //跳过 linux 上的测试
-        if (!PlatformHelper.isWindows()) {
+        if (!OSHelper.isWindows()) {
             return;
         }
 

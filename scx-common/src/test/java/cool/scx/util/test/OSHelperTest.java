@@ -1,9 +1,9 @@
 package cool.scx.util.test;
 
-import cool.scx.util.PlatformHelper;
+import cool.scx.util.OSHelper;
 import org.testng.annotations.Test;
 
-public class PlatformHelperTest {
+public class OSHelperTest {
 
     public static void main(String[] args) {
         test1();
@@ -11,7 +11,7 @@ public class PlatformHelperTest {
 
     @Test
     public static void test1() {
-        System.out.println(PlatformHelper.getOSInfo());
+        System.out.println(OSHelper.getOSInfo());
     }
 
 }

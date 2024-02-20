@@ -1,8 +1,8 @@
 package cool.scx.util;
 
-import static cool.scx.util.PlatformHelper.OSType.*;
+import static cool.scx.util.OSHelper.OSType.*;
 
-public final class PlatformHelper {
+public final class OSHelper {
 
     private static final OSInfo osInfo;
 
