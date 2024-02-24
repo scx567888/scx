@@ -39,7 +39,7 @@ public class SingleListenerFutureTest {
 
             Thread.startVirtualThread(() -> {
                 //延迟 100 毫秒 设置结果
-                $.sleep(200);
+                $.sleep(100);
                 promise.complete(finalI + " ggg");
             });
 
