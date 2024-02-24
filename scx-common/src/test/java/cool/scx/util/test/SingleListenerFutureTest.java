@@ -26,10 +26,10 @@ public class SingleListenerFutureTest {
 
             int finalI = i;
 
-            future.onSuccess(c->{
-                System.out.println(c); 
+            future.onSuccess(c -> {
+                System.out.println(c);
             });
-            
+
             Thread.startVirtualThread(() -> {
                 //在 Future 没有结果的时候 可以 重设结果
                 future.onSuccess((c) -> {
