@@ -26,13 +26,20 @@ public class SingleListenerFutureTest {
 
             int finalI = i;
 
+            future.onSuccess(c->{
+                System.out.println(c); 
+            });
+            
             Thread.startVirtualThread(() -> {
+                //在 Future 没有结果的时候 可以 重设结果
                 future.onSuccess((c) -> {
                     num.getAndIncrement();
                 });
             });
 
             Thread.startVirtualThread(() -> {
+                //延迟 100 毫秒 设置结果
+                $.sleep(200);
                 promise.complete(finalI + " ggg");
             });
 
