@@ -11,10 +11,6 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public final class RandomUtils {
 
-    private static final byte[] NUMBER_POOL = new byte[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
-    private static final byte[] LETTER_POOL = new byte[]{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
-    private static final byte[] NUMBER_AND_LETTER_POOL = new byte[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
-
     /**
      * 获取随机的 字符串
      * 注意!!! 此方法和 getUUID 不同 若需要获取 uuid 请使用 getUUID
@@ -24,11 +20,7 @@ public final class RandomUtils {
      * @return 随机的 字符串
      */
     public static String randomString(int size, PoolType poolType) {
-        var pool = switch (poolType) {
-            case NUMBER -> NUMBER_POOL;
-            case LETTER -> LETTER_POOL;
-            case NUMBER_AND_LETTER -> NUMBER_AND_LETTER_POOL;
-        };
+        var pool = poolType.pool;
         var value = new byte[size];
         for (int i = 0; i < size; i = i + 1) {
             value[i] = pool[randomInt(pool.length)];
@@ -247,9 +239,17 @@ public final class RandomUtils {
     }
 
     public enum PoolType {
-        NUMBER,
-        LETTER,
-        NUMBER_AND_LETTER
+
+        NUMBER(new byte[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'}),
+        LETTER(new byte[]{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'}),
+        NUMBER_AND_LETTER(new byte[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'});
+
+        final byte[] pool;
+
+        PoolType(byte[] pool) {
+            this.pool = pool;
+        }
+
     }
 
 }
