@@ -4,12 +4,12 @@ import static cool.scx.util.OSHelper.OSType.*;
 
 public final class OSHelper {
 
-    private static final OSInfo osInfo;
+    private static final OSInfo osInfo = initOSInfo();
 
-    static {
+    private static OSInfo initOSInfo() {
         var osType = getOSType();
         var osVersion = System.getProperty("os.version");
-        osInfo = new OSInfo(osType, osVersion);
+        return new OSInfo(osType, osVersion);
     }
 
     private static OSType getOSType() {

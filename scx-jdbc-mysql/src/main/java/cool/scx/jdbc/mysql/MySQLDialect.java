@@ -3,6 +3,7 @@ package cool.scx.jdbc.mysql;
 import com.mysql.cj.PreparedQuery;
 import com.mysql.cj.jdbc.ClientPreparedStatement;
 import com.mysql.cj.jdbc.MysqlDataSource;
+import com.mysql.cj.jdbc.NonRegisteringDriver;
 import cool.scx.jdbc.dialect.DDLBuilder;
 import cool.scx.jdbc.dialect.Dialect;
 
@@ -14,16 +15,15 @@ import java.sql.Statement;
 
 public class MySQLDialect extends Dialect {
 
-    private static final com.mysql.cj.jdbc.NonRegisteringDriver DRIVER;
-    private static final MySQLDDLBuilder MYSQL_DDL_BUILDER;
+    private static final com.mysql.cj.jdbc.NonRegisteringDriver DRIVER = initDriver();
+    private static final MySQLDDLBuilder MYSQL_DDL_BUILDER = new MySQLDDLBuilder();
 
-    static {
+    private static NonRegisteringDriver initDriver() {
         try {
-            DRIVER = new com.mysql.cj.jdbc.NonRegisteringDriver();
+            return new com.mysql.cj.jdbc.NonRegisteringDriver();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        MYSQL_DDL_BUILDER = new MySQLDDLBuilder();
     }
 
     @Override
