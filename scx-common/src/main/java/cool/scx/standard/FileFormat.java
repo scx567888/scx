@@ -49,18 +49,18 @@ public enum FileFormat {
 
     private static final Map<String, FileFormat> MAP = initMAP();
 
+    private final MediaType mediaType;
+
+    FileFormat(MediaType mediaType) {
+        this.mediaType = mediaType;
+    }
+
     private static Map<String, FileFormat> initMAP() {
         var map = new TreeMap<String, FileFormat>(CASE_INSENSITIVE_ORDER);
         for (var value : FileFormat.values()) {
             map.put(value.name(), value);
         }
         return map;
-    }
-
-    private final MediaType mediaType;
-
-    FileFormat(MediaType mediaType) {
-        this.mediaType = mediaType;
     }
 
     public static FileFormat ofExtension(String ext) {
