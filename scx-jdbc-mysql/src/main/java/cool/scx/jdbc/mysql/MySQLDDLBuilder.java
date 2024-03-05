@@ -19,29 +19,30 @@ import static cool.scx.util.StringUtils.notBlank;
  */
 public class MySQLDDLBuilder implements DDLBuilder {
 
-    private static final Map<Class<?>, MysqlType> DEFAULT_MYSQL_TYPES;
+    private static final Map<Class<?>, MysqlType> DEFAULT_MYSQL_TYPES = initDefaultMySqlTypes();
 
-    static {
-        DEFAULT_MYSQL_TYPES = new HashMap<>();
+    private static Map<Class<?>, MysqlType> initDefaultMySqlTypes() {
+        var map = new HashMap<Class<?>, MysqlType>();
         //这里 我们在额外添加几个下表对应的基本类型或包装类型
-        DEFAULT_MYSQL_TYPES.put(byte.class, MysqlType.TINYINT);
-        DEFAULT_MYSQL_TYPES.put(Byte[].class, MysqlType.BINARY);
-        DEFAULT_MYSQL_TYPES.put(double.class, MysqlType.DOUBLE);
-        DEFAULT_MYSQL_TYPES.put(float.class, MysqlType.FLOAT);
-        DEFAULT_MYSQL_TYPES.put(int.class, MysqlType.INT);
-        DEFAULT_MYSQL_TYPES.put(long.class, MysqlType.BIGINT);
-        DEFAULT_MYSQL_TYPES.put(short.class, MysqlType.SMALLINT);
-        DEFAULT_MYSQL_TYPES.put(boolean.class, MysqlType.BOOLEAN);
+        map.put(byte.class, MysqlType.TINYINT);
+        map.put(Byte[].class, MysqlType.BINARY);
+        map.put(double.class, MysqlType.DOUBLE);
+        map.put(float.class, MysqlType.FLOAT);
+        map.put(int.class, MysqlType.INT);
+        map.put(long.class, MysqlType.BIGINT);
+        map.put(short.class, MysqlType.SMALLINT);
+        map.put(boolean.class, MysqlType.BOOLEAN);
         try {
             //整合 mysql 驱动中的 DEFAULT_MYSQL_TYPES
             var f = NativeQueryBindings.class.getDeclaredField("DEFAULT_MYSQL_TYPES");
             f.setAccessible(true);
             @SuppressWarnings("unchecked")
             var mysqlDriverDefaultMysqlTypes = (Map<Class<?>, MysqlType>) f.get(null);
-            DEFAULT_MYSQL_TYPES.putAll(mysqlDriverDefaultMysqlTypes);
+            map.putAll(mysqlDriverDefaultMysqlTypes);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
+        return map;
     }
 
     /**

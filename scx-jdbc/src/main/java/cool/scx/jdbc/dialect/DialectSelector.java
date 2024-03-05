@@ -8,14 +8,15 @@ import java.util.ServiceLoader;
 
 public final class DialectSelector {
 
-    private static final List<Dialect> DIALECT_LIST;
+    private static final List<Dialect> DIALECT_LIST = initDialectList();
 
-    static {
-        DIALECT_LIST = new ArrayList<>();
+    private static List<Dialect> initDialectList() {
+        var list = new ArrayList<Dialect>();
         var loader = ServiceLoader.load(Dialect.class);
         for (var dialect : loader) {
-            DIALECT_LIST.add(dialect);
+            list.add(dialect);
         }
+        return list;
     }
 
     /**

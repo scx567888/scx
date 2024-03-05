@@ -47,12 +47,14 @@ public enum FileFormat {
     MP4(VIDEO_MP4),
     WEBM(VIDEO_WEBM);
 
-    private static final Map<String, FileFormat> MAP = new TreeMap<>(CASE_INSENSITIVE_ORDER);
+    private static final Map<String, FileFormat> MAP = initMAP();
 
-    static {
+    private static Map<String, FileFormat> initMAP() {
+        var map = new TreeMap<String, FileFormat>(CASE_INSENSITIVE_ORDER);
         for (var value : FileFormat.values()) {
-            MAP.put(value.name(), value);
+            map.put(value.name(), value);
         }
+        return map;
     }
 
     private final MediaType mediaType;
