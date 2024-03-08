@@ -27,7 +27,7 @@ import static cool.scx.jdbc.sql.SQL.sql;
 import static cool.scx.jdbc.sql.SQL.sqlNamed;
 import static java.lang.System.Logger.Level.DEBUG;
 
-public class SQLRunnerTestForMySQL {
+public class SQLRunnerForMySQLTest {
 
     private static final String databaseName = "scx_sql_test";
     public static final DataSource dataSource = getMySQLDataSource();

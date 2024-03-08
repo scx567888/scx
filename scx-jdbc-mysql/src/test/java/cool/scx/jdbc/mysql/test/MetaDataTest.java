@@ -15,8 +15,8 @@ public class MetaDataTest {
 
     @Test
     public static void test1() throws SQLException, JsonProcessingException {
-        test1_1(SQLRunnerTestForMySQL.dataSource);
-        test1_2(SQLRunnerTestForMySQL.dataSource);
+        test1_1(SQLRunnerForMySQLTest.dataSource);
+        test1_2(SQLRunnerForMySQLTest.dataSource);
     }
 
     public static void test1_1(DataSource dataSource) throws SQLException, JsonProcessingException {
