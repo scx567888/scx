@@ -39,6 +39,7 @@ public @interface Column {
 
     /**
      * 数据库更新时值 仅用于 创建或修复表时
+     * todo 支持函数以实现自定义
      *
      * @return 数据库更新时值
      */
