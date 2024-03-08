@@ -1,10 +1,12 @@
 package cool.scx.util.test;
 
 import cool.scx.util.ArrayUtils;
+import cool.scx.util.RandomUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static cool.scx.util.ArrayUtils.*;
 
@@ -14,6 +16,7 @@ public class ArrayUtilsTest {
         test1();
         test2();
         test3();
+        test4();
     }
 
     @Test
@@ -47,6 +50,15 @@ public class ArrayUtilsTest {
         var lists2 = splitArray(s, 9);
         Assert.assertEquals(lists1[0].length, 112);
         Assert.assertEquals(lists2[lists2.length - 1].length, 2);
+    }
+
+    @Test
+    public static void test4() {
+        var bytes = RandomUtils.randomBytes(101);
+        var newBytes = Arrays.copyOf(bytes, bytes.length);
+        ArrayUtils.reverse(newBytes);
+        ArrayUtils.reverse(newBytes);
+        Assert.assertEquals(newBytes, bytes);
     }
 
 }

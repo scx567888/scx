@@ -264,6 +264,65 @@ public final class ArrayUtils {
     //************* shuffle END ***************
 
 
+    //************* reverse START ***************
+
+    public static void reverse(byte[] arr) {
+        for (int i = 0, mid = arr.length / 2; i < mid; i = i + 1) {
+            swap(arr, i, arr.length - i - 1);
+        }
+    }
+
+    public static void reverse(short[] arr) {
+        for (int i = 0, mid = arr.length / 2; i < mid; i = i + 1) {
+            swap(arr, i, arr.length - i - 1);
+        }
+    }
+
+    public static void reverse(int[] arr) {
+        for (int i = 0, mid = arr.length / 2; i < mid; i = i + 1) {
+            swap(arr, i, arr.length - i - 1);
+        }
+    }
+
+    public static void reverse(long[] arr) {
+        for (int i = 0, mid = arr.length / 2; i < mid; i = i + 1) {
+            swap(arr, i, arr.length - i - 1);
+        }
+    }
+
+    public static void reverse(float[] arr) {
+        for (int i = 0, mid = arr.length / 2; i < mid; i = i + 1) {
+            swap(arr, i, arr.length - i - 1);
+        }
+    }
+
+    public static void reverse(double[] arr) {
+        for (int i = 0, mid = arr.length / 2; i < mid; i = i + 1) {
+            swap(arr, i, arr.length - i - 1);
+        }
+    }
+
+    public static void reverse(boolean[] arr) {
+        for (int i = 0, mid = arr.length / 2; i < mid; i = i + 1) {
+            swap(arr, i, arr.length - i - 1);
+        }
+    }
+
+    public static void reverse(char[] arr) {
+        for (int i = 0, mid = arr.length / 2; i < mid; i = i + 1) {
+            swap(arr, i, arr.length - i - 1);
+        }
+    }
+
+    public static void reverse(Object[] arr) {
+        for (int i = 0, mid = arr.length / 2; i < mid; i = i + 1) {
+            swap(arr, i, arr.length - i - 1);
+        }
+    }
+
+    //************* reverse END ***************
+
+
     //************* indexOf START ***************
 
     public static int indexOf(byte[] a, byte[] a1) {
