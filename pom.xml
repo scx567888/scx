@@ -160,7 +160,7 @@
                 <artifactId>mysql-connector-j</artifactId>
                 <version>${mysql-connector-j.version}</version>
             </dependency>
-            
+
             <!-- sqlite 驱动 -->
             <dependency>
                 <groupId>org.xerial</groupId>

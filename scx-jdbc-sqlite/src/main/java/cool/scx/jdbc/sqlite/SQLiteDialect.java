@@ -30,6 +30,11 @@ public class SQLiteDialect extends Dialect {
     private static final SQLiteDDLBuilder SQLite_DDL_BUILDER = new SQLiteDDLBuilder();
     private static final org.sqlite.JDBC DRIVER = initDRIVER();
 
+    public SQLiteDialect() {
+        // 注册自定义的 TypeHandler       
+        this.typeHandlerSelector.registerTypeHandler(LocalDateTime.class, new SQLiteLocalDateTimeTypeHandler());
+    }
+
     private static Field initCoreStatement_sql() {
         try {
             var f = CoreStatement.class.getDeclaredField("sql");
@@ -66,11 +71,6 @@ public class SQLiteDialect extends Dialect {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public SQLiteDialect() {
-        // 注册自定义的 TypeHandler       
-        this.typeHandlerSelector.registerTypeHandler(LocalDateTime.class, new SQLiteLocalDateTimeTypeHandler());
     }
 
     @Override
