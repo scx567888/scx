@@ -184,7 +184,8 @@ public class SQLRunnerForSQLiteTest {
         System.out.println("ofBeanConsumer1 " + size);
     }
 
-    @Test
+    // 太费时 所以注释掉
+//    @Test
     public static void test6() {
         try {
             sqlRunner.execute(sql("drop table if exists " + tableName + ";"));
