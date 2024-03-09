@@ -4,7 +4,7 @@ import cool.scx.data.jdbc.annotation.NoColumn;
 import cool.scx.jdbc.mapping.Table;
 import cool.scx.util.CaseUtils;
 import cool.scx.util.MultiMap;
-import cool.scx.util.StringUtils;
+import cool.scx.util.reflect.AnnotationUtils;
 import cool.scx.util.reflect.FieldUtils;
 
 import java.util.HashMap;
@@ -35,16 +35,30 @@ public class AnnotationConfigTable implements Table {
         this.columnMap = initAllColumnMap(columns);
     }
 
+    /**
+     * 这里判断一下是否使用了数据库 如果使用 则表名省略掉 数据库限定名 否则的话则添加数据库限定名
+     *
+     * @param clazz c
+     * @return c
+     */
     public static String initTableName(Class<?> clazz) {
-        var scxModel = clazz.getAnnotation(cool.scx.data.jdbc.annotation.Table.class);
-        if (scxModel != null && StringUtils.notBlank(scxModel.tableName())) {
-            return scxModel.tableName();
+        var table = clazz.getAnnotation(cool.scx.data.jdbc.annotation.Table.class);
+        var defaultTableName = CaseUtils.toSnake(clazz.getSimpleName());
+
+        if (table != null) {
+            var _tableName = AnnotationUtils.getAnnotationValue(table.tableName());
+            var _tablePrefix = AnnotationUtils.getAnnotationValue(table.tablePrefix());
+
+            if (_tableName != null) {
+                return _tableName;
+            }
+
+            if (_tablePrefix != null) {
+                return _tablePrefix + "_" + defaultTableName;
+            }
         }
-        if (scxModel != null && StringUtils.notBlank(scxModel.tablePrefix())) {
-            return scxModel.tablePrefix() + "_" + CaseUtils.toSnake(clazz.getSimpleName());
-        }
-        //这里判断一下是否使用了数据库 如果使用 则表名省略掉 数据库限定名 否则的话则添加数据库限定名
-        return "scx_" + CaseUtils.toSnake(clazz.getSimpleName());
+
+        return "scx_" + defaultTableName;
     }
 
     private static AnnotationConfigColumn[] initAllColumns(Class<?> clazz) {
