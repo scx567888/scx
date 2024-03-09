@@ -135,6 +135,12 @@ public final class ScxBuilder {
         return mainClass;
     }
 
+    private static String getScxConfigPath(String[] args) {
+        var scxConfig = new ScxConfig(ArgsConfigSource.of(args));
+        var scxConfigPath = scxConfig.get("scx.config.path", String.class);
+        return scxConfigPath != null ? scxConfigPath : DEFAULT_SCX_CONFIG_PATH;
+    }
+
     /**
      * a
      */
@@ -164,12 +170,6 @@ public final class ScxBuilder {
         //创建 scx 实例
         var scxConfig = new ScxConfig(scxConfigSources.toArray(ScxConfigSource[]::new));
         return new Scx(scxEnvironment, appKey, scxFeatureConfig, scxConfig, scxModules.toArray(ScxModule[]::new), vertxOptions, defaultHttpServerOptions);
-    }
-
-    private static String getScxConfigPath(String[] args) {
-        var scxConfig = new ScxConfig(ArgsConfigSource.of(args));
-        var scxConfigPath = scxConfig.get("scx.config.path", String.class);
-        return scxConfigPath != null ? scxConfigPath : DEFAULT_SCX_CONFIG_PATH;
     }
 
     /**
