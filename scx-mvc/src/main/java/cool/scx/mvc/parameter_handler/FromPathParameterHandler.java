@@ -6,7 +6,7 @@ import cool.scx.mvc.ScxMvcRequestInfo;
 import cool.scx.mvc.annotation.FromPath;
 import cool.scx.mvc.parameter_handler.exception.ParamConvertException;
 import cool.scx.mvc.parameter_handler.exception.RequiredParamEmptyException;
-import cool.scx.util.StringUtils;
+import cool.scx.util.reflect.AnnotationUtils;
 
 import java.lang.reflect.Parameter;
 
@@ -74,8 +74,9 @@ public final class FromPathParameterHandler implements ScxMvcParameterHandler {
         var fromPath = parameter.getAnnotation(FromPath.class);
         if (fromPath != null) {
             required = fromPath.required();
-            if (StringUtils.notBlank(fromPath.value())) {
-                name = fromPath.value();
+            var _value = AnnotationUtils.getAnnotationValue(fromPath.value());
+            if (_value != null) {
+                name = _value;
             }
             merge = fromPath.merge();
         }

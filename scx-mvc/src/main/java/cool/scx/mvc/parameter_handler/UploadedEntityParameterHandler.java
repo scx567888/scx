@@ -5,7 +5,7 @@ import cool.scx.mvc.ScxMvcRequestInfo;
 import cool.scx.mvc.annotation.FromUpload;
 import cool.scx.mvc.parameter_handler.exception.RequiredParamEmptyException;
 import cool.scx.mvc.type.UploadedEntity;
-import cool.scx.util.StringUtils;
+import cool.scx.util.reflect.AnnotationUtils;
 import io.vertx.ext.web.FileUpload;
 import io.vertx.ext.web.RoutingContext;
 
@@ -55,8 +55,9 @@ public final class UploadedEntityParameterHandler implements ScxMvcParameterHand
         var required = false;
         var fromUpload = parameter.getAnnotation(FromUpload.class);
         if (fromUpload != null) {
-            if (StringUtils.notBlank(fromUpload.value())) {
-                name = fromUpload.value();
+            var _value = AnnotationUtils.getAnnotationValue(fromUpload.value());
+            if (_value != null) {
+                name = _value;
             }
             required = fromUpload.required();
         }

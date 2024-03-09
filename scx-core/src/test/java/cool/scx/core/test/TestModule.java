@@ -55,7 +55,7 @@ public class TestModule extends ScxModule {
     @BeforeTest
     public static void runModule() {
         //模拟外部参数
-        var args = new String[]{"--scx.port=8888"};
+        var args = new String[]{"--scx.port=8888", "--scx.config.path=AppRoot:scx-config.json"};
         Scx.builder()
                 .setMainClass(TestModule.class)
                 .addModule(new TestModule())
@@ -69,7 +69,11 @@ public class TestModule extends ScxModule {
                 .configure(ScxCoreFeature.USE_SPY, true)
                 .run();
         //修复表
-        ScxContext.sqlRunner().execute(SQL.sql("drop database if exists scx_test; create database scx_test; use scx_test"));
+        try {
+            ScxContext.sqlRunner().execute(SQL.sql("drop database if exists scx_test; create database scx_test; use scx_test"));
+        } catch (Exception ignored) {
+
+        }
         ScxContext.scx().fixTable();
     }
 

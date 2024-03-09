@@ -135,6 +135,12 @@ public final class ScxBuilder {
         return mainClass;
     }
 
+    private static String getScxConfigPath(String[] args) {
+        var scxConfig = new ScxConfig(ArgsConfigSource.of(args));
+        var scxConfigPath = scxConfig.get("scx.config.path", String.class);
+        return scxConfigPath != null ? scxConfigPath : DEFAULT_SCX_CONFIG_PATH;
+    }
+
     /**
      * a
      */
@@ -156,7 +162,7 @@ public final class ScxBuilder {
         var scxEnvironment = new ScxEnvironment(mainClass);
         //配置源 注意顺序 以保证可以逐个覆盖
         var defaultMapConfigSource = MapConfigSource.of(DEFAULT_CONFIG_MAP);
-        var defaultJsonFileConfigSource = JsonFileConfigSource.of(scxEnvironment.getPathByAppRoot(DEFAULT_SCX_CONFIG_PATH));
+        var defaultJsonFileConfigSource = JsonFileConfigSource.of(scxEnvironment.getPathByAppRoot(getScxConfigPath(args)));
         var defaultArgsConfigSource = ArgsConfigSource.of(args);
         scxConfigSources.add(defaultMapConfigSource);
         scxConfigSources.add(defaultJsonFileConfigSource);

@@ -5,6 +5,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import static cool.scx.util.reflect.AnnotationUtils.NULL;
+
 /**
  * ScxModel
  * model 层映射
@@ -22,13 +24,13 @@ public @interface Table {
      *
      * @return 表全限定名称
      */
-    String tableName() default "";
+    String tableName() default NULL;
 
     /**
      * 表名称前缀
      *
      * @return 表前缀
      */
-    String tablePrefix() default "";
+    String tablePrefix() default NULL;
 
 }

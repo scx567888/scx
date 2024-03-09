@@ -15,10 +15,10 @@ import java.sql.Statement;
 
 public class MySQLDialect extends Dialect {
 
-    private static final com.mysql.cj.jdbc.NonRegisteringDriver DRIVER = initDriver();
+    private static final com.mysql.cj.jdbc.NonRegisteringDriver DRIVER = initDRIVER();
     private static final MySQLDDLBuilder MYSQL_DDL_BUILDER = new MySQLDDLBuilder();
 
-    private static NonRegisteringDriver initDriver() {
+    private static NonRegisteringDriver initDRIVER() {
         try {
             return new com.mysql.cj.jdbc.NonRegisteringDriver();
         } catch (SQLException e) {

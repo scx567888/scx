@@ -6,7 +6,7 @@ import cool.scx.mvc.ScxMvcRequestInfo;
 import cool.scx.mvc.annotation.FromQuery;
 import cool.scx.mvc.parameter_handler.exception.ParamConvertException;
 import cool.scx.mvc.parameter_handler.exception.RequiredParamEmptyException;
-import cool.scx.util.StringUtils;
+import cool.scx.util.reflect.AnnotationUtils;
 
 import java.lang.reflect.Parameter;
 
@@ -74,8 +74,9 @@ public final class FromQueryParameterHandler implements ScxMvcParameterHandler {
         var fromQuery = parameter.getAnnotation(FromQuery.class);
         if (fromQuery != null) {
             required = fromQuery.required();
-            if (StringUtils.notBlank(fromQuery.value())) {
-                name = fromQuery.value();
+            var _value = AnnotationUtils.getAnnotationValue(fromQuery.value());
+            if (_value != null) {
+                name = _value;
             }
             merge = fromQuery.merge();
         }
