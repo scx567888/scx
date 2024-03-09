@@ -4,6 +4,7 @@ import cool.scx.jdbc.JDBCHelper;
 import cool.scx.jdbc.dialect.DDLBuilder;
 import cool.scx.jdbc.dialect.Dialect;
 import cool.scx.jdbc.sqlite.type_handler.SQLiteLocalDateTimeTypeHandler;
+import org.sqlite.JDBC;
 import org.sqlite.SQLiteDataSource;
 import org.sqlite.core.CorePreparedStatement;
 import org.sqlite.core.CoreStatement;
@@ -23,34 +24,53 @@ import java.time.LocalDateTime;
 public class SQLiteDialect extends Dialect {
 
     public static final Logger logger = System.getLogger(SQLiteDialect.class.getName());
-    static final Field CoreStatement_sql;
-    static final Field CoreStatement_batch;
-    static final Field CorePreparedStatement_batchQueryCount;
-    private static final SQLiteDDLBuilder SQLite_DDL_BUILDER;
-    private static final org.sqlite.JDBC DRIVER;
+    static final Field CoreStatement_sql = initCoreStatement_sql();
+    static final Field CoreStatement_batch = initCoreStatement_batch();
+    static final Field CorePreparedStatement_batchQueryCount = initCorePreparedStatement_batchQueryCount();
+    private static final SQLiteDDLBuilder SQLite_DDL_BUILDER = new SQLiteDDLBuilder();
+    private static final org.sqlite.JDBC DRIVER = initDRIVER();
 
-    static {
+    private static Field initCoreStatement_sql() {
         try {
-            CoreStatement_sql = CoreStatement.class.getDeclaredField("sql");
-            CoreStatement_batch = CoreStatement.class.getDeclaredField("batch");
-            CorePreparedStatement_batchQueryCount = CorePreparedStatement.class.getDeclaredField("batchQueryCount");
-            CoreStatement_sql.setAccessible(true);
-            CoreStatement_batch.setAccessible(true);
-            CorePreparedStatement_batchQueryCount.setAccessible(true);
+            var f = CoreStatement.class.getDeclaredField("sql");
+            f.setAccessible(true);
+            return f;
         } catch (NoSuchFieldException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static Field initCoreStatement_batch() {
         try {
-            DRIVER = new org.sqlite.JDBC();
+            var f = CoreStatement.class.getDeclaredField("batch");
+            f.setAccessible(true);
+            return f;
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static Field initCorePreparedStatement_batchQueryCount() {
+        try {
+            var f = CorePreparedStatement.class.getDeclaredField("batchQueryCount");
+            f.setAccessible(true);
+            return f;
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static JDBC initDRIVER() {
+        try {
+            return new org.sqlite.JDBC();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        SQLite_DDL_BUILDER = new SQLiteDDLBuilder();
     }
 
     public SQLiteDialect() {
         // 注册自定义的 TypeHandler       
-        typeHandlerSelector.registerTypeHandler(LocalDateTime.class, new SQLiteLocalDateTimeTypeHandler());
+        this.typeHandlerSelector.registerTypeHandler(LocalDateTime.class, new SQLiteLocalDateTimeTypeHandler());
     }
 
     @Override
@@ -102,7 +122,7 @@ public class SQLiteDialect extends Dialect {
 
     @Override
     public DataSource createDataSource(String url, String username, String password, String[] parameters) {
-        SQLiteDataSource sqLiteDataSource = new SQLiteDataSource();
+        var sqLiteDataSource = new SQLiteDataSource();
         sqLiteDataSource.setUrl(url);
         return sqLiteDataSource;
     }
