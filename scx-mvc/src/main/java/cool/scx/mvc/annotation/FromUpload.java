@@ -7,6 +7,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import static cool.scx.util.reflect.AnnotationUtils.NULL;
+
 /**
  * 从上传中获取参数 (注意 : 必须标注在 {@link UploadedEntity} 类型的参数上)
  *
@@ -23,7 +25,7 @@ public @interface FromUpload {
      *
      * @return 名称
      */
-    String value() default "";
+    String value() default NULL;
 
     /**
      * 是否必填

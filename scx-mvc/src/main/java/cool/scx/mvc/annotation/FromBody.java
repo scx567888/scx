@@ -5,6 +5,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import static cool.scx.util.reflect.AnnotationUtils.NULL;
+
 /**
  * 从 body 获取参数
  *
@@ -35,7 +37,7 @@ public @interface FromBody {
      *
      * @return value
      */
-    String value() default "";
+    String value() default NULL;
 
     /**
      * 是否必填

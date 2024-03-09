@@ -5,6 +5,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import static cool.scx.util.reflect.AnnotationUtils.NULL;
+
 /**
  * 从 query 获取参数
  *
@@ -21,7 +23,7 @@ public @interface FromQuery {
      *
      * @return 名称
      */
-    String value() default "";
+    String value() default NULL;
 
     /**
      * 将 查询参数聚合

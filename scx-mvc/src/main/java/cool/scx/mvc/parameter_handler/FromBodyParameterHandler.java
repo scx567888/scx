@@ -6,7 +6,7 @@ import cool.scx.mvc.ScxMvcRequestInfo;
 import cool.scx.mvc.annotation.FromBody;
 import cool.scx.mvc.parameter_handler.exception.ParamConvertException;
 import cool.scx.mvc.parameter_handler.exception.RequiredParamEmptyException;
-import cool.scx.util.StringUtils;
+import cool.scx.util.reflect.AnnotationUtils;
 
 import java.lang.reflect.Parameter;
 
@@ -128,8 +128,9 @@ public final class FromBodyParameterHandler implements ScxMvcParameterHandler {
         var fromBody = parameter.getAnnotation(FromBody.class);
         if (fromBody != null) {
             required = fromBody.required();
-            if (StringUtils.notBlank(fromBody.value())) {
-                name = fromBody.value();
+            var _value = AnnotationUtils.getAnnotationValue(fromBody.value());
+            if (_value != null) {
+                name = _value;
             }
             useAllBody = fromBody.useAllBody();
         }
