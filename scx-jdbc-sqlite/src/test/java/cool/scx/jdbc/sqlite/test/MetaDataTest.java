@@ -17,8 +17,8 @@ public class MetaDataTest {
     public static void test1() throws SQLException, JsonProcessingException {
         try {
             test1_1(SQLRunnerForSQLiteTest.dataSource);
-            test1_2(SQLRunnerForSQLiteTest.dataSource);    
-        }catch (Exception ignored){
+            test1_2(SQLRunnerForSQLiteTest.dataSource);
+        } catch (Exception ignored) {
             
         }
     }
