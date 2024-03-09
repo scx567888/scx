@@ -55,7 +55,7 @@ public class TestModule extends ScxModule {
     @BeforeTest
     public static void runModule() {
         //模拟外部参数
-        var args = new String[]{"--scx.port=8888"};
+        var args = new String[]{"--scx.port=8888","--scx.config.path=AppRoot:scx-config.json"};
         Scx.builder()
                 .setMainClass(TestModule.class)
                 .addModule(new TestModule())
