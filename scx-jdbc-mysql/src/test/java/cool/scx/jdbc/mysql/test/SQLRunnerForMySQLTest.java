@@ -45,7 +45,8 @@ public class SQLRunnerForMySQLTest {
         test3();
         test4();
         test5();
-//        test6();
+        // 太耗时 不执行
+        // test6();
     }
 
     @BeforeTest
