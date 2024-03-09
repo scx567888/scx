@@ -19,7 +19,7 @@ public class MetaDataTest {
             test1_1(SQLRunnerForSQLiteTest.dataSource);
             test1_2(SQLRunnerForSQLiteTest.dataSource);
         } catch (Exception ignored) {
-            
+
         }
     }
 

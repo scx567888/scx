@@ -181,7 +181,7 @@ public class SQLRunnerTest {
         System.out.println("ofBeanConsumer1 " + size);
     }
 
-//    太耗时
+    //    太耗时
 //    @Test
     public static void test6() {
         sqlRunner.execute(sql("drop table if exists " + tableName + ";" + " create table " + tableName + "(`name` varchar(32) ,`age` integer,`sex` boolean )"));
