@@ -8,7 +8,7 @@ import cool.scx.jdbc.mapping.type.TypeColumn;
 import java.lang.reflect.Field;
 
 import static cool.scx.util.CaseUtils.toSnake;
-import static cool.scx.util.StringUtils.notBlank;
+import static cool.scx.util.reflect.AnnotationUtils.getAnnotationValue;
 
 public class AnnotationConfigColumn implements TypeColumn {
 
@@ -27,18 +27,24 @@ public class AnnotationConfigColumn implements TypeColumn {
         this.javaField = javaField;
         this.javaField.setAccessible(true);
         var column = javaField.getAnnotation(Column.class);
+        var defaultColumnName = toSnake(javaField.getName());
         if (column != null) {
-            this.columnName = notBlank(column.columnName()) ? column.columnName() : toSnake(javaField.getName());
-            this.dataType = notBlank(column.dataType()) ? new BaseDataType(column.dataType()) : null;
-            this.defaultValue = notBlank(column.defaultValue()) ? column.defaultValue() : null;
-            this.onUpdate = notBlank(column.onUpdate()) ? column.onUpdate() : null;
+            var _columnName = getAnnotationValue(column.columnName());
+            var _dataType = getAnnotationValue(column.dataType());
+            var _defaultValue = getAnnotationValue(column.defaultValue());
+            var _onUpdate = getAnnotationValue(column.onUpdate());
+
+            this.columnName = _columnName != null ? _columnName : defaultColumnName;
+            this.dataType = _dataType != null ? new BaseDataType(_dataType) : null;
+            this.defaultValue = _defaultValue;
+            this.onUpdate = _onUpdate;
             this.notNull = column.notNull();
             this.autoIncrement = column.autoIncrement();
             this.primary = column.primary();
             this.unique = column.unique();
             this.index = column.index();
         } else {
-            this.columnName = toSnake(javaField.getName());
+            this.columnName = defaultColumnName;
             this.dataType = null;
             this.defaultValue = null;
             this.onUpdate = null;

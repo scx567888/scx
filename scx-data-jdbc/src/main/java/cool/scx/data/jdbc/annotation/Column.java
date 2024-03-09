@@ -1,9 +1,13 @@
 package cool.scx.data.jdbc.annotation;
 
+import cool.scx.util.reflect.AnnotationUtils;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import static cool.scx.util.reflect.AnnotationUtils.*;
 
 /**
  * 添加此注解的 字段 在创建数据表是会采用 value 上的类型
@@ -21,21 +25,21 @@ public @interface Column {
      *
      * @return 列的名称
      */
-    String columnName() default "";
+    String columnName() default NULL;
 
     /**
      * 数据库字段类型 仅用于 创建或修复表时
      *
      * @return 字段类型
      */
-    DataType[] dataType() default {};
+    String dataType() default NULL;
 
     /**
      * 数据库默认值 仅用于 创建或修复表时
      *
      * @return 数据库默认值
      */
-    String defaultValue() default "";
+    String defaultValue() default NULL;
 
     /**
      * 数据库更新时值 仅用于 创建或修复表时
@@ -43,7 +47,7 @@ public @interface Column {
      *
      * @return 数据库更新时值
      */
-    String onUpdate() default "";
+    String onUpdate() default NULL;
 
     /**
      * 是否必填 仅用于 创建或修复表时
