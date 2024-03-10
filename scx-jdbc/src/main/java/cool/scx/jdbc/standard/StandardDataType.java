@@ -105,39 +105,39 @@ public enum StandardDataType {
     private static Map<Class<?>, StandardDataType> initTypes() {
         var map = new HashMap<Class<?>, StandardDataType>();
 
-        map.put(byte.class, StandardDataType.TINYINT);
-        map.put(short.class, StandardDataType.SMALLINT);
-        map.put(int.class, StandardDataType.INT);
-        map.put(long.class, StandardDataType.BIGINT);
-        map.put(float.class, StandardDataType.FLOAT);
-        map.put(double.class, StandardDataType.DOUBLE);
-        map.put(boolean.class, StandardDataType.BOOLEAN);
+        map.put(byte.class, TINYINT);
+        map.put(short.class, SMALLINT);
+        map.put(int.class, INT);
+        map.put(long.class, BIGINT);
+        map.put(float.class, FLOAT);
+        map.put(double.class, DOUBLE);
+        map.put(boolean.class, BOOLEAN);
 
-        map.put(Byte.class, StandardDataType.TINYINT);
-        map.put(Short.class, StandardDataType.SMALLINT);
-        map.put(Integer.class, StandardDataType.INT);
-        map.put(Long.class, StandardDataType.BIGINT);
-        map.put(Double.class, StandardDataType.DOUBLE);
-        map.put(Float.class, StandardDataType.FLOAT);
-        map.put(Boolean.class, StandardDataType.BOOLEAN);
+        map.put(Byte.class, TINYINT);
+        map.put(Short.class, SMALLINT);
+        map.put(Integer.class, INT);
+        map.put(Long.class, BIGINT);
+        map.put(Double.class, DOUBLE);
+        map.put(Float.class, FLOAT);
+        map.put(Boolean.class, BOOLEAN);
 
-        map.put(BigInteger.class, StandardDataType.BIGINT);
-        map.put(BigDecimal.class, StandardDataType.DECIMAL);
+        map.put(BigInteger.class, BIGINT);
+        map.put(BigDecimal.class, DECIMAL);
 
-        map.put(LocalDate.class, StandardDataType.DATE);
-        map.put(LocalTime.class, StandardDataType.TIME);
-        map.put(LocalDateTime.class, StandardDataType.DATETIME);
-        map.put(OffsetTime.class, StandardDataType.TIME);
-        map.put(OffsetDateTime.class, StandardDataType.DATETIME);
-        map.put(ZonedDateTime.class, StandardDataType.DATETIME);
+        map.put(LocalDate.class, DATE);
+        map.put(LocalTime.class, TIME);
+        map.put(LocalDateTime.class, DATETIME);
+        map.put(OffsetTime.class, TIME);
+        map.put(OffsetDateTime.class, DATETIME);
+        map.put(ZonedDateTime.class, DATETIME);
 
-        map.put(Duration.class, StandardDataType.TIME);
-        map.put(Instant.class, StandardDataType.DATETIME);
+        map.put(Duration.class, TIME);
+        map.put(Instant.class, DATETIME);
 
-        map.put(String.class, StandardDataType.VARCHAR);
+        map.put(String.class, VARCHAR);
 
-        map.put(byte[].class, StandardDataType.BINARY);
-        map.put(Byte[].class, StandardDataType.BINARY);
+        map.put(byte[].class, BINARY);
+        map.put(Byte[].class, BINARY);
 
         return map;
     }
