@@ -64,12 +64,14 @@ public class MethodUtils {
         return list.toArray(Annotation[]::new);
     }
 
+    //COPY FROM  org.springframework.core.annotation.AnnotationsScanner.isOverride
     private static boolean isOverride(Method rootMethod, Method candidateMethod) {
         return (!Modifier.isPrivate(candidateMethod.getModifiers()) &&
                 candidateMethod.getName().equals(rootMethod.getName()) &&
                 hasSameParameterTypes(rootMethod, candidateMethod));
     }
 
+    //COPY FROM org.springframework.core.annotation.AnnotationsScanner.hasSameParameterTypes
     private static boolean hasSameParameterTypes(Method rootMethod, Method candidateMethod) {
         if (candidateMethod.getParameterCount() != rootMethod.getParameterCount()) {
             return false;
@@ -83,6 +85,7 @@ public class MethodUtils {
                 rootParameterTypes);
     }
 
+    //COPY FROM org.springframework.core.annotation.AnnotationsScanner.hasSameGenericTypeParameters
     private static boolean hasSameGenericTypeParameters(
             Method rootMethod, Method candidateMethod, Class<?>[] rootParameterTypes) {
 
