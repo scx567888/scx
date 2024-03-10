@@ -117,8 +117,8 @@ public enum StandardDataType {
         map.put(Short.class, SMALLINT);
         map.put(Integer.class, INT);
         map.put(Long.class, BIGINT);
-        map.put(Double.class, DOUBLE);
         map.put(Float.class, FLOAT);
+        map.put(Double.class, DOUBLE);
         map.put(Boolean.class, BOOLEAN);
 
         map.put(BigInteger.class, BIGINT);
