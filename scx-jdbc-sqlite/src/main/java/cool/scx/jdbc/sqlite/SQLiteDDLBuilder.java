@@ -12,8 +12,14 @@ import static cool.scx.util.StringUtils.notBlank;
 public class SQLiteDDLBuilder implements DDLBuilder {
 
     @Override
-    public String getDataTypeDefinitionByStandardDataType(StandardDataType dataType) {
+    public String getDataTypeNameByStandardDataType(StandardDataType dataType) {
         return SQLiteDialectHelper.standardDataTypeToDialectDataType(dataType);
+    }
+
+    @Override
+    public String getDataTypeDefinitionByName(String dataType, Integer length) {
+        //SQLite 的类型无需长度
+        return dataType;
     }
 
     /**

@@ -2,8 +2,6 @@ package cool.scx.jdbc.mapping.type;
 
 import cool.scx.jdbc.mapping.Column;
 
-import java.lang.reflect.Field;
-
 /**
  * 具有 java 类型 的 Column
  *
@@ -12,6 +10,7 @@ import java.lang.reflect.Field;
  */
 public interface TypeColumn extends Column {
 
-    Field javaField();
+    @Override
+    TypeDataType dataType();
 
 }

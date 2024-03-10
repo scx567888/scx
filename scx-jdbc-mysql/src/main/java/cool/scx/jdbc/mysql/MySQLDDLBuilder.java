@@ -1,6 +1,5 @@
 package cool.scx.jdbc.mysql;
 
-import com.mysql.cj.MysqlType;
 import cool.scx.jdbc.dialect.DDLBuilder;
 import cool.scx.jdbc.mapping.Column;
 import cool.scx.jdbc.mapping.Table;
@@ -33,9 +32,9 @@ public class MySQLDDLBuilder implements DDLBuilder {
     }
 
     @Override
-    public String getDataTypeDefinitionByStandardDataType(StandardDataType dataType) {
+    public String getDataTypeNameByStandardDataType(StandardDataType dataType) {
         var mysqlType = MySQLDialectHelper.standardDataTypeToDialectDataType(dataType);
-        return mysqlType == MysqlType.VARCHAR ? mysqlType.getName() + "(128)" : mysqlType.getName();
+        return mysqlType.getName();
     }
 
     @Override

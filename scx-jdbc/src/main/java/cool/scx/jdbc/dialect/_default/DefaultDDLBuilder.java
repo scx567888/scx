@@ -11,7 +11,7 @@ public final class DefaultDDLBuilder implements DDLBuilder {
     }
 
     @Override
-    public String getDataTypeDefinitionByStandardDataType(StandardDataType dataType) {
+    public String getDataTypeNameByStandardDataType(StandardDataType dataType) {
         return dataType.name();
     }
 
