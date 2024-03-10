@@ -1,16 +1,13 @@
 package cool.scx.jdbc.mysql;
 
 import com.mysql.cj.MysqlType;
-import com.mysql.cj.NativeQueryBindings;
 import cool.scx.jdbc.dialect.DDLBuilder;
 import cool.scx.jdbc.mapping.Column;
 import cool.scx.jdbc.mapping.Table;
+import cool.scx.jdbc.standard.StandardDataType;
 
-import java.sql.SQLType;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static cool.scx.util.StringUtils.notBlank;
 
@@ -18,56 +15,6 @@ import static cool.scx.util.StringUtils.notBlank;
  * @see <a href="https://dev.mysql.com/doc/refman/8.0/en/create-table.html">https://dev.mysql.com/doc/refman/8.0/en/create-table.html</a>
  */
 public class MySQLDDLBuilder implements DDLBuilder {
-
-    private static final Map<Class<?>, MysqlType> DEFAULT_MYSQL_TYPES = initDefaultMySqlTypes();
-
-    private static Map<Class<?>, MysqlType> initDefaultMySqlTypes() {
-        var map = new HashMap<Class<?>, MysqlType>();
-        //这里 我们在额外添加几个下表对应的基本类型或包装类型
-        map.put(byte.class, MysqlType.TINYINT);
-        map.put(Byte[].class, MysqlType.BINARY);
-        map.put(double.class, MysqlType.DOUBLE);
-        map.put(float.class, MysqlType.FLOAT);
-        map.put(int.class, MysqlType.INT);
-        map.put(long.class, MysqlType.BIGINT);
-        map.put(short.class, MysqlType.SMALLINT);
-        map.put(boolean.class, MysqlType.BOOLEAN);
-        try {
-            //整合 mysql 驱动中的 DEFAULT_MYSQL_TYPES
-            var f = NativeQueryBindings.class.getDeclaredField("DEFAULT_MYSQL_TYPES");
-            f.setAccessible(true);
-            @SuppressWarnings("unchecked")
-            var mysqlDriverDefaultMysqlTypes = (Map<Class<?>, MysqlType>) f.get(null);
-            map.putAll(mysqlDriverDefaultMysqlTypes);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-        return map;
-    }
-
-    /**
-     * 获取 mysql 类型
-     * 用于后续判断类型是否可以由 JDBC 进行 SQLType 到 JavaType 的直接转换
-     * <p>
-     * 例子 :
-     * String 可以由 varchar 直接转换 true
-     * Integer 可以由 int 直接转换 true
-     * User 不可以由 json 直接转换 false
-     *
-     * @param javaType 需要判断的类型
-     * @return r
-     */
-    private static SQLType getSQLType(Class<?> javaType) {
-        var mysqlType = DEFAULT_MYSQL_TYPES.get(javaType);
-        if (mysqlType == null) {
-            return DEFAULT_MYSQL_TYPES.entrySet().stream()
-                    .filter(entry -> entry.getKey().isAssignableFrom(javaType))
-                    .findFirst()
-                    .map(Map.Entry::getValue)
-                    .orElse(null);
-        }
-        return mysqlType;
-    }
 
     @Override
     public List<String> getColumnConstraint(Column column) {
@@ -86,15 +33,8 @@ public class MySQLDDLBuilder implements DDLBuilder {
     }
 
     @Override
-    public String getDataTypeDefinitionByClass(Class<?> javaType) {
-        var mysqlType = getSQLType(javaType);
-        if (mysqlType == null) {
-            if (javaType.isEnum()) {
-                mysqlType = MysqlType.VARCHAR;
-            } else {
-                mysqlType = MysqlType.JSON;
-            }
-        }
+    public String getDataTypeDefinitionByStandardDataType(StandardDataType dataType) {
+        var mysqlType = MySQLDialectHelper.standardDataTypeToDialectDataType(dataType);
         return mysqlType == MysqlType.VARCHAR ? mysqlType.getName() + "(128)" : mysqlType.getName();
     }
 

@@ -2,6 +2,7 @@ package cool.scx.jdbc.sqlite;
 
 import cool.scx.jdbc.dialect.DDLBuilder;
 import cool.scx.jdbc.mapping.Column;
+import cool.scx.jdbc.standard.StandardDataType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,14 +12,8 @@ import static cool.scx.util.StringUtils.notBlank;
 public class SQLiteDDLBuilder implements DDLBuilder {
 
     @Override
-    public String getDataTypeDefinitionByClass(Class<?> javaType) {
-        if (javaType == Integer.class || javaType == Long.class) {
-            return "INTEGER";
-        } else if (javaType == String.class) {
-            return "TEXT";
-        } else {
-            return "BLOB";
-        }
+    public String getDataTypeDefinitionByStandardDataType(StandardDataType dataType) {
+        return SQLiteDialectHelper.standardDataTypeToDialectDataType(dataType);
     }
 
     /**

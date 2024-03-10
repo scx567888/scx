@@ -3,6 +3,7 @@ package cool.scx.jdbc.dialect;
 import cool.scx.jdbc.mapping.Column;
 import cool.scx.jdbc.mapping.Table;
 import cool.scx.jdbc.mapping.type.TypeColumn;
+import cool.scx.jdbc.standard.StandardDataType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,7 +99,19 @@ public interface DDLBuilder {
      * @param javaType 需要获取的类型
      * @return a {@link String} object.
      */
-    String getDataTypeDefinitionByClass(Class<?> javaType);
+    default String getDataTypeDefinitionByClass(Class<?> javaType) {
+        var standardDataType = StandardDataType.getByJavaType(javaType);
+        if (standardDataType == null) {
+            if (javaType.isEnum()) {
+                standardDataType = StandardDataType.VARCHAR;
+            } else {
+                standardDataType = StandardDataType.JSON;
+            }
+        }
+        return getDataTypeDefinitionByStandardDataType(standardDataType);
+    }
+
+    String getDataTypeDefinitionByStandardDataType(StandardDataType dataType);
 
     /**
      * 默认值

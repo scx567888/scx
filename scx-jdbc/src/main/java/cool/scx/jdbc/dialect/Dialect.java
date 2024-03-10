@@ -1,5 +1,6 @@
 package cool.scx.jdbc.dialect;
 
+import cool.scx.jdbc.standard.StandardDataType;
 import cool.scx.jdbc.type_handler.TypeHandler;
 import cool.scx.jdbc.type_handler.TypeHandlerSelector;
 
@@ -94,5 +95,21 @@ public abstract class Dialect {
     public final <T> TypeHandler<T> findTypeHandler(Type type) {
         return typeHandlerSelector.findTypeHandler(type);
     }
+
+    /**
+     * 方言数据类型 转换为 标准数据类型
+     *
+     * @param dialectDataType 方言数据类型
+     * @return 标准数据类型
+     */
+    public abstract StandardDataType dialectDataTypeToStandardDataType(String dialectDataType);
+
+    /**
+     * 标准数据类型 转换为 方言数据类型
+     *
+     * @param standardDataType 标准数据类型
+     * @return 方言数据类型
+     */
+    public abstract String standardDataTypeToDialectDataType(StandardDataType standardDataType);
 
 }

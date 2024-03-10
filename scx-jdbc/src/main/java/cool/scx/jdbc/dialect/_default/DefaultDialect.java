@@ -2,6 +2,7 @@ package cool.scx.jdbc.dialect._default;
 
 import cool.scx.jdbc.dialect.DDLBuilder;
 import cool.scx.jdbc.dialect.Dialect;
+import cool.scx.jdbc.standard.StandardDataType;
 
 import javax.sql.DataSource;
 import java.sql.Driver;
@@ -44,6 +45,16 @@ public final class DefaultDialect extends Dialect {
 
     @Override
     public DataSource createDataSource(String url, String username, String password, String[] parameters) {
+        return null;
+    }
+
+    @Override
+    public StandardDataType dialectDataTypeToStandardDataType(String dialectDataType) {
+        return null;
+    }
+
+    @Override
+    public String standardDataTypeToDialectDataType(StandardDataType standardDataType) {
         return null;
     }
 

@@ -42,11 +42,19 @@ public final class SchemaMetaData implements Schema {
     }
 
     public SchemaMetaData refreshTables(Connection connection) throws SQLException {
-        return refreshTables(connection, false);
+        return refreshTables(connection, new String[]{"TABLE"}, false);
     }
 
     public SchemaMetaData refreshTables(Connection connection, boolean deep) throws SQLException {
-        this.tables = MetaDataHelper.getTables(connection, this.catalog, this.name, null, null);
+        return refreshTables(connection, new String[]{"TABLE"}, deep);
+    }
+
+    public SchemaMetaData refreshTables(Connection connection, String[] types) throws SQLException {
+        return refreshTables(connection, types, false);
+    }
+
+    public SchemaMetaData refreshTables(Connection connection, String[] types, boolean deep) throws SQLException {
+        this.tables = MetaDataHelper.getTables(connection, this.catalog, this.name, null, types);
         this.tableMap = Arrays.stream(this.tables).collect(Collectors.toMap(TableMetaData::name, c -> c));
         if (deep) {
             for (var table : tables) {

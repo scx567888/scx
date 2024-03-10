@@ -21,13 +21,13 @@ public abstract class BaseModel {
     /**
      * 创建时间
      */
-    @Column(notNull = true, defaultValue = "CURRENT_TIMESTAMP", index = true)
+    @Column(notNull = true, defaultValue = "(NOW())", index = true)
     public LocalDateTime createdDate;
 
     /**
      * 最后修改时间
      */
-    @Column(notNull = true, defaultValue = "CURRENT_TIMESTAMP", onUpdate = "CURRENT_TIMESTAMP", index = true)
+    @Column(notNull = true, defaultValue = "(NOW())", onUpdate = "CURRENT_TIMESTAMP", index = true)
     public LocalDateTime updatedDate;
 
 }
