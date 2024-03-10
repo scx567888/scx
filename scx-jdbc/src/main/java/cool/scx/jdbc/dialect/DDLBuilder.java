@@ -72,13 +72,12 @@ public interface DDLBuilder {
     default String getDataTypeDefinition(Column column) {
         if (column.dataType() != null) {
             var _dataType = column.dataType();
-            var _length = _dataType.length();
             var _name = _dataType.name();
             // TypeDataType 做特殊处理
             if (_dataType instanceof TypeDataType m && m.standardDataType() != null) {
                 _name = getDataTypeNameByStandardDataType(m.standardDataType());
             }
-            return getDataTypeDefinitionByName(_name, _length);
+            return getDataTypeDefinitionByName(_name, _dataType.length());
         }
         return defaultDateType();
     }
