@@ -1,6 +1,7 @@
 package cool.scx.jdbc.dialect._default;
 
 import cool.scx.jdbc.dialect.DDLBuilder;
+import cool.scx.jdbc.standard.StandardDataType;
 
 public final class DefaultDDLBuilder implements DDLBuilder {
 
@@ -10,8 +11,8 @@ public final class DefaultDDLBuilder implements DDLBuilder {
     }
 
     @Override
-    public String getDataTypeDefinitionByClass(Class<?> javaType) {
-        return null;
+    public String getDataTypeDefinitionByStandardDataType(StandardDataType dataType) {
+        return dataType.name();
     }
 
 }
