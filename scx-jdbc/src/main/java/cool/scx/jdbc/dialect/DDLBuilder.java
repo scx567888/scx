@@ -77,10 +77,10 @@ public interface DDLBuilder {
             // TypeDataType 做特殊处理
             if (_dataType instanceof TypeDataType m) {
                 if (m.standardDataType() != null) {
-                    _name = getDataTypeDefinitionByStandardDataType(m.standardDataType());
+                    _name = getDataTypeNameByStandardDataType(m.standardDataType());
                 }
             }
-            return _length != null ? _name + "(" + _length + ")" : _name;
+            return getDataTypeDefinitionByName(_name, _length);
         }
         return defaultDateType();
     }
@@ -92,7 +92,11 @@ public interface DDLBuilder {
         return new ArrayList<>();
     }
 
-    String getDataTypeDefinitionByStandardDataType(StandardDataType dataType);
+    String getDataTypeNameByStandardDataType(StandardDataType dataType);
+
+    default String getDataTypeDefinitionByName(String dataType, Integer length) {
+        return length != null ? dataType + "(" + length + ")" : dataType;
+    }
 
     /**
      * 默认值

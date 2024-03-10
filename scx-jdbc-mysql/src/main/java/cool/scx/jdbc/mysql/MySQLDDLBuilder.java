@@ -32,7 +32,7 @@ public class MySQLDDLBuilder implements DDLBuilder {
     }
 
     @Override
-    public String getDataTypeDefinitionByStandardDataType(StandardDataType dataType) {
+    public String getDataTypeNameByStandardDataType(StandardDataType dataType) {
         var mysqlType = MySQLDialectHelper.standardDataTypeToDialectDataType(dataType);
         return mysqlType.getName();
     }
