@@ -24,7 +24,7 @@ public interface DDLBuilder {
         if (notEmpty(table.schema())) {
             s.append(table.schema()).append(".");
         }
-        s.append(table.name()).append("\n");
+        s.append("`").append(table.name()).append("`").append("\n");
         s.append("(\n");
 
         // 创建子句
@@ -58,7 +58,7 @@ public interface DDLBuilder {
 
     default String getColumnDefinition(Column column) {
         var s = new StringBuilder();
-        s.append(column.name()).append(" ");// 列名
+        s.append("`").append(column.name()).append("`").append(" ");// 列名
         var dataTypeDefinition = getDataTypeDefinition(column);
         if (dataTypeDefinition != null) {
             s.append(dataTypeDefinition).append(" ");
@@ -118,7 +118,7 @@ public interface DDLBuilder {
         if (notEmpty(tableInfo.schema())) {
             s.append(tableInfo.schema()).append(".");
         }
-        s.append(tableInfo.name()).append("\n");
+        s.append("`").append(tableInfo.name()).append("`").append("\n");
 
         var columnDefinitionStr = getColumnDefinitions(needAdds).stream()
                 .map(c -> "    ADD COLUMN " + c)
