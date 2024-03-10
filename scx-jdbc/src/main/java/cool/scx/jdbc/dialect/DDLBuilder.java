@@ -118,7 +118,7 @@ public interface DDLBuilder {
         if (notEmpty(tableInfo.schema())) {
             s.append(tableInfo.schema()).append(".");
         }
-        s.append(tableInfo.name()).append("\n");
+        s.append("`").append(tableInfo.name()).append("`").append("\n");
 
         var columnDefinitionStr = getColumnDefinitions(needAdds).stream()
                 .map(c -> "    ADD COLUMN " + c)
