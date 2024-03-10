@@ -75,10 +75,8 @@ public interface DDLBuilder {
             var _length = _dataType.length();
             var _name = _dataType.name();
             // TypeDataType 做特殊处理
-            if (_dataType instanceof TypeDataType m) {
-                if (m.standardDataType() != null) {
-                    _name = getDataTypeNameByStandardDataType(m.standardDataType());
-                }
+            if (_dataType instanceof TypeDataType m && m.standardDataType() != null) {
+                _name = getDataTypeNameByStandardDataType(m.standardDataType());
             }
             return getDataTypeDefinitionByName(_name, _length);
         }
