@@ -34,24 +34,7 @@ public class MySQLDDLBuilder implements DDLBuilder {
 
     @Override
     public String getDataTypeDefinitionByStandardDataType(StandardDataType dataType) {
-        var mysqlType = switch (dataType) {
-            case TINYINT -> MysqlType.TINYINT;
-            case SMALLINT -> MysqlType.SMALLINT;
-            case INT -> MysqlType.INT;
-            case BIGINT -> MysqlType.BIGINT;
-            case FLOAT -> MysqlType.FLOAT;
-            case DOUBLE -> MysqlType.DOUBLE;
-            case BOOLEAN -> MysqlType.BOOLEAN;
-            case DECIMAL -> MysqlType.DECIMAL;
-            case DATE -> MysqlType.DATE;
-            case TIME -> MysqlType.TIME;
-            case DATETIME -> MysqlType.DATETIME;
-            case VARCHAR -> MysqlType.VARCHAR;
-            case TEXT -> MysqlType.TEXT;
-            case LONGTEXT -> MysqlType.LONGTEXT;
-            case BINARY -> MysqlType.BINARY;
-            case JSON -> MysqlType.JSON;
-        };
+        var mysqlType = MySQLDialectHelper.standardDataTypeToDialectDataType(dataType);
         return mysqlType == MysqlType.VARCHAR ? mysqlType.getName() + "(128)" : mysqlType.getName();
     }
 

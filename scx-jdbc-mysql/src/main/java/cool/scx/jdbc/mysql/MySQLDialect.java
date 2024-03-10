@@ -6,6 +6,7 @@ import com.mysql.cj.jdbc.MysqlDataSource;
 import com.mysql.cj.jdbc.NonRegisteringDriver;
 import cool.scx.jdbc.dialect.DDLBuilder;
 import cool.scx.jdbc.dialect.Dialect;
+import cool.scx.jdbc.standard.StandardDataType;
 
 import javax.sql.DataSource;
 import java.sql.Driver;
@@ -90,6 +91,16 @@ public class MySQLDialect extends Dialect {
     public PreparedStatement beforeExecuteQuery(PreparedStatement preparedStatement) throws SQLException {
         preparedStatement.setFetchSize(Integer.MIN_VALUE);
         return preparedStatement;
+    }
+
+    @Override
+    public StandardDataType dialectDataTypeToStandardDataType(String dialectDataType) {
+        return MySQLDialectHelper.dialectDataTypeToStandardDataType(dialectDataType);
+    }
+
+    @Override
+    public String standardDataTypeToDialectDataType(StandardDataType standardDataType) {
+        return MySQLDialectHelper.standardDataTypeToDialectDataType(standardDataType).getName();
     }
 
 }

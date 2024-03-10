@@ -4,6 +4,7 @@ import cool.scx.jdbc.JDBCHelper;
 import cool.scx.jdbc.dialect.DDLBuilder;
 import cool.scx.jdbc.dialect.Dialect;
 import cool.scx.jdbc.sqlite.type_handler.SQLiteLocalDateTimeTypeHandler;
+import cool.scx.jdbc.standard.StandardDataType;
 import org.sqlite.JDBC;
 import org.sqlite.SQLiteDataSource;
 import org.sqlite.core.CorePreparedStatement;
@@ -125,6 +126,16 @@ public class SQLiteDialect extends Dialect {
         var sqLiteDataSource = new SQLiteDataSource();
         sqLiteDataSource.setUrl(url);
         return sqLiteDataSource;
+    }
+
+    @Override
+    public StandardDataType dialectDataTypeToStandardDataType(String dialectDataType) {
+        return SQLiteDialectHelper.dialectDataTypeToStandardDataType(dialectDataType);
+    }
+
+    @Override
+    public String standardDataTypeToDialectDataType(StandardDataType standardDataType) {
+        return SQLiteDialectHelper.standardDataTypeToDialectDataType(standardDataType);
     }
 
 }

@@ -68,7 +68,7 @@ public class SQLRunnerForSQLiteTest {
     public static void beforeTest() {
         try {
             sqlRunner.execute(sql("drop table if exists " + tableName + ";"));
-            sqlRunner.execute(sql(" create table " + tableName + "(`name` varchar(32) unique ,`age` integer,`sex` boolean )"));
+            sqlRunner.execute(sql(" create table " + tableName + "(`name` text unique ,`age` integer,`sex` integer )"));
         } catch (Exception e) {
             e.printStackTrace();
         }
