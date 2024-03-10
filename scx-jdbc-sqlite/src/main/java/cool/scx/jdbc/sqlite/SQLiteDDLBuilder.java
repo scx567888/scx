@@ -13,7 +13,7 @@ public class SQLiteDDLBuilder implements DDLBuilder {
 
     @Override
     public String getDataTypeDefinitionByStandardDataType(StandardDataType dataType) {
-        return switch (dataType){
+        return switch (dataType) {
             case TINYINT, SMALLINT, INT, BIGINT, BOOLEAN -> "INTEGER";
             case FLOAT, DOUBLE, DECIMAL -> "REAL";
             case DATE, TIME, DATETIME, VARCHAR, TEXT, LONGTEXT, JSON -> "TEXT";
