@@ -2,7 +2,6 @@ package cool.scx.data.jdbc;
 
 import cool.scx.data.jdbc.annotation.Column;
 import cool.scx.jdbc.mapping.DataType;
-import cool.scx.jdbc.mapping.base.BaseDataType;
 import cool.scx.jdbc.mapping.type.TypeColumn;
 
 import java.lang.reflect.Field;
@@ -14,7 +13,7 @@ public class AnnotationConfigColumn implements TypeColumn {
 
     private final Field javaField;
     private final String columnName;
-    private final DataType dataType;
+    private final AnnotationConfigDataType dataType;
     private final String defaultValue;
     private final String onUpdate;
     private final boolean notNull;
@@ -28,14 +27,14 @@ public class AnnotationConfigColumn implements TypeColumn {
         this.javaField.setAccessible(true);
         var column = javaField.getAnnotation(Column.class);
         var defaultColumnName = toSnake(javaField.getName());
+        var defaultDataType = new AnnotationConfigDataType(this.javaField.getType());
         if (column != null) {
             var _columnName = getAnnotationValue(column.columnName());
-            var _dataType = getAnnotationValue(column.dataType());
             var _defaultValue = getAnnotationValue(column.defaultValue());
             var _onUpdate = getAnnotationValue(column.onUpdate());
 
             this.columnName = _columnName != null ? _columnName : defaultColumnName;
-            this.dataType = _dataType != null ? new BaseDataType(_dataType) : null;
+            this.dataType = column.dataType().length > 0 ? new AnnotationConfigDataType(column.dataType()[0]) : defaultDataType;
             this.defaultValue = _defaultValue;
             this.onUpdate = _onUpdate;
             this.notNull = column.notNull();
@@ -45,7 +44,7 @@ public class AnnotationConfigColumn implements TypeColumn {
             this.index = column.index();
         } else {
             this.columnName = defaultColumnName;
-            this.dataType = null;
+            this.dataType = defaultDataType;
             this.defaultValue = null;
             this.onUpdate = null;
             this.notNull = false;
@@ -56,7 +55,6 @@ public class AnnotationConfigColumn implements TypeColumn {
         }
     }
 
-    @Override
     public Field javaField() {
         return javaField;
     }
@@ -67,7 +65,7 @@ public class AnnotationConfigColumn implements TypeColumn {
     }
 
     @Override
-    public DataType dataType() {
+    public AnnotationConfigDataType dataType() {
         return dataType;
     }
 

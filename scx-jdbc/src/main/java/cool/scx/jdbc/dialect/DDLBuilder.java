@@ -2,7 +2,7 @@ package cool.scx.jdbc.dialect;
 
 import cool.scx.jdbc.mapping.Column;
 import cool.scx.jdbc.mapping.Table;
-import cool.scx.jdbc.mapping.type.TypeColumn;
+import cool.scx.jdbc.mapping.type.TypeDataType;
 import cool.scx.jdbc.standard.StandardDataType;
 
 import java.util.ArrayList;
@@ -71,18 +71,18 @@ public interface DDLBuilder {
 
     default String getDataTypeDefinition(Column column) {
         if (column.dataType() != null) {
-            if (column.dataType().length() != null) {
-                return column.dataType().name() + "(" + column.dataType().length() + ")";
-            } else {
-                return column.dataType().name();
+            var _dataType = column.dataType();
+            var _length = _dataType.length();
+            var _name = _dataType.name();
+            // TypeDataType 做特殊处理
+            if (_dataType instanceof TypeDataType m) {
+                if (m.standardDataType() != null) {
+                    _name = getDataTypeDefinitionByStandardDataType(m.standardDataType());
+                }
             }
-        } else {
-            if (column instanceof TypeColumn m) {
-                return getDataTypeDefinitionByClass(m.javaField().getType());
-            } else {
-                return defaultDateType();
-            }
+            return _length != null ? _name + "(" + _length + ")" : _name;
         }
+        return defaultDateType();
     }
 
     /**
@@ -90,25 +90,6 @@ public interface DDLBuilder {
      */
     default List<String> getColumnConstraint(Column column) {
         return new ArrayList<>();
-    }
-
-    /**
-     * 根据 class 获取对应的 SQLType 类型 如果没有则返回 JSON
-     * todo 是否需要 ?
-     *
-     * @param javaType 需要获取的类型
-     * @return a {@link String} object.
-     */
-    default String getDataTypeDefinitionByClass(Class<?> javaType) {
-        var standardDataType = StandardDataType.getByJavaType(javaType);
-        if (standardDataType == null) {
-            if (javaType.isEnum()) {
-                standardDataType = StandardDataType.VARCHAR;
-            } else {
-                standardDataType = StandardDataType.JSON;
-            }
-        }
-        return getDataTypeDefinitionByStandardDataType(standardDataType);
     }
 
     String getDataTypeDefinitionByStandardDataType(StandardDataType dataType);

@@ -30,7 +30,7 @@ public @interface Column {
      *
      * @return 字段类型
      */
-    String dataType() default NULL;
+    DataType[] dataType() default {};
 
     /**
      * 数据库默认值 仅用于 创建或修复表时
