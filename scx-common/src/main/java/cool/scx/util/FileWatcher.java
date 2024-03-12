@@ -11,8 +11,8 @@ import static java.nio.file.StandardWatchEventKinds.*;
 public class FileWatcher {
 
     private final WatchService watchService;
-    private Thread watchThread;
     private final Path fileName;
+    private Thread watchThread;
     private Runnable deleteHandler;
     private Runnable createHandler;
     private Runnable modifyHandler;

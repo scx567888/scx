@@ -19,7 +19,6 @@ import org.testng.annotations.Test;
 
 import javax.sql.DataSource;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
