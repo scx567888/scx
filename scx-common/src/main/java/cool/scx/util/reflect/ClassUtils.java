@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.FileVisitResult;
@@ -111,21 +110,30 @@ public final class ClassUtils {
      *
      * @param source a {@link java.lang.Class} object.
      * @return 可能是 目录 也可能是 jar 文件
-     * @throws java.net.URISyntaxException if any.
      */
-    public static URI getCodeSource(Class<?> source) throws URISyntaxException {
-        return source.getProtectionDomain().getCodeSource().getLocation().toURI();
+    public static URI getCodeSource(Class<?> source) {
+        return URI.create(source.getProtectionDomain().getCodeSource().getLocation().toString());
     }
 
     /**
-     * 根据 codeSource 获取 app 根路径
+     * 根据 codeSource 获取 app 根路径(文件夹)
      *
      * @param codeSource {@link ClassUtils#getCodeSource(Class)}
-     * @return a
+     * @return app 根路径(文件夹)
      */
     public static Path getAppRoot(URI codeSource) {
         var path = Path.of(codeSource);
         return Files.isDirectory(path) ? path : path.getParent();
+    }
+
+    /**
+     * 根据 class 获取 app 根路径(文件夹)
+     *
+     * @param source {@link ClassUtils#getCodeSource(Class)}
+     * @return app 根路径(文件夹)
+     */
+    public static Path getAppRoot(Class<?> source) {
+        return getAppRoot(getCodeSource(source));
     }
 
     /**

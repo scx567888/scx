@@ -42,10 +42,10 @@ public class SQLRunnerForSQLiteTest {
     static {
         ScxLoggerFactory.setConfig("ScxSpy", new ScxLoggerConfig().setLevel(DEBUG));
         try {
-            AppRoot = ClassUtils.getAppRoot(ClassUtils.getCodeSource(SQLRunnerForSQLiteTest.class));
+            AppRoot = ClassUtils.getAppRoot(SQLRunnerForSQLiteTest.class);
             TempSQLite = AppRoot.resolve("temp").resolve("temp.sqlite");
             Files.createDirectories(TempSQLite.getParent());
-        } catch (URISyntaxException | IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
         dataSource = getSQLiteDataSource();
