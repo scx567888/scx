@@ -12,7 +12,6 @@ public class FileWatcher {
 
     private final WatchService watchService;
     private Thread watchThread;
-    private final Path fileParent;
     private final Path fileName;
     private Runnable deleteHandler;
     private Runnable createHandler;
@@ -20,9 +19,9 @@ public class FileWatcher {
 
     public FileWatcher(Path path) throws IOException {
         this.watchService = FileSystems.getDefault().newWatchService();
-        this.fileParent = path.getParent();
         this.fileName = path.getFileName();
-        this.fileParent.register(watchService, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
+        var fileParent = path.getParent();
+        fileParent.register(watchService, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
     }
 
     public void _do() {
