@@ -40,13 +40,7 @@ public final class ScxEnvironment {
      * @return f
      */
     private static Path initAppRoot(Class<?> mainClass) {
-        try {
-            return ClassUtils.getAppRoot(ClassUtils.getCodeSource(mainClass));
-            //判断当前是否处于 jar 包中
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+        return ClassUtils.getAppRoot(mainClass);
     }
 
     /**
