@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static cool.scx.common.util.ScxExceptionHelper.wrap;
+import static cool.scx.common.util.reflect.ClassUtils.*;
 
 /**
  * Scx 模块接口 , 自定义模块必须实现此接口
