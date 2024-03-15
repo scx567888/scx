@@ -1,18 +1,18 @@
 package cool.scx.mvc.parameter_handler;
 
 import com.fasterxml.jackson.databind.JavaType;
+import cool.scx.common.util.reflect.AnnotationUtils;
 import cool.scx.mvc.ScxMvcParameterHandler;
 import cool.scx.mvc.ScxMvcRequestInfo;
 import cool.scx.mvc.annotation.FromBody;
 import cool.scx.mvc.parameter_handler.exception.ParamConvertException;
 import cool.scx.mvc.parameter_handler.exception.RequiredParamEmptyException;
-import cool.scx.util.reflect.AnnotationUtils;
 
 import java.lang.reflect.Parameter;
 
+import static cool.scx.common.util.ObjectUtils.*;
 import static cool.scx.mvc.ScxMvcHelper.*;
 import static cool.scx.mvc.ScxMvcRequestInfo.ContentType;
-import static cool.scx.util.ObjectUtils.*;
 
 /**
  * a

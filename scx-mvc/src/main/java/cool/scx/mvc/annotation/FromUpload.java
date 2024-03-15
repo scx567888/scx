@@ -7,7 +7,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import static cool.scx.util.reflect.AnnotationUtils.NULL;
+import static cool.scx.common.util.reflect.AnnotationUtils.NULL;
 
 /**
  * 从上传中获取参数 (注意 : 必须标注在 {@link UploadedEntity} 类型的参数上)

@@ -1,7 +1,7 @@
 package cool.scx.mvc.vo;
 
-import cool.scx.standard.MediaType;
-import cool.scx.util.HttpUtils;
+import cool.scx.common.standard.MediaType;
+import cool.scx.common.util.HttpUtils;
 
 import java.io.InputStream;
 import java.nio.file.Path;

@@ -1,5 +1,11 @@
 package cool.scx.core.test;
 
+import cool.scx.common.http_client.ScxHttpClientHelper;
+import cool.scx.common.http_client.body.FormData;
+import cool.scx.common.util.*;
+import cool.scx.common.util.zip.UnZipBuilder;
+import cool.scx.common.util.zip.ZipBuilder;
+import cool.scx.common.util.zip.ZipOptions;
 import cool.scx.core.Scx;
 import cool.scx.core.ScxContext;
 import cool.scx.core.ScxModule;
@@ -12,13 +18,7 @@ import cool.scx.core.test.car.CarService;
 import cool.scx.core.test.person.Person;
 import cool.scx.core.test.person.PersonService;
 import cool.scx.data.query.WhereOption;
-import cool.scx.http_client.ScxHttpClientHelper;
-import cool.scx.http_client.body.FormData;
 import cool.scx.jdbc.sql.SQL;
-import cool.scx.util.*;
-import cool.scx.util.zip.UnZipBuilder;
-import cool.scx.util.zip.ZipBuilder;
-import cool.scx.util.zip.ZipOptions;
 import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.ext.web.handler.FileSystemAccess;
 import io.vertx.ext.web.handler.StaticHandler;

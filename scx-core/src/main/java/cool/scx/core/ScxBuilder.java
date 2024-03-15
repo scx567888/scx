@@ -1,5 +1,6 @@
 package cool.scx.core;
 
+import cool.scx.common.util.StringUtils;
 import cool.scx.config.ScxConfig;
 import cool.scx.config.ScxConfigSource;
 import cool.scx.config.ScxEnvironment;
@@ -8,7 +9,6 @@ import cool.scx.config.source.ArgsConfigSource;
 import cool.scx.config.source.JsonFileConfigSource;
 import cool.scx.config.source.MapConfigSource;
 import cool.scx.core.enumeration.ScxCoreFeature;
-import cool.scx.util.StringUtils;
 import io.vertx.core.VertxOptions;
 import io.vertx.core.http.HttpServerOptions;
 

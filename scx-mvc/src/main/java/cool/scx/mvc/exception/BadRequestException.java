@@ -1,7 +1,7 @@
 package cool.scx.mvc.exception;
 
 
-import static cool.scx.standard.HttpStatusCode.BAD_REQUEST;
+import static cool.scx.common.standard.HttpStatusCode.BAD_REQUEST;
 
 /**
  * 请求错误异常

@@ -1,8 +1,8 @@
 package cool.scx.mvc.return_value_handler;
 
+import cool.scx.common.util.ObjectUtils;
 import cool.scx.mvc.ScxMvcReturnValueHandler;
 import cool.scx.mvc.vo.BaseVo;
-import cool.scx.util.ObjectUtils;
 import io.vertx.ext.web.RoutingContext;
 
 /**

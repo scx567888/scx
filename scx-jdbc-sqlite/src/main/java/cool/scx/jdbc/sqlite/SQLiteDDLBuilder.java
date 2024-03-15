@@ -7,7 +7,7 @@ import cool.scx.jdbc.standard.StandardDataType;
 import java.util.ArrayList;
 import java.util.List;
 
-import static cool.scx.util.StringUtils.notBlank;
+import static cool.scx.common.util.StringUtils.notBlank;
 
 public class SQLiteDDLBuilder implements DDLBuilder {
 

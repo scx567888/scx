@@ -1,6 +1,6 @@
 package cool.scx.mvc.vo;
 
-import cool.scx.standard.FileFormat;
+import cool.scx.common.standard.FileFormat;
 
 import java.io.InputStream;
 import java.nio.file.Path;

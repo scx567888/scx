@@ -1,11 +1,11 @@
 package cool.scx.mvc.vo;
 
+import cool.scx.common.standard.FileFormat;
+import cool.scx.common.standard.HttpHeader;
+import cool.scx.common.standard.HttpStatusCode;
+import cool.scx.common.standard.MediaType;
+import cool.scx.common.util.ScxExceptionHelper;
 import cool.scx.mvc.exception.NotFoundException;
-import cool.scx.standard.FileFormat;
-import cool.scx.standard.HttpHeader;
-import cool.scx.standard.HttpStatusCode;
-import cool.scx.standard.MediaType;
-import cool.scx.util.ScxExceptionHelper;
 import io.vertx.core.MultiMap;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpMethod;

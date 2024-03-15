@@ -5,7 +5,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import static cool.scx.util.reflect.AnnotationUtils.NULL;
+import static cool.scx.common.util.reflect.AnnotationUtils.NULL;
 
 /**
  * 从路径 (Path) 参数

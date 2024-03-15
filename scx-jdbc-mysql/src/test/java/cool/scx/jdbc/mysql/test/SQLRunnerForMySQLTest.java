@@ -1,6 +1,9 @@
 package cool.scx.jdbc.mysql.test;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
+import cool.scx.common.util.FileUtils;
+import cool.scx.common.util.ObjectUtils;
+import cool.scx.common.util.ScxExceptionHelper;
 import cool.scx.jdbc.JDBCContext;
 import cool.scx.jdbc.mysql.test.bean.Student;
 import cool.scx.jdbc.mysql.test.bean.StudentRecord;
@@ -10,9 +13,6 @@ import cool.scx.jdbc.sql.SQLRunner;
 import cool.scx.jdbc.sql.UpdateResult;
 import cool.scx.logging.ScxLoggerConfig;
 import cool.scx.logging.ScxLoggerFactory;
-import cool.scx.util.FileUtils;
-import cool.scx.util.ObjectUtils;
-import cool.scx.util.ScxExceptionHelper;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 

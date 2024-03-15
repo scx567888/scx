@@ -1,9 +1,9 @@
 package cool.scx.config.handler;
 
+import cool.scx.common.util.ObjectUtils;
+import cool.scx.common.util.ansi.Ansi;
 import cool.scx.config.ScxConfigValueHandler;
 import cool.scx.config.ScxEnvironment;
-import cool.scx.util.ObjectUtils;
-import cool.scx.util.ansi.Ansi;
 
 import java.nio.file.Path;
 

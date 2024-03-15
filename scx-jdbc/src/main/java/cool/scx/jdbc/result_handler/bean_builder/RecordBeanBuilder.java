@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.function.Function;
 
-import static cool.scx.util.reflect.ConstructorUtils.findRecordConstructor;
+import static cool.scx.common.util.reflect.ConstructorUtils.findRecordConstructor;
 
 /**
  * <p>BeanBuilder interface.</p>

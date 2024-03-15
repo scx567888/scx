@@ -7,7 +7,7 @@ import io.vertx.ext.web.FileUpload;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static cool.scx.util.ScxExceptionHelper.wrap;
+import static cool.scx.common.util.ScxExceptionHelper.wrap;
 
 /**
  * 文件上传后台接受容器类

@@ -3,7 +3,7 @@ package cool.scx.jdbc.type_handler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import cool.scx.util.ObjectUtils;
+import cool.scx.common.util.ObjectUtils;
 
 import java.lang.reflect.Type;
 import java.sql.PreparedStatement;

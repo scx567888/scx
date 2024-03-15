@@ -1,10 +1,10 @@
 package cool.scx.mvc;
 
+import cool.scx.common.standard.HttpMethod;
+import cool.scx.common.util.CaseUtils;
+import cool.scx.common.util.ScxExceptionHelper;
+import cool.scx.common.util.URIBuilder;
 import cool.scx.mvc.annotation.ScxRoute;
-import cool.scx.standard.HttpMethod;
-import cool.scx.util.CaseUtils;
-import cool.scx.util.ScxExceptionHelper;
-import cool.scx.util.URIBuilder;
 import io.vertx.core.Handler;
 import io.vertx.ext.web.MIMEHeader;
 import io.vertx.ext.web.RoutingContext;
@@ -18,9 +18,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import static cool.scx.common.util.reflect.AnnotationUtils.getAnnotationValue;
 import static cool.scx.mvc.ScxMvcHelper.responseCanUse;
 import static cool.scx.mvc.ScxRouteRegistrar.findScxRouteOrThrow;
-import static cool.scx.util.reflect.AnnotationUtils.getAnnotationValue;
 
 /**
  * <p>ScxRouteHandler class.</p>

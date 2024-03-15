@@ -2,8 +2,8 @@ package cool.scx.config.handler;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JavaType;
+import cool.scx.common.util.ObjectUtils;
 import cool.scx.config.ScxConfigValueHandler;
-import cool.scx.util.ObjectUtils;
 
 public final class ConvertValueHandler<T> implements ScxConfigValueHandler<T> {
 

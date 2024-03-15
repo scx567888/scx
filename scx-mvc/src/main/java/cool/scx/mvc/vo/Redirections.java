@@ -1,6 +1,6 @@
 package cool.scx.mvc.vo;
 
-import cool.scx.standard.HttpHeader;
+import cool.scx.common.standard.HttpHeader;
 import io.vertx.ext.web.RoutingContext;
 
 /**

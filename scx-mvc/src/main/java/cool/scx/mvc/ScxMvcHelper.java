@@ -2,15 +2,15 @@ package cool.scx.mvc;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
-import cool.scx.util.JsonNodeHelper;
-import cool.scx.util.ObjectUtils;
+import cool.scx.common.util.JsonNodeHelper;
+import cool.scx.common.util.ObjectUtils;
 import io.vertx.core.MultiMap;
 import io.vertx.ext.web.RoutingContext;
 
 import java.io.IOException;
 import java.util.Map;
 
-import static cool.scx.util.ObjectUtils.jsonMapper;
+import static cool.scx.common.util.ObjectUtils.jsonMapper;
 
 public class ScxMvcHelper {
 
