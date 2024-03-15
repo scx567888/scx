@@ -77,10 +77,10 @@ English | [简体中文](./README.zh-CN.md)
 #### 1. Write your own module and run the main method .
 
 ``` java
+import cool.scx.common.standard.HttpMethod;
 import cool.scx.core.Scx;
 import cool.scx.core.ScxModule;
 import cool.scx.mvc.annotation.ScxRoute;
-import cool.scx.standard.HttpMethod;
 
 // Note : Custom modules need extends ScxModule
 // This @ScxRoute indicate this class needs to be scanned by WebHandler
