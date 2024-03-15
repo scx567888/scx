@@ -1,6 +1,6 @@
 package cool.scx.mvc.annotation;
 
-import cool.scx.standard.HttpMethod;
+import cool.scx.common.standard.HttpMethod;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
 
@@ -9,7 +9,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import static cool.scx.util.reflect.AnnotationUtils.NULL;
+import static cool.scx.common.util.reflect.AnnotationUtils.NULL;
 
 /**
  * 路由注解 默认会在方法上进行继承 如果想在子类禁用 请使用 NoScxRoute

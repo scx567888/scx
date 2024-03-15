@@ -6,8 +6,8 @@ import com.mysql.cj.xdevapi.Schema;
 import cool.scx.data.Dao;
 import cool.scx.data.FieldFilter;
 import cool.scx.data.Query;
-import cool.scx.util.CaseUtils;
-import cool.scx.util.StringUtils;
+import cool.scx.common.util.CaseUtils;
+import cool.scx.common.util.StringUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;

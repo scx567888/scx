@@ -2,14 +2,14 @@ package cool.scx.mvc.parameter_handler;
 
 import cool.scx.mvc.ScxMvcParameterHandler;
 import cool.scx.mvc.ScxMvcRequestInfo;
-import cool.scx.util.ObjectUtils;
+import cool.scx.common.util.ObjectUtils;
 
 import java.lang.reflect.Parameter;
 
 import static cool.scx.mvc.parameter_handler.FromBodyParameterHandler.getValueFromBody;
 import static cool.scx.mvc.parameter_handler.FromPathParameterHandler.getValueFromPath;
 import static cool.scx.mvc.parameter_handler.FromQueryParameterHandler.getValueFromQuery;
-import static cool.scx.util.ScxExceptionHelper.ignore;
+import static cool.scx.common.util.ScxExceptionHelper.ignore;
 
 /**
  * a

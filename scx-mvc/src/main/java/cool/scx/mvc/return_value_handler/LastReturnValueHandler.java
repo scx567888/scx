@@ -3,9 +3,9 @@ package cool.scx.mvc.return_value_handler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.mvc.ScxMvcReturnValueHandler;
 import cool.scx.mvc.vo.BaseVo;
-import cool.scx.standard.HttpHeader;
-import cool.scx.standard.MediaType;
-import cool.scx.util.ObjectUtils;
+import cool.scx.common.standard.HttpHeader;
+import cool.scx.common.standard.MediaType;
+import cool.scx.common.util.ObjectUtils;
 import io.vertx.ext.web.RoutingContext;
 
 /**

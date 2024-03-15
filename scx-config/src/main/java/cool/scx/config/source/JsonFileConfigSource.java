@@ -4,8 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import cool.scx.config.ScxConfigSource;
-import cool.scx.util.ObjectUtils;
-import cool.scx.util.ansi.Ansi;
+import cool.scx.common.util.ObjectUtils;
+import cool.scx.common.util.ansi.Ansi;
 
 import java.nio.file.Files;
 import java.nio.file.Path;

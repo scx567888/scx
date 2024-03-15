@@ -4,8 +4,8 @@ import cool.scx.mvc.annotation.ScxWebSocketRoute;
 import cool.scx.mvc.base.BaseWebSocketHandler;
 import cool.scx.mvc.websocket.WebSocketRoute;
 import cool.scx.mvc.websocket.WebSocketRouter;
-import cool.scx.util.URIBuilder;
-import cool.scx.util.reflect.ClassUtils;
+import cool.scx.common.util.URIBuilder;
+import cool.scx.common.util.reflect.ClassUtils;
 
 import java.util.Arrays;
 import java.util.Comparator;

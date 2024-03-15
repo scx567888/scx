@@ -5,7 +5,7 @@ import cool.scx.mvc.ScxMvcRequestInfo;
 import cool.scx.mvc.annotation.FromUpload;
 import cool.scx.mvc.parameter_handler.exception.RequiredParamEmptyException;
 import cool.scx.mvc.type.UploadedEntity;
-import cool.scx.util.reflect.AnnotationUtils;
+import cool.scx.common.util.reflect.AnnotationUtils;
 import io.vertx.ext.web.FileUpload;
 import io.vertx.ext.web.RoutingContext;
 

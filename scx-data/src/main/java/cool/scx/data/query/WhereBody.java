@@ -4,7 +4,7 @@ import cool.scx.data.Query;
 import cool.scx.data.query.exception.WrongWhereTypeParamSizeException;
 
 import static cool.scx.data.query.WhereOption.Info;
-import static cool.scx.util.StringUtils.isBlank;
+import static cool.scx.common.util.StringUtils.isBlank;
 
 /**
  * where 封装体

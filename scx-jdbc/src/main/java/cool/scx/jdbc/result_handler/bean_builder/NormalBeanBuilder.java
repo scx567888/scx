@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.function.Function;
 
-import static cool.scx.util.reflect.ConstructorUtils.findNoArgsConstructor;
+import static cool.scx.common.util.reflect.ConstructorUtils.findNoArgsConstructor;
 
 /**
  * <p>BeanBuilder interface.</p>

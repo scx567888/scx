@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import cool.scx.config.handler.ConvertValueHandler;
 import cool.scx.config.handler.DefaultValueHandler;
-import cool.scx.util.JsonNodeHelper;
+import cool.scx.common.util.JsonNodeHelper;
 
 /**
  * 配置文件类

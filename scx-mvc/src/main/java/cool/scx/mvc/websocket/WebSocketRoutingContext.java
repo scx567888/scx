@@ -1,6 +1,6 @@
 package cool.scx.mvc.websocket;
 
-import cool.scx.util.MultiMap;
+import cool.scx.common.util.MultiMap;
 import io.netty.handler.codec.http.QueryStringDecoder;
 import io.vertx.core.Handler;
 import io.vertx.core.http.ServerWebSocket;

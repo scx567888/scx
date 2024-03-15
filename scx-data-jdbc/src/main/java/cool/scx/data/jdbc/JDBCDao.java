@@ -13,7 +13,7 @@ import cool.scx.jdbc.result_handler.ResultHandler;
 import cool.scx.jdbc.result_handler.bean_builder.BeanBuilder;
 import cool.scx.jdbc.sql.SQL;
 import cool.scx.jdbc.sql.SQLRunner;
-import cool.scx.util.RandomUtils;
+import cool.scx.common.util.RandomUtils;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ import static cool.scx.data.jdbc.FieldFilterHelper.filter;
 import static cool.scx.jdbc.result_handler.ResultHandler.*;
 import static cool.scx.jdbc.sql.SQL.sql;
 import static cool.scx.jdbc.sql.SQLBuilder.*;
-import static cool.scx.util.ArrayUtils.concat;
+import static cool.scx.common.util.ArrayUtils.concat;
 
 /**
  * 使用 JDBC 接口, 通过 SQL 操作关系型数据库的 DAO

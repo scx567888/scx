@@ -6,7 +6,7 @@ import cool.scx.jdbc.mapping.Table;
 
 import java.util.Arrays;
 
-import static cool.scx.util.StringUtils.notEmpty;
+import static cool.scx.common.util.StringUtils.notEmpty;
 
 /**
  * 此 SQLBuilder 并不用于构建 {@link SQL} 只是用于构建普通的 SQL 语句

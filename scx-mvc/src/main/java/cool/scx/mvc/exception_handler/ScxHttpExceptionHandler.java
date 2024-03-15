@@ -3,10 +3,10 @@ package cool.scx.mvc.exception_handler;
 import cool.scx.mvc.ScxHttpRouterExceptionHandler;
 import cool.scx.mvc.exception.ScxHttpException;
 import cool.scx.mvc.vo.BaseVo;
-import cool.scx.standard.HttpHeader;
-import cool.scx.standard.MediaType;
-import cool.scx.util.ObjectUtils;
-import cool.scx.util.ScxExceptionHelper;
+import cool.scx.common.standard.HttpHeader;
+import cool.scx.common.standard.MediaType;
+import cool.scx.common.util.ObjectUtils;
+import cool.scx.common.util.ScxExceptionHelper;
 import io.vertx.ext.web.RoutingContext;
 
 import java.lang.System.Logger;

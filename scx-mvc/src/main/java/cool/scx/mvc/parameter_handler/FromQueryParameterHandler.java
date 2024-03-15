@@ -6,12 +6,12 @@ import cool.scx.mvc.ScxMvcRequestInfo;
 import cool.scx.mvc.annotation.FromQuery;
 import cool.scx.mvc.parameter_handler.exception.ParamConvertException;
 import cool.scx.mvc.parameter_handler.exception.RequiredParamEmptyException;
-import cool.scx.util.reflect.AnnotationUtils;
+import cool.scx.common.util.reflect.AnnotationUtils;
 
 import java.lang.reflect.Parameter;
 
 import static cool.scx.mvc.ScxMvcHelper.getFromMap;
-import static cool.scx.util.ObjectUtils.*;
+import static cool.scx.common.util.ObjectUtils.*;
 
 /**
  * a

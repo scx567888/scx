@@ -5,8 +5,8 @@ import cool.scx.jdbc.mapping.type.TypeColumn;
 
 import java.lang.reflect.Field;
 
-import static cool.scx.util.CaseUtils.toSnake;
-import static cool.scx.util.reflect.AnnotationUtils.getAnnotationValue;
+import static cool.scx.common.util.CaseUtils.toSnake;
+import static cool.scx.common.util.reflect.AnnotationUtils.getAnnotationValue;
 
 public class AnnotationConfigColumn implements TypeColumn {
 

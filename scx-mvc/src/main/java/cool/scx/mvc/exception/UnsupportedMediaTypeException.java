@@ -1,6 +1,6 @@
 package cool.scx.mvc.exception;
 
-import static cool.scx.standard.HttpStatusCode.UNSUPPORTED_MEDIA_TYPE;
+import static cool.scx.common.standard.HttpStatusCode.UNSUPPORTED_MEDIA_TYPE;
 
 /**
  * 415 参数异常

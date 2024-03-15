@@ -4,20 +4,20 @@ import cool.scx.core.ScxContext;
 import cool.scx.core.test.car.CarService;
 import cool.scx.core.test.person.Person;
 import cool.scx.core.test.person.PersonService;
-import cool.scx.http_client.ScxHttpClientHelper;
+import cool.scx.common.http_client.ScxHttpClientHelper;
 import cool.scx.mvc.ScxMvc;
 import cool.scx.mvc.annotation.FromQuery;
 import cool.scx.mvc.annotation.FromUpload;
 import cool.scx.mvc.annotation.ScxRoute;
 import cool.scx.mvc.type.UploadedEntity;
 import cool.scx.mvc.vo.*;
-import cool.scx.standard.FileFormat;
-import cool.scx.standard.HttpMethod;
-import cool.scx.util.HashUtils;
-import cool.scx.util.NetUtils;
-import cool.scx.util.RandomUtils;
-import cool.scx.util.ScxExceptionHelper;
-import cool.scx.util.zip.ZipBuilder;
+import cool.scx.common.standard.FileFormat;
+import cool.scx.common.standard.HttpMethod;
+import cool.scx.common.util.HashUtils;
+import cool.scx.common.util.NetUtils;
+import cool.scx.common.util.RandomUtils;
+import cool.scx.common.util.ScxExceptionHelper;
+import cool.scx.common.util.zip.ZipBuilder;
 import io.vertx.ext.web.FileUpload;
 import io.vertx.ext.web.RoutingContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.zip.ZipOutputStream;
 
-import static cool.scx.standard.ScxDateTimeFormatter.yyyy_MM_dd_HH_mm_ss;
+import static cool.scx.common.standard.ScxDateTimeFormatter.yyyy_MM_dd_HH_mm_ss;
 
 /**
  * 简单测试

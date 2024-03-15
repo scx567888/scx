@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 import static cool.scx.jdbc.meta_data.MetaDataHelper.getCurrentSchema;
 import static cool.scx.jdbc.sql.SQL.sql;
-import static cool.scx.util.StringUtils.notBlank;
+import static cool.scx.common.util.StringUtils.notBlank;
 
 /**
  * 架构管理工具

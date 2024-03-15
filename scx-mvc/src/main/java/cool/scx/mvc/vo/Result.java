@@ -1,9 +1,9 @@
 package cool.scx.mvc.vo;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import cool.scx.standard.HttpHeader;
-import cool.scx.standard.MediaType;
-import cool.scx.util.ObjectUtils;
+import cool.scx.common.standard.HttpHeader;
+import cool.scx.common.standard.MediaType;
+import cool.scx.common.util.ObjectUtils;
 import io.vertx.ext.web.RoutingContext;
 
 import java.util.LinkedHashMap;

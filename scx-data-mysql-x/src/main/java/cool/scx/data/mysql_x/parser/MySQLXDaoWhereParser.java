@@ -6,14 +6,14 @@ import cool.scx.data.query.WhereOption.Info;
 import cool.scx.data.query.WhereType;
 import cool.scx.data.query.exception.ValidParamListIsEmptyException;
 import cool.scx.data.query.parser.WhereParser;
-import cool.scx.util.ObjectUtils;
-import cool.scx.util.StringUtils;
+import cool.scx.common.util.ObjectUtils;
+import cool.scx.common.util.StringUtils;
 
 import java.util.Arrays;
 import java.util.Objects;
 
-import static cool.scx.util.ArrayUtils.toObjectArray;
-import static cool.scx.util.ObjectUtils.toJson;
+import static cool.scx.common.util.ArrayUtils.toObjectArray;
+import static cool.scx.common.util.ObjectUtils.toJson;
 
 public class MySQLXDaoWhereParser extends WhereParser {
 

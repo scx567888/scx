@@ -8,7 +8,7 @@ import cool.scx.jdbc.standard.StandardDataType;
 import java.util.ArrayList;
 import java.util.List;
 
-import static cool.scx.util.StringUtils.notBlank;
+import static cool.scx.common.util.StringUtils.notBlank;
 
 /**
  * @see <a href="https://dev.mysql.com/doc/refman/8.0/en/create-table.html">https://dev.mysql.com/doc/refman/8.0/en/create-table.html</a>

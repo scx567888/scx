@@ -2,10 +2,10 @@ package cool.scx.mvc;
 
 import cool.scx.mvc.annotation.NoScxRoute;
 import cool.scx.mvc.annotation.ScxRoute;
-import cool.scx.util.MultiMap;
-import cool.scx.util.ObjectUtils;
-import cool.scx.util.reflect.ClassUtils;
-import cool.scx.util.reflect.MethodUtils;
+import cool.scx.common.util.MultiMap;
+import cool.scx.common.util.ObjectUtils;
+import cool.scx.common.util.reflect.ClassUtils;
+import cool.scx.common.util.reflect.MethodUtils;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.impl.RouteImpl;

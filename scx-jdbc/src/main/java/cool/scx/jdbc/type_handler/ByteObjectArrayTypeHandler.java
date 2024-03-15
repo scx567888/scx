@@ -4,8 +4,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static cool.scx.util.ArrayUtils.toPrimitive;
-import static cool.scx.util.ArrayUtils.toWrapper;
+import static cool.scx.common.util.ArrayUtils.toPrimitive;
+import static cool.scx.common.util.ArrayUtils.toWrapper;
 
 public class ByteObjectArrayTypeHandler implements TypeHandler<Byte[]> {
 

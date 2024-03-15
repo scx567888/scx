@@ -15,7 +15,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static cool.scx.util.reflect.ClassUtils.isEnum;
+import static cool.scx.common.util.reflect.ClassUtils.isEnum;
 
 public final class TypeHandlerSelector {
 

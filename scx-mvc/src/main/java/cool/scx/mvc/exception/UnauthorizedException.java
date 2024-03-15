@@ -1,6 +1,6 @@
 package cool.scx.mvc.exception;
 
-import static cool.scx.standard.HttpStatusCode.UNAUTHORIZED;
+import static cool.scx.common.standard.HttpStatusCode.UNAUTHORIZED;
 
 /**
  * 未认证异常 (未登录)

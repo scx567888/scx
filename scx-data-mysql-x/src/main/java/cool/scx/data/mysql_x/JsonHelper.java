@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.node.*;
 import com.mysql.cj.xdevapi.*;
 import cool.scx.data.FieldFilter;
-import cool.scx.util.ObjectUtils;
+import cool.scx.common.util.ObjectUtils;
 
 class JsonHelper {
 

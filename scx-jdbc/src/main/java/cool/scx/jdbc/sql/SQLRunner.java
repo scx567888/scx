@@ -1,8 +1,9 @@
 package cool.scx.jdbc.sql;
 
-import cool.scx.functional.ScxConsumer;
-import cool.scx.functional.ScxFunction;
-import cool.scx.functional.ScxRunnable;
+import cool.scx.common.functional.ScxConsumer;
+import cool.scx.common.functional.ScxFunction;
+import cool.scx.common.functional.ScxRunnable;
+import cool.scx.common.util.ScxExceptionHelper;
 import cool.scx.jdbc.JDBCContext;
 import cool.scx.jdbc.dialect.Dialect;
 import cool.scx.jdbc.result_handler.ResultHandler;
@@ -17,7 +18,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static cool.scx.util.ScxExceptionHelper.wrap;
+import static cool.scx.common.util.ScxExceptionHelper.wrap;
 import static java.sql.ResultSet.CONCUR_READ_ONLY;
 import static java.sql.ResultSet.TYPE_FORWARD_ONLY;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
@@ -283,7 +284,7 @@ public final class SQLRunner {
     /**
      * 自动处理事务并在产生异常时进行自动回滚
      * 注意 其中的操作会在另一个线程中执行 所以需要注意线程的操作
-     * 当抛出异常时 请使用 {@link cool.scx.util.ScxExceptionHelper#getRootCause(Throwable)} 来获取真正的异常
+     * 当抛出异常时 请使用 {@link ScxExceptionHelper#getRootCause(Throwable)} 来获取真正的异常
      * 用法
      * <pre>{@code
      *      假设有以下结构的数据表

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static cool.scx.util.StringUtils.notEmpty;
+import static cool.scx.common.util.StringUtils.notEmpty;
 
 public interface DDLBuilder {
 

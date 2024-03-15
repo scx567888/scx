@@ -1,6 +1,6 @@
 package cool.scx.core;
 
-import cool.scx.util.FileUtils;
+import cool.scx.common.util.FileUtils;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.util.AsciiString;
 import io.vertx.core.http.HttpMethod;

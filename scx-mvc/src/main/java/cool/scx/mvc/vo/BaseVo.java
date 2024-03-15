@@ -1,8 +1,8 @@
 package cool.scx.mvc.vo;
 
-import cool.scx.functional.ScxConsumer;
-import cool.scx.standard.HttpHeader;
-import cool.scx.standard.MediaType;
+import cool.scx.common.functional.ScxConsumer;
+import cool.scx.common.standard.HttpHeader;
+import cool.scx.common.standard.MediaType;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.RoutingContext;
 

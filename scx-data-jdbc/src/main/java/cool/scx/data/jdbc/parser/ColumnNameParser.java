@@ -3,7 +3,7 @@ package cool.scx.data.jdbc.parser;
 
 import cool.scx.jdbc.mapping.Table;
 
-import static cool.scx.util.StringUtils.notBlank;
+import static cool.scx.common.util.StringUtils.notBlank;
 
 public final class ColumnNameParser {
 

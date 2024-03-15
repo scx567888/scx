@@ -1,7 +1,7 @@
 package cool.scx.mvc.vo;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import cool.scx.util.ObjectUtils;
+import cool.scx.common.util.ObjectUtils;
 import io.vertx.ext.web.RoutingContext;
 
 /**
