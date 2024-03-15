@@ -1,5 +1,9 @@
 package cool.scx.jdbc.sqlite.test;
 
+import cool.scx.common.util.FileUtils;
+import cool.scx.common.util.ObjectUtils;
+import cool.scx.common.util.ScxExceptionHelper;
+import cool.scx.common.util.reflect.ClassUtils;
 import cool.scx.jdbc.JDBCContext;
 import cool.scx.jdbc.result_handler.ResultHandler;
 import cool.scx.jdbc.spy.Spy;
@@ -9,10 +13,6 @@ import cool.scx.jdbc.sqlite.test.bean.Student;
 import cool.scx.jdbc.sqlite.test.bean.StudentRecord;
 import cool.scx.logging.ScxLoggerConfig;
 import cool.scx.logging.ScxLoggerFactory;
-import cool.scx.common.util.FileUtils;
-import cool.scx.common.util.ObjectUtils;
-import cool.scx.common.util.ScxExceptionHelper;
-import cool.scx.common.util.reflect.ClassUtils;
 import org.sqlite.SQLiteDataSource;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;

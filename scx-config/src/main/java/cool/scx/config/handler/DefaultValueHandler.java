@@ -1,8 +1,8 @@
 package cool.scx.config.handler;
 
-import cool.scx.config.ScxConfigValueHandler;
 import cool.scx.common.util.ObjectUtils;
 import cool.scx.common.util.ansi.Ansi;
+import cool.scx.config.ScxConfigValueHandler;
 
 
 public final class DefaultValueHandler<T> implements ScxConfigValueHandler<T> {

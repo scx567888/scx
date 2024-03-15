@@ -6,8 +6,8 @@ import java.sql.*;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import static cool.scx.jdbc.spy.Spy.buildEventListener;
 import static cool.scx.common.util.StringUtils.startsWithIgnoreCase;
+import static cool.scx.jdbc.spy.Spy.buildEventListener;
 
 public class SpyDriver implements Driver {
 

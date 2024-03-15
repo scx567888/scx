@@ -1,6 +1,7 @@
 package cool.scx.data.jdbc.parser;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import cool.scx.common.util.StringUtils;
 import cool.scx.data.jdbc.AnnotationConfigTable;
 import cool.scx.data.query.WhereClause;
 import cool.scx.data.query.WhereOption.Info;
@@ -9,18 +10,17 @@ import cool.scx.data.query.exception.ValidParamListIsEmptyException;
 import cool.scx.data.query.parser.WhereParser;
 import cool.scx.jdbc.dialect.Dialect;
 import cool.scx.jdbc.sql.SQL;
-import cool.scx.common.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
-import static cool.scx.data.jdbc.parser.ColumnNameParser.parseColumnName;
-import static cool.scx.data.jdbc.parser.ColumnNameParser.splitIntoColumnNameAndFieldPath;
 import static cool.scx.common.util.ArrayUtils.toObjectArray;
 import static cool.scx.common.util.ObjectUtils.Option.IGNORE_JSON_IGNORE;
 import static cool.scx.common.util.ObjectUtils.Option.IGNORE_NULL_VALUE;
 import static cool.scx.common.util.ObjectUtils.toJson;
+import static cool.scx.data.jdbc.parser.ColumnNameParser.parseColumnName;
+import static cool.scx.data.jdbc.parser.ColumnNameParser.splitIntoColumnNameAndFieldPath;
 import static java.util.Collections.addAll;
 
 public class JDBCDaoWhereParser extends WhereParser {

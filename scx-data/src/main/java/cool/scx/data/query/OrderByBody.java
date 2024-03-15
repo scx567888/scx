@@ -2,8 +2,8 @@ package cool.scx.data.query;
 
 import cool.scx.data.Query;
 
-import static cool.scx.data.query.OrderByOption.Info;
 import static cool.scx.common.util.StringUtils.isBlank;
+import static cool.scx.data.query.OrderByOption.Info;
 
 /**
  * OrderBy 封装体

@@ -1,7 +1,7 @@
 package cool.scx.data.query;
 
-import cool.scx.data.Query;
 import cool.scx.common.util.ArrayUtils;
+import cool.scx.data.Query;
 
 import java.util.Arrays;
 

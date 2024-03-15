@@ -10,8 +10,6 @@ import java.nio.file.Path;
 import java.util.function.Supplier;
 import java.util.zip.GZIPOutputStream;
 
-import static cool.scx.common.util.io_stream_source.InputStreamSource.of;
-
 /**
  * <p>GzipBuilder class.</p>
  *

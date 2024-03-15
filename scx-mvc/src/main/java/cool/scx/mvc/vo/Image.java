@@ -1,10 +1,10 @@
 package cool.scx.mvc.vo;
 
+import cool.scx.common.standard.HttpHeader;
+import cool.scx.common.standard.MediaType;
 import cool.scx.mvc.exception.BadRequestException;
 import cool.scx.mvc.exception.NotFoundException;
 import cool.scx.mvc.exception.ScxHttpException;
-import cool.scx.common.standard.HttpHeader;
-import cool.scx.common.standard.MediaType;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.impl.MimeMapping;
 import io.vertx.ext.web.RoutingContext;

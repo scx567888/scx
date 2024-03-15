@@ -1,7 +1,7 @@
 package cool.scx.core.enumeration;
 
-import cool.scx.config.ScxFeature;
 import cool.scx.common.scheduler.ScxScheduler;
+import cool.scx.config.ScxFeature;
 
 /**
  * scx 特性枚举

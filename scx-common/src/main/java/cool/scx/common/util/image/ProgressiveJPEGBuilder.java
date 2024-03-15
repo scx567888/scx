@@ -15,8 +15,6 @@ import java.io.OutputStream;
 import java.nio.file.Path;
 import java.util.function.Supplier;
 
-import static cool.scx.common.util.io_stream_source.InputStreamSource.of;
-
 /**
  * 将图片转换为 渐进式 JPEG
  */

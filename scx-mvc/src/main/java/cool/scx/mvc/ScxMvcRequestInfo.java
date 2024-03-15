@@ -3,14 +3,14 @@ package cool.scx.mvc;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.TextNode;
-import cool.scx.mvc.exception.BadRequestException;
 import cool.scx.common.standard.HttpHeader;
 import cool.scx.common.standard.MediaType;
+import cool.scx.mvc.exception.BadRequestException;
 import io.vertx.ext.web.RoutingContext;
 
-import static cool.scx.mvc.ScxMvcRequestInfo.ContentType.*;
 import static cool.scx.common.util.ObjectUtils.jsonMapper;
 import static cool.scx.common.util.ObjectUtils.xmlMapper;
+import static cool.scx.mvc.ScxMvcRequestInfo.ContentType.*;
 
 /**
  * 封装 RoutingContext 的参数 防止反复取值造成性能损失
@@ -114,7 +114,7 @@ public final class ScxMvcRequestInfo {
         } else if (contentType.startsWith(MediaType.APPLICATION_XML.toString())) {
             return XML;
         } else if (contentType.startsWith(MediaType.MULTIPART_FORM_DATA.toString())
-                   || contentType.startsWith(MediaType.APPLICATION_X_WWW_FORM_URLENCODED.toString())) {
+                || contentType.startsWith(MediaType.APPLICATION_X_WWW_FORM_URLENCODED.toString())) {
             return FORM;
         } else {
             return OTHER;

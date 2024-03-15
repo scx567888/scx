@@ -3,6 +3,10 @@ package cool.scx.core;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import cool.scx.common.util.ConsoleUtils;
+import cool.scx.common.util.ObjectUtils;
+import cool.scx.common.util.StringUtils;
+import cool.scx.common.util.reflect.ClassUtils;
 import cool.scx.config.ScxConfig;
 import cool.scx.config.ScxEnvironment;
 import cool.scx.config.ScxFeatureConfig;
@@ -22,10 +26,6 @@ import cool.scx.logging.recorder.ConsoleRecorder;
 import cool.scx.logging.recorder.FileRecorder;
 import cool.scx.mvc.annotation.ScxRoute;
 import cool.scx.mvc.annotation.ScxWebSocketRoute;
-import cool.scx.common.util.ConsoleUtils;
-import cool.scx.common.util.ObjectUtils;
-import cool.scx.common.util.StringUtils;
-import cool.scx.common.util.reflect.ClassUtils;
 import org.springframework.beans.factory.annotation.AnnotatedGenericBeanDefinition;
 import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
@@ -88,8 +88,8 @@ public final class ScxHelper {
      */
     public static boolean isScxBaseModelClass(Class<?> c) {
         return c.isAnnotationPresent(Table.class) // 拥有注解
-               && ClassUtils.isInstantiableClass(c) // 是一个可以不需要其他参数直接生成实例化的对象
-               && BaseModel.class.isAssignableFrom(c);
+                && ClassUtils.isInstantiableClass(c) // 是一个可以不需要其他参数直接生成实例化的对象
+                && BaseModel.class.isAssignableFrom(c);
     }
 
     /**
@@ -100,9 +100,9 @@ public final class ScxHelper {
      */
     public static boolean isScxBaseModelServiceClass(Class<?> c) {
         return c.isAnnotationPresent(ScxService.class) // 拥有注解
-               && ClassUtils.isNormalClass(c) // 是一个普通的类 (不是接口, 不是抽象类) ; 此处不要求有必须有无参构造函数 因为此类的创建会由 beanFactory 进行处理
-               && c.getGenericSuperclass() instanceof ParameterizedType t //需要有泛型参数
-               && t.getActualTypeArguments().length == 1; //并且泛型参数的数量必须是一个
+                && ClassUtils.isNormalClass(c) // 是一个普通的类 (不是接口, 不是抽象类) ; 此处不要求有必须有无参构造函数 因为此类的创建会由 beanFactory 进行处理
+                && c.getGenericSuperclass() instanceof ParameterizedType t //需要有泛型参数
+                && t.getActualTypeArguments().length == 1; //并且泛型参数的数量必须是一个
     }
 
     /**

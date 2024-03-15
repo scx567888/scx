@@ -3,11 +3,11 @@ package cool.scx.data.mysql_x;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.mysql.cj.xdevapi.DbDoc;
 import com.mysql.cj.xdevapi.Schema;
+import cool.scx.common.util.CaseUtils;
+import cool.scx.common.util.StringUtils;
 import cool.scx.data.Dao;
 import cool.scx.data.FieldFilter;
 import cool.scx.data.Query;
-import cool.scx.common.util.CaseUtils;
-import cool.scx.common.util.StringUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;

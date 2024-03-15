@@ -1,11 +1,11 @@
 package cool.scx.data.jdbc;
 
-import cool.scx.data.jdbc.annotation.NoColumn;
-import cool.scx.jdbc.mapping.Table;
 import cool.scx.common.util.CaseUtils;
 import cool.scx.common.util.MultiMap;
 import cool.scx.common.util.reflect.AnnotationUtils;
 import cool.scx.common.util.reflect.FieldUtils;
+import cool.scx.data.jdbc.annotation.NoColumn;
+import cool.scx.jdbc.mapping.Table;
 
 import java.util.HashMap;
 import java.util.List;

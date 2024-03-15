@@ -111,8 +111,8 @@ public final class ScxExceptionHelper {
      */
     public static Throwable getRootCause(Throwable throwable) {
         if (throwable instanceof ScxWrappedRuntimeException
-            || throwable instanceof ExecutionException
-            || throwable instanceof CompletionException) {
+                || throwable instanceof ExecutionException
+                || throwable instanceof CompletionException) {
             return getRootCause(throwable.getCause());
         } else {
             return throwable;

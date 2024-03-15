@@ -3,8 +3,8 @@ package cool.scx.common.util.ansi;
 import com.sun.jna.Function;
 import com.sun.jna.platform.win32.WinDef;
 import com.sun.jna.platform.win32.WinNT;
-import cool.scx.common.util.circular_iterable.CircularIterable;
 import cool.scx.common.util.OSHelper;
+import cool.scx.common.util.circular_iterable.CircularIterable;
 
 import java.util.Iterator;
 

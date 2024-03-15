@@ -2,8 +2,8 @@ package cool.scx.config.source;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import cool.scx.config.ScxConfigSource;
 import cool.scx.common.util.JsonNodeHelper;
+import cool.scx.config.ScxConfigSource;
 
 import java.util.Map;
 

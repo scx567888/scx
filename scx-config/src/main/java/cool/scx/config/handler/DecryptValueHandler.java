@@ -1,9 +1,9 @@
 package cool.scx.config.handler;
 
-import cool.scx.config.ScxConfigValueHandler;
 import cool.scx.common.util.CryptoUtils;
 import cool.scx.common.util.ObjectUtils;
 import cool.scx.common.util.ansi.Ansi;
+import cool.scx.config.ScxConfigValueHandler;
 
 
 public final class DecryptValueHandler implements ScxConfigValueHandler<String> {

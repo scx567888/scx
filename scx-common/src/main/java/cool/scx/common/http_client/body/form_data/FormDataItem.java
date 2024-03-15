@@ -1,7 +1,7 @@
 package cool.scx.common.http_client.body.form_data;
 
-import cool.scx.common.util.StringUtils;
 import cool.scx.common.util.RandomUtils;
+import cool.scx.common.util.StringUtils;
 
 import java.nio.file.Path;
 

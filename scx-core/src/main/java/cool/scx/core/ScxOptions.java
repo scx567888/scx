@@ -1,11 +1,11 @@
 package cool.scx.core;
 
+import cool.scx.common.util.NetUtils;
+import cool.scx.common.util.ansi.Ansi;
 import cool.scx.config.ScxConfig;
 import cool.scx.config.ScxEnvironment;
 import cool.scx.config.handler.AppRootHandler;
 import cool.scx.config.handler.DecryptValueHandler;
-import cool.scx.common.util.NetUtils;
-import cool.scx.common.util.ansi.Ansi;
 
 import java.nio.file.Path;
 import java.util.Arrays;
