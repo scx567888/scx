@@ -1,0 +1,15 @@
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+*/.idea/
+*/*.iws
+*/*.iml
+*/*.ipr
+
+### Build Targets ###
+target/
+built/
+*/target/
+*/built/
