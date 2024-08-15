@@ -28,6 +28,7 @@ public enum MediaType {
     APPLICATION_DOCX("application", "vnd.openxmlformats-officedocument.wordprocessingml.document"),
     APPLICATION_XLSX("application", "vnd.openxmlformats-officedocument.spreadsheetml.sheet"),
     APPLICATION_PPTX("application", "vnd.openxmlformats-officedocument.presentationml.presentation"),
+    APPLICATION_APK("application", "vnd.android.package-archive"),
 
     // Image
     IMAGE_BMP("image", "bmp"),

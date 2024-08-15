@@ -30,6 +30,7 @@ public enum FileFormat {
     DOCX(APPLICATION_DOCX),
     XLSX(APPLICATION_XLSX),
     PPTX(APPLICATION_PPTX),
+    APK(APPLICATION_APK),
 
     // Image
     BMP(IMAGE_BMP),
