@@ -1,9 +1,9 @@
 package cool.scx.ext.test.apple;
 
-import cool.scx.core.annotation.ScxService;
+import cool.scx.core.annotation.ScxComponent;
 import cool.scx.core.base.BaseModelService;
 
-@ScxService
+@ScxComponent
 public class AppleService extends BaseModelService<Apple> {
 
 }

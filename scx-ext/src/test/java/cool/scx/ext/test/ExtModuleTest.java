@@ -1,7 +1,7 @@
 package cool.scx.ext.test;
 
-import cool.scx.core.Scx;
 import cool.scx.core.ScxModule;
+import cool.scx.core.Scx;
 import cool.scx.core.enumeration.ScxCoreFeature;
 import cool.scx.ext.crud.CRUDModule;
 import cool.scx.ext.fix_table.FixTableModule;

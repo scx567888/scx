@@ -1,13 +1,13 @@
 package cool.scx.core.test;
 
-import cool.scx.core.annotation.ScxService;
+import cool.scx.core.annotation.ScxComponent;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import java.lang.System.Logger;
 
 import static java.lang.System.Logger.Level.ERROR;
 
-@ScxService
+@ScxComponent
 public class TestScheduleTask {
 
     private static final Logger logger = System.getLogger(TestScheduleTask.class.getName());
