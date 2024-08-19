@@ -14,7 +14,7 @@ import cool.scx.config.ScxFeatureConfig;
 import cool.scx.config.handler.AppRootHandler;
 import cool.scx.config.handler.ConvertValueHandler;
 import cool.scx.config.handler.DefaultValueHandler;
-import cool.scx.core.annotation.ScxComponent;
+import cool.scx.core.annotation.ScxService;
 import cool.scx.core.base.BaseModel;
 import cool.scx.core.base.BaseModelService;
 import cool.scx.core.enumeration.ScxCoreFeature;

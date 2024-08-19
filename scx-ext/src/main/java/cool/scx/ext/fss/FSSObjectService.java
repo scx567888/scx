@@ -1,7 +1,7 @@
 package cool.scx.ext.fss;
 
 import cool.scx.common.util.FileUtils;
-import cool.scx.core.annotation.ScxComponent;
+import cool.scx.core.annotation.ScxService;
 import cool.scx.core.base.BaseModelService;
 
 import java.io.IOException;
@@ -17,7 +17,7 @@ import static cool.scx.ext.fss.FSSHelper.getPhysicalFilePath;
  * @author scx567888
  * @version 0.3.6
  */
-@ScxComponent
+@ScxService
 public class FSSObjectService extends BaseModelService<FSSObject> {
 
     /**
