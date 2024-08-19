@@ -15,7 +15,6 @@ import cool.scx.config.handler.AppRootHandler;
 import cool.scx.config.handler.ConvertValueHandler;
 import cool.scx.config.handler.DefaultValueHandler;
 import cool.scx.core.annotation.ScxComponent;
-import cool.scx.core.annotation.ScxService;
 import cool.scx.core.base.BaseModel;
 import cool.scx.core.base.BaseModelService;
 import cool.scx.core.enumeration.ScxCoreFeature;
@@ -66,7 +65,7 @@ public final class ScxHelper {
      */
     private static final List<Class<? extends Annotation>> beanFilterAnnotation = List.of(
             //scx 注解
-            ScxComponent.class, ScxRoute.class, Table.class, ScxService.class, ScxWebSocketRoute.class,
+            ScxComponent.class, ScxRoute.class, Table.class, ScxWebSocketRoute.class,
             //兼容 spring 注解
             Component.class, Controller.class, Service.class, Repository.class);
 
@@ -121,19 +120,6 @@ public final class ScxHelper {
         return c.isAnnotationPresent(Table.class) &&  // 拥有注解
                ClassUtils.isInstantiableClass(c) &&  // 是一个可以不需要其他参数直接生成实例化的对象
                BaseModel.class.isAssignableFrom(c);
-    }
-
-    /**
-     * <p>isScxBaseModelServiceClass.</p>
-     *
-     * @param c a {@link java.lang.Class} object
-     * @return a boolean
-     */
-    public static boolean isScxBaseModelServiceClass(Class<?> c) {
-        return c.isAnnotationPresent(ScxService.class) &&  // 拥有注解
-               ClassUtils.isNormalClass(c) && // 是一个普通的类 (不是接口, 不是抽象类) ; 此处不要求有必须有无参构造函数 因为此类的创建会由 beanFactory 进行处理
-               c.getGenericSuperclass() instanceof ParameterizedType t && //需要有泛型参数
-               t.getActualTypeArguments().length == 1; //并且泛型参数的数量必须是一个
     }
 
     @SuppressWarnings("unchecked")

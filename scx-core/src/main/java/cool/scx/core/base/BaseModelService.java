@@ -18,7 +18,7 @@ import static cool.scx.data.QueryBuilder.*;
 /**
  * 提供一些针对 BaseModel 类型实体类 简单的 CRUD 操作的 service 类
  * <p>
- * 业务 service 可以继承此类 (注意 : 如需要被 beanFactory 扫描到 请标注 {@link cool.scx.core.annotation.ScxService} 注解)
+ * 业务 service 可以继承此类 (注意 : 如需要被 beanFactory 扫描到 请标注 {@link cool.scx.core.annotation.ScxComponent} 注解)
  * <p>
  * 或手动创建 : new BaseModelService()
  * <p>
