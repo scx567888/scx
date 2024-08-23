@@ -50,23 +50,23 @@ public class QueryImpl implements Query {
         this.limitInfo = new LimitInfo(oldQuery.getLimitInfo());
     }
 
-    QueryImpl(Where oldWhere) {
+    public QueryImpl(Where oldWhere) {
         this(oldWhere, new GroupBy(), new OrderBy(), new LimitInfo());
     }
 
-    QueryImpl(GroupBy oldGroupBy) {
+    public QueryImpl(GroupBy oldGroupBy) {
         this(new Where(), oldGroupBy, new OrderBy(), new LimitInfo());
     }
 
-    QueryImpl(OrderBy oldOrderBy) {
+    public QueryImpl(OrderBy oldOrderBy) {
         this(new Where(), new GroupBy(), oldOrderBy, new LimitInfo());
     }
 
-    QueryImpl(LimitInfo oldLimitInfo) {
+    public QueryImpl(LimitInfo oldLimitInfo) {
         this(new Where(), new GroupBy(), new OrderBy(), oldLimitInfo);
     }
 
-    private QueryImpl(Where oldWhere, GroupBy oldGroupBy, OrderBy oldOrderBy, LimitInfo oldLimitInfo) {
+    public QueryImpl(Where oldWhere, GroupBy oldGroupBy, OrderBy oldOrderBy, LimitInfo oldLimitInfo) {
         this.where = oldWhere;
         this.groupBy = oldGroupBy;
         this.orderBy = oldOrderBy;
