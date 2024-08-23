@@ -49,5 +49,5 @@ public class OrderByOption {
     public boolean useJsonExtract() {
         return useJsonExtract;
     }
-    
+
 }
