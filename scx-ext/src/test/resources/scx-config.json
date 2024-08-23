@@ -1,6 +1,6 @@
 {
   "scx": {
-    "port": 443,
+    "port": 8888,
     "allowed-origin": "*",
     "data-source": {
       "url": "jdbc:mysql://127.0.0.1:3306/scx",
@@ -14,7 +14,7 @@
       ]
     },
     "https": {
-      "enabled": true,
+      "enabled": false,
       "ssl-path": "AppRoot:ssl/my_keystore.jks",
       "ssl-password": "123456"
     },
