@@ -1,26 +1,20 @@
 package cool.scx.data.query.serializer;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.data.Query;
 import cool.scx.data.query.GroupBy;
 import cool.scx.data.query.GroupByBody;
-import cool.scx.data.query.GroupByOption;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 public class GroupBySerializer {
-
-
-    //****************** 序列化 *********************   
 
     public Object serialize(Object obj) {
         return switch (obj) {
             case GroupBy s -> serializeGroupBy(s);
             case GroupByBody s -> serializeGroupByBody(s);
             case String s -> serializeString(s);
-            case Query q -> serializeGroupBy(q.getGroupBy());
             case Object[] q -> serializeAll(q);
+            case Query q -> serializeGroupBy(q.getGroupBy());
             case null, default -> null;
         };
     }
@@ -50,50 +44,6 @@ public class GroupBySerializer {
             arr[i] = serialize(objs[i]);
         }
         return arr;
-    }
-
-    //**************** 反序列化 *********************    
-
-    public Object deserialize(JsonNode v) {
-        if (v.isObject()) {
-            var type = v.get("@type").asText();
-            return switch (type) {
-                case "GroupBy" -> deserializeGroupBy(v);
-                case "GroupByBody" -> deserializeGroupByBody(v);
-                default -> null;
-            };
-        } else if (v.isTextual()) {
-            return deserializeString(v);
-        } else if (v.isArray()) {
-            return deserializeAll(v);
-        }
-        return null;
-    }
-
-    public GroupBy deserializeGroupBy(JsonNode v) {
-        if (v == null) {
-            return new GroupBy();
-        }
-        var groupBy = new GroupBy();
-        groupBy.set(deserializeAll(v.get("clauses")));
-        return groupBy;
-    }
-
-    public GroupByBody deserializeGroupByBody(JsonNode v) {
-        var name = v.path("name").asText();
-        return new GroupByBody(name, new GroupByOption.Info());
-    }
-
-    private String deserializeString(JsonNode v) {
-        return v.textValue();
-    }
-
-    private Object[] deserializeAll(JsonNode v) {
-        var s = new ArrayList<>();
-        for (var jsonNode : v) {
-            s.add(deserialize(jsonNode));
-        }
-        return s.toArray();
     }
 
 }
