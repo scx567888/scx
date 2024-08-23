@@ -44,9 +44,9 @@ public class QuerySerializer {
 
     public Query deserialize(JsonNode objectNode) {
         var where = whereSerializer.deserialize(objectNode.get("where"));
-        var groupBy = groupBySerializer.deserialize(objectNode.get("groupBy"));
-        var orderBy = orderBySerializer.deserialize(objectNode.get("orderBy"));
-        var limitInfo = limitInfoSerializer.deserialize(objectNode.get("limitInfo"));
+        var groupBy = groupBySerializer.deserializeGroupBy(objectNode.get("groupBy"));
+        var orderBy = orderBySerializer.deserializeOrderBy(objectNode.get("orderBy"));
+        var limitInfo = limitInfoSerializer.deserializeLimitInfo(objectNode.get("limitInfo"));
         return new QueryImpl(where, groupBy, orderBy, limitInfo);
     }
 

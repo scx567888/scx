@@ -79,19 +79,17 @@ public class OrderBySerializer {
 
     public OrderBy deserializeOrderBy(JsonNode v) {
         var orderBy = new OrderBy();
-        var clauses = v.get("clauses");
-        for (var clause : clauses) {
-            orderBy.add(deserialize(clause));
-        }
+        orderBy.set(deserialize(v.get("clauses")));
         return orderBy;
     }
 
     public OrderByBodySet deserializeOrderByBodySet(JsonNode v) {
         var orderByBodySet = new OrderByBodySet();
-        var clauses = v.get("clauses");
+        var clauses = deserializeAll(v.get("clauses"));
         for (var clause : clauses) {
-            var orderByBody = deserializeOrderByBody(clause);
-            orderByBodySet.add(orderByBody.name(), orderByBody.orderByType());
+            if (clause instanceof OrderByBody b) {
+                orderByBodySet.add(b.name(), b.orderByType());
+            }
         }
         return orderByBodySet;
     }
