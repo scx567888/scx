@@ -99,10 +99,10 @@ public class WhereSerializer {
     }
 
     private Logic deserializeLogic(JsonNode v) {
-        var type = v.get("type").asText();
-        if (type.equals("OR")) {
+        var logicType = v.get("logicType").asText();
+        if (logicType.equals("OR")) {
             return new OR(deserializeAll(v.get("clauses")));
-        } else if (type.equals("AND")) {
+        } else if (logicType.equals("AND")) {
             return new AND(deserializeAll(v.get("clauses")));
         } else {
             return null;
