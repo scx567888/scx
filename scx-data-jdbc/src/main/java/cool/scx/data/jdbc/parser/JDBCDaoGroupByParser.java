@@ -16,7 +16,7 @@ public class JDBCDaoGroupByParser extends GroupByParser {
 
     @Override
     public String parseGroupByBody(GroupByBody body) {
-        return parseColumnName(tableInfo, body.name(), body.info().useJsonExtract(), body.info().useOriginalName());
+        return parseColumnName(tableInfo, body.name(), body.option().useJsonExtract(), body.option().useOriginalName());
     }
 
 }
