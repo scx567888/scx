@@ -7,6 +7,8 @@ import org.testng.annotations.Test;
 import java.util.Arrays;
 
 import static cool.scx.data.QueryBuilder.*;
+import static cool.scx.data.query.deserializer.QueryDeserializer.QUERY_DESERIALIZER;
+import static cool.scx.data.query.serializer.QuerySerializer.QUERY_SERIALIZER;
 
 public class QueryTest {
 
@@ -24,9 +26,8 @@ public class QueryTest {
         System.out.println(parse1.whereClause() + " " + Arrays.toString(parse1.params()) + " LIMIT " + and.getLimit());
         System.out.println(parse2.whereClause() + " " + Arrays.toString(parse2.params()) + " LIMIT " + andSet.getLimit());
 
-        var querySerializer = new QuerySerializer();
-        String json = querySerializer.toJson(andSet);
-        var andNew = querySerializer.fromJson(json);
+        String json = QUERY_SERIALIZER.toJson(andSet);
+        var andNew = QUERY_DESERIALIZER.fromJson(json);
         System.out.println(json);
 
     }
