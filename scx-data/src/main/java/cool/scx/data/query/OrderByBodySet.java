@@ -1,7 +1,6 @@
 package cool.scx.data.query;
 
 import cool.scx.data.Query;
-import cool.scx.data.query.OrderByOption.Info;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,13 +19,13 @@ public final class OrderByBodySet extends QueryLike<OrderByBodySet> {
     /**
      * 存储排序的字段
      */
-    private final List<OrderByBody> orderByBodyList;
+    private final List<OrderByBody> clauses;
 
     /**
      * 创建一个 OrderBy 对象
      */
     public OrderByBodySet() {
-        this.orderByBodyList = new ArrayList<>();
+        this.clauses = new ArrayList<>();
     }
 
     /**
@@ -38,14 +37,14 @@ public final class OrderByBodySet extends QueryLike<OrderByBodySet> {
      * @return 本身, 方便链式调用
      */
     public OrderByBodySet add(String name, OrderByType orderByType, OrderByOption... options) {
-        var info = new Info(options);
+        var option = options != null && options.length > 0 && options[0] != null ? options[0] : new OrderByOption();
         // 是否使用原始名称 (即不进行转义)
-        var orderByBody = new OrderByBody(name, orderByType, info);
+        var orderByBody = new OrderByBody(name, orderByType, option);
         // 是否替换
-        if (info.replace()) {
-            orderByBodyList.removeIf(w -> orderByBody.name().equals(w.name()));
+        if (option.replace()) {
+            clauses.removeIf(w -> orderByBody.name().equals(w.name()));
         }
-        orderByBodyList.add(orderByBody);
+        clauses.add(orderByBody);
         return this;
     }
 
@@ -78,7 +77,7 @@ public final class OrderByBodySet extends QueryLike<OrderByBodySet> {
      * @return a
      */
     public OrderByBodySet remove(String name) {
-        orderByBodyList.removeIf(w -> w.name().equals(name.trim()));
+        clauses.removeIf(w -> w.name().equals(name.trim()));
         return this;
     }
 
@@ -88,7 +87,7 @@ public final class OrderByBodySet extends QueryLike<OrderByBodySet> {
      * @return self
      */
     public OrderByBodySet clear() {
-        orderByBodyList.clear();
+        clauses.clear();
         return this;
     }
 
@@ -98,7 +97,7 @@ public final class OrderByBodySet extends QueryLike<OrderByBodySet> {
      * @return orderByBodyList
      */
     public Object[] clauses() {
-        return orderByBodyList.toArray();
+        return clauses.toArray();
     }
 
     @Override

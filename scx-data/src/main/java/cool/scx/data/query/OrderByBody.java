@@ -3,7 +3,6 @@ package cool.scx.data.query;
 import cool.scx.data.Query;
 
 import static cool.scx.common.util.StringUtils.isBlank;
-import static cool.scx.data.query.OrderByOption.Info;
 
 /**
  * OrderBy 封装体
@@ -15,19 +14,7 @@ public final class OrderByBody extends QueryLike<OrderByBody> {
 
     private final String name;
     private final OrderByType orderByType;
-    private final Info info;
-
-    public OrderByBody(String name, OrderByType orderByType, Info info) {
-        if (isBlank(name)) {
-            throw new IllegalArgumentException("OrderBy 参数错误 : 名称 不能为空 !!!");
-        }
-        if (orderByType == null) {
-            throw new IllegalArgumentException("OrderBy 参数错误 : orderByType 不能为空 !!!");
-        }
-        this.name = name.trim();
-        this.orderByType = orderByType;
-        this.info = info;
-    }
+    private final OrderByOption option;
 
     /**
      * 添加一个排序字段
@@ -37,7 +24,15 @@ public final class OrderByBody extends QueryLike<OrderByBody> {
      * @param options     配置
      */
     public OrderByBody(String name, OrderByType orderByType, OrderByOption... options) {
-        this(name, orderByType, new Info(options));
+        if (isBlank(name)) {
+            throw new IllegalArgumentException("OrderBy 参数错误 : 名称 不能为空 !!!");
+        }
+        if (orderByType == null) {
+            throw new IllegalArgumentException("OrderBy 参数错误 : orderByType 不能为空 !!!");
+        }
+        this.name = name.trim();
+        this.orderByType = orderByType;
+        this.option = options != null && options.length > 0 && options[0] != null ? options[0] : new OrderByOption();
     }
 
     public String name() {
@@ -48,8 +43,8 @@ public final class OrderByBody extends QueryLike<OrderByBody> {
         return orderByType;
     }
 
-    public Info info() {
-        return info;
+    public OrderByOption option() {
+        return option;
     }
 
     @Override
