@@ -4,6 +4,7 @@ import cool.scx.data.Query;
 import cool.scx.data.query.exception.WrongWhereTypeParamSizeException;
 
 import static cool.scx.common.util.StringUtils.isBlank;
+import static cool.scx.data.query.WhereOption.Info;
 
 /**
  * where 封装体
@@ -17,9 +18,9 @@ public final class WhereBody extends QueryLike<WhereBody> {
     private final WhereType whereType;
     private final Object value1;
     private final Object value2;
-    private final WhereOption option;
+    private final Info info;
 
-    public WhereBody(String name, WhereType whereType, Object value1, Object value2, WhereOption... options) {
+    public WhereBody(String name, WhereType whereType, Object value1, Object value2, Info info) {
         //名称不能为空
         if (isBlank(name)) {
             throw new IllegalArgumentException("Where 参数错误 : 名称 不能为空 !!!");
@@ -38,7 +39,11 @@ public final class WhereBody extends QueryLike<WhereBody> {
         this.whereType = whereType;
         this.value1 = value1;
         this.value2 = value2;
-        this.option = options != null && options.length > 0 && options[0] != null ? options[0] : new WhereOption();
+        this.info = info;
+    }
+
+    public WhereBody(String name, WhereType whereType, Object value1, Object value2, WhereOption... options) {
+        this(name, whereType, value1, value2, new Info(options));
     }
 
     /**
@@ -76,8 +81,8 @@ public final class WhereBody extends QueryLike<WhereBody> {
         return value2;
     }
 
-    public WhereOption option() {
-        return option;
+    public Info info() {
+        return info;
     }
 
     @Override

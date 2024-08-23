@@ -1,17 +1,17 @@
 package cool.scx.data.query;
 
 /**
- * WhereOption
+ * a
  *
  * @author scx567888
  * @version 0.0.1
  */
-public class WhereOption {
+public enum WhereOption {
 
     /**
-     * 是否替换已有的相同名称的 WhereBody
+     * 替换同名的 where 参数
      */
-    private boolean replace = false;
+    REPLACE,
 
     /**
      * 如果查询的参数值为 null 则跳过添加而不是报错
@@ -20,26 +20,31 @@ public class WhereOption {
      * <br>
      * 只是为了简化书写
      */
-    private boolean skipIfNull = false;
+    SKIP_IF_NULL,
 
     /**
      * 在 in 或 not in 中 如果有效的参数条目 (指去除 null 后的) 为空 则跳过添加而不是报错
      * <br>
-     * 和 {@link  WhereOption#skipIfNull} 相同 是为了简化书写 其实际意义为参数中去除非法数值(为 null)后的列表长度是否为 0
+     * 和 {@link  WhereOption#SKIP_IF_NULL} 相同 是为了简化书写 其实际意义为参数中去除非法数值(为 null)后的列表长度是否为 0
      */
-    private boolean skipIfEmptyList = false;
+    SKIP_IF_EMPTY_LIST,
 
     /**
      * 使用原始名称 (不进行转换)
      */
-    private boolean useOriginalName = false;
+    USE_ORIGINAL_NAME,
 
     /**
-     * 是否使用 json 类型的查询
+     * 使用 json 查询
      * <br>
      * 注意和 {@link WhereType#JSON_CONTAINS} 一起使用时无效 因为 {@link WhereType#JSON_CONTAINS} 自己有针对 Json 的特殊实现
      */
-    private boolean useJsonExtract = false;
+    USE_JSON_EXTRACT,
+
+    /**
+     * 包含 null 值 只适用于 JSON_CONTAINS
+     */
+    JSON_CONTAINS_INCLUDE_NULL_VALUE,
 
     /**
      * 注意只适用于 JSON_CONTAINS
@@ -47,60 +52,114 @@ public class WhereOption {
      * 使用 原始值 时会将值 直接传递到 SQL 语句
      * 若值为 实体类 则会转换为 JSON 不过 和默认情况相比, 转换的 JSON 会包含 value 为 null 的字段
      */
-    private boolean useOriginalValue = false;
+    USE_ORIGINAL_VALUE;
 
-    public WhereOption setReplace(boolean replace) {
-        this.replace = replace;
-        return this;
-    }
+    /**
+     * a
+     *
+     * @author scx567888
+     * @version 0.0.1
+     */
+    public static final class Info {
 
-    public WhereOption setSkipIfNull(boolean skipIfNull) {
-        this.skipIfNull = skipIfNull;
-        return this;
-    }
+        /**
+         * 是否替换已有的相同名称的 WhereBody
+         */
+        private boolean replace = false;
 
-    public WhereOption setSkipIfEmptyList(boolean skipIfEmptyList) {
-        this.skipIfEmptyList = skipIfEmptyList;
-        return this;
-    }
+        /**
+         * 如果查询的参数值为 null 则跳过添加而不是报错
+         */
+        private boolean skipIfNull = false;
 
-    public WhereOption setUseOriginalName(boolean useOriginalName) {
-        this.useOriginalName = useOriginalName;
-        return this;
-    }
+        /**
+         * a
+         */
+        private boolean skipIfEmptyList = false;
 
-    public WhereOption setUseJsonExtract(boolean useJsonExtract) {
-        this.useJsonExtract = useJsonExtract;
-        return this;
-    }
+        /**
+         * 是否使用原始名称
+         */
+        private boolean useOriginalName = false;
 
-    public WhereOption setUseOriginalValue(boolean useOriginalValue) {
-        this.useOriginalValue = useOriginalValue;
-        return this;
-    }
+        /**
+         * 是否使用 json 类型的查询
+         */
+        private boolean useJsonExtract = false;
 
-    public boolean replace() {
-        return replace;
-    }
+        /**
+         * 注意只适用于 JSON_CONTAINS
+         * 是否使用 原始值
+         */
+        private boolean useOriginalValue = false;
 
-    public boolean skipIfNull() {
-        return skipIfNull;
-    }
+        /**
+         * a
+         *
+         * @param whereOptions a
+         */
+        Info(WhereOption... whereOptions) {
+            for (var option : whereOptions) {
+                switch (option) {
+                    case REPLACE -> this.replace = true;
+                    case SKIP_IF_NULL -> this.skipIfNull = true;
+                    case SKIP_IF_EMPTY_LIST -> this.skipIfEmptyList = true;
+                    case USE_ORIGINAL_NAME -> this.useOriginalName = true;
+                    case USE_JSON_EXTRACT -> this.useJsonExtract = true;
+                    case USE_ORIGINAL_VALUE -> this.useOriginalValue = true;
+                }
+            }
+        }
 
-    public boolean skipIfEmptyList() {
-        return skipIfEmptyList;
-    }
+        /**
+         * a
+         *
+         * @return a
+         */
+        boolean replace() {
+            return replace;
+        }
 
-    public boolean useOriginalName() {
-        return useOriginalName;
-    }
+        /**
+         * a
+         *
+         * @return a
+         */
+        boolean skipIfNull() {
+            return skipIfNull;
+        }
 
-    public boolean useJsonExtract() {
-        return useJsonExtract;
-    }
+        /**
+         * a
+         *
+         * @return a
+         */
+        boolean skipIfEmptyList() {
+            return skipIfEmptyList;
+        }
 
-    public boolean useOriginalValue() {
-        return useOriginalValue;
+        /**
+         * a
+         *
+         * @return a
+         */
+        public boolean useOriginalName() {
+            return useOriginalName;
+        }
+
+        /**
+         * a
+         *
+         * @return a
+         */
+        public boolean useJsonExtract() {
+            return useJsonExtract;
+        }
+
+        public boolean useOriginalValue() {
+            return useOriginalValue;
+        }
+
     }
 
 }

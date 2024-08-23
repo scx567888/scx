@@ -2,6 +2,7 @@ package cool.scx.data.query.parser;
 
 import cool.scx.data.Query;
 import cool.scx.data.query.*;
+import cool.scx.data.query.WhereOption.Info;
 
 import java.util.ArrayList;
 
@@ -65,31 +66,31 @@ public abstract class WhereParser {
         var whereType = body.whereType();
         var value1 = body.value1();
         var value2 = body.value2();
-        var option = body.option();
+        var info = body.info();
         return switch (whereType) {
-            case IS_NULL, IS_NOT_NULL -> parseIsNull(name, whereType, value1, value2, option);
+            case IS_NULL, IS_NOT_NULL -> parseIsNull(name, whereType, value1, value2, info);
             case EQUAL, NOT_EQUAL,
                  LESS_THAN, LESS_THAN_OR_EQUAL,
                  GREATER_THAN, GREATER_THAN_OR_EQUAL,
-                 LIKE_REGEX, NOT_LIKE_REGEX -> parseEqual(name, whereType, value1, value2, option);
-            case LIKE, NOT_LIKE -> parseLike(name, whereType, value1, value2, option);
-            case IN, NOT_IN -> parseIn(name, whereType, value1, value2, option);
-            case BETWEEN, NOT_BETWEEN -> parseBetween(name, whereType, value1, value2, option);
-            case JSON_CONTAINS -> parseJsonContains(name, whereType, value1, value2, option);
+                 LIKE_REGEX, NOT_LIKE_REGEX -> parseEqual(name, whereType, value1, value2, info);
+            case LIKE, NOT_LIKE -> parseLike(name, whereType, value1, value2, info);
+            case IN, NOT_IN -> parseIn(name, whereType, value1, value2, info);
+            case BETWEEN, NOT_BETWEEN -> parseBetween(name, whereType, value1, value2, info);
+            case JSON_CONTAINS -> parseJsonContains(name, whereType, value1, value2, info);
         };
     }
 
-    public abstract WhereClause parseJsonContains(String name, WhereType whereType, Object value1, Object value2, WhereOption option);
+    public abstract WhereClause parseJsonContains(String name, WhereType whereType, Object value1, Object value2, Info info);
 
-    public abstract WhereClause parseBetween(String name, WhereType whereType, Object value1, Object value2, WhereOption option);
+    public abstract WhereClause parseBetween(String name, WhereType whereType, Object value1, Object value2, Info info);
 
-    public abstract WhereClause parseIn(String name, WhereType whereType, Object value1, Object value2, WhereOption option);
+    public abstract WhereClause parseIn(String name, WhereType whereType, Object value1, Object value2, Info info);
 
-    public abstract WhereClause parseLike(String name, WhereType whereType, Object value1, Object value2, WhereOption option);
+    public abstract WhereClause parseLike(String name, WhereType whereType, Object value1, Object value2, Info info);
 
-    public abstract WhereClause parseEqual(String name, WhereType whereType, Object value1, Object value2, WhereOption option);
+    public abstract WhereClause parseEqual(String name, WhereType whereType, Object value1, Object value2, Info info);
 
-    public abstract WhereClause parseIsNull(String name, WhereType whereType, Object value1, Object value2, WhereOption option);
+    public abstract WhereClause parseIsNull(String name, WhereType whereType, Object value1, Object value2, Info info);
 
     public String getLogicKeyWord(LogicType logicType) {
         return switch (logicType) {

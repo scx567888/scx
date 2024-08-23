@@ -88,7 +88,7 @@ public class BaseCRUDController<T extends BaseModelService> {
     @ScxRoute(value = "check-unique/:fieldName", methods = POST)
     public BaseVo checkUnique(@FromPath String fieldName, @FromBody Object value, @FromBody(required = false) Long id) {
         CRUDHelper.checkFieldName(service.entityClass(), fieldName);
-        var query = andSet().eq(fieldName, value).ne("id", id, new WhereOption().setSkipIfNull(true));
+        var query = andSet().eq(fieldName, value).ne("id", id, WhereOption.SKIP_IF_NULL);
         var isUnique = service.count(query) == 0;
         return Result.ok().put("isUnique", isUnique);
     }

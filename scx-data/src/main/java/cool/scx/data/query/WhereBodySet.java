@@ -22,13 +22,13 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      */
     private final List<WhereBody> clauses;
 
-    private final LogicType logicType;
+    private final LogicType type;
 
     /**
      * 创建一个 Where 对象
      */
-    public WhereBodySet(LogicType logicType) {
-        this.logicType = logicType;
+    public WhereBodySet(LogicType type) {
+        this.type = type;
         this.clauses = new ArrayList<>();
     }
 
@@ -297,24 +297,24 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      */
     private WhereBodySet _add(String name, WhereType whereType, Object value1, Object value2, int needParamSize, WhereOption... options) {
         //创建 option 信息
-        var option = options != null && options.length > 0 && options[0] != null ? options[0] : new WhereOption();
+        var info = new WhereOption.Info(options);
         try {
-            var whereBody = new WhereBody(name, whereType, value1, value2, option);
+            var whereBody = new WhereBody(name, whereType, value1, value2, info);
             //类型所需的参数数量和所传的参数数量必须一致
             if (whereType.paramSize() != needParamSize) {
                 throw new IllegalArgumentException("Where 参数错误 : whereType 类型 : " + whereType + " , 参数数量必须为 " + whereType.paramSize());
             }
             // 是否替换
-            if (option.replace()) {
+            if (info.replace()) {
                 clauses.removeIf(w -> whereBody.name().equals(w.name()));
             }
             clauses.add(whereBody);
         } catch (WrongWhereTypeParamSizeException e) {
-            if (!option.skipIfNull()) {
+            if (!info.skipIfNull()) {
                 throw e;
             }
         } catch (ValidParamListIsEmptyException e) {
-            if (!option.skipIfEmptyList()) {
+            if (!info.skipIfEmptyList()) {
                 throw e;
             }
         }
@@ -344,7 +344,7 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
 
     @Override
     public LogicType logicType() {
-        return this.logicType;
+        return this.type;
     }
 
     @Override
