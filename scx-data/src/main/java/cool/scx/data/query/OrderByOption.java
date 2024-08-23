@@ -1,53 +1,73 @@
 package cool.scx.data.query;
 
 /**
- * OrderByOption
+ * a
  *
  * @author scx567888
  * @version 0.0.1
  */
-public class OrderByOption {
+public enum OrderByOption {
 
     /**
-     * 是否替换已有的相同名称的 WhereBody
+     * 替换现有同名字段
      */
-    private boolean replace = false;
+    REPLACE,
 
     /**
-     * 是否使用原始名称
+     * 使用原始名称
      */
-    private boolean useOriginalName = false;
+    USE_ORIGINAL_NAME,
 
     /**
-     * 是否使用 json 类型的查询
+     * 使用 json 查询
      */
-    private boolean useJsonExtract = false;
+    USE_JSON_EXTRACT;
 
-    public OrderByOption setReplace(boolean replace) {
-        this.replace = replace;
-        return this;
-    }
+    /**
+     * a
+     *
+     * @author scx567888
+     * @version 0.0.1
+     */
+    public static final class Info {
 
-    public OrderByOption setUseOriginalName(boolean useOriginalName) {
-        this.useOriginalName = useOriginalName;
-        return this;
-    }
+        /**
+         * 是否替换已有的相同名称的 WhereBody
+         */
+        private boolean replace = false;
 
-    public OrderByOption setUseJsonExtract(boolean useJsonExtract) {
-        this.useJsonExtract = useJsonExtract;
-        return this;
-    }
+        /**
+         * 是否使用原始名称
+         */
+        private boolean useOriginalName = false;
 
-    public boolean replace() {
-        return replace;
-    }
+        /**
+         * 是否使用 json 类型的查询
+         */
+        private boolean useJsonExtract = false;
 
-    public boolean useOriginalName() {
-        return useOriginalName;
-    }
+        public Info(OrderByOption... orderByOptions) {
+            for (var option : orderByOptions) {
+                switch (option) {
+                    case REPLACE -> this.replace = true;
+                    case USE_ORIGINAL_NAME -> this.useOriginalName = true;
+                    case USE_JSON_EXTRACT -> this.useJsonExtract = true;
+                }
+            }
+        }
 
-    public boolean useJsonExtract() {
-        return useJsonExtract;
+        public boolean replace() {
+            return replace;
+        }
+
+        public boolean useOriginalName() {
+            return useOriginalName;
+        }
+
+        public boolean useJsonExtract() {
+            return useJsonExtract;
+        }
+
     }
 
 }

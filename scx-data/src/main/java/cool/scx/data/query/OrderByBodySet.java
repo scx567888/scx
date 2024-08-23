@@ -1,6 +1,7 @@
 package cool.scx.data.query;
 
 import cool.scx.data.Query;
+import cool.scx.data.query.OrderByOption.Info;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,11 +38,11 @@ public final class OrderByBodySet extends QueryLike<OrderByBodySet> {
      * @return 本身, 方便链式调用
      */
     public OrderByBodySet add(String name, OrderByType orderByType, OrderByOption... options) {
-        var option = options != null && options.length > 0 && options[0] != null ? options[0] : new OrderByOption();
+        var info = new Info(options);
         // 是否使用原始名称 (即不进行转义)
-        var orderByBody = new OrderByBody(name, orderByType, option);
+        var orderByBody = new OrderByBody(name, orderByType, info);
         // 是否替换
-        if (option.replace()) {
+        if (info.replace()) {
             clauses.removeIf(w -> orderByBody.name().equals(w.name()));
         }
         clauses.add(orderByBody);

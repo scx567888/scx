@@ -42,7 +42,7 @@ public class OrderBySerializer {
         m.put("@type", "OrderByBody");
         m.put("name", orderByBody.name());
         m.put("orderByType", orderByBody.orderByType());
-        m.put("option", orderByBody.option());
+        m.put("info", orderByBody.info());
         return m;
     }
 
@@ -97,7 +97,7 @@ public class OrderBySerializer {
     public OrderByBody deserializeOrderByBody(JsonNode v) {
         var name = v.path("name").asText();
         var orderByType = OrderByType.of(v.path("orderByType").asText());
-        return new OrderByBody(name, orderByType, new OrderByOption());
+        return new OrderByBody(name, orderByType, new OrderByOption.Info());
     }
 
     private String deserializeString(JsonNode v) {
