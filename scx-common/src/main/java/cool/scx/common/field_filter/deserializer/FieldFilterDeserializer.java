@@ -7,6 +7,9 @@ import cool.scx.common.field_filter.FilterMode;
 import cool.scx.common.field_filter.IncludedFieldFilter;
 import cool.scx.common.util.ObjectUtils;
 
+import static cool.scx.common.field_filter.FilterMode.EXCLUDED;
+import static cool.scx.common.field_filter.FilterMode.INCLUDED;
+
 public class FieldFilterDeserializer {
 
     public static final FieldFilterDeserializer FIELD_FILTER_DESERIALIZER = new FieldFilterDeserializer();
@@ -28,9 +31,9 @@ public class FieldFilterDeserializer {
         var filterMode = FilterMode.of(objectNode.get("filterMode").textValue());
         var fieldNames = ObjectUtils.convertValue(objectNode.get("fieldNames"), String[].class);
         var ignoreNullValue = objectNode.get("ignoreNullValue").asBoolean();
-        if (filterMode == FilterMode.INCLUDED) {
+        if (filterMode == INCLUDED) {
             return new IncludedFieldFilter().addIncluded(fieldNames).ignoreNullValue(ignoreNullValue);
-        } else if (filterMode == FilterMode.EXCLUDED) {
+        } else if (filterMode == EXCLUDED) {
             return new ExcludedFieldFilter().addIncluded(fieldNames).ignoreNullValue(ignoreNullValue);
         } else {
             return null;
