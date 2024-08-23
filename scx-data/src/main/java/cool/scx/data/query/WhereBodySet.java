@@ -20,16 +20,16 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
     /**
      * 存储查询条件 key 为 fieldName ,采用 map 而不是 list 是为了保证重复添加的会直接覆盖
      */
-    private final List<WhereBody> whereBodyList;
+    private final List<WhereBody> clauses;
 
-    private final LogicType type;
+    private final LogicType logicType;
 
     /**
      * 创建一个 Where 对象
      */
-    public WhereBodySet(LogicType type) {
-        this.type = type;
-        this.whereBodyList = new ArrayList<>();
+    public WhereBodySet(LogicType logicType) {
+        this.logicType = logicType;
+        this.clauses = new ArrayList<>();
     }
 
     /**
@@ -77,7 +77,7 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      * @return a boolean
      */
     public boolean isEmpty() {
-        return whereBodyList.size() == 0;
+        return clauses.size() == 0;
     }
 
     /**
@@ -297,24 +297,24 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      */
     private WhereBodySet _add(String name, WhereType whereType, Object value1, Object value2, int needParamSize, WhereOption... options) {
         //创建 option 信息
-        var info = new WhereOption.Info(options);
+        var option = options != null && options.length > 0 && options[0] != null ? options[0] : new WhereOption();
         try {
-            var whereBody = new WhereBody(name, whereType, value1, value2, info);
+            var whereBody = new WhereBody(name, whereType, value1, value2, option);
             //类型所需的参数数量和所传的参数数量必须一致
             if (whereType.paramSize() != needParamSize) {
                 throw new IllegalArgumentException("Where 参数错误 : whereType 类型 : " + whereType + " , 参数数量必须为 " + whereType.paramSize());
             }
             // 是否替换
-            if (info.replace()) {
-                whereBodyList.removeIf(w -> whereBody.name().equals(w.name()));
+            if (option.replace()) {
+                clauses.removeIf(w -> whereBody.name().equals(w.name()));
             }
-            whereBodyList.add(whereBody);
+            clauses.add(whereBody);
         } catch (WrongWhereTypeParamSizeException e) {
-            if (!info.skipIfNull()) {
+            if (!option.skipIfNull()) {
                 throw e;
             }
         } catch (ValidParamListIsEmptyException e) {
-            if (!info.skipIfEmptyList()) {
+            if (!option.skipIfEmptyList()) {
                 throw e;
             }
         }
@@ -328,7 +328,7 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      * @return a
      */
     public WhereBodySet remove(String name) {
-        whereBodyList.removeIf(w -> w.name().equals(name.trim()));
+        clauses.removeIf(w -> w.name().equals(name.trim()));
         return this;
     }
 
@@ -338,18 +338,18 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      * @return this 方便链式调用
      */
     public WhereBodySet clear() {
-        whereBodyList.clear();
+        clauses.clear();
         return this;
     }
 
     @Override
-    public LogicType type() {
-        return this.type;
+    public LogicType logicType() {
+        return this.logicType;
     }
 
     @Override
     public Object[] clauses() {
-        return whereBodyList.toArray();
+        return clauses.toArray();
     }
 
     @Override
