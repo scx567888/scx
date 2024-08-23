@@ -16,7 +16,7 @@ public class JDBCDaoOrderByParser extends OrderByParser {
 
     @Override
     protected String parseOrderByBody(OrderByBody body) {
-        var columnName = parseColumnName(tableInfo, body.name(), body.option().useJsonExtract(), body.option().useOriginalName());
+        var columnName = parseColumnName(tableInfo, body.name(), body.info().useJsonExtract(), body.info().useOriginalName());
         return columnName + " " + body.orderByType().name();
     }
 
