@@ -79,7 +79,7 @@ public class OrderBySerializer {
 
     public OrderBy deserializeOrderBy(JsonNode v) {
         var orderBy = new OrderBy();
-        orderBy.set(deserialize(v.get("clauses")));
+        orderBy.set(deserializeAll(v.get("clauses")));
         return orderBy;
     }
 

@@ -23,16 +23,58 @@ public class QuerySerializer {
     }
 
     public String toJson(Query query) throws JsonProcessingException {
-        var v = serialize(query);
+        var v = serializeAny(query);
         return ObjectUtils.jsonMapper().writeValueAsString(v);
     }
 
     public Query fromJson(String json) throws JsonProcessingException {
         var v = ObjectUtils.jsonMapper().readTree(json);
-        return deserialize(v);
+        return deserializeAny(v);
     }
 
-    public LinkedHashMap<String, Object> serialize(Query query) {
+
+    public Object serializeAny(Object object) {
+        Object serialize = serialize(object);
+        if (serialize == null) {
+            serialize = whereSerializer.serialize(object);
+        }
+        if (serialize == null) {
+            serialize = groupBySerializer.serialize(object);
+        }
+        if (serialize == null) {
+            serialize = orderBySerializer.serialize(object);
+        }
+        if (serialize == null) {
+            serialize = limitInfoSerializer.serialize(object);
+        }
+        return serialize;
+    }
+
+    public Query deserializeAny(JsonNode v) {
+        Object deserialize = deserialize(v);
+        if (deserialize == null) {
+            deserialize = whereSerializer.deserialize(v);
+        }
+        if (deserialize == null) {
+            deserialize = groupBySerializer.deserialize(v);
+        }
+        if (deserialize == null) {
+            deserialize = orderBySerializer.deserialize(v);
+        }
+        if (deserialize == null) {
+            deserialize = limitInfoSerializer.deserialize(v);
+        }
+        return (Query) deserialize;
+    }
+
+    public Object serialize(Object obj) {
+        return switch (obj) {
+            case Query s -> serializeQueryImpl(s);
+            case null, default -> null;
+        };
+    }
+
+    public LinkedHashMap<String, Object> serializeQueryImpl(Query query) {
         var m = new LinkedHashMap<String, Object>();
         m.put("@type", "Query");
         m.put("where", whereSerializer.serialize(query.getWhere()));
@@ -42,8 +84,19 @@ public class QuerySerializer {
         return m;
     }
 
-    public Query deserialize(JsonNode objectNode) {
-        var where = whereSerializer.deserialize(objectNode.get("where"));
+
+    public Object deserialize(JsonNode v) {
+        if (v.isObject()) {
+            var type = v.get("@type").asText();
+            if (type.equals("Query")) {
+                return deserializeQuery(v);
+            }
+        }
+        return null;
+    }
+
+    public Query deserializeQuery(JsonNode objectNode) {
+        var where = whereSerializer.deserializeWhere(objectNode.get("where"));
         var groupBy = groupBySerializer.deserializeGroupBy(objectNode.get("groupBy"));
         var orderBy = orderBySerializer.deserializeOrderBy(objectNode.get("orderBy"));
         var limitInfo = limitInfoSerializer.deserializeLimitInfo(objectNode.get("limitInfo"));
