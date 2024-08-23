@@ -36,7 +36,7 @@ public class WhereSerializer {
     public Map<String, Object> serializeLogic(Logic l) {
         var m = new LinkedHashMap<String, Object>();
         m.put("@type", "Logic");
-        m.put("type", l.type());
+        m.put("logicType", l.logicType());
         m.put("clauses", serializeAll(l.clauses()));
         return m;
     }

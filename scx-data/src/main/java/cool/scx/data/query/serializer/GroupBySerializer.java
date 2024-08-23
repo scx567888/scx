@@ -36,7 +36,7 @@ public class GroupBySerializer {
         var m = new LinkedHashMap<String, Object>();
         m.put("@type", "GroupByBody");
         m.put("name", groupByBody.name());
-        m.put("info", groupByBody.info());
+        m.put("option", groupByBody.option());
         return m;
     }
 
@@ -78,7 +78,7 @@ public class GroupBySerializer {
 
     public GroupByBody deserializeGroupByBody(JsonNode v) {
         var name = v.path("name").asText();
-        return new GroupByBody(name, new GroupByOption.Info());
+        return new GroupByBody(name, new GroupByOption());
     }
 
     private String deserializeString(JsonNode v) {

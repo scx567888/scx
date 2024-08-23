@@ -48,7 +48,7 @@ public abstract class WhereParser {
                 addAll(whereParams, w.params());
             }
         }
-        var clause = String.join(" " + getLogicKeyWord(l.type()) + " ", clauses);
+        var clause = String.join(" " + getLogicKeyWord(l.logicType()) + " ", clauses);
         //只有 子句数量 大于 1 时, 我们才在两端拼接 括号
         if (clauses.size() > 1) {
             clause = "(" + clause + ")";
