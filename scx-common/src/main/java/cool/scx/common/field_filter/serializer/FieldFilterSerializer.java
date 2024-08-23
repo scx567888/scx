@@ -38,6 +38,9 @@ public class FieldFilterSerializer {
     }
 
     public FieldFilter deserializeFieldFilter(JsonNode objectNode) {
+        if (objectNode == null) {
+            return FieldFilter.ofExcluded();
+        }
         var filterMode = FilterMode.of(objectNode.get("filterMode").textValue());
         var fieldNames = ObjectUtils.convertValue(objectNode.get("fieldNames"), String[].class);
         var ignoreNullValue = objectNode.get("ignoreNullValue").asBoolean();

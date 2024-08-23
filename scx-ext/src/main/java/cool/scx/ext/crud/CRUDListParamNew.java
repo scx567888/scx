@@ -21,7 +21,6 @@ public class CRUDListParamNew {
      */
     public JsonNode extParams;
 
-
     public Query getQuery() {
         return querySerializer.deserializeQuery(query);
     }

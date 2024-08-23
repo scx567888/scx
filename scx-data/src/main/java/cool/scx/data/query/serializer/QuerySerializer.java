@@ -96,6 +96,9 @@ public class QuerySerializer {
     }
 
     public Query deserializeQuery(JsonNode objectNode) {
+        if (objectNode == null) {
+            return new QueryImpl();
+        }
         var where = whereSerializer.deserializeWhere(objectNode.get("where"));
         var groupBy = groupBySerializer.deserializeGroupBy(objectNode.get("groupBy"));
         var orderBy = orderBySerializer.deserializeOrderBy(objectNode.get("orderBy"));
