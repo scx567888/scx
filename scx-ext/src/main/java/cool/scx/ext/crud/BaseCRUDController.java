@@ -43,6 +43,15 @@ public class BaseCRUDController<T extends BaseModelService> {
         return Result.ok().put("items", list).put("total", total);
     }
 
+    @ScxRoute(methods = POST)
+    public BaseVo listNew(CRUDListParamNew crudListParam) {
+        var query = crudListParam.getQuery();
+        var selectFilter = crudListParam.getFieldFilter();
+        var list = service.find(query, selectFilter);
+        var total = service.count(query);
+        return Result.ok().put("items", list).put("total", total);
+    }
+
     @ScxRoute(value = ":id", methods = GET)
     public BaseVo info(@FromPath Long id) {
         var info = service.get(id);

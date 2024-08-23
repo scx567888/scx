@@ -24,7 +24,7 @@ public final class CRUDListParamMethodParameterHandler implements ParameterHandl
      */
     @Override
     public boolean canHandle(ParameterInfo parameter) {
-        return parameter.type().getRawClass() == CRUDListParam.class;
+        return parameter.type().getRawClass() == CRUDListParam.class || parameter.type().getRawClass() == CRUDListParamNew.class;
     }
 
     /**
@@ -38,7 +38,15 @@ public final class CRUDListParamMethodParameterHandler implements ParameterHandl
         var useAllBody = true;
         var crudListParam = getValueFromBody(name, useAllBody, required, javaType, requestInfo);
         //这里保证 方法上的 CRUDListParam 类型参数永远不为空
-        return crudListParam != null ? crudListParam : new CRUDListParam();
+        if (crudListParam != null) {
+            return crudListParam;
+        } else {
+            if (javaType.getRawClass() == CRUDListParamNew.class) {
+                return new CRUDListParamNew();
+            } else {
+                return new CRUDListParam();
+            }
+        }
     }
 
 }

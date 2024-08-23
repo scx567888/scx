@@ -7,6 +7,8 @@ import cool.scx.data.query.exception.WrongWhereTypeParamSizeException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static cool.scx.data.query.WhereType.*;
+
 /**
  * where 查询条件封装类
  *
@@ -86,7 +88,7 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      * @return this 方便链式调用
      */
     public WhereBodySet isNull(String fieldName, WhereOption... options) {
-        return add0(fieldName, WhereType.IS_NULL, options);
+        return add0(fieldName, IS_NULL, options);
     }
 
     /**
@@ -97,7 +99,7 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      * @return this 方便链式调用
      */
     public WhereBodySet isNotNull(String fieldName, WhereOption... options) {
-        return add0(fieldName, WhereType.IS_NOT_NULL, options);
+        return add0(fieldName, IS_NOT_NULL, options);
     }
 
     /**
@@ -109,7 +111,7 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      * @return this 方便链式调用
      */
     public WhereBodySet eq(String fieldName, Object value, WhereOption... options) {
-        return add1(fieldName, WhereType.EQUAL, value, options);
+        return add1(fieldName, EQUAL, value, options);
     }
 
     /**
@@ -121,7 +123,7 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      * @return this 方便链式调用
      */
     public WhereBodySet ne(String fieldName, Object value, WhereOption... options) {
-        return add1(fieldName, WhereType.NOT_EQUAL, value, options);
+        return add1(fieldName, NOT_EQUAL, value, options);
     }
 
     /**
@@ -133,7 +135,7 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      * @return this 方便链式调用
      */
     public WhereBodySet gt(String fieldName, Object value, WhereOption... options) {
-        return add1(fieldName, WhereType.GREATER_THAN, value, options);
+        return add1(fieldName, GREATER_THAN, value, options);
     }
 
     /**
@@ -145,7 +147,7 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      * @return this 方便链式调用
      */
     public WhereBodySet ge(String fieldName, Object value, WhereOption... options) {
-        return add1(fieldName, WhereType.GREATER_THAN_OR_EQUAL, value, options);
+        return add1(fieldName, GREATER_THAN_OR_EQUAL, value, options);
     }
 
     /**
@@ -157,7 +159,7 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      * @return this 方便链式调用
      */
     public WhereBodySet lt(String fieldName, Object value, WhereOption... options) {
-        return add1(fieldName, WhereType.LESS_THAN, value, options);
+        return add1(fieldName, LESS_THAN, value, options);
     }
 
     /**
@@ -169,7 +171,7 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      * @return this 方便链式调用
      */
     public WhereBodySet le(String fieldName, Object value, WhereOption... options) {
-        return add1(fieldName, WhereType.LESS_THAN_OR_EQUAL, value, options);
+        return add1(fieldName, LESS_THAN_OR_EQUAL, value, options);
     }
 
     /**
@@ -182,7 +184,7 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      * @return this 方便链式调用
      */
     public WhereBodySet between(String fieldName, Object value1, Object value2, WhereOption... options) {
-        return add2(fieldName, WhereType.BETWEEN, value1, value2, options);
+        return add2(fieldName, BETWEEN, value1, value2, options);
     }
 
     /**
@@ -195,7 +197,7 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      * @return this 方便链式调用
      */
     public WhereBodySet notBetween(String fieldName, Object value1, Object value2, WhereOption... options) {
-        return add2(fieldName, WhereType.NOT_BETWEEN, value1, value2, options);
+        return add2(fieldName, NOT_BETWEEN, value1, value2, options);
     }
 
     /**
@@ -207,7 +209,7 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      * @return this 方便链式调用
      */
     public WhereBodySet likeRegex(String fieldName, String value, WhereOption... options) {
-        return add1(fieldName, WhereType.LIKE_REGEX, value, options);
+        return add1(fieldName, LIKE_REGEX, value, options);
     }
 
     /**
@@ -219,7 +221,7 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      * @return this 方便链式调用
      */
     public WhereBodySet notLikeRegex(String fieldName, String value, WhereOption... options) {
-        return add1(fieldName, WhereType.NOT_LIKE_REGEX, value, options);
+        return add1(fieldName, NOT_LIKE_REGEX, value, options);
     }
 
     /**
@@ -231,7 +233,7 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      * @return this 方便链式调用
      */
     public WhereBodySet like(String fieldName, Object value, WhereOption... options) {
-        return add1(fieldName, WhereType.LIKE, value, options);
+        return add1(fieldName, LIKE, value, options);
     }
 
     /**
@@ -243,7 +245,7 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      * @return this 方便链式调用
      */
     public WhereBodySet notLike(String fieldName, Object value, WhereOption... options) {
-        return add1(fieldName, WhereType.NOT_LIKE, value, options);
+        return add1(fieldName, NOT_LIKE, value, options);
     }
 
     /**
@@ -255,7 +257,7 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      * @return this 方便链式调用
      */
     public WhereBodySet jsonContains(String fieldName, Object value, WhereOption... options) {
-        return add1(fieldName, WhereType.JSON_CONTAINS, value, options);
+        return add1(fieldName, JSON_CONTAINS, value, options);
     }
 
     /**
@@ -267,7 +269,7 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      * @return this 方便链式调用
      */
     public WhereBodySet in(String fieldName, Object value, WhereOption... options) {
-        return add1(fieldName, WhereType.IN, value, options);
+        return add1(fieldName, IN, value, options);
     }
 
     /**
@@ -279,7 +281,7 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      * @return this 方便链式调用
      */
     public WhereBodySet notIn(String fieldName, Object value, WhereOption... options) {
-        return add1(fieldName, WhereType.NOT_IN, value, options);
+        return add1(fieldName, NOT_IN, value, options);
     }
 
     /**
