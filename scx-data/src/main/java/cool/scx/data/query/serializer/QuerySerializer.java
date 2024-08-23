@@ -8,6 +8,8 @@ import java.util.LinkedHashMap;
 
 public class QuerySerializer {
 
+    public static final QuerySerializer QUERY_SERIALIZER = new QuerySerializer();
+
     private final WhereSerializer whereSerializer;
     private final GroupBySerializer groupBySerializer;
     private final OrderBySerializer orderBySerializer;

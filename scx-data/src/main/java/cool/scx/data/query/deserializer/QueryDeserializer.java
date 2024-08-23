@@ -8,6 +8,8 @@ import cool.scx.data.query.QueryImpl;
 
 public class QueryDeserializer {
 
+    public static final QueryDeserializer QUERY_DESERIALIZER = new QueryDeserializer();
+
     private final WhereDeserializer whereDeserializer;
     private final GroupByDeserializer groupByDeserializer;
     private final OrderByDeserializer orderByDeserializer;
