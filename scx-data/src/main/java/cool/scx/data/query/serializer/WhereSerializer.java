@@ -93,6 +93,9 @@ public class WhereSerializer {
 
 
     public Where deserializeWhere(JsonNode v) {
+        if (v == null) {
+            return new Where();
+        }
         var where = new Where();
         where.set(deserializeAll(v.get("clauses")));
         return where;

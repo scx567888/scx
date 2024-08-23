@@ -71,6 +71,9 @@ public class GroupBySerializer {
     }
 
     public GroupBy deserializeGroupBy(JsonNode v) {
+        if (v == null) {
+            return new GroupBy();
+        }
         var groupBy = new GroupBy();
         groupBy.set(deserializeAll(v.get("clauses")));
         return groupBy;

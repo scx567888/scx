@@ -33,6 +33,9 @@ public class LimitInfoSerializer {
     }
 
     public LimitInfo deserializeLimitInfo(JsonNode objectNode) {
+        if (objectNode == null) {
+            return new LimitInfo();
+        }
         var limitInfo = new LimitInfo();
         limitInfo.offset(objectNode.get("offset").asLong());
         limitInfo.limit(objectNode.get("limit").asLong());
