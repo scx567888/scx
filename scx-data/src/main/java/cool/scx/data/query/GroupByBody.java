@@ -3,36 +3,32 @@ package cool.scx.data.query;
 import cool.scx.data.Query;
 
 import static cool.scx.common.util.StringUtils.isBlank;
-import static cool.scx.data.query.GroupByOption.Info;
 
 /**
- * <p>GroupByBody class.</p>
+ * GroupByBody
  *
  * @author scx567888
  * @version 0.0.1
  */
 public final class GroupByBody extends QueryLike<GroupByBody> {
-    private final String name;
-    private final Info info;
 
-    public GroupByBody(String name, Info info) {
+    private final String name;
+    private final GroupByOption option;
+
+    public GroupByBody(String name, GroupByOption... options) {
         if (isBlank(name)) {
             throw new IllegalArgumentException("GroupBy 参数错误 : 名称 不能为空 !!!");
         }
         this.name = name.trim();
-        this.info = info;
-    }
-
-    public GroupByBody(String name, GroupByOption... options) {
-        this(name, new Info(options));
+        this.option = options != null && options.length > 0 && options[0] != null ? options[0] : new GroupByOption();
     }
 
     public String name() {
         return name;
     }
 
-    public Info info() {
-        return info;
+    public GroupByOption option() {
+        return option;
     }
 
     @Override

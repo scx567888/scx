@@ -1,73 +1,39 @@
 package cool.scx.data.query;
 
 /**
- * a
+ * GroupByOption
  *
  * @author scx567888
  * @version 0.0.1
  */
-public enum GroupByOption {
+public class GroupByOption {
 
     /**
-     * 使用原始名称
+     * 是否使用原始名称
      */
-    USE_ORIGINAL_NAME,
+    private boolean useOriginalName = false;
 
     /**
-     * 使用 json 表达式
+     * 是否使用 json 类型的查询
      */
-    USE_JSON_EXTRACT;
+    private boolean useJsonExtract = false;
 
-    /**
-     * a
-     *
-     * @author scx567888
-     * @version 0.0.1
-     */
-    public static final class Info {
+    public GroupByOption setUseOriginalName(boolean useOriginalName) {
+        this.useOriginalName = useOriginalName;
+        return this;
+    }
 
-        /**
-         * 是否使用原始名称
-         */
-        private boolean useOriginalName = false;
+    public GroupByOption setUseJsonExtract(boolean useJsonExtract) {
+        this.useJsonExtract = useJsonExtract;
+        return this;
+    }
 
-        /**
-         * 是否使用 json 类型的查询
-         */
-        private boolean useJsonExtract = false;
+    public boolean useOriginalName() {
+        return useOriginalName;
+    }
 
-        /**
-         * <p>Constructor for GroupByOptionInfo.</p>
-         *
-         * @param groupByOptions a {@link GroupByOption} object
-         */
-        public Info(GroupByOption... groupByOptions) {
-            for (var option : groupByOptions) {
-                switch (option) {
-                    case USE_ORIGINAL_NAME -> this.useOriginalName = true;
-                    case USE_JSON_EXTRACT -> this.useJsonExtract = true;
-                }
-            }
-        }
-
-        /**
-         * <p>useOriginalName.</p>
-         *
-         * @return a boolean
-         */
-        public boolean useOriginalName() {
-            return useOriginalName;
-        }
-
-        /**
-         * <p>useJsonExtract.</p>
-         *
-         * @return a boolean
-         */
-        public boolean useJsonExtract() {
-            return useJsonExtract;
-        }
-
+    public boolean useJsonExtract() {
+        return useJsonExtract;
     }
 
 }
