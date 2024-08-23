@@ -16,13 +16,13 @@ public final class OrderBy extends QueryLike<OrderBy> {
     /**
      * 存储排序的字段
      */
-    private Object[] orderByClauses;
+    private Object[] clauses;
 
     /**
      * 创建一个 OrderBy 对象
      */
     public OrderBy() {
-        this.orderByClauses = new Object[]{};
+        this.clauses = new Object[]{};
     }
 
     /**
@@ -31,7 +31,7 @@ public final class OrderBy extends QueryLike<OrderBy> {
      * @param oldOrderBy 旧的 OrderBy
      */
     public OrderBy(OrderBy oldOrderBy) {
-        this.orderByClauses = Arrays.copyOf(oldOrderBy.orderByClauses, oldOrderBy.orderByClauses.length);
+        this.clauses = Arrays.copyOf(oldOrderBy.clauses, oldOrderBy.clauses.length);
     }
 
     /**
@@ -41,17 +41,17 @@ public final class OrderBy extends QueryLike<OrderBy> {
      * @return self
      */
     public OrderBy set(Object... orderByClauses) {
-        this.orderByClauses = orderByClauses;
+        this.clauses = orderByClauses;
         return this;
     }
 
     public OrderBy add(Object... orderByClauses) {
-        this.orderByClauses = ArrayUtils.concat(this.orderByClauses, orderByClauses);
+        this.clauses = ArrayUtils.concat(this.clauses, orderByClauses);
         return this;
     }
 
     public Object[] clauses() {
-        return this.orderByClauses;
+        return this.clauses;
     }
 
     /**
@@ -60,7 +60,7 @@ public final class OrderBy extends QueryLike<OrderBy> {
      * @return self
      */
     public OrderBy clear() {
-        this.orderByClauses = new Object[]{};
+        this.clauses = new Object[]{};
         return this;
     }
 
