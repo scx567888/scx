@@ -13,7 +13,7 @@ public final class AND extends QueryLike<AND> implements Logic {
     }
 
     @Override
-    public LogicType type() {
+    public LogicType logicType() {
         return AND;
     }
 

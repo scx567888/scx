@@ -20,7 +20,7 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
     /**
      * 存储查询条件 key 为 fieldName ,采用 map 而不是 list 是为了保证重复添加的会直接覆盖
      */
-    private final List<WhereBody> whereBodyList;
+    private final List<WhereBody> clauses;
 
     private final LogicType type;
 
@@ -29,7 +29,7 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      */
     public WhereBodySet(LogicType type) {
         this.type = type;
-        this.whereBodyList = new ArrayList<>();
+        this.clauses = new ArrayList<>();
     }
 
     /**
@@ -77,7 +77,7 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      * @return a boolean
      */
     public boolean isEmpty() {
-        return whereBodyList.size() == 0;
+        return clauses.size() == 0;
     }
 
     /**
@@ -306,9 +306,9 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
             }
             // 是否替换
             if (info.replace()) {
-                whereBodyList.removeIf(w -> whereBody.name().equals(w.name()));
+                clauses.removeIf(w -> whereBody.name().equals(w.name()));
             }
-            whereBodyList.add(whereBody);
+            clauses.add(whereBody);
         } catch (WrongWhereTypeParamSizeException e) {
             if (!info.skipIfNull()) {
                 throw e;
@@ -328,7 +328,7 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      * @return a
      */
     public WhereBodySet remove(String name) {
-        whereBodyList.removeIf(w -> w.name().equals(name.trim()));
+        clauses.removeIf(w -> w.name().equals(name.trim()));
         return this;
     }
 
@@ -338,18 +338,18 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      * @return this 方便链式调用
      */
     public WhereBodySet clear() {
-        whereBodyList.clear();
+        clauses.clear();
         return this;
     }
 
     @Override
-    public LogicType type() {
+    public LogicType logicType() {
         return this.type;
     }
 
     @Override
     public Object[] clauses() {
-        return whereBodyList.toArray();
+        return clauses.toArray();
     }
 
     @Override

@@ -80,7 +80,7 @@ public abstract class ScxModule {
      *
      * @return r
      */
-    public final List<Class<?>> classList() {
+    public List<Class<?>> classList() {
         return new ArrayList<>(this.classList);
     }
 
@@ -89,7 +89,7 @@ public abstract class ScxModule {
      *
      * @return a
      */
-    public final Path rootPath() {
+    public Path rootPath() {
         return this.rootPath;
     }
 

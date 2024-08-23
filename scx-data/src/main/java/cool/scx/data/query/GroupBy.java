@@ -16,13 +16,13 @@ public final class GroupBy extends QueryLike<GroupBy> {
     /**
      * 分组字段列表
      */
-    private Object[] groupByClauses;
+    private Object[] clauses;
 
     /**
      * 创建一个 OrderBy 对象
      */
     public GroupBy() {
-        this.groupByClauses = new Object[]{};
+        this.clauses = new Object[]{};
     }
 
     /**
@@ -31,7 +31,7 @@ public final class GroupBy extends QueryLike<GroupBy> {
      * @param oldGroupBy 旧的 GroupBy
      */
     public GroupBy(GroupBy oldGroupBy) {
-        this.groupByClauses = Arrays.copyOf(oldGroupBy.groupByClauses, oldGroupBy.groupByClauses.length);
+        this.clauses = Arrays.copyOf(oldGroupBy.clauses, oldGroupBy.clauses.length);
     }
 
     /**
@@ -41,17 +41,17 @@ public final class GroupBy extends QueryLike<GroupBy> {
      * @return a
      */
     public GroupBy set(Object... groupByClauses) {
-        this.groupByClauses = groupByClauses;
+        this.clauses = groupByClauses;
         return this;
     }
 
     public GroupBy add(Object... groupByClauses) {
-        this.groupByClauses = ArrayUtils.concat(this.groupByClauses, groupByClauses);
+        this.clauses = ArrayUtils.concat(this.clauses, groupByClauses);
         return this;
     }
 
     public Object[] clauses() {
-        return this.groupByClauses;
+        return this.clauses;
     }
 
     /**
@@ -60,7 +60,7 @@ public final class GroupBy extends QueryLike<GroupBy> {
      * @return self
      */
     public GroupBy clear() {
-        this.groupByClauses = new Object[]{};
+        this.clauses = new Object[]{};
         return this;
     }
 

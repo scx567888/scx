@@ -36,7 +36,7 @@ public class WhereSerializer {
     public Map<String, Object> serializeLogic(Logic l) {
         var m = new LinkedHashMap<String, Object>();
         m.put("@type", "Logic");
-        m.put("type", l.type());
+        m.put("logicType", l.logicType());
         m.put("clauses", serializeAll(l.clauses()));
         return m;
     }
@@ -99,10 +99,10 @@ public class WhereSerializer {
     }
 
     private Logic deserializeLogic(JsonNode v) {
-        var type = v.get("type").asText();
-        if (type.equals("OR")) {
+        var logicType = v.get("logicType").asText();
+        if (logicType.equals("OR")) {
             return new OR(deserializeAll(v.get("clauses")));
-        } else if (type.equals("AND")) {
+        } else if (logicType.equals("AND")) {
             return new AND(deserializeAll(v.get("clauses")));
         } else {
             return null;

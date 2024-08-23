@@ -4,7 +4,7 @@ import cool.scx.data.Query;
 
 public interface Logic extends Query {
 
-    LogicType type();
+    LogicType logicType();
 
     Object[] clauses();
 

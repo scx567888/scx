@@ -16,13 +16,13 @@ public final class Where extends QueryLike<Where> {
     /**
      * 自定义的查询语句
      */
-    private Object[] whereClauses;
+    private Object[] clauses;
 
     /**
      * 创建一个 Where 对象
      */
     public Where() {
-        this.whereClauses = new Object[]{};
+        this.clauses = new Object[]{};
     }
 
     /**
@@ -31,7 +31,7 @@ public final class Where extends QueryLike<Where> {
      * @param oldWhere 旧的 Where
      */
     public Where(Where oldWhere) {
-        this.whereClauses = Arrays.copyOf(oldWhere.whereClauses, oldWhere.whereClauses.length);
+        this.clauses = Arrays.copyOf(oldWhere.clauses, oldWhere.clauses.length);
     }
 
     /**
@@ -40,7 +40,7 @@ public final class Where extends QueryLike<Where> {
      * @return a boolean
      */
     public boolean isEmpty() {
-        return whereClauses.length == 0;
+        return clauses.length == 0;
     }
 
     /**
@@ -53,17 +53,17 @@ public final class Where extends QueryLike<Where> {
      * @return 本身 , 方便链式调用
      */
     public Where set(Object... whereClauses) {
-        this.whereClauses = whereClauses;
+        this.clauses = whereClauses;
         return this;
     }
 
     public Where add(Object... whereClauses) {
-        this.whereClauses = ArrayUtils.concat(this.whereClauses, whereClauses);
+        this.clauses = ArrayUtils.concat(this.clauses, whereClauses);
         return this;
     }
 
     public Object[] clauses() {
-        return this.whereClauses;
+        return this.clauses;
     }
 
     /**
@@ -72,7 +72,7 @@ public final class Where extends QueryLike<Where> {
      * @return this 方便链式调用
      */
     public Where clear() {
-        whereClauses = new Object[]{};
+        clauses = new Object[]{};
         return this;
     }
 
