@@ -13,7 +13,7 @@ public final class OR extends QueryLike<OR> implements Logic {
     }
 
     @Override
-    public LogicType type() {
+    public LogicType logicType() {
         return OR;
     }
 
