@@ -54,6 +54,7 @@
         <module>scx-logging</module>
         <module>scx-web</module>
         <module>scx-ext</module>
+        <module>scx-socket</module>
     </modules>
 
     <build>
