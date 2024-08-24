@@ -9,13 +9,13 @@
         <version>3.0.2</version>
     </parent>
 
-    <artifactId>scx-jdbc</artifactId>
+    <artifactId>scx-socket</artifactId>
     <packaging>jar</packaging>
 
-    <name>SCX JDBC</name>
+    <name>SCX Socket</name>
     <url>https://github.com/scx567888/scx</url>
     <description>
-        SCX JDBC
+        A WebSocket framework
     </description>
 
     <dependencies>
@@ -26,8 +26,14 @@
             <version>${project.version}</version>
         </dependency>
 
-        <!-- ****************** 以下为测试依赖 ****************** -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>scx-logging</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
 
+        <!-- TestNG 测试包 -->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
