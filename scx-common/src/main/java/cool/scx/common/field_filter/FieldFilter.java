@@ -1,7 +1,5 @@
 package cool.scx.common.field_filter;
 
-import java.util.Set;
-
 /**
  * 列过滤器
  *
@@ -76,10 +74,26 @@ public interface FieldFilter {
      */
     FilterMode getFilterMode();
 
-    Set<String> getFieldNames();
+    /**
+     * 获取 FieldName
+     *
+     * @return name
+     */
+    String[] getFieldNames();
 
+    /**
+     * 忽略 空值
+     *
+     * @return a
+     */
     boolean getIgnoreNullValue();
 
+    /**
+     * 设置忽略空值
+     *
+     * @param ignoreNullValue a
+     * @return a
+     */
     FieldFilter ignoreNullValue(boolean ignoreNullValue);
 
 }

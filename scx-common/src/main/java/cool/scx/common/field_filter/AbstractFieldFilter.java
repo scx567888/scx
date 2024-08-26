@@ -58,8 +58,8 @@ public abstract class AbstractFieldFilter implements FieldFilter {
     }
 
     @Override
-    public Set<String> getFieldNames() {
-        return fieldNames;
+    public String[] getFieldNames() {
+        return fieldNames.toArray(String[]::new);
     }
 
     @Override

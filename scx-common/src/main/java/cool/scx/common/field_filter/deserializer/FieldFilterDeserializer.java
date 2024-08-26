@@ -26,7 +26,7 @@ public class FieldFilterDeserializer {
 
     public FieldFilter deserializeFieldFilter(JsonNode objectNode) {
         if (objectNode == null) {
-            return FieldFilter.ofExcluded();
+            return new ExcludedFieldFilter();
         }
         var filterMode = FilterMode.of(objectNode.get("filterMode").textValue());
         var fieldNames = ObjectUtils.convertValue(objectNode.get("fieldNames"), String[].class);

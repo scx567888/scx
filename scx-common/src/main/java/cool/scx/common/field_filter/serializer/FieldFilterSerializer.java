@@ -24,5 +24,4 @@ public class FieldFilterSerializer {
         return m;
     }
 
-
 }
