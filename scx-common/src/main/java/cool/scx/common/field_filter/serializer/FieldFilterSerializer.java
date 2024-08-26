@@ -1,6 +1,6 @@
-package cool.scx.data.field_filter.serializer;
+package cool.scx.common.field_filter.serializer;
 
-import cool.scx.data.FieldFilter;
+import cool.scx.common.field_filter.FieldFilter;
 
 import java.util.LinkedHashMap;
 

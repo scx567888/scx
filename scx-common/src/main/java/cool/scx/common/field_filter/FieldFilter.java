@@ -1,6 +1,4 @@
-package cool.scx.data;
-
-import cool.scx.data.field_filter.FilterMode;
+package cool.scx.common.field_filter;
 
 /**
  * 列过滤器
@@ -9,6 +7,26 @@ import cool.scx.data.field_filter.FilterMode;
  * @version 0.1.3
  */
 public interface FieldFilter {
+
+    /**
+     * 白名单模式
+     *
+     * @param fieldNames a
+     * @return a
+     */
+    static FieldFilter ofIncluded(String... fieldNames) {
+        return new IncludedFieldFilter().addIncluded(fieldNames);
+    }
+
+    /**
+     * 黑名单模式
+     *
+     * @param fieldNames a
+     * @return a
+     */
+    static FieldFilter ofExcluded(String... fieldNames) {
+        return new ExcludedFieldFilter().addExcluded(fieldNames);
+    }
 
     /**
      * 添加 白名单
