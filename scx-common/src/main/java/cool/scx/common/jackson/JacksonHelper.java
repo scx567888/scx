@@ -11,8 +11,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import cool.scx.common.field_filter.FieldFilter;
 import cool.scx.common.util.ScxDateTimeFormatter;
 
-import static com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter.filterOutAllExcept;
-import static com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter.serializeAllExcept;
 import static cool.scx.common.jackson.IgnoreJsonIgnore.IGNORE_JSON_IGNORE;
 import static cool.scx.common.jackson.NullKeySerializer.NULL_KEY_SERIALIZER;
 import static cool.scx.common.jackson.PropertyFilterMixIn.PROPERTY_FILTER_MIX_IN;
@@ -77,12 +75,7 @@ public final class JacksonHelper {
 
     public static FilterProvider getFilterProvider(FieldFilter fieldFilter) {
         var filterProvider = new SimpleFilterProvider();
-        switch (fieldFilter.getFilterMode()) {
-            case EXCLUDED ->
-                    filterProvider.addFilter(PROPERTY_FILTER_MIX_IN, serializeAllExcept(fieldFilter.getFieldNames()));
-            case INCLUDED ->
-                    filterProvider.addFilter(PROPERTY_FILTER_MIX_IN, filterOutAllExcept(fieldFilter.getFieldNames()));
-        }
+        filterProvider.addFilter(PROPERTY_FILTER_MIX_IN, new DeepFieldFilter(fieldFilter));
         return filterProvider;
     }
 
