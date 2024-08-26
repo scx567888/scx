@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 标注此类是一个 Service 层映射
+ * 标识此类是一个需要注入到容器中的类
  *
  * @author scx567888
  * @version 0.3.6

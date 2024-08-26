@@ -14,7 +14,6 @@ import cool.scx.config.ScxFeatureConfig;
 import cool.scx.config.handler.AppRootHandler;
 import cool.scx.config.handler.ConvertValueHandler;
 import cool.scx.config.handler.DefaultValueHandler;
-import cool.scx.core.annotation.ScxComponent;
 import cool.scx.core.annotation.ScxService;
 import cool.scx.core.base.BaseModel;
 import cool.scx.core.base.BaseModelService;
@@ -66,7 +65,7 @@ public final class ScxHelper {
      */
     private static final List<Class<? extends Annotation>> beanFilterAnnotation = List.of(
             //scx 注解
-            ScxComponent.class, ScxRoute.class, Table.class, ScxService.class, ScxWebSocketRoute.class,
+            ScxRoute.class, Table.class, ScxService.class, ScxWebSocketRoute.class,
             //兼容 spring 注解
             Component.class, Controller.class, Service.class, Repository.class);
 
