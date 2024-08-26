@@ -1,6 +1,6 @@
-package cool.scx.common.field_filter;
+package cool.scx.data;
 
-import java.util.Set;
+import cool.scx.data.field_filter.FilterMode;
 
 /**
  * 列过滤器
@@ -9,26 +9,6 @@ import java.util.Set;
  * @version 0.1.3
  */
 public interface FieldFilter {
-
-    /**
-     * 白名单模式
-     *
-     * @param fieldNames a
-     * @return a
-     */
-    static FieldFilter ofIncluded(String... fieldNames) {
-        return new IncludedFieldFilter().addIncluded(fieldNames);
-    }
-
-    /**
-     * 黑名单模式
-     *
-     * @param fieldNames a
-     * @return a
-     */
-    static FieldFilter ofExcluded(String... fieldNames) {
-        return new ExcludedFieldFilter().addExcluded(fieldNames);
-    }
 
     /**
      * 添加 白名单
@@ -76,10 +56,26 @@ public interface FieldFilter {
      */
     FilterMode getFilterMode();
 
-    Set<String> getFieldNames();
+    /**
+     * 获取 FieldName
+     *
+     * @return name
+     */
+    String[] getFieldNames();
 
+    /**
+     * 忽略 空值
+     *
+     * @return a
+     */
     boolean getIgnoreNullValue();
 
+    /**
+     * 设置忽略空值
+     *
+     * @param ignoreNullValue a
+     * @return a
+     */
     FieldFilter ignoreNullValue(boolean ignoreNullValue);
 
 }

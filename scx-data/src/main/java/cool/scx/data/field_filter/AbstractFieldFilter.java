@@ -1,4 +1,6 @@
-package cool.scx.common.field_filter;
+package cool.scx.data.field_filter;
+
+import cool.scx.data.FieldFilter;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -58,8 +60,8 @@ public abstract class AbstractFieldFilter implements FieldFilter {
     }
 
     @Override
-    public Set<String> getFieldNames() {
-        return fieldNames;
+    public String[] getFieldNames() {
+        return fieldNames.toArray(String[]::new);
     }
 
     @Override
