@@ -27,7 +27,7 @@ public final class JDBCDaoHelper {
      * @return 过滤后的列表
      */
     public static AnnotationConfigColumn[] filter(FieldFilter fieldFilter, AnnotationConfigTable tableInfo) {
-        return fieldFilter.getFieldNames().size() == 0 ?
+        return fieldFilter.getFieldNames().length == 0 ?
                 switch (fieldFilter.getFilterMode()) {
                     case INCLUDED -> new AnnotationConfigColumn[0];
                     case EXCLUDED -> tableInfo.columns();
