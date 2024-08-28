@@ -24,14 +24,14 @@ public abstract class OrderByParser {
         return new String[]{s};
     }
 
-    protected abstract String[] parseOrderBy(OrderBy body);
+    protected abstract String[] parseOrderBy(OrderBy o);
 
-    protected String[] parseOrderBySet(OrderBySet body) {
-        return parseAll(body.clauses());
+    protected String[] parseOrderBySet(OrderBySet s) {
+        return parseAll(s.clauses());
     }
 
-    protected String[] parseQuery(Query body) {
-        return parseAll(body.getOrderBy());
+    protected String[] parseQuery(Query q) {
+        return parseAll(q.getOrderBy());
     }
 
     protected final String[] parseAll(Object[] objs) {

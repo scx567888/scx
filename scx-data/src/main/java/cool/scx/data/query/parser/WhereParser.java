@@ -20,8 +20,8 @@ public abstract class WhereParser {
         };
     }
 
-    protected final WhereClause parseString(String str) {
-        return new WhereClause(str);
+    protected final WhereClause parseString(String s) {
+        return new WhereClause(s);
     }
 
     protected WhereClause parseWhereClause(WhereClause w) {
@@ -97,7 +97,7 @@ public abstract class WhereParser {
         return new WhereClause(whereClause.toString(), whereParams.toArray());
     }
 
-    public static String getWhereKeyWord(WhereType whereType) {
+    public String getWhereKeyWord(WhereType whereType) {
         return switch (whereType) {
             case IS_NULL -> "IS NULL";
             case IS_NOT_NULL -> "IS NOT NULL";
