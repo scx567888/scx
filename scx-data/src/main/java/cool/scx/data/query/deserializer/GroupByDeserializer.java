@@ -2,7 +2,6 @@ package cool.scx.data.query.deserializer;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.data.query.GroupBy;
-import cool.scx.data.query.GroupByBody;
 import cool.scx.data.query.GroupByOption;
 
 import java.util.ArrayList;
@@ -14,8 +13,7 @@ public class GroupByDeserializer {
             var type = v.get("@type").asText();
             return switch (type) {
                 case "GroupBy" -> deserializeGroupBy(v);
-                case "GroupByBody" -> deserializeGroupByBody(v);
-                default -> null;
+                default -> v;
             };
         } else if (v.isTextual()) {
             return deserializeString(v);
@@ -25,18 +23,9 @@ public class GroupByDeserializer {
         return null;
     }
 
-    public GroupBy deserializeGroupBy(JsonNode v) {
-        if (v == null) {
-            return new GroupBy();
-        }
-        var groupBy = new GroupBy();
-        groupBy.set(deserializeAll(v.get("clauses")));
-        return groupBy;
-    }
-
-    public GroupByBody deserializeGroupByBody(JsonNode v) {
+    private GroupBy deserializeGroupBy(JsonNode v) {
         var name = v.path("name").asText();
-        return new GroupByBody(name, new GroupByOption.Info());
+        return new GroupBy(name, new GroupByOption.Info());
     }
 
     private String deserializeString(JsonNode v) {

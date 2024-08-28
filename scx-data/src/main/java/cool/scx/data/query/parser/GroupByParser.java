@@ -2,22 +2,34 @@ package cool.scx.data.query.parser;
 
 import cool.scx.data.Query;
 import cool.scx.data.query.GroupBy;
-import cool.scx.data.query.GroupByBody;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static java.util.Collections.addAll;
 
 public abstract class GroupByParser {
 
-    public final String[] parseGroupBy(GroupBy groupBy) {
-        var all = parseAll(groupBy.clauses());
-        //此处去重
-        return Arrays.stream(all).distinct().toArray(String[]::new);
+    public String[] parse(Object obj) {
+        return switch (obj) {
+            case String s -> parseString(s);
+            case GroupBy g -> parseGroupBy(g);
+            case Query q -> parseQuery(q);
+            case Object[] o -> parseAll(o);
+            default -> null;
+        };
     }
 
-    public final String[] parseAll(Object[] objs) {
+    protected String[] parseString(String s) {
+        return new String[]{s};
+    }
+
+    protected abstract String[] parseGroupBy(GroupBy g);
+
+    protected String[] parseQuery(Query q) {
+        return parseAll(q.getGroupBy());
+    }
+
+    protected final String[] parseAll(Object[] objs) {
         var list = new ArrayList<String>();
         for (var obj : objs) {
             var s = parse(obj);
@@ -25,20 +37,5 @@ public abstract class GroupByParser {
         }
         return list.toArray(String[]::new);
     }
-
-    public String[] parse(Object obj) {
-        return switch (obj) {
-            case String str -> new String[]{parseString(str)};
-            case GroupByBody groupByBody -> new String[]{parseGroupByBody(groupByBody)};
-            case Query q -> parseAll(q.getGroupBy().clauses());
-            case null, default -> null;
-        };
-    }
-
-    private String parseString(String str) {
-        return str;
-    }
-
-    public abstract String parseGroupByBody(GroupByBody body);
 
 }

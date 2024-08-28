@@ -1,10 +1,5 @@
 package cool.scx.data;
 
-import cool.scx.data.query.GroupBy;
-import cool.scx.data.query.LimitInfo;
-import cool.scx.data.query.OrderBy;
-import cool.scx.data.query.Where;
-
 public interface Query {
 
     Query where(Object... whereClauses);
@@ -13,27 +8,25 @@ public interface Query {
 
     Query orderBy(Object... orderByClauses);
 
+    Query offset(long limitOffset);
+
+    Query limit(long numberOfRows);
+
     Query addWhere(Object... whereClauses);
 
     Query addGroupBy(Object... groupByClauses);
 
     Query addOrderBy(Object... orderByClauses);
 
-    Query offset(long limitOffset);
+    Object[] getWhere();
 
-    Query limit(long numberOfRows);
+    Object[] getGroupBy();
 
-    Where getWhere();
-
-    GroupBy getGroupBy();
-
-    OrderBy getOrderBy();
+    Object[] getOrderBy();
 
     Long getOffset();
 
     Long getLimit();
-
-    LimitInfo getLimitInfo();
 
     Query clearWhere();
 

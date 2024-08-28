@@ -34,7 +34,7 @@ public class FieldFilterDeserializer {
         if (filterMode == INCLUDED) {
             return new IncludedFieldFilter().addIncluded(fieldNames).ignoreNullValue(ignoreNullValue);
         } else if (filterMode == EXCLUDED) {
-            return new ExcludedFieldFilter().addIncluded(fieldNames).ignoreNullValue(ignoreNullValue);
+            return new ExcludedFieldFilter().addExcluded(fieldNames).ignoreNullValue(ignoreNullValue);
         } else {
             return null;
         }

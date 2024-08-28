@@ -11,7 +11,7 @@ public class FieldFilterSerializer {
     public Object serialize(Object obj) {
         return switch (obj) {
             case FieldFilter s -> serializeFieldFilter(s);
-            case null, default -> null;
+            default -> null;
         };
     }
 

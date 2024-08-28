@@ -1,7 +1,7 @@
 package cool.scx.data.query;
 
 /**
- * a
+ * WhereOption
  *
  * @author scx567888
  * @version 0.0.1
@@ -54,50 +54,20 @@ public enum WhereOption {
      */
     USE_ORIGINAL_VALUE;
 
-    /**
-     * a
-     *
-     * @author scx567888
-     * @version 0.0.1
-     */
     public static final class Info {
 
-        /**
-         * 是否替换已有的相同名称的 WhereBody
-         */
         private boolean replace = false;
 
-        /**
-         * 如果查询的参数值为 null 则跳过添加而不是报错
-         */
         private boolean skipIfNull = false;
 
-        /**
-         * a
-         */
         private boolean skipIfEmptyList = false;
 
-        /**
-         * 是否使用原始名称
-         */
         private boolean useOriginalName = false;
 
-        /**
-         * 是否使用 json 类型的查询
-         */
         private boolean useJsonExtract = false;
 
-        /**
-         * 注意只适用于 JSON_CONTAINS
-         * 是否使用 原始值
-         */
         private boolean useOriginalValue = false;
 
-        /**
-         * a
-         *
-         * @param whereOptions a
-         */
         Info(WhereOption... whereOptions) {
             for (var option : whereOptions) {
                 switch (option) {
@@ -111,47 +81,22 @@ public enum WhereOption {
             }
         }
 
-        /**
-         * a
-         *
-         * @return a
-         */
         boolean replace() {
             return replace;
         }
 
-        /**
-         * a
-         *
-         * @return a
-         */
         boolean skipIfNull() {
             return skipIfNull;
         }
 
-        /**
-         * a
-         *
-         * @return a
-         */
         boolean skipIfEmptyList() {
             return skipIfEmptyList;
         }
 
-        /**
-         * a
-         *
-         * @return a
-         */
         public boolean useOriginalName() {
             return useOriginalName;
         }
 
-        /**
-         * a
-         *
-         * @return a
-         */
         public boolean useJsonExtract() {
             return useJsonExtract;
         }

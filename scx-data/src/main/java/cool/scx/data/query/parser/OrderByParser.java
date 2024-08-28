@@ -2,8 +2,7 @@ package cool.scx.data.query.parser;
 
 import cool.scx.data.Query;
 import cool.scx.data.query.OrderBy;
-import cool.scx.data.query.OrderByBody;
-import cool.scx.data.query.OrderByBodySet;
+import cool.scx.data.query.OrderBySet;
 
 import java.util.ArrayList;
 
@@ -11,11 +10,32 @@ import static java.util.Collections.addAll;
 
 public abstract class OrderByParser {
 
-    public final String[] parseOrderBy(OrderBy orderBy) {
-        return parseAll(orderBy.clauses());
+    public String[] parse(Object obj) {
+        return switch (obj) {
+            case String s -> parseString(s);
+            case OrderBy o -> parseOrderBy(o);
+            case OrderBySet s -> parseOrderBySet(s);
+            case Query q -> parseQuery(q);
+            case Object[] q -> parseAll(q);
+            default -> null;
+        };
     }
 
-    public final String[] parseAll(Object[] objs) {
+    protected String[] parseString(String s) {
+        return new String[]{s};
+    }
+
+    protected abstract String[] parseOrderBy(OrderBy o);
+
+    protected String[] parseOrderBySet(OrderBySet s) {
+        return parseAll(s.clauses());
+    }
+
+    protected String[] parseQuery(Query q) {
+        return parseAll(q.getOrderBy());
+    }
+
+    protected final String[] parseAll(Object[] objs) {
         var list = new ArrayList<String>();
         for (var obj : objs) {
             var s = parse(obj);
@@ -23,18 +43,5 @@ public abstract class OrderByParser {
         }
         return list.toArray(String[]::new);
     }
-
-    public String[] parse(Object obj) {
-        return switch (obj) {
-            case OrderByBody o -> new String[]{parseOrderByBody(o)};
-            case String s -> new String[]{s};
-            case OrderByBodySet s -> parseAll(s.clauses());
-            case OrderBy s -> parseAll(s.clauses());
-            case Query q -> parseAll(q.getOrderBy().clauses());
-            case null, default -> null;
-        };
-    }
-
-    protected abstract String parseOrderByBody(OrderByBody body);
 
 }

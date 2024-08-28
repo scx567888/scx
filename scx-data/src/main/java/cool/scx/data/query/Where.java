@@ -1,84 +1,93 @@
 package cool.scx.data.query;
 
-import cool.scx.common.util.ArrayUtils;
 import cool.scx.data.Query;
+import cool.scx.data.query.exception.WrongWhereTypeParamSizeException;
 
-import java.util.Arrays;
+import static cool.scx.common.util.StringUtils.isBlank;
+import static cool.scx.data.query.WhereOption.Info;
 
 /**
- * where 查询条件封装类
+ * where 封装体
  *
  * @author scx567888
  * @version 0.0.1
  */
 public final class Where extends QueryLike<Where> {
 
-    /**
-     * 自定义的查询语句
-     */
-    private Object[] clauses;
+    private final String name;
+    private final WhereType whereType;
+    private final Object value1;
+    private final Object value2;
+    private final Info info;
 
-    /**
-     * 创建一个 Where 对象
-     */
-    public Where() {
-        this.clauses = new Object[]{};
+    public Where(String name, WhereType whereType, Object value1, Object value2, Info info) {
+        //名称不能为空
+        if (isBlank(name)) {
+            throw new IllegalArgumentException("Where 参数错误 : 名称 不能为空 !!!");
+        }
+        //类型也不能为空
+        if (whereType == null) {
+            throw new IllegalArgumentException("Where 参数错误 : whereType 不能为空 !!!");
+        }
+        //校验参数 并获取有效的参数数量(不为空的) 每检测到一个有效的(不为空的) 便加 1
+        var validParamSize = getValidParamSize(value1, value2);
+        //类型所需的参数数量和所传的合法参数数量必须一致
+        if (whereType.paramSize() != validParamSize) {
+            throw new WrongWhereTypeParamSizeException(whereType);
+        }
+        this.name = name.trim();
+        this.whereType = whereType;
+        this.value1 = value1;
+        this.value2 = value2;
+        this.info = info;
+    }
+
+    public Where(String name, WhereType whereType, Object value1, Object value2, WhereOption... options) {
+        this(name, whereType, value1, value2, new Info(options));
     }
 
     /**
-     * 根据旧的 Where 创建一个 Where 对象
+     * 校验参数 并获取有效的参数数量(不为空的) 每检测到一个有效的(不为空的) 便加 1
      *
-     * @param oldWhere 旧的 Where
+     * @param value1 a
+     * @param value2 a
+     * @return a
      */
-    public Where(Where oldWhere) {
-        this.clauses = Arrays.copyOf(oldWhere.clauses, oldWhere.clauses.length);
+    private static int getValidParamSize(Object value1, Object value2) {
+        //有效的参数数量(不为空的) 每检测到一个有效的(不为空的) 便加 1
+        var validParamSize = 0;
+        if (value1 != null) {
+            validParamSize = validParamSize + 1;
+        }
+        if (value2 != null) {
+            validParamSize = validParamSize + 1;
+        }
+        return validParamSize;
     }
 
-    /**
-     * 查询条件是否为空
-     *
-     * @return a boolean
-     */
-    public boolean isEmpty() {
-        return clauses.length == 0;
+    public String name() {
+        return name;
     }
 
-    /**
-     * 设置 whereSQL 适用于 复杂查询的自定义 where 子句<br>
-     * 支持三种类型 String , WhereBody 和 AbstractPlaceholderSQL
-     * 在最终 cool.scx.sql 中会拼接到 where 子句的最后<br>
-     * 注意 :  除特殊语法外不需要手动在头部添加 AND
-     *
-     * @param whereClauses cool.scx.sql 语句
-     * @return 本身 , 方便链式调用
-     */
-    public Where set(Object... whereClauses) {
-        this.clauses = whereClauses;
-        return this;
+    public WhereType whereType() {
+        return whereType;
     }
 
-    public Where add(Object... whereClauses) {
-        this.clauses = ArrayUtils.concat(this.clauses, whereClauses);
-        return this;
+    public Object value1() {
+        return value1;
     }
 
-    public Object[] clauses() {
-        return this.clauses;
+    public Object value2() {
+        return value2;
     }
 
-    /**
-     * 清除所有 where 条件 (不包括 whereSQL)
-     *
-     * @return this 方便链式调用
-     */
-    public Where clear() {
-        clauses = new Object[]{};
-        return this;
+    public Info info() {
+        return info;
     }
 
     @Override
     public Query toQuery() {
-        return new QueryImpl(this);
+        return new QueryImpl().where(this);
     }
 
 }

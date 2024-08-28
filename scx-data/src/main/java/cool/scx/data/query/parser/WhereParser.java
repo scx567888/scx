@@ -2,7 +2,6 @@ package cool.scx.data.query.parser;
 
 import cool.scx.data.Query;
 import cool.scx.data.query.*;
-import cool.scx.data.query.WhereOption.Info;
 
 import java.util.ArrayList;
 
@@ -10,36 +9,27 @@ import static java.util.Collections.addAll;
 
 public abstract class WhereParser {
 
-    public final WhereClause parseAll(Object[] objs) {
-        var whereClause = new StringBuilder();
-        var whereParams = new ArrayList<>();
-        for (var obj : objs) {
-            var w = parse(obj);
-            if (w != null && !w.isEmpty()) {
-                whereClause.append(w.whereClause());
-                addAll(whereParams, w.params());
-            }
-        }
-        return new WhereClause(whereClause.toString(), whereParams.toArray());
-    }
-
     public WhereClause parse(Object obj) {
         return switch (obj) {
-            case String str -> parseString(str);
-            case WhereBody whereBody -> parseWhereBody(whereBody);
+            case String s -> parseString(s);
+            case WhereClause w -> parseWhereClause(w);
             case Logic l -> parseLogic(l);
-            case WhereClause w -> w;
             case Where w -> parseWhere(w);
-            case Query q -> parseWhere(q.getWhere());
-            case null, default -> null;
+            case Query q -> parseQuery(q);
+            case Object[] o -> parseAll(o);
+            default -> null;
         };
     }
 
-    public final WhereClause parseString(String str) {
-        return new WhereClause(str);
+    protected final WhereClause parseString(String s) {
+        return new WhereClause(s);
     }
 
-    public final WhereClause parseLogic(Logic l) {
+    protected WhereClause parseWhereClause(WhereClause w) {
+        return w;
+    }
+
+    protected final WhereClause parseLogic(Logic l) {
         var clauses = new ArrayList<String>();
         var whereParams = new ArrayList<>();
         for (var c : l.clauses()) {
@@ -57,46 +47,55 @@ public abstract class WhereParser {
         return new WhereClause(clause, whereParams.toArray());
     }
 
-    public final WhereClause parseWhere(Where where) {
-        return this.parseAll(where.clauses());
-    }
 
-    public WhereClause parseWhereBody(WhereBody body) {
-        var name = body.name();
-        var whereType = body.whereType();
-        var value1 = body.value1();
-        var value2 = body.value2();
-        var info = body.info();
-        return switch (whereType) {
-            case IS_NULL, IS_NOT_NULL -> parseIsNull(name, whereType, value1, value2, info);
-            case EQUAL, NOT_EQUAL,
-                 LESS_THAN, LESS_THAN_OR_EQUAL,
-                 GREATER_THAN, GREATER_THAN_OR_EQUAL,
-                 LIKE_REGEX, NOT_LIKE_REGEX -> parseEqual(name, whereType, value1, value2, info);
-            case LIKE, NOT_LIKE -> parseLike(name, whereType, value1, value2, info);
-            case IN, NOT_IN -> parseIn(name, whereType, value1, value2, info);
-            case BETWEEN, NOT_BETWEEN -> parseBetween(name, whereType, value1, value2, info);
-            case JSON_CONTAINS -> parseJsonContains(name, whereType, value1, value2, info);
-        };
-    }
-
-    public abstract WhereClause parseJsonContains(String name, WhereType whereType, Object value1, Object value2, Info info);
-
-    public abstract WhereClause parseBetween(String name, WhereType whereType, Object value1, Object value2, Info info);
-
-    public abstract WhereClause parseIn(String name, WhereType whereType, Object value1, Object value2, Info info);
-
-    public abstract WhereClause parseLike(String name, WhereType whereType, Object value1, Object value2, Info info);
-
-    public abstract WhereClause parseEqual(String name, WhereType whereType, Object value1, Object value2, Info info);
-
-    public abstract WhereClause parseIsNull(String name, WhereType whereType, Object value1, Object value2, Info info);
-
-    public String getLogicKeyWord(LogicType logicType) {
+    protected String getLogicKeyWord(LogicType logicType) {
         return switch (logicType) {
             case OR -> "OR";
             case AND -> "AND";
         };
+    }
+
+    protected WhereClause parseWhere(Where body) {
+        return switch (body.whereType()) {
+            case IS_NULL, IS_NOT_NULL -> parseIsNull(body);
+            case EQUAL, NOT_EQUAL,
+                 LESS_THAN, LESS_THAN_OR_EQUAL,
+                 GREATER_THAN, GREATER_THAN_OR_EQUAL,
+                 LIKE_REGEX, NOT_LIKE_REGEX -> parseEqual(body);
+            case LIKE, NOT_LIKE -> parseLike(body);
+            case IN, NOT_IN -> parseIn(body);
+            case BETWEEN, NOT_BETWEEN -> parseBetween(body);
+            case JSON_CONTAINS -> parseJsonContains(body);
+        };
+    }
+
+    protected abstract WhereClause parseIsNull(Where where);
+
+    protected abstract WhereClause parseEqual(Where where);
+
+    protected abstract WhereClause parseLike(Where where);
+
+    protected abstract WhereClause parseIn(Where where);
+
+    protected abstract WhereClause parseBetween(Where where);
+
+    protected abstract WhereClause parseJsonContains(Where where);
+
+    protected WhereClause parseQuery(Query query) {
+        return parseAll(query.getWhere());
+    }
+
+    protected final WhereClause parseAll(Object[] objs) {
+        var whereClause = new StringBuilder();
+        var whereParams = new ArrayList<>();
+        for (var obj : objs) {
+            var w = parse(obj);
+            if (w != null && !w.isEmpty()) {
+                whereClause.append(w.whereClause());
+                addAll(whereParams, w.params());
+            }
+        }
+        return new WhereClause(whereClause.toString(), whereParams.toArray());
     }
 
     public String getWhereKeyWord(WhereType whereType) {

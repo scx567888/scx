@@ -36,15 +36,6 @@ public class BaseCRUDController<T extends BaseModelService> {
 
     @ScxRoute(methods = POST)
     public BaseVo list(CRUDListParam crudListParam) {
-        var query = crudListParam.getQueryOrThrow(service.entityClass());
-        var selectFilter = crudListParam.getSelectFilterOrThrow(service.entityClass(), service.dao().tableInfo());
-        var list = service.find(query, selectFilter);
-        var total = service.count(query);
-        return Result.ok().put("items", list).put("total", total);
-    }
-
-    @ScxRoute(methods = POST)
-    public BaseVo listNew(CRUDListParamNew crudListParam) {
         var query = crudListParam.getQuery();
         var selectFilter = crudListParam.getFieldFilter();
         var list = service.find(query, selectFilter);

@@ -1,7 +1,10 @@
 package cool.scx.data.query.deserializer;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import cool.scx.data.query.*;
+import cool.scx.data.query.OrderBy;
+import cool.scx.data.query.OrderByOption;
+import cool.scx.data.query.OrderBySet;
+import cool.scx.data.query.OrderByType;
 
 import java.util.ArrayList;
 
@@ -11,10 +14,9 @@ public class OrderByDeserializer {
         if (v.isObject()) {
             var type = v.get("@type").asText();
             return switch (type) {
+                case "OrderBySet" -> deserializeOrderBySet(v);
                 case "OrderBy" -> deserializeOrderBy(v);
-                case "OrderByBodySet" -> deserializeOrderByBodySet(v);
-                case "OrderByBody" -> deserializeOrderByBody(v);
-                default -> null;
+                default -> v;
             };
         } else if (v.isTextual()) {
             return deserializeString(v);
@@ -24,30 +26,21 @@ public class OrderByDeserializer {
         return null;
     }
 
-    public OrderBy deserializeOrderBy(JsonNode v) {
-        if (v == null) {
-            return new OrderBy();
-        }
-        var orderBy = new OrderBy();
-        orderBy.set(deserializeAll(v.get("clauses")));
-        return orderBy;
-    }
-
-    public OrderByBodySet deserializeOrderByBodySet(JsonNode v) {
-        var orderByBodySet = new OrderByBodySet();
+    private OrderBySet deserializeOrderBySet(JsonNode v) {
+        var orderByBodySet = new OrderBySet();
         var clauses = deserializeAll(v.get("clauses"));
         for (var clause : clauses) {
-            if (clause instanceof OrderByBody b) {
+            if (clause instanceof OrderBy b) {
                 orderByBodySet.add(b.name(), b.orderByType());
             }
         }
         return orderByBodySet;
     }
 
-    public OrderByBody deserializeOrderByBody(JsonNode v) {
+    private OrderBy deserializeOrderBy(JsonNode v) {
         var name = v.path("name").asText();
         var orderByType = OrderByType.of(v.path("orderByType").asText());
-        return new OrderByBody(name, orderByType, new OrderByOption.Info());
+        return new OrderBy(name, orderByType, new OrderByOption.Info());
     }
 
     private String deserializeString(JsonNode v) {

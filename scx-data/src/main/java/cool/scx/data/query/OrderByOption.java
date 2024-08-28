@@ -1,7 +1,7 @@
 package cool.scx.data.query;
 
 /**
- * a
+ * OrderByOption
  *
  * @author scx567888
  * @version 0.0.1
@@ -19,31 +19,16 @@ public enum OrderByOption {
     USE_ORIGINAL_NAME,
 
     /**
-     * 使用 json 查询
+     * 使用 JSON 查询
      */
     USE_JSON_EXTRACT;
 
-    /**
-     * a
-     *
-     * @author scx567888
-     * @version 0.0.1
-     */
     public static final class Info {
 
-        /**
-         * 是否替换已有的相同名称的 WhereBody
-         */
         private boolean replace = false;
 
-        /**
-         * 是否使用原始名称
-         */
         private boolean useOriginalName = false;
 
-        /**
-         * 是否使用 json 类型的查询
-         */
         private boolean useJsonExtract = false;
 
         public Info(OrderByOption... orderByOptions) {

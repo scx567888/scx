@@ -4,9 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.common.util.ObjectUtils;
 import cool.scx.common.util.StringUtils;
 import cool.scx.data.jdbc.AnnotationConfigTable;
+import cool.scx.data.query.Where;
 import cool.scx.data.query.WhereClause;
-import cool.scx.data.query.WhereOption.Info;
-import cool.scx.data.query.WhereType;
 import cool.scx.data.query.exception.ValidParamListIsEmptyException;
 import cool.scx.data.query.parser.WhereParser;
 import cool.scx.jdbc.dialect.Dialect;
@@ -33,116 +32,116 @@ public class JDBCDaoWhereParser extends WhereParser {
     }
 
     @Override
-    public WhereClause parseIsNull(String name, WhereType whereType, Object value1, Object value2, Info info) {
-        var columnName = parseColumnName(tableInfo, name, info.useJsonExtract(), info.useOriginalName());
+    public WhereClause parseIsNull(Where w) {
+        var columnName = parseColumnName(tableInfo, w.name(), w.info().useJsonExtract(), w.info().useOriginalName());
         var whereParams = new Object[]{};
-        var whereClause = columnName + " " + getWhereKeyWord(whereType);
+        var whereClause = columnName + " " + getWhereKeyWord(w.whereType());
         return new WhereClause(whereClause, whereParams);
     }
 
     @Override
-    public WhereClause parseEqual(String name, WhereType whereType, Object value1, Object value2, Info info) {
-        var columnName = parseColumnName(tableInfo, name, info.useJsonExtract(), info.useOriginalName());
+    public WhereClause parseEqual(Where w) {
+        var columnName = parseColumnName(tableInfo, w.name(), w.info().useJsonExtract(), w.info().useOriginalName());
         String v1;
         Object[] whereParams;
         //针对 参数类型是 AbstractPlaceholderSQL 的情况进行特殊处理 下同
-        if (value1 instanceof SQL a) {
+        if (w.value1() instanceof SQL a) {
             v1 = "(" + a.sql() + ")";
             whereParams = a.params();
         } else {
             v1 = "?";
-            whereParams = new Object[]{value1};
+            whereParams = new Object[]{w.value1()};
         }
-        var whereClause = columnName + " " + getWhereKeyWord(whereType) + " " + v1;
+        var whereClause = columnName + " " + getWhereKeyWord(w.whereType()) + " " + v1;
         return new WhereClause(whereClause, whereParams);
     }
 
     @Override
-    public WhereClause parseLike(String name, WhereType whereType, Object value1, Object value2, Info info) {
-        var columnName = parseColumnName(tableInfo, name, info.useJsonExtract(), info.useOriginalName());
+    public WhereClause parseLike(Where w) {
+        var columnName = parseColumnName(tableInfo, w.name(), w.info().useJsonExtract(), w.info().useOriginalName());
         String v1;
         Object[] whereParams;
-        if (value1 instanceof SQL a) {
+        if (w.value1() instanceof SQL a) {
             v1 = "(" + a.sql() + ")";
             whereParams = a.params();
         } else {
             v1 = "?";
-            whereParams = new Object[]{value1};
+            whereParams = new Object[]{w.value1()};
         }
-        var whereClause = columnName + " " + getWhereKeyWord(whereType) + " CONCAT('%'," + v1 + ",'%')";
+        var whereClause = columnName + " " + getWhereKeyWord(w.whereType()) + " CONCAT('%'," + v1 + ",'%')";
         return new WhereClause(whereClause, whereParams);
     }
 
     @Override
-    public WhereClause parseIn(String name, WhereType whereType, Object value1, Object value2, Info info) {
-        var columnName = parseColumnName(tableInfo, name, info.useJsonExtract(), info.useOriginalName());
+    public WhereClause parseIn(Where w) {
+        var columnName = parseColumnName(tableInfo, w.name(), w.info().useJsonExtract(), w.info().useOriginalName());
         String v1;
         Object[] whereParams;
-        if (value1 instanceof SQL a) {
+        if (w.value1() instanceof SQL a) {
             v1 = "(" + a.sql() + ")";
             whereParams = a.params();
         } else {
             //移除空值并去重
-            whereParams = Arrays.stream(toObjectArray(value1)).filter(Objects::nonNull).distinct().toArray();
+            whereParams = Arrays.stream(toObjectArray(w.value1())).filter(Objects::nonNull).distinct().toArray();
             //长度为空是抛异常
             if (whereParams.length == 0) {
-                throw new ValidParamListIsEmptyException(whereType);
+                throw new ValidParamListIsEmptyException(w.whereType());
             }
             v1 = "(" + StringUtils.repeat("?", ", ", whereParams.length) + ")";
         }
-        var whereClause = columnName + " " + getWhereKeyWord(whereType) + " " + v1;
+        var whereClause = columnName + " " + getWhereKeyWord(w.whereType()) + " " + v1;
         return new WhereClause(whereClause, whereParams);
     }
 
     @Override
-    public WhereClause parseBetween(String name, WhereType whereType, Object value1, Object value2, Info info) {
-        var columnName = parseColumnName(tableInfo, name, info.useJsonExtract(), info.useOriginalName());
+    public WhereClause parseBetween(Where w) {
+        var columnName = parseColumnName(tableInfo, w.name(), w.info().useJsonExtract(), w.info().useOriginalName());
         String v1;
         String v2;
         var whereParams = new ArrayList<>();
-        if (value1 instanceof SQL a) {
+        if (w.value1() instanceof SQL a) {
             v1 = "(" + a.sql() + ")";
             addAll(whereParams, a.params());
         } else {
             v1 = "?";
-            whereParams.add(value1);
+            whereParams.add(w.value1());
         }
-        if (value2 instanceof SQL a) {
+        if (w.value2() instanceof SQL a) {
             v2 = "(" + a.sql() + ")";
             addAll(whereParams, a.params());
         } else {
             v2 = "?";
-            whereParams.add(value2);
+            whereParams.add(w.value2());
         }
-        var whereClause = columnName + " " + getWhereKeyWord(whereType) + " " + v1 + " AND " + v2;
+        var whereClause = columnName + " " + getWhereKeyWord(w.whereType()) + " " + v1 + " AND " + v2;
         return new WhereClause(whereClause, whereParams.toArray());
     }
 
     @Override
-    public WhereClause parseJsonContains(String name, WhereType whereType, Object value1, Object value2, Info info) {
-        var c = splitIntoColumnNameAndFieldPath(name);
-        var columnName = info.useOriginalName() ? c.columnName() : tableInfo.getColumn(c.columnName()).name();
+    public WhereClause parseJsonContains(Where w) {
+        var c = splitIntoColumnNameAndFieldPath(w.name());
+        var columnName = w.info().useOriginalName() ? c.columnName() : tableInfo.getColumn(c.columnName()).name();
         if (StringUtils.isBlank(c.columnName())) {
-            throw new IllegalArgumentException("使用 JSON_CONTAINS 时, 查询名称不合法 !!! 字段名 : " + name);
+            throw new IllegalArgumentException("使用 JSON_CONTAINS 时, 查询名称不合法 !!! 字段名 : " + w.name());
         }
         String v1;
         Object[] whereParams;
-        if (value1 instanceof SQL a) {
+        if (w.value1() instanceof SQL a) {
             v1 = "(" + a.sql() + ")";
             whereParams = a.params();
         } else {
             v1 = "?";
-            if (info.useOriginalValue()) {
-                whereParams = new Object[]{value1};
+            if (w.info().useOriginalValue()) {
+                whereParams = new Object[]{w.value1()};
             } else {
                 try {
-                    whereParams = new Object[]{toJson(value1, new ObjectUtils.Options().setIgnoreJsonIgnore(true).setIgnoreNullValue(true))};
+                    whereParams = new Object[]{toJson(w.value1(), new ObjectUtils.Options().setIgnoreJsonIgnore(true).setIgnoreNullValue(true))};
                 } catch (JsonProcessingException e) {
-                    throw new IllegalArgumentException("使用 JSON_CONTAINS 时, 查询参数不合法(无法正确转换为 JSON) !!! 字段名 : " + name, e);
+                    throw new IllegalArgumentException("使用 JSON_CONTAINS 时, 查询参数不合法(无法正确转换为 JSON) !!! 字段名 : " + w.name(), e);
                 }
             }
         }
-        var whereClause = getWhereKeyWord(whereType) + "(" + columnName;
+        var whereClause = getWhereKeyWord(w.whereType()) + "(" + columnName;
         if (StringUtils.notBlank(c.fieldPath())) {
             whereClause = whereClause + ", " + v1 + ", '$" + c.fieldPath() + "')";
         } else {
@@ -159,7 +158,7 @@ public class JDBCDaoWhereParser extends WhereParser {
         return super.parse(obj);
     }
 
-    public final WhereClause parseSQL(SQL sql) {
+    private WhereClause parseSQL(SQL sql) {
         return new WhereClause("(" + sql.sql() + ")", sql.params());
     }
 
