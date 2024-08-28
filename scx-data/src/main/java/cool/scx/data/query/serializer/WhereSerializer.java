@@ -17,6 +17,7 @@ public class WhereSerializer {
             case Logic l -> serializeLogic(l);
             case Where whereBody -> serializeWhere(whereBody);
             case Query q -> serializeQuery(q);
+            case Object[] o -> serializeAll(o);
             default -> obj;
         };
     }
@@ -43,7 +44,7 @@ public class WhereSerializer {
 
     private Map<String, Object> serializeWhere(Where w) {
         var m = new LinkedHashMap<String, Object>();
-        m.put("@type", "WhereBody");
+        m.put("@type", "Where");
         m.put("name", w.name());
         m.put("whereType", w.whereType());
         m.put("value1", w.value1());

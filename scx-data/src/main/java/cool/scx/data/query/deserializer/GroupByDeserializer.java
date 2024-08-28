@@ -12,7 +12,7 @@ public class GroupByDeserializer {
         if (v.isObject()) {
             var type = v.get("@type").asText();
             return switch (type) {
-                case "GroupByBody" -> deserializeGroupBy(v);
+                case "GroupBy" -> deserializeGroupBy(v);
                 default -> v;
             };
         } else if (v.isTextual()) {

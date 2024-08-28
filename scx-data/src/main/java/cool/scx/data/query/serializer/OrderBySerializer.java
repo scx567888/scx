@@ -14,6 +14,7 @@ public class OrderBySerializer {
             case OrderBy o -> serializeOrderBy(o);
             case OrderBySet s -> serializeOrderBySet(s);
             case Query q -> serializeQuery(q);
+            case Object[] o -> serializeAll(o);
             default -> obj;
         };
     }
@@ -24,7 +25,7 @@ public class OrderBySerializer {
 
     private Object serializeOrderBy(OrderBy orderByBody) {
         var m = new LinkedHashMap<String, Object>();
-        m.put("@type", "OrderByBody");
+        m.put("@type", "OrderBy");
         m.put("name", orderByBody.name());
         m.put("orderByType", orderByBody.orderByType());
         m.put("info", orderByBody.info());

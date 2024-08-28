@@ -12,6 +12,7 @@ public class GroupBySerializer {
             case String s -> serializeString(s);
             case GroupBy g -> serializeGroupBy(g);
             case Query q -> serializeQuery(q);
+            case Object[] o -> serializeAll(o);
             default -> obj;
         };
     }
@@ -22,7 +23,7 @@ public class GroupBySerializer {
 
     private Object serializeGroupBy(GroupBy g) {
         var m = new LinkedHashMap<String, Object>();
-        m.put("@type", "GroupByBody");
+        m.put("@type", "GroupBy");
         m.put("name", g.name());
         m.put("info", g.info());
         return m;
