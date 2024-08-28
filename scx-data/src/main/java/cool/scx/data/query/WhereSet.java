@@ -15,19 +15,19 @@ import static cool.scx.data.query.WhereType.*;
  * @author scx567888
  * @version 0.0.1
  */
-public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic {
+public final class WhereSet extends QueryLike<WhereSet> implements Logic {
 
     /**
      * 存储查询条件 key 为 fieldName ,采用 map 而不是 list 是为了保证重复添加的会直接覆盖
      */
-    private final List<WhereBody> clauses;
+    private final List<Where> clauses;
 
     private final LogicType type;
 
     /**
      * 创建一个 Where 对象
      */
-    public WhereBodySet(LogicType type) {
+    public WhereSet(LogicType type) {
         this.type = type;
         this.clauses = new ArrayList<>();
     }
@@ -42,7 +42,7 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      * @param options   配置
      * @return 本身 , 方便链式调用
      */
-    public WhereBodySet add2(String name, WhereType whereType, Object value1, Object value2, WhereOption... options) {
+    public WhereSet add2(String name, WhereType whereType, Object value1, Object value2, WhereOption... options) {
         return _add(name, whereType, value1, value2, 2, options);
     }
 
@@ -55,7 +55,7 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      * @param options   配置
      * @return 本身 , 方便链式调用
      */
-    public WhereBodySet add1(String name, WhereType whereType, Object value1, WhereOption... options) {
+    public WhereSet add1(String name, WhereType whereType, Object value1, WhereOption... options) {
         return _add(name, whereType, value1, null, 1, options);
     }
 
@@ -67,7 +67,7 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      * @param options   配置
      * @return 本身 , 方便链式调用
      */
-    public WhereBodySet add0(String name, WhereType whereType, WhereOption... options) {
+    public WhereSet add0(String name, WhereType whereType, WhereOption... options) {
         return _add(name, whereType, null, null, 0, options);
     }
 
@@ -87,7 +87,7 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      * @param options   配置
      * @return this 方便链式调用
      */
-    public WhereBodySet isNull(String fieldName, WhereOption... options) {
+    public WhereSet isNull(String fieldName, WhereOption... options) {
         return add0(fieldName, IS_NULL, options);
     }
 
@@ -98,7 +98,7 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      * @param options   配置
      * @return this 方便链式调用
      */
-    public WhereBodySet isNotNull(String fieldName, WhereOption... options) {
+    public WhereSet isNotNull(String fieldName, WhereOption... options) {
         return add0(fieldName, IS_NOT_NULL, options);
     }
 
@@ -110,7 +110,7 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      * @param options   配置
      * @return this 方便链式调用
      */
-    public WhereBodySet eq(String fieldName, Object value, WhereOption... options) {
+    public WhereSet eq(String fieldName, Object value, WhereOption... options) {
         return add1(fieldName, EQUAL, value, options);
     }
 
@@ -122,7 +122,7 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      * @param options   配置
      * @return this 方便链式调用
      */
-    public WhereBodySet ne(String fieldName, Object value, WhereOption... options) {
+    public WhereSet ne(String fieldName, Object value, WhereOption... options) {
         return add1(fieldName, NOT_EQUAL, value, options);
     }
 
@@ -134,7 +134,7 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      * @param options   配置
      * @return this 方便链式调用
      */
-    public WhereBodySet gt(String fieldName, Object value, WhereOption... options) {
+    public WhereSet gt(String fieldName, Object value, WhereOption... options) {
         return add1(fieldName, GREATER_THAN, value, options);
     }
 
@@ -146,7 +146,7 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      * @param options   配置
      * @return this 方便链式调用
      */
-    public WhereBodySet ge(String fieldName, Object value, WhereOption... options) {
+    public WhereSet ge(String fieldName, Object value, WhereOption... options) {
         return add1(fieldName, GREATER_THAN_OR_EQUAL, value, options);
     }
 
@@ -158,7 +158,7 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      * @param options   配置
      * @return this 方便链式调用
      */
-    public WhereBodySet lt(String fieldName, Object value, WhereOption... options) {
+    public WhereSet lt(String fieldName, Object value, WhereOption... options) {
         return add1(fieldName, LESS_THAN, value, options);
     }
 
@@ -170,7 +170,7 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      * @param options   配置
      * @return this 方便链式调用
      */
-    public WhereBodySet le(String fieldName, Object value, WhereOption... options) {
+    public WhereSet le(String fieldName, Object value, WhereOption... options) {
         return add1(fieldName, LESS_THAN_OR_EQUAL, value, options);
     }
 
@@ -183,7 +183,7 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      * @param options   配置
      * @return this 方便链式调用
      */
-    public WhereBodySet between(String fieldName, Object value1, Object value2, WhereOption... options) {
+    public WhereSet between(String fieldName, Object value1, Object value2, WhereOption... options) {
         return add2(fieldName, BETWEEN, value1, value2, options);
     }
 
@@ -196,7 +196,7 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      * @param options   配置
      * @return this 方便链式调用
      */
-    public WhereBodySet notBetween(String fieldName, Object value1, Object value2, WhereOption... options) {
+    public WhereSet notBetween(String fieldName, Object value1, Object value2, WhereOption... options) {
         return add2(fieldName, NOT_BETWEEN, value1, value2, options);
     }
 
@@ -208,7 +208,7 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      * @param options   配置
      * @return this 方便链式调用
      */
-    public WhereBodySet likeRegex(String fieldName, String value, WhereOption... options) {
+    public WhereSet likeRegex(String fieldName, String value, WhereOption... options) {
         return add1(fieldName, LIKE_REGEX, value, options);
     }
 
@@ -220,7 +220,7 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      * @param options   配置
      * @return this 方便链式调用
      */
-    public WhereBodySet notLikeRegex(String fieldName, String value, WhereOption... options) {
+    public WhereSet notLikeRegex(String fieldName, String value, WhereOption... options) {
         return add1(fieldName, NOT_LIKE_REGEX, value, options);
     }
 
@@ -232,7 +232,7 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      * @param options   配置
      * @return this 方便链式调用
      */
-    public WhereBodySet like(String fieldName, Object value, WhereOption... options) {
+    public WhereSet like(String fieldName, Object value, WhereOption... options) {
         return add1(fieldName, LIKE, value, options);
     }
 
@@ -244,7 +244,7 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      * @param options   配置
      * @return this 方便链式调用
      */
-    public WhereBodySet notLike(String fieldName, Object value, WhereOption... options) {
+    public WhereSet notLike(String fieldName, Object value, WhereOption... options) {
         return add1(fieldName, NOT_LIKE, value, options);
     }
 
@@ -256,7 +256,7 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      * @param options   配置
      * @return this 方便链式调用
      */
-    public WhereBodySet jsonContains(String fieldName, Object value, WhereOption... options) {
+    public WhereSet jsonContains(String fieldName, Object value, WhereOption... options) {
         return add1(fieldName, JSON_CONTAINS, value, options);
     }
 
@@ -268,7 +268,7 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      * @param options   配置
      * @return this 方便链式调用
      */
-    public WhereBodySet in(String fieldName, Object value, WhereOption... options) {
+    public WhereSet in(String fieldName, Object value, WhereOption... options) {
         return add1(fieldName, IN, value, options);
     }
 
@@ -280,7 +280,7 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      * @param options   配置
      * @return this 方便链式调用
      */
-    public WhereBodySet notIn(String fieldName, Object value, WhereOption... options) {
+    public WhereSet notIn(String fieldName, Object value, WhereOption... options) {
         return add1(fieldName, NOT_IN, value, options);
     }
 
@@ -295,11 +295,11 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      * @param needParamSize a int
      * @return a
      */
-    private WhereBodySet _add(String name, WhereType whereType, Object value1, Object value2, int needParamSize, WhereOption... options) {
+    private WhereSet _add(String name, WhereType whereType, Object value1, Object value2, int needParamSize, WhereOption... options) {
         //创建 option 信息
         var info = new WhereOption.Info(options);
         try {
-            var whereBody = new WhereBody(name, whereType, value1, value2, info);
+            var whereBody = new Where(name, whereType, value1, value2, info);
             //类型所需的参数数量和所传的参数数量必须一致
             if (whereType.paramSize() != needParamSize) {
                 throw new IllegalArgumentException("Where 参数错误 : whereType 类型 : " + whereType + " , 参数数量必须为 " + whereType.paramSize());
@@ -327,7 +327,7 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      * @param name a
      * @return a
      */
-    public WhereBodySet remove(String name) {
+    public WhereSet remove(String name) {
         clauses.removeIf(w -> w.name().equals(name.trim()));
         return this;
     }
@@ -337,7 +337,7 @@ public final class WhereBodySet extends QueryLike<WhereBodySet> implements Logic
      *
      * @return this 方便链式调用
      */
-    public WhereBodySet clear() {
+    public WhereSet clear() {
         clauses.clear();
         return this;
     }
