@@ -1,9 +1,11 @@
 package cool.scx.data.query;
 
-import cool.scx.common.util.ArrayUtils;
 import cool.scx.data.Query;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.util.Collections.addAll;
 
 /**
  * 分组
@@ -16,13 +18,13 @@ public final class GroupBy extends QueryLike<GroupBy> {
     /**
      * 分组字段列表
      */
-    private Object[] clauses;
+    private final List<Object> clauses;
 
     /**
      * 创建一个 OrderBy 对象
      */
     public GroupBy() {
-        this.clauses = new Object[]{};
+        this.clauses = new ArrayList<>();
     }
 
     /**
@@ -31,36 +33,26 @@ public final class GroupBy extends QueryLike<GroupBy> {
      * @param oldGroupBy 旧的 GroupBy
      */
     public GroupBy(GroupBy oldGroupBy) {
-        this.clauses = Arrays.copyOf(oldGroupBy.clauses, oldGroupBy.clauses.length);
+        this.clauses = new ArrayList<>(oldGroupBy.clauses);
     }
 
-    /**
-     * set
-     *
-     * @param groupByClauses a
-     * @return a
-     */
     public GroupBy set(Object... groupByClauses) {
-        this.clauses = groupByClauses;
+        this.clear();
+        this.add(groupByClauses);
         return this;
     }
 
     public GroupBy add(Object... groupByClauses) {
-        this.clauses = ArrayUtils.concat(this.clauses, groupByClauses);
+        addAll(this.clauses, groupByClauses);
         return this;
     }
 
     public Object[] clauses() {
-        return this.clauses;
+        return this.clauses.toArray();
     }
 
-    /**
-     * clear
-     *
-     * @return self
-     */
     public GroupBy clear() {
-        this.clauses = new Object[]{};
+        this.clauses.clear();
         return this;
     }
 
