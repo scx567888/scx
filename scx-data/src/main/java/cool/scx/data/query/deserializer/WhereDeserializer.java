@@ -12,11 +12,10 @@ public class WhereDeserializer {
         if (v.isObject()) {
             var type = v.get("@type").asText();
             return switch (type) {
-                case "Where" -> deserializeWhere(v);
                 case "Logic" -> deserializeLogic(v);
                 case "WhereClause" -> deserializeWhereClause(v);
-                case "WhereBody" -> deserializeWhereBody(v);
-                default -> null;
+                case "Where" -> deserializeWhere(v);
+                default -> v;
             };
         } else if (v.isTextual()) {
             return deserializeString(v);
@@ -24,15 +23,6 @@ public class WhereDeserializer {
             return deserializeAll(v);
         }
         return null;
-    }
-
-    public Where deserializeWhere(JsonNode v) {
-        if (v == null) {
-            return new Where();
-        }
-        var where = new Where();
-        where.set(deserializeAll(v.get("clauses")));
-        return where;
     }
 
     private Logic deserializeLogic(JsonNode v) {
@@ -52,12 +42,12 @@ public class WhereDeserializer {
         return new WhereClause(whereClause, params);
     }
 
-    private WhereBody deserializeWhereBody(JsonNode v) {
+    private Where deserializeWhere(JsonNode v) {
         var name = v.get("name").asText();
         var whereType = WhereType.of(v.get("whereType").asText());
         var value1 = ObjectUtils.convertValue(v.get("value1"), Object.class);
         var value2 = ObjectUtils.convertValue(v.get("value2"), Object.class);
-        return new WhereBody(name, whereType, value1, value2);
+        return new Where(name, whereType, value1, value2);
     }
 
     private String deserializeString(JsonNode v) {
