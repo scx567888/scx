@@ -13,51 +13,33 @@ public class QuerySerializer {
     private final WhereSerializer whereSerializer;
     private final GroupBySerializer groupBySerializer;
     private final OrderBySerializer orderBySerializer;
-    private final LimitInfoSerializer limitInfoSerializer;
 
     public QuerySerializer() {
         this.whereSerializer = new WhereSerializer();
         this.groupBySerializer = new GroupBySerializer();
         this.orderBySerializer = new OrderBySerializer();
-        this.limitInfoSerializer = new LimitInfoSerializer();
     }
 
     public String toJson(Query query) throws JsonProcessingException {
-        var v = serializeAny(query);
+        var v = serialize(query);
         return ObjectUtils.jsonMapper().writeValueAsString(v);
-    }
-
-    public Object serializeAny(Object object) {
-        Object serialize = serialize(object);
-        if (serialize == null) {
-            serialize = whereSerializer.serialize(object);
-        }
-        if (serialize == null) {
-            serialize = groupBySerializer.serialize(object);
-        }
-        if (serialize == null) {
-            serialize = orderBySerializer.serialize(object);
-        }
-        if (serialize == null) {
-            serialize = limitInfoSerializer.serialize(object);
-        }
-        return serialize;
     }
 
     public Object serialize(Object obj) {
         return switch (obj) {
-            case Query s -> serializeQueryImpl(s);
-            case null, default -> null;
+            case Query s -> serializeQuery(s);
+            default -> obj;
         };
     }
 
-    public LinkedHashMap<String, Object> serializeQueryImpl(Query query) {
+    private Object serializeQuery(Query query) {
         var m = new LinkedHashMap<String, Object>();
         m.put("@type", "Query");
-        m.put("where", whereSerializer.serialize(query.getWhere()));
-        m.put("groupBy", groupBySerializer.serialize(query.getGroupBy()));
-        m.put("orderBy", orderBySerializer.serialize(query.getOrderBy()));
-        m.put("limitInfo", limitInfoSerializer.serialize(query.getLimitInfo()));
+        m.put("where", whereSerializer.serialize(query));
+        m.put("groupBy", groupBySerializer.serialize(query));
+        m.put("orderBy", orderBySerializer.serialize(query));
+        m.put("offset", query.getOffset());
+        m.put("limit", query.getLimit());
         return m;
     }
 
