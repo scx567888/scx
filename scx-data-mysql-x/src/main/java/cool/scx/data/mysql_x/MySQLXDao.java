@@ -82,7 +82,7 @@ public class MySQLXDao<Entity> implements Dao<Entity, String> {
 
     @Override
     public List<Entity> find(Query query, FieldFilter selectFilter) {
-        var whereClause = WHERE_PARSER.parseWhere(query.getWhere());
+        var whereClause = WHERE_PARSER.parse(query.getWhere());
         var findStatement = this.collection
                 .find(whereClause.whereClause())
                 .bind(whereClause.params());
@@ -103,7 +103,7 @@ public class MySQLXDao<Entity> implements Dao<Entity, String> {
 
     @Override
     public void find(Query query, FieldFilter fieldFilter, Consumer<Entity> consumer) {
-        var whereClause = WHERE_PARSER.parseWhere(query.getWhere());
+        var whereClause = WHERE_PARSER.parse(query.getWhere());
         var findStatement = this.collection
                 .find(whereClause.whereClause())
                 .bind(whereClause.params());
@@ -121,7 +121,7 @@ public class MySQLXDao<Entity> implements Dao<Entity, String> {
 
     @Override
     public Entity get(Query query, FieldFilter fieldFilter) {
-        var whereClause = WHERE_PARSER.parseWhere(query.getWhere());
+        var whereClause = WHERE_PARSER.parse(query.getWhere());
         var findStatement = this.collection
                 .find(whereClause.whereClause())
                 .bind(whereClause.params())
@@ -135,7 +135,7 @@ public class MySQLXDao<Entity> implements Dao<Entity, String> {
 
     @Override
     public long update(Entity entity, Query query, FieldFilter updateFilter) {
-        var whereClause = WHERE_PARSER.parseWhere(query.getWhere());
+        var whereClause = WHERE_PARSER.parse(query.getWhere());
         var newDoc = toDbDoc(entity, updateFilter.addExcluded("_id"));
         var result = this.collection
                 .modify(whereClause.whereClause())
@@ -147,7 +147,7 @@ public class MySQLXDao<Entity> implements Dao<Entity, String> {
 
     @Override
     public long delete(Query query) {
-        var whereClause = WHERE_PARSER.parseWhere(query.getWhere());
+        var whereClause = WHERE_PARSER.parse(query.getWhere());
         var result = this.collection
                 .remove(whereClause.whereClause())
                 .bind(whereClause.params())
@@ -157,7 +157,7 @@ public class MySQLXDao<Entity> implements Dao<Entity, String> {
 
     @Override
     public long count(Query query) {
-        var whereClause = WHERE_PARSER.parseWhere(query.getWhere());
+        var whereClause = WHERE_PARSER.parse(query.getWhere());
         var docResult = this.collection
                 .find(whereClause.whereClause())
                 .bind(whereClause.params())
