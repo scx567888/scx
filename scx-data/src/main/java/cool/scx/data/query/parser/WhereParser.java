@@ -16,6 +16,7 @@ public abstract class WhereParser {
             case Logic l -> parseLogic(l);
             case Where w -> parseWhere(w);
             case Query q -> parseQuery(q);
+            case Object[] o -> parseAll(o);
             default -> null;
         };
     }

@@ -16,6 +16,7 @@ public abstract class OrderByParser {
             case OrderBy o -> parseOrderBy(o);
             case OrderBySet s -> parseOrderBySet(s);
             case Query q -> parseQuery(q);
+            case Object[] q -> parseAll(q);
             default -> null;
         };
     }

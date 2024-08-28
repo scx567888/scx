@@ -205,8 +205,8 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
 
     private String _buildSelectSQL0(Query query, FieldFilter selectFilter, WhereClause whereClause) {
         var selectColumns = filter(selectFilter, tableInfo);
-        var groupByColumns = groupByParser.parseGroupBy(query.getGroupBy());
-        var orderByClauses = orderByParser.parseOrderBy(query.getOrderBy());
+        var groupByColumns = groupByParser.parse(query.getGroupBy());
+        var orderByClauses = orderByParser.parse(query.getOrderBy());
         return Select(selectColumns)
                 .From(tableInfo)
                 .Where(whereClause.whereClause())
@@ -264,7 +264,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
      * @return selectSQL
      */
     public final SQL buildSelectSQL(Query query, FieldFilter selectFilter) {
-        var whereClause = whereParser.parseWhere(query.getWhere());
+        var whereClause = whereParser.parse(query.getWhere());
         var sql = _buildSelectSQL0(query, selectFilter, whereClause);
         return sql(sql, whereClause.params());
     }
@@ -278,7 +278,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
      * @return a
      */
     public final SQL buildSelectSQLWithAlias(Query query, FieldFilter selectFilter) {
-        var whereClause = whereParser.parseWhere(query.getWhere());
+        var whereClause = whereParser.parse(query.getWhere());
         var sql0 = _buildSelectSQL0(query, selectFilter, whereClause);
         var sql = Select("*")
                 .From("(" + sql0 + ")")
@@ -288,8 +288,8 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
 
     private String _buildGetSQL0(Query query, FieldFilter selectFilter, WhereClause whereClause) {
         var selectColumns = filter(selectFilter, tableInfo);
-        var groupByColumns = groupByParser.parseGroupBy(query.getGroupBy());
-        var orderByClauses = orderByParser.parseOrderBy(query.getOrderBy());
+        var groupByColumns = groupByParser.parse(query.getGroupBy());
+        var orderByClauses = orderByParser.parse(query.getOrderBy());
         return Select(selectColumns)
                 .From(tableInfo)
                 .Where(whereClause.whereClause())
@@ -300,7 +300,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
     }
 
     public final SQL buildGetSQL(Query query, FieldFilter selectFilter) {
-        var whereClause = whereParser.parseWhere(query.getWhere());
+        var whereClause = whereParser.parse(query.getWhere());
         var sql = _buildGetSQL0(query, selectFilter, whereClause);
         return sql(sql, whereClause.params());
     }
@@ -314,7 +314,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
      * @return a
      */
     public final SQL buildGetSQLWithAlias(Query query, FieldFilter selectFilter) {
-        var whereClause = whereParser.parseWhere(query.getWhere());
+        var whereClause = whereParser.parse(query.getWhere());
         var sql0 = _buildGetSQL0(query, selectFilter, whereClause);
         var sql = Select("*")
                 .From("(" + sql0 + ")")
@@ -323,13 +323,13 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
     }
 
     private SQL buildUpdateSQL(Entity entity, Query query, FieldFilter updateFilter) {
-        if (query.getWhere().isEmpty()) {
+        if (query.getWhere().length == 0) {
             throw new IllegalArgumentException("更新数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
         }
         var updateSetColumnInfos = filter(updateFilter, entity, tableInfo);
         var updateSetColumns = Arrays.stream(updateSetColumnInfos).map(c -> c.name() + " = ?").toArray(String[]::new);
-        var whereClause = whereParser.parseWhere(query.getWhere());
-        var orderByClauses = orderByParser.parseOrderBy(query.getOrderBy());
+        var whereClause = whereParser.parse(query.getWhere());
+        var orderByClauses = orderByParser.parse(query.getOrderBy());
         var sql = Update(tableInfo)
                 .Set(updateSetColumns)
                 .Where(whereClause.whereClause())
@@ -341,11 +341,11 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
     }
 
     private SQL buildDeleteSQL(Query query) {
-        if (query.getWhere().isEmpty()) {
+        if (query.getWhere().length == 0) {
             throw new IllegalArgumentException("删除数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
         }
-        var whereClause = whereParser.parseWhere(query.getWhere());
-        var orderByClauses = orderByParser.parseOrderBy(query.getOrderBy());
+        var whereClause = whereParser.parse(query.getWhere());
+        var orderByClauses = orderByParser.parse(query.getOrderBy());
         var sql = Delete(tableInfo)
                 .Where(whereClause.whereClause())
                 .OrderBy(orderByClauses)
@@ -355,8 +355,8 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
     }
 
     private SQL buildCountSQL(Query query) {
-        var whereClause = whereParser.parseWhere(query.getWhere());
-        var groupByColumns = groupByParser.parseGroupBy(query.getGroupBy());
+        var whereClause = whereParser.parse(query.getWhere());
+        var groupByColumns = groupByParser.parse(query.getGroupBy());
         var sql = Select("COUNT(*) AS count")
                 .From(tableInfo)
                 .Where(whereClause.whereClause())

@@ -14,6 +14,7 @@ public abstract class GroupByParser {
             case String s -> parseString(s);
             case GroupBy g -> parseGroupBy(g);
             case Query q -> parseQuery(q);
+            case Object[] o -> parseAll(o);
             default -> null;
         };
     }
