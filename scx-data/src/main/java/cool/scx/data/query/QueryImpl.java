@@ -85,26 +85,20 @@ public class QueryImpl implements Query {
     }
 
     @Override
-    public QueryImpl offset(long limitOffset) {
-        if (limitOffset < 0) {
+    public QueryImpl offset(long offset) {
+        if (offset < 0) {
             throw new IllegalArgumentException("Limit 参数错误 : offset (偏移量) 不能小于 0 !!!");
         }
-        this.offset = limitOffset;
+        this.offset = offset;
         return this;
     }
 
-    /**
-     * 设置分页参数
-     *
-     * @param numberOfRows 长度
-     * @return p
-     */
     @Override
-    public QueryImpl limit(long numberOfRows) {
-        if (numberOfRows < 0) {
+    public QueryImpl limit(long limit) {
+        if (limit < 0) {
             throw new IllegalArgumentException("Limit 参数错误 : limit (行长度) 不能小于 0 !!!");
         }
-        this.limit = numberOfRows;
+        this.limit = limit;
         return this;
     }
 
