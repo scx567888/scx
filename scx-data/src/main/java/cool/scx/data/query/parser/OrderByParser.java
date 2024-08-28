@@ -10,7 +10,31 @@ import static java.util.Collections.addAll;
 
 public abstract class OrderByParser {
 
-    public final String[] parseAll(Object[] objs) {
+    public String[] parse(Object obj) {
+        return switch (obj) {
+            case String s -> parseString(s);
+            case OrderBy o -> parseOrderBy(o);
+            case OrderBySet s -> parseOrderBySet(s);
+            case Query q -> parseQuery(q);
+            default -> null;
+        };
+    }
+
+    protected String[] parseString(String s) {
+        return new String[]{s};
+    }
+
+    protected abstract String[] parseOrderBy(OrderBy body);
+
+    protected String[] parseOrderBySet(OrderBySet body) {
+        return parseAll(body.clauses());
+    }
+
+    protected String[] parseQuery(Query body) {
+        return parseAll(body.getOrderBy());
+    }
+
+    protected final String[] parseAll(Object[] objs) {
         var list = new ArrayList<String>();
         for (var obj : objs) {
             var s = parse(obj);
@@ -18,21 +42,5 @@ public abstract class OrderByParser {
         }
         return list.toArray(String[]::new);
     }
-
-    public String[] parse(Object obj) {
-        return switch (obj) {
-            case String s -> new String[]{parseString(s)};
-            case OrderBy o -> new String[]{parseOrderBy(o)};
-            case OrderBySet s -> parseAll(s.clauses());
-            case Query q -> parseAll(q.getOrderBy());
-            default -> null;
-        };
-    }
-
-    private String parseString(String str) {
-        return str;
-    }
-
-    public abstract String parseOrderBy(OrderBy body);
 
 }
