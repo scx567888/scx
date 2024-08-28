@@ -2,20 +2,12 @@ package cool.scx.data.query.parser;
 
 import cool.scx.data.Query;
 import cool.scx.data.query.GroupBy;
-import cool.scx.data.query.GroupByBody;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static java.util.Collections.addAll;
 
 public abstract class GroupByParser {
-
-    public final String[] parseGroupBy(GroupBy groupBy) {
-        var all = parseAll(groupBy.clauses());
-        //此处去重
-        return Arrays.stream(all).distinct().toArray(String[]::new);
-    }
 
     public final String[] parseAll(Object[] objs) {
         var list = new ArrayList<String>();
@@ -28,10 +20,10 @@ public abstract class GroupByParser {
 
     public String[] parse(Object obj) {
         return switch (obj) {
-            case String str -> new String[]{parseString(str)};
-            case GroupByBody groupByBody -> new String[]{parseGroupByBody(groupByBody)};
-            case Query q -> parseAll(q.getGroupBy().clauses());
-            case null, default -> null;
+            case String s -> new String[]{parseString(s)};
+            case GroupBy g -> new String[]{parseGroupBy(g)};
+            case Query q -> parseAll(q.getGroupBy());
+            default -> null;
         };
     }
 
@@ -39,6 +31,6 @@ public abstract class GroupByParser {
         return str;
     }
 
-    public abstract String parseGroupByBody(GroupByBody body);
+    public abstract String parseGroupBy(GroupBy body);
 
 }

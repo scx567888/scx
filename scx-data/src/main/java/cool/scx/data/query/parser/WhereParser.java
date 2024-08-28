@@ -25,13 +25,12 @@ public abstract class WhereParser {
 
     public WhereClause parse(Object obj) {
         return switch (obj) {
-            case String str -> parseString(str);
-            case WhereBody whereBody -> parseWhereBody(whereBody);
+            case String s -> parseString(s);
+            case Where w -> parseWhere(w);
             case Logic l -> parseLogic(l);
             case WhereClause w -> w;
-            case Where w -> parseWhere(w);
-            case Query q -> parseWhere(q.getWhere());
-            case null, default -> null;
+            case Query q -> parseAll(q.getWhere());
+            default -> null;
         };
     }
 
@@ -57,11 +56,7 @@ public abstract class WhereParser {
         return new WhereClause(clause, whereParams.toArray());
     }
 
-    public final WhereClause parseWhere(Where where) {
-        return this.parseAll(where.clauses());
-    }
-
-    public WhereClause parseWhereBody(WhereBody body) {
+    public WhereClause parseWhere(Where body) {
         var name = body.name();
         var whereType = body.whereType();
         var value1 = body.value1();
