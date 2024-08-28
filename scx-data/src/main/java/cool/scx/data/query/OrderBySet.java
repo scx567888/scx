@@ -10,22 +10,22 @@ import static cool.scx.data.query.OrderByType.ASC;
 import static cool.scx.data.query.OrderByType.DESC;
 
 /**
- * 排序
+ * 排序集合
  *
  * @author scx567888
  * @version 0.0.1
  */
-public final class OrderByBodySet extends QueryLike<OrderByBodySet> {
+public final class OrderBySet extends QueryLike<OrderBySet> {
 
     /**
      * 存储排序的字段
      */
-    private final List<OrderByBody> clauses;
+    private final List<OrderBy> clauses;
 
     /**
      * 创建一个 OrderBy 对象
      */
-    public OrderByBodySet() {
+    public OrderBySet() {
         this.clauses = new ArrayList<>();
     }
 
@@ -37,10 +37,10 @@ public final class OrderByBodySet extends QueryLike<OrderByBodySet> {
      * @param options     配置
      * @return 本身, 方便链式调用
      */
-    public OrderByBodySet add(String name, OrderByType orderByType, OrderByOption... options) {
+    public OrderBySet add(String name, OrderByType orderByType, OrderByOption... options) {
         var info = new Info(options);
         // 是否使用原始名称 (即不进行转义)
-        var orderByBody = new OrderByBody(name, orderByType, info);
+        var orderByBody = new OrderBy(name, orderByType, info);
         // 是否替换
         if (info.replace()) {
             clauses.removeIf(w -> orderByBody.name().equals(w.name()));
@@ -56,7 +56,7 @@ public final class OrderByBodySet extends QueryLike<OrderByBodySet> {
      * @param options 配置
      * @return a
      */
-    public OrderByBodySet asc(String name, OrderByOption... options) {
+    public OrderBySet asc(String name, OrderByOption... options) {
         return add(name, ASC, options);
     }
 
@@ -67,36 +67,20 @@ public final class OrderByBodySet extends QueryLike<OrderByBodySet> {
      * @param options 配置
      * @return a
      */
-    public OrderByBodySet desc(String name, OrderByOption... options) {
+    public OrderBySet desc(String name, OrderByOption... options) {
         return add(name, DESC, options);
     }
 
-    /**
-     * a
-     *
-     * @param name a
-     * @return a
-     */
-    public OrderByBodySet remove(String name) {
+    public OrderBySet remove(String name) {
         clauses.removeIf(w -> w.name().equals(name.trim()));
         return this;
     }
 
-    /**
-     * clear
-     *
-     * @return self
-     */
-    public OrderByBodySet clear() {
+    public OrderBySet clear() {
         clauses.clear();
         return this;
     }
 
-    /**
-     * orderByBodyList
-     *
-     * @return orderByBodyList
-     */
     public Object[] clauses() {
         return clauses.toArray();
     }

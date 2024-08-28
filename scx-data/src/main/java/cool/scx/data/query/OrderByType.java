@@ -18,12 +18,6 @@ public enum OrderByType {
      */
     DESC;
 
-    /**
-     * a
-     *
-     * @param orderByTypeStr a
-     * @return a
-     */
     public static OrderByType of(String orderByTypeStr) {
         return OrderByType.valueOf(orderByTypeStr.trim().toUpperCase());
     }
