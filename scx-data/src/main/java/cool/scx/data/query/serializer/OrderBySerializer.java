@@ -14,15 +14,15 @@ public class OrderBySerializer {
             case OrderBy o -> serializeOrderBy(o);
             case OrderBySet s -> serializeOrderBySet(s);
             case Query q -> serializeQuery(q);
-            default -> null;
+            default -> obj;
         };
     }
 
-    public Object serializeString(String s) {
+    private Object serializeString(String s) {
         return s;
     }
 
-    public Object serializeOrderBy(OrderBy orderByBody) {
+    private Object serializeOrderBy(OrderBy orderByBody) {
         var m = new LinkedHashMap<String, Object>();
         m.put("@type", "OrderByBody");
         m.put("name", orderByBody.name());
@@ -31,18 +31,18 @@ public class OrderBySerializer {
         return m;
     }
 
-    public Object serializeOrderBySet(OrderBySet orderByBodySet) {
+    private Object serializeOrderBySet(OrderBySet orderByBodySet) {
         var m = new LinkedHashMap<String, Object>();
         m.put("@type", "OrderBySet");
         m.put("clauses", serializeAll(orderByBodySet.clauses()));
         return m;
     }
 
-    public Object serializeQuery(Query q) {
+    private Object serializeQuery(Query q) {
         return serializeAll(q.getOrderBy());
     }
 
-    public Object[] serializeAll(Object[] objs) {
+    private Object[] serializeAll(Object[] objs) {
         var arr = new Object[objs.length];
         for (int i = 0; i < objs.length; i = i + 1) {
             arr[i] = serialize(objs[i]);

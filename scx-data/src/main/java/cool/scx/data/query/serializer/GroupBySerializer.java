@@ -12,7 +12,7 @@ public class GroupBySerializer {
             case String s -> serializeString(s);
             case GroupBy g -> serializeGroupBy(g);
             case Query q -> serializeQuery(q);
-            default -> null;
+            default -> obj;
         };
     }
 

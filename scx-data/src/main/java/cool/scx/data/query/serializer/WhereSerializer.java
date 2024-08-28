@@ -3,7 +3,6 @@ package cool.scx.data.query.serializer;
 import cool.scx.data.Query;
 import cool.scx.data.query.Logic;
 import cool.scx.data.query.Where;
-import cool.scx.data.query.WhereBody;
 import cool.scx.data.query.WhereClause;
 
 import java.util.LinkedHashMap;
@@ -13,33 +12,20 @@ public class WhereSerializer {
 
     public Object serialize(Object obj) {
         return switch (obj) {
-            case Where w -> serializeWhere(w);
-            case Logic l -> serializeLogic(l);
-            case WhereClause w -> serializeWhereClause(w);
-            case WhereBody whereBody -> serializeWhereBody(whereBody);
             case String str -> serializeString(str);
-            case Object[] q -> serializeAll(q);
-            case Query q -> serializeWhere(q.getWhere());
-            case null, default -> obj;
+            case WhereClause w -> serializeWhereClause(w);
+            case Logic l -> serializeLogic(l);
+            case Where whereBody -> serializeWhere(whereBody);
+            case Query q -> serializeQuery(q);
+            default -> obj;
         };
     }
 
-    public Map<String, Object> serializeWhere(Where where) {
-        var m = new LinkedHashMap<String, Object>();
-        m.put("@type", "Where");
-        m.put("clauses", serialize(where.clauses()));
-        return m;
+    private String serializeString(String str) {
+        return str;
     }
 
-    public Map<String, Object> serializeLogic(Logic l) {
-        var m = new LinkedHashMap<String, Object>();
-        m.put("@type", "Logic");
-        m.put("logicType", l.logicType());
-        m.put("clauses", serializeAll(l.clauses()));
-        return m;
-    }
-
-    public LinkedHashMap<String, Object> serializeWhereClause(WhereClause w) {
+    private LinkedHashMap<String, Object> serializeWhereClause(WhereClause w) {
         var m = new LinkedHashMap<String, Object>();
         m.put("@type", "WhereClause");
         m.put("whereClause", w.whereClause());
@@ -47,7 +33,15 @@ public class WhereSerializer {
         return m;
     }
 
-    private Map<String, Object> serializeWhereBody(WhereBody w) {
+    private Map<String, Object> serializeLogic(Logic l) {
+        var m = new LinkedHashMap<String, Object>();
+        m.put("@type", "Logic");
+        m.put("logicType", l.logicType());
+        m.put("clauses", serializeAll(l.clauses()));
+        return m;
+    }
+
+    private Map<String, Object> serializeWhere(Where w) {
         var m = new LinkedHashMap<String, Object>();
         m.put("@type", "WhereBody");
         m.put("name", w.name());
@@ -57,11 +51,11 @@ public class WhereSerializer {
         return m;
     }
 
-    public String serializeString(String str) {
-        return str;
+    private Object[] serializeQuery(Query q) {
+        return serializeAll(q.getWhere());
     }
 
-    public final Object[] serializeAll(Object[] objs) {
+    private Object[] serializeAll(Object[] objs) {
         var arr = new Object[objs.length];
         for (int i = 0; i < objs.length; i = i + 1) {
             arr[i] = serialize(objs[i]);
