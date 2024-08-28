@@ -13,35 +13,16 @@ public class QueryDeserializer {
     private final WhereDeserializer whereDeserializer;
     private final GroupByDeserializer groupByDeserializer;
     private final OrderByDeserializer orderByDeserializer;
-    private final LimitInfoDeserializer limitInfoDeserializer;
 
     public QueryDeserializer() {
         this.whereDeserializer = new WhereDeserializer();
         this.groupByDeserializer = new GroupByDeserializer();
         this.orderByDeserializer = new OrderByDeserializer();
-        this.limitInfoDeserializer = new LimitInfoDeserializer();
     }
 
     public Query fromJson(String json) throws JsonProcessingException {
         var v = ObjectUtils.jsonMapper().readTree(json);
-        return deserializeAny(v);
-    }
-
-    public Query deserializeAny(JsonNode v) {
-        Object deserialize = deserialize(v);
-        if (deserialize == null) {
-            deserialize = whereDeserializer.deserialize(v);
-        }
-        if (deserialize == null) {
-            deserialize = groupByDeserializer.deserialize(v);
-        }
-        if (deserialize == null) {
-            deserialize = orderByDeserializer.deserialize(v);
-        }
-        if (deserialize == null) {
-            deserialize = limitInfoDeserializer.deserialize(v);
-        }
-        return (Query) deserialize;
+        return deserializeQuery(v);
     }
 
     public Object deserialize(JsonNode v) {
@@ -58,11 +39,12 @@ public class QueryDeserializer {
         if (objectNode == null) {
             return new QueryImpl();
         }
-        var where = whereDeserializer.deserializeWhere(objectNode.get("where"));
-        var groupBy = groupByDeserializer.deserializeGroupBy(objectNode.get("groupBy"));
-        var orderBy = orderByDeserializer.deserializeOrderBy(objectNode.get("orderBy"));
-        var limitInfo = limitInfoDeserializer.deserializeLimitInfo(objectNode.get("limitInfo"));
-        return new QueryImpl(where, groupBy, orderBy, limitInfo);
+        var where = whereDeserializer.deserialize(objectNode.get("where"));
+        var groupBy = groupByDeserializer.deserialize(objectNode.get("groupBy"));
+        var orderBy = orderByDeserializer.deserialize(objectNode.get("orderBy"));
+        var offset = objectNode.get("offset").asLong();
+        var limit = objectNode.get("limit").asLong();
+        return new QueryImpl().where(where).groupBy(groupBy).orderBy(orderBy).offset(offset).limit(limit);
     }
 
 }
