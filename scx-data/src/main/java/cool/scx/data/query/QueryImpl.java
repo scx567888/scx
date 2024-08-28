@@ -2,6 +2,11 @@ package cool.scx.data.query;
 
 import cool.scx.data.Query;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.util.Collections.addAll;
+
 /**
  * 查询参数类<br>
  * 针对  GroupBy , OrderBy , Limit , Where 等进行的简单封装 <br>
@@ -16,102 +21,75 @@ public class QueryImpl implements Query {
     /**
      * 自定义WHERE 添加
      */
-    private final Where where;
+    private final List<Object> where;
 
     /**
      * 自定义分组 SQL 添加
      */
-    private final GroupBy groupBy;
+    private final List<Object> groupBy;
 
     /**
      * 排序的字段
      */
-    private final OrderBy orderBy;
+    private final List<Object> orderBy;
 
     /**
-     * 分页参数
+     * 当前页 页码 默认为空 即不设置页码
      */
-    private final LimitInfo limitInfo;
+    private Long offset;
+
+    /**
+     * 每页数量分页 每页数量 默认为空 即不设置分页内容
+     */
+    private Long limit;
 
     /**
      * 创建 Query 对象
      */
     public QueryImpl() {
-        this.where = new Where();
-        this.groupBy = new GroupBy();
-        this.orderBy = new OrderBy();
-        this.limitInfo = new LimitInfo();
+        this.where = new ArrayList<>();
+        this.groupBy = new ArrayList<>();
+        this.orderBy = new ArrayList<>();
+        this.offset = null;
+        this.limit = null;
     }
 
     public QueryImpl(Query oldQuery) {
-        this.where = new Where(oldQuery.getWhere());
-        this.groupBy = new GroupBy(oldQuery.getGroupBy());
-        this.orderBy = new OrderBy(oldQuery.getOrderBy());
-        this.limitInfo = new LimitInfo(oldQuery.getLimitInfo());
-    }
-
-    public QueryImpl(Where oldWhere) {
-        this(oldWhere, new GroupBy(), new OrderBy(), new LimitInfo());
-    }
-
-    public QueryImpl(GroupBy oldGroupBy) {
-        this(new Where(), oldGroupBy, new OrderBy(), new LimitInfo());
-    }
-
-    public QueryImpl(OrderBy oldOrderBy) {
-        this(new Where(), new GroupBy(), oldOrderBy, new LimitInfo());
-    }
-
-    public QueryImpl(LimitInfo oldLimitInfo) {
-        this(new Where(), new GroupBy(), new OrderBy(), oldLimitInfo);
-    }
-
-    public QueryImpl(Where oldWhere, GroupBy oldGroupBy, OrderBy oldOrderBy, LimitInfo oldLimitInfo) {
-        this.where = oldWhere;
-        this.groupBy = oldGroupBy;
-        this.orderBy = oldOrderBy;
-        this.limitInfo = oldLimitInfo;
+        this();
+        addWhere(oldQuery.getWhere());
+        addGroupBy(oldQuery.getWhere());
+        addOrderBy(oldQuery.getWhere());
+        offset(oldQuery.getOffset());
+        limit(oldQuery.getLimit());
     }
 
     @Override
     public QueryImpl where(Object... whereClauses) {
-        this.where.set(whereClauses);
+        clearWhere();
+        addWhere(whereClauses);
         return this;
     }
 
     @Override
     public QueryImpl groupBy(Object... groupByClauses) {
-        this.groupBy.set(groupByClauses);
+        clearGroupBy();
+        addGroupBy(groupByClauses);
         return this;
     }
 
     @Override
     public QueryImpl orderBy(Object... orderByClauses) {
-        this.orderBy.set(orderByClauses);
-        return this;
-    }
-
-    @Override
-    public QueryImpl addWhere(Object... whereClauses) {
-        this.where.add(whereClauses);
-        return this;
-    }
-
-    @Override
-    public QueryImpl addGroupBy(Object... groupByClauses) {
-        this.groupBy.add(groupByClauses);
-        return this;
-    }
-
-    @Override
-    public QueryImpl addOrderBy(Object... orderByClauses) {
-        this.orderBy.add(orderByClauses);
+        clearOrderBy();
+        addOrderBy(orderByClauses);
         return this;
     }
 
     @Override
     public QueryImpl offset(long limitOffset) {
-        limitInfo.offset(limitOffset);
+        if (limitOffset < 0) {
+            throw new IllegalArgumentException("Limit 参数错误 : offset (偏移量) 不能小于 0 !!!");
+        }
+        this.offset = limitOffset;
         return this;
     }
 
@@ -123,38 +101,54 @@ public class QueryImpl implements Query {
      */
     @Override
     public QueryImpl limit(long numberOfRows) {
-        limitInfo.limit(numberOfRows);
+        if (numberOfRows < 0) {
+            throw new IllegalArgumentException("Limit 参数错误 : limit (行长度) 不能小于 0 !!!");
+        }
+        this.limit = numberOfRows;
         return this;
     }
 
     @Override
-    public Where getWhere() {
-        return where;
+    public QueryImpl addWhere(Object... whereClauses) {
+        addAll(where, whereClauses);
+        return this;
     }
 
     @Override
-    public GroupBy getGroupBy() {
-        return groupBy;
+    public QueryImpl addGroupBy(Object... groupByClauses) {
+        addAll(groupBy, groupByClauses);
+        return this;
     }
 
     @Override
-    public OrderBy getOrderBy() {
-        return orderBy;
+    public QueryImpl addOrderBy(Object... orderByClauses) {
+        addAll(orderBy, orderByClauses);
+        return this;
+    }
+
+    @Override
+    public Object[] getWhere() {
+        return where.toArray();
+    }
+
+    @Override
+    public Object[] getGroupBy() {
+        return groupBy.toArray();
+    }
+
+    @Override
+    public Object[] getOrderBy() {
+        return orderBy.toArray();
     }
 
     @Override
     public Long getOffset() {
-        return limitInfo.getOffset();
+        return offset;
     }
 
     @Override
     public Long getLimit() {
-        return limitInfo.getLimit();
-    }
-
-    @Override
-    public LimitInfo getLimitInfo() {
-        return limitInfo;
+        return limit;
     }
 
     @Override
@@ -177,13 +171,13 @@ public class QueryImpl implements Query {
 
     @Override
     public QueryImpl clearOffset() {
-        limitInfo.clearOffset();
+        offset = null;
         return this;
     }
 
     @Override
     public QueryImpl clearLimit() {
-        limitInfo.clearLimit();
+        limit = null;
         return this;
     }
 
