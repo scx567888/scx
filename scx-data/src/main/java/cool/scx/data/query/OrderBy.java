@@ -1,72 +1,60 @@
 package cool.scx.data.query;
 
-import cool.scx.common.util.ArrayUtils;
 import cool.scx.data.Query;
 
-import java.util.Arrays;
+import static cool.scx.common.util.StringUtils.isBlank;
+import static cool.scx.data.query.OrderByOption.Info;
 
 /**
- * 排序
+ * OrderBy 封装体
  *
  * @author scx567888
  * @version 0.0.1
  */
 public final class OrderBy extends QueryLike<OrderBy> {
 
-    /**
-     * 存储排序的字段
-     */
-    private Object[] clauses;
+    private final String name;
+    private final OrderByType orderByType;
+    private final Info info;
 
-    /**
-     * 创建一个 OrderBy 对象
-     */
-    public OrderBy() {
-        this.clauses = new Object[]{};
+    public OrderBy(String name, OrderByType orderByType, Info info) {
+        if (isBlank(name)) {
+            throw new IllegalArgumentException("OrderBy 参数错误 : 名称 不能为空 !!!");
+        }
+        if (orderByType == null) {
+            throw new IllegalArgumentException("OrderBy 参数错误 : orderByType 不能为空 !!!");
+        }
+        this.name = name.trim();
+        this.orderByType = orderByType;
+        this.info = info;
     }
 
     /**
-     * 根据旧的 OrderBy 创建一个 OrderBy 对象
+     * 添加一个排序字段
      *
-     * @param oldOrderBy 旧的 OrderBy
+     * @param name        排序字段的名称 (默认是实体类的字段名 , 不是数据库中的字段名)
+     * @param orderByType 排序类型 正序或倒序
+     * @param options     配置
      */
-    public OrderBy(OrderBy oldOrderBy) {
-        this.clauses = Arrays.copyOf(oldOrderBy.clauses, oldOrderBy.clauses.length);
+    public OrderBy(String name, OrderByType orderByType, OrderByOption... options) {
+        this(name, orderByType, new Info(options));
     }
 
-    /**
-     * set
-     *
-     * @param orderByClauses a
-     * @return self
-     */
-    public OrderBy set(Object... orderByClauses) {
-        this.clauses = orderByClauses;
-        return this;
+    public String name() {
+        return name;
     }
 
-    public OrderBy add(Object... orderByClauses) {
-        this.clauses = ArrayUtils.concat(this.clauses, orderByClauses);
-        return this;
+    public OrderByType orderByType() {
+        return orderByType;
     }
 
-    public Object[] clauses() {
-        return this.clauses;
-    }
-
-    /**
-     * clear
-     *
-     * @return self
-     */
-    public OrderBy clear() {
-        this.clauses = new Object[]{};
-        return this;
+    public Info info() {
+        return info;
     }
 
     @Override
     public Query toQuery() {
-        return new QueryImpl(this);
+        return new QueryImpl().orderBy(this);
     }
 
 }
