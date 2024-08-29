@@ -57,10 +57,14 @@ public class QueryImpl implements Query {
     public QueryImpl(Query oldQuery) {
         this();
         addWhere(oldQuery.getWhere());
-        addGroupBy(oldQuery.getWhere());
-        addOrderBy(oldQuery.getWhere());
-        offset(oldQuery.getOffset());
-        limit(oldQuery.getLimit());
+        addGroupBy(oldQuery.getGroupBy());
+        addOrderBy(oldQuery.getOrderBy());
+        if (oldQuery.getOffset() != null) {
+            offset(oldQuery.getOffset());
+        }
+        if (oldQuery.getLimit() != null) {
+            limit(oldQuery.getLimit());
+        }
     }
 
     @Override
