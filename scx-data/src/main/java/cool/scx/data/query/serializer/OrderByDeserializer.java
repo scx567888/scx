@@ -1,7 +1,6 @@
 package cool.scx.data.query.serializer;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import cool.scx.common.util.ObjectUtils;
 import cool.scx.data.query.OrderBy;
 import cool.scx.data.query.OrderByType;
 

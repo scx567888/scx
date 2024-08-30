@@ -1,7 +1,6 @@
 package cool.scx.data.query.serializer;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import cool.scx.common.util.ObjectUtils;
 import cool.scx.data.query.*;
 
 import java.util.ArrayList;
@@ -41,7 +40,7 @@ public class WhereDeserializer {
 
     private Where deserializeWhere(JsonNode v) {
         var name = v.get("name").asText();
-        var whereType = convertValue(v.get("whereType"),WhereType.class);
+        var whereType = convertValue(v.get("whereType"), WhereType.class);
         var value1 = convertValue(v.get("value1"), Object.class);
         var value2 = convertValue(v.get("value2"), Object.class);
         return new Where(name, whereType, value1, value2);
