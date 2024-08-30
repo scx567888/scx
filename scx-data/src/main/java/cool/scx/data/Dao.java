@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static cool.scx.common.field_filter.FieldFilter.ofExcluded;
+import static cool.scx.common.field_filter.FieldFilterBuilder.ofExcluded;
 import static cool.scx.data.QueryBuilder.query;
 
 /**

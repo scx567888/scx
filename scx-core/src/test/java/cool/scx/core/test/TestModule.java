@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static cool.scx.common.field_filter.FieldFilter.ofIncluded;
+import static cool.scx.common.field_filter.FieldFilterBuilder.ofIncluded;
 import static cool.scx.core.eventbus.ZeroCopyMessageCodec.ZERO_COPY_CODEC_NAME;
 import static cool.scx.core.eventbus.ZeroCopyMessageWrapper.zeroCopyMessage;
 import static cool.scx.data.QueryBuilder.*;

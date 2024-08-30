@@ -42,9 +42,14 @@ public class QueryDeserializer {
         var where = whereDeserializer.deserialize(objectNode.get("where"));
         var groupBy = groupByDeserializer.deserialize(objectNode.get("groupBy"));
         var orderBy = orderByDeserializer.deserialize(objectNode.get("orderBy"));
-        var offset = objectNode.get("offset").asLong();
-        var limit = objectNode.get("limit").asLong();
-        return new QueryImpl().where(where).groupBy(groupBy).orderBy(orderBy).offset(offset).limit(limit);
+        var query = new QueryImpl().where(where).groupBy(groupBy).orderBy(orderBy);
+        if (!objectNode.get("offset").isNull()) {
+            query.offset(objectNode.get("offset").asLong());
+        }
+        if (!objectNode.get("limit").isNull()) {
+            query.limit(objectNode.get("limit").asLong());
+        }
+        return query;
     }
 
 }
