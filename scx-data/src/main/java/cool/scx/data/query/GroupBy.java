@@ -4,7 +4,7 @@ import static cool.scx.common.util.StringUtils.isBlank;
 import static cool.scx.data.query.GroupByOption.Info;
 
 /**
- * GroupBy 封装体
+ * GroupBy
  *
  * @author scx567888
  * @version 0.0.1

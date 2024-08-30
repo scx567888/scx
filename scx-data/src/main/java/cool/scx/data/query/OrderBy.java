@@ -1,17 +1,15 @@
 package cool.scx.data.query;
 
-import cool.scx.data.Query;
-
 import static cool.scx.common.util.StringUtils.isBlank;
 import static cool.scx.data.query.OrderByOption.Info;
 
 /**
- * OrderBy 封装体
+ * OrderBy
  *
  * @author scx567888
  * @version 0.0.1
  */
-public final class OrderBy extends QueryLike<OrderBy> {
+public final class OrderBy {
 
     private final String name;
     private final OrderByType orderByType;
@@ -24,7 +22,7 @@ public final class OrderBy extends QueryLike<OrderBy> {
         if (orderByType == null) {
             throw new IllegalArgumentException("OrderBy 参数错误 : orderByType 不能为空 !!!");
         }
-        this.name = name.trim();
+        this.name = name;
         this.orderByType = orderByType;
         this.info = info;
     }
@@ -50,11 +48,6 @@ public final class OrderBy extends QueryLike<OrderBy> {
 
     public Info info() {
         return info;
-    }
-
-    @Override
-    public Query toQuery() {
-        return new QueryImpl().orderBy(this);
     }
 
 }
