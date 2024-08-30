@@ -47,7 +47,6 @@ public abstract class WhereParser {
         return new WhereClause(clause, whereParams.toArray());
     }
 
-
     protected String getLogicKeyWord(LogicType logicType) {
         return switch (logicType) {
             case OR -> "OR";
