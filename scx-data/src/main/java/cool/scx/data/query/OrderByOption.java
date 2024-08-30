@@ -9,7 +9,7 @@ package cool.scx.data.query;
 public enum OrderByOption {
 
     /**
-     * 替换现有同名字段
+     * 替换现有
      */
     REPLACE,
 
@@ -26,12 +26,10 @@ public enum OrderByOption {
     public static final class Info {
 
         private boolean replace = false;
-
         private boolean useOriginalName = false;
-
         private boolean useJsonExtract = false;
 
-        public Info(OrderByOption... orderByOptions) {
+        Info(OrderByOption... orderByOptions) {
             for (var option : orderByOptions) {
                 switch (option) {
                     case REPLACE -> this.replace = true;
