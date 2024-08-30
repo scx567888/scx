@@ -14,7 +14,7 @@ public abstract class OrderByParser {
             case String s -> parseString(s);
             case OrderBy o -> parseOrderBy(o);
             case Query q -> parseQuery(q);
-            case Object[] q -> parseAll(q);
+            case Object[] o -> parseAll(o);
             default -> null;
         };
     }
