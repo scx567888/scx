@@ -7,6 +7,8 @@ import cool.scx.data.query.OrderByType;
 
 import java.util.ArrayList;
 
+import static cool.scx.common.util.ObjectUtils.convertValue;
+
 public class OrderByDeserializer {
 
     public Object deserialize(JsonNode v) {
@@ -26,7 +28,7 @@ public class OrderByDeserializer {
 
     private OrderBy deserializeOrderBy(JsonNode v) {
         var name = v.path("name").asText();
-        var orderByType = ObjectUtils.convertValue(v.path("orderByType"), OrderByType.class);
+        var orderByType = convertValue(v.path("orderByType"), OrderByType.class);
         return new OrderBy(name, orderByType);
     }
 
