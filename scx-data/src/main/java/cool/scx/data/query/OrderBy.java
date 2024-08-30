@@ -1,5 +1,7 @@
 package cool.scx.data.query;
 
+import cool.scx.data.Query;
+
 import static cool.scx.common.util.StringUtils.isBlank;
 import static cool.scx.data.query.OrderByOption.Info;
 
@@ -9,7 +11,7 @@ import static cool.scx.data.query.OrderByOption.Info;
  * @author scx567888
  * @version 0.0.1
  */
-public final class OrderBy {
+public final class OrderBy extends QueryLike<OrderBy>{
 
     private final String name;
     private final OrderByType orderByType;
@@ -50,4 +52,9 @@ public final class OrderBy {
         return info;
     }
 
+    @Override
+    protected Query toQuery() {
+        return new QueryImpl().orderBy(this);
+    }
+    
 }

@@ -1,5 +1,7 @@
 package cool.scx.data.query;
 
+import cool.scx.data.Query;
+
 import static cool.scx.common.util.StringUtils.isBlank;
 import static cool.scx.data.query.WhereOption.Info;
 
@@ -9,7 +11,7 @@ import static cool.scx.data.query.WhereOption.Info;
  * @author scx567888
  * @version 0.0.1
  */
-public final class Where {
+public final class Where extends QueryLike<Where>{
 
     private final String name;
     private final WhereType whereType;
@@ -57,4 +59,9 @@ public final class Where {
         return info;
     }
 
+    @Override
+    protected Query toQuery() {
+        return new QueryImpl().where(this);
+    }
+    
 }

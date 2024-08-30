@@ -2,8 +2,9 @@ package cool.scx.data.query;
 
 import cool.scx.common.util.ArrayUtils;
 import cool.scx.common.util.StringUtils;
+import cool.scx.data.Query;
 
-public final class WhereClause {
+public final class WhereClause extends QueryLike<WhereClause>{
 
     private final String clause;
     private final Object[] params;
@@ -33,6 +34,11 @@ public final class WhereClause {
 
     public Object[] params() {
         return params;
+    }
+
+    @Override
+    protected Query toQuery() {
+        return new QueryImpl().where(this);
     }
 
 }

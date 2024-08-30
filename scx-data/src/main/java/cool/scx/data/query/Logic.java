@@ -1,12 +1,14 @@
 package cool.scx.data.query;
 
+import cool.scx.data.Query;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import static cool.scx.data.query.WhereType.*;
 import static java.util.Collections.addAll;
 
-public class Logic {
+public class Logic extends QueryLike<Logic>{
 
     private final LogicType logicType;
     private final List<Object> clauses;
@@ -101,4 +103,9 @@ public class Logic {
         return addWhere(fieldName, JSON_CONTAINS, value, null, options);
     }
 
+    @Override
+    protected Query toQuery() {
+        return new QueryImpl().where(this);
+    }
+    
 }

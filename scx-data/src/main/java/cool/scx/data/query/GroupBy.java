@@ -1,5 +1,7 @@
 package cool.scx.data.query;
 
+import cool.scx.data.Query;
+
 import static cool.scx.common.util.StringUtils.isBlank;
 import static cool.scx.data.query.GroupByOption.Info;
 
@@ -9,7 +11,7 @@ import static cool.scx.data.query.GroupByOption.Info;
  * @author scx567888
  * @version 0.0.1
  */
-public final class GroupBy {
+public final class GroupBy extends QueryLike<GroupBy>{
 
     private final String name;
     private final Info info;
@@ -34,4 +36,9 @@ public final class GroupBy {
         return info;
     }
 
+    @Override
+    protected Query toQuery() {
+        return new QueryImpl().groupBy(this);
+    }
+    
 }
