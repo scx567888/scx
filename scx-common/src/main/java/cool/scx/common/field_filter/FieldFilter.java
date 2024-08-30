@@ -9,26 +9,6 @@ package cool.scx.common.field_filter;
 public interface FieldFilter {
 
     /**
-     * 白名单模式
-     *
-     * @param fieldNames a
-     * @return a
-     */
-    static FieldFilter ofIncluded(String... fieldNames) {
-        return new IncludedFieldFilter().addIncluded(fieldNames);
-    }
-
-    /**
-     * 黑名单模式
-     *
-     * @param fieldNames a
-     * @return a
-     */
-    static FieldFilter ofExcluded(String... fieldNames) {
-        return new ExcludedFieldFilter().addExcluded(fieldNames);
-    }
-
-    /**
      * 添加 白名单
      *
      * @param fieldNames 包含的列名 (注意是 java 字段名称 ,不是 数据库 字段名称)
