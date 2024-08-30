@@ -1,4 +1,4 @@
-package cool.scx.data.field_filter.deserializer;
+package cool.scx.data.field_filter.serializer;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.data.FieldFilter;
