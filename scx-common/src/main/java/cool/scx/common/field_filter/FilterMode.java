@@ -13,10 +13,6 @@ public enum FilterMode {
     /**
      * 排除模式
      */
-    EXCLUDED;
-
-    public static FilterMode of(String filterModeStr) {
-        return valueOf(filterModeStr.trim().toUpperCase());
-    }
+    EXCLUDED
 
 }

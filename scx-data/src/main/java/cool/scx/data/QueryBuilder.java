@@ -36,20 +36,12 @@ public final class QueryBuilder {
         return new QueryImpl().limit(numberOfRows);
     }
 
-    public static AND and(Object... clauses) {
-        return new AND(clauses);
+    public static Logic and(Object... clauses) {
+        return new Logic(LogicType.AND).add(clauses);
     }
 
-    public static OR or(Object... clauses) {
-        return new OR(clauses);
-    }
-
-    public static WhereSet andSet() {
-        return new WhereSet(LogicType.AND);
-    }
-
-    public static WhereSet orSet() {
-        return new WhereSet(LogicType.OR);
+    public static Logic or(Object... clauses) {
+        return new Logic(LogicType.OR).add(clauses);
     }
 
     /**
@@ -72,32 +64,6 @@ public final class QueryBuilder {
      */
     public static OrderBy desc(String name, OrderByOption... options) {
         return new OrderBy(name, DESC, options);
-    }
-
-    public static OrderBySet orderBySet() {
-        return new OrderBySet();
-    }
-
-    /**
-     * 为空
-     *
-     * @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
-     * @param options   配置
-     * @return this 方便链式调用
-     */
-    public static Where isNull(String fieldName, WhereOption... options) {
-        return new Where(fieldName, IS_NULL, null, null, options);
-    }
-
-    /**
-     * 不为空
-     *
-     * @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
-     * @param options   配置
-     * @return this 方便链式调用
-     */
-    public static Where isNotNull(String fieldName, WhereOption... options) {
-        return new Where(fieldName, IS_NOT_NULL, null, null, options);
     }
 
     /**
@@ -125,6 +91,30 @@ public final class QueryBuilder {
     }
 
     /**
+     * 小于
+     *
+     * @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
+     * @param value     比较值
+     * @param options   配置
+     * @return this 方便链式调用
+     */
+    public static Where lt(String fieldName, Object value, WhereOption... options) {
+        return new Where(fieldName, LESS_THAN, value, null, options);
+    }
+
+    /**
+     * 小于等于
+     *
+     * @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
+     * @param value     比较值
+     * @param options   配置
+     * @return this 方便链式调用
+     */
+    public static Where le(String fieldName, Object value, WhereOption... options) {
+        return new Where(fieldName, LESS_THAN_OR_EQUAL, value, null, options);
+    }
+
+    /**
      * 大于
      *
      * @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
@@ -148,28 +138,101 @@ public final class QueryBuilder {
         return new Where(fieldName, GREATER_THAN_OR_EQUAL, value, null, options);
     }
 
+
     /**
-     * 小于
+     * 为空
      *
      * @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
-     * @param value     比较值
      * @param options   配置
      * @return this 方便链式调用
      */
-    public static Where lt(String fieldName, Object value, WhereOption... options) {
-        return new Where(fieldName, LESS_THAN, value, null, options);
+    public static Where isNull(String fieldName, WhereOption... options) {
+        return new Where(fieldName, IS_NULL, null, null, options);
     }
 
     /**
-     * 小于等于
+     * 不为空
+     *
+     * @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
+     * @param options   配置
+     * @return this 方便链式调用
+     */
+    public static Where isNotNull(String fieldName, WhereOption... options) {
+        return new Where(fieldName, IS_NOT_NULL, null, null, options);
+    }
+
+    /**
+     * like : 默认会在首尾添加 %
+     *
+     * @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
+     * @param value     参数 默认会在首尾添加 %
+     * @param options   配置
+     * @return this 方便链式调用
+     */
+    public static Where like(String fieldName, Object value, WhereOption... options) {
+        return new Where(fieldName, LIKE, value, null, options);
+    }
+
+    /**
+     * not like : 默认会在首尾添加 %
+     *
+     * @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
+     * @param value     默认会在首尾添加 %
+     * @param options   配置
+     * @return this 方便链式调用
+     */
+    public static Where notLike(String fieldName, Object value, WhereOption... options) {
+        return new Where(fieldName, NOT_LIKE, value, null, options);
+    }
+
+
+    /**
+     * like : 根据 SQL 表达式进行判断
+     *
+     * @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
+     * @param value     SQL 表达式
+     * @param options   配置
+     * @return this 方便链式调用
+     */
+    public static Where likeRegex(String fieldName, String value, WhereOption... options) {
+        return new Where(fieldName, LIKE_REGEX, value, null, options);
+    }
+
+    /**
+     * not like : 根据 SQL 表达式进行判断
+     *
+     * @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
+     * @param value     SQL 表达式
+     * @param options   配置
+     * @return this 方便链式调用
+     */
+    public static Where notLikeRegex(String fieldName, String value, WhereOption... options) {
+        return new Where(fieldName, NOT_LIKE_REGEX, value, null, options);
+    }
+
+
+    /**
+     * 在其中
      *
      * @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
      * @param value     比较值
      * @param options   配置
      * @return this 方便链式调用
      */
-    public static Where le(String fieldName, Object value, WhereOption... options) {
-        return new Where(fieldName, LESS_THAN_OR_EQUAL, value, null, options);
+    public static Where in(String fieldName, Object value, WhereOption... options) {
+        return new Where(fieldName, IN, value, null, options);
+    }
+
+    /**
+     * 不在其中
+     *
+     * @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
+     * @param value     比较值
+     * @param options   配置
+     * @return this 方便链式调用
+     */
+    public static Where notIn(String fieldName, Object value, WhereOption... options) {
+        return new Where(fieldName, NOT_IN, value, null, options);
     }
 
     /**
@@ -199,54 +262,6 @@ public final class QueryBuilder {
     }
 
     /**
-     * like : 根据 SQL 表达式进行判断
-     *
-     * @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
-     * @param value     SQL 表达式
-     * @param options   配置
-     * @return this 方便链式调用
-     */
-    public static Where likeRegex(String fieldName, String value, WhereOption... options) {
-        return new Where(fieldName, LIKE_REGEX, value, null, options);
-    }
-
-    /**
-     * not like : 根据 SQL 表达式进行判断
-     *
-     * @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
-     * @param value     SQL 表达式
-     * @param options   配置
-     * @return this 方便链式调用
-     */
-    public static Where notLikeRegex(String fieldName, String value, WhereOption... options) {
-        return new Where(fieldName, NOT_LIKE_REGEX, value, null, options);
-    }
-
-    /**
-     * like : 默认会在首尾添加 %
-     *
-     * @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
-     * @param value     参数 默认会在首尾添加 %
-     * @param options   配置
-     * @return this 方便链式调用
-     */
-    public static Where like(String fieldName, Object value, WhereOption... options) {
-        return new Where(fieldName, LIKE, value, null, options);
-    }
-
-    /**
-     * not like : 默认会在首尾添加 %
-     *
-     * @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
-     * @param value     默认会在首尾添加 %
-     * @param options   配置
-     * @return this 方便链式调用
-     */
-    public static Where notLike(String fieldName, Object value, WhereOption... options) {
-        return new Where(fieldName, NOT_LIKE, value, null, options);
-    }
-
-    /**
      * 包含  : 一般用于 JSON 格式字段 区别于 in
      *
      * @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
@@ -256,30 +271,6 @@ public final class QueryBuilder {
      */
     public static Where jsonContains(String fieldName, Object value, WhereOption... options) {
         return new Where(fieldName, JSON_CONTAINS, value, null, options);
-    }
-
-    /**
-     * 在其中
-     *
-     * @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
-     * @param value     比较值
-     * @param options   配置
-     * @return this 方便链式调用
-     */
-    public static Where in(String fieldName, Object value, WhereOption... options) {
-        return new Where(fieldName, IN, value, null, options);
-    }
-
-    /**
-     * 不在其中
-     *
-     * @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
-     * @param value     比较值
-     * @param options   配置
-     * @return this 方便链式调用
-     */
-    public static Where notIn(String fieldName, Object value, WhereOption... options) {
-        return new Where(fieldName, NOT_IN, value, null, options);
     }
 
     public static WhereClause whereClause(String whereClause, Object... params) {

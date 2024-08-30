@@ -2,7 +2,6 @@ package cool.scx.data.query.serializer;
 
 import cool.scx.data.Query;
 import cool.scx.data.query.OrderBy;
-import cool.scx.data.query.OrderBySet;
 
 import java.util.LinkedHashMap;
 
@@ -12,7 +11,6 @@ public class OrderBySerializer {
         return switch (obj) {
             case String s -> serializeString(s);
             case OrderBy o -> serializeOrderBy(o);
-            case OrderBySet s -> serializeOrderBySet(s);
             case Query q -> serializeQuery(q);
             case Object[] o -> serializeAll(o);
             default -> obj;
@@ -29,13 +27,6 @@ public class OrderBySerializer {
         m.put("name", orderByBody.name());
         m.put("orderByType", orderByBody.orderByType());
         m.put("info", orderByBody.info());
-        return m;
-    }
-
-    private Object serializeOrderBySet(OrderBySet orderByBodySet) {
-        var m = new LinkedHashMap<String, Object>();
-        m.put("@type", "OrderBySet");
-        m.put("clauses", serializeAll(orderByBodySet.clauses()));
         return m;
     }
 

@@ -6,7 +6,7 @@ import static cool.scx.common.util.StringUtils.isBlank;
 import static cool.scx.data.query.GroupByOption.Info;
 
 /**
- * GroupBy 封装体
+ * GroupBy
  *
  * @author scx567888
  * @version 0.0.1
@@ -20,7 +20,7 @@ public final class GroupBy extends QueryLike<GroupBy> {
         if (isBlank(name)) {
             throw new IllegalArgumentException("GroupBy 参数错误 : 名称 不能为空 !!!");
         }
-        this.name = name.trim();
+        this.name = name;
         this.info = info;
     }
 
@@ -37,7 +37,7 @@ public final class GroupBy extends QueryLike<GroupBy> {
     }
 
     @Override
-    public Query toQuery() {
+    protected Query toQuery() {
         return new QueryImpl().groupBy(this);
     }
 

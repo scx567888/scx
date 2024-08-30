@@ -11,7 +11,7 @@ public final class WhereBodyParametersSizeErrorException extends BadRequestExcep
         super(Result.fail("where-body-parameters-size-error")
                 .put("field-name", fieldName)
                 .put("where-type", whereType)
-                .put("need-parameters-size", whereType.paramSize())
+                .put("need-parameters-size", -1)
                 .put("got-parameters-size", gotParametersSize)
                 .toJson(""));
 

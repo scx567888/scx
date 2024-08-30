@@ -9,22 +9,21 @@ package cool.scx.data.query;
 public enum GroupByOption {
 
     /**
-     * 是否使用原始名称
+     * 使用原始名称
      */
     USE_ORIGINAL_NAME,
 
     /**
-     * 是否使用 json 类型的查询
+     * 使用 JSON 查询
      */
     USE_JSON_EXTRACT;
 
     public static final class Info {
 
         private boolean useOriginalName = false;
-
         private boolean useJsonExtract = false;
 
-        public Info(GroupByOption... groupByOptions) {
+        Info(GroupByOption... groupByOptions) {
             for (var option : groupByOptions) {
                 switch (option) {
                     case USE_ORIGINAL_NAME -> this.useOriginalName = true;

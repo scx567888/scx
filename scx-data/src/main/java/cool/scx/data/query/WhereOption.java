@@ -9,7 +9,7 @@ package cool.scx.data.query;
 public enum WhereOption {
 
     /**
-     * 替换同名的 where 参数
+     * 替换现有
      */
     REPLACE,
 
@@ -35,16 +35,11 @@ public enum WhereOption {
     USE_ORIGINAL_NAME,
 
     /**
-     * 使用 json 查询
+     * 使用 JSON 查询
      * <br>
      * 注意和 {@link WhereType#JSON_CONTAINS} 一起使用时无效 因为 {@link WhereType#JSON_CONTAINS} 自己有针对 Json 的特殊实现
      */
     USE_JSON_EXTRACT,
-
-    /**
-     * 包含 null 值 只适用于 JSON_CONTAINS
-     */
-    JSON_CONTAINS_INCLUDE_NULL_VALUE,
 
     /**
      * 注意只适用于 JSON_CONTAINS
@@ -57,15 +52,10 @@ public enum WhereOption {
     public static final class Info {
 
         private boolean replace = false;
-
         private boolean skipIfNull = false;
-
         private boolean skipIfEmptyList = false;
-
         private boolean useOriginalName = false;
-
         private boolean useJsonExtract = false;
-
         private boolean useOriginalValue = false;
 
         Info(WhereOption... whereOptions) {
@@ -81,15 +71,15 @@ public enum WhereOption {
             }
         }
 
-        boolean replace() {
+        public boolean replace() {
             return replace;
         }
 
-        boolean skipIfNull() {
+        public boolean skipIfNull() {
             return skipIfNull;
         }
 
-        boolean skipIfEmptyList() {
+        public boolean skipIfEmptyList() {
             return skipIfEmptyList;
         }
 

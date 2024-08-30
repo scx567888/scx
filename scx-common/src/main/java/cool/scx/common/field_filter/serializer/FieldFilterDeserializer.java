@@ -1,14 +1,12 @@
-package cool.scx.common.field_filter.deserializer;
+package cool.scx.common.field_filter.serializer;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.common.field_filter.ExcludedFieldFilter;
 import cool.scx.common.field_filter.FieldFilter;
 import cool.scx.common.field_filter.FilterMode;
 import cool.scx.common.field_filter.IncludedFieldFilter;
-import cool.scx.common.util.ObjectUtils;
 
-import static cool.scx.common.field_filter.FilterMode.EXCLUDED;
-import static cool.scx.common.field_filter.FilterMode.INCLUDED;
+import static cool.scx.common.util.ObjectUtils.convertValue;
 
 public class FieldFilterDeserializer {
 
@@ -21,23 +19,20 @@ public class FieldFilterDeserializer {
                 return deserializeFieldFilter(v);
             }
         }
-        return null;
+        return v;
     }
 
     public FieldFilter deserializeFieldFilter(JsonNode objectNode) {
         if (objectNode == null) {
             return new ExcludedFieldFilter();
         }
-        var filterMode = FilterMode.of(objectNode.get("filterMode").textValue());
-        var fieldNames = ObjectUtils.convertValue(objectNode.get("fieldNames"), String[].class);
+        var filterMode = convertValue(objectNode.get("filterMode"), FilterMode.class);
+        var fieldNames = convertValue(objectNode.get("fieldNames"), String[].class);
         var ignoreNullValue = objectNode.get("ignoreNullValue").asBoolean();
-        if (filterMode == INCLUDED) {
-            return new IncludedFieldFilter().addIncluded(fieldNames).ignoreNullValue(ignoreNullValue);
-        } else if (filterMode == EXCLUDED) {
-            return new ExcludedFieldFilter().addExcluded(fieldNames).ignoreNullValue(ignoreNullValue);
-        } else {
-            return null;
-        }
+        return switch (filterMode) {
+            case INCLUDED -> new IncludedFieldFilter().addIncluded(fieldNames).ignoreNullValue(ignoreNullValue);
+            case EXCLUDED -> new ExcludedFieldFilter().addExcluded(fieldNames).ignoreNullValue(ignoreNullValue);
+        };
     }
 
 }

@@ -117,6 +117,6 @@ public abstract class QueryLike<QL extends QueryLike<QL>> implements Query {
         return (QL) this;
     }
 
-    public abstract Query toQuery();
+    protected abstract Query toQuery();
 
 }

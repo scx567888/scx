@@ -1,10 +1,11 @@
-package cool.scx.data.query.deserializer;
+package cool.scx.data.query.serializer;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import cool.scx.common.util.ObjectUtils;
 import cool.scx.data.query.*;
 
 import java.util.ArrayList;
+
+import static cool.scx.common.util.ObjectUtils.convertValue;
 
 public class WhereDeserializer {
 
@@ -26,27 +27,22 @@ public class WhereDeserializer {
     }
 
     private Logic deserializeLogic(JsonNode v) {
-        var logicType = v.get("logicType").asText();
-        if (logicType.equals("OR")) {
-            return new OR(deserializeAll(v.get("clauses")));
-        } else if (logicType.equals("AND")) {
-            return new AND(deserializeAll(v.get("clauses")));
-        } else {
-            return null;
-        }
+        var logicType = convertValue(v.get("logicType"), LogicType.class);
+        var clauses = deserializeAll(v.get("clauses"));
+        return new Logic(logicType).add(clauses);
     }
 
     private WhereClause deserializeWhereClause(JsonNode v) {
         var whereClause = v.get("whereClause").asText();
-        var params = ObjectUtils.convertValue(v.get("params"), Object[].class);
+        var params = convertValue(v.get("params"), Object[].class);
         return new WhereClause(whereClause, params);
     }
 
     private Where deserializeWhere(JsonNode v) {
         var name = v.get("name").asText();
-        var whereType = WhereType.of(v.get("whereType").asText());
-        var value1 = ObjectUtils.convertValue(v.get("value1"), Object.class);
-        var value2 = ObjectUtils.convertValue(v.get("value2"), Object.class);
+        var whereType = convertValue(v.get("whereType"), WhereType.class);
+        var value1 = convertValue(v.get("value1"), Object.class);
+        var value2 = convertValue(v.get("value2"), Object.class);
         return new Where(name, whereType, value1, value2);
     }
 

@@ -1,13 +1,12 @@
 package cool.scx.data.query;
 
 import cool.scx.data.Query;
-import cool.scx.data.query.exception.WrongWhereTypeParamSizeException;
 
 import static cool.scx.common.util.StringUtils.isBlank;
 import static cool.scx.data.query.WhereOption.Info;
 
 /**
- * where 封装体
+ * Where
  *
  * @author scx567888
  * @version 0.0.1
@@ -29,13 +28,7 @@ public final class Where extends QueryLike<Where> {
         if (whereType == null) {
             throw new IllegalArgumentException("Where 参数错误 : whereType 不能为空 !!!");
         }
-        //校验参数 并获取有效的参数数量(不为空的) 每检测到一个有效的(不为空的) 便加 1
-        var validParamSize = getValidParamSize(value1, value2);
-        //类型所需的参数数量和所传的合法参数数量必须一致
-        if (whereType.paramSize() != validParamSize) {
-            throw new WrongWhereTypeParamSizeException(whereType);
-        }
-        this.name = name.trim();
+        this.name = name;
         this.whereType = whereType;
         this.value1 = value1;
         this.value2 = value2;
@@ -44,25 +37,6 @@ public final class Where extends QueryLike<Where> {
 
     public Where(String name, WhereType whereType, Object value1, Object value2, WhereOption... options) {
         this(name, whereType, value1, value2, new Info(options));
-    }
-
-    /**
-     * 校验参数 并获取有效的参数数量(不为空的) 每检测到一个有效的(不为空的) 便加 1
-     *
-     * @param value1 a
-     * @param value2 a
-     * @return a
-     */
-    private static int getValidParamSize(Object value1, Object value2) {
-        //有效的参数数量(不为空的) 每检测到一个有效的(不为空的) 便加 1
-        var validParamSize = 0;
-        if (value1 != null) {
-            validParamSize = validParamSize + 1;
-        }
-        if (value2 != null) {
-            validParamSize = validParamSize + 1;
-        }
-        return validParamSize;
     }
 
     public String name() {
@@ -86,7 +60,7 @@ public final class Where extends QueryLike<Where> {
     }
 
     @Override
-    public Query toQuery() {
+    protected Query toQuery() {
         return new QueryImpl().where(this);
     }
 

@@ -6,7 +6,7 @@ import static cool.scx.common.util.StringUtils.isBlank;
 import static cool.scx.data.query.OrderByOption.Info;
 
 /**
- * OrderBy 封装体
+ * OrderBy
  *
  * @author scx567888
  * @version 0.0.1
@@ -24,7 +24,7 @@ public final class OrderBy extends QueryLike<OrderBy> {
         if (orderByType == null) {
             throw new IllegalArgumentException("OrderBy 参数错误 : orderByType 不能为空 !!!");
         }
-        this.name = name.trim();
+        this.name = name;
         this.orderByType = orderByType;
         this.info = info;
     }
@@ -53,7 +53,7 @@ public final class OrderBy extends QueryLike<OrderBy> {
     }
 
     @Override
-    public Query toQuery() {
+    protected Query toQuery() {
         return new QueryImpl().orderBy(this);
     }
 

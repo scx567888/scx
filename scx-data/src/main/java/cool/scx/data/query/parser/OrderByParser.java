@@ -2,7 +2,6 @@ package cool.scx.data.query.parser;
 
 import cool.scx.data.Query;
 import cool.scx.data.query.OrderBy;
-import cool.scx.data.query.OrderBySet;
 
 import java.util.ArrayList;
 
@@ -14,9 +13,8 @@ public abstract class OrderByParser {
         return switch (obj) {
             case String s -> parseString(s);
             case OrderBy o -> parseOrderBy(o);
-            case OrderBySet s -> parseOrderBySet(s);
             case Query q -> parseQuery(q);
-            case Object[] q -> parseAll(q);
+            case Object[] o -> parseAll(o);
             default -> null;
         };
     }
@@ -26,10 +24,6 @@ public abstract class OrderByParser {
     }
 
     protected abstract String[] parseOrderBy(OrderBy o);
-
-    protected String[] parseOrderBySet(OrderBySet s) {
-        return parseAll(s.clauses());
-    }
 
     protected String[] parseQuery(Query q) {
         return parseAll(q.getOrderBy());

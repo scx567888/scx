@@ -61,11 +61,12 @@ public interface FieldFilter {
     FieldFilter removeExcluded(String... fieldNames);
 
     /**
-     * 清除所有 包含类型的列
+     * 设置忽略空值
      *
-     * @return this 方便链式调用
+     * @param ignoreNullValue a
+     * @return a
      */
-    FieldFilter clear();
+    FieldFilter ignoreNullValue(boolean ignoreNullValue);
 
     /**
      * 获取当前模式
@@ -89,11 +90,10 @@ public interface FieldFilter {
     boolean getIgnoreNullValue();
 
     /**
-     * 设置忽略空值
+     * 清除所有 包含类型的列
      *
-     * @param ignoreNullValue a
-     * @return a
+     * @return this 方便链式调用
      */
-    FieldFilter ignoreNullValue(boolean ignoreNullValue);
+    FieldFilter clear();
 
 }
