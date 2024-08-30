@@ -9,8 +9,8 @@ import cool.scx.ext.crud.exception.EmptyUpdateColumnException;
 import java.util.Arrays;
 import java.util.Map;
 
-import static cool.scx.common.field_filter.FieldFilter.ofExcluded;
-import static cool.scx.common.field_filter.FieldFilter.ofIncluded;
+import static cool.scx.common.field_filter.FieldFilterBuilder.ofExcluded;
+import static cool.scx.common.field_filter.FieldFilterBuilder.ofIncluded;
 
 /**
  * 更新实体类的封装
