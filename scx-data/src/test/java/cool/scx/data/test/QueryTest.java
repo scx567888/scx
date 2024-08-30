@@ -6,7 +6,7 @@ import org.testng.annotations.Test;
 import java.util.Arrays;
 
 import static cool.scx.data.QueryBuilder.*;
-import static cool.scx.data.query.deserializer.QueryDeserializer.QUERY_DESERIALIZER;
+import static cool.scx.data.query.serializer.QueryDeserializer.QUERY_DESERIALIZER;
 import static cool.scx.data.query.serializer.QuerySerializer.QUERY_SERIALIZER;
 
 public class QueryTest {
@@ -19,7 +19,7 @@ public class QueryTest {
     @Test
     public static void test1() {
         var and = and(eq("name", "abc"), eq("age", "10")).limit(1);
-        var andSet = andSet().eq("abc", "123").limit(10).gt("bvd", "456");
+        var andSet = and().eq("abc", "123").limit(10).gt("bvd", "456");
         var parser = new TestWhereParser();
         var parse1 = parser.parse(and);
         var parse2 = parser.parse(andSet);
@@ -29,7 +29,7 @@ public class QueryTest {
     }
 
     public static void test2() throws JsonProcessingException {
-        var q1 = andSet().eq("name", "小明").between("age", 1, 10).orderBy("desc name", desc("age")).groupBy("class", groupBy("abc")).limit(10).offset(12);
+        var q1 = and().eq("name", "小明").between("age", 1, 10).orderBy("desc name", desc("age")).groupBy("class", groupBy("abc")).limit(10).offset(12);
         var q2 = and(
                 or(
                         and(

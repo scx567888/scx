@@ -261,8 +261,6 @@ public final class QueryBuilder {
         return new Where(fieldName, NOT_BETWEEN, value1, value2, options);
     }
 
-
-
     /**
      * 包含  : 一般用于 JSON 格式字段 区别于 in
      *
