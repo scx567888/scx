@@ -1,7 +1,7 @@
 package cool.scx.data.query;
 
 /**
- * 排序类型
+ * OrderByType
  *
  * @author scx567888
  * @version 0.0.1
@@ -16,10 +16,6 @@ public enum OrderByType {
     /**
      * 倒序 : 也就是从大到小 (6,5,4,3,2,1)
      */
-    DESC;
-
-    public static OrderByType of(String orderByTypeStr) {
-        return OrderByType.valueOf(orderByTypeStr.trim().toUpperCase());
-    }
+    DESC
 
 }
