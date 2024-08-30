@@ -8,44 +8,19 @@ import java.util.List;
 import static java.util.Collections.addAll;
 
 /**
- * 查询参数类<br>
- * 针对  GroupBy , OrderBy , Limit , Where 等进行的简单封装 <br>
- * 同时附带一些简单的参数校验 <br>
- * 只是 为了方便传递参数使用<br>
+ * 默认实现
  *
  * @author scx567888
  * @version 0.1.3
  */
 public class QueryImpl implements Query {
 
-    /**
-     * 自定义WHERE 添加
-     */
     private final List<Object> where;
-
-    /**
-     * 自定义分组 SQL 添加
-     */
     private final List<Object> groupBy;
-
-    /**
-     * 排序的字段
-     */
     private final List<Object> orderBy;
-
-    /**
-     * 当前页 页码 默认为空 即不设置页码
-     */
     private Long offset;
-
-    /**
-     * 每页数量分页 每页数量 默认为空 即不设置分页内容
-     */
     private Long limit;
 
-    /**
-     * 创建 Query 对象
-     */
     public QueryImpl() {
         this.where = new ArrayList<>();
         this.groupBy = new ArrayList<>();

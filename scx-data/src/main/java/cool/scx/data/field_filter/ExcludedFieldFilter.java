@@ -17,7 +17,6 @@ import static java.util.Collections.addAll;
 public class ExcludedFieldFilter implements FieldFilter {
 
     private final Set<String> fieldNames;
-
     private boolean ignoreNullValue;
 
     public ExcludedFieldFilter() {
