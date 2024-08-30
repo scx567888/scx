@@ -1,7 +1,5 @@
 package cool.scx.data.query;
 
-import cool.scx.data.Query;
-
 import static cool.scx.common.util.StringUtils.isBlank;
 import static cool.scx.data.query.GroupByOption.Info;
 
@@ -11,7 +9,7 @@ import static cool.scx.data.query.GroupByOption.Info;
  * @author scx567888
  * @version 0.0.1
  */
-public final class GroupBy extends QueryLike<GroupBy> {
+public final class GroupBy {
 
     private final String name;
     private final Info info;
@@ -20,7 +18,7 @@ public final class GroupBy extends QueryLike<GroupBy> {
         if (isBlank(name)) {
             throw new IllegalArgumentException("GroupBy 参数错误 : 名称 不能为空 !!!");
         }
-        this.name = name.trim();
+        this.name = name;
         this.info = info;
     }
 
@@ -34,11 +32,6 @@ public final class GroupBy extends QueryLike<GroupBy> {
 
     public Info info() {
         return info;
-    }
-
-    @Override
-    public Query toQuery() {
-        return new QueryImpl().groupBy(this);
     }
 
 }
