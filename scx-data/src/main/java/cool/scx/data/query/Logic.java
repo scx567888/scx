@@ -8,7 +8,7 @@ import java.util.List;
 import static cool.scx.data.query.WhereType.*;
 import static java.util.Collections.addAll;
 
-public class Logic extends QueryLike<Logic>{
+public class Logic extends QueryLike<Logic> {
 
     private final LogicType logicType;
     private final List<Object> clauses;
@@ -107,5 +107,5 @@ public class Logic extends QueryLike<Logic>{
     protected Query toQuery() {
         return new QueryImpl().where(this);
     }
-    
+
 }

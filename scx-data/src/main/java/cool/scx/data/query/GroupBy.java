@@ -11,7 +11,7 @@ import static cool.scx.data.query.GroupByOption.Info;
  * @author scx567888
  * @version 0.0.1
  */
-public final class GroupBy extends QueryLike<GroupBy>{
+public final class GroupBy extends QueryLike<GroupBy> {
 
     private final String name;
     private final Info info;
@@ -40,5 +40,5 @@ public final class GroupBy extends QueryLike<GroupBy>{
     protected Query toQuery() {
         return new QueryImpl().groupBy(this);
     }
-    
+
 }

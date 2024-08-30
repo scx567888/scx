@@ -11,7 +11,7 @@ import static cool.scx.data.query.OrderByOption.Info;
  * @author scx567888
  * @version 0.0.1
  */
-public final class OrderBy extends QueryLike<OrderBy>{
+public final class OrderBy extends QueryLike<OrderBy> {
 
     private final String name;
     private final OrderByType orderByType;
@@ -56,5 +56,5 @@ public final class OrderBy extends QueryLike<OrderBy>{
     protected Query toQuery() {
         return new QueryImpl().orderBy(this);
     }
-    
+
 }

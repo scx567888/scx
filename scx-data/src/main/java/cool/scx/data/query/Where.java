@@ -11,7 +11,7 @@ import static cool.scx.data.query.WhereOption.Info;
  * @author scx567888
  * @version 0.0.1
  */
-public final class Where extends QueryLike<Where>{
+public final class Where extends QueryLike<Where> {
 
     private final String name;
     private final WhereType whereType;
@@ -63,5 +63,5 @@ public final class Where extends QueryLike<Where>{
     protected Query toQuery() {
         return new QueryImpl().where(this);
     }
-    
+
 }
