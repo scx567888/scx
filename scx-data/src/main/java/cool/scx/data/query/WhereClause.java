@@ -2,15 +2,14 @@ package cool.scx.data.query;
 
 import cool.scx.common.util.ArrayUtils;
 import cool.scx.common.util.StringUtils;
-import cool.scx.data.Query;
 
-public final class WhereClause extends QueryLike<WhereClause> {
+public final class WhereClause {
 
-    private final String whereClause;
+    private final String clause;
     private final Object[] params;
 
-    public WhereClause(String whereClause, Object... params) {
-        this.whereClause = whereClause;
+    public WhereClause(String clause, Object... params) {
+        this.clause = clause;
         this.params = params;
     }
 
@@ -21,24 +20,19 @@ public final class WhereClause extends QueryLike<WhereClause> {
      * @return a
      */
     public WhereClause concat(WhereClause other) {
-        return new WhereClause(StringUtils.concat(whereClause, other.whereClause), ArrayUtils.concat(params, other.params));
+        return new WhereClause(StringUtils.concat(clause, other.clause), ArrayUtils.concat(params, other.params));
     }
 
     public boolean isEmpty() {
-        return (whereClause == null || whereClause.isEmpty()) && (params == null || params.length == 0);
+        return (clause == null || clause.isEmpty()) && (params == null || params.length == 0);
     }
 
-    public String whereClause() {
-        return whereClause;
+    public String clause() {
+        return clause;
     }
 
     public Object[] params() {
         return params;
-    }
-
-    @Override
-    public Query toQuery() {
-        return new QueryImpl().where(this);
     }
 
 }
