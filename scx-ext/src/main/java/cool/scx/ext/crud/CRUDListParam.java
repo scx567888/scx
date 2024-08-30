@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.common.field_filter.FieldFilter;
 import cool.scx.data.Query;
 
-import static cool.scx.common.field_filter.deserializer.FieldFilterDeserializer.FIELD_FILTER_DESERIALIZER;
-import static cool.scx.data.query.deserializer.QueryDeserializer.QUERY_DESERIALIZER;
+import static cool.scx.common.field_filter.serializer.FieldFilterDeserializer.FIELD_FILTER_DESERIALIZER;
+import static cool.scx.data.query.serializer.QueryDeserializer.QUERY_DESERIALIZER;
 
 public class CRUDListParam {
 
