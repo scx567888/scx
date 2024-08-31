@@ -1,7 +1,7 @@
 package cool.scx.data.query.serializer;
 
-import cool.scx.data.query.Query;
 import cool.scx.data.query.OrderBy;
+import cool.scx.data.query.Query;
 
 import java.util.LinkedHashMap;
 

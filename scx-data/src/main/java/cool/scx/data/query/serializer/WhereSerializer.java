@@ -1,7 +1,7 @@
 package cool.scx.data.query.serializer;
 
-import cool.scx.data.query.Query;
 import cool.scx.data.query.Logic;
+import cool.scx.data.query.Query;
 import cool.scx.data.query.Where;
 import cool.scx.data.query.WhereClause;
 

@@ -2,8 +2,8 @@ package cool.scx.core.base;
 
 import cool.scx.common.field_filter.FieldFilter;
 import cool.scx.core.ScxContext;
-import cool.scx.data.query.Query;
 import cool.scx.data.jdbc.JDBCDao;
+import cool.scx.data.query.Query;
 import cool.scx.jdbc.sql.SQL;
 import cool.scx.jdbc.sql.SQLRunner;
 
