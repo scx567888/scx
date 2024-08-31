@@ -2,6 +2,7 @@ package cool.scx.data.query;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 import static java.util.Collections.addAll;
 
@@ -94,6 +95,24 @@ public class QueryImpl implements Query {
     @Override
     public QueryImpl addOrderBy(Object... orderByClauses) {
         addAll(orderBy, orderByClauses);
+        return this;
+    }
+
+    @Override
+    public Query removeWhereIf(Predicate<Object> filter) {
+        where.removeIf(filter);
+        return this;
+    }
+
+    @Override
+    public Query removeGroupByIf(Predicate<Object> filter) {
+        groupBy.removeIf(filter);
+        return this;
+    }
+
+    @Override
+    public Query removeOrderByIf(Predicate<Object> filter) {
+        orderBy.removeIf(filter);
         return this;
     }
 
