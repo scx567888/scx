@@ -1,5 +1,7 @@
 package cool.scx.data.query;
 
+import java.util.function.Predicate;
+
 public interface Query {
 
     Query where(Object... whereClauses);
@@ -17,6 +19,12 @@ public interface Query {
     Query addGroupBy(Object... groupByClauses);
 
     Query addOrderBy(Object... orderByClauses);
+    
+    Query removeWhereIf(Predicate<Object> filter);
+    
+    Query removeGroupByIf(Predicate<Object> filter);
+    
+    Query removeOrderByIf(Predicate<Object> filter);
 
     Object[] getWhere();
 
