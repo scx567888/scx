@@ -1,6 +1,4 @@
-package cool.scx.data;
-
-import cool.scx.data.query.*;
+package cool.scx.data.query;
 
 import static cool.scx.data.query.OrderByType.ASC;
 import static cool.scx.data.query.OrderByType.DESC;

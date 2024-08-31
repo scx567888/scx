@@ -3,7 +3,7 @@ package cool.scx.data.query.serializer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.common.util.ObjectUtils;
-import cool.scx.data.Query;
+import cool.scx.data.query.Query;
 import cool.scx.data.query.QueryImpl;
 
 public class QueryDeserializer {
