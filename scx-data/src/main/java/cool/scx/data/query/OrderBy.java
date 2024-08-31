@@ -3,7 +3,8 @@ package cool.scx.data.query;
 import cool.scx.data.Query;
 
 import static cool.scx.common.util.StringUtils.isBlank;
-import static cool.scx.data.query.OrderByOption.Info;
+import static cool.scx.data.query.QueryOption.Info;
+import static cool.scx.data.query.QueryOption.ofInfo;
 
 /**
  * OrderBy
@@ -36,8 +37,8 @@ public final class OrderBy extends QueryLike<OrderBy> {
      * @param orderByType 排序类型 正序或倒序
      * @param options     配置
      */
-    public OrderBy(String name, OrderByType orderByType, OrderByOption... options) {
-        this(name, orderByType, new Info(options));
+    public OrderBy(String name, OrderByType orderByType, QueryOption... options) {
+        this(name, orderByType, ofInfo(options));
     }
 
     public String name() {
