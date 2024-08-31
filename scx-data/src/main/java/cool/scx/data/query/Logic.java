@@ -2,6 +2,7 @@ package cool.scx.data.query;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 import static cool.scx.data.query.WhereType.*;
 import static java.util.Collections.addAll;
@@ -26,6 +27,16 @@ public class Logic extends QueryLike<Logic> {
 
     public Logic add(Object... logicCauses) {
         addAll(clauses, logicCauses);
+        return this;
+    }
+
+    public Logic removeIf(Predicate<Object> filter) {
+        clauses.removeIf(filter);
+        return this;
+    }
+    
+    public Logic clear(){
+        clauses.clear();
         return this;
     }
 
