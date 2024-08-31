@@ -2,7 +2,7 @@ package cool.scx.data.query.serializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.common.util.ObjectUtils;
-import cool.scx.data.Query;
+import cool.scx.data.query.Query;
 
 import java.util.LinkedHashMap;
 

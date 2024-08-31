@@ -1,13 +1,14 @@
 package cool.scx.data;
 
 import cool.scx.common.field_filter.FieldFilter;
+import cool.scx.data.query.Query;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
 import static cool.scx.common.field_filter.FieldFilterBuilder.ofExcluded;
-import static cool.scx.data.QueryBuilder.query;
+import static cool.scx.data.query.QueryBuilder.query;
 
 /**
  * 用于定义数据访问层的规范

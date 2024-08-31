@@ -5,7 +5,7 @@ import org.testng.annotations.Test;
 
 import java.util.Arrays;
 
-import static cool.scx.data.QueryBuilder.*;
+import static cool.scx.data.query.QueryBuilder.*;
 import static cool.scx.data.query.serializer.QueryDeserializer.QUERY_DESERIALIZER;
 import static cool.scx.data.query.serializer.QuerySerializer.QUERY_SERIALIZER;
 

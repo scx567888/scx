@@ -1,9 +1,8 @@
 package cool.scx.data.query;
 
-import cool.scx.data.Query;
-
 import static cool.scx.common.util.StringUtils.isBlank;
-import static cool.scx.data.query.WhereOption.Info;
+import static cool.scx.data.query.QueryOption.Info;
+import static cool.scx.data.query.QueryOption.ofInfo;
 
 /**
  * Where
@@ -35,8 +34,8 @@ public final class Where extends QueryLike<Where> {
         this.info = info;
     }
 
-    public Where(String name, WhereType whereType, Object value1, Object value2, WhereOption... options) {
-        this(name, whereType, value1, value2, new Info(options));
+    public Where(String name, WhereType whereType, Object value1, Object value2, QueryOption... options) {
+        this(name, whereType, value1, value2, ofInfo(options));
     }
 
     public String name() {

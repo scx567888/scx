@@ -1,7 +1,5 @@
 package cool.scx.data.query;
 
-import cool.scx.data.Query;
-
 @SuppressWarnings("unchecked")
 public abstract class QueryLike<QL extends QueryLike<QL>> implements Query {
 

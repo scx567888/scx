@@ -9,8 +9,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static cool.scx.data.QueryBuilder.*;
-import static cool.scx.data.query.WhereOption.USE_JSON_EXTRACT;
+import static cool.scx.data.query.QueryBuilder.*;
+import static cool.scx.data.query.QueryOption.USE_JSON_EXTRACT;
 import static java.lang.System.Logger.Level.DEBUG;
 
 public class MySQLXDaoTest {

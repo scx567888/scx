@@ -2,7 +2,6 @@ package cool.scx.data.query;
 
 import cool.scx.common.util.ArrayUtils;
 import cool.scx.common.util.StringUtils;
-import cool.scx.data.Query;
 
 public final class WhereClause extends QueryLike<WhereClause> {
 

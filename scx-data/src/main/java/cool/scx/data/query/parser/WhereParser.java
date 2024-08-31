@@ -1,6 +1,5 @@
 package cool.scx.data.query.parser;
 
-import cool.scx.data.Query;
 import cool.scx.data.query.*;
 
 import java.util.ArrayList;

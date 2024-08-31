@@ -7,7 +7,7 @@ import cool.scx.common.field_filter.FieldFilter;
 import cool.scx.common.util.CaseUtils;
 import cool.scx.common.util.StringUtils;
 import cool.scx.data.Dao;
-import cool.scx.data.Query;
+import cool.scx.data.query.Query;
 
 import java.io.IOException;
 import java.util.ArrayList;

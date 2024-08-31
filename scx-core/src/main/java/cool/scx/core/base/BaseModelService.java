@@ -2,8 +2,8 @@ package cool.scx.core.base;
 
 import cool.scx.common.field_filter.FieldFilter;
 import cool.scx.core.ScxContext;
-import cool.scx.data.Query;
 import cool.scx.data.jdbc.JDBCDao;
+import cool.scx.data.query.Query;
 import cool.scx.jdbc.sql.SQL;
 import cool.scx.jdbc.sql.SQLRunner;
 
@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 
 import static cool.scx.common.field_filter.FieldFilterBuilder.ofExcluded;
 import static cool.scx.core.ScxHelper.findBaseModelServiceEntityClass;
-import static cool.scx.data.QueryBuilder.*;
+import static cool.scx.data.query.QueryBuilder.*;
 
 /**
  * 提供一些针对 BaseModel 类型实体类 简单的 CRUD 操作的 service 类

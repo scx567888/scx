@@ -1,4 +1,4 @@
-package cool.scx.data;
+package cool.scx.data.query;
 
 public interface Query {
 

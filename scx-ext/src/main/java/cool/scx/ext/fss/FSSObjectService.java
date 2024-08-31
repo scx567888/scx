@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.nio.file.NoSuchFileException;
 import java.util.List;
 
-import static cool.scx.data.QueryBuilder.*;
+import static cool.scx.data.query.QueryBuilder.*;
 import static cool.scx.ext.fss.FSSHelper.getPhysicalFilePath;
 
 /**

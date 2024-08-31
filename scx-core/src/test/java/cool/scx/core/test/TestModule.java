@@ -17,7 +17,7 @@ import cool.scx.core.test.car.CarOwner;
 import cool.scx.core.test.car.CarService;
 import cool.scx.core.test.person.Person;
 import cool.scx.core.test.person.PersonService;
-import cool.scx.data.query.WhereOption;
+import cool.scx.data.query.QueryOption;
 import cool.scx.jdbc.sql.SQL;
 import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.ext.web.handler.FileSystemAccess;
@@ -40,7 +40,7 @@ import java.util.List;
 import static cool.scx.common.field_filter.FieldFilterBuilder.ofIncluded;
 import static cool.scx.core.eventbus.ZeroCopyMessageCodec.ZERO_COPY_CODEC_NAME;
 import static cool.scx.core.eventbus.ZeroCopyMessageWrapper.zeroCopyMessage;
-import static cool.scx.data.QueryBuilder.*;
+import static cool.scx.data.query.QueryBuilder.*;
 import static java.lang.System.Logger.Level.ERROR;
 import static org.testng.Assert.assertEquals;
 
@@ -122,8 +122,8 @@ public class TestModule extends ScxModule {
             System.err.println("查询所有数据条数 !!! : " + carService.find().size());
             System.err.println("查询所有 id 大于 200 条数 !!! : " + carService.find(gt("id", 200)).size());
             System.err.println("查询所有 name 为空 条数 !!! : " + carService.find(isNull("name")).size());
-            System.err.println("查询所有 车主为 Jack 的条数 !!! : " + carService.find(eq("owner.name", "Jack", WhereOption.USE_JSON_EXTRACT)).size());
-            System.err.println("查询所有 车主年龄大于 18 的条数 !!! : " + carService.find(gt("owner.age", 18, WhereOption.USE_JSON_EXTRACT)).size());
+            System.err.println("查询所有 车主为 Jack 的条数 !!! : " + carService.find(eq("owner.name", "Jack", QueryOption.USE_JSON_EXTRACT)).size());
+            System.err.println("查询所有 车主年龄大于 18 的条数 !!! : " + carService.find(gt("owner.age", 18, QueryOption.USE_JSON_EXTRACT)).size());
             System.err.println("查询所有 拥有 fast 和 big 标签的条数 !!! : " + carService.find(jsonContains("tags", "fast,big")).size());
             System.err.println("查询所有 汽车 中 车主 的 电话号 中 包含 666666666 的条数 !!! : " + carService.find(jsonContains("owner.phoneNumber", "666666666")).size());
 

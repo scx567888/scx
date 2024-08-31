@@ -2,7 +2,7 @@ package cool.scx.ext.crud;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.common.field_filter.FieldFilter;
-import cool.scx.data.Query;
+import cool.scx.data.query.Query;
 
 import static cool.scx.common.field_filter.serializer.FieldFilterDeserializer.FIELD_FILTER_DESERIALIZER;
 import static cool.scx.data.query.serializer.QueryDeserializer.QUERY_DESERIALIZER;

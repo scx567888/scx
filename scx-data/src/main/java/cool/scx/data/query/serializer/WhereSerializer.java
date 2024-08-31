@@ -1,7 +1,7 @@
 package cool.scx.data.query.serializer;
 
-import cool.scx.data.Query;
 import cool.scx.data.query.Logic;
+import cool.scx.data.query.Query;
 import cool.scx.data.query.Where;
 import cool.scx.data.query.WhereClause;
 
@@ -49,6 +49,7 @@ public class WhereSerializer {
         m.put("whereType", w.whereType());
         m.put("value1", w.value1());
         m.put("value2", w.value2());
+        m.put("info", w.info());
         return m;
     }
 

@@ -1,6 +1,7 @@
 package cool.scx.data.jdbc.parser;
 
 
+import cool.scx.jdbc.mapping.Column;
 import cool.scx.jdbc.mapping.Table;
 
 import static cool.scx.common.util.StringUtils.notBlank;
@@ -17,7 +18,15 @@ public final class ColumnNameParser {
                 throw new IllegalArgumentException("使用 USE_JSON_EXTRACT 时, 查询名称不合法 !!! 字段名 : " + name);
             }
         } else {// 这里就是普通的判断一下是否使用 原始名称即可
-            return useOriginalName ? name : tableInfo.getColumn(name).name();
+            if (useOriginalName) {
+                return name;
+            }
+            Column column = tableInfo.getColumn(name);
+            if (column == null) {
+                throw new IllegalArgumentException("在 Table : " + tableInfo.name() + " 中 , 未找到对应 name 为 : " + name + " 的列 !!!");
+            } else {
+                return column.name();
+            }
         }
     }
 

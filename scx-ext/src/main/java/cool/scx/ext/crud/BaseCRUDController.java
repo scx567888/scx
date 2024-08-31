@@ -1,7 +1,7 @@
 package cool.scx.ext.crud;
 
 import cool.scx.core.base.BaseModelService;
-import cool.scx.data.query.WhereOption;
+import cool.scx.data.query.QueryOption;
 import cool.scx.web.annotation.FromBody;
 import cool.scx.web.annotation.FromPath;
 import cool.scx.web.annotation.ScxRoute;
@@ -12,7 +12,7 @@ import java.util.Map;
 
 import static cool.scx.common.standard.HttpMethod.*;
 import static cool.scx.core.ScxContext.getBean;
-import static cool.scx.data.QueryBuilder.and;
+import static cool.scx.data.query.QueryBuilder.and;
 import static cool.scx.ext.crud.CRUDHelper.findBaseModelServiceClass;
 
 /**
@@ -79,7 +79,7 @@ public class BaseCRUDController<T extends BaseModelService> {
     @ScxRoute(value = "check-unique/:fieldName", methods = POST)
     public BaseVo checkUnique(@FromPath String fieldName, @FromBody Object value, @FromBody(required = false) Long id) {
         CRUDHelper.checkFieldName(service.entityClass(), fieldName);
-        var query = and().eq(fieldName, value).ne("id", id, WhereOption.SKIP_IF_NULL);
+        var query = and().eq(fieldName, value).ne("id", id, QueryOption.SKIP_IF_NULL);
         var isUnique = service.count(query) == 0;
         return Result.ok().put("isUnique", isUnique);
     }
