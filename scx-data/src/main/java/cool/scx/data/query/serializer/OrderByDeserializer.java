@@ -3,12 +3,11 @@ package cool.scx.data.query.serializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.data.query.OrderBy;
 import cool.scx.data.query.OrderByType;
-import cool.scx.data.query.QueryOption;
 
 import java.util.ArrayList;
 
 import static cool.scx.common.util.ObjectUtils.convertValue;
-import static cool.scx.data.query.QueryOption.*;
+import static cool.scx.data.query.QueryOption.Info;
 
 public class OrderByDeserializer {
 
@@ -31,7 +30,7 @@ public class OrderByDeserializer {
         var name = v.get("name").asText();
         var orderByType = convertValue(v.get("orderByType"), OrderByType.class);
         var info = convertValue(v.path("info"), Info.class);
-        return new OrderBy(name, orderByType,info);
+        return new OrderBy(name, orderByType, info);
     }
 
     private String deserializeString(JsonNode v) {

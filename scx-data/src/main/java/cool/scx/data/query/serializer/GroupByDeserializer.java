@@ -1,9 +1,7 @@
 package cool.scx.data.query.serializer;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import cool.scx.common.util.ObjectUtils;
 import cool.scx.data.query.GroupBy;
-import cool.scx.data.query.QueryOption;
 import cool.scx.data.query.QueryOption.Info;
 
 import java.util.ArrayList;
@@ -30,7 +28,7 @@ public class GroupByDeserializer {
     private GroupBy deserializeGroupBy(JsonNode v) {
         var name = v.path("name").asText();
         var info = convertValue(v.path("info"), Info.class);
-        return new GroupBy(name,info);
+        return new GroupBy(name, info);
     }
 
     private String deserializeString(JsonNode v) {

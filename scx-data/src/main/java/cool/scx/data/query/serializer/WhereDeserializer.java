@@ -45,7 +45,7 @@ public class WhereDeserializer {
         var value1 = convertValue(v.get("value1"), Object.class);
         var value2 = convertValue(v.get("value2"), Object.class);
         var info = convertValue(v.get("info"), Info.class);
-        return new Where(name, whereType, value1, value2,info);
+        return new Where(name, whereType, value1, value2, info);
     }
 
     private String deserializeString(JsonNode v) {
