@@ -45,7 +45,7 @@ public class MySQLXDaoWhereParser extends WhereParser {
         var whereParams = Arrays.stream(toObjectArray(w.value1())).filter(Objects::nonNull).distinct().toArray();
         //长度为空是抛异常
         if (whereParams.length == 0) {
-            throw new ValidParamListIsEmptyException(w.whereType());
+            throw new ValidParamListIsEmptyException(w.name(), w.whereType());
         }
         var v1 = "(" + StringUtils.repeat("?", ", ", whereParams.length) + ")";
         var whereClause = w.name() + " " + getWhereKeyWord(w.whereType()) + " " + v1;
