@@ -34,8 +34,8 @@ public class Logic extends QueryLike<Logic> {
         clauses.removeIf(filter);
         return this;
     }
-    
-    public Logic clear(){
+
+    public Logic clear() {
         clauses.clear();
         return this;
     }

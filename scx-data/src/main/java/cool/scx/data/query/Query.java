@@ -19,11 +19,11 @@ public interface Query {
     Query addGroupBy(Object... groupByClauses);
 
     Query addOrderBy(Object... orderByClauses);
-    
+
     Query removeWhereIf(Predicate<Object> filter);
-    
+
     Query removeGroupByIf(Predicate<Object> filter);
-    
+
     Query removeOrderByIf(Predicate<Object> filter);
 
     Object[] getWhere();
