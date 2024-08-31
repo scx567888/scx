@@ -51,7 +51,7 @@ public final class QueryBuilder {
      * @param options 配置
      * @return a
      */
-    public static OrderBy asc(String name, OrderByOption... options) {
+    public static OrderBy asc(String name, QueryOption... options) {
         return new OrderBy(name, ASC, options);
     }
 
@@ -62,7 +62,7 @@ public final class QueryBuilder {
      * @param options 配置
      * @return a
      */
-    public static OrderBy desc(String name, OrderByOption... options) {
+    public static OrderBy desc(String name, QueryOption... options) {
         return new OrderBy(name, DESC, options);
     }
 
@@ -74,7 +74,7 @@ public final class QueryBuilder {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public static Where eq(String fieldName, Object value, WhereOption... options) {
+    public static Where eq(String fieldName, Object value, QueryOption... options) {
         return new Where(fieldName, EQUAL, value, null, options);
     }
 
@@ -86,7 +86,7 @@ public final class QueryBuilder {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public static Where ne(String fieldName, Object value, WhereOption... options) {
+    public static Where ne(String fieldName, Object value, QueryOption... options) {
         return new Where(fieldName, NOT_EQUAL, value, null, options);
     }
 
@@ -98,7 +98,7 @@ public final class QueryBuilder {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public static Where lt(String fieldName, Object value, WhereOption... options) {
+    public static Where lt(String fieldName, Object value, QueryOption... options) {
         return new Where(fieldName, LESS_THAN, value, null, options);
     }
 
@@ -110,7 +110,7 @@ public final class QueryBuilder {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public static Where le(String fieldName, Object value, WhereOption... options) {
+    public static Where le(String fieldName, Object value, QueryOption... options) {
         return new Where(fieldName, LESS_THAN_OR_EQUAL, value, null, options);
     }
 
@@ -122,7 +122,7 @@ public final class QueryBuilder {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public static Where gt(String fieldName, Object value, WhereOption... options) {
+    public static Where gt(String fieldName, Object value, QueryOption... options) {
         return new Where(fieldName, GREATER_THAN, value, null, options);
     }
 
@@ -134,7 +134,7 @@ public final class QueryBuilder {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public static Where ge(String fieldName, Object value, WhereOption... options) {
+    public static Where ge(String fieldName, Object value, QueryOption... options) {
         return new Where(fieldName, GREATER_THAN_OR_EQUAL, value, null, options);
     }
 
@@ -146,7 +146,7 @@ public final class QueryBuilder {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public static Where isNull(String fieldName, WhereOption... options) {
+    public static Where isNull(String fieldName, QueryOption... options) {
         return new Where(fieldName, IS_NULL, null, null, options);
     }
 
@@ -157,7 +157,7 @@ public final class QueryBuilder {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public static Where isNotNull(String fieldName, WhereOption... options) {
+    public static Where isNotNull(String fieldName, QueryOption... options) {
         return new Where(fieldName, IS_NOT_NULL, null, null, options);
     }
 
@@ -169,7 +169,7 @@ public final class QueryBuilder {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public static Where like(String fieldName, Object value, WhereOption... options) {
+    public static Where like(String fieldName, Object value, QueryOption... options) {
         return new Where(fieldName, LIKE, value, null, options);
     }
 
@@ -181,7 +181,7 @@ public final class QueryBuilder {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public static Where notLike(String fieldName, Object value, WhereOption... options) {
+    public static Where notLike(String fieldName, Object value, QueryOption... options) {
         return new Where(fieldName, NOT_LIKE, value, null, options);
     }
 
@@ -194,7 +194,7 @@ public final class QueryBuilder {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public static Where likeRegex(String fieldName, String value, WhereOption... options) {
+    public static Where likeRegex(String fieldName, String value, QueryOption... options) {
         return new Where(fieldName, LIKE_REGEX, value, null, options);
     }
 
@@ -206,7 +206,7 @@ public final class QueryBuilder {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public static Where notLikeRegex(String fieldName, String value, WhereOption... options) {
+    public static Where notLikeRegex(String fieldName, String value, QueryOption... options) {
         return new Where(fieldName, NOT_LIKE_REGEX, value, null, options);
     }
 
@@ -219,7 +219,7 @@ public final class QueryBuilder {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public static Where in(String fieldName, Object value, WhereOption... options) {
+    public static Where in(String fieldName, Object value, QueryOption... options) {
         return new Where(fieldName, IN, value, null, options);
     }
 
@@ -231,7 +231,7 @@ public final class QueryBuilder {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public static Where notIn(String fieldName, Object value, WhereOption... options) {
+    public static Where notIn(String fieldName, Object value, QueryOption... options) {
         return new Where(fieldName, NOT_IN, value, null, options);
     }
 
@@ -244,7 +244,7 @@ public final class QueryBuilder {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public static Where between(String fieldName, Object value1, Object value2, WhereOption... options) {
+    public static Where between(String fieldName, Object value1, Object value2, QueryOption... options) {
         return new Where(fieldName, BETWEEN, value1, value2, options);
     }
 
@@ -257,7 +257,7 @@ public final class QueryBuilder {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public static Where notBetween(String fieldName, Object value1, Object value2, WhereOption... options) {
+    public static Where notBetween(String fieldName, Object value1, Object value2, QueryOption... options) {
         return new Where(fieldName, NOT_BETWEEN, value1, value2, options);
     }
 
@@ -269,7 +269,7 @@ public final class QueryBuilder {
      * @param options   配置
      * @return this 方便链式调用
      */
-    public static Where jsonContains(String fieldName, Object value, WhereOption... options) {
+    public static Where jsonContains(String fieldName, Object value, QueryOption... options) {
         return new Where(fieldName, JSON_CONTAINS, value, null, options);
     }
 

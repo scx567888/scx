@@ -10,8 +10,8 @@ import cool.scx.data.query.WhereType;
  */
 public final class ValidParamListIsEmptyException extends IllegalArgumentException {
 
-    public ValidParamListIsEmptyException(WhereType whereType) {
-        super("Where 参数错误 : whereType 类型 : " + whereType + " 中要求, 有效的参数条目(指去除 null 后的) 不能为空 !!!");
+    public ValidParamListIsEmptyException(String name,WhereType whereType) {
+        super("Where 参数错误 : name : " + name + " , whereType 类型 : " + whereType + " 中要求, 有效的参数条目(指去除 null 后的) 不能为空 !!!");
     }
 
 }
