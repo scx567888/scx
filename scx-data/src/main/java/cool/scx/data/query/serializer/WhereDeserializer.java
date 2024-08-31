@@ -2,6 +2,7 @@ package cool.scx.data.query.serializer;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.data.query.*;
+import cool.scx.data.query.QueryOption.Info;
 
 import java.util.ArrayList;
 
@@ -43,7 +44,7 @@ public class WhereDeserializer {
         var whereType = convertValue(v.get("whereType"), WhereType.class);
         var value1 = convertValue(v.get("value1"), Object.class);
         var value2 = convertValue(v.get("value2"), Object.class);
-        var info = convertValue(v.get("info"), WhereOption.Info.class);
+        var info = convertValue(v.get("info"), Info.class);
         return new Where(name, whereType, value1, value2,info);
     }
 
