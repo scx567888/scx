@@ -49,6 +49,7 @@ public class WhereSerializer {
         m.put("whereType", w.whereType());
         m.put("value1", w.value1());
         m.put("value2", w.value2());
+        m.put("info", w.info());
         return m;
     }
 

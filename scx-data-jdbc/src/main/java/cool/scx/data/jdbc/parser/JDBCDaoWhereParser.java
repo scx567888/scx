@@ -7,6 +7,8 @@ import cool.scx.data.jdbc.AnnotationConfigTable;
 import cool.scx.data.query.Where;
 import cool.scx.data.query.WhereClause;
 import cool.scx.data.query.exception.ValidParamListIsEmptyException;
+import cool.scx.data.query.exception.WrongWhereParamTypeException;
+import cool.scx.data.query.exception.WrongWhereTypeParamSizeException;
 import cool.scx.data.query.parser.WhereParser;
 import cool.scx.jdbc.dialect.Dialect;
 import cool.scx.jdbc.sql.SQL;
@@ -41,6 +43,13 @@ public class JDBCDaoWhereParser extends WhereParser {
 
     @Override
     public WhereClause parseEqual(Where w) {
+        if (w.value1() == null) {
+            if (w.info().skipIfNull()) {
+                return new WhereClause("");
+            } else {
+                throw new WrongWhereTypeParamSizeException(w.name(), w.whereType(), 1);
+            }
+        }
         var columnName = parseColumnName(tableInfo, w.name(), w.info().useJsonExtract(), w.info().useOriginalName());
         String v1;
         Object[] whereParams;
@@ -58,6 +67,13 @@ public class JDBCDaoWhereParser extends WhereParser {
 
     @Override
     public WhereClause parseLike(Where w) {
+        if (w.value1() == null) {
+            if (w.info().skipIfNull()) {
+                return new WhereClause("");
+            } else {
+                throw new WrongWhereTypeParamSizeException(w.name(), w.whereType(), 1);
+            }
+        }
         var columnName = parseColumnName(tableInfo, w.name(), w.info().useJsonExtract(), w.info().useOriginalName());
         String v1;
         Object[] whereParams;
@@ -74,6 +90,13 @@ public class JDBCDaoWhereParser extends WhereParser {
 
     @Override
     public WhereClause parseIn(Where w) {
+        if (w.value1() == null) {
+            if (w.info().skipIfNull()) {
+                return new WhereClause("");
+            } else {
+                throw new WrongWhereTypeParamSizeException(w.name(), w.whereType(), 1);
+            }
+        }
         var columnName = parseColumnName(tableInfo, w.name(), w.info().useJsonExtract(), w.info().useOriginalName());
         String v1;
         Object[] whereParams;
@@ -81,11 +104,23 @@ public class JDBCDaoWhereParser extends WhereParser {
             v1 = "(" + a.sql() + ")";
             whereParams = a.params();
         } else {
+
+            var v = new Object[]{};
+            try {
+                v = toObjectArray(w.value1());
+            } catch (Exception e) {
+                throw new WrongWhereParamTypeException(w.name(), w.whereType(), "数组");
+            }
+
             //移除空值并去重
-            whereParams = Arrays.stream(toObjectArray(w.value1())).filter(Objects::nonNull).distinct().toArray();
+            whereParams = Arrays.stream(v).filter(Objects::nonNull).distinct().toArray();
             //长度为空是抛异常
             if (whereParams.length == 0) {
-                throw new ValidParamListIsEmptyException(w.whereType());
+                if (w.info().skipIfEmptyList()) {
+                    return new WhereClause("");
+                } else {
+                    throw new ValidParamListIsEmptyException(w.name(), w.whereType());
+                }
             }
             v1 = "(" + StringUtils.repeat("?", ", ", whereParams.length) + ")";
         }
@@ -95,6 +130,13 @@ public class JDBCDaoWhereParser extends WhereParser {
 
     @Override
     public WhereClause parseBetween(Where w) {
+        if (w.value1() == null || w.value2() == null) {
+            if (w.info().skipIfNull()) {
+                return new WhereClause("");
+            } else {
+                throw new WrongWhereTypeParamSizeException(w.name(), w.whereType(), 2);
+            }
+        }
         var columnName = parseColumnName(tableInfo, w.name(), w.info().useJsonExtract(), w.info().useOriginalName());
         String v1;
         String v2;
@@ -119,6 +161,13 @@ public class JDBCDaoWhereParser extends WhereParser {
 
     @Override
     public WhereClause parseJsonContains(Where w) {
+        if (w.value1() == null) {
+            if (w.info().skipIfNull()) {
+                return new WhereClause("");
+            } else {
+                throw new WrongWhereTypeParamSizeException(w.name(), w.whereType(), 1);
+            }
+        }
         var c = splitIntoColumnNameAndFieldPath(w.name());
         var columnName = w.info().useOriginalName() ? c.columnName() : tableInfo.getColumn(c.columnName()).name();
         if (StringUtils.isBlank(c.columnName())) {
