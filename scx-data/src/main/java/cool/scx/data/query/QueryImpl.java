@@ -2,8 +2,7 @@ package cool.scx.data.query;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static java.util.Collections.addAll;
+import java.util.function.Predicate;
 
 /**
  * 默认实现
@@ -81,19 +80,52 @@ public class QueryImpl implements Query {
 
     @Override
     public QueryImpl addWhere(Object... whereClauses) {
-        addAll(where, whereClauses);
+        for (var whereClause : whereClauses) {
+            if (whereClause instanceof Where w && w.info().replace()) {
+                removeWhereIf(c -> c instanceof Where w1 && w1.name().equals(w.name()));
+            }
+            where.add(whereClause);
+        }
         return this;
     }
 
     @Override
     public QueryImpl addGroupBy(Object... groupByClauses) {
-        addAll(groupBy, groupByClauses);
+        for (var groupByClause : groupByClauses) {
+            if (groupByClause instanceof GroupBy w && w.info().replace()) {
+                removeGroupByIf(c -> c instanceof GroupBy w1 && w1.name().equals(w.name()));
+            }
+            groupBy.add(groupByClause);
+        }
         return this;
     }
 
     @Override
     public QueryImpl addOrderBy(Object... orderByClauses) {
-        addAll(orderBy, orderByClauses);
+        for (var orderByClause : orderByClauses) {
+            if (orderByClause instanceof OrderBy w && w.info().replace()) {
+                removeOrderByIf(c -> c instanceof OrderBy w1 && w1.name().equals(w.name()));
+            }
+            orderBy.add(orderByClause);
+        }
+        return this;
+    }
+
+    @Override
+    public Query removeWhereIf(Predicate<Object> filter) {
+        where.removeIf(filter);
+        return this;
+    }
+
+    @Override
+    public Query removeGroupByIf(Predicate<Object> filter) {
+        groupBy.removeIf(filter);
+        return this;
+    }
+
+    @Override
+    public Query removeOrderByIf(Predicate<Object> filter) {
+        orderBy.removeIf(filter);
         return this;
     }
 
