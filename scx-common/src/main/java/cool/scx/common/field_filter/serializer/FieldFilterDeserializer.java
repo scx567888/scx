@@ -1,11 +1,11 @@
 package cool.scx.common.field_filter.serializer;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import cool.scx.common.field_filter.ExcludedFieldFilter;
 import cool.scx.common.field_filter.FieldFilter;
+import cool.scx.common.field_filter.FieldFilterImpl;
 import cool.scx.common.field_filter.FilterMode;
-import cool.scx.common.field_filter.IncludedFieldFilter;
 
+import static cool.scx.common.field_filter.FilterMode.EXCLUDED;
 import static cool.scx.common.util.ObjectUtils.convertValue;
 
 public class FieldFilterDeserializer {
@@ -23,16 +23,29 @@ public class FieldFilterDeserializer {
     }
 
     public FieldFilter deserializeFieldFilter(JsonNode objectNode) {
+        var filterMode = EXCLUDED;
+
         if (objectNode == null) {
-            return new ExcludedFieldFilter();
+            return new FieldFilterImpl(filterMode);
         }
-        var filterMode = convertValue(objectNode.get("filterMode"), FilterMode.class);
-        var fieldNames = convertValue(objectNode.get("fieldNames"), String[].class);
-        var ignoreNullValue = objectNode.get("ignoreNullValue").asBoolean();
-        return switch (filterMode) {
-            case INCLUDED -> new IncludedFieldFilter().addIncluded(fieldNames).ignoreNullValue(ignoreNullValue);
-            case EXCLUDED -> new ExcludedFieldFilter().addExcluded(fieldNames).ignoreNullValue(ignoreNullValue);
-        };
+
+        if (objectNode.get("filterMode") != null && !objectNode.get("filterMode").isNull()) {
+            filterMode = convertValue(objectNode.get("filterMode"), FilterMode.class);
+        }
+
+        var fieldFilter = new FieldFilterImpl(filterMode);
+
+        if (objectNode.get("fieldNames") != null && !objectNode.get("fieldNames").isNull()) {
+            var fieldNames = convertValue(objectNode.get("fieldNames"), String[].class);
+            fieldFilter.addFieldNames(fieldNames);
+        }
+
+        if (objectNode.get("ignoreNullValue") != null && !objectNode.get("ignoreNullValue").isNull()) {
+            var ignoreNullValue = objectNode.get("ignoreNullValue").asBoolean();
+            fieldFilter.ignoreNullValue(ignoreNullValue);
+        }
+
+        return fieldFilter;
     }
 
 }

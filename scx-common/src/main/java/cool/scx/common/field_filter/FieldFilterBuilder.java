@@ -1,5 +1,8 @@
 package cool.scx.common.field_filter;
 
+import static cool.scx.common.field_filter.FilterMode.EXCLUDED;
+import static cool.scx.common.field_filter.FilterMode.INCLUDED;
+
 public class FieldFilterBuilder {
 
     /**
@@ -9,7 +12,7 @@ public class FieldFilterBuilder {
      * @return a
      */
     public static FieldFilter ofIncluded(String... fieldNames) {
-        return new IncludedFieldFilter().addIncluded(fieldNames);
+        return new FieldFilterImpl(INCLUDED).addIncluded(fieldNames);
     }
 
     /**
@@ -19,7 +22,7 @@ public class FieldFilterBuilder {
      * @return a
      */
     public static FieldFilter ofExcluded(String... fieldNames) {
-        return new ExcludedFieldFilter().addExcluded(fieldNames);
+        return new FieldFilterImpl(EXCLUDED).addExcluded(fieldNames);
     }
 
 }
