@@ -3,7 +3,6 @@ package cool.scx.common.field_filter;
 import java.util.HashSet;
 import java.util.Set;
 
-import static cool.scx.common.field_filter.FilterMode.INCLUDED;
 import static java.util.Collections.addAll;
 
 /**
@@ -58,7 +57,7 @@ public final class FieldFilterImpl implements FieldFilter {
 
     @Override
     public FilterMode getFilterMode() {
-        return INCLUDED;
+        return filterMode;
     }
 
     @Override
