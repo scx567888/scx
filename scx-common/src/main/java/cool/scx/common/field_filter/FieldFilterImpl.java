@@ -3,7 +3,6 @@ package cool.scx.common.field_filter;
 import java.util.HashSet;
 import java.util.Set;
 
-import static cool.scx.common.field_filter.FilterMode.INCLUDED;
 import static java.util.Collections.addAll;
 
 /**
@@ -12,34 +11,42 @@ import static java.util.Collections.addAll;
  * @author scx567888
  * @version 0.1.3
  */
-public class IncludedFieldFilter implements FieldFilter {
+public final class FieldFilterImpl implements FieldFilter {
 
+    private final FilterMode filterMode;
     private final Set<String> fieldNames;
     private boolean ignoreNullValue;
 
-    public IncludedFieldFilter() {
+    public FieldFilterImpl(FilterMode filterMode) {
+        this.filterMode = filterMode;
         this.fieldNames = new HashSet<>();
         this.ignoreNullValue = true;
     }
 
     @Override
     public FieldFilter addIncluded(String... fieldNames) {
-        return _addFieldNames(fieldNames);
+        return switch (filterMode) {
+            case INCLUDED -> addFieldNames(fieldNames);
+            case EXCLUDED -> removeFieldNames(fieldNames);
+        };
     }
 
     @Override
     public FieldFilter addExcluded(String... fieldNames) {
-        return _removeFieldNames(fieldNames);
+        return switch (filterMode) {
+            case EXCLUDED -> addFieldNames(fieldNames);
+            case INCLUDED -> removeFieldNames(fieldNames);
+        };
     }
 
     @Override
     public FieldFilter removeIncluded(String... fieldNames) {
-        return _addFieldNames(fieldNames);
+        return addExcluded(fieldNames);
     }
 
     @Override
     public FieldFilter removeExcluded(String... fieldNames) {
-        return _removeFieldNames(fieldNames);
+        return addIncluded(fieldNames);
     }
 
     @Override
@@ -50,7 +57,7 @@ public class IncludedFieldFilter implements FieldFilter {
 
     @Override
     public FilterMode getFilterMode() {
-        return INCLUDED;
+        return filterMode;
     }
 
     @Override
@@ -69,12 +76,12 @@ public class IncludedFieldFilter implements FieldFilter {
         return this;
     }
 
-    private FieldFilter _addFieldNames(String... fieldNames) {
+    public FieldFilter addFieldNames(String... fieldNames) {
         addAll(this.fieldNames, fieldNames);
         return this;
     }
 
-    private FieldFilter _removeFieldNames(String... fieldNames) {
+    public FieldFilter removeFieldNames(String... fieldNames) {
         for (var fieldName : fieldNames) {
             this.fieldNames.remove(fieldName);
         }

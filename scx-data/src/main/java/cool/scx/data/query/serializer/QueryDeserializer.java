@@ -36,17 +36,26 @@ public class QueryDeserializer {
     }
 
     public Query deserializeQuery(JsonNode objectNode) {
+        var query = new QueryImpl();
         if (objectNode == null) {
-            return new QueryImpl();
+            return query;
         }
-        var where = whereDeserializer.deserialize(objectNode.get("where"));
-        var groupBy = groupByDeserializer.deserialize(objectNode.get("groupBy"));
-        var orderBy = orderByDeserializer.deserialize(objectNode.get("orderBy"));
-        var query = new QueryImpl().where(where).groupBy(groupBy).orderBy(orderBy);
-        if (!objectNode.get("offset").isNull()) {
+        if (objectNode.get("where") != null && !objectNode.get("where").isNull()) {
+            var where = whereDeserializer.deserialize(objectNode.get("where"));
+            query.where(where);
+        }
+        if (objectNode.get("groupBy") != null && !objectNode.get("groupBy").isNull()) {
+            var groupBy = groupByDeserializer.deserialize(objectNode.path("groupBy"));
+            query.groupBy(groupBy);
+        }
+        if (objectNode.get("orderBy") != null && !objectNode.get("orderBy").isNull()) {
+            var orderBy = orderByDeserializer.deserialize(objectNode.path("orderBy"));
+            query.orderBy(orderBy);
+        }
+        if (objectNode.get("offset") != null && !objectNode.get("offset").isNull()) {
             query.offset(objectNode.get("offset").asLong());
         }
-        if (!objectNode.get("limit").isNull()) {
+        if (objectNode.get("limit") != null && !objectNode.get("limit").isNull()) {
             query.limit(objectNode.get("limit").asLong());
         }
         return query;
