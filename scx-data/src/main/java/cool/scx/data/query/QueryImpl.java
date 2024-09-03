@@ -2,7 +2,6 @@ package cool.scx.data.query;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
 
 /**
  * 默认实现
