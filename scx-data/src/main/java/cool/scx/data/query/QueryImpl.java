@@ -2,7 +2,6 @@ package cool.scx.data.query;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
 
 /**
  * 默认实现
@@ -79,57 +78,6 @@ public class QueryImpl implements Query {
     }
 
     @Override
-    public QueryImpl addWhere(Object... whereClauses) {
-        for (var whereClause : whereClauses) {
-            if (whereClause instanceof Where w && w.info().replace()) {
-                removeWhereIf(c -> c instanceof Where w1 && w1.name().equals(w.name()));
-            }
-            where.add(whereClause);
-        }
-        return this;
-    }
-
-    @Override
-    public QueryImpl addGroupBy(Object... groupByClauses) {
-        for (var groupByClause : groupByClauses) {
-            if (groupByClause instanceof GroupBy w && w.info().replace()) {
-                removeGroupByIf(c -> c instanceof GroupBy w1 && w1.name().equals(w.name()));
-            }
-            groupBy.add(groupByClause);
-        }
-        return this;
-    }
-
-    @Override
-    public QueryImpl addOrderBy(Object... orderByClauses) {
-        for (var orderByClause : orderByClauses) {
-            if (orderByClause instanceof OrderBy w && w.info().replace()) {
-                removeOrderByIf(c -> c instanceof OrderBy w1 && w1.name().equals(w.name()));
-            }
-            orderBy.add(orderByClause);
-        }
-        return this;
-    }
-
-    @Override
-    public Query removeWhereIf(Predicate<Object> filter) {
-        where.removeIf(filter);
-        return this;
-    }
-
-    @Override
-    public Query removeGroupByIf(Predicate<Object> filter) {
-        groupBy.removeIf(filter);
-        return this;
-    }
-
-    @Override
-    public Query removeOrderByIf(Predicate<Object> filter) {
-        orderBy.removeIf(filter);
-        return this;
-    }
-
-    @Override
     public Object[] getWhere() {
         return where.toArray();
     }
@@ -181,6 +129,57 @@ public class QueryImpl implements Query {
     @Override
     public QueryImpl clearLimit() {
         limit = null;
+        return this;
+    }
+
+    private QueryImpl addWhere(Object... whereClauses) {
+        for (var whereClause : whereClauses) {
+            if (whereClause == null) {
+                continue;
+            }
+            if (whereClause instanceof Object[] objs) {
+                addWhere(objs);
+                continue;
+            }
+            if (whereClause instanceof Where w && w.info().replace()) {
+                where.removeIf(c -> c instanceof Where w1 && w1.name().equals(w.name()));
+            }
+            where.add(whereClause);
+        }
+        return this;
+    }
+
+    private QueryImpl addGroupBy(Object... groupByClauses) {
+        for (var groupByClause : groupByClauses) {
+            if (groupByClause == null) {
+                continue;
+            }
+            if (groupByClause instanceof Object[] objs) {
+                addGroupBy(objs);
+                continue;
+            }
+            if (groupByClause instanceof GroupBy w && w.info().replace()) {
+                groupBy.removeIf(c -> c instanceof GroupBy w1 && w1.name().equals(w.name()));
+            }
+            groupBy.add(groupByClause);
+        }
+        return this;
+    }
+
+    private QueryImpl addOrderBy(Object... orderByClauses) {
+        for (var orderByClause : orderByClauses) {
+            if (orderByClause == null) {
+                continue;
+            }
+            if (orderByClause instanceof Object[] objs) {
+                addOrderBy(objs);
+                continue;
+            }
+            if (orderByClause instanceof OrderBy w && w.info().replace()) {
+                orderBy.removeIf(c -> c instanceof OrderBy w1 && w1.name().equals(w.name()));
+            }
+            orderBy.add(orderByClause);
+        }
         return this;
     }
 
