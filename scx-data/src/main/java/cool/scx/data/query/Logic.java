@@ -2,7 +2,6 @@ package cool.scx.data.query;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
 
 import static cool.scx.data.query.WhereType.*;
 
