@@ -26,16 +26,18 @@ public class Logic extends QueryLike<Logic> {
 
     public Logic add(Object... logicCauses) {
         for (var logicCause : logicCauses) {
+            if (logicCause == null) {
+                continue;
+            }
+            if (logicCause instanceof Object[] objs) {
+                add(objs);
+                continue;
+            }
             if (logicCause instanceof Where w && w.info().replace()) {
-                removeIf(c -> c instanceof Where w1 && w1.name().equals(w.name()));
+                clauses.removeIf(c -> c instanceof Where w1 && w1.name().equals(w.name()));
             }
             clauses.add(logicCause);
         }
-        return this;
-    }
-
-    public Logic removeIf(Predicate<Object> filter) {
-        clauses.removeIf(filter);
         return this;
     }
 
