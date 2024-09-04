@@ -271,6 +271,10 @@ public final class QueryBuilder {
         return new Where(fieldName, JSON_CONTAINS, value, null, options);
     }
 
+    public static Where jsonOverlaps(String fieldName, Object value, QueryOption... options) {
+        return new Where(fieldName, JSON_OVERLAPS, value, null, options);
+    }
+
     public static WhereClause whereClause(String whereClause, Object... params) {
         return new WhereClause(whereClause, params);
     }

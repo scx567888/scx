@@ -63,7 +63,7 @@ public abstract class WhereParser {
             case LIKE, NOT_LIKE -> parseLike(body);
             case IN, NOT_IN -> parseIn(body);
             case BETWEEN, NOT_BETWEEN -> parseBetween(body);
-            case JSON_CONTAINS -> parseJsonContains(body);
+            case JSON_CONTAINS, JSON_OVERLAPS -> parseJsonContains(body);
         };
     }
 
@@ -113,6 +113,7 @@ public abstract class WhereParser {
             case BETWEEN -> "BETWEEN";
             case NOT_BETWEEN -> "NOT BETWEEN";
             case JSON_CONTAINS -> "JSON_CONTAINS";
+            case JSON_OVERLAPS -> "JSON_OVERLAPS";
         };
     }
 
