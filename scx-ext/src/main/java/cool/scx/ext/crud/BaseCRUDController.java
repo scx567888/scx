@@ -84,4 +84,11 @@ public class BaseCRUDController<T extends BaseModelService> {
         return Result.ok().put("isUnique", isUnique);
     }
 
+    @ScxRoute(methods = POST)
+    public BaseVo count(CRUDListParam crudListParam) {
+        var query = crudListParam.getQuery();
+        var total = service.count(query);
+        return Result.ok(total);
+    }
+
 }
