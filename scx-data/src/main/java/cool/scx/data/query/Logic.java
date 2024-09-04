@@ -112,7 +112,7 @@ public class Logic extends QueryLike<Logic> {
     public final Logic jsonContains(String fieldName, Object value, QueryOption... options) {
         return add(new Where(fieldName, JSON_CONTAINS, value, null, options));
     }
-    
+
     public final Logic jsonOverlaps(String fieldName, Object value, QueryOption... options) {
         return add(new Where(fieldName, JSON_OVERLAPS, value, null, options));
     }
