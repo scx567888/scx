@@ -89,8 +89,13 @@ public enum WhereType {
     NOT_BETWEEN,
 
     /**
-     * json 包含 一般用于 数组判断
+     * json 包含
      */
-    JSON_CONTAINS
+    JSON_CONTAINS,
+
+    /**
+     * json 重叠
+     */
+    JSON_OVERLAPS
 
 }

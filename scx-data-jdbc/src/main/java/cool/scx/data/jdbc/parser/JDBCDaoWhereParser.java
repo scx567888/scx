@@ -171,7 +171,7 @@ public class JDBCDaoWhereParser extends WhereParser {
         var c = splitIntoColumnNameAndFieldPath(w.name());
         var columnName = w.info().useOriginalName() ? c.columnName() : tableInfo.getColumn(c.columnName()).name();
         if (StringUtils.isBlank(c.columnName())) {
-            throw new IllegalArgumentException("使用 JSON_CONTAINS 时, 查询名称不合法 !!! 字段名 : " + w.name());
+            throw new IllegalArgumentException("使用 "+w.whereType()+" 时, 查询名称不合法 !!! 字段名 : " + w.name());
         }
         String v1;
         Object[] whereParams;
@@ -186,7 +186,7 @@ public class JDBCDaoWhereParser extends WhereParser {
                 try {
                     whereParams = new Object[]{toJson(w.value1(), new ObjectUtils.Options().setIgnoreJsonIgnore(true).setIgnoreNullValue(true))};
                 } catch (JsonProcessingException e) {
-                    throw new IllegalArgumentException("使用 JSON_CONTAINS 时, 查询参数不合法(无法正确转换为 JSON) !!! 字段名 : " + w.name(), e);
+                    throw new IllegalArgumentException("使用 "+w.whereType()+" 时, 查询参数不合法(无法正确转换为 JSON) !!! 字段名 : " + w.name(), e);
                 }
             }
         }
