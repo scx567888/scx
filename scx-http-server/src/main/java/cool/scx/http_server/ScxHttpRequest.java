@@ -1,4 +1,4 @@
-package cool.scx.web.http_server;
+package cool.scx.http_server;
 
 import io.vertx.core.Future;
 import io.vertx.core.buffer.Buffer;

@@ -1,6 +1,6 @@
-package cool.scx.web.http_server.vertx;
+package cool.scx.http_server.vertx;
 
-import cool.scx.web.http_server.ScxHttpResponse;
+import cool.scx.http_server.ScxHttpResponse;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpServerResponse;
 

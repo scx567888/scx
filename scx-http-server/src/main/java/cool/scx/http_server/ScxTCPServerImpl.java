@@ -1,4 +1,4 @@
-package cool.scx.web.http_server;
+package cool.scx.http_server;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

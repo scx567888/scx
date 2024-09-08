@@ -1,6 +1,6 @@
-package cool.scx.web.http_server.vertx;
+package cool.scx.http_server.vertx;
 
-import cool.scx.web.http_server.ScxWebSocket;
+import cool.scx.http_server.ScxWebSocket;
 import io.vertx.core.http.ServerWebSocket;
 
 public class VertxWebSocket implements ScxWebSocket {

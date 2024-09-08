@@ -1,10 +1,9 @@
-package cool.scx.web.http_server.vertx;
+package cool.scx.http_server.vertx;
 
-import cool.scx.web.http_server.ScxHttpServerOptions;
+import cool.scx.http_server.ScxHttpServerOptions;
 import io.vertx.core.Future;
 import io.vertx.core.http.HttpServerOptions;
 
-import javax.sound.midi.Soundbank;
 import java.util.concurrent.CountDownLatch;
 
 public class VertxHelper {

@@ -1,6 +1,6 @@
-package cool.scx.web.http_server;
+package cool.scx.http_server;
 
-public class ScxHttpServerOptions {
+public class ScxHttpServerOptions extends ScxTCPServerOptions{
     
     private int port;
 

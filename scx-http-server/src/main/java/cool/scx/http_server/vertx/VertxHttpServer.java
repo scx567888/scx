@@ -1,16 +1,16 @@
-package cool.scx.web.http_server.vertx;
+package cool.scx.http_server.vertx;
 
-import cool.scx.web.http_server.ScxHttpRequest;
-import cool.scx.web.http_server.ScxHttpServer;
-import cool.scx.web.http_server.ScxHttpServerOptions;
-import cool.scx.web.http_server.ScxWebSocket;
+import cool.scx.http_server.ScxHttpRequest;
+import cool.scx.http_server.ScxHttpServer;
+import cool.scx.http_server.ScxHttpServerOptions;
+import cool.scx.http_server.ScxWebSocket;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServer;
 
 import java.util.function.Consumer;
 
-import static cool.scx.web.http_server.vertx.VertxHelper.await;
-import static cool.scx.web.http_server.vertx.VertxHelper.convertOptions;
+import static cool.scx.http_server.vertx.VertxHelper.await;
+import static cool.scx.http_server.vertx.VertxHelper.convertOptions;
 
 public class VertxHttpServer implements ScxHttpServer {
 
