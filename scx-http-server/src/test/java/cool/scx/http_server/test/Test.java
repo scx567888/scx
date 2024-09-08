@@ -1,19 +1,15 @@
 package cool.scx.http_server.test;
 
-import cool.scx.http_server.ScxHttpResponse;
 import cool.scx.http_server.ScxHttpServer;
 import cool.scx.http_server.ScxHttpServerOptions;
-import cool.scx.http_server.ScxTCPServer;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.WebServerConfig;
-import io.helidon.webserver.http.*;
-import io.helidon.webserver.http.Handler;
+import io.helidon.webserver.http.HttpRoute;
+import io.helidon.webserver.http.HttpRouting;
 import io.vertx.core.*;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.http.HttpServerResponse;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 public class Test {
@@ -105,23 +101,17 @@ public class Test {
         server.listen();
     }
 
-    public static void maina(String[] args) {
-        ScxTCPServer server = ScxTCPServer.create();
-        server.connectHandler(c -> {
-            try {
-                InputStream inputStream = c.getInputStream();
-                byte[] bytes = inputStream.readAllBytes();
-                System.out.println(new String(bytes, StandardCharsets.UTF_8));
-                c.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+    public static void main(String[] args) {
+        var server = ScxHttpServer.create(new ScxHttpServerOptions().setPort(8080));
+        server.requestHandler(c -> {
+            var response = c.response();
+            response.end("aaaaa".getBytes(StandardCharsets.UTF_8));
         }).start();
         System.out.println(123);
     }
 
 
-    public static void main(String[] args) {
+    public static void main122(String[] args) {
         WebServer webServer = WebServer.create(
                 WebServerConfig
                         .builder()

@@ -47,7 +47,7 @@ public class ScxTCPServerImpl implements ScxTCPServer {
     public void start() {
         try {
             this.serverSocket = new ServerSocket();
-            this.serverSocket.bind(new InetSocketAddress(8080), 100);
+            this.serverSocket.bind(new InetSocketAddress(options.getPort()), 100);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -57,7 +57,7 @@ public class ScxTCPServerImpl implements ScxTCPServer {
     @Override
     public void stop() {
         try {
-            serverSocket.close();
+            this.serverSocket.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

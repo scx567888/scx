@@ -2,7 +2,6 @@ package cool.scx.http_server.impl;
 
 import cool.scx.http_server.*;
 
-import java.io.IOException;
 import java.util.function.Consumer;
 
 public class ScxHttpServerImpl implements ScxHttpServer {
@@ -14,34 +13,30 @@ public class ScxHttpServerImpl implements ScxHttpServer {
     public ScxHttpServerImpl(ScxHttpServerOptions options) {
         this.options = options;
         this.tcpServer = ScxTCPServer.create(options);
-        this.tcpServer.connectHandler(this::hhh);
+        this.tcpServer.connectHandler(this::listen);
     }
 
-    private void hhh(ScxTCPSocket scxTCPSocket) {
-        try {
-            var inputStream = scxTCPSocket.getInputStream();
-            //读取 http 协议头
-            //读取 http head
-            //读取 http body
-            this.requestHandler.accept(new ScxHttpRequestImpl());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    private void listen(ScxTCPSocket scxTCPSocket) {
+        //读取 http 协议头
+        //读取 http head
+        //读取 http body
+        this.requestHandler.accept(new ScxHttpRequestImpl(scxTCPSocket));
     }
 
     @Override
-    public void requestHandler(Consumer<ScxHttpRequest> handler) {
+    public ScxHttpServer requestHandler(Consumer<ScxHttpRequest> handler) {
         this.requestHandler = handler;
+        return this;
     }
 
     @Override
-    public void webSocketHandler(Consumer<ScxWebSocket> handler) {
-
+    public ScxHttpServer webSocketHandler(Consumer<ScxWebSocket> handler) {
+        return this;
     }
 
     @Override
-    public void exceptionHandler(Consumer<Throwable> handler) {
-
+    public ScxHttpServer exceptionHandler(Consumer<Throwable> handler) {
+        return this;
     }
 
     @Override
