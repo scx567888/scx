@@ -1,4 +1,8 @@
-package cool.scx.http_server;
+package cool.scx.http_server.impl;
+
+import cool.scx.http_server.ScxTCPServer;
+import cool.scx.http_server.ScxTCPServerOptions;
+import cool.scx.http_server.ScxTCPSocket;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -52,6 +56,11 @@ public class ScxTCPServerImpl implements ScxTCPServer {
 
     @Override
     public void stop() {
+        try {
+            serverSocket.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         this.serverThread.interrupt();
     }
 

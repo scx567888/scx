@@ -1,6 +1,9 @@
-package cool.scx.http_server;
+package cool.scx.http_server.test;
 
-import cool.scx.http_server.vertx.VertxHttpServer;
+import cool.scx.http_server.ScxHttpResponse;
+import cool.scx.http_server.ScxHttpServer;
+import cool.scx.http_server.ScxHttpServerOptions;
+import cool.scx.http_server.ScxTCPServer;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.WebServerConfig;
 import io.helidon.webserver.http.*;
@@ -13,24 +16,24 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-public class vvv {
+public class Test {
 
     public static void main1(String[] args) {
         Vertx vertx = Vertx.vertx();
 
-        ScxHttpServer server = new VertxHttpServer(vertx, new ScxHttpServerOptions().setPort(8888));
+        var server = vertx.createHttpServer();
 
         server.requestHandler(c -> {
             System.out.println(Thread.currentThread());
-            ScxHttpResponse response = c.response();
-            byte[] body = c.body();
-            System.out.println(new String(body, StandardCharsets.UTF_8));
+            var response = c.response();
+            var body = c.body();
+//            System.out.println(new String(body, StandardCharsets.UTF_8));
 //            response.write("12345".getBytes(StandardCharsets.UTF_8));
-            response.end("888888".getBytes(StandardCharsets.UTF_8));
+//            response.end("888888".getBytes(StandardCharsets.UTF_8));
             System.out.println(567);
         });
         System.out.println(888);
-        server.start();
+        server.listen();
         System.out.println(999);
 
     }
@@ -119,7 +122,6 @@ public class vvv {
 
 
     public static void main(String[] args) {
-        request
         WebServer webServer = WebServer.create(
                 WebServerConfig
                         .builder()

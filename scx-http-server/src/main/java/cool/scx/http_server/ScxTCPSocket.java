@@ -17,7 +17,7 @@ public class ScxTCPSocket {
     }
 
     public void close() throws IOException {
-         socket.close();
+        socket.close();
     }
-    
+
 }

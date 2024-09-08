@@ -1,20 +1,11 @@
 package cool.scx.http_server;
 
-public class ScxHttpServerOptions extends ScxTCPServerOptions{
-    
-    private int port;
+public class ScxHttpServerOptions extends ScxTCPServerOptions {
 
-    public ScxHttpServerOptions() {
-        this.port = 0;
-    }
-
-    public int getPort() {
-        return port;
-    }
-
+    @Override
     public ScxHttpServerOptions setPort(int port) {
-        this.port = port;
+        super.setPort(port);
         return this;
     }
-    
+
 }
