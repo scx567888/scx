@@ -127,6 +127,10 @@ public final class ScxRouteHandler implements Handler<RoutingContext> {
 
     @Override
     public void handle(RoutingContext context) {
+        Thread.ofVirtual().start(() -> this.handle0(context));
+    }
+
+    public void handle0(RoutingContext context) {
         //0, 将 routingContext 注入到 ThreadLocal 中去 以方便后续从静态方法调用
         ScxWeb._routingContext(context);
         try {
