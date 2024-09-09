@@ -1,10 +1,10 @@
 package cool.scx.socket;
 
 
-import io.netty.util.Timeout;
+import cool.scx.common.util.$.Timeout;
 import io.vertx.core.http.WebSocketBase;
 
-import static cool.scx.socket.Helper.setTimeout;
+import static cool.scx.common.util.$.setTimeout;
 import static cool.scx.socket.ScxSocketFrame.Type.PING;
 import static cool.scx.socket.ScxSocketFrame.Type.PONG;
 import static java.lang.System.Logger.Level.DEBUG;

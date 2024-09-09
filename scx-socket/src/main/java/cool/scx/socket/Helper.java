@@ -5,32 +5,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import cool.scx.common.util.ObjectUtils;
 import cool.scx.common.util.URIBuilder;
 import io.netty.handler.codec.http.QueryStringDecoder;
-import io.netty.util.HashedWheelTimer;
-import io.netty.util.Timeout;
 import io.vertx.core.http.ServerWebSocket;
 import io.vertx.core.http.WebSocketConnectOptions;
 
 import static cool.scx.common.util.ScxExceptionHelper.wrap;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 public final class Helper {
 
     public static final String SCX_SOCKET_CLIENT_ID = "scx-socket-client-id";
 
     private static final ObjectMapper JSON_MAPPER = ObjectUtils.jsonMapper();
-
-    private static final HashedWheelTimer HASHED_WHEEL_TIMER = new HashedWheelTimer();
-
-    /**
-     * 创建 Timeout 使用 Netty 时间轮 可能不准确但占用资源少
-     *
-     * @param task  任务
-     * @param delay 延时
-     * @return Timeout
-     */
-    public static Timeout setTimeout(Runnable task, long delay) {
-        return HASHED_WHEEL_TIMER.newTimeout((v) -> task.run(), delay, MILLISECONDS);
-    }
 
     /**
      * 从 ServerWebSocket 中获取 clientID

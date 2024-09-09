@@ -28,15 +28,22 @@ public final class $ {
      * @param l 延时 (毫秒)
      * @return 虚拟线程 可用 interrupt 实现终止
      */
-    public static Thread setTimeout(Runnable r, long l) {
-        return Thread.ofVirtual().start(() -> {
+    /**
+     * 创建 Timeout 使用 Netty 时间轮 可能不准确但占用资源少
+     *
+     * @param task  任务
+     * @param delay 延时
+     * @return Timeout
+     */
+    public static Timeout setTimeout(Runnable task, long delay) {
+        return new Timeout(Thread.ofVirtual().start(() -> {
             try {
-                Thread.sleep(l);
-                r.run();
+                Thread.sleep(delay);
+                task.run();
             } catch (InterruptedException ignored) {
 
             }
-        });
+        }));
     }
 
     public static CompletableFuture<Void> async(ScxRunnable<?> runnable) {
@@ -99,6 +106,19 @@ public final class $ {
             multiMap.put(key, value);
         }
         return multiMap;
+    }
+
+    public static class Timeout {
+
+        private final Thread thread;
+
+        public Timeout(Thread thread) {
+            this.thread = thread;
+        }
+
+        public void cancel() {
+            thread.interrupt();
+        }
     }
 
 }
