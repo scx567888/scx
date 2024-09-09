@@ -1,6 +1,6 @@
 package cool.scx.socket;
 
-import io.netty.util.Timeout;
+import cool.scx.socket.Helper.Timeout;
 import io.vertx.core.http.ServerWebSocket;
 
 import static cool.scx.socket.Helper.setTimeout;

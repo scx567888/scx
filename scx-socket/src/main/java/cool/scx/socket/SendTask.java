@@ -1,7 +1,7 @@
 package cool.scx.socket;
 
 import cool.scx.common.util.SingleListenerFuture;
-import io.netty.util.Timeout;
+import cool.scx.socket.Helper.Timeout;
 
 import java.lang.System.Logger;
 import java.util.concurrent.atomic.AtomicInteger;
