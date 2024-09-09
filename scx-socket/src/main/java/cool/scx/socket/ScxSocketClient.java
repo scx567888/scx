@@ -1,7 +1,7 @@
 package cool.scx.socket;
 
+import cool.scx.common.util.$.Timeout;
 import cool.scx.common.util.SingleListenerFuture;
-import cool.scx.socket.Helper.Timeout;
 import io.vertx.core.http.WebSocket;
 import io.vertx.core.http.WebSocketBase;
 import io.vertx.core.http.WebSocketClient;
@@ -9,9 +9,9 @@ import io.vertx.core.http.WebSocketConnectOptions;
 
 import java.util.function.Consumer;
 
+import static cool.scx.common.util.$.setTimeout;
 import static cool.scx.common.util.RandomUtils.randomUUID;
 import static cool.scx.socket.Helper.createConnectOptions;
-import static cool.scx.socket.Helper.setTimeout;
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.getLogger;
 

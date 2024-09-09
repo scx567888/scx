@@ -1,8 +1,10 @@
 package cool.scx.socket;
 
-import cool.scx.socket.Helper.Timeout;
+import cool.scx.common.util.$.Timeout;
 
 import java.util.function.Consumer;
+
+import static cool.scx.common.util.$.setTimeout;
 
 final class RequestTask {
 
@@ -21,7 +23,7 @@ final class RequestTask {
 
     public void start() {
         cancelFail();
-        this.failTimeout = Helper.setTimeout(this::fail, options.getRequestTimeout());
+        this.failTimeout = setTimeout(this::fail, options.getRequestTimeout());
     }
 
     public void success(String payload) {

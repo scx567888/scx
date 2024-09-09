@@ -1,13 +1,13 @@
 package cool.scx.socket;
 
+import cool.scx.common.util.$.Timeout;
 import cool.scx.common.util.SingleListenerFuture;
-import cool.scx.socket.Helper.Timeout;
 
 import java.lang.System.Logger;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static cool.scx.common.util.$.setTimeout;
 import static cool.scx.socket.Helper.getDelayed;
-import static cool.scx.socket.Helper.setTimeout;
 import static java.lang.Math.max;
 import static java.lang.System.Logger.Level.DEBUG;
 

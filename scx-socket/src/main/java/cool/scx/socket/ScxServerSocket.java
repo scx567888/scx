@@ -1,9 +1,9 @@
 package cool.scx.socket;
 
-import cool.scx.socket.Helper.Timeout;
+import cool.scx.common.util.$.Timeout;
 import io.vertx.core.http.ServerWebSocket;
 
-import static cool.scx.socket.Helper.setTimeout;
+import static cool.scx.common.util.$.setTimeout;
 import static java.lang.System.Logger.Level.DEBUG;
 
 public final class ScxServerSocket extends PingPongManager {

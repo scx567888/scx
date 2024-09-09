@@ -1,9 +1,10 @@
 package cool.scx.socket;
 
-import cool.scx.socket.Helper.Timeout;
 
+import cool.scx.common.util.$.Timeout;
+
+import static cool.scx.common.util.$.setTimeout;
 import static cool.scx.socket.DuplicateFrameChecker.Key;
-import static cool.scx.socket.Helper.setTimeout;
 
 final class ClearTask {
 
