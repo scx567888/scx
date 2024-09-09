@@ -54,7 +54,6 @@
         <module>scx-logging</module>
         <module>scx-web</module>
         <module>scx-ext</module>
-        <module>scx-http-server</module>
     </modules>
 
     <build>
@@ -85,13 +84,6 @@
 
     <dependencyManagement>
         <dependencies>
-
-            <!-- Helidon -->
-            <dependency>
-                <groupId>io.helidon.webserver</groupId>
-                <artifactId>helidon-webserver</artifactId>
-                <version>${helidon.version}</version>
-            </dependency>
 
             <!-- vert.x 网络拓展包 -->
             <dependency>
