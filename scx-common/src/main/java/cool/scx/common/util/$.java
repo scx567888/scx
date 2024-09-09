@@ -46,19 +46,6 @@ public final class $ {
         }));
     }
 
-    public static class Timeout {
-        
-        private final Thread thread;
-        
-        public Timeout(Thread thread) {
-            this.thread = thread;
-        }
-
-        public void cancel() {
-            thread.interrupt();
-        }
-    }
-
     public static CompletableFuture<Void> async(ScxRunnable<?> runnable) {
         var promise = new CompletableFuture<Void>();
         Thread.ofVirtual().start(() -> {
@@ -119,6 +106,19 @@ public final class $ {
             multiMap.put(key, value);
         }
         return multiMap;
+    }
+
+    public static class Timeout {
+
+        private final Thread thread;
+
+        public Timeout(Thread thread) {
+            this.thread = thread;
+        }
+
+        public void cancel() {
+            thread.interrupt();
+        }
     }
 
 }

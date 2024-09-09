@@ -2,14 +2,11 @@ package cool.scx.socket;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import cool.scx.common.util.$;
 import cool.scx.common.util.ObjectUtils;
 import cool.scx.common.util.URIBuilder;
 import io.netty.handler.codec.http.QueryStringDecoder;
 import io.vertx.core.http.ServerWebSocket;
 import io.vertx.core.http.WebSocketConnectOptions;
-
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static cool.scx.common.util.ScxExceptionHelper.wrap;
 
