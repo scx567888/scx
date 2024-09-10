@@ -88,7 +88,7 @@ public class Test {
         
         
         server.requestHandler(c -> {
-            $.sleep(1000);
+            c.version();
             HttpServerResponse response = c.response();
                 response.end("司昌旭");
         });
@@ -100,7 +100,7 @@ public class Test {
         var server = new HelidonHttpServer(new ScxHttpServerOptions().setPort(8080));
         var s=new ScxRouter();
         s.addRoute(new ScxRoute().handler((c)->{
-            $.sleep(1000);
+//            $.sleep(1000);
             ScxHttpRequest request = c.request();
             ScxHttpResponse response = request.response();
             response.end("司昌旭".getBytes(StandardCharsets.UTF_8));
