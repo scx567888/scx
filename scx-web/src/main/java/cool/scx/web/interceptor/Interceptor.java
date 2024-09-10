@@ -1,7 +1,7 @@
 package cool.scx.web.interceptor;
 
+import cool.scx.http_server.ScxRoutingContext;
 import cool.scx.web.ScxRouteHandler;
-import io.vertx.ext.web.RoutingContext;
 
 /**
  * 拦截器
@@ -19,7 +19,7 @@ public interface Interceptor {
      * @param scxRouteHandler ScxMappingHandler 实例
      * @throws java.lang.Exception 异常
      */
-    default void preHandle(RoutingContext routingContext, ScxRouteHandler scxRouteHandler) throws Exception {
+    default void preHandle(ScxRoutingContext routingContext, ScxRouteHandler scxRouteHandler) throws Exception {
 
     }
 
@@ -34,7 +34,7 @@ public interface Interceptor {
      * @return 处理后的结果
      * @throws java.lang.Exception java.lang.Exception 会交给 ScxMappingExceptionProcessor 进行处理
      */
-    default Object postHandle(RoutingContext routingContext, ScxRouteHandler scxRouteHandler, Object result) throws Exception {
+    default Object postHandle(ScxRoutingContext routingContext, ScxRouteHandler scxRouteHandler, Object result) throws Exception {
         return result;
     }
 
