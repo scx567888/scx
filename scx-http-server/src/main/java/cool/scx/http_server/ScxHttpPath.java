@@ -1,7 +1,11 @@
 package cool.scx.http_server;
 
-public class ScxHttpPath {
-    
-    String query();
-    
+public interface ScxHttpPath {
+
+    ScxHttpPathQuery query();
+
+    String value();
+
+    String rawValue();
+
 }

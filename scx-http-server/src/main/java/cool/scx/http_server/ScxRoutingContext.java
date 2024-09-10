@@ -5,22 +5,22 @@ import java.util.List;
 
 public class ScxRoutingContext {
 
-    private final ScxHttpRequest scxHttpRequest;
     protected final Iterator<ScxRoute> iter;
+    private final ScxHttpRequest request;
 
-    public ScxRoutingContext(ScxHttpRequest scxHttpRequest, List<ScxRoute> iter) {
-        this.scxHttpRequest = scxHttpRequest;
+    public ScxRoutingContext(ScxHttpRequest request, List<ScxRoute> iter) {
+        this.request = request;
         this.iter = iter.iterator();
     }
 
     public ScxHttpRequest request() {
-        return scxHttpRequest;
+        return request;
     }
 
     public final void next() {
         while (iter.hasNext()) {
             var next = iter.next();
-            if (next.matches(scxHttpRequest)) {
+            if (next.matches(request)) {
                 next.handle(this);
                 return;
             }

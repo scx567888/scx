@@ -1,9 +1,7 @@
 package cool.scx.http_server;
 
-public class ScxHttpHeaders {
+public interface ScxHttpHeaders extends Iterable<ScxHttpHeader> {
 
-    public ScxHttpHeader get(ScxHttpHeaderName headerName) {
-        return null;
-    }
+    ScxHttpHeader get(ScxHttpHeaderName headerName);
 
 }

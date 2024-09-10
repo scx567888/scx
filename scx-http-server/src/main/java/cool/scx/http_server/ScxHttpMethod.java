@@ -1,7 +1,7 @@
 package cool.scx.http_server;
 
-public interface ScxHttpMethod {
-    
+public sealed interface ScxHttpMethod permits ScxHttpMethodEnum, ScxHttpMethodImpl {
+
     String value();
-    
+
 }

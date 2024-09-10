@@ -6,7 +6,11 @@ import java.util.function.Consumer;
 
 public class ScxRouter implements Consumer<ScxHttpRequest> {
 
-    List<ScxRoute> routes = new ArrayList<>();
+    List<ScxRoute> routes;
+
+    public ScxRouter() {
+        this.routes = new ArrayList<>();
+    }
 
     public void addRoute(ScxRoute route) {
         routes.add(route);

@@ -6,7 +6,6 @@ import io.vertx.core.Future;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class HelidonResponse implements ScxHttpResponse {

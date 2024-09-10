@@ -1,5 +1,9 @@
 package cool.scx.http_server;
 
-public class ScxHttpHeader {
-    
+public interface ScxHttpHeader {
+
+    String name();
+
+    String value();
+
 }
