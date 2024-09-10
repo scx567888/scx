@@ -1,8 +1,8 @@
 package cool.scx.web.return_value_handler;
 
+import cool.scx.http_server.ScxRoutingContext;
 import cool.scx.web.template.ScxTemplateHandler;
 import cool.scx.web.vo.Template;
-import io.vertx.ext.web.RoutingContext;
 
 /**
  * 用于渲染 freemarker
@@ -24,7 +24,7 @@ public final class TemplateReturnValueHandler implements ReturnValueHandler {
     }
 
     @Override
-    public void handle(Object returnValue, RoutingContext routingContext) throws Exception {
+    public void handle(Object returnValue, ScxRoutingContext routingContext) throws Exception {
         if (returnValue instanceof Template template) {
             template.accept(routingContext, this.templateHandler);
         } else {

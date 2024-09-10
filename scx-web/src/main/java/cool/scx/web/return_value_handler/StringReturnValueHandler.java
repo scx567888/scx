@@ -1,6 +1,6 @@
 package cool.scx.web.return_value_handler;
 
-import io.vertx.ext.web.RoutingContext;
+import cool.scx.http_server.ScxRoutingContext;
 
 import static cool.scx.web.ScxWebHelper.fillTextPlainContentType;
 
@@ -18,7 +18,7 @@ public final class StringReturnValueHandler implements ReturnValueHandler {
     }
 
     @Override
-    public void handle(Object returnValue, RoutingContext routingContext) {
+    public void handle(Object returnValue, ScxRoutingContext routingContext) {
         if (returnValue instanceof String str) {
             fillTextPlainContentType(routingContext.request().response()).end(str);
         } else {

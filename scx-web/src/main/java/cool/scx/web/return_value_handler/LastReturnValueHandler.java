@@ -1,7 +1,7 @@
 package cool.scx.web.return_value_handler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import io.vertx.ext.web.RoutingContext;
+import cool.scx.http_server.ScxRoutingContext;
 
 import static cool.scx.common.standard.HttpFieldName.ACCEPT;
 import static cool.scx.common.standard.MediaType.APPLICATION_XML;
@@ -25,7 +25,7 @@ public final class LastReturnValueHandler implements ReturnValueHandler {
     }
 
     @Override
-    public void handle(Object returnValue, RoutingContext routingContext) throws JsonProcessingException {
+    public void handle(Object returnValue, ScxRoutingContext routingContext) throws JsonProcessingException {
         var accept = routingContext.request().getHeader(ACCEPT.toString());
         if (accept != null && startsWithIgnoreCase(accept, APPLICATION_XML.toString())) {
             // 只有明确指定 接受参数是 application/xml 的才返回 xml

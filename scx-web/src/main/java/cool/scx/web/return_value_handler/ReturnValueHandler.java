@@ -1,6 +1,6 @@
 package cool.scx.web.return_value_handler;
 
-import io.vertx.ext.web.RoutingContext;
+import cool.scx.http_server.ScxRoutingContext;
 
 /**
  * 返回值处理器
@@ -25,6 +25,6 @@ public interface ReturnValueHandler {
      * @param routingContext context
      * @throws java.lang.Exception e
      */
-    void handle(Object returnValue, RoutingContext routingContext) throws Exception;
+    void handle(Object returnValue, ScxRoutingContext routingContext) throws Exception;
 
 }
