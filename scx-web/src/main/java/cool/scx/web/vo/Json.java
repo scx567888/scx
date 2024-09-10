@@ -1,6 +1,6 @@
 package cool.scx.web.vo;
 
-import io.vertx.ext.web.RoutingContext;
+import cool.scx.http_server.ScxRoutingContext;
 
 import static cool.scx.common.util.ObjectUtils.toJson;
 import static cool.scx.web.ScxWebHelper.fillJsonContentType;
@@ -24,7 +24,7 @@ public final class Json implements BaseVo {
     }
 
     @Override
-    public void accept(RoutingContext context) {
+    public void accept(ScxRoutingContext context) {
         fillJsonContentType(context.request().response()).end(toJson(data, ""));
     }
 
