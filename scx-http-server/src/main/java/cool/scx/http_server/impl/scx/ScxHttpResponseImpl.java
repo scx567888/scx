@@ -2,6 +2,7 @@ package cool.scx.http_server.impl.scx;
 
 import cool.scx.http_server.ScxHttpResponse;
 import cool.scx.http_server.ScxTCPSocket;
+import io.vertx.core.Future;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,6 +27,11 @@ public class ScxHttpResponseImpl implements ScxHttpResponse {
     @Override
     public void write(File file) {
 
+    }
+
+    @Override
+    public Future<Void> sendFile(File filename, long offset, long length) {
+        return null;
     }
 
     @Override

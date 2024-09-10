@@ -22,10 +22,5 @@ public class HelidonRequest implements ScxHttpRequest {
     public ScxHttpResponse response() {
         return this.response;
     }
-
-    @Override
-    public byte[] body() {
-        return new byte[0];
-    }
     
 }

@@ -6,14 +6,6 @@ import java.util.function.Consumer;
 
 public interface ScxHttpServer {
 
-    static ScxHttpServer create() {
-        return create(new ScxHttpServerOptions());
-    }
-
-    static ScxHttpServer create(ScxHttpServerOptions options) {
-        return new ScxHttpServerImpl(options);
-    }
-
     ScxHttpServer requestHandler(Consumer<ScxHttpRequest> handler);
 
     ScxHttpServer webSocketHandler(Consumer<ScxWebSocket> handler);

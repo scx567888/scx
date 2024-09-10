@@ -5,7 +5,7 @@ import io.helidon.webserver.http.*;
 
 import java.util.function.Supplier;
 
-public class HelidonHttpRouting implements HttpRouting, HttpRouting.Builder {
+class HelidonHttpRouting implements HttpRouting, HttpRouting.Builder {
 
     private final HelidonHttpServer server;
 

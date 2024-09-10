@@ -2,10 +2,9 @@ package cool.scx.http_server.impl.helidon;
 
 import cool.scx.http_server.ScxHttpRequest;
 import cool.scx.http_server.ScxHttpServer;
+import cool.scx.http_server.ScxHttpServerOptions;
 import cool.scx.http_server.ScxWebSocket;
 import io.helidon.webserver.WebServer;
-import io.helidon.webserver.http.ServerRequest;
-import io.helidon.webserver.http.ServerResponse;
 
 import java.util.function.Consumer;
 
@@ -14,10 +13,15 @@ public class HelidonHttpServer implements ScxHttpServer {
     private final WebServer webServer;
     private final HelidonHttpRouting httpRouting;
     Consumer<ScxHttpRequest> requestHandler;
+    Consumer<ScxWebSocket> webSocketHandler;
+    Consumer<Throwable> exceptionHandler;
 
-    public HelidonHttpServer() {
+    public HelidonHttpServer(ScxHttpServerOptions options) {
         this.httpRouting = new HelidonHttpRouting(this);
-        this.webServer = WebServer.builder().routing(this.httpRouting).build();
+        this.webServer = WebServer.builder()
+                .routing(this.httpRouting)
+                .port(options.getPort())
+                .build();
         this.requestHandler = null;
     }
 
@@ -29,22 +33,24 @@ public class HelidonHttpServer implements ScxHttpServer {
 
     @Override
     public ScxHttpServer webSocketHandler(Consumer<ScxWebSocket> handler) {
+        this.webSocketHandler = handler;
         return null;
     }
 
     @Override
     public ScxHttpServer exceptionHandler(Consumer<Throwable> handler) {
+        this.exceptionHandler = handler;
         return null;
     }
 
     @Override
     public void start() {
-        webServer.start();
+        this.webServer.start();
     }
 
     @Override
     public void stop() {
-        webServer.stop();
+        this.webServer.stop();
     }
 
 }
