@@ -3,6 +3,7 @@ package cool.scx.http_server.test;
 import cool.scx.common.util.$;
 import cool.scx.http_server.*;
 import cool.scx.http_server.impl.helidon.HelidonHttpServer;
+import io.helidon.http.media.multipart.ReadablePart;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.WebServerConfig;
 import io.helidon.webserver.http.HttpRoute;
@@ -102,6 +103,10 @@ public class Test {
         s.addRoute(new ScxRoute().handler((c)->{
 //            $.sleep(1000);
             ScxHttpRequest request = c.request();
+            ScxHttpBody body = request.body();
+//            var string = body.asFormData();
+            var stringa = body.asMultiPart();
+            System.out.println(stringa);
             ScxHttpResponse response = request.response();
             response.end("司昌旭".getBytes(StandardCharsets.UTF_8));
         }));
