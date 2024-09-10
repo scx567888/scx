@@ -1,7 +1,7 @@
 package cool.scx.web.vo;
 
 import cool.scx.common.functional.ScxConsumer;
-import io.vertx.ext.web.RoutingContext;
+import cool.scx.http_server.ScxRoutingContext;
 
 /**
  * BaseVo 接口
@@ -9,6 +9,6 @@ import io.vertx.ext.web.RoutingContext;
  * @author scx567888
  * @version 0.5.0
  */
-public interface BaseVo extends ScxConsumer<RoutingContext, Exception> {
+public interface BaseVo extends ScxConsumer<ScxRoutingContext, Exception> {
 
 }
