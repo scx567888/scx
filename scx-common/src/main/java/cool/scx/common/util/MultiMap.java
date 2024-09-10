@@ -130,6 +130,12 @@ public final class MultiMap<K, V> {
         values.forEach(this::set);
     }
 
+    public void setAll(K key, Collection<? extends V> values) {
+        var v = listSupplier.get();
+        v.addAll(values);
+        this.map.put(key, v);
+    }
+
     public boolean containsKey(K key) {
         return map.containsKey(key);
     }

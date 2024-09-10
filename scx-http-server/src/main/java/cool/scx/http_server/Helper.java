@@ -1,7 +1,7 @@
 package cool.scx.http_server;
 
-import io.helidon.http.HttpPrologue;
-import io.helidon.http.Method;
+import io.helidon.common.uri.UriQuery;
+import io.helidon.http.*;
 
 import static cool.scx.http_server.ScxHttpMethodEnum.*;
 
@@ -47,13 +47,22 @@ public class Helper {
     }
 
     public static ScxHttpPath createScxHttpPath(HttpPrologue prologue) {
-        var query = createScxHttpPathQuery();
-        String s = prologue.uriPath().rawPath();
-        return new ScxHttpPathImpl(query, null, null);
+        var query = createScxHttpPathQuery(prologue.query());
+        var path = prologue.uriPath().path();
+        return new ScxHttpPathImpl(query, path, null);
     }
 
-    private static Object createScxHttpPathQuery() {
-        return null;
+    private static ScxHttpPathQuery createScxHttpPathQuery(UriQuery q) {
+        var map = q.toMap();
+        var httpPathQuery = new ScxHttpPathQueryImpl();
+        for (var e : map.entrySet()) {
+            var key = e.getKey();
+            var values = e.getValue();
+            for (var value : values) {
+                httpPathQuery.add(key, value);
+            }
+        }
+        return httpPathQuery;
     }
 
     public static ScxHttpVersion createScxHttpVersion(String version) {
@@ -63,6 +72,27 @@ public class Helper {
             case "HTTP/2.0" -> ScxHttpVersion.HTTP_2;
             default -> throw new IllegalArgumentException("Unsupported HTTP version: " + version);
         };
+    }
+
+    public static ScxHttpHeaders createScxHttpHeaders(ServerRequestHeaders q) {
+        var httpHeaders = new ScxHttpHeadersImpl();
+        for (Header header : q) {
+            httpHeaders.add(createScxHttpHeader(header));
+        }
+        return httpHeaders;
+    }
+
+    public static ScxHttpHeaderImpl createScxHttpHeader(Header h) {
+        var scxHttpHeaderName = createScxHttpHeaderName(h.headerName());
+        return new ScxHttpHeaderImpl(scxHttpHeaderName, h.allValues());
+    }
+
+    public static ScxHttpHeaderName createScxHttpHeaderName(HeaderName headerName) {
+        try {
+            return ScxHttpHeaderNameEnum.of(headerName.defaultCase());
+        } catch (Exception e) {
+            return new ScxHttpHeaderNameImpl(headerName.defaultCase());
+        }
     }
 
 }

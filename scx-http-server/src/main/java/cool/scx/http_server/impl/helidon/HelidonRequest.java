@@ -13,15 +13,15 @@ public class HelidonRequest implements ScxHttpRequest {
     private final RoutingRequest request;
     private final ScxHttpResponse response;
     private final ScxHttpMethod method;
-    private final ScxHttpVersion version;
     private final ScxHttpPath path;
+    private final ScxHttpVersion version;
+    private final ScxHttpHeaders headers;
 
     public HelidonRequest(ConnectionContext ctx, RoutingRequest request, RoutingResponse response) {
         this.method = createScxHttpMethod(request.prologue().method());
-        var vbvvv = request.prologue();
-        var vbvvv1 = request.requestedUri();
         this.path = createScxHttpPath(request.prologue());
         this.version = createScxHttpVersion(request.prologue().rawProtocol());
+        this.headers = createScxHttpHeaders(request.headers());
         this.ctx = ctx;
         this.request = request;
         this.response = new HelidonResponse(response);

@@ -1,9 +1,12 @@
 package cool.scx.http_server;
 
-public class ScxHttpPathQuery {
+import java.util.List;
+import java.util.Map;
 
-    public static void main(String[] args) {
+public interface ScxHttpPathQuery extends Iterable<Map.Entry<String, String>> {
 
-    }
+    String get(String name);
+
+    List<String> getAll(String name);
 
 }
