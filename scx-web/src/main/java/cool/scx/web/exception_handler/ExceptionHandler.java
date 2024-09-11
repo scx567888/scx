@@ -1,6 +1,6 @@
 package cool.scx.web.exception_handler;
 
-import io.vertx.ext.web.RoutingContext;
+import cool.scx.http.ScxRoutingContext;
 
 /**
  * 路由异常处理器
@@ -24,6 +24,6 @@ public interface ExceptionHandler {
      * @param throwable      a
      * @param routingContext a
      */
-    void handle(Throwable throwable, RoutingContext routingContext);
+    void handle(Throwable throwable, ScxRoutingContext routingContext);
 
 }

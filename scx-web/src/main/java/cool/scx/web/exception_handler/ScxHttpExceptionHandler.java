@@ -2,15 +2,16 @@ package cool.scx.web.exception_handler;
 
 import cool.scx.common.util.ObjectUtils;
 import cool.scx.common.util.ScxExceptionHelper;
+import cool.scx.http.HttpStatusCode;
+import cool.scx.http.ScxRoutingContext;
 import cool.scx.web.exception.ScxHttpException;
-import io.vertx.ext.web.RoutingContext;
 
 import java.lang.System.Logger;
 import java.util.LinkedHashMap;
 
-import static cool.scx.common.standard.HttpFieldName.ACCEPT;
 import static cool.scx.common.standard.MediaType.TEXT_HTML;
 import static cool.scx.common.util.StringUtils.startsWithIgnoreCase;
+import static cool.scx.http.HttpFieldName.ACCEPT;
 import static cool.scx.web.ScxWebHelper.*;
 import static java.lang.System.Logger.Level.ERROR;
 
@@ -48,30 +49,27 @@ public class ScxHttpExceptionHandler implements ExceptionHandler {
         this.useDevelopmentErrorPage = useDevelopmentErrorPage;
     }
 
-    public static void sendToClient(int statusCode, String title, String info, RoutingContext routingContext) {
+    public static void sendToClient(HttpStatusCode statusCode, String info, ScxRoutingContext routingContext) {
         //防止页面出现 null 这种奇怪的情况
-        if (title == null) {
-            title = "";
-        }
         if (info == null) {
             info = "";
         }
         var accept = routingContext.request().headers().get(ACCEPT.toString());
         //根据 accept 返回不同的错误信息
         if (accept != null && startsWithIgnoreCase(accept, TEXT_HTML.toString())) {
-            var htmlStr = String.format(htmlTemplate, title, statusCode, title, info);
-            fillHtmlContentType(routingContext.request().response()).setStatusCode(statusCode).end(htmlStr);
+            var htmlStr = String.format(htmlTemplate, statusCode.description(), statusCode, statusCode.description(), info);
+            fillHtmlContentType(routingContext.request().response()).status(statusCode).send(htmlStr);
         } else {
             var tempMap = new LinkedHashMap<>();
             tempMap.put("statusCode", statusCode);
-            tempMap.put("title", title);
+            tempMap.put("title", statusCode.description());
             tempMap.put("info", info);
             var jsonStr = ObjectUtils.toJson(tempMap, "");
-            fillJsonContentType(routingContext.request().response()).setStatusCode(statusCode).end(jsonStr);
+            fillJsonContentType(routingContext.request().response()).status(statusCode).send(jsonStr);
         }
     }
 
-    public void handleScxHttpException(ScxHttpException scxHttpException, RoutingContext routingContext) {
+    public void handleScxHttpException(ScxHttpException scxHttpException, ScxRoutingContext routingContext) {
         String info = null;
         //1, 这里根据是否开启了开发人员错误页面 进行相应的返回
         if (useDevelopmentErrorPage) {
@@ -82,7 +80,7 @@ public class ScxHttpExceptionHandler implements ExceptionHandler {
                 info = ScxExceptionHelper.getStackTraceString(cause);
             }
         }
-        sendToClient(scxHttpException.statusCode().code(), scxHttpException.statusCode().description(), info, routingContext);
+        sendToClient(scxHttpException.statusCode(), info, routingContext);
     }
 
     @Override
@@ -91,7 +89,7 @@ public class ScxHttpExceptionHandler implements ExceptionHandler {
     }
 
     @Override
-    public void handle(Throwable throwable, RoutingContext routingContext) {
+    public void handle(Throwable throwable, ScxRoutingContext routingContext) {
         if (responseCanUse(routingContext)) {
             //1, 这里根据是否开启了开发人员错误页面 进行相应的返回
             this.handleScxHttpException((ScxHttpException) throwable, routingContext);

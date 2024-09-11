@@ -1,7 +1,7 @@
 package cool.scx.web.exception_handler;
 
+import cool.scx.http.ScxRoutingContext;
 import cool.scx.web.exception.InternalServerErrorException;
-import io.vertx.ext.web.RoutingContext;
 
 import java.lang.System.Logger;
 
@@ -22,7 +22,7 @@ public final class LastExceptionHandler extends ScxHttpExceptionHandler {
     }
 
     @Override
-    public void handle(Throwable throwable, RoutingContext routingContext) {
+    public void handle(Throwable throwable, ScxRoutingContext routingContext) {
         //1, 如果这时 response 还没有被关闭的话 就返回 500 错误信息
         if (responseCanUse(routingContext)) {
             //打印错误信息

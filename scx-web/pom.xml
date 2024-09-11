@@ -21,8 +21,9 @@
     <dependencies>
 
         <dependency>
-            <groupId>io.vertx</groupId>
-            <artifactId>vertx-web</artifactId>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>scx-http-server</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>

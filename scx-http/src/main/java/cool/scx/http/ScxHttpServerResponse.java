@@ -17,4 +17,9 @@ public interface ScxHttpServerResponse {
 
     boolean closed();
 
+    default ScxHttpServerResponse setHeader(ScxHttpHeaderName headerName, String... values) {
+        this.headers().set(headerName, values);
+        return this;
+    }
+
 }

@@ -14,4 +14,8 @@ public interface ScxHttpServerRequest {
 
     ScxHttpServerResponse response();
 
+    default String getHeader(ScxHttpHeaderName name) {
+        return headers().get(name);
+    }
+
 }
