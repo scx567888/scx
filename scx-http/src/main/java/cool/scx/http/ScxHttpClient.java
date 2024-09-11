@@ -1,10 +1,12 @@
-package cool.scx.http_client;
+package cool.scx.http;
+
+import cool.scx.http_client.ScxHttpClientRequestBody;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.WebSocket;
 
-import static cool.scx.http_server.HttpMethod.*;
+import static cool.scx.http.HttpMethod.*;
 
 public interface ScxHttpClient {
 

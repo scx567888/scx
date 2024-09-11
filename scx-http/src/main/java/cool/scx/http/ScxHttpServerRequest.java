@@ -1,6 +1,6 @@
 package cool.scx.http;
 
-public interface ScxHttpRequest {
+public interface ScxHttpServerRequest {
 
     ScxHttpMethod method();
 
@@ -12,6 +12,6 @@ public interface ScxHttpRequest {
 
     ScxHttpBody body();
 
-    ScxHttpResponse response();
+    ScxHttpServerResponse response();
 
 }
