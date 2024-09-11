@@ -1,29 +1,20 @@
 package cool.scx.http_server;
 
-import io.vertx.core.Future;
-
-import java.io.File;
-
+//todo 方法定义待优化
 public interface ScxHttpResponse {
 
-    void write(byte[] bytes);
+    HttpStatusCode status();
 
-    void write(File file);
+    ScxHttpHeadersWritable headers();
 
-    default Future<Void> sendFile(File file) {
-        return sendFile(file, 0);
-    }
+    ScxHttpResponse status(HttpStatusCode code);
 
-    default Future<Void> sendFile(File file, long offset) {
-        return sendFile(file, offset, Long.MAX_VALUE);
-    }
+    void send(byte[] data);
 
-    Future<Void> sendFile(File filename, long offset, long length);
+    void send(String data);
 
-    void end(byte[] bytes);
+    void send();
 
-    void end(File file);
-
-    void end();
+    boolean closed();
 
 }
