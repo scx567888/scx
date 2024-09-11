@@ -1,7 +1,7 @@
 package cool.scx.core.base;
 
-import cool.scx.common.field_filter.FieldFilter;
 import cool.scx.core.ScxContext;
+import cool.scx.data.field_filter.FieldFilter;
 import cool.scx.data.jdbc.JDBCDao;
 import cool.scx.data.query.Query;
 import cool.scx.jdbc.sql.SQL;
@@ -11,8 +11,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static cool.scx.common.field_filter.FieldFilterBuilder.ofExcluded;
 import static cool.scx.core.ScxHelper.findBaseModelServiceEntityClass;
+import static cool.scx.data.field_filter.FieldFilterBuilder.ofExcluded;
 import static cool.scx.data.query.QueryBuilder.*;
 
 /**
