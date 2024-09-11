@@ -1,7 +1,7 @@
 package cool.scx.jdbc.sqlite;
 
-import cool.scx.jdbc.JDBCType;
 import cool.scx.jdbc.JDBCHelper;
+import cool.scx.jdbc.JDBCType;
 import cool.scx.jdbc.dialect.DDLBuilder;
 import cool.scx.jdbc.dialect.Dialect;
 import cool.scx.jdbc.sqlite.type_handler.SQLiteLocalDateTimeTypeHandler;

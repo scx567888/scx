@@ -1,7 +1,7 @@
 package cool.scx.web.vo;
 
 import cool.scx.common.util.ObjectUtils;
-import cool.scx.http.ScxRoutingContext;
+import cool.scx.web.routing.RoutingContext;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -72,7 +72,7 @@ public abstract class Result implements BaseVo {
     }
 
     @Override
-    public void accept(ScxRoutingContext context) {
+    public void accept(RoutingContext context) {
         var accept = context.request().getHeader(ACCEPT);
         if (accept != null && startsWithIgnoreCase(accept, APPLICATION_XML.toString())) {
             // 只有明确指定 接受参数是 application/xml 的才返回 xml

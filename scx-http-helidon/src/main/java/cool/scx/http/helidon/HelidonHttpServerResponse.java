@@ -16,7 +16,7 @@ class HelidonHttpServerResponse implements ScxHttpServerResponse {
     }
 
     @Override
-    public HttpStatusCode status() {
+    public HttpStatusCode statusCode() {
         return HttpStatusCode.of(this.response.status().code());
     }
 
@@ -26,7 +26,7 @@ class HelidonHttpServerResponse implements ScxHttpServerResponse {
     }
 
     @Override
-    public ScxHttpServerResponse status(HttpStatusCode code) {
+    public ScxHttpServerResponse setStatusCode(HttpStatusCode code) {
         this.response.status(code.code());
         return this;
     }

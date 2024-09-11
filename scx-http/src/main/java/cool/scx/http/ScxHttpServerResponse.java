@@ -3,11 +3,11 @@ package cool.scx.http;
 //todo 方法定义待优化
 public interface ScxHttpServerResponse {
 
-    HttpStatusCode status();
+    HttpStatusCode statusCode();
 
     ScxHttpHeadersWritable headers();
 
-    ScxHttpServerResponse status(HttpStatusCode code);
+    ScxHttpServerResponse setStatusCode(HttpStatusCode code);
 
     void send(byte[] data);
 
