@@ -1,4 +1,4 @@
-package cool.scx.http_server;
+package cool.scx.http;
 
 public sealed interface ScxHttpHeaderName permits HttpFieldName, ScxHttpHeaderNameImpl {
 

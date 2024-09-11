@@ -1,4 +1,4 @@
-package cool.scx.http_server;
+package cool.scx.http;
 
 import java.util.HashMap;
 import java.util.Map;

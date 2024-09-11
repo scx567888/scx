@@ -1,4 +1,4 @@
-package cool.scx.http_server;
+package cool.scx.http;
 
 record ScxHttpHeaderNameImpl(String value) implements ScxHttpHeaderName {
 
