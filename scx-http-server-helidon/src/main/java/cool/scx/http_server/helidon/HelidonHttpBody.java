@@ -1,10 +1,8 @@
-package cool.scx.http_server.impl.helidon;
+package cool.scx.http_server.helidon;
 
-import cool.scx.http_server.Helper;
 import cool.scx.http_server.ScxHttpBody;
-import io.helidon.common.parameters.Parameters;
+import cool.scx.http_server.ScxHttpFormData;
 import io.helidon.http.media.ReadableEntity;
-import io.helidon.http.media.multipart.MultiPart;
 
 import java.io.InputStream;
 
@@ -32,13 +30,10 @@ public class HelidonHttpBody implements ScxHttpBody {
     }
 
     @Override
-    public MultiPart asMultiPart() {
-        return content.as(MultiPart.class);
-    }
-
-    @Override
-    public Parameters asFormData() {
-        return content.as(Helper.FormDataBuilder.class);
+    public ScxHttpFormData asFormData() {
+        //todo 这里会报错
+        // return content.as(MultiPart.class);
+        return content.as(ScxHttpFormData.class);
     }
 
 }
