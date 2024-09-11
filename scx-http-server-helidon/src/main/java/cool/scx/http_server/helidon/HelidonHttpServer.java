@@ -11,15 +11,14 @@ import java.util.function.Consumer;
 public class HelidonHttpServer implements ScxHttpServer {
 
     private final WebServer webServer;
-    private final HelidonHttpRouting httpRouting;
     Consumer<ScxHttpRequest> requestHandler;
     Consumer<ScxWebSocket> webSocketHandler;
     Consumer<Throwable> exceptionHandler;
 
     public HelidonHttpServer(ScxHttpServerOptions options) {
-        this.httpRouting = new HelidonHttpRouting(this);
+        var httpRouting = new HelidonHttpRouting(this);
         this.webServer = WebServer.builder()
-                .routing(this.httpRouting)
+                .routing(httpRouting)
                 .port(options.getPort())
                 .build();
         this.requestHandler = null;

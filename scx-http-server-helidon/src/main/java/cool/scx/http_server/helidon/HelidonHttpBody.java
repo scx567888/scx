@@ -16,17 +16,17 @@ public class HelidonHttpBody implements ScxHttpBody {
 
     @Override
     public InputStream asInputStream() {
-        return content.as(InputStream.class);
+        return content.hasEntity() ? content.as(InputStream.class) : null;
     }
 
     @Override
     public byte[] asBytes() {
-        return content.as(byte[].class);
+        return content.hasEntity() ? content.as(byte[].class) : null;
     }
 
     @Override
     public String asString() {
-        return content.as(String.class);
+        return content.hasEntity() ? content.as(String.class) : null;
     }
 
     @Override
