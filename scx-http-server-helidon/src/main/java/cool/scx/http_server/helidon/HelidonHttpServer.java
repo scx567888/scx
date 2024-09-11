@@ -1,4 +1,4 @@
-package cool.scx.http_server.impl.helidon;
+package cool.scx.http_server.helidon;
 
 import cool.scx.http_server.ScxHttpRequest;
 import cool.scx.http_server.ScxHttpServer;
@@ -34,13 +34,13 @@ public class HelidonHttpServer implements ScxHttpServer {
     @Override
     public ScxHttpServer webSocketHandler(Consumer<ScxWebSocket> handler) {
         this.webSocketHandler = handler;
-        return null;
+        return this;
     }
 
     @Override
     public ScxHttpServer exceptionHandler(Consumer<Throwable> handler) {
         this.exceptionHandler = handler;
-        return null;
+        return this;
     }
 
     @Override
