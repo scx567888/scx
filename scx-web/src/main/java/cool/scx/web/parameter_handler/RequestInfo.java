@@ -4,10 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import cool.scx.common.standard.MediaType;
+import cool.scx.web.routing.RoutingContext;
 import cool.scx.web.exception.BadRequestException;
-import io.vertx.ext.web.RoutingContext;
 
-import static cool.scx.common.standard.HttpFieldName.CONTENT_TYPE;
+import static cool.scx.http.HttpFieldName.CONTENT_TYPE;
 import static cool.scx.common.util.ObjectUtils.jsonMapper;
 import static cool.scx.common.util.ObjectUtils.xmlMapper;
 import static cool.scx.web.parameter_handler.RequestInfo.ContentType.*;
@@ -38,7 +38,7 @@ public final class RequestInfo {
      * @return c a
      */
     public static JsonNode initBody(RoutingContext ctx, ContentType contentType) {
-        var bodyAsString = ctx.body().asString();
+        var bodyAsString = ctx.request().body().asString();
         if (bodyAsString == null) {
             return null;
         }
@@ -85,7 +85,7 @@ public final class RequestInfo {
     }
 
     public static ContentType initContentType(RoutingContext ctx) {
-        var contentType = ctx.request().headers().get(CONTENT_TYPE.toString());
+        var contentType = ctx.request().getHeader(CONTENT_TYPE);
         if (contentType != null) {
             contentType = contentType.toLowerCase();
         }
