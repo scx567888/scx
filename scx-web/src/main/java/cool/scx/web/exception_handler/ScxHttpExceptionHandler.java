@@ -3,8 +3,8 @@ package cool.scx.web.exception_handler;
 import cool.scx.common.util.ObjectUtils;
 import cool.scx.common.util.ScxExceptionHelper;
 import cool.scx.http.HttpStatusCode;
-import cool.scx.http.ScxRoutingContext;
 import cool.scx.web.exception.ScxHttpException;
+import cool.scx.web.routing.RoutingContext;
 
 import java.lang.System.Logger;
 import java.util.LinkedHashMap;
@@ -49,7 +49,7 @@ public class ScxHttpExceptionHandler implements ExceptionHandler {
         this.useDevelopmentErrorPage = useDevelopmentErrorPage;
     }
 
-    public static void sendToClient(HttpStatusCode statusCode, String info, ScxRoutingContext routingContext) {
+    public static void sendToClient(HttpStatusCode statusCode, String info, RoutingContext routingContext) {
         //防止页面出现 null 这种奇怪的情况
         if (info == null) {
             info = "";
@@ -69,7 +69,7 @@ public class ScxHttpExceptionHandler implements ExceptionHandler {
         }
     }
 
-    public void handleScxHttpException(ScxHttpException scxHttpException, ScxRoutingContext routingContext) {
+    public void handleScxHttpException(ScxHttpException scxHttpException, RoutingContext routingContext) {
         String info = null;
         //1, 这里根据是否开启了开发人员错误页面 进行相应的返回
         if (useDevelopmentErrorPage) {
@@ -89,7 +89,7 @@ public class ScxHttpExceptionHandler implements ExceptionHandler {
     }
 
     @Override
-    public void handle(Throwable throwable, ScxRoutingContext routingContext) {
+    public void handle(Throwable throwable, RoutingContext routingContext) {
         if (responseCanUse(routingContext)) {
             //1, 这里根据是否开启了开发人员错误页面 进行相应的返回
             this.handleScxHttpException((ScxHttpException) throwable, routingContext);
