@@ -1,4 +1,4 @@
-package cool.scx.common.standard;
+package cool.scx.http_server;
 
 /**
  * HttpFieldName
