@@ -1,4 +1,4 @@
-package cool.scx.http_server.impl.helidon;
+package cool.scx.http_server.helidon;
 
 import io.helidon.webserver.ConnectionContext;
 import io.helidon.webserver.http.*;
