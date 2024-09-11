@@ -1,8 +1,9 @@
 package cool.scx.http_server;
 
 import java.util.List;
+import java.util.Map;
 
-public interface ScxHttpHeaders {
+public interface ScxHttpHeaders extends Iterable<Map.Entry<String, List<String>>> {
 
     String get(ScxHttpHeaderName headerName);
 
