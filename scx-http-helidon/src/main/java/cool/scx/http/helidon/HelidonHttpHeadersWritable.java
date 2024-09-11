@@ -5,7 +5,7 @@ import cool.scx.http.ScxHttpHeadersWritable;
 import io.helidon.http.HeaderNames;
 import io.helidon.http.ServerResponseHeaders;
 
-public class HelidonHttpHeadersWritable extends HelidonHttpHeaders<ServerResponseHeaders> implements ScxHttpHeadersWritable {
+class HelidonHttpHeadersWritable extends HelidonHttpHeaders<ServerResponseHeaders> implements ScxHttpHeadersWritable {
 
     public HelidonHttpHeadersWritable(ServerResponseHeaders headers) {
         super(headers);

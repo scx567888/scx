@@ -5,7 +5,7 @@ import cool.scx.http.ScxHttpHeadersWritable;
 import cool.scx.http.ScxHttpServerResponse;
 import io.helidon.webserver.http.RoutingResponse;
 
-public class HelidonHttpServerResponse implements ScxHttpServerResponse {
+class HelidonHttpServerResponse implements ScxHttpServerResponse {
 
     private final RoutingResponse response;
     private final HelidonHttpHeadersWritable headers;

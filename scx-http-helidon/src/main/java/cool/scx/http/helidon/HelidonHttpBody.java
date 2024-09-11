@@ -6,7 +6,7 @@ import io.helidon.http.media.ReadableEntity;
 
 import java.io.InputStream;
 
-public class HelidonHttpBody implements ScxHttpBody {
+class HelidonHttpBody implements ScxHttpBody {
 
     private final ReadableEntity content;
 

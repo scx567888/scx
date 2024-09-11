@@ -5,7 +5,7 @@ import io.helidon.webserver.ConnectionContext;
 import io.helidon.webserver.http.RoutingRequest;
 import io.helidon.webserver.http.RoutingResponse;
 
-public class HelidonHttpServerRequest implements ScxHttpServerRequest {
+class HelidonHttpServerRequest implements ScxHttpServerRequest {
 
     private final ScxHttpMethod method;
     private final URIPath path;

@@ -18,4 +18,8 @@ public interface ScxHttpServerRequest {
         return headers().get(name);
     }
 
+    default URIQuery query() {
+        return path().query();
+    }
+
 }

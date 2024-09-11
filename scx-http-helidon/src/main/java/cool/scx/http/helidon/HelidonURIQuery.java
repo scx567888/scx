@@ -5,7 +5,7 @@ import io.helidon.common.uri.UriQuery;
 
 import java.util.List;
 
-public class HelidonURIQuery implements URIQuery {
+class HelidonURIQuery implements URIQuery {
 
     private final UriQuery uriQuery;
 

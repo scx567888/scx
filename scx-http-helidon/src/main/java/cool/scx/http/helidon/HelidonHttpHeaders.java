@@ -7,7 +7,7 @@ import io.helidon.http.Headers;
 
 import java.util.*;
 
-public class HelidonHttpHeaders<T extends Headers> implements ScxHttpHeaders {
+class HelidonHttpHeaders<T extends Headers> implements ScxHttpHeaders {
 
     protected final T headers;
 

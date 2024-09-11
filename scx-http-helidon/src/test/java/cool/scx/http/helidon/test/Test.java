@@ -1,50 +1,45 @@
 package cool.scx.http.helidon.test;
 
-import cool.scx.http.*;
+import cool.scx.http.ScxHttpServerOptions;
 import cool.scx.http.helidon.HelidonHttpServer;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServerOptions;
-import io.vertx.core.http.HttpServerResponse;
-
-import java.nio.charset.StandardCharsets;
-
-import static cool.scx.http.HttpFieldName.COOKIE;
 
 public class Test {
 
-    public static void main2(String[] args) {
-        Vertx vertx = Vertx.vertx();
-
-        var server = vertx.createHttpServer(new HttpServerOptions().setPort(8888));
-
-        server.requestHandler(c -> {
-            HttpServerResponse response = c.response();
-            response.end("8888888");
-        });
-
-        server.listen();
+    public static void main(String[] args) {
+        test1();
+        test2();
     }
 
-    public static void main(String[] args) {
+    public static void test1() {
+        var l = System.nanoTime();
+        Vertx vertx = Vertx.vertx();
+
+        var server = vertx.createHttpServer(new HttpServerOptions().setPort(8081));
+
+        server.requestHandler(c -> {
+            var response = c.response();
+            response.end("响应数据!!!");
+        });
+
+        server.listen().onSuccess(c -> {
+            System.out.println("VertxHttpServer 启动完成 !!! 耗时 : " + (System.nanoTime() - l) / 1000_000);
+        });
+    }
+
+    public static void test2() {
+        var l = System.nanoTime();
         var server = new HelidonHttpServer(new ScxHttpServerOptions().setPort(8080));
-        var s = new ScxRouter();
-        s.addRoute(new ScxRoute().handler((c) -> {
-            ScxHttpHeaders headers = c.request().headers();
-            String s1 = headers.get(COOKIE);
-            for (var header : headers) {
-                System.out.println(header.getKey() + " " + header.getValue());
-            }
-//            $.sleep(1000);
-            ScxHttpServerRequest request = c.request();
-            ScxHttpBody body = request.body();
-//            var string = body.asFormData();
-            var stringa = body.asString();
-            System.out.println(stringa);
-            ScxHttpServerResponse response = request.response();
-            response.send("司昌旭".getBytes(StandardCharsets.UTF_8));
-        }));
-        server.requestHandler(s).start();
-        System.out.println(123);
+
+        server.requestHandler(c -> {
+            var response = c.response();
+            response.send("响应数据");
+        });
+
+        server.start();
+
+        System.out.println("HelidonHttpServer 启动完成 !!! 耗时 : " + (System.nanoTime() - l) / 1000_000);
     }
 
 }
