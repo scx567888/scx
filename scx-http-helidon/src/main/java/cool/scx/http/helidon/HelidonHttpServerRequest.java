@@ -1,28 +1,28 @@
-package cool.scx.http_server.helidon;
+package cool.scx.http.helidon;
 
-import cool.scx.http_server.*;
+import cool.scx.http.*;
 import io.helidon.webserver.ConnectionContext;
 import io.helidon.webserver.http.RoutingRequest;
 import io.helidon.webserver.http.RoutingResponse;
 
-import static cool.scx.http_server.helidon.HelidonHelper.createScxHttpPath;
+import static cool.scx.http.helidon.HelidonHelper.createScxHttpPath;
 
-public class HelidonHttpRequest implements ScxHttpRequest {
+public class HelidonHttpServerRequest implements ScxHttpServerRequest {
 
     private final ScxHttpMethod method;
     private final ScxHttpPath path;
     private final HttpVersion version;
     private final ScxHttpHeaders headers;
     private final ScxHttpBody body;
-    private final ScxHttpResponse response;
+    private final ScxHttpServerResponse response;
 
-    public HelidonHttpRequest(ConnectionContext ctx, RoutingRequest request, RoutingResponse response) {
+    public HelidonHttpServerRequest(ConnectionContext ctx, RoutingRequest request, RoutingResponse response) {
         this.method = ScxHttpMethod.of(request.prologue().method().text());
         this.path = createScxHttpPath(request.prologue().uriPath(), request.query());
         this.version = HttpVersion.of(request.prologue().rawProtocol());
         this.headers = new HelidonHttpHeaders<>(request.headers());
         this.body = new HelidonHttpBody(request.content());
-        this.response = new HelidonHttpResponse(response);
+        this.response = new HelidonHttpServerResponse(response);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class HelidonHttpRequest implements ScxHttpRequest {
     }
 
     @Override
-    public ScxHttpResponse response() {
+    public ScxHttpServerResponse response() {
         return this.response;
     }
 

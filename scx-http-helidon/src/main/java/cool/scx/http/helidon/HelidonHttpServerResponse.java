@@ -1,16 +1,16 @@
-package cool.scx.http_server.helidon;
+package cool.scx.http.helidon;
 
-import cool.scx.http_server.HttpStatusCode;
-import cool.scx.http_server.ScxHttpHeadersWritable;
-import cool.scx.http_server.ScxHttpResponse;
+import cool.scx.http.HttpStatusCode;
+import cool.scx.http.ScxHttpHeadersWritable;
+import cool.scx.http.ScxHttpServerResponse;
 import io.helidon.webserver.http.RoutingResponse;
 
-public class HelidonHttpResponse implements ScxHttpResponse {
+public class HelidonHttpServerResponse implements ScxHttpServerResponse {
 
     private final RoutingResponse response;
     private final HelidonHttpHeadersWritable headers;
 
-    public HelidonHttpResponse(RoutingResponse response) {
+    public HelidonHttpServerResponse(RoutingResponse response) {
         this.response = response;
         this.headers = new HelidonHttpHeadersWritable(response.headers());
     }
@@ -26,7 +26,7 @@ public class HelidonHttpResponse implements ScxHttpResponse {
     }
 
     @Override
-    public ScxHttpResponse status(HttpStatusCode code) {
+    public ScxHttpServerResponse status(HttpStatusCode code) {
         this.response.status(code.code());
         return this;
     }
