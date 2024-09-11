@@ -7,7 +7,7 @@ package cool.scx.http_server;
  * @version 0.3.6
  * @see <a href="https://www.rfc-editor.org/rfc/rfc9110#name-method-definitions">https://www.rfc-editor.org/rfc/rfc9110#name-method-definitions</a>
  */
-public enum HttpMethod {
+public enum HttpMethod implements ScxHttpMethod {
 
     /**
      * CONNECT 方法建立一个到由目标资源标识的服务器的隧道。
@@ -52,6 +52,11 @@ public enum HttpMethod {
     /**
      * TRACE 方法沿着到目标资源的路径执行一个消息环回测试。
      */
-    TRACE
+    TRACE;
+
+    @Override
+    public String value() {
+        return this.name();
+    }
 
 }
