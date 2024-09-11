@@ -1,4 +1,4 @@
-package cool.scx.common.standard;
+package cool.scx.http_server;
 
 /**
  * HttpStatusCode
@@ -7,7 +7,7 @@ package cool.scx.common.standard;
  * @version 1.11.8
  * @see <a href="https://www.rfc-editor.org/rfc/rfc9110#name-status-codes">https://www.rfc-editor.org/rfc/rfc9110#name-status-codes</a>
  */
-public enum HttpStatusCode {
+public enum ScxHttpStatusCode {
 
     /**
      * 这个临时响应表明，迄今为止的所有内容都是可行的，客户端应该继续请求，如果已经完成，则忽略它。
@@ -242,27 +242,27 @@ public enum HttpStatusCode {
     /**
      * 存储 code 和 对应枚举的映射
      */
-    private static final HttpStatusCode[] MAP = initMap();
+    private static final ScxHttpStatusCode[] MAP = initMap();
 
     private final int code;
 
     private final String description;
 
-    HttpStatusCode(int code, String description) {
+    ScxHttpStatusCode(int code, String description) {
         this.code = code;
         this.description = description;
     }
 
-    private static HttpStatusCode[] initMap() {
-        var m = new HttpStatusCode[506];
-        var values = HttpStatusCode.values();
+    private static ScxHttpStatusCode[] initMap() {
+        var m = new ScxHttpStatusCode[506];
+        var values = ScxHttpStatusCode.values();
         for (var v : values) {
             m[v.code] = v;
         }
         return m;
     }
 
-    public static HttpStatusCode of(int code) {
+    public static ScxHttpStatusCode of(int code) {
         if (code < 0 || code > 505) {
             return null;
         }
