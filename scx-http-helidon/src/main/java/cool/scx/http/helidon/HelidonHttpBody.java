@@ -1,7 +1,7 @@
-package cool.scx.http_server.helidon;
+package cool.scx.http.helidon;
 
-import cool.scx.http_server.ScxHttpBody;
-import cool.scx.http_server.ScxHttpFormData;
+import cool.scx.http.ScxHttpBody;
+import cool.scx.http.ScxHttpFormData;
 import io.helidon.http.media.ReadableEntity;
 
 import java.io.InputStream;

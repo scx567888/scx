@@ -1,7 +1,7 @@
-package cool.scx.http_server.helidon;
+package cool.scx.http.helidon;
 
-import cool.scx.http_server.ScxHttpHeaderName;
-import cool.scx.http_server.ScxHttpHeaders;
+import cool.scx.http.ScxHttpHeaderName;
+import cool.scx.http.ScxHttpHeaders;
 import io.helidon.http.HeaderNames;
 import io.helidon.http.Headers;
 
