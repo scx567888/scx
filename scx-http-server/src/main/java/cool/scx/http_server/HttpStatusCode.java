@@ -264,9 +264,13 @@ public enum HttpStatusCode {
 
     public static HttpStatusCode of(int code) {
         if (code < 0 || code > 505) {
-            return null;
+            throw new IllegalArgumentException("Invalid HTTP status code: " + code);
         }
-        return MAP[code];
+        var c = MAP[code];
+        if (c == null) {
+            throw new IllegalArgumentException("Invalid HTTP status code: " + code);
+        }
+        return c;
     }
 
     public int code() {
