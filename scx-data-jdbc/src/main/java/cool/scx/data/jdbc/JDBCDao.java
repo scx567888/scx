@@ -1,6 +1,6 @@
 package cool.scx.data.jdbc;
 
-import cool.scx.common.field_filter.FieldFilter;
+import cool.scx.data.field_filter.FieldFilter;
 import cool.scx.common.util.RandomUtils;
 import cool.scx.data.Dao;
 import cool.scx.data.jdbc.parser.JDBCDaoGroupByParser;

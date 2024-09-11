@@ -3,7 +3,7 @@ package cool.scx.data.mysql_x;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.mysql.cj.xdevapi.DbDoc;
 import com.mysql.cj.xdevapi.Schema;
-import cool.scx.common.field_filter.FieldFilter;
+import cool.scx.data.field_filter.FieldFilter;
 import cool.scx.common.util.CaseUtils;
 import cool.scx.common.util.StringUtils;
 import cool.scx.data.Dao;

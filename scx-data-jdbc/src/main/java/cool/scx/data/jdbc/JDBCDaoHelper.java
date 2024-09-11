@@ -1,7 +1,7 @@
 package cool.scx.data.jdbc;
 
 import com.fasterxml.jackson.databind.JavaType;
-import cool.scx.common.field_filter.FieldFilter;
+import cool.scx.data.field_filter.FieldFilter;
 import cool.scx.common.standard.JDBCType;
 
 import java.lang.reflect.Type;

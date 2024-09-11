@@ -5,8 +5,8 @@ import cool.scx.data.field_filter.FieldFilter;
 import cool.scx.data.field_filter.FieldFilterImpl;
 import cool.scx.data.field_filter.FilterMode;
 
-import static cool.scx.data.field_filter.FilterMode.EXCLUDED;
 import static cool.scx.common.util.ObjectUtils.convertValue;
+import static cool.scx.data.field_filter.FilterMode.EXCLUDED;
 
 public class FieldFilterDeserializer {
 
