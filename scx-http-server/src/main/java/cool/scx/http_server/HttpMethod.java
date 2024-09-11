@@ -59,4 +59,9 @@ public enum HttpMethod implements ScxHttpMethod {
         return this.name();
     }
 
+    public static HttpMethod of(String v) {
+        var upperCase = v.toUpperCase();
+        return valueOf(upperCase);
+    }
+
 }

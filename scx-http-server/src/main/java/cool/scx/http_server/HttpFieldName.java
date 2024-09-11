@@ -1,5 +1,8 @@
 package cool.scx.http_server;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * HttpFieldName
  *
@@ -7,7 +10,7 @@ package cool.scx.http_server;
  * @version 0.3.6
  * @see <a href="https://www.iana.org/assignments/http-fields/http-fields.xhtml">https://www.iana.org/assignments/http-fields/http-fields.xhtml</a>
  */
-public enum HttpFieldName {
+public enum HttpFieldName implements ScxHttpHeaderName {
 
     /**
      * 用来告知（服务器）客户端可以处理的内容类型
@@ -306,8 +309,27 @@ public enum HttpFieldName {
     }
 
     @Override
-    public String toString() {
+    public String value() {
         return value;
+    }
+
+    private static final Map<String, HttpFieldName> MAP = initMap();
+
+    private static Map<String, HttpFieldName> initMap() {
+        var map = new HashMap<String, HttpFieldName>();
+        for (var h : HttpFieldName.values()) {
+            map.put(h.value().toUpperCase(), h);
+        }
+        return map;
+    }
+
+    public static HttpFieldName of(String v) {
+        var upperCase = v.toUpperCase();
+        var httpFieldName = MAP.get(upperCase);
+        if (httpFieldName == null) {
+            throw new IllegalArgumentException(v);
+        }
+        return httpFieldName;
     }
 
 }
