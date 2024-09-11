@@ -54,7 +54,7 @@ public class ScxHttpExceptionHandler implements ExceptionHandler {
         if (info == null) {
             info = "";
         }
-        var accept = routingContext.request().headers().get(ACCEPT.toString());
+        var accept = routingContext.request().getHeader(ACCEPT);
         //根据 accept 返回不同的错误信息
         if (accept != null && startsWithIgnoreCase(accept, TEXT_HTML.toString())) {
             var htmlStr = String.format(htmlTemplate, statusCode.description(), statusCode, statusCode.description(), info);
