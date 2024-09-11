@@ -5,10 +5,7 @@ import cool.scx.http.ScxHttpHeaders;
 import io.helidon.http.HeaderNames;
 import io.helidon.http.Headers;
 
-import java.util.AbstractMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class HelidonHttpHeaders<T extends Headers> implements ScxHttpHeaders {
 
@@ -37,8 +34,11 @@ public class HelidonHttpHeaders<T extends Headers> implements ScxHttpHeaders {
 
     @Override
     public List<String> getAll(String headerName) {
-        var header = this.headers.get(HeaderNames.create(headerName));
-        return header.allValues();
+        try {
+            return this.headers.get(HeaderNames.create(headerName)).allValues();
+        } catch (NoSuchElementException e) {
+            return Collections.emptyList();
+        }
     }
 
     @Override
