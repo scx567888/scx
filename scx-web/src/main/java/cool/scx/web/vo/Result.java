@@ -1,12 +1,12 @@
 package cool.scx.web.vo;
 
 import cool.scx.common.util.ObjectUtils;
-import io.vertx.ext.web.RoutingContext;
+import cool.scx.http.ScxRoutingContext;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static cool.scx.common.standard.HttpFieldName.ACCEPT;
+import static cool.scx.http.HttpFieldName.ACCEPT;
 import static cool.scx.common.standard.MediaType.APPLICATION_XML;
 import static cool.scx.common.util.StringUtils.startsWithIgnoreCase;
 import static cool.scx.web.ScxWebHelper.fillJsonContentType;
@@ -72,13 +72,13 @@ public abstract class Result implements BaseVo {
     }
 
     @Override
-    public void accept(RoutingContext context) {
-        var accept = context.request().getHeader(ACCEPT.toString());
+    public void accept(ScxRoutingContext context) {
+        var accept = context.request().getHeader(ACCEPT);
         if (accept != null && startsWithIgnoreCase(accept, APPLICATION_XML.toString())) {
             // 只有明确指定 接受参数是 application/xml 的才返回 xml
-            fillXmlContentType(context.request().response()).end(toXml(""));
+            fillXmlContentType(context.request().response()).send(toXml(""));
         } else { // 其余全部返回 json
-            fillJsonContentType(context.request().response()).end(toJson(""));
+            fillJsonContentType(context.request().response()).send(toJson(""));
         }
     }
 

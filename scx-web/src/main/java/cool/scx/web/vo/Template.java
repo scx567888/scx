@@ -1,8 +1,8 @@
 package cool.scx.web.vo;
 
+import cool.scx.http.ScxRoutingContext;
 import cool.scx.web.template.ScxTemplateHandler;
 import freemarker.template.TemplateException;
-import io.vertx.ext.web.RoutingContext;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -33,7 +33,7 @@ public final class Template {
         return this;
     }
 
-    public void accept(RoutingContext context, ScxTemplateHandler templateHandler) throws TemplateException, IOException {
+    public void accept(ScxRoutingContext context, ScxTemplateHandler templateHandler) throws TemplateException, IOException {
         if (templateHandler == null) {
             throw new NullPointerException("handler 不能为空 !!!");
         }
@@ -41,7 +41,7 @@ public final class Template {
         var sw = new StringWriter();
         var template = templateHandler.getTemplate(templatePath);
         template.process(dataMap, sw);
-        response.end(sw.toString());
+        response.send(sw.toString());
     }
 
 }
