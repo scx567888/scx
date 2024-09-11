@@ -1,7 +1,7 @@
-package cool.scx.common.field_filter;
+package cool.scx.data.field_filter;
 
-import static cool.scx.common.field_filter.FilterMode.EXCLUDED;
-import static cool.scx.common.field_filter.FilterMode.INCLUDED;
+import static cool.scx.data.field_filter.FilterMode.EXCLUDED;
+import static cool.scx.data.field_filter.FilterMode.INCLUDED;
 
 public class FieldFilterBuilder {
 

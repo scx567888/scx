@@ -1,11 +1,11 @@
-package cool.scx.common.field_filter.serializer;
+package cool.scx.data.field_filter.serializer;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import cool.scx.common.field_filter.FieldFilter;
-import cool.scx.common.field_filter.FieldFilterImpl;
-import cool.scx.common.field_filter.FilterMode;
+import cool.scx.data.field_filter.FieldFilter;
+import cool.scx.data.field_filter.FieldFilterImpl;
+import cool.scx.data.field_filter.FilterMode;
 
-import static cool.scx.common.field_filter.FilterMode.EXCLUDED;
+import static cool.scx.data.field_filter.FilterMode.EXCLUDED;
 import static cool.scx.common.util.ObjectUtils.convertValue;
 
 public class FieldFilterDeserializer {

@@ -1,4 +1,4 @@
-package cool.scx.common.field_filter;
+package cool.scx.data.field_filter;
 
 import java.util.HashSet;
 import java.util.Set;
