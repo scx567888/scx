@@ -4,7 +4,7 @@ public interface ScxHttpServerRequest {
 
     ScxHttpMethod method();
 
-    ScxHttpPath path();
+    URIPath path();
 
     HttpVersion version();
 
