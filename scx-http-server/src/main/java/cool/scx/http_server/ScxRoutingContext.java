@@ -17,6 +17,10 @@ public class ScxRoutingContext {
         return request;
     }
 
+    public ScxHttpResponse response() {
+        return request.response();
+    }
+
     public final void next() {
         while (iter.hasNext()) {
             var next = iter.next();
