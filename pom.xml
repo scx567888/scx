@@ -53,8 +53,8 @@
         <module>scx-jdbc-sqlite</module>
         <module>scx-logging</module>
         <module>scx-web</module>
-        <module>scx-http-server</module>
-        <module>scx-http-server-helidon</module>
+        <module>scx-http</module>
+        <module>scx-http-helidon</module>
         <module>scx-socket</module>
         <module>scx-ext</module>
     </modules>
