@@ -1,10 +1,11 @@
-package cool.scx.http_server;
+package cool.scx.http;
 
+//todo 需要重构
 public interface ScxHttpPath {
 
-    ScxHttpPathQuery query();
-
     String value();
+
+    URIQuery query();
 
     String rawValue();
 

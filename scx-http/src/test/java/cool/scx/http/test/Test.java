@@ -1,4 +1,4 @@
-package cool.scx.http_server.test;
+package cool.scx.http.test;
 
 public class Test {
 
