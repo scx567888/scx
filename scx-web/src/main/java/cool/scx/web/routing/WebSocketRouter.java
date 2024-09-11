@@ -1,4 +1,4 @@
-package cool.scx.web.websocket;
+package cool.scx.web.routing;
 
 import io.vertx.core.Handler;
 import io.vertx.core.http.ServerWebSocket;
@@ -51,11 +51,7 @@ public final class WebSocketRouter implements Handler<ServerWebSocket> {
     @Override
     public void handle(ServerWebSocket serverWebSocket) {
         if (anyMatch(serverWebSocket)) {
-            serverWebSocket
-                    .frameHandler(h -> new OnFrameRoutingContext(h, serverWebSocket, routes).next())
-                    .exceptionHandler(e -> new OnExceptionRoutingContext(e, serverWebSocket, routes).next())
-                    .closeHandler(v -> new OnCloseRoutingContext(serverWebSocket, routes).next());
-            new OnOpenRoutingContext(serverWebSocket, routes).next();
+            new WebSocketRoutingContext(serverWebSocket, routes).next();
         }
     }
 

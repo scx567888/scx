@@ -1,8 +1,9 @@
-package cool.scx.web.websocket;
+package cool.scx.web.routing;
 
 import io.vertx.core.http.ServerWebSocket;
 
 import java.lang.System.Logger;
+import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 /**
@@ -19,8 +20,8 @@ public final class WebSocketRoute {
     private static final Logger logger = System.getLogger(WebSocketRoute.class.getName());
     private final String path;
     private final Pattern pattern;
-    private final BaseWebSocketHandler baseWebSocketHandler;
     private final int order;
+    private final Consumer<WebSocketRoutingContext> handler;
 
     /**
      * <p>Constructor for ScxWebSocketRoute.</p>
@@ -28,7 +29,7 @@ public final class WebSocketRoute {
      * @param path                 a {@link java.lang.String} object
      * @param baseWebSocketHandler a {@link BaseWebSocketHandler} object
      */
-    public WebSocketRoute(String path, BaseWebSocketHandler baseWebSocketHandler) {
+    public WebSocketRoute(String path, Consumer<WebSocketRoutingContext> baseWebSocketHandler) {
         this(0, path, baseWebSocketHandler);
     }
 
@@ -39,11 +40,11 @@ public final class WebSocketRoute {
      * @param path                 a {@link java.lang.String} object
      * @param baseWebSocketHandler a {@link BaseWebSocketHandler} object
      */
-    public WebSocketRoute(int order, String path, BaseWebSocketHandler baseWebSocketHandler) {
+    public WebSocketRoute(int order, String path, Consumer<WebSocketRoutingContext> baseWebSocketHandler) {
         this.order = order;
         this.path = path;
         this.pattern = Pattern.compile(path);
-        this.baseWebSocketHandler = baseWebSocketHandler;
+        this.handler = baseWebSocketHandler;
     }
 
     /**
@@ -70,8 +71,8 @@ public final class WebSocketRoute {
      *
      * @return a {@link BaseWebSocketHandler} object
      */
-    public BaseWebSocketHandler baseWebSocketHandler() {
-        return baseWebSocketHandler;
+    public Consumer<WebSocketRoutingContext> handler() {
+        return handler;
     }
 
     /**

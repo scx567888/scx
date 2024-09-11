@@ -1,17 +1,20 @@
-package cool.scx.web.websocket;
+package cool.scx.web.routing;
 
 import cool.scx.common.util.MultiMap;
 import io.netty.handler.codec.http.QueryStringDecoder;
-import io.vertx.core.Handler;
 import io.vertx.core.http.ServerWebSocket;
 
 import java.util.Iterator;
 import java.util.List;
 
-public abstract class WebSocketRoutingContext implements Handler<WebSocketRoute> {
+import static java.lang.System.Logger.Level.ERROR;
 
-    protected final ServerWebSocket webSocket;
-    protected final Iterator<WebSocketRoute> iter;
+public class WebSocketRoutingContext {
+
+    private static final System.Logger logger = System.getLogger(WebSocketRoutingContext.class.getName());
+
+    private final ServerWebSocket webSocket;
+    private final Iterator<WebSocketRoute> iter;
     private MultiMap<String, String> queryParams;
 
     public WebSocketRoutingContext(ServerWebSocket webSocket, List<WebSocketRoute> webSocketRoutes) {
@@ -45,6 +48,14 @@ public abstract class WebSocketRoutingContext implements Handler<WebSocketRoute>
 
     public List<String> queryParam(String query) {
         return this.queryParams().get(query);
+    }
+
+    public void handle(WebSocketRoute route) {
+        try {
+            route.handler().accept(this);
+        } catch (Exception e) {
+            logger.log(ERROR, "ScxWebSocketRoute : onOpen 发生异常 !!!", e);
+        }
     }
 
 }
