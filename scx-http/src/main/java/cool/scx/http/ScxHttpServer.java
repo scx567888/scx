@@ -1,12 +1,12 @@
-package cool.scx.http_server;
+package cool.scx.http;
 
 import java.util.function.Consumer;
 
 public interface ScxHttpServer {
 
-    ScxHttpServer requestHandler(Consumer<ScxHttpRequest> handler);
+    ScxHttpServer requestHandler(Consumer<ScxHttpServerRequest> handler);
 
-    ScxHttpServer webSocketHandler(Consumer<ScxWebSocket> handler);
+    ScxHttpServer webSocketHandler(Consumer<ScxServerWebSocket> handler);
 
     ScxHttpServer exceptionHandler(Consumer<Throwable> handler);
 

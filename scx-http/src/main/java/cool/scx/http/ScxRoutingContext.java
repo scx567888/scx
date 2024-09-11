@@ -1,4 +1,4 @@
-package cool.scx.http_server;
+package cool.scx.http;
 
 import java.util.Iterator;
 import java.util.List;
@@ -6,18 +6,18 @@ import java.util.List;
 public class ScxRoutingContext {
 
     protected final Iterator<ScxRoute> iter;
-    private final ScxHttpRequest request;
+    private final ScxHttpServerRequest request;
 
-    public ScxRoutingContext(ScxHttpRequest request, List<ScxRoute> iter) {
+    public ScxRoutingContext(ScxHttpServerRequest request, List<ScxRoute> iter) {
         this.request = request;
         this.iter = iter.iterator();
     }
 
-    public ScxHttpRequest request() {
+    public ScxHttpServerRequest request() {
         return request;
     }
 
-    public ScxHttpResponse response() {
+    public ScxHttpServerResponse response() {
         return request.response();
     }
 

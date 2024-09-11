@@ -1,4 +1,4 @@
-package cool.scx.http_server;
+package cool.scx.http;
 
 import java.util.function.Consumer;
 
@@ -6,7 +6,7 @@ public class ScxRoute {
 
     private Consumer<ScxRoutingContext> handler;
 
-    boolean matches(ScxHttpRequest scxHttpRequest) {
+    boolean matches(ScxHttpServerRequest scxHttpRequest) {
         return true;
     }
 

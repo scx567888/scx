@@ -1,10 +1,10 @@
-package cool.scx.http_server;
+package cool.scx.http;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class ScxRouter implements Consumer<ScxHttpRequest> {
+public class ScxRouter implements Consumer<ScxHttpServerRequest> {
 
     List<ScxRoute> routes;
 
@@ -17,7 +17,7 @@ public class ScxRouter implements Consumer<ScxHttpRequest> {
     }
 
     @Override
-    public void accept(ScxHttpRequest scxHttpRequest) {
+    public void accept(ScxHttpServerRequest scxHttpRequest) {
         var routingContext = new ScxRoutingContext(scxHttpRequest, routes);
         routingContext.next();
     }
