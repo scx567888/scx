@@ -1,4 +1,4 @@
-package cool.scx.http_server;
+package cool.scx.http;
 
 //todo 方法定义待优化
 public interface ScxHttpResponse {
