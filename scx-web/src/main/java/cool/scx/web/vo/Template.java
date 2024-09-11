@@ -1,6 +1,6 @@
 package cool.scx.web.vo;
 
-import cool.scx.http.ScxRoutingContext;
+import cool.scx.web.routing.RoutingContext;
 import cool.scx.web.template.ScxTemplateHandler;
 import freemarker.template.TemplateException;
 
@@ -33,7 +33,7 @@ public final class Template {
         return this;
     }
 
-    public void accept(ScxRoutingContext context, ScxTemplateHandler templateHandler) throws TemplateException, IOException {
+    public void accept(RoutingContext context, ScxTemplateHandler templateHandler) throws TemplateException, IOException {
         if (templateHandler == null) {
             throw new NullPointerException("handler 不能为空 !!!");
         }
