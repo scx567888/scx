@@ -5,12 +5,10 @@ import io.helidon.webserver.ConnectionContext;
 import io.helidon.webserver.http.RoutingRequest;
 import io.helidon.webserver.http.RoutingResponse;
 
-import static cool.scx.http.helidon.HelidonHelper.createScxHttpPath;
-
 public class HelidonHttpServerRequest implements ScxHttpServerRequest {
 
     private final ScxHttpMethod method;
-    private final ScxHttpPath path;
+    private final URIPath path;
     private final HttpVersion version;
     private final ScxHttpHeaders headers;
     private final ScxHttpBody body;
@@ -18,7 +16,7 @@ public class HelidonHttpServerRequest implements ScxHttpServerRequest {
 
     public HelidonHttpServerRequest(ConnectionContext ctx, RoutingRequest request, RoutingResponse response) {
         this.method = ScxHttpMethod.of(request.prologue().method().text());
-        this.path = createScxHttpPath(request.prologue().uriPath(), request.query());
+        this.path = new URIPathImpl(request.prologue().uriPath().path(), new HelidonURIQuery(request.query()));
         this.version = HttpVersion.of(request.prologue().rawProtocol());
         this.headers = new HelidonHttpHeaders<>(request.headers());
         this.body = new HelidonHttpBody(request.content());
@@ -31,7 +29,7 @@ public class HelidonHttpServerRequest implements ScxHttpServerRequest {
     }
 
     @Override
-    public ScxHttpPath path() {
+    public URIPath path() {
         return path;
     }
 
