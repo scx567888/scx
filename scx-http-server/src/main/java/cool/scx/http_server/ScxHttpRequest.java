@@ -6,7 +6,7 @@ public interface ScxHttpRequest {
 
     ScxHttpPath path();
 
-    ScxHttpVersion version();
+    HttpVersion version();
 
     ScxHttpHeaders headers();
 
