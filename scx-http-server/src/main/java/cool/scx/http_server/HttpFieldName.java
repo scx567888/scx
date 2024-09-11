@@ -302,18 +302,13 @@ public enum HttpFieldName implements ScxHttpHeaderName {
      */
     WWW_AUTHENTICATE("WWW-Authenticate");
 
+    private static final Map<String, HttpFieldName> MAP = initMap();
+
     private final String value;
 
     HttpFieldName(String value) {
         this.value = value;
     }
-
-    @Override
-    public String value() {
-        return value;
-    }
-
-    private static final Map<String, HttpFieldName> MAP = initMap();
 
     private static Map<String, HttpFieldName> initMap() {
         var map = new HashMap<String, HttpFieldName>();
@@ -330,6 +325,11 @@ public enum HttpFieldName implements ScxHttpHeaderName {
             throw new IllegalArgumentException(v);
         }
         return httpFieldName;
+    }
+
+    @Override
+    public String value() {
+        return value;
     }
 
 }

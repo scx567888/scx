@@ -54,14 +54,14 @@ public enum HttpMethod implements ScxHttpMethod {
      */
     TRACE;
 
-    @Override
-    public String value() {
-        return this.name();
-    }
-
     public static HttpMethod of(String v) {
         var upperCase = v.toUpperCase();
         return valueOf(upperCase);
+    }
+
+    @Override
+    public String value() {
+        return this.name();
     }
 
 }

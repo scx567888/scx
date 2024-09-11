@@ -1,7 +1,7 @@
-package cool.scx.common.standard.test;
+package cool.scx.http_server.test;
 
-import cool.scx.common.standard.HttpFieldName;
 import cool.scx.common.util.CaseUtils;
+import cool.scx.http_server.HttpFieldName;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -14,7 +14,7 @@ public class HttpFieldNameTest {
     @Test
     public static void test1() {
         for (var value : HttpFieldName.values()) {
-            Assert.assertEquals(value.toString().toLowerCase(), CaseUtils.toKebab(value.name()));
+            Assert.assertEquals(value.value().toLowerCase(), CaseUtils.toKebab(value.name()));
         }
     }
 
