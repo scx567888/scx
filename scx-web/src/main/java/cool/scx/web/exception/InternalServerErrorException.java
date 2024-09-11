@@ -1,6 +1,6 @@
 package cool.scx.web.exception;
 
-import static cool.scx.common.standard.HttpStatusCode.INTERNAL_SERVER_ERROR;
+import static cool.scx.http.HttpStatusCode.INTERNAL_SERVER_ERROR;
 
 /**
  * 服务器内部异常
