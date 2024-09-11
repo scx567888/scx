@@ -14,12 +14,4 @@ public interface ScxHttpRequest {
 
     ScxHttpResponse response();
 
-    default ScxHttpHeader getHeader(String string) {
-        return headers().get(string);
-    }
-
-    default ScxHttpPathQuery query() {
-        return path().query();
-    }
-
 }
