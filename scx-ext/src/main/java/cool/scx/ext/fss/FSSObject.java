@@ -8,7 +8,7 @@ import cool.scx.data.jdbc.annotation.Table;
 
 import java.time.LocalDateTime;
 
-import static cool.scx.common.standard.JDBCType.TEXT;
+import static cool.scx.jdbc.JDBCType.TEXT;
 
 /**
  * 文件上传表

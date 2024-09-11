@@ -1,7 +1,7 @@
 package cool.scx.jdbc.mysql;
 
 import com.mysql.cj.MysqlType;
-import cool.scx.common.standard.JDBCType;
+import cool.scx.jdbc.JDBCType;
 
 import java.util.Map;
 import java.util.TreeMap;

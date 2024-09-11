@@ -2,14 +2,14 @@ package cool.scx.data.jdbc;
 
 import com.fasterxml.jackson.databind.JavaType;
 import cool.scx.data.field_filter.FieldFilter;
-import cool.scx.common.standard.JDBCType;
+import cool.scx.jdbc.JDBCType;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static cool.scx.common.standard.JDBCType.JSON;
-import static cool.scx.common.standard.JDBCType.VARCHAR;
+import static cool.scx.jdbc.JDBCType.JSON;
+import static cool.scx.jdbc.JDBCType.VARCHAR;
 import static cool.scx.common.util.ClassUtils.isEnum;
 
 /**

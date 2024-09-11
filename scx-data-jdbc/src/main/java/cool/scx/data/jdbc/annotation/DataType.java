@@ -1,6 +1,6 @@
 package cool.scx.data.jdbc.annotation;
 
-import cool.scx.common.standard.JDBCType;
+import cool.scx.jdbc.JDBCType;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

@@ -1,4 +1,4 @@
-package cool.scx.common.standard;
+package cool.scx.jdbc;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;

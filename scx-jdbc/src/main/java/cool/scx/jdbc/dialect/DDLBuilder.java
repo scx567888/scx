@@ -1,6 +1,6 @@
 package cool.scx.jdbc.dialect;
 
-import cool.scx.common.standard.JDBCType;
+import cool.scx.jdbc.JDBCType;
 import cool.scx.jdbc.mapping.Column;
 import cool.scx.jdbc.mapping.Table;
 import cool.scx.jdbc.mapping.type.TypeDataType;

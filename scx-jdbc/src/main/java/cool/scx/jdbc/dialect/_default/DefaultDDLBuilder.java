@@ -1,6 +1,6 @@
 package cool.scx.jdbc.dialect._default;
 
-import cool.scx.common.standard.JDBCType;
+import cool.scx.jdbc.JDBCType;
 import cool.scx.jdbc.dialect.DDLBuilder;
 
 public final class DefaultDDLBuilder implements DDLBuilder {

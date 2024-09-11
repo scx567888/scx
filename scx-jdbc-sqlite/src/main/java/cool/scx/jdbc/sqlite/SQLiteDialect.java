@@ -1,6 +1,6 @@
 package cool.scx.jdbc.sqlite;
 
-import cool.scx.common.standard.JDBCType;
+import cool.scx.jdbc.JDBCType;
 import cool.scx.jdbc.JDBCHelper;
 import cool.scx.jdbc.dialect.DDLBuilder;
 import cool.scx.jdbc.dialect.Dialect;

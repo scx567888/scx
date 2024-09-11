@@ -1,12 +1,12 @@
 package cool.scx.data.jdbc;
 
-import cool.scx.common.standard.JDBCType;
+import cool.scx.jdbc.JDBCType;
 import cool.scx.data.jdbc.annotation.DataType;
 import cool.scx.jdbc.mapping.type.TypeDataType;
 
 import java.lang.reflect.Type;
 
-import static cool.scx.common.standard.JDBCType.VARCHAR;
+import static cool.scx.jdbc.JDBCType.VARCHAR;
 import static cool.scx.data.jdbc.JDBCDaoHelper.getDataTypeByJavaType;
 
 public class AnnotationConfigDataType implements TypeDataType {

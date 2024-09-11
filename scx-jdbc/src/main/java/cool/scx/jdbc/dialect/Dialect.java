@@ -1,6 +1,6 @@
 package cool.scx.jdbc.dialect;
 
-import cool.scx.common.standard.JDBCType;
+import cool.scx.jdbc.JDBCType;
 import cool.scx.jdbc.type_handler.TypeHandler;
 import cool.scx.jdbc.type_handler.TypeHandlerSelector;
 
