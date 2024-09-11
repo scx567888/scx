@@ -1,6 +1,6 @@
 package cool.scx.web.return_value_handler;
 
-import cool.scx.http.ScxRoutingContext;
+import cool.scx.web.routing.RoutingContext;
 import cool.scx.web.vo.BaseVo;
 
 /**
@@ -17,7 +17,7 @@ public final class BaseVoReturnValueHandler implements ReturnValueHandler {
     }
 
     @Override
-    public void handle(Object returnValue, ScxRoutingContext routingContext) throws Exception {
+    public void handle(Object returnValue, RoutingContext routingContext) throws Exception {
         if (returnValue instanceof BaseVo baseVo) {
             baseVo.accept(routingContext);
         } else {
