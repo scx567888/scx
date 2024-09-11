@@ -1,8 +1,6 @@
 package cool.scx.web.annotation;
 
-import cool.scx.common.standard.HttpMethod;
-import io.vertx.ext.web.Route;
-import io.vertx.ext.web.Router;
+import cool.scx.http.HttpMethod;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -23,31 +21,21 @@ public @interface ScxRoute {
 
     /**
      * @return the path
-     * @see Router#route(String)
      */
     String value() default NULL;
 
-//    /** todo 待支持
-//     * @return the path
-//     * @see Router#routeWithRegex(String)
-//     */
-//    String regex() default "";
-
     /**
      * @return the path
-     * @see Route#method(io.vertx.core.http.HttpMethod) (String)
      */
     HttpMethod[] methods() default {};
 
     /**
      * @return the path
-     * @see Route#consumes(String)
      */
     String[] consumes() default {};
 
     /**
      * @return the path
-     * @see Route#produces(String)
      */
     String[] produces() default {};
 
