@@ -1,6 +1,6 @@
 package cool.scx.web.return_value_handler;
 
-import cool.scx.http_server.ScxRoutingContext;
+import cool.scx.http.ScxRoutingContext;
 
 /**
  * 空值处理器
@@ -17,7 +17,7 @@ public final class NullReturnValueHandler implements ReturnValueHandler {
 
     @Override
     public void handle(Object returnValue, ScxRoutingContext routingContext) {
-        routingContext.request().response().end();
+        routingContext.request().response().send();
     }
 
 }

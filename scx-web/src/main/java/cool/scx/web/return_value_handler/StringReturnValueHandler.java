@@ -1,6 +1,6 @@
 package cool.scx.web.return_value_handler;
 
-import cool.scx.http_server.ScxRoutingContext;
+import cool.scx.http.ScxRoutingContext;
 
 import static cool.scx.web.ScxWebHelper.fillTextPlainContentType;
 
@@ -20,7 +20,7 @@ public final class StringReturnValueHandler implements ReturnValueHandler {
     @Override
     public void handle(Object returnValue, ScxRoutingContext routingContext) {
         if (returnValue instanceof String str) {
-            fillTextPlainContentType(routingContext.request().response()).end(str);
+            fillTextPlainContentType(routingContext.request().response()).send(str);
         } else {
             throw new IllegalArgumentException("参数不是 String 类型 !!! " + returnValue.getClass());
         }
