@@ -7,7 +7,7 @@ import io.helidon.webserver.http.RoutingResponse;
 
 import static cool.scx.http_server.helidon.HelidonHelper.*;
 
-public class HelidonRequest implements ScxHttpRequest {
+public class HelidonHttpRequest implements ScxHttpRequest {
 
     private final ScxHttpMethod method;
     private final ScxHttpPath path;
@@ -16,13 +16,13 @@ public class HelidonRequest implements ScxHttpRequest {
     private final ScxHttpBody body;
     private final ScxHttpResponse response;
 
-    public HelidonRequest(ConnectionContext ctx, RoutingRequest request, RoutingResponse response) {
+    public HelidonHttpRequest(ConnectionContext ctx, RoutingRequest request, RoutingResponse response) {
         this.method = createScxHttpMethod(request.prologue().method());
         this.path = createScxHttpPath(request.prologue().uriPath(), request.query());
         this.version = createScxHttpVersion(request.prologue().protocol());
         this.headers = createScxHttpHeaders(request.headers());
         this.body = new HelidonHttpBody(request.content());
-        this.response = new HelidonResponse(response);
+        this.response = new HelidonHttpResponse(response);
     }
 
     @Override
