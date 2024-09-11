@@ -1,6 +1,6 @@
-package cool.scx.http_server.helidon;
+package cool.scx.http.helidon;
 
-import cool.scx.http_server.URIQuery;
+import cool.scx.http.URIQuery;
 import io.helidon.common.uri.UriQuery;
 
 import java.util.List;
@@ -22,5 +22,5 @@ public class HelidonURIQuery implements URIQuery {
     public List<String> getAll(String name) {
         return uriQuery.all(name);
     }
-    
+
 }

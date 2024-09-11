@@ -9,13 +9,13 @@
         <version>3.0.9</version>
     </parent>
 
-    <artifactId>scx-http-server-helidon</artifactId>
+    <artifactId>scx-http-helidon</artifactId>
     <packaging>jar</packaging>
 
-    <name>SCX HTTP Server Helidon</name>
+    <name>SCX HTTP Helidon</name>
     <url>https://github.com/scx567888/scx</url>
     <description>
-        SCX HTTP Server Helidon
+        SCX HTTP Helidon
     </description>
 
     <dependencies>
