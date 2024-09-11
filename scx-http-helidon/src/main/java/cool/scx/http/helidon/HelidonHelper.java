@@ -16,6 +16,10 @@ import java.util.Set;
 public class HelidonHelper {
 
 
+    public static ScxHttpPath createScxHttpPath(UriPath a, UriQuery b) {
+        return new ScxHttpPathImpl(a.path(), new HelidonURIQuery(b), null);
+    }
+
     public static class FormDataBuilder implements Parameters {
 
         @Override
@@ -60,8 +64,4 @@ public class HelidonHelper {
 
     }
 
-    public static ScxHttpPath createScxHttpPath(UriPath a, UriQuery b) {
-        return new ScxHttpPathImpl(a.path(), new HelidonURIQuery(b), null);
-    }
-    
 }

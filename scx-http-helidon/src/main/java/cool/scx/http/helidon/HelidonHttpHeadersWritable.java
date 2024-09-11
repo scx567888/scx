@@ -18,7 +18,7 @@ public class HelidonHttpHeadersWritable extends HelidonHttpHeaders<ServerRespons
 
     @Override
     public ScxHttpHeadersWritable set(String headerName, String... headerValue) {
-        headers.set(HeaderNames.create(headerName),headerValue);
+        headers.set(HeaderNames.create(headerName), headerValue);
         return this;
     }
 
@@ -29,8 +29,8 @@ public class HelidonHttpHeadersWritable extends HelidonHttpHeaders<ServerRespons
 
     @Override
     public ScxHttpHeadersWritable add(String headerName, String... headerValue) {
-        headers.add(HeaderNames.create(headerName),headerValue);
+        headers.add(HeaderNames.create(headerName), headerValue);
         return this;
     }
-    
+
 }
