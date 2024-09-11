@@ -53,8 +53,10 @@
         <module>scx-jdbc-sqlite</module>
         <module>scx-logging</module>
         <module>scx-web</module>
-        <module>scx-ext</module>
+        <module>scx-http-server</module>
+        <module>scx-http-server-helidon</module>
         <module>scx-socket</module>
+        <module>scx-ext</module>
     </modules>
 
     <build>
@@ -85,6 +87,20 @@
 
     <dependencyManagement>
         <dependencies>
+
+            <!-- helidon Web 服务器 -->
+            <dependency>
+                <groupId>io.helidon.webserver</groupId>
+                <artifactId>helidon-webserver</artifactId>
+                <version>${helidon.version}</version>
+            </dependency>
+
+            <!-- helidon 拓展包 -->
+            <dependency>
+                <groupId>io.helidon.http.media</groupId>
+                <artifactId>helidon-http-media-multipart</artifactId>
+                <version>${helidon.version}</version>
+            </dependency>
 
             <!-- vert.x 网络拓展包 -->
             <dependency>
@@ -204,6 +220,7 @@
     <properties>
 
         <!-- *********************** 以下为依赖包版本 *********************** -->
+        <helidon.version>4.1.1</helidon.version>
         <vertx.version>4.5.10</vertx.version>
         <jackson.version>2.17.2</jackson.version>
         <spring-framework.version>6.1.12</spring-framework.version>
