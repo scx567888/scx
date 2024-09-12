@@ -9,8 +9,8 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.type.TypeBindings;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import cool.scx.common.field_filter.FieldFilter;
 import cool.scx.common.jackson.BuildOptions;
+import cool.scx.common.jackson.FieldFilter;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
