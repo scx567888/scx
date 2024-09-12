@@ -35,8 +35,6 @@ public class PathMatcherImpl implements PathMatcher {
         this.exactPath = true;
     }
 
-    
-
     private static boolean pathMatchesExact(String base, String other, boolean significantSlash) {
         // Ignore trailing slash when matching paths
         int len = other.length();

@@ -64,8 +64,6 @@ class HelidonWebSocketRoute implements WsListener {
 
     /**
      * onOpen 一定是先于其他方法执行的 所以这里 赋值没有问题
-     *
-     * @param session a
      */
     @Override
     public void onOpen(WsSession session) {
@@ -75,6 +73,9 @@ class HelidonWebSocketRoute implements WsListener {
         }
     }
 
+    /**
+     * onHttpUpgrade 一定是先于 onOpen 执行的 所以这里 赋值没有问题
+     */
     @Override
     public Optional<Headers> onHttpUpgrade(HttpPrologue prologue, Headers headers) throws WsUpgradeException {
         this.prologue = prologue;
