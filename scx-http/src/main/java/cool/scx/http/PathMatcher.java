@@ -9,25 +9,30 @@ public class PathMatcher {
 
     // Allow end users to select either the regular valid characters or the extender pattern
     private static final String RE_VAR_NAME = "[A-Za-z0-9_]+";
-    
+
     // Pattern for :<token name> in path
     private static final Pattern RE_TOKEN_SEARCH = Pattern.compile(":(" + RE_VAR_NAME + ")");
-    
+
     // Pattern for (?<token name>) in path
     private static final Pattern RE_TOKEN_NAME_SEARCH = Pattern.compile("\\(\\?<(" + RE_VAR_NAME + ")>");
-    
+
     // intersection of regex chars and https://tools.ietf.org/html/rfc3986#section-3.3
-    private static final Pattern RE_OPERATORS_NO_STAR = Pattern.compile("([\\(\\)\\$\\+\\.])");
-    
-    private boolean exactPath;
-    private boolean pathEndsWithSlash;
-    private List<String> groups;
-    private Pattern pattern;
+    private static final Pattern RE_OPERATORS_NO_STAR = Pattern.compile("([()$+.])");
+
     private String path;
+    private Pattern pattern;
+    private List<String> groups;
     private Set<String> namedGroupsInRegex;
+    private boolean pathEndsWithSlash;
+    private boolean exactPath;
 
     private PathMatcher() {
-
+        this.path = null;
+        this.pattern = null;
+        this.groups = null;
+        this.namedGroupsInRegex = null;
+        this.pathEndsWithSlash = false;
+        this.exactPath = true;
     }
 
     public static PathMatcher ofPath(String path) {
