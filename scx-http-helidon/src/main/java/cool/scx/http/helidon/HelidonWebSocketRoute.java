@@ -1,13 +1,20 @@
 package cool.scx.http.helidon;
 
 import io.helidon.common.buffers.BufferData;
+import io.helidon.http.Headers;
+import io.helidon.http.HttpPrologue;
 import io.helidon.websocket.WsListener;
 import io.helidon.websocket.WsSession;
+import io.helidon.websocket.WsUpgradeException;
+
+import java.util.Optional;
 
 class HelidonWebSocketRoute implements WsListener {
 
     private final HelidonHttpServer server;
     private HelidonServerWebSocket serverWebSocket;
+    private HttpPrologue prologue;
+    private Headers headers;
 
     public HelidonWebSocketRoute(HelidonHttpServer server) {
         this.server = server;
@@ -62,10 +69,17 @@ class HelidonWebSocketRoute implements WsListener {
      */
     @Override
     public void onOpen(WsSession session) {
-        this.serverWebSocket = new HelidonServerWebSocket(session);
+        this.serverWebSocket = new HelidonServerWebSocket(session, prologue, headers);
         if (this.server.webSocketHandler != null) {
             this.server.webSocketHandler.accept(serverWebSocket);
         }
+    }
+
+    @Override
+    public Optional<Headers> onHttpUpgrade(HttpPrologue prologue, Headers headers) throws WsUpgradeException {
+        this.prologue = prologue;
+        this.headers = headers;
+        return WsListener.super.onHttpUpgrade(prologue, headers);
     }
 
 }

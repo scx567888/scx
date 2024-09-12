@@ -4,6 +4,10 @@ import java.util.function.Consumer;
 
 public interface ScxServerWebSocket {
 
+    URIPath path();
+
+    ScxHttpHeaders headers();
+
     ScxServerWebSocket onTextMessage(Consumer<String> textMessageHandler);
 
     ScxServerWebSocket onBinaryMessage(Consumer<byte[]> binaryMessageHandler);

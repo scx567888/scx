@@ -1,7 +1,12 @@
 package cool.scx.http.helidon;
 
+import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.ScxServerWebSocket;
+import cool.scx.http.URIPath;
+import cool.scx.http.URIPathImpl;
 import io.helidon.common.buffers.BufferData;
+import io.helidon.http.Headers;
+import io.helidon.http.HttpPrologue;
 import io.helidon.websocket.WsSession;
 
 import java.util.function.Consumer;
@@ -9,6 +14,8 @@ import java.util.function.Consumer;
 class HelidonServerWebSocket implements ScxServerWebSocket {
 
     private final WsSession wsSession;
+    private final URIPath path;
+    private final HelidonHttpHeaders<Headers> headers;
     Consumer<String> textMessageHandler;
     Consumer<byte[]> binaryMessageHandler;
     Consumer<byte[]> pingHandler;
@@ -16,10 +23,21 @@ class HelidonServerWebSocket implements ScxServerWebSocket {
     Consumer<Integer> closeHandler;
     Consumer<Throwable> errorHandler;
 
-    public HelidonServerWebSocket(WsSession session) {
+    public HelidonServerWebSocket(WsSession session, HttpPrologue prologue, Headers headers) {
         this.wsSession = session;
+        this.path = new URIPathImpl(prologue.uriPath().path(), new HelidonURIQuery(prologue.query()));
+        this.headers = new HelidonHttpHeaders<>(headers);
     }
 
+    @Override
+    public URIPath path() {
+        return path;
+    }
+
+    @Override
+    public ScxHttpHeaders headers() {
+        return headers;
+    }
 
     @Override
     public ScxServerWebSocket onTextMessage(Consumer<String> textMessageHandler) {
