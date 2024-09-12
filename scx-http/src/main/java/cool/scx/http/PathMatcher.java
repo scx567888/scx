@@ -4,8 +4,21 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+//Copy From Vertx RouteImpl
 public class PathMatcher {
 
+    // Allow end users to select either the regular valid characters or the extender pattern
+    private static final String RE_VAR_NAME = "[A-Za-z0-9_]+";
+    
+    // Pattern for :<token name> in path
+    private static final Pattern RE_TOKEN_SEARCH = Pattern.compile(":(" + RE_VAR_NAME + ")");
+    
+    // Pattern for (?<token name>) in path
+    private static final Pattern RE_TOKEN_NAME_SEARCH = Pattern.compile("\\(\\?<(" + RE_VAR_NAME + ")>");
+    
+    // intersection of regex chars and https://tools.ietf.org/html/rfc3986#section-3.3
+    private static final Pattern RE_OPERATORS_NO_STAR = Pattern.compile("([\\(\\)\\$\\+\\.])");
+    
     private boolean exactPath;
     private boolean pathEndsWithSlash;
     private List<String> groups;
@@ -28,6 +41,34 @@ public class PathMatcher {
         var pathMatcher = new PathMatcher();
         pathMatcher.setRegex(regex);
         return pathMatcher;
+    }
+
+    private static boolean pathMatchesExact(String base, String other, boolean significantSlash) {
+        // Ignore trailing slash when matching paths
+        int len = other.length();
+
+        if (significantSlash) {
+            if (other.charAt(len - 1) != '/') {
+                // final slash is significant but missing
+                return false;
+            }
+        } else {
+            if (other.charAt(len - 1) == '/') {
+                // final slash is not significant, ignore it
+                len--;
+                if (base.length() != len) {
+                    return false;
+                }
+                // content must match
+                return other.regionMatches(0, base, 0, len);
+            }
+        }
+        // content must match
+        return other.equals(base);
+    }
+
+    private static <T> boolean isEmpty(Collection<T> collection) {
+        return collection == null || collection.isEmpty();
     }
 
     private void checkPath(String path) {
@@ -62,19 +103,6 @@ public class PathMatcher {
             }
         }
     }
-
-    // Allow end users to select either the regular valid characters or the extender pattern
-    private static final String RE_VAR_NAME = Boolean.getBoolean("io.vertx.web.route.param.extended-pattern") ?
-            "[A-Za-z_$][A-Za-z0-9_$-]*" :
-            "[A-Za-z0-9_]+";
-
-    // Pattern for :<token name> in path
-    private static final Pattern RE_TOKEN_SEARCH = Pattern.compile(":(" + RE_VAR_NAME + ")");
-    // Pattern for (?<token name>) in path
-    private static final Pattern RE_TOKEN_NAME_SEARCH = Pattern.compile("\\(\\?<(" + RE_VAR_NAME + ")>");
-
-    // intersection of regex chars and https://tools.ietf.org/html/rfc3986#section-3.3
-    private static final Pattern RE_OPERATORS_NO_STAR = Pattern.compile("([\\(\\)\\$\\+\\.])");
 
     private synchronized int createPatternRegex(String path) {
         // escape path from any regex special chars
@@ -133,7 +161,6 @@ public class PathMatcher {
         this.namedGroupsInRegex.add(namedGroupInRegex);
     }
 
-
     private boolean pathMatches(String requestPath, ParametersWritable pathParams) {
         final String thePath = path;
         final boolean pathEndsWithSlash = this.pathEndsWithSlash;
@@ -184,32 +211,8 @@ public class PathMatcher {
         }
     }
 
-    private static boolean pathMatchesExact(String base, String other, boolean significantSlash) {
-        // Ignore trailing slash when matching paths
-        int len = other.length();
-
-        if (significantSlash) {
-            if (other.charAt(len - 1) != '/') {
-                // final slash is significant but missing
-                return false;
-            }
-        } else {
-            if (other.charAt(len - 1) == '/') {
-                // final slash is not significant, ignore it
-                len--;
-                if (base.length() != len) {
-                    return false;
-                }
-                // content must match
-                return other.regionMatches(0, base, 0, len);
-            }
-        }
-        // content must match
-        return other.equals(base);
-    }
-
     private boolean matches(String requestPath, ParametersWritable pathParams) {
-        
+
         if (path != null && pattern == null && !pathMatches(requestPath, pathParams)) {
             return false;
         }
@@ -217,7 +220,7 @@ public class PathMatcher {
         if (pattern == null) {
             return true;
         }
-        
+
         // need to reset "rest"
         pathParams
                 .remove("*");
@@ -286,10 +289,6 @@ public class PathMatcher {
         }
 
         return true;
-    }
-
-    private static <T> boolean isEmpty(Collection<T> collection) {
-        return collection == null || collection.isEmpty();
     }
 
     public MatchResult matches(String path) {
