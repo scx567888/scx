@@ -102,6 +102,12 @@
                 <version>${helidon.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>io.helidon.webserver</groupId>
+                <artifactId>helidon-webserver-websocket</artifactId>
+                <version>${helidon.version}</version>
+            </dependency>
+
             <!-- vert.x 网络拓展包 -->
             <dependency>
                 <groupId>io.vertx</groupId>

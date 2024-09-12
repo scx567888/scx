@@ -8,6 +8,8 @@ import io.helidon.webserver.WebServer;
 
 import java.util.function.Consumer;
 
+import static cool.scx.http.helidon.HelidonHelper.createHelidonWebSocketRouting;
+
 public class HelidonHttpServer implements ScxHttpServer {
 
     private final WebServer webServer;
@@ -17,11 +19,14 @@ public class HelidonHttpServer implements ScxHttpServer {
 
     public HelidonHttpServer(ScxHttpServerOptions options) {
         var httpRouting = new HelidonHttpRouting(this);
+        var webSocketRouting = createHelidonWebSocketRouting(this);
         this.webServer = WebServer.builder()
-                .routing(httpRouting)
+                .addRouting(httpRouting)
+                .addRouting(webSocketRouting)
                 .port(options.getPort())
                 .build();
         this.requestHandler = null;
+        this.webSocketHandler = null;
     }
 
     @Override
