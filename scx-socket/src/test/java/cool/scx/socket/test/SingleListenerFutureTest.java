@@ -1,7 +1,7 @@
-package cool.scx.common.util.test;
+package cool.scx.socket.test;
 
 import cool.scx.common.util.$;
-import cool.scx.common.util.SingleListenerFuture;
+import cool.scx.socket.SingleListenerFuture;
 import io.vertx.core.Promise;
 import org.testng.annotations.Test;
 

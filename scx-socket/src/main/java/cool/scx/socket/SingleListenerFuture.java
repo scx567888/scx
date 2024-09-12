@@ -1,4 +1,4 @@
-package cool.scx.common.util;
+package cool.scx.socket;
 
 import io.vertx.core.Future;
 

@@ -1,7 +1,7 @@
 package cool.scx.ext.crud;
 
-import cool.scx.data.field_filter.FieldFilter;
 import cool.scx.core.base.BaseModel;
+import cool.scx.data.field_filter.FieldFilter;
 import cool.scx.data.jdbc.AnnotationConfigTable;
 import cool.scx.data.jdbc.JDBCDaoHelper;
 import cool.scx.ext.crud.exception.EmptyUpdateColumnException;

@@ -1,7 +1,6 @@
 package cool.scx.socket;
 
 import cool.scx.common.util.$.Timeout;
-import cool.scx.common.util.SingleListenerFuture;
 
 import java.lang.System.Logger;
 import java.util.concurrent.atomic.AtomicInteger;
