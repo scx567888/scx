@@ -35,14 +35,14 @@ public class PathMatcher {
         this.exactPath = true;
     }
 
-    public static PathMatcher ofPath(String path) {
+    public static PathMatcher of(String path) {
         var pathMatcher = new PathMatcher();
         pathMatcher.checkPath(path);
         pathMatcher.setPath(path);
         return pathMatcher;
     }
 
-    public static PathMatcher ofPathRegex(String regex) {
+    public static PathMatcher ofRegex(String regex) {
         var pathMatcher = new PathMatcher();
         pathMatcher.setRegex(regex);
         return pathMatcher;
@@ -53,12 +53,12 @@ public class PathMatcher {
         int len = other.length();
 
         if (significantSlash) {
-            if (other.charAt(len - 1) != '/') {
+            if (other.charAt(len -1) != '/') {
                 // final slash is significant but missing
                 return false;
             }
         } else {
-            if (other.charAt(len - 1) == '/') {
+            if (other.charAt(len -1) == '/') {
                 // final slash is not significant, ignore it
                 len--;
                 if (base.length() != len) {
