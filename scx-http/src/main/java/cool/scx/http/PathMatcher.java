@@ -1,7 +1,5 @@
 package cool.scx.http;
 
-import io.vertx.core.http.HttpServerRequest;
-
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -223,7 +221,7 @@ public class PathMatcher {
     }
 
     private boolean matches(String requestPath, ParametersWritable pathParams) {
-        
+
         if (path != null && pattern == null && !pathMatches(requestPath, pathParams)) {
             return false;
         }
@@ -232,10 +230,8 @@ public class PathMatcher {
             pathParams
                     .remove("*");
 
-            String path = requestPath;
-
             Matcher m;
-            if (path != null && (m = pattern.matcher(path)).matches()) {
+            if (requestPath != null && (m = pattern.matcher(requestPath)).matches()) {
 
                 var matchRest = -1;
 
@@ -244,7 +240,7 @@ public class PathMatcher {
                         matchRest = m.start("rest");
                         // always replace
                         pathParams
-                                .add("*", path.substring(matchRest));
+                                .add("*", requestPath.substring(matchRest));
                     }
 
                     if (!isEmpty(groups)) {
@@ -296,17 +292,17 @@ public class PathMatcher {
                 return false;
             }
         }
-        
+
         return true;
     }
 
     public MatchResult matches(String path) {
-        var p = new ParametersImpl();
-        var a = matches(path, p);
-        return new MatchResult(a, p);
+        var pathParams = new ParametersImpl();
+        var accepted = matches(path, pathParams);
+        return new MatchResult(accepted, pathParams);
     }
 
-    public record MatchResult(boolean accepted, Parameters params) {
+    public record MatchResult(boolean accepted, Parameters pathParams) {
 
     }
 
