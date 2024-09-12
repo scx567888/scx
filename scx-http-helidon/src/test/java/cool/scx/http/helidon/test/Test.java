@@ -21,6 +21,14 @@ public class Test {
         server.requestHandler(c -> {
             var response = c.response();
             response.end("响应数据!!!");
+        }).webSocketHandler(c -> {
+
+            c.textMessageHandler(s -> {
+                System.out.println("Text Message: " + s);
+            });
+
+            c.writeTextMessage("This is Server");
+
         });
 
         server.listen().onSuccess(c -> {
@@ -35,6 +43,14 @@ public class Test {
         server.requestHandler(c -> {
             var response = c.response();
             response.send("响应数据");
+        }).webSocketHandler(c -> {
+
+            c.onTextMessage(s -> {
+                System.out.println("Text Message: " + s);
+            });
+
+            c.send("This is Server", false);
+
         });
 
         server.start();
