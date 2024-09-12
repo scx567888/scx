@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.cfg.MapperBuilder;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import cool.scx.common.field_filter.FieldFilter;
 import cool.scx.common.util.ScxDateTimeFormatter;
 
 import static cool.scx.common.jackson.IgnoreJsonIgnore.IGNORE_JSON_IGNORE;

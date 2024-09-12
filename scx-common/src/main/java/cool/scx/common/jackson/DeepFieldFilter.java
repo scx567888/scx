@@ -4,13 +4,12 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.PropertyWriter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
-import cool.scx.common.field_filter.FieldFilter;
 import cool.scx.common.util.StringUtils;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import static cool.scx.common.field_filter.FilterMode.INCLUDED;
+import static cool.scx.common.jackson.FieldFilter.FilterMode.INCLUDED;
 
 public class DeepFieldFilter extends SimpleBeanPropertyFilter {
 
