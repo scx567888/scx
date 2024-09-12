@@ -19,8 +19,8 @@ public class Router implements Consumer<ScxHttpServerRequest> {
         return this;
     }
 
-    public List<Route> routes() {
-        return routes;
+    public List<Route> getRoutes() {
+        return new ArrayList<>(routes);
     }
 
     @Override
