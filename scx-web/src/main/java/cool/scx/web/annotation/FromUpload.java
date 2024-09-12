@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 import static cool.scx.common.util.AnnotationUtils.NULL;
 
 /**
- * 从上传中获取参数 (注意 : 必须标注在 {@link io.vertx.ext.web.FileUpload} 类型的参数上)
+ * 从上传中获取参数
  *
  * @author scx567888
  * @version 1.9.1

@@ -20,24 +20,18 @@ import static cool.scx.common.util.AnnotationUtils.NULL;
 public @interface ScxRoute {
 
     /**
+     * path 路径
+     *
      * @return the path
      */
     String value() default NULL;
 
     /**
+     * 方法 默认所有
+     *
      * @return the path
      */
     HttpMethod[] methods() default {};
-
-    /**
-     * @return the path
-     */
-    String[] consumes() default {};
-
-    /**
-     * @return the path
-     */
-    String[] produces() default {};
 
     /**
      * 排序
