@@ -1,5 +1,7 @@
 package cool.scx.http;
 
+import io.vertx.core.net.impl.URIDecoder;
+
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -134,7 +136,7 @@ public class PathMatcher {
             }
             m.appendReplacement(sb, "(?<" + param + ">[^/]+)");
             groups.add(group);
-            index = index + 1;
+            index++;
         }
         m.appendTail(sb);
         if (this.exactPath && !this.pathEndsWithSlash) {
@@ -148,8 +150,8 @@ public class PathMatcher {
     }
 
     private synchronized void setRegex(String regex) {
-        this.pattern = Pattern.compile(regex);
-        this.exactPath = true;
+        this.pattern= Pattern.compile(regex);
+        this.exactPath= true;
         findNamedGroups(this.pattern.pattern());
     }
 
@@ -167,14 +169,21 @@ public class PathMatcher {
         this.namedGroupsInRegex.add(namedGroupInRegex);
     }
 
-    private boolean pathMatches(String requestPath, ParametersWritable pathParams) {
-        final String thePath = path;
-        final boolean pathEndsWithSlash = this.pathEndsWithSlash;
+    private boolean pathMatches(String requestPath,ParametersWritable pathParams) {
+        final boolean pathEndsWithSlash;
+        final String thePath;
 
-        // can be null
-        if (requestPath == null) {
-            requestPath = "/";
+        if (true) {
+            thePath = path;
+            pathEndsWithSlash = this.pathEndsWithSlash;
         }
+
+        
+            // can be null
+            if (requestPath == null) {
+                requestPath = "/";
+            }
+        
 
         if (exactPath) {
             // exact path has no "rest"
@@ -210,7 +219,7 @@ public class PathMatcher {
             if (requestPath.startsWith(thePath)) {
                 // handle the "rest" as path param *
                 pathParams
-                        .add("*", requestPath.substring(thePath.length()));
+                        .add("*", URIDecoder.decodeURIComponent(requestPath.substring(thePath.length()), false));
                 return true;
             }
             return false;
