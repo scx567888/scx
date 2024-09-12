@@ -53,12 +53,12 @@ public class PathMatcher {
         int len = other.length();
 
         if (significantSlash) {
-            if (other.charAt(len -1) != '/') {
+            if (other.charAt(len - 1) != '/') {
                 // final slash is significant but missing
                 return false;
             }
         } else {
-            if (other.charAt(len -1) == '/') {
+            if (other.charAt(len - 1) == '/') {
                 // final slash is not significant, ignore it
                 len--;
                 if (base.length() != len) {
@@ -83,7 +83,7 @@ public class PathMatcher {
     }
 
     private synchronized void setPath(String path) {
-        // 查看路径是否为通配符 "*" 如果是，我们需要将此路径配置为不精确
+        // See if the path is a wildcard "*" is present - If so we need to configure this path to be not exact
         if (path.charAt(path.length() - 1) != '*') {
             this.exactPath = true;
             this.path = path;
@@ -94,11 +94,12 @@ public class PathMatcher {
 
         this.pathEndsWithSlash = this.path.endsWith("/");
 
-        // 查看路径是否包含 ":" 如果是，则它包含参数捕获组，我们必须生成一个对应的正则表达式
+        // See if the path contains ":" - if so then it contains parameter capture groups and we have to generate
+        // a regex for that
         int params = 0;
-        for (int i = 0; i < path.length(); i = i + 1) {
+        for (int i = 0; i < path.length(); i++) {
             if (path.charAt(i) == ':') {
-                params = params + 1;
+                params++;
             }
         }
         if (params > 0) {
