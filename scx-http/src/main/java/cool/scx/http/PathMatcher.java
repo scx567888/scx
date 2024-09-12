@@ -1,6 +1,6 @@
 package cool.scx.http;
 
-import io.vertx.core.net.impl.URIDecoder;
+import io.vertx.core.http.HttpServerRequest;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -150,8 +150,8 @@ public class PathMatcher {
     }
 
     private synchronized void setRegex(String regex) {
-        this.pattern= Pattern.compile(regex);
-        this.exactPath= true;
+        this.pattern = Pattern.compile(regex);
+        this.exactPath = true;
         findNamedGroups(this.pattern.pattern());
     }
 
@@ -169,21 +169,17 @@ public class PathMatcher {
         this.namedGroupsInRegex.add(namedGroupInRegex);
     }
 
-    private boolean pathMatches(String requestPath,ParametersWritable pathParams) {
+    private boolean pathMatches(String requestPath, ParametersWritable pathParams) {
         final boolean pathEndsWithSlash;
         final String thePath;
 
-        if (true) {
-            thePath = path;
-            pathEndsWithSlash = this.pathEndsWithSlash;
-        }
+        thePath = path;
+        pathEndsWithSlash = this.pathEndsWithSlash;
 
-        
-            // can be null
-            if (requestPath == null) {
-                requestPath = "/";
-            }
-        
+        // can be null
+        if (requestPath == null) {
+            requestPath = "/";
+        }
 
         if (exactPath) {
             // exact path has no "rest"
@@ -219,7 +215,7 @@ public class PathMatcher {
             if (requestPath.startsWith(thePath)) {
                 // handle the "rest" as path param *
                 pathParams
-                        .add("*", URIDecoder.decodeURIComponent(requestPath.substring(thePath.length()), false));
+                        .add("*", requestPath.substring(thePath.length()));
                 return true;
             }
             return false;
@@ -227,82 +223,80 @@ public class PathMatcher {
     }
 
     private boolean matches(String requestPath, ParametersWritable pathParams) {
-
+        
         if (path != null && pattern == null && !pathMatches(requestPath, pathParams)) {
             return false;
         }
+        if (pattern != null) {
+            // need to reset "rest"
+            pathParams
+                    .remove("*");
 
-        if (pattern == null) {
-            return true;
-        }
+            String path = requestPath;
 
-        // need to reset "rest"
-        pathParams
-                .remove("*");
+            Matcher m;
+            if (path != null && (m = pattern.matcher(path)).matches()) {
 
-        Matcher m;
-        if (requestPath != null && (m = pattern.matcher(requestPath)).matches()) {
+                var matchRest = -1;
 
-            var matchRest = -1;
-
-            if (m.groupCount() <= 0) {
-                return true;
-            }
-            if (!exactPath) {
-                matchRest = m.start("rest");
-                // always replace
-                pathParams
-                        .add("*", path.substring(matchRest));
-            }
-
-            if (!isEmpty(groups)) {
-                // Pattern - named params
-                // decode the path as it could contain escaped chars.
-                final int len = Math.min(groups.size(), m.groupCount());
-                for (int i = 0; i < len; i = i + 1) {
-                    final String k = groups.get(i);
-                    String undecodedValue;
-                    // We try to take value in three ways:
-                    // 1. group name of type p0, p1, pN (most frequent and used by vertx params)
-                    // 2. group name inside the regex
-                    // 3. No group name
-                    try {
-                        undecodedValue = m.group("p" + i);
-                    } catch (IllegalArgumentException e) {
-                        try {
-                            undecodedValue = m.group(k);
-                        } catch (IllegalArgumentException e1) {
-                            // Groups starts from 1 (0 group is total match)
-                            undecodedValue = m.group(i + 1);
-                        }
+                if (m.groupCount() > 0) {
+                    if (!exactPath) {
+                        matchRest = m.start("rest");
+                        // always replace
+                        pathParams
+                                .add("*", path.substring(matchRest));
                     }
-                    if (undecodedValue != null) {
-                        pathParams.add(k, undecodedValue);
+
+                    if (!isEmpty(groups)) {
+                        // Pattern - named params
+                        // decode the path as it could contain escaped chars.
+                        final int len = Math.min(groups.size(), m.groupCount());
+                        for (int i = 0; i < len; i++) {
+                            final String k = groups.get(i);
+                            String undecodedValue;
+                            // We try to take value in three ways:
+                            // 1. group name of type p0, p1, pN (most frequent and used by vertx params)
+                            // 2. group name inside the regex
+                            // 3. No group name
+                            try {
+                                undecodedValue = m.group("p" + i);
+                            } catch (IllegalArgumentException e) {
+                                try {
+                                    undecodedValue = m.group(k);
+                                } catch (IllegalArgumentException e1) {
+                                    // Groups starts from 1 (0 group is total match)
+                                    undecodedValue = m.group(i + 1);
+                                }
+                            }
+                            if (undecodedValue != null) {
+                                pathParams.add(k, undecodedValue);
+                            }
+                        }
+                    } else {
+                        // Straight regex - un-named params
+                        // decode the path as it could contain escaped chars.
+                        if (!isEmpty(namedGroupsInRegex)) {
+                            for (String namedGroup : namedGroupsInRegex) {
+                                String namedGroupValue = m.group(namedGroup);
+                                if (namedGroupValue != null) {
+                                    pathParams.add(namedGroup, namedGroupValue);
+                                }
+                            }
+                        }
+                        for (int i = 0; i < m.groupCount(); i++) {
+                            String group = m.group(i + 1);
+                            if (group != null) {
+                                final String k = "param" + i;
+                                pathParams.add(k, group);
+                            }
+                        }
                     }
                 }
             } else {
-                // Straight regex - un-named params
-                // decode the path as it could contain escaped chars.
-                if (!isEmpty(namedGroupsInRegex)) {
-                    for (String namedGroup : namedGroupsInRegex) {
-                        String namedGroupValue = m.group(namedGroup);
-                        if (namedGroupValue != null) {
-                            pathParams.add(namedGroup, namedGroupValue);
-                        }
-                    }
-                }
-                for (int i = 0; i < m.groupCount(); i = i + 1) {
-                    String group = m.group(i + 1);
-                    if (group != null) {
-                        final String k = "param" + i;
-                        pathParams.add(k, group);
-                    }
-                }
+                return false;
             }
-        } else {
-            return false;
         }
-
+        
         return true;
     }
 
