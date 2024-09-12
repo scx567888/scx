@@ -1,5 +1,9 @@
 package cool.scx.http;
 
+import cool.scx.common.util.MultiMap;
+import io.vertx.core.http.HttpServerRequest;
+import io.vertx.core.net.impl.URIDecoder;
+
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -175,17 +179,189 @@ public class PathMatcher {
         return exactPath;
     }
 
-    //todo 
-    public MatchResult match(URIPath uriPath) {
-        return null;
+
+
+    private boolean pathMatches(String requestPath,MultiMap<String,String> pathParams) {
+        final String thePath = path;
+        final boolean pathEndsWithSlash = this.pathEndsWithSlash;
+
+        // can be null
+        if (requestPath == null) {
+            requestPath = "/";
+        }
+
+        if (exactPath) {
+            // exact path has no "rest"
+            pathParams
+                    .removeAll("*");
+
+            return pathMatchesExact(thePath, requestPath, pathEndsWithSlash);
+        } else {
+            if (pathEndsWithSlash) {
+                // the route expects a path that ends in "/*". This is a special case
+                // we need to optionally allow any request just like if it was a "*" but
+                // treat the slash
+                final int pathLen = thePath.length();
+                final int reqLen = requestPath.length();
+
+                if (reqLen < pathLen - 2) {
+                    // we miss at least 2 characters
+                    return false;
+                }
+
+                if (reqLen == pathLen - 1) {
+                    // request misses 1 character, there is the chance that this request doesn't include the final slash
+                    // because the mount path ended with a wildcard we are relaxed in the check
+                    if (thePath.regionMatches(0, requestPath, 0, pathLen - 1)) {
+                        // handle the "rest" as path param *, always known to be empty
+                        pathParams
+                                .put("*", "/");
+                        return true;
+                    }
+                }
+            }
+
+            if (requestPath.startsWith(thePath)) {
+                // handle the "rest" as path param *
+                pathParams
+                        .put("*", URIDecoder.decodeURIComponent(requestPath.substring(thePath.length()), false));
+                return true;
+            }
+            return false;
+        }
     }
 
-    public record MatchResult(boolean accepted, Map<String, String> params) {
+    private static boolean pathMatchesExact(String base, String other, boolean significantSlash) {
+        // Ignore trailing slash when matching paths
+        int len = other.length();
+
+        if (significantSlash) {
+            if (other.charAt(len -1) != '/') {
+                // final slash is significant but missing
+                return false;
+            }
+        } else {
+            if (other.charAt(len -1) == '/') {
+                // final slash is not significant, ignore it
+                len--;
+                if (base.length() != len) {
+                    return false;
+                }
+                // content must match
+                return other.regionMatches(0, base, 0, len);
+            }
+        }
+        // content must match
+        return other.equals(base);
+    }
+
+    public int matches(String requestPath,  MultiMap<String,String> pathParams) {
+        
+        if (path != null && pattern == null && !pathMatches(requestPath, pathParams)) {
+            return 404;
+        }
+        if (pattern != null) {
+            // need to reset "rest"
+            pathParams
+                    .removeAll("*");
+
+            String path = requestPath;
+
+            Matcher m;
+            if (path != null && (m = pattern.matcher(path)).matches()) {
+
+                var matchRest = -1;
+
+                if (m.groupCount() > 0) {
+                    if (!exactPath) {
+                        matchRest = m.start("rest");
+                        // always replace
+                        pathParams
+                                .put("*", path.substring( matchRest));
+                    }
+
+                    if (!isEmpty(groups)) {
+                        // Pattern - named params
+                        // decode the path as it could contain escaped chars.
+                        final int len = Math.min(groups.size(), m.groupCount());
+                        for (int i = 0; i < len; i++) {
+                            final String k = groups.get(i);
+                            String undecodedValue;
+                            // We try to take value in three ways:
+                            // 1. group name of type p0, p1, pN (most frequent and used by vertx params)
+                            // 2. group name inside the regex
+                            // 3. No group name
+                            try {
+                                undecodedValue = m.group("p" + i);
+                            } catch (IllegalArgumentException e) {
+                                try {
+                                    undecodedValue = m.group(k);
+                                } catch (IllegalArgumentException e1) {
+                                    // Groups starts from 1 (0 group is total match)
+                                    undecodedValue = m.group(i + 1);
+                                }
+                            }
+                            if (undecodedValue != null) {
+                                pathParams.put(k, undecodedValue);
+                            }
+                        }
+                    } else {
+                        // Straight regex - un-named params
+                        // decode the path as it could contain escaped chars.
+                        if (!isEmpty(namedGroupsInRegex)) {
+                            for (String namedGroup : namedGroupsInRegex) {
+                                String namedGroupValue = m.group(namedGroup);
+                                if (namedGroupValue != null) {
+                                    pathParams.put(namedGroup, namedGroupValue);
+                                }
+                            }
+                        }
+                        for (int i = 0; i < m.groupCount(); i++) {
+                            String group = m.group(i + 1);
+                            if (group != null) {
+                                final String k = "param" + i;
+                                pathParams.put(k, group);
+                            }
+                        }
+                    }
+                }
+            } else {
+                return 404;
+            }
+        }
+        
+        return 0;
+    }
+
+    private static <T> boolean isEmpty(Collection<T> collection) {
+        return collection == null || collection.isEmpty();
+    }
+
+    //todo 
+    public MatchResult match(URIPath uriPath) {
+        MultiMap<String,String> s=new MultiMap<>();
+        var m=matches(uriPath.path(),s);
+        return new MatchResult(m==0,s);
+    }
+
+    public record MatchResult(boolean accepted, MultiMap<String, String> params) {
 
     }
 
     public static void main(String[] args) {
-        PathMatcher s = PathMatcher.ofPathRegex("/asdcasdcasdc/*");
+        PathMatcher s = PathMatcher.ofPath("/asdcasdcasdc/:id/ccc");
+        var sss=new HashMap<String, String>();
+        var b = s.match(new URIPath() {
+            @Override
+            public String path() {
+                return "/asdcasdcasdc/v/ccc";
+            }
+
+            @Override
+            public URIQuery query() {
+                return null;
+            }
+        });
         System.out.println();
     }
 
