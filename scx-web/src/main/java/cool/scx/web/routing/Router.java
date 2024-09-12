@@ -8,19 +8,24 @@ import java.util.function.Consumer;
 
 public class Router implements Consumer<ScxHttpServerRequest> {
 
-    List<Route> routes;
+    private final List<Route> routes;
 
     public Router() {
         this.routes = new ArrayList<>();
     }
 
-    public void addRoute(Route route) {
-        routes.add(route);
+    public Router addRoute(Route route) {
+        routes.add(route.order(), route);
+        return this;
+    }
+
+    public List<Route> routes() {
+        return routes;
     }
 
     @Override
     public void accept(ScxHttpServerRequest scxHttpRequest) {
-        var routingContext = new RoutingContext(scxHttpRequest, routes);
+        var routingContext = new RoutingContext(scxHttpRequest, this.routes);
         routingContext.next();
     }
 
