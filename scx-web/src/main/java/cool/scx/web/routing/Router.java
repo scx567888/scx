@@ -25,8 +25,7 @@ public class Router implements Consumer<ScxHttpServerRequest> {
 
     @Override
     public void accept(ScxHttpServerRequest scxHttpRequest) {
-        var routingContext = new RoutingContext(scxHttpRequest, this.routes);
-        routingContext.next();
+        new RoutingContext(scxHttpRequest, this.routes).next();
     }
 
 }
