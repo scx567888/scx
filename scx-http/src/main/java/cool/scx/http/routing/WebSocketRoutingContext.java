@@ -3,19 +3,18 @@ package cool.scx.http.routing;
 import cool.scx.http.Parameters;
 import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.ScxHttpServerResponse;
-import cool.scx.http.exception.MethodNotAllowedException;
 import cool.scx.http.exception.NotFoundException;
 
 import java.util.Iterator;
 
-public class RoutingContext {
+public class WebSocketRoutingContext {
 
-    private final Router router;
+    private final WebSocketRouter router;
     private final ScxHttpServerRequest request;
-    private final Iterator<Route> iter;
+    private final Iterator<WebSocketRoute> iter;
     private Parameters nowPathParams;
 
-    public RoutingContext(Router router, ScxHttpServerRequest request) {
+    public WebSocketRoutingContext(WebSocketRouter router, ScxHttpServerRequest request) {
         this.router = router;
         this.request = request;
         this.iter = router.routes.iterator();
@@ -52,15 +51,6 @@ public class RoutingContext {
             //匹配不到就下一次
             if (!pathMatchResult.accepted()) {
                 e = new NotFoundException();
-                continue;
-            }
-
-            //匹配方法
-            var methodMatchResult = routeState.methodMatcher().matches(request.method());
-
-            //匹配方法失败
-            if (!methodMatchResult) {
-                e = new MethodNotAllowedException();
                 continue;
             }
 
