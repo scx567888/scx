@@ -1,7 +1,7 @@
 package cool.scx.web.return_value_handler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import cool.scx.web.routing.RoutingContext;
+import cool.scx.http.routing.RoutingContext;
 
 import static cool.scx.common.standard.MediaType.APPLICATION_XML;
 import static cool.scx.common.util.ObjectUtils.toJson;

@@ -1,6 +1,6 @@
 package cool.scx.web.return_value_handler;
 
-import cool.scx.web.routing.RoutingContext;
+import cool.scx.http.routing.RoutingContext;
 
 import static cool.scx.web.ScxWebHelper.fillTextPlainContentType;
 
