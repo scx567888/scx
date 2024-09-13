@@ -1,9 +1,8 @@
-package cool.scx.web.exception;
+package cool.scx.http.exception;
 
 import cool.scx.http.HttpStatusCode;
 
 /**
- * 在 {@link cool.scx.web.annotation.ScxRoute}  注解标记的方法中抛出此异常会被 {@link cool.scx.web.ScxRouteHandler} 进行截获并进行处理
  * <p>
  * 当我们的代码中有需要向客户端返回错误信息的时候
  * <p>

@@ -1,4 +1,4 @@
-package cool.scx.web.exception;
+package cool.scx.http.exception;
 
 import static cool.scx.http.HttpStatusCode.BAD_REQUEST;
 
