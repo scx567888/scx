@@ -1,6 +1,6 @@
 package cool.scx.web.vo;
 
-import cool.scx.web.routing.RoutingContext;
+import cool.scx.http.routing.RoutingContext;
 
 import static cool.scx.common.util.ObjectUtils.toJson;
 import static cool.scx.web.ScxWebHelper.fillJsonContentType;

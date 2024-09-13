@@ -1,14 +1,14 @@
 package cool.scx.web.vo;
 
 import cool.scx.common.util.ObjectUtils;
-import cool.scx.web.routing.RoutingContext;
+import cool.scx.http.routing.RoutingContext;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static cool.scx.http.HttpFieldName.ACCEPT;
 import static cool.scx.common.standard.MediaType.APPLICATION_XML;
 import static cool.scx.common.util.StringUtils.startsWithIgnoreCase;
+import static cool.scx.http.HttpFieldName.ACCEPT;
 import static cool.scx.web.ScxWebHelper.fillJsonContentType;
 import static cool.scx.web.ScxWebHelper.fillXmlContentType;
 

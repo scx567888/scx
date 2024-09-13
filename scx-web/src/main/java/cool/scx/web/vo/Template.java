@@ -1,6 +1,6 @@
 package cool.scx.web.vo;
 
-import cool.scx.web.routing.RoutingContext;
+import cool.scx.http.routing.RoutingContext;
 import cool.scx.web.template.ScxTemplateHandler;
 import freemarker.template.TemplateException;
 
