@@ -1,8 +1,7 @@
 package cool.scx.http.routing;
 
 import cool.scx.http.Parameters;
-import cool.scx.http.ScxHttpServerRequest;
-import cool.scx.http.ScxHttpServerResponse;
+import cool.scx.http.ScxServerWebSocket;
 import cool.scx.http.exception.NotFoundException;
 
 import java.util.Iterator;
@@ -10,22 +9,18 @@ import java.util.Iterator;
 public class WebSocketRoutingContext {
 
     private final WebSocketRouter router;
-    private final ScxHttpServerRequest request;
+    private final ScxServerWebSocket webSocket;
     private final Iterator<WebSocketRoute> iter;
     private Parameters nowPathParams;
 
-    public WebSocketRoutingContext(WebSocketRouter router, ScxHttpServerRequest request) {
+    public WebSocketRoutingContext(WebSocketRouter router, ScxServerWebSocket webSocket) {
         this.router = router;
-        this.request = request;
+        this.webSocket = webSocket;
         this.iter = router.routes.iterator();
     }
 
-    public ScxHttpServerRequest request() {
-        return request;
-    }
-
-    public ScxHttpServerResponse response() {
-        return request.response();
+    public ScxServerWebSocket webSocket() {
+        return webSocket;
     }
 
     public final void next() {
@@ -44,7 +39,7 @@ public class WebSocketRoutingContext {
             var routeState = iter.next();
 
             //匹配路径
-            var pathMatchResult = routeState.pathMatcher().matches(request.path().path());
+            var pathMatchResult = routeState.pathMatcher().matches(webSocket.path().path());
 
             this.nowPathParams = pathMatchResult.pathParams();
 
