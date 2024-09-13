@@ -88,31 +88,25 @@
     <dependencyManagement>
         <dependencies>
 
-            <!-- helidon Web 服务器 -->
+            <!-- helidon webserver -->
             <dependency>
                 <groupId>io.helidon.webserver</groupId>
                 <artifactId>helidon-webserver</artifactId>
                 <version>${helidon.version}</version>
             </dependency>
 
-            <!-- helidon 拓展包 -->
+            <!-- helidon multipart -->
             <dependency>
                 <groupId>io.helidon.http.media</groupId>
                 <artifactId>helidon-http-media-multipart</artifactId>
                 <version>${helidon.version}</version>
             </dependency>
 
+            <!-- helidon websocket -->
             <dependency>
                 <groupId>io.helidon.webserver</groupId>
                 <artifactId>helidon-webserver-websocket</artifactId>
                 <version>${helidon.version}</version>
-            </dependency>
-
-            <!-- vert.x 网络拓展包 -->
-            <dependency>
-                <groupId>io.vertx</groupId>
-                <artifactId>vertx-web</artifactId>
-                <version>${vertx.version}</version>
             </dependency>
 
             <!-- vert.x 核心包 -->
