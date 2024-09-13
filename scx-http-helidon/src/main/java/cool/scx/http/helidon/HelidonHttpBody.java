@@ -1,7 +1,6 @@
 package cool.scx.http.helidon;
 
 import cool.scx.http.ScxHttpBody;
-import cool.scx.http.ScxHttpFormData;
 import io.helidon.http.media.ReadableEntity;
 
 import java.io.InputStream;
@@ -15,8 +14,8 @@ class HelidonHttpBody implements ScxHttpBody {
     }
 
     @Override
-    public InputStream asInputStream() {
-        return content.hasEntity() ? content.as(InputStream.class) : null;
+    public InputStream inputStream() {
+        return content.inputStream();
     }
 
     @Override
@@ -30,10 +29,8 @@ class HelidonHttpBody implements ScxHttpBody {
     }
 
     @Override
-    public ScxHttpFormData asFormData() {
-        //todo 这里会报错
-        // return content.as(MultiPart.class);
-        return content.as(ScxHttpFormData.class);
+    public <T> T as(Class<T> t) {
+        return content.hasEntity() ? content.as(t) : null;
     }
 
 }

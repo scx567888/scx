@@ -11,7 +11,7 @@ public interface ScxHttpServerResponse {
     ScxHttpServerResponse setStatusCode(HttpStatusCode code);
 
     OutputStream outputStream();
-    
+
     void send();
 
     void send(byte[] data);

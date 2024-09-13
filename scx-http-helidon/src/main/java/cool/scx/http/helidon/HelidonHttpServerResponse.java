@@ -5,6 +5,8 @@ import cool.scx.http.ScxHttpHeadersWritable;
 import cool.scx.http.ScxHttpServerResponse;
 import io.helidon.webserver.http.RoutingResponse;
 
+import java.io.OutputStream;
+
 class HelidonHttpServerResponse implements ScxHttpServerResponse {
 
     private final RoutingResponse response;
@@ -42,8 +44,18 @@ class HelidonHttpServerResponse implements ScxHttpServerResponse {
     }
 
     @Override
+    public void send(Object data) {
+        this.response.send(data);
+    }
+
+    @Override
     public void send() {
         this.response.send();
+    }
+
+    @Override
+    public OutputStream outputStream() {
+        return this.response.outputStream();
     }
 
     @Override
