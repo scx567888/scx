@@ -1,6 +1,6 @@
 package cool.scx.web.vo;
 
-import cool.scx.http_server.ScxRoutingContext;
+import cool.scx.http.routing.RoutingContext;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -34,7 +34,7 @@ public final class Html implements BaseVo {
     }
 
     @Override
-    public void accept(ScxRoutingContext context) throws Exception {
+    public void accept(RoutingContext context) throws Exception {
         if (usePath) {
             sendHtmlPath(context);
         } else {
@@ -42,12 +42,12 @@ public final class Html implements BaseVo {
         }
     }
 
-    public void sendHtmlStr(ScxRoutingContext context) {
-        fillHtmlContentType(context.request().response()).end(htmlStr);
+    public void sendHtmlStr(RoutingContext context) {
+        fillHtmlContentType(context.request().response()).send(htmlStr);
     }
 
-    public void sendHtmlPath(ScxRoutingContext context) {
-        fillHtmlContentType(context.request().response()).sendFile(htmlPath.toFile());
+    public void sendHtmlPath(RoutingContext context) {
+        fillHtmlContentType(context.request().response()).send(htmlPath);
     }
 
 }
