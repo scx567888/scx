@@ -22,7 +22,7 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>scx-http-server</artifactId>
+            <artifactId>scx-http-helidon</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -34,12 +34,6 @@
         <dependency>
             <groupId>net.coobird</groupId>
             <artifactId>thumbnailator</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>scx-common</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>
