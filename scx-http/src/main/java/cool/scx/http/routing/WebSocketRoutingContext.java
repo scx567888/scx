@@ -27,7 +27,7 @@ public class WebSocketRoutingContext {
         try {
             tryNext();
         } catch (Throwable e) {
-            router.exceptionHandler.accept(this, e);
+            router.exceptionHandler.accept(e, this);
         }
     }
 
@@ -45,7 +45,6 @@ public class WebSocketRoutingContext {
 
             //匹配不到就下一次
             if (!pathMatchResult.accepted()) {
-                e = new NotFoundException();
                 continue;
             }
 

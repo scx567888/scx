@@ -33,7 +33,7 @@ public class RoutingContext {
         try {
             tryNext();
         } catch (Throwable e) {
-            router.exceptionHandler.accept(this, e);
+            router.exceptionHandler.accept(e, this);
         }
     }
 
@@ -51,7 +51,6 @@ public class RoutingContext {
 
             //匹配不到就下一次
             if (!pathMatchResult.accepted()) {
-                e = new NotFoundException();
                 continue;
             }
 

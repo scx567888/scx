@@ -1,9 +1,17 @@
 package cool.scx.http.helidon.test;
 
+import cool.scx.http.HttpMethod;
 import cool.scx.http.ScxHttpServerOptions;
+import cool.scx.http.exception.ScxHttpException;
+import cool.scx.http.exception.UnauthorizedException;
 import cool.scx.http.helidon.HelidonHttpServer;
+import cool.scx.http.routing.Route;
+import cool.scx.http.routing.Router;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServerOptions;
+
+import static cool.scx.http.HttpMethod.GET;
+import static cool.scx.http.HttpStatusCode.INTERNAL_SERVER_ERROR;
 
 public class Test {
 
@@ -16,10 +24,42 @@ public class Test {
         var l = System.nanoTime();
         var server = new HelidonHttpServer(new ScxHttpServerOptions().setPort(8080));
 
-        server.requestHandler(c -> {
-            var response = c.response();
-            response.send("响应数据");
-        }).webSocketHandler(c -> {
+        var router = new Router();
+
+        router.addRoute(new Route().path("/*").handler(c -> {
+            System.out.println(c.request().path().path());
+            c.next();
+        }));
+
+        router.addRoute(new Route().path("/hello").method(GET).handler(c -> {
+            c.response().send("hello");
+        }));
+
+        router.addRoute(new Route().path("/path-params/:id").method(GET).handler(c -> {
+            c.response().send("id : " + c.pathParams().get("id"));
+        }));
+
+        router.addRoute(new Route().path("/401").method(GET).handler(c -> {
+            throw new UnauthorizedException();
+        }));
+
+        router.addRoute(new Route().path("/405").method(HttpMethod.POST).handler(c -> {
+            System.out.println("405");
+        }));
+
+        router.addRoute(new Route().path("/last").method(GET).handler(c -> {
+            c.response().send("last");
+        }));
+
+        router.exceptionHandler((e, ctx) -> {
+            if (e instanceof ScxHttpException s) {
+                ctx.response().setStatusCode(s.statusCode()).send(s.statusCode().description());
+            } else {
+                ctx.response().setStatusCode(INTERNAL_SERVER_ERROR).send(e.getMessage());
+            }
+        });
+
+        server.requestHandler(router).webSocketHandler(c -> {
 
             c.onTextMessage(s -> {
                 System.out.println("Text Message: " + s);
