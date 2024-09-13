@@ -2,8 +2,8 @@ package cool.scx.http;
 
 public interface MethodMatcher {
 
-    static MethodMatcher of() {
-        return new MethodMatcherImpl();
+    static MethodMatcher any() {
+        return method -> true;
     }
 
     static MethodMatcher of(ScxHttpMethod... method) {

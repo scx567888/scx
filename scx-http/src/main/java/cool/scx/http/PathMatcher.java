@@ -2,6 +2,10 @@ package cool.scx.http;
 
 public interface PathMatcher {
 
+    static PathMatcher any() {
+        return path -> new MatchResult(true, new ParametersImpl());
+    }
+
     static PathMatcher of(String path) {
         var pathMatcher = new PathMatcherImpl();
         pathMatcher.checkPath(path);
