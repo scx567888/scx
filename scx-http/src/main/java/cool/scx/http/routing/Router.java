@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 public class Router implements Consumer<ScxHttpServerRequest> {
 
     final List<Route> routes;
-    BiConsumer<Throwable, RoutingContext> exceptionHandler;
+    BiConsumer<Throwable, RoutingContext> errorHandler;
 
     public Router() {
         this.routes = new ArrayList<>();
@@ -31,8 +31,8 @@ public class Router implements Consumer<ScxHttpServerRequest> {
         new RoutingContext(this, scxHttpRequest).next();
     }
 
-    public Router exceptionHandler(BiConsumer<Throwable, RoutingContext> handler) {
-        this.exceptionHandler = handler;
+    public Router errorHandler(BiConsumer<Throwable, RoutingContext> handler) {
+        this.errorHandler = handler;
         return this;
     }
 

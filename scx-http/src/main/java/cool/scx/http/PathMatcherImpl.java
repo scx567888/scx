@@ -290,4 +290,20 @@ public class PathMatcherImpl implements PathMatcher {
         return new MatchResult(accepted, pathParams);
     }
 
+    public String path() {
+        return path;
+    }
+
+    public Pattern pattern() {
+        return pattern;
+    }
+
+    public List<String> groups() {
+        return groups;
+    }
+
+    public boolean exactPath() {
+        return exactPath;
+    }
+
 }

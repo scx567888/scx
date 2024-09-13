@@ -33,7 +33,7 @@ public class RoutingContext {
         try {
             tryNext();
         } catch (Throwable e) {
-            router.exceptionHandler.accept(e, this);
+            router.errorHandler.accept(e, this);
         }
     }
 

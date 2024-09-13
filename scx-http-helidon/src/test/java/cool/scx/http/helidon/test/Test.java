@@ -51,7 +51,7 @@ public class Test {
             var r = 1 / 0;
         }));
 
-        router.exceptionHandler((e, ctx) -> {
+        router.errorHandler((e, ctx) -> {
             if (e instanceof ScxHttpException s) {
                 ctx.response().setStatusCode(s.statusCode()).send(s.statusCode().description());
             } else {
