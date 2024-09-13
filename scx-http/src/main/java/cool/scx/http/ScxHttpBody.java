@@ -4,12 +4,12 @@ import java.io.InputStream;
 
 public interface ScxHttpBody {
 
-    InputStream asInputStream();
+    InputStream inputStream();
 
     byte[] asBytes();
 
     String asString();
 
-    ScxHttpFormData asFormData();
+    <T> T as(Class<T> t);
 
 }
