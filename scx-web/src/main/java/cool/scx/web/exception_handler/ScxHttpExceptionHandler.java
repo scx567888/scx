@@ -3,8 +3,8 @@ package cool.scx.web.exception_handler;
 import cool.scx.common.util.ObjectUtils;
 import cool.scx.common.util.ScxExceptionHelper;
 import cool.scx.http.HttpStatusCode;
-import cool.scx.web.exception.ScxHttpException;
-import cool.scx.web.routing.RoutingContext;
+import cool.scx.http.exception.ScxHttpException;
+import cool.scx.http.routing.RoutingContext;
 
 import java.lang.System.Logger;
 import java.util.LinkedHashMap;
