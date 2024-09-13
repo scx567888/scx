@@ -1,4 +1,4 @@
-package cool.scx.web.routing;
+package cool.scx.http.routing;
 
 import cool.scx.http.HttpMethod;
 import cool.scx.http.MethodMatcher;

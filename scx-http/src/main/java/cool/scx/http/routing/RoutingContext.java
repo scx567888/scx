@@ -1,21 +1,24 @@
-package cool.scx.web.routing;
+package cool.scx.http.routing;
 
+import cool.scx.http.Parameters;
 import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.ScxHttpServerResponse;
+import cool.scx.http.exception.MethodNotAllowedException;
+import cool.scx.http.exception.NotFoundException;
 
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 public class RoutingContext {
 
-    private static final System.Logger logger = System.getLogger(RoutingContext.class.getName());
-    protected final Iterator<Route> iter;
+    private final Router router;
     private final ScxHttpServerRequest request;
+    protected final Iterator<Route> iter;
+    protected Parameters nowPathParams;
 
-    public RoutingContext(ScxHttpServerRequest request, List<Route> routes) {
+    public RoutingContext(Router router, ScxHttpServerRequest request) {
+        this.router = router;
         this.request = request;
-        this.iter = routes.iterator();
+        this.iter = router.routes.iterator();
     }
 
     public ScxHttpServerRequest request() {
@@ -27,22 +30,28 @@ public class RoutingContext {
     }
 
     public final void next() {
-        iterateNext();
+        try {
+            tryNext();
+        } catch (Throwable e) {
+            router.exceptionHandler.accept(this, e);
+        }
     }
 
-    boolean iterateNext() {
+    void tryNext() throws Throwable {
 
-        var matchResult = 0;
-        
+        Throwable e = new NotFoundException();
+
         while (iter.hasNext()) {
             var routeState = iter.next();
-            
+
             //匹配路径
             var pathMatchResult = routeState.pathMatcher().matches(request.path().path());
 
+            this.nowPathParams = pathMatchResult.pathParams();
+
             //匹配不到就下一次
             if (!pathMatchResult.accepted()) {
-                matchResult = 404;
+                e = new NotFoundException();
                 continue;
             }
 
@@ -51,20 +60,22 @@ public class RoutingContext {
 
             //匹配方法失败
             if (!methodMatchResult) {
-                matchResult = 405;
+                e = new MethodNotAllowedException();
                 continue;
             }
 
             routeState.handler().accept(this);
 
-            return true;
+            return;
 
         }
-        return false;
+
+        throw e;
+
     }
 
-    public Map<String, String> pathParams() {
-        return null;
+    public Parameters pathParams() {
+        return this.nowPathParams;
     }
 
 }

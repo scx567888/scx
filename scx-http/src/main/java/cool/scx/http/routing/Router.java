@@ -1,21 +1,24 @@
-package cool.scx.web.routing;
+package cool.scx.http.routing;
 
 import cool.scx.http.ScxHttpServerRequest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class Router implements Consumer<ScxHttpServerRequest> {
 
-    private final List<Route> routes;
+    final List<Route> routes;
+    BiConsumer<RoutingContext, Throwable> exceptionHandler;
 
     public Router() {
         this.routes = new ArrayList<>();
     }
 
     public Router addRoute(Route route) {
-        routes.add(route.order(), route);
+        //todo order 需要处理
+        routes.add(route);
         return this;
     }
 
@@ -25,7 +28,12 @@ public class Router implements Consumer<ScxHttpServerRequest> {
 
     @Override
     public void accept(ScxHttpServerRequest scxHttpRequest) {
-        new RoutingContext(scxHttpRequest, this.routes).next();
+        new RoutingContext(this, scxHttpRequest).next();
+    }
+
+    public Router exceptionHandler(BiConsumer<RoutingContext, Throwable> handler) {
+        this.exceptionHandler = handler;
+        return this;
     }
 
 }
