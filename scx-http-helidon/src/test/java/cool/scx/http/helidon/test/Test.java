@@ -1,6 +1,5 @@
 package cool.scx.http.helidon.test;
 
-import cool.scx.http.HttpMethod;
 import cool.scx.http.ScxHttpServerOptions;
 import cool.scx.http.exception.ScxHttpException;
 import cool.scx.http.exception.UnauthorizedException;
@@ -11,6 +10,7 @@ import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServerOptions;
 
 import static cool.scx.http.HttpMethod.GET;
+import static cool.scx.http.HttpMethod.POST;
 import static cool.scx.http.HttpStatusCode.INTERNAL_SERVER_ERROR;
 
 public class Test {
@@ -43,12 +43,12 @@ public class Test {
             throw new UnauthorizedException();
         }));
 
-        router.addRoute(new Route().path("/405").method(HttpMethod.POST).handler(c -> {
+        router.addRoute(new Route().path("/405").method(POST).handler(c -> {
             System.out.println("405");
         }));
 
         router.addRoute(new Route().path("/last").method(GET).handler(c -> {
-            c.response().send("last");
+            var r = 1 / 0;
         }));
 
         router.exceptionHandler((e, ctx) -> {
