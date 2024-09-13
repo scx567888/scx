@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 public class WebSocketRouter implements Consumer<ScxServerWebSocket> {
 
     final List<WebSocketRoute> routes;
-    BiConsumer<WebSocketRoutingContext, Throwable> exceptionHandler;
+    BiConsumer<Throwable, WebSocketRoutingContext> exceptionHandler;
 
     public WebSocketRouter() {
         this.routes = new ArrayList<>();
@@ -31,7 +31,7 @@ public class WebSocketRouter implements Consumer<ScxServerWebSocket> {
         new WebSocketRoutingContext(this, scxServerWebSocket).next();
     }
 
-    public WebSocketRouter exceptionHandler(BiConsumer<WebSocketRoutingContext, Throwable> handler) {
+    public WebSocketRouter exceptionHandler(BiConsumer<Throwable, WebSocketRoutingContext> handler) {
         this.exceptionHandler = handler;
         return this;
     }
