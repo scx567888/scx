@@ -4,6 +4,8 @@ import cool.scx.http.HttpMethod;
 import cool.scx.http.MethodMatcher;
 import cool.scx.http.PathMatcher;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Consumer;
 
 /**
@@ -12,12 +14,15 @@ import java.util.function.Consumer;
 public class Route {
 
     private String path;
+    private Set<HttpMethod> methods;
     private PathMatcher pathMatcher;
     private MethodMatcher methodMatcher;
     private int order;
     private Consumer<RoutingContext> handler;
 
     public Route() {
+        this.path = null;
+        this.methods = new HashSet<>();
         this.pathMatcher = PathMatcher.any();
         this.methodMatcher = MethodMatcher.any();
         this.order = Integer.MAX_VALUE;
@@ -37,6 +42,7 @@ public class Route {
     }
 
     public Route method(HttpMethod... httpMethods) {
+        this.methods = Set.of(httpMethods);
         this.methodMatcher = MethodMatcher.of(httpMethods);
         return this;
     }
@@ -53,6 +59,10 @@ public class Route {
 
     public String path() {
         return path;
+    }
+
+    public Set<HttpMethod> methods() {
+        return methods;
     }
 
     public PathMatcher pathMatcher() {

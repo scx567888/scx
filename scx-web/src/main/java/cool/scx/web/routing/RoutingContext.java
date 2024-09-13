@@ -5,8 +5,7 @@ import cool.scx.http.ScxHttpServerResponse;
 
 import java.util.Iterator;
 import java.util.List;
-
-import static java.lang.System.Logger.Level.ERROR;
+import java.util.Map;
 
 public class RoutingContext {
 
@@ -28,21 +27,44 @@ public class RoutingContext {
     }
 
     public final void next() {
-        while (iter.hasNext()) {
-            var next = iter.next();
-            if (next.matches(request)) {
-                handle(next);
-                return;
-            }
-        }
+        iterateNext();
     }
 
-    public void handle(Route route) {
-        try {
-            route.handler().accept(this);
-        } catch (Exception e) {
-            logger.log(ERROR, "ScxWebSocketRoute : onOpen 发生异常 !!!", e);
+    boolean iterateNext() {
+
+        var matchResult = 0;
+        
+        while (iter.hasNext()) {
+            var routeState = iter.next();
+            
+            //匹配路径
+            var pathMatchResult = routeState.pathMatcher().matches(request.path().path());
+
+            //匹配不到就下一次
+            if (!pathMatchResult.accepted()) {
+                matchResult = 404;
+                continue;
+            }
+
+            //匹配方法
+            var methodMatchResult = routeState.methodMatcher().matches(request.method());
+
+            //匹配方法失败
+            if (!methodMatchResult) {
+                matchResult = 405;
+                continue;
+            }
+
+            routeState.handler().accept(this);
+
+            return true;
+
         }
+        return false;
+    }
+
+    public Map<String, String> pathParams() {
+        return null;
     }
 
 }
