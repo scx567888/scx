@@ -6,7 +6,7 @@ import cool.scx.core.base.BaseModel;
 import cool.scx.core.base.BaseModelService;
 import cool.scx.data.jdbc.annotation.NoColumn;
 import cool.scx.ext.crud.exception.UnknownFieldNameException;
-import cool.scx.web.exception.BadRequestException;
+import cool.scx.http.exception.BadRequestException;
 
 import java.lang.System.Logger;
 import java.util.Map;

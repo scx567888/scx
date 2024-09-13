@@ -4,8 +4,8 @@ import cool.scx.common.standard.HttpMethod;
 import cool.scx.common.util.Cache;
 import cool.scx.common.util.FileUtils;
 import cool.scx.web.annotation.*;
-import cool.scx.web.exception.InternalServerErrorException;
-import cool.scx.web.exception.NotFoundException;
+import cool.scx.http.exception.InternalServerErrorException;
+import cool.scx.http.exception.NotFoundException;
 import cool.scx.web.vo.*;
 import io.vertx.ext.web.FileUpload;
 
