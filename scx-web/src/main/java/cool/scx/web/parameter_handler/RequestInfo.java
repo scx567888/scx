@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.node.TextNode;
 import cool.scx.common.standard.MediaType;
 import cool.scx.http.exception.BadRequestException;
 import cool.scx.http.routing.RoutingContext;
-import cool.scx.web.parameter_handler.form_data.FormData;
+import cool.scx.web.type.FormData;
 import io.helidon.http.media.multipart.MultiPart;
 
 import static cool.scx.common.util.ObjectUtils.jsonMapper;
@@ -41,6 +41,10 @@ public final class RequestInfo {
      */
     private void initBody(RoutingContext ctx, ContentType contentType) {
         switch (contentType) {
+            case NULL -> {
+                this.body = null;
+                this.formData = null;
+            }
             case APPLICATION_JSON -> {
                 var string = ctx.request().body().asString();
                 this.body = readJson(string);

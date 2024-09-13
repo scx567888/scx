@@ -1,7 +1,7 @@
 package cool.scx.web;
 
-import cool.scx.common.standard.HttpMethod;
 import cool.scx.common.util.ObjectUtils;
+import cool.scx.http.HttpMethod;
 import io.vertx.ext.web.MIMEHeader;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.impl.RouteImpl;
@@ -16,11 +16,7 @@ import java.util.regex.Pattern;
 /**
  * 用于承载数据
  */
-record RouteState(Map<String, Object> metadata, String path, String name, int order, boolean enabled,
-                  Set<HttpMethod> methods, Set<MIMEHeader> consumes, boolean emptyBodyPermittedWithConsumes,
-                  Set<MIMEHeader> produces, boolean added, Pattern pattern, List<String> groups,
-                  boolean useNormalizedPath, Set<String> namedGroupsInRegex, Pattern virtualHostPattern,
-                  boolean pathEndsWithSlash, boolean exclusive, boolean exactPath) {
+record RouteState(String path,  Pattern pattern, List<String> groups, boolean exactPath) {
 
     private static final Method VERTX_ROUTE_STATE_METHOD = initVertxRouteStateMethod();
 

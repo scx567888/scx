@@ -1,16 +1,18 @@
 package cool.scx.web;
 
+import cool.scx.common.functional.ScxConsumer;
 import cool.scx.common.reflect.MethodInfo;
-import cool.scx.common.standard.HttpMethod;
 import cool.scx.common.util.CaseUtils;
 import cool.scx.common.util.ScxExceptionHelper;
 import cool.scx.common.util.URIBuilder;
+import cool.scx.http.HttpMethod;
+import cool.scx.http.routing.RoutingContext;
 import cool.scx.web.annotation.ScxRoute;
 import io.vertx.core.Handler;
-import io.vertx.ext.web.RoutingContext;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import java.util.function.Consumer;
 
 import static cool.scx.common.util.AnnotationUtils.getAnnotationValue;
 import static cool.scx.web.RouteRegistrar.findScxRouteOrThrow;
@@ -22,7 +24,7 @@ import static cool.scx.web.ScxWebHelper.responseCanUse;
  * @author scx567888
  * @version 0.3.6
  */
-public final class ScxRouteHandler implements Handler<RoutingContext> {
+public final class ScxRouteHandler implements Consumer<RoutingContext> {
 
     /**
      * 方法
@@ -53,10 +55,6 @@ public final class ScxRouteHandler implements Handler<RoutingContext> {
      * httpMethods 由 注解上的 method 属性转换而来 并采用 set 进行去重
      */
     public final HttpMethod[] httpMethods;
-
-    public final String[] consumes;
-
-    public final String[] produces;
 
     /**
      * 配置
@@ -91,8 +89,6 @@ public final class ScxRouteHandler implements Handler<RoutingContext> {
         var clazzAnnotation = clazz.getAnnotation(ScxRoute.class);
         var methodAnnotation = findScxRouteOrThrow(method);
         this.originalUrl = initOriginalUrl(clazzAnnotation, methodAnnotation);
-        this.consumes = distinct(methodAnnotation.consumes());
-        this.produces = distinct(methodAnnotation.produces());
         this.httpMethods = distinct(methodAnnotation.methods());
         this.order = methodAnnotation.order();
     }
@@ -126,11 +122,7 @@ public final class ScxRouteHandler implements Handler<RoutingContext> {
     }
 
     @Override
-    public void handle(RoutingContext context) {
-        Thread.ofVirtual().start(() -> this.handle0(context));
-    }
-
-    public void handle0(RoutingContext context) {
+    public void accept(RoutingContext context) {
         //0, 将 routingContext 注入到 ThreadLocal 中去 以方便后续从静态方法调用
         ScxWeb._routingContext(context);
         try {

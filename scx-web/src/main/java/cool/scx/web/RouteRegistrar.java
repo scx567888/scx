@@ -4,9 +4,12 @@ import cool.scx.common.reflect.MethodInfo;
 import cool.scx.common.reflect.ReflectFactory;
 import cool.scx.common.util.ClassUtils;
 import cool.scx.common.util.MultiMap;
+import cool.scx.http.PathMatcher;
+import cool.scx.http.PathMatcherImpl;
+import cool.scx.http.routing.Route;
+import cool.scx.http.routing.Router;
 import cool.scx.web.annotation.NoScxRoute;
 import cool.scx.web.annotation.ScxRoute;
-import io.vertx.ext.web.Router;
 import org.springframework.stereotype.Controller;
 
 import java.lang.System.Logger;
@@ -18,8 +21,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static cool.scx.common.reflect.AccessModifier.PUBLIC;
-import static cool.scx.web.RouteState.getRouteState;
-import static cool.scx.web.ScxWebHelper.toVertxMethod;
 import static java.lang.System.Logger.Level.WARNING;
 
 /**
@@ -83,8 +84,11 @@ public final class RouteRegistrar {
      * @return a
      */
     private static List<ScxRouteHandler> fillRouteState(List<ScxRouteHandler> list) {
-        var tempRouter = Router.router(null);
-        return list.stream().peek(c -> c.setRouteState(getRouteState(tempRouter.route(c.originalUrl)))).toList();
+        for (var c : list) {
+            var o = (PathMatcherImpl) PathMatcher.of(c.originalUrl);
+            c.setRouteState(new RouteState(o.path(), o.pattern(), o.groups(), o.exactPath()));
+        }
+        return list;
     }
 
     private static ScxRouteHandler createScxRouteHandler(MethodInfo m, Object bean, ScxWeb scxWeb) {
@@ -192,17 +196,13 @@ public final class RouteRegistrar {
         checkRouteExists(scxRouteHandlers);
         //循环添加到 vertxRouter 中
         for (var c : scxRouteHandlers) {
-            var r = router.route(c.originalUrl);
-            for (var httpMethod : c.httpMethods) {
-                r.method(toVertxMethod(httpMethod));
+            var route = new Route();
+            route.path(c.originalUrl);
+            if (c.httpMethods.length > 0) {
+                route.method(c.httpMethods);
             }
-            for (var consumes : c.consumes) {
-                r.consumes(consumes);
-            }
-            for (var produces : c.produces) {
-                r.produces(produces);
-            }
-            r.handler(c);
+            route.handler(c);
+            router.addRoute(route);
         }
         return router;
     }

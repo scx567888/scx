@@ -1,11 +1,11 @@
 package cool.scx.web;
 
 import cool.scx.common.reflect.ParameterInfo;
-import cool.scx.common.standard.HttpStatusCode;
 import cool.scx.common.util.ScxExceptionHelper;
-import cool.scx.web.exception.BadRequestException;
-import cool.scx.web.exception.InternalServerErrorException;
-import cool.scx.web.exception.ScxHttpException;
+import cool.scx.http.exception.BadRequestException;
+import cool.scx.http.routing.Router;
+import cool.scx.http.routing.RoutingContext;
+import cool.scx.http.routing.WebSocketRouter;
 import cool.scx.web.exception_handler.ExceptionHandler;
 import cool.scx.web.exception_handler.LastExceptionHandler;
 import cool.scx.web.exception_handler.ScxHttpExceptionHandler;
@@ -16,13 +16,10 @@ import cool.scx.web.parameter_handler.exception.ParamConvertException;
 import cool.scx.web.parameter_handler.exception.RequiredParamEmptyException;
 import cool.scx.web.return_value_handler.*;
 import cool.scx.web.template.ScxTemplateHandler;
-import cool.scx.web.websocket.WebSocketRouter;
-import io.vertx.core.Handler;
-import io.vertx.ext.web.Router;
-import io.vertx.ext.web.RoutingContext;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 public final class ScxWeb {
@@ -196,28 +193,16 @@ public final class ScxWeb {
     }
 
     public ScxWeb bindErrorHandler(Router vertxRouter) {
-        for (var s : HttpStatusCode.values()) {
-            if (s.code() >= 400) {
-                vertxRouter.errorHandler(s.code(), routerErrorHandler);
-            }
-        }
+        vertxRouter.errorHandler(routerErrorHandler);
         return this;
     }
 
-    private record RouterErrorHandler(ScxWeb scxWeb) implements Handler<RoutingContext> {
+    private record RouterErrorHandler(ScxWeb scxWeb) implements BiConsumer<Throwable, RoutingContext> {
 
         @Override
-        public void handle(RoutingContext routingContext) {
-            var cause = ScxExceptionHelper.getRootCause(routingContext.failure());
-            var statusCode = routingContext.statusCode();
-            if (statusCode == 500) { // vertx 会将所有为声明状态码的异常归类为 500 其中就包括 我们的 ScxHttpException
-                this.scxWeb.findExceptionHandler(cause).handle(cause, routingContext);
-            } else {
-                //不是 500 的话 根据状态码 我们看一下是否能需要进行一次包装
-                var status = HttpStatusCode.of(statusCode);
-                var scxHttpException = status != null ? new ScxHttpException(status, cause) : new InternalServerErrorException(cause);
-                this.scxWeb.findExceptionHandler(scxHttpException).handle(scxHttpException, routingContext);
-            }
+        public void accept(Throwable throwable, RoutingContext routingContext) {
+            var cause = ScxExceptionHelper.getRootCause(throwable);
+            this.scxWeb.findExceptionHandler(cause).handle(cause, routingContext);
         }
 
     }
