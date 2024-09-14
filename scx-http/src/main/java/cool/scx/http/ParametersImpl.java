@@ -4,7 +4,7 @@ import cool.scx.common.util.MultiMap;
 
 import java.util.List;
 
-public class ParametersImpl implements ParametersWritable {
+class ParametersImpl implements ParametersWritable {
 
     private final MultiMap<String, String> map = new MultiMap<>();
 
