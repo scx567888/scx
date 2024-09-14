@@ -2,8 +2,8 @@ package cool.scx.http.helidon;
 
 import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.ScxServerWebSocket;
-import cool.scx.http.URIPath;
-import cool.scx.http.URIPathImpl;
+import cool.scx.http.uri.URIPath;
+import cool.scx.http.uri.URIQuery;
 import io.helidon.common.buffers.BufferData;
 import io.helidon.http.Headers;
 import io.helidon.http.HttpPrologue;
@@ -15,6 +15,7 @@ class HelidonServerWebSocket implements ScxServerWebSocket {
 
     private final WsSession wsSession;
     private final URIPath path;
+    private final HelidonURIQuery query;
     private final HelidonHttpHeaders<Headers> headers;
     Consumer<String> textMessageHandler;
     Consumer<byte[]> binaryMessageHandler;
@@ -25,13 +26,19 @@ class HelidonServerWebSocket implements ScxServerWebSocket {
 
     public HelidonServerWebSocket(WsSession session, HttpPrologue prologue, Headers headers) {
         this.wsSession = session;
-        this.path = new URIPathImpl(prologue.uriPath().path(), new HelidonURIQuery(prologue.query()));
+        this.path = URIPath.of().value(prologue.uriPath().path());
+        this.query = new HelidonURIQuery(prologue.query());
         this.headers = new HelidonHttpHeaders<>(headers);
     }
 
     @Override
     public URIPath path() {
         return path;
+    }
+
+    @Override
+    public URIQuery query() {
+        return query;
     }
 
     @Override
