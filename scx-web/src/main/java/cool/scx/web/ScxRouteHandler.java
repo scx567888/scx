@@ -1,17 +1,18 @@
 package cool.scx.web;
 
-import cool.scx.common.functional.ScxConsumer;
 import cool.scx.common.reflect.MethodInfo;
 import cool.scx.common.util.CaseUtils;
 import cool.scx.common.util.ScxExceptionHelper;
 import cool.scx.common.util.URIBuilder;
 import cool.scx.http.HttpMethod;
+import cool.scx.http.routing.MethodMatcher;
+import cool.scx.http.routing.PathMatcher;
+import cool.scx.http.routing.Route;
 import cool.scx.http.routing.RoutingContext;
 import cool.scx.web.annotation.ScxRoute;
-import io.vertx.core.Handler;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
+import java.util.Set;
 import java.util.function.Consumer;
 
 import static cool.scx.common.util.AnnotationUtils.getAnnotationValue;
@@ -24,60 +25,19 @@ import static cool.scx.web.ScxWebHelper.responseCanUse;
  * @author scx567888
  * @version 0.3.6
  */
-public final class ScxRouteHandler implements Consumer<RoutingContext> {
+public final class ScxRouteHandler implements Route, Consumer<RoutingContext> {
 
-    /**
-     * 方法
-     */
     public final MethodInfo method;
-
-    /**
-     * 返回值类型为空
-     */
     public final boolean isVoid;
-
-    /**
-     * 实例
-     */
     public final Object instance;
-
-    /**
-     * clazz 对象
-     */
     public final Class<?> clazz;
-
-    /**
-     * 原始的 url 处理规则为 {类注解值}/{方法注解值} 并采取简单的去除重复 "/"
-     */
-    public final String originalUrl;
-
-    /**
-     * httpMethods 由 注解上的 method 属性转换而来 并采用 set 进行去重
-     */
-    public final HttpMethod[] httpMethods;
-
-    /**
-     * 配置
-     */
     private final ScxWeb scxWeb;
-
-    /**
-     * 排序 优先级最高
-     */
+    private final String path;
+    private final Set<HttpMethod> methods;
     private final int order;
+    private final PathMatcher pathMatcher;
+    private final MethodMatcher methodMatcher;
 
-    /**
-     * a
-     */
-    private RouteState routeState;
-
-    /**
-     * a
-     *
-     * @param method   a
-     * @param scxWeb   a
-     * @param instance ex
-     */
     ScxRouteHandler(MethodInfo method, Object instance, ScxWeb scxWeb) {
         this.scxWeb = scxWeb;
         this.clazz = instance.getClass();
@@ -88,20 +48,14 @@ public final class ScxRouteHandler implements Consumer<RoutingContext> {
         //根据注解初始化值
         var clazzAnnotation = clazz.getAnnotation(ScxRoute.class);
         var methodAnnotation = findScxRouteOrThrow(method);
-        this.originalUrl = initOriginalUrl(clazzAnnotation, methodAnnotation);
-        this.httpMethods = distinct(methodAnnotation.methods());
+        this.path = initPath(clazzAnnotation, methodAnnotation);
+        this.methods = Set.of(methodAnnotation.methods());
         this.order = methodAnnotation.order();
+        this.pathMatcher = PathMatcher.of(path);
+        this.methodMatcher = MethodMatcher.of(methodAnnotation.methods());
     }
 
-    private static HttpMethod[] distinct(HttpMethod[] methods) {
-        return Arrays.stream(methods).distinct().toArray(HttpMethod[]::new);
-    }
-
-    private static String[] distinct(String[] strings) {
-        return Arrays.stream(strings).distinct().toArray(String[]::new);
-    }
-
-    private String initOriginalUrl(ScxRoute classAnnotation, ScxRoute methodAnnotation) {
+    private String initPath(ScxRoute classAnnotation, ScxRoute methodAnnotation) {
         var classUrl = "";
         var methodUrl = "";
         //处理 类 级别的注解的 url
@@ -149,16 +103,34 @@ public final class ScxRouteHandler implements Consumer<RoutingContext> {
         }
     }
 
-    void setRouteState(RouteState route) {
-        this.routeState = route;
+    @Override
+    public String path() {
+        return path;
     }
 
-    RouteState routeState() {
-        return routeState;
+    @Override
+    public Set<HttpMethod> methods() {
+        return methods;
     }
 
+    @Override
+    public PathMatcher pathMatcher() {
+        return pathMatcher;
+    }
+
+    @Override
+    public MethodMatcher methodMatcher() {
+        return methodMatcher;
+    }
+
+    @Override
     public int order() {
         return order;
+    }
+
+    @Override
+    public Consumer<RoutingContext> handler() {
+        return this;
     }
 
 }
