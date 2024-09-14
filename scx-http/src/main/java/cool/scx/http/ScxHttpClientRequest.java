@@ -1,5 +1,7 @@
 package cool.scx.http;
 
+import cool.scx.http.uri.URIWritable;
+
 public interface ScxHttpClientRequest {
 
     static ScxHttpClientRequest of() {
@@ -8,7 +10,7 @@ public interface ScxHttpClientRequest {
 
     ScxHttpMethod method();
 
-    URIPath path();
+    URIWritable uri();
 
     ScxHttpHeadersWritable headers();
 
@@ -16,7 +18,9 @@ public interface ScxHttpClientRequest {
 
     ScxHttpClientRequest method(HttpMethod method);
 
-    ScxHttpClientRequest path(URIPath path);
+    ScxHttpClientRequest uri(URIWritable uri);
+
+    ScxHttpClientRequest headers(ScxHttpHeadersWritable headers);
 
     ScxHttpClientRequest body(Object body);
 

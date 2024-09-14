@@ -39,7 +39,7 @@ public class WebSocketRoutingContext {
             var routeState = iter.next();
 
             //匹配路径
-            var pathMatchResult = routeState.pathMatcher().matches(webSocket.path().path());
+            var pathMatchResult = routeState.pathMatcher().matches(webSocket.path().value());
 
             this.nowPathParams = pathMatchResult.pathParams();
 

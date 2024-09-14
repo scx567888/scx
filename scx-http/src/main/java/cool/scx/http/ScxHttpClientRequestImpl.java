@@ -1,33 +1,37 @@
 package cool.scx.http;
 
+import cool.scx.http.uri.URI;
+import cool.scx.http.uri.URIWritable;
+
 import static cool.scx.http.HttpMethod.GET;
 
-public class ScxHttpClientRequestImpl implements ScxHttpClientRequest {
+class ScxHttpClientRequestImpl implements ScxHttpClientRequest {
 
-    private ScxHttpMethod method;
+    private HttpMethod method;
+    private URIWritable uri;
     private ScxHttpHeadersWritable headers;
-    private URIPath path;
     private Object body;
 
     public ScxHttpClientRequestImpl() {
         this.method = GET;
-        this.path = null;
-        this.headers = new ScxHttpHeadersImpl();
+        this.uri = URI.of();
+        this.headers = ScxHttpHeaders.of();
+        this.body = null;
     }
 
     @Override
     public ScxHttpMethod method() {
-        return this.method;
+        return method;
     }
 
     @Override
-    public URIPath path() {
-        return this.path;
+    public URIWritable uri() {
+        return uri;
     }
 
     @Override
     public ScxHttpHeadersWritable headers() {
-        return this.headers;
+        return headers;
     }
 
     @Override
@@ -42,8 +46,14 @@ public class ScxHttpClientRequestImpl implements ScxHttpClientRequest {
     }
 
     @Override
-    public ScxHttpClientRequest path(URIPath path) {
-        this.path = path;
+    public ScxHttpClientRequest uri(URIWritable uri) {
+        this.uri = uri;
+        return this;
+    }
+
+    @Override
+    public ScxHttpClientRequest headers(ScxHttpHeadersWritable headers) {
+        this.headers = headers;
         return this;
     }
 

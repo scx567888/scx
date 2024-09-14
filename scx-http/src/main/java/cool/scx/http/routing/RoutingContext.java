@@ -45,7 +45,7 @@ public class RoutingContext {
             var routeState = iter.next();
 
             //匹配路径
-            var pathMatchResult = routeState.pathMatcher().matches(request.path().path());
+            var pathMatchResult = routeState.pathMatcher().matches(request.path().value());
 
             this.nowPathParams = pathMatchResult.pathParams();
 

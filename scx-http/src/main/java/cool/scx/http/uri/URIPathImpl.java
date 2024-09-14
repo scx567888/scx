@@ -3,7 +3,7 @@ package cool.scx.http.uri;
 import static cool.scx.http.uri.URIDecoder.decode;
 import static cool.scx.http.uri.URIEncoder.encode;
 
-public class URIPathImpl implements URIPathWritable {
+class URIPathImpl implements URIPathWritable {
 
     private String value;
     private String rawValue;
