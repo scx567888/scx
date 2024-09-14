@@ -14,5 +14,16 @@ public interface URIWritable extends URI {
 
     URIWritable fragment(URIFragment fragment);
 
+    default URIWritable path(String path) {
+        return path(URIPath.of(path));
+    }
+
+    default URIWritable query(String query) {
+        return query(URIQuery.of(query));
+    }
+
+    default URIWritable fragment(String fragment) {
+        return fragment(URIFragment.of(fragment));
+    }
 
 }

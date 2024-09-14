@@ -12,9 +12,9 @@ public interface URI {
                 .scheme(u.getScheme())
                 .host(u.getHost())
                 .port(u.getPort())
-                .path(URIPath.of(u.getPath()))
-                .query(URIQuery.of(u.getQuery()))
-                .fragment(URIFragment.of(u.getFragment()));
+                .path(u.getPath())
+                .query(u.getQuery())
+                .fragment(u.getFragment());
     }
 
     String scheme();

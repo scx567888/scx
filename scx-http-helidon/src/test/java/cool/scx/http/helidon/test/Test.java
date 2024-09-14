@@ -26,28 +26,28 @@ public class Test {
 
         var router = new Router();
 
-        router.addRoute(new Route().path("/*").handler(c -> {
-            System.out.println(c.request().path().path());
+        router.addRoute(Route.of().path("/*").handler(c -> {
+            System.out.println(c.request().path().value());
             c.next();
         }));
 
-        router.addRoute(new Route().path("/hello").method(GET).handler(c -> {
+        router.addRoute(Route.of().path("/hello").method(GET).handler(c -> {
             c.response().send("hello");
         }));
 
-        router.addRoute(new Route().path("/path-params/:id").method(GET).handler(c -> {
+        router.addRoute(Route.of().path("/path-params/:id").method(GET).handler(c -> {
             c.response().send("id : " + c.pathParams().get("id"));
         }));
 
-        router.addRoute(new Route().path("/401").method(GET).handler(c -> {
+        router.addRoute(Route.of().path("/401").method(GET).handler(c -> {
             throw new UnauthorizedException();
         }));
 
-        router.addRoute(new Route().path("/405").method(POST).handler(c -> {
+        router.addRoute(Route.of().path("/405").method(POST).handler(c -> {
             System.out.println("405");
         }));
 
-        router.addRoute(new Route().path("/last").method(GET).handler(c -> {
+        router.addRoute(Route.of().path("/last").method(GET).handler(c -> {
             var r = 1 / 0;
         }));
 

@@ -8,5 +8,5 @@ public class URITest {
         var uri = URI.of("http://www.example.com/abc/bcd?name=小明&age=20#999");
         System.out.println(uri);
     }
-    
+
 }

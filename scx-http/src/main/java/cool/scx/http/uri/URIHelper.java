@@ -17,6 +17,9 @@ public class URIHelper {
 
     public static URIQueryWritable decodeQuery(String value) {
         var query = URIQuery.of();
+        if (value == null) {
+            return query;
+        }
         var split = value.split("&");
         for (var s : split) {
             split = s.split("=", 2);
