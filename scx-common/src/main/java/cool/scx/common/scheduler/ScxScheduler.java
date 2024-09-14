@@ -32,4 +32,8 @@ public final class ScxScheduler {
         return new ScheduleRunnable(task).schedule(this.taskScheduler, options);
     }
 
+    public ScheduledExecutorService scheduledExecutorService() {
+        return scheduledExecutorService;
+    }
+
 }

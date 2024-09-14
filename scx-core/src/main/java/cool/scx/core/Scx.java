@@ -14,11 +14,11 @@ import cool.scx.data.jdbc.AnnotationConfigTable;
 import cool.scx.jdbc.JDBCContext;
 import cool.scx.jdbc.meta_data.SchemaHelper;
 import cool.scx.jdbc.sql.SQLRunner;
-import cool.scx.web.RouteRegistrar;
 import cool.scx.web.ScxWeb;
 import cool.scx.web.ScxWebOptions;
+import cool.scx.web.RouteRegistrar;
 import cool.scx.web.WebSocketRouteRegistrar;
-import cool.scx.web.websocket.WebSocketRouter;
+import cool.scx.http.routing.WebSocketRouter;
 import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
 import io.vertx.core.eventbus.EventBus;
@@ -97,13 +97,13 @@ public final class Scx {
         //2, 初始化 ScxLog 日志框架
         initScxLoggerFactory(this.scxConfig, this.scxEnvironment);
         //3, 初始化任务调度器 这是核心调度器
-        this.scxScheduler = new ScxScheduler(newScheduledThreadPool(Integer.MAX_VALUE, new ScxVirtualThreadFactory()));
+        this.scxScheduler = new ScxScheduler();
         //4, 初始化 Vertx 这里在 log4j2 之后初始化是因为 vertx 需要使用 log4j2 打印日志
         this.vertx = Vertx.vertx(vertxOptions);
         //5, 初始化事件总线
         ZeroCopyMessageCodec.registerCodec(this.vertx.eventBus());
         //6, 初始化 BeanFactory
-        this.beanFactory = initBeanFactory(this.scxModules, scxScheduler, this.scxFeatureConfig);
+        this.beanFactory = initBeanFactory(this.scxModules, scxScheduler.scheduledExecutorService(), this.scxFeatureConfig);
         //7, 初始化 Web
         this.scxWeb = new ScxWeb(new ScxWebOptions().templateRoot(scxOptions.templateRoot()).useDevelopmentErrorPage(scxFeatureConfig.get(ScxCoreFeature.USE_DEVELOPMENT_ERROR_PAGE)));
     }

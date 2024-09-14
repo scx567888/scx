@@ -1,6 +1,6 @@
 package cool.scx.ext.fss;
 
-import cool.scx.common.standard.HttpMethod;
+import cool.scx.http.HttpMethod;
 import cool.scx.common.util.Cache;
 import cool.scx.common.util.FileUtils;
 import cool.scx.web.annotation.*;

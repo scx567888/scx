@@ -1,6 +1,5 @@
 package cool.scx.core.test;
 
-import cool.scx.common.http_client.ScxHttpClientHelper;
 import cool.scx.common.http_client.request_body.FormData;
 import cool.scx.common.util.*;
 import cool.scx.common.zip.UnZipBuilder;
@@ -18,6 +17,7 @@ import cool.scx.core.test.car.CarService;
 import cool.scx.core.test.person.Person;
 import cool.scx.core.test.person.PersonService;
 import cool.scx.data.query.QueryOption;
+import cool.scx.http_client.ScxHttpClientHelper;
 import cool.scx.jdbc.sql.SQL;
 import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.ext.web.handler.FileSystemAccess;

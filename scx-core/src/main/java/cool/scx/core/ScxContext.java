@@ -10,7 +10,7 @@ import cool.scx.core.enumeration.ScxCoreFeature;
 import cool.scx.jdbc.JDBCContext;
 import cool.scx.jdbc.sql.SQLRunner;
 import cool.scx.web.ScxWeb;
-import cool.scx.web.websocket.WebSocketRouter;
+import cool.scx.http.routing.WebSocketRouter;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.http.HttpServer;
