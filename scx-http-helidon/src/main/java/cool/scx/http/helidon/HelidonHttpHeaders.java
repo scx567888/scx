@@ -42,7 +42,7 @@ class HelidonHttpHeaders<T extends Headers> implements ScxHttpHeaders {
     }
 
     @Override
-    public Iterator<Map.Entry<String, List<String>>> iterator() {
+    public Iterator<Map.Entry<ScxHttpHeaderName, List<String>>> iterator() {
         var s = this.headers.iterator();
         return new Iterator<>() {
             @Override
@@ -51,9 +51,9 @@ class HelidonHttpHeaders<T extends Headers> implements ScxHttpHeaders {
             }
 
             @Override
-            public Map.Entry<String, List<String>> next() {
+            public Map.Entry<ScxHttpHeaderName, List<String>> next() {
                 var next = s.next();
-                return new AbstractMap.SimpleEntry<>(next.name(), next.allValues());
+                return new AbstractMap.SimpleEntry<>(ScxHttpHeaderName.of(next.name()), next.allValues());
             }
         };
     }

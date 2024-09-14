@@ -33,4 +33,15 @@ class HelidonHttpHeadersWritable extends HelidonHttpHeaders<ServerResponseHeader
         return this;
     }
 
+    @Override
+    public ScxHttpHeadersWritable remove(ScxHttpHeaderName headerName) {
+        return remove(headerName.value());
+    }
+
+    @Override
+    public ScxHttpHeadersWritable remove(String headerName) {
+        headers.remove(HeaderNames.create(headerName));
+        return this;
+    }
+
 }
