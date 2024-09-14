@@ -1,4 +1,4 @@
-package cool.scx.http;
+package cool.scx.http.uri;
 
 public interface URIQueryWritable extends URIQuery {
 

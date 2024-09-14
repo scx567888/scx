@@ -5,7 +5,7 @@ public interface URI {
     static URIWritable of() {
         return new URIImpl();
     }
-    
+
     String scheme();
 
     String host();
