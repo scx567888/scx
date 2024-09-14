@@ -109,6 +109,13 @@
                 <version>${helidon.version}</version>
             </dependency>
 
+            <!-- helidon webclient -->
+            <dependency>
+                <groupId>io.helidon.webclient</groupId>
+                <artifactId>helidon-webclient</artifactId>
+                <version>${helidon.version}</version>
+            </dependency>
+
             <!-- vert.x 核心包 -->
             <dependency>
                 <groupId>io.vertx</groupId>
