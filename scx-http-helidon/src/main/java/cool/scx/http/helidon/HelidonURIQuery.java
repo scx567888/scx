@@ -1,6 +1,6 @@
 package cool.scx.http.helidon;
 
-import cool.scx.http.URIQuery;
+import cool.scx.http.uri.URIQuery;
 import io.helidon.common.uri.UriQuery;
 
 import java.util.List;
