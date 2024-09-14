@@ -2,9 +2,12 @@ package cool.scx.http;
 
 import cool.scx.common.util.MultiMap;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-class ParametersImpl implements ParametersWritable {
+public class ParametersImpl implements ParametersWritable {
 
     private final MultiMap<String, String> map = new MultiMap<>();
 
@@ -27,6 +30,16 @@ class ParametersImpl implements ParametersWritable {
     }
 
     @Override
+    public long size() {
+        return map.size();
+    }
+
+    @Override
+    public Set<String> names() {
+        return map.keySet();
+    }
+
+    @Override
     public String get(String name) {
         return map.getFirst(name);
     }
@@ -34,6 +47,11 @@ class ParametersImpl implements ParametersWritable {
     @Override
     public List<String> getAll(String name) {
         return map.get(name);
+    }
+
+    @Override
+    public Iterator<Map.Entry<String, List<String>>> iterator() {
+        return map.toMultiValueMap().entrySet().iterator();
     }
 
 }

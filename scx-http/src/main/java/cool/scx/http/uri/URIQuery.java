@@ -1,11 +1,17 @@
 package cool.scx.http.uri;
 
-import java.util.List;
+import cool.scx.http.Parameters;
 
-public interface URIQuery {
+import static cool.scx.http.uri.URIHelper.decodeQuery;
 
-    String get(String name);
+public interface URIQuery extends Parameters {
 
-    List<String> getAll(String name);
+    static URIQueryWritable of() {
+        return new URIQueryImpl();
+    }
+
+    static URIQueryWritable of(String queryString) {
+        return decodeQuery(queryString);
+    }
 
 }

@@ -9,6 +9,15 @@ public class URIImpl implements URIWritable {
     private URIQuery query;
     private URIFragment fragment;
 
+    public URIImpl() {
+        this.scheme = null;
+        this.host = null;
+        this.port = -1;
+        this.path = URIPath.of();
+        this.query = URIQuery.of();
+        this.fragment = URIFragment.of();
+    }
+
     @Override
     public URIWritable scheme(String scheme) {
         this.scheme = scheme;
@@ -73,6 +82,11 @@ public class URIImpl implements URIWritable {
     @Override
     public URIFragment fragment() {
         return fragment;
+    }
+
+    @Override
+    public String toString() {
+        return URIHelper.toString(this);
     }
 
 }

@@ -1,9 +1,7 @@
 package cool.scx.http.uri;
 
-public interface URIQueryWritable extends URIQuery {
+import cool.scx.http.ParametersWritable;
 
-    URIQueryWritable set(String name, String... value);
-
-    URIQueryWritable add(String name, String... value);
+public interface URIQueryWritable extends URIQuery, ParametersWritable {
 
 }

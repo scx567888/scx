@@ -1,7 +1,7 @@
 package cool.scx.http.uri;
 
-import static cool.scx.http.uri.URIDecoder.decode;
-import static cool.scx.http.uri.URIEncoder.encode;
+import static cool.scx.http.uri.URIHelper.decode;
+import static cool.scx.http.uri.URIHelper.encode;
 
 class URIPathImpl implements URIPathWritable {
 

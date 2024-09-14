@@ -6,6 +6,10 @@ public interface URIPath {
         return new URIPathImpl();
     }
 
+    static URIPathWritable of(String path) {
+        return new URIPathImpl().value(path);
+    }
+
     /**
      * 解码后的值
      *
