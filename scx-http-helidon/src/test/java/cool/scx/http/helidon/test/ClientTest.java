@@ -17,5 +17,5 @@ public class ClientTest {
         var string = response.body().asString();
         System.out.println(string);
     }
-    
+
 }

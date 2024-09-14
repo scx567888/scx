@@ -12,7 +12,7 @@ class WebSocketRouteImpl implements WebSocketRouteWritable {
     public WebSocketRouteImpl() {
         this.path = null;
         this.pathMatcher = PathMatcher.any();
-        this.order = Integer.MAX_VALUE;
+        this.order = 0;
         this.handler = WebSocketRoutingContext::next;
     }
 

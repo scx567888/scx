@@ -23,7 +23,7 @@ class RouteImpl implements RouteWritable {
         this.methods = new HashSet<>();
         this.pathMatcher = PathMatcher.any();
         this.methodMatcher = MethodMatcher.any();
-        this.order = Integer.MAX_VALUE;
+        this.order = 0;
         this.handler = RoutingContext::next;
     }
 
