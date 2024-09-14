@@ -3,7 +3,7 @@ package cool.scx.http.routing;
 import java.util.function.Consumer;
 
 public interface WebSocketRouteWritable extends WebSocketRoute {
-    
+
     WebSocketRouteWritable path(String path);
 
     WebSocketRouteWritable pathRegex(String path);

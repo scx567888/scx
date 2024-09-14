@@ -61,5 +61,5 @@ class WebSocketRouteImpl implements WebSocketRouteWritable {
     public Consumer<WebSocketRoutingContext> handler() {
         return handler;
     }
-    
+
 }

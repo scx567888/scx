@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 /**
  * 路由只保存状态不做行为处理
  */
-class RouteImpl implements RouteWritable{
+class RouteImpl implements RouteWritable {
 
     private String path;
     private Set<HttpMethod> methods;
