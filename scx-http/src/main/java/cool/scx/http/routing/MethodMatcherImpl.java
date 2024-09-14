@@ -1,4 +1,6 @@
-package cool.scx.http;
+package cool.scx.http.routing;
+
+import cool.scx.http.ScxHttpMethod;
 
 import java.util.Set;
 

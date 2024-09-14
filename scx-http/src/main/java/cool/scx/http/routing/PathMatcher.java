@@ -1,9 +1,11 @@
-package cool.scx.http;
+package cool.scx.http.routing;
+
+import cool.scx.http.Parameters;
 
 public interface PathMatcher {
 
     static PathMatcher any() {
-        return path -> new MatchResult(true, new ParametersImpl());
+        return path -> new MatchResult(true, Parameters.of());
     }
 
     static PathMatcher of(String path) {

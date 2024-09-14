@@ -1,4 +1,7 @@
-package cool.scx.http;
+package cool.scx.http.routing;
+
+import cool.scx.http.Parameters;
+import cool.scx.http.ParametersWritable;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -285,7 +288,7 @@ public class PathMatcherImpl implements PathMatcher {
 
     @Override
     public MatchResult matches(String path) {
-        var pathParams = new ParametersImpl();
+        var pathParams = Parameters.of();
         var accepted = matches(path, pathParams);
         return new MatchResult(accepted, pathParams);
     }
