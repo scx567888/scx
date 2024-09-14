@@ -7,6 +7,10 @@ import java.util.function.Consumer;
  */
 public interface WebSocketRoute {
 
+    static WebSocketRouteWritable of() {
+        return new WebSocketRouteImpl();
+    }
+
     String path();
 
     PathMatcher pathMatcher();

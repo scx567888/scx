@@ -1,6 +1,6 @@
 package cool.scx.http.test;
 
-import cool.scx.http.PathMatcher;
+import cool.scx.http.routing.PathMatcher;
 
 public class PathMatcherTest {
 

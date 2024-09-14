@@ -10,6 +10,10 @@ import java.util.function.Consumer;
  */
 public interface Route {
 
+    static RouteWritable of() {
+        return new RouteImpl();
+    }
+
     String path();
 
     Set<HttpMethod> methods();
