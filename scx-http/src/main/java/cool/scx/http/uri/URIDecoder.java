@@ -8,5 +8,5 @@ public class URIDecoder {
     public static String decode(String value) {
         return URLDecoder.decode(value, StandardCharsets.UTF_8);
     }
-    
+
 }

@@ -1,10 +1,15 @@
 package cool.scx.http;
 
+import cool.scx.http.uri.URIPath;
+import cool.scx.http.uri.URIQuery;
+
 public interface ScxHttpServerRequest {
 
     ScxHttpMethod method();
 
     URIPath path();
+
+    URIQuery query();
 
     HttpVersion version();
 
@@ -16,10 +21,6 @@ public interface ScxHttpServerRequest {
 
     default String getHeader(ScxHttpHeaderName name) {
         return headers().get(name);
-    }
-
-    default URIQuery query() {
-        return path().query();
     }
 
 }

@@ -8,5 +8,5 @@ public class URIEncoder {
     public static String encode(String value) {
         return URLEncoder.encode(value, StandardCharsets.UTF_8);
     }
-    
+
 }

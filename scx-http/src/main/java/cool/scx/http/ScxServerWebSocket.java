@@ -1,10 +1,15 @@
 package cool.scx.http;
 
+import cool.scx.http.uri.URIPath;
+import cool.scx.http.uri.URIQuery;
+
 import java.util.function.Consumer;
 
 public interface ScxServerWebSocket {
 
     URIPath path();
+
+    URIQuery query();
 
     ScxHttpHeaders headers();
 

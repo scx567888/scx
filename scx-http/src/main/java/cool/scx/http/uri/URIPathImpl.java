@@ -30,6 +30,6 @@ public class URIPathImpl implements URIPathWritable {
     @Override
     public String rawValue() {
         return rawValue;
-    }   
+    }
 
 }
