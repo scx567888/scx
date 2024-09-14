@@ -37,7 +37,7 @@ public final class WebSocketRouteRegistrar {
         var path = URIBuilder.addSlashStart(URIBuilder.join(scxWebSocketMapping.value()));
         var order = scxWebSocketMapping.order();
         //todo 需要重新设计
-        return new WebSocketRoute().order(order).path(path).handler((d)-> {
+        return WebSocketRoute.of().order(order).path(path).handler((d) -> {
             try {
                 o.onOpen(d);
             } catch (Exception e) {

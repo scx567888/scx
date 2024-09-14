@@ -33,37 +33,6 @@ public final class RequestInfo {
         initBody(ctx, this.contentType);
     }
 
-    /**
-     * 根据不同的 ContentType 以不同的逻辑初始化 body
-     *
-     * @param ctx         ctx
-     * @param contentType a
-     */
-    private void initBody(RoutingContext ctx, ContentType contentType) {
-        switch (contentType) {
-            case NULL -> {
-                this.body = null;
-                this.formData = null;
-            }
-            case APPLICATION_JSON -> {
-                var string = ctx.request().body().asString();
-                this.body = readJson(string);
-            }
-            case APPLICATION_XML -> {
-                var string = ctx.request().body().asString();
-                this.body = readXml(string);
-            }
-            case MULTIPART_FORM_DATA -> {
-                var multiPart = ctx.request().body().as(MultiPart.class);
-                this.formData = new FormData(multiPart);
-            }
-            default -> {
-                var string = ctx.request().body().asString();
-                this.body = tryReadOrTextNode(string);
-            }
-        }
-    }
-
     public static JsonNode readJson(String jsonStr) {
         try {
             return jsonMapper().readTree(jsonStr);
@@ -116,6 +85,37 @@ public final class RequestInfo {
             return APPLICATION_X_WWW_FORM_URLENCODED;
         } else {
             return OTHER;
+        }
+    }
+
+    /**
+     * 根据不同的 ContentType 以不同的逻辑初始化 body
+     *
+     * @param ctx         ctx
+     * @param contentType a
+     */
+    private void initBody(RoutingContext ctx, ContentType contentType) {
+        switch (contentType) {
+            case NULL -> {
+                this.body = null;
+                this.formData = null;
+            }
+            case APPLICATION_JSON -> {
+                var string = ctx.request().body().asString();
+                this.body = readJson(string);
+            }
+            case APPLICATION_XML -> {
+                var string = ctx.request().body().asString();
+                this.body = readXml(string);
+            }
+            case MULTIPART_FORM_DATA -> {
+                var multiPart = ctx.request().body().as(MultiPart.class);
+                this.formData = new FormData(multiPart);
+            }
+            default -> {
+                var string = ctx.request().body().asString();
+                this.body = string != null ? tryReadOrTextNode(string) : null;
+            }
         }
     }
 

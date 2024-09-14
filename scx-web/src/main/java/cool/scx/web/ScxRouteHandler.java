@@ -5,6 +5,7 @@ import cool.scx.common.util.CaseUtils;
 import cool.scx.common.util.ScxExceptionHelper;
 import cool.scx.common.util.URIBuilder;
 import cool.scx.http.HttpMethod;
+import cool.scx.http.ScxHttpMethod;
 import cool.scx.http.routing.MethodMatcher;
 import cool.scx.http.routing.PathMatcher;
 import cool.scx.http.routing.Route;
@@ -51,8 +52,8 @@ public final class ScxRouteHandler implements Route, Consumer<RoutingContext> {
         this.path = initPath(clazzAnnotation, methodAnnotation);
         this.methods = Set.of(methodAnnotation.methods());
         this.order = methodAnnotation.order();
-        this.pathMatcher = PathMatcher.of(path);
-        this.methodMatcher = MethodMatcher.of(methodAnnotation.methods());
+        this.pathMatcher = path.isBlank() ? PathMatcher.any() : PathMatcher.of(path);
+        this.methodMatcher = methods.isEmpty() ? MethodMatcher.any() : MethodMatcher.of(methods.toArray(ScxHttpMethod[]::new));
     }
 
     private String initPath(ScxRoute classAnnotation, ScxRoute methodAnnotation) {

@@ -151,7 +151,7 @@ public abstract class Image implements BaseVo {
          * @throws ScxHttpException if any.
          */
         private byte[] getBuffer(Path path, Integer width, Integer height, Position position) {
-            var file=path.toFile();
+            var file = path.toFile();
             try (var out = new ByteArrayOutputStream()) {
                 var image = Thumbnails.of(file).scale(1.0).asBufferedImage();
                 var imageHeight = image.getHeight();

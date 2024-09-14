@@ -30,12 +30,12 @@ public class ScxWebTest {
         //绑定异常处理器后可以直接再 handler 中抛出异常
         new ScxWeb(new ScxWebOptions().useDevelopmentErrorPage(true)).bindErrorHandler(router);
 
-        router.addRoute(new Route().path("/no-perm").handler(c -> {
+        router.addRoute(Route.of().path("/no-perm").handler(c -> {
             //这里可以直接抛出 异常
             throw new ForbiddenException(new RuntimeException("你没有权限 !!!"));
         }));
 
-        router.addRoute(new Route().path("/no-perm2").handler(c -> {
+        router.addRoute(Route.of().path("/no-perm2").handler(c -> {
             //或者用这种 vertx 的形式 和上方是一样的
             c.response().setStatusCode(FORBIDDEN).send("Error");
         }));
@@ -61,13 +61,13 @@ public class ScxWebTest {
         new ScxWeb().bindErrorHandler(router).registerHttpRoutes(router, new HelloWorldController());
 
         // 原有的并不会收到任何影响
-        router.addRoute(new Route().path("/vertx-route").handler(c -> {
+        router.addRoute(Route.of().path("/vertx-route").handler(c -> {
             //这里直接抛出会由 ScxWeb 进行处理
             c.response().send("vertx-route");
         }));
 
         vertx.requestHandler(router).start();
-        
+
         System.out.println("http://127.0.0.1:8081/hello");
         System.out.println("http://127.0.0.1:8081/no-perm");
         System.out.println("http://127.0.0.1:8081/vertx-route");

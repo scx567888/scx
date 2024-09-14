@@ -7,11 +7,10 @@ import cool.scx.common.util.JsonNodeHelper;
 import cool.scx.common.util.ObjectUtils;
 import cool.scx.http.HttpMethod;
 import cool.scx.http.Parameters;
-import cool.scx.http.URIQuery;
 import cool.scx.http.ScxHttpServerResponse;
 import cool.scx.http.routing.RoutingContext;
+import cool.scx.http.uri.URIQuery;
 import cool.scx.web.type.FormData;
-import io.helidon.common.uri.UriQuery;
 
 import java.io.IOException;
 import java.util.Map;
