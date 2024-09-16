@@ -1,14 +1,7 @@
 package cool.scx.common.util;
 
-import io.netty.handler.codec.http.QueryStringDecoder;
-import io.netty.handler.codec.http.QueryStringEncoder;
-
-import java.net.URI;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -23,23 +16,6 @@ public final class URIBuilder {
      * 切割正则表达式
      */
     private static final Pattern PATH_SEPARATOR = Pattern.compile("[/\\\\]+");
-
-    private final String path;
-
-    private final MultiMap<String, String> queryParams = new MultiMap<>();
-
-    private URIBuilder(QueryStringDecoder decoder) {
-        this.path = decoder.path();
-        decoder.parameters().forEach(this.queryParams::putAll);
-    }
-
-    public static URIBuilder of(String str) {
-        return new URIBuilder(new QueryStringDecoder(str, StandardCharsets.UTF_8));
-    }
-
-    public static URIBuilder of(URI uri) {
-        return new URIBuilder(new QueryStringDecoder(uri, StandardCharsets.UTF_8));
-    }
 
     /**
      * 拼接多个 uri 并进行一些简单的清理  例 : 处理前 ["a/b/", "/c"] 处理后 "a/b/c"
@@ -136,40 +112,6 @@ public final class URIBuilder {
 
     public static String[] split(String uri) {
         return PATH_SEPARATOR.split(uri, -1);
-    }
-
-    public URIBuilder addParam(String key, Object value) {
-        queryParams.put(key, value.toString());
-        return this;
-    }
-
-    public URIBuilder removeParam(String key) {
-        queryParams.removeAll(key);
-        return this;
-    }
-
-    public List<String> getParams(String key) {
-        return queryParams.get(key);
-    }
-
-    public Map<String, List<String>> getAllParams() {
-        return queryParams.toMultiValueMap();
-    }
-
-    public URIBuilder removeAllParams() {
-        queryParams.clear();
-        return this;
-    }
-
-    public URI build() {
-        return URI.create(this.toString());
-    }
-
-    @Override
-    public String toString() {
-        var encoder = new QueryStringEncoder(path, StandardCharsets.UTF_8);
-        queryParams.forEach(encoder::addParam);
-        return encoder.toString();
     }
 
 }
