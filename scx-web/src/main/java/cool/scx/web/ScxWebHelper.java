@@ -18,7 +18,6 @@ import java.util.Map;
 import static cool.scx.common.standard.MediaType.*;
 import static cool.scx.common.util.ObjectUtils.jsonMapper;
 import static cool.scx.http.HttpFieldName.CONTENT_TYPE;
-import static io.vertx.core.http.HttpMethod.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class ScxWebHelper {
@@ -27,7 +26,7 @@ public class ScxWebHelper {
      * <p>getFromMap.</p>
      *
      * @param name     a {@link java.lang.String} object
-     * @param map      a {@link io.vertx.core.MultiMap} object
+     * @param map      a  a
      * @param useAll   a boolean
      * @param javaType a {@link com.fasterxml.jackson.databind.JavaType} object
      * @return a {@link java.lang.Object} object
@@ -91,20 +90,6 @@ public class ScxWebHelper {
 
     public static boolean responseCanUse(RoutingContext context) {
         return !context.request().response().closed();
-    }
-
-    public static io.vertx.core.http.HttpMethod toVertxMethod(HttpMethod httpMethod) {
-        return switch (httpMethod) {
-            case CONNECT -> CONNECT;
-            case DELETE -> DELETE;
-            case GET -> GET;
-            case HEAD -> HEAD;
-            case OPTIONS -> OPTIONS;
-            case PATCH -> PATCH;
-            case POST -> POST;
-            case PUT -> PUT;
-            case TRACE -> TRACE;
-        };
     }
 
     public static ScxHttpServerResponse fillContentType(ScxHttpServerResponse response, MediaType contentType) {
