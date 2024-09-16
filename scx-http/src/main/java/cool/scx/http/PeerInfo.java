@@ -4,6 +4,9 @@ import java.net.SocketAddress;
 import java.security.Principal;
 import java.security.cert.Certificate;
 
+/**
+ * PeerInfo
+ */
 public interface PeerInfo {
 
     static PeerInfoWritable of() {

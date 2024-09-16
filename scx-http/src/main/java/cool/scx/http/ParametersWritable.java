@@ -1,5 +1,8 @@
 package cool.scx.http;
 
+/**
+ * ParametersWritable
+ */
 public interface ParametersWritable extends Parameters {
 
     ParametersWritable set(String name, String... value);
