@@ -3,7 +3,7 @@ package cool.scx.http.routing;
 import java.util.function.Consumer;
 
 /**
- * WebSocketRouteImpl 
+ * WebSocketRouteImpl
  */
 class WebSocketRouteImpl implements WebSocketRouteWritable {
 
