@@ -69,5 +69,5 @@ class PeerInfoImpl implements PeerInfoWritable {
         this.certificateSupplier = certificates;
         return this;
     }
-    
+
 }

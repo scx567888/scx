@@ -18,5 +18,5 @@ public interface PeerInfoWritable extends PeerInfo {
     PeerInfoWritable tlsPrincipal(Principal principal);
 
     PeerInfoWritable tlsCertificates(Certificate[] certificates);
-    
+
 }
