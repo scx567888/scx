@@ -1,5 +1,8 @@
 package cool.scx.http.uri;
 
+/**
+ * URIFragmentImpl
+ */
 class URIFragmentImpl implements URIFragmentWritable {
 
     private String value;
