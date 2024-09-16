@@ -18,6 +18,10 @@ public interface ScxHttpServerRequest {
 
     ScxHttpServerResponse response();
 
+    PeerInfo remotePeer();
+
+    PeerInfo localPeer();
+
     default URIPath path() {
         return uri().path();
     }

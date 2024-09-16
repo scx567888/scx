@@ -10,7 +10,7 @@ public class MethodMatcherTest {
 
     public static void main(String[] args) {
         var matcher = MethodMatcher.of(GET, POST);
-        var result = matcher.matches(ScxHttpMethod.of("get"));
+        var result = matcher.matches(ScxHttpMethod.of("GET"));
         System.out.println(result);
     }
 
