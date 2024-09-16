@@ -20,7 +20,7 @@ import static cool.scx.web.ScxWebHelper.getFromMap;
 public final class FromQueryParameterHandler implements ParameterHandler {
 
     public static Object getValueFromQuery(String name, boolean merge, boolean required, JavaType javaType, RequestInfo info) throws RequiredParamEmptyException, ParamConvertException {
-        var tempValue = getFromMap(name, info.routingContext().queryParams(), merge, javaType);
+        var tempValue = getFromMap(name, info.routingContext().request().query(), merge, javaType);
         if (tempValue == null) {
             if (required) {
                 throw new RequiredParamEmptyException("必填参数不能为空 !!! 参数名称 [" + name + "] , 参数来源 [FromQuery, merge=" + merge + "] , 参数类型 [" + javaType.getTypeName() + "]");

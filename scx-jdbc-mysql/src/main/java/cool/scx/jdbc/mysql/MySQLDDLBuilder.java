@@ -1,6 +1,6 @@
 package cool.scx.jdbc.mysql;
 
-import cool.scx.common.standard.JDBCType;
+import cool.scx.jdbc.JDBCType;
 import cool.scx.jdbc.dialect.DDLBuilder;
 import cool.scx.jdbc.mapping.Column;
 import cool.scx.jdbc.mapping.Table;

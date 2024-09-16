@@ -1,20 +1,17 @@
 package cool.scx.web.vo;
 
 import cool.scx.common.standard.MediaType;
-import cool.scx.common.util.ScxExceptionHelper;
-import cool.scx.web.exception.NotFoundException;
-import io.vertx.core.buffer.Buffer;
-import io.vertx.core.http.HttpServerResponse;
-import io.vertx.ext.web.RoutingContext;
+import cool.scx.http.ScxHttpServerResponse;
+import cool.scx.http.exception.NotFoundException;
+import cool.scx.http.routing.RoutingContext;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
-import java.util.Arrays;
 
-import static cool.scx.common.standard.HttpFieldName.CONTENT_DISPOSITION;
-import static cool.scx.common.standard.HttpFieldName.CONTENT_LENGTH;
+import static cool.scx.http.HttpFieldName.CONTENT_DISPOSITION;
+import static cool.scx.http.HttpFieldName.CONTENT_LENGTH;
 import static cool.scx.web.ScxWebHelper.fillContentType;
-import static cool.scx.web._hack.SendFileHelper.SEND_FILE_HELPER;
 
 /**
  * 基本写入程序 可以直接向相应体中写入数据
@@ -91,56 +88,39 @@ class BaseWriter implements BaseVo {
 
     protected void sendBytes(RoutingContext context) {
         var response = fillContentType(context.request().response(), contentType)
-                .putHeader(CONTENT_DISPOSITION.toString(), contentDisposition)
-                .putHeader(CONTENT_LENGTH.toString(), String.valueOf(this.bytes.length));
+                .setHeader(CONTENT_DISPOSITION, contentDisposition)
+                .setHeader(CONTENT_LENGTH, String.valueOf(this.bytes.length));
         this.writeBytes(response, 0);
     }
 
     protected void sendInputStream(RoutingContext context) {
         var response = fillContentType(context.request().response(), contentType)
-                .putHeader(CONTENT_DISPOSITION.toString(), contentDisposition).
-                setChunked(true);
+                .setHeader(CONTENT_DISPOSITION, contentDisposition);
+        //todo ?
+//                setChunked(true);
         this.writeInputStream(response);
     }
 
     protected void sendFile(RoutingContext context) throws NotFoundException {
-        context.request().response().putHeader(CONTENT_DISPOSITION.toString(), contentDisposition);
+        context.request().response().setHeader(CONTENT_DISPOSITION, contentDisposition);
         this.writeFile(context);
     }
 
-    private void writeBytes(HttpServerResponse response, int startIndex) {
-        //当前分块的尾部索引
-        var endIndex = startIndex + bucketSize;
-        //尾部索引 大于等于 字节长度 说明是最后一个区块
-        if (endIndex >= this.bytes.length) {
-            response.end(Buffer.buffer(Arrays.copyOfRange(this.bytes, startIndex, this.bytes.length)));
-        } else {//不是最后一个区块
-            response.write(Buffer.buffer(Arrays.copyOfRange(this.bytes, startIndex, endIndex)), (r) -> {
-                if (r.succeeded()) {
-                    //将尾部索引作为下一次递归的起始索引
-                    writeBytes(response, endIndex);
-                }
-            });
-        }
+    private void writeBytes(ScxHttpServerResponse response, int startIndex) {
+        response.send(this.bytes);
     }
 
-    private void writeInputStream(HttpServerResponse response) {
-        var b = new byte[bucketSize];
-        var endIndex = ScxExceptionHelper.wrap(() -> inputStream.read(b));
-        //已经读取完毕
-        if (endIndex == -1) {
-            response.end();
-        } else {//还有数据
-            response.write(Buffer.buffer(Arrays.copyOfRange(b, 0, endIndex)), (r) -> {
-                if (r.succeeded()) {
-                    writeInputStream(response);
-                }
-            });
+    private void writeInputStream(ScxHttpServerResponse response) {
+        try {
+            inputStream.transferTo(response.outputStream());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
     private void writeFile(RoutingContext context) throws NotFoundException {
-        SEND_FILE_HELPER.sendStatic(context, context.vertx().fileSystem(), this.path.toString(), false);
+        //todo 此处需要处理 206 之类的请求
+//        SEND_FILE_HELPER.sendStatic(context, context.vertx().fileSystem(), this.path.toString(), false);
     }
 
     enum Type {

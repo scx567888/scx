@@ -4,9 +4,10 @@ import cool.scx.common.reflect.MethodInfo;
 import cool.scx.common.reflect.ReflectFactory;
 import cool.scx.common.util.ClassUtils;
 import cool.scx.common.util.MultiMap;
+import cool.scx.http.routing.PathMatcherImpl;
+import cool.scx.http.routing.Router;
 import cool.scx.web.annotation.NoScxRoute;
 import cool.scx.web.annotation.ScxRoute;
-import io.vertx.ext.web.Router;
 import org.springframework.stereotype.Controller;
 
 import java.lang.System.Logger;
@@ -18,8 +19,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static cool.scx.common.reflect.AccessModifier.PUBLIC;
-import static cool.scx.web.RouteState.getRouteState;
-import static cool.scx.web.ScxWebHelper.toVertxMethod;
 import static java.lang.System.Logger.Level.WARNING;
 
 /**
@@ -31,8 +30,14 @@ import static java.lang.System.Logger.Level.WARNING;
 public final class RouteRegistrar {
 
     private static final Logger logger = System.getLogger(RouteRegistrar.class.getName());
-    private static final Comparator<ScxRouteHandler> EXACT_PATH_COMPARATOR = Comparator.comparing(routeState -> routeState.routeState().getExactPathOrder());
-    private static final Comparator<ScxRouteHandler> GROUPS_COMPARATOR = Comparator.comparing(routeState -> routeState.routeState().getGroupsOrder());
+    private static final Comparator<ScxRouteHandler> EXACT_PATH_COMPARATOR = Comparator.comparing(r -> {
+        var p = (PathMatcherImpl) r.pathMatcher();
+        return p.exactPath() ? 0 : 1;
+    });
+    private static final Comparator<ScxRouteHandler> GROUPS_COMPARATOR = Comparator.comparing(r -> {
+        var p = (PathMatcherImpl) r.pathMatcher();
+        return p.groups() == null ? 0 : p.groups().size();
+    });
     private static final Comparator<ScxRouteHandler> ORDER_COMPARATOR = Comparator.comparing(ScxRouteHandler::order);
     private static final Pattern RE_TOKEN_SEARCH = Pattern.compile(":(\\w+)");
     private final ScxWeb scxWeb;
@@ -72,19 +77,7 @@ public final class RouteRegistrar {
      * @return s
      */
     private static List<ScxRouteHandler> sortedScxRouteHandlers(List<ScxRouteHandler> handlers) {
-        var list = fillRouteState(handlers);
-        return list.stream().sorted(ORDER_COMPARATOR.thenComparing(EXACT_PATH_COMPARATOR).thenComparing(GROUPS_COMPARATOR)).toList();
-    }
-
-    /**
-     * 填充 routeState
-     *
-     * @param list a
-     * @return a
-     */
-    private static List<ScxRouteHandler> fillRouteState(List<ScxRouteHandler> list) {
-        var tempRouter = Router.router(null);
-        return list.stream().peek(c -> c.setRouteState(getRouteState(tempRouter.route(c.originalUrl)))).toList();
+        return handlers.stream().sorted(ORDER_COMPARATOR.thenComparing(EXACT_PATH_COMPARATOR).thenComparing(GROUPS_COMPARATOR)).toList();
     }
 
     private static ScxRouteHandler createScxRouteHandler(MethodInfo m, Object bean, ScxWeb scxWeb) {
@@ -155,13 +148,12 @@ public final class RouteRegistrar {
     private static void checkRouteExists(List<ScxRouteHandler> handlers) {
         var m = new MultiMap<NormalPathInfo, ScxRouteHandler>();
         for (var handler : handlers) {
-            var key = handler.routeState().pattern() != null
-                    ? handler.routeState().pattern().toString()
-                    : handler.routeState().path();
-            if (handler.httpMethods.length == 0) {
+            var p = (PathMatcherImpl) handler.pathMatcher();
+            var key = p.pattern() != null ? p.pattern().toString() : p.path();
+            if (handler.methods().isEmpty()) {
                 m.put(new NormalPathInfo("*", key), handler);
             } else {
-                for (var httpMethod : handler.httpMethods) {
+                for (var httpMethod : handler.methods()) {
                     m.put(new NormalPathInfo(httpMethod.name(), key), handler);
                 }
             }
@@ -171,7 +163,7 @@ public final class RouteRegistrar {
             if (v.size() > 1) { //具有多个路由
                 var content = v.stream().map(c -> "\t" + c.clazz.getName() + " : " + c.method.name()).collect(Collectors.joining(System.lineSeparator()));
                 logger.log(WARNING, "检测到重复的路由!!! {0} --> \"{1}\" , 相关 class 及 方法 如下 ▼" + System.lineSeparator() + "{2}",
-                        k.httpMethod(), getPatternUrl(v.get(0).originalUrl), content);
+                        k.httpMethod(), getPatternUrl(v.get(0).path()), content);
             }
         });
     }
@@ -192,17 +184,7 @@ public final class RouteRegistrar {
         checkRouteExists(scxRouteHandlers);
         //循环添加到 vertxRouter 中
         for (var c : scxRouteHandlers) {
-            var r = router.route(c.originalUrl);
-            for (var httpMethod : c.httpMethods) {
-                r.method(toVertxMethod(httpMethod));
-            }
-            for (var consumes : c.consumes) {
-                r.consumes(consumes);
-            }
-            for (var produces : c.produces) {
-                r.produces(produces);
-            }
-            r.handler(c);
+            router.addRoute(c);
         }
         return router;
     }

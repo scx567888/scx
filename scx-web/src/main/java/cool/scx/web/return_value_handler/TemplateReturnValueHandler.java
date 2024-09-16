@@ -1,8 +1,8 @@
 package cool.scx.web.return_value_handler;
 
+import cool.scx.http.routing.RoutingContext;
 import cool.scx.web.template.ScxTemplateHandler;
 import cool.scx.web.vo.Template;
-import io.vertx.ext.web.RoutingContext;
 
 /**
  * 用于渲染 freemarker

@@ -1,12 +1,11 @@
 package cool.scx.web.vo;
 
+import cool.scx.common.standard.FileFormat;
 import cool.scx.common.standard.MediaType;
-import cool.scx.web.exception.BadRequestException;
-import cool.scx.web.exception.NotFoundException;
-import cool.scx.web.exception.ScxHttpException;
-import io.vertx.core.buffer.Buffer;
-import io.vertx.core.http.impl.MimeMapping;
-import io.vertx.ext.web.RoutingContext;
+import cool.scx.http.exception.BadRequestException;
+import cool.scx.http.exception.NotFoundException;
+import cool.scx.http.exception.ScxHttpException;
+import cool.scx.http.routing.RoutingContext;
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.geometry.AbsoluteSize;
 import net.coobird.thumbnailator.geometry.Position;
@@ -16,10 +15,11 @@ import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Objects;
 
-import static cool.scx.common.standard.HttpFieldName.*;
+import static cool.scx.http.HttpFieldName.*;
 
 /**
  * <p>Image class.</p>
@@ -34,21 +34,21 @@ public abstract class Image implements BaseVo {
      *
      * @param _file a {@link java.io.File} object.
      */
-    protected Image(File _file) {
+    protected Image(Path _file) {
         Objects.requireNonNull(_file, "图片文件不能为 null");
         // 图片不存在 这里抛出不存在异常
-        if (!_file.exists()) {
+        if (Files.notExists(_file)) {
             throw new NotFoundException();
         }
     }
 
-    public static Image of(File file) {
+    public static Image of(Path file) {
         return of(file, null, null, null);
     }
 
-    public static Image of(File file, Integer width, Integer height, Position position) {
-        var contentType = MimeMapping.getMimeTypeForFilename(file.getName());
-        if (contentType != null && contentType.startsWith("image")) {
+    public static Image of(Path file, Integer width, Integer height, Position position) {
+        var fileFormat = FileFormat.ofFileName(file.toString());
+        if (fileFormat != null && fileFormat.mediaType().type().equals("image")) {
             if (height == null && width == null) {
                 return new OriginalImage(file);
             } else {
@@ -68,8 +68,8 @@ public abstract class Image implements BaseVo {
     public final void accept(RoutingContext context) throws BadRequestException {
         //设置缓存 减少服务器压力
         context.response()
-                .putHeader(CACHE_CONTROL.toString(), "public,immutable,max-age=2628000")
-                .putHeader(ACCEPT_RANGES.toString(), "bytes");
+                .setHeader(CACHE_CONTROL, "public,immutable,max-age=2628000")
+                .setHeader(ACCEPT_RANGES, "bytes");
         imageHandler(context);
     }
 
@@ -77,9 +77,9 @@ public abstract class Image implements BaseVo {
 
     private static final class SystemIconImage extends Image {
 
-        private final Buffer buffer;
+        private final byte[] buffer;
 
-        public SystemIconImage(File file) {
+        public SystemIconImage(Path file) {
             super(file);
             this.buffer = getBuffer(file);
         }
@@ -90,15 +90,15 @@ public abstract class Image implements BaseVo {
          * @return a {@link io.vertx.core.buffer.Buffer} object
          * @throws ScxHttpException if any.
          */
-        private Buffer getBuffer(File file) {
+        private byte[] getBuffer(Path file) {
             try (var out = new ByteArrayOutputStream()) {
-                var image = ((ImageIcon) FileSystemView.getFileSystemView().getSystemIcon(file)).getImage();
+                var image = ((ImageIcon) FileSystemView.getFileSystemView().getSystemIcon(file.toFile())).getImage();
                 var myImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
                 var g = myImage.createGraphics();
                 g.drawImage(image, 0, 0, null);
                 g.dispose();
                 ImageIO.write(myImage, "png", out);
-                return Buffer.buffer(out.toByteArray());
+                return out.toByteArray();
             } catch (Exception e) {
                 throw new BadRequestException(e);
             }
@@ -106,23 +106,23 @@ public abstract class Image implements BaseVo {
 
         @Override
         public void imageHandler(RoutingContext context) {
-            context.response().putHeader(CONTENT_TYPE.toString(), MediaType.IMAGE_PNG.toString()).end(buffer);
+            context.response().setHeader(CONTENT_TYPE, MediaType.IMAGE_PNG.toString()).send(buffer);
         }
 
     }
 
     private static final class OriginalImage extends Image {
 
-        private final String filePath;
+        private final Path filePath;
 
-        public OriginalImage(File file) {
+        public OriginalImage(Path file) {
             super(file);
-            this.filePath = file.getPath();
+            this.filePath = file;
         }
 
         @Override
         public void imageHandler(RoutingContext context) {
-            context.response().sendFile(filePath);
+            context.response().send(filePath);
         }
 
     }
@@ -134,11 +134,13 @@ public abstract class Image implements BaseVo {
         /**
          * 如果图片是需要裁剪的这里存储裁剪过后的字节数组 以提高多次调用的性能
          */
-        private final Buffer buffer;
+        private final byte[] buffer;
 
-        public CroppedImage(File file, Integer width, Integer height, Position position) {
+        public CroppedImage(Path file, Integer width, Integer height, Position position) {
             super(file);
-            this.contentType = MimeMapping.getMimeTypeForFilename(file.getName());
+            var fileFormat = FileFormat.ofFileName(file.toString());
+            var mediaType = fileFormat != null ? fileFormat.mediaType() : MediaType.APPLICATION_OCTET_STREAM;
+            this.contentType = mediaType.toString();
             this.buffer = getBuffer(file, width, height, position);
         }
 
@@ -148,7 +150,8 @@ public abstract class Image implements BaseVo {
          * @return a {@link io.vertx.core.buffer.Buffer} object
          * @throws ScxHttpException if any.
          */
-        private Buffer getBuffer(File file, Integer width, Integer height, Position position) {
+        private byte[] getBuffer(Path path, Integer width, Integer height, Position position) {
+            var file = path.toFile();
             try (var out = new ByteArrayOutputStream()) {
                 var image = Thumbnails.of(file).scale(1.0).asBufferedImage();
                 var imageHeight = image.getHeight();
@@ -164,7 +167,7 @@ public abstract class Image implements BaseVo {
                     Thumbnails.of(file).size(croppedWidth, croppedHeight).keepAspectRatio(false).toOutputStream(out);
                 }
 
-                return Buffer.buffer(out.toByteArray());
+                return out.toByteArray();
             } catch (Exception e) {
                 throw new BadRequestException(e);
             }
@@ -172,7 +175,7 @@ public abstract class Image implements BaseVo {
 
         @Override
         public void imageHandler(RoutingContext context) {
-            context.response().putHeader(CONTENT_TYPE.toString(), contentType).end(buffer);
+            context.response().setHeader(CONTENT_TYPE, contentType).send(buffer);
         }
 
     }

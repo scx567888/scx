@@ -7,13 +7,11 @@ import cool.scx.config.ScxConfig;
 import cool.scx.config.ScxEnvironment;
 import cool.scx.config.ScxFeatureConfig;
 import cool.scx.core.enumeration.ScxCoreFeature;
+import cool.scx.http.ScxHttpServer;
 import cool.scx.jdbc.JDBCContext;
 import cool.scx.jdbc.sql.SQLRunner;
 import cool.scx.web.ScxWeb;
-import cool.scx.web.websocket.WebSocketRouter;
-import io.vertx.core.Vertx;
-import io.vertx.core.eventbus.EventBus;
-import io.vertx.core.http.HttpServer;
+import cool.scx.http.routing.WebSocketRouter;
 import org.springframework.beans.factory.BeanFactory;
 
 import javax.sql.DataSource;
@@ -99,17 +97,8 @@ public final class ScxContext {
      *
      * @return a
      */
-    public static HttpServer httpServer() {
+    public static ScxHttpServer httpServer() {
         return scx().vertxHttpServer();
-    }
-
-    /**
-     * a
-     *
-     * @return a
-     */
-    public static EventBus eventBus() {
-        return scx().eventBus();
     }
 
     /**
@@ -175,14 +164,14 @@ public final class ScxContext {
         return scx().scxHttpRouter();
     }
 
-    /**
-     * 返回当前运行的 scx 实例的 vertx
-     *
-     * @return 全局的事件总线
-     */
-    public static Vertx vertx() {
-        return scx().vertx();
-    }
+//    /**
+//     * 返回当前运行的 scx 实例的 vertx
+//     *
+//     * @return 全局的事件总线
+//     */
+//    public static Vertx vertx() {
+//        return scx().vertx();
+//    }
 
     /**
      * 返回当前运行的 scx 实例的 scheduler

@@ -1,7 +1,7 @@
 package cool.scx.web.vo;
 
 import cool.scx.common.functional.ScxConsumer;
-import io.vertx.ext.web.RoutingContext;
+import cool.scx.http.routing.RoutingContext;
 
 /**
  * BaseVo 接口

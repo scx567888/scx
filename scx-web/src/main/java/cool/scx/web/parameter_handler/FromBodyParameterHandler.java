@@ -21,7 +21,7 @@ import static cool.scx.web.parameter_handler.RequestInfo.ContentType;
 public final class FromBodyParameterHandler implements ParameterHandler {
 
     public static Object getValueFromBody(String name, boolean useAllBody, boolean required, JavaType javaType, RequestInfo info) throws RequiredParamEmptyException, ParamConvertException {
-        if (info.contentType() == ContentType.FORM) {
+        if (info.contentType() == ContentType.MULTIPART_FORM_DATA) {
             return fromFormAttributes(name, useAllBody, required, javaType, info);
         } else {
             return fromBody(name, useAllBody, required, javaType, info);
@@ -50,7 +50,7 @@ public final class FromBodyParameterHandler implements ParameterHandler {
     }
 
     private static Object fromFormAttributes(String name, boolean useAllBody, boolean required, JavaType javaType, RequestInfo info) throws RequiredParamEmptyException, ParamConvertException {
-        var tempValue = getFromMap(name, info.routingContext().request().formAttributes(), useAllBody, javaType);
+        var tempValue = getFromMap(name, info.formData(), useAllBody, javaType);
         if (tempValue == null) {
             if (required) {
                 throw new RequiredParamEmptyException("必填参数不能为空 !!! 参数名称 [" + name + "] , 参数来源 [FromBody, useAllBody=" + useAllBody + "] , 参数类型 [" + javaType.getTypeName() + "]");

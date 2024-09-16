@@ -3,28 +3,23 @@ package cool.scx.core;
 import cool.scx.common.ansi.Ansi;
 import cool.scx.common.scheduler.ScxScheduler;
 import cool.scx.common.util.ScopedValue;
-import cool.scx.common.util.ScxVirtualThreadFactory;
 import cool.scx.common.util.StopWatch;
 import cool.scx.config.ScxConfig;
 import cool.scx.config.ScxEnvironment;
 import cool.scx.config.ScxFeatureConfig;
 import cool.scx.core.enumeration.ScxCoreFeature;
-import cool.scx.core.eventbus.ZeroCopyMessageCodec;
 import cool.scx.data.jdbc.AnnotationConfigTable;
+import cool.scx.http.ScxHttpServer;
+import cool.scx.http.ScxHttpServerOptions;
+import cool.scx.http.helidon.HelidonHttpServer;
 import cool.scx.jdbc.JDBCContext;
 import cool.scx.jdbc.meta_data.SchemaHelper;
 import cool.scx.jdbc.sql.SQLRunner;
-import cool.scx.web.RouteRegistrar;
 import cool.scx.web.ScxWeb;
 import cool.scx.web.ScxWebOptions;
+import cool.scx.web.RouteRegistrar;
 import cool.scx.web.WebSocketRouteRegistrar;
-import cool.scx.web.websocket.WebSocketRouter;
-import io.vertx.core.Vertx;
-import io.vertx.core.VertxOptions;
-import io.vertx.core.eventbus.EventBus;
-import io.vertx.core.http.HttpServer;
-import io.vertx.core.http.HttpServerOptions;
-import io.vertx.core.net.JksOptions;
+import cool.scx.http.routing.WebSocketRouter;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 import javax.sql.DataSource;
@@ -67,13 +62,11 @@ public final class Scx {
 
     private final ScxScheduler scxScheduler;
 
-    private final Vertx vertx;
-
     private final DefaultListableBeanFactory beanFactory;
 
     private final ScxWeb scxWeb;
 
-    private final HttpServerOptions defaultHttpServerOptions;
+    private final ScxHttpServerOptions defaultHttpServerOptions;
 
     private JDBCContext jdbcContext = null;
 
@@ -81,9 +74,9 @@ public final class Scx {
 
     private WebSocketRouter webSocketRouter = null;
 
-    private HttpServer vertxHttpServer = null;
+    private ScxHttpServer vertxHttpServer = null;
 
-    Scx(ScxEnvironment scxEnvironment, String appKey, ScxFeatureConfig scxFeatureConfig, ScxConfig scxConfig, ScxModule[] scxModules, VertxOptions vertxOptions, HttpServerOptions defaultHttpServerOptions) {
+    Scx(ScxEnvironment scxEnvironment, String appKey, ScxFeatureConfig scxFeatureConfig, ScxConfig scxConfig, ScxModule[] scxModules, ScxHttpServerOptions defaultHttpServerOptions) {
         //0, 赋值到全局
         ScxContext.scx(this);
         //1, 初始化基本参数
@@ -97,14 +90,10 @@ public final class Scx {
         //2, 初始化 ScxLog 日志框架
         initScxLoggerFactory(this.scxConfig, this.scxEnvironment);
         //3, 初始化任务调度器 这是核心调度器
-        this.scxScheduler = new ScxScheduler(newScheduledThreadPool(Integer.MAX_VALUE, new ScxVirtualThreadFactory()));
-        //4, 初始化 Vertx 这里在 log4j2 之后初始化是因为 vertx 需要使用 log4j2 打印日志
-        this.vertx = Vertx.vertx(vertxOptions);
-        //5, 初始化事件总线
-        ZeroCopyMessageCodec.registerCodec(this.vertx.eventBus());
-        //6, 初始化 BeanFactory
-        this.beanFactory = initBeanFactory(this.scxModules, scxScheduler, this.scxFeatureConfig);
-        //7, 初始化 Web
+        this.scxScheduler = new ScxScheduler();
+        //4, 初始化 BeanFactory
+        this.beanFactory = initBeanFactory(this.scxModules, scxScheduler.scheduledExecutorService(), this.scxFeatureConfig);
+        //5, 初始化 Web
         this.scxWeb = new ScxWeb(new ScxWebOptions().templateRoot(scxOptions.templateRoot()).useDevelopmentErrorPage(scxFeatureConfig.get(ScxCoreFeature.USE_DEVELOPMENT_ERROR_PAGE)));
     }
 
@@ -179,14 +168,14 @@ public final class Scx {
                     .brightBlue("已加载 " + this.webSocketRouter.getRoutes().size() + " 个 WebSocket 路由 !!!").println();
         }
         //6, 初始化服务器
-        var httpServerOptions = new HttpServerOptions(this.defaultHttpServerOptions);
+        var httpServerOptions = new ScxHttpServerOptions();
         if (this.scxOptions.isHttpsEnabled()) {
-            httpServerOptions.setSsl(true)
-                    .setKeyCertOptions(new JksOptions()
-                            .setPath(this.scxOptions.sslPath().toString())
-                            .setPassword(this.scxOptions.sslPassword()));
+//            httpServerOptions.setSsl(true)
+//                    .setKeyCertOptions(new JksOptions()
+//                            .setPath(this.scxOptions.sslPath().toString())
+//                            .setPassword(this.scxOptions.sslPassword()));
         }
-        this.vertxHttpServer = vertx.createHttpServer(httpServerOptions);
+        this.vertxHttpServer = new HelidonHttpServer(httpServerOptions);
         this.vertxHttpServer.requestHandler(this.scxHttpRouter).webSocketHandler(this.webSocketRouter);
         //7, 添加程序停止时的钩子函数
         this.addShutdownHook();
@@ -203,17 +192,18 @@ public final class Scx {
      * @param port a int
      */
     private void startServer(int port) {
-        var listenFuture = this.vertxHttpServer.listen(port);
-        listenFuture.onSuccess(server -> {
+        try {
+//        port=    server.actualPort(); todo 
+            this.vertxHttpServer.start();
             var httpOrHttps = this.scxOptions.isHttpsEnabled() ? "https" : "http";
             var o = Ansi.ansi().green("服务器启动成功... 用时 " + StopWatch.stopToMillis("ScxRun") + " ms").ln();
-            o.green("> 本地: " + httpOrHttps + "://localhost:" + server.actualPort() + "/").ln();
+            o.green("> 本地: " + httpOrHttps + "://localhost:" + port + "/").ln();
             var normalIP = ignore(() -> getLocalIPAddress(c -> c instanceof Inet4Address), new InetAddress[]{});
             for (var ip : normalIP) {
-                o.green("> 网络: " + httpOrHttps + "://" + ip.getHostAddress() + ":" + server.actualPort() + "/").ln();
+                o.green("> 网络: " + httpOrHttps + "://" + ip.getHostAddress() + ":" + port + "/").ln();
             }
             o.print();
-        }).onFailure(cause -> {
+        }catch (Exception cause){
             if (cause instanceof BindException) {
                 //获取新的端口号然后 重新启动服务器
                 if (isUseNewPort(port)) {
@@ -222,7 +212,7 @@ public final class Scx {
             } else {
                 cause.printStackTrace();
             }
-        });
+        }
     }
 
     private void addShutdownHook() {
@@ -339,10 +329,6 @@ public final class Scx {
         return scxEnvironment;
     }
 
-    public Vertx vertx() {
-        return vertx;
-    }
-
     public String appKey() {
         return appKey;
     }
@@ -384,12 +370,8 @@ public final class Scx {
         return jdbcContext;
     }
 
-    public HttpServer vertxHttpServer() {
+    public ScxHttpServer vertxHttpServer() {
         return vertxHttpServer;
-    }
-
-    public EventBus eventBus() {
-        return vertx.eventBus();
     }
 
     public WebSocketRouter webSocketRouter() {

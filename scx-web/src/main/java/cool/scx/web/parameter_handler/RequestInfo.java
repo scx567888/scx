@@ -4,12 +4,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import cool.scx.common.standard.MediaType;
-import cool.scx.web.exception.BadRequestException;
-import io.vertx.ext.web.RoutingContext;
+import cool.scx.http.exception.BadRequestException;
+import cool.scx.http.routing.RoutingContext;
+import cool.scx.web.type.FormData;
+import io.helidon.http.media.multipart.MultiPart;
 
-import static cool.scx.common.standard.HttpFieldName.CONTENT_TYPE;
 import static cool.scx.common.util.ObjectUtils.jsonMapper;
 import static cool.scx.common.util.ObjectUtils.xmlMapper;
+import static cool.scx.http.HttpFieldName.CONTENT_TYPE;
 import static cool.scx.web.parameter_handler.RequestInfo.ContentType.*;
 
 /**
@@ -21,32 +23,14 @@ import static cool.scx.web.parameter_handler.RequestInfo.ContentType.*;
 public final class RequestInfo {
 
     private final RoutingContext routingContext;
-    private final JsonNode body;
     private final ContentType contentType;
+    private JsonNode body;
+    private FormData formData;
 
     public RequestInfo(RoutingContext ctx) {
         this.routingContext = ctx;
         this.contentType = initContentType(ctx);
-        this.body = initBody(ctx, this.contentType);
-    }
-
-    /**
-     * 根据不同的 ContentType 以不同的逻辑初始化 body
-     *
-     * @param ctx         ctx
-     * @param contentType a
-     * @return c a
-     */
-    public static JsonNode initBody(RoutingContext ctx, ContentType contentType) {
-        var bodyAsString = ctx.body().asString();
-        if (bodyAsString == null) {
-            return null;
-        }
-        return switch (contentType) {
-            case JSON -> readJson(bodyAsString);
-            case XML -> readXml(bodyAsString);
-            default -> tryReadOrTextNode(bodyAsString);
-        };
+        initBody(ctx, this.contentType);
     }
 
     public static JsonNode readJson(String jsonStr) {
@@ -85,26 +69,62 @@ public final class RequestInfo {
     }
 
     public static ContentType initContentType(RoutingContext ctx) {
-        var contentType = ctx.request().headers().get(CONTENT_TYPE.toString());
+        var contentType = ctx.request().getHeader(CONTENT_TYPE);
         if (contentType != null) {
             contentType = contentType.toLowerCase();
         }
         if (contentType == null) {
             return NULL;
         } else if (contentType.startsWith(MediaType.APPLICATION_JSON.toString())) {
-            return JSON;
+            return APPLICATION_JSON;
         } else if (contentType.startsWith(MediaType.APPLICATION_XML.toString())) {
-            return XML;
-        } else if (contentType.startsWith(MediaType.MULTIPART_FORM_DATA.toString()) ||
-                   contentType.startsWith(MediaType.APPLICATION_X_WWW_FORM_URLENCODED.toString())) {
-            return FORM;
+            return APPLICATION_XML;
+        } else if (contentType.startsWith(MediaType.MULTIPART_FORM_DATA.toString())) {
+            return MULTIPART_FORM_DATA;
+        } else if (contentType.startsWith(MediaType.APPLICATION_X_WWW_FORM_URLENCODED.toString())) {
+            return APPLICATION_X_WWW_FORM_URLENCODED;
         } else {
             return OTHER;
         }
     }
 
+    /**
+     * 根据不同的 ContentType 以不同的逻辑初始化 body
+     *
+     * @param ctx         ctx
+     * @param contentType a
+     */
+    private void initBody(RoutingContext ctx, ContentType contentType) {
+        switch (contentType) {
+            case NULL -> {
+                this.body = null;
+                this.formData = null;
+            }
+            case APPLICATION_JSON -> {
+                var string = ctx.request().body().asString();
+                this.body = readJson(string);
+            }
+            case APPLICATION_XML -> {
+                var string = ctx.request().body().asString();
+                this.body = readXml(string);
+            }
+            case MULTIPART_FORM_DATA -> {
+                var multiPart = ctx.request().body().as(MultiPart.class);
+                this.formData = new FormData(multiPart);
+            }
+            default -> {
+                var string = ctx.request().body().asString();
+                this.body = string != null ? tryReadOrTextNode(string) : null;
+            }
+        }
+    }
+
     public JsonNode body() {
         return body;
+    }
+
+    public FormData formData() {
+        return formData;
     }
 
     public ContentType contentType() {
@@ -116,9 +136,10 @@ public final class RequestInfo {
     }
 
     public enum ContentType {
-        FORM,
-        JSON,
-        XML,
+        APPLICATION_JSON,
+        APPLICATION_XML,
+        MULTIPART_FORM_DATA,
+        APPLICATION_X_WWW_FORM_URLENCODED,
         OTHER,
         NULL
     }

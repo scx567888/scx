@@ -2,7 +2,7 @@ package cool.scx.ext.fss;
 
 import cool.scx.common.util.FileUtils;
 import cool.scx.common.util.RandomUtils;
-import cool.scx.web.exception.NotFoundException;
+import cool.scx.http.exception.NotFoundException;
 import net.coobird.thumbnailator.geometry.Positions;
 
 import java.io.IOException;
@@ -67,7 +67,7 @@ public final class FSSHelper {
      *
      * @param fssObject a {@link cool.scx.ext.fss.FSSObject} object
      * @return a {@link java.io.File} object
-     * @throws cool.scx.web.exception.NotFoundException if any.
+     * @throws NotFoundException if any.
      */
     public static Path checkPhysicalFile(FSSObject fssObject) throws NotFoundException {
         var physicalFile = getPhysicalFilePath(fssObject);

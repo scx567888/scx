@@ -1,7 +1,7 @@
 package cool.scx.web.return_value_handler;
 
+import cool.scx.http.routing.RoutingContext;
 import cool.scx.web.vo.BaseVo;
-import io.vertx.ext.web.RoutingContext;
 
 /**
  * BaseVo 处理器

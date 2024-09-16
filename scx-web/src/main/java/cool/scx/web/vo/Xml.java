@@ -1,6 +1,6 @@
 package cool.scx.web.vo;
 
-import io.vertx.ext.web.RoutingContext;
+import cool.scx.http.routing.RoutingContext;
 
 import static cool.scx.common.util.ObjectUtils.toXml;
 import static cool.scx.web.ScxWebHelper.fillXmlContentType;
@@ -25,7 +25,7 @@ public final class Xml implements BaseVo {
 
     @Override
     public void accept(RoutingContext context) {
-        fillXmlContentType(context.request().response()).end(toXml(data, ""));
+        fillXmlContentType(context.request().response()).send(toXml(data, ""));
     }
 
 }

@@ -1,7 +1,6 @@
 package cool.scx.socket;
 
 import cool.scx.common.util.$.Timeout;
-import cool.scx.common.util.SingleListenerFuture;
 import io.vertx.core.http.WebSocket;
 import io.vertx.core.http.WebSocketBase;
 import io.vertx.core.http.WebSocketClient;

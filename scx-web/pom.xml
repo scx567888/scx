@@ -21,8 +21,9 @@
     <dependencies>
 
         <dependency>
-            <groupId>io.vertx</groupId>
-            <artifactId>vertx-web</artifactId>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>scx-http-helidon</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
@@ -33,12 +34,6 @@
         <dependency>
             <groupId>net.coobird</groupId>
             <artifactId>thumbnailator</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>scx-common</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>

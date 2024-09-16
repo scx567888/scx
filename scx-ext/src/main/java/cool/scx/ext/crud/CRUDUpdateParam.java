@@ -1,7 +1,7 @@
 package cool.scx.ext.crud;
 
-import cool.scx.common.field_filter.FieldFilter;
 import cool.scx.core.base.BaseModel;
+import cool.scx.data.field_filter.FieldFilter;
 import cool.scx.data.jdbc.AnnotationConfigTable;
 import cool.scx.data.jdbc.JDBCDaoHelper;
 import cool.scx.ext.crud.exception.EmptyUpdateColumnException;
@@ -9,8 +9,8 @@ import cool.scx.ext.crud.exception.EmptyUpdateColumnException;
 import java.util.Arrays;
 import java.util.Map;
 
-import static cool.scx.common.field_filter.FieldFilterBuilder.ofExcluded;
-import static cool.scx.common.field_filter.FieldFilterBuilder.ofIncluded;
+import static cool.scx.data.field_filter.FieldFilterBuilder.ofExcluded;
+import static cool.scx.data.field_filter.FieldFilterBuilder.ofIncluded;
 
 /**
  * 更新实体类的封装

@@ -4,8 +4,7 @@ import cool.scx.common.reflect.ParameterInfo;
 import cool.scx.common.util.AnnotationUtils;
 import cool.scx.web.annotation.FromUpload;
 import cool.scx.web.parameter_handler.exception.RequiredParamEmptyException;
-import io.vertx.ext.web.FileUpload;
-import io.vertx.ext.web.RoutingContext;
+import cool.scx.web.type.FileUpload;
 
 import java.util.Collection;
 
@@ -27,9 +26,11 @@ public final class FileUploadParameterHandler implements ParameterHandler {
      * @param name           a
      * @return a
      */
-    private static FileUpload[] findFileUploadListByName(RoutingContext routingContext, String name) {
-        var fileUploads = routingContext.fileUploads();
-        return fileUploads.stream().filter(f -> name.equals(f.name())).toArray(FileUpload[]::new);
+    private static FileUpload[] findFileUploadListByName(RequestInfo routingContext, String name) {
+        var fileUploads = routingContext.formData();
+        var formDataParts = fileUploads.getAll(name);
+        //todo 有 bug
+        return formDataParts.stream().filter(f -> name.equals(f.name())).toArray(FileUpload[]::new);
     }
 
     @Override
@@ -53,7 +54,7 @@ public final class FileUploadParameterHandler implements ParameterHandler {
             required = fromUpload.required();
         }
 
-        var v = findFileUploadListByName(requestInfo.routingContext(), name);
+        var v = findFileUploadListByName(requestInfo, name);
 
         //为空的时候做两个处理 即必填则报错 非必填则返回 null
         if (v.length == 0) {

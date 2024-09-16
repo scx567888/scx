@@ -3,8 +3,8 @@ package cool.scx.socket;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cool.scx.common.util.ObjectUtils;
-import cool.scx.common.util.URIBuilder;
 import io.netty.handler.codec.http.QueryStringDecoder;
+import io.netty.handler.codec.http.QueryStringEncoder;
 import io.vertx.core.http.ServerWebSocket;
 import io.vertx.core.http.WebSocketConnectOptions;
 
@@ -42,7 +42,9 @@ public final class Helper {
     public static WebSocketConnectOptions createConnectOptions(String absoluteURI, String clientID) {
         var o = new WebSocketConnectOptions().setAbsoluteURI(absoluteURI);
         var oldUri = o.getURI();
-        var newUri = URIBuilder.of(oldUri).addParam(SCX_SOCKET_CLIENT_ID, clientID).toString();
+        var decoder = new QueryStringEncoder(oldUri);
+        decoder.addParam(SCX_SOCKET_CLIENT_ID, clientID);
+        var newUri = decoder.toString();
         o.setURI(newUri);
         return o;
     }

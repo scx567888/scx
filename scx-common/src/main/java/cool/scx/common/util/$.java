@@ -24,15 +24,8 @@ public final class $ {
     /**
      * 延时执行代码 , 这种简单的方式 相比 ScheduledExecutorService , 一般能实现更低的内存占用
      *
-     * @param r 待运行的内容
-     * @param l 延时 (毫秒)
-     * @return 虚拟线程 可用 interrupt 实现终止
-     */
-    /**
-     * 创建 Timeout 使用 Netty 时间轮 可能不准确但占用资源少
-     *
-     * @param task  任务
-     * @param delay 延时
+     * @param task  待运行的内容
+     * @param delay 延时 (毫秒)
      * @return Timeout
      */
     public static Timeout setTimeout(Runnable task, long delay) {

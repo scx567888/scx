@@ -2,10 +2,9 @@ package cool.scx.web;
 
 import cool.scx.common.util.ClassUtils;
 import cool.scx.common.util.URIBuilder;
+import cool.scx.http.routing.WebSocketRoute;
+import cool.scx.http.routing.WebSocketRouter;
 import cool.scx.web.annotation.ScxWebSocketRoute;
-import cool.scx.web.websocket.BaseWebSocketHandler;
-import cool.scx.web.websocket.WebSocketRoute;
-import cool.scx.web.websocket.WebSocketRouter;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -37,7 +36,14 @@ public final class WebSocketRouteRegistrar {
         var scxWebSocketMapping = c.getAnnotation(ScxWebSocketRoute.class);
         var path = URIBuilder.addSlashStart(URIBuilder.join(scxWebSocketMapping.value()));
         var order = scxWebSocketMapping.order();
-        return new WebSocketRoute(order, path, o);
+        //todo 需要重新设计
+        return WebSocketRoute.of().order(order).path(path).handler((d) -> {
+            try {
+                o.onOpen(d);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     public static List<BaseWebSocketHandler> filterObject(Object... classList) {
