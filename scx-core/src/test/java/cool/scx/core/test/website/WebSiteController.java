@@ -1,24 +1,21 @@
 package cool.scx.core.test.website;
 
 import cool.scx.common.standard.FileFormat;
-import cool.scx.common.standard.HttpMethod;
-import cool.scx.common.util.HashUtils;
-import cool.scx.common.util.NetUtils;
-import cool.scx.common.util.RandomUtils;
-import cool.scx.common.util.ScxExceptionHelper;
+import cool.scx.common.util.*;
 import cool.scx.common.zip.ZipBuilder;
 import cool.scx.core.ScxContext;
 import cool.scx.core.test.car.CarService;
 import cool.scx.core.test.person.Person;
 import cool.scx.core.test.person.PersonService;
-import cool.scx.http_client.ScxHttpClientHelper;
+import cool.scx.http.HttpHelper;
+import cool.scx.http.HttpMethod;
+import cool.scx.http.routing.RoutingContext;
 import cool.scx.web.ScxWeb;
 import cool.scx.web.annotation.FromQuery;
 import cool.scx.web.annotation.FromUpload;
 import cool.scx.web.annotation.ScxRoute;
+import cool.scx.web.type.FileUpload;
 import cool.scx.web.vo.*;
-import io.vertx.ext.web.FileUpload;
-import io.vertx.ext.web.RoutingContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
@@ -55,10 +52,11 @@ public class WebSiteController {
                                @FromQuery Integer age,
                                @FromUpload FileUpload content,
                                @FromUpload FileUpload content1) {
-        System.err.println("客户端 IP :" + NetUtils.getClientIPAddress(ScxWeb.routingContext().request()));
-        return Map.of("now", yyyy_MM_dd_HH_mm_ss.format(LocalDateTime.now()),
-                "name", name, "age", age, "content", ScxContext.vertx().fileSystem().readFileBlocking(content.uploadedFileName()).toString(StandardCharsets.UTF_8),
-                "content1", ScxContext.vertx().fileSystem().readFileBlocking(content1.uploadedFileName()).toString(StandardCharsets.UTF_8));
+        System.err.println("客户端 IP :" + HttpHelper.getRequestIP(ScxWeb.routingContext().request()));
+        return Map.of("now", yyyy_MM_dd_HH_mm_ss.format(LocalDateTime.now())
+//                "name", name, "age", age, "content", ScxContext.vertx().fileSystem().readFileBlocking(content.uploadedFileName()).toString(StandardCharsets.UTF_8),
+//                "content1", ScxContext.vertx().fileSystem().readFileBlocking(content1.uploadedFileName()).toString(StandardCharsets.UTF_8));
+        );
     }
 
     @ScxRoute(methods = HttpMethod.GET)
@@ -106,7 +104,7 @@ public class WebSiteController {
     public Template TestIndex(RoutingContext c) throws IOException {
         System.err.println("最后一次匹配的路由" + c.request().path());
         var index = Template.of("index.html");
-        index.add("name", c.get("name"));
+//        index.add("name", c.get("name"));
         index.add("age", 22);
         return index;
     }
@@ -120,7 +118,7 @@ public class WebSiteController {
     @ScxRoute(value = "", methods = HttpMethod.GET, order = 5)
     public void TestIndex1(RoutingContext c) throws IOException {
         System.err.println("第二个匹配的路由" + c.request().path());
-        c.put("name", "小明");
+//        c.put("name", "小明");
         c.next();
     }
 
@@ -144,8 +142,9 @@ public class WebSiteController {
      */
     @ScxRoute(value = "/baidu", methods = HttpMethod.GET)
     public Html TestHttpUtils() throws IOException, InterruptedException {
-        var baiduHtml = ScxHttpClientHelper.get("https://www.baidu.com/").body().toString();
-        return Html.of(baiduHtml);
+//        var baiduHtml = ScxHttpClientHelper.get("https://www.baidu.com/").body().toString();
+//        return Html.of(baiduHtml);
+        return null;
     }
 
     /**

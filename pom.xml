@@ -95,6 +95,13 @@
                 <version>${helidon.version}</version>
             </dependency>
 
+            <!-- helidon webserver http2 -->
+            <dependency>
+                <groupId>io.helidon.webserver</groupId>
+                <artifactId>helidon-webserver-http2</artifactId>
+                <version>${helidon.version}</version>
+            </dependency>
+
             <!-- helidon multipart -->
             <dependency>
                 <groupId>io.helidon.http.media</groupId>

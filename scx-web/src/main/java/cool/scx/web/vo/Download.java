@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.nio.file.Path;
 
 import static cool.scx.common.standard.MediaType.ofFileName;
-import static cool.scx.common.util.HttpUtils.getDownloadContentDisposition;
+import static cool.scx.http.HttpHelper.getDownloadContentDisposition;
 
 /**
  * 文件下载 vo
