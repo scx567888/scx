@@ -1,12 +1,15 @@
 package cool.scx.ext.static_server;
 
-import cool.scx.web._hack.StaticHandlerImpl;
-import io.vertx.core.file.FileSystem;
-import io.vertx.ext.web.RoutingContext;
+//import cool.scx.web._hack.StaticHandlerImpl;
+//import io.vertx.core.file.FileSystem;
+//import io.vertx.ext.web.RoutingContext;
+
+import cool.scx.http.routing.RoutingContext;
 
 import java.nio.file.Path;
 
-class SingleFileStaticHandler extends StaticHandlerImpl {
+//class SingleFileStaticHandler extends StaticHandlerImpl {
+class SingleFileStaticHandler  {
 
     private final String singleFile;
 
@@ -14,14 +17,14 @@ class SingleFileStaticHandler extends StaticHandlerImpl {
         this.singleFile = root.toString();
     }
 
-    @Override
-    public String getFile(String path, RoutingContext context) {
-        return singleFile;
-    }
-
-    @Override
-    public void sendStatic(RoutingContext context, FileSystem fileSystem, String path, boolean index) {
-        super.sendStatic(context, fileSystem, path, false);
-    }
+//    @Override
+//    public String getFile(String path, RoutingContext context) {
+//        return singleFile;
+//    }
+//
+//    @Override
+//    public void sendStatic(RoutingContext context, FileSystem fileSystem, String path, boolean index) {
+//        super.sendStatic(context, fileSystem, path, false);
+//    }
 
 }

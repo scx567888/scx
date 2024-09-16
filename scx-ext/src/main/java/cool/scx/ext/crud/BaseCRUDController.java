@@ -10,10 +10,10 @@ import cool.scx.web.vo.Result;
 
 import java.util.Map;
 
-import static cool.scx.common.standard.HttpMethod.*;
 import static cool.scx.core.ScxContext.getBean;
 import static cool.scx.data.query.QueryBuilder.and;
 import static cool.scx.ext.crud.CRUDHelper.findBaseModelServiceClass;
+import static cool.scx.http.HttpMethod.*;
 
 /**
  * 继承方式的 CRUD 的 controller (推荐使用)
