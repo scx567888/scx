@@ -1,5 +1,8 @@
 package cool.scx.http.uri;
 
+/**
+ * URI
+ */
 public interface URI {
 
     static URIWritable of() {

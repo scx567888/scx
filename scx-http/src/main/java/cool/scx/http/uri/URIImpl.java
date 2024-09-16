@@ -1,13 +1,16 @@
 package cool.scx.http.uri;
 
+/**
+ * URIImpl
+ */
 public class URIImpl implements URIWritable {
 
     private String scheme;
     private String host;
     private int port;
-    private URIPath path;
-    private URIQuery query;
-    private URIFragment fragment;
+    private URIPathWritable path;
+    private URIQueryWritable query;
+    private URIFragmentWritable fragment;
 
     public URIImpl() {
         this.scheme = null;
@@ -37,19 +40,19 @@ public class URIImpl implements URIWritable {
     }
 
     @Override
-    public URIWritable path(URIPath path) {
+    public URIWritable path(URIPathWritable path) {
         this.path = path;
         return this;
     }
 
     @Override
-    public URIWritable query(URIQuery query) {
+    public URIWritable query(URIQueryWritable query) {
         this.query = query;
         return this;
     }
 
     @Override
-    public URIWritable fragment(URIFragment fragment) {
+    public URIWritable fragment(URIFragmentWritable fragment) {
         this.fragment = fragment;
         return this;
     }
@@ -70,17 +73,17 @@ public class URIImpl implements URIWritable {
     }
 
     @Override
-    public URIPath path() {
+    public URIPathWritable path() {
         return path;
     }
 
     @Override
-    public URIQuery query() {
+    public URIQueryWritable query() {
         return query;
     }
 
     @Override
-    public URIFragment fragment() {
+    public URIFragmentWritable fragment() {
         return fragment;
     }
 
