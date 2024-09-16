@@ -6,8 +6,6 @@ import cool.scx.http.exception.UnauthorizedException;
 import cool.scx.http.helidon.HelidonHttpServer;
 import cool.scx.http.routing.Route;
 import cool.scx.http.routing.Router;
-import io.vertx.core.Vertx;
-import io.vertx.core.http.HttpServerOptions;
 
 import static cool.scx.http.HttpMethod.GET;
 import static cool.scx.http.HttpMethod.POST;
@@ -17,7 +15,6 @@ public class Test {
 
     public static void main(String[] args) {
         test1();
-        test2();
     }
 
     public static void test1() {
@@ -72,30 +69,6 @@ public class Test {
         server.start();
 
         System.out.println("HelidonHttpServer 启动完成 !!! 耗时 : " + (System.nanoTime() - l) / 1000_000);
-    }
-
-    public static void test2() {
-        var l = System.nanoTime();
-        Vertx vertx = Vertx.vertx();
-
-        var server = vertx.createHttpServer(new HttpServerOptions().setPort(8081));
-
-        server.requestHandler(c -> {
-            var response = c.response();
-            response.end("响应数据!!!");
-        }).webSocketHandler(c -> {
-
-            c.textMessageHandler(s -> {
-                System.out.println("Text Message: " + s);
-            });
-
-            c.writeTextMessage("This is Server");
-
-        });
-
-        server.listen().onSuccess(c -> {
-            System.out.println("VertxHttpServer 启动完成 !!! 耗时 : " + (System.nanoTime() - l) / 1000_000);
-        });
     }
 
 }
