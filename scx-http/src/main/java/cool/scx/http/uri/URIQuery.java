@@ -4,6 +4,9 @@ import cool.scx.http.Parameters;
 
 import static cool.scx.http.uri.URIHelper.decodeQuery;
 
+/**
+ * URIQuery
+ */
 public interface URIQuery extends Parameters {
 
     static URIQueryWritable of() {
