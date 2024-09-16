@@ -7,7 +7,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 /**
- * 路由只保存状态不做行为处理
+ * RouteImpl 路由只保存状态不做行为处理
  */
 class RouteImpl implements RouteWritable {
 
