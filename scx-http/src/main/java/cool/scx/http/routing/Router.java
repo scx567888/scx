@@ -9,10 +9,13 @@ import java.util.TreeSet;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+/**
+ * Router
+ */
 public class Router implements Consumer<ScxHttpServerRequest> {
 
-    private static final Comparator<Route> ROUTE_COMPARATOR = (Route o1, Route o2) -> {
-        final int compare = Integer.compare(o1.order(), o2.order());
+    private static final Comparator<Route> ROUTE_COMPARATOR = (o1, o2) -> {
+        var compare = Integer.compare(o1.order(), o2.order());
         if (compare == 0) {
             if (o1.equals(o2)) {
                 return 0;
