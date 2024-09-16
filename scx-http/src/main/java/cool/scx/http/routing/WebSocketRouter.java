@@ -23,7 +23,7 @@ public class WebSocketRouter implements Consumer<ScxServerWebSocket> {
     };
 
     final TreeSet<WebSocketRoute> routes;
-    BiConsumer<Throwable, WebSocketRoutingContext> exceptionHandler;
+    BiConsumer<Throwable, WebSocketRoutingContext> errorHandler;
 
     public WebSocketRouter() {
         this.routes = new TreeSet<>(ROUTE_COMPARATOR);
@@ -43,8 +43,8 @@ public class WebSocketRouter implements Consumer<ScxServerWebSocket> {
         new WebSocketRoutingContext(this, scxServerWebSocket).next();
     }
 
-    public WebSocketRouter exceptionHandler(BiConsumer<Throwable, WebSocketRoutingContext> handler) {
-        this.exceptionHandler = handler;
+    public WebSocketRouter errorHandler(BiConsumer<Throwable, WebSocketRoutingContext> handler) {
+        this.errorHandler = handler;
         return this;
     }
 
