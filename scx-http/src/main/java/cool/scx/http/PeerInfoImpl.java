@@ -4,6 +4,9 @@ import java.net.SocketAddress;
 import java.security.Principal;
 import java.security.cert.Certificate;
 
+/**
+ * PeerInfoImpl
+ */
 class PeerInfoImpl implements PeerInfoWritable {
 
     private SocketAddress socketAddress;
@@ -66,5 +69,5 @@ class PeerInfoImpl implements PeerInfoWritable {
         this.certificateSupplier = certificates;
         return this;
     }
-    
+
 }

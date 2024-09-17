@@ -9,10 +9,13 @@ import java.util.TreeSet;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+/**
+ * WebSocketRouter
+ */
 public class WebSocketRouter implements Consumer<ScxServerWebSocket> {
 
-    private static final Comparator<WebSocketRoute> ROUTE_COMPARATOR = (WebSocketRoute o1, WebSocketRoute o2) -> {
-        final int compare = Integer.compare(o1.order(), o2.order());
+    private static final Comparator<WebSocketRoute> ROUTE_COMPARATOR = (o1, o2) -> {
+        var compare = Integer.compare(o1.order(), o2.order());
         if (compare == 0) {
             if (o1.equals(o2)) {
                 return 0;
@@ -23,7 +26,7 @@ public class WebSocketRouter implements Consumer<ScxServerWebSocket> {
     };
 
     final TreeSet<WebSocketRoute> routes;
-    BiConsumer<Throwable, WebSocketRoutingContext> exceptionHandler;
+    BiConsumer<Throwable, WebSocketRoutingContext> errorHandler;
 
     public WebSocketRouter() {
         this.routes = new TreeSet<>(ROUTE_COMPARATOR);
@@ -43,8 +46,8 @@ public class WebSocketRouter implements Consumer<ScxServerWebSocket> {
         new WebSocketRoutingContext(this, scxServerWebSocket).next();
     }
 
-    public WebSocketRouter exceptionHandler(BiConsumer<Throwable, WebSocketRoutingContext> handler) {
-        this.exceptionHandler = handler;
+    public WebSocketRouter errorHandler(BiConsumer<Throwable, WebSocketRoutingContext> handler) {
+        this.errorHandler = handler;
         return this;
     }
 

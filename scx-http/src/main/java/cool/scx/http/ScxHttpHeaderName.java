@@ -1,7 +1,7 @@
 package cool.scx.http;
 
 /**
- * HttpHeaderName 是不区分大小写的 所以我们这里全部按照大写处理
+ * HttpHeaderName 是不区分大小写的 所以我们这里全部按照小写处理
  */
 public sealed interface ScxHttpHeaderName permits HttpFieldName, ScxHttpHeaderNameImpl {
 
@@ -10,7 +10,7 @@ public sealed interface ScxHttpHeaderName permits HttpFieldName, ScxHttpHeaderNa
             // 优先使用 HttpFieldName
             return HttpFieldName.of(name);
         } catch (IllegalArgumentException e) {
-            return new ScxHttpHeaderNameImpl(name.toUpperCase());
+            return new ScxHttpHeaderNameImpl(name.toLowerCase());
         }
     }
 

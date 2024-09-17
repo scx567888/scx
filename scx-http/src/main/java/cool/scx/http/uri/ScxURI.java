@@ -1,14 +1,17 @@
 package cool.scx.http.uri;
 
-public interface URI {
+/**
+ * ScxURI
+ */
+public interface ScxURI {
 
-    static URIWritable of() {
-        return new URIImpl();
+    static ScxURIWritable of() {
+        return new ScxURIImpl();
     }
 
-    static URIWritable of(String uri) {
+    static ScxURIWritable of(String uri) {
         var u = java.net.URI.create(uri);
-        return new URIImpl()
+        return new ScxURIImpl()
                 .scheme(u.getScheme())
                 .host(u.getHost())
                 .port(u.getPort())

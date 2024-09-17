@@ -9,6 +9,9 @@ import io.helidon.websocket.WsUpgradeException;
 
 import java.util.Optional;
 
+/**
+ * HelidonWebSocketRoute
+ */
 class HelidonWebSocketRoute implements WsListener {
 
     private final HelidonHttpServer server;

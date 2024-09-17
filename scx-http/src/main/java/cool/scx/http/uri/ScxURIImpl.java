@@ -1,15 +1,18 @@
 package cool.scx.http.uri;
 
-public class URIImpl implements URIWritable {
+/**
+ * ScxURIImpl
+ */
+public class ScxURIImpl implements ScxURIWritable {
 
     private String scheme;
     private String host;
     private int port;
-    private URIPath path;
-    private URIQuery query;
-    private URIFragment fragment;
+    private URIPathWritable path;
+    private URIQueryWritable query;
+    private URIFragmentWritable fragment;
 
-    public URIImpl() {
+    public ScxURIImpl() {
         this.scheme = null;
         this.host = null;
         this.port = -1;
@@ -19,37 +22,37 @@ public class URIImpl implements URIWritable {
     }
 
     @Override
-    public URIWritable scheme(String scheme) {
+    public ScxURIWritable scheme(String scheme) {
         this.scheme = scheme;
         return this;
     }
 
     @Override
-    public URIWritable host(String host) {
+    public ScxURIWritable host(String host) {
         this.host = host;
         return this;
     }
 
     @Override
-    public URIWritable port(int port) {
+    public ScxURIWritable port(int port) {
         this.port = port;
         return this;
     }
 
     @Override
-    public URIWritable path(URIPath path) {
+    public ScxURIWritable path(URIPathWritable path) {
         this.path = path;
         return this;
     }
 
     @Override
-    public URIWritable query(URIQuery query) {
+    public ScxURIWritable query(URIQueryWritable query) {
         this.query = query;
         return this;
     }
 
     @Override
-    public URIWritable fragment(URIFragment fragment) {
+    public ScxURIWritable fragment(URIFragmentWritable fragment) {
         this.fragment = fragment;
         return this;
     }
@@ -70,17 +73,17 @@ public class URIImpl implements URIWritable {
     }
 
     @Override
-    public URIPath path() {
+    public URIPathWritable path() {
         return path;
     }
 
     @Override
-    public URIQuery query() {
+    public URIQueryWritable query() {
         return query;
     }
 
     @Override
-    public URIFragment fragment() {
+    public URIFragmentWritable fragment() {
         return fragment;
     }
 

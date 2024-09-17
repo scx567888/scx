@@ -2,8 +2,7 @@ package cool.scx.http.helidon;
 
 import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.ScxServerWebSocket;
-import cool.scx.http.uri.URIPath;
-import cool.scx.http.uri.URIQuery;
+import cool.scx.http.uri.ScxURI;
 import io.helidon.common.buffers.BufferData;
 import io.helidon.http.Headers;
 import io.helidon.http.HttpPrologue;
@@ -11,11 +10,13 @@ import io.helidon.websocket.WsSession;
 
 import java.util.function.Consumer;
 
+/**
+ * HelidonServerWebSocket
+ */
 class HelidonServerWebSocket implements ScxServerWebSocket {
 
     private final WsSession wsSession;
-    private final URIPath path;
-    private final HelidonURIQuery query;
+    private final ScxURI uri;
     private final HelidonHttpHeaders<Headers> headers;
     Consumer<String> textMessageHandler;
     Consumer<byte[]> binaryMessageHandler;
@@ -24,21 +25,15 @@ class HelidonServerWebSocket implements ScxServerWebSocket {
     Consumer<Integer> closeHandler;
     Consumer<Throwable> errorHandler;
 
-    public HelidonServerWebSocket(WsSession session, HttpPrologue prologue, Headers headers) {
+    public HelidonServerWebSocket(WsSession session, HttpPrologue p, Headers headers) {
         this.wsSession = session;
-        this.path = URIPath.of().value(prologue.uriPath().path());
-        this.query = new HelidonURIQuery(prologue.query());
+        this.uri = ScxURI.of().path(p.uriPath().path()).query(new HelidonURIQuery(p.query())).fragment(p.fragment().hasValue() ? p.fragment().value() : null);
         this.headers = new HelidonHttpHeaders<>(headers);
     }
 
     @Override
-    public URIPath path() {
-        return path;
-    }
-
-    @Override
-    public URIQuery query() {
-        return query;
+    public ScxURI uri() {
+        return uri;
     }
 
     @Override

@@ -2,6 +2,9 @@ package cool.scx.http;
 
 import java.io.InputStream;
 
+/**
+ * ScxHttpBody
+ */
 public interface ScxHttpBody {
 
     InputStream inputStream();

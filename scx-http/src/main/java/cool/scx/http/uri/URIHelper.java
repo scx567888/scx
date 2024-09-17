@@ -1,19 +1,11 @@
 package cool.scx.http.uri;
 
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
+/**
+ * URIHelper
+ */
 public class URIHelper {
-
-    public static String decode(String value) {
-        return URLDecoder.decode(value, StandardCharsets.UTF_8);
-    }
-
-    public static String encode(String value) {
-        return URLEncoder.encode(value, StandardCharsets.UTF_8);
-    }
 
     public static URIQueryWritable decodeQuery(String value) {
         var query = URIQuery.of();
@@ -42,7 +34,7 @@ public class URIHelper {
         return String.join("&", l);
     }
 
-    public static String toString(URI uri) {
+    public static String toString(ScxURI uri) {
         var scheme = uri.scheme();
         var host = uri.host();
         var port = uri.port();

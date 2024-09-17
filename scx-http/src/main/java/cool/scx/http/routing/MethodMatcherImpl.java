@@ -4,7 +4,10 @@ import cool.scx.http.ScxHttpMethod;
 
 import java.util.Set;
 
-public class MethodMatcherImpl implements MethodMatcher {
+/**
+ * MethodMatcherImpl
+ */
+class MethodMatcherImpl implements MethodMatcher {
 
     private final Set<ScxHttpMethod> methods;
 

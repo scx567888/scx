@@ -2,6 +2,9 @@ package cool.scx.http.routing;
 
 import cool.scx.http.ScxHttpMethod;
 
+/**
+ * MethodMatcher
+ */
 public interface MethodMatcher {
 
     static MethodMatcher any() {

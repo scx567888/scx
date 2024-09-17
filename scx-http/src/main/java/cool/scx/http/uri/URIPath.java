@@ -1,5 +1,8 @@
 package cool.scx.http.uri;
 
+/**
+ * URIPath
+ */
 public interface URIPath {
 
     static URIPathWritable of() {
@@ -16,12 +19,5 @@ public interface URIPath {
      * @return v
      */
     String value();
-
-    /**
-     * 未解码的值
-     *
-     * @return v
-     */
-    String rawValue();
 
 }

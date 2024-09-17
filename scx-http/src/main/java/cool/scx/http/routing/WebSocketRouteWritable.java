@@ -2,6 +2,9 @@ package cool.scx.http.routing;
 
 import java.util.function.Consumer;
 
+/**
+ * WebSocketRouteWritable
+ */
 public interface WebSocketRouteWritable extends WebSocketRoute {
 
     WebSocketRouteWritable path(String path);

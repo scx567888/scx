@@ -7,6 +7,9 @@ import io.helidon.webserver.http.RoutingResponse;
 
 import java.io.OutputStream;
 
+/**
+ * HelidonHttpServerResponse
+ */
 class HelidonHttpServerResponse implements ScxHttpServerResponse {
 
     private final RoutingResponse response;
@@ -18,7 +21,7 @@ class HelidonHttpServerResponse implements ScxHttpServerResponse {
     }
 
     @Override
-    public HttpStatusCode statusCode() {
+    public HttpStatusCode status() {
         return HttpStatusCode.of(this.response.status().code());
     }
 
@@ -28,9 +31,19 @@ class HelidonHttpServerResponse implements ScxHttpServerResponse {
     }
 
     @Override
-    public ScxHttpServerResponse setStatusCode(HttpStatusCode code) {
+    public ScxHttpServerResponse status(HttpStatusCode code) {
         this.response.status(code.code());
         return this;
+    }
+
+    @Override
+    public OutputStream outputStream() {
+        return this.response.outputStream();
+    }
+
+    @Override
+    public void send() {
+        this.response.send();
     }
 
     @Override
@@ -46,16 +59,6 @@ class HelidonHttpServerResponse implements ScxHttpServerResponse {
     @Override
     public void send(Object data) {
         this.response.send(data);
-    }
-
-    @Override
-    public void send() {
-        this.response.send();
-    }
-
-    @Override
-    public OutputStream outputStream() {
-        return this.response.outputStream();
     }
 
     @Override

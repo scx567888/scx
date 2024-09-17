@@ -4,6 +4,9 @@ import java.net.SocketAddress;
 import java.security.Principal;
 import java.security.cert.Certificate;
 
+/**
+ * PeerInfoWritable
+ */
 public interface PeerInfoWritable extends PeerInfo {
 
     PeerInfoWritable address(SocketAddress address);
@@ -15,5 +18,5 @@ public interface PeerInfoWritable extends PeerInfo {
     PeerInfoWritable tlsPrincipal(Principal principal);
 
     PeerInfoWritable tlsCertificates(Certificate[] certificates);
-    
+
 }

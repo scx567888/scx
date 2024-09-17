@@ -5,14 +5,18 @@ import cool.scx.common.util.MultiMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+/**
+ * ScxHttpHeadersImpl
+ */
 class ScxHttpHeadersImpl implements ScxHttpHeadersWritable {
 
     private final MultiMap<ScxHttpHeaderName, String> map = new MultiMap<>();
 
     @Override
     public ScxHttpHeadersWritable set(ScxHttpHeaderName headerName, String... headerValue) {
-        this.map.setAll(headerName, List.of(headerValue));
+        map.setAll(headerName, List.of(headerValue));
         return this;
     }
 
@@ -41,6 +45,16 @@ class ScxHttpHeadersImpl implements ScxHttpHeadersWritable {
     @Override
     public ScxHttpHeadersWritable remove(String headerName) {
         return remove(ScxHttpHeaderName.of(headerName));
+    }
+
+    @Override
+    public long size() {
+        return map.size();
+    }
+
+    @Override
+    public Set<ScxHttpHeaderName> names() {
+        return map.keySet();
     }
 
     @Override

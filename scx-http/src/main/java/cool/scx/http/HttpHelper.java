@@ -4,6 +4,9 @@ import static cool.scx.common.util.StringUtils.notBlank;
 import static java.net.URLEncoder.encode;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+/**
+ * HttpHelper
+ */
 public class HttpHelper {
 
     /**
@@ -36,7 +39,7 @@ public class HttpHelper {
         } else {
             return remoteAddressStr;
         }
-        
+
     }
 
     /**

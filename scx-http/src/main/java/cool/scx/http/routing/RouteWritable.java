@@ -4,6 +4,9 @@ import cool.scx.http.HttpMethod;
 
 import java.util.function.Consumer;
 
+/**
+ * RouteWritable
+ */
 public interface RouteWritable extends Route {
 
     RouteWritable path(String path);

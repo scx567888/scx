@@ -6,7 +6,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 /**
- * 路由只保存状态不做行为处理
+ * Route 路由只保存状态不做行为处理
  */
 public interface Route {
 

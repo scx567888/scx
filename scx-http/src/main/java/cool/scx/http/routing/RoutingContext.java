@@ -8,6 +8,9 @@ import cool.scx.http.exception.NotFoundException;
 
 import java.util.Iterator;
 
+/**
+ * RoutingContext
+ */
 public class RoutingContext {
 
     private final Router router;

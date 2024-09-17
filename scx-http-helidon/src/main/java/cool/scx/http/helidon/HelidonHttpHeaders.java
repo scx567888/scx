@@ -6,13 +6,27 @@ import io.helidon.http.HeaderNames;
 import io.helidon.http.Headers;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
+/**
+ * HelidonHttpHeaders
+ */
 class HelidonHttpHeaders<T extends Headers> implements ScxHttpHeaders {
 
     protected final T headers;
 
     public HelidonHttpHeaders(T headers) {
         this.headers = headers;
+    }
+
+    @Override
+    public long size() {
+        return headers.size();
+    }
+
+    @Override
+    public Set<ScxHttpHeaderName> names() {
+        return headers.stream().map(c -> ScxHttpHeaderName.of(c.name())).collect(Collectors.toSet());
     }
 
     @Override

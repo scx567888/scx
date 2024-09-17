@@ -37,7 +37,7 @@ public class ScxWebTest {
 
         router.addRoute(Route.of().path("/no-perm2").handler(c -> {
             //或者用这种 vertx 的形式 和上方是一样的
-            c.response().setStatusCode(FORBIDDEN).send("Error");
+            c.response().status(FORBIDDEN).send("Error");
         }));
 
         vertx.requestHandler(router).start();

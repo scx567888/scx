@@ -6,6 +6,9 @@ import cool.scx.http.exception.NotFoundException;
 
 import java.util.Iterator;
 
+/**
+ * WebSocketRoutingContext
+ */
 public class WebSocketRoutingContext {
 
     private final WebSocketRouter router;
@@ -27,7 +30,7 @@ public class WebSocketRoutingContext {
         try {
             tryNext();
         } catch (Throwable e) {
-            router.exceptionHandler.accept(e, this);
+            router.errorHandler.accept(e, this);
         }
     }
 

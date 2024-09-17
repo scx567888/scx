@@ -1,12 +1,15 @@
 package cool.scx.http.uri;
 
+/**
+ * URIFragment
+ */
 public interface URIFragment {
 
-    static URIFragment of() {
+    static URIFragmentWritable of() {
         return new URIFragmentImpl();
     }
 
-    static URIFragment of(String value) {
+    static URIFragmentWritable of(String value) {
         return new URIFragmentImpl().value(value);
     }
 

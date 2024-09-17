@@ -2,6 +2,9 @@ package cool.scx.http.routing;
 
 import cool.scx.http.Parameters;
 
+/**
+ * PathMatcher
+ */
 public interface PathMatcher {
 
     static PathMatcher any() {

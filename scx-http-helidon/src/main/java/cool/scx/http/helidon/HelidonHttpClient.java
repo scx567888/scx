@@ -1,19 +1,23 @@
 package cool.scx.http.helidon;
 
 import cool.scx.http.*;
+import cool.scx.http.uri.ScxURI;
 import io.helidon.http.HeaderNames;
 import io.helidon.http.Method;
 import io.helidon.webclient.api.WebClient;
+import io.helidon.webclient.websocket.WsClient;
 
 import java.io.IOException;
-import java.net.URI;
 
+//todo 
 public class HelidonHttpClient implements ScxHttpClient {
 
     private final WebClient webClient;
+    private final WsClient wsClient;
 
     public HelidonHttpClient(ScxHttpClientOptions options) {
         this.webClient = WebClient.builder().build();
+        this.wsClient = WsClient.builder().build();
     }
 
     @Override
@@ -34,8 +38,10 @@ public class HelidonHttpClient implements ScxHttpClient {
     }
 
     @Override
-    public ScxClientWebSocket webSocket(URI uri) {
-        throw new UnsupportedOperationException();
+    public ScxClientWebSocket webSocket(ScxURI uri) {
+        var clientWebSocket = new HelidonClientWebSocket();
+        wsClient.connect(uri.toString(), clientWebSocket);
+        return clientWebSocket;
     }
 
 }
