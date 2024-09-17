@@ -1,6 +1,6 @@
 package cool.scx.http;
 
-import cool.scx.http.uri.URI;
+import cool.scx.http.uri.ScxURI;
 import cool.scx.http.uri.URIPath;
 import cool.scx.http.uri.URIQuery;
 
@@ -9,7 +9,7 @@ import cool.scx.http.uri.URIQuery;
  */
 public interface ScxServerWebSocket extends ScxWebSocket {
 
-    URI uri();
+    ScxURI uri();
 
     ScxHttpHeaders headers();
 

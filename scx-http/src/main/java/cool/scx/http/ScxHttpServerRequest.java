@@ -1,6 +1,6 @@
 package cool.scx.http;
 
-import cool.scx.http.uri.URI;
+import cool.scx.http.uri.ScxURI;
 import cool.scx.http.uri.URIPath;
 import cool.scx.http.uri.URIQuery;
 
@@ -11,7 +11,7 @@ public interface ScxHttpServerRequest {
 
     ScxHttpMethod method();
 
-    URI uri();
+    ScxURI uri();
 
     HttpVersion version();
 

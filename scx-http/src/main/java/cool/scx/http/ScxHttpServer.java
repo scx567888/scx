@@ -17,4 +17,6 @@ public interface ScxHttpServer {
 
     void stop();
 
+    int port();
+
 }

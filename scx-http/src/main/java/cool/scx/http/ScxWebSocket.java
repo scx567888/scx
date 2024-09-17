@@ -28,13 +28,13 @@ public interface ScxWebSocket {
     ScxWebSocket pong(byte[] data);
 
     ScxWebSocket close(int var1, String var2);
-    
+
     default ScxWebSocket send(String textMessage) {
         return send(textMessage, false);
     }
-    
+
     default ScxWebSocket send(byte[] binaryMessage) {
         return send(binaryMessage, false);
     }
-    
+
 }
