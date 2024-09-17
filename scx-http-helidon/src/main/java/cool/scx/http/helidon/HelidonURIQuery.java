@@ -1,6 +1,7 @@
 package cool.scx.http.helidon;
 
-import cool.scx.http.uri.URIQuery;
+import cool.scx.http.ParametersWritable;
+import cool.scx.http.uri.URIQueryWritable;
 import io.helidon.common.uri.UriQuery;
 
 import java.util.Iterator;
@@ -8,7 +9,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-class HelidonURIQuery implements URIQuery {
+/**
+ * HelidonURIQuery
+ */
+class HelidonURIQuery implements URIQueryWritable {
 
     private final UriQuery uriQuery;
 
@@ -49,6 +53,21 @@ class HelidonURIQuery implements URIQuery {
                 return null;
             }
         };
+    }
+
+    @Override
+    public ParametersWritable set(String name, String... value) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public ParametersWritable add(String name, String... value) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public ParametersWritable remove(String name) {
+        throw new UnsupportedOperationException();
     }
 
 }
