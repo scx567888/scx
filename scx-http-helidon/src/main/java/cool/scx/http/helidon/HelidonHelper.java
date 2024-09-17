@@ -9,6 +9,9 @@ import io.helidon.websocket.WsListener;
 import java.util.Arrays;
 import java.util.function.Supplier;
 
+/**
+ * HelidonHelper
+ */
 class HelidonHelper {
 
     public static WsRouting.Builder createHelidonWebSocketRouting(HelidonHttpServer server) {
