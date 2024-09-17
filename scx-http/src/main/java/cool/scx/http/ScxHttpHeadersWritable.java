@@ -1,5 +1,8 @@
 package cool.scx.http;
 
+/**
+ * ScxHttpHeadersWritable
+ */
 public interface ScxHttpHeadersWritable extends ScxHttpHeaders {
 
     ScxHttpHeadersWritable set(ScxHttpHeaderName headerName, String... headerValue);

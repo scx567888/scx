@@ -2,12 +2,20 @@ package cool.scx.http;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+/**
+ * ScxHttpHeaders
+  */ 
 public interface ScxHttpHeaders extends Iterable<Map.Entry<ScxHttpHeaderName, List<String>>> {
 
     static ScxHttpHeadersWritable of() {
         return new ScxHttpHeadersImpl();
     }
+
+    long size();
+
+    Set<String> names();
 
     String get(ScxHttpHeaderName headerName);
 
@@ -16,5 +24,9 @@ public interface ScxHttpHeaders extends Iterable<Map.Entry<ScxHttpHeaderName, Li
     List<String> getAll(ScxHttpHeaderName headerName);
 
     List<String> getAll(String headerName);
+
+    default boolean isEmpty() {
+        return this.size() == 0;
+    }
 
 }
