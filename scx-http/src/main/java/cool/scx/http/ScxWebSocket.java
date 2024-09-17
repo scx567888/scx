@@ -2,6 +2,9 @@ package cool.scx.http;
 
 import java.util.function.Consumer;
 
+/**
+ * ScxWebSocket
+ */
 public interface ScxWebSocket {
 
     ScxServerWebSocket onTextMessage(Consumer<String> textMessageHandler);
@@ -25,5 +28,13 @@ public interface ScxWebSocket {
     ScxServerWebSocket pong(byte[] data);
 
     ScxServerWebSocket close(int var1, String var2);
+    
+    default ScxServerWebSocket send(String textMessage) {
+        return send(textMessage, false);
+    }
+    
+    default ScxServerWebSocket send(byte[] binaryMessage) {
+        return send(binaryMessage, false);
+    }
     
 }
