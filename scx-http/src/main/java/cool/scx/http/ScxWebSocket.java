@@ -7,33 +7,33 @@ import java.util.function.Consumer;
  */
 public interface ScxWebSocket {
 
-    ScxServerWebSocket onTextMessage(Consumer<String> textMessageHandler);
+    ScxWebSocket onTextMessage(Consumer<String> textMessageHandler);
 
-    ScxServerWebSocket onBinaryMessage(Consumer<byte[]> binaryMessageHandler);
+    ScxWebSocket onBinaryMessage(Consumer<byte[]> binaryMessageHandler);
 
-    ScxServerWebSocket onPing(Consumer<byte[]> pingHandler);
+    ScxWebSocket onPing(Consumer<byte[]> pingHandler);
 
-    ScxServerWebSocket onPong(Consumer<byte[]> pongHandler);
+    ScxWebSocket onPong(Consumer<byte[]> pongHandler);
 
-    ScxServerWebSocket onClose(Consumer<Integer> closeHandler);
+    ScxWebSocket onClose(Consumer<Integer> closeHandler);
 
-    ScxServerWebSocket onError(Consumer<Throwable> errorHandler);
+    ScxWebSocket onError(Consumer<Throwable> errorHandler);
 
-    ScxServerWebSocket send(String textMessage, boolean var2);
+    ScxWebSocket send(String textMessage, boolean var2);
 
-    ScxServerWebSocket send(byte[] binaryMessage, boolean var2);
+    ScxWebSocket send(byte[] binaryMessage, boolean var2);
 
-    ScxServerWebSocket ping(byte[] data);
+    ScxWebSocket ping(byte[] data);
 
-    ScxServerWebSocket pong(byte[] data);
+    ScxWebSocket pong(byte[] data);
 
-    ScxServerWebSocket close(int var1, String var2);
+    ScxWebSocket close(int var1, String var2);
     
-    default ScxServerWebSocket send(String textMessage) {
+    default ScxWebSocket send(String textMessage) {
         return send(textMessage, false);
     }
     
-    default ScxServerWebSocket send(byte[] binaryMessage) {
+    default ScxWebSocket send(byte[] binaryMessage) {
         return send(binaryMessage, false);
     }
     
