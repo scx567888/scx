@@ -51,6 +51,11 @@
             <artifactId>helidon-webclient</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>io.helidon.webclient</groupId>
+            <artifactId>helidon-webclient-websocket</artifactId>
+        </dependency>
+
         <!-- ****************** 以下为测试依赖 ****************** -->
 
         <dependency>

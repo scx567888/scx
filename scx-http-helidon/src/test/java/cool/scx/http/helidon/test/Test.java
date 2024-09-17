@@ -50,9 +50,9 @@ public class Test {
 
         router.errorHandler((e, ctx) -> {
             if (e instanceof ScxHttpException s) {
-                ctx.response().setStatusCode(s.statusCode()).send(s.statusCode().description());
+                ctx.response().status(s.statusCode()).send(s.statusCode().description());
             } else {
-                ctx.response().setStatusCode(INTERNAL_SERVER_ERROR).send(e.getMessage());
+                ctx.response().status(INTERNAL_SERVER_ERROR).send(e.getMessage());
             }
         });
 
