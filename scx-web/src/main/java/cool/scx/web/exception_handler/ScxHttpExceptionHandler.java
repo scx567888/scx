@@ -58,14 +58,14 @@ public class ScxHttpExceptionHandler implements ExceptionHandler {
         //根据 accept 返回不同的错误信息
         if (accept != null && startsWithIgnoreCase(accept, TEXT_HTML.toString())) {
             var htmlStr = String.format(htmlTemplate, statusCode.description(), statusCode, statusCode.description(), info);
-            fillHtmlContentType(routingContext.request().response()).setStatusCode(statusCode).send(htmlStr);
+            fillHtmlContentType(routingContext.request().response()).status(statusCode).send(htmlStr);
         } else {
             var tempMap = new LinkedHashMap<>();
             tempMap.put("statusCode", statusCode);
             tempMap.put("title", statusCode.description());
             tempMap.put("info", info);
             var jsonStr = ObjectUtils.toJson(tempMap, "");
-            fillJsonContentType(routingContext.request().response()).setStatusCode(statusCode).send(jsonStr);
+            fillJsonContentType(routingContext.request().response()).status(statusCode).send(jsonStr);
         }
     }
 
