@@ -34,7 +34,7 @@ public class URIHelper {
         return String.join("&", l);
     }
 
-    public static String toString(URI uri) {
+    public static String toString(ScxURI uri) {
         var scheme = uri.scheme();
         var host = uri.host();
         var port = uri.port();
