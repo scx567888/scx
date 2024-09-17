@@ -1,7 +1,7 @@
 package cool.scx.http.helidon;
 
 import cool.scx.http.*;
-import cool.scx.http.uri.URI;
+import cool.scx.http.uri.ScxURI;
 import io.helidon.webserver.ConnectionContext;
 import io.helidon.webserver.http.RoutingRequest;
 import io.helidon.webserver.http.RoutingResponse;
@@ -9,7 +9,7 @@ import io.helidon.webserver.http.RoutingResponse;
 class HelidonHttpServerRequest implements ScxHttpServerRequest {
 
     private final ScxHttpMethod method;
-    private final URI uri;
+    private final ScxURI uri;
     private final HttpVersion version;
     private final ScxHttpHeaders headers;
     private final ScxHttpBody body;
@@ -20,7 +20,7 @@ class HelidonHttpServerRequest implements ScxHttpServerRequest {
     public HelidonHttpServerRequest(ConnectionContext ctx, RoutingRequest request, RoutingResponse response) {
         var p = request.prologue();
         this.method = ScxHttpMethod.of(p.method().text());
-        this.uri = URI.of().path(p.uriPath().path()).query(new HelidonURIQuery(p.query())).fragment(p.fragment().hasValue() ? p.fragment().value() : null);
+        this.uri = ScxURI.of().path(p.uriPath().path()).query(new HelidonURIQuery(p.query())).fragment(p.fragment().hasValue() ? p.fragment().value() : null);
         this.version = HttpVersion.of(p.rawProtocol());
         this.headers = new HelidonHttpHeaders<>(request.headers());
         this.body = new HelidonHttpBody(request.content());
@@ -35,7 +35,7 @@ class HelidonHttpServerRequest implements ScxHttpServerRequest {
     }
 
     @Override
-    public URI uri() {
+    public ScxURI uri() {
         return uri;
     }
 
