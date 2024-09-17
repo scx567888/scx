@@ -10,7 +10,7 @@ import java.util.Set;
 /**
  * ParametersImpl
  */
-public class ParametersImpl implements ParametersWritable {
+class ParametersImpl implements ParametersWritable {
 
     private final MultiMap<String, String> map = new MultiMap<>();
 

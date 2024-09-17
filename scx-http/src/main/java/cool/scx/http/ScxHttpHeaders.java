@@ -6,7 +6,7 @@ import java.util.Set;
 
 /**
  * ScxHttpHeaders
-  */ 
+ */
 public interface ScxHttpHeaders extends Iterable<Map.Entry<ScxHttpHeaderName, List<String>>> {
 
     static ScxHttpHeadersWritable of() {
@@ -15,7 +15,7 @@ public interface ScxHttpHeaders extends Iterable<Map.Entry<ScxHttpHeaderName, Li
 
     long size();
 
-    Set<String> names();
+    Set<ScxHttpHeaderName> names();
 
     String get(ScxHttpHeaderName headerName);
 
