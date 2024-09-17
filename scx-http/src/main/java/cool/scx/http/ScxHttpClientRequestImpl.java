@@ -1,20 +1,21 @@
 package cool.scx.http;
 
-import cool.scx.http.uri.URI;
-import cool.scx.http.uri.URIWritable;
+import cool.scx.http.uri.ScxURI;
+import cool.scx.http.uri.ScxURIWritable;
 
 import static cool.scx.http.HttpMethod.GET;
 
+//todo 
 class ScxHttpClientRequestImpl implements ScxHttpClientRequest {
 
     private HttpMethod method;
-    private URIWritable uri;
+    private ScxURIWritable uri;
     private ScxHttpHeadersWritable headers;
     private Object body;
 
     public ScxHttpClientRequestImpl() {
         this.method = GET;
-        this.uri = URI.of();
+        this.uri = ScxURI.of();
         this.headers = ScxHttpHeaders.of();
         this.body = null;
     }
@@ -25,7 +26,7 @@ class ScxHttpClientRequestImpl implements ScxHttpClientRequest {
     }
 
     @Override
-    public URIWritable uri() {
+    public ScxURIWritable uri() {
         return uri;
     }
 
@@ -46,7 +47,7 @@ class ScxHttpClientRequestImpl implements ScxHttpClientRequest {
     }
 
     @Override
-    public ScxHttpClientRequest uri(URIWritable uri) {
+    public ScxHttpClientRequest uri(ScxURIWritable uri) {
         this.uri = uri;
         return this;
     }

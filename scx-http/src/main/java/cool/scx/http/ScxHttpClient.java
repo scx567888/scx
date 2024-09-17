@@ -1,12 +1,14 @@
 package cool.scx.http;
 
-import java.io.IOException;
-import java.net.URI;
+import cool.scx.http.uri.ScxURI;
 
+import java.io.IOException;
+
+//todo 
 public interface ScxHttpClient {
 
     ScxHttpClientResponse request(ScxHttpClientRequest request) throws IOException, InterruptedException;
 
-    ScxClientWebSocket webSocket(URI uri);
+    ScxClientWebSocket webSocket(ScxURI uri);
 
 }

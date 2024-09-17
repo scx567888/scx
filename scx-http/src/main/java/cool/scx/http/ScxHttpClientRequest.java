@@ -1,8 +1,9 @@
 package cool.scx.http;
 
-import cool.scx.http.uri.URI;
-import cool.scx.http.uri.URIWritable;
+import cool.scx.http.uri.ScxURI;
+import cool.scx.http.uri.ScxURIWritable;
 
+//todo 
 public interface ScxHttpClientRequest {
 
     static ScxHttpClientRequest of() {
@@ -11,7 +12,7 @@ public interface ScxHttpClientRequest {
 
     ScxHttpMethod method();
 
-    URIWritable uri();
+    ScxURIWritable uri();
 
     ScxHttpHeadersWritable headers();
 
@@ -19,14 +20,14 @@ public interface ScxHttpClientRequest {
 
     ScxHttpClientRequest method(HttpMethod method);
 
-    ScxHttpClientRequest uri(URIWritable uri);
+    ScxHttpClientRequest uri(ScxURIWritable uri);
 
     ScxHttpClientRequest headers(ScxHttpHeadersWritable headers);
 
     ScxHttpClientRequest body(Object body);
 
     default ScxHttpClientRequest uri(String uri) {
-        return uri(URI.of(uri));
+        return uri(ScxURI.of(uri));
     }
 
     default ScxHttpClientRequest setHeader(ScxHttpHeaderName headerName, String... values) {
