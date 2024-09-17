@@ -123,6 +123,12 @@
                 <version>${helidon.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>io.helidon.webclient</groupId>
+                <artifactId>helidon-webclient-websocket</artifactId>
+                <version>${helidon.version}</version>
+            </dependency>
+
             <!-- vert.x 核心包 -->
             <dependency>
                 <groupId>io.vertx</groupId>
