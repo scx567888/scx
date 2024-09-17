@@ -6,6 +6,9 @@ import io.helidon.webserver.ConnectionContext;
 import io.helidon.webserver.http.RoutingRequest;
 import io.helidon.webserver.http.RoutingResponse;
 
+/**
+ * HelidonHttpServerRequest
+ */
 class HelidonHttpServerRequest implements ScxHttpServerRequest {
 
     private final ScxHttpMethod method;
