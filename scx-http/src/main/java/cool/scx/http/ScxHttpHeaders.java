@@ -25,6 +25,14 @@ public interface ScxHttpHeaders extends Iterable<Map.Entry<ScxHttpHeaderName, Li
 
     List<String> getAll(String headerName);
 
+    default boolean contains(ScxHttpHeaderName httpFieldName) {
+        return get(httpFieldName) != null;
+    }
+
+    default boolean contains(String httpFieldName) {
+        return get(httpFieldName) != null;
+    }
+
     default boolean isEmpty() {
         return this.size() == 0;
     }

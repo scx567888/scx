@@ -5,6 +5,9 @@ import java.nio.charset.Charset;
 public interface ContentType {
 
     static ContentTypeWritable of(String contentTypeStr) {
+        if (contentTypeStr == null) {
+            return null;
+        }
         var split = contentTypeStr.split(";");
         if (split.length == 0) {
             return null;

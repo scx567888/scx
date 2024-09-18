@@ -26,5 +26,5 @@ public class ContentTypeImpl implements ContentTypeWritable {
     public Parameters params() {
         return params;
     }
-    
+
 }

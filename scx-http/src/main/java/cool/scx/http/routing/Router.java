@@ -2,53 +2,22 @@ package cool.scx.http.routing;
 
 import cool.scx.http.ScxHttpServerRequest;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.TreeSet;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-/**
- * Router
- */
-public class Router implements Consumer<ScxHttpServerRequest> {
+public interface Router extends Consumer<ScxHttpServerRequest> {
 
-    private static final Comparator<Route> ROUTE_COMPARATOR = (o1, o2) -> {
-        var compare = Integer.compare(o1.order(), o2.order());
-        if (compare == 0) {
-            if (o1.equals(o2)) {
-                return 0;
-            }
-            return 1;
-        }
-        return compare;
-    };
+    Router addRoute(Route route);
 
-    final TreeSet<Route> routes;
-    BiConsumer<Throwable, RoutingContext> errorHandler;
+    List<Route> getRoutes();
 
-    public Router() {
-        this.routes = new TreeSet<>(ROUTE_COMPARATOR);
-    }
+    Router errorHandler(BiConsumer<Throwable, RoutingContext> handler);
 
-    public Router addRoute(Route route) {
-        routes.add(route);
-        return this;
-    }
-
-    public List<Route> getRoutes() {
-        return new ArrayList<>(routes);
-    }
-
-    @Override
-    public void accept(ScxHttpServerRequest scxHttpRequest) {
-        new RoutingContext(this, scxHttpRequest).next();
-    }
-
-    public Router errorHandler(BiConsumer<Throwable, RoutingContext> handler) {
-        this.errorHandler = handler;
-        return this;
+    default RouteWritable route() {
+        var route = Route.of();
+        addRoute(route);
+        return route;
     }
 
 }
