@@ -8,6 +8,10 @@ import java.util.function.Consumer;
 
 public interface Router extends Consumer<ScxHttpServerRequest> {
 
+    static Router of() {
+        return new RouterImpl();
+    }
+
     Router addRoute(Route route);
 
     List<Route> getRoutes();

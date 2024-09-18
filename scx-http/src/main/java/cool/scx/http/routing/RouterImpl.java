@@ -29,6 +29,7 @@ public class RouterImpl implements Router {
 
     public RouterImpl() {
         this.routes = new TreeSet<>(ROUTE_COMPARATOR);
+        this.errorHandler = null;
     }
 
     @Override
