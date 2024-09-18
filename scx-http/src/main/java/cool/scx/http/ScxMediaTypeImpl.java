@@ -26,5 +26,5 @@ public class ScxMediaTypeImpl implements ScxMediaType {
     public String value() {
         return value;
     }
-    
+
 }
