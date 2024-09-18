@@ -25,7 +25,7 @@ public class ScxWebTest {
     public static void test0() {
         var vertx = new HelidonHttpServer(new ScxHttpServerOptions().setPort(8080));
 
-        var router = new Router();
+        var router = Router.of();
 
         //绑定异常处理器后可以直接再 handler 中抛出异常
         new ScxWeb(new ScxWebOptions().useDevelopmentErrorPage(true)).bindErrorHandler(router);
@@ -42,8 +42,9 @@ public class ScxWebTest {
 
         vertx.requestHandler(router).start();
 
-        System.out.println("http://127.0.0.1:8080/no-perm");
-        System.out.println("http://127.0.0.1:8080/no-perm2");
+        for (var route : router.getRoutes()) {
+            System.out.println("http://127.0.0.1:" + vertx.port() + route.path());
+        }
 
     }
 
@@ -54,7 +55,7 @@ public class ScxWebTest {
 
         var vertx = new HelidonHttpServer(new ScxHttpServerOptions().setPort(8081));
 
-        var router = new cool.scx.http.routing.Router();
+        var router = Router.of();
 
         // 直接将 class 扫描并注册到 router 中 这样可以实现类似 spring mvc 的写法
         // 具体参照 HelloWorldController
@@ -68,9 +69,10 @@ public class ScxWebTest {
 
         vertx.requestHandler(router).start();
 
-        System.out.println("http://127.0.0.1:8081/hello");
-        System.out.println("http://127.0.0.1:8081/no-perm");
-        System.out.println("http://127.0.0.1:8081/vertx-route");
+        for (var route : router.getRoutes()) {
+            System.out.println("http://127.0.0.1:" + vertx.port() + route.path());
+        }
+
     }
 
 }
