@@ -9,9 +9,12 @@ public class ScxHttpServerOptions {
 
     private int port;
     private TLS tls;
+    private long maxPayloadSize;
 
     public ScxHttpServerOptions() {
         this.port = 0;
+        this.tls = null;
+        this.maxPayloadSize = -1;
     }
 
     public int getPort() {
@@ -33,6 +36,14 @@ public class ScxHttpServerOptions {
 
     public void setTLS(TLS tls) {
         this.tls = tls;
+    }
+
+    public void setMaxPayloadSize(long maxPayloadSize) {
+        this.maxPayloadSize = maxPayloadSize;
+    }
+
+    public long getMaxPayloadSize() {
+        return this.maxPayloadSize;
     }
 
 }
