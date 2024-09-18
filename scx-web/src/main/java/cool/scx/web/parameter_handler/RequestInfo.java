@@ -75,7 +75,7 @@ public final class RequestInfo {
      * @param contentType a
      */
     private void initBody(RoutingContext ctx, ContentType contentType) {
-        var mediaType = contentType.mediaType();
+        var mediaType = contentType != null ? contentType.mediaType() : null;
         // 除了 MULTIPART_FORM_DATA 其余全部转为 JsonNode 的形式方便后续使用
         switch (mediaType) {
             case APPLICATION_JSON -> {
@@ -94,7 +94,7 @@ public final class RequestInfo {
                 var multiPart = ctx.request().body().as(MultiPart.class);
                 this.formData = new FormData(multiPart);
             }
-            default -> {
+            case null, default -> {
                 var string = ctx.request().body().asString();
                 this.body = string != null ? tryReadOrTextNode(string) : null;
             }
