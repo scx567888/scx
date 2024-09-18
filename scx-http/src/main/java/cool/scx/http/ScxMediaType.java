@@ -4,7 +4,7 @@ public interface ScxMediaType {
 
     static ScxMediaType of(String str) {
         try {
-            return MediaType.valueOf(str);
+            return MediaType.of(str);
         } catch (IllegalArgumentException e) {
             var s = str.split("/");
             if (s.length == 2) {

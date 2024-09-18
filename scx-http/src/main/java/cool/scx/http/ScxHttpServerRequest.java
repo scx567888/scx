@@ -41,4 +41,8 @@ public interface ScxHttpServerRequest {
         return headers().get(name);
     }
 
+    default ContentType contentType() {
+        return ContentType.of(getHeader(HttpFieldName.CONTENT_TYPE));
+    }
+
 }
