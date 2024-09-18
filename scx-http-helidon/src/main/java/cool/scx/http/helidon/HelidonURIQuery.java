@@ -56,6 +56,11 @@ class HelidonURIQuery implements URIQueryWritable {
     }
 
     @Override
+    public Map<String, List<String>> toMap() {
+        return uriQuery.toMap();
+    }
+
+    @Override
     public ParametersWritable set(String name, String... value) {
         throw new UnsupportedOperationException();
     }

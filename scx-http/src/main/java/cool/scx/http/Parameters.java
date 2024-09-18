@@ -1,5 +1,6 @@
 package cool.scx.http;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -23,6 +24,14 @@ public interface Parameters extends Iterable<Map.Entry<String, List<String>>> {
 
     default boolean isEmpty() {
         return this.size() == 0;
+    }
+
+    default Map<String, List<String>> toMap() {
+        var map = new HashMap<String, List<String>>();
+        for (var stringListEntry : this) {
+            map.put(stringListEntry.getKey(), stringListEntry.getValue());
+        }
+        return map;
     }
 
 }

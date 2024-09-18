@@ -26,12 +26,14 @@ public final class RequestInfo {
     private final ContentType contentType;
     private JsonNode body;
     private JsonNode pathParams;
+    private JsonNode query;
     private FormData formData;
 
     public RequestInfo(RoutingContext ctx) {
         this.routingContext = ctx;
         this.contentType = ctx.request().contentType();
         this.pathParams = jsonMapper().convertValue(ctx.pathParams().toMap(), JsonNode.class);
+        this.query = jsonMapper().convertValue(ctx.request().query().toMap(), JsonNode.class);
         initBody(ctx, this.contentType);
     }
 
@@ -93,6 +95,7 @@ public final class RequestInfo {
                 this.body = jsonMapper().convertValue(multiPart.toMap(), JsonNode.class);
             }
             case MULTIPART_FORM_DATA -> {
+                //todo 需要处理
                 var multiPart = ctx.request().body().as(MultiPart.class);
                 this.formData = new FormData(multiPart);
             }
@@ -105,6 +108,10 @@ public final class RequestInfo {
 
     public JsonNode pathParams() {
         return pathParams;
+    }
+
+    public JsonNode query() {
+        return query;
     }
 
     public JsonNode body() {
