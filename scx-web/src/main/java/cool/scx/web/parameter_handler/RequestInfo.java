@@ -25,11 +25,13 @@ public final class RequestInfo {
     private final RoutingContext routingContext;
     private final ContentType contentType;
     private JsonNode body;
+    private JsonNode pathParams;
     private FormData formData;
 
     public RequestInfo(RoutingContext ctx) {
         this.routingContext = ctx;
         this.contentType = ctx.request().contentType();
+        this.pathParams = jsonMapper().convertValue(ctx.pathParams().toMap(), JsonNode.class);
         initBody(ctx, this.contentType);
     }
 
@@ -99,6 +101,10 @@ public final class RequestInfo {
                 this.body = string != null ? tryReadOrTextNode(string) : null;
             }
         }
+    }
+
+    public JsonNode pathParams() {
+        return pathParams;
     }
 
     public JsonNode body() {

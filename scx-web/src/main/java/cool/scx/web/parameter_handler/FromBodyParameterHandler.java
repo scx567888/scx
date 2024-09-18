@@ -52,7 +52,7 @@ public final class FromBodyParameterHandler implements ParameterHandler {
         return o;
     }
 
-    private static <T> T readValue(JsonNode jsonNode, JavaType type) throws IOException {
+    public static <T> T readValue(JsonNode jsonNode, JavaType type) throws IOException {
         var reader = jsonMapper(new Options().setIgnoreJsonIgnore(true)).readerFor(type);
         //这里我们做一下数组的兼容 保证无论参数是数组还是type是数组都可以正确读取
         if (jsonNode.isArray()) {
