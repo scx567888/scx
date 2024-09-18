@@ -27,6 +27,7 @@ public class HelidonHttpServer implements ScxHttpServer {
         var builder = WebServer.builder()
                 .addRouting(httpRouting)
                 .addRouting(webSocketRouting)
+                .maxPayloadSize(options.getMaxPayloadSize())
                 .port(options.getPort());
         if (options.getTLS() != null) {
             builder.tls((Tls) options.getTLS());
