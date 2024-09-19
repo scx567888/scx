@@ -206,13 +206,6 @@
                 <version>${sqlite-jdbc.version}</version>
             </dependency>
 
-            <!-- jna -->
-            <dependency>
-                <groupId>net.java.dev.jna</groupId>
-                <artifactId>jna-platform</artifactId>
-                <version>${jna.version}</version>
-            </dependency>
-
             <!-- slf4j 日志框架 -->
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -252,7 +245,6 @@
         <jasypt.version>1.9.3</jasypt.version>
         <mysql-connector-j.version>9.0.0</mysql-connector-j.version>
         <sqlite-jdbc.version>3.46.1.0</sqlite-jdbc.version>
-        <jna.version>5.15.0</jna.version>
         <slf4j.version>2.0.16</slf4j.version>
         <log4j2.version>2.24.0</log4j2.version>
         <testng.version>7.10.2</testng.version>
