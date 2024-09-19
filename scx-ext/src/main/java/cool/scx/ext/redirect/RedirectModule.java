@@ -3,7 +3,8 @@ package cool.scx.ext.redirect;
 import cool.scx.common.ansi.Ansi;
 import cool.scx.core.Scx;
 import cool.scx.core.ScxModule;
-import cool.scx.http.routing.Route;
+import cool.scx.http.ScxHttpServerOptions;
+import cool.scx.http.helidon.HelidonHttpServer;
 import cool.scx.http.routing.Router;
 import cool.scx.web.vo.Redirection;
 
@@ -36,21 +37,22 @@ public class RedirectModule extends ScxModule {
      * @param port  a int
      */
     public static void startRedirect(int port) {
-        //todo 
-        var router =new Router();
-        router.addRoute(Route.of().handler(c -> {
-//            var oldURI = c.request().absoluteURI();
+        var router = Router.of();
+        router.route().handler(c -> {
+            var oldURI = c.request().absoluteURI();
             // 4 = "http".length()
-//            var newURI = "https" + oldURI.substring(4);
-//            Redirection.ofTemporary(newURI).accept(c);
-        }));
-//        vertx.createHttpServer().requestHandler(router).listen(port, (http) -> {
-//            if (http.succeeded()) {
-//                Ansi.ansi().brightMagenta("转发服务器启动成功 http -> https, 端口号 : " + port + " !!!").println();
-//            } else {
-//                logger.log(Logger.Level.ERROR, "转发服务器启动失败 !!! ", http.cause());
-//            }
-//        });
+            var newURI = "https" + oldURI.substring(4);
+            Redirection.ofTemporary(newURI).accept(c);
+        });
+        var httpServer = new HelidonHttpServer(new ScxHttpServerOptions().setPort(port));
+        httpServer.requestHandler(router);
+
+        try {
+            httpServer.start();
+            Ansi.ansi().brightMagenta("转发服务器启动成功 http -> https, 端口号 : " + httpServer.port() + " !!!").println();
+        } catch (Exception e) {
+            logger.log(Logger.Level.ERROR, "转发服务器启动失败 !!! ", e);
+        }
     }
 
     @Override
