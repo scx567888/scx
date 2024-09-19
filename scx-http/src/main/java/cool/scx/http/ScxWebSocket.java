@@ -1,5 +1,6 @@
 package cool.scx.http;
 
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
@@ -15,7 +16,7 @@ public interface ScxWebSocket {
 
     ScxWebSocket onPong(Consumer<byte[]> pongHandler);
 
-    ScxWebSocket onClose(Consumer<Integer> closeHandler);
+    ScxWebSocket onClose(BiConsumer<Integer, String> closeHandler);
 
     ScxWebSocket onError(Consumer<Throwable> errorHandler);
 
@@ -29,12 +30,18 @@ public interface ScxWebSocket {
 
     ScxWebSocket close(int var1, String var2);
 
+    boolean isClosed();
+
     default ScxWebSocket send(String textMessage) {
         return send(textMessage, false);
     }
 
     default ScxWebSocket send(byte[] binaryMessage) {
         return send(binaryMessage, false);
+    }
+
+    default ScxWebSocket close() {
+        return close(0, null);
     }
 
 }
