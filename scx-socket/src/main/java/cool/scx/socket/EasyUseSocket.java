@@ -1,7 +1,7 @@
 package cool.scx.socket;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import io.vertx.core.http.WebSocketBase;
+import cool.scx.http.ScxWebSocket;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -17,11 +17,11 @@ public class EasyUseSocket extends ScxSocket {
     private static final SendOptions DEFAULT_SEND_OPTIONS = new SendOptions();
     private static final RequestOptions DEFAULT_REQUEST_OPTIONS = new RequestOptions();
 
-    EasyUseSocket(WebSocketBase webSocket, String clientID, ScxSocketOptions options, ScxSocketStatus status) {
+    EasyUseSocket(ScxWebSocket webSocket, String clientID, ScxSocketOptions options, ScxSocketStatus status) {
         super(webSocket, clientID, options, status);
     }
 
-    EasyUseSocket(WebSocketBase webSocket, String clientID, ScxSocketOptions options) {
+    EasyUseSocket(ScxWebSocket webSocket, String clientID, ScxSocketOptions options) {
         super(webSocket, clientID, options);
     }
 

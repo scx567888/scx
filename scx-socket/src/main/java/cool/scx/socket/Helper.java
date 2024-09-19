@@ -3,10 +3,8 @@ package cool.scx.socket;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cool.scx.common.util.ObjectUtils;
-import io.netty.handler.codec.http.QueryStringDecoder;
-import io.netty.handler.codec.http.QueryStringEncoder;
-import io.vertx.core.http.ServerWebSocket;
-import io.vertx.core.http.WebSocketConnectOptions;
+import cool.scx.http.ScxServerWebSocket;
+import cool.scx.http.uri.ScxURI;
 
 import static cool.scx.common.util.ScxExceptionHelper.wrap;
 
@@ -22,14 +20,8 @@ public final class Helper {
      * @param serverWebSocket serverWebSocket
      * @return clientID 没有返回 null
      */
-    public static String getClientID(ServerWebSocket serverWebSocket) {
-        var decoder = new QueryStringDecoder(serverWebSocket.uri());
-        var parameters = decoder.parameters();
-        var clientIDValues = parameters.get(SCX_SOCKET_CLIENT_ID);
-        if (clientIDValues == null) {
-            return null;
-        }
-        return clientIDValues.isEmpty() ? null : clientIDValues.get(0);
+    public static String getClientID(ScxServerWebSocket serverWebSocket) {
+        return serverWebSocket.uri().query().get(SCX_SOCKET_CLIENT_ID);
     }
 
     /**
@@ -39,14 +31,8 @@ public final class Helper {
      * @param clientID    客户端 ID
      * @return ConnectOptions
      */
-    public static WebSocketConnectOptions createConnectOptions(String absoluteURI, String clientID) {
-        var o = new WebSocketConnectOptions().setAbsoluteURI(absoluteURI);
-        var oldUri = o.getURI();
-        var decoder = new QueryStringEncoder(oldUri);
-        decoder.addParam(SCX_SOCKET_CLIENT_ID, clientID);
-        var newUri = decoder.toString();
-        o.setURI(newUri);
-        return o;
+    public static ScxURI createConnectOptions(String absoluteURI, String clientID) {
+        return ScxURI.of(absoluteURI).setQuery(SCX_SOCKET_CLIENT_ID, clientID);
     }
 
     /**
