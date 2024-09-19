@@ -27,6 +27,7 @@ import cool.scx.logging.recorder.ConsoleRecorder;
 import cool.scx.logging.recorder.FileRecorder;
 import cool.scx.web.annotation.ScxRoute;
 import cool.scx.web.annotation.ScxWebSocketRoute;
+import io.helidon.common.tls.Tls;
 import org.springframework.beans.factory.annotation.AnnotatedGenericBeanDefinition;
 import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
@@ -42,6 +43,9 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.nio.file.Path;
+import java.security.KeyStore;
+import java.security.PrivateKey;
+import java.security.cert.X509Certificate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -372,6 +376,28 @@ public final class ScxHelper {
          * 既打印到控制台也同时写入到文件
          */
         BOTH
+    }
+
+    public static Tls getTls(Path path, String password) {
+        var builder = Tls.builder();
+        try {
+            var jks = KeyStore.getInstance(path.toFile(), password.toCharArray());
+            var aliases = jks.aliases();
+            if (aliases.hasMoreElements()) {
+                var a = aliases.nextElement();
+                var key = jks.getKey(a, password.toCharArray());
+                if (key instanceof PrivateKey p) {
+                    builder.privateKey(p);
+                }
+                var c = jks.getCertificate(a);
+                if (c instanceof X509Certificate x) {
+                    builder.addPrivateKeyCertChain(x);
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("加载 SSL 证书时发生错误 !!!", e);
+        }
+        return builder.build();
     }
 
 }

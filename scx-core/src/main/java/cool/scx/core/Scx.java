@@ -2,6 +2,7 @@ package cool.scx.core;
 
 import cool.scx.common.ansi.Ansi;
 import cool.scx.common.scheduler.ScxScheduler;
+import cool.scx.common.util.FileUtils;
 import cool.scx.common.util.ScopedValue;
 import cool.scx.common.util.StopWatch;
 import cool.scx.config.ScxConfig;
@@ -12,14 +13,14 @@ import cool.scx.data.jdbc.AnnotationConfigTable;
 import cool.scx.http.ScxHttpServer;
 import cool.scx.http.ScxHttpServerOptions;
 import cool.scx.http.helidon.HelidonHttpServer;
+import cool.scx.http.routing.WebSocketRouter;
 import cool.scx.jdbc.JDBCContext;
 import cool.scx.jdbc.meta_data.SchemaHelper;
 import cool.scx.jdbc.sql.SQLRunner;
+import cool.scx.web.RouteRegistrar;
 import cool.scx.web.ScxWeb;
 import cool.scx.web.ScxWebOptions;
-import cool.scx.web.RouteRegistrar;
 import cool.scx.web.WebSocketRouteRegistrar;
-import cool.scx.http.routing.WebSocketRouter;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 import javax.sql.DataSource;
@@ -36,7 +37,6 @@ import static cool.scx.core.ScxContext.GLOBAL_SCX;
 import static cool.scx.core.ScxHelper.*;
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.WARNING;
-import static java.util.concurrent.Executors.newScheduledThreadPool;
 
 /**
  * 启动类
@@ -75,6 +75,11 @@ public final class Scx {
     private WebSocketRouter webSocketRouter = null;
 
     private ScxHttpServer vertxHttpServer = null;
+
+    /**
+     * 默认 http 请求 body 限制大小
+     */
+    private static final long DEFAULT_BODY_LIMIT = FileUtils.displaySizeToLong("16384KB");
 
     Scx(ScxEnvironment scxEnvironment, String appKey, ScxFeatureConfig scxFeatureConfig, ScxConfig scxConfig, ScxModule[] scxModules, ScxHttpServerOptions defaultHttpServerOptions) {
         //0, 赋值到全局
@@ -168,12 +173,12 @@ public final class Scx {
                     .brightBlue("已加载 " + this.webSocketRouter.getRoutes().size() + " 个 WebSocket 路由 !!!").println();
         }
         //6, 初始化服务器
-        var httpServerOptions = new ScxHttpServerOptions();
+        var httpServerOptions = new ScxHttpServerOptions()
+                .setMaxPayloadSize(DEFAULT_BODY_LIMIT)
+                .setPort(this.scxOptions.port());
         if (this.scxOptions.isHttpsEnabled()) {
-//            httpServerOptions.setSsl(true)
-//                    .setKeyCertOptions(new JksOptions()
-//                            .setPath(this.scxOptions.sslPath().toString())
-//                            .setPassword(this.scxOptions.sslPassword()));
+            var tls = getTls(this.scxOptions.sslPath(), this.scxOptions.sslPassword());
+            httpServerOptions.setTLS(tls);
         }
         this.vertxHttpServer = new HelidonHttpServer(httpServerOptions);
         this.vertxHttpServer.requestHandler(this.scxHttpRouter).webSocketHandler(this.webSocketRouter);
@@ -193,17 +198,16 @@ public final class Scx {
      */
     private void startServer(int port) {
         try {
-//        port=    server.actualPort(); todo 
             this.vertxHttpServer.start();
             var httpOrHttps = this.scxOptions.isHttpsEnabled() ? "https" : "http";
             var o = Ansi.ansi().green("服务器启动成功... 用时 " + StopWatch.stopToMillis("ScxRun") + " ms").ln();
-            o.green("> 本地: " + httpOrHttps + "://localhost:" + port + "/").ln();
+            o.green("> 本地: " + httpOrHttps + "://localhost:" + this.vertxHttpServer.port() + "/").ln();
             var normalIP = ignore(() -> getLocalIPAddress(c -> c instanceof Inet4Address), new InetAddress[]{});
             for (var ip : normalIP) {
-                o.green("> 网络: " + httpOrHttps + "://" + ip.getHostAddress() + ":" + port + "/").ln();
+                o.green("> 网络: " + httpOrHttps + "://" + ip.getHostAddress() + ":" + this.vertxHttpServer.port() + "/").ln();
             }
             o.print();
-        }catch (Exception cause){
+        } catch (Exception cause) {
             if (cause instanceof BindException) {
                 //获取新的端口号然后 重新启动服务器
                 if (isUseNewPort(port)) {
