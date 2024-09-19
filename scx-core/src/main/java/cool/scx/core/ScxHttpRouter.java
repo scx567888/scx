@@ -1,6 +1,5 @@
 package cool.scx.core;
 
-import cool.scx.common.util.FileUtils;
 import cool.scx.http.HttpFieldName;
 import cool.scx.http.HttpMethod;
 import cool.scx.http.handler.CorsHandler;
