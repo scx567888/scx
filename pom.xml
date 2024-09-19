@@ -238,7 +238,9 @@
     </dependencyManagement>
 
     <properties>
-
+        
+        <scx.javaVersion>23</scx.javaVersion>
+        
         <!-- *********************** 以下为依赖包版本 *********************** -->
         <helidon.version>4.1.1</helidon.version>
         <vertx.version>4.5.10</vertx.version>
