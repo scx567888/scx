@@ -1,10 +1,9 @@
 package cool.scx.common.ansi;
 
-import com.sun.jna.Function;
-import com.sun.jna.platform.win32.WinDef;
-import com.sun.jna.platform.win32.WinNT;
+import cool.scx.common.ffm.type.IntRef;
 import cool.scx.common.util.OSHelper;
 
+import static cool.scx.common.ffm.win32.Kernel32.KERNEL32;
 import static cool.scx.common.standard.OSType.WINDOWS;
 
 class AnsiHelper {
@@ -20,22 +19,19 @@ class AnsiHelper {
      */
     static void enableWindows10AnsiSupport() {
 
-        // See https://docs.microsoft.com/zh-cn/windows/console/getstdhandle
-        var GetStdHandleFunc = Function.getFunction("kernel32", "GetStdHandle");
-        var STD_OUTPUT_HANDLE = new WinDef.DWORD(-11);
-        var hOut = (WinNT.HANDLE) GetStdHandleFunc.invoke(WinNT.HANDLE.class, new Object[]{STD_OUTPUT_HANDLE});
+        // See https://learn.microsoft.com/zh-cn/windows/console/getstdhandle
+        var hOut = KERNEL32.GetStdHandle(-11);
 
-        //See https://docs.microsoft.com/zh-cn/windows/console/getconsolemode
-        var p_dwMode = new WinDef.DWORDByReference(new WinDef.DWORD(0));
-        var GetConsoleModeFunc = Function.getFunction("kernel32", "GetConsoleMode");
-        GetConsoleModeFunc.invoke(WinDef.BOOL.class, new Object[]{hOut, p_dwMode});
+        // See https://learn.microsoft.com/zh-cn/windows/console/getconsolemode
+        var lpModeMemorySegment = new IntRef(0);
+        KERNEL32.GetConsoleMode(hOut, lpModeMemorySegment);
 
-        //See https://docs.microsoft.com/zh-cn/windows/console/setconsolemode
+        // See https://learn.microsoft.com/zh-cn/windows/console/setconsolemode
         int ENABLE_VIRTUAL_TERMINAL_PROCESSING = 4;
-        var dwMode = p_dwMode.getValue();
-        dwMode.setValue(dwMode.intValue() | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
-        var SetConsoleModeFunc = Function.getFunction("kernel32", "SetConsoleMode");
-        SetConsoleModeFunc.invoke(WinDef.BOOL.class, new Object[]{hOut, dwMode});
+
+        long lpMode = lpModeMemorySegment.getValue();
+        long dwMode = lpMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+        KERNEL32.SetConsoleMode(hOut, dwMode);
 
     }
 

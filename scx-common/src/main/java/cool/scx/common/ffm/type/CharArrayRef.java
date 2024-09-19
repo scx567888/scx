@@ -16,7 +16,7 @@ public class CharArrayRef implements Ref {
 
     @Override
     public MemorySegment init(Arena arena) {
-        return this.memorySegment = arena.allocateArray(JAVA_CHAR, value);
+        return this.memorySegment = arena.allocateFrom(JAVA_CHAR, value);
     }
 
     @Override

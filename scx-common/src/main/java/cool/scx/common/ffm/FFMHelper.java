@@ -79,7 +79,7 @@ public final class FFMHelper {
         return switch (o) {
             case null -> MemorySegment.NULL;
             case Long _, MemorySegment _, Ref _, Integer _ -> o;
-            case String s -> arena.allocateUtf8String(s);
+            case String s -> arena.allocateFrom(s);
             case char[] c -> new CharArrayRef(c);
             case Callback c -> convertCallback(arena, c);
             case Struct c -> new StructRef(c);
