@@ -18,7 +18,7 @@ public class RoutingContext {
     private final Iterator<Route> iter;
     private Parameters nowPathParams;
 
-    public RoutingContext(RouterImpl router, ScxHttpServerRequest request) {
+    RoutingContext(RouterImpl router, ScxHttpServerRequest request) {
         this.router = router;
         this.request = request;
         this.iter = router.routes.iterator();
