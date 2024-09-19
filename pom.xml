@@ -129,13 +129,6 @@
                 <version>${helidon.version}</version>
             </dependency>
 
-            <!-- vert.x 核心包 -->
-            <dependency>
-                <groupId>io.vertx</groupId>
-                <artifactId>vertx-core</artifactId>
-                <version>${vertx.version}</version>
-            </dependency>
-
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-core</artifactId>
@@ -236,7 +229,6 @@
 
         <!-- *********************** 以下为依赖包版本 *********************** -->
         <helidon.version>4.1.1</helidon.version>
-        <vertx.version>4.5.10</vertx.version>
         <jackson.version>2.17.2</jackson.version>
         <spring-framework.version>6.1.13</spring-framework.version>
         <hikaricp.version>5.1.0</hikaricp.version>
