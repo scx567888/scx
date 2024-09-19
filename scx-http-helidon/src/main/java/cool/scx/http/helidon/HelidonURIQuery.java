@@ -42,17 +42,7 @@ class HelidonURIQuery implements URIQueryWritable {
 
     @Override
     public Iterator<Map.Entry<String, List<String>>> iterator() {
-        return new Iterator<>() {
-            @Override
-            public boolean hasNext() {
-                return false;
-            }
-
-            @Override
-            public Map.Entry<String, List<String>> next() {
-                return null;
-            }
-        };
+        return uriQuery.toMap().entrySet().iterator();
     }
 
     @Override
