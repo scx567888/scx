@@ -62,7 +62,7 @@ class HelidonHttpServerResponse implements ScxHttpServerResponse {
     }
 
     @Override
-    public boolean closed() {
+    public boolean isClosed() {
         return this.response.isSent();
     }
 
