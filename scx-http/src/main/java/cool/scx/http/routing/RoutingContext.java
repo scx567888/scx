@@ -13,12 +13,12 @@ import java.util.Iterator;
  */
 public class RoutingContext {
 
-    private final Router router;
+    private final RouterImpl router;
     private final ScxHttpServerRequest request;
     private final Iterator<Route> iter;
     private Parameters nowPathParams;
 
-    public RoutingContext(Router router, ScxHttpServerRequest request) {
+    RoutingContext(RouterImpl router, ScxHttpServerRequest request) {
         this.router = router;
         this.request = request;
         this.iter = router.routes.iterator();

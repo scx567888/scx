@@ -57,4 +57,9 @@ public class ParametersImpl implements ParametersWritable {
         return map.toMultiValueMap().entrySet().iterator();
     }
 
+    @Override
+    public Map<String, List<String>> toMap() {
+        return map.toMultiValueMap();
+    }
+
 }

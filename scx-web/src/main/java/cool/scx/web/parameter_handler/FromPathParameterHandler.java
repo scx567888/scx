@@ -7,9 +7,7 @@ import cool.scx.web.parameter_handler.exception.ParamConvertException;
 import cool.scx.web.parameter_handler.exception.RequiredParamEmptyException;
 
 import static cool.scx.common.util.AnnotationUtils.getAnnotationValue;
-import static cool.scx.common.util.ObjectUtils.Options;
-import static cool.scx.common.util.ObjectUtils.convertValue;
-import static cool.scx.web.ScxWebHelper.getFromMap;
+import static cool.scx.web.parameter_handler.FromBodyParameterHandler.readValue;
 
 /**
  * FromPathParameterHandler
@@ -20,7 +18,7 @@ import static cool.scx.web.ScxWebHelper.getFromMap;
 public final class FromPathParameterHandler implements ParameterHandler {
 
     public static Object getValueFromPath(String name, boolean merge, boolean required, JavaType javaType, RequestInfo info) throws RequiredParamEmptyException, ParamConvertException {
-        var tempValue = getFromMap(name, info.routingContext().pathParams(), merge);
+        var tempValue = merge ? info.pathParams() : info.pathParams().get(name);
         if (tempValue == null) {
             if (required) {
                 throw new RequiredParamEmptyException("必填参数不能为空 !!! 参数名称 [" + name + "] , 参数来源 [FromPath, merge=" + merge + "] , 参数类型 [" + javaType.getTypeName() + "]");
@@ -29,7 +27,7 @@ public final class FromPathParameterHandler implements ParameterHandler {
         }
         Object o;
         try {
-            o = convertValue(tempValue, javaType, new Options().setIgnoreJsonIgnore(true));
+            o = readValue(tempValue, javaType);
         } catch (Exception e) {
             throw new ParamConvertException("参数类型转换异常 !!! 参数名称 [" + name + "] , 参数来源 [FromPath, merge=" + merge + "] , 参数类型 [" + javaType.getTypeName() + "] , 详细错误信息 : " + e.getMessage());
         }

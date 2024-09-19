@@ -1,6 +1,5 @@
 package cool.scx.http;
 
-import cool.scx.http.tls.TLS;
 
 /**
  * ScxHttpServerOptions
@@ -8,10 +7,13 @@ import cool.scx.http.tls.TLS;
 public class ScxHttpServerOptions {
 
     private int port;
-    private TLS tls;
+    private Object tls;
+    private long maxPayloadSize;
 
     public ScxHttpServerOptions() {
         this.port = 0;
+        this.tls = null;
+        this.maxPayloadSize = -1;
     }
 
     public int getPort() {
@@ -27,12 +29,21 @@ public class ScxHttpServerOptions {
         }
     }
 
-    public TLS getTLS() {
+    public Object getTLS() {
         return tls;
     }
 
-    public void setTLS(TLS tls) {
+    public void setTLS(Object tls) {
         this.tls = tls;
+    }
+
+    public long getMaxPayloadSize() {
+        return this.maxPayloadSize;
+    }
+
+    public ScxHttpServerOptions setMaxPayloadSize(long maxPayloadSize) {
+        this.maxPayloadSize = maxPayloadSize;
+        return this;
     }
 
 }

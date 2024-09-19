@@ -3,16 +3,16 @@ package cool.scx.web.parameter_handler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.TextNode;
-import cool.scx.common.standard.MediaType;
+import cool.scx.http.ContentType;
 import cool.scx.http.exception.BadRequestException;
 import cool.scx.http.routing.RoutingContext;
 import cool.scx.web.type.FormData;
+import io.helidon.common.parameters.Parameters;
 import io.helidon.http.media.multipart.MultiPart;
 
 import static cool.scx.common.util.ObjectUtils.jsonMapper;
 import static cool.scx.common.util.ObjectUtils.xmlMapper;
-import static cool.scx.http.HttpFieldName.CONTENT_TYPE;
-import static cool.scx.web.parameter_handler.RequestInfo.ContentType.*;
+import static cool.scx.http.MediaType.*;
 
 /**
  * 封装 RoutingContext 的参数 防止反复取值造成性能损失
@@ -25,11 +25,15 @@ public final class RequestInfo {
     private final RoutingContext routingContext;
     private final ContentType contentType;
     private JsonNode body;
+    private JsonNode pathParams;
+    private JsonNode query;
     private FormData formData;
 
     public RequestInfo(RoutingContext ctx) {
         this.routingContext = ctx;
-        this.contentType = initContentType(ctx);
+        this.contentType = ctx.request().contentType();
+        this.pathParams = jsonMapper().convertValue(ctx.pathParams().toMap(), JsonNode.class);
+        this.query = jsonMapper().convertValue(ctx.request().query().toMap(), JsonNode.class);
         initBody(ctx, this.contentType);
     }
 
@@ -68,26 +72,6 @@ public final class RequestInfo {
         }
     }
 
-    public static ContentType initContentType(RoutingContext ctx) {
-        var contentType = ctx.request().getHeader(CONTENT_TYPE);
-        if (contentType != null) {
-            contentType = contentType.toLowerCase();
-        }
-        if (contentType == null) {
-            return NULL;
-        } else if (contentType.startsWith(MediaType.APPLICATION_JSON.toString())) {
-            return APPLICATION_JSON;
-        } else if (contentType.startsWith(MediaType.APPLICATION_XML.toString())) {
-            return APPLICATION_XML;
-        } else if (contentType.startsWith(MediaType.MULTIPART_FORM_DATA.toString())) {
-            return MULTIPART_FORM_DATA;
-        } else if (contentType.startsWith(MediaType.APPLICATION_X_WWW_FORM_URLENCODED.toString())) {
-            return APPLICATION_X_WWW_FORM_URLENCODED;
-        } else {
-            return OTHER;
-        }
-    }
-
     /**
      * 根据不同的 ContentType 以不同的逻辑初始化 body
      *
@@ -95,11 +79,9 @@ public final class RequestInfo {
      * @param contentType a
      */
     private void initBody(RoutingContext ctx, ContentType contentType) {
-        switch (contentType) {
-            case NULL -> {
-                this.body = null;
-                this.formData = null;
-            }
+        var mediaType = contentType != null ? contentType.mediaType() : null;
+        // 除了 MULTIPART_FORM_DATA 其余全部转为 JsonNode 的形式方便后续使用
+        switch (mediaType) {
             case APPLICATION_JSON -> {
                 var string = ctx.request().body().asString();
                 this.body = readJson(string);
@@ -108,15 +90,28 @@ public final class RequestInfo {
                 var string = ctx.request().body().asString();
                 this.body = readXml(string);
             }
+            case APPLICATION_X_WWW_FORM_URLENCODED -> {
+                var multiPart = ctx.request().body().as(Parameters.class);
+                this.body = jsonMapper().convertValue(multiPart.toMap(), JsonNode.class);
+            }
             case MULTIPART_FORM_DATA -> {
+                //todo 需要处理
                 var multiPart = ctx.request().body().as(MultiPart.class);
                 this.formData = new FormData(multiPart);
             }
-            default -> {
+            case null, default -> {
                 var string = ctx.request().body().asString();
                 this.body = string != null ? tryReadOrTextNode(string) : null;
             }
         }
+    }
+
+    public JsonNode pathParams() {
+        return pathParams;
+    }
+
+    public JsonNode query() {
+        return query;
     }
 
     public JsonNode body() {
@@ -133,15 +128,6 @@ public final class RequestInfo {
 
     public RoutingContext routingContext() {
         return routingContext;
-    }
-
-    public enum ContentType {
-        APPLICATION_JSON,
-        APPLICATION_XML,
-        MULTIPART_FORM_DATA,
-        APPLICATION_X_WWW_FORM_URLENCODED,
-        OTHER,
-        NULL
     }
 
 }

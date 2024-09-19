@@ -35,4 +35,8 @@ public interface ScxHttpServerResponse {
         return this;
     }
 
+    default ScxHttpServerResponse status(int code) {
+        return status(HttpStatusCode.of(code));
+    }
+
 }

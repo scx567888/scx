@@ -4,7 +4,6 @@ import cool.scx.http.ScxHttpServerOptions;
 import cool.scx.http.exception.ScxHttpException;
 import cool.scx.http.exception.UnauthorizedException;
 import cool.scx.http.helidon.HelidonHttpServer;
-import cool.scx.http.routing.Route;
 import cool.scx.http.routing.Router;
 
 import static cool.scx.http.HttpMethod.GET;
@@ -21,32 +20,32 @@ public class Test {
         var l = System.nanoTime();
         var server = new HelidonHttpServer(new ScxHttpServerOptions().setPort(8080));
 
-        var router = new Router();
+        var router = Router.of();
 
-        router.addRoute(Route.of().path("/*").handler(c -> {
+        router.route().path("/*").handler(c -> {
             System.out.println(c.request().path().value());
             c.next();
-        }));
+        });
 
-        router.addRoute(Route.of().path("/hello").method(GET).handler(c -> {
+        router.route().path("/hello").method(GET).handler(c -> {
             c.response().send("hello");
-        }));
+        });
 
-        router.addRoute(Route.of().path("/path-params/:id").method(GET).handler(c -> {
+        router.route().path("/path-params/:id").method(GET).handler(c -> {
             c.response().send("id : " + c.pathParams().get("id"));
-        }));
+        });
 
-        router.addRoute(Route.of().path("/401").method(GET).handler(c -> {
+        router.route().path("/401").method(GET).handler(c -> {
             throw new UnauthorizedException();
-        }));
+        });
 
-        router.addRoute(Route.of().path("/405").method(POST).handler(c -> {
+        router.route().path("/405").method(POST).handler(c -> {
             System.out.println("405");
-        }));
+        });
 
-        router.addRoute(Route.of().path("/last").method(GET).handler(c -> {
+        router.route().path("/last").method(GET).handler(c -> {
             var r = 1 / 0;
-        }));
+        });
 
         router.errorHandler((e, ctx) -> {
             if (e instanceof ScxHttpException s) {

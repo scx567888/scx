@@ -1,5 +1,7 @@
 package cool.scx.http.uri;
 
+import java.net.URI;
+
 /**
  * ScxURI
  */
@@ -10,7 +12,10 @@ public interface ScxURI {
     }
 
     static ScxURIWritable of(String uri) {
-        var u = java.net.URI.create(uri);
+        return of(URI.create(uri));
+    }
+
+    static ScxURIWritable of(URI u) {
         return new ScxURIImpl()
                 .scheme(u.getScheme())
                 .host(u.getHost())

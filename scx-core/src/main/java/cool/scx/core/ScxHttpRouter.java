@@ -3,12 +3,12 @@ package cool.scx.core;
 import cool.scx.common.util.FileUtils;
 import cool.scx.http.HttpFieldName;
 import cool.scx.http.HttpMethod;
-import cool.scx.http.routing.Router;
+import cool.scx.http.handler.CorsHandler;
+import cool.scx.http.routing.Route;
+import cool.scx.http.routing.RouterImpl;
 
-import java.nio.file.Path;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import static cool.scx.http.HttpFieldName.*;
+import static cool.scx.http.HttpMethod.*;
 
 /**
  * ScxHttp 路由 内部使用 vertxRouter 进行具体路由的处理
@@ -16,128 +16,38 @@ import java.util.stream.Stream;
  * @author scx567888
  * @version 1.11.8
  */
-public final class ScxHttpRouter extends Router {
+public final class ScxHttpRouter extends RouterImpl {
 
-    /**
-     * Constant <code>defaultAllowedMethods</code>
-     */
-    private static final Set<HttpMethod> DEFAULT_ALLOWED_METHODS = Set.of(
-            HttpMethod.GET,
-            HttpMethod.POST,
-            HttpMethod.OPTIONS,
-            HttpMethod.DELETE,
-            HttpMethod.PATCH,
-            HttpMethod.PUT
-    );
-    /**
-     * Constant <code>defaultAllowedHeaders</code>
-     */
-    private static final Set<String> DEFAULT_ALLOWED_HEADERS = toSet(
-            HttpFieldName.ACCEPT,
-            HttpFieldName.CONTENT_TYPE
-    );
-    /**
-     * Constant <code>defaultExposedHeaders</code>
-     */
-    private static final Set<String> DEFAULT_EXPOSED_HEADERS = toSet(
-            HttpFieldName.CONTENT_DISPOSITION
-    );
-
-    /**
-     * 默认 http 请求 body 限制大小
-     */
-    private static final long DEFAULT_BODY_LIMIT = FileUtils.displaySizeToLong("16384KB");
+    private static final HttpMethod[] DEFAULT_ALLOWED_METHODS = new HttpMethod[]{GET, POST, OPTIONS, DELETE, PATCH, PUT};
+    private static final HttpFieldName[] DEFAULT_ALLOWED_HEADERS = new HttpFieldName[]{ACCEPT, CONTENT_TYPE};
+    private static final HttpFieldName[] DEFAULT_EXPOSED_HEADERS = new HttpFieldName[]{CONTENT_DISPOSITION};
 
     //基本 handler
-//    private final CorsHandler corsHandler;
-//    private final BodyHandler bodyHandler;
+    private final CorsHandler corsHandler;
     //基本 handler 对应的 路由
-//    private final Route corsHandlerRoute;
-//    private final Route bodyHandlerRoute;
+    private final Route corsHandlerRoute;
 
     public ScxHttpRouter(Scx scx) {
-//        super(scx.vertx());
         //设置基本的 handler
-//        this.corsHandler = initCorsHandler(scx.scxOptions().allowedOrigin());
-//        this.bodyHandler = initBodyHandler(scx.scxEnvironment().getTempPath(BodyHandler.DEFAULT_UPLOADS_DIRECTORY));
+        this.corsHandler = initCorsHandler(scx.scxOptions().allowedOrigin());
         //注册路由
-//        this.corsHandlerRoute = this.route().handler(corsHandler);
-//        this.bodyHandlerRoute = this.route().handler(bodyHandler);
+        this.corsHandlerRoute = this.route().handler(corsHandler);
     }
 
-    /**
-     * <p>toSet.</p>
-     *
-     * @param accept
-     * @param contentType
-     * @param values      a {@link io.netty.util.AsciiString} object
-     * @return a {@link java.util.Set} object
-     */
-    private static Set<String> toSet(HttpFieldName...  values) {
-        return Stream.of(values).map(HttpFieldName::value).collect(Collectors.toSet());
+    private static CorsHandler initCorsHandler(String allowedOriginPattern) {
+        return new CorsHandler().addOrigin(allowedOriginPattern)
+                .allowedHeader(DEFAULT_ALLOWED_HEADERS)
+                .allowedMethod(DEFAULT_ALLOWED_METHODS)
+                .exposedHeader(DEFAULT_EXPOSED_HEADERS)
+                .allowCredentials(true);
     }
 
-    /**
-     * <p>initCorsHandler.</p>
-     *
-     * @param allowedOriginPattern a {@link java.lang.String} object
-     * @return a {@link io.vertx.ext.web.handler.CorsHandler} object
-     */
-//    static CorsHandler initCorsHandler(String allowedOriginPattern) {
-//        return new CorsHandlerImpl().addOrigin(allowedOriginPattern)
-//                .allowedHeaders(DEFAULT_ALLOWED_HEADERS)
-//                .allowedMethods(DEFAULT_ALLOWED_METHODS)
-//                .exposedHeaders(DEFAULT_EXPOSED_HEADERS)
-//                .allowCredentials(true);
-//    }
+    public CorsHandler corsHandler() {
+        return corsHandler;
+    }
 
-    /**
-     * <p>initBodyHandler.</p>
-     *
-     * @param uploadDirectory a {@link java.nio.file.Path} object
-     * @return a {@link io.vertx.ext.web.handler.BodyHandler} object
-     */
-//    static BodyHandler initBodyHandler(Path uploadDirectory) {
-//        return new BodyHandlerImpl(uploadDirectory.toString())
-//                .setBodyLimit(DEFAULT_BODY_LIMIT)
-//                .setMergeFormAttributes(false)
-//                .setDeleteUploadedFilesOnEnd(true);
-//    }
-//
-//    /**
-//     * a
-//     *
-//     * @return a
-//     */
-//    public CorsHandler corsHandler() {
-//        return corsHandler;
-//    }
-//
-//    /**
-//     * a
-//     *
-//     * @return a
-//     */
-//    public BodyHandler bodyHandler() {
-//        return bodyHandler;
-//    }
-//
-//    /**
-//     * a
-//     *
-//     * @return a
-//     */
-//    public Route corsHandlerRoute() {
-//        return corsHandlerRoute;
-//    }
-
-//    /**
-//     * a
-//     *
-//     * @return a
-//     */
-//    public Route bodyHandlerRoute() {
-//        return bodyHandlerRoute;
-//    }
+    public Route corsHandlerRoute() {
+        return corsHandlerRoute;
+    }
 
 }

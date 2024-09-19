@@ -22,8 +22,9 @@ class HelidonHttpServerRequest implements ScxHttpServerRequest {
 
     public HelidonHttpServerRequest(ConnectionContext ctx, RoutingRequest request, RoutingResponse response) {
         var p = request.prologue();
+        request.path(new HelidonRoutePath(p));
         this.method = ScxHttpMethod.of(p.method().text());
-        this.uri = ScxURI.of().path(p.uriPath().path()).query(new HelidonURIQuery(p.query())).fragment(p.fragment().hasValue() ? p.fragment().value() : null);
+        this.uri = ScxURI.of(request.requestedUri().toUri());
         this.version = HttpVersion.of(p.rawProtocol());
         this.headers = new HelidonHttpHeaders<>(request.headers());
         this.body = new HelidonHttpBody(request.content());

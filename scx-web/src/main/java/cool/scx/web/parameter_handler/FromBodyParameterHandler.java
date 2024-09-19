@@ -1,16 +1,19 @@
 package cool.scx.web.parameter_handler;
 
 import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.common.reflect.ParameterInfo;
+import cool.scx.common.util.JsonNodeHelper;
 import cool.scx.web.annotation.FromBody;
 import cool.scx.web.parameter_handler.exception.ParamConvertException;
 import cool.scx.web.parameter_handler.exception.RequiredParamEmptyException;
+import cool.scx.web.type.FormData;
+
+import java.io.IOException;
 
 import static cool.scx.common.util.AnnotationUtils.getAnnotationValue;
-import static cool.scx.common.util.ObjectUtils.Options;
-import static cool.scx.common.util.ObjectUtils.convertValue;
-import static cool.scx.web.ScxWebHelper.*;
-import static cool.scx.web.parameter_handler.RequestInfo.ContentType;
+import static cool.scx.common.util.ObjectUtils.*;
+import static cool.scx.http.MediaType.MULTIPART_FORM_DATA;
 
 /**
  * FromBodyParameterHandler
@@ -21,15 +24,15 @@ import static cool.scx.web.parameter_handler.RequestInfo.ContentType;
 public final class FromBodyParameterHandler implements ParameterHandler {
 
     public static Object getValueFromBody(String name, boolean useAllBody, boolean required, JavaType javaType, RequestInfo info) throws RequiredParamEmptyException, ParamConvertException {
-        if (info.contentType() == ContentType.MULTIPART_FORM_DATA) {
-            return fromFormAttributes(name, useAllBody, required, javaType, info);
+        if (info.contentType().mediaType() == MULTIPART_FORM_DATA) {
+            return fromMultipartFormData(name, useAllBody, required, javaType, info);
         } else {
             return fromBody(name, useAllBody, required, javaType, info);
         }
     }
 
     private static Object fromBody(String name, boolean useAllBody, boolean required, JavaType javaType, RequestInfo info) throws RequiredParamEmptyException, ParamConvertException {
-        var tempValue = getFromJsonNode(name, info.body(), useAllBody);
+        var tempValue = useAllBody ? info.body() : JsonNodeHelper.get(info.body(), name);
         // 为了提高性能这里提前做一次校验
         if (tempValue == null || tempValue.isNull() || tempValue.isMissingNode()) {
             if (required) {
@@ -49,8 +52,28 @@ public final class FromBodyParameterHandler implements ParameterHandler {
         return o;
     }
 
-    private static Object fromFormAttributes(String name, boolean useAllBody, boolean required, JavaType javaType, RequestInfo info) throws RequiredParamEmptyException, ParamConvertException {
-        var tempValue = getFromMap(name, info.formData(), useAllBody, javaType);
+    public static <T> T readValue(JsonNode jsonNode, JavaType type) throws IOException {
+        var reader = jsonMapper(new Options().setIgnoreJsonIgnore(true)).readerFor(type);
+        //这里我们做一下数组的兼容 保证无论参数是数组还是type是数组都可以正确读取
+        if (jsonNode.isArray()) {
+            if (type.isArrayType() || type.isCollectionLikeType()) {
+                return reader.readValue(jsonNode);
+            } else {
+                return reader.readValue(jsonNode.get(0));
+            }
+        } else {
+            if (type.isArrayType() || type.isCollectionLikeType()) {
+                var add = jsonMapper().createArrayNode().add(jsonNode);
+                return reader.readValue(add);
+            } else {
+                return reader.readValue(jsonNode);
+            }
+        }
+    }
+
+    //todo 
+    private static Object fromMultipartFormData(String name, boolean useAllBody, boolean required, JavaType javaType, RequestInfo info) throws RequiredParamEmptyException, ParamConvertException {
+        var tempValue = getFromMultipartFormData(name, info.formData(), useAllBody, javaType);
         if (tempValue == null) {
             if (required) {
                 throw new RequiredParamEmptyException("必填参数不能为空 !!! 参数名称 [" + name + "] , 参数来源 [FromBody, useAllBody=" + useAllBody + "] , 参数类型 [" + javaType.getTypeName() + "]");
@@ -67,6 +90,11 @@ public final class FromBodyParameterHandler implements ParameterHandler {
             throw new RequiredParamEmptyException("必填参数不能为空 !!! 参数名称 [" + name + "] , 参数来源 [FromBody, useAllBody=" + useAllBody + "] , 参数类型 [" + javaType.getTypeName() + "]");
         }
         return o;
+    }
+
+    //todo 
+    private static Object getFromMultipartFormData(String name, FormData formData, boolean useAllBody, JavaType javaType) {
+        return null;
     }
 
     @Override
