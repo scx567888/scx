@@ -1,7 +1,9 @@
 package cool.scx.core.test.website;
 
 import cool.scx.common.standard.FileFormat;
-import cool.scx.common.util.*;
+import cool.scx.common.util.HashUtils;
+import cool.scx.common.util.RandomUtils;
+import cool.scx.common.util.ScxExceptionHelper;
 import cool.scx.common.zip.ZipBuilder;
 import cool.scx.core.ScxContext;
 import cool.scx.core.test.car.CarService;

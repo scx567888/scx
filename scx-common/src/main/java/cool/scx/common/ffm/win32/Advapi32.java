@@ -18,11 +18,11 @@ public interface Advapi32 {
     int RegEnumValueW(int hKey, int dwIndex, char[] lpValueName, IntRef lpcchValueName, IntRef lpReserved, IntRef lpType, MemorySegment lpData, IntRef lpcbData);
 
     int RegQueryInfoKeyW(int hKey, char[] lpClass, IntRef lpcchClass, IntRef lpReserved, IntRef lpcSubKeys, IntRef lpcbMaxSubKeyLen, IntRef lpcbMaxClassLen, IntRef lpcValues, IntRef lpcbMaxValueNameLen, IntRef lpcbMaxValueLen, IntRef lpcbSecurityDescriptor, FILETIME lpftLastWriteTime);
-    
+
     int RegQueryValueExA(int hKey, String lpValueName, int lpReserved, IntRef lpType, IntRef lpData, IntRef lpcbData);
-    
+
     int RegQueryValueExA(int hKey, String lpValueName, int lpReserved, IntRef lpType, MemorySegment lpData, IntRef lpcbData);
-    
+
     int RegSetValueExA(int hKey, String lpValueName, int Reserved, int dwType, MemorySegment lpData, int cbData);
 
 }

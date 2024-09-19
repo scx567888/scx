@@ -46,6 +46,11 @@ import static java.lang.System.Logger.Level.WARNING;
  */
 public final class Scx {
 
+    /**
+     * 默认 http 请求 body 限制大小
+     */
+    private static final long DEFAULT_BODY_LIMIT = FileUtils.displaySizeToLong("16384KB");
+
     private static final Logger logger = System.getLogger(Scx.class.getName());
 
     private final ScxEnvironment scxEnvironment;
@@ -75,11 +80,6 @@ public final class Scx {
     private WebSocketRouter webSocketRouter = null;
 
     private ScxHttpServer vertxHttpServer = null;
-
-    /**
-     * 默认 http 请求 body 限制大小
-     */
-    private static final long DEFAULT_BODY_LIMIT = FileUtils.displaySizeToLong("16384KB");
 
     Scx(ScxEnvironment scxEnvironment, String appKey, ScxFeatureConfig scxFeatureConfig, ScxConfig scxConfig, ScxModule[] scxModules, ScxHttpServerOptions defaultHttpServerOptions) {
         //0, 赋值到全局
