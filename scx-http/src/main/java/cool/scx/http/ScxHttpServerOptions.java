@@ -37,13 +37,13 @@ public class ScxHttpServerOptions {
         this.tls = tls;
     }
 
+    public long getMaxPayloadSize() {
+        return this.maxPayloadSize;
+    }
+
     public ScxHttpServerOptions setMaxPayloadSize(long maxPayloadSize) {
         this.maxPayloadSize = maxPayloadSize;
         return this;
-    }
-
-    public long getMaxPayloadSize() {
-        return this.maxPayloadSize;
     }
 
 }

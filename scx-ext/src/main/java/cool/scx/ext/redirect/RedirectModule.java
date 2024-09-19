@@ -33,13 +33,12 @@ public class RedirectModule extends ScxModule {
     /**
      * 也可以直接以工具类的形式调用
      *
-     * @param vertx a {@link io.vertx.core.Vertx} object
-     * @param port  a int
+     * @param port a int
      */
     public static void startRedirect(int port) {
         var router = Router.of();
         router.route().handler(c -> {
-            var oldURI = c.request().absoluteURI();
+            var oldURI = c.request().uri().toString();
             // 4 = "http".length()
             var newURI = "https" + oldURI.substring(4);
             Redirection.ofTemporary(newURI).accept(c);
