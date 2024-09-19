@@ -28,7 +28,7 @@ public class LongRef implements Ref {
 
     @Override
     public MemorySegment init(Arena arena) {
-        return this.memorySegment = arena.allocate(JAVA_LONG, this.value);
+        return this.memorySegment = arena.allocateFrom(JAVA_LONG, this.value);
     }
 
     @Override

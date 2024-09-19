@@ -1,11 +1,9 @@
-package cool.scx.common.util;
-
-import com.sun.jna.platform.win32.Win32Exception;
+package cool.scx.common.ffm.win32;
 
 import java.util.Map;
 
-import static com.sun.jna.platform.win32.Advapi32Util.*;
-import static com.sun.jna.platform.win32.WinReg.HKEY_CURRENT_USER;
+import static cool.scx.common.ffm.win32.Advapi32Helper.*;
+import static cool.scx.common.ffm.win32.WinReg.HKEY_CURRENT_USER;
 
 /**
  * 设置 windows 系统的代理 (使用前请检查当前操作系统是否为 Windows !!!)

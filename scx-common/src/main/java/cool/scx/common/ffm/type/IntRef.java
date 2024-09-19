@@ -7,7 +7,6 @@ import static java.lang.foreign.ValueLayout.JAVA_INT;
 
 public class IntRef implements Ref {
 
-
     private int value;
     private MemorySegment memorySegment;
 
@@ -29,7 +28,7 @@ public class IntRef implements Ref {
 
     @Override
     public MemorySegment init(Arena arena) {
-        return this.memorySegment = arena.allocate(JAVA_INT, this.value);
+        return this.memorySegment = arena.allocateFrom(JAVA_INT, this.value);
     }
 
     @Override

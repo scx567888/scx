@@ -23,7 +23,8 @@ public final class FFMHelper {
      * @return MethodHandle
      */
     public static MethodHandle findMethodHandle(SymbolLookup symbolLookup, String name, FunctionDescriptor functionDescriptor) {
-        return nativeLinker().downcallHandle(symbolLookup.find(name).orElseThrow(), functionDescriptor);
+        var memorySegment = symbolLookup.find(name).orElseThrow(() -> new IllegalArgumentException("未找到 " + name));
+        return nativeLinker().downcallHandle(memorySegment, functionDescriptor);
     }
 
     /**
