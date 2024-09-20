@@ -1,4 +1,4 @@
-package cool.scx.http.handler;
+package cool.scx.http.routing.handler;
 
 import cool.scx.http.HttpMethod;
 import cool.scx.http.ScxHttpHeaderName;

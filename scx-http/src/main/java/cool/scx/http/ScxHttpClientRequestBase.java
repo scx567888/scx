@@ -6,7 +6,7 @@ import cool.scx.http.uri.ScxURIWritable;
 import static cool.scx.http.HttpMethod.GET;
 
 /**
- * ScxHttpClientRequestBase 
+ * ScxHttpClientRequestBase
  */
 public abstract class ScxHttpClientRequestBase implements ScxHttpClientRequest {
 

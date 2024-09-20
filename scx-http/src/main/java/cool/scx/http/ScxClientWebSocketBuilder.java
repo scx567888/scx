@@ -15,7 +15,7 @@ public interface ScxClientWebSocketBuilder {
 
     ScxClientWebSocketBuilder onConnect(Consumer<ScxClientWebSocket> onOpen);
 
-    ScxClientWebSocket connect();
+    void connect();
 
     default ScxClientWebSocketBuilder uri(String uri) {
         return uri(ScxURI.of(uri));
