@@ -20,8 +20,8 @@ public final class ScxClientSocket extends PingPongManager {
     }
 
     @Override
-    protected void doClose(Integer code,String reason) {
-        super.doClose(code,reason);
+    protected void doClose(Integer code, String reason) {
+        super.doClose(code, reason);
         this.socketClient.connect();
     }
 

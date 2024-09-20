@@ -3,7 +3,7 @@ package cool.scx.web.parameter_handler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.TextNode;
-import cool.scx.http.ContentType;
+import cool.scx.http.content_type.ContentType;
 import cool.scx.http.exception.BadRequestException;
 import cool.scx.http.routing.RoutingContext;
 import cool.scx.web.type.FormData;
