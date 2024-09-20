@@ -28,7 +28,7 @@ public interface ScxHttpServerResponse {
     boolean isClosed();
 
     ScxHttpServerResponse addCookie(Cookie cookie);
-    
+
     ScxHttpServerResponse removeCookie(String name);
 
     default ScxHttpServerResponse setHeader(ScxHttpHeaderName headerName, String... values) {

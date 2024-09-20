@@ -2,8 +2,8 @@ package cool.scx.http.cookie;
 
 public interface Cookie {
 
-    static CookieWritable of() {
-        return new CookieImpl();
+    static CookieWritable of(String name, String value) {
+        return new CookieImpl(name, value);
     }
 
     String name();

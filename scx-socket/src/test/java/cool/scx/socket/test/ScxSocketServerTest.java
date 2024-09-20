@@ -31,7 +31,7 @@ public class ScxSocketServerTest extends InitLogger {
                 clientContent.sendEvent("b", m);
             });
 
-            clientContent.onClose((i,s) -> {
+            clientContent.onClose((i, s) -> {
                 System.out.println("close");
             });
 

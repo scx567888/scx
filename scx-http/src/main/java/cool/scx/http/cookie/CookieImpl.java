@@ -11,16 +11,9 @@ class CookieImpl implements CookieWritable {
     private boolean httpOnly;
     private CookieSameSite sameSite;
 
-    @Override
-    public CookieWritable name(String name) {
+    public CookieImpl(String name, String value) {
         this.name = name;
-        return this;
-    }
-
-    @Override
-    public CookieWritable value(String value) {
         this.value = value;
-        return this;
     }
 
     @Override

@@ -25,7 +25,7 @@ public class HelidonCookies implements Cookies {
         if (value == null) {
             return null;
         } else {
-            return Cookie.of().name(name).value(value);
+            return Cookie.of(name, value);
         }
     }
 
@@ -43,7 +43,7 @@ public class HelidonCookies implements Cookies {
                 var next = itr.next();
                 var key = next.getKey();
                 var value = next.getValue();
-                return Cookie.of().name(key).value(value.size() > 0 ? value.get(0) : null);
+                return Cookie.of(key, value.size() > 0 ? value.get(0) : null);
             }
         };
     }

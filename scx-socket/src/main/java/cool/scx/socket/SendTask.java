@@ -46,7 +46,7 @@ final class SendTask {
             return;
         }
         //根据不同序列化配置发送不同消息
-        
+
         try {
 
             scxSocket.webSocket.send(this.socketFrame.toJson());
@@ -65,14 +65,14 @@ final class SendTask {
             if (logger.isLoggable(DEBUG)) {
                 logger.log(DEBUG, "CLIENT_ID : {0}, 发送成功 : {1}", scxSocket.clientID(), this.socketFrame.toJson());
             }
-            
-        }catch (Exception e){
+
+        } catch (Exception e) {
 
             //LOGGER
             if (logger.isLoggable(DEBUG)) {
                 logger.log(DEBUG, "CLIENT_ID : {0}, 发送失败 : {1}", scxSocket.clientID(), this.socketFrame.toJson(), e);
             }
-            
+
         }
 
     }
