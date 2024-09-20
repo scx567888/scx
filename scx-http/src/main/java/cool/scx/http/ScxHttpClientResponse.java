@@ -1,9 +1,11 @@
 package cool.scx.http;
 
-//todo 
+/**
+ * ScxHttpClientResponse
+ */
 public interface ScxHttpClientResponse {
 
-    HttpStatusCode statusCode();
+    HttpStatusCode status();
 
     ScxHttpHeaders headers();
 
