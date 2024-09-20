@@ -20,16 +20,9 @@
 
     <dependencies>
 
-        <!-- vert.x 核心包 -->
-        <dependency>
-            <groupId>io.vertx</groupId>
-            <artifactId>vertx-core</artifactId>
-            <version>${vertx.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>scx-common</artifactId>
+            <artifactId>scx-http-helidon</artifactId>
             <version>${project.version}</version>
         </dependency>
 

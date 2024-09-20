@@ -19,7 +19,7 @@ class HelidonHelper {
             var wsRouteClassInfo = ReflectFactory.getClassInfo(WsRoute.class);
             var constructor = wsRouteClassInfo.constructors()[0];
             constructor.setAccessible(true);
-            var wsRoute = constructor.newInstance(PathMatchers.any(), (Supplier<WsListener>) () -> new HelidonWebSocketRoute(server));
+            var wsRoute = constructor.newInstance(PathMatchers.any(), (Supplier<WsListener>) () -> new HelidonServerWebSocket(server));
             var builder = WsRouting.builder();
             var classInfo = ReflectFactory.getClassInfo(WsRouting.Builder.class);
             var routeMethod = Arrays.stream(classInfo.methods()).filter(method -> method.name().equals("route")).findFirst().orElseThrow();

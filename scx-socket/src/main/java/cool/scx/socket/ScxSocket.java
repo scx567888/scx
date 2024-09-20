@@ -1,9 +1,10 @@
 package cool.scx.socket;
 
-import io.vertx.core.http.WebSocketBase;
+import cool.scx.http.ScxWebSocket;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import static cool.scx.common.util.StringUtils.isBlank;
@@ -16,17 +17,17 @@ public class ScxSocket {
 
     protected final System.Logger logger = getLogger(this.getClass().getName());
 
-    final WebSocketBase webSocket;
+    final ScxWebSocket webSocket;
     final String clientID;
     final ScxSocketOptions options;
     final ScxSocketStatus status;
 
     private final ConcurrentMap<String, Consumer<ScxSocketRequest>> onEventMap;
     private Consumer<String> onMessage;
-    private Consumer<Void> onClose;
+    private BiConsumer<Integer, String> onClose;
     private Consumer<Throwable> onError;
 
-    ScxSocket(WebSocketBase webSocket, String clientID, ScxSocketOptions options, ScxSocketStatus status) {
+    ScxSocket(ScxWebSocket webSocket, String clientID, ScxSocketOptions options, ScxSocketStatus status) {
         this.webSocket = webSocket;
         this.clientID = clientID;
         this.options = options;
@@ -37,7 +38,7 @@ public class ScxSocket {
         this.onError = null;
     }
 
-    ScxSocket(WebSocketBase webSocket, String clientID, ScxSocketOptions options) {
+    ScxSocket(ScxWebSocket webSocket, String clientID, ScxSocketOptions options) {
         this(webSocket, clientID, options, new ScxSocketStatus(options));
     }
 
@@ -75,22 +76,24 @@ public class ScxSocket {
 
     private void sendAck(long ack_id) {
         var ackFrame = status.frameCreator.createAckFrame(ack_id);
-        var sendAckFuture = this.webSocket.writeTextMessage(ackFrame.toJson());
-        sendAckFuture.onSuccess(v -> {
+
+        try {
+
+            this.webSocket.send(ackFrame.toJson());
 
             //LOGGER
             if (logger.isLoggable(DEBUG)) {
                 logger.log(DEBUG, "CLIENT_ID : {0}, 发送 ACK 成功 : {1}", clientID, ackFrame.toJson());
             }
 
-        }).onFailure(c -> {
+        } catch (Exception e) {
 
             //LOGGER
             if (logger.isLoggable(DEBUG)) {
-                logger.log(DEBUG, "CLIENT_ID : {0}, 发送 ACK 失败 : {1}", clientID, ackFrame.toJson(), c);
+                logger.log(DEBUG, "CLIENT_ID : {0}, 发送 ACK 失败 : {1}", clientID, ackFrame.toJson(), e);
             }
 
-        });
+        }
     }
 
     //*********************** 设置事件方法 ***********************
@@ -99,18 +102,18 @@ public class ScxSocket {
         this.onMessage = onMessage;
     }
 
-    public final void onClose(Consumer<Void> onClose) {
+    public final void onClose(BiConsumer<Integer, String> onClose) {
         this.onClose = onClose;
         //为了解决 绑定事件为完成是 连接就被关闭 从而无法触发 onClose 事件
         //此处绑定的意义在于如果当前 webSocket 已经被关闭则永远无法触发 onClose 事件
         //但是我们在这里调用 vertx 的绑定会触发异常 可以在外层进行 异常捕获然后进行对应的修改
-        this.webSocket.closeHandler(this::doClose);
+        this.webSocket.onClose(this::doClose);
     }
 
     public final void onError(Consumer<Throwable> onError) {
         this.onError = onError;
         //同 onClose
-        this.webSocket.exceptionHandler(this::doError);
+        this.webSocket.onError(this::doError);
     }
 
     public final void onEvent(String eventName, Consumer<ScxSocketRequest> onEvent) {
@@ -166,10 +169,10 @@ public class ScxSocket {
         }
     }
 
-    protected void doClose(Void v) {
+    protected void doClose(Integer code, String reason) {
         this.close();
         //呼叫 onClose 事件
-        this._callOnClose(v);
+        this._callOnClose(code, reason);
     }
 
     protected void doError(Throwable e) {
@@ -181,9 +184,9 @@ public class ScxSocket {
     //********************** 生命周期方法 ********************
 
     private void bind() {
-        this.webSocket.textMessageHandler(t -> doSocketFrame(fromJson(t)));
-        this.webSocket.closeHandler(this::doClose);
-        this.webSocket.exceptionHandler(this::doError);
+        this.webSocket.onTextMessage(t -> doSocketFrame(fromJson(t)));
+        this.webSocket.onClose(this::doClose);
+        this.webSocket.onError(this::doError);
     }
 
     protected void start() {
@@ -206,23 +209,25 @@ public class ScxSocket {
 
     protected void closeWebSocket() {
         if (!this.webSocket.isClosed()) {
-            var closeFuture = this.webSocket.close();
 
-            closeFuture.onSuccess(c -> {
+            try {
+
+                this.webSocket.close();
 
                 //LOGGER
                 if (logger.isLoggable(DEBUG)) {
                     logger.log(DEBUG, "CLIENT_ID : {0}, 关闭成功", clientID);
                 }
 
-            }).onFailure(e -> {
+            } catch (Exception e) {
 
                 //LOGGER
                 if (logger.isLoggable(DEBUG)) {
                     logger.log(DEBUG, "CLIENT_ID : {0}, 关闭失败", clientID, e);
                 }
 
-            });
+            }
+
         }
     }
 
@@ -251,10 +256,10 @@ public class ScxSocket {
         }
     }
 
-    private void _callOnClose(Void v) {
+    private void _callOnClose(Integer code, String reason) {
         if (this.onClose != null) {
             //为了防止用户回调 将线程卡死 这里独立创建一个线程处理
-            Thread.ofVirtual().name("scx-socket-call-on-close").start(() -> this.onClose.accept(v));
+            Thread.ofVirtual().name("scx-socket-call-on-close").start(() -> this.onClose.accept(code, reason));
         }
     }
 

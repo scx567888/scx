@@ -6,5 +6,5 @@ public class FILETIME implements Struct {
 
     public int dwLowDateTime;
     public int dwHighDateTime;
-    
+
 }

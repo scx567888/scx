@@ -5,13 +5,13 @@ package cool.scx.core.eventbus;
 //import io.vertx.core.eventbus.MessageCodec;
 
 /**
- * todo 
+ * todo
  * 零拷贝编解码器 (因为并不适用于集群模式,所以此处不实现 encodeToWire和decodeFromWire)
  *
  * @author scx567888
  * @version 1.18.0
  */
-public final class ZeroCopyMessageCodec<T>  {
+public final class ZeroCopyMessageCodec<T> {
 
     /**
      * ZERO_COPY_CODEC_NAME

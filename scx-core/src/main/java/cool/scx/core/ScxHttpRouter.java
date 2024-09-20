@@ -2,7 +2,7 @@ package cool.scx.core;
 
 import cool.scx.http.HttpFieldName;
 import cool.scx.http.HttpMethod;
-import cool.scx.http.handler.CorsHandler;
+import cool.scx.http.routing.handler.CorsHandler;
 import cool.scx.http.routing.Route;
 import cool.scx.http.routing.RouterImpl;
 

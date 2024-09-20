@@ -124,7 +124,7 @@ public class Advapi32Helper {
         }
         IntRef data = new IntRef();
         rc = ADVAPI32.RegQueryValueExA(hKey, value, 0, lpType, data, lpcbData);
-        if (rc != WinError.ERROR_SUCCESS ) {
+        if (rc != WinError.ERROR_SUCCESS) {
             throw new Win32Exception(rc);
         }
         return data.getValue();
@@ -240,7 +240,7 @@ public class Advapi32Helper {
             return "";
         }
         try (Arena arena = Arena.ofConfined()) {
-            var mem = arena.allocate(lpcbData.getValue() );
+            var mem = arena.allocate(lpcbData.getValue());
             rc = ADVAPI32.RegQueryValueExA(hKey, value, 0, lpType, mem, lpcbData);
             if (rc != WinError.ERROR_SUCCESS) {
                 throw new Win32Exception(rc);

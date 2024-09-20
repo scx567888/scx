@@ -2,7 +2,7 @@ package cool.scx.socket;
 
 
 import cool.scx.common.util.$.Timeout;
-import io.vertx.core.http.WebSocketBase;
+import cool.scx.http.ScxWebSocket;
 
 import static cool.scx.common.util.$.setTimeout;
 import static cool.scx.socket.ScxSocketFrame.Type.PING;
@@ -15,12 +15,12 @@ abstract class PingPongManager extends EasyUseSocket {
     private Timeout ping;
     private Timeout pingTimeout;
 
-    public PingPongManager(WebSocketBase webSocket, String clientID, PingPongOptions options, ScxSocketStatus status) {
+    public PingPongManager(ScxWebSocket webSocket, String clientID, PingPongOptions options, ScxSocketStatus status) {
         super(webSocket, clientID, options, status);
         this.pingPongOptions = options;
     }
 
-    public PingPongManager(WebSocketBase webSocket, String clientID, PingPongOptions options) {
+    public PingPongManager(ScxWebSocket webSocket, String clientID, PingPongOptions options) {
         super(webSocket, clientID, options);
         this.pingPongOptions = options;
     }
@@ -84,45 +84,47 @@ abstract class PingPongManager extends EasyUseSocket {
 
     private void sendPing() {
         var pingFrame = status.frameCreator.createPingFrame();
-        var sendPingFuture = this.webSocket.writeTextMessage(pingFrame.toJson());
 
-        sendPingFuture.onSuccess(v -> {
+        try {
+
+            this.webSocket.send(pingFrame.toJson());
 
             //LOGGER
             if (logger.isLoggable(DEBUG)) {
                 logger.log(DEBUG, "CLIENT_ID : {0}, 发送 PING 成功 : {1}", clientID, pingFrame.toJson());
             }
 
-        }).onFailure(c -> {
+        } catch (Exception e) {
 
             //LOGGER
             if (logger.isLoggable(DEBUG)) {
-                logger.log(DEBUG, "CLIENT_ID : {0}, 发送 PING 失败: {1}", clientID, pingFrame.toJson(), c);
+                logger.log(DEBUG, "CLIENT_ID : {0}, 发送 PING 失败: {1}", clientID, pingFrame.toJson(), e);
             }
 
-        });
+        }
     }
 
     private void sendPong() {
         var pongFrame = status.frameCreator.createPongFrame();
-        var sendPongFuture = this.webSocket.writeTextMessage(pongFrame.toJson());
 
-        sendPongFuture.onSuccess(v -> {
+        try {
+
+            this.webSocket.send(pongFrame.toJson());
 
             //LOGGER
             if (logger.isLoggable(DEBUG)) {
                 logger.log(DEBUG, "CLIENT_ID : {0}, 发送 PONG 成功 : {1}", clientID, pongFrame.toJson());
             }
 
-        }).onFailure(c -> {
+        } catch (Exception e) {
+
 
             //LOGGER
             if (logger.isLoggable(DEBUG)) {
-                logger.log(DEBUG, "CLIENT_ID : {0}, 发送 PONG 失败 : {1}", clientID, pongFrame.toJson(), c);
+                logger.log(DEBUG, "CLIENT_ID : {0}, 发送 PONG 失败 : {1}", clientID, pongFrame.toJson(), e);
             }
 
-        });
-
+        }
 
     }
 

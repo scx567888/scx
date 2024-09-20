@@ -1,15 +1,14 @@
 package cool.scx.http.helidon;
 
-import cool.scx.http.*;
-import cool.scx.http.uri.ScxURI;
-import io.helidon.http.HeaderNames;
-import io.helidon.http.Method;
+import cool.scx.http.ScxClientWebSocketBuilder;
+import cool.scx.http.ScxHttpClient;
+import cool.scx.http.ScxHttpClientOptions;
 import io.helidon.webclient.api.WebClient;
 import io.helidon.webclient.websocket.WsClient;
 
-import java.io.IOException;
-
-//todo 
+/**
+ * HelidonHttpClient
+ */
 public class HelidonHttpClient implements ScxHttpClient {
 
     private final WebClient webClient;
@@ -20,28 +19,18 @@ public class HelidonHttpClient implements ScxHttpClient {
         this.wsClient = WsClient.builder().build();
     }
 
-    @Override
-    public ScxHttpClientResponse request(ScxHttpClientRequest request) throws IOException, InterruptedException {
-        var method = Method.create(request.method().value());
-        var uri = request.uri().toString();
-        var headers = request.headers();
-        var r = webClient.method(method);
-        r.uri(uri);
-        for (var h : headers) {
-            r.header(HeaderNames.create(h.getKey().value()), h.getValue());
-        }
-        if (request.body() != null) {
-            r.submit(request.body());
-        }
-        var res = r.request();
-        return new HelidonHttpClientResponse(res);
+    public HelidonHttpClient() {
+        this(new ScxHttpClientOptions());
     }
 
     @Override
-    public ScxClientWebSocket webSocket(ScxURI uri) {
-        var clientWebSocket = new HelidonClientWebSocket();
-        wsClient.connect(uri.toString(), clientWebSocket);
-        return clientWebSocket;
+    public HelidonHttpClientRequestBuilder request() {
+        return new HelidonHttpClientRequestBuilder(webClient);
+    }
+
+    @Override
+    public ScxClientWebSocketBuilder webSocket() {
+        return new HelidonClientWebSocket(wsClient);
     }
 
 }

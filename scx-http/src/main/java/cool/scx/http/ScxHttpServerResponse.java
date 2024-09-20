@@ -23,7 +23,7 @@ public interface ScxHttpServerResponse {
 
     void send(Object data);
 
-    boolean closed();
+    boolean isClosed();
 
     default ScxHttpServerResponse setHeader(ScxHttpHeaderName headerName, String... values) {
         this.headers().set(headerName, values);

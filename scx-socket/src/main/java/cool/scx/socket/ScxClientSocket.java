@@ -1,6 +1,6 @@
 package cool.scx.socket;
 
-import io.vertx.core.http.WebSocket;
+import cool.scx.http.ScxWebSocket;
 
 /**
  * 客户端 Socket 对象
@@ -9,19 +9,19 @@ public final class ScxClientSocket extends PingPongManager {
 
     private final ScxSocketClient socketClient;
 
-    ScxClientSocket(WebSocket webSocket, String clientID, ScxSocketClient socketClient) {
+    ScxClientSocket(ScxWebSocket webSocket, String clientID, ScxSocketClient socketClient) {
         super(webSocket, clientID, socketClient.options);
         this.socketClient = socketClient;
     }
 
-    ScxClientSocket(WebSocket webSocket, String clientID, ScxSocketClient socketClient, ScxSocketStatus status) {
+    ScxClientSocket(ScxWebSocket webSocket, String clientID, ScxSocketClient socketClient, ScxSocketStatus status) {
         super(webSocket, clientID, socketClient.options, status);
         this.socketClient = socketClient;
     }
 
     @Override
-    protected void doClose(Void unused) {
-        super.doClose(unused);
+    protected void doClose(Integer code,String reason) {
+        super.doClose(code,reason);
         this.socketClient.connect();
     }
 
@@ -44,8 +44,8 @@ public final class ScxClientSocket extends PingPongManager {
      */
     private void resetCloseOrErrorBind() {
         if (!this.webSocket.isClosed()) {
-            this.webSocket.closeHandler(null);
-            this.webSocket.exceptionHandler(null);
+            this.webSocket.onClose(null);
+            this.webSocket.onError(null);
         }
     }
 

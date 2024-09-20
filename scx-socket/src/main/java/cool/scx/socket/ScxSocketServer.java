@@ -1,6 +1,6 @@
 package cool.scx.socket;
 
-import io.vertx.core.http.ServerWebSocket;
+import cool.scx.http.ScxServerWebSocket;
 
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
@@ -35,10 +35,12 @@ public final class ScxSocketServer {
         }
     }
 
-    public void call(ServerWebSocket serverWebSocket) {
+    public void call(ScxServerWebSocket serverWebSocket) {
         var clientID = getClientID(serverWebSocket);
         if (clientID == null) {
-            serverWebSocket.reject(400);
+            //todo 如何拒绝连接
+            serverWebSocket.close();
+//            serverWebSocket.close(400);
             return;
         }
 

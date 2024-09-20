@@ -8,10 +8,10 @@ import cool.scx.config.ScxEnvironment;
 import cool.scx.config.ScxFeatureConfig;
 import cool.scx.core.enumeration.ScxCoreFeature;
 import cool.scx.http.ScxHttpServer;
+import cool.scx.http.routing.WebSocketRouter;
 import cool.scx.jdbc.JDBCContext;
 import cool.scx.jdbc.sql.SQLRunner;
 import cool.scx.web.ScxWeb;
-import cool.scx.http.routing.WebSocketRouter;
 import org.springframework.beans.factory.BeanFactory;
 
 import javax.sql.DataSource;
