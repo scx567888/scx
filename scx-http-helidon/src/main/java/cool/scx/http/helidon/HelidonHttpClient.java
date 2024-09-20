@@ -24,8 +24,8 @@ public class HelidonHttpClient implements ScxHttpClient {
     }
 
     @Override
-    public HelidonHttpClientRequest request() {
-        return new HelidonHttpClientRequest(webClient);
+    public HelidonHttpClientRequestBuilder request() {
+        return new HelidonHttpClientRequestBuilder(webClient);
     }
 
     @Override
