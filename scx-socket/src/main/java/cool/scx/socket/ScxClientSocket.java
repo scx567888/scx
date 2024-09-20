@@ -20,8 +20,8 @@ public final class ScxClientSocket extends PingPongManager {
     }
 
     @Override
-    protected void doClose(Void unused) {
-        super.doClose(unused);
+    protected void doClose(Integer code,String reason) {
+        super.doClose(code,reason);
         this.socketClient.connect();
     }
 
@@ -44,8 +44,8 @@ public final class ScxClientSocket extends PingPongManager {
      */
     private void resetCloseOrErrorBind() {
         if (!this.webSocket.isClosed()) {
-            this.webSocket.closeHandler(null);
-            this.webSocket.exceptionHandler(null);
+            this.webSocket.onClose(null);
+            this.webSocket.onError(null);
         }
     }
 

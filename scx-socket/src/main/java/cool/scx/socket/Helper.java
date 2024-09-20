@@ -21,7 +21,7 @@ public final class Helper {
      * @return clientID 没有返回 null
      */
     public static String getClientID(ScxServerWebSocket serverWebSocket) {
-        return serverWebSocket.uri().query().get(SCX_SOCKET_CLIENT_ID);
+        return serverWebSocket.uri().getQuery(SCX_SOCKET_CLIENT_ID);
     }
 
     /**
