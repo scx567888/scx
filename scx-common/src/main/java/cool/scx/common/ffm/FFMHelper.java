@@ -125,7 +125,7 @@ public final class FFMHelper {
      */
     private static Object initRef(Arena arena, Object parameter) {
         if (parameter instanceof Ref r) {
-            return r.init(arena);
+            return r.writeToMemorySegment(arena);
         }
         return parameter;
     }
@@ -138,7 +138,7 @@ public final class FFMHelper {
     public static void refreshRefs(Object[] parameters) {
         for (var parameter : parameters) {
             if (parameter instanceof Ref r) {
-                r.refresh();
+                r.readFromMemorySegment();
             }
         }
     }

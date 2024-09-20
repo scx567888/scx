@@ -33,7 +33,7 @@ public class StructRef implements Ref {
     }
 
     @Override
-    public MemorySegment init(Arena arena) {
+    public MemorySegment writeToMemorySegment(Arena arena) {
         var field = Arrays.stream(classInfo.fields()).filter(c -> c.accessModifier() == AccessModifier.PUBLIC).toList();
 
         var memoryLayouts = new MemoryLayout[field.size()];
@@ -55,7 +55,7 @@ public class StructRef implements Ref {
     }
 
     @Override
-    public void refresh() {
+    public void readFromMemorySegment() {
         for (var e : fieldMap.entrySet()) {
             var k = e.getKey();
             var v = e.getValue();
