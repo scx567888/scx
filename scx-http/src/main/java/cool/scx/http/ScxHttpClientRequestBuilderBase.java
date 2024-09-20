@@ -8,14 +8,14 @@ import static cool.scx.http.HttpMethod.GET;
 /**
  * ScxHttpClientRequestBase
  */
-public abstract class ScxHttpClientRequestBase implements ScxHttpClientRequest {
+public abstract class ScxHttpClientRequestBuilderBase implements ScxHttpClientRequestBuilder {
 
     protected HttpMethod method;
     protected ScxURIWritable uri;
     protected ScxHttpHeadersWritable headers;
     protected Object body;
 
-    public ScxHttpClientRequestBase() {
+    public ScxHttpClientRequestBuilderBase() {
         this.method = GET;
         this.uri = ScxURI.of();
         this.headers = ScxHttpHeaders.of();
@@ -43,25 +43,25 @@ public abstract class ScxHttpClientRequestBase implements ScxHttpClientRequest {
     }
 
     @Override
-    public ScxHttpClientRequest method(HttpMethod method) {
+    public ScxHttpClientRequestBuilder method(HttpMethod method) {
         this.method = method;
         return this;
     }
 
     @Override
-    public ScxHttpClientRequest uri(ScxURIWritable uri) {
+    public ScxHttpClientRequestBuilder uri(ScxURIWritable uri) {
         this.uri = uri;
         return this;
     }
 
     @Override
-    public ScxHttpClientRequest headers(ScxHttpHeadersWritable headers) {
+    public ScxHttpClientRequestBuilder headers(ScxHttpHeadersWritable headers) {
         this.headers = headers;
         return this;
     }
 
     @Override
-    public ScxHttpClientRequest body(Object body) {
+    public ScxHttpClientRequestBuilder body(Object body) {
         this.body = body;
         return this;
     }
