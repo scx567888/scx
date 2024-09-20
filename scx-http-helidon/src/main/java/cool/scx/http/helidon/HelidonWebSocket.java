@@ -108,6 +108,15 @@ class HelidonWebSocket implements ScxWebSocket, WsListener {
     }
 
     @Override
+    public ScxWebSocket terminate() {
+        if (wsSession == null) {
+            throw new IllegalStateException("wsSession is null");
+        }
+        wsSession.terminate();
+        return this;
+    }
+
+    @Override
     public boolean isClosed() {
         //todo 
         return false;
