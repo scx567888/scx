@@ -5,15 +5,17 @@ import cool.scx.http.uri.ScxURIWritable;
 
 import static cool.scx.http.HttpMethod.GET;
 
-//todo 
-class ScxHttpClientRequestImpl implements ScxHttpClientRequest {
+/**
+ * ScxHttpClientRequestBase 
+ */
+public abstract class ScxHttpClientRequestBase implements ScxHttpClientRequest {
 
-    private HttpMethod method;
-    private ScxURIWritable uri;
-    private ScxHttpHeadersWritable headers;
-    private Object body;
+    protected HttpMethod method;
+    protected ScxURIWritable uri;
+    protected ScxHttpHeadersWritable headers;
+    protected Object body;
 
-    public ScxHttpClientRequestImpl() {
+    public ScxHttpClientRequestBase() {
         this.method = GET;
         this.uri = ScxURI.of();
         this.headers = ScxHttpHeaders.of();
