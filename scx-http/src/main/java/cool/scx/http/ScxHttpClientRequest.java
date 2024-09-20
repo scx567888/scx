@@ -3,12 +3,10 @@ package cool.scx.http;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.uri.ScxURIWritable;
 
-//todo 
+/**
+ * ScxHttpClientRequest
+ */
 public interface ScxHttpClientRequest {
-
-    static ScxHttpClientRequest of() {
-        return new ScxHttpClientRequestImpl();
-    }
 
     ScxHttpMethod method();
 
@@ -25,6 +23,8 @@ public interface ScxHttpClientRequest {
     ScxHttpClientRequest headers(ScxHttpHeadersWritable headers);
 
     ScxHttpClientRequest body(Object body);
+
+    ScxHttpClientResponse request();
 
     default ScxHttpClientRequest uri(String uri) {
         return uri(ScxURI.of(uri));
