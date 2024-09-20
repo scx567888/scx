@@ -16,7 +16,20 @@ public class FormDataPart {
         this.fileName = part.fileName().orElse(null);
         this.contentType = part.contentType();
         this.fieldValue = this.fileName == null ? part.as(String.class) : null;
-        this.uploadFileValue = this.fileName == null ? null : part.as(byte[].class);
+        try {
+            this.uploadFileValue = null;
+            if (this.fileName == null) {
+            } else {
+//                var path = part.as(String.class);
+                System.out.println();
+                try (var s = part.inputStream()) {
+                    var ss = s.readAllBytes();
+                    System.out.println();
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public boolean isFileUpload() {
