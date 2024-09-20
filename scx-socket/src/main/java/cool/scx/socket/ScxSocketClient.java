@@ -1,10 +1,8 @@
 package cool.scx.socket;
 
 import cool.scx.common.util.$.Timeout;
-import io.vertx.core.http.WebSocket;
-import io.vertx.core.http.WebSocketBase;
-import io.vertx.core.http.WebSocketClient;
-import io.vertx.core.http.WebSocketConnectOptions;
+import cool.scx.http.ScxHttpClient;
+import cool.scx.http.uri.ScxURI;
 
 import java.util.function.Consumer;
 
@@ -18,32 +16,32 @@ public final class ScxSocketClient {
 
     private static final System.Logger logger = getLogger(ScxSocketClient.class.getName());
 
-    final WebSocketConnectOptions connectOptions;
-    final WebSocketClient webSocketClient;
+    final ScxURI connectOptions;
+    final ScxHttpClient webSocketClient;
     final String clientID;
     final ScxSocketClientOptions options;
 
     private ScxClientSocket clientSocket;
     private Consumer<ScxClientSocket> onConnect;
-    private SingleListenerFuture<WebSocket> connectFuture;
+    //    private SingleListenerFuture<WebSocket> connectFuture;
     private Timeout reconnectTimeout;
 
-    public ScxSocketClient(String uri, WebSocketClient webSocketClient, String clientID, ScxSocketClientOptions options) {
+    public ScxSocketClient(String uri, ScxHttpClient webSocketClient, String clientID, ScxSocketClientOptions options) {
         this.connectOptions = createConnectOptions(uri, clientID);
         this.webSocketClient = webSocketClient;
         this.clientID = clientID;
         this.options = options;
     }
 
-    public ScxSocketClient(String uri, WebSocketClient webSocketClient, ScxSocketClientOptions options) {
+    public ScxSocketClient(String uri, ScxHttpClient webSocketClient, ScxSocketClientOptions options) {
         this(uri, webSocketClient, randomUUID(), options);
     }
 
-    public ScxSocketClient(String uri, WebSocketClient webSocketClient, String clientID) {
+    public ScxSocketClient(String uri, ScxHttpClient webSocketClient, String clientID) {
         this(uri, webSocketClient, clientID, new ScxSocketClientOptions());
     }
 
-    public ScxSocketClient(String uri, WebSocketClient webSocketClient) {
+    public ScxSocketClient(String uri, ScxHttpClient webSocketClient) {
         this(uri, webSocketClient, randomUUID(), new ScxSocketClientOptions());
     }
 
@@ -60,23 +58,29 @@ public final class ScxSocketClient {
 
     public void connect() {
         //当前已经存在一个连接中的任务
-        if (this.connectFuture != null && !this.connectFuture.isComplete()) {
-            return;
-        }
+        //todo 处理多次连接的问题
+//        if (this.connectFuture != null && !this.connectFuture.isComplete()) {
+//            return;
+//        }
         //关闭上一次连接
         this._closeOldSocket();
         //创建连接
-        this.connectFuture = new SingleListenerFuture<>(webSocketClient.connect(connectOptions));
-        this.connectFuture.onSuccess((webSocket) -> {
+        var webSocketBuilder = webSocketClient.webSocket()
+                .onConnect(webSocket -> {
+                    //如果存在旧的 则使用旧的 status
+                    this.clientSocket = clientSocket != null ?
+                            new ScxClientSocket(webSocket, clientID, this, clientSocket.status) :
+                            new ScxClientSocket(webSocket, clientID, this);
 
-            //如果存在旧的 则使用旧的 status
-            this.clientSocket = clientSocket != null ?
-                    new ScxClientSocket(webSocket, clientID, this, clientSocket.status) :
-                    new ScxClientSocket(webSocket, clientID, this);
-
-            this.clientSocket.start();
-            this._callOnConnect(clientSocket);
-        }).onFailure(this::reconnect);
+                    this.clientSocket.start();
+                    this._callOnConnect(clientSocket);
+                })
+                .uri(connectOptions);
+        try {
+            webSocketBuilder.connect();
+        } catch (Exception e) {
+            this.reconnect(e);
+        }
     }
 
     void reconnect(Throwable e) {
@@ -99,13 +103,13 @@ public final class ScxSocketClient {
     }
 
     void removeConnectFuture() {
-        if (this.connectFuture != null) {
-            //只有当未完成的时候才设置
-            if (!this.connectFuture.isComplete()) {
-                this.connectFuture.onSuccess(WebSocketBase::close).onFailure(null);
-            }
-            this.connectFuture = null;
-        }
+//        if (this.connectFuture != null) {
+//            //只有当未完成的时候才设置
+//            if (!this.connectFuture.isComplete()) {
+//                this.connectFuture.onSuccess(WebSocketBase::close).onFailure(null);
+//            }
+//            this.connectFuture = null;
+//        }
     }
 
     private void _closeOldSocket() {

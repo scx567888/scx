@@ -19,7 +19,7 @@ final class SendTask {
     private final AtomicInteger sendTimes;
     private final FrameSender sender;
     private Timeout resendTask;
-    private SingleListenerFuture<Void> sendFuture;
+//    private SingleListenerFuture<Void> sendFuture;
 
     public SendTask(ScxSocketFrame socketFrame, SendOptions options, FrameSender sender) {
         this.socketFrame = socketFrame;
@@ -34,9 +34,10 @@ final class SendTask {
             return;
         }
         //当前已经存在一个 发送中(并未完成发送) 的任务
-        if (this.sendFuture != null && !this.sendFuture.isComplete()) {
-            return;
-        }
+        //todo 处理并发问题
+//        if (this.sendFuture != null && !this.sendFuture.isComplete()) {
+//            return;
+//        }
         //超过最大发送次数
         if (this.sendTimes.get() > options.getMaxResendTimes()) {
             if (options.getGiveUpIfReachMaxResendTimes()) {
@@ -45,9 +46,11 @@ final class SendTask {
             return;
         }
         //根据不同序列化配置发送不同消息
-        this.sendFuture = new SingleListenerFuture<>(scxSocket.webSocket.writeTextMessage(this.socketFrame.toJson()));
+        
+        try {
 
-        this.sendFuture.onSuccess(webSocket -> {
+            scxSocket.webSocket.send(this.socketFrame.toJson());
+
             var currentSendTime = sendTimes.getAndIncrement();
             //当需要 ack 时 创建 重复发送 延时
             if (options.getNeedAck()) {
@@ -62,15 +65,15 @@ final class SendTask {
             if (logger.isLoggable(DEBUG)) {
                 logger.log(DEBUG, "CLIENT_ID : {0}, 发送成功 : {1}", scxSocket.clientID(), this.socketFrame.toJson());
             }
-
-        }).onFailure((v) -> {
+            
+        }catch (Exception e){
 
             //LOGGER
             if (logger.isLoggable(DEBUG)) {
-                logger.log(DEBUG, "CLIENT_ID : {0}, 发送失败 : {1}", scxSocket.clientID(), this.socketFrame.toJson(), v);
+                logger.log(DEBUG, "CLIENT_ID : {0}, 发送失败 : {1}", scxSocket.clientID(), this.socketFrame.toJson(), e);
             }
-
-        });
+            
+        }
 
     }
 
@@ -98,10 +101,10 @@ final class SendTask {
     }
 
     private synchronized void removeConnectFuture() {
-        if (this.sendFuture != null) {
-            this.sendFuture.onSuccess(null).onFailure(null);
-            this.sendFuture = null;
-        }
+//        if (this.sendFuture != null) {
+//            this.sendFuture.onSuccess(null).onFailure(null);
+//            this.sendFuture = null;
+//        }
     }
 
 }
