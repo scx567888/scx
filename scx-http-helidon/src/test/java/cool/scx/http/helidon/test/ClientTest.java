@@ -28,7 +28,7 @@ public class ClientTest {
 
     public static void test2() {
         var httpClient = new HelidonHttpClient();
-        var webSocketBuilder = httpClient.webSocket().uri("http://localhost:89901/test");
+        var webSocketBuilder = httpClient.webSocket().uri("http://localhost:8990/test");
         webSocketBuilder.onConnect(webSocket -> {
             webSocket.onTextMessage(t -> {
                 System.out.println(t);
