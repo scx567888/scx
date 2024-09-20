@@ -1,7 +1,7 @@
 package cool.scx.socket;
 
 import cool.scx.common.util.$.Timeout;
-import io.vertx.core.http.ServerWebSocket;
+import cool.scx.http.ScxServerWebSocket;
 
 import static cool.scx.common.util.$.setTimeout;
 import static java.lang.System.Logger.Level.DEBUG;
@@ -11,12 +11,12 @@ public final class ScxServerSocket extends PingPongManager {
     private final ScxSocketServer scxSocketServer;
     private Timeout removeClosedClientTimeout;
 
-    ScxServerSocket(ServerWebSocket serverWebSocket, String clientID, ScxSocketServer scxSocketServer) {
+    ScxServerSocket(ScxServerWebSocket serverWebSocket, String clientID, ScxSocketServer scxSocketServer) {
         super(serverWebSocket, clientID, scxSocketServer.options);
         this.scxSocketServer = scxSocketServer;
     }
 
-    ScxServerSocket(ServerWebSocket serverWebSocket, String clientID, ScxSocketServer scxSocketServer, ScxSocketStatus status) {
+    ScxServerSocket(ScxServerWebSocket serverWebSocket, String clientID, ScxSocketServer scxSocketServer, ScxSocketStatus status) {
         super(serverWebSocket, clientID, scxSocketServer.options, status);
         this.scxSocketServer = scxSocketServer;
     }
