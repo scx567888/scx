@@ -7,6 +7,6 @@ public interface ScxHttpClient {
 
     ScxHttpClientRequest request();
 
-    ScxClientWebSocket webSocket();
+    ScxClientWebSocketBuilder webSocket();
 
 }
