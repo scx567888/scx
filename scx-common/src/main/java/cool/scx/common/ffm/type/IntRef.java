@@ -27,12 +27,12 @@ public class IntRef implements Ref {
     }
 
     @Override
-    public MemorySegment init(Arena arena) {
+    public MemorySegment writeToMemorySegment(Arena arena) {
         return this.memorySegment = arena.allocateFrom(JAVA_INT, this.value);
     }
-
+    
     @Override
-    public void refresh() {
+    public void readFromMemorySegment() {
         this.value = this.memorySegment.get(JAVA_INT, 0);
     }
 

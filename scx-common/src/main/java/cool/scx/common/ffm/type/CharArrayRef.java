@@ -15,12 +15,13 @@ public class CharArrayRef implements Ref {
     }
 
     @Override
-    public MemorySegment init(Arena arena) {
+    public MemorySegment writeToMemorySegment(Arena arena) {
         return this.memorySegment = arena.allocateFrom(JAVA_CHAR, value);
     }
 
     @Override
-    public void refresh() {
+    public void readFromMemorySegment() {
+        //此处为了使 外部的 char[] 引用依然可用 这里直接 copy 值
         var chars = this.memorySegment.toArray(JAVA_CHAR);
         System.arraycopy(chars, 0, value, 0, value.length);
     }
