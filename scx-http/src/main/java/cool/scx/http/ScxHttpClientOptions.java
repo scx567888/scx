@@ -1,6 +1,8 @@
 package cool.scx.http;
 
-//todo 
+/**
+ * ScxHttpClientOptions
+ */
 public class ScxHttpClientOptions {
 
 }

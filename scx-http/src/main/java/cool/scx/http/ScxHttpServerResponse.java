@@ -1,5 +1,7 @@
 package cool.scx.http;
 
+import cool.scx.http.cookie.Cookie;
+
 import java.io.OutputStream;
 
 /**
@@ -24,6 +26,10 @@ public interface ScxHttpServerResponse {
     void send(Object data);
 
     boolean isClosed();
+
+    ScxHttpServerResponse addCookie(Cookie cookie);
+    
+    ScxHttpServerResponse removeCookie(String name);
 
     default ScxHttpServerResponse setHeader(ScxHttpHeaderName headerName, String... values) {
         this.headers().set(headerName, values);
