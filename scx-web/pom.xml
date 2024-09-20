@@ -21,12 +21,6 @@
     <dependencies>
 
         <dependency>
-            <groupId>io.vertx</groupId>
-            <artifactId>vertx-web</artifactId>
-            <version>4.5.10</version>
-        </dependency>
-
-        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>scx-http-helidon</artifactId>
             <version>${project.version}</version>
