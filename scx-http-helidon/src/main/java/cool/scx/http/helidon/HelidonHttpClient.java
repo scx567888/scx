@@ -8,8 +8,11 @@ import io.helidon.webclient.api.WebClient;
 import io.helidon.webclient.websocket.WsClient;
 
 import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
 
-//todo 
+/**
+ * HelidonHttpClient
+ */
 public class HelidonHttpClient implements ScxHttpClient {
 
     private final WebClient webClient;
@@ -39,8 +42,16 @@ public class HelidonHttpClient implements ScxHttpClient {
 
     @Override
     public ScxClientWebSocket webSocket(ScxURI uri) {
-        var clientWebSocket = new HelidonClientWebSocket();
+        //此处使用 CountDownLatch 保证一定是调用了 onOpen 之后才返回 clientWebSocket 对象
+        //服务端不需要如此处理 因为服务端 实在 onOpen 方法内调用 后续功能的
+        var lock = new CountDownLatch(1);
+        var clientWebSocket = new HelidonClientWebSocket(lock);
         wsClient.connect(uri.toString(), clientWebSocket);
+        try {
+            lock.await();
+        } catch (InterruptedException _) {
+
+        }
         return clientWebSocket;
     }
 
