@@ -37,4 +37,8 @@ public interface ScxURI {
 
     URIFragment fragment();
 
+    default String getQuery(String name) {
+        return query().get(name);
+    }
+
 }

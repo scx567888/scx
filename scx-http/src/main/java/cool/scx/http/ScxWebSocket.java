@@ -41,7 +41,7 @@ public interface ScxWebSocket {
     }
 
     default ScxWebSocket close() {
-        return close(0, null);
+        return close(666, "NORMAL");
     }
 
 }
