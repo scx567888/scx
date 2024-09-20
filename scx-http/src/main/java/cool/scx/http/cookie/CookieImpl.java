@@ -1,8 +1,5 @@
 package cool.scx.http.cookie;
 
-/**
- * The default {@link Cookie} implementation.
- */
 public class CookieImpl implements CookieWritable {
 
     private String name;

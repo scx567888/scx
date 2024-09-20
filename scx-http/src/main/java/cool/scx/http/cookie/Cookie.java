@@ -2,6 +2,10 @@ package cool.scx.http.cookie;
 
 public interface Cookie {
 
+    static CookieWritable of() {
+        return new CookieImpl();
+    }
+
     String name();
 
     String value();
@@ -17,5 +21,5 @@ public interface Cookie {
     boolean httpOnly();
 
     CookieSameSite sameSite();
-    
+
 }

@@ -18,5 +18,4 @@ public interface CookieWritable extends Cookie {
 
     CookieWritable sameSite(CookieSameSite sameSite);
     
-    
 }
