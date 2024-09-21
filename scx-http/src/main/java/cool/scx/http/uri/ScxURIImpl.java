@@ -1,5 +1,8 @@
 package cool.scx.http.uri;
 
+import cool.scx.http.Parameters;
+import cool.scx.http.ParametersWritable;
+
 /**
  * ScxURIImpl
  */
@@ -9,7 +12,7 @@ public class ScxURIImpl implements ScxURIWritable {
     private String host;
     private int port;
     private URIPathWritable path;
-    private URIQueryWritable query;
+    private ParametersWritable<String, String> query;
     private URIFragmentWritable fragment;
 
     public ScxURIImpl() {
@@ -17,7 +20,7 @@ public class ScxURIImpl implements ScxURIWritable {
         this.host = null;
         this.port = -1;
         this.path = URIPath.of();
-        this.query = URIQuery.of();
+        this.query = Parameters.of();
         this.fragment = URIFragment.of();
     }
 
@@ -46,7 +49,7 @@ public class ScxURIImpl implements ScxURIWritable {
     }
 
     @Override
-    public ScxURIWritable query(URIQueryWritable query) {
+    public ScxURIWritable query(ParametersWritable<String, String> query) {
         this.query = query;
         return this;
     }
@@ -78,7 +81,7 @@ public class ScxURIImpl implements ScxURIWritable {
     }
 
     @Override
-    public URIQueryWritable query() {
+    public ParametersWritable<String, String> query() {
         return query;
     }
 

@@ -1,5 +1,7 @@
 package cool.scx.http.uri;
 
+import cool.scx.http.Parameters;
+
 import java.net.URI;
 
 /**
@@ -33,7 +35,7 @@ public interface ScxURI {
 
     URIPath path();
 
-    URIQuery query();
+    Parameters<String, String> query();
 
     URIFragment fragment();
 

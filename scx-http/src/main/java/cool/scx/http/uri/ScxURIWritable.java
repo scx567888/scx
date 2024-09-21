@@ -1,5 +1,9 @@
 package cool.scx.http.uri;
 
+import cool.scx.http.ParametersWritable;
+
+import static cool.scx.http.uri.URIHelper.decodeQuery;
+
 /**
  * ScxURIWritable
  */
@@ -9,7 +13,7 @@ public interface ScxURIWritable extends ScxURI {
     URIPathWritable path();
 
     @Override
-    URIQueryWritable query();
+    ParametersWritable<String, String> query();
 
     @Override
     URIFragmentWritable fragment();
@@ -22,7 +26,7 @@ public interface ScxURIWritable extends ScxURI {
 
     ScxURIWritable path(URIPathWritable path);
 
-    ScxURIWritable query(URIQueryWritable query);
+    ScxURIWritable query(ParametersWritable<String, String> query);
 
     ScxURIWritable fragment(URIFragmentWritable fragment);
 
@@ -30,8 +34,8 @@ public interface ScxURIWritable extends ScxURI {
         return path(URIPath.of(path));
     }
 
-    default ScxURIWritable query(String query) {
-        return query(URIQuery.of(query));
+    default ScxURIWritable query(String queryString) {
+        return query(decodeQuery(queryString));
     }
 
     default ScxURIWritable fragment(String fragment) {

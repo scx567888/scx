@@ -28,7 +28,7 @@ public interface ContentType {
 
     ScxMediaType mediaType();
 
-    Parameters params();
+    Parameters<String, String> params();
 
     default Charset charSet() {
         return Charset.forName(params().get("charset"));

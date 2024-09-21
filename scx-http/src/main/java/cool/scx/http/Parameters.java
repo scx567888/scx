@@ -8,26 +8,26 @@ import java.util.Set;
 /**
  * Parameters
  */
-public interface Parameters extends Iterable<Map.Entry<String, List<String>>> {
+public interface Parameters<K, V> extends Iterable<Map.Entry<K, List<V>>> {
 
-    static ParametersWritable of() {
-        return new ParametersImpl();
+    static <K, V> ParametersWritable<K, V> of() {
+        return new ParametersImpl<>();
     }
 
     long size();
 
-    Set<String> names();
+    Set<K> names();
 
-    String get(String name);
+    V get(K name);
 
-    List<String> getAll(String name);
+    List<V> getAll(K name);
 
     default boolean isEmpty() {
         return this.size() == 0;
     }
 
-    default Map<String, List<String>> toMap() {
-        var map = new HashMap<String, List<String>>();
+    default Map<K, List<V>> toMap() {
+        var map = new HashMap<K, List<V>>();
         for (var stringListEntry : this) {
             map.put(stringListEntry.getKey(), stringListEntry.getValue());
         }

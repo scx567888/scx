@@ -1,5 +1,8 @@
 package cool.scx.http.uri;
 
+import cool.scx.http.Parameters;
+import cool.scx.http.ParametersWritable;
+
 import java.util.ArrayList;
 
 /**
@@ -7,8 +10,8 @@ import java.util.ArrayList;
  */
 public class URIHelper {
 
-    public static URIQueryWritable decodeQuery(String value) {
-        var query = URIQuery.of();
+    public static ParametersWritable<String, String> decodeQuery(String value) {
+        ParametersWritable<String, String> query = Parameters.of();
         if (value == null) {
             return query;
         }
@@ -22,7 +25,7 @@ public class URIHelper {
         return query;
     }
 
-    public static String toString(URIQuery query) {
+    public static String toString(Parameters<String, String> query) {
         var l = new ArrayList<String>();
         for (var v : query) {
             var key = v.getKey();

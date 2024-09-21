@@ -5,7 +5,6 @@ import cool.scx.http.cookie.Cookie;
 import cool.scx.http.cookie.Cookies;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.uri.URIPath;
-import cool.scx.http.uri.URIQuery;
 
 /**
  * ScxHttpServerRequest
@@ -34,7 +33,7 @@ public interface ScxHttpServerRequest {
         return uri().path();
     }
 
-    default URIQuery query() {
+    default Parameters<String, String> query() {
         return uri().query();
     }
 
