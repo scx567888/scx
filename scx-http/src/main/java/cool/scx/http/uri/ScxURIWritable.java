@@ -10,13 +10,7 @@ import static cool.scx.http.uri.URIHelper.decodeQuery;
 public interface ScxURIWritable extends ScxURI {
 
     @Override
-    URIPathWritable path();
-
-    @Override
     ParametersWritable<String, String> query();
-
-    @Override
-    URIFragmentWritable fragment();
 
     ScxURIWritable scheme(String scheme);
 
@@ -24,22 +18,14 @@ public interface ScxURIWritable extends ScxURI {
 
     ScxURIWritable port(int port);
 
-    ScxURIWritable path(URIPathWritable path);
+    ScxURIWritable path(String path);
 
     ScxURIWritable query(ParametersWritable<String, String> query);
 
-    ScxURIWritable fragment(URIFragmentWritable fragment);
-
-    default ScxURIWritable path(String path) {
-        return path(URIPath.of(path));
-    }
+    ScxURIWritable fragment(String fragment);
 
     default ScxURIWritable query(String queryString) {
         return query(decodeQuery(queryString));
-    }
-
-    default ScxURIWritable fragment(String fragment) {
-        return fragment(URIFragment.of(fragment));
     }
 
     default ScxURIWritable setQuery(String name, String... value) {

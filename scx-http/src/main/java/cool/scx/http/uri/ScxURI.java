@@ -33,11 +33,11 @@ public interface ScxURI {
 
     int port();
 
-    URIPath path();
+    String path();
 
     Parameters<String, String> query();
 
-    URIFragment fragment();
+    String fragment();
 
     default String getQuery(String name) {
         return query().get(name);

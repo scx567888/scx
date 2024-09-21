@@ -11,17 +11,17 @@ public class ScxURIImpl implements ScxURIWritable {
     private String scheme;
     private String host;
     private int port;
-    private URIPathWritable path;
+    private String path;
     private ParametersWritable<String, String> query;
-    private URIFragmentWritable fragment;
+    private String fragment;
 
     public ScxURIImpl() {
         this.scheme = null;
         this.host = null;
         this.port = -1;
-        this.path = URIPath.of();
+        this.path = null;
         this.query = Parameters.of();
-        this.fragment = URIFragment.of();
+        this.fragment = null;
     }
 
     @Override
@@ -43,7 +43,7 @@ public class ScxURIImpl implements ScxURIWritable {
     }
 
     @Override
-    public ScxURIWritable path(URIPathWritable path) {
+    public ScxURIWritable path(String path) {
         this.path = path;
         return this;
     }
@@ -55,7 +55,7 @@ public class ScxURIImpl implements ScxURIWritable {
     }
 
     @Override
-    public ScxURIWritable fragment(URIFragmentWritable fragment) {
+    public ScxURIWritable fragment(String fragment) {
         this.fragment = fragment;
         return this;
     }
@@ -76,7 +76,7 @@ public class ScxURIImpl implements ScxURIWritable {
     }
 
     @Override
-    public URIPathWritable path() {
+    public String path() {
         return path;
     }
 
@@ -86,13 +86,13 @@ public class ScxURIImpl implements ScxURIWritable {
     }
 
     @Override
-    public URIFragmentWritable fragment() {
+    public String fragment() {
         return fragment;
     }
 
     @Override
     public String toString() {
-        return URIHelper.toString(this);
+        return URIHelper.encodedURI(this);
     }
 
 }
