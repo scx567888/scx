@@ -1,7 +1,5 @@
 package cool.scx.http;
 
-import cool.scx.http.uri.ScxURI;
-
 import java.util.function.Consumer;
 
 /**
