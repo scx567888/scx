@@ -23,7 +23,7 @@ public class Test {
         var router = Router.of();
 
         router.route().path("/*").handler(c -> {
-            System.out.println(c.request().path().value());
+            System.out.println(c.request().path());
             c.next();
         });
 

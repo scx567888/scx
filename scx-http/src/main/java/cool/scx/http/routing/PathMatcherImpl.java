@@ -159,7 +159,7 @@ public class PathMatcherImpl implements PathMatcher {
         this.namedGroupsInRegex.add(namedGroupInRegex);
     }
 
-    private boolean pathMatches(String requestPath, ParametersWritable pathParams) {
+    private boolean pathMatches(String requestPath, ParametersWritable<String, String> pathParams) {
         final boolean pathEndsWithSlash;
         final String thePath;
 
@@ -212,7 +212,7 @@ public class PathMatcherImpl implements PathMatcher {
         }
     }
 
-    private boolean matches(String requestPath, ParametersWritable pathParams) {
+    private boolean matches(String requestPath, ParametersWritable<String, String> pathParams) {
 
         if (path != null && pattern == null && !pathMatches(requestPath, pathParams)) {
             return false;
@@ -290,7 +290,7 @@ public class PathMatcherImpl implements PathMatcher {
 
     @Override
     public MatchResult matches(String path) {
-        var pathParams = Parameters.of();
+        ParametersWritable<String, String> pathParams = Parameters.of();
         var accepted = matches(path, pathParams);
         return new MatchResult(accepted, pathParams);
     }
