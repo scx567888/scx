@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Parameters
+ * Parameters 类似 MultiMap 但是分为 只读 和 可读可写 两种类型 , 以便实现更细粒度的控制 ( 默认实现 基于 MultiMap)
  */
 public interface Parameters<K, V> extends Iterable<Map.Entry<K, List<V>>> {
 
@@ -21,6 +21,10 @@ public interface Parameters<K, V> extends Iterable<Map.Entry<K, List<V>>> {
     V get(K name);
 
     List<V> getAll(K name);
+
+    default boolean contains(K name) {
+        return get(name) != null;
+    }
 
     default boolean isEmpty() {
         return this.size() == 0;
