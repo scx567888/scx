@@ -1,6 +1,7 @@
 package cool.scx.http.content_type;
 
 import cool.scx.http.Parameters;
+import cool.scx.http.ParametersWritable;
 import cool.scx.http.ScxMediaType;
 
 import java.nio.charset.Charset;
@@ -16,7 +17,7 @@ public interface ContentType {
             return null;
         }
         var mediaType = ScxMediaType.of(split[0]);
-        var params = Parameters.of();
+        ParametersWritable<String, String> params = Parameters.of();
         for (var i = 1; i < split.length; i = i + 1) {
             var s = split[i].split("=");
             if (s.length == 2) {

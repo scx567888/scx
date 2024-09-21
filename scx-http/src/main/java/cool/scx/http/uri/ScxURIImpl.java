@@ -1,4 +1,7 @@
-package cool.scx.http;
+package cool.scx.http.uri;
+
+import cool.scx.http.Parameters;
+import cool.scx.http.ParametersWritable;
 
 /**
  * ScxURIImpl

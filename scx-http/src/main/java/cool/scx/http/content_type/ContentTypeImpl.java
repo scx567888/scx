@@ -6,7 +6,7 @@ import cool.scx.http.ScxMediaType;
 public class ContentTypeImpl implements ContentTypeWritable {
 
     private ScxMediaType mediaType;
-    private Parameters params;
+    private Parameters<String, String> params;
 
     @Override
     public ContentTypeWritable mediaType(ScxMediaType mediaType) {
@@ -15,7 +15,7 @@ public class ContentTypeImpl implements ContentTypeWritable {
     }
 
     @Override
-    public ContentTypeWritable params(Parameters params) {
+    public ContentTypeWritable params(Parameters<String, String> params) {
         this.params = params;
         return this;
     }
@@ -26,7 +26,7 @@ public class ContentTypeImpl implements ContentTypeWritable {
     }
 
     @Override
-    public Parameters params() {
+    public Parameters<String, String> params() {
         return params;
     }
 

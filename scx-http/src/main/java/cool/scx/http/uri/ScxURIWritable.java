@@ -1,6 +1,8 @@
-package cool.scx.http;
+package cool.scx.http.uri;
 
-import static cool.scx.http.URIHelper.decodeQuery;
+import cool.scx.http.ParametersWritable;
+
+import static cool.scx.http.uri.URIHelper.decodeQuery;
 
 /**
  * ScxURIWritable

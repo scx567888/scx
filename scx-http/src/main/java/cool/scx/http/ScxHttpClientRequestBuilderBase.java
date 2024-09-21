@@ -1,5 +1,8 @@
 package cool.scx.http;
 
+import cool.scx.http.uri.ScxURI;
+import cool.scx.http.uri.ScxURIWritable;
+
 import static cool.scx.http.HttpMethod.GET;
 
 /**

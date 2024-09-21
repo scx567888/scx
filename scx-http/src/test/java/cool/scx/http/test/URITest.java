@@ -1,6 +1,6 @@
 package cool.scx.http.test;
 
-import cool.scx.http.ScxURI;
+import cool.scx.http.uri.ScxURI;
 
 public class URITest {
 
