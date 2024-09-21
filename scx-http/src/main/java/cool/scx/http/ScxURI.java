@@ -1,6 +1,4 @@
-package cool.scx.http.uri;
-
-import cool.scx.http.Parameters;
+package cool.scx.http;
 
 import java.net.URI;
 
