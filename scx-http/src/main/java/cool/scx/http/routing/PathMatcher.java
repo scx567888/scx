@@ -26,7 +26,7 @@ public interface PathMatcher {
 
     PathMatcher.MatchResult matches(String path);
 
-    record MatchResult(boolean accepted, Parameters pathParams) {
+    record MatchResult(boolean accepted, Parameters<String, String> pathParams) {
 
     }
 

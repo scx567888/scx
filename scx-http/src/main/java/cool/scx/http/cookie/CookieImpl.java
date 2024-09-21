@@ -2,8 +2,8 @@ package cool.scx.http.cookie;
 
 class CookieImpl implements CookieWritable {
 
-    private String name;
-    private String value;
+    private final String name;
+    private final String value;
     private String domain;
     private String path;
     private long maxAge;

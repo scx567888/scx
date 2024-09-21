@@ -3,18 +3,21 @@ package cool.scx.http;
 /**
  * ScxHttpHeadersWritable
  */
-public interface ScxHttpHeadersWritable extends ScxHttpHeaders {
+public interface ScxHttpHeadersWritable extends ScxHttpHeaders, ParametersWritable<ScxHttpHeaderName, String> {
 
-    ScxHttpHeadersWritable set(ScxHttpHeaderName headerName, String... headerValue);
+    default ScxHttpHeadersWritable set(String name, String... value) {
+        set(ScxHttpHeaderName.of(name), value);
+        return this;
+    }
 
-    ScxHttpHeadersWritable set(String headerName, String... headerValue);
+    default ScxHttpHeadersWritable add(String name, String... value) {
+        add(ScxHttpHeaderName.of(name), value);
+        return this;
+    }
 
-    ScxHttpHeadersWritable add(ScxHttpHeaderName headerName, String... headerValue);
-
-    ScxHttpHeadersWritable add(String headerName, String... headerValue);
-
-    ScxHttpHeadersWritable remove(ScxHttpHeaderName headerName);
-
-    ScxHttpHeadersWritable remove(String headerName);
+    default ScxHttpHeadersWritable remove(String name) {
+        remove(ScxHttpHeaderName.of(name));
+        return this;
+    }
 
 }

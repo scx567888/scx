@@ -16,7 +16,7 @@ public class RoutingContext {
     private final RouterImpl router;
     private final ScxHttpServerRequest request;
     private final Iterator<Route> iter;
-    private Parameters nowPathParams;
+    private Parameters<String, String> nowPathParams;
 
     RoutingContext(RouterImpl router, ScxHttpServerRequest request) {
         this.router = router;
@@ -48,7 +48,7 @@ public class RoutingContext {
             var routeState = iter.next();
 
             //匹配路径
-            var pathMatchResult = routeState.pathMatcher().matches(request.path().value());
+            var pathMatchResult = routeState.pathMatcher().matches(request.path());
 
             this.nowPathParams = pathMatchResult.pathParams();
 
@@ -76,7 +76,7 @@ public class RoutingContext {
 
     }
 
-    public Parameters pathParams() {
+    public Parameters<String, String> pathParams() {
         return this.nowPathParams;
     }
 

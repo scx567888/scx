@@ -3,12 +3,12 @@ package cool.scx.http;
 /**
  * ParametersWritable
  */
-public interface ParametersWritable extends Parameters {
+public interface ParametersWritable<K, V> extends Parameters<K, V> {
 
-    ParametersWritable set(String name, String... value);
+    ParametersWritable<K, V> set(K name, V... value);
 
-    ParametersWritable add(String name, String... value);
+    ParametersWritable<K, V> add(K name, V... value);
 
-    ParametersWritable remove(String name);
+    ParametersWritable<K, V> remove(K name);
 
 }

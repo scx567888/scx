@@ -1,40 +1,26 @@
 package cool.scx.http;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * ScxHttpHeaders
  */
-public interface ScxHttpHeaders extends Iterable<Map.Entry<ScxHttpHeaderName, List<String>>> {
+public interface ScxHttpHeaders extends Parameters<ScxHttpHeaderName, String> {
 
     static ScxHttpHeadersWritable of() {
         return new ScxHttpHeadersImpl();
     }
 
-    long size();
-
-    Set<ScxHttpHeaderName> names();
-
-    String get(ScxHttpHeaderName headerName);
-
-    String get(String headerName);
-
-    List<String> getAll(ScxHttpHeaderName headerName);
-
-    List<String> getAll(String headerName);
-
-    default boolean contains(ScxHttpHeaderName httpFieldName) {
-        return get(httpFieldName) != null;
+    default String get(String name) {
+        return get(ScxHttpHeaderName.of(name));
     }
 
-    default boolean contains(String httpFieldName) {
-        return get(httpFieldName) != null;
+    default List<String> getAll(String name) {
+        return getAll(ScxHttpHeaderName.of(name));
     }
 
-    default boolean isEmpty() {
-        return this.size() == 0;
+    default boolean contains(String name) {
+        return contains(ScxHttpHeaderName.of(name));
     }
 
 }
