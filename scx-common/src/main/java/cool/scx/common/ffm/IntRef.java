@@ -1,4 +1,4 @@
-package cool.scx.common.ffm.type;
+package cool.scx.common.ffm;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
@@ -27,7 +27,7 @@ public class IntRef implements Ref {
     }
 
     @Override
-    public MemorySegment writeToMemorySegment(Arena arena) {
+    public MemorySegment toMemorySegment(Arena arena) {
         return this.memorySegment = arena.allocateFrom(JAVA_INT, this.value);
     }
 

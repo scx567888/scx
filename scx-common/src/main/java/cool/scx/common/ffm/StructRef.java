@@ -1,13 +1,13 @@
-package cool.scx.common.ffm.type;
+package cool.scx.common.ffm;
 
 import cool.scx.common.reflect.AccessModifier;
-import cool.scx.common.reflect.ClassInfo;
 import cool.scx.common.reflect.FieldInfo;
 import cool.scx.common.reflect.ReflectFactory;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemoryLayout;
 import java.lang.foreign.MemorySegment;
+import java.lang.foreign.StructLayout;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
 import java.util.Arrays;
@@ -22,20 +22,18 @@ import static cool.scx.common.ffm.FFMHelper.getMemoryLayout;
 public class StructRef implements Ref {
 
     private final Object value;
-    private final ClassInfo classInfo;
     private final Map<FieldInfo, VarHandle> fieldMap;
+    private final StructLayout LAYOUT;
     private MemorySegment memorySegment;
 
-    public StructRef(Object value) {
+    public StructRef(Struct value) {
         this.value = value;
-        this.classInfo = ReflectFactory.getClassInfo(this.value.getClass());
+        var classInfo = ReflectFactory.getClassInfo(this.value.getClass());
         this.fieldMap = new HashMap<>();
-    }
-
-    @Override
-    public MemorySegment writeToMemorySegment(Arena arena) {
+        //1, 寻找 public 的 fields
         var field = Arrays.stream(classInfo.fields()).filter(c -> c.accessModifier() == AccessModifier.PUBLIC).toList();
 
+        //2, 创建每个 field 对应的 内存布局
         var memoryLayouts = new MemoryLayout[field.size()];
         for (int i = 0; i < field.size(); i = i + 1) {
             var f = field.get(i);
@@ -43,14 +41,18 @@ public class StructRef implements Ref {
             memoryLayouts[i] = memoryLayout.withName(f.name());
         }
 
-        var LAYOUT = MemoryLayout.structLayout(memoryLayouts);
+        this.LAYOUT = MemoryLayout.structLayout(memoryLayouts);
 
+        //3, 创建 varHandle 以便能反向将 内存中的值读取出来
         for (var f : field) {
             var x = LAYOUT.varHandle(MemoryLayout.PathElement.groupElement(f.name()));
             var ff = MethodHandles.insertCoordinates(x, 1, 0L);
             fieldMap.put(f, ff);
         }
+    }
 
+    @Override
+    public MemorySegment toMemorySegment(Arena arena) {
         return this.memorySegment = arena.allocate(LAYOUT);
     }
 
