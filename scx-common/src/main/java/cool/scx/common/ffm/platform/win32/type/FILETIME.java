@@ -1,6 +1,6 @@
-package cool.scx.common.ffm.win32.type;
+package cool.scx.common.ffm.platform.win32.type;
 
-import cool.scx.common.ffm.type.Struct;
+import cool.scx.common.ffm.Struct;
 
 public class FILETIME implements Struct {
 

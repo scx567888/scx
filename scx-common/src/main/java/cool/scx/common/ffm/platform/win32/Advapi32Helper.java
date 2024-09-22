@@ -1,7 +1,7 @@
-package cool.scx.common.ffm.win32;
+package cool.scx.common.ffm.platform.win32;
 
 import cool.scx.common.ffm.Native;
-import cool.scx.common.ffm.type.IntRef;
+import cool.scx.common.ffm.IntRef;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
@@ -9,8 +9,8 @@ import java.lang.foreign.ValueLayout;
 import java.util.Arrays;
 import java.util.TreeMap;
 
-import static cool.scx.common.ffm.win32.Advapi32.ADVAPI32;
-import static cool.scx.common.ffm.win32.WinNT.*;
+import static cool.scx.common.ffm.platform.win32.Advapi32.ADVAPI32;
+import static cool.scx.common.ffm.platform.win32.WinNT.*;
 
 public class Advapi32Helper {
 

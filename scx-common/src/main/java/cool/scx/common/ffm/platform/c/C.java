@@ -1,4 +1,4 @@
-package cool.scx.common.ffm.c;
+package cool.scx.common.ffm.platform.c;
 
 import cool.scx.common.ffm.FFMProxy;
 

@@ -1,6 +1,6 @@
-package cool.scx.common.ffm.win32.type;
+package cool.scx.common.ffm.platform.win32.type;
 
-import cool.scx.common.ffm.type.Callback;
+import cool.scx.common.ffm.Callback;
 
 import java.lang.foreign.MemorySegment;
 

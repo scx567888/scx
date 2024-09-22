@@ -1,8 +1,8 @@
-package cool.scx.common.ffm.win32;
+package cool.scx.common.ffm.platform.win32;
 
 
-import cool.scx.common.ffm.win32.type.RECT;
-import cool.scx.common.ffm.win32.type.WNDENUMPROC;
+import cool.scx.common.ffm.platform.win32.type.RECT;
+import cool.scx.common.ffm.platform.win32.type.WNDENUMPROC;
 
 import java.lang.foreign.MemorySegment;
 

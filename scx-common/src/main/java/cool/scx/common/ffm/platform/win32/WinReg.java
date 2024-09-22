@@ -1,4 +1,4 @@
-package cool.scx.common.ffm.win32;
+package cool.scx.common.ffm.platform.win32;
 
 public interface WinReg {
 

@@ -1,11 +1,11 @@
-package cool.scx.common.ffm.win32;
+package cool.scx.common.ffm.platform.win32;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 import java.util.ArrayList;
 import java.util.List;
 
-import static cool.scx.common.ffm.win32.User32.USER32;
+import static cool.scx.common.ffm.platform.win32.User32.USER32;
 import static java.lang.foreign.ValueLayout.JAVA_LONG;
 
 public class WindowHelper {

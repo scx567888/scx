@@ -1,6 +1,6 @@
-package cool.scx.common.ffm.win32;
+package cool.scx.common.ffm.platform.win32;
 
-import cool.scx.common.ffm.type.IntRef;
+import cool.scx.common.ffm.IntRef;
 
 import java.lang.foreign.MemorySegment;
 
