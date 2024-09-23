@@ -8,7 +8,7 @@ import java.lang.foreign.MemorySegment;
 public class MapperParameter implements Parameter {
 
     private final Mapper mapper;
-    
+
     private MemorySegment memorySegment;
 
     public MapperParameter(Mapper mapper) {

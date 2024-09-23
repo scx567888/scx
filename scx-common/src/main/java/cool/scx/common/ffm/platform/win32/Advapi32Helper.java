@@ -1,7 +1,7 @@
 package cool.scx.common.ffm.platform.win32;
 
-import cool.scx.common.ffm.Native;
-import cool.scx.common.ffm.IntRef;
+import cool.scx.common.ffm.FFMHelper;
+import cool.scx.common.ffm.type.mapper.IntMapper;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
@@ -19,7 +19,7 @@ public class Advapi32Helper {
     }
 
     public static TreeMap<String, Object> registryGetValues(int root, String keyPath, int samDesiredExtra) {
-        IntRef phkKey = new IntRef();
+        IntMapper phkKey = new IntMapper();
         int rc = ADVAPI32.RegOpenKeyExA(root, keyPath, 0,
                 WinNT.KEY_READ | samDesiredExtra, phkKey);
         if (rc != WinError.ERROR_SUCCESS) {
@@ -36,9 +36,9 @@ public class Advapi32Helper {
     }
 
     public static TreeMap<String, Object> registryGetValues(int hKey) {
-        IntRef lpcValues = new IntRef();
-        IntRef lpcMaxValueNameLen = new IntRef();
-        IntRef lpcMaxValueLen = new IntRef();
+        IntMapper lpcValues = new IntMapper();
+        IntMapper lpcMaxValueNameLen = new IntMapper();
+        IntMapper lpcMaxValueLen = new IntMapper();
         int rc = ADVAPI32.RegQueryInfoKeyW(hKey, null, null, null,
                 null, null, null, lpcValues, lpcMaxValueNameLen,
                 lpcMaxValueLen, null, null);
@@ -53,15 +53,15 @@ public class Advapi32Helper {
         try (var arena = Arena.ofConfined()) {
             for (int i = 0; i < lpcValues.getValue(); i++) {
                 var byteData = arena.allocate(lpcMaxValueLen.getValue());
-                IntRef lpcchValueName = new IntRef(lpcMaxValueNameLen.getValue() + 1);
-                IntRef lpcbData = new IntRef(lpcMaxValueLen.getValue());
-                IntRef lpType = new IntRef();
+                IntMapper lpcchValueName = new IntMapper(lpcMaxValueNameLen.getValue() + 1);
+                IntMapper lpcbData = new IntMapper(lpcMaxValueLen.getValue());
+                IntMapper lpType = new IntMapper();
                 rc = ADVAPI32.RegEnumValueW(hKey, i, name, lpcchValueName, null, lpType, byteData, lpcbData);
                 if (rc != WinError.ERROR_SUCCESS) {
                     throw new Win32Exception(rc);
                 }
 
-                String nameString = Native.toString(name);
+                String nameString = FFMHelper.toString(name);
 
                 if (lpcbData.getValue() == 0) {
                     switch (lpType.getValue()) {
@@ -78,7 +78,7 @@ public class Advapi32Helper {
                     case REG_QWORD -> keyValues.put(nameString, byteData.get(ValueLayout.JAVA_LONG, 0));
                     case REG_DWORD -> keyValues.put(nameString, byteData.get(ValueLayout.JAVA_INT, 0));
                     case REG_SZ, REG_EXPAND_SZ ->
-                            keyValues.put(nameString, Native.toString(byteData.toArray(ValueLayout.JAVA_CHAR)));
+                            keyValues.put(nameString, FFMHelper.toString(byteData.toArray(ValueLayout.JAVA_CHAR)));
                     case REG_BINARY ->
                             keyValues.put(nameString, Arrays.copyOf(byteData.toArray(ValueLayout.JAVA_BYTE), lpcbData.getValue()));
                     case REG_MULTI_SZ -> keyValues.put(nameString, null);
@@ -96,7 +96,7 @@ public class Advapi32Helper {
     }
 
     public static int registryGetIntValue(int root, String key, String value, int samDesiredExtra) {
-        IntRef phkKey = new IntRef();
+        IntMapper phkKey = new IntMapper();
         int rc = ADVAPI32.RegOpenKeyExA(root, key, 0, WinNT.KEY_READ | samDesiredExtra, phkKey);
         if (rc != WinError.ERROR_SUCCESS) {
             throw new Win32Exception(rc);
@@ -112,9 +112,9 @@ public class Advapi32Helper {
     }
 
     public static int registryGetIntValue(int hKey, String value) {
-        IntRef lpcbData = new IntRef();
-        IntRef lpType = new IntRef();
-        int rc = ADVAPI32.RegQueryValueExA(hKey, value, 0, lpType, (IntRef) null, lpcbData);
+        IntMapper lpcbData = new IntMapper();
+        IntMapper lpType = new IntMapper();
+        int rc = ADVAPI32.RegQueryValueExA(hKey, value, 0, lpType, (IntMapper) null, lpcbData);
         if (rc != WinError.ERROR_SUCCESS) {
             throw new Win32Exception(rc);
         }
@@ -122,7 +122,7 @@ public class Advapi32Helper {
             throw new RuntimeException("Unexpected registry type "
                                        + lpType.getValue() + ", expected REG_DWORD");
         }
-        IntRef data = new IntRef();
+        IntMapper data = new IntMapper();
         rc = ADVAPI32.RegQueryValueExA(hKey, value, 0, lpType, data, lpcbData);
         if (rc != WinError.ERROR_SUCCESS) {
             throw new Win32Exception(rc);
@@ -138,7 +138,7 @@ public class Advapi32Helper {
 
     public static void registrySetStringValue(int root, String keyPath,
                                               String name, String value, int samDesiredExtra) {
-        IntRef phkKey = new IntRef();
+        IntMapper phkKey = new IntMapper();
         int rc = ADVAPI32.RegOpenKeyExA(root, keyPath, 0, WinNT.KEY_READ | WinNT.KEY_WRITE | samDesiredExtra, phkKey);
         if (rc != WinError.ERROR_SUCCESS) {
             throw new Win32Exception(rc);
@@ -176,7 +176,7 @@ public class Advapi32Helper {
 
     public static void registrySetIntValue(int root, String keyPath,
                                            String name, int value, int samDesiredExtra) {
-        IntRef phkKey = new IntRef();
+        IntMapper phkKey = new IntMapper();
         int rc = ADVAPI32.RegOpenKeyExA(root, keyPath, 0, WinNT.KEY_READ | WinNT.KEY_WRITE | samDesiredExtra, phkKey);
         if (rc != WinError.ERROR_SUCCESS) {
             throw new Win32Exception(rc);
@@ -208,7 +208,7 @@ public class Advapi32Helper {
     }
 
     public static String registryGetStringValue(int root, String key, String value, int samDesiredExtra) {
-        IntRef phkKey = new IntRef();
+        IntMapper phkKey = new IntMapper();
         int rc = ADVAPI32.RegOpenKeyExA(root, key, 0, WinNT.KEY_READ | samDesiredExtra, phkKey);
         if (rc != WinError.ERROR_SUCCESS) {
             throw new Win32Exception(rc);
@@ -224,8 +224,8 @@ public class Advapi32Helper {
     }
 
     public static String registryGetStringValue(int hKey, String value) {
-        IntRef lpcbData = new IntRef();
-        IntRef lpType = new IntRef();
+        IntMapper lpcbData = new IntMapper();
+        IntMapper lpType = new IntMapper();
         int rc = ADVAPI32.RegQueryValueExA(hKey, value, 0, lpType, (MemorySegment) null, lpcbData);
         if (rc != WinError.ERROR_SUCCESS) {
             throw new Win32Exception(rc);

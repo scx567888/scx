@@ -41,5 +41,5 @@ public class CallbackParameter implements Parameter {
     public Object toNativeParameter(Arena arena) {
         return nativeLinker().upcallStub(fun, functionDescriptor, arena);
     }
-    
+
 }

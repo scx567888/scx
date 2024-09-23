@@ -1,7 +1,7 @@
 package cool.scx.common.ffm.platform.win32;
 
-import cool.scx.common.ffm.IntRef;
 import cool.scx.common.ffm.platform.win32.type.FILETIME;
+import cool.scx.common.ffm.type.mapper.IntMapper;
 
 import java.lang.foreign.MemorySegment;
 
@@ -11,17 +11,17 @@ public interface Advapi32 {
 
     Advapi32 ADVAPI32 = ffmProxy("Advapi32", Advapi32.class);
 
-    int RegOpenKeyExA(int hKey, String lpSubKey, int ulOptions, int samDesired, IntRef phkResult);
+    int RegOpenKeyExA(int hKey, String lpSubKey, int ulOptions, int samDesired, IntMapper phkResult);
 
     int RegCloseKey(int hKey);
 
-    int RegEnumValueW(int hKey, int dwIndex, char[] lpValueName, IntRef lpcchValueName, IntRef lpReserved, IntRef lpType, MemorySegment lpData, IntRef lpcbData);
+    int RegEnumValueW(int hKey, int dwIndex, char[] lpValueName, IntMapper lpcchValueName, IntMapper lpReserved, IntMapper lpType, MemorySegment lpData, IntMapper lpcbData);
 
-    int RegQueryInfoKeyW(int hKey, char[] lpClass, IntRef lpcchClass, IntRef lpReserved, IntRef lpcSubKeys, IntRef lpcbMaxSubKeyLen, IntRef lpcbMaxClassLen, IntRef lpcValues, IntRef lpcbMaxValueNameLen, IntRef lpcbMaxValueLen, IntRef lpcbSecurityDescriptor, FILETIME lpftLastWriteTime);
+    int RegQueryInfoKeyW(int hKey, char[] lpClass, IntMapper lpcchClass, IntMapper lpReserved, IntMapper lpcSubKeys, IntMapper lpcbMaxSubKeyLen, IntMapper lpcbMaxClassLen, IntMapper lpcValues, IntMapper lpcbMaxValueNameLen, IntMapper lpcbMaxValueLen, IntMapper lpcbSecurityDescriptor, FILETIME lpftLastWriteTime);
 
-    int RegQueryValueExA(int hKey, String lpValueName, int lpReserved, IntRef lpType, IntRef lpData, IntRef lpcbData);
+    int RegQueryValueExA(int hKey, String lpValueName, int lpReserved, IntMapper lpType, IntMapper lpData, IntMapper lpcbData);
 
-    int RegQueryValueExA(int hKey, String lpValueName, int lpReserved, IntRef lpType, MemorySegment lpData, IntRef lpcbData);
+    int RegQueryValueExA(int hKey, String lpValueName, int lpReserved, IntMapper lpType, MemorySegment lpData, IntMapper lpcbData);
 
     int RegSetValueExA(int hKey, String lpValueName, int Reserved, int dwType, MemorySegment lpData, int cbData);
 

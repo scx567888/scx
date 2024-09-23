@@ -1,8 +1,8 @@
 package cool.scx.common.ffm;
 
+import cool.scx.common.ffm.type.callback.Callback;
 import cool.scx.common.ffm.type.mapper.*;
 import cool.scx.common.ffm.type.paramter.*;
-import cool.scx.common.ffm.type.callback.Callback;
 import cool.scx.common.ffm.type.struct.Struct;
 import cool.scx.common.ffm.type.wrapper.*;
 
@@ -130,13 +130,13 @@ public final class FFMHelper {
             //6, Callback 类型
             case Callback c -> new CallbackParameter(c);
             //7, 数组类型
-            case byte[] c -> new ArrayParameter(c,new ByteArrayMapper(c));
-            case char[] c -> new ArrayParameter(c,new CharArrayMapper(c));
-            case short[] c -> new ArrayParameter(c,new ShortArrayMapper(c));
-            case int[] c -> new ArrayParameter(c,new IntArrayMapper(c));
-            case long[] c -> new ArrayParameter(c,new LongArrayMapper(c));
-            case float[] c -> new ArrayParameter(c,new FloatArrayMapper(c));
-            case double[] c -> new ArrayParameter(c,new DoubleArrayMapper(c));
+            case byte[] c -> new ArrayParameter(c, new ByteArrayMapper(c));
+            case char[] c -> new ArrayParameter(c, new CharArrayMapper(c));
+            case short[] c -> new ArrayParameter(c, new ShortArrayMapper(c));
+            case int[] c -> new ArrayParameter(c, new IntArrayMapper(c));
+            case long[] c -> new ArrayParameter(c, new LongArrayMapper(c));
+            case float[] c -> new ArrayParameter(c, new FloatArrayMapper(c));
+            case double[] c -> new ArrayParameter(c, new DoubleArrayMapper(c));
             //8, Parameter 类型
             case Parameter r -> r;
             default -> throw new RuntimeException("无法转换的类型 !!! " + o.getClass());
