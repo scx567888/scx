@@ -31,8 +31,9 @@ public class DoubleMapper implements Mapper {
     }
 
     @Override
-    public void fromMemorySegment(MemorySegment memorySegment) {
+    public Object fromMemorySegment(MemorySegment memorySegment) {
         this.value = memorySegment.get(JAVA_DOUBLE, 0);
+        return value;
     }
 
 }

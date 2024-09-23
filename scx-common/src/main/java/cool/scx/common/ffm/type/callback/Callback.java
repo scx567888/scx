@@ -1,4 +1,4 @@
-package cool.scx.common.ffm;
+package cool.scx.common.ffm.type.callback;
 
 /**
  * 回调函数需要继承此接口, 同时需要创建一个名为 "callback" 的方法

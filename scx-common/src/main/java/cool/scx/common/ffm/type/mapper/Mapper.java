@@ -24,6 +24,6 @@ public interface Mapper {
      *
      * @param memorySegment a
      */
-    void fromMemorySegment(MemorySegment memorySegment);
+    Object fromMemorySegment(MemorySegment memorySegment);
 
 }

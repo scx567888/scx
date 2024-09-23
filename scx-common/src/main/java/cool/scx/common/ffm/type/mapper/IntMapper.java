@@ -31,8 +31,9 @@ public class IntMapper implements Mapper {
     }
 
     @Override
-    public void fromMemorySegment(MemorySegment memorySegment) {
+    public Object fromMemorySegment(MemorySegment memorySegment) {
         this.value = memorySegment.get(JAVA_INT, 0);
+        return value;
     }
 
 }

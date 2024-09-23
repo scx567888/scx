@@ -27,8 +27,9 @@ public class IntArrayMapper implements Mapper {
     }
 
     @Override
-    public void fromMemorySegment(MemorySegment memorySegment) {
+    public Object fromMemorySegment(MemorySegment memorySegment) {
         value = memorySegment.toArray(JAVA_INT);
+        return value;
     }
 
 }

@@ -1,6 +1,9 @@
 package cool.scx.common.ffm;
 
-import cool.scx.common.ffm.type.*;
+import cool.scx.common.ffm.type.mapper.*;
+import cool.scx.common.ffm.type.paramter.*;
+import cool.scx.common.ffm.type.callback.Callback;
+import cool.scx.common.ffm.type.struct.Struct;
 import cool.scx.common.ffm.type.wrapper.*;
 
 import java.lang.foreign.MemoryLayout;
@@ -71,8 +74,8 @@ public final class FFMHelper {
         if (String.class == type) {
             return ADDRESS;
         }
-        //4, 处理引用类型
-        if (Ref.class.isAssignableFrom(type)) {
+        //4, 处理映射类型
+        if (Mapper.class.isAssignableFrom(type)) {
             return ADDRESS;
         }
         //5, 处理 结构体类型 这里我们使用 ADDRESS 而不使用 MemoryLayout.structLayout(), 因为需要在运行时才知道具体结构
@@ -100,12 +103,37 @@ public final class FFMHelper {
 
     public static Parameter convertToParameter(Object o) throws NoSuchMethodException, IllegalAccessException {
         return switch (o) {
-            case null -> new RawParameter(MemorySegment.NULL);
-            case Long _, Integer _, MemorySegment _ -> new RawParameter(o);
+            //0, 空值
+            case null -> new RawValueParameter(MemorySegment.NULL);
+            //1, 基本值
+            case Byte _,
+                 Boolean _,
+                 Character _,
+                 Short _,
+                 Integer _,
+                 Long _,
+                 Float _,
+                 Double _,
+                 MemorySegment _ -> new RawValueParameter(o);
+            //2, 基本值包装值
+            case Wrapper<?> w -> w;
+            //3, 字符串
             case String s -> new StringParameter(s);
-            case char[] c -> new CharArrayRef(c);
+            //4, 映射类型
+            case Mapper m -> new MapperParameter(m);
+            //5, 结构体
+            case Struct c -> new StructParameter(c);
+            //6, Callback 类型
             case Callback c -> new CallbackParameter(c);
-            case Struct c -> new StructRef(c);
+            //7, 数组类型
+            case byte[] c -> new ArrayParameter(c,new ByteArrayMapper(c));
+            case char[] c -> new ArrayParameter(c,new CharArrayMapper(c));
+            case short[] c -> new ArrayParameter(c,new ShortArrayMapper(c));
+            case int[] c -> new ArrayParameter(c,new IntArrayMapper(c));
+            case long[] c -> new ArrayParameter(c,new LongArrayMapper(c));
+            case float[] c -> new ArrayParameter(c,new FloatArrayMapper(c));
+            case double[] c -> new ArrayParameter(c,new DoubleArrayMapper(c));
+            //8, Parameter 类型
             case Parameter r -> r;
             default -> throw new RuntimeException("无法转换的类型 !!! " + o.getClass());
         };
@@ -117,6 +145,19 @@ public final class FFMHelper {
             result[i] = convertToParameter(objs[i]);
         }
         return result;
+    }
+
+    public static String toString(char[] buf) {
+        int len = buf.length;
+
+        for (int index = 0; index < len; index = index + 1) {
+            if (buf[index] == 0) {
+                len = index;
+                break;
+            }
+        }
+
+        return len == 0 ? "" : new String(buf, 0, len);
     }
 
 }

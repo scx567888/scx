@@ -25,8 +25,9 @@ public class AddressMapper implements Mapper {
     }
 
     @Override
-    public void fromMemorySegment(MemorySegment memorySegment) {
+    public Object fromMemorySegment(MemorySegment memorySegment) {
         this.value = memorySegment;
+        return value;
     }
 
 }

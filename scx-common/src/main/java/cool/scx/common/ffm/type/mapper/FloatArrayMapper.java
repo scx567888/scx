@@ -27,8 +27,9 @@ public class FloatArrayMapper implements Mapper {
     }
 
     @Override
-    public void fromMemorySegment(MemorySegment memorySegment) {
+    public Object fromMemorySegment(MemorySegment memorySegment) {
         value = memorySegment.toArray(JAVA_FLOAT);
+        return value;
     }
 
 }

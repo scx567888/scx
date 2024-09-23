@@ -1,6 +1,6 @@
 package cool.scx.common.ffm.type.wrapper;
 
-import cool.scx.common.ffm.type.Parameter;
+import cool.scx.common.ffm.type.paramter.Parameter;
 import cool.scx.common.ffm.type.mapper.Mapper;
 
 import java.lang.foreign.Arena;

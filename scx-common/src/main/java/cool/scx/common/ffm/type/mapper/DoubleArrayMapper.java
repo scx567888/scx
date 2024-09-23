@@ -27,8 +27,9 @@ public class DoubleArrayMapper implements Mapper {
     }
 
     @Override
-    public void fromMemorySegment(MemorySegment memorySegment) {
+    public Object fromMemorySegment(MemorySegment memorySegment) {
         value = memorySegment.toArray(JAVA_DOUBLE);
+        return value;
     }
 
 }
