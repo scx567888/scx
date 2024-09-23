@@ -9,6 +9,7 @@ import io.helidon.websocket.WsSession;
 import io.helidon.websocket.WsUpgradeException;
 
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -23,6 +24,9 @@ class HelidonWebSocket implements ScxWebSocket, WsListener {
     private Consumer<byte[]> pongHandler;
     private BiConsumer<Integer, String> closeHandler;
     private Consumer<Throwable> errorHandler;
+
+    //todo 这种方式不准确
+    private final AtomicBoolean closed = new AtomicBoolean(false);
 
 
     @Override
@@ -118,8 +122,7 @@ class HelidonWebSocket implements ScxWebSocket, WsListener {
 
     @Override
     public boolean isClosed() {
-        //todo 
-        return false;
+        return closed.get();
     }
 
     @Override
@@ -152,6 +155,7 @@ class HelidonWebSocket implements ScxWebSocket, WsListener {
 
     @Override
     public void onClose(WsSession session, int status, String reason) {
+        this.closed.set(true);
         if (closeHandler != null) {
             closeHandler.accept(status, reason);
         }
@@ -159,6 +163,7 @@ class HelidonWebSocket implements ScxWebSocket, WsListener {
 
     @Override
     public void onError(WsSession session, Throwable t) {
+        this.closed.set(true);
         if (errorHandler != null) {
             errorHandler.accept(t);
         }

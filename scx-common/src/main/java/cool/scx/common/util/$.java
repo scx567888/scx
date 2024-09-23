@@ -39,6 +39,19 @@ public final class $ {
         }));
     }
 
+    public static Timeout setInterval(Runnable task, long delay) {
+        return new Timeout(Thread.ofVirtual().start(() -> {
+            while (true) {
+                try {
+                    Thread.sleep(delay);
+                    Thread.ofVirtual().start(task);
+                } catch (InterruptedException ignored) {
+                    break;
+                }
+            }
+        }));
+    }
+
     public static CompletableFuture<Void> async(ScxRunnable<?> runnable) {
         var promise = new CompletableFuture<Void>();
         Thread.ofVirtual().start(() -> {
