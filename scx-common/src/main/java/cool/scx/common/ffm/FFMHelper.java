@@ -90,6 +90,10 @@ public final class FFMHelper {
         if (type.isArray() && type.getComponentType().isPrimitive()) {
             return ADDRESS;
         }
+        //8, Parameter 类型 这里一定要放在最后 因为其子类 Wrapper 需要单独处理
+        if (Parameter.class.isAssignableFrom(type)) {
+            return ADDRESS;
+        }
         throw new IllegalArgumentException("不支持的参数类型 !!! " + type);
     }
 

@@ -1,45 +1,65 @@
 package cool.scx.common.ffm;
 
 import java.lang.foreign.Arena;
+import java.lang.foreign.FunctionDescriptor;
 import java.lang.foreign.SymbolLookup;
 import java.lang.invoke.MethodHandle;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
-import static cool.scx.common.ffm.FFMHelper.convertToParameters;
-import static cool.scx.common.ffm.FFMHelper.findMethodHandle;
+import static cool.scx.common.ffm.FFMHelper.*;
 import static java.lang.foreign.Arena.global;
 import static java.lang.foreign.Linker.nativeLinker;
 import static java.lang.foreign.SymbolLookup.libraryLookup;
 
 public final class FFMProxy implements InvocationHandler {
 
-    private final Map<Method, MethodHandle> cache;
-    private final Class<?> clazz;
     private final SymbolLookup lookup;
+    private final Map<Method, MethodHandle> cache;
 
-    private FFMProxy(String name, Class<?> clazz) {
-        this.lookup = name != null ? libraryLookup(name, global()) : nativeLinker().defaultLookup();
-        this.clazz = clazz;
+    private FFMProxy() {
+        this.lookup = nativeLinker().defaultLookup();
+        this.cache = new HashMap<>();
+    }
+
+    private FFMProxy(String name) {
+        this.lookup = libraryLookup(name, global());
+        this.cache = new HashMap<>();
+    }
+
+    private FFMProxy(Path path) {
+        this.lookup = libraryLookup(path, global());
         this.cache = new HashMap<>();
     }
 
     @SuppressWarnings("unchecked")
+    public static <T> T ffmProxy(Class<T> clazz) {
+        return (T) Proxy.newProxyInstance(clazz.getClassLoader(), new Class[]{clazz}, new FFMProxy());
+    }
+
+    @SuppressWarnings("unchecked")
     public static <T> T ffmProxy(String name, Class<T> clazz) {
-        return (T) Proxy.newProxyInstance(clazz.getClassLoader(), new Class[]{clazz}, new FFMProxy(name, clazz));
+        return (T) Proxy.newProxyInstance(clazz.getClassLoader(), new Class[]{clazz}, new FFMProxy(name));
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T ffmProxy(Path path, Class<T> clazz) {
+        return (T) Proxy.newProxyInstance(clazz.getClassLoader(), new Class[]{clazz}, new FFMProxy(path));
     }
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+
         // Object 的方法这里直接跳过, 我们只处理接口上的方法
         if (method.getDeclaringClass() == Object.class) {
             return method.invoke(this, args);
         }
 
-        var methodHandle = this.cache.computeIfAbsent(method, (m) -> findMethodHandle(this.lookup, m));
+        var methodHandle = this.cache.computeIfAbsent(method, this::findMethodHandle);
 
         try (var arena = Arena.ofConfined()) {
 
@@ -57,9 +77,7 @@ public final class FFMProxy implements InvocationHandler {
 
             //4, 针对 ref 进行特殊处理
             for (var parameter : parameters) {
-                if (parameter instanceof Ref ref) {
-                    ref.readFromMemorySegment();
-                }
+                parameter.beforeCloseArena();
             }
 
             //5, 返回结果
@@ -67,6 +85,17 @@ public final class FFMProxy implements InvocationHandler {
 
         }
 
+    }
+
+    private MethodHandle findMethodHandle(Method method) {
+        //1, 根据方法名查找对应的方法
+        var fun = lookup.find(method.getName()).orElseThrow();
+        //2, 创建方法的描述, 包括 返回值类型 参数类型列表
+        var returnLayout = getMemoryLayout(method.getReturnType());
+        var paramLayouts = getMemoryLayouts(method.getParameterTypes());
+        var functionDescriptor = FunctionDescriptor.of(returnLayout, paramLayouts);
+        //3, 根据方法和描述, 获取可以调用本机方法的方法句柄
+        return nativeLinker().downcallHandle(fun, functionDescriptor);
     }
 
 }
