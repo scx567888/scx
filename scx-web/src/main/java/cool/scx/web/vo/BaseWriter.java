@@ -1,7 +1,8 @@
 package cool.scx.web.vo;
 
-import cool.scx.common.standard.MediaType;
+import cool.scx.http.MediaType;
 import cool.scx.http.ScxHttpServerResponse;
+import cool.scx.http.content_type.ContentType;
 import cool.scx.http.exception.NotFoundException;
 import cool.scx.http.routing.RoutingContext;
 
@@ -11,7 +12,8 @@ import java.nio.file.Path;
 
 import static cool.scx.http.HttpFieldName.CONTENT_DISPOSITION;
 import static cool.scx.http.HttpFieldName.CONTENT_LENGTH;
-import static cool.scx.web.ScxWebHelper.fillContentType;
+import static cool.scx.http.MediaType.APPLICATION_OCTET_STREAM;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * 基本写入程序 可以直接向相应体中写入数据
@@ -121,6 +123,18 @@ class BaseWriter implements BaseVo {
     private void writeFile(RoutingContext context) throws NotFoundException {
         //todo 此处需要处理 206 之类的请求
 //        SEND_FILE_HELPER.sendStatic(context, context.vertx().fileSystem(), this.path.toString(), false);
+    }
+
+    public static ScxHttpServerResponse fillContentType(ScxHttpServerResponse response, MediaType contentType) {
+        if (contentType != null) {
+            if (contentType.type().equals("text")) {
+                return response.contentType(ContentType.of(contentType).charset(UTF_8));
+            } else {
+                return response.contentType(ContentType.of(contentType));
+            }
+        } else {
+            return response.contentType(ContentType.of(APPLICATION_OCTET_STREAM));
+        }
     }
 
     enum Type {

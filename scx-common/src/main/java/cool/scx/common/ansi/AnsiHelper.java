@@ -4,7 +4,7 @@ import cool.scx.common.ffm.type.mapper.IntMapper;
 import cool.scx.common.util.OSHelper;
 
 import static cool.scx.common.ffm.platform.win32.Kernel32.KERNEL32;
-import static cool.scx.common.standard.OSType.WINDOWS;
+import static cool.scx.common.util.OSHelper.OSType.WINDOWS;
 
 class AnsiHelper {
 

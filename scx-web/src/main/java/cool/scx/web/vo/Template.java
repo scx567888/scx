@@ -1,5 +1,6 @@
 package cool.scx.web.vo;
 
+import cool.scx.http.content_type.ContentType;
 import cool.scx.http.routing.RoutingContext;
 import cool.scx.web.template.ScxTemplateHandler;
 import freemarker.template.TemplateException;
@@ -9,7 +10,8 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-import static cool.scx.web.ScxWebHelper.fillHtmlContentType;
+import static cool.scx.http.MediaType.TEXT_HTML;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * 模板
@@ -37,11 +39,12 @@ public final class Template {
         if (templateHandler == null) {
             throw new NullPointerException("handler 不能为空 !!!");
         }
-        var response = fillHtmlContentType(context.request().response());
         var sw = new StringWriter();
         var template = templateHandler.getTemplate(templatePath);
         template.process(dataMap, sw);
-        response.send(sw.toString());
+        context.response()
+                .contentType(ContentType.of(TEXT_HTML).charset(UTF_8))
+                .send(sw.toString());
     }
 
 }

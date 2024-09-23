@@ -1,8 +1,11 @@
 package cool.scx.http;
 
+import cool.scx.http.content_type.ContentType;
 import cool.scx.http.cookie.Cookie;
 
 import java.io.OutputStream;
+
+import static cool.scx.http.HttpFieldName.CONTENT_TYPE;
 
 /**
  * ScxHttpServerResponse
@@ -43,6 +46,14 @@ public interface ScxHttpServerResponse {
 
     default ScxHttpServerResponse status(int code) {
         return status(HttpStatusCode.of(code));
+    }
+
+    default ScxHttpServerResponse contentType(ContentType contentType) {
+        return setHeader(CONTENT_TYPE, contentType.toString());
+    }
+
+    default ScxHttpServerResponse contentType(MediaType mediaType) {
+        return contentType(ContentType.of(mediaType));
     }
 
 }

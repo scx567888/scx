@@ -19,7 +19,6 @@ import java.util.function.Consumer;
 
 import static cool.scx.common.util.AnnotationUtils.getAnnotationValue;
 import static cool.scx.web.RouteRegistrar.findScxRouteOrThrow;
-import static cool.scx.web.ScxWebHelper.responseCanUse;
 
 /**
  * <p>ScxRouteHandler class.</p>
@@ -91,7 +90,7 @@ public final class ScxRouteHandler implements Route, Consumer<RoutingContext> {
             //4, 执行后置处理器
             var finalResult = this.scxWeb.interceptor().postHandle(context, this, tempResult);
             //5, 如果方法返回值不为 void 并且 response 可用 , 则调用返回值处理器
-            if (!isVoid && responseCanUse(context)) {
+            if (!isVoid && !context.response().isClosed()) {
                 this.scxWeb.findReturnValueHandler(finalResult).handle(finalResult, context);
             }
         } catch (Throwable e) {

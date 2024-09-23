@@ -1,38 +1,34 @@
 package cool.scx.http.content_type;
 
 import cool.scx.http.Parameters;
-import cool.scx.http.ParametersWritable;
 import cool.scx.http.ScxMediaType;
 
 import java.nio.charset.Charset;
 
+import static cool.scx.http.content_type.ContentTypeHelper.decodedContentType;
+
 public interface ContentType {
 
+    static ContentTypeWritable of() {
+        return new ContentTypeImpl();
+    }
+
     static ContentTypeWritable of(String contentTypeStr) {
-        if (contentTypeStr == null) {
-            return null;
-        }
-        var split = contentTypeStr.split(";");
-        if (split.length == 0) {
-            return null;
-        }
-        var mediaType = ScxMediaType.of(split[0]);
-        ParametersWritable<String, String> params = Parameters.of();
-        for (var i = 1; i < split.length; i = i + 1) {
-            var s = split[i].split("=");
-            if (s.length == 2) {
-                params.add(s[0], s[1]);
-            }
-        }
-        return new ContentTypeImpl().mediaType(mediaType).params(params);
+        return decodedContentType(contentTypeStr);
+    }
+
+    static ContentTypeWritable of(ScxMediaType mediaType) {
+        return new ContentTypeImpl().mediaType(mediaType);
     }
 
     ScxMediaType mediaType();
 
     Parameters<String, String> params();
 
-    default Charset charSet() {
+    default Charset charset() {
         return Charset.forName(params().get("charset"));
     }
+
+    String toString();
 
 }

@@ -1,6 +1,5 @@
 package cool.scx.core.test.website;
 
-import cool.scx.common.standard.FileFormat;
 import cool.scx.common.util.HashUtils;
 import cool.scx.common.util.RandomUtils;
 import cool.scx.common.util.ScxExceptionHelper;
@@ -9,6 +8,7 @@ import cool.scx.core.ScxContext;
 import cool.scx.core.test.car.CarService;
 import cool.scx.core.test.person.Person;
 import cool.scx.core.test.person.PersonService;
+import cool.scx.http.FileFormat;
 import cool.scx.http.HttpHelper;
 import cool.scx.http.HttpMethod;
 import cool.scx.http.routing.RoutingContext;

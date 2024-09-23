@@ -54,4 +54,14 @@ public class HttpHelper {
         return "attachment; filename*=utf-8''" + encode(downloadName, UTF_8).replace("+", "%20");
     }
 
+    public static MediaType getMediaTypeFromExtension(String ext) {
+        var fileFormat = FileFormat.ofExtension(ext);
+        return fileFormat != null ? fileFormat.mediaType() : null;
+    }
+
+    public static MediaType getMediaTypeFromFileName(String filename) {
+        var fileFormat = FileFormat.ofFileName(filename);
+        return fileFormat != null ? fileFormat.mediaType() : null;
+    }
+
 }
