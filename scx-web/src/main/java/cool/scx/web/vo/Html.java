@@ -1,11 +1,13 @@
 package cool.scx.web.vo;
 
+import cool.scx.http.content_type.ContentType;
 import cool.scx.http.routing.RoutingContext;
 
 import java.io.IOException;
 import java.nio.file.Path;
 
-import static cool.scx.web.ScxWebHelper.fillHtmlContentType;
+import static cool.scx.http.MediaType.TEXT_HTML;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * html 渲染类
@@ -43,11 +45,15 @@ public final class Html implements BaseVo {
     }
 
     public void sendHtmlStr(RoutingContext context) {
-        fillHtmlContentType(context.request().response()).send(htmlStr);
+        context.response()
+                .contentType(ContentType.of(TEXT_HTML).charset(UTF_8))
+                .send(htmlStr);
     }
 
     public void sendHtmlPath(RoutingContext context) {
-        fillHtmlContentType(context.request().response()).send(htmlPath);
+        context.response()
+                .contentType(ContentType.of(TEXT_HTML).charset(UTF_8))
+                .send(htmlPath);
     }
 
 }

@@ -1,8 +1,10 @@
 package cool.scx.web.return_value_handler;
 
+import cool.scx.http.content_type.ContentType;
 import cool.scx.http.routing.RoutingContext;
 
-import static cool.scx.web.ScxWebHelper.fillTextPlainContentType;
+import static cool.scx.http.MediaType.TEXT_PLAIN;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * String 类型处理器
@@ -20,7 +22,9 @@ public final class StringReturnValueHandler implements ReturnValueHandler {
     @Override
     public void handle(Object returnValue, RoutingContext routingContext) {
         if (returnValue instanceof String str) {
-            fillTextPlainContentType(routingContext.request().response()).send(str);
+            routingContext.response()
+                    .contentType(ContentType.of(TEXT_PLAIN).charset(UTF_8))
+                    .send(str);
         } else {
             throw new IllegalArgumentException("参数不是 String 类型 !!! " + returnValue.getClass());
         }

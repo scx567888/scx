@@ -1,9 +1,11 @@
 package cool.scx.web.vo;
 
+import cool.scx.http.content_type.ContentType;
 import cool.scx.http.routing.RoutingContext;
 
 import static cool.scx.common.util.ObjectUtils.toXml;
-import static cool.scx.web.ScxWebHelper.fillXmlContentType;
+import static cool.scx.http.MediaType.APPLICATION_XML;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Xml 格式的返回值
@@ -25,7 +27,9 @@ public final class Xml implements BaseVo {
 
     @Override
     public void accept(RoutingContext context) {
-        fillXmlContentType(context.request().response()).send(toXml(data, ""));
+        context.response()
+                .contentType(ContentType.of(APPLICATION_XML).charset(UTF_8))
+                .send(toXml(data, ""));
     }
 
 }

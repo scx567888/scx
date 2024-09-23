@@ -1,15 +1,16 @@
 package cool.scx.web.return_value_handler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import cool.scx.http.content_type.ContentType;
 import cool.scx.http.routing.RoutingContext;
 
 import static cool.scx.common.util.ObjectUtils.toJson;
 import static cool.scx.common.util.ObjectUtils.toXml;
 import static cool.scx.common.util.StringUtils.startsWithIgnoreCase;
 import static cool.scx.http.HttpFieldName.ACCEPT;
+import static cool.scx.http.MediaType.APPLICATION_JSON;
 import static cool.scx.http.MediaType.APPLICATION_XML;
-import static cool.scx.web.ScxWebHelper.fillJsonContentType;
-import static cool.scx.web.ScxWebHelper.fillXmlContentType;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * 最后的 返回值处理器
@@ -29,9 +30,13 @@ public final class LastReturnValueHandler implements ReturnValueHandler {
         var accept = routingContext.request().getHeader(ACCEPT);
         if (accept != null && startsWithIgnoreCase(accept, APPLICATION_XML.value())) {
             // 只有明确指定 接受参数是 application/xml 的才返回 xml
-            fillXmlContentType(routingContext.request().response()).send(toXml(returnValue));
+            routingContext.response()
+                    .contentType(ContentType.of(APPLICATION_XML).charset(UTF_8))
+                    .send(toXml(returnValue));
         } else { // 其余全部返回 json
-            fillJsonContentType(routingContext.request().response()).send(toJson(returnValue));
+            routingContext.request().response()
+                    .contentType(ContentType.of(APPLICATION_JSON).charset(UTF_8))
+                    .send(toJson(returnValue));
         }
     }
 
