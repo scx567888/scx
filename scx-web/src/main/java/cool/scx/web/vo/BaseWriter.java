@@ -1,6 +1,6 @@
 package cool.scx.web.vo;
 
-import cool.scx.common.standard.MediaType;
+import cool.scx.http.MediaType;
 import cool.scx.http.ScxHttpServerResponse;
 import cool.scx.http.exception.NotFoundException;
 import cool.scx.http.routing.RoutingContext;

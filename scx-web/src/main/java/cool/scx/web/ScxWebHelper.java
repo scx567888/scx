@@ -1,11 +1,11 @@
 package cool.scx.web;
 
-import cool.scx.common.standard.MediaType;
+import cool.scx.http.MediaType;
 import cool.scx.http.ScxHttpServerResponse;
+import cool.scx.http.content_type.ContentType;
 import cool.scx.http.routing.RoutingContext;
 
-import static cool.scx.common.standard.MediaType.*;
-import static cool.scx.http.HttpFieldName.CONTENT_TYPE;
+import static cool.scx.http.MediaType.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class ScxWebHelper {
@@ -18,29 +18,29 @@ public class ScxWebHelper {
     public static ScxHttpServerResponse fillContentType(ScxHttpServerResponse response, MediaType contentType) {
         if (contentType != null) {
             if (contentType.type().equals("text")) {
-                return response.setHeader(CONTENT_TYPE, contentType.toString(UTF_8));
+                return response.contentType(ContentType.of(contentType).charset(UTF_8));
             } else {
-                return response.setHeader(CONTENT_TYPE, contentType.toString());
+                return response.contentType(ContentType.of(contentType));
             }
         } else {
-            return response.setHeader(CONTENT_TYPE, APPLICATION_OCTET_STREAM.toString());
+            return response.contentType(ContentType.of(APPLICATION_OCTET_STREAM));
         }
     }
 
     public static ScxHttpServerResponse fillJsonContentType(ScxHttpServerResponse response) {
-        return response.setHeader(CONTENT_TYPE, APPLICATION_JSON.toString(UTF_8));
+        return response.contentType(ContentType.of(APPLICATION_JSON).charset(UTF_8));
     }
 
     public static ScxHttpServerResponse fillXmlContentType(ScxHttpServerResponse response) {
-        return response.setHeader(CONTENT_TYPE, APPLICATION_XML.toString(UTF_8));
+        return response.contentType( ContentType.of(APPLICATION_XML).charset(UTF_8));
     }
 
     public static ScxHttpServerResponse fillHtmlContentType(ScxHttpServerResponse response) {
-        return response.setHeader(CONTENT_TYPE, TEXT_HTML.toString(UTF_8));
+        return response.contentType(ContentType.of(TEXT_HTML).charset(UTF_8) );
     }
 
     public static ScxHttpServerResponse fillTextPlainContentType(ScxHttpServerResponse response) {
-        return response.setHeader(CONTENT_TYPE, TEXT_PLAIN.toString(UTF_8));
+        return response.contentType(ContentType.of(TEXT_PLAIN).charset(UTF_8));
     }
 
 }

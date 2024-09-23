@@ -1,7 +1,7 @@
 package cool.scx.web.vo;
 
-import cool.scx.common.standard.FileFormat;
-import cool.scx.common.standard.MediaType;
+import cool.scx.http.FileFormat;
+import cool.scx.http.MediaType;
 import cool.scx.http.exception.BadRequestException;
 import cool.scx.http.exception.NotFoundException;
 import cool.scx.http.exception.ScxHttpException;
@@ -20,6 +20,7 @@ import java.nio.file.Path;
 import java.util.Objects;
 
 import static cool.scx.http.HttpFieldName.*;
+import static cool.scx.http.MediaType.IMAGE_PNG;
 
 /**
  * <p>Image class.</p>
@@ -87,7 +88,7 @@ public abstract class Image implements BaseVo {
         /**
          * 就不是普通的图片 我们就返回他在操作系统中的展示图标即可
          *
-         * @return a {@link io.vertx.core.buffer.Buffer} object
+         * @return a 
          * @throws ScxHttpException if any.
          */
         private byte[] getBuffer(Path file) {
@@ -106,7 +107,7 @@ public abstract class Image implements BaseVo {
 
         @Override
         public void imageHandler(RoutingContext context) {
-            context.response().setHeader(CONTENT_TYPE, MediaType.IMAGE_PNG.toString()).send(buffer);
+            context.response().contentType(IMAGE_PNG).send(buffer);
         }
 
     }
@@ -147,7 +148,7 @@ public abstract class Image implements BaseVo {
         /**
          * 裁剪后的图片
          *
-         * @return a {@link io.vertx.core.buffer.Buffer} object
+         * @return a 
          * @throws ScxHttpException if any.
          */
         private byte[] getBuffer(Path path, Integer width, Integer height, Position position) {
