@@ -1,6 +1,6 @@
 package cool.scx.common.ffm.platform.win32;
 
-import cool.scx.common.ffm.IntRef;
+import cool.scx.common.ffm.type.mapper.IntMapper;
 
 import java.lang.foreign.MemorySegment;
 
@@ -14,7 +14,7 @@ public interface Kernel32 {
     MemorySegment GetStdHandle(int nStdHandle);
 
     // https://learn.microsoft.com/zh-cn/windows/console/getconsolemode
-    boolean GetConsoleMode(MemorySegment hConsoleHandle, IntRef lpMode);
+    boolean GetConsoleMode(MemorySegment hConsoleHandle, IntMapper lpMode);
 
     // https://learn.microsoft.com/zh-cn/windows/console/setconsolemode
     boolean SetConsoleMode(MemorySegment hConsoleHandle, long dwMode);
