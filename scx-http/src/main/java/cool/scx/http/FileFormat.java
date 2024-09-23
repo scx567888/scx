@@ -1,9 +1,9 @@
-package cool.scx.common.standard;
+package cool.scx.http;
 
 import java.util.Map;
 import java.util.TreeMap;
 
-import static cool.scx.common.standard.MediaType.*;
+import static cool.scx.http.MediaType.*;
 import static java.lang.String.CASE_INSENSITIVE_ORDER;
 
 /**
