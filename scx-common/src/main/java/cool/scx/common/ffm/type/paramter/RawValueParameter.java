@@ -1,15 +1,15 @@
-package cool.scx.common.ffm;
+package cool.scx.common.ffm.type.paramter;
 
 import java.lang.foreign.Arena;
 
 /**
- * 原始值 REF 
+ * 原始值 
  */
-public class RawParameter implements Parameter{
+public class RawValueParameter implements Parameter {
 
     private final Object value;
 
-    public RawParameter(Object value) {
+    public RawValueParameter(Object value) {
         this.value=value;
     }
 

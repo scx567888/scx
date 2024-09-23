@@ -1,5 +1,6 @@
-package cool.scx.common.ffm;
+package cool.scx.common.ffm.type.paramter;
 
+import cool.scx.common.ffm.type.callback.Callback;
 import cool.scx.common.reflect.ReflectFactory;
 
 import java.lang.foreign.Arena;

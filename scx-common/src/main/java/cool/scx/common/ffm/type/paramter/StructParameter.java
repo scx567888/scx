@@ -1,5 +1,6 @@
-package cool.scx.common.ffm;
+package cool.scx.common.ffm.type.paramter;
 
+import cool.scx.common.ffm.type.struct.Struct;
 import cool.scx.common.reflect.AccessModifier;
 import cool.scx.common.reflect.FieldInfo;
 import cool.scx.common.reflect.ReflectFactory;
@@ -17,16 +18,16 @@ import java.util.Map;
 import static cool.scx.common.ffm.FFMHelper.getMemoryLayout;
 
 /**
- * 只支持单层的 结构
+ * todo 目前 只支持单层的 结构 需要支持多层
  */
-public class StructRef implements Ref {
+public class StructParameter implements Parameter {
 
     private final Object value;
     private final Map<FieldInfo, VarHandle> fieldMap;
     private final StructLayout LAYOUT;
     private MemorySegment memorySegment;
 
-    public StructRef(Struct value) {
+    public StructParameter(Struct value) {
         this.value = value;
         var classInfo = ReflectFactory.getClassInfo(this.value.getClass());
         this.fieldMap = new HashMap<>();
@@ -52,12 +53,12 @@ public class StructRef implements Ref {
     }
 
     @Override
-    public MemorySegment toMemorySegment(Arena arena) {
+    public Object toNativeParameter(Arena arena) {
         return this.memorySegment = arena.allocate(LAYOUT);
     }
 
     @Override
-    public void readFromMemorySegment() {
+    public void beforeCloseArena() {
         for (var e : fieldMap.entrySet()) {
             var k = e.getKey();
             var v = e.getValue();
