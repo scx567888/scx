@@ -1,0 +1,34 @@
+package cool.scx.common.ffm.type.mapper;
+
+import java.lang.foreign.Arena;
+import java.lang.foreign.MemorySegment;
+
+import static java.lang.foreign.ValueLayout.JAVA_BYTE;
+
+public class ByteArrayMapper implements Mapper {
+
+    private byte[] value;
+
+    public ByteArrayMapper(byte[] value) {
+        this.value = value;
+    }
+
+    public byte[] getValue() {
+        return value;
+    }
+
+    public void setValue(byte[] value) {
+        this.value = value;
+    }
+
+    @Override
+    public MemorySegment toMemorySegment(Arena arena) {
+        return arena.allocateFrom(JAVA_BYTE, value);
+    }
+
+    @Override
+    public void fromMemorySegment(MemorySegment memorySegment) {
+        value = memorySegment.toArray(JAVA_BYTE);
+    }
+
+}
