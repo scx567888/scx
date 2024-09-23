@@ -1,59 +1,101 @@
 package cool.scx.common.ffm;
 
-import java.lang.foreign.*;
-import java.lang.invoke.MethodHandle;
-import java.lang.reflect.Method;
+import cool.scx.common.ffm.type.*;
+import cool.scx.common.ffm.type.wrapper.*;
 
-import static java.lang.foreign.Linker.nativeLinker;
+import java.lang.foreign.MemoryLayout;
+import java.lang.foreign.MemorySegment;
+
 import static java.lang.foreign.ValueLayout.*;
 
 public final class FFMHelper {
 
-    public static MethodHandle findMethodHandle(SymbolLookup lookup, Method method) {
-        //1, 根据方法名查找对应的方法
-        var fun = lookup.find(method.getName()).orElseThrow();
-        //2, 创建方法的描述 , 包括 返回值类型 参数类型列表
-        var returnLayout = getMemoryLayout(method.getReturnType());
-        var paramLayouts = getMemoryLayouts(method.getParameterTypes());
-        var functionDescriptor = FunctionDescriptor.of(returnLayout, paramLayouts);
-        //3, 根据方法和描述 获取方法句柄
-        return nativeLinker().downcallHandle(fun, functionDescriptor);
-    }
-
     public static MemoryLayout getMemoryLayout(Class<?> type) {
+        //1, 先处理可以直接映射的基本类型
         if (type == Byte.class || type == byte.class) {
             return JAVA_BYTE;
-        } else if (type == Boolean.class || type == boolean.class) {
+        }
+        if (type == Boolean.class || type == boolean.class) {
             return JAVA_BOOLEAN;
-        } else if (type == Character.class || type == char.class) {
+        }
+        if (type == Character.class || type == char.class) {
             return JAVA_CHAR;
-        } else if (type == Short.class || type == short.class) {
+        }
+        if (type == Short.class || type == short.class) {
             return JAVA_SHORT;
-        } else if (type == Integer.class || type == int.class) {
+        }
+        if (type == Integer.class || type == int.class) {
             return JAVA_INT;
-        } else if (type == Long.class || type == long.class) {
+        }
+        if (type == Long.class || type == long.class) {
             return JAVA_LONG;
-        } else if (type == Float.class || type == float.class) {
+        }
+        if (type == Float.class || type == float.class) {
             return JAVA_FLOAT;
-        } else if (type == Double.class || type == double.class) {
+        }
+        if (type == Double.class || type == double.class) {
             return JAVA_DOUBLE;
-        } else if (type == String.class ||
-                   type == MemorySegment.class ||
-                   type.isArray() ||
-                   Ref.class.isAssignableFrom(type) ||
-                   Callback.class.isAssignableFrom(type) ||
-                   Struct.class.isAssignableFrom(type)) {
+        }
+        if (type == MemorySegment.class) {
+            return ADDRESS;
+        }
+        //2, 处理基本类型的简单包装类型
+        if (ByteWrapper.class.isAssignableFrom(type)) {
+            return JAVA_BYTE;
+        }
+        if (BooleanWrapper.class.isAssignableFrom(type)) {
+            return JAVA_BOOLEAN;
+        }
+        if (CharWrapper.class.isAssignableFrom(type)) {
+            return JAVA_CHAR;
+        }
+        if (ShortWrapper.class.isAssignableFrom(type)) {
+            return JAVA_SHORT;
+        }
+        if (IntWrapper.class.isAssignableFrom(type)) {
+            return JAVA_INT;
+        }
+        if (LongWrapper.class.isAssignableFrom(type)) {
+            return JAVA_LONG;
+        }
+        if (FloatWrapper.class.isAssignableFrom(type)) {
+            return JAVA_FLOAT;
+        }
+        if (DoubleWrapper.class.isAssignableFrom(type)) {
+            return JAVA_DOUBLE;
+        }
+        if (AddressWrapper.class.isAssignableFrom(type)) {
+            return ADDRESS;
+        }
+        //3, 处理字符串
+        if (String.class == type) {
+            return ADDRESS;
+        }
+        //4, 处理引用类型
+        if (Ref.class.isAssignableFrom(type)) {
+            return ADDRESS;
+        }
+        //5, 处理 结构体类型 这里我们使用 ADDRESS 而不使用 MemoryLayout.structLayout(), 因为需要在运行时才知道具体结构
+        if (Struct.class.isAssignableFrom(type)) {
+            return ADDRESS;
+        }
+        //6, 处理 Callback 类型
+        if (Callback.class.isAssignableFrom(type)) {
+            return ADDRESS;
+        }
+        //7, 处理基本类型的数组类型 这里我们使用 ADDRESS 而不使用 MemoryLayout.sequenceLayout() , 因为我们不知道数组长度
+        if (type.isArray() && type.getComponentType().isPrimitive()) {
             return ADDRESS;
         }
         throw new IllegalArgumentException("不支持的参数类型 !!! " + type);
     }
 
     public static MemoryLayout[] getMemoryLayouts(Class<?>[] types) {
-        var array = new MemoryLayout[types.length];
+        var memoryLayouts = new MemoryLayout[types.length];
         for (var i = 0; i < types.length; i = i + 1) {
-            array[i] = getMemoryLayout(types[i]);
+            memoryLayouts[i] = getMemoryLayout(types[i]);
         }
-        return array;
+        return memoryLayouts;
     }
 
     public static Parameter convertToParameter(Object o) throws NoSuchMethodException, IllegalAccessException {
