@@ -24,5 +24,5 @@ public class MapperParameter implements Parameter {
     public void beforeCloseArena() {
         mapper.fromMemorySegment(memorySegment);
     }
-    
+
 }
