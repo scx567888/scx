@@ -4,7 +4,7 @@ import cool.scx.common.ffm.FFMProxy;
 
 public interface C {
 
-    C C = FFMProxy.ffmProxy(null, C.class);
+    C C = FFMProxy.ffmProxy(C.class);
 
     long strlen(String str);
 

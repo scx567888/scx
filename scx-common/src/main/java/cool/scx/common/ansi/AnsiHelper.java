@@ -1,6 +1,6 @@
 package cool.scx.common.ansi;
 
-import cool.scx.common.ffm.IntRef;
+import cool.scx.common.ffm.type.mapper.IntMapper;
 import cool.scx.common.util.OSHelper;
 
 import static cool.scx.common.ffm.platform.win32.Kernel32.KERNEL32;
@@ -23,7 +23,7 @@ class AnsiHelper {
         var hOut = KERNEL32.GetStdHandle(-11);
 
         // See https://learn.microsoft.com/zh-cn/windows/console/getconsolemode
-        var lpModeMemorySegment = new IntRef(0);
+        var lpModeMemorySegment = new IntMapper(0);
         KERNEL32.GetConsoleMode(hOut, lpModeMemorySegment);
 
         // See https://learn.microsoft.com/zh-cn/windows/console/setconsolemode
