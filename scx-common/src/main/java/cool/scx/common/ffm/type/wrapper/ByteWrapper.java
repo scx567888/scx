@@ -1,5 +1,5 @@
 package cool.scx.common.ffm.type.wrapper;
 
-public interface ByteWrapper {
-    
+public interface ByteWrapper extends Wrapper<Byte> {
+
 }

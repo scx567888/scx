@@ -1,5 +1,7 @@
 package cool.scx.common.ffm.type.wrapper;
 
-public interface AddressWrapper {
-    
+import java.lang.foreign.MemorySegment;
+
+public interface AddressWrapper extends Wrapper<MemorySegment> {
+
 }

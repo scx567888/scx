@@ -1,4 +1,5 @@
 package cool.scx.common.ffm.type.wrapper;
 
-public interface BooleanWrapper {
+public interface BooleanWrapper extends Wrapper<Boolean> {
+
 }

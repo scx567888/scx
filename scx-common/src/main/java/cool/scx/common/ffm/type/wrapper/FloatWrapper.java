@@ -1,5 +1,5 @@
 package cool.scx.common.ffm.type.wrapper;
 
-public interface FloatWrapper {
-    
+public interface FloatWrapper extends Wrapper<Float> {
+
 }
