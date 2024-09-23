@@ -52,4 +52,8 @@ public interface ScxHttpServerResponse {
         return setHeader(CONTENT_TYPE, contentType.toString());
     }
 
+    default ScxHttpServerResponse contentType(MediaType mediaType) {
+        return contentType(ContentType.of(mediaType));
+    }
+
 }

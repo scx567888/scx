@@ -8,7 +8,7 @@ import java.util.ArrayList;
 /**
  * URIHelper
  */
-public class URIHelper {
+public class ScxURIHelper {
 
     public static ParametersWritable<String, String> decodeQuery(String value) {
         ParametersWritable<String, String> query = Parameters.of();

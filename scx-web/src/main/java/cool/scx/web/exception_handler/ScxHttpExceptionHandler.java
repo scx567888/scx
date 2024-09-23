@@ -9,9 +9,9 @@ import cool.scx.http.routing.RoutingContext;
 import java.lang.System.Logger;
 import java.util.LinkedHashMap;
 
-import static cool.scx.common.standard.MediaType.TEXT_HTML;
 import static cool.scx.common.util.StringUtils.startsWithIgnoreCase;
 import static cool.scx.http.HttpFieldName.ACCEPT;
+import static cool.scx.http.MediaType.TEXT_HTML;
 import static cool.scx.web.ScxWebHelper.*;
 import static java.lang.System.Logger.Level.ERROR;
 
@@ -56,7 +56,7 @@ public class ScxHttpExceptionHandler implements ExceptionHandler {
         }
         var accept = routingContext.request().getHeader(ACCEPT);
         //根据 accept 返回不同的错误信息
-        if (accept != null && startsWithIgnoreCase(accept, TEXT_HTML.toString())) {
+        if (accept != null && startsWithIgnoreCase(accept, TEXT_HTML.value())) {
             var htmlStr = String.format(htmlTemplate, statusCode.description(), statusCode, statusCode.description(), info);
             fillHtmlContentType(routingContext.request().response()).status(statusCode).send(htmlStr);
         } else {

@@ -43,4 +43,6 @@ public interface ScxURI {
         return query().get(name);
     }
 
+    String toString();
+
 }
