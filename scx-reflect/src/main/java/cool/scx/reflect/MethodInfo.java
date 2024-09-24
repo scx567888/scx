@@ -1,11 +1,11 @@
-package cool.scx.common.reflect;
+package cool.scx.reflect;
 
 import com.fasterxml.jackson.databind.JavaType;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
-import static cool.scx.common.reflect.ReflectFactory.*;
+import static cool.scx.reflect.ReflectFactory.*;
 
 /**
  * MethodInfo

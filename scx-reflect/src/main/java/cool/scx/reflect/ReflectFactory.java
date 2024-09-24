@@ -1,4 +1,4 @@
-package cool.scx.common.reflect;
+package cool.scx.reflect;
 
 import com.fasterxml.jackson.databind.JavaType;
 
@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-import static cool.scx.common.reflect.AccessModifier.*;
+import static cool.scx.reflect.AccessModifier.*;
 import static cool.scx.common.util.ObjectUtils.constructType;
 import static cool.scx.common.util.ObjectUtils.resolveMemberType;
 import static java.util.Collections.addAll;
