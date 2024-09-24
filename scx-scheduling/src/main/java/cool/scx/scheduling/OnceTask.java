@@ -5,16 +5,19 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 
+import static java.lang.System.Logger.Level.ERROR;
 import static java.time.Duration.between;
 import static java.time.Instant.now;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 
 public class OnceTask implements ScheduleTask {
 
+    private static final System.Logger logger = System.getLogger(FixedRateTask.class.getName());
+
     private final AtomicLong runCount;
     private Instant startTime;
-    private Consumer<ScheduleStatus> task;
     private ScheduledExecutorService executor;
+    private Consumer<ScheduleStatus> task;
 
     public OnceTask() {
         this.runCount = new AtomicLong(0);
@@ -52,28 +55,6 @@ public class OnceTask implements ScheduleTask {
         return this;
     }
 
-    private void run() {
-        var l = runCount.incrementAndGet();
-        try {
-            //1, 这里传递给 task 是一个 copy
-            task.accept(new ScheduleStatus() {
-
-                @Override
-                public long runCount() {
-                    return l;
-                }
-
-                @Override
-                public void cancel() {
-                    //因为只执行一次所以没法取消也没必要取消 这里什么都不做
-                }
-
-            });
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
-    }
-
     @Override
     public ScheduleStatus start() {
         var delay = startTime != null ? between(now(), startTime).toNanos() : 0;
@@ -89,6 +70,28 @@ public class OnceTask implements ScheduleTask {
                 scheduledFuture.cancel(false);
             }
         };
+    }
+
+
+    private void run() {
+        var l = runCount.incrementAndGet();
+        try {
+            task.accept(new ScheduleStatus() {
+
+                @Override
+                public long runCount() {
+                    return l;
+                }
+
+                @Override
+                public void cancel() {
+                    //因为只执行一次所以没法取消也没必要取消 这里什么都不做
+                }
+
+            });
+        } catch (Throwable e) {
+            logger.log(ERROR, "调度任务时发生错误 !!!", e);
+        }
     }
 
 }

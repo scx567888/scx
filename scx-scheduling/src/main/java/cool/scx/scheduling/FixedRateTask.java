@@ -7,11 +7,14 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 
+import static java.lang.System.Logger.Level.ERROR;
 import static java.time.Duration.between;
 import static java.time.Instant.now;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 
 public class FixedRateTask implements ScheduleTask {
+
+    private static final System.Logger logger = System.getLogger(FixedRateTask.class.getName());
 
     protected final AtomicLong runCount;
     protected Instant startTime;
@@ -98,7 +101,7 @@ public class FixedRateTask implements ScheduleTask {
     }
 
     protected void run0() {
-        long l = this.runCount.incrementAndGet();
+        var l = runCount.incrementAndGet();
         //判断是否 达到最大次数 停止运行并取消任务
         if (maxRunCount != -1 && l > maxRunCount) {
             //todo 这里 scheduledFuture 可能为空吗 ? 
@@ -108,8 +111,8 @@ public class FixedRateTask implements ScheduleTask {
             return;
         }
         try {
-            // 这里传递给 task 的只是一个 copy
             task.accept(new ScheduleStatus() {
+
                 @Override
                 public long runCount() {
                     return l;
@@ -120,9 +123,10 @@ public class FixedRateTask implements ScheduleTask {
                     // todo 这里也是 可能为空吗?
                     scheduledFuture.cancel(false);
                 }
+
             });
         } catch (Throwable e) {
-            e.printStackTrace();
+            logger.log(ERROR, "调度任务时发生错误 !!!", e);
         }
     }
 

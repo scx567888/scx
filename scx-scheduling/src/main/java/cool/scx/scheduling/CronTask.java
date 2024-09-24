@@ -3,6 +3,7 @@ package cool.scx.scheduling;
 import com.cronutils.model.time.ExecutionTime;
 import com.cronutils.parser.CronParser;
 
+import java.lang.System.Logger;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.concurrent.ScheduledExecutorService;
@@ -12,9 +13,12 @@ import java.util.function.Consumer;
 
 import static com.cronutils.model.CronType.QUARTZ;
 import static com.cronutils.model.definition.CronDefinitionBuilder.instanceDefinitionFor;
+import static java.lang.System.Logger.Level.ERROR;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 public class CronTask implements ScheduleTask {
+
+    private static final Logger logger = System.getLogger(CronTask.class.getName());
 
     //这里默认用 QUARTZ 的格式
     private static final CronParser CRON_PARSER = new CronParser(instanceDefinitionFor(QUARTZ));
@@ -98,6 +102,7 @@ public class CronTask implements ScheduleTask {
         }
         try {
             task.accept(new ScheduleStatus() {
+
                 @Override
                 public long runCount() {
                     return l;
@@ -107,9 +112,10 @@ public class CronTask implements ScheduleTask {
                 public void cancel() {
                     cancel.set(true);
                 }
+
             });
         } catch (Throwable e) {
-            e.printStackTrace();
+            logger.log(ERROR, "调度任务时发生错误 !!!", e);
         }
         //如果不是并发 就需要等待当前任务完成在处理下一次任务
         if (!concurrent) {
