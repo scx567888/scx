@@ -10,16 +10,16 @@ import static java.util.concurrent.TimeUnit.NANOSECONDS;
 
 public class OnceTask implements ScheduleTask {
 
+    private final DefaultScheduleStatus status;
     private Instant startTime;
     private Consumer<ScheduleStatus> task;
     private ScheduledExecutorService executor;
-    private final FixedRateStatus status;
 
     public OnceTask() {
+        this.status = new DefaultScheduleStatus();
         this.startTime = null;
         this.task = null;
         this.executor = null;
-        this.status = new FixedRateStatus();
     }
 
     public OnceTask startTime(Instant startTime) {
@@ -53,14 +53,14 @@ public class OnceTask implements ScheduleTask {
 
     private void run() {
         try {
-            task.accept(this.status);
+            task.accept(this.status.addRunCount());
         } catch (Throwable e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public FixedRateStatus start() {
+    public ScheduleStatus start() {
         var delay = startTime != null ? between(now(), startTime).toNanos() : 0;
         var scheduledFuture = executor.schedule(this::run, delay, NANOSECONDS);
         return this.status.setScheduledFuture(scheduledFuture);
