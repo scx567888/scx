@@ -2,6 +2,9 @@ package cool.scx.scheduling;
 
 import static cool.scx.scheduling.ScxScheduler.getInstance;
 
+/**
+ * 用来创建 调度任务的工具类
+ */
 public interface ScxScheduling {
 
     static FixedRateTask fixedRate() {

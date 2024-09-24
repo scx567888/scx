@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 public interface ScheduleTask {
 
     /**
-     * 是否运行并发执行 
+     * 是否运行并发执行
      * 运行并发执行的时候 当到达规定时间时 无论上一次任务是否结束 都会开启下一次任务
      *
      * @param concurrent 并发执行
