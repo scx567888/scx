@@ -88,7 +88,7 @@ public abstract class Image implements BaseVo {
         /**
          * 就不是普通的图片 我们就返回他在操作系统中的展示图标即可
          *
-         * @return a 
+         * @return a
          * @throws ScxHttpException if any.
          */
         private byte[] getBuffer(Path file) {
@@ -148,7 +148,7 @@ public abstract class Image implements BaseVo {
         /**
          * 裁剪后的图片
          *
-         * @return a 
+         * @return a
          * @throws ScxHttpException if any.
          */
         private byte[] getBuffer(Path path, Integer width, Integer height, Position position) {

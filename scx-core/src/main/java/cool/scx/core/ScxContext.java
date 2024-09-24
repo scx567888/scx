@@ -1,7 +1,6 @@
 package cool.scx.core;
 
 import cool.scx.common.functional.ScxRunnable;
-import cool.scx.common.scheduler.ScxScheduler;
 import cool.scx.common.util.ScopedValue;
 import cool.scx.config.ScxConfig;
 import cool.scx.config.ScxEnvironment;
@@ -11,6 +10,7 @@ import cool.scx.http.ScxHttpServer;
 import cool.scx.http.routing.WebSocketRouter;
 import cool.scx.jdbc.JDBCContext;
 import cool.scx.jdbc.sql.SQLRunner;
+import cool.scx.scheduling.ScxScheduler;
 import cool.scx.web.ScxWeb;
 import org.springframework.beans.factory.BeanFactory;
 

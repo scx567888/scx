@@ -32,6 +32,12 @@
             <version>${project.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>scx-reflect</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <!-- ****************** 以下为测试依赖 ****************** -->
 
         <dependency>

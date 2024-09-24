@@ -3,7 +3,7 @@ package cool.scx.config.source;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import cool.scx.common.ansi.Ansi;
+import cool.scx.ansi.Ansi;
 import cool.scx.common.util.ObjectUtils;
 import cool.scx.config.ScxConfigSource;
 

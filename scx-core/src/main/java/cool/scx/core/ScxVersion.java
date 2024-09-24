@@ -1,6 +1,6 @@
 package cool.scx.core;
 
-import cool.scx.common.ansi.Ansi;
+import cool.scx.ansi.Ansi;
 
 /**
  * <p>ScxVersion class.</p>

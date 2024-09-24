@@ -1,6 +1,6 @@
 package cool.scx.core;
 
-import cool.scx.common.ansi.Ansi;
+import cool.scx.ansi.Ansi;
 import cool.scx.config.ScxConfig;
 import cool.scx.config.ScxEnvironment;
 import cool.scx.config.handler.AppRootHandler;

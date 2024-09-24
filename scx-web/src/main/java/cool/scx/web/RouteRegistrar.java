@@ -1,11 +1,11 @@
 package cool.scx.web;
 
-import cool.scx.common.reflect.MethodInfo;
-import cool.scx.common.reflect.ReflectFactory;
 import cool.scx.common.util.ClassUtils;
 import cool.scx.common.util.MultiMap;
 import cool.scx.http.routing.PathMatcherImpl;
 import cool.scx.http.routing.Router;
+import cool.scx.reflect.MethodInfo;
+import cool.scx.reflect.ReflectFactory;
 import cool.scx.web.annotation.NoScxRoute;
 import cool.scx.web.annotation.ScxRoute;
 import org.springframework.stereotype.Controller;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static cool.scx.common.reflect.AccessModifier.PUBLIC;
+import static cool.scx.reflect.AccessModifier.PUBLIC;
 import static java.lang.System.Logger.Level.WARNING;
 
 /**

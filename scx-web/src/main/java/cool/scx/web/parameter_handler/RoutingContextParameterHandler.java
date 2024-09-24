@@ -1,7 +1,7 @@
 package cool.scx.web.parameter_handler;
 
-import cool.scx.common.reflect.ParameterInfo;
 import cool.scx.http.routing.RoutingContext;
+import cool.scx.reflect.ParameterInfo;
 
 /**
  * 类型为 RoutingContext 的参数处理器

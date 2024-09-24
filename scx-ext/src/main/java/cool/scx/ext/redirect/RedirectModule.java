@@ -1,6 +1,6 @@
 package cool.scx.ext.redirect;
 
-import cool.scx.common.ansi.Ansi;
+import cool.scx.ansi.Ansi;
 import cool.scx.core.Scx;
 import cool.scx.core.ScxModule;
 import cool.scx.http.ScxHttpServerOptions;

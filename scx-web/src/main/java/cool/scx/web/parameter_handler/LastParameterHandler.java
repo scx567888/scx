@@ -1,6 +1,6 @@
 package cool.scx.web.parameter_handler;
 
-import cool.scx.common.reflect.ParameterInfo;
+import cool.scx.reflect.ParameterInfo;
 
 import static cool.scx.common.util.ScxExceptionHelper.ignore;
 import static cool.scx.web.parameter_handler.FromBodyParameterHandler.getValueFromBody;

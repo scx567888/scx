@@ -1,7 +1,6 @@
 package cool.scx.core;
 
-import cool.scx.common.ansi.Ansi;
-import cool.scx.common.scheduler.ScxScheduler;
+import cool.scx.ansi.Ansi;
 import cool.scx.common.util.FileUtils;
 import cool.scx.common.util.ScopedValue;
 import cool.scx.common.util.StopWatch;
@@ -17,6 +16,7 @@ import cool.scx.http.routing.WebSocketRouter;
 import cool.scx.jdbc.JDBCContext;
 import cool.scx.jdbc.meta_data.SchemaHelper;
 import cool.scx.jdbc.sql.SQLRunner;
+import cool.scx.scheduling.ScxScheduler;
 import cool.scx.web.RouteRegistrar;
 import cool.scx.web.ScxWeb;
 import cool.scx.web.ScxWebOptions;

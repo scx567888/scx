@@ -1,6 +1,6 @@
 package cool.scx.config.handler;
 
-import cool.scx.common.ansi.Ansi;
+import cool.scx.ansi.Ansi;
 import cool.scx.common.util.ObjectUtils;
 import cool.scx.config.ScxConfigValueHandler;
 
