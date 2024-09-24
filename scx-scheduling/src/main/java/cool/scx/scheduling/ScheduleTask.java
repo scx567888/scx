@@ -8,7 +8,9 @@ import java.util.function.Consumer;
  */
 public interface ScheduleTask {
 
-    ScheduleTask concurrentExecution(boolean concurrentExecution);
+    ScheduleTask concurrent(boolean concurrent);
+
+    ScheduleTask maxRunCount(long maxRunCount);
 
     ScheduleTask executor(ScheduledExecutorService executor);
 
