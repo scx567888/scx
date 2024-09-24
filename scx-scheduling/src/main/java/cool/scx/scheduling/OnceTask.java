@@ -2,6 +2,7 @@ package cool.scx.scheduling;
 
 import java.time.Instant;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 
 import static java.time.Duration.between;
@@ -10,20 +11,32 @@ import static java.util.concurrent.TimeUnit.NANOSECONDS;
 
 public class OnceTask implements ScheduleTask {
 
-    private final DefaultScheduleStatus status;
     private Instant startTime;
     private Consumer<ScheduleStatus> task;
     private ScheduledExecutorService executor;
+    private final AtomicLong runCount;
 
     public OnceTask() {
-        this.status = new DefaultScheduleStatus();
         this.startTime = null;
-        this.task = null;
         this.executor = null;
+        this.task = null;
+        this.runCount = new AtomicLong(0);
     }
 
     public OnceTask startTime(Instant startTime) {
         this.startTime = startTime;
+        return this;
+    }
+
+    @Override
+    public OnceTask concurrent(boolean concurrent) {
+        // 什么也不需要做
+        return this;
+    }
+
+    @Override
+    public OnceTask maxRunCount(long maxRunCount) {
+        // 什么也不需要做
         return this;
     }
 
@@ -39,21 +52,9 @@ public class OnceTask implements ScheduleTask {
         return this;
     }
 
-    public Instant startTime() {
-        return startTime;
-    }
-
-    public ScheduledExecutorService executor() {
-        return executor;
-    }
-
-    public Consumer<ScheduleStatus> task() {
-        return task;
-    }
-
     private void run() {
+        var l = runCount.incrementAndGet();
         try {
-            long l = status.addRunCount();
             //1, 这里传递给 task 是一个 copy
             task.accept(new ScheduleStatus() {
 
@@ -64,7 +65,7 @@ public class OnceTask implements ScheduleTask {
 
                 @Override
                 public void cancel() {
-                    status.cancel();
+                    //因为只执行一次所以没法取消也没必要取消 这里什么都不做
                 }
 
             });
@@ -77,7 +78,17 @@ public class OnceTask implements ScheduleTask {
     public ScheduleStatus start() {
         var delay = startTime != null ? between(now(), startTime).toNanos() : 0;
         var scheduledFuture = executor.schedule(this::run, delay, NANOSECONDS);
-        return this.status.setScheduledFuture(scheduledFuture);
+        return new ScheduleStatus() {
+            @Override
+            public long runCount() {
+                return runCount.get();
+            }
+
+            @Override
+            public void cancel() {
+                scheduledFuture.cancel(false);
+            }
+        };
     }
 
 }
