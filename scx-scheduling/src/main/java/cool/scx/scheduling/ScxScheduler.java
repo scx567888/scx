@@ -14,6 +14,9 @@ import java.util.stream.Collectors;
 public class ScxScheduler implements ScheduledExecutorService {
 
     private static final AtomicInteger POOL_NUMBER = new AtomicInteger(1);
+
+    private static ScxScheduler INSTANCE;
+
     private final AtomicLong threadNumber = new AtomicLong(0);
     private final String namePrefix;
     private final ScheduledExecutorService s;
@@ -21,6 +24,13 @@ public class ScxScheduler implements ScheduledExecutorService {
     private ScxScheduler() {
         this.s = new ScheduledThreadPoolExecutor(1);
         this.namePrefix = "scx-" + POOL_NUMBER.getAndIncrement() + "-virtual-thread-";
+    }
+
+    public static ScxScheduler getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new ScxScheduler();
+        }
+        return INSTANCE;
     }
 
     @Override
@@ -127,15 +137,6 @@ public class ScxScheduler implements ScheduledExecutorService {
 
     private Runnable wrap(Runnable command) {
         return () -> Thread.ofVirtual().name(namePrefix, threadNumber.getAndIncrement()).start(command);
-    }
-
-    private static ScxScheduler INSTANCE;
-
-    public static ScxScheduler getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new ScxScheduler();
-        }
-        return INSTANCE;
     }
 
 }
