@@ -1,7 +1,7 @@
 package cool.scx.core;
 
 import cool.scx.common.functional.ScxRunnable;
-import cool.scx.common.scheduler.ScxScheduler;
+import cool.scx.scheduling.ScxScheduler;
 import cool.scx.common.util.ScopedValue;
 import cool.scx.config.ScxConfig;
 import cool.scx.config.ScxEnvironment;

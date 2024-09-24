@@ -3,7 +3,7 @@ package cool.scx.core;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import cool.scx.common.reflect.ReflectFactory;
+import cool.scx.reflect.ReflectFactory;
 import cool.scx.common.util.ClassUtils;
 import cool.scx.common.util.ConsoleUtils;
 import cool.scx.common.util.ObjectUtils;
