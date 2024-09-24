@@ -1,8 +1,8 @@
 package cool.scx.data.jdbc;
 
-import cool.scx.reflect.FieldInfo;
 import cool.scx.data.jdbc.annotation.Column;
 import cool.scx.jdbc.mapping.type.TypeColumn;
+import cool.scx.reflect.FieldInfo;
 
 import static cool.scx.common.util.AnnotationUtils.getAnnotationValue;
 import static cool.scx.common.util.CaseUtils.toSnake;

@@ -1,12 +1,12 @@
 package cool.scx.data.jdbc;
 
-import cool.scx.reflect.FieldInfo;
-import cool.scx.reflect.ReflectFactory;
 import cool.scx.common.util.AnnotationUtils;
 import cool.scx.common.util.CaseUtils;
 import cool.scx.common.util.MultiMap;
 import cool.scx.data.jdbc.annotation.NoColumn;
 import cool.scx.jdbc.mapping.Table;
+import cool.scx.reflect.FieldInfo;
+import cool.scx.reflect.ReflectFactory;
 
 import java.util.HashMap;
 import java.util.List;
