@@ -53,7 +53,21 @@ public class OnceTask implements ScheduleTask {
 
     private void run() {
         try {
-            task.accept(this.status.addRunCount());
+            long l = status.addRunCount();
+            //1, 这里传递给 task 是一个 copy
+            task.accept(new ScheduleStatus() {
+
+                @Override
+                public long runCount() {
+                    return l;
+                }
+
+                @Override
+                public void cancel() {
+                    status.cancel();
+                }
+
+            });
         } catch (Throwable e) {
             e.printStackTrace();
         }
