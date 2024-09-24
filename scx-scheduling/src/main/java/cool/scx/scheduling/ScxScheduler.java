@@ -1,6 +1,5 @@
-package cool.scx.common.scheduler;
+package cool.scx.scheduling;
 
-import cool.scx.common.util.ScxVirtualThreadFactory;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 

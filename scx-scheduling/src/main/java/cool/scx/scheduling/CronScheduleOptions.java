@@ -1,4 +1,4 @@
-package cool.scx.common.scheduler;
+package cool.scx.scheduling;
 
 public non-sealed class CronScheduleOptions implements ScheduleOptions {
 

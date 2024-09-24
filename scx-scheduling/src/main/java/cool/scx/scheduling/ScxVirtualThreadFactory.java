@@ -1,4 +1,4 @@
-package cool.scx.common.util;
+package cool.scx.scheduling;
 
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;

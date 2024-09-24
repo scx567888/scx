@@ -1,4 +1,4 @@
-package cool.scx.common.scheduler;
+package cool.scx.scheduling;
 
 import java.time.Instant;
 import java.time.LocalDateTime;

@@ -1,4 +1,4 @@
-package cool.scx.common.scheduler;
+package cool.scx.scheduling;
 
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.atomic.AtomicLong;
