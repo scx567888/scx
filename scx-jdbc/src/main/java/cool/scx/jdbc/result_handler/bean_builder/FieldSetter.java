@@ -1,8 +1,8 @@
 package cool.scx.jdbc.result_handler.bean_builder;
 
+import cool.scx.jdbc.type_handler.TypeHandler;
 import cool.scx.reflect.FieldInfo;
 import cool.scx.reflect.ReflectFactory;
-import cool.scx.jdbc.type_handler.TypeHandler;
 
 import java.lang.reflect.Field;
 import java.util.function.Function;

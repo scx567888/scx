@@ -1,7 +1,7 @@
 package cool.scx.scheduling.test;
 
-import cool.scx.scheduling.ScxScheduler;
 import cool.scx.common.util.$;
+import cool.scx.scheduling.ScxScheduler;
 
 import static cool.scx.scheduling.ScheduleOptions.ofCron;
 import static cool.scx.scheduling.ScheduleOptions.ofFixedRate;

@@ -1,6 +1,5 @@
 package cool.scx.web;
 
-import cool.scx.reflect.MethodInfo;
 import cool.scx.common.util.CaseUtils;
 import cool.scx.common.util.ScxExceptionHelper;
 import cool.scx.common.util.ScxExceptionHelper.ScxWrappedRuntimeException;
@@ -11,6 +10,7 @@ import cool.scx.http.routing.MethodMatcher;
 import cool.scx.http.routing.PathMatcher;
 import cool.scx.http.routing.Route;
 import cool.scx.http.routing.RoutingContext;
+import cool.scx.reflect.MethodInfo;
 import cool.scx.web.annotation.ScxRoute;
 
 import java.lang.reflect.InvocationTargetException;

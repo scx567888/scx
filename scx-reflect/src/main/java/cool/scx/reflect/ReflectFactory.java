@@ -10,9 +10,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-import static cool.scx.reflect.AccessModifier.*;
 import static cool.scx.common.util.ObjectUtils.constructType;
 import static cool.scx.common.util.ObjectUtils.resolveMemberType;
+import static cool.scx.reflect.AccessModifier.*;
 import static java.util.Collections.addAll;
 
 public final class ReflectFactory {
