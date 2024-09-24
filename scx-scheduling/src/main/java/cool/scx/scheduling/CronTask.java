@@ -6,7 +6,9 @@ import com.cronutils.parser.CronParser;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 
@@ -18,22 +20,28 @@ public class CronTask implements ScheduleTask {
     //这里默认用 QUARTZ 的格式
     private static final CronParser CRON_PARSER = new CronParser(instanceDefinitionFor(QUARTZ));
     
+    private final AtomicLong runCount;
     private ExecutionTime executionTime;
     private boolean concurrent;
     private long maxRunCount;
     private ScheduledExecutorService executor;
     private Consumer<ScheduleStatus> task;
+    
     private final ReentrantLock scheduleNextLock;
     private ZonedDateTime lastNext = null;
+    private ScheduledFuture<?> scheduledFuture;
 
     public CronTask() {
+        this.runCount = new AtomicLong(0);
         this.executionTime = null;
         this.concurrent = false;// 默认不允许并发
         this.maxRunCount = -1;// 默认不限制运行次数
         this.executor = null;
         this.task = null;
+        
         this.scheduleNextLock = new ReentrantLock();
         this.lastNext = null;
+        this.scheduledFuture = null;
     }
 
     public CronTask expression(String expression) {
@@ -72,20 +80,40 @@ public class CronTask implements ScheduleTask {
     @Override
     public ScheduleStatus start() {
         scheduleNext();
-        return this.status;
+        return new ScheduleStatus() {
+            @Override
+            public long runCount() {
+                return runCount.get();
+            }
+
+            @Override
+            public void cancel() {
+
+            }
+        };
     }
     
 
     public void run() {
-        if (concurrentExecution) {
+        if (concurrent) {
             scheduleNext();
         }
         try {
-//            task.accept(this.status.addRunCount());
+            task.accept(new ScheduleStatus() {
+                @Override
+                public long runCount() {
+                    return 0;
+                }
+
+                @Override
+                public void cancel() {
+
+                }
+            });
         } catch (Throwable e) {
             e.printStackTrace();
         }
-        if (!concurrentExecution) {
+        if (!concurrent) {
             scheduleNext();
         }
     }
@@ -96,7 +124,7 @@ public class CronTask implements ScheduleTask {
             scheduleNextLock.lock();
 
             var now = ZonedDateTime.now();
-            //1, 获取下一次执行的事件 如果为空 则直接跳过
+            //1, 获取下一次执行的时间 如果为空 则直接跳过
             var next = executionTime.nextExecution(now).orElse(null);
             if (next == null) {
                 return;
@@ -113,8 +141,7 @@ public class CronTask implements ScheduleTask {
 
             if (time != null) {
                 //此处精度不需要太高
-                var scheduledFuture = executor.schedule(this::run, time.toMillis(), TimeUnit.MILLISECONDS);
-                this.status.setScheduledFuture(scheduledFuture);
+                this.scheduledFuture = executor.schedule(this::run, time.toMillis(), TimeUnit.MILLISECONDS);
             }
 
         } finally {
