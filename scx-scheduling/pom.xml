@@ -26,6 +26,12 @@
             <version>${project.version}</version>
         </dependency>
 
+        <!-- Spring Context 框架 , 主要使用其依赖注入及部分注解功能 -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
+
         <!-- TestNG 测试包 -->
         <dependency>
             <groupId>org.testng</groupId>
