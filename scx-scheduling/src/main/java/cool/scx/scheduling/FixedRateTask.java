@@ -13,23 +13,23 @@ import static java.util.concurrent.TimeUnit.NANOSECONDS;
 
 public class FixedRateTask implements ScheduleTask {
 
+    protected final AtomicLong runCount;
     protected Instant startTime;
     protected Duration delay;
     protected boolean concurrent;
     protected long maxRunCount;
     protected ScheduledExecutorService executor;
     protected Consumer<ScheduleStatus> task;
-    protected final AtomicLong runCount;
     protected ScheduledFuture<?> scheduledFuture;
 
     public FixedRateTask() {
+        this.runCount = new AtomicLong(0);
         this.startTime = null;
         this.delay = null;
         this.concurrent = false; //默认不允许并发
         this.maxRunCount = -1;// 默认没有最大运行次数
         this.executor = null;
         this.task = null;
-        this.runCount = new AtomicLong(0);
         this.scheduledFuture = null;
     }
 
