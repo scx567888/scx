@@ -17,7 +17,7 @@ import cool.scx.core.test.person.Person;
 import cool.scx.core.test.person.PersonService;
 import cool.scx.data.query.QueryOption;
 import cool.scx.jdbc.sql.SQL;
-import org.springframework.scheduling.support.CronTrigger;
+//import org.springframework.scheduling.support.CronTrigger;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 

@@ -29,14 +29,13 @@ import cool.scx.web.annotation.ScxRoute;
 import cool.scx.web.annotation.ScxWebSocketRoute;
 import io.helidon.common.tls.Tls;
 import org.springframework.beans.factory.annotation.AnnotatedGenericBeanDefinition;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
-import org.springframework.context.annotation.AnnotationConfigUtils;
-import org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
+//import org.springframework.context.annotation.AnnotationConfigUtils;
+//import org.springframework.context.annotation.AnnotationConfigUtils;
+//import org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor;
+
 
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -69,9 +68,7 @@ public final class ScxHelper {
      */
     private static final List<Class<? extends Annotation>> beanFilterAnnotation = List.of(
             //scx 注解
-            ScxRoute.class, Table.class, ScxService.class, ScxWebSocketRoute.class,
-            //兼容 spring 注解
-            Component.class, Controller.class, Service.class, Repository.class);
+            ScxRoute.class, Table.class, ScxService.class, ScxWebSocketRoute.class);
 
     static Path findRootPathByScxModule(Class<? extends ScxModule> c) throws IOException {
         var classSource = getCodeSource(c);
@@ -209,7 +206,7 @@ public final class ScxHelper {
         return scxModules;
     }
 
-    static DefaultListableBeanFactory initBeanFactory(ScxModule[] modules, ScheduledExecutorService scheduledExecutorService, ScxFeatureConfig scxFeatureConfig) {
+    static DefaultListableBeanFactory initBeanFactory(ScxModule[] modules,ScxFeatureConfig scxFeatureConfig) {
         var beanFactory = new DefaultListableBeanFactory();
         //这里添加一个 bean 的后置处理器以便可以使用 @Autowired 注解
         var beanPostProcessor = new AutowiredAnnotationBeanPostProcessor();
@@ -218,11 +215,12 @@ public final class ScxHelper {
         //只有 开启标识时才 启用定时任务 这里直接跳过 后置处理器
         if (scxFeatureConfig.get(ScxCoreFeature.ENABLE_SCHEDULING_WITH_ANNOTATION)) {
             //这里在添加一个 bean 的后置处理器 以便使用 定时任务 注解
-            var scheduledAnnotationBeanPostProcessor = new ScheduledAnnotationBeanPostProcessor();
-            scheduledAnnotationBeanPostProcessor.setBeanFactory(beanFactory);
-            scheduledAnnotationBeanPostProcessor.setScheduler(scheduledExecutorService);
-            scheduledAnnotationBeanPostProcessor.afterSingletonsInstantiated();
-            beanFactory.addBeanPostProcessor(scheduledAnnotationBeanPostProcessor);
+            //todo 这里使用 scx 调度器重写
+//            var scheduledAnnotationBeanPostProcessor = new ScheduledAnnotationBeanPostProcessor();
+//            scheduledAnnotationBeanPostProcessor.setBeanFactory(beanFactory);
+//            scheduledAnnotationBeanPostProcessor.setScheduler(scheduledExecutorService);
+//            scheduledAnnotationBeanPostProcessor.afterSingletonsInstantiated();
+//            beanFactory.addBeanPostProcessor(scheduledAnnotationBeanPostProcessor);
         }
         //设置是否允许循环依赖 (默认禁止循环依赖)
         beanFactory.setAllowCircularReferences(scxFeatureConfig.get(ScxCoreFeature.ALLOW_CIRCULAR_REFERENCES));
@@ -235,7 +233,6 @@ public final class ScxHelper {
         for (var c : beanClass) {
             var beanDefinition = new AnnotatedGenericBeanDefinition(c);
             //这里是为了兼容 spring context 的部分注解
-            AnnotationConfigUtils.processCommonDefinitionAnnotations(beanDefinition);
             beanFactory.registerBeanDefinition(c.getName(), beanDefinition);
         }
         return beanFactory;

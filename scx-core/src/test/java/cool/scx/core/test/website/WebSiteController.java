@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.zip.ZipOutputStream;
@@ -160,7 +161,7 @@ public class WebSiteController {
         for (int i = 0; i < 9999; i = i + 1) {
             s.append("这是文字 ").append(i).append(", ");
         }
-        return Download.of(s.toString().getBytes(StandardCharsets.UTF_8), "测试中 + - ~!文 a😊😂 🤣 ghj ❤😍😒👌.txt");
+        return Download.of(Path.of("C:\\Users\\scx\\Desktop\\On Java 8 (zh_latest).pdf"), "测试中 + - ~!文 a😊😂 🤣 ghj ❤😍😒👌.txt");
     }
 
     /**
