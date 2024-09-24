@@ -16,6 +16,7 @@ public class ScxSchedulingTest {
     }
 
     public static void test1() {
+
         //测试单次
         ScxScheduling
                 .once()
@@ -37,16 +38,17 @@ public class ScxSchedulingTest {
     }
 
     public static void test2() {
+
         //测试 固定频率
         ScxScheduling
                 .fixedRate()
                 .delay(Duration.ofMillis(1))
+                .concurrent(true)
+                .maxRunCount(10)
                 .start((a) -> {
-                    if (a.runCount() >= 10) {
-                        a.cancel();
-                    }
                     System.err.println("这是通过 fixedRate() 打印的 : 第 10 次会取消 , 这时第 " + a.runCount() + " 次执行 !!!");
                 });
+
     }
 
     public static void test3(String[] args) {
