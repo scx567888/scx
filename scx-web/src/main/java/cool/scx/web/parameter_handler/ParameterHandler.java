@@ -1,6 +1,6 @@
 package cool.scx.web.parameter_handler;
 
-import cool.scx.common.reflect.ParameterInfo;
+import cool.scx.reflect.ParameterInfo;
 
 /**
  * 参数处理器

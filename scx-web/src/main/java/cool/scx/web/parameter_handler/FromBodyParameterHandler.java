@@ -2,7 +2,7 @@ package cool.scx.web.parameter_handler;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
-import cool.scx.common.reflect.ParameterInfo;
+import cool.scx.reflect.ParameterInfo;
 import cool.scx.common.util.JsonNodeHelper;
 import cool.scx.web.annotation.FromBody;
 import cool.scx.web.parameter_handler.exception.ParamConvertException;

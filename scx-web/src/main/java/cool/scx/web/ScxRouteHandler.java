@@ -1,6 +1,6 @@
 package cool.scx.web;
 
-import cool.scx.common.reflect.MethodInfo;
+import cool.scx.reflect.MethodInfo;
 import cool.scx.common.util.CaseUtils;
 import cool.scx.common.util.ScxExceptionHelper;
 import cool.scx.common.util.ScxExceptionHelper.ScxWrappedRuntimeException;

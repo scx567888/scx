@@ -1,6 +1,6 @@
 package cool.scx.web;
 
-import cool.scx.common.reflect.ParameterInfo;
+import cool.scx.reflect.ParameterInfo;
 import cool.scx.common.util.ScxExceptionHelper;
 import cool.scx.http.exception.BadRequestException;
 import cool.scx.http.routing.Router;
