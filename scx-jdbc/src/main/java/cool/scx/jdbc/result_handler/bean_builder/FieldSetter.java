@@ -1,14 +1,14 @@
 package cool.scx.jdbc.result_handler.bean_builder;
 
-import cool.scx.common.reflect.FieldInfo;
-import cool.scx.common.reflect.ReflectFactory;
+import cool.scx.reflect.FieldInfo;
+import cool.scx.reflect.ReflectFactory;
 import cool.scx.jdbc.type_handler.TypeHandler;
 
 import java.lang.reflect.Field;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import static cool.scx.common.reflect.AccessModifier.PUBLIC;
+import static cool.scx.reflect.AccessModifier.PUBLIC;
 
 /**
  * <p>BeanBuilder interface.</p>

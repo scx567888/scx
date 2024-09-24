@@ -22,7 +22,7 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>scx-common</artifactId>
+            <artifactId>scx-reflect</artifactId>
             <version>${project.version}</version>
         </dependency>
 
