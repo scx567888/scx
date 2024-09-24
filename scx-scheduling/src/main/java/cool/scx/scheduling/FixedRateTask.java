@@ -19,7 +19,6 @@ public class FixedRateTask implements ScheduleTask {
     protected long maxRunCount;
     protected ScheduledExecutorService executor;
     protected Consumer<ScheduleStatus> task;
-    protected final DefaultScheduleStatus status;
     protected final AtomicLong runCount;
     protected ScheduledFuture<?> scheduledFuture;
 
@@ -30,8 +29,8 @@ public class FixedRateTask implements ScheduleTask {
         this.maxRunCount = -1;// 默认没有最大运行次数
         this.executor = null;
         this.task = null;
-        this.status = new DefaultScheduleStatus();
         this.runCount = new AtomicLong(0);
+        this.scheduledFuture = null;
     }
 
     public FixedRateTask startTime(Instant startTime) {
@@ -102,6 +101,7 @@ public class FixedRateTask implements ScheduleTask {
         long l = this.runCount.incrementAndGet();
         //判断是否 达到最大次数 停止运行并取消任务
         if (maxRunCount != -1 && l > maxRunCount) {
+            //todo 这里 scheduledFuture 可能为空吗 ? 
             if (scheduledFuture != null) {
                 scheduledFuture.cancel(false);
             }
@@ -117,6 +117,7 @@ public class FixedRateTask implements ScheduleTask {
 
                 @Override
                 public void cancel() {
+                    // todo 这里也是 可能为空吗?
                     scheduledFuture.cancel(false);
                 }
             });
