@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 /**
- * 所有任务都在虚拟线程中运行的调度器 (注意: 无法实现等待任务结束的功能)
+ * 所有任务都在虚拟线程中运行的调度器 (注意: 因所有任务都在独立的虚拟线程中运行, 所以无法实现等待任务结束的功能)
  */
 public class ScxScheduledExecutorService implements ScheduledExecutorService {
 
