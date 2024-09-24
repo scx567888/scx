@@ -1,10 +1,10 @@
-package cool.scx.common.ansi;
+package cool.scx.ansi;
 
-import cool.scx.common.ffm.type.mapper.IntMapper;
 import cool.scx.common.util.OSHelper;
+import cool.scx.ffm.type.mapper.IntMapper;
 
-import static cool.scx.common.ffm.platform.win32.Kernel32.KERNEL32;
 import static cool.scx.common.util.OSHelper.OSType.WINDOWS;
+import static cool.scx.ffm.platform.win32.Kernel32.KERNEL32;
 
 class AnsiHelper {
 

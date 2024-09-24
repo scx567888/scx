@@ -1,4 +1,4 @@
-package cool.scx.common.ansi;
+package cool.scx.ansi;
 
 /**
  * 背景色

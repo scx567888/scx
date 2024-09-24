@@ -1,10 +1,10 @@
-package cool.scx.common.ansi;
+package cool.scx.ansi;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-import static cool.scx.common.ansi.AnsiColor.*;
+import static cool.scx.ansi.AnsiColor.*;
 import static cool.scx.common.util.ArrayUtils.concat;
 
 /**

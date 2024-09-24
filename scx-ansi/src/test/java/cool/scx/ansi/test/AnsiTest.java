@@ -1,6 +1,6 @@
-package cool.scx.common.ansi.test;
+package cool.scx.ansi.test;
 
-import cool.scx.common.ansi.*;
+import cool.scx.ansi.*;
 import org.testng.annotations.Test;
 
 public class AnsiTest {

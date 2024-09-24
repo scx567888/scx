@@ -1,8 +1,8 @@
-package cool.scx.common.ansi;
+package cool.scx.ansi;
 
 import java.util.StringJoiner;
 
-import static cool.scx.common.ansi.AnsiStyle.NORMAL;
+import static cool.scx.ansi.AnsiStyle.NORMAL;
 
 public record AnsiItem(Object value, AnsiElement... elements) {
 
