@@ -57,6 +57,10 @@
         <module>scx-socket</module>
         <module>scx-http</module>
         <module>scx-http-helidon</module>
+        <module>scx-ffm</module>
+        <module>scx-ansi</module>
+        <module>scx-reflect</module>
+        <module>scx-scheduling</module>
     </modules>
 
     <build>
