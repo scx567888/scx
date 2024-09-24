@@ -1,6 +1,6 @@
 package cool.scx.http.helidon;
 
-import cool.scx.common.reflect.ReflectFactory;
+import cool.scx.reflect.ReflectFactory;
 import io.helidon.http.PathMatchers;
 import io.helidon.webserver.websocket.WsRoute;
 import io.helidon.webserver.websocket.WsRouting;
