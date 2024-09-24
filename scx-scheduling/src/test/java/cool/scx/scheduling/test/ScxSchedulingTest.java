@@ -6,7 +6,7 @@ import cool.scx.scheduling.ScxScheduling;
 import java.time.Duration;
 import java.time.Instant;
 
-public class ScxSchedulerTest {
+public class ScxSchedulingTest {
 
     public static void main(String[] args) {
         test1();
