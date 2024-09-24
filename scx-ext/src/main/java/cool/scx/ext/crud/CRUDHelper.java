@@ -1,6 +1,6 @@
 package cool.scx.ext.crud;
 
-import cool.scx.common.reflect.ReflectFactory;
+import cool.scx.reflect.ReflectFactory;
 import cool.scx.common.util.ObjectUtils;
 import cool.scx.core.base.BaseModel;
 import cool.scx.core.base.BaseModelService;
