@@ -3,10 +3,7 @@ package cool.scx.ffm;
 import cool.scx.ffm.type.callback.Callback;
 import cool.scx.ffm.type.mapper.*;
 import cool.scx.ffm.type.paramter.*;
-import cool.scx.ffm.type.mapper.*;
-import cool.scx.ffm.type.paramter.*;
 import cool.scx.ffm.type.struct.Struct;
-import cool.scx.ffm.type.wrapper.*;
 import cool.scx.ffm.type.wrapper.*;
 
 import java.lang.foreign.MemoryLayout;

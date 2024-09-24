@@ -1,7 +1,7 @@
 package cool.scx.ffm.test;
 
-import cool.scx.ffm.platform.win32.WindowsProxyHelper;
 import cool.scx.common.util.OSHelper;
+import cool.scx.ffm.platform.win32.WindowsProxyHelper;
 import org.testng.annotations.Test;
 
 public class WindowsProxyHelperTest {
