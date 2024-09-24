@@ -1,6 +1,6 @@
 package cool.scx.data.jdbc;
 
-import cool.scx.common.reflect.FieldInfo;
+import cool.scx.reflect.FieldInfo;
 import cool.scx.data.jdbc.annotation.Column;
 import cool.scx.jdbc.mapping.type.TypeColumn;
 

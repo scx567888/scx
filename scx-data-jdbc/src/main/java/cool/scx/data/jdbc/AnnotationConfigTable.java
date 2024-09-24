@@ -1,7 +1,7 @@
 package cool.scx.data.jdbc;
 
-import cool.scx.common.reflect.FieldInfo;
-import cool.scx.common.reflect.ReflectFactory;
+import cool.scx.reflect.FieldInfo;
+import cool.scx.reflect.ReflectFactory;
 import cool.scx.common.util.AnnotationUtils;
 import cool.scx.common.util.CaseUtils;
 import cool.scx.common.util.MultiMap;
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static cool.scx.common.reflect.AccessModifier.PUBLIC;
+import static cool.scx.reflect.AccessModifier.PUBLIC;
 
 public class AnnotationConfigTable implements Table {
 
