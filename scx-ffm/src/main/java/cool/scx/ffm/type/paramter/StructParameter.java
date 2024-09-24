@@ -1,9 +1,9 @@
 package cool.scx.ffm.type.paramter;
 
 import cool.scx.ffm.type.struct.Struct;
-import cool.scx.common.reflect.AccessModifier;
-import cool.scx.common.reflect.FieldInfo;
-import cool.scx.common.reflect.ReflectFactory;
+import cool.scx.reflect.AccessModifier;
+import cool.scx.reflect.FieldInfo;
+import cool.scx.reflect.ReflectFactory;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemoryLayout;
