@@ -11,16 +11,16 @@ import static java.util.concurrent.TimeUnit.NANOSECONDS;
 
 public class OnceTask implements ScheduleTask {
 
+    private final AtomicLong runCount;
     private Instant startTime;
     private Consumer<ScheduleStatus> task;
     private ScheduledExecutorService executor;
-    private final AtomicLong runCount;
 
     public OnceTask() {
+        this.runCount = new AtomicLong(0);
         this.startTime = null;
         this.executor = null;
         this.task = null;
-        this.runCount = new AtomicLong(0);
     }
 
     public OnceTask startTime(Instant startTime) {
