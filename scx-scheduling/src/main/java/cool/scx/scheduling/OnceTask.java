@@ -12,7 +12,7 @@ import static java.time.Duration.between;
 import static java.time.Instant.now;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 
-public class OnceTask implements ScheduleTask {
+public class OnceTask implements SingleTimeTask {
 
     private static final System.Logger logger = System.getLogger(FixedRateTask.class.getName());
 
@@ -30,30 +30,15 @@ public class OnceTask implements ScheduleTask {
         this.task = null;
     }
 
-    public OnceTask startTime(Instant startTime) {
-        this.startTimeSupplier = () -> startTime;
-        return this;
-    }
-
+    @Override
     public OnceTask startTime(Supplier<Instant> startTime) {
         this.startTimeSupplier = startTime;
         return this;
     }
 
+    @Override
     public OnceTask skipIfExpired(boolean skipIfExpired) {
         this.skipIfExpired = skipIfExpired;
-        return this;
-    }
-
-    @Override
-    public OnceTask concurrent(boolean concurrent) {
-        // 什么也不需要做
-        return this;
-    }
-
-    @Override
-    public OnceTask maxRunCount(long maxRunCount) {
-        // 什么也不需要做
         return this;
     }
 
