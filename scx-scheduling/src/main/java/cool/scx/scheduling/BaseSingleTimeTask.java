@@ -4,8 +4,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 
-import static cool.scx.scheduling.ExpirationPolicy.COMPENSATE;
-import static cool.scx.scheduling.ExpirationPolicy.IGNORE;
+import static cool.scx.scheduling.ExpirationPolicy.*;
 import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.Logger.Level.WARNING;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
@@ -22,7 +21,7 @@ public abstract class BaseSingleTimeTask<T extends BaseSingleTimeTask<T>> implem
     public BaseSingleTimeTask() {
         this.logger = System.getLogger(this.getClass().getName());
         this.runCount = new AtomicLong(0);
-        this.expirationPolicy = COMPENSATE; //默认过期补偿
+        this.expirationPolicy = IMMEDIATE_COMPENSATION; //默认过期补偿
         this.executor = null;
         this.task = null;
     }
@@ -53,7 +52,7 @@ public abstract class BaseSingleTimeTask<T extends BaseSingleTimeTask<T>> implem
     public ScheduleStatus start() {
         var startDelay = getStartDelay();
         //判断任务是否过期
-        if (expirationPolicy == IGNORE && startDelay < 0) {
+        if ((expirationPolicy == IMMEDIATE_IGNORE || expirationPolicy == BACKTRACKING_IGNORE) && startDelay < 0) {
             logger.log(WARNING, "任务过期 跳过执行 !!!");
             return new ScheduleStatus() {
                 @Override
