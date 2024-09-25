@@ -19,7 +19,7 @@ public class ScxSchedulingTest {
     public static void test1() {
 
         //测试单次
-        
+
         //正常执行
         ScxScheduling
                 .once()
@@ -45,7 +45,7 @@ public class ScxSchedulingTest {
                 .start((a) -> {
                     System.err.println("这是通过 once() 2 打印的 !!! runCount : " + a.runCount());
                 });
-        
+
         //测试取消
         var status = ScxScheduling
                 .once()
@@ -62,7 +62,7 @@ public class ScxSchedulingTest {
     public static void test2() {
 
         //测试 固定频率
-        
+
         //正常执行
         ScxScheduling
                 .fixedRate()
@@ -74,7 +74,7 @@ public class ScxSchedulingTest {
                 })
 //                .start()
         ;
-        
+
 //        //过期策略 1
         ScxScheduling
                 .fixedRate()

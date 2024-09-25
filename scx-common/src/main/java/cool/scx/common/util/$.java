@@ -23,6 +23,7 @@ public final class $ {
 
     /**
      * 延时执行代码 , 这种简单的方式 相比 ScheduledExecutorService , 一般能实现更低的内存占用
+     * todo 使用  ScheduledExecutorService 替换
      *
      * @param task  待运行的内容
      * @param delay 延时 (毫秒)
