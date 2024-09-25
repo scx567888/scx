@@ -4,8 +4,10 @@ import java.time.Instant;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import static java.lang.System.Logger.Level.ERROR;
+import static java.lang.System.Logger.Level.WARNING;
 import static java.time.Duration.between;
 import static java.time.Instant.now;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
@@ -15,19 +17,31 @@ public class OnceTask implements ScheduleTask {
     private static final System.Logger logger = System.getLogger(FixedRateTask.class.getName());
 
     private final AtomicLong runCount;
-    private Instant startTime;
+    private Supplier<Instant> startTimeSupplier;
+    private boolean skipIfExpired;
     private ScheduledExecutorService executor;
     private Consumer<ScheduleStatus> task;
 
     public OnceTask() {
         this.runCount = new AtomicLong(0);
-        this.startTime = null;
+        this.startTimeSupplier = null;
+        this.skipIfExpired = false;
         this.executor = null;
         this.task = null;
     }
 
     public OnceTask startTime(Instant startTime) {
-        this.startTime = startTime;
+        this.startTimeSupplier = () -> startTime;
+        return this;
+    }
+
+    public OnceTask startTime(Supplier<Instant> startTime) {
+        this.startTimeSupplier = startTime;
+        return this;
+    }
+
+    public OnceTask skipIfExpired(boolean skipIfExpired) {
+        this.skipIfExpired = skipIfExpired;
         return this;
     }
 
@@ -57,7 +71,26 @@ public class OnceTask implements ScheduleTask {
 
     @Override
     public ScheduleStatus start() {
-        var delay = startTime != null ? between(now(), startTime).toNanos() : 0;
+        long delay = 0;
+        if (startTimeSupplier != null) {
+            var startTime = startTimeSupplier.get();
+            delay = between(now(), startTime).toNanos();
+        }
+        //判断任务是否过期
+        if (skipIfExpired && delay < 0) {
+            logger.log(WARNING, "任务过期 跳过执行 !!!");
+            return new ScheduleStatus() {
+                @Override
+                public long runCount() {
+                    return 0;
+                }
+
+                @Override
+                public void cancel() {
+                    //任务从未执行所以无需取消
+                }
+            };
+        }
         var scheduledFuture = executor.schedule(this::run, delay, NANOSECONDS);
         return new ScheduleStatus() {
             @Override
@@ -71,7 +104,6 @@ public class OnceTask implements ScheduleTask {
             }
         };
     }
-
 
     private void run() {
         var l = runCount.incrementAndGet();
