@@ -21,12 +21,8 @@ public interface ScxScheduling {
         return new CronTask().executor(getInstance());
     }
 
-    static OnceTask once() {
-        return new OnceTask().executor(getInstance());
-    }
-
-    static DelayTask delay() {
-        return new DelayTask().executor(getInstance());
+    static SingleTimeTask once() {
+        return new SingleTimeTask().executor(getInstance());
     }
 
 }

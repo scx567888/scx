@@ -1,65 +1,90 @@
 package cool.scx.scheduling;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import static cool.scx.scheduling.ExpirationPolicy.BACKTRACKING_IGNORE;
 import static cool.scx.scheduling.ExpirationPolicy.IMMEDIATE_COMPENSATION;
 import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.Logger.Level.WARNING;
+import static java.time.Duration.between;
+import static java.time.Instant.now;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 
-public abstract class SingleTimeTask<T extends SingleTimeTask<T>> implements ScheduleTask {
+public final class SingleTimeTask implements ScheduleTask {
 
     private static final System.Logger logger = System.getLogger(SingleTimeTask.class.getName());
 
     private final AtomicLong runCount;
+    private Supplier<Long> startDelaySupplier;
     private ExpirationPolicy expirationPolicy;
     private ScheduledExecutorService executor;
     private Consumer<ScheduleStatus> task;
 
     public SingleTimeTask() {
         this.runCount = new AtomicLong(0);
+        this.startDelaySupplier = null;
         this.expirationPolicy = IMMEDIATE_COMPENSATION; //默认过期补偿
         this.executor = null;
         this.task = null;
     }
 
+    /**
+     * 开始时间 这里采用 Supplier 保证不会因为方法执行的速度导致时间误差
+     *
+     * @param startTime startTime
+     * @return a
+     */
+    public SingleTimeTask startTime(Supplier<Instant> startTime) {
+        this.startDelaySupplier = () -> between(now(), startTime.get()).toNanos();
+        return  this;
+    }
+
+    public SingleTimeTask startTime(Instant startTime) {
+        this.startDelaySupplier = () -> between(now(), startTime).toNanos();
+        return  this;
+    }
+
+    public SingleTimeTask startDelay(Duration delay) {
+        this.startDelaySupplier = delay::toNanos;
+        return this;
+    }
+
     @Override
-    public T concurrent(boolean concurrent) {
+    public SingleTimeTask concurrent(boolean concurrent) {
         throw new UnsupportedOperationException("SingleTimeTask 不支持 concurrent 参数 !!!");
     }
 
     @Override
-    public T maxRunCount(long maxRunCount) {
+    public SingleTimeTask maxRunCount(long maxRunCount) {
         throw new UnsupportedOperationException("SingleTimeTask 不支持 maxRunCount 参数 !!!");
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public T expirationPolicy(ExpirationPolicy expirationPolicy) {
+    public SingleTimeTask expirationPolicy(ExpirationPolicy expirationPolicy) {
         this.expirationPolicy = expirationPolicy;
-        return (T) this;
+        return this;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public T executor(ScheduledExecutorService executor) {
+    public SingleTimeTask executor(ScheduledExecutorService executor) {
         this.executor = executor;
-        return (T) this;
+        return  this;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public T task(Consumer<ScheduleStatus> task) {
+    public SingleTimeTask task(Consumer<ScheduleStatus> task) {
         this.task = task;
-        return (T) this;
+        return this;
     }
 
     @Override
     public ScheduleStatus start() {
-        var startDelay = getStartDelay();
+        var startDelay = startDelaySupplier != null ? startDelaySupplier.get() : 0;
         //判断任务是否过期
         if (startDelay < 0) {
             switch (expirationPolicy) {
@@ -118,12 +143,5 @@ public abstract class SingleTimeTask<T extends SingleTimeTask<T>> implements Sch
             logger.log(ERROR, "调度任务时发生错误 !!!", e);
         }
     }
-
-    /**
-     * 延时 (单位纳秒)
-     *
-     * @return 延时
-     */
-    protected abstract long getStartDelay();
 
 }
