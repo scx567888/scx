@@ -19,17 +19,18 @@ import static java.util.concurrent.TimeUnit.NANOSECONDS;
 /**
  * 可多次执行的任务
  */
-public abstract class MultipleTimeTask<T extends MultipleTimeTask<T>> implements ScheduleTask {
+public final class MultipleTimeTask implements ScheduleTask {
 
     private static final System.Logger logger = System.getLogger(MultipleTimeTask.class.getName());
 
     private final AtomicLong runCount;
-    protected ScheduledExecutorService executor;
     private Supplier<Instant> startTimeSupplier;
     private Duration delay;
-    private ExpirationPolicy expirationPolicy;
+    private Type type;
     private boolean concurrent;
     private long maxRunCount;
+    private ExpirationPolicy expirationPolicy;
+    private ScheduledExecutorService executor;
     private Consumer<ScheduleStatus> task;
     private ScheduledFuture<?> scheduledFuture;
 
@@ -37,65 +38,63 @@ public abstract class MultipleTimeTask<T extends MultipleTimeTask<T>> implements
         this.runCount = new AtomicLong(0);
         this.startTimeSupplier = null;
         this.delay = null;
-        this.expirationPolicy = IMMEDIATE_COMPENSATION;
+        this.type = Type.FIXED_RATE;//默认类型
         this.concurrent = false; //默认不允许并发
         this.maxRunCount = -1;// 默认没有最大运行次数
+        this.expirationPolicy = IMMEDIATE_COMPENSATION;//默认策略
         this.executor = null;
         this.task = null;
         this.scheduledFuture = null;
     }
 
-    @SuppressWarnings("unchecked")
-    public T startTime(Supplier<Instant> startTime) {
+    public MultipleTimeTask startTime(Supplier<Instant> startTime) {
         this.startTimeSupplier = startTime;
-        return (T) this;
+        return this;
     }
 
-    @SuppressWarnings("unchecked")
-    public T startTime(Instant startTime) {
+    public MultipleTimeTask startTime(Instant startTime) {
         this.startTimeSupplier = () -> startTime;
-        return (T) this;
+        return this;
     }
 
-    @SuppressWarnings("unchecked")
-    public T delay(Duration delay) {
+    public MultipleTimeTask delay(Duration delay) {
         this.delay = delay;
-        return (T) this;
+        return this;
     }
 
-    @SuppressWarnings("unchecked")
+    public MultipleTimeTask type(Type type) {
+        this.type = type;
+        return this;
+    }
+
     @Override
-    public T concurrent(boolean concurrentExecution) {
+    public MultipleTimeTask concurrent(boolean concurrentExecution) {
         this.concurrent = concurrentExecution;
-        return (T) this;
+        return this;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public T maxRunCount(long maxRunCount) {
+    public MultipleTimeTask maxRunCount(long maxRunCount) {
         this.maxRunCount = maxRunCount;
-        return (T) this;
+        return this;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public T expirationPolicy(ExpirationPolicy expirationPolicy) {
+    public MultipleTimeTask expirationPolicy(ExpirationPolicy expirationPolicy) {
         this.expirationPolicy = expirationPolicy;
-        return (T) this;
+        return this;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public T executor(ScheduledExecutorService executor) {
+    public MultipleTimeTask executor(ScheduledExecutorService executor) {
         this.executor = executor;
-        return (T) this;
+        return this;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public T task(Consumer<ScheduleStatus> task) {
+    public MultipleTimeTask task(Consumer<ScheduleStatus> task) {
         this.task = task;
-        return (T) this;
+        return this;
     }
 
     @Override
@@ -246,6 +245,16 @@ public abstract class MultipleTimeTask<T extends MultipleTimeTask<T>> implements
         }
     }
 
-    protected abstract ScheduledFuture<?> executorSchedule(Runnable command, long startDelay, long delay, TimeUnit unit);
+    public enum Type {
+        FIXED_RATE,
+        FIXED_DELAY
+    }
+
+    private ScheduledFuture<?> executorSchedule(Runnable command, long startDelay, long delay, TimeUnit unit) {
+        return switch (type) {
+            case FIXED_RATE -> executor.scheduleAtFixedRate(command, startDelay, delay, unit);
+            case FIXED_DELAY -> executor.scheduleWithFixedDelay(command, startDelay, delay, unit);
+        };
+    }
 
 }
