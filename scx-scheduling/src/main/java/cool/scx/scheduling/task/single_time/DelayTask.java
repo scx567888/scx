@@ -1,5 +1,7 @@
 package cool.scx.scheduling.task.single_time;
 
+import java.time.Duration;
+
 public interface DelayTask extends SingleTimeTask {
 
     /**
@@ -8,6 +10,6 @@ public interface DelayTask extends SingleTimeTask {
      * @param delay delay
      * @return delay
      */
-    DelayTask delay(long delay);
+    DelayTask delay(Duration delay);
 
 }

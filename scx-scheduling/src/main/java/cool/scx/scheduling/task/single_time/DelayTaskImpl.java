@@ -2,6 +2,7 @@ package cool.scx.scheduling.task.single_time;
 
 import cool.scx.scheduling.ScheduleStatus;
 
+import java.time.Duration;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
@@ -15,21 +16,21 @@ public class DelayTaskImpl implements DelayTask {
     private static final System.Logger logger = System.getLogger(DelayTaskImpl.class.getName());
 
     private final AtomicLong runCount;
-    private long delay;
+    private Duration delay;
     private boolean skipIfExpired;
     private ScheduledExecutorService executor;
     private Consumer<ScheduleStatus> task;
 
     public DelayTaskImpl() {
         this.runCount = new AtomicLong(0);
-        this.delay = 0;
+        this.delay = null;
         this.skipIfExpired = false;
         this.executor = null;
         this.task = null;
     }
 
     @Override
-    public DelayTask delay(long delay) {
+    public DelayTask delay(Duration delay) {
         this.delay = delay;
         return this;
     }
@@ -54,7 +55,10 @@ public class DelayTaskImpl implements DelayTask {
 
     @Override
     public ScheduleStatus start() {
-        long delay = this.delay;
+        long delay = 0;
+        if (this.delay != null) {
+            delay = this.delay.toNanos();
+        }
         //判断任务是否过期
         if (skipIfExpired && delay < 0) {
             logger.log(WARNING, "任务过期 跳过执行 !!!");
