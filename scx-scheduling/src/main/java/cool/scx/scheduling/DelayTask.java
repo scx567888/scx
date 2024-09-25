@@ -15,6 +15,7 @@ public final class DelayTask extends BaseSingleTimeTask<DelayTask> {
         return this;
     }
 
+    @Override
     protected long getStartDelay() {
         return delay != null ? delay.toNanos() : 0;
     }
