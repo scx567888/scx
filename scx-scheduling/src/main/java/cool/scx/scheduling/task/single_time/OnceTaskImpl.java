@@ -1,4 +1,7 @@
-package cool.scx.scheduling;
+package cool.scx.scheduling.task.single_time;
+
+import cool.scx.scheduling.FixedRateTask;
+import cool.scx.scheduling.ScheduleStatus;
 
 import java.time.Instant;
 import java.util.concurrent.ScheduledExecutorService;
@@ -12,7 +15,7 @@ import static java.time.Duration.between;
 import static java.time.Instant.now;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 
-public class OnceTask implements SingleTimeTask {
+public class OnceTaskImpl implements OnceTask {
 
     private static final System.Logger logger = System.getLogger(FixedRateTask.class.getName());
 
@@ -22,7 +25,7 @@ public class OnceTask implements SingleTimeTask {
     private ScheduledExecutorService executor;
     private Consumer<ScheduleStatus> task;
 
-    public OnceTask() {
+    public OnceTaskImpl() {
         this.runCount = new AtomicLong(0);
         this.startTimeSupplier = null;
         this.skipIfExpired = false;
