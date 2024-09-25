@@ -9,6 +9,14 @@ import java.util.function.Consumer;
 public interface ScheduleTask {
 
     /**
+     * 过期策略 
+     *
+     * @param expirationPolicy a
+     * @return a
+     */
+    ScheduleTask expirationPolicy(ExpirationPolicy expirationPolicy);
+
+    /**
      * 执行器
      * <p>
      * 默认会使用单例的 ScxScheduler

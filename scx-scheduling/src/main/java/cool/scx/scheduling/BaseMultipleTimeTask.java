@@ -9,6 +9,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import static cool.scx.scheduling.ExpirationPolicy.COMPENSATE;
 import static java.lang.System.Logger.Level.ERROR;
 import static java.time.Duration.between;
 import static java.time.Instant.now;
@@ -17,7 +18,7 @@ import static java.util.concurrent.TimeUnit.NANOSECONDS;
 /**
  * 可多次执行的任务
  */
-public abstract class BaseMultipleTimeTask<T extends BaseMultipleTimeTask<T>> implements ScheduleTask {
+public abstract class BaseMultipleTimeTask<T extends BaseMultipleTimeTask<T>> implements MultipleTimeTask {
 
     private static final System.Logger logger = System.getLogger(FixedRateTask.class.getName());
 
@@ -25,7 +26,7 @@ public abstract class BaseMultipleTimeTask<T extends BaseMultipleTimeTask<T>> im
     protected ScheduledExecutorService executor;
     private Supplier<Instant> startTimeSupplier;
     private Duration delay;
-    private boolean skipIfExpired;
+    private ExpirationPolicy expirationPolicy;
     private boolean concurrent;
     private long maxRunCount;
     private Consumer<ScheduleStatus> task;
@@ -35,7 +36,7 @@ public abstract class BaseMultipleTimeTask<T extends BaseMultipleTimeTask<T>> im
         this.runCount = new AtomicLong(0);
         this.startTimeSupplier = null;
         this.delay = null;
-        this.skipIfExpired = false;
+        this.expirationPolicy = COMPENSATE;
         this.concurrent = false; //默认不允许并发
         this.maxRunCount = -1;// 默认没有最大运行次数
         this.executor = null;
@@ -57,8 +58,8 @@ public abstract class BaseMultipleTimeTask<T extends BaseMultipleTimeTask<T>> im
 
     @SuppressWarnings("unchecked")
     @Override
-    public T skipIfExpired(boolean skipIfExpired) {
-        this.skipIfExpired = skipIfExpired;
+    public T expirationPolicy(ExpirationPolicy expirationPolicy) {
+        this.expirationPolicy = expirationPolicy;
         return (T) this;
     }
 
