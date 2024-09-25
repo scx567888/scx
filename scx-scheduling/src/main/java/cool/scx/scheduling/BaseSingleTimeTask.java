@@ -4,6 +4,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 
+import static cool.scx.scheduling.ExpirationPolicy.COMPENSATE;
+import static cool.scx.scheduling.ExpirationPolicy.IGNORE;
 import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.Logger.Level.WARNING;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
@@ -13,14 +15,14 @@ public abstract class BaseSingleTimeTask<T extends BaseSingleTimeTask<T>> implem
     private final System.Logger logger;
 
     private final AtomicLong runCount;
-    private boolean skipIfExpired;
+    private ExpirationPolicy expirationPolicy;
     private ScheduledExecutorService executor;
     private Consumer<ScheduleStatus> task;
 
     public BaseSingleTimeTask() {
         this.logger = System.getLogger(this.getClass().getName());
         this.runCount = new AtomicLong(0);
-        this.skipIfExpired = false;
+        this.expirationPolicy = COMPENSATE; //默认过期补偿
         this.executor = null;
         this.task = null;
     }
@@ -28,22 +30,8 @@ public abstract class BaseSingleTimeTask<T extends BaseSingleTimeTask<T>> implem
 
     @SuppressWarnings("unchecked")
     @Override
-    public T skipIfExpired(boolean skipIfExpired) {
-        this.skipIfExpired = skipIfExpired;
-        return (T) this;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public T concurrent(boolean concurrent) {
-        //单次执行无需考虑并发
-        return (T) this;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public T maxRunCount(long maxRunCount) {
-        //单次执行无需设置最大次数
+    public T expirationPolicy(ExpirationPolicy expirationPolicy) {
+        this.expirationPolicy = expirationPolicy;
         return (T) this;
     }
 
@@ -65,7 +53,7 @@ public abstract class BaseSingleTimeTask<T extends BaseSingleTimeTask<T>> implem
     public ScheduleStatus start() {
         var startDelay = getStartDelay();
         //判断任务是否过期
-        if (skipIfExpired && startDelay < 0) {
+        if (expirationPolicy == IGNORE && startDelay < 0) {
             logger.log(WARNING, "任务过期 跳过执行 !!!");
             return new ScheduleStatus() {
                 @Override
