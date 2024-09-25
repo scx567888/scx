@@ -9,7 +9,8 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import static cool.scx.scheduling.ExpirationPolicy.*;
+import static cool.scx.scheduling.ExpirationPolicy.BACKTRACKING_IGNORE;
+import static cool.scx.scheduling.ExpirationPolicy.IMMEDIATE_COMPENSATION;
 import static java.lang.System.Logger.Level.ERROR;
 import static java.time.Duration.between;
 import static java.time.Instant.now;
@@ -138,7 +139,7 @@ public abstract class BaseMultipleTimeTask<T extends BaseMultipleTimeTask<T>> im
                 }
             };
         }
-        
+
         //处理过期情况 
         switch (expirationPolicy) {
             case IMMEDIATE_IGNORE, BACKTRACKING_IGNORE -> {

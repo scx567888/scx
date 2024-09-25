@@ -4,7 +4,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 
-import static cool.scx.scheduling.ExpirationPolicy.*;
+import static cool.scx.scheduling.ExpirationPolicy.BACKTRACKING_IGNORE;
+import static cool.scx.scheduling.ExpirationPolicy.IMMEDIATE_COMPENSATION;
 import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.Logger.Level.WARNING;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
