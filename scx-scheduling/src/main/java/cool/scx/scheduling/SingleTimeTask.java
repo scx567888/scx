@@ -10,17 +10,16 @@ import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.Logger.Level.WARNING;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 
-public abstract class BaseSingleTimeTask<T extends BaseSingleTimeTask<T>> implements ScheduleTask {
+public abstract class SingleTimeTask<T extends SingleTimeTask<T>> implements ScheduleTask {
 
-    private final System.Logger logger;
+    private static final System.Logger logger=System.getLogger(SingleTimeTask.class.getName());
 
     private final AtomicLong runCount;
     private ExpirationPolicy expirationPolicy;
     private ScheduledExecutorService executor;
     private Consumer<ScheduleStatus> task;
 
-    public BaseSingleTimeTask() {
-        this.logger = System.getLogger(this.getClass().getName());
+    public SingleTimeTask() {
         this.runCount = new AtomicLong(0);
         this.expirationPolicy = IMMEDIATE_COMPENSATION; //默认过期补偿
         this.executor = null;

@@ -19,9 +19,9 @@ import static java.util.concurrent.TimeUnit.NANOSECONDS;
 /**
  * 可多次执行的任务
  */
-public abstract class BaseMultipleTimeTask<T extends BaseMultipleTimeTask<T>> implements ScheduleTask {
+public abstract class MultipleTimeTask<T extends MultipleTimeTask<T>> implements ScheduleTask {
 
-    private static final System.Logger logger = System.getLogger(FixedRateTask.class.getName());
+    private static final System.Logger logger = System.getLogger(MultipleTimeTask.class.getName());
 
     private final AtomicLong runCount;
     protected ScheduledExecutorService executor;
@@ -33,7 +33,7 @@ public abstract class BaseMultipleTimeTask<T extends BaseMultipleTimeTask<T>> im
     private Consumer<ScheduleStatus> task;
     private ScheduledFuture<?> scheduledFuture;
 
-    public BaseMultipleTimeTask() {
+    public MultipleTimeTask() {
         this.runCount = new AtomicLong(0);
         this.startTimeSupplier = null;
         this.delay = null;

@@ -2,7 +2,7 @@ package cool.scx.scheduling;
 
 import java.time.Duration;
 
-public final class DelayTask extends BaseSingleTimeTask<DelayTask> {
+public final class DelayTask extends SingleTimeTask<DelayTask> {
 
     private Duration delay;
 

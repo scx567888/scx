@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 import static java.time.Duration.between;
 import static java.time.Instant.now;
 
-public final class OnceTask extends BaseSingleTimeTask<OnceTask> {
+public final class OnceTask extends SingleTimeTask<OnceTask> {
 
     private Supplier<Instant> startTimeSupplier;
 
