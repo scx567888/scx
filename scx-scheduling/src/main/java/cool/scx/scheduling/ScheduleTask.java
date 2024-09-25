@@ -41,6 +41,14 @@ public interface ScheduleTask {
     ScheduleTask maxRunCount(long maxRunCount);
 
     /**
+     * 过期策略
+     *
+     * @param expirationPolicy a
+     * @return a
+     */
+    ScheduleTask expirationPolicy(ExpirationPolicy expirationPolicy);
+
+    /**
      * 执行器
      * <p>
      * 默认会使用单例的 ScxScheduler
@@ -51,8 +59,19 @@ public interface ScheduleTask {
      */
     ScheduleTask executor(ScheduledExecutorService executor);
 
+    /**
+     * 任务
+     *
+     * @param task 任务
+     * @return self
+     */
     ScheduleTask task(Consumer<ScheduleStatus> task);
 
+    /**
+     * 启动任务
+     *
+     * @return 调度状态
+     */
     ScheduleStatus start();
 
     default ScheduleStatus start(Consumer<ScheduleStatus> task) {

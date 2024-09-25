@@ -1,5 +1,7 @@
 package cool.scx.scheduling;
 
+import static cool.scx.scheduling.MultipleTimeTask.Type.FIXED_DELAY;
+import static cool.scx.scheduling.MultipleTimeTask.Type.FIXED_RATE;
 import static cool.scx.scheduling.ScxScheduler.getInstance;
 
 /**
@@ -7,20 +9,20 @@ import static cool.scx.scheduling.ScxScheduler.getInstance;
  */
 public interface ScxScheduling {
 
-    static FixedRateTask fixedRate() {
-        return new FixedRateTask().executor(getInstance());
+    static MultipleTimeTask fixedRate() {
+        return new MultipleTimeTask().executor(getInstance()).type(FIXED_RATE);
     }
 
-    static FixedRateTask fixedDelay() {
-        return new FixedDelayTask().executor(getInstance());
+    static MultipleTimeTask fixedDelay() {
+        return new MultipleTimeTask().executor(getInstance()).type(FIXED_DELAY);
     }
 
     static CronTask cron() {
         return new CronTask().executor(getInstance());
     }
 
-    static OnceTask once() {
-        return new OnceTask().executor(getInstance());
+    static SingleTimeTask once() {
+        return new SingleTimeTask().executor(getInstance());
     }
 
 }

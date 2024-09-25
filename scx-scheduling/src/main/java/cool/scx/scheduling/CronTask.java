@@ -63,6 +63,12 @@ public class CronTask implements ScheduleTask {
     }
 
     @Override
+    public CronTask expirationPolicy(ExpirationPolicy expirationPolicy) {
+        //不支持直接跳过
+        return this;
+    }
+
+    @Override
     public CronTask executor(ScheduledExecutorService executor) {
         this.executor = executor;
         return this;
