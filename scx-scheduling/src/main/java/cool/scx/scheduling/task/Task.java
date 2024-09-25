@@ -1,4 +1,6 @@
-package cool.scx.scheduling;
+package cool.scx.scheduling.task;
+
+import cool.scx.scheduling.ScheduleStatus;
 
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.function.Consumer;
@@ -6,7 +8,7 @@ import java.util.function.Consumer;
 /**
  * 调度任务
  */
-public interface ScheduleTask {
+public interface Task {
 
     /**
      * 执行器
@@ -17,10 +19,21 @@ public interface ScheduleTask {
      * @param executor 执行器
      * @return self
      */
-    ScheduleTask executor(ScheduledExecutorService executor);
+    Task executor(ScheduledExecutorService executor);
 
-    ScheduleTask task(Consumer<ScheduleStatus> task);
+    /**
+     * 任务
+     *
+     * @param task 任务
+     * @return self
+     */
+    Task task(Consumer<ScheduleStatus> task);
 
+    /**
+     * 启动任务
+     *
+     * @return 调度状态
+     */
     ScheduleStatus start();
 
     default ScheduleStatus start(Consumer<ScheduleStatus> task) {
