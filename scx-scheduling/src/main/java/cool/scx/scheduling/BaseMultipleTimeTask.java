@@ -24,8 +24,8 @@ public abstract class BaseMultipleTimeTask<T extends BaseMultipleTimeTask<T>> im
     private final AtomicLong runCount;
     protected ScheduledExecutorService executor;
     private Supplier<Instant> startTimeSupplier;
-    private boolean skipIfExpired;
     private Duration delay;
+    private boolean skipIfExpired;
     private boolean concurrent;
     private long maxRunCount;
     private Consumer<ScheduleStatus> task;
@@ -34,8 +34,8 @@ public abstract class BaseMultipleTimeTask<T extends BaseMultipleTimeTask<T>> im
     public BaseMultipleTimeTask() {
         this.runCount = new AtomicLong(0);
         this.startTimeSupplier = null;
-        this.skipIfExpired = false;
         this.delay = null;
+        this.skipIfExpired = false;
         this.concurrent = false; //默认不允许并发
         this.maxRunCount = -1;// 默认没有最大运行次数
         this.executor = null;
