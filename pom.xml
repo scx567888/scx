@@ -157,7 +157,7 @@
             <!-- Spring Context 框架 , 主要使用其依赖注入及部分注解功能 -->
             <dependency>
                 <groupId>org.springframework</groupId>
-                <artifactId>spring-context</artifactId>
+                <artifactId>spring-beans</artifactId>
                 <version>${spring-framework.version}</version>
             </dependency>
 
@@ -187,6 +187,12 @@
                 <groupId>org.jasypt</groupId>
                 <artifactId>jasypt</artifactId>
                 <version>${jasypt.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.cronutils</groupId>
+                <artifactId>cron-utils</artifactId>
+                <version>${cron-utils.version}</version>
             </dependency>
 
             <!-- mysql 驱动 -->
@@ -239,6 +245,7 @@
         <freemarker.version>2.3.33</freemarker.version>
         <thumbnailator.version>0.4.20</thumbnailator.version>
         <jasypt.version>1.9.3</jasypt.version>
+        <cron-utils.version>9.2.1</cron-utils.version>
         <mysql-connector-j.version>9.0.0</mysql-connector-j.version>
         <sqlite-jdbc.version>3.46.1.0</sqlite-jdbc.version>
         <slf4j.version>2.0.16</slf4j.version>

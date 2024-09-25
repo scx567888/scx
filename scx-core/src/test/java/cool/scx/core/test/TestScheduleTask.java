@@ -1,7 +1,7 @@
 package cool.scx.core.test;
 
+import cool.scx.core.annotation.Scheduled;
 import cool.scx.core.annotation.ScxService;
-import org.springframework.scheduling.annotation.Scheduled;
 
 import java.lang.System.Logger;
 

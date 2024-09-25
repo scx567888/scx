@@ -51,7 +51,7 @@ public final class Scx {
      */
     private static final long DEFAULT_BODY_LIMIT = FileUtils.displaySizeToLong("16384KB");
 
-    private static final Logger logger = System.getLogger(Scx.class.getName());
+    static final Logger logger = System.getLogger(Scx.class.getName());
 
     private final ScxEnvironment scxEnvironment;
 
@@ -64,8 +64,6 @@ public final class Scx {
     private final ScxModule[] scxModules;
 
     private final ScxOptions scxOptions;
-
-    private final ScxScheduler scxScheduler;
 
     private final DefaultListableBeanFactory beanFactory;
 
@@ -94,11 +92,9 @@ public final class Scx {
         this.defaultHttpServerOptions = defaultHttpServerOptions;
         //2, 初始化 ScxLog 日志框架
         initScxLoggerFactory(this.scxConfig, this.scxEnvironment);
-        //3, 初始化任务调度器 这是核心调度器
-        this.scxScheduler = new ScxScheduler();
-        //4, 初始化 BeanFactory
-        this.beanFactory = initBeanFactory(this.scxModules, scxScheduler.scheduledExecutorService(), this.scxFeatureConfig);
-        //5, 初始化 Web
+        //3, 初始化 BeanFactory
+        this.beanFactory = initBeanFactory(this.scxModules,  this.scxFeatureConfig);
+        //4, 初始化 Web
         this.scxWeb = new ScxWeb(new ScxWebOptions().templateRoot(scxOptions.templateRoot()).useDevelopmentErrorPage(scxFeatureConfig.get(ScxCoreFeature.USE_DEVELOPMENT_ERROR_PAGE)));
     }
 
@@ -188,6 +184,10 @@ public final class Scx {
         this.startServer(this.scxOptions.port());
         //9, 此处刷新 scxBeanFactory 使其实例化所有符合条件的 Bean
         this.beanFactory.preInstantiateSingletons();
+        //10, 启动调度器注解
+        if (scxFeatureConfig.get(ScxCoreFeature.ENABLE_SCHEDULING_WITH_ANNOTATION)) {
+            startAnnotationScheduled(this.beanFactory);
+        }
         return this;
     }
 
@@ -384,10 +384,6 @@ public final class Scx {
 
     public ScxWeb scxWeb() {
         return scxWeb;
-    }
-
-    public ScxScheduler scxScheduler() {
-        return scxScheduler;
     }
 
     public <T> T getBean(Class<T> requiredType) {

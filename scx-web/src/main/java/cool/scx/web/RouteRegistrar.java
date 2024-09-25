@@ -8,7 +8,6 @@ import cool.scx.reflect.MethodInfo;
 import cool.scx.reflect.ReflectFactory;
 import cool.scx.web.annotation.NoScxRoute;
 import cool.scx.web.annotation.ScxRoute;
-import org.springframework.stereotype.Controller;
 
 import java.lang.System.Logger;
 import java.util.ArrayList;
@@ -103,7 +102,7 @@ public final class RouteRegistrar {
      * @return a
      */
     public static boolean isRoute(Class<?> c) {
-        return (c.isAnnotationPresent(ScxRoute.class) || c.isAnnotationPresent(Controller.class)) && //拥有注解
+        return c.isAnnotationPresent(ScxRoute.class) && //拥有注解
                ClassUtils.isNormalClass(c); // 是一个普通的类 (不是接口, 不是抽象类) ; 此处不要求有必须有无参构造函数 因为此类的创建会由 beanFactory 进行处理
     }
 

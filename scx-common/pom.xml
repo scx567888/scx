@@ -38,12 +38,6 @@
             <artifactId>jackson-dataformat-xml</artifactId>
         </dependency>
 
-        <!-- Spring Context 框架 , 主要使用其依赖注入及部分注解功能 -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-        </dependency>
-
         <!-- 轻量级的加密解密工具包 , 用于简化一些密码校验及敏感数据加密的操作 -->
         <dependency>
             <groupId>org.jasypt</groupId>

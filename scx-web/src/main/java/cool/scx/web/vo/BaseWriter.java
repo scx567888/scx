@@ -8,6 +8,7 @@ import cool.scx.http.routing.RoutingContext;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static cool.scx.http.HttpFieldName.CONTENT_DISPOSITION;
@@ -121,6 +122,9 @@ class BaseWriter implements BaseVo {
     }
 
     private void writeFile(RoutingContext context) throws NotFoundException {
+        System.out.println();
+//        context.response().setHeader(CONTENT_LENGTH, Files.len);
+        context.response().send(this.path);
         //todo 此处需要处理 206 之类的请求
 //        SEND_FILE_HELPER.sendStatic(context, context.vertx().fileSystem(), this.path.toString(), false);
     }

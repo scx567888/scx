@@ -20,10 +20,10 @@
 
     <dependencies>
 
+        <!-- 解析 cron 表达式 -->
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>scx-common</artifactId>
-            <version>${project.version}</version>
+            <groupId>com.cronutils</groupId>
+            <artifactId>cron-utils</artifactId>
         </dependency>
 
         <!-- TestNG 测试包 -->

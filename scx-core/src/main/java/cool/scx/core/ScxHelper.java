@@ -13,6 +13,8 @@ import cool.scx.config.ScxFeatureConfig;
 import cool.scx.config.handler.AppRootHandler;
 import cool.scx.config.handler.ConvertValueHandler;
 import cool.scx.config.handler.DefaultValueHandler;
+import cool.scx.core.annotation.Scheduled;
+import cool.scx.core.annotation.ScheduledList;
 import cool.scx.core.annotation.ScxService;
 import cool.scx.core.base.BaseModel;
 import cool.scx.core.base.BaseModelService;
@@ -25,18 +27,13 @@ import cool.scx.logging.ScxLoggerFactory;
 import cool.scx.logging.recorder.ConsoleRecorder;
 import cool.scx.logging.recorder.FileRecorder;
 import cool.scx.reflect.ReflectFactory;
+import cool.scx.scheduling.ScxScheduling;
 import cool.scx.web.annotation.ScxRoute;
 import cool.scx.web.annotation.ScxWebSocketRoute;
 import io.helidon.common.tls.Tls;
 import org.springframework.beans.factory.annotation.AnnotatedGenericBeanDefinition;
 import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
-import org.springframework.context.annotation.AnnotationConfigUtils;
-import org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -50,9 +47,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.ScheduledExecutorService;
+import java.util.stream.Stream;
 
 import static cool.scx.common.util.ClassUtils.*;
+import static cool.scx.reflect.AccessModifier.PUBLIC;
 import static java.lang.System.Logger.Level.*;
 import static java.util.Objects.requireNonNull;
 
@@ -69,9 +67,7 @@ public final class ScxHelper {
      */
     private static final List<Class<? extends Annotation>> beanFilterAnnotation = List.of(
             //scx 注解
-            ScxRoute.class, Table.class, ScxService.class, ScxWebSocketRoute.class,
-            //兼容 spring 注解
-            Component.class, Controller.class, Service.class, Repository.class);
+            ScxRoute.class, Table.class, ScxService.class, ScxWebSocketRoute.class);
 
     static Path findRootPathByScxModule(Class<? extends ScxModule> c) throws IOException {
         var classSource = getCodeSource(c);
@@ -209,21 +205,12 @@ public final class ScxHelper {
         return scxModules;
     }
 
-    static DefaultListableBeanFactory initBeanFactory(ScxModule[] modules, ScheduledExecutorService scheduledExecutorService, ScxFeatureConfig scxFeatureConfig) {
+    static DefaultListableBeanFactory initBeanFactory(ScxModule[] modules, ScxFeatureConfig scxFeatureConfig) {
         var beanFactory = new DefaultListableBeanFactory();
         //这里添加一个 bean 的后置处理器以便可以使用 @Autowired 注解
         var beanPostProcessor = new AutowiredAnnotationBeanPostProcessor();
         beanPostProcessor.setBeanFactory(beanFactory);
         beanFactory.addBeanPostProcessor(beanPostProcessor);
-        //只有 开启标识时才 启用定时任务 这里直接跳过 后置处理器
-        if (scxFeatureConfig.get(ScxCoreFeature.ENABLE_SCHEDULING_WITH_ANNOTATION)) {
-            //这里在添加一个 bean 的后置处理器 以便使用 定时任务 注解
-            var scheduledAnnotationBeanPostProcessor = new ScheduledAnnotationBeanPostProcessor();
-            scheduledAnnotationBeanPostProcessor.setBeanFactory(beanFactory);
-            scheduledAnnotationBeanPostProcessor.setScheduler(scheduledExecutorService);
-            scheduledAnnotationBeanPostProcessor.afterSingletonsInstantiated();
-            beanFactory.addBeanPostProcessor(scheduledAnnotationBeanPostProcessor);
-        }
         //设置是否允许循环依赖 (默认禁止循环依赖)
         beanFactory.setAllowCircularReferences(scxFeatureConfig.get(ScxCoreFeature.ALLOW_CIRCULAR_REFERENCES));
         //注册 bean
@@ -235,10 +222,59 @@ public final class ScxHelper {
         for (var c : beanClass) {
             var beanDefinition = new AnnotatedGenericBeanDefinition(c);
             //这里是为了兼容 spring context 的部分注解
-            AnnotationConfigUtils.processCommonDefinitionAnnotations(beanDefinition);
             beanFactory.registerBeanDefinition(c.getName(), beanDefinition);
         }
         return beanFactory;
+    }
+
+    public static void startAnnotationScheduled(DefaultListableBeanFactory beanFactory) {
+        var beanDefinitionNames = beanFactory.getBeanDefinitionNames();
+        for (var beanDefinitionName : beanDefinitionNames) {
+            var bean = beanFactory.getBean(beanDefinitionName);
+            var classInfo = ReflectFactory.getClassInfo(bean.getClass());
+            for (var method : classInfo.methods()) {
+                if (method.accessModifier() != PUBLIC) {
+                    continue;
+                }
+                var scheduledList = Arrays.stream(method.annotations()).flatMap(c -> switch (c) {
+                    case Scheduled s -> Stream.of(s);
+                    case ScheduledList f -> Stream.of(f.value());
+                    default -> Stream.of();
+                }).toList();
+                for (Scheduled scheduled : scheduledList) {
+                    if (method.parameters().length != 0) {
+                        Scx.logger.log(ERROR,
+                                "被 Scheduled 注解标识的方法不可以有参数 Class [{0}] , Method [{1}]",
+                                classInfo.type().getRawClass().getName(),
+                                method.name()
+                        );
+                        break;
+                    }
+                    if (method.isStatic()) {
+                        ScxScheduling.cron()
+                                .expression(scheduled.cron())
+                                .start(c -> {
+                                    try {
+                                        method.method().invoke(null);
+                                    } catch (Exception e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                });
+                    } else {
+                        ScxScheduling.cron()
+                                .expression(scheduled.cron())
+                                .start(c -> {
+                                    try {
+                                        method.method().invoke(bean);
+                                    } catch (Exception e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                });
+                    }
+                }
+             
+            }
+        }
     }
 
     /**
