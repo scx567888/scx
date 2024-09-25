@@ -65,8 +65,6 @@ public final class Scx {
 
     private final ScxOptions scxOptions;
 
-//    private final ScxScheduler scxScheduler;
-
     private final DefaultListableBeanFactory beanFactory;
 
     private final ScxWeb scxWeb;
@@ -94,11 +92,9 @@ public final class Scx {
         this.defaultHttpServerOptions = defaultHttpServerOptions;
         //2, 初始化 ScxLog 日志框架
         initScxLoggerFactory(this.scxConfig, this.scxEnvironment);
-        //3, 初始化任务调度器 这是核心调度器
-        
-        //4, 初始化 BeanFactory
+        //3, 初始化 BeanFactory
         this.beanFactory = initBeanFactory(this.scxModules,  this.scxFeatureConfig);
-        //5, 初始化 Web
+        //4, 初始化 Web
         this.scxWeb = new ScxWeb(new ScxWebOptions().templateRoot(scxOptions.templateRoot()).useDevelopmentErrorPage(scxFeatureConfig.get(ScxCoreFeature.USE_DEVELOPMENT_ERROR_PAGE)));
     }
 
