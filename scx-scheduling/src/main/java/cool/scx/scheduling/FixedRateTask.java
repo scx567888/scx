@@ -6,28 +6,29 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import static java.lang.System.Logger.Level.ERROR;
 import static java.time.Duration.between;
 import static java.time.Instant.now;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 
-public class FixedRateTask implements ScheduleTask {
+public final class FixedRateTask implements MultipleTimeTask {
 
     private static final System.Logger logger = System.getLogger(FixedRateTask.class.getName());
 
-    protected final AtomicLong runCount;
-    protected Instant startTime;
-    protected Duration delay;
-    protected boolean concurrent;
-    protected long maxRunCount;
-    protected ScheduledExecutorService executor;
-    protected Consumer<ScheduleStatus> task;
-    protected ScheduledFuture<?> scheduledFuture;
+    private final AtomicLong runCount;
+    private Supplier<Instant> startTimeSupplier;
+    private Duration delay;
+    private boolean concurrent;
+    private long maxRunCount;
+    private ScheduledExecutorService executor;
+    private Consumer<ScheduleStatus> task;
+    private ScheduledFuture<?> scheduledFuture;
 
     public FixedRateTask() {
         this.runCount = new AtomicLong(0);
-        this.startTime = null;
+        this.startTimeSupplier = null;
         this.delay = null;
         this.concurrent = false; //默认不允许并发
         this.maxRunCount = -1;// 默认没有最大运行次数
@@ -36,8 +37,8 @@ public class FixedRateTask implements ScheduleTask {
         this.scheduledFuture = null;
     }
 
-    public FixedRateTask startTime(Instant startTime) {
-        this.startTime = startTime;
+    public FixedRateTask startTime(Supplier<Instant> startTime) {
+        this.startTimeSupplier = startTime;
         return this;
     }
 
@@ -75,9 +76,9 @@ public class FixedRateTask implements ScheduleTask {
         if (this.delay == null) {
             throw new IllegalArgumentException("Delay must be non-null");
         }
-        var initialDelay = this.startTime != null ? between(this.startTime, now()).toNanos() : 0;
+        var startDelay = getStartDelay();
         var delay = this.delay.toNanos();
-        this.scheduledFuture = executor.scheduleAtFixedRate(this::run, initialDelay, delay, NANOSECONDS);
+        this.scheduledFuture = executor.scheduleAtFixedRate(this::run, startDelay, delay, NANOSECONDS);
         return new ScheduleStatus() {
             @Override
             public long runCount() {
@@ -91,7 +92,11 @@ public class FixedRateTask implements ScheduleTask {
         };
     }
 
-    protected void run() {
+    private long getStartDelay() {
+        return this.startTimeSupplier != null ? between(now(), this.startTimeSupplier.get()).toNanos() : 0;
+    }
+
+    private void run() {
         //如果允许并发执行则 开启虚拟线程执行
         if (concurrent) {
             Thread.ofVirtual().start(this::run0);
@@ -100,7 +105,7 @@ public class FixedRateTask implements ScheduleTask {
         }
     }
 
-    protected void run0() {
+    private void run0() {
         var l = runCount.incrementAndGet();
         //判断是否 达到最大次数 停止运行并取消任务
         if (maxRunCount != -1 && l > maxRunCount) {
