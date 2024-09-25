@@ -52,19 +52,28 @@ public abstract class BaseSingleTimeTask<T extends BaseSingleTimeTask<T>> implem
     public ScheduleStatus start() {
         var startDelay = getStartDelay();
         //判断任务是否过期
-        if ((expirationPolicy == IMMEDIATE_IGNORE || expirationPolicy == BACKTRACKING_IGNORE) && startDelay < 0) {
-            logger.log(WARNING, "任务过期 跳过执行 !!!");
-            return new ScheduleStatus() {
-                @Override
-                public long runCount() {
-                    return 0;
-                }
+        if (startDelay < 0) {
+            switch (expirationPolicy) {
+                //因为在单次执行任务中 只有忽略的策略需要特殊处理
+                case IMMEDIATE_IGNORE, BACKTRACKING_IGNORE -> {
+                    logger.log(WARNING, "任务过期 跳过执行 !!!");
+                    //这里处理一下
+                    if (expirationPolicy == BACKTRACKING_IGNORE) {
+                        runCount.incrementAndGet();
+                    }
+                    return new ScheduleStatus() {
+                        @Override
+                        public long runCount() {
+                            return runCount.get();
+                        }
 
-                @Override
-                public void cancel() {
-                    //任务从未执行所以无需取消
+                        @Override
+                        public void cancel() {
+                            //任务从未执行所以无需取消
+                        }
+                    };
                 }
-            };
+            }
         }
         var scheduledFuture = executor.schedule(this::run, startDelay, NANOSECONDS);
         return new ScheduleStatus() {
