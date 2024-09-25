@@ -1,6 +1,5 @@
 package cool.scx.scheduling.task.single_time;
 
-import cool.scx.scheduling.FixedRateTask;
 import cool.scx.scheduling.ScheduleStatus;
 
 import java.time.Instant;
@@ -17,7 +16,7 @@ import static java.util.concurrent.TimeUnit.NANOSECONDS;
 
 public class OnceTaskImpl implements OnceTask {
 
-    private static final System.Logger logger = System.getLogger(FixedRateTask.class.getName());
+    private static final System.Logger logger = System.getLogger(OnceTaskImpl.class.getName());
 
     private final AtomicLong runCount;
     private Supplier<Instant> startTimeSupplier;

@@ -4,9 +4,10 @@ public interface DelayTask extends SingleTimeTask {
 
     /**
      * 延时时间
+     *
      * @param delay delay
      * @return delay
-     */ 
+     */
     DelayTask delay(long delay);
 
 }

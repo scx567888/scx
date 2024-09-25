@@ -1,6 +1,5 @@
 package cool.scx.scheduling.task.single_time;
 
-import cool.scx.scheduling.FixedRateTask;
 import cool.scx.scheduling.ScheduleStatus;
 
 import java.util.concurrent.ScheduledExecutorService;
@@ -13,7 +12,7 @@ import static java.util.concurrent.TimeUnit.NANOSECONDS;
 
 public class DelayTaskImpl implements DelayTask {
 
-    private static final System.Logger logger = System.getLogger(FixedRateTask.class.getName());
+    private static final System.Logger logger = System.getLogger(DelayTaskImpl.class.getName());
 
     private final AtomicLong runCount;
     private long delay;
