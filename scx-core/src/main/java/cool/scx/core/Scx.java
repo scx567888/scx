@@ -386,10 +386,6 @@ public final class Scx {
         return scxWeb;
     }
 
-    public ScxScheduler scxScheduler() {
-        return null;
-    }
-
     public <T> T getBean(Class<T> requiredType) {
         return beanFactory.getBean(requiredType);
     }

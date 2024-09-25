@@ -164,24 +164,6 @@ public final class ScxContext {
         return scx().scxHttpRouter();
     }
 
-//    /**
-//     * 返回当前运行的 scx 实例的 vertx
-//     *
-//     * @return 全局的事件总线
-//     */
-//    public static Vertx vertx() {
-//        return scx().vertx();
-//    }
-
-    /**
-     * 返回当前运行的 scx 实例的 scheduler
-     *
-     * @return a
-     */
-    public static ScxScheduler scheduler() {
-        return scx().scxScheduler();
-    }
-
     /**
      * 返回当前运行的 scx 实例的 scxMappingConfiguration
      *
