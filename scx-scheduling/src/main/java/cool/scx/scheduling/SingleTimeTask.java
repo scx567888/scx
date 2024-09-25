@@ -12,7 +12,7 @@ import static java.util.concurrent.TimeUnit.NANOSECONDS;
 
 public abstract class SingleTimeTask<T extends SingleTimeTask<T>> implements ScheduleTask {
 
-    private static final System.Logger logger=System.getLogger(SingleTimeTask.class.getName());
+    private static final System.Logger logger = System.getLogger(SingleTimeTask.class.getName());
 
     private final AtomicLong runCount;
     private ExpirationPolicy expirationPolicy;
