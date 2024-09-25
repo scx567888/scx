@@ -50,9 +50,9 @@ public abstract class AbstractSingleTimeTask<T extends AbstractSingleTimeTask<T>
 
     @Override
     public final ScheduleStatus start() {
-        var delay = getDelay();
+        var startDelay = getStartDelay();
         //判断任务是否过期
-        if (skipIfExpired && delay < 0) {
+        if (skipIfExpired && startDelay < 0) {
             logger.log(WARNING, "任务过期 跳过执行 !!!");
             return new ScheduleStatus() {
                 @Override
@@ -66,7 +66,7 @@ public abstract class AbstractSingleTimeTask<T extends AbstractSingleTimeTask<T>
                 }
             };
         }
-        var scheduledFuture = executor.schedule(this::run, delay, NANOSECONDS);
+        var scheduledFuture = executor.schedule(this::run, startDelay, NANOSECONDS);
         return new ScheduleStatus() {
             @Override
             public long runCount() {
@@ -106,6 +106,6 @@ public abstract class AbstractSingleTimeTask<T extends AbstractSingleTimeTask<T>
      *
      * @return 延时
      */
-    protected abstract long getDelay();
+    protected abstract long getStartDelay();
 
 }

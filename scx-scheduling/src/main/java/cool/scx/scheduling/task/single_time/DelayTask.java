@@ -5,11 +5,11 @@ import java.time.Duration;
 public interface DelayTask extends SingleTimeTask {
 
     /**
-     * 延时时间
+     * 开始延时
      *
      * @param delay delay
      * @return delay
      */
-    DelayTask delay(Duration delay);
+    DelayTask startDelay(Duration delay);
 
 }

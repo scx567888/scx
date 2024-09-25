@@ -11,13 +11,13 @@ public class DelayTaskImpl extends AbstractSingleTimeTask<DelayTaskImpl> impleme
     }
 
     @Override
-    public DelayTask delay(Duration delay) {
+    public DelayTask startDelay(Duration delay) {
         this.delay = delay;
         return this;
     }
 
     @Override
-    protected long getDelay() {
+    protected long getStartDelay() {
         return delay != null ? delay.toNanos() : 0;
     }
 

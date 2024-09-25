@@ -21,7 +21,7 @@ public class OnceTaskImpl extends AbstractSingleTimeTask<OnceTaskImpl> implement
     }
 
     @Override
-    protected long getDelay() {
+    protected long getStartDelay() {
         return startTimeSupplier != null ? between(now(), startTimeSupplier.get()).toNanos() : 0;
     }
 
