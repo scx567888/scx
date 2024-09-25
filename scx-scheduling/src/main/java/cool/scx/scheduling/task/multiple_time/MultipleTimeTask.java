@@ -1,9 +1,11 @@
-package cool.scx.scheduling;
+package cool.scx.scheduling.task.multiple_time;
+
+import cool.scx.scheduling.task.Task;
 
 /**
  * 可多次执行的任务
  */
-public interface MultipleTimeTask extends ScheduleTask {
+public interface MultipleTimeTask extends Task {
 
     /**
      * 是否运行并发执行
