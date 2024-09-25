@@ -245,16 +245,16 @@ public final class MultipleTimeTask implements ScheduleTask {
         }
     }
 
-    public enum Type {
-        FIXED_RATE,
-        FIXED_DELAY
-    }
-
     private ScheduledFuture<?> executorSchedule(Runnable command, long startDelay, long delay, TimeUnit unit) {
         return switch (type) {
             case FIXED_RATE -> executor.scheduleAtFixedRate(command, startDelay, delay, unit);
             case FIXED_DELAY -> executor.scheduleWithFixedDelay(command, startDelay, delay, unit);
         };
+    }
+
+    public enum Type {
+        FIXED_RATE,
+        FIXED_DELAY
     }
 
 }

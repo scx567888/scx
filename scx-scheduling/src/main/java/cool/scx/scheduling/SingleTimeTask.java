@@ -41,12 +41,12 @@ public final class SingleTimeTask implements ScheduleTask {
      */
     public SingleTimeTask startTime(Supplier<Instant> startTime) {
         this.startDelaySupplier = () -> between(now(), startTime.get()).toNanos();
-        return  this;
+        return this;
     }
 
     public SingleTimeTask startTime(Instant startTime) {
         this.startDelaySupplier = () -> between(now(), startTime).toNanos();
-        return  this;
+        return this;
     }
 
     public SingleTimeTask startDelay(Duration delay) {
@@ -56,12 +56,14 @@ public final class SingleTimeTask implements ScheduleTask {
 
     @Override
     public SingleTimeTask concurrent(boolean concurrent) {
-        throw new UnsupportedOperationException("SingleTimeTask 不支持 concurrent 参数 !!!");
+        //不支持所以直接跳过
+        return this;
     }
 
     @Override
     public SingleTimeTask maxRunCount(long maxRunCount) {
-        throw new UnsupportedOperationException("SingleTimeTask 不支持 maxRunCount 参数 !!!");
+        //不支持所以直接跳过
+        return this;
     }
 
     @Override
@@ -73,7 +75,7 @@ public final class SingleTimeTask implements ScheduleTask {
     @Override
     public SingleTimeTask executor(ScheduledExecutorService executor) {
         this.executor = executor;
-        return  this;
+        return this;
     }
 
     @Override

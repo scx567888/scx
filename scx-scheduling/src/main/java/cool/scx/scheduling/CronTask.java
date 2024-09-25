@@ -64,7 +64,8 @@ public class CronTask implements ScheduleTask {
 
     @Override
     public CronTask expirationPolicy(ExpirationPolicy expirationPolicy) {
-        throw new UnsupportedOperationException("CronTask 不支持 expirationPolicy 参数 !!!");
+        //不支持直接跳过
+        return this;
     }
 
     @Override
