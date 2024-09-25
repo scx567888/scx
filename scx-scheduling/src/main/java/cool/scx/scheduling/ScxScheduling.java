@@ -11,7 +11,7 @@ public interface ScxScheduling {
         return new FixedRateTask().executor(getInstance());
     }
 
-    static FixedRateTask fixedDelay() {
+    static FixedDelayTask fixedDelay() {
         return new FixedDelayTask().executor(getInstance());
     }
 
@@ -21,6 +21,10 @@ public interface ScxScheduling {
 
     static OnceTask once() {
         return new OnceTask().executor(getInstance());
+    }
+
+    static DelayTask delay() {
+        return new DelayTask().executor(getInstance());
     }
 
 }

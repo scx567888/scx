@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 public interface ScheduleTask {
 
     /**
-     * 过期策略 
+     * 过期策略
      *
      * @param expirationPolicy a
      * @return a

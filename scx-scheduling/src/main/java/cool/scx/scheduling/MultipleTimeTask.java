@@ -1,6 +1,6 @@
 package cool.scx.scheduling;
 
-public interface MultipleTimeTask extends ScheduleTask{
+public interface MultipleTimeTask extends ScheduleTask {
 
 
     /**
@@ -34,5 +34,5 @@ public interface MultipleTimeTask extends ScheduleTask{
      * @return self
      */
     ScheduleTask maxRunCount(long maxRunCount);
-    
+
 }
