@@ -51,7 +51,7 @@ public final class Scx {
      */
     private static final long DEFAULT_BODY_LIMIT = FileUtils.displaySizeToLong("16384KB");
 
-    private static final Logger logger = System.getLogger(Scx.class.getName());
+    static final Logger logger = System.getLogger(Scx.class.getName());
 
     private final ScxEnvironment scxEnvironment;
 
@@ -188,6 +188,10 @@ public final class Scx {
         this.startServer(this.scxOptions.port());
         //9, 此处刷新 scxBeanFactory 使其实例化所有符合条件的 Bean
         this.beanFactory.preInstantiateSingletons();
+        //10, 启动调度器注解
+        if (scxFeatureConfig.get(ScxCoreFeature.ENABLE_SCHEDULING_WITH_ANNOTATION)) {
+            startAnnotationScheduled(this.beanFactory);
+        }
         return this;
     }
 

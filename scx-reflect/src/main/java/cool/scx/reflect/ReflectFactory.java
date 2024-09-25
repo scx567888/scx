@@ -298,6 +298,10 @@ public final class ReflectFactory {
     static boolean _isAbstract(MethodInfo methodInfo) {
         return Modifier.isAbstract(methodInfo.method().getModifiers());
     }
+    
+    static boolean _isStatic(MethodInfo methodInfo){
+        return Modifier.isStatic(methodInfo.method().getModifiers());
+    }
 
     static AccessModifier _findAccessModifier(MethodInfo methodInfo) {
         return _findAccessModifier(methodInfo.method().getModifiers());

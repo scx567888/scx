@@ -1,28 +1,12 @@
 package cool.scx.core.annotation;
 
-import java.util.concurrent.TimeUnit;
+import java.lang.annotation.*;
 
-//todo 写一个代替品
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+@Repeatable(ScheduledList.class)
 public @interface Scheduled {
-    String CRON_DISABLED = "-";
 
-    String cron() default "";
+    String cron();
 
-    String zone() default "";
-
-    long fixedRate() default -1L;
-
-    String fixedRateString() default "";
-
-    long fixedDelay() default -1L;
-
-    String fixedDelayString() default "";
-
-    long initialDelay() default -1L;
-
-    String initialDelayString() default "";
-
-    TimeUnit timeUnit() default TimeUnit.MILLISECONDS;
-
-    String scheduler() default "";
 }

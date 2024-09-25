@@ -16,6 +16,7 @@ public final class MethodInfo implements ExecutableInfo {
     private final ClassInfo classInfo;
     private final String name;
     private final boolean isAbstract;
+    private final boolean isStatic;
     private final AccessModifier accessModifier;
 
     private final Annotation[] annotations;
@@ -30,6 +31,7 @@ public final class MethodInfo implements ExecutableInfo {
         this.classInfo = classInfo;
         this.name = _findName(this);
         this.isAbstract = _isAbstract(this);
+        this.isStatic = _isStatic(this);
         this.accessModifier = _findAccessModifier(this);
         this.annotations = _findAnnotations(this);
         this.returnType = _findReturnType(this);
@@ -54,6 +56,10 @@ public final class MethodInfo implements ExecutableInfo {
 
     public boolean isAbstract() {
         return isAbstract;
+    }
+
+    public boolean isStatic() {
+        return isStatic;
     }
 
     public AccessModifier accessModifier() {
