@@ -13,11 +13,10 @@ import java.util.function.Consumer;
 
 import static com.cronutils.model.CronType.QUARTZ;
 import static com.cronutils.model.definition.CronDefinitionBuilder.instanceDefinitionFor;
-import static cool.scx.scheduling.ExpirationPolicy.IMMEDIATE_COMPENSATION;
 import static java.lang.System.Logger.Level.ERROR;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
-public class CronTask implements MultipleTimeTask {
+public class CronTask implements ScheduleTask {
 
     private static final Logger logger = System.getLogger(CronTask.class.getName());
 
@@ -27,7 +26,6 @@ public class CronTask implements MultipleTimeTask {
     private final AtomicLong runCount;
     private final AtomicBoolean cancel;
     private ExecutionTime executionTime;
-    private ExpirationPolicy expirationPolicy;
     private boolean concurrent;
     private long maxRunCount;
     private ScheduledExecutorService executor;
@@ -39,7 +37,6 @@ public class CronTask implements MultipleTimeTask {
         this.runCount = new AtomicLong(0);
         this.cancel = new AtomicBoolean(false);
         this.executionTime = null;
-        this.expirationPolicy = IMMEDIATE_COMPENSATION;
         this.concurrent = false;// 默认不允许并发
         this.maxRunCount = -1;// 默认不限制运行次数
         this.executor = null;
@@ -67,8 +64,7 @@ public class CronTask implements MultipleTimeTask {
 
     @Override
     public CronTask expirationPolicy(ExpirationPolicy expirationPolicy) {
-        this.expirationPolicy = expirationPolicy;
-        return this;
+        throw new UnsupportedOperationException("CronTask 不支持 expirationPolicy 参数 !!!");
     }
 
     @Override

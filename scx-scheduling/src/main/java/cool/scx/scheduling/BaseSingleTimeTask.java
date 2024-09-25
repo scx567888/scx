@@ -27,6 +27,15 @@ public abstract class BaseSingleTimeTask<T extends BaseSingleTimeTask<T>> implem
         this.task = null;
     }
 
+    @Override
+    public T concurrent(boolean concurrent) {
+        throw new UnsupportedOperationException("SingleTimeTask 不支持 concurrent 参数 !!!");
+    }
+
+    @Override
+    public T maxRunCount(long maxRunCount) {
+        throw new UnsupportedOperationException("SingleTimeTask 不支持 maxRunCount 参数 !!!");
+    }
 
     @SuppressWarnings("unchecked")
     @Override

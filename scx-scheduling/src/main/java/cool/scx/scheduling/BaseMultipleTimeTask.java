@@ -19,7 +19,7 @@ import static java.util.concurrent.TimeUnit.NANOSECONDS;
 /**
  * 可多次执行的任务
  */
-public abstract class BaseMultipleTimeTask<T extends BaseMultipleTimeTask<T>> implements MultipleTimeTask {
+public abstract class BaseMultipleTimeTask<T extends BaseMultipleTimeTask<T>> implements ScheduleTask {
 
     private static final System.Logger logger = System.getLogger(FixedRateTask.class.getName());
 
