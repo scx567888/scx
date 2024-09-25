@@ -58,13 +58,6 @@ public abstract class BaseMultipleTimeTask<T extends BaseMultipleTimeTask<T>> im
 
     @SuppressWarnings("unchecked")
     @Override
-    public T expirationPolicy(ExpirationPolicy expirationPolicy) {
-        this.expirationPolicy = expirationPolicy;
-        return (T) this;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
     public T concurrent(boolean concurrentExecution) {
         this.concurrent = concurrentExecution;
         return (T) this;
@@ -74,6 +67,13 @@ public abstract class BaseMultipleTimeTask<T extends BaseMultipleTimeTask<T>> im
     @Override
     public T maxRunCount(long maxRunCount) {
         this.maxRunCount = maxRunCount;
+        return (T) this;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public T expirationPolicy(ExpirationPolicy expirationPolicy) {
+        this.expirationPolicy = expirationPolicy;
         return (T) this;
     }
 
