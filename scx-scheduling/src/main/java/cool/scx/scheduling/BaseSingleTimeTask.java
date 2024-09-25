@@ -1,6 +1,4 @@
-package cool.scx.scheduling.task.single_time;
-
-import cool.scx.scheduling.ScheduleStatus;
+package cool.scx.scheduling;
 
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicLong;
@@ -10,7 +8,7 @@ import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.Logger.Level.WARNING;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 
-public abstract class AbstractSingleTimeTask<T extends AbstractSingleTimeTask<T>> implements SingleTimeTask {
+public abstract class BaseSingleTimeTask<T extends BaseSingleTimeTask<T>> implements ScheduleTask {
 
     private final System.Logger logger;
 
@@ -19,7 +17,7 @@ public abstract class AbstractSingleTimeTask<T extends AbstractSingleTimeTask<T>
     private ScheduledExecutorService executor;
     private Consumer<ScheduleStatus> task;
 
-    public AbstractSingleTimeTask() {
+    public BaseSingleTimeTask() {
         this.logger = System.getLogger(this.getClass().getName());
         this.runCount = new AtomicLong(0);
         this.skipIfExpired = false;
@@ -27,29 +25,44 @@ public abstract class AbstractSingleTimeTask<T extends AbstractSingleTimeTask<T>
         this.task = null;
     }
 
+
     @SuppressWarnings("unchecked")
     @Override
-    public final T skipIfExpired(boolean skipIfExpired) {
+    public T skipIfExpired(boolean skipIfExpired) {
         this.skipIfExpired = skipIfExpired;
         return (T) this;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public final T executor(ScheduledExecutorService executor) {
+    public T concurrent(boolean concurrent) {
+        //单次执行无需考虑并发
+        return (T) this;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public T maxRunCount(long maxRunCount) {
+        //单次执行无需设置最大次数
+        return (T) this;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public T executor(ScheduledExecutorService executor) {
         this.executor = executor;
         return (T) this;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public final T task(Consumer<ScheduleStatus> task) {
+    public T task(Consumer<ScheduleStatus> task) {
         this.task = task;
         return (T) this;
     }
 
     @Override
-    public final ScheduleStatus start() {
+    public ScheduleStatus start() {
         var startDelay = getStartDelay();
         //判断任务是否过期
         if (skipIfExpired && startDelay < 0) {
