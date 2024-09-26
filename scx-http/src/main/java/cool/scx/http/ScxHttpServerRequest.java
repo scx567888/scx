@@ -1,5 +1,6 @@
 package cool.scx.http;
 
+import cool.scx.http.content_type.ContentType;
 import cool.scx.http.uri.ScxURI;
 
 /**
@@ -37,6 +38,10 @@ public interface ScxHttpServerRequest {
 
     default String getHeader(String name) {
         return headers().get(name);
+    }
+
+    default ContentType contentType() {
+        return headers().contentType();
     }
 
 }

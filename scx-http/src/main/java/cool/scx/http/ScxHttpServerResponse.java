@@ -1,5 +1,7 @@
 package cool.scx.http;
 
+import cool.scx.http.content_type.ContentType;
+
 import java.io.OutputStream;
 
 /**
@@ -37,6 +39,16 @@ public interface ScxHttpServerResponse {
 
     default ScxHttpServerResponse status(int code) {
         return status(HttpStatusCode.of(code));
+    }
+
+    default ScxHttpServerResponse contentType(ContentType contentType) {
+        headers().contentType(contentType);
+        return this;
+    }
+
+    default ScxHttpServerResponse contentType(MediaType mediaType) {
+        headers().contentType(mediaType);
+        return this;
     }
 
 }
