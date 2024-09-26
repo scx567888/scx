@@ -4,13 +4,11 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import static cool.scx.scheduling.ExpirationPolicy.BACKTRACKING_IGNORE;
-import static cool.scx.scheduling.ExpirationPolicy.IMMEDIATE_COMPENSATION;
+import static cool.scx.scheduling.ExpirationPolicy.*;
 import static java.lang.System.Logger.Level.ERROR;
 import static java.time.Duration.between;
 import static java.time.Instant.now;
@@ -108,102 +106,40 @@ public final class MultipleTimeTask implements ScheduleTask {
         var startTime = this.startTimeSupplier != null ? this.startTimeSupplier.get() : null;
         //没有开始时间 就不需要验证任何过期策略 直接执行
         if (startTime == null) {
-            this.scheduledFuture = executorSchedule(this::run, 0, delay.toNanos(), NANOSECONDS);
-            return new ScheduleStatus() {
-                @Override
-                public long runCount() {
-                    return runCount.get();
-                }
-
-                @Override
-                public void cancel() {
-                    scheduledFuture.cancel(false);
-                }
-            };
+            return doStart(0);
         }
         //先判断过没过期
         var between = between(now, startTime);
         //不为负数 则没有过期
         if (!between.isNegative()) {
-            this.scheduledFuture = executorSchedule(this::run, between.toNanos(), delay.toNanos(), NANOSECONDS);
-            return new ScheduleStatus() {
-                @Override
-                public long runCount() {
-                    return runCount.get();
-                }
-
-                @Override
-                public void cancel() {
-                    scheduledFuture.cancel(false);
-                }
-            };
+            return doStart(between.toNanos());
         }
 
-        //处理过期情况 
-        switch (expirationPolicy) {
-            case IMMEDIATE_IGNORE, BACKTRACKING_IGNORE -> {
-                //1, 计算过期次数
-                var delayCount = between.dividedBy(delay) * -1;
-                //2, 计算下一次最近的时间点 用作开始时间
-                var nearestTime = startTime.plus(delay.multipliedBy(delayCount + 1));
-                //3, 计算延时
-                var d = between(now, nearestTime);
-                //4, 如果是回溯忽略 我们就假设之前的已经都执行了 所以这里需要 处理 runCount
-                if (expirationPolicy == BACKTRACKING_IGNORE) {
-                    runCount.addAndGet(delayCount);
-                }
-                this.scheduledFuture = executorSchedule(this::run, d.toNanos(), delay.toNanos(), NANOSECONDS);
-                return new ScheduleStatus() {
-                    @Override
-                    public long runCount() {
-                        return runCount.get();
-                    }
-
-                    @Override
-                    public void cancel() {
-                        scheduledFuture.cancel(false);
-                    }
-                };
+        //以下处理过期情况 
+        //1, 忽略策略
+        if (expirationPolicy == IMMEDIATE_IGNORE || expirationPolicy == BACKTRACKING_IGNORE) {
+            //1, 计算过期次数和最近的开始时间
+            var delayCount = between.dividedBy(delay) * -1;
+            var nearestTime = startTime.plus(delay.multipliedBy(delayCount + 1));
+            //2, 如果是回溯忽略 我们就假设之前的已经都执行了 所以这里需要 修改 runCount
+            if (expirationPolicy == BACKTRACKING_IGNORE) {
+                runCount.addAndGet(delayCount);
             }
-
-            //2, 立即补偿的行为其实和 默认是一样的
-            case IMMEDIATE_COMPENSATION -> {
-                this.scheduledFuture = executorSchedule(this::run, 0, delay.toNanos(), NANOSECONDS);
-                return new ScheduleStatus() {
-                    @Override
-                    public long runCount() {
-                        return runCount.get();
-                    }
-
-                    @Override
-                    public void cancel() {
-                        scheduledFuture.cancel(false);
-                    }
-                };
-            }
-            //3, 回溯补偿
-            case BACKTRACKING_COMPENSATION -> {
-                //1, 计算过期次数
+            return doStart(between(now, nearestTime).toNanos());
+        }
+        //2, 补偿策略
+        if (expirationPolicy == IMMEDIATE_COMPENSATION || expirationPolicy == BACKTRACKING_COMPENSATION) {
+            //如果是回溯补偿则需要先把未执行的执行一遍
+            if (expirationPolicy == BACKTRACKING_COMPENSATION) {
                 var delayCount = between.dividedBy(delay) * -1;
                 //2, 执行所有过期的任务
-                for (int i = 0; i < delayCount; i = i + 1) {
+                for (var i = 0; i < delayCount; i = i + 1) {
                     run();
                 }
-                this.scheduledFuture = executorSchedule(this::run, 0, delay.toNanos(), NANOSECONDS);
-                return new ScheduleStatus() {
-                    @Override
-                    public long runCount() {
-                        return runCount.get();
-                    }
-
-                    @Override
-                    public void cancel() {
-                        scheduledFuture.cancel(false);
-                    }
-                };
             }
-            default -> throw new IllegalStateException("Unexpected value: " + expirationPolicy);
+            return doStart(0);
         }
+        throw new IllegalStateException("Unexpected value: " + expirationPolicy);
     }
 
     private void run() {
@@ -245,10 +181,21 @@ public final class MultipleTimeTask implements ScheduleTask {
         }
     }
 
-    private ScheduledFuture<?> executorSchedule(Runnable command, long startDelay, long delay, TimeUnit unit) {
-        return switch (type) {
-            case FIXED_RATE -> executor.scheduleAtFixedRate(command, startDelay, delay, unit);
-            case FIXED_DELAY -> executor.scheduleWithFixedDelay(command, startDelay, delay, unit);
+    private ScheduleStatus doStart(long startDelay) {
+        this.scheduledFuture = switch (type) {
+            case FIXED_RATE -> executor.scheduleAtFixedRate(this::run, startDelay, delay.toNanos(), NANOSECONDS);
+            case FIXED_DELAY -> executor.scheduleWithFixedDelay(this::run, startDelay, delay.toNanos(), NANOSECONDS);
+        };
+        return new ScheduleStatus() {
+            @Override
+            public long runCount() {
+                return runCount.get();
+            }
+
+            @Override
+            public void cancel() {
+                scheduledFuture.cancel(false);
+            }
         };
     }
 
