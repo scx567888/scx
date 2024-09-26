@@ -3,22 +3,20 @@ package cool.scx.http.helidon;
 import cool.scx.http.HttpStatusCode;
 import cool.scx.http.ScxHttpBody;
 import cool.scx.http.ScxHttpClientResponse;
-import cool.scx.http.ScxHttpHeaders;
-import io.helidon.http.ClientResponseHeaders;
 import io.helidon.webclient.api.HttpClientResponse;
 
 public class HelidonHttpClientResponse implements ScxHttpClientResponse {
 
-    private final HttpClientResponse request;
+    private final HttpClientResponse response;
     private final HttpStatusCode status;
-    private final HelidonHttpHeaders<ClientResponseHeaders> headers;
+    private final HelidonHttpClientResponseHeaders headers;
     private final HelidonHttpBody body;
 
-    public HelidonHttpClientResponse(HttpClientResponse request) {
-        this.request = request;
-        this.status = HttpStatusCode.of(request.status().code());
-        this.headers = new HelidonHttpHeaders<>(request.headers());
-        this.body = new HelidonHttpBody(request.entity());
+    public HelidonHttpClientResponse(HttpClientResponse response) {
+        this.response = response;
+        this.status = HttpStatusCode.of(response.status().code());
+        this.headers = new HelidonHttpClientResponseHeaders(response.headers());
+        this.body = new HelidonHttpBody(response.entity());
     }
 
     @Override
@@ -27,7 +25,7 @@ public class HelidonHttpClientResponse implements ScxHttpClientResponse {
     }
 
     @Override
-    public ScxHttpHeaders headers() {
+    public HelidonHttpClientResponseHeaders headers() {
         return headers;
     }
 
