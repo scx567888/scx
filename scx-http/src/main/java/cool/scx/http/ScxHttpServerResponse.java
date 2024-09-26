@@ -1,6 +1,7 @@
 package cool.scx.http;
 
 import cool.scx.http.content_type.ContentType;
+import cool.scx.http.cookie.Cookie;
 
 import java.io.OutputStream;
 
@@ -48,6 +49,16 @@ public interface ScxHttpServerResponse {
 
     default ScxHttpServerResponse contentType(MediaType mediaType) {
         headers().contentType(mediaType);
+        return this;
+    }
+
+    default ScxHttpServerResponse addCookie(Cookie cookie) {
+        headers().addCookie(cookie);
+        return this;
+    }
+
+    default ScxHttpServerResponse removeCookie(String name) {
+        headers().removeCookie(name);
         return this;
     }
 
