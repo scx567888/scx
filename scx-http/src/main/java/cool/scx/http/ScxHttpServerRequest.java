@@ -1,6 +1,8 @@
 package cool.scx.http;
 
 import cool.scx.http.content_type.ContentType;
+import cool.scx.http.cookie.Cookie;
+import cool.scx.http.cookie.Cookies;
 import cool.scx.http.uri.ScxURI;
 
 /**
@@ -42,6 +44,14 @@ public interface ScxHttpServerRequest {
 
     default ContentType contentType() {
         return headers().contentType();
+    }
+
+    default Cookies cookies() {
+        return headers().cookies();
+    }
+
+    default Cookie getCookie(String name) {
+        return headers().getCookie(name);
     }
 
 }
