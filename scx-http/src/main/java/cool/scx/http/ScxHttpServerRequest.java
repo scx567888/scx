@@ -1,8 +1,5 @@
 package cool.scx.http;
 
-import cool.scx.http.content_type.ContentType;
-import cool.scx.http.cookie.Cookie;
-import cool.scx.http.cookie.Cookies;
 import cool.scx.http.uri.ScxURI;
 
 /**
@@ -16,7 +13,7 @@ public interface ScxHttpServerRequest {
 
     HttpVersion version();
 
-    ScxHttpHeaders headers();
+    ScxHttpServerRequestHeaders headers();
 
     ScxHttpBody body();
 
@@ -25,8 +22,6 @@ public interface ScxHttpServerRequest {
     PeerInfo remotePeer();
 
     PeerInfo localPeer();
-
-    Cookies cookies();
 
     default String path() {
         return uri().path();
@@ -42,14 +37,6 @@ public interface ScxHttpServerRequest {
 
     default String getHeader(String name) {
         return headers().get(name);
-    }
-
-    default ContentType contentType() {
-        return ContentType.of(getHeader(HttpFieldName.CONTENT_TYPE));
-    }
-
-    default Cookie getCookie(String name) {
-        return cookies().get(name);
     }
 
 }
