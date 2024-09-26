@@ -7,14 +7,15 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import static cool.scx.scheduling.ExpirationPolicy.BACKTRACKING_IGNORE;
-import static cool.scx.scheduling.ExpirationPolicy.IMMEDIATE_COMPENSATION;
+import static cool.scx.scheduling.ExpirationPolicy.*;
 import static java.lang.System.Logger.Level.ERROR;
-import static java.lang.System.Logger.Level.WARNING;
 import static java.time.Duration.between;
 import static java.time.Instant.now;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 
+/**
+ * 单次执行的任务
+ **/
 public final class SingleTimeTask implements ScheduleTask {
 
     private static final System.Logger logger = System.getLogger(SingleTimeTask.class.getName());
@@ -88,29 +89,39 @@ public final class SingleTimeTask implements ScheduleTask {
     public ScheduleStatus start() {
         var startDelay = startDelaySupplier != null ? startDelaySupplier.get() : 0;
         //判断任务是否过期
-        if (startDelay < 0) {
-            switch (expirationPolicy) {
-                //因为在单次执行任务中 只有忽略的策略需要特殊处理
-                case IMMEDIATE_IGNORE, BACKTRACKING_IGNORE -> {
-                    logger.log(WARNING, "任务过期 跳过执行 !!!");
-                    //这里处理一下
-                    if (expirationPolicy == BACKTRACKING_IGNORE) {
-                        runCount.incrementAndGet();
-                    }
-                    return new ScheduleStatus() {
-                        @Override
-                        public long runCount() {
-                            return runCount.get();
-                        }
-
-                        @Override
-                        public void cancel() {
-                            //任务从未执行所以无需取消
-                        }
-                    };
-                }
-            }
+        if (startDelay >= 0) {
+            return doStart(startDelay);
         }
+
+        //因为在单次执行任务中 只有忽略的策略需要特殊处理
+        if (expirationPolicy == IMMEDIATE_IGNORE || expirationPolicy == BACKTRACKING_IGNORE) {
+            //2, 如果是回溯忽略 我们就假设之前的已经都执行了 所以这里需要 修改 runCount
+            if (expirationPolicy == BACKTRACKING_IGNORE) {
+                runCount.incrementAndGet();
+            }
+            //单次任务 直接返回虚拟的 Status 即可 无需执行
+            return new ScheduleStatus() {
+                @Override
+                public long runCount() {
+                    return runCount.get();
+                }
+
+                @Override
+                public void cancel() {
+                    //任务从未执行所以无需取消
+                }
+            };
+        }
+
+        //单次任务的补偿策略就是立即执行
+        if (expirationPolicy == IMMEDIATE_COMPENSATION || expirationPolicy == BACKTRACKING_COMPENSATION) {
+            return doStart(0);
+        }
+
+        throw new IllegalStateException("Unexpected value: " + expirationPolicy);
+    }
+
+    public ScheduleStatus doStart(long startDelay) {
         var scheduledFuture = executor.schedule(this::run, startDelay, NANOSECONDS);
         return new ScheduleStatus() {
             @Override
