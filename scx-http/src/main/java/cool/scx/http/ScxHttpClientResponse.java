@@ -7,7 +7,7 @@ public interface ScxHttpClientResponse {
 
     HttpStatusCode status();
 
-    ScxHttpHeaders headers();
+    ScxHttpClientResponseHeaders headers();
 
     ScxHttpBody body();
 
