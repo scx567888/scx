@@ -33,7 +33,7 @@ public class ContentTypeHelper {
         var params = contentType.params();
         sb.append(mediaType.value());
         if (contentType.params() != null && !contentType.params().isEmpty()) {
-            sb.append(';');
+            sb.append("; ");
             sb.append(encodeParams(params));
         }
         return sb.toString();

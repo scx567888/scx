@@ -26,7 +26,8 @@ public interface ContentType {
     Parameters<String, String> params();
 
     default Charset charset() {
-        return Charset.forName(params().get("charset"));
+        var charset = params().get("charset");
+        return charset == null ? null : Charset.forName(charset);
     }
 
     String toString();
