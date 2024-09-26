@@ -1,8 +1,10 @@
-package cool.scx.ffm.platform.win32;
+package cool.scx.ffm.platform.win32.helper;
+
+import cool.scx.ffm.platform.win32.Win32Exception;
 
 import java.util.Map;
 
-import static cool.scx.ffm.platform.win32.Advapi32Helper.*;
+import static cool.scx.ffm.platform.win32.helper.Advapi32Helper.*;
 import static cool.scx.ffm.platform.win32.WinReg.HKEY_CURRENT_USER;
 
 /**

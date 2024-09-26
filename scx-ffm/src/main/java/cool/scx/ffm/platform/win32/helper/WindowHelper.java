@@ -1,4 +1,4 @@
-package cool.scx.ffm.platform.win32;
+package cool.scx.ffm.platform.win32.helper;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;

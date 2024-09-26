@@ -1,6 +1,9 @@
-package cool.scx.ffm.platform.win32;
+package cool.scx.ffm.platform.win32.helper;
 
 import cool.scx.ffm.FFMHelper;
+import cool.scx.ffm.platform.win32.Win32Exception;
+import cool.scx.ffm.platform.win32.WinError;
+import cool.scx.ffm.platform.win32.WinNT;
 import cool.scx.ffm.type.mapper.IntMapper;
 
 import java.lang.foreign.Arena;
