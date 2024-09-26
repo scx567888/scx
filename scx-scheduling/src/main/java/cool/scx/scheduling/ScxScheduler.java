@@ -15,7 +15,7 @@ public class ScxScheduler implements ScheduledExecutorService {
 
     private ScxScheduler() {
         //todo JDK 暂时没有办法使用 由虚拟线程底层支持的调度器 这里这种做法只是一种 hack 并不完善
-        this.s = new ScheduledThreadPoolExecutor(Integer.MAX_VALUE, new ScxVirtualThreadFactory());
+        this.s = new ScheduledThreadPoolExecutor(Integer.MAX_VALUE, new ScxThreadFactory());
     }
 
     public static ScxScheduler getInstance() {

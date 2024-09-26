@@ -5,8 +5,6 @@ import cool.scx.http.cookie.Cookie;
 
 import java.io.OutputStream;
 
-import static cool.scx.http.HttpFieldName.CONTENT_TYPE;
-
 /**
  * ScxHttpServerResponse
  */
@@ -14,7 +12,7 @@ public interface ScxHttpServerResponse {
 
     HttpStatusCode status();
 
-    ScxHttpHeadersWritable headers();
+    ScxHttpServerResponseHeaders headers();
 
     ScxHttpServerResponse status(HttpStatusCode code);
 
@@ -29,10 +27,6 @@ public interface ScxHttpServerResponse {
     void send(Object data);
 
     boolean isClosed();
-
-    ScxHttpServerResponse addCookie(Cookie cookie);
-
-    ScxHttpServerResponse removeCookie(String name);
 
     default ScxHttpServerResponse setHeader(ScxHttpHeaderName headerName, String... values) {
         this.headers().set(headerName, values);
@@ -49,11 +43,23 @@ public interface ScxHttpServerResponse {
     }
 
     default ScxHttpServerResponse contentType(ContentType contentType) {
-        return setHeader(CONTENT_TYPE, contentType.toString());
+        headers().contentType(contentType);
+        return this;
     }
 
     default ScxHttpServerResponse contentType(MediaType mediaType) {
-        return contentType(ContentType.of(mediaType));
+        headers().contentType(mediaType);
+        return this;
+    }
+
+    default ScxHttpServerResponse addCookie(Cookie cookie) {
+        headers().addCookie(cookie);
+        return this;
+    }
+
+    default ScxHttpServerResponse removeCookie(String name) {
+        headers().removeCookie(name);
+        return this;
     }
 
 }

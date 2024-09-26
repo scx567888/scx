@@ -1,7 +1,6 @@
 package cool.scx.http.helidon;
 
 import cool.scx.http.*;
-import cool.scx.http.cookie.Cookies;
 import cool.scx.http.uri.ScxURI;
 import io.helidon.webserver.ConnectionContext;
 import io.helidon.webserver.http.RoutingRequest;
@@ -15,12 +14,11 @@ class HelidonHttpServerRequest implements ScxHttpServerRequest {
     private final ScxHttpMethod method;
     private final ScxURI uri;
     private final HttpVersion version;
-    private final ScxHttpHeaders headers;
+    private final ScxHttpServerRequestHeaders headers;
     private final ScxHttpBody body;
     private final ScxHttpServerResponse response;
     private final HelidonPeerInfo remotePeer;
     private final HelidonPeerInfo localPeer;
-    private final Cookies cookies;
 
     public HelidonHttpServerRequest(ConnectionContext ctx, RoutingRequest request, RoutingResponse response) {
         var p = request.prologue();
@@ -28,12 +26,11 @@ class HelidonHttpServerRequest implements ScxHttpServerRequest {
         this.method = ScxHttpMethod.of(p.method().text());
         this.uri = ScxURI.of(request.requestedUri().toUri());
         this.version = HttpVersion.of(p.rawProtocol());
-        this.headers = new HelidonHttpHeaders<>(request.headers());
+        this.headers = new HelidonHttpServerRequestHeaders(request.headers());
         this.body = new HelidonHttpBody(request.content());
         this.response = new HelidonHttpServerResponse(response);
         this.remotePeer = new HelidonPeerInfo(request.remotePeer());
         this.localPeer = new HelidonPeerInfo(request.localPeer());
-        this.cookies = new HelidonCookies(request.headers().cookies());
     }
 
     @Override
@@ -52,7 +49,7 @@ class HelidonHttpServerRequest implements ScxHttpServerRequest {
     }
 
     @Override
-    public ScxHttpHeaders headers() {
+    public ScxHttpServerRequestHeaders headers() {
         return headers;
     }
 
@@ -74,11 +71,6 @@ class HelidonHttpServerRequest implements ScxHttpServerRequest {
     @Override
     public PeerInfo localPeer() {
         return localPeer;
-    }
-
-    @Override
-    public Cookies cookies() {
-        return cookies;
     }
 
 }

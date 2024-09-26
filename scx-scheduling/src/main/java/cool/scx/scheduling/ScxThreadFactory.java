@@ -5,14 +5,17 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 
-public final class ScxVirtualThreadFactory implements ThreadFactory {
+/**
+ * 专用于调度器的线程工厂 第一次会返回一个平台线程 (防止调度器退出) 之后会返回虚拟线程
+ */
+final class ScxThreadFactory implements ThreadFactory {
 
     private static final AtomicInteger POOL_NUMBER = new AtomicInteger(1);
     private final AtomicLong threadNumber = new AtomicLong(0);
     private final String namePrefix;
     private Function<Runnable, Thread> newThread;
 
-    public ScxVirtualThreadFactory() {
+    public ScxThreadFactory() {
         this.namePrefix = "scx-" + POOL_NUMBER.getAndIncrement() + "-virtual-thread-";
         // 只有第一次返回一个平台线程 剩余都返回虚拟线程
         this.newThread = (r) -> {

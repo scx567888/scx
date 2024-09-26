@@ -16,7 +16,7 @@ public interface ScxHttpServerRequest {
 
     HttpVersion version();
 
-    ScxHttpHeaders headers();
+    ScxHttpServerRequestHeaders headers();
 
     ScxHttpBody body();
 
@@ -25,8 +25,6 @@ public interface ScxHttpServerRequest {
     PeerInfo remotePeer();
 
     PeerInfo localPeer();
-
-    Cookies cookies();
 
     default String path() {
         return uri().path();
@@ -45,11 +43,15 @@ public interface ScxHttpServerRequest {
     }
 
     default ContentType contentType() {
-        return ContentType.of(getHeader(HttpFieldName.CONTENT_TYPE));
+        return headers().contentType();
+    }
+
+    default Cookies cookies() {
+        return headers().cookies();
     }
 
     default Cookie getCookie(String name) {
-        return cookies().get(name);
+        return headers().getCookie(name);
     }
 
 }
