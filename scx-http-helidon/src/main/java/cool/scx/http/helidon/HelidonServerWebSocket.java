@@ -26,7 +26,7 @@ class HelidonServerWebSocket extends HelidonWebSocket implements ScxServerWebSoc
 
     @Override
     public ScxHttpHeaders headers() {
-        return new HelidonHttpHeaders<>(headers);
+        return new HelidonHttpHeaders(headers);
     }
 
     /**
