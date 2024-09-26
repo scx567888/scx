@@ -8,12 +8,10 @@ import java.time.Instant;
 
 public class ScxSchedulingTest {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
 //        test1();
 //        test2();
         test3();
-        // 因为 ScxVirtualThreadFactory 创建的都是守护线程 所以为了防止程序退出 这里 sleep  一下
-        Thread.sleep(99999);
     }
 
     public static void test1() {

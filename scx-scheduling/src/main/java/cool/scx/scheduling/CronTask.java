@@ -16,6 +16,9 @@ import static com.cronutils.model.definition.CronDefinitionBuilder.instanceDefin
 import static java.lang.System.Logger.Level.ERROR;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
+/**
+ * Cron 执行的任务
+ */
 public class CronTask implements ScheduleTask {
 
     private static final Logger logger = System.getLogger(CronTask.class.getName());
