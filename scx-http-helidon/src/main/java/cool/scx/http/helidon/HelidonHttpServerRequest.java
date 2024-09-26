@@ -1,7 +1,6 @@
 package cool.scx.http.helidon;
 
 import cool.scx.http.*;
-import cool.scx.http.ScxHttpServerRequestHeaders;
 import cool.scx.http.uri.ScxURI;
 import io.helidon.webserver.ConnectionContext;
 import io.helidon.webserver.http.RoutingRequest;
