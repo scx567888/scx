@@ -1,5 +1,8 @@
 package cool.scx.http;
 
+import cool.scx.http.media.FormParams;
+import cool.scx.http.media.MultiPart;
+
 import java.io.InputStream;
 
 /**
@@ -9,10 +12,22 @@ public interface ScxHttpBody {
 
     InputStream inputStream();
 
-    byte[] asBytes();
-
-    String asString();
-
     <T> T as(Class<T> t);
+
+    default byte[] asBytes() {
+        return as(byte[].class);
+    }
+
+    default String asString() {
+        return as(String.class);
+    }
+
+    default FormParams asFormParams() {
+        return as(FormParams.class);
+    }
+
+    default MultiPart asMultiPart() {
+        return as(MultiPart.class);
+    }
 
 }
