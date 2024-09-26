@@ -8,11 +8,11 @@ import io.helidon.http.Headers;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class HelidonHttpHeaders implements ScxHttpHeaders {
+public class HelidonHttpHeaders<T extends Headers> implements ScxHttpHeaders {
 
-    private final Headers headers;
+    protected final T headers;
 
-    public HelidonHttpHeaders(Headers headers) {
+    public HelidonHttpHeaders(T headers) {
         this.headers = headers;
     }
 
