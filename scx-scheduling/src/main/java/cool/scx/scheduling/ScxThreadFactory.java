@@ -6,7 +6,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 
 /**
- * 专用于调度器的线程工厂 第一次会返回一个平台线程 (防止退出) 之后会返回虚拟线程
+ * 专用于调度器的线程工厂 第一次会返回一个平台线程 (防止调度器退出) 之后会返回虚拟线程
  */
 final class ScxThreadFactory implements ThreadFactory {
 
