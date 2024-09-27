@@ -44,5 +44,5 @@ public class ContentDispositionImpl implements ContentDispositionWritable {
     public String toString() {
         return encode();
     }
-    
+
 }

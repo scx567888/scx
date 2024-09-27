@@ -45,5 +45,5 @@ public class ContentTypeImpl implements ContentTypeWritable {
     public String toString() {
         return encode();
     }
-    
+
 }
