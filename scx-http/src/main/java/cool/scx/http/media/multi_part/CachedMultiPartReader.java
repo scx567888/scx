@@ -18,7 +18,7 @@ public class CachedMultiPartReader implements MediaReader<CachedMultiPart> {
     }
 
     public CachedMultiPartReader() {
-        this.cachePath = Path.of(System.getProperty("java.io.tmpdir"));
+        this.cachePath = Path.of(System.getProperty("java.io.tmpdir")).resolve(".SCX-CACHE");
     }
 
     @Override
