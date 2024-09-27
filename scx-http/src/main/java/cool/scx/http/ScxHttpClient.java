@@ -5,7 +5,7 @@ package cool.scx.http;
  */
 public interface ScxHttpClient {
 
-    ScxHttpClientRequestBuilder request();
+    ScxHttpClientRequest request();
 
     ScxClientWebSocketBuilder webSocket();
 
