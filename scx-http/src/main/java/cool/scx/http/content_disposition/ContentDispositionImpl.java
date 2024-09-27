@@ -40,4 +40,9 @@ public class ContentDispositionImpl implements ContentDispositionWritable {
         return ContentDispositionHelper.encodeContentDisposition(this);
     }
 
+    @Override
+    public String toString() {
+        return encode();
+    }
+    
 }
