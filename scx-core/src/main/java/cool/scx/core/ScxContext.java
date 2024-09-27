@@ -10,7 +10,6 @@ import cool.scx.http.ScxHttpServer;
 import cool.scx.http.routing.WebSocketRouter;
 import cool.scx.jdbc.JDBCContext;
 import cool.scx.jdbc.sql.SQLRunner;
-import cool.scx.scheduling.ScxScheduler;
 import cool.scx.web.ScxWeb;
 import org.springframework.beans.factory.BeanFactory;
 

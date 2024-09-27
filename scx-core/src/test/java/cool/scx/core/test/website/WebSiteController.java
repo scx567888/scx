@@ -11,12 +11,13 @@ import cool.scx.core.test.person.PersonService;
 import cool.scx.http.FileFormat;
 import cool.scx.http.HttpHelper;
 import cool.scx.http.HttpMethod;
+import cool.scx.http.helidon.HelidonHttpClient;
+import cool.scx.http.media.multi_part.MultiPartPart;
 import cool.scx.http.routing.RoutingContext;
 import cool.scx.web.ScxWeb;
 import cool.scx.web.annotation.FromQuery;
 import cool.scx.web.annotation.FromUpload;
 import cool.scx.web.annotation.ScxRoute;
-import cool.scx.web.type.FileUpload;
 import cool.scx.web.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -52,13 +53,14 @@ public class WebSiteController {
     @ScxRoute(methods = HttpMethod.POST)
     public static Object test0(@FromQuery String name,
                                @FromQuery Integer age,
-                               @FromUpload FileUpload content,
-                               @FromUpload FileUpload content1) {
+                               @FromUpload MultiPartPart content,
+                               @FromUpload MultiPartPart content1) {
         System.err.println("客户端 IP :" + HttpHelper.getRequestIP(ScxWeb.routingContext().request()));
-        return Map.of("now", yyyy_MM_dd_HH_mm_ss.format(LocalDateTime.now())
-//                "name", name, "age", age, "content", ScxContext.vertx().fileSystem().readFileBlocking(content.uploadedFileName()).toString(StandardCharsets.UTF_8),
-//                "content1", ScxContext.vertx().fileSystem().readFileBlocking(content1.uploadedFileName()).toString(StandardCharsets.UTF_8));
-        );
+        return Map.of("now", yyyy_MM_dd_HH_mm_ss.format(LocalDateTime.now()),
+                "name", name,
+                "age", age,
+                "content", new String(content.content(), StandardCharsets.UTF_8),
+                "content1", new String(content1.content(), StandardCharsets.UTF_8));
     }
 
     @ScxRoute(methods = HttpMethod.GET)
@@ -106,7 +108,7 @@ public class WebSiteController {
     public Template TestIndex(RoutingContext c) throws IOException {
         System.err.println("最后一次匹配的路由" + c.request().path());
         var index = Template.of("index.html");
-//        index.add("name", c.get("name"));
+        index.add("name", c.get("name"));
         index.add("age", 22);
         return index;
     }
@@ -120,7 +122,7 @@ public class WebSiteController {
     @ScxRoute(value = "", methods = HttpMethod.GET, order = 5)
     public void TestIndex1(RoutingContext c) throws IOException {
         System.err.println("第二个匹配的路由" + c.request().path());
-//        c.put("name", "小明");
+        c.put("name", "小明");
         c.next();
     }
 
@@ -144,9 +146,12 @@ public class WebSiteController {
      */
     @ScxRoute(value = "/baidu", methods = HttpMethod.GET)
     public Html TestHttpUtils() throws IOException, InterruptedException {
-//        var baiduHtml = ScxHttpClientHelper.get("https://www.baidu.com/").body().toString();
-//        return Html.of(baiduHtml);
-        return null;
+        var client = new HelidonHttpClient();
+        var baiduHtml = client.request()
+                .method(HttpMethod.GET)
+                .uri("http://www.baidu.com/")
+                .send().body().asString();
+        return Html.of(baiduHtml);
     }
 
     /**

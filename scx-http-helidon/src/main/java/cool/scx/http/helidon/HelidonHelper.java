@@ -1,7 +1,9 @@
 package cool.scx.http.helidon;
 
+import cool.scx.http.ScxHttpHeaders;
+import cool.scx.http.ScxHttpHeadersWritable;
 import cool.scx.reflect.ReflectFactory;
-import io.helidon.http.PathMatchers;
+import io.helidon.http.*;
 import io.helidon.webserver.websocket.WsRoute;
 import io.helidon.webserver.websocket.WsRouting;
 import io.helidon.websocket.WsListener;
@@ -28,6 +30,21 @@ class HelidonHelper {
             return builder;
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public static ScxHttpHeadersWritable convertHeaders(Headers o) {
+        var h = ScxHttpHeaders.of();
+        for (Header header : o) {
+            h.add(header.name(), header.allValues().toArray(new String[0]));
+        }
+        return h;
+    }
+
+    public static void updateHeaders(ScxHttpHeaders o, ServerResponseHeaders u) {
+        u.clear();
+        for (var header : o) {
+            u.add(HeaderNames.create(header.getKey().value()), header.getValue().toArray(String[]::new));
         }
     }
 

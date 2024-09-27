@@ -37,8 +37,13 @@ public class ContentTypeImpl implements ContentTypeWritable {
     }
 
     @Override
-    public String toString() {
+    public String encode() {
         return ContentTypeHelper.encodeContentType(this);
+    }
+
+    @Override
+    public String toString() {
+        return encode();
     }
 
 }

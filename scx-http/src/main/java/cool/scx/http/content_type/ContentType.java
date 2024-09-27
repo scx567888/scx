@@ -30,6 +30,10 @@ public interface ContentType {
         return charset == null ? null : Charset.forName(charset);
     }
 
-    String toString();
+    default String boundary() {
+        return params().get("boundary");
+    }
+
+    String encode();
 
 }

@@ -12,14 +12,14 @@ public class ContentTypeHelper {
         if (contentTypeStr == null) {
             return null;
         }
-        var split = contentTypeStr.split(";");
+        var split = contentTypeStr.split(";\\s*");
         if (split.length == 0) {
             return null;
         }
         var mediaType = ScxMediaType.of(split[0]);
         ParametersWritable<String, String> params = Parameters.of();
         for (var i = 1; i < split.length; i = i + 1) {
-            var s = split[i].split("=");
+            var s = split[i].split("=", 2);
             if (s.length == 2) {
                 params.add(s[0], s[1]);
             }

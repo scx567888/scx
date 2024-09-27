@@ -14,12 +14,14 @@ public interface Cookie {
 
     String path();
 
-    long maxAge();
+    Long maxAge();
+
+    CookieSameSite sameSite();
 
     boolean secure();
 
     boolean httpOnly();
 
-    CookieSameSite sameSite();
+    String encode();
 
 }

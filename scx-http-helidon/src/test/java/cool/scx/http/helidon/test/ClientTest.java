@@ -42,7 +42,7 @@ public class ClientTest {
         var httpClient = new HelidonHttpClient();
         var response = httpClient.request()
                 .uri("http://www.baidu.com")
-                .request();
+                .send();
         var string = response.body().asString();
         System.out.println(string.length());
     }

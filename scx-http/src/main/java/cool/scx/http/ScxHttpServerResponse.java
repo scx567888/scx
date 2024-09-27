@@ -12,7 +12,7 @@ public interface ScxHttpServerResponse {
 
     HttpStatusCode status();
 
-    ScxHttpServerResponseHeaders headers();
+    ScxHttpHeadersWritable headers();
 
     ScxHttpServerResponse status(HttpStatusCode code);
 
@@ -47,18 +47,13 @@ public interface ScxHttpServerResponse {
         return this;
     }
 
-    default ScxHttpServerResponse contentType(MediaType mediaType) {
-        headers().contentType(mediaType);
+    default ScxHttpServerResponse addSetCookie(Cookie cookie) {
+        headers().addSetCookie(cookie);
         return this;
     }
 
-    default ScxHttpServerResponse addCookie(Cookie cookie) {
-        headers().addCookie(cookie);
-        return this;
-    }
-
-    default ScxHttpServerResponse removeCookie(String name) {
-        headers().removeCookie(name);
+    default ScxHttpServerResponse removeSetCookie(String name) {
+        headers().removeSetCookie(name);
         return this;
     }
 
