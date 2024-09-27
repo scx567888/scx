@@ -27,7 +27,7 @@ class HelidonHttpServerRequest implements ScxHttpServerRequest {
         this.uri = ScxURI.of(request.requestedUri().toUri());
         this.version = HttpVersion.of(p.rawProtocol());
         this.headers = new HelidonHttpServerRequestHeaders(request.headers());
-        this.body = new HelidonHttpBody(request.content());
+        this.body = new ScxHttpBodyImpl(request.content().inputStream(), this.headers);
         this.response = new HelidonHttpServerResponse(response);
         this.remotePeer = new HelidonPeerInfo(request.remotePeer());
         this.localPeer = new HelidonPeerInfo(request.localPeer());
