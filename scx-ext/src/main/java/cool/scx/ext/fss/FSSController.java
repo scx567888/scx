@@ -5,8 +5,8 @@ import cool.scx.common.util.FileUtils;
 import cool.scx.http.HttpMethod;
 import cool.scx.http.exception.InternalServerErrorException;
 import cool.scx.http.exception.NotFoundException;
+import cool.scx.http.media.multi_part.CachedMultiPartPart;
 import cool.scx.web.annotation.*;
-import cool.scx.web.type.FileUpload;
 import cool.scx.web.vo.*;
 
 import java.io.IOException;
@@ -75,7 +75,7 @@ public class FSSController {
             @FromBody String fileHash,// 文件 Hash
             @FromBody Integer chunkLength,//分片总长度
             @FromBody Integer nowChunkIndex,//当前分片
-            @FromUpload FileUpload fileData//文件内容
+            @FromUpload CachedMultiPartPart fileData//文件内容
     ) throws Exception {
         var uploadTempFile = getUploadTempPath(fileHash).resolve("scx_fss.temp");
         var uploadConfigFile = uploadTempFile.resolveSibling("scx_fss.upload_state");
@@ -83,7 +83,7 @@ public class FSSController {
         //判断是否上传的是最后一个分块 (因为 索引是以 0 开头的所以这里 -1)
         if (nowChunkIndex == chunkLength - 1) {
             //先将数据写入临时文件中
-            FileUtils.merge(uploadTempFile, Path.of(fileData.uploadedFileName()));
+            FileUtils.merge(uploadTempFile, fileData.contentPath());
             //获取文件描述信息创建 fssObject 对象
             var newFSSObject = createFSSObjectByFileInfo(fileName, fileSize, fileHash);
             //获取文件真实的存储路径
@@ -111,7 +111,7 @@ public class FSSController {
             var needUploadChunkIndex = lastUploadChunk + 1;
             //当前的区块索引和需要的区块索引相同 就保存文件内容
             if (nowChunkIndex.equals(needUploadChunkIndex)) {
-                FileUtils.merge(uploadTempFile, Path.of(fileData.uploadedFileName()));
+                FileUtils.merge(uploadTempFile, fileData.contentPath());
                 //将当前上传成功的区块索引和总区块长度保存到配置文件中
                 updateLastUploadChunk(uploadConfigFile, nowChunkIndex, chunkLength);
                 //像前台返回我们需要的下一个区块索引

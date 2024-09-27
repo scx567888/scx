@@ -118,4 +118,23 @@ public final class StringUtils {
         return value;
     }
 
+    public static String removeQuotes(String str) {
+        if (str == null || str.isEmpty()) {
+            return str;
+        }
+
+        int start = 0;
+        int end = str.length();
+
+        if (str.charAt(0) == '\"') {
+            start = start + 1;
+        }
+
+        if (str.charAt(end - 1) == '\"') {
+            end = end - 1;
+        }
+
+        return str.substring(start, end);
+    }
+
 }

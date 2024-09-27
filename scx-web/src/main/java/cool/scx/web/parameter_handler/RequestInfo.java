@@ -3,12 +3,11 @@ package cool.scx.web.parameter_handler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.TextNode;
+import cool.scx.common.util.MultiMap;
 import cool.scx.http.content_type.ContentType;
 import cool.scx.http.exception.BadRequestException;
+import cool.scx.http.media.multi_part.MultiPartPart;
 import cool.scx.http.routing.RoutingContext;
-import cool.scx.web.type.FormData;
-import io.helidon.common.parameters.Parameters;
-import io.helidon.http.media.multipart.MultiPart;
 
 import static cool.scx.common.util.ObjectUtils.jsonMapper;
 import static cool.scx.common.util.ObjectUtils.xmlMapper;
@@ -27,7 +26,7 @@ public final class RequestInfo {
     private JsonNode body;
     private JsonNode pathParams;
     private JsonNode query;
-    private FormData formData;
+    private MultiMap<String, MultiPartPart> uploadFiles;
 
     public RequestInfo(RoutingContext ctx) {
         this.routingContext = ctx;
@@ -91,13 +90,24 @@ public final class RequestInfo {
                 this.body = readXml(string);
             }
             case APPLICATION_X_WWW_FORM_URLENCODED -> {
-                var multiPart = ctx.request().body().as(Parameters.class);
-                this.body = jsonMapper().convertValue(multiPart.toMap(), JsonNode.class);
+                var formParams = ctx.request().body().asFormParams();
+                this.body = jsonMapper().convertValue(formParams.toMap(), JsonNode.class);
             }
             case MULTIPART_FORM_DATA -> {
-                //todo 需要处理
-                var multiPart = ctx.request().body().as(MultiPart.class);
-                this.formData = new FormData(multiPart);
+                //这里我们分为两类
+                var m = new MultiMap<String, String>();
+                var f = new MultiMap<String, MultiPartPart>();
+                //文件和非文件
+                var multiPart = ctx.request().body().asCachedMultiPart();
+                for (var multiPartPart : multiPart) {
+                    if (multiPartPart.isFile()) {
+                        f.put(multiPartPart.name(), multiPartPart);
+                    } else {
+                        m.put(multiPartPart.name(), new String(multiPartPart.content()));
+                    }
+                }
+                this.body = jsonMapper().convertValue(m.toMultiValueMap(), JsonNode.class);
+                this.uploadFiles = f;
             }
             case null, default -> {
                 var string = ctx.request().body().asString();
@@ -118,8 +128,8 @@ public final class RequestInfo {
         return body;
     }
 
-    public FormData formData() {
-        return formData;
+    public MultiMap<String, MultiPartPart> uploadFiles() {
+        return uploadFiles;
     }
 
     public ContentType contentType() {

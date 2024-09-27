@@ -42,6 +42,8 @@ public class CachedMultiPart implements Iterable<CachedMultiPartPart>, Iterator<
     }
 
     public static Path readContentToPath(MultipartStream multipartStream, Path path) throws IOException {
+        //保证一定有目录
+        Files.createDirectories(path.getParent());
         var output = Files.newOutputStream(path);
         multipartStream.readBodyData(output);
         return path;

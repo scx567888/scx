@@ -9,6 +9,7 @@ import java.nio.file.Path;
 public class CachedMultiPartPart extends MultiPartPart {
 
     private final Path contentPath;
+    private byte[] cacheContent = null;
 
     public CachedMultiPartPart(ScxHttpHeadersWritable headers, byte[] content, Path contentPath) {
         super(headers, content);
@@ -20,11 +21,14 @@ public class CachedMultiPartPart extends MultiPartPart {
         if (content != null) {
             return content;
         }
-        try {
-            return Files.readAllBytes(contentPath);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        if (cacheContent == null) {
+            try {
+                cacheContent = Files.readAllBytes(contentPath);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
+        return cacheContent;
     }
 
     public Path contentPath() {

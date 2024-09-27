@@ -34,8 +34,13 @@ public final class StringReader implements MediaReader<String> {
 
     public static Charset getContentTypeCharsetOrUTF8(ScxHttpHeaders headers) {
         var contentType = headers.contentType();
-        var charset = contentType.charset();
-        return charset == null ? StandardCharsets.UTF_8 : charset;
+        if (contentType != null) {
+            var charset = contentType.charset();
+            if (charset != null) {
+                return charset;
+            }
+        }
+        return StandardCharsets.UTF_8;
     }
 
     @Override

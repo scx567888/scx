@@ -1,10 +1,11 @@
 package cool.scx.web.parameter_handler;
 
 import cool.scx.common.util.AnnotationUtils;
+import cool.scx.http.media.multi_part.CachedMultiPartPart;
+import cool.scx.http.media.multi_part.MultiPartPart;
 import cool.scx.reflect.ParameterInfo;
 import cool.scx.web.annotation.FromUpload;
 import cool.scx.web.parameter_handler.exception.RequiredParamEmptyException;
-import cool.scx.web.type.FileUpload;
 
 import java.util.Collection;
 
@@ -26,18 +27,16 @@ public final class FileUploadParameterHandler implements ParameterHandler {
      * @param name           a
      * @return a
      */
-    private static FileUpload[] findFileUploadListByName(RequestInfo routingContext, String name) {
-        var fileUploads = routingContext.formData();
-        var formDataParts = fileUploads.getAll(name);
-        //todo 有 bug
-        return formDataParts.stream().filter(f -> name.equals(f.name())).toArray(FileUpload[]::new);
+    private static MultiPartPart[] findFileUploadListByName(RequestInfo routingContext, String name) {
+        var fileUploads = routingContext.uploadFiles();
+        return fileUploads.get(name).toArray(MultiPartPart[]::new);
     }
 
     @Override
     public boolean canHandle(ParameterInfo parameter) {
         var isArray = parameter.type().isCollectionLikeType() || parameter.type().isArrayType();
         var rawType = isArray ? parameter.type().getContentType().getRawClass() : parameter.type().getRawClass();
-        return rawType == FileUpload.class;
+        return rawType == MultiPartPart.class || rawType == CachedMultiPartPart.class;
     }
 
     @Override

@@ -6,7 +6,9 @@ import cool.scx.http.ScxHttpServerResponse;
 import cool.scx.http.exception.MethodNotAllowedException;
 import cool.scx.http.exception.NotFoundException;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * RoutingContext
@@ -78,6 +80,18 @@ public class RoutingContext {
 
     public Parameters<String, String> pathParams() {
         return this.nowPathParams;
+    }
+    
+    private final Map<String,Object> contentParams = new HashMap<>();
+
+    @SuppressWarnings("unchecked")
+    public <T> T get(String name) {
+        return (T) contentParams.get(name);
+    }
+
+    public RoutingContext put(String name, Object value) {
+        contentParams.put(name,value);
+        return this;
     }
 
 }

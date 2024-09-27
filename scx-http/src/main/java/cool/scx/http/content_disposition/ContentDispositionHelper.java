@@ -5,6 +5,8 @@ import cool.scx.http.ParametersWritable;
 
 import java.util.ArrayList;
 
+import static cool.scx.common.util.StringUtils.removeQuotes;
+
 public class ContentDispositionHelper {
 
     public static ContentDispositionWritable decodedContentDisposition(String contentDispositionStr) {
@@ -20,7 +22,8 @@ public class ContentDispositionHelper {
         for (var i = 1; i < split.length; i = i + 1) {
             var s = split[i].split("=", 2);
             if (s.length == 2) {
-                params.add(s[0], s[1]);
+                //移除两端的引号
+                params.add(s[0], removeQuotes(s[1]));
             }
         }
         return new ContentDispositionImpl().type(type).params(params);
