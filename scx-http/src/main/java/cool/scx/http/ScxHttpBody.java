@@ -3,8 +3,10 @@ package cool.scx.http;
 import cool.scx.http.media.form_params.FormParams;
 import cool.scx.http.media.MediaReader;
 import cool.scx.http.media.multi_part.MultiPart;
+import cool.scx.http.media.path.PathReader;
 
 import java.io.InputStream;
+import java.nio.file.Path;
 
 import static cool.scx.http.media.byte_array.ByteArrayReader.BYTE_ARRAY_READER;
 import static cool.scx.http.media.form_params.FormParamsReader.FORM_PARAMS_READER;
@@ -34,6 +36,10 @@ public interface ScxHttpBody {
 
     default MultiPart asMultiPart() {
         return as(MULTI_PART_READER);
+    }
+
+    default Path asPath(Path path) {
+        return as(new PathReader(path));
     }
 
 }
