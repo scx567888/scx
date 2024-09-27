@@ -1,11 +1,14 @@
 package cool.scx.http.helidon;
 
 import cool.scx.http.HttpStatusCode;
+import cool.scx.http.ScxHttpHeadersWritable;
 import cool.scx.http.ScxHttpServerResponse;
-import cool.scx.http.ScxHttpServerResponseHeaders;
 import io.helidon.webserver.http.RoutingResponse;
 
 import java.io.OutputStream;
+
+import static cool.scx.http.helidon.HelidonHelper.convertHeaders;
+import static cool.scx.http.helidon.HelidonHelper.updateHeaders;
 
 /**
  * HelidonHttpServerResponse
@@ -13,11 +16,11 @@ import java.io.OutputStream;
 class HelidonHttpServerResponse implements ScxHttpServerResponse {
 
     private final RoutingResponse response;
-    private final HelidonHttpServerResponseHeaders headers;
+    private final ScxHttpHeadersWritable headers;
 
     public HelidonHttpServerResponse(RoutingResponse response) {
         this.response = response;
-        this.headers = new HelidonHttpServerResponseHeaders(response.headers());
+        this.headers = convertHeaders(response.headers());
     }
 
     @Override
@@ -26,7 +29,7 @@ class HelidonHttpServerResponse implements ScxHttpServerResponse {
     }
 
     @Override
-    public ScxHttpServerResponseHeaders headers() {
+    public ScxHttpHeadersWritable headers() {
         return headers;
     }
 
@@ -43,21 +46,25 @@ class HelidonHttpServerResponse implements ScxHttpServerResponse {
 
     @Override
     public void send() {
+        updateHeaders(this.headers, this.response.headers());
         this.response.send();
     }
 
     @Override
     public void send(byte[] data) {
+        updateHeaders(this.headers, this.response.headers());
         this.response.send(data);
     }
 
     @Override
     public void send(String data) {
+        updateHeaders(this.headers, this.response.headers());
         this.response.send(data);
     }
 
     @Override
     public void send(Object data) {
+        updateHeaders(this.headers, this.response.headers());
         this.response.send(data);
     }
 

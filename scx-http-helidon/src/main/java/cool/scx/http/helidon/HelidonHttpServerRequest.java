@@ -6,6 +6,8 @@ import io.helidon.webserver.ConnectionContext;
 import io.helidon.webserver.http.RoutingRequest;
 import io.helidon.webserver.http.RoutingResponse;
 
+import static cool.scx.http.helidon.HelidonHelper.convertHeaders;
+
 /**
  * HelidonHttpServerRequest
  */
@@ -14,7 +16,7 @@ class HelidonHttpServerRequest implements ScxHttpServerRequest {
     private final ScxHttpMethod method;
     private final ScxURI uri;
     private final HttpVersion version;
-    private final ScxHttpServerRequestHeaders headers;
+    private final ScxHttpHeaders headers;
     private final ScxHttpBody body;
     private final ScxHttpServerResponse response;
     private final HelidonPeerInfo remotePeer;
@@ -26,7 +28,7 @@ class HelidonHttpServerRequest implements ScxHttpServerRequest {
         this.method = ScxHttpMethod.of(p.method().text());
         this.uri = ScxURI.of(request.requestedUri().toUri());
         this.version = HttpVersion.of(p.rawProtocol());
-        this.headers = new HelidonHttpServerRequestHeaders(request.headers());
+        this.headers = convertHeaders(request.headers());
         this.body = new ScxHttpBodyImpl(request.content().inputStream(), this.headers);
         this.response = new HelidonHttpServerResponse(response);
         this.remotePeer = new HelidonPeerInfo(request.remotePeer());
@@ -49,7 +51,7 @@ class HelidonHttpServerRequest implements ScxHttpServerRequest {
     }
 
     @Override
-    public ScxHttpServerRequestHeaders headers() {
+    public ScxHttpHeaders headers() {
         return headers;
     }
 

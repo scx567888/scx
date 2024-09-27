@@ -5,6 +5,8 @@ import cool.scx.http.ScxServerWebSocket;
 import cool.scx.http.uri.ScxURI;
 import io.helidon.websocket.WsSession;
 
+import static cool.scx.http.helidon.HelidonHelper.convertHeaders;
+
 /**
  * HelidonServerWebSocket
  */
@@ -26,7 +28,7 @@ class HelidonServerWebSocket extends HelidonWebSocket implements ScxServerWebSoc
 
     @Override
     public ScxHttpHeaders headers() {
-        return new HelidonHttpHeaders<>(headers);
+        return convertHeaders(headers);
     }
 
     /**
