@@ -39,5 +39,5 @@ public class CookiesImpl implements CookiesWritable, Iterator<Cookie> {
     public CookiesWritable add(Cookie cookie) {
         return null;
     }
-    
+
 }

@@ -2,12 +2,7 @@ package cool.scx.http.media.multi_part;
 
 import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.content_disposition.ContentDisposition;
-import cool.scx.http.content_disposition.ContentDispositionWritable;
 import cool.scx.http.content_type.ContentType;
-import cool.scx.http.content_type.ContentTypeWritable;
-
-import static cool.scx.http.HttpFieldName.CONTENT_DISPOSITION;
-import static cool.scx.http.HttpFieldName.CONTENT_TYPE;
 
 
 public class MultiPartPart {

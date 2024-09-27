@@ -21,7 +21,7 @@ public interface ScxHttpClientRequest {
     ScxHttpClientRequest headers(ScxHttpHeadersWritable headers);
 
     ScxHttpClientResponse send();
-    
+
     ScxHttpClientResponse send(Object body);
 
     default ScxHttpClientRequest uri(String uri) {
