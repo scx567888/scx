@@ -14,7 +14,7 @@ public class FormParamsReader implements MediaReader<FormParams> {
     public static final FormParamsReader FORM_PARAMS_READER = new FormParamsReader();
 
     private FormParamsReader() {
-        
+
     }
 
     @Override

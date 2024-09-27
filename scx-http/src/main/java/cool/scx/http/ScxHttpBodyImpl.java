@@ -1,8 +1,8 @@
 package cool.scx.http;
 
-import java.io.InputStream;
+import cool.scx.http.media.MediaReader;
 
-import static cool.scx.http.media.MediaSupportSelector.findMediaSupport;
+import java.io.InputStream;
 
 public class ScxHttpBodyImpl implements ScxHttpBody {
 
@@ -20,9 +20,8 @@ public class ScxHttpBodyImpl implements ScxHttpBody {
     }
 
     @Override
-    public <T> T as(Class<T> t) {
-        var mediaSupport = findMediaSupport(t);
-        return mediaSupport.read(inputStream, headers);
+    public <T> T as(MediaReader<T> t) {
+        return t.read(inputStream, headers);
     }
 
 }
