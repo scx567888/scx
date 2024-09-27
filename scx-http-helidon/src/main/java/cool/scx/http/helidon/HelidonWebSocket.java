@@ -15,6 +15,9 @@ import java.util.function.Consumer;
 
 class HelidonWebSocket implements ScxWebSocket, WsListener {
 
+    //todo 这种方式不准确
+    private final AtomicBoolean closed = new AtomicBoolean(false);
+
     protected HttpPrologue prologue;
     protected Headers headers;
     protected WsSession wsSession;
@@ -24,10 +27,6 @@ class HelidonWebSocket implements ScxWebSocket, WsListener {
     private Consumer<byte[]> pongHandler;
     private BiConsumer<Integer, String> closeHandler;
     private Consumer<Throwable> errorHandler;
-
-    //todo 这种方式不准确
-    private final AtomicBoolean closed = new AtomicBoolean(false);
-
 
     @Override
     public HelidonWebSocket onTextMessage(Consumer<String> textMessageHandler) {
