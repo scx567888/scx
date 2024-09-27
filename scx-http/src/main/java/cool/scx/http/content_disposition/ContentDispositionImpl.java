@@ -3,7 +3,7 @@ package cool.scx.http.content_disposition;
 import cool.scx.http.Parameters;
 import cool.scx.http.ParametersWritable;
 
-public class ContentDispositionImpl implements ContentDispositionWritable{
+public class ContentDispositionImpl implements ContentDispositionWritable {
 
     private String type;
     private ParametersWritable<String, String> params;
@@ -39,5 +39,5 @@ public class ContentDispositionImpl implements ContentDispositionWritable{
     public String toString() {
         return ContentDispositionHelper.encodeContentDisposition(this);
     }
-    
+
 }

@@ -6,6 +6,7 @@ import cool.scx.http.media.MediaReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.OpenOption;
 import java.nio.file.Path;
 
 /**
@@ -14,20 +15,22 @@ import java.nio.file.Path;
 public class PathReader implements MediaReader<Path> {
 
     private final Path path;
+    private final OpenOption[] options;
 
     /**
      * 写入的路径
      *
      * @param path a
      */
-    public PathReader(Path path) {
+    public PathReader(Path path, OpenOption... options) {
         this.path = path;
+        this.options = options;
     }
 
     @Override
     public Path read(InputStream inputStream, ScxHttpServerRequestHeaders headers) {
         try {
-            var outputStream = Files.newOutputStream(path);
+            var outputStream = Files.newOutputStream(path, options);
             inputStream.transferTo(outputStream);
         } catch (IOException e) {
             throw new RuntimeException(e);

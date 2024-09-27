@@ -28,8 +28,8 @@ public interface ContentType {
     default Charset charset() {
         var charset = params().get("charset");
         return charset == null ? null : Charset.forName(charset);
-    } 
-    
+    }
+
     default String boundary() {
         return params().get("boundary");
     }

@@ -26,6 +26,12 @@
             <version>${project.version}</version>
         </dependency>
 
+        <!-- 解析 MultiPart -->
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+        </dependency>
+
         <!-- ****************** 以下为测试依赖 ****************** -->
 
         <dependency>
