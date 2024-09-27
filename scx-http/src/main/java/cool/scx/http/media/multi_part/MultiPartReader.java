@@ -1,13 +1,14 @@
-package cool.scx.http.media;
+package cool.scx.http.media.multi_part;
 
 import cool.scx.http.MediaType;
 import cool.scx.http.ScxHttpServerRequestHeaders;
+import cool.scx.http.media.MediaReader;
 
 import java.io.InputStream;
 
-public class MultiPartSupport implements MediaSupport<MultiPart> {
+public class MultiPartReader implements MediaReader<MultiPart> {
 
-    public static final MultiPartSupport MULTI_PART_SUPPORT = new MultiPartSupport();
+    public static final MultiPartReader MULTI_PART_READER = new MultiPartReader();
 
     @Override
     public MultiPart read(InputStream inputStream, ScxHttpServerRequestHeaders headers) {

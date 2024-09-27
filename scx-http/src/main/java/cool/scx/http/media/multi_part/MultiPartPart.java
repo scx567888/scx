@@ -1,4 +1,4 @@
-package cool.scx.http.media;
+package cool.scx.http.media.multi_part;
 
 import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.ScxHttpHeadersWritable;
@@ -10,6 +10,7 @@ import cool.scx.http.content_type.ContentTypeWritable;
 import static cool.scx.http.HttpFieldName.CONTENT_DISPOSITION;
 import static cool.scx.http.HttpFieldName.CONTENT_TYPE;
 
+//todo 这里目前是全部读取到内存中 这里可以优化 比如添加一个子类 将文件写入到 临时目录然后返回 文件路径 添加删除方法
 public class MultiPartPart {
 
     private final ScxHttpHeadersWritable headers;

@@ -1,4 +1,4 @@
-package cool.scx.http.media;
+package cool.scx.http.media.multi_part;
 
 import org.apache.commons.fileupload.MultipartStream;
 
