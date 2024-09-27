@@ -1,10 +1,15 @@
 package cool.scx.http.media.multi_part;
 
+import cool.scx.http.ScxHttpHeaders;
+import cool.scx.http.ScxHttpHeadersWritable;
+import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.fileupload.MultipartStream;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -36,12 +41,10 @@ public class MultiPart implements Iterable<MultiPartPart>, Iterator<MultiPartPar
         try {
 
             // 读取当前部分的头部信息
-            var headers = multipartStream.readHeaders();
+            var headers = readToHeaders(multipartStream);
 
             //读取内容
-            var output = new ByteArrayOutputStream();
-            multipartStream.readBodyData(output);
-            var content = output.toByteArray();
+            var content = readContentToByte(multipartStream);
 
             // 检查是否有下一个部分
             hasNextPart = multipartStream.readBoundary();
@@ -50,6 +53,17 @@ public class MultiPart implements Iterable<MultiPartPart>, Iterator<MultiPartPar
         } catch (IOException e) {
             throw new RuntimeException("Error reading next part", e);
         }
+    }
+
+    public static ScxHttpHeadersWritable readToHeaders(MultipartStream multipartStream) throws MultipartStream.MalformedStreamException, FileUploadBase.FileUploadIOException {
+        var headersStr = multipartStream.readHeaders();
+        return ScxHttpHeaders.of(headersStr);
+    }
+
+    public static byte[] readContentToByte(MultipartStream multipartStream) throws IOException {
+        var output = new ByteArrayOutputStream();
+        multipartStream.readBodyData(output);
+        return output.toByteArray();
     }
 
     @Override

@@ -1,7 +1,6 @@
 package cool.scx.http.media.multi_part;
 
 import cool.scx.http.ScxHttpHeaders;
-import cool.scx.http.ScxHttpHeadersWritable;
 import cool.scx.http.content_disposition.ContentDisposition;
 import cool.scx.http.content_disposition.ContentDispositionWritable;
 import cool.scx.http.content_type.ContentType;
@@ -10,39 +9,62 @@ import cool.scx.http.content_type.ContentTypeWritable;
 import static cool.scx.http.HttpFieldName.CONTENT_DISPOSITION;
 import static cool.scx.http.HttpFieldName.CONTENT_TYPE;
 
-//todo 这里目前是全部读取到内存中 这里可以优化 比如添加一个子类 将文件写入到 临时目录然后返回 文件路径 添加删除方法
+
 public class MultiPartPart {
 
-    private final ScxHttpHeadersWritable headers;
-    private final ContentDispositionWritable contentDisposition;
-    private final ContentTypeWritable contentType;
-    private final byte[] content;
+    protected final ScxHttpHeaders headers;
+    protected final ContentDispositionWritable contentDisposition;
+    protected final ContentTypeWritable contentType;
+    protected final String name;
+    protected final String filename;
+    protected final String size;
+    protected final byte[] content;
+    protected final boolean isFile;
 
-    public MultiPartPart(String headersStr, byte[] content) {
-        this.headers = ScxHttpHeaders.of(headersStr);
+    public MultiPartPart(ScxHttpHeaders headers, byte[] content) {
+        this.headers = headers;
         this.contentDisposition = ContentDisposition.of(headers.get(CONTENT_DISPOSITION));
         this.contentType = ContentType.of(headers.get(CONTENT_TYPE));
         this.content = content;
+        if (this.contentDisposition != null) {
+            this.name = contentDisposition.name();
+            this.filename = contentDisposition.filename();
+            this.size = contentDisposition.size();
+            this.isFile = filename != null;
+        } else {
+            this.name = null;
+            this.filename = null;
+            this.size = null;
+            this.isFile = false;
+        }
     }
 
-    public ScxHttpHeadersWritable headers() {
+    public ScxHttpHeaders headers() {
         return headers;
     }
 
+    public boolean isFile() {
+        return isFile;
+    }
+
     public String name() {
-        return contentDisposition != null ? contentDisposition.name() : null;
+        return name;
     }
 
     public String filename() {
-        return contentDisposition != null ? contentDisposition.filename() : null;
+        return filename;
     }
 
     public String size() {
-        return contentDisposition != null ? contentDisposition.size() : null;
+        return size;
     }
 
     public ContentType contentType() {
         return contentType;
+    }
+
+    public ContentDisposition contentDisposition() {
+        return contentDisposition;
     }
 
     public byte[] content() {
