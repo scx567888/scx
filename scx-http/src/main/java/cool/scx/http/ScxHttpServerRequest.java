@@ -16,7 +16,7 @@ public interface ScxHttpServerRequest {
 
     HttpVersion version();
 
-    ScxHttpServerRequestHeaders headers();
+    ScxHttpHeaders headers();
 
     ScxHttpBody body();
 
