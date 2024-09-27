@@ -57,10 +57,10 @@ public class WebSiteController {
                                @FromUpload MultiPartPart content1) {
         System.err.println("客户端 IP :" + HttpHelper.getRequestIP(ScxWeb.routingContext().request()));
         return Map.of("now", yyyy_MM_dd_HH_mm_ss.format(LocalDateTime.now()),
-                "name", name, 
-                "age", age, 
-                "content", new String(content.content(),StandardCharsets.UTF_8),
-                "content1", new String(content1.content(),StandardCharsets.UTF_8));
+                "name", name,
+                "age", age,
+                "content", new String(content.content(), StandardCharsets.UTF_8),
+                "content1", new String(content1.content(), StandardCharsets.UTF_8));
     }
 
     @ScxRoute(methods = HttpMethod.GET)

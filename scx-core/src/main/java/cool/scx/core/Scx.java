@@ -16,7 +16,6 @@ import cool.scx.http.routing.WebSocketRouter;
 import cool.scx.jdbc.JDBCContext;
 import cool.scx.jdbc.meta_data.SchemaHelper;
 import cool.scx.jdbc.sql.SQLRunner;
-import cool.scx.scheduling.ScxScheduler;
 import cool.scx.web.RouteRegistrar;
 import cool.scx.web.ScxWeb;
 import cool.scx.web.ScxWebOptions;
@@ -46,13 +45,12 @@ import static java.lang.System.Logger.Level.WARNING;
  */
 public final class Scx {
 
+    static final Logger logger = System.getLogger(Scx.class.getName());
+
     /**
      * 默认 http 请求 body 限制大小
      */
     private static final long DEFAULT_BODY_LIMIT = FileUtils.displaySizeToLong("16384KB");
-
-    static final Logger logger = System.getLogger(Scx.class.getName());
-
     private final ScxEnvironment scxEnvironment;
 
     private final String appKey;
@@ -93,7 +91,7 @@ public final class Scx {
         //2, 初始化 ScxLog 日志框架
         initScxLoggerFactory(this.scxConfig, this.scxEnvironment);
         //3, 初始化 BeanFactory
-        this.beanFactory = initBeanFactory(this.scxModules,  this.scxFeatureConfig);
+        this.beanFactory = initBeanFactory(this.scxModules, this.scxFeatureConfig);
         //4, 初始化 Web
         this.scxWeb = new ScxWeb(new ScxWebOptions().templateRoot(scxOptions.templateRoot()).useDevelopmentErrorPage(scxFeatureConfig.get(ScxCoreFeature.USE_DEVELOPMENT_ERROR_PAGE)));
     }

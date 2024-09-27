@@ -2,6 +2,7 @@ package cool.scx.web.vo;
 
 import cool.scx.http.FileFormat;
 import cool.scx.http.MediaType;
+import cool.scx.http.content_type.ContentType;
 import cool.scx.http.exception.BadRequestException;
 import cool.scx.http.exception.NotFoundException;
 import cool.scx.http.exception.ScxHttpException;
@@ -107,7 +108,7 @@ public abstract class Image implements BaseVo {
 
         @Override
         public void imageHandler(RoutingContext context) {
-            context.response().contentType(IMAGE_PNG).send(buffer);
+            context.response().contentType(ContentType.of(IMAGE_PNG)).send(buffer);
         }
 
     }
