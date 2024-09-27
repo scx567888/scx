@@ -1,13 +1,21 @@
-package cool.scx.http.media;
+package cool.scx.http.media.byte_array;
 
 import cool.scx.http.ScxHttpServerRequestHeaders;
+import cool.scx.http.media.MediaReader;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-public class ByteArraySupport implements MediaSupport<byte[]> {
+/**
+ * 保持单例模式
+ */
+public class ByteArrayReader implements MediaReader<byte[]> {
 
-    public static final ByteArraySupport BYTE_ARRAY_SUPPORT = new ByteArraySupport();
+    public static final ByteArrayReader BYTE_ARRAY_READER = new ByteArrayReader();
+
+    private ByteArrayReader() {
+
+    }
 
     @Override
     public byte[] read(InputStream inputStream, ScxHttpServerRequestHeaders headers) {
@@ -17,5 +25,5 @@ public class ByteArraySupport implements MediaSupport<byte[]> {
             throw new RuntimeException(e);
         }
     }
-    
+
 }
