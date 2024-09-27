@@ -9,7 +9,7 @@ import java.io.InputStream;
 /**
  * 保持单例模式
  */
-public class ByteArrayReader implements MediaReader<byte[]> {
+public final class ByteArrayReader implements MediaReader<byte[]> {
 
     public static final ByteArrayReader BYTE_ARRAY_READER = new ByteArrayReader();
 

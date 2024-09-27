@@ -10,7 +10,7 @@ import static cool.scx.http.media.input_stream.InputStreamReader.INPUT_STREAM_RE
 /**
  * 此类保持单例模式即可
  */
-public class InputStreamSupport implements MediaSupport<InputStream> {
+public final class InputStreamSupport implements MediaSupport<InputStream> {
 
     public static final InputStreamSupport INPUT_STREAM_SUPPORT = new InputStreamSupport();
 

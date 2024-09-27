@@ -8,7 +8,7 @@ import static cool.scx.http.media.byte_array.ByteArrayReader.BYTE_ARRAY_READER;
 /**
  * 保持单例模式
  */
-public class ByteArraySupport implements MediaSupport<byte[]> {
+public final class ByteArraySupport implements MediaSupport<byte[]> {
 
     public static final ByteArraySupport BYTE_ARRAY_SUPPORT = new ByteArraySupport();
 
