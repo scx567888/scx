@@ -36,7 +36,7 @@ public interface ScxHttpHeadersWritable extends ScxHttpHeaders, ParametersWritab
     }
 
     default CookiesWritable setCookies() {
-        return Cookies.of(get(SET_COOKIE));
+        return Cookies.of(getAll(SET_COOKIE).toArray(String[]::new));
     }
 
     default ContentTypeWritable contentType() {
