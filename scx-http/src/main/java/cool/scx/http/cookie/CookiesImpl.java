@@ -1,43 +1,42 @@
 package cool.scx.http.cookie;
 
+import cool.scx.common.util.MultiMap;
+
 import java.util.Iterator;
 
-//todo 
-public class CookiesImpl implements CookiesWritable, Iterator<Cookie> {
+public class CookiesImpl implements CookiesWritable {
+
+    private final MultiMap<String, Cookie> cookies;
+
+    public CookiesImpl() {
+        this.cookies = new MultiMap<>();
+    }
 
     @Override
     public long size() {
-        return 0;
+        return cookies.size();
     }
 
     @Override
     public Cookie get(String name) {
-        return null;
+        return cookies.getFirst(name);
     }
 
     @Override
     public Iterator<Cookie> iterator() {
-        return this;
-    }
-
-    @Override
-    public boolean hasNext() {
-        return false;
-    }
-
-    @Override
-    public Cookie next() {
-        return null;
+        return cookies.values().iterator();
     }
 
     @Override
     public CookiesWritable remove(String name) {
-        return null;
+        cookies.removeAll(name);
+        return this;
     }
 
     @Override
     public CookiesWritable add(Cookie cookie) {
-        return null;
+        cookies.put(cookie.name(), cookie);
+        return this;
     }
 
 }

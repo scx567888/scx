@@ -8,7 +8,7 @@ class CookieImpl implements CookieWritable {
     private final String value;
     private String domain;
     private String path;
-    private long maxAge;
+    private Long maxAge;
     private String expires;
     private boolean secure;
     private boolean httpOnly;
@@ -32,7 +32,7 @@ class CookieImpl implements CookieWritable {
     }
 
     @Override
-    public CookieWritable maxAge(long maxAge) {
+    public CookieWritable maxAge(Long maxAge) {
         this.maxAge = maxAge;
         return this;
     }
@@ -82,7 +82,7 @@ class CookieImpl implements CookieWritable {
     }
 
     @Override
-    public long maxAge() {
+    public Long maxAge() {
         return maxAge;
     }
 

@@ -14,7 +14,7 @@ public interface Cookie {
 
     String path();
 
-    long maxAge();
+    Long maxAge();
     
     String expires();
 

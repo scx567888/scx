@@ -48,35 +48,35 @@ public interface ScxHttpHeadersWritable extends ScxHttpHeaders, ParametersWritab
     }
 
     default ScxHttpHeadersWritable contentType(ContentType contentType) {
-        set(CONTENT_TYPE, contentType.toString());
+        set(CONTENT_TYPE, contentType.encode());
         return this;
     }
 
     default ScxHttpHeadersWritable cookies(Cookies cookies) {
-        set(COOKIE, cookies.toString());
+        set(COOKIE, cookies.encodeCookie());
         return this;
     }
 
     default ScxHttpHeadersWritable setCookies(Cookies cookies) {
-        set(COOKIE, cookies.toString());
+        set(SET_COOKIE, cookies.encodeSetCookie());
         return this;
     }
 
     default ScxHttpHeadersWritable contentDisposition(ContentDisposition contentDisposition) {
-        set(CONTENT_DISPOSITION, contentDisposition.toString());
+        set(CONTENT_DISPOSITION, contentDisposition.encode());
         return this;
     }
 
     default ScxHttpHeadersWritable addSetCookie(Cookie cookie) {
-        var cookies = cookies();
+        var cookies = setCookies();
         cookies.add(cookie);
-        return cookies(cookies);
+        return setCookies(cookies);
     }
 
     default ScxHttpHeadersWritable removeSetCookie(String name) {
-        var cookies = cookies();
+        var cookies = setCookies();
         cookies.remove(name);
-        return cookies(cookies);
+        return setCookies(cookies);
     }
 
 }

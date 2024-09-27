@@ -6,7 +6,7 @@ public interface CookieWritable extends Cookie {
 
     CookieWritable path(String path);
 
-    CookieWritable maxAge(long maxAge);
+    CookieWritable maxAge(Long maxAge);
 
     CookieWritable expires(String expires);
 
