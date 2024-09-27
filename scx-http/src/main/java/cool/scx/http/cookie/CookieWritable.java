@@ -8,6 +8,8 @@ public interface CookieWritable extends Cookie {
 
     CookieWritable maxAge(long maxAge);
 
+    CookieWritable expires(String expires);
+
     CookieWritable secure(boolean secure);
 
     CookieWritable httpOnly(boolean httpOnly);

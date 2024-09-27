@@ -15,11 +15,15 @@ public interface Cookie {
     String path();
 
     long maxAge();
+    
+    String expires();
 
     boolean secure();
 
     boolean httpOnly();
 
     CookieSameSite sameSite();
+    
+    String encode();
 
 }

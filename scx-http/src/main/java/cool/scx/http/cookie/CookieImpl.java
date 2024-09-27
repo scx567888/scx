@@ -1,5 +1,7 @@
 package cool.scx.http.cookie;
 
+import static cool.scx.http.cookie.CookieHelper.encodeCookie;
+
 class CookieImpl implements CookieWritable {
 
     private final String name;
@@ -7,6 +9,7 @@ class CookieImpl implements CookieWritable {
     private String domain;
     private String path;
     private long maxAge;
+    private String expires;
     private boolean secure;
     private boolean httpOnly;
     private CookieSameSite sameSite;
@@ -31,6 +34,12 @@ class CookieImpl implements CookieWritable {
     @Override
     public CookieWritable maxAge(long maxAge) {
         this.maxAge = maxAge;
+        return this;
+    }
+
+    @Override
+    public CookieWritable expires(String expires) {
+        this.expires = expires;
         return this;
     }
 
@@ -78,6 +87,11 @@ class CookieImpl implements CookieWritable {
     }
 
     @Override
+    public String expires() {
+        return expires;
+    }
+
+    @Override
     public boolean secure() {
         return secure;
     }
@@ -93,34 +107,13 @@ class CookieImpl implements CookieWritable {
     }
 
     @Override
+    public String encode() {
+        return encodeCookie(this);
+    }
+
+    @Override
     public String toString() {
-        var buf = new StringBuilder()
-                .append(name)
-                .append('=')
-                .append(value);
-        if (domain != null) {
-            buf.append(", domain=")
-                    .append(domain);
-        }
-        if (path != null) {
-            buf.append(", path=")
-                    .append(path);
-        }
-        if (maxAge >= 0) {
-            buf.append(", maxAge=")
-                    .append(maxAge)
-                    .append('s');
-        }
-        if (secure) {
-            buf.append(", secure");
-        }
-        if (httpOnly) {
-            buf.append(", HTTPOnly");
-        }
-        if (sameSite != null) {
-            buf.append(", SameSite=").append(sameSite.value());
-        }
-        return buf.toString();
+        return encode();
     }
 
 }
