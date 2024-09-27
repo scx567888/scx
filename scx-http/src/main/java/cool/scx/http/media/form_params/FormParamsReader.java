@@ -1,6 +1,6 @@
 package cool.scx.http.media.form_params;
 
-import cool.scx.http.ScxHttpServerRequestHeaders;
+import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.media.MediaReader;
 
 import java.io.InputStream;
@@ -18,7 +18,7 @@ public class FormParamsReader implements MediaReader<FormParams> {
     }
 
     @Override
-    public FormParams read(InputStream inputStream, ScxHttpServerRequestHeaders headers) {
+    public FormParams read(InputStream inputStream, ScxHttpHeaders headers) {
         var formParams = new FormParams();
         var str = STRING_READER.read(inputStream, headers);
         var pairs = str.split("&");

@@ -13,8 +13,8 @@ import static cool.scx.http.HttpFieldName.CONTENT_TYPE;
 public class MultiPartPart {
 
     protected final ScxHttpHeaders headers;
-    protected final ContentDispositionWritable contentDisposition;
-    protected final ContentTypeWritable contentType;
+    protected final ContentDisposition contentDisposition;
+    protected final ContentType contentType;
     protected final String name;
     protected final String filename;
     protected final String size;
@@ -23,8 +23,8 @@ public class MultiPartPart {
 
     public MultiPartPart(ScxHttpHeaders headers, byte[] content) {
         this.headers = headers;
-        this.contentDisposition = ContentDisposition.of(headers.get(CONTENT_DISPOSITION));
-        this.contentType = ContentType.of(headers.get(CONTENT_TYPE));
+        this.contentDisposition = headers.contentDisposition();
+        this.contentType = headers.contentType();
         this.content = content;
         if (this.contentDisposition != null) {
             this.name = contentDisposition.name();

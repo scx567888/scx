@@ -2,7 +2,6 @@ package cool.scx.http.media.multi_part;
 
 import cool.scx.common.util.RandomUtils;
 import cool.scx.http.ScxHttpHeaders;
-import cool.scx.http.content_disposition.ContentDisposition;
 import org.apache.commons.fileupload.MultipartStream;
 
 import java.io.IOException;
@@ -12,7 +11,6 @@ import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import static cool.scx.http.HttpFieldName.CONTENT_DISPOSITION;
 import static cool.scx.http.media.multi_part.MultiPart.readContentToByte;
 import static cool.scx.http.media.multi_part.MultiPart.readToHeaders;
 
@@ -35,7 +33,7 @@ public class CachedMultiPart implements Iterable<CachedMultiPartPart>, Iterator<
 
     public static boolean needCached(ScxHttpHeaders headers) {
         //根据是否存在文件名来假定上传的不是文件 只有文件才缓存
-        var contentDisposition = ContentDisposition.of(headers.get(CONTENT_DISPOSITION));
+        var contentDisposition = headers.contentDisposition();
         if (contentDisposition == null) {
             return false;
         }

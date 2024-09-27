@@ -1,7 +1,7 @@
 package cool.scx.http.media.multi_part;
 
 import cool.scx.http.MediaType;
-import cool.scx.http.ScxHttpServerRequestHeaders;
+import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.media.MediaReader;
 
 import java.io.InputStream;
@@ -22,7 +22,7 @@ public class CachedMultiPartReader implements MediaReader<CachedMultiPart> {
     }
 
     @Override
-    public CachedMultiPart read(InputStream inputStream, ScxHttpServerRequestHeaders headers) {
+    public CachedMultiPart read(InputStream inputStream, ScxHttpHeaders headers) {
         var contentType = headers.contentType();
         if (contentType == null) {
             throw new IllegalArgumentException("No Content-Type header found");

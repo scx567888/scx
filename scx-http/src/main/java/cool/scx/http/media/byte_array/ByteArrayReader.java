@@ -1,6 +1,6 @@
 package cool.scx.http.media.byte_array;
 
-import cool.scx.http.ScxHttpServerRequestHeaders;
+import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.media.MediaReader;
 
 import java.io.IOException;
@@ -18,7 +18,7 @@ public final class ByteArrayReader implements MediaReader<byte[]> {
     }
 
     @Override
-    public byte[] read(InputStream inputStream, ScxHttpServerRequestHeaders headers) {
+    public byte[] read(InputStream inputStream, ScxHttpHeaders headers) {
         try {
             return inputStream.readAllBytes();
         } catch (IOException e) {

@@ -7,9 +7,9 @@ import java.io.InputStream;
 public class ScxHttpBodyImpl implements ScxHttpBody {
 
     private final InputStream inputStream;
-    private final ScxHttpServerRequestHeaders headers;
+    private final ScxHttpHeaders headers;
 
-    public ScxHttpBodyImpl(InputStream inputStream, ScxHttpServerRequestHeaders headers) {
+    public ScxHttpBodyImpl(InputStream inputStream, ScxHttpHeaders headers) {
         this.inputStream = inputStream;
         this.headers = headers;
     }

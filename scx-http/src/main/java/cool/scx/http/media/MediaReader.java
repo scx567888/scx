@@ -1,6 +1,6 @@
 package cool.scx.http.media;
 
-import cool.scx.http.ScxHttpServerRequestHeaders;
+import cool.scx.http.ScxHttpHeaders;
 
 import java.io.InputStream;
 
@@ -11,6 +11,6 @@ import java.io.InputStream;
  */
 public interface MediaReader<T> {
 
-    T read(InputStream inputStream, ScxHttpServerRequestHeaders headers);
+    T read(InputStream inputStream, ScxHttpHeaders headers);
 
 }

@@ -1,6 +1,6 @@
 package cool.scx.http.media.string;
 
-import cool.scx.http.ScxHttpServerRequestHeaders;
+import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.media.MediaReader;
 
 import java.io.IOException;
@@ -32,14 +32,14 @@ public final class StringReader implements MediaReader<String> {
         this.charset = null;
     }
 
-    public static Charset getContentTypeCharsetOrUTF8(ScxHttpServerRequestHeaders headers) {
+    public static Charset getContentTypeCharsetOrUTF8(ScxHttpHeaders headers) {
         var contentType = headers.contentType();
         var charset = contentType.charset();
         return charset == null ? StandardCharsets.UTF_8 : charset;
     }
 
     @Override
-    public String read(InputStream inputStream, ScxHttpServerRequestHeaders headers) {
+    public String read(InputStream inputStream, ScxHttpHeaders headers) {
         var c = charset != null ? charset : getContentTypeCharsetOrUTF8(headers);
         try {
             var bytes = inputStream.readAllBytes();

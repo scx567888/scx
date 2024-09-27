@@ -1,6 +1,6 @@
 package cool.scx.http.media.path;
 
-import cool.scx.http.ScxHttpServerRequestHeaders;
+import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.media.MediaReader;
 
 import java.io.IOException;
@@ -28,7 +28,7 @@ public class PathReader implements MediaReader<Path> {
     }
 
     @Override
-    public Path read(InputStream inputStream, ScxHttpServerRequestHeaders headers) {
+    public Path read(InputStream inputStream, ScxHttpHeaders headers) {
         try {
             var outputStream = Files.newOutputStream(path, options);
             inputStream.transferTo(outputStream);

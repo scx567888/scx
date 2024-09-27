@@ -1,6 +1,6 @@
 package cool.scx.http.media.input_stream;
 
-import cool.scx.http.ScxHttpServerRequestHeaders;
+import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.media.MediaReader;
 
 import java.io.InputStream;
@@ -17,7 +17,7 @@ public final class InputStreamReader implements MediaReader<InputStream> {
     }
 
     @Override
-    public InputStream read(InputStream inputStream, ScxHttpServerRequestHeaders headers) {
+    public InputStream read(InputStream inputStream, ScxHttpHeaders headers) {
         return inputStream;
     }
 
