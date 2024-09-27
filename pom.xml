@@ -106,13 +106,6 @@
                 <version>${helidon.version}</version>
             </dependency>
 
-            <!-- helidon multipart -->
-            <dependency>
-                <groupId>io.helidon.http.media</groupId>
-                <artifactId>helidon-http-media-multipart</artifactId>
-                <version>${helidon.version}</version>
-            </dependency>
-
             <!-- helidon websocket -->
             <dependency>
                 <groupId>io.helidon.webserver</groupId>
