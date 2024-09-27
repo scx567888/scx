@@ -8,8 +8,8 @@ import java.io.InputStream;
 import java.nio.file.Path;
 
 public class CachedMultiPartReader implements MediaReader<CachedMultiPart> {
-    
-    public static final CachedMultiPartReader CACHED_MULTI_PART_READER =new CachedMultiPartReader();
+
+    public static final CachedMultiPartReader CACHED_MULTI_PART_READER = new CachedMultiPartReader();
 
     private final Path cachePath;
 

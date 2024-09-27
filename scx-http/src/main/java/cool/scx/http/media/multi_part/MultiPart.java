@@ -8,8 +8,6 @@ import org.apache.commons.fileupload.MultipartStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -26,6 +24,17 @@ public class MultiPart implements Iterable<MultiPartPart>, Iterator<MultiPartPar
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static ScxHttpHeadersWritable readToHeaders(MultipartStream multipartStream) throws MultipartStream.MalformedStreamException, FileUploadBase.FileUploadIOException {
+        var headersStr = multipartStream.readHeaders();
+        return ScxHttpHeaders.of(headersStr);
+    }
+
+    public static byte[] readContentToByte(MultipartStream multipartStream) throws IOException {
+        var output = new ByteArrayOutputStream();
+        multipartStream.readBodyData(output);
+        return output.toByteArray();
     }
 
     @Override
@@ -53,17 +62,6 @@ public class MultiPart implements Iterable<MultiPartPart>, Iterator<MultiPartPar
         } catch (IOException e) {
             throw new RuntimeException("Error reading next part", e);
         }
-    }
-
-    public static ScxHttpHeadersWritable readToHeaders(MultipartStream multipartStream) throws MultipartStream.MalformedStreamException, FileUploadBase.FileUploadIOException {
-        var headersStr = multipartStream.readHeaders();
-        return ScxHttpHeaders.of(headersStr);
-    }
-
-    public static byte[] readContentToByte(MultipartStream multipartStream) throws IOException {
-        var output = new ByteArrayOutputStream();
-        multipartStream.readBodyData(output);
-        return output.toByteArray();
     }
 
     @Override

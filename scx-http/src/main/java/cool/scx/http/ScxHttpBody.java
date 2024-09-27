@@ -41,7 +41,7 @@ public interface ScxHttpBody {
     default MultiPart asMultiPart() {
         return as(MULTI_PART_READER);
     }
-    
+
     default CachedMultiPart asCachedMultiPart() {
         return as(CACHED_MULTI_PART_READER);
     }

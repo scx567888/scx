@@ -13,7 +13,8 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import static cool.scx.http.HttpFieldName.CONTENT_DISPOSITION;
-import static cool.scx.http.media.multi_part.MultiPart.*;
+import static cool.scx.http.media.multi_part.MultiPart.readContentToByte;
+import static cool.scx.http.media.multi_part.MultiPart.readToHeaders;
 
 public class CachedMultiPart implements Iterable<CachedMultiPartPart>, Iterator<CachedMultiPartPart> {
 
@@ -30,6 +31,22 @@ public class CachedMultiPart implements Iterable<CachedMultiPartPart>, Iterator<
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static boolean needCached(ScxHttpHeaders headers) {
+        //根据是否存在文件名来假定上传的不是文件 只有文件才缓存
+        var contentDisposition = ContentDisposition.of(headers.get(CONTENT_DISPOSITION));
+        if (contentDisposition == null) {
+            return false;
+        }
+        var filename = contentDisposition.filename();
+        return filename != null;
+    }
+
+    public static Path readContentToPath(MultipartStream multipartStream, Path path) throws IOException {
+        var output = Files.newOutputStream(path);
+        multipartStream.readBodyData(output);
+        return path;
     }
 
     @Override
@@ -63,22 +80,6 @@ public class CachedMultiPart implements Iterable<CachedMultiPartPart>, Iterator<
         } catch (IOException e) {
             throw new RuntimeException("Error reading next part", e);
         }
-    }
-
-    public static boolean needCached(ScxHttpHeaders headers) {
-        //根据是否存在文件名来假定上传的不是文件 只有文件才缓存
-        var contentDisposition = ContentDisposition.of(headers.get(CONTENT_DISPOSITION));
-        if (contentDisposition == null) {
-            return false;
-        }
-        var filename = contentDisposition.filename();
-        return filename != null;
-    }
-
-    public static Path readContentToPath(MultipartStream multipartStream, Path path) throws IOException {
-        var output = Files.newOutputStream(path);
-        multipartStream.readBodyData(output);
-        return path;
     }
 
     @Override
