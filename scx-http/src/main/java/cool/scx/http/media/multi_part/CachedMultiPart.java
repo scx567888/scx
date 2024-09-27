@@ -69,9 +69,9 @@ public class CachedMultiPart implements Iterable<CachedMultiPartPart>, Iterator<
 
             var b = needCached(headers);
             if (b) {
-                content = readContentToByte(multipartStream);
-            } else {
                 contentPath = readContentToPath(multipartStream, cachePath.resolve(RandomUtils.randomString(32)));
+            } else {
+                content = readContentToByte(multipartStream);
             }
             // 检查是否有下一个部分
             hasNextPart = multipartStream.readBoundary();
