@@ -30,12 +30,12 @@ public interface Cookies extends Iterable<Cookie> {
 
     Cookie get(String name);
 
-    default String encodeCookie(){
+    default String encodeCookie() {
         return CookieHelper.encodeCookie(this);
     }
 
-    default String[] encodeSetCookie(){
+    default String[] encodeSetCookie() {
         return CookieHelper.encodeSetCookie(this);
     }
-    
+
 }

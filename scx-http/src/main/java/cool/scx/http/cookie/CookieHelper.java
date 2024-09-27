@@ -1,8 +1,6 @@
 package cool.scx.http.cookie;
 
-import java.net.HttpCookie;
 import java.util.ArrayList;
-import java.util.List;
 
 public class CookieHelper {
 
@@ -15,7 +13,6 @@ public class CookieHelper {
     public static CookiesImpl parseCookies(String cookieStr) {
         var cookies = new CookiesImpl();
         if (cookieStr != null) {
-            List<HttpCookie> parse = HttpCookie.parse(cookieStr);
             var c = cookieStr.split(";\\s");
             for (var cookie : c) {
                 String[] parts = cookie.split("=", 2);
@@ -43,20 +40,18 @@ public class CookieHelper {
             var attrValue = attr.length > 1 ? attr[1] : "";
 
             // 解析其他属性
-            if (key.equalsIgnoreCase("Expires")) {
-                cookie.expires(attrValue);
-            } else if (key.equalsIgnoreCase("Domain")) {
+            if (key.equalsIgnoreCase("Domain")) {
                 cookie.domain(attrValue);
             } else if (key.equalsIgnoreCase("Path")) {
                 cookie.path(attrValue);
             } else if (key.equalsIgnoreCase("Max-Age")) {
                 cookie.maxAge(Long.parseLong(attrValue));
+            } else if (key.equalsIgnoreCase("SameSite")) {
+                cookie.sameSite(CookieSameSite.of(attrValue));
             } else if (key.equalsIgnoreCase("Secure")) {
                 cookie.secure(true);
             } else if (key.equalsIgnoreCase("HttpOnly")) {
                 cookie.httpOnly(true);
-            } else if (key.equalsIgnoreCase("SameSite")) {
-                cookie.sameSite(CookieSameSite.of(attrValue));
             }
         }
 
@@ -89,15 +84,15 @@ public class CookieHelper {
             buf.append("; Max-Age=")
                     .append(cookie.maxAge());
         }
-        if (cookie.httpOnly()) {
-            buf.append("; HttpOnly");
+        if (cookie.sameSite() != null) {
+            buf.append("; SameSite=")
+                    .append(cookie.sameSite().value());
         }
         if (cookie.secure()) {
             buf.append("; Secure");
         }
-        if (cookie.sameSite() != null) {
-            buf.append("; SameSite=")
-                    .append(cookie.sameSite().value());
+        if (cookie.httpOnly()) {
+            buf.append("; HttpOnly");
         }
         return buf.toString();
     }

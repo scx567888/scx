@@ -16,7 +16,7 @@ public enum CookieSameSite {
 
     public static CookieSameSite of(String attrValue) {
         if (attrValue == null) {
-            return null;    
+            return null;
         }
         if ("None".equalsIgnoreCase(attrValue)) {
             return NONE;
