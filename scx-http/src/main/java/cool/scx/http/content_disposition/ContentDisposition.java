@@ -42,4 +42,6 @@ public interface ContentDisposition {
         return params().get("size");
     }
 
+    String encode();
+
 }

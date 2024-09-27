@@ -7,7 +7,6 @@ import java.util.ArrayList;
 
 public class ContentDispositionHelper {
 
-
     public static ContentDispositionWritable decodedContentDisposition(String contentDispositionStr) {
         if (contentDispositionStr == null) {
             return null;

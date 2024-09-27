@@ -34,6 +34,6 @@ public interface ContentType {
         return params().get("boundary");
     }
 
-    String toString();
+    String encode();
 
 }
