@@ -16,7 +16,7 @@ public class HelidonHttpClientResponse implements ScxHttpClientResponse {
         this.response = response;
         this.status = HttpStatusCode.of(response.status().code());
         this.headers = convertHeaders(response.headers());
-        this.body = new ScxHttpBodyImpl(response.entity().inputStream(),this.headers);
+        this.body = new ScxHttpBodyImpl(response.entity().inputStream(), this.headers);
     }
 
     @Override

@@ -26,7 +26,7 @@ public class HelidonHttpClientRequest extends ScxHttpClientRequestBase {
         for (var h : headers) {
             r.header(HeaderNames.create(h.getKey().value()), h.getValue());
         }
-        var res =  r.request();
+        var res = r.request();
         return new HelidonHttpClientResponse(res);
     }
 

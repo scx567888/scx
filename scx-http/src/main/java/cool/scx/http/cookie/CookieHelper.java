@@ -2,6 +2,7 @@ package cool.scx.http.cookie;
 
 import java.util.ArrayList;
 
+//todo 中文编码有一些问题 
 public class CookieHelper {
 
     /**
