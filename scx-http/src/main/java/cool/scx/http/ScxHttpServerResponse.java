@@ -25,6 +25,8 @@ public interface ScxHttpServerResponse {
     void send(String data);
 
     void send(Object data);
+    
+    void end();
 
     boolean isClosed();
 
@@ -34,6 +36,16 @@ public interface ScxHttpServerResponse {
     }
 
     default ScxHttpServerResponse addHeader(ScxHttpHeaderName headerName, String... values) {
+        this.headers().add(headerName, values);
+        return this;
+    }
+
+    default ScxHttpServerResponse setHeader(String headerName, String... values) {
+        this.headers().set(headerName, values);
+        return this;
+    }
+
+    default ScxHttpServerResponse addHeader(String headerName, String... values) {
         this.headers().add(headerName, values);
         return this;
     }

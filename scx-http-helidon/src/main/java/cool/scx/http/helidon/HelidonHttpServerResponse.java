@@ -69,6 +69,12 @@ class HelidonHttpServerResponse implements ScxHttpServerResponse {
     }
 
     @Override
+    public void end() {
+        updateHeaders(this.headers, this.response.headers());
+        this.response.commit();
+    }
+
+    @Override
     public boolean isClosed() {
         return this.response.isSent();
     }
