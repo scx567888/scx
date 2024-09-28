@@ -6,17 +6,17 @@ import cool.scx.http.ScxHttpHeadersWritable;
 import java.io.OutputStream;
 
 /**
- * 写入器
+ * 写入器 可用于 ServerResponse 和 ClientRequest
  */
 public interface MediaWriter {
 
     /**
      * 写入内容之前 在这里可以设置 header 头
      *
-     * @param responseHeaders 响应头
-     * @param requestHeaders  请求头
+     * @param headersWritable 响应头
+     * @param headers  请求头
      */
-    void beforeWrite(ScxHttpHeadersWritable responseHeaders, ScxHttpHeaders requestHeaders);
+    void beforeWrite(ScxHttpHeadersWritable headersWritable, ScxHttpHeaders headers);
 
     /**
      * 写入内容

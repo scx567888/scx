@@ -29,8 +29,7 @@ public class PathReader implements MediaReader<Path> {
 
     @Override
     public Path read(InputStream inputStream, ScxHttpHeaders headers) {
-        try {
-            var outputStream = Files.newOutputStream(path, options);
+        try (var outputStream = Files.newOutputStream(path, options)){
             inputStream.transferTo(outputStream);
         } catch (IOException e) {
             throw new RuntimeException(e);
