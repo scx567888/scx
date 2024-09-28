@@ -28,6 +28,10 @@ public interface ScxHttpServerResponse {
 
     OutputStream outputStream();
 
+    void end();
+
+    boolean isClosed();
+
     default void send(MediaWriter writer) {
         writer.beforeWrite(headers(), request().headers());
         writer.write(outputStream());
@@ -61,10 +65,6 @@ public interface ScxHttpServerResponse {
     default void send(InputStream inputStream) {
         send(new InputStreamWriter(inputStream));
     }
-
-    void end();
-
-    boolean isClosed();
 
     default ScxHttpServerResponse setHeader(ScxHttpHeaderName headerName, String... values) {
         this.headers().set(headerName, values);
