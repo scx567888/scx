@@ -12,7 +12,9 @@ import cool.scx.web.vo.*;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import static cool.scx.common.util.HashUtils.md5Hex;
 import static cool.scx.ext.fss.FSSHelper.*;
@@ -31,7 +33,7 @@ public class FSSController {
      * 图片缓存 此处做一些初始设置
      * 设置缓存的最大容量 为 10000 .
      */
-    private static final Cache<String, Image> IMAGE_CACHE = new Cache<>(10000);
+    private static final Map<String, Image> IMAGE_CACHE = Collections.synchronizedMap(new Cache<>(10000));
     private final FSSObjectService fssObjectService;
 
     public FSSController(FSSObjectService fssObjectService) {
