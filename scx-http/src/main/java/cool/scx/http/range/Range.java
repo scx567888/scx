@@ -14,14 +14,6 @@ import static java.lang.Long.parseLong;
  */
 public record Range(Long start, Long end) {
 
-    public Long getStart() {
-        return start != null ? start : 0L;
-    }
-
-    public Long getEnd(long fileLength) {
-        return end != null ? min(end, fileLength - 1) : fileLength - 1;
-    }
-
     public static List<Range> parseRange(String rangeHeader) {
         List<Range> ranges = new ArrayList<>();
         if (rangeHeader == null || !rangeHeader.startsWith("bytes=")) {
@@ -41,6 +33,14 @@ public record Range(Long start, Long end) {
         }
 
         return ranges;
+    }
+
+    public long getStart() {
+        return start != null ? start : 0L;
+    }
+
+    public long getEnd(long fileLength) {
+        return end != null ? min(end, fileLength - 1) : fileLength - 1;
     }
 
 }
