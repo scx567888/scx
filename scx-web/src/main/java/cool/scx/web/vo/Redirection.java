@@ -48,7 +48,7 @@ public final class Redirection implements BaseVo {
         routingContext.response()
                 .setHeader(LOCATION, location)
                 .status(statusCode.code())
-                .end();
+                .send();
     }
 
 }

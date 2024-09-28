@@ -39,7 +39,7 @@ public interface ScxHttpServerResponse {
     }
 
     default void send() {
-        end();
+        send(new byte[]{});
     }
 
     default void send(byte[] bytes) {
