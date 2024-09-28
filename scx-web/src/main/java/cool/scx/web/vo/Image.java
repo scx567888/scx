@@ -5,8 +5,8 @@ import cool.scx.http.MediaType;
 import cool.scx.http.content_type.ContentType;
 import cool.scx.http.exception.BadRequestException;
 import cool.scx.http.exception.NotFoundException;
-import cool.scx.http.exception.ScxHttpException;
 import cool.scx.http.routing.RoutingContext;
+import cool.scx.http.routing.handler.StaticHelper;
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.geometry.AbsoluteSize;
 import net.coobird.thumbnailator.geometry.Position;
@@ -124,7 +124,7 @@ public abstract class Image implements BaseVo {
 
         @Override
         public void imageHandler(RoutingContext context) {
-            context.response().send(filePath);
+            StaticHelper.sendStatic(filePath,context);
         }
 
     }
@@ -142,7 +142,7 @@ public abstract class Image implements BaseVo {
             super(file);
             var fileFormat = FileFormat.ofFileName(file.toString());
             var mediaType = fileFormat != null ? fileFormat.mediaType() : MediaType.APPLICATION_OCTET_STREAM;
-            this.contentType = mediaType.toString();
+            this.contentType = mediaType.value();
             this.buffer = getBuffer(file, width, height, position);
         }
 
@@ -152,10 +152,9 @@ public abstract class Image implements BaseVo {
          * @return a
          * @throws ScxHttpException if any.
          */
-        private byte[] getBuffer(Path path, Integer width, Integer height, Position position) {
-            var file = path.toFile();
+        private byte[] getBuffer(Path file, Integer width, Integer height, Position position) {
             try (var out = new ByteArrayOutputStream()) {
-                var image = Thumbnails.of(file).scale(1.0).asBufferedImage();
+                var image = Thumbnails.of(file.toFile()).scale(1.0).asBufferedImage();
                 var imageHeight = image.getHeight();
                 var imageWidth = image.getWidth();
 
@@ -164,9 +163,9 @@ public abstract class Image implements BaseVo {
 
                 var absoluteSize = new AbsoluteSize(croppedWidth, croppedHeight);
                 if (position != null) {
-                    Thumbnails.of(file).sourceRegion(position, absoluteSize).size(croppedWidth, croppedHeight).keepAspectRatio(false).toOutputStream(out);
+                    Thumbnails.of(file.toFile()).sourceRegion(position, absoluteSize).size(croppedWidth, croppedHeight).keepAspectRatio(false).toOutputStream(out);
                 } else {
-                    Thumbnails.of(file).size(croppedWidth, croppedHeight).keepAspectRatio(false).toOutputStream(out);
+                    Thumbnails.of(file.toFile()).size(croppedWidth, croppedHeight).keepAspectRatio(false).toOutputStream(out);
                 }
 
                 return out.toByteArray();
@@ -177,7 +176,7 @@ public abstract class Image implements BaseVo {
 
         @Override
         public void imageHandler(RoutingContext context) {
-            context.response().setHeader(CONTENT_TYPE, contentType).send(buffer);
+            context.response().contentType(ContentType.of(contentType)).send(buffer);
         }
 
     }
