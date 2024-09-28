@@ -52,6 +52,11 @@ public interface ScxHttpHeaders extends Parameters<ScxHttpHeaderName, String> {
         return ContentDisposition.of(get(CONTENT_DISPOSITION));
     }
 
+    default Long contentLength() {
+        var c = get(CONTENT_LENGTH);
+        return c != null ? Long.parseLong(c) : null;
+    }
+
     default Cookie getCookie(String name) {
         return cookies().get(name);
     }

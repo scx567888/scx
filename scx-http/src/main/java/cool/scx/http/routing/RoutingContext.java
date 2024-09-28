@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import static cool.scx.http.HttpStatusCode.INTERNAL_SERVER_ERROR;
+
 /**
  * RoutingContext
  */
@@ -40,7 +42,12 @@ public class RoutingContext {
         try {
             tryNext();
         } catch (Throwable e) {
-            router.errorHandler.accept(e, this);
+            if (router.errorHandler != null) {
+                router.errorHandler.accept(e, this);
+            } else {
+                //todo 这里需要完善的错误处理
+                response().status(INTERNAL_SERVER_ERROR).send("Internal Server Error");
+            }
         }
     }
 
