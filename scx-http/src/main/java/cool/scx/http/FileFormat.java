@@ -17,6 +17,8 @@ public enum FileFormat {
     // Text
     TXT(TEXT_PLAIN),
     HTML(TEXT_HTML),
+    CSS(TEXT_CSS),
+    JS(TEXT_JS),
 
     // Application
     BIN(APPLICATION_OCTET_STREAM),
@@ -35,6 +37,7 @@ public enum FileFormat {
     // Image
     BMP(IMAGE_BMP),
     PNG(IMAGE_PNG),
+    JPG(IMAGE_JPEG),
     JPEG(IMAGE_JPEG),
     GIF(IMAGE_GIF),
     SVG(IMAGE_SVG),

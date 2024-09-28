@@ -45,7 +45,10 @@ public final class Redirection implements BaseVo {
 
     @Override
     public void accept(RoutingContext routingContext) {
-        routingContext.request().response().setHeader(LOCATION, location).status(statusCode).send();
+        routingContext.response()
+                .setHeader(LOCATION, location)
+                .status(statusCode.code())
+                .send();
     }
 
 }
