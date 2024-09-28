@@ -35,6 +35,7 @@ public enum FileFormat {
     // Image
     BMP(IMAGE_BMP),
     PNG(IMAGE_PNG),
+    JPG(IMAGE_JPEG),
     JPEG(IMAGE_JPEG),
     GIF(IMAGE_GIF),
     SVG(IMAGE_SVG),
