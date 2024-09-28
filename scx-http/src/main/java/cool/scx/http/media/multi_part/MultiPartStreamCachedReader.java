@@ -3,12 +3,11 @@ package cool.scx.http.media.multi_part;
 import cool.scx.http.MediaType;
 import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.media.MediaReader;
-import cool.scx.http.media.multi_part.CachedMultiPart;
 
 import java.io.InputStream;
 import java.nio.file.Path;
 
-public class MultiPartStreamCachedReader implements MediaReader<CachedMultiPart> {
+public class MultiPartStreamCachedReader implements MediaReader<MultiPart> {
 
     public static final MultiPartStreamCachedReader CACHED_MULTI_PART_READER = new MultiPartStreamCachedReader();
 
@@ -23,7 +22,7 @@ public class MultiPartStreamCachedReader implements MediaReader<CachedMultiPart>
     }
 
     @Override
-    public CachedMultiPart read(InputStream inputStream, ScxHttpHeaders headers) {
+    public MultiPart read(InputStream inputStream, ScxHttpHeaders headers) {
         var contentType = headers.contentType();
         if (contentType == null) {
             throw new IllegalArgumentException("No Content-Type header found");
@@ -35,7 +34,7 @@ public class MultiPartStreamCachedReader implements MediaReader<CachedMultiPart>
         if (boundary == null) {
             throw new IllegalArgumentException("No boundary found");
         }
-        return new CachedMultiPart(inputStream, boundary, cachePath);
+        return new MultiPartStreamCached(inputStream, boundary, cachePath);
     }
 
 }

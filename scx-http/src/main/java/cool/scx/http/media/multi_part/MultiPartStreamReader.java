@@ -3,13 +3,12 @@ package cool.scx.http.media.multi_part;
 import cool.scx.http.MediaType;
 import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.media.MediaReader;
-import cool.scx.http.media.multi_part.MultiPartReader;
 
 import java.io.InputStream;
 
 public class MultiPartStreamReader implements MediaReader<MultiPart> {
 
-    public static final MultiPartReader MULTI_PART_READER = new MultiPartReader();
+    public static final MultiPartStreamReader MULTI_PART_READER = new MultiPartStreamReader();
 
     @Override
     public MultiPart read(InputStream inputStream, ScxHttpHeaders headers) {
@@ -24,7 +23,7 @@ public class MultiPartStreamReader implements MediaReader<MultiPart> {
         if (boundary == null) {
             throw new IllegalArgumentException("No boundary found");
         }
-        return new MultiPart(inputStream, boundary);
+        return new MultiPartStream(inputStream, boundary);
     }
     
 }

@@ -11,8 +11,8 @@ import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import static cool.scx.http.media.multi_part.MultiPart.readContentToByte;
-import static cool.scx.http.media.multi_part.MultiPart.readToHeaders;
+import static cool.scx.http.media.multi_part.MultiPartStream.readContentToByte;
+import static cool.scx.http.media.multi_part.MultiPartStream.readToHeaders;
 
 public class MultiPartStreamCached implements MultiPart, Iterator<MultiPartPart> {
 

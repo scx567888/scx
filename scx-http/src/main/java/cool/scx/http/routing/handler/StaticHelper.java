@@ -2,6 +2,7 @@ package cool.scx.http.routing.handler;
 
 import cool.scx.http.FileFormat;
 import cool.scx.http.content_type.ContentType;
+import cool.scx.http.content_type.ContentTypeWritable;
 import cool.scx.http.exception.NotFoundException;
 import cool.scx.http.media.path.PathHelper;
 import cool.scx.http.range.Range;
@@ -76,7 +77,7 @@ public class StaticHelper {
 
     }
 
-    public static ContentType getMediaTypeByFile(Path path) {
+    public static ContentTypeWritable getMediaTypeByFile(Path path) {
         var fileFormat = FileFormat.ofFileName(path.getFileName().toString());
         if (fileFormat == null) {
             fileFormat = FileFormat.BIN;
