@@ -78,5 +78,10 @@ public interface ScxHttpHeadersWritable extends ScxHttpHeaders, ParametersWritab
         cookies.remove(name);
         return setCookies(cookies);
     }
+    
+    default ScxHttpHeadersWritable contentLength(long contentLength) {
+        set(CONTENT_LENGTH, String.valueOf(contentLength));
+        return this;
+    }
 
 }

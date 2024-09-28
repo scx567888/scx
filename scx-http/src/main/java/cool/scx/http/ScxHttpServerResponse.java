@@ -2,6 +2,10 @@ package cool.scx.http;
 
 import cool.scx.http.content_type.ContentType;
 import cool.scx.http.cookie.Cookie;
+import cool.scx.http.media.MediaWriteSelector;
+import cool.scx.http.media.MediaWriter;
+import cool.scx.http.media.byte_array.ByteArrayWriter;
+import cool.scx.http.media.string.StringWriter;
 
 import java.io.OutputStream;
 
@@ -9,6 +13,8 @@ import java.io.OutputStream;
  * ScxHttpServerResponse
  */
 public interface ScxHttpServerResponse {
+
+    ScxHttpServerRequest request();
 
     HttpStatusCode status();
 
@@ -18,13 +24,27 @@ public interface ScxHttpServerResponse {
 
     OutputStream outputStream();
 
-    void send();
+    default void send(MediaWriter writer){
+        writer.beforeWrite(headers(), request().headers());
+        writer.write(outputStream());
+        end();
+    }
 
-    void send(byte[] data);
+    default void send(){
+        end();
+    }
 
-    void send(String data);
+    default void send(byte[] data){
+        send(new ByteArrayWriter(data));
+    }
 
-    void send(Object data);
+    default void send(String data){
+        send(new StringWriter(data));
+    }
+
+    default void send(Object data){
+        send(MediaWriteSelector.findWriter(data));
+    }
     
     void end();
 

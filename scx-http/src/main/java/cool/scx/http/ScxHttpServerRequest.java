@@ -10,6 +10,8 @@ import cool.scx.http.uri.ScxURI;
  */
 public interface ScxHttpServerRequest {
 
+    ScxHttpServerResponse response();
+
     ScxHttpMethod method();
 
     ScxURI uri();
@@ -19,8 +21,6 @@ public interface ScxHttpServerRequest {
     ScxHttpHeaders headers();
 
     ScxHttpBody body();
-
-    ScxHttpServerResponse response();
 
     PeerInfo remotePeer();
 
