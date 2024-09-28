@@ -11,6 +11,6 @@ import java.io.InputStream;
  */
 public interface MediaReader<T> {
 
-    T read(InputStream inputStream, ScxHttpHeaders headers);
+    T read(InputStream inputStream, ScxHttpHeaders requestHeaders);
 
 }
