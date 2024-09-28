@@ -1,4 +1,4 @@
-package cool.scx.http.media.m;
+package cool.scx.http.media.multi_part;
 
 public interface MultiPartWritable extends MultiPart {
     

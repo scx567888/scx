@@ -1,23 +1,28 @@
-package cool.scx.http.media.m;
+package cool.scx.http.media.multi_part;
 
+import cool.scx.common.util.RandomUtils;
 import cool.scx.http.ScxHttpHeaders;
-import cool.scx.http.ScxHttpHeadersWritable;
-import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.fileupload.MultipartStream;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class MultiPartStream implements MultiPart, Iterator<MultiPartPart> {
+import static cool.scx.http.media.multi_part.MultiPart.readContentToByte;
+import static cool.scx.http.media.multi_part.MultiPart.readToHeaders;
+
+public class MultiPartStreamCached implements MultiPart, Iterator<MultiPartPart> {
 
     private final MultipartStream multipartStream;
+    private final Path cachePath;
     private boolean hasNextPart;
     private String boundary;
 
-    public MultiPartStream(InputStream inputStream, String boundary) {
+    public MultiPartStreamCached(InputStream inputStream, String boundary, Path cachePath) {
+        this.cachePath = cachePath;
         var boundaryBytes = boundary.getBytes();
         this.multipartStream = new MultipartStream(inputStream, boundaryBytes, 1024, null);
         try {
@@ -37,15 +42,22 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart> {
         return this;
     }
 
-    public static ScxHttpHeadersWritable readToHeaders(MultipartStream multipartStream) throws MultipartStream.MalformedStreamException, FileUploadBase.FileUploadIOException {
-        var headersStr = multipartStream.readHeaders();
-        return ScxHttpHeaders.of(headersStr);
+    public static boolean needCached(ScxHttpHeaders headers) {
+        //根据是否存在文件名来假定上传的不是文件 只有文件才缓存
+        var contentDisposition = headers.contentDisposition();
+        if (contentDisposition == null) {
+            return false;
+        }
+        var filename = contentDisposition.filename();
+        return filename != null;
     }
 
-    public static byte[] readContentToByte(MultipartStream multipartStream) throws IOException {
-        var output = new ByteArrayOutputStream();
+    public static Path readContentToPath(MultipartStream multipartStream, Path path) throws IOException {
+        //保证一定有目录
+        Files.createDirectories(path.getParent());
+        var output = Files.newOutputStream(path);
         multipartStream.readBodyData(output);
-        return output.toByteArray();
+        return path;
     }
 
     @Override
@@ -65,10 +77,14 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart> {
 
             var part = new MultiPartPartImpl().headers(headers);
 
-            //读取内容
-            var content = readContentToByte(multipartStream);
-            part.body(content);
-
+            var b = needCached(headers);
+            if (b) {
+                var contentPath = readContentToPath(multipartStream, cachePath.resolve(RandomUtils.randomString(32)));
+                part.body(contentPath);
+            } else {
+                var content = readContentToByte(multipartStream);
+                part.body(content);
+            }
             // 检查是否有下一个部分
             hasNextPart = multipartStream.readBoundary();
 

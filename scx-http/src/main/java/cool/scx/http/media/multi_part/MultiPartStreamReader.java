@@ -1,9 +1,8 @@
-package cool.scx.http.media.m;
+package cool.scx.http.media.multi_part;
 
 import cool.scx.http.MediaType;
 import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.media.MediaReader;
-import cool.scx.http.media.multi_part.MultiPart;
 import cool.scx.http.media.multi_part.MultiPartReader;
 
 import java.io.InputStream;

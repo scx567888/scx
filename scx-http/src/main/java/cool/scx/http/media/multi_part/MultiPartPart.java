@@ -4,66 +4,40 @@ import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.content_disposition.ContentDisposition;
 import cool.scx.http.content_type.ContentType;
 
+import java.io.InputStream;
+import java.util.function.Supplier;
 
-public class MultiPartPart {
+public interface MultiPartPart {
 
-    protected final ScxHttpHeaders headers;
-    protected final ContentDisposition contentDisposition;
-    protected final ContentType contentType;
-    protected final String name;
-    protected final String filename;
-    protected final String size;
-    protected final byte[] content;
-    protected final boolean isFile;
-
-    public MultiPartPart(ScxHttpHeaders headers, byte[] content) {
-        this.headers = headers;
-        this.contentDisposition = headers.contentDisposition();
-        this.contentType = headers.contentType();
-        this.content = content;
-        if (this.contentDisposition != null) {
-            this.name = contentDisposition.name();
-            this.filename = contentDisposition.filename();
-            this.size = contentDisposition.size();
-            this.isFile = filename != null;
-        } else {
-            this.name = null;
-            this.filename = null;
-            this.size = null;
-            this.isFile = false;
-        }
+    static MultiPartPartWritable of() {
+        return new MultiPartPartImpl();
     }
 
-    public ScxHttpHeaders headers() {
-        return headers;
+    ScxHttpHeaders headers();
+
+    Supplier<InputStream> body();
+
+    default ContentType contentType() {
+        return headers().contentType();
     }
 
-    public boolean isFile() {
-        return isFile;
+    default ContentDisposition contentDisposition() {
+        return headers().contentDisposition();
     }
 
-    public String name() {
-        return name;
+    default String name() {
+        var contentDisposition = contentDisposition();
+        return contentDisposition != null ? contentDisposition.name() : null;
     }
 
-    public String filename() {
-        return filename;
+    default String filename() {
+        var contentDisposition = contentDisposition();
+        return contentDisposition != null ? contentDisposition.filename() : null;
     }
 
-    public String size() {
-        return size;
-    }
-
-    public ContentType contentType() {
-        return contentType;
-    }
-
-    public ContentDisposition contentDisposition() {
-        return contentDisposition;
-    }
-
-    public byte[] content() {
-        return content;
+    default Long size() {
+        var contentDisposition = contentDisposition();
+        return contentDisposition != null ? contentDisposition.size() : null;
     }
 
 }

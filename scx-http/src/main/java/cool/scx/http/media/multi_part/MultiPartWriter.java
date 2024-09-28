@@ -1,4 +1,4 @@
-package cool.scx.http.media.m;
+package cool.scx.http.media.multi_part;
 
 import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.ScxHttpHeadersWritable;

@@ -3,21 +3,22 @@ package cool.scx.http.media.multi_part;
 import cool.scx.http.MediaType;
 import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.media.MediaReader;
+import cool.scx.http.media.multi_part.CachedMultiPart;
 
 import java.io.InputStream;
 import java.nio.file.Path;
 
-public class CachedMultiPartReader implements MediaReader<CachedMultiPart> {
+public class MultiPartStreamCachedReader implements MediaReader<CachedMultiPart> {
 
-    public static final CachedMultiPartReader CACHED_MULTI_PART_READER = new CachedMultiPartReader();
+    public static final MultiPartStreamCachedReader CACHED_MULTI_PART_READER = new MultiPartStreamCachedReader();
 
     private final Path cachePath;
 
-    public CachedMultiPartReader(Path cachePath) {
+    public MultiPartStreamCachedReader(Path cachePath) {
         this.cachePath = cachePath;
     }
 
-    public CachedMultiPartReader() {
+    public MultiPartStreamCachedReader() {
         this.cachePath = Path.of(System.getProperty("java.io.tmpdir")).resolve(".SCX-CACHE");
     }
 

@@ -38,8 +38,9 @@ public interface ContentDisposition {
         return params().get("read-date");
     }
 
-    default String size() {
-        return params().get("size");
+    default Long size() {
+        var size = params().get("size");
+        return size != null ? Long.valueOf(size) : null;
     }
 
     String encode();
