@@ -1,6 +1,26 @@
 package cool.scx.http.media;
 
-//todo 写入器 目前没有用到
+import cool.scx.http.ScxHttpHeaders;
+import cool.scx.http.ScxHttpHeadersWritable;
+
+import java.io.OutputStream;
+
+/**
+ * 写入器
+ */
 public interface MediaWriter {
+
+    /**
+     * 写入内容之前 在这里可以设置 header 头
+     * @param responseHeaders 响应头 
+     * @param requestHeaders 请求头
+     */
+    void beforeWrite(ScxHttpHeadersWritable responseHeaders, ScxHttpHeaders requestHeaders);
+
+    /**
+     * 写入内容
+     * @param outputStream 输入流
+     */
+    void write(OutputStream outputStream);
 
 }
