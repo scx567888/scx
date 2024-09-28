@@ -86,6 +86,10 @@ public interface ScxHttpServerResponse {
         return this;
     }
 
+    default ContentType contentType() {
+        return headers().contentType();
+    }
+
     default ScxHttpServerResponse status(int code) {
         return status(HttpStatusCode.of(code));
     }

@@ -8,7 +8,6 @@ import cool.scx.http.routing.RoutingContext;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static cool.scx.http.HttpFieldName.CONTENT_DISPOSITION;
@@ -80,6 +79,18 @@ class BaseWriter implements BaseVo {
         this(null, null, bytes, Type.BYTE_ARRAY, contentType, contentDisposition);
     }
 
+    public static ScxHttpServerResponse fillContentType(ScxHttpServerResponse response, MediaType contentType) {
+        if (contentType != null) {
+            if (contentType.type().equals("text")) {
+                return response.contentType(ContentType.of(contentType).charset(UTF_8));
+            } else {
+                return response.contentType(ContentType.of(contentType));
+            }
+        } else {
+            return response.contentType(ContentType.of(APPLICATION_OCTET_STREAM));
+        }
+    }
+
     @Override
     public final void accept(RoutingContext context) {
         switch (type) {
@@ -127,18 +138,6 @@ class BaseWriter implements BaseVo {
         context.response().send(this.path);
         //todo 此处需要处理 206 之类的请求
 //        SEND_FILE_HELPER.sendStatic(context, context.vertx().fileSystem(), this.path.toString(), false);
-    }
-
-    public static ScxHttpServerResponse fillContentType(ScxHttpServerResponse response, MediaType contentType) {
-        if (contentType != null) {
-            if (contentType.type().equals("text")) {
-                return response.contentType(ContentType.of(contentType).charset(UTF_8));
-            } else {
-                return response.contentType(ContentType.of(contentType));
-            }
-        } else {
-            return response.contentType(ContentType.of(APPLICATION_OCTET_STREAM));
-        }
     }
 
     enum Type {
