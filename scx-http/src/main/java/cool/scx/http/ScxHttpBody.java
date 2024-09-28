@@ -6,8 +6,10 @@ import cool.scx.http.media.multi_part.CachedMultiPart;
 import cool.scx.http.media.multi_part.CachedMultiPartReader;
 import cool.scx.http.media.multi_part.MultiPart;
 import cool.scx.http.media.path.PathReader;
+import cool.scx.http.media.string.StringReader;
 
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
 
@@ -32,6 +34,10 @@ public interface ScxHttpBody {
 
     default String asString() {
         return as(STRING_READER);
+    }
+
+    default String asString(Charset charset) {
+        return as(new StringReader(charset));
     }
 
     default FormParams asFormParams() {

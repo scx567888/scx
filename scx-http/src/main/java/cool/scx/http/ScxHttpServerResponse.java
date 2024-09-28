@@ -4,9 +4,12 @@ import cool.scx.http.content_type.ContentType;
 import cool.scx.http.cookie.Cookie;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.media.byte_array.ByteArrayWriter;
+import cool.scx.http.media.path.PathWriter;
 import cool.scx.http.media.string.StringWriter;
 
 import java.io.OutputStream;
+import java.nio.charset.Charset;
+import java.nio.file.Path;
 
 /**
  * ScxHttpServerResponse
@@ -33,12 +36,24 @@ public interface ScxHttpServerResponse {
         end();
     }
 
-    default void send(byte[] data) {
-        send(new ByteArrayWriter(data));
+    default void send(byte[] bytes) {
+        send(new ByteArrayWriter(bytes));
     }
 
-    default void send(String data) {
-        send(new StringWriter(data));
+    default void send(String str) {
+        send(new StringWriter(str));
+    }
+
+    default void send(String str, Charset charset) {
+        send(new StringWriter(str, charset));
+    }
+
+    default void send(Path path) {
+        send(new PathWriter(path));
+    }
+
+    default void send(Path path, long offset, long length) {
+        send(new PathWriter(path, offset, length));
     }
 
     void end();
