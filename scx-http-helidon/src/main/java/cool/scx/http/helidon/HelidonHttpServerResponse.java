@@ -8,9 +8,6 @@ import io.helidon.webserver.http.RoutingResponse;
 
 import java.io.OutputStream;
 
-import static cool.scx.http.helidon.HelidonHelper.convertHeaders;
-import static cool.scx.http.helidon.HelidonHelper.updateHeaders;
-
 /**
  * HelidonHttpServerResponse
  */
@@ -21,7 +18,7 @@ class HelidonHttpServerResponse implements ScxHttpServerResponse {
     private final HelidonHttpServerRequest request;
 
     public HelidonHttpServerResponse(HelidonHttpServerRequest request, RoutingResponse response) {
-        this.request=request;
+        this.request = request;
         this.response = response;
         this.headers = new HelidonHeadersWritable(response.headers());
     }

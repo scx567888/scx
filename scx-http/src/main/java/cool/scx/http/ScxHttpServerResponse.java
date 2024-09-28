@@ -2,7 +2,6 @@ package cool.scx.http;
 
 import cool.scx.http.content_type.ContentType;
 import cool.scx.http.cookie.Cookie;
-import cool.scx.http.media.MediaWriteSelector;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.media.byte_array.ByteArrayWriter;
 import cool.scx.http.media.string.StringWriter;
@@ -24,28 +23,24 @@ public interface ScxHttpServerResponse {
 
     OutputStream outputStream();
 
-    default void send(MediaWriter writer){
+    default void send(MediaWriter writer) {
         writer.beforeWrite(headers(), request().headers());
         writer.write(outputStream());
         end();
     }
 
-    default void send(){
+    default void send() {
         end();
     }
 
-    default void send(byte[] data){
+    default void send(byte[] data) {
         send(new ByteArrayWriter(data));
     }
 
-    default void send(String data){
+    default void send(String data) {
         send(new StringWriter(data));
     }
 
-    default void send(Object data){
-        send(MediaWriteSelector.findWriter(data));
-    }
-    
     void end();
 
     boolean isClosed();
