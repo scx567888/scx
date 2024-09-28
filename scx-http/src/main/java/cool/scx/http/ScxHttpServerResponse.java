@@ -105,4 +105,9 @@ public interface ScxHttpServerResponse {
         return this;
     }
 
+    default ScxHttpServerResponse contentLength(long contentLength) {
+        headers().contentLength(contentLength);
+        return this;
+    }
+
 }
