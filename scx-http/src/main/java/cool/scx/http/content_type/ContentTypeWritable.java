@@ -18,4 +18,9 @@ public interface ContentTypeWritable extends ContentType {
         return this;
     }
 
+    default ContentTypeWritable boundary(String boundary) {
+        params().set("boundary", boundary);
+        return this;
+    }
+
 }
