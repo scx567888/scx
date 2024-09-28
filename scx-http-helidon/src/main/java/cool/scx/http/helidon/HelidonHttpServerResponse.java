@@ -2,6 +2,7 @@ package cool.scx.http.helidon;
 
 import cool.scx.http.HttpStatusCode;
 import cool.scx.http.ScxHttpHeadersWritable;
+import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.ScxHttpServerResponse;
 import io.helidon.webserver.http.RoutingResponse;
 
@@ -17,10 +18,17 @@ class HelidonHttpServerResponse implements ScxHttpServerResponse {
 
     private final RoutingResponse response;
     private final ScxHttpHeadersWritable headers;
+    private final HelidonHttpServerRequest request;
 
-    public HelidonHttpServerResponse(RoutingResponse response) {
+    public HelidonHttpServerResponse(HelidonHttpServerRequest request, RoutingResponse response) {
+        this.request=request;
         this.response = response;
-        this.headers = convertHeaders(response.headers());
+        this.headers = new HelidonHeadersWritable(response.headers());
+    }
+
+    @Override
+    public ScxHttpServerRequest request() {
+        return request;
     }
 
     @Override
@@ -45,32 +53,7 @@ class HelidonHttpServerResponse implements ScxHttpServerResponse {
     }
 
     @Override
-    public void send() {
-        updateHeaders(this.headers, this.response.headers());
-        this.response.send();
-    }
-
-    @Override
-    public void send(byte[] data) {
-        updateHeaders(this.headers, this.response.headers());
-        this.response.send(data);
-    }
-
-    @Override
-    public void send(String data) {
-        updateHeaders(this.headers, this.response.headers());
-        this.response.send(data);
-    }
-
-    @Override
-    public void send(Object data) {
-        updateHeaders(this.headers, this.response.headers());
-        this.response.send(data);
-    }
-
-    @Override
     public void end() {
-        updateHeaders(this.headers, this.response.headers());
         this.response.commit();
     }
 
