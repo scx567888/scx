@@ -32,16 +32,6 @@ public class MultiPartStreamCached implements MultiPart, Iterator<MultiPartPart>
         }
     }
 
-    @Override
-    public String boundary() {
-        return boundary;
-    }
-
-    @Override
-    public Iterator<MultiPartPart> iterator() {
-        return this;
-    }
-
     public static boolean needCached(ScxHttpHeaders headers) {
         //根据是否存在文件名来假定上传的不是文件 只有文件才缓存
         var contentDisposition = headers.contentDisposition();
@@ -58,6 +48,16 @@ public class MultiPartStreamCached implements MultiPart, Iterator<MultiPartPart>
         var output = Files.newOutputStream(path);
         multipartStream.readBodyData(output);
         return path;
+    }
+
+    @Override
+    public String boundary() {
+        return boundary;
+    }
+
+    @Override
+    public Iterator<MultiPartPart> iterator() {
+        return this;
     }
 
     @Override

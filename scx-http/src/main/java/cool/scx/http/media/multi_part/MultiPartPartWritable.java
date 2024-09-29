@@ -35,7 +35,7 @@ public interface MultiPartPartWritable extends MultiPartPart {
         if (contentDisposition != null) {
             contentDisposition.name(name);
             contentDisposition(contentDisposition);
-        }else{
+        } else {
             contentDisposition(ContentDisposition.of().type("form-data").name(name));
         }
         return this;
@@ -46,7 +46,7 @@ public interface MultiPartPartWritable extends MultiPartPart {
         if (contentDisposition != null) {
             contentDisposition.filename(filename);
             contentDisposition(contentDisposition);
-        }else{
+        } else {
             contentDisposition(ContentDisposition.of().type("form-data").filename(filename));
         }
         return this;
@@ -57,7 +57,7 @@ public interface MultiPartPartWritable extends MultiPartPart {
         if (contentDisposition != null) {
             contentDisposition.size(size);
             contentDisposition(contentDisposition);
-        }else{
+        } else {
             contentDisposition(ContentDisposition.of().type("form-data").size(size));
         }
         return this;

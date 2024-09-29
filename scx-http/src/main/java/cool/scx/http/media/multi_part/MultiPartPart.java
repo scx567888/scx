@@ -5,6 +5,7 @@ import cool.scx.http.content_disposition.ContentDisposition;
 import cool.scx.http.content_type.ContentType;
 import cool.scx.http.media.path.PathHelper;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.function.Supplier;
@@ -52,6 +53,14 @@ public interface MultiPartPart {
     default Long size() {
         var contentDisposition = contentDisposition();
         return contentDisposition != null ? contentDisposition.size() : null;
+    }
+
+    default byte[] bodyBytes() {
+        try (var b = body().get()) {
+            return b.readAllBytes();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

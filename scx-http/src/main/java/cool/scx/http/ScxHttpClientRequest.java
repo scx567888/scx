@@ -3,6 +3,8 @@ package cool.scx.http;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.media.byte_array.ByteArrayWriter;
 import cool.scx.http.media.input_stream.InputStreamWriter;
+import cool.scx.http.media.multi_part.MultiPart;
+import cool.scx.http.media.multi_part.MultiPartWriter;
 import cool.scx.http.media.path.PathWriter;
 import cool.scx.http.media.string.StringWriter;
 import cool.scx.http.uri.ScxURI;
@@ -57,6 +59,10 @@ public interface ScxHttpClientRequest {
 
     default ScxHttpClientResponse send(InputStream inputStream) {
         return send(new InputStreamWriter(inputStream));
+    }
+
+    default ScxHttpClientResponse send(MultiPart multiPart) {
+        return send(new MultiPartWriter(multiPart));
     }
 
     default ScxHttpClientRequest uri(String uri) {

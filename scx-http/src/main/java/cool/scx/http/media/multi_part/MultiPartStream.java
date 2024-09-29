@@ -27,16 +27,6 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart> {
         }
     }
 
-    @Override
-    public String boundary() {
-        return boundary;
-    }
-
-    @Override
-    public Iterator<MultiPartPart> iterator() {
-        return this;
-    }
-
     public static ScxHttpHeadersWritable readToHeaders(MultipartStream multipartStream) throws MultipartStream.MalformedStreamException, FileUploadBase.FileUploadIOException {
         var headersStr = multipartStream.readHeaders();
         return ScxHttpHeaders.of(headersStr);
@@ -46,6 +36,16 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart> {
         var output = new ByteArrayOutputStream();
         multipartStream.readBodyData(output);
         return output.toByteArray();
+    }
+
+    @Override
+    public String boundary() {
+        return boundary;
+    }
+
+    @Override
+    public Iterator<MultiPartPart> iterator() {
+        return this;
     }
 
     @Override
