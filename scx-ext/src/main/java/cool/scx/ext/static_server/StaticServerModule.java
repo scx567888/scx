@@ -1,13 +1,11 @@
 package cool.scx.ext.static_server;
 
-import cool.scx.common.util.ScxExceptionHelper;
 import cool.scx.core.Scx;
 import cool.scx.core.ScxModule;
 import cool.scx.http.routing.Router;
 import cool.scx.http.routing.handler.StaticHandler;
 
 import java.lang.System.Logger;
-import java.nio.file.Files;
 import java.util.List;
 import java.util.stream.Collectors;
 
