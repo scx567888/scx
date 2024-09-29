@@ -2,6 +2,7 @@ package cool.scx.http;
 
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.media.byte_array.ByteArrayWriter;
+import cool.scx.http.media.empty.EmptyWriter;
 import cool.scx.http.media.input_stream.InputStreamWriter;
 import cool.scx.http.media.multi_part.MultiPart;
 import cool.scx.http.media.multi_part.MultiPartWriter;
@@ -34,7 +35,7 @@ public interface ScxHttpClientRequest {
     ScxHttpClientResponse send(MediaWriter writer);
 
     default ScxHttpClientResponse send() {
-        return send(new byte[]{});
+        return send(new EmptyWriter());
     }
 
     default ScxHttpClientResponse send(byte[] bytes) {

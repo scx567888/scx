@@ -49,18 +49,6 @@ class BaseWriter implements BaseVo {
         this(null, null, bytes, Type.BYTE_ARRAY, contentType, contentDisposition);
     }
 
-    @Override
-    public final void accept(RoutingContext context) {
-        var response = context.response();
-        response.setHeader(CONTENT_DISPOSITION, contentDisposition);
-        fillContentType(response, contentType);
-        switch (type) {
-            case BYTE_ARRAY -> response.send(this.bytes);
-            case PATH -> StaticHelper.sendStatic(this.path, context);
-            case INPUT_STREAM -> response.send(inputStream);
-        }
-    }
-
     public static ScxHttpServerResponse fillContentType(ScxHttpServerResponse response, MediaType contentType) {
         if (contentType != null) {
             if (contentType.type().equals("text")) {
@@ -70,6 +58,18 @@ class BaseWriter implements BaseVo {
             }
         } else {
             return response.contentType(ContentType.of(APPLICATION_OCTET_STREAM));
+        }
+    }
+
+    @Override
+    public final void accept(RoutingContext context) {
+        var response = context.response();
+        response.setHeader(CONTENT_DISPOSITION, contentDisposition);
+        fillContentType(response, contentType);
+        switch (type) {
+            case BYTE_ARRAY -> response.send(this.bytes);
+            case PATH -> StaticHelper.sendStatic(this.path, context);
+            case INPUT_STREAM -> response.send(inputStream);
         }
     }
 

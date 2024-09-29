@@ -1,6 +1,7 @@
 package cool.scx.core.enumeration;
 
 import cool.scx.config.ScxFeature;
+import cool.scx.core.annotation.Scheduled;
 import cool.scx.scheduling.ScxScheduler;
 
 /**
@@ -37,7 +38,7 @@ public enum ScxCoreFeature implements ScxFeature<Boolean> {
     USE_DEVELOPMENT_ERROR_PAGE(false),
 
     /**
-     * 目前框架中支持两种添加任务调度的方式 [注解 例如 ${@link org.springframework.scheduling.annotation.Scheduled}, 或使用 手动配置的方式 ${@link ScxScheduler}]
+     * 目前框架中支持两种添加任务调度的方式 [注解 例如 ${@link Scheduled}, 或使用 手动配置的方式 ${@link ScxScheduler}]
      * <br>
      * 此标识表示是否扫描并启用 使用注解类型的定时任务 默认为 true , 及项目启动时扫描并启动所有的 注解类型定时任务
      * <br>
