@@ -44,8 +44,7 @@ public class MultiPartWriter implements MediaWriter {
                 //写入换行符
                 outputStream.write(l);
                 //写入内容
-                var body = multiPartPart.body();
-                try (var i = body.get()) {
+                try (var i = multiPartPart.inputStream()) {
                     i.transferTo(outputStream);
                 }
                 //写入换行符
