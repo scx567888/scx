@@ -9,6 +9,9 @@ public class ScxHttpBodyImpl implements ScxHttpBody {
     private final InputStream inputStream;
     private final ScxHttpHeaders headers;
 
+    // 简单做一个缓存
+    private String cacheString;
+
     public ScxHttpBodyImpl(InputStream inputStream, ScxHttpHeaders headers) {
         this.inputStream = inputStream;
         this.headers = headers;
@@ -22,6 +25,14 @@ public class ScxHttpBodyImpl implements ScxHttpBody {
     @Override
     public <T> T as(MediaReader<T> t) {
         return t.read(inputStream, headers);
+    }
+
+    @Override
+    public String asString() {
+        if (cacheString == null) {
+            cacheString = ScxHttpBody.super.asString();
+        }
+        return cacheString;
     }
 
 }
