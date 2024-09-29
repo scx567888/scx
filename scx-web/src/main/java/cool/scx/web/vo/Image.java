@@ -5,6 +5,7 @@ import cool.scx.http.MediaType;
 import cool.scx.http.content_type.ContentType;
 import cool.scx.http.exception.BadRequestException;
 import cool.scx.http.exception.NotFoundException;
+import cool.scx.http.exception.ScxHttpException;
 import cool.scx.http.routing.RoutingContext;
 import cool.scx.http.routing.handler.StaticHelper;
 import net.coobird.thumbnailator.Thumbnails;

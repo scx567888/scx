@@ -32,7 +32,7 @@ public class HelidonCookies implements Cookies {
     @Override
     public Iterator<Cookie> iterator() {
         var itr = cookies.toMap().entrySet().iterator();
-        return new Iterator<Cookie>() {
+        return new Iterator<>() {
             @Override
             public boolean hasNext() {
                 return itr.hasNext();

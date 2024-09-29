@@ -19,17 +19,9 @@ public class StaticServerModule extends ScxModule {
 
     private static void registerStaticServerHandler(Router vertxRouter, List<StaticServer> staticServers) {
         for (var staticServer : staticServers) {
-            var isRegularFile = ScxExceptionHelper.ignore(() -> Files.isRegularFile(staticServer.root()), true);
-            if (isRegularFile) {// 单文件的 (使用场景例如 vue-router history 模式)
-                vertxRouter.route()
-                        .path(staticServer.location())
-                        .handler(new StaticHandler(staticServer.root()));
-            } else {
-                // 目录则采用 vertx 自带的
-                vertxRouter.route()
-                        .path(staticServer.location())
-                        .handler(new StaticHandler(staticServer.root()));
-            }
+            vertxRouter.route()
+                    .path(staticServer.location())
+                    .handler(new StaticHandler(staticServer.root()));
         }
     }
 
