@@ -65,4 +65,8 @@ public interface ScxHttpHeaders extends Parameters<ScxHttpHeaderName, String> {
         return setCookies().get(name);
     }
 
+    default String encode() {
+        return ScxHttpHeadersHelper.encodeHeaders(this);
+    }
+
 }

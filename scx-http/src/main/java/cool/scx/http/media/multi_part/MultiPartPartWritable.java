@@ -32,31 +32,34 @@ public interface MultiPartPartWritable extends MultiPartPart {
 
     default MultiPartPartWritable name(String name) {
         var contentDisposition = headers().contentDisposition();
-        if (contentDisposition == null) {
-            contentDisposition = ContentDisposition.of();
+        if (contentDisposition != null) {
+            contentDisposition.name(name);
             contentDisposition(contentDisposition);
+        }else{
+            contentDisposition(ContentDisposition.of().type("form-data").name(name));
         }
-        contentDisposition.name(name);
         return this;
     }
 
     default MultiPartPartWritable filename(String filename) {
         var contentDisposition = headers().contentDisposition();
-        if (contentDisposition == null) {
-            contentDisposition = ContentDisposition.of();
+        if (contentDisposition != null) {
+            contentDisposition.filename(filename);
             contentDisposition(contentDisposition);
+        }else{
+            contentDisposition(ContentDisposition.of().type("form-data").filename(filename));
         }
-        contentDisposition.filename(filename);
         return this;
     }
 
     default MultiPartPartWritable size(long size) {
         var contentDisposition = headers().contentDisposition();
-        if (contentDisposition == null) {
-            contentDisposition = ContentDisposition.of();
+        if (contentDisposition != null) {
+            contentDisposition.size(size);
             contentDisposition(contentDisposition);
+        }else{
+            contentDisposition(ContentDisposition.of().type("form-data").size(size));
         }
-        contentDisposition.size(size);
         return this;
     }
 

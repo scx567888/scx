@@ -20,21 +20,40 @@ public class MultiPartWriter implements MediaWriter {
     @Override
     public void beforeWrite(ScxHttpHeadersWritable headersWritable, ScxHttpHeaders headers) {
         if (headersWritable.contentType() == null) {
+            // MULTIPART 有很多类型 这里暂时只当成 MULTIPART_FORM_DATA
             headersWritable.contentType(ContentType.of().mediaType(MULTIPART_FORM_DATA).boundary(this.multiPart.boundary()));
         }
     }
 
     @Override
     public void write(OutputStream outputStream) {
-        //发送头
-        //发送每个内容
-        for (var multiPartPart : multiPart) {
-            var body = multiPartPart.body();
-            try (var i = body.get()) {
-                i.transferTo(outputStream);
-            } catch (Exception e) {
-
+        //头
+        var h = ("--" + multiPart.boundary() + "\r\n").getBytes();
+        //尾
+        var f = ("--" + multiPart.boundary() + "--\r\n").getBytes();
+        //换行符
+        var l = "\r\n".getBytes();
+        try {
+            //发送每个内容
+            for (var multiPartPart : multiPart) {
+                //发送头
+                outputStream.write(h);
+                var headers = multiPartPart.headers().encode();
+                //写入头
+                outputStream.write(headers.getBytes());
+                //写入换行符
+                outputStream.write(l);
+                //写入内容
+                var body = multiPartPart.body();
+                try (var i = body.get()) {
+                    i.transferTo(outputStream);
+                }
+                //写入换行符
+                outputStream.write(l);
             }
+            outputStream.write(f);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
