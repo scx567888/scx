@@ -16,13 +16,15 @@ import cool.scx.core.test.car.CarService;
 import cool.scx.core.test.person.Person;
 import cool.scx.core.test.person.PersonService;
 import cool.scx.data.query.QueryOption;
+import cool.scx.http.media.multi_part.MultiPart;
 import cool.scx.http.routing.handler.StaticHandler;
+import cool.scx.http.uri.ScxURI;
 import cool.scx.jdbc.sql.SQL;
 import cool.scx.scheduling.ScxScheduling;
+import cool.scx.web.ScxHttpClientHelper;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.SocketException;
 import java.nio.charset.StandardCharsets;
@@ -149,20 +151,15 @@ public class TestModule extends ScxModule {
         //测试 URIBuilder
         for (int i = 0; i < 1000; i = i + 1) {
             var s = "http://" + ip.getHostAddress() + ":8888/test0";
-//            try {
-//                var stringHttpResponse = ScxHttpClientHelper.post(
-//                        URIBuilder.of(s)
-//                                .addParam("name", "小明😊123?!@%^&**()_特-殊 字=符")
-//                                .addParam("age", 18).toString(),
-//                        new FormData()
-//                                .fileUpload("content", "内容内容内容内容内容".getBytes(StandardCharsets.UTF_8), "", "")
-//                                .fileUpload("content1", ScxContext.getTempPath("test.txt"))
-//                ).body();
-//                logger.log(ERROR, "测试请求[{0}] : {1}", i, stringHttpResponse);
-//            } catch (IOException | InterruptedException ignored) {
-//
-//            }
-
+            var stringHttpResponse = ScxHttpClientHelper.post(
+                    ScxURI.of(s)
+                            .addQuery("name", "小明😊123?!@%^&**()_特-殊 字=符")
+                            .addQuery("age", 18),
+                    MultiPart.of()
+                            .add("content", "内容内容内容内容内容".getBytes(StandardCharsets.UTF_8))
+                            .add("content1", ScxContext.getTempPath("test.txt"))
+            ).body();
+            logger.log(ERROR, "测试请求[{0}] : {1}", i, stringHttpResponse.asString());
         }
     }
 

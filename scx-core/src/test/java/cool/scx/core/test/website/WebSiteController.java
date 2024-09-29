@@ -60,7 +60,7 @@ public class WebSiteController {
                 "name", name,
                 "age", age,
                 "content", content.asString(),
-                "content1", content.asString());
+                "content1", content1.asString());
     }
 
     @ScxRoute(methods = HttpMethod.GET)
