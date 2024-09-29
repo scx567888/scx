@@ -1,6 +1,7 @@
 package cool.scx.http.helidon;
 
 import cool.scx.http.ScxHttpClient;
+import cool.scx.http.ScxHttpClientRequest;
 import cool.scx.http.ScxHttpClientResponse;
 import cool.scx.http.media.multi_part.MultiPart;
 import cool.scx.http.uri.ScxURIWritable;
@@ -10,6 +11,10 @@ import static cool.scx.http.HttpMethod.*;
 public class ScxHttpClientHelper {
 
     public static final ScxHttpClient DEFAULT_HTTP_CLIENT = new HelidonHttpClient();
+
+    public static ScxHttpClientRequest request() {
+        return DEFAULT_HTTP_CLIENT.request();
+    }
 
     public static ScxHttpClientResponse get(ScxURIWritable uri) {
         return DEFAULT_HTTP_CLIENT.request().method(GET).uri(uri).send();

@@ -19,6 +19,7 @@ import java.nio.file.Path;
  */
 public interface ScxHttpServerResponse {
 
+    // ************* 基本方法 ****************
     ScxHttpServerRequest request();
 
     HttpStatusCode status();
@@ -37,6 +38,12 @@ public interface ScxHttpServerResponse {
         writer.beforeWrite(headers(), request().headers());
         writer.write(outputStream());
         end();
+    }
+
+    //************** 简化操作 ***************
+
+    default ScxHttpServerResponse status(int code) {
+        return status(HttpStatusCode.of(code));
     }
 
     default void send() {
@@ -67,6 +74,8 @@ public interface ScxHttpServerResponse {
         send(new InputStreamWriter(inputStream));
     }
 
+    //************** 简化 Headers 操作 *************
+
     default ScxHttpServerResponse setHeader(ScxHttpHeaderName headerName, String... values) {
         this.headers().set(headerName, values);
         return this;
@@ -87,19 +96,6 @@ public interface ScxHttpServerResponse {
         return this;
     }
 
-    default ContentType contentType() {
-        return headers().contentType();
-    }
-
-    default ScxHttpServerResponse status(int code) {
-        return status(HttpStatusCode.of(code));
-    }
-
-    default ScxHttpServerResponse contentType(ContentType contentType) {
-        headers().contentType(contentType);
-        return this;
-    }
-
     default ScxHttpServerResponse addSetCookie(Cookie cookie) {
         headers().addSetCookie(cookie);
         return this;
@@ -108,6 +104,19 @@ public interface ScxHttpServerResponse {
     default ScxHttpServerResponse removeSetCookie(String name) {
         headers().removeSetCookie(name);
         return this;
+    }
+
+    default ContentType contentType() {
+        return headers().contentType();
+    }
+
+    default ScxHttpServerResponse contentType(ContentType contentType) {
+        headers().contentType(contentType);
+        return this;
+    }
+
+    default Long contentLength() {
+        return headers().contentLength();
     }
 
     default ScxHttpServerResponse contentLength(long contentLength) {

@@ -1,5 +1,7 @@
 package cool.scx.http;
 
+import cool.scx.http.content_type.ContentType;
+import cool.scx.http.cookie.Cookie;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.media.byte_array.ByteArrayWriter;
 import cool.scx.http.media.empty.EmptyWriter;
@@ -20,6 +22,7 @@ import java.nio.file.Path;
  */
 public interface ScxHttpClientRequest {
 
+    // ************* 基本方法 ****************
     ScxHttpMethod method();
 
     ScxURIWritable uri();
@@ -33,6 +36,12 @@ public interface ScxHttpClientRequest {
     ScxHttpClientRequest headers(ScxHttpHeadersWritable headers);
 
     ScxHttpClientResponse send(MediaWriter writer);
+
+    //************** 简化操作 ***************
+
+    default ScxHttpClientRequest uri(String uri) {
+        return uri(ScxURI.of(uri));
+    }
 
     default ScxHttpClientResponse send() {
         return send(new EmptyWriter());
@@ -66,12 +75,53 @@ public interface ScxHttpClientRequest {
         return send(new MultiPartWriter(multiPart));
     }
 
-    default ScxHttpClientRequest uri(String uri) {
-        return uri(ScxURI.of(uri));
-    }
+    //************** 简化 Headers 操作 *************
 
     default ScxHttpClientRequest setHeader(ScxHttpHeaderName headerName, String... values) {
         this.headers().set(headerName, values);
+        return this;
+    }
+
+    default ScxHttpClientRequest addHeader(ScxHttpHeaderName headerName, String... values) {
+        this.headers().add(headerName, values);
+        return this;
+    }
+
+    default ScxHttpClientRequest setHeader(String headerName, String... values) {
+        this.headers().set(headerName, values);
+        return this;
+    }
+
+    default ScxHttpClientRequest addHeader(String headerName, String... values) {
+        this.headers().add(headerName, values);
+        return this;
+    }
+
+    default ScxHttpClientRequest addCookie(Cookie cookie) {
+        headers().addCookie(cookie);
+        return this;
+    }
+
+    default ScxHttpClientRequest removeCookie(String name) {
+        headers().removeCookie(name);
+        return this;
+    }
+
+    default ContentType contentType() {
+        return headers().contentType();
+    }
+
+    default ScxHttpClientRequest contentType(ContentType contentType) {
+        headers().contentType(contentType);
+        return this;
+    }
+
+    default Long contentLength() {
+        return headers().contentLength();
+    }
+
+    default ScxHttpClientRequest contentLength(long contentLength) {
+        headers().contentLength(contentLength);
         return this;
     }
 
