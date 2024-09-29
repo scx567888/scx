@@ -6,6 +6,7 @@ import cool.scx.config.ScxConfig;
 import cool.scx.config.ScxEnvironment;
 import cool.scx.config.ScxFeatureConfig;
 import cool.scx.core.enumeration.ScxCoreFeature;
+import cool.scx.core.eventbus.EventBus;
 import cool.scx.http.ScxHttpServer;
 import cool.scx.http.routing.WebSocketRouter;
 import cool.scx.jdbc.JDBCContext;
@@ -98,6 +99,15 @@ public final class ScxContext {
      */
     public static ScxHttpServer httpServer() {
         return scx().vertxHttpServer();
+    }
+
+    /**
+     * a
+     *
+     * @return a
+     */
+    public static EventBus eventBus() {
+        return scx().eventBus();
     }
 
     /**

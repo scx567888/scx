@@ -21,7 +21,7 @@ import cool.scx.http.routing.handler.StaticHandler;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.jdbc.sql.SQL;
 import cool.scx.scheduling.ScxScheduling;
-import cool.scx.web.ScxHttpClientHelper;
+import cool.scx.http.helidon.ScxHttpClientHelper;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
@@ -38,6 +38,7 @@ import java.util.List;
 import static cool.scx.data.field_filter.FieldFilterBuilder.ofIncluded;
 import static cool.scx.data.query.QueryBuilder.*;
 import static java.lang.System.Logger.Level.ERROR;
+import static org.testng.AssertJUnit.assertEquals;
 
 public class TestModule extends ScxModule {
 
@@ -166,19 +167,10 @@ public class TestModule extends ScxModule {
     @Test
     public static void test2() {
         var car = new Car();
-//        ScxContext.eventBus().consumer("test-event-bus", (c) -> {
-//            c.reply(car, new DeliveryOptions().setCodecName(ZERO_COPY_CODEC_NAME));
-//            assertEquals(c.body(), car);
-//        });
-//        ScxContext.eventBus().request("test-event-bus", car, new DeliveryOptions().setCodecName(ZERO_COPY_CODEC_NAME), c -> {
-//            assertEquals(c.result().body(), car);
-//        });
-//        //通过指定 ZERO_COPY_CODEC_NAME 实现 0 拷贝
-//        ScxContext.eventBus().send("test-event-bus", car, new DeliveryOptions().setCodecName(ZERO_COPY_CODEC_NAME));
-//        //通过 @ZeroCopyMessage 注解实现 零拷贝
-//        ScxContext.eventBus().publish("test-event-bus", car);
-//        //通过 zeroCopyMessage() 包装器实现 零拷贝 (会自动脱壳)
-//        ScxContext.eventBus().send("test-event-bus", zeroCopyMessage(car));
+        ScxContext.eventBus().consumer("test-event-bus", (c) -> {
+            assertEquals(c, car);
+        });
+        ScxContext.eventBus().publish("test-event-bus", car);
     }
 
     @Test

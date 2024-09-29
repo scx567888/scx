@@ -1,8 +1,7 @@
-package cool.scx.web;
+package cool.scx.http.helidon;
 
 import cool.scx.http.ScxHttpClient;
 import cool.scx.http.ScxHttpClientResponse;
-import cool.scx.http.helidon.HelidonHttpClient;
 import cool.scx.http.media.multi_part.MultiPart;
 import cool.scx.http.uri.ScxURIWritable;
 
