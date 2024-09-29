@@ -1,69 +1,70 @@
 package cool.scx.http.media.multi_part;
 
+import cool.scx.http.ScxHttpBody;
 import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.content_disposition.ContentDisposition;
 import cool.scx.http.content_type.ContentType;
+import cool.scx.http.media.MediaReader;
+import cool.scx.http.media.path.PathHelper;
 
+import java.io.InputStream;
+import java.nio.file.Path;
+import java.util.function.Supplier;
 
-public class MultiPartPart {
+import static cool.scx.http.routing.handler.StaticHelper.getMediaTypeByFile;
 
-    protected final ScxHttpHeaders headers;
-    protected final ContentDisposition contentDisposition;
-    protected final ContentType contentType;
-    protected final String name;
-    protected final String filename;
-    protected final String size;
-    protected final byte[] content;
-    protected final boolean isFile;
+public interface MultiPartPart extends ScxHttpBody {
 
-    public MultiPartPart(ScxHttpHeaders headers, byte[] content) {
-        this.headers = headers;
-        this.contentDisposition = headers.contentDisposition();
-        this.contentType = headers.contentType();
-        this.content = content;
-        if (this.contentDisposition != null) {
-            this.name = contentDisposition.name();
-            this.filename = contentDisposition.filename();
-            this.size = contentDisposition.size();
-            this.isFile = filename != null;
-        } else {
-            this.name = null;
-            this.filename = null;
-            this.size = null;
-            this.isFile = false;
-        }
+    static MultiPartPartWritable of() {
+        return new MultiPartPartImpl();
     }
 
-    public ScxHttpHeaders headers() {
-        return headers;
+    static MultiPartPartWritable of(String name, String value) {
+        return new MultiPartPartImpl().name(name).body(value);
     }
 
-    public boolean isFile() {
-        return isFile;
+    static MultiPartPartWritable of(String name, Path value) {
+        var fileSize = PathHelper.getFileSize(value);
+        var contentType = getMediaTypeByFile(value);
+        var filename = value.getFileName().toString();
+        return new MultiPartPartImpl().name(name).body(value).size(fileSize).filename(filename).contentType(contentType);
     }
 
-    public String name() {
-        return name;
+    ScxHttpHeaders headers();
+
+    Supplier<InputStream> body();
+
+    @Override
+    default InputStream inputStream() {
+        return body().get();
     }
 
-    public String filename() {
-        return filename;
+    @Override
+    default <T> T as(MediaReader<T> t) {
+        return t.read(inputStream(), headers());
     }
 
-    public String size() {
-        return size;
+    default ContentType contentType() {
+        return headers().contentType();
     }
 
-    public ContentType contentType() {
-        return contentType;
+    default ContentDisposition contentDisposition() {
+        return headers().contentDisposition();
     }
 
-    public ContentDisposition contentDisposition() {
-        return contentDisposition;
+    default String name() {
+        var contentDisposition = contentDisposition();
+        return contentDisposition != null ? contentDisposition.name() : null;
     }
 
-    public byte[] content() {
-        return content;
+    default String filename() {
+        var contentDisposition = contentDisposition();
+        return contentDisposition != null ? contentDisposition.filename() : null;
+    }
+
+    default Long size() {
+        var contentDisposition = contentDisposition();
+        return contentDisposition != null ? contentDisposition.size() : null;
     }
 
 }

@@ -16,8 +16,9 @@ import cool.scx.core.test.car.CarService;
 import cool.scx.core.test.person.Person;
 import cool.scx.core.test.person.PersonService;
 import cool.scx.data.query.QueryOption;
+import cool.scx.http.routing.handler.StaticHandler;
 import cool.scx.jdbc.sql.SQL;
-//import org.springframework.scheduling.support.CronTrigger;
+import cool.scx.scheduling.ScxScheduling;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
@@ -32,12 +33,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static cool.scx.core.eventbus.ZeroCopyMessageCodec.ZERO_COPY_CODEC_NAME;
-import static cool.scx.core.eventbus.ZeroCopyMessageWrapper.zeroCopyMessage;
 import static cool.scx.data.field_filter.FieldFilterBuilder.ofIncluded;
 import static cool.scx.data.query.QueryBuilder.*;
 import static java.lang.System.Logger.Level.ERROR;
-import static org.testng.Assert.assertEquals;
 
 public class TestModule extends ScxModule {
 
@@ -151,7 +149,6 @@ public class TestModule extends ScxModule {
         //测试 URIBuilder
         for (int i = 0; i < 1000; i = i + 1) {
             var s = "http://" + ip.getHostAddress() + ":8888/test0";
-            // todo 
 //            try {
 //                var stringHttpResponse = ScxHttpClientHelper.post(
 //                        URIBuilder.of(s)
@@ -179,11 +176,11 @@ public class TestModule extends ScxModule {
 //        ScxContext.eventBus().request("test-event-bus", car, new DeliveryOptions().setCodecName(ZERO_COPY_CODEC_NAME), c -> {
 //            assertEquals(c.result().body(), car);
 //        });
-//        通过指定 ZERO_COPY_CODEC_NAME 实现 0 拷贝
+//        //通过指定 ZERO_COPY_CODEC_NAME 实现 0 拷贝
 //        ScxContext.eventBus().send("test-event-bus", car, new DeliveryOptions().setCodecName(ZERO_COPY_CODEC_NAME));
-//        通过 @ZeroCopyMessage 注解实现 零拷贝
+//        //通过 @ZeroCopyMessage 注解实现 零拷贝
 //        ScxContext.eventBus().publish("test-event-bus", car);
-//        通过 zeroCopyMessage() 包装器实现 零拷贝 (会自动脱壳)
+//        //通过 zeroCopyMessage() 包装器实现 零拷贝 (会自动脱壳)
 //        ScxContext.eventBus().send("test-event-bus", zeroCopyMessage(car));
     }
 
@@ -244,30 +241,38 @@ public class TestModule extends ScxModule {
      */
     @Override
     public void start(Scx scx) {
-        //todo 
-//        scx.scxHttpRouter().route("/static/*")
-//                .handler(StaticHandler.create(FileSystemAccess.ROOT, scx.scxEnvironment().getPathByAppRoot("AppRoot:c\\static").toString())
-//                        .setFilesReadOnly(false));
-//        var logger = System.getLogger(TestModule.class.getName());
-//        //测试定时任务
-//        scx.scxScheduler().scheduleAtFixedRate((a) -> {
-//            //测试
-//            logger.log(ERROR, "这是通过 ScxContext.scheduleAtFixedRate() 打印的 : 一共 10 次 , 这时第 " + a.runCount() + " 次执行 !!!");
-//        }, Instant.now().plusSeconds(3), Duration.of(1, ChronoUnit.SECONDS), 10);
-//
-//        scx.scxScheduler().schedule((a) -> {
-//            //测试
-//            logger.log(ERROR, "这是通过 ScxContext.scheduler() 使用 Cron 表达式 打印的 : 这时第 " + a.runCount() + " 次执行 !!!");
-//        }, new CronTrigger("*/1 * * * * ?"));
-//
-//        scx.scxScheduler().scheduleAtFixedRate((a) -> {
-//            logger.log(ERROR, "这是通过 ScxContext.scheduleAtFixedRate() 打印的 : 不限次数 不过到 第 10 次手动取消 , 这是第 " + a.runCount() + " 次执行 !!!");
-//            if (a.runCount() >= 10) {
-//                a.scheduledFuture().cancel(false);
-//            }
-//        }, Instant.now().plusSeconds(3), Duration.of(1, ChronoUnit.SECONDS));
-//
-//        System.out.println("CarModule-Start");
+        scx.scxHttpRouter().route()
+                .path("/static/*")
+                .handler(new StaticHandler(scx.scxEnvironment().getPathByAppRoot("AppRoot:c\\static")));
+        var logger = System.getLogger(TestModule.class.getName());
+        //测试定时任务
+        ScxScheduling.fixedRate()
+                .startTime(Instant.now().plusSeconds(3))
+                .delay(Duration.of(1, ChronoUnit.SECONDS))
+                .maxRunCount(10)
+                .start((a) -> {
+                    //测试
+                    logger.log(ERROR, "这是通过 ScxContext.scheduleAtFixedRate() 打印的 : 一共 10 次 , 这时第 " + a.runCount() + " 次执行 !!!");
+                });
+
+        ScxScheduling.cron()
+                .expression("*/1 * * * * ?")
+                .start((a) -> {
+                    //测试
+                    logger.log(ERROR, "这是通过 ScxContext.scheduler() 使用 Cron 表达式 打印的 : 这时第 " + a.runCount() + " 次执行 !!!");
+                });
+
+        ScxScheduling.fixedRate()
+                .startTime(Instant.now().plusSeconds(3))
+                .delay(Duration.of(1, ChronoUnit.SECONDS))
+                .start((a) -> {
+                    logger.log(ERROR, "这是通过 ScxContext.scheduleAtFixedRate() 打印的 : 不限次数 不过到 第 10 次手动取消 , 这是第 " + a.runCount() + " 次执行 !!!");
+                    if (a.runCount() >= 10) {
+                        a.cancel();
+                    }
+                });
+
+        System.out.println("CarModule-Start");
     }
 
 }

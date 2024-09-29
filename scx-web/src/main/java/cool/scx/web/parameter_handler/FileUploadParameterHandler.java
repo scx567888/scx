@@ -1,7 +1,6 @@
 package cool.scx.web.parameter_handler;
 
 import cool.scx.common.util.AnnotationUtils;
-import cool.scx.http.media.multi_part.CachedMultiPartPart;
 import cool.scx.http.media.multi_part.MultiPartPart;
 import cool.scx.reflect.ParameterInfo;
 import cool.scx.web.annotation.FromUpload;
@@ -36,7 +35,7 @@ public final class FileUploadParameterHandler implements ParameterHandler {
     public boolean canHandle(ParameterInfo parameter) {
         var isArray = parameter.type().isCollectionLikeType() || parameter.type().isArrayType();
         var rawType = isArray ? parameter.type().getContentType().getRawClass() : parameter.type().getRawClass();
-        return rawType == MultiPartPart.class || rawType == CachedMultiPartPart.class;
+        return rawType == MultiPartPart.class;
     }
 
     @Override

@@ -5,10 +5,21 @@ import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.media.MediaReader;
 
 import java.io.InputStream;
+import java.nio.file.Path;
 
-public class MultiPartReader implements MediaReader<MultiPart> {
+public class MultiPartStreamCachedReader implements MediaReader<MultiPart> {
 
-    public static final MultiPartReader MULTI_PART_READER = new MultiPartReader();
+    public static final MultiPartStreamCachedReader MULTI_PART_READER_CACHED = new MultiPartStreamCachedReader();
+
+    private final Path cachePath;
+
+    public MultiPartStreamCachedReader(Path cachePath) {
+        this.cachePath = cachePath;
+    }
+
+    public MultiPartStreamCachedReader() {
+        this.cachePath = Path.of(System.getProperty("java.io.tmpdir")).resolve(".SCX-CACHE");
+    }
 
     @Override
     public MultiPart read(InputStream inputStream, ScxHttpHeaders headers) {
@@ -23,7 +34,7 @@ public class MultiPartReader implements MediaReader<MultiPart> {
         if (boundary == null) {
             throw new IllegalArgumentException("No boundary found");
         }
-        return new MultiPart(inputStream, boundary);
+        return new MultiPartStreamCached(inputStream, boundary, cachePath);
     }
 
 }

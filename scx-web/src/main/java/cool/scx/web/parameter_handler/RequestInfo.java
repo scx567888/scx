@@ -98,12 +98,13 @@ public final class RequestInfo {
                 var m = new MultiMap<String, String>();
                 var f = new MultiMap<String, MultiPartPart>();
                 //文件和非文件
-                var multiPart = ctx.request().body().asCachedMultiPart();
+                var multiPart = ctx.request().body().asMultiPartCached();
                 for (var multiPartPart : multiPart) {
-                    if (multiPartPart.isFile()) {
+                    //没有文件名我们就当成 空文件
+                    if (multiPartPart.filename() != null) {
                         f.put(multiPartPart.name(), multiPartPart);
                     } else {
-                        m.put(multiPartPart.name(), new String(multiPartPart.content()));
+                        m.put(multiPartPart.name(), multiPartPart.asString());
                     }
                 }
                 this.body = jsonMapper().convertValue(m.toMultiValueMap(), JsonNode.class);

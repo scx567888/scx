@@ -2,6 +2,7 @@ package cool.scx.common.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
 import java.nio.file.*;
@@ -209,6 +210,19 @@ public final class FileUtils {
                 Files.createDirectories(source.getParent());
                 try (var out = FileChannel.open(source, APPEND, CREATE, SYNC, WRITE);) {
                     in.transferTo(0, in.size(), out);
+                }
+            }
+        }
+    }
+
+    public static void appendToFile(Path target, InputStream appendContent) throws IOException {
+        try (var in = appendContent) {
+            try (var out = Files.newOutputStream(target, APPEND, CREATE, SYNC, WRITE)) {
+                in.transferTo(out);
+            } catch (NoSuchFileException e) {
+                Files.createDirectories(target.getParent());
+                try (var out = Files.newOutputStream(target, APPEND, CREATE, SYNC, WRITE);) {
+                    in.transferTo(out);
                 }
             }
         }

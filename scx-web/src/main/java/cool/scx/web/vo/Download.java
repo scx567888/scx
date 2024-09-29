@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.nio.file.Path;
 
 import static cool.scx.http.HttpHelper.getDownloadContentDisposition;
-import static cool.scx.http.HttpHelper.getMediaTypeFromFileName;
+import static cool.scx.http.HttpHelper.getMediaTypeByFileName;
 
 /**
  * 文件下载 vo
@@ -15,15 +15,15 @@ import static cool.scx.http.HttpHelper.getMediaTypeFromFileName;
 public final class Download extends BaseWriter {
 
     private Download(InputStream inputStream, String downloadName) {
-        super(inputStream, getMediaTypeFromFileName(downloadName), getDownloadContentDisposition(downloadName));
+        super(inputStream, getMediaTypeByFileName(downloadName), getDownloadContentDisposition(downloadName));
     }
 
     private Download(Path path, String downloadName) {
-        super(path, getMediaTypeFromFileName(downloadName), getDownloadContentDisposition(downloadName));
+        super(path, getMediaTypeByFileName(downloadName), getDownloadContentDisposition(downloadName));
     }
 
     private Download(byte[] bytes, String downloadName) {
-        super(bytes, getMediaTypeFromFileName(downloadName), getDownloadContentDisposition(downloadName));
+        super(bytes, getMediaTypeByFileName(downloadName), getDownloadContentDisposition(downloadName));
     }
 
     public static Download of(InputStream inputStream, String downloadName) {

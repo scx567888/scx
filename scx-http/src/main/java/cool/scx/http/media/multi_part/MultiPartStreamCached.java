@@ -11,16 +11,17 @@ import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import static cool.scx.http.media.multi_part.MultiPart.readContentToByte;
-import static cool.scx.http.media.multi_part.MultiPart.readToHeaders;
+import static cool.scx.http.media.multi_part.MultiPartStream.readContentToByte;
+import static cool.scx.http.media.multi_part.MultiPartStream.readToHeaders;
 
-public class CachedMultiPart implements Iterable<CachedMultiPartPart>, Iterator<CachedMultiPartPart> {
+public class MultiPartStreamCached implements MultiPart, Iterator<MultiPartPart> {
 
     private final MultipartStream multipartStream;
     private final Path cachePath;
     private boolean hasNextPart;
+    private String boundary;
 
-    public CachedMultiPart(InputStream inputStream, String boundary, Path cachePath) {
+    public MultiPartStreamCached(InputStream inputStream, String boundary, Path cachePath) {
         this.cachePath = cachePath;
         var boundaryBytes = boundary.getBytes();
         this.multipartStream = new MultipartStream(inputStream, boundaryBytes, 1024, null);
@@ -50,12 +51,22 @@ public class CachedMultiPart implements Iterable<CachedMultiPartPart>, Iterator<
     }
 
     @Override
+    public String boundary() {
+        return boundary;
+    }
+
+    @Override
+    public Iterator<MultiPartPart> iterator() {
+        return this;
+    }
+
+    @Override
     public boolean hasNext() {
         return hasNextPart;
     }
 
     @Override
-    public CachedMultiPartPart next() {
+    public MultiPartPart next() {
         if (!hasNextPart) {
             throw new NoSuchElementException("No more parts available.");
         }
@@ -64,27 +75,23 @@ public class CachedMultiPart implements Iterable<CachedMultiPartPart>, Iterator<
             // 读取当前部分的头部信息
             var headers = readToHeaders(multipartStream);
 
-            byte[] content = null;
-            Path contentPath = null;
+            var part = new MultiPartPartImpl().headers(headers);
 
             var b = needCached(headers);
             if (b) {
-                contentPath = readContentToPath(multipartStream, cachePath.resolve(RandomUtils.randomString(32)));
+                var contentPath = readContentToPath(multipartStream, cachePath.resolve(RandomUtils.randomString(32)));
+                part.body(contentPath);
             } else {
-                content = readContentToByte(multipartStream);
+                var content = readContentToByte(multipartStream);
+                part.body(content);
             }
             // 检查是否有下一个部分
             hasNextPart = multipartStream.readBoundary();
 
-            return new CachedMultiPartPart(headers, content, contentPath);
+            return part;
         } catch (IOException e) {
             throw new RuntimeException("Error reading next part", e);
         }
-    }
-
-    @Override
-    public Iterator<CachedMultiPartPart> iterator() {
-        return this;
     }
 
 }

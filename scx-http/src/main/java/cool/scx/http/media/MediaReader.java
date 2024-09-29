@@ -5,7 +5,7 @@ import cool.scx.http.ScxHttpHeaders;
 import java.io.InputStream;
 
 /**
- * 媒体读取器 一般用来从 ServerRequest 或 ClientResponse 中读取数据
+ * 读取器 可用于 ServerRequest 和 ClientResponse
  *
  * @param <T>
  */

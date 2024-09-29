@@ -2,7 +2,8 @@ package cool.scx.http.helidon;
 
 import cool.scx.http.HttpMethod;
 import cool.scx.http.ScxHttpClientRequestBase;
-import cool.scx.http.ScxHttpClientResponse;
+import cool.scx.http.ScxHttpHeaders;
+import cool.scx.http.media.MediaWriter;
 import io.helidon.http.HeaderNames;
 import io.helidon.http.Method;
 import io.helidon.webclient.api.WebClient;
@@ -20,25 +21,15 @@ public class HelidonHttpClientRequest extends ScxHttpClientRequestBase {
     }
 
     @Override
-    public HelidonHttpClientResponse send() {
+    public HelidonHttpClientResponse send(MediaWriter writer) {
         var r = webClient.method(Method.create(method.value()));
         r.uri(uri.toString());
+        writer.beforeWrite(headers, ScxHttpHeaders.of());
         for (var h : headers) {
             r.header(HeaderNames.create(h.getKey().value()), h.getValue());
         }
-        var res = r.request();
-        return new HelidonHttpClientResponse(res);
-    }
-
-    @Override
-    public ScxHttpClientResponse send(Object body) {
-        var r = webClient.method(Method.create(method.value()));
-        r.uri(uri.toString());
-        for (var h : headers) {
-            r.header(HeaderNames.create(h.getKey().value()), h.getValue());
-        }
-        var res = r.submit(body);
-        return new HelidonHttpClientResponse(res);
+        var httpClientResponse = r.outputStream(writer::write);
+        return new HelidonHttpClientResponse(httpClientResponse);
     }
 
 }
