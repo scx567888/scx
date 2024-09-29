@@ -17,7 +17,9 @@ public class ByteArrayWriter implements MediaWriter {
 
     @Override
     public void beforeWrite(ScxHttpHeadersWritable responseHeaders, ScxHttpHeaders requestHeaders) {
-        responseHeaders.contentLength(bytes.length);
+        if (responseHeaders.contentLength() == null) {
+            responseHeaders.contentLength(bytes.length);
+        }
     }
 
     @Override

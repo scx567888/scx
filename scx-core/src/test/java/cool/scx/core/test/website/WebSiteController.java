@@ -11,7 +11,7 @@ import cool.scx.core.test.person.PersonService;
 import cool.scx.http.FileFormat;
 import cool.scx.http.HttpHelper;
 import cool.scx.http.HttpMethod;
-import cool.scx.http.helidon.HelidonHttpClient;
+import cool.scx.http.helidon.ScxHttpClientHelper;
 import cool.scx.http.media.multi_part.MultiPartPart;
 import cool.scx.http.routing.RoutingContext;
 import cool.scx.web.ScxWeb;
@@ -146,11 +146,7 @@ public class WebSiteController {
      */
     @ScxRoute(value = "/baidu", methods = HttpMethod.GET)
     public Html TestHttpUtils() throws IOException, InterruptedException {
-        var client = new HelidonHttpClient();
-        var baiduHtml = client.request()
-                .method(HttpMethod.GET)
-                .uri("http://www.baidu.com/")
-                .send().body().asString();
+        var baiduHtml = ScxHttpClientHelper.get("http://www.baidu.com/").body().asString();
         return Html.of(baiduHtml);
     }
 

@@ -4,6 +4,7 @@ import cool.scx.http.content_type.ContentType;
 import cool.scx.http.cookie.Cookie;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.media.byte_array.ByteArrayWriter;
+import cool.scx.http.media.empty.EmptyWriter;
 import cool.scx.http.media.input_stream.InputStreamWriter;
 import cool.scx.http.media.path.PathWriter;
 import cool.scx.http.media.string.StringWriter;
@@ -39,7 +40,7 @@ public interface ScxHttpServerResponse {
     }
 
     default void send() {
-        send(new byte[]{});
+        send(new EmptyWriter());
     }
 
     default void send(byte[] bytes) {
