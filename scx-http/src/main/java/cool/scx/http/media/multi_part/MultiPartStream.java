@@ -2,8 +2,8 @@ package cool.scx.http.media.multi_part;
 
 import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.ScxHttpHeadersWritable;
-import org.apache.commons.fileupload.FileUploadBase;
-import org.apache.commons.fileupload.MultipartStream;
+import org.apache.commons.fileupload2.core.FileUploadSizeException;
+import org.apache.commons.fileupload2.core.MultipartInput;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -13,26 +13,26 @@ import java.util.NoSuchElementException;
 
 public class MultiPartStream implements MultiPart, Iterator<MultiPartPart> {
 
-    private final MultipartStream multipartStream;
+    private final MultipartInput multipartStream;
     private boolean hasNextPart;
     private String boundary;
 
     public MultiPartStream(InputStream inputStream, String boundary) {
         var boundaryBytes = boundary.getBytes();
-        this.multipartStream = new MultipartStream(inputStream, boundaryBytes, 1024, null);
         try {
+            this.multipartStream = MultipartInput.builder().setInputStream(inputStream).setBoundary(boundaryBytes).get();
             hasNextPart = multipartStream.skipPreamble();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static ScxHttpHeadersWritable readToHeaders(MultipartStream multipartStream) throws MultipartStream.MalformedStreamException, FileUploadBase.FileUploadIOException {
+    public static ScxHttpHeadersWritable readToHeaders(MultipartInput multipartStream) throws MultipartInput.MalformedStreamException, FileUploadSizeException {
         var headersStr = multipartStream.readHeaders();
         return ScxHttpHeaders.of(headersStr);
     }
 
-    public static byte[] readContentToByte(MultipartStream multipartStream) throws IOException {
+    public static byte[] readContentToByte(MultipartInput multipartStream) throws IOException {
         var output = new ByteArrayOutputStream();
         multipartStream.readBodyData(output);
         return output.toByteArray();
