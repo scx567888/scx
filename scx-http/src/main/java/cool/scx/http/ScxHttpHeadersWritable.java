@@ -35,26 +35,13 @@ public interface ScxHttpHeadersWritable extends ScxHttpHeaders, ParametersWritab
         return Cookies.of(get(COOKIE));
     }
 
-    default CookiesWritable setCookies() {
-        return Cookies.of(getAll(SET_COOKIE).toArray(String[]::new));
-    }
-
-    default ContentTypeWritable contentType() {
-        return ContentType.of(get(CONTENT_TYPE));
-    }
-
-    default ContentDispositionWritable contentDisposition() {
-        return ContentDisposition.of(get(CONTENT_DISPOSITION));
-    }
-
-    default ScxHttpHeadersWritable contentType(ContentType contentType) {
-        set(CONTENT_TYPE, contentType.encode());
-        return this;
-    }
-
     default ScxHttpHeadersWritable cookies(Cookies cookies) {
         set(COOKIE, cookies.encodeCookie());
         return this;
+    }
+
+    default CookiesWritable setCookies() {
+        return Cookies.of(getAll(SET_COOKIE).toArray(String[]::new));
     }
 
     default ScxHttpHeadersWritable setCookies(Cookies cookies) {
@@ -62,9 +49,34 @@ public interface ScxHttpHeadersWritable extends ScxHttpHeaders, ParametersWritab
         return this;
     }
 
+    default ContentTypeWritable contentType() {
+        return ContentType.of(get(CONTENT_TYPE));
+    }
+
+    default ScxHttpHeadersWritable contentType(ContentType contentType) {
+        set(CONTENT_TYPE, contentType.encode());
+        return this;
+    }
+
+    default ContentDispositionWritable contentDisposition() {
+        return ContentDisposition.of(get(CONTENT_DISPOSITION));
+    }
+
     default ScxHttpHeadersWritable contentDisposition(ContentDisposition contentDisposition) {
         set(CONTENT_DISPOSITION, contentDisposition.encode());
         return this;
+    }
+
+    default ScxHttpHeadersWritable addCookie(Cookie cookie) {
+        var cookies = cookies();
+        cookies.add(cookie);
+        return cookies(cookies);
+    }
+
+    default ScxHttpHeadersWritable removeCookie(String name) {
+        var cookies = cookies();
+        cookies.remove(name);
+        return cookies(cookies);
     }
 
     default ScxHttpHeadersWritable addSetCookie(Cookie cookie) {
