@@ -3,7 +3,10 @@ package cool.scx.http.uri;
 import cool.scx.http.Parameters;
 import cool.scx.http.ParametersWritable;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * URIHelper
@@ -25,19 +28,21 @@ public class ScxURIHelper {
         return query;
     }
 
-    public static String encodedQuery(Parameters<String, String> query) {
+    public static String encodeQuery(Parameters<String, String> query) {
         var l = new ArrayList<String>();
         for (var v : query) {
             var key = v.getKey();
             var value = v.getValue();
             for (var s : value) {
-                l.add(key + "=" + s);
+                var kk = URLEncoder.encode(key, UTF_8);
+                var vv = URLEncoder.encode(s, UTF_8);
+                l.add(kk + "=" + vv);
             }
         }
         return String.join("&", l);
     }
 
-    public static String encodedURI(ScxURI uri) {
+    public static String encodeURI(ScxURI uri) {
         var scheme = uri.scheme();
         var host = uri.host();
         var port = uri.port();
@@ -70,17 +75,17 @@ public class ScxURIHelper {
         }
 
         if (path != null) {
-            sb.append(path);
+            sb.append(URLEncoder.encode(path, UTF_8).replace("%2F", "/"));
         }
 
         if (query != null && !query.isEmpty()) {
             sb.append('?');
-            sb.append(encodedQuery(query));
+            sb.append(encodeQuery(query));
         }
 
         if (fragment != null) {
             sb.append('#');
-            sb.append(fragment);
+            sb.append(URLEncoder.encode(fragment, UTF_8));
         }
         return sb.toString();
     }

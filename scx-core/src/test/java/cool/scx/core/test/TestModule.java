@@ -16,13 +16,15 @@ import cool.scx.core.test.car.CarService;
 import cool.scx.core.test.person.Person;
 import cool.scx.core.test.person.PersonService;
 import cool.scx.data.query.QueryOption;
+import cool.scx.http.helidon.ScxHttpClientHelper;
+import cool.scx.http.media.multi_part.MultiPart;
 import cool.scx.http.routing.handler.StaticHandler;
+import cool.scx.http.uri.ScxURI;
 import cool.scx.jdbc.sql.SQL;
 import cool.scx.scheduling.ScxScheduling;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.SocketException;
 import java.nio.charset.StandardCharsets;
@@ -36,6 +38,7 @@ import java.util.List;
 import static cool.scx.data.field_filter.FieldFilterBuilder.ofIncluded;
 import static cool.scx.data.query.QueryBuilder.*;
 import static java.lang.System.Logger.Level.ERROR;
+import static org.testng.AssertJUnit.assertEquals;
 
 public class TestModule extends ScxModule {
 
@@ -149,39 +152,25 @@ public class TestModule extends ScxModule {
         //测试 URIBuilder
         for (int i = 0; i < 1000; i = i + 1) {
             var s = "http://" + ip.getHostAddress() + ":8888/test0";
-//            try {
-//                var stringHttpResponse = ScxHttpClientHelper.post(
-//                        URIBuilder.of(s)
-//                                .addParam("name", "小明😊123?!@%^&**()_特-殊 字=符")
-//                                .addParam("age", 18).toString(),
-//                        new FormData()
-//                                .fileUpload("content", "内容内容内容内容内容".getBytes(StandardCharsets.UTF_8), "", "")
-//                                .fileUpload("content1", ScxContext.getTempPath("test.txt"))
-//                ).body();
-//                logger.log(ERROR, "测试请求[{0}] : {1}", i, stringHttpResponse);
-//            } catch (IOException | InterruptedException ignored) {
-//
-//            }
-
+            var stringHttpResponse = ScxHttpClientHelper.post(
+                    ScxURI.of(s)
+                            .addQuery("name", "小明😊123?!@%^&**()_特-殊 字=符")
+                            .addQuery("age", 18),
+                    MultiPart.of()
+                            .add("content", "内容内容内容内容内容".getBytes(StandardCharsets.UTF_8))
+                            .add("content1", ScxContext.getTempPath("test.txt"))
+            ).body();
+            logger.log(ERROR, "测试请求[{0}] : {1}", i, stringHttpResponse.asString());
         }
     }
 
     @Test
     public static void test2() {
         var car = new Car();
-//        ScxContext.eventBus().consumer("test-event-bus", (c) -> {
-//            c.reply(car, new DeliveryOptions().setCodecName(ZERO_COPY_CODEC_NAME));
-//            assertEquals(c.body(), car);
-//        });
-//        ScxContext.eventBus().request("test-event-bus", car, new DeliveryOptions().setCodecName(ZERO_COPY_CODEC_NAME), c -> {
-//            assertEquals(c.result().body(), car);
-//        });
-//        //通过指定 ZERO_COPY_CODEC_NAME 实现 0 拷贝
-//        ScxContext.eventBus().send("test-event-bus", car, new DeliveryOptions().setCodecName(ZERO_COPY_CODEC_NAME));
-//        //通过 @ZeroCopyMessage 注解实现 零拷贝
-//        ScxContext.eventBus().publish("test-event-bus", car);
-//        //通过 zeroCopyMessage() 包装器实现 零拷贝 (会自动脱壳)
-//        ScxContext.eventBus().send("test-event-bus", zeroCopyMessage(car));
+        ScxContext.eventBus().consumer("test-event-bus", (c) -> {
+            assertEquals(c, car);
+        });
+        ScxContext.eventBus().publish("test-event-bus", car);
     }
 
     @Test

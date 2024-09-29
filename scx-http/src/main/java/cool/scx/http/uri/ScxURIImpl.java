@@ -92,7 +92,7 @@ public class ScxURIImpl implements ScxURIWritable {
 
     @Override
     public String toString() {
-        return ScxURIHelper.encodedURI(this);
+        return encode();
     }
 
 }

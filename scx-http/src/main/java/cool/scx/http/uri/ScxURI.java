@@ -43,6 +43,13 @@ public interface ScxURI {
         return query().get(name);
     }
 
-    String toString();
+    /**
+     * 注意此编码会进行 URL编码 转换
+     *
+     * @return a
+     */
+    default String encode() {
+        return ScxURIHelper.encodeURI(this);
+    }
 
 }

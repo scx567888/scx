@@ -8,6 +8,7 @@ import cool.scx.config.ScxConfig;
 import cool.scx.config.ScxEnvironment;
 import cool.scx.config.ScxFeatureConfig;
 import cool.scx.core.enumeration.ScxCoreFeature;
+import cool.scx.core.eventbus.EventBus;
 import cool.scx.data.jdbc.AnnotationConfigTable;
 import cool.scx.http.ScxHttpServer;
 import cool.scx.http.ScxHttpServerOptions;
@@ -69,6 +70,8 @@ public final class Scx {
 
     private final ScxHttpServerOptions defaultHttpServerOptions;
 
+    private final EventBus eventBus;
+
     private JDBCContext jdbcContext = null;
 
     private ScxHttpRouter scxHttpRouter = null;
@@ -92,6 +95,8 @@ public final class Scx {
         initScxLoggerFactory(this.scxConfig, this.scxEnvironment);
         //3, 初始化 BeanFactory
         this.beanFactory = initBeanFactory(this.scxModules, this.scxFeatureConfig);
+        //4, 初始化事件总线
+        this.eventBus = new EventBus();
         //4, 初始化 Web
         this.scxWeb = new ScxWeb(new ScxWebOptions().templateRoot(scxOptions.templateRoot()).useDevelopmentErrorPage(scxFeatureConfig.get(ScxCoreFeature.USE_DEVELOPMENT_ERROR_PAGE)));
     }
@@ -374,6 +379,10 @@ public final class Scx {
 
     public ScxHttpServer vertxHttpServer() {
         return vertxHttpServer;
+    }
+
+    public EventBus eventBus() {
+        return eventBus;
     }
 
     public WebSocketRouter webSocketRouter() {

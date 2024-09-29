@@ -2,6 +2,8 @@ package cool.scx.http.uri;
 
 import cool.scx.http.ParametersWritable;
 
+import java.util.Arrays;
+
 import static cool.scx.http.uri.ScxURIHelper.decodeQuery;
 
 /**
@@ -35,6 +37,11 @@ public interface ScxURIWritable extends ScxURI {
 
     default ScxURIWritable addQuery(String name, String... value) {
         query().add(name, value);
+        return this;
+    }
+
+    default ScxURIWritable addQuery(String name, Object... value) {
+        query().add(name, Arrays.stream(value).map(Object::toString).toArray(String[]::new));
         return this;
     }
 
