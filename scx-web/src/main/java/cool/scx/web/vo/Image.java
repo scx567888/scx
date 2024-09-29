@@ -20,7 +20,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 
-import static cool.scx.http.HttpFieldName.*;
+import static cool.scx.http.HttpFieldName.ACCEPT_RANGES;
+import static cool.scx.http.HttpFieldName.CACHE_CONTROL;
 import static cool.scx.http.MediaType.IMAGE_PNG;
 
 /**
@@ -124,7 +125,7 @@ public abstract class Image implements BaseVo {
 
         @Override
         public void imageHandler(RoutingContext context) {
-            StaticHelper.sendStatic(filePath,context);
+            StaticHelper.sendStatic(filePath, context);
         }
 
     }

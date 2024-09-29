@@ -10,16 +10,16 @@ public class EmptyWriter implements MediaWriter {
 
     @Override
     public void beforeWrite(ScxHttpHeadersWritable headersWritable, ScxHttpHeaders headers) {
-        
+
     }
 
     @Override
     public void write(OutputStream outputStream) {
         try (outputStream) {
-            
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
-    
+
 }
