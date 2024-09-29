@@ -101,11 +101,10 @@ public final class RequestInfo {
                 var multiPart = ctx.request().body().asMultiPartCached();
                 for (var multiPartPart : multiPart) {
                     //没有文件名我们就当成 空文件
-                    if (multiPartPart.filename() != null) {
-                        f.put(multiPartPart.name(), multiPartPart);
-                    } else {
+                    if (multiPartPart.filename() == null) {
                         m.put(multiPartPart.name(), multiPartPart.asString());
                     }
+                    f.put(multiPartPart.name(), multiPartPart);
                 }
                 this.body = jsonMapper().convertValue(m.toMultiValueMap(), JsonNode.class);
                 this.uploadFiles = f;

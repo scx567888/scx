@@ -12,6 +12,10 @@ public interface MultiPartWritable extends MultiPart {
         return add(MultiPartPart.of(name, value));
     }
 
+    default MultiPartWritable add(String name, byte[] value) {
+        return add(MultiPartPart.of(name, value));
+    }
+
     default MultiPartWritable add(String name, Path value) {
         return add(MultiPartPart.of(name, value));
     }
