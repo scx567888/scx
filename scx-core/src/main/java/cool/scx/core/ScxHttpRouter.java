@@ -30,7 +30,7 @@ public final class ScxHttpRouter extends RouterImpl {
         //设置基本的 handler
         this.corsHandler = initCorsHandler(scx.scxOptions().allowedOrigin());
         //注册路由
-        this.corsHandlerRoute = this.route().handler(corsHandler);
+        this.corsHandlerRoute = this.route(-10000).handler(corsHandler);
     }
 
     private static CorsHandler initCorsHandler(String allowedOriginPattern) {

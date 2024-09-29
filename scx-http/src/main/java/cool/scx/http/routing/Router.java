@@ -24,4 +24,10 @@ public interface Router extends Consumer<ScxHttpServerRequest> {
         return route;
     }
 
+    default RouteWritable route(int order) {
+        var route = Route.of().order(order);
+        addRoute(route);
+        return route;
+    }
+
 }
