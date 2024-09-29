@@ -33,7 +33,7 @@ public class MultiPartWriter implements MediaWriter {
         var f = ("--" + multiPart.boundary() + "--\r\n").getBytes();
         //换行符
         var l = "\r\n".getBytes();
-        try {
+        try (outputStream) {
             //发送每个内容
             for (var multiPartPart : multiPart) {
                 //发送头

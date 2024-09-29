@@ -9,7 +9,7 @@ import java.nio.file.Path;
 
 public class MultiPartStreamCachedReader implements MediaReader<MultiPart> {
 
-    public static final MultiPartStreamCachedReader CACHED_MULTI_PART_READER = new MultiPartStreamCachedReader();
+    public static final MultiPartStreamCachedReader MULTI_PART_READER_CACHED = new MultiPartStreamCachedReader();
 
     private final Path cachePath;
 

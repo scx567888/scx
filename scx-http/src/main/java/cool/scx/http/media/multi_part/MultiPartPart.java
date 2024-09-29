@@ -26,7 +26,8 @@ public interface MultiPartPart extends ScxHttpBody {
     static MultiPartPartWritable of(String name, Path value) {
         var fileSize = PathHelper.getFileSize(value);
         var contentType = getMediaTypeByFile(value);
-        return new MultiPartPartImpl().name(name).body(value).size(fileSize).contentType(contentType);
+        var filename = value.getFileName().toString();
+        return new MultiPartPartImpl().name(name).body(value).size(fileSize).filename(filename).contentType(contentType);
     }
 
     ScxHttpHeaders headers();

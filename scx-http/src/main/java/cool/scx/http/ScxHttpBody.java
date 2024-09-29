@@ -14,7 +14,7 @@ import java.nio.file.Path;
 
 import static cool.scx.http.media.byte_array.ByteArrayReader.BYTE_ARRAY_READER;
 import static cool.scx.http.media.form_params.FormParamsReader.FORM_PARAMS_READER;
-import static cool.scx.http.media.multi_part.MultiPartStreamCachedReader.CACHED_MULTI_PART_READER;
+import static cool.scx.http.media.multi_part.MultiPartStreamCachedReader.MULTI_PART_READER_CACHED;
 import static cool.scx.http.media.multi_part.MultiPartStreamReader.MULTI_PART_READER;
 import static cool.scx.http.media.string.StringReader.STRING_READER;
 
@@ -47,11 +47,11 @@ public interface ScxHttpBody {
         return as(MULTI_PART_READER);
     }
 
-    default MultiPart asCachedMultiPart() {
-        return as(CACHED_MULTI_PART_READER);
+    default MultiPart asMultiPartCached() {
+        return as(MULTI_PART_READER_CACHED);
     }
 
-    default MultiPart asCachedMultiPart(Path cachePath) {
+    default MultiPart asMultiPartCached(Path cachePath) {
         return as(new MultiPartStreamCachedReader(cachePath));
     }
 
