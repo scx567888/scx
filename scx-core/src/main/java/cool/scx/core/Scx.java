@@ -69,7 +69,7 @@ public final class Scx {
     private final ScxWeb scxWeb;
 
     private final ScxHttpServerOptions defaultHttpServerOptions;
-    
+
     private final EventBus eventBus;
 
     private JDBCContext jdbcContext = null;
