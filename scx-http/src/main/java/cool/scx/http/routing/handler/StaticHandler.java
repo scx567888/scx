@@ -1,5 +1,6 @@
 package cool.scx.http.routing.handler;
 
+import cool.scx.http.exception.NotFoundException;
 import cool.scx.http.routing.RoutingContext;
 
 import java.nio.file.Files;
@@ -46,7 +47,11 @@ public class StaticHandler implements Consumer<RoutingContext> {
         if (regularFile) {
             return root;
         }
-        var path = root.resolve(p);
+        var path = root.resolve(p).normalize();
+        // 1, 重要!!! , 防止访问到上级文件的情况
+        if (!path.startsWith(root)) {
+            throw new NotFoundException();
+        }
         if (Files.isDirectory(path)) {
             return path.resolve("index.html");
         } else {
