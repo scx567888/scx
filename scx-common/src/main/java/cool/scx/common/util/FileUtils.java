@@ -208,7 +208,7 @@ public final class FileUtils {
                 in.transferTo(0, in.size(), out);
             } catch (NoSuchFileException e) {
                 Files.createDirectories(source.getParent());
-                try (var out = FileChannel.open(source, APPEND, CREATE, SYNC, WRITE);) {
+                try (var out = FileChannel.open(source, APPEND, CREATE, SYNC, WRITE)) {
                     in.transferTo(0, in.size(), out);
                 }
             }
@@ -221,7 +221,7 @@ public final class FileUtils {
                 in.transferTo(out);
             } catch (NoSuchFileException e) {
                 Files.createDirectories(target.getParent());
-                try (var out = Files.newOutputStream(target, APPEND, CREATE, SYNC, WRITE);) {
+                try (var out = Files.newOutputStream(target, APPEND, CREATE, SYNC, WRITE)) {
                     in.transferTo(out);
                 }
             }

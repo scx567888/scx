@@ -115,7 +115,7 @@ public class PathMatcherImpl implements PathMatcher {
 
         // We need to search for any :<token name> tokens in the String and replace them with named capture groups
         Matcher m = RE_TOKEN_SEARCH.matcher(path);
-        StringBuffer sb = new StringBuffer();
+        var sb = new StringBuilder();
         List<String> groups = new ArrayList<>();
         int index = 0;
         while (m.find()) {

@@ -14,7 +14,7 @@ public class WebSocketRoutingContext {
     private final WebSocketRouter router;
     private final ScxServerWebSocket webSocket;
     private final Iterator<WebSocketRoute> iter;
-    private Parameters nowPathParams;
+    private Parameters<String, String> nowPathParams;
 
     public WebSocketRoutingContext(WebSocketRouter router, ScxServerWebSocket webSocket) {
         this.router = router;
@@ -61,7 +61,7 @@ public class WebSocketRoutingContext {
 
     }
 
-    public Parameters pathParams() {
+    public Parameters<String, String> pathParams() {
         return this.nowPathParams;
     }
 

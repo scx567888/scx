@@ -14,12 +14,14 @@ public class ParametersImpl<K, V> implements ParametersWritable<K, V> {
 
     private final MultiMap<K, V> map = new MultiMap<>();
 
+    @SuppressWarnings("unchecked")
     @Override
     public ParametersImpl<K, V> set(K name, V... value) {
         map.setAll(name, List.of(value));
         return this;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public ParametersImpl<K, V> add(K name, V... value) {
         map.putAll(name, List.of(value));
