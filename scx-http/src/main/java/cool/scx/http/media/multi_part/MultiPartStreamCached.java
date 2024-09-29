@@ -2,7 +2,7 @@ package cool.scx.http.media.multi_part;
 
 import cool.scx.common.util.RandomUtils;
 import cool.scx.http.ScxHttpHeaders;
-import org.apache.commons.fileupload.MultipartStream;
+import org.apache.commons.fileupload2.core.MultipartInput;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,7 +16,7 @@ import static cool.scx.http.media.multi_part.MultiPartStream.readToHeaders;
 
 public class MultiPartStreamCached implements MultiPart, Iterator<MultiPartPart> {
 
-    private final MultipartStream multipartStream;
+    private final MultipartInput multipartStream;
     private final Path cachePath;
     private boolean hasNextPart;
     private String boundary;
@@ -24,8 +24,8 @@ public class MultiPartStreamCached implements MultiPart, Iterator<MultiPartPart>
     public MultiPartStreamCached(InputStream inputStream, String boundary, Path cachePath) {
         this.cachePath = cachePath;
         var boundaryBytes = boundary.getBytes();
-        this.multipartStream = new MultipartStream(inputStream, boundaryBytes, 1024, null);
         try {
+            this.multipartStream = MultipartInput.builder().setInputStream(inputStream).setBoundary(boundaryBytes).get();
             hasNextPart = multipartStream.skipPreamble();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -42,7 +42,7 @@ public class MultiPartStreamCached implements MultiPart, Iterator<MultiPartPart>
         return filename != null;
     }
 
-    public static Path readContentToPath(MultipartStream multipartStream, Path path) throws IOException {
+    public static Path readContentToPath(MultipartInput multipartStream, Path path) throws IOException {
         //保证一定有目录
         Files.createDirectories(path.getParent());
         var output = Files.newOutputStream(path);
