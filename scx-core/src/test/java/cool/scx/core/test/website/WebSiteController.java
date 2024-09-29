@@ -59,8 +59,8 @@ public class WebSiteController {
         return Map.of("now", yyyy_MM_dd_HH_mm_ss.format(LocalDateTime.now()),
                 "name", name,
                 "age", age,
-                "content", new String(content.content(), StandardCharsets.UTF_8),
-                "content1", new String(content1.content(), StandardCharsets.UTF_8));
+                "content", content.asString(),
+                "content1", content.asString());
     }
 
     @ScxRoute(methods = HttpMethod.GET)
