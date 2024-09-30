@@ -50,4 +50,9 @@ public interface ScxURIWritable extends ScxURI {
         return this;
     }
 
+    default ScxURIWritable clearQuery() {
+        query().clear();
+        return this;
+    }
+
 }

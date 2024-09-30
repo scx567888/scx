@@ -35,6 +35,12 @@ public class ParametersImpl<K, V> implements ParametersWritable<K, V> {
     }
 
     @Override
+    public ParametersWritable<K, V> clear() {
+        map.clear();
+        return this;
+    }
+
+    @Override
     public long size() {
         return map.size();
     }

@@ -13,4 +13,6 @@ public interface ParametersWritable<K, V> extends Parameters<K, V> {
 
     ParametersWritable<K, V> remove(K name);
 
+    ParametersWritable<K, V> clear();
+
 }

@@ -67,9 +67,11 @@ public interface ScxHttpHeadersWritable extends ScxHttpHeaders, ParametersWritab
         return this;
     }
 
-    default ScxHttpHeadersWritable addCookie(Cookie cookie) {
+    default ScxHttpHeadersWritable addCookie(Cookie... cookie) {
         var cookies = cookies();
-        cookies.add(cookie);
+        for (var c : cookie) {
+            cookies.add(c);
+        }
         return cookies(cookies);
     }
 
@@ -79,9 +81,11 @@ public interface ScxHttpHeadersWritable extends ScxHttpHeaders, ParametersWritab
         return cookies(cookies);
     }
 
-    default ScxHttpHeadersWritable addSetCookie(Cookie cookie) {
+    default ScxHttpHeadersWritable addSetCookie(Cookie... cookie) {
         var cookies = setCookies();
-        cookies.add(cookie);
+        for (var c : cookie) {
+            cookies.add(c);
+        }
         return setCookies(cookies);
     }
 

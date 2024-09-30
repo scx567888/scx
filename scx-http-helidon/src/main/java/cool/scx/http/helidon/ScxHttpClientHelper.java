@@ -1,5 +1,6 @@
 package cool.scx.http.helidon;
 
+import cool.scx.http.ScxClientWebSocketBuilder;
 import cool.scx.http.ScxHttpClient;
 import cool.scx.http.ScxHttpClientRequest;
 import cool.scx.http.ScxHttpClientResponse;
@@ -14,6 +15,10 @@ public class ScxHttpClientHelper {
 
     public static ScxHttpClientRequest request() {
         return DEFAULT_HTTP_CLIENT.request();
+    }
+
+    public static ScxClientWebSocketBuilder webSocket() {
+        return DEFAULT_HTTP_CLIENT.webSocket();
     }
 
     public static ScxHttpClientResponse get(ScxURIWritable uri) {

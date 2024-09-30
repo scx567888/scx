@@ -12,11 +12,9 @@ import io.helidon.webclient.websocket.WsClient;
 public class HelidonHttpClient implements ScxHttpClient {
 
     private final WebClient webClient;
-    private final WsClient wsClient;
 
     public HelidonHttpClient(ScxHttpClientOptions options) {
         this.webClient = WebClient.builder().build();
-        this.wsClient = WsClient.builder().build();
     }
 
     public HelidonHttpClient() {
@@ -30,7 +28,7 @@ public class HelidonHttpClient implements ScxHttpClient {
 
     @Override
     public ScxClientWebSocketBuilder webSocket() {
-        return new HelidonClientWebSocket(wsClient);
+        return new HelidonClientWebSocket();
     }
 
 }

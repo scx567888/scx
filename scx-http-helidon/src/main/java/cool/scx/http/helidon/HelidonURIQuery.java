@@ -64,4 +64,9 @@ class HelidonURIQuery implements ParametersWritable<String, String> {
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    public ParametersWritable<String, String> clear() {
+        throw new UnsupportedOperationException();
+    }
+
 }

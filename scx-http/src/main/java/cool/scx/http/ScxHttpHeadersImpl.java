@@ -5,4 +5,9 @@ package cool.scx.http;
  */
 class ScxHttpHeadersImpl extends ParametersImpl<ScxHttpHeaderName, String> implements ScxHttpHeadersWritable {
 
+    @Override
+    public String toString() {
+        return encode();
+    }
+    
 }
