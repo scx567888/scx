@@ -1,9 +1,11 @@
 package cool.scx.http;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import cool.scx.http.media.MediaReader;
 import cool.scx.http.media.form_params.FormParams;
 import cool.scx.http.media.multi_part.MultiPart;
 import cool.scx.http.media.multi_part.MultiPartStreamCachedReader;
+import cool.scx.http.media.object.ObjectReader;
 import cool.scx.http.media.path.PathReader;
 import cool.scx.http.media.string.StringReader;
 
@@ -57,6 +59,14 @@ public interface ScxHttpBody {
 
     default Path asPath(Path path, OpenOption... options) {
         return as(new PathReader(path, options));
+    }
+
+    default <T> T asObject(Class<T> c) {
+        return as(new ObjectReader<>(c));
+    }
+
+    default <T> T asObject(TypeReference<T> c) {
+        return as(new ObjectReader<>(c));
     }
 
 }

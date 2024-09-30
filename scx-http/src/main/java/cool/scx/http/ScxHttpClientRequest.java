@@ -8,6 +8,7 @@ import cool.scx.http.media.empty.EmptyWriter;
 import cool.scx.http.media.input_stream.InputStreamWriter;
 import cool.scx.http.media.multi_part.MultiPart;
 import cool.scx.http.media.multi_part.MultiPartWriter;
+import cool.scx.http.media.object.ObjectWriter;
 import cool.scx.http.media.path.PathWriter;
 import cool.scx.http.media.string.StringWriter;
 import cool.scx.http.uri.ScxURI;
@@ -73,6 +74,10 @@ public interface ScxHttpClientRequest {
 
     default ScxHttpClientResponse send(MultiPart multiPart) {
         return send(new MultiPartWriter(multiPart));
+    }
+
+    default ScxHttpClientResponse send(Object object) {
+        return send(new ObjectWriter(object));
     }
 
     //************** 简化 Headers 操作 *************
