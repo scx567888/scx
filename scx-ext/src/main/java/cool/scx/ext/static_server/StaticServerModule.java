@@ -15,9 +15,9 @@ public class StaticServerModule extends ScxModule {
 
     private static final Logger logger = System.getLogger(StaticServerModule.class.getName());
 
-    private static void registerStaticServerHandler(Router vertxRouter, List<StaticServer> staticServers) {
+    private static void registerStaticServerHandler(Router router, List<StaticServer> staticServers) {
         for (var staticServer : staticServers) {
-            vertxRouter.route()
+            router.route()
                     .path(staticServer.location())
                     .handler(new StaticHandler(staticServer.root()));
         }

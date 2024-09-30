@@ -6,6 +6,9 @@ import cool.scx.http.media.MediaWriter;
 import cool.scx.http.media.byte_array.ByteArrayWriter;
 import cool.scx.http.media.empty.EmptyWriter;
 import cool.scx.http.media.input_stream.InputStreamWriter;
+import cool.scx.http.media.multi_part.MultiPart;
+import cool.scx.http.media.multi_part.MultiPartWriter;
+import cool.scx.http.media.object.ObjectWriter;
 import cool.scx.http.media.path.PathWriter;
 import cool.scx.http.media.string.StringWriter;
 
@@ -72,6 +75,14 @@ public interface ScxHttpServerResponse {
 
     default void send(InputStream inputStream) {
         send(new InputStreamWriter(inputStream));
+    }
+
+    default void send(MultiPart multiPart) {
+        send(new MultiPartWriter(multiPart));
+    }
+
+    default void send(Object object) {
+        send(new ObjectWriter(object));
     }
 
     //************** 简化 Headers 操作 *************

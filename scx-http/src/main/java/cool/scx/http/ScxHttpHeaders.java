@@ -1,5 +1,6 @@
 package cool.scx.http;
 
+import cool.scx.http.accept.Accepts;
 import cool.scx.http.content_disposition.ContentDisposition;
 import cool.scx.http.content_type.ContentType;
 import cool.scx.http.cookie.Cookie;
@@ -63,6 +64,10 @@ public interface ScxHttpHeaders extends Parameters<ScxHttpHeaderName, String> {
 
     default Cookie getSetCookie(String name) {
         return setCookies().get(name);
+    }
+
+    default Accepts accepts() {
+        return Accepts.of(get(ACCEPT));
     }
 
     default String encode() {

@@ -12,7 +12,7 @@
 
     <artifactId>scx</artifactId>
     <packaging>pom</packaging>
-    <version>3.1.0</version>
+    <version>3.1.1</version>
 
     <name>SCX</name>
     <url>https://github.com/scx567888/scx</url>
@@ -233,8 +233,6 @@
     </dependencyManagement>
 
     <properties>
-
-        <scx.javaVersion>23</scx.javaVersion>
 
         <!-- *********************** 以下为依赖包版本 *********************** -->
         <helidon.version>4.1.1</helidon.version>

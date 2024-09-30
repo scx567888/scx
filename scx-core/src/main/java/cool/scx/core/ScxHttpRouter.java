@@ -10,7 +10,7 @@ import static cool.scx.http.HttpFieldName.*;
 import static cool.scx.http.HttpMethod.*;
 
 /**
- * ScxHttp 路由 内部使用 vertxRouter 进行具体路由的处理
+ * ScxHttp 路由 内部使用 Router 进行具体路由的处理
  *
  * @author scx567888
  * @version 1.11.8
