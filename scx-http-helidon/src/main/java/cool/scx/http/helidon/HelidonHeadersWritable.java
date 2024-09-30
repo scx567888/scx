@@ -36,6 +36,12 @@ public class HelidonHeadersWritable implements ScxHttpHeadersWritable {
     }
 
     @Override
+    public ParametersWritable<ScxHttpHeaderName, String> clear() {
+        headers.clear();
+        return this;
+    }
+
+    @Override
     public long size() {
         return headers.size();
     }
