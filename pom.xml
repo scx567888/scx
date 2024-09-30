@@ -234,8 +234,6 @@
 
     <properties>
 
-        <scx.javaVersion>23</scx.javaVersion>
-
         <!-- *********************** 以下为依赖包版本 *********************** -->
         <helidon.version>4.1.1</helidon.version>
         <commons-fileupload2.version>2.0.0-M2</commons-fileupload2.version>
