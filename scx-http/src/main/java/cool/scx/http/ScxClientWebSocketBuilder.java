@@ -13,9 +13,9 @@ public interface ScxClientWebSocketBuilder {
     ScxURI uri();
 
     ScxClientWebSocketBuilder uri(ScxURI uri);
-    
+
     ScxHttpHeadersWritable headers();
-    
+
     ScxClientWebSocketBuilder headers(ScxHttpHeadersWritable headers);
 
     ScxClientWebSocketBuilder onConnect(Consumer<ScxClientWebSocket> onOpen);

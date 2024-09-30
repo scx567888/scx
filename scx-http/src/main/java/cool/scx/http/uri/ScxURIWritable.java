@@ -49,8 +49,8 @@ public interface ScxURIWritable extends ScxURI {
         query().remove(name);
         return this;
     }
-    
-    default ScxURIWritable clearQuery(){
+
+    default ScxURIWritable clearQuery() {
         query().clear();
         return this;
     }
