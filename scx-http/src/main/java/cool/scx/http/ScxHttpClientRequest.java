@@ -102,7 +102,7 @@ public interface ScxHttpClientRequest {
         return this;
     }
 
-    default ScxHttpClientRequest addCookie(Cookie cookie) {
+    default ScxHttpClientRequest addCookie(Cookie... cookie) {
         headers().addCookie(cookie);
         return this;
     }

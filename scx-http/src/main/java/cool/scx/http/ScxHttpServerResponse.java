@@ -107,7 +107,7 @@ public interface ScxHttpServerResponse {
         return this;
     }
 
-    default ScxHttpServerResponse addSetCookie(Cookie cookie) {
+    default ScxHttpServerResponse addSetCookie(Cookie... cookie) {
         headers().addSetCookie(cookie);
         return this;
     }

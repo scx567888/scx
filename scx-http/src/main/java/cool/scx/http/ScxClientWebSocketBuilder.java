@@ -48,7 +48,7 @@ public interface ScxClientWebSocketBuilder {
         return this;
     }
 
-    default ScxClientWebSocketBuilder addCookie(Cookie cookie) {
+    default ScxClientWebSocketBuilder addCookie(Cookie... cookie) {
         headers().addCookie(cookie);
         return this;
     }
