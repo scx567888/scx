@@ -4,6 +4,8 @@ import cool.scx.http.Parameters;
 
 import java.net.URI;
 
+import static cool.scx.http.uri.ScxURIHelper.parseURI;
+
 /**
  * ScxURI
  */
@@ -14,7 +16,7 @@ public interface ScxURI {
     }
 
     static ScxURIWritable of(String uri) {
-        return of(URI.create(uri));
+        return of(parseURI(uri));
     }
 
     static ScxURIWritable of(URI u) {
@@ -49,7 +51,11 @@ public interface ScxURI {
      * @return a
      */
     default String encode() {
-        return ScxURIHelper.encodeURI(this);
+        return encode(false);
+    }
+
+    default String encode(boolean uriEncoding) {
+        return ScxURIHelper.encodeURI(this, uriEncoding);
     }
 
 }

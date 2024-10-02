@@ -5,9 +5,11 @@ import cool.scx.http.ScxClientWebSocketBuilder;
 import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.ScxHttpHeadersWritable;
 import cool.scx.http.uri.ScxURI;
+import io.helidon.common.uri.UriEncoding;
 import io.helidon.webclient.websocket.WsClient;
 import io.helidon.websocket.WsSession;
 
+import java.net.URI;
 import java.util.function.Consumer;
 
 /**
@@ -70,7 +72,7 @@ class HelidonClientWebSocket extends HelidonWebSocket implements ScxClientWebSoc
             }
         }
         var wsClient = wsClientBuilder.build();
-        wsClient.connect(uri.toString(), this);
+        wsClient.connect(URI.create(UriEncoding.encodeUri(uri.encode())), this);
     }
 
 }

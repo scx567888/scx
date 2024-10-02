@@ -16,19 +16,23 @@ public class ClientTest {
 
     public static void test1() throws IOException, InterruptedException {
         var httpServer = new HelidonHttpServer(new ScxHttpServerOptions().setPort(8990));
+        httpServer.requestHandler(c -> {
+            System.out.println(c.uri());
+            c.response().send("Hi Client !!!");
+        });
         httpServer.webSocketHandler(c -> {
             System.out.println(c.uri());
             c.onTextMessage(t -> {
                 System.out.println(t);
             });
-            c.send("Hi Client !!!");
+            c.send("Hi WS Client !!!");
         });
         httpServer.start();
     }
 
     public static void test2() {
         var httpClient = new HelidonHttpClient();
-        var webSocketBuilder = httpClient.webSocket().uri("http://localhost:8990/test");
+        var webSocketBuilder = httpClient.webSocket().uri("http://localhost:8990/中:文|路径/ddd?查询=🎈🎈|🎈");
         webSocketBuilder.onConnect(webSocket -> {
             webSocket.onTextMessage(t -> {
                 System.out.println(t);
@@ -38,13 +42,13 @@ public class ClientTest {
         webSocketBuilder.connect();
     }
 
-    public static void test3() throws IOException, InterruptedException {
+    public static void test3() {
         var httpClient = new HelidonHttpClient();
         var response = httpClient.request()
-                .uri("http://www.baidu.com")
+                .uri("http://localhost:8990/中:文|路径/ddd?查询=🎈🎈|🎈")
                 .send();
         var string = response.body().asString();
-        System.out.println(string.length());
+        System.out.println(string);
     }
 
 }

@@ -4,7 +4,6 @@ import cool.scx.http.ScxClientWebSocketBuilder;
 import cool.scx.http.ScxHttpClient;
 import cool.scx.http.ScxHttpClientOptions;
 import io.helidon.webclient.api.WebClient;
-import io.helidon.webclient.websocket.WsClient;
 
 /**
  * HelidonHttpClient
