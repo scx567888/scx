@@ -3,12 +3,8 @@ package cool.scx.http.helidon.test;
 import cool.scx.http.ScxHttpServerOptions;
 import cool.scx.http.helidon.HelidonHttpClient;
 import cool.scx.http.helidon.HelidonHttpServer;
-import cool.scx.http.uri.ScxURIHelper;
-import io.helidon.common.uri.UriEncoding;
 
 import java.io.IOException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 
 public class ClientTest {
 
@@ -20,7 +16,7 @@ public class ClientTest {
 
     public static void test1() throws IOException, InterruptedException {
         var httpServer = new HelidonHttpServer(new ScxHttpServerOptions().setPort(8990));
-        httpServer.requestHandler(c->{
+        httpServer.requestHandler(c -> {
             System.out.println(c.uri());
             c.response().send("Hi Client !!!");
         });

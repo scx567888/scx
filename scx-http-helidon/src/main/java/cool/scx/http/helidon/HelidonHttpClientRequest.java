@@ -8,8 +8,6 @@ import io.helidon.http.HeaderNames;
 import io.helidon.http.Method;
 import io.helidon.webclient.api.WebClient;
 
-import java.net.URI;
-
 /**
  * HelidonHttpClientRequestBuilder
  */

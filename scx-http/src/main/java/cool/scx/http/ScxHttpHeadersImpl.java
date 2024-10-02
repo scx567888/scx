@@ -9,5 +9,5 @@ class ScxHttpHeadersImpl extends ParametersImpl<ScxHttpHeaderName, String> imple
     public String toString() {
         return encode();
     }
-    
+
 }
