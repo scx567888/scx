@@ -70,7 +70,7 @@ class HelidonClientWebSocket extends HelidonWebSocket implements ScxClientWebSoc
             }
         }
         var wsClient = wsClientBuilder.build();
-        wsClient.connect(uri.toString(), this);
+        wsClient.connect(uri.encode(), this);
     }
 
 }

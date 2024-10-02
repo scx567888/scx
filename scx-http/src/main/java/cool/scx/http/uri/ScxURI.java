@@ -60,8 +60,4 @@ public interface ScxURI {
         return ScxURIHelper.encodeURI(this, uriEncoding);
     }
 
-    default URI toURI() throws URISyntaxException {
-        return new URI(scheme(), null, host(), port(), path(), encodeQuery(query(), false), fragment());
-    }
-
 }

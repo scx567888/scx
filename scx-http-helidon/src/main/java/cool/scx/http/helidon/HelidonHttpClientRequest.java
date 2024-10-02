@@ -26,7 +26,7 @@ public class HelidonHttpClientRequest extends ScxHttpClientRequestBase {
     public HelidonHttpClientResponse send(MediaWriter writer) {
         var r = webClient.method(Method.create(method.value()));
         //这里已经转换为 URL 编码了 无需再转换一遍
-        r.uri(URI.create(uri.encode()));
+        r.uri(uri.encode());
         writer.beforeWrite(headers, ScxHttpHeaders.of());
         for (var h : headers) {
             r.header(HeaderNames.create(h.getKey().value()), h.getValue());
