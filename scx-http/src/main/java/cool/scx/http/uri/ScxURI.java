@@ -3,7 +3,9 @@ package cool.scx.http.uri;
 import cool.scx.http.Parameters;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 
+import static cool.scx.http.uri.ScxURIHelper.encodeQuery;
 import static cool.scx.http.uri.ScxURIHelper.parseURI;
 
 /**
@@ -56,6 +58,10 @@ public interface ScxURI {
 
     default String encode(boolean uriEncoding) {
         return ScxURIHelper.encodeURI(this, uriEncoding);
+    }
+
+    default URI toURI() throws URISyntaxException {
+        return new URI(scheme(), null, host(), port(), path(), encodeQuery(query(), false), fragment());
     }
 
 }
