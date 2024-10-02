@@ -70,4 +70,9 @@ public class ParametersImpl<K, V> implements ParametersWritable<K, V> {
         return map.toMultiValueMap();
     }
 
+    @Override
+    public String toString() {
+        return map.toString();
+    }
+    
 }
