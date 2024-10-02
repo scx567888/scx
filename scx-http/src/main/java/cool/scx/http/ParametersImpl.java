@@ -2,17 +2,14 @@ package cool.scx.http;
 
 import cool.scx.common.util.MultiMap;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * ParametersImpl
  */
 public class ParametersImpl<K, V> implements ParametersWritable<K, V> {
 
-    private final MultiMap<K, V> map = new MultiMap<>();
+    private final MultiMap<K, V> map = new MultiMap<>(LinkedHashMap::new, ArrayList::new);
 
     @SuppressWarnings("unchecked")
     @Override
@@ -74,5 +71,5 @@ public class ParametersImpl<K, V> implements ParametersWritable<K, V> {
     public String toString() {
         return map.toString();
     }
-    
+
 }
