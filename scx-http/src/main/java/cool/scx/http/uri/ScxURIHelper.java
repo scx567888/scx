@@ -105,6 +105,11 @@ public class ScxURIHelper {
     }
 
     public static URI parseURI(String uriStr) {
+        // 解析 URI
+        return URI.create(encodeUri(uriStr));
+    }
+
+    public static String encodeUri(String uriStr) {
         // 预处理 URI，将特殊字符进行编码
         uriStr = URLEncoder.encode(uriStr, UTF_8)
                 .replace("%3A", ":")
@@ -115,7 +120,7 @@ public class ScxURIHelper {
                 .replace("%23", "#");
 
         // 解析 URI
-        return URI.create(uriStr);
+        return uriStr;
     }
 
 }
