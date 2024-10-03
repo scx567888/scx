@@ -22,14 +22,16 @@ class HelidonHttpServerRequest implements ScxHttpServerRequest {
     private final ScxHttpServerResponse response;
     private final HelidonPeerInfo remotePeer;
     private final HelidonPeerInfo localPeer;
+    private final HelidonHttpServer server;
 
-    public HelidonHttpServerRequest(ConnectionContext ctx, RoutingRequest request, RoutingResponse response) {
+    public HelidonHttpServerRequest(ConnectionContext ctx, RoutingRequest request, RoutingResponse response, HelidonHttpServer server) {
+        this.server = server;
         var p = request.prologue();
         this.method = ScxHttpMethod.of(p.method().text());
         this.uri = createScxURI(p);
         this.version = HttpVersion.of(p.rawProtocol());
         this.headers = convertHeaders(request.headers());
-        this.body = new ScxHttpBodyImpl(request.content().inputStream(), this.headers);
+        this.body = new ScxHttpBodyImpl(request.content().inputStream(), this.headers, server.options().bodyBufferSize());
         this.response = new HelidonHttpServerResponse(this, response);
         this.remotePeer = new HelidonPeerInfo(request.remotePeer());
         this.localPeer = new HelidonPeerInfo(request.localPeer());

@@ -17,20 +17,22 @@ import static cool.scx.http.helidon.HelidonHelper.createHelidonWebSocketRouting;
 public class HelidonHttpServer implements ScxHttpServer {
 
     private final WebServer webServer;
+    private final ScxHttpServerOptions options;
     Consumer<ScxHttpServerRequest> requestHandler;
     Consumer<ScxServerWebSocket> webSocketHandler;
     Consumer<Throwable> errorHandler;
 
     public HelidonHttpServer(ScxHttpServerOptions options) {
+        this.options = options;
         var httpRouting = new HelidonHttpRouting(this);
         var webSocketRouting = createHelidonWebSocketRouting(this);
         var builder = WebServer.builder()
                 .addRouting(httpRouting)
                 .addRouting(webSocketRouting)
-                .maxPayloadSize(options.getMaxPayloadSize())
-                .port(options.getPort());
-        if (options.getTLS() != null) {
-            builder.tls((Tls) options.getTLS());
+                .maxPayloadSize(options.maxPayloadSize())
+                .port(options.port());
+        if (options.tls() != null) {
+            builder.tls((Tls) options.tls());
         }
         this.webServer = builder.build();
         this.requestHandler = null;
@@ -69,6 +71,10 @@ public class HelidonHttpServer implements ScxHttpServer {
     @Override
     public int port() {
         return this.webServer.port();
+    }
+
+    public ScxHttpServerOptions options() {
+        return options;
     }
 
 }

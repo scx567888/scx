@@ -12,11 +12,11 @@ public class HelidonHttpClientResponse implements ScxHttpClientResponse {
     private final ScxHttpHeaders headers;
     private final ScxHttpBody body;
 
-    public HelidonHttpClientResponse(HttpClientResponse response) {
+    public HelidonHttpClientResponse(HttpClientResponse response, HelidonHttpClient client) {
         this.response = response;
         this.status = HttpStatusCode.of(response.status().code());
         this.headers = convertHeaders(response.headers());
-        this.body = new ScxHttpBodyImpl(response.entity().inputStream(), this.headers);
+        this.body = new ScxHttpBodyImpl(response.entity().inputStream(), this.headers, client.options().bodyBufferSize());
     }
 
     @Override
