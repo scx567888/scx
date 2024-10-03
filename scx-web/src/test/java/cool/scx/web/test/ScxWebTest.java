@@ -23,7 +23,7 @@ public class ScxWebTest {
      */
     @Test
     public static void test0() {
-        var vertx = new HelidonHttpServer(new ScxHttpServerOptions().setPort(8080));
+        var vertx = new HelidonHttpServer(new ScxHttpServerOptions().port(8080));
 
         var router = Router.of();
 
@@ -53,7 +53,7 @@ public class ScxWebTest {
      */
     public static void test1() {
 
-        var vertx = new HelidonHttpServer(new ScxHttpServerOptions().setPort(8081));
+        var vertx = new HelidonHttpServer(new ScxHttpServerOptions().port(8081));
 
         var router = Router.of();
 

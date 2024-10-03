@@ -18,7 +18,7 @@ public class Test {
 
     public static void test1() {
         var l = System.nanoTime();
-        var server = new HelidonHttpServer(new ScxHttpServerOptions().setPort(8080));
+        var server = new HelidonHttpServer(new ScxHttpServerOptions().port(8080));
 
         var router = Router.of();
 
