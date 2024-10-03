@@ -1,7 +1,7 @@
 package cool.scx.http;
 
-import cool.scx.http.media.MediaReader;
-
+import java.io.BufferedInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 public class ScxHttpBodyImpl implements ScxHttpBody {
@@ -9,30 +9,34 @@ public class ScxHttpBodyImpl implements ScxHttpBody {
     private final InputStream inputStream;
     private final ScxHttpHeaders headers;
 
-    // 简单做一个缓存
-    private String cacheString;
+    // InputStream 的缓存
+    private final BufferedInputStream bufferedInputStream;
 
     public ScxHttpBodyImpl(InputStream inputStream, ScxHttpHeaders headers) {
         this.inputStream = inputStream;
+        this.bufferedInputStream = new BufferedInputStream(inputStream);
         this.headers = headers;
+        this.bufferedInputStream.mark(0);
+    }
+
+    @Override
+    public ScxHttpHeaders headers() {
+        return headers;
     }
 
     @Override
     public InputStream inputStream() {
-        return inputStream;
-    }
-
-    @Override
-    public <T> T as(MediaReader<T> t) {
-        return t.read(inputStream, headers);
-    }
-
-    @Override
-    public String asString() {
-        if (cacheString == null) {
-            cacheString = ScxHttpBody.super.asString();
+        try {
+            bufferedInputStream.reset();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        return cacheString;
+        return bufferedInputStream;
+    }
+
+    @Override
+    public String toString() {
+        return asString();
     }
 
 }

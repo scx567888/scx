@@ -1,11 +1,15 @@
 package cool.scx.http;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.http.content_type.ContentType;
 import cool.scx.http.cookie.Cookie;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.media.byte_array.ByteArrayWriter;
 import cool.scx.http.media.empty.EmptyWriter;
+import cool.scx.http.media.form_params.FormParams;
+import cool.scx.http.media.form_params.FormParamsWriter;
 import cool.scx.http.media.input_stream.InputStreamWriter;
+import cool.scx.http.media.json_node.JsonNodeWriter;
 import cool.scx.http.media.multi_part.MultiPart;
 import cool.scx.http.media.multi_part.MultiPartWriter;
 import cool.scx.http.media.object.ObjectWriter;
@@ -72,8 +76,16 @@ public interface ScxHttpClientRequest {
         return send(new InputStreamWriter(inputStream));
     }
 
+    default ScxHttpClientResponse send(FormParams formParams) {
+        return send(new FormParamsWriter(formParams));
+    }
+
     default ScxHttpClientResponse send(MultiPart multiPart) {
         return send(new MultiPartWriter(multiPart));
+    }
+
+    default ScxHttpClientResponse send(JsonNode jsonNode) {
+        return send(new JsonNodeWriter(jsonNode));
     }
 
     default ScxHttpClientResponse send(Object object) {
