@@ -58,4 +58,8 @@ public interface ScxURI {
         return ScxURIHelper.encodeScxURI(this, uriEncoding);
     }
 
+    default URI toURI() {
+        return URI.create(encode(true));
+    }
+
 }
