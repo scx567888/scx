@@ -1,10 +1,13 @@
 package cool.scx.http.helidon.test;
 
+import cool.scx.http.MediaType;
 import cool.scx.http.ScxHttpServerOptions;
 import cool.scx.http.helidon.HelidonHttpClient;
 import cool.scx.http.helidon.HelidonHttpServer;
 
 import java.io.IOException;
+
+import static cool.scx.http.HttpFieldName.ACCEPT;
 
 public class ClientTest {
 
@@ -45,6 +48,8 @@ public class ClientTest {
     public static void test3() {
         var httpClient = new HelidonHttpClient();
         var response = httpClient.request()
+                //支持 ACCEPT
+                .addHeader(ACCEPT, MediaType.APPLICATION_XML.value())
                 .uri("http://localhost:8990/中:文|路@径/ddd?查询=🎈🎈|🎈#🎃🎃")
                 .send();
         //可以用不同的方式重复读取
