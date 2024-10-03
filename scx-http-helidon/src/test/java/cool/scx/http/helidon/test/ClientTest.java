@@ -54,8 +54,8 @@ public class ClientTest {
                 .addHeader(ACCEPT, MediaType.APPLICATION_XML.value())
                 .uri("http://localhost:8990/中:文|路@径/ddd?查询=🎈🎈|🎈#🎃🎃")
                 .send(new FormParams()
-                        .add("中文|||/ |||===","嘎 嘎  嘎🧶🧶🛒")
-                        .add("🏓🏓🏓","!@#%^%&*%%")
+                        .add("中文|||/ |||===", "嘎 嘎  嘎🧶🧶🛒")
+                        .add("🏓🏓🏓", "!@#%^%&*%%")
                 );
         //可以用不同的方式重复读取
         var apple = response.body().asObject(Apple.class);
