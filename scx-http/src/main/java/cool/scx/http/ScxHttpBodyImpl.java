@@ -34,4 +34,9 @@ public class ScxHttpBodyImpl implements ScxHttpBody {
         return bufferedInputStream;
     }
 
+    @Override
+    public String toString() {
+        return asString();
+    }
+
 }

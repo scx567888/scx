@@ -6,6 +6,8 @@ import cool.scx.http.cookie.Cookie;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.media.byte_array.ByteArrayWriter;
 import cool.scx.http.media.empty.EmptyWriter;
+import cool.scx.http.media.form_params.FormParams;
+import cool.scx.http.media.form_params.FormParamsWriter;
 import cool.scx.http.media.input_stream.InputStreamWriter;
 import cool.scx.http.media.json_node.JsonNodeWriter;
 import cool.scx.http.media.multi_part.MultiPart;
@@ -72,6 +74,10 @@ public interface ScxHttpClientRequest {
 
     default ScxHttpClientResponse send(InputStream inputStream) {
         return send(new InputStreamWriter(inputStream));
+    }
+
+    default ScxHttpClientResponse send(FormParams formParams) {
+        return send(new FormParamsWriter(formParams));
     }
 
     default ScxHttpClientResponse send(MultiPart multiPart) {
