@@ -10,7 +10,8 @@ import cool.scx.http.media.MediaWriter;
 
 import java.io.OutputStream;
 
-import static cool.scx.common.util.ObjectUtils.*;
+import static cool.scx.common.util.ObjectUtils.jsonMapper;
+import static cool.scx.common.util.ObjectUtils.xmlMapper;
 import static cool.scx.http.MediaType.APPLICATION_JSON;
 import static cool.scx.http.MediaType.APPLICATION_XML;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -18,7 +19,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class JsonNodeWriter implements MediaWriter {
 
     private final JsonNode jsonNode;
-    private  byte[] data;
+    private byte[] data;
 
     public JsonNodeWriter(JsonNode jsonNode) {
         this.jsonNode = jsonNode;
