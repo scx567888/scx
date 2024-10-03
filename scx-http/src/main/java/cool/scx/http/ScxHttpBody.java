@@ -1,6 +1,7 @@
 package cool.scx.http;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.http.media.MediaReader;
 import cool.scx.http.media.form_params.FormParams;
 import cool.scx.http.media.multi_part.MultiPart;
@@ -16,6 +17,7 @@ import java.nio.file.Path;
 
 import static cool.scx.http.media.byte_array.ByteArrayReader.BYTE_ARRAY_READER;
 import static cool.scx.http.media.form_params.FormParamsReader.FORM_PARAMS_READER;
+import static cool.scx.http.media.json_node.JsonNodeReader.JSON_NODE_READER;
 import static cool.scx.http.media.multi_part.MultiPartStreamCachedReader.MULTI_PART_READER_CACHED;
 import static cool.scx.http.media.multi_part.MultiPartStreamReader.MULTI_PART_READER;
 import static cool.scx.http.media.string.StringReader.STRING_READER;
@@ -27,7 +29,11 @@ public interface ScxHttpBody {
 
     InputStream inputStream();
 
-    <T> T as(MediaReader<T> t);
+    ScxHttpHeaders headers();
+
+    default <T> T as(MediaReader<T> t) {
+        return t.read(inputStream(), headers());
+    }
 
     default byte[] asBytes() {
         return as(BYTE_ARRAY_READER);
@@ -59,6 +65,10 @@ public interface ScxHttpBody {
 
     default Path asPath(Path path, OpenOption... options) {
         return as(new PathReader(path, options));
+    }
+
+    default JsonNode asJsonNode() {
+        return as(JSON_NODE_READER);
     }
 
     default <T> T asObject(Class<T> c) {

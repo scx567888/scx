@@ -41,11 +41,4 @@ class HelidonHelper {
         return h;
     }
 
-    public static void updateHeaders(ScxHttpHeaders o, ServerResponseHeaders u) {
-        u.clear();
-        for (var header : o) {
-            u.add(HeaderNames.create(header.getKey().value()), header.getValue().toArray(String[]::new));
-        }
-    }
-
 }
