@@ -45,7 +45,7 @@ public class JsonNodeReader implements MediaReader<JsonNode> {
                 return xmlMapper().readTree(str);
             } catch (JsonProcessingException e) {
                 // json 和 xml 均转换失败 直接报错
-                throw new BadRequestException();
+                throw new IllegalArgumentException(str);
             }
         }
     }
