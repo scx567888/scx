@@ -3,11 +3,9 @@ package cool.scx.http.uri;
 import cool.scx.http.Parameters;
 import cool.scx.http.ParametersWritable;
 
-import java.net.URI;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
+import static cool.scx.http.uri.URIEncoder.encodeURIComponent;
 
 /**
  * URIHelper
@@ -36,8 +34,8 @@ public class ScxURIHelper {
             var value = v.getValue();
             for (var s : value) {
                 if (uriEncoding) {
-                    var kk = URLEncoder.encode(key, UTF_8);
-                    var vv = URLEncoder.encode(s, UTF_8);
+                    var kk = encodeURIComponent(key);
+                    var vv = encodeURIComponent(s);
                     l.add(kk + "=" + vv);
                 } else {
                     l.add(key + "=" + s);
@@ -47,7 +45,7 @@ public class ScxURIHelper {
         return String.join("&", l);
     }
 
-    public static String encodeURI(ScxURI uri, boolean uriEncoding) {
+    public static String encodeScxURI(ScxURI uri, boolean uriEncoding) {
         var scheme = uri.scheme();
         var host = uri.host();
         var port = uri.port();
@@ -80,7 +78,7 @@ public class ScxURIHelper {
             //是否需要进行 uri 编码
             if (uriEncoding) {
                 //我们不编码 "/"
-                sb.append(URLEncoder.encode(path, UTF_8).replace("%2F", "/"));
+                sb.append(URIEncoder.encodeURI(path));
             } else {
                 sb.append(path);
             }
@@ -96,31 +94,12 @@ public class ScxURIHelper {
             sb.append('#');
             //是否需要进行 uri 编码
             if (uriEncoding) {
-                sb.append(URLEncoder.encode(fragment, UTF_8));
+                sb.append(URIEncoder.encodeURI(fragment));
             } else {
                 sb.append(fragment);
             }
         }
         return sb.toString();
-    }
-
-    public static URI parseURI(String uriStr) {
-        // 解析 URI
-        return URI.create(encodeUri(uriStr));
-    }
-
-    public static String encodeUri(String uriStr) {
-        // 预处理 URI，将特殊字符进行编码
-        uriStr = URLEncoder.encode(uriStr, UTF_8)
-                .replace("%3A", ":")
-                .replace("%2F", "/")
-                .replace("%3F", "?")
-                .replace("%3D", "=")
-                .replace("%26", "&")
-                .replace("%23", "#");
-
-        // 解析 URI
-        return uriStr;
     }
 
 }
