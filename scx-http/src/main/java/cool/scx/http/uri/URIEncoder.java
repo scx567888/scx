@@ -10,7 +10,7 @@ public class URIEncoder {
             '0', '1', '2', '3', '4', '5', '6', '7',
             '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
     };
-    
+
     //按照 codePoint 排列
     private static final boolean[] DONT_NEED_ENCODING_URI = initDontNeedEncoding(
             "!", "#", "$", "&", "'", "(", ")", "*", "+", ",", "-", ".", "/",
