@@ -58,7 +58,7 @@ public class ScxSocketServerTest extends InitLogger {
         });
 
         //使用 vertx 的 httpServer
-        new HelidonHttpServer(new ScxHttpServerOptions().setPort(8990))
+        new HelidonHttpServer(new ScxHttpServerOptions().port(8990))
                 .webSocketHandler(scxSocketServer::call)
                 .start();
 

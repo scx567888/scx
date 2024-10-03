@@ -14,23 +14,25 @@ import io.helidon.webclient.api.WebClient;
 public class HelidonHttpClientRequest extends ScxHttpClientRequestBase {
 
     private final WebClient webClient;
+    private final HelidonHttpClient client;
 
-    public HelidonHttpClientRequest(WebClient webClient) {
+    public HelidonHttpClientRequest(WebClient webClient, HelidonHttpClient client) {
         this.webClient = webClient;
         this.method = HttpMethod.GET;
+        this.client = client;
     }
 
     @Override
     public HelidonHttpClientResponse send(MediaWriter writer) {
         var r = webClient.method(Method.create(method.value()));
         //这里已经转换为 URL 编码了 无需再转换一遍
-        r.uri(uri.encode());
+        r.uri(uri.toURI());
         writer.beforeWrite(headers, ScxHttpHeaders.of());
         for (var h : headers) {
             r.header(HeaderNames.create(h.getKey().value()), h.getValue());
         }
         var httpClientResponse = r.outputStream(writer::write);
-        return new HelidonHttpClientResponse(httpClientResponse);
+        return new HelidonHttpClientResponse(httpClientResponse, this.client);
     }
 
 }

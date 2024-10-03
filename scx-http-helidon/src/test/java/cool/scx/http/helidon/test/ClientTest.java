@@ -19,7 +19,7 @@ public class ClientTest {
     }
 
     public static void test1() throws IOException, InterruptedException {
-        var httpServer = new HelidonHttpServer(new ScxHttpServerOptions().setPort(8990));
+        var httpServer = new HelidonHttpServer(new ScxHttpServerOptions().port(8990));
         httpServer.requestHandler(c -> {
             System.out.println(c.uri());
             System.out.println(c.body().asFormParams());

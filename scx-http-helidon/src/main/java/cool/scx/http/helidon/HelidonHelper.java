@@ -2,9 +2,12 @@ package cool.scx.http.helidon;
 
 import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.ScxHttpHeadersWritable;
+import cool.scx.http.uri.ScxURI;
+import cool.scx.http.uri.ScxURIWritable;
 import cool.scx.reflect.ReflectFactory;
 import io.helidon.http.Header;
 import io.helidon.http.Headers;
+import io.helidon.http.HttpPrologue;
 import io.helidon.http.PathMatchers;
 import io.helidon.webserver.websocket.WsRoute;
 import io.helidon.webserver.websocket.WsRouting;
@@ -41,6 +44,16 @@ class HelidonHelper {
             h.add(header.name(), header.allValues().toArray(new String[0]));
         }
         return h;
+    }
+
+    public static ScxURIWritable createScxURI(HttpPrologue p) {
+        var path = p.uriPath().path();
+        var query = p.query().value();
+        var fragment = p.fragment().hasValue() ? p.fragment().value() : null;
+        return ScxURI.of()
+                .path(path)
+                .query(query)
+                .fragment(fragment);
     }
 
 }

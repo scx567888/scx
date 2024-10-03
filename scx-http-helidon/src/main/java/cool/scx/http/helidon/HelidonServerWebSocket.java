@@ -6,6 +6,7 @@ import cool.scx.http.uri.ScxURI;
 import io.helidon.websocket.WsSession;
 
 import static cool.scx.http.helidon.HelidonHelper.convertHeaders;
+import static cool.scx.http.helidon.HelidonHelper.createScxURI;
 
 /**
  * HelidonServerWebSocket
@@ -20,10 +21,7 @@ class HelidonServerWebSocket extends HelidonWebSocket implements ScxServerWebSoc
 
     @Override
     public ScxURI uri() {
-        return ScxURI.of()
-                .path(prologue.uriPath().path())
-                .query(new HelidonURIQuery(prologue.query()))
-                .fragment(prologue.fragment().hasValue() ? prologue.fragment().value() : null);
+        return createScxURI(prologue);
     }
 
     @Override

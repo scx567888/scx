@@ -19,7 +19,7 @@ class HelidonHttpRouting implements HttpRouting, HttpRouting.Builder {
     @Override
     public void route(ConnectionContext ctx, RoutingRequest request, RoutingResponse response) {
         if (server.requestHandler != null) {
-            server.requestHandler.accept(new HelidonHttpServerRequest(ctx, request, response));
+            server.requestHandler.accept(new HelidonHttpServerRequest(ctx, request, response, server));
         }
     }
 

@@ -173,11 +173,11 @@ public final class Scx {
         }
         //6, 初始化服务器
         var httpServerOptions = new ScxHttpServerOptions()
-                .setMaxPayloadSize(DEFAULT_BODY_LIMIT)
-                .setPort(this.scxOptions.port());
+                .maxPayloadSize(DEFAULT_BODY_LIMIT)
+                .port(this.scxOptions.port());
         if (this.scxOptions.isHttpsEnabled()) {
             var tls = getTls(this.scxOptions.sslPath(), this.scxOptions.sslPassword());
-            httpServerOptions.setTLS(tls);
+            httpServerOptions.tls(tls);
         }
         this.vertxHttpServer = new HelidonHttpServer(httpServerOptions);
         this.vertxHttpServer.requestHandler(this.scxHttpRouter).webSocketHandler(this.webSocketRouter);
