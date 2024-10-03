@@ -138,6 +138,16 @@ public interface ScxHttpServerResponse {
         return this;
     }
 
+    default ScxHttpServerResponse contentType(ScxMediaType mediaType) {
+        headers().contentType(mediaType);
+        return this;
+    }
+
+    default ScxHttpServerResponse contentType(ScxMediaType mediaType, Charset charset) {
+        headers().contentType(mediaType, charset);
+        return this;
+    }
+
     default Long contentLength() {
         return headers().contentLength();
     }

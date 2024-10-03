@@ -8,6 +8,8 @@ import cool.scx.http.cookie.Cookie;
 import cool.scx.http.cookie.Cookies;
 import cool.scx.http.cookie.CookiesWritable;
 
+import java.nio.charset.Charset;
+
 import static cool.scx.http.HttpFieldName.*;
 
 /**
@@ -55,6 +57,16 @@ public interface ScxHttpHeadersWritable extends ScxHttpHeaders, ParametersWritab
 
     default ScxHttpHeadersWritable contentType(ContentType contentType) {
         set(CONTENT_TYPE, contentType.encode());
+        return this;
+    }
+
+    default ScxHttpHeadersWritable contentType(ScxMediaType mediaType) {
+        contentType(ContentType.of(mediaType));
+        return this;
+    }
+
+    default ScxHttpHeadersWritable contentType(ScxMediaType mediaType, Charset charset) {
+        contentType(ContentType.of(mediaType).charset(charset));
         return this;
     }
 

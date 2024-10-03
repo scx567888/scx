@@ -133,6 +133,16 @@ public interface ScxHttpClientRequest {
         return this;
     }
 
+    default ScxHttpClientRequest contentType(ScxMediaType mediaType) {
+        headers().contentType(mediaType);
+        return this;
+    }
+
+    default ScxHttpClientRequest contentType(ScxMediaType mediaType, Charset charset) {
+        headers().contentType(mediaType, charset);
+        return this;
+    }
+
     default Long contentLength() {
         return headers().contentLength();
     }
