@@ -35,7 +35,7 @@ public class ScxHttpClientOptions {
 
         private String host;
         private int port;
-        public String username;
+        private String username;
         private char[] password;
 
         public Proxy() {
