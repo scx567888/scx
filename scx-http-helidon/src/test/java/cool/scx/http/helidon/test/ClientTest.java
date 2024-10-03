@@ -32,7 +32,7 @@ public class ClientTest {
 
     public static void test2() {
         var httpClient = new HelidonHttpClient();
-        var webSocketBuilder = httpClient.webSocket().uri("http://localhost:8990/中:文|路径/ddd?查询=🎈🎈|🎈");
+        var webSocketBuilder = httpClient.webSocket().uri("http://localhost:8990/中:文|路@径/ddd?查询=🎈🎈|🎈#🎃🎃");
         webSocketBuilder.onConnect(webSocket -> {
             webSocket.onTextMessage(t -> {
                 System.out.println(t);
@@ -45,7 +45,7 @@ public class ClientTest {
     public static void test3() {
         var httpClient = new HelidonHttpClient();
         var response = httpClient.request()
-                .uri("http://localhost:8990/中:文|路径/ddd?查询=🎈🎈|🎈")
+                .uri("http://localhost:8990/中:文|路@径/ddd?查询=🎈🎈|🎈#🎃🎃")
                 .send();
         var string = response.body().asString();
         System.out.println(string);
