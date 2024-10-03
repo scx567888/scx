@@ -14,10 +14,12 @@ import io.helidon.webclient.api.WebClient;
 public class HelidonHttpClientRequest extends ScxHttpClientRequestBase {
 
     private final WebClient webClient;
+    private final HelidonHttpClient client;
 
-    public HelidonHttpClientRequest(WebClient webClient) {
+    public HelidonHttpClientRequest(WebClient webClient, HelidonHttpClient client) {
         this.webClient = webClient;
         this.method = HttpMethod.GET;
+        this.client = client;
     }
 
     @Override
@@ -30,7 +32,7 @@ public class HelidonHttpClientRequest extends ScxHttpClientRequestBase {
             r.header(HeaderNames.create(h.getKey().value()), h.getValue());
         }
         var httpClientResponse = r.outputStream(writer::write);
-        return new HelidonHttpClientResponse(httpClientResponse);
+        return new HelidonHttpClientResponse(httpClientResponse, this.client);
     }
 
 }
