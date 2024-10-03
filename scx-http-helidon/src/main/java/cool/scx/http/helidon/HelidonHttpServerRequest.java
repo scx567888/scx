@@ -7,6 +7,7 @@ import io.helidon.webserver.http.RoutingRequest;
 import io.helidon.webserver.http.RoutingResponse;
 
 import static cool.scx.http.helidon.HelidonHelper.convertHeaders;
+import static cool.scx.http.helidon.HelidonHelper.createScxURI;
 
 /**
  * HelidonHttpServerRequest
@@ -24,9 +25,8 @@ class HelidonHttpServerRequest implements ScxHttpServerRequest {
 
     public HelidonHttpServerRequest(ConnectionContext ctx, RoutingRequest request, RoutingResponse response) {
         var p = request.prologue();
-        request.path(new HelidonRoutePath(p));
         this.method = ScxHttpMethod.of(p.method().text());
-        this.uri = ScxURI.of(request.requestedUri().toUri());
+        this.uri = createScxURI(p);
         this.version = HttpVersion.of(p.rawProtocol());
         this.headers = convertHeaders(request.headers());
         this.body = new ScxHttpBodyImpl(request.content().inputStream(), this.headers);
