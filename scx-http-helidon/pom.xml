@@ -39,11 +39,6 @@
 
         <dependency>
             <groupId>io.helidon.webserver</groupId>
-            <artifactId>helidon-webserver-http2</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>io.helidon.webserver</groupId>
             <artifactId>helidon-webserver-websocket</artifactId>
         </dependency>
 
