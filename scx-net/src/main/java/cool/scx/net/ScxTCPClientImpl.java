@@ -19,7 +19,7 @@ public class ScxTCPClientImpl implements ScxTCPClient {
     }
 
     @Override
-    public Socket connect(SocketAddress endpoint) {
+    public ScxTCPSocket connect(SocketAddress endpoint) {
         try {
             var tls = options.tls();
 
@@ -39,7 +39,7 @@ public class ScxTCPClientImpl implements ScxTCPClient {
                 sslSocket.startHandshake();
             }
 
-            return socket;
+            return new ScxTCPSocketImpl(socket);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }

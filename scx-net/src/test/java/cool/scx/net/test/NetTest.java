@@ -11,7 +11,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
-import java.nio.file.Path;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class NetTest {
@@ -19,22 +18,29 @@ public class NetTest {
     static TLS tls;
 
     static {
-        tls = new TLS(Path.of("C:\\Users\\scx\\Desktop\\hjdl.bole577.cn.jks"), "2seg2ek2");
+        tls = null;
     }
 
     public static void main(String[] args) {
         test1();
-        test2();
+        for (int i = 0; i < 1000; i++) {
+            Thread.ofVirtual().start(() -> {
+                test2();
+            });
+        }
+
     }
 
     public static void test1() {
         var tcpServer = new ScxTCPServerImpl(new ScxTCPServerOptions().port(8899).tls(tls));
+        var i = new AtomicInteger(0);
         tcpServer.onConnect(c -> {
+            int n = i.getAndIncrement();
             var b = new BufferedReader(new InputStreamReader(c.inputStream()));
             while (true) {
                 try {
                     var s = b.readLine();
-                    System.out.println(s);
+                    System.out.println(n + " " + c.socket().getRemoteSocketAddress() + " : " + s);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }

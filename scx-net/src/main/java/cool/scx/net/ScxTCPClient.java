@@ -5,6 +5,6 @@ import java.net.SocketAddress;
 
 public interface ScxTCPClient {
 
-    Socket connect(SocketAddress endpoint);
+    ScxTCPSocket connect(SocketAddress endpoint);
 
 }
