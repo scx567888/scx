@@ -2,16 +2,25 @@ package cool.scx.net.test;
 
 import cool.scx.common.util.$;
 import cool.scx.net.ScxTCPClientImpl;
+import cool.scx.net.ScxTCPClientOptions;
 import cool.scx.net.ScxTCPServerImpl;
 import cool.scx.net.ScxTCPServerOptions;
+import cool.scx.net.tls.TLS;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
+import java.nio.file.Path;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class NetTest {
+
+    static TLS tls;
+
+    static {
+        tls = new TLS(Path.of("C:\\Users\\scx\\Desktop\\hjdl.bole577.cn.jks"), "2seg2ek2");
+    }
 
     public static void main(String[] args) {
         test1();
@@ -19,7 +28,7 @@ public class NetTest {
     }
 
     public static void test1() {
-        var tcpServer = new ScxTCPServerImpl(new ScxTCPServerOptions().port(8899));
+        var tcpServer = new ScxTCPServerImpl(new ScxTCPServerOptions().port(8899).tls(tls));
         tcpServer.onConnect(c -> {
             var b = new BufferedReader(new InputStreamReader(c.inputStream()));
             while (true) {
@@ -32,24 +41,22 @@ public class NetTest {
             }
         });
         tcpServer.start();
+        System.out.println("已监听端口号 : " + tcpServer.port());
     }
 
     public static void test2() {
-        var tcpClient = new ScxTCPClientImpl();
+        var tcpClient = new ScxTCPClientImpl(new ScxTCPClientOptions().tls(tls));
         var tcpSocket = tcpClient.connect(new InetSocketAddress(8899));
         try {
-            var outputStream = tcpSocket.getOutputStream();
+            var outputStream = tcpSocket.outputStream();
             $.Timeout[] timeout = new $.Timeout[1];
             AtomicInteger i = new AtomicInteger(0);
-            timeout[0] = $.setInterval(() -> {
-                try {
-                    outputStream.write((i.getAndIncrement() + "\r\n").getBytes());
-                    outputStream.flush();
-                } catch (IOException e) {
-                    timeout[0].cancel();
-                    throw new RuntimeException(e);
-                }
-            }, 100);
+
+            while (true) {
+                outputStream.write((i.getAndIncrement() + "\r\n").getBytes());
+                outputStream.flush();
+                $.sleep(50);
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
