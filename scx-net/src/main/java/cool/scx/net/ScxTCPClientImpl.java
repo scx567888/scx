@@ -1,5 +1,6 @@
 package cool.scx.net;
 
+import javax.net.ssl.SSLSocket;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.Socket;
@@ -30,6 +31,11 @@ public class ScxTCPClientImpl implements ScxTCPClient {
             }
 
             socket.connect(endpoint);
+
+            if (socket instanceof SSLSocket sslSocket) {
+                sslSocket.startHandshake();
+            }
+
             return socket;
         } catch (IOException e) {
             throw new UncheckedIOException(e);
