@@ -1,0 +1,58 @@
+package cool.scx.net.test;
+
+import cool.scx.common.util.$;
+import cool.scx.net.ScxTCPClientImpl;
+import cool.scx.net.ScxTCPServerImpl;
+import cool.scx.net.ScxTCPServerOptions;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.InetSocketAddress;
+import java.util.concurrent.atomic.AtomicInteger;
+
+public class NetTest {
+
+    public static void main(String[] args) {
+        test1();
+        test2();
+    }
+
+    public static void test1() {
+        var tcpServer = new ScxTCPServerImpl(new ScxTCPServerOptions().port(8899));
+        tcpServer.onConnect(c -> {
+            var b = new BufferedReader(new InputStreamReader(c.inputStream()));
+            while (true) {
+                try {
+                    var s = b.readLine();
+                    System.out.println(s);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+        tcpServer.start();
+    }
+
+    public static void test2() {
+        var tcpClient = new ScxTCPClientImpl();
+        var tcpSocket = tcpClient.connect(new InetSocketAddress(8899));
+        try {
+            var outputStream = tcpSocket.getOutputStream();
+            $.Timeout[] timeout = new $.Timeout[1];
+            AtomicInteger i = new AtomicInteger(0);
+            timeout[0] = $.setInterval(() -> {
+                try {
+                    outputStream.write((i.getAndIncrement() + "\r\n").getBytes());
+                    outputStream.flush();
+                } catch (IOException e) {
+                    timeout[0].cancel();
+                    throw new RuntimeException(e);
+                }
+            }, 100);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+}
