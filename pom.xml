@@ -61,6 +61,7 @@
         <module>scx-ansi</module>
         <module>scx-reflect</module>
         <module>scx-scheduling</module>
+        <module>scx-net</module>
     </modules>
 
     <build>
