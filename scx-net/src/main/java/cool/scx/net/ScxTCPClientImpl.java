@@ -23,6 +23,9 @@ public class ScxTCPClientImpl implements ScxTCPClient {
         try {
             var tls = options.tls();
 
+            //todo 处理代理
+            var proxy = options.proxy();
+
             Socket socket;
             if (tls != null && tls.enabled()) {
                 socket = tls.createSocket();
