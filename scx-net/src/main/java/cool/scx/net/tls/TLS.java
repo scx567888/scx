@@ -15,7 +15,6 @@ import static cool.scx.net.tls.TLSHelper.*;
  */
 public class TLS {
 
-    private boolean enabled;
     private final Path path;
     private final String password;
     private final KeyStore keyStore;
@@ -24,6 +23,7 @@ public class TLS {
     private final SSLContext sslContext;
     private final SSLServerSocketFactory serverSocketFactory;
     private final SSLSocketFactory socketFactory;
+    private boolean enabled;
 
     public TLS(Path path, String password) {
         this.enabled = true;

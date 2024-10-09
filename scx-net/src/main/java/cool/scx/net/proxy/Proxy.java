@@ -8,10 +8,9 @@ import static java.net.Proxy.Type.SOCKS;
 
 public class Proxy {
 
-    private boolean enabled;
-
     private final SocketAddress proxyAddress;
     private final java.net.Proxy proxy;
+    private boolean enabled;
 
     public Proxy(SocketAddress proxyAddress, Type type) {
         this.enabled = true;
