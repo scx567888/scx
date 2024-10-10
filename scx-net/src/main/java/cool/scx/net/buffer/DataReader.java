@@ -2,38 +2,21 @@ package cool.scx.net.buffer;
 
 import io.helidon.common.buffers.Bytes;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.function.Supplier;
 
-/**
- * Data reader that can pull additional data.
- */
 public class DataReader {
+    
     private final Supplier<byte[]> bytesSupplier;
     private Node head;
     private Node tail;
 
-    /**
-     * Data reader from a supplier of bytes.
-     *
-     * @param bytesSupplier supplier that can be pulled for more data
-     */
     public DataReader(Supplier<byte[]> bytesSupplier) {
         this.bytesSupplier = bytesSupplier;
-        // we cannot block until data is actually ready to be consumed
         this.head = new Node(new byte[]{});
         this.tail = this.head;
     }
-
-    /**
-     * Number of bytes available in the currently pulled data.
-     *
-     * @return number of bytes available
-     */
+    
     public int available() {
         int a = 0;
         for (Node n = head; n != null; n = n.next) {
@@ -42,9 +25,6 @@ public class DataReader {
         return a;
     }
 
-    /**
-     * Pull next data.
-     */
     public void pullData() {
         byte[] bytes = bytesSupplier.get();
         if (bytes == null) {
@@ -55,24 +35,13 @@ public class DataReader {
         tail = n;
     }
 
-    /**
-     * Skip n bytes.
-     *
-     * @param lenToSkip number of bytes to skip (must be less or equal to current capacity)
-     */
     public void skip(int lenToSkip) {
         while (lenToSkip > 0) {
             ensureAvailable();
             lenToSkip = head.skip(lenToSkip);
         }
     }
-
-    /**
-     * Ensure we have at least one byte available.
-     */
-    // remove consumed head of the list
-    // make sure that head has available
-    // may block to read
+    
     public void ensureAvailable() {
         while (!head.hasAvailable()) {
             if (head.next == null) {
@@ -82,47 +51,16 @@ public class DataReader {
         }
     }
 
-    /**
-     * Read 1 byte.
-     *
-     * @return next byte
-     */
     public byte read() {
         ensureAvailable();
         return head.bytes[head.position++];
     }
 
-    /**
-     * Look at the next byte (does not modify position).
-     *
-     * @return next byte
-     */
     public byte lookup() {
         ensureAvailable();
         return head.bytes[head.position];
     }
 
-    /**
-     * Does the data start with a new line (CRLF).
-     *
-     * @return whether the data starts with a new line (will pull data to have at least two bytes available)
-     */
-    public boolean startsWithNewLine() {
-        ensureAvailable();
-        byte[] bytes = head.bytes;
-        int pos = head.position;
-        if (bytes[pos] == Bytes.CR_BYTE && ((pos + 1 < bytes.length) ? bytes[pos + 1] : head.next().peek()) == Bytes.LF_BYTE) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Does the current data start with the prefix.
-     *
-     * @param prefix prefix to find, will pull data to have at least prefix.length bytes available
-     * @return whether the data starts with the provided prefix
-     */
     public boolean startsWith(byte[] prefix) {
         ensureAvailable(); // we have at least 1 byte
         if (prefix.length <= head.available()) { // fast case
@@ -145,12 +83,6 @@ public class DataReader {
         }
     }
 
-    /**
-     * Read byte array.
-     *
-     * @param len number of bytes of the string
-     * @return string value
-     */
     public byte[] readBytes(int len) {
         ensureAvailable(); // we have at least 1 byte
         byte[] b = new byte[len];
@@ -175,12 +107,6 @@ public class DataReader {
         }
     }
 
-    /**
-     * Read an ascii string until new line.
-     *
-     * @return string with the next line
-     * @throws io.helidon.common.buffers.DataReader.IncorrectNewLineException when new line cannot be found
-     */
     public String readLine() throws IncorrectNewLineException {
         int i = findNewLine(Integer.MAX_VALUE);
         String s = readAsciiString(i);
@@ -289,27 +215,15 @@ public class DataReader {
         }
     }
 
-    /**
-     * New line not valid.
-     */
     public static class IncorrectNewLineException extends RuntimeException {
-        /**
-         * Incorrect new line.
-         *
-         * @param message descriptive message
-         */
+
         public IncorrectNewLineException(String message) {
             super(message);
         }
     }
 
-    /**
-     * Not enough data available to finish the requested operation.
-     */
     public static class InsufficientDataAvailableException extends RuntimeException {
-        /**
-         * Create a new instance. This exception does not have any other constructors.
-         */
+
         public InsufficientDataAvailableException() {
         }
     }
@@ -363,23 +277,6 @@ public class DataReader {
         byte peek() {
             return bytes[position];
         }
-    }
-
-    public static void main(String[] args) throws IOException {
-        InputStream inputStream = Files.newInputStream(Path.of("C:\\Users\\scx\\Desktop\\新建文本文档 (2).txt"));
-        DataReader d = new DataReader(() -> {
-            try {
-                return inputStream.readNBytes(1);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
-        for (int i = 0; i < 10; ) {
-            var bytes = d.findNewLine(Integer.MAX_VALUE);
-            var bytes1 = d.find("123".getBytes(), Integer.MAX_VALUE);
-            System.out.println(bytes);
-        }
-
     }
 
 }
