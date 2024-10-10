@@ -14,45 +14,47 @@ public class ArrayFinderTest {
     }
 
     public static void test1() {
-        var s = new ArrayList<byte[]>();
-        s.add("1234567890".getBytes());
-        s.add("abcdefghi".getBytes());
-        s.add("jklmnopqrst".getBytes());
-        s.add("uvwzyz".getBytes());
-        s.add("ddf".getBytes());
-        s.add("1".getBytes());
-        s.add("3".getBytes());
-        s.add("5".getBytes());
-        s.add("7".getBytes());
-//        s.add("9".getBytes());
+        var s = new byte[10][];
+        s[0]="1234567890".getBytes();
+        s[1]="abcdefghi".getBytes();
+        s[2]="jklmnopqrst".getBytes();
+        s[3]="uvwzyz".getBytes();
+        s[4]="ddf".getBytes();
+        s[5]="1".getBytes();
+        s[6]="3".getBytes();
+        s[7]="5".getBytes();
+        s[8]="7".getBytes();
+        s[9]="9".getBytes();
         var d = new AtomicInteger(0);
         Supplier<byte[]> sp = () -> {
             try {
-                return s.get(d.getAndIncrement());
+                return s[d.getAndIncrement()];
             } catch (Exception e) {
                 return null;
             }
         };
 
-        var ll = System.nanoTime();
-        for (int i = 0; i < 10000; i++) {
-            ArrayFinder.indexOf(sp, "1".getBytes());
-            d.set(0);
-            ArrayFinder.indexOf(sp, "123456789".getBytes());
-            d.set(0);
-            ArrayFinder.indexOf(sp, "789".getBytes());
-            d.set(0);
-            ArrayFinder.indexOf(sp, "df".getBytes());
-            d.set(0);
-            ArrayFinder.indexOf(sp, "ijklmnopqrstu".getBytes());
-            d.set(0);
-            ArrayFinder.indexOf(sp, "?".getBytes());
-            d.set(0);
-            ArrayFinder.indexOf(sp, "3579".getBytes());
-            d.set(0);
-        }
+        for (int j = 0; j < 200; j++) {
+            var ll = System.nanoTime();
+            for (int i = 0; i < 20000; i++) {
+                ArrayFinder.indexOf(sp, "1".getBytes());
+                d.set(0);
+                ArrayFinder.indexOf(sp, "123456789".getBytes());
+                d.set(0);
+                ArrayFinder.indexOf(sp, "789".getBytes());
+                d.set(0);
+                ArrayFinder.indexOf(sp, "df".getBytes());
+                d.set(0);
+                ArrayFinder.indexOf(sp, "ijklmnopqrstu".getBytes());
+                d.set(0);
+                ArrayFinder.indexOf(sp, "?".getBytes());
+                d.set(0);
+                ArrayFinder.indexOf(sp, "3579".getBytes());
+                d.set(0);
+            }
 
-        System.out.println((System.nanoTime() - ll) / 1000_000);
+            System.out.println((System.nanoTime() - ll) / 1000_000);
+        }
 
         Assert.assertEquals(ArrayFinder.indexOf(sp, "1".getBytes()), 0);
         d.set(0);
