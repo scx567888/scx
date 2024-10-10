@@ -1,26 +1,13 @@
-/*
- * Copyright (c) 2022, 2024 Oracle and/or its affiliates.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package cool.scx.net.buffer;
 
-import io.helidon.common.buffers.BufferData;
 import io.helidon.common.buffers.Bytes;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -163,118 +150,6 @@ public class DataReader {
     }
 
     /**
-     * Read next buffer.
-     * Will read {@link #available()} number of bytes into a buffer and move position.
-     *
-     * @return buffer data wrapping the available bytes
-     */
-    public BufferData readBuffer() {
-        ensureAvailable();
-        int size = head.available();
-        BufferData result = BufferData.create(head.bytes, head.position, size);
-        skip(size);
-        return result;
-    }
-
-    /**
-     * Read next buffer of defined size. Will pull additional data if length is not available.
-     * Will move position.
-     *
-     * @param length length of data to read
-     * @return buffer data with the length requested
-     */
-    public BufferData readBuffer(int length) {
-        BufferData data = getBuffer(length); // TODO optimization - merge getChunk and skip into one loop; if required
-        skip(length);
-        return data;
-    }
-
-    /**
-     * Get the next buffer of the requested size without moving position.
-     *
-     * @param length bytes to read
-     * @return buffer data with the length requested
-     */
-    public BufferData getBuffer(int length) {
-        ensureAvailable(); // we have at least 1 byte
-        if (length <= head.available()) { // fast case
-            return new ReadOnlyArrayData(head.bytes, head.position, length);
-        } else {
-            List<BufferData> data = new ArrayList<>();
-            int remaining = length;
-            for (Node n = head; remaining > 0; n = n.next) {
-                int toAdd = Math.min(remaining, n.available());
-                data.add(new ReadOnlyArrayData(n.bytes, n.position, toAdd));
-                remaining -= toAdd;
-                if (remaining > 0 && n.next == null) {
-                    pullData();
-                }
-            }
-            return BufferData.create(data);
-        }
-    }
-
-    /**
-     * Read the next {@code len} bytes as a {@link LazyString}.
-     * This should be used for example for headers, where we want to materialize the string only when needed.
-     *
-     * @param charset character set to use
-     * @param len     number of bytes of the string
-     * @return lazy string
-     */
-    public LazyString readLazyString(Charset charset, int len) {
-        ensureAvailable(); // we have at least 1 byte
-        if (len <= head.available()) { // fast case
-            LazyString s = new LazyString(head.bytes, head.position, len, charset);
-            head.position += len;
-            return s;
-        } else {
-            byte[] b = new byte[len];
-            int remaining = len;
-            for (Node n = head; remaining > 0; n = n.next) {
-                ensureAvailable();
-                int toAdd = Math.min(remaining, n.available());
-                System.arraycopy(n.bytes, n.position, b, len - remaining, toAdd);
-                remaining -= toAdd;
-                n.position += toAdd;
-                if (remaining > 0 && n.next == null) {
-                    pullData();
-                }
-            }
-            return new LazyString(b, charset);
-        }
-    }
-
-    /**
-     * Read ascii string.
-     *
-     * @param len number of bytes of the string
-     * @return string value
-     */
-    public String readAsciiString(int len) {
-        ensureAvailable(); // we have at least 1 byte
-        if (len <= head.available()) { // fast case
-            String s = new String(head.bytes, head.position, len, StandardCharsets.US_ASCII);
-            head.position += len;
-            return s;
-        } else {
-            byte[] b = new byte[len];
-            int remaining = len;
-            for (Node n = head; remaining > 0; n = n.next) {
-                ensureAvailable();
-                int toAdd = Math.min(remaining, n.available());
-                System.arraycopy(n.bytes, n.position, b, len - remaining, toAdd);
-                remaining -= toAdd;
-                n.position += toAdd;
-                if (remaining > 0 && n.next == null) {
-                    pullData();
-                }
-            }
-            return new String(b, StandardCharsets.US_ASCII);
-        }
-    }
-
-    /**
      * Read byte array.
      *
      * @param len number of bytes of the string
@@ -317,63 +192,59 @@ public class DataReader {
         return s;
     }
 
-    /**
-     * Find the byte or next new line.
-     *
-     * @param b   - byte to find
-     * @param max - search limit
-     * @return i &gt; 0 - index;
-     *         i == max - not found;
-     *         i &lt; 0 - new line found at  (-i-1) position
-     * @throws io.helidon.common.buffers.DataReader.IncorrectNewLineException in case new line was incorrect (such as CR not before LF)
-     */
-    public int findOrNewLine(byte b, int max) throws IncorrectNewLineException {
+    private String readAsciiString(int i) {
+        return new String(readBytes(i));
+    }
+
+    public int findPattern(byte[] pattern, int max){
         ensureAvailable();
         int idx = 0;
         Node n = head;
+        int indexWithinNode = n.position;
+        int patternIndex = 0;
+
         while (true) {
             byte[] barr = n.bytes;
-            for (int i = n.position; i < barr.length && idx < max; i++, idx++) {
-                if (barr[i] == Bytes.LF_BYTE) {
-                    throw new IncorrectNewLineException("Found LF (" + idx + ") without preceding CR. :\n" + this.debugDataHex());
-                } else if (barr[i] == Bytes.CR_BYTE) {
-                    byte nextByte;
-                    if (i + 1 < barr.length) {
-                        nextByte = barr[i + 1];
-                    } else {
-                        nextByte = n.next().peek();
+            int maxLength = Math.min(max - idx, barr.length - indexWithinNode);
+
+            for (int i = indexWithinNode; i < indexWithinNode + maxLength; i++) {
+                if (barr[i] == pattern[patternIndex]) {
+                    patternIndex++;
+                    if (patternIndex == pattern.length) {
+                        return idx + i - n.position - pattern.length + 1;
                     }
-                    if (nextByte == Bytes.LF_BYTE) {
-                        return -idx - 1;
+                } else {
+                    // 回退索引
+                    for (int j = patternIndex - 1; j >= 0; j--) {
+                        if (barr[i] == pattern[j]) {
+                            patternIndex = j + 1;
+                            break;
+                        }
+                        if (j == 0) {
+                            patternIndex = 0;
+                        }
                     }
-                } else if (barr[i] == b) {
-                    return idx;
                 }
             }
-            if (idx == max) {
+
+            idx += maxLength;
+            if (idx >= max) {
                 return max;
             }
             n = n.next();
+            indexWithinNode = n.position;
         }
     }
 
-    /**
-     * Debug data as a hex string.
-     *
-     * @return hex string, including headers
-     */
-    public String debugDataHex() {
-        return getBuffer(available()).debugDataHex(true);
-    }
 
-    /**
-     * Find new line with the next n bytes.
-     *
-     * @param max length to search
-     * @return index of the new line, or max if not found
-     * @throws io.helidon.common.buffers.DataReader.IncorrectNewLineException in case there is a LF without CR,
-     *              or CR without a LF
-     */
+        /**
+         * Find new line with the next n bytes.
+         *
+         * @param max length to search
+         * @return index of the new line, or max if not found
+         * @throws io.helidon.common.buffers.DataReader.IncorrectNewLineException in case there is a LF without CR,
+         *              or CR without a LF
+         */
     public int findNewLine(int max) throws IncorrectNewLineException {
         ensureAvailable();
         int idx = 0;
@@ -506,4 +377,22 @@ public class DataReader {
             return bytes[position];
         }
     }
+
+    public static void main(String[] args) throws IOException {
+        InputStream inputStream = Files.newInputStream(Path.of("C:\\Users\\scx\\Desktop\\新建文本文档 (2).txt"));
+        DataReader d=new DataReader(()->{
+            try {
+                return inputStream.readNBytes(1);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        for (int i = 0; i < 10; ) {
+            var bytes = d.findNewLine(Integer.MAX_VALUE);
+            var bytes1 = d.findPattern("\r\n".getBytes(),Integer.MAX_VALUE);
+            System.out.println(bytes);
+        }
+        
+    }
+    
 }
