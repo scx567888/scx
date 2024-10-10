@@ -4,13 +4,9 @@ import io.helidon.common.buffers.Bytes;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.function.Supplier;
 
 /**
@@ -196,7 +192,7 @@ public class DataReader {
         return new String(readBytes(i));
     }
 
-    public int findPattern(byte[] pattern, int max){
+    public int find(byte[] pattern, int max) {
         ensureAvailable();
         int idx = 0;
         Node n = head;
@@ -236,15 +232,6 @@ public class DataReader {
         }
     }
 
-
-        /**
-         * Find new line with the next n bytes.
-         *
-         * @param max length to search
-         * @return index of the new line, or max if not found
-         * @throws io.helidon.common.buffers.DataReader.IncorrectNewLineException in case there is a LF without CR,
-         *              or CR without a LF
-         */
     public int findNewLine(int max) throws IncorrectNewLineException {
         ensureAvailable();
         int idx = 0;
@@ -259,7 +246,7 @@ public class DataReader {
             if (crIndex == -1) {
                 int lfIndex = Bytes.firstIndexOf(barr, indexWithinNode, indexWithinNode + maxLength, Bytes.LF_BYTE);
                 if (lfIndex != -1) {
-                  
+
                 }
                 // not found, continue with next buffer
                 idx += maxLength;
@@ -380,7 +367,7 @@ public class DataReader {
 
     public static void main(String[] args) throws IOException {
         InputStream inputStream = Files.newInputStream(Path.of("C:\\Users\\scx\\Desktop\\新建文本文档 (2).txt"));
-        DataReader d=new DataReader(()->{
+        DataReader d = new DataReader(() -> {
             try {
                 return inputStream.readNBytes(1);
             } catch (IOException e) {
@@ -389,10 +376,10 @@ public class DataReader {
         });
         for (int i = 0; i < 10; ) {
             var bytes = d.findNewLine(Integer.MAX_VALUE);
-            var bytes1 = d.findPattern("\r\n".getBytes(),Integer.MAX_VALUE);
+            var bytes1 = d.find("123".getBytes(), Integer.MAX_VALUE);
             System.out.println(bytes);
         }
-        
+
     }
-    
+
 }
