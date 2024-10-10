@@ -114,7 +114,7 @@ public class DataReader {
         return s;
     }
 
-    private String readAsciiString(int i) {
+    public String readAsciiString(int i) {
         return new String(readBytes(i));
     }
 
