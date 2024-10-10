@@ -3,7 +3,6 @@ package cool.scx.common.util.test;
 import cool.scx.common.util.ArrayFinder;
 import org.testng.Assert;
 
-import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
@@ -15,16 +14,16 @@ public class ArrayFinderTest {
 
     public static void test1() {
         var s = new byte[10][];
-        s[0]="1234567890".getBytes();
-        s[1]="abcdefghi".getBytes();
-        s[2]="jklmnopqrst".getBytes();
-        s[3]="uvwzyz".getBytes();
-        s[4]="ddf".getBytes();
-        s[5]="1".getBytes();
-        s[6]="3".getBytes();
-        s[7]="5".getBytes();
-        s[8]="7".getBytes();
-        s[9]="9".getBytes();
+        s[0] = "1234567890".getBytes();
+        s[1] = "abcdefghi".getBytes();
+        s[2] = "jklmnopqrst".getBytes();
+        s[3] = "uvwzyz".getBytes();
+        s[4] = "ddf".getBytes();
+        s[5] = "1".getBytes();
+        s[6] = "3".getBytes();
+        s[7] = "5".getBytes();
+        s[8] = "7".getBytes();
+        s[9] = "9".getBytes();
         var d = new AtomicInteger(0);
         Supplier<byte[]> sp = () -> {
             try {
