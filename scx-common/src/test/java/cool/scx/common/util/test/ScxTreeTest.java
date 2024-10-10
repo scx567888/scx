@@ -1,4 +1,4 @@
-package cool.scx.common.util.tree.test;
+package cool.scx.common.util.test;
 
 import cool.scx.common.util.tree.ScxTreeModel;
 import cool.scx.common.util.tree.ScxTreeUtils;
