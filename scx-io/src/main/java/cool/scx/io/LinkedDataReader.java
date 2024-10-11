@@ -25,11 +25,10 @@ public class LinkedDataReader implements DataReader {
         return a;
     }
 
-    public void pullData() {
+    public void pullData() throws NoMoreDataException {
         byte[] bytes = bytesSupplier.get();
         if (bytes == null) {
-//            throw new NoSuchElementException();
-            return;
+            throw new NoMoreDataException();
         }
         Node n = new Node(bytes);
         tail.next = n;
@@ -44,7 +43,6 @@ public class LinkedDataReader implements DataReader {
             head = head.next;
         }
     }
-
 
     @Override
     public byte read() {
