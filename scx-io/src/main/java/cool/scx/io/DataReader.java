@@ -14,7 +14,7 @@ public interface DataReader {
 
     /**
      * 读取字节 (指针会移动)
-     * 当没有更多的数据时会返回 null
+     * 当没有更多的数据时会抛出异常
      *
      * @param maxLength 最大长度
      * @return bytes
@@ -23,6 +23,7 @@ public interface DataReader {
 
     /**
      * 读取单个字节 (指针不会移动)
+     * 当没有更多的数据时会抛出异常
      *
      * @return byte
      */
@@ -30,6 +31,7 @@ public interface DataReader {
 
     /**
      * 读取指定长度字节 (指针不会移动)
+     * 当没有更多的数据时会抛出异常
      *
      * @return byte
      */
