@@ -325,8 +325,9 @@ public final class ArrayUtils {
 
     //************* indexOf START ***************
 
-    public static int indexOf(byte[] a, byte... a1) {
-        for (var i = 0; i <= a.length - a1.length; i = i + 1) {
+    public static int indexOf(byte[] a, int startPosition, int maxLength, byte... a1) {
+        var endIndex = Math.min(a.length, startPosition + maxLength) - a1.length;
+        for (var i = startPosition; i <= endIndex; i = i + 1) {
             var found = true;
             for (var j = 0; j < a1.length; j = j + 1) {
                 if (a[i + j] != a1[j]) {
@@ -341,8 +342,9 @@ public final class ArrayUtils {
         return -1;
     }
 
-    public static int indexOf(short[] a, short... a1) {
-        for (var i = 0; i <= a.length - a1.length; i = i + 1) {
+    public static int indexOf(short[] a, int startPosition, int maxLength, short... a1) {
+        var endIndex = Math.min(a.length, startPosition + maxLength) - a1.length;
+        for (var i = startPosition; i <= endIndex; i = i + 1) {
             var found = true;
             for (var j = 0; j < a1.length; j = j + 1) {
                 if (a[i + j] != a1[j]) {
@@ -357,8 +359,9 @@ public final class ArrayUtils {
         return -1;
     }
 
-    public static int indexOf(int[] a, int... a1) {
-        for (var i = 0; i <= a.length - a1.length; i = i + 1) {
+    public static int indexOf(int[] a, int startPosition, int maxLength, int... a1) {
+        var endIndex = Math.min(a.length, startPosition + maxLength) - a1.length;
+        for (var i = startPosition; i <= endIndex; i = i + 1) {
             var found = true;
             for (var j = 0; j < a1.length; j = j + 1) {
                 if (a[i + j] != a1[j]) {
@@ -373,8 +376,9 @@ public final class ArrayUtils {
         return -1;
     }
 
-    public static int indexOf(long[] a, long... a1) {
-        for (var i = 0; i <= a.length - a1.length; i = i + 1) {
+    public static int indexOf(long[] a, int startPosition, int maxLength, long... a1) {
+        var endIndex = Math.min(a.length, startPosition + maxLength) - a1.length;
+        for (var i = startPosition; i <= endIndex; i = i + 1) {
             var found = true;
             for (var j = 0; j < a1.length; j = j + 1) {
                 if (a[i + j] != a1[j]) {
@@ -389,8 +393,9 @@ public final class ArrayUtils {
         return -1;
     }
 
-    public static int indexOf(float[] a, float... a1) {
-        for (var i = 0; i <= a.length - a1.length; i = i + 1) {
+    public static int indexOf(float[] a, int startPosition, int maxLength, float... a1) {
+        var endIndex = Math.min(a.length, startPosition + maxLength) - a1.length;
+        for (var i = startPosition; i <= endIndex; i = i + 1) {
             var found = true;
             for (var j = 0; j < a1.length; j = j + 1) {
                 if (a[i + j] != a1[j]) {
@@ -405,8 +410,9 @@ public final class ArrayUtils {
         return -1;
     }
 
-    public static int indexOf(double[] a, double... a1) {
-        for (var i = 0; i <= a.length - a1.length; i = i + 1) {
+    public static int indexOf(double[] a, int startPosition, int maxLength, double... a1) {
+        var endIndex = Math.min(a.length, startPosition + maxLength) - a1.length;
+        for (var i = startPosition; i <= endIndex; i = i + 1) {
             var found = true;
             for (var j = 0; j < a1.length; j = j + 1) {
                 if (a[i + j] != a1[j]) {
@@ -421,8 +427,9 @@ public final class ArrayUtils {
         return -1;
     }
 
-    public static int indexOf(boolean[] a, boolean... a1) {
-        for (var i = 0; i <= a.length - a1.length; i = i + 1) {
+    public static int indexOf(boolean[] a, int startPosition, int maxLength, boolean... a1) {
+        var endIndex = Math.min(a.length, startPosition + maxLength) - a1.length;
+        for (var i = startPosition; i <= endIndex; i = i + 1) {
             var found = true;
             for (var j = 0; j < a1.length; j = j + 1) {
                 if (a[i + j] != a1[j]) {
@@ -437,8 +444,9 @@ public final class ArrayUtils {
         return -1;
     }
 
-    public static int indexOf(char[] a, char... a1) {
-        for (var i = 0; i <= a.length - a1.length; i = i + 1) {
+    public static int indexOf(char[] a, int startPosition, int maxLength, char... a1) {
+        var endIndex = Math.min(a.length, startPosition + maxLength) - a1.length;
+        for (var i = startPosition; i <= endIndex; i = i + 1) {
             var found = true;
             for (var j = 0; j < a1.length; j = j + 1) {
                 if (a[i + j] != a1[j]) {
@@ -453,8 +461,9 @@ public final class ArrayUtils {
         return -1;
     }
 
-    public static int indexOf(Object[] a, Object... a1) {
-        for (var i = 0; i <= a.length - a1.length; i = i + 1) {
+    public static int indexOf(Object[] a, int startPosition, int maxLength, Object... a1) {
+        var endIndex = Math.min(a.length, startPosition + maxLength) - a1.length;
+        for (var i = startPosition; i <= endIndex; i = i + 1) {
             var found = true;
             for (var j = 0; j < a1.length; j = j + 1) {
                 if (!Objects.equals(a[i + j], a1[j])) {
@@ -467,6 +476,42 @@ public final class ArrayUtils {
             }
         }
         return -1;
+    }
+
+    public static int indexOf(byte[] a, byte... a1) {
+        return indexOf(a, 0, a.length, a1);
+    }
+
+    public static int indexOf(short[] a, short... a1) {
+        return indexOf(a, 0, a.length, a1);
+    }
+
+    public static int indexOf(int[] a, int... a1) {
+        return indexOf(a, 0, a.length, a1);
+    }
+
+    public static int indexOf(long[] a, long... a1) {
+        return indexOf(a, 0, a.length, a1);
+    }
+
+    public static int indexOf(float[] a, float... a1) {
+        return indexOf(a, 0, a.length, a1);
+    }
+
+    public static int indexOf(double[] a, double... a1) {
+        return indexOf(a, 0, a.length, a1);
+    }
+
+    public static int indexOf(boolean[] a, boolean... a1) {
+        return indexOf(a, 0, a.length, a1);
+    }
+
+    public static int indexOf(char[] a, char... a1) {
+        return indexOf(a, 0, a.length, a1);
+    }
+
+    public static int indexOf(Object[] a, Object... a1) {
+        return indexOf(a, 0, a.length, a1);
     }
 
     //************* indexOf END ***************
