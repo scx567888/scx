@@ -9,25 +9,24 @@
         <version>3.1.7</version>
     </parent>
 
-    <artifactId>scx-jdbc</artifactId>
+    <artifactId>scx-io</artifactId>
     <packaging>jar</packaging>
 
-    <name>SCX JDBC</name>
+    <name>SCX IO</name>
     <url>https://github.com/scx567888/scx</url>
     <description>
-        SCX JDBC
+        SCX IO
     </description>
 
     <dependencies>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>scx-reflect</artifactId>
+            <artifactId>scx-http-helidon</artifactId>
             <version>${project.version}</version>
         </dependency>
 
-        <!-- ****************** 以下为测试依赖 ****************** -->
-
+        <!-- TestNG 测试包 -->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>

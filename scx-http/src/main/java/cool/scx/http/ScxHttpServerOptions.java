@@ -35,8 +35,9 @@ public class ScxHttpServerOptions {
         return tls;
     }
 
-    public void tls(Object tls) {
+    public ScxHttpServerOptions tls(Object tls) {
         this.tls = tls;
+        return this;
     }
 
     public long maxPayloadSize() {
