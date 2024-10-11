@@ -44,7 +44,7 @@ public interface DataReader {
      * @param b 指定字节
      * @return index 或者 -1 (未找到)
      */
-    int find(byte b);
+    int indexOf(byte b);
 
     /**
      * 查找 指定字节数组 第一次出现的 index (指针不会移动)
@@ -52,7 +52,7 @@ public interface DataReader {
      * @param b 指定字节数组
      * @return index 或者 -1 (未找到)
      */
-    int find(byte[] b);
+    int indexOf(byte[] b);
 
     /**
      * 向后移动指定字节
@@ -67,8 +67,8 @@ public interface DataReader {
      * @param b 指定字节
      * @return bytes
      */
-    default byte[] readFind(byte b) {
-        var index = find(b);
+    default byte[] readMatch(byte b) {
+        var index = indexOf(b);
         if (index == -1) {
             return null;
         }
@@ -81,8 +81,8 @@ public interface DataReader {
      * @param b 指定字节
      * @return bytes
      */
-    default byte[] readFind(byte[] b) {
-        var index = find(b);
+    default byte[] readMatch(byte[] b) {
+        var index = indexOf(b);
         if (index == -1) {
             return null;
         }

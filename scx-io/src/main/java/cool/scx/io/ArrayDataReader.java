@@ -56,12 +56,12 @@ public class ArrayDataReader implements DataReader {
     }
 
     @Override
-    public int find(byte b) {
+    public int indexOf(byte b) {
         return ArrayUtils.indexOf(bytes, position, bytes.length, b);
     }
 
     @Override
-    public int find(byte[] b) {
+    public int indexOf(byte[] b) {
         return ArrayUtils.indexOf(bytes, position, bytes.length, b);
     }
 
