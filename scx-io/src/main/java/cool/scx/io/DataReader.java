@@ -44,7 +44,7 @@ public interface DataReader {
      * @param b 指定字节
      * @return index 或者 -1 (未找到)
      */
-    int indexOf(byte b);
+    int indexOf(byte b) throws NoMatchFoundException;
 
     /**
      * 查找 指定字节数组 第一次出现的 index (指针不会移动)
@@ -52,7 +52,7 @@ public interface DataReader {
      * @param b 指定字节数组
      * @return index 或者 -1 (未找到)
      */
-    int indexOf(byte[] b);
+    int indexOf(byte[] b) throws NoMatchFoundException;
 
     /**
      * 向后移动指定字节
@@ -67,12 +67,11 @@ public interface DataReader {
      * @param b 指定字节
      * @return bytes
      */
-    default byte[] readMatch(byte b) {
+    default byte[] readMatch(byte b) throws NoMatchFoundException {
         var index = indexOf(b);
-        if (index == -1) {
-            return null;
-        }
-        return read(index);
+        var data = read(index);
+        skip(1);
+        return data;
     }
 
     /**
@@ -81,12 +80,11 @@ public interface DataReader {
      * @param b 指定字节
      * @return bytes
      */
-    default byte[] readMatch(byte[] b) {
+    default byte[] readMatch(byte[] b) throws NoMatchFoundException {
         var index = indexOf(b);
-        if (index == -1) {
-            return null;
-        }
-        return read(index);
+        var data = read(index);
+        skip(b.length);
+        return data;
     }
 
 }

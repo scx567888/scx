@@ -56,13 +56,21 @@ public class ArrayDataReader implements DataReader {
     }
 
     @Override
-    public int indexOf(byte b) {
-        return ArrayUtils.indexOf(bytes, position, bytes.length, b);
+    public int indexOf(byte b) throws NoMatchFoundException {
+        var index = ArrayUtils.indexOf(bytes, position, bytes.length, b);
+        if (index == -1) {
+            throw new NoMatchFoundException();
+        }
+        return index;
     }
 
     @Override
-    public int indexOf(byte[] b) {
-        return ArrayUtils.indexOf(bytes, position, bytes.length, b);
+    public int indexOf(byte[] b) throws NoMatchFoundException {
+        var index = ArrayUtils.indexOf(bytes, position, bytes.length, b);
+        if (index == -1) {
+            throw new NoMatchFoundException();
+        }
+        return index;
     }
 
     @Override
