@@ -48,6 +48,13 @@ public interface DataReader {
     int find(byte[] b);
 
     /**
+     * 向后移动指定字节
+     *
+     * @param length 移动长度
+     */
+    void skip(int length);
+
+    /**
      * 读取 直到 找到匹配的字节 (指针会移动)
      *
      * @param b 指定字节
@@ -74,12 +81,5 @@ public interface DataReader {
         }
         return read(index);
     }
-
-    /**
-     * 向后移动指定字节
-     *
-     * @param length 移动长度
-     */
-    void skip(int length);
 
 }
