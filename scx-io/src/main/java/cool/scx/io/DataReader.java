@@ -6,6 +6,7 @@ import io.helidon.common.buffers.Bytes;
 import java.util.Arrays;
 import java.util.function.Supplier;
 
+
 public class DataReader {
 
     private final Supplier<byte[]> bytesSupplier;
@@ -92,7 +93,7 @@ public class DataReader {
      *
      * @return next byte
      */
-    public byte lookup() {
+    public byte get() {
         ensureAvailable();
         return head.bytes[head.position];
     }
@@ -117,20 +118,6 @@ public class DataReader {
             }
             return true;
         }
-    }
-
-    /**
-     * Read next buffer.
-     * Will read {@link #available()} number of bytes into a buffer and move position.
-     *
-     * @return buffer data wrapping the available bytes
-     */
-    public BufferData readBuffer() {
-        ensureAvailable();
-        int size = head.available();
-        BufferData result = BufferData.create(head.bytes, head.position, size);
-        skip(size);
-        return result;
     }
 
     public byte[] readBytes1(int len) {
@@ -197,40 +184,24 @@ public class DataReader {
     }
 
     /**
-     * Find the byte or next new line.
+     * Find the byte
      *
-     * @param b   - byte to find
-     * @param max - search limit
+     * @param b - byte to find
      * @return i &gt; 0 - index;
      * i == max - not found;
      * i &lt; 0 - new line found at  (-i-1) position
      * @throws io.helidon.common.buffers.DataReader.IncorrectNewLineException in case new line was incorrect (such as CR not before LF)
      */
-    public int findOrNewLine(byte b, int max) throws IncorrectNewLineException {
+    public int find(byte b) throws IncorrectNewLineException {
         ensureAvailable();
         int idx = 0;
         Node n = head;
         while (true) {
             byte[] barr = n.bytes;
-            for (int i = n.position; i < barr.length && idx < max; i++, idx++) {
-                if (barr[i] == Bytes.LF_BYTE) {
-                    throw new IncorrectNewLineException("Found LF (" + idx + ") without preceding CR. :\n");
-                } else if (barr[i] == Bytes.CR_BYTE) {
-                    byte nextByte;
-                    if (i + 1 < barr.length) {
-                        nextByte = barr[i + 1];
-                    } else {
-                        nextByte = n.next().peek();
-                    }
-                    if (nextByte == Bytes.LF_BYTE) {
-                        return -idx - 1;
-                    }
-                } else if (barr[i] == b) {
+            for (int i = n.position; i < barr.length; i++, idx++) {
+                if (barr[i] == b) {
                     return idx;
                 }
-            }
-            if (idx == max) {
-                return max;
             }
             n = n.next();
         }
