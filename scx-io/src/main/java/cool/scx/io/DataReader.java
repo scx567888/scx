@@ -6,32 +6,34 @@ public interface DataReader {
 
     /**
      * 读取单个字节 (指针会移动)
+     * 当没有更多的数据时会抛出异常
      *
      * @return byte
      */
-    byte read();
+    byte read() throws NoMoreDataException;
 
     /**
-     * 读取指定长度字节 (指针会移动)
+     * 读取字节 (指针会移动)
+     * 当没有更多的数据时会返回 null
      *
-     * @param length 长度
+     * @param maxLength 最大长度
      * @return bytes
      */
-    byte[] read(int length);
+    byte[] read(int maxLength) throws NoMoreDataException;
 
     /**
      * 读取单个字节 (指针不会移动)
      *
      * @return byte
      */
-    byte get();
+    byte get() throws NoMoreDataException;
 
     /**
      * 读取指定长度字节 (指针不会移动)
      *
      * @return byte
      */
-    byte[] get(int length);
+    byte[] get(int length) throws NoMoreDataException;
 
     /**
      * 查找 指定字节 第一次出现的 index (指针不会移动)
