@@ -23,7 +23,15 @@ public class ArrayDataReader implements DataReader {
 
     @Override
     public byte[] read(int maxLength) throws NoMoreDataException {
-        return new byte[0];
+        int availableLength = bytes.length - position;
+        if (availableLength <= 0) {
+            throw new NoMoreDataException();
+        }
+        int actualLength = Math.min(maxLength, availableLength);
+        byte[] result = new byte[actualLength];
+        System.arraycopy(bytes, position, result, 0, actualLength);
+        position += actualLength;
+        return result;
     }
 
     @Override
@@ -36,23 +44,30 @@ public class ArrayDataReader implements DataReader {
     }
 
     @Override
-    public byte[] get(int length) throws NoMoreDataException {
-        return new byte[0];
+    public byte[] get(int maxLength) throws NoMoreDataException {
+        int availableLength = bytes.length - position;
+        if (availableLength <= 0) {
+            throw new NoMoreDataException();
+        }
+        int actualLength = Math.min(maxLength, availableLength);
+        byte[] result = new byte[actualLength];
+        System.arraycopy(bytes, position, result, 0, actualLength);
+        return result;
     }
 
     @Override
     public int find(byte b) {
-        return ArrayUtils.indexOf(bytes, b);
+        return ArrayUtils.indexOf(bytes, position, bytes.length, b);
     }
 
     @Override
     public int find(byte[] b) {
-        return ArrayUtils.indexOf(bytes, b);
+        return ArrayUtils.indexOf(bytes, position, bytes.length, b);
     }
 
     @Override
     public void skip(int length) {
         this.position += length;
     }
-    
+
 }

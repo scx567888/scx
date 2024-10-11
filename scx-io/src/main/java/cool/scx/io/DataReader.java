@@ -33,9 +33,10 @@ public interface DataReader {
      * 读取指定长度字节 (指针不会移动)
      * 当没有更多的数据时会抛出异常
      *
+     * @param maxLength 最大长度
      * @return byte
      */
-    byte[] get(int length) throws NoMoreDataException;
+    byte[] get(int maxLength) throws NoMoreDataException;
 
     /**
      * 查找 指定字节 第一次出现的 index (指针不会移动)
