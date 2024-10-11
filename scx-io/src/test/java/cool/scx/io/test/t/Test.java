@@ -1,6 +1,6 @@
-package cool.scx.io.test;
+package cool.scx.io.test.t;
 
-import cool.scx.io.DataReader;
+import cool.scx.io.LinkedDataReader;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,17 +23,17 @@ public class Test {
 
     public static void test1() {
         var is=getTestInputStream();
-        DataReader dataReader=new DataReader(()->{
+        LinkedDataReader dataReader=new LinkedDataReader(()->{
             try {
                 return is.readNBytes(1);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         });
-        byte[] bytes = dataReader.readBytes1(10);
-        byte[] bytes1 = dataReader.readBytes1(10);
-        System.out.println(new String(bytes));
-        System.out.println(new String(bytes1));
+//        byte[] bytes = dataReader.readBytes1(10);
+//        byte[] bytes1 = dataReader.readBytes1(10);
+//        System.out.println(new String(bytes));
+//        System.out.println(new String(bytes1));
     }
 
 }

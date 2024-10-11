@@ -1,10 +1,9 @@
 package cool.scx.io;
 
 import java.util.Arrays;
-import java.util.NoSuchElementException;
 import java.util.function.Supplier;
 
-
+//todo 实现所有功能
 public class LinkedDataReader implements DataReader {
 
     private final Supplier<byte[]> bytesSupplier;
@@ -111,7 +110,7 @@ public class LinkedDataReader implements DataReader {
     }
 
     @Override
-    public int find(byte b) {
+    public int indexOf(byte b) {
         ensureAvailable();
         int idx = 0;
         Node n = head;
@@ -127,7 +126,7 @@ public class LinkedDataReader implements DataReader {
     }
 
     @Override
-    public int find(byte[] b) {
+    public int indexOf(byte[] b) {
         throw new UnsupportedOperationException();
     }
 
