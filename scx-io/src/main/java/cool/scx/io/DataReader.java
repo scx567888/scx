@@ -87,4 +87,26 @@ public interface DataReader {
         return data;
     }
 
+    /**
+     * 读取 直到 找到匹配的字节 (指针不会移动)
+     *
+     * @param b 指定字节
+     * @return bytes
+     */
+    default byte[] getMatch(byte b) throws NoMatchFoundException {
+        var index = indexOf(b);
+        return get(index);
+    }
+
+    /**
+     * 读取 直到 找到匹配的字节 (指针不会移动)
+     *
+     * @param b 指定字节
+     * @return bytes
+     */
+    default byte[] getMatch(byte[] b) throws NoMatchFoundException {
+        var index = indexOf(b);
+        return get(index);
+    }
+
 }
