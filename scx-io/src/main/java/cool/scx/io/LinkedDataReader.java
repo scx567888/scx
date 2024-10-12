@@ -1,5 +1,7 @@
 package cool.scx.io;
 
+import cool.scx.common.util.ArrayUtils;
+
 import java.util.Arrays;
 import java.util.function.Supplier;
 
@@ -127,8 +129,30 @@ public class LinkedDataReader implements DataReader {
 
     @Override
     public int indexOf(byte b) throws NoMatchFoundException {
-        return 0;
+        var index = 0;
+
+        var n = head;
+
+        while (n != null) {
+            int pos = ArrayUtils.indexOf(n.bytes, n.position, n.bytes.length - n.position, b);
+            if (pos != -1) {
+                return index + (pos - n.position);
+            }
+            index += n.bytes.length - n.position;
+
+            // 如果 currentNode 没有下一个节点并且尝试拉取数据失败，直接退出循环
+            if (n.next == null) {
+                var moreData = pullData();
+                if (!moreData) {
+                    break;
+                }
+            }
+            n = n.next;
+        }
+
+        throw new NoMatchFoundException();
     }
+
 
     @Override
     public int indexOf(byte[] b) throws NoMatchFoundException {
