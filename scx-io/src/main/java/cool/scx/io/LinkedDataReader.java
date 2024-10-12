@@ -179,7 +179,8 @@ public class LinkedDataReader implements DataReader {
                 }
 
                 if (patternIndex == pattern.length) {
-                    return index + (i - patternIndex + 1);
+                    // i - n.position 的意义在于我们不需要包含当前 节点的偏移量 所以减去
+                    return index + (i - n.position - patternIndex + 1);
                 }
             }
             index += n.bytes.length - n.position;

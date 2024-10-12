@@ -26,6 +26,12 @@
             <version>${project.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>scx-io</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <!-- 解析 MultiPart -->
         <dependency>
             <groupId>org.apache.commons</groupId>
