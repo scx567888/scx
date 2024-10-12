@@ -49,7 +49,7 @@ public class LinkedDataReader implements DataReader {
         ensureAvailable(); // 确保至少有一个字节可读
         var result = new byte[maxLength];
         var remaining = maxLength; //剩余字节数
-        
+
         var n = head; //循环用节点
         //循环有两种情况会退出 1, 已经读取到足够的数据 2, 没有更多数据可读了 
         while (remaining > 0) {
@@ -59,7 +59,7 @@ public class LinkedDataReader implements DataReader {
             System.arraycopy(n.bytes, n.position, result, maxLength - remaining, toAdd);
             // 计算剩余字节数
             remaining -= toAdd;
-            // 移动当前节点的指针位置
+            // 同时移动当前节点的指针位置
             n.position += toAdd;
 
             // 如果 remaining > 0 说明还需要继续读取 
@@ -72,10 +72,9 @@ public class LinkedDataReader implements DataReader {
                     if (!moreData) {
                         break;
                     }
-                    head = head.next(); // 更新 head 节点
                 }
-                //更新 n 节点 进行下一次循环
-                n = n.next;
+                //更新 n 节点 的同时更新 head 节点 然后进行下一次循环
+                head = n = n.next;
             }
         }
 
