@@ -16,127 +16,117 @@ public class LinkedDataReader implements DataReader {
         this.tail = this.head;
     }
 
-    public int available() {
-        int a = 0;
-        for (Node n = head; n != null; n = n.next) {
-            a += n.available();
-        }
-        return a;
-    }
-
-    public void pullData() throws NoMoreDataException {
-        byte[] bytes = bytesSupplier.get();
+    public boolean pullData() {
+        var bytes = bytesSupplier.get();
         if (bytes == null) {
-            throw new NoMoreDataException();
+            return false;
         }
-        Node n = new Node(bytes);
-        tail.next = n;
-        tail = n;
+        tail.next = new Node(bytes);
+        tail = tail.next;
+        return true;
     }
 
     public void ensureAvailable() {
         while (!head.hasAvailable()) {
             if (head.next == null) {
-                pullData();
+                var b = pullData();
+                if (!b) {
+                    throw new NoMoreDataException();
+                }
             }
             head = head.next;
         }
     }
 
     @Override
-    public byte read() {
+    public byte read() throws NoMoreDataException {
         ensureAvailable();
         return head.bytes[head.position++];
     }
 
     @Override
-    public byte[] read(int len) {
-        ensureAvailable(); // we have at least 1 byte
-        byte[] b = new byte[len];
+    public byte[] read(int maxLength) throws NoMoreDataException {
+        ensureAvailable();
+        
+        byte[] result = new byte[maxLength];
+        int bytesRead = 0;
+        
+        while (bytesRead < maxLength) {
+            int available = head.available();
+            int lengthToRead = Math.min(available, maxLength - bytesRead);
+            System.arraycopy(head.bytes, head.position, result, bytesRead, lengthToRead);
+            head.position += lengthToRead;
+            bytesRead += lengthToRead;
 
-        if (len <= head.available()) { // fast case
-            System.arraycopy(head.bytes, head.position, b, 0, len);
-            head.position += len;
-            return b;
-        } else {
-            int remaining = len;
-            for (Node n = head; remaining > 0; n = n.next) {
-                ensureAvailable();
-                int toAdd = Math.min(remaining, n.available());
-                System.arraycopy(n.bytes, n.position, b, len - remaining, toAdd);
-                remaining -= toAdd;
-                n.position += toAdd;
-                if (remaining > 0 && n.next == null) {
-                    pullData();
+            if (!head.hasAvailable()) {
+                if (head.next == null) {
+                    var b = pullData();
+                    if (!b) {
+                        break;
+                    }
                 }
+                head = head.next();
             }
-            return b;
+            
         }
-    }
-
-    //todo 另一种 read 的实现 性能待测试
-    public byte[] read1(int len) {
-        var data = get(len);
-        skip(len);
-        return data;
+        return bytesRead == maxLength ? result : Arrays.copyOf(result, bytesRead);
     }
 
     @Override
-    public byte get() {
+    public byte get() throws NoMoreDataException {
         ensureAvailable();
         return head.bytes[head.position];
     }
 
     @Override
-    public byte[] get(int len) {
-        ensureAvailable(); // we have at least 1 byte
-        byte[] b = new byte[len];
-
-        if (len <= head.available()) { // fast case
-            System.arraycopy(head.bytes, head.position, b, 0, len);
-            return b;
-        } else {
-            int remaining = len;
-            for (Node n = head; remaining > 0; n = n.next) {
-                int toAdd = Math.min(remaining, n.available());
-                System.arraycopy(n.bytes, n.position, b, len - remaining, toAdd);
-                remaining -= toAdd;
-                if (remaining > 0 && n.next == null) {
-                    pullData();
-                }
-            }
-            return b;
-        }
-    }
-
-    @Override
-    public int indexOf(byte b) {
+    public byte[] get(int maxLength) throws NoMoreDataException {
         ensureAvailable();
-        int idx = 0;
-        Node n = head;
-        while (n != null) {
-            for (int i = n.position; i < n.bytes.length; i++, idx++) {
-                if (n.bytes[i] == b) {
-                    return idx;
+        
+        byte[] result = new byte[maxLength];
+        int bytesRead = 0;
+        
+        Node currentNode = head;
+        int currentPosition = head.position;
+
+        while (bytesRead < maxLength) {
+            int available = currentNode.bytes.length - currentPosition;
+            int lengthToRead = Math.min(available, maxLength - bytesRead);
+            System.arraycopy(currentNode.bytes, currentPosition, result, bytesRead, lengthToRead);
+            currentPosition += lengthToRead;
+            bytesRead += lengthToRead;
+
+            if (currentPosition >= currentNode.bytes.length) {
+                if (currentNode.next == null ) {
+                    var b= pullData();
+                    if (!b) {
+                        break;
+                    }
                 }
+                currentNode = currentNode.next();
+                currentPosition = currentNode.position;
             }
-            n = n.next();
+
         }
-        return -1;
+
+        return bytesRead == maxLength ? result : Arrays.copyOf(result, bytesRead);
+    }
+
+
+    @Override
+    public int indexOf(byte b) throws NoMatchFoundException {
+        return 0;
     }
 
     @Override
-    public int indexOf(byte[] b) {
-        throw new UnsupportedOperationException();
+    public int indexOf(byte[] b) throws NoMatchFoundException {
+        return 0;
     }
 
     @Override
-    public void skip(int lenToSkip) {
-        while (lenToSkip > 0) {
-            ensureAvailable();
-            lenToSkip = head.skip(lenToSkip);
-        }
+    public void skip(int length) {
+
     }
+
 
     private class Node {
         private final byte[] bytes;
