@@ -4,6 +4,7 @@ import cool.scx.http.MediaType;
 import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.content_type.ContentType;
 import cool.scx.http.media.multi_part.*;
+import org.testng.annotations.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -14,6 +15,7 @@ public class MultiPartTest {
         test1();
     }
 
+    @Test
     public static void test1() {
         var multipart = MultiPart.of("wwwwwwwwww");
         multipart.add("name", "123");
