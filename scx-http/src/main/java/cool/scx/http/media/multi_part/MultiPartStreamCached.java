@@ -19,13 +19,13 @@ import java.util.NoSuchElementException;
 
 public class MultiPartStreamCached implements MultiPart, Iterator<MultiPartPart> {
 
+    private static final byte[] CRLF_CRLF_BYTES = "\r\n\r\n".getBytes();
     private final Path cachePath;
     private final LinkedDataReader linkedDataReader;
-    private boolean hasNextPart;
-    private String boundary;
     private final byte[] boundaryHeadCRLFBytes;
     private final byte[] boundaryENDBytes;
-    private static final byte[] CRLF_CRLF_BYTES = "\r\n\r\n".getBytes();
+    private boolean hasNextPart;
+    private String boundary;
 
     public MultiPartStreamCached(InputStream inputStream, String boundary, Path cachePath) {
         this.cachePath = cachePath;
@@ -34,6 +34,16 @@ public class MultiPartStreamCached implements MultiPart, Iterator<MultiPartPart>
         this.boundaryENDBytes = ArrayUtils.concat(boundaryHeadBytes, "--".getBytes());
         this.linkedDataReader = new LinkedDataReader(new InputStreamDataSupplier(inputStream));
         hasNextPart = readNext(linkedDataReader);
+    }
+
+    public static boolean needCached(ScxHttpHeaders headers) {
+        //根据是否存在文件名来假定上传的不是文件 只有文件才缓存
+        var contentDisposition = headers.contentDisposition();
+        if (contentDisposition == null) {
+            return false;
+        }
+        var filename = contentDisposition.filename();
+        return filename != null;
     }
 
     public ScxHttpHeadersWritable readToHeaders(LinkedDataReader multipartStream) throws MultipartInput.MalformedStreamException, FileUploadSizeException {
@@ -76,22 +86,12 @@ public class MultiPartStreamCached implements MultiPart, Iterator<MultiPartPart>
         }
     }
 
-    public static boolean needCached(ScxHttpHeaders headers) {
-        //根据是否存在文件名来假定上传的不是文件 只有文件才缓存
-        var contentDisposition = headers.contentDisposition();
-        if (contentDisposition == null) {
-            return false;
-        }
-        var filename = contentDisposition.filename();
-        return filename != null;
-    }
-
     public Path readContentToPath(LinkedDataReader multipartStream, Path path) throws IOException {
         //保证一定有目录
         Files.createDirectories(path.getParent());
         var output = Files.newOutputStream(path);
-        
-        try (output){
+
+        try (output) {
             //我们需要查找终结点 先假设不是最后一个 那我们就需要查找下一个开始位置 
             try {
                 var i = multipartStream.indexOf(boundaryHeadCRLFBytes);
@@ -107,7 +107,7 @@ public class MultiPartStreamCached implements MultiPart, Iterator<MultiPartPart>
                 multipartStream.skip(2);
             }
         }
-       
+
         return path;
     }
 

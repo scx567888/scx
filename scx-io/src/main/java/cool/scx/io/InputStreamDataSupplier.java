@@ -29,5 +29,5 @@ public class InputStreamDataSupplier implements Supplier<byte[]> {
             throw new UncheckedIOException(e);
         }
     }
-    
+
 }

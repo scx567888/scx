@@ -16,12 +16,12 @@ import java.util.NoSuchElementException;
 
 public class MultiPartStream implements MultiPart, Iterator<MultiPartPart> {
 
+    private static final byte[] CRLF_CRLF_BYTES = "\r\n\r\n".getBytes();
     private final LinkedDataReader linkedDataReader;
-    private boolean hasNextPart;
-    private String boundary;
     private final byte[] boundaryHeadCRLFBytes;
     private final byte[] boundaryENDBytes;
-    private static final byte[] CRLF_CRLF_BYTES = "\r\n\r\n".getBytes();
+    private boolean hasNextPart;
+    private String boundary;
 
     public MultiPartStream(InputStream inputStream, String boundary) {
         var boundaryHeadBytes = ArrayUtils.concat("--".getBytes(), boundary.getBytes());
