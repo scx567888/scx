@@ -16,7 +16,7 @@ public class ByteArrayDataReader implements DataReader {
     public byte read() throws NoMoreDataException {
         try {
             return bytes[position++];
-        } catch (Exception e) {
+        } catch (ArrayIndexOutOfBoundsException e) {
             throw new NoMoreDataException();
         }
     }
@@ -38,7 +38,7 @@ public class ByteArrayDataReader implements DataReader {
     public byte get() throws NoMoreDataException {
         try {
             return bytes[position];
-        } catch (Exception e) {
+        } catch (ArrayIndexOutOfBoundsException e) {
             throw new NoMoreDataException();
         }
     }
