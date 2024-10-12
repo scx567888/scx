@@ -5,7 +5,8 @@ import cool.scx.common.util.ArrayUtils;
 import java.util.Arrays;
 import java.util.function.Supplier;
 
-//todo 实现所有功能
+import static cool.scx.io.Helper.computeLPSArray;
+
 public class LinkedDataReader implements DataReader {
 
     private final Supplier<byte[]> bytesSupplier;
@@ -134,6 +135,7 @@ public class LinkedDataReader implements DataReader {
         var n = head;
 
         while (n != null) {
+            //普通查找
             int pos = ArrayUtils.indexOf(n.bytes, n.position, n.bytes.length - n.position, b);
             if (pos != -1) {
                 return index + (pos - n.position);
@@ -155,8 +157,44 @@ public class LinkedDataReader implements DataReader {
 
 
     @Override
-    public int indexOf(byte[] b) throws NoMatchFoundException {
-        return 0;
+    public int indexOf(byte[] pattern) throws NoMatchFoundException {
+        var index = 0; // 主串索引
+
+        var n = head;
+
+        // 创建部分匹配表
+        int[] lps = computeLPSArray(pattern);
+
+        int patternIndex = 0; // 模式串索引
+
+        while (n != null) {
+            //KMP 查找
+            for (int i = n.position; i < n.bytes.length; i++) {
+                while (patternIndex > 0 && n.bytes[i] != pattern[patternIndex]) {
+                    patternIndex = lps[patternIndex - 1];
+                }
+
+                if (n.bytes[i] == pattern[patternIndex]) {
+                    patternIndex++;
+                }
+
+                if (patternIndex == pattern.length) {
+                    return index + (i - patternIndex + 1);
+                }
+            }
+            index += n.bytes.length - n.position;
+
+            // 如果 currentNode 没有下一个节点并且尝试拉取数据失败，直接退出循环
+            if (n.next == null) {
+                var moreData = pullData();
+                if (!moreData) {
+                    break;
+                }
+            }
+            n = n.next;
+        }
+
+        throw new NoMatchFoundException();
     }
 
     @Override
