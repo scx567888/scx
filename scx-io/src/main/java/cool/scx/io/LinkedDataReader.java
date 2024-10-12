@@ -46,30 +46,41 @@ public class LinkedDataReader implements DataReader {
 
     @Override
     public byte[] read(int maxLength) throws NoMoreDataException {
-        ensureAvailable();
+        ensureAvailable(); // 确保至少有一个字节可读
+        var result = new byte[maxLength];
+        var remaining = maxLength; //剩余字节数
         
-        byte[] result = new byte[maxLength];
-        int bytesRead = 0;
-        
-        while (bytesRead < maxLength) {
-            int available = head.available();
-            int lengthToRead = Math.min(available, maxLength - bytesRead);
-            System.arraycopy(head.bytes, head.position, result, bytesRead, lengthToRead);
-            head.position += lengthToRead;
-            bytesRead += lengthToRead;
+        var n = head; //循环用节点
+        //循环有两种情况会退出 1, 已经读取到足够的数据 2, 没有更多数据可读了 
+        while (remaining > 0) {
+            // 计算当前节点能够读取的长度 
+            var toAdd = Math.min(remaining, n.available());
+            // 写入到 result 中
+            System.arraycopy(n.bytes, n.position, result, maxLength - remaining, toAdd);
+            // 计算剩余字节数
+            remaining -= toAdd;
+            // 移动当前节点的指针位置
+            n.position += toAdd;
 
-            if (!head.hasAvailable()) {
-                if (head.next == null) {
-                    var b = pullData();
-                    if (!b) {
+            // 如果 remaining > 0 说明还需要继续读取 
+            // 但是 我们在上边的代码是一定会将 当前节点全部读完的 所以这里我们需要向后移动节点
+            if (remaining > 0) {
+                // 如果 当前节点没有下一个节点 则尝试拉取下一个节点
+                if (n.next == null) {
+                    var moreData = pullData();
+                    //如果拉取失败 直接跳出循环
+                    if (!moreData) {
                         break;
                     }
+                    head = head.next(); // 更新 head 节点
                 }
-                head = head.next();
+                //更新 n 节点 进行下一次循环
+                n = n.next;
             }
-            
         }
-        return bytesRead == maxLength ? result : Arrays.copyOf(result, bytesRead);
+
+        return remaining == 0 ? result : Arrays.copyOf(result, maxLength - remaining);
+
     }
 
     @Override
@@ -80,35 +91,38 @@ public class LinkedDataReader implements DataReader {
 
     @Override
     public byte[] get(int maxLength) throws NoMoreDataException {
-        ensureAvailable();
-        
-        byte[] result = new byte[maxLength];
-        int bytesRead = 0;
-        
-        Node currentNode = head;
-        int currentPosition = head.position;
+        ensureAvailable(); // 确保至少有一个字节可读
+        var result = new byte[maxLength];
+        var remaining = maxLength; //剩余字节数
 
-        while (bytesRead < maxLength) {
-            int available = currentNode.bytes.length - currentPosition;
-            int lengthToRead = Math.min(available, maxLength - bytesRead);
-            System.arraycopy(currentNode.bytes, currentPosition, result, bytesRead, lengthToRead);
-            currentPosition += lengthToRead;
-            bytesRead += lengthToRead;
+        var n = head; //循环用节点
+        //循环有两种情况会退出 1, 已经读取到足够的数据 2, 没有更多数据可读了 
+        while (remaining > 0) {
+            // 计算当前节点能够读取的长度 
+            var toAdd = Math.min(remaining, n.available());
+            // 写入到 result 中
+            System.arraycopy(n.bytes, n.position, result, maxLength - remaining, toAdd);
+            // 计算剩余字节数
+            remaining -= toAdd;
 
-            if (currentPosition >= currentNode.bytes.length) {
-                if (currentNode.next == null ) {
-                    var b= pullData();
-                    if (!b) {
+            // 如果 remaining > 0 说明还需要继续读取 
+            // 但是 我们在上边的代码是一定会将 当前节点全部读完的 所以这里我们需要向后移动节点
+            if (remaining > 0) {
+                // 如果 当前节点没有下一个节点 则尝试拉取下一个节点
+                if (n.next == null) {
+                    var moreData = pullData();
+                    //如果拉取失败 直接跳出循环
+                    if (!moreData) {
                         break;
                     }
                 }
-                currentNode = currentNode.next();
-                currentPosition = currentNode.position;
+                //更新 n 节点 进行下一次循环
+                n = n.next;
             }
-
         }
 
-        return bytesRead == maxLength ? result : Arrays.copyOf(result, bytesRead);
+        return remaining == 0 ? result : Arrays.copyOf(result, maxLength - remaining);
+
     }
 
 
@@ -124,9 +138,12 @@ public class LinkedDataReader implements DataReader {
 
     @Override
     public void skip(int length) {
-
+        //todo 
+        while (length > 0) {
+            ensureAvailable();
+            length = head.skip(length);
+        }
     }
-
 
     private class Node {
         private final byte[] bytes;
