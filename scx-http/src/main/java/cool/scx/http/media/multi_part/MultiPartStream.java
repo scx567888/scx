@@ -28,7 +28,7 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart> {
         this.boundaryHeadCRLFBytes = ArrayUtils.concat(boundaryHeadBytes, "\r\n".getBytes());
         this.boundaryENDBytes = ArrayUtils.concat(boundaryHeadBytes, "--".getBytes());
         this.linkedDataReader = new LinkedDataReader(new InputStreamDataSupplier(inputStream));
-        hasNextPart = readNext(linkedDataReader);
+        this.hasNextPart = readNext();
     }
 
     public ScxHttpHeadersWritable readToHeaders() throws MultipartInput.MalformedStreamException, FileUploadSizeException {
