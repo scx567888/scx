@@ -3,10 +3,7 @@ package cool.scx.http.test;
 import cool.scx.http.MediaType;
 import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.content_type.ContentType;
-import cool.scx.http.media.multi_part.MultiPart;
-import cool.scx.http.media.multi_part.MultiPartPart;
-import cool.scx.http.media.multi_part.MultiPartStreamCachedReader;
-import cool.scx.http.media.multi_part.MultiPartWriter;
+import cool.scx.http.media.multi_part.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -39,7 +36,7 @@ public class MultiPartTest {
 
 
         long l = System.nanoTime();
-        for (int j = 0; j < 10; j++) {
+        for (int j = 0; j < 9999; j++) {
 
             var i = new MultiPartStreamCachedReader();
 
@@ -47,11 +44,26 @@ public class MultiPartTest {
             MultiPart read = i.read(s, ScxHttpHeaders.of().contentType(ContentType.of(MediaType.MULTIPART_FORM_DATA).boundary("wwwwwwwwww")));
 
             for (MultiPartPart multiPartPart : read) {
-                System.out.println(multiPartPart.name() + " : " + multiPartPart.asBytes().length);
+//                System.out.println(multiPartPart.name() + " : " + multiPartPart.asBytes().length);
             }
 
         }
         System.out.println((System.nanoTime() - l) / 1000_000);
+
+        long l1 = System.nanoTime();
+        for (int j = 0; j < 9999; j++) {
+
+            var i = new MultiPartStreamReader();
+
+            var s = new ByteArrayInputStream(byteArray);
+            MultiPart read = i.read(s, ScxHttpHeaders.of().contentType(ContentType.of(MediaType.MULTIPART_FORM_DATA).boundary("wwwwwwwwww")));
+
+            for (MultiPartPart multiPartPart : read) {
+//                System.out.println(multiPartPart.name() + " : " + multiPartPart.asBytes().length);
+            }
+
+        }
+        System.out.println((System.nanoTime() - l1) / 1000_000);
 
 
     }
