@@ -26,10 +26,10 @@
             <version>${project.version}</version>
         </dependency>
 
-        <!-- 解析 MultiPart -->
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-fileupload2-core</artifactId>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>scx-io</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <!-- ****************** 以下为测试依赖 ****************** -->

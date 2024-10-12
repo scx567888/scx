@@ -22,7 +22,7 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>scx-http-helidon</artifactId>
+            <artifactId>scx-common</artifactId>
             <version>${project.version}</version>
         </dependency>
 
