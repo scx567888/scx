@@ -31,40 +31,40 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart> {
         hasNextPart = readNext(linkedDataReader);
     }
 
-    public ScxHttpHeadersWritable readToHeaders(LinkedDataReader multipartStream) throws MultipartInput.MalformedStreamException, FileUploadSizeException {
+    public ScxHttpHeadersWritable readToHeaders() throws MultipartInput.MalformedStreamException, FileUploadSizeException {
         // head 的终结点是 连续两个换行符 具体格式 如下
         // head /r/n
         // /r/n
         // content
-        var headersBytes = multipartStream.readMatch(CRLF_CRLF_BYTES);
+        var headersBytes = linkedDataReader.readMatch(CRLF_CRLF_BYTES);
         var headersStr = new String(headersBytes);
         return ScxHttpHeaders.of(headersStr);
     }
 
-    public byte[] readContentToByte(LinkedDataReader multipartStream) throws IOException {
+    public byte[] readContentToByte() throws IOException {
         //我们需要查找终结点 先假设不是最后一个 那我们就需要查找下一个开始位置 
         try {
-            var i = multipartStream.indexOf(boundaryHeadCRLFBytes);
+            var i = linkedDataReader.indexOf(boundaryHeadCRLFBytes);
             // i - 2 因为我们不需要读取内容结尾的 \r\n  
-            var bytes = multipartStream.read(i - 2);
+            var bytes = linkedDataReader.read(i - 2);
             //跳过 \r\n 方便后续读取
-            multipartStream.skip(2);
+            linkedDataReader.skip(2);
             return bytes;
         } catch (NoMatchFoundException e) {
             //可能是最后一个查找 最终终结点
-            var i = multipartStream.indexOf(boundaryENDBytes);
-            var bytes = multipartStream.read(i - 2);
+            var i = linkedDataReader.indexOf(boundaryENDBytes);
+            var bytes = linkedDataReader.read(i - 2);
             //跳过 \r\n 方便后续读取
-            multipartStream.skip(2);
+            linkedDataReader.skip(2);
             return bytes;
         }
     }
 
-    public boolean readNext(LinkedDataReader multipartStream) {
+    public boolean readNext() {
         //查找 --xxxxxxxxx\r\n 没有代表 读取到结尾
         try {
-            var i = multipartStream.indexOf(boundaryHeadCRLFBytes);
-            multipartStream.skip(i + boundaryHeadCRLFBytes.length);
+            var i = linkedDataReader.indexOf(boundaryHeadCRLFBytes);
+            linkedDataReader.skip(i + boundaryHeadCRLFBytes.length);
             return true;
         } catch (NoMatchFoundException e) {
             return false;
@@ -94,16 +94,16 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart> {
         try {
 
             // 读取当前部分的头部信息
-            var headers = readToHeaders(linkedDataReader);
+            var headers = readToHeaders();
 
             var part = new MultiPartPartImpl().headers(headers);
 
             //读取内容
-            var content = readContentToByte(linkedDataReader);
+            var content = readContentToByte();
             part.body(content);
 
             // 检查是否有下一个部分
-            hasNextPart = readNext(linkedDataReader);
+            hasNextPart = readNext();
 
             return part;
         } catch (IOException e) {
