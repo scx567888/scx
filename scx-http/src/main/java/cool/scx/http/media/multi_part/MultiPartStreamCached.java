@@ -46,7 +46,9 @@ public class MultiPartStreamCached implements MultiPart, Iterator<MultiPartPart>
         //保证一定有目录
         Files.createDirectories(path.getParent());
         var output = Files.newOutputStream(path);
-        multipartStream.readBodyData(output);
+        try (output){
+            multipartStream.readBodyData(output);    
+        }
         return path;
     }
 
