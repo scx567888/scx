@@ -2,6 +2,8 @@ package cool.scx.io;
 
 import cool.scx.common.util.ArrayUtils;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.function.Supplier;
 
@@ -86,6 +88,45 @@ public class LinkedDataReader implements DataReader {
     }
 
     @Override
+    public void read(OutputStream outputStream, int maxLength) throws NoMoreDataException {
+        ensureAvailable(); // 确保至少有一个字节可读
+        var remaining = maxLength; //剩余字节数
+
+        var n = head; //循环用节点
+        //循环有两种情况会退出 1, 已经读取到足够的数据 2, 没有更多数据可读了 
+        while (remaining > 0) {
+            // 计算当前节点能够读取的长度 
+            var toAdd = Math.min(remaining, n.available());
+            // 写入到 result 中
+            try {
+                outputStream.write(n.bytes, n.position, toAdd);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            // 计算剩余字节数
+            remaining -= toAdd;
+            // 同时移动当前节点的指针位置
+            n.position += toAdd;
+
+            // 如果 remaining > 0 说明还需要继续读取 
+            // 但是 我们在上边的代码是一定会将 当前节点全部读完的 所以这里我们需要向后移动节点
+            if (remaining > 0) {
+                // 如果 当前节点没有下一个节点 则尝试拉取下一个节点
+                if (n.next == null) {
+                    var moreData = pullData();
+                    //如果拉取失败 直接跳出循环
+                    if (!moreData) {
+                        break;
+                    }
+                }
+                //更新 n 节点 的同时更新 head 节点 然后进行下一次循环
+                head = n = n.next;
+            }
+        }
+
+    }
+
+    @Override
     public byte get() throws NoMoreDataException {
         ensureAvailable();
         return head.bytes[head.position];
@@ -125,6 +166,43 @@ public class LinkedDataReader implements DataReader {
 
         return remaining == 0 ? result : Arrays.copyOf(result, maxLength - remaining);
 
+    }
+
+    @Override
+    public void get(OutputStream outputStream, int maxLength) throws NoMoreDataException {
+        ensureAvailable(); // 确保至少有一个字节可读
+        var result = new byte[maxLength];
+        var remaining = maxLength; //剩余字节数
+
+        var n = head; //循环用节点
+        //循环有两种情况会退出 1, 已经读取到足够的数据 2, 没有更多数据可读了 
+        while (remaining > 0) {
+            // 计算当前节点能够读取的长度 
+            var toAdd = Math.min(remaining, n.available());
+            // 写入到 result 中
+            try {
+                outputStream.write(n.bytes, n.position, toAdd);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            // 计算剩余字节数
+            remaining -= toAdd;
+
+            // 如果 remaining > 0 说明还需要继续读取 
+            // 但是 我们在上边的代码是一定会将 当前节点全部读完的 所以这里我们需要向后移动节点
+            if (remaining > 0) {
+                // 如果 当前节点没有下一个节点 则尝试拉取下一个节点
+                if (n.next == null) {
+                    var moreData = pullData();
+                    //如果拉取失败 直接跳出循环
+                    if (!moreData) {
+                        break;
+                    }
+                }
+                //更新 n 节点 进行下一次循环
+                n = n.next;
+            }
+        }
     }
 
 
