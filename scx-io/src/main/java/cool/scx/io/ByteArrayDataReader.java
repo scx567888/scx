@@ -2,12 +2,12 @@ package cool.scx.io;
 
 import cool.scx.common.util.ArrayUtils;
 
-public class ArrayDataReader implements DataReader {
+public class ByteArrayDataReader implements DataReader {
 
     private final byte[] bytes;
     private int position;
 
-    public ArrayDataReader(byte[] bytes) {
+    public ByteArrayDataReader(byte[] bytes) {
         this.bytes = bytes;
         this.position = 0;
     }
