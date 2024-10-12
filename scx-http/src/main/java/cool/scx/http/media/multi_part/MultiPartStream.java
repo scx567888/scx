@@ -6,8 +6,6 @@ import cool.scx.http.ScxHttpHeadersWritable;
 import cool.scx.io.InputStreamDataSupplier;
 import cool.scx.io.LinkedDataReader;
 import cool.scx.io.NoMatchFoundException;
-import org.apache.commons.fileupload2.core.FileUploadSizeException;
-import org.apache.commons.fileupload2.core.MultipartInput;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,7 +29,7 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart> {
         this.hasNextPart = readNext();
     }
 
-    public ScxHttpHeadersWritable readToHeaders() throws MultipartInput.MalformedStreamException, FileUploadSizeException {
+    public ScxHttpHeadersWritable readToHeaders() {
         // head 的终结点是 连续两个换行符 具体格式 如下
         // head /r/n
         // /r/n
