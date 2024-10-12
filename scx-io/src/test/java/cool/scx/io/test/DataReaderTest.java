@@ -4,6 +4,7 @@ import cool.scx.io.ByteArrayDataReader;
 import cool.scx.io.LinkedDataReader;
 import cool.scx.io.NoMatchFoundException;
 import org.testng.Assert;
+import org.testng.annotations.Test;
 
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -16,6 +17,7 @@ public class DataReaderTest {
         test2();
     }
 
+    @Test
     public static void test1() {
         var dataReader = new ByteArrayDataReader("11112345678".getBytes(StandardCharsets.UTF_8));
 
@@ -34,6 +36,7 @@ public class DataReaderTest {
         }
     }
 
+    @Test
     public static void test2() {
         var s = new byte[10][];
         s[0] = "1234567890".getBytes();
