@@ -193,7 +193,7 @@ public class LinkedDataReader implements DataReader {
 
     }
 
-    private class Node {
+    private static class Node {
         private final byte[] bytes;
         private int position;
         private Node next;
@@ -202,45 +202,12 @@ public class LinkedDataReader implements DataReader {
             this.bytes = bytes;
         }
 
-        @Override
-        public String toString() {
-            return position + " of " + Arrays.toString(bytes);
-        }
-
         int available() {
             return bytes.length - position;
         }
 
         boolean hasAvailable() {
             return position < bytes.length;
-        }
-
-        /*
-         * returns number of skipped bytes
-         */
-        int skip(int lenToSkip) {
-            int newPos = position + lenToSkip;
-            if (newPos <= bytes.length) {
-                position = newPos;
-                return 0;
-            } else {
-                lenToSkip -= (bytes.length - position);
-                position = bytes.length;
-                return lenToSkip;
-            }
-        }
-
-        Node next() {
-            if (this.next == null) {
-                assert this == tail;
-                pullData();
-                assert this.next != null;
-            }
-            return this.next;
-        }
-
-        byte peek() {
-            return bytes[position];
         }
 
     }
