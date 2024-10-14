@@ -85,7 +85,7 @@ public interface DataReader {
      * @param b 指定字节
      * @return bytes
      */
-    default byte[] readMatch(byte b) throws NoMatchFoundException {
+    default byte[] readUntil(byte b) throws NoMatchFoundException {
         var index = indexOf(b);
         var data = read(index);
         skip(1);
@@ -98,7 +98,7 @@ public interface DataReader {
      * @param b 指定字节
      * @return bytes
      */
-    default byte[] readMatch(byte[] b) throws NoMatchFoundException {
+    default byte[] readUntil(byte[] b) throws NoMatchFoundException {
         var index = indexOf(b);
         var data = read(index);
         skip(b.length);
@@ -111,7 +111,7 @@ public interface DataReader {
      * @param b 指定字节
      * @return bytes
      */
-    default byte[] peekMatch(byte b) throws NoMatchFoundException {
+    default byte[] peekUntil(byte b) throws NoMatchFoundException {
         var index = indexOf(b);
         return peek(index);
     }
@@ -122,7 +122,7 @@ public interface DataReader {
      * @param b 指定字节
      * @return bytes
      */
-    default byte[] peekMatch(byte[] b) throws NoMatchFoundException {
+    default byte[] peekUntil(byte[] b) throws NoMatchFoundException {
         var index = indexOf(b);
         return peek(index);
     }
