@@ -1,6 +1,5 @@
 package cool.scx.http.media.multi_part;
 
-import cool.scx.common.util.ArrayUtils;
 import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.ScxHttpHeadersWritable;
 import cool.scx.io.InputStreamDataSupplier;
@@ -16,15 +15,12 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart> {
 
     protected static final byte[] CRLF_CRLF_BYTES = "\r\n\r\n".getBytes();
     protected final LinkedDataReader linkedDataReader;
-    protected final byte[] boundaryHeadCRLFBytes;
-    protected final byte[] boundaryENDBytes;
+    protected final byte[] boundaryBytes;
     protected boolean hasNextPart;
     protected String boundary;
 
     public MultiPartStream(InputStream inputStream, String boundary) {
-        var boundaryHeadBytes = ArrayUtils.concat("--".getBytes(), boundary.getBytes());
-        this.boundaryHeadCRLFBytes = ArrayUtils.concat(boundaryHeadBytes, "\r\n".getBytes());
-        this.boundaryENDBytes = ArrayUtils.concat(boundaryHeadBytes, "--".getBytes());
+        this.boundaryBytes = ("--" + boundary).getBytes();
         this.linkedDataReader = new LinkedDataReader(new InputStreamDataSupplier(inputStream));
         this.hasNextPart = readNext();
     }
@@ -34,36 +30,42 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart> {
         // head /r/n
         // /r/n
         // content
-        var headersBytes = linkedDataReader.readMatch(CRLF_CRLF_BYTES);
+        var headersBytes = linkedDataReader.readUntil(CRLF_CRLF_BYTES);
         var headersStr = new String(headersBytes);
         return ScxHttpHeaders.of(headersStr);
     }
 
     public byte[] readContentToByte() throws IOException {
-        //我们需要查找终结点 先假设不是最后一个 那我们就需要查找下一个开始位置 
+        //因为正常的表单一定是 --xxxxxx 结尾的 所以我们只需要找 下一个分块的起始位置作为结束位置即可 
         try {
-            var i = linkedDataReader.indexOf(boundaryHeadCRLFBytes);
+            var i = linkedDataReader.indexOf(boundaryBytes);
             // i - 2 因为我们不需要读取内容结尾的 \r\n  
             var bytes = linkedDataReader.read(i - 2);
             //跳过 \r\n 方便后续读取
             linkedDataReader.skip(2);
             return bytes;
         } catch (NoMatchFoundException e) {
-            //可能是最后一个查找 最终终结点
-            var i = linkedDataReader.indexOf(boundaryENDBytes);
-            var bytes = linkedDataReader.read(i - 2);
-            //跳过 \r\n 方便后续读取
-            linkedDataReader.skip(2);
-            return bytes;
+            // 理论上一个正常的 MultiPart 不会有这种情况
+            throw new RuntimeException("异常状态 !!!");
         }
     }
 
     public boolean readNext() {
-        //查找 --xxxxxxxxx\r\n 没有代表 读取到结尾
+        //查找 --xxxxxxxxx
         try {
-            var i = linkedDataReader.indexOf(boundaryHeadCRLFBytes);
-            linkedDataReader.skip(i + boundaryHeadCRLFBytes.length);
-            return true;
+            var i = linkedDataReader.indexOf(boundaryBytes);
+            linkedDataReader.skip(i + boundaryBytes.length);
+            //向后读取两个字节 
+            var a = linkedDataReader.read();
+            var b = linkedDataReader.read();
+            // 判断 是 \r\n or -- 
+            if (a == '\r' && b == '\n') { //还有数据
+                return true;
+            } else if (a == '-' && b == '-') { // 读取到了终结符
+                return false;
+            } else { // 理论上一个正常的 MultiPart 不会有这种情况
+                throw new RuntimeException("未知字符 !!! ");
+            }
         } catch (NoMatchFoundException e) {
             return false;
         }
@@ -91,10 +93,11 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart> {
         }
         try {
 
+            var part = new MultiPartPartImpl();
+            
             // 读取当前部分的头部信息
             var headers = readToHeaders();
-
-            var part = new MultiPartPartImpl().headers(headers);
+            part.headers(headers);
 
             //读取内容
             var content = readContentToByte();
