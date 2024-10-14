@@ -127,13 +127,13 @@ public class LinkedDataReader implements DataReader {
     }
 
     @Override
-    public byte get() throws NoMoreDataException {
+    public byte peek() throws NoMoreDataException {
         ensureAvailable();
         return head.bytes[head.position];
     }
 
     @Override
-    public byte[] get(int maxLength) throws NoMoreDataException {
+    public byte[] peek(int maxLength) throws NoMoreDataException {
         ensureAvailable(); // 确保至少有一个字节可读
         var result = new byte[maxLength];
         var remaining = maxLength; //剩余字节数
@@ -169,7 +169,7 @@ public class LinkedDataReader implements DataReader {
     }
 
     @Override
-    public void get(OutputStream outputStream, int maxLength) throws NoMoreDataException {
+    public void peek(OutputStream outputStream, int maxLength) throws NoMoreDataException {
         ensureAvailable(); // 确保至少有一个字节可读
         var result = new byte[maxLength];
         var remaining = maxLength; //剩余字节数

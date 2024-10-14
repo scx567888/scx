@@ -22,15 +22,15 @@ public class DataReaderTest {
         var dataReader = new ByteArrayDataReader("11112345678".getBytes(StandardCharsets.UTF_8));
 
         //不会影响读取
-        dataReader.get(99);
+        dataReader.peek(99);
 
         dataReader.indexOf("1".getBytes(StandardCharsets.UTF_8));
 
-        var index = dataReader.readMatch("123".getBytes());
+        var index = dataReader.readUntil("123".getBytes());
 
         try {
             //第二次应该匹配失败
-            var index1 = dataReader.readMatch("123".getBytes());
+            var index1 = dataReader.readUntil("123".getBytes());
         } catch (NoMatchFoundException _) {
 
         }
