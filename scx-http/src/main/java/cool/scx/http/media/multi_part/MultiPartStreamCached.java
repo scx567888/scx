@@ -37,17 +37,14 @@ public class MultiPartStreamCached extends MultiPartStream {
         try (output) {
             //我们需要查找终结点 先假设不是最后一个 那我们就需要查找下一个开始位置 
             try {
-                var i = linkedDataReader.indexOf(boundaryHeadCRLFBytes);
+                var i = linkedDataReader.indexOf(boundaryBytes);
                 // i - 2 因为我们不需要读取内容结尾的 \r\n  
                 linkedDataReader.read(output, i - 2);
                 //跳过 \r\n 方便后续读取
                 linkedDataReader.skip(2);
             } catch (NoMatchFoundException e) {
-                //可能是最后一个查找 最终终结点
-                var i = linkedDataReader.indexOf(boundaryENDBytes);
-                linkedDataReader.read(output, i - 2);
-                //跳过 \r\n 方便后续读取
-                linkedDataReader.skip(2);
+                // 理论上一个正常的 MultiPart 不会有这种情况
+                throw new RuntimeException("异常状态 !!!");
             }
         }
 
@@ -61,10 +58,11 @@ public class MultiPartStreamCached extends MultiPartStream {
         }
         try {
 
+            var part = new MultiPartPartImpl();
+
             // 读取当前部分的头部信息
             var headers = readToHeaders();
-
-            var part = new MultiPartPartImpl().headers(headers);
+            part.headers(headers);
 
             var b = needCached(headers);
             if (b) {
@@ -74,6 +72,7 @@ public class MultiPartStreamCached extends MultiPartStream {
                 var content = readContentToByte();
                 part.body(content);
             }
+
             // 检查是否有下一个部分
             hasNextPart = readNext();
 

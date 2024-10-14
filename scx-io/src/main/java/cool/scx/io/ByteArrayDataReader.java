@@ -53,7 +53,7 @@ public class ByteArrayDataReader implements DataReader {
     }
 
     @Override
-    public byte get() throws NoMoreDataException {
+    public byte peek() throws NoMoreDataException {
         try {
             return bytes[position];
         } catch (ArrayIndexOutOfBoundsException e) {
@@ -62,7 +62,7 @@ public class ByteArrayDataReader implements DataReader {
     }
 
     @Override
-    public byte[] get(int maxLength) throws NoMoreDataException {
+    public byte[] peek(int maxLength) throws NoMoreDataException {
         int availableLength = bytes.length - position;
         if (availableLength <= 0) {
             throw new NoMoreDataException();
@@ -74,7 +74,7 @@ public class ByteArrayDataReader implements DataReader {
     }
 
     @Override
-    public void get(OutputStream outputStream, int maxLength) throws NoMoreDataException {
+    public void peek(OutputStream outputStream, int maxLength) throws NoMoreDataException {
         int availableLength = bytes.length - position;
         if (availableLength <= 0) {
             throw new NoMoreDataException();
