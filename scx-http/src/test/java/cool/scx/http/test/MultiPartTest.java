@@ -1,5 +1,6 @@
 package cool.scx.http.test;
 
+import cool.scx.common.util.ArrayUtils;
 import cool.scx.http.MediaType;
 import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.content_type.ContentType;
@@ -35,6 +36,9 @@ public class MultiPartTest {
         var b = new ByteArrayOutputStream();
         ss.write(b);
         byte[] byteArray = b.toByteArray();
+
+        //复制两遍查看是否会产生错误的读取
+        byteArray = ArrayUtils.concat(byteArray, byteArray);
 
 
         long l = System.nanoTime();
