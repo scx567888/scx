@@ -37,7 +37,7 @@ public interface DataReader {
      *
      * @return byte
      */
-    byte get() throws NoMoreDataException;
+    byte peek() throws NoMoreDataException;
 
     /**
      * 读取指定长度字节 (指针不会移动)
@@ -46,7 +46,7 @@ public interface DataReader {
      * @param maxLength 最大长度
      * @return byte
      */
-    byte[] get(int maxLength) throws NoMoreDataException;
+    byte[] peek(int maxLength) throws NoMoreDataException;
 
     /**
      * 向 outputStream 写入指定长度字节 (指针不会移动)
@@ -54,7 +54,7 @@ public interface DataReader {
      *
      * @param maxLength 最大长度
      */
-    void get(OutputStream outputStream, int maxLength) throws NoMoreDataException;
+    void peek(OutputStream outputStream, int maxLength) throws NoMoreDataException;
 
     /**
      * 查找 指定字节 第一次出现的 index (指针不会移动)
@@ -111,9 +111,9 @@ public interface DataReader {
      * @param b 指定字节
      * @return bytes
      */
-    default byte[] getMatch(byte b) throws NoMatchFoundException {
+    default byte[] peekMatch(byte b) throws NoMatchFoundException {
         var index = indexOf(b);
-        return get(index);
+        return peek(index);
     }
 
     /**
@@ -122,9 +122,9 @@ public interface DataReader {
      * @param b 指定字节
      * @return bytes
      */
-    default byte[] getMatch(byte[] b) throws NoMatchFoundException {
+    default byte[] peekMatch(byte[] b) throws NoMatchFoundException {
         var index = indexOf(b);
-        return get(index);
+        return peek(index);
     }
 
 }
