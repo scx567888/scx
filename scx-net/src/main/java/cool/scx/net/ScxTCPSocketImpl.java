@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class ScxTCPSocketImpl implements ScxTCPSocket {
 
@@ -35,6 +37,14 @@ public class ScxTCPSocketImpl implements ScxTCPSocket {
     @Override
     public OutputStream outputStream() {
         return outputStream;
+    }
+
+    @Override
+    public void sendFile(Path path, long offset, long length) throws IOException {
+        //todo 需要使用零拷贝重写
+        try (var is = Files.newInputStream(path)) {
+            is.transferTo(outputStream);
+        }
     }
 
 }
