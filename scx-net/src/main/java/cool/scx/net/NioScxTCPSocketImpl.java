@@ -8,6 +8,9 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+
+import static java.nio.file.StandardOpenOption.*;
 
 public class NioScxTCPSocketImpl implements ScxTCPSocket {
 
@@ -31,12 +34,15 @@ public class NioScxTCPSocketImpl implements ScxTCPSocket {
 
     @Override
     public void write(byte[] bytes) throws IOException {
-        this.socketChannel.write(ByteBuffer.wrap(bytes));
+        var buffer = ByteBuffer.wrap(bytes);
+        while (buffer.hasRemaining()) {
+            socketChannel.write(buffer);
+        }
     }
 
     @Override
     public void sendFile(Path path, long offset, long length) throws IOException {
-        try (var fileChannel = FileChannel.open(path)) {
+        try (var fileChannel = FileChannel.open(path, READ)) {
             while (length > 0) {
                 // transferTo 不保证一次既可以全部传输完毕 所以我们需要循环调用 
                 long transferred = fileChannel.transferTo(offset, length, socketChannel);
