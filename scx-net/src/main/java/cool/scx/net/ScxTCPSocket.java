@@ -1,18 +1,13 @@
 package cool.scx.net;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.Socket;
 import java.nio.file.Path;
 
 public interface ScxTCPSocket {
 
-    Socket socket();
+    byte[] read(int maxLength) throws IOException;
 
-    InputStream inputStream();
-
-    OutputStream outputStream();
+    void write(byte[] bytes) throws IOException;
 
     void sendFile(Path path, long offset, long length) throws IOException;
 
