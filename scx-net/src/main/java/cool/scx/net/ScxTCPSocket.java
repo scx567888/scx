@@ -9,11 +9,11 @@ import java.nio.file.Path;
 public interface ScxTCPSocket {
 
     Socket socket();
-    
+
     InputStream inputStream();
 
     OutputStream outputStream();
 
-    void sendFile(Path path,long offset,long length) throws IOException;
+    void sendFile(Path path, long offset, long length) throws IOException;
 
 }
