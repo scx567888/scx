@@ -235,7 +235,7 @@
         <helidon.version>4.1.2</helidon.version>
         <commons-fileupload2.version>2.0.0-M2</commons-fileupload2.version>
         <jackson.version>2.18.0</jackson.version>
-        <spring-framework.version>6.1.13</spring-framework.version>
+        <spring-framework.version>6.1.14</spring-framework.version>
         <hikaricp.version>6.0.0</hikaricp.version>
         <freemarker.version>2.3.33</freemarker.version>
         <thumbnailator.version>0.4.20</thumbnailator.version>
