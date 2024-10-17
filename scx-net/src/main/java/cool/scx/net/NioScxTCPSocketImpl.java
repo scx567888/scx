@@ -1,16 +1,12 @@
 package cool.scx.net;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 
-import static java.nio.file.StandardOpenOption.*;
+import static java.nio.file.StandardOpenOption.READ;
 
 public class NioScxTCPSocketImpl implements ScxTCPSocket {
 
@@ -21,15 +17,18 @@ public class NioScxTCPSocketImpl implements ScxTCPSocket {
     }
 
     @Override
-    public Socket socket() {
-        return null;
-    }
-
-    @Override
     public byte[] read(int maxLength) throws IOException {
-        var allocate = ByteBuffer.allocate(maxLength);
-        int read = this.socketChannel.read(allocate);
-        return allocate.array();
+        var buffer = ByteBuffer.allocate(maxLength);
+        int bytesRead = this.socketChannel.read(buffer);
+        if (bytesRead == maxLength) {
+            // 如果读取的数据量与缓冲区大小一致，直接返回内部数组
+            return buffer.array();
+        } else {
+            // 创建一个长度为实际读取字节数的字节数组
+            var data = new byte[bytesRead];
+            buffer.get(data);
+            return data;
+        }
     }
 
     @Override
