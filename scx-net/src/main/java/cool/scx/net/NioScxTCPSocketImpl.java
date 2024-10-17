@@ -50,9 +50,9 @@ public class NioScxTCPSocketImpl implements ScxTCPSocket {
         try (var fileChannel = FileChannel.open(path, READ)) {
             while (length > 0) {
                 // transferTo 不保证一次既可以全部传输完毕 所以我们需要循环调用 
-                long transferred = fileChannel.transferTo(offset, length, socketChannel);
-                offset += transferred;
-                length -= transferred;
+                var i = fileChannel.transferTo(offset, length, socketChannel);
+                offset += i;
+                length -= i;
             }
         }
     }
