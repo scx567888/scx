@@ -3,35 +3,82 @@ package cool.scx.io;
 import javax.net.ssl.SSLEngine;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.channels.ByteChannel;
+import java.nio.file.Path;
 
 //todo 待完成
-public class TLSDataChannel extends BaseDataChannel<ByteChannel> {
+public class TLSDataChannel implements DataChannel {
 
+    private final DataChannel channel;
     private final SSLEngine sslEngine;
 
-    public TLSDataChannel(ByteChannel channel, SSLEngine sslEngine) {
-        super(channel);
+    public TLSDataChannel(DataChannel channel, SSLEngine sslEngine) {
+        this.channel = channel;
         this.sslEngine = sslEngine;
     }
 
     @Override
     public void write(ByteBuffer buffer) throws IOException {
-        // 在写入前进行加密
-        ByteBuffer encryptedBuffer = ByteBuffer.allocate(buffer.remaining() + sslEngine.getSession().getPacketBufferSize());
-        sslEngine.wrap(buffer, encryptedBuffer);
-        encryptedBuffer.flip();
-        super.write(encryptedBuffer);
+
+    }
+
+    @Override
+    public void write(byte[] bytes, int offset, int length) throws IOException {
+
+    }
+
+    @Override
+    public void write(byte[] bytes) throws IOException {
+
+    }
+
+    @Override
+    public void write(Path path, long offset, long length) throws IOException {
+
+    }
+
+    @Override
+    public void write(Path path) throws IOException {
+
     }
 
     @Override
     public int read(ByteBuffer buffer) throws IOException {
-        // 在读取后进行解密
-        ByteBuffer encryptedBuffer = ByteBuffer.allocate(buffer.remaining() + sslEngine.getSession().getPacketBufferSize());
-        int bytesRead = super.read(encryptedBuffer);
-        encryptedBuffer.flip();
-        sslEngine.unwrap(encryptedBuffer, buffer);
-        return buffer.position();
+        return 0;
     }
-    
+
+    @Override
+    public int read(byte[] bytes, int offset, int length) throws IOException {
+        return 0;
+    }
+
+    @Override
+    public int read(byte[] bytes) throws IOException {
+        return 0;
+    }
+
+    @Override
+    public void read(Path path, long offset, long length) throws IOException {
+
+    }
+
+    @Override
+    public void read(Path path) throws IOException {
+
+    }
+
+    @Override
+    public byte[] read(int maxLength) throws IOException, NoMoreDataException {
+        return new byte[0];
+    }
+
+    @Override
+    public void close() throws IOException {
+
+    }
+
+    @Override
+    public boolean isOpen() throws IOException {
+        return false;
+    }
+
 }

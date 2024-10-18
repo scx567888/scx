@@ -6,10 +6,11 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.file.Path;
 
+//todo 待完成
 public class IOStreamDataChannel implements DataChannel {
 
-    private final InputStream in;
-    private final OutputStream out;
+    protected final InputStream in;
+    protected final OutputStream out;
 
     public IOStreamDataChannel(InputStream in, OutputStream out) {
         this.in = in;
