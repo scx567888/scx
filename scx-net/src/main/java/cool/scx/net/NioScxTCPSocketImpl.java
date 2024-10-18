@@ -53,6 +53,7 @@ public class NioScxTCPSocketImpl implements ScxTCPSocket {
     public void write(Path path) throws IOException {
         try (var fileChannel = FileChannel.open(path, READ)) {
             long offset = 0;
+            //这样读取 size 速度最快
             long length = fileChannel.size();
             while (length > 0) {
                 // transferTo 不保证一次既可以全部传输完毕 所以我们需要循环调用 
@@ -65,36 +66,17 @@ public class NioScxTCPSocketImpl implements ScxTCPSocket {
 
     @Override
     public int read(ByteBuffer buffer) throws IOException, NoMoreDataException {
-        return 0;
+        return this.socketChannel.read(buffer);
     }
 
     @Override
     public int read(byte[] bytes, int offset, int length) throws IOException, NoMoreDataException {
-        var buffer = ByteBuffer.wrap(bytes, offset, length);
-        return this.socketChannel.read(buffer);
+        return read(ByteBuffer.wrap(bytes, offset, length));
     }
 
     @Override
     public int read(byte[] bytes) throws IOException, NoMoreDataException {
-        var buffer = ByteBuffer.wrap(bytes);
-        return this.socketChannel.read(buffer);
-    }
-
-    @Override
-    public int read(Path path, long offset, long length) throws IOException {
-        try (var fileChannel = FileChannel.open(path, WRITE)) {
-            while (length > 0) {
-                // transferTo 不保证一次既可以全部传输完毕 所以我们需要循环调用 
-                var i = fileChannel.transferFrom(socketChannel, offset, length);
-                offset += i;
-                length -= i;
-            }
-        }
-    }
-
-    @Override
-    public int read(Path path) throws IOException {
-        return 0;
+        return read(ByteBuffer.wrap(bytes));
     }
 
     @Override
@@ -115,9 +97,8 @@ public class NioScxTCPSocketImpl implements ScxTCPSocket {
         }
     }
 
-
     @Override
-    public void receiveFile(Path path, long offset, long length) throws IOException {
+    public void read(Path path, long offset, long length) throws IOException {
         try (var fileChannel = FileChannel.open(path, WRITE)) {
             while (length > 0) {
                 // transferTo 不保证一次既可以全部传输完毕 所以我们需要循环调用 
@@ -126,11 +107,6 @@ public class NioScxTCPSocketImpl implements ScxTCPSocket {
                 length -= i;
             }
         }
-    }
-
-    @Override
-    public void sendFile(Path path, long offset, long length) throws IOException {
-
     }
 
     @Override
