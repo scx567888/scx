@@ -4,29 +4,27 @@ import cool.scx.io.LinkedDataReader;
 import cool.scx.net.*;
 import cool.scx.net.tls.TLS;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static java.lang.Thread.sleep;
+public class ServerTest {
 
-public class NetTest {
-
-    static TLS tls;
+   public static TLS tls;
 
     static {
         tls = null;
     }
 
     public static void main(String[] args) throws InterruptedException, IOException {
-        test1();
+//        test1();
         test2();
     }
 
     public static void test1() {
-        var tcpServer = new NioScxTCPServerImpl(new ScxTCPServerOptions().port(8899).tls(tls));
+        var tcpServer = new ScxTCPServerImpl(new ScxTCPServerOptions().port(8899).tls(tls));
         var i = new AtomicInteger(0);
         tcpServer.onConnect(c -> {
             System.out.println("客户端连接了 !!!");
@@ -56,19 +54,27 @@ public class NetTest {
         System.out.println("已监听端口号 : " + tcpServer.port());
     }
 
-    public static void test2() throws InterruptedException, IOException {
-        var tcpClient = new ScxTCPClientImpl(new ScxTCPClientOptions().tls(tls));
-        var tcpSocket = tcpClient.connect(new InetSocketAddress(8899));
-        try {
-            AtomicInteger i = new AtomicInteger(0);
-            while (i.get() < 100) {
-                tcpSocket.write((i.getAndIncrement() + "\r\n").getBytes());
-                sleep(50);
+    public static void test2() {
+        var tcpServer = new ScxTCPServerImpl(new ScxTCPServerOptions().port(8899).tls(tls));
+        var i = new AtomicInteger(0);
+        tcpServer.onConnect(c -> {
+            System.out.println("客户端连接了 !!!");
+            long l = System.nanoTime();
+            var path = Path.of("C:\\Users\\scx\\Documents\\ISO\\ubuntu-24.04.1-desktop-amd64.iso");
+            try {
+                c.sendFile(path,0, Files.size(path));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-            tcpSocket.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+            System.out.println("耗时 :" +(System.nanoTime() - l)/1000_000);
+            try {
+                c.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        tcpServer.start();
+        System.out.println("已监听端口号 : " + tcpServer.port());
     }
 
 }

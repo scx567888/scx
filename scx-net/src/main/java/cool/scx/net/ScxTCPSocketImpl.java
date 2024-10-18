@@ -1,5 +1,6 @@
 package cool.scx.net;
 
+import cool.scx.io.IOStreamDataChannel;
 import cool.scx.io.NoMoreDataException;
 
 import java.io.IOException;
@@ -12,37 +13,29 @@ import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class ScxTCPSocketImpl implements ScxTCPSocket {
+public class ScxTCPSocketImpl extends IOStreamDataChannel implements ScxTCPSocket {
 
     private final Socket socket;
-    private final InputStream inputStream;
-    private final OutputStream outputStream;
 
     public ScxTCPSocketImpl(Socket socket) {
+        super(getInputStream(socket), getOutputStream(socket));
         this.socket = socket;
+    }
+
+    private static InputStream getInputStream(Socket socket) {
         try {
-            this.inputStream = socket.getInputStream();
-            this.outputStream = socket.getOutputStream();
+            return socket.getInputStream();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    @Override
-    public void write(ByteBuffer buffer) throws IOException {
-        byte[] bytes = new byte[buffer.remaining()];
-        buffer.get(bytes);
-        write(bytes);
-    }
-
-    @Override
-    public void write(byte[] bytes, int offset, int length) throws IOException {
-        outputStream.write(bytes, offset, length);
-    }
-
-    @Override
-    public void write(byte[] bytes) throws IOException {
-        outputStream.write(bytes);
+    private static OutputStream getOutputStream(Socket socket) {
+        try {
+            return socket.getOutputStream();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -57,7 +50,7 @@ public class ScxTCPSocketImpl implements ScxTCPSocket {
                 if (i == -1) {
                     break; // 处理文件结束情况
                 }
-                outputStream.write(buffer, 0, i);
+                out.write(buffer, 0, i);
                 length -= i;
             }
         }
@@ -66,7 +59,7 @@ public class ScxTCPSocketImpl implements ScxTCPSocket {
     @Override
     public void write(Path path) throws IOException {
         try (var is = Files.newInputStream(path)) {
-            is.transferTo(outputStream);
+            is.transferTo(out);
         }
     }
 
@@ -79,19 +72,9 @@ public class ScxTCPSocketImpl implements ScxTCPSocket {
     }
 
     @Override
-    public int read(byte[] bytes, int offset, int length) throws IOException {
-        return inputStream.read(bytes, offset, length);
-    }
-
-    @Override
-    public int read(byte[] bytes) throws IOException {
-        return inputStream.read(bytes);
-    }
-
-    @Override
     public byte[] read(int maxLength) throws IOException {
         var buffer = new byte[maxLength];
-        int bytesRead = inputStream.read(buffer);
+        int bytesRead = in.read(buffer);
         if (bytesRead == -1) {
             throw new NoMoreDataException();
         }
@@ -113,7 +96,7 @@ public class ScxTCPSocketImpl implements ScxTCPSocket {
 
             byte[] buffer = new byte[8192];
             while (length > 0) {
-                int bytesRead = inputStream.read(buffer);
+                int bytesRead = in.read(buffer);
                 if (bytesRead == -1) {
                     break;
                 }
@@ -129,7 +112,7 @@ public class ScxTCPSocketImpl implements ScxTCPSocket {
             byte[] buffer = new byte[8192];
             int bytesRead;
             while (true) {
-                bytesRead = inputStream.read(buffer);
+                bytesRead = in.read(buffer);
                 if (bytesRead == -1) {
                     break;
                 }
