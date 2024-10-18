@@ -4,38 +4,30 @@ import cool.scx.io.NoMoreDataException;
 
 import java.io.IOException;
 import java.net.SocketAddress;
+import java.nio.ByteBuffer;
 import java.nio.file.Path;
 
 public interface ScxTCPSocket {
 
-    /**
-     * 读取字节
-     * 当没有更多的数据时会抛出异常
-     *
-     * @param maxLength 最大长度
-     * @return bytes
-     * @throws IOException         Socket IO 异常
-     * @throws NoMoreDataException 没有更多数据时抛出
-     */
-    byte[] read(int maxLength) throws IOException, NoMoreDataException;
+    void write(ByteBuffer buffer) throws IOException;
 
-    /**
-     * 写入字节
-     *
-     * @param bytes 数据
-     * @throws IOException Socket IO 异常
-     */
+    void write(byte[] bytes, int offset, int length) throws IOException;
+
     void write(byte[] bytes) throws IOException;
 
-    /**
-     * 发送文件
-     *
-     * @param path   文件路径
-     * @param offset 起始位置
-     * @param length 长度
-     * @throws IOException Socket IO 异常
-     */
-    void sendFile(Path path, long offset, long length) throws IOException;
+    void write(Path path, long offset, long length) throws IOException;
+
+    void write(Path path) throws IOException;
+
+    int read(ByteBuffer buffer) throws IOException, NoMoreDataException;
+
+    int read(byte[] bytes, int offset, int length) throws IOException, NoMoreDataException;
+
+    int read(byte[] bytes) throws IOException, NoMoreDataException;
+
+    int read(Path path, long offset, long length) throws IOException;
+
+    int read(Path path) throws IOException;
 
     /**
      * 关闭 Socket
