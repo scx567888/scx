@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.ByteChannel;
 import java.nio.channels.FileChannel;
+import java.nio.file.OpenOption;
 import java.nio.file.Path;
 
 import static java.nio.file.StandardOpenOption.READ;
-import static java.nio.file.StandardOpenOption.WRITE;
 
 public class ByteChannelDataChannel<C extends ByteChannel> implements DataChannel {
 
@@ -81,8 +81,8 @@ public class ByteChannelDataChannel<C extends ByteChannel> implements DataChanne
     }
 
     @Override
-    public void read(Path path, long offset, long length) throws IOException {
-        try (var fileChannel = FileChannel.open(path, WRITE)) {
+    public void read(Path path, long offset, long length, OpenOption... options) throws IOException {
+        try (var fileChannel = FileChannel.open(path, options)) {
             while (length > 0) {
                 // transferTo 不保证一次既可以全部传输完毕 所以我们需要循环调用 
                 var i = fileChannel.transferFrom(channel, offset, length);
@@ -96,8 +96,8 @@ public class ByteChannelDataChannel<C extends ByteChannel> implements DataChanne
     }
 
     @Override
-    public void read(Path path) throws IOException {
-        try (var fileChannel = FileChannel.open(path, WRITE)) {
+    public void read(Path path, OpenOption... options) throws IOException {
+        try (var fileChannel = FileChannel.open(path, options)) {
             long offset = 0;
             while (true) {
                 long i = fileChannel.transferFrom(channel, offset, Long.MAX_VALUE);

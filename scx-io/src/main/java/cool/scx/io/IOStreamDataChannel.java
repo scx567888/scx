@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
+import java.nio.file.OpenOption;
 import java.nio.file.Path;
 
 //todo 待完成
@@ -60,12 +61,12 @@ public class IOStreamDataChannel implements DataChannel {
     }
 
     @Override
-    public void read(Path path, long offset, long length) throws IOException {
+    public void read(Path path, long offset, long length, OpenOption... options) throws IOException {
 
     }
 
     @Override
-    public void read(Path path) throws IOException {
+    public void read(Path path, OpenOption... options) throws IOException {
 
     }
 

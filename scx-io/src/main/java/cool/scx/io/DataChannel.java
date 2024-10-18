@@ -2,6 +2,7 @@ package cool.scx.io;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.file.OpenOption;
 import java.nio.file.Path;
 
 /**
@@ -25,9 +26,9 @@ public interface DataChannel {
 
     int read(byte[] bytes) throws IOException;
 
-    void read(Path path, long offset, long length) throws IOException;
+    void read(Path path, long offset, long length, OpenOption... options) throws IOException;
 
-    void read(Path path) throws IOException;
+    void read(Path path, OpenOption... options) throws IOException;
 
     /**
      * 读取字节
