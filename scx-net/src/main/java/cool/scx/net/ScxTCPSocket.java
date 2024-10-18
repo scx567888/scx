@@ -19,29 +19,18 @@ public interface ScxTCPSocket {
 
     void write(Path path) throws IOException;
 
-    int read(ByteBuffer buffer) throws IOException, NoMoreDataException;
+    int read(ByteBuffer buffer) throws IOException;
 
-    int read(byte[] bytes, int offset, int length) throws IOException, NoMoreDataException;
+    int read(byte[] bytes, int offset, int length) throws IOException;
 
-    int read(byte[] bytes) throws IOException, NoMoreDataException;
+    int read(byte[] bytes) throws IOException;
 
-    int read(Path path, long offset, long length) throws IOException;
+    byte[] read(int maxLength) throws IOException,NoMoreDataException;
 
-    int read(Path path) throws IOException;
+    void read(Path path, long offset, long length) throws IOException;
 
-    /**
-     * 关闭 Socket
-     *
-     * @throws IOException Socket IO 异常
-     */
     void close() throws IOException;
 
-    /**
-     * 获取远程地址
-     *
-     * @return 远程地址
-     * @throws IOException Socket IO 异常
-     */
     SocketAddress getRemoteAddress() throws IOException;
 
 }
