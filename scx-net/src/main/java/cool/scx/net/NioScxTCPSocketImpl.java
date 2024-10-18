@@ -43,6 +43,9 @@ public class NioScxTCPSocketImpl implements ScxTCPSocket {
             while (length > 0) {
                 // transferTo 不保证一次既可以全部传输完毕 所以我们需要循环调用 
                 var i = fileChannel.transferTo(offset, length, socketChannel);
+                if (i == 0) {
+                    break; // No more data left to write
+                }
                 offset += i;
                 length -= i;
             }
@@ -54,12 +57,13 @@ public class NioScxTCPSocketImpl implements ScxTCPSocket {
         try (var fileChannel = FileChannel.open(path, READ)) {
             long offset = 0;
             //这样读取 size 速度最快
-            long length = fileChannel.size();
-            while (length > 0) {
+            while (true) {
                 // transferTo 不保证一次既可以全部传输完毕 所以我们需要循环调用 
-                var i = fileChannel.transferTo(offset, length, socketChannel);
+                var i = fileChannel.transferTo(offset, Long.MAX_VALUE, socketChannel);
+                if (i == 0) {
+                    break; // No more data left to write
+                }
                 offset += i;
-                length -= i;
             }
         }
     }
@@ -85,6 +89,9 @@ public class NioScxTCPSocketImpl implements ScxTCPSocket {
             while (length > 0) {
                 // transferTo 不保证一次既可以全部传输完毕 所以我们需要循环调用 
                 var i = fileChannel.transferFrom(socketChannel, offset, length);
+                if (i == 0) {
+                    break; // No more data left to read
+                }
                 offset += i;
                 length -= i;
             }
