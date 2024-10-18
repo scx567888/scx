@@ -65,22 +65,48 @@ public class NioScxTCPSocketImpl implements ScxTCPSocket {
     }
 
     @Override
-    public int read(ByteBuffer buffer) throws IOException, NoMoreDataException {
+    public int read(ByteBuffer buffer) throws IOException {
         return this.socketChannel.read(buffer);
     }
 
     @Override
-    public int read(byte[] bytes, int offset, int length) throws IOException, NoMoreDataException {
+    public int read(byte[] bytes, int offset, int length) throws IOException {
         return read(ByteBuffer.wrap(bytes, offset, length));
     }
 
     @Override
-    public int read(byte[] bytes) throws IOException, NoMoreDataException {
+    public int read(byte[] bytes) throws IOException {
         return read(ByteBuffer.wrap(bytes));
     }
 
     @Override
-    public byte[] read(int maxLength) throws IOException {
+    public void read(Path path, long offset, long length) throws IOException {
+        try (var fileChannel = FileChannel.open(path, WRITE)) {
+            while (length > 0) {
+                // transferTo 不保证一次既可以全部传输完毕 所以我们需要循环调用 
+                var i = fileChannel.transferFrom(socketChannel, offset, length);
+                offset += i;
+                length -= i;
+            }
+        }
+    }
+
+    @Override
+    public void read(Path path) throws IOException {
+        try (var fileChannel = FileChannel.open(path, WRITE)) {
+            long position = 0;
+            while (true) {
+                long i = fileChannel.transferFrom(socketChannel, position, Long.MAX_VALUE);
+                if (i == 0) {
+                    break; // No more data left to read
+                }
+                position += i;
+            }
+        }
+    }
+
+    @Override
+    public byte[] read(int maxLength) throws IOException, NoMoreDataException {
         var buffer = ByteBuffer.allocate(maxLength);
         int bytesRead = this.socketChannel.read(buffer);
         if (bytesRead == -1) {
@@ -94,18 +120,6 @@ public class NioScxTCPSocketImpl implements ScxTCPSocket {
             var data = new byte[bytesRead];
             System.arraycopy(buffer.array(), 0, data, 0, data.length);
             return data;
-        }
-    }
-
-    @Override
-    public void read(Path path, long offset, long length) throws IOException {
-        try (var fileChannel = FileChannel.open(path, WRITE)) {
-            while (length > 0) {
-                // transferTo 不保证一次既可以全部传输完毕 所以我们需要循环调用 
-                var i = fileChannel.transferFrom(socketChannel, offset, length);
-                offset += i;
-                length -= i;
-            }
         }
     }
 
