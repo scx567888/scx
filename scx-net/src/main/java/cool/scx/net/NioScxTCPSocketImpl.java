@@ -94,13 +94,13 @@ public class NioScxTCPSocketImpl implements ScxTCPSocket {
     @Override
     public void read(Path path) throws IOException {
         try (var fileChannel = FileChannel.open(path, WRITE)) {
-            long position = 0;
+            long offset = 0;
             while (true) {
-                long i = fileChannel.transferFrom(socketChannel, position, Long.MAX_VALUE);
+                long i = fileChannel.transferFrom(socketChannel, offset, Long.MAX_VALUE);
                 if (i == 0) {
                     break; // No more data left to read
                 }
-                position += i;
+                offset += i;
             }
         }
     }
