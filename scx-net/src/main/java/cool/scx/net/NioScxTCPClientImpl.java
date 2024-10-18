@@ -1,14 +1,12 @@
 package cool.scx.net;
 
-import javax.net.ssl.SSLSocket;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.net.Socket;
 import java.net.SocketAddress;
 import java.nio.channels.SocketChannel;
 
 public class NioScxTCPClientImpl implements ScxTCPClient {
-    
+
     private final ScxTCPClientOptions options;
 
     public NioScxTCPClientImpl() {
@@ -28,7 +26,7 @@ public class NioScxTCPClientImpl implements ScxTCPClient {
             //todo 处理代理
             var proxy = options.proxy();
 
-            SocketChannel socket=SocketChannel.open();
+            SocketChannel socket = SocketChannel.open();
 //            if (tls != null && tls.enabled()) {
 //                socket = tls.createSocket();
 //            } else {

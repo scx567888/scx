@@ -1,18 +1,18 @@
 package cool.scx.net.test;
 
 import cool.scx.io.LinkedDataReader;
-import cool.scx.net.*;
+import cool.scx.net.NioScxTCPServerImpl;
+import cool.scx.net.ScxTCPServerImpl;
+import cool.scx.net.ScxTCPServerOptions;
 import cool.scx.net.tls.TLS;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ServerTest {
 
-   public static TLS tls;
+    public static TLS tls;
 
     static {
         tls = null;
@@ -66,7 +66,7 @@ public class ServerTest {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            System.out.println("耗时 :" +(System.nanoTime() - l)/1000_000);
+            System.out.println("耗时 :" + (System.nanoTime() - l) / 1000_000);
             try {
                 c.close();
             } catch (IOException e) {

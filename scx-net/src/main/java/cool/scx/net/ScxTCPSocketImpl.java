@@ -108,7 +108,7 @@ public class ScxTCPSocketImpl extends IOStreamDataChannel implements ScxTCPSocke
     }
 
     @Override
-    public void read(Path path,OpenOption... options) throws IOException {
+    public void read(Path path, OpenOption... options) throws IOException {
         try (var outputFile = new RandomAccessFile(path.toFile(), "rw")) {
             byte[] buffer = new byte[8192];
             int bytesRead;
