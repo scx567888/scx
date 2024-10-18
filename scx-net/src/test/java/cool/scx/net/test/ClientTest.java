@@ -5,6 +5,7 @@ import cool.scx.net.*;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.FileChannel;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -31,7 +32,7 @@ public class ClientTest {
         try {
             AtomicInteger i = new AtomicInteger(0);
             while (i.get() < 100) {
-                tcpSocket.sendFile((i.getAndIncrement() + "\r\n").getBytes());
+//                tcpSocket.sendFile((i.getAndIncrement() + "\r\n").getBytes());
 //                sleep(50);
             }
             tcpSocket.close();
@@ -44,12 +45,10 @@ public class ClientTest {
         var tcpClient = new NioScxTCPClientImpl(new ScxTCPClientOptions().tls(tls));
         var tcpSocket = tcpClient.connect(new InetSocketAddress(8899));
         try {
-            try (var f= FileChannel.open(Path.of("C:\\Users\\scx\\Desktop\\aaaa.iso"), StandardOpenOption.CREATE, StandardOpenOption.WRITE);) {
-                var nnn= (NioScxTCPSocketImpl)tcpSocket;
-                long l = f.transferFrom(nnn.socketChannel(), 0, Long.MAX_VALUE);
-                System.out.println();
-            }
-            
+            Path path = Path.of("C:\\Users\\scx\\Desktop\\aaaa.iso");
+            long size = Files.size(path);
+            tcpSocket.read(Path.of("C:\\Users\\scx\\Desktop\\aaaa.iso"),size,Long.MAX_VALUE,StandardOpenOption.APPEND,StandardOpenOption.WRITE);
+            System.out.println("读取完成");
 //            while (true) {
 //
 //                byte[] read = tcpSocket.read(8192);

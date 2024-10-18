@@ -11,6 +11,7 @@ import java.net.Socket;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
+import java.nio.file.OpenOption;
 import java.nio.file.Path;
 
 public class ScxTCPSocketImpl extends IOStreamDataChannel implements ScxTCPSocket {
@@ -90,7 +91,7 @@ public class ScxTCPSocketImpl extends IOStreamDataChannel implements ScxTCPSocke
     }
 
     @Override
-    public void read(Path path, long offset, long length) throws IOException {
+    public void read(Path path, long offset, long length, OpenOption... options) throws IOException {
         try (var outputFile = new RandomAccessFile(path.toFile(), "rw")) {
             outputFile.seek(offset);
 
@@ -107,7 +108,7 @@ public class ScxTCPSocketImpl extends IOStreamDataChannel implements ScxTCPSocke
     }
 
     @Override
-    public void read(Path path) throws IOException {
+    public void read(Path path,OpenOption... options) throws IOException {
         try (var outputFile = new RandomAccessFile(path.toFile(), "rw")) {
             byte[] buffer = new byte[8192];
             int bytesRead;

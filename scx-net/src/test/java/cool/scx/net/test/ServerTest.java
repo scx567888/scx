@@ -55,14 +55,14 @@ public class ServerTest {
     }
 
     public static void test2() {
-        var tcpServer = new ScxTCPServerImpl(new ScxTCPServerOptions().port(8899).tls(tls));
+        var tcpServer = new NioScxTCPServerImpl(new ScxTCPServerOptions().port(8899).tls(tls));
         var i = new AtomicInteger(0);
         tcpServer.onConnect(c -> {
             System.out.println("客户端连接了 !!!");
             long l = System.nanoTime();
             var path = Path.of("C:\\Users\\scx\\Documents\\ISO\\ubuntu-24.04.1-desktop-amd64.iso");
             try {
-                c.sendFile(path,0, Files.size(path));
+                c.write(path);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
