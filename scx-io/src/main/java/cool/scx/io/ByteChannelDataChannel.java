@@ -9,11 +9,11 @@ import java.nio.file.Path;
 import static java.nio.file.StandardOpenOption.READ;
 import static java.nio.file.StandardOpenOption.WRITE;
 
-public class BaseDataChannel<C extends ByteChannel> implements DataChannel {
+public class ByteChannelDataChannel<C extends ByteChannel> implements DataChannel {
 
     protected final C channel;
 
-    public BaseDataChannel(C channel) {
+    public ByteChannelDataChannel(C channel) {
         this.channel = channel;
     }
 
