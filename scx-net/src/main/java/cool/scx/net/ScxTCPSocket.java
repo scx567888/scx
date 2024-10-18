@@ -25,9 +25,11 @@ public interface ScxTCPSocket {
 
     int read(byte[] bytes) throws IOException;
 
-    byte[] read(int maxLength) throws IOException,NoMoreDataException;
-
     void read(Path path, long offset, long length) throws IOException;
+    
+    void read(Path path) throws IOException;
+
+    byte[] read(int maxLength) throws IOException, NoMoreDataException;
 
     void close() throws IOException;
 
