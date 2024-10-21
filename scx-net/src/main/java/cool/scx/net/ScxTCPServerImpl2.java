@@ -1,24 +1,25 @@
 package cool.scx.net;
 
+import javax.net.ssl.SSLSocket;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.InetSocketAddress;
-import java.nio.channels.ServerSocketChannel;
+import java.net.ServerSocket;
 import java.util.function.Consumer;
 
-public class NioScxTCPServerImpl implements ScxTCPServer {
+public class ScxTCPServerImpl2 implements ScxTCPServer {
 
     private final ScxTCPServerOptions options;
     private final Thread serverThread;
     private Consumer<ScxTCPSocket> connectHandler;
-    private ServerSocketChannel serverSocketChannel;
+    private ServerSocket serverSocket;
     private boolean running;
 
-    public NioScxTCPServerImpl() {
+    public ScxTCPServerImpl2() {
         this(new ScxTCPServerOptions());
     }
 
-    public NioScxTCPServerImpl(ScxTCPServerOptions options) {
+    public ScxTCPServerImpl2(ScxTCPServerOptions options) {
         this.options = options;
         this.serverThread = Thread.ofPlatform().unstarted(this::listen);
     }
@@ -38,11 +39,11 @@ public class NioScxTCPServerImpl implements ScxTCPServer {
         try {
             var tls = options.tls();
             if (tls != null && tls.enabled()) {
-                //todo
+                this.serverSocket = tls.createServerSocket();
             } else {
-                this.serverSocketChannel = ServerSocketChannel.open();
+                this.serverSocket = new ServerSocket();
             }
-            this.serverSocketChannel.bind(new InetSocketAddress(options.port()));
+            this.serverSocket.bind(new InetSocketAddress(options.port()));
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
@@ -61,7 +62,7 @@ public class NioScxTCPServerImpl implements ScxTCPServer {
         running = false;
 
         try {
-            serverSocketChannel.close();
+            serverSocket.close();
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
@@ -71,26 +72,21 @@ public class NioScxTCPServerImpl implements ScxTCPServer {
 
     @Override
     public int port() {
-        try {
-            //理论上都是 InetSocketAddress 类型
-            var localAddress = (InetSocketAddress) serverSocketChannel.getLocalAddress();
-            return localAddress.getPort();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return serverSocket.getLocalPort();
     }
 
     private void listen() {
         while (running) {
             try {
-                var socket = this.serverSocketChannel.accept();
+                var socket = this.serverSocket.accept();
                 Thread.ofVirtual().start(() -> {
                     try {
-                        //todo 处理 TLS
                         //尝试握手
-
+                        if (socket instanceof SSLSocket sslSocket) {
+                            sslSocket.startHandshake();
+                        }
                         //调用处理器
-                        var tcpSocket = new NioScxTCPSocketImpl(socket);
+                        var tcpSocket = new ScxTCPSocketImpl2(socket);
                         connectHandler.accept(tcpSocket);
                     } catch (Exception e) {
                         //暂时忽略
