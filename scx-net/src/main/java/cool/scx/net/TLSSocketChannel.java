@@ -16,16 +16,16 @@ public final class TLSSocketChannel implements ByteChannel {
 
     private final SocketChannel socketChannel;
     private final SSLEngine sslEngine;
-    private final ByteBuffer netData;
-    private final ByteBuffer peerNetData;
+    private final ByteBuffer writeBuffer;
+    private final ByteBuffer readBuffer;
     private final ByteBuffer appData;
     private final ByteBuffer peerAppData;
 
     public TLSSocketChannel(SocketChannel socketChannel, SSLContext sslContext) {
         this.socketChannel = socketChannel;
         this.sslEngine = sslContext.createSSLEngine();
-        this.netData = ByteBuffer.allocate(sslEngine.getSession().getPacketBufferSize());
-        this.peerNetData = ByteBuffer.allocate(sslEngine.getSession().getPacketBufferSize());
+        this.writeBuffer = ByteBuffer.allocate(sslEngine.getSession().getPacketBufferSize());
+        this.readBuffer = ByteBuffer.allocate(sslEngine.getSession().getPacketBufferSize());
         this.appData = ByteBuffer.allocate(sslEngine.getSession().getApplicationBufferSize());
         this.peerAppData = ByteBuffer.allocate(sslEngine.getSession().getApplicationBufferSize());
     }
@@ -38,6 +38,7 @@ public final class TLSSocketChannel implements ByteChannel {
         sslEngine.setUseClientMode(useClientMode);
     }
 
+
     public void startHandshake() throws IOException {
         sslEngine.beginHandshake();
         var handshakeStatus = sslEngine.getHandshakeStatus();
@@ -46,20 +47,20 @@ public final class TLSSocketChannel implements ByteChannel {
 
             switch (handshakeStatus) {
                 case NEED_UNWRAP:
-                    if (socketChannel.read(peerNetData) == -1) {
+                    if (socketChannel.read(readBuffer) == -1) {
                         throw new IOException("Channel closed during handshake");
                     }
-                    peerNetData.flip();
-                    SSLEngineResult unwrapResult = sslEngine.unwrap(peerNetData, peerAppData);
-                    peerNetData.compact();
+                    readBuffer.flip();
+                    SSLEngineResult unwrapResult = sslEngine.unwrap(readBuffer, peerAppData);
+                    readBuffer.compact();
                     handshakeStatus = unwrapResult.getHandshakeStatus();
                     break;
                 case NEED_WRAP:
-                    netData.clear();
-                    SSLEngineResult wrapResult = sslEngine.wrap(ByteBuffer.allocate(0), netData);
-                    netData.flip();
-                    while (netData.hasRemaining()) {
-                        socketChannel.write(netData);
+                    writeBuffer.clear();
+                    SSLEngineResult wrapResult = sslEngine.wrap(ByteBuffer.allocate(0), writeBuffer);
+                    writeBuffer.flip();
+                    while (writeBuffer.hasRemaining()) {
+                        socketChannel.write(writeBuffer);
                     }
                     handshakeStatus = wrapResult.getHandshakeStatus();
                     break;
@@ -82,13 +83,13 @@ public final class TLSSocketChannel implements ByteChannel {
 
     @Override
     public int read(ByteBuffer dst) throws IOException {
-        int bytesRead = socketChannel.read(peerNetData);
+        int bytesRead = socketChannel.read(readBuffer);
         if (bytesRead == -1) {
             return -1;
         }
-        peerNetData.flip();
-        SSLEngineResult result = sslEngine.unwrap(peerNetData, dst);
-        peerNetData.compact();
+        readBuffer.flip();
+        SSLEngineResult result = sslEngine.unwrap(readBuffer, dst);
+        readBuffer.compact();
         if (result.getStatus() == SSLEngineResult.Status.CLOSED) {
             socketChannel.close();
             return -1;
@@ -98,15 +99,35 @@ public final class TLSSocketChannel implements ByteChannel {
 
     @Override
     public int write(ByteBuffer src) throws IOException {
-        netData.clear();
-        SSLEngineResult result = sslEngine.wrap(src, netData);
-        netData.flip();
-        int totalBytesWritten = socketChannel.write(netData);
-        if (result.getStatus() == SSLEngineResult.Status.CLOSED) {
-            socketChannel.close();
-            throw new IOException("SSLEngine has closed");
+        //清空 写缓存
+        writeBuffer.clear();
+        var result = sslEngine.wrap(src, writeBuffer);
+        var status = result.getStatus();
+        switch (status) {
+            case OK -> {
+                //什么都不做
+            }
+            case BUFFER_OVERFLOW -> {
+                throw new IOException("SSLEngine has BUFFER_OVERFLOW ");
+            }
+            case BUFFER_UNDERFLOW -> {
+                throw new IOException("SSLEngine has BUFFER_UNDERFLOW ");
+            }
+            case CLOSED -> {
+                // 关闭连接
+                socketChannel.close();
+                throw new IOException("SSLEngine has closed");
+            }
         }
-        return totalBytesWritten;
+        //反转到读模式
+        writeBuffer.flip();
+        //写入到 socketChannel 中 这里我们一直调用直到完全写入 原因如下
+        while (writeBuffer.hasRemaining()) {
+            socketChannel.write(writeBuffer);
+        }
+        // 我们这里不返回 socketChannel.write(writeBuffer) 的数据 (因为长度是加密后的)
+        // 因为我们需要对外保持行为一致 返回的就是写入的明文的数据长度
+        return result.bytesConsumed();
     }
 
     @Override
@@ -122,5 +143,6 @@ public final class TLSSocketChannel implements ByteChannel {
         }
         socketChannel.close();
     }
+
 
 }
