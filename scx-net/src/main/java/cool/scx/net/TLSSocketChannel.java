@@ -32,9 +32,9 @@ public final class TLSSocketChannel implements ByteChannel {
     public void startHandshake() throws IOException {
         sslEngine.beginHandshake();
         var handshakeStatus = sslEngine.getHandshakeStatus();
-        
+
         while (handshakeStatus != FINISHED && handshakeStatus != NOT_HANDSHAKING) {
-            
+
             switch (handshakeStatus) {
                 case NEED_UNWRAP:
                     if (socketChannel.read(peerNetData) == -1) {
@@ -71,6 +71,7 @@ public final class TLSSocketChannel implements ByteChannel {
         return socketChannel.connect(remote);
     }
 
+    @Override
     public int read(ByteBuffer dst) throws IOException {
         int bytesRead = socketChannel.read(peerNetData);
         if (bytesRead == -1) {
@@ -86,26 +87,25 @@ public final class TLSSocketChannel implements ByteChannel {
         return dst.position();
     }
 
+    @Override
     public int write(ByteBuffer src) throws IOException {
-        while (src.hasRemaining()) {
-            myNetData.clear();
-            SSLEngineResult result = sslEngine.wrap(src, myNetData);
-            myNetData.flip();
-            while (myNetData.hasRemaining()) {
-                socketChannel.write(myNetData);
-            }
-            if (result.getStatus() == SSLEngineResult.Status.CLOSED) {
-                socketChannel.close();
-                throw new IOException("SSLEngine has closed");
-            }
+        myNetData.clear();
+        SSLEngineResult result = sslEngine.wrap(src, myNetData);
+        myNetData.flip();
+        int totalBytesWritten = socketChannel.write(myNetData);
+        if (result.getStatus() == SSLEngineResult.Status.CLOSED) {
+            socketChannel.close();
+            throw new IOException("SSLEngine has closed");
         }
+        return totalBytesWritten;
     }
 
     @Override
     public boolean isOpen() {
-        return false;
+        return socketChannel.isOpen();
     }
 
+    @Override
     public void close() throws IOException {
         sslEngine.closeOutbound();
         startHandshake();
