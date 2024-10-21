@@ -1,43 +1,48 @@
 package cool.scx.net;
 
+import javax.net.ssl.SSLSocket;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.net.Socket;
 import java.net.SocketAddress;
-import java.nio.channels.SocketChannel;
 
-public class NioScxTCPClientImpl implements ScxTCPClient {
+public class ScxTCPClientImpl2 implements ScxTCPClient {
 
     private final ScxTCPClientOptions options;
 
-    public NioScxTCPClientImpl() {
+    public ScxTCPClientImpl2() {
         this(new ScxTCPClientOptions());
     }
 
-    public NioScxTCPClientImpl(ScxTCPClientOptions options) {
+    public ScxTCPClientImpl2(ScxTCPClientOptions options) {
         this.options = options;
     }
 
     @Override
     public ScxTCPSocket connect(SocketAddress endpoint) {
         try {
-            //todo 处理 SSL
             var tls = options.tls();
 
             //todo 处理代理
             var proxy = options.proxy();
 
-            SocketChannel socket = SocketChannel.open();
-//            if (tls != null && tls.enabled()) {
-//                socket = tls.createSocket();
-//            } else {
-//                socket = new Socket();
-//            }
+            Socket socket;
+            if (tls != null && tls.enabled()) {
+                socket = tls.createSocket();
+            } else {
+                socket = new Socket();
+            }
 
             socket.connect(endpoint);
 
-            return new NioScxTCPSocketImpl(socket);
+            if (socket instanceof SSLSocket sslSocket) {
+                sslSocket.startHandshake();
+            }
+
+            return new ScxTCPSocketImpl2(socket);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
     }
+
 }
