@@ -112,7 +112,7 @@ public class ByteChannelDataChannel<C extends ByteChannel> implements DataChanne
     @Override
     public byte[] read(int maxLength) throws IOException, NoMoreDataException {
         var buffer = ByteBuffer.allocate(maxLength);
-        int bytesRead = this.channel.read(buffer);
+        int bytesRead = this.read(buffer);
         if (bytesRead == -1) {
             throw new NoMoreDataException();
         }
