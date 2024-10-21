@@ -7,7 +7,7 @@ import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.function.Supplier;
 
-import static cool.scx.io.Helper.computeLPSArray;
+import static cool.scx.io.ScxIOHelper.computeLPSArray;
 
 public class LinkedDataReader implements DataReader {
 

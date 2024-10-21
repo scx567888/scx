@@ -1,6 +1,8 @@
 package cool.scx.io;
 
-public class Helper {
+import java.nio.ByteBuffer;
+
+public class ScxIOHelper {
 
     public static int[] computeLPSArray(byte[] pattern) {
         int[] lps = new int[pattern.length];
@@ -23,6 +25,12 @@ public class Helper {
         }
 
         return lps;
+    }
+
+    public static byte[] toByteArray(ByteBuffer buffer) {
+        byte[] bytes = new byte[buffer.remaining()];
+        buffer.get(bytes);
+        return bytes;
     }
 
 }

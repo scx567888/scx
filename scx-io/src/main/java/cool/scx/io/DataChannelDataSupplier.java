@@ -2,8 +2,9 @@ package cool.scx.io;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.Arrays;
 import java.util.function.Supplier;
+
+import static cool.scx.io.ScxIOHelper.toByteArray;
 
 public class DataChannelDataSupplier implements Supplier<byte[]> {
 
@@ -24,7 +25,7 @@ public class DataChannelDataSupplier implements Supplier<byte[]> {
             if (bytesRead == -1) {
                 return null; // end of data
             }
-            return Arrays.copyOf(readBuffer.array(), bytesRead);
+            return toByteArray(readBuffer);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
