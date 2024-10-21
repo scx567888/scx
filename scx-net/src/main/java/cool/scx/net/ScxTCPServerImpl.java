@@ -1,10 +1,9 @@
 package cool.scx.net;
 
-import javax.net.ssl.SSLSocket;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.InetSocketAddress;
-import java.net.ServerSocket;
+import java.nio.channels.ServerSocketChannel;
 import java.util.function.Consumer;
 
 public class ScxTCPServerImpl implements ScxTCPServer {
@@ -12,7 +11,7 @@ public class ScxTCPServerImpl implements ScxTCPServer {
     private final ScxTCPServerOptions options;
     private final Thread serverThread;
     private Consumer<ScxTCPSocket> connectHandler;
-    private ServerSocket serverSocket;
+    private ServerSocketChannel serverSocketChannel;
     private boolean running;
 
     public ScxTCPServerImpl() {
@@ -37,13 +36,8 @@ public class ScxTCPServerImpl implements ScxTCPServer {
         }
 
         try {
-            var tls = options.tls();
-            if (tls != null && tls.enabled()) {
-                this.serverSocket = tls.createServerSocket();
-            } else {
-                this.serverSocket = new ServerSocket();
-            }
-            this.serverSocket.bind(new InetSocketAddress(options.port()));
+            this.serverSocketChannel = ServerSocketChannel.open();
+            this.serverSocketChannel.bind(new InetSocketAddress(options.port()));
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
@@ -62,7 +56,7 @@ public class ScxTCPServerImpl implements ScxTCPServer {
         running = false;
 
         try {
-            serverSocket.close();
+            serverSocketChannel.close();
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
@@ -72,21 +66,32 @@ public class ScxTCPServerImpl implements ScxTCPServer {
 
     @Override
     public int port() {
-        return serverSocket.getLocalPort();
+        try {
+            //理论上都是 InetSocketAddress 类型
+            var localAddress = (InetSocketAddress) serverSocketChannel.getLocalAddress();
+            return localAddress.getPort();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void listen() {
         while (running) {
             try {
-                var socket = this.serverSocket.accept();
+                var socketChannel = this.serverSocketChannel.accept();
                 Thread.ofVirtual().start(() -> {
                     try {
-                        //尝试握手
-                        if (socket instanceof SSLSocket sslSocket) {
-                            sslSocket.startHandshake();
+                        var tls = options.tls();
+
+                        ScxTCPSocket tcpSocket;
+                        if (tls != null && tls.enabled()) {
+                            tcpSocket = new TLSScxTCPSocketImpl(socketChannel, tls.sslContext().createSSLEngine());
+                        } else {
+                            tcpSocket = new ScxTCPSocketImpl(socketChannel);
                         }
+                        // todo 尝试握手   
+
                         //调用处理器
-                        var tcpSocket = new ScxTCPSocketImpl(socket);
                         connectHandler.accept(tcpSocket);
                     } catch (Exception e) {
                         //暂时忽略

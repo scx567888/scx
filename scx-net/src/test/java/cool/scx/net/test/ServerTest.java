@@ -1,8 +1,8 @@
 package cool.scx.net.test;
 
 import cool.scx.io.LinkedDataReader;
-import cool.scx.net.NioScxTCPServerImpl;
 import cool.scx.net.ScxTCPServerImpl;
+import cool.scx.net.ScxTCPServerImpl2;
 import cool.scx.net.ScxTCPServerOptions;
 import cool.scx.net.tls.TLS;
 
@@ -24,7 +24,7 @@ public class ServerTest {
     }
 
     public static void test1() {
-        var tcpServer = new ScxTCPServerImpl(new ScxTCPServerOptions().port(8899).tls(tls));
+        var tcpServer = new ScxTCPServerImpl2(new ScxTCPServerOptions().port(8899).tls(tls));
         var i = new AtomicInteger(0);
         tcpServer.onConnect(c -> {
             System.out.println("客户端连接了 !!!");
@@ -55,7 +55,7 @@ public class ServerTest {
     }
 
     public static void test2() {
-        var tcpServer = new NioScxTCPServerImpl(new ScxTCPServerOptions().port(8899).tls(tls));
+        var tcpServer = new ScxTCPServerImpl(new ScxTCPServerOptions().port(8899).tls(tls));
         var i = new AtomicInteger(0);
         tcpServer.onConnect(c -> {
             System.out.println("客户端连接了 !!!");

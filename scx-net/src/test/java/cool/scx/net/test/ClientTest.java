@@ -1,7 +1,7 @@
 package cool.scx.net.test;
 
-import cool.scx.net.NioScxTCPClientImpl;
 import cool.scx.net.ScxTCPClientImpl;
+import cool.scx.net.ScxTCPClientImpl2;
 import cool.scx.net.ScxTCPClientOptions;
 
 import java.io.IOException;
@@ -27,7 +27,7 @@ public class ClientTest {
     }
 
     public static void test1() throws InterruptedException, IOException {
-        var tcpClient = new ScxTCPClientImpl(new ScxTCPClientOptions().tls(tls));
+        var tcpClient = new ScxTCPClientImpl2(new ScxTCPClientOptions().tls(tls));
         var tcpSocket = tcpClient.connect(new InetSocketAddress(8899));
         try {
             AtomicInteger i = new AtomicInteger(0);
@@ -42,7 +42,7 @@ public class ClientTest {
     }
 
     public static void test2() {
-        var tcpClient = new NioScxTCPClientImpl(new ScxTCPClientOptions().tls(tls));
+        var tcpClient = new ScxTCPClientImpl(new ScxTCPClientOptions().tls(tls));
         var tcpSocket = tcpClient.connect(new InetSocketAddress(8899));
         try {
             Path path = Path.of("C:\\Users\\scx\\Desktop\\aaaa.iso");
