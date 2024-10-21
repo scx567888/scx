@@ -1,5 +1,6 @@
 package cool.scx.net;
 
+import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLEngine;
 import javax.net.ssl.SSLEngineResult;
 import java.io.IOException;
@@ -15,18 +16,26 @@ public final class TLSSocketChannel implements ByteChannel {
 
     private final SocketChannel socketChannel;
     private final SSLEngine sslEngine;
-    private final ByteBuffer myNetData;
+    private final ByteBuffer netData;
     private final ByteBuffer peerNetData;
     private final ByteBuffer appData;
     private final ByteBuffer peerAppData;
 
-    public TLSSocketChannel(SSLEngine sslEngine) throws IOException {
-        this.socketChannel = SocketChannel.open();
-        this.sslEngine = sslEngine;
-        this.myNetData = ByteBuffer.allocate(sslEngine.getSession().getPacketBufferSize());
+    public TLSSocketChannel(SocketChannel socketChannel, SSLContext sslContext) {
+        this.socketChannel = socketChannel;
+        this.sslEngine = sslContext.createSSLEngine();
+        this.netData = ByteBuffer.allocate(sslEngine.getSession().getPacketBufferSize());
         this.peerNetData = ByteBuffer.allocate(sslEngine.getSession().getPacketBufferSize());
         this.appData = ByteBuffer.allocate(sslEngine.getSession().getApplicationBufferSize());
         this.peerAppData = ByteBuffer.allocate(sslEngine.getSession().getApplicationBufferSize());
+    }
+
+    public TLSSocketChannel(SSLContext sslContext) throws IOException {
+        this(SocketChannel.open(), sslContext);
+    }
+
+    public void setUseClientMode(boolean useClientMode) {
+        sslEngine.setUseClientMode(useClientMode);
     }
 
     public void startHandshake() throws IOException {
@@ -46,11 +55,11 @@ public final class TLSSocketChannel implements ByteChannel {
                     handshakeStatus = unwrapResult.getHandshakeStatus();
                     break;
                 case NEED_WRAP:
-                    myNetData.clear();
-                    SSLEngineResult wrapResult = sslEngine.wrap(ByteBuffer.allocate(0), myNetData);
-                    myNetData.flip();
-                    while (myNetData.hasRemaining()) {
-                        socketChannel.write(myNetData);
+                    netData.clear();
+                    SSLEngineResult wrapResult = sslEngine.wrap(ByteBuffer.allocate(0), netData);
+                    netData.flip();
+                    while (netData.hasRemaining()) {
+                        socketChannel.write(netData);
                     }
                     handshakeStatus = wrapResult.getHandshakeStatus();
                     break;
@@ -89,10 +98,10 @@ public final class TLSSocketChannel implements ByteChannel {
 
     @Override
     public int write(ByteBuffer src) throws IOException {
-        myNetData.clear();
-        SSLEngineResult result = sslEngine.wrap(src, myNetData);
-        myNetData.flip();
-        int totalBytesWritten = socketChannel.write(myNetData);
+        netData.clear();
+        SSLEngineResult result = sslEngine.wrap(src, netData);
+        netData.flip();
+        int totalBytesWritten = socketChannel.write(netData);
         if (result.getStatus() == SSLEngineResult.Status.CLOSED) {
             socketChannel.close();
             throw new IOException("SSLEngine has closed");
@@ -108,7 +117,9 @@ public final class TLSSocketChannel implements ByteChannel {
     @Override
     public void close() throws IOException {
         sslEngine.closeOutbound();
-        startHandshake();
+        if (sslEngine.getHandshakeStatus() != NOT_HANDSHAKING) {
+            startHandshake();
+        }
         socketChannel.close();
     }
 
