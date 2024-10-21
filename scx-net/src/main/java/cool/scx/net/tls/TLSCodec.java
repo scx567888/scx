@@ -1,12 +1,10 @@
-package cool.scx.io;
+package cool.scx.net.tls;
 
 import cool.scx.common.functional.ScxConsumer;
 
-import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLEngine;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.security.NoSuchAlgorithmException;
 
 public class TLSCodec {
 
@@ -22,7 +20,6 @@ public class TLSCodec {
         largerBuffer.put(buffer);
         return largerBuffer;
     }
-
 
     private static ByteBuffer ensureCapacity(ByteBuffer buffer, int additionalCapacity) {
         if (buffer.remaining() >= additionalCapacity) {
@@ -93,7 +90,7 @@ public class TLSCodec {
     public byte[] encode(byte[] bytes) throws IOException {
         // 将字节数组包装成 ByteBuffer
         var buffer = ByteBuffer.wrap(bytes);
-        
+
         // 调用已有的 encode(ByteBuffer buffer) 方法
         var encryptedData = encode(buffer);
 
@@ -106,7 +103,7 @@ public class TLSCodec {
     public void encode(byte[] bytes, ScxConsumer<byte[], IOException> consumer) throws IOException {
         // 将字节数组包装成 ByteBuffer
         var buffer = ByteBuffer.wrap(bytes);
-        
+
         // 调用已有的 encode(ByteBuffer buffer) 方法
         encode(buffer, (encryptedData) -> {
             // 将加密后的 ByteBuffer 转换为字节数组并返回
@@ -157,19 +154,15 @@ public class TLSCodec {
         return decryptedData;
     }
 
-
-    public static void main(String[] args) throws NoSuchAlgorithmException, IOException {
-        SSLEngine sslEngine1 = SSLContext.getDefault().createSSLEngine();
-        sslEngine1.setUseClientMode(true);
-        var s = new TLSCodec(sslEngine1);
-        var sb = new StringBuilder();
-        for (int i = 0; i < 999; i++) {
-            sb.append(i + ",");
-        }
-        sb.append("end");
-        var encode = s.encode(sb.toString().getBytes());
-//        ByteBuffer decode = s.decode(encode);
-        System.out.println();
+    public byte[] decode(byte[] encryptedBytes) throws IOException {
+        // 将字节数组包装成 ByteBuffer
+        var encryptedBuffer = ByteBuffer.wrap(encryptedBytes);
+        // 调用已有的 decode(ByteBuffer encryptedBuffer) 方法
+        var decryptedData = decode(encryptedBuffer);
+        // 将解密后的 ByteBuffer 转换为字节数组并返回
+        byte[] decryptedBytes = new byte[decryptedData.remaining()];
+        decryptedData.get(decryptedBytes);
+        return decryptedBytes;
     }
 
 }
