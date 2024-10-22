@@ -84,6 +84,48 @@ public class LinkedDataReader implements DataReader {
         return remaining;
     }
 
+    private int fastRead(ReadConsumer consumer, int maxLength, boolean movePointer) {
+        var remaining = maxLength; // 剩余字节数
+        var n = head; // 循环用节点
+
+        // 确保至少有一个字节可读
+        if (!head.hasAvailable()) {
+            var moreData = pullData(); // 尝试拉取一次数据
+            if (!moreData) {
+                throw new NoMoreDataException(); // 没有更多数据
+            }
+        }
+
+        // 循环有两种情况会退出 1, 已经读取到足够的数据 2, 没有更多数据可读了
+        while (remaining > 0) {
+            // 计算当前节点能够读取的长度
+            var toAdd = Math.min(remaining, n.available());
+            // 写入到 result 中
+            consumer.accept(n.bytes, n.position, remaining, toAdd);
+            // 计算剩余字节数
+            remaining -= toAdd;
+            if (movePointer) {
+                // 同时移动当前节点的指针位置
+                n.position += toAdd;
+            }
+            // 如果 remaining > 0 说明还需要继续读取
+            // 但是我们在上边的代码是一定会将当前节点全部读完的，所以这里我们需要向后移动节点
+            if (remaining > 0) {
+                // 如果当前节点没有下一个节点，则直接退出循环，不再尝试拉取更多数据
+                if (n.next == null) {
+                    break;
+                }
+                // 更新 n 节点的同时更新 head 节点，然后进行下一次循环
+                if (movePointer) {
+                    head = n = n.next;
+                } else {
+                    n = n.next;
+                }
+            }
+        }
+        return remaining;
+    }
+
     @Override
     public byte read() throws NoMoreDataException {
         ensureAvailable();
@@ -208,6 +250,18 @@ public class LinkedDataReader implements DataReader {
     @Override
     public void skip(int length) {
         read((_, _, _, _) -> {}, length, true);
+    }
+
+    public byte[] fastRead(int maxLength) throws NoMoreDataException {
+        var result = new byte[maxLength];
+        var r = fastRead((bytes, position, remaining, toAdd) -> System.arraycopy(bytes, position, result, maxLength - remaining, toAdd), maxLength, true);
+        return r == 0 ? result : Arrays.copyOf(result, maxLength - r);
+    }
+
+    public byte[] fastPeek(int maxLength) throws NoMoreDataException {
+        var result = new byte[maxLength];
+        var r = fastRead((bytes, position, remaining, toAdd) -> System.arraycopy(bytes, position, result, maxLength - remaining, toAdd), maxLength, false);
+        return r == 0 ? result : Arrays.copyOf(result, maxLength - r);
     }
 
     private interface ReadConsumer {
