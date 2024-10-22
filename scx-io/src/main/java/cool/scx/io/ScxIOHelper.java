@@ -55,26 +55,21 @@ public class ScxIOHelper {
         if (newCapacity <= byteBuffer.capacity()) {
             throw new IllegalArgumentException("New capacity must be greater than current capacity.");
         }
-
         ByteBuffer newByteBuffer = ByteBuffer.allocate(newCapacity);
         ByteBuffer duplicate = byteBuffer.duplicate();
-        boolean wasReadMode = isReadMode(duplicate);
-
-        if (wasReadMode) {
-            duplicate.flip(); // 如果是读模式，转换到写模式以复制所有内容
+        var isReadMode = isReadMode(duplicate);
+        if (isReadMode) {
+            duplicate.flip(); // 如果是读模式，切换到写模式以复制所有内容
         }
-
         newByteBuffer.put(duplicate);
-
-        if (wasReadMode) {
+        if (isReadMode) {
             newByteBuffer.flip(); // 恢复新缓冲区的读模式
         }
-
-        newByteBuffer.position(byteBuffer.position()); // 恢复原缓冲区位置
+        newByteBuffer.position(byteBuffer.position()); // 恢复原缓冲区的位置
         return newByteBuffer;
     }
 
-    /** 扩容 (默认 2 倍) */
+    /** 扩容（默认 2 倍） */
     public static ByteBuffer expandByteBuffer(ByteBuffer byteBuffer) {
         return expandByteBuffer(byteBuffer, byteBuffer.capacity() * 2);
     }
