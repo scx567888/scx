@@ -22,6 +22,9 @@ public class LinkedDataReader implements DataReader {
         this.tail = this.head;
     }
 
+    /**
+     * @return 是否拉取成功
+     */
     private boolean pullData() {
         var bytes = bytesSupplier.get();
         if (bytes == null) {
@@ -32,33 +35,19 @@ public class LinkedDataReader implements DataReader {
         return true;
     }
 
-    private void ensureAvailable() {
-        while (!head.hasAvailable()) {
-            if (head.next == null) {
-                if (!pullData()) {
-                    throw new NoMoreDataException();
-                }
-            }
-            head = head.next;
-        }
-    }
-
     /**
-     * 只尝试 pullData 一次
-     * 对比 :
-     * ensureAvailable 如果 pullData 拉取的是空字节数组 则会一直尝试拉取 直到 有一个可读的字节
-     * fastEnsureAvailable 只要 pullData 拉取的不是 null 则拉取一次即可
-     *
-     * @return 是否执行了 pullData
+     * @param pullOnce 是否只尝试拉取一次
+     * @return 是否执行了拉取操作
      */
-    private boolean fastEnsureAvailable() {
+    private boolean ensureAvailable(boolean pullOnce) {
         while (!head.hasAvailable()) {
             if (head.next == null) {
                 if (!pullData()) {
                     throw new NoMoreDataException();
                 }
-                //拉取一次即终止
-                return true;
+                if (pullOnce) {
+                    return true;
+                }
             }
             head = head.next;
         }
@@ -107,54 +96,33 @@ public class LinkedDataReader implements DataReader {
     }
 
     private int read(ReadConsumer consumer, int maxLength, boolean movePointer) {
-        ensureAvailable(); // 确保至少有一个字节可读
+        ensureAvailable(false); // 确保至少有一个字节可读 之后持续拉取
         return read(consumer, maxLength, movePointer, this::pullData);
     }
 
-    /**
-     * 功能和 read 基本相同 但是当数据不足需要 pullData 的时候 只会拉取一次 而不是一直尝试拉取
-     * 一般用于 网络 可以保证快速访问数据
-     *
-     * @param consumer    a
-     * @param maxLength   a
-     * @param movePointer a
-     * @return a
-     */
     private int fastRead(ReadConsumer consumer, int maxLength, boolean movePointer) {
-        var p = new AtomicBoolean(fastEnsureAvailable());// 不确保一定有数据可读 (但是只拉取一次)
+        var pulled = new AtomicBoolean(ensureAvailable(true)); // 只在这里尝试拉取一次 如果没拉取 后续可能会拉取
         return read(consumer, maxLength, movePointer, () -> {
-            if (p.get()) {
+            if (pulled.get()) {
                 return false;
             } else {
                 // 2, 如果没有拉取过 尝试拉取
                 var moreData = pullData();
-                p.set(true);
+                pulled.set(true);
                 // 如果拉取数据失败，则跳出循环
                 return moreData;
             }
         });
     }
 
-    /**
-     * 功能和 fastRead 基本相同 但是当数据不足以填充所需长度的时候 不会尝试去拉取
-     * 相较于 fastRead 可能在循环中进行 拉取 这个方法 只会在一开始 进行拉取
-     * 例如 当前 head 中的数据 [1,2,3] maxLength = 4
-     * 这个方法 会返回 [1,2,3] 但是 fastRead 则会在循环中尝试拉取 即返回 [1,2,3,4]
-     * 一般用于 网络 可以保证快速访问数据
-     *
-     * @param consumer    a
-     * @param maxLength   a
-     * @param movePointer a
-     * @return a
-     */
     private int tryRead(ReadConsumer consumer, int maxLength, boolean movePointer) {
-        fastEnsureAvailable(); // 只在这里尝试拉取一次
+        ensureAvailable(true); // 只在这里尝试拉取一次 之后一次都不拉取
         return read(consumer, maxLength, movePointer, () -> false);
     }
 
     @Override
     public byte read() throws NoMoreDataException {
-        ensureAvailable();
+        ensureAvailable(false);
         return head.bytes[head.position++];
     }
 
@@ -179,7 +147,7 @@ public class LinkedDataReader implements DataReader {
 
     @Override
     public byte peek() throws NoMoreDataException {
-        ensureAvailable();
+        ensureAvailable(false);
         return head.bytes[head.position];
     }
 
