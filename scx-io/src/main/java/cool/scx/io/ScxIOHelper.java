@@ -33,4 +33,54 @@ public class ScxIOHelper {
         return bytes;
     }
 
+    public static ByteBuffer enlargeBuffer(ByteBuffer buffer) {
+        ByteBuffer largerBuffer = ByteBuffer.allocate(buffer.capacity() * 2);
+        buffer.flip();
+        largerBuffer.put(buffer);
+        return largerBuffer;
+    }
+
+    public static ByteBuffer ensureCapacity(ByteBuffer buffer, int additionalCapacity) {
+        if (buffer.remaining() >= additionalCapacity) {
+            return buffer;
+        }
+        ByteBuffer largerBuffer = ByteBuffer.allocate(buffer.capacity() * 2 + additionalCapacity);
+        buffer.flip();
+        largerBuffer.put(buffer);
+        return largerBuffer;
+    }
+
+
+    public static ByteBuffer expandByteBuffer(ByteBuffer byteBuffer, int newCapacity) {
+        if (newCapacity <= byteBuffer.capacity()) {
+            throw new IllegalArgumentException("New capacity must be greater than current capacity.");
+        }
+        ByteBuffer newByteBuffer = ByteBuffer.allocate(newCapacity);
+        ByteBuffer duplicate = byteBuffer.duplicate();
+        boolean wasReadMode = isReadMode(duplicate);
+        if (wasReadMode) {
+            duplicate.clear(); // 如果是读模式，转换到写模式以复制所有内容
+        }
+        newByteBuffer.put(duplicate);
+        if (wasReadMode) {
+            newByteBuffer.flip(); // 恢复新缓冲区的读模式
+        }
+        newByteBuffer.position(byteBuffer.position()); // 恢复原缓冲区位置
+        return newByteBuffer;
+    }
+
+    /** 扩容 (默认 2 倍) */
+    public static ByteBuffer expandByteBuffer(ByteBuffer byteBuffer) {
+        return expandByteBuffer(byteBuffer, byteBuffer.capacity() * 2);
+    }
+
+    public static boolean isReadMode(ByteBuffer buffer) {
+        return buffer.position() == 0 && buffer.limit() == buffer.capacity();
+    }
+
+    public static boolean isWriteMode(ByteBuffer buffer) {
+        return buffer.limit() == buffer.capacity() && buffer.position() < buffer.capacity();
+    }
+
+
 }
