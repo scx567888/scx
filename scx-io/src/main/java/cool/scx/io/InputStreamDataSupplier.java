@@ -13,8 +13,12 @@ public class InputStreamDataSupplier implements Supplier<byte[]> {
     private final InputStream inputStream;
 
     public InputStreamDataSupplier(InputStream inputStream) {
+        this(inputStream, BUFFER_LENGTH);
+    }
+
+    public InputStreamDataSupplier(InputStream inputStream, int bufferLength) {
         this.inputStream = inputStream;
-        this.readBuffer = new byte[BUFFER_LENGTH];
+        this.readBuffer = new byte[bufferLength];
     }
 
     @Override

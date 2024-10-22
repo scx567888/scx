@@ -2,21 +2,22 @@ package cool.scx.io;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.channels.ByteChannel;
 import java.util.function.Supplier;
 
 import static cool.scx.io.ScxIOHelper.toByteArray;
 
-public class DataChannelDataSupplier implements Supplier<byte[]> {
+public class ByteChannelDataSupplier implements Supplier<byte[]> {
 
     private static final int BUFFER_LENGTH = 8 * 1024;
-    private final DataChannel dataChannel;
+    private final ByteChannel dataChannel;
     private final ByteBuffer readBuffer;
 
-    public DataChannelDataSupplier(DataChannel dataChannel) {
+    public ByteChannelDataSupplier(ByteChannel dataChannel) {
         this(dataChannel, BUFFER_LENGTH);
     }
 
-    public DataChannelDataSupplier(DataChannel dataChannel, int bufferLength) {
+    public ByteChannelDataSupplier(ByteChannel dataChannel, int bufferLength) {
         this.dataChannel = dataChannel;
         this.readBuffer = ByteBuffer.allocate(bufferLength);
     }
@@ -29,6 +30,7 @@ public class DataChannelDataSupplier implements Supplier<byte[]> {
             if (bytesRead == -1) {
                 return null; // end of data
             }
+            readBuffer.flip();
             return toByteArray(readBuffer);
         } catch (IOException e) {
             throw new RuntimeException(e);
