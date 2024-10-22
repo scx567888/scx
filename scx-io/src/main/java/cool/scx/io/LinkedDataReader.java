@@ -170,6 +170,60 @@ public class LinkedDataReader implements DataReader {
         return remaining;
     }
 
+    /**
+     * 功能和 fastRead 基本相同 但是当数据不足以填充所需长度的时候 不会尝试去拉取
+     * 相较于 fastRead 可能在循环中进行 拉取 这个方法 只会在一开始 进行拉取
+     * 例如 当前 head 中的数据 [1,2,3] maxLength = 4
+     * 这个方法 会返回 [1,2,3] 但是 fastRead 则会在循环中尝试拉取 即返回 [1,2,3,4]
+     * 一般用于 网络 可以保证快速访问数据
+     *
+     * @param consumer    a
+     * @param maxLength   a
+     * @param movePointer a
+     * @return a
+     */
+    private int tryRead(ReadConsumer consumer, int maxLength, boolean movePointer) {
+        fastEnsureAvailable(); // 不确保一定有数据可读 (但是只拉取一次)
+
+        var remaining = maxLength; // 剩余需要读取的字节数
+        var n = head; // 用于循环的节点
+
+        // 循环有 3 种情况会退出
+        // 1, 已经读取到足够的数据
+        // 2, 没有更多数据可读了
+        // 3, 已经拉取过了
+        while (remaining > 0) {
+            // 计算当前节点可以读取的长度
+            var toAdd = Math.min(remaining, n.available());
+            // 写入数据
+            consumer.accept(n.bytes, n.position, remaining, toAdd);
+            // 计算剩余字节数
+            remaining -= toAdd;
+
+            if (movePointer) {
+                // 移动当前节点的指针位置
+                n.position += toAdd;
+            }
+
+            // 如果 remaining > 0 说明还需要继续读取
+            if (remaining > 0) {
+                // 如果 当前节点没有下一个节点 则尝试拉取下一个节点
+                if (n.next == null) {
+                    // 检查是否已经拉取过数据, 
+                    // 如果拉取过 直接退出循环 指针移动问题我们不需要考虑 因为 fastEnsureAvailable 会处理
+                    break;
+                }
+                //更新 n 节点 的同时更新 head 节点 然后进行下一次循环
+                if (movePointer) {
+                    head = n = n.next;
+                } else {
+                    n = n.next;
+                }
+            }
+        }
+        return remaining;
+    }
+
     @Override
     public byte read() throws NoMoreDataException {
         ensureAvailable();
@@ -306,6 +360,28 @@ public class LinkedDataReader implements DataReader {
         var result = new byte[maxLength];
         var r = fastRead((bytes, position, remaining, toAdd) -> System.arraycopy(bytes, position, result, maxLength - remaining, toAdd), maxLength, false);
         return r == 0 ? result : Arrays.copyOf(result, maxLength - r);
+    }
+
+    public byte[] tryRead(int maxLength) throws NoMoreDataException {
+        var result = new byte[maxLength];
+        var r = tryRead((bytes, position, remaining, toAdd) -> System.arraycopy(bytes, position, result, maxLength - remaining, toAdd), maxLength, true);
+        return r == 0 ? result : Arrays.copyOf(result, maxLength - r);
+    }
+
+    public byte[] tryPeek(int maxLength) throws NoMoreDataException {
+        var result = new byte[maxLength];
+        var r = tryRead((bytes, position, remaining, toAdd) -> System.arraycopy(bytes, position, result, maxLength - remaining, toAdd), maxLength, false);
+        return r == 0 ? result : Arrays.copyOf(result, maxLength - r);
+    }
+
+    public int available() {
+        var totalAvailable = 0;
+        var n = head;
+        while (n != null) {
+            totalAvailable += n.available();
+            n = n.next;
+        }
+        return totalAvailable;
     }
 
     private interface ReadConsumer {
