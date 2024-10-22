@@ -93,10 +93,7 @@ public class LinkedDataReader implements DataReader {
     @Override
     public byte[] read(int maxLength) throws NoMoreDataException {
         var result = new byte[maxLength];
-        var r = read((bytes, position, remaining, toAdd) -> {
-            // 写入到 result 中
-            System.arraycopy(bytes, position, result, maxLength - remaining, toAdd);
-        }, maxLength, true);
+        var r = read((bytes, position, remaining, toAdd) -> System.arraycopy(bytes, position, result, maxLength - remaining, toAdd), maxLength, true);
         return r == 0 ? result : Arrays.copyOf(result, maxLength - r);
     }
 
@@ -121,10 +118,7 @@ public class LinkedDataReader implements DataReader {
     @Override
     public byte[] peek(int maxLength) throws NoMoreDataException {
         var result = new byte[maxLength];
-        var r = read((bytes, position, remaining, toAdd) -> {
-            // 写入到 result 中
-            System.arraycopy(bytes, position, result, maxLength - remaining, toAdd);
-        }, maxLength, false);
+        var r = read((bytes, position, remaining, toAdd) -> System.arraycopy(bytes, position, result, maxLength - remaining, toAdd), maxLength, false);
         return r == 0 ? result : Arrays.copyOf(result, maxLength - r);
     }
 
@@ -217,9 +211,7 @@ public class LinkedDataReader implements DataReader {
     }
 
     private interface ReadConsumer {
-
         void accept(byte[] bytes, int position, int remaining, int toAdd);
-
     }
 
     private static class Node {
