@@ -34,8 +34,7 @@ public class LinkedDataReader implements DataReader {
     private void ensureAvailable() {
         while (!head.hasAvailable()) {
             if (head.next == null) {
-                var b = pullData();
-                if (!b) {
+                if (!pullData()) {
                     throw new NoMoreDataException();
                 }
             }
@@ -43,26 +42,51 @@ public class LinkedDataReader implements DataReader {
         }
     }
 
+    /**
+     * 只尝试 pullData 一次
+     * 对比 :
+     * ensureAvailable 如果 pullData 拉取的是空字节数组 则会一直尝试拉取 直到 有一个可读的字节
+     * fastEnsureAvailable 只要 pullData 拉取的不是 null 则拉取一次即可
+     *
+     * @return 是否执行了 pullData
+     */
+    private boolean fastEnsureAvailable() {
+        while (!head.hasAvailable()) {
+            if (head.next == null) {
+                if (!pullData()) {
+                    throw new NoMoreDataException();
+                }
+                //拉取一次即终止
+                return true;
+            }
+            head = head.next;
+        }
+        return false;
+    }
+
     private int read(ReadConsumer consumer, int maxLength, boolean movePointer) {
         ensureAvailable(); // 确保至少有一个字节可读
-        var remaining = maxLength; //剩余字节数
 
-        var n = head; //循环用节点
-        //循环有两种情况会退出 1, 已经读取到足够的数据 2, 没有更多数据可读了 
+        var remaining = maxLength; // 剩余需要读取的字节数
+        var n = head; // 用于循环的节点
+
+        // 循环有两种情况会退出
+        // 1, 已经读取到足够的数据
+        // 2, 没有更多数据可读了
         while (remaining > 0) {
-            // 计算当前节点能够读取的长度 
+            // 计算当前节点可以读取的长度
             var toAdd = Math.min(remaining, n.available());
-            // 写入到 result 中
+            // 写入数据
             consumer.accept(n.bytes, n.position, remaining, toAdd);
             // 计算剩余字节数
             remaining -= toAdd;
 
             if (movePointer) {
-                // 同时移动当前节点的指针位置
+                // 移动当前节点的指针位置
                 n.position += toAdd;
             }
 
-            // 如果 remaining > 0 说明还需要继续读取 
+            // 如果 remaining > 0 说明还需要继续读取
             // 但是 我们在上边的代码是一定会将 当前节点全部读完的 所以这里我们需要向后移动节点
             if (remaining > 0) {
                 // 如果 当前节点没有下一个节点 则尝试拉取下一个节点
@@ -94,30 +118,19 @@ public class LinkedDataReader implements DataReader {
      * @return a
      */
     private int fastRead(ReadConsumer consumer, int maxLength, boolean movePointer) {
-
-        boolean dataPulled = false; // 标识是否已经尝试拉取过数据
-
-        // 首先确保至少有一个字节可读 这里不使用循环 防止多次拉取
-        if (!head.hasAvailable()) {
-            if (head.next == null) {
-                var b = pullData();
-                if (!b) {
-                    throw new NoMoreDataException();
-                } else {
-                    dataPulled = true;
-                }
-            }
-            head = head.next;
-        }
+        var pulled = fastEnsureAvailable(); // 不确保一定有数据可读 (只拉取一次)
 
         var remaining = maxLength; // 剩余需要读取的字节数
         var n = head; // 用于循环的节点
 
-        // 循环，直到读取到足够的数据或没有更多数据可读为止
+        // 循环有三种情况会退出
+        // 1, 已经读取到足够的数据
+        // 2, 没有更多数据可读了
+        // 3, 已经拉取了
         while (remaining > 0) {
             // 计算当前节点可以读取的长度
             var toAdd = Math.min(remaining, n.available());
-            // 使用消费者将数据写入结果
+            // 写入数据
             consumer.accept(n.bytes, n.position, remaining, toAdd);
             // 计算剩余字节数
             remaining -= toAdd;
@@ -127,21 +140,23 @@ public class LinkedDataReader implements DataReader {
                 n.position += toAdd;
             }
 
-            // 如果剩余字节数大于0，说明还需要继续读取
+            // 如果 remaining > 0 说明还需要继续读取
+            // 但是 我们在上边的代码是一定会将 当前节点全部读完的 所以这里我们需要向后移动节点
             if (remaining > 0) {
-                // 如果当前节点没有下一个节点
+                // 如果 当前节点没有下一个节点 则尝试拉取下一个节点
                 if (n.next == null) {
-                    // 检查是否已经拉取过数据
-                    if (!dataPulled) {
+                    // 检查是否已经拉取过数据, 
+                    // 如果拉取过 直接退出循环 指针移动问题我们不需要考虑 因为 fastEnsureAvailable 会处理
+                    if (pulled) {
+                        break;
+                    } else {
+                        // 2, 如果没有拉取过 尝试拉取
                         var moreData = pullData();
-                        dataPulled = true;
+                        pulled = true;
                         // 如果拉取数据失败，则跳出循环
                         if (!moreData) {
                             break;
                         }
-                    } else {
-                        // 已经拉取过数据，但数据不足，跳出循环
-                        break;
                     }
                 }
                 //更新 n 节点 的同时更新 head 节点 然后进行下一次循环
