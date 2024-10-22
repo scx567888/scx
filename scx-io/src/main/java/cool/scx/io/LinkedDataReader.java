@@ -70,7 +70,7 @@ public class LinkedDataReader implements DataReader {
         var remaining = maxLength; // 剩余需要读取的字节数
         var n = head; // 用于循环的节点
 
-        // 循环有两种情况会退出
+        // 循环有 2 种情况会退出
         // 1, 已经读取到足够的数据
         // 2, 没有更多数据可读了
         while (remaining > 0) {
@@ -92,7 +92,7 @@ public class LinkedDataReader implements DataReader {
                 // 如果 当前节点没有下一个节点 则尝试拉取下一个节点
                 if (n.next == null) {
                     var moreData = pullData();
-                    //如果拉取失败 直接跳出循环
+                    // 如果拉取数据失败，则跳出循环
                     if (!moreData) {
                         break;
                     }
@@ -118,15 +118,15 @@ public class LinkedDataReader implements DataReader {
      * @return a
      */
     private int fastRead(ReadConsumer consumer, int maxLength, boolean movePointer) {
-        var pulled = fastEnsureAvailable(); // 不确保一定有数据可读 (只拉取一次)
+        var pulled = fastEnsureAvailable(); // 不确保一定有数据可读 (但是只拉取一次)
 
         var remaining = maxLength; // 剩余需要读取的字节数
         var n = head; // 用于循环的节点
 
-        // 循环有三种情况会退出
+        // 循环有 3 种情况会退出
         // 1, 已经读取到足够的数据
         // 2, 没有更多数据可读了
-        // 3, 已经拉取了
+        // 3, 已经拉取过了
         while (remaining > 0) {
             // 计算当前节点可以读取的长度
             var toAdd = Math.min(remaining, n.available());
