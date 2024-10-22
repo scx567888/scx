@@ -5,7 +5,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.ByteChannel;
 import java.util.function.Supplier;
 
-import static cool.scx.io.ScxIOHelper.toByteArray;
+import static cool.scx.io.ByteBufferHelper.toByteArray;
 
 public class ByteChannelDataSupplier implements Supplier<byte[]> {
 

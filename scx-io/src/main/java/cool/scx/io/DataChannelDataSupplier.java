@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.function.Supplier;
 
-import static cool.scx.io.ScxIOHelper.toByteArray;
+import static cool.scx.io.ByteBufferHelper.toByteArray;
 
 public class DataChannelDataSupplier implements Supplier<byte[]> {
 

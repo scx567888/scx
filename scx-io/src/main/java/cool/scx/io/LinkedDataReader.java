@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
-import static cool.scx.io.ScxIOHelper.computeLPSArray;
+import static cool.scx.io.KMPHelper.computeLPSArray;
 
 public class LinkedDataReader implements DataReader {
 
