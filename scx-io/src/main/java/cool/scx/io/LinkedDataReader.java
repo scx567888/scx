@@ -5,6 +5,7 @@ import cool.scx.common.util.ArrayUtils;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
 import static cool.scx.io.ScxIOHelper.computeLPSArray;
@@ -64,9 +65,7 @@ public class LinkedDataReader implements DataReader {
         return false;
     }
 
-    private int read(ReadConsumer consumer, int maxLength, boolean movePointer) {
-        ensureAvailable(); // 确保至少有一个字节可读
-
+    private int read(ReadConsumer consumer, int maxLength, boolean movePointer, DataPuller puller) {
         var remaining = maxLength; // 剩余需要读取的字节数
         var n = head; // 用于循环的节点
 
@@ -91,9 +90,8 @@ public class LinkedDataReader implements DataReader {
             if (remaining > 0) {
                 // 如果 当前节点没有下一个节点 则尝试拉取下一个节点
                 if (n.next == null) {
-                    var moreData = pullData();
-                    // 如果拉取数据失败，则跳出循环
-                    if (!moreData) {
+                    //如果 返回 false 则表示拉取失败或不需要拉取 退出循环
+                    if (!puller.pull()) {
                         break;
                     }
                 }
@@ -108,6 +106,11 @@ public class LinkedDataReader implements DataReader {
         return remaining;
     }
 
+    private int read(ReadConsumer consumer, int maxLength, boolean movePointer) {
+        ensureAvailable(); // 确保至少有一个字节可读
+        return read(consumer, maxLength, movePointer, this::pullData);
+    }
+
     /**
      * 功能和 read 基本相同 但是当数据不足需要 pullData 的时候 只会拉取一次 而不是一直尝试拉取
      * 一般用于 网络 可以保证快速访问数据
@@ -118,56 +121,18 @@ public class LinkedDataReader implements DataReader {
      * @return a
      */
     private int fastRead(ReadConsumer consumer, int maxLength, boolean movePointer) {
-        var pulled = fastEnsureAvailable(); // 不确保一定有数据可读 (但是只拉取一次)
-
-        var remaining = maxLength; // 剩余需要读取的字节数
-        var n = head; // 用于循环的节点
-
-        // 循环有 3 种情况会退出
-        // 1, 已经读取到足够的数据
-        // 2, 没有更多数据可读了
-        // 3, 已经拉取过了
-        while (remaining > 0) {
-            // 计算当前节点可以读取的长度
-            var toAdd = Math.min(remaining, n.available());
-            // 写入数据
-            consumer.accept(n.bytes, n.position, remaining, toAdd);
-            // 计算剩余字节数
-            remaining -= toAdd;
-
-            if (movePointer) {
-                // 移动当前节点的指针位置
-                n.position += toAdd;
+        var p = new AtomicBoolean(fastEnsureAvailable());// 不确保一定有数据可读 (但是只拉取一次)
+        return read(consumer, maxLength, movePointer, () -> {
+            if (p.get()) {
+                return false;
+            } else {
+                // 2, 如果没有拉取过 尝试拉取
+                var moreData = pullData();
+                p.set(true);
+                // 如果拉取数据失败，则跳出循环
+                return moreData;
             }
-
-            // 如果 remaining > 0 说明还需要继续读取
-            // 但是 我们在上边的代码是一定会将 当前节点全部读完的 所以这里我们需要向后移动节点
-            if (remaining > 0) {
-                // 如果 当前节点没有下一个节点 则尝试拉取下一个节点
-                if (n.next == null) {
-                    // 检查是否已经拉取过数据, 
-                    // 如果拉取过 直接退出循环 指针移动问题我们不需要考虑 因为 fastEnsureAvailable 会处理
-                    if (pulled) {
-                        break;
-                    } else {
-                        // 2, 如果没有拉取过 尝试拉取
-                        var moreData = pullData();
-                        pulled = true;
-                        // 如果拉取数据失败，则跳出循环
-                        if (!moreData) {
-                            break;
-                        }
-                    }
-                }
-                //更新 n 节点 的同时更新 head 节点 然后进行下一次循环
-                if (movePointer) {
-                    head = n = n.next;
-                } else {
-                    n = n.next;
-                }
-            }
-        }
-        return remaining;
+        });
     }
 
     /**
@@ -183,45 +148,8 @@ public class LinkedDataReader implements DataReader {
      * @return a
      */
     private int tryRead(ReadConsumer consumer, int maxLength, boolean movePointer) {
-        fastEnsureAvailable(); // 不确保一定有数据可读 (但是只拉取一次)
-
-        var remaining = maxLength; // 剩余需要读取的字节数
-        var n = head; // 用于循环的节点
-
-        // 循环有 3 种情况会退出
-        // 1, 已经读取到足够的数据
-        // 2, 没有更多数据可读了
-        // 3, 已经拉取过了
-        while (remaining > 0) {
-            // 计算当前节点可以读取的长度
-            var toAdd = Math.min(remaining, n.available());
-            // 写入数据
-            consumer.accept(n.bytes, n.position, remaining, toAdd);
-            // 计算剩余字节数
-            remaining -= toAdd;
-
-            if (movePointer) {
-                // 移动当前节点的指针位置
-                n.position += toAdd;
-            }
-
-            // 如果 remaining > 0 说明还需要继续读取
-            if (remaining > 0) {
-                // 如果 当前节点没有下一个节点 则尝试拉取下一个节点
-                if (n.next == null) {
-                    // 检查是否已经拉取过数据, 
-                    // 如果拉取过 直接退出循环 指针移动问题我们不需要考虑 因为 fastEnsureAvailable 会处理
-                    break;
-                }
-                //更新 n 节点 的同时更新 head 节点 然后进行下一次循环
-                if (movePointer) {
-                    head = n = n.next;
-                } else {
-                    n = n.next;
-                }
-            }
-        }
-        return remaining;
+        fastEnsureAvailable(); // 只在这里尝试拉取一次
+        return read(consumer, maxLength, movePointer, () -> false);
     }
 
     @Override
@@ -386,6 +314,10 @@ public class LinkedDataReader implements DataReader {
 
     private interface ReadConsumer {
         void accept(byte[] bytes, int position, int remaining, int toAdd);
+    }
+
+    private interface DataPuller {
+        boolean pull();
     }
 
     private static class Node {
