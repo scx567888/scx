@@ -35,6 +35,7 @@ public class ByteChannelDataSupplier implements Supplier<Node> {
     @Override
     public Node get() {
         try {
+            //不使用成员变量作为缓冲区的原因 参照 InputStreamDataSupplier
             var bytes = ByteBuffer.allocate(bufferLength);
             int i = dataChannel.read(bytes);
             if (i == -1) {

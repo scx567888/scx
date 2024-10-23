@@ -270,16 +270,6 @@ public class LinkedDataReader implements DataReader {
         return r == 0 ? result : Arrays.copyOf(result, maxLength - r);
     }
 
-    public int available() {
-        var totalAvailable = 0;
-        var n = head;
-        while (n != null) {
-            totalAvailable += n.available();
-            n = n.next;
-        }
-        return totalAvailable;
-    }
-
     private interface ReadConsumer {
         void accept(byte[] bytes, int position, int remaining, int toAdd);
     }
