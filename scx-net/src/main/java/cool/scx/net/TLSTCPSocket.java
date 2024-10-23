@@ -12,7 +12,8 @@ import java.nio.channels.SocketChannel;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
 
-import static cool.scx.io.BufferHelper.*;
+import static cool.scx.io.BufferHelper.expandBuffer;
+import static cool.scx.io.BufferHelper.putBytes;
 import static javax.net.ssl.SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING;
 
 //todo 未完成
@@ -118,7 +119,7 @@ public class TLSTCPSocket implements ScxTCPSocket {
             //切换到读模式
             decryptedBuffer.flip();
 
-            return new LinkedDataReader.Node(decryptedBuffer.array(),decryptedBuffer.position(),decryptedBuffer.limit());
+            return new LinkedDataReader.Node(decryptedBuffer.array(), decryptedBuffer.position(), decryptedBuffer.limit());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
