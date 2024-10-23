@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.function.Supplier;
 
-import static cool.scx.io.ByteBufferHelper.toByteArray;
+import static cool.scx.io.BufferHelper.toBytes;
 
 public class DataChannelDataSupplier implements Supplier<byte[]> {
 
@@ -29,7 +29,7 @@ public class DataChannelDataSupplier implements Supplier<byte[]> {
             if (bytesRead == -1) {
                 return null; // end of data
             }
-            return toByteArray(readBuffer);
+            return toBytes(readBuffer);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

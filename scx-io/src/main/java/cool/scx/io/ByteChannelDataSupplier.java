@@ -5,7 +5,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.ByteChannel;
 import java.util.function.Supplier;
 
-import static cool.scx.io.ByteBufferHelper.toByteArray;
+import static cool.scx.io.BufferHelper.toBytes;
 
 public class ByteChannelDataSupplier implements Supplier<byte[]> {
 
@@ -31,7 +31,7 @@ public class ByteChannelDataSupplier implements Supplier<byte[]> {
                 return null; // end of data
             }
             readBuffer.flip();
-            return toByteArray(readBuffer);
+            return toBytes(readBuffer);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
