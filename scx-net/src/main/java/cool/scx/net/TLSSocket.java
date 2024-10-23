@@ -18,9 +18,10 @@ import static javax.net.ssl.SSLEngineResult.HandshakeStatus.FINISHED;
 import static javax.net.ssl.SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING;
 
 //todo 未完成
-public class TLSScxTCPSocketImpl implements ScxTCPSocket {
+public class TLSSocket implements ScxTCPSocket {
 
     private final SocketChannel socketChannel;
+
     private final SSLEngine sslEngine;
     private final ByteBuffer writeBuffer;
     private final ByteBuffer readBuffer;
@@ -31,7 +32,7 @@ public class TLSScxTCPSocketImpl implements ScxTCPSocket {
     private final int packetBufferSize;
     private final int applicationBufferSize;
 
-    public TLSScxTCPSocketImpl(SocketChannel socketChannel, SSLEngine sslEngine) {
+    public TLSSocket(SocketChannel socketChannel, SSLEngine sslEngine) {
         this.socketChannel = socketChannel;
         this.sslEngine = sslEngine;
         //写入缓冲 默认取 PacketBuffer 大小 (存储的永远是加密的数据)
@@ -124,14 +125,6 @@ public class TLSScxTCPSocketImpl implements ScxTCPSocket {
         }
     }
 
-    public boolean connect(SocketAddress remote) throws IOException {
-        return socketChannel.connect(remote);
-    }
-
-    public SocketAddress remoteAddress() throws IOException {
-        return socketChannel.getRemoteAddress();
-    }
-
     @Override
     public void write(ByteBuffer buffer) throws IOException {
         var r = buffer.remaining();
@@ -206,10 +199,6 @@ public class TLSScxTCPSocketImpl implements ScxTCPSocket {
         return dataReader.tryRead(maxLength);
     }
 
-    @Override
-    public boolean isOpen() {
-        return socketChannel.isOpen();
-    }
 
     @Override
     public void close() throws IOException {
@@ -218,6 +207,16 @@ public class TLSScxTCPSocketImpl implements ScxTCPSocket {
             startHandshake();
         }
         socketChannel.close();
+    }
+
+    @Override
+    public boolean isOpen() {
+        return socketChannel.isOpen();
+    }
+
+    @Override
+    public SocketAddress remoteAddress() throws IOException {
+        return socketChannel.getRemoteAddress();
     }
 
 }

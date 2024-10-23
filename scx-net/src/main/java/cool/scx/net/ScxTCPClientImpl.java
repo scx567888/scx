@@ -33,13 +33,13 @@ public class ScxTCPClientImpl implements ScxTCPClient {
                 var socketChannel = SocketChannel.open();
                 socketChannel.connect(endpoint);
                 //创建 TLSScxTCPSocketImpl 并执行握手
-                var socket = new TLSScxTCPSocketImpl(socketChannel, sslEngine);
+                var socket = new TLSSocket(socketChannel, sslEngine);
                 socket.startHandshake();
                 return socket;
             } else {
                 var socketChannel = SocketChannel.open();
                 socketChannel.connect(endpoint);
-                return new ScxTCPSocketImpl(socketChannel);
+                return new PlainSocket(socketChannel);
             }
 
         } catch (IOException e) {
