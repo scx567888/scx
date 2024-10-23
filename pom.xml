@@ -64,6 +64,7 @@
         <module>scx-net</module>
         <module>scx-io</module>
         <module>scx-jdbc-sql-server</module>
+        <module>scx-http-peach</module>
     </modules>
 
     <build>
