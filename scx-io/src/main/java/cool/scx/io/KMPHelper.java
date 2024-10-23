@@ -1,6 +1,6 @@
 package cool.scx.io;
 
-public class Helper {
+public class KMPHelper {
 
     public static int[] computeLPSArray(byte[] pattern) {
         int[] lps = new int[pattern.length];

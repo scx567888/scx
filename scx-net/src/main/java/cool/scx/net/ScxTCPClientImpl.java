@@ -1,10 +1,9 @@
 package cool.scx.net;
 
-import javax.net.ssl.SSLSocket;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.net.Socket;
 import java.net.SocketAddress;
+import java.nio.channels.SocketChannel;
 
 public class ScxTCPClientImpl implements ScxTCPClient {
 
@@ -26,20 +25,23 @@ public class ScxTCPClientImpl implements ScxTCPClient {
             //todo 处理代理
             var proxy = options.proxy();
 
-            Socket socket;
             if (tls != null && tls.enabled()) {
-                socket = tls.createSocket();
+                //创建 sslEngine
+                var sslEngine = tls.sslContext().createSSLEngine();
+                sslEngine.setUseClientMode(true);
+                //创建 SocketChannel
+                var socketChannel = SocketChannel.open();
+                socketChannel.connect(endpoint);
+                //创建 TLSScxTCPSocketImpl 并执行握手
+                var socket = new TLSScxTCPSocketImpl(socketChannel, sslEngine);
+                socket.startHandshake();
+                return socket;
             } else {
-                socket = new Socket();
+                var socketChannel = SocketChannel.open();
+                socketChannel.connect(endpoint);
+                return new ScxTCPSocketImpl(socketChannel);
             }
 
-            socket.connect(endpoint);
-
-            if (socket instanceof SSLSocket sslSocket) {
-                sslSocket.startHandshake();
-            }
-
-            return new ScxTCPSocketImpl(socket);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
