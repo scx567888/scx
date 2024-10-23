@@ -34,8 +34,14 @@ public class TCPClient implements ScxTCPClient {
                 socketChannel.connect(endpoint);
                 //创建 TLSScxTCPSocketImpl 并执行握手
                 var socket = new TLSTCPSocket(socketChannel, sslEngine);
-                socket.startHandshake();
-                return socket;
+                try {
+                    //握手失败 目前直接抛出异常
+                    socket.startHandshake();
+                    return socket;
+                } catch (Exception e) {
+                    socketChannel.close();
+                    throw e;
+                }
             } else {
                 var socketChannel = SocketChannel.open();
                 socketChannel.connect(endpoint);
