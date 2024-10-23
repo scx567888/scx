@@ -6,15 +6,15 @@ import java.io.UncheckedIOException;
 import java.net.Socket;
 import java.net.SocketAddress;
 
-public class ScxTCPClientImpl2 implements ScxTCPClient {
+public class ClassicScxTCPClientImpl implements ScxTCPClient {
 
     private final ScxTCPClientOptions options;
 
-    public ScxTCPClientImpl2() {
+    public ClassicScxTCPClientImpl() {
         this(new ScxTCPClientOptions());
     }
 
-    public ScxTCPClientImpl2(ScxTCPClientOptions options) {
+    public ClassicScxTCPClientImpl(ScxTCPClientOptions options) {
         this.options = options;
     }
 
@@ -39,7 +39,7 @@ public class ScxTCPClientImpl2 implements ScxTCPClient {
                 sslSocket.startHandshake();
             }
 
-            return new ScxTCPSocketImpl2(socket);
+            return new ClassicScxTCPSocketImpl(socket);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
