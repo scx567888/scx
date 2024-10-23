@@ -25,17 +25,23 @@ public class ScxTCPClientImpl implements ScxTCPClient {
             //todo 处理代理
             var proxy = options.proxy();
 
-            var socketChannel = SocketChannel.open();
-            ScxTCPSocket socket;
             if (tls != null && tls.enabled()) {
-                socket = new TLSScxTCPSocketImpl(socketChannel, tls.sslContext().createSSLEngine());
+                //创建 sslEngine
+                var sslEngine = tls.sslContext().createSSLEngine();
+                sslEngine.setUseClientMode(true);
+                //创建 SocketChannel
+                var socketChannel = SocketChannel.open();
+                socketChannel.connect(endpoint);
+                //创建 TLSScxTCPSocketImpl 并执行握手
+                var socket = new TLSScxTCPSocketImpl(socketChannel, sslEngine);
+                socket.startHandshake();
+                return socket;
             } else {
-                socket = new ScxTCPSocketImpl(socketChannel);
+                var socketChannel = SocketChannel.open();
+                socketChannel.connect(endpoint);
+                return new ScxTCPSocketImpl(socketChannel);
             }
 
-            socketChannel.connect(endpoint);
-
-            return socket;
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
