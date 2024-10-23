@@ -25,6 +25,8 @@ public class TLSTCPSocket implements ScxTCPSocket {
     private final LinkedDataReader rawReader;
     private final int packetBufferSize;
     private final int applicationBufferSize;
+    // 避免每次都创建 减少内存占用
+    private final ByteBuffer writeBuffer;
 
     public TLSTCPSocket(SocketChannel socketChannel, SSLEngine sslEngine) {
         this.socketChannel = socketChannel;
@@ -36,6 +38,7 @@ public class TLSTCPSocket implements ScxTCPSocket {
         this.rawReader = new LinkedDataReader(new ByteChannelDataSupplier(socketChannel, applicationBufferSize));
         // 存储解密的数据
         this.dataReader = new LinkedDataReader(this::decodeDataSupplier);
+        this.writeBuffer = ByteBuffer.allocateDirect(packetBufferSize);
     }
 
     //todo 在虚拟线程中运行时 有 bug
@@ -43,7 +46,6 @@ public class TLSTCPSocket implements ScxTCPSocket {
         sslEngine.beginHandshake();
         var peerAppData = ByteBuffer.allocate(applicationBufferSize);
         var readBuffer = ByteBuffer.allocate(packetBufferSize);
-        var writeBuffer = ByteBuffer.allocate(packetBufferSize);
         while (true) {
 
             var handshakeStatus = sslEngine.getHandshakeStatus();
@@ -83,7 +85,7 @@ public class TLSTCPSocket implements ScxTCPSocket {
         }
     }
 
-    public byte[] decodeDataSupplier() {
+    public LinkedDataReader.Node decodeDataSupplier() {
         try {
             // 未解密的数据
             var encryptedBuffer = ByteBuffer.allocate(packetBufferSize);
@@ -116,7 +118,7 @@ public class TLSTCPSocket implements ScxTCPSocket {
             //切换到读模式
             decryptedBuffer.flip();
 
-            return toBytes(decryptedBuffer);
+            return new LinkedDataReader.Node(decryptedBuffer.array(),decryptedBuffer.position(),decryptedBuffer.limit());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -124,22 +126,21 @@ public class TLSTCPSocket implements ScxTCPSocket {
 
     @Override
     public void write(ByteBuffer buffer) throws IOException {
-        var r = buffer.remaining();
-
         while (buffer.hasRemaining()) {
-            var tempEncryptedData = ByteBuffer.allocate(packetBufferSize);
-            var result = sslEngine.wrap(buffer, tempEncryptedData);
-            var status = result.getStatus();
+            writeBuffer.clear();  // 重置位置和限制
+            var result = sslEngine.wrap(buffer, writeBuffer);
 
+            var status = result.getStatus();
             switch (status) {
                 case OK -> {
-                    // 切换到读模式并写入
-                    tempEncryptedData.flip();
-                    socketChannel.write(tempEncryptedData);
+                    writeBuffer.flip();
+                    while (writeBuffer.hasRemaining()) {
+                        socketChannel.write(writeBuffer);
+                    }
                 }
-                case BUFFER_OVERFLOW -> throw new IOException("SSLEngine wrap encountered BUFFER_OVERFLOW");
-                case BUFFER_UNDERFLOW -> throw new IOException("SSLEngine wrap encountered BUFFER_UNDERFLOW");
-                case CLOSED -> throw new IOException("SSLEngine wrap encountered CLOSED");
+                case BUFFER_OVERFLOW -> throw new IOException("SSLEngine wrap 遇到 BUFFER_OVERFLOW");
+                case BUFFER_UNDERFLOW -> throw new IOException("SSLEngine wrap 遇到 BUFFER_UNDERFLOW");
+                case CLOSED -> throw new IOException("SSLEngine wrap 遇到 CLOSED");
             }
         }
     }
