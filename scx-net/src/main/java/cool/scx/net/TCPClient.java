@@ -5,15 +5,15 @@ import java.io.UncheckedIOException;
 import java.net.SocketAddress;
 import java.nio.channels.SocketChannel;
 
-public class ScxTCPClientImpl implements ScxTCPClient {
+public class TCPClient implements ScxTCPClient {
 
     private final ScxTCPClientOptions options;
 
-    public ScxTCPClientImpl() {
+    public TCPClient() {
         this(new ScxTCPClientOptions());
     }
 
-    public ScxTCPClientImpl(ScxTCPClientOptions options) {
+    public TCPClient(ScxTCPClientOptions options) {
         this.options = options;
     }
 

@@ -6,7 +6,7 @@ import java.net.InetSocketAddress;
 import java.nio.channels.ServerSocketChannel;
 import java.util.function.Consumer;
 
-public class ScxTCPServerImpl implements ScxTCPServer {
+public class TCPServer implements ScxTCPServer {
 
     private final ScxTCPServerOptions options;
     private final Thread serverThread;
@@ -14,11 +14,11 @@ public class ScxTCPServerImpl implements ScxTCPServer {
     private ServerSocketChannel serverSocketChannel;
     private boolean running;
 
-    public ScxTCPServerImpl() {
+    public TCPServer() {
         this(new ScxTCPServerOptions());
     }
 
-    public ScxTCPServerImpl(ScxTCPServerOptions options) {
+    public TCPServer(ScxTCPServerOptions options) {
         this.options = options;
         this.serverThread = Thread.ofPlatform().unstarted(this::listen);
     }
