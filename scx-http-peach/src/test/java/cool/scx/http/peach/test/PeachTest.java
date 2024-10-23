@@ -12,7 +12,7 @@ public class PeachTest {
     public static void test1() {
         var httpServer = new PeachHttpServer(new ScxHttpServerOptions().port(8899));
         httpServer.requestHandler(c -> {
-            System.out.println(c.body().asString());
+            System.out.println(c.method() + " " + c.uri() + " -> " + c.body().asString());
             c.response().send("123");
         });
         httpServer.start();

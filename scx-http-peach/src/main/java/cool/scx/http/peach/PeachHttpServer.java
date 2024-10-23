@@ -9,11 +9,13 @@ import cool.scx.net.ScxTCPSocket;
 import cool.scx.net.TCPServer;
 
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static cool.scx.http.HttpFieldName.CONNECTION;
 import static cool.scx.http.HttpFieldName.SERVER;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class PeachHttpServer implements ScxHttpServer {
 
@@ -63,7 +65,7 @@ public class PeachHttpServer implements ScxHttpServer {
             var request = new PeachHttpServerRequest();
 
             request.method = HttpMethod.of(method);
-            request.uri = ScxURI.of(path);
+            request.uri = ScxURI.of(URLDecoder.decode(path, UTF_8));
             request.version = HttpVersion.of(version);
 
             var headerBytes = dataReader.readUntil("\r\n\r\n".getBytes());
