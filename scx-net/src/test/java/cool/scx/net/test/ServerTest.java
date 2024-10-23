@@ -27,7 +27,7 @@ public class ServerTest {
 
             var dataReader = new LinkedDataReader(() -> {
                 try {
-                    return c.read(8192);
+                    return new LinkedDataReader.Node(c.read(8192));
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
