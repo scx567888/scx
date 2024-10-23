@@ -1,10 +1,7 @@
 package cool.scx.http.peach;
 
-import cool.scx.http.ScxHttpServer;
-import cool.scx.http.ScxHttpServerOptions;
-import cool.scx.http.ScxHttpServerRequest;
-import cool.scx.http.ScxServerWebSocket;
-import cool.scx.io.ByteChannelDataSupplier;
+import cool.scx.http.*;
+import cool.scx.http.uri.ScxURI;
 import cool.scx.io.LinkedDataReader;
 import cool.scx.net.ScxTCPServer;
 import cool.scx.net.ScxTCPServerOptions;
@@ -24,15 +21,15 @@ public class PeachHttpServer implements ScxHttpServer {
     private Consumer<ScxServerWebSocket> webSocketHandler;
     private Consumer<Throwable> errorHandler;
 
-    public PeachHttpServer(ScxHttpServerOptions options,Function<ScxTCPServerOptions, ScxTCPServer> tcpServerBuilder) {
-        this.options=options;
+    public PeachHttpServer(ScxHttpServerOptions options, Function<ScxTCPServerOptions, ScxTCPServer> tcpServerBuilder) {
+        this.options = options;
         this.tcpServerBuilder = tcpServerBuilder;
         this.tcpServer = tcpServerBuilder.apply(new ScxTCPServerOptions().port(options.port()));
         this.tcpServer.onConnect(this::listen);
     }
 
     public PeachHttpServer(ScxHttpServerOptions options) {
-       this(options, TCPServer::new);
+        this(options, TCPServer::new);
     }
 
     public PeachHttpServer() {
@@ -40,7 +37,7 @@ public class PeachHttpServer implements ScxHttpServer {
     }
 
     private void listen(ScxTCPSocket scxTCPSocket) {
-        var dataReader=new LinkedDataReader(()-> {
+        var dataReader = new LinkedDataReader(() -> {
             try {
                 byte[] read = scxTCPSocket.read(8192);
                 return new LinkedDataReader.Node(read);
@@ -48,27 +45,71 @@ public class PeachHttpServer implements ScxHttpServer {
                 throw new RuntimeException(e);
             }
         });
-        while (true){
-            byte[] bytes = dataReader.readUntil("\r\n".getBytes());
-            System.out.println(new String(bytes));
+        while (true) {
+            //读取 请求行
+            var requestLineBytes = dataReader.readUntil("\r\n".getBytes());
+            String requestLine = new String(requestLineBytes);
+            String[] split = requestLine.split(" ");
+            if (split.length != 3) {
+                throw new RuntimeException("Invalid request line: " + requestLine);
+            }
+            var method = split[0];
+            var path = split[1];
+            var version = split[2];
+
+            var request = new PeachHttpServerRequest();
+
+            request.method = HttpMethod.of(method);
+            request.uri = ScxURI.of(path);
+            request.version = HttpVersion.of(version);
+
+            var headerBytes = dataReader.readUntil("\r\n\r\n".getBytes());
+
+            var headerStr = new String(headerBytes);
+
+            var headers = ScxHttpHeaders.of(headerStr);
+
+            request.headers = headers;
+
+
+            ScxHttpBody body = null;
+
+            Long contentLength = headers.contentLength();
+
+            if (contentLength != null) {
+                body = new PeachScxHttpBody(dataReader, headers, contentLength);
+            } else {
+                body = new PeachScxHttpBody(dataReader, headers, 0L);
+            }
+
+            request.body = body;
+
+            var response = new PeachHttpServerResponse(request, scxTCPSocket);
+
+            request.response = response;
+
+            if (requestHandler != null) {
+                requestHandler.accept(request);
+            }
+
         }
     }
 
     @Override
     public ScxHttpServer requestHandler(Consumer<ScxHttpServerRequest> handler) {
-        this.requestHandler=handler;
+        this.requestHandler = handler;
         return this;
     }
 
     @Override
     public ScxHttpServer webSocketHandler(Consumer<ScxServerWebSocket> handler) {
-        this.webSocketHandler=handler;
+        this.webSocketHandler = handler;
         return this;
     }
 
     @Override
     public ScxHttpServer errorHandler(Consumer<Throwable> handler) {
-        this.errorHandler=handler;
+        this.errorHandler = handler;
         return this;
     }
 
