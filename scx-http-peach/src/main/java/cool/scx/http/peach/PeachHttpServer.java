@@ -13,6 +13,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static cool.scx.http.HttpFieldName.CONNECTION;
+import static cool.scx.http.HttpFieldName.SERVER;
 
 public class PeachHttpServer implements ScxHttpServer {
 
@@ -89,6 +90,8 @@ public class PeachHttpServer implements ScxHttpServer {
             var response = new PeachHttpServerResponse(request, scxTCPSocket);
 
             response.headers().set(CONNECTION, "keep-alive");
+
+            response.headers().set(SERVER, "Scx Peach");
 
             request.response = response;
 
