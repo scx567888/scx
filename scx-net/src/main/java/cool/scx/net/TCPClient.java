@@ -5,15 +5,15 @@ import java.io.UncheckedIOException;
 import java.net.SocketAddress;
 import java.nio.channels.SocketChannel;
 
-public class ScxTCPClientImpl implements ScxTCPClient {
+public class TCPClient implements ScxTCPClient {
 
     private final ScxTCPClientOptions options;
 
-    public ScxTCPClientImpl() {
+    public TCPClient() {
         this(new ScxTCPClientOptions());
     }
 
-    public ScxTCPClientImpl(ScxTCPClientOptions options) {
+    public TCPClient(ScxTCPClientOptions options) {
         this.options = options;
     }
 
@@ -33,13 +33,19 @@ public class ScxTCPClientImpl implements ScxTCPClient {
                 var socketChannel = SocketChannel.open();
                 socketChannel.connect(endpoint);
                 //创建 TLSScxTCPSocketImpl 并执行握手
-                var socket = new TLSScxTCPSocketImpl(socketChannel, sslEngine);
-                socket.startHandshake();
-                return socket;
+                var socket = new TLSTCPSocket(socketChannel, sslEngine);
+                try {
+                    //握手失败 目前直接抛出异常
+                    socket.startHandshake();
+                    return socket;
+                } catch (Exception e) {
+                    socketChannel.close();
+                    throw e;
+                }
             } else {
                 var socketChannel = SocketChannel.open();
                 socketChannel.connect(endpoint);
-                return new ScxTCPSocketImpl(socketChannel);
+                return new PlainTCPSocket(socketChannel);
             }
 
         } catch (IOException e) {

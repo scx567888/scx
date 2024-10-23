@@ -13,13 +13,13 @@ import java.nio.file.Files;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
 
-public class ScxTCPSocketImpl2 implements ScxTCPSocket {
+public class ClassicTCPSocket implements ScxTCPSocket {
 
     private final Socket socket;
     private final InputStream in;
     private final OutputStream out;
 
-    public ScxTCPSocketImpl2(Socket socket) {
+    public ClassicTCPSocket(Socket socket) {
         this.socket = socket;
         try {
             this.in = socket.getInputStream();

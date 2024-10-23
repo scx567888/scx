@@ -5,7 +5,6 @@ import cool.scx.io.LinkedDataReader;
 import cool.scx.io.NoMoreDataException;
 
 import javax.net.ssl.SSLEngine;
-import javax.net.ssl.SSLEngineResult;
 import java.io.IOException;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
@@ -14,73 +13,72 @@ import java.nio.file.OpenOption;
 import java.nio.file.Path;
 
 import static cool.scx.io.BufferHelper.*;
-import static javax.net.ssl.SSLEngineResult.HandshakeStatus.FINISHED;
 import static javax.net.ssl.SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING;
 
 //todo 未完成
-public class TLSScxTCPSocketImpl implements ScxTCPSocket {
+public class TLSTCPSocket implements ScxTCPSocket {
 
     private final SocketChannel socketChannel;
+
     private final SSLEngine sslEngine;
-    private final ByteBuffer writeBuffer;
-    private final ByteBuffer readBuffer;
-    private final ByteBuffer appData;
-    private final ByteBuffer peerAppData;
     private final LinkedDataReader dataReader;
     private final LinkedDataReader rawReader;
     private final int packetBufferSize;
     private final int applicationBufferSize;
 
-    public TLSScxTCPSocketImpl(SocketChannel socketChannel, SSLEngine sslEngine) {
+    public TLSTCPSocket(SocketChannel socketChannel, SSLEngine sslEngine) {
         this.socketChannel = socketChannel;
         this.sslEngine = sslEngine;
         //写入缓冲 默认取 PacketBuffer 大小 (存储的永远是加密的数据)
         this.packetBufferSize = sslEngine.getSession().getPacketBufferSize();
         this.applicationBufferSize = sslEngine.getSession().getApplicationBufferSize();
-        this.writeBuffer = ByteBuffer.allocate(packetBufferSize);
-        this.readBuffer = ByteBuffer.allocate(packetBufferSize);
-        this.appData = ByteBuffer.allocate(applicationBufferSize);
-        this.peerAppData = ByteBuffer.allocate(applicationBufferSize);
         // 存储未解密的数据
         this.rawReader = new LinkedDataReader(new ByteChannelDataSupplier(socketChannel, applicationBufferSize));
         // 存储解密的数据
         this.dataReader = new LinkedDataReader(this::decodeDataSupplier);
     }
 
+    //todo 在虚拟线程中运行时 有 bug
     public void startHandshake() throws IOException {
         sslEngine.beginHandshake();
-        var handshakeStatus = sslEngine.getHandshakeStatus();
+        var peerAppData = ByteBuffer.allocate(applicationBufferSize);
+        var readBuffer = ByteBuffer.allocate(packetBufferSize);
+        var writeBuffer = ByteBuffer.allocate(packetBufferSize);
+        while (true) {
 
-        while (handshakeStatus != FINISHED && handshakeStatus != NOT_HANDSHAKING) {
+            var handshakeStatus = sslEngine.getHandshakeStatus();
 
             switch (handshakeStatus) {
-                case NEED_UNWRAP:
+                // 退出循环
+                case FINISHED, NOT_HANDSHAKING -> {
+                    return;
+                }
+                case NEED_UNWRAP -> {
                     if (socketChannel.read(readBuffer) == -1) {
                         throw new IOException("Channel closed during handshake");
                     }
                     readBuffer.flip();
-                    SSLEngineResult unwrapResult = sslEngine.unwrap(readBuffer, peerAppData);
+                    //todo 在虚拟线程中 可能陷入无限循环 既 readBuffer.hasRemaining() 永为 true
+                    while (readBuffer.hasRemaining()) {
+                        var unwrapResult = sslEngine.unwrap(readBuffer, peerAppData);
+                    }
                     readBuffer.compact();
-                    handshakeStatus = unwrapResult.getHandshakeStatus();
-                    break;
-                case NEED_WRAP:
+                }
+                case NEED_WRAP -> {
                     writeBuffer.clear();
-                    SSLEngineResult wrapResult = sslEngine.wrap(ByteBuffer.allocate(0), writeBuffer);
+                    var wrapResult = sslEngine.wrap(ByteBuffer.allocate(0), writeBuffer);
                     writeBuffer.flip();
                     while (writeBuffer.hasRemaining()) {
                         socketChannel.write(writeBuffer);
                     }
-                    handshakeStatus = wrapResult.getHandshakeStatus();
-                    break;
-                case NEED_TASK:
+                }
+                case NEED_TASK -> {
                     Runnable task;
                     while ((task = sslEngine.getDelegatedTask()) != null) {
                         task.run();
                     }
-                    handshakeStatus = sslEngine.getHandshakeStatus();
-                    break;
-                default:
-                    throw new IllegalStateException("Unexpected handshake status: " + handshakeStatus);
+                }
+                default -> throw new IllegalStateException("Unexpected handshake status: " + handshakeStatus);
             }
         }
     }
@@ -122,14 +120,6 @@ public class TLSScxTCPSocketImpl implements ScxTCPSocket {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public boolean connect(SocketAddress remote) throws IOException {
-        return socketChannel.connect(remote);
-    }
-
-    public SocketAddress remoteAddress() throws IOException {
-        return socketChannel.getRemoteAddress();
     }
 
     @Override
@@ -206,10 +196,6 @@ public class TLSScxTCPSocketImpl implements ScxTCPSocket {
         return dataReader.tryRead(maxLength);
     }
 
-    @Override
-    public boolean isOpen() {
-        return socketChannel.isOpen();
-    }
 
     @Override
     public void close() throws IOException {
@@ -218,6 +204,16 @@ public class TLSScxTCPSocketImpl implements ScxTCPSocket {
             startHandshake();
         }
         socketChannel.close();
+    }
+
+    @Override
+    public boolean isOpen() {
+        return socketChannel.isOpen();
+    }
+
+    @Override
+    public SocketAddress remoteAddress() throws IOException {
+        return socketChannel.getRemoteAddress();
     }
 
 }
