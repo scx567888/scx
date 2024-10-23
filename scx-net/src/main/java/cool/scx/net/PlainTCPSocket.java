@@ -114,6 +114,7 @@ public class PlainTCPSocket implements ScxTCPSocket {
 
     @Override
     public byte[] read(int maxLength) throws IOException, NoMoreDataException {
+        // 不使用成员变量做 缓冲 buffer 的原因 参考 InputStreamDataSupplier
         var buffer = ByteBuffer.allocate(maxLength);
         int bytesRead = this.read(buffer);
         if (bytesRead == -1) {

@@ -12,12 +12,12 @@ import static cool.scx.io.KMPHelper.computeLPSArray;
 
 public class LinkedDataReader implements DataReader {
 
-    private final Supplier<byte[]> bytesSupplier;
+    private final Supplier<Node> dataSupplier;
     private Node head;
     private Node tail;
 
-    public LinkedDataReader(Supplier<byte[]> bytesSupplier) {
-        this.bytesSupplier = bytesSupplier;
+    public LinkedDataReader(Supplier<Node> dataSupplier) {
+        this.dataSupplier = dataSupplier;
         this.head = new Node(EMPTY_BYTES);
         this.tail = this.head;
     }
@@ -26,11 +26,11 @@ public class LinkedDataReader implements DataReader {
      * @return 是否拉取成功
      */
     private boolean pullData() {
-        var bytes = bytesSupplier.get();
-        if (bytes == null) {
+        var data = dataSupplier.get();
+        if (data == null) {
             return false;
         }
-        tail.next = new Node(bytes);
+        tail.next = data;
         tail = tail.next;
         return true;
     }
@@ -270,16 +270,6 @@ public class LinkedDataReader implements DataReader {
         return r == 0 ? result : Arrays.copyOf(result, maxLength - r);
     }
 
-    public int available() {
-        var totalAvailable = 0;
-        var n = head;
-        while (n != null) {
-            totalAvailable += n.available();
-            n = n.next;
-        }
-        return totalAvailable;
-    }
-
     private interface ReadConsumer {
         void accept(byte[] bytes, int position, int remaining, int toAdd);
     }
@@ -288,21 +278,30 @@ public class LinkedDataReader implements DataReader {
         boolean pull();
     }
 
-    private static class Node {
+    public static class Node {
         private final byte[] bytes;
+        private final int limit;
         private int position;
         private Node next;
 
-        Node(byte[] bytes) {
+        public Node(byte[] bytes) {
             this.bytes = bytes;
+            this.position = 0;
+            this.limit = bytes.length;
+        }
+
+        public Node(byte[] bytes, int position, int limit) {
+            this.bytes = bytes;
+            this.position = position;
+            this.limit = limit;
         }
 
         int available() {
-            return bytes.length - position;
+            return limit - position;
         }
 
         boolean hasAvailable() {
-            return position < bytes.length;
+            return position < limit;
         }
 
     }

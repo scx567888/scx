@@ -51,9 +51,9 @@ public class DataReaderTest {
         s[8] = "7".getBytes();
         s[9] = "9".getBytes();
         var d = new AtomicInteger(0);
-        Supplier<byte[]> sp = () -> {
+        Supplier<LinkedDataReader.Node> sp = () -> {
             try {
-                return s[d.getAndIncrement()];
+                return new LinkedDataReader.Node(s[d.getAndIncrement()]);
             } catch (Exception e) {
                 return null;
             }
@@ -93,9 +93,9 @@ public class DataReaderTest {
         s[8] = "7".getBytes();
         s[9] = "9".getBytes();
         var d = new AtomicInteger(0);
-        Supplier<byte[]> sp = () -> {
+        Supplier<LinkedDataReader.Node> sp = () -> {
             try {
-                return s[d.getAndIncrement()];
+                return new LinkedDataReader.Node(s[d.getAndIncrement()]);
             } catch (Exception e) {
                 return null;
             }
