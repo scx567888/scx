@@ -12,11 +12,11 @@ import java.nio.file.Path;
 
 import static java.nio.file.StandardOpenOption.READ;
 
-public class PlainSocket implements ScxTCPSocket {
+public class PlainTCPSocket implements ScxTCPSocket {
 
     private final SocketChannel socketChannel;
 
-    public PlainSocket(SocketChannel socketChannel) {
+    public PlainTCPSocket(SocketChannel socketChannel) {
         this.socketChannel = socketChannel;
     }
 

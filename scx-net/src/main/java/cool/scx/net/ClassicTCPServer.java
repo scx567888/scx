@@ -7,7 +7,7 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.util.function.Consumer;
 
-public class ClassicScxTCPServerImpl implements ScxTCPServer {
+public class ClassicTCPServer implements ScxTCPServer {
 
     private final ScxTCPServerOptions options;
     private final Thread serverThread;
@@ -15,11 +15,11 @@ public class ClassicScxTCPServerImpl implements ScxTCPServer {
     private ServerSocket serverSocket;
     private boolean running;
 
-    public ClassicScxTCPServerImpl() {
+    public ClassicTCPServer() {
         this(new ScxTCPServerOptions());
     }
 
-    public ClassicScxTCPServerImpl(ScxTCPServerOptions options) {
+    public ClassicTCPServer(ScxTCPServerOptions options) {
         this.options = options;
         this.serverThread = Thread.ofPlatform().unstarted(this::listen);
     }
@@ -86,7 +86,7 @@ public class ClassicScxTCPServerImpl implements ScxTCPServer {
                             sslSocket.startHandshake();
                         }
                         //调用处理器
-                        var tcpSocket = new ClassicScxTCPSocketImpl(socket);
+                        var tcpSocket = new ClassicTCPSocket(socket);
                         connectHandler.accept(tcpSocket);
                     } catch (Exception e) {
                         //暂时忽略

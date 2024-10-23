@@ -88,11 +88,11 @@ public class ScxTCPServerImpl implements ScxTCPServer {
                             var sslEngine = tls.sslContext().createSSLEngine();
                             sslEngine.setUseClientMode(false);
                             //创建 TLSScxTCPSocketImpl 并执行握手
-                            var tcpSocket = new TLSSocket(socketChannel, sslEngine);
+                            var tcpSocket = new TLSTCPSocket(socketChannel, sslEngine);
                             tcpSocket.startHandshake();
                             connectHandler.accept(tcpSocket);
                         } else {
-                            var tcpSocket = new PlainSocket(socketChannel);
+                            var tcpSocket = new PlainTCPSocket(socketChannel);
                             //调用处理器
                             connectHandler.accept(tcpSocket);
                         }

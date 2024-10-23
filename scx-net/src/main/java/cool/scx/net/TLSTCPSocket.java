@@ -18,7 +18,7 @@ import static javax.net.ssl.SSLEngineResult.HandshakeStatus.FINISHED;
 import static javax.net.ssl.SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING;
 
 //todo 未完成
-public class TLSSocket implements ScxTCPSocket {
+public class TLSTCPSocket implements ScxTCPSocket {
 
     private final SocketChannel socketChannel;
 
@@ -32,7 +32,7 @@ public class TLSSocket implements ScxTCPSocket {
     private final int packetBufferSize;
     private final int applicationBufferSize;
 
-    public TLSSocket(SocketChannel socketChannel, SSLEngine sslEngine) {
+    public TLSTCPSocket(SocketChannel socketChannel, SSLEngine sslEngine) {
         this.socketChannel = socketChannel;
         this.sslEngine = sslEngine;
         //写入缓冲 默认取 PacketBuffer 大小 (存储的永远是加密的数据)
