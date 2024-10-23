@@ -5,7 +5,6 @@ import cool.scx.io.LinkedDataReader;
 import cool.scx.io.NoMoreDataException;
 
 import javax.net.ssl.SSLEngine;
-import javax.net.ssl.SSLEngineResult;
 import java.io.IOException;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
@@ -39,6 +38,7 @@ public class TLSTCPSocket implements ScxTCPSocket {
         this.dataReader = new LinkedDataReader(this::decodeDataSupplier);
     }
 
+    //todo 在虚拟线程中运行时 有 bug
     public void startHandshake() throws IOException {
         sslEngine.beginHandshake();
         var peerAppData = ByteBuffer.allocate(applicationBufferSize);
@@ -58,6 +58,7 @@ public class TLSTCPSocket implements ScxTCPSocket {
                         throw new IOException("Channel closed during handshake");
                     }
                     readBuffer.flip();
+                    //todo 在虚拟线程中 可能陷入无限循环 既 readBuffer.hasRemaining() 永为 true
                     while (readBuffer.hasRemaining()) {
                         var unwrapResult = sslEngine.unwrap(readBuffer, peerAppData);
                     }

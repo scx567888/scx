@@ -95,6 +95,7 @@ public class TCPServer implements ScxTCPServer {
                                 connectHandler.accept(tcpSocket);
                             } catch (Exception e) {
                                 socketChannel.close();
+                                e.printStackTrace();
                             }
                         } else {
                             var tcpSocket = new PlainTCPSocket(socketChannel);
