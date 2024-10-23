@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import static cool.scx.http.HttpFieldName.CONNECTION;
+
 public class PeachHttpServer implements ScxHttpServer {
 
     private final Function<ScxTCPServerOptions, ScxTCPServer> tcpServerBuilder;
@@ -85,6 +87,8 @@ public class PeachHttpServer implements ScxHttpServer {
             request.body = body;
 
             var response = new PeachHttpServerResponse(request, scxTCPSocket);
+
+            response.headers().set(CONNECTION, "keep-alive");
 
             request.response = response;
 

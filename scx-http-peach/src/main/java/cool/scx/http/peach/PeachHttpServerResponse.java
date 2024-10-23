@@ -84,8 +84,6 @@ public class PeachHttpServerResponse implements ScxHttpServerResponse {
         if (firstSend) {
             doFirstSend();
             firstSend = false;
-        } else {
-            firstSend = true;
         }
     }
 
