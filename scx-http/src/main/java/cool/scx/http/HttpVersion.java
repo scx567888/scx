@@ -7,7 +7,13 @@ public enum HttpVersion {
 
     HTTP_1_1("HTTP/1.1"),
 
-    HTTP_2("HTTP/2.0"),;
+    HTTP_2("HTTP/2.0");
+
+    private final String value;
+
+    HttpVersion(String value) {
+        this.value = value;
+    }
 
     public static HttpVersion of(String version) {
         var upperCase = version.toUpperCase();
@@ -18,12 +24,6 @@ public enum HttpVersion {
         };
     }
 
-    private final String value;
-
-    HttpVersion(String value) {
-        this.value = value;
-    }
-    
     public String value() {
         return this.value;
     }

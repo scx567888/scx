@@ -16,7 +16,7 @@ class PeachHttpServerRequest implements ScxHttpServerRequest {
     ScxHttpServerResponse response;
 
     public PeachHttpServerRequest() {
-        
+
     }
 
     @Override

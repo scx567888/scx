@@ -9,11 +9,11 @@ import java.io.InputStream;
 
 public class PeachScxHttpBody implements ScxHttpBody {
 
-    private long position;
     private final LinkedDataReader dataReader;
     private final long contentLength;
     private final ScxHttpHeaders headers;
     private final InputStream inputStream;
+    private long position;
 
     public PeachScxHttpBody(LinkedDataReader dataReader, ScxHttpHeaders headers, long contentLength) {
         this.dataReader = dataReader;

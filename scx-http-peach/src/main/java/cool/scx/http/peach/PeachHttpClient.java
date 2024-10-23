@@ -5,8 +5,6 @@ import cool.scx.http.ScxHttpClient;
 import cool.scx.http.ScxHttpClientRequest;
 import cool.scx.net.ScxTCPClient;
 import cool.scx.net.ScxTCPClientOptions;
-import cool.scx.net.ScxTCPServer;
-import cool.scx.net.ScxTCPServerOptions;
 
 import java.util.function.Function;
 
@@ -29,5 +27,5 @@ public class PeachHttpClient implements ScxHttpClient {
     public ScxClientWebSocketBuilder webSocket() {
         return null;
     }
-    
+
 }
