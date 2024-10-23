@@ -89,8 +89,13 @@ public class TCPServer implements ScxTCPServer {
                             sslEngine.setUseClientMode(false);
                             //创建 TLSScxTCPSocketImpl 并执行握手
                             var tcpSocket = new TLSTCPSocket(socketChannel, sslEngine);
-                            tcpSocket.startHandshake();
-                            connectHandler.accept(tcpSocket);
+                            try {
+                                //握手失败 目前直接 关闭远程连接
+                                tcpSocket.startHandshake();
+                                connectHandler.accept(tcpSocket);
+                            } catch (Exception e) {
+                                socketChannel.close();
+                            }
                         } else {
                             var tcpSocket = new PlainTCPSocket(socketChannel);
                             //调用处理器
