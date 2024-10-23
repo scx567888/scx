@@ -16,7 +16,7 @@ import static cool.scx.io.BufferHelper.expandBuffer;
 import static cool.scx.io.BufferHelper.putBytes;
 import static javax.net.ssl.SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING;
 
-//todo 未完成
+//todo 未完成 在高并发的时候 内存占用较高
 public class TLSTCPSocket implements ScxTCPSocket {
 
     private final SocketChannel socketChannel;
