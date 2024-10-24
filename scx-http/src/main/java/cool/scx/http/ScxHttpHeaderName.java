@@ -7,7 +7,7 @@ public sealed interface ScxHttpHeaderName permits HttpFieldName, ScxHttpHeaderNa
 
     static ScxHttpHeaderName of(String name) {
         // 优先使用 HttpFieldName
-        var n = HttpFieldName.of(name);
+        var n = HttpFieldName.find(name);
         return n != null ? n : new ScxHttpHeaderNameImpl(name.toLowerCase());
     }
 
