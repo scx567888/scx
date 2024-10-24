@@ -6,12 +6,9 @@ package cool.scx.http;
 public sealed interface ScxHttpHeaderName permits HttpFieldName, ScxHttpHeaderNameImpl {
 
     static ScxHttpHeaderName of(String name) {
-        try {
-            // 优先使用 HttpFieldName
-            return HttpFieldName.of(name);
-        } catch (IllegalArgumentException e) {
-            return new ScxHttpHeaderNameImpl(name.toLowerCase());
-        }
+        // 优先使用 HttpFieldName
+        var n = HttpFieldName.find(name);
+        return n != null ? n : new ScxHttpHeaderNameImpl(name.toLowerCase());
     }
 
     String value();

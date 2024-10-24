@@ -78,7 +78,7 @@ public class StaticHelper {
     }
 
     public static ContentTypeWritable getMediaTypeByFile(Path path) {
-        var fileFormat = FileFormat.ofFileName(path.getFileName().toString());
+        var fileFormat = FileFormat.findByFileName(path.getFileName().toString());
         if (fileFormat == null) {
             fileFormat = FileFormat.BIN;
         }

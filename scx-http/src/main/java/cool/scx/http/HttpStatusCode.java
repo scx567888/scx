@@ -262,6 +262,10 @@ public enum HttpStatusCode {
         return m;
     }
 
+    /**
+     * @param code c
+     * @return 未找到时 抛出异常
+     */
     public static HttpStatusCode of(int code) {
         if (code < 0 || code > 505) {
             throw new IllegalArgumentException("Invalid HTTP status code: " + code);
@@ -271,6 +275,17 @@ public enum HttpStatusCode {
             throw new IllegalArgumentException("Invalid HTTP status code: " + code);
         }
         return c;
+    }
+
+    /**
+     * @param code c
+     * @return 未找到时 返回 null
+     */
+    public static HttpStatusCode find(int code) {
+        if (code < 0 || code > 505) {
+            return null;
+        }
+        return MAP[code];
     }
 
     public int code() {

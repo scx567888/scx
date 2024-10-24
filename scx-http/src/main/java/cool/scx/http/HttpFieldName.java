@@ -318,13 +318,26 @@ public enum HttpFieldName implements ScxHttpHeaderName {
         return map;
     }
 
+    /**
+     * @param v v
+     * @return 未找到 抛出异常
+     */
     public static HttpFieldName of(String v) {
-        var upperCase = v.toLowerCase();
-        var httpFieldName = MAP.get(upperCase);
+        var lowerCase = v.toLowerCase();
+        var httpFieldName = MAP.get(lowerCase);
         if (httpFieldName == null) {
             throw new IllegalArgumentException(v);
         }
         return httpFieldName;
+    }
+
+    /**
+     * @param v v
+     * @return 未找到返回 null
+     */
+    public static HttpFieldName find(String v) {
+        var lowerCase = v.toLowerCase();
+        return MAP.get(lowerCase);
     }
 
     @Override

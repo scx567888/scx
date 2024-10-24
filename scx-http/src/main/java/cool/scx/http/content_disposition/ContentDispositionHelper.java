@@ -3,9 +3,8 @@ package cool.scx.http.content_disposition;
 import cool.scx.http.Parameters;
 import cool.scx.http.ParametersWritable;
 
-import java.util.ArrayList;
-
 import static cool.scx.common.util.StringUtils.removeQuotes;
+import static cool.scx.http.content_type.ContentTypeHelper.encodeParams;
 
 public class ContentDispositionHelper {
 
@@ -29,28 +28,14 @@ public class ContentDispositionHelper {
         return new ContentDispositionImpl().type(type).params(params);
     }
 
-    public static String encodeContentDisposition(ContentDisposition contentType) {
-        var sb = new StringBuilder();
-        var type = contentType.type();
-        var params = contentType.params();
-        sb.append(type);
-        if (contentType.params() != null && !contentType.params().isEmpty()) {
-            sb.append("; ");
-            sb.append(encodeParams(params));
+    public static String encodeContentDisposition(ContentDisposition contentDisposition) {
+        var type = contentDisposition.type();
+        var params = contentDisposition.params();
+        var sb = new StringBuilder(type);
+        if (params != null) {
+            encodeParams(sb, params);
         }
         return sb.toString();
-    }
-
-    public static String encodeParams(Parameters<String, String> params) {
-        var l = new ArrayList<String>();
-        for (var v : params) {
-            var key = v.getKey();
-            var value = v.getValue();
-            for (var s : value) {
-                l.add(key + "=" + s);
-            }
-        }
-        return String.join(";", l);
     }
 
 }

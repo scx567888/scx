@@ -304,6 +304,11 @@ public class LinkedDataReader implements DataReader {
             return position < limit;
         }
 
+        @Override
+        public String toString() {
+            return new String(bytes, position, limit - position);
+        }
+
     }
 
 }
