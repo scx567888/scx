@@ -60,6 +60,10 @@ public enum HttpMethod implements ScxHttpMethod {
         this.value = value;
     }
 
+    /**
+     * @param v v
+     * @return 未找到返回 null
+     */
     public static HttpMethod of(String v) {
         return switch (v) {
             case "CONNECT" -> CONNECT;
@@ -71,7 +75,7 @@ public enum HttpMethod implements ScxHttpMethod {
             case "POST" -> POST;
             case "PUT" -> PUT;
             case "TRACE" -> TRACE;
-            default -> throw new IllegalArgumentException("Unknown http method: " + v);
+            default -> null;
         };
     }
 

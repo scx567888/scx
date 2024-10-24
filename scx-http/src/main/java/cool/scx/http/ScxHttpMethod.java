@@ -6,11 +6,8 @@ package cool.scx.http;
 public sealed interface ScxHttpMethod permits HttpMethod, ScxHttpMethodImpl {
 
     static ScxHttpMethod of(String v) {
-        try {
-            return HttpMethod.of(v);
-        } catch (IllegalArgumentException e) {
-            return new ScxHttpMethodImpl(v);
-        }
+        var m= HttpMethod.of(v);
+        return m != null ? m : new ScxHttpMethodImpl(v);
     }
 
     String value();
