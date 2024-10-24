@@ -4,8 +4,6 @@ import cool.scx.http.Parameters;
 import cool.scx.http.ParametersWritable;
 import cool.scx.http.ScxMediaType;
 
-import java.util.ArrayList;
-
 public class ContentTypeHelper {
 
     public static ContentTypeWritable decodedContentType(String contentTypeStr) {
@@ -28,27 +26,23 @@ public class ContentTypeHelper {
     }
 
     public static String encodeContentType(ContentTypeImpl contentType) {
-        var sb = new StringBuilder();
         var mediaType = contentType.mediaType();
         var params = contentType.params();
-        sb.append(mediaType.value());
-        if (contentType.params() != null && !contentType.params().isEmpty()) {
-            sb.append("; ");
-            sb.append(encodeParams(params));
+        var sb = new StringBuilder(mediaType.value());
+        if (params != null) {
+            encodeParams(sb, params);
         }
         return sb.toString();
     }
 
-    public static String encodeParams(Parameters<String, String> params) {
-        var l = new ArrayList<String>();
+    public static void encodeParams(StringBuilder result, Parameters<String, String> params) {
         for (var v : params) {
             var key = v.getKey();
-            var value = v.getValue();
-            for (var s : value) {
-                l.add(key + "=" + s);
+            var values = v.getValue();
+            for (var value : values) {
+                result.append("; ").append(key).append("=").append(value);
             }
         }
-        return String.join(";", l);
     }
 
 }
