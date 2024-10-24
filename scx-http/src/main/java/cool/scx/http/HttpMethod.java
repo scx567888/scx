@@ -65,6 +65,7 @@ public enum HttpMethod implements ScxHttpMethod {
      * @return 未找到返回 null
      */
     public static HttpMethod of(String v) {
+        //数量较少时 switch 性能要高于 Map
         return switch (v) {
             case "CONNECT" -> CONNECT;
             case "DELETE" -> DELETE;
@@ -81,7 +82,7 @@ public enum HttpMethod implements ScxHttpMethod {
 
     @Override
     public String value() {
-        return this.value;
+        return value;
     }
 
 }

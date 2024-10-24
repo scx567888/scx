@@ -6,6 +6,7 @@ package cool.scx.http;
 public sealed interface ScxHttpMethod permits HttpMethod, ScxHttpMethodImpl {
 
     static ScxHttpMethod of(String v) {
+        // 优先使用 HttpMethod
         var m= HttpMethod.of(v);
         return m != null ? m : new ScxHttpMethodImpl(v);
     }
