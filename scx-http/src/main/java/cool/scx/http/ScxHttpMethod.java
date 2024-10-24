@@ -7,7 +7,7 @@ public sealed interface ScxHttpMethod permits HttpMethod, ScxHttpMethodImpl {
 
     static ScxHttpMethod of(String v) {
         // 优先使用 HttpMethod
-        var m= HttpMethod.find(v);
+        var m = HttpMethod.find(v);
         return m != null ? m : new ScxHttpMethodImpl(v);
     }
 

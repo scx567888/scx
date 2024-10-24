@@ -16,7 +16,6 @@ public enum HttpVersion {
     }
 
     /**
-     * 
      * @param version v
      * @return 未找到时 抛出异常
      */
@@ -30,7 +29,6 @@ public enum HttpVersion {
     }
 
     /**
-     *
      * @param version v
      * @return 未找到时返回 null
      */
