@@ -64,7 +64,7 @@ public class PeachHttpServer implements ScxHttpServer {
 
             var request = new PeachHttpServerRequest();
 
-            request.method = HttpMethod.of(method);
+            request.method = ScxHttpMethod.of(method);
             request.uri = ScxURI.of(URLDecoder.decode(path, UTF_8));
             request.version = HttpVersion.of(version);
 
