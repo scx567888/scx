@@ -14,13 +14,13 @@ public class StaticHandlerTest {
     }
 
     public static void test1() {
-        var httpServer=new HelidonHttpServer(new ScxHttpServerOptions().port(8899));
-        
-        var router= Router.of();
+        var httpServer = new HelidonHttpServer(new ScxHttpServerOptions().port(8899));
+
+        var router = Router.of();
         router.route().path("/*").handler(new StaticHandler(Path.of("")));
-        
+
         httpServer.requestHandler(router);
         httpServer.start();
     }
-    
+
 }
