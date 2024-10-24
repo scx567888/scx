@@ -2,8 +2,7 @@ package cool.scx.http.media.path;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.ByteBuffer;
-import java.nio.channels.Channels;
+import java.io.RandomAccessFile;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -26,21 +25,18 @@ public class PathHelper {
     }
 
     public static void fileCopyWithOffset(Path path, OutputStream out, long offset, long length) {
-        try (var channel = Files.newByteChannel(path); var outChannel = Channels.newChannel(out)) {
-            channel.position(offset);
-            long toRead = length;
-            var buffer = ByteBuffer.allocate(8192);
-            while (toRead > 0) {
-                int read = channel.read(buffer);
-                if (read == -1) { // 处理文件末尾的情况
-                    break;
+        try (var raf = new RandomAccessFile(path.toFile(), "r"); out) {
+            //先移动文件指针
+            raf.seek(offset);
+            //循环发送
+            var buffer = new byte[8192];
+            while (length > 0) {
+                int i = raf.read(buffer, 0, (int) Math.min(buffer.length, length));
+                if (i == -1) {
+                    break; // 处理文件结束情况
                 }
-                buffer.flip();
-                int toWrite = (int) Math.min(toRead, read);
-                buffer.limit(toWrite);
-                outChannel.write(buffer);
-                buffer.clear();
-                toRead = toRead - toWrite;
+                out.write(buffer, 0, i);
+                length -= i;
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
