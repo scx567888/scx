@@ -67,15 +67,15 @@ public enum FileFormat {
         return map;
     }
 
-    public static FileFormat ofExtension(String ext) {
+    public static FileFormat findByExtension(String ext) {
         return MAP.get(ext);
     }
 
-    public static FileFormat ofFileName(String filename) {
+    public static FileFormat findByFileName(String filename) {
         int li = filename.lastIndexOf('.');
         if (li != -1 && li != filename.length() - 1) {
             var ext = filename.substring(li + 1);
-            return ofExtension(ext);
+            return findByExtension(ext);
         }
         return null;
     }

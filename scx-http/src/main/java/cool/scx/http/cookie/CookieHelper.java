@@ -48,7 +48,7 @@ public class CookieHelper {
             } else if (key.equalsIgnoreCase("Max-Age")) {
                 cookie.maxAge(Long.parseLong(attrValue));
             } else if (key.equalsIgnoreCase("SameSite")) {
-                cookie.sameSite(CookieSameSite.of(attrValue));
+                cookie.sameSite(CookieSameSite.find(attrValue));
             } else if (key.equalsIgnoreCase("Secure")) {
                 cookie.secure(true);
             } else if (key.equalsIgnoreCase("HttpOnly")) {

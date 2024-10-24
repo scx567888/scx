@@ -51,7 +51,7 @@ public abstract class Image implements BaseVo {
     }
 
     public static Image of(Path file, Integer width, Integer height, Position position) {
-        var fileFormat = FileFormat.ofFileName(file.toString());
+        var fileFormat = FileFormat.findByFileName(file.toString());
         if (fileFormat != null && fileFormat.mediaType().type().equals("image")) {
             if (height == null && width == null) {
                 return new OriginalImage(file);
@@ -142,7 +142,7 @@ public abstract class Image implements BaseVo {
 
         public CroppedImage(Path file, Integer width, Integer height, Position position) {
             super(file);
-            var fileFormat = FileFormat.ofFileName(file.toString());
+            var fileFormat = FileFormat.findByFileName(file.toString());
             var mediaType = fileFormat != null ? fileFormat.mediaType() : MediaType.APPLICATION_OCTET_STREAM;
             this.contentType = mediaType.value();
             this.buffer = getBuffer(file, width, height, position);

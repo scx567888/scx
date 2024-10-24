@@ -55,12 +55,12 @@ public class HttpHelper {
     }
 
     public static MediaType getMediaTypeByExtension(String ext) {
-        var fileFormat = FileFormat.ofExtension(ext);
+        var fileFormat = FileFormat.findByExtension(ext);
         return fileFormat != null ? fileFormat.mediaType() : null;
     }
 
     public static MediaType getMediaTypeByFileName(String filename) {
-        var fileFormat = FileFormat.ofFileName(filename);
+        var fileFormat = FileFormat.findByFileName(filename);
         return fileFormat != null ? fileFormat.mediaType() : null;
     }
 
