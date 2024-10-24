@@ -5,6 +5,7 @@ import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.ScxHttpServerResponse;
 import cool.scx.http.exception.MethodNotAllowedException;
 import cool.scx.http.exception.NotFoundException;
+import cool.scx.http.exception.ScxHttpException;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -42,11 +43,16 @@ public class RoutingContext {
         try {
             tryNext();
         } catch (Throwable e) {
+            //如果有自定义的处理器则使用
             if (router.errorHandler != null) {
                 router.errorHandler.accept(e, this);
             } else {
-                //todo 这里需要完善的错误处理
-                response().status(INTERNAL_SERVER_ERROR).send("Internal Server Error");
+                if (e instanceof ScxHttpException httpException) {
+                    var code = httpException.statusCode();
+                    response().status(code).send(code.toString());
+                } else {
+                    response().status(INTERNAL_SERVER_ERROR).send("Internal Server Error");
+                }
             }
         }
     }
