@@ -2,6 +2,7 @@ package cool.scx.http.peach;
 
 import cool.scx.http.*;
 import cool.scx.http.uri.ScxURI;
+import cool.scx.io.InputStreamDataSupplier;
 import cool.scx.io.LinkedDataReader;
 import cool.scx.net.ScxTCPServer;
 import cool.scx.net.ScxTCPServerOptions;
@@ -36,14 +37,7 @@ public class PeachHttpServer implements ScxHttpServer {
     }
 
     private void listen(ScxTCPSocket scxTCPSocket) {
-        var dataReader = new LinkedDataReader(() -> {
-            try {
-                byte[] read = scxTCPSocket.read(8192);
-                return new LinkedDataReader.Node(read);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
+        var dataReader = new LinkedDataReader(new InputStreamDataSupplier(scxTCPSocket.inputStream()));
         while (true) {
             //读取 请求行
             var requestLineBytes = dataReader.readUntil("\r\n".getBytes());

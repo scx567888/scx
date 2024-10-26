@@ -12,12 +12,14 @@ public class PeachHttpServerResponse implements ScxHttpServerResponse {
     private final ScxTCPSocket tcpSocket;
     private final OutputStream outputStream;
     private final ScxHttpHeadersWritable headers;
+    private final OutputStream out;
     private HttpStatusCode status;
     private boolean firstSend;
 
     PeachHttpServerResponse(PeachHttpServerRequest request, ScxTCPSocket tcpSocket) {
         this.request = request;
         this.tcpSocket = tcpSocket;
+        this.out = tcpSocket.outputStream();
         this.headers = ScxHttpHeaders.of();
         this.firstSend = true;
         this.status = HttpStatusCode.OK;
@@ -26,19 +28,19 @@ public class PeachHttpServerResponse implements ScxHttpServerResponse {
             @Override
             public void write(int b) throws IOException {
                 checkFirstSend();
-                tcpSocket.write(new byte[]{(byte) b});
+                out.write(b);
             }
 
             @Override
             public void write(byte[] b) throws IOException {
                 checkFirstSend();
-                tcpSocket.write(b);
+                out.write(b);
             }
 
             @Override
             public void write(byte[] b, int off, int len) throws IOException {
                 checkFirstSend();
-                tcpSocket.write(b, off, len);
+                out.write(b, off, len);
             }
 
         };
@@ -102,7 +104,7 @@ public class PeachHttpServerResponse implements ScxHttpServerResponse {
         sb.append("\r\n");
 
         try {
-            tcpSocket.write(sb.toString().getBytes());
+            out.write(sb.toString().getBytes());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
