@@ -112,9 +112,9 @@ public class LinkedDataReader implements DataReader {
 
     @Override
     public byte[] read(int maxLength) throws NoMoreDataException {
-        var outputStream = new ByteArrayOutputStream();
-        walk(outputStream::write, maxLength, true);
-        return outputStream.toByteArray();
+        var consumer = new BytesDataConsumer();
+        walk(consumer, maxLength, true);
+        return consumer.getBytes();
     }
 
     @Override
@@ -130,9 +130,9 @@ public class LinkedDataReader implements DataReader {
 
     @Override
     public byte[] peek(int maxLength) throws NoMoreDataException {
-        var outputStream = new ByteArrayOutputStream();
-        walk(outputStream::write, maxLength, false);
-        return outputStream.toByteArray();
+        var consumer = new BytesDataConsumer();
+        walk(consumer, maxLength, false);
+        return consumer.getBytes();
     }
 
     @Override
@@ -142,7 +142,7 @@ public class LinkedDataReader implements DataReader {
 
     @Override
     public int indexOf(byte b) throws NoMatchFoundException {
-        return indexOf(((bytes, position, length) -> ArrayUtils.indexOf(bytes, position, length, b)));
+        return indexOf((bytes, position, length) -> ArrayUtils.indexOf(bytes, position, length, b));
     }
 
     @Override
