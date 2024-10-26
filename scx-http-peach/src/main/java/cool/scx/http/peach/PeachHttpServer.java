@@ -19,22 +19,16 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class PeachHttpServer implements ScxHttpServer {
 
-    private final Function<ScxTCPServerOptions, ScxTCPServer> tcpServerBuilder;
     private final ScxTCPServer tcpServer;
     private final ScxHttpServerOptions options;
     private Consumer<ScxHttpServerRequest> requestHandler;
     private Consumer<ScxServerWebSocket> webSocketHandler;
     private Consumer<Throwable> errorHandler;
 
-    public PeachHttpServer(ScxHttpServerOptions options, Function<ScxTCPServerOptions, ScxTCPServer> tcpServerBuilder) {
-        this.options = options;
-        this.tcpServerBuilder = tcpServerBuilder;
-        this.tcpServer = tcpServerBuilder.apply(new ScxTCPServerOptions().port(options.port()));
-        this.tcpServer.onConnect(this::listen);
-    }
-
     public PeachHttpServer(ScxHttpServerOptions options) {
-        this(options, TCPServer::new);
+        this.options = options;
+        this.tcpServer = new TCPServer(new ScxTCPServerOptions().port(options.port()));
+        this.tcpServer.onConnect(this::listen);
     }
 
     public PeachHttpServer() {
