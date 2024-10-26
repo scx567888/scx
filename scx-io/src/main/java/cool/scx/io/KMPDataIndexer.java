@@ -36,8 +36,9 @@ public class KMPDataIndexer implements DataIndexer {
     }
 
     public int indexOf(byte[] bytes, int position, int length) {
+        var end = position + length;
         //KMP 查找
-        for (int i = position; i < position + length; i++) {
+        for (int i = position; i < end; i++) {
             while (patternIndex > 0 && bytes[i] != pattern[patternIndex]) {
                 patternIndex = lps[patternIndex - 1];
             }
