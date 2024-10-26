@@ -2,7 +2,6 @@ package cool.scx.io;
 
 import cool.scx.common.util.ArrayUtils;
 
-import java.io.ByteArrayOutputStream;
 import java.util.function.Supplier;
 
 public class LinkedDataReader implements DataReader {
@@ -65,7 +64,7 @@ public class LinkedDataReader implements DataReader {
 
             // 如果 remaining > 0 说明还需要继续读取
             if (remaining > 0) {
-                if (n.next == null){
+                if (n.next == null) {
                     // 如果 当前节点没有下一个节点 并且拉取失败 (没有更多数据) 则退出循环
                     var success = pullData();
                     if (!success) {
