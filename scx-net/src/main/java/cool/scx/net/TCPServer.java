@@ -1,9 +1,10 @@
 package cool.scx.net;
 
+import javax.net.ssl.SSLSocket;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.InetSocketAddress;
-import java.nio.channels.ServerSocketChannel;
+import java.net.ServerSocket;
 import java.util.function.Consumer;
 
 public class TCPServer implements ScxTCPServer {
@@ -11,7 +12,7 @@ public class TCPServer implements ScxTCPServer {
     private final ScxTCPServerOptions options;
     private final Thread serverThread;
     private Consumer<ScxTCPSocket> connectHandler;
-    private ServerSocketChannel serverSocketChannel;
+    private ServerSocket serverSocket;
     private boolean running;
 
     public TCPServer() {
@@ -36,8 +37,13 @@ public class TCPServer implements ScxTCPServer {
         }
 
         try {
-            this.serverSocketChannel = ServerSocketChannel.open();
-            this.serverSocketChannel.bind(new InetSocketAddress(options.port()));
+            var tls = options.tls();
+            if (tls != null && tls.enabled()) {
+                this.serverSocket = tls.createServerSocket();
+            } else {
+                this.serverSocket = new ServerSocket();
+            }
+            this.serverSocket.bind(new InetSocketAddress(options.port()));
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
@@ -56,7 +62,7 @@ public class TCPServer implements ScxTCPServer {
         running = false;
 
         try {
-            serverSocketChannel.close();
+            serverSocket.close();
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
@@ -66,42 +72,22 @@ public class TCPServer implements ScxTCPServer {
 
     @Override
     public int port() {
-        try {
-            //理论上都是 InetSocketAddress 类型
-            var localAddress = (InetSocketAddress) serverSocketChannel.getLocalAddress();
-            return localAddress.getPort();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return serverSocket.getLocalPort();
     }
 
     private void listen() {
         while (running) {
             try {
-                var socketChannel = this.serverSocketChannel.accept();
+                var socket = this.serverSocket.accept();
                 Thread.ofVirtual().start(() -> {
                     try {
-                        var tls = options.tls();
-
-                        if (tls != null && tls.enabled()) {
-                            //创建 sslEngine
-                            var sslEngine = tls.sslContext().createSSLEngine();
-                            sslEngine.setUseClientMode(false);
-                            //创建 TLSScxTCPSocketImpl 并执行握手
-                            var tcpSocket = new TLSTCPSocket(socketChannel, sslEngine);
-                            try {
-                                //握手失败 目前直接 关闭远程连接
-                                tcpSocket.startHandshake();
-                                connectHandler.accept(tcpSocket);
-                            } catch (Exception e) {
-                                socketChannel.close();
-                                e.printStackTrace();
-                            }
-                        } else {
-                            var tcpSocket = new PlainTCPSocket(socketChannel);
-                            //调用处理器
-                            connectHandler.accept(tcpSocket);
+                        //尝试握手
+                        if (socket instanceof SSLSocket sslSocket) {
+                            sslSocket.startHandshake();
                         }
+                        //调用处理器
+                        var tcpSocket = new TCPSocket(socket);
+                        connectHandler.accept(tcpSocket);
                     } catch (Exception e) {
                         //暂时忽略
                     }
