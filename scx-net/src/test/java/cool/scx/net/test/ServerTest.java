@@ -6,8 +6,6 @@ import cool.scx.net.ScxTCPServerOptions;
 import cool.scx.net.TCPServer;
 import cool.scx.net.tls.TLS;
 
-import java.io.IOException;
-
 public class ServerTest {
 
     public static TLS tls;

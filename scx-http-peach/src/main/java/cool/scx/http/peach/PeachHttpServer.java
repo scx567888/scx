@@ -9,10 +9,8 @@ import cool.scx.net.ScxTCPServerOptions;
 import cool.scx.net.ScxTCPSocket;
 import cool.scx.net.TCPServer;
 
-import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 import static cool.scx.http.HttpFieldName.CONNECTION;
 import static cool.scx.http.HttpFieldName.SERVER;
