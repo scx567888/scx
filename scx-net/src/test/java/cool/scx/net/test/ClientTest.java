@@ -23,10 +23,11 @@ public class ClientTest {
             Thread.ofVirtual().start(() -> {
                 var tcpClient = new TCPClient(new ScxTCPClientOptions().tls(tls));
                 var tcpSocket = tcpClient.connect(new InetSocketAddress(8899));
+                var out = tcpSocket.outputStream();
                 try {
                     var i = 0;
                     while (i < 10000) {
-                        tcpSocket.write((i++ + "\r\n" + i++ + "\r\n").getBytes());
+                        out.write((i++ + "\r\n" + i++ + "\r\n").getBytes());
 //                $.sleep(50);
                     }
 //            tcpSocket.close();

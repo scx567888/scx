@@ -2,9 +2,6 @@ package cool.scx.io;
 
 import cool.scx.common.util.ArrayUtils;
 
-import java.io.IOException;
-import java.io.OutputStream;
-
 public class ByteArrayDataReader implements DataReader {
 
     private final byte[] bytes;
@@ -38,17 +35,13 @@ public class ByteArrayDataReader implements DataReader {
     }
 
     @Override
-    public void read(OutputStream outputStream, int maxLength) throws NoMoreDataException {
+    public void read(DataConsumer dataConsumer, int maxLength) throws NoMoreDataException {
         int availableLength = bytes.length - position;
         if (availableLength <= 0) {
             throw new NoMoreDataException();
         }
         int actualLength = Math.min(maxLength, availableLength);
-        try {
-            outputStream.write(bytes, position, actualLength);
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to write to OutputStream", e);
-        }
+        dataConsumer.accept(bytes, position, actualLength);
         position += actualLength;
     }
 
@@ -74,17 +67,13 @@ public class ByteArrayDataReader implements DataReader {
     }
 
     @Override
-    public void peek(OutputStream outputStream, int maxLength) throws NoMoreDataException {
+    public void peek(DataConsumer dataConsumer, int maxLength) throws NoMoreDataException {
         int availableLength = bytes.length - position;
         if (availableLength <= 0) {
             throw new NoMoreDataException();
         }
         int actualLength = Math.min(maxLength, availableLength);
-        try {
-            outputStream.write(bytes, position, actualLength);
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to write to OutputStream", e);
-        }
+        dataConsumer.accept(bytes, position, actualLength);
     }
 
     @Override

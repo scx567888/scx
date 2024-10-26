@@ -1,11 +1,10 @@
 package cool.scx.net.test;
 
+import cool.scx.io.InputStreamDataSupplier;
 import cool.scx.io.LinkedDataReader;
 import cool.scx.net.ScxTCPServerOptions;
 import cool.scx.net.TCPServer;
 import cool.scx.net.tls.TLS;
-
-import java.io.IOException;
 
 public class ServerTest {
 
@@ -25,13 +24,7 @@ public class ServerTest {
         tcpServer.onConnect(c -> {
             System.out.println("客户端连接了 !!!");
 
-            var dataReader = new LinkedDataReader(() -> {
-                try {
-                    return new LinkedDataReader.Node(c.read(8192));
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            });
+            var dataReader = new LinkedDataReader(new InputStreamDataSupplier(c.inputStream()));
             while (true) {
                 try {
                     var s = dataReader.readUntil("\r\n".getBytes());

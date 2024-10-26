@@ -2,16 +2,15 @@ package cool.scx.http.peach;
 
 import cool.scx.http.*;
 import cool.scx.http.uri.ScxURI;
+import cool.scx.io.InputStreamDataSupplier;
 import cool.scx.io.LinkedDataReader;
 import cool.scx.net.ScxTCPServer;
 import cool.scx.net.ScxTCPServerOptions;
 import cool.scx.net.ScxTCPSocket;
 import cool.scx.net.TCPServer;
 
-import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 import static cool.scx.http.HttpFieldName.CONNECTION;
 import static cool.scx.http.HttpFieldName.SERVER;
@@ -19,22 +18,16 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class PeachHttpServer implements ScxHttpServer {
 
-    private final Function<ScxTCPServerOptions, ScxTCPServer> tcpServerBuilder;
     private final ScxTCPServer tcpServer;
     private final ScxHttpServerOptions options;
     private Consumer<ScxHttpServerRequest> requestHandler;
     private Consumer<ScxServerWebSocket> webSocketHandler;
     private Consumer<Throwable> errorHandler;
 
-    public PeachHttpServer(ScxHttpServerOptions options, Function<ScxTCPServerOptions, ScxTCPServer> tcpServerBuilder) {
-        this.options = options;
-        this.tcpServerBuilder = tcpServerBuilder;
-        this.tcpServer = tcpServerBuilder.apply(new ScxTCPServerOptions().port(options.port()));
-        this.tcpServer.onConnect(this::listen);
-    }
-
     public PeachHttpServer(ScxHttpServerOptions options) {
-        this(options, TCPServer::new);
+        this.options = options;
+        this.tcpServer = new TCPServer(new ScxTCPServerOptions().port(options.port()));
+        this.tcpServer.onConnect(this::listen);
     }
 
     public PeachHttpServer() {
@@ -42,14 +35,7 @@ public class PeachHttpServer implements ScxHttpServer {
     }
 
     private void listen(ScxTCPSocket scxTCPSocket) {
-        var dataReader = new LinkedDataReader(() -> {
-            try {
-                byte[] read = scxTCPSocket.read(8192);
-                return new LinkedDataReader.Node(read);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
+        var dataReader = new LinkedDataReader(new InputStreamDataSupplier(scxTCPSocket.inputStream()));
         while (true) {
             //读取 请求行
             var requestLineBytes = dataReader.readUntil("\r\n".getBytes());

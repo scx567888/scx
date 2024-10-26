@@ -5,7 +5,7 @@ import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.content_disposition.ContentDisposition;
 import cool.scx.http.content_type.ContentType;
 import cool.scx.http.media.MediaReader;
-import cool.scx.http.media.path.PathHelper;
+import cool.scx.io.IOHelper;
 
 import java.io.InputStream;
 import java.nio.file.Path;
@@ -28,7 +28,7 @@ public interface MultiPartPart extends ScxHttpBody {
     }
 
     static MultiPartPartWritable of(String name, Path value) {
-        var fileSize = PathHelper.getFileSize(value);
+        var fileSize = IOHelper.getFileSize(value);
         var contentType = getMediaTypeByFile(value);
         var filename = value.getFileName().toString();
         return new MultiPartPartImpl().name(name).body(value).size(fileSize).filename(filename).contentType(contentType);

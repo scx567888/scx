@@ -1,7 +1,5 @@
 package cool.scx.io;
 
-import java.io.OutputStream;
-
 public interface DataReader {
 
     byte[] EMPTY_BYTES = new byte[0];
@@ -26,16 +24,16 @@ public interface DataReader {
     byte[] read(int maxLength) throws NoMoreDataException;
 
     /**
-     * 向 outputStream 写入指定长度字节 (指针会移动)
+     * 向 dataConsumer 写入指定长度字节 (指针会移动)
      * 当没有更多的数据时会抛出异常
      *
      * @param maxLength 最大长度
      * @throws NoMoreDataException 没有更多数据时抛出
      */
-    void read(OutputStream outputStream, int maxLength) throws NoMoreDataException;
+    void read(DataConsumer dataConsumer, int maxLength) throws NoMoreDataException;
 
     /**
-     * 读取单个字节 (指针不会移动)
+     * 向 dataConsumer 写入指定长度字节 (指针不会移动)
      * 当没有更多的数据时会抛出异常
      *
      * @return byte
@@ -60,7 +58,7 @@ public interface DataReader {
      * @param maxLength 最大长度
      * @throws NoMoreDataException 没有更多数据时抛出
      */
-    void peek(OutputStream outputStream, int maxLength) throws NoMoreDataException;
+    void peek(DataConsumer dataConsumer, int maxLength) throws NoMoreDataException;
 
     /**
      * 查找 指定字节 第一次出现的 index (指针不会移动)

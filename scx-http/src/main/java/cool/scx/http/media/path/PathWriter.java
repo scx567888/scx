@@ -3,12 +3,13 @@ package cool.scx.http.media.path;
 import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.ScxHttpHeadersWritable;
 import cool.scx.http.media.MediaWriter;
+import cool.scx.io.IOHelper;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Path;
 
-import static cool.scx.http.media.path.PathHelper.fileCopy;
-import static cool.scx.http.media.path.PathHelper.fileCopyWithOffset;
+import static cool.scx.io.IOHelper.writeFileToOut;
 
 public class PathWriter implements MediaWriter {
 
@@ -19,14 +20,14 @@ public class PathWriter implements MediaWriter {
 
     public PathWriter(Path path) {
         this.path = path;
-        this.fileRealSize = PathHelper.getFileSize(path);
+        this.fileRealSize = IOHelper.getFileSize(path);
         this.offset = 0;
         this.length = fileRealSize;
     }
 
     public PathWriter(Path path, long offset, long length) {
         this.path = path;
-        this.fileRealSize = PathHelper.getFileSize(path);
+        this.fileRealSize = IOHelper.getFileSize(path);
         this.offset = offset;
         this.length = length;
     }
@@ -41,10 +42,14 @@ public class PathWriter implements MediaWriter {
 
     @Override
     public void write(OutputStream outputStream) {
-        if (offset == 0 && length == fileRealSize) {
-            fileCopy(path, outputStream);
-        } else {
-            fileCopyWithOffset(path, outputStream, offset, length);
+        try (outputStream) {
+            if (offset == 0 && length == fileRealSize) {
+                writeFileToOut(path, outputStream);
+            } else {
+                writeFileToOut(path, outputStream, offset, length);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
