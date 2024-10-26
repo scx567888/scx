@@ -65,9 +65,12 @@ public class LinkedDataReader implements DataReader {
 
             // 如果 remaining > 0 说明还需要继续读取
             if (remaining > 0) {
-                // 如果 当前节点没有下一个节点 并且拉取失败 (没有更多数据) 则退出循环
-                if (n.next == null && !this.pullData()) {
-                    break;
+                if (n.next == null){
+                    // 如果 当前节点没有下一个节点 并且拉取失败 (没有更多数据) 则退出循环
+                    var success = pullData();
+                    if (!success) {
+                        break;
+                    }
                 }
                 n = n.next;
                 if (movePointer) {
@@ -82,7 +85,7 @@ public class LinkedDataReader implements DataReader {
 
         var n = head;
 
-        while (n != null) {
+        while (true) {
             var length = n.available();
             var i = indexer.indexOf(n.bytes, n.position, length);
             if (i != -1) {
@@ -93,8 +96,8 @@ public class LinkedDataReader implements DataReader {
 
             // 如果 currentNode 没有下一个节点并且尝试拉取数据失败，直接退出循环
             if (n.next == null) {
-                var moreData = pullData();
-                if (!moreData) {
+                var success = pullData();
+                if (!success) {
                     break;
                 }
             }
