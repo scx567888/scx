@@ -5,21 +5,21 @@ import java.util.List;
 
 public class BytesDataConsumer implements DataConsumer {
 
-    List<Data> resultList = null;
-    Data result = null;
-    int total = 0;
+    private List<BytesInfo> resultList = null;
+    private BytesInfo result = null;
+    private int total = 0;
 
     @Override
     public void accept(byte[] bytes, int position, int length) {
         total += length;
         if (result == null) {
-            result = new Data(bytes, position, length);
+            result = new BytesInfo(bytes, position, length);
         } else {
             if (resultList == null) {
                 resultList = new ArrayList<>();
                 resultList.add(result);
             }
-            resultList.add(new Data(bytes, position, length));
+            resultList.add(new BytesInfo(bytes, position, length));
         }
     }
 
@@ -42,6 +42,7 @@ public class BytesDataConsumer implements DataConsumer {
         return result;
     }
 
-    private record Data(byte[] bytes, int position, int length) {}
+    private record BytesInfo(byte[] bytes, int position, int length) {
+    }
 
 }
