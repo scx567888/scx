@@ -1,14 +1,19 @@
 package cool.scx.io;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.RandomAccessFile;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
 
 public class IOHelper {
+
+    public static long getFileSize(Path path) {
+        try {
+            return Files.size(path);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
 
     public static byte[] compressBytes(byte[] bytes, int offset, int length) {
         if (offset == 0 && length == bytes.length) {

@@ -3,6 +3,7 @@ package cool.scx.http.media.path;
 import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.ScxHttpHeadersWritable;
 import cool.scx.http.media.MediaWriter;
+import cool.scx.io.IOHelper;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -19,14 +20,14 @@ public class PathWriter implements MediaWriter {
 
     public PathWriter(Path path) {
         this.path = path;
-        this.fileRealSize = PathHelper.getFileSize(path);
+        this.fileRealSize = IOHelper.getFileSize(path);
         this.offset = 0;
         this.length = fileRealSize;
     }
 
     public PathWriter(Path path, long offset, long length) {
         this.path = path;
-        this.fileRealSize = PathHelper.getFileSize(path);
+        this.fileRealSize = IOHelper.getFileSize(path);
         this.offset = offset;
         this.length = length;
     }

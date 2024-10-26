@@ -4,9 +4,9 @@ import cool.scx.http.FileFormat;
 import cool.scx.http.content_type.ContentType;
 import cool.scx.http.content_type.ContentTypeWritable;
 import cool.scx.http.exception.NotFoundException;
-import cool.scx.http.media.path.PathHelper;
 import cool.scx.http.range.Range;
 import cool.scx.http.routing.RoutingContext;
+import cool.scx.io.IOHelper;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -29,7 +29,7 @@ public class StaticHelper {
             throw new NotFoundException();
         }
         //获取文件长度
-        var fileLength = PathHelper.getFileSize(path);
+        var fileLength = IOHelper.getFileSize(path);
 
         //1, 通知客户端我们支持 分段加载
         response.headers().set(ACCEPT_RANGES, "bytes");
