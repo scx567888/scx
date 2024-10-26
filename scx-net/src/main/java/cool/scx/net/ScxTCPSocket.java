@@ -16,7 +16,7 @@ public interface ScxTCPSocket {
 
     void close() throws IOException;
 
-    boolean isOpen() throws IOException;
+    boolean isClosed();
 
     SocketAddress remoteAddress() throws IOException;
 

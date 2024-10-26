@@ -23,11 +23,6 @@ public class TCPSocket implements ScxTCPSocket {
     }
 
     @Override
-    public boolean isOpen() throws IOException {
-        return !socket.isClosed();
-    }
-
-    @Override
     public InputStream inputStream() {
         return in;
     }
@@ -40,6 +35,11 @@ public class TCPSocket implements ScxTCPSocket {
     @Override
     public void close() throws IOException {
         socket.close();
+    }
+
+    @Override
+    public boolean isClosed() {
+        return socket.isClosed();
     }
 
     @Override
