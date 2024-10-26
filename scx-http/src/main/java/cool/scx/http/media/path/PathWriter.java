@@ -4,11 +4,11 @@ import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.ScxHttpHeadersWritable;
 import cool.scx.http.media.MediaWriter;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Path;
 
-import static cool.scx.http.media.path.PathHelper.fileCopy;
-import static cool.scx.http.media.path.PathHelper.fileCopyWithOffset;
+import static cool.scx.io.IOHelper.writeFileToOut;
 
 public class PathWriter implements MediaWriter {
 
@@ -41,10 +41,14 @@ public class PathWriter implements MediaWriter {
 
     @Override
     public void write(OutputStream outputStream) {
-        if (offset == 0 && length == fileRealSize) {
-            fileCopy(path, outputStream);
-        } else {
-            fileCopyWithOffset(path, outputStream, offset, length);
+        try (outputStream) {
+            if (offset == 0 && length == fileRealSize) {
+                writeFileToOut(path, outputStream);
+            } else {
+                writeFileToOut(path, outputStream, offset, length);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

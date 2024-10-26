@@ -5,9 +5,10 @@ import cool.scx.http.media.MediaReader;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
+
+import static cool.scx.io.IOHelper.readInToFile;
 
 /**
  * 将内容写入到文件
@@ -29,8 +30,8 @@ public class PathReader implements MediaReader<Path> {
 
     @Override
     public Path read(InputStream inputStream, ScxHttpHeaders headers) {
-        try (var outputStream = Files.newOutputStream(path, options)) {
-            inputStream.transferTo(outputStream);
+        try {
+            readInToFile(inputStream, path, options);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
