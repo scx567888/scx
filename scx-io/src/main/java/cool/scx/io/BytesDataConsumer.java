@@ -43,6 +43,7 @@ public class BytesDataConsumer implements DataConsumer {
     }
 
     private record BytesInfo(byte[] bytes, int position, int length) {
+
     }
 
 }
