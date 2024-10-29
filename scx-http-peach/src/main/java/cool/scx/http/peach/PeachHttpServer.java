@@ -1,19 +1,21 @@
 package cool.scx.http.peach;
 
+import cool.scx.common.util.Base64Utils;
+import cool.scx.common.util.HashUtils;
 import cool.scx.http.*;
-import cool.scx.http.uri.ScxURI;
 import cool.scx.io.InputStreamDataSupplier;
 import cool.scx.io.LinkedDataReader;
 import cool.scx.net.ScxTCPServer;
 import cool.scx.net.ScxTCPServerOptions;
 import cool.scx.net.ScxTCPSocket;
 import cool.scx.net.TCPServer;
+import cool.scx.net.tls.TLS;
 
 import java.net.URLDecoder;
 import java.util.function.Consumer;
 
-import static cool.scx.http.HttpFieldName.CONNECTION;
-import static cool.scx.http.HttpFieldName.SERVER;
+import static cool.scx.http.HttpFieldName.*;
+import static cool.scx.http.HttpMethod.GET;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class PeachHttpServer implements ScxHttpServer {
@@ -26,15 +28,16 @@ public class PeachHttpServer implements ScxHttpServer {
 
     public PeachHttpServer(ScxHttpServerOptions options) {
         this.options = options;
-        this.tcpServer = new TCPServer(new ScxTCPServerOptions().port(options.port()));
-        this.tcpServer.onConnect(this::listen);
+        this.tcpServer = new TCPServer(new ScxTCPServerOptions().port(options.port()).tls((TLS) options.tls()));
+        this.tcpServer.onConnect(this::handle);
     }
 
     public PeachHttpServer() {
         this(new ScxHttpServerOptions());
     }
 
-    private void listen(ScxTCPSocket scxTCPSocket) {
+    private void handle(ScxTCPSocket scxTCPSocket) {
+        //先假定 这是一个 http 1.1 连接
         var dataReader = new LinkedDataReader(new InputStreamDataSupplier(scxTCPSocket.inputStream()));
         while (true) {
             //读取 请求行
@@ -44,15 +47,15 @@ public class PeachHttpServer implements ScxHttpServer {
             if (split.length != 3) {
                 throw new RuntimeException("Invalid request line: " + requestLine);
             }
-            var method = split[0];
-            var path = split[1];
-            var version = split[2];
+            var method0 = split[0];
+            var path0 = split[1];
+            var version0 = split[2];
 
-            var request = new PeachHttpServerRequest();
+            var method = ScxHttpMethod.of(method0);
+            var path = URLDecoder.decode(path0, UTF_8);
+            var version = HttpVersion.of(version0);
 
-            request.method = ScxHttpMethod.of(method);
-            request.uri = ScxURI.of(URLDecoder.decode(path, UTF_8));
-            request.version = HttpVersion.of(version);
+            var httpPrologue = new HttpPrologue(method, path);
 
             var headerBytes = dataReader.readUntil("\r\n\r\n".getBytes());
 
@@ -60,8 +63,14 @@ public class PeachHttpServer implements ScxHttpServer {
 
             var headers = ScxHttpHeaders.of(headerStr);
 
-            request.headers = headers;
+            var connection = headers.get(CONNECTION);
+            var upgrade = headers.get(UPGRADE);
 
+            //处理 websocket
+            if (method == GET && "Upgrade".equals(connection) && "websocket".equals(upgrade)) {
+                handleWebSocket(httpPrologue, headers, scxTCPSocket);
+                break;
+            }
 
             ScxHttpBody body = null;
 
@@ -72,6 +81,8 @@ public class PeachHttpServer implements ScxHttpServer {
             } else {
                 body = new PeachScxHttpBody(dataReader, headers, 0L);
             }
+
+            var request = new PeachHttpServerRequest();
 
             request.body = body;
 
@@ -88,6 +99,31 @@ public class PeachHttpServer implements ScxHttpServer {
             }
 
         }
+    }
+
+    private void handleWebSocket(HttpPrologue httpPrologue, ScxHttpHeadersWritable headers, ScxTCPSocket scxTCPSocket) {
+        // 生成Sec-WebSocket-Accept
+        var key = headers.get("Sec-WebSocket-Key");
+        var b = HashUtils.sha1(key + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11");
+        var acceptKey = Base64Utils.encodeToString(b);
+
+        try {
+            // 构建和发送101响应
+            String response = "HTTP/1.1 101 Switching Protocols\r\n" +
+                    "Upgrade: websocket\r\n" +
+                    "Connection: Upgrade\r\n" +
+                    "Sec-WebSocket-Accept: " + acceptKey + "\r\n\r\n";
+            var outputStream = scxTCPSocket.outputStream();
+            outputStream.write(response.getBytes());
+            outputStream.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        var webSocket = new PeachServerWebSocket(httpPrologue, headers, scxTCPSocket);
+        //当用户处理程序执行完成之后我们再 启动监听 这样可以保证不会丢失消息
+        this.webSocketHandler.accept(webSocket);
+        webSocket.start();
     }
 
     @Override
