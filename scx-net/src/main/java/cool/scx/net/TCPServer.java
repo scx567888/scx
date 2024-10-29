@@ -34,11 +34,12 @@ public class TCPServer implements ScxTCPServer {
     @Override
     public void start() {
         if (running) {
-            throw new IllegalStateException("Server is already running");
+            throw new IllegalStateException("服务器已在运行 !!!");
         }
 
+        var tls = options.tls();
+
         try {
-            var tls = options.tls();
             if (tls != null && tls.enabled()) {
                 this.serverSocket = tls.createServerSocket();
             } else {
@@ -46,7 +47,7 @@ public class TCPServer implements ScxTCPServer {
             }
             this.serverSocket.bind(new InetSocketAddress(options.port()));
         } catch (IOException e) {
-            throw new UncheckedIOException(e);
+            throw new UncheckedIOException("启动失败 !!!", e);
         }
 
         running = true;
@@ -65,7 +66,7 @@ public class TCPServer implements ScxTCPServer {
         try {
             serverSocket.close();
         } catch (IOException e) {
-            throw new UncheckedIOException(e);
+            throw new UncheckedIOException("关闭失败 !!!", e);
         }
 
         serverThread.interrupt();
@@ -88,15 +89,17 @@ public class TCPServer implements ScxTCPServer {
     }
 
     private void handle(Socket socket) {
+        //主动调用握手 防止等到调用用户处理程序时才发现 ssl 错误
         if (socket instanceof SSLSocket sslSocket) {
             try {
-                sslSocket.startHandshake(); //主动调用握手 防止等到调用用户处理程序时才发现 ssl 错误
+                sslSocket.startHandshake();
             } catch (Exception e) {
                 try {
                     socket.close(); //SSL 握手失败 !!! 尝试关闭连接
-                } catch (IOException _) {
-                    //我们直接忽略关闭异常 !!!
+                } catch (IOException ce) {
+                    e.addSuppressed(ce);
                 }
+                // 我们直接忽略所有异常 !!!
                 return;
             }
         }
