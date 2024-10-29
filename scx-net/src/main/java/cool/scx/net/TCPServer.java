@@ -8,7 +8,11 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.function.Consumer;
 
+import static java.lang.System.Logger.Level.ERROR;
+
 public class TCPServer implements ScxTCPServer {
+
+    private static final System.Logger logger = System.getLogger(TCPServer.class.getName());
 
     private final ScxTCPServerOptions options;
     private final Thread serverThread;
@@ -89,11 +93,12 @@ public class TCPServer implements ScxTCPServer {
     }
 
     private void handle(Socket socket) {
-        //主动调用握手 防止等到调用用户处理程序时才发现 ssl 错误
+        //主动调用握手 快速检测 ssl 错误 防止等到调用用户处理程序时才发现
         if (socket instanceof SSLSocket sslSocket) {
             try {
                 sslSocket.startHandshake();
             } catch (Exception e) {
+                logger.log(ERROR, "SSL 握手失败 : " + e.getMessage());
                 try {
                     socket.close(); //SSL 握手失败 !!! 尝试关闭连接
                 } catch (IOException ce) {
