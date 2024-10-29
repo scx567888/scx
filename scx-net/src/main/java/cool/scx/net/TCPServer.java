@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.function.Consumer;
 
 public class TCPServer implements ScxTCPServer {
@@ -79,23 +80,30 @@ public class TCPServer implements ScxTCPServer {
         while (running) {
             try {
                 var socket = this.serverSocket.accept();
-                Thread.ofVirtual().start(() -> {
-                    try {
-                        //尝试握手
-                        if (socket instanceof SSLSocket sslSocket) {
-                            sslSocket.startHandshake();
-                        }
-                        //调用处理器
-                        var tcpSocket = new TCPSocket(socket);
-                        connectHandler.accept(tcpSocket);
-                    } catch (Exception e) {
-                        //暂时忽略
-                    }
-                });
+                Thread.ofVirtual().start(() -> handle(socket));
             } catch (IOException e) {
                 throw new UncheckedIOException(e);
             }
         }
+    }
+
+    private void handle(Socket socket) {
+        if (socket instanceof SSLSocket sslSocket) {
+            try {
+                sslSocket.startHandshake(); //主动调用握手 防止等到调用用户处理程序时才发现 ssl 错误
+            } catch (Exception e) {
+                try {
+                    socket.close(); //SSL 握手失败 !!! 尝试关闭连接
+                } catch (IOException _) {
+                    //我们直接忽略关闭异常 !!!
+                }
+                return;
+            }
+        }
+        
+        var tcpSocket = new TCPSocket(socket);
+        //调用用户处理器
+        connectHandler.accept(tcpSocket);
     }
 
 }
