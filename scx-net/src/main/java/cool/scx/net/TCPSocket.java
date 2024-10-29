@@ -3,6 +3,7 @@ package cool.scx.net;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UncheckedIOException;
 import java.net.Socket;
 import java.net.SocketAddress;
 
@@ -18,7 +19,7 @@ public class TCPSocket implements ScxTCPSocket {
             this.in = socket.getInputStream();
             this.out = socket.getOutputStream();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new UncheckedIOException(e);
         }
     }
 

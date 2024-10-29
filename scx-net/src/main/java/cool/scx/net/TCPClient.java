@@ -20,11 +20,13 @@ public class TCPClient implements ScxTCPClient {
 
     @Override
     public ScxTCPSocket connect(SocketAddress endpoint) {
-        try {
-            var tls = options.tls();
 
-            //todo 处理代理
-            var proxy = options.proxy();
+        var tls = options.tls();
+
+        //todo 处理代理
+        var proxy = options.proxy();
+
+        try {
 
             Socket socket;
             if (tls != null && tls.enabled()) {
@@ -43,6 +45,7 @@ public class TCPClient implements ScxTCPClient {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
+
     }
 
 }

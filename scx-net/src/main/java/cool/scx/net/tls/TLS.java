@@ -2,7 +2,6 @@ package cool.scx.net.tls;
 
 import javax.net.ssl.*;
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.file.Path;
@@ -50,20 +49,12 @@ public class TLS {
         return sslContext;
     }
 
-    public ServerSocket createServerSocket() {
-        try {
-            return serverSocketFactory.createServerSocket();
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
+    public ServerSocket createServerSocket() throws IOException {
+        return serverSocketFactory.createServerSocket();
     }
 
-    public Socket createSocket() {
-        try {
-            return socketFactory.createSocket();
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
+    public Socket createSocket() throws IOException {
+        return socketFactory.createSocket();
     }
 
 }
