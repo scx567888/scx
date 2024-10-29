@@ -100,7 +100,7 @@ public class TCPServer implements ScxTCPServer {
                 return;
             }
         }
-        
+
         var tcpSocket = new TCPSocket(socket);
         //调用用户处理器
         connectHandler.accept(tcpSocket);
