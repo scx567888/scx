@@ -108,6 +108,8 @@ public class PeachHttpServer implements ScxHttpServer {
                 if (ws != null) {
                     ws.start();
                 }
+                // websocket 独占整个连接 退出循环
+                break;
             }
 
         }

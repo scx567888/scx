@@ -10,8 +10,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import static cool.scx.http.WebSocketOpCode.*;
-import static cool.scx.http.peach.WebSocketFrameHelper.readFrame;
-import static cool.scx.http.peach.WebSocketFrameHelper.writeFrame;
+import static cool.scx.http.peach.WebSocketFrameHelper.*;
 
 public class PeachServerWebSocket implements ScxServerWebSocket {
 
@@ -159,7 +158,7 @@ public class PeachServerWebSocket implements ScxServerWebSocket {
     public void start() {
         while (true) {
             try {
-                var frame = readFrame(reader);
+                var frame = readFrameUntilLast(reader);
                 handleFrame(frame);
             } catch (Exception e) {
                 if (errorHandler != null) {
@@ -173,7 +172,7 @@ public class PeachServerWebSocket implements ScxServerWebSocket {
     private void handleFrame(WebSocketFrame frame) {
         switch (frame.opCode()) {
             case CONTINUATION -> {
-
+                // 理论上不会走到这里
             }
             case TEXT -> {
                 textMessageHandler.accept(new String(frame.payloadData()));

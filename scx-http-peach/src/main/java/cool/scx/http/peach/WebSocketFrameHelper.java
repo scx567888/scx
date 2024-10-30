@@ -5,6 +5,7 @@ import cool.scx.io.DataReader;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 
 /**
  * @see <a href="https://www.rfc-editor.org/rfc/rfc6455">https://www.rfc-editor.org/rfc/rfc6455</a>
@@ -23,16 +24,19 @@ public class WebSocketFrameHelper {
         var masked = (b2 & 0b1000_0000) != 0;
         var payloadLength = b2 & 0b0111_1111;
 
+        var extendedPayloadLength = new byte[0];
+
         //读取 拓展长度
         if (payloadLength == 126) {
-            var extendedPayloadLength = reader.read(2);
-            payloadLength = (extendedPayloadLength[0] << 8) | (extendedPayloadLength[1] & 0xFF);
-        } else if (payloadLength == 127) {
-            var extendedPayloadLength = reader.read(8);
+            extendedPayloadLength = reader.read(2);
             payloadLength = 0;
-            for (int i = 0; i < 8; i++) {
-                payloadLength = (payloadLength << 8) | (extendedPayloadLength[i] & 0xFF);
-            }
+        } else if (payloadLength == 127) {
+            extendedPayloadLength = reader.read(8);
+            payloadLength = 0;
+        }
+
+        for (byte b : extendedPayloadLength) {
+            payloadLength = (payloadLength << 8) | (b & 0xFF);
         }
 
         byte[] maskingKey = null;
@@ -51,6 +55,36 @@ public class WebSocketFrameHelper {
         }
 
         return new WebSocketFrame(fin, opCode, masked, payloadLength, maskingKey, payloadData);
+    }
+
+    public static WebSocketFrame readFrameUntilLast(DataReader reader) {
+        var frameList = new ArrayList<WebSocketFrame>();
+        while (true) {
+            var webSocketFrame = readFrame(reader);
+            frameList.add(webSocketFrame);
+            if (webSocketFrame.fin()) {
+                break;
+            }
+        }
+
+
+        var first = frameList.get(0);
+
+        if (frameList.size() == 1) {
+            return first;
+        }
+
+        var opCode = first.opCode();
+        var length = frameList.stream().mapToInt(WebSocketFrame::payloadLength).sum();
+        var payloadData = new byte[length];
+
+        int offset = 0;
+        for (var webSocketFrame : frameList) {
+            System.arraycopy(webSocketFrame.payloadData(), 0, payloadData, offset, webSocketFrame.payloadLength());
+            offset += webSocketFrame.payloadLength();
+        }
+
+        return new WebSocketFrame(true, opCode, payloadData);
     }
 
     public static void writeFrame(WebSocketFrame frame, OutputStream out) throws IOException, IOException {
