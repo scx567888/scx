@@ -1,47 +1,57 @@
 package cool.scx.http.peach;
 
-import java.io.InputStream;
-import java.nio.ByteBuffer;
+import cool.scx.http.WebSocketOpCode;
+import cool.scx.io.DataReader;
 
+/**
+ * @see <a href="https://www.rfc-editor.org/rfc/rfc6455">https://www.rfc-editor.org/rfc/rfc6455</a>
+ */
 public class WebSocketFrame {
+
     private boolean fin;
-    private int opcode;
+    private WebSocketOpCode opCode;
     private boolean masked;
-    private long payloadLength;
+    private int payloadLength;
     private byte[] maskingKey;
     private byte[] payloadData;
 
-    public WebSocketFrame(InputStream inputStream) throws Exception {
-        parseFrame(inputStream);
+    public WebSocketFrame(DataReader reader) {
+        parseFrame(reader);
     }
 
-    private void parseFrame(InputStream inputStream) throws Exception {
-        byte[] header = new byte[2];
-        inputStream.read(header, 0, 2);
+    public void parseFrame(DataReader reader) {
+        byte[] header = reader.read(2);
 
-        fin = (header[0] & 0x80) != 0;
-        opcode = header[0] & 0x0F;
-        masked = (header[1] & 0x80) != 0;
-        payloadLength = header[1] & 0x7F;
+        var b1 = header[0];
+        var b2 = header[1];
 
+        fin = (b1 & 0b1000_0000) != 0;
+        opCode = WebSocketOpCode.of(b1 & 0b0000_1111);
+
+        masked = (b2 & 0b1000_0000) != 0;
+        payloadLength = b2 & 0b0111_1111;
+
+        //读取 拓展长度
         if (payloadLength == 126) {
-            byte[] extendedPayloadLength = new byte[2];
-            inputStream.read(extendedPayloadLength);
-            payloadLength = ByteBuffer.wrap(extendedPayloadLength).getShort();
+            var extendedPayloadLength = reader.read(2);
+            payloadLength = (extendedPayloadLength[0] << 8) | (extendedPayloadLength[1] & 0xFF);
         } else if (payloadLength == 127) {
-            byte[] extendedPayloadLength = new byte[8];
-            inputStream.read(extendedPayloadLength);
-            payloadLength = ByteBuffer.wrap(extendedPayloadLength).getLong();
+            var extendedPayloadLength = reader.read(8);
+            payloadLength = 0;
+            for (int i = 0; i < 8; i++) {
+                payloadLength = (payloadLength << 8) | (extendedPayloadLength[i] & 0xFF);
+            }
         }
 
         if (masked) {
-            maskingKey = new byte[4];
-            inputStream.read(maskingKey);
+            maskingKey = reader.read(4);
+        } else {
+            maskingKey = null;
         }
 
-        payloadData = new byte[(int) payloadLength];
-        inputStream.read(payloadData);
+        payloadData = reader.read(payloadLength);
 
+        //除了掩码计算
         if (masked) {
             for (int i = 0; i < payloadLength; i++) {
                 payloadData[i] = (byte) (payloadData[i] ^ maskingKey[i % 4]);
@@ -49,15 +59,16 @@ public class WebSocketFrame {
         }
     }
 
-    public boolean isFin() {
+    public boolean fin() {
         return fin;
     }
 
-    public int getOpcode() {
-        return opcode;
+    public WebSocketOpCode opCode() {
+        return opCode;
     }
 
-    public byte[] getPayloadData() {
+    public byte[] payloadData() {
         return payloadData;
     }
+
 }
