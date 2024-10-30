@@ -7,7 +7,7 @@ import cool.scx.http.WebSocketOpCode;
  */
 public record WebSocketFrame(boolean fin,
                              WebSocketOpCode opCode,
-                             boolean masked, 
+                             boolean masked,
                              int payloadLength,
                              byte[] maskingKey,
                              byte[] payloadData) {

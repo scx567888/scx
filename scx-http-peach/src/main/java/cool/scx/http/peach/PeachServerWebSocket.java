@@ -10,7 +10,8 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import static cool.scx.http.WebSocketOpCode.*;
-import static cool.scx.http.peach.WebSocketFrameHelper.*;
+import static cool.scx.http.peach.WebSocketFrameHelper.readFrameUntilLast;
+import static cool.scx.http.peach.WebSocketFrameHelper.writeFrame;
 
 public class PeachServerWebSocket implements ScxServerWebSocket {
 

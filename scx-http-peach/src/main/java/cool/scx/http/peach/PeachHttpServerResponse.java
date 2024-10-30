@@ -52,7 +52,7 @@ public class PeachHttpServerResponse implements ScxHttpServerResponse {
             public void close() throws IOException {
                 checkFirstSend();
             }
-            
+
         };
     }
 

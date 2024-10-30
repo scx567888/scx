@@ -3,9 +3,6 @@ package cool.scx.http.peach.test;
 import cool.scx.http.ScxHttpServerOptions;
 import cool.scx.http.ScxServerWebSocketHandshakeRequest;
 import cool.scx.http.peach.PeachHttpServer;
-import cool.scx.net.tls.TLS;
-
-import java.nio.file.Path;
 
 public class PeachTest {
 
