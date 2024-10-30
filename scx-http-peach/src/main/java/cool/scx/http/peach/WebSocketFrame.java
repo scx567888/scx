@@ -49,7 +49,7 @@ public class WebSocketFrame {
 
         payloadData = reader.read(payloadLength);
 
-        //除了掩码计算
+        //掩码计算
         if (masked) {
             for (int i = 0; i < payloadLength; i++) {
                 payloadData[i] = (byte) (payloadData[i] ^ maskingKey[i % 4]);
