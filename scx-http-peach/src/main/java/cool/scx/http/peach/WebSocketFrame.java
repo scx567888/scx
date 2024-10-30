@@ -45,8 +45,6 @@ public class WebSocketFrame {
 
         if (masked) {
             maskingKey = reader.read(4);
-        } else {
-            maskingKey = null;
         }
 
         payloadData = reader.read(payloadLength);
@@ -65,6 +63,18 @@ public class WebSocketFrame {
 
     public WebSocketOpCode opCode() {
         return opCode;
+    }
+
+    public boolean masked() {
+        return masked;
+    }
+
+    public int payloadLength() {
+        return payloadLength;
+    }
+
+    public byte[] maskingKey() {
+        return maskingKey;
     }
 
     public byte[] payloadData() {
