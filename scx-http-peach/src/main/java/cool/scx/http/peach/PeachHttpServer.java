@@ -8,12 +8,13 @@ import cool.scx.net.ScxTCPServer;
 import cool.scx.net.ScxTCPServerOptions;
 import cool.scx.net.ScxTCPSocket;
 import cool.scx.net.TCPServer;
+import cool.scx.net.tls.TLS;
 
 import java.net.URLDecoder;
 import java.util.function.Consumer;
 
-import static cool.scx.http.HttpFieldName.CONNECTION;
-import static cool.scx.http.HttpFieldName.SERVER;
+import static cool.scx.http.HttpFieldName.*;
+import static cool.scx.http.HttpMethod.GET;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class PeachHttpServer implements ScxHttpServer {
@@ -26,15 +27,16 @@ public class PeachHttpServer implements ScxHttpServer {
 
     public PeachHttpServer(ScxHttpServerOptions options) {
         this.options = options;
-        this.tcpServer = new TCPServer(new ScxTCPServerOptions().port(options.port()));
-        this.tcpServer.onConnect(this::listen);
+        this.tcpServer = new TCPServer(new ScxTCPServerOptions().port(options.port()).tls((TLS) options.tls()));
+        this.tcpServer.onConnect(this::handle);
     }
 
     public PeachHttpServer() {
         this(new ScxHttpServerOptions());
     }
 
-    private void listen(ScxTCPSocket scxTCPSocket) {
+    private void handle(ScxTCPSocket scxTCPSocket) {
+        //先假定 这是一个 http 1.1 连接
         var dataReader = new LinkedDataReader(new InputStreamDataSupplier(scxTCPSocket.inputStream()));
         while (true) {
             //读取 请求行
@@ -44,15 +46,13 @@ public class PeachHttpServer implements ScxHttpServer {
             if (split.length != 3) {
                 throw new RuntimeException("Invalid request line: " + requestLine);
             }
-            var method = split[0];
-            var path = split[1];
-            var version = split[2];
+            var method0 = split[0];
+            var path0 = split[1];
+            var version0 = split[2];
 
-            var request = new PeachHttpServerRequest();
-
-            request.method = ScxHttpMethod.of(method);
-            request.uri = ScxURI.of(URLDecoder.decode(path, UTF_8));
-            request.version = HttpVersion.of(version);
+            var method = ScxHttpMethod.of(method0);
+            var path = URLDecoder.decode(path0, UTF_8);
+            var version = HttpVersion.of(version0);
 
             var headerBytes = dataReader.readUntil("\r\n\r\n".getBytes());
 
@@ -60,8 +60,23 @@ public class PeachHttpServer implements ScxHttpServer {
 
             var headers = ScxHttpHeaders.of(headerStr);
 
-            request.headers = headers;
+            var connection = headers.get(CONNECTION);
+            var upgrade = headers.get(UPGRADE);
 
+            var isWebSocketHandshake = method == GET && "Upgrade".equals(connection) && "websocket".equals(upgrade);
+
+            PeachHttpServerRequest request;
+
+            if (isWebSocketHandshake) {
+                request = new PeachServerWebSocketHandshakeRequest(dataReader, scxTCPSocket.outputStream());
+            } else {
+                request = new PeachHttpServerRequest();
+            }
+
+            request.method = method;
+            request.uri = ScxURI.of(path);
+            request.version = version;
+            request.headers = headers;
 
             ScxHttpBody body = null;
 
@@ -85,6 +100,16 @@ public class PeachHttpServer implements ScxHttpServer {
 
             if (requestHandler != null) {
                 requestHandler.accept(request);
+            }
+
+            //尝试启动 websocket 监听 todo 这里应该重新设计
+            if (request instanceof PeachServerWebSocketHandshakeRequest w) {
+                var ws = w.webSocket;
+                if (ws != null) {
+                    ws.start();
+                }
+                // websocket 独占整个连接 退出循环
+                break;
             }
 
         }

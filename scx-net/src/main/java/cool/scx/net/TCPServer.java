@@ -5,9 +5,14 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.function.Consumer;
 
+import static java.lang.System.Logger.Level.ERROR;
+
 public class TCPServer implements ScxTCPServer {
+
+    private static final System.Logger logger = System.getLogger(TCPServer.class.getName());
 
     private final ScxTCPServerOptions options;
     private final Thread serverThread;
@@ -33,11 +38,12 @@ public class TCPServer implements ScxTCPServer {
     @Override
     public void start() {
         if (running) {
-            throw new IllegalStateException("Server is already running");
+            throw new IllegalStateException("服务器已在运行 !!!");
         }
 
+        var tls = options.tls();
+
         try {
-            var tls = options.tls();
             if (tls != null && tls.enabled()) {
                 this.serverSocket = tls.createServerSocket();
             } else {
@@ -45,7 +51,7 @@ public class TCPServer implements ScxTCPServer {
             }
             this.serverSocket.bind(new InetSocketAddress(options.port()));
         } catch (IOException e) {
-            throw new UncheckedIOException(e);
+            throw new UncheckedIOException("启动失败 !!!", e);
         }
 
         running = true;
@@ -64,7 +70,7 @@ public class TCPServer implements ScxTCPServer {
         try {
             serverSocket.close();
         } catch (IOException e) {
-            throw new UncheckedIOException(e);
+            throw new UncheckedIOException("关闭失败 !!!", e);
         }
 
         serverThread.interrupt();
@@ -79,23 +85,33 @@ public class TCPServer implements ScxTCPServer {
         while (running) {
             try {
                 var socket = this.serverSocket.accept();
-                Thread.ofVirtual().start(() -> {
-                    try {
-                        //尝试握手
-                        if (socket instanceof SSLSocket sslSocket) {
-                            sslSocket.startHandshake();
-                        }
-                        //调用处理器
-                        var tcpSocket = new TCPSocket(socket);
-                        connectHandler.accept(tcpSocket);
-                    } catch (Exception e) {
-                        //暂时忽略
-                    }
-                });
+                Thread.ofVirtual().start(() -> handle(socket));
             } catch (IOException e) {
                 throw new UncheckedIOException(e);
             }
         }
+    }
+
+    private void handle(Socket socket) {
+        //主动调用握手 快速检测 ssl 错误 防止等到调用用户处理程序时才发现
+        if (socket instanceof SSLSocket sslSocket) {
+            try {
+                sslSocket.startHandshake();
+            } catch (Exception e) {
+                logger.log(ERROR, "SSL 握手失败 : " + e.getMessage());
+                try {
+                    socket.close(); //SSL 握手失败 !!! 尝试关闭连接
+                } catch (IOException ce) {
+                    e.addSuppressed(ce);
+                }
+                // 我们直接忽略所有异常 !!!
+                return;
+            }
+        }
+
+        var tcpSocket = new TCPSocket(socket);
+        //调用用户处理器
+        connectHandler.accept(tcpSocket);
     }
 
 }

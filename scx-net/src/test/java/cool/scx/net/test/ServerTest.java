@@ -35,7 +35,7 @@ public class ServerTest {
                     }
                     System.out.println(c.remoteAddress() + " : " + new String(s));
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    break;
                 }
             }
         });
