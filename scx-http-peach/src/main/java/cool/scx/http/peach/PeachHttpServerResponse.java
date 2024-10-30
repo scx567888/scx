@@ -43,6 +43,16 @@ public class PeachHttpServerResponse implements ScxHttpServerResponse {
                 out.write(b, off, len);
             }
 
+            @Override
+            public void flush() throws IOException {
+                out.flush();
+            }
+
+            @Override
+            public void close() throws IOException {
+                checkFirstSend();
+            }
+            
         };
     }
 

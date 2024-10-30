@@ -1,42 +1,45 @@
 package cool.scx.http.peach;
 
-import cool.scx.http.ScxHttpHeaders;
-import cool.scx.http.ScxHttpHeadersWritable;
-import cool.scx.http.ScxServerWebSocket;
-import cool.scx.http.ScxWebSocket;
+import cool.scx.http.*;
 import cool.scx.http.uri.ScxURI;
-import cool.scx.http.uri.ScxURIWritable;
-import cool.scx.net.ScxTCPSocket;
+import cool.scx.io.DataReader;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+import static cool.scx.http.WebSocketOpCode.*;
+import static cool.scx.http.peach.WebSocketFrameHelper.readFrame;
+import static cool.scx.http.peach.WebSocketFrameHelper.writeFrame;
+
 public class PeachServerWebSocket implements ScxServerWebSocket {
 
-    private final ScxURIWritable uri;
-    private final ScxHttpHeadersWritable headers;
-    private final ScxTCPSocket scxTCPSocket;
+    private final DataReader reader;
+    private final OutputStream writer;
+    private final ScxServerWebSocketHandshakeRequest handshakeServerRequest;
     private Consumer<String> textMessageHandler;
     private Consumer<byte[]> binaryMessageHandler;
     private Consumer<byte[]> pingHandler;
     private Consumer<byte[]> pongHandler;
     private BiConsumer<Integer, String> closeHandler;
     private Consumer<Throwable> errorHandler;
+    private boolean isClosed;
 
-    public PeachServerWebSocket(HttpPrologue httpPrologue, ScxHttpHeadersWritable headers, ScxTCPSocket scxTCPSocket) {
-        this.uri = ScxURI.of(httpPrologue.path());
-        this.headers = headers;
-        this.scxTCPSocket = scxTCPSocket;
+    public PeachServerWebSocket(ScxServerWebSocketHandshakeRequest handshakeServerRequest, DataReader reader, OutputStream writer) {
+        this.handshakeServerRequest = handshakeServerRequest;
+        this.reader = reader;
+        this.writer = writer;
     }
 
     @Override
     public ScxURI uri() {
-        return null;
+        return this.handshakeServerRequest.uri();
     }
 
     @Override
     public ScxHttpHeaders headers() {
-        return null;
+        return this.handshakeServerRequest.headers();
     }
 
     @Override
@@ -77,45 +80,87 @@ public class PeachServerWebSocket implements ScxServerWebSocket {
 
     @Override
     public ScxWebSocket send(String textMessage, boolean last) {
-        return null;
+        try {
+            byte[] payload = textMessage.getBytes();
+            sendFrame(payload, TEXT, last);
+        } catch (Exception e) {
+            if (errorHandler != null) {
+                errorHandler.accept(e);
+            }
+        }
+        return this;
     }
 
     @Override
     public ScxWebSocket send(byte[] binaryMessage, boolean last) {
-        return null;
+        try {
+            sendFrame(binaryMessage, BINARY, last);
+        } catch (Exception e) {
+            if (errorHandler != null) {
+                errorHandler.accept(e);
+            }
+        }
+        return this;
     }
 
     @Override
     public ScxWebSocket ping(byte[] data) {
-        return null;
+        try {
+            sendFrame(data, PING, true);
+        } catch (Exception e) {
+            if (errorHandler != null) {
+                errorHandler.accept(e);
+            }
+        }
+        return this;
     }
 
     @Override
     public ScxWebSocket pong(byte[] data) {
-        return null;
+        try {
+            sendFrame(data, WebSocketOpCode.PONG, true);
+        } catch (Exception e) {
+            if (errorHandler != null) {
+                errorHandler.accept(e);
+            }
+        }
+        return this;
     }
 
     @Override
     public ScxWebSocket close(int code, String reason) {
-        return null;
+        try {
+            sendFrame(reason.getBytes(), WebSocketOpCode.CLOSE, true);
+        } catch (Exception e) {
+            if (errorHandler != null) {
+                errorHandler.accept(e);
+            }
+        }
+        return this;
     }
 
     @Override
     public ScxWebSocket terminate() {
-        return null;
+        isClosed = true;
+        //todo 这里需要关闭 tcp 连接 ?
+//        try {
+//            scxTCPSocket.close();
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+        return this;
     }
 
     @Override
     public boolean isClosed() {
-        return false;
+        return isClosed;
     }
 
-    void start() {
-        var inputStream = scxTCPSocket.inputStream();
+    public void start() {
         while (true) {
             try {
-                var frame = new WebSocketFrame(inputStream);
-                handleFrame(frame, scxTCPSocket);
+                var frame = readFrame(reader);
+                handleFrame(frame);
             } catch (Exception e) {
                 if (errorHandler != null) {
                     errorHandler.accept(e);
@@ -125,23 +170,33 @@ public class PeachServerWebSocket implements ScxServerWebSocket {
         }
     }
 
-    private void handleFrame(WebSocketFrame frame, ScxTCPSocket scxTCPSocket) {
-        switch (frame.getOpcode()) {
-            case 0x0 -> {
+    private void handleFrame(WebSocketFrame frame) {
+        switch (frame.opCode()) {
+            case CONTINUATION -> {
 
             }
-            case 0x1 -> {
-                textMessageHandler.accept(new String(frame.getPayloadData()));
+            case TEXT -> {
+                textMessageHandler.accept(new String(frame.payloadData()));
             }
-            case 0x2 -> {
+            case BINARY -> {
+                binaryMessageHandler.accept(frame.payloadData());
             }
-            case 0x8 -> {
+            case CLOSE -> {
+                isClosed = true;
+                closeHandler.accept(0, new String(frame.payloadData()));
             }
-            case 0x9 -> {
+            case PING -> {
+                pingHandler.accept(frame.payloadData());
             }
-            case 0xA -> {
+            case PONG -> {
+                pongHandler.accept(frame.payloadData());
             }
         }
+    }
+
+    private void sendFrame(byte[] payload, WebSocketOpCode opcode, boolean last) throws IOException {
+        var f = new WebSocketFrame(last, opcode, payload);
+        writeFrame(f, writer);
     }
 
 }

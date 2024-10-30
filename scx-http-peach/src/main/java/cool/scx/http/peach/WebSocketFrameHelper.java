@@ -53,7 +53,7 @@ public class WebSocketFrameHelper {
         return new WebSocketFrame(fin, opCode, masked, payloadLength, maskingKey, payloadData);
     }
 
-    private void writeFrame(WebSocketFrame frame, OutputStream out) throws IOException, IOException {
+    public static void writeFrame(WebSocketFrame frame, OutputStream out) throws IOException, IOException {
         // 写入头部
         int b1 = (frame.fin() ? 0x80 : 0) | frame.opCode().code();
         int b2 = frame.payloadLength();
