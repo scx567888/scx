@@ -15,7 +15,9 @@ public class ByteArrayDataReader implements DataReader {
     @Override
     public byte read() throws NoMoreDataException {
         try {
-            return bytes[position++];
+            var b = bytes[position];
+            position = position + 1;
+            return b;
         } catch (ArrayIndexOutOfBoundsException e) {
             throw new NoMoreDataException();
         }

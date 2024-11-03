@@ -19,15 +19,15 @@ public class KMPDataIndexer implements DataIndexer {
 
         while (i < pattern.length) {
             if (pattern[i] == pattern[length]) {
-                length++;
+                length = length + 1;
                 lps[i] = length;
-                i++;
+                i = i + 1;
             } else {
                 if (length != 0) {
                     length = lps[length - 1];
                 } else {
                     lps[i] = 0;
-                    i++;
+                    i = i + 1;
                 }
             }
         }
@@ -38,13 +38,13 @@ public class KMPDataIndexer implements DataIndexer {
     public int indexOf(byte[] bytes, int position, int length) {
         var end = position + length;
         //KMP 查找
-        for (int i = position; i < end; i++) {
+        for (int i = position; i < end; i = i + 1) {
             while (patternIndex > 0 && bytes[i] != pattern[patternIndex]) {
                 patternIndex = lps[patternIndex - 1];
             }
 
             if (bytes[i] == pattern[patternIndex]) {
-                patternIndex++;
+                patternIndex = patternIndex + 1;
             }
 
             if (patternIndex == pattern.length) {
