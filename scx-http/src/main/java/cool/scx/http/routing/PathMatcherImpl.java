@@ -89,9 +89,9 @@ public class PathMatcherImpl implements PathMatcher {
         // See if the path contains ":" - if so then it contains parameter capture groups and we have to generate
         // a regex for that
         int params = 0;
-        for (int i = 0; i < path.length(); i++) {
+        for (int i = 0; i < path.length(); i = i + 1) {
             if (path.charAt(i) == ':') {
-                params++;
+                params = params + 1;
             }
         }
         if (params > 0) {
@@ -126,7 +126,7 @@ public class PathMatcherImpl implements PathMatcher {
             }
             m.appendReplacement(sb, "(?<" + param + ">[^/]+)");
             groups.add(group);
-            index++;
+            index = index + 1;
         }
         m.appendTail(sb);
         if (this.exactPath && !this.pathEndsWithSlash) {
@@ -239,7 +239,7 @@ public class PathMatcherImpl implements PathMatcher {
                         // Pattern - named params
                         // decode the path as it could contain escaped chars.
                         final int len = Math.min(groups.size(), m.groupCount());
-                        for (int i = 0; i < len; i++) {
+                        for (int i = 0; i < len; i = i + 1) {
                             final String k = groups.get(i);
                             String undecodedValue;
                             // We try to take value in three ways:
@@ -271,7 +271,7 @@ public class PathMatcherImpl implements PathMatcher {
                                 }
                             }
                         }
-                        for (int i = 0; i < m.groupCount(); i++) {
+                        for (int i = 0; i < m.groupCount(); i = i + 1) {
                             String group = m.group(i + 1);
                             if (group != null) {
                                 final String k = "param" + i;

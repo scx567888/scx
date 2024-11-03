@@ -35,7 +35,7 @@ public class CookieHelper {
 
         var cookie = new CookieImpl(name, value);
         //3, 其余参数
-        for (int i = 1; i < parts.length; i++) {
+        for (int i = 1; i < parts.length; i = i + 1) {
             var attr = parts[i].split("=", 2);
             var key = attr[0];
             var attrValue = attr.length > 1 ? attr[1] : "";

@@ -57,7 +57,7 @@ public final class ReflectFactory {
     static ClassInfo[] _findInterfaces(ClassInfo classInfo) {
         var interfaces = classInfo.type().getInterfaces();
         var result = new ClassInfo[interfaces.size()];
-        for (int i = 0; i < interfaces.size(); i++) {
+        for (int i = 0; i < interfaces.size(); i = i + 1) {
             result[i] = getClassInfo(interfaces.get(i));
         }
         return result;
