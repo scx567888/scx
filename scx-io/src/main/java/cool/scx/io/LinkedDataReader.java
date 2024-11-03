@@ -109,7 +109,9 @@ public class LinkedDataReader implements DataReader {
     @Override
     public byte read() throws NoMoreDataException {
         ensureAvailable();
-        return head.bytes[head.position++];
+        var b = head.bytes[head.position];
+        head.position = head.position + 1;
+        return b;
     }
 
     @Override
