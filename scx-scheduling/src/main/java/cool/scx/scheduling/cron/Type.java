@@ -1,4 +1,3 @@
-
 package cool.scx.scheduling.cron;
 
 public enum Type {

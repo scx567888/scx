@@ -38,7 +38,7 @@ public class Cron {
 
         int var6;
         int s;
-        for(var6 = 0; var6 < var5; ++var6) {
+        for (var6 = 0; var6 < var5; ++var6) {
             s = var4[var6];
             if (s > nextTime.getSecond()) {
                 nextTime = nextTime.withSecond(s);
@@ -56,7 +56,7 @@ public class Cron {
         var6 = var11.length;
 
         int m;
-        for(s = 0; s < var6; ++s) {
+        for (s = 0; s < var6; ++s) {
             m = var11[s];
             if (m >= nextTime.getMinute()) {
                 nextTime = nextTime.withMinute(m);
@@ -73,7 +73,7 @@ public class Cron {
         int[] var13 = this.hour.values;
         s = var13.length;
 
-        for(m = 0; m < s; ++m) {
+        for (m = 0; m < s; ++m) {
             int h = var13[m];
             if (h >= nextTime.getHour()) {
                 nextTime = nextTime.withHour(h);

@@ -13,5 +13,5 @@ public class CronSecond {
         this.values = normalize(result.values);
         this.type = result.type;
     }
-    
+
 }

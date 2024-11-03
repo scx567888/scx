@@ -1,7 +1,7 @@
 package cool.scx.scheduling.cron;
 
 public class ParseResult {
-    
+
     public int[] values;
     public Type type;
 
@@ -9,5 +9,5 @@ public class ParseResult {
         this.values = values;
         this.type = type;
     }
-    
+
 }
