@@ -19,6 +19,7 @@ public enum FileFormat {
     HTML(TEXT_HTML),
     CSS(TEXT_CSS),
     JS(TEXT_JS),
+    MJS(TEXT_JS),
 
     // Application
     BIN(APPLICATION_OCTET_STREAM),
