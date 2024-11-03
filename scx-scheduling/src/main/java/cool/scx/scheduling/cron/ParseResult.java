@@ -1,11 +1,11 @@
 package cool.scx.scheduling.cron;
 
-class Result {
+public class ParseResult {
     
     public int[] values;
     public Type type;
 
-    public Result(Type type, int... values) {
+    public ParseResult(Type type, int... values) {
         this.values = values;
         this.type = type;
     }
