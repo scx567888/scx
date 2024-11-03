@@ -4,6 +4,7 @@ import static cool.scx.scheduling.cron.CronHelper.normalize;
 import static cool.scx.scheduling.cron.CronHelper.parseSegment;
 
 public class CronMinute {
+
     public final int[] values;
     public final Type type;
 

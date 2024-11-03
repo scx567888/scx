@@ -1,6 +1,7 @@
 package cool.scx.scheduling.cron;
 
 class Result {
+    
     public int[] values;
     public Type type;
 
