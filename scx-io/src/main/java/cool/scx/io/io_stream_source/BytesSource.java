@@ -1,4 +1,4 @@
-package cool.scx.common.io_stream_source;
+package cool.scx.io.io_stream_source;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -7,34 +7,33 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
-import java.util.function.Supplier;
 
-public class BytesSupplierSource implements InputStreamSource {
+public class BytesSource implements InputStreamSource {
 
-    private final Supplier<byte[]> bytesSupplier;
+    private final byte[] bytes;
 
-    public BytesSupplierSource(Supplier<byte[]> bytesSupplier) {
-        this.bytesSupplier = bytesSupplier;
+    public BytesSource(byte[] bytes) {
+        this.bytes = bytes;
     }
 
     @Override
     public InputStream toInputStream() throws IOException {
-        return new ByteArrayInputStream(bytesSupplier.get());
+        return new ByteArrayInputStream(bytes);
     }
 
     @Override
     public void writeToOutputStream(OutputStream out) throws IOException {
-        out.write(bytesSupplier.get());
+        out.write(bytes);
     }
 
     @Override
     public byte[] toBytes() throws IOException {
-        return bytesSupplier.get();
+        return bytes;
     }
 
     @Override
     public void toFile(Path outputPath, OpenOption... options) throws IOException {
-        Files.write(outputPath, bytesSupplier.get(), options);
+        Files.write(outputPath, bytes, options);
     }
 
 }

@@ -1,4 +1,4 @@
-package cool.scx.common.io_stream_source;
+package cool.scx.io.io_stream_source;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
