@@ -1,7 +1,7 @@
-package cool.scx.common.util.image;
+package cool.scx.io.image;
 
-import cool.scx.common.io_stream_source.InputStreamSource;
-import cool.scx.common.io_stream_source.OutputStreamSource;
+import cool.scx.io.io_stream_source.InputStreamSource;
+import cool.scx.io.io_stream_source.OutputStreamSource;
 
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
@@ -15,7 +15,7 @@ import java.io.OutputStream;
 import java.nio.file.Path;
 import java.util.function.Supplier;
 
-import static cool.scx.common.io_stream_source.InputStreamSource.of;
+import static cool.scx.io.io_stream_source.InputStreamSource.of;
 
 /**
  * 将图片转换为 渐进式 JPEG

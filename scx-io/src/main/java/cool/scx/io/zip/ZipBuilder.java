@@ -1,4 +1,4 @@
-package cool.scx.common.zip;
+package cool.scx.io.zip;
 
 import cool.scx.common.util.StringUtils;
 import cool.scx.common.util.URIBuilder;

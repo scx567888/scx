@@ -1,9 +1,6 @@
 package cool.scx.core.test;
 
 import cool.scx.common.util.*;
-import cool.scx.common.zip.UnZipBuilder;
-import cool.scx.common.zip.ZipBuilder;
-import cool.scx.common.zip.ZipOptions;
 import cool.scx.core.Scx;
 import cool.scx.core.ScxContext;
 import cool.scx.core.ScxModule;
@@ -20,6 +17,9 @@ import cool.scx.http.helidon.ScxHttpClientHelper;
 import cool.scx.http.media.multi_part.MultiPart;
 import cool.scx.http.routing.handler.StaticHandler;
 import cool.scx.http.uri.ScxURI;
+import cool.scx.io.zip.UnZipBuilder;
+import cool.scx.io.zip.ZipBuilder;
+import cool.scx.io.zip.ZipOptions;
 import cool.scx.jdbc.sql.SQL;
 import cool.scx.scheduling.ScxScheduling;
 import org.testng.annotations.BeforeTest;
