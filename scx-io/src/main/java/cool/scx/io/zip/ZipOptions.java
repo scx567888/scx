@@ -1,4 +1,4 @@
-package cool.scx.common.zip;
+package cool.scx.io.zip;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
