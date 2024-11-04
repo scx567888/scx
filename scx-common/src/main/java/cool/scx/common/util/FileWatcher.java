@@ -1,30 +1,29 @@
 package cool.scx.common.util;
 
 import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
-import java.nio.file.WatchKey;
-import java.nio.file.WatchService;
+import java.nio.file.*;
+import java.util.function.Consumer;
 
 import static java.nio.file.StandardWatchEventKinds.*;
 
 /**
- * 文件监听器 (只监听单个文件)
+ * 文件监听器
  */
 public final class FileWatcher {
 
     private final WatchService watchService;
-    private final Path fileName;
+    private final Path target;
+    private final Path watchTarget;
+    private final boolean isFile;
     private Thread watchThread;
-    private Runnable deleteHandler;
-    private Runnable createHandler;
-    private Runnable modifyHandler;
+    private Consumer<ChangeEvent> listener;
 
-    public FileWatcher(Path path) throws IOException {
+    public FileWatcher(Path target) throws IOException {
         this.watchService = FileSystems.getDefault().newWatchService();
-        this.fileName = path.getFileName();
-        var fileParent = path.getParent();
-        fileParent.register(watchService, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
+        this.target = target;
+        this.isFile = !Files.isDirectory(target);
+        this.watchTarget = isFile ? target.getParent() : target;
+        watchTarget.register(watchService, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
     }
 
     public void _do() {
@@ -38,18 +37,18 @@ public final class FileWatcher {
             }
             var watchEvents = watchKey.pollEvents();
             for (var event : watchEvents) {
-                Path context = (Path) event.context();
-                //只处理指定文件
-                if (this.fileName.equals(context)) {
-                    var kind = event.kind();
-                    if (kind == ENTRY_CREATE) {
-                        _callOnCreate();
-                    } else if (kind == ENTRY_MODIFY) {
-                        _callOnModify();
-                    } else if (kind == ENTRY_DELETE) {
-                        _callOnDelete();
-                    }
+                var eventPath = (Path) event.context();
+                var eventKind = event.kind();
+
+                //使用全路径方便处理
+                eventPath = watchTarget.resolve(eventPath);
+                
+                //如果监听的是单个文件 但是发生变化的并不是这个文件 我们跳过
+                if (isFile && !target.equals(eventPath)) {
+                    continue;
                 }
+                //调用监听
+                _callListener(eventPath, eventKind);
             }
             // reset the key
             var valid = watchKey.reset();
@@ -59,37 +58,13 @@ public final class FileWatcher {
         }
     }
 
-    public FileWatcher onCreate(Runnable createHandler) {
-        this.createHandler = createHandler;
+    public FileWatcher listener(Consumer<ChangeEvent> listener) {
+        this.listener = listener;
         return this;
     }
 
-    public FileWatcher onModify(Runnable modifyHandler) {
-        this.modifyHandler = modifyHandler;
-        return this;
-    }
-
-    public FileWatcher onDelete(Runnable deleteHandler) {
-        this.deleteHandler = deleteHandler;
-        return this;
-    }
-
-    private void _callOnCreate() {
-        if (this.createHandler != null) {
-            this.createHandler.run();
-        }
-    }
-
-    private void _callOnModify() {
-        if (this.modifyHandler != null) {
-            this.modifyHandler.run();
-        }
-    }
-
-    private void _callOnDelete() {
-        if (this.deleteHandler != null) {
-            this.deleteHandler.run();
-        }
+    private void _callListener(Path target, WatchEvent.Kind<?> kind) {
+        this.listener.accept(new ChangeEvent(target, ChangeEventType.of(kind)));
     }
 
     public synchronized void start() {
@@ -101,6 +76,33 @@ public final class FileWatcher {
             this.watchThread.interrupt();
             this.watchThread = null;
         }
+    }
+
+    public record ChangeEvent(Path target, ChangeEventType type) {
+
+    }
+
+    public enum ChangeEventType {
+
+        MODIFY,
+
+        DELETED,
+
+        CREATED;
+
+        public static ChangeEventType of(WatchEvent.Kind<?> t) {
+            if (t == ENTRY_CREATE) {
+                return CREATED;
+            }
+            if (t == ENTRY_MODIFY) {
+                return MODIFY;
+            }
+            if (t == ENTRY_DELETE) {
+                return DELETED;
+            }
+            throw new IllegalArgumentException("未知类型 : " + t.toString());
+        }
+
     }
 
 }
