@@ -1,7 +1,7 @@
-package cool.scx.common.util.test;
+package cool.scx.io.test;
 
 import cool.scx.common.util.ClassUtils;
-import cool.scx.common.util.FileWatcher;
+import cool.scx.io.file.FileWatcher;
 import org.testng.annotations.Test;
 
 import java.io.IOException;

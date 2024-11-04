@@ -1,8 +1,8 @@
-package cool.scx.common.zip.test;
+package cool.scx.io.test;
 
-import cool.scx.common.zip.GunzipBuilder;
-import cool.scx.common.zip.GzipBuilder;
-import cool.scx.common.zip.ZipBuilder;
+import cool.scx.io.zip.GunzipBuilder;
+import cool.scx.io.zip.GzipBuilder;
+import cool.scx.io.zip.ZipBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
