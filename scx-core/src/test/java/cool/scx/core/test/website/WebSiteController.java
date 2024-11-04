@@ -3,7 +3,7 @@ package cool.scx.core.test.website;
 import cool.scx.common.util.HashUtils;
 import cool.scx.common.util.RandomUtils;
 import cool.scx.common.util.ScxExceptionHelper;
-import cool.scx.common.zip.ZipBuilder;
+import cool.scx.io.zip.ZipBuilder;
 import cool.scx.core.ScxContext;
 import cool.scx.core.test.car.CarService;
 import cool.scx.core.test.person.Person;

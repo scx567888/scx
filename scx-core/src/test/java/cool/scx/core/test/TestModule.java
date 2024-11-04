@@ -1,9 +1,9 @@
 package cool.scx.core.test;
 
 import cool.scx.common.util.*;
-import cool.scx.common.zip.UnZipBuilder;
-import cool.scx.common.zip.ZipBuilder;
-import cool.scx.common.zip.ZipOptions;
+import cool.scx.io.zip.UnZipBuilder;
+import cool.scx.io.zip.ZipBuilder;
+import cool.scx.io.zip.ZipOptions;
 import cool.scx.core.Scx;
 import cool.scx.core.ScxContext;
 import cool.scx.core.ScxModule;
