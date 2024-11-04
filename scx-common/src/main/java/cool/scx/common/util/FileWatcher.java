@@ -42,7 +42,7 @@ public final class FileWatcher {
 
                 //使用全路径方便处理
                 eventPath = watchTarget.resolve(eventPath);
-                
+
                 //如果监听的是单个文件 但是发生变化的并不是这个文件 我们跳过
                 if (isFile && !target.equals(eventPath)) {
                     continue;
