@@ -14,9 +14,12 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class FileAttributesReader {
 
+    //为了解决 ConcurrentHashMap 无法存储空值的问题
+    private static final NotExist NOT_EXIST = new NotExist();
+
+    private final Path target;
     private final FileWatcher fileWatcher;
-    public final Path target;
-    public final Map<Path, BasicFileAttributes> cache;
+    private final Map<Path, BasicFileAttributes> cache;
 
     public FileAttributesReader(Path target) throws IOException {
         this.target = target;
@@ -59,9 +62,6 @@ public class FileAttributesReader {
         }
         return f;
     }
-    
-    //为了解决 ConcurrentHashMap 无法存储空值的问题
-    private static final NotExist NOT_EXIST = new NotExist();
 
     private static class NotExist implements BasicFileAttributes {
 

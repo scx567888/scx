@@ -82,12 +82,8 @@ public final class FileWatcher {
         try {
             watchService.close();
         } catch (IOException _) {
-            
+
         }
-    }
-
-    public record ChangeEvent(Path target, ChangeEventType type) {
-
     }
 
     public enum ChangeEventType {
@@ -110,6 +106,10 @@ public final class FileWatcher {
             }
             throw new IllegalArgumentException("未知类型 : " + t.toString());
         }
+
+    }
+
+    public record ChangeEvent(Path target, ChangeEventType type) {
 
     }
 
