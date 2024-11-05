@@ -313,13 +313,20 @@ public final class ScxHelper {
         }
     }
 
+    static void initScxLoggerFactory(ScxConfig scxConfig, ScxEnvironment scxEnvironment) {
+        initScxLoggerFactory0(scxConfig, scxEnvironment);
+        scxConfig.onChange(_ -> {
+            initScxLoggerFactory0(scxConfig, scxEnvironment);
+        });
+    }
+
     /**
      * a
      *
      * @param scxConfig      a
      * @param scxEnvironment a
      */
-    static void initScxLoggerFactory(ScxConfig scxConfig, ScxEnvironment scxEnvironment) {
+    static void initScxLoggerFactory0(ScxConfig scxConfig, ScxEnvironment scxEnvironment) {
         //先初始化好 DefaultScxLoggerInfo
         var defaultLevel = toLevel(scxConfig.get("scx.logging.default.level", String.class));
         var defaultType = toType(scxConfig.get("scx.logging.default.type", String.class));

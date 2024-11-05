@@ -9,10 +9,16 @@ import java.util.Map;
 
 public final class MapConfigSource implements ScxConfigSource {
 
-    private final ObjectNode configMapping = JsonNodeFactory.instance.objectNode();
+    private final ObjectNode configMapping;
 
     private MapConfigSource(Map<String, Object> map) {
-        map.forEach((k, v) -> JsonNodeHelper.set(this.configMapping, k, v));
+        this.configMapping = loadFromMap(map);
+    }
+
+    public static ObjectNode loadFromMap(Map<String, Object> map) {
+        var configMapping = JsonNodeFactory.instance.objectNode();
+        map.forEach((k, v) -> JsonNodeHelper.set(configMapping, k, v));
+        return configMapping;
     }
 
     public static MapConfigSource of(Map<String, Object> configMapping) {
