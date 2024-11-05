@@ -1,11 +1,13 @@
-package cool.scx.web.parameter_handler;
+package cool.scx.web.parameter_handler.last;
 
 import cool.scx.reflect.ParameterInfo;
+import cool.scx.web.parameter_handler.ParameterHandler;
+import cool.scx.web.parameter_handler.RequestInfo;
 
 import static cool.scx.common.util.ScxExceptionHelper.ignore;
-import static cool.scx.web.parameter_handler.FromBodyParameterHandler.getValueFromBody;
-import static cool.scx.web.parameter_handler.FromPathParameterHandler.getValueFromPath;
-import static cool.scx.web.parameter_handler.FromQueryParameterHandler.getValueFromQuery;
+import static cool.scx.web.parameter_handler.from_body.FromBodyParameterHandler.getValueFromBody;
+import static cool.scx.web.parameter_handler.from_path.FromPathParameterHandler.getValueFromPath;
+import static cool.scx.web.parameter_handler.from_query.FromQueryParameterHandler.getValueFromQuery;
 
 /**
  * LastParameterHandler
@@ -15,13 +17,14 @@ import static cool.scx.web.parameter_handler.FromQueryParameterHandler.getValueF
  */
 public final class LastParameterHandler implements ParameterHandler {
 
-    @Override
-    public boolean canHandle(ParameterInfo parameter) {
-        return true;
+    private final ParameterInfo parameter;
+
+    public LastParameterHandler(ParameterInfo parameter) {
+        this.parameter = parameter;
     }
 
     @Override
-    public Object handle(ParameterInfo parameter, RequestInfo requestInfo) throws Exception {
+    public Object handle(RequestInfo requestInfo) throws Exception {
         var javaType = parameter.type();
         var name = parameter.name();
         //------ 这里针对没有注解的参数进行赋值猜测 ---------------

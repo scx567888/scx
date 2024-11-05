@@ -15,7 +15,7 @@ public interface ScxConfigSource {
     ObjectNode configMapping();
 
     default void onChange(BiConsumer<ObjectNode, ObjectNode> changeHandler) {
-        
+
     }
 
 }

@@ -1,13 +1,15 @@
-package cool.scx.web.parameter_handler;
+package cool.scx.web.parameter_handler.from_path;
 
 import com.fasterxml.jackson.databind.JavaType;
 import cool.scx.reflect.ParameterInfo;
 import cool.scx.web.annotation.FromPath;
+import cool.scx.web.parameter_handler.ParameterHandler;
+import cool.scx.web.parameter_handler.RequestInfo;
 import cool.scx.web.parameter_handler.exception.ParamConvertException;
 import cool.scx.web.parameter_handler.exception.RequiredParamEmptyException;
 
 import static cool.scx.common.util.AnnotationUtils.getAnnotationValue;
-import static cool.scx.web.parameter_handler.FromBodyParameterHandler.readValue;
+import static cool.scx.web.parameter_handler.from_body.FromBodyParameterHandler.readValue;
 
 /**
  * FromPathParameterHandler
@@ -16,6 +18,17 @@ import static cool.scx.web.parameter_handler.FromBodyParameterHandler.readValue;
  * @version 1.11.8
  */
 public final class FromPathParameterHandler implements ParameterHandler {
+
+    private final FromPath fromPath;
+    private final ParameterInfo parameter;
+    private final String value;
+
+    public FromPathParameterHandler(FromPath fromPath, ParameterInfo parameter) {
+        this.fromPath = fromPath;
+        this.parameter = parameter;
+        var tempValue = getAnnotationValue(fromPath.value());
+        this.value = tempValue != null ? tempValue : parameter.name();
+    }
 
     public static Object getValueFromPath(String name, boolean merge, boolean required, JavaType javaType, RequestInfo info) throws RequiredParamEmptyException, ParamConvertException {
         var tempValue = merge ? info.pathParams() : info.pathParams().get(name);
@@ -38,18 +51,8 @@ public final class FromPathParameterHandler implements ParameterHandler {
     }
 
     @Override
-    public boolean canHandle(ParameterInfo parameter) {
-        return parameter.parameter().getAnnotation(FromPath.class) != null;
-    }
-
-    @Override
-    public Object handle(ParameterInfo parameter, RequestInfo requestInfo) throws Exception {
-        var fromPath = parameter.parameter().getAnnotation(FromPath.class);
-        if (fromPath == null) {
-            throw new IllegalArgumentException("参数没有 FromPath 注解 !!!");
-        }
-        var value = getAnnotationValue(fromPath.value());
-        return getValueFromPath(value != null ? value : parameter.name(), fromPath.merge(), fromPath.required(), parameter.type(), requestInfo);
+    public Object handle(RequestInfo requestInfo) throws Exception {
+        return getValueFromPath(value, fromPath.merge(), fromPath.required(), parameter.type(), requestInfo);
     }
 
 }

@@ -2,6 +2,8 @@ package cool.scx.ext.crud;
 
 import cool.scx.core.Scx;
 import cool.scx.core.ScxModule;
+import cool.scx.ext.crud.parameter_handler.crud_list_param.CRUDListParamParameterHandlerBuilder;
+import cool.scx.ext.crud.parameter_handler.crud_update_param.CRUDUpdateParamParameterHandlerBuilder;
 
 import static java.lang.System.Logger;
 import static java.lang.System.Logger.Level.DEBUG;
@@ -33,10 +35,10 @@ public class CRUDModule extends ScxModule {
     @Override
     public void start(Scx scx) {
         //这里添加额外的参数处理器 保证 CRUDListParam 类型的参数永不为空
-        scx.scxWeb().addParameterHandler(0, cool.scx.ext.crud.CRUDListParamMethodParameterHandler.DEFAULT_INSTANCE);
-        scx.scxWeb().addParameterHandler(0, cool.scx.ext.crud.CRUDUpdateParamMethodParameterHandler.DEFAULT_INSTANCE);
-        logger.log(DEBUG, "已添加用于处理类型为 CRUDListParam   的 MethodParameterHandler  -->  {0}", CRUDListParamMethodParameterHandler.class.getName());
-        logger.log(DEBUG, "已添加用于处理类型为 CRUDUpdateParam 的 MethodParameterHandler  -->  {0}", CRUDUpdateParamMethodParameterHandler.class.getName());
+        scx.scxWeb().addParameterHandlerBuilder(0, new CRUDListParamParameterHandlerBuilder());
+        scx.scxWeb().addParameterHandlerBuilder(0, new CRUDUpdateParamParameterHandlerBuilder());
+        logger.log(DEBUG, "已添加用于处理类型为 CRUDListParam   的 ParameterHandlerBuilder  -->  {0}", CRUDListParamParameterHandlerBuilder.class.getName());
+        logger.log(DEBUG, "已添加用于处理类型为 CRUDUpdateParam 的 ParameterHandlerBuilder  -->  {0}", CRUDUpdateParamParameterHandlerBuilder.class.getName());
     }
 
     /**

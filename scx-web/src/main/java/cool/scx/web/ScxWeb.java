@@ -11,9 +11,17 @@ import cool.scx.web.exception_handler.LastExceptionHandler;
 import cool.scx.web.exception_handler.ScxHttpExceptionHandler;
 import cool.scx.web.interceptor.DefaultInterceptor;
 import cool.scx.web.interceptor.Interceptor;
-import cool.scx.web.parameter_handler.*;
+import cool.scx.web.parameter_handler.ParameterHandler;
+import cool.scx.web.parameter_handler.ParameterHandlerBuilder;
+import cool.scx.web.parameter_handler.RequestInfo;
 import cool.scx.web.parameter_handler.exception.ParamConvertException;
 import cool.scx.web.parameter_handler.exception.RequiredParamEmptyException;
+import cool.scx.web.parameter_handler.from_body.FromBodyParameterHandlerBuilder;
+import cool.scx.web.parameter_handler.from_context.FromContextParameterHandlerBuilder;
+import cool.scx.web.parameter_handler.from_path.FromPathParameterHandlerBuilder;
+import cool.scx.web.parameter_handler.from_query.FromQueryParameterHandlerBuilder;
+import cool.scx.web.parameter_handler.from_upload.FromUploadParameterHandlerBuilder;
+import cool.scx.web.parameter_handler.last.LastParameterHandlerBuilder;
 import cool.scx.web.return_value_handler.*;
 import cool.scx.web.template.ScxTemplateHandler;
 
@@ -32,8 +40,8 @@ public final class ScxWeb {
     private final LastExceptionHandler lastExceptionHandler;
     private final List<ReturnValueHandler> returnValueHandlers = new ArrayList<>();
     private final LastReturnValueHandler lastReturnValueHandler;
-    private final List<ParameterHandler> parameterHandlers = new ArrayList<>();
-    private final LastParameterHandler lastParameterHandler;
+    private final List<ParameterHandlerBuilder> parameterHandlerBuilders = new ArrayList<>();
+    private final LastParameterHandlerBuilder lastParameterHandlerBuilder;
     private final ScxTemplateHandler templateHandler;
     private final RouterErrorHandler routerErrorHandler;
     private final RouteRegistrar routeRegistrar;
@@ -59,12 +67,12 @@ public final class ScxWeb {
         addReturnValueHandler(new BaseVoReturnValueHandler());
         this.lastReturnValueHandler = new LastReturnValueHandler();
         //初始化默认的参数处理器
-        addParameterHandler(new RoutingContextParameterHandler());
-        addParameterHandler(new FileUploadParameterHandler());
-        addParameterHandler(new FromBodyParameterHandler());
-        addParameterHandler(new FromQueryParameterHandler());
-        addParameterHandler(new FromPathParameterHandler());
-        this.lastParameterHandler = new LastParameterHandler();
+        addParameterHandlerBuilder(new FromContextParameterHandlerBuilder());
+        addParameterHandlerBuilder(new FromUploadParameterHandlerBuilder());
+        addParameterHandlerBuilder(new FromBodyParameterHandlerBuilder());
+        addParameterHandlerBuilder(new FromQueryParameterHandlerBuilder());
+        addParameterHandlerBuilder(new FromPathParameterHandlerBuilder());
+        this.lastParameterHandlerBuilder = new LastParameterHandlerBuilder();
     }
 
     /**
@@ -114,8 +122,8 @@ public final class ScxWeb {
         return this;
     }
 
-    public ScxWeb addParameterHandler(ParameterHandler handler) {
-        parameterHandlers.add(handler);
+    public ScxWeb addParameterHandlerBuilder(ParameterHandlerBuilder handlerBuilder) {
+        parameterHandlerBuilders.add(handlerBuilder);
         return this;
     }
 
@@ -129,8 +137,8 @@ public final class ScxWeb {
         return this;
     }
 
-    public ScxWeb addParameterHandler(int index, ParameterHandler handler) {
-        parameterHandlers.add(index, handler);
+    public ScxWeb addParameterHandlerBuilder(int index, ParameterHandlerBuilder handlerBuilder) {
+        parameterHandlerBuilders.add(index, handlerBuilder);
         return this;
     }
 
@@ -166,22 +174,23 @@ public final class ScxWeb {
     }
 
     ParameterHandler findParameterHandler(ParameterInfo parameter) {
-        for (var handler : parameterHandlers) {
-            if (handler.canHandle(parameter)) {
-                return handler;
+        for (var handler : parameterHandlerBuilders) {
+            var parameterHandler = handler.tryBuild(parameter);
+            if (parameterHandler != null) {
+                return parameterHandler;
             }
         }
-        return lastParameterHandler;
+        return lastParameterHandlerBuilder.tryBuild(parameter);
     }
 
-    Object[] buildMethodParameters(ParameterInfo[] parameters, RoutingContext context) throws Exception {
+    Object[] buildMethodParameters(ParameterHandler[] parameterHandlers, RoutingContext context) throws Exception {
         var info = new RequestInfo(context);
         var exceptionArrayList = new ArrayList<Exception>();
-        var methodParameter = new Object[parameters.length];
+        var methodParameter = new Object[parameterHandlers.length];
         for (int i = 0; i < methodParameter.length; i = i + 1) {
-            var methodParameterHandler = findParameterHandler(parameters[i]);
+            var methodParameterHandler = parameterHandlers[i];
             try {
-                methodParameter[i] = methodParameterHandler.handle(parameters[i], info);
+                methodParameter[i] = methodParameterHandler.handle(info);
             } catch (ParamConvertException | RequiredParamEmptyException e) {
                 exceptionArrayList.add(e);
             }
@@ -190,6 +199,14 @@ public final class ScxWeb {
             throw new BadRequestException(exceptionArrayList.stream().map(Throwable::getMessage).collect(Collectors.joining(";" + System.lineSeparator())));
         }
         return methodParameter;
+    }
+
+    ParameterHandler[] buildParameterHandlers(ParameterInfo[] parameters) {
+        var s = new ParameterHandler[parameters.length];
+        for (int i = 0; i < parameters.length; i = i + 1) {
+            s[i] = findParameterHandler(parameters[i]);
+        }
+        return s;
     }
 
     public ScxWeb bindErrorHandler(Router vertxRouter) {

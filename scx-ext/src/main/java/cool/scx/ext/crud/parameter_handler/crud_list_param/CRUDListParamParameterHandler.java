@@ -1,10 +1,11 @@
-package cool.scx.ext.crud;
+package cool.scx.ext.crud.parameter_handler.crud_list_param;
 
+import cool.scx.ext.crud.CRUDListParam;
 import cool.scx.reflect.ParameterInfo;
 import cool.scx.web.parameter_handler.ParameterHandler;
 import cool.scx.web.parameter_handler.RequestInfo;
 
-import static cool.scx.web.parameter_handler.FromBodyParameterHandler.getValueFromBody;
+import static cool.scx.web.parameter_handler.from_body.FromBodyParameterHandler.getValueFromBody;
 
 /**
  * a
@@ -12,26 +13,19 @@ import static cool.scx.web.parameter_handler.FromBodyParameterHandler.getValueFr
  * @author scx567888
  * @version 1.10.8
  */
-public final class CRUDListParamMethodParameterHandler implements ParameterHandler {
+public final class CRUDListParamParameterHandler implements ParameterHandler {
 
-    /**
-     * a
-     */
-    public static final CRUDListParamMethodParameterHandler DEFAULT_INSTANCE = new CRUDListParamMethodParameterHandler();
+    private final ParameterInfo parameter;
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean canHandle(ParameterInfo parameter) {
-        return parameter.type().getRawClass() == CRUDListParam.class;
+    public CRUDListParamParameterHandler(ParameterInfo parameter) {
+        this.parameter = parameter;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Object handle(ParameterInfo parameter, RequestInfo requestInfo) throws Exception {
+    public Object handle(RequestInfo requestInfo) throws Exception {
         var javaType = parameter.type();
         var name = parameter.name();
         var required = false;

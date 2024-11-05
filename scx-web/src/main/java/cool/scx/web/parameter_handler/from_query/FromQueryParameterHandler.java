@@ -1,13 +1,15 @@
-package cool.scx.web.parameter_handler;
+package cool.scx.web.parameter_handler.from_query;
 
 import com.fasterxml.jackson.databind.JavaType;
 import cool.scx.reflect.ParameterInfo;
 import cool.scx.web.annotation.FromQuery;
+import cool.scx.web.parameter_handler.ParameterHandler;
+import cool.scx.web.parameter_handler.RequestInfo;
 import cool.scx.web.parameter_handler.exception.ParamConvertException;
 import cool.scx.web.parameter_handler.exception.RequiredParamEmptyException;
 
 import static cool.scx.common.util.AnnotationUtils.getAnnotationValue;
-import static cool.scx.web.parameter_handler.FromBodyParameterHandler.readValue;
+import static cool.scx.web.parameter_handler.from_body.FromBodyParameterHandler.readValue;
 
 /**
  * FromQueryParameterHandler
@@ -16,6 +18,17 @@ import static cool.scx.web.parameter_handler.FromBodyParameterHandler.readValue;
  * @version 1.11.8
  */
 public final class FromQueryParameterHandler implements ParameterHandler {
+
+    private final FromQuery fromQuery;
+    private final ParameterInfo parameter;
+    private final String value;
+
+    public FromQueryParameterHandler(FromQuery fromQuery, ParameterInfo parameter) {
+        this.fromQuery = fromQuery;
+        this.parameter = parameter;
+        var tempValue = getAnnotationValue(fromQuery.value());
+        this.value = tempValue != null ? tempValue : parameter.name();
+    }
 
     public static Object getValueFromQuery(String name, boolean merge, boolean required, JavaType javaType, RequestInfo info) throws RequiredParamEmptyException, ParamConvertException {
         var tempValue = merge ? info.query() : info.query().get(name);
@@ -38,18 +51,8 @@ public final class FromQueryParameterHandler implements ParameterHandler {
     }
 
     @Override
-    public boolean canHandle(ParameterInfo parameter) {
-        return parameter.parameter().getAnnotation(FromQuery.class) != null;
-    }
-
-    @Override
-    public Object handle(ParameterInfo parameter, RequestInfo requestInfo) throws Exception {
-        var fromQuery = parameter.parameter().getAnnotation(FromQuery.class);
-        if (fromQuery == null) {
-            throw new IllegalArgumentException("参数没有 FromQuery 注解 !!!");
-        }
-        var value = getAnnotationValue(fromQuery.value());
-        return getValueFromQuery(value != null ? value : parameter.name(), fromQuery.merge(), fromQuery.required(), parameter.type(), requestInfo);
+    public Object handle(RequestInfo requestInfo) throws Exception {
+        return getValueFromQuery(value, fromQuery.merge(), fromQuery.required(), parameter.type(), requestInfo);
     }
 
 }
