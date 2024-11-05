@@ -3,21 +3,27 @@ package cool.scx.config.source;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import cool.scx.config.ScxConfigSource;
 
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 public abstract class AbstractConfigSource implements ScxConfigSource {
 
-    private Consumer<ObjectNode> changeHandler;
+    protected ObjectNode configMapping;
+    private BiConsumer<ObjectNode, ObjectNode> changeHandler;
 
     @Override
-    public void onChange(Consumer<ObjectNode> changeHandler) {
+    public void onChange(BiConsumer<ObjectNode, ObjectNode> changeHandler) {
         this.changeHandler = changeHandler;
     }
 
-    public void callOnChange(ObjectNode configMapping) {
+    public void callOnChange(ObjectNode oldValue, ObjectNode newValue) {
         if (changeHandler != null) {
-            this.changeHandler.accept(configMapping);
+            this.changeHandler.accept(oldValue, newValue);
         }
+    }
+
+    @Override
+    public ObjectNode configMapping() {
+        return configMapping;
     }
 
 }

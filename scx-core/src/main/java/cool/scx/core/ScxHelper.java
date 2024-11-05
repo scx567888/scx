@@ -315,7 +315,7 @@ public final class ScxHelper {
 
     static void initScxLoggerFactory(ScxConfig scxConfig, ScxEnvironment scxEnvironment) {
         initScxLoggerFactory0(scxConfig, scxEnvironment);
-        scxConfig.onChange(_ -> {
+        scxConfig.onChange((oldValue, newValue) -> {
             initScxLoggerFactory0(scxConfig, scxEnvironment);
         });
     }

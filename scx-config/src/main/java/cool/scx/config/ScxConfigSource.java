@@ -2,7 +2,7 @@ package cool.scx.config;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 /**
  * 配置源
@@ -14,7 +14,7 @@ public interface ScxConfigSource {
 
     ObjectNode configMapping();
 
-    default void onChange(Consumer<ObjectNode> changeHandler) {
+    default void onChange(BiConsumer<ObjectNode, ObjectNode> changeHandler) {
         
     }
 

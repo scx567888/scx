@@ -8,23 +8,11 @@ import cool.scx.config.ScxConfigSource;
 public class MultiConfigSource extends AbstractConfigSource {
 
     private final ScxConfigSource[] sources;
-    protected ObjectNode configMapping;
 
     public MultiConfigSource(ScxConfigSource... sources) {
         this.sources = sources;
         this.configMapping = loadFromSources(sources);
         bindOnChange(sources);
-    }
-
-    public void bindOnChange(ScxConfigSource... sources) {
-        for (var source : sources) {
-            source.onChange(this::callOnChange0);
-        }
-    }
-
-    private void callOnChange0(ObjectNode objectNode) {
-        this.configMapping = loadFromSources(sources);
-        callOnChange(this.configMapping);
     }
 
     public static ObjectNode loadFromSources(ScxConfigSource... sources) {
@@ -35,9 +23,16 @@ public class MultiConfigSource extends AbstractConfigSource {
         return configMapping;
     }
 
-    @Override
-    public ObjectNode configMapping() {
-        return configMapping;
+    public void bindOnChange(ScxConfigSource... sources) {
+        for (var source : sources) {
+            source.onChange(this::callOnChange0);
+        }
+    }
+
+    private void callOnChange0(ObjectNode oldValue, ObjectNode newValue) {
+        var oldConfigMapping = this.configMapping;
+        this.configMapping = loadFromSources(sources);
+        callOnChange(oldConfigMapping, this.configMapping);
     }
 
 }
