@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import cool.scx.ansi.Ansi;
 import cool.scx.common.util.ObjectUtils;
-import cool.scx.config.ScxConfigSource;
 import cool.scx.io.file.FileWatcher;
 
 import java.io.IOException;
@@ -13,18 +12,21 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Consumer;
 
-public final class JsonFileConfigSource implements ScxConfigSource {
+public final class JsonFileConfigSource extends AbstractConfigSource {
 
     private ObjectNode configMapping;
     private final Path jsonPath;
-    private final FileWatcher fileWatcher;
-    private Consumer<ObjectNode> changeHandler;
+    private FileWatcher fileWatcher;
 
     private JsonFileConfigSource(Path jsonPath) {
         this.jsonPath = jsonPath;
         this.configMapping = loadFromJsonFile(jsonPath);
+        bindOnChange(this.jsonPath);
+    }
+
+    public void bindOnChange(Path jsonPath) {
         try {
-            this.fileWatcher = new FileWatcher(this.jsonPath).listener(this::onJsonFileChange).start();
+            this.fileWatcher = new FileWatcher(jsonPath).listener(this::onJsonFileChange).start();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -32,7 +34,7 @@ public final class JsonFileConfigSource implements ScxConfigSource {
 
     private void onJsonFileChange(FileWatcher.ChangeEvent changeEvent) {
         this.configMapping = loadFromJsonFile(jsonPath);
-        _callOnChange(this.configMapping);
+        callOnChange(this.configMapping);
     }
 
     public static ObjectNode loadFromJsonFile(Path jsonPath) {
@@ -66,17 +68,6 @@ public final class JsonFileConfigSource implements ScxConfigSource {
 
     public static JsonFileConfigSource of(Path jsonPath) {
         return new JsonFileConfigSource(jsonPath);
-    }
-
-    @Override
-    public void onChange(Consumer<ObjectNode> changeHandler) {
-        this.changeHandler = changeHandler;
-    }
-
-    private void _callOnChange(ObjectNode configMapping) {
-        if (changeHandler != null) {
-            changeHandler.accept(configMapping);
-        }
     }
 
     @Override
