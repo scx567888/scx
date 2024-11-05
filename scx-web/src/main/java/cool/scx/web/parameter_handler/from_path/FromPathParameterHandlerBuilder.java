@@ -14,7 +14,7 @@ import cool.scx.web.parameter_handler.ParameterHandlerBuilder;
 public final class FromPathParameterHandlerBuilder implements ParameterHandlerBuilder {
 
     @Override
-    public ParameterHandler tryBuildParameterHandler(ParameterInfo parameter) {
+    public ParameterHandler tryBuild(ParameterInfo parameter) {
         var fromPath = parameter.parameter().getAnnotation(FromPath.class);
         if (fromPath == null) {
             return null;

@@ -8,7 +8,7 @@ import cool.scx.web.parameter_handler.ParameterHandlerBuilder;
 public class FromQueryParameterHandlerBuilder implements ParameterHandlerBuilder {
 
     @Override
-    public ParameterHandler tryBuildParameterHandler(ParameterInfo parameter) {
+    public ParameterHandler tryBuild(ParameterInfo parameter) {
         var fromQuery = parameter.parameter().getAnnotation(FromQuery.class);
         if (fromQuery == null) {
             return null;

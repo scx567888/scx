@@ -16,7 +16,7 @@ import static cool.scx.common.util.ObjectUtils.convertValue;
 public final class FromUploadParameterHandlerBuilder implements ParameterHandlerBuilder {
 
     @Override
-    public ParameterHandler tryBuildParameterHandler(ParameterInfo parameter) {
+    public ParameterHandler tryBuild(ParameterInfo parameter) {
         var isArray = parameter.type().isCollectionLikeType() || parameter.type().isArrayType();
         var rawType = isArray ? parameter.type().getContentType().getRawClass() : parameter.type().getRawClass();
         if (rawType != MultiPartPart.class) {
