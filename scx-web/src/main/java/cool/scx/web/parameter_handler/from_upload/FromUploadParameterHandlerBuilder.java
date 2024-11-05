@@ -5,8 +5,6 @@ import cool.scx.reflect.ParameterInfo;
 import cool.scx.web.parameter_handler.ParameterHandler;
 import cool.scx.web.parameter_handler.ParameterHandlerBuilder;
 
-import static cool.scx.common.util.ObjectUtils.convertValue;
-
 /**
  * 处理 FileUpload 类型参数
  *

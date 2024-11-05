@@ -28,7 +28,7 @@ public final class FromUploadParameterHandler implements ParameterHandler {
     private boolean required;
 
     public FromUploadParameterHandler(ParameterInfo parameter) {
-        this.parameter=parameter;
+        this.parameter = parameter;
         this.value = parameter.name();
         this.required = false;
         var fromUpload = parameter.parameter().getAnnotation(FromUpload.class);

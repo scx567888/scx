@@ -13,7 +13,7 @@ public class FromQueryParameterHandlerBuilder implements ParameterHandlerBuilder
         if (fromQuery == null) {
             return null;
         }
-        return new FromQueryParameterHandler(fromQuery,parameter);
+        return new FromQueryParameterHandler(fromQuery, parameter);
     }
 
 }
