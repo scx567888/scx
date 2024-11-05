@@ -1,10 +1,9 @@
 package cool.scx.config;
 
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import cool.scx.common.util.JsonNodeHelper;
 import cool.scx.config.handler.ConvertValueHandler;
 import cool.scx.config.handler.DefaultValueHandler;
+import cool.scx.config.source.MultiConfigSource;
 
 /**
  * 配置文件类
@@ -12,14 +11,7 @@ import cool.scx.config.handler.DefaultValueHandler;
  * @author scx567888
  * @version 0.0.1
  */
-public final class ScxConfig implements ScxConfigSource {
-
-    /**
-     * 当前 默认配置文件的实例
-     * 是一个映射表
-     * 注意!!! 如果未执行 init 或 loadConfig 方法 nowScxExample 可能为空
-     */
-    private final ObjectNode configMapping = JsonNodeFactory.instance.objectNode();
+public final class ScxConfig extends MultiConfigSource {
 
     /**
      * a
@@ -27,9 +19,7 @@ public final class ScxConfig implements ScxConfigSource {
      * @param scxConfigSources a
      */
     public ScxConfig(ScxConfigSource... scxConfigSources) {
-        for (var scxConfigSource : scxConfigSources) {
-            JsonNodeHelper.merge(this.configMapping, scxConfigSource.configMapping());
-        }
+        super(scxConfigSources);
     }
 
     /**
@@ -78,11 +68,6 @@ public final class ScxConfig implements ScxConfigSource {
      */
     public <T> T get(String keyPath, Class<T> type) {
         return get(keyPath, ConvertValueHandler.of(type));
-    }
-
-    @Override
-    public ObjectNode configMapping() {
-        return configMapping;
     }
 
 }

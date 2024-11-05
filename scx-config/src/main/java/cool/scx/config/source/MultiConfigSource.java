@@ -8,7 +8,7 @@ import cool.scx.config.ScxConfigSource;
 public class MultiConfigSource extends AbstractConfigSource {
 
     private final ScxConfigSource[] sources;
-    private ObjectNode configMapping;
+    protected ObjectNode configMapping;
 
     public MultiConfigSource(ScxConfigSource... sources) {
         this.sources = sources;
