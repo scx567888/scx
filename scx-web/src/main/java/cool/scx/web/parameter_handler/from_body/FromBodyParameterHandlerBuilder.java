@@ -14,7 +14,7 @@ import cool.scx.web.parameter_handler.ParameterHandlerBuilder;
 public final class FromBodyParameterHandlerBuilder implements ParameterHandlerBuilder {
 
     @Override
-    public ParameterHandler tryBuildParameterHandler(ParameterInfo parameter) {
+    public ParameterHandler tryBuild(ParameterInfo parameter) {
         var fromBody = parameter.parameter().getAnnotation(FromBody.class);
         if (fromBody == null) {
             return null;

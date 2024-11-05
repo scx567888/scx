@@ -20,7 +20,7 @@ import cool.scx.web.parameter_handler.RequestInfo;
 public final class FromContextParameterHandlerBuilder implements ParameterHandlerBuilder {
 
     @Override
-    public ParameterHandler tryBuildParameterHandler(ParameterInfo parameter) {
+    public ParameterHandler tryBuild(ParameterInfo parameter) {
         var rawClass = parameter.type().getRawClass();
         if (rawClass == RoutingContext.class) {
             return RequestInfo::routingContext;
