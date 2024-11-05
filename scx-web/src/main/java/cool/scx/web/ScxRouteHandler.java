@@ -12,6 +12,7 @@ import cool.scx.http.routing.Route;
 import cool.scx.http.routing.RoutingContext;
 import cool.scx.reflect.MethodInfo;
 import cool.scx.web.annotation.ScxRoute;
+import cool.scx.web.parameter_handler.ParameterHandler;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
@@ -38,6 +39,7 @@ public final class ScxRouteHandler implements Route, Consumer<RoutingContext> {
     private final int order;
     private final PathMatcher pathMatcher;
     private final MethodMatcher methodMatcher;
+    private final ParameterHandler[] parameterHandlers;
 
     ScxRouteHandler(MethodInfo method, Object instance, ScxWeb scxWeb) {
         this.scxWeb = scxWeb;
@@ -54,6 +56,7 @@ public final class ScxRouteHandler implements Route, Consumer<RoutingContext> {
         this.order = methodAnnotation.order();
         this.pathMatcher = path.isBlank() ? PathMatcher.any() : PathMatcher.of(path);
         this.methodMatcher = methods.isEmpty() ? MethodMatcher.any() : MethodMatcher.of(methods.toArray(ScxHttpMethod[]::new));
+        this.parameterHandlers = scxWeb.buildParameterHandlers(this.method.parameters());
     }
 
     private String initPath(ScxRoute classAnnotation, ScxRoute methodAnnotation) {
@@ -84,7 +87,7 @@ public final class ScxRouteHandler implements Route, Consumer<RoutingContext> {
             //1, 执行前置处理器 (一般用于校验权限之类)
             this.scxWeb.interceptor().preHandle(context, this);
             //2, 根据 method 参数获取 invoke 时的参数
-            var methodParameters = this.scxWeb.buildMethodParameters(this.method.parameters(), context);
+            var methodParameters = this.scxWeb.buildMethodParameters(parameterHandlers, context);
             //3, 执行具体方法 (用来从请求中获取参数并执行反射调用方法以获取返回值)
             var tempResult = this.method.method().invoke(this.instance, methodParameters);
             //4, 执行后置处理器
