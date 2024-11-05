@@ -9,7 +9,7 @@ import cool.scx.web.parameter_handler.exception.ParamConvertException;
 import cool.scx.web.parameter_handler.exception.RequiredParamEmptyException;
 
 import static cool.scx.common.util.AnnotationUtils.getAnnotationValue;
-import static cool.scx.web.parameter_handler.FromBodyParameterHandler.readValue;
+import static cool.scx.web.parameter_handler.from_body.FromBodyParameterHandler.readValue;
 
 /**
  * FromQueryParameterHandler

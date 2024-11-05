@@ -1,10 +1,12 @@
-package cool.scx.web.parameter_handler;
+package cool.scx.web.parameter_handler.from_body;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.common.util.JsonNodeHelper;
 import cool.scx.reflect.ParameterInfo;
 import cool.scx.web.annotation.FromBody;
+import cool.scx.web.parameter_handler.ParameterHandler;
+import cool.scx.web.parameter_handler.RequestInfo;
 import cool.scx.web.parameter_handler.exception.ParamConvertException;
 import cool.scx.web.parameter_handler.exception.RequiredParamEmptyException;
 
@@ -21,6 +23,17 @@ import static cool.scx.common.util.ObjectUtils.jsonMapper;
  * @version 1.11.8
  */
 public final class FromBodyParameterHandler implements ParameterHandler {
+
+    private final FromBody fromBody;
+    private final ParameterInfo parameter;
+    private final String value;
+
+    public FromBodyParameterHandler(FromBody fromBody, ParameterInfo parameter) {
+        this.fromBody = fromBody;
+        this.parameter = parameter;
+        var tempValue = getAnnotationValue(fromBody.value());
+        this.value = tempValue != null ? tempValue : parameter.name();
+    }
 
     public static Object getValueFromBody(String name, boolean useAllBody, boolean required, JavaType javaType, RequestInfo info) throws RequiredParamEmptyException, ParamConvertException {
         return fromBody(name, useAllBody, required, javaType, info);
@@ -67,18 +80,8 @@ public final class FromBodyParameterHandler implements ParameterHandler {
     }
 
     @Override
-    public boolean canHandle(ParameterInfo parameter) {
-        return parameter.parameter().getAnnotation(FromBody.class) != null;
-    }
-
-    @Override
-    public Object handle(ParameterInfo parameter, RequestInfo requestInfo) throws Exception {
-        var fromBody = parameter.parameter().getAnnotation(FromBody.class);
-        if (fromBody == null) {
-            throw new IllegalArgumentException("参数没有 FromBody 注解 !!!");
-        }
-        var value = getAnnotationValue(fromBody.value());
-        return getValueFromBody(value != null ? value : parameter.name(), fromBody.useAllBody(), fromBody.required(), parameter.type(), requestInfo);
+    public Object handle(RequestInfo requestInfo) throws Exception {
+        return getValueFromBody(value, fromBody.useAllBody(), fromBody.required(), parameter.type(), requestInfo);
     }
 
 }
