@@ -3,13 +3,10 @@ package cool.scx.config.source;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import cool.scx.common.util.JsonNodeHelper;
-import cool.scx.config.ScxConfigSource;
 
 import java.util.Map;
 
-public final class MapConfigSource implements ScxConfigSource {
-
-    private final ObjectNode configMapping;
+public final class MapConfigSource extends AbstractConfigSource {
 
     private MapConfigSource(Map<String, Object> map) {
         this.configMapping = loadFromMap(map);
@@ -23,11 +20,6 @@ public final class MapConfigSource implements ScxConfigSource {
 
     public static MapConfigSource of(Map<String, Object> configMapping) {
         return new MapConfigSource(configMapping);
-    }
-
-    @Override
-    public ObjectNode configMapping() {
-        return configMapping;
     }
 
 }

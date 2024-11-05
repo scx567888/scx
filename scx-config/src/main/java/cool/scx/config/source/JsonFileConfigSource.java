@@ -10,11 +10,9 @@ import cool.scx.io.file.FileWatcher;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.function.Consumer;
 
 public final class JsonFileConfigSource extends AbstractConfigSource {
 
-    private ObjectNode configMapping;
     private final Path jsonPath;
     private FileWatcher fileWatcher;
 
@@ -22,19 +20,6 @@ public final class JsonFileConfigSource extends AbstractConfigSource {
         this.jsonPath = jsonPath;
         this.configMapping = loadFromJsonFile(jsonPath);
         bindOnChange(this.jsonPath);
-    }
-
-    public void bindOnChange(Path jsonPath) {
-        try {
-            this.fileWatcher = new FileWatcher(jsonPath).listener(this::onJsonFileChange).start();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void onJsonFileChange(FileWatcher.ChangeEvent changeEvent) {
-        this.configMapping = loadFromJsonFile(jsonPath);
-        callOnChange(this.configMapping);
     }
 
     public static ObjectNode loadFromJsonFile(Path jsonPath) {
@@ -70,9 +55,18 @@ public final class JsonFileConfigSource extends AbstractConfigSource {
         return new JsonFileConfigSource(jsonPath);
     }
 
-    @Override
-    public ObjectNode configMapping() {
-        return configMapping;
+    public void bindOnChange(Path jsonPath) {
+        try {
+            this.fileWatcher = new FileWatcher(jsonPath).listener(this::onJsonFileChange).start();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void onJsonFileChange(FileWatcher.ChangeEvent changeEvent) {
+        var oldConfigMapping = this.configMapping;
+        this.configMapping = loadFromJsonFile(jsonPath);
+        callOnChange(oldConfigMapping, this.configMapping);
     }
 
     /**
