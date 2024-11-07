@@ -1,7 +1,7 @@
 package cool.scx.io.zip;
 
 import cool.scx.common.util.URIBuilder;
-import cool.scx.io.io_stream_source.InputStreamSource;
+import cool.scx.io.InputSource;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,36 +23,36 @@ public class ZipBuilderItem {
      */
     protected final String zipPath;
 
-    protected final InputStreamSource source;
+    protected final InputSource source;
 
-    protected ZipBuilderItem(String zipPath, InputStreamSource source) {
+    protected ZipBuilderItem(String zipPath, InputSource source) {
         this.zipPath = zipPath;
         this.source = source;
     }
 
     ZipBuilderItem(String zipPath, byte[] bytes) {
         this.zipPath = URIBuilder.trimSlash(URIBuilder.normalize(zipPath));
-        this.source = InputStreamSource.of(bytes);
+        this.source = InputSource.of(bytes);
     }
 
     ZipBuilderItem(String zipPath, Supplier<byte[]> bytesSupplier) {
         this.zipPath = URIBuilder.trimSlash(URIBuilder.normalize(zipPath));
-        this.source = InputStreamSource.of(bytesSupplier);
+        this.source = InputSource.of(bytesSupplier);
     }
 
     ZipBuilderItem(String zipPath, InputStream inputStream) {
         this.zipPath = URIBuilder.trimSlash(URIBuilder.normalize(zipPath));
-        this.source = InputStreamSource.of(inputStream);
+        this.source = InputSource.of(inputStream);
     }
 
     ZipBuilderItem(String zipPath) {
         this.zipPath = URIBuilder.addSlashEnd(URIBuilder.trimSlash(URIBuilder.normalize(zipPath)));
-        this.source = InputStreamSource.of();
+        this.source = InputSource.of();
     }
 
     ZipBuilderItem(ZipEntry zipEntry, ZipFile zipFile) {
         this.zipPath = URIBuilder.trimSlash(URIBuilder.normalize(zipEntry.getName()));
-        this.source = InputStreamSource.of(zipEntry, zipFile);
+        this.source = InputSource.of(zipEntry, zipFile);
     }
 
     public void writeToZipOutputStream(ZipOutputStream zos) throws IOException {
@@ -61,7 +61,7 @@ public class ZipBuilderItem {
         zos.closeEntry();
     }
 
-    public InputStreamSource zipDataSource() {
+    public InputSource zipDataSource() {
         return source;
     }
 

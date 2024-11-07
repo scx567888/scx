@@ -1,14 +1,16 @@
-package cool.scx.io.io_stream_source;
+package cool.scx.io.source;
+
+import cool.scx.io.InputSource;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class RawInputStreamSource implements InputStreamSource {
+public class InputStreamSource implements InputSource {
 
     private final InputStream inputStream;
 
-    public RawInputStreamSource(InputStream inputStream) {
+    public InputStreamSource(InputStream inputStream) {
         this.inputStream = inputStream;
     }
 

@@ -1,4 +1,6 @@
-package cool.scx.io.io_stream_source;
+package cool.scx.io;
+
+import cool.scx.io.source.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,29 +17,29 @@ import java.util.zip.ZipFile;
  * @author scx567888
  * @version 2.0.4
  */
-public interface InputStreamSource extends OutputStreamSource {
+public interface InputSource extends OutputSource {
 
-    static InputStreamSource of() {
+    static InputSource of() {
         return new NullSource();
     }
 
-    static InputStreamSource of(Path path) {
+    static InputSource of(Path path) {
         return new PathSource(path);
     }
 
-    static InputStreamSource of(byte[] bytes) {
+    static InputSource of(byte[] bytes) {
         return new BytesSource(bytes);
     }
 
-    static InputStreamSource of(Supplier<byte[]> bytesSupplier) {
+    static InputSource of(Supplier<byte[]> bytesSupplier) {
         return new BytesSupplierSource(bytesSupplier);
     }
 
-    static InputStreamSource of(InputStream inputStream) {
-        return new RawInputStreamSource(inputStream);
+    static InputSource of(InputStream inputStream) {
+        return new InputStreamSource(inputStream);
     }
 
-    static InputStreamSource of(ZipEntry zipEntry, ZipFile zipFile) {
+    static InputSource of(ZipEntry zipEntry, ZipFile zipFile) {
         return new ZipEntrySource(zipEntry, zipFile);
     }
 
@@ -50,7 +52,7 @@ public interface InputStreamSource extends OutputStreamSource {
     InputStream toInputStream() throws IOException;
 
     /**
-     * 这样默认会比 {@link OutputStreamSource#toBytes()} 性能更高一些
+     * 这样默认会比 {@link OutputSource#toBytes()} 性能更高一些
      *
      * @return bytes
      * @throws IOException e

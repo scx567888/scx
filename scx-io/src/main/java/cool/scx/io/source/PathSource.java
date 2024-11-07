@@ -1,4 +1,6 @@
-package cool.scx.io.io_stream_source;
+package cool.scx.io.source;
+
+import cool.scx.io.InputSource;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,7 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
 
-public class PathSource implements InputStreamSource {
+public class PathSource implements InputSource {
 
     private final Path path;
 
