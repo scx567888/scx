@@ -1,7 +1,7 @@
 package cool.scx.io.image;
 
-import cool.scx.io.io_stream_source.InputStreamSource;
-import cool.scx.io.io_stream_source.OutputStreamSource;
+import cool.scx.io.io_stream_source.InputSource;
+import cool.scx.io.io_stream_source.OutputSource;
 
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
@@ -15,16 +15,16 @@ import java.io.OutputStream;
 import java.nio.file.Path;
 import java.util.function.Supplier;
 
-import static cool.scx.io.io_stream_source.InputStreamSource.of;
+import static cool.scx.io.io_stream_source.InputSource.of;
 
 /**
  * 将图片转换为 渐进式 JPEG
  */
-public final class ProgressiveJPEGBuilder implements OutputStreamSource {
+public final class ProgressiveJPEGBuilder implements OutputSource {
 
     private final BufferedImage sourceImage;
 
-    public ProgressiveJPEGBuilder(InputStreamSource source) throws IOException {
+    public ProgressiveJPEGBuilder(InputSource source) throws IOException {
         //源文件
         this.sourceImage = ImageIO.read(source.toInputStream());
     }

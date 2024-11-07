@@ -8,7 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
 
-public class BytesSource implements InputStreamSource {
+public class BytesSource implements InputSource {
 
     private final byte[] bytes;
 

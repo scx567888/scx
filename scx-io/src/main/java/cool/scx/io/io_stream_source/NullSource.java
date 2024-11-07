@@ -7,7 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
 
-public class NullSource implements InputStreamSource {
+public class NullSource implements InputSource {
 
     public NullSource() {
 

@@ -9,7 +9,7 @@ import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.util.function.Supplier;
 
-public class BytesSupplierSource implements InputStreamSource {
+public class BytesSupplierSource implements InputSource {
 
     private final Supplier<byte[]> bytesSupplier;
 

@@ -2,7 +2,7 @@ package cool.scx.io.zip;
 
 import cool.scx.common.util.FileUtils;
 import cool.scx.common.util.URIBuilder;
-import cool.scx.io.io_stream_source.InputStreamSource;
+import cool.scx.io.io_stream_source.InputSource;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,29 +20,29 @@ import java.util.zip.ZipInputStream;
  */
 public final class UnZipBuilder {
 
-    private final InputStreamSource source;
+    private final InputSource source;
 
     private Path path = null;
 
-    public UnZipBuilder(InputStreamSource source) {
+    public UnZipBuilder(InputSource source) {
         this.source = source;
     }
 
     public UnZipBuilder(Path path) {
-        this(InputStreamSource.of(path));
+        this(InputSource.of(path));
         this.path = path;
     }
 
     public UnZipBuilder(byte[] bytes) {
-        this(InputStreamSource.of(bytes));
+        this(InputSource.of(bytes));
     }
 
     public UnZipBuilder(Supplier<byte[]> bytesSupplier) {
-        this(InputStreamSource.of(bytesSupplier));
+        this(InputSource.of(bytesSupplier));
     }
 
     public UnZipBuilder(InputStream inputStream) {
-        this(InputStreamSource.of(inputStream));
+        this(InputSource.of(inputStream));
     }
 
     /**

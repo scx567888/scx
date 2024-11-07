@@ -7,7 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
 
-public interface OutputStreamSource {
+public interface OutputSource {
 
     default void toFile(Path outputPath, OpenOption... options) throws IOException {
         Files.createDirectories(outputPath.getParent());
