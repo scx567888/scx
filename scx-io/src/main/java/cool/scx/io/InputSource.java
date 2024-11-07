@@ -7,7 +7,8 @@ import java.nio.file.OpenOption;
 import java.nio.file.Path;
 
 /**
- * 可以将其想象成一个 BytesSupplier ,主要用来规范多种类型的数据来源 如文件 字节数组等
+ * 类似 InputStream 的抽象
+ * 不使用 InputStream 是为了利用 NIO 以便实现 零拷贝
  *
  * @author scx567888
  * @version 2.0.4
