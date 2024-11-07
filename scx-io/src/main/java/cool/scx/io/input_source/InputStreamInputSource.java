@@ -1,4 +1,4 @@
-package cool.scx.io.source2;
+package cool.scx.io.input_source;
 
 import cool.scx.io.InputSource;
 
@@ -40,7 +40,7 @@ public class InputStreamInputSource implements InputSource {
     }
 
     @Override
-    public InputStream toInputStream() throws IOException {
+    public InputStream toInputStream() {
         return inputStream;
     }
 
