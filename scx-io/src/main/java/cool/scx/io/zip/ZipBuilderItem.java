@@ -1,7 +1,7 @@
 package cool.scx.io.zip;
 
 import cool.scx.common.util.URIBuilder;
-import cool.scx.io.io_stream_source.InputSource;
+import cool.scx.io.io_source.InputSource;
 
 import java.io.IOException;
 import java.io.InputStream;

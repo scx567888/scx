@@ -1,6 +1,6 @@
 package cool.scx.io.zip;
 
-import cool.scx.io.io_stream_source.InputSource;
+import cool.scx.io.io_source.InputSource;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,7 +8,7 @@ import java.nio.file.Path;
 import java.util.function.Supplier;
 import java.util.zip.GZIPInputStream;
 
-import static cool.scx.io.io_stream_source.InputSource.of;
+import static cool.scx.io.io_source.InputSource.of;
 
 /**
  * GunzipBuilder
