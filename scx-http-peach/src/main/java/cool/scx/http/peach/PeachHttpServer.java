@@ -7,7 +7,7 @@ import cool.scx.io.LinkedDataReader;
 import cool.scx.net.ScxTCPServer;
 import cool.scx.net.ScxTCPServerOptions;
 import cool.scx.net.ScxTCPSocket;
-import cool.scx.net.TCPServer;
+import cool.scx.net.ClassicTCPServer;
 import cool.scx.net.tls.TLS;
 
 import java.net.URLDecoder;
@@ -27,7 +27,7 @@ public class PeachHttpServer implements ScxHttpServer {
 
     public PeachHttpServer(ScxHttpServerOptions options) {
         this.options = options;
-        this.tcpServer = new TCPServer(new ScxTCPServerOptions().port(options.port()).tls((TLS) options.tls()));
+        this.tcpServer = new ClassicTCPServer(new ScxTCPServerOptions().port(options.port()).tls((TLS) options.tls()));
         this.tcpServer.onConnect(this::handle);
     }
 
