@@ -1,7 +1,6 @@
 package cool.scx.io.input_source;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 
 public class ByteArrayInputSource extends LazyInputStreamInputSource {
@@ -13,7 +12,7 @@ public class ByteArrayInputSource extends LazyInputStreamInputSource {
     }
 
     @Override
-    public InputStream toInputStream0() throws IOException {
+    public InputStream toInputStream0() {
         return new ByteArrayInputStream(bytes);
     }
 
