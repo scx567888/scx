@@ -10,7 +10,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Supplier;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
@@ -62,11 +61,6 @@ public final class ZipBuilder {
 
     public ZipBuilder put(String zipPath, byte[] bytes) {
         items.add(new ZipBuilderItem(zipPath, bytes));
-        return this;
-    }
-
-    public ZipBuilder put(String zipPath, Supplier<byte[]> bytesSupplier) {
-        items.add(new ZipBuilderItem(zipPath, bytesSupplier));
         return this;
     }
 

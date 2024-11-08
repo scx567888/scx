@@ -3,13 +3,15 @@ package cool.scx.io.zip;
 import cool.scx.common.util.FileUtils;
 import cool.scx.common.util.URIBuilder;
 import cool.scx.io.InputSource;
+import cool.scx.io.input_source.ByteArrayInputSource;
+import cool.scx.io.input_source.FileInputSource;
+import cool.scx.io.input_source.InputStreamInputSource;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.function.Supplier;
 import java.util.zip.ZipInputStream;
 
 /**
@@ -29,20 +31,16 @@ public final class UnZipBuilder {
     }
 
     public UnZipBuilder(Path path) {
-        this(InputSource.of(path));
+        this(new FileInputSource(path));
         this.path = path;
     }
 
     public UnZipBuilder(byte[] bytes) {
-        this(InputSource.of(bytes));
-    }
-
-    public UnZipBuilder(Supplier<byte[]> bytesSupplier) {
-        this(InputSource.of(bytesSupplier));
+        this(new ByteArrayInputSource(bytes));
     }
 
     public UnZipBuilder(InputStream inputStream) {
-        this(InputSource.of(inputStream));
+        this(new InputStreamInputSource(inputStream));
     }
 
     /**
