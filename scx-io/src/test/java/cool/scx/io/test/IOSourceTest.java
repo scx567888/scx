@@ -5,8 +5,6 @@ import cool.scx.io.input_source.ByteArrayInputSource;
 
 import java.io.IOException;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
 public class IOSourceTest {
 
     public static void main(String[] args) throws IOException {

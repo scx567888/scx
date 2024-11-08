@@ -12,7 +12,10 @@ import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.MemoryCacheImageOutputStream;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
 
 /**
@@ -56,7 +59,7 @@ public final class ProgressiveJPEGBuilder extends LazyInputStreamInputSource {
         var writeParam = jpegWriter.getDefaultWriteParam();
         //使用默认参数以启用渐进式图片
         writeParam.setProgressiveMode(ImageWriteParam.MODE_DEFAULT);
-        
+
         var out = new ByteArrayOutputStream();
         //开始转换
         try (var m = new MemoryCacheImageOutputStream(out)) {
