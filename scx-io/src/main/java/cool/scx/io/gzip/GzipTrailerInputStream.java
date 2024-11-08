@@ -1,4 +1,6 @@
-package cool.scx.io.input_source;
+package cool.scx.io.gzip;
+
+import cool.scx.io.input_source.LazyInputStream;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;

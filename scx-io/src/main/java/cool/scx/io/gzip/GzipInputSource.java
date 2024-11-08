@@ -1,6 +1,7 @@
-package cool.scx.io.input_source;
+package cool.scx.io.gzip;
 
 import cool.scx.io.InputSource;
+import cool.scx.io.input_source.LazyInputStreamInputSource;
 
 import java.io.IOException;
 import java.io.InputStream;

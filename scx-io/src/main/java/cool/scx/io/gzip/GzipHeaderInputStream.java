@@ -1,4 +1,4 @@
-package cool.scx.io.input_source;
+package cool.scx.io.gzip;
 
 import java.io.ByteArrayInputStream;
 import java.util.zip.Deflater;
