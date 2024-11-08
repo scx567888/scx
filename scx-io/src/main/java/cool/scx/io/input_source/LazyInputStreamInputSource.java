@@ -48,6 +48,6 @@ public abstract class LazyInputStreamInputSource implements InputSource {
         toInputStream().close();
     }
 
-    public abstract InputStream toInputStream0() throws IOException;
+    protected abstract InputStream toInputStream0() throws IOException;
 
 }

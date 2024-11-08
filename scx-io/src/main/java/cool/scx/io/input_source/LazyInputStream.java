@@ -15,7 +15,7 @@ public abstract class LazyInputStream extends InputStream {
         return inputStream;
     }
 
-    public abstract InputStream toInputStream0();
+    protected abstract InputStream toInputStream0();
 
     @Override
     public int read() throws IOException {
