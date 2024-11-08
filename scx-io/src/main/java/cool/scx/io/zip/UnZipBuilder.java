@@ -2,11 +2,8 @@ package cool.scx.io.zip;
 
 import cool.scx.common.util.FileUtils;
 import cool.scx.common.util.URIBuilder;
-import cool.scx.io.InputSource;
-import cool.scx.io.input_source.ByteArrayInputSource;
-import cool.scx.io.input_source.FileInputSource;
-import cool.scx.io.input_source.InputStreamInputSource;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -22,25 +19,21 @@ import java.util.zip.ZipInputStream;
  */
 public final class UnZipBuilder {
 
-    private final InputSource source;
+    private final InputStream source;
 
     private Path path = null;
 
-    public UnZipBuilder(InputSource source) {
+    public UnZipBuilder(InputStream source) {
         this.source = source;
     }
 
-    public UnZipBuilder(Path path) {
-        this(new FileInputSource(path));
+    public UnZipBuilder(Path path) throws IOException {
+        this(Files.newInputStream(path));
         this.path = path;
     }
 
     public UnZipBuilder(byte[] bytes) {
-        this(new ByteArrayInputSource(bytes));
-    }
-
-    public UnZipBuilder(InputStream inputStream) {
-        this(new InputStreamInputSource(inputStream));
+        this(new ByteArrayInputStream(bytes));
     }
 
     /**
@@ -53,7 +46,7 @@ public final class UnZipBuilder {
     public void toFile(Path outputPath, ZipOptions zipOptions) throws IOException {
         Files.createDirectories(outputPath);
         var rootPath = getRootPath(zipOptions);
-        try (var zis = new ZipInputStream(this.source.toInputStream(), zipOptions.charset())) {
+        try (var zis = new ZipInputStream(this.source, zipOptions.charset())) {
             // 遍历每一个文件
             var zipEntry = zis.getNextEntry();
             while (zipEntry != null) {

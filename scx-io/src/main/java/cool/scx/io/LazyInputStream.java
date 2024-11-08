@@ -1,4 +1,4 @@
-package cool.scx.io.input_source;
+package cool.scx.io;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -1,12 +1,8 @@
 package cool.scx.io.zip;
 
 import cool.scx.common.util.URIBuilder;
-import cool.scx.io.InputSource;
-import cool.scx.io.input_source.ByteArrayInputSource;
-import cool.scx.io.input_source.InputStreamInputSource;
-import cool.scx.io.input_source.NullInputSource;
-import cool.scx.io.input_source.ZipEntryInputSource;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.ZipEntry;
@@ -26,31 +22,26 @@ public class ZipBuilderItem {
      */
     protected final String zipPath;
 
-    protected final InputSource source;
-
-    protected ZipBuilderItem(String zipPath, InputSource source) {
-        this.zipPath = zipPath;
-        this.source = source;
-    }
+    protected final InputStream source;
 
     ZipBuilderItem(String zipPath, byte[] bytes) {
         this.zipPath = URIBuilder.trimSlash(URIBuilder.normalize(zipPath));
-        this.source = new ByteArrayInputSource(bytes);
+        this.source = new ByteArrayInputStream(bytes);
     }
 
     ZipBuilderItem(String zipPath, InputStream inputStream) {
         this.zipPath = URIBuilder.trimSlash(URIBuilder.normalize(zipPath));
-        this.source = new InputStreamInputSource(inputStream);
+        this.source = inputStream;
     }
 
     ZipBuilderItem(String zipPath) {
         this.zipPath = URIBuilder.addSlashEnd(URIBuilder.trimSlash(URIBuilder.normalize(zipPath)));
-        this.source = new NullInputSource();
+        this.source = InputStream.nullInputStream();
     }
 
-    ZipBuilderItem(ZipEntry zipEntry, ZipFile zipFile) {
+    ZipBuilderItem(ZipEntry zipEntry, ZipFile zipFile) throws IOException {
         this.zipPath = URIBuilder.trimSlash(URIBuilder.normalize(zipEntry.getName()));
-        this.source = new ZipEntryInputSource(zipEntry, zipFile);
+        this.source = zipFile.getInputStream(zipEntry);
     }
 
     public void writeToZipOutputStream(ZipOutputStream zos) throws IOException {
@@ -59,7 +50,7 @@ public class ZipBuilderItem {
         zos.closeEntry();
     }
 
-    public InputSource zipDataSource() {
+    public InputStream zipDataSource() {
         return source;
     }
 

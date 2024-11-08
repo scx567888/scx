@@ -1,11 +1,11 @@
 package cool.scx.io.test;
 
-import cool.scx.io.gzip.GunzipInputSource;
-import cool.scx.io.gzip.GzipInputSource;
-import cool.scx.io.input_source.ByteArrayInputSource;
+import cool.scx.io.zip.GunzipBuilder;
+import cool.scx.io.zip.GzipBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 public class GzipTest {
@@ -22,8 +22,8 @@ public class GzipTest {
         }
         var b = s.getBytes();
         for (int i = 0; i < 10; i++) {
-            b = new GzipInputSource(new ByteArrayInputSource(b)).readAll();
-            b = new GunzipInputSource(new ByteArrayInputSource(b)).readAll();
+            b = new GzipBuilder(new ByteArrayInputStream(b)).readAllBytes();
+            b = new GunzipBuilder(new ByteArrayInputStream(b)).readAllBytes();
         }
         Assert.assertEquals(s, new String(b));
     }

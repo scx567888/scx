@@ -27,16 +27,19 @@ public final class ZipBuilder {
 
     }
 
-    public ZipBuilder(ZipFile zipFile) {
-        var list = zipFile.stream().map(zipEntry -> new ZipBuilderItem(zipEntry, zipFile)).toList();
-        items.addAll(list);
+    public ZipBuilder(ZipFile zipFile) throws IOException {
+        var list = zipFile.stream().toList();
+        for (var zipEntry : list) {
+            var i = new ZipBuilderItem(zipEntry, zipFile);
+            items.add(i);
+        }
     }
 
-    public ZipBuilder(Path path) {
+    public ZipBuilder(Path path) throws IOException {
         this.put(path);
     }
 
-    public ZipBuilder(Path path, ZipOptions zipOptions) {
+    public ZipBuilder(Path path, ZipOptions zipOptions) throws IOException {
         this.put(path, zipOptions);
     }
 
@@ -45,16 +48,16 @@ public final class ZipBuilder {
         return this;
     }
 
-    public ZipBuilder put(Path path, ZipOptions zipOptions) {
+    public ZipBuilder put(Path path, ZipOptions zipOptions) throws IOException {
         items.add(new PathZipBuilderItem("", path, zipOptions));
         return this;
     }
 
-    public ZipBuilder put(Path path) {
+    public ZipBuilder put(Path path) throws IOException {
         return this.put(path, new ZipOptions());
     }
 
-    public ZipBuilder put(String zipPath, Path path, ZipOptions zipOptions) {
+    public ZipBuilder put(String zipPath, Path path, ZipOptions zipOptions) throws IOException {
         items.add(new PathZipBuilderItem(zipPath, path, zipOptions));
         return this;
     }
