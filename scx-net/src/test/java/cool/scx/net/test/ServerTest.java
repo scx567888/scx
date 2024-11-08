@@ -1,7 +1,6 @@
 package cool.scx.net.test;
 
 import cool.scx.io.InputSourceDataSupplier;
-import cool.scx.io.InputStreamDataSupplier;
 import cool.scx.io.LinkedDataReader;
 import cool.scx.net.ScxTCPServerOptions;
 import cool.scx.net.ClassicTCPServer;

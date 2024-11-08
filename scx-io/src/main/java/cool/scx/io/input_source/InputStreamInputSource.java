@@ -19,8 +19,20 @@ public class InputStreamInputSource implements InputSource {
 
     @Override
     public byte[] read(int length) throws IOException {
-        var data = inputStream.readNBytes(length);
-        return data.length > 0 ? data : null;
+        //不使用 readNBytes 防止阻塞
+        var bytes = new byte[length];
+        int i = inputStream.read(bytes);
+        if (i == -1) {
+            return null; // end of data
+        }
+        // 如果读取的数据量与缓冲区大小一致，直接返回内部数组
+        if (i == length) {
+            return bytes;
+        } else {
+            var data = new byte[i];
+            System.arraycopy(bytes, 0, data, 0, i);
+            return data;
+        }
     }
 
     @Override
