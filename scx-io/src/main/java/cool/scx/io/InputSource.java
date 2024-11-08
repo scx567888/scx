@@ -16,18 +16,18 @@ import java.nio.file.Path;
 public interface InputSource extends AutoCloseable {
 
     /**
-     * 读取为 字节数组
+     * 读取为 字节数组 没有数据则返回 null
      *
      * @param length 最大长度
-     * @return 字节数组
+     * @return 字节数组 or null
      * @throws IOException E
      */
     byte[] read(int length) throws IOException;
 
     /**
-     * 读取所有字节
+     * 读取所有字节 没有数据则返回 null
      *
-     * @return 字节数组
+     * @return 字节数组 or null
      * @throws IOException E
      */
     byte[] readAll() throws IOException;
