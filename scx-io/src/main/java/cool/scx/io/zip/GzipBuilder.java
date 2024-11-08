@@ -129,6 +129,6 @@ public class GzipBuilder extends SequenceInputStream {
         }
 
     }
-    
+
 
 }
