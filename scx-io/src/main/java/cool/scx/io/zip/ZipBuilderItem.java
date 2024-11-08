@@ -2,10 +2,13 @@ package cool.scx.io.zip;
 
 import cool.scx.common.util.URIBuilder;
 import cool.scx.io.InputSource;
+import cool.scx.io.input_source.ByteArrayInputSource;
+import cool.scx.io.input_source.InputStreamInputSource;
+import cool.scx.io.input_source.NullInputSource;
+import cool.scx.io.input_source.ZipEntryInputSource;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.function.Supplier;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
@@ -32,32 +35,27 @@ public class ZipBuilderItem {
 
     ZipBuilderItem(String zipPath, byte[] bytes) {
         this.zipPath = URIBuilder.trimSlash(URIBuilder.normalize(zipPath));
-        this.source = InputSource.of(bytes);
-    }
-
-    ZipBuilderItem(String zipPath, Supplier<byte[]> bytesSupplier) {
-        this.zipPath = URIBuilder.trimSlash(URIBuilder.normalize(zipPath));
-        this.source = InputSource.of(bytesSupplier);
+        this.source = new ByteArrayInputSource(bytes);
     }
 
     ZipBuilderItem(String zipPath, InputStream inputStream) {
         this.zipPath = URIBuilder.trimSlash(URIBuilder.normalize(zipPath));
-        this.source = InputSource.of(inputStream);
+        this.source = new InputStreamInputSource(inputStream);
     }
 
     ZipBuilderItem(String zipPath) {
         this.zipPath = URIBuilder.addSlashEnd(URIBuilder.trimSlash(URIBuilder.normalize(zipPath)));
-        this.source = InputSource.of();
+        this.source = new NullInputSource();
     }
 
     ZipBuilderItem(ZipEntry zipEntry, ZipFile zipFile) {
         this.zipPath = URIBuilder.trimSlash(URIBuilder.normalize(zipEntry.getName()));
-        this.source = InputSource.of(zipEntry, zipFile);
+        this.source = new ZipEntryInputSource(zipEntry, zipFile);
     }
 
     public void writeToZipOutputStream(ZipOutputStream zos) throws IOException {
         zos.putNextEntry(new ZipEntry(this.zipPath));
-        this.source.writeToOutputStream(zos);
+        this.source.transferTo(zos);
         zos.closeEntry();
     }
 
