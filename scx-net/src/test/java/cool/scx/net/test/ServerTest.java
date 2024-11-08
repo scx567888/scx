@@ -1,6 +1,6 @@
 package cool.scx.net.test;
 
-import cool.scx.io.InputStreamDataSupplier;
+import cool.scx.io.InputSourceDataSupplier;
 import cool.scx.io.LinkedDataReader;
 import cool.scx.net.ScxTCPServerOptions;
 import cool.scx.net.ClassicTCPServer;
@@ -24,7 +24,7 @@ public class ServerTest {
         tcpServer.onConnect(c -> {
             System.out.println("客户端连接了 !!!");
 
-            var dataReader = new LinkedDataReader(new InputStreamDataSupplier(c.inputStream()));
+            var dataReader = new LinkedDataReader(new InputSourceDataSupplier(c.inputSource()));
             while (true) {
                 try {
                     var s = dataReader.readUntil("\r\n".getBytes());

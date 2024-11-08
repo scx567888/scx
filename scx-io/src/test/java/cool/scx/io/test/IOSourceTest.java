@@ -14,7 +14,9 @@ public class IOSourceTest {
     public static void test1() throws IOException {
         InputSource inputSource = new ByteArrayInputSource("测试文字".getBytes());
         var string = inputSource.readAll();
+        var string1 = inputSource.readAll();
         System.out.println(new String(string));
+        System.out.println(string1);//应该是 null
     }
 
 }
