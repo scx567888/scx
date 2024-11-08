@@ -22,18 +22,18 @@ public class GzipInputSource extends LazyInputStreamInputSource {
     }
 
     @Override
-    public InputStream toInputStream0() throws IOException {
+    protected InputStream toInputStream0() throws IOException {
         var crc = new CRC32();
         var def = new Deflater(Deflater.DEFAULT_COMPRESSION, true);
-        
+
         var headerInputStream = new GzipHeaderInputStream();
         var dataInputStream = new GzipDataInputStream(inputSource.toInputStream(), crc, def);
         var trailerInputStream = new GzipTrailerInputStream(crc, def);
-        
+
         //整合三个流
         var in = List.of(headerInputStream, dataInputStream, trailerInputStream);
         return new SequenceInputStream(Collections.enumeration(in));
-        
+
     }
 
 }
