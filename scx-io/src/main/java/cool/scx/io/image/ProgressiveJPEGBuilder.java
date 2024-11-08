@@ -1,7 +1,10 @@
 package cool.scx.io.image;
 
 import cool.scx.io.InputSource;
-import cool.scx.io.OutputSource;
+import cool.scx.io.input_source.ByteArrayInputSource;
+import cool.scx.io.input_source.FileInputSource;
+import cool.scx.io.input_source.InputStreamInputSource;
+import cool.scx.io.input_source.LazyInputStreamInputSource;
 
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
@@ -9,18 +12,13 @@ import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.MemoryCacheImageOutputStream;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.file.Path;
-import java.util.function.Supplier;
-
-import static cool.scx.io.InputSource.of;
 
 /**
  * 将图片转换为 渐进式 JPEG
  */
-public final class ProgressiveJPEGBuilder implements OutputSource {
+public final class ProgressiveJPEGBuilder extends LazyInputStreamInputSource {
 
     private final BufferedImage sourceImage;
 
@@ -30,19 +28,15 @@ public final class ProgressiveJPEGBuilder implements OutputSource {
     }
 
     public ProgressiveJPEGBuilder(Path path) throws IOException {
-        this(of(path));
+        this(new FileInputSource(path));
     }
 
     public ProgressiveJPEGBuilder(byte[] bytes) throws IOException {
-        this(of(bytes));
-    }
-
-    public ProgressiveJPEGBuilder(Supplier<byte[]> bytesSupplier) throws IOException {
-        this(of(bytesSupplier));
+        this(new ByteArrayInputSource(bytes));
     }
 
     public ProgressiveJPEGBuilder(InputStream inputStream) throws IOException {
-        this(of(inputStream));
+        this(new InputStreamInputSource(inputStream));
     }
 
     public static ImageWriter getImageWriter(String formatName) {
@@ -55,19 +49,22 @@ public final class ProgressiveJPEGBuilder implements OutputSource {
     }
 
     @Override
-    public void writeToOutputStream(OutputStream out) throws IOException {
+    protected InputStream toInputStream0() throws IOException {
         //图片 writer
         var jpegWriter = getImageWriter("jpeg");
         //参数
         var writeParam = jpegWriter.getDefaultWriteParam();
         //使用默认参数以启用渐进式图片
         writeParam.setProgressiveMode(ImageWriteParam.MODE_DEFAULT);
+        
+        var out = new ByteArrayOutputStream();
         //开始转换
         try (var m = new MemoryCacheImageOutputStream(out)) {
             jpegWriter.setOutput(m);
             jpegWriter.write(null, new IIOImage(sourceImage, null, null), writeParam);
             jpegWriter.dispose();
         }
+        return new ByteArrayInputStream(out.toByteArray());
     }
 
 }
