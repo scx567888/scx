@@ -1,7 +1,8 @@
 package cool.scx.net;
 
+import cool.scx.io.InputSource;
+
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.SocketAddress;
 
@@ -10,7 +11,7 @@ import java.net.SocketAddress;
  */
 public interface ScxTCPSocket {
 
-    InputStream inputStream();
+    InputSource inputSource();
 
     OutputStream outputStream();
 

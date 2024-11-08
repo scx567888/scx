@@ -1,7 +1,9 @@
 package cool.scx.net;
 
+import cool.scx.io.InputSource;
+import cool.scx.io.input_source.InputStreamInputSource;
+
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.net.Socket;
@@ -10,13 +12,13 @@ import java.net.SocketAddress;
 public class ClassicTCPSocket implements ScxTCPSocket {
 
     private final Socket socket;
-    private final InputStream in;
+    private final InputSource in;
     private final OutputStream out;
 
     public ClassicTCPSocket(Socket socket) {
         this.socket = socket;
         try {
-            this.in = socket.getInputStream();
+            this.in = new InputStreamInputSource(socket.getInputStream());
             this.out = socket.getOutputStream();
         } catch (IOException e) {
             throw new UncheckedIOException(e);
@@ -24,7 +26,7 @@ public class ClassicTCPSocket implements ScxTCPSocket {
     }
 
     @Override
-    public InputStream inputStream() {
+    public InputSource inputSource() {
         return in;
     }
 
