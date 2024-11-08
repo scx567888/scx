@@ -3,10 +3,10 @@ package cool.scx.io.zip;
 import cool.scx.io.LazyInputStream;
 
 import java.io.ByteArrayInputStream;
-import java.io.FilterInputStream;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.CRC32;
 import java.util.zip.CheckedInputStream;
@@ -16,13 +16,13 @@ import java.util.zip.DeflaterInputStream;
 /**
  * 用来压缩
  */
-public class GzipBuilder extends FilterInputStream {
+public class GzipBuilder extends SequenceInputStream {
 
     public GzipBuilder(InputStream inputStream) {
         super(createGzipInputStream(inputStream));
     }
 
-    public static InputStream createGzipInputStream(InputStream inputStream) {
+    public static Enumeration<InputStream> createGzipInputStream(InputStream inputStream) {
         var crc = new CRC32();
         var def = new Deflater(Deflater.DEFAULT_COMPRESSION, true);
 
@@ -32,7 +32,7 @@ public class GzipBuilder extends FilterInputStream {
 
         //整合三个流
         var in = List.of(headerInputStream, dataInputStream, trailerInputStream);
-        return new SequenceInputStream(Collections.enumeration(in));
+        return Collections.enumeration(in);
 
     }
 
