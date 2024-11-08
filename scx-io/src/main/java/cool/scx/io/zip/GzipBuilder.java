@@ -1,6 +1,6 @@
 package cool.scx.io.zip;
 
-import cool.scx.io.input_source.LazyInputStream;
+import cool.scx.io.LazyInputStream;
 
 import java.io.ByteArrayInputStream;
 import java.io.FilterInputStream;
