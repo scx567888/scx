@@ -19,12 +19,14 @@ public class InputStreamInputSource implements InputSource {
 
     @Override
     public byte[] read(int length) throws IOException {
-        return inputStream.readNBytes(length);
+        var data = inputStream.readNBytes(length);
+        return data.length > 0 ? data : null;
     }
 
     @Override
     public byte[] readAll() throws IOException {
-        return inputStream.readAllBytes();
+        var data = inputStream.readAllBytes();
+        return data.length > 0 ? data : null;
     }
 
     @Override

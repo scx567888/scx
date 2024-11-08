@@ -15,12 +15,12 @@ public class NullInputSource implements InputSource {
 
     @Override
     public byte[] read(int length) {
-        return new byte[]{};
+        return null;
     }
 
     @Override
     public byte[] readAll() {
-        return new byte[]{};
+        return null;
     }
 
     @Override
