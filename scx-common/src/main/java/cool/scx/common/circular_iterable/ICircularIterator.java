@@ -1,4 +1,4 @@
-package cool.scx.common.util.circular_iterable;
+package cool.scx.common.circular_iterable;
 
 import java.util.Iterator;
 
