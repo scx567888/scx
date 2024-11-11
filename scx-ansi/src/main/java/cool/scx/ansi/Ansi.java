@@ -5,7 +5,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 import static cool.scx.ansi.AnsiColor.*;
-import static cool.scx.common.util.ArrayUtils.concat;
+import static cool.scx.common.util.ArrayUtils.tryConcat;
 
 /**
  * 向控制台打印彩色
@@ -60,7 +60,7 @@ public final class Ansi {
      * @return an array of {@link AnsiElement} objects
      */
     private static AnsiElement[] filterAnsiElement(AnsiElement... elements) {
-        if (elements.length == 0) {
+        if (elements.length < 2) {
             return elements;
         }
 
@@ -95,71 +95,71 @@ public final class Ansi {
     }
 
     public Ansi defaultColor(Object o, AnsiElement... ansiElements) {
-        return add(o, concat(ansiElements, DEFAULT));
+        return add(o, tryConcat(ansiElements, DEFAULT));
     }
 
     public Ansi black(Object o, AnsiElement... ansiElements) {
-        return add(o, concat(ansiElements, BLACK));
+        return add(o, tryConcat(ansiElements, BLACK));
     }
 
     public Ansi red(Object o, AnsiElement... ansiElements) {
-        return add(o, concat(ansiElements, RED));
+        return add(o, tryConcat(ansiElements, RED));
     }
 
     public Ansi green(Object o, AnsiElement... ansiElements) {
-        return add(o, concat(ansiElements, GREEN));
+        return add(o, tryConcat(ansiElements, GREEN));
     }
 
     public Ansi yellow(Object o, AnsiElement... ansiElements) {
-        return add(o, concat(ansiElements, YELLOW));
+        return add(o, tryConcat(ansiElements, YELLOW));
     }
 
     public Ansi blue(Object o, AnsiElement... ansiElements) {
-        return add(o, concat(ansiElements, BLUE));
+        return add(o, tryConcat(ansiElements, BLUE));
     }
 
     public Ansi magenta(Object o, AnsiElement... ansiElements) {
-        return add(o, concat(ansiElements, MAGENTA));
+        return add(o, tryConcat(ansiElements, MAGENTA));
     }
 
     public Ansi cyan(Object o, AnsiElement... ansiElements) {
-        return add(o, concat(ansiElements, CYAN));
+        return add(o, tryConcat(ansiElements, CYAN));
     }
 
     public Ansi white(Object o, AnsiElement... ansiElements) {
-        return add(o, concat(ansiElements, WHITE));
+        return add(o, tryConcat(ansiElements, WHITE));
     }
 
     public Ansi brightBlack(Object o, AnsiElement... ansiElements) {
-        return add(o, concat(ansiElements, BRIGHT_BLACK));
+        return add(o, tryConcat(ansiElements, BRIGHT_BLACK));
     }
 
     public Ansi brightRed(Object o, AnsiElement... ansiElements) {
-        return add(o, concat(ansiElements, BRIGHT_RED));
+        return add(o, tryConcat(ansiElements, BRIGHT_RED));
     }
 
     public Ansi brightGreen(Object o, AnsiElement... ansiElements) {
-        return add(o, concat(ansiElements, BRIGHT_GREEN));
+        return add(o, tryConcat(ansiElements, BRIGHT_GREEN));
     }
 
     public Ansi brightYellow(Object o, AnsiElement... ansiElements) {
-        return add(o, concat(ansiElements, BRIGHT_YELLOW));
+        return add(o, tryConcat(ansiElements, BRIGHT_YELLOW));
     }
 
     public Ansi brightBlue(Object o, AnsiElement... ansiElements) {
-        return add(o, concat(ansiElements, BRIGHT_BLUE));
+        return add(o, tryConcat(ansiElements, BRIGHT_BLUE));
     }
 
     public Ansi brightMagenta(Object o, AnsiElement... ansiElements) {
-        return add(o, concat(ansiElements, BRIGHT_MAGENTA));
+        return add(o, tryConcat(ansiElements, BRIGHT_MAGENTA));
     }
 
     public Ansi brightCyan(Object o, AnsiElement... ansiElements) {
-        return add(o, concat(ansiElements, BRIGHT_CYAN));
+        return add(o, tryConcat(ansiElements, BRIGHT_CYAN));
     }
 
     public Ansi brightWhite(Object o, AnsiElement... ansiElements) {
-        return add(o, concat(ansiElements, BRIGHT_WHITE));
+        return add(o, tryConcat(ansiElements, BRIGHT_WHITE));
     }
 
     public Ansi ln() {
