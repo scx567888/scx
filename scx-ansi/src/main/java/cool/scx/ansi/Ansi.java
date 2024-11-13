@@ -15,42 +15,17 @@ import static cool.scx.common.util.ArrayUtils.concat;
  */
 public final class Ansi {
 
-    /**
-     * 是否开启颜色
-     */
+    // 是否启用 ANSI 支持
     private static final boolean ENABLED = AnsiHelper.detectIfAnsiCapable();
 
-    /**
-     * 待输出的数据
-     */
-    private final List<AnsiItem> items = new ArrayList<>();
+    private final List<AnsiItem> items;
 
-    /**
-     * 私有构造函数
-     */
-    private Ansi() {
-
+    public Ansi() {
+        this.items = new ArrayList<>();
     }
 
-    /**
-     * 创建 Ansi 对象
-     *
-     * @return a
-     */
     public static Ansi ansi() {
         return new Ansi();
-    }
-
-    private static void buildEnabled(StringBuilder sb, List<AnsiItem> elements) {
-        for (var element : elements) {
-            element.buildEnabled(sb);
-        }
-    }
-
-    private static void buildDisabled(StringBuilder sb, List<AnsiItem> elements) {
-        for (var element : elements) {
-            element.buildDisabled(sb);
-        }
     }
 
     /**
@@ -166,29 +141,33 @@ public final class Ansi {
         return add(System.lineSeparator());
     }
 
-    public void print() {
-        System.out.print(this);
-    }
-
     public void print(boolean useAnsi) {
         System.out.print(this.toString(useAnsi));
     }
 
-    public void println() {
-        ln().print();
+    public void print() {
+        print(true);
     }
 
     public void println(boolean useAnsi) {
         ln().print(useAnsi);
     }
 
+    public void println() {
+        println(true);
+    }
+
     public String toString(boolean useAnsi) {
         var sb = new StringBuilder();
         //系统支持 && 用户启用
         if (ENABLED && useAnsi) {
-            buildEnabled(sb, items);
+            for (var i : items) {
+                i.buildEnabled(sb);
+            }
         } else {
-            buildDisabled(sb, items);
+            for (var i : items) {
+                i.buildDisabled(sb);
+            }
         }
         return sb.toString();
     }
