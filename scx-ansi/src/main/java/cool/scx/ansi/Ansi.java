@@ -28,28 +28,22 @@ public final class Ansi {
         return new Ansi();
     }
 
-    /**
-     * 过滤参数 每个类型的参数只留一种
-     *
-     * @param elements a
-     * @return an array of {@link AnsiElement} objects
-     */
     private static AnsiElement[] filterAnsiElement(AnsiElement... elements) {
-        if (elements.length == 0) {
+        if (elements.length < 2) {
             return elements;
         }
-
+        //颜色 和 背景色 只留一个, 样式可以存在多个但是需要去重
         AnsiElement ansiColor = null;
         AnsiElement ansiBackground = null;
         var ansiStyleSet = new LinkedHashSet<AnsiStyle>();
 
         for (var element : elements) {
-            if (element instanceof AnsiColor || element instanceof Ansi8BitColor) {
-                ansiColor = element;
-            } else if (element instanceof AnsiBackground || element instanceof Ansi8BitBackground) {
-                ansiBackground = element;
-            } else if (element instanceof AnsiStyle ansiStyle) {
-                ansiStyleSet.add(ansiStyle);
+            switch (element) {
+                case AnsiColor _, Ansi8BitColor _ -> ansiColor = element;
+                case AnsiBackground _, Ansi8BitBackground _ -> ansiBackground = element;
+                case AnsiStyle ansiStyle -> ansiStyleSet.add(ansiStyle);
+                default -> {
+                }
             }
         }
 
