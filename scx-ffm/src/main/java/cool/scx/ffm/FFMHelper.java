@@ -144,6 +144,9 @@ public final class FFMHelper {
     }
 
     public static Parameter[] convertToParameters(Object[] objs) throws NoSuchMethodException, IllegalAccessException {
+        if (objs == null) {
+            return new Parameter[0];
+        }
         var result = new Parameter[objs.length];
         for (var i = 0; i < objs.length; i = i + 1) {
             result[i] = convertToParameter(objs[i]);

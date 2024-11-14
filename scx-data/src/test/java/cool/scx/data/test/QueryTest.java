@@ -1,6 +1,7 @@
 package cool.scx.data.test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
@@ -28,6 +29,7 @@ public class QueryTest {
 
     }
 
+    @Test
     public static void test2() throws JsonProcessingException {
         var q1 = and().eq("name", "小明").between("age", 1, 10).orderBy("desc name", desc("age")).groupBy("class", groupBy("abc")).limit(10).offset(12);
         var q2 = and(
@@ -43,6 +45,17 @@ public class QueryTest {
         String json1 = QUERY_SERIALIZER.toJson(q2);
         var andNew2 = QUERY_DESERIALIZER.fromJson(json1);
         System.out.println(json1);
+
+        var parser = new TestWhereParser();
+        var parse1 = parser.parse(q1);
+        var parse2 = parser.parse(andNew);
+        Assert.assertEquals(parse1.whereClause(), parse2.whereClause());
+        Assert.assertEquals(parse1.params(), parse2.params());
+        
+        var parse11 = parser.parse(q2);
+        var parse21 = parser.parse(andNew2);
+        Assert.assertEquals(parse11.whereClause(), parse21.whereClause());
+        Assert.assertEquals(parse11.params(), parse21.params());
     }
 
 }

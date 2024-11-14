@@ -89,7 +89,10 @@ public final class FFMProxy implements InvocationHandler {
 
     private MethodHandle findMethodHandle(Method method) {
         //1, 根据方法名查找对应的方法
-        var fun = lookup.find(method.getName()).orElseThrow();
+        var fun = lookup.find(method.getName()).orElse(null);
+        if (fun == null) {
+            throw new IllegalArgumentException("未找到对应外部方法 : " + method.getName());
+        }
         //2, 创建方法的描述, 包括 返回值类型 参数类型列表
         var returnLayout = getMemoryLayout(method.getReturnType());
         var paramLayouts = getMemoryLayouts(method.getParameterTypes());
