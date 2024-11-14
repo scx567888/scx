@@ -19,7 +19,7 @@ public record AnsiItem(Object value, AnsiElement... elements) {
      */
     private static final String ENCODE_END = "m";
 
-    private void appendAnsiElement(StringBuilder sb) {
+    private void appendAnsiElements(StringBuilder sb) {
         var isFirst = true;
         for (var element : elements) {
             if (isFirst) {
@@ -40,7 +40,7 @@ public record AnsiItem(Object value, AnsiElement... elements) {
 
         //1, 添加 ansi 转义符
         sb.append(ENCODE_START);
-        appendAnsiElement(sb);
+        appendAnsiElements(sb);
         sb.append(ENCODE_END);
 
         //2, 添加文字内容
