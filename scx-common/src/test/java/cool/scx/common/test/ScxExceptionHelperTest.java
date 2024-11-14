@@ -1,4 +1,4 @@
-package cool.scx.common.util.test;
+package cool.scx.common.test;
 
 import cool.scx.common.util.ScxExceptionHelper;
 import org.testng.Assert;
@@ -23,7 +23,7 @@ public class ScxExceptionHelperTest {
             }).get());
         } catch (Exception e) {
             var rootCause = ScxExceptionHelper.getRootCause(e);
-            Assert.assertEquals(ArithmeticException.class, rootCause.getClass());
+            Assert.assertEquals(rootCause.getClass(), ArithmeticException.class);
         }
     }
 
@@ -35,7 +35,7 @@ public class ScxExceptionHelperTest {
             }).join());
         } catch (Exception e) {
             var rootCause = ScxExceptionHelper.getRootCause(e);
-            Assert.assertEquals(ArithmeticException.class, rootCause.getClass());
+            Assert.assertEquals(rootCause.getClass(), ArithmeticException.class);
         }
 
     }
@@ -48,7 +48,7 @@ public class ScxExceptionHelperTest {
             });
         } catch (Exception e) {
             var rootCause = ScxExceptionHelper.getRootCause(e);
-            Assert.assertEquals(ArithmeticException.class, rootCause.getClass());
+            Assert.assertEquals(rootCause.getClass(), ArithmeticException.class);
         }
     }
 

@@ -1,4 +1,4 @@
-package cool.scx.common.util.test;
+package cool.scx.common.test;
 
 import cool.scx.common.util.URIBuilder;
 import org.testng.Assert;
@@ -38,13 +38,13 @@ public class URIBuilderTest {
         var f1 = URIBuilder.normalize(f);
         var g1 = URIBuilder.normalize(g);
 
-        Assert.assertEquals(aa, a1);
-        Assert.assertEquals(bb, b1);
-        Assert.assertEquals(cc, c1);
-        Assert.assertEquals(dd, d1);
-        Assert.assertEquals(ee, e1);
-        Assert.assertEquals(ff, f1);
-        Assert.assertEquals(gg, g1);
+        Assert.assertEquals(a1, aa);
+        Assert.assertEquals(b1, bb);
+        Assert.assertEquals(c1, cc);
+        Assert.assertEquals(d1, dd);
+        Assert.assertEquals(e1, ee);
+        Assert.assertEquals(f1, ff);
+        Assert.assertEquals(g1, gg);
     }
 
     @Test
@@ -61,7 +61,7 @@ public class URIBuilderTest {
 
         var a1 = URIBuilder.join(a, b, c, d, e, f, g);
 
-        Assert.assertEquals(aa, a1);
+        Assert.assertEquals(a1, aa);
     }
 
     @Test
@@ -72,11 +72,11 @@ public class URIBuilderTest {
         var a3 = URIBuilder.trimSlashStart(a);
         var a4 = URIBuilder.addSlashStart(a);
         var a5 = URIBuilder.addSlashEnd(a);
-        Assert.assertEquals("a/💃", a1);
-        Assert.assertEquals("\\\\\\\\///////a/💃", a2);
-        Assert.assertEquals("a/💃////////\\\\\\\\\\", a3);
-        Assert.assertEquals("/a/💃////////\\\\\\\\\\", a4);
-        Assert.assertEquals("\\\\\\\\///////a/💃/", a5);
+        Assert.assertEquals(a1, "a/💃");
+        Assert.assertEquals(a2, "\\\\\\\\///////a/💃");
+        Assert.assertEquals(a3, "a/💃////////\\\\\\\\\\");
+        Assert.assertEquals(a4, "/a/💃////////\\\\\\\\\\");
+        Assert.assertEquals(a5, "\\\\\\\\///////a/💃/");
     }
 
 }
