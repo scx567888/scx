@@ -1,7 +1,7 @@
 package cool.scx.ansi;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
+import java.util.EnumSet;
 import java.util.List;
 
 import static cool.scx.ansi.AnsiColor.*;
@@ -35,7 +35,7 @@ public final class Ansi {
         //颜色 和 背景色 只留一个, 样式可以存在多个但是需要去重
         AnsiElement ansiColor = null;
         AnsiElement ansiBackground = null;
-        var ansiStyleSet = new LinkedHashSet<AnsiStyle>();
+        var ansiStyleSet = EnumSet.noneOf(AnsiStyle.class);
 
         for (var element : elements) {
             switch (element) {
@@ -47,17 +47,24 @@ public final class Ansi {
             }
         }
 
-        var result = new ArrayList<AnsiElement>();
+        //为了极致的性能优化 直接创建数组而不是 使用 List 
+        int size = (ansiColor != null ? 1 : 0) + (ansiBackground != null ? 1 : 0) + ansiStyleSet.size();
+        var result = new AnsiElement[size];
+        int index = 0;
+        
         if (ansiColor != null) {
-            result.add(ansiColor);
+            result[index] = ansiColor;
+            index = index + 1;
         }
         if (ansiBackground != null) {
-            result.add(ansiBackground);
+            result[index] = ansiBackground;
+            index = index + 1;
         }
-        if (!ansiStyleSet.isEmpty()) {
-            result.addAll(ansiStyleSet);
+        for (var element : ansiStyleSet) {
+            result[index] = element;
+            index = index + 1;
         }
-        return result.toArray(AnsiElement[]::new);
+        return result;
     }
 
     public Ansi add(Object o, AnsiElement... ansiElements) {
