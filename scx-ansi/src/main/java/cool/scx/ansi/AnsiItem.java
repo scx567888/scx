@@ -1,7 +1,5 @@
 package cool.scx.ansi;
 
-import java.util.StringJoiner;
-
 import static cool.scx.ansi.AnsiStyle.RESET;
 
 public record AnsiItem(Object value, AnsiElement... elements) {
@@ -21,12 +19,16 @@ public record AnsiItem(Object value, AnsiElement... elements) {
      */
     private static final String ENCODE_END = "m";
 
-    public static String joinAnsiElement(AnsiElement... elements) {
-        var joiner = new StringJoiner(ENCODE_JOIN);
+    private void appendAnsiElement(StringBuilder sb) {
+        var isFirst = true;
         for (var element : elements) {
-            joiner.add(element.code());
+            if (isFirst) {
+                isFirst = false;
+            } else {
+                sb.append(ENCODE_JOIN);
+            }
+            sb.append(element.code());
         }
-        return joiner.toString();
     }
 
     public void buildEnabled(StringBuilder sb) {
@@ -38,7 +40,7 @@ public record AnsiItem(Object value, AnsiElement... elements) {
 
         //1, 添加 ansi 转义符
         sb.append(ENCODE_START);
-        sb.append(joinAnsiElement(elements));
+        appendAnsiElement(sb);
         sb.append(ENCODE_END);
 
         //2, 添加文字内容
