@@ -2,7 +2,7 @@ package cool.scx.ansi;
 
 import java.util.StringJoiner;
 
-import static cool.scx.ansi.AnsiStyle.NORMAL;
+import static cool.scx.ansi.AnsiStyle.RESET;
 
 public record AnsiItem(Object value, AnsiElement... elements) {
 
@@ -46,7 +46,7 @@ public record AnsiItem(Object value, AnsiElement... elements) {
 
         //3, 添加重置转义符
         sb.append(ENCODE_START);
-        sb.append(NORMAL.code());
+        sb.append(RESET.code());
         sb.append(ENCODE_END);
     }
 

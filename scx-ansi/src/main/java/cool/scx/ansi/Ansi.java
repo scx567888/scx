@@ -1,10 +1,10 @@
 package cool.scx.ansi;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import static cool.scx.ansi.AnsiColor.*;
-import static cool.scx.ansi.AnsiHelper.filterAnsiElement;
 import static cool.scx.common.util.ArrayUtils.tryConcat;
 
 /**
@@ -26,6 +26,38 @@ public final class Ansi {
 
     public static Ansi ansi() {
         return new Ansi();
+    }
+
+    private static AnsiElement[] filterAnsiElement(AnsiElement... elements) {
+        if (elements.length < 2) {
+            return elements;
+        }
+        //颜色 和 背景色 只留一个, 样式可以存在多个但是需要去重
+        AnsiElement ansiColor = null;
+        AnsiElement ansiBackground = null;
+        var ansiStyleSet = new LinkedHashSet<AnsiStyle>();
+
+        for (var element : elements) {
+            switch (element) {
+                case AnsiColor _, Ansi8BitColor _ -> ansiColor = element;
+                case AnsiBackground _, Ansi8BitBackground _ -> ansiBackground = element;
+                case AnsiStyle ansiStyle -> ansiStyleSet.add(ansiStyle);
+                default -> {
+                }
+            }
+        }
+
+        var result = new ArrayList<AnsiElement>();
+        if (ansiColor != null) {
+            result.add(ansiColor);
+        }
+        if (ansiBackground != null) {
+            result.add(ansiBackground);
+        }
+        if (!ansiStyleSet.isEmpty()) {
+            result.addAll(ansiStyleSet);
+        }
+        return result.toArray(AnsiElement[]::new);
     }
 
     public Ansi add(Object o, AnsiElement... ansiElements) {
