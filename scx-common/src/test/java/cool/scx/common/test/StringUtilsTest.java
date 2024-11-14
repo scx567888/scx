@@ -18,21 +18,21 @@ public class StringUtilsTest {
     public static void test1() {
         var correctResults = "?, ?, ?, ?";
         var finalResult = StringUtils.repeat("?", ", ", 4);
-        assertEquals(correctResults, finalResult);
+        assertEquals(finalResult, correctResults);
     }
 
     @Test
     public static void test2() {
         var correctResults = true;
         var finalResult = StringUtils.isBlank(" ");
-        assertEquals(correctResults, finalResult);
+        assertEquals(finalResult, correctResults);
     }
 
     @Test
     public static void test3() {
         var correctResults = true;
         var finalResult = StringUtils.isEmpty("");
-        assertEquals(correctResults, finalResult);
+        assertEquals(finalResult, correctResults);
     }
 
     @Test
