@@ -88,7 +88,9 @@ class AnsiHelper {
         if (ansiBackground != null) {
             result.add(ansiBackground);
         }
-        result.addAll(ansiStyleSet);
+        if (!ansiStyleSet.isEmpty()) {
+            result.addAll(ansiStyleSet);
+        }
         return result.toArray(AnsiElement[]::new);
     }
 
