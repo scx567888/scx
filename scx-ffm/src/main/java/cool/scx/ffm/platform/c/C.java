@@ -8,4 +8,10 @@ public interface C {
 
     long strlen(String str);
 
+    int abs(int x);
+
+    double sin(double x);
+
+    double sqrt(double x);
+
 }
