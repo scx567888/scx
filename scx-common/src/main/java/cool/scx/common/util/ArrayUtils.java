@@ -747,6 +747,101 @@ public final class ArrayUtils {
 
     //********************* concat END *********************
 
+    //********************* tryConcat START *********************
+
+    public static byte[] tryConcat(byte[] first, byte... second) {
+        if (first == null || first.length == 0) {
+            return second;
+        }
+        if (second == null || second.length == 0) {
+            return first;
+        }
+        return concat(first, second);
+    }
+
+    public static short[] tryConcat(short[] first, short... second) {
+        if (first == null || first.length == 0) {
+            return second;
+        }
+        if (second == null || second.length == 0) {
+            return first;
+        }
+        return concat(first, second);
+    }
+
+    public static int[] tryConcat(int[] first, int... second) {
+        if (first == null || first.length == 0) {
+            return second;
+        }
+        if (second == null || second.length == 0) {
+            return first;
+        }
+        return concat(first, second);
+    }
+
+    public static long[] tryConcat(long[] first, long... second) {
+        if (first == null || first.length == 0) {
+            return second;
+        }
+        if (second == null || second.length == 0) {
+            return first;
+        }
+        return concat(first, second);
+    }
+
+    public static float[] tryConcat(float[] first, float... second) {
+        if (first == null || first.length == 0) {
+            return second;
+        }
+        if (second == null || second.length == 0) {
+            return first;
+        }
+        return concat(first, second);
+    }
+
+    public static double[] tryConcat(double[] first, double... second) {
+        if (first == null || first.length == 0) {
+            return second;
+        }
+        if (second == null || second.length == 0) {
+            return first;
+        }
+        return concat(first, second);
+    }
+
+    public static boolean[] tryConcat(boolean[] first, boolean... second) {
+        if (first == null || first.length == 0) {
+            return second;
+        }
+        if (second == null || second.length == 0) {
+            return first;
+        }
+        return concat(first, second);
+    }
+
+    public static char[] tryConcat(char[] first, char... second) {
+        if (first == null || first.length == 0) {
+            return second;
+        }
+        if (second == null || second.length == 0) {
+            return first;
+        }
+        return concat(first, second);
+    }
+
+    @SafeVarargs
+    public static <T> T[] tryConcat(T[] first, T... second) {
+        if (first == null || first.length == 0) {
+            return second;
+        }
+        if (second == null || second.length == 0) {
+            return first;
+        }
+        return concat(first, second);
+    }
+
+    //********************* tryConcat END *********************
+
 
     //********************* splitArray START *****************
 
