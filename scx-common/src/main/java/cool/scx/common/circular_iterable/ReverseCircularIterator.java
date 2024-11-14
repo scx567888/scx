@@ -1,4 +1,4 @@
-package cool.scx.common.util.circular_iterable;
+package cool.scx.common.circular_iterable;
 
 /**
  * 无限循环的迭代器 (倒转)

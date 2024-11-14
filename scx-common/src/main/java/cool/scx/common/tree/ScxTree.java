@@ -1,4 +1,4 @@
-package cool.scx.common.util.tree;
+package cool.scx.common.tree;
 
 import java.util.List;
 

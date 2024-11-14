@@ -1,4 +1,4 @@
-package cool.scx.common.util.test;
+package cool.scx.common.test;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;

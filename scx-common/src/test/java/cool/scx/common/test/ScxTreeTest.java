@@ -1,7 +1,7 @@
-package cool.scx.common.util.tree.test;
+package cool.scx.common.test;
 
-import cool.scx.common.util.tree.ScxTreeModel;
-import cool.scx.common.util.tree.ScxTreeUtils;
+import cool.scx.common.tree.ScxTreeModel;
+import cool.scx.common.tree.ScxTreeUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

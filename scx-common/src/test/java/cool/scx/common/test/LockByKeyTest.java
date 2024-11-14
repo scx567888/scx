@@ -1,4 +1,4 @@
-package cool.scx.common.util.test;
+package cool.scx.common.test;
 
 import cool.scx.common.util.$;
 import cool.scx.common.util.LockByKey;
