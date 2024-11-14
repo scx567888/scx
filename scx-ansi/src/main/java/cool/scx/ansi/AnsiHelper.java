@@ -3,9 +3,6 @@ package cool.scx.ansi;
 import cool.scx.common.util.OSHelper;
 import cool.scx.ffm.type.mapper.IntMapper;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-
 import static cool.scx.common.util.OSHelper.OSType.WINDOWS;
 import static cool.scx.ffm.platform.win32.Kernel32.KERNEL32;
 
