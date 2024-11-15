@@ -1,6 +1,6 @@
 package cool.scx.app;
 
-import cool.scx.app.enumeration.ScxCoreFeature;
+import cool.scx.app.enumeration.ScxAppFeature;
 import cool.scx.app.eventbus.EventBus;
 import cool.scx.common.functional.ScxRunnable;
 import cool.scx.common.util.ScopedValue;
@@ -188,7 +188,7 @@ public final class ScxContext {
      * @param scxFeature a
      * @return a
      */
-    public static boolean getFeatureState(ScxCoreFeature scxFeature) {
+    public static boolean getFeatureState(ScxAppFeature scxFeature) {
         return featureConfig().get(scxFeature);
     }
 

@@ -1,6 +1,6 @@
 package cool.scx.app;
 
-import cool.scx.app.enumeration.ScxCoreFeature;
+import cool.scx.app.enumeration.ScxAppFeature;
 import cool.scx.common.util.StringUtils;
 import cool.scx.config.ScxConfig;
 import cool.scx.config.ScxConfigSource;
@@ -220,7 +220,7 @@ public final class ScxBuilder {
      * @param state      s
      * @return a
      */
-    public ScxBuilder configure(ScxCoreFeature scxFeature, boolean state) {
+    public ScxBuilder configure(ScxAppFeature scxFeature, boolean state) {
         scxFeatureConfig.set(scxFeature, state);
         return this;
     }

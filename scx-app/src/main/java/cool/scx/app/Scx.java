@@ -1,7 +1,6 @@
 package cool.scx.app;
 
 import cool.scx.ansi.Ansi;
-import cool.scx.app.enumeration.ScxCoreFeature;
 import cool.scx.app.eventbus.EventBus;
 import cool.scx.common.util.FileUtils;
 import cool.scx.common.util.ScopedValue;
@@ -33,6 +32,7 @@ import java.util.List;
 
 import static cool.scx.app.ScxContext.GLOBAL_SCX;
 import static cool.scx.app.ScxHelper.*;
+import static cool.scx.app.enumeration.ScxAppFeature.*;
 import static cool.scx.common.util.NetUtils.getLocalIPAddress;
 import static cool.scx.common.util.ScxExceptionHelper.ignore;
 import static java.lang.System.Logger.Level.DEBUG;
@@ -98,7 +98,7 @@ public final class Scx {
         //4, 初始化事件总线
         this.eventBus = new EventBus();
         //4, 初始化 Web
-        this.scxWeb = new ScxWeb(new ScxWebOptions().templateRoot(scxOptions.templateRoot()).useDevelopmentErrorPage(scxFeatureConfig.get(ScxCoreFeature.USE_DEVELOPMENT_ERROR_PAGE)));
+        this.scxWeb = new ScxWeb(new ScxWebOptions().templateRoot(scxOptions.templateRoot()).useDevelopmentErrorPage(scxFeatureConfig.get(USE_DEVELOPMENT_ERROR_PAGE)));
     }
 
     public static ScxBuilder builder() {
@@ -110,11 +110,11 @@ public final class Scx {
      */
     private void startAllScxModules() {
         for (var m : scxModules) {
-            if (this.scxFeatureConfig.get(ScxCoreFeature.SHOW_MODULE_LIFE_CYCLE_INFO)) {
+            if (this.scxFeatureConfig.get(SHOW_MODULE_LIFE_CYCLE_INFO)) {
                 Ansi.ansi().brightWhite("[").brightGreen("Starting").brightWhite("] " + m.name()).println();
             }
             m.start(this);
-            if (this.scxFeatureConfig.get(ScxCoreFeature.SHOW_MODULE_LIFE_CYCLE_INFO)) {
+            if (this.scxFeatureConfig.get(SHOW_MODULE_LIFE_CYCLE_INFO)) {
                 Ansi.ansi().brightWhite("[").brightGreen("Start OK").brightWhite("] " + m.name()).println();
             }
         }
@@ -124,7 +124,7 @@ public final class Scx {
      * 执行模块结束的生命周期
      */
     private void stopAllScxModules() {
-        if (this.scxFeatureConfig.get(ScxCoreFeature.SHOW_MODULE_LIFE_CYCLE_INFO)) {
+        if (this.scxFeatureConfig.get(SHOW_MODULE_LIFE_CYCLE_INFO)) {
             for (var m : scxModules) {
                 Ansi.ansi().brightWhite("[").brightRed("Stopping").brightWhite("] " + m.name()).println();
                 m.stop(this);
@@ -148,10 +148,10 @@ public final class Scx {
         //0, 启动 核心计时器
         StopWatch.start("ScxRun");
         //1, 根据配置打印一下 banner 或者配置文件信息之类
-        if (this.scxFeatureConfig.get(ScxCoreFeature.SHOW_BANNER)) {
+        if (this.scxFeatureConfig.get(SHOW_BANNER)) {
             ScxVersion.printBanner();
         }
-        if (this.scxFeatureConfig.get(ScxCoreFeature.SHOW_OPTIONS_INFO)) {
+        if (this.scxFeatureConfig.get(SHOW_OPTIONS_INFO)) {
             this.scxOptions.printInfo();
         }
         //2, 初始化路由器 (Http 和 WebSocket)
@@ -165,7 +165,7 @@ public final class Scx {
         //4, 依次执行 模块的 start 生命周期 , 在这里我们可以操作 scxRouteRegistry, vertxRouter 等对象 "手动注册新路由" 或其他任何操作
         this.startAllScxModules();
         //5, 打印基本信息
-        if (this.scxFeatureConfig.get(ScxCoreFeature.SHOW_START_UP_INFO)) {
+        if (this.scxFeatureConfig.get(SHOW_START_UP_INFO)) {
             Ansi.ansi()
                     .brightYellow("已加载 " + this.beanFactory.getBeanDefinitionNames().length + " 个 Bean !!!").ln()
                     .brightGreen("已加载 " + this.scxHttpRouter.getRoutes().size() + " 个 Http 路由 !!!").ln()
@@ -188,7 +188,7 @@ public final class Scx {
         //9, 此处刷新 scxBeanFactory 使其实例化所有符合条件的 Bean
         this.beanFactory.preInstantiateSingletons();
         //10, 启动调度器注解
-        if (scxFeatureConfig.get(ScxCoreFeature.ENABLE_SCHEDULING_WITH_ANNOTATION)) {
+        if (scxFeatureConfig.get(ENABLE_SCHEDULING_WITH_ANNOTATION)) {
             startAnnotationScheduled(this.beanFactory);
         }
         return this;

@@ -10,7 +10,7 @@ import cool.scx.scheduling.ScxScheduler;
  * @author scx567888
  * @version 1.11.8
  */
-public enum ScxCoreFeature implements ScxFeature<Boolean> {
+public enum ScxAppFeature implements ScxFeature<Boolean> {
 
     /**
      * 显示 banner
@@ -66,7 +66,7 @@ public enum ScxCoreFeature implements ScxFeature<Boolean> {
      *
      * @param defaultValue a boolean
      */
-    ScxCoreFeature(boolean defaultValue) {
+    ScxAppFeature(boolean defaultValue) {
         this._defaultValue = defaultValue;
     }
 
