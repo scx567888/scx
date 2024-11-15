@@ -3,8 +3,8 @@ package cool.scx.ext.redirect;
 import cool.scx.ansi.Ansi;
 import cool.scx.core.Scx;
 import cool.scx.core.ScxModule;
-import cool.scx.http.helidon.HelidonHttpServerOptions;
 import cool.scx.http.helidon.HelidonHttpServer;
+import cool.scx.http.helidon.HelidonHttpServerOptions;
 import cool.scx.http.routing.Router;
 import cool.scx.web.vo.Redirection;
 
