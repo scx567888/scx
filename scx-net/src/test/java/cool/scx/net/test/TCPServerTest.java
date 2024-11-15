@@ -6,7 +6,7 @@ import cool.scx.net.ScxTCPServerOptions;
 import cool.scx.net.TCPServer;
 import cool.scx.net.tls.TLS;
 
-public class ServerTest {
+public class TCPServerTest {
 
     public static TLS tls;
 

@@ -25,10 +25,14 @@ public class PeachHttpServer implements ScxHttpServer {
     private Consumer<ScxServerWebSocket> webSocketHandler;
     private Consumer<Throwable> errorHandler;
 
-    public PeachHttpServer(ScxHttpServerOptions options) {
+    public PeachHttpServer(ScxTCPServer tcpServer, ScxHttpServerOptions options) {
+        this.tcpServer = tcpServer;
         this.options = options;
-        this.tcpServer = new TCPServer(new ScxTCPServerOptions().port(options.port()).tls((TLS) options.tls()));
         this.tcpServer.onConnect(this::handle);
+    }
+
+    public PeachHttpServer(ScxHttpServerOptions options) {
+        this(new TCPServer(new ScxTCPServerOptions().port(options.port()).tls((TLS) options.tls())), options);
     }
 
     public PeachHttpServer() {
