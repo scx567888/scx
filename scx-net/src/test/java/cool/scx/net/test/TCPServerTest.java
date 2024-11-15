@@ -3,10 +3,10 @@ package cool.scx.net.test;
 import cool.scx.io.InputStreamDataSupplier;
 import cool.scx.io.LinkedDataReader;
 import cool.scx.net.ScxTCPServerOptions;
-import cool.scx.net.ClassicTCPServer;
+import cool.scx.net.TCPServer;
 import cool.scx.net.tls.TLS;
 
-public class ServerTest {
+public class TCPServerTest {
 
     public static TLS tls;
 
@@ -19,7 +19,7 @@ public class ServerTest {
     }
 
     public static void test1() {
-        var tcpServer = new ClassicTCPServer(new ScxTCPServerOptions().port(8899).tls(tls));
+        var tcpServer = new TCPServer(new ScxTCPServerOptions().port(8899).tls(tls));
 
         tcpServer.onConnect(c -> {
             System.out.println("客户端连接了 !!!");

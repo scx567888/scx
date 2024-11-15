@@ -1,9 +1,9 @@
 package cool.scx.http.helidon.test;
 
-import cool.scx.http.ScxHttpServerOptions;
 import cool.scx.http.exception.ScxHttpException;
 import cool.scx.http.exception.UnauthorizedException;
 import cool.scx.http.helidon.HelidonHttpServer;
+import cool.scx.http.helidon.HelidonHttpServerOptions;
 import cool.scx.http.routing.Router;
 
 import static cool.scx.http.HttpMethod.GET;
@@ -18,7 +18,7 @@ public class Test {
 
     public static void test1() {
         var l = System.nanoTime();
-        var server = new HelidonHttpServer(new ScxHttpServerOptions().port(8080));
+        var server = new HelidonHttpServer(new HelidonHttpServerOptions().port(8080));
 
         var router = Router.of();
 

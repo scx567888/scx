@@ -1,9 +1,9 @@
 package cool.scx.http.helidon.test;
 
 import cool.scx.http.MediaType;
-import cool.scx.http.ScxHttpServerOptions;
 import cool.scx.http.helidon.HelidonHttpClient;
 import cool.scx.http.helidon.HelidonHttpServer;
+import cool.scx.http.helidon.HelidonHttpServerOptions;
 import cool.scx.http.media.form_params.FormParams;
 
 import java.io.IOException;
@@ -19,7 +19,7 @@ public class ClientTest {
     }
 
     public static void test1() throws IOException, InterruptedException {
-        var httpServer = new HelidonHttpServer(new ScxHttpServerOptions().port(8990));
+        var httpServer = new HelidonHttpServer(new HelidonHttpServerOptions().port(8990));
         httpServer.requestHandler(c -> {
             System.out.println(c.uri());
             System.out.println(c.body().asFormParams());

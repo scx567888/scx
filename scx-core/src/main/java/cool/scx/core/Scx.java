@@ -11,8 +11,8 @@ import cool.scx.core.enumeration.ScxCoreFeature;
 import cool.scx.core.eventbus.EventBus;
 import cool.scx.data.jdbc.AnnotationConfigTable;
 import cool.scx.http.ScxHttpServer;
-import cool.scx.http.ScxHttpServerOptions;
 import cool.scx.http.helidon.HelidonHttpServer;
+import cool.scx.http.helidon.HelidonHttpServerOptions;
 import cool.scx.http.routing.WebSocketRouter;
 import cool.scx.jdbc.JDBCContext;
 import cool.scx.jdbc.meta_data.SchemaHelper;
@@ -68,7 +68,7 @@ public final class Scx {
 
     private final ScxWeb scxWeb;
 
-    private final ScxHttpServerOptions defaultHttpServerOptions;
+    private final HelidonHttpServerOptions defaultHttpServerOptions;
 
     private final EventBus eventBus;
 
@@ -80,7 +80,7 @@ public final class Scx {
 
     private ScxHttpServer vertxHttpServer = null;
 
-    Scx(ScxEnvironment scxEnvironment, String appKey, ScxFeatureConfig scxFeatureConfig, ScxConfig scxConfig, ScxModule[] scxModules, ScxHttpServerOptions defaultHttpServerOptions) {
+    Scx(ScxEnvironment scxEnvironment, String appKey, ScxFeatureConfig scxFeatureConfig, ScxConfig scxConfig, ScxModule[] scxModules, HelidonHttpServerOptions defaultHttpServerOptions) {
         //0, 赋值到全局
         ScxContext.scx(this);
         //1, 初始化基本参数
@@ -172,7 +172,7 @@ public final class Scx {
                     .brightBlue("已加载 " + this.webSocketRouter.getRoutes().size() + " 个 WebSocket 路由 !!!").println();
         }
         //6, 初始化服务器
-        var httpServerOptions = new ScxHttpServerOptions()
+        var httpServerOptions = new HelidonHttpServerOptions()
                 .maxPayloadSize(DEFAULT_BODY_LIMIT)
                 .port(this.scxOptions.port());
         if (this.scxOptions.isHttpsEnabled()) {

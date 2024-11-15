@@ -18,6 +18,9 @@ public class ScxTCPServerOptions {
     }
 
     public ScxTCPServerOptions port(int port) {
+        if (port < 0 || port > 65535) {
+            throw new IllegalArgumentException("port must be between 0 and 65535");
+        }
         this.port = port;
         return this;
     }

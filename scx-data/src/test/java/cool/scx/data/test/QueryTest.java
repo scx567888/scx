@@ -51,7 +51,7 @@ public class QueryTest {
         var parse2 = parser.parse(andNew);
         Assert.assertEquals(parse1.whereClause(), parse2.whereClause());
         Assert.assertEquals(parse1.params(), parse2.params());
-        
+
         var parse11 = parser.parse(q2);
         var parse21 = parser.parse(andNew2);
         Assert.assertEquals(parse11.whereClause(), parse21.whereClause());

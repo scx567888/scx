@@ -1,8 +1,8 @@
 package cool.scx.socket.test;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import cool.scx.http.ScxHttpServerOptions;
 import cool.scx.http.helidon.HelidonHttpServer;
+import cool.scx.http.helidon.HelidonHttpServerOptions;
 import cool.scx.socket.ScxSocketServer;
 import org.testng.annotations.Test;
 
@@ -58,7 +58,7 @@ public class ScxSocketServerTest extends InitLogger {
         });
 
         //使用 vertx 的 httpServer
-        new HelidonHttpServer(new ScxHttpServerOptions().port(8990))
+        new HelidonHttpServer(new HelidonHttpServerOptions().port(8990))
                 .webSocketHandler(scxSocketServer::call)
                 .start();
 
