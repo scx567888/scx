@@ -1,7 +1,7 @@
 package cool.scx.http.helidon.test;
 
-import cool.scx.http.helidon.HelidonHttpServerOptions;
 import cool.scx.http.helidon.HelidonHttpServer;
+import cool.scx.http.helidon.HelidonHttpServerOptions;
 
 public class Test1 {
 
