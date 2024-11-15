@@ -16,8 +16,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static cool.scx.common.util.HashUtils.md5Hex;
 import static cool.scx.app.ext.fss.FSSHelper.*;
+import static cool.scx.common.util.HashUtils.md5Hex;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 /**

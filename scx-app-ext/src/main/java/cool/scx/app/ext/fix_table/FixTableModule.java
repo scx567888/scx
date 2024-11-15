@@ -1,8 +1,8 @@
 package cool.scx.app.ext.fix_table;
 
-import cool.scx.common.util.ConsoleUtils;
 import cool.scx.app.Scx;
 import cool.scx.app.ScxModule;
+import cool.scx.common.util.ConsoleUtils;
 
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.ERROR;

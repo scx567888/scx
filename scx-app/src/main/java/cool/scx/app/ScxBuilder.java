@@ -1,5 +1,6 @@
 package cool.scx.app;
 
+import cool.scx.app.enumeration.ScxAppFeature;
 import cool.scx.common.util.StringUtils;
 import cool.scx.config.ScxConfig;
 import cool.scx.config.ScxConfigSource;
@@ -8,7 +9,6 @@ import cool.scx.config.ScxFeatureConfig;
 import cool.scx.config.source.ArgsConfigSource;
 import cool.scx.config.source.JsonFileConfigSource;
 import cool.scx.config.source.MapConfigSource;
-import cool.scx.app.enumeration.ScxCoreFeature;
 import cool.scx.http.helidon.HelidonHttpServerOptions;
 
 import java.util.*;
@@ -220,7 +220,7 @@ public final class ScxBuilder {
      * @param state      s
      * @return a
      */
-    public ScxBuilder configure(ScxCoreFeature scxFeature, boolean state) {
+    public ScxBuilder configure(ScxAppFeature scxFeature, boolean state) {
         scxFeatureConfig.set(scxFeature, state);
         return this;
     }

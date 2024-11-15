@@ -3,6 +3,11 @@ package cool.scx.app;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import cool.scx.app.annotation.Scheduled;
+import cool.scx.app.annotation.ScheduledList;
+import cool.scx.app.annotation.ScxService;
+import cool.scx.app.base.BaseModel;
+import cool.scx.app.base.BaseModelService;
 import cool.scx.common.util.ClassUtils;
 import cool.scx.common.util.ConsoleUtils;
 import cool.scx.common.util.ObjectUtils;
@@ -13,12 +18,6 @@ import cool.scx.config.ScxFeatureConfig;
 import cool.scx.config.handler.AppRootHandler;
 import cool.scx.config.handler.ConvertValueHandler;
 import cool.scx.config.handler.DefaultValueHandler;
-import cool.scx.app.annotation.Scheduled;
-import cool.scx.app.annotation.ScheduledList;
-import cool.scx.app.annotation.ScxService;
-import cool.scx.app.base.BaseModel;
-import cool.scx.app.base.BaseModelService;
-import cool.scx.app.enumeration.ScxCoreFeature;
 import cool.scx.data.jdbc.annotation.Table;
 import cool.scx.jdbc.dialect.DialectSelector;
 import cool.scx.jdbc.spy.Spy;
@@ -49,6 +48,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
 
+import static cool.scx.app.enumeration.ScxAppFeature.ALLOW_CIRCULAR_REFERENCES;
+import static cool.scx.app.enumeration.ScxAppFeature.USE_SPY;
 import static cool.scx.common.util.ClassUtils.*;
 import static cool.scx.reflect.AccessModifier.PUBLIC;
 import static java.lang.System.Logger.Level.*;
@@ -194,7 +195,7 @@ public final class ScxHelper {
         var hikariConfig = new HikariConfig();
         hikariConfig.setDataSource(realDataSource);
         var hikariDataSource = new HikariDataSource(hikariConfig);
-        return scxFeatureConfig.get(ScxCoreFeature.USE_SPY) ? Spy.wrap(hikariDataSource) : hikariDataSource;
+        return scxFeatureConfig.get(USE_SPY) ? Spy.wrap(hikariDataSource) : hikariDataSource;
     }
 
     static ScxModule[] initScxModuleMetadataList(ScxModule[] scxModules) {
@@ -212,7 +213,7 @@ public final class ScxHelper {
         beanPostProcessor.setBeanFactory(beanFactory);
         beanFactory.addBeanPostProcessor(beanPostProcessor);
         //设置是否允许循环依赖 (默认禁止循环依赖)
-        beanFactory.setAllowCircularReferences(scxFeatureConfig.get(ScxCoreFeature.ALLOW_CIRCULAR_REFERENCES));
+        beanFactory.setAllowCircularReferences(scxFeatureConfig.get(ALLOW_CIRCULAR_REFERENCES));
         //注册 bean
         var beanClass = Arrays.stream(modules)
                 .flatMap(c -> c.classList().stream())

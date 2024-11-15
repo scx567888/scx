@@ -1,17 +1,17 @@
 package cool.scx.app.test;
 
-import cool.scx.common.util.*;
 import cool.scx.app.Scx;
 import cool.scx.app.ScxContext;
 import cool.scx.app.ScxModule;
 import cool.scx.app.base.BaseModelService;
-import cool.scx.app.enumeration.ScxCoreFeature;
+import cool.scx.app.enumeration.ScxAppFeature;
 import cool.scx.app.test.car.Car;
 import cool.scx.app.test.car.CarColor;
 import cool.scx.app.test.car.CarOwner;
 import cool.scx.app.test.car.CarService;
 import cool.scx.app.test.person.Person;
 import cool.scx.app.test.person.PersonService;
+import cool.scx.common.util.*;
 import cool.scx.data.query.QueryOption;
 import cool.scx.http.helidon.ScxHttpClientHelper;
 import cool.scx.http.media.multi_part.MultiPart;
@@ -59,13 +59,13 @@ public class TestModule extends ScxModule {
                 .setMainClass(TestModule.class)
                 .addModule(new TestModule())
                 .setArgs(args)
-                .configure(ScxCoreFeature.SHOW_BANNER, true)
-                .configure(ScxCoreFeature.SHOW_OPTIONS_INFO, true)
-                .configure(ScxCoreFeature.SHOW_MODULE_LIFE_CYCLE_INFO, true)
-                .configure(ScxCoreFeature.SHOW_START_UP_INFO, true)
-                .configure(ScxCoreFeature.USE_DEVELOPMENT_ERROR_PAGE, true)
-                .configure(ScxCoreFeature.ENABLE_SCHEDULING_WITH_ANNOTATION, true)
-                .configure(ScxCoreFeature.USE_SPY, true)
+                .configure(ScxAppFeature.SHOW_BANNER, true)
+                .configure(ScxAppFeature.SHOW_OPTIONS_INFO, true)
+                .configure(ScxAppFeature.SHOW_MODULE_LIFE_CYCLE_INFO, true)
+                .configure(ScxAppFeature.SHOW_START_UP_INFO, true)
+                .configure(ScxAppFeature.USE_DEVELOPMENT_ERROR_PAGE, true)
+                .configure(ScxAppFeature.ENABLE_SCHEDULING_WITH_ANNOTATION, true)
+                .configure(ScxAppFeature.USE_SPY, true)
                 .run();
         //修复表
         try {
