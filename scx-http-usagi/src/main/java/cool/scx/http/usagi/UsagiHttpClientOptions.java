@@ -1,14 +1,14 @@
-package cool.scx.http.peach;
+package cool.scx.http.usagi;
 
 /**
  * ScxHttpClientOptions
  */
-public class PeachHttpClientOptions {
+public class UsagiHttpClientOptions {
 
     private Proxy proxy;
     private int bodyBufferSize;
 
-    public PeachHttpClientOptions() {
+    public UsagiHttpClientOptions() {
         this.proxy = null;
         this.bodyBufferSize = 65536;
     }
@@ -17,7 +17,7 @@ public class PeachHttpClientOptions {
         return proxy;
     }
 
-    public PeachHttpClientOptions proxy(Proxy proxy) {
+    public UsagiHttpClientOptions proxy(Proxy proxy) {
         this.proxy = proxy;
         return this;
     }
@@ -26,7 +26,7 @@ public class PeachHttpClientOptions {
         return bodyBufferSize;
     }
 
-    public PeachHttpClientOptions bodyBufferSize(int bodyBufferSize) {
+    public UsagiHttpClientOptions bodyBufferSize(int bodyBufferSize) {
         this.bodyBufferSize = bodyBufferSize;
         return this;
     }

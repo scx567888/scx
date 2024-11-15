@@ -1,4 +1,4 @@
-package cool.scx.http.peach;
+package cool.scx.http.usagi;
 
 
 import cool.scx.net.ScxTCPServerOptions;
@@ -7,24 +7,24 @@ import cool.scx.net.tls.TLS;
 /**
  * ScxHttpServerOptions
  */
-public class PeachHttpServerOptions extends ScxTCPServerOptions {
+public class UsagiHttpServerOptions extends ScxTCPServerOptions {
 
     private long maxPayloadSize;
     private int bodyBufferSize;
 
-    public PeachHttpServerOptions() {
+    public UsagiHttpServerOptions() {
         this.maxPayloadSize = -1;
         this.bodyBufferSize = 65536;
     }
 
     @Override
-    public PeachHttpServerOptions port(int port) {
+    public UsagiHttpServerOptions port(int port) {
         super.port(port);
         return this;
     }
 
     @Override
-    public PeachHttpServerOptions tls(TLS tls) {
+    public UsagiHttpServerOptions tls(TLS tls) {
         super.tls(tls);
         return this;
     }
@@ -33,7 +33,7 @@ public class PeachHttpServerOptions extends ScxTCPServerOptions {
         return this.maxPayloadSize;
     }
 
-    public PeachHttpServerOptions maxPayloadSize(long maxPayloadSize) {
+    public UsagiHttpServerOptions maxPayloadSize(long maxPayloadSize) {
         this.maxPayloadSize = maxPayloadSize;
         return this;
     }
@@ -42,7 +42,7 @@ public class PeachHttpServerOptions extends ScxTCPServerOptions {
         return bodyBufferSize;
     }
 
-    public PeachHttpServerOptions bodyBufferSize(int bodyBufferSize) {
+    public UsagiHttpServerOptions bodyBufferSize(int bodyBufferSize) {
         this.bodyBufferSize = bodyBufferSize;
         return this;
     }

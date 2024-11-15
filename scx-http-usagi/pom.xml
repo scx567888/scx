@@ -9,13 +9,13 @@
         <version>3.2.3</version>
     </parent>
 
-    <artifactId>scx-http-peach</artifactId>
+    <artifactId>scx-http-usagi</artifactId>
     <packaging>jar</packaging>
 
-    <name>SCX HTTP Peach</name>
+    <name>SCX HTTP Usagi</name>
     <url>https://github.com/scx567888/scx</url>
     <description>
-        SCX HTTP Peach
+        SCX HTTP Usagi
     </description>
 
     <dependencies>

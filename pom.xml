@@ -53,7 +53,7 @@
         <module>scx-ffm</module>
         <module>scx-http</module>
         <module>scx-http-helidon</module>
-        <module>scx-http-peach</module>
+        <module>scx-http-usagi</module>
         <module>scx-io</module>
         <module>scx-jdbc</module>
         <module>scx-jdbc-mysql</module>

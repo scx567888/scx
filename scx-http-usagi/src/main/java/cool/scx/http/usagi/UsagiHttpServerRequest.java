@@ -1,4 +1,4 @@
-package cool.scx.http.peach;
+package cool.scx.http.usagi;
 
 import cool.scx.http.*;
 import cool.scx.http.uri.ScxURI;
@@ -6,7 +6,7 @@ import cool.scx.http.uri.ScxURI;
 /**
  * PeachHttpServerRequest
  */
-class PeachHttpServerRequest implements ScxHttpServerRequest {
+class UsagiHttpServerRequest implements ScxHttpServerRequest {
 
     ScxHttpMethod method;
     ScxURI uri;
@@ -15,7 +15,7 @@ class PeachHttpServerRequest implements ScxHttpServerRequest {
     ScxHttpBody body;
     ScxHttpServerResponse response;
 
-    public PeachHttpServerRequest() {
+    public UsagiHttpServerRequest() {
 
     }
 

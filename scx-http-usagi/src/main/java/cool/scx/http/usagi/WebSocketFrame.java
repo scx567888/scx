@@ -1,4 +1,4 @@
-package cool.scx.http.peach;
+package cool.scx.http.usagi;
 
 import cool.scx.http.WebSocketOpCode;
 
