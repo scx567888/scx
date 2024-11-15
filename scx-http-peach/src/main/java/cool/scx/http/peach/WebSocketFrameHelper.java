@@ -89,7 +89,7 @@ public class WebSocketFrameHelper {
 
     public static void writeFrame(WebSocketFrame frame, OutputStream out, int maxFrameSize) throws IOException, IOException {
         //todo 分割帧 发送
-        
+
     }
 
     public static void writeFrame(WebSocketFrame frame, OutputStream out) throws IOException, IOException {

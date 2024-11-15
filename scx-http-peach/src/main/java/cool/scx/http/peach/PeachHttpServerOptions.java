@@ -8,7 +8,7 @@ import cool.scx.net.tls.TLS;
  * ScxHttpServerOptions
  */
 public class PeachHttpServerOptions extends ScxTCPServerOptions {
-    
+
     private long maxPayloadSize;
     private int bodyBufferSize;
 
