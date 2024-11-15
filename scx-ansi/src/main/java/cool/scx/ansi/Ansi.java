@@ -51,7 +51,7 @@ public final class Ansi {
         int size = (ansiColor != null ? 1 : 0) + (ansiBackground != null ? 1 : 0) + ansiStyleSet.size();
         var result = new AnsiElement[size];
         int index = 0;
-        
+
         if (ansiColor != null) {
             result[index] = ansiColor;
             index = index + 1;
