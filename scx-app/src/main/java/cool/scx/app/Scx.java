@@ -1,14 +1,14 @@
 package cool.scx.app;
 
 import cool.scx.ansi.Ansi;
+import cool.scx.app.enumeration.ScxCoreFeature;
+import cool.scx.app.eventbus.EventBus;
 import cool.scx.common.util.FileUtils;
 import cool.scx.common.util.ScopedValue;
 import cool.scx.common.util.StopWatch;
 import cool.scx.config.ScxConfig;
 import cool.scx.config.ScxEnvironment;
 import cool.scx.config.ScxFeatureConfig;
-import cool.scx.app.enumeration.ScxCoreFeature;
-import cool.scx.app.eventbus.EventBus;
 import cool.scx.data.jdbc.AnnotationConfigTable;
 import cool.scx.http.ScxHttpServer;
 import cool.scx.http.helidon.HelidonHttpServer;
@@ -31,10 +31,10 @@ import java.net.InetAddress;
 import java.util.Arrays;
 import java.util.List;
 
-import static cool.scx.common.util.NetUtils.getLocalIPAddress;
-import static cool.scx.common.util.ScxExceptionHelper.ignore;
 import static cool.scx.app.ScxContext.GLOBAL_SCX;
 import static cool.scx.app.ScxHelper.*;
+import static cool.scx.common.util.NetUtils.getLocalIPAddress;
+import static cool.scx.common.util.ScxExceptionHelper.ignore;
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.WARNING;
 

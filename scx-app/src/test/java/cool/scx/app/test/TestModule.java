@@ -1,6 +1,5 @@
 package cool.scx.app.test;
 
-import cool.scx.common.util.*;
 import cool.scx.app.Scx;
 import cool.scx.app.ScxContext;
 import cool.scx.app.ScxModule;
@@ -12,6 +11,7 @@ import cool.scx.app.test.car.CarOwner;
 import cool.scx.app.test.car.CarService;
 import cool.scx.app.test.person.Person;
 import cool.scx.app.test.person.PersonService;
+import cool.scx.common.util.*;
 import cool.scx.data.query.QueryOption;
 import cool.scx.http.helidon.ScxHttpClientHelper;
 import cool.scx.http.media.multi_part.MultiPart;

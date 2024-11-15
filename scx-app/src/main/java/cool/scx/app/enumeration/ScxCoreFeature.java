@@ -1,7 +1,7 @@
 package cool.scx.app.enumeration;
 
-import cool.scx.config.ScxFeature;
 import cool.scx.app.annotation.Scheduled;
+import cool.scx.config.ScxFeature;
 import cool.scx.scheduling.ScxScheduler;
 
 /**

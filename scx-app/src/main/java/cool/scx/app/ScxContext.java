@@ -1,12 +1,12 @@
 package cool.scx.app;
 
+import cool.scx.app.enumeration.ScxCoreFeature;
+import cool.scx.app.eventbus.EventBus;
 import cool.scx.common.functional.ScxRunnable;
 import cool.scx.common.util.ScopedValue;
 import cool.scx.config.ScxConfig;
 import cool.scx.config.ScxEnvironment;
 import cool.scx.config.ScxFeatureConfig;
-import cool.scx.app.enumeration.ScxCoreFeature;
-import cool.scx.app.eventbus.EventBus;
 import cool.scx.http.ScxHttpServer;
 import cool.scx.http.routing.WebSocketRouter;
 import cool.scx.jdbc.JDBCContext;
