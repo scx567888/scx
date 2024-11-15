@@ -2,7 +2,6 @@ package cool.scx.http.helidon;
 
 import cool.scx.http.ScxClientWebSocketBuilder;
 import cool.scx.http.ScxHttpClient;
-import cool.scx.http.ScxHttpClientOptions;
 import io.helidon.webclient.api.Proxy;
 import io.helidon.webclient.api.WebClient;
 
@@ -12,9 +11,9 @@ import io.helidon.webclient.api.WebClient;
 public class HelidonHttpClient implements ScxHttpClient {
 
     private final WebClient webClient;
-    private final ScxHttpClientOptions options;
+    private final HelidonHttpClientOptions options;
 
-    public HelidonHttpClient(ScxHttpClientOptions options) {
+    public HelidonHttpClient(HelidonHttpClientOptions options) {
         this.options = options;
         var builder = WebClient.builder();
         if (options.proxy() != null) {
@@ -29,7 +28,7 @@ public class HelidonHttpClient implements ScxHttpClient {
     }
 
     public HelidonHttpClient() {
-        this(new ScxHttpClientOptions());
+        this(new HelidonHttpClientOptions());
     }
 
     @Override
@@ -42,7 +41,7 @@ public class HelidonHttpClient implements ScxHttpClient {
         return new HelidonClientWebSocket();
     }
 
-    public ScxHttpClientOptions options() {
+    public HelidonHttpClientOptions options() {
         return options;
     }
 

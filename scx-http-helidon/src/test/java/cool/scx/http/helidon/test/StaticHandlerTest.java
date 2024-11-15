@@ -1,6 +1,6 @@
 package cool.scx.http.helidon.test;
 
-import cool.scx.http.ScxHttpServerOptions;
+import cool.scx.http.helidon.HelidonHttpServerOptions;
 import cool.scx.http.helidon.HelidonHttpServer;
 import cool.scx.http.routing.Router;
 import cool.scx.http.routing.handler.StaticHandler;
@@ -14,7 +14,7 @@ public class StaticHandlerTest {
     }
 
     public static void test1() {
-        var httpServer = new HelidonHttpServer(new ScxHttpServerOptions().port(8899));
+        var httpServer = new HelidonHttpServer(new HelidonHttpServerOptions().port(8899));
 
         var router = Router.of();
         router.route().path("/*").handler(new StaticHandler(Path.of("")));

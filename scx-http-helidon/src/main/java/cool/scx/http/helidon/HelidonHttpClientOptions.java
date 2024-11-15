@@ -1,14 +1,14 @@
-package cool.scx.http;
+package cool.scx.http.helidon;
 
 /**
  * ScxHttpClientOptions
  */
-public class ScxHttpClientOptions {
+public class HelidonHttpClientOptions {
 
     private Proxy proxy;
     private int bodyBufferSize;
 
-    public ScxHttpClientOptions() {
+    public HelidonHttpClientOptions() {
         this.proxy = null;
         this.bodyBufferSize = 65536;
     }
@@ -17,7 +17,7 @@ public class ScxHttpClientOptions {
         return proxy;
     }
 
-    public ScxHttpClientOptions proxy(Proxy proxy) {
+    public HelidonHttpClientOptions proxy(Proxy proxy) {
         this.proxy = proxy;
         return this;
     }
@@ -26,7 +26,7 @@ public class ScxHttpClientOptions {
         return bodyBufferSize;
     }
 
-    public ScxHttpClientOptions bodyBufferSize(int bodyBufferSize) {
+    public HelidonHttpClientOptions bodyBufferSize(int bodyBufferSize) {
         this.bodyBufferSize = bodyBufferSize;
         return this;
     }

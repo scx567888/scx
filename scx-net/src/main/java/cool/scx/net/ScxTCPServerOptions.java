@@ -18,8 +18,12 @@ public class ScxTCPServerOptions {
     }
 
     public ScxTCPServerOptions port(int port) {
-        this.port = port;
-        return this;
+        if (port < 0 || port > 65535) {
+            throw new IllegalArgumentException("port must be between 0 and 65535");
+        } else {
+            this.port = port;
+            return this;
+        }
     }
 
     public TLS tls() {

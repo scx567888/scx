@@ -1,8 +1,8 @@
 package cool.scx.http.peach.test;
 
-import cool.scx.http.ScxHttpServerOptions;
 import cool.scx.http.ScxServerWebSocketHandshakeRequest;
 import cool.scx.http.peach.PeachHttpServer;
+import cool.scx.http.peach.PeachHttpServerOptions;
 
 public class PeachTest {
 
@@ -11,7 +11,7 @@ public class PeachTest {
     }
 
     public static void test1() {
-        var httpServer = new PeachHttpServer(new ScxHttpServerOptions().port(8899));
+        var httpServer = new PeachHttpServer(new PeachHttpServerOptions().port(8899));
         httpServer.requestHandler(c -> {
             System.out.println(c.method() + " " + c.uri() + " -> " + c.body().asString());
             //通过 c 的类型判断是不是 websocket 连接

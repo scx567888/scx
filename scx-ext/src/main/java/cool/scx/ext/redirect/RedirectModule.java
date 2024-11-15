@@ -3,7 +3,7 @@ package cool.scx.ext.redirect;
 import cool.scx.ansi.Ansi;
 import cool.scx.core.Scx;
 import cool.scx.core.ScxModule;
-import cool.scx.http.ScxHttpServerOptions;
+import cool.scx.http.helidon.HelidonHttpServerOptions;
 import cool.scx.http.helidon.HelidonHttpServer;
 import cool.scx.http.routing.Router;
 import cool.scx.web.vo.Redirection;
@@ -43,7 +43,7 @@ public class RedirectModule extends ScxModule {
             var newURI = "https" + oldURI.substring(4);
             Redirection.ofTemporary(newURI).accept(c);
         });
-        var httpServer = new HelidonHttpServer(new ScxHttpServerOptions().port(port));
+        var httpServer = new HelidonHttpServer(new HelidonHttpServerOptions().port(port));
         httpServer.requestHandler(router);
 
         try {
