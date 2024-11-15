@@ -11,8 +11,8 @@ import cool.scx.web.vo.Result;
 import java.util.Map;
 
 import static cool.scx.app.ScxContext.getBean;
-import static cool.scx.data.query.QueryBuilder.and;
 import static cool.scx.app.ext.crud.CRUDHelper.findBaseModelServiceClass;
+import static cool.scx.data.query.QueryBuilder.and;
 import static cool.scx.http.HttpMethod.*;
 
 /**

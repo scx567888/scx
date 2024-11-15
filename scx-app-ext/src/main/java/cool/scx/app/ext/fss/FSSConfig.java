@@ -1,7 +1,7 @@
 package cool.scx.app.ext.fss;
 
-import cool.scx.config.handler.AppRootHandler;
 import cool.scx.app.Scx;
+import cool.scx.config.handler.AppRootHandler;
 
 import java.lang.System.Logger;
 import java.nio.file.Path;
