@@ -10,9 +10,9 @@ import java.util.function.Consumer;
 
 import static java.lang.System.Logger.Level.ERROR;
 
-public class ClassicTCPServer implements ScxTCPServer {
+public class TCPServer implements ScxTCPServer {
 
-    private static final System.Logger logger = System.getLogger(ClassicTCPServer.class.getName());
+    private static final System.Logger logger = System.getLogger(TCPServer.class.getName());
 
     private final ScxTCPServerOptions options;
     private final Thread serverThread;
@@ -20,11 +20,11 @@ public class ClassicTCPServer implements ScxTCPServer {
     private ServerSocket serverSocket;
     private boolean running;
 
-    public ClassicTCPServer() {
+    public TCPServer() {
         this(new ScxTCPServerOptions());
     }
 
-    public ClassicTCPServer(ScxTCPServerOptions options) {
+    public TCPServer(ScxTCPServerOptions options) {
         this.options = options;
         this.serverThread = Thread.ofPlatform().unstarted(this::listen);
     }
@@ -109,7 +109,7 @@ public class ClassicTCPServer implements ScxTCPServer {
             }
         }
 
-        var tcpSocket = new ClassicTCPSocket(socket);
+        var tcpSocket = new TCPSocket(socket);
         //调用用户处理器
         connectHandler.accept(tcpSocket);
     }

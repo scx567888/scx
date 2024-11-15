@@ -8,17 +8,17 @@ import java.net.SocketAddress;
 
 import static java.lang.System.Logger.Level.ERROR;
 
-public class ClassicTCPClient implements ScxTCPClient {
+public class TCPClient implements ScxTCPClient {
 
-    private static final System.Logger logger = System.getLogger(ClassicTCPClient.class.getName());
+    private static final System.Logger logger = System.getLogger(TCPClient.class.getName());
 
     private final ScxTCPClientOptions options;
 
-    public ClassicTCPClient() {
+    public TCPClient() {
         this(new ScxTCPClientOptions());
     }
 
-    public ClassicTCPClient(ScxTCPClientOptions options) {
+    public TCPClient(ScxTCPClientOptions options) {
         this.options = options;
     }
 
@@ -61,7 +61,7 @@ public class ClassicTCPClient implements ScxTCPClient {
             throw new UncheckedIOException(e);
         }
 
-        return new ClassicTCPSocket(socket);
+        return new TCPSocket(socket);
 
     }
 
