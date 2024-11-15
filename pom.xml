@@ -42,29 +42,29 @@
     </scm>
 
     <modules>
+        <module>scx-ansi</module>
+        <module>scx-app</module>
+        <module>scx-app-ext</module>
         <module>scx-common</module>
         <module>scx-config</module>
-        <module>scx-core</module>
         <module>scx-data</module>
         <module>scx-data-jdbc</module>
         <module>scx-data-mysql-x</module>
-        <module>scx-jdbc</module>
-        <module>scx-jdbc-mysql</module>
-        <module>scx-jdbc-sqlite</module>
-        <module>scx-logging</module>
-        <module>scx-web</module>
-        <module>scx-ext</module>
-        <module>scx-socket</module>
+        <module>scx-ffm</module>
         <module>scx-http</module>
         <module>scx-http-helidon</module>
-        <module>scx-ffm</module>
-        <module>scx-ansi</module>
+        <module>scx-http-peach</module>
+        <module>scx-io</module>
+        <module>scx-jdbc</module>
+        <module>scx-jdbc-mysql</module>
+        <module>scx-jdbc-sql-server</module>
+        <module>scx-jdbc-sqlite</module>
+        <module>scx-logging</module>
+        <module>scx-net</module>
         <module>scx-reflect</module>
         <module>scx-scheduling</module>
-        <module>scx-net</module>
-        <module>scx-io</module>
-        <module>scx-jdbc-sql-server</module>
-        <module>scx-http-peach</module>
+        <module>scx-socket</module>
+        <module>scx-web</module>
     </modules>
 
     <build>

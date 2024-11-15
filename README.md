@@ -67,7 +67,7 @@ English | [简体中文](./README.zh-CN.md)
 ``` xml
 <dependency>
     <groupId>cool.scx</groupId>
-    <artifactId>scx-core</artifactId>
+    <artifactId>scx-app</artifactId>
     <version>{version}</version>
 </dependency>
 ```
@@ -77,8 +77,8 @@ English | [简体中文](./README.zh-CN.md)
 #### 1. Write your own module and run the main method .
 
 ``` java
-import cool.scx.core.Scx;
-import cool.scx.core.ScxModule;
+import cool.scx.app.Scx;
+import cool.scx.app.ScxModule;
 import cool.scx.http.HttpMethod;
 import cool.scx.web.annotation.ScxRoute;
 
