@@ -67,7 +67,7 @@
 ``` xml
 <dependency>
     <groupId>cool.scx</groupId>
-    <artifactId>scx-core</artifactId>
+    <artifactId>scx-app</artifactId>
     <version>{version}</version>
 </dependency>
 ```
@@ -77,8 +77,8 @@
 #### 1. 编写您自己的模块并运行 main 方法 。
 
 ``` java
-import cool.scx.core.Scx;
-import cool.scx.core.ScxModule;
+import cool.scx.app.Scx;
+import cool.scx.app.ScxModule;
 import cool.scx.http.HttpMethod;
 import cool.scx.web.annotation.ScxRoute;
 
