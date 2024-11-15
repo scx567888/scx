@@ -1,4 +1,4 @@
-package cool.scx.http.peach;
+package cool.scx.http.usagi;
 
 import cool.scx.http.*;
 import cool.scx.http.uri.ScxURI;
@@ -10,10 +10,10 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import static cool.scx.http.WebSocketOpCode.*;
-import static cool.scx.http.peach.WebSocketFrameHelper.readFrameUntilLast;
-import static cool.scx.http.peach.WebSocketFrameHelper.writeFrame;
+import static cool.scx.http.usagi.WebSocketFrameHelper.readFrameUntilLast;
+import static cool.scx.http.usagi.WebSocketFrameHelper.writeFrame;
 
-public class PeachServerWebSocket implements ScxServerWebSocket {
+public class UsagiServerWebSocket implements ScxServerWebSocket {
 
     private final DataReader reader;
     private final OutputStream writer;
@@ -26,7 +26,7 @@ public class PeachServerWebSocket implements ScxServerWebSocket {
     private Consumer<Throwable> errorHandler;
     private boolean isClosed;
 
-    public PeachServerWebSocket(ScxServerWebSocketHandshakeRequest handshakeServerRequest, DataReader reader, OutputStream writer) {
+    public UsagiServerWebSocket(ScxServerWebSocketHandshakeRequest handshakeServerRequest, DataReader reader, OutputStream writer) {
         this.handshakeServerRequest = handshakeServerRequest;
         this.reader = reader;
         this.writer = writer;

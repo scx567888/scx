@@ -1,4 +1,4 @@
-package cool.scx.http.peach;
+package cool.scx.http.usagi;
 
 import cool.scx.http.ScxHttpBody;
 import cool.scx.http.ScxHttpHeaders;
@@ -7,7 +7,7 @@ import cool.scx.io.LinkedDataReader;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class PeachScxHttpBody implements ScxHttpBody {
+public class UsagiHttpBody implements ScxHttpBody {
 
     private final LinkedDataReader dataReader;
     private final long contentLength;
@@ -15,7 +15,7 @@ public class PeachScxHttpBody implements ScxHttpBody {
     private final InputStream inputStream;
     private long position;
 
-    public PeachScxHttpBody(LinkedDataReader dataReader, ScxHttpHeaders headers, long contentLength) {
+    public UsagiHttpBody(LinkedDataReader dataReader, ScxHttpHeaders headers, long contentLength) {
         this.dataReader = dataReader;
         this.headers = headers;
         this.contentLength = contentLength;

@@ -1,4 +1,4 @@
-package cool.scx.http.peach;
+package cool.scx.http.usagi;
 
 import cool.scx.http.*;
 import cool.scx.http.uri.ScxURI;
@@ -15,22 +15,22 @@ import static cool.scx.http.HttpFieldName.*;
 import static cool.scx.http.HttpMethod.GET;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-public class PeachHttpServer implements ScxHttpServer {
+public class UsagiHttpServer implements ScxHttpServer {
 
     private final ScxTCPServer tcpServer;
-    private final PeachHttpServerOptions options;
+    private final UsagiHttpServerOptions options;
     private Consumer<ScxHttpServerRequest> requestHandler;
     private Consumer<ScxServerWebSocket> webSocketHandler;
     private Consumer<Throwable> errorHandler;
 
-    public PeachHttpServer(PeachHttpServerOptions options) {
+    public UsagiHttpServer(UsagiHttpServerOptions options) {
         this.options = options;
         this.tcpServer = new TCPServer(options);
         this.tcpServer.onConnect(this::handle);
     }
 
-    public PeachHttpServer() {
-        this(new PeachHttpServerOptions());
+    public UsagiHttpServer() {
+        this(new UsagiHttpServerOptions());
     }
 
     private void handle(ScxTCPSocket scxTCPSocket) {
@@ -63,12 +63,12 @@ public class PeachHttpServer implements ScxHttpServer {
 
             var isWebSocketHandshake = method == GET && "Upgrade".equals(connection) && "websocket".equals(upgrade);
 
-            PeachHttpServerRequest request;
+            UsagiHttpServerRequest request;
 
             if (isWebSocketHandshake) {
-                request = new PeachServerWebSocketHandshakeRequest(dataReader, scxTCPSocket.outputStream());
+                request = new UsagiServerWebSocketHandshakeRequest(dataReader, scxTCPSocket.outputStream());
             } else {
-                request = new PeachHttpServerRequest();
+                request = new UsagiHttpServerRequest();
             }
 
             request.method = method;
@@ -81,18 +81,18 @@ public class PeachHttpServer implements ScxHttpServer {
             Long contentLength = headers.contentLength();
 
             if (contentLength != null) {
-                body = new PeachScxHttpBody(dataReader, headers, contentLength);
+                body = new UsagiHttpBody(dataReader, headers, contentLength);
             } else {
-                body = new PeachScxHttpBody(dataReader, headers, 0L);
+                body = new UsagiHttpBody(dataReader, headers, 0L);
             }
 
             request.body = body;
 
-            var response = new PeachHttpServerResponse(request, scxTCPSocket);
+            var response = new UsagiHttpServerResponse(request, scxTCPSocket);
 
             response.headers().set(CONNECTION, "keep-alive");
 
-            response.headers().set(SERVER, "Scx Peach");
+            response.headers().set(SERVER, "Scx Usagi");
 
             request.response = response;
 
@@ -101,7 +101,7 @@ public class PeachHttpServer implements ScxHttpServer {
             }
 
             //尝试启动 websocket 监听 todo 这里应该重新设计
-            if (request instanceof PeachServerWebSocketHandshakeRequest w) {
+            if (request instanceof UsagiServerWebSocketHandshakeRequest w) {
                 var ws = w.webSocket;
                 if (ws != null) {
                     ws.start();

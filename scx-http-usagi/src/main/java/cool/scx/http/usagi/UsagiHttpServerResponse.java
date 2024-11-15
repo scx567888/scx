@@ -1,4 +1,4 @@
-package cool.scx.http.peach;
+package cool.scx.http.usagi;
 
 import cool.scx.http.*;
 import cool.scx.net.ScxTCPSocket;
@@ -6,9 +6,9 @@ import cool.scx.net.ScxTCPSocket;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class PeachHttpServerResponse implements ScxHttpServerResponse {
+public class UsagiHttpServerResponse implements ScxHttpServerResponse {
 
-    private final PeachHttpServerRequest request;
+    private final UsagiHttpServerRequest request;
     private final ScxTCPSocket tcpSocket;
     private final OutputStream outputStream;
     private final ScxHttpHeadersWritable headers;
@@ -16,7 +16,7 @@ public class PeachHttpServerResponse implements ScxHttpServerResponse {
     private HttpStatusCode status;
     private boolean firstSend;
 
-    PeachHttpServerResponse(PeachHttpServerRequest request, ScxTCPSocket tcpSocket) {
+    UsagiHttpServerResponse(UsagiHttpServerRequest request, ScxTCPSocket tcpSocket) {
         this.request = request;
         this.tcpSocket = tcpSocket;
         this.out = tcpSocket.outputStream();

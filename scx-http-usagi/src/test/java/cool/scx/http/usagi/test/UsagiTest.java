@@ -1,17 +1,17 @@
-package cool.scx.http.peach.test;
+package cool.scx.http.usagi.test;
 
 import cool.scx.http.ScxServerWebSocketHandshakeRequest;
-import cool.scx.http.peach.PeachHttpServer;
-import cool.scx.http.peach.PeachHttpServerOptions;
+import cool.scx.http.usagi.UsagiHttpServer;
+import cool.scx.http.usagi.UsagiHttpServerOptions;
 
-public class PeachTest {
+public class UsagiTest {
 
     public static void main(String[] args) {
         test1();
     }
 
     public static void test1() {
-        var httpServer = new PeachHttpServer(new PeachHttpServerOptions().port(8899));
+        var httpServer = new UsagiHttpServer(new UsagiHttpServerOptions().port(8899));
         httpServer.requestHandler(c -> {
             System.out.println(c.method() + " " + c.uri() + " -> " + c.body().asString());
             //通过 c 的类型判断是不是 websocket 连接
