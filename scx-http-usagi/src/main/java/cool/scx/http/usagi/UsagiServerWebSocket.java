@@ -6,12 +6,13 @@ import cool.scx.io.DataReader;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UncheckedIOException;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import static cool.scx.http.WebSocketOpCode.*;
-import static cool.scx.http.usagi.WebSocketFrameHelper.readFrameUntilLast;
-import static cool.scx.http.usagi.WebSocketFrameHelper.writeFrame;
+import static cool.scx.http.usagi.WebSocketFrameHelper.*;
 
 public class UsagiServerWebSocket implements ScxServerWebSocket {
 
@@ -25,11 +26,15 @@ public class UsagiServerWebSocket implements ScxServerWebSocket {
     private BiConsumer<Integer, String> closeHandler;
     private Consumer<Throwable> errorHandler;
     private boolean isClosed;
+    
+    //为了防止底层的 OutputStream 被乱序写入 此处需要加锁
+    private final ReentrantLock lock;
 
     public UsagiServerWebSocket(ScxServerWebSocketHandshakeRequest handshakeServerRequest, DataReader reader, OutputStream writer) {
         this.handshakeServerRequest = handshakeServerRequest;
         this.reader = reader;
         this.writer = writer;
+        this.lock = new ReentrantLock();
     }
 
     @Override
@@ -80,13 +85,11 @@ public class UsagiServerWebSocket implements ScxServerWebSocket {
 
     @Override
     public ScxWebSocket send(String textMessage, boolean last) {
+        byte[] payload = textMessage.getBytes();
         try {
-            byte[] payload = textMessage.getBytes();
             sendFrame(payload, TEXT, last);
-        } catch (Exception e) {
-            if (errorHandler != null) {
-                errorHandler.accept(e);
-            }
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
         }
         return this;
     }
@@ -95,10 +98,8 @@ public class UsagiServerWebSocket implements ScxServerWebSocket {
     public ScxWebSocket send(byte[] binaryMessage, boolean last) {
         try {
             sendFrame(binaryMessage, BINARY, last);
-        } catch (Exception e) {
-            if (errorHandler != null) {
-                errorHandler.accept(e);
-            }
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
         }
         return this;
     }
@@ -129,6 +130,10 @@ public class UsagiServerWebSocket implements ScxServerWebSocket {
 
     @Override
     public ScxWebSocket close(int code, String reason) {
+        if (isClosed) {
+            return this;
+        }
+        isClosed = true;
         try {
             sendFrame(reason.getBytes(), WebSocketOpCode.CLOSE, true);
         } catch (Exception e) {
@@ -195,8 +200,13 @@ public class UsagiServerWebSocket implements ScxServerWebSocket {
     }
 
     private void sendFrame(byte[] payload, WebSocketOpCode opcode, boolean last) throws IOException {
-        var f = new WebSocketFrame(last, opcode, payload);
-        writeFrame(f, writer);
+        lock.lock();
+        try {
+            var f = new WebSocketFrame(last, opcode, payload);
+            writeServerFrame(f, writer);    
+        }finally {
+            lock.unlock();
+        }
     }
 
 }
