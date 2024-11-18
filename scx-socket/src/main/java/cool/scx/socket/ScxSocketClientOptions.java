@@ -1,6 +1,6 @@
 package cool.scx.socket;
 
-import java.util.concurrent.Executor;
+import java.util.concurrent.ScheduledExecutorService;
 
 public final class ScxSocketClientOptions extends PingPongOptions {
 
@@ -20,7 +20,7 @@ public final class ScxSocketClientOptions extends PingPongOptions {
     }
 
     @Override
-    public ScxSocketClientOptions executor(Executor executor) {
+    public ScxSocketClientOptions executor(ScheduledExecutorService executor) {
         super.executor(executor);
         return this;
     }
@@ -30,5 +30,5 @@ public final class ScxSocketClientOptions extends PingPongOptions {
         super.setDuplicateFrameCheckerClearTimeout(duplicateFrameCheckerClearTimeout);
         return this;
     }
-    
+
 }
