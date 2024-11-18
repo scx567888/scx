@@ -29,7 +29,7 @@ public interface ScxScheduling {
     }
 
     static ScheduleStatus setTimeout(Runnable task, long delay) {
-        return once().startTime(() -> Instant.now().plusMillis(delay)).start((c) -> task.run());
+        return once().startDelay(Duration.ofMillis(delay)).start((c) -> task.run());
     }
 
     static ScheduleStatus setInterval(Runnable task, long delay) {
