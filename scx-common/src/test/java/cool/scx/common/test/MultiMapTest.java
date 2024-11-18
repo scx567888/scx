@@ -80,5 +80,5 @@ public class MultiMapTest {
     private static void printMultiMap(MultiMap<String, String> multiMap) {
         System.out.println("MultiMap: " + multiMap);
     }
-    
+
 }
