@@ -2,13 +2,16 @@ package cool.scx.socket;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ScheduledExecutorService;
 
 final class FrameSender {
 
     final ConcurrentMap<Long, SendTask> sendTaskMap;
+    final ScheduledExecutorService executor;
 
-    public FrameSender() {
+    public FrameSender(ScxSocketOptions options) {
         this.sendTaskMap = new ConcurrentHashMap<>();
+        this.executor = options.executor();
     }
 
     public void clearSendTask(ScxSocketFrame ackFrame) {

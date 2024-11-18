@@ -2,6 +2,7 @@ package cool.scx.socket;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -10,15 +11,17 @@ import java.util.concurrent.atomic.AtomicBoolean;
 final class DuplicateFrameChecker {
 
     final ConcurrentMap<Key, ClearTask> clearTaskMap;
+    final ScheduledExecutorService executor;
 
     /**
      * 重复帧校验 清理延时
      */
     private final long clearTimeout;
 
-    public DuplicateFrameChecker(long clearTimeout) {
+    public DuplicateFrameChecker(ScxSocketOptions options) {
         this.clearTaskMap = new ConcurrentHashMap<>();
-        this.clearTimeout = clearTimeout;
+        this.clearTimeout = options.getDuplicateFrameCheckerClearTimeout();
+        this.executor = options.executor();
     }
 
     /**

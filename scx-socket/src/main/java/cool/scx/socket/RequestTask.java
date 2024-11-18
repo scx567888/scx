@@ -1,10 +1,9 @@
 package cool.scx.socket;
 
-import cool.scx.scheduling.ScheduleStatus;
-
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
-
-import static cool.scx.scheduling.ScxScheduling.setTimeout;
 
 final class RequestTask {
 
@@ -12,18 +11,20 @@ final class RequestTask {
     private final RequestManager requestManager;
     private final RequestOptions options;
     private final long seq_id;
-    private ScheduleStatus failTimeout;
+    private final ScheduledExecutorService executor;
+    private ScheduledFuture<?> failTimeout;
 
     public RequestTask(Consumer<ScxSocketResponse> responseCallback, RequestManager requestManager, RequestOptions options, long seqId) {
         this.responseCallback = responseCallback;
         this.requestManager = requestManager;
         this.options = options;
         this.seq_id = seqId;
+        this.executor = requestManager.executor;
     }
 
     public void start() {
         cancelFail();
-        this.failTimeout = setTimeout(this::fail, options.getRequestTimeout());
+        this.failTimeout = executor.schedule(this::fail, options.getRequestTimeout(), TimeUnit.MILLISECONDS);
     }
 
     public void success(String payload) {
@@ -38,7 +39,7 @@ final class RequestTask {
 
     public void cancelFail() {
         if (this.failTimeout != null) {
-            this.failTimeout.cancel();
+            this.failTimeout.cancel(false);
             this.failTimeout = null;
         }
     }

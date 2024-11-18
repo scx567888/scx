@@ -1,30 +1,32 @@
 package cool.scx.socket;
 
-import cool.scx.scheduling.ScheduleStatus;
-
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import static cool.scx.scheduling.ScxScheduling.setTimeout;
 import static cool.scx.socket.DuplicateFrameChecker.Key;
 
 final class ClearTask {
 
     private final DuplicateFrameChecker checker;
     private final Key key;
-    private ScheduleStatus clearTimeout;
+    private final ScheduledExecutorService executor;
     private final Lock lock = new ReentrantLock();
+    private ScheduledFuture<?> clearTimeout;
 
     public ClearTask(Key key, DuplicateFrameChecker checker) {
         this.key = key;
         this.checker = checker;
+        this.executor = checker.executor;
     }
 
     public void start() {
         lock.lock();
         try {
             cancel();
-            this.clearTimeout = setTimeout(this::clear, this.checker.getClearTimeout());
+            this.clearTimeout = executor.schedule(this::clear, this.checker.getClearTimeout(), TimeUnit.MILLISECONDS);
         } finally {
             lock.unlock();
         }
@@ -34,7 +36,7 @@ final class ClearTask {
         lock.lock();
         try {
             if (this.clearTimeout != null) {
-                this.clearTimeout.cancel();
+                this.clearTimeout.cancel(false);
                 this.clearTimeout = null;
             }
         } finally {
