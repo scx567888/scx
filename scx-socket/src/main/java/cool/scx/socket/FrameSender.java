@@ -7,11 +7,11 @@ import java.util.concurrent.ScheduledExecutorService;
 final class FrameSender {
 
     final ConcurrentMap<Long, SendTask> sendTaskMap;
-    final ScheduledExecutorService executor;
+    final ScheduledExecutorService scheduledExecutor;
 
     public FrameSender(ScxSocketOptions options) {
         this.sendTaskMap = new ConcurrentHashMap<>();
-        this.executor = options.executor();
+        this.scheduledExecutor = options.scheduledExecutor();
     }
 
     public void clearSendTask(ScxSocketFrame ackFrame) {

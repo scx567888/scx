@@ -11,7 +11,7 @@ final class RequestTask {
     private final RequestManager requestManager;
     private final RequestOptions options;
     private final long seq_id;
-    private final ScheduledExecutorService executor;
+    private final ScheduledExecutorService scheduledExecutor;
     private ScheduledFuture<?> failTimeout;
 
     public RequestTask(Consumer<ScxSocketResponse> responseCallback, RequestManager requestManager, RequestOptions options, long seqId) {
@@ -19,12 +19,12 @@ final class RequestTask {
         this.requestManager = requestManager;
         this.options = options;
         this.seq_id = seqId;
-        this.executor = requestManager.executor;
+        this.scheduledExecutor = requestManager.scheduledExecutor;
     }
 
     public void start() {
         cancelFail();
-        this.failTimeout = executor.schedule(this::fail, options.getRequestTimeout(), TimeUnit.MILLISECONDS);
+        this.failTimeout = scheduledExecutor.schedule(this::fail, options.getRequestTimeout(), TimeUnit.MILLISECONDS);
     }
 
     public void success(String payload) {

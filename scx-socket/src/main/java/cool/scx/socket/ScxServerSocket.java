@@ -36,7 +36,7 @@ public final class ScxServerSocket extends PingPongManager {
 
     private void startRemoveClosedClientTask() {
         cancelRemoveClosedClientTask();
-        this.removeClosedClientTimeout = executor.schedule(this::removeClosedClient, scxSocketServer.options.getStatusKeepTime(), TimeUnit.MILLISECONDS);
+        this.removeClosedClientTimeout = scheduledExecutor.schedule(this::removeClosedClient, scxSocketServer.options.getStatusKeepTime(), TimeUnit.MILLISECONDS);
     }
 
     private void cancelRemoveClosedClientTask() {

@@ -4,6 +4,7 @@ import cool.scx.http.ScxWebSocket;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.Executor;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -23,7 +24,8 @@ public class ScxSocket {
     final ScxSocketOptions options;
     final ScxSocketStatus status;
 
-    final ScheduledExecutorService executor;
+    final ScheduledExecutorService scheduledExecutor;
+    final Executor executor;
 
     private final ConcurrentMap<String, Consumer<ScxSocketRequest>> onEventMap;
     private Consumer<String> onMessage;
@@ -35,6 +37,7 @@ public class ScxSocket {
         this.clientID = clientID;
         this.options = options;
         this.status = status;
+        this.scheduledExecutor = options.scheduledExecutor();
         this.executor = options.executor();
         this.onEventMap = new ConcurrentHashMap<>();
         this.onMessage = null;

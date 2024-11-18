@@ -28,7 +28,7 @@ abstract class PingPongManager extends EasyUseSocket {
 
     private void startPingTimeout() {
         cancelPingTimeout();
-        this.pingTimeout = executor.schedule(this::doPingTimeout, pingPongOptions.getPingTimeout() + pingPongOptions.getPingInterval(), TimeUnit.MILLISECONDS);
+        this.pingTimeout = scheduledExecutor.schedule(this::doPingTimeout, pingPongOptions.getPingTimeout() + pingPongOptions.getPingInterval(), TimeUnit.MILLISECONDS);
     }
 
     private void cancelPingTimeout() {
@@ -40,7 +40,7 @@ abstract class PingPongManager extends EasyUseSocket {
 
     protected void startPing() {
         cancelPing();
-        this.ping = executor.schedule(() -> {
+        this.ping = scheduledExecutor.schedule(() -> {
             sendPing();
             startPing();
         }, pingPongOptions.getPingInterval(), TimeUnit.MILLISECONDS);

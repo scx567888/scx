@@ -12,21 +12,21 @@ final class ClearTask {
 
     private final DuplicateFrameChecker checker;
     private final Key key;
-    private final ScheduledExecutorService executor;
+    private final ScheduledExecutorService scheduledExecutor;
     private final Lock lock = new ReentrantLock();
     private ScheduledFuture<?> clearTimeout;
 
     public ClearTask(Key key, DuplicateFrameChecker checker) {
         this.key = key;
         this.checker = checker;
-        this.executor = checker.executor;
+        this.scheduledExecutor = checker.scheduledExecutor;
     }
 
     public void start() {
         lock.lock();
         try {
             cancel();
-            this.clearTimeout = executor.schedule(this::clear, this.checker.getClearTimeout(), TimeUnit.MILLISECONDS);
+            this.clearTimeout = scheduledExecutor.schedule(this::clear, this.checker.getClearTimeout(), TimeUnit.MILLISECONDS);
         } finally {
             lock.unlock();
         }
