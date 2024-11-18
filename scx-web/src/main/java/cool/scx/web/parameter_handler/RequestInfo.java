@@ -102,9 +102,9 @@ public final class RequestInfo {
                 for (var multiPartPart : multiPart) {
                     //没有文件名我们就当成 空文件
                     if (multiPartPart.filename() == null) {
-                        m.put(multiPartPart.name(), multiPartPart.asString());
+                        m.add(multiPartPart.name(), multiPartPart.asString());
                     }
-                    f.put(multiPartPart.name(), multiPartPart);
+                    f.add(multiPartPart.name(), multiPartPart);
                 }
                 this.body = jsonMapper().convertValue(m.toMultiValueMap(), JsonNode.class);
                 this.uploadFiles = f;

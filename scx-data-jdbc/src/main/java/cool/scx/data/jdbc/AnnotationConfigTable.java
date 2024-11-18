@@ -96,10 +96,9 @@ public class AnnotationConfigTable implements Table {
     private static void checkDuplicateColumnName(List<AnnotationConfigColumn> list, Class<?> clazz) {
         var multiMap = new MultiMap<String, AnnotationConfigColumn>();
         for (var info : list) {
-            multiMap.put(info.name(), info);
+            multiMap.add(info.name(), info);
         }
-        var map = multiMap.toMultiValueMap();
-        for (var entry : map.entrySet()) {
+        for (var entry : multiMap) {
             var v = entry.getValue();
             if (v.size() > 1) { //具有多个相同的 columnName 值
                 throw new IllegalArgumentException("重复的 columnName !!! Class -> " + clazz.getName() + ", Field -> " + v.stream().map(c -> c.javaField().name()).toList());

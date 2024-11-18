@@ -1,7 +1,6 @@
 package cool.scx.scheduling;
 
 import java.time.Duration;
-import java.time.Instant;
 
 import static cool.scx.scheduling.MultipleTimeTask.Type.FIXED_DELAY;
 import static cool.scx.scheduling.MultipleTimeTask.Type.FIXED_RATE;

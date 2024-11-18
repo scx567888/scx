@@ -57,7 +57,7 @@ public final class ScxTreeUtils {
         var parentIDMap = new MultiMap<Object, T>();
         for (T t : list) {
             idMap.put(t.id(), t);
-            parentIDMap.put(t.parentID(), t);
+            parentIDMap.add(t.parentID(), t);
         }
         // 循环所有项，并添加 children 属性
         return list.stream().filter(my -> {
@@ -67,7 +67,7 @@ public final class ScxTreeUtils {
             var isOrphan = !ignoreOrphans && (parentID == null || idMap.get(parentID) == null);
             if (myID != null) {
                 // 返回每一项的子级数组
-                var myChildren = parentIDMap.get(myID);
+                var myChildren = parentIDMap.getAll(myID);
                 if (myChildren.size() > 0) {
                     my.children(myChildren);
                 }
