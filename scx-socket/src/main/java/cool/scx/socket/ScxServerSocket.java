@@ -1,15 +1,16 @@
 package cool.scx.socket;
 
 import cool.scx.http.ScxServerWebSocket;
-import cool.scx.scheduling.ScheduleStatus;
 
-import static cool.scx.scheduling.ScxScheduling.setTimeout;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+
 import static java.lang.System.Logger.Level.DEBUG;
 
 public final class ScxServerSocket extends PingPongManager {
 
     private final ScxSocketServer scxSocketServer;
-    private ScheduleStatus removeClosedClientTimeout;
+    private ScheduledFuture<?> removeClosedClientTimeout;
 
     ScxServerSocket(ScxServerWebSocket serverWebSocket, String clientID, ScxSocketServer scxSocketServer) {
         super(serverWebSocket, clientID, scxSocketServer.options);
@@ -35,12 +36,12 @@ public final class ScxServerSocket extends PingPongManager {
 
     private void startRemoveClosedClientTask() {
         cancelRemoveClosedClientTask();
-        this.removeClosedClientTimeout = setTimeout(this::removeClosedClient, scxSocketServer.options.getStatusKeepTime());
+        this.removeClosedClientTimeout = executor.schedule(this::removeClosedClient, scxSocketServer.options.getStatusKeepTime(), TimeUnit.MILLISECONDS);
     }
 
     private void cancelRemoveClosedClientTask() {
         if (this.removeClosedClientTimeout != null) {
-            this.removeClosedClientTimeout.cancel();
+            this.removeClosedClientTimeout.cancel(false);
             this.removeClosedClientTimeout = null;
         }
     }

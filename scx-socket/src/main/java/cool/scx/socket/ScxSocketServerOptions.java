@@ -1,5 +1,7 @@
 package cool.scx.socket;
 
+import java.util.concurrent.ScheduledExecutorService;
+
 public final class ScxSocketServerOptions extends PingPongOptions {
 
     private int statusKeepTime;
@@ -14,6 +16,18 @@ public final class ScxSocketServerOptions extends PingPongOptions {
 
     public ScxSocketServerOptions setStatusKeepTime(int statusKeepTime) {
         this.statusKeepTime = statusKeepTime;
+        return this;
+    }
+
+    @Override
+    public ScxSocketServerOptions executor(ScheduledExecutorService executor) {
+        super.executor(executor);
+        return this;
+    }
+
+    @Override
+    public ScxSocketServerOptions setDuplicateFrameCheckerClearTimeout(int duplicateFrameCheckerClearTimeout) {
+        super.setDuplicateFrameCheckerClearTimeout(duplicateFrameCheckerClearTimeout);
         return this;
     }
 

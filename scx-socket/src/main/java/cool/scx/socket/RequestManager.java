@@ -2,14 +2,17 @@ package cool.scx.socket;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.function.Consumer;
 
 final class RequestManager {
 
     final ConcurrentMap<Long, RequestTask> responseTaskMap;
+    final ScheduledExecutorService executor;
 
-    public RequestManager() {
+    public RequestManager(ScxSocketOptions options) {
         this.responseTaskMap = new ConcurrentHashMap<>();
+        this.executor = options.executor();
     }
 
     public void setResponseCallback(ScxSocketFrame socketFrame, Consumer<ScxSocketResponse> responseCallback, RequestOptions options) {

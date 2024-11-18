@@ -9,9 +9,9 @@ final class ScxSocketStatus {
 
     public ScxSocketStatus(ScxSocketOptions options) {
         this.frameCreator = new FrameCreator();
-        this.frameSender = new FrameSender();
-        this.duplicateFrameChecker = new DuplicateFrameChecker(options.getDuplicateFrameCheckerClearTimeout());
-        this.requestManager = new RequestManager();
+        this.frameSender = new FrameSender(options);
+        this.duplicateFrameChecker = new DuplicateFrameChecker(options);
+        this.requestManager = new RequestManager(options);
     }
 
 }

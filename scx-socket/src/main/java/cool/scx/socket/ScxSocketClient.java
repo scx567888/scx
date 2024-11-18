@@ -2,13 +2,13 @@ package cool.scx.socket;
 
 import cool.scx.http.ScxHttpClient;
 import cool.scx.http.uri.ScxURI;
-import cool.scx.scheduling.ScheduleStatus;
 
-import java.util.concurrent.Executor;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 import static cool.scx.common.util.RandomUtils.randomUUID;
-import static cool.scx.scheduling.ScxScheduling.setTimeout;
 import static cool.scx.socket.Helper.createConnectOptions;
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.getLogger;
@@ -21,11 +21,11 @@ public final class ScxSocketClient {
     final ScxHttpClient webSocketClient;
     final String clientID;
     final ScxSocketClientOptions options;
-    final Executor executor;
+    final ScheduledExecutorService executor;
 
     private ScxClientSocket clientSocket;
     private Consumer<ScxClientSocket> onConnect;
-    private ScheduleStatus reconnectTimeout;
+    private ScheduledFuture<?> reconnectTimeout;
 
     public ScxSocketClient(String uri, ScxHttpClient webSocketClient, String clientID, ScxSocketClientOptions options) {
         this.connectOptions = createConnectOptions(uri, clientID);
@@ -54,7 +54,7 @@ public final class ScxSocketClient {
     private void _callOnConnect(ScxClientSocket clientSocket) {
         if (this.onConnect != null) {
             //为了防止用户回调 将线程卡死 这里独立创建一个线程处理
-            executor.execute(() -> this.onConnect.accept(clientSocket));
+            this.onConnect.accept(clientSocket);
         }
     }
 
@@ -91,15 +91,15 @@ public final class ScxSocketClient {
             return;
         }
         logger.log(DEBUG, "WebSocket 重连中... CLIENT_ID : {0}", clientID, e);
-        this.reconnectTimeout = setTimeout(() -> {  //没连接上会一直重连，设置延迟为5000毫秒避免请求过多
+        this.reconnectTimeout = executor.schedule(() -> {  //没连接上会一直重连，设置延迟为5000毫秒避免请求过多
             this.reconnectTimeout = null;
             this.connect();
-        }, options.getReconnectTimeout());
+        }, options.getReconnectTimeout(), TimeUnit.MILLISECONDS);
     }
 
     void cancelReconnect() {
         if (this.reconnectTimeout != null) {
-            this.reconnectTimeout.cancel();
+            this.reconnectTimeout.cancel(false);
             this.reconnectTimeout = null;
         }
     }

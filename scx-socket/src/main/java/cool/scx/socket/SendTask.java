@@ -1,13 +1,13 @@
 package cool.scx.socket;
 
-import cool.scx.scheduling.ScheduleStatus;
-
 import java.lang.System.Logger;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import static cool.scx.scheduling.ScxScheduling.setTimeout;
 import static cool.scx.socket.Helper.getDelayed;
 import static java.lang.Math.max;
 import static java.lang.System.Logger.Level.DEBUG;
@@ -20,14 +20,16 @@ final class SendTask {
     private final SendOptions options;
     private final AtomicInteger sendTimes;
     private final FrameSender sender;
-    private ScheduleStatus resendTask;
+    private final ScheduledExecutorService executor;
     private final Lock lock = new ReentrantLock();
+    private ScheduledFuture<?> resendTask;
 
     public SendTask(ScxSocketFrame socketFrame, SendOptions options, FrameSender sender) {
         this.socketFrame = socketFrame;
         this.options = options;
         this.sendTimes = new AtomicInteger(0);
         this.sender = sender;
+        this.executor = sender.executor;
     }
 
     public void start(ScxSocket scxSocket) {
@@ -60,7 +62,7 @@ final class SendTask {
                 if (options.getNeedAck()) {
                     //计算重新发送延时
                     var resendDelayed = max(getDelayed(currentSendTime), options.getMaxResendDelayed());
-                    this.resendTask = setTimeout(() -> start(scxSocket), resendDelayed);
+                    this.resendTask = executor.schedule(() -> start(scxSocket), resendDelayed, TimeUnit.MILLISECONDS);
                 } else {
                     this.clear();
                 }
@@ -87,7 +89,7 @@ final class SendTask {
         lock.lock();
         try {
             if (this.resendTask != null) {
-                this.resendTask.cancel();
+                this.resendTask.cancel(false);
                 this.resendTask = null;
             }
         } finally {

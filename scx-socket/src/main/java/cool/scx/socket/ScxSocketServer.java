@@ -33,7 +33,7 @@ public final class ScxSocketServer {
 
     private void _callOnConnect(ScxServerSocket serverSocket) {
         if (this.onConnect != null) {
-            executor.execute(() -> this.onConnect.accept(serverSocket));
+            this.onConnect.accept(serverSocket);
         }
     }
 

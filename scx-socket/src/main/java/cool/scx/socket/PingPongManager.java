@@ -2,9 +2,10 @@ package cool.scx.socket;
 
 
 import cool.scx.http.ScxWebSocket;
-import cool.scx.scheduling.ScheduleStatus;
 
-import static cool.scx.scheduling.ScxScheduling.setTimeout;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+
 import static cool.scx.socket.ScxSocketFrame.Type.PING;
 import static cool.scx.socket.ScxSocketFrame.Type.PONG;
 import static java.lang.System.Logger.Level.DEBUG;
@@ -12,8 +13,8 @@ import static java.lang.System.Logger.Level.DEBUG;
 abstract class PingPongManager extends EasyUseSocket {
 
     private final PingPongOptions pingPongOptions;
-    private ScheduleStatus ping;
-    private ScheduleStatus pingTimeout;
+    private ScheduledFuture<?> ping;
+    private ScheduledFuture<?> pingTimeout;
 
     public PingPongManager(ScxWebSocket webSocket, String clientID, PingPongOptions options, ScxSocketStatus status) {
         super(webSocket, clientID, options, status);
@@ -27,27 +28,27 @@ abstract class PingPongManager extends EasyUseSocket {
 
     private void startPingTimeout() {
         cancelPingTimeout();
-        this.pingTimeout = setTimeout(this::doPingTimeout, pingPongOptions.getPingTimeout() + pingPongOptions.getPingInterval());
+        this.pingTimeout = executor.schedule(this::doPingTimeout, pingPongOptions.getPingTimeout() + pingPongOptions.getPingInterval(), TimeUnit.MILLISECONDS);
     }
 
     private void cancelPingTimeout() {
         if (this.pingTimeout != null) {
-            this.pingTimeout.cancel();
+            this.pingTimeout.cancel(false);
             this.pingTimeout = null;
         }
     }
 
     protected void startPing() {
         cancelPing();
-        this.ping = setTimeout(() -> {
+        this.ping = executor.schedule(() -> {
             sendPing();
             startPing();
-        }, pingPongOptions.getPingInterval());
+        }, pingPongOptions.getPingInterval(), TimeUnit.MILLISECONDS);
     }
 
     private void cancelPing() {
         if (this.ping != null) {
-            this.ping.cancel();
+            this.ping.cancel(false);
             this.ping = null;
         }
     }

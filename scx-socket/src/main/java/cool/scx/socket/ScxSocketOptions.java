@@ -1,8 +1,7 @@
 package cool.scx.socket;
 
-import cool.scx.scheduling.ScxScheduler;
-
-import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 public class ScxSocketOptions {
 
@@ -11,11 +10,11 @@ public class ScxSocketOptions {
      */
     private int duplicateFrameCheckerClearTimeout;
 
-    private Executor executor;
+    private ScheduledExecutorService executor;
 
     public ScxSocketOptions() {
         this.duplicateFrameCheckerClearTimeout = 1000 * 60 * 10;// 默认 10 分钟
-        this.executor = ScxScheduler.getInstance();
+        this.executor = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors() * 2);
     }
 
     public int getDuplicateFrameCheckerClearTimeout() {
@@ -27,11 +26,11 @@ public class ScxSocketOptions {
         return this;
     }
 
-    public Executor executor() {
+    public ScheduledExecutorService executor() {
         return executor;
     }
 
-    public ScxSocketOptions executor(Executor executor) {
+    public ScxSocketOptions executor(ScheduledExecutorService executor) {
         this.executor = executor;
         return this;
     }
