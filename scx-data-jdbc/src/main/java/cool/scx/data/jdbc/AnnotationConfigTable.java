@@ -96,7 +96,7 @@ public class AnnotationConfigTable implements Table {
     private static void checkDuplicateColumnName(List<AnnotationConfigColumn> list, Class<?> clazz) {
         var multiMap = new MultiMap<String, AnnotationConfigColumn>();
         for (var info : list) {
-            multiMap.put(info.name(), info);
+            multiMap.add(info.name(), info);
         }
         var map = multiMap.toMultiValueMap();
         for (var entry : map.entrySet()) {
