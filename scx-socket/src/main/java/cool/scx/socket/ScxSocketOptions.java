@@ -18,7 +18,7 @@ public class ScxSocketOptions {
     public ScxSocketOptions() {
         this.duplicateFrameCheckerClearTimeout = 1000 * 60 * 10;// 默认 10 分钟
         this.scheduledExecutor = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors() * 2);
-        this.executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
+        this.executor = Executors.newWorkStealingPool(Runtime.getRuntime().availableProcessors() * 2);
     }
 
     public int getDuplicateFrameCheckerClearTimeout() {
