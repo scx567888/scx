@@ -92,42 +92,31 @@ public class WebSocketFrameHelper {
 
     }
 
-    public static void writeFrame(WebSocketFrame frame, OutputStream out) throws IOException, IOException {
+    public static void writeServerFrame(WebSocketFrame frame, OutputStream out) throws IOException {
         // 写入头部
-        int b1 = (frame.fin() ? 0x80 : 0) | frame.opCode().code();
-        int b2 = frame.payloadLength();
-        if (frame.masked()) {
-            b2 |= 0x80;
-        }
-        out.write(b1);
-        out.write(b2);
+        int fullOpCode = (frame.fin() ? 0x80 : 0) | frame.opCode().code();
 
-        // 写入扩展长度
-        if (frame.payloadLength() >= 126) {
-            if (frame.payloadLength() <= 0xFFFF) {
-                out.write((frame.payloadLength() >> 8) & 0xFF);
-                out.write(frame.payloadLength() & 0xFF);
-            } else {
-                for (int i = 7; i >= 0; i--) {
-                    out.write((frame.payloadLength() >> (8 * i)) & 0xFF);
-                }
+        out.write(fullOpCode);
+
+        long length = frame.payloadLength();
+        if (length < 126L) {
+            out.write((int) length);
+        } else if (length < 65536L) {
+            out.write(126);
+            out.write((int) (length >>> 8));
+            out.write((int) (length & 255L));
+        } else {
+            out.write(127);
+            for (int i = 56; i >= 0; i -= 8) {
+                out.write((int) (length >>> i) & 255);
             }
-        }
-
-        // 写入掩码键
-        if (frame.masked() && frame.maskingKey() != null) {
-            out.write(frame.maskingKey());
         }
 
         // 写入有效载荷数据
         byte[] payloadData = frame.payloadData();
-        if (frame.masked() && frame.maskingKey() != null) {
-            for (int i = 0; i < payloadData.length; i++) {
-                payloadData[i] = (byte) (payloadData[i] ^ frame.maskingKey()[i % 4]);
-            }
-        }
         out.write(payloadData);
         out.flush();
+
     }
 
 }

@@ -54,7 +54,7 @@ public final class ScxSocketClient {
     private void _callOnConnect(ScxClientSocket clientSocket) {
         if (this.onConnect != null) {
             //为了防止用户回调 将线程卡死 这里独立创建一个线程处理
-            this.onConnect.accept(clientSocket);
+            executor.execute(() -> this.onConnect.accept(clientSocket));
         }
     }
 
