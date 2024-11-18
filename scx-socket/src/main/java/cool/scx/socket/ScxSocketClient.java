@@ -3,6 +3,7 @@ package cool.scx.socket;
 import cool.scx.http.ScxHttpClient;
 import cool.scx.http.uri.ScxURI;
 
+import java.util.concurrent.Executor;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -21,7 +22,8 @@ public final class ScxSocketClient {
     final ScxHttpClient webSocketClient;
     final String clientID;
     final ScxSocketClientOptions options;
-    final ScheduledExecutorService executor;
+    final ScheduledExecutorService scheduledExecutor;
+    final Executor executor;
 
     private ScxClientSocket clientSocket;
     private Consumer<ScxClientSocket> onConnect;
@@ -32,6 +34,7 @@ public final class ScxSocketClient {
         this.webSocketClient = webSocketClient;
         this.clientID = clientID;
         this.options = options;
+        this.scheduledExecutor = options.scheduledExecutor();
         this.executor = options.executor();
     }
 
@@ -91,7 +94,7 @@ public final class ScxSocketClient {
             return;
         }
         logger.log(DEBUG, "WebSocket 重连中... CLIENT_ID : {0}", clientID, e);
-        this.reconnectTimeout = executor.schedule(() -> {  //没连接上会一直重连，设置延迟为5000毫秒避免请求过多
+        this.reconnectTimeout = scheduledExecutor.schedule(() -> {  //没连接上会一直重连，设置延迟为5000毫秒避免请求过多
             this.reconnectTimeout = null;
             this.connect();
         }, options.getReconnectTimeout(), TimeUnit.MILLISECONDS);

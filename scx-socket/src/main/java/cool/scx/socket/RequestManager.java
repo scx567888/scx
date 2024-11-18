@@ -8,11 +8,11 @@ import java.util.function.Consumer;
 final class RequestManager {
 
     final ConcurrentMap<Long, RequestTask> responseTaskMap;
-    final ScheduledExecutorService executor;
+    final ScheduledExecutorService scheduledExecutor;
 
     public RequestManager(ScxSocketOptions options) {
         this.responseTaskMap = new ConcurrentHashMap<>();
-        this.executor = options.executor();
+        this.scheduledExecutor = options.scheduledExecutor();
     }
 
     public void setResponseCallback(ScxSocketFrame socketFrame, Consumer<ScxSocketResponse> responseCallback, RequestOptions options) {

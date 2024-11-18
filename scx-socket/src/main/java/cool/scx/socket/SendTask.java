@@ -20,7 +20,7 @@ final class SendTask {
     private final SendOptions options;
     private final AtomicInteger sendTimes;
     private final FrameSender sender;
-    private final ScheduledExecutorService executor;
+    private final ScheduledExecutorService scheduledExecutor;
     private final Lock lock = new ReentrantLock();
     private ScheduledFuture<?> resendTask;
 
@@ -29,7 +29,7 @@ final class SendTask {
         this.options = options;
         this.sendTimes = new AtomicInteger(0);
         this.sender = sender;
-        this.executor = sender.executor;
+        this.scheduledExecutor = sender.scheduledExecutor;
     }
 
     public void start(ScxSocket scxSocket) {
@@ -62,7 +62,7 @@ final class SendTask {
                 if (options.getNeedAck()) {
                     //计算重新发送延时
                     var resendDelayed = max(getDelayed(currentSendTime), options.getMaxResendDelayed());
-                    this.resendTask = executor.schedule(() -> start(scxSocket), resendDelayed, TimeUnit.MILLISECONDS);
+                    this.resendTask = scheduledExecutor.schedule(() -> start(scxSocket), resendDelayed, TimeUnit.MILLISECONDS);
                 } else {
                     this.clear();
                 }
