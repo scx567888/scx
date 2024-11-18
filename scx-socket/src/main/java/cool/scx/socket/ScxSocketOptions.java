@@ -12,7 +12,7 @@ public class ScxSocketOptions {
     private int duplicateFrameCheckerClearTimeout;
 
     private ScheduledExecutorService scheduledExecutor;
-    
+
     private Executor executor;
 
     public ScxSocketOptions() {
