@@ -12,7 +12,8 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import static cool.scx.http.WebSocketOpCode.*;
-import static cool.scx.http.usagi.WebSocketFrameHelper.*;
+import static cool.scx.http.usagi.WebSocketFrameHelper.readFrameUntilLast;
+import static cool.scx.http.usagi.WebSocketFrameHelper.writeServerFrame;
 
 public class UsagiServerWebSocket implements ScxServerWebSocket {
 
@@ -203,8 +204,8 @@ public class UsagiServerWebSocket implements ScxServerWebSocket {
         lock.lock();
         try {
             var f = new WebSocketFrame(last, opcode, payload);
-            writeServerFrame(f, writer);    
-        }finally {
+            writeServerFrame(f, writer);
+        } finally {
             lock.unlock();
         }
     }
