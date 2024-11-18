@@ -237,7 +237,7 @@
         <helidon.version>4.1.4</helidon.version>
         <jackson.version>2.18.1</jackson.version>
         <spring-framework.version>6.2.0</spring-framework.version>
-        <hikaricp.version>6.1.0</hikaricp.version>
+        <hikaricp.version>6.2.1</hikaricp.version>
         <freemarker.version>2.3.33</freemarker.version>
         <thumbnailator.version>0.4.20</thumbnailator.version>
         <jasypt.version>1.9.3</jasypt.version>
