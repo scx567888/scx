@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 final class DuplicateFrameChecker {
 
     final ConcurrentMap<Key, ClearTask> clearTaskMap;
-    final ScheduledExecutorService executor;
+    final ScheduledExecutorService scheduledExecutor;
 
     /**
      * 重复帧校验 清理延时
@@ -21,7 +21,7 @@ final class DuplicateFrameChecker {
     public DuplicateFrameChecker(ScxSocketOptions options) {
         this.clearTaskMap = new ConcurrentHashMap<>();
         this.clearTimeout = options.getDuplicateFrameCheckerClearTimeout();
-        this.executor = options.executor();
+        this.scheduledExecutor = options.scheduledExecutor();
     }
 
     /**
