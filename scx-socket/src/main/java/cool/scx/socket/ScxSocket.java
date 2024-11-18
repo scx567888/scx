@@ -4,6 +4,7 @@ import cool.scx.http.ScxWebSocket;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.Executor;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -22,6 +23,8 @@ public class ScxSocket {
     final ScxSocketOptions options;
     final ScxSocketStatus status;
 
+    final Executor executor;
+
     private final ConcurrentMap<String, Consumer<ScxSocketRequest>> onEventMap;
     private Consumer<String> onMessage;
     private BiConsumer<Integer, String> onClose;
@@ -32,6 +35,7 @@ public class ScxSocket {
         this.clientID = clientID;
         this.options = options;
         this.status = status;
+        this.executor = options.executor();
         this.onEventMap = new ConcurrentHashMap<>();
         this.onMessage = null;
         this.onClose = null;
@@ -252,21 +256,21 @@ public class ScxSocket {
     private void _callOnMessage(String message) {
         if (this.onMessage != null) {
             //为了防止用户回调 将线程卡死 这里独立创建一个线程处理
-            Thread.ofVirtual().name("scx-socket-call-on-message").start(() -> this.onMessage.accept(message));
+            executor.execute(() -> this.onMessage.accept(message));
         }
     }
 
     private void _callOnClose(Integer code, String reason) {
         if (this.onClose != null) {
             //为了防止用户回调 将线程卡死 这里独立创建一个线程处理
-            Thread.ofVirtual().name("scx-socket-call-on-close").start(() -> this.onClose.accept(code, reason));
+            executor.execute(() -> this.onClose.accept(code, reason));
         }
     }
 
     private void _callOnError(Throwable e) {
         if (this.onError != null) {
             //为了防止用户回调 将线程卡死 这里独立创建一个线程处理
-            Thread.ofVirtual().name("scx-socket-call-on-error").start(() -> this.onError.accept(e));
+            executor.execute(() -> this.onError.accept(e));
         }
     }
 
@@ -274,7 +278,7 @@ public class ScxSocket {
         var onEvent = this.onEventMap.get(socketFrame.event_name);
         if (onEvent != null) {
             //为了防止用户回调 将线程卡死 这里独立创建一个线程处理
-            Thread.ofVirtual().name("scx-socket-call-on-event").start(() -> {
+            executor.execute(() -> {
                 var socketRequest = new ScxSocketRequest(this, socketFrame);
                 onEvent.accept(socketRequest);
             });
