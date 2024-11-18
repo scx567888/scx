@@ -53,12 +53,12 @@ public class MultiMap<K, V> implements MultiMapInterface<K, V> {
     }
 
     @Override
-    public void add(Map<K, V> map) {
+    public void add(Map<? extends K, ? extends V> map) {
         map.forEach(this::add);
     }
 
     @Override
-    public void add(MultiMapInterface<K, V> map) {
+    public void add(MultiMapInterface<? extends K, ? extends V> map) {
         for (var entry : map) {
             add(entry.getKey(), entry.getValue());
         }
@@ -79,19 +79,19 @@ public class MultiMap<K, V> implements MultiMapInterface<K, V> {
     }
 
     @Override
-    public List<V> set(K key, Collection<V> values) {
+    public List<V> set(K key, Collection<? extends V> values) {
         var v = listSupplier.get();
         v.addAll(values);
         return this.map.put(key, v);
     }
 
     @Override
-    public void set(Map<K, V> map) {
+    public void set(Map<? extends K, ? extends V> map) {
         map.forEach(this::set);
     }
 
     @Override
-    public void set(MultiMapInterface<K, V> map) {
+    public void set(MultiMapInterface<? extends K, ? extends V> map) {
         for (var entry : map) {
             set(entry.getKey(), entry.getValue());
         }
@@ -153,7 +153,7 @@ public class MultiMap<K, V> implements MultiMapInterface<K, V> {
     }
 
     @Override
-    public boolean remove(K key, Collection<V> values) {
+    public boolean remove(K key, Collection<? extends V> values) {
         var v = map.get(key);
         if (v == null) {
             return false;
