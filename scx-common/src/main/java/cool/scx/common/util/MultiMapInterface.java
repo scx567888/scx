@@ -79,7 +79,7 @@ public interface MultiMapInterface<K, V> extends Iterable<Map.Entry<K, List<V>>>
     Map<K, V> toSingleValueMap();
 
     Map<K, V> toSingleValueMap(Supplier<Map<K, V>> mapSupplier);
-    
+
     void forEach(BiConsumer<? super K, V> action);
 
 }
