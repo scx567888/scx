@@ -109,15 +109,17 @@ public class ScxSocket {
     public final void onClose(BiConsumer<Integer, String> onClose) {
         this.onClose = onClose;
         //为了解决 绑定事件为完成是 连接就被关闭 从而无法触发 onClose 事件
-        //此处绑定的意义在于如果当前 webSocket 已经被关闭则永远无法触发 onClose 事件
-        //但是我们在这里调用 vertx 的绑定会触发异常 可以在外层进行 异常捕获然后进行对应的修改
-        this.webSocket.onClose(this::doClose);
+        if (webSocket.isClosed()) {
+            throw new IllegalStateException("WebSocket is closed");
+        }
     }
 
     public final void onError(Consumer<Throwable> onError) {
         this.onError = onError;
-        //同 onClose
-        this.webSocket.onError(this::doError);
+        //为了解决 绑定事件为完成是 连接就被关闭 从而无法触发 onError 事件
+        if (webSocket.isClosed()) {
+            throw new IllegalStateException("WebSocket is closed");
+        }
     }
 
     public final void onEvent(String eventName, Consumer<ScxSocketRequest> onEvent) {
