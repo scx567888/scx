@@ -52,7 +52,7 @@ public final class FromUploadParameterHandler implements ParameterHandler {
      */
     private static MultiPartPart[] findFileUploadListByName(RequestInfo routingContext, String name) {
         var fileUploads = routingContext.uploadFiles();
-        return fileUploads.get(name).toArray(MultiPartPart[]::new);
+        return fileUploads.getAll(name).toArray(MultiPartPart[]::new);
     }
 
     @Override

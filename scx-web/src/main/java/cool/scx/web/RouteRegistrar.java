@@ -150,10 +150,10 @@ public final class RouteRegistrar {
             var p = (PathMatcherImpl) handler.pathMatcher();
             var key = p.pattern() != null ? p.pattern().toString() : p.path();
             if (handler.methods().isEmpty()) {
-                m.put(new NormalPathInfo("*", key), handler);
+                m.add(new NormalPathInfo("*", key), handler);
             } else {
                 for (var httpMethod : handler.methods()) {
-                    m.put(new NormalPathInfo(httpMethod.name(), key), handler);
+                    m.add(new NormalPathInfo(httpMethod.name(), key), handler);
                 }
             }
         }
