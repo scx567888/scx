@@ -47,7 +47,7 @@ public class MultiMap<K, V> implements MultiMapInterface<K, V> {
     }
 
     @Override
-    public boolean add(K key, Collection<V> values) {
+    public boolean add(K key, Collection<? extends V> values) {
         var v = map.computeIfAbsent(key, k -> listSupplier.get());
         return v.addAll(values);
     }
