@@ -10,6 +10,8 @@ import io.helidon.websocket.WsUpgradeException;
 
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -27,6 +29,13 @@ class HelidonWebSocket implements ScxWebSocket, WsListener {
     private Consumer<byte[]> pongHandler;
     private BiConsumer<Integer, String> closeHandler;
     private Consumer<Throwable> errorHandler;
+
+    //必须加 因为 helidon 底层没有锁 如果在多个线程 send 会导致数据乱
+    private final Lock lock;
+
+    public HelidonWebSocket() {
+        lock = new ReentrantLock();
+    }
 
     @Override
     public HelidonWebSocket onTextMessage(Consumer<String> textMessageHandler) {
@@ -69,7 +78,12 @@ class HelidonWebSocket implements ScxWebSocket, WsListener {
         if (wsSession == null) {
             throw new IllegalStateException("wsSession is null");
         }
-        wsSession.send(textMessage, var2);
+        lock.lock();
+        try {
+            wsSession.send(textMessage, var2);
+        } finally {
+            lock.unlock();
+        }
         return this;
     }
 
@@ -78,7 +92,12 @@ class HelidonWebSocket implements ScxWebSocket, WsListener {
         if (wsSession == null) {
             throw new IllegalStateException("wsSession is null");
         }
-        wsSession.send(BufferData.create(binaryMessage), var2);
+        lock.lock();
+        try {
+            wsSession.send(BufferData.create(binaryMessage), var2);
+        } finally {
+            lock.unlock();
+        }
         return this;
     }
 
@@ -88,7 +107,12 @@ class HelidonWebSocket implements ScxWebSocket, WsListener {
         if (wsSession == null) {
             throw new IllegalStateException("wsSession is null");
         }
-        wsSession.ping(BufferData.create(data));
+        lock.lock();
+        try {
+            wsSession.ping(BufferData.create(data));
+        } finally {
+            lock.unlock();
+        }
         return this;
     }
 
@@ -97,7 +121,12 @@ class HelidonWebSocket implements ScxWebSocket, WsListener {
         if (wsSession == null) {
             throw new IllegalStateException("wsSession is null");
         }
-        wsSession.pong(BufferData.create(data));
+        lock.lock();
+        try {
+            wsSession.pong(BufferData.create(data));
+        } finally {
+            lock.unlock();
+        }
         return this;
     }
 
@@ -106,7 +135,12 @@ class HelidonWebSocket implements ScxWebSocket, WsListener {
         if (wsSession == null) {
             throw new IllegalStateException("wsSession is null");
         }
-        wsSession.close(var1, var2);
+        lock.lock();
+        try {
+            wsSession.close(var1, var2);
+        } finally {
+            lock.unlock();
+        }
         return this;
     }
 
@@ -115,7 +149,12 @@ class HelidonWebSocket implements ScxWebSocket, WsListener {
         if (wsSession == null) {
             throw new IllegalStateException("wsSession is null");
         }
-        wsSession.terminate();
+        lock.lock();
+        try {
+            wsSession.terminate();
+        } finally {
+            lock.unlock();
+        }
         return this;
     }
 
