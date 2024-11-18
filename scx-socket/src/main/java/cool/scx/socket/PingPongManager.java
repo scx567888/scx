@@ -1,10 +1,10 @@
 package cool.scx.socket;
 
 
-import cool.scx.common.util.$.Timeout;
 import cool.scx.http.ScxWebSocket;
+import cool.scx.scheduling.ScheduleStatus;
 
-import static cool.scx.common.util.$.setTimeout;
+import static cool.scx.scheduling.ScxScheduling.setTimeout;
 import static cool.scx.socket.ScxSocketFrame.Type.PING;
 import static cool.scx.socket.ScxSocketFrame.Type.PONG;
 import static java.lang.System.Logger.Level.DEBUG;
@@ -12,8 +12,8 @@ import static java.lang.System.Logger.Level.DEBUG;
 abstract class PingPongManager extends EasyUseSocket {
 
     private final PingPongOptions pingPongOptions;
-    private Timeout ping;
-    private Timeout pingTimeout;
+    private ScheduleStatus ping;
+    private ScheduleStatus pingTimeout;
 
     public PingPongManager(ScxWebSocket webSocket, String clientID, PingPongOptions options, ScxSocketStatus status) {
         super(webSocket, clientID, options, status);

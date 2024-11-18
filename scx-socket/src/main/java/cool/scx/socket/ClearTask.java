@@ -1,17 +1,18 @@
 package cool.scx.socket;
 
-import cool.scx.common.util.$.Timeout;
+import cool.scx.scheduling.ScheduleStatus;
+
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import static cool.scx.common.util.$.setTimeout;
+import static cool.scx.scheduling.ScxScheduling.setTimeout;
 import static cool.scx.socket.DuplicateFrameChecker.Key;
 
 final class ClearTask {
 
     private final DuplicateFrameChecker checker;
     private final Key key;
-    private Timeout clearTimeout;
+    private ScheduleStatus clearTimeout;
     private final Lock lock = new ReentrantLock();
 
     public ClearTask(Key key, DuplicateFrameChecker checker) {
