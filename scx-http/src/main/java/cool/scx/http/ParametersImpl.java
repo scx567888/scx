@@ -14,14 +14,14 @@ public class ParametersImpl<K, V> implements ParametersWritable<K, V> {
     @SuppressWarnings("unchecked")
     @Override
     public ParametersImpl<K, V> set(K name, V... value) {
-        map.setAll(name, List.of(value));
+        map.set(name, value);
         return this;
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public ParametersImpl<K, V> add(K name, V... value) {
-        map.putAll(name, List.of(value));
+        map.add(name, value);
         return this;
     }
 
@@ -44,22 +44,22 @@ public class ParametersImpl<K, V> implements ParametersWritable<K, V> {
 
     @Override
     public Set<K> names() {
-        return map.keySet();
+        return map.keys();
     }
 
     @Override
     public V get(K name) {
-        return map.getFirst(name);
-    }
-
-    @Override
-    public List<V> getAll(K name) {
         return map.get(name);
     }
 
     @Override
+    public List<V> getAll(K name) {
+        return map.getAll(name);
+    }
+
+    @Override
     public Iterator<Map.Entry<K, List<V>>> iterator() {
-        return map.toMultiValueMap().entrySet().iterator();
+        return map.iterator();
     }
 
     @Override
