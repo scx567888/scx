@@ -1,15 +1,15 @@
 package cool.scx.socket;
 
-import cool.scx.common.util.$.Timeout;
 import cool.scx.http.ScxServerWebSocket;
+import cool.scx.scheduling.ScheduleStatus;
 
-import static cool.scx.common.util.$.setTimeout;
+import static cool.scx.scheduling.ScxScheduling.setTimeout;
 import static java.lang.System.Logger.Level.DEBUG;
 
 public final class ScxServerSocket extends PingPongManager {
 
     private final ScxSocketServer scxSocketServer;
-    private Timeout removeClosedClientTimeout;
+    private ScheduleStatus removeClosedClientTimeout;
 
     ScxServerSocket(ScxServerWebSocket serverWebSocket, String clientID, ScxSocketServer scxSocketServer) {
         super(serverWebSocket, clientID, scxSocketServer.options);

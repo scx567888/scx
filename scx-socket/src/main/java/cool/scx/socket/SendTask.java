@@ -1,13 +1,13 @@
 package cool.scx.socket;
 
-import cool.scx.common.util.$.Timeout;
+import cool.scx.scheduling.ScheduleStatus;
 
 import java.lang.System.Logger;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import static cool.scx.common.util.$.setTimeout;
+import static cool.scx.scheduling.ScxScheduling.setTimeout;
 import static cool.scx.socket.Helper.getDelayed;
 import static java.lang.Math.max;
 import static java.lang.System.Logger.Level.DEBUG;
@@ -20,7 +20,7 @@ final class SendTask {
     private final SendOptions options;
     private final AtomicInteger sendTimes;
     private final FrameSender sender;
-    private Timeout resendTask;
+    private ScheduleStatus resendTask;
     private final Lock lock = new ReentrantLock();
 
     public SendTask(ScxSocketFrame socketFrame, SendOptions options, FrameSender sender) {
