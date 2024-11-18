@@ -5,6 +5,7 @@ import cool.scx.http.ScxServerWebSocket;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 
 import static cool.scx.socket.Helper.getClientID;
@@ -13,6 +14,7 @@ public final class ScxSocketServer {
 
     final ConcurrentMap<String, ScxServerSocket> serverSockets;
     final ScxSocketServerOptions options;
+    final Executor executor;
     private Consumer<ScxServerSocket> onConnect;
 
     public ScxSocketServer() {
@@ -22,6 +24,7 @@ public final class ScxSocketServer {
     public ScxSocketServer(ScxSocketServerOptions options) {
         this.options = options;
         this.serverSockets = new ConcurrentHashMap<>();
+        this.executor = options.executor();
     }
 
     public void onConnect(Consumer<ScxServerSocket> onConnect) {
@@ -30,8 +33,7 @@ public final class ScxSocketServer {
 
     private void _callOnConnect(ScxServerSocket serverSocket) {
         if (this.onConnect != null) {
-            //为了防止用户回调 将线程卡死 这里独立创建一个线程处理
-            Thread.ofVirtual().name("scx-socket-server-call-on-connect").start(() -> this.onConnect.accept(serverSocket));
+            executor.execute(() -> this.onConnect.accept(serverSocket));
         }
     }
 

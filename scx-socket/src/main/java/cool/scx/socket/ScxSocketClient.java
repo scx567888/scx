@@ -4,6 +4,7 @@ import cool.scx.http.ScxHttpClient;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.scheduling.ScheduleStatus;
 
+import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 
 import static cool.scx.common.util.RandomUtils.randomUUID;
@@ -20,10 +21,10 @@ public final class ScxSocketClient {
     final ScxHttpClient webSocketClient;
     final String clientID;
     final ScxSocketClientOptions options;
+    final Executor executor;
 
     private ScxClientSocket clientSocket;
     private Consumer<ScxClientSocket> onConnect;
-    //    private SingleListenerFuture<WebSocket> connectFuture;
     private ScheduleStatus reconnectTimeout;
 
     public ScxSocketClient(String uri, ScxHttpClient webSocketClient, String clientID, ScxSocketClientOptions options) {
@@ -31,6 +32,7 @@ public final class ScxSocketClient {
         this.webSocketClient = webSocketClient;
         this.clientID = clientID;
         this.options = options;
+        this.executor = options.executor();
     }
 
     public ScxSocketClient(String uri, ScxHttpClient webSocketClient, ScxSocketClientOptions options) {
@@ -52,7 +54,7 @@ public final class ScxSocketClient {
     private void _callOnConnect(ScxClientSocket clientSocket) {
         if (this.onConnect != null) {
             //为了防止用户回调 将线程卡死 这里独立创建一个线程处理
-            Thread.ofVirtual().name("scx-socket-client-call-on-connect").start(() -> this.onConnect.accept(clientSocket));
+            executor.execute(() -> this.onConnect.accept(clientSocket));
         }
     }
 
