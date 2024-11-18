@@ -1,6 +1,7 @@
 package cool.scx.common.util;
 
 import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 /**
@@ -226,6 +227,17 @@ public class MultiMap<K, V> implements MultiMapInterface<K, V> {
             }
         }
         return tempMap;
+    }
+
+    @Override
+    public void forEach(BiConsumer<? super K, V> action) {
+        for (var entry : map.entrySet()) {
+            var key = entry.getKey();
+            var values = entry.getValue();
+            for (var value : values) {
+                action.accept(key, value);
+            }
+        }
     }
 
     @Override

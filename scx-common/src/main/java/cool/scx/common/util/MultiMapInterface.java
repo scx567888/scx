@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 /**
@@ -78,5 +79,7 @@ public interface MultiMapInterface<K, V> extends Iterable<Map.Entry<K, List<V>>>
     Map<K, V> toSingleValueMap();
 
     Map<K, V> toSingleValueMap(Supplier<Map<K, V>> mapSupplier);
+    
+    void forEach(BiConsumer<? super K, V> action);
 
 }
