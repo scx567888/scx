@@ -28,4 +28,8 @@ final class ScxJDKLoggerHelper {
         }
     }
 
+    public static Throwable getThrowableCandidate(Object[] argArray) {
+        return argArray != null && argArray.length != 0 && argArray[argArray.length - 1] instanceof Throwable e ? e : null;
+    }
+
 }

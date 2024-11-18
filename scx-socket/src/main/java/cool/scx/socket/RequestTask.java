@@ -1,10 +1,10 @@
 package cool.scx.socket;
 
-import cool.scx.common.util.$.Timeout;
+import cool.scx.scheduling.ScheduleStatus;
 
 import java.util.function.Consumer;
 
-import static cool.scx.common.util.$.setTimeout;
+import static cool.scx.scheduling.ScxScheduling.setTimeout;
 
 final class RequestTask {
 
@@ -12,7 +12,7 @@ final class RequestTask {
     private final RequestManager requestManager;
     private final RequestOptions options;
     private final long seq_id;
-    private Timeout failTimeout;
+    private ScheduleStatus failTimeout;
 
     public RequestTask(Consumer<ScxSocketResponse> responseCallback, RequestManager requestManager, RequestOptions options, long seqId) {
         this.responseCallback = responseCallback;

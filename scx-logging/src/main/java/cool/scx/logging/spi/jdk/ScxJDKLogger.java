@@ -5,8 +5,7 @@ import cool.scx.logging.ScxLogger;
 import java.lang.System.Logger;
 import java.util.ResourceBundle;
 
-import static cool.scx.logging.spi.jdk.ScxJDKLoggerHelper.formatMessage;
-import static cool.scx.logging.spi.jdk.ScxJDKLoggerHelper.getResourceString;
+import static cool.scx.logging.spi.jdk.ScxJDKLoggerHelper.*;
 
 public final class ScxJDKLogger implements Logger {
 
@@ -33,7 +32,7 @@ public final class ScxJDKLogger implements Logger {
 
     @Override
     public void log(Level level, ResourceBundle bundle, String format, Object... params) {
-        scxLogger.log(level, formatMessage(getResourceString(bundle, format), params), null);
+        scxLogger.log(level, formatMessage(getResourceString(bundle, format), params), getThrowableCandidate(params));
     }
 
 }

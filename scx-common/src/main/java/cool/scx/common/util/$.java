@@ -21,38 +21,6 @@ public final class $ {
         }
     }
 
-    /**
-     * 延时执行代码 , 这种简单的方式 相比 ScheduledExecutorService , 一般能实现更低的内存占用
-     * todo 使用  ScheduledExecutorService 替换
-     *
-     * @param task  待运行的内容
-     * @param delay 延时 (毫秒)
-     * @return Timeout
-     */
-    public static Timeout setTimeout(Runnable task, long delay) {
-        return new Timeout(Thread.ofVirtual().start(() -> {
-            try {
-                Thread.sleep(delay);
-                task.run();
-            } catch (InterruptedException ignored) {
-
-            }
-        }));
-    }
-
-    public static Timeout setInterval(Runnable task, long delay) {
-        return new Timeout(Thread.ofVirtual().start(() -> {
-            while (true) {
-                try {
-                    Thread.sleep(delay);
-                    Thread.ofVirtual().start(task);
-                } catch (InterruptedException ignored) {
-                    break;
-                }
-            }
-        }));
-    }
-
     public static CompletableFuture<Void> async(ScxRunnable<?> runnable) {
         var promise = new CompletableFuture<Void>();
         Thread.ofVirtual().start(() -> {
@@ -113,19 +81,6 @@ public final class $ {
             multiMap.put(key, value);
         }
         return multiMap;
-    }
-
-    public static class Timeout {
-
-        private final Thread thread;
-
-        public Timeout(Thread thread) {
-            this.thread = thread;
-        }
-
-        public void cancel() {
-            thread.interrupt();
-        }
     }
 
 }

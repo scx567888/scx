@@ -1,5 +1,8 @@
 package cool.scx.scheduling;
 
+import java.time.Duration;
+import java.time.Instant;
+
 import static cool.scx.scheduling.MultipleTimeTask.Type.FIXED_DELAY;
 import static cool.scx.scheduling.MultipleTimeTask.Type.FIXED_RATE;
 import static cool.scx.scheduling.ScxScheduler.getInstance;
@@ -23,6 +26,14 @@ public interface ScxScheduling {
 
     static SingleTimeTask once() {
         return new SingleTimeTask().executor(getInstance());
+    }
+
+    static ScheduleStatus setTimeout(Runnable task, long delay) {
+        return once().startDelay(Duration.ofMillis(delay)).start((c) -> task.run());
+    }
+
+    static ScheduleStatus setInterval(Runnable task, long delay) {
+        return fixedRate().delay(Duration.ofMillis(delay)).start((c) -> task.run());
     }
 
 }

@@ -1,13 +1,13 @@
 package cool.scx.socket;
 
-import cool.scx.common.util.$.Timeout;
 import cool.scx.http.ScxHttpClient;
 import cool.scx.http.uri.ScxURI;
+import cool.scx.scheduling.ScheduleStatus;
 
 import java.util.function.Consumer;
 
-import static cool.scx.common.util.$.setTimeout;
 import static cool.scx.common.util.RandomUtils.randomUUID;
+import static cool.scx.scheduling.ScxScheduling.setTimeout;
 import static cool.scx.socket.Helper.createConnectOptions;
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.getLogger;
@@ -24,7 +24,7 @@ public final class ScxSocketClient {
     private ScxClientSocket clientSocket;
     private Consumer<ScxClientSocket> onConnect;
     //    private SingleListenerFuture<WebSocket> connectFuture;
-    private Timeout reconnectTimeout;
+    private ScheduleStatus reconnectTimeout;
 
     public ScxSocketClient(String uri, ScxHttpClient webSocketClient, String clientID, ScxSocketClientOptions options) {
         this.connectOptions = createConnectOptions(uri, clientID);
@@ -88,7 +88,7 @@ public final class ScxSocketClient {
         if (this.reconnectTimeout != null) {
             return;
         }
-        logger.log(DEBUG, "WebSocket 重连中... CLIENT_ID : {0}", clientID);
+        logger.log(DEBUG, "WebSocket 重连中... CLIENT_ID : {0}", clientID, e);
         this.reconnectTimeout = setTimeout(() -> {  //没连接上会一直重连，设置延迟为5000毫秒避免请求过多
             this.reconnectTimeout = null;
             this.connect();
