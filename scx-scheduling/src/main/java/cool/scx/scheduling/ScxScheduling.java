@@ -33,7 +33,7 @@ public interface ScxScheduling {
     }
 
     static ScheduleStatus setInterval(Runnable task, long delay) {
-        return fixedRate().startTime(Instant::now).delay(Duration.ofMillis(delay)).start((c) -> task.run());
+        return fixedRate().delay(Duration.ofMillis(delay)).start((c) -> task.run());
     }
 
 }
