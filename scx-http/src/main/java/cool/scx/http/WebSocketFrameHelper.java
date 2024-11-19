@@ -23,7 +23,7 @@ public class WebSocketFrameHelper {
         var masked = (b2 & 0b1000_0000) != 0;
         long payloadLength = b2 & 0b0111_1111;
 
-        //读取 拓展长度
+        // 读取扩展长度
         if (payloadLength == 126) {
             byte[] extendedPayloadLength = reader.read(2);
             payloadLength = (extendedPayloadLength[0] & 0xFFL) << 8 |
@@ -46,10 +46,10 @@ public class WebSocketFrameHelper {
             maskingKey = reader.read(4);
         }
 
-        //我们假定长度都是在 int 范围内的 (理论上不会有 2GB 的文件会通过 websocket 发送)
+        // 我们假定长度都是在 int 范围内的 (理论上不会有 2GB 的文件会通过 websocket 发送)
         var payloadData = reader.read((int) payloadLength);
 
-        //掩码计算
+        // 掩码计算
         if (masked) {
             for (int i = 0; i < payloadLength; i++) {
                 payloadData[i] = (byte) (payloadData[i] ^ maskingKey[i % 4]);
