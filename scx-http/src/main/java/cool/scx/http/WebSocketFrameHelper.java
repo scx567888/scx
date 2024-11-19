@@ -78,15 +78,15 @@ public class WebSocketFrameHelper {
         var masked = frame.masked() ? 0b1000_0000 : 0;
 
         if (length < 126L) {
-            out.write((int) length | masked);
+            out.write(length | masked);
         } else if (length < 65536L) {
             out.write(126 | masked);
-            out.write((int) (length >>> 8) & 0b1111_1111);
-            out.write((int) length & 0b1111_1111);
+            out.write((length >>> 8) & 0b1111_1111);
+            out.write(length & 0b1111_1111);
         } else {
             out.write(127 | masked);
             for (int i = 56; i >= 0; i -= 8) {
-                out.write((int) (length >>> i) & 0b1111_1111);
+                out.write((length >>> i) & 0b1111_1111);
             }
         }
 

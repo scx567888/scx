@@ -214,6 +214,7 @@ public final class Scx {
             }
             o.print();
         } catch (Exception cause) {
+            //todo 此处判断有误
             if (cause instanceof BindException) {
                 //获取新的端口号然后 重新启动服务器
                 if (isUseNewPort(port)) {
