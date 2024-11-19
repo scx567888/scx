@@ -31,7 +31,7 @@ public class HelidonHttpServer implements ScxHttpServer {
                 .maxPayloadSize(options.maxPayloadSize())
                 .port(options.port());
         if (options.tls() != null) {
-            builder.tls((Tls) options.tls());
+            builder.tls(options.tls());
         }
         this.webServer = builder.build();
         this.requestHandler = null;

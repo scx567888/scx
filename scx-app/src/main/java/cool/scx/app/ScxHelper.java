@@ -406,6 +406,7 @@ public final class ScxHelper {
 
     public static Tls getTls(Path path, String password) {
         var builder = Tls.builder();
+        builder.protocol("TLSv1.2");
         try {
             var jks = KeyStore.getInstance(path.toFile(), password.toCharArray());
             var aliases = jks.aliases();

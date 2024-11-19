@@ -17,12 +17,7 @@ public class HelidonHttpClient implements ScxHttpClient {
         this.options = options;
         var builder = WebClient.builder();
         if (options.proxy() != null) {
-            var p = options.proxy();
-            var proxy = Proxy.builder().host(p.host()).port(p.port()).username(p.username());
-            if (p.password() != null) {
-                proxy.password(p.password());
-            }
-            builder.proxy(proxy.build());
+            builder.proxy(options().proxy());
         }
         this.webClient = builder.build();
     }
