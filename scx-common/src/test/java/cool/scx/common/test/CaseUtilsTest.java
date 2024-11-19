@@ -14,7 +14,7 @@ public class CaseUtilsTest {
     public static void test1() {
         var s = "userNameID";
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 10; i = i + 1) {
             s = CaseUtils.toCamel(s);
             Assert.assertEquals(s, "userNameId");
 

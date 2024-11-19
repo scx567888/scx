@@ -31,7 +31,7 @@ public class ArrayUtilsTest {
     @Test
     public static void test2() {
         var s = new ArrayList<>();
-        for (int i = 0; i < 1001; i++) {
+        for (int i = 0; i < 1001; i = i + 1) {
             s.add(i);
         }
         var lists1 = splitListN(s, 9);
@@ -43,7 +43,7 @@ public class ArrayUtilsTest {
     @Test
     public static void test3() {
         var s = new int[1001];
-        for (int i = 0; i < 1001; i++) {
+        for (int i = 0; i < 1001; i = i + 1) {
             s[i] = i;
         }
         var lists1 = splitArrayN(s, 9);

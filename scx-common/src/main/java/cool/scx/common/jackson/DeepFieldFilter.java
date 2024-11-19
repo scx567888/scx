@@ -23,7 +23,7 @@ public class DeepFieldFilter extends SimpleBeanPropertyFilter {
         if (e1.length != e2.length) {
             return false;
         }
-        for (int i = 0; i < e1.length; i++) {
+        for (int i = 0; i < e1.length; i = i + 1) {
             var b = match(e1[i], e2[i]);
             if (!b) {
                 return false;

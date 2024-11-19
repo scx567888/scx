@@ -55,7 +55,7 @@ public class WebSocketFrameHelper {
 
         // 掩码计算
         if (masked) {
-            for (int i = 0; i < payloadLength; i++) {
+            for (int i = 0; i < payloadLength; i = i + 1) {
                 payloadData[i] = (byte) (payloadData[i] ^ maskingKey[i % 4]);
             }
         }
@@ -100,7 +100,7 @@ public class WebSocketFrameHelper {
         byte[] payloadData = frame.payloadData();
         byte[] maskingKey = frame.maskingKey();
         if (frame.masked()) {
-            for (int i = 0; i < payloadData.length; i++) {
+            for (int i = 0; i < payloadData.length; i = i + 1) {
                 payloadData[i] = (byte) (payloadData[i] ^ maskingKey[i % 4]);
             }
         }
