@@ -21,7 +21,7 @@ public class ClassInfoTest {
 
         var l = System.nanoTime();
         ClassInfo classInfo;
-        for (int i = 0; i < 9999; i++) {
+        for (int i = 0; i < 9999; i = i + 1) {
 
             classInfo = ReflectFactory.getClassInfo(a.class);
             classInfo = ReflectFactory.getClassInfo(c.class);

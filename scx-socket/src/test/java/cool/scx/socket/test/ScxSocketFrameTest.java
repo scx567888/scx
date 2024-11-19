@@ -19,14 +19,14 @@ public class ScxSocketFrameTest {
         s.now = System.currentTimeMillis();
         s.payload = "消息 Message😀😀😀 😁😁 😂😂😂!!!";
 
-        for (int i = 0; i < 9999; i++) {
+        for (int i = 0; i < 9999; i = i + 1) {
             var json = s.toJson();
             var socketFrame1 = ScxSocketFrame.fromJson(json);
         }
 
         //粗略测试一下性能
         var l = System.nanoTime();
-        for (int i = 0; i < 999999; i++) {
+        for (int i = 0; i < 999999; i = i + 1) {
             var json = s.toJson();
             var socketFrame = ScxSocketFrame.fromJson(json);
         }
