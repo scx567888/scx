@@ -16,10 +16,12 @@ import cool.scx.http.routing.WebSocketRouter;
 import cool.scx.jdbc.JDBCContext;
 import cool.scx.jdbc.meta_data.SchemaHelper;
 import cool.scx.jdbc.sql.SQLRunner;
+import cool.scx.net.tls.TLS;
 import cool.scx.web.RouteRegistrar;
 import cool.scx.web.ScxWeb;
 import cool.scx.web.ScxWebOptions;
 import cool.scx.web.WebSocketRouteRegistrar;
+import io.helidon.common.tls.Tls;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 import javax.sql.DataSource;
@@ -176,8 +178,9 @@ public final class Scx {
                 .maxPayloadSize(DEFAULT_BODY_LIMIT)
                 .port(this.scxOptions.port());
         if (this.scxOptions.isHttpsEnabled()) {
-            var tls = getTls(this.scxOptions.sslPath(), this.scxOptions.sslPassword());
-            httpServerOptions.tls(tls);
+            //此处因为 helidon 的 tls 有 bug, 直接使用 scx-net 的 tls 代替
+            var tls = new TLS(this.scxOptions.sslPath(), this.scxOptions.sslPassword());
+            httpServerOptions.tls(Tls.builder().sslContext(tls.sslContext()).build());
         }
         this.vertxHttpServer = new HelidonHttpServer(httpServerOptions);
         this.vertxHttpServer.requestHandler(this.scxHttpRouter).webSocketHandler(this.webSocketRouter);

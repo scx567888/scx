@@ -402,13 +402,6 @@ public final class ScxHelper {
         };
     }
 
-    public static Tls getTls(Path path, String password) {
-        TLS tls = new TLS(path, password);
-        var builder = Tls.builder();
-        builder.sslContext(tls.sslContext());
-        return builder.build();
-    }
-
     private enum LoggingType {
 
         /**

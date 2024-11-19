@@ -3,7 +3,6 @@ package cool.scx.http.helidon;
 import cool.scx.http.ScxHttpServer;
 import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.ScxServerWebSocket;
-import io.helidon.common.tls.Tls;
 import io.helidon.webserver.WebServer;
 
 import java.util.function.Consumer;
