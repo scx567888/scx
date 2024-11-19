@@ -1,10 +1,14 @@
 package cool.scx.http;
 
+import java.util.regex.Pattern;
+
 public class ScxHttpHeadersHelper {
+
+    public static final Pattern CRLF_PATTERN = Pattern.compile("\r\n");
 
     public static ScxHttpHeadersWritable parseHeaders(String headersStr) {
         var headers = new ScxHttpHeadersImpl();
-        var lines = headersStr.split("\r\n");
+        var lines = CRLF_PATTERN.split(headersStr);
 
         for (var line : lines) {
             int i = line.indexOf(':');
