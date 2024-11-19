@@ -38,8 +38,13 @@ public class ScxSocketOptions {
         return scheduledExecutor;
     }
 
-    public ScxSocketOptions executor(ScheduledExecutorService executor) {
+    public ScxSocketOptions executor(Executor executor) {
         this.executor = executor;
+        return this;
+    }
+
+    public ScxSocketOptions scheduledExecutor(ScheduledExecutorService scheduledExecutor) {
+        this.scheduledExecutor = scheduledExecutor;
         return this;
     }
 
