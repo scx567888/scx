@@ -63,11 +63,40 @@ public interface DataReader {
     /**
      * 查找 指定字节 第一次出现的 index (指针不会移动)
      *
+     * @param b   指定字节
+     * @param max 最大长度
+     * @return index 或者 -1 (未找到)
+     * @throws NoMatchFoundException 没有匹配时抛出
+     */
+    int indexOf(byte b, int max) throws NoMatchFoundException;
+
+    /**
+     * 查找 指定字节数组 第一次出现的 index (指针不会移动)
+     *
+     * @param b   指定字节数组
+     * @param max 最大长度
+     * @return index 或者 -1 (未找到)
+     * @throws NoMatchFoundException 没有匹配时抛出
+     */
+    int indexOf(byte[] b, int max) throws NoMatchFoundException;
+
+    /**
+     * 向后移动指定字节
+     *
+     * @param length 移动长度
+     */
+    void skip(int length);
+
+    /**
+     * 查找 指定字节 第一次出现的 index (指针不会移动)
+     *
      * @param b 指定字节
      * @return index 或者 -1 (未找到)
      * @throws NoMatchFoundException 没有匹配时抛出
      */
-    int indexOf(byte b) throws NoMatchFoundException;
+    default int indexOf(byte b) throws NoMatchFoundException {
+        return indexOf(b, Integer.MAX_VALUE);
+    }
 
     /**
      * 查找 指定字节数组 第一次出现的 index (指针不会移动)
@@ -76,14 +105,61 @@ public interface DataReader {
      * @return index 或者 -1 (未找到)
      * @throws NoMatchFoundException 没有匹配时抛出
      */
-    int indexOf(byte[] b) throws NoMatchFoundException;
+    default int indexOf(byte[] b) throws NoMatchFoundException {
+        return indexOf(b, Integer.MAX_VALUE);
+    }
 
     /**
-     * 向后移动指定字节
+     * 读取 直到 找到匹配的字节 (指针会移动)
      *
-     * @param length 移动长度
+     * @param b 指定字节
+     * @return bytes
+     * @throws NoMatchFoundException 没有匹配时抛出
      */
-    void skip(int length);
+    default byte[] readUntil(byte b, int max) throws NoMatchFoundException {
+        var index = indexOf(b, max);
+        var data = read(index);
+        skip(1);
+        return data;
+    }
+
+    /**
+     * 读取 直到 找到匹配的字节 (指针会移动)
+     *
+     * @param b 指定字节
+     * @return bytes
+     * @throws NoMatchFoundException 没有匹配时抛出
+     */
+    default byte[] readUntil(byte[] b, int max) throws NoMatchFoundException {
+        var index = indexOf(b, max);
+        var data = read(index);
+        skip(b.length);
+        return data;
+    }
+
+    /**
+     * 读取 直到 找到匹配的字节 (指针不会移动)
+     *
+     * @param b 指定字节
+     * @return bytes
+     * @throws NoMatchFoundException 没有匹配时抛出
+     */
+    default byte[] peekUntil(byte b, int max) throws NoMatchFoundException {
+        var index = indexOf(b, max);
+        return peek(index);
+    }
+
+    /**
+     * 读取 直到 找到匹配的字节 (指针不会移动)
+     *
+     * @param b 指定字节
+     * @return bytes
+     * @throws NoMatchFoundException 没有匹配时抛出
+     */
+    default byte[] peekUntil(byte[] b, int max) throws NoMatchFoundException {
+        var index = indexOf(b, max);
+        return peek(index);
+    }
 
     /**
      * 读取 直到 找到匹配的字节 (指针会移动)
