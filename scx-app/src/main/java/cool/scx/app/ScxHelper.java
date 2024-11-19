@@ -25,6 +25,7 @@ import cool.scx.logging.ScxLoggerConfig;
 import cool.scx.logging.ScxLoggerFactory;
 import cool.scx.logging.recorder.ConsoleRecorder;
 import cool.scx.logging.recorder.FileRecorder;
+import cool.scx.net.tls.TLS;
 import cool.scx.reflect.ReflectFactory;
 import cool.scx.scheduling.ScxScheduling;
 import cool.scx.web.annotation.ScxRoute;
@@ -39,9 +40,6 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.nio.file.Path;
-import java.security.KeyStore;
-import java.security.PrivateKey;
-import java.security.cert.X509Certificate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -119,8 +117,8 @@ public final class ScxHelper {
      */
     public static boolean isScxBaseModelClass(Class<?> c) {
         return c.isAnnotationPresent(Table.class) &&  // 拥有注解
-               ClassUtils.isInstantiableClass(c) &&  // 是一个可以不需要其他参数直接生成实例化的对象
-               BaseModel.class.isAssignableFrom(c);
+                ClassUtils.isInstantiableClass(c) &&  // 是一个可以不需要其他参数直接生成实例化的对象
+                BaseModel.class.isAssignableFrom(c);
     }
 
     /**
@@ -131,9 +129,9 @@ public final class ScxHelper {
      */
     public static boolean isScxBaseModelServiceClass(Class<?> c) {
         return c.isAnnotationPresent(ScxService.class) &&  // 拥有注解
-               ClassUtils.isNormalClass(c) && // 是一个普通的类 (不是接口, 不是抽象类) ; 此处不要求有必须有无参构造函数 因为此类的创建会由 beanFactory 进行处理
-               c.getGenericSuperclass() instanceof ParameterizedType t && //需要有泛型参数
-               t.getActualTypeArguments().length == 1; //并且泛型参数的数量必须是一个
+                ClassUtils.isNormalClass(c) && // 是一个普通的类 (不是接口, 不是抽象类) ; 此处不要求有必须有无参构造函数 因为此类的创建会由 beanFactory 进行处理
+                c.getGenericSuperclass() instanceof ParameterizedType t && //需要有泛型参数
+                t.getActualTypeArguments().length == 1; //并且泛型参数的数量必须是一个
     }
 
     @SuppressWarnings("unchecked")
@@ -405,25 +403,9 @@ public final class ScxHelper {
     }
 
     public static Tls getTls(Path path, String password) {
+        TLS tls = new TLS(path, password);
         var builder = Tls.builder();
-        builder.protocol("TLSv1.2");
-        try {
-            var jks = KeyStore.getInstance(path.toFile(), password.toCharArray());
-            var aliases = jks.aliases();
-            if (aliases.hasMoreElements()) {
-                var a = aliases.nextElement();
-                var key = jks.getKey(a, password.toCharArray());
-                if (key instanceof PrivateKey p) {
-                    builder.privateKey(p);
-                }
-                var c = jks.getCertificate(a);
-                if (c instanceof X509Certificate x) {
-                    builder.addPrivateKeyCertChain(x);
-                }
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("加载 SSL 证书时发生错误 !!!", e);
-        }
+        builder.sslContext(tls.sslContext());
         return builder.build();
     }
 
