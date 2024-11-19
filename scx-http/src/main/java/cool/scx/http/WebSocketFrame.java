@@ -14,7 +14,7 @@ public record WebSocketFrame(boolean fin,
                              byte[] payloadData) {
 
     public static WebSocketFrame of(boolean fin, WebSocketOpCode opCode, byte[] maskingKey, byte[] payloadData) {
-        return new WebSocketFrame(fin, false, false, false, opCode,maskingKey != null, payloadData.length, maskingKey, payloadData);
+        return new WebSocketFrame(fin, false, false, false, opCode, maskingKey != null, payloadData.length, maskingKey, payloadData);
     }
 
     public static WebSocketFrame of(boolean fin, WebSocketOpCode opCode, byte[] payloadData) {
