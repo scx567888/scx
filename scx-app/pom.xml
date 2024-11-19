@@ -56,6 +56,12 @@
             <version>${project.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>scx-net</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
         <!-- Spring Context 框架 , 主要使用其依赖注入及部分注解功能 -->
         <dependency>
             <groupId>org.springframework</groupId>

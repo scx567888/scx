@@ -25,6 +25,7 @@ import cool.scx.logging.ScxLoggerConfig;
 import cool.scx.logging.ScxLoggerFactory;
 import cool.scx.logging.recorder.ConsoleRecorder;
 import cool.scx.logging.recorder.FileRecorder;
+import cool.scx.net.tls.TLS;
 import cool.scx.reflect.ReflectFactory;
 import cool.scx.scheduling.ScxScheduling;
 import cool.scx.web.annotation.ScxRoute;
@@ -39,9 +40,6 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.nio.file.Path;
-import java.security.KeyStore;
-import java.security.PrivateKey;
-import java.security.cert.X509Certificate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -405,24 +403,9 @@ public final class ScxHelper {
     }
 
     public static Tls getTls(Path path, String password) {
+        TLS tls = new TLS(path, password);
         var builder = Tls.builder();
-        try {
-            var jks = KeyStore.getInstance(path.toFile(), password.toCharArray());
-            var aliases = jks.aliases();
-            if (aliases.hasMoreElements()) {
-                var a = aliases.nextElement();
-                var key = jks.getKey(a, password.toCharArray());
-                if (key instanceof PrivateKey p) {
-                    builder.privateKey(p);
-                }
-                var c = jks.getCertificate(a);
-                if (c instanceof X509Certificate x) {
-                    builder.addPrivateKeyCertChain(x);
-                }
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("加载 SSL 证书时发生错误 !!!", e);
-        }
+        builder.sslContext(tls.sslContext());
         return builder.build();
     }
 
