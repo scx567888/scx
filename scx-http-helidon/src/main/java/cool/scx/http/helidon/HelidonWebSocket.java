@@ -1,6 +1,7 @@
 package cool.scx.http.helidon;
 
 import cool.scx.http.ScxWebSocket;
+import cool.scx.http.WebSocketCloseCode;
 import io.helidon.common.buffers.BufferData;
 import io.helidon.http.Headers;
 import io.helidon.http.HttpPrologue;
@@ -140,6 +141,8 @@ class HelidonWebSocket implements ScxWebSocket, WsListener {
             wsSession.close(var1, var2);
         } finally {
             lock.unlock();
+            //此处主动调用 onClose
+            onClose(null, WebSocketCloseCode.NORMAL_CLOSE.code(), "主动关闭");
         }
         return this;
     }
