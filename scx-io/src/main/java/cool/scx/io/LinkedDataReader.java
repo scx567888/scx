@@ -79,18 +79,24 @@ public class LinkedDataReader implements DataReader {
         }
     }
 
-    private int indexOf(DataIndexer indexer) {
+    private int indexOf(DataIndexer indexer, int max) {
         var index = 0; // 主串索引
 
         var n = head;
 
         while (true) {
-            var length = n.available();
+            // 计算当前节点中可读取的最大长度，确保不超过 max
+            var length = Math.min(n.available(), max - index);
             var i = indexer.indexOf(n.bytes, n.position, length);
             if (i != -1) {
                 return index + i;
             } else {
                 index += length;
+            }
+
+            // 检查是否已达到最大长度
+            if (index >= max) {
+                break;
             }
 
             // 如果 currentNode 没有下一个节点并且尝试拉取数据失败，直接退出循环
@@ -145,13 +151,13 @@ public class LinkedDataReader implements DataReader {
     }
 
     @Override
-    public int indexOf(byte b) throws NoMatchFoundException {
-        return indexOf((bytes, position, length) -> ArrayUtils.indexOf(bytes, position, length, b));
+    public int indexOf(byte b, int max) throws NoMatchFoundException {
+        return indexOf((bytes, position, length) -> ArrayUtils.indexOf(bytes, position, length, b), max);
     }
 
     @Override
-    public int indexOf(byte[] pattern) throws NoMatchFoundException {
-        return indexOf(new KMPDataIndexer(pattern));
+    public int indexOf(byte[] pattern, int max) throws NoMatchFoundException {
+        return indexOf(new KMPDataIndexer(pattern), max);
     }
 
     @Override

@@ -15,6 +15,7 @@ public class DataReaderTest {
     public static void main(String[] args) {
         test1();
         test2();
+        test3();
     }
 
     @Test
@@ -75,6 +76,18 @@ public class DataReaderTest {
 
         Assert.assertEquals(dataReader.indexOf("3579".getBytes()), 40);
 
+    }
+
+    @Test
+    public static void test3() {
+        //测试资源耗尽攻击
+        var dataReader = new LinkedDataReader(() -> new LinkedDataReader.Node("aaaaaa".getBytes()));
+        //最大只搜索 100 字节
+        try {
+            byte[] bytes = dataReader.readUntil("\r\n".getBytes(), 100);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
