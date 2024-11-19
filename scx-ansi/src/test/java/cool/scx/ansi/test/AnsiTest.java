@@ -26,8 +26,8 @@ public class AnsiTest {
     @Test
     public static void test2() {
         var ansi = Ansi.ansi();
-        for (int i = 0; i < 256; i++) {
-            for (int j = 0; j < 256; j++) {
+        for (int i = 0; i < 256; i = i + 1) {
+            for (int j = 0; j < 256; j = j + 1) {
                 ansi.add("0", new Ansi8BitColor(i), new Ansi8BitBackground(j), AnsiStyle.BOLD, AnsiStyle.ITALIC, AnsiStyle.UNDERLINE);
             }
             ansi.ln();
@@ -39,7 +39,7 @@ public class AnsiTest {
     public static void test3() {
         var ansi = Ansi.ansi();
         for (AnsiStyle value : AnsiStyle.values()) {
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 10; i = i + 1) {
                 ansi.add(value.name() + "  ", value);
             }
             ansi.ln();

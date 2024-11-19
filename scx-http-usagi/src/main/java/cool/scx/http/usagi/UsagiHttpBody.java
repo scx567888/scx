@@ -25,7 +25,7 @@ public class UsagiHttpBody implements ScxHttpBody {
                 if (position >= contentLength) {
                     return -1;
                 }
-                position++;
+                position = position + 1;
                 return dataReader.read() & 0xFF;
             }
 

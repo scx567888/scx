@@ -180,7 +180,7 @@ public class TestModule extends ScxModule {
         if (personService.count() < 200) {
             List<Car> list = carService.find();
             var ps = new ArrayList<Person>();
-            for (int i = 0; i < list.size(); i++) {
+            for (int i = 0; i < list.size(); i = i + 1) {
                 var p = new Person();
                 p.carID = list.get(i).id;
                 p.age = i;

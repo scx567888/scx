@@ -174,7 +174,7 @@ public class SQLRunnerForMySQLTest {
         sqlRunner.execute(sql("drop table if exists " + tableName + ";" + " create table " + tableName + "(`name` varchar(32) ,`age` integer,`sex` boolean )"));
         try { // 准备大量数据 200万条 进行测试
             var sql = "insert into " + tableName + "(name, age, sex) values (:name, :age, :sex)";
-            for (int j = 0; j < 20; j++) {
+            for (int j = 0; j < 20; j = j + 1) {
                 var ms = new ArrayList<Map<String, Object>>();
                 for (int i = 0; i < 99999; i = i + 1) {
                     var m1 = new HashMap<String, Object>();
@@ -195,7 +195,7 @@ public class SQLRunnerForMySQLTest {
 
         //测试内存占用
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 10; i = i + 1) {
             var s = System.nanoTime();
             var ofBeanList = sqlRunner.query(sql, ResultHandler.ofBeanList(StudentRecord.class));
             System.out.println("ofBeanList 耗时 : " + (System.nanoTime() - s) / 1000_000 + " 内存占用 : " + FileUtils.longToDisplaySize(Runtime.getRuntime().totalMemory()) + " ; " + ofBeanList.size());
@@ -203,7 +203,7 @@ public class SQLRunnerForMySQLTest {
 
         Runtime.getRuntime().gc();
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 10; i = i + 1) {
             var s = System.nanoTime();
             var size = new AtomicInteger();
             sqlRunner.query(sql, ResultHandler.ofBeanConsumer(StudentRecord.class, x -> {

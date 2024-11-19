@@ -14,7 +14,7 @@ public class HeadersTest {
 
     public static void test1() {
         long l = System.nanoTime();
-        for (int i = 0; i < 9999; i++) {
+        for (int i = 0; i < 9999; i = i + 1) {
             var h = ScxHttpHeaders.of();
             h.add("Content-Disposition", "form-data; name=myname");
             h.contentLength(100);

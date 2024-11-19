@@ -43,7 +43,7 @@ public class ScxSocketClientTest extends InitLogger {
                 System.out.println("服务端发送的消息 : " + m);
             });
 
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 10; i = i + 1) {
                 int finalI = i;
                 c.sendEvent("aaa", i, r -> {
                     System.out.println(r.payload() + "  " + finalI);

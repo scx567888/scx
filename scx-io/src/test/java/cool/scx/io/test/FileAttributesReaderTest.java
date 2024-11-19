@@ -15,7 +15,7 @@ public class FileAttributesReaderTest {
         var s = new FileAttributesReader(Path.of("xxxx"));
         var p = Path.of("xxxx/xxxx");
         var l = System.nanoTime();
-        for (int i = 0; i < 99999; i++) {
+        for (int i = 0; i < 99999; i = i + 1) {
             var basicFileAttributes = s.get(p);
             if (basicFileAttributes != null) {
                 System.out.println(basicFileAttributes.size());
