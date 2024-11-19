@@ -42,7 +42,7 @@ public class MultiPartTest {
 
 
         long l = System.nanoTime();
-        for (int j = 0; j < 9999; j++) {
+        for (int j = 0; j < 9999; j = j + 1) {
 
             var i = new MultiPartStreamCachedReader();
 
@@ -57,7 +57,7 @@ public class MultiPartTest {
         System.out.println((System.nanoTime() - l) / 1000_000);
 
         long l1 = System.nanoTime();
-        for (int j = 0; j < 9999; j++) {
+        for (int j = 0; j < 9999; j = j + 1) {
 
             var i = new MultiPartStreamReader();
 
