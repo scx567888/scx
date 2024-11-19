@@ -1,6 +1,6 @@
 package cool.scx.socket;
 
-import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.Executor;
 
 public final class ScxSocketClientOptions extends PingPongOptions {
 
@@ -20,7 +20,7 @@ public final class ScxSocketClientOptions extends PingPongOptions {
     }
 
     @Override
-    public ScxSocketClientOptions executor(ScheduledExecutorService executor) {
+    public ScxSocketClientOptions executor(Executor executor) {
         super.executor(executor);
         return this;
     }

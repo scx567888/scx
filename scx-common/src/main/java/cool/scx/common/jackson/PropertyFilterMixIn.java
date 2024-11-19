@@ -5,6 +5,6 @@ import com.fasterxml.jackson.annotation.JsonFilter;
 @JsonFilter("PROPERTY_FILTER_MIX_IN")
 public class PropertyFilterMixIn {
 
-    public static String PROPERTY_FILTER_MIX_IN = "PROPERTY_FILTER_MIX_IN";
+    public static final String PROPERTY_FILTER_MIX_IN = "PROPERTY_FILTER_MIX_IN";
 
 }
