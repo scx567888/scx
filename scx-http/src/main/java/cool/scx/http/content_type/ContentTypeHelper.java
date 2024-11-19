@@ -9,20 +9,19 @@ import java.util.regex.Pattern;
 public class ContentTypeHelper {
 
     public static final Pattern SEMICOLON_PATTERN = Pattern.compile(";\\s*");
-    public static final Pattern EQUALS_SIGN_PATTERN = Pattern.compile("=");
 
     public static ContentTypeWritable decodedContentType(String contentTypeStr) {
         if (contentTypeStr == null) {
             return null;
         }
-        var split = SEMICOLON_PATTERN.split(contentTypeStr);
-        if (split.length == 0) {
+        var parts = SEMICOLON_PATTERN.split(contentTypeStr);
+        if (parts.length == 0) {
             return null;
         }
-        var mediaType = ScxMediaType.of(split[0]);
+        var mediaType = ScxMediaType.of(parts[0]);
         ParametersWritable<String, String> params = Parameters.of();
-        for (var i = 1; i < split.length; i = i + 1) {
-            var s = EQUALS_SIGN_PATTERN.split(split[i], 2);
+        for (var i = 1; i < parts.length; i = i + 1) {
+            var s = parts[i].split("=", 2);
             if (s.length == 2) {
                 params.add(s[0], s[1]);
             }

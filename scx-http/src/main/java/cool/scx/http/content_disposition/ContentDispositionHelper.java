@@ -12,14 +12,14 @@ public class ContentDispositionHelper {
         if (contentDispositionStr == null) {
             return null;
         }
-        var split = SEMICOLON_PATTERN.split(contentDispositionStr);
-        if (split.length == 0) {
+        var parts = SEMICOLON_PATTERN.split(contentDispositionStr);
+        if (parts.length == 0) {
             return null;
         }
-        var type = split[0];
+        var type = parts[0];
         ParametersWritable<String, String> params = Parameters.of();
-        for (var i = 1; i < split.length; i = i + 1) {
-            var s = EQUALS_SIGN_PATTERN.split(split[i], 2);
+        for (var i = 1; i < parts.length; i = i + 1) {
+            var s = parts[i].split("=", 2);
             if (s.length == 2) {
                 //移除两端的引号
                 params.add(s[0], removeQuotes(s[1]));

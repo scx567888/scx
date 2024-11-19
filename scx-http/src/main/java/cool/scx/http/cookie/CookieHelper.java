@@ -2,6 +2,8 @@ package cool.scx.http.cookie;
 
 import java.util.ArrayList;
 
+import static cool.scx.http.content_type.ContentTypeHelper.SEMICOLON_PATTERN;
+
 //todo 中文编码有一些问题 
 public class CookieHelper {
 
@@ -14,7 +16,7 @@ public class CookieHelper {
     public static CookiesImpl parseCookies(String cookieStr) {
         var cookies = new CookiesImpl();
         if (cookieStr != null) {
-            var c = cookieStr.split(";\\s");
+            var c = SEMICOLON_PATTERN.split(cookieStr);
             for (var cookie : c) {
                 String[] parts = cookie.split("=", 2);
                 if (parts.length == 2) {
@@ -27,7 +29,7 @@ public class CookieHelper {
 
     public static Cookie parseSetCookie(String setCookieHeader) {
         //1, 分割先
-        var parts = setCookieHeader.split(";\\s*");
+        var parts = SEMICOLON_PATTERN.split(setCookieHeader);
         //2, 获取 name 和 value
         var nameValue = parts[0].split("=", 2);
         var name = nameValue[0];
