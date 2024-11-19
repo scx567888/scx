@@ -178,6 +178,7 @@ public final class Scx {
                 .maxPayloadSize(DEFAULT_BODY_LIMIT)
                 .port(this.scxOptions.port());
         if (this.scxOptions.isHttpsEnabled()) {
+            //此处因为 helidon 的 tls 有 bug, 直接使用 scx-net 的 tls 代替
             var tls = new TLS(this.scxOptions.sslPath(), this.scxOptions.sslPassword());
             httpServerOptions.tls(Tls.builder().sslContext(tls.sslContext()).build());
         }
