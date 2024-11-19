@@ -75,5 +75,5 @@ public class WebSocketFrameHelperTest {
         assertEquals(frame.payloadLength(), 5);
         assertEquals(frame.payloadData(), new byte[]{'H', 'e', 'l', 'l', 'o'});
     }
-    
+
 }

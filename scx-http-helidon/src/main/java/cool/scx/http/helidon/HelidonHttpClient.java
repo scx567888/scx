@@ -2,7 +2,6 @@ package cool.scx.http.helidon;
 
 import cool.scx.http.ScxClientWebSocketBuilder;
 import cool.scx.http.ScxHttpClient;
-import io.helidon.webclient.api.Proxy;
 import io.helidon.webclient.api.WebClient;
 
 /**
