@@ -19,7 +19,7 @@ public class TCPClientTest {
         TCPServerTest.test1();
 
         // todo 优化性能 以及再虚拟线程中的 bug
-        for (int j = 0; j < 10; j++) {
+        for (int j = 0; j < 10; j = j + 1) {
             Thread.ofVirtual().start(() -> {
                 var tcpClient = new TCPClient(new ScxTCPClientOptions().tls(tls));
                 var tcpSocket = tcpClient.connect(new InetSocketAddress(8899));
@@ -27,7 +27,7 @@ public class TCPClientTest {
                 try {
                     var i = 0;
                     while (i < 10000) {
-                        out.write((i++ + "\r\n" + i++ + "\r\n").getBytes());
+                        out.write(((i = i + 1) + "\r\n" + (i = i + 1) + "\r\n").getBytes());
 //                $.sleep(50);
                     }
 //            tcpSocket.close();

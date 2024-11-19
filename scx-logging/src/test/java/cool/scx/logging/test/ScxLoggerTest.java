@@ -22,7 +22,7 @@ public class ScxLoggerTest {
     @Test
     public static void test1() {
         var logger = LoggerFactory.getLogger("test1");
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 10; i = i + 1) {
             logger.debug("测试 debug {}", i);
             logger.error("测试 error {}", i);
             logger.error("测试 {}", i, new RuntimeException("错误"));
@@ -40,7 +40,7 @@ public class ScxLoggerTest {
                         new FileRecorder(path)
                 )
                 .setStackTrace(true);
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 10; i = i + 1) {
             logger.debug("测试 debug {}", i);
         }
         ScxLoggerFactory.setConfig("test.*", new ScxLoggerConfig().setLevel(ERROR));
