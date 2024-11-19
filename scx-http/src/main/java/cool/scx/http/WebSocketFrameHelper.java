@@ -4,6 +4,7 @@ import cool.scx.io.DataReader;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 
 /**
  * @see <a href="https://www.rfc-editor.org/rfc/rfc6455">https://www.rfc-editor.org/rfc/rfc6455</a>
@@ -24,23 +25,24 @@ public class WebSocketFrameHelper {
         var b2 = header[1];
 
         var masked = (b2 & 0b1000_0000) != 0;
-        long payloadLength = b2 & 0b0111_1111;
+        int payloadLength = b2 & 0b0111_1111;
 
         // 读取扩展长度
         if (payloadLength == 126) {
             byte[] extendedPayloadLength = reader.read(2);
-            payloadLength = (extendedPayloadLength[0] & 0b1111_1111L) << 8 |
-                    extendedPayloadLength[1] & 0b1111_1111L;
+            payloadLength = (extendedPayloadLength[0] & 0b1111_1111) << 8 |
+                    extendedPayloadLength[1] & 0b1111_1111;
         } else if (payloadLength == 127) {
             byte[] extendedPayloadLength = reader.read(8);
-            payloadLength = (extendedPayloadLength[0] & 0b1111_1111L) << 56 |
+            // 我们假定长度都是在 int 范围内的 (理论上不会有 2GB 的文件会通过 websocket 发送)
+            payloadLength = (int) ((extendedPayloadLength[0] & 0b1111_1111L) << 56 |
                     (extendedPayloadLength[1] & 0b1111_1111L) << 48 |
                     (extendedPayloadLength[2] & 0b1111_1111L) << 40 |
                     (extendedPayloadLength[3] & 0b1111_1111L) << 32 |
-                    (extendedPayloadLength[4] & 0b1111_1111L) << 24 |
-                    (extendedPayloadLength[5] & 0b1111_1111L) << 16 |
-                    (extendedPayloadLength[6] & 0b1111_1111L) << 8 |
-                    extendedPayloadLength[7] & 0b1111_1111L;
+                    (extendedPayloadLength[4] & 0b1111_1111) << 24 |
+                    (extendedPayloadLength[5] & 0b1111_1111) << 16 |
+                    (extendedPayloadLength[6] & 0b1111_1111) << 8 |
+                    extendedPayloadLength[7] & 0b1111_1111);
         }
 
         byte[] maskingKey = null;
@@ -49,8 +51,7 @@ public class WebSocketFrameHelper {
             maskingKey = reader.read(4);
         }
 
-        // 我们假定长度都是在 int 范围内的 (理论上不会有 2GB 的文件会通过 websocket 发送)
-        var payloadData = reader.read((int) payloadLength);
+        var payloadData = reader.read(payloadLength);
 
         // 掩码计算
         if (masked) {
@@ -75,7 +76,7 @@ public class WebSocketFrameHelper {
 
         var length = frame.payloadLength();
         var masked = frame.masked() ? 0b1000_0000 : 0;
-        
+
         if (length < 126L) {
             out.write((int) length | masked);
         } else if (length < 65536L) {
@@ -88,7 +89,7 @@ public class WebSocketFrameHelper {
                 out.write((int) (length >>> i) & 0b1111_1111);
             }
         }
-        
+
         // 写入掩码键（如果有）
         if (frame.masked()) {
             byte[] maskingKey = frame.maskingKey();
@@ -107,6 +108,37 @@ public class WebSocketFrameHelper {
         // 写入有效负载数据
         out.write(payloadData);
         out.flush();
+    }
+
+    public static WebSocketFrame readFrameUntilLast(DataReader reader) {
+        var frameList = new ArrayList<WebSocketFrame>();
+
+        while (true) {
+            var webSocketFrame = readFrame(reader);
+            frameList.add(webSocketFrame);
+            if (webSocketFrame.fin()) {
+                break;
+            }
+        }
+
+        var first = frameList.get(0);
+
+        if (frameList.size() == 1) {
+            return first;
+        }
+
+        var opCode = first.opCode();
+        var length = frameList.stream().mapToInt(WebSocketFrame::payloadLength).sum();
+        var payloadData = new byte[length];
+
+        int offset = 0;
+        for (var webSocketFrame : frameList) {
+            System.arraycopy(webSocketFrame.payloadData(), 0, payloadData, offset, webSocketFrame.payloadLength());
+            offset += webSocketFrame.payloadLength();
+        }
+
+        return WebSocketFrame.of(true, opCode, payloadData);
+
     }
 
 }

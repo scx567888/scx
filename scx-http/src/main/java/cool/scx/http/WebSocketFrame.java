@@ -9,7 +9,7 @@ public record WebSocketFrame(boolean fin,
                              boolean rsv3,
                              WebSocketOpCode opCode,
                              boolean masked,
-                             long payloadLength,
+                             int payloadLength,
                              byte[] maskingKey,
                              byte[] payloadData) {
 
