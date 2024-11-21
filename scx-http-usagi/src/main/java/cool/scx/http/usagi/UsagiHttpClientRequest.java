@@ -22,6 +22,68 @@ public class UsagiHttpClientRequest extends ScxHttpClientRequestBase {
         this.httpClient = httpClient;
     }
 
+    public static String getPath(ScxURIWritable uri) {
+        var encode = uri.scheme(null).host(null).port(-1).encode(true);
+        return encode;
+    }
+
+    public static InetSocketAddress getRemoteAddress(ScxURI uri) {
+        var defaultPort = -1;
+        if ("http".equals(uri.scheme())) {
+            defaultPort = 80;
+        } else if ("https".equals(uri.scheme())) {
+            defaultPort = 443;
+        } else {
+            throw new IllegalArgumentException("Unsupported scheme: " + uri.scheme());
+        }
+        var port = uri.port() == -1 ? defaultPort : uri.port();
+
+        return new InetSocketAddress(uri.host(), port);
+    }
+
+    private static ScxHttpClientResponse waitResponse(InputStream in) {
+
+        var dataReader = new LinkedDataReader(new InputStreamDataSupplier(in));
+
+        var lineBytes = dataReader.readUntil("\r\n".getBytes());
+
+        var line = new String(lineBytes);
+
+        var linePart = line.split(" ", 3);
+
+        if (linePart.length != 3) {
+            throw new RuntimeException("Invalid usagi response: " + line);
+        }
+
+        var version = linePart[0];
+        var code = Integer.parseInt(linePart[1]);
+        var description = linePart[2];
+
+
+        var headerBytes = dataReader.readUntil("\r\n\r\n".getBytes());
+        var headerStr = new String(headerBytes);
+        var headers = ScxHttpHeaders.of(headerStr);
+
+        var status = HttpStatusCode.of(code);
+
+        //此处判断请求体是不是分块传输
+        var transferEncoding = headers.get(TRANSFER_ENCODING);
+        ScxHttpBody body;
+
+        if ("chunked".equals(transferEncoding)) {
+            body = new ScxHttpBodyImpl(new ChunkedInputStream(dataReader), headers, 65535);
+        } else {
+            var contentLength = headers.contentLength();
+            if (contentLength != null) {
+                body = new ScxHttpBodyImpl(new FixedLengthInputStream(dataReader, contentLength), headers, 65536);
+            } else {
+                body = new ScxHttpBodyImpl(InputStream.nullInputStream(), headers, 65536);
+            }
+        }
+
+        return new UsagiHttpClientResponse(status, headers, body);
+    }
+
     @Override
     public ScxHttpClientResponse send(MediaWriter writer) {
         var tcpClient = new TCPClient(httpClient.options);
@@ -60,68 +122,6 @@ public class UsagiHttpClientRequest extends ScxHttpClientRequestBase {
         //等待响应
         return waitResponse(in);
 
-    }
-
-    public static String getPath(ScxURIWritable uri) {
-        var encode = uri.scheme(null).host(null).port(-1).encode(true);
-        return encode;
-    }
-
-    public static InetSocketAddress getRemoteAddress(ScxURI uri) {
-        var defaultPort = -1;
-        if ("http".equals(uri.scheme())) {
-            defaultPort = 80;
-        } else if ("https".equals(uri.scheme())) {
-            defaultPort = 443;
-        } else {
-            throw new IllegalArgumentException("Unsupported scheme: " + uri.scheme());
-        }
-        var port = uri.port() == -1 ? defaultPort : uri.port();
-
-        return new InetSocketAddress(uri.host(), port);
-    }
-
-    private static ScxHttpClientResponse waitResponse(InputStream in) {
-
-        var dataReader = new LinkedDataReader(new InputStreamDataSupplier(in));
-
-        var lineBytes = dataReader.readUntil("\r\n".getBytes());
-
-        var line = new String(lineBytes);
-
-        var linePart = line.split(" ",3);
-
-        if (linePart.length != 3) {
-            throw new RuntimeException("Invalid usagi response: " + line);
-        }
-
-        var version = linePart[0];
-        var code = Integer.parseInt(linePart[1]);
-        var description = linePart[2];
-
-
-        var headerBytes = dataReader.readUntil("\r\n\r\n".getBytes());
-        var headerStr = new String(headerBytes);
-        var headers = ScxHttpHeaders.of(headerStr);
-
-        var status = HttpStatusCode.of(code);
-
-        //此处判断请求体是不是分块传输
-        var transferEncoding = headers.get(TRANSFER_ENCODING);
-        ScxHttpBody body;
-
-        if ("chunked".equals(transferEncoding)) {
-            body = new ScxHttpBodyImpl(new ChunkedInputStream(dataReader), headers, 65535);
-        } else {
-            var contentLength = headers.contentLength();
-            if (contentLength != null) {
-                body = new ScxHttpBodyImpl(new FixedLengthInputStream(dataReader, contentLength), headers, 65536);
-            } else {
-                body = new ScxHttpBodyImpl(InputStream.nullInputStream(), headers, 65536);
-            }
-        }
-
-        return new UsagiHttpClientResponse(status, headers, body);
     }
 
 

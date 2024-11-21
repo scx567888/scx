@@ -1,6 +1,5 @@
 package cool.scx.http.usagi;
 
-import java.io.FilterInputStream;
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -24,5 +23,5 @@ public class NoCloseOutputStream extends FilterOutputStream {
     public void close() throws IOException {
         //这里什么也不做
     }
-    
+
 }

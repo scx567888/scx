@@ -12,9 +12,9 @@ public class HttpClientTest {
 
     public static void test1() {
         var usagiHttpClient = new UsagiHttpClient();
-        var send = usagiHttpClient.request().uri("http://localhost:8899/aaaaa").addHeader("a","b").method(GET).send();
+        var send = usagiHttpClient.request().uri("http://localhost:8899/aaaaa").addHeader("a", "b").method(GET).send();
         String string = send.body().asString();
         System.out.println(string);
     }
-    
+
 }
