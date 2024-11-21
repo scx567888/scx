@@ -79,7 +79,11 @@ public class ByteArrayDataReader implements DataReader {
     }
 
     @Override
-    public int indexOf(byte b, int max) throws NoMatchFoundException {
+    public int indexOf(byte b, int max) throws NoMatchFoundException, NoMoreDataException {
+        int availableLength = bytes.length - position;
+        if (availableLength <= 0) {
+            throw new NoMoreDataException();
+        }
         var index = ArrayUtils.indexOf(bytes, position, Math.min(bytes.length, max), b);
         if (index == -1) {
             throw new NoMatchFoundException();
@@ -88,7 +92,11 @@ public class ByteArrayDataReader implements DataReader {
     }
 
     @Override
-    public int indexOf(byte[] b, int max) throws NoMatchFoundException {
+    public int indexOf(byte[] b, int max) throws NoMatchFoundException, NoMoreDataException {
+        int availableLength = bytes.length - position;
+        if (availableLength <= 0) {
+            throw new NoMoreDataException();
+        }
         var index = ArrayUtils.indexOf(bytes, position, Math.min(bytes.length, max), b);
         if (index == -1) {
             throw new NoMatchFoundException();
@@ -97,7 +105,11 @@ public class ByteArrayDataReader implements DataReader {
     }
 
     @Override
-    public void skip(int length) {
+    public void skip(int length) throws NoMoreDataException {
+        int availableLength = bytes.length - position;
+        if (availableLength <= 0) {
+            throw new NoMoreDataException();
+        }
         this.position += length;
     }
 
