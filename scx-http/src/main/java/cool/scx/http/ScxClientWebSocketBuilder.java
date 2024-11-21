@@ -2,6 +2,7 @@ package cool.scx.http;
 
 import cool.scx.http.cookie.Cookie;
 import cool.scx.http.uri.ScxURI;
+import cool.scx.http.uri.ScxURIWritable;
 
 import java.util.function.Consumer;
 
@@ -10,15 +11,15 @@ import java.util.function.Consumer;
  */
 public interface ScxClientWebSocketBuilder {
 
-    ScxURI uri();
+    ScxURIWritable uri();
 
-    ScxClientWebSocketBuilder uri(ScxURI uri);
+    ScxClientWebSocketBuilder uri(ScxURIWritable uri);
 
     ScxHttpHeadersWritable headers();
 
     ScxClientWebSocketBuilder headers(ScxHttpHeadersWritable headers);
 
-    ScxClientWebSocketBuilder onConnect(Consumer<ScxClientWebSocket> onOpen);
+    ScxClientWebSocketBuilder onConnect(Consumer<ScxClientWebSocket> onConnect);
 
     void connect();
 

@@ -1,7 +1,7 @@
 package cool.scx.socket;
 
 import cool.scx.http.ScxHttpClient;
-import cool.scx.http.uri.ScxURI;
+import cool.scx.http.uri.ScxURIWritable;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.ScheduledExecutorService;
@@ -18,7 +18,7 @@ public final class ScxSocketClient {
 
     private static final System.Logger logger = getLogger(ScxSocketClient.class.getName());
 
-    final ScxURI connectOptions;
+    final ScxURIWritable connectOptions;
     final ScxHttpClient webSocketClient;
     final String clientID;
     final ScxSocketClientOptions options;

@@ -7,6 +7,7 @@ import cool.scx.http.uri.ScxURIWritable;
 import cool.scx.io.InputStreamDataSupplier;
 import cool.scx.io.LinkedDataReader;
 import cool.scx.net.ScxTCPClientOptions;
+import cool.scx.net.ScxTCPSocket;
 import cool.scx.net.TCPClient;
 import cool.scx.net.tls.TLS;
 
@@ -25,6 +26,9 @@ import static cool.scx.http.HttpFieldName.TRANSFER_ENCODING;
 public class UsagiHttpClientRequest extends ScxHttpClientRequestBase {
 
     private final UsagiHttpClient httpClient;
+
+    TCPClient tcpClient;
+    ScxTCPSocket connect;
 
     public UsagiHttpClientRequest(UsagiHttpClient httpClient) {
         this.httpClient = httpClient;
@@ -130,16 +134,15 @@ public class UsagiHttpClientRequest extends ScxHttpClientRequestBase {
     public ScxHttpClientResponse send(MediaWriter writer) {
         var isHttps = checkIsHttps(uri);
 
-        TCPClient tcpClient;
         if (isHttps) {
             var trustAllTLS = getTrustAllTLS();
-            tcpClient = new TCPClient(new ScxTCPClientOptions().tls(trustAllTLS));
+            this.tcpClient = new TCPClient(new ScxTCPClientOptions().tls(trustAllTLS));
         } else {
-            tcpClient = new TCPClient(httpClient.options);
+            this.tcpClient = new TCPClient(httpClient.options);
         }
 
         var remoteAddress = getRemoteAddress(uri);
-        var connect = tcpClient.connect(remoteAddress);
+        this.connect = tcpClient.connect(remoteAddress);
 
         var out = new NoCloseOutputStream(connect.outputStream());
         var in = connect.inputStream();

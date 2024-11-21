@@ -16,6 +16,7 @@ public class UsagiTest {
             System.out.println(c.method() + " " + c.uri() + " -> " + c.body().asString());
             //通过 c 的类型判断是不是 websocket 连接
             if (c instanceof ScxServerWebSocketHandshakeRequest w) {
+                System.out.println("这是 websocket handshake");
                 var d = w.webSocket();
                 d.onTextMessage(s -> {
                     System.out.println("收到消息 :" + s);

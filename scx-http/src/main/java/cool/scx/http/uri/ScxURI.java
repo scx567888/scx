@@ -29,6 +29,16 @@ public interface ScxURI {
                 .fragment(u.getFragment());
     }
 
+    static ScxURIWritable of(ScxURI u) {
+        return new ScxURIImpl()
+                .scheme(u.scheme())
+                .host(u.host())
+                .port(u.port())
+                .path(u.path())
+                .query(Parameters.of(u.query()))
+                .fragment(u.fragment());
+    }
+
     String scheme();
 
     String host();
