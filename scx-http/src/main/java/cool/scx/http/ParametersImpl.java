@@ -9,7 +9,18 @@ import java.util.*;
  */
 public class ParametersImpl<K, V> implements ParametersWritable<K, V> {
 
-    private final MultiMap<K, V> map = new MultiMap<>(LinkedHashMap::new, ArrayList::new);
+    private final MultiMap<K, V> map;
+
+    public ParametersImpl(Parameters<K, V> p) {
+        this();
+        for (var e : p) {
+            this.map.set(e.getKey(), e.getValue());
+        }
+    }
+
+    public ParametersImpl() {
+        this.map = new MultiMap<>(LinkedHashMap::new, ArrayList::new);
+    }
 
     @SuppressWarnings("unchecked")
     @Override
