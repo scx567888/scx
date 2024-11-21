@@ -80,6 +80,8 @@ public class LinkedDataReader implements DataReader {
     }
 
     private int indexOf(DataIndexer indexer, int max) {
+        ensureAvailable(); // 确保至少有一个字节可读
+
         var index = 0; // 主串索引
 
         var n = head;
