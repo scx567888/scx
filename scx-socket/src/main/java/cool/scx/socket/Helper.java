@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import cool.scx.common.util.ObjectUtils;
 import cool.scx.http.ScxServerWebSocket;
 import cool.scx.http.uri.ScxURI;
+import cool.scx.http.uri.ScxURIWritable;
 
 import static cool.scx.common.util.ScxExceptionHelper.wrap;
 
@@ -31,7 +32,7 @@ public final class Helper {
      * @param clientID    客户端 ID
      * @return ConnectOptions
      */
-    public static ScxURI createConnectOptions(String absoluteURI, String clientID) {
+    public static ScxURIWritable createConnectOptions(String absoluteURI, String clientID) {
         return ScxURI.of(absoluteURI).setQuery(SCX_SOCKET_CLIENT_ID, clientID);
     }
 
