@@ -23,7 +23,7 @@ public class UsagiServerWebSocket implements ScxServerWebSocket {
 
     //为了防止底层的 OutputStream 被乱序写入 此处需要加锁
     private final ReentrantLock lock;
-    
+
     private Consumer<String> textMessageHandler;
     private Consumer<byte[]> binaryMessageHandler;
     private Consumer<byte[]> pingHandler;
