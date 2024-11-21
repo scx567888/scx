@@ -3,29 +3,28 @@ package cool.scx.http.usagi;
 import cool.scx.http.ScxClientWebSocketBuilder;
 import cool.scx.http.ScxHttpClient;
 import cool.scx.http.ScxHttpClientRequest;
-import cool.scx.net.ScxTCPClient;
 import cool.scx.net.ScxTCPClientOptions;
-
-import java.util.function.Function;
 
 public class UsagiHttpClient implements ScxHttpClient {
 
-    private final Function<ScxTCPClientOptions, ScxTCPClient> tcpClientBuilder;
-    private final ScxTCPClient tcpClient;
+    final ScxTCPClientOptions options;
 
-    public UsagiHttpClient(Function<ScxTCPClientOptions, ScxTCPClient> tcpClientBuilder) {
-        this.tcpClientBuilder = tcpClientBuilder;
-        this.tcpClient = tcpClientBuilder.apply(null);
+    public UsagiHttpClient(ScxTCPClientOptions options) {
+        this.options = options;
+    }
+
+    public UsagiHttpClient() {
+        this(new ScxTCPClientOptions());
     }
 
     @Override
     public ScxHttpClientRequest request() {
-        return new UsagiHttpClientRequest();
+        return new UsagiHttpClientRequest(this);
     }
 
     @Override
     public ScxClientWebSocketBuilder webSocket() {
-        return null;
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }
