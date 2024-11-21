@@ -24,7 +24,7 @@ public class UsagiHttpClient implements ScxHttpClient {
 
     @Override
     public ScxClientWebSocketBuilder webSocket() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return new UsagiHttpClientWebSocket(this);
     }
 
 }
