@@ -1,6 +1,9 @@
 package cool.scx.http.usagi;
 
-import cool.scx.http.*;
+import cool.scx.http.ScxClientWebSocket;
+import cool.scx.http.ScxWebSocket;
+import cool.scx.http.WebSocketFrame;
+import cool.scx.http.WebSocketOpCode;
 import cool.scx.io.DataReader;
 
 import java.io.IOException;
@@ -198,5 +201,5 @@ public class UsagiClientWebSocket implements ScxClientWebSocket {
             lock.unlock();
         }
     }
-    
+
 }

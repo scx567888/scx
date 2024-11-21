@@ -81,7 +81,7 @@ public class UsagiHttpClientWebSocket implements ScxClientWebSocketBuilder {
         var connect = ((UsagiHttpClientRequest) request).connect;
         var in = connect.inputStream();
         var out = connect.outputStream();
-        
+
         //todo 此处 UsagiClientWebSocket 没有掩码 操作
         var webSocket = new UsagiClientWebSocket(new LinkedDataReader(new InputStreamDataSupplier(in)), out);
         if (onConnect != null) {

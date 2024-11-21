@@ -14,7 +14,7 @@ public interface Parameters<K, V> extends Iterable<Map.Entry<K, List<V>>> {
         return new ParametersImpl<>();
     }
 
-    static <K, V> ParametersWritable<K, V> of(Parameters<K,V> p) {
+    static <K, V> ParametersWritable<K, V> of(Parameters<K, V> p) {
         return new ParametersImpl<>(p);
     }
 

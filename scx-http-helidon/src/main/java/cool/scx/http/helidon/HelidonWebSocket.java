@@ -20,6 +20,9 @@ class HelidonWebSocket implements ScxWebSocket, WsListener {
 
     //todo 这种方式不准确
     private final AtomicBoolean closed = new AtomicBoolean(false);
+    
+    //必须加 因为 helidon 底层没有锁 如果在多个线程 send 会导致数据乱
+    private final Lock lock;
 
     protected HttpPrologue prologue;
     protected Headers headers;
@@ -30,9 +33,6 @@ class HelidonWebSocket implements ScxWebSocket, WsListener {
     private Consumer<byte[]> pongHandler;
     private BiConsumer<Integer, String> closeHandler;
     private Consumer<Throwable> errorHandler;
-
-    //必须加 因为 helidon 底层没有锁 如果在多个线程 send 会导致数据乱
-    private final Lock lock;
 
     public HelidonWebSocket() {
         lock = new ReentrantLock();
