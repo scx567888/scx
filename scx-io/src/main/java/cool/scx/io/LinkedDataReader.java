@@ -29,7 +29,7 @@ public class LinkedDataReader implements DataReader {
         return true;
     }
 
-    private void ensureAvailable() {
+    private void ensureAvailable() throws NoMoreDataException {
         while (!head.hasAvailable()) {
             if (head.next == null) {
                 if (!pullData()) {
@@ -40,7 +40,7 @@ public class LinkedDataReader implements DataReader {
         }
     }
 
-    private void walk(DataConsumer consumer, int maxLength, boolean movePointer) {
+    private void walk(DataConsumer consumer, int maxLength, boolean movePointer) throws NoMoreDataException {
         ensureAvailable(); // 确保至少有一个字节可读
 
         var remaining = maxLength; // 剩余需要读取的字节数
@@ -79,7 +79,7 @@ public class LinkedDataReader implements DataReader {
         }
     }
 
-    private int indexOf(DataIndexer indexer, int max) {
+    private int indexOf(DataIndexer indexer, int max) throws NoMoreDataException, NoMatchFoundException {
         ensureAvailable(); // 确保至少有一个字节可读
 
         var index = 0; // 主串索引
@@ -153,17 +153,17 @@ public class LinkedDataReader implements DataReader {
     }
 
     @Override
-    public int indexOf(byte b, int max) throws NoMatchFoundException {
+    public int indexOf(byte b, int max) throws NoMatchFoundException, NoMoreDataException {
         return indexOf((bytes, position, length) -> ArrayUtils.indexOf(bytes, position, length, b), max);
     }
 
     @Override
-    public int indexOf(byte[] pattern, int max) throws NoMatchFoundException {
+    public int indexOf(byte[] pattern, int max) throws NoMatchFoundException, NoMoreDataException {
         return indexOf(new KMPDataIndexer(pattern), max);
     }
 
     @Override
-    public void skip(int length) {
+    public void skip(int length) throws NoMoreDataException {
         walk((_, _, _) -> {}, length, true);
     }
 

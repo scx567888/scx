@@ -85,7 +85,7 @@ public interface DataReader {
      *
      * @param length 移动长度
      */
-    void skip(int length);
+    void skip(int length) throws NoMoreDataException;
 
     /**
      * 查找 指定字节 第一次出现的 index (指针不会移动)
