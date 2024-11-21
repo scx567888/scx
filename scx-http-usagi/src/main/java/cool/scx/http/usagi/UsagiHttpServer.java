@@ -1,25 +1,19 @@
 package cool.scx.http.usagi;
 
-import cool.scx.http.*;
-import cool.scx.http.uri.ScxURI;
-import cool.scx.io.InputStreamDataSupplier;
-import cool.scx.io.LinkedDataReader;
+import cool.scx.http.ScxHttpServer;
+import cool.scx.http.ScxHttpServerRequest;
+import cool.scx.http.ScxServerWebSocket;
 import cool.scx.net.ScxTCPServer;
 import cool.scx.net.ScxTCPSocket;
 import cool.scx.net.TCPServer;
 
-import java.net.URLDecoder;
 import java.util.function.Consumer;
-
-import static cool.scx.http.HttpFieldName.*;
-import static cool.scx.http.HttpMethod.GET;
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class UsagiHttpServer implements ScxHttpServer {
 
     private final ScxTCPServer tcpServer;
     private final UsagiHttpServerOptions options;
-    private Consumer<ScxHttpServerRequest> requestHandler;
+    Consumer<ScxHttpServerRequest> requestHandler;
     private Consumer<ScxServerWebSocket> webSocketHandler;
     private Consumer<Throwable> errorHandler;
 
@@ -34,83 +28,7 @@ public class UsagiHttpServer implements ScxHttpServer {
     }
 
     private void handle(ScxTCPSocket scxTCPSocket) {
-        //先假定 这是一个 http 1.1 连接
-        var dataReader = new LinkedDataReader(new InputStreamDataSupplier(scxTCPSocket.inputStream()));
-        while (true) {
-            //读取 请求行
-            var requestLineBytes = dataReader.readUntil("\r\n".getBytes());
-            String requestLine = new String(requestLineBytes);
-            String[] split = requestLine.split(" ");
-            if (split.length != 3) {
-                throw new RuntimeException("Invalid request line: " + requestLine);
-            }
-            var method0 = split[0];
-            var path0 = split[1];
-            var version0 = split[2];
-
-            var method = ScxHttpMethod.of(method0);
-            var path = URLDecoder.decode(path0, UTF_8);
-            var version = HttpVersion.of(version0);
-
-            var headerBytes = dataReader.readUntil("\r\n\r\n".getBytes());
-
-            var headerStr = new String(headerBytes);
-
-            var headers = ScxHttpHeaders.of(headerStr);
-
-            var connection = headers.get(CONNECTION);
-            var upgrade = headers.get(UPGRADE);
-
-            var isWebSocketHandshake = method == GET && "Upgrade".equals(connection) && "websocket".equals(upgrade);
-
-            UsagiHttpServerRequest request;
-
-            if (isWebSocketHandshake) {
-                request = new UsagiServerWebSocketHandshakeRequest(dataReader, scxTCPSocket.outputStream());
-            } else {
-                request = new UsagiHttpServerRequest();
-            }
-
-            request.method = method;
-            request.uri = ScxURI.of(path);
-            request.version = version;
-            request.headers = headers;
-
-            ScxHttpBody body = null;
-
-            Long contentLength = headers.contentLength();
-
-            if (contentLength != null) {
-                body = new UsagiHttpBody(dataReader, headers, contentLength);
-            } else {
-                body = new UsagiHttpBody(dataReader, headers, 0L);
-            }
-
-            request.body = body;
-
-            var response = new UsagiHttpServerResponse(request, scxTCPSocket);
-
-            response.headers().set(CONNECTION, "keep-alive");
-
-            response.headers().set(SERVER, "Scx Usagi");
-
-            request.response = response;
-
-            if (requestHandler != null) {
-                requestHandler.accept(request);
-            }
-
-            //尝试启动 websocket 监听 todo 这里应该重新设计
-            if (request instanceof UsagiServerWebSocketHandshakeRequest w) {
-                var ws = w.webSocket;
-                if (ws != null) {
-                    ws.start();
-                }
-                // websocket 独占整个连接 退出循环
-                break;
-            }
-
-        }
+        new Http1ConnectionHandler(scxTCPSocket, this).start();
     }
 
     @Override

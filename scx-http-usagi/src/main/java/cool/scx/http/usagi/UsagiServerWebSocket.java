@@ -11,15 +11,19 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import static cool.scx.http.WebSocketOpCode.*;
 import static cool.scx.http.WebSocketFrameHelper.readFrameUntilLast;
 import static cool.scx.http.WebSocketFrameHelper.writeFrame;
+import static cool.scx.http.WebSocketOpCode.*;
 
 public class UsagiServerWebSocket implements ScxServerWebSocket {
 
     private final DataReader reader;
     private final OutputStream writer;
     private final ScxServerWebSocketHandshakeRequest handshakeServerRequest;
+
+    //为了防止底层的 OutputStream 被乱序写入 此处需要加锁
+    private final ReentrantLock lock;
+    
     private Consumer<String> textMessageHandler;
     private Consumer<byte[]> binaryMessageHandler;
     private Consumer<byte[]> pingHandler;
@@ -27,9 +31,6 @@ public class UsagiServerWebSocket implements ScxServerWebSocket {
     private BiConsumer<Integer, String> closeHandler;
     private Consumer<Throwable> errorHandler;
     private boolean isClosed;
-    
-    //为了防止底层的 OutputStream 被乱序写入 此处需要加锁
-    private final ReentrantLock lock;
 
     public UsagiServerWebSocket(ScxServerWebSocketHandshakeRequest handshakeServerRequest, DataReader reader, OutputStream writer) {
         this.handshakeServerRequest = handshakeServerRequest;
