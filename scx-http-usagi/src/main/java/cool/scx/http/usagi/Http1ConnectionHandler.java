@@ -16,12 +16,12 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class Http1ConnectionHandler {
 
+    private static final byte[] CRLF_BYTES = "\r\n".getBytes();
+    private static final byte[] CRLF_CRLF_BYTES = "\r\n\r\n".getBytes();
+
     private final ScxTCPSocket scxTCPSocket;
     private final UsagiHttpServer httpServer;
     private final LinkedDataReader dataReader;
-
-    private static final byte[] CRLF_BYTES = "\r\n".getBytes();
-    private static final byte[] CRLF_CRLF_BYTES = "\r\n\r\n".getBytes();
 
     public Http1ConnectionHandler(ScxTCPSocket scxTCPSocket, UsagiHttpServer httpServer) {
         this.scxTCPSocket = scxTCPSocket;
@@ -112,7 +112,7 @@ public class Http1ConnectionHandler {
         } catch (NoMoreDataException e) {
             throw new RuntimeException("socket 关闭了 !!!");
         }
-        
+
         String requestLine = new String(requestLineBytes);
         String[] split = requestLine.split(" ");
         if (split.length != 3) {
