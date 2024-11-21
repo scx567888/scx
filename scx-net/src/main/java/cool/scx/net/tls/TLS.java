@@ -1,11 +1,12 @@
 package cool.scx.net.tls;
 
-import javax.net.ssl.*;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLServerSocketFactory;
+import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.file.Path;
-import java.security.KeyStore;
 
 import static cool.scx.net.tls.TLSHelper.*;
 
@@ -14,11 +15,6 @@ import static cool.scx.net.tls.TLSHelper.*;
  */
 public class TLS {
 
-    private final Path path;
-    private final String password;
-    private final KeyStore keyStore;
-    private final KeyManagerFactory KeyManagerFactory;
-    private final TrustManagerFactory trustManagerFactory;
     private final SSLContext sslContext;
     private final SSLServerSocketFactory serverSocketFactory;
     private final SSLSocketFactory socketFactory;
@@ -26,12 +22,17 @@ public class TLS {
 
     public TLS(Path path, String password) {
         this.enabled = true;
-        this.path = path;
-        this.password = password;
-        this.keyStore = createKeyStore(path, password);
-        this.KeyManagerFactory = createKeyManagerFactory(keyStore, password);
-        this.trustManagerFactory = createTrustManagerFactory(keyStore);
+        var keyStore = createKeyStore(path, password);
+        var KeyManagerFactory = createKeyManagerFactory(keyStore, password);
+        var trustManagerFactory = createTrustManagerFactory(keyStore);
         this.sslContext = createSSLContext(KeyManagerFactory, trustManagerFactory);
+        this.serverSocketFactory = sslContext.getServerSocketFactory();
+        this.socketFactory = sslContext.getSocketFactory();
+    }
+
+    public TLS(SSLContext sslContext) {
+        this.enabled = true;
+        this.sslContext = sslContext;
         this.serverSocketFactory = sslContext.getServerSocketFactory();
         this.socketFactory = sslContext.getSocketFactory();
     }
