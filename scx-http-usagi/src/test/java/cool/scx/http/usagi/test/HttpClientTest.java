@@ -12,7 +12,7 @@ public class HttpClientTest {
 
     public static void test1() {
 //        UsagiTest.test1();
-        
+
         var usagiHttpClient = new UsagiHttpClient();
         var send = usagiHttpClient.request()
                 .uri("http://localhost:8899/中文路径😎😎😎😎?a=1&b=llll")

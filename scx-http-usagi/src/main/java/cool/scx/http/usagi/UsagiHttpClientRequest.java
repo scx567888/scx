@@ -92,6 +92,40 @@ public class UsagiHttpClientRequest extends ScxHttpClientRequestBase {
         return new UsagiHttpClientResponse(status, headers, body);
     }
 
+    private static boolean checkIsHttps(ScxURIWritable uri) {
+        if ("http".equals(uri.scheme())) {
+            return false;
+        } else if ("https".equals(uri.scheme())) {
+            return true;
+        } else {
+            throw new IllegalArgumentException("Unsupported scheme: " + uri.scheme());
+        }
+    }
+
+    public static TLS getTrustAllTLS() {
+        // 创建自定义 TrustManager，忽略证书验证（仅用于测试环境）
+        var trustAllCerts = new TrustManager[]{new X509TrustManager() {
+            public X509Certificate[] getAcceptedIssuers() {
+                return null;
+            }
+
+            public void checkClientTrusted(X509Certificate[] certs, String authType) {
+            }
+
+            public void checkServerTrusted(X509Certificate[] certs, String authType) {
+            }
+        }};
+
+        try {
+            // 初始化 SSLContext
+            var sslContext = SSLContext.getInstance("TLS");
+            sslContext.init(null, trustAllCerts, null);
+            return new TLS(sslContext);
+        } catch (NoSuchAlgorithmException | KeyManagementException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @Override
     public ScxHttpClientResponse send(MediaWriter writer) {
         var isHttps = checkIsHttps(uri);
@@ -138,40 +172,6 @@ public class UsagiHttpClientRequest extends ScxHttpClientRequestBase {
         //等待响应
         return waitResponse(in);
 
-    }
-
-    private static boolean checkIsHttps(ScxURIWritable uri) {
-        if ("http".equals(uri.scheme())) {
-            return false;
-        } else if ("https".equals(uri.scheme())) {
-            return true;
-        } else {
-            throw new IllegalArgumentException("Unsupported scheme: " + uri.scheme());
-        }
-    }
-
-    public static TLS getTrustAllTLS() {
-        // 创建自定义 TrustManager，忽略证书验证（仅用于测试环境）
-        var trustAllCerts = new TrustManager[]{new X509TrustManager() {
-            public X509Certificate[] getAcceptedIssuers() {
-                return null;
-            }
-
-            public void checkClientTrusted(X509Certificate[] certs, String authType) {
-            }
-
-            public void checkServerTrusted(X509Certificate[] certs, String authType) {
-            }
-        }};
-
-        try {
-            // 初始化 SSLContext
-            var sslContext = SSLContext.getInstance("TLS");
-            sslContext.init(null, trustAllCerts, null);
-            return new TLS(sslContext);
-        } catch (NoSuchAlgorithmException | KeyManagementException e) {
-            throw new RuntimeException(e);
-        }
     }
 
 
