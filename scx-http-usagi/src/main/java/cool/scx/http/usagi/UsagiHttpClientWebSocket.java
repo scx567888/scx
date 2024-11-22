@@ -32,8 +32,8 @@ public class UsagiHttpClientWebSocket implements ScxClientWebSocketBuilder {
     }
 
     @Override
-    public ScxClientWebSocketBuilder uri(ScxURIWritable uri) {
-        this.uri = uri;
+    public ScxClientWebSocketBuilder uri(ScxURI uri) {
+        this.uri = ScxURI.of(uri);
         return this;
     }
 
@@ -43,8 +43,8 @@ public class UsagiHttpClientWebSocket implements ScxClientWebSocketBuilder {
     }
 
     @Override
-    public ScxClientWebSocketBuilder headers(ScxHttpHeadersWritable headers) {
-        this.headers = headers;
+    public ScxClientWebSocketBuilder headers(ScxHttpHeaders headers) {
+        this.headers = ScxHttpHeaders.of(headers);
         return this;
     }
 
