@@ -4,6 +4,7 @@ import cool.scx.http.ScxClientWebSocket;
 import cool.scx.http.ScxClientWebSocketBuilder;
 import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.ScxHttpHeadersWritable;
+import cool.scx.http.uri.ScxURI;
 import cool.scx.http.uri.ScxURIWritable;
 import io.helidon.webclient.websocket.WsClient;
 import io.helidon.websocket.WsSession;
@@ -29,8 +30,8 @@ class HelidonClientWebSocket extends HelidonWebSocket implements ScxClientWebSoc
     }
 
     @Override
-    public HelidonClientWebSocket uri(ScxURIWritable uri) {
-        this.uri = uri;
+    public HelidonClientWebSocket uri(ScxURI uri) {
+        this.uri = ScxURI.of(uri);
         return this;
     }
 
@@ -40,8 +41,8 @@ class HelidonClientWebSocket extends HelidonWebSocket implements ScxClientWebSoc
     }
 
     @Override
-    public ScxClientWebSocketBuilder headers(ScxHttpHeadersWritable headers) {
-        builderHeaders = headers;
+    public ScxClientWebSocketBuilder headers(ScxHttpHeaders headers) {
+        builderHeaders = ScxHttpHeaders.of(headers);
         return this;
     }
 

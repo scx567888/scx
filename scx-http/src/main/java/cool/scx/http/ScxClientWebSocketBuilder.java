@@ -13,11 +13,11 @@ public interface ScxClientWebSocketBuilder {
 
     ScxURIWritable uri();
 
-    ScxClientWebSocketBuilder uri(ScxURIWritable uri);
+    ScxClientWebSocketBuilder uri(ScxURI uri);
 
     ScxHttpHeadersWritable headers();
 
-    ScxClientWebSocketBuilder headers(ScxHttpHeadersWritable headers);
+    ScxClientWebSocketBuilder headers(ScxHttpHeaders headers);
 
     ScxClientWebSocketBuilder onConnect(Consumer<ScxClientWebSocket> onConnect);
 

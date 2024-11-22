@@ -25,8 +25,8 @@ public interface ScxHttpHeaders extends Parameters<ScxHttpHeaderName, String> {
         return parseHeaders(headerStr);
     }
 
-    static ScxHttpHeadersWritable of(ScxHttpHeaders h) {
-        return new ScxHttpHeadersImpl(h);
+    static ScxHttpHeadersWritable of(ScxHttpHeaders oldHeaders) {
+        return new ScxHttpHeadersImpl(oldHeaders);
     }
 
     default String get(String name) {

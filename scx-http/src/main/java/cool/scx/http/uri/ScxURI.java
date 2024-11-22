@@ -35,7 +35,7 @@ public interface ScxURI {
                 .host(u.host())
                 .port(u.port())
                 .path(u.path())
-                .query(Parameters.of(u.query()))
+                .query(u.query())
                 .fragment(u.fragment());
     }
 
