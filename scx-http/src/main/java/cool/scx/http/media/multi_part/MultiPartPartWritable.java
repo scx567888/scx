@@ -1,9 +1,9 @@
 package cool.scx.http.media.multi_part;
 
+import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.ScxHttpHeadersWritable;
 import cool.scx.http.content_disposition.ContentDisposition;
-import cool.scx.http.content_disposition.ContentDispositionWritable;
-import cool.scx.http.content_type.ContentTypeWritable;
+import cool.scx.http.content_type.ContentType;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -16,16 +16,16 @@ public interface MultiPartPartWritable extends MultiPartPart {
 
     ScxHttpHeadersWritable headers();
 
-    MultiPartPartWritable headers(ScxHttpHeadersWritable headers);
+    MultiPartPartWritable headers(ScxHttpHeaders headers);
 
     MultiPartPartWritable body(Supplier<InputStream> os);
 
-    default MultiPartPartWritable contentType(ContentTypeWritable contentType) {
+    default MultiPartPartWritable contentType(ContentType contentType) {
         headers().contentType(contentType);
         return this;
     }
 
-    default MultiPartPartWritable contentDisposition(ContentDispositionWritable contentDisposition) {
+    default MultiPartPartWritable contentDisposition(ContentDisposition contentDisposition) {
         headers().contentDisposition(contentDisposition);
         return this;
     }

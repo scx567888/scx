@@ -16,8 +16,8 @@ public class MultiPartPartImpl implements MultiPartPartWritable {
     }
 
     @Override
-    public MultiPartPartWritable headers(ScxHttpHeadersWritable headers) {
-        this.headers = headers;
+    public MultiPartPartWritable headers(ScxHttpHeaders headers) {
+        this.headers = ScxHttpHeaders.of(headers);
         return this;
     }
 
