@@ -1,5 +1,6 @@
 package cool.scx.http.content_disposition;
 
+import cool.scx.http.Parameters;
 import cool.scx.http.ParametersWritable;
 
 public interface ContentDispositionWritable extends ContentDisposition {
@@ -8,7 +9,7 @@ public interface ContentDispositionWritable extends ContentDisposition {
 
     ContentDispositionWritable type(String type);
 
-    ContentDispositionWritable params(ParametersWritable<String, String> params);
+    ContentDispositionWritable params(Parameters<String, String> params);
 
     default ContentDispositionWritable name(String name) {
         params().set("name", name);
