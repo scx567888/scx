@@ -14,6 +14,11 @@ public class ContentTypeImpl implements ContentTypeWritable {
         this.params = Parameters.of();
     }
 
+    public ContentTypeImpl(ContentType oldContentType) {
+        this.mediaType(oldContentType.mediaType());
+        this.params(oldContentType.params());
+    }
+
     @Override
     public ContentTypeWritable mediaType(ScxMediaType mediaType) {
         this.mediaType = mediaType;
@@ -21,8 +26,8 @@ public class ContentTypeImpl implements ContentTypeWritable {
     }
 
     @Override
-    public ContentTypeWritable params(ParametersWritable<String, String> params) {
-        this.params = params;
+    public ContentTypeWritable params(Parameters<String, String> params) {
+        this.params = Parameters.of(params);
         return this;
     }
 

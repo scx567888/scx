@@ -8,6 +8,13 @@ public class AcceptsImpl implements AcceptsWritable {
 
     private final List<Accept> accepts;
 
+    public AcceptsImpl(Accepts oldAccepts) {
+        this.accepts = new ArrayList<>();
+        for (var oldAccept : oldAccepts) {
+            this.accepts.add(oldAccept);
+        }
+    }
+
     public AcceptsImpl() {
         this.accepts = new ArrayList<>();
     }

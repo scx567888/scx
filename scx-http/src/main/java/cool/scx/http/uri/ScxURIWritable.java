@@ -1,5 +1,6 @@
 package cool.scx.http.uri;
 
+import cool.scx.http.Parameters;
 import cool.scx.http.ParametersWritable;
 
 import java.util.Arrays;
@@ -22,7 +23,7 @@ public interface ScxURIWritable extends ScxURI {
 
     ScxURIWritable path(String path);
 
-    ScxURIWritable query(ParametersWritable<String, String> query);
+    ScxURIWritable query(Parameters<String, String> query);
 
     ScxURIWritable fragment(String fragment);
 

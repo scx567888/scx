@@ -13,6 +13,11 @@ public class ContentDispositionImpl implements ContentDispositionWritable {
         this.params = Parameters.of();
     }
 
+    public ContentDispositionImpl(ContentDisposition oldContentDisposition) {
+        this.type(oldContentDisposition.type());
+        this.params(oldContentDisposition.params());
+    }
+
     @Override
     public ContentDispositionWritable type(String type) {
         this.type = type;
@@ -20,8 +25,8 @@ public class ContentDispositionImpl implements ContentDispositionWritable {
     }
 
     @Override
-    public ContentDispositionWritable params(ParametersWritable<String, String> params) {
-        this.params = params;
+    public ContentDispositionWritable params(Parameters<String, String> params) {
+        this.params = Parameters.of(params);
         return this;
     }
 

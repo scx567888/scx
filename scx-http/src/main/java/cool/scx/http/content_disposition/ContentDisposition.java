@@ -14,6 +14,10 @@ public interface ContentDisposition {
         return decodedContentDisposition(contentDispositionStr);
     }
 
+    static ContentDispositionWritable of(ContentDisposition oldContentDisposition) {
+        return new ContentDispositionImpl(oldContentDisposition);
+    }
+
     String type();
 
     Parameters<String, String> params();

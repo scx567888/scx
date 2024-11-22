@@ -36,9 +36,9 @@ public interface ScxHttpClientRequest {
 
     ScxHttpClientRequest method(HttpMethod method);
 
-    ScxHttpClientRequest uri(ScxURIWritable uri);
+    ScxHttpClientRequest uri(ScxURI uri);
 
-    ScxHttpClientRequest headers(ScxHttpHeadersWritable headers);
+    ScxHttpClientRequest headers(ScxHttpHeaders headers);
 
     ScxHttpClientResponse send(MediaWriter writer);
 

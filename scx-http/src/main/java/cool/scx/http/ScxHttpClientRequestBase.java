@@ -42,14 +42,14 @@ public abstract class ScxHttpClientRequestBase implements ScxHttpClientRequest {
     }
 
     @Override
-    public ScxHttpClientRequest uri(ScxURIWritable uri) {
-        this.uri = uri;
+    public ScxHttpClientRequest uri(ScxURI uri) {
+        this.uri = ScxURI.of(uri);
         return this;
     }
 
     @Override
-    public ScxHttpClientRequest headers(ScxHttpHeadersWritable headers) {
-        this.headers = headers;
+    public ScxHttpClientRequest headers(ScxHttpHeaders headers) {
+        this.headers = ScxHttpHeaders.of(headers);
         return this;
     }
 

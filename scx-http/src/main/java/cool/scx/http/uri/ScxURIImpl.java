@@ -49,8 +49,8 @@ public class ScxURIImpl implements ScxURIWritable {
     }
 
     @Override
-    public ScxURIWritable query(ParametersWritable<String, String> query) {
-        this.query = query;
+    public ScxURIWritable query(Parameters<String, String> query) {
+        this.query = Parameters.of(query);
         return this;
     }
 
