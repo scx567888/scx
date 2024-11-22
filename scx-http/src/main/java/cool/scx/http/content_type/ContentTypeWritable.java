@@ -1,5 +1,6 @@
 package cool.scx.http.content_type;
 
+import cool.scx.http.Parameters;
 import cool.scx.http.ParametersWritable;
 import cool.scx.http.ScxMediaType;
 
@@ -9,7 +10,7 @@ public interface ContentTypeWritable extends ContentType {
 
     ContentTypeWritable mediaType(ScxMediaType mediaType);
 
-    ContentTypeWritable params(ParametersWritable<String, String> parameters);
+    ContentTypeWritable params(Parameters<String, String> parameters);
 
     ParametersWritable<String, String> params();
 

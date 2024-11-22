@@ -21,6 +21,10 @@ public interface ContentType {
         return new ContentTypeImpl().mediaType(mediaType);
     }
 
+    static ContentTypeWritable of(ContentType oldContentType) {
+        return new ContentTypeImpl(oldContentType);
+    }
+
     ScxMediaType mediaType();
 
     Parameters<String, String> params();
