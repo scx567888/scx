@@ -6,7 +6,6 @@ import cool.scx.http.ScxHttpClientRequest;
 import cool.scx.http.ScxHttpClientResponse;
 import cool.scx.http.media.multi_part.MultiPart;
 import cool.scx.http.uri.ScxURI;
-import cool.scx.http.uri.ScxURIWritable;
 
 import static cool.scx.http.HttpMethod.*;
 
