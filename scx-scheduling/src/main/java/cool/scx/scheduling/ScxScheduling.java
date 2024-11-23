@@ -9,7 +9,7 @@ import static cool.scx.scheduling.MultipleTimeTask.Type.FIXED_RATE;
 /**
  * 用来创建 调度任务的工具类
  */
-public class ScxScheduling {
+public final class ScxScheduling {
 
     private static ScheduledThreadPoolExecutor defaultScheduler;
 

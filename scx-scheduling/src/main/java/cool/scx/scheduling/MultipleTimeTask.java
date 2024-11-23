@@ -145,7 +145,7 @@ public final class MultipleTimeTask implements ScheduleTask {
     private void run() {
         //如果允许并发执行则 开启虚拟线程执行
         if (concurrent) {
-            Thread.ofVirtual().start(this::run0);
+            executor.execute(this::run0);
         } else {
             run0();
         }
