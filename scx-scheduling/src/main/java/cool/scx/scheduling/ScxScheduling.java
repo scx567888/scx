@@ -1,37 +1,46 @@
 package cool.scx.scheduling;
 
 import java.time.Duration;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 import static cool.scx.scheduling.MultipleTimeTask.Type.FIXED_DELAY;
 import static cool.scx.scheduling.MultipleTimeTask.Type.FIXED_RATE;
-import static cool.scx.scheduling.ScxScheduler.getInstance;
 
 /**
  * 用来创建 调度任务的工具类
  */
-public interface ScxScheduling {
+public final class ScxScheduling {
 
-    static MultipleTimeTask fixedRate() {
-        return new MultipleTimeTask().executor(getInstance()).type(FIXED_RATE);
+    private static ScheduledThreadPoolExecutor defaultScheduler;
+
+    public static ScheduledThreadPoolExecutor defaultScheduler() {
+        if (defaultScheduler == null) {
+            defaultScheduler = new ScheduledThreadPoolExecutor(Runtime.getRuntime().availableProcessors() * 2);
+        }
+        return defaultScheduler;
     }
 
-    static MultipleTimeTask fixedDelay() {
-        return new MultipleTimeTask().executor(getInstance()).type(FIXED_DELAY);
+    public static MultipleTimeTask fixedRate() {
+        return new MultipleTimeTask().executor(defaultScheduler()).type(FIXED_RATE);
     }
 
-    static CronTask cron() {
-        return new CronTask().executor(getInstance());
+    public static MultipleTimeTask fixedDelay() {
+        return new MultipleTimeTask().executor(defaultScheduler()).type(FIXED_DELAY);
     }
 
-    static SingleTimeTask once() {
-        return new SingleTimeTask().executor(getInstance());
+    public static CronTask cron() {
+        return new CronTask().executor(defaultScheduler());
     }
 
-    static ScheduleStatus setTimeout(Runnable task, long delay) {
+    public static SingleTimeTask once() {
+        return new SingleTimeTask().executor(defaultScheduler());
+    }
+
+    public static ScheduleStatus setTimeout(Runnable task, long delay) {
         return once().startDelay(Duration.ofMillis(delay)).start((c) -> task.run());
     }
 
-    static ScheduleStatus setInterval(Runnable task, long delay) {
+    public static ScheduleStatus setInterval(Runnable task, long delay) {
         return fixedRate().delay(Duration.ofMillis(delay)).start((c) -> task.run());
     }
 
