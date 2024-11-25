@@ -1,5 +1,6 @@
 package cool.scx.http.usagi;
 
+import cool.scx.common.util.RandomUtils;
 import cool.scx.http.ScxClientWebSocket;
 import cool.scx.http.ScxWebSocket;
 import cool.scx.http.WebSocketFrame;
@@ -195,7 +196,8 @@ public class UsagiClientWebSocket implements ScxClientWebSocket {
     private void sendFrame(byte[] payload, WebSocketOpCode opcode, boolean last) throws IOException {
         lock.lock();
         try {
-            var f = WebSocketFrame.of(last, opcode, payload);
+            var maskingKey = RandomUtils.randomBytes(4);
+            var f = WebSocketFrame.of(last, opcode, maskingKey, payload);
             writeFrame(f, writer);
         } finally {
             lock.unlock();

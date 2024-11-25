@@ -90,7 +90,8 @@ public class LinkedDataReader implements DataReader {
             // 计算当前节点中可读取的最大长度，确保不超过 max
             var length = Math.min(n.available(), max - index);
             var i = indexer.indexOf(n.bytes, n.position, length);
-            if (i != -1) {
+            //此处因为支持回溯匹配 所以可能是负数 Integer.MIN_VALUE 表示真正未找到
+            if (i != Integer.MIN_VALUE) {
                 return index + i;
             } else {
                 index += length;
@@ -154,7 +155,10 @@ public class LinkedDataReader implements DataReader {
 
     @Override
     public int indexOf(byte b, int max) throws NoMatchFoundException, NoMoreDataException {
-        return indexOf((bytes, position, length) -> ArrayUtils.indexOf(bytes, position, length, b), max);
+        return indexOf((bytes, position, length) -> {
+            int i = ArrayUtils.indexOf(bytes, position, length, b);
+            return i == -1 ? Integer.MIN_VALUE : i;
+        }, max);
     }
 
     @Override

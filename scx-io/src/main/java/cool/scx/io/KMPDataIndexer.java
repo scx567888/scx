@@ -49,10 +49,13 @@ public class KMPDataIndexer implements DataIndexer {
 
             if (patternIndex == pattern.length) {
                 // i - n.position 的意义在于我们不需要包含当前 节点的偏移量 所以减去
-                return i - position - patternIndex + 1;
+                var result = i - position - patternIndex + 1;
+                // 重置 patternIndex 为 0, 保证下次匹配 
+                patternIndex = 0;
+                return result;
             }
         }
-        return -1;
+        return Integer.MIN_VALUE;
     }
 
 }
