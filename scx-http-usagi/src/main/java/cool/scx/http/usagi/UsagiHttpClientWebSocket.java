@@ -1,5 +1,6 @@
 package cool.scx.http.usagi;
 
+import cool.scx.common.util.Base64Utils;
 import cool.scx.common.util.RandomUtils;
 import cool.scx.http.*;
 import cool.scx.http.uri.ScxURI;
@@ -56,12 +57,13 @@ public class UsagiHttpClientWebSocket implements ScxClientWebSocketBuilder {
 
     @Override
     public void connect() {
-        var key = RandomUtils.randomString(10);
+        var key = Base64Utils.encodeToString(RandomUtils.randomBytes(16));
         var newHeader = ScxHttpHeaders.of(headers);
         newHeader.add(CONNECTION, "Upgrade");
         newHeader.add(UPGRADE, "websocket");
         newHeader.add("Sec-Websocket-Key", key);
-        newHeader.add("Sec-WebSocket-Version", "v13");
+        newHeader.add("Host", "127.0.0.1");
+        newHeader.add("Sec-WebSocket-Version", "13");
         var request = httpClient.request()
                 .method(HttpMethod.GET)
                 .uri(uri)
