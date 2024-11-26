@@ -103,6 +103,13 @@
                 <version>${helidon.version}</version>
             </dependency>
 
+            <!-- helidon websocket -->
+            <dependency>
+                <groupId>io.helidon.webserver</groupId>
+                <artifactId>helidon-webserver-websocket</artifactId>
+                <version>${helidon.version}</version>
+            </dependency>
+
             <!-- helidon webclient -->
             <dependency>
                 <groupId>io.helidon.webclient</groupId>
@@ -110,10 +117,9 @@
                 <version>${helidon.version}</version>
             </dependency>
 
-            <!-- helidon websocket -->
             <dependency>
-                <groupId>io.helidon.websocket</groupId>
-                <artifactId>helidon-websocket</artifactId>
+                <groupId>io.helidon.webclient</groupId>
+                <artifactId>helidon-webclient-websocket</artifactId>
                 <version>${helidon.version}</version>
             </dependency>
 
