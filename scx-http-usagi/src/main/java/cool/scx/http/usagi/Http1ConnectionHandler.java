@@ -59,7 +59,7 @@ public class Http1ConnectionHandler {
                 ScxHttpBody body;
 
                 if ("chunked".equals(transferEncoding)) {
-                    body = new ScxHttpBodyImpl(new ChunkedInputStream(dataReader), headers, 65535);
+                    body = new ScxHttpBodyImpl(new HttpChunkedInputStream(dataReader), headers, 65535);
                 } else {
                     var contentLength = headers.contentLength();
                     if (contentLength != null) {
@@ -79,16 +79,16 @@ public class Http1ConnectionHandler {
 
                 request.response = response;
 
-                _callRequestHandler(request);
-
-                //尝试启动 websocket 监听 todo 这里应该重新设计
+                //尝试启动 websocket 监听 
+                // todo 这里应该重新设计 以便给用户 终止握手的可能 比如 去掉 websocketHandler 而是使用判断  ScxServerWebSocketHandshakeRequest 来处理
                 if (request instanceof UsagiServerWebSocketHandshakeRequest w) {
-                    var ws = w.webSocket;
-                    if (ws != null) {
-                        ws.start();
-                    }
+                    var usagiServerWebSocket = w.webSocket();
+                    _callWebSocketHandler(usagiServerWebSocket);
                     // websocket 独占整个连接 退出循环
+                    usagiServerWebSocket.start();
                     break;
+                } else {
+                    _callRequestHandler(request);
                 }
 
             }
@@ -101,6 +101,12 @@ public class Http1ConnectionHandler {
     private void _callRequestHandler(UsagiHttpServerRequest request) {
         if (httpServer.requestHandler != null) {
             httpServer.requestHandler.accept(request);
+        }
+    }
+
+    private void _callWebSocketHandler(UsagiServerWebSocket request) {
+        if (httpServer.webSocketHandler != null) {
+            httpServer.webSocketHandler.accept(request);
         }
     }
 

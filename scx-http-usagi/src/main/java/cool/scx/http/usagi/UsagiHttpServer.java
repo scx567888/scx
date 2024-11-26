@@ -14,7 +14,7 @@ public class UsagiHttpServer implements ScxHttpServer {
     private final ScxTCPServer tcpServer;
     private final UsagiHttpServerOptions options;
     Consumer<ScxHttpServerRequest> requestHandler;
-    private Consumer<ScxServerWebSocket> webSocketHandler;
+    Consumer<ScxServerWebSocket> webSocketHandler;
     private Consumer<Throwable> errorHandler;
 
     public UsagiHttpServer(UsagiHttpServerOptions options) {

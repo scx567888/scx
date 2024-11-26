@@ -1,6 +1,7 @@
 package cool.scx.io.test;
 
 import cool.scx.io.ByteArrayDataReader;
+import cool.scx.io.DataNode;
 import cool.scx.io.LinkedDataReader;
 import cool.scx.io.NoMatchFoundException;
 import org.testng.Assert;
@@ -51,9 +52,9 @@ public class DataReaderTest {
         s[8] = "7".getBytes();
         s[9] = "9".getBytes();
         var d = new AtomicInteger(0);
-        Supplier<LinkedDataReader.Node> sp = () -> {
+        Supplier<DataNode> sp = () -> {
             try {
-                return new LinkedDataReader.Node(s[d.getAndIncrement()]);
+                return new DataNode(s[d.getAndIncrement()]);
             } catch (Exception e) {
                 return null;
             }
@@ -81,7 +82,7 @@ public class DataReaderTest {
     @Test
     public static void test3() {
         //测试资源耗尽攻击
-        var dataReader = new LinkedDataReader(() -> new LinkedDataReader.Node("aaaaaa".getBytes()));
+        var dataReader = new LinkedDataReader(() -> new DataNode("aaaaaa".getBytes()));
         //最大只搜索 100 字节
         try {
             byte[] bytes = dataReader.readUntil("\r\n".getBytes(), 100);

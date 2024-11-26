@@ -6,8 +6,8 @@ public class PingPongOptions extends ScxSocketOptions {
     private int pingTimeout;
 
     public PingPongOptions() {
-        this.pingInterval = 1000 * 5; // 心跳 间隔 5 秒
-        this.pingTimeout = 1000 * 5; // 心跳 超时 5 秒
+        this.pingInterval = 1000 * 10; // 心跳 间隔 10 秒
+        this.pingTimeout = 1000 * 10; // 心跳 超时 10 秒
     }
 
     public final int getPingInterval() {

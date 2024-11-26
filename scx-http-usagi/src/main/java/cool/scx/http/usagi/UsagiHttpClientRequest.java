@@ -83,7 +83,7 @@ public class UsagiHttpClientRequest extends ScxHttpClientRequestBase {
         ScxHttpBody body;
 
         if ("chunked".equals(transferEncoding)) {
-            body = new ScxHttpBodyImpl(new ChunkedInputStream(dataReader), headers, 65535);
+            body = new ScxHttpBodyImpl(new HttpChunkedInputStream(dataReader), headers, 65535);
         } else {
             var contentLength = headers.contentLength();
             if (contentLength != null) {
