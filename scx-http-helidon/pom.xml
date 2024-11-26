@@ -38,18 +38,13 @@
         </dependency>
 
         <dependency>
-            <groupId>io.helidon.webserver</groupId>
-            <artifactId>helidon-webserver-websocket</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>io.helidon.webclient</groupId>
             <artifactId>helidon-webclient</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>io.helidon.webclient</groupId>
-            <artifactId>helidon-webclient-websocket</artifactId>
+            <groupId>io.helidon.websocket</groupId>
+            <artifactId>helidon-websocket</artifactId>
         </dependency>
 
         <!-- ****************** 以下为测试依赖 ****************** -->
