@@ -32,7 +32,7 @@ public class HelidonHttpClient implements ScxHttpClient {
 
     @Override
     public ScxClientWebSocketBuilder webSocket() {
-        return new HelidonClientWebSocket();
+        return new HelidonClientWebSocketBuilder(this);
     }
 
     public HelidonHttpClientOptions options() {
