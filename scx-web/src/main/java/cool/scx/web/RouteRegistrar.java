@@ -181,7 +181,7 @@ public final class RouteRegistrar {
         var scxRouteHandlers = initScxRouteHandlers(this.scxWeb, objects);
         // 检查重复路由 (这里只需给出警告即可)
         checkRouteExists(scxRouteHandlers);
-        //循环添加到 vertxRouter 中
+        //循环添加到 router 中
         for (var c : scxRouteHandlers) {
             router.addRoute(c);
         }
