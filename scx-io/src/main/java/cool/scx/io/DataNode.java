@@ -1,7 +1,7 @@
 package cool.scx.io;
 
 public class DataNode {
-    
+
     final byte[] bytes;
     final int limit;
     int position;

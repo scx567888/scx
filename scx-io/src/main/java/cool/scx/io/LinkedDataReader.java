@@ -6,13 +6,13 @@ import java.util.function.Supplier;
 
 public class LinkedDataReader implements DataReader {
 
-    private final Supplier<Node> dataSupplier;
-    private Node head;
-    private Node tail;
+    private final Supplier<DataNode> dataSupplier;
+    private DataNode head;
+    private DataNode tail;
 
-    public LinkedDataReader(Supplier<Node> dataSupplier) {
+    public LinkedDataReader(Supplier<DataNode> dataSupplier) {
         this.dataSupplier = dataSupplier;
-        this.head = new Node(EMPTY_BYTES);
+        this.head = new DataNode(EMPTY_BYTES);
         this.tail = this.head;
     }
 
@@ -169,39 +169,6 @@ public class LinkedDataReader implements DataReader {
     @Override
     public void skip(int length) throws NoMoreDataException {
         walk((_, _, _) -> {}, length, true);
-    }
-
-    public static class Node {
-        private final byte[] bytes;
-        private final int limit;
-        private int position;
-        private Node next;
-
-        public Node(byte[] bytes) {
-            this.bytes = bytes;
-            this.position = 0;
-            this.limit = bytes.length;
-        }
-
-        public Node(byte[] bytes, int position, int limit) {
-            this.bytes = bytes;
-            this.position = position;
-            this.limit = limit;
-        }
-
-        int available() {
-            return limit - position;
-        }
-
-        boolean hasAvailable() {
-            return position < limit;
-        }
-
-        @Override
-        public String toString() {
-            return new String(bytes, position, limit - position);
-        }
-
     }
 
 }
