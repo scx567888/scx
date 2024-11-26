@@ -24,7 +24,7 @@ public class UsagiHttpClient implements ScxHttpClient {
 
     @Override
     public ScxClientWebSocketBuilder webSocket() {
-        return new UsagiHttpClientWebSocket(this);
+        return new UsagiClientWebSocketBuilder(this);
     }
 
 }
