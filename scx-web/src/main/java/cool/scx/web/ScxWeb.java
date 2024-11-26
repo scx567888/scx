@@ -209,8 +209,8 @@ public final class ScxWeb {
         return s;
     }
 
-    public ScxWeb bindErrorHandler(Router vertxRouter) {
-        vertxRouter.errorHandler(routerErrorHandler);
+    public ScxWeb bindErrorHandler(Router router) {
+        router.errorHandler(routerErrorHandler);
         return this;
     }
 

@@ -23,7 +23,7 @@ public class ScxWebTest {
      */
     @Test
     public static void test0() {
-        var vertx = new HelidonHttpServer(new HelidonHttpServerOptions().port(8080));
+        var httpServer = new HelidonHttpServer(new HelidonHttpServerOptions().port(8080));
 
         var router = Router.of();
 
@@ -36,14 +36,14 @@ public class ScxWebTest {
         }));
 
         router.addRoute(Route.of().path("/no-perm2").handler(c -> {
-            //或者用这种 vertx 的形式 和上方是一样的
+            //或者用这种 httpServer 的形式 和上方是一样的
             c.response().status(FORBIDDEN).send("Error");
         }));
 
-        vertx.requestHandler(router).start();
+        httpServer.requestHandler(router).start();
 
         for (var route : router.getRoutes()) {
-            System.out.println("http://127.0.0.1:" + vertx.port() + route.path());
+            System.out.println("http://127.0.0.1:" + httpServer.port() + route.path());
         }
 
     }
@@ -53,7 +53,7 @@ public class ScxWebTest {
      */
     public static void test1() {
 
-        var vertx = new HelidonHttpServer(new HelidonHttpServerOptions().port(8081));
+        var httpServer = new HelidonHttpServer(new HelidonHttpServerOptions().port(8081));
 
         var router = Router.of();
 
@@ -62,15 +62,15 @@ public class ScxWebTest {
         new ScxWeb().bindErrorHandler(router).registerHttpRoutes(router, new HelloWorldController());
 
         // 原有的并不会收到任何影响
-        router.addRoute(Route.of().path("/vertx-route").handler(c -> {
+        router.addRoute(Route.of().path("/my-route").handler(c -> {
             //这里直接抛出会由 ScxWeb 进行处理
-            c.response().send("vertx-route");
+            c.response().send("my-route");
         }));
 
-        vertx.requestHandler(router).start();
+        httpServer.requestHandler(router).start();
 
         for (var route : router.getRoutes()) {
-            System.out.println("http://127.0.0.1:" + vertx.port() + route.path());
+            System.out.println("http://127.0.0.1:" + httpServer.port() + route.path());
         }
 
     }
