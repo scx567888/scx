@@ -59,7 +59,7 @@ public class HelidonClientWebSocketBuilder implements ScxClientWebSocketBuilder 
             }
         }
         var wsClient = wsClientBuilder.build();
-        
+
         wsClient.connect(uri.toURI(), new HelidonClientWebSocket(this));
     }
 
