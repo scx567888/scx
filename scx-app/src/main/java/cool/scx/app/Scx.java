@@ -80,7 +80,7 @@ public final class Scx {
 
     private WebSocketRouter webSocketRouter = null;
 
-    private ScxHttpServer vertxHttpServer = null;
+    private ScxHttpServer httpServer = null;
 
     Scx(ScxEnvironment scxEnvironment, String appKey, ScxFeatureConfig scxFeatureConfig, ScxConfig scxConfig, ScxModule[] scxModules, HelidonHttpServerOptions defaultHttpServerOptions) {
         //0, 赋值到全局
@@ -164,7 +164,7 @@ public final class Scx {
         var httpRoutes = RouteRegistrar.filterClass(classList).stream().map(beanFactory::getBean).toArray();
         var webSocketRoutes = WebSocketRouteRegistrar.filterClass(classList).stream().map(beanFactory::getBean).toArray();
         this.scxWeb.bindErrorHandler(this.scxHttpRouter).registerHttpRoutes(scxHttpRouter, httpRoutes).registerWebSocketRoutes(webSocketRouter, webSocketRoutes);
-        //4, 依次执行 模块的 start 生命周期 , 在这里我们可以操作 scxRouteRegistry, vertxRouter 等对象 "手动注册新路由" 或其他任何操作
+        //4, 依次执行 模块的 start 生命周期 , 在这里我们可以操作 router 等对象 "手动注册新路由" 或其他任何操作
         this.startAllScxModules();
         //5, 打印基本信息
         if (this.scxFeatureConfig.get(SHOW_START_UP_INFO)) {
@@ -182,8 +182,8 @@ public final class Scx {
             var tls = new TLS(this.scxOptions.sslPath(), this.scxOptions.sslPassword());
             httpServerOptions.tls(Tls.builder().sslContext(tls.sslContext()).build());
         }
-        this.vertxHttpServer = new HelidonHttpServer(httpServerOptions);
-        this.vertxHttpServer.requestHandler(this.scxHttpRouter).webSocketHandler(this.webSocketRouter);
+        this.httpServer = new HelidonHttpServer(httpServerOptions);
+        this.httpServer.requestHandler(this.scxHttpRouter).webSocketHandler(this.webSocketRouter);
         //7, 添加程序停止时的钩子函数
         this.addShutdownHook();
         //8, 使用初始端口号 启动服务器
@@ -204,13 +204,13 @@ public final class Scx {
      */
     private void startServer(int port) {
         try {
-            this.vertxHttpServer.start();
+            this.httpServer.start();
             var httpOrHttps = this.scxOptions.isHttpsEnabled() ? "https" : "http";
             var o = Ansi.ansi().green("服务器启动成功... 用时 " + StopWatch.stopToMillis("ScxRun") + " ms").ln();
-            o.green("> 本地: " + httpOrHttps + "://localhost:" + this.vertxHttpServer.port() + "/").ln();
+            o.green("> 本地: " + httpOrHttps + "://localhost:" + this.httpServer.port() + "/").ln();
             var normalIP = ignore(() -> getLocalIPAddress(c -> c instanceof Inet4Address), new InetAddress[]{});
             for (var ip : normalIP) {
-                o.green("> 网络: " + httpOrHttps + "://" + ip.getHostAddress() + ":" + this.vertxHttpServer.port() + "/").ln();
+                o.green("> 网络: " + httpOrHttps + "://" + ip.getHostAddress() + ":" + this.httpServer.port() + "/").ln();
             }
             o.print();
         } catch (Exception cause) {
@@ -381,8 +381,8 @@ public final class Scx {
         return jdbcContext;
     }
 
-    public ScxHttpServer vertxHttpServer() {
-        return vertxHttpServer;
+    public ScxHttpServer httpServer() {
+        return httpServer;
     }
 
     public EventBus eventBus() {

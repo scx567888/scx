@@ -98,7 +98,7 @@ public final class ScxContext {
      * @return a
      */
     public static ScxHttpServer httpServer() {
-        return scx().vertxHttpServer();
+        return scx().httpServer();
     }
 
     /**
