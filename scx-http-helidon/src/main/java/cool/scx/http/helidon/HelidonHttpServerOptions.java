@@ -21,6 +21,14 @@ public class HelidonHttpServerOptions {
         this.maxWebSocketFrameLength = 1024 * 1024;// 1MB
     }
 
+    public HelidonHttpServerOptions(HelidonHttpServerOptions oldOptions) {
+        this.port = oldOptions.port;
+        this.tls = oldOptions.tls;
+        this.maxPayloadSize = oldOptions.maxPayloadSize;
+        this.bodyBufferSize = oldOptions.bodyBufferSize;
+        this.maxWebSocketFrameLength = oldOptions.maxWebSocketFrameLength;
+    }
+
     public int port() {
         return port;
     }
