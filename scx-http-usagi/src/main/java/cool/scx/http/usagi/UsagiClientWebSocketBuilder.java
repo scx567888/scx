@@ -14,14 +14,14 @@ import static cool.scx.http.HttpFieldName.CONNECTION;
 import static cool.scx.http.HttpFieldName.UPGRADE;
 import static cool.scx.http.HttpHelper.generateSecWebSocketAccept;
 
-public class UsagiHttpClientWebSocket implements ScxClientWebSocketBuilder {
+public class UsagiClientWebSocketBuilder implements ScxClientWebSocketBuilder {
 
     private final UsagiHttpClient httpClient;
     private ScxURIWritable uri;
     private ScxHttpHeadersWritable headers;
     private Consumer<ScxClientWebSocket> onConnect;
 
-    public UsagiHttpClientWebSocket(UsagiHttpClient httpClient) {
+    public UsagiClientWebSocketBuilder(UsagiHttpClient httpClient) {
         this.httpClient = httpClient;
         this.uri = ScxURI.of();
         this.headers = ScxHttpHeaders.of();
@@ -64,6 +64,13 @@ public class UsagiHttpClientWebSocket implements ScxClientWebSocketBuilder {
         newHeader.add("Sec-Websocket-Key", key);
         newHeader.add("Host", "127.0.0.1");
         newHeader.add("Sec-WebSocket-Version", "13");
+
+        var scheme = uri.scheme();
+        if ("ws".equals(scheme)) {
+            uri.scheme("http");
+        } else if ("wss".equals(scheme)) {
+            uri.scheme("https");
+        }
         var request = httpClient.request()
                 .method(HttpMethod.GET)
                 .uri(uri)
