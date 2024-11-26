@@ -7,10 +7,11 @@ import cool.scx.http.usagi.UsagiHttpServerOptions;
 public class WebSocketTest {
 
     public static void main(String[] args) {
-        test1();
+        startServer();
+        startClient();
     }
 
-    public static void test1() {
+    public static void startServer() {
         var httpServer = new UsagiHttpServer(new UsagiHttpServerOptions().port(8080));
 
         httpServer.webSocketHandler(webSocket -> {
@@ -21,7 +22,9 @@ public class WebSocketTest {
         });
 
         httpServer.start();
+    }
 
+    public static void startClient() {
         var httpClient = new UsagiHttpClient();
 
         httpClient.webSocket().uri("ws://127.0.0.1:8080/websocket").onConnect(webSocket -> {
@@ -35,7 +38,6 @@ public class WebSocketTest {
                 }
             });
         }).connect();
-
     }
 
 }
