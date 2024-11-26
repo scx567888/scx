@@ -4,6 +4,7 @@ import cool.scx.http.ScxHttpServer;
 import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.ScxServerWebSocket;
 import io.helidon.webserver.WebServer;
+import io.helidon.webserver.websocket.WsConfig;
 
 import java.util.function.Consumer;
 
@@ -28,6 +29,11 @@ public class HelidonHttpServer implements ScxHttpServer {
                 .addRouting(httpRouting)
                 .addRouting(webSocketRouting)
                 .maxPayloadSize(options.maxPayloadSize())
+                .addProtocol(
+                        WsConfig.builder()
+                                .maxFrameLength(options.maxWebSocketFrameLength())
+                                .build()
+                )
                 .port(options.port());
         if (options.tls() != null) {
             builder.tls(options.tls());

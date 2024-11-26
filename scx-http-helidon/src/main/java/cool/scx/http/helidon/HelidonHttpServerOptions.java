@@ -11,12 +11,14 @@ public class HelidonHttpServerOptions {
     private Tls tls;
     private long maxPayloadSize;
     private int bodyBufferSize;
+    private int maxWebSocketFrameLength;
 
     public HelidonHttpServerOptions() {
         this.port = 0;
         this.tls = null;
         this.maxPayloadSize = -1;
         this.bodyBufferSize = 65536;
+        this.maxWebSocketFrameLength = 1024 * 1024;// 1MB
     }
 
     public int port() {
@@ -47,6 +49,15 @@ public class HelidonHttpServerOptions {
 
     public HelidonHttpServerOptions maxPayloadSize(long maxPayloadSize) {
         this.maxPayloadSize = maxPayloadSize;
+        return this;
+    }
+
+    public int maxWebSocketFrameLength() {
+        return this.maxWebSocketFrameLength;
+    }
+
+    public HelidonHttpServerOptions maxWebSocketFrameLength(int maxWebSocketFrameLength) {
+        this.maxWebSocketFrameLength = maxWebSocketFrameLength;
         return this;
     }
 
