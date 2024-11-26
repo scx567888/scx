@@ -16,7 +16,6 @@ public class WebSocketTest {
 
         httpServer.webSocketHandler(webSocket -> {
             webSocket.onTextMessage(data -> {
-                System.out.println(Thread.currentThread());
                 webSocket.send(data);
                 System.out.println("服 : " + data);
             });

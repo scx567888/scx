@@ -1,77 +1,25 @@
 package cool.scx.http.helidon;
 
 import cool.scx.http.ScxClientWebSocket;
-import cool.scx.http.ScxClientWebSocketBuilder;
-import cool.scx.http.ScxHttpHeaders;
-import cool.scx.http.ScxHttpHeadersWritable;
-import cool.scx.http.uri.ScxURI;
-import cool.scx.http.uri.ScxURIWritable;
-import io.helidon.webclient.websocket.WsClient;
 import io.helidon.websocket.WsSession;
-
-import java.util.function.Consumer;
 
 /**
  * HelidonClientWebSocket
  */
-class HelidonClientWebSocket extends HelidonWebSocket implements ScxClientWebSocket, ScxClientWebSocketBuilder {
+class HelidonClientWebSocket extends HelidonWebSocket implements ScxClientWebSocket {
 
-    private Consumer<ScxClientWebSocket> connectHandler;
-    private ScxURIWritable uri;
-    private ScxHttpHeadersWritable builderHeaders;
+    private final HelidonClientWebSocketBuilder builder;
 
-    public HelidonClientWebSocket() {
-        builderHeaders = ScxHttpHeaders.of();
-    }
-
-    @Override
-    public ScxURIWritable uri() {
-        return uri;
-    }
-
-    @Override
-    public HelidonClientWebSocket uri(ScxURI uri) {
-        this.uri = ScxURI.of(uri);
-        return this;
-    }
-
-    @Override
-    public ScxHttpHeadersWritable headers() {
-        return builderHeaders;
-    }
-
-    @Override
-    public ScxClientWebSocketBuilder headers(ScxHttpHeaders headers) {
-        builderHeaders = ScxHttpHeaders.of(headers);
-        return this;
+    public HelidonClientWebSocket(HelidonClientWebSocketBuilder builder) {
+        this.builder = builder;
     }
 
     @Override
     public void onOpen(WsSession session) {
         super.onOpen(session);
-        if (connectHandler != null) {
-            connectHandler.accept(this);
+        if (builder.connectHandler != null) {
+            builder.connectHandler.accept(this);
         }
-    }
-
-    @Override
-    public HelidonClientWebSocket onConnect(Consumer<ScxClientWebSocket> connectHandler) {
-        this.connectHandler = connectHandler;
-        return this;
-    }
-
-    @Override
-    public void connect() {
-        var wsClientBuilder = WsClient.builder();
-        for (var i : builderHeaders) {
-            var key = i.getKey();
-            var values = i.getValue();
-            for (var value : values) {
-                wsClientBuilder.addHeader(key.value(), value);
-            }
-        }
-        var wsClient = wsClientBuilder.build();
-        wsClient.connect(uri.toURI(), this);
     }
 
 }

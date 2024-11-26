@@ -1,6 +1,6 @@
 package cool.scx.http.helidon;
 
-import io.helidon.common.socket.PeerInfo;
+import cool.scx.http.PeerInfo;
 
 import java.net.SocketAddress;
 import java.security.Principal;
@@ -9,11 +9,11 @@ import java.security.cert.Certificate;
 /**
  * HelidonPeerInfo
  */
-public class HelidonPeerInfo implements cool.scx.http.PeerInfo {
+public class HelidonPeerInfo implements PeerInfo {
 
-    private final PeerInfo peerInfo;
+    private final io.helidon.common.socket.PeerInfo peerInfo;
 
-    public HelidonPeerInfo(PeerInfo peerInfo) {
+    public HelidonPeerInfo(io.helidon.common.socket.PeerInfo peerInfo) {
         this.peerInfo = peerInfo;
     }
 
