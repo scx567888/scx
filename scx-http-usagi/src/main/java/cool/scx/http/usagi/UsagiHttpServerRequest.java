@@ -14,9 +14,13 @@ class UsagiHttpServerRequest implements ScxHttpServerRequest {
     ScxHttpHeaders headers;
     ScxHttpBody body;
     ScxHttpServerResponse response;
+    PeerInfo remotePeer;
+    PeerInfo localPeer;
 
     public UsagiHttpServerRequest() {
-
+        //todo 这里现在是假的
+        remotePeer = PeerInfo.of();
+        localPeer = PeerInfo.of();
     }
 
     @Override
@@ -51,12 +55,12 @@ class UsagiHttpServerRequest implements ScxHttpServerRequest {
 
     @Override
     public PeerInfo remotePeer() {
-        return null;
+        return remotePeer;
     }
 
     @Override
     public PeerInfo localPeer() {
-        return null;
+        return localPeer;
     }
 
 }
