@@ -109,7 +109,7 @@ public class TCPServer implements ScxTCPServer {
             // 调用用户处理器
             var tcpSocket = new TCPSocket(socket);
             connectHandler.accept(tcpSocket);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             LOGGER.log(ERROR, "处理 Socket 时发生错误 !!!", e);
             try {
                 socket.close();
