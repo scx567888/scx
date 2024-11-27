@@ -2,6 +2,7 @@ package cool.scx.http.helidon;
 
 import cool.scx.http.web_socket.ScxWebSocket;
 import cool.scx.http.web_socket.ScxWebSocketCloseInfo;
+import cool.scx.http.web_socket.ScxWebSocketCloseInfoImpl;
 import cool.scx.http.web_socket.WebSocketCloseInfo;
 import io.helidon.common.buffers.BufferData;
 import io.helidon.http.Headers;
@@ -32,7 +33,7 @@ class HelidonWebSocket implements ScxWebSocket, WsListener {
     private Consumer<byte[]> binaryMessageHandler;
     private Consumer<byte[]> pingHandler;
     private Consumer<byte[]> pongHandler;
-    private BiConsumer<Integer, String> closeHandler;
+    private Consumer<ScxWebSocketCloseInfo> closeHandler;
     private Consumer<Throwable> errorHandler;
 
     public HelidonWebSocket() {
@@ -64,7 +65,7 @@ class HelidonWebSocket implements ScxWebSocket, WsListener {
     }
 
     @Override
-    public HelidonWebSocket onClose(BiConsumer<Integer, String> closeHandler) {
+    public HelidonWebSocket onClose(Consumer<ScxWebSocketCloseInfo> closeHandler) {
         this.closeHandler = closeHandler;
         return this;
     }
@@ -199,7 +200,7 @@ class HelidonWebSocket implements ScxWebSocket, WsListener {
     public void onClose(WsSession session, int status, String reason) {
         this.closed.set(true);
         if (closeHandler != null) {
-            closeHandler.accept(status, reason);
+            closeHandler.accept(new ScxWebSocketCloseInfoImpl(status, reason));
         }
     }
 
