@@ -3,7 +3,7 @@ package cool.scx.http.web_socket;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import static cool.scx.http.web_socket.WebSocketCloseCode.NORMAL_CLOSE;
+import static cool.scx.http.web_socket.WebSocketCloseInfo.NORMAL_CLOSE;
 
 /**
  * ScxWebSocket
@@ -30,7 +30,7 @@ public interface ScxWebSocket {
 
     ScxWebSocket pong(byte[] data);
 
-    ScxWebSocket close(int code, String reason);
+    ScxWebSocket close(ScxWebSocketCloseInfo closeInfo);
 
     ScxWebSocket terminate();
 
@@ -44,8 +44,8 @@ public interface ScxWebSocket {
         return send(binaryMessage, true);
     }
 
-    default ScxWebSocket close(WebSocketCloseCode closeCode) {
-        return close(closeCode.code(), closeCode.reason());
+    default ScxWebSocket close(int code, String reason) {
+        return close(new ScxWebSocketCloseInfoImpl(code, reason));
     }
 
     default ScxWebSocket close() {
