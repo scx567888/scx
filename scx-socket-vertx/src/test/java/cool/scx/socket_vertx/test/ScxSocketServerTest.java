@@ -1,14 +1,14 @@
-package cool.scx.socket.test;
+package cool.scx.socket_vertx.test;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import cool.scx.http.helidon.HelidonHttpServer;
-import cool.scx.http.helidon.HelidonHttpServerOptions;
-import cool.scx.socket.ScxSocketServer;
+import cool.scx.socket_vertx.ScxSocketServer;
+import io.vertx.core.Vertx;
 import org.testng.annotations.Test;
 
 import java.util.List;
 
 public class ScxSocketServerTest extends InitLogger {
+    public static final Vertx VERTX = Vertx.vertx();
 
     public static void main(String[] args) {
         test1();
@@ -31,7 +31,7 @@ public class ScxSocketServerTest extends InitLogger {
                 clientContent.sendEvent("b", m);
             });
 
-            clientContent.onClose((i, s) -> {
+            clientContent.onClose(c -> {
                 System.out.println("close");
             });
 
@@ -57,15 +57,10 @@ public class ScxSocketServerTest extends InitLogger {
 
         });
 
-        //使用 httpServer
-        new HelidonHttpServer(new HelidonHttpServerOptions().port(8990))
+        //使用 vertx 的 httpServer 
+        VERTX.createHttpServer()
                 .webSocketHandler(scxSocketServer::call)
-                .start();
-
-        //使用 httpServer
-//        new UsagiHttpServer(new UsagiHttpServerOptions().port(8990))
-//                .webSocketHandler(scxSocketServer::call)
-//                .start();
+                .listen(8990);
 
     }
 

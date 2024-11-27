@@ -1,11 +1,12 @@
-package cool.scx.socket.test;
+package cool.scx.socket_vertx.test;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import cool.scx.http.usagi.UsagiHttpClient;
-import cool.scx.socket.ScxSocketClient;
+import cool.scx.socket_vertx.ScxSocketClient;
 import org.testng.annotations.Test;
 
 import java.util.List;
+
+import static cool.scx.socket_vertx.test.ScxSocketServerTest.VERTX;
 
 public class ScxSocketClientTest extends InitLogger {
 
@@ -18,8 +19,7 @@ public class ScxSocketClientTest extends InitLogger {
         //启动服务器
 //        ScxSocketServerTest.test1();
 
-//        var webSocketClient = new HelidonHttpClient();
-        var webSocketClient = new UsagiHttpClient();
+        var webSocketClient = VERTX.createWebSocketClient();
 
         var scxSocketClient = new ScxSocketClient("ws://127.0.0.1:8990/test", webSocketClient);
 

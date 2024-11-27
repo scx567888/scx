@@ -9,35 +9,32 @@
         <version>3.2.8</version>
     </parent>
 
-    <artifactId>scx-socket</artifactId>
+    <artifactId>scx-socket-vertx</artifactId>
     <packaging>jar</packaging>
 
-    <name>SCX Socket</name>
+    <name>SCX Socket Vertx</name>
     <url>https://github.com/scx567888/scx</url>
     <description>
-        A WebSocket framework
+        A WebSocket framework (Vertx)
     </description>
 
     <dependencies>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>scx-http</artifactId>
+            <artifactId>scx-common</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>scx-http-helidon</artifactId>
+            <artifactId>scx-socket</artifactId>
             <version>${project.version}</version>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>scx-http-usagi</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-core</artifactId>
         </dependency>
 
         <dependency>
