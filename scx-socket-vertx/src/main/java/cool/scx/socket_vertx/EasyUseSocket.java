@@ -1,7 +1,9 @@
 package cool.scx.socket_vertx;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import cool.scx.socket.*;
+import cool.scx.socket.RequestOptions;
+import cool.scx.socket.ScxSocketResponse;
+import cool.scx.socket.SendOptions;
 import io.vertx.core.http.WebSocketBase;
 
 import java.util.function.Consumer;

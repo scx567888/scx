@@ -1,6 +1,9 @@
 package cool.scx.socket_vertx;
 
-import cool.scx.socket.*;
+import cool.scx.socket.RequestOptions;
+import cool.scx.socket.ScxSocketFrame;
+import cool.scx.socket.ScxSocketResponse;
+import cool.scx.socket.SendOptions;
 import io.vertx.core.http.WebSocketBase;
 
 import java.util.concurrent.ConcurrentHashMap;
