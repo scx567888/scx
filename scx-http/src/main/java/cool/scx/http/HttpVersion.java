@@ -5,6 +5,7 @@ package cool.scx.http;
  */
 public enum HttpVersion {
 
+    HTTP_1_0("HTTP/1.0"),
     HTTP_1_1("HTTP/1.1"),
     HTTP_2("HTTP/2.0");
 
@@ -21,6 +22,7 @@ public enum HttpVersion {
     public static HttpVersion of(String version) {
         var upperCase = version.toUpperCase();
         return switch (upperCase) {
+            case "HTTP/1.0" -> HTTP_1_0;
             case "HTTP/1.1" -> HTTP_1_1;
             case "HTTP/2.0" -> HTTP_2;
             default -> throw new IllegalArgumentException("Unsupported HTTP version: " + version);
@@ -34,6 +36,7 @@ public enum HttpVersion {
     public static HttpVersion find(String version) {
         var upperCase = version.toUpperCase();
         return switch (upperCase) {
+            case "HTTP/1.0" -> HTTP_1_0;
             case "HTTP/1.1" -> HTTP_1_1;
             case "HTTP/2.0" -> HTTP_2;
             default -> null;
