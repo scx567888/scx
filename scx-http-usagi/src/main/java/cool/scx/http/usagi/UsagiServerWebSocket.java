@@ -3,17 +3,16 @@ package cool.scx.http.usagi;
 import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.web_socket.ScxServerWebSocket;
-import cool.scx.http.web_socket.ScxServerWebSocketHandshakeRequest;
 import cool.scx.io.DataReader;
 
 import java.io.OutputStream;
 
 public class UsagiServerWebSocket extends UsagiWebSocket implements ScxServerWebSocket {
 
-    private final ScxServerWebSocketHandshakeRequest handshakeServerRequest;
+    private final UsagiServerWebSocketHandshakeRequest handshakeServerRequest;
 
-    public UsagiServerWebSocket(ScxServerWebSocketHandshakeRequest handshakeServerRequest, DataReader reader, OutputStream writer) {
-        super(reader, writer);
+    public UsagiServerWebSocket(UsagiServerWebSocketHandshakeRequest handshakeServerRequest, DataReader reader, OutputStream writer) {
+        super(handshakeServerRequest.tcpSocket, reader, writer);
         this.handshakeServerRequest = handshakeServerRequest;
     }
 
