@@ -16,7 +16,7 @@ public class ScxSocketClientTest extends InitLogger {
     @Test
     public static void test1() {
         //启动服务器
-        ScxSocketServerTest.test1();
+//        ScxSocketServerTest.test1();
 
 //        var webSocketClient = new HelidonHttpClient();
         var webSocketClient = new UsagiHttpClient();
