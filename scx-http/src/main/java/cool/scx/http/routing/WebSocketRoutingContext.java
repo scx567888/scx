@@ -1,8 +1,8 @@
 package cool.scx.http.routing;
 
 import cool.scx.http.Parameters;
-import cool.scx.http.ScxServerWebSocket;
 import cool.scx.http.exception.NotFoundException;
+import cool.scx.http.web_socket.ScxServerWebSocket;
 
 import java.util.Iterator;
 

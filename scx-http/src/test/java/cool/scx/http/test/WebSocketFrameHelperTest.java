@@ -1,8 +1,8 @@
 package cool.scx.http.test;
 
-import cool.scx.http.WebSocketFrame;
-import cool.scx.http.WebSocketFrameHelper;
-import cool.scx.http.WebSocketOpCode;
+import cool.scx.http.web_socket.WebSocketFrame;
+import cool.scx.http.web_socket.WebSocketFrameHelper;
+import cool.scx.http.web_socket.WebSocketOpCode;
 import cool.scx.io.ByteArrayDataReader;
 import cool.scx.io.NoMoreDataException;
 import org.testng.annotations.Test;

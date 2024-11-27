@@ -1,5 +1,7 @@
-package cool.scx.http;
+package cool.scx.http.web_socket;
 
+import cool.scx.http.Parameters;
+import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.uri.ScxURI;
 
 /**

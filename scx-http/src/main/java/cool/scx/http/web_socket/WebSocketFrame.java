@@ -1,4 +1,4 @@
-package cool.scx.http;
+package cool.scx.http.web_socket;
 
 /**
  * @see <a href="https://www.rfc-editor.org/rfc/rfc6455">https://www.rfc-editor.org/rfc/rfc6455</a>
