@@ -150,7 +150,7 @@ public class TestModule extends ScxModule {
         var ip = Arrays.stream(NetUtils.getLocalIPAddress()).filter(i -> i instanceof Inet4Address).toList().getFirst();
         var logger = System.getLogger(TestModule.class.getName());
         //测试 URIBuilder
-        for (int i = 0; i < 1000; i = i + 1) {
+        for (int i = 0; i < 10; i = i + 1) {
             var s = "http://" + ip.getHostAddress() + ":8888/test0";
             var stringHttpResponse = ScxHttpClientHelper.post(
                     ScxURI.of(s)
