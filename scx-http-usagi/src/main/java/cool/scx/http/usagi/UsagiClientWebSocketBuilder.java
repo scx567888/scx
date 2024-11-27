@@ -5,6 +5,8 @@ import cool.scx.common.util.RandomUtils;
 import cool.scx.http.*;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.uri.ScxURIWritable;
+import cool.scx.http.web_socket.ScxClientWebSocket;
+import cool.scx.http.web_socket.ScxClientWebSocketBuilder;
 import cool.scx.io.InputStreamDataSupplier;
 import cool.scx.io.LinkedDataReader;
 

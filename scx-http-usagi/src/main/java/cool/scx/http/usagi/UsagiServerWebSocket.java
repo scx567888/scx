@@ -1,8 +1,8 @@
 package cool.scx.http.usagi;
 
 import cool.scx.http.ScxHttpHeaders;
-import cool.scx.http.ScxServerWebSocket;
-import cool.scx.http.ScxServerWebSocketHandshakeRequest;
+import cool.scx.http.web_socket.ScxServerWebSocket;
+import cool.scx.http.web_socket.ScxServerWebSocketHandshakeRequest;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.io.DataReader;
 
