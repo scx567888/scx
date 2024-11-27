@@ -1,6 +1,7 @@
 package cool.scx.socket;
 
 import cool.scx.http.web_socket.ScxWebSocket;
+import cool.scx.http.web_socket.ScxWebSocketCloseInfo;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -178,10 +179,10 @@ public class ScxSocket {
         }
     }
 
-    protected void doClose(Integer code, String reason) {
+    protected void doClose(ScxWebSocketCloseInfo closeInfo) {
         this.close();
         //呼叫 onClose 事件
-        this._callOnClose(code, reason);
+        this._callOnClose(closeInfo.code(), closeInfo.reason());
     }
 
     protected void doError(Throwable e) {
