@@ -1,4 +1,4 @@
-package cool.scx.http;
+package cool.scx.http.web_socket;
 
 import cool.scx.io.DataReader;
 

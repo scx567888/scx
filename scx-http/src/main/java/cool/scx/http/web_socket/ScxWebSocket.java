@@ -1,9 +1,9 @@
-package cool.scx.http;
+package cool.scx.http.web_socket;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import static cool.scx.http.WebSocketCloseCode.NORMAL_CLOSE;
+import static cool.scx.http.web_socket.WebSocketCloseCode.NORMAL_CLOSE;
 
 /**
  * ScxWebSocket

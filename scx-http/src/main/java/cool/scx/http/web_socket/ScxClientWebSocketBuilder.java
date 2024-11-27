@@ -1,5 +1,8 @@
-package cool.scx.http;
+package cool.scx.http.web_socket;
 
+import cool.scx.http.ScxHttpHeaderName;
+import cool.scx.http.ScxHttpHeaders;
+import cool.scx.http.ScxHttpHeadersWritable;
 import cool.scx.http.cookie.Cookie;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.uri.ScxURIWritable;

@@ -1,8 +1,8 @@
 package cool.scx.http.usagi;
 
-import cool.scx.http.ScxWebSocket;
-import cool.scx.http.WebSocketFrame;
-import cool.scx.http.WebSocketOpCode;
+import cool.scx.http.web_socket.ScxWebSocket;
+import cool.scx.http.web_socket.WebSocketFrame;
+import cool.scx.http.web_socket.WebSocketOpCode;
 import cool.scx.io.DataReader;
 
 import java.io.IOException;
@@ -12,9 +12,9 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import static cool.scx.http.WebSocketFrameHelper.readFrameUntilLast;
-import static cool.scx.http.WebSocketFrameHelper.writeFrame;
-import static cool.scx.http.WebSocketOpCode.*;
+import static cool.scx.http.web_socket.WebSocketFrameHelper.readFrameUntilLast;
+import static cool.scx.http.web_socket.WebSocketFrameHelper.writeFrame;
+import static cool.scx.http.web_socket.WebSocketOpCode.*;
 
 public class UsagiWebSocket implements ScxWebSocket {
 

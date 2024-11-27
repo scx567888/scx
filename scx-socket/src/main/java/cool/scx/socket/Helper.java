@@ -3,9 +3,9 @@ package cool.scx.socket;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cool.scx.common.util.ObjectUtils;
-import cool.scx.http.ScxServerWebSocket;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.uri.ScxURIWritable;
+import cool.scx.http.web_socket.ScxServerWebSocket;
 
 import static cool.scx.common.util.ScxExceptionHelper.wrap;
 

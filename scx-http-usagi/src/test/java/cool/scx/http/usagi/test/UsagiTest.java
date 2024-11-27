@@ -1,8 +1,8 @@
 package cool.scx.http.usagi.test;
 
-import cool.scx.http.ScxServerWebSocketHandshakeRequest;
 import cool.scx.http.usagi.UsagiHttpServer;
 import cool.scx.http.usagi.UsagiHttpServerOptions;
+import cool.scx.http.web_socket.ScxServerWebSocketHandshakeRequest;
 
 public class UsagiTest {
 

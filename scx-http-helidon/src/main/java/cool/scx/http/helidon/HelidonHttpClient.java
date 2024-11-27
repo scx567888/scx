@@ -1,7 +1,8 @@
 package cool.scx.http.helidon;
 
-import cool.scx.http.ScxClientWebSocketBuilder;
 import cool.scx.http.ScxHttpClient;
+import cool.scx.http.ScxHttpClientRequest;
+import cool.scx.http.web_socket.ScxClientWebSocketBuilder;
 import io.helidon.webclient.api.WebClient;
 
 /**
@@ -26,7 +27,7 @@ public class HelidonHttpClient implements ScxHttpClient {
     }
 
     @Override
-    public HelidonHttpClientRequest request() {
+    public ScxHttpClientRequest request() {
         return new HelidonHttpClientRequest(this.webClient, this);
     }
 

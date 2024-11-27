@@ -1,6 +1,6 @@
 package cool.scx.http.routing;
 
-import cool.scx.http.ScxServerWebSocket;
+import cool.scx.http.web_socket.ScxServerWebSocket;
 
 import java.util.ArrayList;
 import java.util.Comparator;

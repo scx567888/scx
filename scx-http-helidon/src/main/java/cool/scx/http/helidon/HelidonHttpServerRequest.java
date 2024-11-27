@@ -6,8 +6,7 @@ import io.helidon.webserver.ConnectionContext;
 import io.helidon.webserver.http.RoutingRequest;
 import io.helidon.webserver.http.RoutingResponse;
 
-import static cool.scx.http.helidon.HelidonHelper.convertHeaders;
-import static cool.scx.http.helidon.HelidonHelper.createScxURI;
+import static cool.scx.http.helidon.HelidonHelper.*;
 
 /**
  * HelidonHttpServerRequest
@@ -20,8 +19,8 @@ class HelidonHttpServerRequest implements ScxHttpServerRequest {
     private final ScxHttpHeaders headers;
     private final ScxHttpBody body;
     private final ScxHttpServerResponse response;
-    private final HelidonPeerInfo remotePeer;
-    private final HelidonPeerInfo localPeer;
+    private final PeerInfo remotePeer;
+    private final PeerInfo localPeer;
     private final HelidonHttpServer server;
 
     public HelidonHttpServerRequest(ConnectionContext ctx, RoutingRequest request, RoutingResponse response, HelidonHttpServer server) {
@@ -33,8 +32,8 @@ class HelidonHttpServerRequest implements ScxHttpServerRequest {
         this.headers = convertHeaders(request.headers());
         this.body = new ScxHttpBodyImpl(request.content().inputStream(), this.headers, server.options().bodyBufferSize());
         this.response = new HelidonHttpServerResponse(this, response);
-        this.remotePeer = new HelidonPeerInfo(request.remotePeer());
-        this.localPeer = new HelidonPeerInfo(request.localPeer());
+        this.remotePeer = convertPeerInfo(request.remotePeer());
+        this.localPeer = convertPeerInfo(request.localPeer());
     }
 
     @Override

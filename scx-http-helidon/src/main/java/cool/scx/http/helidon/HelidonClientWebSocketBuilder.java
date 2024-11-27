@@ -1,16 +1,16 @@
 package cool.scx.http.helidon;
 
-import cool.scx.http.ScxClientWebSocket;
-import cool.scx.http.ScxClientWebSocketBuilder;
 import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.ScxHttpHeadersWritable;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.uri.ScxURIWritable;
+import cool.scx.http.web_socket.ScxClientWebSocket;
+import cool.scx.http.web_socket.ScxClientWebSocketBuilder;
 import io.helidon.webclient.websocket.WsClient;
 
 import java.util.function.Consumer;
 
-public class HelidonClientWebSocketBuilder implements ScxClientWebSocketBuilder {
+class HelidonClientWebSocketBuilder implements ScxClientWebSocketBuilder {
 
     Consumer<ScxClientWebSocket> connectHandler;
     private ScxURIWritable uri;

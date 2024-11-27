@@ -1,4 +1,6 @@
-package cool.scx.http;
+package cool.scx.http.web_socket;
+
+import cool.scx.http.ScxHttpServerRequest;
 
 import static cool.scx.http.HttpFieldName.*;
 import static cool.scx.http.HttpHelper.generateSecWebSocketAccept;

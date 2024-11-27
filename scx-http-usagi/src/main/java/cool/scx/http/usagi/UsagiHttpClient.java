@@ -1,8 +1,8 @@
 package cool.scx.http.usagi;
 
-import cool.scx.http.ScxClientWebSocketBuilder;
 import cool.scx.http.ScxHttpClient;
 import cool.scx.http.ScxHttpClientRequest;
+import cool.scx.http.web_socket.ScxClientWebSocketBuilder;
 import cool.scx.net.ScxTCPClientOptions;
 
 public class UsagiHttpClient implements ScxHttpClient {

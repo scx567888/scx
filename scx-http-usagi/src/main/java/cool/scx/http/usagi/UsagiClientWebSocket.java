@@ -1,15 +1,15 @@
 package cool.scx.http.usagi;
 
 import cool.scx.common.util.RandomUtils;
-import cool.scx.http.ScxClientWebSocket;
-import cool.scx.http.WebSocketFrame;
-import cool.scx.http.WebSocketOpCode;
+import cool.scx.http.web_socket.ScxClientWebSocket;
+import cool.scx.http.web_socket.WebSocketFrame;
+import cool.scx.http.web_socket.WebSocketOpCode;
 import cool.scx.io.DataReader;
 
 import java.io.IOException;
 import java.io.OutputStream;
 
-import static cool.scx.http.WebSocketFrameHelper.writeFrame;
+import static cool.scx.http.web_socket.WebSocketFrameHelper.writeFrame;
 
 public class UsagiClientWebSocket extends UsagiWebSocket implements ScxClientWebSocket {
 

@@ -1,5 +1,6 @@
 package cool.scx.http.helidon;
 
+import cool.scx.http.PeerInfo;
 import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.ScxHttpHeadersWritable;
 import cool.scx.http.uri.ScxURI;
@@ -54,6 +55,15 @@ class HelidonHelper {
                 .path(path)
                 .query(query)
                 .fragment(fragment);
+    }
+
+    public static PeerInfo convertPeerInfo(io.helidon.common.socket.PeerInfo peerInfo) {
+        return PeerInfo.of()
+                .address(peerInfo.address())
+                .host(peerInfo.host())
+                .port(peerInfo.port())
+                .tlsPrincipal(peerInfo.tlsPrincipal().orElse(null))
+                .tlsCertificates(peerInfo.tlsCertificates().orElse(null));
     }
 
 }

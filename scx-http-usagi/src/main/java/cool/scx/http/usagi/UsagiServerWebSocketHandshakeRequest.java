@@ -1,6 +1,6 @@
 package cool.scx.http.usagi;
 
-import cool.scx.http.ScxServerWebSocketHandshakeRequest;
+import cool.scx.http.web_socket.ScxServerWebSocketHandshakeRequest;
 import cool.scx.io.DataReader;
 
 import java.io.OutputStream;
