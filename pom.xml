@@ -248,7 +248,7 @@
         <freemarker.version>2.3.33</freemarker.version>
         <thumbnailator.version>0.4.20</thumbnailator.version>
         <jasypt.version>1.9.3</jasypt.version>
-        <vertx.version>4.5.10</vertx.version>
+        <vertx.version>4.5.11</vertx.version>
         <cron-utils.version>9.2.1</cron-utils.version>
         <mysql-connector-j.version>9.1.0</mysql-connector-j.version>
         <mssql-jdbc.version>12.8.1.jre11</mssql-jdbc.version>
