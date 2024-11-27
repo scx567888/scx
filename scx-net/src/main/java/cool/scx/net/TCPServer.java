@@ -96,7 +96,6 @@ public class TCPServer implements ScxTCPServer {
 
     private void handle(Socket socket) {
         try {
-
             // 主动调用握手 快速检测 SSL 错误 防止等到调用用户处理程序时才发现
             if (socket instanceof SSLSocket sslSocket) {
                 sslSocket.startHandshake();
@@ -110,7 +109,6 @@ public class TCPServer implements ScxTCPServer {
             // 调用用户处理器
             var tcpSocket = new TCPSocket(socket);
             connectHandler.accept(tcpSocket);
-
         } catch (Exception e) {
             LOGGER.log(ERROR, "处理 Socket 时发生错误 !!!", e);
             try {
