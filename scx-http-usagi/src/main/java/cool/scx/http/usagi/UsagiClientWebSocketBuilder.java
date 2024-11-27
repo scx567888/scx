@@ -10,8 +10,7 @@ import cool.scx.io.LinkedDataReader;
 
 import java.util.function.Consumer;
 
-import static cool.scx.http.HttpFieldName.CONNECTION;
-import static cool.scx.http.HttpFieldName.UPGRADE;
+import static cool.scx.http.HttpFieldName.*;
 import static cool.scx.http.HttpHelper.generateSecWebSocketAccept;
 
 public class UsagiClientWebSocketBuilder implements ScxClientWebSocketBuilder {
@@ -61,9 +60,9 @@ public class UsagiClientWebSocketBuilder implements ScxClientWebSocketBuilder {
         var newHeader = ScxHttpHeaders.of(headers);
         newHeader.add(CONNECTION, "Upgrade");
         newHeader.add(UPGRADE, "websocket");
-        newHeader.add("Sec-Websocket-Key", key);
-        newHeader.add("Host", "127.0.0.1");
-        newHeader.add("Sec-WebSocket-Version", "13");
+        newHeader.add(SEC_WEBSOCKET_KEY, key);
+        newHeader.add(HOST, "127.0.0.1");
+        newHeader.add(SEC_WEBSOCKET_VERSION, "13");
 
         var scheme = uri.scheme();
         if ("ws".equals(scheme)) {
@@ -80,7 +79,7 @@ public class UsagiClientWebSocketBuilder implements ScxClientWebSocketBuilder {
         if (response.status() != HttpStatusCode.SWITCHING_PROTOCOLS) {
             throw new RuntimeException("Unexpected response status: " + response.status());
         }
-        var secWebsocketAccept = response.headers().get("Sec-WebSocket-Accept");
+        var secWebsocketAccept = response.getHeader(SEC_WEBSOCKET_ACCEPT);
 
         var expectedSecWebsocketAccept = generateSecWebSocketAccept(key);
 

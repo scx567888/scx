@@ -6,7 +6,6 @@ package cool.scx.http;
 public enum HttpVersion {
 
     HTTP_1_1("HTTP/1.1"),
-
     HTTP_2("HTTP/2.0");
 
     private final String value;
