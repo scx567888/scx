@@ -1,4 +1,4 @@
-package cool.scx.socket.test;
+package cool.scx.socket_vertx.test;
 
 import cool.scx.logging.ScxLoggerFactory;
 
