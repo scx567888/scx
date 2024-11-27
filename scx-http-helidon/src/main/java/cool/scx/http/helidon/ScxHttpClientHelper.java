@@ -1,11 +1,11 @@
 package cool.scx.http.helidon;
 
-import cool.scx.http.ScxClientWebSocketBuilder;
 import cool.scx.http.ScxHttpClient;
 import cool.scx.http.ScxHttpClientRequest;
 import cool.scx.http.ScxHttpClientResponse;
 import cool.scx.http.media.multi_part.MultiPart;
 import cool.scx.http.uri.ScxURI;
+import cool.scx.http.web_socket.ScxClientWebSocketBuilder;
 
 import static cool.scx.http.HttpMethod.*;
 

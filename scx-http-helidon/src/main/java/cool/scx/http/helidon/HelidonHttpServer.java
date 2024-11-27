@@ -2,7 +2,7 @@ package cool.scx.http.helidon;
 
 import cool.scx.http.ScxHttpServer;
 import cool.scx.http.ScxHttpServerRequest;
-import cool.scx.http.ScxServerWebSocket;
+import cool.scx.http.web_socket.ScxServerWebSocket;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.websocket.WsConfig;
 

@@ -9,7 +9,7 @@ import java.security.cert.Certificate;
 /**
  * HelidonPeerInfo
  */
-public class HelidonPeerInfo implements PeerInfo {
+class HelidonPeerInfo implements PeerInfo {
 
     private final io.helidon.common.socket.PeerInfo peerInfo;
 

@@ -1,7 +1,7 @@
 package cool.scx.http.helidon;
 
-import cool.scx.http.ScxWebSocket;
-import cool.scx.http.WebSocketCloseCode;
+import cool.scx.http.web_socket.ScxWebSocket;
+import cool.scx.http.web_socket.WebSocketCloseCode;
 import io.helidon.common.buffers.BufferData;
 import io.helidon.http.Headers;
 import io.helidon.http.HttpPrologue;

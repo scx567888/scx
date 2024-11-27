@@ -9,7 +9,7 @@ import io.helidon.http.ServerResponseHeaders;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class HelidonHeadersWritable implements ScxHttpHeadersWritable {
+class HelidonHeadersWritable implements ScxHttpHeadersWritable {
 
     private final ServerResponseHeaders headers;
 

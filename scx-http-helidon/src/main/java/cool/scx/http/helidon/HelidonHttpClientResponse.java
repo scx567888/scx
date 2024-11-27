@@ -5,7 +5,7 @@ import io.helidon.webclient.api.HttpClientResponse;
 
 import static cool.scx.http.helidon.HelidonHelper.convertHeaders;
 
-public class HelidonHttpClientResponse implements ScxHttpClientResponse {
+class HelidonHttpClientResponse implements ScxHttpClientResponse {
 
     private final HttpClientResponse response;
     private final HttpStatusCode status;

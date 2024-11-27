@@ -11,7 +11,7 @@ import io.helidon.webclient.api.WebClient;
 /**
  * HelidonHttpClientRequestBuilder
  */
-public class HelidonHttpClientRequest extends ScxHttpClientRequestBase {
+class HelidonHttpClientRequest extends ScxHttpClientRequestBase {
 
     private final WebClient webClient;
     private final HelidonHttpClient client;

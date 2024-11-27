@@ -1,6 +1,6 @@
 package cool.scx.http.helidon;
 
-import cool.scx.http.ScxClientWebSocket;
+import cool.scx.http.web_socket.ScxClientWebSocket;
 import io.helidon.websocket.WsSession;
 
 /**

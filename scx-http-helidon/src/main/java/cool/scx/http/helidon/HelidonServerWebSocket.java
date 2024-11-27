@@ -1,8 +1,8 @@
 package cool.scx.http.helidon;
 
 import cool.scx.http.ScxHttpHeaders;
-import cool.scx.http.ScxServerWebSocket;
 import cool.scx.http.uri.ScxURI;
+import cool.scx.http.web_socket.ScxServerWebSocket;
 import io.helidon.websocket.WsSession;
 
 import static cool.scx.http.helidon.HelidonHelper.convertHeaders;
