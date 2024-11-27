@@ -160,13 +160,13 @@ public class WebSocketFrameHelper {
         int code = closeInfo.code();
         String reason = closeInfo.reason();
         byte[] reasonBytes = reason != null ? reason.getBytes() : new byte[0];
-        byte[] frame = new byte[2 + reasonBytes.length];
+        byte[] payload = new byte[2 + reasonBytes.length];
         // 设置状态码
-        frame[0] = (byte) (code >> 8);
-        frame[1] = (byte) (code & 0xFF);
+        payload[0] = (byte) (code >> 8);
+        payload[1] = (byte) (code & 0b1111_1111);
         // 设置关闭原因
-        System.arraycopy(reasonBytes, 0, frame, 2, reasonBytes.length);
-        return frame;
+        System.arraycopy(reasonBytes, 0, payload, 2, reasonBytes.length);
+        return payload;
     }
 
 }

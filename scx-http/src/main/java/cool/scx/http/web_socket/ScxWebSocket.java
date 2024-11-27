@@ -1,6 +1,5 @@
 package cool.scx.http.web_socket;
 
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import static cool.scx.http.web_socket.WebSocketCloseInfo.NORMAL_CLOSE;
@@ -18,7 +17,7 @@ public interface ScxWebSocket {
 
     ScxWebSocket onPong(Consumer<byte[]> pongHandler);
 
-    ScxWebSocket onClose(BiConsumer<Integer, String> closeHandler);
+    ScxWebSocket onClose(Consumer<ScxWebSocketCloseInfo> closeHandler);
 
     ScxWebSocket onError(Consumer<Throwable> errorHandler);
 
