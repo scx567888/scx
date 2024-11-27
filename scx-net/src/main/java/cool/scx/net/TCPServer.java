@@ -27,7 +27,7 @@ public class TCPServer implements ScxTCPServer {
 
     public TCPServer(ScxTCPServerOptions options) {
         this.options = options;
-        this.serverThread = Thread.ofPlatform().unstarted(this::listen);
+        this.serverThread = Thread.ofPlatform().name("TCPServer-Listener").unstarted(this::listen);
     }
 
     @Override
@@ -86,7 +86,7 @@ public class TCPServer implements ScxTCPServer {
         while (running) {
             try {
                 var socket = this.serverSocket.accept();
-                Thread.ofVirtual().start(() -> handle(socket));
+                Thread.ofVirtual().name("TCPServer-Handler-" + socket.getRemoteSocketAddress()).start(() -> handle(socket));
             } catch (IOException e) {
                 LOGGER.log(ERROR, "服务器接受连接时发生错误 !!!", e);
                 stop();
@@ -101,7 +101,7 @@ public class TCPServer implements ScxTCPServer {
                 sslSocket.startHandshake();
             }
 
-            //如果没有设置用户处理程序 直接关闭 socket
+            // 判断是否设置用户处理程序
             if (connectHandler == null) {
                 throw new IllegalStateException("未设置用户处理程序");
             }
