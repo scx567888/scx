@@ -31,70 +31,64 @@ public class Http1ConnectionHandler {
     }
 
     public void start() {
-        try {
-            while (true) {
-                //读取 请求行 和请求头
-                var requestLine = readRequestLine();
-                var headers = readHeaders();
+        while (true) {
+            //读取 请求行 和请求头
+            var requestLine = readRequestLine();
+            var headers = readHeaders();
 
-                //判断是否为 websocket 连接
-                var isWebSocketHandshake = checkIsWebSocketHandshake(requestLine, headers);
+            //判断是否为 websocket 连接
+            var isWebSocketHandshake = checkIsWebSocketHandshake(requestLine, headers);
 
-                UsagiHttpServerRequest request;
+            UsagiHttpServerRequest request;
 
-                if (isWebSocketHandshake) {
-                    request = new UsagiServerWebSocketHandshakeRequest(dataReader, scxTCPSocket.outputStream());
-                } else {
-                    request = new UsagiHttpServerRequest();
-                }
-
-                request.method = requestLine.method();
-                request.uri = ScxURI.of(requestLine.path());
-                request.version = requestLine.version();
-                request.headers = headers;
-
-                //此处判断请求体是不是分块传输
-                var transferEncoding = headers.get(TRANSFER_ENCODING);
-
-                ScxHttpBody body;
-
-                if ("chunked".equals(transferEncoding)) {
-                    body = new ScxHttpBodyImpl(new HttpChunkedInputStream(dataReader), headers, 65535);
-                } else {
-                    var contentLength = headers.contentLength();
-                    if (contentLength != null) {
-                        body = new ScxHttpBodyImpl(new FixedLengthInputStream(dataReader, contentLength), headers, 65536);
-                    } else {
-                        body = new ScxHttpBodyImpl(InputStream.nullInputStream(), headers, 65536);
-                    }
-                }
-
-                request.body = body;
-
-                var response = new UsagiHttpServerResponse(request, scxTCPSocket);
-
-                response.headers().set(CONNECTION, "keep-alive");
-
-                response.headers().set(SERVER, "Scx Usagi");
-
-                request.response = response;
-
-                //尝试启动 websocket 监听 
-                // todo 这里应该重新设计 以便给用户 终止握手的可能 比如 去掉 websocketHandler 而是使用判断  ScxServerWebSocketHandshakeRequest 来处理
-                if (request instanceof UsagiServerWebSocketHandshakeRequest w) {
-                    var usagiServerWebSocket = w.webSocket();
-                    _callWebSocketHandler(usagiServerWebSocket);
-                    // websocket 独占整个连接 退出循环
-                    usagiServerWebSocket.start();
-                    break;
-                } else {
-                    _callRequestHandler(request);
-                }
-
+            if (isWebSocketHandshake) {
+                request = new UsagiServerWebSocketHandshakeRequest(scxTCPSocket, dataReader, scxTCPSocket.outputStream());
+            } else {
+                request = new UsagiHttpServerRequest(scxTCPSocket);
             }
-        } catch (Exception e) {
-            //这里暂时直接打印
-            e.printStackTrace();
+
+            request.method = requestLine.method();
+            request.uri = ScxURI.of(requestLine.path());
+            request.version = requestLine.version();
+            request.headers = headers;
+
+            //此处判断请求体是不是分块传输
+            var transferEncoding = headers.get(TRANSFER_ENCODING);
+
+            ScxHttpBody body;
+
+            if ("chunked".equals(transferEncoding)) {
+                body = new ScxHttpBodyImpl(new HttpChunkedInputStream(dataReader), headers, 65535);
+            } else {
+                var contentLength = headers.contentLength();
+                if (contentLength != null) {
+                    body = new ScxHttpBodyImpl(new FixedLengthInputStream(dataReader, contentLength), headers, 65536);
+                } else {
+                    body = new ScxHttpBodyImpl(InputStream.nullInputStream(), headers, 65536);
+                }
+            }
+
+            request.body = body;
+
+            var response = new UsagiHttpServerResponse(request, scxTCPSocket);
+
+            response.headers().set(CONNECTION, "keep-alive");
+
+            response.headers().set(SERVER, "Scx Usagi");
+
+            request.response = response;
+
+            //尝试启动 websocket 监听 
+            // todo 这里应该重新设计 以便给用户 终止握手的可能 比如 去掉 websocketHandler 而是使用判断  ScxServerWebSocketHandshakeRequest 来处理
+            if (request instanceof UsagiServerWebSocketHandshakeRequest w) {
+                var usagiServerWebSocket = w.webSocket();
+                _callWebSocketHandler(usagiServerWebSocket);
+                // websocket 独占整个连接 退出循环
+                usagiServerWebSocket.start();
+                break;
+            } else {
+                _callRequestHandler(request);
+            }
         }
     }
 

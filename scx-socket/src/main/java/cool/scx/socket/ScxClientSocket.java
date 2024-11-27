@@ -1,6 +1,7 @@
 package cool.scx.socket;
 
 import cool.scx.http.web_socket.ScxWebSocket;
+import cool.scx.http.web_socket.ScxWebSocketCloseInfo;
 
 /**
  * 客户端 Socket 对象
@@ -20,8 +21,8 @@ public final class ScxClientSocket extends PingPongManager {
     }
 
     @Override
-    protected void doClose(Integer code, String reason) {
-        super.doClose(code, reason);
+    protected void doClose(ScxWebSocketCloseInfo closeInfo) {
+        super.doClose(closeInfo);
         this.socketClient.connect();
     }
 

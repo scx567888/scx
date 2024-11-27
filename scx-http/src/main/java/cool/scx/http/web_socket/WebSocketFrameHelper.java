@@ -141,4 +141,32 @@ public class WebSocketFrameHelper {
 
     }
 
+    public static ScxWebSocketCloseInfoImpl parseCloseInfo(byte[] frame) {
+        int len = frame.length;
+        int code = 1005; // 默认值（表示没有状态码） 
+        // 读取状态码（如果存在） 
+        if (len >= 2) {
+            code = (frame[0] & 0b1111_1111) << 8 |
+                    frame[1] & 0b1111_1111;
+        } // 读取关闭原因（如果存在）
+        String reason = null;
+        if (len > 2) {
+            reason = new String(frame, 2, len - 2);
+        }
+        return new ScxWebSocketCloseInfoImpl(code, reason);
+    }
+
+    public static byte[] createClosePayload(ScxWebSocketCloseInfo closeInfo) {
+        int code = closeInfo.code();
+        String reason = closeInfo.reason();
+        byte[] reasonBytes = reason != null ? reason.getBytes() : new byte[0];
+        byte[] payload = new byte[2 + reasonBytes.length];
+        // 设置状态码
+        payload[0] = (byte) (code >> 8);
+        payload[1] = (byte) (code & 0b1111_1111);
+        // 设置关闭原因
+        System.arraycopy(reasonBytes, 0, payload, 2, reasonBytes.length);
+        return payload;
+    }
+
 }

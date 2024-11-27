@@ -1,19 +1,20 @@
 package cool.scx.http.usagi;
 
 import cool.scx.http.web_socket.ScxWebSocket;
+import cool.scx.http.web_socket.ScxWebSocketCloseInfo;
 import cool.scx.http.web_socket.WebSocketFrame;
 import cool.scx.http.web_socket.WebSocketOpCode;
 import cool.scx.io.DataReader;
+import cool.scx.net.ScxTCPSocket;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import static cool.scx.http.web_socket.WebSocketFrameHelper.readFrameUntilLast;
-import static cool.scx.http.web_socket.WebSocketFrameHelper.writeFrame;
+import static cool.scx.http.web_socket.WebSocketCloseInfo.NORMAL_CLOSE;
+import static cool.scx.http.web_socket.WebSocketFrameHelper.*;
 import static cool.scx.http.web_socket.WebSocketOpCode.*;
 
 public class UsagiWebSocket implements ScxWebSocket {
@@ -23,16 +24,18 @@ public class UsagiWebSocket implements ScxWebSocket {
 
     //为了防止底层的 OutputStream 被乱序写入 此处需要加锁
     protected final ReentrantLock lock;
+    private final ScxTCPSocket tcpSocket;
 
     protected Consumer<String> textMessageHandler;
     protected Consumer<byte[]> binaryMessageHandler;
     protected Consumer<byte[]> pingHandler;
     protected Consumer<byte[]> pongHandler;
-    protected BiConsumer<Integer, String> closeHandler;
+    protected Consumer<ScxWebSocketCloseInfo> closeHandler;
     protected Consumer<Throwable> errorHandler;
     protected boolean isClosed;
 
-    public UsagiWebSocket(DataReader reader, OutputStream writer) {
+    public UsagiWebSocket(ScxTCPSocket tcpSocket, DataReader reader, OutputStream writer) {
+        this.tcpSocket = tcpSocket;
         this.reader = reader;
         this.writer = writer;
         this.lock = new ReentrantLock();
@@ -63,7 +66,7 @@ public class UsagiWebSocket implements ScxWebSocket {
     }
 
     @Override
-    public ScxWebSocket onClose(BiConsumer<Integer, String> closeHandler) {
+    public ScxWebSocket onClose(Consumer<ScxWebSocketCloseInfo> closeHandler) {
         this.closeHandler = closeHandler;
         return this;
     }
@@ -120,13 +123,14 @@ public class UsagiWebSocket implements ScxWebSocket {
     }
 
     @Override
-    public ScxWebSocket close(int code, String reason) {
+    public ScxWebSocket close(ScxWebSocketCloseInfo closeInfo) {
         if (isClosed) {
             return this;
         }
         isClosed = true;
         try {
-            sendFrame(reason.getBytes(), WebSocketOpCode.CLOSE, true);
+            var closePayload = createClosePayload(closeInfo);
+            sendFrame(closePayload, WebSocketOpCode.CLOSE, true);
         } catch (Exception e) {
             if (errorHandler != null) {
                 errorHandler.accept(e);
@@ -139,11 +143,11 @@ public class UsagiWebSocket implements ScxWebSocket {
     public ScxWebSocket terminate() {
         isClosed = true;
         //todo 这里需要关闭 tcp 连接 ?
-//        try {
-//            scxTCPSocket.close();
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
+        try {
+            tcpSocket.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         return this;
     }
 
@@ -159,9 +163,9 @@ public class UsagiWebSocket implements ScxWebSocket {
                 handleFrame(frame);
             } catch (Exception e) {
                 if (errorHandler != null) {
-                    errorHandler.accept(e);
+//                    errorHandler.accept(e);
                 }
-                break; // 发生错误时退出循环
+                break;
             }
         }
     }
@@ -171,16 +175,9 @@ public class UsagiWebSocket implements ScxWebSocket {
             case CONTINUATION -> {
                 // 理论上不会走到这里
             }
-            case TEXT -> {
-                textMessageHandler.accept(new String(frame.payloadData()));
-            }
-            case BINARY -> {
-                binaryMessageHandler.accept(frame.payloadData());
-            }
-            case CLOSE -> {
-                isClosed = true;
-                closeHandler.accept(0, new String(frame.payloadData()));
-            }
+            case TEXT -> _callOnTextMessage(frame);
+            case BINARY -> _callOnBinaryMessage(frame);
+            case CLOSE -> _handleClose(frame);
             case PING -> {
                 pingHandler.accept(frame.payloadData());
             }
@@ -197,6 +194,40 @@ public class UsagiWebSocket implements ScxWebSocket {
             writeFrame(f, writer);
         } finally {
             lock.unlock();
+        }
+    }
+
+    public void _handleClose(WebSocketFrame frame) {
+        close(NORMAL_CLOSE);
+        try {
+            tcpSocket.close();
+        } catch (IOException e) {
+            _callOnError(e);
+        }
+        _callOnClose(frame);
+    }
+
+    public void _callOnTextMessage(WebSocketFrame frame) {
+        if (textMessageHandler != null) {
+            textMessageHandler.accept(new String(frame.payloadData()));
+        }
+    }
+
+    public void _callOnBinaryMessage(WebSocketFrame frame) {
+        if (binaryMessageHandler != null) {
+            binaryMessageHandler.accept(frame.payloadData());
+        }
+    }
+
+    public void _callOnClose(WebSocketFrame frame) {
+        if (closeHandler != null) {
+            closeHandler.accept(parseCloseInfo(frame.payloadData()));
+        }
+    }
+
+    private void _callOnError(Exception e) {
+        if (errorHandler != null) {
+            errorHandler.accept(e);
         }
     }
 

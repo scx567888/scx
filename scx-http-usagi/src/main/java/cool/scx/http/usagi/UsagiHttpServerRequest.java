@@ -2,12 +2,14 @@ package cool.scx.http.usagi;
 
 import cool.scx.http.*;
 import cool.scx.http.uri.ScxURI;
+import cool.scx.net.ScxTCPSocket;
 
 /**
  * PeachHttpServerRequest
  */
 class UsagiHttpServerRequest implements ScxHttpServerRequest {
 
+    final ScxTCPSocket tcpSocket;
     ScxHttpMethod method;
     ScxURI uri;
     HttpVersion version;
@@ -17,7 +19,8 @@ class UsagiHttpServerRequest implements ScxHttpServerRequest {
     PeerInfo remotePeer;
     PeerInfo localPeer;
 
-    public UsagiHttpServerRequest() {
+    public UsagiHttpServerRequest(ScxTCPSocket tcpSocket) {
+        this.tcpSocket = tcpSocket;
         //todo 这里现在是假的
         remotePeer = PeerInfo.of();
         localPeer = PeerInfo.of();
