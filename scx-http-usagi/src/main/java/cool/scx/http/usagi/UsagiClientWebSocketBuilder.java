@@ -2,7 +2,10 @@ package cool.scx.http.usagi;
 
 import cool.scx.common.util.Base64Utils;
 import cool.scx.common.util.RandomUtils;
-import cool.scx.http.*;
+import cool.scx.http.HttpMethod;
+import cool.scx.http.HttpStatusCode;
+import cool.scx.http.ScxHttpHeaders;
+import cool.scx.http.ScxHttpHeadersWritable;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.uri.ScxURIWritable;
 import cool.scx.http.web_socket.ScxClientWebSocket;

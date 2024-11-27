@@ -1,6 +1,6 @@
 package cool.scx.socket;
 
-import cool.scx.http.ScxWebSocket;
+import cool.scx.http.web_socket.ScxWebSocket;
 
 /**
  * 客户端 Socket 对象
