@@ -14,7 +14,7 @@ public class TCPClientTest {
         test1();
     }
 
-    public static void test1() throws InterruptedException, IOException {
+    public static void test1() {
         //先启动服务器
         TCPServerTest.test1();
 
@@ -23,20 +23,17 @@ public class TCPClientTest {
             Thread.ofVirtual().start(() -> {
                 var tcpClient = new TCPClient(new ScxTCPClientOptions().tls(tls));
                 var tcpSocket = tcpClient.connect(new InetSocketAddress(8899));
-                var out = tcpSocket.outputStream();
-                try {
+                try (tcpSocket) {
+                    var out = tcpSocket.outputStream();
                     var i = 0;
                     while (i < 10000) {
                         out.write(((i = i + 1) + "\r\n" + (i = i + 1) + "\r\n").getBytes());
-//                $.sleep(50);
                     }
-//            tcpSocket.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             });
         }
-
 
     }
 
