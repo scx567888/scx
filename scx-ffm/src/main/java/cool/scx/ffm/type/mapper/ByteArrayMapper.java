@@ -5,6 +5,12 @@ import java.lang.foreign.MemorySegment;
 
 import static java.lang.foreign.ValueLayout.JAVA_BYTE;
 
+/**
+ * ByteArrayMapper
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class ByteArrayMapper implements Mapper {
 
     private byte[] value;

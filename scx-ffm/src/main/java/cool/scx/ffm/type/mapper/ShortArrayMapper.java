@@ -5,6 +5,12 @@ import java.lang.foreign.MemorySegment;
 
 import static java.lang.foreign.ValueLayout.JAVA_SHORT;
 
+/**
+ * ShortArrayMapper
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class ShortArrayMapper implements Mapper {
 
     private short[] value;

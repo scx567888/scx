@@ -18,7 +18,11 @@ import java.util.Map;
 import static cool.scx.ffm.FFMHelper.getMemoryLayout;
 
 /**
+ * StructParameter
  * todo 目前 只支持单层的 结构 需要支持多层
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public class StructParameter implements Parameter {
 
