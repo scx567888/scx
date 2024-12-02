@@ -42,5 +42,5 @@ public final class WinNT {
     public static final int REG_RESOURCE_REQUIREMENTS_LIST = 10;
     public static final int REG_QWORD = 11;
     public static final int REG_QWORD_LITTLE_ENDIAN = 11;
-    
+
 }
