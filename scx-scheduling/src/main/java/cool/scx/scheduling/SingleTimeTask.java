@@ -4,14 +4,14 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.function.Supplier;
 
+/**
+ * SingleTimeTask
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public interface SingleTimeTask extends ScheduleTask<SingleTimeTask> {
 
-    /**
-     * 开始时间 这里采用 Supplier 保证不会因为方法执行的速度导致时间误差
-     *
-     * @param startTime startTime
-     * @return a
-     */
     SingleTimeTask startTime(Supplier<Instant> startTime);
 
     SingleTimeTask startTime(Instant startTime);

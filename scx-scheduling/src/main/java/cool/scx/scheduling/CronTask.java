@@ -1,5 +1,12 @@
 package cool.scx.scheduling;
 
+
+/**
+ * Cron 执行的任务
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public interface CronTask extends ScheduleTask<CronTask> {
 
     /**
