@@ -1,7 +1,7 @@
 package cool.scx.common.test;
 
+import cool.scx.common.lock.LockByKey;
 import cool.scx.common.util.$;
-import cool.scx.common.util.LockByKey;
 import org.testng.annotations.Test;
 
 public class LockByKeyTest {

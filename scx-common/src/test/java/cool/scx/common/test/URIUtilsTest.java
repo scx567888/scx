@@ -1,10 +1,10 @@
 package cool.scx.common.test;
 
-import cool.scx.common.util.URIBuilder;
+import cool.scx.common.util.URIUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class URIBuilderTest {
+public class URIUtilsTest {
 
     public static void main(String[] args) {
         test1();
@@ -30,13 +30,13 @@ public class URIBuilderTest {
         var ff = "           ";
         var gg = "从扽记 者闹adf jvnkdvj nkddvj nkdfn kdf n卡框反 正那 狂风只能/";
 
-        var a1 = URIBuilder.normalize(a);
-        var b1 = URIBuilder.normalize(b);
-        var c1 = URIBuilder.normalize(c);
-        var d1 = URIBuilder.normalize(d);
-        var e1 = URIBuilder.normalize(e);
-        var f1 = URIBuilder.normalize(f);
-        var g1 = URIBuilder.normalize(g);
+        var a1 = URIUtils.normalize(a);
+        var b1 = URIUtils.normalize(b);
+        var c1 = URIUtils.normalize(c);
+        var d1 = URIUtils.normalize(d);
+        var e1 = URIUtils.normalize(e);
+        var f1 = URIUtils.normalize(f);
+        var g1 = URIUtils.normalize(g);
 
         Assert.assertEquals(a1, aa);
         Assert.assertEquals(b1, bb);
@@ -59,7 +59,7 @@ public class URIBuilderTest {
 
         var aa = "/ a/s/d/s/d/s/d/s/d/s/d/s/d/ad/f /ff/ff✌👏  🤷g/fgb/fga🎶 😢 💕‍♀️b/fb/fgb/fgb/fgb/ff/a/🤷‍♀️a/a/fgbhfbhj/dvhdbfvhbdbbjhbjh/fnjdfvk❤🎶🤦‍♂️😢👍🎉jdv/666666/从扽记 者闹adf jvnkdvj nkddvj nkdfn kdf n卡框反 正那 狂风只能/";
 
-        var a1 = URIBuilder.join(a, b, c, d, e, f, g);
+        var a1 = URIUtils.join(a, b, c, d, e, f, g);
 
         Assert.assertEquals(a1, aa);
     }
@@ -67,11 +67,11 @@ public class URIBuilderTest {
     @Test
     public static void test3() {
         var a = "\\\\\\\\///////a/💃////////\\\\\\\\\\";
-        var a1 = URIBuilder.trimSlash(a);
-        var a2 = URIBuilder.trimSlashEnd(a);
-        var a3 = URIBuilder.trimSlashStart(a);
-        var a4 = URIBuilder.addSlashStart(a);
-        var a5 = URIBuilder.addSlashEnd(a);
+        var a1 = URIUtils.trimSlash(a);
+        var a2 = URIUtils.trimSlashEnd(a);
+        var a3 = URIUtils.trimSlashStart(a);
+        var a4 = URIUtils.addSlashStart(a);
+        var a5 = URIUtils.addSlashEnd(a);
         Assert.assertEquals(a1, "a/💃");
         Assert.assertEquals(a2, "\\\\\\\\///////a/💃");
         Assert.assertEquals(a3, "a/💃////////\\\\\\\\\\");
