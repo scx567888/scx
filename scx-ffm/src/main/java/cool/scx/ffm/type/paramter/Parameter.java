@@ -2,6 +2,12 @@ package cool.scx.ffm.type.paramter;
 
 import java.lang.foreign.Arena;
 
+/**
+ * Parameter
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public interface Parameter {
 
     Object toNativeParameter(Arena arena);

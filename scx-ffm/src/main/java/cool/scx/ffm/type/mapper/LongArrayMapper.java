@@ -5,6 +5,12 @@ import java.lang.foreign.MemorySegment;
 
 import static java.lang.foreign.ValueLayout.JAVA_LONG;
 
+/**
+ * LongArrayMapper
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class LongArrayMapper implements Mapper {
 
     private long[] value;

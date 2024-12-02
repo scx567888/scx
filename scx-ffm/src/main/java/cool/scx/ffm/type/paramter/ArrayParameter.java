@@ -6,6 +6,12 @@ import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 import java.lang.reflect.Array;
 
+/**
+ * ArrayParameter
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class ArrayParameter implements Parameter {
 
     private final Object array;

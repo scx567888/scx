@@ -6,6 +6,12 @@ import java.lang.foreign.MemorySegment;
 
 import static cool.scx.ffm.FFMProxy.ffmProxy;
 
+/**
+ * 提供一些 Kernel32 标准的接口
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public interface Kernel32 {
 
     Kernel32 KERNEL32 = ffmProxy("kernel32", Kernel32.class);

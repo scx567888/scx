@@ -5,6 +5,12 @@ import java.lang.foreign.MemorySegment;
 
 import static java.lang.foreign.ValueLayout.JAVA_SHORT;
 
+/**
+ * ShortMapper
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class ShortMapper implements Mapper {
 
     private short value;

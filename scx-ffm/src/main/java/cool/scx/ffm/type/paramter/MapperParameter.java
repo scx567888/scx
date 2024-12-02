@@ -5,6 +5,12 @@ import cool.scx.ffm.type.mapper.Mapper;
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 
+/**
+ * MapperParameter
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class MapperParameter implements Parameter {
 
     private final Mapper mapper;

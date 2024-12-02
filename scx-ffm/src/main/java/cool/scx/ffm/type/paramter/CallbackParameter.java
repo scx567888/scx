@@ -14,7 +14,11 @@ import static java.lang.foreign.Linker.nativeLinker;
 import static java.lang.invoke.MethodHandles.lookup;
 
 /**
+ * CallbackParameter
  * todo 参数校验不是特别完善
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public class CallbackParameter implements Parameter {
 
