@@ -5,6 +5,12 @@ import cool.scx.data.query.Query;
 
 import java.util.LinkedHashMap;
 
+/**
+ * OrderBySerializer
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class OrderBySerializer {
 
     public Object serialize(Object obj) {

@@ -4,6 +4,12 @@ import static cool.scx.data.query.OrderByType.ASC;
 import static cool.scx.data.query.OrderByType.DESC;
 import static cool.scx.data.query.WhereType.*;
 
+/**
+ * QueryBuilder
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public final class QueryBuilder {
 
     public static Query query() {

@@ -5,6 +5,12 @@ import java.util.List;
 
 import static cool.scx.data.query.WhereType.*;
 
+/**
+ * Logic
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class Logic extends QueryLike<Logic> {
 
     private final LogicType logicType;

@@ -7,6 +7,12 @@ import java.util.ArrayList;
 
 import static java.util.Collections.addAll;
 
+/**
+ * OrderByParser
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public abstract class OrderByParser {
 
     public String[] parse(Object obj) {

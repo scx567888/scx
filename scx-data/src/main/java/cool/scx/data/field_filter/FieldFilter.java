@@ -1,10 +1,10 @@
 package cool.scx.data.field_filter;
 
 /**
- * 列过滤器
+ * 字段过滤器
  *
  * @author scx567888
- * @version 0.1.3
+ * @version 0.0.1
  */
 public interface FieldFilter {
 
