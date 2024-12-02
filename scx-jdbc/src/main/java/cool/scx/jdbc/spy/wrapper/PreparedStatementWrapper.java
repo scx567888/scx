@@ -9,7 +9,11 @@ import java.net.URL;
 import java.sql.*;
 import java.util.Calendar;
 
-
+/**
+ * PreparedStatementWrapper
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class PreparedStatementWrapper<T extends PreparedStatement> extends StatementWrapper<T> implements PreparedStatement {
 
     protected PreparedStatementWrapper(T delegate, SpyEventListener eventListener) {
