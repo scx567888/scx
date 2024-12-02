@@ -51,38 +51,32 @@ public class CronTaskImpl implements CronTask {
     }
 
     @Override
-    public CronTaskImpl expression(String expression) {
+    public CronTask expression(String expression) {
         var cron = CRON_PARSER.parse(expression);
         this.executionTime = ExecutionTime.forCron(cron);
         return this;
     }
 
     @Override
-    public CronTaskImpl concurrent(boolean concurrent) {
+    public CronTask concurrent(boolean concurrent) {
         this.concurrent = concurrent;
         return this;
     }
 
     @Override
-    public CronTaskImpl maxRunCount(long maxRunCount) {
+    public CronTask maxRunCount(long maxRunCount) {
         this.maxRunCount = maxRunCount;
         return this;
     }
 
     @Override
-    public CronTaskImpl expirationPolicy(ExpirationPolicy expirationPolicy) {
-        //不支持直接跳过
-        return this;
-    }
-
-    @Override
-    public CronTaskImpl executor(ScheduledExecutorService executor) {
+    public CronTask executor(ScheduledExecutorService executor) {
         this.executor = executor;
         return this;
     }
 
     @Override
-    public CronTaskImpl task(Consumer<ScheduleStatus> task) {
+    public CronTask task(Consumer<ScheduleStatus> task) {
         this.task = task;
         return this;
     }
