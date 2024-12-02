@@ -12,7 +12,7 @@ record AnsiItem(Object value, AnsiElement... elements) {
 
     //起始字符
     private static final String ENCODE_START = "\033[";
-    //连接字符
+    //合并字符
     private static final String ENCODE_JOIN = ";";
     //结束字符
     private static final String ENCODE_END = "m";
