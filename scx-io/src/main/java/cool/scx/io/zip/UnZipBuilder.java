@@ -12,7 +12,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.zip.ZipInputStream;
 
 /**
- * <p>UnZipBuilder class.</p>
+ * UnZipBuilder
  *
  * @author scx567888
  * @version 2.0.4
@@ -67,12 +67,6 @@ public final class UnZipBuilder {
         toFile(outputPath, new ZipOptions());
     }
 
-    /**
-     * <p>getRootPath.</p>
-     *
-     * @param zipOptions a {@link ZipOptions} object
-     * @return a {@link String} object
-     */
     private String getRootPath(ZipOptions zipOptions) {
         if (zipOptions.includeRoot() && this.path != null) {
             var fileName = this.path.getFileName().toString();

@@ -5,6 +5,12 @@ import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.util.function.Supplier;
 
+/**
+ * InputStreamDataSupplier
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class InputStreamDataSupplier implements Supplier<DataNode> {
 
     private final InputStream inputStream;

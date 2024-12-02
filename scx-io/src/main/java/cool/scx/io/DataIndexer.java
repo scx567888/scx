@@ -1,5 +1,11 @@
 package cool.scx.io;
 
+/**
+ * DataIndexer
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public interface DataIndexer {
 
     /**

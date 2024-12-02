@@ -12,16 +12,18 @@ import java.io.OutputStream;
 
 /**
  * 将图片转换为 渐进式 JPEG
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public final class ProgressiveJPEGBuilder {
 
     public static ImageWriter getImageWriter(String formatName) {
         var writerIterator = ImageIO.getImageWritersByFormatName(formatName.trim().toLowerCase());
-        var writer = writerIterator.next();
-        if (writer == null) {
+        if (!writerIterator.hasNext()) {
             throw new IllegalArgumentException("未找到对应格式的 ImageWriter , formatName : " + formatName);
         }
-        return writer;
+        return writerIterator.next();
     }
 
     public static byte[] toProgressiveJPEG(InputStream inputStream) throws IOException {

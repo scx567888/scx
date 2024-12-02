@@ -14,7 +14,10 @@ import java.util.zip.Deflater;
 import java.util.zip.DeflaterInputStream;
 
 /**
- * 用来压缩
+ * 用来 压缩 GZIP
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public class GzipBuilder extends SequenceInputStream {
 
