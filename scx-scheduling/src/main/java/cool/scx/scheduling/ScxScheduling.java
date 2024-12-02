@@ -8,6 +8,9 @@ import static cool.scx.scheduling.MultipleTimeTask.Type.FIXED_RATE;
 
 /**
  * 用来创建 调度任务的工具类
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public final class ScxScheduling {
 
@@ -21,19 +24,19 @@ public final class ScxScheduling {
     }
 
     public static MultipleTimeTask fixedRate() {
-        return new MultipleTimeTask().executor(defaultScheduler()).type(FIXED_RATE);
+        return new MultipleTimeTaskImpl().executor(defaultScheduler()).type(FIXED_RATE);
     }
 
     public static MultipleTimeTask fixedDelay() {
-        return new MultipleTimeTask().executor(defaultScheduler()).type(FIXED_DELAY);
+        return new MultipleTimeTaskImpl().executor(defaultScheduler()).type(FIXED_DELAY);
     }
 
     public static CronTask cron() {
-        return new CronTask().executor(defaultScheduler());
+        return new CronTaskImpl().executor(defaultScheduler());
     }
 
     public static SingleTimeTask once() {
-        return new SingleTimeTask().executor(defaultScheduler());
+        return new SingleTimeTaskImpl().executor(defaultScheduler());
     }
 
     public static ScheduleStatus setTimeout(Runnable task, long delay) {
