@@ -7,7 +7,6 @@ public final class WinNT {
     public static final int WRITE_DAC = 0x00040000;
     public static final int WRITE_OWNER = 0x00080000;
     public static final int SYNCHRONIZE = 0x00100000;
-
     public static final int STANDARD_RIGHTS_REQUIRED = 0x000F0000;
     public static final int STANDARD_RIGHTS_READ = READ_CONTROL;
     public static final int STANDARD_RIGHTS_WRITE = READ_CONTROL;
@@ -22,39 +21,21 @@ public final class WinNT {
     public static final int KEY_WOW64_32KEY = 0x0200;
     public static final int KEY_WOW64_64KEY = 0x0100;
     public static final int KEY_WOW64_RES = 0x0300;
-
-    public static final int KEY_READ = STANDARD_RIGHTS_READ | KEY_QUERY_VALUE
-                   | KEY_ENUMERATE_SUB_KEYS | KEY_NOTIFY & (~SYNCHRONIZE);
-
-
-    public static final int KEY_WRITE = STANDARD_RIGHTS_WRITE | KEY_SET_VALUE | KEY_CREATE_SUB_KEY
-                                                            & (~SYNCHRONIZE);
-    
+    public static final int KEY_READ = STANDARD_RIGHTS_READ | KEY_QUERY_VALUE | KEY_ENUMERATE_SUB_KEYS | KEY_NOTIFY & (~SYNCHRONIZE);
+    public static final int KEY_WRITE = STANDARD_RIGHTS_WRITE | KEY_SET_VALUE | KEY_CREATE_SUB_KEY & (~SYNCHRONIZE);
     public static final int REG_NONE = 0;
-
     public static final int REG_SZ = 1;
-
     public static final int REG_EXPAND_SZ = 2;
-
     public static final int REG_BINARY = 3;
-
     public static final int REG_DWORD = 4;
-
     public static final int REG_DWORD_LITTLE_ENDIAN = 4;
-
     public static final int REG_DWORD_BIG_ENDIAN = 5;
-
     public static final int REG_LINK = 6;
-
     public static final int REG_MULTI_SZ = 7;
-
     public static final int REG_RESOURCE_LIST = 8;
-
     public static final int REG_FULL_RESOURCE_DESCRIPTOR = 9;
-
     public static final int REG_RESOURCE_REQUIREMENTS_LIST = 10;
-
     public static final int REG_QWORD = 11;
-    
     public static final int REG_QWORD_LITTLE_ENDIAN = 11;
+    
 }
