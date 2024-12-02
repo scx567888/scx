@@ -5,10 +5,13 @@ import com.fasterxml.jackson.databind.JavaType;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
-import static cool.scx.reflect.ReflectFactory.*;
+import static cool.scx.reflect.FieldInfoHelper.*;
 
 /**
  * FieldInfo
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public final class FieldInfo {
 

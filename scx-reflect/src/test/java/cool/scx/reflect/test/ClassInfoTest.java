@@ -1,7 +1,7 @@
 package cool.scx.reflect.test;
 
 import cool.scx.reflect.ClassInfo;
-import cool.scx.reflect.ReflectFactory;
+import cool.scx.reflect.ReflectHelper;
 import org.testng.annotations.Test;
 
 import java.lang.annotation.Repeatable;
@@ -16,22 +16,22 @@ public class ClassInfoTest {
 
     @Test
     public static void test1() {
-        var c1 = ReflectFactory.getClassInfo(c.class);
-        var d2 = ReflectFactory.getClassInfo(d.class);
+        var c1 = ReflectHelper.getClassInfo(c.class);
+        var d2 = ReflectHelper.getClassInfo(d.class);
 
         var l = System.nanoTime();
         ClassInfo classInfo;
         for (int i = 0; i < 9999; i = i + 1) {
 
-            classInfo = ReflectFactory.getClassInfo(a.class);
-            classInfo = ReflectFactory.getClassInfo(c.class);
-            classInfo = ReflectFactory.getClassInfo(d.class);
-            classInfo = ReflectFactory.getClassInfo(ee.class);
+            classInfo = ReflectHelper.getClassInfo(a.class);
+            classInfo = ReflectHelper.getClassInfo(c.class);
+            classInfo = ReflectHelper.getClassInfo(d.class);
+            classInfo = ReflectHelper.getClassInfo(ee.class);
         }
 
         System.out.println((System.nanoTime() - l) / 1000_000);
-        var classInfo1 = ReflectFactory.getClassInfo(ee.class);
-        var classInfo2 = ReflectFactory.getClassInfo(ee.b.getClass());
+        var classInfo1 = ReflectHelper.getClassInfo(ee.class);
+        var classInfo2 = ReflectHelper.getClassInfo(ee.b.getClass());
 
     }
 

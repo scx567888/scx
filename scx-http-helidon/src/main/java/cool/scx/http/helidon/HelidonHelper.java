@@ -5,7 +5,7 @@ import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.ScxHttpHeadersWritable;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.uri.ScxURIWritable;
-import cool.scx.reflect.ReflectFactory;
+import cool.scx.reflect.ReflectHelper;
 import io.helidon.http.Header;
 import io.helidon.http.Headers;
 import io.helidon.http.HttpPrologue;
@@ -24,12 +24,12 @@ class HelidonHelper {
 
     public static WsRouting.Builder createHelidonWebSocketRouting(HelidonHttpServer server) {
         try {
-            var wsRouteClassInfo = ReflectFactory.getClassInfo(WsRoute.class);
+            var wsRouteClassInfo = ReflectHelper.getClassInfo(WsRoute.class);
             var constructor = wsRouteClassInfo.constructors()[0];
             constructor.setAccessible(true);
             var wsRoute = constructor.newInstance(PathMatchers.any(), (Supplier<WsListener>) () -> new HelidonServerWebSocket(server));
             var builder = WsRouting.builder();
-            var classInfo = ReflectFactory.getClassInfo(WsRouting.Builder.class);
+            var classInfo = ReflectHelper.getClassInfo(WsRouting.Builder.class);
             var routeMethod = Arrays.stream(classInfo.methods()).filter(method -> method.name().equals("route")).findFirst().orElseThrow();
             routeMethod.setAccessible(true);
             routeMethod.method().invoke(builder, wsRoute);

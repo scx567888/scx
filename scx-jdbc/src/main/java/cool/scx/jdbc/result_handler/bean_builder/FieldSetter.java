@@ -2,7 +2,7 @@ package cool.scx.jdbc.result_handler.bean_builder;
 
 import cool.scx.jdbc.type_handler.TypeHandler;
 import cool.scx.reflect.FieldInfo;
-import cool.scx.reflect.ReflectFactory;
+import cool.scx.reflect.ReflectHelper;
 
 import java.lang.reflect.Field;
 import java.util.function.Function;
@@ -42,7 +42,7 @@ final class FieldSetter {
     }
 
     static FieldSetter[] ofArray(Class<?> type, Function<Field, String> columnNameMapping) {
-        var classInfo = ReflectFactory.getClassInfo(type);
+        var classInfo = ReflectHelper.getClassInfo(type);
         var fields = classInfo.isRecord() ? classInfo.allFields() : Stream.of(classInfo.allFields()).filter(c -> c.accessModifier() == PUBLIC).toArray(FieldInfo[]::new);
         var fieldSetters = new FieldSetter[fields.length];
         for (int i = 0; i < fields.length; i = i + 1) {

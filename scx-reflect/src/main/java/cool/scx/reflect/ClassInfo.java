@@ -4,10 +4,13 @@ import com.fasterxml.jackson.databind.JavaType;
 
 import java.lang.annotation.Annotation;
 
-import static cool.scx.reflect.ReflectFactory.*;
+import static cool.scx.reflect.ClassInfoHelper.*;
 
 /**
  * ClassInfo
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public final class ClassInfo {
 

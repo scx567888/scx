@@ -2,7 +2,7 @@ package cool.scx.jdbc.result_handler.bean_builder;
 
 import cool.scx.reflect.ClassInfo;
 import cool.scx.reflect.ConstructorInfo;
-import cool.scx.reflect.ReflectFactory;
+import cool.scx.reflect.ReflectHelper;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -22,7 +22,7 @@ final class NormalBeanBuilder<T> extends BeanBuilder<T> {
     private final FieldSetter[] fieldSetters;
 
     public NormalBeanBuilder(Class<T> type, Function<Field, String> columnNameMapping) {
-        this.constructor = checkNoArgsConstructor(ReflectFactory.getClassInfo(type));
+        this.constructor = checkNoArgsConstructor(ReflectHelper.getClassInfo(type));
         this.constructor.setAccessible(true);
         this.fieldSetters = FieldSetter.ofArray(type, columnNameMapping);
     }

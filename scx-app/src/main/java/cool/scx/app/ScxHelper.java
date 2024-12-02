@@ -25,7 +25,7 @@ import cool.scx.logging.ScxLoggerConfig;
 import cool.scx.logging.ScxLoggerFactory;
 import cool.scx.logging.recorder.ConsoleRecorder;
 import cool.scx.logging.recorder.FileRecorder;
-import cool.scx.reflect.ReflectFactory;
+import cool.scx.reflect.ReflectHelper;
 import cool.scx.scheduling.ScxScheduling;
 import cool.scx.web.annotation.ScxRoute;
 import cool.scx.web.annotation.ScxWebSocketRoute;
@@ -134,7 +134,7 @@ public final class ScxHelper {
 
     @SuppressWarnings("unchecked")
     public static <Entity extends BaseModel> Class<Entity> findBaseModelServiceEntityClass(Class<?> baseModelServiceClass) {
-        var superClass = ReflectFactory.getClassInfo(baseModelServiceClass).findSuperType(BaseModelService.class);
+        var superClass = ReflectHelper.getClassInfo(baseModelServiceClass).findSuperType(BaseModelService.class);
         if (superClass != null) {
             var boundType = superClass.type().getBindings().getBoundType(0);
             if (boundType != null) {
@@ -228,7 +228,7 @@ public final class ScxHelper {
         var beanDefinitionNames = beanFactory.getBeanDefinitionNames();
         for (var beanDefinitionName : beanDefinitionNames) {
             var bean = beanFactory.getBean(beanDefinitionName);
-            var classInfo = ReflectFactory.getClassInfo(bean.getClass());
+            var classInfo = ReflectHelper.getClassInfo(bean.getClass());
             for (var method : classInfo.methods()) {
                 if (method.accessModifier() != PUBLIC) {
                     continue;

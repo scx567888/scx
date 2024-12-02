@@ -6,7 +6,7 @@ import cool.scx.app.ext.crud.exception.UnknownFieldNameException;
 import cool.scx.common.util.ObjectUtils;
 import cool.scx.data.jdbc.annotation.NoColumn;
 import cool.scx.http.exception.BadRequestException;
-import cool.scx.reflect.ReflectFactory;
+import cool.scx.reflect.ReflectHelper;
 
 import java.lang.System.Logger;
 import java.util.Map;
@@ -66,7 +66,7 @@ public final class CRUDHelper {
 
     @SuppressWarnings("unchecked")
     static Class<? extends BaseModelService<?>> findBaseModelServiceClass(Class<?> baseCRUDControllerClass) {
-        var superClass = ReflectFactory.getClassInfo(baseCRUDControllerClass).findSuperType(BaseCRUDController.class);
+        var superClass = ReflectHelper.getClassInfo(baseCRUDControllerClass).findSuperType(BaseCRUDController.class);
         if (superClass != null) {
             var boundType = superClass.type().getBindings().getBoundType(0);
             if (boundType != null) {

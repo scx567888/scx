@@ -6,7 +6,7 @@ import cool.scx.common.util.CaseUtils;
 import cool.scx.data.jdbc.annotation.NoColumn;
 import cool.scx.jdbc.mapping.Table;
 import cool.scx.reflect.FieldInfo;
-import cool.scx.reflect.ReflectFactory;
+import cool.scx.reflect.ReflectHelper;
 
 import java.util.HashMap;
 import java.util.List;
@@ -71,7 +71,7 @@ public class AnnotationConfigTable implements Table {
     }
 
     private static AnnotationConfigColumn[] initAllColumns(Class<?> clazz) {
-        var classInfo = ReflectFactory.getClassInfo(clazz);
+        var classInfo = ReflectHelper.getClassInfo(clazz);
         var fields = classInfo.isRecord() ? classInfo.allFields() : Stream.of(classInfo.allFields()).filter(c -> c.accessModifier() == PUBLIC).toArray(FieldInfo[]::new);
         var list = Stream.of(fields)
                 .filter(field -> field.getAnnotation(NoColumn.class) == null)
