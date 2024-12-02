@@ -17,7 +17,7 @@ import java.util.zip.ZipOutputStream;
  * 简化 zip 的创建
  *
  * @author scx567888
- * @version 0.1.4
+ * @version 0.0.1
  */
 public final class ZipBuilder {
 

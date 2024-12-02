@@ -16,7 +16,7 @@ import java.util.zip.ZipOutputStream;
  * PathZipBuilderItem
  *
  * @author scx567888
- * @version 2.0.4
+ * @version 0.0.1
  */
 public final class PathZipBuilderItem extends ZipBuilderItem {
 
