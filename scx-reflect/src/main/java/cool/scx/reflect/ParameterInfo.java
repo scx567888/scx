@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.JavaType;
 
 import java.lang.reflect.Parameter;
 
-import static cool.scx.reflect.ReflectFactory._findName;
-import static cool.scx.reflect.ReflectFactory._findType;
+import static cool.scx.reflect.ParameterInfoHelper._findName;
+import static cool.scx.reflect.ParameterInfoHelper._findType;
 
 /**
  * ParameterInfo

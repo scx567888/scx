@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JavaType;
 
 import java.lang.annotation.Annotation;
 
-import static cool.scx.reflect.ReflectFactory.*;
+import static cool.scx.reflect.ClassInfoHelper.*;
 
 /**
  * ClassInfo

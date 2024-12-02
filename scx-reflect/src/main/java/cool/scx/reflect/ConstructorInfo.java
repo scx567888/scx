@@ -3,8 +3,8 @@ package cool.scx.reflect;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-import static cool.scx.reflect.ReflectFactory._findAccessModifier;
-import static cool.scx.reflect.ReflectFactory._findParameterInfos;
+import static cool.scx.reflect.ConstructorInfoHelper._findAccessModifier;
+import static cool.scx.reflect.ConstructorInfoHelper._findParameterInfos;
 
 /**
  * ConstructorInfo

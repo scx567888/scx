@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JavaType;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
-import static cool.scx.reflect.ReflectFactory.*;
+import static cool.scx.reflect.MethodInfoHelper.*;
 
 /**
  * MethodInfo
