@@ -9,7 +9,7 @@ import cool.scx.web.parameter_handler.exception.RequiredParamEmptyException;
 
 import java.util.Collection;
 
-import static cool.scx.common.util.AnnotationUtils.getAnnotationValue;
+import static cool.scx.common.constant.AnnotationValueHelper.getRealValue;
 import static cool.scx.common.util.ObjectUtils.convertValue;
 import static java.util.Collections.addAll;
 
@@ -33,7 +33,7 @@ public final class FromUploadParameterHandler implements ParameterHandler {
         this.required = false;
         var fromUpload = parameter.parameter().getAnnotation(FromUpload.class);
         if (fromUpload != null) {
-            var _value = getAnnotationValue(fromUpload.value());
+            var _value = getRealValue(fromUpload.value());
             if (_value != null) {
                 value = _value;
             }

@@ -3,7 +3,7 @@ package cool.scx.jdbc.sql;
 import cool.scx.common.functional.ScxConsumer;
 import cool.scx.common.functional.ScxFunction;
 import cool.scx.common.functional.ScxRunnable;
-import cool.scx.common.util.ScxExceptionHelper;
+import cool.scx.common.exception.ScxExceptionHelper;
 import cool.scx.jdbc.JDBCContext;
 import cool.scx.jdbc.dialect.Dialect;
 import cool.scx.jdbc.result_handler.ResultHandler;
@@ -18,7 +18,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static cool.scx.common.util.ScxExceptionHelper.wrap;
+import static cool.scx.common.exception.ScxExceptionHelper.wrap;
 import static java.sql.ResultSet.CONCUR_READ_ONLY;
 import static java.sql.ResultSet.TYPE_FORWARD_ONLY;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;

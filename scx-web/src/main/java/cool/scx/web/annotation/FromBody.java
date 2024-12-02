@@ -5,7 +5,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import static cool.scx.common.util.AnnotationUtils.NULL;
+import static cool.scx.common.constant.AnnotationValue.NULL;
 
 /**
  * 从 body 获取参数

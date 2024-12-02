@@ -1,9 +1,9 @@
 package cool.scx.web;
 
 import cool.scx.common.util.CaseUtils;
-import cool.scx.common.util.ScxExceptionHelper;
-import cool.scx.common.util.ScxExceptionHelper.ScxWrappedRuntimeException;
-import cool.scx.common.util.URIBuilder;
+import cool.scx.common.exception.ScxExceptionHelper;
+import cool.scx.common.exception.ScxRuntimeException;
+import cool.scx.common.util.URIUtils;
 import cool.scx.http.HttpMethod;
 import cool.scx.http.ScxHttpMethod;
 import cool.scx.http.routing.MethodMatcher;
@@ -18,7 +18,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import static cool.scx.common.util.AnnotationUtils.getAnnotationValue;
+import static cool.scx.common.constant.AnnotationValueHelper.getRealValue;
 import static cool.scx.web.RouteRegistrar.findScxRouteOrThrow;
 
 /**
@@ -64,19 +64,19 @@ public final class ScxRouteHandler implements Route, Consumer<RoutingContext> {
         var methodUrl = "";
         //处理 类 级别的注解的 url
         if (classAnnotation != null && !methodAnnotation.ignoreParentUrl()) {
-            var value = getAnnotationValue(classAnnotation.value());
+            var value = getRealValue(classAnnotation.value());
             if (value != null) {
                 classUrl = value;
             }
         }
         //处理 方法 级别的注解的 url
-        var value = getAnnotationValue(methodAnnotation.value());
+        var value = getRealValue(methodAnnotation.value());
         if (value != null) {
             methodUrl = value;
         } else if (methodAnnotation.useNameAsUrl()) {
             methodUrl = CaseUtils.toKebab(this.method.name());
         }
-        return URIBuilder.addSlashStart(URIBuilder.join(classUrl, methodUrl));
+        return URIUtils.addSlashStart(URIUtils.join(classUrl, methodUrl));
     }
 
     @Override
@@ -100,7 +100,7 @@ public final class ScxRouteHandler implements Route, Consumer<RoutingContext> {
             //1, 如果是反射调用时发生异常 则使用反射异常的内部异常 否则使用异常
             //2, 如果是包装类型异常 (ScxWrappedRuntimeException) 则使用其内部的异常
             var exception = ScxExceptionHelper.getRootCause(e instanceof InvocationTargetException ? e.getCause() : e);
-            throw new ScxWrappedRuntimeException(exception);
+            throw new ScxRuntimeException(exception);
         }
     }
 

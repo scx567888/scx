@@ -1,7 +1,7 @@
 package cool.scx.io.zip;
 
 import cool.scx.common.util.StringUtils;
-import cool.scx.common.util.URIBuilder;
+import cool.scx.common.util.URIUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -73,7 +73,7 @@ public final class ZipBuilder {
     }
 
     public ZipBuilder remove(String zipPath) {
-        var p = URIBuilder.normalize(zipPath);
+        var p = URIUtils.normalize(zipPath);
         if (StringUtils.notBlank(zipPath)) {
             items.removeIf(c -> c.zipPath.startsWith(p));
         }
@@ -81,7 +81,7 @@ public final class ZipBuilder {
     }
 
     public ZipBuilderItem get(String zipPath) {
-        var p = URIBuilder.normalize(zipPath);
+        var p = URIUtils.normalize(zipPath);
         if (StringUtils.notBlank(zipPath)) {
             return items.stream().filter(c -> c.zipPath.startsWith(p)).findAny().orElse(null);
         }

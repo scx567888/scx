@@ -1,9 +1,9 @@
 package cool.scx.ansi;
 
-import cool.scx.common.util.OSHelper;
+import cool.scx.common.os.OSHelper;
 import cool.scx.ffm.type.mapper.IntMapper;
 
-import static cool.scx.common.util.OSHelper.OSType.WINDOWS;
+import static cool.scx.common.os.OSType.WINDOWS;
 import static cool.scx.ffm.platform.win32.Kernel32.KERNEL32;
 
 /**

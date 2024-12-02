@@ -1,6 +1,6 @@
 package cool.scx.io.zip;
 
-import cool.scx.common.util.URIBuilder;
+import cool.scx.common.util.URIUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -25,22 +25,22 @@ public class ZipBuilderItem {
     protected final InputStream source;
 
     ZipBuilderItem(String zipPath, byte[] bytes) {
-        this.zipPath = URIBuilder.trimSlash(URIBuilder.normalize(zipPath));
+        this.zipPath = URIUtils.trimSlash(URIUtils.normalize(zipPath));
         this.source = new ByteArrayInputStream(bytes);
     }
 
     ZipBuilderItem(String zipPath, InputStream inputStream) {
-        this.zipPath = URIBuilder.trimSlash(URIBuilder.normalize(zipPath));
+        this.zipPath = URIUtils.trimSlash(URIUtils.normalize(zipPath));
         this.source = inputStream;
     }
 
     ZipBuilderItem(String zipPath) {
-        this.zipPath = URIBuilder.addSlashEnd(URIBuilder.trimSlash(URIBuilder.normalize(zipPath)));
+        this.zipPath = URIUtils.addSlashEnd(URIUtils.trimSlash(URIUtils.normalize(zipPath)));
         this.source = InputStream.nullInputStream();
     }
 
     ZipBuilderItem(ZipEntry zipEntry, ZipFile zipFile) throws IOException {
-        this.zipPath = URIBuilder.trimSlash(URIBuilder.normalize(zipEntry.getName()));
+        this.zipPath = URIUtils.trimSlash(URIUtils.normalize(zipEntry.getName()));
         this.source = zipFile.getInputStream(zipEntry);
     }
 

@@ -4,7 +4,7 @@ import cool.scx.data.jdbc.annotation.Column;
 import cool.scx.jdbc.mapping.type.TypeColumn;
 import cool.scx.reflect.FieldInfo;
 
-import static cool.scx.common.util.AnnotationUtils.getAnnotationValue;
+import static cool.scx.common.constant.AnnotationValueHelper.getRealValue;
 import static cool.scx.common.util.CaseUtils.toSnake;
 
 public class AnnotationConfigColumn implements TypeColumn {
@@ -27,9 +27,9 @@ public class AnnotationConfigColumn implements TypeColumn {
         var defaultColumnName = toSnake(javaField.name());
         var defaultDataType = new AnnotationConfigDataType(this.javaField.type());
         if (column != null) {
-            var _columnName = getAnnotationValue(column.columnName());
-            var _defaultValue = getAnnotationValue(column.defaultValue());
-            var _onUpdate = getAnnotationValue(column.onUpdate());
+            var _columnName = getRealValue(column.columnName());
+            var _defaultValue = getRealValue(column.defaultValue());
+            var _onUpdate = getRealValue(column.onUpdate());
 
             this.columnName = _columnName != null ? _columnName : defaultColumnName;
             this.dataType = column.dataType().length > 0 ? new AnnotationConfigDataType(column.dataType()[0]) : defaultDataType;

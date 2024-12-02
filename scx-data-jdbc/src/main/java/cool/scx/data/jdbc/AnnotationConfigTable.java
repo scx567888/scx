@@ -1,8 +1,8 @@
 package cool.scx.data.jdbc;
 
-import cool.scx.common.util.AnnotationUtils;
+import cool.scx.common.constant.AnnotationValueHelper;
 import cool.scx.common.util.CaseUtils;
-import cool.scx.common.util.MultiMap;
+import cool.scx.common.multi_map.MultiMap;
 import cool.scx.data.jdbc.annotation.NoColumn;
 import cool.scx.jdbc.mapping.Table;
 import cool.scx.reflect.FieldInfo;
@@ -49,8 +49,8 @@ public class AnnotationConfigTable implements Table {
         var defaultTableName = CaseUtils.toSnake(clazz.getSimpleName());
 
         if (table != null) {
-            var _tableName = AnnotationUtils.getAnnotationValue(table.tableName());
-            var _tablePrefix = AnnotationUtils.getAnnotationValue(table.tablePrefix());
+            var _tableName = AnnotationValueHelper.getRealValue(table.tableName());
+            var _tablePrefix = AnnotationValueHelper.getRealValue(table.tablePrefix());
 
             if (_tableName != null) {
                 return _tableName;

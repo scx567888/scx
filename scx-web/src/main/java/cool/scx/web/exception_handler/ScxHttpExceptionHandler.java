@@ -1,7 +1,7 @@
 package cool.scx.web.exception_handler;
 
 import cool.scx.common.util.ObjectUtils;
-import cool.scx.common.util.ScxExceptionHelper;
+import cool.scx.common.exception.ScxExceptionHelper;
 import cool.scx.http.HttpStatusCode;
 import cool.scx.http.content_type.ContentType;
 import cool.scx.http.exception.ScxHttpException;

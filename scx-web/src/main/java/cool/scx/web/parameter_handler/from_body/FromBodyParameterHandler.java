@@ -2,7 +2,7 @@ package cool.scx.web.parameter_handler.from_body;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
-import cool.scx.common.util.JsonNodeHelper;
+import cool.scx.common.jackson.JsonNodeHelper;
 import cool.scx.reflect.ParameterInfo;
 import cool.scx.web.annotation.FromBody;
 import cool.scx.web.parameter_handler.ParameterHandler;
@@ -12,7 +12,7 @@ import cool.scx.web.parameter_handler.exception.RequiredParamEmptyException;
 
 import java.io.IOException;
 
-import static cool.scx.common.util.AnnotationUtils.getAnnotationValue;
+import static cool.scx.common.constant.AnnotationValueHelper.getRealValue;
 import static cool.scx.common.util.ObjectUtils.Options;
 import static cool.scx.common.util.ObjectUtils.jsonMapper;
 
@@ -31,7 +31,7 @@ public final class FromBodyParameterHandler implements ParameterHandler {
     public FromBodyParameterHandler(FromBody fromBody, ParameterInfo parameter) {
         this.fromBody = fromBody;
         this.parameter = parameter;
-        var tempValue = getAnnotationValue(fromBody.value());
+        var tempValue = getRealValue(fromBody.value());
         this.value = tempValue != null ? tempValue : parameter.name();
     }
 

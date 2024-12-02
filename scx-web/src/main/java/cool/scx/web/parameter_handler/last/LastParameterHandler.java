@@ -4,7 +4,7 @@ import cool.scx.reflect.ParameterInfo;
 import cool.scx.web.parameter_handler.ParameterHandler;
 import cool.scx.web.parameter_handler.RequestInfo;
 
-import static cool.scx.common.util.ScxExceptionHelper.ignore;
+import static cool.scx.common.exception.ScxExceptionHelper.ignore;
 import static cool.scx.web.parameter_handler.from_body.FromBodyParameterHandler.getValueFromBody;
 import static cool.scx.web.parameter_handler.from_path.FromPathParameterHandler.getValueFromPath;
 import static cool.scx.web.parameter_handler.from_query.FromQueryParameterHandler.getValueFromQuery;

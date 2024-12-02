@@ -1,7 +1,7 @@
 package cool.scx.io.zip;
 
 import cool.scx.common.util.FileUtils;
-import cool.scx.common.util.URIBuilder;
+import cool.scx.common.util.URIUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -77,7 +77,7 @@ public final class UnZipBuilder {
         if (zipOptions.includeRoot() && this.path != null) {
             var fileName = this.path.getFileName().toString();
             var fileNameWithoutExtension = FileUtils.getFileNameWithoutExtension(fileName);
-            return URIBuilder.addSlashEnd(fileNameWithoutExtension);
+            return URIUtils.addSlashEnd(fileNameWithoutExtension);
         }
         return "";
     }

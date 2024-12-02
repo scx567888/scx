@@ -5,7 +5,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import static cool.scx.common.util.AnnotationUtils.NULL;
+import static cool.scx.common.constant.AnnotationValue.NULL;
 
 /**
  * 添加此注解的 字段 在创建数据表是会采用 value 上的类型

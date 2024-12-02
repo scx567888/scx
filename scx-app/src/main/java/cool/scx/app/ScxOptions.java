@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import static cool.scx.common.util.NetUtils.getLocalIPAddress;
-import static cool.scx.common.util.ScxExceptionHelper.ignore;
+import static cool.scx.common.exception.ScxExceptionHelper.ignore;
 
 /**
  * <p>ScxCoreConfig class.</p>

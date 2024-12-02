@@ -3,7 +3,7 @@ package cool.scx.jdbc.mysql.test;
 import com.mysql.cj.jdbc.MysqlDataSource;
 import cool.scx.common.util.FileUtils;
 import cool.scx.common.util.ObjectUtils;
-import cool.scx.common.util.ScxExceptionHelper;
+import cool.scx.common.exception.ScxExceptionHelper;
 import cool.scx.jdbc.JDBCContext;
 import cool.scx.jdbc.mysql.test.bean.Student;
 import cool.scx.jdbc.mysql.test.bean.StudentRecord;

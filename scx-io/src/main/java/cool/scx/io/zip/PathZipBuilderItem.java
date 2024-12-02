@@ -1,7 +1,7 @@
 package cool.scx.io.zip;
 
 import cool.scx.common.util.StringUtils;
-import cool.scx.common.util.URIBuilder;
+import cool.scx.common.util.URIUtils;
 
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
@@ -23,17 +23,17 @@ public final class PathZipBuilderItem extends ZipBuilderItem {
 
     private static String getZipPathByPath(String zipPath, Path path, ZipOptions zipOptions) {
         var fileName = path.getFileName().toString();
-        var normalizeZipPath = URIBuilder.trimSlash(URIBuilder.normalize(zipPath));
+        var normalizeZipPath = URIUtils.trimSlash(URIUtils.normalize(zipPath));
 
         if (Files.isDirectory(path)) {//文件夹特殊处理 根据 info 判断是否拼接 文件夹名称
             var dirName = zipOptions.includeRoot() ? fileName : "";
-            var rootPath = URIBuilder.join(normalizeZipPath, dirName); //判断是否有自定义目录并进行拼接
-            return StringUtils.isEmpty(rootPath) ? rootPath : URIBuilder.addSlashEnd(rootPath);
+            var rootPath = URIUtils.join(normalizeZipPath, dirName); //判断是否有自定义目录并进行拼接
+            return StringUtils.isEmpty(rootPath) ? rootPath : URIUtils.addSlashEnd(rootPath);
         } else {
             if (StringUtils.isEmpty(normalizeZipPath)) { //zipPath 为空时, 我们直接将文件名设置为 zipPath
                 return fileName;
             } else if (zipOptions.useOriginalFileName()) {
-                return URIBuilder.join(normalizeZipPath, fileName);
+                return URIUtils.join(normalizeZipPath, fileName);
             } else {
                 return normalizeZipPath;
             }

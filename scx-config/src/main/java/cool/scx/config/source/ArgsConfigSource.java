@@ -2,7 +2,7 @@ package cool.scx.config.source;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import cool.scx.common.util.JsonNodeHelper;
+import cool.scx.common.jackson.JsonNodeHelper;
 
 public final class ArgsConfigSource extends AbstractConfigSource {
 

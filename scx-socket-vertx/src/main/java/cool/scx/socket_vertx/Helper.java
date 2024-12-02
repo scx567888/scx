@@ -9,7 +9,7 @@ import io.netty.util.Timeout;
 import io.vertx.core.http.ServerWebSocket;
 import io.vertx.core.http.WebSocketConnectOptions;
 
-import static cool.scx.common.util.ScxExceptionHelper.wrap;
+import static cool.scx.common.exception.ScxExceptionHelper.wrap;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 public final class Helper {
