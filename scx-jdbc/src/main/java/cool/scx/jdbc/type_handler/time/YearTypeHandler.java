@@ -7,6 +7,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Year;
 
+/**
+ * YearTypeHandler
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class YearTypeHandler implements TypeHandler<Year> {
 
     @Override

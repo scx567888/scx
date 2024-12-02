@@ -12,6 +12,9 @@ import static cool.scx.common.constant.ScxDateTimeFormatter.HH_mm_ss;
 
 /**
  * 为不支持 LocalTime 的数据库添加 string 类型的兼容支持
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public class LocalTimeTypeHandler implements TypeHandler<LocalTime> {
 

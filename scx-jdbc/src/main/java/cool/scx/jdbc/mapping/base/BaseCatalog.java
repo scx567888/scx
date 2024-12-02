@@ -8,6 +8,9 @@ import java.util.Map;
 
 /**
  * 用于手动编写 Catalog
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public class BaseCatalog implements Catalog {
 

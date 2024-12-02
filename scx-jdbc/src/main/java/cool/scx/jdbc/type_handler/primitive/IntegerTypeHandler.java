@@ -4,7 +4,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class IntegerTypeHandler extends _PrimitiveTypeHandler<Integer> {
+/**
+ * IntegerTypeHandler
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
+public class IntegerTypeHandler extends PrimitiveTypeHandler<Integer> {
 
     public IntegerTypeHandler(boolean isPrimitive) {
         super(isPrimitive, 0);

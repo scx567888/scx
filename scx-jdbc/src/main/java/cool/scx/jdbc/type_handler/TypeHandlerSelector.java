@@ -19,6 +19,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import static cool.scx.common.util.ClassUtils.getEnumClass;
 import static cool.scx.common.util.ClassUtils.isEnum;
 
+/**
+ * TypeHandlerSelector
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public final class TypeHandlerSelector {
 
     private final Map<Type, TypeHandler<?>> TYPE_HANDLER_MAP = new ConcurrentHashMap<>();

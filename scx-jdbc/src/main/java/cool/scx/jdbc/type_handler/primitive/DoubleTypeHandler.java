@@ -4,7 +4,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class DoubleTypeHandler extends _PrimitiveTypeHandler<Double> {
+/**
+ * DoubleTypeHandler
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
+public class DoubleTypeHandler extends PrimitiveTypeHandler<Double> {
 
     public DoubleTypeHandler(boolean isPrimitive) {
         super(isPrimitive, 0.0);

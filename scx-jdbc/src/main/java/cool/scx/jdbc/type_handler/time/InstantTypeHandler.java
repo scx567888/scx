@@ -8,7 +8,12 @@ import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.time.Instant;
 
-
+/**
+ * InstantTypeHandler
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class InstantTypeHandler implements TypeHandler<Instant> {
 
     @Override

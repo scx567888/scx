@@ -5,13 +5,20 @@ import cool.scx.jdbc.type_handler.TypeHandler;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-abstract class _PrimitiveTypeHandler<T> implements TypeHandler<T> {
+/**
+ * 处理原始类型 因为原始类型 不能为空 (必须有一个值) 所以使用此类支持 默认值处理
+ *
+ * @param <T>
+ * @author scx567888
+ * @version 0.0.1
+ */
+abstract class PrimitiveTypeHandler<T> implements TypeHandler<T> {
 
     final boolean isPrimitive;
 
     final T defaultValue;
 
-    _PrimitiveTypeHandler(boolean isPrimitive, T defaultValue) {
+    PrimitiveTypeHandler(boolean isPrimitive, T defaultValue) {
         this.isPrimitive = isPrimitive;
         // 处理基类以外全使用 null
         this.defaultValue = isPrimitive ? defaultValue : null;

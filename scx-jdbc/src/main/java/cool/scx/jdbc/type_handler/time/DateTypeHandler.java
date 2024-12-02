@@ -18,6 +18,9 @@ import java.util.Date;
  * {@link java.sql.Timestamp} 是指既有日期又有时间
  * <br>
  * 我们此处使用 {@link java.sql.Timestamp} 进行存储, 同时建议用户使用 {@link  java.time.LocalDateTime} 等替换 {@link  java.util.Date}
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public class DateTypeHandler implements TypeHandler<Date> {
 
