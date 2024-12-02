@@ -1,5 +1,7 @@
 package cool.scx.common.util;
 
+import cool.scx.common.util.ScxExceptionUtils.ScxWrappedRuntimeException;
+
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
@@ -11,7 +13,7 @@ import java.util.function.Supplier;
  *
  * @param <T> a
  * @author scx567888
- * @version 1.11.8
+ * @version 0.0.1
  */
 public final class ScopedValue<T> {
 
@@ -57,10 +59,10 @@ public final class ScopedValue<T> {
             try {
                 w.join();
             } catch (InterruptedException e) {
-                throw new ScxExceptionHelper.ScxWrappedRuntimeException(e);
+                throw new ScxWrappedRuntimeException(e);
             }
             if (exception.get() != null) {
-                throw new ScxExceptionHelper.ScxWrappedRuntimeException(exception.get());
+                throw new ScxWrappedRuntimeException(exception.get());
             }
         }
 
@@ -82,7 +84,7 @@ public final class ScopedValue<T> {
                 throw new RuntimeException(e);
             }
             if (exception.get() != null) {
-                throw new ScxExceptionHelper.ScxWrappedRuntimeException(exception.get());
+                throw new ScxWrappedRuntimeException(exception.get());
             }
             return result.get();
         }
@@ -102,7 +104,7 @@ public final class ScopedValue<T> {
             try {
                 w.join();
             } catch (InterruptedException e) {
-                throw new ScxExceptionHelper.ScxWrappedRuntimeException(e);
+                throw new ScxWrappedRuntimeException(e);
             }
             if (exception.get() != null) {
                 throw exception.get();

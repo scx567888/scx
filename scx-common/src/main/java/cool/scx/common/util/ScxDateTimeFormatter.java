@@ -8,7 +8,7 @@ import static java.time.format.DateTimeFormatter.ofPattern;
  * 所有常量
  *
  * @author scx567888
- * @version 1.11.8
+ * @version 0.0.1
  */
 public final class ScxDateTimeFormatter {
 

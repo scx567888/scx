@@ -14,7 +14,7 @@ import java.util.concurrent.ExecutionException;
  * @author scx567888
  * @version 0.0.1
  */
-public final class ScxExceptionHelper {
+public final class ScxExceptionUtils {
 
     /**
      * 包装 异常

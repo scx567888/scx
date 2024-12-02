@@ -10,9 +10,9 @@ import java.io.IOException;
  * todo 后续需要将其拓展出完整的 JsonPath
  *
  * @author scx567888
- * @version 1.11.8
+ * @version 0.0.1
  */
-public final class JsonNodeHelper {
+public final class JsonNodeUtils {
 
     public static JsonNode get(JsonNode jsonNode, String jsonPath) {
         var paths = jsonPath.split("\\.");
