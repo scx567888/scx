@@ -1,7 +1,8 @@
-package cool.scx.common.util;
+package cool.scx.common.jackson;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import cool.scx.common.util.ObjectUtils;
 
 import java.io.IOException;
 
@@ -12,7 +13,7 @@ import java.io.IOException;
  * @author scx567888
  * @version 0.0.1
  */
-public final class JsonNodeUtils {
+public final class JsonNodeHelper {
 
     public static JsonNode get(JsonNode jsonNode, String jsonPath) {
         var paths = jsonPath.split("\\.");
