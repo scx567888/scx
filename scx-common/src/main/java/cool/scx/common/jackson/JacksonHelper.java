@@ -5,14 +5,11 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.cfg.MapperBuilder;
-import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import cool.scx.common.util.ScxDateTimeFormatter;
 
 import static cool.scx.common.jackson.IgnoreJsonIgnore.IGNORE_JSON_IGNORE;
 import static cool.scx.common.jackson.NullKeySerializer.NULL_KEY_SERIALIZER;
-import static cool.scx.common.jackson.PropertyFilterMixIn.PROPERTY_FILTER_MIX_IN;
 
 /**
  * JacksonHelper
@@ -25,7 +22,7 @@ public final class JacksonHelper {
     /**
      * 根据 MapperBuilder 获取 ObjectMapper 对象 并对默认属性进行一些设置,具体如下
      * 如需获得原始的 ObjectMapper 对象请使用 {@link com.fasterxml.jackson.databind.cfg.MapperBuilder}; 自行创建
-     * 1, 针对 LocalDateTime 类型设置默认的日期格式化格式 默认为 {@link ScxDateTimeFormatter#yyyy_MM_dd_HH_mm_ss} 决定
+     * 1, 针对 日期 类型设置 自定义的格式  {@link MyJavaTimeModule}
      * 2, DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES 设置为  false
      * 3, SerializationFeature.FAIL_ON_EMPTY_BEANS          设置为  false
      * 4, NullKeySerializer                                 设置为  JacksonHelper.NULL_KEY_SERIALIZER
@@ -47,7 +44,6 @@ public final class JacksonHelper {
                 // 当 待序列化的对象没有任何可以序列化的属性(字段)时是否抛出异常
                 // 如 public class EmptyClass { }
                 .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, o.failOnEmptyBeans())
-                .addMixIn(Object.class, PropertyFilterMixIn.class)
                 .filterProvider(new SimpleFilterProvider().setFailOnUnknownId(false));
 
         if (o.visibilityConfig() != null) {
@@ -70,12 +66,6 @@ public final class JacksonHelper {
         // 获取序列化空值 处理器 一般用于处理例如 map.put(null,"abc"); 之类 key 为空的
         objectMapper.getSerializerProvider().setNullKeySerializer(NULL_KEY_SERIALIZER);
         return objectMapper;
-    }
-
-    public static FilterProvider getFilterProvider(FieldFilter fieldFilter) {
-        var filterProvider = new SimpleFilterProvider();
-        filterProvider.addFilter(PROPERTY_FILTER_MIX_IN, new DeepFieldFilter(fieldFilter));
-        return filterProvider;
     }
 
 }
