@@ -1,7 +1,7 @@
 package cool.scx.common.test;
 
+import cool.scx.common.tree.ScxTreeHelper;
 import cool.scx.common.tree.ScxTreeModel;
-import cool.scx.common.tree.ScxTreeUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -28,10 +28,10 @@ public class ScxTreeTest {
         l.add(new MyTree(6, 1, "子节点5"));
         l.add(new MyTree(7, 2, "子节点6"));
         l.add(new MyTree(8, 2, "子节点7"));
-        var myTrees = ScxTreeUtils.listToTree(l);
+        var myTrees = ScxTreeHelper.listToTree(l);
         var m = new HashMap<String, MyTree>();
         for (var myTree : myTrees) {
-            ScxTreeUtils.walk(myTree, (parents, self) -> {
+            ScxTreeHelper.walk(myTree, (parents, self) -> {
                 var fullPath = getFullPath(parents, self);
                 m.put(fullPath, self);
             });

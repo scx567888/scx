@@ -6,7 +6,7 @@ import cool.scx.app.test.person.Person;
 import cool.scx.app.test.person.PersonService;
 import cool.scx.common.util.HashUtils;
 import cool.scx.common.util.RandomUtils;
-import cool.scx.common.util.ScxExceptionHelper;
+import cool.scx.common.exception.ScxExceptionHelper;
 import cool.scx.http.FileFormat;
 import cool.scx.http.HttpHelper;
 import cool.scx.http.HttpMethod;
@@ -29,7 +29,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.zip.ZipOutputStream;
 
-import static cool.scx.common.util.ScxDateTimeFormatter.yyyy_MM_dd_HH_mm_ss;
+import static cool.scx.common.constant.ScxDateTimeFormatter.yyyy_MM_dd_HH_mm_ss;
 
 /**
  * 简单测试

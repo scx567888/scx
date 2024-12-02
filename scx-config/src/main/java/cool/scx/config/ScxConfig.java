@@ -1,6 +1,6 @@
 package cool.scx.config;
 
-import cool.scx.common.util.JsonNodeHelper;
+import cool.scx.common.jackson.JsonNodeHelper;
 import cool.scx.config.handler.ConvertValueHandler;
 import cool.scx.config.handler.DefaultValueHandler;
 import cool.scx.config.source.MultiConfigSource;

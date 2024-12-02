@@ -1,4 +1,4 @@
-package cool.scx.common.util;
+package cool.scx.common.multi_map;
 
 import java.util.Collection;
 import java.util.List;
@@ -8,14 +8,14 @@ import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 /**
- * MultiMap
+ * MultiMap 接口 用来约束
  *
  * @param <K> Key
  * @param <V> Value
  * @author scx567888
  * @version 0.0.1
  */
-public interface MultiMapInterface<K, V> extends Iterable<Map.Entry<K, List<V>>> {
+public interface IMultiMap<K, V> extends Iterable<Map.Entry<K, List<V>>> {
 
     //*********** 添加 ************
     boolean add(K key, V value);
@@ -26,7 +26,7 @@ public interface MultiMapInterface<K, V> extends Iterable<Map.Entry<K, List<V>>>
 
     void add(Map<? extends K, ? extends V> map);
 
-    void add(MultiMapInterface<? extends K, ? extends V> map);
+    void add(IMultiMap<? extends K, ? extends V> map);
 
 
     //********** 覆盖 **************
@@ -38,7 +38,7 @@ public interface MultiMapInterface<K, V> extends Iterable<Map.Entry<K, List<V>>>
 
     void set(Map<? extends K, ? extends V> map);
 
-    void set(MultiMapInterface<? extends K, ? extends V> map);
+    void set(IMultiMap<? extends K, ? extends V> map);
 
 
     //********** 获取 **************

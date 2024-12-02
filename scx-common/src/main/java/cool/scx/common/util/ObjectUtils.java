@@ -10,7 +10,6 @@ import com.fasterxml.jackson.databind.type.TypeBindings;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import cool.scx.common.jackson.BuildOptions;
-import cool.scx.common.jackson.FieldFilter;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -18,7 +17,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static cool.scx.common.jackson.JacksonHelper.createObjectMapper;
-import static cool.scx.common.jackson.JacksonHelper.getFilterProvider;
 
 /**
  * 处理对象的工具类<br>
@@ -148,23 +146,11 @@ public final class ObjectUtils {
     }
 
     public static String toJson(Object value, Options options) throws JsonProcessingException {
-        if (options.fieldFilter == null) {
-            return jsonMapper(options).writeValueAsString(value);
-        } else {
-            var filterProvider = getFilterProvider(options.fieldFilter);
-            var writer = jsonMapper(options).writer(filterProvider);
-            return writer.writeValueAsString(value);
-        }
+        return jsonMapper(options).writeValueAsString(value);
     }
 
     public static String toXml(Object value, Options options) throws JsonProcessingException {
-        if (options.fieldFilter == null) {
-            return xmlMapper(options).writeValueAsString(value);
-        } else {
-            var filterProvider = getFilterProvider(options.fieldFilter);
-            var writer = xmlMapper(options).writer(filterProvider);
-            return writer.writeValueAsString(value);
-        }
+        return xmlMapper(options).writeValueAsString(value);
     }
 
     public static String toJson(Object value) throws JsonProcessingException {
@@ -206,6 +192,7 @@ public final class ObjectUtils {
         return flatMap0(sourceMap, null);
     }
 
+    //todo 支持字段过滤器 (如何表现一个路径 是否应该拓展出一个 JsonPath)
     public static class Options {
 
         /**
@@ -222,7 +209,6 @@ public final class ObjectUtils {
         boolean failOnUnknownProperties;
         boolean failOnEmptyBeans;
         Map<PropertyAccessor, JsonAutoDetect.Visibility> visibilityConfig;
-        FieldFilter fieldFilter;
 
         public Options() {
             this.ignoreNullValue = false;
@@ -230,7 +216,6 @@ public final class ObjectUtils {
             this.failOnUnknownProperties = false;
             this.failOnEmptyBeans = false;
             this.visibilityConfig = null;
-            this.fieldFilter = null;
         }
 
         public Options setIgnoreNullValue(boolean ignoreNullValue) {
@@ -258,11 +243,6 @@ public final class ObjectUtils {
                 this.visibilityConfig = new HashMap<>();
             }
             this.visibilityConfig.put(a, b);
-            return this;
-        }
-
-        public Options setFieldFilter(FieldFilter fieldFilter) {
-            this.fieldFilter = fieldFilter;
             return this;
         }
 

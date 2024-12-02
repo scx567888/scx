@@ -2,6 +2,13 @@ package cool.scx.common.circular_iterable;
 
 import java.util.function.IntFunction;
 
+/**
+ * ReverseCircularIterable
+ *
+ * @param <T>
+ * @author scx567888
+ * @version 0.0.1
+ */
 final class ReverseCircularIterable<T> implements ICircularIterable<T> {
 
     private final CircularIterable<T> cycleIterable;

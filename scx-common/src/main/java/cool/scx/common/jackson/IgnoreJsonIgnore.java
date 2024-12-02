@@ -13,6 +13,9 @@ import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
  * 同时还可以创建另一个 普通的 objectMapper 使其正常识别 @JsonIgnore 注解
  * 换句话说就是使 @JsonIgnore 注解只在 像前台发送数据时使用
  * 项目内部使用时则不会理会 @JsonIgnore 注解
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public class IgnoreJsonIgnore extends JacksonAnnotationIntrospector {
 

@@ -133,7 +133,7 @@ public final class CaseUtils {
      * CaseType
      *
      * @author scx567888
-     * @version 0.0.8
+     * @version 0.0.1
      */
     public enum CaseType implements CaseTypeHandler {
 

@@ -36,7 +36,7 @@ import static cool.scx.app.ScxContext.GLOBAL_SCX;
 import static cool.scx.app.ScxHelper.*;
 import static cool.scx.app.enumeration.ScxAppFeature.*;
 import static cool.scx.common.util.NetUtils.getLocalIPAddress;
-import static cool.scx.common.util.ScxExceptionHelper.ignore;
+import static cool.scx.common.exception.ScxExceptionHelper.ignore;
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.WARNING;
 

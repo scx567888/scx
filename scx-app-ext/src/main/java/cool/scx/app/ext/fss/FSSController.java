@@ -1,6 +1,7 @@
 package cool.scx.app.ext.fss;
 
-import cool.scx.common.util.Cache;
+//import cool.scx.common.cache.FixedSizeLinkedHashMap;
+import cool.scx.common.cache.Cache;
 import cool.scx.common.util.FileUtils;
 import cool.scx.http.HttpMethod;
 import cool.scx.http.exception.InternalServerErrorException;
@@ -33,7 +34,7 @@ public class FSSController {
      * 图片缓存 此处做一些初始设置
      * 设置缓存的最大容量 为 10000 .
      */
-    private static final Map<String, Image> IMAGE_CACHE = Collections.synchronizedMap(new Cache<>(10000));
+    private static final Cache<String, Image> IMAGE_CACHE = new Cache<>(10000,true,false);
     private final FSSObjectService fssObjectService;
 
     public FSSController(FSSObjectService fssObjectService) {

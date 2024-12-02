@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import static cool.scx.common.util.ScxExceptionHelper.noException;
+import static cool.scx.common.exception.ScxExceptionHelper.noException;
 import static cool.scx.common.util.StringUtils.endsWithIgnoreCase;
 
 /**

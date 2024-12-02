@@ -8,7 +8,7 @@ import cool.scx.web.parameter_handler.RequestInfo;
 import cool.scx.web.parameter_handler.exception.ParamConvertException;
 import cool.scx.web.parameter_handler.exception.RequiredParamEmptyException;
 
-import static cool.scx.common.util.AnnotationUtils.getAnnotationValue;
+import static cool.scx.common.constant.AnnotationValueHelper.getRealValue;
 import static cool.scx.web.parameter_handler.from_body.FromBodyParameterHandler.readValue;
 
 /**
@@ -26,7 +26,7 @@ public final class FromQueryParameterHandler implements ParameterHandler {
     public FromQueryParameterHandler(FromQuery fromQuery, ParameterInfo parameter) {
         this.fromQuery = fromQuery;
         this.parameter = parameter;
-        var tempValue = getAnnotationValue(fromQuery.value());
+        var tempValue = getRealValue(fromQuery.value());
         this.value = tempValue != null ? tempValue : parameter.name();
     }
 

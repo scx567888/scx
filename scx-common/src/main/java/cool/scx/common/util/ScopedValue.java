@@ -1,5 +1,7 @@
 package cool.scx.common.util;
 
+import cool.scx.common.exception.ScxRuntimeException;
+
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
@@ -10,6 +12,8 @@ import java.util.function.Supplier;
  * todo ScopedValue 正式版本发布时 移除此类
  *
  * @param <T> a
+ * @author scx567888
+ * @version 0.0.1
  */
 public final class ScopedValue<T> {
 
@@ -44,7 +48,7 @@ public final class ScopedValue<T> {
 
         public void run(Runnable op) {
             var exception = new AtomicReference<Exception>();
-            var w = Thread.ofVirtual().name("scx-scoped-value-thread-", THREAD_NUMBER.getAndIncrement()).start(() -> {
+            var w = Thread.ofPlatform().name("scx-scoped-value-thread-", THREAD_NUMBER.getAndIncrement()).start(() -> {
                 key.bind(value);
                 try {
                     op.run();
@@ -55,17 +59,17 @@ public final class ScopedValue<T> {
             try {
                 w.join();
             } catch (InterruptedException e) {
-                throw new ScxExceptionHelper.ScxWrappedRuntimeException(e);
+                throw new ScxRuntimeException(e);
             }
             if (exception.get() != null) {
-                throw new ScxExceptionHelper.ScxWrappedRuntimeException(exception.get());
+                throw new ScxRuntimeException(exception.get());
             }
         }
 
         public <R> R get(Supplier<? extends R> op) {
             var result = new AtomicReference<R>();
             var exception = new AtomicReference<Exception>();
-            var w = Thread.ofVirtual().name("scx-scoped-value-thread-", THREAD_NUMBER.getAndIncrement()).start(() -> {
+            var w = Thread.ofPlatform().name("scx-scoped-value-thread-", THREAD_NUMBER.getAndIncrement()).start(() -> {
                 key.bind(value);
                 try {
                     var r = op.get();
@@ -80,7 +84,7 @@ public final class ScopedValue<T> {
                 throw new RuntimeException(e);
             }
             if (exception.get() != null) {
-                throw new ScxExceptionHelper.ScxWrappedRuntimeException(exception.get());
+                throw new ScxRuntimeException(exception.get());
             }
             return result.get();
         }
@@ -88,7 +92,7 @@ public final class ScopedValue<T> {
         public <R> R call(Callable<? extends R> op) throws Exception {
             var result = new AtomicReference<R>();
             var exception = new AtomicReference<Exception>();
-            var w = Thread.ofVirtual().name("scx-scoped-value-thread-", THREAD_NUMBER.getAndIncrement()).start(() -> {
+            var w = Thread.ofPlatform().name("scx-scoped-value-thread-", THREAD_NUMBER.getAndIncrement()).start(() -> {
                 key.bind(value);
                 try {
                     var r = op.call();
@@ -100,7 +104,7 @@ public final class ScopedValue<T> {
             try {
                 w.join();
             } catch (InterruptedException e) {
-                throw new ScxExceptionHelper.ScxWrappedRuntimeException(e);
+                throw new ScxRuntimeException(e);
             }
             if (exception.get() != null) {
                 throw exception.get();

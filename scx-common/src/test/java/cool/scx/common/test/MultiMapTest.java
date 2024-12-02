@@ -1,6 +1,6 @@
 package cool.scx.common.test;
 
-import cool.scx.common.util.MultiMap;
+import cool.scx.common.multi_map.MultiMap;
 
 import java.util.Arrays;
 import java.util.List;

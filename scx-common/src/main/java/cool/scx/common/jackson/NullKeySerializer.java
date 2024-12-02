@@ -8,6 +8,9 @@ import java.io.IOException;
 
 /**
  * 针对 HashMap 中可能出现的 null key 这里做特殊处理
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public class NullKeySerializer extends JsonSerializer<Object> {
 

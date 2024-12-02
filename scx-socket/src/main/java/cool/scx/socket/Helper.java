@@ -7,7 +7,7 @@ import cool.scx.http.uri.ScxURI;
 import cool.scx.http.uri.ScxURIWritable;
 import cool.scx.http.web_socket.ScxServerWebSocket;
 
-import static cool.scx.common.util.ScxExceptionHelper.wrap;
+import static cool.scx.common.exception.ScxExceptionHelper.wrap;
 
 public final class Helper {
 

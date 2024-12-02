@@ -1,6 +1,6 @@
 package cool.scx.common.tree;
 
-import cool.scx.common.util.MultiMap;
+import cool.scx.common.multi_map.MultiMap;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,7 +12,7 @@ import java.util.List;
  * @author scx567888
  * @version 0.0.1
  */
-public final class ScxTreeUtils {
+public final class ScxTreeHelper {
 
     public static <T extends ScxTree<T>> void walk(final T scxTree, final ScxTreeVisitor<T> visitor) {
         _walk(null, scxTree, visitor);

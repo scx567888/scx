@@ -1,6 +1,6 @@
 package cool.scx.socket_vertx;
 
-import cool.scx.common.util.MultiMap;
+import cool.scx.common.multi_map.MultiMap;
 import cool.scx.common.util.StringUtils;
 import io.netty.handler.codec.http.QueryStringDecoder;
 import io.netty.handler.codec.http.QueryStringEncoder;

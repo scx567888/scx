@@ -1,7 +1,7 @@
 package cool.scx.web;
 
 import cool.scx.common.util.ClassUtils;
-import cool.scx.common.util.URIBuilder;
+import cool.scx.common.util.URIUtils;
 import cool.scx.http.routing.WebSocketRoute;
 import cool.scx.http.routing.WebSocketRouter;
 import cool.scx.web.annotation.ScxWebSocketRoute;
@@ -34,7 +34,7 @@ public final class WebSocketRouteRegistrar {
     public static WebSocketRoute createWebSocketRoute(BaseWebSocketHandler o) {
         var c = o.getClass();
         var scxWebSocketMapping = c.getAnnotation(ScxWebSocketRoute.class);
-        var path = URIBuilder.addSlashStart(URIBuilder.join(scxWebSocketMapping.value()));
+        var path = URIUtils.addSlashStart(URIUtils.join(scxWebSocketMapping.value()));
         var order = scxWebSocketMapping.order();
         //todo 需要重新设计
         return WebSocketRoute.of().order(order).path(path).handler((d) -> {

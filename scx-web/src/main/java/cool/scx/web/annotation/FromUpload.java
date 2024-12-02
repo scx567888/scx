@@ -7,7 +7,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import static cool.scx.common.util.AnnotationUtils.NULL;
+import static cool.scx.common.constant.AnnotationValue.NULL;
 
 /**
  * 从上传中获取参数 请标识在 {@link  MultiPartPart} 类型的参数上

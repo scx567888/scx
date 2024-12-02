@@ -1,6 +1,6 @@
 package cool.scx.common.test;
 
-import cool.scx.common.util.ScxExceptionHelper;
+import cool.scx.common.exception.ScxExceptionHelper;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

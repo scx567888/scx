@@ -1,6 +1,6 @@
 package cool.scx.app.eventbus;
 
-import cool.scx.common.util.MultiMap;
+import cool.scx.common.multi_map.MultiMap;
 
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;

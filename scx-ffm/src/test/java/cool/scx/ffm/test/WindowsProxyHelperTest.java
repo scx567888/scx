@@ -1,6 +1,6 @@
 package cool.scx.ffm.test;
 
-import cool.scx.common.util.OSHelper;
+import cool.scx.common.os.OSHelper;
 import cool.scx.ffm.platform.win32.helper.WindowsProxyHelper;
 import org.testng.annotations.Test;
 

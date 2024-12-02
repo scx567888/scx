@@ -1,9 +1,12 @@
-package cool.scx.common.util;
+package cool.scx.common.os;
 
-import static cool.scx.common.util.OSHelper.OSType.*;
+import static cool.scx.common.os.OSType.*;
 
 /**
  * OSHelper 用来获取操作系统信息
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public final class OSHelper {
 
@@ -38,55 +41,19 @@ public final class OSHelper {
     }
 
     public static boolean isMac() {
-        return osInfo.type == MAC;
+        return osInfo.type() == MAC;
     }
 
     public static boolean isAndroid() {
-        return osInfo.type == ANDROID;
+        return osInfo.type() == ANDROID;
     }
 
     public static boolean isLinux() {
-        return osInfo.type == LINUX;
+        return osInfo.type() == LINUX;
     }
 
     public static boolean isWindows() {
-        return osInfo.type == WINDOWS;
-    }
-
-    /**
-     * OSType
-     */
-    public enum OSType {
-
-        /**
-         * MAC
-         */
-        MAC,
-
-        /**
-         * LINUX
-         */
-        LINUX,
-
-        /**
-         * WINDOWS
-         */
-        WINDOWS,
-
-        /**
-         * ANDROID
-         */
-        ANDROID,
-
-        /**
-         * UNKNOWN
-         */
-        UNKNOWN
-
-    }
-
-    public record OSInfo(OSType type, String version) {
-
+        return osInfo.type() == WINDOWS;
     }
 
 }

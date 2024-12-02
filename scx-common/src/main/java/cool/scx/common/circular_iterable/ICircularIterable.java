@@ -2,6 +2,13 @@ package cool.scx.common.circular_iterable;
 
 import java.util.function.IntFunction;
 
+/**
+ * ICircularIterable
+ *
+ * @param <T>
+ * @author scx567888
+ * @version 0.0.1
+ */
 public interface ICircularIterable<T> extends Iterable<T> {
 
     T first();

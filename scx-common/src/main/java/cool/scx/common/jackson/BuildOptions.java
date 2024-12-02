@@ -5,12 +5,16 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 
 import java.util.Map;
 
-public record BuildOptions(
-        boolean ignoreNullValue,
-        boolean ignoreJsonIgnore,
-        boolean failOnUnknownProperties,
-        boolean failOnEmptyBeans,
-        Map<PropertyAccessor, JsonAutoDetect.Visibility> visibilityConfig
-) {
+/**
+ * BuildOptions
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
+public record BuildOptions(boolean ignoreNullValue,
+                           boolean ignoreJsonIgnore,
+                           boolean failOnUnknownProperties,
+                           boolean failOnEmptyBeans,
+                           Map<PropertyAccessor, JsonAutoDetect.Visibility> visibilityConfig) {
 
 }

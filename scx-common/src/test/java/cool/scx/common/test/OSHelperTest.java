@@ -1,6 +1,6 @@
 package cool.scx.common.test;
 
-import cool.scx.common.util.OSHelper;
+import cool.scx.common.os.OSHelper;
 import org.testng.annotations.Test;
 
 public class OSHelperTest {
