@@ -6,6 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ServiceLoader;
 
+/**
+ * DialectSelector
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public final class DialectSelector {
 
     private static final List<Dialect> DIALECT_LIST = initDialectList();

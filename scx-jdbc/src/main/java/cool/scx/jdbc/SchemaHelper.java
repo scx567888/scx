@@ -14,7 +14,7 @@ import static cool.scx.jdbc.sql.SQL.sql;
 
 /**
  * 架构管理工具
- 
+ *
  * @author scx567888
  * @version 0.0.1
  */
