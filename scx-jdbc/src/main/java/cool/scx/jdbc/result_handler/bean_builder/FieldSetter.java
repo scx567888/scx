@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 import static cool.scx.reflect.AccessModifier.PUBLIC;
 
 /**
- * <p>BeanBuilder interface.</p>
+ * FieldSetter
  *
  * @author scx567888
  * @version 0.2.1

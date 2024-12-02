@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.function.Consumer;
 
 /**
- * <p>BeanBuilder interface.</p>
+ * BeanConsumerHandler
  *
  * @author scx567888
  * @version 0.2.1

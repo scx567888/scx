@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.util.function.Function;
 
 /**
- * <p>BeanBuilder interface.</p>
+ * NormalBeanBuilder
  *
  * @author scx567888
  * @version 0.2.1

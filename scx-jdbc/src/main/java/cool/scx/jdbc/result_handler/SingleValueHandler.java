@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * a
+ * SingleValueHandler
  *
  * @param <T> t
  * @author scx567888

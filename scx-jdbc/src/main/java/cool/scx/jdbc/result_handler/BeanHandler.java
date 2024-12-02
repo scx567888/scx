@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * <p>BeanBuilder interface.</p>
+ * BeanHandler
  *
  * @author scx567888
  * @version 0.2.1

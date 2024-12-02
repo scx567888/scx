@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
- * <p>BeanBuilder interface.</p>
+ * MapConsumerHandler
  *
  * @author scx567888
  * @version 0.2.1

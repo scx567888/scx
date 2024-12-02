@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 /**
- * <p>BeanBuilder interface.</p>
+ * MapHandler
  *
  * @author scx567888
  * @version 0.2.1
