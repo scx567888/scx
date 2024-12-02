@@ -6,21 +6,27 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+/**
+ * EasyEventListener
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class EasyEventListener implements SpyEventListener {
 
-    public void onBeforeAnyExecute(Statement Statement) {
+    public void onBeforeAnyExecute(Statement statement) {
 
     }
 
-    public void onAfterAnyExecute(Statement Statement, long timeElapsedNanos, SQLException e) {
+    public void onAfterAnyExecute(Statement statement, long timeElapsedNanos, SQLException e) {
 
     }
 
-    public void onBeforeAnyAddBatch(Statement Statement) {
+    public void onBeforeAnyAddBatch(Statement statement) {
 
     }
 
-    public void onAfterAnyAddBatch(Statement Statement, long timeElapsedNanos, SQLException e) {
+    public void onAfterAnyAddBatch(Statement statement, long timeElapsedNanos, SQLException e) {
 
     }
 

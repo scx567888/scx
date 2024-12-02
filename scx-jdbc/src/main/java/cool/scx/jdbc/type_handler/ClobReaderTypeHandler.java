@@ -5,7 +5,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-//todo 在驱动不支持时 转换为 string 或者 byte[] 存储 ?
+/**
+ * ClobReaderTypeHandler
+ * todo 在驱动不支持时 转换为 string 或者 byte[] 存储 ?
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class ClobReaderTypeHandler implements TypeHandler<Reader> {
 
     @Override

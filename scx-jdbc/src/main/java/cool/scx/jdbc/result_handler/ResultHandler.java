@@ -14,10 +14,10 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
- * <p>ResultHandler interface.</p>
+ * ResultHandler
  *
  * @author scx567888
- * @version 0.0.7
+ * @version 0.0.1
  */
 public interface ResultHandler<T> {
 

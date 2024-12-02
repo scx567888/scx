@@ -11,6 +11,12 @@ import java.util.stream.Collectors;
 
 import static cool.scx.common.util.StringUtils.notEmpty;
 
+/**
+ * DDLBuilder
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public interface DDLBuilder {
 
     /**

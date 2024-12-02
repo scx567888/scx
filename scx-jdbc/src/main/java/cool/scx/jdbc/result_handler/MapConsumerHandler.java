@@ -10,10 +10,10 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
- * <p>BeanBuilder interface.</p>
+ * MapConsumerHandler
  *
  * @author scx567888
- * @version 0.2.1
+ * @version 0.0.1
  */
 record MapConsumerHandler(Supplier<Map<String, Object>> mapSupplier,
                           Consumer<Map<String, Object>> consumer) implements ResultHandler<Void> {

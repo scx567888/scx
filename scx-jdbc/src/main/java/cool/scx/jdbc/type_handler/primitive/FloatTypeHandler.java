@@ -4,7 +4,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class FloatTypeHandler extends _PrimitiveTypeHandler<Float> {
+/**
+ * FloatTypeHandler
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
+public class FloatTypeHandler extends PrimitiveTypeHandler<Float> {
 
     public FloatTypeHandler(boolean isPrimitive) {
         super(isPrimitive, 0F);

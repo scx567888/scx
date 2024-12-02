@@ -4,6 +4,9 @@ import cool.scx.jdbc.mapping.Key;
 
 /**
  * 用于手动编写 Key
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public class BaseKey implements Key {
 

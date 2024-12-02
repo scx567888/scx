@@ -4,7 +4,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class BooleanTypeHandler extends _PrimitiveTypeHandler<Boolean> {
+/**
+ * BooleanTypeHandler
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
+public class BooleanTypeHandler extends PrimitiveTypeHandler<Boolean> {
 
     public BooleanTypeHandler(boolean isPrimitive) {
         super(isPrimitive, false);

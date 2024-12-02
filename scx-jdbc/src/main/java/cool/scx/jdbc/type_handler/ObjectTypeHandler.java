@@ -13,6 +13,12 @@ import java.sql.Types;
 
 import static java.lang.System.Logger.Level.ERROR;
 
+/**
+ * ObjectTypeHandler 默认都会转换为 json 字符串来存储
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class ObjectTypeHandler implements TypeHandler<Object> {
 
     private static final System.Logger logger = System.getLogger(ObjectTypeHandler.class.getName());

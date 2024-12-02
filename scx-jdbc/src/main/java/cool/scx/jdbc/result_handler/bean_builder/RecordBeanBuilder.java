@@ -13,10 +13,10 @@ import java.util.HashMap;
 import java.util.function.Function;
 
 /**
- * <p>BeanBuilder interface.</p>
+ * RecordBeanBuilder
  *
  * @author scx567888
- * @version 0.2.1
+ * @version 0.0.1
  */
 final class RecordBeanBuilder<T> extends BeanBuilder<T> {
 

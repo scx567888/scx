@@ -11,6 +11,12 @@ import java.util.Objects;
 
 import static cool.scx.jdbc.result_handler.ResultHandler.ofBeanList;
 
+/**
+ * MetaDataHelper
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public final class MetaDataHelper {
 
     private static final ResultHandler<List<_Catalog>> CATALOG_LIST_HANDLER = ofBeanList(_Catalog.class);

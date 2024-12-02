@@ -1,6 +1,5 @@
-package cool.scx.jdbc.meta_data;
+package cool.scx.jdbc;
 
-import cool.scx.jdbc.JDBCContext;
 import cool.scx.jdbc.dialect.Dialect;
 import cool.scx.jdbc.mapping.Column;
 import cool.scx.jdbc.mapping.Table;
@@ -15,6 +14,9 @@ import static cool.scx.jdbc.sql.SQL.sql;
 
 /**
  * 架构管理工具
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public final class SchemaHelper {
 

@@ -4,7 +4,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class CharacterTypeHandler extends _PrimitiveTypeHandler<Character> {
+/**
+ * CharacterTypeHandler
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
+public class CharacterTypeHandler extends PrimitiveTypeHandler<Character> {
 
     public CharacterTypeHandler(boolean isPrimitive) {
         super(isPrimitive, (char) 0);

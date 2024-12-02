@@ -4,7 +4,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class ShortTypeHandler extends _PrimitiveTypeHandler<Short> {
+/**
+ * ShortTypeHandler
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
+public class ShortTypeHandler extends PrimitiveTypeHandler<Short> {
 
     public ShortTypeHandler(boolean isPrimitive) {
         super(isPrimitive, (short) 0);

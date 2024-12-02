@@ -5,6 +5,12 @@ import cool.scx.jdbc.mapping.Catalog;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+/**
+ * CatalogMetaData
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public final class CatalogMetaData implements Catalog {
 
     private final String name;

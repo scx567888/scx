@@ -12,7 +12,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
- * 针对不同数据库驱动进行的二次封装
+ * 方言 用于针对不同数据库进行差异归一化
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public abstract class Dialect {
 

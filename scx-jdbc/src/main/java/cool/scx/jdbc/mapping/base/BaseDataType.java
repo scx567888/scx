@@ -2,6 +2,12 @@ package cool.scx.jdbc.mapping.base;
 
 import cool.scx.jdbc.mapping.DataType;
 
+/**
+ * 用于手动编写 DataType
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class BaseDataType implements DataType {
 
     private String name;
