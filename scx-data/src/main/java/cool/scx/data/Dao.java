@@ -16,7 +16,7 @@ import static cool.scx.data.query.QueryBuilder.query;
  * @param <Entity>
  * @param <ID>
  * @author scx567888
- * @version 0.1.3
+ * @version 0.0.1
  */
 public interface Dao<Entity, ID> {
 

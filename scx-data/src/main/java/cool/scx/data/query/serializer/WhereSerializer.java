@@ -8,6 +8,12 @@ import cool.scx.data.query.WhereClause;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * WhereSerializer
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class WhereSerializer {
 
     public Object serialize(Object obj) {

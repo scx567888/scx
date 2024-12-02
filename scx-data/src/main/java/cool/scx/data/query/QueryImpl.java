@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 默认实现
+ * QueryImpl
  *
  * @author scx567888
- * @version 0.1.3
+ * @version 0.0.1
  */
 public class QueryImpl implements Query {
 

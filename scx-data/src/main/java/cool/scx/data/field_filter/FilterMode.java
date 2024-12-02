@@ -2,6 +2,9 @@ package cool.scx.data.field_filter;
 
 /**
  * 过滤模式
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public enum FilterMode {
 

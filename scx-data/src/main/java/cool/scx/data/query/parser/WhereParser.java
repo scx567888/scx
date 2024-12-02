@@ -6,6 +6,12 @@ import java.util.ArrayList;
 
 import static java.util.Collections.addAll;
 
+/**
+ * WhereParser
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public abstract class WhereParser {
 
     public WhereClause parse(Object obj) {

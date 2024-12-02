@@ -3,7 +3,7 @@ package cool.scx.data.query.exception;
 import cool.scx.data.query.WhereType;
 
 /**
- * 错误的 WhereBody 参数长度异常
+ * WhereBody 参数类型异常
  *
  * @author scx567888
  * @version 0.0.1

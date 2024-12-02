@@ -5,6 +5,12 @@ import cool.scx.data.query.Query;
 
 import java.util.LinkedHashMap;
 
+/**
+ * GroupBySerializer
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class GroupBySerializer {
 
     public Object serialize(Object obj) {

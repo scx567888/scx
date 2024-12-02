@@ -3,6 +3,12 @@ package cool.scx.data.query;
 import cool.scx.common.util.ArrayUtils;
 import cool.scx.common.util.StringUtils;
 
+/**
+ * WhereClause
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public final class WhereClause extends QueryLike<WhereClause> {
 
     private final String whereClause;
