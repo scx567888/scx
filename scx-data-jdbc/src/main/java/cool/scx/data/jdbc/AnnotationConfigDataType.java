@@ -9,6 +9,12 @@ import java.lang.reflect.Type;
 import static cool.scx.data.jdbc.JDBCDaoHelper.getDataTypeByJavaType;
 import static cool.scx.jdbc.JDBCType.VARCHAR;
 
+/**
+ * AnnotationConfigDataType
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class AnnotationConfigDataType implements TypeDataType {
 
     private static final int DEFAULT_VARCHAR_LENGTH = 128;

@@ -12,7 +12,7 @@ import static cool.scx.common.constant.AnnotationValue.NULL;
  * 如果不添加 则会根据 字段的类型进行创建
  *
  * @author scx567888
- * @version 0.3.6
+ * @version 0.0.1
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)

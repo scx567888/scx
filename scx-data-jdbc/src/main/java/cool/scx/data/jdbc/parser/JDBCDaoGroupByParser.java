@@ -6,6 +6,12 @@ import cool.scx.data.query.parser.GroupByParser;
 
 import static cool.scx.data.jdbc.parser.ColumnNameParser.parseColumnName;
 
+/**
+ * JDBCDaoGroupByParser
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class JDBCDaoGroupByParser extends GroupByParser {
 
     private final AnnotationConfigTable tableInfo;

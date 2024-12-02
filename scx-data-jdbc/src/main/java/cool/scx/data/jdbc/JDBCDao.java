@@ -33,7 +33,7 @@ import static cool.scx.jdbc.sql.SQLBuilder.*;
  * 使用 JDBC 接口, 通过 SQL 操作关系型数据库的 DAO
  *
  * @author scx567888
- * @version 0.1.3
+ * @version 0.0.1
  */
 public class JDBCDao<Entity> implements Dao<Entity, Long> {
 

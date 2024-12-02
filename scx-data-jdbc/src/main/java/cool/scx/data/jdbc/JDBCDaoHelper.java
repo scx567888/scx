@@ -16,7 +16,7 @@ import static cool.scx.jdbc.JDBCType.VARCHAR;
  * 列过滤器
  *
  * @author scx567888
- * @version 0.1.3
+ * @version 0.0.1
  */
 public final class JDBCDaoHelper {
 
