@@ -9,7 +9,7 @@ import java.util.function.Consumer;
  * @author scx567888
  * @version 0.0.1
  */
-public interface ScheduleTask {
+public interface ScheduleTask<T extends ScheduleTask<T>> {
 
     /**
      * 是否运行并发执行
@@ -18,7 +18,7 @@ public interface ScheduleTask {
      * @param concurrent 并发执行
      * @return self
      */
-    ScheduleTask concurrent(boolean concurrent);
+    T concurrent(boolean concurrent);
 
     /**
      * 最大运行次数 (此参数不受并发影响)
@@ -41,7 +41,7 @@ public interface ScheduleTask {
      * @param maxRunCount 最大运行次数
      * @return self
      */
-    ScheduleTask maxRunCount(long maxRunCount);
+    T maxRunCount(long maxRunCount);
 
     /**
      * 过期策略
@@ -49,7 +49,7 @@ public interface ScheduleTask {
      * @param expirationPolicy a
      * @return a
      */
-    ScheduleTask expirationPolicy(ExpirationPolicy expirationPolicy);
+    T expirationPolicy(ExpirationPolicy expirationPolicy);
 
     /**
      * 执行器
@@ -60,7 +60,7 @@ public interface ScheduleTask {
      * @param executor 执行器
      * @return self
      */
-    ScheduleTask executor(ScheduledExecutorService executor);
+    T executor(ScheduledExecutorService executor);
 
     /**
      * 任务
@@ -68,7 +68,7 @@ public interface ScheduleTask {
      * @param task 任务
      * @return self
      */
-    ScheduleTask task(Consumer<ScheduleStatus> task);
+    T task(Consumer<ScheduleStatus> task);
 
     /**
      * 启动任务
