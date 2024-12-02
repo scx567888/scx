@@ -1,4 +1,4 @@
-package cool.scx.common.util;
+package cool.scx.common;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Semaphore;
@@ -10,7 +10,7 @@ import java.util.function.Function;
  *
  * @param <T> KEY
  * @author scx567888
- * @version 1.11.8
+ * @version 0.0.1
  */
 public final class LockByKey<T> {
 
