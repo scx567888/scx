@@ -1,8 +1,8 @@
 package cool.scx.data.jdbc;
 
 import cool.scx.common.constant.AnnotationValueHelper;
-import cool.scx.common.util.CaseUtils;
 import cool.scx.common.multi_map.MultiMap;
+import cool.scx.common.util.CaseUtils;
 import cool.scx.data.jdbc.annotation.NoColumn;
 import cool.scx.jdbc.mapping.Table;
 import cool.scx.reflect.FieldInfo;
@@ -15,6 +15,12 @@ import java.util.stream.Stream;
 
 import static cool.scx.reflect.AccessModifier.PUBLIC;
 
+/**
+ * AnnotationConfigTable
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class AnnotationConfigTable implements Table {
 
     /**

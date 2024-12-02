@@ -23,6 +23,12 @@ import static cool.scx.data.jdbc.parser.ColumnNameParser.parseColumnName;
 import static cool.scx.data.jdbc.parser.ColumnNameParser.splitIntoColumnNameAndFieldPath;
 import static java.util.Collections.addAll;
 
+/**
+ * JDBCDaoWhereParser
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class JDBCDaoWhereParser extends WhereParser {
 
     private final AnnotationConfigTable tableInfo;
