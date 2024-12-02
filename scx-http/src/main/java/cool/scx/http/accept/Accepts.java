@@ -1,5 +1,11 @@
 package cool.scx.http.accept;
 
+/**
+ * Accepts
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public interface Accepts extends Iterable<Accept> {
 
     static AcceptsWritable of(String acceptsStr) {

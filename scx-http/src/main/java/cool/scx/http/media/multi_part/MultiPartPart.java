@@ -13,6 +13,12 @@ import java.util.function.Supplier;
 
 import static cool.scx.http.routing.handler.StaticHelper.getMediaTypeByFile;
 
+/**
+ * MultiPartPart
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public interface MultiPartPart extends ScxHttpBody {
 
     static MultiPartPartWritable of() {

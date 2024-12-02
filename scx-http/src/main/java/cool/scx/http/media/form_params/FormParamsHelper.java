@@ -6,6 +6,12 @@ import static java.net.URLDecoder.decode;
 import static java.net.URLEncoder.encode;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+/**
+ * FormParamsHelper
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class FormParamsHelper {
 
     public static String encodeFormParams(FormParams formParams) {

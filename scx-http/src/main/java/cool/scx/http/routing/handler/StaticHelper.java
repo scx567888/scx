@@ -17,6 +17,12 @@ import static cool.scx.http.HttpFieldName.CONTENT_RANGE;
 import static cool.scx.http.HttpStatusCode.PARTIAL_CONTENT;
 import static cool.scx.http.MediaType.*;
 
+/**
+ * StaticHelper
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class StaticHelper {
 
     public static void sendStatic(Path path, RoutingContext context) {

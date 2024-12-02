@@ -2,6 +2,12 @@ package cool.scx.http.cookie;
 
 import static cool.scx.http.cookie.CookieHelper.encodeCookie;
 
+/**
+ * CookieImpl
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 class CookieImpl implements CookieWritable {
 
     private final String name;

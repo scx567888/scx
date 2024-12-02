@@ -1,11 +1,15 @@
 package cool.scx.http.cookie;
 
+/**
+ * CookieSameSite
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public enum CookieSameSite {
 
     NONE("None"),
-
     STRICT("Strict"),
-
     LAX("Lax");
 
     private final String value;

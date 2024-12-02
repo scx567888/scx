@@ -9,6 +9,12 @@ import cool.scx.http.media.json_node.JsonNodeWriter;
 
 import java.io.OutputStream;
 
+/**
+ * ObjectWriter
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class ObjectWriter implements MediaWriter {
 
     private final Object object;

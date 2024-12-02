@@ -6,6 +6,12 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+/**
+ * Router
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public interface Router extends Consumer<ScxHttpServerRequest> {
 
     static Router of() {

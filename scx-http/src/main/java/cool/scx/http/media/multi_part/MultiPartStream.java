@@ -11,6 +11,12 @@ import java.io.InputStream;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+/**
+ * MultiPartStream
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class MultiPartStream implements MultiPart, Iterator<MultiPartPart> {
 
     protected static final byte[] CRLF_CRLF_BYTES = "\r\n\r\n".getBytes();

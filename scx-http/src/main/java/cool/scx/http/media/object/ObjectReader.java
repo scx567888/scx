@@ -10,6 +10,12 @@ import java.io.InputStream;
 
 import static cool.scx.http.media.json_node.JsonNodeReader.JSON_NODE_READER;
 
+/**
+ * ObjectReader
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class ObjectReader<T> implements MediaReader<T> {
 
     private final JavaType type;

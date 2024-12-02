@@ -6,6 +6,9 @@ import static cool.scx.http.web_socket.WebSocketCloseInfo.NORMAL_CLOSE;
 
 /**
  * ScxWebSocket
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public interface ScxWebSocket {
 

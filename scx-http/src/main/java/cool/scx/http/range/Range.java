@@ -11,6 +11,8 @@ import static java.lang.Long.parseLong;
  *
  * @param start 可以为空
  * @param end   可以为空
+ * @author scx567888
+ * @version 0.0.1
  */
 public record Range(Long start, Long end) {
 

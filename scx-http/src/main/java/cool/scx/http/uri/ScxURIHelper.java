@@ -8,7 +8,10 @@ import java.util.ArrayList;
 import static cool.scx.http.uri.URIEncoder.encodeURIComponent;
 
 /**
- * URIHelper
+ * ScxURIHelper
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public class ScxURIHelper {
 

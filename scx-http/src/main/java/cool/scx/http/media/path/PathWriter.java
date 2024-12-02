@@ -11,6 +11,12 @@ import java.nio.file.Path;
 
 import static cool.scx.io.IOHelper.writeFileToOut;
 
+/**
+ * PathWriter
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class PathWriter implements MediaWriter {
 
     private final Path path;

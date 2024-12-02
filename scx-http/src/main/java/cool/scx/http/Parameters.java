@@ -7,6 +7,9 @@ import java.util.Set;
 
 /**
  * Parameters 类似 MultiMap 但是分为 只读 和 可读可写 两种类型 , 以便实现更细粒度的控制 ( 默认实现 基于 MultiMap)
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public interface Parameters<K, V> extends Iterable<Map.Entry<K, List<V>>> {
 

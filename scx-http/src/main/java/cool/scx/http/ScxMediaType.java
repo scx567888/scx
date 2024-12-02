@@ -1,5 +1,11 @@
 package cool.scx.http;
 
+/**
+ * ScxMediaType
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public interface ScxMediaType {
 
     static ScxMediaType of(String str) {

@@ -2,6 +2,12 @@ package cool.scx.http.media.multi_part;
 
 import java.nio.file.Path;
 
+/**
+ * MultiPartWritable
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public interface MultiPartWritable extends MultiPart {
 
     MultiPartWritable boundary(String boundary);

@@ -4,7 +4,14 @@ import java.util.ArrayList;
 
 import static cool.scx.http.content_type.ContentTypeHelper.SEMICOLON_PATTERN;
 
-//todo 中文编码有一些问题 
+
+/**
+ * CookieHelper
+ * todo 中文编码有一些问题
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class CookieHelper {
 
     /**

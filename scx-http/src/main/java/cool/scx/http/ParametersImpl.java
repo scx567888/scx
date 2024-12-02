@@ -6,6 +6,9 @@ import java.util.*;
 
 /**
  * ParametersImpl
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public class ParametersImpl<K, V> implements ParametersWritable<K, V> {
 

@@ -1,5 +1,11 @@
 package cool.scx.http.cookie;
 
+/**
+ * Cookies
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public interface Cookies extends Iterable<Cookie> {
 
     static CookiesImpl of() {

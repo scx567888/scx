@@ -5,6 +5,9 @@ import cool.scx.http.ParametersWritable;
 
 /**
  * ScxURIImpl
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public class ScxURIImpl implements ScxURIWritable {
 

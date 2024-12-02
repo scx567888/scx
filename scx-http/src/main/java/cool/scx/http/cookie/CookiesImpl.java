@@ -4,6 +4,12 @@ import cool.scx.common.multi_map.MultiMap;
 
 import java.util.Iterator;
 
+/**
+ * CookiesImpl
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class CookiesImpl implements CookiesWritable {
 
     private final MultiMap<String, Cookie> cookies;

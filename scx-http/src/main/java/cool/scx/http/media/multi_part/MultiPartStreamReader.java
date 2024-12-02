@@ -6,6 +6,12 @@ import cool.scx.http.media.MediaReader;
 
 import java.io.InputStream;
 
+/**
+ * MultiPartStreamReader
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class MultiPartStreamReader implements MediaReader<MultiPart> {
 
     public static final MultiPartStreamReader MULTI_PART_READER = new MultiPartStreamReader();

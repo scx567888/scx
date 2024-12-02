@@ -1,6 +1,10 @@
 package cool.scx.http.web_socket;
 
 /**
+ * WebSocketFrame
+ *
+ * @author scx567888
+ * @version 0.0.1
  * @see <a href="https://www.rfc-editor.org/rfc/rfc6455">https://www.rfc-editor.org/rfc/rfc6455</a>
  */
 public record WebSocketFrame(boolean fin,

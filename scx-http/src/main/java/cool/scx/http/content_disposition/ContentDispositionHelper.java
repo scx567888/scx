@@ -7,6 +7,12 @@ import static cool.scx.common.util.StringUtils.removeQuotes;
 import static cool.scx.http.content_type.ContentTypeHelper.SEMICOLON_PATTERN;
 import static cool.scx.http.content_type.ContentTypeHelper.encodeParams;
 
+/**
+ * ContentDispositionHelper
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class ContentDispositionHelper {
 
     public static ContentDispositionWritable decodedContentDisposition(String contentDispositionStr) {

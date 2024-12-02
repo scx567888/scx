@@ -7,6 +7,12 @@ import cool.scx.http.media.MediaWriter;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+/**
+ * InputStreamWriter
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class InputStreamWriter implements MediaWriter {
 
     private final InputStream inputStream;

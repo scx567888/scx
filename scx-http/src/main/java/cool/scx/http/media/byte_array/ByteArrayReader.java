@@ -8,6 +8,9 @@ import java.io.InputStream;
 
 /**
  * 保持单例模式
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public final class ByteArrayReader implements MediaReader<byte[]> {
 

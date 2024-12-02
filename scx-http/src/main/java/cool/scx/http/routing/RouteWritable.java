@@ -6,6 +6,9 @@ import java.util.function.Consumer;
 
 /**
  * RouteWritable
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public interface RouteWritable extends Route {
 

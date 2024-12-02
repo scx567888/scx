@@ -7,6 +7,9 @@ import static cool.scx.http.HttpMethod.GET;
 
 /**
  * ScxHttpClientRequestBase
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public abstract class ScxHttpClientRequestBase implements ScxHttpClientRequest {
 

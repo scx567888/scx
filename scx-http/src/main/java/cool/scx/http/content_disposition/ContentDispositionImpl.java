@@ -3,6 +3,12 @@ package cool.scx.http.content_disposition;
 import cool.scx.http.Parameters;
 import cool.scx.http.ParametersWritable;
 
+/**
+ * ContentDispositionImpl
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class ContentDispositionImpl implements ContentDispositionWritable {
 
     private String type;
