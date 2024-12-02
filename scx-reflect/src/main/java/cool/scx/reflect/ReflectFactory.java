@@ -15,6 +15,12 @@ import static cool.scx.common.util.ObjectUtils.resolveMemberType;
 import static cool.scx.reflect.AccessModifier.*;
 import static java.util.Collections.addAll;
 
+/**
+ * ReflectFactory
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public final class ReflectFactory {
 
     private static final Map<JavaType, ClassInfo> CLASS_INFO_CACHE = new HashMap<>();
@@ -364,8 +370,8 @@ public final class ReflectFactory {
      */
     private static boolean isOverride(MethodInfo rootMethod, MethodInfo candidateMethod) {
         return PRIVATE != candidateMethod.accessModifier() &&
-               candidateMethod.name().equals(rootMethod.name()) &&
-               _hasSameParameterTypes(rootMethod, candidateMethod);
+                candidateMethod.name().equals(rootMethod.name()) &&
+                _hasSameParameterTypes(rootMethod, candidateMethod);
     }
 
     private static boolean _hasSameParameterTypes(MethodInfo rootMethod, MethodInfo candidateMethod) {

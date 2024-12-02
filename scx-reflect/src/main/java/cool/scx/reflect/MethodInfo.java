@@ -9,6 +9,9 @@ import static cool.scx.reflect.ReflectFactory.*;
 
 /**
  * MethodInfo
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public final class MethodInfo implements ExecutableInfo {
 

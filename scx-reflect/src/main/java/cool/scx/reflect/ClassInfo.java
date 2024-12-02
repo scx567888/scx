@@ -8,6 +8,9 @@ import static cool.scx.reflect.ReflectFactory.*;
 
 /**
  * ClassInfo
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public final class ClassInfo {
 
