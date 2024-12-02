@@ -1,5 +1,7 @@
 package cool.scx.common.util;
 
+import cool.scx.common.multi_map.MultiMap;
+
 import java.util.function.Function;
 
 /**
