@@ -4,6 +4,7 @@ import cool.scx.ffm.FFMProxy;
 
 /**
  * 提供一些 C 标准的接口
+ *
  * @author scx567888
  * @version 0.0.1
  */

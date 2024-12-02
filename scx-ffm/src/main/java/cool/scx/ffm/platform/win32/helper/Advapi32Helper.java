@@ -17,6 +17,7 @@ import static cool.scx.ffm.platform.win32.WinNT.*;
 
 /**
  * 简化操作 注册表
+ * todo 代码待整理 现在太乱了
  * @author scx567888
  * @version 0.0.1
  */
@@ -128,7 +129,7 @@ public final class Advapi32Helper {
         }
         if (lpType.getValue() != WinNT.REG_DWORD) {
             throw new RuntimeException("Unexpected registry type "
-                                       + lpType.getValue() + ", expected REG_DWORD");
+                    + lpType.getValue() + ", expected REG_DWORD");
         }
         IntMapper data = new IntMapper();
         rc = ADVAPI32.RegQueryValueExA(hKey, value, 0, lpType, data, lpcbData);
@@ -239,10 +240,10 @@ public final class Advapi32Helper {
             throw new Win32Exception(rc);
         }
         if (lpType.getValue() != WinNT.REG_SZ
-            && lpType.getValue() != WinNT.REG_EXPAND_SZ) {
+                && lpType.getValue() != WinNT.REG_EXPAND_SZ) {
             throw new RuntimeException("Unexpected registry type "
-                                       + lpType.getValue()
-                                       + ", expected REG_SZ or REG_EXPAND_SZ");
+                    + lpType.getValue()
+                    + ", expected REG_SZ or REG_EXPAND_SZ");
         }
         if (lpcbData.getValue() == 0) {
             return "";
