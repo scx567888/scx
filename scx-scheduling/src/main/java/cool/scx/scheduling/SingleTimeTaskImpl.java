@@ -56,19 +56,19 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
     }
 
     @Override
-    public SingleTimeTaskImpl expirationPolicy(ExpirationPolicy expirationPolicy) {
+    public SingleTimeTask expirationPolicy(ExpirationPolicy expirationPolicy) {
         this.expirationPolicy = expirationPolicy;
         return this;
     }
 
     @Override
-    public SingleTimeTaskImpl executor(ScheduledExecutorService executor) {
+    public SingleTimeTask executor(ScheduledExecutorService executor) {
         this.executor = executor;
         return this;
     }
 
     @Override
-    public SingleTimeTaskImpl task(Consumer<ScheduleStatus> task) {
+    public SingleTimeTask task(Consumer<ScheduleStatus> task) {
         this.task = task;
         return this;
     }
