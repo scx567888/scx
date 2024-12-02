@@ -1,11 +1,11 @@
-package cool.scx.common.util;
+package cool.scx.common.constant;
 
 import java.time.format.DateTimeFormatter;
 
 import static java.time.format.DateTimeFormatter.ofPattern;
 
 /**
- * 所有常量
+ * 预定义的 日期格式化器
  *
  * @author scx567888
  * @version 0.0.1
