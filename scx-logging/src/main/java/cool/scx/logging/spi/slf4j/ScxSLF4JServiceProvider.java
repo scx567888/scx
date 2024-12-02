@@ -7,6 +7,13 @@ import org.slf4j.helpers.BasicMarkerFactory;
 import org.slf4j.spi.MDCAdapter;
 import org.slf4j.spi.SLF4JServiceProvider;
 
+
+/**
+ * ScxSLF4JServiceProvider
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public final class ScxSLF4JServiceProvider implements SLF4JServiceProvider {
 
     private static final ILoggerFactory LOGGER_FACTORY = new ScxSLF4JLoggerFactory();

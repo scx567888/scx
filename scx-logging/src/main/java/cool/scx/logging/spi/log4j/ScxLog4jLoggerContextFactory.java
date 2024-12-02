@@ -5,6 +5,13 @@ import org.apache.logging.log4j.spi.LoggerContextFactory;
 
 import java.net.URI;
 
+
+/**
+ * ScxLog4jLoggerContextFactory
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public final class ScxLog4jLoggerContextFactory implements LoggerContextFactory {
 
     private static final LoggerContext LOGGER_CONTEXT = new ScxLog4jLoggerContext();

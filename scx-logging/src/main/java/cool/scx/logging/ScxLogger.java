@@ -5,6 +5,13 @@ import java.time.LocalDateTime;
 import static cool.scx.logging.ScxLoggerHelper.getFilteredStackTrace;
 import static java.lang.System.Logger.Level;
 
+
+/**
+ * ScxLogger
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public record ScxLogger(String name, ScxLoggerConfig config) {
 
     public boolean isLoggable(Level level) {

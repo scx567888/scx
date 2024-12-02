@@ -9,6 +9,13 @@ import java.util.regex.Pattern;
 
 import static java.lang.System.Logger.Level.ERROR;
 
+
+/**
+ * ScxLoggerFactory
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public final class ScxLoggerFactory {
 
     static final System.Logger.Level DEFAULT_LEVEL = ERROR;

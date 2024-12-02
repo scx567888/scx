@@ -5,6 +5,13 @@ import org.apache.logging.log4j.message.MessageFactory;
 import org.apache.logging.log4j.spi.ExtendedLogger;
 import org.apache.logging.log4j.spi.LoggerContext;
 
+
+/**
+ * ScxLog4jLoggerContext
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public final class ScxLog4jLoggerContext implements LoggerContext {
 
     @Override

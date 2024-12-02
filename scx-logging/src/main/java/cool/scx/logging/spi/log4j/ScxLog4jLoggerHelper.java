@@ -4,6 +4,13 @@ import org.apache.logging.log4j.Level;
 
 import static org.apache.logging.log4j.Level.*;
 
+
+/**
+ * ScxLog4jLoggerHelper
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 final class ScxLog4jLoggerHelper {
 
     public static System.Logger.Level toJDKLevel(Level level) {

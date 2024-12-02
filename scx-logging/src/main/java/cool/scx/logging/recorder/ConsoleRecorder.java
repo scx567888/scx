@@ -6,6 +6,9 @@ import static java.lang.System.Logger.Level.ERROR;
 
 /**
  * 控制台 记录器
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public class ConsoleRecorder extends AbstractRecorder {
 
