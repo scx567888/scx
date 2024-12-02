@@ -1,7 +1,7 @@
 package cool.scx.ansi;
 
 /**
- * 背景色
+ * Ansi 基本背景色
  *
  * @author scx567888
  * @version 0.0.1

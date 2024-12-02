@@ -2,7 +2,13 @@ package cool.scx.ansi;
 
 import static cool.scx.ansi.AnsiStyle.RESET;
 
-public record AnsiItem(Object value, AnsiElement... elements) {
+/**
+ * AnsiItem
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
+record AnsiItem(Object value, AnsiElement... elements) {
 
     //起始字符
     private static final String ENCODE_START = "\033[";

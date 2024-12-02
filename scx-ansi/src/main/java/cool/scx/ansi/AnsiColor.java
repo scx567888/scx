@@ -1,7 +1,7 @@
 package cool.scx.ansi;
 
 /**
- * 前景色
+ * Ansi 基本前景色
  *
  * @author scx567888
  * @version 0.0.1
