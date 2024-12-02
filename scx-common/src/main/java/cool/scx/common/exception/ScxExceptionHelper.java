@@ -1,4 +1,4 @@
-package cool.scx.common.util;
+package cool.scx.common.exception;
 
 import cool.scx.common.functional.ScxRunnable;
 
@@ -14,7 +14,7 @@ import java.util.concurrent.ExecutionException;
  * @author scx567888
  * @version 0.0.1
  */
-public final class ScxExceptionUtils {
+public final class ScxExceptionHelper {
 
     /**
      * 包装 异常
@@ -27,7 +27,7 @@ public final class ScxExceptionUtils {
         try {
             return handler.call();
         } catch (Throwable throwable) {
-            throw new ScxWrappedRuntimeException(throwable);
+            throw new ScxRuntimeException(throwable);
         }
     }
 
@@ -40,7 +40,7 @@ public final class ScxExceptionUtils {
         try {
             handler.run();
         } catch (Throwable throwable) {
-            throw new ScxWrappedRuntimeException(throwable);
+            throw new ScxRuntimeException(throwable);
         }
     }
 
@@ -110,9 +110,9 @@ public final class ScxExceptionUtils {
      * @return a
      */
     public static Throwable getRootCause(Throwable throwable) {
-        if (throwable instanceof ScxWrappedRuntimeException ||
-            throwable instanceof ExecutionException ||
-            throwable instanceof CompletionException) {
+        if (throwable instanceof ScxRuntimeException ||
+                throwable instanceof ExecutionException ||
+                throwable instanceof CompletionException) {
             return getRootCause(throwable.getCause());
         } else {
             return throwable;
@@ -129,20 +129,6 @@ public final class ScxExceptionUtils {
         var stringWriter = new StringWriter();
         throwable.printStackTrace(new PrintWriter(stringWriter));
         return stringWriter.getBuffer().toString();
-    }
-
-    /**
-     * ScxWrappedRuntimeException  Scx 自定义异常包装器
-     *
-     * @author scx567888
-     * @version 0.0.1
-     */
-    public static final class ScxWrappedRuntimeException extends RuntimeException {
-
-        public ScxWrappedRuntimeException(Throwable cause) {
-            super(cause);
-        }
-
     }
 
 }
