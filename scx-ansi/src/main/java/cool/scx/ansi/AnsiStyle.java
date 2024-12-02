@@ -1,24 +1,24 @@
 package cool.scx.ansi;
 
 /**
- * Ansi 样式
+ * Ansi 基本样式
  *
  * @author scx567888
  * @version 0.0.1
  */
 public enum AnsiStyle implements AnsiElement {
 
-    RESET("0"),              // 重置所有样式
-    BOLD("1"),               // 粗体
-    FAINT("2"),              // 微弱
-    ITALIC("3"),             // 斜体
-    UNDERLINE("4"),          // 下划线
-    BLINK("5"),              // 闪烁
-    REVERSE("7"),            // 反转前景色和背景色
-    HIDDEN("8"),             // 隐藏文本
-    CROSSED_OUT("9"),        // 删除线
-    DOUBLE_UNDERLINE("21"),  // 双下划线
-    OVERLINE("53");          // 上划线
+    RESET("0"),
+    BOLD("1"),
+    FAINT("2"),
+    ITALIC("3"),
+    UNDERLINE("4"),
+    BLINK("5"),
+    REVERSE("7"),
+    HIDDEN("8"),
+    CROSSED_OUT("9"),
+    DOUBLE_UNDERLINE("21"),
+    OVERLINE("53");
 
     private final String code;
 

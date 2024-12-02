@@ -6,6 +6,12 @@ import cool.scx.ffm.type.mapper.IntMapper;
 import static cool.scx.common.util.OSHelper.OSType.WINDOWS;
 import static cool.scx.ffm.platform.win32.Kernel32.KERNEL32;
 
+/**
+ * AnsiHelper
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 class AnsiHelper {
 
     /**
