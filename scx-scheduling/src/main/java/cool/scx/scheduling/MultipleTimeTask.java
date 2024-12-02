@@ -16,6 +16,9 @@ import static java.util.concurrent.TimeUnit.NANOSECONDS;
 
 /**
  * 多次执行的任务
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public final class MultipleTimeTask implements ScheduleTask {
 

@@ -2,6 +2,9 @@ package cool.scx.scheduling;
 
 /**
  * 过期策略
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public enum ExpirationPolicy {
 

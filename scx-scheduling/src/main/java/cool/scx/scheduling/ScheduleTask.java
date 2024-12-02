@@ -5,6 +5,9 @@ import java.util.function.Consumer;
 
 /**
  * 调度任务
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public interface ScheduleTask {
 

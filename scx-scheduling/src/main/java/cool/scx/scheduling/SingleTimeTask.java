@@ -15,7 +15,10 @@ import static java.util.concurrent.TimeUnit.NANOSECONDS;
 
 /**
  * 单次执行的任务
- **/
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public final class SingleTimeTask implements ScheduleTask {
 
     private static final System.Logger logger = System.getLogger(SingleTimeTask.class.getName());
