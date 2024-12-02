@@ -6,7 +6,7 @@ import static cool.scx.http.HttpStatusCode.INTERNAL_SERVER_ERROR;
  * 服务器内部异常
  *
  * @author scx567888
- * @version 1.11.8
+ * @version 0.0.1
  */
 public class InternalServerErrorException extends ScxHttpException {
 

@@ -10,7 +10,7 @@ import static java.lang.String.CASE_INSENSITIVE_ORDER;
  * 常见 文件格式 (文件类型/文件后缀/文件拓展名)
  *
  * @author scx567888
- * @version 1.3.4
+ * @version 0.0.1
  */
 public enum FileFormat {
 

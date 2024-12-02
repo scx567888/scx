@@ -4,7 +4,7 @@ package cool.scx.http;
  * HttpMethod
  *
  * @author scx567888
- * @version 0.3.6
+ * @version 0.0.1
  * @see <a href="https://www.rfc-editor.org/rfc/rfc9110#name-method-definitions">https://www.rfc-editor.org/rfc/rfc9110#name-method-definitions</a>
  */
 public enum HttpMethod implements ScxHttpMethod {

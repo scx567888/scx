@@ -4,7 +4,7 @@ package cool.scx.http;
  * HttpStatusCode
  *
  * @author scx567888
- * @version 1.11.8
+ * @version 0.0.1
  * @see <a href="https://www.rfc-editor.org/rfc/rfc9110#name-status-codes">https://www.rfc-editor.org/rfc/rfc9110#name-status-codes</a>
  */
 public enum HttpStatusCode {
