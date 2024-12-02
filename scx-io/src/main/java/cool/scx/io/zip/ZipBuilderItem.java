@@ -13,7 +13,7 @@ import java.util.zip.ZipOutputStream;
  * ZipBuilderItem
  *
  * @author scx567888
- * @version 2.0.4
+ * @version 0.0.1
  */
 public class ZipBuilderItem {
 

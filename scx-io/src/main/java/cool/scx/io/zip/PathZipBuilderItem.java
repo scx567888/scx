@@ -12,6 +12,12 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+/**
+ * PathZipBuilderItem
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public final class PathZipBuilderItem extends ZipBuilderItem {
 
     private final Path path;

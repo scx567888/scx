@@ -4,6 +4,12 @@ import cool.scx.common.util.ArrayUtils;
 
 import java.util.function.Supplier;
 
+/**
+ * LinkedDataReader
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class LinkedDataReader implements DataReader {
 
     private final Supplier<DataNode> dataSupplier;

@@ -5,7 +5,13 @@ import java.nio.file.Files;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
 
-public class IOHelper {
+/**
+ * IOHelper
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
+public final class IOHelper {
 
     public static long getFileSize(Path path) {
         try {

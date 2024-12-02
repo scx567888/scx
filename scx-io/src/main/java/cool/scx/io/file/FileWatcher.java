@@ -8,6 +8,9 @@ import static java.nio.file.StandardWatchEventKinds.*;
 
 /**
  * 文件监听器
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public final class FileWatcher {
 
@@ -70,7 +73,7 @@ public final class FileWatcher {
     }
 
     public FileWatcher start() {
-        this.watchThread = Thread.ofVirtual().name("FileWatcher-WatchThread").start(this::_do);
+        this.watchThread = Thread.ofPlatform().name("FileWatcher-WatchThread").start(this::_do);
         return this;
     }
 

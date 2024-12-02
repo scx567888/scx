@@ -11,6 +11,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 通过 FileWatcher 主动更新 代替高频的 Files.readAttributes 查询
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public class FileAttributesReader {
 

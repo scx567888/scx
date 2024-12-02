@@ -2,6 +2,12 @@ package cool.scx.io;
 
 import cool.scx.common.util.ArrayUtils;
 
+/**
+ * ByteArrayDataReader
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class ByteArrayDataReader implements DataReader {
 
     private final byte[] bytes;

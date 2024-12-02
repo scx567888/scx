@@ -4,6 +4,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+/**
+ * 懒加载输入流
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public abstract class LazyInputStream extends InputStream {
 
     private InputStream inputStream;

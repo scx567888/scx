@@ -1,5 +1,11 @@
 package cool.scx.io;
 
+/**
+ * DataNode
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class DataNode {
 
     final byte[] bytes;
