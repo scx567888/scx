@@ -1,4 +1,4 @@
-package cool.scx.common;
+package cool.scx.common.util;
 
 import java.util.*;
 import java.util.function.BiConsumer;

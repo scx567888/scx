@@ -1,4 +1,4 @@
-package cool.scx.common;
+package cool.scx.common.util;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Semaphore;
