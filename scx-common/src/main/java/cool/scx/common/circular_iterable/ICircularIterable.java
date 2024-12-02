@@ -4,9 +4,10 @@ import java.util.function.IntFunction;
 
 /**
  * ICircularIterable
+ *
  * @param <T>
  * @author scx567888
- * @version 1.11.8
+ * @version 0.0.1
  */
 public interface ICircularIterable<T> extends Iterable<T> {
 

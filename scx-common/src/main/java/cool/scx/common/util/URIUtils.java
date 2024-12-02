@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
  * @author scx567888
  * @version 0.0.1
  */
-public final class URIBuilder {
+public final class URIUtils {
 
     /**
      * 切割正则表达式

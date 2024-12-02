@@ -1,14 +1,14 @@
 package cool.scx.common.util;
 
-import static cool.scx.common.util.OSHelper.OSType.*;
+import static cool.scx.common.util.OSUtils.OSType.*;
 
 /**
  * OSHelper 用来获取操作系统信息
  *
  * @author scx567888
- * @version 1.11.8
+ * @version 0.0.1
  */
-public final class OSHelper {
+public final class OSUtils {
 
     private static final OSInfo osInfo = initOSInfo();
 
@@ -56,34 +56,12 @@ public final class OSHelper {
         return osInfo.type == WINDOWS;
     }
 
-    /**
-     * OSType
-     */
     public enum OSType {
 
-        /**
-         * MAC
-         */
         MAC,
-
-        /**
-         * LINUX
-         */
         LINUX,
-
-        /**
-         * WINDOWS
-         */
         WINDOWS,
-
-        /**
-         * ANDROID
-         */
         ANDROID,
-
-        /**
-         * UNKNOWN
-         */
         UNKNOWN
 
     }

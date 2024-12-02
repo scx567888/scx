@@ -2,9 +2,10 @@ package cool.scx.common.circular_iterable;
 
 /**
  * Node
+ *
  * @param <E>
  * @author scx567888
- * @version 1.11.8
+ * @version 0.0.1
  */
 public final class Node<E> {
 

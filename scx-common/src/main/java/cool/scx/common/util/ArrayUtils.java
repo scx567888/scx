@@ -7,7 +7,7 @@ import java.util.*;
  * 提供一些操作 Array 的方法
  *
  * @author scx567888
- * @version 1.11.8
+ * @version 0.0.1
  */
 public final class ArrayUtils {
 
