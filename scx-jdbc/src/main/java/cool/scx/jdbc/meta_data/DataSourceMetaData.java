@@ -5,6 +5,12 @@ import cool.scx.jdbc.mapping.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+/**
+ * DataSourceMetaData
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public final class DataSourceMetaData implements DataSource {
 
     private CatalogMetaData[] catalogs;
