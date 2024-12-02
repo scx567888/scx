@@ -7,6 +7,12 @@ import java.sql.Statement;
 
 import static java.lang.System.Logger.Level.DEBUG;
 
+/**
+ * LoggingEventListener
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class LoggingEventListener extends EasyEventListener {
 
     private static final Logger logger = System.getLogger("ScxSpy");
