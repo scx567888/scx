@@ -1,5 +1,11 @@
 package cool.scx.ffm.platform.win32;
 
+/**
+ * WinNT
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public final class WinNT {
 
     // 文件权限常量
