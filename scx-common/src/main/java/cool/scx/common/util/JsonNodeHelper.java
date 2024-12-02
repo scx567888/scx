@@ -8,6 +8,9 @@ import java.io.IOException;
 /**
  * 用来处理一些简单的 JsonNode 的节点操作
  * todo 后续需要将其拓展出完整的 JsonPath
+ *
+ * @author scx567888
+ * @version 1.11.8
  */
 public final class JsonNodeHelper {
 

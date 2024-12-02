@@ -12,7 +12,7 @@ import java.util.function.Supplier;
  * @author scx567888
  * @version 0.0.1
  */
-public class MultiMap<K, V> implements MultiMapInterface<K, V> {
+public class MultiMap<K, V> implements IMultiMap<K, V> {
 
     private final Map<K, List<V>> map;
     private final Supplier<List<V>> listSupplier;
@@ -59,7 +59,7 @@ public class MultiMap<K, V> implements MultiMapInterface<K, V> {
     }
 
     @Override
-    public void add(MultiMapInterface<? extends K, ? extends V> map) {
+    public void add(IMultiMap<? extends K, ? extends V> map) {
         for (var entry : map) {
             add(entry.getKey(), entry.getValue());
         }
@@ -92,7 +92,7 @@ public class MultiMap<K, V> implements MultiMapInterface<K, V> {
     }
 
     @Override
-    public void set(MultiMapInterface<? extends K, ? extends V> map) {
+    public void set(IMultiMap<? extends K, ? extends V> map) {
         for (var entry : map) {
             set(entry.getKey(), entry.getValue());
         }

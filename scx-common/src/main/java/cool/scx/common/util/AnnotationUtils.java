@@ -1,5 +1,11 @@
 package cool.scx.common.util;
 
+/**
+ * AnnotationUtils
+ *
+ * @author scx567888
+ * @version 1.11.8
+ */
 public final class AnnotationUtils {
 
     public static final String NULL = """

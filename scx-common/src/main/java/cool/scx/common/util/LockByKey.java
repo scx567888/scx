@@ -9,6 +9,8 @@ import java.util.function.Function;
  * 根据 Key 进行锁 , 使用 Semaphore 以支持多线程的 访问
  *
  * @param <T> KEY
+ * @author scx567888
+ * @version 1.11.8
  */
 public final class LockByKey<T> {
 

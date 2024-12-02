@@ -4,6 +4,8 @@ package cool.scx.common.circular_iterable;
  * 无限循环的迭代器
  *
  * @param <T>
+ * @author scx567888
+ * @version 1.11.8
  */
 public final class CircularIterator<T> implements ICircularIterator<T> {
 

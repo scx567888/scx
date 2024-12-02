@@ -4,6 +4,8 @@ package cool.scx.common.circular_iterable;
  * 无限循环的迭代器 (倒转)
  *
  * @param <T>
+ * @author scx567888
+ * @version 1.11.8
  */
 final class ReverseCircularIterator<T> implements ICircularIterator<T> {
 

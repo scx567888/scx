@@ -4,7 +4,10 @@ import java.lang.reflect.Array;
 import java.util.*;
 
 /**
- * 提供一些 Array 的方法, 也有一些 List 相关的方法
+ * 提供一些操作 Array 的方法
+ *
+ * @author scx567888
+ * @version 1.11.8
  */
 public final class ArrayUtils {
 

@@ -4,6 +4,9 @@ import static cool.scx.common.util.OSHelper.OSType.*;
 
 /**
  * OSHelper 用来获取操作系统信息
+ *
+ * @author scx567888
+ * @version 1.11.8
  */
 public final class OSHelper {
 

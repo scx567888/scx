@@ -3,6 +3,13 @@ package cool.scx.common.circular_iterable;
 import java.util.Objects;
 import java.util.function.IntFunction;
 
+/**
+ * CircularIterable
+ *
+ * @param <T>
+ * @author scx567888
+ * @version 1.11.8
+ */
 public final class CircularIterable<T> implements ICircularIterable<T> {
 
     private Node<T> first;

@@ -10,6 +10,8 @@ import java.util.function.Supplier;
  * todo ScopedValue 正式版本发布时 移除此类
  *
  * @param <T> a
+ * @author scx567888
+ * @version 1.11.8
  */
 public final class ScopedValue<T> {
 
