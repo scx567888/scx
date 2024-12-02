@@ -14,7 +14,7 @@ import cool.scx.http.helidon.HelidonHttpServer;
 import cool.scx.http.helidon.HelidonHttpServerOptions;
 import cool.scx.http.routing.WebSocketRouter;
 import cool.scx.jdbc.JDBCContext;
-import cool.scx.jdbc.meta_data.SchemaHelper;
+import cool.scx.jdbc.SchemaHelper;
 import cool.scx.jdbc.sql.SQLRunner;
 import cool.scx.net.tls.TLS;
 import cool.scx.web.RouteRegistrar;
