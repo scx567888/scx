@@ -7,7 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
-import cool.scx.common.util.ScxDateTimeFormatter;
+import cool.scx.common.constant.ScxDateTimeFormatter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -17,6 +17,9 @@ import java.time.LocalTime;
  * 获取针对日期处理的 jackson module;
  * <br>
  * 仅仅是在 jackson-datatype-jsr310 包的基础上 添加了一些自定义的日期序列化格式
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public class MyJavaTimeModule extends SimpleModule {
 
