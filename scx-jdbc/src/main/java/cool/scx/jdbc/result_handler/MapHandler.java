@@ -12,7 +12,7 @@ import java.util.function.Supplier;
  * MapHandler
  *
  * @author scx567888
- * @version 0.2.1
+ * @version 0.0.1
  */
 record MapHandler(Supplier<Map<String, Object>> mapSupplier) implements ResultHandler<Map<String, Object>> {
 

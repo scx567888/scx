@@ -13,7 +13,7 @@ import java.util.function.Function;
  * BeanBuilder
  *
  * @author scx567888
- * @version 0.2.1
+ * @version 0.0.1
  */
 public abstract class BeanBuilder<T> {
 

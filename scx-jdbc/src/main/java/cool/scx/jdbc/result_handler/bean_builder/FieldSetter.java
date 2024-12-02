@@ -14,7 +14,7 @@ import static cool.scx.reflect.AccessModifier.PUBLIC;
  * FieldSetter
  *
  * @author scx567888
- * @version 0.2.1
+ * @version 0.0.1
  */
 final class FieldSetter {
 

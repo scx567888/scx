@@ -13,7 +13,7 @@ import java.util.function.Supplier;
  * MapConsumerHandler
  *
  * @author scx567888
- * @version 0.2.1
+ * @version 0.0.1
  */
 record MapConsumerHandler(Supplier<Map<String, Object>> mapSupplier,
                           Consumer<Map<String, Object>> consumer) implements ResultHandler<Void> {

@@ -14,7 +14,7 @@ import java.util.function.Function;
  * NormalBeanBuilder
  *
  * @author scx567888
- * @version 0.2.1
+ * @version 0.0.1
  */
 final class NormalBeanBuilder<T> extends BeanBuilder<T> {
 
