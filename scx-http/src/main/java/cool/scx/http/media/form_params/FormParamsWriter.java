@@ -12,6 +12,12 @@ import java.io.OutputStream;
 import static cool.scx.http.media.form_params.FormParamsHelper.encodeFormParams;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+/**
+ * FormParamsWriter
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class FormParamsWriter implements MediaWriter {
 
     private final FormParams formParams;

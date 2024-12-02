@@ -9,6 +9,9 @@ import static cool.scx.http.uri.ScxURIHelper.decodeQuery;
 
 /**
  * ScxURIWritable
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public interface ScxURIWritable extends ScxURI {
 

@@ -6,6 +6,12 @@ import cool.scx.http.ScxHttpHeadersWritable;
 import java.io.InputStream;
 import java.util.function.Supplier;
 
+/**
+ * MultiPartPartImpl
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class MultiPartPartImpl implements MultiPartPartWritable {
 
     private ScxHttpHeadersWritable headers;

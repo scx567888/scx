@@ -5,6 +5,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * ScxHttpBodyImpl
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class ScxHttpBodyImpl implements ScxHttpBody {
 
     private final AtomicBoolean alreadyRead;

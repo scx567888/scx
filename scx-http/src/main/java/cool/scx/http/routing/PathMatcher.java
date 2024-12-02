@@ -4,6 +4,9 @@ import cool.scx.http.Parameters;
 
 /**
  * PathMatcher
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public interface PathMatcher {
 

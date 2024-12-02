@@ -6,7 +6,7 @@ import static cool.scx.http.HttpStatusCode.METHOD_NOT_ALLOWED;
  * 方法不被允许
  *
  * @author scx567888
- * @version 1.11.8
+ * @version 0.0.1
  */
 public class MethodNotAllowedException extends ScxHttpException {
 

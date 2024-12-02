@@ -11,6 +11,9 @@ import java.util.function.Consumer;
 
 /**
  * ScxClientWebSocketBuilder
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public interface ScxClientWebSocketBuilder {
 

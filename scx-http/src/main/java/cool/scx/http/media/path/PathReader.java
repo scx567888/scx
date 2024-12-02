@@ -12,6 +12,9 @@ import static cool.scx.io.IOHelper.readInToFile;
 
 /**
  * 将内容写入到文件
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public class PathReader implements MediaReader<Path> {
 

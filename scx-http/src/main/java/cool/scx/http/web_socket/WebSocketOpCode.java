@@ -1,35 +1,18 @@
 package cool.scx.http.web_socket;
 
+/**
+ * WebSocketOpCode
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public enum WebSocketOpCode {
 
-    /**
-     * Continuation Frames
-     */
     CONTINUATION(0x0),
-
-    /**
-     * Text Data Frames
-     */
     TEXT(0x1),
-
-    /**
-     * Binary Data Frames
-     */
     BINARY(0x2),
-
-    /**
-     * Close Control Frames
-     */
     CLOSE(0x8),
-
-    /**
-     * Ping Control Frames
-     */
     PING(0x9),
-
-    /**
-     * Pong Control Frames
-     */
     PONG(0xA);
 
     private static final WebSocketOpCode[] MAP = initMap();

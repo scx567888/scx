@@ -4,6 +4,9 @@ import cool.scx.http.web_socket.ScxClientWebSocketBuilder;
 
 /**
  * ScxHttpClient
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public interface ScxHttpClient {
 

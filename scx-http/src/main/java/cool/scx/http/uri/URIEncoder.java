@@ -4,7 +4,13 @@ import java.nio.CharBuffer;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-public class URIEncoder {
+/**
+ * URIEncoder
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
+public final class URIEncoder {
 
     private static final char[] HEX_DIGITS = {
             '0', '1', '2', '3', '4', '5', '6', '7',

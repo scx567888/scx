@@ -6,6 +6,9 @@ import java.security.cert.Certificate;
 
 /**
  * PeerInfo
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public interface PeerInfo {
 

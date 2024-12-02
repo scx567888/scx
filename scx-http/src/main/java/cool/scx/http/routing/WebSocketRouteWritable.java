@@ -4,6 +4,9 @@ import java.util.function.Consumer;
 
 /**
  * WebSocketRouteWritable
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public interface WebSocketRouteWritable extends WebSocketRoute {
 

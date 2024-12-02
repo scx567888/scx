@@ -24,6 +24,9 @@ import static cool.scx.http.media.string.StringReader.STRING_READER;
 
 /**
  * ScxHttpBody
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public interface ScxHttpBody {
 

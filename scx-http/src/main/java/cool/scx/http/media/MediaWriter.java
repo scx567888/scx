@@ -7,6 +7,9 @@ import java.io.OutputStream;
 
 /**
  * 写入器 可用于 ServerResponse 和 ClientRequest
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public interface MediaWriter {
 

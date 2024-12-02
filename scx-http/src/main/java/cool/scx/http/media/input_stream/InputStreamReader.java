@@ -7,6 +7,9 @@ import java.io.InputStream;
 
 /**
  * 此类保持单例模式即可
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public final class InputStreamReader implements MediaReader<InputStream> {
 

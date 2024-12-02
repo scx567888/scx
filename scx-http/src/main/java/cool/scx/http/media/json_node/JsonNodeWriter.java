@@ -16,6 +16,12 @@ import static cool.scx.http.MediaType.APPLICATION_JSON;
 import static cool.scx.http.MediaType.APPLICATION_XML;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+/**
+ * JsonNodeWriter
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class JsonNodeWriter implements MediaWriter {
 
     private final JsonNode jsonNode;

@@ -5,6 +5,12 @@ import cool.scx.http.ScxHttpServerRequest;
 import static cool.scx.http.HttpFieldName.*;
 import static cool.scx.http.HttpHelper.generateSecWebSocketAccept;
 
+/**
+ * ScxServerWebSocketHandshakeRequest
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public interface ScxServerWebSocketHandshakeRequest extends ScxHttpServerRequest {
 
     default String secWebSocketKey() {

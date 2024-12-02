@@ -8,6 +8,9 @@ import static cool.scx.http.uri.URIEncoder.encodeURI;
 
 /**
  * ScxURI
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public interface ScxURI {
 

@@ -6,7 +6,7 @@ import static cool.scx.http.HttpStatusCode.UNAUTHORIZED;
  * 未认证异常 (未登录)
  *
  * @author scx567888
- * @version 1.1.19
+ * @version 0.0.1
  */
 public class UnauthorizedException extends ScxHttpException {
 

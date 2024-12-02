@@ -2,6 +2,12 @@ package cool.scx.http.accept;
 
 import cool.scx.http.ScxMediaType;
 
+/**
+ * AcceptHelper
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class AcceptHelper {
 
     public static AcceptWritable decodeAccept(String s) {
