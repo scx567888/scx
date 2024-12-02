@@ -1,4 +1,4 @@
-package cool.scx.common.util;
+package cool.scx.common.multi_map;
 
 import java.util.*;
 import java.util.function.BiConsumer;
