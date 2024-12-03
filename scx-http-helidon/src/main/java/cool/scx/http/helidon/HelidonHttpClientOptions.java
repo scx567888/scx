@@ -3,7 +3,10 @@ package cool.scx.http.helidon;
 import io.helidon.webclient.api.Proxy;
 
 /**
- * ScxHttpClientOptions
+ * HelidonHttpClientOptions
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public class HelidonHttpClientOptions {
 

@@ -5,6 +5,9 @@ import io.helidon.websocket.WsSession;
 
 /**
  * HelidonClientWebSocket
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 class HelidonClientWebSocket extends HelidonWebSocket implements ScxClientWebSocket {
 

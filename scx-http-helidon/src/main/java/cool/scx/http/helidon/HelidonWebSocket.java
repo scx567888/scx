@@ -17,6 +17,12 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 
+/**
+ * HelidonWebSocket
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 class HelidonWebSocket implements ScxWebSocket, WsListener {
 
     //todo 这种方式不准确
