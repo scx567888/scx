@@ -6,7 +6,7 @@ import cool.scx.jdbc.JDBCType;
  * SQLiteDialectHelper
  *
  * @author scx567888
- * @version 0.3.6
+ * @version 0.0.1
  */
 public class SQLiteDialectHelper {
 

@@ -23,7 +23,7 @@ import static cool.scx.data.mysql_x.parser.MySQLXDaoWhereParser.WHERE_PARSER;
  *
  * @param <Entity>
  * @author scx567888
- * @version 0.3.6
+ * @version 0.0.1
  */
 public class MySQLXDao<Entity> implements Dao<Entity, String> {
 

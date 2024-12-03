@@ -13,7 +13,7 @@ import static cool.scx.common.util.StringUtils.notBlank;
  * SQLiteDDLBuilder
  *
  * @author scx567888
- * @version 0.3.6
+ * @version 0.0.1
  */
 public class SQLiteDDLBuilder implements DDLBuilder {
 

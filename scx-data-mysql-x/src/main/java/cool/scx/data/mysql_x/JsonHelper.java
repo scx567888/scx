@@ -10,7 +10,7 @@ import cool.scx.data.field_filter.FieldFilter;
 
 /**
  * @author scx567888
- * @version 0.3.6
+ * @version 0.0.1
  */
 class JsonHelper {
 
