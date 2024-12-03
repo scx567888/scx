@@ -5,6 +5,12 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import cool.scx.common.jackson.JsonNodeHelper;
 import cool.scx.config.ScxConfigSource;
 
+/**
+ * MultiConfigSource
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class MultiConfigSource extends AbstractConfigSource {
 
     private final ScxConfigSource[] sources;

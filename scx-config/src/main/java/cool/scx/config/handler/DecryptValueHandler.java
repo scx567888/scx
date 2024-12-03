@@ -5,6 +5,12 @@ import cool.scx.common.util.CryptoUtils;
 import cool.scx.common.util.ObjectUtils;
 import cool.scx.config.ScxConfigValueHandler;
 
+/**
+ * DecryptValueHandler
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public final class DecryptValueHandler implements ScxConfigValueHandler<String> {
 
     private final String password;

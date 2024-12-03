@@ -5,6 +5,12 @@ import com.fasterxml.jackson.databind.JavaType;
 import cool.scx.common.util.ObjectUtils;
 import cool.scx.config.ScxConfigValueHandler;
 
+/**
+ * ConvertValueHandler
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public final class ConvertValueHandler<T> implements ScxConfigValueHandler<T> {
 
     private final JavaType javaType;
