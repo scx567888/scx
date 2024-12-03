@@ -11,7 +11,7 @@ import static cool.scx.http.HttpStatusCode.MOVED_PERMANENTLY;
  * 重定向
  *
  * @author scx567888
- * @version 1.11.8
+ * @version 0.0.1
  */
 public final class Redirection implements BaseVo {
 

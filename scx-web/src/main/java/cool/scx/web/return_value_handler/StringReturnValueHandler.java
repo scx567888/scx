@@ -10,7 +10,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  * String 类型处理器
  *
  * @author scx567888
- * @version 1.11.8
+ * @version 0.0.1
  */
 public final class StringReturnValueHandler implements ReturnValueHandler {
 

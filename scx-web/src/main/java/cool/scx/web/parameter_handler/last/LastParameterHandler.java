@@ -13,7 +13,7 @@ import static cool.scx.web.parameter_handler.from_query.FromQueryParameterHandle
  * LastParameterHandler
  *
  * @author scx567888
- * @version 1.11.8
+ * @version 0.0.1
  */
 public final class LastParameterHandler implements ParameterHandler {
 

@@ -26,10 +26,10 @@ import static cool.scx.http.HttpFieldName.CACHE_CONTROL;
 import static cool.scx.http.MediaType.IMAGE_PNG;
 
 /**
- * <p>Image class.</p>
+ * Image
  *
  * @author scx567888
- * @version 1.0.10
+ * @version 0.0.1
  */
 public abstract class Image implements BaseVo {
 

@@ -11,7 +11,7 @@ import static cool.scx.common.constant.AnnotationValue.NULL;
  * 从 body 获取参数
  *
  * @author scx567888
- * @version 0.5.0
+ * @version 0.0.1
  */
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)

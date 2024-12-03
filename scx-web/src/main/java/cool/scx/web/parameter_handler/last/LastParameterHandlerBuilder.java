@@ -8,7 +8,7 @@ import cool.scx.web.parameter_handler.ParameterHandlerBuilder;
  * LastParameterHandler
  *
  * @author scx567888
- * @version 1.11.8
+ * @version 0.0.1
  */
 public final class LastParameterHandlerBuilder implements ParameterHandlerBuilder {
 

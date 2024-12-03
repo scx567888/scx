@@ -7,7 +7,7 @@ import cool.scx.web.annotation.ScxWebSocketRoute;
  * BaseWebSocketHandler 基本接口 请与 {@link ScxWebSocketRoute} 配合使用
  *
  * @author scx567888
- * @version 1.0.10
+ * @version 0.0.1
  */
 public interface BaseWebSocketHandler {
 

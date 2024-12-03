@@ -17,15 +17,15 @@ import static cool.scx.http.MediaType.*;
  * 封装 RoutingContext 的参数 防止反复取值造成性能损失
  *
  * @author scx567888
- * @version 1.4.7
+ * @version 0.0.1
  */
 public final class RequestInfo {
 
     private final RoutingContext routingContext;
     private final ContentType contentType;
+    private final JsonNode pathParams;
+    private final JsonNode query;
     private JsonNode body;
-    private JsonNode pathParams;
-    private JsonNode query;
     private MultiMap<String, MultiPartPart> uploadFiles;
 
     public RequestInfo(RoutingContext ctx) {

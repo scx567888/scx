@@ -30,6 +30,12 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
+/**
+ * ScxWeb
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public final class ScxWeb {
 
     /**

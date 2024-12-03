@@ -1,7 +1,7 @@
 package cool.scx.web.exception_handler;
 
-import cool.scx.common.util.ObjectUtils;
 import cool.scx.common.exception.ScxExceptionHelper;
+import cool.scx.common.util.ObjectUtils;
 import cool.scx.http.HttpStatusCode;
 import cool.scx.http.content_type.ContentType;
 import cool.scx.http.exception.ScxHttpException;
@@ -21,7 +21,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  * ScxHttpException 处理器
  *
  * @author scx567888
- * @version 1.11.8
+ * @version 0.0.1
  */
 public class ScxHttpExceptionHandler implements ExceptionHandler {
 

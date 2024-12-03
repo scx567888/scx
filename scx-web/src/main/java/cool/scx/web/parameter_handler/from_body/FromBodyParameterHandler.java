@@ -20,7 +20,7 @@ import static cool.scx.common.util.ObjectUtils.jsonMapper;
  * FromBodyParameterHandler
  *
  * @author scx567888
- * @version 1.11.8
+ * @version 0.0.1
  */
 public final class FromBodyParameterHandler implements ParameterHandler {
 

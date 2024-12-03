@@ -9,7 +9,7 @@ import cool.scx.web.parameter_handler.ParameterHandlerBuilder;
  * FromBodyParameterHandler
  *
  * @author scx567888
- * @version 1.11.8
+ * @version 0.0.1
  */
 public final class FromBodyParameterHandlerBuilder implements ParameterHandlerBuilder {
 

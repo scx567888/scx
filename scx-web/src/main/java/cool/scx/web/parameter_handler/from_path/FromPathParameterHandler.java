@@ -15,7 +15,7 @@ import static cool.scx.web.parameter_handler.from_body.FromBodyParameterHandler.
  * FromPathParameterHandler
  *
  * @author scx567888
- * @version 1.11.8
+ * @version 0.0.1
  */
 public final class FromPathParameterHandler implements ParameterHandler {
 

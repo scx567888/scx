@@ -10,7 +10,7 @@ import static cool.scx.http.HttpHelper.getMediaTypeByFileName;
  * 文件下载 vo
  *
  * @author scx567888
- * @version 1.0.10
+ * @version 0.0.1
  */
 public final class Download extends BaseWriter {
 

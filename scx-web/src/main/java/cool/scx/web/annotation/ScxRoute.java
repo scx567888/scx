@@ -13,7 +13,7 @@ import static cool.scx.common.constant.AnnotationValue.NULL;
  * 路由注解 默认会在方法上进行继承 如果想在子类禁用 请使用 NoScxRoute
  *
  * @author scx567888
- * @version 0.3.6
+ * @version 0.0.1
  */
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)

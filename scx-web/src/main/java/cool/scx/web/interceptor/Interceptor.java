@@ -7,7 +7,7 @@ import cool.scx.web.ScxRouteHandler;
  * 拦截器
  *
  * @author scx567888
- * @version 1.3.14
+ * @version 0.0.1
  */
 public interface Interceptor {
 

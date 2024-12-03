@@ -13,7 +13,7 @@ import static cool.scx.common.constant.AnnotationValue.NULL;
  * 从上传中获取参数 请标识在 {@link  MultiPartPart} 类型的参数上
  *
  * @author scx567888
- * @version 1.9.1
+ * @version 0.0.1
  */
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)

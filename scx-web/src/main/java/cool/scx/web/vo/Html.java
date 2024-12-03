@@ -13,7 +13,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  * html 渲染类
  *
  * @author scx567888
- * @version 0.3.6
+ * @version 0.0.1
  */
 public final class Html implements BaseVo {
 
