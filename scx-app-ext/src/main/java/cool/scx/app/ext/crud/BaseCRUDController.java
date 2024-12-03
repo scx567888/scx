@@ -16,10 +16,10 @@ import static cool.scx.data.query.QueryBuilder.and;
 import static cool.scx.http.HttpMethod.*;
 
 /**
- * 继承方式的 CRUD 的 controller (推荐使用)
+ * 继承方式的 CRUD 的 controller
  *
  * @author scx567888
- * @version 2.5.2
+ * @version 0.0.1
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class BaseCRUDController<T extends BaseModelService> {

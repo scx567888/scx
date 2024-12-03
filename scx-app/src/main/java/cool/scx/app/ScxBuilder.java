@@ -17,7 +17,7 @@ import java.util.*;
  * Scx 构建器
  *
  * @author scx567888
- * @version 1.11.8
+ * @version 0.0.1
  */
 public final class ScxBuilder {
 
@@ -118,12 +118,6 @@ public final class ScxBuilder {
         return appKey;
     }
 
-    /**
-     * <p>initMainClass.</p>
-     *
-     * @param mainClass a {@link java.lang.Class} object
-     * @return a {@link java.lang.Class} object
-     */
     private static Class<?> checkMainClass(Class<?> mainClass) {
         //1,检测 mainClass 是否正确
         if (mainClass == null) {

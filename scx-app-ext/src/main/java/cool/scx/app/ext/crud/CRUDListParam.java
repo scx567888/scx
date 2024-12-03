@@ -7,6 +7,13 @@ import cool.scx.data.query.Query;
 import static cool.scx.data.field_filter.serializer.FieldFilterDeserializer.FIELD_FILTER_DESERIALIZER;
 import static cool.scx.data.query.serializer.QueryDeserializer.QUERY_DESERIALIZER;
 
+
+/**
+ * CRUDListParam
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class CRUDListParam {
 
     public JsonNode query;

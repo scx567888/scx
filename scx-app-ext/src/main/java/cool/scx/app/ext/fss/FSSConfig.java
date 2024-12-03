@@ -12,7 +12,7 @@ import static java.lang.System.Logger.Level.DEBUG;
  * 核心模块配置文件
  *
  * @author scx567888
- * @version 1.1.2
+ * @version 0.0.1
  */
 public class FSSConfig {
 

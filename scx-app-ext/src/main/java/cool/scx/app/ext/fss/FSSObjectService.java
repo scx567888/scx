@@ -12,10 +12,10 @@ import static cool.scx.app.ext.fss.FSSHelper.getPhysicalFilePath;
 import static cool.scx.data.query.QueryBuilder.*;
 
 /**
- * UploadFileService
+ * FSSObjectService
  *
  * @author scx567888
- * @version 0.3.6
+ * @version 0.0.1
  */
 @ScxService
 public class FSSObjectService extends BaseModelService<FSSObject> {

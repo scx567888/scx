@@ -63,11 +63,6 @@ public abstract class Image implements BaseVo {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     * <p>
-     * sendToClient
-     */
     @Override
     public final void accept(RoutingContext context) throws BadRequestException {
         //设置缓存 减少服务器压力

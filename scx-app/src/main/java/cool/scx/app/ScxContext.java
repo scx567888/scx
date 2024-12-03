@@ -22,7 +22,7 @@ import java.util.concurrent.Callable;
  * 用来存储 整个项目的上下文
  *
  * @author scx567888
- * @version 1.11.8
+ * @version 0.0.1
  */
 public final class ScxContext {
 
@@ -65,209 +65,90 @@ public final class ScxContext {
         }
     }
 
-    /**
-     * a
-     *
-     * @return a
-     */
     public static ScxFeatureConfig featureConfig() {
         return scx().scxFeatureConfig();
     }
 
-    /**
-     * a
-     *
-     * @return a
-     */
     public static ScxConfig config() {
         return scx().scxConfig();
     }
 
-    /**
-     * 获取 dao
-     *
-     * @return d
-     */
     public static DataSource dataSource() {
         return scx().dataSource();
     }
 
-    /**
-     * a
-     *
-     * @return a
-     */
     public static ScxHttpServer httpServer() {
         return scx().httpServer();
     }
 
-    /**
-     * a
-     *
-     * @return a
-     */
     public static EventBus eventBus() {
         return scx().eventBus();
     }
 
-    /**
-     * a
-     *
-     * @return a
-     */
     public static WebSocketRouter webSocketRouter() {
         return scx().webSocketRouter();
     }
 
-    /**
-     * <p>appRoot.</p>
-     *
-     * @return a {@link java.io.File} object
-     */
     public static ScxEnvironment environment() {
         return scx().scxEnvironment();
     }
 
-    /**
-     * <p>appKey.</p>
-     *
-     * @return a {@link java.lang.String} object
-     */
     public static String appKey() {
         return scx().appKey();
     }
 
-    /**
-     * 所有模块
-     *
-     * @return a {@link java.util.List} object.
-     */
     public static ScxModule[] scxModules() {
         return scx().scxModules();
     }
 
-    /**
-     * a
-     *
-     * @return a
-     */
     public static ScxOptions options() {
         return scx().scxOptions();
     }
 
-    /**
-     * 返回当前运行的 scx 实例的 beanFactory
-     *
-     * @return a
-     */
     public static BeanFactory beanFactory() {
         return scx().beanFactory();
     }
 
-    /**
-     * a
-     *
-     * @return a
-     */
     public static ScxHttpRouter router() {
         return scx().scxHttpRouter();
     }
 
-    /**
-     * 返回当前运行的 scx 实例的 scxMappingConfiguration
-     *
-     * @return a
-     */
     public static ScxWeb scxWeb() {
         return scx().scxWeb();
     }
 
-    /**
-     * 简化方法
-     *
-     * @param scxFeature a
-     * @return a
-     */
     public static boolean getFeatureState(ScxAppFeature scxFeature) {
         return featureConfig().get(scxFeature);
     }
 
-    /**
-     * 简化方法
-     *
-     * @return a
-     */
     public static SQLRunner sqlRunner() {
         return scx().sqlRunner();
     }
 
-    /**
-     * 避免冗长的 调用
-     *
-     * @param handler handler
-     */
     public static void autoTransaction(ScxRunnable<?> handler) {
         sqlRunner().autoTransaction(handler);
     }
 
-    /**
-     * 避免冗长的 调用
-     *
-     * @param handler a
-     * @param <T>     a
-     * @return a
-     */
     public static <T> T autoTransaction(Callable<T> handler) {
         return sqlRunner().autoTransaction(handler);
     }
 
-    /**
-     * 简化方法
-     *
-     * @param requiredType r
-     * @param <T>          r
-     * @return r
-     */
     public static <T> T getBean(Class<T> requiredType) {
         return scx().getBean(requiredType);
     }
 
-    /**
-     * 简化方法
-     *
-     * @param clazz a {@link java.lang.Class} object
-     * @param <T>   a T class
-     * @return a 模块
-     */
     public static <T extends ScxModule> T findScxModule(Class<T> clazz) {
         return scx().findScxModule(clazz);
     }
 
-    /**
-     * 简化方法
-     *
-     * @param path a
-     * @return a
-     */
     public static Path getPathByAppRoot(String path) {
         return environment().getPathByAppRoot(path);
     }
 
-    /**
-     * 获取临时路径
-     *
-     * @return a
-     */
     public static Path getTempPath() {
         return environment().getTempPath();
     }
 
-    /**
-     * 获取临时路径
-     *
-     * @param paths a
-     * @return a
-     */
     public static Path getTempPath(String... paths) {
         return environment().getTempPath(paths);
     }

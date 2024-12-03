@@ -16,7 +16,7 @@ import static cool.scx.app.ScxHelper.findRootPathByScxModule;
  * 生命周期请参阅方法说明
  *
  * @author scx567888
- * @version 1.1.2
+ * @version 0.0.1
  */
 public abstract class ScxModule {
 

@@ -5,6 +5,12 @@ import cool.scx.http.exception.BadRequestException;
 import cool.scx.web.vo.Result;
 
 
+/**
+ * WhereBodyParametersSizeErrorException
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public final class WhereBodyParametersSizeErrorException extends BadRequestException {
 
     public WhereBodyParametersSizeErrorException(String fieldName, WhereType whereType, int gotParametersSize) {

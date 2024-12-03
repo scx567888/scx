@@ -15,6 +15,13 @@ import java.util.Map;
 
 import static java.nio.file.StandardOpenOption.*;
 
+
+/**
+ * FSSHelper
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public final class FSSHelper {
     /**
      * type 和裁剪类型 映射表
@@ -125,14 +132,6 @@ public final class FSSHelper {
     }
 
 
-    /**
-     * <p>getLastUploadChunk.</p>
-     *
-     * @param uploadConfigFile a {@link java.io.File} object.
-     * @param chunkLength      a {@link java.lang.Integer} object.
-     * @return a {@link java.lang.Integer} object.
-     * @throws java.io.IOException e
-     */
     public static Integer getLastUploadChunk(Path uploadConfigFile, Integer chunkLength) throws IOException {
         try {
             var allStr = Files.readString(uploadConfigFile);

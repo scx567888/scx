@@ -11,6 +11,13 @@ import java.util.stream.Collectors;
 
 import static java.lang.System.Logger.Level.DEBUG;
 
+
+/**
+ * StaticServerModule
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class StaticServerModule extends ScxModule {
 
     private static final Logger logger = System.getLogger(StaticServerModule.class.getName());

@@ -12,14 +12,14 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import static cool.scx.common.util.NetUtils.getLocalIPAddress;
 import static cool.scx.common.exception.ScxExceptionHelper.ignore;
+import static cool.scx.common.util.NetUtils.getLocalIPAddress;
 
 /**
- * <p>ScxCoreConfig class.</p>
+ * ScxOptions
  *
  * @author scx567888
- * @version 1.3.0
+ * @version 0.0.1
  */
 public final class ScxOptions {
 
@@ -73,13 +73,6 @@ public final class ScxOptions {
      */
     private final Path templateRoot;
 
-    /**
-     * a
-     *
-     * @param scxConfig      a
-     * @param scxEnvironment a
-     * @param appKey         a
-     */
     public ScxOptions(ScxConfig scxConfig, ScxEnvironment scxEnvironment, String appKey) {
         port = scxConfig.getOrDefault("scx.port", 8080);
         allowedOrigin = scxConfig.getOrDefault("scx.allowed-origin", "*");
@@ -97,90 +90,42 @@ public final class ScxOptions {
         return dataSourceUrl;
     }
 
-    /**
-     * <p>dataSourceParameters.</p>
-     *
-     * @return a {@link java.util.Set} object.
-     */
     public String[] dataSourceParameters() {
         return dataSourceParameters;
     }
 
-    /**
-     * <p>dataSourceUsername.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
     public String dataSourceUsername() {
         return dataSourceUsername;
     }
 
-    /**
-     * <p>dataSourcePassword.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
     public String dataSourcePassword() {
         return dataSourcePassword;
     }
-
-    /**
-     * <p>isHttpsEnabled.</p>
-     *
-     * @return a boolean.
-     */
+    
     public boolean isHttpsEnabled() {
         return httpsEnabled;
     }
 
-    /**
-     * <p>port.</p>
-     *
-     * @return a int.
-     */
     public int port() {
         return port;
     }
 
-    /**
-     * <p>sslPath.</p>
-     *
-     * @return a {@link java.io.File} object.
-     */
     public Path sslPath() {
         return sslPath;
     }
 
-    /**
-     * <p>sslPassword.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
     public String sslPassword() {
         return sslPassword;
     }
 
-    /**
-     * 获取模板根路径
-     *
-     * @return a {@link java.io.File} object.
-     */
     public Path templateRoot() {
         return templateRoot;
     }
 
-    /**
-     * <p>allowedOrigin.</p>
-     *
-     * @return a {@link java.lang.String} object.
-     */
     public String allowedOrigin() {
         return allowedOrigin;
     }
 
-    /**
-     * 打印 coreConfig 的信息
-     */
     public void printInfo() {
         Ansi.ansi()
                 .green("Y 服务器 IP 地址                       \t -->\t " + Arrays.stream(ignore(() -> getLocalIPAddress(c -> c instanceof Inet4Address), new InetAddress[]{})).map(InetAddress::getHostAddress).collect(Collectors.joining(", ", "[", "]"))).ln()

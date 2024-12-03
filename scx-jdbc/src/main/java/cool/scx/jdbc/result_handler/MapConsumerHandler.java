@@ -22,11 +22,6 @@ record MapConsumerHandler(Supplier<Map<String, Object>> mapSupplier,
         this(HashMap::new, consumer);
     }
 
-    /**
-     * {@inheritDoc}
-     * <p>
-     * a
-     */
     @Override
     public Void apply(ResultSet rs, Dialect dialect) throws SQLException {
         var rsm = rs.getMetaData();

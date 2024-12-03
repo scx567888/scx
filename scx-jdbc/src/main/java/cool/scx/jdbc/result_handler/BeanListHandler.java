@@ -16,10 +16,6 @@ import java.util.List;
  */
 record BeanListHandler<T>(BeanBuilder<T> beanBuilder) implements ResultHandler<List<T>> {
 
-    /**
-     * {@inheritDoc}
-     * a
-     */
     @Override
     public List<T> apply(ResultSet rs, Dialect dialect) throws SQLException {
         beanBuilder.bindDialect(dialect);
