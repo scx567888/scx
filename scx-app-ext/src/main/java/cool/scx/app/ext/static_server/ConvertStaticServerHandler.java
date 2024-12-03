@@ -1,5 +1,6 @@
 package cool.scx.app.ext.static_server;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.config.ScxConfigValueHandler;
 import cool.scx.config.ScxEnvironment;
 import cool.scx.config.handler.DefaultValueHandler;
@@ -12,7 +13,7 @@ record ConvertStaticServerHandler(
         ScxEnvironment scxEnvironment) implements ScxConfigValueHandler<List<StaticServer>> {
 
     @Override
-    public List<StaticServer> handle(String keyPath, Object rawValue) {
+    public List<StaticServer> handle(String keyPath, JsonNode rawValue) {
         var arrayList = DefaultValueHandler.of(new ArrayList<Map<String, String>>()).handle(keyPath, rawValue);
         var tempList = new ArrayList<StaticServer>();
         for (var arg : arrayList) {

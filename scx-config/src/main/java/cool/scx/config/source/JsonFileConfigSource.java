@@ -11,6 +11,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+/**
+ * JsonFileConfigSource
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public final class JsonFileConfigSource extends AbstractConfigSource {
 
     private final Path jsonPath;

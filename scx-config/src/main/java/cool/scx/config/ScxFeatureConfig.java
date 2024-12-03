@@ -3,6 +3,12 @@ package cool.scx.config;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * ScxFeatureConfig
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public final class ScxFeatureConfig {
 
     /**

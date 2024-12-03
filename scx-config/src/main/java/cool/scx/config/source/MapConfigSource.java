@@ -6,6 +6,12 @@ import cool.scx.common.jackson.JsonNodeHelper;
 
 import java.util.Map;
 
+/**
+ * MapConfigSource
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public final class MapConfigSource extends AbstractConfigSource {
 
     private MapConfigSource(Map<String, Object> map) {

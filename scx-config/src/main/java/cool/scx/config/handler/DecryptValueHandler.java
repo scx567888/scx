@@ -1,10 +1,17 @@
 package cool.scx.config.handler;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.ansi.Ansi;
 import cool.scx.common.util.CryptoUtils;
 import cool.scx.common.util.ObjectUtils;
 import cool.scx.config.ScxConfigValueHandler;
 
+/**
+ * DecryptValueHandler
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public final class DecryptValueHandler implements ScxConfigValueHandler<String> {
 
     private final String password;
@@ -18,7 +25,7 @@ public final class DecryptValueHandler implements ScxConfigValueHandler<String> 
     }
 
     @Override
-    public String handle(String keyPath, Object rawValue) {
+    public String handle(String keyPath, JsonNode rawValue) {
         var str = ObjectUtils.convertValue(rawValue, String.class);
         if (str != null) {
             try {
