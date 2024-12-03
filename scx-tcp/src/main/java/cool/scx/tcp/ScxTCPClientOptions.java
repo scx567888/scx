@@ -1,8 +1,15 @@
-package cool.scx.net;
+package cool.scx.tcp;
 
-import cool.scx.net.proxy.Proxy;
-import cool.scx.net.tls.TLS;
+import cool.scx.tcp.proxy.Proxy;
+import cool.scx.tcp.tls.TLS;
 
+
+/**
+ * ScxTCPClientOptions
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class ScxTCPClientOptions {
 
     private TLS tls;

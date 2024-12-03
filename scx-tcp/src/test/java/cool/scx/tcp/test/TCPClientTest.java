@@ -1,12 +1,12 @@
-package cool.scx.net.test;
+package cool.scx.tcp.test;
 
-import cool.scx.net.ScxTCPClientOptions;
-import cool.scx.net.TCPClient;
+import cool.scx.tcp.ScxTCPClientOptions;
+import cool.scx.tcp.TCPClient;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
-import static cool.scx.net.test.TCPServerTest.tls;
+import static cool.scx.tcp.test.TCPServerTest.tls;
 
 public class TCPClientTest {
 

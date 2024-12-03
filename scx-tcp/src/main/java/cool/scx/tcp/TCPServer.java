@@ -1,4 +1,4 @@
-package cool.scx.net;
+package cool.scx.tcp;
 
 import javax.net.ssl.SSLSocket;
 import java.io.IOException;
@@ -11,6 +11,13 @@ import java.util.function.Consumer;
 
 import static java.lang.System.Logger.Level.ERROR;
 
+
+/**
+ * TCPServer
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class TCPServer implements ScxTCPServer {
 
     private static final Logger LOGGER = System.getLogger(TCPServer.class.getName());

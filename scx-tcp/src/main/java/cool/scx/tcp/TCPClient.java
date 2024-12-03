@@ -1,4 +1,4 @@
-package cool.scx.net;
+package cool.scx.tcp;
 
 import javax.net.ssl.SSLSocket;
 import java.io.IOException;
@@ -6,6 +6,13 @@ import java.io.UncheckedIOException;
 import java.net.Socket;
 import java.net.SocketAddress;
 
+
+/**
+ * TCPClient
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class TCPClient implements ScxTCPClient {
 
     private final ScxTCPClientOptions options;

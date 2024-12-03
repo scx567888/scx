@@ -1,7 +1,14 @@
-package cool.scx.net;
+package cool.scx.tcp;
 
-import cool.scx.net.tls.TLS;
+import cool.scx.tcp.tls.TLS;
 
+
+/**
+ * ScxTCPServerOptions
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class ScxTCPServerOptions {
 
     private int port;
