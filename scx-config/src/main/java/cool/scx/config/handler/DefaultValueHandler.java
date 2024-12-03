@@ -1,5 +1,6 @@
 package cool.scx.config.handler;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.ansi.Ansi;
 import cool.scx.common.util.ObjectUtils;
 import cool.scx.config.ScxConfigValueHandler;
@@ -24,7 +25,7 @@ public final class DefaultValueHandler<T> implements ScxConfigValueHandler<T> {
 
     @SuppressWarnings("unchecked")
     @Override
-    public T handle(String keyPath, Object rawValue) {
+    public T handle(String keyPath, JsonNode rawValue) {
         Object value = this.defaultVal != null ? ObjectUtils.convertValue(rawValue, this.defaultVal.getClass()) : rawValue;
         if (value != null) {
             return (T) value;

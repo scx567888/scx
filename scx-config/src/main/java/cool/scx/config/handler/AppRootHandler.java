@@ -1,5 +1,6 @@
 package cool.scx.config.handler;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.ansi.Ansi;
 import cool.scx.common.util.ObjectUtils;
 import cool.scx.config.ScxConfigValueHandler;
@@ -37,7 +38,7 @@ public final class AppRootHandler implements ScxConfigValueHandler<Path> {
     }
 
     @Override
-    public Path handle(String keyPath, Object rawValue) {
+    public Path handle(String keyPath, JsonNode rawValue) {
         var path = ObjectUtils.convertValue(rawValue, String.class);
         if (path != null) {
             return this.scxEnvironment.getPathByAppRoot(path);
