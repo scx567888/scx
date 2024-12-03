@@ -43,12 +43,6 @@ public final class ScxEnvironment {
         return ClassUtils.getAppRoot(mainClass);
     }
 
-    /**
-     * <p>getFileByAppRoot.</p>
-     *
-     * @param path a {@link java.lang.String} object.
-     * @return a {@link java.io.File} object.
-     */
     public Path getPathByAppRoot(String path) {
         if (path.startsWith("AppRoot:")) {
             return Path.of(this.appRootPath.toString(), path.substring("AppRoot:".length()));

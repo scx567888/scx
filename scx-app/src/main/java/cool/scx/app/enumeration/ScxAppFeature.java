@@ -64,9 +64,6 @@ public enum ScxAppFeature implements ScxFeature<Boolean> {
         this._defaultValue = defaultValue;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Boolean defaultValue() {
         return _defaultValue;

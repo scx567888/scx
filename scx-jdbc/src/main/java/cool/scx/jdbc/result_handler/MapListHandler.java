@@ -24,11 +24,6 @@ record MapListHandler(Supplier<Map<String, Object>> mapSupplier) implements Resu
         this(HashMap::new);
     }
 
-    /**
-     * {@inheritDoc}
-     * <p>
-     * a
-     */
     @Override
     public List<Map<String, Object>> apply(ResultSet rs, Dialect dialect) throws SQLException {
         var list = new ArrayList<Map<String, Object>>();

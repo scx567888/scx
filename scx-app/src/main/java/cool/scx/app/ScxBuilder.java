@@ -118,12 +118,6 @@ public final class ScxBuilder {
         return appKey;
     }
 
-    /**
-     * <p>initMainClass.</p>
-     *
-     * @param mainClass a {@link java.lang.Class} object
-     * @return a {@link java.lang.Class} object
-     */
     private static Class<?> checkMainClass(Class<?> mainClass) {
         //1,检测 mainClass 是否正确
         if (mainClass == null) {

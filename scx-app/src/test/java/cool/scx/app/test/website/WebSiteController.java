@@ -255,7 +255,7 @@ public class WebSiteController {
     }
 
     /**
-     * <p>qrcode.</p>
+     * 测试 ZIP
      *
      * @return a {@link BaseVo} object
      */

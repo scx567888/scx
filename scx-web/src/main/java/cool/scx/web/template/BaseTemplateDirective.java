@@ -40,9 +40,6 @@ public interface BaseTemplateDirective extends TemplateDirectiveModel {
         return newMap;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     default void execute(Environment env, Map params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateException, IOException {
         //获取原始结果

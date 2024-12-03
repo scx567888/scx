@@ -229,9 +229,6 @@ public class TestModule extends ScxModule {
 
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void start(Scx scx) {
         scx.scxHttpRouter().route()

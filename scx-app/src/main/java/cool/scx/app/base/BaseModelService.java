@@ -324,11 +324,6 @@ public class BaseModelService<Entity extends BaseModel> {
         return dao().count(query);
     }
 
-    /**
-     * <p>baseDao.</p>
-     *
-     * @return a {@link JDBCDao} object
-     */
     public final JDBCDao<Entity> dao() {
         if (dao == null) {
             this.dao = new JDBCDao<>(entityClass, ScxContext.jdbcContext());

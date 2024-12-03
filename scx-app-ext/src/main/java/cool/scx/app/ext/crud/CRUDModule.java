@@ -17,21 +17,12 @@ import static java.lang.System.getLogger;
  */
 public class CRUDModule extends ScxModule {
 
-    /**
-     * Constant <code>logger</code>
-     */
     private static final Logger logger = getLogger(CRUDModule.class.getName());
 
-    /**
-     * <p>Constructor for CmsModule.</p>
-     */
     public CRUDModule() {
 
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void start(Scx scx) {
         //这里添加额外的参数处理器 保证 CRUDListParam 类型的参数永不为空
@@ -41,9 +32,6 @@ public class CRUDModule extends ScxModule {
         logger.log(DEBUG, "已添加用于处理类型为 CRUDUpdateParam 的 ParameterHandlerBuilder  -->  {0}", CRUDUpdateParamParameterHandlerBuilder.class.getName());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String name() {
         return "SCX_EXT-" + super.name();

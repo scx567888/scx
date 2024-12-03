@@ -53,7 +53,6 @@ public interface ScheduleTask<T extends ScheduleTask<T>> {
 
     /**
      * 执行器
-     * <p>
      * 默认会使用单例的 ScxScheduler
      * 不建议自行设置
      *

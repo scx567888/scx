@@ -21,9 +21,6 @@ public final class CRUDUpdateParamParameterHandler implements ParameterHandler {
         this.parameter = parameter;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Object handle(RequestInfo requestInfo) throws Exception {
         var javaType = parameter.type();

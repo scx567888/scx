@@ -250,9 +250,6 @@ public final class Scx {
         }
     }
 
-    /**
-     * <p>fixTable.</p>
-     */
     public void fixTable() {
         logger.log(DEBUG, "修复数据表结构中...");
         //修复成功的表
