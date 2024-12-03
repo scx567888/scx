@@ -20,6 +20,10 @@ import java.sql.Statement;
 import java.time.LocalDateTime;
 
 /**
+ * SQLiteDialect
+ *
+ * @author scx567888
+ * @version 0.0.1
  * @see <a href="https://www.sqlite.org/lang_createtable.html">https://www.sqlite.org/lang_createtable.html</a>
  */
 public class SQLiteDialect extends Dialect {

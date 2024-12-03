@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  * 设置此注解的方法 必须同时 继承 BaseModel
  *
  * @author scx567888
- * @version 0.3.6
+ * @version 0.0.1
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

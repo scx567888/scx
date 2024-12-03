@@ -5,7 +5,10 @@ import cool.scx.http.uri.ScxURI;
 import cool.scx.tcp.ScxTCPSocket;
 
 /**
- * PeachHttpServerRequest
+ * todo 待完成
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 class UsagiHttpServerRequest implements ScxHttpServerRequest {
 

@@ -2,6 +2,12 @@ package cool.scx.http.usagi;
 
 import cool.scx.http.*;
 
+/**
+ * todo 待完成
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class UsagiHttpClientResponse implements ScxHttpClientResponse {
 
     private final HttpStatusCode status;

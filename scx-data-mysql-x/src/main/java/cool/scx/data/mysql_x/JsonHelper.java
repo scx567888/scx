@@ -8,6 +8,10 @@ import com.mysql.cj.xdevapi.*;
 import cool.scx.common.util.ObjectUtils;
 import cool.scx.data.field_filter.FieldFilter;
 
+/**
+ * @author scx567888
+ * @version 0.0.1
+ */
 class JsonHelper {
 
     final static ObjectMapper OBJECT_MAPPER = ObjectUtils.jsonMapper(new ObjectUtils.Options().setIgnoreJsonIgnore(true));

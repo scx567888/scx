@@ -14,6 +14,10 @@ import java.util.Objects;
 import static cool.scx.common.util.ArrayUtils.toObjectArray;
 import static cool.scx.common.util.ObjectUtils.toJson;
 
+/**
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class MySQLXDaoWhereParser extends WhereParser {
 
     public static final MySQLXDaoWhereParser WHERE_PARSER = new MySQLXDaoWhereParser();

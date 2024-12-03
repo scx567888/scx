@@ -22,6 +22,8 @@ import static cool.scx.data.mysql_x.parser.MySQLXDaoWhereParser.WHERE_PARSER;
  * 使用 MySQL X Dev Api 通过 MySQL X 协议, 操作 MySQL 的 Dao
  *
  * @param <Entity>
+ * @author scx567888
+ * @version 0.0.1
  */
 public class MySQLXDao<Entity> implements Dao<Entity, String> {
 

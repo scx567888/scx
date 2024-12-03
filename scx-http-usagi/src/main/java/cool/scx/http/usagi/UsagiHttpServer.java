@@ -9,6 +9,12 @@ import cool.scx.tcp.TCPServer;
 
 import java.util.function.Consumer;
 
+/**
+ * todo 待完成
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class UsagiHttpServer implements ScxHttpServer {
 
     private final ScxTCPServer tcpServer;
