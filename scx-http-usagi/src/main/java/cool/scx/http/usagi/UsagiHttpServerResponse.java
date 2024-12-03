@@ -6,6 +6,12 @@ import cool.scx.tcp.ScxTCPSocket;
 import java.io.IOException;
 import java.io.OutputStream;
 
+/**
+ * todo 待完成
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class UsagiHttpServerResponse implements ScxHttpServerResponse {
 
     private final UsagiHttpServerRequest request;

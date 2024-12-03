@@ -7,6 +7,12 @@ import cool.scx.io.DataReader;
 
 import java.io.OutputStream;
 
+/**
+ * todo 待完成
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class UsagiServerWebSocket extends UsagiWebSocket implements ScxServerWebSocket {
 
     private final UsagiServerWebSocketHandshakeRequest handshakeServerRequest;

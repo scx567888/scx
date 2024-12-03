@@ -5,6 +5,12 @@ import cool.scx.http.ScxHttpClientRequest;
 import cool.scx.http.web_socket.ScxClientWebSocketBuilder;
 import cool.scx.tcp.ScxTCPClientOptions;
 
+/**
+ * todo 待完成
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class UsagiHttpClient implements ScxHttpClient {
 
     final ScxTCPClientOptions options;

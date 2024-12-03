@@ -5,6 +5,12 @@ import cool.scx.io.NoMoreDataException;
 
 import java.io.InputStream;
 
+/**
+ * todo 待完成
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class FixedLengthInputStream extends InputStream {
 
     private final DataReader dataReader;

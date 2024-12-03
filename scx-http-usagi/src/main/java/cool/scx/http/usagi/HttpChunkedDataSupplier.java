@@ -5,6 +5,12 @@ import cool.scx.io.DataReader;
 
 import java.util.function.Supplier;
 
+/**
+ * todo 待完成
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class HttpChunkedDataSupplier implements Supplier<DataNode> {
 
     private final DataReader dataReader;

@@ -14,6 +14,12 @@ import static cool.scx.http.HttpFieldName.*;
 import static cool.scx.http.HttpMethod.GET;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+/**
+ * todo 待完成
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class Http1ConnectionHandler {
 
     private static final byte[] CRLF_BYTES = "\r\n".getBytes();

@@ -23,6 +23,12 @@ import java.security.cert.X509Certificate;
 
 import static cool.scx.http.HttpFieldName.TRANSFER_ENCODING;
 
+/**
+ * todo 待完成
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class UsagiHttpClientRequest extends ScxHttpClientRequestBase {
 
     private final UsagiHttpClient httpClient;

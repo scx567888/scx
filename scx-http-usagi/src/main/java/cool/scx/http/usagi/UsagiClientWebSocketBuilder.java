@@ -18,6 +18,13 @@ import java.util.function.Consumer;
 import static cool.scx.http.HttpFieldName.*;
 import static cool.scx.http.HttpHelper.generateSecWebSocketAccept;
 
+
+/**
+ * todo 待完成
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class UsagiClientWebSocketBuilder implements ScxClientWebSocketBuilder {
 
     private final UsagiHttpClient httpClient;

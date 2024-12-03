@@ -12,6 +12,12 @@ import java.io.OutputStream;
 
 import static cool.scx.http.web_socket.WebSocketFrameHelper.writeFrame;
 
+/**
+ * todo 待完成
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class UsagiClientWebSocket extends UsagiWebSocket implements ScxClientWebSocket {
 
     public UsagiClientWebSocket(ScxTCPSocket connect, DataReader reader, OutputStream writer) {

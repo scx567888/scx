@@ -5,7 +5,10 @@ import cool.scx.tcp.ScxTCPServerOptions;
 import cool.scx.tcp.tls.TLS;
 
 /**
- * ScxHttpServerOptions
+ * todo 待完成
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public class UsagiHttpServerOptions extends ScxTCPServerOptions {
 

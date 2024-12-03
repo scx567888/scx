@@ -17,6 +17,12 @@ import static cool.scx.http.web_socket.WebSocketCloseInfo.NORMAL_CLOSE;
 import static cool.scx.http.web_socket.WebSocketFrameHelper.*;
 import static cool.scx.http.web_socket.WebSocketOpCode.*;
 
+/**
+ * todo 待完成
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class UsagiWebSocket implements ScxWebSocket {
 
     protected final DataReader reader;
