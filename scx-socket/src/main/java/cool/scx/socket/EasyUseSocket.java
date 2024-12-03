@@ -11,7 +11,7 @@ import static cool.scx.socket.Helper.toJson;
 
 /**
  * 便于使用的 Socket
-
+ *
  * @author scx567888
  * @version 0.0.1
  */

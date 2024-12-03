@@ -101,7 +101,7 @@ public final class ScxOptions {
     public String dataSourcePassword() {
         return dataSourcePassword;
     }
-    
+
     public boolean isHttpsEnabled() {
         return httpsEnabled;
     }
