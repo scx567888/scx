@@ -11,6 +11,12 @@ import java.sql.Driver;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+/**
+ * todo 待完成
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class SQLServerDialect extends Dialect {
 
     private static final SQLServerDriver DRIVER = initDRIVER();
