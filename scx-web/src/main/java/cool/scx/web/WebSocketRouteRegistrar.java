@@ -11,10 +11,10 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * <p>ScxWebSocketMappingRegistrar class.</p>
+ * WebSocketRouteRegistrar
  *
  * @author scx567888
- * @version 1.18.0
+ * @version 0.0.1
  */
 public final class WebSocketRouteRegistrar {
 
@@ -63,8 +63,8 @@ public final class WebSocketRouteRegistrar {
 
     public static boolean isWebSocketRouteClass(Class<?> c) {
         return c.isAnnotationPresent(ScxWebSocketRoute.class) && // 拥有注解
-               ClassUtils.isNormalClass(c) && // 是一个普通的类 (不是接口, 不是抽象类) ; 此处不要求有必须有无参构造函数 因为此类的创建会由 beanFactory 进行处理
-               BaseWebSocketHandler.class.isAssignableFrom(c); // 继承自 BaseWebSocketHandler
+                ClassUtils.isNormalClass(c) && // 是一个普通的类 (不是接口, 不是抽象类) ; 此处不要求有必须有无参构造函数 因为此类的创建会由 beanFactory 进行处理
+                BaseWebSocketHandler.class.isAssignableFrom(c); // 继承自 BaseWebSocketHandler
     }
 
     private static List<WebSocketRoute> sortedWebSocketRoutes(List<WebSocketRoute> list) {

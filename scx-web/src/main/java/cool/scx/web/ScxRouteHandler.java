@@ -1,8 +1,8 @@
 package cool.scx.web;
 
-import cool.scx.common.util.CaseUtils;
 import cool.scx.common.exception.ScxExceptionHelper;
 import cool.scx.common.exception.ScxRuntimeException;
+import cool.scx.common.util.CaseUtils;
 import cool.scx.common.util.URIUtils;
 import cool.scx.http.HttpMethod;
 import cool.scx.http.ScxHttpMethod;
@@ -22,10 +22,10 @@ import static cool.scx.common.constant.AnnotationValueHelper.getRealValue;
 import static cool.scx.web.RouteRegistrar.findScxRouteOrThrow;
 
 /**
- * <p>ScxRouteHandler class.</p>
+ * ScxRouteHandler
  *
  * @author scx567888
- * @version 0.3.6
+ * @version 0.0.1
  */
 public final class ScxRouteHandler implements Route, Consumer<RoutingContext> {
 

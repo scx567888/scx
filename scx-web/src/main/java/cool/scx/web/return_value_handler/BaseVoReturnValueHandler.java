@@ -7,7 +7,7 @@ import cool.scx.web.vo.BaseVo;
  * BaseVo 处理器
  *
  * @author scx567888
- * @version 1.11.8
+ * @version 0.0.1
  */
 public final class BaseVoReturnValueHandler implements ReturnValueHandler {
 

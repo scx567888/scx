@@ -6,7 +6,7 @@ import cool.scx.http.routing.RoutingContext;
  * 路由异常处理器
  *
  * @author scx567888
- * @version 1.11.8
+ * @version 0.0.1
  */
 public interface ExceptionHandler {
 

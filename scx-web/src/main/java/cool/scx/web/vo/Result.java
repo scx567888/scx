@@ -17,7 +17,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  * 一般用来表达业务逻辑
  *
  * @author scx567888
- * @version 1.9.5
+ * @version 0.0.1
  */
 public abstract class Result implements BaseVo {
 

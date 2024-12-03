@@ -11,7 +11,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  * Xml 格式的返回值
  *
  * @author scx567888
- * @version 0.3.6
+ * @version 0.0.1
  */
 public final class Xml implements BaseVo {
 

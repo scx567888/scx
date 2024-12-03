@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
  * 禁用路由注解
  *
  * @author scx567888
- * @version 0.3.6
+ * @version 0.0.1
  */
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)

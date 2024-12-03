@@ -17,7 +17,7 @@ import static java.util.Collections.addAll;
  * 处理 FileUpload 类型参数
  *
  * @author scx567888
- * @version 1.11.8
+ * @version 0.0.1
  */
 public final class FromUploadParameterHandler implements ParameterHandler {
 

@@ -9,7 +9,7 @@ import cool.scx.web.parameter_handler.ParameterHandlerBuilder;
  * 处理 FileUpload 类型参数
  *
  * @author scx567888
- * @version 1.11.8
+ * @version 0.0.1
  */
 public final class FromUploadParameterHandlerBuilder implements ParameterHandlerBuilder {
 

@@ -1,7 +1,7 @@
 package cool.scx.web;
 
-import cool.scx.common.util.ClassUtils;
 import cool.scx.common.multi_map.MultiMap;
+import cool.scx.common.util.ClassUtils;
 import cool.scx.http.routing.PathMatcherImpl;
 import cool.scx.http.routing.Router;
 import cool.scx.reflect.MethodInfo;
@@ -24,7 +24,7 @@ import static java.lang.System.Logger.Level.WARNING;
  * 路由注册器
  *
  * @author scx567888
- * @version 1.17.8
+ * @version 0.0.1
  */
 public final class RouteRegistrar {
 
@@ -103,7 +103,7 @@ public final class RouteRegistrar {
      */
     public static boolean isRoute(Class<?> c) {
         return c.isAnnotationPresent(ScxRoute.class) && //拥有注解
-               ClassUtils.isNormalClass(c); // 是一个普通的类 (不是接口, 不是抽象类) ; 此处不要求有必须有无参构造函数 因为此类的创建会由 beanFactory 进行处理
+                ClassUtils.isNormalClass(c); // 是一个普通的类 (不是接口, 不是抽象类) ; 此处不要求有必须有无参构造函数 因为此类的创建会由 beanFactory 进行处理
     }
 
     /**

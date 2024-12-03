@@ -17,7 +17,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  * 基本写入程序 可以直接向相应体中写入数据
  *
  * @author scx567888
- * @version 1.16.4
+ * @version 0.0.1
  */
 class BaseWriter implements BaseVo {
 
