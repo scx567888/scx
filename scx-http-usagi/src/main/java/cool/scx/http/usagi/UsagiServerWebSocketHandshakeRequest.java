@@ -2,7 +2,7 @@ package cool.scx.http.usagi;
 
 import cool.scx.http.web_socket.ScxServerWebSocketHandshakeRequest;
 import cool.scx.io.DataReader;
-import cool.scx.net.ScxTCPSocket;
+import cool.scx.tcp.ScxTCPSocket;
 
 import java.io.OutputStream;
 

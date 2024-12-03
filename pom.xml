@@ -60,11 +60,11 @@
         <module>scx-jdbc-sql-server</module>
         <module>scx-jdbc-sqlite</module>
         <module>scx-logging</module>
-        <module>scx-net</module>
         <module>scx-reflect</module>
         <module>scx-scheduling</module>
         <module>scx-socket</module>
         <module>scx-socket-vertx</module>
+        <module>scx-tcp</module>
         <module>scx-web</module>
     </modules>
 

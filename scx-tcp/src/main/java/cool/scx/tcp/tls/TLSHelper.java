@@ -1,4 +1,4 @@
-package cool.scx.net.tls;
+package cool.scx.tcp.tls;
 
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
@@ -8,7 +8,14 @@ import java.nio.file.Path;
 import java.security.*;
 import java.security.cert.CertificateException;
 
-public class TLSHelper {
+
+/**
+ * TLSHelper
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
+class TLSHelper {
 
     public static KeyStore createKeyStore(Path path, String password) {
         // 证书存储器

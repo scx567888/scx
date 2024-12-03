@@ -9,13 +9,13 @@
         <version>3.2.8</version>
     </parent>
 
-    <artifactId>scx-net</artifactId>
+    <artifactId>scx-tcp</artifactId>
     <packaging>jar</packaging>
 
-    <name>SCX Net</name>
+    <name>SCX TCP</name>
     <url>https://github.com/scx567888/scx</url>
     <description>
-        SCX Net
+        SCX TCP
     </description>
 
     <dependencies>

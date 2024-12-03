@@ -1,7 +1,7 @@
 package cool.scx.http.usagi;
 
 import cool.scx.http.*;
-import cool.scx.net.ScxTCPSocket;
+import cool.scx.tcp.ScxTCPSocket;
 
 import java.io.IOException;
 import java.io.OutputStream;

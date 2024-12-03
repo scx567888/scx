@@ -1,4 +1,4 @@
-package cool.scx.net.tls;
+package cool.scx.tcp.tls;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLServerSocketFactory;
@@ -8,10 +8,13 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.file.Path;
 
-import static cool.scx.net.tls.TLSHelper.*;
+import static cool.scx.tcp.tls.TLSHelper.*;
 
 /**
  * TLS 配置
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 public class TLS {
 

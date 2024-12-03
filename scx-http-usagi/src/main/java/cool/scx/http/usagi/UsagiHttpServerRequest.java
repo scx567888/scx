@@ -2,7 +2,7 @@ package cool.scx.http.usagi;
 
 import cool.scx.http.*;
 import cool.scx.http.uri.ScxURI;
-import cool.scx.net.ScxTCPSocket;
+import cool.scx.tcp.ScxTCPSocket;
 
 /**
  * PeachHttpServerRequest

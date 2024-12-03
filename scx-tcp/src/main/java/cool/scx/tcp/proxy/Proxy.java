@@ -1,4 +1,4 @@
-package cool.scx.net.proxy;
+package cool.scx.tcp.proxy;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy.Type;
@@ -6,6 +6,13 @@ import java.net.SocketAddress;
 
 import static java.net.Proxy.Type.SOCKS;
 
+/**
+ * 代理
+ * todo 待完成
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class Proxy {
 
     private final SocketAddress proxyAddress;

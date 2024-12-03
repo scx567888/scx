@@ -1,10 +1,10 @@
-package cool.scx.net.test;
+package cool.scx.tcp.test;
 
 import cool.scx.io.InputStreamDataSupplier;
 import cool.scx.io.LinkedDataReader;
-import cool.scx.net.ScxTCPServerOptions;
-import cool.scx.net.TCPServer;
-import cool.scx.net.tls.TLS;
+import cool.scx.tcp.ScxTCPServerOptions;
+import cool.scx.tcp.TCPServer;
+import cool.scx.tcp.tls.TLS;
 
 public class TCPServerTest {
 
