@@ -2,6 +2,12 @@ package cool.scx.jdbc.sqlite;
 
 import cool.scx.jdbc.JDBCType;
 
+/**
+ * SQLiteDialectHelper
+ *
+ * @author scx567888
+ * @version 0.3.6
+ */
 public class SQLiteDialectHelper {
 
     public static JDBCType dialectDataTypeToJDBCType(String dialectDataType) {

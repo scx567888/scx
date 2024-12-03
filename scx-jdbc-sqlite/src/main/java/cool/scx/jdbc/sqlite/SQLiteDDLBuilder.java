@@ -9,6 +9,12 @@ import java.util.List;
 
 import static cool.scx.common.util.StringUtils.notBlank;
 
+/**
+ * SQLiteDDLBuilder
+ *
+ * @author scx567888
+ * @version 0.3.6
+ */
 public class SQLiteDDLBuilder implements DDLBuilder {
 
     @Override

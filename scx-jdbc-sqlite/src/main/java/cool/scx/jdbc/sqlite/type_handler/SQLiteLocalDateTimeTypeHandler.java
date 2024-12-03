@@ -10,6 +10,9 @@ import java.time.LocalDateTime;
 
 /**
  * 当前驱动不支持 LocalDateTime, 尝试使用 Timestamp 进行转换 !!!
+ *
+ * @author scx567888
+ * @version 0.3.6
  */
 public class SQLiteLocalDateTimeTypeHandler extends LocalDateTimeTypeHandler {
 
