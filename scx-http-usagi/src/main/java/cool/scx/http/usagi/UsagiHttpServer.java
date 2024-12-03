@@ -3,9 +3,9 @@ package cool.scx.http.usagi;
 import cool.scx.http.ScxHttpServer;
 import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.web_socket.ScxServerWebSocket;
-import cool.scx.net.ScxTCPServer;
-import cool.scx.net.ScxTCPSocket;
-import cool.scx.net.TCPServer;
+import cool.scx.tcp.ScxTCPServer;
+import cool.scx.tcp.ScxTCPSocket;
+import cool.scx.tcp.TCPServer;
 
 import java.util.function.Consumer;
 

@@ -1,8 +1,8 @@
 package cool.scx.http.usagi;
 
 
-import cool.scx.net.ScxTCPServerOptions;
-import cool.scx.net.tls.TLS;
+import cool.scx.tcp.ScxTCPServerOptions;
+import cool.scx.tcp.tls.TLS;
 
 /**
  * ScxHttpServerOptions

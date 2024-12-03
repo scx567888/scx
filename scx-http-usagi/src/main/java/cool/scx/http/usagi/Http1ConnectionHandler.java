@@ -5,7 +5,7 @@ import cool.scx.http.uri.ScxURI;
 import cool.scx.io.InputStreamDataSupplier;
 import cool.scx.io.LinkedDataReader;
 import cool.scx.io.NoMoreDataException;
-import cool.scx.net.ScxTCPSocket;
+import cool.scx.tcp.ScxTCPSocket;
 
 import java.io.InputStream;
 import java.net.URLDecoder;

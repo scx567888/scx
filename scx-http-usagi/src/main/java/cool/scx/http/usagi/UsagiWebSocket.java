@@ -5,7 +5,7 @@ import cool.scx.http.web_socket.ScxWebSocketCloseInfo;
 import cool.scx.http.web_socket.WebSocketFrame;
 import cool.scx.http.web_socket.WebSocketOpCode;
 import cool.scx.io.DataReader;
-import cool.scx.net.ScxTCPSocket;
+import cool.scx.tcp.ScxTCPSocket;
 
 import java.io.IOException;
 import java.io.OutputStream;

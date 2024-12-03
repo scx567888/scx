@@ -58,7 +58,7 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>scx-net</artifactId>
+            <artifactId>scx-tcp</artifactId>
             <version>${project.version}</version>
         </dependency>
 

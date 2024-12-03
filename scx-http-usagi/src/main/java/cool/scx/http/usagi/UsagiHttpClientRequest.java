@@ -6,10 +6,10 @@ import cool.scx.http.uri.ScxURI;
 import cool.scx.http.uri.ScxURIWritable;
 import cool.scx.io.InputStreamDataSupplier;
 import cool.scx.io.LinkedDataReader;
-import cool.scx.net.ScxTCPClientOptions;
-import cool.scx.net.ScxTCPSocket;
-import cool.scx.net.TCPClient;
-import cool.scx.net.tls.TLS;
+import cool.scx.tcp.ScxTCPClientOptions;
+import cool.scx.tcp.ScxTCPSocket;
+import cool.scx.tcp.TCPClient;
+import cool.scx.tcp.tls.TLS;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
