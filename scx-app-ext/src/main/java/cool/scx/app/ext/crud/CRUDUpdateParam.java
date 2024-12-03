@@ -30,24 +30,10 @@ public final class CRUDUpdateParam {
      */
     public String[] needUpdateFieldNames;
 
-    /**
-     * a
-     *
-     * @param modelClass a
-     * @param <B>        a
-     * @return a
-     */
     public <B extends BaseModel> B getBaseModel(Class<B> modelClass) {
         return CRUDHelper.mapToBaseModel(this.updateModel, modelClass);
     }
 
-    /**
-     * 获取 b
-     *
-     * @param modelClass      a
-     * @param scxDaoTableInfo a
-     * @return a
-     */
     public FieldFilter getUpdateFilter(Class<? extends BaseModel> modelClass, AnnotationConfigTable scxDaoTableInfo) {
         if (needUpdateFieldNames == null) {
             return ofExcluded();

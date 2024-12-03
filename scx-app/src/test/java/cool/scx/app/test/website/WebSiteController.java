@@ -36,7 +36,6 @@ import static cool.scx.common.constant.ScxDateTimeFormatter.yyyy_MM_dd_HH_mm_ss;
  *
  * @author scx567888
  * @version 0.0.1
- * @since 1.3.14
  */
 @ScxRoute
 public class WebSiteController {

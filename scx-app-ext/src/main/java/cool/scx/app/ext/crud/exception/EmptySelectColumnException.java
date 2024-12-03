@@ -4,6 +4,13 @@ import cool.scx.data.field_filter.FilterMode;
 import cool.scx.http.exception.BadRequestException;
 import cool.scx.web.vo.Result;
 
+
+/**
+ * EmptySelectColumnException
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public final class EmptySelectColumnException extends BadRequestException {
 
     public EmptySelectColumnException(FilterMode filterMode, String[] fieldNames) {

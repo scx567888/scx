@@ -8,7 +8,7 @@ import cool.scx.web.parameter_handler.RequestInfo;
 import static cool.scx.web.parameter_handler.from_body.FromBodyParameterHandler.getValueFromBody;
 
 /**
- * a
+ * CRUDUpdateParamParameterHandler
  *
  * @author scx567888
  * @version 1.10.8

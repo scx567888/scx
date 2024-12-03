@@ -8,7 +8,7 @@ import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.ERROR;
 
 /**
- * <p>FixTableModule class.</p>
+ * FixTableModule
  *
  * @author scx567888
  * @version 1.3.0

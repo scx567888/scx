@@ -22,7 +22,7 @@ import static cool.scx.common.util.HashUtils.md5Hex;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 /**
- * <p>FSSController class.</p>
+ * FSSController
  *
  * @author scx567888
  * @version 0.3.6

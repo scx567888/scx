@@ -15,6 +15,13 @@ import java.util.Map;
 
 import static java.nio.file.StandardOpenOption.*;
 
+
+/**
+ * FSSHelper
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public final class FSSHelper {
     /**
      * type 和裁剪类型 映射表

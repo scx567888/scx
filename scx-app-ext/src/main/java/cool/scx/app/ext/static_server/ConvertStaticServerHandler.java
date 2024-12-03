@@ -9,8 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-record ConvertStaticServerHandler(
-        ScxEnvironment scxEnvironment) implements ScxConfigValueHandler<List<StaticServer>> {
+
+/**
+ * ConvertStaticServerHandler
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
+record ConvertStaticServerHandler(ScxEnvironment scxEnvironment) implements ScxConfigValueHandler<List<StaticServer>> {
 
     @Override
     public List<StaticServer> handle(String keyPath, JsonNode rawValue) {
