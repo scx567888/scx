@@ -99,7 +99,7 @@ public final class Scx {
         //3, 初始化 BeanFactory
         this.beanFactory = initBeanFactory(this.scxModules, this.scxFeatureConfig);
         //4, 初始化事件总线
-        this.eventBus = new EventBus(Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()*2));
+        this.eventBus = new EventBus(Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2));
         //4, 初始化 Web
         this.scxWeb = new ScxWeb(new ScxWebOptions().templateRoot(scxOptions.templateRoot()).useDevelopmentErrorPage(scxFeatureConfig.get(USE_DEVELOPMENT_ERROR_PAGE)));
     }
