@@ -10,6 +10,12 @@ import io.helidon.webclient.websocket.WsClient;
 
 import java.util.function.Consumer;
 
+/**
+ * HelidonClientWebSocketBuilder
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 class HelidonClientWebSocketBuilder implements ScxClientWebSocketBuilder {
 
     Consumer<ScxClientWebSocket> connectHandler;

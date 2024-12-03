@@ -10,6 +10,9 @@ import static cool.scx.http.helidon.HelidonHelper.createScxURI;
 
 /**
  * HelidonServerWebSocket
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 class HelidonServerWebSocket extends HelidonWebSocket implements ScxServerWebSocket {
 

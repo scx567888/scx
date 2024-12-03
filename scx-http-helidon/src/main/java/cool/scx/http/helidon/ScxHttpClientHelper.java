@@ -9,7 +9,13 @@ import cool.scx.http.web_socket.ScxClientWebSocketBuilder;
 
 import static cool.scx.http.HttpMethod.*;
 
-public class ScxHttpClientHelper {
+/**
+ * ScxHttpClientHelper
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
+public final class ScxHttpClientHelper {
 
     public static final ScxHttpClient DEFAULT_HTTP_CLIENT = new HelidonHttpClient();
 

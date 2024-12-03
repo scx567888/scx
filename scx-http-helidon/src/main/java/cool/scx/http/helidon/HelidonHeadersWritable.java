@@ -9,6 +9,12 @@ import io.helidon.http.ServerResponseHeaders;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * HelidonHeadersWritable
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 class HelidonHeadersWritable implements ScxHttpHeadersWritable {
 
     private final ServerResponseHeaders headers;

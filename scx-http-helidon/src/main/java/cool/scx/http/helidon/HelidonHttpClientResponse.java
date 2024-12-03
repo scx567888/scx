@@ -5,6 +5,12 @@ import io.helidon.webclient.api.HttpClientResponse;
 
 import static cool.scx.http.helidon.HelidonHelper.convertHeaders;
 
+/**
+ * HelidonHttpClientResponse
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 class HelidonHttpClientResponse implements ScxHttpClientResponse {
 
     private final HttpClientResponse response;
