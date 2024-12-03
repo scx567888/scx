@@ -4,6 +4,13 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import static cool.scx.socket.ScxSocketFrame.Type.*;
 
+
+/**
+ * FrameCreator
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public final class FrameCreator {
 
     private final AtomicLong nowSeqID;

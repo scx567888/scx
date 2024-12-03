@@ -2,6 +2,13 @@ package cool.scx.socket;
 
 import java.util.concurrent.Executor;
 
+
+/**
+ * ScxSocketServerOptions
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public final class ScxSocketServerOptions extends PingPongOptions {
 
     private int statusKeepTime;

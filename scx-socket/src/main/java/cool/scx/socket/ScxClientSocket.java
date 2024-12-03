@@ -5,6 +5,10 @@ import cool.scx.http.web_socket.ScxWebSocketCloseInfo;
 
 /**
  * 客户端 Socket 对象
+
+
+ * @author scx567888
+ * @version 0.0.1
  */
 public final class ScxClientSocket extends PingPongManager {
 

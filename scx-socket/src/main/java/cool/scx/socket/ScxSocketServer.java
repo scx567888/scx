@@ -10,6 +10,13 @@ import java.util.function.Consumer;
 
 import static cool.scx.socket.Helper.getClientID;
 
+
+/**
+ * ScxSocketServer
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public final class ScxSocketServer {
 
     final ConcurrentMap<String, ScxServerSocket> serverSockets;

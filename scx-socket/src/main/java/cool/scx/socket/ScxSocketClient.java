@@ -14,6 +14,13 @@ import static cool.scx.socket.Helper.createConnectOptions;
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.getLogger;
 
+
+/**
+ * ScxSocketClient
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public final class ScxSocketClient {
 
     private static final System.Logger logger = getLogger(ScxSocketClient.class.getName());

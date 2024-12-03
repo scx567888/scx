@@ -1,5 +1,12 @@
 package cool.scx.socket;
 
+
+/**
+ * PingPongOptions
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class PingPongOptions extends ScxSocketOptions {
 
     private int pingInterval;

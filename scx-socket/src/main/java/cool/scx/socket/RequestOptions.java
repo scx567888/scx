@@ -1,5 +1,12 @@
 package cool.scx.socket;
 
+
+/**
+ * RequestOptions
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */ 
 public final class RequestOptions extends SendOptions {
 
     private int requestTimeout;

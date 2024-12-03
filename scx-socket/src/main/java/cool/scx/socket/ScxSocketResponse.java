@@ -4,6 +4,13 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 import static cool.scx.socket.Helper.fromJson;
 
+
+/**
+ * ScxSocketResponse
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public final class ScxSocketResponse {
 
     private final String payload;

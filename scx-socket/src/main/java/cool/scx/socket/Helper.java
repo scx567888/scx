@@ -9,6 +9,13 @@ import cool.scx.http.web_socket.ScxServerWebSocket;
 
 import static cool.scx.common.exception.ScxExceptionHelper.wrap;
 
+
+/**
+ * Helper
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public final class Helper {
 
     public static final String SCX_SOCKET_CLIENT_ID = "scx-socket-client-id";

@@ -5,6 +5,13 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.function.Consumer;
 
+
+/**
+ * RequestManager
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 final class RequestManager {
 
     final ConcurrentMap<Long, RequestTask> responseTaskMap;
