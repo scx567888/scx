@@ -16,7 +16,7 @@ import static cool.scx.data.field_filter.FieldFilterBuilder.ofIncluded;
  * 更新实体类的封装
  *
  * @author scx567888
- * @version 1.10.8
+ * @version 0.0.1
  */
 public final class CRUDUpdateParam {
 

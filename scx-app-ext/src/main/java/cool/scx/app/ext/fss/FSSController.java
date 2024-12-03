@@ -22,7 +22,7 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
  * FSSController
  *
  * @author scx567888
- * @version 0.3.6
+ * @version 0.0.1
  */
 @ScxRoute("/api/fss")
 public class FSSController {

@@ -14,7 +14,7 @@ import static cool.scx.jdbc.JDBCType.TEXT;
  * 文件上传表
  *
  * @author scx567888
- * @version 0.3.6
+ * @version 0.0.1
  */
 @Table
 public class FSSObject extends BaseModel {

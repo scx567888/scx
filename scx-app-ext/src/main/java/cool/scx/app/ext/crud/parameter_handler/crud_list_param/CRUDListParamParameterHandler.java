@@ -11,7 +11,7 @@ import static cool.scx.web.parameter_handler.from_body.FromBodyParameterHandler.
  * CRUDListParamParameterHandler
  *
  * @author scx567888
- * @version 1.10.8
+ * @version 0.0.1
  */
 public final class CRUDListParamParameterHandler implements ParameterHandler {
 

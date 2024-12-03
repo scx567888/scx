@@ -13,7 +13,7 @@ import static java.lang.System.getLogger;
  * 为 BaseModel 的实现类 提供一套简单的 "单表" 的增删改查 api
  *
  * @author scx567888
- * @version 1.3.0
+ * @version 0.0.1
  */
 public class CRUDModule extends ScxModule {
 

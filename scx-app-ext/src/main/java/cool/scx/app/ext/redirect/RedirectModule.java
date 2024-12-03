@@ -14,7 +14,7 @@ import java.lang.System.Logger;
  * 监听 80 端口并将所有 http 请求重定向 到 https
  *
  * @author scx567888
- * @version 1.15.2
+ * @version 0.0.1
  */
 public class RedirectModule extends ScxModule {
 

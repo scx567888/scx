@@ -9,7 +9,7 @@ import cool.scx.web.parameter_handler.ParameterHandlerBuilder;
  * CRUDUpdateParamParameterHandlerBuilder
  *
  * @author scx567888
- * @version 1.10.8
+ * @version 0.0.1
  */
 public final class CRUDUpdateParamParameterHandlerBuilder implements ParameterHandlerBuilder {
 
