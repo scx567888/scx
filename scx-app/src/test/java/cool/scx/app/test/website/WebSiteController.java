@@ -4,9 +4,9 @@ import cool.scx.app.ScxContext;
 import cool.scx.app.test.car.CarService;
 import cool.scx.app.test.person.Person;
 import cool.scx.app.test.person.PersonService;
+import cool.scx.common.exception.ScxExceptionHelper;
 import cool.scx.common.util.HashUtils;
 import cool.scx.common.util.RandomUtils;
-import cool.scx.common.exception.ScxExceptionHelper;
 import cool.scx.http.FileFormat;
 import cool.scx.http.HttpHelper;
 import cool.scx.http.HttpMethod;
@@ -35,7 +35,7 @@ import static cool.scx.common.constant.ScxDateTimeFormatter.yyyy_MM_dd_HH_mm_ss;
  * 简单测试
  *
  * @author scx567888
- * @version 0.3.6
+ * @version 0.0.1
  * @since 1.3.14
  */
 @ScxRoute

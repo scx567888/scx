@@ -25,7 +25,7 @@ import static cool.scx.data.query.QueryBuilder.*;
  * 如果还是无法满足需求, 可以考虑使用 {@link SQLRunner}
  *
  * @author scx567888
- * @version 0.3.6
+ * @version 0.0.1
  */
 public class BaseModelService<Entity extends BaseModel> {
 

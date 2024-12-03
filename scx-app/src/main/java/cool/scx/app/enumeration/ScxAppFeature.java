@@ -7,7 +7,7 @@ import cool.scx.config.ScxFeature;
  * scx 特性枚举
  *
  * @author scx567888
- * @version 1.11.8
+ * @version 0.0.1
  */
 public enum ScxAppFeature implements ScxFeature<Boolean> {
 
@@ -60,11 +60,6 @@ public enum ScxAppFeature implements ScxFeature<Boolean> {
      */
     private final boolean _defaultValue;
 
-    /**
-     * <p>Constructor for ScxFeature.</p>
-     *
-     * @param defaultValue a boolean
-     */
     ScxAppFeature(boolean defaultValue) {
         this._defaultValue = defaultValue;
     }

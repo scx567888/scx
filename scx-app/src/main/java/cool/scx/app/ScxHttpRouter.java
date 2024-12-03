@@ -13,7 +13,7 @@ import static cool.scx.http.HttpMethod.*;
  * ScxHttp 路由 内部使用 Router 进行具体路由的处理
  *
  * @author scx567888
- * @version 1.11.8
+ * @version 0.0.1
  */
 public final class ScxHttpRouter extends RouterImpl {
 

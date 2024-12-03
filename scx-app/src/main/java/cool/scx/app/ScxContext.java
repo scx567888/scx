@@ -22,7 +22,7 @@ import java.util.concurrent.Callable;
  * 用来存储 整个项目的上下文
  *
  * @author scx567888
- * @version 1.11.8
+ * @version 0.0.1
  */
 public final class ScxContext {
 

@@ -12,14 +12,14 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import static cool.scx.common.util.NetUtils.getLocalIPAddress;
 import static cool.scx.common.exception.ScxExceptionHelper.ignore;
+import static cool.scx.common.util.NetUtils.getLocalIPAddress;
 
 /**
- * <p>ScxCoreConfig class.</p>
+ * ScxOptions
  *
  * @author scx567888
- * @version 1.3.0
+ * @version 0.0.1
  */
 public final class ScxOptions {
 
