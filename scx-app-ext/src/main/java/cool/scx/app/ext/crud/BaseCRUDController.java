@@ -64,16 +64,11 @@ public class BaseCRUDController<T extends BaseModelService> {
         return Result.ok(updatedModel);
     }
 
-    @ScxRoute(value = ":id", methods = DELETE)
-    public BaseVo delete(@FromPath Long id) {
-        var b = service.delete(id) == 1;
-        return b ? Result.ok() : Result.fail();
-    }
-
-    @ScxRoute(methods = DELETE)
-    public BaseVo batchDelete(@FromBody long[] deleteIDs) {
-        var deletedCount = service.delete(deleteIDs);
-        return Result.ok().put("deletedCount", deletedCount);
+    @ScxRoute(value = "", methods = DELETE)
+    public BaseVo delete(CRUDListParam crudListParam) {
+        var query = crudListParam.getQuery();
+        var size = service.delete(query);
+        return Result.ok(size);
     }
 
     @ScxRoute(value = "check-unique/:fieldName", methods = POST)
