@@ -1,5 +1,12 @@
 package cool.scx.socket;
 
+
+/**
+ * ScxSocketFrame
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public final class ScxSocketFrame {
 
     public long seq_id;

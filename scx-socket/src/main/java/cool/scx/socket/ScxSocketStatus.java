@@ -1,5 +1,12 @@
 package cool.scx.socket;
 
+
+/**
+ * ScxSocketStatus
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 final class ScxSocketStatus {
 
     final FrameCreator frameCreator;

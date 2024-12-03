@@ -5,6 +5,13 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
+
+/**
+ * RequestTask
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 final class RequestTask {
 
     private final Consumer<ScxSocketResponse> responseCallback;

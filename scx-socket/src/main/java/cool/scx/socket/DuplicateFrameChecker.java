@@ -7,6 +7,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * 重复帧检查器
+ *
+ * @author scx567888
+ * @version 0.0.1
  */
 final class DuplicateFrameChecker {
 

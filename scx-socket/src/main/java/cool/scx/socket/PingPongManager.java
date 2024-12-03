@@ -10,6 +10,13 @@ import static cool.scx.socket.ScxSocketFrame.Type.PING;
 import static cool.scx.socket.ScxSocketFrame.Type.PONG;
 import static java.lang.System.Logger.Level.DEBUG;
 
+
+/**
+ * PingPongManager
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 abstract class PingPongManager extends EasyUseSocket {
 
     private final PingPongOptions pingPongOptions;

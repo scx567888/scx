@@ -1,5 +1,12 @@
 package cool.scx.socket;
 
+
+/**
+ * SendOptions
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class SendOptions {
 
     private boolean needAck;

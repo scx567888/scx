@@ -8,6 +8,12 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import static cool.scx.socket.DuplicateFrameChecker.Key;
 
+/**
+ * ClearTask
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 final class ClearTask {
 
     private final DuplicateFrameChecker checker;

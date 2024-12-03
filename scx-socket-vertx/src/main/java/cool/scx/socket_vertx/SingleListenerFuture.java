@@ -7,7 +7,7 @@ import java.util.function.Consumer;
 /**
  * Vertx 中的 Future 可以添加多个回调且无法取消 ,此类用于解决此问题
  */
-public final class SingleListenerFuture<T> {
+final class SingleListenerFuture<T> {
 
     private final Future<T> vertxFuture;
     //为了解决 Future 无法移除回调 采取的折中方式

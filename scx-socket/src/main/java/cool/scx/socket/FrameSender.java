@@ -4,6 +4,13 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ScheduledExecutorService;
 
+
+/**
+ * FrameSender
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 final class FrameSender {
 
     final ConcurrentMap<Long, SendTask> sendTaskMap;

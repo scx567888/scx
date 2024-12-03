@@ -7,6 +7,13 @@ import java.util.concurrent.TimeUnit;
 
 import static java.lang.System.Logger.Level.DEBUG;
 
+
+/**
+ * ScxServerSocket
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public final class ScxServerSocket extends PingPongManager {
 
     private final ScxSocketServer scxSocketServer;

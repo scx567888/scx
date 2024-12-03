@@ -12,6 +12,13 @@ import static cool.scx.socket.Helper.getDelayed;
 import static java.lang.Math.max;
 import static java.lang.System.Logger.Level.DEBUG;
 
+
+/**
+ * SendTask
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 final class SendTask {
 
     private static final Logger logger = System.getLogger(SendTask.class.getName());
