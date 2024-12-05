@@ -10,6 +10,7 @@ import java.net.Socket;
 import java.util.function.Consumer;
 
 import static java.lang.System.Logger.Level.ERROR;
+import static java.lang.System.Logger.Level.TRACE;
 
 
 /**
@@ -39,12 +40,22 @@ public class TCPServer implements ScxTCPServer {
 
     @Override
     public ScxTCPServer onConnect(Consumer<ScxTCPSocket> connectHandler) {
+
+        if (running) {
+            throw new IllegalStateException("服务器启动后, 不允许设置 连接处理器 !!!");
+        }
+        
         this.connectHandler = connectHandler;
         return this;
     }
 
     @Override
     public void start() {
+
+        if (this.connectHandler == null) {
+            throw new IllegalStateException("未设置 连接处理器 !!!");
+        }
+
         if (running) {
             throw new IllegalStateException("服务器已在运行 !!!");
         }
@@ -102,29 +113,35 @@ public class TCPServer implements ScxTCPServer {
     }
 
     private void handle(Socket socket) {
+
         try {
             // 主动调用握手 快速检测 SSL 错误 防止等到调用用户处理程序时才发现
             if (socket instanceof SSLSocket sslSocket) {
                 sslSocket.startHandshake();
             }
+        } catch (IOException e) {
+            LOGGER.log(TRACE, "处理 TLS 握手 时发生错误 !!!", e);
+            tryCloseSocket(socket);
+            return;
+        }
 
-            // 判断是否设置用户处理程序
-            if (connectHandler == null) {
-                throw new IllegalStateException("未设置用户处理程序");
-            }
-
+        try {
             // 调用用户处理器
             var tcpSocket = new TCPSocket(socket);
             connectHandler.accept(tcpSocket);
         } catch (Throwable e) {
-            LOGGER.log(ERROR, "处理 Socket 时发生错误 !!!", e);
-            try {
-                socket.close();
-            } catch (IOException ex) {
-                LOGGER.log(ERROR, "关闭 Socket 发生错误", ex);
-            }
+            LOGGER.log(ERROR, "调用 连接处理器 时发生错误 !!!", e);
+            tryCloseSocket(socket);
         }
 
+    }
+
+    private void tryCloseSocket(Socket socket) {
+        try {
+            socket.close();
+        } catch (IOException ex) {
+            LOGGER.log(TRACE, "关闭 Socket 发生错误 !!!", ex);
+        }
     }
 
 }
