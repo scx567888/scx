@@ -23,6 +23,15 @@ public class UsagiHttpServerOptions extends ScxTCPServerOptions {
         this.maxWebsocketFrameSize = 1024 * 1024 * 16; // 默认 16 MB
     }
 
+    public UsagiHttpServerOptions(UsagiHttpServerOptions oldOptions) {
+        port(oldOptions.port());
+        tls(oldOptions.tls());
+        maxRequestLineSize(oldOptions.maxRequestLineSize());
+        maxHeaderSize(oldOptions.maxHeaderSize());
+        maxPayloadSize(oldOptions.maxPayloadSize());
+        maxWebsocketFrameSize(oldOptions.maxWebsocketFrameSize());
+    }
+
     @Override
     public UsagiHttpServerOptions port(int port) {
         super.port(port);
@@ -39,32 +48,36 @@ public class UsagiHttpServerOptions extends ScxTCPServerOptions {
         return maxRequestLineSize;
     }
 
-    public void maxRequestLineSize(int maxRequestLineSize) {
+    public UsagiHttpServerOptions maxRequestLineSize(int maxRequestLineSize) {
         this.maxRequestLineSize = maxRequestLineSize;
+        return this;
     }
 
     public int maxHeaderSize() {
         return maxHeaderSize;
     }
 
-    public void maxHeaderSize(int maxHeaderSize) {
+    public UsagiHttpServerOptions maxHeaderSize(int maxHeaderSize) {
         this.maxHeaderSize = maxHeaderSize;
+        return this;
     }
 
     public int maxPayloadSize() {
         return maxPayloadSize;
     }
 
-    public void maxPayloadSize(int maxPayloadSize) {
+    public UsagiHttpServerOptions maxPayloadSize(int maxPayloadSize) {
         this.maxPayloadSize = maxPayloadSize;
+        return this;
     }
 
     public int maxWebsocketFrameSize() {
         return maxWebsocketFrameSize;
     }
 
-    public void maxWebsocketFrameSize(int maxWebsocketFrameSize) {
+    public UsagiHttpServerOptions maxWebsocketFrameSize(int maxWebsocketFrameSize) {
         this.maxWebsocketFrameSize = maxWebsocketFrameSize;
+        return this;
     }
 
 }
