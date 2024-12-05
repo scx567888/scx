@@ -15,6 +15,10 @@ import java.io.OutputStream;
  */
 public class Http1xServerRequest implements ScxHttpServerRequest {
 
+    final ScxTCPSocket tcpSocket;
+    final LinkedDataReader dataReader;
+    final OutputStream dataWriter;
+
     private final ScxHttpMethod method;
     private final ScxURI uri;
     private final HttpVersion version;
@@ -25,13 +29,17 @@ public class Http1xServerRequest implements ScxHttpServerRequest {
     private final PeerInfo localPeer;
 
     public Http1xServerRequest(Http1xRequestLine requestLine, ScxHttpHeadersWritable headers, ScxHttpBody body, ScxTCPSocket tcpSocket, LinkedDataReader dataReader, OutputStream dataWriter) {
+        this.tcpSocket = tcpSocket;
+        this.dataReader = dataReader;
+        this.dataWriter = dataWriter;
+
         this.method = requestLine.method();
         // todo uri 需要 通过请求头 , socket 等 获取 请求主机 
         this.uri = ScxURI.of(requestLine.path());
         this.version = requestLine.version();
         this.headers = headers;
         this.body = body;
-        this.response = new Http1xServerResponse(this, tcpSocket);
+        this.response = new Http1xServerResponse(this, tcpSocket, dataReader, dataWriter);
         this.remotePeer = PeerInfo.of();
         this.localPeer = PeerInfo.of();
     }
