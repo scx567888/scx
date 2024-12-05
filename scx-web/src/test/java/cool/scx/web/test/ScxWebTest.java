@@ -40,7 +40,7 @@ public class ScxWebTest {
             c.response().status(FORBIDDEN).send("Error");
         }));
 
-        httpServer.requestHandler(router).start();
+        httpServer.onRequest(router).start();
 
         for (var route : router.getRoutes()) {
             System.out.println("http://127.0.0.1:" + httpServer.port() + route.path());
@@ -67,7 +67,7 @@ public class ScxWebTest {
             c.response().send("my-route");
         }));
 
-        httpServer.requestHandler(router).start();
+        httpServer.onRequest(router).start();
 
         for (var route : router.getRoutes()) {
             System.out.println("http://127.0.0.1:" + httpServer.port() + route.path());
