@@ -40,22 +40,12 @@ public class TCPServer implements ScxTCPServer {
 
     @Override
     public ScxTCPServer onConnect(Consumer<ScxTCPSocket> connectHandler) {
-
-        if (running) {
-            throw new IllegalStateException("服务器启动后, 不允许设置 连接处理器 !!!");
-        }
-        
         this.connectHandler = connectHandler;
         return this;
     }
 
     @Override
     public void start() {
-
-        if (this.connectHandler == null) {
-            throw new IllegalStateException("未设置 连接处理器 !!!");
-        }
-
         if (running) {
             throw new IllegalStateException("服务器已在运行 !!!");
         }
@@ -121,6 +111,12 @@ public class TCPServer implements ScxTCPServer {
             }
         } catch (IOException e) {
             LOGGER.log(TRACE, "处理 TLS 握手 时发生错误 !!!", e);
+            tryCloseSocket(socket);
+            return;
+        }
+
+        if (connectHandler == null) {
+            LOGGER.log(ERROR, "未设置用户处理器, 关闭连接 !!!");
             tryCloseSocket(socket);
             return;
         }
