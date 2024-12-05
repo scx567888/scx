@@ -10,7 +10,7 @@ import java.util.function.Consumer;
  */
 public interface ScxHttpServer {
 
-    ScxHttpServer onRequest(Consumer<ScxHttpServerRequest> handler);
+    ScxHttpServer onRequest(Consumer<ScxHttpServerRequest> requestHandler);
 
     void start();
 
