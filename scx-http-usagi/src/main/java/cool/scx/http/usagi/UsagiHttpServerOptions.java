@@ -1,23 +1,26 @@
 package cool.scx.http.usagi;
 
-
 import cool.scx.tcp.ScxTCPServerOptions;
 import cool.scx.tcp.tls.TLS;
 
 /**
- * todo 待完成
+ * Http 服务器配置
  *
  * @author scx567888
  * @version 0.0.1
  */
 public class UsagiHttpServerOptions extends ScxTCPServerOptions {
 
-    private long maxPayloadSize;
-    private int bodyBufferSize;
+    private int maxRequestLineSize;
+    private int maxHeaderSize;
+    private int maxPayloadSize;
+    private int maxWebsocketFrameSize;
 
     public UsagiHttpServerOptions() {
-        this.maxPayloadSize = -1;
-        this.bodyBufferSize = 65536;
+        this.maxRequestLineSize = 1024 * 64; // 默认 64 KB
+        this.maxHeaderSize = 1024 * 128; // 默认 128 KB
+        this.maxPayloadSize = 1024 * 1024 * 16; // 默认 16 MB
+        this.maxWebsocketFrameSize = 1024 * 1024 * 16; // 默认 16 MB
     }
 
     @Override
@@ -32,22 +35,36 @@ public class UsagiHttpServerOptions extends ScxTCPServerOptions {
         return this;
     }
 
-    public long maxPayloadSize() {
-        return this.maxPayloadSize;
+    public int maxRequestLineSize() {
+        return maxRequestLineSize;
     }
 
-    public UsagiHttpServerOptions maxPayloadSize(long maxPayloadSize) {
+    public void maxRequestLineSize(int maxRequestLineSize) {
+        this.maxRequestLineSize = maxRequestLineSize;
+    }
+
+    public int maxHeaderSize() {
+        return maxHeaderSize;
+    }
+
+    public void maxHeaderSize(int maxHeaderSize) {
+        this.maxHeaderSize = maxHeaderSize;
+    }
+
+    public int maxPayloadSize() {
+        return maxPayloadSize;
+    }
+
+    public void maxPayloadSize(int maxPayloadSize) {
         this.maxPayloadSize = maxPayloadSize;
-        return this;
     }
 
-    public int bodyBufferSize() {
-        return bodyBufferSize;
+    public int maxWebsocketFrameSize() {
+        return maxWebsocketFrameSize;
     }
 
-    public UsagiHttpServerOptions bodyBufferSize(int bodyBufferSize) {
-        this.bodyBufferSize = bodyBufferSize;
-        return this;
+    public void maxWebsocketFrameSize(int maxWebsocketFrameSize) {
+        this.maxWebsocketFrameSize = maxWebsocketFrameSize;
     }
 
 }
