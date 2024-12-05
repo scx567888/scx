@@ -15,9 +15,9 @@ import java.io.OutputStream;
  */
 public class Http1xServerRequest implements ScxHttpServerRequest {
 
-    final ScxTCPSocket tcpSocket;
-    final LinkedDataReader dataReader;
-    final OutputStream dataWriter;
+    public final ScxTCPSocket tcpSocket;
+    public final LinkedDataReader dataReader;
+    public final OutputStream dataWriter;
 
     private final ScxHttpMethod method;
     private final ScxURI uri;

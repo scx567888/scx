@@ -13,7 +13,7 @@ public final class Http1xRequestLineHelper {
     public static Http1xRequestLine parseRequestLine(String requestLineStr) {
         var split = requestLineStr.split(" ");
         if (split.length != 3) {
-            throw new RuntimeException("Invalid request line: " + requestLineStr);
+            throw new IllegalArgumentException("Invalid request line: " + requestLineStr);
         }
         var methodStr = split[0];
         var pathStr = split[1];
