@@ -20,12 +20,12 @@ public class ClientTest {
 
     public static void test1() throws IOException, InterruptedException {
         var httpServer = new HelidonHttpServer(new HelidonHttpServerOptions().port(8990));
-        httpServer.requestHandler(c -> {
+        httpServer.onRequest(c -> {
             System.out.println(c.uri());
             System.out.println(c.body().asFormParams());
             c.response().send(new Apple("red", "red apple", 99));
         });
-        httpServer.webSocketHandler(c -> {
+        httpServer.onWebSocket(c -> {
             System.out.println(c.uri());
             c.onTextMessage(t -> {
                 System.out.println(t);
