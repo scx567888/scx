@@ -12,7 +12,7 @@ public class Test1 {
 
     public static void test1() {
         var httpServer = new HelidonHttpServer(new HelidonHttpServerOptions().port(8899));
-        httpServer.requestHandler(c -> {
+        httpServer.onRequest(c -> {
             System.out.println(c.body().asString());
             c.response().send("123");
         });
