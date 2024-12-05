@@ -59,7 +59,7 @@ public class ScxSocketServerTest extends InitLogger {
 
         //使用 httpServer
         new HelidonHttpServer(new HelidonHttpServerOptions().port(8990))
-                .webSocketHandler(scxSocketServer::call)
+                .onWebSocket(scxSocketServer::call)
                 .start();
 
         //使用 httpServer
