@@ -28,8 +28,8 @@ public class ObjectWriter implements MediaWriter {
     }
 
     @Override
-    public void beforeWrite(ScxHttpHeadersWritable headersWritable, ScxHttpHeaders headers) {
-        jsonNodeWriter.beforeWrite(headersWritable, headers);
+    public void beforeWrite(ScxHttpHeadersWritable responseHeaders, ScxHttpHeaders requestHeaders) {
+        jsonNodeWriter.beforeWrite(responseHeaders, requestHeaders);
     }
 
     @Override

@@ -59,8 +59,8 @@ public class JsonNodeWriter implements MediaWriter {
     }
 
     @Override
-    public void beforeWrite(ScxHttpHeadersWritable headersWritable, ScxHttpHeaders headers) {
-        var contentType = trySetContentType(headersWritable, headers);
+    public void beforeWrite(ScxHttpHeadersWritable responseHeaders, ScxHttpHeaders requestHeaders) {
+        var contentType = trySetContentType(responseHeaders, requestHeaders);
         //根据类型确定内容长度
         try {
             if (contentType.mediaType() == APPLICATION_JSON) {
@@ -73,8 +73,8 @@ public class JsonNodeWriter implements MediaWriter {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-        if (headersWritable.contentLength() == null) {
-            headersWritable.contentLength(data.length);
+        if (responseHeaders.contentLength() == null) {
+            responseHeaders.contentLength(data.length);
         }
     }
 

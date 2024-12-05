@@ -24,10 +24,10 @@ public class MultiPartWriter implements MediaWriter {
     }
 
     @Override
-    public void beforeWrite(ScxHttpHeadersWritable headersWritable, ScxHttpHeaders headers) {
-        if (headersWritable.contentType() == null) {
+    public void beforeWrite(ScxHttpHeadersWritable responseHeaders, ScxHttpHeaders requestHeaders) {
+        if (responseHeaders.contentType() == null) {
             // MULTIPART 有很多类型 这里暂时只当成 MULTIPART_FORM_DATA
-            headersWritable.contentType(ContentType.of().mediaType(MULTIPART_FORM_DATA).boundary(this.multiPart.boundary()));
+            responseHeaders.contentType(ContentType.of().mediaType(MULTIPART_FORM_DATA).boundary(this.multiPart.boundary()));
         }
     }
 
