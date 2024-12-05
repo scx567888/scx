@@ -16,9 +16,9 @@ import java.util.function.Consumer;
  */
 public class UsagiHttpServer implements ScxHttpServer {
 
-    private final ScxTCPServer tcpServer;
     private final UsagiHttpServerOptions options;
-    Consumer<ScxHttpServerRequest> requestHandler;
+    private final ScxTCPServer tcpServer;
+    private Consumer<ScxHttpServerRequest> requestHandler;
 
     public UsagiHttpServer(UsagiHttpServerOptions options) {
         this.options = options;
@@ -31,7 +31,7 @@ public class UsagiHttpServer implements ScxHttpServer {
     }
 
     private void handle(ScxTCPSocket tcpSocket) {
-        new Http1xConnectionHandler(tcpSocket, this).start();
+        new Http1xConnectionHandler(tcpSocket, options, requestHandler).start();
     }
 
     @Override
