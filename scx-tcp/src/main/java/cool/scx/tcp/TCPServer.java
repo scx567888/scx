@@ -96,7 +96,7 @@ public class TCPServer implements ScxTCPServer {
                 var socket = this.serverSocket.accept();
                 Thread.ofVirtual().name("TCPServer-Handler-" + socket.getRemoteSocketAddress()).start(() -> handle(socket));
             } catch (IOException e) {
-                LOGGER.log(ERROR, "服务器接受连接时发生错误 !!!", e);
+                LOGGER.log(ERROR, "服务器 接受连接 时发生错误 !!!", e);
                 stop();
             }
         }
@@ -116,7 +116,7 @@ public class TCPServer implements ScxTCPServer {
         }
 
         if (connectHandler == null) {
-            LOGGER.log(ERROR, "未设置用户处理器, 关闭连接 !!!");
+            LOGGER.log(ERROR, "未设置 连接处理器, 关闭连接 !!!");
             tryCloseSocket(socket);
             return;
         }
@@ -136,7 +136,7 @@ public class TCPServer implements ScxTCPServer {
         try {
             socket.close();
         } catch (IOException ex) {
-            LOGGER.log(TRACE, "关闭 Socket 发生错误 !!!", ex);
+            LOGGER.log(TRACE, "关闭 Socket 时发生错误 !!!", ex);
         }
     }
 
