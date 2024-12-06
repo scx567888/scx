@@ -14,12 +14,12 @@ public class WebSocketTest {
     public static void startServer() {
         var httpServer = new UsagiHttpServer(new UsagiHttpServerOptions().port(8080));
 
-        httpServer.webSocketHandler(webSocket -> {
-            webSocket.onTextMessage(data -> {
-                webSocket.send(data);
-                System.out.println("服 : " + data);
-            });
-        });
+//        httpServer.webSocketHandler(webSocket -> {
+//            webSocket.onTextMessage(data -> {
+//                webSocket.send(data);
+//                System.out.println("服 : " + data);
+//            });
+//        });
 
         httpServer.start();
     }

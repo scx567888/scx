@@ -3,10 +3,10 @@ package cool.scx.http.usagi.http1x;
 import cool.scx.http.*;
 import cool.scx.http.exception.InternalServerErrorException;
 import cool.scx.http.exception.ScxHttpException;
-import cool.scx.http.usagi.CloseConnectionException;
 import cool.scx.http.usagi.FixedLengthInputStream;
 import cool.scx.http.usagi.HttpChunkedInputStream;
 import cool.scx.http.usagi.UsagiHttpServerOptions;
+import cool.scx.http.usagi.exception.CloseConnectionException;
 import cool.scx.io.InputStreamDataSupplier;
 import cool.scx.io.LinkedDataReader;
 import cool.scx.io.NoMatchFoundException;
@@ -19,8 +19,7 @@ import java.io.OutputStream;
 import java.util.function.Consumer;
 
 import static cool.scx.http.HttpFieldName.CONNECTION;
-import static cool.scx.http.usagi.http1x.Http1xHelper.checkIsChunkedTransfer;
-import static cool.scx.http.usagi.http1x.Http1xHelper.checkIsWebSocketHandshake;
+import static cool.scx.http.usagi.http1x.Http1xHelper.*;
 
 /**
  * Http 1.x 连接处理器
@@ -51,9 +50,9 @@ public class Http1xConnection {
 
 
     public void start() {
-        try {
-            while (true) {
-
+        System.out.println("新连接");
+        while (true) {
+            try {
                 // 1, 读取 请求行
                 var requestLine = readRequestLine();
 
@@ -62,21 +61,34 @@ public class Http1xConnection {
 
                 // 3, 读取 请求体
                 var body = readBody(headers);
+                
+                // 4, 是否是持久连接
+                var isKeepAlive = checkIsKeepAlive(requestLine, headers);
 
                 // 4, 判断是否为 WebSocket 握手请求 并创建对应请求
                 var isWebSocketHandshake = checkIsWebSocketHandshake(requestLine, headers);
+
                 var request = isWebSocketHandshake ?
-                        new Http1xServerWebSocketHandshakeRequest(requestLine, headers, body, tcpSocket, dataReader, dataWriter) :
-                        new Http1xServerRequest(requestLine, headers, body, tcpSocket, dataReader, dataWriter);
+                        new Http1xServerWebSocketHandshakeRequest(requestLine, headers, body, tcpSocket, dataReader, dataWriter,isKeepAlive) :
+                        new Http1xServerRequest(requestLine, headers, body, tcpSocket, dataReader, dataWriter,isKeepAlive);
 
                 // 5, 调用用户处理器
                 _callRequestHandler(request);
 
+            } catch (CloseConnectionException e) {
+                //这种情况是我们主动触发的, 表示需要关闭连接 这里直接跳出循环, 以便完成关闭
+                break;
+            } catch (ScxHttpException e) {
+                handleHttpException(e);
+            } catch (Throwable e) {
+                handleHttpException(new InternalServerErrorException(e));
             }
-        } catch (ScxHttpException e) {
-            handleHttpException(e);
-        } catch (Throwable e) {
-            handleHttpException(new InternalServerErrorException(e));
+        }
+        // 循环结束则关闭连接
+        try {
+            tcpSocket.close();
+        } catch (IOException e) {
+            LOGGER.log(System.Logger.Level.TRACE, "关闭 Socket 时发生错误！", e);
         }
     }
 
@@ -172,7 +184,7 @@ public class Http1xConnection {
         } catch (IOException ee) {
             LOGGER.log(System.Logger.Level.TRACE, "Failed to write request exception");
         }
-        
+
     }
 
 }

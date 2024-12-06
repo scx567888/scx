@@ -12,7 +12,7 @@ public class UsagiTest {
 
     public static void test1() {
         var httpServer = new UsagiHttpServer(new UsagiHttpServerOptions().port(8899));
-        httpServer.requestHandler(c -> {
+        httpServer.onRequest(c -> {
             System.out.println(c.method() + " " + c.uri() + " -> " + c.body().asString());
             //通过 c 的类型判断是不是 websocket 连接
             if (c instanceof ScxServerWebSocketHandshakeRequest w) {

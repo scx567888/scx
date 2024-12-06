@@ -18,6 +18,7 @@ public class Http1xServerRequest implements ScxHttpServerRequest {
     public final ScxTCPSocket tcpSocket;
     public final LinkedDataReader dataReader;
     public final OutputStream dataWriter;
+    public final boolean isKeepAlive;
 
     private final ScxHttpMethod method;
     private final ScxURI uri;
@@ -28,10 +29,11 @@ public class Http1xServerRequest implements ScxHttpServerRequest {
     private final PeerInfo remotePeer;
     private final PeerInfo localPeer;
 
-    public Http1xServerRequest(Http1xRequestLine requestLine, ScxHttpHeadersWritable headers, ScxHttpBody body, ScxTCPSocket tcpSocket, LinkedDataReader dataReader, OutputStream dataWriter) {
+    public Http1xServerRequest(Http1xRequestLine requestLine, ScxHttpHeadersWritable headers, ScxHttpBody body, ScxTCPSocket tcpSocket, LinkedDataReader dataReader, OutputStream dataWriter, boolean isKeepAlive) {
         this.tcpSocket = tcpSocket;
         this.dataReader = dataReader;
         this.dataWriter = dataWriter;
+        this.isKeepAlive = isKeepAlive;
 
         this.method = requestLine.method();
         // todo uri 需要 通过请求头 , socket 等 获取 请求主机 
@@ -39,7 +41,7 @@ public class Http1xServerRequest implements ScxHttpServerRequest {
         this.version = requestLine.version();
         this.headers = headers;
         this.body = body;
-        this.response = new Http1xServerResponse(this, tcpSocket, dataReader, dataWriter);
+        this.response = new Http1xServerResponse(this, tcpSocket, dataReader, dataWriter, isKeepAlive);
         this.remotePeer = PeerInfo.of();
         this.localPeer = PeerInfo.of();
     }
