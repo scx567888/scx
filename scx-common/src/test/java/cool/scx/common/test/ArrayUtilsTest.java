@@ -73,8 +73,8 @@ public class ArrayUtilsTest {
         Assert.assertEquals(result, expected);
 
         long[] array2 = {1L, 2L, 3L, 4L, 5L};
-        long[] expected2 = {};
-        long[] result2 = ArrayUtils.safeSubArray(array2, -1, 10); // 期望返回空数组 
+        long[] expected2 = {1L, 2L, 3L, 4L, 5L};
+        long[] result2 = ArrayUtils.safeSubArray(array2, -1, 10); 
         Assert.assertEquals(result2, expected2);
 
 
