@@ -1074,181 +1074,232 @@ public final class ArrayUtils {
 
     //********************* subArray START *****************
 
-    public static byte[] subArray(byte[] array, int fromIndex, int toIndex) {
-        if (fromIndex < 0 || toIndex > array.length || fromIndex > toIndex) {
-            throw new ArrayIndexOutOfBoundsException("Array length: " + array.length + ", fromIndex: " + fromIndex + ", toIndex: " + toIndex);
+    public static void subArrayCheck(int fromIndex, int toIndex, int size) {
+        if (fromIndex < 0) {
+            throw new ArrayIndexOutOfBoundsException("fromIndex = " + fromIndex);
         }
-        byte[] subArray = new byte[toIndex - fromIndex];
-        System.arraycopy(array, fromIndex, subArray, 0, toIndex - fromIndex);
+        if (toIndex > size) {
+            throw new ArrayIndexOutOfBoundsException("toIndex = " + toIndex);
+        }
+        if (fromIndex > toIndex) {
+            throw new ArrayIndexOutOfBoundsException("fromIndex(" + fromIndex + ") > toIndex(" + toIndex + ")");
+        }
+    }
+
+    public static byte[] subArray(byte[] array, int fromIndex, int toIndex) {
+        subArrayCheck(fromIndex, toIndex, array.length);
+        var subArray = new byte[toIndex - fromIndex];
+        System.arraycopy(array, fromIndex, subArray, 0, subArray.length);
         return subArray;
     }
 
     public static short[] subArray(short[] array, int fromIndex, int toIndex) {
-        if (fromIndex < 0 || toIndex > array.length || fromIndex > toIndex) {
-            throw new ArrayIndexOutOfBoundsException("Array length: " + array.length + ", fromIndex: " + fromIndex + ", toIndex: " + toIndex);
-        }
-        short[] subArray = new short[toIndex - fromIndex];
-        System.arraycopy(array, fromIndex, subArray, 0, toIndex - fromIndex);
+        subArrayCheck(fromIndex, toIndex, array.length);
+        var subArray = new short[toIndex - fromIndex];
+        System.arraycopy(array, fromIndex, subArray, 0, subArray.length);
         return subArray;
     }
 
     public static int[] subArray(int[] array, int fromIndex, int toIndex) {
-        if (fromIndex < 0 || toIndex > array.length || fromIndex > toIndex) {
-            throw new ArrayIndexOutOfBoundsException("Array length: " + array.length + ", fromIndex: " + fromIndex + ", toIndex: " + toIndex);
-        }
-        int[] subArray = new int[toIndex - fromIndex];
-        System.arraycopy(array, fromIndex, subArray, 0, toIndex - fromIndex);
+        subArrayCheck(fromIndex, toIndex, array.length);
+        var subArray = new int[toIndex - fromIndex];
+        System.arraycopy(array, fromIndex, subArray, 0, subArray.length);
         return subArray;
     }
 
     public static long[] subArray(long[] array, int fromIndex, int toIndex) {
-        if (fromIndex < 0 || toIndex > array.length || fromIndex > toIndex) {
-            throw new ArrayIndexOutOfBoundsException("Array length: " + array.length + ", fromIndex: " + fromIndex + ", toIndex: " + toIndex);
-        }
-        long[] subArray = new long[toIndex - fromIndex];
-        System.arraycopy(array, fromIndex, subArray, 0, toIndex - fromIndex);
+        subArrayCheck(fromIndex, toIndex, array.length);
+        var subArray = new long[toIndex - fromIndex];
+        System.arraycopy(array, fromIndex, subArray, 0, subArray.length);
         return subArray;
     }
 
     public static float[] subArray(float[] array, int fromIndex, int toIndex) {
-        if (fromIndex < 0 || toIndex > array.length || fromIndex > toIndex) {
-            throw new ArrayIndexOutOfBoundsException("Array length: " + array.length + ", fromIndex: " + fromIndex + ", toIndex: " + toIndex);
-        }
-        float[] subArray = new float[toIndex - fromIndex];
-        System.arraycopy(array, fromIndex, subArray, 0, toIndex - fromIndex);
+        subArrayCheck(fromIndex, toIndex, array.length);
+        var subArray = new float[toIndex - fromIndex];
+        System.arraycopy(array, fromIndex, subArray, 0, subArray.length);
         return subArray;
     }
 
     public static double[] subArray(double[] array, int fromIndex, int toIndex) {
-        if (fromIndex < 0 || toIndex > array.length || fromIndex > toIndex) {
-            throw new ArrayIndexOutOfBoundsException("Array length: " + array.length + ", fromIndex: " + fromIndex + ", toIndex: " + toIndex);
-        }
-        double[] subArray = new double[toIndex - fromIndex];
-        System.arraycopy(array, fromIndex, subArray, 0, toIndex - fromIndex);
+        subArrayCheck(fromIndex, toIndex, array.length);
+        var subArray = new double[toIndex - fromIndex];
+        System.arraycopy(array, fromIndex, subArray, 0, subArray.length);
         return subArray;
     }
 
     public static boolean[] subArray(boolean[] array, int fromIndex, int toIndex) {
-        if (fromIndex < 0 || toIndex > array.length || fromIndex > toIndex) {
-            throw new ArrayIndexOutOfBoundsException("Array length: " + array.length + ", fromIndex: " + fromIndex + ", toIndex: " + toIndex);
-        }
-        boolean[] subArray = new boolean[toIndex - fromIndex];
-        System.arraycopy(array, fromIndex, subArray, 0, toIndex - fromIndex);
+        subArrayCheck(fromIndex, toIndex, array.length);
+        var subArray = new boolean[toIndex - fromIndex];
+        System.arraycopy(array, fromIndex, subArray, 0, subArray.length);
         return subArray;
     }
 
     public static char[] subArray(char[] array, int fromIndex, int toIndex) {
-        if (fromIndex < 0 || toIndex > array.length || fromIndex > toIndex) {
-            throw new ArrayIndexOutOfBoundsException("Array length: " + array.length + ", fromIndex: " + fromIndex + ", toIndex: " + toIndex);
-        }
-        char[] subArray = new char[toIndex - fromIndex];
-        System.arraycopy(array, fromIndex, subArray, 0, toIndex - fromIndex);
+        subArrayCheck(fromIndex, toIndex, array.length);
+        var subArray = new char[toIndex - fromIndex];
+        System.arraycopy(array, fromIndex, subArray, 0, subArray.length);
         return subArray;
     }
 
     @SuppressWarnings("unchecked")
     public static <T> T[] subArray(T[] array, int fromIndex, int toIndex) {
-        if (fromIndex < 0 || toIndex > array.length || fromIndex > toIndex) {
-            throw new ArrayIndexOutOfBoundsException("Array length: " + array.length + ", fromIndex: " + fromIndex + ", toIndex: " + toIndex);
-        }
-        T[] subArray = (T[]) Array.newInstance(array.getClass().getComponentType(), toIndex - fromIndex);
-        System.arraycopy(array, fromIndex, subArray, 0, toIndex - fromIndex);
+        subArrayCheck(fromIndex, toIndex, array.length);
+        var subArray = (T[]) Array.newInstance(array.getClass().getComponentType(), toIndex - fromIndex);
+        System.arraycopy(array, fromIndex, subArray, 0, subArray.length);
         return subArray;
     }
 
     public static byte[] safeSubArray(byte[] array, int fromIndex, int toIndex) {
-        if (fromIndex < 0 || toIndex > array.length || fromIndex > toIndex) {
+        if (fromIndex < 0) {
+            fromIndex = 0;
+        }
+        if (toIndex > array.length) {
+            toIndex = array.length;
+        }
+        if (fromIndex >= toIndex) {
             return new byte[]{};
         }
-        byte[] subArray = new byte[toIndex - fromIndex];
-        System.arraycopy(array, fromIndex, subArray, 0, toIndex - fromIndex);
+        var subArray = new byte[toIndex - fromIndex];
+        System.arraycopy(array, fromIndex, subArray, 0, subArray.length);
         return subArray;
     }
 
     public static short[] safeSubArray(short[] array, int fromIndex, int toIndex) {
-        if (fromIndex < 0 || toIndex > array.length || fromIndex > toIndex) {
+        if (fromIndex < 0) {
+            fromIndex = 0;
+        }
+        if (toIndex > array.length) {
+            toIndex = array.length;
+        }
+        if (fromIndex >= toIndex) {
             return new short[]{};
         }
-        short[] subArray = new short[toIndex - fromIndex];
-        System.arraycopy(array, fromIndex, subArray, 0, toIndex - fromIndex);
+        var subArray = new short[toIndex - fromIndex];
+        System.arraycopy(array, fromIndex, subArray, 0, subArray.length);
         return subArray;
     }
 
     public static int[] safeSubArray(int[] array, int fromIndex, int toIndex) {
-        if (fromIndex < 0 || toIndex > array.length || fromIndex > toIndex) {
+        if (fromIndex < 0) {
+            fromIndex = 0;
+        }
+        if (toIndex > array.length) {
+            toIndex = array.length;
+        }
+        if (fromIndex >= toIndex) {
             return new int[]{};
         }
-        int[] subArray = new int[toIndex - fromIndex];
-        System.arraycopy(array, fromIndex, subArray, 0, toIndex - fromIndex);
+        var subArray = new int[toIndex - fromIndex];
+        System.arraycopy(array, fromIndex, subArray, 0, subArray.length);
         return subArray;
     }
 
     public static long[] safeSubArray(long[] array, int fromIndex, int toIndex) {
-        if (fromIndex < 0 || toIndex > array.length || fromIndex > toIndex) {
+        if (fromIndex < 0) {
+            fromIndex = 0;
+        }
+        if (toIndex > array.length) {
+            toIndex = array.length;
+        }
+        if (fromIndex >= toIndex) {
             return new long[]{};
         }
-        long[] subArray = new long[toIndex - fromIndex];
-        System.arraycopy(array, fromIndex, subArray, 0, toIndex - fromIndex);
+        var subArray = new long[toIndex - fromIndex];
+        System.arraycopy(array, fromIndex, subArray, 0, subArray.length);
         return subArray;
     }
 
     public static float[] safeSubArray(float[] array, int fromIndex, int toIndex) {
-        if (fromIndex < 0 || toIndex > array.length || fromIndex > toIndex) {
+        if (fromIndex < 0) {
+            fromIndex = 0;
+        }
+        if (toIndex > array.length) {
+            toIndex = array.length;
+        }
+        if (fromIndex >= toIndex) {
             return new float[]{};
         }
-        float[] subArray = new float[toIndex - fromIndex];
-        System.arraycopy(array, fromIndex, subArray, 0, toIndex - fromIndex);
+        var subArray = new float[toIndex - fromIndex];
+        System.arraycopy(array, fromIndex, subArray, 0, subArray.length);
         return subArray;
     }
 
     public static double[] safeSubArray(double[] array, int fromIndex, int toIndex) {
-        if (fromIndex < 0 || toIndex > array.length || fromIndex > toIndex) {
+        if (fromIndex < 0) {
+            fromIndex = 0;
+        }
+        if (toIndex > array.length) {
+            toIndex = array.length;
+        }
+        if (fromIndex >= toIndex) {
             return new double[]{};
         }
-        double[] subArray = new double[toIndex - fromIndex];
-        System.arraycopy(array, fromIndex, subArray, 0, toIndex - fromIndex);
+        var subArray = new double[toIndex - fromIndex];
+        System.arraycopy(array, fromIndex, subArray, 0, subArray.length);
         return subArray;
     }
 
     public static boolean[] safeSubArray(boolean[] array, int fromIndex, int toIndex) {
-        if (fromIndex < 0 || toIndex > array.length || fromIndex > toIndex) {
+        if (fromIndex < 0) {
+            fromIndex = 0;
+        }
+        if (toIndex > array.length) {
+            toIndex = array.length;
+        }
+        if (fromIndex >= toIndex) {
             return new boolean[]{};
         }
-        boolean[] subArray = new boolean[toIndex - fromIndex];
-        System.arraycopy(array, fromIndex, subArray, 0, toIndex - fromIndex);
+        var subArray = new boolean[toIndex - fromIndex];
+        System.arraycopy(array, fromIndex, subArray, 0, subArray.length);
         return subArray;
     }
 
     public static char[] safeSubArray(char[] array, int fromIndex, int toIndex) {
-        if (fromIndex < 0 || toIndex > array.length || fromIndex > toIndex) {
+        if (fromIndex < 0) {
+            fromIndex = 0;
+        }
+        if (toIndex > array.length) {
+            toIndex = array.length;
+        }
+        if (fromIndex >= toIndex) {
             return new char[]{};
         }
-        char[] subArray = new char[toIndex - fromIndex];
-        System.arraycopy(array, fromIndex, subArray, 0, toIndex - fromIndex);
+        var subArray = new char[toIndex - fromIndex];
+        System.arraycopy(array, fromIndex, subArray, 0, subArray.length);
         return subArray;
     }
 
     @SuppressWarnings("unchecked")
     public static <T> T[] safeSubArray(T[] array, int fromIndex, int toIndex) {
-        if (fromIndex < 0 || toIndex > array.length || fromIndex > toIndex) {
+        if (fromIndex < 0) {
+            fromIndex = 0;
+        }
+        if (toIndex > array.length) {
+            toIndex = array.length;
+        }
+        if (fromIndex >= toIndex) {
             return (T[]) Array.newInstance(array.getClass().getComponentType(), 0);
         }
-        T[] subArray = (T[]) Array.newInstance(array.getClass().getComponentType(), toIndex - fromIndex);
-        System.arraycopy(array, fromIndex, subArray, 0, toIndex - fromIndex);
+        var subArray = (T[])Array.newInstance(array.getClass().getComponentType(), toIndex - fromIndex);
+        System.arraycopy(array, fromIndex, subArray, 0, subArray.length);
         return subArray;
     }
 
     //********************* subArray END *****************
 
     public static <T> List<T> subList(List<T> list, int fromIndex, int toIndex) {
-        if (fromIndex < 0 || toIndex > list.size() || fromIndex > toIndex) {
-            throw new IndexOutOfBoundsException("List size: " + list.size() + ", fromIndex: " + fromIndex + ", toIndex: " + toIndex);
-        }
         return list.subList(fromIndex, toIndex);
     }
 
     public static <T> List<T> safeSubList(List<T> list, int fromIndex, int toIndex) {
-        if (fromIndex < 0 || toIndex > list.size() || fromIndex > toIndex) {
+        if (fromIndex < 0) {
+            fromIndex = 0;
+        }
+        if (toIndex > list.size()) {
+            toIndex = list.size();
+        }
+        if (fromIndex >= toIndex) {
             return List.of();
         }
         return list.subList(fromIndex, toIndex);
