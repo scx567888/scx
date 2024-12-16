@@ -74,7 +74,7 @@ public class ArrayUtilsTest {
 
         long[] array2 = {1L, 2L, 3L, 4L, 5L};
         long[] expected2 = {1L, 2L, 3L, 4L, 5L};
-        long[] result2 = ArrayUtils.safeSubArray(array2, -1, 10); 
+        long[] result2 = ArrayUtils.safeSubArray(array2, -1, 10);
         Assert.assertEquals(result2, expected2);
 
 

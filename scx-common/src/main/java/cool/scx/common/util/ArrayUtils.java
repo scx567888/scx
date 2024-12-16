@@ -1281,7 +1281,7 @@ public final class ArrayUtils {
         if (fromIndex >= toIndex) {
             return (T[]) Array.newInstance(array.getClass().getComponentType(), 0);
         }
-        var subArray = (T[])Array.newInstance(array.getClass().getComponentType(), toIndex - fromIndex);
+        var subArray = (T[]) Array.newInstance(array.getClass().getComponentType(), toIndex - fromIndex);
         System.arraycopy(array, fromIndex, subArray, 0, subArray.length);
         return subArray;
     }
