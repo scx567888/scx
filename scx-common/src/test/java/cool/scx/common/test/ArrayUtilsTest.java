@@ -65,7 +65,7 @@ public class ArrayUtilsTest {
     @Test
     public static void test5() {
         byte[] array = {1, 2, 3, 4, 5};
-        Assert.assertThrows(IndexOutOfBoundsException.class,()->ArrayUtils.subArray(array, -1, 10)); // 期望抛出异常
+        Assert.assertThrows(IndexOutOfBoundsException.class, () -> ArrayUtils.subArray(array, -1, 10)); // 期望抛出异常
 
         int[] array1 = {1, 2, 3, 4, 5};
         int[] expected = {2, 3, 4};
@@ -78,13 +78,13 @@ public class ArrayUtilsTest {
         Assert.assertEquals(result2, expected2);
 
 
-        float[] array3 = {1.0f, 2.0f, 3.0f, 4.0f, 5.0f}; 
+        float[] array3 = {1.0f, 2.0f, 3.0f, 4.0f, 5.0f};
         float[] expected3 = {2.0f, 3.0f};
         float[] result3 = ArrayUtils.safeSubArray(array3, 1, 3);
         Assert.assertEquals(result3, expected3);
 
         double[] array4 = {1.0, 2.0, 3.0, 4.0, 5.0};
-        double[] subArrayResult4 = ArrayUtils.subArray(array4, 0, 3); 
+        double[] subArrayResult4 = ArrayUtils.subArray(array4, 0, 3);
         double[] safeSubArrayResult4 = ArrayUtils.safeSubArray(array4, 0, 3);
         Assert.assertEquals(subArrayResult4, safeSubArrayResult4);
     }
