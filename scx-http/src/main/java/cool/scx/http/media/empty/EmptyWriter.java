@@ -15,7 +15,7 @@ import java.io.OutputStream;
 public class EmptyWriter implements MediaWriter {
 
     @Override
-    public void beforeWrite(ScxHttpHeadersWritable headersWritable, ScxHttpHeaders headers) {
+    public void beforeWrite(ScxHttpHeadersWritable responseHeaders, ScxHttpHeaders requestHeaders) {
 
     }
 

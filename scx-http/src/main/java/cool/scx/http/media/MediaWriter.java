@@ -16,10 +16,10 @@ public interface MediaWriter {
     /**
      * 写入内容之前 在这里可以设置 header 头
      *
-     * @param headersWritable 响应头
-     * @param headers         请求头
+     * @param responseHeaders 响应头
+     * @param requestHeaders  请求头
      */
-    void beforeWrite(ScxHttpHeadersWritable headersWritable, ScxHttpHeaders headers);
+    void beforeWrite(ScxHttpHeadersWritable responseHeaders, ScxHttpHeaders requestHeaders);
 
     /**
      * 写入内容

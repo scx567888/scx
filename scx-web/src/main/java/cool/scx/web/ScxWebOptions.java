@@ -12,10 +12,12 @@ public class ScxWebOptions {
 
     private Path templateRoot;
     private boolean useDevelopmentErrorPage;
+    private boolean cachedMultiPart;
 
     public ScxWebOptions() {
         this.useDevelopmentErrorPage = false;
         this.templateRoot = null;
+        this.cachedMultiPart = false;
     }
 
     public Path templateRoot() {
@@ -27,13 +29,22 @@ public class ScxWebOptions {
         return this;
     }
 
+    public boolean useDevelopmentErrorPage() {
+        return useDevelopmentErrorPage;
+    }
+
     public ScxWebOptions useDevelopmentErrorPage(boolean useDevelopmentErrorPage) {
         this.useDevelopmentErrorPage = useDevelopmentErrorPage;
         return this;
     }
 
-    public boolean useDevelopmentErrorPage() {
-        return useDevelopmentErrorPage;
+    public boolean cachedMultiPart() {
+        return cachedMultiPart;
+    }
+
+    public ScxWebOptions cachedMultiPart(boolean cachedMultiPart) {
+        this.cachedMultiPart = cachedMultiPart;
+        return this;
     }
 
 }

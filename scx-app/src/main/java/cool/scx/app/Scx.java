@@ -81,7 +81,7 @@ public final class Scx {
 
     private WebSocketRouter webSocketRouter = null;
 
-    private ScxHttpServer httpServer = null;
+    private HelidonHttpServer httpServer = null;
 
     Scx(ScxEnvironment scxEnvironment, String appKey, ScxFeatureConfig scxFeatureConfig, ScxConfig scxConfig, ScxModule[] scxModules, HelidonHttpServerOptions defaultHttpServerOptions) {
         //0, 赋值到全局
@@ -184,7 +184,7 @@ public final class Scx {
             httpServerOptions.tls(Tls.builder().sslContext(tls.sslContext()).build());
         }
         this.httpServer = new HelidonHttpServer(httpServerOptions);
-        this.httpServer.requestHandler(this.scxHttpRouter).webSocketHandler(this.webSocketRouter);
+        this.httpServer.onRequest(this.scxHttpRouter).onWebSocket(this.webSocketRouter);
         //7, 添加程序停止时的钩子函数
         this.addShutdownHook();
         //8, 使用初始端口号 启动服务器

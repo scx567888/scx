@@ -44,7 +44,7 @@ public class RedirectModule extends ScxModule {
             Redirection.ofTemporary(newURI).accept(c);
         });
         var httpServer = new HelidonHttpServer(new HelidonHttpServerOptions().port(port));
-        httpServer.requestHandler(router);
+        httpServer.onRequest(router);
 
         try {
             httpServer.start();

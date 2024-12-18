@@ -55,7 +55,7 @@ public class Test {
             }
         });
 
-        server.requestHandler(router).webSocketHandler(c -> {
+        server.onRequest(router).onWebSocket(c -> {
 
             c.onTextMessage(s -> {
                 System.out.println("Text Message: " + s);

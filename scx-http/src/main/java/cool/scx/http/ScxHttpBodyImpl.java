@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * ScxHttpBodyImpl
+ * todo 这里的缓存可能导致性能损失 (可能需要重新设计一下)
  *
  * @author scx567888
  * @version 0.0.1

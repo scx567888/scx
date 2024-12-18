@@ -19,7 +19,7 @@ public class StaticHandlerTest {
         var router = Router.of();
         router.route().path("/*").handler(new StaticHandler(Path.of("")));
 
-        httpServer.requestHandler(router);
+        httpServer.onRequest(router);
         httpServer.start();
     }
 

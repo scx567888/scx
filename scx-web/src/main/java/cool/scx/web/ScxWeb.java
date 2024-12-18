@@ -52,6 +52,7 @@ public final class ScxWeb {
     private final RouterErrorHandler routerErrorHandler;
     private final RouteRegistrar routeRegistrar;
     private final WebSocketRouteRegistrar webSocketRouteRegistrar;
+    private final ScxWebOptions options;
     private Interceptor interceptor = new DefaultInterceptor();
 
     public ScxWeb() {
@@ -59,6 +60,7 @@ public final class ScxWeb {
     }
 
     public ScxWeb(ScxWebOptions options) {
+        this.options = options;
         this.templateHandler = new ScxTemplateHandler(options.templateRoot());
         this.routerErrorHandler = new RouterErrorHandler(this);
         this.routeRegistrar = new RouteRegistrar(this);
@@ -190,7 +192,7 @@ public final class ScxWeb {
     }
 
     Object[] buildMethodParameters(ParameterHandler[] parameterHandlers, RoutingContext context) throws Exception {
-        var info = new RequestInfo(context);
+        var info = new RequestInfo(context, options.cachedMultiPart());
         var exceptionArrayList = new ArrayList<Exception>();
         var methodParameter = new Object[parameterHandlers.length];
         for (int i = 0; i < methodParameter.length; i = i + 1) {

@@ -29,12 +29,12 @@ public class FormParamsWriter implements MediaWriter {
     }
 
     @Override
-    public void beforeWrite(ScxHttpHeadersWritable headersWritable, ScxHttpHeaders headers) {
-        if (headersWritable.contentLength() == null) {
-            headersWritable.contentLength(bytes.length);
+    public void beforeWrite(ScxHttpHeadersWritable responseHeaders, ScxHttpHeaders requestHeaders) {
+        if (responseHeaders.contentLength() == null) {
+            responseHeaders.contentLength(bytes.length);
         }
-        if (headersWritable.contentType() == null) {
-            headersWritable.contentType(ContentType.of(MediaType.APPLICATION_X_WWW_FORM_URLENCODED));
+        if (responseHeaders.contentType() == null) {
+            responseHeaders.contentType(ContentType.of(MediaType.APPLICATION_X_WWW_FORM_URLENCODED));
         }
     }
 

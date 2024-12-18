@@ -22,7 +22,6 @@ public class HelidonHttpServer implements ScxHttpServer {
     private final HelidonHttpServerOptions options;
     Consumer<ScxHttpServerRequest> requestHandler;
     Consumer<ScxServerWebSocket> webSocketHandler;
-    Consumer<Throwable> errorHandler;
 
     public HelidonHttpServer(HelidonHttpServerOptions options) {
         this.options = options;
@@ -44,24 +43,16 @@ public class HelidonHttpServer implements ScxHttpServer {
         this.webServer = builder.build();
         this.requestHandler = null;
         this.webSocketHandler = null;
-        this.errorHandler = null;
     }
 
     @Override
-    public ScxHttpServer requestHandler(Consumer<ScxHttpServerRequest> handler) {
-        this.requestHandler = handler;
+    public HelidonHttpServer onRequest(Consumer<ScxHttpServerRequest> requestHandler) {
+        this.requestHandler = requestHandler;
         return this;
     }
 
-    @Override
-    public ScxHttpServer webSocketHandler(Consumer<ScxServerWebSocket> handler) {
+    public ScxHttpServer onWebSocket(Consumer<ScxServerWebSocket> handler) {
         this.webSocketHandler = handler;
-        return this;
-    }
-
-    @Override
-    public ScxHttpServer errorHandler(Consumer<Throwable> handler) {
-        this.errorHandler = handler;
         return this;
     }
 

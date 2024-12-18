@@ -25,11 +25,13 @@ public final class RequestInfo {
     private final ContentType contentType;
     private final JsonNode pathParams;
     private final JsonNode query;
+    private final boolean cachedMultiPart;
     private JsonNode body;
     private MultiMap<String, MultiPartPart> uploadFiles;
 
-    public RequestInfo(RoutingContext ctx) {
+    public RequestInfo(RoutingContext ctx, boolean cachedMultiPart) {
         this.routingContext = ctx;
+        this.cachedMultiPart = cachedMultiPart;
         this.contentType = ctx.request().contentType();
         this.pathParams = jsonMapper().convertValue(ctx.pathParams().toMap(), JsonNode.class);
         this.query = jsonMapper().convertValue(ctx.request().query().toMap(), JsonNode.class);
@@ -98,7 +100,7 @@ public final class RequestInfo {
                 var m = new MultiMap<String, String>();
                 var f = new MultiMap<String, MultiPartPart>();
                 //文件和非文件
-                var multiPart = ctx.request().body().asMultiPartCached();
+                var multiPart = cachedMultiPart ? ctx.request().body().asMultiPartCached() : ctx.request().body().asMultiPart();
                 for (var multiPartPart : multiPart) {
                     //没有文件名我们就当成 空文件
                     if (multiPartPart.filename() == null) {

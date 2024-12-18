@@ -14,7 +14,7 @@ public class WebSocketTest {
     public static void startServer() {
         var httpServer = new HelidonHttpServer(new HelidonHttpServerOptions().port(8080));
 
-        httpServer.webSocketHandler(webSocket -> {
+        httpServer.onWebSocket(webSocket -> {
             webSocket.onTextMessage(data -> {
                 webSocket.send(data);
                 System.out.println("服 : " + data);
