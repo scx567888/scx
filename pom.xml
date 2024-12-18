@@ -241,7 +241,7 @@
     <properties>
 
         <!-- *********************** 以下为依赖包版本 *********************** -->
-        <helidon.version>4.1.4</helidon.version>
+        <helidon.version>4.1.5</helidon.version>
         <jackson.version>2.18.2</jackson.version>
         <spring-framework.version>6.2.1</spring-framework.version>
         <hikaricp.version>6.2.1</hikaricp.version>
