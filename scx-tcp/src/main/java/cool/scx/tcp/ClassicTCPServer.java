@@ -14,14 +14,14 @@ import static java.lang.System.Logger.Level.TRACE;
 
 
 /**
- * TCPServer
+ * 经典 TCP 服务器
  *
  * @author scx567888
  * @version 0.0.1
  */
-public class TCPServer implements ScxTCPServer {
+public class ClassicTCPServer implements ScxTCPServer {
 
-    private static final Logger LOGGER = System.getLogger(TCPServer.class.getName());
+    private static final Logger LOGGER = System.getLogger(ClassicTCPServer.class.getName());
 
     private final ScxTCPServerOptions options;
     private final Thread serverThread;
@@ -29,13 +29,13 @@ public class TCPServer implements ScxTCPServer {
     private ServerSocket serverSocket;
     private boolean running;
 
-    public TCPServer() {
+    public ClassicTCPServer() {
         this(new ScxTCPServerOptions());
     }
 
-    public TCPServer(ScxTCPServerOptions options) {
+    public ClassicTCPServer(ScxTCPServerOptions options) {
         this.options = options;
-        this.serverThread = Thread.ofPlatform().name("TCPServer-Listener").unstarted(this::listen);
+        this.serverThread = Thread.ofPlatform().name("ClassicTCPServer-Listener").unstarted(this::listen);
     }
 
     @Override
@@ -94,7 +94,7 @@ public class TCPServer implements ScxTCPServer {
         while (running) {
             try {
                 var socket = this.serverSocket.accept();
-                Thread.ofVirtual().name("TCPServer-Handler-" + socket.getRemoteSocketAddress()).start(() -> handle(socket));
+                Thread.ofVirtual().name("ClassicTCPServer-Handler-" + socket.getRemoteSocketAddress()).start(() -> handle(socket));
             } catch (IOException e) {
                 LOGGER.log(ERROR, "服务器 接受连接 时发生错误 !!!", e);
                 stop();
@@ -123,7 +123,7 @@ public class TCPServer implements ScxTCPServer {
 
         try {
             // 调用用户处理器
-            var tcpSocket = new TCPSocket(socket);
+            var tcpSocket = new ClassicTCPSocket(socket);
             connectHandler.accept(tcpSocket);
         } catch (Throwable e) {
             LOGGER.log(ERROR, "调用 连接处理器 时发生错误 !!!", e);
