@@ -41,11 +41,6 @@ public class ClassicTCPSocket implements ScxTCPSocket {
     }
 
     @Override
-    public void close() throws IOException {
-        socket.close();
-    }
-
-    @Override
     public boolean isClosed() {
         return socket.isClosed();
     }
@@ -53,6 +48,11 @@ public class ClassicTCPSocket implements ScxTCPSocket {
     @Override
     public SocketAddress remoteAddress() {
         return socket.getRemoteSocketAddress();
+    }
+
+    @Override
+    public void close() throws IOException {
+        socket.close();
     }
 
 }
