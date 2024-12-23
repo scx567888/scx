@@ -1,8 +1,5 @@
 package cool.scx.io;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * ByteArrayDataConsumer
  *
@@ -11,41 +8,52 @@ import java.util.List;
  */
 public class ByteArrayDataConsumer implements DataConsumer {
 
-    private List<DataNode> resultList = null;
-    private DataNode result = null;
-    private int total = 0;
+    private DataNode head;
+    private DataNode tail;
+    private int total;
+
+    public ByteArrayDataConsumer() {
+        this.head = null;
+        this.tail = null;
+        this.total = 0;
+    }
 
     @Override
     public void accept(byte[] bytes, int position, int length) {
         total += length;
-        if (result == null) {
-            result = new DataNode(bytes, position, length);
+        if (head == null) {
+            head = new DataNode(bytes, position, length);
+            tail = head;
         } else {
-            if (resultList == null) {
-                resultList = new ArrayList<>();
-                resultList.add(result);
-            }
-            resultList.add(new DataNode(bytes, position, length));
+            tail.next = new DataNode(bytes, position, length);
+            tail = tail.next;
         }
     }
 
     public byte[] getBytes() {
-        if (resultList == null) {
-            if (result == null) {
-                return new byte[0];
-            }
-            return IOHelper.compressBytes(result.bytes, result.position, result.limit);
+        var node = head;
+
+        //从未调用 accept 会导致此情况
+        if (node == null) {
+            return new byte[0];
         }
 
-        var result = new byte[total];
+        //只调用了一次 accept, 我们直接返回当前数据
+        if (node.next == null) {
+            return IOHelper.compressBytes(node.bytes, node.position, node.limit);
+        }
+
+        //多个数据我们合并
+        var bytes = new byte[total];
         int offset = 0;
 
-        for (var b : resultList) {
-            System.arraycopy(b.bytes, b.position, result, offset, b.limit);
-            offset += b.limit;
-        }
+        do {
+            System.arraycopy(node.bytes, node.position, bytes, offset, node.limit);
+            offset += node.limit;
+            node = node.next;
+        } while (node != null);
 
-        return result;
+        return bytes;
     }
 
 }
