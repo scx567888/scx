@@ -8,20 +8,20 @@ import java.net.SocketAddress;
 
 
 /**
- * TCPClient
+ * 经典 TCP 客户端
  *
  * @author scx567888
  * @version 0.0.1
  */
-public class TCPClient implements ScxTCPClient {
+public class ClassicTCPClient implements ScxTCPClient {
 
     private final ScxTCPClientOptions options;
 
-    public TCPClient() {
+    public ClassicTCPClient() {
         this(new ScxTCPClientOptions());
     }
 
-    public TCPClient(ScxTCPClientOptions options) {
+    public ClassicTCPClient(ScxTCPClientOptions options) {
         this.options = options;
     }
 
@@ -58,7 +58,7 @@ public class TCPClient implements ScxTCPClient {
             }
         }
 
-        return new TCPSocket(socket);
+        return new ClassicTCPSocket(socket);
 
     }
 
