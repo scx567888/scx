@@ -9,18 +9,18 @@ import java.net.SocketAddress;
 
 
 /**
- * TCPSocket
+ * 经典 TCP Socket
  *
  * @author scx567888
  * @version 0.0.1
  */
-public class TCPSocket implements ScxTCPSocket {
+public class ClassicTCPSocket implements ScxTCPSocket {
 
     private final Socket socket;
     private final InputStream in;
     private final OutputStream out;
 
-    public TCPSocket(Socket socket) {
+    public ClassicTCPSocket(Socket socket) {
         this.socket = socket;
         try {
             this.in = socket.getInputStream();
