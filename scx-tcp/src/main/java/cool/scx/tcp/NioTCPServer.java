@@ -1,6 +1,5 @@
 package cool.scx.tcp;
 
-import javax.net.ssl.SSLSocket;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.lang.System.Logger;
@@ -149,7 +148,7 @@ public class NioTCPServer implements ScxTCPServer {
             sslEngine.setUseClientMode(false);
             return new NioTLSTCPSocket(socketChannel, sslEngine);
         } else {
-            return new NioPlainTCPSocket(socketChannel);
+            return new NioTCPSocket(socketChannel);
         }
     }
 

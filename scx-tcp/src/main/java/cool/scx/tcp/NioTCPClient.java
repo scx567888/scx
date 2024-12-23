@@ -61,7 +61,7 @@ public class NioTCPClient implements ScxTCPClient {
             sslEngine.setUseClientMode(true);
             return new NioTLSTCPSocket(socketChannel, sslEngine);
         } else {
-            return new NioPlainTCPSocket(socketChannel);
+            return new NioTCPSocket(socketChannel);
         }
     }
 
