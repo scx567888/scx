@@ -107,18 +107,18 @@ public class NioTCPServer implements ScxTCPServer {
 
         try {
             // 主动调用握手 快速检测 SSL 错误 防止等到调用用户处理程序时才发现
-            if (socket instanceof SSLSocket sslSocket) {
+            if (socket instanceof NioTLSTCPSocket sslSocket) {
                 sslSocket.startHandshake();
             }
         } catch (IOException e) {
             LOGGER.log(TRACE, "处理 TLS 握手 时发生错误 !!!", e);
-            tryCloseSocket(socketChannel);
+            tryCloseSocket(socket);
             return;
         }
 
         if (connectHandler == null) {
             LOGGER.log(ERROR, "未设置 连接处理器, 关闭连接 !!!");
-            tryCloseSocket(socketChannel);
+            tryCloseSocket(socket);
             return;
         }
 
@@ -127,14 +127,14 @@ public class NioTCPServer implements ScxTCPServer {
             connectHandler.accept(socket);
         } catch (Throwable e) {
             LOGGER.log(ERROR, "调用 连接处理器 时发生错误 !!!", e);
-            tryCloseSocket(socketChannel);
+            tryCloseSocket(socket);
         }
 
     }
 
-    private void tryCloseSocket(SocketChannel socketChannel) {
+    private void tryCloseSocket(ScxTCPSocket socket) {
         try {
-            socketChannel.close();
+            socket.close();
         } catch (IOException ex) {
             LOGGER.log(TRACE, "关闭 Socket 时发生错误 !!!", ex);
         }
