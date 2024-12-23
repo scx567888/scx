@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * BytesDataConsumer
+ * ByteArrayDataConsumer
  *
  * @author scx567888
  * @version 0.0.1
  */
-public class BytesDataConsumer implements DataConsumer {
+public class ByteArrayDataConsumer implements DataConsumer {
 
     private List<DataNode> resultList = null;
     private DataNode result = null;

@@ -84,11 +84,9 @@ public class DataReaderTest {
         //测试资源耗尽攻击
         var dataReader = new LinkedDataReader(() -> new DataNode("aaaaaa".getBytes()));
         //最大只搜索 100 字节
-        try {
+        Assert.assertThrows(NoMatchFoundException.class, () -> {
             byte[] bytes = dataReader.readUntil("\r\n".getBytes(), 100);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        });
     }
 
 

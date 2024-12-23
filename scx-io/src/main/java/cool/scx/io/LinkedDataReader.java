@@ -22,17 +22,8 @@ public class LinkedDataReader implements DataReader {
         this.tail = this.head;
     }
 
-    /**
-     * @return 是否拉取成功
-     */
-    private boolean pullData() {
-        var data = dataSupplier.get();
-        if (data == null) {
-            return false;
-        }
-        tail.next = data;
-        tail = tail.next;
-        return true;
+    public LinkedDataReader() {
+        this(() -> null);
     }
 
     private void ensureAvailable() throws NoMoreDataException {
@@ -121,6 +112,30 @@ public class LinkedDataReader implements DataReader {
         throw new NoMatchFoundException();
     }
 
+    /**
+     * 添加数据
+     *
+     * @param data data
+     */
+    public void appendData(DataNode data) {
+        tail.next = data;
+        tail = tail.next;
+    }
+
+    /**
+     * 拉取数据
+     *
+     * @return 是否拉取成功
+     */
+    public boolean pullData() {
+        var data = dataSupplier.get();
+        if (data == null) {
+            return false;
+        }
+        appendData(data);
+        return true;
+    }
+
     @Override
     public byte read() throws NoMoreDataException {
         ensureAvailable();
@@ -131,7 +146,7 @@ public class LinkedDataReader implements DataReader {
 
     @Override
     public byte[] read(int maxLength) throws NoMoreDataException {
-        var consumer = new BytesDataConsumer();
+        var consumer = new ByteArrayDataConsumer();
         walk(consumer, maxLength, true);
         return consumer.getBytes();
     }
@@ -149,7 +164,7 @@ public class LinkedDataReader implements DataReader {
 
     @Override
     public byte[] peek(int maxLength) throws NoMoreDataException {
-        var consumer = new BytesDataConsumer();
+        var consumer = new ByteArrayDataConsumer();
         walk(consumer, maxLength, false);
         return consumer.getBytes();
     }
