@@ -5,36 +5,36 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.lang.System.Logger;
 import java.net.InetSocketAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
 import java.util.function.Consumer;
 
 import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.Logger.Level.TRACE;
 
 /**
- * 经典 TCP 服务器
+ * NIO TCP 服务器
  *
  * @author scx567888
  * @version 0.0.1
  */
-public class ClassicTCPServer implements ScxTCPServer {
+public class NioTCPServer implements ScxTCPServer {
 
     private static final Logger LOGGER = System.getLogger(ClassicTCPServer.class.getName());
 
     private final ScxTCPServerOptions options;
     private final Thread serverThread;
     private Consumer<ScxTCPSocket> connectHandler;
-    private ServerSocket serverSocket;
+    private ServerSocketChannel serverSocketChannel;
     private boolean running;
 
-    public ClassicTCPServer() {
+    public NioTCPServer() {
         this(new ScxTCPServerOptions());
     }
 
-    public ClassicTCPServer(ScxTCPServerOptions options) {
+    public NioTCPServer(ScxTCPServerOptions options) {
         this.options = options;
-        this.serverThread = Thread.ofPlatform().name("ClassicTCPServer-Listener").unstarted(this::listen);
+        this.serverThread = Thread.ofPlatform().name("NioTCPServer-Listener").unstarted(this::listen);
     }
 
     @Override
@@ -49,15 +49,9 @@ public class ClassicTCPServer implements ScxTCPServer {
             throw new IllegalStateException("服务器已在运行 !!!");
         }
 
-        var tls = options.tls();
-
         try {
-            if (tls != null && tls.enabled()) {
-                serverSocket = tls.createServerSocket();
-            } else {
-                serverSocket = new ServerSocket();
-            }
-            serverSocket.bind(new InetSocketAddress(options.port()));
+            this.serverSocketChannel = ServerSocketChannel.open();
+            this.serverSocketChannel.bind(new InetSocketAddress(options.port()));
         } catch (IOException e) {
             throw new UncheckedIOException("启动服务器失败 !!!", e);
         }
@@ -76,7 +70,7 @@ public class ClassicTCPServer implements ScxTCPServer {
         running = false;
 
         try {
-            serverSocket.close();
+            serverSocketChannel.close();
         } catch (IOException e) {
             throw new UncheckedIOException("关闭服务器失败 !!!", e);
         }
@@ -86,14 +80,20 @@ public class ClassicTCPServer implements ScxTCPServer {
 
     @Override
     public int port() {
-        return serverSocket.getLocalPort();
+        try {
+            //理论上都是 InetSocketAddress 类型
+            var localAddress = (InetSocketAddress) serverSocketChannel.getLocalAddress();
+            return localAddress.getPort();
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 
     private void listen() {
         while (running) {
             try {
-                var socket = this.serverSocket.accept();
-                Thread.ofVirtual().name("ClassicTCPServer-Handler-" + socket.getRemoteSocketAddress()).start(() -> handle(socket));
+                var socketChannel = this.serverSocketChannel.accept();
+                Thread.ofVirtual().name("NioTCPServer-Handler-" + socketChannel.getRemoteAddress()).start(() -> handle(socketChannel));
             } catch (IOException e) {
                 LOGGER.log(ERROR, "服务器 接受连接 时发生错误 !!!", e);
                 stop();
@@ -101,7 +101,9 @@ public class ClassicTCPServer implements ScxTCPServer {
         }
     }
 
-    private void handle(Socket socket) {
+    private void handle(SocketChannel socketChannel) {
+
+        var socket = createScxTCPSocket(socketChannel);
 
         try {
             // 主动调用握手 快速检测 SSL 错误 防止等到调用用户处理程序时才发现
@@ -110,32 +112,44 @@ public class ClassicTCPServer implements ScxTCPServer {
             }
         } catch (IOException e) {
             LOGGER.log(TRACE, "处理 TLS 握手 时发生错误 !!!", e);
-            tryCloseSocket(socket);
+            tryCloseSocket(socketChannel);
             return;
         }
 
         if (connectHandler == null) {
             LOGGER.log(ERROR, "未设置 连接处理器, 关闭连接 !!!");
-            tryCloseSocket(socket);
+            tryCloseSocket(socketChannel);
             return;
         }
 
         try {
             // 调用用户处理器
-            var tcpSocket = new ClassicTCPSocket(socket);
-            connectHandler.accept(tcpSocket);
+            connectHandler.accept(socket);
         } catch (Throwable e) {
             LOGGER.log(ERROR, "调用 连接处理器 时发生错误 !!!", e);
-            tryCloseSocket(socket);
+            tryCloseSocket(socketChannel);
         }
 
     }
 
-    private void tryCloseSocket(Socket socket) {
+    private void tryCloseSocket(SocketChannel socketChannel) {
         try {
-            socket.close();
+            socketChannel.close();
         } catch (IOException ex) {
             LOGGER.log(TRACE, "关闭 Socket 时发生错误 !!!", ex);
+        }
+    }
+
+    private ScxTCPSocket createScxTCPSocket(SocketChannel socketChannel) {
+        var tls = options.tls();
+
+        if (tls != null && tls.enabled()) {
+            //创建 sslEngine
+            var sslEngine = tls.sslContext().createSSLEngine();
+            sslEngine.setUseClientMode(false);
+            return new NioTLSTCPSocket(socketChannel, sslEngine);
+        } else {
+            return new NioPlainTCPSocket(socketChannel);
         }
     }
 
