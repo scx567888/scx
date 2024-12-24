@@ -1,56 +1,32 @@
 package cool.scx.tcp;
 
 import javax.net.ssl.SSLEngine;
-import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLHandshakeException;
-import javax.net.ssl.SSLSession;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
-import java.util.concurrent.locks.ReentrantLock;
 
-/**
- * app data
- * <p>
- * |           ^
- * |     |     |
- * v     |     |
- * +----+-----|-----+----+
- * |          |          |
- * |       SSL|Engine    |
- * wrap()  |          |          |  unwrap()
- * | OUTBOUND | INBOUND  |
- * |          |          |
- * +----+-----|-----+----+
- * |     |     ^
- * |     |     |
- * v           |
- * <p>
- * net data
- */
-//todo 未完成 有 bug
 public class NioTLSTCPSocket implements ScxTCPSocket {
 
     private final SocketChannel socketChannel;
     private final SSLEngine sslEngine;
-    private final ReentrantLock sslLock = new ReentrantLock();
-    private final InputStream inputStream;
-    private final OutputStream outputStream;
 
     private final ByteBuffer outboundAppData;
     private final ByteBuffer outboundNetData;
     private final ByteBuffer inboundAppData;
     private final ByteBuffer inboundNetData;
 
+    private final InputStream inputStream;
+    private final OutputStream outputStream;
 
     public NioTLSTCPSocket(SocketChannel socketChannel, SSLEngine sslEngine) {
         this.socketChannel = socketChannel;
         this.sslEngine = sslEngine;
 
-        SSLSession session = sslEngine.getSession();
+        var session = sslEngine.getSession();
         this.outboundAppData = ByteBuffer.allocate(session.getApplicationBufferSize());
         this.outboundNetData = ByteBuffer.allocate(session.getPacketBufferSize());
         this.inboundAppData = ByteBuffer.allocate(session.getApplicationBufferSize());
@@ -59,25 +35,6 @@ public class NioTLSTCPSocket implements ScxTCPSocket {
         this.inputStream = createInputStream();
         this.outputStream = createOutputStream();
     }
-
-    private ByteBuffer enlargeApplicationBuffer(ByteBuffer buffer) {
-        SSLSession session = sslEngine.getSession();
-        return ByteBuffer.allocate(session.getApplicationBufferSize() + buffer.capacity());
-    }
-
-    private ByteBuffer handleBufferUnderflow(ByteBuffer buffer) throws SSLException {
-        if (sslEngine.getSession().getPacketBufferSize() > buffer.capacity()) {
-            return enlargePacketBuffer(buffer);
-        } else {
-            buffer.compact();
-            return buffer;
-        }
-    }
-
-    private ByteBuffer enlargePacketBuffer(ByteBuffer buffer) {
-        return ByteBuffer.allocate(buffer.capacity() * 2);
-    }
-
 
     private InputStream createInputStream() {
         return new InputStream() {
@@ -223,90 +180,39 @@ public class NioTLSTCPSocket implements ScxTCPSocket {
     }
 
     public int read(ByteBuffer dst) throws IOException {
-        sslLock.lock();
-        try {
-            int bytesRead = 0;
-            // 确保在开始读取之前清空网络数据缓冲区
-//            peerNetData.clear();
-
-//            while (true) {
-//                if (peerNetData.hasRemaining()) {
-//                    var result = sslEngine.unwrap(peerNetData, peerAppData);
-//
-//                    switch (result.getStatus()) {
-//                        case OK -> {
-//                            peerAppData.flip();
-//                            while (peerAppData.hasRemaining() && dst.hasRemaining()) {
-//                                dst.put(peerAppData.get());
-//                                bytesRead++;
-//                            }
-//                            peerAppData.compact();
-//                            if (bytesRead > 0) {
-//                                return bytesRead;
-//                            }
-//                        }
-//                        case BUFFER_OVERFLOW -> peerAppData = enlargeApplicationBuffer(peerAppData);
-//                        case BUFFER_UNDERFLOW -> {
-//                            peerNetData.compact();
-//                            if (socketChannel.read(peerNetData) < 0) {
-//                                if (bytesRead == 0) {
-//                                    return -1;
-//                                }
-//                                break;
-//                            }
-//                            peerNetData.flip();
-//                        }
-//                        case CLOSED -> {
-//                            return -1;
-//                        }
-//                        default -> throw new SSLException("解密错误: " + result.getStatus());
-//                    }
-//                } else {
-//                    peerNetData.clear();
-//                    if (socketChannel.read(peerNetData) < 0) {
-//                        if (bytesRead == 0) {
-//                            return -1;
-//                        }
-//                        break;
-//                    }
-//                    peerNetData.flip();
-//                }
-//            }
-            return bytesRead;
-        } finally {
-            sslLock.unlock();
-        }
+        return -1;
     }
 
-
-    //todo 待重写
     public void write(ByteBuffer buffer) throws IOException {
-        sslLock.lock();
-        try {
-            while (buffer.hasRemaining()) {
-                //重置
-                outboundNetData.clear();
-                //加密
-                var result = sslEngine.wrap(buffer, outboundNetData);
-                switch (result.getStatus()) {
-                    case OK -> {
-                        //切换到读模式
-                        outboundNetData.flip();
-                        //循环发送
-                        while (outboundNetData.hasRemaining()) {
-                            socketChannel.write(outboundNetData);
-                        }
+        //可能出现扩容的情况 这里使用单独的
+        var outboundNetData = this.outboundNetData;
+
+        //重置
+        outboundNetData.clear();
+
+        while (buffer.hasRemaining()) {
+            //加密
+            var result = sslEngine.wrap(buffer, outboundNetData);
+
+            switch (result.getStatus()) {
+                case OK -> {
+                    //切换到读模式
+                    outboundNetData.flip();
+
+                    //循环发送
+                    while (outboundNetData.hasRemaining()) {
+                        socketChannel.write(outboundNetData);
                     }
-                    // 不应该发生在 wrap 操作中      
-                    case BUFFER_OVERFLOW -> throw new IOException("SSLEngine wrap 遇到 BUFFER_OVERFLOW");
-                    // 不应该发生在 wrap 操作中  
-                    case BUFFER_UNDERFLOW -> throw new IOException("SSLEngine wrap 遇到 BUFFER_UNDERFLOW");
-                    // 不应该发生在 wrap 操作中
-                    case CLOSED -> throw new IOException("SSLEngine wrap 遇到 CLOSED");
                 }
+                case BUFFER_OVERFLOW -> {
+                    // 直接扩容即可 以 2 倍为基准
+                    outboundNetData = ByteBuffer.allocate(outboundNetData.capacity() * 2);
+                }
+                // 不应该发生在 wrap 操作中  
+                case BUFFER_UNDERFLOW -> throw new IOException("SSLEngine wrap 遇到 BUFFER_UNDERFLOW");
+                // 不应该发生在 wrap 操作中
+                case CLOSED -> throw new IOException("SSLEngine wrap 遇到 CLOSED");
             }
-        } finally {
-            sslLock.unlock();
         }
     }
 
@@ -332,13 +238,8 @@ public class NioTLSTCPSocket implements ScxTCPSocket {
 
     @Override
     public void close() throws IOException {
-        sslLock.lock();
-        try {
-            sslEngine.closeOutbound();
-            socketChannel.close();
-        } finally {
-            sslLock.unlock();
-        }
+        sslEngine.closeOutbound();
+        socketChannel.close();
     }
 
 }
