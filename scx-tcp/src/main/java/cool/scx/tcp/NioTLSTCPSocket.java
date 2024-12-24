@@ -19,8 +19,8 @@ public class NioTLSTCPSocket implements ScxTCPSocket {
     private final ByteBuffer inboundAppData;
     private final ByteBuffer inboundNetData;
 
-    private final InputStream inputStream;
-    private final OutputStream outputStream;
+    private final InputStream in;
+    private final OutputStream out;
 
     public NioTLSTCPSocket(SocketChannel socketChannel, SSLEngine sslEngine) {
         this.socketChannel = socketChannel;
@@ -32,21 +32,21 @@ public class NioTLSTCPSocket implements ScxTCPSocket {
         this.inboundAppData = ByteBuffer.allocate(session.getApplicationBufferSize());
         this.inboundNetData = ByteBuffer.allocate(session.getPacketBufferSize());
 
-        this.inputStream = createInputStream();
-        this.outputStream = createOutputStream();
+        this.in = createInputStream();
+        this.out = createOutputStream();
     }
 
     private InputStream createInputStream() {
         return new InputStream() {
             @Override
             public int read() throws IOException {
-                ByteBuffer buffer = ByteBuffer.allocate(1);
+                var buffer = ByteBuffer.allocate(1);
                 return NioTLSTCPSocket.this.read(buffer) > 0 ? buffer.get() & 0xFF : -1;
             }
 
             @Override
             public int read(byte[] b, int off, int len) throws IOException {
-                ByteBuffer buffer = ByteBuffer.wrap(b, off, len);
+                var buffer = ByteBuffer.wrap(b, off, len);
                 return NioTLSTCPSocket.this.read(buffer);
             }
         };
@@ -56,15 +56,13 @@ public class NioTLSTCPSocket implements ScxTCPSocket {
         return new OutputStream() {
             @Override
             public void write(int b) throws IOException {
-                ByteBuffer buffer = ByteBuffer.allocate(1);
-                buffer.put((byte) b);
-                buffer.flip();
+                var buffer = ByteBuffer.wrap(new byte[]{(byte) b});
                 NioTLSTCPSocket.this.write(buffer);
             }
 
             @Override
             public void write(byte[] b, int off, int len) throws IOException {
-                ByteBuffer buffer = ByteBuffer.wrap(b, off, len);
+                var buffer = ByteBuffer.wrap(b, off, len);
                 NioTLSTCPSocket.this.write(buffer);
             }
         };
@@ -218,12 +216,12 @@ public class NioTLSTCPSocket implements ScxTCPSocket {
 
     @Override
     public InputStream inputStream() {
-        return inputStream;
+        return in;
     }
 
     @Override
     public OutputStream outputStream() {
-        return outputStream;
+        return out;
     }
 
     @Override
