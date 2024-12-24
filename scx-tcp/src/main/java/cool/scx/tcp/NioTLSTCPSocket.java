@@ -107,7 +107,6 @@ public class NioTLSTCPSocket implements ScxTCPSocket {
 
             @Override
             public void write(byte[] b, int off, int len) throws IOException {
-                System.err.println(new String(b, off, len));
                 ByteBuffer buffer = ByteBuffer.wrap(b, off, len);
                 NioTLSTCPSocket.this.write(buffer);
             }
@@ -117,9 +116,9 @@ public class NioTLSTCPSocket implements ScxTCPSocket {
     public void startHandshake() throws IOException {
         sslEngine.beginHandshake();
 
-        //这里我们可能会出现需要扩容的情况所以 复制一份缓冲区
-        var outboundNetData = ByteBuffer.allocate(3);
-        var inboundNetData = this.inboundNetData;
+        //这里我们可能会出现需要扩容的情况(当然概率很低) 所以 复制一份缓冲区
+        var outboundNetData = this.outboundAppData;
+        var inboundNetData = ByteBuffer.allocate(1);
 
         _MAIN:
         while (true) {
@@ -128,21 +127,21 @@ public class NioTLSTCPSocket implements ScxTCPSocket {
                 case NEED_UNWRAP -> {
                     //读取远程数据到入站网络缓冲区
                     if (socketChannel.read(inboundNetData) == -1) {
-                        throw new IOException("Channel closed during handshake");
-                    }
+                        throw new SSLHandshakeException("Channel closed during handshake");
+                    }                     
                     //切换成读模式
                     inboundNetData.flip();
                     //尝试解密
                     while (inboundNetData.hasRemaining()) {
-                        //使用空缓冲区接受 因为握手阶段是不会有任何数据的
+                        //使用空缓冲区接收 因为握手阶段是不会有任何数据的
                         var result = sslEngine.unwrap(inboundNetData, ByteBuffer.allocate(0));
                         switch (result.getStatus()) {
                             case OK -> {
-                                // 解密成功，直接继续进行，因为握手阶段 即使 unwrap , inboundAppData 也只会是空 所以跳过处理
+                                // 解密成功，直接继续进行，因为握手阶段 即使 unwrap , 解密数据容量也只会是空 所以跳过处理
                             }
                             case BUFFER_OVERFLOW -> {
                                 // 解密后数据缓冲区 容量太小 无法容纳解密后的数据
-                                // 但在握手阶段 理论上不会发生 所以这里我们抛出错误
+                                // 但在握手阶段 和 OK 分支同理 理论上不会发生 所以这里我们抛出错误
                                 throw new SSLHandshakeException("Unexpected buffer overflow");
                             }
                             case BUFFER_UNDERFLOW -> {
