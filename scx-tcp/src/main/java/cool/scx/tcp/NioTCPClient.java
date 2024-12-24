@@ -1,10 +1,18 @@
 package cool.scx.tcp;
 
+import cool.scx.tcp.tls.TLSSocketChannel;
+
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.SocketAddress;
 import java.nio.channels.SocketChannel;
 
+/**
+ * NIO TCP 客户端
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class NioTCPClient implements ScxTCPClient {
 
     private final ScxTCPClientOptions options;
@@ -26,16 +34,20 @@ public class NioTCPClient implements ScxTCPClient {
 
         SocketChannel socketChannel;
         try {
-            socketChannel = SocketChannel.open();
+            if (tls != null && tls.enabled()) {
+                var sslEngine = tls.sslContext().createSSLEngine();
+                sslEngine.setUseClientMode(true);
+                socketChannel = new TLSSocketChannel(SocketChannel.open(), sslEngine);
+            } else {
+                socketChannel = SocketChannel.open();
+            }
             socketChannel.connect(endpoint);
         } catch (IOException e) {
             throw new UncheckedIOException("客户端连接失败 !!!", e);
         }
 
-        var socket = createScxTCPSocket(socketChannel);
-
         // 主动调用握手 快速检测 SSL 错误 防止等到调用用户处理程序时才发现 
-        if (socket instanceof NioTLSTCPSocket sslSocket) {
+        if (socketChannel instanceof TLSSocketChannel sslSocket) {
             try {
                 sslSocket.startHandshake();
             } catch (IOException e) {
@@ -48,21 +60,8 @@ public class NioTCPClient implements ScxTCPClient {
             }
         }
 
-        return socket;
+        return new NioTCPSocket(socketChannel);
 
-    }
-
-    private ScxTCPSocket createScxTCPSocket(SocketChannel socketChannel) {
-        var tls = options.tls();
-
-        if (tls != null && tls.enabled()) {
-            //创建 sslEngine
-            var sslEngine = tls.sslContext().createSSLEngine();
-            sslEngine.setUseClientMode(true);
-            return new NioTLSTCPSocket(socketChannel, sslEngine);
-        } else {
-            return new NioTCPSocket(socketChannel);
-        }
     }
 
 }

@@ -1,5 +1,7 @@
 package cool.scx.tcp;
 
+import cool.scx.tcp.tls.TLSSocketChannel;
+
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.lang.System.Logger;
@@ -102,53 +104,54 @@ public class NioTCPServer implements ScxTCPServer {
 
     private void handle(SocketChannel socketChannel) {
 
-        var socket = createScxTCPSocket(socketChannel);
+        socketChannel = createScxTCPSocket(socketChannel);
 
         try {
             // 主动调用握手 快速检测 SSL 错误 防止等到调用用户处理程序时才发现
-            if (socket instanceof NioTLSTCPSocket sslSocket) {
+            if (socketChannel instanceof TLSSocketChannel sslSocket) {
                 sslSocket.startHandshake();
             }
         } catch (IOException e) {
             LOGGER.log(TRACE, "处理 TLS 握手 时发生错误 !!!", e);
-            tryCloseSocket(socket);
+            tryCloseSocket(socketChannel);
             return;
         }
 
         if (connectHandler == null) {
             LOGGER.log(ERROR, "未设置 连接处理器, 关闭连接 !!!");
-            tryCloseSocket(socket);
+            tryCloseSocket(socketChannel);
             return;
         }
 
         try {
             // 调用用户处理器
-            connectHandler.accept(socket);
+            var tcpSocket = new NioTCPSocket(socketChannel);
+            connectHandler.accept(tcpSocket);
         } catch (Throwable e) {
             LOGGER.log(ERROR, "调用 连接处理器 时发生错误 !!!", e);
-            tryCloseSocket(socket);
+            tryCloseSocket(socketChannel);
         }
 
     }
 
-    private void tryCloseSocket(ScxTCPSocket socket) {
+    private void tryCloseSocket(SocketChannel socketChannel) {
         try {
-            socket.close();
+            socketChannel.close();
         } catch (IOException ex) {
             LOGGER.log(TRACE, "关闭 Socket 时发生错误 !!!", ex);
         }
     }
 
-    private ScxTCPSocket createScxTCPSocket(SocketChannel socketChannel) {
+    private SocketChannel createScxTCPSocket(SocketChannel socketChannel) {
         var tls = options.tls();
 
         if (tls != null && tls.enabled()) {
             //创建 sslEngine
             var sslEngine = tls.sslContext().createSSLEngine();
             sslEngine.setUseClientMode(false);
-            return new NioTLSTCPSocket(socketChannel, sslEngine);
+            return new TLSSocketChannel(socketChannel, sslEngine);
         } else {
-            return new NioTCPSocket(socketChannel);
+            return socketChannel;
         }
     }
 
