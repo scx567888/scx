@@ -1,7 +1,6 @@
 package cool.scx.tcp;
 
 import javax.net.ssl.SSLEngine;
-import javax.net.ssl.SSLEngineResult.HandshakeStatus;
 import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLSession;
 import java.io.IOException;
@@ -12,6 +11,25 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * app data
+ * <p>
+ * |           ^
+ * |     |     |
+ * v     |     |
+ * +----+-----|-----+----+
+ * |          |          |
+ * |       SSL|Engine    |
+ * wrap()  |          |          |  unwrap()
+ * | OUTBOUND | INBOUND  |
+ * |          |          |
+ * +----+-----|-----+----+
+ * |     |     ^
+ * |     |     |
+ * v           |
+ * <p>
+ * net data
+ */
 //todo 未完成 有 bug
 public class NioTLSTCPSocket implements ScxTCPSocket {
 
@@ -20,20 +38,21 @@ public class NioTLSTCPSocket implements ScxTCPSocket {
     private final ReentrantLock sslLock = new ReentrantLock();
     private final InputStream inputStream;
     private final OutputStream outputStream;
-    private ByteBuffer peerAppData;
-    private ByteBuffer peerNetData;
-    private ByteBuffer myAppData;
-    private ByteBuffer myNetData;
+    private final ByteBuffer outboundAppData;
+    private final ByteBuffer outboundNetData;
+    private final ByteBuffer inboundAppData;
+    private final ByteBuffer inboundNetData;
+
 
     public NioTLSTCPSocket(SocketChannel socketChannel, SSLEngine sslEngine) {
         this.socketChannel = socketChannel;
         this.sslEngine = sslEngine;
 
         SSLSession session = sslEngine.getSession();
-        this.peerAppData = ByteBuffer.allocate(session.getApplicationBufferSize());
-        this.peerNetData = ByteBuffer.allocate(session.getPacketBufferSize());
-        this.myAppData = ByteBuffer.allocate(session.getApplicationBufferSize());
-        this.myNetData = ByteBuffer.allocate(session.getPacketBufferSize());
+        this.outboundAppData = ByteBuffer.allocate(session.getApplicationBufferSize());
+        this.outboundNetData = ByteBuffer.allocate(session.getPacketBufferSize());
+        this.inboundAppData = ByteBuffer.allocate(session.getApplicationBufferSize());
+        this.inboundNetData = ByteBuffer.allocate(session.getPacketBufferSize());
 
         this.inputStream = createInputStream();
         this.outputStream = createOutputStream();
@@ -94,80 +113,95 @@ public class NioTLSTCPSocket implements ScxTCPSocket {
     }
 
     public void startHandshake() throws IOException {
-        sslLock.lock();
-        try {
-            sslEngine.beginHandshake();
+        sslEngine.beginHandshake();
 
-            while (true) {
-                var handshakeStatus = sslEngine.getHandshakeStatus();
-                switch (handshakeStatus) {
-                    case NEED_UNWRAP -> {
-                        if (socketChannel.read(peerNetData) < 0) {
-                            throw new IOException("Failed to read data for unwrap.");
-                        }
-                        peerNetData.flip();
-                        while (peerNetData.hasRemaining()) {
-                            var unwrapResult = sslEngine.unwrap(peerNetData, peerAppData);
-                            switch (unwrapResult.getStatus()) {
-                                case OK -> {
-                                }
-                                case BUFFER_OVERFLOW -> peerAppData = enlargeApplicationBuffer(peerAppData);
-                                case BUFFER_UNDERFLOW -> peerNetData = handleBufferUnderflow(peerNetData);
-                                case CLOSED -> throw new SSLException("SSL Engine closed during handshake.");
-                                default ->
-                                        throw new IllegalStateException("Unexpected unwrap result: " + unwrapResult.getStatus());
-                            }
-                        }
-                        peerNetData.compact();
+        while (true) {
+            var handshakeStatus = sslEngine.getHandshakeStatus();
+            switch (handshakeStatus) {
+                case NEED_UNWRAP -> {
+                    //读取远程数据到入站网络缓冲区
+                    if (socketChannel.read(inboundNetData) == -1) {
+                        throw new IOException("Channel closed during handshake");
                     }
-                    case NEED_WRAP -> {
-                        myNetData.clear();
-                        var result = sslEngine.wrap(peerAppData, myNetData);
+                    //切换成读模式
+                    inboundNetData.flip();
+                    //尝试解密
+                    while (inboundNetData.hasRemaining()) {
+                        var result = sslEngine.unwrap(inboundNetData, inboundAppData);
                         switch (result.getStatus()) {
                             case OK -> {
-                                myNetData.flip();
-                                while (myNetData.hasRemaining()) {
-                                    socketChannel.write(myNetData);
-                                }
+                                // 解密成功，直接继续进行，因为握手阶段 即使 unwrap , inboundAppData 也只会是空 所以跳过处理
                             }
-                            case BUFFER_OVERFLOW -> throw new IOException("Buffer overflow during handshake wrap.");
-                            case BUFFER_UNDERFLOW -> throw new SSLException("Buffer underflow during handshake wrap.");
-                            case CLOSED -> throw new SSLException("SSL Engine closed during handshake.");
-                            default -> throw new IllegalStateException("Unexpected wrap result: " + result.getStatus());
+                            case BUFFER_OVERFLOW -> {
+                                // inboundAppData 容量太小 无法容纳解密后的数据 需要扩容 inboundAppData
+                                //todo 暂不处理
+                                System.out.println("buffer overflow");
+                            }
+                            case BUFFER_UNDERFLOW -> {
+                                // inboundNetData 数据不够解密 需要继续获取
+                                //todo 暂不处理
+                                System.out.println("buffer underflow");
+                            }
+                            case CLOSED -> {
+                                //todo 暂不处理
+                                System.out.println("closed");
+                            }
                         }
                     }
-                    case NEED_TASK -> {
-                        //todo 这里绝对正确
-                        Runnable task;
-                        while ((task = sslEngine.getDelegatedTask()) != null) {
-                            task.run();
+                    inboundNetData.compact();
+                }
+                case NEED_WRAP -> {
+                    //清空出站网络缓冲区
+                    outboundNetData.clear();
+                    //加密一个空的数据 这里因为待加密数据是空的 所以不需要循环去加密 单次执行即可
+                    var result = sslEngine.wrap(ByteBuffer.allocate(0), outboundNetData);
+                    switch (result.getStatus()) {
+                        case OK -> {
+                            //切换到读模式
+                            outboundNetData.flip();
+                            //循环发送到远端
+                            while (outboundNetData.hasRemaining()) {
+                                socketChannel.write(outboundNetData);
+                            }
                         }
-                    }
-                    case FINISHED -> {
-                        //退出循环 todo 这里绝对正确
-                        System.err.println("Handshake finished.");
-                        return;
-                    }
-                    case NOT_HANDSHAKING -> {
-                        //退出循环 todo 这里绝对正确
-                        System.err.println("Handshake not handled.");
-                        return;
+                        case BUFFER_OVERFLOW -> {
+                            //todo 理论上不会到这里
+                            System.out.println("buffer overflow");
+                        }
+                        case BUFFER_UNDERFLOW -> {
+                            //todo 理论上不会到这里
+                            System.out.println("buffer underflow");
+                        }
+                        case CLOSED -> {
+                            //todo 理论上不会到这里
+                            System.out.println("closed");
+                        }
                     }
                 }
+                case NEED_TASK -> {
+                    //todo 这里绝对正确
+                    while (true) {
+                        var task = sslEngine.getDelegatedTask();
+                        if (task == null) {
+                            break;
+                        }
+                        task.run();
+                    }
+                }
+                case FINISHED -> {
+                    //退出循环 todo 这里绝对正确
+                    System.err.println("Handshake finished.");
+                    return;
+                }
+                case NOT_HANDSHAKING -> {
+                    //退出循环 todo 这里绝对正确
+                    System.err.println("Handshake not handled.");
+                    return;
+                }
             }
-        } finally {
-            sslLock.unlock();
         }
     }
 
-    private void runDelegatedTasks() {
-        Runnable task;
-        while ((task = sslEngine.getDelegatedTask()) != null) {
-            task.run();
-        }
-    }
-    
-    
 
     public int read(ByteBuffer dst) throws IOException {
         sslLock.lock();
@@ -176,49 +210,49 @@ public class NioTLSTCPSocket implements ScxTCPSocket {
             // 确保在开始读取之前清空网络数据缓冲区
 //            peerNetData.clear();
 
-            while (true) {
-                if (peerNetData.hasRemaining()) {
-                    var result = sslEngine.unwrap(peerNetData, peerAppData);
-
-                    switch (result.getStatus()) {
-                        case OK -> {
-                            peerAppData.flip();
-                            while (peerAppData.hasRemaining() && dst.hasRemaining()) {
-                                dst.put(peerAppData.get());
-                                bytesRead++;
-                            }
-                            peerAppData.compact();
-                            if (bytesRead > 0) {
-                                return bytesRead;
-                            }
-                        }
-                        case BUFFER_OVERFLOW -> peerAppData = enlargeApplicationBuffer(peerAppData);
-                        case BUFFER_UNDERFLOW -> {
-                            peerNetData.compact();
-                            if (socketChannel.read(peerNetData) < 0) {
-                                if (bytesRead == 0) {
-                                    return -1;
-                                }
-                                break;
-                            }
-                            peerNetData.flip();
-                        }
-                        case CLOSED -> {
-                            return -1;
-                        }
-                        default -> throw new SSLException("解密错误: " + result.getStatus());
-                    }
-                } else {
-                    peerNetData.clear();
-                    if (socketChannel.read(peerNetData) < 0) {
-                        if (bytesRead == 0) {
-                            return -1;
-                        }
-                        break;
-                    }
-                    peerNetData.flip();
-                }
-            }
+//            while (true) {
+//                if (peerNetData.hasRemaining()) {
+//                    var result = sslEngine.unwrap(peerNetData, peerAppData);
+//
+//                    switch (result.getStatus()) {
+//                        case OK -> {
+//                            peerAppData.flip();
+//                            while (peerAppData.hasRemaining() && dst.hasRemaining()) {
+//                                dst.put(peerAppData.get());
+//                                bytesRead++;
+//                            }
+//                            peerAppData.compact();
+//                            if (bytesRead > 0) {
+//                                return bytesRead;
+//                            }
+//                        }
+//                        case BUFFER_OVERFLOW -> peerAppData = enlargeApplicationBuffer(peerAppData);
+//                        case BUFFER_UNDERFLOW -> {
+//                            peerNetData.compact();
+//                            if (socketChannel.read(peerNetData) < 0) {
+//                                if (bytesRead == 0) {
+//                                    return -1;
+//                                }
+//                                break;
+//                            }
+//                            peerNetData.flip();
+//                        }
+//                        case CLOSED -> {
+//                            return -1;
+//                        }
+//                        default -> throw new SSLException("解密错误: " + result.getStatus());
+//                    }
+//                } else {
+//                    peerNetData.clear();
+//                    if (socketChannel.read(peerNetData) < 0) {
+//                        if (bytesRead == 0) {
+//                            return -1;
+//                        }
+//                        break;
+//                    }
+//                    peerNetData.flip();
+//                }
+//            }
             return bytesRead;
         } finally {
             sslLock.unlock();
@@ -231,15 +265,17 @@ public class NioTLSTCPSocket implements ScxTCPSocket {
         sslLock.lock();
         try {
             while (buffer.hasRemaining()) {
-                myNetData.clear();  // 重置位置和限制
-                var result = sslEngine.wrap(buffer, myNetData);
-
-                var status = result.getStatus();
-                switch (status) {
+                //重置
+                outboundNetData.clear();
+                //加密
+                var result = sslEngine.wrap(buffer, outboundNetData);
+                switch (result.getStatus()) {
                     case OK -> {
-                        myNetData.flip();
-                        while (myNetData.hasRemaining()) {
-                            socketChannel.write(myNetData);
+                        //切换到读模式
+                        outboundNetData.flip();
+                        //循环发送
+                        while (outboundNetData.hasRemaining()) {
+                            socketChannel.write(outboundNetData);
                         }
                     }
                     // 不应该发生在 wrap 操作中      
