@@ -1,69 +1,27 @@
-package cool.scx.tcp;
+package cool.scx.tcp.tls;
 
 import javax.net.ssl.SSLEngine;
 import javax.net.ssl.SSLHandshakeException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
-public class NioTLSTCPSocket implements ScxTCPSocket {
+public class TLSSocketChannel extends AbstractSocketChannel {
 
-    private final SocketChannel socketChannel;
     private final SSLEngine sslEngine;
 
     private final ByteBuffer inboundAppData;// 存储已经解密的数据 (相当于缓存)
     private final ByteBuffer outboundNetData;// 存储将要发送到远端的加密数据
     private final ByteBuffer inboundNetData;// 存储从远端读取到的加密数据
 
-    private final InputStream in;
-    private final OutputStream out;
-
-    public NioTLSTCPSocket(SocketChannel socketChannel, SSLEngine sslEngine) {
-        this.socketChannel = socketChannel;
+    public TLSSocketChannel(SocketChannel socketChannel, SSLEngine sslEngine) {
+        super(socketChannel);
         this.sslEngine = sslEngine;
 
         var session = sslEngine.getSession();
         this.inboundAppData = ByteBuffer.allocate(session.getApplicationBufferSize());
         this.outboundNetData = ByteBuffer.allocate(session.getPacketBufferSize());
         this.inboundNetData = ByteBuffer.allocate(session.getPacketBufferSize());
-
-        this.in = createInputStream();
-        this.out = createOutputStream();
-    }
-
-    private InputStream createInputStream() {
-        return new InputStream() {
-            @Override
-            public int read() throws IOException {
-                var buffer = ByteBuffer.allocate(1);
-                return NioTLSTCPSocket.this.read(buffer) > 0 ? buffer.get() & 0xFF : -1;
-            }
-
-            @Override
-            public int read(byte[] b, int off, int len) throws IOException {
-                var buffer = ByteBuffer.wrap(b, off, len);
-                return NioTLSTCPSocket.this.read(buffer);
-            }
-        };
-    }
-
-    private OutputStream createOutputStream() {
-        return new OutputStream() {
-            @Override
-            public void write(int b) throws IOException {
-                var buffer = ByteBuffer.wrap(new byte[]{(byte) b});
-                NioTLSTCPSocket.this.write(buffer);
-            }
-
-            @Override
-            public void write(byte[] b, int off, int len) throws IOException {
-                var buffer = ByteBuffer.wrap(b, off, len);
-                NioTLSTCPSocket.this.write(buffer);
-            }
-        };
     }
 
     public void startHandshake() throws IOException {
@@ -175,22 +133,24 @@ public class NioTLSTCPSocket implements ScxTCPSocket {
         }
     }
 
-    //todo 这个方法未完成
+    @Override
     public int read(ByteBuffer dst) throws IOException {
-
-        return -1;
+        return 0;
     }
 
-    public void write(ByteBuffer buffer) throws IOException {
+    @Override
+    public int write(ByteBuffer src) throws IOException {
+        int n = 0;
+
         //可能出现扩容的情况 这里使用单独的
         var outboundNetData = this.outboundNetData;
 
-        //重置
-        outboundNetData.clear();
+        while (src.hasRemaining()) {
+            //重置
+            outboundNetData.clear();
 
-        while (buffer.hasRemaining()) {
             //加密
-            var result = sslEngine.wrap(buffer, outboundNetData);
+            var result = sslEngine.wrap(src, outboundNetData);
 
             switch (result.getStatus()) {
                 case OK -> {
@@ -201,43 +161,22 @@ public class NioTLSTCPSocket implements ScxTCPSocket {
                     while (outboundNetData.hasRemaining()) {
                         socketChannel.write(outboundNetData);
                     }
+                    n += result.bytesConsumed();
                 }
                 case BUFFER_OVERFLOW -> {
                     // 直接扩容即可 以 2 倍为基准
                     outboundNetData = ByteBuffer.allocate(outboundNetData.capacity() * 2);
                 }
                 // 不应该发生在 wrap 操作中  
-                case BUFFER_UNDERFLOW -> throw new IOException("SSLEngine wrap 遇到 BUFFER_UNDERFLOW");
+                case BUFFER_UNDERFLOW ->
+                        throw new IOException("SSLEngine wrap 遇到 BUFFER_UNDERFLOW, 这不应该发生 !!!");
                 // 不应该发生在 wrap 操作中
-                case CLOSED -> throw new IOException("SSLEngine wrap 遇到 CLOSED");
+                case CLOSED -> 
+                        throw new IOException("SSLEngine wrap 遇到 CLOSED");
             }
         }
-    }
 
-    @Override
-    public InputStream inputStream() {
-        return in;
-    }
-
-    @Override
-    public OutputStream outputStream() {
-        return out;
-    }
-
-    @Override
-    public boolean isClosed() {
-        return !socketChannel.isOpen();
-    }
-
-    @Override
-    public SocketAddress remoteAddress() throws IOException {
-        return socketChannel.getRemoteAddress();
-    }
-
-    @Override
-    public void close() throws IOException {
-        sslEngine.closeOutbound();
-        socketChannel.close();
+        return n;
     }
 
 }
