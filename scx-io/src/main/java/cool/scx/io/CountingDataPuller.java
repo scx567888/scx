@@ -1,5 +1,7 @@
 package cool.scx.io;
 
+import static cool.scx.io.DataPuller.PullResult.BREAK;
+
 /**
  * 计数 DataPuller
  *
@@ -19,13 +21,13 @@ public class CountingDataPuller implements DataPuller {
     }
 
     @Override
-    public boolean pull() {
+    public PullResult pull() {
         if (count < maxCount) {
             var b = dataPuller.pull();
             count = count + 1;
             return b;
         }
-        return false;
+        return BREAK;
     }
 
 }
