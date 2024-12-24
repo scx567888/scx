@@ -2,6 +2,7 @@ package cool.scx.tcp;
 
 import javax.net.ssl.SSLEngine;
 import javax.net.ssl.SSLException;
+import javax.net.ssl.SSLHandshakeException;
 import javax.net.ssl.SSLSession;
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,6 +39,7 @@ public class NioTLSTCPSocket implements ScxTCPSocket {
     private final ReentrantLock sslLock = new ReentrantLock();
     private final InputStream inputStream;
     private final OutputStream outputStream;
+
     private final ByteBuffer outboundAppData;
     private final ByteBuffer outboundNetData;
     private final ByteBuffer inboundAppData;
@@ -115,6 +117,11 @@ public class NioTLSTCPSocket implements ScxTCPSocket {
     public void startHandshake() throws IOException {
         sslEngine.beginHandshake();
 
+        //这里我们可能会出现需要扩容的情况所以 复制一份缓冲区
+        var outboundNetData = ByteBuffer.allocate(3);
+        var inboundNetData = this.inboundNetData;
+
+        _MAIN:
         while (true) {
             var handshakeStatus = sslEngine.getHandshakeStatus();
             switch (handshakeStatus) {
@@ -127,15 +134,16 @@ public class NioTLSTCPSocket implements ScxTCPSocket {
                     inboundNetData.flip();
                     //尝试解密
                     while (inboundNetData.hasRemaining()) {
-                        var result = sslEngine.unwrap(inboundNetData, inboundAppData);
+                        //使用空缓冲区接受 因为握手阶段是不会有任何数据的
+                        var result = sslEngine.unwrap(inboundNetData, ByteBuffer.allocate(0));
                         switch (result.getStatus()) {
                             case OK -> {
                                 // 解密成功，直接继续进行，因为握手阶段 即使 unwrap , inboundAppData 也只会是空 所以跳过处理
                             }
                             case BUFFER_OVERFLOW -> {
-                                // inboundAppData 容量太小 无法容纳解密后的数据 需要扩容 inboundAppData
-                                //todo 暂不处理
-                                System.out.println("buffer overflow");
+                                // 解密后数据缓冲区 容量太小 无法容纳解密后的数据
+                                // 但在握手阶段 理论上不会发生 所以这里我们抛出错误
+                                throw new SSLHandshakeException("Unexpected buffer overflow");
                             }
                             case BUFFER_UNDERFLOW -> {
                                 // inboundNetData 数据不够解密 需要继续获取
@@ -144,38 +152,45 @@ public class NioTLSTCPSocket implements ScxTCPSocket {
                             }
                             case CLOSED -> {
                                 //todo 暂不处理
-                                System.out.println("closed");
+                                System.err.println("closed");
                             }
                         }
                     }
                     inboundNetData.compact();
                 }
                 case NEED_WRAP -> {
-                    //清空出站网络缓冲区
-                    outboundNetData.clear();
-                    //加密一个空的数据 这里因为待加密数据是空的 所以不需要循环去加密 单次执行即可
-                    var result = sslEngine.wrap(ByteBuffer.allocate(0), outboundNetData);
-                    switch (result.getStatus()) {
-                        case OK -> {
-                            //切换到读模式
-                            outboundNetData.flip();
-                            //循环发送到远端
-                            while (outboundNetData.hasRemaining()) {
-                                socketChannel.write(outboundNetData);
+                    // 这里不停循环 直到完成
+                    _NW:
+                    while (true) {
+                        // 清空出站网络缓冲区
+                        outboundNetData.clear();
+                        // 加密一个空的数据 这里因为待加密数据是空的 所以不需要循环去加密 单次执行即可
+                        var result = sslEngine.wrap(ByteBuffer.allocate(0), outboundNetData);
+                        switch (result.getStatus()) {
+                            case OK -> {
+                                //切换到读模式
+                                outboundNetData.flip();
+                                //循环发送到远端
+                                while (outboundNetData.hasRemaining()) {
+                                    socketChannel.write(outboundNetData);
+                                }
+                                break _NW;
                             }
-                        }
-                        case BUFFER_OVERFLOW -> {
-                            // outboundNetData 容量太小 无法容纳加密后的数据 需要扩容 outboundNetData
-                            // 但在握手阶段 理论上不会发生 所以这里我们抛出错误  
-                            throw new IllegalStateException("buffer overflow on handshake wrap");
-                        }
-                        case BUFFER_UNDERFLOW -> {
-                            // 待加密数据 数据量不足 理论上不会发生 所以这里我们抛出错误
-                            throw new IllegalStateException("buffer underflow on handshake wrap");
-                        }
-                        case CLOSED -> {
-                            //todo 需要处理
-                            System.err.println("closed");
+                            case BUFFER_OVERFLOW -> {
+                                // outboundNetData 容量太小 无法容纳加密后的数据 需要扩容 outboundNetData, 这里采取 2 倍
+                                // 但在实际环境中 默认的 outboundNetData 大小是 session.getPacketBufferSize()
+                                // 所以几乎不会出现这种情况 但这里还是做一个处理
+                                outboundNetData = ByteBuffer.allocate(outboundNetData.capacity() * 2);
+                            }
+                            case BUFFER_UNDERFLOW -> {
+                                // 待加密数据 数据量不足, 在 wrap 中理论上不会发生 所以这里我们抛出错误
+                                throw new SSLHandshakeException("buffer underflow on handshake wrap");
+                            }
+                            case CLOSED -> {
+                                //todo 需要处理
+                                System.err.println("closed");
+                                break _NW;
+                            }
                         }
                     }
                 }
@@ -190,12 +205,12 @@ public class NioTLSTCPSocket implements ScxTCPSocket {
                     }
                 }
                 case FINISHED -> {
-                    // 握手完成 退出循环
-                    return;
+                    // 握手完成 退出主循环
+                    break _MAIN;
                 }
                 case NOT_HANDSHAKING -> {
-                    // 当前不在进行握手操作，退出循环
-                    return;
+                    // 当前不在进行握手操作，退出主循环
+                    break _MAIN;
                 }
             }
         }
