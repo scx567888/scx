@@ -165,21 +165,22 @@ public class NioTLSTCPSocket implements ScxTCPSocket {
                             }
                         }
                         case BUFFER_OVERFLOW -> {
-                            //todo 理论上不会到这里
-                            System.out.println("buffer overflow");
+                            // outboundNetData 容量太小 无法容纳加密后的数据 需要扩容 outboundNetData
+                            // 但在握手阶段 理论上不会发生 所以这里我们抛出错误  
+                            throw new IllegalStateException("buffer overflow on handshake wrap");
                         }
                         case BUFFER_UNDERFLOW -> {
-                            //todo 理论上不会到这里
-                            System.out.println("buffer underflow");
+                            // 待加密数据 数据量不足 理论上不会发生 所以这里我们抛出错误
+                            throw new IllegalStateException("buffer underflow on handshake wrap");
                         }
                         case CLOSED -> {
-                            //todo 理论上不会到这里
-                            System.out.println("closed");
+                            //todo 需要处理
+                            System.err.println("closed");
                         }
                     }
                 }
                 case NEED_TASK -> {
-                    //todo 这里绝对正确
+                    // 处理委派任务 这里我们直接在当前线程中运行
                     while (true) {
                         var task = sslEngine.getDelegatedTask();
                         if (task == null) {
@@ -189,13 +190,11 @@ public class NioTLSTCPSocket implements ScxTCPSocket {
                     }
                 }
                 case FINISHED -> {
-                    //退出循环 todo 这里绝对正确
-                    System.err.println("Handshake finished.");
+                    // 握手完成 退出循环
                     return;
                 }
                 case NOT_HANDSHAKING -> {
-                    //退出循环 todo 这里绝对正确
-                    System.err.println("Handshake not handled.");
+                    // 当前不在进行握手操作，退出循环
                     return;
                 }
             }
