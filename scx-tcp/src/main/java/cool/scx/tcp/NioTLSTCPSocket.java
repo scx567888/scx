@@ -117,8 +117,8 @@ public class NioTLSTCPSocket implements ScxTCPSocket {
         sslEngine.beginHandshake();
 
         //这里我们可能会出现需要扩容的情况(当然概率很低) 所以 复制一份缓冲区
-        var outboundNetData = ByteBuffer.allocate(1);
-        var inboundNetData = ByteBuffer.allocate(1);
+        var outboundNetData = this.outboundNetData;
+        var inboundNetData = this.inboundNetData;
 
         _MAIN:
         while (true) {
@@ -159,8 +159,7 @@ public class NioTLSTCPSocket implements ScxTCPSocket {
                                 // 2, 远端未发送完整的数据 我们需要继续读取数据 (这种情况很少见) 这里直接继续循环
                             }
                             case CLOSED -> {
-                                //todo 暂不处理
-                                System.err.println("closed");
+                                throw new SSLHandshakeException("closed on handshake wrap");
                             }
                         }
                     }
@@ -196,9 +195,7 @@ public class NioTLSTCPSocket implements ScxTCPSocket {
                                 throw new SSLHandshakeException("buffer underflow on handshake wrap");
                             }
                             case CLOSED -> {
-                                //todo 需要处理
-                                System.err.println("closed");
-                                break _NW;
+                                throw new SSLHandshakeException("closed on handshake wrap");
                             }
                         }
                     }
