@@ -189,4 +189,49 @@ public class LinkedDataReader implements DataReader {
         walk((_, _, _) -> {}, length, true, dataPuller);
     }
 
+    @Override
+    public byte read() throws NoMoreDataException {
+        return read(this::pullData);
+    }
+
+    @Override
+    public byte[] read(int maxLength) throws NoMoreDataException {
+        return read(maxLength, this::pullData);
+    }
+
+    @Override
+    public void read(DataConsumer dataConsumer, int maxLength) throws NoMoreDataException {
+        read(dataConsumer, maxLength, this::pullData);
+    }
+
+    @Override
+    public byte peek() throws NoMoreDataException {
+        return peek(this::pullData);
+    }
+
+    @Override
+    public byte[] peek(int maxLength) throws NoMoreDataException {
+        return peek(maxLength, this::pullData);
+    }
+
+    @Override
+    public void peek(DataConsumer dataConsumer, int maxLength) throws NoMoreDataException {
+        peek(dataConsumer, maxLength, this::pullData);
+    }
+
+    @Override
+    public int indexOf(byte b, int max) throws NoMatchFoundException, NoMoreDataException {
+        return indexOf(b, max, this::pullData);
+    }
+
+    @Override
+    public int indexOf(byte[] pattern, int max) throws NoMatchFoundException, NoMoreDataException {
+        return indexOf(pattern, max, this::pullData);
+    }
+
+    @Override
+    public void skip(int length) throws NoMoreDataException {
+        skip(length, this::pullData);
+    }
+
 }
