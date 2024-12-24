@@ -117,7 +117,7 @@ public class NioTLSTCPSocket implements ScxTCPSocket {
         sslEngine.beginHandshake();
 
         //这里我们可能会出现需要扩容的情况(当然概率很低) 所以 复制一份缓冲区
-        var outboundNetData = this.outboundAppData;
+        var outboundNetData = ByteBuffer.allocate(1);
         var inboundNetData = ByteBuffer.allocate(1);
 
         _MAIN:
@@ -125,19 +125,21 @@ public class NioTLSTCPSocket implements ScxTCPSocket {
             var handshakeStatus = sslEngine.getHandshakeStatus();
             switch (handshakeStatus) {
                 case NEED_UNWRAP -> {
-                    //读取远程数据到入站网络缓冲区
-                    if (socketChannel.read(inboundNetData) == -1) {
-                        throw new SSLHandshakeException("Channel closed during handshake");
-                    }                     
-                    //切换成读模式
-                    inboundNetData.flip();
-                    //尝试解密
-                    while (inboundNetData.hasRemaining()) {
+                    // 这里不停循环 直到完成
+                    _NU:
+                    while (true) {
+                        //读取远程数据到入站网络缓冲区
+                        if (socketChannel.read(inboundNetData) == -1) {
+                            throw new SSLHandshakeException("Channel closed during handshake");
+                        }
+                        //切换成读模式
+                        inboundNetData.flip();
                         //使用空缓冲区接收 因为握手阶段是不会有任何数据的
                         var result = sslEngine.unwrap(inboundNetData, ByteBuffer.allocate(0));
                         switch (result.getStatus()) {
                             case OK -> {
                                 // 解密成功，直接继续进行，因为握手阶段 即使 unwrap , 解密数据容量也只会是空 所以跳过处理
+                                break _NU;
                             }
                             case BUFFER_OVERFLOW -> {
                                 // 解密后数据缓冲区 容量太小 无法容纳解密后的数据
@@ -145,9 +147,16 @@ public class NioTLSTCPSocket implements ScxTCPSocket {
                                 throw new SSLHandshakeException("Unexpected buffer overflow");
                             }
                             case BUFFER_UNDERFLOW -> {
-                                // inboundNetData 数据不够解密 需要继续获取
-                                //todo 暂不处理
-                                System.out.println("buffer underflow");
+                                // inboundNetData 数据不够解密 需要继续获取 这里有两种情况
+                                int remainingSpace = inboundNetData.capacity() - inboundNetData.limit();
+                                // 1, inboundNetData 本身容量太小 我们需要扩容
+                                if (remainingSpace == 0) {
+                                    var newInboundNetData = ByteBuffer.allocate(inboundNetData.capacity() * 2);
+                                    //把原有数据放进去
+                                    newInboundNetData.put(inboundNetData);
+                                    inboundNetData = newInboundNetData;
+                                }
+                                // 2, 远端未发送完整的数据 我们需要继续读取数据 (这种情况很少见) 这里直接继续循环
                             }
                             case CLOSED -> {
                                 //todo 暂不处理
@@ -155,14 +164,15 @@ public class NioTLSTCPSocket implements ScxTCPSocket {
                             }
                         }
                     }
+                    //压缩数据
                     inboundNetData.compact();
                 }
                 case NEED_WRAP -> {
+                    // 清空出站网络缓冲区
+                    outboundNetData.clear();
                     // 这里不停循环 直到完成
                     _NW:
                     while (true) {
-                        // 清空出站网络缓冲区
-                        outboundNetData.clear();
                         // 加密一个空的数据 这里因为待加密数据是空的 所以不需要循环去加密 单次执行即可
                         var result = sslEngine.wrap(ByteBuffer.allocate(0), outboundNetData);
                         switch (result.getStatus()) {
@@ -214,7 +224,6 @@ public class NioTLSTCPSocket implements ScxTCPSocket {
             }
         }
     }
-
 
     public int read(ByteBuffer dst) throws IOException {
         sslLock.lock();
@@ -273,7 +282,7 @@ public class NioTLSTCPSocket implements ScxTCPSocket {
     }
 
 
-    //todo 这个方法已经完成
+    //todo 待重写
     public void write(ByteBuffer buffer) throws IOException {
         sslLock.lock();
         try {
