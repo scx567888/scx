@@ -14,10 +14,9 @@ public class NioTLSTCPSocket implements ScxTCPSocket {
     private final SocketChannel socketChannel;
     private final SSLEngine sslEngine;
 
-    private final ByteBuffer outboundAppData;
-    private final ByteBuffer outboundNetData;
-    private final ByteBuffer inboundAppData;
-    private final ByteBuffer inboundNetData;
+    private final ByteBuffer inboundAppData;// 存储已经解密的数据 (相当于缓存)
+    private final ByteBuffer outboundNetData;// 存储将要发送到远端的加密数据
+    private final ByteBuffer inboundNetData;// 存储从远端读取到的加密数据
 
     private final InputStream in;
     private final OutputStream out;
@@ -27,9 +26,8 @@ public class NioTLSTCPSocket implements ScxTCPSocket {
         this.sslEngine = sslEngine;
 
         var session = sslEngine.getSession();
-        this.outboundAppData = ByteBuffer.allocate(session.getApplicationBufferSize());
-        this.outboundNetData = ByteBuffer.allocate(session.getPacketBufferSize());
         this.inboundAppData = ByteBuffer.allocate(session.getApplicationBufferSize());
+        this.outboundNetData = ByteBuffer.allocate(session.getPacketBufferSize());
         this.inboundNetData = ByteBuffer.allocate(session.getPacketBufferSize());
 
         this.in = createInputStream();
@@ -177,7 +175,9 @@ public class NioTLSTCPSocket implements ScxTCPSocket {
         }
     }
 
+    //todo 这个方法未完成
     public int read(ByteBuffer dst) throws IOException {
+
         return -1;
     }
 
