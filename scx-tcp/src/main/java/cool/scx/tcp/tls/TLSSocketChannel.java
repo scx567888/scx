@@ -1,5 +1,7 @@
 package cool.scx.tcp.tls;
 
+import cool.scx.io.IOHelper;
+
 import javax.net.ssl.SSLEngine;
 import javax.net.ssl.SSLHandshakeException;
 import java.io.IOException;
@@ -135,7 +137,43 @@ public class TLSSocketChannel extends AbstractSocketChannel {
 
     @Override
     public int read(ByteBuffer dst) throws IOException {
-        return 0;
+        var inboundNetData = this.inboundNetData;
+
+        while (true) {
+            //1, 先将剩余的数据返回
+            if (inboundAppData.hasRemaining()) {
+                inboundAppData.flip();
+                return IOHelper.transferByteBuffer(inboundAppData, dst);
+            }
+            //2, aaa
+            inboundNetData.compact();
+            int bytesRead = socketChannel.read(inboundNetData);
+
+            inboundNetData.flip();
+
+            while (inboundNetData.hasRemaining()) {
+                inboundAppData.compact();
+                var result = sslEngine.unwrap(inboundNetData, inboundAppData);
+                switch (result.getStatus()) {
+                    case OK -> {
+                        inboundAppData.flip();
+                        return IOHelper.transferByteBuffer(inboundAppData, dst);
+                    }
+                    case BUFFER_OVERFLOW -> {
+                        inboundAppData.flip();
+                        return IOHelper.transferByteBuffer(inboundAppData, dst);
+                    }
+                    case BUFFER_UNDERFLOW -> {
+                        inboundNetData = ByteBuffer.allocate(inboundNetData.capacity() * 2);
+                        continue;
+                    }
+                    case CLOSED -> {
+                        throw new SSLHandshakeException("closed on handshake wrap");
+                    }
+                }
+            }
+
+        }
     }
 
     @Override
@@ -167,12 +205,12 @@ public class TLSSocketChannel extends AbstractSocketChannel {
                     // 直接扩容即可 以 2 倍为基准
                     outboundNetData = ByteBuffer.allocate(outboundNetData.capacity() * 2);
                 }
-                // 不应该发生在 wrap 操作中  
-                case BUFFER_UNDERFLOW ->
-                        throw new IOException("SSLEngine wrap 遇到 BUFFER_UNDERFLOW, 这不应该发生 !!!");
-                // 不应该发生在 wrap 操作中
-                case CLOSED -> 
-                        throw new IOException("SSLEngine wrap 遇到 CLOSED");
+                case BUFFER_UNDERFLOW -> {
+                    throw new IOException("SSLEngine wrap 遇到 BUFFER_UNDERFLOW, 这不应该发生 !!!");
+                }
+                case CLOSED -> {
+                    throw new IOException("SSLEngine wrap 遇到 CLOSED");
+                }
             }
         }
 

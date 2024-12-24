@@ -22,8 +22,8 @@ public class TCPServerTest {
     }
 
     public static void test1() {
-//        var tcpServer = new ClassicTCPServer(new ScxTCPServerOptions().port(8899).tls(tls));
-        var tcpServer = new NioTCPServer(new ScxTCPServerOptions().port(8899).tls(tls));
+        var tcpServer = new ClassicTCPServer(new ScxTCPServerOptions().port(8899).tls(tls));
+//        var tcpServer = new NioTCPServer(new ScxTCPServerOptions().port(8899).tls(tls));
 
         tcpServer.onConnect(c -> {
             System.out.println("客户端连接了 !!!");

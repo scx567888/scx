@@ -97,8 +97,8 @@ public abstract class AbstractSocketChannel extends SocketChannel {
     @Override
     public long read(ByteBuffer[] dsts, int offset, int length) throws IOException {
         var n = 0L;
-        for (int i = 0; i < length; i++) {
-            n += this.read(dsts[offset + i]);
+        for (int i = offset; i < length; i = i + 1) {
+            n += this.read(dsts[i]);
         }
         return n;
     }
@@ -106,8 +106,8 @@ public abstract class AbstractSocketChannel extends SocketChannel {
     @Override
     public long write(ByteBuffer[] srcs, int offset, int length) throws IOException {
         var n = 0L;
-        for (int i = 0; i < length; i++) {
-            n += this.write(srcs[offset + i]);
+        for (int i = offset; i < length; i = i + 1) {
+            n += this.write(srcs[i]);
         }
         return n;
     }
