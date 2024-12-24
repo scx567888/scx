@@ -1,8 +1,11 @@
 package cool.scx.io;
 
 import cool.scx.common.util.ArrayUtils;
+import cool.scx.io.DataPuller.PullResult;
 
 import java.util.function.Supplier;
+
+import static cool.scx.io.DataPuller.PullResult.*;
 
 /**
  * LinkedDataReader
@@ -26,19 +29,22 @@ public class LinkedDataReader implements DataReader {
         this(() -> null);
     }
 
-    private void ensureAvailable() throws NoMoreDataException {
+    public void ensureAvailable(DataPuller dataPuller) throws NoMoreDataException {
         while (!head.hasAvailable()) {
             if (head.next == null) {
-                if (!pullData()) {
+                var result = dataPuller.pull();
+                if (FAIL == result) {
                     throw new NoMoreDataException();
+                } else if (BREAK == result) {
+                    break;
                 }
             }
             head = head.next;
         }
     }
 
-    private void walk(DataConsumer consumer, int maxLength, boolean movePointer) throws NoMoreDataException {
-        ensureAvailable(); // 确保至少有一个字节可读
+    public void walk(DataConsumer consumer, int maxLength, boolean movePointer, DataPuller dataPuller) throws NoMoreDataException {
+        ensureAvailable(dataPuller); // 确保至少有一个字节可读
 
         var remaining = maxLength; // 剩余需要读取的字节数
         var n = head; // 用于循环的节点
@@ -62,9 +68,9 @@ public class LinkedDataReader implements DataReader {
             // 如果 remaining > 0 说明还需要继续读取
             if (remaining > 0) {
                 if (n.next == null) {
-                    // 如果 当前节点没有下一个节点 并且拉取失败 (没有更多数据) 则退出循环
-                    var success = pullData();
-                    if (!success) {
+                    // 如果 当前节点没有下一个节点 并且拉取失败 则退出循环
+                    var result = dataPuller.pull();
+                    if (result != SUCCESS) {
                         break;
                     }
                 }
@@ -76,8 +82,8 @@ public class LinkedDataReader implements DataReader {
         }
     }
 
-    private int indexOf(DataIndexer indexer, int max) throws NoMoreDataException, NoMatchFoundException {
-        ensureAvailable(); // 确保至少有一个字节可读
+    public int indexOf(DataIndexer indexer, int max, DataPuller dataPuller) throws NoMoreDataException, NoMatchFoundException {
+        ensureAvailable(dataPuller); // 确保至少有一个字节可读
 
         var index = 0; // 主串索引
 
@@ -101,8 +107,8 @@ public class LinkedDataReader implements DataReader {
 
             // 如果 currentNode 没有下一个节点并且尝试拉取数据失败，直接退出循环
             if (n.next == null) {
-                var success = pullData();
-                if (!success) {
+                var result = dataPuller.pull();
+                if (result != SUCCESS) {
                     break;
                 }
             }
@@ -127,69 +133,60 @@ public class LinkedDataReader implements DataReader {
      *
      * @return 是否拉取成功
      */
-    public boolean pullData() {
+    public PullResult pullData() {
         var data = dataSupplier.get();
         if (data == null) {
-            return false;
+            return FAIL;
         }
         appendData(data);
-        return true;
+        return SUCCESS;
     }
 
-    @Override
-    public byte read() throws NoMoreDataException {
-        ensureAvailable();
+    public byte read(DataPuller dataPuller) throws NoMoreDataException {
+        ensureAvailable(dataPuller);
         var b = head.bytes[head.position];
         head.position = head.position + 1;
         return b;
     }
 
-    @Override
-    public byte[] read(int maxLength) throws NoMoreDataException {
+    public byte[] read(int maxLength, DataPuller dataPuller) throws NoMoreDataException {
         var consumer = new ByteArrayDataConsumer();
-        walk(consumer, maxLength, true);
+        walk(consumer, maxLength, true, dataPuller);
         return consumer.getBytes();
     }
 
-    @Override
-    public void read(DataConsumer dataConsumer, int maxLength) throws NoMoreDataException {
-        walk(dataConsumer, maxLength, true);
+    public void read(DataConsumer dataConsumer, int maxLength, DataPuller dataPuller) throws NoMoreDataException {
+        walk(dataConsumer, maxLength, true, dataPuller);
     }
 
-    @Override
-    public byte peek() throws NoMoreDataException {
-        ensureAvailable();
+    public byte peek(DataPuller dataPuller) throws NoMoreDataException {
+        ensureAvailable(dataPuller);
         return head.bytes[head.position];
     }
 
-    @Override
-    public byte[] peek(int maxLength) throws NoMoreDataException {
+    public byte[] peek(int maxLength, DataPuller dataPuller) throws NoMoreDataException {
         var consumer = new ByteArrayDataConsumer();
-        walk(consumer, maxLength, false);
+        walk(consumer, maxLength, false, dataPuller);
         return consumer.getBytes();
     }
 
-    @Override
-    public void peek(DataConsumer dataConsumer, int maxLength) throws NoMoreDataException {
-        walk(dataConsumer, maxLength, false);
+    public void peek(DataConsumer dataConsumer, int maxLength, DataPuller dataPuller) throws NoMoreDataException {
+        walk(dataConsumer, maxLength, false, dataPuller);
     }
 
-    @Override
-    public int indexOf(byte b, int max) throws NoMatchFoundException, NoMoreDataException {
+    public int indexOf(byte b, int max, DataPuller dataPuller) throws NoMatchFoundException, NoMoreDataException {
         return indexOf((bytes, position, length) -> {
             int i = ArrayUtils.indexOf(bytes, position, length, b);
             return i == -1 ? Integer.MIN_VALUE : i;
-        }, max);
+        }, max, dataPuller);
     }
 
-    @Override
-    public int indexOf(byte[] pattern, int max) throws NoMatchFoundException, NoMoreDataException {
-        return indexOf(new KMPDataIndexer(pattern), max);
+    public int indexOf(byte[] pattern, int max, DataPuller dataPuller) throws NoMatchFoundException, NoMoreDataException {
+        return indexOf(new KMPDataIndexer(pattern), max, dataPuller);
     }
 
-    @Override
-    public void skip(int length) throws NoMoreDataException {
-        walk((_, _, _) -> {}, length, true);
+    public void skip(int length, DataPuller dataPuller) throws NoMoreDataException {
+        walk((_, _, _) -> {}, length, true, dataPuller);
     }
 
 }
