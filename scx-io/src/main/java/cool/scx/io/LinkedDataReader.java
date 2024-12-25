@@ -1,11 +1,10 @@
 package cool.scx.io;
 
-import cool.scx.common.util.ArrayUtils;
 import cool.scx.io.DataPuller.PullResult;
 
-import java.util.function.Supplier;
-
 import static cool.scx.io.DataPuller.PullResult.*;
+import static cool.scx.io.DataSupplier.EMPTY_DATA_SUPPLIER;
+import static cool.scx.io.SkipDataConsumer.SKIP_DATA_CONSUMER;
 
 /**
  * LinkedDataReader
@@ -15,18 +14,18 @@ import static cool.scx.io.DataPuller.PullResult.*;
  */
 public class LinkedDataReader implements DataReader {
 
-    private final Supplier<DataNode> dataSupplier;
+    private final DataSupplier dataSupplier;
     private DataNode head;
     private DataNode tail;
 
-    public LinkedDataReader(Supplier<DataNode> dataSupplier) {
+    public LinkedDataReader(DataSupplier dataSupplier) {
         this.dataSupplier = dataSupplier;
-        this.head = new DataNode(EMPTY_BYTES);
+        this.head = new DataNode(new byte[]{});
         this.tail = this.head;
     }
 
     public LinkedDataReader() {
-        this(() -> null);
+        this(EMPTY_DATA_SUPPLIER);
     }
 
     public void ensureAvailable(DataPuller dataPuller) throws NoMoreDataException {
@@ -118,21 +117,11 @@ public class LinkedDataReader implements DataReader {
         throw new NoMatchFoundException();
     }
 
-    /**
-     * 添加数据
-     *
-     * @param data data
-     */
     public void appendData(DataNode data) {
         tail.next = data;
         tail = tail.next;
     }
 
-    /**
-     * 拉取数据
-     *
-     * @return 是否拉取成功
-     */
     public PullResult pullData() {
         var data = dataSupplier.get();
         if (data == null) {
@@ -142,96 +131,69 @@ public class LinkedDataReader implements DataReader {
         return SUCCESS;
     }
 
-    public byte read(DataPuller dataPuller) throws NoMoreDataException {
-        ensureAvailable(dataPuller);
+    public void ensureAvailable() throws NoMoreDataException {
+        ensureAvailable(this::pullData);
+    }
+
+    public void walk(DataConsumer consumer, int maxLength, boolean movePointer) throws NoMoreDataException {
+        walk(consumer, maxLength, movePointer, this::pullData);
+    }
+
+    public int indexOf(DataIndexer indexer, int max) throws NoMoreDataException {
+        return indexOf(indexer, max, this::pullData);
+    }
+
+    @Override
+    public byte read() throws NoMoreDataException {
+        ensureAvailable();
         var b = head.bytes[head.position];
         head.position = head.position + 1;
         return b;
     }
 
-    public byte[] read(int maxLength, DataPuller dataPuller) throws NoMoreDataException {
-        var consumer = new ByteArrayDataConsumer();
-        walk(consumer, maxLength, true, dataPuller);
-        return consumer.getBytes();
-    }
-
-    public void read(DataConsumer dataConsumer, int maxLength, DataPuller dataPuller) throws NoMoreDataException {
-        walk(dataConsumer, maxLength, true, dataPuller);
-    }
-
-    public byte peek(DataPuller dataPuller) throws NoMoreDataException {
-        ensureAvailable(dataPuller);
-        return head.bytes[head.position];
-    }
-
-    public byte[] peek(int maxLength, DataPuller dataPuller) throws NoMoreDataException {
-        var consumer = new ByteArrayDataConsumer();
-        walk(consumer, maxLength, false, dataPuller);
-        return consumer.getBytes();
-    }
-
-    public void peek(DataConsumer dataConsumer, int maxLength, DataPuller dataPuller) throws NoMoreDataException {
-        walk(dataConsumer, maxLength, false, dataPuller);
-    }
-
-    public int indexOf(byte b, int max, DataPuller dataPuller) throws NoMatchFoundException, NoMoreDataException {
-        return indexOf((bytes, position, length) -> {
-            int i = ArrayUtils.indexOf(bytes, position, length, b);
-            return i == -1 ? Integer.MIN_VALUE : i;
-        }, max, dataPuller);
-    }
-
-    public int indexOf(byte[] pattern, int max, DataPuller dataPuller) throws NoMatchFoundException, NoMoreDataException {
-        return indexOf(new KMPDataIndexer(pattern), max, dataPuller);
-    }
-
-    public void skip(int length, DataPuller dataPuller) throws NoMoreDataException {
-        walk((_, _, _) -> {}, length, true, dataPuller);
-    }
-
-    @Override
-    public byte read() throws NoMoreDataException {
-        return read(this::pullData);
-    }
-
     @Override
     public byte[] read(int maxLength) throws NoMoreDataException {
-        return read(maxLength, this::pullData);
+        var consumer = new ByteArrayDataConsumer();
+        walk(consumer, maxLength, true);
+        return consumer.getBytes();
     }
 
     @Override
     public void read(DataConsumer dataConsumer, int maxLength) throws NoMoreDataException {
-        read(dataConsumer, maxLength, this::pullData);
+        walk(dataConsumer, maxLength, true);
     }
 
     @Override
     public byte peek() throws NoMoreDataException {
-        return peek(this::pullData);
+        ensureAvailable();
+        return head.bytes[head.position];
     }
 
     @Override
     public byte[] peek(int maxLength) throws NoMoreDataException {
-        return peek(maxLength, this::pullData);
+        var consumer = new ByteArrayDataConsumer();
+        walk(consumer, maxLength, false);
+        return consumer.getBytes();
     }
 
     @Override
     public void peek(DataConsumer dataConsumer, int maxLength) throws NoMoreDataException {
-        peek(dataConsumer, maxLength, this::pullData);
+        walk(dataConsumer, maxLength, false);
     }
 
     @Override
     public int indexOf(byte b, int max) throws NoMatchFoundException, NoMoreDataException {
-        return indexOf(b, max, this::pullData);
+        return indexOf(new ByteIndexer(b), max);
     }
 
     @Override
     public int indexOf(byte[] pattern, int max) throws NoMatchFoundException, NoMoreDataException {
-        return indexOf(pattern, max, this::pullData);
+        return indexOf(new KMPDataIndexer(pattern), max);
     }
 
     @Override
     public void skip(int length) throws NoMoreDataException {
-        skip(length, this::pullData);
+        walk(SKIP_DATA_CONSUMER, length, true);
     }
 
 }
