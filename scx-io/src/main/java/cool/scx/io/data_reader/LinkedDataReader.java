@@ -37,6 +37,20 @@ public class LinkedDataReader implements DataReader {
         this(() -> null);
     }
 
+    public void appendData(DataNode data) {
+        tail.next = data;
+        tail = tail.next;
+    }
+
+    public PullResult pullData() {
+        var data = dataSupplier.get();
+        if (data == null) {
+            return FAIL;
+        }
+        appendData(data);
+        return SUCCESS;
+    }
+
     public void ensureAvailable(DataPuller dataPuller) throws NoMoreDataException {
         while (!head.hasAvailable()) {
             if (head.next == null) {
@@ -124,20 +138,6 @@ public class LinkedDataReader implements DataReader {
         }
 
         throw new NoMatchFoundException();
-    }
-
-    public void appendData(DataNode data) {
-        tail.next = data;
-        tail = tail.next;
-    }
-
-    public PullResult pullData() {
-        var data = dataSupplier.get();
-        if (data == null) {
-            return FAIL;
-        }
-        appendData(data);
-        return SUCCESS;
     }
 
     public void ensureAvailable() throws NoMoreDataException {
