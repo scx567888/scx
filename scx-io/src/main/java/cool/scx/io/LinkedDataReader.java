@@ -3,7 +3,6 @@ package cool.scx.io;
 import cool.scx.io.DataPuller.PullResult;
 
 import static cool.scx.io.DataPuller.PullResult.*;
-import static cool.scx.io.DataSupplier.EMPTY_DATA_SUPPLIER;
 import static cool.scx.io.SkipDataConsumer.SKIP_DATA_CONSUMER;
 
 /**
@@ -25,7 +24,7 @@ public class LinkedDataReader implements DataReader {
     }
 
     public LinkedDataReader() {
-        this(EMPTY_DATA_SUPPLIER);
+        this(() -> null);
     }
 
     public void ensureAvailable(DataPuller dataPuller) throws NoMoreDataException {
