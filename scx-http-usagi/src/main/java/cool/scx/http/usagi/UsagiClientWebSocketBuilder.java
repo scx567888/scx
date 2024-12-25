@@ -10,8 +10,8 @@ import cool.scx.http.uri.ScxURI;
 import cool.scx.http.uri.ScxURIWritable;
 import cool.scx.http.web_socket.ScxClientWebSocket;
 import cool.scx.http.web_socket.ScxClientWebSocketBuilder;
-import cool.scx.io.data_supplier.InputStreamDataSupplier;
 import cool.scx.io.data_reader.LinkedDataReader;
+import cool.scx.io.data_supplier.InputStreamDataSupplier;
 
 import java.util.function.Consumer;
 

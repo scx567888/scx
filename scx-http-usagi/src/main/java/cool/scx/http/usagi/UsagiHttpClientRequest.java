@@ -4,11 +4,11 @@ import cool.scx.http.*;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.uri.ScxURIWritable;
-import cool.scx.io.data_supplier.InputStreamDataSupplier;
 import cool.scx.io.data_reader.LinkedDataReader;
+import cool.scx.io.data_supplier.InputStreamDataSupplier;
+import cool.scx.tcp.ClassicTCPClient;
 import cool.scx.tcp.ScxTCPClientOptions;
 import cool.scx.tcp.ScxTCPSocket;
-import cool.scx.tcp.ClassicTCPClient;
 import cool.scx.tcp.tls.TLS;
 
 import javax.net.ssl.SSLContext;

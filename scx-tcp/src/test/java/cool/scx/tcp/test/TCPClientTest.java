@@ -1,6 +1,6 @@
 package cool.scx.tcp.test;
 
-import cool.scx.tcp.NioTCPClient;
+import cool.scx.tcp.ClassicTCPClient;
 import cool.scx.tcp.ScxTCPClientOptions;
 import cool.scx.tcp.ClassicTCPClient;
 

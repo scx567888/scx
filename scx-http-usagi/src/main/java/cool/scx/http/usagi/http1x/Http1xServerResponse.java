@@ -93,7 +93,7 @@ public class Http1xServerResponse extends OutputStream implements ScxHttpServerR
         } else {
             headers.set(CONNECTION, "close");
         }
-        
+
         //用户可能已经自行设置了 SERVER
         if (!headers.contains(SERVER)) {
             headers.set(SERVER, "SCX");

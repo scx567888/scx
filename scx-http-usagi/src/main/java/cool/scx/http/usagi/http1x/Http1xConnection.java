@@ -7,8 +7,8 @@ import cool.scx.http.usagi.FixedLengthInputStream;
 import cool.scx.http.usagi.HttpChunkedInputStream;
 import cool.scx.http.usagi.UsagiHttpServerOptions;
 import cool.scx.http.usagi.exception.CloseConnectionException;
-import cool.scx.io.data_supplier.InputStreamDataSupplier;
 import cool.scx.io.data_reader.LinkedDataReader;
+import cool.scx.io.data_supplier.InputStreamDataSupplier;
 import cool.scx.io.exception.NoMatchFoundException;
 import cool.scx.io.exception.NoMoreDataException;
 import cool.scx.tcp.ScxTCPSocket;
@@ -61,7 +61,7 @@ public class Http1xConnection {
 
                 // 3, 读取 请求体
                 var body = readBody(headers);
-                
+
                 // 4, 是否是持久连接
                 var isKeepAlive = checkIsKeepAlive(requestLine, headers);
 
@@ -69,8 +69,8 @@ public class Http1xConnection {
                 var isWebSocketHandshake = checkIsWebSocketHandshake(requestLine, headers);
 
                 var request = isWebSocketHandshake ?
-                        new Http1xServerWebSocketHandshakeRequest(requestLine, headers, body, tcpSocket, dataReader, dataWriter,isKeepAlive) :
-                        new Http1xServerRequest(requestLine, headers, body, tcpSocket, dataReader, dataWriter,isKeepAlive);
+                        new Http1xServerWebSocketHandshakeRequest(requestLine, headers, body, tcpSocket, dataReader, dataWriter, isKeepAlive) :
+                        new Http1xServerRequest(requestLine, headers, body, tcpSocket, dataReader, dataWriter, isKeepAlive);
 
                 // 5, 调用用户处理器
                 _callRequestHandler(request);
