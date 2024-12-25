@@ -13,7 +13,7 @@ public class TCPServerTest {
     public static TLS tls;
 
     static {
-        tls = new TLS(Path.of("C:\\Users\\scx\\Desktop\\15717129_sichangxu.com_iis\\sichangxu.com.pfx"),"9kr5a0q6");
+        tls = null;
     }
 
     public static void main(String[] args) {
