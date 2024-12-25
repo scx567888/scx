@@ -1,6 +1,6 @@
 package cool.scx.http.web_socket;
 
-import cool.scx.io.DataReader;
+import cool.scx.io.data_reader.DataReader;
 
 import java.io.IOException;
 import java.io.OutputStream;
