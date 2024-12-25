@@ -3,27 +3,30 @@ package cool.scx.io;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.ByteBuffer;
-import java.nio.channels.ByteChannel;
+import java.nio.channels.ReadableByteChannel;
 
+/**
+ * 参见 {@link InputStreamDataSupplier}
+ */
 public class ByteChannelDataSupplier implements DataSupplier {
 
-    private final ByteChannel dataChannel;
+    private final ReadableByteChannel dataChannel;
     private final int bufferLength;
     private final boolean compress;
 
-    public ByteChannelDataSupplier(ByteChannel dataChannel) {
+    public ByteChannelDataSupplier(ReadableByteChannel dataChannel) {
         this(dataChannel, 8192, false);
     }
 
-    public ByteChannelDataSupplier(ByteChannel dataChannel, boolean compress) {
+    public ByteChannelDataSupplier(ReadableByteChannel dataChannel, boolean compress) {
         this(dataChannel, 8192, compress);
     }
 
-    public ByteChannelDataSupplier(ByteChannel dataChannel, int bufferLength) {
+    public ByteChannelDataSupplier(ReadableByteChannel dataChannel, int bufferLength) {
         this(dataChannel, bufferLength, false);
     }
 
-    public ByteChannelDataSupplier(ByteChannel dataChannel, int bufferLength, boolean compress) {
+    public ByteChannelDataSupplier(ReadableByteChannel dataChannel, int bufferLength, boolean compress) {
         this.dataChannel = dataChannel;
         this.bufferLength = bufferLength;
         this.compress = compress;
