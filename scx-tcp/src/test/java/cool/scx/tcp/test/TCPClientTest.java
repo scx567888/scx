@@ -22,8 +22,8 @@ public class TCPClientTest {
         // todo 优化性能 以及再虚拟线程中的 bug
 //        for (int j = 0; j < 10; j = j + 1) {
 //            Thread.ofVirtual().start(() -> {
-                var tcpClient = new NioTCPClient(new ScxTCPClientOptions().tls(tls));
-//                var tcpClient = new ClassicTCPClient(new ScxTCPClientOptions().tls(tls));
+//                var tcpClient = new NioTCPClient(new ScxTCPClientOptions().tls(tls));
+                var tcpClient = new ClassicTCPClient(new ScxTCPClientOptions().tls(tls));
                 var tcpSocket = tcpClient.connect(new InetSocketAddress(8899));
                 try// (tcpSocket)
                 {

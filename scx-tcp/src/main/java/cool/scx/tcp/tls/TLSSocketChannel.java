@@ -1,6 +1,9 @@
 package cool.scx.tcp.tls;
 
-import cool.scx.io.IOHelper;
+import cool.scx.io.ByteChannelDataSupplier;
+import cool.scx.io.PowerfulLinkedDataReader;
+import cool.scx.io.data_node.DataNode;
+import cool.scx.io.data_reader.LinkedDataReader;
 
 import javax.net.ssl.SSLEngine;
 import javax.net.ssl.SSLHandshakeException;
@@ -15,6 +18,10 @@ public class TLSSocketChannel extends AbstractSocketChannel {
     private final ByteBuffer inboundAppData;// 存储已经解密的数据 (相当于缓存)
     private final ByteBuffer outboundNetData;// 存储将要发送到远端的加密数据
     private final ByteBuffer inboundNetData;// 存储从远端读取到的加密数据
+    private final LinkedDataReader rawReader;
+    private final LinkedDataReader dataReader;
+    private int packetBufferSize;
+    private int applicationBufferSize;
 
     public TLSSocketChannel(SocketChannel socketChannel, SSLEngine sslEngine) {
         super(socketChannel);
@@ -24,6 +31,18 @@ public class TLSSocketChannel extends AbstractSocketChannel {
         this.inboundAppData = ByteBuffer.allocate(session.getApplicationBufferSize());
         this.outboundNetData = ByteBuffer.allocate(session.getPacketBufferSize());
         this.inboundNetData = ByteBuffer.allocate(session.getPacketBufferSize());
+
+        this.applicationBufferSize = session.getApplicationBufferSize();
+        this.packetBufferSize = session.getPacketBufferSize();
+
+        this.rawReader = new PowerfulLinkedDataReader(new ByteChannelDataSupplier(socketChannel, session.getApplicationBufferSize()));
+
+        this.dataReader = new PowerfulLinkedDataReader(this::decodeDataSupplier);
+    }
+
+    public DataNode decodeDataSupplier() {
+
+        return null;
     }
 
     public void startHandshake() throws IOException {
@@ -135,45 +154,10 @@ public class TLSSocketChannel extends AbstractSocketChannel {
         }
     }
 
+    //todo 未完成
     @Override
     public int read(ByteBuffer dst) throws IOException {
-        var inboundNetData = this.inboundNetData;
-
-        while (true) {
-            //1, 先将剩余的数据返回
-            if (inboundAppData.hasRemaining()) {
-                inboundAppData.flip();
-                return IOHelper.transferByteBuffer(inboundAppData, dst);
-            }
-            //2, aaa
-            inboundNetData.compact();
-            int bytesRead = socketChannel.read(inboundNetData);
-
-            inboundNetData.flip();
-
-            while (inboundNetData.hasRemaining()) {
-                inboundAppData.compact();
-                var result = sslEngine.unwrap(inboundNetData, inboundAppData);
-                switch (result.getStatus()) {
-                    case OK -> {
-                        inboundAppData.flip();
-                        return IOHelper.transferByteBuffer(inboundAppData, dst);
-                    }
-                    case BUFFER_OVERFLOW -> {
-                        inboundAppData.flip();
-                        return IOHelper.transferByteBuffer(inboundAppData, dst);
-                    }
-                    case BUFFER_UNDERFLOW -> {
-                        inboundNetData = ByteBuffer.allocate(inboundNetData.capacity() * 2);
-                        continue;
-                    }
-                    case CLOSED -> {
-                        throw new SSLHandshakeException("closed on handshake wrap");
-                    }
-                }
-            }
-
-        }
+        return -1;
     }
 
     @Override

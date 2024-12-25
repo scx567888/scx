@@ -1,7 +1,11 @@
 package cool.scx.http.usagi.test;
 
 import cool.scx.http.usagi.HttpChunkedDataSupplier;
-import cool.scx.io.*;
+import cool.scx.io.data_node.DataNode;
+import cool.scx.io.data_reader.DataReader;
+import cool.scx.io.data_reader.LinkedDataReader;
+import cool.scx.io.data_supplier.InputStreamDataSupplier;
+import cool.scx.io.exception.NoMatchFoundException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
