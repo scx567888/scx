@@ -13,12 +13,14 @@ import static cool.scx.io.SkipDataConsumer.SKIP_DATA_CONSUMER;
  */
 public class LinkedDataReader implements DataReader {
 
-    private final DataSupplier dataSupplier;
-    private DataNode head;
-    private DataNode tail;
+    protected final DataSupplier dataSupplier;
+    protected final DataPuller dataPuller;
+    protected DataNode head;
+    protected DataNode tail;
 
     public LinkedDataReader(DataSupplier dataSupplier) {
         this.dataSupplier = dataSupplier;
+        this.dataPuller = this::pullData;
         this.head = new DataNode(new byte[]{});
         this.tail = this.head;
     }
@@ -129,15 +131,15 @@ public class LinkedDataReader implements DataReader {
     }
 
     public void ensureAvailable() throws NoMoreDataException {
-        ensureAvailable(this::pullData);
+        ensureAvailable(dataPuller);
     }
 
     public void walk(DataConsumer consumer, int maxLength, boolean movePointer) {
-        walk(consumer, maxLength, movePointer, this::pullData);
+        walk(consumer, maxLength, movePointer, dataPuller);
     }
 
     public int indexOf(DataIndexer indexer, int max) throws NoMatchFoundException {
-        return indexOf(indexer, max, this::pullData);
+        return indexOf(indexer, max, dataPuller);
     }
 
     @Override
