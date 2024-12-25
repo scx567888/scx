@@ -1,27 +1,27 @@
 package cool.scx.tcp;
 
-import javax.net.ssl.SSLSocket;
+import cool.scx.tcp.tls.TLSSocketChannel;
+
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.net.Socket;
 import java.net.SocketAddress;
-
+import java.nio.channels.SocketChannel;
 
 /**
- * TCPClient
+ * NIO TCP 客户端
  *
  * @author scx567888
  * @version 0.0.1
  */
-public class TCPClient implements ScxTCPClient {
+public class NioTCPClient implements ScxTCPClient {
 
     private final ScxTCPClientOptions options;
 
-    public TCPClient() {
+    public NioTCPClient() {
         this(new ScxTCPClientOptions());
     }
 
-    public TCPClient(ScxTCPClientOptions options) {
+    public NioTCPClient(ScxTCPClientOptions options) {
         this.options = options;
     }
 
@@ -32,20 +32,22 @@ public class TCPClient implements ScxTCPClient {
         //todo 处理代理
         var proxy = options.proxy();
 
-        Socket socket;
+        SocketChannel socketChannel;
         try {
             if (tls != null && tls.enabled()) {
-                socket = tls.createSocket();
+                var sslEngine = tls.sslContext().createSSLEngine();
+                sslEngine.setUseClientMode(true);
+                socketChannel = new TLSSocketChannel(SocketChannel.open(), sslEngine);
             } else {
-                socket = new Socket();
+                socketChannel = SocketChannel.open();
             }
-            socket.connect(endpoint);
+            socketChannel.connect(endpoint);
         } catch (IOException e) {
             throw new UncheckedIOException("客户端连接失败 !!!", e);
         }
 
         // 主动调用握手 快速检测 SSL 错误 防止等到调用用户处理程序时才发现 
-        if (socket instanceof SSLSocket sslSocket) {
+        if (socketChannel instanceof TLSSocketChannel sslSocket) {
             try {
                 sslSocket.startHandshake();
             } catch (IOException e) {
@@ -58,7 +60,7 @@ public class TCPClient implements ScxTCPClient {
             }
         }
 
-        return new TCPSocket(socket);
+        return new NioTCPSocket(socketChannel);
 
     }
 

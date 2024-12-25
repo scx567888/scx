@@ -2,8 +2,7 @@ package cool.scx.http.usagi;
 
 import cool.scx.io.DataNode;
 import cool.scx.io.DataReader;
-
-import java.util.function.Supplier;
+import cool.scx.io.DataSupplier;
 
 /**
  * todo 待完成
@@ -11,7 +10,7 @@ import java.util.function.Supplier;
  * @author scx567888
  * @version 0.0.1
  */
-public class HttpChunkedDataSupplier implements Supplier<DataNode> {
+public class HttpChunkedDataSupplier implements DataSupplier {
 
     private final DataReader dataReader;
 

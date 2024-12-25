@@ -6,9 +6,9 @@ import cool.scx.http.uri.ScxURI;
 import cool.scx.http.uri.ScxURIWritable;
 import cool.scx.io.InputStreamDataSupplier;
 import cool.scx.io.LinkedDataReader;
+import cool.scx.tcp.ClassicTCPClient;
 import cool.scx.tcp.ScxTCPClientOptions;
 import cool.scx.tcp.ScxTCPSocket;
-import cool.scx.tcp.TCPClient;
 import cool.scx.tcp.tls.TLS;
 
 import javax.net.ssl.SSLContext;
@@ -33,7 +33,7 @@ public class UsagiHttpClientRequest extends ScxHttpClientRequestBase {
 
     private final UsagiHttpClient httpClient;
 
-    TCPClient tcpClient;
+    ClassicTCPClient tcpClient;
     ScxTCPSocket connect;
 
     public UsagiHttpClientRequest(UsagiHttpClient httpClient) {
@@ -142,9 +142,9 @@ public class UsagiHttpClientRequest extends ScxHttpClientRequestBase {
 
         if (isHttps) {
             var trustAllTLS = getTrustAllTLS();
-            this.tcpClient = new TCPClient(new ScxTCPClientOptions().tls(trustAllTLS));
+            this.tcpClient = new ClassicTCPClient(new ScxTCPClientOptions().tls(trustAllTLS));
         } else {
-            this.tcpClient = new TCPClient(httpClient.options);
+            this.tcpClient = new ClassicTCPClient(httpClient.options);
         }
 
         var remoteAddress = getRemoteAddress(uri);

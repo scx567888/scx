@@ -1,8 +1,9 @@
 package cool.scx.io;
 
-import cool.scx.common.util.ArrayUtils;
+import cool.scx.io.DataPuller.PullResult;
 
-import java.util.function.Supplier;
+import static cool.scx.io.DataPuller.PullResult.*;
+import static cool.scx.io.SkipDataConsumer.SKIP_DATA_CONSUMER;
 
 /**
  * LinkedDataReader
@@ -12,42 +13,50 @@ import java.util.function.Supplier;
  */
 public class LinkedDataReader implements DataReader {
 
-    private final Supplier<DataNode> dataSupplier;
+    private final DataSupplier dataSupplier;
     private DataNode head;
     private DataNode tail;
 
-    public LinkedDataReader(Supplier<DataNode> dataSupplier) {
+    public LinkedDataReader(DataSupplier dataSupplier) {
         this.dataSupplier = dataSupplier;
-        this.head = new DataNode(EMPTY_BYTES);
+        this.head = new DataNode(new byte[]{});
         this.tail = this.head;
     }
 
-    /**
-     * @return 是否拉取成功
-     */
-    private boolean pullData() {
-        var data = dataSupplier.get();
-        if (data == null) {
-            return false;
-        }
-        tail.next = data;
-        tail = tail.next;
-        return true;
+    public LinkedDataReader() {
+        this(() -> null);
     }
 
-    private void ensureAvailable() throws NoMoreDataException {
+    public void appendData(DataNode data) {
+        tail.next = data;
+        tail = tail.next;
+    }
+
+    public PullResult pullData() {
+        var data = dataSupplier.get();
+        if (data == null) {
+            return FAIL;
+        }
+        appendData(data);
+        return SUCCESS;
+    }
+
+    public void ensureAvailable(DataPuller dataPuller) throws NoMoreDataException {
         while (!head.hasAvailable()) {
             if (head.next == null) {
-                if (!pullData()) {
+                var result = dataPuller.pull();
+                if (FAIL == result) {
                     throw new NoMoreDataException();
+                } else if (BREAK == result) {
+                    break;
                 }
             }
             head = head.next;
         }
     }
 
-    private void walk(DataConsumer consumer, int maxLength, boolean movePointer) throws NoMoreDataException {
-        ensureAvailable(); // 确保至少有一个字节可读
+    public void walk(DataConsumer consumer, int maxLength, boolean movePointer, DataPuller dataPuller) throws NoMoreDataException {
+        ensureAvailable(dataPuller); // 确保至少有一个字节可读
 
         var remaining = maxLength; // 剩余需要读取的字节数
         var n = head; // 用于循环的节点
@@ -71,9 +80,9 @@ public class LinkedDataReader implements DataReader {
             // 如果 remaining > 0 说明还需要继续读取
             if (remaining > 0) {
                 if (n.next == null) {
-                    // 如果 当前节点没有下一个节点 并且拉取失败 (没有更多数据) 则退出循环
-                    var success = pullData();
-                    if (!success) {
+                    // 如果 当前节点没有下一个节点 并且拉取失败 则退出循环
+                    var result = dataPuller.pull();
+                    if (result != SUCCESS) {
                         break;
                     }
                 }
@@ -85,8 +94,8 @@ public class LinkedDataReader implements DataReader {
         }
     }
 
-    private int indexOf(DataIndexer indexer, int max) throws NoMoreDataException, NoMatchFoundException {
-        ensureAvailable(); // 确保至少有一个字节可读
+    public int indexOf(DataIndexer indexer, int max, DataPuller dataPuller) throws NoMoreDataException, NoMatchFoundException {
+        ensureAvailable(dataPuller); // 确保至少有一个字节可读
 
         var index = 0; // 主串索引
 
@@ -110,8 +119,8 @@ public class LinkedDataReader implements DataReader {
 
             // 如果 currentNode 没有下一个节点并且尝试拉取数据失败，直接退出循环
             if (n.next == null) {
-                var success = pullData();
-                if (!success) {
+                var result = dataPuller.pull();
+                if (result != SUCCESS) {
                     break;
                 }
             }
@@ -119,6 +128,18 @@ public class LinkedDataReader implements DataReader {
         }
 
         throw new NoMatchFoundException();
+    }
+
+    public void ensureAvailable() throws NoMoreDataException {
+        ensureAvailable(this::pullData);
+    }
+
+    public void walk(DataConsumer consumer, int maxLength, boolean movePointer) throws NoMoreDataException {
+        walk(consumer, maxLength, movePointer, this::pullData);
+    }
+
+    public int indexOf(DataIndexer indexer, int max) throws NoMoreDataException {
+        return indexOf(indexer, max, this::pullData);
     }
 
     @Override
@@ -131,7 +152,7 @@ public class LinkedDataReader implements DataReader {
 
     @Override
     public byte[] read(int maxLength) throws NoMoreDataException {
-        var consumer = new BytesDataConsumer();
+        var consumer = new ByteArrayDataConsumer();
         walk(consumer, maxLength, true);
         return consumer.getBytes();
     }
@@ -149,7 +170,7 @@ public class LinkedDataReader implements DataReader {
 
     @Override
     public byte[] peek(int maxLength) throws NoMoreDataException {
-        var consumer = new BytesDataConsumer();
+        var consumer = new ByteArrayDataConsumer();
         walk(consumer, maxLength, false);
         return consumer.getBytes();
     }
@@ -161,10 +182,7 @@ public class LinkedDataReader implements DataReader {
 
     @Override
     public int indexOf(byte b, int max) throws NoMatchFoundException, NoMoreDataException {
-        return indexOf((bytes, position, length) -> {
-            int i = ArrayUtils.indexOf(bytes, position, length, b);
-            return i == -1 ? Integer.MIN_VALUE : i;
-        }, max);
+        return indexOf(new ByteIndexer(b), max);
     }
 
     @Override
@@ -174,7 +192,7 @@ public class LinkedDataReader implements DataReader {
 
     @Override
     public void skip(int length) throws NoMoreDataException {
-        walk((_, _, _) -> {}, length, true);
+        walk(SKIP_DATA_CONSUMER, length, true);
     }
 
 }

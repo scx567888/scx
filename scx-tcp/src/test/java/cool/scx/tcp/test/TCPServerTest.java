@@ -2,8 +2,8 @@ package cool.scx.tcp.test;
 
 import cool.scx.io.InputStreamDataSupplier;
 import cool.scx.io.LinkedDataReader;
+import cool.scx.tcp.NioTCPServer;
 import cool.scx.tcp.ScxTCPServerOptions;
-import cool.scx.tcp.TCPServer;
 import cool.scx.tcp.tls.TLS;
 
 public class TCPServerTest {
@@ -19,7 +19,8 @@ public class TCPServerTest {
     }
 
     public static void test1() {
-        var tcpServer = new TCPServer(new ScxTCPServerOptions().port(8899).tls(tls));
+//        var tcpServer = new ClassicTCPServer(new ScxTCPServerOptions().port(8899).tls(tls));
+        var tcpServer = new NioTCPServer(new ScxTCPServerOptions().port(8899).tls(tls));
 
         tcpServer.onConnect(c -> {
             System.out.println("客户端连接了 !!!");
@@ -35,6 +36,7 @@ public class TCPServerTest {
                     }
                     System.out.println(c.remoteAddress() + " : " + new String(s));
                 } catch (Exception e) {
+                    e.printStackTrace();
                     break;
                 }
             }

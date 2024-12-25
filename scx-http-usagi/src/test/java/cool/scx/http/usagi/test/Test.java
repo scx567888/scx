@@ -1,12 +1,10 @@
 package cool.scx.http.usagi.test;
 
 import cool.scx.http.exception.ScxHttpException;
-
 import cool.scx.http.routing.Router;
 import cool.scx.http.usagi.UsagiHttpServer;
 import cool.scx.http.usagi.UsagiHttpServerOptions;
 
-import static cool.scx.common.exception.ScxExceptionHelper.wrap;
 import static cool.scx.http.HttpStatusCode.INTERNAL_SERVER_ERROR;
 
 public class Test {
@@ -20,7 +18,7 @@ public class Test {
         var server = new UsagiHttpServer(new UsagiHttpServerOptions().port(8080));
 
         var router = Router.of();
-        
+
 //        router.route(-100000).handler(new CorsHandler().addOrigin("http://localhost:18899"));
 
         router.route().path("/abc").handler(c -> {

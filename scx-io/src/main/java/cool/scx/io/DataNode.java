@@ -14,9 +14,7 @@ public class DataNode {
     DataNode next;
 
     public DataNode(byte[] bytes) {
-        this.bytes = bytes;
-        this.position = 0;
-        this.limit = bytes.length;
+        this(bytes, 0, bytes.length);
     }
 
     public DataNode(byte[] bytes, int position, int limit) {

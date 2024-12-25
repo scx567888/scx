@@ -3,7 +3,6 @@ package cool.scx.io;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
-import java.util.function.Supplier;
 
 /**
  * InputStreamDataSupplier
@@ -11,7 +10,7 @@ import java.util.function.Supplier;
  * @author scx567888
  * @version 0.0.1
  */
-public class InputStreamDataSupplier implements Supplier<DataNode> {
+public class InputStreamDataSupplier implements DataSupplier {
 
     private final InputStream inputStream;
     private final int bufferLength;

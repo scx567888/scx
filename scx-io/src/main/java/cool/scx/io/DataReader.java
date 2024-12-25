@@ -8,8 +8,6 @@ package cool.scx.io;
  */
 public interface DataReader {
 
-    byte[] EMPTY_BYTES = new byte[0];
-
     /**
      * 读取单个字节 (指针会移动)
      * 当没有更多的数据时会抛出异常

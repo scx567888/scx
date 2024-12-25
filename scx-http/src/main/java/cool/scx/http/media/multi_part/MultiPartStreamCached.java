@@ -3,6 +3,7 @@ package cool.scx.http.media.multi_part;
 import cool.scx.common.util.RandomUtils;
 import cool.scx.http.ScxHttpHeaders;
 import cool.scx.io.NoMatchFoundException;
+import cool.scx.io.OutputStreamDataConsumer;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,13 +46,7 @@ public class MultiPartStreamCached extends MultiPartStream {
             try {
                 var i = linkedDataReader.indexOf(boundaryBytes);
                 // i - 2 因为我们不需要读取内容结尾的 \r\n  
-                linkedDataReader.read((b, off, len) -> {
-                    try {
-                        output.write(b, off, len);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }, i - 2);
+                linkedDataReader.read(new OutputStreamDataConsumer(output), i - 2);
                 //跳过 \r\n 方便后续读取
                 linkedDataReader.skip(2);
             } catch (NoMatchFoundException e) {

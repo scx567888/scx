@@ -1,6 +1,7 @@
 package cool.scx.io;
 
 import java.io.*;
+import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
@@ -74,5 +75,22 @@ public final class IOHelper {
             }
         }
     }
+
+    public static int transferByteBuffer(ByteBuffer source, ByteBuffer dest) {
+        int sourceRemaining = source.remaining();
+        int destRemaining = dest.remaining();
+        if (sourceRemaining > destRemaining) {
+            // 设置源缓冲区的限制为当前 position 加上目标缓冲区的剩余容量
+            int originalLimit = source.limit();
+            source.limit(source.position() + destRemaining);
+            dest.put(source);
+            source.limit(originalLimit); // 恢复原始限制
+            return destRemaining;
+        } else {
+            dest.put(source);
+            return sourceRemaining;
+        }
+    }
+
 
 }
