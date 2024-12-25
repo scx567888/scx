@@ -1,7 +1,7 @@
 package cool.scx.http.usagi;
 
-import cool.scx.io.DataReader;
-import cool.scx.io.NoMoreDataException;
+import cool.scx.io.data_reader.DataReader;
+import cool.scx.io.exception.NoMoreDataException;
 
 import java.io.InputStream;
 

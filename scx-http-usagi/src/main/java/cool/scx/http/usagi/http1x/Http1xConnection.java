@@ -7,10 +7,10 @@ import cool.scx.http.usagi.FixedLengthInputStream;
 import cool.scx.http.usagi.HttpChunkedInputStream;
 import cool.scx.http.usagi.UsagiHttpServerOptions;
 import cool.scx.http.usagi.exception.CloseConnectionException;
-import cool.scx.io.InputStreamDataSupplier;
-import cool.scx.io.LinkedDataReader;
-import cool.scx.io.NoMatchFoundException;
-import cool.scx.io.NoMoreDataException;
+import cool.scx.io.data_supplier.InputStreamDataSupplier;
+import cool.scx.io.data_reader.LinkedDataReader;
+import cool.scx.io.exception.NoMatchFoundException;
+import cool.scx.io.exception.NoMoreDataException;
 import cool.scx.tcp.ScxTCPSocket;
 
 import java.io.IOException;
