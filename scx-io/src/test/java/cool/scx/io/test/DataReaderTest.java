@@ -1,15 +1,14 @@
 package cool.scx.io.test;
 
-import cool.scx.io.ByteArrayDataReader;
-import cool.scx.io.DataNode;
-import cool.scx.io.LinkedDataReader;
-import cool.scx.io.NoMatchFoundException;
+import cool.scx.io.data_node.DataNode;
+import cool.scx.io.data_reader.ByteArrayDataReader;
+import cool.scx.io.data_reader.LinkedDataReader;
+import cool.scx.io.data_supplier.ByteArrayDataSupplier;
+import cool.scx.io.exception.NoMatchFoundException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.nio.charset.StandardCharsets;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Supplier;
 
 public class DataReaderTest {
 
@@ -40,25 +39,18 @@ public class DataReaderTest {
 
     @Test
     public static void test2() {
-        var s = new byte[10][];
-        s[0] = "1234567890".getBytes();
-        s[1] = "abcdefghi".getBytes();
-        s[2] = "jklmnopqrst".getBytes();
-        s[3] = "uvwzyz".getBytes();
-        s[4] = "ddf".getBytes();
-        s[5] = "1".getBytes();
-        s[6] = "3".getBytes();
-        s[7] = "5".getBytes();
-        s[8] = "7".getBytes();
-        s[9] = "9".getBytes();
-        var d = new AtomicInteger(0);
-        Supplier<DataNode> sp = () -> {
-            try {
-                return new DataNode(s[d.getAndIncrement()]);
-            } catch (Exception e) {
-                return null;
-            }
-        };
+        var sp = new ByteArrayDataSupplier(
+                "1234567890".getBytes(),
+                "abcdefghi".getBytes(),
+                "jklmnopqrst".getBytes(),
+                "uvwzyz".getBytes(),
+                "ddf".getBytes(),
+                "1".getBytes(),
+                "3".getBytes(),
+                "5".getBytes(),
+                "7".getBytes(),
+                "9".getBytes()
+        );
 
         var dataReader = new LinkedDataReader(sp);
 

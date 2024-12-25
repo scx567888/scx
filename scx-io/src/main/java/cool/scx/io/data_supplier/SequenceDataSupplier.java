@@ -2,8 +2,8 @@ package cool.scx.io.data_supplier;
 
 import cool.scx.io.data_node.DataNode;
 
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
 
 public class SequenceDataSupplier implements DataSupplier {
 
@@ -31,5 +31,5 @@ public class SequenceDataSupplier implements DataSupplier {
         }
         return null; // 所有 DataSupplier 都返回 null，表示结束
     }
-    
+
 }

@@ -1,8 +1,9 @@
 package cool.scx.io.data_supplier;
 
 import cool.scx.io.data_node.DataNode;
-import java.util.List;
+
 import java.util.Iterator;
+import java.util.List;
 
 public class ByteArrayDataSupplier implements DataSupplier {
 
@@ -24,5 +25,5 @@ public class ByteArrayDataSupplier implements DataSupplier {
         }
         return null; // 没有更多字节数组时返回 null
     }
-    
+
 }
