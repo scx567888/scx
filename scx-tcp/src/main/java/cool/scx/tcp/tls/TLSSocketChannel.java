@@ -1,7 +1,7 @@
 package cool.scx.tcp.tls;
 
-import cool.scx.io.ByteChannelDataSupplier;
-import cool.scx.io.PowerfulLinkedDataReader;
+import cool.scx.io.data_supplier.ByteChannelDataSupplier;
+import cool.scx.io.data_reader.PowerfulLinkedDataReader;
 import cool.scx.io.data_node.DataNode;
 import cool.scx.io.data_reader.LinkedDataReader;
 
