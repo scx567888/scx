@@ -1,4 +1,7 @@
-package cool.scx.io;
+package cool.scx.io.data_consumer;
+
+import cool.scx.io.data_node.DataNode;
+import cool.scx.io.IOHelper;
 
 /**
  * ByteArrayDataConsumer

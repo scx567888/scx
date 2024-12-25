@@ -1,4 +1,4 @@
-package cool.scx.io;
+package cool.scx.io.exception;
 
 /**
  * 寻找匹配内容 查找失败的异常

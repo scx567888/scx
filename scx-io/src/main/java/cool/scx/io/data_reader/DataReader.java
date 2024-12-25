@@ -1,4 +1,8 @@
-package cool.scx.io;
+package cool.scx.io.data_reader;
+
+import cool.scx.io.data_consumer.DataConsumer;
+import cool.scx.io.exception.NoMatchFoundException;
+import cool.scx.io.exception.NoMoreDataException;
 
 /**
  * DataReader
