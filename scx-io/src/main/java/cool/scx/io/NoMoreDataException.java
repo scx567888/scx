@@ -1,4 +1,4 @@
-package cool.scx.io.exception;
+package cool.scx.io;
 
 /**
  * 读取数据时达到末尾的异常

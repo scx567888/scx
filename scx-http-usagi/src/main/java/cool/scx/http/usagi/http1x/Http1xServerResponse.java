@@ -1,7 +1,7 @@
 package cool.scx.http.usagi.http1x;
 
 import cool.scx.http.*;
-import cool.scx.io.data_reader.LinkedDataReader;
+import cool.scx.io.LinkedDataReader;
 import cool.scx.tcp.ScxTCPSocket;
 
 import java.io.IOException;

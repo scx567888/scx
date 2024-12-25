@@ -1,6 +1,4 @@
-package cool.scx.io.data_supplier;
-
-import cool.scx.io.data_node.DataNode;
+package cool.scx.io;
 
 import java.io.IOException;
 import java.io.InputStream;

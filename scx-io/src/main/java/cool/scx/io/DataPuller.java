@@ -1,4 +1,4 @@
-package cool.scx.io.data_puller;
+package cool.scx.io;
 
 /**
  * DataPuller

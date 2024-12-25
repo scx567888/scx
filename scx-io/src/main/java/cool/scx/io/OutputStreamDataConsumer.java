@@ -1,4 +1,4 @@
-package cool.scx.io.data_consumer;
+package cool.scx.io;
 
 import java.io.IOException;
 import java.io.OutputStream;

@@ -1,4 +1,4 @@
-package cool.scx.io.data_indexer;
+package cool.scx.io;
 
 import cool.scx.common.util.ArrayUtils;
 

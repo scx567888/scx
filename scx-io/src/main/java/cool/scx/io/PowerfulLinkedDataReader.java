@@ -1,6 +1,4 @@
-package cool.scx.io.data_reader;
-
-import cool.scx.io.data_supplier.DataSupplier;
+package cool.scx.io;
 
 //todo 待增强
 public class PowerfulLinkedDataReader extends LinkedDataReader {

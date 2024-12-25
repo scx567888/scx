@@ -4,7 +4,7 @@ import cool.scx.http.ScxHttpBody;
 import cool.scx.http.ScxHttpHeadersWritable;
 import cool.scx.http.usagi.UsagiServerWebSocket;
 import cool.scx.http.web_socket.ScxServerWebSocketHandshakeRequest;
-import cool.scx.io.data_reader.LinkedDataReader;
+import cool.scx.io.LinkedDataReader;
 import cool.scx.tcp.ScxTCPSocket;
 
 import java.io.OutputStream;

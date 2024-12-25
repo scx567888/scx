@@ -2,8 +2,8 @@ package cool.scx.http.media.multi_part;
 
 import cool.scx.common.util.RandomUtils;
 import cool.scx.http.ScxHttpHeaders;
-import cool.scx.io.data_consumer.OutputStreamDataConsumer;
-import cool.scx.io.exception.NoMatchFoundException;
+import cool.scx.io.OutputStreamDataConsumer;
+import cool.scx.io.NoMatchFoundException;
 
 import java.io.IOException;
 import java.io.InputStream;

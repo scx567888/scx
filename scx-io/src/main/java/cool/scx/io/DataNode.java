@@ -1,4 +1,4 @@
-package cool.scx.io.data_node;
+package cool.scx.io;
 
 /**
  * DataNode
@@ -8,10 +8,10 @@ package cool.scx.io.data_node;
  */
 public class DataNode {
 
-    public final byte[] bytes;
-    public final int limit;
-    public int position;
-    public DataNode next;
+    final byte[] bytes;
+    final int limit;
+    int position;
+    DataNode next;
 
     public DataNode(byte[] bytes) {
         this(bytes, 0, bytes.length);
@@ -23,11 +23,11 @@ public class DataNode {
         this.limit = limit;
     }
 
-    public int available() {
+    int available() {
         return limit - position;
     }
 
-    public boolean hasAvailable() {
+    boolean hasAvailable() {
         return position < limit;
     }
 

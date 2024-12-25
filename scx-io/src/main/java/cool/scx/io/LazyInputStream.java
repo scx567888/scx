@@ -1,4 +1,4 @@
-package cool.scx.io.stream;
+package cool.scx.io;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -1,6 +1,6 @@
-package cool.scx.io.data_puller;
+package cool.scx.io;
 
-import static cool.scx.io.data_puller.DataPuller.PullResult.BREAK;
+import static cool.scx.io.DataPuller.PullResult.BREAK;
 
 /**
  * 计数 DataPuller
