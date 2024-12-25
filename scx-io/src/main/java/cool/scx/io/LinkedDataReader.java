@@ -13,12 +13,14 @@ import static cool.scx.io.SkipDataConsumer.SKIP_DATA_CONSUMER;
  */
 public class LinkedDataReader implements DataReader {
 
-    private final DataSupplier dataSupplier;
-    private DataNode head;
-    private DataNode tail;
+    protected final DataSupplier dataSupplier;
+    protected final DataPuller dataPuller;
+    protected DataNode head;
+    protected DataNode tail;
 
     public LinkedDataReader(DataSupplier dataSupplier) {
         this.dataSupplier = dataSupplier;
+        this.dataPuller = this::pullData;
         this.head = new DataNode(new byte[]{});
         this.tail = this.head;
     }
@@ -55,8 +57,7 @@ public class LinkedDataReader implements DataReader {
         }
     }
 
-    public void walk(DataConsumer consumer, int maxLength, boolean movePointer, DataPuller dataPuller) throws NoMoreDataException {
-        ensureAvailable(dataPuller); // 确保至少有一个字节可读
+    public void walk(DataConsumer consumer, int maxLength, boolean movePointer, DataPuller dataPuller) {
 
         var remaining = maxLength; // 剩余需要读取的字节数
         var n = head; // 用于循环的节点
@@ -94,8 +95,7 @@ public class LinkedDataReader implements DataReader {
         }
     }
 
-    public int indexOf(DataIndexer indexer, int max, DataPuller dataPuller) throws NoMoreDataException, NoMatchFoundException {
-        ensureAvailable(dataPuller); // 确保至少有一个字节可读
+    public int indexOf(DataIndexer indexer, int max, DataPuller dataPuller) throws NoMatchFoundException {
 
         var index = 0; // 主串索引
 
@@ -131,15 +131,15 @@ public class LinkedDataReader implements DataReader {
     }
 
     public void ensureAvailable() throws NoMoreDataException {
-        ensureAvailable(this::pullData);
+        ensureAvailable(dataPuller);
     }
 
-    public void walk(DataConsumer consumer, int maxLength, boolean movePointer) throws NoMoreDataException {
-        walk(consumer, maxLength, movePointer, this::pullData);
+    public void walk(DataConsumer consumer, int maxLength, boolean movePointer) {
+        walk(consumer, maxLength, movePointer, dataPuller);
     }
 
-    public int indexOf(DataIndexer indexer, int max) throws NoMoreDataException {
-        return indexOf(indexer, max, this::pullData);
+    public int indexOf(DataIndexer indexer, int max) throws NoMatchFoundException {
+        return indexOf(indexer, max, dataPuller);
     }
 
     @Override
@@ -152,6 +152,7 @@ public class LinkedDataReader implements DataReader {
 
     @Override
     public byte[] read(int maxLength) throws NoMoreDataException {
+        ensureAvailable();
         var consumer = new ByteArrayDataConsumer();
         walk(consumer, maxLength, true);
         return consumer.getBytes();
@@ -159,6 +160,7 @@ public class LinkedDataReader implements DataReader {
 
     @Override
     public void read(DataConsumer dataConsumer, int maxLength) throws NoMoreDataException {
+        ensureAvailable();
         walk(dataConsumer, maxLength, true);
     }
 
@@ -170,6 +172,7 @@ public class LinkedDataReader implements DataReader {
 
     @Override
     public byte[] peek(int maxLength) throws NoMoreDataException {
+        ensureAvailable();
         var consumer = new ByteArrayDataConsumer();
         walk(consumer, maxLength, false);
         return consumer.getBytes();
@@ -177,21 +180,25 @@ public class LinkedDataReader implements DataReader {
 
     @Override
     public void peek(DataConsumer dataConsumer, int maxLength) throws NoMoreDataException {
+        ensureAvailable();
         walk(dataConsumer, maxLength, false);
     }
 
     @Override
     public int indexOf(byte b, int max) throws NoMatchFoundException, NoMoreDataException {
+        ensureAvailable();
         return indexOf(new ByteIndexer(b), max);
     }
 
     @Override
     public int indexOf(byte[] pattern, int max) throws NoMatchFoundException, NoMoreDataException {
+        ensureAvailable();
         return indexOf(new KMPDataIndexer(pattern), max);
     }
 
     @Override
     public void skip(int length) throws NoMoreDataException {
+        ensureAvailable();
         walk(SKIP_DATA_CONSUMER, length, true);
     }
 

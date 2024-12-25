@@ -30,4 +30,8 @@ public class CountingDataPuller implements DataPuller {
         return BREAK;
     }
 
+    public int count() {
+        return count;
+    }
+
 }

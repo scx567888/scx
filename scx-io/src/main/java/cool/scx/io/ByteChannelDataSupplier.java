@@ -3,51 +3,39 @@ package cool.scx.io;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.ByteBuffer;
-import java.nio.channels.ByteChannel;
+import java.nio.channels.ReadableByteChannel;
 
+/**
+ * ByteChannelDataSupplier
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class ByteChannelDataSupplier implements DataSupplier {
 
-    private final ByteChannel dataChannel;
-    private final int bufferLength;
-    private final boolean compress;
+    private final ReadableByteChannel dataChannel;
+    private final ByteBuffer buffer;
 
-    public ByteChannelDataSupplier(ByteChannel dataChannel) {
-        this(dataChannel, 8192, false);
-    }
-
-    public ByteChannelDataSupplier(ByteChannel dataChannel, boolean compress) {
-        this(dataChannel, 8192, compress);
-    }
-
-    public ByteChannelDataSupplier(ByteChannel dataChannel, int bufferLength) {
-        this(dataChannel, bufferLength, false);
-    }
-
-    public ByteChannelDataSupplier(ByteChannel dataChannel, int bufferLength, boolean compress) {
+    public ByteChannelDataSupplier(ReadableByteChannel dataChannel, int bufferLength) {
         this.dataChannel = dataChannel;
-        this.bufferLength = bufferLength;
-        this.compress = compress;
+        this.buffer = ByteBuffer.allocate(bufferLength);
+    }
+
+    public ByteChannelDataSupplier(ReadableByteChannel dataChannel) {
+        this(dataChannel, 8192);
     }
 
     @Override
     public DataNode get() {
         try {
-            // 不使用成员变量作为缓冲区的原因 参照 InputStreamDataSupplier
-            var bytes = ByteBuffer.allocate(bufferLength);
-            int i = dataChannel.read(bytes);
+            buffer.clear(); // 重置缓冲区以进行新的读取操作
+            int i = dataChannel.read(buffer);
             if (i == -1) {
-                return null; // end of data
+                return null; // 数据结束
             }
-            // 如果读取的数据量与缓冲区大小一致，直接返回内部数组
-            if (i == bufferLength) {
-                return new DataNode(bytes.array());
-            } else if (compress) {// 否则判断是否开启压缩
-                var data = new byte[i];
-                System.arraycopy(bytes.array(), 0, data, 0, i);
-                return new DataNode(data);
-            } else {// 不压缩 直接返回
-                return new DataNode(bytes.array(), 0, i);
-            }
+            var data = new byte[i];
+            buffer.flip().get(data); // 复制数据到新的数组
+            return new DataNode(data);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }

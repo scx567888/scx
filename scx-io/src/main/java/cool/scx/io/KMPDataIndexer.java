@@ -64,4 +64,12 @@ public class KMPDataIndexer implements DataIndexer {
         return Integer.MIN_VALUE;
     }
 
+    public void reset() {
+        patternIndex = 0;
+    }
+
+    public byte[] pattern() {
+        return pattern;
+    }
+
 }
