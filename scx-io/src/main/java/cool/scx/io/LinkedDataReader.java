@@ -2,8 +2,8 @@ package cool.scx.io;
 
 import cool.scx.io.DataPuller.PullResult;
 
-import static cool.scx.io.SkipDataConsumer.SKIP_DATA_CONSUMER;
 import static cool.scx.io.DataPuller.PullResult.*;
+import static cool.scx.io.SkipDataConsumer.SKIP_DATA_CONSUMER;
 
 /**
  * LinkedDataReader

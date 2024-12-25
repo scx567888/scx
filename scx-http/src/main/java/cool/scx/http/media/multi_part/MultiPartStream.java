@@ -2,8 +2,8 @@ package cool.scx.http.media.multi_part;
 
 import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.ScxHttpHeadersWritable;
-import cool.scx.io.LinkedDataReader;
 import cool.scx.io.InputStreamDataSupplier;
+import cool.scx.io.LinkedDataReader;
 import cool.scx.io.NoMatchFoundException;
 
 import java.io.IOException;

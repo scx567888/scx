@@ -1,10 +1,6 @@
 package cool.scx.io.test;
 
-import cool.scx.io.DataNode;
-import cool.scx.io.ByteArrayDataReader;
-import cool.scx.io.LinkedDataReader;
-import cool.scx.io.ByteArrayDataSupplier;
-import cool.scx.io.NoMatchFoundException;
+import cool.scx.io.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
