@@ -1,5 +1,7 @@
 package cool.scx.io;
 
+import cool.scx.common.iterator.ArrayIterator;
+
 import java.util.Iterator;
 import java.util.List;
 
@@ -13,6 +15,13 @@ public class SequenceDataSupplier implements DataSupplier {
 
     public SequenceDataSupplier(List<DataSupplier> dataSupplierList) {
         this.iterator = dataSupplierList.iterator();
+        if (this.iterator.hasNext()) {
+            this.currentSupplier = this.iterator.next();
+        }
+    }
+
+    public SequenceDataSupplier(DataSupplier... dataSupplierList) {
+        this.iterator = new ArrayIterator<>(dataSupplierList);
         if (this.iterator.hasNext()) {
             this.currentSupplier = this.iterator.next();
         }
