@@ -54,7 +54,7 @@ public class PowerfulLinkedDataReader extends LinkedDataReader {
         walk(consumer, maxLength, true, SKIP_DATA_PULLER);
         return consumer.getBytes();
     }
-    
+
     // InputStream 写法的 read
     public int tryRead(byte[] b, int off, int len) throws NoMoreDataException {
         var dp = new CountingDataPuller(dataPuller, 1);

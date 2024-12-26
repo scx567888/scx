@@ -5,8 +5,6 @@ import cool.scx.io.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.io.ByteArrayInputStream;
-
 public class HttpChunkedDataSupplierTest {
 
     public static void main(String[] args) {
