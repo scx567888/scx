@@ -1,5 +1,7 @@
 package cool.scx.io;
 
+import java.nio.ByteBuffer;
+
 import static cool.scx.io.SkipDataPuller.SKIP_DATA_PULLER;
 
 public class PowerfulLinkedDataReader extends LinkedDataReader {
@@ -52,6 +54,24 @@ public class PowerfulLinkedDataReader extends LinkedDataReader {
         walk(consumer, maxLength, true, SKIP_DATA_PULLER);
         return consumer.getBytes();
     }
+    
+    // InputStream 写法的 read
+    public int tryRead(byte[] b, int off, int len) throws NoMoreDataException {
+        var dp = new CountingDataPuller(dataPuller, 1);
+        ensureAvailable(dp);
+        var consumer = new FillByteArrayDataConsumer(b, off, len);
+        walk(consumer, len, true, SKIP_DATA_PULLER);
+        return consumer.getFilledLength();
+    }
+
+    // ByteChannel 写法的 read
+    public int tryRead(ByteBuffer b) throws NoMoreDataException {
+        var dp = new CountingDataPuller(dataPuller, 1);
+        ensureAvailable(dp);
+        var consumer = new FillByteBufferDataConsumer(b);
+        walk(consumer, b.remaining(), true, SKIP_DATA_PULLER);
+        return consumer.getFilledLength();
+    }
 
     public byte[] tryPeek(int maxLength) throws NoMoreDataException {
         var dp = new CountingDataPuller(dataPuller, 1);
@@ -61,22 +81,14 @@ public class PowerfulLinkedDataReader extends LinkedDataReader {
         return consumer.getBytes();
     }
 
-    /**
-     * 为了极致的性能考虑 复用 KMPDataIndexer
-     */
     public byte[] readUntil(KMPDataIndexer indexer, int max) throws NoMatchFoundException, NoMoreDataException {
-        indexer.reset();
         var index = indexOf(indexer, max);
         var data = read(index);
         skip(indexer.pattern().length);
         return data;
     }
 
-    /**
-     * 为了极致的性能考虑 复用 KMPDataIndexer
-     */
     public byte[] readUntil(KMPDataIndexer indexer) throws NoMatchFoundException, NoMoreDataException {
-        indexer.reset();
         var index = indexOf(indexer, Integer.MAX_VALUE);
         var data = read(index);
         skip(indexer.pattern().length);
@@ -91,6 +103,15 @@ public class PowerfulLinkedDataReader extends LinkedDataReader {
     public byte[] peekUntil(KMPDataIndexer indexer) throws NoMatchFoundException, NoMoreDataException {
         var index = indexOf(indexer, Integer.MAX_VALUE);
         return peek(index);
+    }
+
+    /**
+     * 为了极致的性能考虑 复用 KMPDataIndexer
+     */
+    public int indexOf(KMPDataIndexer indexer, int max) throws NoMatchFoundException, NoMoreDataException {
+        ensureAvailable();
+        indexer.reset();
+        return super.indexOf(indexer, max);
     }
 
 }
