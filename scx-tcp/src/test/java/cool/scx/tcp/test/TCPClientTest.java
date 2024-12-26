@@ -24,11 +24,12 @@ public class TCPClientTest {
 //                var tcpClient = new NioTCPClient(new ScxTCPClientOptions().tls(tls));
         var tcpClient = new ClassicTCPClient(new ScxTCPClientOptions().tls(tls));
         var tcpSocket = tcpClient.connect(new InetSocketAddress(8899));
-        try// (tcpSocket)
+        try //(tcpSocket) 
         {
             var out = tcpSocket.outputStream();
+
             var i = 0;
-            while (i < 10000) {
+            while (i < 100000) {
                 out.write(((i = i + 1) + "\r\n" + (i = i + 1) + "\r\n").getBytes());
             }
             System.err.println("发送完成" + i);
