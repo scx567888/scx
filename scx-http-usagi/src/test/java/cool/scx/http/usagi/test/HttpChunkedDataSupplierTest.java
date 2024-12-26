@@ -5,8 +5,6 @@ import cool.scx.io.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.io.ByteArrayInputStream;
-
 public class HttpChunkedDataSupplierTest {
 
     public static void main(String[] args) {
@@ -18,7 +16,7 @@ public class HttpChunkedDataSupplierTest {
     public static void testGet() {
         // 模拟的复杂分块数据
         byte[] mockData = ("4\r\nWiki\r\n3\r\nHel\r\n7\r\nloWorld\r\n0\r\n\r\n").getBytes();
-        DataReader byteArrayDataReader = new LinkedDataReader(new InputStreamDataSupplier(new ByteArrayInputStream(mockData)));
+        DataReader byteArrayDataReader = new LinkedDataReader(new ByteArrayDataSupplier(mockData));
 
         // 创建 HttpChunkedDataSupplier 实例
         HttpChunkedDataSupplier supplier = new HttpChunkedDataSupplier(byteArrayDataReader);
@@ -45,7 +43,7 @@ public class HttpChunkedDataSupplierTest {
     public static void testFail() {
         // 模拟的复杂分块数据
         byte[] mockData = ("4\r\nWiki\r\n3\r\nHel\r\n7\r\nloWorld\r\n0\r\n\r").getBytes();
-        DataReader byteArrayDataReader = new LinkedDataReader(new InputStreamDataSupplier(new ByteArrayInputStream(mockData)));
+        DataReader byteArrayDataReader = new LinkedDataReader(new ByteArrayDataSupplier(mockData));
 
         // 创建 HttpChunkedDataSupplier 实例
         HttpChunkedDataSupplier supplier = new HttpChunkedDataSupplier(byteArrayDataReader);

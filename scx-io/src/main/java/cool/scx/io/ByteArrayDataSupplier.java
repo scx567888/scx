@@ -1,18 +1,25 @@
 package cool.scx.io;
 
+import cool.scx.common.iterator.ArrayIterator;
+import cool.scx.common.iterator.SingleIterator;
+
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 public class ByteArrayDataSupplier implements DataSupplier {
 
     private final Iterator<byte[]> byteArrayIterator;
 
-    public ByteArrayDataSupplier(List<byte[]> byteArrays) {
+    public ByteArrayDataSupplier(Collection<byte[]> byteArrays) {
         this.byteArrayIterator = byteArrays.iterator();
     }
 
     public ByteArrayDataSupplier(byte[]... byteArrays) {
-        this.byteArrayIterator = List.of(byteArrays).iterator();
+        this.byteArrayIterator = new ArrayIterator<>(byteArrays);
+    }
+
+    public ByteArrayDataSupplier(byte[] byteArray) {
+        this.byteArrayIterator = new SingleIterator<>(byteArray);
     }
 
     @Override
