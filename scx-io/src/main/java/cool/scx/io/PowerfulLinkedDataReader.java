@@ -26,7 +26,7 @@ public class PowerfulLinkedDataReader extends LinkedDataReader {
     public byte[] fastRead(int maxLength) throws NoMoreDataException {
         //通过 计数数据拉取器限制只拉取一次
         var dp = new CountingDataPuller(dataPuller, 1);
-        ensureAvailable(dp);
+        ensureAvailableOrThrow(dp);
         var consumer = new ByteArrayDataConsumer();
         walk(consumer, maxLength, true, dp);
         return consumer.getBytes();
@@ -34,7 +34,7 @@ public class PowerfulLinkedDataReader extends LinkedDataReader {
 
     public byte[] fastPeek(int maxLength) throws NoMoreDataException {
         var dp = new CountingDataPuller(dataPuller, 1);
-        ensureAvailable(dp);
+        ensureAvailableOrThrow(dp);
         var consumer = new ByteArrayDataConsumer();
         walk(consumer, maxLength, false, dp);
         return consumer.getBytes();
@@ -49,7 +49,7 @@ public class PowerfulLinkedDataReader extends LinkedDataReader {
      */
     public byte[] tryRead(int maxLength) throws NoMoreDataException {
         var dp = new CountingDataPuller(dataPuller, 1);
-        ensureAvailable(dp);
+        ensureAvailableOrThrow(dp);
         var consumer = new ByteArrayDataConsumer();
         walk(consumer, maxLength, true, SKIP_DATA_PULLER);
         return consumer.getBytes();
@@ -58,7 +58,10 @@ public class PowerfulLinkedDataReader extends LinkedDataReader {
     // InputStream 写法的 read
     public int tryRead(byte[] b, int off, int len) throws NoMoreDataException {
         var dp = new CountingDataPuller(dataPuller, 1);
-        ensureAvailable(dp);
+        var b1 = ensureAvailable(dp);
+        if (!b1) {
+            return -1;
+        }
         var consumer = new FillByteArrayDataConsumer(b, off, len);
         walk(consumer, len, true, SKIP_DATA_PULLER);
         return consumer.getFilledLength();
@@ -67,7 +70,10 @@ public class PowerfulLinkedDataReader extends LinkedDataReader {
     // ByteChannel 写法的 read
     public int tryRead(ByteBuffer b) throws NoMoreDataException {
         var dp = new CountingDataPuller(dataPuller, 1);
-        ensureAvailable(dp);
+        var b1 = ensureAvailable(dp);
+        if (!b1) {
+            return -1;
+        }
         var consumer = new FillByteBufferDataConsumer(b);
         walk(consumer, b.remaining(), true, SKIP_DATA_PULLER);
         return consumer.getFilledLength();
@@ -75,7 +81,7 @@ public class PowerfulLinkedDataReader extends LinkedDataReader {
 
     public byte[] tryPeek(int maxLength) throws NoMoreDataException {
         var dp = new CountingDataPuller(dataPuller, 1);
-        ensureAvailable(dp);
+        ensureAvailableOrThrow(dp);
         var consumer = new ByteArrayDataConsumer();
         walk(consumer, maxLength, false, SKIP_DATA_PULLER);
         return consumer.getBytes();
@@ -109,7 +115,7 @@ public class PowerfulLinkedDataReader extends LinkedDataReader {
      * 为了极致的性能考虑 复用 KMPDataIndexer
      */
     public int indexOf(KMPDataIndexer indexer, int max) throws NoMatchFoundException, NoMoreDataException {
-        ensureAvailable();
+        ensureAvailableOrThrow();
         indexer.reset();
         return super.indexOf(indexer, max);
     }

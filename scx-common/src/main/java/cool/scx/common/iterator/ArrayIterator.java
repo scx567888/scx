@@ -3,7 +3,7 @@ package cool.scx.common.iterator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class ArrayIterator<T> implements Iterator<T> {
+public class ArrayIterator<T> implements Iterator<T>, Iterable<T> {
 
     private final T[] array;
     private int index;
@@ -20,13 +20,18 @@ public class ArrayIterator<T> implements Iterator<T> {
 
     @Override
     public T next() {
-        if (!hasNext()) {
+        if (index >= array.length) {
             throw new NoSuchElementException("No more elements.");
         }
         var n = array[index];
         array[index] = null; // 可能有助于垃圾回收
         index = index + 1;
         return n;
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return this;
     }
 
 }

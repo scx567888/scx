@@ -1,16 +1,18 @@
 package cool.scx.tcp.tls;
 
-import cool.scx.io.ByteChannelDataSupplier;
+import cool.scx.io.BufferedByteChannelDataSupplier;
 import cool.scx.io.DataNode;
-import cool.scx.io.LinkedDataReader;
 import cool.scx.io.PowerfulLinkedDataReader;
 
 import javax.net.ssl.SSLEngine;
+import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLHandshakeException;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
+//todo 未完成
 public class TLSSocketChannel extends AbstractSocketChannel {
 
     private final SSLEngine sslEngine;
@@ -18,10 +20,10 @@ public class TLSSocketChannel extends AbstractSocketChannel {
     private final ByteBuffer inboundAppData;// 存储已经解密的数据 (相当于缓存)
     private final ByteBuffer outboundNetData;// 存储将要发送到远端的加密数据
     private final ByteBuffer inboundNetData;// 存储从远端读取到的加密数据
-    private final LinkedDataReader rawReader;
-    private final LinkedDataReader dataReader;
-    private int packetBufferSize;
-    private int applicationBufferSize;
+    private final PowerfulLinkedDataReader rawReader;
+    private final PowerfulLinkedDataReader dataReader;
+    private final int packetBufferSize;
+    private final int applicationBufferSize;
 
     public TLSSocketChannel(SocketChannel socketChannel, SSLEngine sslEngine) {
         super(socketChannel);
@@ -35,14 +37,112 @@ public class TLSSocketChannel extends AbstractSocketChannel {
         this.applicationBufferSize = session.getApplicationBufferSize();
         this.packetBufferSize = session.getPacketBufferSize();
 
-        this.rawReader = new PowerfulLinkedDataReader(new ByteChannelDataSupplier(socketChannel, session.getApplicationBufferSize()));
+        this.rawReader = new PowerfulLinkedDataReader(new BufferedByteChannelDataSupplier(socketChannel, session.getPacketBufferSize()));
 
         this.dataReader = new PowerfulLinkedDataReader(this::decodeDataSupplier);
     }
 
-    public DataNode decodeDataSupplier() {
+    public static byte[] readBytes(ByteBuffer buffer) {
+        var bytes = new byte[buffer.remaining()];
+        buffer.get(bytes);
+        return bytes;
+    }
 
-        return null;
+    public static ByteBuffer expandBuffer(ByteBuffer oldBuffer) {
+        return expandBuffer(oldBuffer, oldBuffer.capacity() * 2);
+    }
+
+    public static ByteBuffer expandBuffer(ByteBuffer oldBuffer, int size) {
+        var newBuffer = ByteBuffer.allocate(size);
+        oldBuffer.flip();
+        newBuffer.put(oldBuffer);
+        return newBuffer;
+    }
+
+    /**
+     * 会自动扩容
+     *
+     * @param buffer b
+     * @param bytes  b
+     * @return b
+     */
+    public static ByteBuffer putBytes(ByteBuffer buffer, byte[] bytes) {
+        if (buffer.remaining() < bytes.length) {
+            int newCapacity = Math.max(buffer.capacity() * 2, buffer.capacity() + bytes.length);
+            buffer = expandBuffer(buffer, newCapacity);
+        }
+        buffer.put(bytes);
+        return buffer;
+    }
+
+    public DataNode decodeDataSupplier() {
+        inboundAppData.clear();
+        try {
+            //读取加密后的数据
+            var encryptedBuffer = ByteBuffer.wrap(rawReader.fastPeek(packetBufferSize));
+
+            // 解密后的数据
+            var decryptedBuffer = inboundAppData;
+
+            var totalBytesConsumed = 0;
+            var totalBytesProduced = 0;
+
+            //我们这里尝试将读取到的数据全部解密
+            var i = 0;
+            _MAIN:
+            while (encryptedBuffer.hasRemaining()) {
+
+                var result = sslEngine.unwrap(encryptedBuffer, decryptedBuffer);
+
+                totalBytesConsumed += result.bytesConsumed();
+                totalBytesProduced += result.bytesProduced();
+
+                switch (result.getStatus()) {
+                    case OK -> {
+                        // 解密成功，无需额外操作
+                    }
+                    case BUFFER_OVERFLOW -> {
+                        // decryptedBuffer 容量不足, 进行扩容 2 倍,
+                        // 这里无需进行原有数据的复制 因为 BUFFER_OVERFLOW 的时候 decryptedBuffer 是不会被填充数据的
+                        if (totalBytesProduced > 0) {
+                            break _MAIN;
+                        } else {
+                            //todo 这里需要处理 
+                            System.out.println("扩容了");
+                            decryptedBuffer = ByteBuffer.allocate(decryptedBuffer.capacity() * 2);
+                        }
+                    }
+                    case BUFFER_UNDERFLOW -> {
+                        // 这里表示 待解密数据不足 但这里有可能已经 解密成功了一些数据
+                        // 1, 如果已经解密了一些数据 我们跳过这次的扩容
+                        // 2, 如果之前没有解密任何数据 我们需要扩容并重新读取数据
+                        if (totalBytesProduced > 0) {
+                            break _MAIN;
+                        } else {
+
+                            //todo 这里需要处理
+                            System.out.println("需要扩容了");
+                        }
+                    }
+                    case CLOSED -> {
+                        //通道关闭 表示我们读取不到任何数据了
+                        return null;
+                    }
+                }
+            }
+
+            //此处我们跳过值
+            rawReader.skip(totalBytesConsumed);
+
+            // 切换到读模式
+            decryptedBuffer.flip();
+
+            //返回
+            return new DataNode(decryptedBuffer.array(), decryptedBuffer.position(), decryptedBuffer.limit());
+
+        } catch (SSLException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 
     public void startHandshake() throws IOException {
@@ -154,10 +254,9 @@ public class TLSSocketChannel extends AbstractSocketChannel {
         }
     }
 
-    //todo 未完成
     @Override
     public int read(ByteBuffer dst) throws IOException {
-        return -1;
+        return dataReader.tryRead(dst);
     }
 
     @Override

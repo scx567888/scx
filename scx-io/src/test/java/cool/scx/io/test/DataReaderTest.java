@@ -12,6 +12,8 @@ public class DataReaderTest {
         test1();
         test2();
         test3();
+        test4();
+        test5();
     }
 
     @Test
@@ -75,6 +77,24 @@ public class DataReaderTest {
         Assert.assertThrows(NoMatchFoundException.class, () -> {
             byte[] bytes = dataReader.readUntil("\r\n".getBytes(), 100);
         });
+    }
+
+    @Test
+    public static void test4() {
+        var d1 = new ByteArrayDataSupplier("123456aaabbb".getBytes());
+        var d2 = new ByteArrayDataSupplier("cccddd456789".getBytes());
+        var dataReader = new LinkedDataReader(new SequenceDataSupplier(d1, d2));
+        var read = dataReader.read(Integer.MAX_VALUE);
+        Assert.assertEquals(new String(read), "123456aaabbbcccddd456789");
+    }
+
+    @Test
+    public static void test5() {
+        var d1 = new ByteArrayDataSupplier("123456aaabbb".getBytes());
+        var d2 = new ByteArrayDataSupplier("cccddd456789".getBytes());
+        var dataReader = new LinkedDataReader(new SequenceDataSupplier(d1, d2));
+        var read = dataReader.indexOf("bbbccc".getBytes());
+        Assert.assertEquals(read, 9);
     }
 
 
