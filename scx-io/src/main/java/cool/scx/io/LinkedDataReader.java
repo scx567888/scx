@@ -43,17 +43,25 @@ public class LinkedDataReader implements DataReader {
         return SUCCESS;
     }
 
-    public void ensureAvailable(DataPuller dataPuller) throws NoMoreDataException {
+    public boolean ensureAvailable(DataPuller dataPuller) {
         while (!head.hasAvailable()) {
             if (head.next == null) {
                 var result = dataPuller.pull();
                 if (FAIL == result) {
-                    throw new NoMoreDataException();
+                    return false;
                 } else if (BREAK == result) {
                     break;
                 }
             }
             head = head.next;
+        }
+        return true;
+    }
+
+    public void ensureAvailableOrThrow(DataPuller dataPuller) throws NoMoreDataException {
+        var b = ensureAvailable(dataPuller);
+        if (!b) {
+            throw new NoMoreDataException();
         }
     }
 
@@ -130,8 +138,12 @@ public class LinkedDataReader implements DataReader {
         throw new NoMatchFoundException();
     }
 
-    public void ensureAvailable() throws NoMoreDataException {
-        ensureAvailable(dataPuller);
+    public boolean ensureAvailable() throws NoMoreDataException {
+        return ensureAvailable(dataPuller);
+    }
+
+    public void ensureAvailableOrThrow() throws NoMoreDataException {
+        ensureAvailableOrThrow(dataPuller);
     }
 
     public void walk(DataConsumer consumer, int maxLength, boolean movePointer) {
@@ -144,7 +156,7 @@ public class LinkedDataReader implements DataReader {
 
     @Override
     public byte read() throws NoMoreDataException {
-        ensureAvailable();
+        ensureAvailableOrThrow();
         var b = head.bytes[head.position];
         head.position = head.position + 1;
         return b;
@@ -152,7 +164,7 @@ public class LinkedDataReader implements DataReader {
 
     @Override
     public byte[] read(int maxLength) throws NoMoreDataException {
-        ensureAvailable();
+        ensureAvailableOrThrow();
         var consumer = new ByteArrayDataConsumer();
         walk(consumer, maxLength, true);
         return consumer.getBytes();
@@ -160,19 +172,19 @@ public class LinkedDataReader implements DataReader {
 
     @Override
     public void read(DataConsumer dataConsumer, int maxLength) throws NoMoreDataException {
-        ensureAvailable();
+        ensureAvailableOrThrow();
         walk(dataConsumer, maxLength, true);
     }
 
     @Override
     public byte peek() throws NoMoreDataException {
-        ensureAvailable();
+        ensureAvailableOrThrow();
         return head.bytes[head.position];
     }
 
     @Override
     public byte[] peek(int maxLength) throws NoMoreDataException {
-        ensureAvailable();
+        ensureAvailableOrThrow();
         var consumer = new ByteArrayDataConsumer();
         walk(consumer, maxLength, false);
         return consumer.getBytes();
@@ -180,25 +192,25 @@ public class LinkedDataReader implements DataReader {
 
     @Override
     public void peek(DataConsumer dataConsumer, int maxLength) throws NoMoreDataException {
-        ensureAvailable();
+        ensureAvailableOrThrow();
         walk(dataConsumer, maxLength, false);
     }
 
     @Override
     public int indexOf(byte b, int max) throws NoMatchFoundException, NoMoreDataException {
-        ensureAvailable();
+        ensureAvailableOrThrow();
         return indexOf(new ByteIndexer(b), max);
     }
 
     @Override
     public int indexOf(byte[] pattern, int max) throws NoMatchFoundException, NoMoreDataException {
-        ensureAvailable();
+        ensureAvailableOrThrow();
         return indexOf(new KMPDataIndexer(pattern), max);
     }
 
     @Override
     public void skip(int length) throws NoMoreDataException {
-        ensureAvailable();
+        ensureAvailableOrThrow();
         walk(SKIP_DATA_CONSUMER, length, true);
     }
 
