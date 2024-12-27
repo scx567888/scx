@@ -22,7 +22,7 @@ public class FillByteArrayDataConsumer implements DataConsumer {
         if (i + length > dataLength) {
             throw new IllegalStateException("Buffer overflow: not enough space to accept more data");
         }
-        System.arraycopy(data, i, bytes, position, length);
+        System.arraycopy(bytes, position, data, i, length);
         i += length;
     }
 
