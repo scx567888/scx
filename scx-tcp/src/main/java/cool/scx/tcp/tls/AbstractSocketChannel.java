@@ -85,11 +85,6 @@ public abstract class AbstractSocketChannel extends SocketChannel {
     }
 
     @Override
-    protected void implCloseSelectableChannel() throws IOException {
-        socketChannel.close();
-    }
-
-    @Override
     protected void implConfigureBlocking(boolean block) throws IOException {
         socketChannel.configureBlocking(block);
     }
