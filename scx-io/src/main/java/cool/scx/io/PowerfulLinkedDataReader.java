@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 
 import static cool.scx.io.SkipDataPuller.SKIP_DATA_PULLER;
 
+//todo 有一些方法 没有用 需要移除
 public class PowerfulLinkedDataReader extends LinkedDataReader {
 
     public PowerfulLinkedDataReader(DataSupplier dataSupplier) {
@@ -30,6 +31,42 @@ public class PowerfulLinkedDataReader extends LinkedDataReader {
         var consumer = new ByteArrayDataConsumer();
         walk(consumer, maxLength, true, dp);
         return consumer.getBytes();
+    }
+
+    // ByteChannel 写法的 read
+    public int fastRead(ByteBuffer b) throws NoMoreDataException {
+        var dp = new CountingDataPuller(dataPuller, 1);
+        var b1 = ensureAvailable(dp);
+        if (!b1) {
+            return -1;
+        }
+        var consumer = new FillByteBufferDataConsumer(b);
+        walk(consumer, b.remaining(), true, dp);
+        return consumer.getFilledLength();
+    }
+
+    // InputStream 写法的 read
+    public int fastRead(byte[] b, int offset, int length) throws NoMoreDataException {
+        var dp = new CountingDataPuller(dataPuller, 1);
+        var b1 = ensureAvailable(dp);
+        if (!b1) {
+            return -1;
+        }
+        var consumer = new FillByteArrayDataConsumer(b, offset, length);
+        walk(consumer, length, true, dp);
+        return consumer.getFilledLength();
+    }
+
+    // InputStream 写法的 read
+    public int inputStreamFastRead() throws NoMoreDataException {
+        var dp = new CountingDataPuller(dataPuller, 1);
+        var b1 = ensureAvailable(dp);
+        if (!b1) {
+            return -1;
+        }
+        var b = head.bytes[head.position];
+        head.position = head.position + 1;
+        return b;
     }
 
     public byte[] fastPeek(int maxLength) throws NoMoreDataException {
