@@ -106,7 +106,6 @@ public class TLSSocketChannel extends AbstractSocketChannel {
 
             @Override
             public int read(byte[] b, int off, int len) throws IOException {
-                //todo 貌似有 bug
                 return dataReader.fastRead(b, off, len);
             }
 
