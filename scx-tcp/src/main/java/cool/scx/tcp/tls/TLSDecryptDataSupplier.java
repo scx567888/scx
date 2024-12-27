@@ -25,8 +25,10 @@ public class TLSDecryptDataSupplier implements DataSupplier {
     public TLSDecryptDataSupplier(ReadableByteChannel dataChannel, SSLEngine sslEngine) {
         this.dataChannel = dataChannel;
         this.sslEngine = sslEngine;
-        this.netBuffer = ByteBuffer.allocate(sslEngine.getSession().getPacketBufferSize());
-        this.appBuffer = ByteBuffer.allocate(sslEngine.getSession().getApplicationBufferSize());
+        //这里默认容量采用 SSLSession 提供的 以便减小扩容的概率
+        var session = sslEngine.getSession();
+        this.netBuffer = ByteBuffer.allocate(session.getPacketBufferSize());
+        this.appBuffer = ByteBuffer.allocate(session.getApplicationBufferSize());
     }
 
     @Override
