@@ -98,8 +98,8 @@ public class TLSDecryptDataSupplier implements DataSupplier {
                         continue _R;
                     }
                     case CLOSED -> {
-                        //通道关闭 表示我们读取不到任何数据了
-                        return null;
+                        //通道关闭 但是我们有可能之前已经读取到了部分数据这里需要 跳出循环以便返回剩余数据
+                        break _R; 
                     }
                 }
             }
