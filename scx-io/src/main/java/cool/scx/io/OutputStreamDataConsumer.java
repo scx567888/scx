@@ -7,7 +7,7 @@ import java.io.UncheckedIOException;
 public class OutputStreamDataConsumer implements DataConsumer {
 
     private final OutputStream out;
-    
+
     //记录总的长度 有时候会用到
     private long byteCount;
 

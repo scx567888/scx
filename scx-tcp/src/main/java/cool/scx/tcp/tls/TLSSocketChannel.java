@@ -98,7 +98,7 @@ public class TLSSocketChannel extends AbstractSocketChannel {
     private InputStream createInputStream() {
         //todo close 方法是否需要关闭 socket ?
         return new InputStream() {
-            
+
             @Override
             public int read() throws IOException {
                 return dataReader.inputStreamFastRead();

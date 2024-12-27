@@ -99,11 +99,11 @@ public class TLSDecryptDataSupplier implements DataSupplier {
                     }
                     case CLOSED -> {
                         //通道关闭 但是我们有可能之前已经读取到了部分数据这里需要 跳出循环以便返回剩余数据
-                        break _R; 
+                        break _R;
                     }
                 }
             }
-            
+
             //退出主循环
             break;
         }
