@@ -1,7 +1,5 @@
 package cool.scx.tcp;
 
-import cool.scx.tcp.tls.TLSSocketChannel;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -17,11 +15,7 @@ public class NioTCPSocket implements ScxTCPSocket {
 
     public NioTCPSocket(SocketChannel socketChannel) {
         this.socketChannel = socketChannel;
-        if (socketChannel instanceof TLSSocketChannel tlsSocketChannel) {
-            this.in = tlsSocketChannel.inputStream();
-        } else {
-            this.in = Channels.newInputStream(socketChannel);
-        }
+        this.in = Channels.newInputStream(socketChannel);
         this.out = Channels.newOutputStream(socketChannel);
     }
 

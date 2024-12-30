@@ -46,7 +46,7 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart> {
         try {
             var i = linkedDataReader.indexOf(boundaryBytes);
             // i - 2 因为我们不需要读取内容结尾的 \r\n  
-            var bytes = linkedDataReader.read(i - 2);
+            var bytes = linkedDataReader.read((int) (i - 2));
             //跳过 \r\n 方便后续读取
             linkedDataReader.skip(2);
             return bytes;
