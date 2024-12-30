@@ -11,7 +11,7 @@ public class TLSHandshakeHelper {
     public static void startHandshake(SocketChannel socketChannel, SSLEngine sslEngine) throws IOException {
         sslEngine.beginHandshake();
 
-        //创建出站和入站缓冲区
+        //创建出站和入站网络缓冲区 这里默认容量采用 SSLSession 提供的 以便减小扩容的概率
         var outboundNetData = ByteBuffer.allocate(sslEngine.getSession().getPacketBufferSize());
         var inboundNetData = ByteBuffer.allocate(sslEngine.getSession().getPacketBufferSize());
 
