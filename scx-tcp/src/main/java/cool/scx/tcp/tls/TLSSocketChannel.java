@@ -10,6 +10,7 @@ import static cool.scx.io.IOHelper.transferByteBuffer;
 
 /**
  * TLSSocketChannel
+ * todo 虚拟线程中会无法握手成功
  *
  * @author scx567888
  * @version 0.0.1
