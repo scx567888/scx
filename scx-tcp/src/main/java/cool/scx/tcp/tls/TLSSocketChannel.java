@@ -8,12 +8,18 @@ import java.nio.channels.SocketChannel;
 
 import static cool.scx.io.IOHelper.transferByteBuffer;
 
-//todo 未完成
+/**
+ * TLSSocketChannel
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class TLSSocketChannel extends AbstractSocketChannel {
 
     private final SSLEngine sslEngine;
 
     // 存储应用数据 (已加密) 这里不使用其缓存任何数据 仅仅是为了减少频繁创建 ByteBuffer 造成的性能损失
+    // 这里不是 final 的是因为本身可能会进行扩容
     private ByteBuffer outboundNetData;
 
     // 存储网络数据 (未解密) 同时会缓存 tcp 半包 
@@ -227,9 +233,6 @@ public class TLSSocketChannel extends AbstractSocketChannel {
     public int write(ByteBuffer src) throws IOException {
         int n = 0;
 
-        //可能出现扩容的情况 这里使用单独的
-        var outboundNetData = this.outboundNetData;
-
         while (src.hasRemaining()) {
             //重置
             outboundNetData.clear();
@@ -249,7 +252,7 @@ public class TLSSocketChannel extends AbstractSocketChannel {
                     n += result.bytesConsumed();
                 }
                 case BUFFER_OVERFLOW -> {
-                    // 直接扩容即可 以 2 倍为基准
+                    // 直接扩容即可 以 2 倍为基准 (这种情况很少发生)
                     outboundNetData = ByteBuffer.allocate(outboundNetData.capacity() * 2);
                 }
                 case BUFFER_UNDERFLOW -> {
