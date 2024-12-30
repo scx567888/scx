@@ -1,5 +1,7 @@
 package cool.scx.io;
 
+import static java.lang.Math.toIntExact;
+
 /**
  * DataReader
  *
@@ -34,7 +36,7 @@ public interface DataReader {
      * @param maxLength 最大长度
      * @throws NoMoreDataException 没有更多数据时抛出
      */
-    void read(DataConsumer dataConsumer, int maxLength) throws NoMoreDataException;
+    void read(DataConsumer dataConsumer, long maxLength) throws NoMoreDataException;
 
     /**
      * 向 dataConsumer 写入指定长度字节 (指针不会移动)
@@ -62,7 +64,7 @@ public interface DataReader {
      * @param maxLength 最大长度
      * @throws NoMoreDataException 没有更多数据时抛出
      */
-    void peek(DataConsumer dataConsumer, int maxLength) throws NoMoreDataException;
+    void peek(DataConsumer dataConsumer, long maxLength) throws NoMoreDataException;
 
     /**
      * 查找 指定字节 第一次出现的 index (指针不会移动)
@@ -72,7 +74,7 @@ public interface DataReader {
      * @return index 或者 -1 (未找到)
      * @throws NoMatchFoundException 没有匹配时抛出
      */
-    int indexOf(byte b, int max) throws NoMatchFoundException, NoMoreDataException;
+    long indexOf(byte b, long max) throws NoMatchFoundException, NoMoreDataException;
 
     /**
      * 查找 指定字节数组 第一次出现的 index (指针不会移动)
@@ -82,14 +84,14 @@ public interface DataReader {
      * @return index 或者 -1 (未找到)
      * @throws NoMatchFoundException 没有匹配时抛出
      */
-    int indexOf(byte[] b, int max) throws NoMatchFoundException, NoMoreDataException;
+    long indexOf(byte[] b, long max) throws NoMatchFoundException, NoMoreDataException;
 
     /**
      * 向后移动指定字节
      *
      * @param length 移动长度
      */
-    void skip(int length) throws NoMoreDataException;
+    void skip(long length) throws NoMoreDataException;
 
     /**
      * 查找 指定字节 第一次出现的 index (指针不会移动)
@@ -98,8 +100,8 @@ public interface DataReader {
      * @return index 或者 -1 (未找到)
      * @throws NoMatchFoundException 没有匹配时抛出
      */
-    default int indexOf(byte b) throws NoMatchFoundException, NoMoreDataException {
-        return indexOf(b, Integer.MAX_VALUE);
+    default long indexOf(byte b) throws NoMatchFoundException, NoMoreDataException {
+        return indexOf(b, Long.MAX_VALUE);
     }
 
     /**
@@ -109,8 +111,8 @@ public interface DataReader {
      * @return index 或者 -1 (未找到)
      * @throws NoMatchFoundException 没有匹配时抛出
      */
-    default int indexOf(byte[] b) throws NoMatchFoundException, NoMoreDataException {
-        return indexOf(b, Integer.MAX_VALUE);
+    default long indexOf(byte[] b) throws NoMatchFoundException, NoMoreDataException {
+        return indexOf(b, Long.MAX_VALUE);
     }
 
     /**
@@ -122,7 +124,7 @@ public interface DataReader {
      */
     default byte[] readUntil(byte b, int max) throws NoMatchFoundException, NoMoreDataException {
         var index = indexOf(b, max);
-        var data = read(index);
+        var data = read(toIntExact(index));
         skip(1);
         return data;
     }
@@ -136,7 +138,7 @@ public interface DataReader {
      */
     default byte[] readUntil(byte[] b, int max) throws NoMatchFoundException, NoMoreDataException {
         var index = indexOf(b, max);
-        var data = read(index);
+        var data = read(toIntExact(index));
         skip(b.length);
         return data;
     }
@@ -150,7 +152,7 @@ public interface DataReader {
      */
     default byte[] peekUntil(byte b, int max) throws NoMatchFoundException, NoMoreDataException {
         var index = indexOf(b, max);
-        return peek(index);
+        return peek(toIntExact(index));
     }
 
     /**
@@ -162,7 +164,7 @@ public interface DataReader {
      */
     default byte[] peekUntil(byte[] b, int max) throws NoMatchFoundException, NoMoreDataException {
         var index = indexOf(b, max);
-        return peek(index);
+        return peek(toIntExact(index));
     }
 
     /**
@@ -174,7 +176,7 @@ public interface DataReader {
      */
     default byte[] readUntil(byte b) throws NoMatchFoundException, NoMoreDataException {
         var index = indexOf(b);
-        var data = read(index);
+        var data = read(toIntExact(index));
         skip(1);
         return data;
     }
@@ -188,7 +190,7 @@ public interface DataReader {
      */
     default byte[] readUntil(byte[] b) throws NoMatchFoundException, NoMoreDataException {
         var index = indexOf(b);
-        var data = read(index);
+        var data = read(toIntExact(index));
         skip(b.length);
         return data;
     }
@@ -202,7 +204,7 @@ public interface DataReader {
      */
     default byte[] peekUntil(byte b) throws NoMatchFoundException, NoMoreDataException {
         var index = indexOf(b);
-        return peek(index);
+        return peek(toIntExact(index));
     }
 
     /**
@@ -214,7 +216,7 @@ public interface DataReader {
      */
     default byte[] peekUntil(byte[] b) throws NoMatchFoundException, NoMoreDataException {
         var index = indexOf(b);
-        return peek(index);
+        return peek(toIntExact(index));
     }
 
 }
