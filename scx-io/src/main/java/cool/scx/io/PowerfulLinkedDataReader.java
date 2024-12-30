@@ -3,6 +3,8 @@ package cool.scx.io;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 
+import static java.lang.Math.toIntExact;
+
 public class PowerfulLinkedDataReader extends LinkedDataReader {
 
     public PowerfulLinkedDataReader(DataSupplier dataSupplier) {
@@ -42,7 +44,7 @@ public class PowerfulLinkedDataReader extends LinkedDataReader {
             return -1;
         }
         var consumer = new OutputStreamDataConsumer(out);
-        walk(consumer, Integer.MAX_VALUE, true);
+        walk(consumer, Long.MAX_VALUE, true);
         return consumer.byteCount();
     }
 
@@ -59,32 +61,32 @@ public class PowerfulLinkedDataReader extends LinkedDataReader {
 
     public byte[] readUntil(KMPDataIndexer indexer, int max) throws NoMatchFoundException, NoMoreDataException {
         var index = indexOf(indexer, max);
-        var data = read(index);
+        var data = read(toIntExact(index));
         skip(indexer.pattern().length);
         return data;
     }
 
     public byte[] readUntil(KMPDataIndexer indexer) throws NoMatchFoundException, NoMoreDataException {
-        var index = indexOf(indexer, Integer.MAX_VALUE);
-        var data = read(index);
+        var index = indexOf(indexer, Long.MAX_VALUE);
+        var data = read(toIntExact(index));
         skip(indexer.pattern().length);
         return data;
     }
 
     public byte[] peekUntil(KMPDataIndexer indexer, int max) throws NoMatchFoundException, NoMoreDataException {
         var index = indexOf(indexer, max);
-        return peek(index);
+        return peek(toIntExact(index));
     }
 
     public byte[] peekUntil(KMPDataIndexer indexer) throws NoMatchFoundException, NoMoreDataException {
-        var index = indexOf(indexer, Integer.MAX_VALUE);
-        return peek(index);
+        var index = indexOf(indexer, Long.MAX_VALUE);
+        return peek(toIntExact(index));
     }
 
     /**
      * 为了极致的性能考虑 复用 KMPDataIndexer
      */
-    public int indexOf(KMPDataIndexer indexer, int max) throws NoMatchFoundException, NoMoreDataException {
+    public long indexOf(KMPDataIndexer indexer, long max) throws NoMatchFoundException, NoMoreDataException {
         ensureAvailableOrThrow();
         indexer.reset();
         return super.indexOf(indexer, max);

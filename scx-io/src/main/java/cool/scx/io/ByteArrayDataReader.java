@@ -2,6 +2,8 @@ package cool.scx.io;
 
 import cool.scx.common.util.ArrayUtils;
 
+import static java.lang.Math.min;
+
 /**
  * ByteArrayDataReader
  *
@@ -35,7 +37,7 @@ public class ByteArrayDataReader implements DataReader {
         if (availableLength <= 0) {
             throw new NoMoreDataException();
         }
-        int actualLength = Math.min(maxLength, availableLength);
+        int actualLength = min(maxLength, availableLength);
         byte[] result = new byte[actualLength];
         System.arraycopy(bytes, position, result, 0, actualLength);
         position += actualLength;
@@ -43,12 +45,12 @@ public class ByteArrayDataReader implements DataReader {
     }
 
     @Override
-    public void read(DataConsumer dataConsumer, int maxLength) throws NoMoreDataException {
+    public void read(DataConsumer dataConsumer, long maxLength) throws NoMoreDataException {
         int availableLength = bytes.length - position;
         if (availableLength <= 0) {
             throw new NoMoreDataException();
         }
-        int actualLength = Math.min(maxLength, availableLength);
+        int actualLength = (int) min(maxLength, availableLength);
         dataConsumer.accept(bytes, position, actualLength);
         position += actualLength;
     }
@@ -68,29 +70,29 @@ public class ByteArrayDataReader implements DataReader {
         if (availableLength <= 0) {
             throw new NoMoreDataException();
         }
-        int actualLength = Math.min(maxLength, availableLength);
+        int actualLength = min(maxLength, availableLength);
         byte[] result = new byte[actualLength];
         System.arraycopy(bytes, position, result, 0, actualLength);
         return result;
     }
 
     @Override
-    public void peek(DataConsumer dataConsumer, int maxLength) throws NoMoreDataException {
+    public void peek(DataConsumer dataConsumer, long maxLength) throws NoMoreDataException {
         int availableLength = bytes.length - position;
         if (availableLength <= 0) {
             throw new NoMoreDataException();
         }
-        int actualLength = Math.min(maxLength, availableLength);
+        int actualLength = (int) min(maxLength, availableLength);
         dataConsumer.accept(bytes, position, actualLength);
     }
 
     @Override
-    public int indexOf(byte b, int max) throws NoMatchFoundException, NoMoreDataException {
+    public long indexOf(byte b, long max) throws NoMatchFoundException, NoMoreDataException {
         int availableLength = bytes.length - position;
         if (availableLength <= 0) {
             throw new NoMoreDataException();
         }
-        var index = ArrayUtils.indexOf(bytes, position, Math.min(bytes.length, max), b);
+        var index = ArrayUtils.indexOf(bytes, position, (int) min(bytes.length, max), b);
         if (index == -1) {
             throw new NoMatchFoundException();
         }
@@ -98,12 +100,12 @@ public class ByteArrayDataReader implements DataReader {
     }
 
     @Override
-    public int indexOf(byte[] b, int max) throws NoMatchFoundException, NoMoreDataException {
+    public long indexOf(byte[] b, long max) throws NoMatchFoundException, NoMoreDataException {
         int availableLength = bytes.length - position;
         if (availableLength <= 0) {
             throw new NoMoreDataException();
         }
-        var index = ArrayUtils.indexOf(bytes, position, Math.min(bytes.length, max), b);
+        var index = ArrayUtils.indexOf(bytes, position, (int) min(bytes.length, max), b);
         if (index == -1) {
             throw new NoMatchFoundException();
         }
@@ -111,12 +113,16 @@ public class ByteArrayDataReader implements DataReader {
     }
 
     @Override
-    public void skip(int length) throws NoMoreDataException {
+    public void skip(long length) throws NoMoreDataException {
         int availableLength = bytes.length - position;
         if (availableLength <= 0) {
             throw new NoMoreDataException();
         }
-        this.position += length;
+        if (length >= availableLength) {
+            this.position = bytes.length;
+        } else {
+            this.position += (int) length;
+        }
     }
 
 }
