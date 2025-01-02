@@ -229,7 +229,8 @@ public class TLSSocketChannel extends AbstractSocketChannel {
 
                 switch (result.getStatus()) {
                     case OK -> {
-                        // 解密成功，无需额外操作 继续解密即可
+                        // 这里有时会出现无法消耗任何数据的情况 为了防止死循环这里跳出
+                        unwrapResult.status = OK;
                         if (result.bytesProduced() == 0 && result.bytesConsumed() == 0) {
                             break _R;
                         }
@@ -249,6 +250,7 @@ public class TLSSocketChannel extends AbstractSocketChannel {
                         }
                         // 2, 如果之前没有解密成功任何数据 我们需要扩容 netBuffer 并重新从网络中读取数据
                         // 原有的已经读取的数据别忘了放进去
+                        System.out.println("扩容了");
                         var newNetBuffer = ByteBuffer.allocate(inboundNetData.capacity() * 2);
                         newNetBuffer.put(inboundNetData);// 这里 netBuffer 已经是读状态 不需要 flip()
                         inboundNetData = newNetBuffer;
@@ -291,7 +293,7 @@ public class TLSSocketChannel extends AbstractSocketChannel {
             //使用空缓冲区接收 因为握手阶段是不会有任何数据的
             while (inboundNetData.hasRemaining()) {
 
-                var result = sslEngine.unwrap(inboundNetData, ByteBuffer.allocate(0));
+                var result = sslEngine.unwrap(inboundNetData, inboundAppData);
 
                 //更新 字节消费与生产数量
                 unwrapResult.bytesConsumed += result.bytesConsumed();
@@ -299,7 +301,9 @@ public class TLSSocketChannel extends AbstractSocketChannel {
 
                 switch (result.getStatus()) {
                     case OK -> {
+                        // 解密成功
                         unwrapResult.status = OK;
+                        // 这里有时会出现无法消耗任何数据的情况 为了防止死循环这里跳出
                         if (result.bytesProduced() == 0 && result.bytesConsumed() == 0) {
                             break _R;
                         }
@@ -316,8 +320,8 @@ public class TLSSocketChannel extends AbstractSocketChannel {
                         int remainingSpace = inboundNetData.capacity() - inboundNetData.limit();
                         // 1, inboundNetData 本身容量太小 我们需要扩容
                         if (remainingSpace == 0) {
+                            // 原有的已经读取的数据别忘了放进去
                             var newInboundNetData = ByteBuffer.allocate(inboundNetData.capacity() * 2);
-                            //把原有数据放进去
                             newInboundNetData.put(inboundNetData);
                             inboundNetData = newInboundNetData;
                         }
@@ -326,7 +330,7 @@ public class TLSSocketChannel extends AbstractSocketChannel {
                     }
                     case CLOSED -> {
                         unwrapResult.status = CLOSED;
-                        return unwrapResult;
+                        break _R;
                     }
                 }
             }
