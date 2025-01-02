@@ -35,10 +35,12 @@ public class TLSSocketChannel extends AbstractSocketChannel {
         super(socketChannel);
         this.sslEngine = sslEngine;
         //这里默认容量采用 SSLSession 提供的 以便减小扩容的概率
-        this.outboundNetData = ByteBuffer.allocate(sslEngine.getSession().getPacketBufferSize());
-        this.inboundNetData = ByteBuffer.allocate(sslEngine.getSession().getPacketBufferSize());
-        this.inboundAppData = ByteBuffer.allocate(sslEngine.getSession().getApplicationBufferSize());
-        this.inboundAppData.flip();// 这里我们默认设置为读模式
+        var session = sslEngine.getSession();
+        var packetBufferSize = session.getPacketBufferSize();
+        var applicationBufferSize = session.getApplicationBufferSize();
+        this.outboundNetData = ByteBuffer.allocate(1); //永远都是写模式
+        this.inboundNetData = ByteBuffer.allocate(packetBufferSize); //永远都是写模式
+        this.inboundAppData = ByteBuffer.allocate(applicationBufferSize).flip(); //永远都是读模式
     }
 
     public void startHandshake() throws IOException {
@@ -94,37 +96,12 @@ public class TLSSocketChannel extends AbstractSocketChannel {
                     inboundNetData.compact();
                 }
                 case NEED_WRAP -> {
-                    // 清空出站网络缓冲区
-                    outboundNetData.clear();
-                    // 这里不停循环 直到完成
-                    _NW:
-                    while (true) {
-                        // 加密一个空的数据 这里因为待加密数据是空的 所以不需要循环去加密 单次执行即可
-                        var result = sslEngine.wrap(ByteBuffer.allocate(0), outboundNetData);
-                        switch (result.getStatus()) {
-                            case OK -> {
-                                //切换到读模式
-                                outboundNetData.flip();
-                                //循环发送到远端
-                                while (outboundNetData.hasRemaining()) {
-                                    socketChannel.write(outboundNetData);
-                                }
-                                break _NW;
-                            }
-                            case BUFFER_OVERFLOW -> {
-                                // outboundNetData 容量太小 无法容纳加密后的数据 需要扩容 outboundNetData, 这里采取 2 倍
-                                // 但在实际环境中 默认的 outboundNetData 大小是 session.getPacketBufferSize()
-                                // 所以几乎不会出现这种情况 但这里还是做一个处理
-                                outboundNetData = ByteBuffer.allocate(outboundNetData.capacity() * 2);
-                            }
-                            case BUFFER_UNDERFLOW -> {
-                                // 待加密数据 数据量不足, 在 wrap 中理论上不会发生 所以这里我们抛出错误
-                                throw new SSLHandshakeException("buffer underflow on handshake wrap");
-                            }
-                            case CLOSED -> {
-                                throw new SSLHandshakeException("closed on handshake wrap");
-                            }
-                        }
+                    var result = wrap(ByteBuffer.allocate(0));
+                    switch (result.status) {
+                        case OK -> {}
+                        case BUFFER_OVERFLOW -> throw new SSLHandshakeException("BUFFER_OVERFLOW on handshake wrap");
+                        case BUFFER_UNDERFLOW -> throw new SSLHandshakeException("BUFFER_UNDERFLOW on handshake wrap");
+                        case CLOSED -> throw new SSLHandshakeException("CLOSED on handshake wrap");
                     }
                 }
                 case NEED_TASK -> {
@@ -235,9 +212,23 @@ public class TLSSocketChannel extends AbstractSocketChannel {
 
     @Override
     public int write(ByteBuffer src) throws IOException {
-        int n = 0;
+        var result = wrap(src);
+        switch (result.status) {
+            case OK -> {
 
-        while (src.hasRemaining()) {
+            }
+            case BUFFER_OVERFLOW -> throw new IOException("SSLEngine wrap 遇到 BUFFER_OVERFLOW, 这不应该发生 !!!");
+            case BUFFER_UNDERFLOW -> throw new IOException("SSLEngine wrap 遇到 BUFFER_UNDERFLOW, 这不应该发生 !!!");
+            case CLOSED -> throw new IOException("SSLEngine wrap 遇到 CLOSED, 这不应该发生 !!!");
+        }
+
+        return result.bytesConsumed;
+    }
+
+    public WrapResult wrap(ByteBuffer src) throws IOException {
+        var wrapResult = new WrapResult();
+        _MAIN:
+        while (true) {
             //重置
             outboundNetData.clear();
 
@@ -253,22 +244,30 @@ public class TLSSocketChannel extends AbstractSocketChannel {
                     while (outboundNetData.hasRemaining()) {
                         socketChannel.write(outboundNetData);
                     }
-                    n += result.bytesConsumed();
+                    wrapResult.bytesConsumed += result.bytesConsumed();
+                    wrapResult.status = SSLEngineResult.Status.OK;
+                    //只有原有数据全部用尽我们才跳出循环
+                    if (!src.hasRemaining()) {
+                        break _MAIN;
+                    }
                 }
                 case BUFFER_OVERFLOW -> {
                     // 直接扩容即可 以 2 倍为基准 (这种情况很少发生)
                     outboundNetData = ByteBuffer.allocate(outboundNetData.capacity() * 2);
+                    wrapResult.status = SSLEngineResult.Status.BUFFER_OVERFLOW;
                 }
                 case BUFFER_UNDERFLOW -> {
-                    throw new IOException("SSLEngine wrap 遇到 BUFFER_UNDERFLOW, 这不应该发生 !!!");
+                    wrapResult.status = SSLEngineResult.Status.BUFFER_UNDERFLOW;
+                    break _MAIN;
                 }
                 case CLOSED -> {
-                    throw new IOException("SSLEngine wrap 遇到 CLOSED");
+                    wrapResult.status = SSLEngineResult.Status.CLOSED;
+                    break _MAIN;
                 }
             }
         }
 
-        return n;
+        return wrapResult;
     }
 
     @Override
@@ -277,26 +276,9 @@ public class TLSSocketChannel extends AbstractSocketChannel {
         // 发起关闭握手
         sslEngine.closeOutbound();
 
-        // 创建一个空缓冲区用于发送关闭消息
-        ByteBuffer emptyBuffer = ByteBuffer.allocate(0);
-        // 缓冲区用于存储出站数据
-        ByteBuffer outboundBuffer = outboundNetData;
-
         // 完成关闭握手
         while (!sslEngine.isOutboundDone()) {
-            outboundBuffer.clear();
-            SSLEngineResult result = sslEngine.wrap(emptyBuffer, outboundBuffer);
-            switch (result.getStatus()) {
-                case OK -> {
-                    outboundBuffer.flip();
-                    while (outboundBuffer.hasRemaining()) {
-                        socketChannel.write(outboundBuffer);
-                    }
-                }
-                case CLOSED -> {
-                }
-                default -> throw new IOException("Error during SSL/TLS close handshake: " + result.getStatus());
-            }
+            wrap(ByteBuffer.allocate(0));
         }
 
         // 接收对方的 CLOSE_NOTIFY 消息
@@ -306,6 +288,9 @@ public class TLSSocketChannel extends AbstractSocketChannel {
             b = sslEngine.isInboundDone();
             read(emptyReadBuffer);
         }
+
+//        sslEngine.closeInbound();
+
         // 关闭 SocketChannel
         socketChannel.close();
     }
