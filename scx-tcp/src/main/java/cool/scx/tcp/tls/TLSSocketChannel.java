@@ -38,7 +38,7 @@ public class TLSSocketChannel extends AbstractSocketChannel {
         var session = sslEngine.getSession();
         var packetBufferSize = session.getPacketBufferSize();
         var applicationBufferSize = session.getApplicationBufferSize();
-        this.outboundNetData = ByteBuffer.allocate(1); //永远都是写模式
+        this.outboundNetData = ByteBuffer.allocate(packetBufferSize); //永远都是写模式
         this.inboundNetData = ByteBuffer.allocate(packetBufferSize); //永远都是写模式
         this.inboundAppData = ByteBuffer.allocate(applicationBufferSize).flip(); //永远都是读模式
     }
