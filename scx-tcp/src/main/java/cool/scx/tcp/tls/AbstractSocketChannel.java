@@ -41,12 +41,14 @@ public abstract class AbstractSocketChannel extends SocketChannel {
 
     @Override
     public SocketChannel shutdownInput() throws IOException {
-        return socketChannel.shutdownInput();
+        socketChannel.shutdownInput();
+        return this;
     }
 
     @Override
     public SocketChannel shutdownOutput() throws IOException {
-        return socketChannel.shutdownOutput();
+        socketChannel.shutdownOutput();
+        return this;
     }
 
     @Override
