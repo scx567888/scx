@@ -207,10 +207,8 @@ public class TLSSocketChannel extends AbstractSocketChannel {
         _R:
         while (true) {
 
-            //尝试读取
+            //读取远程数据到入站网络缓冲区
             var bytesRead = socketChannel.read(inboundNetData);
-
-            //没有数据我们返回 null, 就如同 DataSupplier 规定的
             if (bytesRead == -1) {
                 unwrapResult.status = SOCKET_CHANNEL_CLOSED;
                 return unwrapResult;
@@ -232,6 +230,9 @@ public class TLSSocketChannel extends AbstractSocketChannel {
                 switch (result.getStatus()) {
                     case OK -> {
                         // 解密成功，无需额外操作 继续解密即可
+                        if (result.bytesProduced() == 0 && result.bytesConsumed() == 0) {
+                            break _R;
+                        }
                     }
                     case BUFFER_OVERFLOW -> {
                         // appBuffer 容量不足, 这里进行扩容 2 倍
@@ -260,7 +261,6 @@ public class TLSSocketChannel extends AbstractSocketChannel {
                 }
             }
 
-
             //退出主循环
             break;
         }
@@ -274,18 +274,15 @@ public class TLSSocketChannel extends AbstractSocketChannel {
     public UnwrapResult unwrap1() throws IOException {
         var unwrapResult = new UnwrapResult();
 
-        // 这里不停循环 直到完成
+        //这里涉及到如果遇到 tcp 半包 我们需要尝试重新读取 (如果第一次就遇到了) 所以这里采用一个 while 循环
         _R:
         while (true) {
-            //缓冲区没有数据我们才读取
-            if (inboundNetData.position() == 0) {
-                //读取远程数据到入站网络缓冲区
-                int bytesRead = socketChannel.read(inboundNetData);
-                if (bytesRead == -1) {
-                    unwrapResult.status = SOCKET_CHANNEL_CLOSED;
-                    return unwrapResult;
-                }
 
+            //读取远程数据到入站网络缓冲区
+            var bytesRead = socketChannel.read(inboundNetData);
+            if (bytesRead == -1) {
+                unwrapResult.status = SOCKET_CHANNEL_CLOSED;
+                return unwrapResult;
             }
 
             //转换为读模式 准备用于解密
@@ -303,8 +300,9 @@ public class TLSSocketChannel extends AbstractSocketChannel {
                 switch (result.getStatus()) {
                     case OK -> {
                         unwrapResult.status = OK;
-                        // 解密成功，直接继续进行，因为握手阶段 即使 unwrap , 解密数据容量也只会是空 所以跳过处理
-                        break _R;
+                        if (result.bytesProduced() == 0 && result.bytesConsumed() == 0) {
+                            break _R;
+                        }
                     }
                     case BUFFER_OVERFLOW -> {
                         // appBuffer 容量不足, 这里进行扩容 2 倍
@@ -332,8 +330,12 @@ public class TLSSocketChannel extends AbstractSocketChannel {
                     }
                 }
             }
+
+            //退出主循环
+            break;
         }
-        //压缩数据
+
+        //这里我们的 netBuffer 中可能有一些残留数据 我们压缩一下 以便下次继续使用
         inboundNetData.compact();
 
         return unwrapResult;
