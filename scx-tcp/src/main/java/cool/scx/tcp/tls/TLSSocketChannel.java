@@ -130,8 +130,7 @@ public class TLSSocketChannel extends AbstractSocketChannel {
 
     @Override
     protected void implCloseSelectableChannel() throws IOException {
-        //todo 代码待抽取
-        // 发起关闭握手
+        //todo 此处不完善
         sslEngine.closeOutbound();
 
         // 完成关闭握手
@@ -141,7 +140,6 @@ public class TLSSocketChannel extends AbstractSocketChannel {
         }
 
         // 接收对方的 CLOSE_NOTIFY 消息
-        var emptyReadBuffer = ByteBuffer.allocate(0);
         var b = true;
         while (b) {
             b = sslEngine.isInboundDone();
