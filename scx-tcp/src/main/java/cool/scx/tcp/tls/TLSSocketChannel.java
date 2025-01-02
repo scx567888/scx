@@ -51,55 +51,14 @@ public class TLSSocketChannel extends AbstractSocketChannel {
             var handshakeStatus = sslEngine.getHandshakeStatus();
             switch (handshakeStatus) {
                 case NEED_UNWRAP -> {
-                    // 这里不停循环 直到完成
-                    _NU:
-                    while (true) {
-                        //缓冲区没有数据我们才读取
-                        if (inboundNetData.position() == 0) {
-                            //读取远程数据到入站网络缓冲区
-                            if (socketChannel.read(inboundNetData) == -1) {
-                                throw new SSLHandshakeException("Channel closed during handshake");
-                            }
-                        }
-                        //切换成读模式
-                        inboundNetData.flip();
-                        //使用空缓冲区接收 因为握手阶段是不会有任何数据的
-                        var result = sslEngine.unwrap(inboundNetData, ByteBuffer.allocate(0));
-                        switch (result.getStatus()) {
-                            case OK -> {
-                                // 解密成功，直接继续进行，因为握手阶段 即使 unwrap , 解密数据容量也只会是空 所以跳过处理
-                                break _NU;
-                            }
-                            case BUFFER_OVERFLOW -> {
-                                // 解密后数据缓冲区 容量太小 无法容纳解密后的数据
-                                // 但在握手阶段 和 OK 分支同理 理论上不会发生 所以这里我们抛出错误
-                                throw new SSLHandshakeException("Unexpected buffer overflow");
-                            }
-                            case BUFFER_UNDERFLOW -> {
-                                // inboundNetData 数据不够解密 需要继续获取 这里有两种情况
-                                int remainingSpace = inboundNetData.capacity() - inboundNetData.limit();
-                                // 1, inboundNetData 本身容量太小 我们需要扩容
-                                if (remainingSpace == 0) {
-                                    var newInboundNetData = ByteBuffer.allocate(inboundNetData.capacity() * 2);
-                                    //把原有数据放进去
-                                    newInboundNetData.put(inboundNetData);
-                                    inboundNetData = newInboundNetData;
-                                }
-                                // 2, 远端未发送完整的数据 我们需要继续读取数据 (这种情况很少见) 这里直接继续循环
-                            }
-                            case CLOSED -> {
-                                throw new SSLHandshakeException("closed on handshake wrap");
-                            }
-                        }
-                    }
-                    //压缩数据
-                    inboundNetData.compact();
+                    unwrap1();
                 }
                 case NEED_WRAP -> {
                     // 加密一个空的数据 用于握手
                     var result = wrap(ByteBuffer.allocate(0));
                     switch (result.status) {
-                        case OK -> {}
+                        case OK -> {
+                        }
                         case BUFFER_OVERFLOW -> throw new SSLHandshakeException("BUFFER_OVERFLOW on handshake wrap");
                         case BUFFER_UNDERFLOW -> throw new SSLHandshakeException("BUFFER_UNDERFLOW on handshake wrap");
                         case CLOSED -> throw new SSLHandshakeException("CLOSED on handshake wrap");
@@ -137,6 +96,104 @@ public class TLSSocketChannel extends AbstractSocketChannel {
         //1, 重置缓冲区以进行新的读取操作
         inboundAppData.clear();
 
+        int result = unwrap();
+
+        if (result == -1) {
+            return -1;
+        }
+
+        // 将 appBuffer 切换到读模式并转换为 DataNode
+        inboundAppData.flip();
+
+        //返回
+        return transferByteBuffer(inboundAppData, dst);
+    }
+
+    @Override
+    public int write(ByteBuffer src) throws IOException {
+        var result = wrap(src);
+        switch (result.status) {
+            case OK -> {
+            }
+            case BUFFER_OVERFLOW -> throw new SSLException("BUFFER_OVERFLOW on handshake wrap");
+            case BUFFER_UNDERFLOW -> throw new SSLException("BUFFER_UNDERFLOW on handshake wrap");
+            case CLOSED -> throw new SSLException("CLOSED on handshake wrap");
+        }
+        return result.bytesConsumed;
+    }
+
+    @Override
+    protected void implCloseSelectableChannel() throws IOException {
+        //todo 代码待抽取
+        // 发起关闭握手
+        sslEngine.closeOutbound();
+
+        // 完成关闭握手
+        while (!sslEngine.isOutboundDone()) {
+            //空缓冲区用于发送关闭消息
+            wrap(ByteBuffer.allocate(0));
+        }
+
+        // 接收对方的 CLOSE_NOTIFY 消息
+        var emptyReadBuffer = ByteBuffer.allocate(0);
+        var b = true;
+        while (b) {
+            b = sslEngine.isInboundDone();
+            read(emptyReadBuffer);
+        }
+        // 关闭 SocketChannel
+        socketChannel.close();
+    }
+
+    public WrapResult wrap(ByteBuffer src) throws IOException {
+        var wrapResult = new WrapResult();
+
+        _MAIN:
+        while (true) {
+            //重置缓冲区为写入模式
+            outboundNetData.clear();
+
+            //执行 wrap 加密
+            var result = sslEngine.wrap(src, outboundNetData);
+
+            //累加 字节消费数
+            wrapResult.bytesConsumed += result.bytesConsumed();
+
+            //设置 状态
+            wrapResult.status = result.getStatus();
+
+            switch (result.getStatus()) {
+                case OK -> {
+                    //切换到读模式
+                    outboundNetData.flip();
+
+                    //循环发送
+                    while (outboundNetData.hasRemaining()) {
+                        socketChannel.write(outboundNetData);
+                    }
+
+                    //只有原始数据全部用尽我们才跳出循环
+                    if (!src.hasRemaining()) {
+                        break _MAIN;
+                    }
+                }
+                case BUFFER_OVERFLOW -> {
+                    // 直接扩容即可 以 2 倍为基准 (这种情况很少发生)
+                    outboundNetData = ByteBuffer.allocate(outboundNetData.capacity() * 2);
+                }
+                case BUFFER_UNDERFLOW -> {
+                    break _MAIN;
+                }
+                case CLOSED -> {
+                    break _MAIN;
+                }
+            }
+        }
+
+        return wrapResult;
+    }
+
+    public int unwrap() throws IOException {
         //计算本次 get 总的 解密和加密数据量, 用于判断当遇见 TCP 半包时是直接终止还是继续 read 
         var totalBytesConsumed = 0;
         var totalBytesProduced = 0;
@@ -197,6 +254,7 @@ public class TLSSocketChannel extends AbstractSocketChannel {
                 }
             }
 
+            
             //退出主循环
             break;
         }
@@ -204,94 +262,53 @@ public class TLSSocketChannel extends AbstractSocketChannel {
         //这里我们的 netBuffer 中可能有一些残留数据 我们压缩一下 以便下次继续使用
         inboundNetData.compact();
 
-        // 将 appBuffer 切换到读模式并转换为 DataNode
-        inboundAppData.flip();
-
-        //返回
-        return transferByteBuffer(inboundAppData, dst);
+        return totalBytesProduced;
     }
 
-    @Override
-    public int write(ByteBuffer src) throws IOException {
-        var result = wrap(src);
-        switch (result.status) {
-            case OK -> {}
-            case BUFFER_OVERFLOW -> throw new SSLException("BUFFER_OVERFLOW on handshake wrap");
-            case BUFFER_UNDERFLOW -> throw new SSLException("BUFFER_UNDERFLOW on handshake wrap");
-            case CLOSED -> throw new SSLException("CLOSED on handshake wrap");
-        }
-        return result.bytesConsumed;
-    }
-
-    @Override
-    protected void implCloseSelectableChannel() throws IOException {
-        //todo 代码待抽取
-        // 发起关闭握手
-        sslEngine.closeOutbound();
-
-        // 完成关闭握手
-        while (!sslEngine.isOutboundDone()) {
-            //空缓冲区用于发送关闭消息
-            wrap(ByteBuffer.allocate(0));
-        }
-
-        // 接收对方的 CLOSE_NOTIFY 消息
-        var emptyReadBuffer = ByteBuffer.allocate(0);
-        var b = true;
-        while (b) {
-            b = sslEngine.isInboundDone();
-            read(emptyReadBuffer);
-        }
-        // 关闭 SocketChannel
-        socketChannel.close();
-    }
-
-    public WrapResult wrap(ByteBuffer src) throws IOException {
-        var wrapResult = new WrapResult();
-
-        _MAIN:
+    public void unwrap1() throws IOException {
+        // 这里不停循环 直到完成
+        _NU:
         while (true) {
-            //重置缓冲区为写入模式
-            outboundNetData.clear();
-
-            //执行 wrap 加密
-            var result = sslEngine.wrap(src, outboundNetData);
-
-            //累加 字节消费数
-            wrapResult.bytesConsumed += result.bytesConsumed();
-
-            //设置 状态
-            wrapResult.status = result.getStatus();
-            
+            //缓冲区没有数据我们才读取
+            if (inboundNetData.position() == 0) {
+                //读取远程数据到入站网络缓冲区
+                if (socketChannel.read(inboundNetData) == -1) {
+                    throw new SSLHandshakeException("Channel closed during handshake");
+                }
+            }
+            //切换成读模式
+            inboundNetData.flip();
+            //使用空缓冲区接收 因为握手阶段是不会有任何数据的
+            var result = sslEngine.unwrap(inboundNetData, ByteBuffer.allocate(0));
             switch (result.getStatus()) {
                 case OK -> {
-                    //切换到读模式
-                    outboundNetData.flip();
-
-                    //循环发送
-                    while (outboundNetData.hasRemaining()) {
-                        socketChannel.write(outboundNetData);
-                    }
-                    
-                    //只有原始数据全部用尽我们才跳出循环
-                    if (!src.hasRemaining()) {
-                        break _MAIN;
-                    }
+                    // 解密成功，直接继续进行，因为握手阶段 即使 unwrap , 解密数据容量也只会是空 所以跳过处理
+                    break _NU;
                 }
                 case BUFFER_OVERFLOW -> {
-                    // 直接扩容即可 以 2 倍为基准 (这种情况很少发生)
-                    outboundNetData = ByteBuffer.allocate(outboundNetData.capacity() * 2);
+                    // 解密后数据缓冲区 容量太小 无法容纳解密后的数据
+                    // 但在握手阶段 和 OK 分支同理 理论上不会发生 所以这里我们抛出错误
+                    throw new SSLHandshakeException("Unexpected buffer overflow");
                 }
                 case BUFFER_UNDERFLOW -> {
-                    break _MAIN;
+                    // inboundNetData 数据不够解密 需要继续获取 这里有两种情况
+                    int remainingSpace = inboundNetData.capacity() - inboundNetData.limit();
+                    // 1, inboundNetData 本身容量太小 我们需要扩容
+                    if (remainingSpace == 0) {
+                        var newInboundNetData = ByteBuffer.allocate(inboundNetData.capacity() * 2);
+                        //把原有数据放进去
+                        newInboundNetData.put(inboundNetData);
+                        inboundNetData = newInboundNetData;
+                    }
+                    // 2, 远端未发送完整的数据 我们需要继续读取数据 (这种情况很少见) 这里直接继续循环
                 }
                 case CLOSED -> {
-                    break _MAIN;
+                    throw new SSLHandshakeException("closed on handshake wrap");
                 }
             }
         }
-
-        return wrapResult;
+        //压缩数据
+        inboundNetData.compact();
     }
 
 }
