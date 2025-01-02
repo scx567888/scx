@@ -52,7 +52,7 @@ public class TLSSocketChannel extends AbstractSocketChannel {
             var handshakeStatus = sslEngine.getHandshakeStatus();
             switch (handshakeStatus) {
                 case NEED_UNWRAP -> {
-                    var result = unwrap1();
+                    var result = unwrap();
                     switch (result.status) {
                         case SOCKET_CHANNEL_CLOSED ->
                                 throw new SSLHandshakeException("Channel closed during handshake");
@@ -245,91 +245,20 @@ public class TLSSocketChannel extends AbstractSocketChannel {
                     }
                     case BUFFER_UNDERFLOW -> {
                         unwrapResult.status = BUFFER_UNDERFLOW;
-                        // 这里表示 netBuffer 中待解密数据不足 这里分为两种情况
+                        // 这里表示 netBuffer 中待解密数据不足 这里分为三种情况
                         // 1, 如果已经成功解密了部分数据 我们跳过这次的扩容
                         if (unwrapResult.bytesProduced > 0) {
                             break _UW;
                         }
-                        // 2, 如果之前没有解密成功任何数据 我们需要扩容 netBuffer 并重新从网络中读取数据
-                        // 原有的已经读取的数据别忘了放进去
-                        System.out.println("扩容了");
-                        var newNetBuffer = ByteBuffer.allocate(inboundNetData.capacity() * 2);
-                        newNetBuffer.put(inboundNetData);// 这里 netBuffer 已经是读状态 不需要 flip()
-                        inboundNetData = newNetBuffer;
-                        continue _R;
-                    }
-                    case CLOSED -> {
-                        unwrapResult.status = CLOSED;
-                        //通道关闭 但是我们有可能之前已经读取到了部分数据这里需要 跳出循环以便返回剩余数据
-                        break _R;
-                    }
-                }
-            }
-
-            //退出主循环
-            break;
-        }
-
-        //这里我们的 netBuffer 中可能有一些残留数据 我们压缩一下 以便下次继续使用
-        inboundNetData.compact();
-
-        return unwrapResult;
-    }
-
-    public UnwrapResult unwrap1() throws IOException {
-        var unwrapResult = new UnwrapResult();
-
-        //这里涉及到如果遇到 tcp 半包 我们需要尝试重新读取 (如果第一次就遇到了) 所以这里采用一个 while 循环
-        _R:
-        while (true) {
-
-            //读取远程数据到入站网络缓冲区
-            var bytesRead = socketChannel.read(inboundNetData);
-            if (bytesRead == -1) {
-                unwrapResult.status = SOCKET_CHANNEL_CLOSED;
-                return unwrapResult;
-            }
-
-            //转换为读模式 准备用于解密
-            inboundNetData.flip();
-
-            //使用空缓冲区接收 因为握手阶段是不会有任何数据的
-            while (inboundNetData.hasRemaining()) {
-
-                var result = sslEngine.unwrap(inboundNetData, inboundAppData);
-
-                //更新 字节消费与生产数量
-                unwrapResult.bytesConsumed += result.bytesConsumed();
-                unwrapResult.bytesProduced += result.bytesProduced();
-
-                switch (result.getStatus()) {
-                    case OK -> {
-                        unwrapResult.status = OK;
-                        // 解密成功, 但这里有时会出现无法消耗任何数据的情况 为了防止死循环这里跳出
-                        if (result.bytesProduced() == 0 && result.bytesConsumed() == 0) {
-                            break _R;
-                        }
-                    }
-                    case BUFFER_OVERFLOW -> {
-                        unwrapResult.status = BUFFER_OVERFLOW;
-                        // appBuffer 容量不足, 这里进行扩容 2 倍
-                        // 原有的已经解密的数据别忘了放进去
-                        var newAppBuffer = ByteBuffer.allocate(inboundAppData.capacity() * 2);
-                        newAppBuffer.put(inboundAppData.flip()); // 这里 appBuffer 是写状态 所以需要翻转一下
-                        inboundAppData = newAppBuffer;
-                    }
-                    case BUFFER_UNDERFLOW -> {
-                        unwrapResult.status = BUFFER_UNDERFLOW;
-                        // inboundNetData 数据不够解密 需要继续获取 这里有两种情况
+                        // 2, 如果之前没有解密成功任何数据 可能是因为 inboundNetData 容量太小了 这里扩容
                         int remainingSpace = inboundNetData.capacity() - inboundNetData.limit();
-                        // 1, inboundNetData 本身容量太小 我们需要扩容
                         if (remainingSpace == 0) {
                             // 原有的已经读取的数据别忘了放进去
                             var newInboundNetData = ByteBuffer.allocate(inboundNetData.capacity() * 2);
-                            newInboundNetData.put(inboundNetData);
+                            newInboundNetData.put(inboundNetData);// 这里 netBuffer 已经是读状态 不需要 flip()
                             inboundNetData = newInboundNetData;
                         }
-                        // 2, 远端未发送完整的数据 我们需要继续读取数据 (这种情况很少见) 这里直接继续循环
+                        //3, 这里表示单纯的需要继续读取数据 直接循环
                         continue _R;
                     }
                     case CLOSED -> {
