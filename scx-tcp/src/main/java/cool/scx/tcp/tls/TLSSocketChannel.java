@@ -145,7 +145,7 @@ public class TLSSocketChannel extends AbstractSocketChannel {
         var b = true;
         while (b) {
             b = sslEngine.isInboundDone();
-            read(emptyReadBuffer);
+            unwrap();
         }
         // 关闭 SocketChannel
         socketChannel.close();
@@ -236,6 +236,7 @@ public class TLSSocketChannel extends AbstractSocketChannel {
                         }
                     }
                     case BUFFER_OVERFLOW -> {
+                        unwrapResult.status = BUFFER_OVERFLOW;
                         // appBuffer 容量不足, 这里进行扩容 2 倍
                         // 原有的已经解密的数据别忘了放进去
                         var newAppBuffer = ByteBuffer.allocate(inboundAppData.capacity() * 2);
@@ -243,6 +244,7 @@ public class TLSSocketChannel extends AbstractSocketChannel {
                         inboundAppData = newAppBuffer;
                     }
                     case BUFFER_UNDERFLOW -> {
+                        unwrapResult.status = BUFFER_UNDERFLOW;
                         // 这里表示 netBuffer 中待解密数据不足 这里分为两种情况
                         // 1, 如果已经成功解密了部分数据 我们跳过这次的扩容
                         if (unwrapResult.bytesProduced > 0) {
@@ -257,6 +259,7 @@ public class TLSSocketChannel extends AbstractSocketChannel {
                         continue _R;
                     }
                     case CLOSED -> {
+                        unwrapResult.status = CLOSED;
                         //通道关闭 但是我们有可能之前已经读取到了部分数据这里需要 跳出循环以便返回剩余数据
                         break _R;
                     }
@@ -309,6 +312,7 @@ public class TLSSocketChannel extends AbstractSocketChannel {
                         }
                     }
                     case BUFFER_OVERFLOW -> {
+                        unwrapResult.status = BUFFER_OVERFLOW;
                         // appBuffer 容量不足, 这里进行扩容 2 倍
                         // 原有的已经解密的数据别忘了放进去
                         var newAppBuffer = ByteBuffer.allocate(inboundAppData.capacity() * 2);
@@ -316,6 +320,7 @@ public class TLSSocketChannel extends AbstractSocketChannel {
                         inboundAppData = newAppBuffer;
                     }
                     case BUFFER_UNDERFLOW -> {
+                        unwrapResult.status = BUFFER_UNDERFLOW;
                         // inboundNetData 数据不够解密 需要继续获取 这里有两种情况
                         int remainingSpace = inboundNetData.capacity() - inboundNetData.limit();
                         // 1, inboundNetData 本身容量太小 我们需要扩容
@@ -330,6 +335,7 @@ public class TLSSocketChannel extends AbstractSocketChannel {
                     }
                     case CLOSED -> {
                         unwrapResult.status = CLOSED;
+                        //通道关闭 但是我们有可能之前已经读取到了部分数据这里需要 跳出循环以便返回剩余数据
                         break _R;
                     }
                 }
