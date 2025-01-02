@@ -20,7 +20,6 @@ public final class UnwrapResult {
                 "bytesProduced=" + bytesProduced + ']';
     }
 
-
     public enum Status {
         SOCKET_CHANNEL_CLOSED,
         OK,
