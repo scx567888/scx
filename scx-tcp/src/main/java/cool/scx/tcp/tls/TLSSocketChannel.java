@@ -229,8 +229,8 @@ public class TLSSocketChannel extends AbstractSocketChannel {
 
                 switch (result.getStatus()) {
                     case OK -> {
-                        // 这里有时会出现无法消耗任何数据的情况 为了防止死循环这里跳出
                         unwrapResult.status = OK;
+                        // 解密成功, 但这里有时会出现无法消耗任何数据的情况 为了防止死循环这里跳出
                         if (result.bytesProduced() == 0 && result.bytesConsumed() == 0) {
                             break _R;
                         }
@@ -304,9 +304,8 @@ public class TLSSocketChannel extends AbstractSocketChannel {
 
                 switch (result.getStatus()) {
                     case OK -> {
-                        // 解密成功
                         unwrapResult.status = OK;
-                        // 这里有时会出现无法消耗任何数据的情况 为了防止死循环这里跳出
+                        // 解密成功, 但这里有时会出现无法消耗任何数据的情况 为了防止死循环这里跳出
                         if (result.bytesProduced() == 0 && result.bytesConsumed() == 0) {
                             break _R;
                         }
