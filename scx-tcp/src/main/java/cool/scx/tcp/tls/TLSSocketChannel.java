@@ -1,6 +1,7 @@
 package cool.scx.tcp.tls;
 
 import javax.net.ssl.SSLEngine;
+import javax.net.ssl.SSLEngineResult;
 import javax.net.ssl.SSLHandshakeException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -10,7 +11,6 @@ import static cool.scx.io.IOHelper.transferByteBuffer;
 
 /**
  * TLSSocketChannel
- * todo 虚拟线程中会无法握手成功
  *
  * @author scx567888
  * @version 0.0.1
@@ -52,9 +52,12 @@ public class TLSSocketChannel extends AbstractSocketChannel {
                     // 这里不停循环 直到完成
                     _NU:
                     while (true) {
-                        //读取远程数据到入站网络缓冲区
-                        if (socketChannel.read(inboundNetData) == -1) {
-                            throw new SSLHandshakeException("Channel closed during handshake");
+                        //缓冲区没有数据我们才读取
+                        if (inboundNetData.position() == 0) {
+                            //读取远程数据到入站网络缓冲区
+                            if (socketChannel.read(inboundNetData) == -1) {
+                                throw new SSLHandshakeException("Channel closed during handshake");
+                            }
                         }
                         //切换成读模式
                         inboundNetData.flip();
@@ -270,8 +273,40 @@ public class TLSSocketChannel extends AbstractSocketChannel {
 
     @Override
     protected void implCloseSelectableChannel() throws IOException {
-        //todo ? 此处是否有问题 ?
+        //todo 代码待抽取
+        // 发起关闭握手
         sslEngine.closeOutbound();
+
+        // 创建一个空缓冲区用于发送关闭消息
+        ByteBuffer emptyBuffer = ByteBuffer.allocate(0);
+        // 缓冲区用于存储出站数据
+        ByteBuffer outboundBuffer = outboundNetData;
+
+        // 完成关闭握手
+        while (!sslEngine.isOutboundDone()) {
+            outboundBuffer.clear();
+            SSLEngineResult result = sslEngine.wrap(emptyBuffer, outboundBuffer);
+            switch (result.getStatus()) {
+                case OK -> {
+                    outboundBuffer.flip();
+                    while (outboundBuffer.hasRemaining()) {
+                        socketChannel.write(outboundBuffer);
+                    }
+                }
+                case CLOSED -> {
+                }
+                default -> throw new IOException("Error during SSL/TLS close handshake: " + result.getStatus());
+            }
+        }
+
+        // 接收对方的 CLOSE_NOTIFY 消息
+        var emptyReadBuffer = ByteBuffer.allocate(0);
+        var b = true;
+        while (b) {
+            b = sslEngine.isInboundDone();
+            read(emptyReadBuffer);
+        }
+        // 关闭 SocketChannel
         socketChannel.close();
     }
 
