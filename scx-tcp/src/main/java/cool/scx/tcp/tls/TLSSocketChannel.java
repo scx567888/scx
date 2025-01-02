@@ -245,20 +245,16 @@ public class TLSSocketChannel extends AbstractSocketChannel {
                     }
                     case BUFFER_UNDERFLOW -> {
                         unwrapResult.status = BUFFER_UNDERFLOW;
-                        // 这里表示 netBuffer 中待解密数据不足 这里分为三种情况
+                        // 这里表示 netBuffer 中待解密数据不足 这里分为两种情况
                         // 1, 如果已经成功解密了部分数据 我们跳过这次的扩容
                         if (unwrapResult.bytesProduced > 0) {
                             break _UW;
                         }
-                        // 2, 如果之前没有解密成功任何数据 可能是因为 inboundNetData 容量太小了 这里扩容
-                        int remainingSpace = inboundNetData.capacity() - inboundNetData.limit();
-                        if (remainingSpace == 0) {
-                            // 原有的已经读取的数据别忘了放进去
-                            var newInboundNetData = ByteBuffer.allocate(inboundNetData.capacity() * 2);
-                            newInboundNetData.put(inboundNetData);// 这里 netBuffer 已经是读状态 不需要 flip()
-                            inboundNetData = newInboundNetData;
-                        }
-                        //3, 这里表示单纯的需要继续读取数据 直接循环
+                        // 2, 如果之前没有解密成功任何数据 说明 容量太小了 这里扩容
+                        // 原有的已经读取的数据别忘了放进去
+                        var newInboundNetData = ByteBuffer.allocate(inboundNetData.capacity() * 2);
+                        newInboundNetData.put(inboundNetData);// 这里 netBuffer 已经是读状态 不需要 flip()
+                        inboundNetData = newInboundNetData;
                         continue _R;
                     }
                     case CLOSED -> {
