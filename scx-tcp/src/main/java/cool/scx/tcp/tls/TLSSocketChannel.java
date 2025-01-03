@@ -108,7 +108,7 @@ public class TLSSocketChannel extends AbstractSocketChannel {
 
         //切换到读模式
         inboundAppData.flip();
-        
+
         switch (result.status) {
             case SOCKET_CHANNEL_CLOSED -> {
                 return -1;
