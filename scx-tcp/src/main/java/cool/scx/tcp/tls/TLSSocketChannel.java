@@ -197,7 +197,8 @@ public class TLSSocketChannel extends AbstractSocketChannel {
                     break _MAIN;
                 }
                 case CLOSED -> {
-                    //切换到读模式
+                    // 即使遇到 CLOSED 我们也需要向远端写入 关闭数据帧
+                    // 切换到读模式
                     outboundNetData.flip();
 
                     //循环发送
