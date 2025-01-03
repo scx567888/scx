@@ -106,6 +106,9 @@ public class TLSSocketChannel extends AbstractSocketChannel {
 
         var result = unwrap();
 
+        //切换到读模式
+        inboundAppData.flip();
+        
         switch (result.status) {
             case SOCKET_CHANNEL_CLOSED -> {
                 return -1;
@@ -114,8 +117,8 @@ public class TLSSocketChannel extends AbstractSocketChannel {
             case CLOSED -> sslEngine.closeInbound();
         }
 
-        // 切换到读模式并写入到用户 buffer 中
-        return transferByteBuffer(inboundAppData.flip(), dst);
+        // 写入到用户 buffer 中
+        return transferByteBuffer(inboundAppData, dst);
     }
 
     //调用前请保证 outboundNetData 是写入模式
@@ -125,8 +128,6 @@ public class TLSSocketChannel extends AbstractSocketChannel {
         var result = wrap(src);
 
         switch (result.status) {
-            case OK -> {
-            }
             case BUFFER_OVERFLOW -> throw new SSLException("BUFFER_OVERFLOW on handshake wrap");
             case BUFFER_UNDERFLOW -> throw new SSLException("BUFFER_UNDERFLOW on handshake wrap");
             case CLOSED -> throw new SSLException("CLOSED on handshake wrap");
