@@ -123,7 +123,7 @@ public class TLSSocketChannel extends AbstractSocketChannel {
     @Override
     public int write(ByteBuffer src) throws IOException {
         var result = wrap(src);
-        
+
         switch (result.status) {
             case OK -> {
             }
@@ -137,13 +137,24 @@ public class TLSSocketChannel extends AbstractSocketChannel {
 
     @Override
     protected void implCloseSelectableChannel() throws IOException {
+        //1, 关闭出站
+        sslEngine.closeOutbound();
+        while (!sslEngine.isOutboundDone()) {
+            wrap(ByteBuffer.allocate(0));
+        }
+
+        //2, 重置缓冲区以进行新的读取操作
+        inboundAppData.clear();
+
+        //2, 读取剩余数据
+        unwrap();
 
         //4,关闭底层连接
         socketChannel.close();
     }
 
     //调用前请保证 outboundNetData 是写入模式
-    //调用后 outboundNetData 仍然是写入模式
+    //调用后 outboundNetData 是读模式
     public WrapResult wrap(ByteBuffer src) throws IOException {
         var wrapResult = new WrapResult();
 
@@ -185,6 +196,14 @@ public class TLSSocketChannel extends AbstractSocketChannel {
                     break _MAIN;
                 }
                 case CLOSED -> {
+                    //切换到读模式
+                    outboundNetData.flip();
+
+                    //循环发送
+                    while (outboundNetData.hasRemaining()) {
+                        socketChannel.write(outboundNetData);
+                    }
+
                     break _MAIN;
                 }
             }
