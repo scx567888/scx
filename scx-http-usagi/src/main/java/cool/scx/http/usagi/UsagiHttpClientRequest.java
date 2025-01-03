@@ -7,7 +7,8 @@ import cool.scx.http.uri.ScxURIWritable;
 import cool.scx.io.InputStreamDataSupplier;
 import cool.scx.io.LinkedDataReader;
 import cool.scx.tcp.ClassicTCPClient;
-import cool.scx.tcp.ScxTCPClientOptions;
+import cool.scx.tcp.NioTCPClient;
+import cool.scx.tcp.ScxTCPClient;
 import cool.scx.tcp.ScxTCPSocket;
 import cool.scx.tcp.tls.TLS;
 
@@ -33,7 +34,7 @@ public class UsagiHttpClientRequest extends ScxHttpClientRequestBase {
 
     private final UsagiHttpClient httpClient;
 
-    ClassicTCPClient tcpClient;
+    ScxTCPClient tcpClient;
     ScxTCPSocket connect;
 
     public UsagiHttpClientRequest(UsagiHttpClient httpClient) {
@@ -140,12 +141,12 @@ public class UsagiHttpClientRequest extends ScxHttpClientRequestBase {
     public ScxHttpClientResponse send(MediaWriter writer) {
         var isHttps = checkIsHttps(uri);
 
-        if (isHttps) {
-            var trustAllTLS = getTrustAllTLS();
-            this.tcpClient = new ClassicTCPClient(new ScxTCPClientOptions().tls(trustAllTLS));
-        } else {
-            this.tcpClient = new ClassicTCPClient(httpClient.options);
-        }
+        var options = isHttps ? new UsagiHttpClientOptions().tls(getTrustAllTLS()) : httpClient.options;
+
+        this.tcpClient = switch (options.tcpClientType()) {
+            case CLASSIC -> new ClassicTCPClient(options);
+            case NIO -> new NioTCPClient(options);
+        };
 
         var remoteAddress = getRemoteAddress(uri);
         this.connect = tcpClient.connect(remoteAddress);

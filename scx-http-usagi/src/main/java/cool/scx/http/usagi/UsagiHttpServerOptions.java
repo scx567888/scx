@@ -15,12 +15,14 @@ public class UsagiHttpServerOptions extends ScxTCPServerOptions {
     private int maxHeaderSize;
     private int maxPayloadSize;
     private int maxWebsocketFrameSize;
+    private TCPServerType tcpServerType;
 
     public UsagiHttpServerOptions() {
         this.maxRequestLineSize = 1024 * 64; // 默认 64 KB
         this.maxHeaderSize = 1024 * 128; // 默认 128 KB
         this.maxPayloadSize = 1024 * 1024 * 16; // 默认 16 MB
         this.maxWebsocketFrameSize = 1024 * 1024 * 16; // 默认 16 MB
+        this.tcpServerType = TCPServerType.NIO; // 默认 16 MB
     }
 
     public UsagiHttpServerOptions(UsagiHttpServerOptions oldOptions) {
@@ -30,6 +32,7 @@ public class UsagiHttpServerOptions extends ScxTCPServerOptions {
         maxHeaderSize(oldOptions.maxHeaderSize());
         maxPayloadSize(oldOptions.maxPayloadSize());
         maxWebsocketFrameSize(oldOptions.maxWebsocketFrameSize());
+        tcpServerType(oldOptions.tcpServerType());
     }
 
     @Override
@@ -78,6 +81,20 @@ public class UsagiHttpServerOptions extends ScxTCPServerOptions {
     public UsagiHttpServerOptions maxWebsocketFrameSize(int maxWebsocketFrameSize) {
         this.maxWebsocketFrameSize = maxWebsocketFrameSize;
         return this;
+    }
+
+    public TCPServerType tcpServerType() {
+        return tcpServerType;
+    }
+
+    public UsagiHttpServerOptions tcpServerType(TCPServerType tcpServerType) {
+        this.tcpServerType = tcpServerType;
+        return this;
+    }
+
+    public enum TCPServerType {
+        CLASSIC,
+        NIO
     }
 
 }

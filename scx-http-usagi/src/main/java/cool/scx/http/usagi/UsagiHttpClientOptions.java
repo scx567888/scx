@@ -1,27 +1,35 @@
 package cool.scx.http.usagi;
 
+import cool.scx.tcp.ScxTCPClientOptions;
+import cool.scx.tcp.proxy.Proxy;
+import cool.scx.tcp.tls.TLS;
+
 /**
  * todo 待完成
  *
  * @author scx567888
  * @version 0.0.1
  */
-public class UsagiHttpClientOptions {
+public class UsagiHttpClientOptions extends ScxTCPClientOptions {
 
-    private Proxy proxy;
+    private TCPClientType tcpClientType;
     private int bodyBufferSize;
 
     public UsagiHttpClientOptions() {
-        this.proxy = null;
         this.bodyBufferSize = 65536;
+        this.tcpClientType = TCPClientType.NIO;
     }
 
-    public Proxy proxy() {
-        return proxy;
-    }
-
+    @Override
     public UsagiHttpClientOptions proxy(Proxy proxy) {
-        this.proxy = proxy;
+        super.proxy(proxy);
+        return this;
+
+    }
+
+    @Override
+    public UsagiHttpClientOptions tls(TLS tls) {
+        super.tls(tls);
         return this;
     }
 
@@ -34,56 +42,18 @@ public class UsagiHttpClientOptions {
         return this;
     }
 
-    public static class Proxy {
+    public TCPClientType tcpClientType() {
+        return tcpClientType;
+    }
 
-        private String host;
-        private int port;
-        private String username;
-        private char[] password;
+    public UsagiHttpClientOptions tcpClientType(TCPClientType tcpClientType) {
+        this.tcpClientType = tcpClientType;
+        return this;
+    }
 
-        public Proxy() {
-            this.host = "127.0.0.1";
-            this.port = 80;
-            this.username = null;
-            this.password = null;
-        }
-
-        public String host() {
-            return host;
-        }
-
-        public int port() {
-            return port;
-        }
-
-        public String username() {
-            return username;
-        }
-
-        public char[] password() {
-            return password;
-        }
-
-        public Proxy host(String host) {
-            this.host = host;
-            return this;
-        }
-
-        public Proxy port(int port) {
-            this.port = port;
-            return this;
-        }
-
-        public Proxy username(String username) {
-            this.username = username;
-            return this;
-        }
-
-        public Proxy password(char[] password) {
-            this.password = password;
-            return this;
-        }
-
+    public enum TCPClientType {
+        CLASSIC,
+        NIO
     }
 
 }
