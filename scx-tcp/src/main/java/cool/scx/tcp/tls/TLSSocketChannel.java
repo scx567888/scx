@@ -248,9 +248,9 @@ public class TLSSocketChannel extends AbstractSocketChannel {
                             break _MAIN;
                         }
                         //计算 inboundNetData 是不是满了
-                        var full = inboundNetData.limit() == inboundNetData.capacity();
-                        // 2, 如果没有可写入的空间，则扩容
-                        if (full) {
+                        var isFull = inboundNetData.limit() == inboundNetData.capacity();
+                        // 2, 如果满了 (没有可写入的空间)，则扩容
+                        if (isFull) {
                             var newInboundNetData = ByteBuffer.allocate(inboundNetData.capacity() * 2);
                             // 原有的已经读取的数据别忘了放进去
                             newInboundNetData.put(inboundNetData);// 这里 netBuffer 已经是读状态 不需要 flip()
