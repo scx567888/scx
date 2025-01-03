@@ -3,7 +3,6 @@ package cool.scx.http.usagi;
 import cool.scx.http.ScxHttpClient;
 import cool.scx.http.ScxHttpClientRequest;
 import cool.scx.http.web_socket.ScxClientWebSocketBuilder;
-import cool.scx.tcp.ScxTCPClientOptions;
 
 /**
  * todo 待完成
@@ -13,14 +12,14 @@ import cool.scx.tcp.ScxTCPClientOptions;
  */
 public class UsagiHttpClient implements ScxHttpClient {
 
-    final ScxTCPClientOptions options;
+    final UsagiHttpClientOptions options;
 
-    public UsagiHttpClient(ScxTCPClientOptions options) {
+    public UsagiHttpClient(UsagiHttpClientOptions options) {
         this.options = options;
     }
 
     public UsagiHttpClient() {
-        this(new ScxTCPClientOptions());
+        this(new UsagiHttpClientOptions());
     }
 
     @Override

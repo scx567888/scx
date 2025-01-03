@@ -4,6 +4,7 @@ import cool.scx.http.ScxHttpServer;
 import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.usagi.http1x.Http1xConnection;
 import cool.scx.tcp.ClassicTCPServer;
+import cool.scx.tcp.NioTCPServer;
 import cool.scx.tcp.ScxTCPServer;
 import cool.scx.tcp.ScxTCPSocket;
 
@@ -23,7 +24,10 @@ public class UsagiHttpServer implements ScxHttpServer {
 
     public UsagiHttpServer(UsagiHttpServerOptions options) {
         this.options = options;
-        this.tcpServer = new ClassicTCPServer(options);
+        this.tcpServer = switch (options.tcpServerType()) {
+            case CLASSIC -> new ClassicTCPServer(options);
+            case NIO -> new NioTCPServer(options);
+        };
         this.tcpServer.onConnect(this::handle);
     }
 
