@@ -202,7 +202,7 @@ public class TLSSocketChannel extends AbstractSocketChannel {
         var unwrapResult = new UnwrapResult();
 
         //这里涉及到如果遇到 tcp 半包 我们需要尝试重新读取 (如果第一次就遇到了) 所以这里采用一个 while 循环
-        _R:
+        _MAIN:
         while (true) {
 
             //读取远程数据到入站网络缓冲区
@@ -216,7 +216,6 @@ public class TLSSocketChannel extends AbstractSocketChannel {
             inboundNetData.flip();
 
             //这里我们尝试解密所有读取到的数据 直到剩余解密数据为空或者遇到 TCP 半包
-            _UW:
             while (inboundNetData.hasRemaining()) {
 
                 var result = sslEngine.unwrap(inboundNetData, inboundAppData);
@@ -230,7 +229,7 @@ public class TLSSocketChannel extends AbstractSocketChannel {
                         unwrapResult.status = OK;
                         // 解密成功, 但这里有时会出现无法消耗任何数据的情况 为了防止死循环这里跳出
                         if (result.bytesProduced() == 0 && result.bytesConsumed() == 0) {
-                            break _R;
+                            break _MAIN;
                         }
                     }
                     case BUFFER_OVERFLOW -> {
@@ -246,7 +245,7 @@ public class TLSSocketChannel extends AbstractSocketChannel {
                         // 这里表示 netBuffer 中待解密数据不足 这里分为三种情况
                         // 1, 如果已经成功解密了部分数据 我们跳过这次的扩容
                         if (unwrapResult.bytesProduced > 0) {
-                            break _UW;
+                            break _MAIN;
                         }
                         //计算剩余 "可写的长度"
                         var w = inboundNetData.capacity() - inboundNetData.remaining();
@@ -262,12 +261,12 @@ public class TLSSocketChannel extends AbstractSocketChannel {
                             // 设置位置到剩余数据的末尾 
                             inboundNetData.limit(inboundNetData.capacity());
                         }
-                        continue _R;
+                        continue _MAIN;
                     }
                     case CLOSED -> {
                         unwrapResult.status = CLOSED;
                         //通道关闭 但是我们有可能之前已经读取到了部分数据这里需要 跳出循环以便返回剩余数据
-                        break _R;
+                        break _MAIN;
                     }
                 }
             }
