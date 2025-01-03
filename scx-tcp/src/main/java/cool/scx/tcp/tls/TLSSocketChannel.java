@@ -52,7 +52,9 @@ public class TLSSocketChannel extends AbstractSocketChannel {
             var handshakeStatus = sslEngine.getHandshakeStatus();
             switch (handshakeStatus) {
                 case NEED_UNWRAP -> {
-                    var result = unwrap();
+                    //握手阶段我们不需要强制读取 因为 inboundNetData 中可能存在半包
+                    //我们需要将 inboundNetData 用尽才去读取
+                    var result = unwrap(false);
                     switch (result.status) {
                         case SOCKET_CHANNEL_CLOSED ->
                                 throw new SSLHandshakeException("Channel closed during handshake");
@@ -104,7 +106,8 @@ public class TLSSocketChannel extends AbstractSocketChannel {
         //1, 重置缓冲区以进行新的读取操作
         inboundAppData.clear();
 
-        var result = unwrap();
+        //这里强制读取 因为实际测试中 强制读取会减少 unwrap 的半包错误尝试次数
+        var result = unwrap(true);
 
         //切换到读模式
         inboundAppData.flip();
@@ -148,7 +151,7 @@ public class TLSSocketChannel extends AbstractSocketChannel {
         inboundAppData.clear();
 
         //2, 读取剩余数据
-        unwrap();
+        unwrap(true);
 
         //4,关闭底层连接
         socketChannel.close();
@@ -216,19 +219,24 @@ public class TLSSocketChannel extends AbstractSocketChannel {
 
     //调用前请保证 inboundNetData 是写入模式 , inboundAppData 是写入模式
     //调用后会尝试从网络通道中读取数据并解密 inboundNetData 仍然是写入模式 , inboundAppData 仍然是写入模式
-    public UnwrapResult unwrap() throws IOException {
+    public UnwrapResult unwrap(boolean forceRead) throws IOException {
         //计算本次 get 总的 解密和加密数据量, 用于判断当遇见 TCP 半包时是直接终止还是继续 read 
         var unwrapResult = new UnwrapResult();
+
+        //如果不是强制读 我们根据 inboundNetData 中是否存在剩余数据来判断是否需要读取
+        var needRead = forceRead || inboundNetData.position() == 0;
 
         //这里涉及到如果遇到 tcp 半包 我们需要尝试重新读取 (如果第一次就遇到了) 所以这里采用一个 while 循环
         _MAIN:
         while (true) {
 
-            //读取远程数据到入站网络缓冲区
-            var bytesRead = socketChannel.read(inboundNetData);
-            if (bytesRead == -1) {
-                unwrapResult.status = SOCKET_CHANNEL_CLOSED;
-                return unwrapResult;
+            if (needRead) {
+                //读取远程数据到入站网络缓冲区
+                var bytesRead = socketChannel.read(inboundNetData);
+                if (bytesRead == -1) {
+                    unwrapResult.status = SOCKET_CHANNEL_CLOSED;
+                    return unwrapResult;
+                }
             }
 
             //转换为读模式 准备用于解密
@@ -281,6 +289,8 @@ public class TLSSocketChannel extends AbstractSocketChannel {
                             // 设置位置到剩余数据的末尾 
                             inboundNetData.limit(inboundNetData.capacity());
                         }
+                        // 这里我们需要继续读取
+                        needRead = true;
                         continue _MAIN;
                     }
                     case CLOSED -> {
