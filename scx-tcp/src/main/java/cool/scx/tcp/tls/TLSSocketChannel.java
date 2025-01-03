@@ -257,8 +257,8 @@ public class TLSSocketChannel extends AbstractSocketChannel {
                             inboundNetData = newInboundNetData;
                         } else {
                             //3, 有剩余表示 只是上一次读取的少了 可以直接使用 inboundNetData.compact(); 但是因为会进行数组的复制
-                            // 这里为了性能 手动调整缓冲区：将未处理数据移动到缓冲区起始位置 然后重新读取
-                            inboundNetData.position(inboundNetData.remaining());
+                            // 这里为了性能 手动调整缓冲区指针 然后重新读取
+                            inboundNetData.position(inboundNetData.limit());
                             // 设置位置到剩余数据的末尾 
                             inboundNetData.limit(inboundNetData.capacity());
                         }
