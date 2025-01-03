@@ -92,6 +92,8 @@ public class TLSSocketChannel extends AbstractSocketChannel {
         }
     }
 
+    //调用前 inboundAppData 是读模式
+    //调用后 inboundAppData 仍然是读模式
     @Override
     public int read(ByteBuffer dst) throws IOException {
         //0, 如果有剩余则先使用剩余的
@@ -104,20 +106,24 @@ public class TLSSocketChannel extends AbstractSocketChannel {
 
         var result = unwrap();
 
-        if (result.status == SOCKET_CHANNEL_CLOSED) {
-            return -1;
+        switch (result.status) {
+            case SOCKET_CHANNEL_CLOSED -> {
+                return -1;
+            }
+            //如果是关闭帧 则执行关闭
+            case CLOSED -> sslEngine.closeInbound();
         }
 
-        // 将 appBuffer 切换到读模式并转换为 DataNode
-        inboundAppData.flip();
-
-        //返回
-        return transferByteBuffer(inboundAppData, dst);
+        // 切换到读模式并写入到用户 buffer 中
+        return transferByteBuffer(inboundAppData.flip(), dst);
     }
 
+    //调用前请保证 outboundNetData 是写入模式
+    //调用后 outboundNetData 仍然是写入模式
     @Override
     public int write(ByteBuffer src) throws IOException {
         var result = wrap(src);
+        
         switch (result.status) {
             case OK -> {
             }
@@ -125,30 +131,19 @@ public class TLSSocketChannel extends AbstractSocketChannel {
             case BUFFER_UNDERFLOW -> throw new SSLException("BUFFER_UNDERFLOW on handshake wrap");
             case CLOSED -> throw new SSLException("CLOSED on handshake wrap");
         }
+
         return result.bytesConsumed;
     }
 
     @Override
     protected void implCloseSelectableChannel() throws IOException {
-        //todo 此处不完善
-        sslEngine.closeOutbound();
 
-        // 完成关闭握手
-        while (!sslEngine.isOutboundDone()) {
-            //空缓冲区用于发送关闭消息
-            wrap(ByteBuffer.allocate(0));
-        }
-
-        // 接收对方的 CLOSE_NOTIFY 消息
-        var b = true;
-        while (b) {
-            b = sslEngine.isInboundDone();
-            unwrap();
-        }
-        // 关闭 SocketChannel
+        //4,关闭底层连接
         socketChannel.close();
     }
 
+    //调用前请保证 outboundNetData 是写入模式
+    //调用后 outboundNetData 仍然是写入模式
     public WrapResult wrap(ByteBuffer src) throws IOException {
         var wrapResult = new WrapResult();
 
@@ -160,8 +155,9 @@ public class TLSSocketChannel extends AbstractSocketChannel {
             //执行 wrap 加密
             var result = sslEngine.wrap(src, outboundNetData);
 
-            //累加 字节消费数
+            //更新 字节消费与生产数量
             wrapResult.bytesConsumed += result.bytesConsumed();
+            wrapResult.bytesProduced += result.bytesProduced();
 
             //设置 状态
             wrapResult.status = result.getStatus();
@@ -197,6 +193,8 @@ public class TLSSocketChannel extends AbstractSocketChannel {
         return wrapResult;
     }
 
+    //调用前请保证 inboundNetData 是写入模式 , inboundAppData 是写入模式
+    //调用后会尝试从网络通道中读取数据并解密 inboundNetData 仍然是写入模式 , inboundAppData 仍然是写入模式
     public UnwrapResult unwrap() throws IOException {
         //计算本次 get 总的 解密和加密数据量, 用于判断当遇见 TCP 半包时是直接终止还是继续 read 
         var unwrapResult = new UnwrapResult();
