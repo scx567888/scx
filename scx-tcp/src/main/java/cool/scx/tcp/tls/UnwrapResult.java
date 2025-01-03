@@ -1,7 +1,7 @@
 package cool.scx.tcp.tls;
 
 public final class UnwrapResult {
-    
+
     public Status status;
     public int bytesConsumed;
     public int bytesProduced;

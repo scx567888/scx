@@ -92,6 +92,8 @@ public class TLSSocketChannel extends AbstractSocketChannel {
         }
     }
 
+    //调用前 inboundAppData 是读模式
+    //调用后 inboundAppData 仍然是读模式
     @Override
     public int read(ByteBuffer dst) throws IOException {
         //0, 如果有剩余则先使用剩余的
@@ -104,51 +106,56 @@ public class TLSSocketChannel extends AbstractSocketChannel {
 
         var result = unwrap();
 
-        if (result.status == SOCKET_CHANNEL_CLOSED) {
-            return -1;
-        }
-
-        // 将 appBuffer 切换到读模式并转换为 DataNode
+        //切换到读模式
         inboundAppData.flip();
 
-        //返回
+        switch (result.status) {
+            case SOCKET_CHANNEL_CLOSED -> {
+                return -1;
+            }
+            //如果是关闭帧 则执行关闭
+            case CLOSED -> sslEngine.closeInbound();
+        }
+
+        // 写入到用户 buffer 中
         return transferByteBuffer(inboundAppData, dst);
     }
 
+    //调用前请保证 outboundNetData 是写入模式
+    //调用后 outboundNetData 仍然是写入模式
     @Override
     public int write(ByteBuffer src) throws IOException {
         var result = wrap(src);
+
         switch (result.status) {
-            case OK -> {
-            }
             case BUFFER_OVERFLOW -> throw new SSLException("BUFFER_OVERFLOW on handshake wrap");
             case BUFFER_UNDERFLOW -> throw new SSLException("BUFFER_UNDERFLOW on handshake wrap");
             case CLOSED -> throw new SSLException("CLOSED on handshake wrap");
         }
+
         return result.bytesConsumed;
     }
 
     @Override
     protected void implCloseSelectableChannel() throws IOException {
-        //todo 此处不完善
+        //1, 关闭出站
         sslEngine.closeOutbound();
-
-        // 完成关闭握手
         while (!sslEngine.isOutboundDone()) {
-            //空缓冲区用于发送关闭消息
             wrap(ByteBuffer.allocate(0));
         }
 
-        // 接收对方的 CLOSE_NOTIFY 消息
-        var b = true;
-        while (b) {
-            b = sslEngine.isInboundDone();
-            unwrap();
-        }
-        // 关闭 SocketChannel
+        //2, 重置缓冲区以进行新的读取操作
+        inboundAppData.clear();
+
+        //2, 读取剩余数据
+        unwrap();
+
+        //4,关闭底层连接
         socketChannel.close();
     }
 
+    //调用前请保证 outboundNetData 是写入模式
+    //调用后 outboundNetData 是读模式
     public WrapResult wrap(ByteBuffer src) throws IOException {
         var wrapResult = new WrapResult();
 
@@ -160,8 +167,9 @@ public class TLSSocketChannel extends AbstractSocketChannel {
             //执行 wrap 加密
             var result = sslEngine.wrap(src, outboundNetData);
 
-            //累加 字节消费数
+            //更新 字节消费与生产数量
             wrapResult.bytesConsumed += result.bytesConsumed();
+            wrapResult.bytesProduced += result.bytesProduced();
 
             //设置 状态
             wrapResult.status = result.getStatus();
@@ -189,6 +197,15 @@ public class TLSSocketChannel extends AbstractSocketChannel {
                     break _MAIN;
                 }
                 case CLOSED -> {
+                    // 即使遇到 CLOSED 我们也需要向远端写入 关闭数据帧
+                    // 切换到读模式
+                    outboundNetData.flip();
+
+                    //循环发送
+                    while (outboundNetData.hasRemaining()) {
+                        socketChannel.write(outboundNetData);
+                    }
+
                     break _MAIN;
                 }
             }
@@ -197,12 +214,14 @@ public class TLSSocketChannel extends AbstractSocketChannel {
         return wrapResult;
     }
 
+    //调用前请保证 inboundNetData 是写入模式 , inboundAppData 是写入模式
+    //调用后会尝试从网络通道中读取数据并解密 inboundNetData 仍然是写入模式 , inboundAppData 仍然是写入模式
     public UnwrapResult unwrap() throws IOException {
         //计算本次 get 总的 解密和加密数据量, 用于判断当遇见 TCP 半包时是直接终止还是继续 read 
         var unwrapResult = new UnwrapResult();
 
         //这里涉及到如果遇到 tcp 半包 我们需要尝试重新读取 (如果第一次就遇到了) 所以这里采用一个 while 循环
-        _R:
+        _MAIN:
         while (true) {
 
             //读取远程数据到入站网络缓冲区
@@ -216,7 +235,6 @@ public class TLSSocketChannel extends AbstractSocketChannel {
             inboundNetData.flip();
 
             //这里我们尝试解密所有读取到的数据 直到剩余解密数据为空或者遇到 TCP 半包
-            _UW:
             while (inboundNetData.hasRemaining()) {
 
                 var result = sslEngine.unwrap(inboundNetData, inboundAppData);
@@ -230,7 +248,7 @@ public class TLSSocketChannel extends AbstractSocketChannel {
                         unwrapResult.status = OK;
                         // 解密成功, 但这里有时会出现无法消耗任何数据的情况 为了防止死循环这里跳出
                         if (result.bytesProduced() == 0 && result.bytesConsumed() == 0) {
-                            break _R;
+                            break _MAIN;
                         }
                     }
                     case BUFFER_OVERFLOW -> {
@@ -243,22 +261,32 @@ public class TLSSocketChannel extends AbstractSocketChannel {
                     }
                     case BUFFER_UNDERFLOW -> {
                         unwrapResult.status = BUFFER_UNDERFLOW;
-                        // 这里表示 netBuffer 中待解密数据不足 这里分为两种情况
+                        // 这里表示 netBuffer 中待解密数据不足 这里分为三种情况
                         // 1, 如果已经成功解密了部分数据 我们跳过这次的扩容
                         if (unwrapResult.bytesProduced > 0) {
-                            break _UW;
+                            break _MAIN;
                         }
-                        // 2, 如果之前没有解密成功任何数据 说明 容量太小了 这里扩容
-                        // 原有的已经读取的数据别忘了放进去
-                        var newInboundNetData = ByteBuffer.allocate(inboundNetData.capacity() * 2);
-                        newInboundNetData.put(inboundNetData);// 这里 netBuffer 已经是读状态 不需要 flip()
-                        inboundNetData = newInboundNetData;
-                        continue _R;
+                        //计算 inboundNetData 是不是满了
+                        var isFull = inboundNetData.limit() == inboundNetData.capacity();
+                        // 2, 如果满了 (没有可写入的空间)，则扩容
+                        if (isFull) {
+                            var newInboundNetData = ByteBuffer.allocate(inboundNetData.capacity() * 2);
+                            // 原有的已经读取的数据别忘了放进去
+                            newInboundNetData.put(inboundNetData);// 这里 netBuffer 已经是读状态 不需要 flip()
+                            inboundNetData = newInboundNetData;
+                        } else {
+                            //3, 有剩余表示 只是上一次读取的少了 可以直接使用 inboundNetData.compact(); 但是因为会进行数组的复制
+                            // 这里为了性能 手动调整缓冲区指针 然后重新读取
+                            inboundNetData.position(inboundNetData.limit());
+                            // 设置位置到剩余数据的末尾 
+                            inboundNetData.limit(inboundNetData.capacity());
+                        }
+                        continue _MAIN;
                     }
                     case CLOSED -> {
                         unwrapResult.status = CLOSED;
                         //通道关闭 但是我们有可能之前已经读取到了部分数据这里需要 跳出循环以便返回剩余数据
-                        break _R;
+                        break _MAIN;
                     }
                 }
             }
