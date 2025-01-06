@@ -41,13 +41,18 @@ public class ClassicTCPSocket implements ScxTCPSocket {
     }
 
     @Override
-    public boolean isClosed() {
-        return socket.isClosed();
+    public SocketAddress remoteAddress() {
+        return socket.getRemoteSocketAddress();
     }
 
     @Override
-    public SocketAddress remoteAddress() {
-        return socket.getRemoteSocketAddress();
+    public SocketAddress localAddress() {
+        return socket.getLocalSocketAddress();
+    }
+
+    @Override
+    public boolean isClosed() {
+        return socket.isClosed();
     }
 
     @Override

@@ -18,8 +18,10 @@ public interface ScxTCPSocket extends Closeable {
 
     OutputStream outputStream();
 
-    boolean isClosed();
+    SocketAddress remoteAddress();
 
-    SocketAddress remoteAddress() throws IOException;
+    SocketAddress localAddress();
+
+    boolean isClosed();
 
 }
