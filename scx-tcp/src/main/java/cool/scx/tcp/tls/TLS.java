@@ -3,9 +3,6 @@ package cool.scx.tcp.tls;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocketFactory;
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.nio.file.Path;
 
 import static cool.scx.tcp.tls.TLSHelper.*;
@@ -53,12 +50,12 @@ public class TLS {
         return sslContext;
     }
 
-    public ServerSocket createServerSocket() throws IOException {
-        return serverSocketFactory.createServerSocket();
+    public SSLServerSocketFactory serverSocketFactory() {
+        return serverSocketFactory;
     }
 
-    public Socket createSocket() throws IOException {
-        return socketFactory.createSocket();
+    public SSLSocketFactory socketFactory() {
+        return socketFactory;
     }
 
 }

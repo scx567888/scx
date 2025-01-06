@@ -6,7 +6,6 @@ import java.io.UncheckedIOException;
 import java.net.Socket;
 import java.net.SocketAddress;
 
-
 /**
  * 经典 TCP 客户端
  *
@@ -35,7 +34,7 @@ public class ClassicTCPClient implements ScxTCPClient {
         Socket socket;
         try {
             if (tls != null && tls.enabled()) {
-                socket = tls.createSocket();
+                socket = tls.socketFactory().createSocket();
             } else {
                 socket = new Socket();
             }
