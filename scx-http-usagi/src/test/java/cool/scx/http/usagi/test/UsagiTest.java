@@ -27,7 +27,7 @@ public class UsagiTest {
             }
         });
         httpServer.start();
-        System.out.println("启动完成 !!! 端口号 : " + httpServer.port());
+        System.out.println("启动完成 !!! 端口号 : " + httpServer.localAddress().getPort());
     }
 
 }
