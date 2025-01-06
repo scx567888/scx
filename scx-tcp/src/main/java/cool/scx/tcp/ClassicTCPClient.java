@@ -26,18 +26,13 @@ public class ClassicTCPClient implements ScxTCPClient {
 
     @Override
     public ScxTCPSocket connect(SocketAddress endpoint) {
-        var tls = options.tls();
 
         //todo 处理代理
         var proxy = options.proxy();
 
         Socket socket;
         try {
-            if (tls != null && tls.enabled()) {
-                socket = tls.socketFactory().createSocket();
-            } else {
-                socket = new Socket();
-            }
+            socket = createSocket();
             socket.connect(endpoint);
         } catch (IOException e) {
             throw new UncheckedIOException("客户端连接失败 !!!", e);
@@ -59,6 +54,19 @@ public class ClassicTCPClient implements ScxTCPClient {
 
         return new ClassicTCPSocket(socket);
 
+    }
+
+    private Socket createSocket() throws IOException {
+        var tls = options.tls();
+
+        if (tls != null && tls.enabled()) {
+            //创建 sslSocket
+            var sslSocket = (SSLSocket) tls.socketFactory().createSocket();
+            sslSocket.setUseClientMode(true);
+            return sslSocket;
+        } else {
+            return new Socket();
+        }
     }
 
 }

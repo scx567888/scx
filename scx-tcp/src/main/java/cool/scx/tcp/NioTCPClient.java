@@ -27,20 +27,13 @@ public class NioTCPClient implements ScxTCPClient {
 
     @Override
     public ScxTCPSocket connect(SocketAddress endpoint) {
-        var tls = options.tls();
 
         //todo 处理代理
         var proxy = options.proxy();
 
         SocketChannel socketChannel;
         try {
-            if (tls != null && tls.enabled()) {
-                var sslEngine = tls.sslContext().createSSLEngine();
-                sslEngine.setUseClientMode(true);
-                socketChannel = new TLSSocketChannel(SocketChannel.open(), sslEngine);
-            } else {
-                socketChannel = SocketChannel.open();
-            }
+            socketChannel = createSocket();
             socketChannel.connect(endpoint);
         } catch (IOException e) {
             throw new UncheckedIOException("客户端连接失败 !!!", e);
@@ -62,6 +55,19 @@ public class NioTCPClient implements ScxTCPClient {
 
         return new NioTCPSocket(socketChannel);
 
+    }
+
+    private SocketChannel createSocket() throws IOException {
+        var tls = options.tls();
+
+        if (tls != null && tls.enabled()) {
+            //创建 sslEngine
+            var sslEngine = tls.sslContext().createSSLEngine();
+            sslEngine.setUseClientMode(true);
+            return new TLSSocketChannel(SocketChannel.open(), sslEngine);
+        } else {
+            return SocketChannel.open();
+        }
     }
 
 }
