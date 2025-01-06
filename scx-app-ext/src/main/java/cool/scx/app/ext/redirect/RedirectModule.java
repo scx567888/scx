@@ -48,7 +48,7 @@ public class RedirectModule extends ScxModule {
 
         try {
             httpServer.start();
-            Ansi.ansi().brightMagenta("转发服务器启动成功 http -> https, 端口号 : " + httpServer.port() + " !!!").println();
+            Ansi.ansi().brightMagenta("转发服务器启动成功 http -> https, 端口号 : " + httpServer.localAddress().getPort() + " !!!").println();
         } catch (Exception e) {
             logger.log(Logger.Level.ERROR, "转发服务器启动失败 !!! ", e);
         }
