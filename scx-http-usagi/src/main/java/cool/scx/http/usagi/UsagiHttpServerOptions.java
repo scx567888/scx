@@ -3,6 +3,8 @@ package cool.scx.http.usagi;
 import cool.scx.tcp.ScxTCPServerOptions;
 import cool.scx.tcp.tls.TLS;
 
+import java.net.InetSocketAddress;
+
 /**
  * Http 服务器配置
  *
@@ -22,29 +24,16 @@ public class UsagiHttpServerOptions extends ScxTCPServerOptions {
         this.maxHeaderSize = 1024 * 128; // 默认 128 KB
         this.maxPayloadSize = 1024 * 1024 * 16; // 默认 16 MB
         this.maxWebsocketFrameSize = 1024 * 1024 * 16; // 默认 16 MB
-        this.tcpServerType = TCPServerType.NIO; // 默认 16 MB
+        this.tcpServerType = TCPServerType.NIO; // 默认 使用 NIO 实现
     }
 
     public UsagiHttpServerOptions(UsagiHttpServerOptions oldOptions) {
-        port(oldOptions.port());
-        tls(oldOptions.tls());
+        super(oldOptions);
         maxRequestLineSize(oldOptions.maxRequestLineSize());
         maxHeaderSize(oldOptions.maxHeaderSize());
         maxPayloadSize(oldOptions.maxPayloadSize());
         maxWebsocketFrameSize(oldOptions.maxWebsocketFrameSize());
         tcpServerType(oldOptions.tcpServerType());
-    }
-
-    @Override
-    public UsagiHttpServerOptions port(int port) {
-        super.port(port);
-        return this;
-    }
-
-    @Override
-    public UsagiHttpServerOptions tls(TLS tls) {
-        super.tls(tls);
-        return this;
     }
 
     public int maxRequestLineSize() {
@@ -89,6 +78,30 @@ public class UsagiHttpServerOptions extends ScxTCPServerOptions {
 
     public UsagiHttpServerOptions tcpServerType(TCPServerType tcpServerType) {
         this.tcpServerType = tcpServerType;
+        return this;
+    }
+
+    @Override
+    public UsagiHttpServerOptions localAddress(InetSocketAddress localAddress) {
+        super.localAddress(localAddress);
+        return this;
+    }
+
+    @Override
+    public UsagiHttpServerOptions backlog(int backlog) {
+        super.backlog(backlog);
+        return this;
+    }
+
+    @Override
+    public UsagiHttpServerOptions tls(TLS tls) {
+        super.tls(tls);
+        return this;
+    }
+
+    @Override
+    public UsagiHttpServerOptions port(int port) {
+        super.port(port);
         return this;
     }
 
