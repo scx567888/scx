@@ -6,6 +6,7 @@ import cool.scx.http.web_socket.ScxServerWebSocket;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.websocket.WsConfig;
 
+import java.net.InetSocketAddress;
 import java.util.function.Consumer;
 
 import static cool.scx.http.helidon.HelidonHelper.createHelidonWebSocketRouting;
@@ -67,8 +68,8 @@ public class HelidonHttpServer implements ScxHttpServer {
     }
 
     @Override
-    public int port() {
-        return this.webServer.port();
+    public InetSocketAddress localAddress() {
+        return new InetSocketAddress(options.port());
     }
 
     public HelidonHttpServerOptions options() {
