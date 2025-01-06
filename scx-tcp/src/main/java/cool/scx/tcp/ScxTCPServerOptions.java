@@ -2,6 +2,8 @@ package cool.scx.tcp;
 
 import cool.scx.tcp.tls.TLS;
 
+import java.net.InetSocketAddress;
+
 
 /**
  * ScxTCPServerOptions
@@ -11,24 +13,33 @@ import cool.scx.tcp.tls.TLS;
  */
 public class ScxTCPServerOptions {
 
-    private int port;
+    private InetSocketAddress localAddress;
+    
+    private int backlog;
 
     private TLS tls;
 
     public ScxTCPServerOptions() {
-        this.port = 0;
-        this.tls = null;
+        this.localAddress = new InetSocketAddress(0); // 默认随机端口号
+        this.backlog = 0; // 默认采用实现的默认背压
+        this.tls = null; // 默认没有 tls
     }
 
-    public int port() {
-        return port;
+    public InetSocketAddress localAddress() {
+        return localAddress;
     }
 
-    public ScxTCPServerOptions port(int port) {
-        if (port < 0 || port > 65535) {
-            throw new IllegalArgumentException("port must be between 0 and 65535");
-        }
-        this.port = port;
+    public ScxTCPServerOptions localAddress(InetSocketAddress localAddress) {
+        this.localAddress = localAddress;
+        return this;
+    }
+
+    public int backlog() {
+        return backlog;
+    }
+
+    public ScxTCPServerOptions backlog(int backlog) {
+        this.backlog = backlog;
         return this;
     }
 
@@ -39,6 +50,11 @@ public class ScxTCPServerOptions {
     public ScxTCPServerOptions tls(TLS tls) {
         this.tls = tls;
         return this;
+    }
+    
+    //简易方法
+    public ScxTCPServerOptions port(int port) {
+        return localAddress(new InetSocketAddress(port));
     }
 
 }
