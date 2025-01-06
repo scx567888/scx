@@ -25,6 +25,12 @@ public class ScxTCPServerOptions {
         this.tls = null; // 默认没有 tls
     }
 
+    public ScxTCPServerOptions(ScxTCPServerOptions oldOptions) {
+        localAddress(oldOptions.localAddress());
+        backlog(oldOptions.backlog());
+        tls(oldOptions.tls());
+    }
+
     public InetSocketAddress localAddress() {
         return localAddress;
     }

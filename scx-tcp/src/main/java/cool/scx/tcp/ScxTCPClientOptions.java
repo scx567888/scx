@@ -13,11 +13,17 @@ import cool.scx.tcp.tls.TLS;
 public class ScxTCPClientOptions {
 
     private TLS tls;
+
     private Proxy proxy;
 
     public ScxTCPClientOptions() {
         this.tls = null;
         this.proxy = null;
+    }
+
+    public ScxTCPClientOptions(ScxTCPClientOptions oldOptions) {
+        tls(oldOptions.tls());
+        proxy(oldOptions.proxy());
     }
 
     public TLS tls() {
