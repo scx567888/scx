@@ -49,15 +49,9 @@ public class ClassicTCPServer implements ScxTCPServer {
             throw new IllegalStateException("服务器已在运行 !!!");
         }
 
-        var tls = options.tls();
-
         try {
-            if (tls != null && tls.enabled()) {
-                serverSocket = tls.createServerSocket();
-            } else {
-                serverSocket = new ServerSocket();
-            }
-            serverSocket.bind(options.localAddress(), options.backlog());
+            this.serverSocket = new ServerSocket();
+            this.serverSocket.bind(options.localAddress(), options.backlog());
         } catch (IOException e) {
             throw new UncheckedIOException("启动服务器失败 !!!", e);
         }
@@ -104,6 +98,14 @@ public class ClassicTCPServer implements ScxTCPServer {
     private void handle(Socket socket) {
 
         try {
+            socket = upgradeToTLS(socket);
+        } catch (Exception e) {
+            LOGGER.log(TRACE, "升级到 TLS 时发生错误 !!!", e);
+            tryCloseSocket(socket);
+            return;
+        }
+
+        try {
             // 主动调用握手 快速检测 SSL 错误 防止等到调用用户处理程序时才发现
             if (socket instanceof SSLSocket sslSocket) {
                 sslSocket.startHandshake();
@@ -136,6 +138,19 @@ public class ClassicTCPServer implements ScxTCPServer {
             socket.close();
         } catch (IOException ex) {
             LOGGER.log(TRACE, "关闭 Socket 时发生错误 !!!", ex);
+        }
+    }
+
+    private Socket upgradeToTLS(Socket socket) throws IOException {
+        var tls = options.tls();
+
+        if (tls != null && tls.enabled()) {
+            //创建 sslSocket (服务器端不需要设置 host 和 port)
+            var sslSocket = (SSLSocket) tls.socketFactory().createSocket(socket, null, -1, true);
+            sslSocket.setUseClientMode(false);
+            return sslSocket;
+        } else {
+            return socket;
         }
     }
 

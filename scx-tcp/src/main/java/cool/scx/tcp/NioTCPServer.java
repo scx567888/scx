@@ -102,7 +102,13 @@ public class NioTCPServer implements ScxTCPServer {
 
     private void handle(SocketChannel socketChannel) {
 
-        socketChannel = createScxTCPSocket(socketChannel);
+        try {
+            socketChannel = upgradeToTLS(socketChannel);
+        } catch (Exception e) {
+            LOGGER.log(TRACE, "升级到 TLS 时发生错误 !!!", e);
+            tryCloseSocket(socketChannel);
+            return;
+        }
 
         try {
             // 主动调用握手 快速检测 SSL 错误 防止等到调用用户处理程序时才发现
@@ -140,7 +146,7 @@ public class NioTCPServer implements ScxTCPServer {
         }
     }
 
-    private SocketChannel createScxTCPSocket(SocketChannel socketChannel) {
+    private SocketChannel upgradeToTLS(SocketChannel socketChannel) {
         var tls = options.tls();
 
         if (tls != null && tls.enabled()) {
