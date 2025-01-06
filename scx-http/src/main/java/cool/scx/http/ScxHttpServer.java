@@ -1,5 +1,6 @@
 package cool.scx.http;
 
+import java.net.InetSocketAddress;
 import java.util.function.Consumer;
 
 /**
@@ -16,6 +17,6 @@ public interface ScxHttpServer {
 
     void stop();
 
-    int port();
+    InetSocketAddress localAddress();
 
 }
