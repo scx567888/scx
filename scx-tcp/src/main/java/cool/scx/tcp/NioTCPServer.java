@@ -52,7 +52,7 @@ public class NioTCPServer implements ScxTCPServer {
 
         try {
             this.serverSocketChannel = ServerSocketChannel.open();
-            this.serverSocketChannel.bind(new InetSocketAddress(options.port()));
+            this.serverSocketChannel.bind(options.localAddress(), options.backlog());
         } catch (IOException e) {
             throw new UncheckedIOException("启动服务器失败 !!!", e);
         }
@@ -80,11 +80,9 @@ public class NioTCPServer implements ScxTCPServer {
     }
 
     @Override
-    public int port() {
+    public InetSocketAddress localAddress() {
         try {
-            //理论上都是 InetSocketAddress 类型
-            var localAddress = (InetSocketAddress) serverSocketChannel.getLocalAddress();
-            return localAddress.getPort();
+            return (InetSocketAddress) serverSocketChannel.getLocalAddress();
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
