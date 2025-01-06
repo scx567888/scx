@@ -14,9 +14,7 @@ import java.net.InetSocketAddress;
 public class ScxTCPServerOptions {
 
     private InetSocketAddress localAddress;
-
     private int backlog;
-
     private TLS tls;
 
     public ScxTCPServerOptions() {
