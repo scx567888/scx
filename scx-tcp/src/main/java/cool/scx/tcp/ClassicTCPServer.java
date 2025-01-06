@@ -145,7 +145,7 @@ public class ClassicTCPServer implements ScxTCPServer {
         var tls = options.tls();
 
         if (tls != null && tls.enabled()) {
-            //创建 sslSocket (服务器段不需要设置 host 和 port)
+            //创建 sslSocket (服务器端不需要设置 host 和 port)
             var sslSocket = (SSLSocket) tls.socketFactory().createSocket(socket, null, -1, true);
             sslSocket.setUseClientMode(false);
             return sslSocket;
