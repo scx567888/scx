@@ -31,7 +31,7 @@ public class NioTCPSocket implements ScxTCPSocket {
     }
 
     @Override
-    public SocketAddress remoteAddress()  {
+    public SocketAddress remoteAddress() {
         try {
             return socketChannel.getRemoteAddress();
         } catch (IOException e) {

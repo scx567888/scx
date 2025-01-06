@@ -14,7 +14,7 @@ import java.net.InetSocketAddress;
 public class ScxTCPServerOptions {
 
     private InetSocketAddress localAddress;
-    
+
     private int backlog;
 
     private TLS tls;
@@ -51,7 +51,7 @@ public class ScxTCPServerOptions {
         this.tls = tls;
         return this;
     }
-    
+
     //简易方法
     public ScxTCPServerOptions port(int port) {
         return localAddress(new InetSocketAddress(port));

@@ -41,7 +41,7 @@ public class TCPServerTest {
             System.err.println("完成");
         });
         tcpServer.start();
-        System.out.println("已监听端口号 : " + tcpServer.port());
+        System.out.println("已监听端口号 : " + tcpServer.localAddress().getPort());
     }
 
 }
