@@ -208,10 +208,11 @@ public final class Scx {
             this.httpServer.start();
             var httpOrHttps = this.scxOptions.isHttpsEnabled() ? "https" : "http";
             var o = Ansi.ansi().green("服务器启动成功... 用时 " + StopWatch.stopToMillis("ScxRun") + " ms").ln();
-            o.green("> 本地: " + httpOrHttps + "://localhost:" + this.httpServer.port() + "/").ln();
+            var p = this.httpServer.localAddress().getPort();
+            o.green("> 本地: " + httpOrHttps + "://localhost:" + p + "/").ln();
             var normalIP = ignore(() -> getLocalIPAddress(c -> c instanceof Inet4Address), new InetAddress[]{});
             for (var ip : normalIP) {
-                o.green("> 网络: " + httpOrHttps + "://" + ip.getHostAddress() + ":" + this.httpServer.port() + "/").ln();
+                o.green("> 网络: " + httpOrHttps + "://" + ip.getHostAddress() + ":" + p + "/").ln();
             }
             o.print();
         } catch (Exception cause) {

@@ -57,7 +57,7 @@ public class ClassicTCPServer implements ScxTCPServer {
             } else {
                 serverSocket = new ServerSocket();
             }
-            serverSocket.bind(new InetSocketAddress(options.port()));
+            serverSocket.bind(options.localAddress(), options.backlog());
         } catch (IOException e) {
             throw new UncheckedIOException("启动服务器失败 !!!", e);
         }
@@ -85,8 +85,8 @@ public class ClassicTCPServer implements ScxTCPServer {
     }
 
     @Override
-    public int port() {
-        return serverSocket.getLocalPort();
+    public InetSocketAddress localAddress() {
+        return (InetSocketAddress) serverSocket.getLocalSocketAddress();
     }
 
     private void listen() {

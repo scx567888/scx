@@ -43,7 +43,7 @@ public class ScxWebTest {
         httpServer.onRequest(router).start();
 
         for (var route : router.getRoutes()) {
-            System.out.println("http://127.0.0.1:" + httpServer.port() + route.path());
+            System.out.println("http://127.0.0.1:" + httpServer.localAddress().getPort() + route.path());
         }
 
     }
@@ -70,7 +70,7 @@ public class ScxWebTest {
         httpServer.onRequest(router).start();
 
         for (var route : router.getRoutes()) {
-            System.out.println("http://127.0.0.1:" + httpServer.port() + route.path());
+            System.out.println("http://127.0.0.1:" + httpServer.localAddress().getPort() + route.path());
         }
 
     }

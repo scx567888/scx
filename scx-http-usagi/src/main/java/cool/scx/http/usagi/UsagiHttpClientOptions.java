@@ -12,25 +12,18 @@ import cool.scx.tcp.tls.TLS;
  */
 public class UsagiHttpClientOptions extends ScxTCPClientOptions {
 
+    private int bodyBufferSize;//todo 暂时未用到
     private TCPClientType tcpClientType;
-    private int bodyBufferSize;
 
     public UsagiHttpClientOptions() {
-        this.bodyBufferSize = 65536;
+        this.bodyBufferSize = 1024 * 64;// 默认 64 KB
         this.tcpClientType = TCPClientType.NIO;
     }
 
-    @Override
-    public UsagiHttpClientOptions proxy(Proxy proxy) {
-        super.proxy(proxy);
-        return this;
-
-    }
-
-    @Override
-    public UsagiHttpClientOptions tls(TLS tls) {
-        super.tls(tls);
-        return this;
+    public UsagiHttpClientOptions(UsagiHttpClientOptions oldOptions) {
+        super(oldOptions);
+        bodyBufferSize(oldOptions.bodyBufferSize());
+        tcpClientType(oldOptions.tcpClientType());
     }
 
     public int bodyBufferSize() {
@@ -48,6 +41,18 @@ public class UsagiHttpClientOptions extends ScxTCPClientOptions {
 
     public UsagiHttpClientOptions tcpClientType(TCPClientType tcpClientType) {
         this.tcpClientType = tcpClientType;
+        return this;
+    }
+
+    @Override
+    public UsagiHttpClientOptions tls(TLS tls) {
+        super.tls(tls);
+        return this;
+    }
+
+    @Override
+    public UsagiHttpClientOptions proxy(Proxy proxy) {
+        super.proxy(proxy);
         return this;
     }
 

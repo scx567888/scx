@@ -20,6 +20,11 @@ public class ScxTCPClientOptions {
         this.proxy = null;
     }
 
+    public ScxTCPClientOptions(ScxTCPClientOptions oldOptions) {
+        tls(oldOptions.tls());
+        proxy(oldOptions.proxy());
+    }
+
     public TLS tls() {
         return tls;
     }

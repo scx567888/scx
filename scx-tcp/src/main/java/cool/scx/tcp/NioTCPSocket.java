@@ -3,6 +3,7 @@ package cool.scx.tcp;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UncheckedIOException;
 import java.net.SocketAddress;
 import java.nio.channels.Channels;
 import java.nio.channels.SocketChannel;
@@ -30,13 +31,26 @@ public class NioTCPSocket implements ScxTCPSocket {
     }
 
     @Override
-    public boolean isClosed() {
-        return !socketChannel.isOpen();
+    public SocketAddress remoteAddress() {
+        try {
+            return socketChannel.getRemoteAddress();
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 
     @Override
-    public SocketAddress remoteAddress() throws IOException {
-        return socketChannel.getRemoteAddress();
+    public SocketAddress localAddress() {
+        try {
+            return socketChannel.getLocalAddress();
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    @Override
+    public boolean isClosed() {
+        return !socketChannel.isOpen();
     }
 
     @Override

@@ -17,6 +17,6 @@ public class Test1 {
             c.response().send("123");
         });
         httpServer.start();
-        System.out.println("启动完成 !!! 端口号 : " + httpServer.port());
+        System.out.println("启动完成 !!! 端口号 : " + httpServer.localAddress().getPort());
     }
 }

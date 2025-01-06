@@ -1,7 +1,6 @@
 package cool.scx.tcp;
 
 import java.io.Closeable;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.SocketAddress;
@@ -18,8 +17,10 @@ public interface ScxTCPSocket extends Closeable {
 
     OutputStream outputStream();
 
-    boolean isClosed();
+    SocketAddress remoteAddress();
 
-    SocketAddress remoteAddress() throws IOException;
+    SocketAddress localAddress();
+
+    boolean isClosed();
 
 }

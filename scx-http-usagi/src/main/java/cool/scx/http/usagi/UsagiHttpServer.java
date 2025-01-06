@@ -8,6 +8,7 @@ import cool.scx.tcp.NioTCPServer;
 import cool.scx.tcp.ScxTCPServer;
 import cool.scx.tcp.ScxTCPSocket;
 
+import java.net.InetSocketAddress;
 import java.util.function.Consumer;
 
 /**
@@ -56,8 +57,8 @@ public class UsagiHttpServer implements ScxHttpServer {
     }
 
     @Override
-    public int port() {
-        return tcpServer.port();
+    public InetSocketAddress localAddress() {
+        return tcpServer.localAddress();
     }
 
 }
