@@ -2,8 +2,8 @@ package cool.scx.tcp.test;
 
 import cool.scx.io.InputStreamDataSupplier;
 import cool.scx.io.LinkedDataReader;
-import cool.scx.tcp.ScxTCPServerOptions;
 import cool.scx.tcp.NioTCPServer;
+import cool.scx.tcp.ScxTCPServerOptions;
 import cool.scx.tcp.tls.TLS;
 
 public class TCPServerTest {
