@@ -1,6 +1,5 @@
 package cool.scx.tcp;
 
-import javax.net.ssl.SSLSocket;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.lang.System.Logger;
@@ -97,60 +96,49 @@ public class ClassicTCPServer implements ScxTCPServer {
 
     private void handle(Socket socket) {
 
-        try {
-            socket = upgradeToTLS(socket);
-        } catch (Exception e) {
-            LOGGER.log(TRACE, "升级到 TLS 时发生错误 !!!", e);
-            tryCloseSocket(socket);
-            return;
+        var tcpSocket = new ClassicTCPSocket(socket);
+
+        if (options.autoUpgradeToTLS()) {
+            try {
+                tcpSocket.upgradeToTLS(options.tls());
+            } catch (IOException e) {
+                LOGGER.log(TRACE, "升级到 TLS 时发生错误 !!!", e);
+                tryCloseSocket(tcpSocket);
+                return;
+            }
         }
 
-        try {
-            // 主动调用握手 快速检测 SSL 错误 防止等到调用用户处理程序时才发现
-            if (socket instanceof SSLSocket sslSocket) {
-                sslSocket.startHandshake();
+        if (options.autoHandshake()) {
+            try {
+                tcpSocket.startHandshake();
+            } catch (IOException e) {
+                LOGGER.log(TRACE, "处理 TLS 握手 时发生错误 !!!", e);
+                tryCloseSocket(tcpSocket);
+                return;
             }
-        } catch (IOException e) {
-            LOGGER.log(TRACE, "处理 TLS 握手 时发生错误 !!!", e);
-            tryCloseSocket(socket);
-            return;
         }
 
         if (connectHandler == null) {
             LOGGER.log(ERROR, "未设置 连接处理器, 关闭连接 !!!");
-            tryCloseSocket(socket);
+            tryCloseSocket(tcpSocket);
             return;
         }
 
         try {
             // 调用用户处理器
-            var tcpSocket = new ClassicTCPSocket(socket);
             connectHandler.accept(tcpSocket);
         } catch (Throwable e) {
             LOGGER.log(ERROR, "调用 连接处理器 时发生错误 !!!", e);
-            tryCloseSocket(socket);
+            tryCloseSocket(tcpSocket);
         }
 
     }
 
-    private void tryCloseSocket(Socket socket) {
+    private void tryCloseSocket(ScxTCPSocket tcpSocket) {
         try {
-            socket.close();
+            tcpSocket.close();
         } catch (IOException ex) {
             LOGGER.log(TRACE, "关闭 Socket 时发生错误 !!!", ex);
-        }
-    }
-
-    private Socket upgradeToTLS(Socket socket) throws IOException {
-        var tls = options.tls();
-
-        if (tls != null && tls.enabled()) {
-            //创建 sslSocket (服务器端不需要设置 host 和 port)
-            var sslSocket = (SSLSocket) tls.socketFactory().createSocket(socket, null, -1, true);
-            sslSocket.setUseClientMode(false);
-            return sslSocket;
-        } else {
-            return socket;
         }
     }
 
