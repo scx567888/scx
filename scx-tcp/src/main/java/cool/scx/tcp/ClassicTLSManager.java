@@ -5,16 +5,16 @@ import java.util.List;
 import java.util.function.BiFunction;
 
 /**
- * 经典 TLS Config
+ * 经典 TLS Manager
  *
  * @author scx567888
  * @version 0.0.1
  */
-public class ClassicTLSConfig implements ScxTLSConfig {
+public class ClassicTLSManager implements ScxTLSManager {
 
     private final SSLSocket sslSocket;
 
-    public ClassicTLSConfig(SSLSocket sslSocket) {
+    public ClassicTLSManager(SSLSocket sslSocket) {
         this.sslSocket = sslSocket;
     }
 
@@ -24,7 +24,7 @@ public class ClassicTLSConfig implements ScxTLSConfig {
     }
 
     @Override
-    public void setHandshakeApplicationProtocolSelector(BiFunction<ScxTLSConfig, List<String>, String> selector) {
+    public void setHandshakeApplicationProtocolSelector(BiFunction<ScxTLSManager, List<String>, String> selector) {
         sslSocket.setHandshakeApplicationProtocolSelector((sslEngine, list) -> selector.apply(this, list));
     }
 
