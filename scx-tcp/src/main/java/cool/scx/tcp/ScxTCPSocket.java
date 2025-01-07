@@ -30,7 +30,7 @@ public interface ScxTCPSocket extends Closeable {
 
     ScxTCPSocket startHandshake() throws IOException;
 
-    ScxTLSConfig tlsConfig();
+    ScxTLSManager tlsManager();
 
     boolean isClosed();
 
