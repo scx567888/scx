@@ -1,5 +1,8 @@
 package cool.scx.tcp;
 
+import cool.scx.tcp.tls.TLS;
+import cool.scx.tcp.tls.TLSSocketChannel;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -8,16 +11,20 @@ import java.net.SocketAddress;
 import java.nio.channels.Channels;
 import java.nio.channels.SocketChannel;
 
+/**
+ * NIO TCP Socket
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class NioTCPSocket implements ScxTCPSocket {
 
-    private final SocketChannel socketChannel;
-    private final OutputStream out;
-    private final InputStream in;
+    private SocketChannel socketChannel;
+    private InputStream in;
+    private OutputStream out;
 
     public NioTCPSocket(SocketChannel socketChannel) {
-        this.socketChannel = socketChannel;
-        this.in = Channels.newInputStream(socketChannel);
-        this.out = Channels.newOutputStream(socketChannel);
+        setSocket(socketChannel);
     }
 
     @Override
@@ -49,6 +56,30 @@ public class NioTCPSocket implements ScxTCPSocket {
     }
 
     @Override
+    public ScxTCPSocket upgradeToTLS(TLS tls) throws IOException {
+        if (tls != null && tls.enabled()) {
+            //创建 sslEngine
+            var sslEngine = tls.sslContext().createSSLEngine();
+            sslEngine.setUseClientMode(false);
+            setSocket(new TLSSocketChannel(socketChannel, sslEngine));
+        }
+        return this;
+    }
+
+    @Override
+    public boolean isTLS() {
+        return socketChannel instanceof TLSSocketChannel;
+    }
+
+    @Override
+    public ScxTCPSocket startHandshake() throws IOException {
+        if (socketChannel instanceof TLSSocketChannel tlsSocketChannel) {
+            tlsSocketChannel.startHandshake();
+        }
+        return this;
+    }
+
+    @Override
     public boolean isClosed() {
         return !socketChannel.isOpen();
     }
@@ -56,6 +87,12 @@ public class NioTCPSocket implements ScxTCPSocket {
     @Override
     public void close() throws IOException {
         socketChannel.close();
+    }
+
+    private void setSocket(SocketChannel socketChannel) {
+        this.socketChannel = socketChannel;
+        this.in = Channels.newInputStream(socketChannel);
+        this.out = Channels.newOutputStream(socketChannel);
     }
 
 }
