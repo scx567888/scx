@@ -1,2 +1,2 @@
 cool.scx.http.usagi.http1x.Http1xConnectionHandler
-# 暂时不支持 cool.scx.http.usagi.http2.Http2ConnectionHandler
+cool.scx.http.usagi.http2.Http2ConnectionHandler
