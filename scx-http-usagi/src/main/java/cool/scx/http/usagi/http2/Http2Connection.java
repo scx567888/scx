@@ -8,7 +8,6 @@ import cool.scx.tcp.ScxTCPSocket;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
