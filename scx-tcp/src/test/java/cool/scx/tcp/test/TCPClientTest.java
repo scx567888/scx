@@ -18,7 +18,6 @@ public class TCPClientTest {
         //先启动服务器
         TCPServerTest.test1();
 
-        // todo 优化性能 以及再虚拟线程中的 bug
         for (int j = 0; j < 10; j = j + 1) {
             Thread.ofVirtual().start(() -> {
                 var tcpClient = new NioTCPClient(new ScxTCPClientOptions().tls(tls));

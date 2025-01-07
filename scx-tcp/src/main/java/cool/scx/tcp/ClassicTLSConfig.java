@@ -4,6 +4,12 @@ import javax.net.ssl.SSLSocket;
 import java.util.List;
 import java.util.function.BiFunction;
 
+/**
+ * 经典 TLS Config
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class ClassicTLSConfig implements ScxTLSConfig {
 
     private final SSLSocket sslSocket;

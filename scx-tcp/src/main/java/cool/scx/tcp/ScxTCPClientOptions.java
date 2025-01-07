@@ -3,7 +3,6 @@ package cool.scx.tcp;
 import cool.scx.tcp.proxy.Proxy;
 import cool.scx.tcp.tls.TLS;
 
-
 /**
  * ScxTCPClientOptions
  *

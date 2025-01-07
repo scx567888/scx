@@ -4,7 +4,6 @@ import cool.scx.tcp.tls.TLS;
 
 import java.net.InetSocketAddress;
 
-
 /**
  * ScxTCPServerOptions
  *
