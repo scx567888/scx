@@ -13,6 +13,11 @@ public class NioTLSConfig implements ScxTLSConfig {
     }
 
     @Override
+    public void setUseClientMode(boolean mode) {
+        sslEngine.setUseClientMode(mode);
+    }
+
+    @Override
     public void setHandshakeApplicationProtocolSelector(BiFunction<ScxTLSConfig, List<String>, String> selector) {
         sslEngine.setHandshakeApplicationProtocolSelector((sslEngine, list) -> selector.apply(this, list));
     }

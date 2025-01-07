@@ -5,6 +5,8 @@ import java.util.function.BiFunction;
 
 public interface ScxTLSConfig {
 
+    void setUseClientMode(boolean mode);
+
     void setHandshakeApplicationProtocolSelector(BiFunction<ScxTLSConfig, List<String>, String> selector);
 
 }

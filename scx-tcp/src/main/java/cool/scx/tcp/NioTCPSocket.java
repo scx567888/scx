@@ -60,10 +60,8 @@ public class NioTCPSocket implements ScxTCPSocket {
     public ScxTCPSocket upgradeToTLS(TLS tls) throws IOException {
         if (tls != null && tls.enabled()) {
             //创建 sslEngine
-            var sslEngine = tls.sslContext().createSSLEngine();
-            sslEngine.setUseClientMode(false);
-            setSocket(new TLSSocketChannel(socketChannel, sslEngine));
-            tlsConfig = new NioTLSConfig(sslEngine);
+            var sslSocket = new TLSSocketChannel(socketChannel, tls.sslContext().createSSLEngine());
+            setSocket(sslSocket);
         }
         return this;
     }
@@ -100,6 +98,9 @@ public class NioTCPSocket implements ScxTCPSocket {
         this.socketChannel = socketChannel;
         this.in = Channels.newInputStream(socketChannel);
         this.out = Channels.newOutputStream(socketChannel);
+        if (socketChannel instanceof TLSSocketChannel tlsSocketChannel) {
+            tlsConfig = new NioTLSConfig(tlsSocketChannel.sslEngine());
+        }
     }
 
 }
