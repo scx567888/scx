@@ -69,12 +69,16 @@ final class ReverseCircularLinkedList<T> implements ICircularLinkedList<T> {
 
     @Override
     public Object[] toArray() {
-        return circularLinkedList.toArray();
+        var arr = new Object[circularLinkedList.size()];
+        fillArray(arr);
+        return arr;
     }
 
     @Override
     public T[] toArray(IntFunction<T[]> generator) {
-        return circularLinkedList.toArray(generator);
+        var arr = generator.apply(circularLinkedList.size());
+        fillArray(arr);
+        return arr;
     }
 
     @Override
@@ -90,6 +94,17 @@ final class ReverseCircularLinkedList<T> implements ICircularLinkedList<T> {
     @Override
     public ICircularLinkedList<T> reversed() {
         return circularLinkedList;
+    }
+
+    private void fillArray(Object[] arr) {
+        int i = 0;
+        var x = circularLinkedList.lastNode();
+        do {
+            arr[i] = x.item;
+            i = i + 1;
+            x = x.prev;
+        }
+        while (x != circularLinkedList.lastNode());
     }
 
 } 
