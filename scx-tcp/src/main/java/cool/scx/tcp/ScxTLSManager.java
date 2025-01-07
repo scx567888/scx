@@ -4,16 +4,16 @@ import java.util.List;
 import java.util.function.BiFunction;
 
 /**
- * ScxTLSConfig
+ * ScxTLSManager
  *
  * @author scx567888
  * @version 0.0.1
  */
-public interface ScxTLSConfig {
+public interface ScxTLSManager {
 
     void setUseClientMode(boolean mode);
 
-    void setHandshakeApplicationProtocolSelector(BiFunction<ScxTLSConfig, List<String>, String> selector);
+    void setHandshakeApplicationProtocolSelector(BiFunction<ScxTLSManager, List<String>, String> selector);
 
     String getApplicationProtocol();
 

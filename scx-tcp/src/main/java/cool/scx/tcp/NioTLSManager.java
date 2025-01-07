@@ -5,16 +5,16 @@ import java.util.List;
 import java.util.function.BiFunction;
 
 /**
- * NIO TLS Config
+ * NIO TLS Manager
  *
  * @author scx567888
  * @version 0.0.1
  */
-public class NioTLSConfig implements ScxTLSConfig {
+public class NioTLSManager implements ScxTLSManager {
 
     private final SSLEngine sslEngine;
 
-    public NioTLSConfig(SSLEngine sslEngine) {
+    public NioTLSManager(SSLEngine sslEngine) {
         this.sslEngine = sslEngine;
     }
 
@@ -24,7 +24,7 @@ public class NioTLSConfig implements ScxTLSConfig {
     }
 
     @Override
-    public void setHandshakeApplicationProtocolSelector(BiFunction<ScxTLSConfig, List<String>, String> selector) {
+    public void setHandshakeApplicationProtocolSelector(BiFunction<ScxTLSManager, List<String>, String> selector) {
         sslEngine.setHandshakeApplicationProtocolSelector((sslEngine, list) -> selector.apply(this, list));
     }
 

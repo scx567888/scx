@@ -45,7 +45,7 @@ public class UsagiHttpServer implements ScxHttpServer {
 
         if (tcpSocket.isTLS()) {
             //配置应用协议协商选择器
-            tcpSocket.tlsConfig().setHandshakeApplicationProtocolSelector((tlsConfig, list) -> {
+            tcpSocket.tlsManager().setHandshakeApplicationProtocolSelector((tlsConfig, list) -> {
                 for (var s : list) {
                     if (connectionHandlerSelector.checkSupport(s)) {
                         return s;
@@ -64,7 +64,7 @@ public class UsagiHttpServer implements ScxHttpServer {
                 }
                 throw new UncheckedIOException("TLS 握手失败 !!!!", e);
             }
-            var applicationProtocol = tcpSocket.tlsConfig().getApplicationProtocol();
+            var applicationProtocol = tcpSocket.tlsManager().getApplicationProtocol();
             connectionHandler = connectionHandlerSelector.find(applicationProtocol);
         }
         //开始连接
