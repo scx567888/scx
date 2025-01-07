@@ -66,5 +66,5 @@ public class ScxTCPClientOptions {
         this.autoHandshake = autoHandshake;
         return this;
     }
-    
+
 }
