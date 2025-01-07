@@ -21,6 +21,7 @@ public class ClassicTCPSocket implements ScxTCPSocket {
     private Socket socket;
     private InputStream in;
     private OutputStream out;
+    private ScxTLSConfig tlsConfig;
 
     public ClassicTCPSocket(Socket socket) {
         setSocket(socket);
@@ -53,6 +54,7 @@ public class ClassicTCPSocket implements ScxTCPSocket {
             var sslSocket = (SSLSocket) tls.socketFactory().createSocket(socket, null, -1, true);
             sslSocket.setUseClientMode(false);
             setSocket(sslSocket);
+            tlsConfig = new ClassicTLSConfig(sslSocket);
         }
         return this;
     }
@@ -64,7 +66,7 @@ public class ClassicTCPSocket implements ScxTCPSocket {
 
     @Override
     public ScxTCPSocket startHandshake() throws IOException {
-        if (socket instanceof SSLSocket sslSocket) { 
+        if (socket instanceof SSLSocket sslSocket) {
             sslSocket.startHandshake();
         }
         return this;
@@ -73,6 +75,11 @@ public class ClassicTCPSocket implements ScxTCPSocket {
     @Override
     public boolean isClosed() {
         return socket.isClosed();
+    }
+
+    @Override
+    public ScxTLSConfig tlsConfig() {
+        return tlsConfig;
     }
 
     @Override

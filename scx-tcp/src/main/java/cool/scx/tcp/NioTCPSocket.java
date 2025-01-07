@@ -22,6 +22,7 @@ public class NioTCPSocket implements ScxTCPSocket {
     private SocketChannel socketChannel;
     private InputStream in;
     private OutputStream out;
+    private ScxTLSConfig tlsConfig;
 
     public NioTCPSocket(SocketChannel socketChannel) {
         setSocket(socketChannel);
@@ -62,6 +63,7 @@ public class NioTCPSocket implements ScxTCPSocket {
             var sslEngine = tls.sslContext().createSSLEngine();
             sslEngine.setUseClientMode(false);
             setSocket(new TLSSocketChannel(socketChannel, sslEngine));
+            tlsConfig = new NioTLSConfig(sslEngine);
         }
         return this;
     }
@@ -82,6 +84,11 @@ public class NioTCPSocket implements ScxTCPSocket {
     @Override
     public boolean isClosed() {
         return !socketChannel.isOpen();
+    }
+
+    @Override
+    public ScxTLSConfig tlsConfig() {
+        return tlsConfig;
     }
 
     @Override
