@@ -1,15 +1,15 @@
-package cool.scx.common.circular_iterable;
+package cool.scx.common.circular_linked_list;
 
 import java.util.Iterator;
 
 /**
- * ICircularIterator
+ * ICircularLinkedIterator
  *
  * @param <T>
  * @author scx567888
  * @version 0.0.1
  */
-public interface ICircularIterator<T> extends Iterator<T> {
+public interface ICircularLinkedIterator<T> extends Iterator<T> {
 
     @Override
     boolean hasNext();

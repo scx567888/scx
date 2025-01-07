@@ -1,4 +1,4 @@
-package cool.scx.common.circular_iterable;
+package cool.scx.common.circular_linked_list;
 
 /**
  * 无限循环的迭代器
@@ -7,11 +7,11 @@ package cool.scx.common.circular_iterable;
  * @author scx567888
  * @version 0.0.1
  */
-public final class CircularIterator<T> implements ICircularIterator<T> {
+public final class CircularLinkedIterator<T> implements ICircularLinkedIterator<T> {
 
     private Node<T> now;
 
-    CircularIterator(Node<T> now) {
+    CircularLinkedIterator(Node<T> now) {
         this.now = now;
     }
 
