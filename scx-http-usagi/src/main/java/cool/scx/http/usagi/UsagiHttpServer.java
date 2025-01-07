@@ -42,7 +42,7 @@ public class UsagiHttpServer implements ScxHttpServer {
     private void handle(ScxTCPSocket tcpSocket) {
         //默认连接处理器
         var connectionHandler = connectionHandlerSelector.defaultConnectionHandler();
-         
+
         if (tcpSocket.isTLS()) {
             //配置应用协议协商选择器
             tcpSocket.tlsConfig().setHandshakeApplicationProtocolSelector((tlsConfig, list) -> {
