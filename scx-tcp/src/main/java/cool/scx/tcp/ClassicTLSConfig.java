@@ -22,4 +22,9 @@ public class ClassicTLSConfig implements ScxTLSConfig {
         sslSocket.setHandshakeApplicationProtocolSelector((sslEngine, list) -> selector.apply(this, list));
     }
 
+    @Override
+    public String getApplicationProtocol() {
+        return sslSocket.getApplicationProtocol();
+    }
+
 }

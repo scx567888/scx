@@ -22,4 +22,9 @@ public class NioTLSConfig implements ScxTLSConfig {
         sslEngine.setHandshakeApplicationProtocolSelector((sslEngine, list) -> selector.apply(this, list));
     }
 
+    @Override
+    public String getApplicationProtocol() {
+        return sslEngine.getApplicationProtocol();
+    }
+
 }
