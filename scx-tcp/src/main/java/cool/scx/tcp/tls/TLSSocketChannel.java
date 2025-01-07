@@ -311,4 +311,8 @@ public class TLSSocketChannel extends AbstractSocketChannel {
         return unwrapResult;
     }
 
+    public SSLEngine sslEngine() {
+        return sslEngine;
+    }
+
 }

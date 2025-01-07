@@ -1,7 +1,5 @@
 package cool.scx.tcp;
 
-import cool.scx.tcp.tls.TLSSocketChannel;
-
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.lang.System.Logger;
@@ -102,60 +100,53 @@ public class NioTCPServer implements ScxTCPServer {
 
     private void handle(SocketChannel socketChannel) {
 
-        try {
-            socketChannel = upgradeToTLS(socketChannel);
-        } catch (Exception e) {
-            LOGGER.log(TRACE, "升级到 TLS 时发生错误 !!!", e);
-            tryCloseSocket(socketChannel);
-            return;
+        var tcpSocket = new NioTCPSocket(socketChannel);
+
+        if (options.autoUpgradeToTLS()) {
+            try {
+                tcpSocket.upgradeToTLS(options.tls());
+            } catch (IOException e) {
+                LOGGER.log(TRACE, "升级到 TLS 时发生错误 !!!", e);
+                tryCloseSocket(tcpSocket);
+                return;
+            }
         }
 
-        try {
-            // 主动调用握手 快速检测 SSL 错误 防止等到调用用户处理程序时才发现
-            if (socketChannel instanceof TLSSocketChannel sslSocket) {
-                sslSocket.startHandshake();
+        if (tcpSocket.tlsConfig() != null) {
+            tcpSocket.tlsConfig().setUseClientMode(false);
+        }
+
+        if (options.autoHandshake()) {
+            try {
+                tcpSocket.startHandshake();
+            } catch (IOException e) {
+                LOGGER.log(TRACE, "处理 TLS 握手 时发生错误 !!!", e);
+                tryCloseSocket(tcpSocket);
+                return;
             }
-        } catch (IOException e) {
-            LOGGER.log(TRACE, "处理 TLS 握手 时发生错误 !!!", e);
-            tryCloseSocket(socketChannel);
-            return;
         }
 
         if (connectHandler == null) {
             LOGGER.log(ERROR, "未设置 连接处理器, 关闭连接 !!!");
-            tryCloseSocket(socketChannel);
+            tryCloseSocket(tcpSocket);
             return;
         }
 
         try {
             // 调用用户处理器
-            var tcpSocket = new NioTCPSocket(socketChannel);
             connectHandler.accept(tcpSocket);
         } catch (Throwable e) {
             LOGGER.log(ERROR, "调用 连接处理器 时发生错误 !!!", e);
-            tryCloseSocket(socketChannel);
+            tryCloseSocket(tcpSocket);
         }
 
     }
 
-    private void tryCloseSocket(SocketChannel socketChannel) {
+    private void tryCloseSocket(ScxTCPSocket tcpSocket) {
         try {
-            socketChannel.close();
+            tcpSocket.close();
         } catch (IOException ex) {
             LOGGER.log(TRACE, "关闭 Socket 时发生错误 !!!", ex);
-        }
-    }
-
-    private SocketChannel upgradeToTLS(SocketChannel socketChannel) {
-        var tls = options.tls();
-
-        if (tls != null && tls.enabled()) {
-            //创建 sslEngine
-            var sslEngine = tls.sslContext().createSSLEngine();
-            sslEngine.setUseClientMode(false);
-            return new TLSSocketChannel(socketChannel, sslEngine);
-        } else {
-            return socketChannel;
         }
     }
 

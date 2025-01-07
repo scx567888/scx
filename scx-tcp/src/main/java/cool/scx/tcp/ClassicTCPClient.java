@@ -1,6 +1,5 @@
 package cool.scx.tcp;
 
-import javax.net.ssl.SSLSocket;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.Socket;
@@ -32,40 +31,45 @@ public class ClassicTCPClient implements ScxTCPClient {
 
         Socket socket;
         try {
-            socket = createSocket();
+            socket = new Socket();
             socket.connect(endpoint);
         } catch (IOException e) {
             throw new UncheckedIOException("客户端连接失败 !!!", e);
         }
 
-        // 主动调用握手 快速检测 SSL 错误 防止等到调用用户处理程序时才发现 
-        if (socket instanceof SSLSocket sslSocket) {
+        var tcpSocket = new ClassicTCPSocket(socket);
+
+        if (options.autoUpgradeToTLS()) {
             try {
-                sslSocket.startHandshake();
+                tcpSocket.upgradeToTLS(options.tls());
             } catch (IOException e) {
-                try {
-                    sslSocket.close();
-                } catch (IOException ce) {
-                    e.addSuppressed(ce);
-                }
-                throw new UncheckedIOException("客户端 SSL 握手失败 !!!", e);
+                tryCloseSocket(tcpSocket, e);
+                throw new UncheckedIOException("升级到 TLS 时发生错误 !!!", e);
             }
         }
 
-        return new ClassicTCPSocket(socket);
+        if (tcpSocket.tlsConfig() != null) {
+            tcpSocket.tlsConfig().setUseClientMode(true);
+        }
+
+        if (options.autoHandshake()) {
+            try {
+                tcpSocket.startHandshake();
+            } catch (IOException e) {
+                tryCloseSocket(tcpSocket, e);
+                throw new UncheckedIOException("处理 TLS 握手 时发生错误 !!!", e);
+            }
+        }
+
+        return tcpSocket;
 
     }
 
-    private Socket createSocket() throws IOException {
-        var tls = options.tls();
-
-        if (tls != null && tls.enabled()) {
-            //创建 sslSocket
-            var sslSocket = (SSLSocket) tls.socketFactory().createSocket();
-            sslSocket.setUseClientMode(true);
-            return sslSocket;
-        } else {
-            return new Socket();
+    private void tryCloseSocket(ScxTCPSocket tcpSocket, Exception e) {
+        try {
+            tcpSocket.close();
+        } catch (IOException ex) {
+            e.addSuppressed(ex);
         }
     }
 
