@@ -25,10 +25,12 @@ public interface ScxTCPSocket extends Closeable {
     SocketAddress localAddress();
 
     ScxTCPSocket upgradeToTLS(TLS tls) throws IOException;
-    
+
     boolean isTLS();
-    
+
     ScxTCPSocket startHandshake() throws IOException;
+
+    ScxTLSConfig tlsConfig();
 
     boolean isClosed();
 
