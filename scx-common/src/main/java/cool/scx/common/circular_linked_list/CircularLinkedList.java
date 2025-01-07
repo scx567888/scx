@@ -1,16 +1,16 @@
-package cool.scx.common.circular_iterable;
+package cool.scx.common.circular_linked_list;
 
 import java.util.Objects;
 import java.util.function.IntFunction;
 
 /**
- * CircularIterable
+ * CircularLinkedList
  *
  * @param <T>
  * @author scx567888
  * @version 0.0.1
  */
-public final class CircularIterable<T> implements ICircularIterable<T> {
+public final class CircularLinkedList<T> implements ICircularLinkedList<T> {
 
     private Node<T> first;
 
@@ -126,8 +126,8 @@ public final class CircularIterable<T> implements ICircularIterable<T> {
     }
 
     @Override
-    public CircularIterator<T> iterator() {
-        return new CircularIterator<>(first);
+    public CircularLinkedListIterator<T> iterator() {
+        return new CircularLinkedListIterator<>(first);
     }
 
     private void fillArray(Object[] arr) {
@@ -167,8 +167,8 @@ public final class CircularIterable<T> implements ICircularIterable<T> {
     }
 
     @Override
-    public ICircularIterable<T> reversed() {
-        return new ReverseCircularIterable<>(this);
+    public ICircularLinkedList<T> reversed() {
+        return new ReverseCircularLinkedList<>(this);
     }
 
 }

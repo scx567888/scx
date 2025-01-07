@@ -1,15 +1,15 @@
-package cool.scx.common.circular_iterable;
+package cool.scx.common.circular_linked_list;
 
 import java.util.function.IntFunction;
 
 /**
- * ICircularIterable
+ * ICircularLinkedList
  *
  * @param <T>
  * @author scx567888
  * @version 0.0.1
  */
-public interface ICircularIterable<T> extends Iterable<T> {
+public interface ICircularLinkedList<T> extends Iterable<T> {
 
     T first();
 
@@ -30,7 +30,7 @@ public interface ICircularIterable<T> extends Iterable<T> {
     Node<T> node(Object o);
 
     @Override
-    ICircularIterator<T> iterator();
+    ICircularLinkedListIterator<T> iterator();
 
     Object[] toArray();
 
@@ -40,6 +40,6 @@ public interface ICircularIterable<T> extends Iterable<T> {
 
     boolean contains(Object o);
 
-    ICircularIterable<T> reversed();
+    ICircularLinkedList<T> reversed();
 
 }
