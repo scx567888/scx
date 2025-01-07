@@ -17,7 +17,7 @@ public class UsagiHttpClientOptions extends ScxTCPClientOptions {
 
     public UsagiHttpClientOptions() {
         this.bodyBufferSize = 1024 * 64;// 默认 64 KB
-        this.tcpClientType = TCPClientType.NIO;
+        this.tcpClientType = TCPClientType.CLASSIC;
     }
 
     public UsagiHttpClientOptions(UsagiHttpClientOptions oldOptions) {

@@ -24,7 +24,7 @@ public class UsagiHttpServerOptions extends ScxTCPServerOptions {
         this.maxHeaderSize = 1024 * 128; // 默认 128 KB
         this.maxPayloadSize = 1024 * 1024 * 16; // 默认 16 MB
         this.maxWebsocketFrameSize = 1024 * 1024 * 16; // 默认 16 MB
-        this.tcpServerType = TCPServerType.NIO; // 默认 使用 NIO 实现
+        this.tcpServerType = TCPServerType.CLASSIC; // 默认 使用 CLASSIC 实现
     }
 
     public UsagiHttpServerOptions(UsagiHttpServerOptions oldOptions) {
