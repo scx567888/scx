@@ -64,7 +64,7 @@ final class ReverseCircularLinkedList<T> implements ICircularLinkedList<T> {
 
     @Override
     public ICircularLinkedIterator<T> iterator() {
-        return new ReverseCircularLinkedListIterator<>(new CircularLinkedIterator<>(circularLinkedList.lastNode()));
+        return new ReverseCircularLinkedIterator<>(new CircularLinkedIterator<>(circularLinkedList.lastNode()));
     }
 
     @Override
