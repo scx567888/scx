@@ -22,7 +22,7 @@ public class NioTCPSocket implements ScxTCPSocket {
     private SocketChannel socketChannel;
     private InputStream in;
     private OutputStream out;
-    private ScxTLSConfig tlsConfig;
+    private ScxTLSManager tlsManager;
 
     public NioTCPSocket(SocketChannel socketChannel) {
         setSocket(socketChannel);
@@ -85,8 +85,8 @@ public class NioTCPSocket implements ScxTCPSocket {
     }
 
     @Override
-    public ScxTLSConfig tlsConfig() {
-        return tlsConfig;
+    public ScxTLSManager tlsManager() {
+        return tlsManager;
     }
 
     @Override
@@ -99,7 +99,7 @@ public class NioTCPSocket implements ScxTCPSocket {
         this.in = Channels.newInputStream(socketChannel);
         this.out = Channels.newOutputStream(socketChannel);
         if (socketChannel instanceof TLSSocketChannel tlsSocketChannel) {
-            tlsConfig = new NioTLSConfig(tlsSocketChannel.sslEngine());
+            tlsManager = new NioTLSManager(tlsSocketChannel.sslEngine());
         }
     }
 

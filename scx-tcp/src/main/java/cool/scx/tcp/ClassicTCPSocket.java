@@ -21,7 +21,7 @@ public class ClassicTCPSocket implements ScxTCPSocket {
     private Socket socket;
     private InputStream in;
     private OutputStream out;
-    private ScxTLSConfig tlsConfig;
+    private ScxTLSManager tlsManager;
 
     public ClassicTCPSocket(Socket socket) {
         setSocket(socket);
@@ -76,8 +76,8 @@ public class ClassicTCPSocket implements ScxTCPSocket {
     }
 
     @Override
-    public ScxTLSConfig tlsConfig() {
-        return tlsConfig;
+    public ScxTLSManager tlsManager() {
+        return tlsManager;
     }
 
     @Override
@@ -94,7 +94,7 @@ public class ClassicTCPSocket implements ScxTCPSocket {
             throw new UncheckedIOException(e);
         }
         if (socket instanceof SSLSocket sslSocket) {
-            tlsConfig = new ClassicTLSConfig(sslSocket);
+            tlsManager = new ClassicTLSManager(sslSocket);
         }
     }
 

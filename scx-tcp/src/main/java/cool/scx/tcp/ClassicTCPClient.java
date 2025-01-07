@@ -48,8 +48,8 @@ public class ClassicTCPClient implements ScxTCPClient {
             }
         }
 
-        if (tcpSocket.tlsConfig() != null) {
-            tcpSocket.tlsConfig().setUseClientMode(true);
+        if (tcpSocket.tlsManager() != null) {
+            tcpSocket.tlsManager().setUseClientMode(true);
         }
 
         if (options.autoHandshake()) {

@@ -112,8 +112,8 @@ public class NioTCPServer implements ScxTCPServer {
             }
         }
 
-        if (tcpSocket.tlsConfig() != null) {
-            tcpSocket.tlsConfig().setUseClientMode(false);
+        if (tcpSocket.tlsManager() != null) {
+            tcpSocket.tlsManager().setUseClientMode(false);
         }
 
         if (options.autoHandshake()) {
