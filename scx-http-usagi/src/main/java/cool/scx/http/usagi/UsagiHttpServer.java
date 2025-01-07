@@ -47,7 +47,7 @@ public class UsagiHttpServer implements ScxHttpServer {
             //配置应用协议协商选择器
             tcpSocket.tlsConfig().setHandshakeApplicationProtocolSelector((tlsConfig, list) -> {
                 for (var s : list) {
-                    if (connectionHandlerSelector.containsApplicationProtocol(s)) {
+                    if (connectionHandlerSelector.checkSupport(s)) {
                         return s;
                     }
                 }
