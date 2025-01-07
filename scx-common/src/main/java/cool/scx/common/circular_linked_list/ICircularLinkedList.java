@@ -30,7 +30,7 @@ public interface ICircularLinkedList<T> extends Iterable<T> {
     Node<T> node(Object o);
 
     @Override
-    ICircularLinkedListIterator<T> iterator();
+    ICircularLinkedIterator<T> iterator();
 
     Object[] toArray();
 

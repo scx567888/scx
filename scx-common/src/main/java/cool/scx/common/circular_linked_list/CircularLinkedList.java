@@ -126,8 +126,8 @@ public final class CircularLinkedList<T> implements ICircularLinkedList<T> {
     }
 
     @Override
-    public CircularLinkedListIterator<T> iterator() {
-        return new CircularLinkedListIterator<>(first);
+    public CircularLinkedIterator<T> iterator() {
+        return new CircularLinkedIterator<>(first);
     }
 
     private void fillArray(Object[] arr) {
