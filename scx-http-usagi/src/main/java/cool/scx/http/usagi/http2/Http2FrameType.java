@@ -37,7 +37,7 @@ public enum Http2FrameType {
     }
 
     public static Http2FrameType of(int code) {
-        if (code < 0 || code > 10) {
+        if (code < 0 || code > 9) {
             throw new IllegalArgumentException("Invalid Http2FrameType : " + code);
         }
         var c = MAP[code];
@@ -48,7 +48,7 @@ public enum Http2FrameType {
     }
 
     public static Http2FrameType find(int code) {
-        if (code < 0 || code > 10) {
+        if (code < 0 || code > 9) {
             return null;
         }
         return MAP[code];

@@ -6,7 +6,7 @@ import cool.scx.http.ScxHttpHeaders;
 import static cool.scx.http.HttpFieldName.*;
 import static cool.scx.http.HttpMethod.GET;
 
-public final class Http1xHelper {
+final class Http1xHelper {
 
     public static boolean checkIsWebSocketHandshake(Http1xRequestLine requestLine, ScxHttpHeaders headers) {
         if (requestLine.method() == GET) {
