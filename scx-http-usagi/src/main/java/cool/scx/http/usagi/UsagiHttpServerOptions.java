@@ -105,6 +105,30 @@ public class UsagiHttpServerOptions extends ScxTCPServerOptions {
         return this;
     }
 
+    @Override
+    public boolean autoUpgradeToTLS() {
+        //永远自动升级到 TLS
+        return true;
+    }
+
+    @Override
+    public ScxTCPServerOptions autoUpgradeToTLS(boolean autoUpgradeToTLS) {
+        //什么都不做
+        return this;
+    }
+
+    @Override
+    public boolean autoHandshake() {
+        //永远不自动握手
+        return false;
+    }
+
+    @Override
+    public ScxTCPServerOptions autoHandshake(boolean autoHandshake) {
+        //什么都不做
+        return this;
+    }
+
     public enum TCPServerType {
         CLASSIC,
         NIO

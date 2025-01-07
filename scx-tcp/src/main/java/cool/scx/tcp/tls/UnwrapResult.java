@@ -1,5 +1,11 @@
 package cool.scx.tcp.tls;
 
+/**
+ * UnwrapResult
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public final class UnwrapResult {
 
     public Status status;

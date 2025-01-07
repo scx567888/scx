@@ -2,7 +2,6 @@ package cool.scx.tcp;
 
 import java.net.SocketAddress;
 
-
 /**
  * ScxTCPClient
  *
