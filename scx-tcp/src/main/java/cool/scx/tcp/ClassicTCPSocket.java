@@ -51,10 +51,8 @@ public class ClassicTCPSocket implements ScxTCPSocket {
     public ClassicTCPSocket upgradeToTLS(TLS tls) throws IOException {
         if (tls != null && tls.enabled()) {
             //创建 sslSocket (服务器端不需要设置 host 和 port)
-            var sslSocket = (SSLSocket) tls.socketFactory().createSocket(socket, null, -1, true);
-            sslSocket.setUseClientMode(false);
+            var sslSocket = tls.socketFactory().createSocket(socket, null, -1, true);
             setSocket(sslSocket);
-            tlsConfig = new ClassicTLSConfig(sslSocket);
         }
         return this;
     }
@@ -94,6 +92,9 @@ public class ClassicTCPSocket implements ScxTCPSocket {
             this.out = socket.getOutputStream();
         } catch (IOException e) {
             throw new UncheckedIOException(e);
+        }
+        if (socket instanceof SSLSocket sslSocket) {
+            tlsConfig = new ClassicTLSConfig(sslSocket);
         }
     }
 

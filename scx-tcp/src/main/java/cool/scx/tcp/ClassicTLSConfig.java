@@ -13,6 +13,11 @@ public class ClassicTLSConfig implements ScxTLSConfig {
     }
 
     @Override
+    public void setUseClientMode(boolean mode) {
+        sslSocket.setUseClientMode(mode);
+    }
+
+    @Override
     public void setHandshakeApplicationProtocolSelector(BiFunction<ScxTLSConfig, List<String>, String> selector) {
         sslSocket.setHandshakeApplicationProtocolSelector((sslEngine, list) -> selector.apply(this, list));
     }
