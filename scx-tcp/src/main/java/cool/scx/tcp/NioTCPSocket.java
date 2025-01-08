@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
-import java.net.SocketAddress;
+import java.net.InetSocketAddress;
 import java.nio.channels.Channels;
 import java.nio.channels.SocketChannel;
 
@@ -39,18 +39,18 @@ public class NioTCPSocket implements ScxTCPSocket {
     }
 
     @Override
-    public SocketAddress remoteAddress() {
+    public InetSocketAddress remoteAddress() {
         try {
-            return socketChannel.getRemoteAddress();
+            return (InetSocketAddress) socketChannel.getRemoteAddress();
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
     }
 
     @Override
-    public SocketAddress localAddress() {
+    public InetSocketAddress localAddress() {
         try {
-            return socketChannel.getLocalAddress();
+            return (InetSocketAddress) socketChannel.getLocalAddress();
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }

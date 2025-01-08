@@ -6,7 +6,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.SocketAddress;
+import java.net.InetSocketAddress;
 
 /**
  * ScxTCPSocket
@@ -20,9 +20,9 @@ public interface ScxTCPSocket extends Closeable {
 
     OutputStream outputStream();
 
-    SocketAddress remoteAddress();
+    InetSocketAddress remoteAddress();
 
-    SocketAddress localAddress();
+    InetSocketAddress localAddress();
 
     ScxTCPSocket upgradeToTLS(TLS tls) throws IOException;
 
