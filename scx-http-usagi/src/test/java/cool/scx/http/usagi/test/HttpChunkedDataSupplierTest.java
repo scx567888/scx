@@ -1,6 +1,6 @@
 package cool.scx.http.usagi.test;
 
-import cool.scx.http.usagi.HttpChunkedDataSupplier;
+import cool.scx.http.usagi.http1x.HttpChunkedDataSupplier;
 import cool.scx.io.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
