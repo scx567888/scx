@@ -2,22 +2,18 @@ package cool.scx.http.usagi.http1x;
 
 import cool.scx.http.*;
 import cool.scx.http.uri.ScxURI;
-import cool.scx.io.LinkedDataReader;
-import cool.scx.tcp.ScxTCPSocket;
 
-import java.io.OutputStream;
+import static cool.scx.http.usagi.http1x.Http1xHelper.*;
 
 /**
- * todo 待完成
+ * Http1xServerRequest
  *
  * @author scx567888
  * @version 0.0.1
  */
 public class Http1xServerRequest implements ScxHttpServerRequest {
 
-    public final ScxTCPSocket tcpSocket;
-    public final LinkedDataReader dataReader;
-    public final OutputStream dataWriter;
+    public final Http1xConnection http1xConnection;
     public final boolean isKeepAlive;
 
     private final ScxHttpMethod method;
@@ -29,21 +25,18 @@ public class Http1xServerRequest implements ScxHttpServerRequest {
     private final PeerInfo remotePeer;
     private final PeerInfo localPeer;
 
-    public Http1xServerRequest(Http1xRequestLine requestLine, ScxHttpHeadersWritable headers, ScxHttpBody body, ScxTCPSocket tcpSocket, LinkedDataReader dataReader, OutputStream dataWriter, boolean isKeepAlive) {
-        this.tcpSocket = tcpSocket;
-        this.dataReader = dataReader;
-        this.dataWriter = dataWriter;
-        this.isKeepAlive = isKeepAlive;
-
+    public Http1xServerRequest(Http1xConnection http1xConnection, Http1xRequestLine requestLine, ScxHttpHeadersWritable headers, ScxHttpBody body) {
+        this.http1xConnection = http1xConnection;
+        this.isKeepAlive = checkIsKeepAlive(requestLine, headers);
         this.method = requestLine.method();
         // todo uri 需要 通过请求头 , socket 等 获取 请求主机 
         this.uri = ScxURI.of(requestLine.path());
         this.version = requestLine.version();
         this.headers = headers;
         this.body = body;
-        this.response = new Http1xServerResponse(this, tcpSocket, dataReader, dataWriter, isKeepAlive);
-        this.remotePeer = PeerInfo.of();
-        this.localPeer = PeerInfo.of();
+        this.response = new Http1xServerResponse(http1xConnection, this);
+        this.remotePeer = getRemotePeer(http1xConnection.tcpSocket);
+        this.localPeer = getLocalPeer(http1xConnection.tcpSocket);
     }
 
     @Override
