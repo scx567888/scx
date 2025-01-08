@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * todo 待完成
+ * 固定长度的 读取器
  *
  * @author scx567888
  * @version 0.0.1
