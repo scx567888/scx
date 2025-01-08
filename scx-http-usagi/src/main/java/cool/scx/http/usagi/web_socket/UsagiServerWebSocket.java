@@ -4,10 +4,6 @@ import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.usagi.http1x.Http1xServerWebSocketHandshakeRequest;
 import cool.scx.http.web_socket.ScxServerWebSocket;
-import cool.scx.io.PowerfulLinkedDataReader;
-import cool.scx.tcp.ScxTCPSocket;
-
-import java.io.OutputStream;
 
 /**
  * Usagi ServerWebSocket

@@ -5,7 +5,10 @@ import cool.scx.http.media.MediaWriter;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.uri.ScxURIWritable;
 import cool.scx.http.usagi.http1x.HttpChunkedDataSupplier;
-import cool.scx.io.*;
+import cool.scx.io.DataReaderInputStream;
+import cool.scx.io.FixedLengthDataReaderInputStream;
+import cool.scx.io.InputStreamDataSupplier;
+import cool.scx.io.PowerfulLinkedDataReader;
 import cool.scx.tcp.ClassicTCPClient;
 import cool.scx.tcp.NioTCPClient;
 import cool.scx.tcp.ScxTCPClient;
@@ -33,9 +36,8 @@ import static cool.scx.http.HttpFieldName.TRANSFER_ENCODING;
 public class UsagiHttpClientRequest extends ScxHttpClientRequestBase {
 
     private final UsagiHttpClient httpClient;
-
-    ScxTCPClient tcpClient;
     public ScxTCPSocket connect;
+    ScxTCPClient tcpClient;
 
     public UsagiHttpClientRequest(UsagiHttpClient httpClient) {
         this.httpClient = httpClient;

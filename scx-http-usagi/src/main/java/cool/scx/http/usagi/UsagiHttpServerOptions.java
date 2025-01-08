@@ -42,7 +42,7 @@ public class UsagiHttpServerOptions {
         tcpServerType(oldOptions.tcpServerType());
         enableHttp2(oldOptions.enableHttp2());
     }
-    
+
     //不允许外界访问
     ScxTCPServerOptions tcpServerOptions() {
         return tcpServerOptions;
@@ -125,7 +125,7 @@ public class UsagiHttpServerOptions {
     }
 
     public UsagiHttpServerOptions tls(TLS tls) {
-        this.tcpServerOptions.tls(tls) ;
+        this.tcpServerOptions.tls(tls);
         return this;
     }
 

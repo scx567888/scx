@@ -2,8 +2,8 @@ package cool.scx.http.web_socket;
 
 import cool.scx.http.ScxHttpServerRequest;
 
-import static cool.scx.http.HttpFieldName.*;
-import static cool.scx.http.HttpHelper.generateSecWebSocketAccept;
+import static cool.scx.http.HttpFieldName.SEC_WEBSOCKET_KEY;
+import static cool.scx.http.HttpFieldName.SEC_WEBSOCKET_VERSION;
 
 /**
  * ScxServerWebSocketHandshakeRequest
