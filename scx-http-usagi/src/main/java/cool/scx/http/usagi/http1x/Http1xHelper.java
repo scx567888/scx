@@ -8,6 +8,9 @@ import static cool.scx.http.HttpMethod.GET;
 
 final class Http1xHelper {
 
+    public static final byte[] CRLF_BYTES = "\r\n".getBytes();
+    public static final byte[] CRLF_CRLF_BYTES = "\r\n\r\n".getBytes();
+
     public static boolean checkIsWebSocketHandshake(Http1xRequestLine requestLine, ScxHttpHeaders headers) {
         if (requestLine.method() == GET) {
             var connection = headers.get(CONNECTION);
