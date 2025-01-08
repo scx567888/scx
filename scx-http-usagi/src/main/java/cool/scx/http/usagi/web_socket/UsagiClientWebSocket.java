@@ -1,4 +1,4 @@
-package cool.scx.http.usagi;
+package cool.scx.http.usagi.web_socket;
 
 import cool.scx.common.util.RandomUtils;
 import cool.scx.http.web_socket.ScxClientWebSocket;
