@@ -4,8 +4,11 @@ import cool.scx.http.*;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.uri.ScxURIWritable;
+import cool.scx.http.usagi.http1x.HttpChunkedDataSupplier;
+import cool.scx.io.DataReaderInputStream;
+import cool.scx.io.FixedLengthDataReaderInputStream;
 import cool.scx.io.InputStreamDataSupplier;
-import cool.scx.io.LinkedDataReader;
+import cool.scx.io.PowerfulLinkedDataReader;
 import cool.scx.tcp.ClassicTCPClient;
 import cool.scx.tcp.NioTCPClient;
 import cool.scx.tcp.ScxTCPClient;
@@ -33,9 +36,8 @@ import static cool.scx.http.HttpFieldName.TRANSFER_ENCODING;
 public class UsagiHttpClientRequest extends ScxHttpClientRequestBase {
 
     private final UsagiHttpClient httpClient;
-
+    public ScxTCPSocket connect;
     ScxTCPClient tcpClient;
-    ScxTCPSocket connect;
 
     public UsagiHttpClientRequest(UsagiHttpClient httpClient) {
         this.httpClient = httpClient;
@@ -62,7 +64,7 @@ public class UsagiHttpClientRequest extends ScxHttpClientRequestBase {
 
     private static ScxHttpClientResponse waitResponse(InputStream in) {
 
-        var dataReader = new LinkedDataReader(new InputStreamDataSupplier(in));
+        var dataReader = new PowerfulLinkedDataReader(new InputStreamDataSupplier(in));
 
         var lineBytes = dataReader.readUntil("\r\n".getBytes());
 
@@ -90,11 +92,11 @@ public class UsagiHttpClientRequest extends ScxHttpClientRequestBase {
         ScxHttpBody body;
 
         if ("chunked".equals(transferEncoding)) {
-            body = new ScxHttpBodyImpl(new HttpChunkedInputStream(dataReader), headers, 65535);
+            body = new ScxHttpBodyImpl(new DataReaderInputStream(new HttpChunkedDataSupplier(dataReader)), headers, 65535);
         } else {
             var contentLength = headers.contentLength();
             if (contentLength != null) {
-                body = new ScxHttpBodyImpl(new FixedLengthInputStream(dataReader, contentLength), headers, 65536);
+                body = new ScxHttpBodyImpl(new FixedLengthDataReaderInputStream(dataReader, contentLength), headers, 65536);
             } else {
                 body = new ScxHttpBodyImpl(InputStream.nullInputStream(), headers, 65536);
             }

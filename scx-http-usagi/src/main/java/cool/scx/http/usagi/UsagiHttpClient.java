@@ -2,6 +2,7 @@ package cool.scx.http.usagi;
 
 import cool.scx.http.ScxHttpClient;
 import cool.scx.http.ScxHttpClientRequest;
+import cool.scx.http.usagi.web_socket.UsagiClientWebSocketBuilder;
 import cool.scx.http.web_socket.ScxClientWebSocketBuilder;
 
 /**

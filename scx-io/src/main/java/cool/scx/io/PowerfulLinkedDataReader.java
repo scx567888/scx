@@ -16,7 +16,7 @@ public class PowerfulLinkedDataReader extends LinkedDataReader {
     }
 
     // InputStream 写法的 read
-    public int inputStreamRead() throws NoMoreDataException {
+    public int inputStreamRead() {
         var r = ensureAvailable();
         if (!r) {
             return -1;
@@ -27,7 +27,7 @@ public class PowerfulLinkedDataReader extends LinkedDataReader {
     }
 
     // InputStream 写法的 read
-    public int inputStreamRead(byte[] b, int off, int len) throws NoMoreDataException {
+    public int inputStreamRead(byte[] b, int off, int len) {
         var r = ensureAvailable();
         if (!r) {
             return -1;
@@ -38,18 +38,23 @@ public class PowerfulLinkedDataReader extends LinkedDataReader {
     }
 
     // InputStream 写法的 read
-    public long inputStreamTransferTo(OutputStream out) throws NoMoreDataException {
+    public long inputStreamTransferTo(OutputStream out, long maxLength) {
         var r = ensureAvailable();
         if (!r) {
             return -1;
         }
         var consumer = new OutputStreamDataConsumer(out);
-        walk(consumer, Long.MAX_VALUE, true);
+        walk(consumer, maxLength, true);
         return consumer.byteCount();
     }
 
+    // InputStream 写法的 read
+    public long inputStreamTransferTo(OutputStream out) {
+        return inputStreamTransferTo(out, Long.MAX_VALUE);
+    }
+
     // ByteChannel 写法的 read
-    public int byteChannelRead(ByteBuffer b) throws NoMoreDataException {
+    public int byteChannelRead(ByteBuffer b) {
         var r = ensureAvailable();
         if (!r) {
             return -1;

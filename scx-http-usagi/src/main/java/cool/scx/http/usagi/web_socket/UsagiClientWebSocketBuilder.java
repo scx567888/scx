@@ -1,4 +1,4 @@
-package cool.scx.http.usagi;
+package cool.scx.http.usagi.web_socket;
 
 import cool.scx.common.util.Base64Utils;
 import cool.scx.common.util.RandomUtils;
@@ -8,6 +8,8 @@ import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.ScxHttpHeadersWritable;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.uri.ScxURIWritable;
+import cool.scx.http.usagi.UsagiHttpClient;
+import cool.scx.http.usagi.UsagiHttpClientRequest;
 import cool.scx.http.web_socket.ScxClientWebSocket;
 import cool.scx.http.web_socket.ScxClientWebSocketBuilder;
 import cool.scx.io.InputStreamDataSupplier;

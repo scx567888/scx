@@ -2,15 +2,14 @@ package cool.scx.http.usagi.http1x;
 
 import cool.scx.http.ScxHttpBody;
 import cool.scx.http.ScxHttpHeadersWritable;
-import cool.scx.http.usagi.UsagiServerWebSocket;
+import cool.scx.http.usagi.web_socket.UsagiServerWebSocket;
 import cool.scx.http.web_socket.ScxServerWebSocketHandshakeRequest;
-import cool.scx.io.LinkedDataReader;
-import cool.scx.tcp.ScxTCPSocket;
 
-import java.io.OutputStream;
+import static cool.scx.http.HttpFieldName.*;
+import static cool.scx.http.HttpHelper.generateSecWebSocketAccept;
 
 /**
- * todo 待完成
+ * 基于 http1 的 websocket 握手请求
  *
  * @author scx567888
  * @version 0.0.1
@@ -19,17 +18,27 @@ public class Http1xServerWebSocketHandshakeRequest extends Http1xServerRequest i
 
     public UsagiServerWebSocket webSocket;
 
-    public Http1xServerWebSocketHandshakeRequest(Http1xRequestLine requestLine, ScxHttpHeadersWritable headers, ScxHttpBody body, ScxTCPSocket tcpSocket, LinkedDataReader dataReader, OutputStream dataWriter, boolean isKeepAlive) {
-        super(requestLine, headers, body, tcpSocket, dataReader, dataWriter, isKeepAlive);
+    public Http1xServerWebSocketHandshakeRequest(Http1xConnection http1xConnection, Http1xRequestLine requestLine, ScxHttpHeadersWritable headers, ScxHttpBody body) {
+        super(http1xConnection, requestLine, headers, body);
+    }
+
+    @Override
+    public UsagiServerWebSocket acceptHandshake() {
+        // 实现握手接受逻辑，返回适当的响应头
+        if (webSocket == null) {
+            var response = response();
+            response.setHeader(UPGRADE, "websocket");
+            response.setHeader(CONNECTION, "Upgrade");
+            response.setHeader(SEC_WEBSOCKET_ACCEPT, generateSecWebSocketAccept(secWebSocketKey()));
+            response.status(101).send();
+            webSocket = new UsagiServerWebSocket(this);
+        }
+        return webSocket;
     }
 
     @Override
     public UsagiServerWebSocket webSocket() {
-        if (webSocket == null) {
-            acceptHandshake();
-            webSocket = new UsagiServerWebSocket(this, dataReader, dataWriter);
-        }
-        return webSocket;
+        return webSocket != null ? webSocket : acceptHandshake();
     }
 
 }

@@ -7,8 +7,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
+import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.net.SocketAddress;
 
 /**
  * 经典 TCP Socket
@@ -38,13 +38,13 @@ public class ClassicTCPSocket implements ScxTCPSocket {
     }
 
     @Override
-    public SocketAddress remoteAddress() {
-        return socket.getRemoteSocketAddress();
+    public InetSocketAddress remoteAddress() {
+        return (InetSocketAddress) socket.getRemoteSocketAddress();
     }
 
     @Override
-    public SocketAddress localAddress() {
-        return socket.getLocalSocketAddress();
+    public InetSocketAddress localAddress() {
+        return (InetSocketAddress) socket.getLocalSocketAddress();
     }
 
     @Override

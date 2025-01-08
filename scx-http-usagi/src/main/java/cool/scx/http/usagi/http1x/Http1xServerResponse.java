@@ -1,8 +1,6 @@
 package cool.scx.http.usagi.http1x;
 
 import cool.scx.http.*;
-import cool.scx.io.LinkedDataReader;
-import cool.scx.tcp.ScxTCPSocket;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -18,22 +16,16 @@ import static cool.scx.http.HttpFieldName.SERVER;
  */
 public class Http1xServerResponse extends OutputStream implements ScxHttpServerResponse {
 
-    private final ScxTCPSocket tcpSocket;
-    private final LinkedDataReader dataReader;
-    private final OutputStream dataWriter;
-
+    private final Http1xConnection http1xConnection;
     private final Http1xServerRequest request;
     private final ScxHttpHeadersWritable headers;
-    private final boolean isKeepAlive;
+    private final OutputStream dataWriter;
     private HttpStatusCode status;
     private boolean firstSend;
 
-    Http1xServerResponse(Http1xServerRequest request, ScxTCPSocket tcpSocket, LinkedDataReader dataReader, OutputStream dataWriter, boolean isKeepAlive) {
-        this.tcpSocket = tcpSocket;
-        this.dataReader = dataReader;
-        this.dataWriter = dataWriter;
-        this.isKeepAlive = isKeepAlive;
-
+    Http1xServerResponse(Http1xConnection http1xConnection, Http1xServerRequest request) {
+        this.http1xConnection = http1xConnection;
+        this.dataWriter = this.http1xConnection.dataWriter;
         this.request = request;
         this.status = HttpStatusCode.OK;
         this.headers = ScxHttpHeaders.of();
@@ -85,13 +77,13 @@ public class Http1xServerResponse extends OutputStream implements ScxHttpServerR
         sb.append(status.description());
         sb.append("\r\n");
 
-        if (isKeepAlive) {
-            //用户可能已经自行设置了 CONNECTION
-            if (!headers.contains(CONNECTION)) {
+        //用户可能已经自行设置了 CONNECTION
+        if (!headers.contains(CONNECTION)) {
+            if (request.isKeepAlive) {
                 headers.set(CONNECTION, "keep-alive");
+            } else {
+                headers.set(CONNECTION, "close");
             }
-        } else {
-            headers.set(CONNECTION, "close");
         }
 
         //用户可能已经自行设置了 SERVER
@@ -146,6 +138,11 @@ public class Http1xServerResponse extends OutputStream implements ScxHttpServerR
     @Override
     public void close() throws IOException {
         checkFirstSend();
+        var connection = headers.get(CONNECTION);
+        //只有明确表示 close 的时候我们才关闭
+        if ("close".equalsIgnoreCase(connection)) {
+            http1xConnection.stop();
+        }
     }
 
 }

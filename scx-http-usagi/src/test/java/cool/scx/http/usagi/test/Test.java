@@ -1,10 +1,13 @@
 package cool.scx.http.usagi.test;
 
 import cool.scx.http.exception.ScxHttpException;
+import cool.scx.http.exception.UnauthorizedException;
 import cool.scx.http.routing.Router;
 import cool.scx.http.usagi.UsagiHttpServer;
 import cool.scx.http.usagi.UsagiHttpServerOptions;
 
+import static cool.scx.http.HttpMethod.GET;
+import static cool.scx.http.HttpMethod.POST;
 import static cool.scx.http.HttpStatusCode.INTERNAL_SERVER_ERROR;
 
 public class Test {
@@ -32,30 +35,30 @@ public class Test {
 //            c.next();
         });
 
-//        router.route().path("/*").handler(c -> {
-//            System.out.println(c.request().path());
-//            c.next();
-//        });
-//
-//        router.route().path("/hello").method(GET).handler(c -> {
-//            c.response().send("hello");
-//        });
-//
-//        router.route().path("/path-params/:id").method(GET).handler(c -> {
-//            c.response().send("id : " + c.pathParams().get("id"));
-//        });
-//
-//        router.route().path("/401").method(GET).handler(c -> {
-//            throw new UnauthorizedException();
-//        });
-//
-//        router.route().path("/405").method(POST).handler(c -> {
-//            System.out.println("405");
-//        });
-//
-//        router.route().path("/last").method(GET).handler(c -> {
-//            var r = 1 / 0;
-//        });
+        router.route().path("/*").handler(c -> {
+            System.out.println(c.request().path());
+            c.next();
+        });
+
+        router.route().path("/hello").method(GET).handler(c -> {
+            c.response().send("hello");
+        });
+
+        router.route().path("/path-params/:id").method(GET).handler(c -> {
+            c.response().send("id : " + c.pathParams().get("id"));
+        });
+
+        router.route().path("/401").method(GET).handler(c -> {
+            throw new UnauthorizedException();
+        });
+
+        router.route().path("/405").method(POST).handler(c -> {
+            System.out.println("405");
+        });
+
+        router.route().path("/last").method(GET).handler(c -> {
+            var r = 1 / 0;
+        });
 
         router.errorHandler((e, ctx) -> {
             if (e instanceof ScxHttpException s) {

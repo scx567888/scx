@@ -1,12 +1,18 @@
 package cool.scx.http.usagi.http1x;
 
 import cool.scx.http.HttpVersion;
+import cool.scx.http.PeerInfo;
+import cool.scx.http.PeerInfoWritable;
 import cool.scx.http.ScxHttpHeaders;
+import cool.scx.tcp.ScxTCPSocket;
 
 import static cool.scx.http.HttpFieldName.*;
 import static cool.scx.http.HttpMethod.GET;
 
 final class Http1xHelper {
+
+    public static final byte[] CRLF_BYTES = "\r\n".getBytes();
+    public static final byte[] CRLF_CRLF_BYTES = "\r\n\r\n".getBytes();
 
     public static boolean checkIsWebSocketHandshake(Http1xRequestLine requestLine, ScxHttpHeaders headers) {
         if (requestLine.method() == GET) {
@@ -38,6 +44,18 @@ final class Http1xHelper {
             }
         }
         return false;
+    }
+
+    public static PeerInfoWritable getRemotePeer(ScxTCPSocket tcpSocket) {
+        var address = tcpSocket.remoteAddress();
+        //todo 未完成 tls 信息没有写入
+        return PeerInfo.of().address(address).host(address.getHostString()).port(address.getPort());
+    }
+
+    public static PeerInfoWritable getLocalPeer(ScxTCPSocket tcpSocket) {
+        //todo 未完成 tls 信息没有写入
+        var address = tcpSocket.localAddress();
+        return PeerInfo.of().address(address).host(address.getHostString()).port(address.getPort());
     }
 
 }
