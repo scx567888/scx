@@ -1,11 +1,11 @@
-package cool.scx.http.usagi;
+package cool.scx.http.usagi.http1x;
 
 import cool.scx.io.DataNode;
 import cool.scx.io.DataReader;
 import cool.scx.io.DataSupplier;
 
 /**
- * todo 待完成
+ * 用来解析 HttpChunked 分块传输数据
  *
  * @author scx567888
  * @version 0.0.1
