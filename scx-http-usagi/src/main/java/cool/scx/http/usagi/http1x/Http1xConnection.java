@@ -4,7 +4,6 @@ import cool.scx.http.*;
 import cool.scx.http.exception.InternalServerErrorException;
 import cool.scx.http.exception.ScxHttpException;
 import cool.scx.http.usagi.UsagiHttpServerOptions;
-import cool.scx.http.usagi.exception.CloseConnectionException;
 import cool.scx.io.*;
 import cool.scx.tcp.ScxTCPSocket;
 
