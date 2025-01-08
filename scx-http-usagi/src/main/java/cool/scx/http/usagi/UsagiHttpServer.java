@@ -2,6 +2,8 @@ package cool.scx.http.usagi;
 
 import cool.scx.http.ScxHttpServer;
 import cool.scx.http.ScxHttpServerRequest;
+import cool.scx.http.usagi.http1x.Http1xConnection;
+import cool.scx.http.usagi.http2.Http2Connection;
 import cool.scx.tcp.ClassicTCPServer;
 import cool.scx.tcp.NioTCPServer;
 import cool.scx.tcp.ScxTCPServer;
@@ -22,17 +24,15 @@ public class UsagiHttpServer implements ScxHttpServer {
 
     private final UsagiHttpServerOptions options;
     private final ScxTCPServer tcpServer;
-    private final ConnectionHandlerSelector connectionHandlerSelector;
     private Consumer<ScxHttpServerRequest> requestHandler;
 
     public UsagiHttpServer(UsagiHttpServerOptions options) {
         this.options = options;
         this.tcpServer = switch (options.tcpServerType()) {
-            case CLASSIC -> new ClassicTCPServer(options);
-            case NIO -> new NioTCPServer(options);
+            case CLASSIC -> new ClassicTCPServer(options.tcpServerOptions());
+            case NIO -> new NioTCPServer(options.tcpServerOptions());
         };
         this.tcpServer.onConnect(this::handle);
-        this.connectionHandlerSelector = new ConnectionHandlerSelector();
     }
 
     public UsagiHttpServer() {
@@ -40,19 +40,12 @@ public class UsagiHttpServer implements ScxHttpServer {
     }
 
     private void handle(ScxTCPSocket tcpSocket) {
-        //默认连接处理器
-        var connectionHandler = connectionHandlerSelector.defaultConnectionHandler();
+        //是否使用 http2
+        var useHttp2 = false;
 
         if (tcpSocket.isTLS()) {
-            //配置应用协议协商选择器
-            tcpSocket.tlsManager().setHandshakeApplicationProtocolSelector((tlsConfig, list) -> {
-                for (var s : list) {
-                    if (connectionHandlerSelector.checkSupport(s)) {
-                        return s;
-                    }
-                }
-                return null;
-            });
+            // 配置应用协议协商选择器
+            tcpSocket.tlsManager().setHandshakeApplicationProtocolSelector((_, protocols) -> options.enableHttp2() && protocols.contains("h2") ? "h2" : protocols.contains("http/1.1") ? "http/1.1" : null);
             // 开始握手
             try {
                 tcpSocket.startHandshake();
@@ -65,10 +58,14 @@ public class UsagiHttpServer implements ScxHttpServer {
                 throw new UncheckedIOException("TLS 握手失败 !!!!", e);
             }
             var applicationProtocol = tcpSocket.tlsManager().getApplicationProtocol();
-            connectionHandler = connectionHandlerSelector.find(applicationProtocol);
+            useHttp2 = "h2".equals(applicationProtocol);
         }
-        //开始连接
-        connectionHandler.handle(tcpSocket, options, requestHandler);
+
+        if (useHttp2) {
+            new Http2Connection(tcpSocket, options, requestHandler).start();
+        } else {
+            new Http1xConnection(tcpSocket, options, requestHandler).start();
+        }
     }
 
     @Override
