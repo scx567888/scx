@@ -19,8 +19,8 @@ public class UsagiServerWebSocket extends UsagiWebSocket implements ScxServerWeb
 
     private final Http1xServerWebSocketHandshakeRequest handshakeRequest;
 
-    public UsagiServerWebSocket(Http1xServerWebSocketHandshakeRequest handshakeRequest, ScxTCPSocket tcpSocket, PowerfulLinkedDataReader dataReader, OutputStream dataWriter) {
-        super(tcpSocket, dataReader, dataWriter);
+    public UsagiServerWebSocket(Http1xServerWebSocketHandshakeRequest handshakeRequest) {
+        super(handshakeRequest.http1xConnection.tcpSocket, handshakeRequest.http1xConnection.dataReader, handshakeRequest.http1xConnection.dataWriter);
         this.handshakeRequest = handshakeRequest;
     }
 

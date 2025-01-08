@@ -31,7 +31,7 @@ public class Http1xServerWebSocketHandshakeRequest extends Http1xServerRequest i
             response.setHeader(CONNECTION, "Upgrade");
             response.setHeader(SEC_WEBSOCKET_ACCEPT, generateSecWebSocketAccept(secWebSocketKey()));
             response.status(101).send();
-            webSocket = new UsagiServerWebSocket(this, http1xConnection.tcpSocket, http1xConnection.dataReader, http1xConnection.dataWriter);
+            webSocket = new UsagiServerWebSocket(this);
         }
         return webSocket;
     }
