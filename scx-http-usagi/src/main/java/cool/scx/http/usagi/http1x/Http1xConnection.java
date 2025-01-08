@@ -26,11 +26,12 @@ public class Http1xConnection {
 
     private final static System.Logger LOGGER = System.getLogger(Http1xConnection.class.getName());
 
-    private final ScxTCPSocket tcpSocket;
-    private final UsagiHttpServerOptions options;
+    public final ScxTCPSocket tcpSocket;
+    public final UsagiHttpServerOptions options;
+    public final PowerfulLinkedDataReader dataReader;
+    public final OutputStream dataWriter;
+
     private final Consumer<ScxHttpServerRequest> requestHandler;
-    private final PowerfulLinkedDataReader dataReader;
-    private final OutputStream dataWriter;
     private boolean running;
 
     public Http1xConnection(ScxTCPSocket tcpSocket, UsagiHttpServerOptions options, Consumer<ScxHttpServerRequest> requestHandler) {
@@ -55,15 +56,12 @@ public class Http1xConnection {
                 // 3, 读取 请求体
                 var body = readBody(headers);
 
-                // 4, 是否是持久连接
-                var isKeepAlive = checkIsKeepAlive(requestLine, headers);
-
                 // 4, 判断是否为 WebSocket 握手请求 并创建对应请求
                 var isWebSocketHandshake = checkIsWebSocketHandshake(requestLine, headers);
 
                 var request = isWebSocketHandshake ?
-                        new Http1xServerWebSocketHandshakeRequest(this, requestLine, headers, body, tcpSocket, dataReader, dataWriter, isKeepAlive) :
-                        new Http1xServerRequest(this, requestLine, headers, body, tcpSocket, dataReader, dataWriter, isKeepAlive);
+                        new Http1xServerWebSocketHandshakeRequest(this, requestLine, headers, body) :
+                        new Http1xServerRequest(this, requestLine, headers, body);
 
                 // 5, 调用用户处理器
                 _callRequestHandler(request);
