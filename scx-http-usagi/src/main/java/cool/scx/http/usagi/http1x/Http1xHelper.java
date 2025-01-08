@@ -50,8 +50,8 @@ final class Http1xHelper {
         var address = tcpSocket.remoteAddress();
         //todo 未完成 tls 信息没有写入
         return PeerInfo.of().address(address).host(address.getHostString()).port(address.getPort());
-    } 
-    
+    }
+
     public static PeerInfoWritable getLocalPeer(ScxTCPSocket tcpSocket) {
         //todo 未完成 tls 信息没有写入
         var address = tcpSocket.localAddress();
