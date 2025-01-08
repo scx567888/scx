@@ -1,5 +1,8 @@
-package cool.scx.http.web_socket;
+package cool.scx.http.usagi.web_socket;
 
+import cool.scx.http.web_socket.ScxWebSocketCloseInfo;
+import cool.scx.http.web_socket.ScxWebSocketCloseInfoImpl;
+import cool.scx.http.web_socket.WebSocketOpCode;
 import cool.scx.io.DataReader;
 
 import java.io.IOException;

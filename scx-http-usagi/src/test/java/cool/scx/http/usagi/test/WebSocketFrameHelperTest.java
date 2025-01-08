@@ -1,7 +1,7 @@
-package cool.scx.http.test;
+package cool.scx.http.usagi.test;
 
-import cool.scx.http.web_socket.WebSocketFrame;
-import cool.scx.http.web_socket.WebSocketFrameHelper;
+import cool.scx.http.usagi.web_socket.WebSocketFrame;
+import cool.scx.http.usagi.web_socket.WebSocketFrameHelper;
 import cool.scx.http.web_socket.WebSocketOpCode;
 import cool.scx.io.ByteArrayDataReader;
 import cool.scx.io.NoMoreDataException;

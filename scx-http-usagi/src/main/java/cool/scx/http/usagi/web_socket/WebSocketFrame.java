@@ -1,4 +1,6 @@
-package cool.scx.http.web_socket;
+package cool.scx.http.usagi.web_socket;
+
+import cool.scx.http.web_socket.WebSocketOpCode;
 
 /**
  * WebSocketFrame
