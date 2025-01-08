@@ -2,14 +2,19 @@ package cool.scx.http.usagi.web_socket;
 
 import cool.scx.http.web_socket.ScxWebSocket;
 import cool.scx.http.web_socket.ScxWebSocketCloseInfo;
+import cool.scx.http.web_socket.WebSocketOpCode;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.function.Consumer;
 
+import static cool.scx.http.usagi.web_socket.WebSocketFrameHelper.createClosePayload;
 import static cool.scx.http.usagi.web_socket.WebSocketFrameHelper.parseCloseInfo;
+import static cool.scx.http.web_socket.WebSocketOpCode.*;
 
 // 实现一些最基本的方法  
 public abstract class AbstractWebSocket implements ScxWebSocket {
-    
+
     protected Consumer<String> textMessageHandler;
     protected Consumer<byte[]> binaryMessageHandler;
     protected Consumer<byte[]> pingHandler;
@@ -88,5 +93,59 @@ public abstract class AbstractWebSocket implements ScxWebSocket {
             errorHandler.accept(e);
         }
     }
-    
+
+    @Override
+    public ScxWebSocket send(String textMessage, boolean last) {
+        var payload = textMessage.getBytes();
+        try {
+            sendFrame(TEXT, payload, last);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+        return this;
+    }
+
+    @Override
+    public ScxWebSocket send(byte[] binaryMessage, boolean last) {
+        try {
+            sendFrame(BINARY, binaryMessage, last);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+        return this;
+    }
+
+    @Override
+    public ScxWebSocket ping(byte[] data) {
+        try {
+            sendFrame(PING, data, true);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+        return this;
+    }
+
+    @Override
+    public ScxWebSocket pong(byte[] data) {
+        try {
+            sendFrame(PONG, data, true);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+        return this;
+    }
+
+    @Override
+    public ScxWebSocket close(ScxWebSocketCloseInfo closeInfo) {
+        var closePayload = createClosePayload(closeInfo);
+        try {
+            sendFrame(WebSocketOpCode.CLOSE, closePayload, true);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+        return this;
+    }
+
+    public abstract void sendFrame(WebSocketOpCode opcode, byte[] payload, boolean last) throws IOException;
+
 }
