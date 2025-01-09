@@ -142,7 +142,9 @@ public class LinkedDataReader implements DataReader {
 
     @Override
     public byte[] read(int maxLength) throws NoMoreDataException {
-        ensureAvailableOrThrow();
+        if (maxLength > 0) {
+            ensureAvailableOrThrow();
+        }
         var consumer = new ByteArrayDataConsumer();
         walk(consumer, maxLength, true);
         return consumer.getBytes();
@@ -150,7 +152,9 @@ public class LinkedDataReader implements DataReader {
 
     @Override
     public void read(DataConsumer dataConsumer, long maxLength) throws NoMoreDataException {
-        ensureAvailableOrThrow();
+        if (maxLength > 0) {
+            ensureAvailableOrThrow();
+        }
         walk(dataConsumer, maxLength, true);
     }
 
@@ -162,7 +166,9 @@ public class LinkedDataReader implements DataReader {
 
     @Override
     public byte[] peek(int maxLength) throws NoMoreDataException {
-        ensureAvailableOrThrow();
+        if (maxLength > 0) {
+            ensureAvailableOrThrow();
+        }
         var consumer = new ByteArrayDataConsumer();
         walk(consumer, maxLength, false);
         return consumer.getBytes();
@@ -170,25 +176,33 @@ public class LinkedDataReader implements DataReader {
 
     @Override
     public void peek(DataConsumer dataConsumer, long maxLength) throws NoMoreDataException {
-        ensureAvailableOrThrow();
+        if (maxLength > 0) {
+            ensureAvailableOrThrow();
+        }
         walk(dataConsumer, maxLength, false);
     }
 
     @Override
-    public long indexOf(byte b, long max) throws NoMatchFoundException, NoMoreDataException {
-        ensureAvailableOrThrow();
-        return indexOf(new ByteIndexer(b), max);
+    public long indexOf(byte b, long maxLength) throws NoMatchFoundException, NoMoreDataException {
+        if (maxLength > 0) {
+            ensureAvailableOrThrow();
+        }
+        return indexOf(new ByteIndexer(b), maxLength);
     }
 
     @Override
-    public long indexOf(byte[] pattern, long max) throws NoMatchFoundException, NoMoreDataException {
-        ensureAvailableOrThrow();
-        return indexOf(new KMPDataIndexer(pattern), max);
+    public long indexOf(byte[] pattern, long maxLength) throws NoMatchFoundException, NoMoreDataException {
+        if (maxLength > 0) {
+            ensureAvailableOrThrow();
+        }
+        return indexOf(new KMPDataIndexer(pattern), maxLength);
     }
 
     @Override
     public void skip(long length) throws NoMoreDataException {
-        ensureAvailableOrThrow();
+        if (length > 0) {
+            ensureAvailableOrThrow();
+        }
         walk(SKIP_DATA_CONSUMER, length, true);
     }
 
