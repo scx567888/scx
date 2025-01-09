@@ -4,6 +4,7 @@ import cool.scx.http.*;
 import cool.scx.http.exception.InternalServerErrorException;
 import cool.scx.http.exception.ScxHttpException;
 import cool.scx.http.usagi.UsagiHttpServerOptions;
+import cool.scx.http.usagi.exception.CloseConnectionException;
 import cool.scx.io.*;
 import cool.scx.tcp.ScxTCPSocket;
 
@@ -42,8 +43,8 @@ public class Http1xConnection {
         this.running = true;
     }
 
-
     public void start() {
+        //开始读取 Http 请求
         while (running) {
             try {
                 // 1, 读取 请求行
@@ -67,22 +68,17 @@ public class Http1xConnection {
 
             } catch (CloseConnectionException e) {
                 //这种情况是我们主动触发的, 表示需要关闭连接 这里直接跳出循环, 以便完成关闭
-                break;
+                stop();
             } catch (ScxHttpException e) {
                 handleHttpException(e);
             } catch (Throwable e) {
                 handleHttpException(new InternalServerErrorException(e));
             }
         }
-        // 循环结束则关闭连接
-        try {
-            tcpSocket.close();
-        } catch (IOException e) {
-            LOGGER.log(System.Logger.Level.TRACE, "关闭 Socket 时发生错误！", e);
-        }
     }
 
     public void stop() {
+        //停止读取 http 请求
         running = false;
     }
 
