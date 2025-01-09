@@ -69,7 +69,7 @@ public interface DataReader {
     /**
      * 查找 指定字节 第一次出现的 index (指针不会移动)
      *
-     * @param b   指定字节
+     * @param b         指定字节
      * @param maxLength 最大长度
      * @return index 或者 -1 (未找到)
      * @throws NoMatchFoundException 没有匹配时抛出
@@ -79,7 +79,7 @@ public interface DataReader {
     /**
      * 查找 指定字节数组 第一次出现的 index (指针不会移动)
      *
-     * @param b   指定字节数组
+     * @param b         指定字节数组
      * @param maxLength 最大长度
      * @return index 或者 -1 (未找到)
      * @throws NoMatchFoundException 没有匹配时抛出
