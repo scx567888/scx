@@ -102,7 +102,7 @@ public class UsagiHttpServerOptions {
         this.mergeWebSocketFrame = mergeWebSocketFrame;
         return this;
     }
-    
+
     public int maxWebSocketFrameSize() {
         return maxWebSocketFrameSize;
     }
