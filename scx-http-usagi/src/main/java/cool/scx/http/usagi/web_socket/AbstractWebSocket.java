@@ -20,12 +20,25 @@ public abstract class AbstractWebSocket implements ScxWebSocket {
 
     public static final Logger LOGGER = getLogger(AbstractWebSocket.class.getName());
 
+    //限制只发送一次 close 帧
+    protected boolean closeFrameSent;
+
     protected Consumer<String> textMessageHandler;
     protected Consumer<byte[]> binaryMessageHandler;
     protected Consumer<byte[]> pingHandler;
     protected Consumer<byte[]> pongHandler;
     protected Consumer<ScxWebSocketCloseInfo> closeHandler;
     protected Consumer<Throwable> errorHandler;
+
+    public AbstractWebSocket() {
+        closeFrameSent = false;
+        textMessageHandler = null;
+        binaryMessageHandler = null;
+        pingHandler = null;
+        pongHandler = null;
+        closeHandler = null;
+        errorHandler = null;
+    }
 
     @Override
     public ScxWebSocket onTextMessage(Consumer<String> textMessageHandler) {
@@ -166,9 +179,15 @@ public abstract class AbstractWebSocket implements ScxWebSocket {
 
     @Override
     public ScxWebSocket close(ScxWebSocketCloseInfo closeInfo) {
+        // close 帧只允许发送一次
+        if (closeFrameSent){
+            return this;
+        }
         var closePayload = createClosePayload(closeInfo);
         try {
             sendFrame(WebSocketOpCode.CLOSE, closePayload, true);
+            //重置 close 帧发送标识
+            closeFrameSent = true;
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
