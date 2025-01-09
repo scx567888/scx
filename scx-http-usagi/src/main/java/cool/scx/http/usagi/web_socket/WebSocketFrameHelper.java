@@ -18,7 +18,7 @@ import java.util.ArrayList;
  */
 public class WebSocketFrameHelper {
 
-    public static WebSocketFrame readFrame(DataReader reader) {
+    public static WebSocketFrame readFrameHeader(DataReader reader) {
         byte[] header = reader.read(2);
 
         var b1 = header[0];
@@ -58,6 +58,14 @@ public class WebSocketFrameHelper {
             maskingKey = reader.read(4);
         }
 
+        return new WebSocketFrame(fin, rsv1, rsv2, rsv3, opCode, masked, payloadLength, maskingKey);
+    }
+
+    public static WebSocketFrame readFramePayload(WebSocketFrame frame, DataReader reader) {
+        var payloadLength = frame.payloadLength();
+        var masked = frame.masked();
+        var maskingKey = frame.maskingKey();
+
         var payloadData = reader.read(payloadLength);
 
         // 掩码计算
@@ -67,7 +75,7 @@ public class WebSocketFrameHelper {
             }
         }
 
-        return new WebSocketFrame(fin, rsv1, rsv2, rsv3, opCode, masked, payloadLength, maskingKey, payloadData);
+        return frame.payloadData(payloadData);
     }
 
     public static void writeFrame(WebSocketFrame frame, OutputStream out) throws IOException {
@@ -117,11 +125,41 @@ public class WebSocketFrameHelper {
         out.flush();
     }
 
-    public static WebSocketFrame readFrameUntilLast(DataReader reader) {
+    //读取单个帧
+    public static WebSocketFrame readFrame(DataReader reader, long maxWebSocketFrameSize) {
+        var webSocketFrame = readFrameHeader(reader);
+
+        //这里检查 最大帧大小
+        if (webSocketFrame.payloadLength() > maxWebSocketFrameSize) {
+            throw new WebSocketFrameTooBigException();
+        }
+
+        return readFramePayload(webSocketFrame, reader);
+    }
+
+    public static WebSocketFrame readFrameUntilLast(DataReader reader, long maxWebSocketFrameSize, long maxWebSocketMessageSize) {
         var frameList = new ArrayList<WebSocketFrame>();
+        long totalPayloadLength = 0;
 
         while (true) {
-            var webSocketFrame = readFrame(reader);
+            var webSocketFrame = readFrameHeader(reader);
+            var framePayloadLength = webSocketFrame.payloadLength();
+
+            // 检查单个帧大小限制 
+            if (framePayloadLength > maxWebSocketFrameSize) {
+                throw new WebSocketFrameTooBigException();
+            }
+
+            // 检查合并后的消息大小限制 
+            if (totalPayloadLength + framePayloadLength > maxWebSocketMessageSize) {
+                throw new WebSocketMessageTooBigException();
+            }
+
+            webSocketFrame = readFramePayload(webSocketFrame, reader);
+
+            // 增加当前帧的有效负载长度
+            totalPayloadLength += framePayloadLength;
+
             frameList.add(webSocketFrame);
             if (webSocketFrame.fin()) {
                 break;
