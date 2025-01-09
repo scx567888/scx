@@ -32,6 +32,8 @@ public class Http1xServerWebSocketHandshakeRequest extends Http1xServerRequest i
             response.setHeader(SEC_WEBSOCKET_ACCEPT, generateSecWebSocketAccept(secWebSocketKey()));
             response.status(101).send();
             webSocket = new UsagiServerWebSocket(this);
+            // 一旦成功接受了 websocket 请求, 整个 tcp 将会被 websocket 独占 所以这里需要停止 http 监听
+            http1xConnection.stop();
         }
         return webSocket;
     }
