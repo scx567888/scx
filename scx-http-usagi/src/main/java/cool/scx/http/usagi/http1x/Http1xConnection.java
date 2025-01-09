@@ -124,6 +124,7 @@ public class Http1xConnection {
         }
     }
 
+    //todo 这里如果 dataReader 抛出了 NoMoreDataException 我们需要处理
     private ScxHttpBody readBody(ScxHttpHeaders headers) {
         // http1.1 本质上只有两种请求体格式 1, 分块传输 2, 指定长度 (当然也可以没有长度 那就表示没有请求体)
 
@@ -176,7 +177,7 @@ public class Http1xConnection {
             dataWriter.write(sb.toString().getBytes());
             dataWriter.write(message);
         } catch (IOException ee) {
-            LOGGER.log(System.Logger.Level.TRACE, "Failed to write request exception");
+            LOGGER.log(System.Logger.Level.TRACE, "发送请求错误时发生错误 !!!");
         }
 
     }
