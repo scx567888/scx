@@ -13,39 +13,57 @@ import java.net.InetSocketAddress;
  */
 public class UsagiHttpServerOptions {
 
-    private final ScxTCPServerOptions tcpServerOptions;
-    private int maxRequestLineSize;
-    private int maxHeaderSize;
-    private int maxPayloadSize;
-    private int maxWebsocketFrameSize;
-    private TCPServerType tcpServerType;
-    private boolean enableHttp2;
+    private final ScxTCPServerOptions tcpServerOptions; // TCP 服务器配置
+    private TCPServerType tcpServerType; // TCP 服务器类型
+
+    private int maxRequestLineSize;// 最大请求行大小
+    private int maxHeaderSize;// 最大请求头大小
+    private int maxPayloadSize;// 最大请求体大小
+
+    private boolean mergeWebSocketFrame;//是否合并 WebSocket 帧
+    private int maxWebSocketFrameSize; // 最大单个 WebSocket 帧长度
+    private int maxWebSocketMessageSize;// 最大 WebSocket 消息长度 (可能由多个帧合并)
+
+    private boolean enableHttp2; // 是否开启 Http2
 
     public UsagiHttpServerOptions() {
         //默认不自动握手
         this.tcpServerOptions = new ScxTCPServerOptions().autoUpgradeToTLS(true).autoHandshake(false);
+        this.tcpServerType = TCPServerType.CLASSIC; // 默认 使用 CLASSIC 实现
         this.maxRequestLineSize = 1024 * 64; // 默认 64 KB
         this.maxHeaderSize = 1024 * 128; // 默认 128 KB
         this.maxPayloadSize = 1024 * 1024 * 16; // 默认 16 MB
-        this.maxWebsocketFrameSize = 1024 * 1024 * 16; // 默认 16 MB
-        this.tcpServerType = TCPServerType.CLASSIC; // 默认 使用 CLASSIC 实现
+        this.mergeWebSocketFrame = true; // 默认 合并 websocket 帧
+        this.maxWebSocketFrameSize = 1024 * 1024 * 16; // 默认 16 MB
+        this.maxWebSocketMessageSize = 1024 * 1024 * 16; // 默认 16 MB
         this.enableHttp2 = false;//默认不启用 http2
     }
 
     public UsagiHttpServerOptions(UsagiHttpServerOptions oldOptions) {
         //默认不自动握手
-        this.tcpServerOptions = new ScxTCPServerOptions(oldOptions.tcpServerOptions).autoUpgradeToTLS(true).autoHandshake(false);
+        this.tcpServerOptions = new ScxTCPServerOptions(oldOptions.tcpServerOptions()).autoUpgradeToTLS(true).autoHandshake(false);
+        tcpServerType(oldOptions.tcpServerType());
         maxRequestLineSize(oldOptions.maxRequestLineSize());
         maxHeaderSize(oldOptions.maxHeaderSize());
         maxPayloadSize(oldOptions.maxPayloadSize());
-        maxWebsocketFrameSize(oldOptions.maxWebsocketFrameSize());
-        tcpServerType(oldOptions.tcpServerType());
+        mergeWebSocketFrame(oldOptions.mergeWebSocketFrame());
+        maxWebSocketFrameSize(oldOptions.maxWebSocketFrameSize());
+        maxWebSocketMessageSize(oldOptions.maxWebSocketMessageSize());
         enableHttp2(oldOptions.enableHttp2());
     }
 
     //不允许外界访问
     ScxTCPServerOptions tcpServerOptions() {
         return tcpServerOptions;
+    }
+
+    public TCPServerType tcpServerType() {
+        return tcpServerType;
+    }
+
+    public UsagiHttpServerOptions tcpServerType(TCPServerType tcpServerType) {
+        this.tcpServerType = tcpServerType;
+        return this;
     }
 
     public int maxRequestLineSize() {
@@ -75,21 +93,31 @@ public class UsagiHttpServerOptions {
         return this;
     }
 
-    public int maxWebsocketFrameSize() {
-        return maxWebsocketFrameSize;
+
+    public boolean mergeWebSocketFrame() {
+        return mergeWebSocketFrame;
     }
 
-    public UsagiHttpServerOptions maxWebsocketFrameSize(int maxWebsocketFrameSize) {
-        this.maxWebsocketFrameSize = maxWebsocketFrameSize;
+    public UsagiHttpServerOptions mergeWebSocketFrame(boolean mergeWebSocketFrame) {
+        this.mergeWebSocketFrame = mergeWebSocketFrame;
+        return this;
+    }
+    
+    public int maxWebSocketFrameSize() {
+        return maxWebSocketFrameSize;
+    }
+
+    public UsagiHttpServerOptions maxWebSocketFrameSize(int maxWebSocketFrameSize) {
+        this.maxWebSocketFrameSize = maxWebSocketFrameSize;
         return this;
     }
 
-    public TCPServerType tcpServerType() {
-        return tcpServerType;
+    public int maxWebSocketMessageSize() {
+        return maxWebSocketMessageSize;
     }
 
-    public UsagiHttpServerOptions tcpServerType(TCPServerType tcpServerType) {
-        this.tcpServerType = tcpServerType;
+    public UsagiHttpServerOptions maxWebSocketMessageSize(int maxWebSocketMessageSize) {
+        this.maxWebSocketMessageSize = maxWebSocketMessageSize;
         return this;
     }
 
