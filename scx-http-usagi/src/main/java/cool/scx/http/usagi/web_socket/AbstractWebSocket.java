@@ -1,36 +1,27 @@
 package cool.scx.http.usagi.web_socket;
 
 import cool.scx.http.web_socket.ScxWebSocket;
-import cool.scx.http.web_socket.ScxWebSocketCloseInfo;
 import cool.scx.http.web_socket.WebSocketOpCode;
+import cool.scx.http.web_socket.handler.BinaryMessageHandler;
+import cool.scx.http.web_socket.handler.CloseHandler;
+import cool.scx.http.web_socket.handler.TextMessageHandler;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.lang.System.Logger;
 import java.util.function.Consumer;
 
 import static cool.scx.http.usagi.web_socket.WebSocketFrameHelper.createClosePayload;
 import static cool.scx.http.web_socket.WebSocketOpCode.*;
-import static java.lang.System.Logger.Level.ERROR;
-import static java.lang.System.getLogger;
 
 // 实现一些最基本的方法  
 public abstract class AbstractWebSocket implements ScxWebSocket {
 
-    public static final Logger LOGGER = getLogger(AbstractWebSocket.class.getName());
-
-    //限制只发送一次 close 帧
-    protected boolean closeFrameSent;
-
-    protected Consumer<String> textMessageHandler;
-    protected Consumer<byte[]> binaryMessageHandler;
+    protected TextMessageHandler textMessageHandler;
+    protected BinaryMessageHandler binaryMessageHandler;
     protected Consumer<byte[]> pingHandler;
     protected Consumer<byte[]> pongHandler;
-    protected Consumer<ScxWebSocketCloseInfo> closeHandler;
+    protected CloseHandler closeHandler;
     protected Consumer<Throwable> errorHandler;
 
     public AbstractWebSocket() {
-        closeFrameSent = false;
         textMessageHandler = null;
         binaryMessageHandler = null;
         pingHandler = null;
@@ -40,13 +31,13 @@ public abstract class AbstractWebSocket implements ScxWebSocket {
     }
 
     @Override
-    public ScxWebSocket onTextMessage(Consumer<String> textMessageHandler) {
+    public ScxWebSocket onTextMessage(TextMessageHandler textMessageHandler) {
         this.textMessageHandler = textMessageHandler;
         return this;
     }
 
     @Override
-    public ScxWebSocket onBinaryMessage(Consumer<byte[]> binaryMessageHandler) {
+    public ScxWebSocket onBinaryMessage(BinaryMessageHandler binaryMessageHandler) {
         this.binaryMessageHandler = binaryMessageHandler;
         return this;
     }
@@ -64,7 +55,7 @@ public abstract class AbstractWebSocket implements ScxWebSocket {
     }
 
     @Override
-    public ScxWebSocket onClose(Consumer<ScxWebSocketCloseInfo> closeHandler) {
+    public ScxWebSocket onClose(CloseHandler closeHandler) {
         this.closeHandler = closeHandler;
         return this;
     }
@@ -75,129 +66,74 @@ public abstract class AbstractWebSocket implements ScxWebSocket {
         return this;
     }
 
-    protected void _callOnTextMessage(String str) {
+    protected void _callOnTextMessage(String text, boolean last) {
         if (textMessageHandler != null) {
-            try {
-                textMessageHandler.accept(str);
-            } catch (Exception e) {
-                _handleCallbackError(e);
-            }
+            textMessageHandler.handle(text, last);
         }
     }
 
-    protected void _callOnBinaryMessage(byte[] bytes) {
+    protected void _callOnBinaryMessage(byte[] binary, boolean last) {
         if (binaryMessageHandler != null) {
-            try {
-                binaryMessageHandler.accept(bytes);
-            } catch (Exception e) {
-                _handleCallbackError(e);
-            }
+            binaryMessageHandler.handle(binary, last);
         }
     }
 
     protected void _callOnPing(byte[] bytes) {
         if (pingHandler != null) {
-            try {
-                pingHandler.accept(bytes);
-            } catch (Exception e) {
-                _handleCallbackError(e);
-            }
+            pingHandler.accept(bytes);
         }
     }
 
     protected void _callOnPong(byte[] bytes) {
         if (pongHandler != null) {
-            try {
-                pongHandler.accept(bytes);
-            } catch (Exception e) {
-                _handleCallbackError(e);
-            }
+            pongHandler.accept(bytes);
         }
     }
 
-    protected void _callOnClose(ScxWebSocketCloseInfo closeInfo) {
+    protected void _callOnClose(int code, String reason) {
         if (closeHandler != null) {
-            try {
-                closeHandler.accept(closeInfo);
-            } catch (Exception e) {
-                _handleCallbackError(e);
-            }
+            closeHandler.handle(code, reason);
         }
     }
 
     protected void _callOnError(Exception e) {
         if (errorHandler != null) {
-            try {
-                errorHandler.accept(e);
-            } catch (Exception ex) {
-                _handleCallbackError(ex);
-            }
+            errorHandler.accept(e);
         }
     }
 
     @Override
     public ScxWebSocket send(String textMessage, boolean last) {
-        var payload = textMessage.getBytes();
-        try {
-            sendFrame(TEXT, payload, last);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
+        var payload = textMessage != null ? textMessage.getBytes() : new byte[]{};
+        sendFrame(TEXT, payload, last);
         return this;
     }
 
     @Override
     public ScxWebSocket send(byte[] binaryMessage, boolean last) {
-        try {
-            sendFrame(BINARY, binaryMessage, last);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
+        sendFrame(BINARY, binaryMessage, last);
         return this;
     }
 
     @Override
     public ScxWebSocket ping(byte[] data) {
-        try {
-            sendFrame(PING, data, true);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
+        sendFrame(PING, data, true);
         return this;
     }
 
     @Override
     public ScxWebSocket pong(byte[] data) {
-        try {
-            sendFrame(PONG, data, true);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
+        sendFrame(PONG, data, true);
         return this;
     }
 
     @Override
-    public ScxWebSocket close(ScxWebSocketCloseInfo closeInfo) {
-        // close 帧只允许发送一次
-        if (closeFrameSent) {
-            return this;
-        }
-        var closePayload = createClosePayload(closeInfo);
-        try {
-            sendFrame(WebSocketOpCode.CLOSE, closePayload, true);
-            //重置 close 帧发送标识
-            closeFrameSent = true;
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
+    public ScxWebSocket close(int code, String reason) {
+        var closePayload = createClosePayload(code, reason);
+        sendFrame(CLOSE, closePayload, true);
         return this;
     }
 
-    protected void _handleCallbackError(Exception e) {
-        // 记录错误日志
-        LOGGER.log(ERROR, "Error during callback execution: ", e);
-    }
-
-    public abstract void sendFrame(WebSocketOpCode opcode, byte[] payload, boolean last) throws IOException;
+    protected abstract void sendFrame(WebSocketOpCode opcode, byte[] payload, boolean last);
 
 }
