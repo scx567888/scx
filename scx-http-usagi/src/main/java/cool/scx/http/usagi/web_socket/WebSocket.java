@@ -1,10 +1,6 @@
 package cool.scx.http.usagi.web_socket;
 
-import cool.scx.http.usagi.http1x.exception.CloseConnectionException;
-import cool.scx.http.usagi.web_socket.exception.WebSocketFrameTooBigException;
-import cool.scx.http.usagi.web_socket.exception.WebSocketMessageTooBigException;
-import cool.scx.http.web_socket.ScxWebSocket;
-import cool.scx.http.web_socket.WebSocketCloseInfo;
+import cool.scx.http.usagi.http1x.CloseConnectionException;
 import cool.scx.http.web_socket.WebSocketOpCode;
 import cool.scx.io.DataReader;
 import cool.scx.io.NoMoreDataException;
@@ -17,9 +13,8 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import static cool.scx.http.usagi.web_socket.WebSocketFrameHelper.parseCloseInfo;
 import static cool.scx.http.usagi.web_socket.WebSocketFrameHelper.writeFrame;
-import static cool.scx.http.web_socket.WebSocketCloseInfo.NORMAL_CLOSE;
+import static cool.scx.http.web_socket.WebSocketCloseInfo.*;
 import static java.lang.System.Logger.Level.ERROR;
-import static java.lang.System.getLogger;
 
 /**
  * todo 待完成
@@ -29,14 +24,15 @@ import static java.lang.System.getLogger;
  */
 public class WebSocket extends AbstractWebSocket {
 
-    public static final System.Logger LOGGER = getLogger(AbstractWebSocket.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(WebSocket.class.getName());
+
+    protected final ScxTCPSocket tcpSocket;
     protected final DataReader reader;
     protected final OutputStream writer;
+    protected final WebSocketOptions options;
     //为了防止底层的 OutputStream 被乱序写入 此处需要加锁
     protected final ReentrantLock lock;
-    private final ScxTCPSocket tcpSocket;
-    private final WebSocketOptions options;
-    protected boolean isClosed;
+    protected ContinuationType continuationType;
     //限制只发送一次 close 帧
     protected boolean closeSent;
     private boolean running;
@@ -47,13 +43,9 @@ public class WebSocket extends AbstractWebSocket {
         this.writer = writer;
         this.options = options;
         this.lock = new ReentrantLock();
+        this.continuationType = ContinuationType.NONE;
+        this.closeSent = false;
         this.running = true;
-    }
-
-    public static void main(String[] args) {
-
-        // 记录错误日志
-        LOGGER.log(ERROR, "Error during callback execution: ", e);
     }
 
     public void start() {
@@ -63,46 +55,34 @@ public class WebSocket extends AbstractWebSocket {
                 var frame = readFrame();
                 //处理帧
                 handleFrame(frame);
-            } catch (WebSocketFrameTooBigException | WebSocketMessageTooBigException e) {
-                var c = new ScxWebSocketCloseInfoImpl(WebSocketCloseInfo.TOO_BIG.code(), "WebSocketFrameTooBig");
-                doClose(c, e);
-            } catch (WebSocketMessageTooBigException e) {
-                var c = new ScxWebSocketCloseInfoImpl(WebSocketCloseInfo.TOO_BIG.code(), "WebSocketMessageTooBig");
-                doClose(c, e);
-            } catch (NoMoreDataException e) {
-                var c = WebSocketCloseInfo.CLOSED_ABNORMALLY;
-                //2, 关闭连接
-                try {
-                    //同样不需要处理错误
-                    tcpSocket.close();
-                } catch (IOException _) {
-
-                }
-                //3, 调用 close 处理器
-                _callOnClose(e);
-                //4, 停止监听
+            } catch (CloseConnectionException e) {
                 stop();
             } catch (Exception e) {
-                e.printStackTrace();
+                _handleError(e);
+                this.close(UNEXPECTED_CONDITION.code(), e.getMessage());
+                return;
             }
         }
+    }
+
+    public void stop() {
+        this.running = false;
     }
 
     public WebSocketFrame readFrame() {
         try {
             return options.mergeWebSocketFrame() ?
                     WebSocketFrameHelper.readFrameUntilLast(reader, options.maxWebSocketFrameSize(), options.maxWebSocketMessageSize()) :
-                    WebSocketFrameHelper.readFrame(reader, options.maxWebSocketFrameSize())
+                    WebSocketFrameHelper.readFrame(reader, options.maxWebSocketFrameSize());
         } catch (NoMoreDataException e) {
             throw new CloseConnectionException();
+        } catch (WebSocketCloseException e) {
+            close(e.closeCode(), e.getMessage());
+            throw new CloseConnectionException("WebSocket failed to read client frame", e);
         }
     }
 
-    public void stop() {
-        running = false;
-    }
-
-    public void handleFrame(WebSocketFrame frame) {
+    private void handleFrame(WebSocketFrame frame) {
         switch (frame.opCode()) {
             case CONTINUATION -> _handleContinuation(frame);
             case TEXT -> _handleText(frame);
@@ -114,89 +94,111 @@ public class WebSocket extends AbstractWebSocket {
     }
 
     private void _handleContinuation(WebSocketFrame frame) {
-        //todo 暂时不处理
+        boolean finalFrame = frame.fin();
+        var ct = continuationType;
+        if (finalFrame) {
+            continuationType = ContinuationType.NONE;
+        }
+        switch (ct) {
+            case TEXT -> {
+                try {
+                    _callOnTextMessage(new String(frame.payloadData()), finalFrame);
+                } catch (Exception e) {
+                    LOGGER.log(ERROR, "Error while calling onTextMessage", e);
+                }
+            }
+            case BINARY -> {
+                try {
+                    _callOnBinaryMessage(frame.payloadData(), finalFrame);
+                } catch (Exception e) {
+                    LOGGER.log(ERROR, "Error while calling onBinaryMessage", e);
+                }
+            }
+            default -> {
+                close(PROTOCOL_ERROR.code(), "Unexpected continuation received");
+                throw new CloseConnectionException("Websocket unexpected continuation");
+            }
+        }
     }
 
     private void _handleText(WebSocketFrame frame) {
-        _callOnTextMessage(new String(frame.payloadData()));
+        continuationType = ContinuationType.TEXT;
+        try {
+            _callOnTextMessage(new String(frame.payloadData()), frame.fin());
+        } catch (Exception e) {
+            LOGGER.log(ERROR, "Error while calling onTextMessage : ", e);
+        }
     }
 
     private void _handleBinary(WebSocketFrame frame) {
-        _callOnBinaryMessage(frame.payloadData());
+        continuationType = ContinuationType.BINARY;
+        try {
+            _callOnBinaryMessage(frame.payloadData(), frame.fin());
+        } catch (Exception e) {
+            LOGGER.log(ERROR, "Error while call onBinaryMessage : ", e);
+        }
     }
 
     private void _handlePing(WebSocketFrame frame) {
-        _callOnPing(frame.payloadData());
+        try {
+            _callOnPing(frame.payloadData());
+        } catch (Exception e) {
+            LOGGER.log(ERROR, "Error while call onPing : ", e);
+        }
     }
 
     private void _handlePong(WebSocketFrame frame) {
-        _callOnPong(frame.payloadData());
+        try {
+            _callOnPong(frame.payloadData());
+        } catch (Exception e) {
+            LOGGER.log(ERROR, "Error while call onPong : ", e);
+        }
     }
 
-    public void _handleClose(WebSocketFrame frame) {
+    private void _handleClose(WebSocketFrame frame) {
+        //1, 调用用户处理器
+        var closeInfo = parseCloseInfo(frame.payloadData());
+        try {
+            _callOnClose(closeInfo.code(), closeInfo.reason());
+        } catch (Exception e) {
+            LOGGER.log(ERROR, "Error while call onClose : ", e);
+        }
+        //2, 发送关闭响应帧
         if (!closeSent) {
-            
-        }
-        //1, 发送帧响应
-        try {
-            //这里有可能失败 但我们不需要调用做处理
-            close(NORMAL_CLOSE);
-        } catch (Exception _) {
+            //这里有可能无法发送 我们跳过处理
+            try {
+                close(NORMAL_CLOSE);
+            } catch (Exception _) {
 
+            }
         }
-        //2, 关闭连接
+        //3, 关闭 socket
         try {
-            //同样不需要处理错误
             tcpSocket.close();
         } catch (IOException _) {
 
         }
-        //3, 调用 close 处理器
-        _callOnClose(parseCloseInfo(frame.payloadData()));
         //4, 停止监听
         stop();
     }
 
-    private void doClose(ScxWebSocketCloseInfoImpl c, Exception e) {
-        //1, 发送帧响应
+    private void _handleError(Exception e) {
         try {
-            //这里有可能失败 但我们不需要调用做处理
-            close(c);
-        } catch (Exception _) {
-
+            _callOnError(e);
+        } catch (Exception ex) {
+            LOGGER.log(ERROR, "Error while call onError : ", ex);
         }
-        //2, 关闭连接
-        try {
-            //同样不需要处理错误
-            tcpSocket.close();
-        } catch (IOException _) {
-
-        }
-        //3, 调用 close 处理器
-        _callOnError(e);
-        //4, 停止监听
-        stop();
     }
 
     @Override
-    public ScxWebSocket terminate() {
-        isClosed = true;
-        //todo 这里需要关闭 tcp 连接 ?
-        try {
-            tcpSocket.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public WebSocket close(int code, String reason) {
+        super.close(code, reason);
+        closeSent = true;
         return this;
     }
 
     @Override
-    public boolean isClosed() {
-        return isClosed;
-    }
-
-    @Override
-    public void sendFrame(WebSocketOpCode opcode, byte[] payload, boolean last) {
+    protected void sendFrame(WebSocketOpCode opcode, byte[] payload, boolean last) {
         lock.lock();
         try {
             var f = WebSocketFrame.of(last, opcode, payload);
@@ -209,10 +211,27 @@ public class WebSocket extends AbstractWebSocket {
     }
 
     @Override
-    public ScxWebSocket close(int code, String reason) {
-        super.close(code, reason);
-        closeSent = true;
+    public WebSocket terminate() {
+        //todo 
+        try {
+            close(NORMAL_CLOSE.code(), "Terminate");
+        } catch (Exception _) {
+
+        }
+        stop();
         return this;
+    }
+
+    @Override
+    public boolean isClosed() {
+        //todo 
+        return false;
+    }
+
+    public enum ContinuationType {
+        NONE,
+        TEXT,
+        BINARY
     }
 
 }

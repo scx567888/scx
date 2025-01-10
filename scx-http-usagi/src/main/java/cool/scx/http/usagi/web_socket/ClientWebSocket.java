@@ -8,6 +8,7 @@ import cool.scx.tcp.ScxTCPSocket;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UncheckedIOException;
 
 import static cool.scx.http.usagi.web_socket.WebSocketFrameHelper.writeFrame;
 
@@ -19,18 +20,20 @@ import static cool.scx.http.usagi.web_socket.WebSocketFrameHelper.writeFrame;
  */
 public class ClientWebSocket extends WebSocket implements ScxClientWebSocket {
 
-    public ClientWebSocket(ScxTCPSocket connect, DataReader reader, OutputStream writer, WebSocketOptions webSocketOptions) {
-        super(connect, reader, writer, webSocketOptions);
+    public ClientWebSocket(ScxTCPSocket tcpSocket, DataReader reader, OutputStream writer, WebSocketOptions options) {
+        super(tcpSocket, reader, writer, options);
     }
 
     @Override
-    public void sendFrame(WebSocketOpCode opcode, byte[] payload, boolean last) throws IOException {
+    public void sendFrame(WebSocketOpCode opcode, byte[] payload, boolean last) {
         lock.lock();
         try {
             // 和服务器端不同, 客户端的是需要发送掩码的
             var maskingKey = RandomUtils.randomBytes(4);
             var f = WebSocketFrame.of(last, opcode, maskingKey, payload);
             writeFrame(f, writer);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
         } finally {
             lock.unlock();
         }
