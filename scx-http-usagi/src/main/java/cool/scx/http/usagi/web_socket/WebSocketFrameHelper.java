@@ -1,15 +1,13 @@
 package cool.scx.http.usagi.web_socket;
 
-import cool.scx.http.usagi.web_socket.exception.WebSocketFrameTooBigException;
-import cool.scx.http.usagi.web_socket.exception.WebSocketMessageTooBigException;
-import cool.scx.http.web_socket.ScxWebSocketCloseInfo;
-import cool.scx.http.web_socket.ScxWebSocketCloseInfoImpl;
 import cool.scx.http.web_socket.WebSocketOpCode;
 import cool.scx.io.DataReader;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+
+import static cool.scx.http.web_socket.WebSocketCloseInfo.TOO_BIG;
 
 /**
  * WebSocketFrameHelper
@@ -133,7 +131,7 @@ public class WebSocketFrameHelper {
 
         //这里检查 最大帧大小
         if (webSocketFrame.payloadLength() > maxWebSocketFrameSize) {
-            throw new WebSocketFrameTooBigException();
+            throw new WebSocketCloseException(TOO_BIG.code(), "Frame too big");
         }
 
         return readFramePayload(webSocketFrame, reader);
@@ -149,12 +147,12 @@ public class WebSocketFrameHelper {
 
             // 检查单个帧大小限制 
             if (framePayloadLength > maxWebSocketFrameSize) {
-                throw new WebSocketFrameTooBigException();
+                throw new WebSocketCloseException(TOO_BIG.code(), "Frame too big");
             }
 
             // 检查合并后的消息大小限制 
             if (totalPayloadLength + framePayloadLength > maxWebSocketMessageSize) {
-                throw new WebSocketMessageTooBigException();
+                throw new WebSocketCloseException(TOO_BIG.code(), "Message too big");
             }
 
             webSocketFrame = readFramePayload(webSocketFrame, reader);
@@ -188,7 +186,7 @@ public class WebSocketFrameHelper {
 
     }
 
-    public static ScxWebSocketCloseInfoImpl parseCloseInfo(byte[] frame) {
+    public static CloseInfo parseCloseInfo(byte[] frame) {
         int len = frame.length;
         int code = 1005; // 默认值（表示没有状态码） 
         // 读取状态码（如果存在） 
@@ -200,12 +198,10 @@ public class WebSocketFrameHelper {
         if (len > 2) {
             reason = new String(frame, 2, len - 2);
         }
-        return new ScxWebSocketCloseInfoImpl(code, reason);
+        return new CloseInfo(code, reason);
     }
 
-    public static byte[] createClosePayload(ScxWebSocketCloseInfo closeInfo) {
-        int code = closeInfo.code();
-        String reason = closeInfo.reason();
+    public static byte[] createClosePayload(int code, String reason) {
         byte[] reasonBytes = reason != null ? reason.getBytes() : new byte[0];
         byte[] payload = new byte[2 + reasonBytes.length];
         // 设置状态码
@@ -214,6 +210,10 @@ public class WebSocketFrameHelper {
         // 设置关闭原因
         System.arraycopy(reasonBytes, 0, payload, 2, reasonBytes.length);
         return payload;
+    }
+
+    public record CloseInfo(int code, String reason) {
+
     }
 
 }
