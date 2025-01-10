@@ -63,8 +63,8 @@ public class WebSocketFrameHelperTest {
                 (byte) 0b0000_0010, // No mask, payload length = 2
                 'l', 'o'
         };
-        ByteArrayDataReader reader = new ByteArrayDataReader(frameData);
-        WebSocketFrame frame = WebSocketFrameHelper.readFrameUntilLast(reader, Integer.MAX_VALUE,Integer.MAX_VALUE);
+        var reader = new ByteArrayDataReader(frameData);
+        var frame = WebSocketFrameHelper.readFrameUntilLast(reader, Integer.MAX_VALUE, Integer.MAX_VALUE);
 
         assertTrue(frame.fin());
         assertFalse(frame.rsv1());
