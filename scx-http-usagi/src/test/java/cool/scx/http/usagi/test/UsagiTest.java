@@ -18,7 +18,7 @@ public class UsagiTest {
             if (c instanceof ScxServerWebSocketHandshakeRequest w) {
                 System.out.println("这是 websocket handshake");
                 var d = w.webSocket();
-                d.onTextMessage(s -> {
+                d.onTextMessage((s, _) -> {
                     System.out.println("收到消息 :" + s);
                 });
                 d.send("hello");
