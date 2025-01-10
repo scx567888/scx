@@ -2,6 +2,7 @@ package cool.scx.http.usagi;
 
 import cool.scx.http.usagi.web_socket.UsagiWebSocketOptions;
 import cool.scx.tcp.ScxTCPClientOptions;
+import cool.scx.tcp.tls.TLS;
 
 /**
  * UsagiHttpClientOptions
@@ -68,6 +69,15 @@ public class UsagiHttpClientOptions {
 
     public UsagiHttpClientOptions maxWebSocketMessageSize(int maxWebSocketMessageSize) {
         webSocketOptions.maxWebSocketMessageSize(maxWebSocketMessageSize);
+        return this;
+    }
+
+    public TLS tls() {
+        return tcpClientOptions.tls();
+    }
+
+    public UsagiHttpClientOptions tls(TLS tls) {
+        this.tcpClientOptions.tls(tls);
         return this;
     }
 

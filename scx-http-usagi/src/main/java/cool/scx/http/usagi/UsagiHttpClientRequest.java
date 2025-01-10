@@ -143,11 +143,11 @@ public class UsagiHttpClientRequest extends ScxHttpClientRequestBase {
     public ScxHttpClientResponse send(MediaWriter writer) {
         var isHttps = checkIsHttps(uri);
 
-        var options = isHttps ? new UsagiHttpClientOptions().tls(getTrustAllTLS()) : httpClient.options;
+        var options = isHttps ? new UsagiHttpClientOptions().tls(getTrustAllTLS()) : httpClient.options();
 
         this.tcpClient = switch (options.tcpClientType()) {
-            case CLASSIC -> new ClassicTCPClient(options);
-            case NIO -> new NioTCPClient(options);
+            case CLASSIC -> new ClassicTCPClient(options.tcpClientOptions());
+            case NIO -> new NioTCPClient(options.tcpClientOptions());
         };
 
         var remoteAddress = getRemoteAddress(uri);
