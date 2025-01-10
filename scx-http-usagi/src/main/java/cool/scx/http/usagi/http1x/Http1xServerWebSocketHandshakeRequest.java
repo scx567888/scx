@@ -2,7 +2,7 @@ package cool.scx.http.usagi.http1x;
 
 import cool.scx.http.ScxHttpBody;
 import cool.scx.http.ScxHttpHeadersWritable;
-import cool.scx.http.usagi.web_socket.UsagiServerWebSocket;
+import cool.scx.http.usagi.web_socket.ServerWebSocket;
 import cool.scx.http.web_socket.ScxServerWebSocketHandshakeRequest;
 
 import static cool.scx.http.HttpFieldName.*;
@@ -16,14 +16,14 @@ import static cool.scx.http.HttpHelper.generateSecWebSocketAccept;
  */
 public class Http1xServerWebSocketHandshakeRequest extends Http1xServerRequest implements ScxServerWebSocketHandshakeRequest {
 
-    public UsagiServerWebSocket webSocket;
+    public ServerWebSocket webSocket;
 
     public Http1xServerWebSocketHandshakeRequest(Http1xConnection http1xConnection, Http1xRequestLine requestLine, ScxHttpHeadersWritable headers, ScxHttpBody body) {
         super(http1xConnection, requestLine, headers, body);
     }
 
     @Override
-    public UsagiServerWebSocket acceptHandshake() {
+    public ServerWebSocket acceptHandshake() {
         // 实现握手接受逻辑，返回适当的响应头
         if (webSocket == null) {
             var response = response();
@@ -31,7 +31,7 @@ public class Http1xServerWebSocketHandshakeRequest extends Http1xServerRequest i
             response.setHeader(CONNECTION, "Upgrade");
             response.setHeader(SEC_WEBSOCKET_ACCEPT, generateSecWebSocketAccept(secWebSocketKey()));
             response.status(101).send();
-            webSocket = new UsagiServerWebSocket(this);
+            webSocket = new ServerWebSocket(this);
             // 一旦成功接受了 websocket 请求, 整个 tcp 将会被 websocket 独占 所以这里需要停止 http 监听
             http1xConnection.stop();
         }
@@ -39,7 +39,7 @@ public class Http1xServerWebSocketHandshakeRequest extends Http1xServerRequest i
     }
 
     @Override
-    public UsagiServerWebSocket webSocket() {
+    public ServerWebSocket webSocket() {
         return webSocket != null ? webSocket : acceptHandshake();
     }
 
