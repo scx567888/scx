@@ -22,12 +22,12 @@ public abstract class AbstractWebSocket implements ScxWebSocket {
     protected Consumer<Throwable> errorHandler;
 
     public AbstractWebSocket() {
-        textMessageHandler = null;
-        binaryMessageHandler = null;
-        pingHandler = null;
-        pongHandler = null;
-        closeHandler = null;
-        errorHandler = null;
+        this.textMessageHandler = null;
+        this.binaryMessageHandler = null;
+        this.pingHandler = null;
+        this.pongHandler = null;
+        this.closeHandler = null;
+        this.errorHandler = null;
     }
 
     @Override
