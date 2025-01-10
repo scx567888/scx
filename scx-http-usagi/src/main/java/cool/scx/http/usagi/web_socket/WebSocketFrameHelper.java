@@ -1,5 +1,7 @@
 package cool.scx.http.usagi.web_socket;
 
+import cool.scx.http.usagi.web_socket.exception.WebSocketFrameTooBigException;
+import cool.scx.http.usagi.web_socket.exception.WebSocketMessageTooBigException;
 import cool.scx.http.web_socket.ScxWebSocketCloseInfo;
 import cool.scx.http.web_socket.ScxWebSocketCloseInfoImpl;
 import cool.scx.http.web_socket.WebSocketOpCode;
