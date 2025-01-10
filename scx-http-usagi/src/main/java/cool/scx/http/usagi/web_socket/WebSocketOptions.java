@@ -1,7 +1,7 @@
 package cool.scx.http.usagi.web_socket;
 
 public class WebSocketOptions {
-    
+
     private boolean mergeWebSocketFrame;//是否合并 WebSocket 帧
     private int maxWebSocketFrameSize; // 最大单个 WebSocket 帧长度
     private int maxWebSocketMessageSize;// 最大 WebSocket 消息长度 (可能由多个帧合并)
@@ -44,5 +44,5 @@ public class WebSocketOptions {
         this.maxWebSocketMessageSize = maxWebSocketMessageSize;
         return this;
     }
-    
+
 }

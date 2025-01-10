@@ -44,5 +44,5 @@ public class Http1xConnectionOptions {
         this.maxPayloadSize = maxPayloadSize;
         return this;
     }
-    
+
 }

@@ -27,7 +27,7 @@ public class ClientTest {
         });
         httpServer.onWebSocket(c -> {
             System.out.println(c.uri());
-            c.onTextMessage((t,_) -> {
+            c.onTextMessage((t, _) -> {
                 System.out.println(t);
             });
             c.send("Hi WS Client !!!");
@@ -39,7 +39,7 @@ public class ClientTest {
         var httpClient = new HelidonHttpClient();
         var webSocketBuilder = httpClient.webSocket().uri("http://localhost:8990/中:文|路@径/ddd?查询=🎈🎈|🎈#🎃🎃");
         webSocketBuilder.onConnect(webSocket -> {
-            webSocket.onTextMessage((t,_) -> {
+            webSocket.onTextMessage((t, _) -> {
                 System.out.println(t);
             });
             webSocket.send("Hi Server !!!");

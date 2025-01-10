@@ -106,7 +106,7 @@ public class UsagiClientWebSocketBuilder implements ScxClientWebSocketBuilder {
         var in = connect.inputStream();
         var out = connect.outputStream();
 
-        var webSocket = new ClientWebSocket(connect, new LinkedDataReader(new InputStreamDataSupplier(in)), out,webSocketOptions);
+        var webSocket = new ClientWebSocket(connect, new LinkedDataReader(new InputStreamDataSupplier(in)), out, webSocketOptions);
         if (onConnect != null) {
             onConnect.accept(webSocket);
         }
