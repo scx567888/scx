@@ -27,7 +27,7 @@ public class WebSocketTest {
                     System.out.println(c);
 
                     scxServerWebSocket.send(c);
-                    
+
                 });
                 scxServerWebSocket.onBinaryMessage((c, _) -> {
                     System.out.println(new String(c));
