@@ -28,7 +28,7 @@ public class WebSocketFrameHelperTest {
                 'H', 'e', 'l', 'l', 'o'
         };
         ByteArrayDataReader reader = new ByteArrayDataReader(frameData);
-        WebSocketFrame frame = WebSocketFrameHelper.readFrame(reader);
+        WebSocketFrame frame = WebSocketFrameHelper.readFrame(reader, Integer.MAX_VALUE);
 
         assertTrue(frame.fin());
         assertFalse(frame.rsv1());
@@ -64,7 +64,7 @@ public class WebSocketFrameHelperTest {
                 'l', 'o'
         };
         ByteArrayDataReader reader = new ByteArrayDataReader(frameData);
-        WebSocketFrame frame = WebSocketFrameHelper.readFrameUntilLast(reader);
+        WebSocketFrame frame = WebSocketFrameHelper.readFrameUntilLast(reader, Integer.MAX_VALUE,Integer.MAX_VALUE);
 
         assertTrue(frame.fin());
         assertFalse(frame.rsv1());
