@@ -1,5 +1,6 @@
 package cool.scx.tcp;
 
+import javax.net.ssl.SSLParameters;
 import javax.net.ssl.SSLSocket;
 import java.util.List;
 import java.util.function.BiFunction;
@@ -31,6 +32,16 @@ public class ClassicTLSManager implements ScxTLSManager {
     @Override
     public String getApplicationProtocol() {
         return sslSocket.getApplicationProtocol();
+    }
+
+    @Override
+    public SSLParameters getSSLParameters() {
+        return sslSocket.getSSLParameters();
+    }
+
+    @Override
+    public void setSSLParameters(SSLParameters params) {
+        sslSocket.setSSLParameters(params);
     }
 
 }

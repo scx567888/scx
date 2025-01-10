@@ -1,5 +1,6 @@
 package cool.scx.tcp;
 
+import javax.net.ssl.SSLParameters;
 import java.util.List;
 import java.util.function.BiFunction;
 
@@ -16,5 +17,16 @@ public interface ScxTLSManager {
     void setHandshakeApplicationProtocolSelector(BiFunction<ScxTLSManager, List<String>, String> selector);
 
     String getApplicationProtocol();
+    
+    SSLParameters getSSLParameters();
+    
+    void setSSLParameters(SSLParameters params);
+
+    default void setApplicationProtocols(String[] protocols) {
+        var sslParameters = getSSLParameters();
+        sslParameters.setApplicationProtocols(protocols);
+        setSSLParameters(sslParameters);
+    }
+    
 
 }
