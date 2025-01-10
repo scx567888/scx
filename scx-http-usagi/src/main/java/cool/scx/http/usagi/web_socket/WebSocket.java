@@ -1,6 +1,5 @@
 package cool.scx.http.usagi.web_socket;
 
-import cool.scx.http.usagi.http1x.CloseConnectionException;
 import cool.scx.http.web_socket.WebSocketOpCode;
 import cool.scx.io.DataReader;
 import cool.scx.io.NoMoreDataException;
@@ -55,12 +54,11 @@ public class WebSocket extends AbstractWebSocket {
                 var frame = readFrame();
                 //处理帧
                 handleFrame(frame);
-            } catch (CloseConnectionException e) {
-                _handleClose(CLOSED_ABNORMALLY.code(), CLOSED_ABNORMALLY.reason());
+            } catch (CloseWebSocketException e) {
+                _handleClose(NORMAL_CLOSE.code(), NORMAL_CLOSE.reason(), e.closeCode(), e.getMessage());
             } catch (Exception e) {
                 _handleError(e);
-                this.close(UNEXPECTED_CONDITION.code(), e.getMessage());
-                return;
+                _handleClose(CLOSED_ABNORMALLY.code(), CLOSED_ABNORMALLY.reason(), UNEXPECTED_CONDITION.code(), e.getMessage());
             }
         }
     }
@@ -75,10 +73,7 @@ public class WebSocket extends AbstractWebSocket {
                     WebSocketFrameHelper.readFrameUntilLast(reader, options.maxWebSocketFrameSize(), options.maxWebSocketMessageSize()) :
                     WebSocketFrameHelper.readFrame(reader, options.maxWebSocketFrameSize());
         } catch (NoMoreDataException e) {
-            throw new CloseConnectionException();
-        } catch (WebSocketCloseException e) {
-            close(e.closeCode(), e.getMessage());
-            throw new CloseConnectionException("WebSocket failed to read client frame", e);
+            throw new CloseWebSocketException(NORMAL_CLOSE.code(), NORMAL_CLOSE.reason());
         }
     }
 
@@ -115,8 +110,7 @@ public class WebSocket extends AbstractWebSocket {
                 }
             }
             default -> {
-                close(PROTOCOL_ERROR.code(), "Unexpected continuation received");
-                throw new CloseConnectionException("Websocket unexpected continuation");
+                throw new CloseWebSocketException(PROTOCOL_ERROR.code(), "Unexpected continuation received");
             }
         }
     }
@@ -157,10 +151,10 @@ public class WebSocket extends AbstractWebSocket {
 
     private void _handleClose(WebSocketFrame frame) {
         var closeInfo = parseCloseInfo(frame.payloadData());
-        _handleClose(closeInfo.code(), closeInfo.reason());
+        _handleClose(closeInfo.code(), closeInfo.reason(), NORMAL_CLOSE.code(), NORMAL_CLOSE.reason());
     }
 
-    public void _handleClose(int code, String reason) {
+    public void _handleClose(int code, String reason, int peerCode, String peerReason) {
         //1, 调用用户处理器
         try {
             _callOnClose(code, reason);
@@ -169,7 +163,7 @@ public class WebSocket extends AbstractWebSocket {
         }
         //2, 发送关闭响应帧
         try {
-            close(NORMAL_CLOSE); // 这里有可能无法发送 我们忽略异常
+            close(peerCode, peerReason); // 这里有可能无法发送 我们忽略异常
         } catch (Exception _) {
 
         }
@@ -217,7 +211,7 @@ public class WebSocket extends AbstractWebSocket {
 
     @Override
     public WebSocket terminate() {
-        _handleClose(NORMAL_CLOSE.code(), "terminate");
+        _handleClose(NORMAL_CLOSE.code(), NORMAL_CLOSE.reason(), NORMAL_CLOSE.code(), "Terminate");
         return this;
     }
 
