@@ -17,9 +17,9 @@ public interface ScxTLSManager {
     void setHandshakeApplicationProtocolSelector(BiFunction<ScxTLSManager, List<String>, String> selector);
 
     String getApplicationProtocol();
-    
+
     SSLParameters getSSLParameters();
-    
+
     void setSSLParameters(SSLParameters params);
 
     default void setApplicationProtocols(String[] protocols) {
@@ -27,6 +27,6 @@ public interface ScxTLSManager {
         sslParameters.setApplicationProtocols(protocols);
         setSSLParameters(sslParameters);
     }
-    
+
 
 }
