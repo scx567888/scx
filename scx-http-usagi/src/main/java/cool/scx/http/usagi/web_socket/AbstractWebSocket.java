@@ -10,7 +10,6 @@ import java.lang.System.Logger;
 import java.util.function.Consumer;
 
 import static cool.scx.http.usagi.web_socket.WebSocketFrameHelper.createClosePayload;
-import static cool.scx.http.usagi.web_socket.WebSocketFrameHelper.parseCloseInfo;
 import static cool.scx.http.web_socket.WebSocketOpCode.*;
 import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.getLogger;
@@ -76,50 +75,50 @@ public abstract class AbstractWebSocket implements ScxWebSocket {
         return this;
     }
 
-    protected void _callOnTextMessage(WebSocketFrame frame) {
+    protected void _callOnTextMessage(String str) {
         if (textMessageHandler != null) {
             try {
-                textMessageHandler.accept(new String(frame.payloadData()));
+                textMessageHandler.accept(str);
             } catch (Exception e) {
                 _handleCallbackError(e);
             }
         }
     }
 
-    protected void _callOnBinaryMessage(WebSocketFrame frame) {
+    protected void _callOnBinaryMessage(byte[] bytes) {
         if (binaryMessageHandler != null) {
             try {
-                binaryMessageHandler.accept(frame.payloadData());
+                binaryMessageHandler.accept(bytes);
             } catch (Exception e) {
                 _handleCallbackError(e);
             }
         }
     }
 
-    protected void _callOnPing(WebSocketFrame frame) {
+    protected void _callOnPing(byte[] bytes) {
         if (pingHandler != null) {
             try {
-                pingHandler.accept(frame.payloadData());
+                pingHandler.accept(bytes);
             } catch (Exception e) {
                 _handleCallbackError(e);
             }
         }
     }
 
-    protected void _callOnPong(WebSocketFrame frame) {
+    protected void _callOnPong(byte[] bytes) {
         if (pongHandler != null) {
             try {
-                pongHandler.accept(frame.payloadData());
+                pongHandler.accept(bytes);
             } catch (Exception e) {
                 _handleCallbackError(e);
             }
         }
     }
 
-    protected void _callOnClose(WebSocketFrame frame) {
+    protected void _callOnClose(ScxWebSocketCloseInfo closeInfo) {
         if (closeHandler != null) {
             try {
-                closeHandler.accept(parseCloseInfo(frame.payloadData()));
+                closeHandler.accept(closeInfo);
             } catch (Exception e) {
                 _handleCallbackError(e);
             }
@@ -180,7 +179,7 @@ public abstract class AbstractWebSocket implements ScxWebSocket {
     @Override
     public ScxWebSocket close(ScxWebSocketCloseInfo closeInfo) {
         // close 帧只允许发送一次
-        if (closeFrameSent){
+        if (closeFrameSent) {
             return this;
         }
         var closePayload = createClosePayload(closeInfo);
@@ -194,11 +193,11 @@ public abstract class AbstractWebSocket implements ScxWebSocket {
         return this;
     }
 
-    public abstract void sendFrame(WebSocketOpCode opcode, byte[] payload, boolean last) throws IOException;
-
     protected void _handleCallbackError(Exception e) {
         // 记录错误日志
         LOGGER.log(ERROR, "Error during callback execution: ", e);
     }
+
+    public abstract void sendFrame(WebSocketOpCode opcode, byte[] payload, boolean last) throws IOException;
 
 }
