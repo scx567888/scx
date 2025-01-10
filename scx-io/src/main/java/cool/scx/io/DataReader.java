@@ -69,22 +69,22 @@ public interface DataReader {
     /**
      * 查找 指定字节 第一次出现的 index (指针不会移动)
      *
-     * @param b   指定字节
-     * @param max 最大长度
+     * @param b         指定字节
+     * @param maxLength 最大长度
      * @return index 或者 -1 (未找到)
      * @throws NoMatchFoundException 没有匹配时抛出
      */
-    long indexOf(byte b, long max) throws NoMatchFoundException, NoMoreDataException;
+    long indexOf(byte b, long maxLength) throws NoMatchFoundException, NoMoreDataException;
 
     /**
      * 查找 指定字节数组 第一次出现的 index (指针不会移动)
      *
-     * @param b   指定字节数组
-     * @param max 最大长度
+     * @param b         指定字节数组
+     * @param maxLength 最大长度
      * @return index 或者 -1 (未找到)
      * @throws NoMatchFoundException 没有匹配时抛出
      */
-    long indexOf(byte[] b, long max) throws NoMatchFoundException, NoMoreDataException;
+    long indexOf(byte[] b, long maxLength) throws NoMatchFoundException, NoMoreDataException;
 
     /**
      * 向后移动指定字节
@@ -122,8 +122,8 @@ public interface DataReader {
      * @return bytes
      * @throws NoMatchFoundException 没有匹配时抛出
      */
-    default byte[] readUntil(byte b, int max) throws NoMatchFoundException, NoMoreDataException {
-        var index = indexOf(b, max);
+    default byte[] readUntil(byte b, int maxLength) throws NoMatchFoundException, NoMoreDataException {
+        var index = indexOf(b, maxLength);
         var data = read(toIntExact(index));
         skip(1);
         return data;
@@ -136,8 +136,8 @@ public interface DataReader {
      * @return bytes
      * @throws NoMatchFoundException 没有匹配时抛出
      */
-    default byte[] readUntil(byte[] b, int max) throws NoMatchFoundException, NoMoreDataException {
-        var index = indexOf(b, max);
+    default byte[] readUntil(byte[] b, int maxLength) throws NoMatchFoundException, NoMoreDataException {
+        var index = indexOf(b, maxLength);
         var data = read(toIntExact(index));
         skip(b.length);
         return data;
@@ -150,8 +150,8 @@ public interface DataReader {
      * @return bytes
      * @throws NoMatchFoundException 没有匹配时抛出
      */
-    default byte[] peekUntil(byte b, int max) throws NoMatchFoundException, NoMoreDataException {
-        var index = indexOf(b, max);
+    default byte[] peekUntil(byte b, int maxLength) throws NoMatchFoundException, NoMoreDataException {
+        var index = indexOf(b, maxLength);
         return peek(toIntExact(index));
     }
 
@@ -162,8 +162,8 @@ public interface DataReader {
      * @return bytes
      * @throws NoMatchFoundException 没有匹配时抛出
      */
-    default byte[] peekUntil(byte[] b, int max) throws NoMatchFoundException, NoMoreDataException {
-        var index = indexOf(b, max);
+    default byte[] peekUntil(byte[] b, int maxLength) throws NoMatchFoundException, NoMoreDataException {
+        var index = indexOf(b, maxLength);
         return peek(toIntExact(index));
     }
 

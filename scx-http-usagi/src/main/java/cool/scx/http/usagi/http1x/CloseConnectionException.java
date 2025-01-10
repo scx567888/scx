@@ -5,4 +5,16 @@ package cool.scx.http.usagi.http1x;
  */
 class CloseConnectionException extends RuntimeException {
 
+    public CloseConnectionException() {
+
+    }
+
+    public CloseConnectionException(String message) {
+        super(message);
+    }
+
+    public CloseConnectionException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
 }

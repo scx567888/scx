@@ -6,7 +6,7 @@ package cool.scx.http.web_socket;
  * @author scx567888
  * @version 0.0.1
  */
-public enum WebSocketCloseInfo implements ScxWebSocketCloseInfo {
+public enum WebSocketCloseInfo {
 
     NORMAL_CLOSE(1000, "normal close"),
     GOING_AWAY(1001, "going away"),
@@ -41,12 +41,10 @@ public enum WebSocketCloseInfo implements ScxWebSocketCloseInfo {
         this.reason = reason;
     }
 
-    @Override
     public int code() {
         return code;
     }
 
-    @Override
     public String reason() {
         return reason;
     }

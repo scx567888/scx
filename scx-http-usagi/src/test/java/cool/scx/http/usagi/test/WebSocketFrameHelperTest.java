@@ -1,7 +1,7 @@
-package cool.scx.http.test;
+package cool.scx.http.usagi.test;
 
-import cool.scx.http.web_socket.WebSocketFrame;
-import cool.scx.http.web_socket.WebSocketFrameHelper;
+import cool.scx.http.usagi.web_socket.WebSocketFrame;
+import cool.scx.http.usagi.web_socket.WebSocketFrameHelper;
 import cool.scx.http.web_socket.WebSocketOpCode;
 import cool.scx.io.ByteArrayDataReader;
 import cool.scx.io.NoMoreDataException;
@@ -28,7 +28,7 @@ public class WebSocketFrameHelperTest {
                 'H', 'e', 'l', 'l', 'o'
         };
         ByteArrayDataReader reader = new ByteArrayDataReader(frameData);
-        WebSocketFrame frame = WebSocketFrameHelper.readFrame(reader);
+        WebSocketFrame frame = WebSocketFrameHelper.readFrame(reader, Integer.MAX_VALUE);
 
         assertTrue(frame.fin());
         assertFalse(frame.rsv1());
@@ -63,8 +63,8 @@ public class WebSocketFrameHelperTest {
                 (byte) 0b0000_0010, // No mask, payload length = 2
                 'l', 'o'
         };
-        ByteArrayDataReader reader = new ByteArrayDataReader(frameData);
-        WebSocketFrame frame = WebSocketFrameHelper.readFrameUntilLast(reader);
+        var reader = new ByteArrayDataReader(frameData);
+        var frame = WebSocketFrameHelper.readFrameUntilLast(reader, Integer.MAX_VALUE, Integer.MAX_VALUE);
 
         assertTrue(frame.fin());
         assertFalse(frame.rsv1());

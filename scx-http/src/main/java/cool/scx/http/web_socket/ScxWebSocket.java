@@ -1,5 +1,9 @@
 package cool.scx.http.web_socket;
 
+import cool.scx.http.web_socket.handler.BinaryMessageHandler;
+import cool.scx.http.web_socket.handler.CloseHandler;
+import cool.scx.http.web_socket.handler.TextMessageHandler;
+
 import java.util.function.Consumer;
 
 import static cool.scx.http.web_socket.WebSocketCloseInfo.NORMAL_CLOSE;
@@ -12,15 +16,15 @@ import static cool.scx.http.web_socket.WebSocketCloseInfo.NORMAL_CLOSE;
  */
 public interface ScxWebSocket {
 
-    ScxWebSocket onTextMessage(Consumer<String> textMessageHandler);
+    ScxWebSocket onTextMessage(TextMessageHandler textMessageHandler);
 
-    ScxWebSocket onBinaryMessage(Consumer<byte[]> binaryMessageHandler);
+    ScxWebSocket onBinaryMessage(BinaryMessageHandler binaryMessageHandler);
 
     ScxWebSocket onPing(Consumer<byte[]> pingHandler);
 
     ScxWebSocket onPong(Consumer<byte[]> pongHandler);
 
-    ScxWebSocket onClose(Consumer<ScxWebSocketCloseInfo> closeHandler);
+    ScxWebSocket onClose(CloseHandler closeHandler);
 
     ScxWebSocket onError(Consumer<Throwable> errorHandler);
 
@@ -32,7 +36,7 @@ public interface ScxWebSocket {
 
     ScxWebSocket pong(byte[] data);
 
-    ScxWebSocket close(ScxWebSocketCloseInfo closeInfo);
+    ScxWebSocket close(int code, String reason);
 
     ScxWebSocket terminate();
 
@@ -46,8 +50,8 @@ public interface ScxWebSocket {
         return send(binaryMessage, true);
     }
 
-    default ScxWebSocket close(int code, String reason) {
-        return close(new ScxWebSocketCloseInfoImpl(code, reason));
+    default ScxWebSocket close(WebSocketCloseInfo closeInfo) {
+        return close(closeInfo.code(), closeInfo.reason());
     }
 
     default ScxWebSocket close() {

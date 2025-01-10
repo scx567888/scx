@@ -42,8 +42,8 @@ public class Http1xConnection {
         this.running = true;
     }
 
-
     public void start() {
+        //开始读取 Http 请求
         while (running) {
             try {
                 // 1, 读取 请求行
@@ -67,22 +67,17 @@ public class Http1xConnection {
 
             } catch (CloseConnectionException e) {
                 //这种情况是我们主动触发的, 表示需要关闭连接 这里直接跳出循环, 以便完成关闭
-                break;
+                stop();
             } catch (ScxHttpException e) {
                 handleHttpException(e);
             } catch (Throwable e) {
                 handleHttpException(new InternalServerErrorException(e));
             }
         }
-        // 循环结束则关闭连接
-        try {
-            tcpSocket.close();
-        } catch (IOException e) {
-            LOGGER.log(System.Logger.Level.TRACE, "关闭 Socket 时发生错误！", e);
-        }
     }
 
     public void stop() {
+        //停止读取 http 请求
         running = false;
     }
 
@@ -128,6 +123,7 @@ public class Http1xConnection {
         }
     }
 
+    //todo 这里如果 dataReader 抛出了 NoMoreDataException 我们需要处理
     private ScxHttpBody readBody(ScxHttpHeaders headers) {
         // http1.1 本质上只有两种请求体格式 1, 分块传输 2, 指定长度 (当然也可以没有长度 那就表示没有请求体)
 
@@ -180,7 +176,7 @@ public class Http1xConnection {
             dataWriter.write(sb.toString().getBytes());
             dataWriter.write(message);
         } catch (IOException ee) {
-            LOGGER.log(System.Logger.Level.TRACE, "Failed to write request exception");
+            LOGGER.log(System.Logger.Level.TRACE, "发送请求错误时发生错误 !!!");
         }
 
     }

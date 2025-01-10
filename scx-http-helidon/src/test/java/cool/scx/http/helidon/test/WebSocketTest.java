@@ -15,7 +15,7 @@ public class WebSocketTest {
         var httpServer = new HelidonHttpServer(new HelidonHttpServerOptions().port(8080));
 
         httpServer.onWebSocket(webSocket -> {
-            webSocket.onTextMessage(data -> {
+            webSocket.onTextMessage((data, _) -> {
                 webSocket.send(data);
                 System.out.println("服 : " + data);
             });
@@ -28,7 +28,7 @@ public class WebSocketTest {
         var httpClient = new HelidonHttpClient();
 
         httpClient.webSocket().uri("ws://127.0.0.1:8080/websocket").onConnect(webSocket -> {
-            webSocket.onTextMessage(data -> {
+            webSocket.onTextMessage((data, s) -> {
                 System.out.println("客 : " + data);
             });
             //这里只有当 onConnect 走完才会 执行 来自客户端请求的监听 所以这里 创建线程发送 不阻塞 onConnect

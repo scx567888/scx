@@ -1,38 +1,39 @@
 package cool.scx.http.usagi;
 
+import cool.scx.http.usagi.web_socket.WebSocketOptions;
 import cool.scx.tcp.ScxTCPClientOptions;
-import cool.scx.tcp.proxy.Proxy;
 import cool.scx.tcp.tls.TLS;
 
 /**
- * todo 待完成
+ * UsagiHttpClientOptions
  *
  * @author scx567888
  * @version 0.0.1
  */
-public class UsagiHttpClientOptions extends ScxTCPClientOptions {
+public class UsagiHttpClientOptions {
 
-    private int bodyBufferSize;//todo 暂时未用到
-    private TCPClientType tcpClientType;
+    private final ScxTCPClientOptions tcpClientOptions;// TCP 客户端 配置
+    private final WebSocketOptions webSocketOptions;// WebSocket 配置
+    private TCPClientType tcpClientType;// TCP 客户端类型
 
     public UsagiHttpClientOptions() {
-        this.bodyBufferSize = 1024 * 64;// 默认 64 KB
+        this.tcpClientOptions = new ScxTCPClientOptions();
+        this.webSocketOptions = new WebSocketOptions();
         this.tcpClientType = TCPClientType.CLASSIC;
     }
 
     public UsagiHttpClientOptions(UsagiHttpClientOptions oldOptions) {
-        super(oldOptions);
-        bodyBufferSize(oldOptions.bodyBufferSize());
+        this.tcpClientOptions = new ScxTCPClientOptions(oldOptions.tcpClientOptions());
+        this.webSocketOptions = new WebSocketOptions(oldOptions.webSocketOptions());
         tcpClientType(oldOptions.tcpClientType());
     }
 
-    public int bodyBufferSize() {
-        return bodyBufferSize;
+    ScxTCPClientOptions tcpClientOptions() {
+        return tcpClientOptions;
     }
 
-    public UsagiHttpClientOptions bodyBufferSize(int bodyBufferSize) {
-        this.bodyBufferSize = bodyBufferSize;
-        return this;
+    public WebSocketOptions webSocketOptions() {
+        return webSocketOptions;
     }
 
     public TCPClientType tcpClientType() {
@@ -44,15 +45,39 @@ public class UsagiHttpClientOptions extends ScxTCPClientOptions {
         return this;
     }
 
-    @Override
-    public UsagiHttpClientOptions tls(TLS tls) {
-        super.tls(tls);
+    public boolean mergeWebSocketFrame() {
+        return webSocketOptions.mergeWebSocketFrame();
+    }
+
+    public UsagiHttpClientOptions mergeWebSocketFrame(boolean mergeWebSocketFrame) {
+        webSocketOptions.mergeWebSocketFrame(mergeWebSocketFrame);
         return this;
     }
 
-    @Override
-    public UsagiHttpClientOptions proxy(Proxy proxy) {
-        super.proxy(proxy);
+    public int maxWebSocketFrameSize() {
+        return webSocketOptions.maxWebSocketFrameSize();
+    }
+
+    public UsagiHttpClientOptions maxWebSocketFrameSize(int maxWebSocketFrameSize) {
+        webSocketOptions.maxWebSocketFrameSize(maxWebSocketFrameSize);
+        return this;
+    }
+
+    public int maxWebSocketMessageSize() {
+        return webSocketOptions.maxWebSocketMessageSize();
+    }
+
+    public UsagiHttpClientOptions maxWebSocketMessageSize(int maxWebSocketMessageSize) {
+        webSocketOptions.maxWebSocketMessageSize(maxWebSocketMessageSize);
+        return this;
+    }
+
+    public TLS tls() {
+        return tcpClientOptions.tls();
+    }
+
+    public UsagiHttpClientOptions tls(TLS tls) {
+        this.tcpClientOptions.tls(tls);
         return this;
     }
 

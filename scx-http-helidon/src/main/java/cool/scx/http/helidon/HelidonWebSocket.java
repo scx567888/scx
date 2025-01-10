@@ -1,9 +1,10 @@
 package cool.scx.http.helidon;
 
 import cool.scx.http.web_socket.ScxWebSocket;
-import cool.scx.http.web_socket.ScxWebSocketCloseInfo;
-import cool.scx.http.web_socket.ScxWebSocketCloseInfoImpl;
 import cool.scx.http.web_socket.WebSocketCloseInfo;
+import cool.scx.http.web_socket.handler.BinaryMessageHandler;
+import cool.scx.http.web_socket.handler.CloseHandler;
+import cool.scx.http.web_socket.handler.TextMessageHandler;
 import io.helidon.common.buffers.BufferData;
 import io.helidon.http.Headers;
 import io.helidon.http.HttpPrologue;
@@ -34,11 +35,11 @@ class HelidonWebSocket implements ScxWebSocket, WsListener {
     protected HttpPrologue prologue;
     protected Headers headers;
     protected WsSession wsSession;
-    private Consumer<String> textMessageHandler;
-    private Consumer<byte[]> binaryMessageHandler;
+    private TextMessageHandler textMessageHandler;
+    private BinaryMessageHandler binaryMessageHandler;
     private Consumer<byte[]> pingHandler;
     private Consumer<byte[]> pongHandler;
-    private Consumer<ScxWebSocketCloseInfo> closeHandler;
+    private CloseHandler closeHandler;
     private Consumer<Throwable> errorHandler;
 
     public HelidonWebSocket() {
@@ -46,13 +47,13 @@ class HelidonWebSocket implements ScxWebSocket, WsListener {
     }
 
     @Override
-    public HelidonWebSocket onTextMessage(Consumer<String> textMessageHandler) {
+    public HelidonWebSocket onTextMessage(TextMessageHandler textMessageHandler) {
         this.textMessageHandler = textMessageHandler;
         return this;
     }
 
     @Override
-    public HelidonWebSocket onBinaryMessage(Consumer<byte[]> binaryMessageHandler) {
+    public HelidonWebSocket onBinaryMessage(BinaryMessageHandler binaryMessageHandler) {
         this.binaryMessageHandler = binaryMessageHandler;
         return this;
     }
@@ -70,7 +71,7 @@ class HelidonWebSocket implements ScxWebSocket, WsListener {
     }
 
     @Override
-    public HelidonWebSocket onClose(Consumer<ScxWebSocketCloseInfo> closeHandler) {
+    public HelidonWebSocket onClose(CloseHandler closeHandler) {
         this.closeHandler = closeHandler;
         return this;
     }
@@ -139,13 +140,13 @@ class HelidonWebSocket implements ScxWebSocket, WsListener {
     }
 
     @Override
-    public ScxWebSocket close(ScxWebSocketCloseInfo closeInfo) {
+    public ScxWebSocket close(int code, String reason) {
         if (wsSession == null) {
             throw new IllegalStateException("wsSession is null");
         }
         lock.lock();
         try {
-            wsSession.close(closeInfo.code(), closeInfo.reason());
+            wsSession.close(code, reason);
         } finally {
             lock.unlock();
             //此处主动调用 onClose
@@ -176,14 +177,14 @@ class HelidonWebSocket implements ScxWebSocket, WsListener {
     @Override
     public void onMessage(WsSession session, String text, boolean last) {
         if (textMessageHandler != null) {
-            textMessageHandler.accept(text);
+            textMessageHandler.handle(text, last);
         }
     }
 
     @Override
     public void onMessage(WsSession session, BufferData buffer, boolean last) {
         if (binaryMessageHandler != null) {
-            binaryMessageHandler.accept(buffer.readBytes());
+            binaryMessageHandler.handle(buffer.readBytes(), last);
         }
     }
 
@@ -205,7 +206,7 @@ class HelidonWebSocket implements ScxWebSocket, WsListener {
     public void onClose(WsSession session, int status, String reason) {
         this.closed.set(true);
         if (closeHandler != null) {
-            closeHandler.accept(new ScxWebSocketCloseInfoImpl(status, reason));
+            closeHandler.handle(status, reason);
         }
     }
 

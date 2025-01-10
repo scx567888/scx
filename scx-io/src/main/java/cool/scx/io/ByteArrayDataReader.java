@@ -87,12 +87,12 @@ public class ByteArrayDataReader implements DataReader {
     }
 
     @Override
-    public long indexOf(byte b, long max) throws NoMatchFoundException, NoMoreDataException {
+    public long indexOf(byte b, long maxLength) throws NoMatchFoundException, NoMoreDataException {
         int availableLength = bytes.length - position;
         if (availableLength <= 0) {
             throw new NoMoreDataException();
         }
-        var index = ArrayUtils.indexOf(bytes, position, (int) min(bytes.length, max), b);
+        var index = ArrayUtils.indexOf(bytes, position, (int) min(bytes.length, maxLength), b);
         if (index == -1) {
             throw new NoMatchFoundException();
         }
@@ -100,12 +100,12 @@ public class ByteArrayDataReader implements DataReader {
     }
 
     @Override
-    public long indexOf(byte[] b, long max) throws NoMatchFoundException, NoMoreDataException {
+    public long indexOf(byte[] b, long maxLength) throws NoMatchFoundException, NoMoreDataException {
         int availableLength = bytes.length - position;
         if (availableLength <= 0) {
             throw new NoMoreDataException();
         }
-        var index = ArrayUtils.indexOf(bytes, position, (int) min(bytes.length, max), b);
+        var index = ArrayUtils.indexOf(bytes, position, (int) min(bytes.length, maxLength), b);
         if (index == -1) {
             throw new NoMatchFoundException();
         }
