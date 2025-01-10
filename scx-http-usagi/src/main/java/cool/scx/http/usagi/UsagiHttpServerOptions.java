@@ -1,7 +1,7 @@
 package cool.scx.http.usagi;
 
 import cool.scx.http.usagi.http1x.Http1xConnectionOptions;
-import cool.scx.http.usagi.web_socket.UsagiWebSocketOptions;
+import cool.scx.http.usagi.web_socket.WebSocketOptions;
 import cool.scx.tcp.ScxTCPServerOptions;
 import cool.scx.tcp.tls.TLS;
 
@@ -17,7 +17,7 @@ public class UsagiHttpServerOptions {
 
     private final ScxTCPServerOptions tcpServerOptions; // TCP 服务器配置
     private final Http1xConnectionOptions http1xConnectionOptions;// Http1 配置
-    private final UsagiWebSocketOptions webSocketOptions;// WebSocket 配置
+    private final WebSocketOptions webSocketOptions;// WebSocket 配置
     private TCPServerType tcpServerType; // TCP 服务器类型
     private boolean enableHttp2; // 是否开启 Http2
 
@@ -25,7 +25,7 @@ public class UsagiHttpServerOptions {
         //默认不自动握手
         this.tcpServerOptions = new ScxTCPServerOptions().autoUpgradeToTLS(true).autoHandshake(false);
         this.http1xConnectionOptions = new Http1xConnectionOptions();
-        this.webSocketOptions = new UsagiWebSocketOptions();
+        this.webSocketOptions = new WebSocketOptions();
         this.tcpServerType = TCPServerType.CLASSIC; // 默认 使用 CLASSIC 实现
         this.enableHttp2 = false;//默认不启用 http2
     }
@@ -34,7 +34,7 @@ public class UsagiHttpServerOptions {
         //默认不自动握手
         this.tcpServerOptions = new ScxTCPServerOptions(oldOptions.tcpServerOptions()).autoUpgradeToTLS(true).autoHandshake(false);
         this.http1xConnectionOptions = new Http1xConnectionOptions(oldOptions.http1xConnectionOptions());
-        this.webSocketOptions = new UsagiWebSocketOptions(oldOptions.webSocketOptions());
+        this.webSocketOptions = new WebSocketOptions(oldOptions.webSocketOptions());
         tcpServerType(oldOptions.tcpServerType());
         enableHttp2(oldOptions.enableHttp2());
     }
@@ -48,7 +48,7 @@ public class UsagiHttpServerOptions {
         return http1xConnectionOptions;
     }
 
-    public UsagiWebSocketOptions webSocketOptions() {
+    public WebSocketOptions webSocketOptions() {
         return webSocketOptions;
     }
 

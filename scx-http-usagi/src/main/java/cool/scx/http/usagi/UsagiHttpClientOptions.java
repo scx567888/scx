@@ -1,6 +1,6 @@
 package cool.scx.http.usagi;
 
-import cool.scx.http.usagi.web_socket.UsagiWebSocketOptions;
+import cool.scx.http.usagi.web_socket.WebSocketOptions;
 import cool.scx.tcp.ScxTCPClientOptions;
 import cool.scx.tcp.tls.TLS;
 
@@ -13,18 +13,18 @@ import cool.scx.tcp.tls.TLS;
 public class UsagiHttpClientOptions {
 
     private final ScxTCPClientOptions tcpClientOptions;// TCP 客户端 配置
-    private final UsagiWebSocketOptions webSocketOptions;// WebSocket 配置
+    private final WebSocketOptions webSocketOptions;// WebSocket 配置
     private TCPClientType tcpClientType;// TCP 客户端类型
 
     public UsagiHttpClientOptions() {
         this.tcpClientOptions = new ScxTCPClientOptions();
-        this.webSocketOptions = new UsagiWebSocketOptions();
+        this.webSocketOptions = new WebSocketOptions();
         this.tcpClientType = TCPClientType.CLASSIC;
     }
 
     public UsagiHttpClientOptions(UsagiHttpClientOptions oldOptions) {
         this.tcpClientOptions = new ScxTCPClientOptions(oldOptions.tcpClientOptions());
-        this.webSocketOptions = new UsagiWebSocketOptions(oldOptions.webSocketOptions());
+        this.webSocketOptions = new WebSocketOptions(oldOptions.webSocketOptions());
         tcpClientType(oldOptions.tcpClientType());
     }
 
@@ -32,7 +32,7 @@ public class UsagiHttpClientOptions {
         return tcpClientOptions;
     }
 
-    public UsagiWebSocketOptions webSocketOptions() {
+    public WebSocketOptions webSocketOptions() {
         return webSocketOptions;
     }
 
