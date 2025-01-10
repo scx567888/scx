@@ -17,7 +17,7 @@ import static cool.scx.http.web_socket.WebSocketCloseInfo.*;
 import static java.lang.System.Logger.Level.ERROR;
 
 /**
- * todo 待完成
+ * WebSocket
  *
  * @author scx567888
  * @version 0.0.1
@@ -56,7 +56,7 @@ public class WebSocket extends AbstractWebSocket {
                 //处理帧
                 handleFrame(frame);
             } catch (CloseConnectionException e) {
-                stop();
+                _handleClose(CLOSED_ABNORMALLY.code(), CLOSED_ABNORMALLY.reason());
             } catch (Exception e) {
                 _handleError(e);
                 this.close(UNEXPECTED_CONDITION.code(), e.getMessage());
@@ -156,25 +156,26 @@ public class WebSocket extends AbstractWebSocket {
     }
 
     private void _handleClose(WebSocketFrame frame) {
-        //1, 调用用户处理器
         var closeInfo = parseCloseInfo(frame.payloadData());
+        _handleClose(closeInfo.code(), closeInfo.reason());
+    }
+
+    public void _handleClose(int code, String reason) {
+        //1, 调用用户处理器
         try {
-            _callOnClose(closeInfo.code(), closeInfo.reason());
+            _callOnClose(code, reason);
         } catch (Exception e) {
             LOGGER.log(ERROR, "Error while call onClose : ", e);
         }
         //2, 发送关闭响应帧
-        if (!closeSent) {
-            //这里有可能无法发送 我们跳过处理
-            try {
-                close(NORMAL_CLOSE);
-            } catch (Exception _) {
+        try {
+            close(NORMAL_CLOSE); // 这里有可能无法发送 我们忽略异常
+        } catch (Exception _) {
 
-            }
         }
         //3, 关闭 socket
         try {
-            tcpSocket.close();
+            tcpSocket.close(); // 这里有可能已经被远端关闭 我们忽略异常
         } catch (IOException _) {
 
         }
@@ -192,6 +193,10 @@ public class WebSocket extends AbstractWebSocket {
 
     @Override
     public WebSocket close(int code, String reason) {
+        //close 帧只允许成功发送一次
+        if (closeSent) {
+            return this;
+        }
         super.close(code, reason);
         closeSent = true;
         return this;
@@ -212,20 +217,13 @@ public class WebSocket extends AbstractWebSocket {
 
     @Override
     public WebSocket terminate() {
-        //todo 
-        try {
-            close(NORMAL_CLOSE.code(), "Terminate");
-        } catch (Exception _) {
-
-        }
-        stop();
+        _handleClose(NORMAL_CLOSE.code(), "terminate");
         return this;
     }
 
     @Override
     public boolean isClosed() {
-        //todo 
-        return false;
+        return tcpSocket.isClosed();
     }
 
     public enum ContinuationType {

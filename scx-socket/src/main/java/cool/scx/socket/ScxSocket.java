@@ -185,10 +185,10 @@ public class ScxSocket {
         }
     }
 
-    protected void doClose(ScxWebSocketCloseInfo closeInfo) {
+    protected void doClose(int code, String reason) {
         this.close();
         //呼叫 onClose 事件
-        this._callOnClose(closeInfo.code(), closeInfo.reason());
+        this._callOnClose(code, reason);
     }
 
     protected void doError(Throwable e) {
@@ -200,7 +200,7 @@ public class ScxSocket {
     //********************** 生命周期方法 ********************
 
     private void bind() {
-        this.webSocket.onTextMessage(t -> doSocketFrame(fromJson(t)));
+        this.webSocket.onTextMessage((t, _) -> doSocketFrame(fromJson(t)));
         this.webSocket.onClose(this::doClose);
         this.webSocket.onError(this::doError);
     }
