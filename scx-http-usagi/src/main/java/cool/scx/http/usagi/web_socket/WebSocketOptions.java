@@ -1,18 +1,18 @@
 package cool.scx.http.usagi.web_socket;
 
-public class UsagiWebSocketOptions {
+public class WebSocketOptions {
     
     private boolean mergeWebSocketFrame;//是否合并 WebSocket 帧
     private int maxWebSocketFrameSize; // 最大单个 WebSocket 帧长度
     private int maxWebSocketMessageSize;// 最大 WebSocket 消息长度 (可能由多个帧合并)
 
-    public UsagiWebSocketOptions() {
+    public WebSocketOptions() {
         this.mergeWebSocketFrame = true; // 默认 合并 websocket 帧
         this.maxWebSocketFrameSize = 1024 * 1024 * 16; // 默认 16 MB
         this.maxWebSocketMessageSize = 1024 * 1024 * 16; // 默认 16 MB
     }
 
-    public UsagiWebSocketOptions(UsagiWebSocketOptions oldOptions) {
+    public WebSocketOptions(WebSocketOptions oldOptions) {
         mergeWebSocketFrame(oldOptions.mergeWebSocketFrame());
         maxWebSocketFrameSize(oldOptions.maxWebSocketFrameSize());
         maxWebSocketMessageSize(oldOptions.maxWebSocketMessageSize());
@@ -22,7 +22,7 @@ public class UsagiWebSocketOptions {
         return mergeWebSocketFrame;
     }
 
-    public UsagiWebSocketOptions mergeWebSocketFrame(boolean mergeWebSocketFrame) {
+    public WebSocketOptions mergeWebSocketFrame(boolean mergeWebSocketFrame) {
         this.mergeWebSocketFrame = mergeWebSocketFrame;
         return this;
     }
@@ -31,7 +31,7 @@ public class UsagiWebSocketOptions {
         return maxWebSocketFrameSize;
     }
 
-    public UsagiWebSocketOptions maxWebSocketFrameSize(int maxWebSocketFrameSize) {
+    public WebSocketOptions maxWebSocketFrameSize(int maxWebSocketFrameSize) {
         this.maxWebSocketFrameSize = maxWebSocketFrameSize;
         return this;
     }
@@ -40,7 +40,7 @@ public class UsagiWebSocketOptions {
         return maxWebSocketMessageSize;
     }
 
-    public UsagiWebSocketOptions maxWebSocketMessageSize(int maxWebSocketMessageSize) {
+    public WebSocketOptions maxWebSocketMessageSize(int maxWebSocketMessageSize) {
         this.maxWebSocketMessageSize = maxWebSocketMessageSize;
         return this;
     }

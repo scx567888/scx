@@ -30,7 +30,7 @@ import static cool.scx.http.HttpHelper.generateSecWebSocketAccept;
 public class UsagiClientWebSocketBuilder implements ScxClientWebSocketBuilder {
 
     private final UsagiHttpClient httpClient;
-    private UsagiWebSocketOptions webSocketOptions;
+    private WebSocketOptions webSocketOptions;
     private ScxURIWritable uri;
     private ScxHttpHeadersWritable headers;
     private Consumer<ScxClientWebSocket> onConnect;
@@ -106,7 +106,7 @@ public class UsagiClientWebSocketBuilder implements ScxClientWebSocketBuilder {
         var in = connect.inputStream();
         var out = connect.outputStream();
 
-        var webSocket = new UsagiClientWebSocket(connect, new LinkedDataReader(new InputStreamDataSupplier(in)), out,webSocketOptions);
+        var webSocket = new ClientWebSocket(connect, new LinkedDataReader(new InputStreamDataSupplier(in)), out,webSocketOptions);
         if (onConnect != null) {
             onConnect.accept(webSocket);
         }

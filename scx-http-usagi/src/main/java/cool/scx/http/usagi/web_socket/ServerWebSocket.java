@@ -11,11 +11,11 @@ import cool.scx.http.web_socket.ScxServerWebSocket;
  * @author scx567888
  * @version 0.0.1
  */
-public class UsagiServerWebSocket extends UsagiWebSocket implements ScxServerWebSocket {
+public class ServerWebSocket extends WebSocket implements ScxServerWebSocket {
 
     private final Http1xServerWebSocketHandshakeRequest handshakeRequest;
 
-    public UsagiServerWebSocket(Http1xServerWebSocketHandshakeRequest handshakeRequest) {
+    public ServerWebSocket(Http1xServerWebSocketHandshakeRequest handshakeRequest) {
         super(
                 handshakeRequest.http1xConnection.tcpSocket,
                 handshakeRequest.http1xConnection.dataReader,

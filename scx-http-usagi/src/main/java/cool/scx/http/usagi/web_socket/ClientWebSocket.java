@@ -17,9 +17,9 @@ import static cool.scx.http.usagi.web_socket.WebSocketFrameHelper.writeFrame;
  * @author scx567888
  * @version 0.0.1
  */
-public class UsagiClientWebSocket extends UsagiWebSocket implements ScxClientWebSocket {
+public class ClientWebSocket extends WebSocket implements ScxClientWebSocket {
 
-    public UsagiClientWebSocket(ScxTCPSocket connect, DataReader reader, OutputStream writer, UsagiWebSocketOptions webSocketOptions) {
+    public ClientWebSocket(ScxTCPSocket connect, DataReader reader, OutputStream writer, WebSocketOptions webSocketOptions) {
         super(connect, reader, writer, webSocketOptions);
     }
 
