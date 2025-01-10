@@ -13,7 +13,7 @@ import cool.scx.http.web_socket.ScxClientWebSocketBuilder;
  */
 public class UsagiHttpClient implements ScxHttpClient {
 
-    final UsagiHttpClientOptions options;
+    private final UsagiHttpClientOptions options;
 
     public UsagiHttpClient(UsagiHttpClientOptions options) {
         this.options = options;
@@ -21,6 +21,10 @@ public class UsagiHttpClient implements ScxHttpClient {
 
     public UsagiHttpClient() {
         this(new UsagiHttpClientOptions());
+    }
+
+    public UsagiHttpClientOptions options() {
+        return options;
     }
 
     @Override
