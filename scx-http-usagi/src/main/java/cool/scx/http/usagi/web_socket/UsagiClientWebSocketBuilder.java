@@ -30,6 +30,7 @@ import static cool.scx.http.HttpHelper.generateSecWebSocketAccept;
 public class UsagiClientWebSocketBuilder implements ScxClientWebSocketBuilder {
 
     private final UsagiHttpClient httpClient;
+    private UsagiWebSocketOptions webSocketOptions;
     private ScxURIWritable uri;
     private ScxHttpHeadersWritable headers;
     private Consumer<ScxClientWebSocket> onConnect;
@@ -38,6 +39,7 @@ public class UsagiClientWebSocketBuilder implements ScxClientWebSocketBuilder {
         this.httpClient = httpClient;
         this.uri = ScxURI.of();
         this.headers = ScxHttpHeaders.of();
+        this.webSocketOptions = httpClient.options().webSocketOptions();
     }
 
     @Override
@@ -104,8 +106,7 @@ public class UsagiClientWebSocketBuilder implements ScxClientWebSocketBuilder {
         var in = connect.inputStream();
         var out = connect.outputStream();
 
-        //todo 此处 UsagiClientWebSocket 没有掩码 操作
-        var webSocket = new UsagiClientWebSocket(connect, new LinkedDataReader(new InputStreamDataSupplier(in)), out);
+        var webSocket = new UsagiClientWebSocket(connect, new LinkedDataReader(new InputStreamDataSupplier(in)), out,webSocketOptions);
         if (onConnect != null) {
             onConnect.accept(webSocket);
         }
