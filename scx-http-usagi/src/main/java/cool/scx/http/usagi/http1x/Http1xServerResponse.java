@@ -16,16 +16,16 @@ import static cool.scx.http.HttpFieldName.SERVER;
  */
 public class Http1xServerResponse extends OutputStream implements ScxHttpServerResponse {
 
-    private final Http1xConnection http1xConnection;
+    private final Http1xServerConnection connection;
     private final Http1xServerRequest request;
     private final ScxHttpHeadersWritable headers;
     private final OutputStream dataWriter;
     private HttpStatusCode status;
     private boolean firstSend;
 
-    Http1xServerResponse(Http1xConnection http1xConnection, Http1xServerRequest request) {
-        this.http1xConnection = http1xConnection;
-        this.dataWriter = this.http1xConnection.dataWriter;
+    Http1xServerResponse(Http1xServerConnection connection, Http1xServerRequest request) {
+        this.connection = connection;
+        this.dataWriter = this.connection.dataWriter;
         this.request = request;
         this.status = HttpStatusCode.OK;
         this.headers = ScxHttpHeaders.of();
@@ -141,7 +141,7 @@ public class Http1xServerResponse extends OutputStream implements ScxHttpServerR
         var connection = headers.get(CONNECTION);
         //只有明确表示 close 的时候我们才关闭
         if ("close".equalsIgnoreCase(connection)) {
-            http1xConnection.stop();
+            this.connection.stop();
         }
     }
 
