@@ -13,7 +13,7 @@ import static cool.scx.http.usagi.http1x.Http1xHelper.*;
  */
 public class Http1xServerRequest implements ScxHttpServerRequest {
 
-    public final Http1xConnection http1xConnection;
+    public final Http1xServerConnection http1xConnection;
     public final boolean isKeepAlive;
 
     private final ScxHttpMethod method;
@@ -25,7 +25,7 @@ public class Http1xServerRequest implements ScxHttpServerRequest {
     private final PeerInfo remotePeer;
     private final PeerInfo localPeer;
 
-    public Http1xServerRequest(Http1xConnection http1xConnection, Http1xRequestLine requestLine, ScxHttpHeadersWritable headers, ScxHttpBody body) {
+    public Http1xServerRequest(Http1xServerConnection http1xConnection, Http1xRequestLine requestLine, ScxHttpHeadersWritable headers, ScxHttpBody body) {
         this.http1xConnection = http1xConnection;
         this.isKeepAlive = checkIsKeepAlive(requestLine, headers);
         this.method = requestLine.method();
