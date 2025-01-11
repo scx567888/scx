@@ -9,13 +9,13 @@
         <version>3.3.2</version>
     </parent>
 
-    <artifactId>scx-socket</artifactId>
+    <artifactId>scx-http-x</artifactId>
     <packaging>jar</packaging>
 
-    <name>SCX Socket</name>
+    <name>SCX HTTP X</name>
     <url>https://github.com/scx567888/scx</url>
     <description>
-        A WebSocket framework
+        SCX HTTP X
     </description>
 
     <dependencies>
@@ -28,26 +28,18 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>scx-http-helidon</artifactId>
+            <artifactId>scx-reflect</artifactId>
             <version>${project.version}</version>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>scx-http-x</artifactId>
+            <artifactId>scx-tcp</artifactId>
             <version>${project.version}</version>
-            <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>scx-logging</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
+        <!-- ****************** 以下为测试依赖 ****************** -->
 
-        <!-- TestNG 测试包 -->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
