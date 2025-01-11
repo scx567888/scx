@@ -14,9 +14,9 @@ import java.util.function.Consumer;
 import static cool.scx.http.usagi.http2.Http2Helper.HTTP2_CONNECTION_PREFACE;
 
 //todo 未完成
-public class Http2Connection {
+public class Http2ServerConnection {
 
-    private final static System.Logger LOGGER = System.getLogger(Http2Connection.class.getName());
+    private final static System.Logger LOGGER = System.getLogger(Http2ServerConnection.class.getName());
 
     private final ScxTCPSocket tcpSocket;
     private final UsagiHttpServerOptions options;
@@ -25,7 +25,7 @@ public class Http2Connection {
     private final OutputStream dataWriter;
     private State state;
 
-    public Http2Connection(ScxTCPSocket tcpSocket, UsagiHttpServerOptions options, Consumer<ScxHttpServerRequest> requestHandler) {
+    public Http2ServerConnection(ScxTCPSocket tcpSocket, UsagiHttpServerOptions options, Consumer<ScxHttpServerRequest> requestHandler) {
         this.tcpSocket = tcpSocket;
         this.options = options;
         this.requestHandler = requestHandler;
