@@ -102,7 +102,7 @@ public class UsagiClientWebSocketBuilder implements ScxClientWebSocketBuilder {
         if (!expectedSecWebsocketAccept.equals(secWebsocketAccept)) {
             throw new RuntimeException("Unexpected Sec-WebSocket-Accept: " + expectedSecWebsocketAccept);
         }
-        var connect = ((UsagiHttpClientRequest) request).connect;
+        var connect = ((UsagiHttpClientRequest) request).tcpSocket;
         var in = connect.inputStream();
         var out = connect.outputStream();
 

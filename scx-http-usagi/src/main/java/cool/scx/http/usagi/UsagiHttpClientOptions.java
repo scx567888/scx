@@ -17,13 +17,13 @@ public class UsagiHttpClientOptions {
     private TCPClientType tcpClientType;// TCP 客户端类型
 
     public UsagiHttpClientOptions() {
-        this.tcpClientOptions = new ScxTCPClientOptions();
+        this.tcpClientOptions = new ScxTCPClientOptions().autoUpgradeToTLS(true).autoHandshake(false);
         this.webSocketOptions = new WebSocketOptions();
         this.tcpClientType = TCPClientType.CLASSIC;
     }
 
     public UsagiHttpClientOptions(UsagiHttpClientOptions oldOptions) {
-        this.tcpClientOptions = new ScxTCPClientOptions(oldOptions.tcpClientOptions());
+        this.tcpClientOptions = new ScxTCPClientOptions(oldOptions.tcpClientOptions()).autoUpgradeToTLS(true).autoHandshake(false);
         this.webSocketOptions = new WebSocketOptions(oldOptions.webSocketOptions());
         tcpClientType(oldOptions.tcpClientType());
     }
