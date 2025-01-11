@@ -2,8 +2,8 @@ package cool.scx.http.x;
 
 import cool.scx.http.ScxHttpClient;
 import cool.scx.http.ScxHttpClientRequest;
-import cool.scx.http.x.web_socket.XClientWebSocketBuilder;
 import cool.scx.http.web_socket.ScxClientWebSocketBuilder;
+import cool.scx.http.x.web_socket.XClientWebSocketBuilder;
 
 /**
  * todo 待完成

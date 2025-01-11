@@ -2,8 +2,8 @@ package cool.scx.http.x.web_socket;
 
 import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.uri.ScxURI;
-import cool.scx.http.x.http1x.Http1xServerWebSocketHandshakeRequest;
 import cool.scx.http.web_socket.ScxServerWebSocket;
+import cool.scx.http.x.http1x.Http1xServerWebSocketHandshakeRequest;
 
 /**
  * X ServerWebSocket

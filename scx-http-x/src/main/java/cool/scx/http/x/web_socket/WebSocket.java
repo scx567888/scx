@@ -10,9 +10,9 @@ import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.util.concurrent.locks.ReentrantLock;
 
+import static cool.scx.http.web_socket.WebSocketCloseInfo.*;
 import static cool.scx.http.x.web_socket.WebSocketFrameHelper.parseCloseInfo;
 import static cool.scx.http.x.web_socket.WebSocketFrameHelper.writeFrame;
-import static cool.scx.http.web_socket.WebSocketCloseInfo.*;
 import static java.lang.System.Logger.Level.ERROR;
 
 /**
