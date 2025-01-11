@@ -13,7 +13,7 @@ import static cool.scx.http.usagi.http1x.Http1xHelper.*;
  */
 public class Http1xServerRequest implements ScxHttpServerRequest {
 
-    public final Http1xServerConnection http1xConnection;
+    public final Http1xServerConnection connection;
     public final boolean isKeepAlive;
 
     private final ScxHttpMethod method;
@@ -25,8 +25,8 @@ public class Http1xServerRequest implements ScxHttpServerRequest {
     private final PeerInfo remotePeer;
     private final PeerInfo localPeer;
 
-    public Http1xServerRequest(Http1xServerConnection http1xConnection, Http1xRequestLine requestLine, ScxHttpHeadersWritable headers, ScxHttpBody body) {
-        this.http1xConnection = http1xConnection;
+    public Http1xServerRequest(Http1xServerConnection connection, Http1xRequestLine requestLine, ScxHttpHeadersWritable headers, ScxHttpBody body) {
+        this.connection = connection;
         this.isKeepAlive = checkIsKeepAlive(requestLine, headers);
         this.method = requestLine.method();
         // todo uri 需要 通过请求头 , socket 等 获取 请求主机 
@@ -34,9 +34,9 @@ public class Http1xServerRequest implements ScxHttpServerRequest {
         this.version = requestLine.version();
         this.headers = headers;
         this.body = body;
-        this.response = new Http1xServerResponse(http1xConnection, this);
-        this.remotePeer = getRemotePeer(http1xConnection.tcpSocket);
-        this.localPeer = getLocalPeer(http1xConnection.tcpSocket);
+        this.response = new Http1xServerResponse(connection, this);
+        this.remotePeer = getRemotePeer(connection.tcpSocket);
+        this.localPeer = getLocalPeer(connection.tcpSocket);
     }
 
     @Override
