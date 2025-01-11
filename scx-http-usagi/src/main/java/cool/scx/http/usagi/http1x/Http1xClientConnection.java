@@ -97,7 +97,7 @@ public class Http1xClientConnection {
             return ScxHttpHeaders.of(headerStr);
         } catch (NoMoreDataException e) {
             throw new CloseConnectionException();
-        }catch (NoMatchFoundException e) {
+        } catch (NoMatchFoundException e) {
             //todo 未找到 这里应该抛出什么异常 ?
             throw new CloseConnectionException();
         }

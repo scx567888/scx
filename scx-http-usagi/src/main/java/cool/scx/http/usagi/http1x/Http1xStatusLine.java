@@ -7,5 +7,5 @@ public record Http1xStatusLine(HttpVersion version, int code, String reason) {
     public static Http1xStatusLine of(String statusLineStr) {
         return Http1xStatusLineHelper.parseStatusLine(statusLineStr);
     }
-    
+
 }

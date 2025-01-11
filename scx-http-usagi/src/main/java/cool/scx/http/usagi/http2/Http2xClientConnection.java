@@ -9,7 +9,7 @@ import cool.scx.tcp.ScxTCPSocket;
 public class Http2xClientConnection {
 
     public Http2xClientConnection(ScxTCPSocket tcpSocket, UsagiHttpClientOptions options) {
-        
+
     }
 
     public Http2xClientConnection sendRequest(UsagiHttpClientRequest usagiHttpClientRequest, MediaWriter writer) {
@@ -19,5 +19,5 @@ public class Http2xClientConnection {
     public ScxHttpClientResponse waitResponse() {
         return null;
     }
-    
+
 }

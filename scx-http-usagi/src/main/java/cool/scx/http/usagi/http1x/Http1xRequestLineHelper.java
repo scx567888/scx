@@ -16,7 +16,7 @@ public final class Http1xRequestLineHelper {
         if (parts.length != 3) {
             throw new IllegalArgumentException("Invalid request line: " + requestLineStr);
         }
-        
+
         var methodStr = parts[0];
         var pathStr = parts[1];
         var versionStr = parts[2];

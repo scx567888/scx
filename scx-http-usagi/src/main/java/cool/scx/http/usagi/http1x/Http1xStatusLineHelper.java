@@ -10,7 +10,7 @@ public class Http1xStatusLineHelper {
         if (parts.length != 3) {
             throw new RuntimeException("Invalid status line: " + statusLineStr);
         }
-    
+
         var versionStr = parts[0];
         var codeStr = parts[1];
         var reasonStr = parts[2];

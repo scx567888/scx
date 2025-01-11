@@ -21,7 +21,7 @@ public class UsagiHttpClientOptions {
 
     public UsagiHttpClientOptions() {
         this.tcpClientOptions = new ScxTCPClientOptions().autoUpgradeToTLS(true).autoHandshake(false);
-        this.http1xConnectionOptions=new Http1xClientConnectionOptions();
+        this.http1xConnectionOptions = new Http1xClientConnectionOptions();
         this.webSocketOptions = new WebSocketOptions();
         this.tcpClientType = TCPClientType.CLASSIC;
         this.enableHttp2 = false;//默认不启用 http2 
