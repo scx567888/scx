@@ -1,21 +1,21 @@
-package cool.scx.http.usagi;
+package cool.scx.http.usagi.http1x;
 
 import cool.scx.http.*;
 
 /**
- * todo 待完成
+ * Http1xClientResponse
  *
  * @author scx567888
  * @version 0.0.1
  */
-public class UsagiHttpClientResponse implements ScxHttpClientResponse {
+public class Http1xClientResponse implements ScxHttpClientResponse {
 
     private final HttpStatusCode status;
     private final ScxHttpHeadersWritable headers;
     private final ScxHttpBody body;
 
-    public UsagiHttpClientResponse(HttpStatusCode status, ScxHttpHeadersWritable headers, ScxHttpBody body) {
-        this.status = status;
+    public Http1xClientResponse(Http1xStatusLine statusLine, ScxHttpHeadersWritable headers, ScxHttpBody body) {
+        this.status = HttpStatusCode.of(statusLine.code());
         this.headers = headers;
         this.body = body;
     }
