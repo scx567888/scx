@@ -28,14 +28,14 @@ import java.security.cert.X509Certificate;
 public class UsagiHttpClientRequest extends ScxHttpClientRequestBase {
 
     private final UsagiHttpClient httpClient;
+    private final UsagiHttpClientOptions options;
     public ScxTCPSocket tcpSocket;
     ScxTCPClient tcpClient;
 
     public UsagiHttpClientRequest(UsagiHttpClient httpClient) {
         this.httpClient = httpClient;
+        this.options = httpClient.options();
     }
-
-    
 
     public static InetSocketAddress getRemoteAddress(ScxURI uri) {
         var defaultPort = -1;
@@ -107,7 +107,7 @@ public class UsagiHttpClientRequest extends ScxHttpClientRequestBase {
         var useHttp2 = false;
 
         if (this.tcpSocket.isTLS()) {
-            this.tcpSocket.tlsManager().setApplicationProtocols(new String[]{"http/1.1", "h2"});
+            this.tcpSocket.tlsManager().setApplicationProtocols(getApplicationProtocols());
             try {
                 this.tcpSocket.startHandshake();
             } catch (IOException e) {
@@ -118,11 +118,19 @@ public class UsagiHttpClientRequest extends ScxHttpClientRequestBase {
         }
 
         if (useHttp2) {
-            return new Http2xClientConnection(tcpSocket).sendRequest(this, writer).waitResponse();
+            return new Http2xClientConnection(tcpSocket,options).sendRequest(this, writer).waitResponse();
         } else {
-            return new Http1xClientConnection(tcpSocket).sendRequest(this, writer).waitResponse();
+            return new Http1xClientConnection(tcpSocket,options).sendRequest(this, writer).waitResponse();
         }
 
+    }
+
+    private String[] getApplicationProtocols() {
+        if (this.options.enableHttp2()) {
+            return new String[]{"http/1.1", "h2"};
+        } else {
+            return new String[]{"http/1.1"};
+        }
     }
 
 }

@@ -1,6 +1,6 @@
 package cool.scx.http.usagi;
 
-import cool.scx.http.usagi.http1x.Http1xConnectionOptions;
+import cool.scx.http.usagi.http1x.Http1xServerConnectionOptions;
 import cool.scx.http.usagi.web_socket.WebSocketOptions;
 import cool.scx.tcp.ScxTCPServerOptions;
 import cool.scx.tcp.tls.TLS;
@@ -16,7 +16,7 @@ import java.net.InetSocketAddress;
 public class UsagiHttpServerOptions {
 
     private final ScxTCPServerOptions tcpServerOptions; // TCP 服务器配置
-    private final Http1xConnectionOptions http1xConnectionOptions;// Http1 配置
+    private final Http1xServerConnectionOptions http1xConnectionOptions;// Http1 配置
     private final WebSocketOptions webSocketOptions;// WebSocket 配置
     private TCPServerType tcpServerType; // TCP 服务器类型
     private boolean enableHttp2; // 是否开启 Http2
@@ -24,7 +24,7 @@ public class UsagiHttpServerOptions {
     public UsagiHttpServerOptions() {
         //默认不自动握手
         this.tcpServerOptions = new ScxTCPServerOptions().autoUpgradeToTLS(true).autoHandshake(false);
-        this.http1xConnectionOptions = new Http1xConnectionOptions();
+        this.http1xConnectionOptions = new Http1xServerConnectionOptions();
         this.webSocketOptions = new WebSocketOptions();
         this.tcpServerType = TCPServerType.CLASSIC; // 默认 使用 CLASSIC 实现
         this.enableHttp2 = false;//默认不启用 http2
@@ -33,7 +33,7 @@ public class UsagiHttpServerOptions {
     public UsagiHttpServerOptions(UsagiHttpServerOptions oldOptions) {
         //默认不自动握手
         this.tcpServerOptions = new ScxTCPServerOptions(oldOptions.tcpServerOptions()).autoUpgradeToTLS(true).autoHandshake(false);
-        this.http1xConnectionOptions = new Http1xConnectionOptions(oldOptions.http1xConnectionOptions());
+        this.http1xConnectionOptions = new Http1xServerConnectionOptions(oldOptions.http1xConnectionOptions());
         this.webSocketOptions = new WebSocketOptions(oldOptions.webSocketOptions());
         tcpServerType(oldOptions.tcpServerType());
         enableHttp2(oldOptions.enableHttp2());
@@ -44,7 +44,7 @@ public class UsagiHttpServerOptions {
         return tcpServerOptions;
     }
 
-    public Http1xConnectionOptions http1xConnectionOptions() {
+    public Http1xServerConnectionOptions http1xConnectionOptions() {
         return http1xConnectionOptions;
     }
 
