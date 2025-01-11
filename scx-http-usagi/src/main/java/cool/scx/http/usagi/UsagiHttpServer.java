@@ -2,8 +2,8 @@ package cool.scx.http.usagi;
 
 import cool.scx.http.ScxHttpServer;
 import cool.scx.http.ScxHttpServerRequest;
-import cool.scx.http.usagi.http1x.Http1xConnection;
-import cool.scx.http.usagi.http2.Http2Connection;
+import cool.scx.http.usagi.http1x.Http1xServerConnection;
+import cool.scx.http.usagi.http2.Http2ServerConnection;
 import cool.scx.tcp.ClassicTCPServer;
 import cool.scx.tcp.NioTCPServer;
 import cool.scx.tcp.ScxTCPServer;
@@ -62,9 +62,9 @@ public class UsagiHttpServer implements ScxHttpServer {
         }
 
         if (useHttp2) {
-            new Http2Connection(tcpSocket, options, requestHandler).start();
+            new Http2ServerConnection(tcpSocket, options, requestHandler).start();
         } else {
-            new Http1xConnection(tcpSocket, options, requestHandler).start();
+            new Http1xServerConnection(tcpSocket, options, requestHandler).start();
         }
     }
 

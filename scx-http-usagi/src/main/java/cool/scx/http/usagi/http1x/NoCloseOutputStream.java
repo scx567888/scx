@@ -1,10 +1,10 @@
-package cool.scx.http.usagi;
+package cool.scx.http.usagi.http1x;
 
 import java.io.FilterOutputStream;
 import java.io.OutputStream;
 
 /**
- * todo 待完成
+ * NoCloseOutputStream
  *
  * @author scx567888
  * @version 0.0.1

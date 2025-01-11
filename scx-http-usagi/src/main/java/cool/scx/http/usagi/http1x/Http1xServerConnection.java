@@ -10,10 +10,13 @@ import cool.scx.tcp.ScxTCPSocket;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.System.Logger;
 import java.util.function.Consumer;
 
 import static cool.scx.http.HttpFieldName.CONNECTION;
 import static cool.scx.http.usagi.http1x.Http1xHelper.*;
+import static java.lang.System.Logger.Level.TRACE;
+import static java.lang.System.getLogger;
 
 /**
  * Http 1.x 连接处理器
@@ -21,9 +24,9 @@ import static cool.scx.http.usagi.http1x.Http1xHelper.*;
  * @author scx567888
  * @version 0.0.1
  */
-public class Http1xConnection {
+public class Http1xServerConnection {
 
-    private final static System.Logger LOGGER = System.getLogger(Http1xConnection.class.getName());
+    private final static Logger LOGGER = getLogger(Http1xServerConnection.class.getName());
 
     public final ScxTCPSocket tcpSocket;
     public final UsagiHttpServerOptions options;
@@ -33,7 +36,7 @@ public class Http1xConnection {
     private final Consumer<ScxHttpServerRequest> requestHandler;
     private boolean running;
 
-    public Http1xConnection(ScxTCPSocket tcpSocket, UsagiHttpServerOptions options, Consumer<ScxHttpServerRequest> requestHandler) {
+    public Http1xServerConnection(ScxTCPSocket tcpSocket, UsagiHttpServerOptions options, Consumer<ScxHttpServerRequest> requestHandler) {
         this.tcpSocket = tcpSocket;
         this.options = options;
         this.requestHandler = requestHandler;
@@ -176,7 +179,7 @@ public class Http1xConnection {
             dataWriter.write(sb.toString().getBytes());
             dataWriter.write(message);
         } catch (IOException ee) {
-            LOGGER.log(System.Logger.Level.TRACE, "发送请求错误时发生错误 !!!");
+            LOGGER.log(TRACE, "发送请求错误时发生错误 !!!");
         }
 
     }

@@ -18,8 +18,8 @@ public class Http1xServerWebSocketHandshakeRequest extends Http1xServerRequest i
 
     public ServerWebSocket webSocket;
 
-    public Http1xServerWebSocketHandshakeRequest(Http1xConnection http1xConnection, Http1xRequestLine requestLine, ScxHttpHeadersWritable headers, ScxHttpBody body) {
-        super(http1xConnection, requestLine, headers, body);
+    public Http1xServerWebSocketHandshakeRequest(Http1xServerConnection connection, Http1xRequestLine requestLine, ScxHttpHeadersWritable headers, ScxHttpBody body) {
+        super(connection, requestLine, headers, body);
     }
 
     @Override
@@ -33,7 +33,7 @@ public class Http1xServerWebSocketHandshakeRequest extends Http1xServerRequest i
             response.status(101).send();
             webSocket = new ServerWebSocket(this);
             // 一旦成功接受了 websocket 请求, 整个 tcp 将会被 websocket 独占 所以这里需要停止 http 监听
-            http1xConnection.stop();
+            connection.stop();
         }
         return webSocket;
     }

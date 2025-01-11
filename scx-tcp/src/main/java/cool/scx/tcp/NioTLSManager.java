@@ -1,6 +1,7 @@
 package cool.scx.tcp;
 
 import javax.net.ssl.SSLEngine;
+import javax.net.ssl.SSLParameters;
 import java.util.List;
 import java.util.function.BiFunction;
 
@@ -31,6 +32,16 @@ public class NioTLSManager implements ScxTLSManager {
     @Override
     public String getApplicationProtocol() {
         return sslEngine.getApplicationProtocol();
+    }
+
+    @Override
+    public SSLParameters getSSLParameters() {
+        return sslEngine.getSSLParameters();
+    }
+
+    @Override
+    public void setSSLParameters(SSLParameters params) {
+        sslEngine.setSSLParameters(params);
     }
 
 }

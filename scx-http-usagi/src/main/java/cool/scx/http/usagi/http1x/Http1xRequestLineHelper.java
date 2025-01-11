@@ -11,17 +11,20 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public final class Http1xRequestLineHelper {
 
     public static Http1xRequestLine parseRequestLine(String requestLineStr) {
-        var split = requestLineStr.split(" ");
-        if (split.length != 3) {
+        var parts = requestLineStr.split(" ");
+
+        if (parts.length != 3) {
             throw new IllegalArgumentException("Invalid request line: " + requestLineStr);
         }
-        var methodStr = split[0];
-        var pathStr = split[1];
-        var versionStr = split[2];
+
+        var methodStr = parts[0];
+        var pathStr = parts[1];
+        var versionStr = parts[2];
 
         var method = ScxHttpMethod.of(methodStr);
         var path = URLDecoder.decode(pathStr, UTF_8);
         var version = HttpVersion.of(versionStr);
+
         return new Http1xRequestLine(method, path, version);
     }
 

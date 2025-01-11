@@ -17,10 +17,10 @@ public class ServerWebSocket extends WebSocket implements ScxServerWebSocket {
 
     public ServerWebSocket(Http1xServerWebSocketHandshakeRequest handshakeRequest) {
         super(
-                handshakeRequest.http1xConnection.tcpSocket,
-                handshakeRequest.http1xConnection.dataReader,
-                handshakeRequest.http1xConnection.dataWriter,
-                handshakeRequest.http1xConnection.options.webSocketOptions()
+                handshakeRequest.connection.tcpSocket,
+                handshakeRequest.connection.dataReader,
+                handshakeRequest.connection.dataWriter,
+                handshakeRequest.connection.options.webSocketOptions()
         );
         this.handshakeRequest = handshakeRequest;
     }
