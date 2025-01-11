@@ -6,7 +6,7 @@ import cool.scx.tcp.ScxTCPClientOptions;
 import cool.scx.tcp.tls.TLS;
 
 /**
- * UsagiHttpClientOptions
+ * XHttpClientOptions
  *
  * @author scx567888
  * @version 0.0.1

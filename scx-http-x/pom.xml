@@ -12,10 +12,10 @@
     <artifactId>scx-http-x</artifactId>
     <packaging>jar</packaging>
 
-    <name>SCX HTTP Usagi</name>
+    <name>SCX HTTP X</name>
     <url>https://github.com/scx567888/scx</url>
     <description>
-        SCX HTTP Usagi
+        SCX HTTP X
     </description>
 
     <dependencies>

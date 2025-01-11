@@ -27,7 +27,7 @@ import static cool.scx.http.HttpHelper.generateSecWebSocketAccept;
  * @author scx567888
  * @version 0.0.1
  */
-public class UsagiClientWebSocketBuilder implements ScxClientWebSocketBuilder {
+public class XClientWebSocketBuilder implements ScxClientWebSocketBuilder {
 
     private final XHttpClient httpClient;
     private WebSocketOptions webSocketOptions;
@@ -35,7 +35,7 @@ public class UsagiClientWebSocketBuilder implements ScxClientWebSocketBuilder {
     private ScxHttpHeadersWritable headers;
     private Consumer<ScxClientWebSocket> onConnect;
 
-    public UsagiClientWebSocketBuilder(XHttpClient httpClient) {
+    public XClientWebSocketBuilder(XHttpClient httpClient) {
         this.httpClient = httpClient;
         this.uri = ScxURI.of();
         this.headers = ScxHttpHeaders.of();

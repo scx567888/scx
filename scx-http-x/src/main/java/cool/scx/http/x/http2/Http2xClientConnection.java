@@ -12,7 +12,7 @@ public class Http2xClientConnection {
 
     }
 
-    public Http2xClientConnection sendRequest(XHttpClientRequest usagiHttpClientRequest, MediaWriter writer) {
+    public Http2xClientConnection sendRequest(XHttpClientRequest request, MediaWriter writer) {
         return null;
     }
 

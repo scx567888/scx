@@ -2,7 +2,7 @@ package cool.scx.http.x;
 
 import cool.scx.http.ScxHttpClient;
 import cool.scx.http.ScxHttpClientRequest;
-import cool.scx.http.x.web_socket.UsagiClientWebSocketBuilder;
+import cool.scx.http.x.web_socket.XClientWebSocketBuilder;
 import cool.scx.http.web_socket.ScxClientWebSocketBuilder;
 
 /**
@@ -34,7 +34,7 @@ public class XHttpClient implements ScxHttpClient {
 
     @Override
     public ScxClientWebSocketBuilder webSocket() {
-        return new UsagiClientWebSocketBuilder(this);
+        return new XClientWebSocketBuilder(this);
     }
 
 }

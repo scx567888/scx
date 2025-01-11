@@ -4,7 +4,7 @@ import cool.scx.http.x.XHttpServer;
 import cool.scx.http.x.XHttpServerOptions;
 import cool.scx.http.web_socket.ScxServerWebSocketHandshakeRequest;
 
-public class UsagiTest {
+public class XTest {
 
     public static void main(String[] args) {
         test1();

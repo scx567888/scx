@@ -6,7 +6,7 @@ import cool.scx.http.x.http1x.Http1xServerWebSocketHandshakeRequest;
 import cool.scx.http.web_socket.ScxServerWebSocket;
 
 /**
- * Usagi ServerWebSocket
+ * X ServerWebSocket
  *
  * @author scx567888
  * @version 0.0.1

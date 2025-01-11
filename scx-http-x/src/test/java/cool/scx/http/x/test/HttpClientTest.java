@@ -12,10 +12,10 @@ public class HttpClientTest {
     }
 
     public static void test1() {
-        UsagiTest.test1();
+        XTest.test1();
 
-        var usagiHttpClient = new XHttpClient();
-        var send = usagiHttpClient.request()
+        var client = new XHttpClient();
+        var send = client.request()
                 .uri("http://localhost:8899/中文路径😎😎😎😎?a=1&b=llll")
                 .addHeader("a", "b")
                 .method(POST)
@@ -26,9 +26,9 @@ public class HttpClientTest {
     }
 
     public static void test2() {
-        UsagiTest.test1();
-        var usagiHttpClient = new XHttpClient();
-        usagiHttpClient.webSocket()
+        XTest.test1();
+        var client = new XHttpClient();
+        client.webSocket()
                 .uri("http://localhost:8899/中文路径😎😎😎😎?a=1&b=llll")
                 .addHeader("a", "b")
                 .onConnect(c -> {

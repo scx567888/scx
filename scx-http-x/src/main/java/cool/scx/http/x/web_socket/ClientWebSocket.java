@@ -13,7 +13,7 @@ import java.io.UncheckedIOException;
 import static cool.scx.http.x.web_socket.WebSocketFrameHelper.writeFrame;
 
 /**
- * UsagiClientWebSocket
+ * ClientWebSocket
  *
  * @author scx567888
  * @version 0.0.1

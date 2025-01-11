@@ -35,7 +35,7 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>scx-http-usagi</artifactId>
+            <artifactId>scx-http-x</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
