@@ -16,8 +16,8 @@ public class HttpChunkedDataSupplier implements DataSupplier {
 
     private final DataReader dataReader;
     private final long maxLength;
-    private long position;
     private final Runnable onFinish;
+    private long position;
     private boolean isFinished;
 
     public HttpChunkedDataSupplier(DataReader dataReader) {
@@ -38,10 +38,10 @@ public class HttpChunkedDataSupplier implements DataSupplier {
 
     @Override
     public DataNode get() {
-        if (isFinished){
+        if (isFinished) {
             return null;
         }
-        
+
         var chunkLengthBytes = dataReader.readUntil("\r\n".getBytes());
         var chunkLengthStr = new String(chunkLengthBytes);
         int chunkLength = Integer.parseUnsignedInt(chunkLengthStr, 16);

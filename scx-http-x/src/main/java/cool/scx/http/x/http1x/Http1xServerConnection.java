@@ -56,6 +56,17 @@ public class Http1xServerConnection {
         this.running = true;
     }
 
+    public static void consumeInputStream(InputStream inputStream) {
+        try (inputStream) {
+            byte[] buffer = new byte[2048];
+            while (inputStream.read(buffer) > 0) {
+                // ignore
+            }
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
     public void start() {
         //开始读取 Http 请求
         while (running) {
@@ -92,7 +103,7 @@ public class Http1xServerConnection {
 
                 // 6, 用户处理器可能没有消费 请求体 这里我们帮助消费用户未消费的数据
                 consumeInputStream(body.inputStream());
-                
+
                 try {
                     //等待请求体消费完成
                     entityReadLatch.await();
@@ -224,17 +235,6 @@ public class Http1xServerConnection {
             LOGGER.log(TRACE, "发送请求错误时发生错误 !!!");
         }
 
-    }
-
-    public static void consumeInputStream(InputStream inputStream) {
-        try (inputStream) {
-            byte[] buffer = new byte[2048];
-            while (inputStream.read(buffer) > 0) {
-                // ignore
-            }
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
     }
 
 }

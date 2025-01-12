@@ -16,8 +16,8 @@ public class FixedLengthInputStream extends InputStream {
 
     private final PowerfulLinkedDataReader dataReader;
     private final long maxLength;
-    private long position;
     private final Runnable onFinish;
+    private long position;
     private boolean isFinished;
 
     public FixedLengthInputStream(PowerfulLinkedDataReader dataReader, long maxLength) {
