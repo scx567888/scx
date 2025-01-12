@@ -15,7 +15,8 @@ import java.io.OutputStream;
 import java.lang.System.Logger;
 import java.util.function.Consumer;
 
-import static cool.scx.http.HttpFieldName.*;
+import static cool.scx.http.HttpFieldName.CONNECTION;
+import static cool.scx.http.HttpFieldName.EXPECT;
 import static cool.scx.http.x.http1x.Http1xHelper.*;
 import static java.lang.System.Logger.Level.TRACE;
 import static java.lang.System.getLogger;
