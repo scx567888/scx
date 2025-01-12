@@ -70,8 +70,10 @@ public class Http1xServerConnection {
                     }
                 }
 
-                // 3, 读取 请求体
-                var body = readBody(headers);
+                // 3, 读取 请求体流
+                var bodyInputStream = readBodyInputStream(headers);
+
+                var body = new ScxHttpBodyImpl(bodyInputStream, headers, 65535);
 
                 // 4, 判断是否为 WebSocket 握手请求 并创建对应请求
                 var isWebSocketHandshake = checkIsWebSocketHandshake(requestLine, headers);
@@ -85,11 +87,11 @@ public class Http1xServerConnection {
                     _callRequestHandler(request);
                 } finally {
                     //todo 这里如果  _callRequestHandler 中 异步读取 body 怎么办?
-                    
+
                     // 6, 如果 还是 running 说明需要继续复用当前 tcp 连接,并进行下一次 Request 的读取
                     if (running) {
                         // 7, 用户处理器可能没有消费完请求体 这里我们帮助消费用户未消费的数据
-                        consumeInputStream(body.inputStream());
+                        consumeInputStream(bodyInputStream);
                     }
                 }
 
@@ -161,13 +163,13 @@ public class Http1xServerConnection {
     }
 
     //todo 这里如果 dataReader 抛出了 NoMoreDataException 我们需要处理
-    private ScxHttpBody readBody(ScxHttpHeaders headers) {
+    private InputStream readBodyInputStream(ScxHttpHeaders headers) {
         // http1.1 本质上只有两种请求体格式 1, 分块传输 2, 指定长度 (当然也可以没有长度 那就表示没有请求体)
 
         //1, 判断请求体是不是分块传输
         var isChunkedTransfer = checkIsChunkedTransfer(headers);
         if (isChunkedTransfer) {
-            return new ScxHttpBodyImpl(new DataReaderInputStream(new HttpChunkedDataSupplier(dataReader, options.maxPayloadSize())), headers, 65535);
+            return new DataReaderInputStream(new HttpChunkedDataSupplier(dataReader, options.maxPayloadSize()));
         }
 
         //2, 判断请求体是不是有 长度
@@ -177,11 +179,11 @@ public class Http1xServerConnection {
             if (contentLength > options.maxPayloadSize()) {
                 throw new ScxHttpException(HttpStatusCode.CONTENT_TOO_LARGE);
             }
-            return new ScxHttpBodyImpl(new FixedLengthDataReaderInputStream(dataReader, contentLength), headers, 65536);
+            return new FixedLengthDataReaderInputStream(dataReader, contentLength);
         }
 
         //3, 没有长度的空请求体
-        return new ScxHttpBodyImpl(InputStream.nullInputStream(), headers, 65536);
+        return InputStream.nullInputStream();
     }
 
     private void handleHttpException(ScxHttpException e) {
