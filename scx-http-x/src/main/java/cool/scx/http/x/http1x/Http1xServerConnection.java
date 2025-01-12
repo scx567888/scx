@@ -15,7 +15,7 @@ import java.io.OutputStream;
 import java.lang.System.Logger;
 import java.util.function.Consumer;
 
-import static cool.scx.http.HttpFieldName.CONNECTION;
+import static cool.scx.http.HttpFieldName.*;
 import static cool.scx.http.x.http1x.Http1xHelper.*;
 import static java.lang.System.Logger.Level.TRACE;
 import static java.lang.System.getLogger;
@@ -59,6 +59,15 @@ public class Http1xServerConnection {
 
                 // 2, 读取 请求头 
                 var headers = readHeaders();
+
+                // Expect: 100-continue //todo 这里需要重构
+                if ("100-continue".equalsIgnoreCase(headers.get(EXPECT))) {
+                    try {
+                        dataWriter.write(CONTINUE_100);
+                    } catch (IOException e) {
+                        throw new CloseConnectionException("Failed to write continue", e);
+                    }
+                }
 
                 // 3, 读取 请求体
                 var body = readBody(headers);
@@ -165,7 +174,7 @@ public class Http1xServerConnection {
     }
 
     private void handleHttpException(ScxHttpException e) {
-
+        //todo 这个方法不是特别合理
         var headers = ScxHttpHeaders.of();
 
         var sb = new StringBuilder();
