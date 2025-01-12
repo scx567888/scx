@@ -12,6 +12,7 @@ public class WebSocketTest {
     }
 
     public static void startServer() {
+        var s = System.nanoTime();
         var httpServer = new XHttpServer(new XHttpServerOptions().port(8080));
 
         httpServer.onWebSocket(webSocket -> {
