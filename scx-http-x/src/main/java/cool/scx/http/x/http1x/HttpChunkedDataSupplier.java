@@ -16,7 +16,6 @@ public class HttpChunkedDataSupplier implements DataSupplier {
 
     private final DataReader dataReader;
     private final long maxLength;
-    private final Runnable onFinish;
     private long position;
     private boolean isFinished;
 
@@ -25,15 +24,10 @@ public class HttpChunkedDataSupplier implements DataSupplier {
     }
 
     public HttpChunkedDataSupplier(DataReader dataReader, long maxLength) {
-        this(dataReader, maxLength, () -> {});
-    }
-
-    public HttpChunkedDataSupplier(DataReader dataReader, long maxLength, Runnable onFinish) {
         this.dataReader = dataReader;
         this.maxLength = maxLength;
         this.position = 0;
         this.isFinished = false;
-        this.onFinish = onFinish;
     }
 
     @Override
@@ -55,8 +49,7 @@ public class HttpChunkedDataSupplier implements DataSupplier {
             if (endBytes.length != 0) {
                 throw new IllegalArgumentException("错误的终结分块");
             }
-            //调用结束
-            completeRead();
+            isFinished = true;
             return null;
         }
         var nextChunkData = dataReader.read(chunkLength);
@@ -70,13 +63,6 @@ public class HttpChunkedDataSupplier implements DataSupplier {
             throw new ScxHttpException(HttpStatusCode.CONTENT_TOO_LARGE);
         }
         position += chunkLength;
-    }
-
-    private void completeRead() {
-        if (!isFinished) {
-            isFinished = true;
-            onFinish.run();
-        }
     }
 
 }
