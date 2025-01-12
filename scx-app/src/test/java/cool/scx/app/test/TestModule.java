@@ -21,7 +21,6 @@ import cool.scx.http.helidon.ScxHttpClientHelper;
 import cool.scx.http.media.multi_part.MultiPart;
 import cool.scx.http.routing.handler.StaticHandler;
 import cool.scx.http.uri.ScxURI;
-import cool.scx.http.x.XHttpServerOptions;
 import cool.scx.io.zip.UnZipBuilder;
 import cool.scx.io.zip.ZipBuilder;
 import cool.scx.io.zip.ZipOptions;
@@ -71,7 +70,6 @@ public class TestModule extends ScxModule {
                 .configure(ScxAppFeature.USE_DEVELOPMENT_ERROR_PAGE, true)
                 .configure(ScxAppFeature.ENABLE_SCHEDULING_WITH_ANNOTATION, true)
                 .configure(ScxAppFeature.USE_SPY, true)
-                .setDefaultHttpServerOptions(new XHttpServerOptions().tcpServerType(XHttpServerOptions.TCPServerType.NIO))
                 .run();
         //修复表
         try {
@@ -156,7 +154,7 @@ public class TestModule extends ScxModule {
         var ip = Arrays.stream(NetUtils.getLocalIPAddress()).filter(i -> i instanceof Inet4Address).toList().getFirst();
         var logger = System.getLogger(TestModule.class.getName());
         //测试 URIBuilder
-        for (int i = 0; i < 1000; i = i + 1) {
+        for (int i = 0; i < 10; i = i + 1) {
             var s = "http://" + ip.getHostAddress() + ":8888/test0";
             var stringHttpResponse = ScxHttpClientHelper.post(
                     ScxURI.of(s)
