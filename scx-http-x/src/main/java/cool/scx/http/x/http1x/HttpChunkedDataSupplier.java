@@ -17,6 +17,7 @@ public class HttpChunkedDataSupplier implements DataSupplier {
     private final DataReader dataReader;
     private final long maxLength;
     private long position;
+    private boolean isFinished;
 
     public HttpChunkedDataSupplier(DataReader dataReader) {
         this(dataReader, Long.MAX_VALUE);
@@ -26,10 +27,15 @@ public class HttpChunkedDataSupplier implements DataSupplier {
         this.dataReader = dataReader;
         this.maxLength = maxLength;
         this.position = 0;
+        this.isFinished = false;
     }
 
     @Override
     public DataNode get() {
+        if (isFinished) {
+            return null;
+        }
+
         var chunkLengthBytes = dataReader.readUntil("\r\n".getBytes());
         var chunkLengthStr = new String(chunkLengthBytes);
         int chunkLength = Integer.parseUnsignedInt(chunkLengthStr, 16);
@@ -43,6 +49,7 @@ public class HttpChunkedDataSupplier implements DataSupplier {
             if (endBytes.length != 0) {
                 throw new IllegalArgumentException("错误的终结分块");
             }
+            isFinished = true;
             return null;
         }
         var nextChunkData = dataReader.read(chunkLength);
