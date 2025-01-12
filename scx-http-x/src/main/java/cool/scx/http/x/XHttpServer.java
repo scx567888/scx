@@ -2,6 +2,7 @@ package cool.scx.http.x;
 
 import cool.scx.http.ScxHttpServer;
 import cool.scx.http.ScxHttpServerRequest;
+import cool.scx.http.web_socket.ScxServerWebSocket;
 import cool.scx.http.x.http1x.Http1xServerConnection;
 import cool.scx.http.x.http2.Http2ServerConnection;
 import cool.scx.tcp.ClassicTCPServer;
@@ -25,6 +26,7 @@ public class XHttpServer implements ScxHttpServer {
     private final XHttpServerOptions options;
     private final ScxTCPServer tcpServer;
     private Consumer<ScxHttpServerRequest> requestHandler;
+    private Consumer<ScxServerWebSocket> webSocketHandler;
 
     public XHttpServer(XHttpServerOptions options) {
         this.options = options;
@@ -64,13 +66,19 @@ public class XHttpServer implements ScxHttpServer {
         if (useHttp2) {
             new Http2ServerConnection(tcpSocket, options, requestHandler).start();
         } else {
-            new Http1xServerConnection(tcpSocket, options, requestHandler).start();
+            new Http1xServerConnection(tcpSocket, options, requestHandler,webSocketHandler).start();
         }
     }
 
     @Override
     public ScxHttpServer onRequest(Consumer<ScxHttpServerRequest> requestHandler) {
         this.requestHandler = requestHandler;
+        return this;
+    }
+
+    @Override
+    public ScxHttpServer onWebSocket(Consumer<ScxServerWebSocket> handler) {
+        this.webSocketHandler = handler;
         return this;
     }
 
