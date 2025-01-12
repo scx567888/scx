@@ -91,13 +91,13 @@ public class Http1xServerConnection {
 
     private void _callRequestHandler(Http1xServerRequest request) {
         //todo 临时方案
-        if (request instanceof Http1xServerWebSocketHandshakeRequest webSocketHandshakeRequest){
+        if (request instanceof Http1xServerWebSocketHandshakeRequest webSocketHandshakeRequest) {
             ServerWebSocket serverWebSocket = webSocketHandshakeRequest.webSocket();
             if (webSocketHandler != null) {
                 webSocketHandler.accept(serverWebSocket);
             }
             serverWebSocket.start();
-        }else{
+        } else {
             if (requestHandler != null) {
                 requestHandler.accept(request);
             }

@@ -66,7 +66,7 @@ public class XHttpServer implements ScxHttpServer {
         if (useHttp2) {
             new Http2ServerConnection(tcpSocket, options, requestHandler).start();
         } else {
-            new Http1xServerConnection(tcpSocket, options, requestHandler,webSocketHandler).start();
+            new Http1xServerConnection(tcpSocket, options, requestHandler, webSocketHandler).start();
         }
     }
 
