@@ -6,13 +6,18 @@ import cool.scx.http.exception.ScxHttpException;
 import cool.scx.http.web_socket.ScxServerWebSocket;
 import cool.scx.http.x.XHttpServerOptions;
 import cool.scx.http.x.web_socket.ServerWebSocket;
-import cool.scx.io.*;
+import cool.scx.io.InputStreamDataSupplier;
+import cool.scx.io.NoMatchFoundException;
+import cool.scx.io.NoMoreDataException;
+import cool.scx.io.PowerfulLinkedDataReader;
 import cool.scx.tcp.ScxTCPSocket;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UncheckedIOException;
 import java.lang.System.Logger;
+import java.util.concurrent.CountDownLatch;
 import java.util.function.Consumer;
 
 import static cool.scx.http.HttpFieldName.CONNECTION;
@@ -70,8 +75,10 @@ public class Http1xServerConnection {
                     }
                 }
 
+                var entityReadLatch = new CountDownLatch(1);
+
                 // 3, 读取 请求体
-                var body = readBody(headers);
+                var body = readBody(headers, entityReadLatch);
 
                 // 4, 判断是否为 WebSocket 握手请求 并创建对应请求
                 var isWebSocketHandshake = checkIsWebSocketHandshake(requestLine, headers);
@@ -82,6 +89,16 @@ public class Http1xServerConnection {
 
                 // 5, 调用用户处理器
                 _callRequestHandler(request);
+
+                // 6, 用户处理器可能没有消费 请求体 这里我们帮助消费用户未消费的数据
+                consumeInputStream(body.inputStream());
+                
+                try {
+                    //等待请求体消费完成
+                    entityReadLatch.await();
+                } catch (InterruptedException e) {
+                    throw new ScxHttpException(HttpStatusCode.INTERNAL_SERVER_ERROR, "Failed to wait for pipeline");
+                }
 
             } catch (CloseConnectionException e) {
                 //这种情况是我们主动触发的, 表示需要关闭连接 这里直接跳出循环, 以便完成关闭
@@ -151,13 +168,13 @@ public class Http1xServerConnection {
     }
 
     //todo 这里如果 dataReader 抛出了 NoMoreDataException 我们需要处理
-    private ScxHttpBody readBody(ScxHttpHeaders headers) {
+    private ScxHttpBody readBody(ScxHttpHeaders headers, CountDownLatch entityReadLatch) {
         // http1.1 本质上只有两种请求体格式 1, 分块传输 2, 指定长度 (当然也可以没有长度 那就表示没有请求体)
 
         //1, 判断请求体是不是分块传输
         var isChunkedTransfer = checkIsChunkedTransfer(headers);
         if (isChunkedTransfer) {
-            return new ScxHttpBodyImpl(new DataReaderInputStream(new HttpChunkedDataSupplier(dataReader, options.maxPayloadSize())), headers, 65535);
+            return new ScxHttpBodyImpl(new HttpChunkedInputStream(dataReader, options.maxPayloadSize(), entityReadLatch::countDown), headers, 65535);
         }
 
         //2, 判断请求体是不是有 长度
@@ -167,10 +184,11 @@ public class Http1xServerConnection {
             if (contentLength > options.maxPayloadSize()) {
                 throw new ScxHttpException(HttpStatusCode.CONTENT_TOO_LARGE);
             }
-            return new ScxHttpBodyImpl(new FixedLengthDataReaderInputStream(dataReader, contentLength), headers, 65536);
+            return new ScxHttpBodyImpl(new FixedLengthInputStream(dataReader, contentLength, entityReadLatch::countDown), headers, 65536);
         }
 
         //3, 没有长度的空请求体
+        entityReadLatch.countDown();// 这里直接释放
         return new ScxHttpBodyImpl(InputStream.nullInputStream(), headers, 65536);
     }
 
@@ -206,6 +224,17 @@ public class Http1xServerConnection {
             LOGGER.log(TRACE, "发送请求错误时发生错误 !!!");
         }
 
+    }
+
+    public static void consumeInputStream(InputStream inputStream) {
+        try (inputStream) {
+            byte[] buffer = new byte[2048];
+            while (inputStream.read(buffer) > 0) {
+                // ignore
+            }
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 
 }

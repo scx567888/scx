@@ -117,7 +117,7 @@ public class Http1xClientConnection {
             if (contentLength > options.maxPayloadSize()) {
                 throw new ScxHttpException(HttpStatusCode.CONTENT_TOO_LARGE);
             }
-            return new ScxHttpBodyImpl(new FixedLengthDataReaderInputStream(dataReader, contentLength), headers, 65536);
+            return new ScxHttpBodyImpl(new FixedLengthInputStream(dataReader, contentLength), headers, 65536);
         }
 
         //3, 没有长度的空请求体
