@@ -84,6 +84,8 @@ public class Http1xServerConnection {
                     // 5, 调用用户处理器
                     _callRequestHandler(request);
                 } finally {
+                    //todo 这里如果  _callRequestHandler 中 异步读取 body 怎么办?
+                    
                     // 6, 如果 还是 running 说明需要继续复用当前 tcp 连接,并进行下一次 Request 的读取
                     if (running) {
                         // 7, 用户处理器可能没有消费完请求体 这里我们帮助消费用户未消费的数据
