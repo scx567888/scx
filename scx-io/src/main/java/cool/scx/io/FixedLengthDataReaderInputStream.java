@@ -29,10 +29,12 @@ public class FixedLengthDataReaderInputStream extends InputStream {
         }
         int i = dataReader.inputStreamRead();
         if (i == -1) {
+            position = maxLength;
             return -1;
+        } else {
+            position = position + 1;
+            return i;
         }
-        position = position + 1;
-        return i;
     }
 
     @Override
@@ -43,10 +45,12 @@ public class FixedLengthDataReaderInputStream extends InputStream {
         var length = Math.min(len, maxLength - position);
         var i = dataReader.inputStreamRead(b, off, (int) length);
         if (i == -1) {
+            position = maxLength;
             return -1;
+        } else {
+            position = position + i;
+            return i;
         }
-        position = position + i;
-        return i;
     }
 
     @Override
@@ -57,10 +61,12 @@ public class FixedLengthDataReaderInputStream extends InputStream {
         var length = maxLength - position;
         var i = dataReader.inputStreamTransferTo(out, length);
         if (i == -1) {
+            position = maxLength;
             return -1;
+        } else {
+            position = position + i;
+            return i;
         }
-        position = position + i;
-        return i;
     }
 
 }
