@@ -41,6 +41,7 @@ public enum HttpFieldName implements ScxHttpHeaderName {
     COOKIE("Cookie"),
     DATE("Date"),
     ETAG("ETag"),
+    EXPECT("Expect"),
     EXPIRES("Expires"),
     FORWARDED("Forwarded"),
     FROM("From"),

@@ -4,7 +4,7 @@ public class Http1xServerConnectionOptions {
 
     private int maxRequestLineSize;// 最大请求行大小
     private int maxHeaderSize;// 最大请求头大小
-    private int maxPayloadSize;// 最大请求体大小
+    private long maxPayloadSize;// 最大请求体大小
 
     public Http1xServerConnectionOptions() {
         this.maxRequestLineSize = 1024 * 64; // 默认 64 KB
@@ -36,11 +36,11 @@ public class Http1xServerConnectionOptions {
         return this;
     }
 
-    public int maxPayloadSize() {
+    public long maxPayloadSize() {
         return maxPayloadSize;
     }
 
-    public Http1xServerConnectionOptions maxPayloadSize(int maxPayloadSize) {
+    public Http1xServerConnectionOptions maxPayloadSize(long maxPayloadSize) {
         this.maxPayloadSize = maxPayloadSize;
         return this;
     }

@@ -52,6 +52,7 @@ public class HelidonHttpServer implements ScxHttpServer {
         return this;
     }
 
+    @Override
     public ScxHttpServer onWebSocket(Consumer<ScxServerWebSocket> handler) {
         this.webSocketHandler = handler;
         return this;

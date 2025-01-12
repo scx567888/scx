@@ -79,11 +79,11 @@ public class XHttpServerOptions {
         return this;
     }
 
-    public int maxPayloadSize() {
+    public long maxPayloadSize() {
         return http1xConnectionOptions.maxPayloadSize();
     }
 
-    public XHttpServerOptions maxPayloadSize(int maxPayloadSize) {
+    public XHttpServerOptions maxPayloadSize(long maxPayloadSize) {
         http1xConnectionOptions.maxPayloadSize(maxPayloadSize);
         return this;
     }

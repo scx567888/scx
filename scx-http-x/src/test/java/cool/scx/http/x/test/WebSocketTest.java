@@ -1,46 +1,25 @@
 package cool.scx.http.x.test;
 
-import cool.scx.http.web_socket.ScxServerWebSocketHandshakeRequest;
 import cool.scx.http.x.XHttpClient;
 import cool.scx.http.x.XHttpServer;
 import cool.scx.http.x.XHttpServerOptions;
-import cool.scx.http.x.web_socket.WebSocket;
 
 public class WebSocketTest {
 
     public static void main(String[] args) {
         startServer();
-//        startClient();
+        startClient();
     }
 
     public static void startServer() {
         var s = System.nanoTime();
-        var httpServer = new XHttpServer(new XHttpServerOptions()
-                .port(8080)
-        );
+        var httpServer = new XHttpServer(new XHttpServerOptions().port(8080));
 
-        httpServer.onRequest(request -> {
-            if (request instanceof ScxServerWebSocketHandshakeRequest req) {
-                var scxServerWebSocket = (WebSocket) req.webSocket();
-                System.out.println("连接了");
-                scxServerWebSocket.onTextMessage((c, _) -> {
-                    System.out.println(c);
-
-                    scxServerWebSocket.send(c);
-
-                });
-                scxServerWebSocket.onBinaryMessage((c, _) -> {
-                    System.out.println(new String(c));
-                });
-                scxServerWebSocket.onClose((a, b) -> {
-                    System.out.println(a + " " + b);
-                });
-                scxServerWebSocket.onError(c -> {
-                    c.printStackTrace();
-                });
-                scxServerWebSocket.start();
-
-            }
+        httpServer.onWebSocket(webSocket -> {
+            webSocket.onTextMessage((data, _) -> {
+                webSocket.send(data);
+                System.out.println("服 : " + data);
+            });
         });
 
         httpServer.start();
@@ -51,7 +30,7 @@ public class WebSocketTest {
         var httpClient = new XHttpClient();
 
         httpClient.webSocket().uri("ws://127.0.0.1:8080/websocket").onConnect(webSocket -> {
-            webSocket.onTextMessage((data, _) -> {
+            webSocket.onTextMessage((data, s) -> {
                 System.out.println("客 : " + data);
             });
             //这里只有当 onConnect 走完才会 执行 来自客户端请求的监听 所以这里 创建线程发送 不阻塞 onConnect

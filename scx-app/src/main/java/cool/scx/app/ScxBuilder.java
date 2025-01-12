@@ -9,7 +9,7 @@ import cool.scx.config.ScxFeatureConfig;
 import cool.scx.config.source.ArgsConfigSource;
 import cool.scx.config.source.JsonFileConfigSource;
 import cool.scx.config.source.MapConfigSource;
-import cool.scx.http.helidon.HelidonHttpServerOptions;
+import cool.scx.http.x.XHttpServerOptions;
 
 import java.util.*;
 
@@ -65,14 +65,14 @@ public final class ScxBuilder {
      * 用来存储临时待添加的 appKey
      */
     private String appKey;
-    private HelidonHttpServerOptions defaultHttpServerOptions;
+    private XHttpServerOptions defaultHttpServerOptions;
 
     /**
      * 构造函数
      */
     public ScxBuilder() {
         appKey = DEFAULT_APP_KEY;
-        defaultHttpServerOptions = new HelidonHttpServerOptions();
+        defaultHttpServerOptions = new XHttpServerOptions();
     }
 
     /**
@@ -219,7 +219,7 @@ public final class ScxBuilder {
         return this;
     }
 
-    public ScxBuilder setDefaultHttpServerOptions(HelidonHttpServerOptions options) {
+    public ScxBuilder setDefaultHttpServerOptions(XHttpServerOptions options) {
         this.defaultHttpServerOptions = options;
         return this;
     }

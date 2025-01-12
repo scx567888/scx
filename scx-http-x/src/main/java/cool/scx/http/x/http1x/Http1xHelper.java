@@ -6,11 +6,14 @@ import cool.scx.http.PeerInfoWritable;
 import cool.scx.http.ScxHttpHeaders;
 import cool.scx.tcp.ScxTCPSocket;
 
+import java.nio.charset.StandardCharsets;
+
 import static cool.scx.http.HttpFieldName.*;
 import static cool.scx.http.HttpMethod.GET;
 
 final class Http1xHelper {
 
+    public static final byte[] CONTINUE_100 = "HTTP/1.1 100 Continue\r\n\r\n".getBytes(StandardCharsets.UTF_8);
     public static final byte[] CRLF_BYTES = "\r\n".getBytes();
     public static final byte[] CRLF_CRLF_BYTES = "\r\n\r\n".getBytes();
 
