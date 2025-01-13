@@ -65,6 +65,7 @@ public class Http1xServerConnection {
 
                 var is100ContinueExpected = checkIs100ContinueExpected(headers);
                 if (is100ContinueExpected) {
+                    //如果自动响应 我们直接发送
                     if (options.autoRespond100Continue()) {
                         try {
                             Http1xHelper.sendContinue100(dataWriter);
@@ -72,6 +73,7 @@ public class Http1xServerConnection {
                             throw new CloseConnectionException("Failed to write continue", e);
                         }
                     } else {
+                        //否则交给用户去处理
                         bodyInputStream = new AutoContinueInputStream(bodyInputStream, dataWriter);
                     }
                 }
