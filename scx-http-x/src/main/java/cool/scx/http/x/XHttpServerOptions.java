@@ -88,6 +88,15 @@ public class XHttpServerOptions {
         return this;
     }
 
+    public boolean autoRespond100Continue() {
+        return http1xConnectionOptions.autoRespond100Continue();
+    }
+
+    public XHttpServerOptions autoRespond100Continue(boolean autoRespond100Continue) {
+        http1xConnectionOptions.autoRespond100Continue(autoRespond100Continue);
+        return this;
+    }
+
     public boolean mergeWebSocketFrame() {
         return webSocketOptions.mergeWebSocketFrame();
     }

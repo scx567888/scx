@@ -16,7 +16,6 @@ import java.lang.System.Logger;
 import java.util.function.Consumer;
 
 import static cool.scx.http.HttpFieldName.CONNECTION;
-import static cool.scx.http.HttpFieldName.EXPECT;
 import static cool.scx.http.x.http1x.Http1xHelper.*;
 import static java.lang.System.Logger.Level.TRACE;
 import static java.lang.System.getLogger;
@@ -61,21 +60,28 @@ public class Http1xServerConnection {
                 // 2, 读取 请求头 
                 var headers = readHeaders();
 
-                // Expect: 100-continue //todo 这里需要重构
-                if ("100-continue".equalsIgnoreCase(headers.get(EXPECT))) {
-                    try {
-                        dataWriter.write(CONTINUE_100);
-                    } catch (IOException e) {
-                        throw new CloseConnectionException("Failed to write continue", e);
-                    }
-                }
-
                 // 3, 读取 请求体流
                 var bodyInputStream = readBodyInputStream(headers);
 
+                // 4, 处理 100-continue 临时请求
+                var is100ContinueExpected = checkIs100ContinueExpected(headers);
+                if (is100ContinueExpected) {
+                    //如果自动响应 我们直接发送
+                    if (options.autoRespond100Continue()) {
+                        try {
+                            Http1xHelper.sendContinue100(dataWriter);
+                        } catch (IOException e) {
+                            throw new CloseConnectionException("Failed to write continue", e);
+                        }
+                    } else {
+                        //否则交给用户去处理
+                        bodyInputStream = new AutoContinueInputStream(bodyInputStream, dataWriter);
+                    }
+                }
+
                 var body = new ScxHttpBodyImpl(bodyInputStream, headers, 65535);
 
-                // 4, 判断是否为 WebSocket 握手请求 并创建对应请求
+                // 5, 判断是否为 WebSocket 握手请求 并创建对应请求
                 var isWebSocketHandshake = checkIsWebSocketHandshake(requestLine, headers);
 
                 var request = isWebSocketHandshake ?
@@ -83,7 +89,7 @@ public class Http1xServerConnection {
                         new Http1xServerRequest(this, requestLine, headers, body);
 
                 try {
-                    // 5, 调用用户处理器
+                    // 6, 调用用户处理器
                     _callRequestHandler(request);
                 } finally {
                     //todo 这里如果  _callRequestHandler 中 异步读取 body 怎么办?
@@ -218,12 +224,6 @@ public class Http1xServerConnection {
             LOGGER.log(TRACE, "发送请求错误时发生错误 !!!");
         }
 
-    }
-
-    public void consumeInputStream(InputStream inputStream) throws IOException {
-        try (inputStream) {
-            inputStream.transferTo(OutputStream.nullOutputStream());
-        }
     }
 
 }

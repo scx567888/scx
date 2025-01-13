@@ -6,6 +6,9 @@ import cool.scx.http.PeerInfoWritable;
 import cool.scx.http.ScxHttpHeaders;
 import cool.scx.tcp.ScxTCPSocket;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
 import static cool.scx.http.HttpFieldName.*;
@@ -47,6 +50,21 @@ final class Http1xHelper {
             }
         }
         return false;
+    }
+
+    public static boolean checkIs100ContinueExpected(ScxHttpHeaders headers) {
+        var expect = headers.get(EXPECT);
+        return "100-continue".equalsIgnoreCase(expect);
+    }
+
+    public static void sendContinue100(OutputStream out) throws IOException {
+        out.write(CONTINUE_100);
+    }
+
+    public static void consumeInputStream(InputStream inputStream) throws IOException {
+        try (inputStream) {
+            inputStream.transferTo(OutputStream.nullOutputStream());
+        }
     }
 
     public static PeerInfoWritable getRemotePeer(ScxTCPSocket tcpSocket) {
