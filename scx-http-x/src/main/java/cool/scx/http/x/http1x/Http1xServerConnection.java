@@ -63,6 +63,7 @@ public class Http1xServerConnection {
                 // 3, 读取 请求体流
                 var bodyInputStream = readBodyInputStream(headers);
 
+                // 4, 处理 100-continue 临时请求
                 var is100ContinueExpected = checkIs100ContinueExpected(headers);
                 if (is100ContinueExpected) {
                     //如果自动响应 我们直接发送
@@ -80,7 +81,7 @@ public class Http1xServerConnection {
 
                 var body = new ScxHttpBodyImpl(bodyInputStream, headers, 65535);
 
-                // 4, 判断是否为 WebSocket 握手请求 并创建对应请求
+                // 5, 判断是否为 WebSocket 握手请求 并创建对应请求
                 var isWebSocketHandshake = checkIsWebSocketHandshake(requestLine, headers);
 
                 var request = isWebSocketHandshake ?
@@ -88,7 +89,7 @@ public class Http1xServerConnection {
                         new Http1xServerRequest(this, requestLine, headers, body);
 
                 try {
-                    // 5, 调用用户处理器
+                    // 6, 调用用户处理器
                     _callRequestHandler(request);
                 } finally {
                     //todo 这里如果  _callRequestHandler 中 异步读取 body 怎么办?
