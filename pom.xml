@@ -12,7 +12,7 @@
 
     <artifactId>scx</artifactId>
     <packaging>pom</packaging>
-    <version>3.3.3</version>
+    <version>3.3.4</version>
 
     <name>SCX</name>
     <url>https://github.com/scx567888/scx</url>
@@ -44,7 +44,7 @@
     <modules>
         <module>scx-ansi</module>
         <module>scx-app</module>
-        <module>scx-app-ext</module>
+        <module>scx-app-x</module>
         <module>scx-common</module>
         <module>scx-config</module>
         <module>scx-data</module>

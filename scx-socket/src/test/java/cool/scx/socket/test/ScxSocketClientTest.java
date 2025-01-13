@@ -1,6 +1,7 @@
 package cool.scx.socket.test;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import cool.scx.http.helidon.HelidonHttpClient;
 import cool.scx.http.x.XHttpClient;
 import cool.scx.socket.ScxSocketClient;
 import org.testng.annotations.Test;
@@ -44,7 +45,7 @@ public class ScxSocketClientTest extends InitLogger {
                 System.out.println("服务端发送的消息 : " + m);
             });
 
-            for (int i = 0; i < 10; i = i + 1) {
+            for (int i = 0; i < 100000; i = i + 1) {
                 int finalI = i;
                 c.sendEvent("aaa", i, r -> {
                     System.out.println(r.payload() + "  " + finalI);
