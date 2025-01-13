@@ -8,11 +8,12 @@ public class AutoContinueInputStream extends InputStream {
 
     private final InputStream in;
     private final OutputStream out;
-    private boolean continueSent = false;
+    private boolean continueSent;
 
     public AutoContinueInputStream(InputStream in, OutputStream out) {
         this.in = in;
         this.out = out;
+        this.continueSent = false;
     }
 
     @Override
