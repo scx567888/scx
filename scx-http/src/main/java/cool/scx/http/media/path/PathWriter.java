@@ -41,7 +41,7 @@ public class PathWriter implements MediaWriter {
     @Override
     public void beforeWrite(ScxHttpHeadersWritable responseHeaders, ScxHttpHeaders requestHeaders) {
         //如果已经设置了 contentLength 我们跳过
-        if (requestHeaders.contentLength() == null) {
+        if (responseHeaders.contentLength() == null) {
             responseHeaders.contentLength(length);
         }
     }

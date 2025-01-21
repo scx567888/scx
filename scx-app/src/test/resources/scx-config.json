@@ -1,6 +1,7 @@
 {
   "scx": {
     "port": 8080,
+    "use-helidon": false,
     "allowed-origin": "*",
     "data-source": {
       "url": "jdbc:mysql://127.0.0.1:3306/scx_test",

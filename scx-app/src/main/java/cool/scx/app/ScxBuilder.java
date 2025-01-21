@@ -65,14 +65,15 @@ public final class ScxBuilder {
      * 用来存储临时待添加的 appKey
      */
     private String appKey;
-    private XHttpServerOptions defaultHttpServerOptions;
+
+    private Object defaultHttpServerOptions;
 
     /**
      * 构造函数
      */
     public ScxBuilder() {
         appKey = DEFAULT_APP_KEY;
-        defaultHttpServerOptions = new XHttpServerOptions();
+        defaultHttpServerOptions = null;
     }
 
     /**
@@ -83,6 +84,7 @@ public final class ScxBuilder {
     private static Map<String, Object> initDefaultConfigMap() {
         var tempMap = new LinkedHashMap<String, Object>();
         tempMap.put("scx.port", 8080);
+        tempMap.put("scx.use-helidon", false);
         tempMap.put("scx.tombstone", false);
         tempMap.put("scx.allowed-origin", "*");
         tempMap.put("scx.template.root", "AppRoot:/c/");
