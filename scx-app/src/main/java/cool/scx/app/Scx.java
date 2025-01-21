@@ -10,6 +10,8 @@ import cool.scx.config.ScxEnvironment;
 import cool.scx.config.ScxFeatureConfig;
 import cool.scx.data.jdbc.AnnotationConfigTable;
 import cool.scx.http.ScxHttpServer;
+import cool.scx.http.helidon.HelidonHttpServer;
+import cool.scx.http.helidon.HelidonHttpServerOptions;
 import cool.scx.http.routing.WebSocketRouter;
 import cool.scx.http.x.XHttpServer;
 import cool.scx.http.x.XHttpServerOptions;
@@ -21,6 +23,7 @@ import cool.scx.web.RouteRegistrar;
 import cool.scx.web.ScxWeb;
 import cool.scx.web.ScxWebOptions;
 import cool.scx.web.WebSocketRouteRegistrar;
+import io.helidon.common.tls.Tls;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 import javax.sql.DataSource;
@@ -70,7 +73,7 @@ public final class Scx {
 
     private final ScxWeb scxWeb;
 
-    private final XHttpServerOptions defaultHttpServerOptions;
+    private final Object defaultHttpServerOptions;
 
     private final EventBus eventBus;
 
@@ -82,7 +85,7 @@ public final class Scx {
 
     private ScxHttpServer httpServer = null;
 
-    Scx(ScxEnvironment scxEnvironment, String appKey, ScxFeatureConfig scxFeatureConfig, ScxConfig scxConfig, ScxModule[] scxModules, XHttpServerOptions defaultHttpServerOptions) {
+    Scx(ScxEnvironment scxEnvironment, String appKey, ScxFeatureConfig scxFeatureConfig, ScxConfig scxConfig, ScxModule[] scxModules, Object defaultHttpServerOptions) {
         //0, 赋值到全局
         ScxContext.scx(this);
         //1, 初始化基本参数
@@ -174,15 +177,7 @@ public final class Scx {
                     .brightBlue("已加载 " + this.webSocketRouter.getRoutes().size() + " 个 WebSocket 路由 !!!").println();
         }
         //6, 初始化服务器
-        var httpServerOptions = new XHttpServerOptions(this.defaultHttpServerOptions)
-                .maxPayloadSize(DEFAULT_BODY_LIMIT)
-                .port(this.scxOptions.port());
-        if (this.scxOptions.isHttpsEnabled()) {
-            //此处因为 helidon 的 tls 有 bug, 直接使用 scx-tcp 的 tls 代替
-            var tls = new TLS(this.scxOptions.sslPath(), this.scxOptions.sslPassword());
-            httpServerOptions.tls(tls);
-        }
-        this.httpServer = new XHttpServer(httpServerOptions);
+        this.httpServer = createServer(this.scxOptions.useHelidon);
         this.httpServer.onRequest(this.scxHttpRouter).onWebSocket(this.webSocketRouter);
         //7, 添加程序停止时的钩子函数
         this.addShutdownHook();
@@ -195,6 +190,30 @@ public final class Scx {
             startAnnotationScheduled(this.beanFactory);
         }
         return this;
+    }
+
+    private ScxHttpServer createServer(boolean useHelidon) {
+        if (useHelidon) {
+            var httpServerOptions =(this.defaultHttpServerOptions!=null? new HelidonHttpServerOptions((HelidonHttpServerOptions) this.defaultHttpServerOptions):new HelidonHttpServerOptions())
+                    .maxPayloadSize(DEFAULT_BODY_LIMIT)
+                    .port(this.scxOptions.port());
+            if (this.scxOptions.isHttpsEnabled()) {
+                //此处因为 helidon 的 tls 有 bug, 直接使用 scx-tcp 的 tls 代替
+                var tls = new TLS(this.scxOptions.sslPath(), this.scxOptions.sslPassword());
+                httpServerOptions.tls(Tls.builder().sslContext(tls.sslContext()).build());
+            }
+            return new HelidonHttpServer(httpServerOptions);
+        }else{
+            var httpServerOptions = (this.defaultHttpServerOptions!=null?new XHttpServerOptions((XHttpServerOptions) this.defaultHttpServerOptions):new XHttpServerOptions())
+                    .maxPayloadSize(DEFAULT_BODY_LIMIT)
+                    .port(this.scxOptions.port());
+            if (this.scxOptions.isHttpsEnabled()) {
+                //此处因为 helidon 的 tls 有 bug, 直接使用 scx-tcp 的 tls 代替
+                var tls = new TLS(this.scxOptions.sslPath(), this.scxOptions.sslPassword());
+                httpServerOptions.tls(tls);
+            }
+            return new XHttpServer(httpServerOptions);
+        }
     }
 
     /**
