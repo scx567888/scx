@@ -1,7 +1,5 @@
 package cool.scx.http;
 
-import cool.scx.http.web_socket.ScxServerWebSocket;
-
 import java.net.InetSocketAddress;
 import java.util.function.Consumer;
 

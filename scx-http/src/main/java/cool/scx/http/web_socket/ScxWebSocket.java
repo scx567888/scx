@@ -28,6 +28,9 @@ public interface ScxWebSocket {
 
     ScxWebSocket onError(Consumer<Throwable> errorHandler);
 
+    //以上回调设置完成之后调用以便启动 websocket 监听
+    ScxWebSocket startListening();
+
     ScxWebSocket send(String textMessage, boolean last);
 
     ScxWebSocket send(byte[] binaryMessage, boolean last);
