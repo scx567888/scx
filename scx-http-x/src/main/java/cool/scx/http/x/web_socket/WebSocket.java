@@ -48,7 +48,7 @@ public class WebSocket extends AbstractWebSocket {
     }
 
     @Override
-    public void startListening() {
+    public void start() {
         if (running) {
             return;
         }
@@ -68,7 +68,7 @@ public class WebSocket extends AbstractWebSocket {
         }
     }
 
-    public void stopListening() {
+    public void stop() {
         this.running = false;
     }
 
@@ -179,7 +179,7 @@ public class WebSocket extends AbstractWebSocket {
 
         }
         //4, 停止监听
-        stopListening();
+        stop();
     }
 
     private void _handleError(Exception e) {

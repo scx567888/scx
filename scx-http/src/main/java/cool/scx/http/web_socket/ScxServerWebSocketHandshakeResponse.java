@@ -16,7 +16,7 @@ public interface ScxServerWebSocketHandshakeResponse extends ScxHttpServerRespon
     default void onWebSocket(Consumer<ScxServerWebSocket> consumer) {
         var ws = webSocket();
         consumer.accept(ws);
-        ws.startListening();
+        ws.start();
     }
 
 }
