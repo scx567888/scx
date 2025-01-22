@@ -24,12 +24,12 @@ public interface ScxServerWebSocketHandshakeRequest extends ScxHttpServerRequest
         return getHeader(SEC_WEBSOCKET_VERSION);
     }
 
-    default ScxServerWebSocket acceptHandshake(){
+    default ScxServerWebSocket acceptHandshake() {
         return response().acceptHandshake();
     }
 
-    default ScxServerWebSocket webSocket(){
+    default ScxServerWebSocket webSocket() {
         return response().webSocket();
     }
-    
+
 }
