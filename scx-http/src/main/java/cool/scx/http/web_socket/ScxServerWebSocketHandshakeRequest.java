@@ -13,6 +13,9 @@ import static cool.scx.http.HttpFieldName.SEC_WEBSOCKET_VERSION;
  */
 public interface ScxServerWebSocketHandshakeRequest extends ScxHttpServerRequest {
 
+    @Override
+    ScxServerWebSocketHandshakeResponse response();
+
     default String secWebSocketKey() {
         return getHeader(SEC_WEBSOCKET_KEY);
     }
@@ -20,9 +23,5 @@ public interface ScxServerWebSocketHandshakeRequest extends ScxHttpServerRequest
     default String secWebSocketVersion() {
         return getHeader(SEC_WEBSOCKET_VERSION);
     }
-
-    ScxServerWebSocket acceptHandshake();
-
-    ScxServerWebSocket webSocket();
 
 }
