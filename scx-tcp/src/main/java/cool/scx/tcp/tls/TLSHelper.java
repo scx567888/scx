@@ -15,7 +15,7 @@ import java.security.cert.CertificateException;
  * @author scx567888
  * @version 0.0.1
  */
-class TLSHelper {
+public class TLSHelper {
 
     public static KeyStore createKeyStore(Path path, String password) {
         // 证书存储器
@@ -56,6 +56,26 @@ class TLSHelper {
             return sslContext;
         } catch (NoSuchAlgorithmException | KeyManagementException e) {
             throw new IllegalArgumentException("failed to create ssl context", e);
+        }
+    }
+
+    public static SSLContext createSSLContext(Path path, String password) {
+        var keyStore = createKeyStore(path, password);
+        var KeyManagerFactory = createKeyManagerFactory(keyStore, password);
+        var trustManagerFactory = createTrustManagerFactory(keyStore);
+        return createSSLContext(KeyManagerFactory, trustManagerFactory);
+    }
+
+    // 获取系统默认证书并返回 TLS 对象（用于客户端） 
+    public static SSLContext createDefaultSSlContext() {
+        try {
+            var tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+            tmf.init((KeyStore) null);
+            var sslContext = SSLContext.getInstance("TLS");
+            sslContext.init(null, tmf.getTrustManagers(), null);
+            return sslContext;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to initialize default TLS configuration", e);
         }
     }
 

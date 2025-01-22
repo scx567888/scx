@@ -5,7 +5,8 @@ import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocketFactory;
 import java.nio.file.Path;
 
-import static cool.scx.tcp.tls.TLSHelper.*;
+import static cool.scx.tcp.tls.TLSHelper.createDefaultSSlContext;
+import static cool.scx.tcp.tls.TLSHelper.createSSLContext;
 
 /**
  * TLS 配置
@@ -13,49 +14,28 @@ import static cool.scx.tcp.tls.TLSHelper.*;
  * @author scx567888
  * @version 0.0.1
  */
-public class TLS {
+public interface TLS {
 
-    private final SSLContext sslContext;
-    private final SSLServerSocketFactory serverSocketFactory;
-    private final SSLSocketFactory socketFactory;
-    private boolean enabled;
-
-    public TLS(Path path, String password) {
-        this.enabled = true;
-        var keyStore = createKeyStore(path, password);
-        var KeyManagerFactory = createKeyManagerFactory(keyStore, password);
-        var trustManagerFactory = createTrustManagerFactory(keyStore);
-        this.sslContext = createSSLContext(KeyManagerFactory, trustManagerFactory);
-        this.serverSocketFactory = sslContext.getServerSocketFactory();
-        this.socketFactory = sslContext.getSocketFactory();
+    static TLS of(Path path, String password) {
+        return new TLSImpl(createSSLContext(path, password));
     }
 
-    public TLS(SSLContext sslContext) {
-        this.enabled = true;
-        this.sslContext = sslContext;
-        this.serverSocketFactory = sslContext.getServerSocketFactory();
-        this.socketFactory = sslContext.getSocketFactory();
+    static TLS of(SSLContext sslContext) {
+        return new TLSImpl(sslContext);
     }
 
-    public boolean enabled() {
-        return enabled;
+    static TLS ofDefault() {
+        return new TLSImpl(createDefaultSSlContext());
     }
 
-    public TLS enabled(boolean enabled) {
-        this.enabled = enabled;
-        return this;
-    }
+    boolean enabled();
 
-    public SSLContext sslContext() {
-        return sslContext;
-    }
+    TLS enabled(boolean enabled);
 
-    public SSLServerSocketFactory serverSocketFactory() {
-        return serverSocketFactory;
-    }
+    SSLContext sslContext();
 
-    public SSLSocketFactory socketFactory() {
-        return socketFactory;
-    }
+    SSLServerSocketFactory serverSocketFactory();
+
+    SSLSocketFactory socketFactory();
 
 }
