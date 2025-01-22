@@ -1,6 +1,5 @@
 package cool.scx.http.x.web_socket;
 
-import cool.scx.http.web_socket.ScxWebSocket;
 import cool.scx.http.web_socket.WebSocketOpCode;
 import cool.scx.io.DataReader;
 import cool.scx.io.NoMoreDataException;
@@ -48,7 +47,12 @@ public class WebSocket extends AbstractWebSocket {
         this.running = false;
     }
 
-    public void start() {
+    @Override
+    public void startListening() {
+        if (running) {
+            return;
+        }
+        running = true;
         while (running) {
             try {
                 //尝试读取 帧
@@ -184,15 +188,6 @@ public class WebSocket extends AbstractWebSocket {
         } catch (Exception ex) {
             LOGGER.log(ERROR, "Error while call onError : ", ex);
         }
-    }
-
-    @Override
-    public ScxWebSocket startListening() {
-        if (!running) {
-            running = true;
-            start();
-        }
-        return this;
     }
 
     @Override
