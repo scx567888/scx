@@ -18,10 +18,10 @@ import static cool.scx.http.x.http1x.Http1xHelper.CRLF_CRLF_BYTES;
 
 public class Http1xClientConnection {
 
-    private final ScxTCPSocket tcpSocket;
-    private final PowerfulLinkedDataReader dataReader;
-    private final OutputStream dataWriter;
-    private final Http1xClientConnectionOptions options;
+    public final ScxTCPSocket tcpSocket;
+    public final PowerfulLinkedDataReader dataReader;
+    public final OutputStream dataWriter;
+    public final Http1xClientConnectionOptions options;
 
     public Http1xClientConnection(ScxTCPSocket tcpSocket, XHttpClientOptions options) {
         this.tcpSocket = tcpSocket;
@@ -35,13 +35,13 @@ public class Http1xClientConnection {
         return encode;
     }
 
-    public Http1xClientConnection sendRequest(XHttpClientRequest request, MediaWriter writer) {
+    public Http1xClientConnection sendRequest(ScxHttpClientRequest request, MediaWriter writer) {
         var sb = new StringBuilder();
         sb.append(request.method().value());
         sb.append(" ");
         sb.append(getPath(request.uri()));
         sb.append(" ");
-        sb.append(HttpVersion.HTTP_1_1.value());
+        sb.append(request.version().value());
         sb.append("\r\n");
 
         //让用户能够设置头信息
