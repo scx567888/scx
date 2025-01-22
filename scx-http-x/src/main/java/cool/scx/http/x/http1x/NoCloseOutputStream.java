@@ -1,6 +1,5 @@
 package cool.scx.http.x.http1x;
 
-import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -15,7 +14,7 @@ public class NoCloseOutputStream extends OutputStream {
     private final OutputStream out;
 
     public NoCloseOutputStream(OutputStream out) {
-        this.out=out;
+        this.out = out;
     }
 
     @Override
@@ -39,9 +38,9 @@ public class NoCloseOutputStream extends OutputStream {
     }
 
     @Override
-    public void close() {
-        //这里什么也不做
-        System.out.println();
+    public void close() throws IOException {
+        //这里我们不去关闭流
+        this.out.flush();
     }
 
 }
