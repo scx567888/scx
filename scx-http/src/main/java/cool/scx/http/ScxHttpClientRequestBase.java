@@ -50,7 +50,7 @@ public abstract class ScxHttpClientRequestBase implements ScxHttpClientRequest {
         this.version = version;
         return this;
     }
-    
+
     @Override
     public ScxHttpClientRequest method(HttpMethod method) {
         this.method = method;

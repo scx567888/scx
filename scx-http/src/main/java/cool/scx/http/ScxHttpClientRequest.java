@@ -32,7 +32,7 @@ public interface ScxHttpClientRequest {
 
     // ************* 基本方法 ****************
     HttpVersion version();
-    
+
     ScxHttpMethod method();
 
     ScxURIWritable uri();
