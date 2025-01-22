@@ -31,11 +31,15 @@ import java.nio.file.Path;
 public interface ScxHttpClientRequest {
 
     // ************* 基本方法 ****************
+    HttpVersion version();
+    
     ScxHttpMethod method();
 
     ScxURIWritable uri();
 
     ScxHttpHeadersWritable headers();
+
+    ScxHttpClientRequest version(HttpVersion version);
 
     ScxHttpClientRequest method(HttpMethod method);
 
