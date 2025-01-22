@@ -13,14 +13,21 @@ import static cool.scx.http.HttpMethod.GET;
  */
 public abstract class ScxHttpClientRequestBase implements ScxHttpClientRequest {
 
+    protected HttpVersion version;
     protected HttpMethod method;
     protected ScxURIWritable uri;
     protected ScxHttpHeadersWritable headers;
 
     public ScxHttpClientRequestBase() {
+        this.version = null;// null 表示自动协商
         this.method = GET;
         this.uri = ScxURI.of();
         this.headers = ScxHttpHeaders.of();
+    }
+
+    @Override
+    public HttpVersion version() {
+        return version;
     }
 
     @Override
@@ -38,6 +45,12 @@ public abstract class ScxHttpClientRequestBase implements ScxHttpClientRequest {
         return headers;
     }
 
+    @Override
+    public ScxHttpClientRequest version(HttpVersion version) {
+        this.version = version;
+        return this;
+    }
+    
     @Override
     public ScxHttpClientRequest method(HttpMethod method) {
         this.method = method;
