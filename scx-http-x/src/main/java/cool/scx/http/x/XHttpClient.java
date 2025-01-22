@@ -1,6 +1,7 @@
 package cool.scx.http.x;
 
 import cool.scx.http.ScxHttpClient;
+import cool.scx.http.ScxHttpClientRequest;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.web_socket.ScxClientWebSocketHandshakeRequest;
 import cool.scx.http.x.web_socket.XClientWebSocketHandshakeRequest;
@@ -37,6 +38,7 @@ public class XHttpClient implements ScxHttpClient {
         return options;
     }
 
+    //创建一个 TCP 连接 todo 后期可以创建一个 连接池 用来复用 未断开的 tcp 连接
     public ScxTCPSocket createTCPSocket(ScxURI uri, String... applicationProtocols) {
         var isTLS = checkIsTLS(uri);
 
@@ -67,7 +69,7 @@ public class XHttpClient implements ScxHttpClient {
     }
 
     @Override
-    public XHttpClientRequest request() {
+    public ScxHttpClientRequest request() {
         return new XHttpClientRequest(this);
     }
 
