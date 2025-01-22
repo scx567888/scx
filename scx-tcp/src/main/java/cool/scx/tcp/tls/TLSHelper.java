@@ -14,7 +14,7 @@ import java.security.cert.X509Certificate;
  * @author scx567888
  * @version 0.0.1
  */
-public class TLSHelper {
+class TLSHelper {
 
     public static KeyStore createKeyStore(Path path, String password) {
         // 证书存储器
@@ -73,7 +73,7 @@ public class TLSHelper {
             var sslContext = SSLContext.getInstance("TLS");
             sslContext.init(null, tmf.getTrustManagers(), null);
             return sslContext;
-        } catch (Exception e) {
+        } catch (NoSuchAlgorithmException | KeyManagementException | KeyStoreException e) {
             throw new RuntimeException("Failed to initialize default TLS configuration", e);
         }
     }
@@ -81,19 +81,21 @@ public class TLSHelper {
     public static SSLContext createTrustAnySSLContext() {
         // 创建自定义 TrustManager，忽略证书验证（仅用于测试环境）
         var trustAllCerts = new TrustManager[]{new X509TrustManager() {
+
             public X509Certificate[] getAcceptedIssuers() {
-                return null;
+                return new X509Certificate[]{};
             }
 
             public void checkClientTrusted(X509Certificate[] certs, String authType) {
+                // 此处忽略客户端证书验证逻辑
             }
 
             public void checkServerTrusted(X509Certificate[] certs, String authType) {
+                // 此处忽略服务器证书验证逻辑
             }
         }};
 
         try {
-            // 初始化 SSLContext
             var sslContext = SSLContext.getInstance("TLS");
             sslContext.init(null, trustAllCerts, null);
             return sslContext;
