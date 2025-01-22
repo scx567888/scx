@@ -15,10 +15,10 @@ public class XClientWebSocketHandshakeResponse implements ScxClientWebSocketHand
     private final WebSocketOptions webSocketOptions;
     private ScxClientWebSocket webSocket;
 
-    public XClientWebSocketHandshakeResponse(Http1xClientConnection connection, ScxHttpClientResponse response,WebSocketOptions webSocketOptions) {
+    public XClientWebSocketHandshakeResponse(Http1xClientConnection connection, ScxHttpClientResponse response, WebSocketOptions webSocketOptions) {
         this.connection = connection;
         this.response = response;
-        this.webSocketOptions=webSocketOptions;
+        this.webSocketOptions = webSocketOptions;
     }
 
     @Override
@@ -32,7 +32,7 @@ public class XClientWebSocketHandshakeResponse implements ScxClientWebSocketHand
             if (!handshakeSucceeded()) {
                 throw new RuntimeException("Unexpected response status: " + response.status());
             }
-            webSocket=new ClientWebSocket(connection.tcpSocket,connection.dataReader,connection.tcpSocket.outputStream(),webSocketOptions);
+            webSocket = new ClientWebSocket(connection.tcpSocket, connection.dataReader, connection.tcpSocket.outputStream(), webSocketOptions);
         }
         return webSocket;
     }

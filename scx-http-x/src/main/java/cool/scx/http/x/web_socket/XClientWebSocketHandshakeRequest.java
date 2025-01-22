@@ -65,7 +65,7 @@ public class XClientWebSocketHandshakeRequest implements ScxClientWebSocketHands
     }
 
     @Override
-    public ScxClientWebSocketHandshakeResponse send() {
+    public ScxClientWebSocketHandshakeResponse sendHandshake() {
         //0, 创建 tcp 连接
         this.tcpSocket = httpClient.createTCPSocket(uri, "http/1.1");
 
