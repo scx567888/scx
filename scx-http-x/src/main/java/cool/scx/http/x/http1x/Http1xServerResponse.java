@@ -1,9 +1,6 @@
 package cool.scx.http.x.http1x;
 
-import cool.scx.http.HttpStatusCode;
-import cool.scx.http.ScxHttpHeaders;
-import cool.scx.http.ScxHttpHeadersWritable;
-import cool.scx.http.ScxHttpServerResponse;
+import cool.scx.http.*;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -19,15 +16,14 @@ import static cool.scx.http.HttpFieldName.SERVER;
  */
 public class Http1xServerResponse extends OutputStream implements ScxHttpServerResponse {
 
-    public final Http1xServerConnection connection;
-
-    protected final Http1xServerRequest request;
+    private final Http1xServerConnection connection;
+    private final Http1xServerRequest request;
     private final ScxHttpHeadersWritable headers;
     private final OutputStream dataWriter;
     private HttpStatusCode status;
     private boolean firstSend;
 
-    public Http1xServerResponse(Http1xServerConnection connection, Http1xServerRequest request) {
+    Http1xServerResponse(Http1xServerConnection connection, Http1xServerRequest request) {
         this.connection = connection;
         this.dataWriter = this.connection.dataWriter;
         this.request = request;
@@ -37,7 +33,7 @@ public class Http1xServerResponse extends OutputStream implements ScxHttpServerR
     }
 
     @Override
-    public Http1xServerRequest request() {
+    public ScxHttpServerRequest request() {
         return request;
     }
 
