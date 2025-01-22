@@ -1,6 +1,6 @@
 package cool.scx.http;
 
-import cool.scx.http.web_socket.ScxClientWebSocketBuilder;
+import cool.scx.http.web_socket.ScxClientWebSocketHandshakeRequest;
 
 /**
  * ScxHttpClient
@@ -12,6 +12,6 @@ public interface ScxHttpClient {
 
     ScxHttpClientRequest request();
 
-    ScxClientWebSocketBuilder webSocket();
+    ScxClientWebSocketHandshakeRequest webSocketHandshakeRequest();
 
 }
