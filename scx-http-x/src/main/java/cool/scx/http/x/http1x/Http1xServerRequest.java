@@ -21,7 +21,7 @@ public class Http1xServerRequest implements ScxHttpServerRequest {
     private final HttpVersion version;
     private final ScxHttpHeaders headers;
     private final ScxHttpBody body;
-    private final ScxHttpServerResponse response;
+    private final Http1xServerResponse response;
     private final PeerInfo remotePeer;
     private final PeerInfo localPeer;
 
@@ -65,7 +65,7 @@ public class Http1xServerRequest implements ScxHttpServerRequest {
     }
 
     @Override
-    public ScxHttpServerResponse response() {
+    public Http1xServerResponse response() {
         return this.response;
     }
 

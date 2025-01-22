@@ -1,12 +1,11 @@
 package cool.scx.http.x.http1x;
 
-import cool.scx.http.ScxHttpBody;
-import cool.scx.http.ScxHttpHeadersWritable;
+import cool.scx.http.*;
+import cool.scx.http.uri.ScxURI;
 import cool.scx.http.web_socket.ScxServerWebSocketHandshakeRequest;
-import cool.scx.http.x.web_socket.ServerWebSocket;
+import cool.scx.http.web_socket.ScxServerWebSocketHandshakeResponse;
 
-import static cool.scx.http.HttpFieldName.*;
-import static cool.scx.http.HttpHelper.generateSecWebSocketAccept;
+import static cool.scx.http.x.http1x.Http1xHelper.*;
 
 /**
  * 基于 http1 的 websocket 握手请求
@@ -14,33 +13,72 @@ import static cool.scx.http.HttpHelper.generateSecWebSocketAccept;
  * @author scx567888
  * @version 0.0.1
  */
-public class Http1xServerWebSocketHandshakeRequest extends Http1xServerRequest implements ScxServerWebSocketHandshakeRequest {
+public class Http1xServerWebSocketHandshakeRequest implements ScxServerWebSocketHandshakeRequest {
 
-    public ServerWebSocket webSocket;
+    public final Http1xServerConnection connection;
+    public final boolean isKeepAlive;
+
+    private final ScxHttpMethod method;
+    private final ScxURI uri;
+    private final HttpVersion version;
+    private final ScxHttpHeaders headers;
+    private final ScxHttpBody body;
+    private final Http1xServerWebSocketHandshakeResponse response;
+    private final PeerInfo remotePeer;
+    private final PeerInfo localPeer;
 
     public Http1xServerWebSocketHandshakeRequest(Http1xServerConnection connection, Http1xRequestLine requestLine, ScxHttpHeadersWritable headers, ScxHttpBody body) {
-        super(connection, requestLine, headers, body);
+        this.connection = connection;
+        this.isKeepAlive = checkIsKeepAlive(requestLine, headers);
+        this.method = requestLine.method();
+        // todo uri 需要 通过请求头 , socket 等 获取 请求主机 
+        this.uri = ScxURI.of(requestLine.path());
+        this.version = requestLine.version();
+        this.headers = headers;
+        this.body = body;
+        this.response = new Http1xServerWebSocketHandshakeResponse(connection, this);
+        this.remotePeer = getRemotePeer(connection.tcpSocket);
+        this.localPeer = getLocalPeer(connection.tcpSocket);
     }
 
     @Override
-    public ServerWebSocket acceptHandshake() {
-        // 实现握手接受逻辑，返回适当的响应头
-        if (webSocket == null) {
-            var response = response();
-            response.setHeader(UPGRADE, "websocket");
-            response.setHeader(CONNECTION, "Upgrade");
-            response.setHeader(SEC_WEBSOCKET_ACCEPT, generateSecWebSocketAccept(secWebSocketKey()));
-            response.status(101).send();
-            webSocket = new ServerWebSocket(this);
-            // 一旦成功接受了 websocket 请求, 整个 tcp 将会被 websocket 独占 所以这里需要停止 http 监听
-            connection.stop();
-        }
-        return webSocket;
+    public ScxHttpMethod method() {
+        return method;
     }
 
     @Override
-    public ServerWebSocket webSocket() {
-        return webSocket != null ? webSocket : acceptHandshake();
+    public ScxURI uri() {
+        return uri;
+    }
+
+    @Override
+    public HttpVersion version() {
+        return version;
+    }
+
+    @Override
+    public ScxHttpHeaders headers() {
+        return headers;
+    }
+
+    @Override
+    public ScxHttpBody body() {
+        return body;
+    }
+
+    @Override
+    public ScxServerWebSocketHandshakeResponse response() {
+        return this.response;
+    }
+
+    @Override
+    public PeerInfo remotePeer() {
+        return remotePeer;
+    }
+
+    @Override
+    public PeerInfo localPeer() {
+        return localPeer;
     }
 
 }
