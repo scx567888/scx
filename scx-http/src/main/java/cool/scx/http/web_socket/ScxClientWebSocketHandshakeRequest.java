@@ -5,6 +5,8 @@ import cool.scx.http.cookie.Cookie;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.uri.ScxURI;
 
+import java.util.function.Consumer;
+
 import static cool.scx.http.HttpMethod.GET;
 import static cool.scx.http.HttpVersion.HTTP_1_1;
 
@@ -18,14 +20,24 @@ import static cool.scx.http.HttpVersion.HTTP_1_1;
  */
 public interface ScxClientWebSocketHandshakeRequest extends ScxHttpClientRequest {
 
+    //发送握手请求
+    ScxClientWebSocketHandshakeResponse sendHandshake();
+
+    //发送握手然后等待远端接受握手并返回 websocket 对象
+    default ScxClientWebSocket webSocket() {
+        return sendHandshake().webSocket();
+    }
+
+    //同上 但是 不需要手动调用 startListening
+    default void onWebSocket(Consumer<ScxClientWebSocket> consumer) {
+        sendHandshake().onWebSocket(consumer);
+    }
+
     @Override
     ScxClientWebSocketHandshakeRequest uri(ScxURI uri);
 
     @Override
     ScxClientWebSocketHandshakeRequest headers(ScxHttpHeaders headers);
-
-    @Override
-    ScxClientWebSocketHandshakeResponse send();
 
     @Override
     default ScxClientWebSocketHandshakeRequest uri(String uri) {
