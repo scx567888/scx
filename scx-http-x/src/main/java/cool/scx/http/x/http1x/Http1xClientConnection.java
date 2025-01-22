@@ -5,7 +5,6 @@ import cool.scx.http.exception.ScxHttpException;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.uri.ScxURIWritable;
 import cool.scx.http.x.XHttpClientOptions;
-import cool.scx.http.x.XHttpClientRequest;
 import cool.scx.io.*;
 import cool.scx.tcp.ScxTCPSocket;
 

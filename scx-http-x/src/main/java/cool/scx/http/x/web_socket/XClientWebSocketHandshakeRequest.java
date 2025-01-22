@@ -2,8 +2,6 @@ package cool.scx.http.x.web_socket;
 
 import cool.scx.common.util.Base64Utils;
 import cool.scx.common.util.RandomUtils;
-import cool.scx.http.HttpFieldName;
-import cool.scx.http.HttpMethod;
 import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.ScxHttpHeadersWritable;
 import cool.scx.http.media.empty.EmptyWriter;
@@ -54,7 +52,7 @@ public class XClientWebSocketHandshakeRequest implements ScxClientWebSocketHands
 
     @Override
     public ScxClientWebSocketHandshakeRequest uri(ScxURI uri) {
-        this.uri=ScxURI.of(uri);
+        this.uri = ScxURI.of(uri);
         return this;
     }
 
@@ -82,7 +80,7 @@ public class XClientWebSocketHandshakeRequest implements ScxClientWebSocketHands
         var connection = new Http1xClientConnection(tcpSocket, httpClient.options());
         var response = connection.sendRequest(this, new EmptyWriter()).waitResponse();
 
-        return new XClientWebSocketHandshakeResponse(connection, response,this.webSocketOptions);
+        return new XClientWebSocketHandshakeResponse(connection, response, this.webSocketOptions);
 
     }
 

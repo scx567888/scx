@@ -2,7 +2,6 @@ package cool.scx.http.x.http2;
 
 import cool.scx.http.*;
 import cool.scx.http.uri.ScxURI;
-import cool.scx.http.web_socket.ScxServerWebSocket;
 import cool.scx.http.web_socket.ScxServerWebSocketHandshakeRequest;
 import cool.scx.http.web_socket.ScxServerWebSocketHandshakeResponse;
 
@@ -48,5 +47,5 @@ public class Http2ServerWebSocketHandshakeRequest implements ScxServerWebSocketH
     public PeerInfo localPeer() {
         return null;
     }
-    
+
 }
