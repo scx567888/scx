@@ -69,7 +69,7 @@ public interface ScxClientWebSocketHandshakeRequest extends ScxHttpClientRequest
     default ScxHttpMethod method() {
         return null;
     }
-    
+
     @Override
     default ScxHttpClientRequest version(HttpVersion version) {
         throw new UnsupportedOperationException("Not supported Custom HttpVersion.");
