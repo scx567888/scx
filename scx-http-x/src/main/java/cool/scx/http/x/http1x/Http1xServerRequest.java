@@ -29,7 +29,6 @@ public class Http1xServerRequest implements ScxHttpServerRequest {
         this.connection = connection;
         this.isKeepAlive = checkIsKeepAlive(requestLine, headers);
 
-        this.response = new Http1xServerResponse(connection, this);
         this.method = requestLine.method();
         // todo uri 需要 通过请求头 , socket 等 获取 请求主机 
         this.uri = ScxURI.of(requestLine.path());
@@ -38,6 +37,7 @@ public class Http1xServerRequest implements ScxHttpServerRequest {
         this.body = body;
         this.remotePeer = getRemotePeer(connection.tcpSocket);
         this.localPeer = getLocalPeer(connection.tcpSocket);
+        this.response = new Http1xServerResponse(connection, this);
     }
 
     @Override
