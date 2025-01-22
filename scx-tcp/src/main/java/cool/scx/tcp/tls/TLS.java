@@ -5,8 +5,7 @@ import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocketFactory;
 import java.nio.file.Path;
 
-import static cool.scx.tcp.tls.TLSHelper.createDefaultSSlContext;
-import static cool.scx.tcp.tls.TLSHelper.createSSLContext;
+import static cool.scx.tcp.tls.TLSHelper.*;
 
 /**
  * TLS 配置
@@ -25,7 +24,11 @@ public interface TLS {
     }
 
     static TLS ofDefault() {
-        return new TLSImpl(createDefaultSSlContext());
+        return new TLSImpl(createDefaultSSLContext());
+    }
+
+    static TLS ofTrustAny() {
+        return new TLSImpl(createTrustAnySSLContext());
     }
 
     boolean enabled();

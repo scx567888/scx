@@ -1,12 +1,11 @@
 package cool.scx.tcp.tls;
 
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.*;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.security.*;
 import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 
 
 /**
@@ -67,7 +66,7 @@ public class TLSHelper {
     }
 
     // 获取系统默认证书并返回 TLS 对象（用于客户端） 
-    public static SSLContext createDefaultSSlContext() {
+    public static SSLContext createDefaultSSLContext() {
         try {
             var tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
             tmf.init((KeyStore) null);
@@ -76,6 +75,30 @@ public class TLSHelper {
             return sslContext;
         } catch (Exception e) {
             throw new RuntimeException("Failed to initialize default TLS configuration", e);
+        }
+    }
+
+    public static SSLContext createTrustAnySSLContext() {
+        // 创建自定义 TrustManager，忽略证书验证（仅用于测试环境）
+        var trustAllCerts = new TrustManager[]{new X509TrustManager() {
+            public X509Certificate[] getAcceptedIssuers() {
+                return null;
+            }
+
+            public void checkClientTrusted(X509Certificate[] certs, String authType) {
+            }
+
+            public void checkServerTrusted(X509Certificate[] certs, String authType) {
+            }
+        }};
+
+        try {
+            // 初始化 SSLContext
+            var sslContext = SSLContext.getInstance("TLS");
+            sslContext.init(null, trustAllCerts, null);
+            return sslContext;
+        } catch (NoSuchAlgorithmException | KeyManagementException e) {
+            throw new RuntimeException(e);
         }
     }
 
