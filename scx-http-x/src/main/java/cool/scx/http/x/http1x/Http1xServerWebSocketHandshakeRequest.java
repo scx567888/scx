@@ -1,11 +1,9 @@
 package cool.scx.http.x.http1x;
 
-import cool.scx.http.*;
-import cool.scx.http.uri.ScxURI;
+import cool.scx.http.ScxHttpBody;
+import cool.scx.http.ScxHttpHeadersWritable;
 import cool.scx.http.web_socket.ScxServerWebSocketHandshakeRequest;
 import cool.scx.http.web_socket.ScxServerWebSocketHandshakeResponse;
-
-import static cool.scx.http.x.http1x.Http1xHelper.*;
 
 /**
  * 基于 http1 的 websocket 握手请求
@@ -13,72 +11,18 @@ import static cool.scx.http.x.http1x.Http1xHelper.*;
  * @author scx567888
  * @version 0.0.1
  */
-public class Http1xServerWebSocketHandshakeRequest implements ScxServerWebSocketHandshakeRequest {
+public class Http1xServerWebSocketHandshakeRequest extends AbstractHttp1xServerRequest implements ScxServerWebSocketHandshakeRequest {
 
-    public final Http1xServerConnection connection;
-    public final boolean isKeepAlive;
-
-    private final ScxHttpMethod method;
-    private final ScxURI uri;
-    private final HttpVersion version;
-    private final ScxHttpHeaders headers;
-    private final ScxHttpBody body;
     private final Http1xServerWebSocketHandshakeResponse response;
-    private final PeerInfo remotePeer;
-    private final PeerInfo localPeer;
 
     public Http1xServerWebSocketHandshakeRequest(Http1xServerConnection connection, Http1xRequestLine requestLine, ScxHttpHeadersWritable headers, ScxHttpBody body) {
-        this.connection = connection;
-        this.isKeepAlive = checkIsKeepAlive(requestLine, headers);
-        this.method = requestLine.method();
-        // todo uri 需要 通过请求头 , socket 等 获取 请求主机 
-        this.uri = ScxURI.of(requestLine.path());
-        this.version = requestLine.version();
-        this.headers = headers;
-        this.body = body;
+        super(connection, requestLine, headers, body);
         this.response = new Http1xServerWebSocketHandshakeResponse(connection, this);
-        this.remotePeer = getRemotePeer(connection.tcpSocket);
-        this.localPeer = getLocalPeer(connection.tcpSocket);
-    }
-
-    @Override
-    public ScxHttpMethod method() {
-        return method;
-    }
-
-    @Override
-    public ScxURI uri() {
-        return uri;
-    }
-
-    @Override
-    public HttpVersion version() {
-        return version;
-    }
-
-    @Override
-    public ScxHttpHeaders headers() {
-        return headers;
-    }
-
-    @Override
-    public ScxHttpBody body() {
-        return body;
     }
 
     @Override
     public ScxServerWebSocketHandshakeResponse response() {
         return this.response;
-    }
-
-    @Override
-    public PeerInfo remotePeer() {
-        return remotePeer;
-    }
-
-    @Override
-    public PeerInfo localPeer() {
-        return localPeer;
     }
 
 }
