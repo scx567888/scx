@@ -5,6 +5,9 @@ import cool.scx.http.cookie.Cookie;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.uri.ScxURI;
 
+import static cool.scx.http.HttpMethod.GET;
+import static cool.scx.http.HttpVersion.HTTP_1_1;
+
 /**
  * ScxClientWebSocketHandshakeRequest
  * 1, WebSocket 协议中指定了 必须由 GET 方法 和 空请求体 所以我们这里屏蔽掉一些方法
@@ -62,12 +65,12 @@ public interface ScxClientWebSocketHandshakeRequest extends ScxHttpClientRequest
     //************ 屏蔽方法 ****************
     @Override
     default HttpVersion version() {
-        return null;
+        return HTTP_1_1;
     }
 
     @Override
     default ScxHttpMethod method() {
-        return null;
+        return GET;
     }
 
     @Override
