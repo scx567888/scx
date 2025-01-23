@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import static cool.scx.http.HttpVersion.HTTP_1_1;
 import static cool.scx.http.x.http1x.Http1xHelper.CRLF_BYTES;
 import static cool.scx.http.x.http1x.Http1xHelper.CRLF_CRLF_BYTES;
 
@@ -40,7 +41,7 @@ public class Http1xClientConnection {
         sb.append(" ");
         sb.append(getPath(request.uri()));
         sb.append(" ");
-        sb.append(request.version().value());
+        sb.append(request.version() != null ? request.version().value() : HTTP_1_1.value());
         sb.append("\r\n");
 
         //让用户能够设置头信息

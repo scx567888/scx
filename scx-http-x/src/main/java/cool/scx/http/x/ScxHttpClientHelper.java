@@ -1,11 +1,11 @@
-package cool.scx.http.helidon;
+package cool.scx.http.x;
 
 import cool.scx.http.ScxHttpClient;
 import cool.scx.http.ScxHttpClientRequest;
 import cool.scx.http.ScxHttpClientResponse;
 import cool.scx.http.media.multi_part.MultiPart;
 import cool.scx.http.uri.ScxURI;
-import cool.scx.http.web_socket.ScxClientWebSocketBuilder;
+import cool.scx.http.web_socket.ScxClientWebSocketHandshakeRequest;
 
 import static cool.scx.http.HttpMethod.*;
 
@@ -17,14 +17,14 @@ import static cool.scx.http.HttpMethod.*;
  */
 public final class ScxHttpClientHelper {
 
-    public static final ScxHttpClient DEFAULT_HTTP_CLIENT = new HelidonHttpClient();
+    public static final ScxHttpClient DEFAULT_HTTP_CLIENT = new XHttpClient();
 
     public static ScxHttpClientRequest request() {
         return DEFAULT_HTTP_CLIENT.request();
     }
 
-    public static ScxClientWebSocketBuilder webSocket() {
-        return DEFAULT_HTTP_CLIENT.webSocket();
+    public static ScxClientWebSocketHandshakeRequest webSocketHandshakeRequest() {
+        return DEFAULT_HTTP_CLIENT.webSocketHandshakeRequest();
     }
 
     public static ScxHttpClientResponse get(ScxURI uri) {
