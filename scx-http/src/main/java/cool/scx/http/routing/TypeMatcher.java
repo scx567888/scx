@@ -24,6 +24,8 @@ public interface TypeMatcher {
         return TypeMatcherImpl.WEB_SOCKET_HANDSHAKE_TYPE;
     }
 
+    Type type();
+
     boolean matches(ScxHttpServerRequest request);
 
     enum Type {

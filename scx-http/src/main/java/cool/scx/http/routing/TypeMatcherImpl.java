@@ -18,6 +18,11 @@ public class TypeMatcherImpl implements TypeMatcher {
     }
 
     @Override
+    public Type type() {
+        return type;
+    }
+
+    @Override
     public boolean matches(ScxHttpServerRequest request) {
         return switch (type) {
             case ANY -> true;
