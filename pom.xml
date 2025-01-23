@@ -52,7 +52,6 @@
         <module>scx-data-mysql-x</module>
         <module>scx-ffm</module>
         <module>scx-http</module>
-        <module>scx-http-helidon</module>
         <module>scx-http-x</module>
         <module>scx-io</module>
         <module>scx-jdbc</module>
