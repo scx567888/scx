@@ -37,6 +37,10 @@ public interface ScxHttpServerRequest {
         return uri().query();
     }
 
+    default String getQuery(String name) {
+        return uri().getQuery(name);
+    }
+
     default String getHeader(ScxHttpHeaderName name) {
         return headers().get(name);
     }
