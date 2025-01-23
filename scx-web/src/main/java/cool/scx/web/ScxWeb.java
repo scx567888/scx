@@ -4,7 +4,6 @@ import cool.scx.common.exception.ScxExceptionHelper;
 import cool.scx.http.exception.BadRequestException;
 import cool.scx.http.routing.Router;
 import cool.scx.http.routing.RoutingContext;
-import cool.scx.http.routing.WebSocketRouter;
 import cool.scx.reflect.ParameterInfo;
 import cool.scx.web.exception_handler.ExceptionHandler;
 import cool.scx.web.exception_handler.LastExceptionHandler;
@@ -112,7 +111,7 @@ public final class ScxWeb {
         return this;
     }
 
-    public ScxWeb registerWebSocketRoutes(WebSocketRouter router, Object... objects) {
+    public ScxWeb registerWebSocketRoutes(Router router, Object... objects) {
         webSocketRouteRegistrar.registerRoute(router, objects);
         return this;
     }
