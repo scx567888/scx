@@ -177,7 +177,7 @@ public final class Scx {
                     .brightBlue("已加载 " + (c != null ? c : 0) + " 个 WebSocket 路由 !!!").println();
         }
         //6, 初始化服务器
-        this.httpServer = createServer(this.scxOptions.useHelidon);
+        this.httpServer = createServer();
         this.httpServer.onRequest(this.scxHttpRouter);
         //7, 添加程序停止时的钩子函数
         this.addShutdownHook();
@@ -192,7 +192,7 @@ public final class Scx {
         return this;
     }
 
-    private ScxHttpServer createServer(boolean useHelidon) {
+    private ScxHttpServer createServer() {
         var httpServerOptions = (this.defaultHttpServerOptions != null ? new XHttpServerOptions((XHttpServerOptions) this.defaultHttpServerOptions) : new XHttpServerOptions())
                 .maxPayloadSize(DEFAULT_BODY_LIMIT)
                 .port(this.scxOptions.port());
