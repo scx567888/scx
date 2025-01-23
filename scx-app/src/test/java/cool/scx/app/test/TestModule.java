@@ -17,7 +17,7 @@ import cool.scx.common.util.NetUtils;
 import cool.scx.common.util.RandomUtils;
 import cool.scx.common.util.StopWatch;
 import cool.scx.data.query.QueryOption;
-import cool.scx.http.helidon.ScxHttpClientHelper;
+import cool.scx.http.x.ScxHttpClientHelper;
 import cool.scx.http.media.multi_part.MultiPart;
 import cool.scx.http.routing.handler.StaticHandler;
 import cool.scx.http.uri.ScxURI;

@@ -22,7 +22,7 @@ public interface ScxTLSManager {
 
     void setSSLParameters(SSLParameters params);
 
-    default void setApplicationProtocols(String[] protocols) {
+    default void setApplicationProtocols(String... protocols) {
         var sslParameters = getSSLParameters();
         sslParameters.setApplicationProtocols(protocols);
         setSSLParameters(sslParameters);

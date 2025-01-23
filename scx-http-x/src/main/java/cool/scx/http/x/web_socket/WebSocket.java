@@ -44,10 +44,15 @@ public class WebSocket extends AbstractWebSocket {
         this.lock = new ReentrantLock();
         this.continuationType = ContinuationType.NONE;
         this.closeSent = false;
-        this.running = true;
+        this.running = false;
     }
 
+    @Override
     public void start() {
+        if (running) {
+            return;
+        }
+        running = true;
         while (running) {
             try {
                 //尝试读取 帧

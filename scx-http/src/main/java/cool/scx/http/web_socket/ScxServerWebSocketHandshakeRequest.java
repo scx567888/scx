@@ -2,6 +2,8 @@ package cool.scx.http.web_socket;
 
 import cool.scx.http.ScxHttpServerRequest;
 
+import java.util.function.Consumer;
+
 import static cool.scx.http.HttpFieldName.SEC_WEBSOCKET_KEY;
 import static cool.scx.http.HttpFieldName.SEC_WEBSOCKET_VERSION;
 
@@ -13,6 +15,9 @@ import static cool.scx.http.HttpFieldName.SEC_WEBSOCKET_VERSION;
  */
 public interface ScxServerWebSocketHandshakeRequest extends ScxHttpServerRequest {
 
+    @Override
+    ScxServerWebSocketHandshakeResponse response();
+
     default String secWebSocketKey() {
         return getHeader(SEC_WEBSOCKET_KEY);
     }
@@ -21,8 +26,16 @@ public interface ScxServerWebSocketHandshakeRequest extends ScxHttpServerRequest
         return getHeader(SEC_WEBSOCKET_VERSION);
     }
 
-    ScxServerWebSocket acceptHandshake();
+    default ScxServerWebSocket acceptHandshake() {
+        return response().acceptHandshake();
+    }
 
-    ScxServerWebSocket webSocket();
+    default ScxServerWebSocket webSocket() {
+        return response().webSocket();
+    }
+
+    default void onWebSocket(Consumer<ScxServerWebSocket> consumer) {
+        response().onWebSocket(consumer);
+    }
 
 }

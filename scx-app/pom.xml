@@ -64,12 +64,6 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>scx-http-helidon</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>scx-http-x</artifactId>
             <version>${project.version}</version>
         </dependency>

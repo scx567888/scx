@@ -1,6 +1,7 @@
 package cool.scx.http.routing;
 
 import cool.scx.http.HttpMethod;
+import cool.scx.http.routing.TypeMatcher.Type;
 
 import java.util.function.Consumer;
 
@@ -11,6 +12,8 @@ import java.util.function.Consumer;
  * @version 0.0.1
  */
 public interface RouteWritable extends Route {
+
+    RouteWritable type(Type type);
 
     RouteWritable path(String path);
 

@@ -1,7 +1,6 @@
 package cool.scx.socket.test;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import cool.scx.http.helidon.HelidonHttpClient;
 import cool.scx.http.x.XHttpClient;
 import cool.scx.socket.ScxSocketClient;
 import org.testng.annotations.Test;
@@ -51,6 +50,7 @@ public class ScxSocketClientTest extends InitLogger {
                     System.out.println(r.payload() + "  " + finalI);
                 });
             }
+
         });
 
         scxSocketClient.connect();

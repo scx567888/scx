@@ -28,14 +28,14 @@ public class HttpClientTest {
     public static void test2() {
         XTest.test1();
         var client = new XHttpClient();
-        client.webSocket()
+        client.webSocketHandshakeRequest()
                 .uri("http://localhost:8899/中文路径😎😎😎😎?a=1&b=llll")
                 .addHeader("a", "b")
-                .onConnect(c -> {
+                .onWebSocket(c -> {
                     System.out.println("连接成功");
                     c.send("测试数据");
-                })
-                .connect();
+                });
     }
 
 }
+

@@ -16,27 +16,33 @@ public class Http1xServerRequest implements ScxHttpServerRequest {
     public final Http1xServerConnection connection;
     public final boolean isKeepAlive;
 
+    private final Http1xServerResponse response;
     private final ScxHttpMethod method;
     private final ScxURI uri;
     private final HttpVersion version;
     private final ScxHttpHeaders headers;
     private final ScxHttpBody body;
-    private final ScxHttpServerResponse response;
     private final PeerInfo remotePeer;
     private final PeerInfo localPeer;
 
     public Http1xServerRequest(Http1xServerConnection connection, Http1xRequestLine requestLine, ScxHttpHeadersWritable headers, ScxHttpBody body) {
         this.connection = connection;
         this.isKeepAlive = checkIsKeepAlive(requestLine, headers);
+
         this.method = requestLine.method();
         // todo uri 需要 通过请求头 , socket 等 获取 请求主机 
         this.uri = ScxURI.of(requestLine.path());
         this.version = requestLine.version();
         this.headers = headers;
         this.body = body;
-        this.response = new Http1xServerResponse(connection, this);
         this.remotePeer = getRemotePeer(connection.tcpSocket);
         this.localPeer = getLocalPeer(connection.tcpSocket);
+        this.response = new Http1xServerResponse(connection, this);
+    }
+
+    @Override
+    public ScxHttpServerResponse response() {
+        return this.response;
     }
 
     @Override
@@ -62,11 +68,6 @@ public class Http1xServerRequest implements ScxHttpServerRequest {
     @Override
     public ScxHttpBody body() {
         return body;
-    }
-
-    @Override
-    public ScxHttpServerResponse response() {
-        return this.response;
     }
 
     @Override

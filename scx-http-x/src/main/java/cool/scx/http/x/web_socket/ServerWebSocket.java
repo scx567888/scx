@@ -4,6 +4,10 @@ import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.web_socket.ScxServerWebSocket;
 import cool.scx.http.x.http1x.Http1xServerWebSocketHandshakeRequest;
+import cool.scx.io.DataReader;
+import cool.scx.tcp.ScxTCPSocket;
+
+import java.io.OutputStream;
 
 /**
  * X ServerWebSocket
@@ -15,13 +19,8 @@ public class ServerWebSocket extends WebSocket implements ScxServerWebSocket {
 
     private final Http1xServerWebSocketHandshakeRequest handshakeRequest;
 
-    public ServerWebSocket(Http1xServerWebSocketHandshakeRequest handshakeRequest) {
-        super(
-                handshakeRequest.connection.tcpSocket,
-                handshakeRequest.connection.dataReader,
-                handshakeRequest.connection.dataWriter,
-                handshakeRequest.connection.options.webSocketOptions()
-        );
+    public ServerWebSocket(ScxTCPSocket tcpSocket, DataReader reader, OutputStream writer, WebSocketOptions options, Http1xServerWebSocketHandshakeRequest handshakeRequest) {
+        super(tcpSocket, reader, writer, options);
         this.handshakeRequest = handshakeRequest;
     }
 

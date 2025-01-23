@@ -6,10 +6,7 @@ import cool.scx.common.util.CaseUtils;
 import cool.scx.common.util.URIUtils;
 import cool.scx.http.HttpMethod;
 import cool.scx.http.ScxHttpMethod;
-import cool.scx.http.routing.MethodMatcher;
-import cool.scx.http.routing.PathMatcher;
-import cool.scx.http.routing.Route;
-import cool.scx.http.routing.RoutingContext;
+import cool.scx.http.routing.*;
 import cool.scx.reflect.MethodInfo;
 import cool.scx.web.annotation.ScxRoute;
 import cool.scx.web.parameter_handler.ParameterHandler;
@@ -37,6 +34,7 @@ public final class ScxRouteHandler implements Route, Consumer<RoutingContext> {
     private final String path;
     private final Set<HttpMethod> methods;
     private final int order;
+    private final TypeMatcher typeMatcher;
     private final PathMatcher pathMatcher;
     private final MethodMatcher methodMatcher;
     private final ParameterHandler[] parameterHandlers;
@@ -54,6 +52,7 @@ public final class ScxRouteHandler implements Route, Consumer<RoutingContext> {
         this.path = initPath(clazzAnnotation, methodAnnotation);
         this.methods = Set.of(methodAnnotation.methods());
         this.order = methodAnnotation.order();
+        this.typeMatcher = TypeMatcher.normal();
         this.pathMatcher = path.isBlank() ? PathMatcher.any() : PathMatcher.of(path);
         this.methodMatcher = methods.isEmpty() ? MethodMatcher.any() : MethodMatcher.of(methods.toArray(ScxHttpMethod[]::new));
         this.parameterHandlers = scxWeb.buildParameterHandlers(this.method.parameters());
@@ -112,6 +111,11 @@ public final class ScxRouteHandler implements Route, Consumer<RoutingContext> {
     @Override
     public Set<HttpMethod> methods() {
         return methods;
+    }
+
+    @Override
+    public TypeMatcher typeMatcher() {
+        return typeMatcher;
     }
 
     @Override

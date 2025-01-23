@@ -2,13 +2,16 @@ package cool.scx.web;
 
 import cool.scx.common.util.ClassUtils;
 import cool.scx.common.util.URIUtils;
-import cool.scx.http.routing.WebSocketRoute;
-import cool.scx.http.routing.WebSocketRouter;
+import cool.scx.http.routing.Route;
+import cool.scx.http.routing.Router;
+import cool.scx.http.web_socket.ScxServerWebSocketHandshakeRequest;
 import cool.scx.web.annotation.ScxWebSocketRoute;
 
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+
+import static cool.scx.http.routing.TypeMatcher.Type.WEB_SOCKET_HANDSHAKE;
 
 /**
  * WebSocketRouteRegistrar
@@ -18,28 +21,31 @@ import java.util.List;
  */
 public final class WebSocketRouteRegistrar {
 
-    private static final Comparator<WebSocketRoute> orderComparator = Comparator.comparing(WebSocketRoute::order);
+    private static final Comparator<Route> orderComparator = Comparator.comparing(Route::order);
     private final ScxWeb scxWeb;
 
     public WebSocketRouteRegistrar(ScxWeb scxWeb) {
         this.scxWeb = scxWeb;
     }
 
-    private static List<WebSocketRoute> initWebSocketRoutes(Object... objects) {
+    private static List<Route> initWebSocketRoutes(Object... objects) {
         var filteredObjectList = filterObject(objects);
         var routeList = filteredObjectList.stream().map(WebSocketRouteRegistrar::createWebSocketRoute).toList();
         return sortedWebSocketRoutes(routeList);
     }
 
-    public static WebSocketRoute createWebSocketRoute(BaseWebSocketHandler o) {
+    public static Route createWebSocketRoute(BaseWebSocketHandler o) {
         var c = o.getClass();
         var scxWebSocketMapping = c.getAnnotation(ScxWebSocketRoute.class);
         var path = URIUtils.addSlashStart(URIUtils.join(scxWebSocketMapping.value()));
         var order = scxWebSocketMapping.order();
         //todo 需要重新设计
-        return WebSocketRoute.of().order(order).path(path).handler((d) -> {
+        return Route.of().type(WEB_SOCKET_HANDSHAKE).order(order).path(path).handler((d) -> {
             try {
-                o.onOpen(d);
+                ScxServerWebSocketHandshakeRequest request = d.request();
+                var ws = request.webSocket();
+                o.onOpen(ws);
+                ws.start();
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -67,11 +73,11 @@ public final class WebSocketRouteRegistrar {
                 BaseWebSocketHandler.class.isAssignableFrom(c); // 继承自 BaseWebSocketHandler
     }
 
-    private static List<WebSocketRoute> sortedWebSocketRoutes(List<WebSocketRoute> list) {
+    private static List<Route> sortedWebSocketRoutes(List<Route> list) {
         return list.stream().sorted(orderComparator).toList();
     }
 
-    public WebSocketRouter registerRoute(WebSocketRouter scxWebSocketRouter, Object... objects) {
+    public Router registerRoute(Router scxWebSocketRouter, Object... objects) {
         var routes = initWebSocketRoutes(objects);
         for (var route : routes) {
             scxWebSocketRouter.addRoute(route);

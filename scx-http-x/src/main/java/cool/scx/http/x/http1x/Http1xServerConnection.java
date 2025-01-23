@@ -3,9 +3,7 @@ package cool.scx.http.x.http1x;
 import cool.scx.http.*;
 import cool.scx.http.exception.InternalServerErrorException;
 import cool.scx.http.exception.ScxHttpException;
-import cool.scx.http.web_socket.ScxServerWebSocket;
 import cool.scx.http.x.XHttpServerOptions;
-import cool.scx.http.x.web_socket.ServerWebSocket;
 import cool.scx.io.*;
 import cool.scx.tcp.ScxTCPSocket;
 
@@ -36,15 +34,12 @@ public class Http1xServerConnection {
     public final OutputStream dataWriter;
 
     private final Consumer<ScxHttpServerRequest> requestHandler;
-    private final Consumer<ScxServerWebSocket> webSocketHandler;
     private boolean running;
 
-    public Http1xServerConnection(ScxTCPSocket tcpSocket, XHttpServerOptions options, Consumer<ScxHttpServerRequest> requestHandler, Consumer<ScxServerWebSocket> webSocketHandler) {
+    public Http1xServerConnection(ScxTCPSocket tcpSocket, XHttpServerOptions options, Consumer<ScxHttpServerRequest> requestHandler) {
         this.tcpSocket = tcpSocket;
         this.options = options;
         this.requestHandler = requestHandler;
-        //todo 这种方式暂时为了兼容 后期需要移除
-        this.webSocketHandler = webSocketHandler;
         this.dataReader = new PowerfulLinkedDataReader(new InputStreamDataSupplier(this.tcpSocket.inputStream()));
         this.dataWriter = this.tcpSocket.outputStream();
         this.running = true;
@@ -117,18 +112,9 @@ public class Http1xServerConnection {
         running = false;
     }
 
-    private void _callRequestHandler(Http1xServerRequest request) {
-        //todo 临时方案
-        if (request instanceof Http1xServerWebSocketHandshakeRequest webSocketHandshakeRequest) {
-            ServerWebSocket serverWebSocket = webSocketHandshakeRequest.webSocket();
-            if (webSocketHandler != null) {
-                webSocketHandler.accept(serverWebSocket);
-            }
-            serverWebSocket.start();
-        } else {
-            if (requestHandler != null) {
-                requestHandler.accept(request);
-            }
+    private void _callRequestHandler(ScxHttpServerRequest request) {
+        if (requestHandler != null) {
+            requestHandler.accept(request);
         }
     }
 

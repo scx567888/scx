@@ -1,6 +1,6 @@
 package cool.scx.web;
 
-import cool.scx.http.routing.WebSocketRoutingContext;
+import cool.scx.http.web_socket.ScxServerWebSocket;
 import cool.scx.web.annotation.ScxWebSocketRoute;
 
 /**
@@ -17,8 +17,8 @@ public interface BaseWebSocketHandler {
      * @param context 上下文
      * @throws java.lang.Exception e
      */
-    default void onOpen(WebSocketRoutingContext context) throws Exception {
-        context.next();
+    default void onOpen(ScxServerWebSocket context) throws Exception {
+        
     }
 
 }

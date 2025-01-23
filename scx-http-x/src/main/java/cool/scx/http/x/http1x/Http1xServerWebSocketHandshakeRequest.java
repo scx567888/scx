@@ -1,12 +1,9 @@
 package cool.scx.http.x.http1x;
 
-import cool.scx.http.ScxHttpBody;
-import cool.scx.http.ScxHttpHeadersWritable;
+import cool.scx.http.*;
+import cool.scx.http.uri.ScxURI;
 import cool.scx.http.web_socket.ScxServerWebSocketHandshakeRequest;
-import cool.scx.http.x.web_socket.ServerWebSocket;
-
-import static cool.scx.http.HttpFieldName.*;
-import static cool.scx.http.HttpHelper.generateSecWebSocketAccept;
+import cool.scx.http.web_socket.ScxServerWebSocketHandshakeResponse;
 
 /**
  * 基于 http1 的 websocket 握手请求
@@ -14,33 +11,54 @@ import static cool.scx.http.HttpHelper.generateSecWebSocketAccept;
  * @author scx567888
  * @version 0.0.1
  */
-public class Http1xServerWebSocketHandshakeRequest extends Http1xServerRequest implements ScxServerWebSocketHandshakeRequest {
+public class Http1xServerWebSocketHandshakeRequest implements ScxServerWebSocketHandshakeRequest {
 
-    public ServerWebSocket webSocket;
+    public final Http1xServerRequest request;
+    private final Http1xServerWebSocketHandshakeResponse response;
 
     public Http1xServerWebSocketHandshakeRequest(Http1xServerConnection connection, Http1xRequestLine requestLine, ScxHttpHeadersWritable headers, ScxHttpBody body) {
-        super(connection, requestLine, headers, body);
+        this.request = new Http1xServerRequest(connection, requestLine, headers, body);
+        this.response = new Http1xServerWebSocketHandshakeResponse(connection, this);
     }
 
     @Override
-    public ServerWebSocket acceptHandshake() {
-        // 实现握手接受逻辑，返回适当的响应头
-        if (webSocket == null) {
-            var response = response();
-            response.setHeader(UPGRADE, "websocket");
-            response.setHeader(CONNECTION, "Upgrade");
-            response.setHeader(SEC_WEBSOCKET_ACCEPT, generateSecWebSocketAccept(secWebSocketKey()));
-            response.status(101).send();
-            webSocket = new ServerWebSocket(this);
-            // 一旦成功接受了 websocket 请求, 整个 tcp 将会被 websocket 独占 所以这里需要停止 http 监听
-            connection.stop();
-        }
-        return webSocket;
+    public ScxServerWebSocketHandshakeResponse response() {
+        return this.response;
     }
 
     @Override
-    public ServerWebSocket webSocket() {
-        return webSocket != null ? webSocket : acceptHandshake();
+    public ScxHttpMethod method() {
+        return request.method();
+    }
+
+    @Override
+    public ScxURI uri() {
+        return request.uri();
+    }
+
+    @Override
+    public HttpVersion version() {
+        return request.version();
+    }
+
+    @Override
+    public ScxHttpHeaders headers() {
+        return request.headers();
+    }
+
+    @Override
+    public ScxHttpBody body() {
+        return request.body();
+    }
+
+    @Override
+    public PeerInfo remotePeer() {
+        return request.remotePeer();
+    }
+
+    @Override
+    public PeerInfo localPeer() {
+        return request.localPeer();
     }
 
 }

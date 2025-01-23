@@ -1,5 +1,6 @@
 package cool.scx.http.x.test;
 
+import cool.scx.http.web_socket.ScxServerWebSocketHandshakeRequest;
 import cool.scx.http.x.XHttpClient;
 import cool.scx.http.x.XHttpServer;
 import cool.scx.http.x.XHttpServerOptions;
@@ -15,11 +16,15 @@ public class WebSocketTest {
         var s = System.nanoTime();
         var httpServer = new XHttpServer(new XHttpServerOptions().port(8080));
 
-        httpServer.onWebSocket(webSocket -> {
-            webSocket.onTextMessage((data, _) -> {
-                webSocket.send(data);
-                System.out.println("服 : " + data);
-            });
+        httpServer.onRequest(req -> {
+            if (req instanceof ScxServerWebSocketHandshakeRequest wsReq) {
+                wsReq.onWebSocket(webSocket -> {
+                    webSocket.onTextMessage((data, _) -> {
+                        webSocket.send(data);
+                        System.out.println("服 : " + data);
+                    });
+                });
+            }
         });
 
         httpServer.start();
@@ -29,7 +34,7 @@ public class WebSocketTest {
     public static void startClient() {
         var httpClient = new XHttpClient();
 
-        httpClient.webSocket().uri("ws://127.0.0.1:8080/websocket").onConnect(webSocket -> {
+        httpClient.webSocketHandshakeRequest().uri("ws://127.0.0.1:8080/websocket").onWebSocket(webSocket -> {
             webSocket.onTextMessage((data, s) -> {
                 System.out.println("客 : " + data);
             });
@@ -39,7 +44,7 @@ public class WebSocketTest {
                     webSocket.send(i + "😀😀😀😀😀😀".repeat(100));
                 }
             });
-        }).connect();
+        });
     }
 
 }
