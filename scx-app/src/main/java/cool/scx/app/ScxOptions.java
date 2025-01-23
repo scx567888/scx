@@ -72,8 +72,6 @@ public final class ScxOptions {
      * 模板 根目录 字符串值
      */
     private final Path templateRoot;
-    
-    public final boolean useHelidon;
 
     public ScxOptions(ScxConfig scxConfig, ScxEnvironment scxEnvironment, String appKey) {
         port = scxConfig.getOrDefault("scx.port", 8080);
@@ -86,7 +84,6 @@ public final class ScxOptions {
         dataSourceUsername = scxConfig.get("scx.data-source.username", String.class);
         dataSourcePassword = scxConfig.get("scx.data-source.password", DecryptValueHandler.of(appKey));
         dataSourceParameters = scxConfig.getOrDefault("scx.data-source.parameters", new String[]{});
-        useHelidon = scxConfig.getOrDefault("scx.use-helidon", false);
     }
 
     public String dataSourceUrl() {
@@ -133,7 +130,6 @@ public final class ScxOptions {
         Ansi.ansi()
                 .green("Y 服务器 IP 地址                       \t -->\t " + Arrays.stream(ignore(() -> getLocalIPAddress(c -> c instanceof Inet4Address), new InetAddress[]{})).map(InetAddress::getHostAddress).collect(Collectors.joining(", ", "[", "]"))).ln()
                 .green("Y 端口号                               \t -->\t " + port).ln()
-                .green("Y 使用 Helidon                         \t -->\t " + (useHelidon ? "是" : "否")).ln()
                 .green("Y 允许的请求源                         \t -->\t " + allowedOrigin).ln()
                 .green("Y 模板根目录                           \t -->\t " + templateRoot.toString()).ln()
                 .green("Y 是否开启 https                       \t -->\t " + (httpsEnabled ? "是" : "否")).ln()

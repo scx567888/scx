@@ -77,19 +77,19 @@ public final class ScxSocketClient {
         //关闭上一次连接
         this._closeOldSocket();
         //创建连接
-        var webSocketBuilder = webSocketClient.webSocket()
-                .onConnect(webSocket -> {
-                    //如果存在旧的 则使用旧的 status
-                    this.clientSocket = clientSocket != null ?
-                            new ScxClientSocket(webSocket, clientID, this, clientSocket.status) :
-                            new ScxClientSocket(webSocket, clientID, this);
 
-                    this.clientSocket.start();
-                    this._callOnConnect(clientSocket);
-                })
-                .uri(connectOptions);
         try {
-            webSocketBuilder.connect();
+            webSocketClient.webSocketHandshakeRequest()
+                    .uri(connectOptions)
+                    .onWebSocket(webSocket -> {
+                        //如果存在旧的 则使用旧的 status
+                        this.clientSocket = clientSocket != null ?
+                                new ScxClientSocket(webSocket, clientID, this, clientSocket.status) :
+                                new ScxClientSocket(webSocket, clientID, this);
+
+                        this.clientSocket.start();
+                        this._callOnConnect(clientSocket);
+                    });
         } catch (Exception e) {
             this.reconnect(e);
         }

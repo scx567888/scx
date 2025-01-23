@@ -84,7 +84,6 @@ public final class ScxBuilder {
     private static Map<String, Object> initDefaultConfigMap() {
         var tempMap = new LinkedHashMap<String, Object>();
         tempMap.put("scx.port", 8080);
-        tempMap.put("scx.use-helidon", false);
         tempMap.put("scx.tombstone", false);
         tempMap.put("scx.allowed-origin", "*");
         tempMap.put("scx.template.root", "AppRoot:/c/");

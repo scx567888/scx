@@ -1,8 +1,7 @@
 package cool.scx.socket.test;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import cool.scx.http.helidon.HelidonHttpServer;
-import cool.scx.http.helidon.HelidonHttpServerOptions;
+import cool.scx.http.web_socket.ScxServerWebSocketHandshakeRequest;
 import cool.scx.http.x.XHttpServer;
 import cool.scx.http.x.XHttpServerOptions;
 import cool.scx.socket.ScxSocketServer;
@@ -66,7 +65,11 @@ public class ScxSocketServerTest extends InitLogger {
 
         //使用 httpServer
         new XHttpServer(new XHttpServerOptions().port(8990))
-                .onWebSocket(scxSocketServer::call)
+                .onRequest(c->{
+                    if (c instanceof ScxServerWebSocketHandshakeRequest s){
+                        s.onWebSocket(scxSocketServer::call);
+                    }
+                })
                 .start();
 
     }
