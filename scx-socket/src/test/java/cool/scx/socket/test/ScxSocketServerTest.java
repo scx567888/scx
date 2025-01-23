@@ -65,8 +65,8 @@ public class ScxSocketServerTest extends InitLogger {
 
         //使用 httpServer
         new XHttpServer(new XHttpServerOptions().port(8990))
-                .onRequest(c->{
-                    if (c instanceof ScxServerWebSocketHandshakeRequest s){
+                .onRequest(c -> {
+                    if (c instanceof ScxServerWebSocketHandshakeRequest s) {
                         s.onWebSocket(scxSocketServer::call);
                     }
                 })

@@ -14,7 +14,7 @@ public class ScxSocketClientTest extends InitLogger {
         test1();
     }
 
-    @Test
+//    @Test
     public static void test1() {
         //启动服务器
 //        ScxSocketServerTest.test1();

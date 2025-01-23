@@ -18,7 +18,7 @@ public interface BaseWebSocketHandler {
      * @throws java.lang.Exception e
      */
     default void onOpen(ScxServerWebSocket context) throws Exception {
-        
+
     }
 
 }
