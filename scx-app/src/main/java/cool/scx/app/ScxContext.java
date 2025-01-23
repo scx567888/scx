@@ -8,7 +8,6 @@ import cool.scx.config.ScxConfig;
 import cool.scx.config.ScxEnvironment;
 import cool.scx.config.ScxFeatureConfig;
 import cool.scx.http.ScxHttpServer;
-import cool.scx.http.routing.WebSocketRouter;
 import cool.scx.jdbc.JDBCContext;
 import cool.scx.jdbc.sql.SQLRunner;
 import cool.scx.web.ScxWeb;
@@ -83,10 +82,6 @@ public final class ScxContext {
 
     public static EventBus eventBus() {
         return scx().eventBus();
-    }
-
-    public static WebSocketRouter webSocketRouter() {
-        return scx().webSocketRouter();
     }
 
     public static ScxEnvironment environment() {

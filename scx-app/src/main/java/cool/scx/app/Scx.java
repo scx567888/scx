@@ -2,6 +2,7 @@ package cool.scx.app;
 
 import cool.scx.ansi.Ansi;
 import cool.scx.app.eventbus.EventBus;
+import cool.scx.common.util.$;
 import cool.scx.common.util.FileUtils;
 import cool.scx.common.util.ScopedValue;
 import cool.scx.common.util.StopWatch;
@@ -10,9 +11,6 @@ import cool.scx.config.ScxEnvironment;
 import cool.scx.config.ScxFeatureConfig;
 import cool.scx.data.jdbc.AnnotationConfigTable;
 import cool.scx.http.ScxHttpServer;
-import cool.scx.http.helidon.HelidonHttpServer;
-import cool.scx.http.helidon.HelidonHttpServerOptions;
-import cool.scx.http.routing.WebSocketRouter;
 import cool.scx.http.x.XHttpServer;
 import cool.scx.http.x.XHttpServerOptions;
 import cool.scx.jdbc.JDBCContext;
@@ -23,7 +21,6 @@ import cool.scx.web.RouteRegistrar;
 import cool.scx.web.ScxWeb;
 import cool.scx.web.ScxWebOptions;
 import cool.scx.web.WebSocketRouteRegistrar;
-import io.helidon.common.tls.Tls;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 import javax.sql.DataSource;
@@ -40,6 +37,7 @@ import static cool.scx.app.ScxHelper.*;
 import static cool.scx.app.enumeration.ScxAppFeature.*;
 import static cool.scx.common.exception.ScxExceptionHelper.ignore;
 import static cool.scx.common.util.NetUtils.getLocalIPAddress;
+import static cool.scx.http.routing.TypeMatcher.Type.*;
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.WARNING;
 
@@ -80,8 +78,6 @@ public final class Scx {
     private JDBCContext jdbcContext = null;
 
     private ScxHttpRouter scxHttpRouter = null;
-
-    private WebSocketRouter webSocketRouter = null;
 
     private ScxHttpServer httpServer = null;
 
@@ -161,24 +157,28 @@ public final class Scx {
         }
         //2, 初始化路由器 (Http 和 WebSocket)
         this.scxHttpRouter = new ScxHttpRouter(this);
-        this.webSocketRouter = new WebSocketRouter();
         //3, 注册 路由
         var classList = Arrays.stream(this.scxModules()).flatMap(c -> c.classList().stream()).toList();
         var httpRoutes = RouteRegistrar.filterClass(classList).stream().map(beanFactory::getBean).toArray();
         var webSocketRoutes = WebSocketRouteRegistrar.filterClass(classList).stream().map(beanFactory::getBean).toArray();
-        this.scxWeb.bindErrorHandler(this.scxHttpRouter).registerHttpRoutes(scxHttpRouter, httpRoutes).registerWebSocketRoutes(webSocketRouter, webSocketRoutes);
+        this.scxWeb.bindErrorHandler(this.scxHttpRouter).registerHttpRoutes(scxHttpRouter, httpRoutes).registerWebSocketRoutes(scxHttpRouter, webSocketRoutes);
         //4, 依次执行 模块的 start 生命周期 , 在这里我们可以操作 router 等对象 "手动注册新路由" 或其他任何操作
         this.startAllScxModules();
         //5, 打印基本信息
         if (this.scxFeatureConfig.get(SHOW_START_UP_INFO)) {
+            var routes = this.scxHttpRouter.getRoutes();
+            var entries = $.countingBy(routes, c -> c.typeMatcher().type());
+            var a = entries.get(ANY);
+            var b = entries.get(NORMAL);
+            var c = entries.get(WEB_SOCKET_HANDSHAKE);
             Ansi.ansi()
                     .brightYellow("已加载 " + this.beanFactory.getBeanDefinitionNames().length + " 个 Bean !!!").ln()
-                    .brightGreen("已加载 " + this.scxHttpRouter.getRoutes().size() + " 个 Http 路由 !!!").ln()
-                    .brightBlue("已加载 " + this.webSocketRouter.getRoutes().size() + " 个 WebSocket 路由 !!!").println();
+                    .brightGreen("已加载 " + ((a != null ? a : 0) + (b != null ? b : 0)) + " 个 Http 路由 !!!").ln()
+                    .brightBlue("已加载 " + (c != null ? c : 0) + " 个 WebSocket 路由 !!!").println();
         }
         //6, 初始化服务器
         this.httpServer = createServer(this.scxOptions.useHelidon);
-        this.httpServer.onRequest(this.scxHttpRouter).onWebSocket(this.webSocketRouter);
+        this.httpServer.onRequest(this.scxHttpRouter);
         //7, 添加程序停止时的钩子函数
         this.addShutdownHook();
         //8, 使用初始端口号 启动服务器
@@ -193,27 +193,15 @@ public final class Scx {
     }
 
     private ScxHttpServer createServer(boolean useHelidon) {
-        if (useHelidon) {
-            var httpServerOptions =(this.defaultHttpServerOptions!=null? new HelidonHttpServerOptions((HelidonHttpServerOptions) this.defaultHttpServerOptions):new HelidonHttpServerOptions())
-                    .maxPayloadSize(DEFAULT_BODY_LIMIT)
-                    .port(this.scxOptions.port());
-            if (this.scxOptions.isHttpsEnabled()) {
-                //此处因为 helidon 的 tls 有 bug, 直接使用 scx-tcp 的 tls 代替
-                var tls = new TLS(this.scxOptions.sslPath(), this.scxOptions.sslPassword());
-                httpServerOptions.tls(Tls.builder().sslContext(tls.sslContext()).build());
-            }
-            return new HelidonHttpServer(httpServerOptions);
-        }else{
-            var httpServerOptions = (this.defaultHttpServerOptions!=null?new XHttpServerOptions((XHttpServerOptions) this.defaultHttpServerOptions):new XHttpServerOptions())
-                    .maxPayloadSize(DEFAULT_BODY_LIMIT)
-                    .port(this.scxOptions.port());
-            if (this.scxOptions.isHttpsEnabled()) {
-                //此处因为 helidon 的 tls 有 bug, 直接使用 scx-tcp 的 tls 代替
-                var tls = new TLS(this.scxOptions.sslPath(), this.scxOptions.sslPassword());
-                httpServerOptions.tls(tls);
-            }
-            return new XHttpServer(httpServerOptions);
+        var httpServerOptions = (this.defaultHttpServerOptions != null ? new XHttpServerOptions((XHttpServerOptions) this.defaultHttpServerOptions) : new XHttpServerOptions())
+                .maxPayloadSize(DEFAULT_BODY_LIMIT)
+                .port(this.scxOptions.port());
+        if (this.scxOptions.isHttpsEnabled()) {
+            //此处因为 helidon 的 tls 有 bug, 直接使用 scx-tcp 的 tls 代替
+            var tls = TLS.of(this.scxOptions.sslPath(), this.scxOptions.sslPassword());
+            httpServerOptions.tls(tls);
         }
+        return new XHttpServer(httpServerOptions);
     }
 
     /**
@@ -404,10 +392,6 @@ public final class Scx {
 
     public EventBus eventBus() {
         return eventBus;
-    }
-
-    public WebSocketRouter webSocketRouter() {
-        return webSocketRouter;
     }
 
     public ScxWeb scxWeb() {

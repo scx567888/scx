@@ -10,7 +10,7 @@ import cool.scx.common.util.RandomUtils;
 import cool.scx.http.FileFormat;
 import cool.scx.http.HttpHelper;
 import cool.scx.http.HttpMethod;
-import cool.scx.http.helidon.ScxHttpClientHelper;
+import cool.scx.http.x.ScxHttpClientHelper;
 import cool.scx.http.media.multi_part.MultiPartPart;
 import cool.scx.http.routing.RoutingContext;
 import cool.scx.io.zip.ZipBuilder;
@@ -145,7 +145,7 @@ public class WebSiteController {
      */
     @ScxRoute(value = "/baidu", methods = HttpMethod.GET)
     public Html TestHttpUtils() throws IOException, InterruptedException {
-        var baiduHtml = ScxHttpClientHelper.get("http://www.baidu.com/").body().asString();
+        var baiduHtml = ScxHttpClientHelper.get("https://www.baidu.com/").body().asString();
         return Html.of(baiduHtml);
     }
 
