@@ -16,6 +16,7 @@ class RouteImpl implements RouteWritable {
 
     private String path;
     private Set<HttpMethod> methods;
+    private TypeMatcher typeMatcher;
     private PathMatcher pathMatcher;
     private MethodMatcher methodMatcher;
     private int order;
@@ -24,10 +25,17 @@ class RouteImpl implements RouteWritable {
     public RouteImpl() {
         this.path = null;
         this.methods = new HashSet<>();
+        this.typeMatcher = TypeMatcher.any();
         this.pathMatcher = PathMatcher.any();
         this.methodMatcher = MethodMatcher.any();
         this.order = 0;
         this.handler = RoutingContext::next;
+    }
+
+    @Override
+    public RouteWritable type(TypeMatcher.Type type) {
+        this.typeMatcher = TypeMatcher.of(type);
+        return this;
     }
 
     @Override
@@ -71,6 +79,11 @@ class RouteImpl implements RouteWritable {
     @Override
     public Set<HttpMethod> methods() {
         return methods;
+    }
+
+    @Override
+    public TypeMatcher typeMatcher() {
+        return typeMatcher;
     }
 
     @Override

@@ -34,12 +34,14 @@ public class RoutingContext {
         this.contentParams = new HashMap<>();
     }
 
-    public ScxHttpServerRequest request() {
-        return request;
+    @SuppressWarnings("unchecked")
+    public <T extends ScxHttpServerRequest> T request() {
+        return (T) request;
     }
 
-    public ScxHttpServerResponse response() {
-        return request.response();
+    @SuppressWarnings("unchecked")
+    public <T extends ScxHttpServerResponse> T response() {
+        return (T) request.response();
     }
 
     public final void next() {
@@ -66,6 +68,13 @@ public class RoutingContext {
 
         while (iter.hasNext()) {
             var routeState = iter.next();
+
+            //匹配类型
+            var typeMatcherResult = routeState.typeMatcher().matches(request);
+
+            if (!typeMatcherResult) {
+                continue;
+            }
 
             //匹配路径
             var pathMatchResult = routeState.pathMatcher().matches(request.path());

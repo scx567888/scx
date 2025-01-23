@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+import static cool.scx.http.routing.TypeMatcher.Type.WEB_SOCKET_HANDSHAKE;
+
 /**
  * Router
  *
@@ -32,6 +34,18 @@ public interface Router extends Consumer<ScxHttpServerRequest> {
 
     default RouteWritable route(int order) {
         var route = Route.of().order(order);
+        addRoute(route);
+        return route;
+    }
+
+    default RouteWritable webSocketRoute() {
+        var route = Route.of().type(WEB_SOCKET_HANDSHAKE);
+        addRoute(route);
+        return route;
+    }
+
+    default RouteWritable webSocketRoute(int order) {
+        var route = Route.of().type(WEB_SOCKET_HANDSHAKE).order(order);
         addRoute(route);
         return route;
     }
