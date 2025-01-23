@@ -14,7 +14,7 @@ import java.util.function.Consumer;
 public interface RouteWritable extends Route {
 
     RouteWritable type(Type type);
-    
+
     RouteWritable path(String path);
 
     RouteWritable pathRegex(String path);

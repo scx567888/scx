@@ -22,7 +22,7 @@ public interface Route {
     Set<HttpMethod> methods();
 
     TypeMatcher typeMatcher();
-    
+
     PathMatcher pathMatcher();
 
     MethodMatcher methodMatcher();
