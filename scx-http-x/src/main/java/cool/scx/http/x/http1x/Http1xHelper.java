@@ -61,9 +61,11 @@ final class Http1xHelper {
         out.write(CONTINUE_100);
     }
 
-    public static void consumeInputStream(InputStream inputStream) throws IOException {
+    public static void consumeInputStream(InputStream inputStream) {
         try (inputStream) {
             inputStream.transferTo(OutputStream.nullOutputStream());
+        } catch (IOException e) {
+            throw new CloseConnectionException();
         }
     }
 
