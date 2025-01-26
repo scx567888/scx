@@ -10,6 +10,7 @@ import cool.scx.tcp.ScxTCPSocket;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UncheckedIOException;
 import java.lang.System.Logger;
 import java.util.function.Consumer;
 
@@ -124,8 +125,8 @@ public class Http1xServerConnection {
             var requestLineBytes = dataReader.readUntil(CRLF_BYTES, options.maxRequestLineSize());
             var requestLineStr = new String(requestLineBytes);
             return Http1xRequestLine.of(requestLineStr);
-        } catch (NoMoreDataException e) {
-            // Socket 关闭了
+        } catch (NoMoreDataException | UncheckedIOException e) {
+            // Socket 关闭了 或者底层 Socket 发生异常
             throw new CloseConnectionException();
         } catch (NoMatchFoundException e) {
             // 在指定长度内未匹配到 这里抛出 URI 过长异常
@@ -142,8 +143,8 @@ public class Http1xServerConnection {
             var headerBytes = dataReader.readUntil(CRLF_CRLF_BYTES, options.maxHeaderSize());
             var headerStr = new String(headerBytes);
             return ScxHttpHeaders.of(headerStr);
-        } catch (NoMoreDataException e) {
-            // Socket 关闭了
+        } catch (NoMoreDataException | UncheckedIOException e) {
+            // Socket 关闭了 或者底层 Socket 发生异常
             throw new CloseConnectionException();
         } catch (NoMatchFoundException e) {
             // 在指定长度内未匹配到 这里抛出请求头过大异常
@@ -208,6 +209,7 @@ public class Http1xServerConnection {
             dataWriter.write(message);
         } catch (IOException ee) {
             LOGGER.log(TRACE, "发送请求错误时发生错误 !!!");
+            stop();
         }
 
     }
