@@ -16,14 +16,14 @@ import java.nio.channels.Channels;
  * @author scx567888
  * @version 0.0.1
  */
-public class AsyncTCPSocket implements ScxTCPSocket {
+public class AioTCPSocket implements ScxTCPSocket {
 
     private AsynchronousSocketChannel socketChannel;
     private InputStream in;
     private OutputStream out;
     private ScxTLSManager tlsManager;
 
-    public AsyncTCPSocket(AsynchronousSocketChannel socketChannel) {
+    public AioTCPSocket(AsynchronousSocketChannel socketChannel) {
         setSocket(socketChannel);
     }
 

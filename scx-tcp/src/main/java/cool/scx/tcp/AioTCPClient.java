@@ -12,15 +12,15 @@ import java.util.concurrent.ExecutionException;
  * @author scx567888
  * @version 0.0.1
  */
-public class AsyncTCPClient implements ScxTCPClient {
+public class AioTCPClient implements ScxTCPClient {
 
     private final ScxTCPClientOptions options;
 
-    public AsyncTCPClient() {
+    public AioTCPClient() {
         this(new ScxTCPClientOptions());
     }
 
-    public AsyncTCPClient(ScxTCPClientOptions options) {
+    public AioTCPClient(ScxTCPClientOptions options) {
         this.options = options;
     }
 
@@ -38,7 +38,7 @@ public class AsyncTCPClient implements ScxTCPClient {
             throw new RuntimeException("客户端连接失败 !!!", e);
         }
 
-        var tcpSocket = new AsyncTCPSocket(socketChannel);
+        var tcpSocket = new AioTCPSocket(socketChannel);
 
         if (options.autoUpgradeToTLS()) {
             try {

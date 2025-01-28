@@ -18,9 +18,9 @@ import static java.lang.System.Logger.Level.TRACE;
  * @author scx567888
  * @version 0.0.1
  */
-public class AsyncTCPServer implements ScxTCPServer {
+public class AioTCPServer implements ScxTCPServer {
 
-    private static final Logger LOGGER = System.getLogger(AsyncTCPServer.class.getName());
+    private static final Logger LOGGER = System.getLogger(AioTCPServer.class.getName());
 
     private final ScxTCPServerOptions options;
     private final Thread serverThread;
@@ -28,11 +28,11 @@ public class AsyncTCPServer implements ScxTCPServer {
     private AsynchronousServerSocketChannel serverSocket;
     private boolean running;
 
-    public AsyncTCPServer() {
+    public AioTCPServer() {
         this(new ScxTCPServerOptions());
     }
 
-    public AsyncTCPServer(ScxTCPServerOptions options) {
+    public AioTCPServer(ScxTCPServerOptions options) {
         this.options = options;
         this.serverThread = Thread.ofPlatform().name("AsyncTCPServer-Listener").unstarted(this::listen);
     }
@@ -101,7 +101,7 @@ public class AsyncTCPServer implements ScxTCPServer {
 
     private void handle(AsynchronousSocketChannel socket) {
 
-        var tcpSocket = new AsyncTCPSocket(socket);
+        var tcpSocket = new AioTCPSocket(socket);
 
         if (options.autoUpgradeToTLS()) {
             try {

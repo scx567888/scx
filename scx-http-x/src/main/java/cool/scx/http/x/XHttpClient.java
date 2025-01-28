@@ -48,7 +48,7 @@ public class XHttpClient implements ScxHttpClient {
         var tcpClient = switch (options.tcpClientType()) {
             case CLASSIC -> new ClassicTCPClient(tcpClientOptions);
             case NIO -> new NioTCPClient(tcpClientOptions);
-            case ASYNC -> new AsyncTCPClient(tcpClientOptions);
+            case ASYNC -> new AioTCPClient(tcpClientOptions);
         };
 
         var remoteAddress = getRemoteAddress(uri);

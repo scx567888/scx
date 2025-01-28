@@ -28,7 +28,7 @@ public class XHttpServer implements ScxHttpServer {
         this.tcpServer = switch (options.tcpServerType()) {
             case CLASSIC -> new ClassicTCPServer(options.tcpServerOptions());
             case NIO -> new NioTCPServer(options.tcpServerOptions());
-            case ASYNC -> new AsyncTCPServer(options.tcpServerOptions());
+            case ASYNC -> new AioTCPServer(options.tcpServerOptions());
         };
         this.tcpServer.onConnect(this::handle);
     }
