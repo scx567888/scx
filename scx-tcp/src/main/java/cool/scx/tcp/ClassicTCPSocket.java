@@ -24,7 +24,7 @@ public class ClassicTCPSocket implements ScxTCPSocket {
     private ScxTLSManager tlsManager;
 
     public ClassicTCPSocket(Socket socket) {
-        updateSocket(socket);
+        setSocket(socket);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class ClassicTCPSocket implements ScxTCPSocket {
         if (tls != null && tls.enabled()) {
             //创建 sslSocket (服务器端不需要设置 host 和 port)
             var sslSocket = tls.socketFactory().createSocket(socket, null, -1, true);
-            updateSocket(sslSocket);
+            setSocket(sslSocket);
         }
         return this;
     }
@@ -85,7 +85,7 @@ public class ClassicTCPSocket implements ScxTCPSocket {
         socket.close();
     }
 
-    private void updateSocket(Socket socket) {
+    private void setSocket(Socket socket) {
         this.socket = socket;
         try {
             this.in = socket.getInputStream();
