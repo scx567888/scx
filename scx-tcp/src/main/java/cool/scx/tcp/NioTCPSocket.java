@@ -25,7 +25,7 @@ public class NioTCPSocket implements ScxTCPSocket {
     private ScxTLSManager tlsManager;
 
     public NioTCPSocket(SocketChannel socketChannel) {
-        setSocketChannel(socketChannel);
+        updateSocket(socketChannel);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class NioTCPSocket implements ScxTCPSocket {
         if (tls != null && tls.enabled()) {
             //创建 sslEngine
             var sslSocket = new TLSSocketChannel(socketChannel, tls.sslContext().createSSLEngine());
-            setSocketChannel(sslSocket);
+            updateSocket(sslSocket);
         }
         return this;
     }
@@ -94,7 +94,7 @@ public class NioTCPSocket implements ScxTCPSocket {
         socketChannel.close();
     }
 
-    private void setSocketChannel(SocketChannel socketChannel) {
+    private void updateSocket(SocketChannel socketChannel) {
         this.socketChannel = socketChannel;
         this.in = Channels.newInputStream(socketChannel);
         this.out = Channels.newOutputStream(socketChannel);
