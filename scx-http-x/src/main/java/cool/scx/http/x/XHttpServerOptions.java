@@ -167,7 +167,8 @@ public class XHttpServerOptions {
 
     public enum TCPServerType {
         CLASSIC,
-        NIO
+        NIO,
+        ASYNC,
     }
 
 }

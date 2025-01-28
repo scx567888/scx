@@ -5,10 +5,7 @@ import cool.scx.http.ScxHttpClientRequest;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.web_socket.ScxClientWebSocketHandshakeRequest;
 import cool.scx.http.x.web_socket.XClientWebSocketHandshakeRequest;
-import cool.scx.tcp.ClassicTCPClient;
-import cool.scx.tcp.NioTCPClient;
-import cool.scx.tcp.ScxTCPClientOptions;
-import cool.scx.tcp.ScxTCPSocket;
+import cool.scx.tcp.*;
 import cool.scx.tcp.tls.TLS;
 
 import java.io.IOException;
@@ -51,6 +48,7 @@ public class XHttpClient implements ScxHttpClient {
         var tcpClient = switch (options.tcpClientType()) {
             case CLASSIC -> new ClassicTCPClient(tcpClientOptions);
             case NIO -> new NioTCPClient(tcpClientOptions);
+            case ASYNC -> new AsyncTCPClient(tcpClientOptions);
         };
 
         var remoteAddress = getRemoteAddress(uri);

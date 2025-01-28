@@ -104,7 +104,8 @@ public class XHttpClientOptions {
 
     public enum TCPClientType {
         CLASSIC,
-        NIO
+        NIO,
+        ASYNC,
     }
 
 }

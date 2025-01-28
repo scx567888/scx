@@ -4,10 +4,7 @@ import cool.scx.http.ScxHttpServer;
 import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.x.http1x.Http1xServerConnection;
 import cool.scx.http.x.http2.Http2ServerConnection;
-import cool.scx.tcp.ClassicTCPServer;
-import cool.scx.tcp.NioTCPServer;
-import cool.scx.tcp.ScxTCPServer;
-import cool.scx.tcp.ScxTCPSocket;
+import cool.scx.tcp.*;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -31,6 +28,7 @@ public class XHttpServer implements ScxHttpServer {
         this.tcpServer = switch (options.tcpServerType()) {
             case CLASSIC -> new ClassicTCPServer(options.tcpServerOptions());
             case NIO -> new NioTCPServer(options.tcpServerOptions());
+            case ASYNC -> new AsyncTCPServer(options.tcpServerOptions());
         };
         this.tcpServer.onConnect(this::handle);
     }
