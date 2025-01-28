@@ -1,6 +1,7 @@
 package cool.scx.tcp;
 
 import cool.scx.tcp.tls.TLS;
+import cool.scx.tcp.tls.TLSAsynchronousSocketChannel;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -57,16 +58,24 @@ public class AioTCPSocket implements ScxTCPSocket {
 
     @Override
     public ScxTCPSocket upgradeToTLS(TLS tls) throws IOException {
+        if (tls != null && tls.enabled()) {
+            //创建 sslEngine
+            var sslSocket = new TLSAsynchronousSocketChannel(socketChannel, tls.sslContext().createSSLEngine());
+            setSocket(sslSocket);
+        }
         return this;
     }
 
     @Override
     public boolean isTLS() {
-        return false;
+        return socketChannel instanceof TLSAsynchronousSocketChannel;
     }
 
     @Override
     public ScxTCPSocket startHandshake() throws IOException {
+        if (socketChannel instanceof TLSAsynchronousSocketChannel tlsSocketChannel) {
+            tlsSocketChannel.startHandshake();
+        }
         return this;
     }
 
@@ -89,6 +98,9 @@ public class AioTCPSocket implements ScxTCPSocket {
         this.socketChannel = socketChannel;
         this.in = Channels.newInputStream(socketChannel);
         this.out = Channels.newOutputStream(socketChannel);
+        if (socketChannel instanceof TLSAsynchronousSocketChannel tlsSocketChannel) {
+            tlsManager = new NioTLSManager(tlsSocketChannel.sslEngine());
+        }
     }
 
 }
