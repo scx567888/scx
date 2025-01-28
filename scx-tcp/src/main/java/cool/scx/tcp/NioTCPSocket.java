@@ -19,13 +19,13 @@ import java.nio.channels.SocketChannel;
  */
 public class NioTCPSocket implements ScxTCPSocket {
 
-    private SocketChannel socket;
+    private SocketChannel socketChannel;
     private InputStream in;
     private OutputStream out;
     private ScxTLSManager tlsManager;
 
-    public NioTCPSocket(SocketChannel socket) {
-        setSocket(socket);
+    public NioTCPSocket(SocketChannel socketChannel) {
+        setSocketChannel(socketChannel);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class NioTCPSocket implements ScxTCPSocket {
     @Override
     public InetSocketAddress remoteAddress() {
         try {
-            return (InetSocketAddress) socket.getRemoteAddress();
+            return (InetSocketAddress) socketChannel.getRemoteAddress();
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
@@ -50,7 +50,7 @@ public class NioTCPSocket implements ScxTCPSocket {
     @Override
     public InetSocketAddress localAddress() {
         try {
-            return (InetSocketAddress) socket.getLocalAddress();
+            return (InetSocketAddress) socketChannel.getLocalAddress();
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
@@ -60,20 +60,20 @@ public class NioTCPSocket implements ScxTCPSocket {
     public ScxTCPSocket upgradeToTLS(TLS tls) throws IOException {
         if (tls != null && tls.enabled()) {
             //创建 sslEngine
-            var sslSocket = new TLSSocketChannel(socket, tls.sslContext().createSSLEngine());
-            setSocket(sslSocket);
+            var sslSocket = new TLSSocketChannel(socketChannel, tls.sslContext().createSSLEngine());
+            setSocketChannel(sslSocket);
         }
         return this;
     }
 
     @Override
     public boolean isTLS() {
-        return socket instanceof TLSSocketChannel;
+        return socketChannel instanceof TLSSocketChannel;
     }
 
     @Override
     public ScxTCPSocket startHandshake() throws IOException {
-        if (socket instanceof TLSSocketChannel tlsSocketChannel) {
+        if (socketChannel instanceof TLSSocketChannel tlsSocketChannel) {
             tlsSocketChannel.startHandshake();
         }
         return this;
@@ -86,19 +86,19 @@ public class NioTCPSocket implements ScxTCPSocket {
 
     @Override
     public boolean isClosed() {
-        return !socket.isOpen();
+        return !socketChannel.isOpen();
     }
 
     @Override
     public void close() throws IOException {
-        socket.close();
+        socketChannel.close();
     }
 
-    private void setSocket(SocketChannel socket) {
-        this.socket = socket;
-        this.in = Channels.newInputStream(socket);
-        this.out = Channels.newOutputStream(socket);
-        if (socket instanceof TLSSocketChannel tlsSocketChannel) {
+    private void setSocketChannel(SocketChannel socketChannel) {
+        this.socketChannel = socketChannel;
+        this.in = Channels.newInputStream(socketChannel);
+        this.out = Channels.newOutputStream(socketChannel);
+        if (socketChannel instanceof TLSSocketChannel tlsSocketChannel) {
             tlsManager = new NioTLSManager(tlsSocketChannel.sslEngine());
         }
     }
