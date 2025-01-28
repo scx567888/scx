@@ -89,8 +89,8 @@ public class NioTCPServer implements ScxTCPServer {
     private void listen() {
         while (running) {
             try {
-                var socket = this.serverSocketChannel.accept();
-                Thread.ofVirtual().name("NioTCPServer-Handler-" + socket.getRemoteAddress()).start(() -> handle(socket));
+                var socketChannel = this.serverSocketChannel.accept();
+                Thread.ofVirtual().name("NioTCPServer-Handler-" + socketChannel.getRemoteAddress()).start(() -> handle(socketChannel));
             } catch (IOException e) {
                 LOGGER.log(ERROR, "服务器 接受连接 时发生错误 !!!", e);
                 stop();
@@ -98,9 +98,9 @@ public class NioTCPServer implements ScxTCPServer {
         }
     }
 
-    private void handle(SocketChannel socket) {
+    private void handle(SocketChannel socketChannel) {
 
-        var tcpSocket = new NioTCPSocket(socket);
+        var tcpSocket = new NioTCPSocket(socketChannel);
 
         if (options.autoUpgradeToTLS()) {
             try {
