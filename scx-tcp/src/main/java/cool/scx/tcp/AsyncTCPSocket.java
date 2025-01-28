@@ -1,30 +1,29 @@
 package cool.scx.tcp;
 
 import cool.scx.tcp.tls.TLS;
-import cool.scx.tcp.tls.TLSSocketChannel;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.net.InetSocketAddress;
+import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.Channels;
-import java.nio.channels.SocketChannel;
 
 /**
- * NIO TCP Socket
+ * 异步 I/O TCP 套接字
  *
  * @author scx567888
  * @version 0.0.1
  */
-public class NioTCPSocket implements ScxTCPSocket {
+public class AsyncTCPSocket implements ScxTCPSocket {
 
-    private SocketChannel socketChannel;
+    private AsynchronousSocketChannel socketChannel;
     private InputStream in;
     private OutputStream out;
     private ScxTLSManager tlsManager;
 
-    public NioTCPSocket(SocketChannel socketChannel) {
+    public AsyncTCPSocket(AsynchronousSocketChannel socketChannel) {
         setSocket(socketChannel);
     }
 
@@ -58,24 +57,16 @@ public class NioTCPSocket implements ScxTCPSocket {
 
     @Override
     public ScxTCPSocket upgradeToTLS(TLS tls) throws IOException {
-        if (tls != null && tls.enabled()) {
-            //创建 sslEngine
-            var sslSocket = new TLSSocketChannel(socketChannel, tls.sslContext().createSSLEngine());
-            setSocket(sslSocket);
-        }
         return this;
     }
 
     @Override
     public boolean isTLS() {
-        return socketChannel instanceof TLSSocketChannel;
+        return false;
     }
 
     @Override
     public ScxTCPSocket startHandshake() throws IOException {
-        if (socketChannel instanceof TLSSocketChannel tlsSocketChannel) {
-            tlsSocketChannel.startHandshake();
-        }
         return this;
     }
 
@@ -94,13 +85,10 @@ public class NioTCPSocket implements ScxTCPSocket {
         socketChannel.close();
     }
 
-    private void setSocket(SocketChannel socketChannel) {
+    private void setSocket(AsynchronousSocketChannel socketChannel) {
         this.socketChannel = socketChannel;
         this.in = Channels.newInputStream(socketChannel);
         this.out = Channels.newOutputStream(socketChannel);
-        if (socketChannel instanceof TLSSocketChannel tlsSocketChannel) {
-            tlsManager = new NioTLSManager(tlsSocketChannel.sslEngine());
-        }
     }
 
 }
