@@ -24,7 +24,7 @@ public class NioTCPServer implements ScxTCPServer {
     private final ScxTCPServerOptions options;
     private final Thread serverThread;
     private Consumer<ScxTCPSocket> connectHandler;
-    private ServerSocketChannel serverSocket;
+    private ServerSocketChannel serverSocketChannel;
     private boolean running;
 
     public NioTCPServer() {
@@ -49,8 +49,8 @@ public class NioTCPServer implements ScxTCPServer {
         }
 
         try {
-            this.serverSocket = ServerSocketChannel.open();
-            this.serverSocket.bind(options.localAddress(), options.backlog());
+            this.serverSocketChannel = ServerSocketChannel.open();
+            this.serverSocketChannel.bind(options.localAddress(), options.backlog());
         } catch (IOException e) {
             throw new UncheckedIOException("启动服务器失败 !!!", e);
         }
@@ -69,7 +69,7 @@ public class NioTCPServer implements ScxTCPServer {
         running = false;
 
         try {
-            serverSocket.close();
+            serverSocketChannel.close();
         } catch (IOException e) {
             throw new UncheckedIOException("关闭服务器失败 !!!", e);
         }
@@ -80,7 +80,7 @@ public class NioTCPServer implements ScxTCPServer {
     @Override
     public InetSocketAddress localAddress() {
         try {
-            return (InetSocketAddress) serverSocket.getLocalAddress();
+            return (InetSocketAddress) serverSocketChannel.getLocalAddress();
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
@@ -89,7 +89,7 @@ public class NioTCPServer implements ScxTCPServer {
     private void listen() {
         while (running) {
             try {
-                var socket = this.serverSocket.accept();
+                var socket = this.serverSocketChannel.accept();
                 Thread.ofVirtual().name("NioTCPServer-Handler-" + socket.getRemoteAddress()).start(() -> handle(socket));
             } catch (IOException e) {
                 LOGGER.log(ERROR, "服务器 接受连接 时发生错误 !!!", e);
