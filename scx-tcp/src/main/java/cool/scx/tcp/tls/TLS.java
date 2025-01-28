@@ -15,6 +15,10 @@ import static cool.scx.tcp.tls.TLSHelper.*;
  */
 public interface TLS {
 
+    static TLS of(String path, String password) {
+        return of(Path.of(path), password);
+    }
+    
     static TLS of(Path path, String password) {
         return new TLSImpl(createSSLContext(path, password));
     }
