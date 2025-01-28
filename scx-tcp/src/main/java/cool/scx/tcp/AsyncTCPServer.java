@@ -4,36 +4,37 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.lang.System.Logger;
 import java.net.InetSocketAddress;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
+import java.nio.channels.AsynchronousServerSocketChannel;
+import java.nio.channels.AsynchronousSocketChannel;
+import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
 import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.Logger.Level.TRACE;
 
 /**
- * NIO TCP 服务器
+ * 异步 I/O TCP 服务器
  *
  * @author scx567888
  * @version 0.0.1
  */
-public class NioTCPServer implements ScxTCPServer {
+public class AsyncTCPServer implements ScxTCPServer {
 
-    private static final Logger LOGGER = System.getLogger(ClassicTCPServer.class.getName());
+    private static final Logger LOGGER = System.getLogger(AsyncTCPServer.class.getName());
 
     private final ScxTCPServerOptions options;
     private final Thread serverThread;
     private Consumer<ScxTCPSocket> connectHandler;
-    private ServerSocketChannel serverSocket;
+    private AsynchronousServerSocketChannel serverSocket;
     private boolean running;
 
-    public NioTCPServer() {
+    public AsyncTCPServer() {
         this(new ScxTCPServerOptions());
     }
 
-    public NioTCPServer(ScxTCPServerOptions options) {
+    public AsyncTCPServer(ScxTCPServerOptions options) {
         this.options = options;
-        this.serverThread = Thread.ofPlatform().name("NioTCPServer-Listener").unstarted(this::listen);
+        this.serverThread = Thread.ofPlatform().name("AsyncTCPServer-Listener").unstarted(this::listen);
     }
 
     @Override
@@ -49,7 +50,7 @@ public class NioTCPServer implements ScxTCPServer {
         }
 
         try {
-            this.serverSocket = ServerSocketChannel.open();
+            this.serverSocket = AsynchronousServerSocketChannel.open();
             this.serverSocket.bind(options.localAddress(), options.backlog());
         } catch (IOException e) {
             throw new UncheckedIOException("启动服务器失败 !!!", e);
@@ -89,18 +90,18 @@ public class NioTCPServer implements ScxTCPServer {
     private void listen() {
         while (running) {
             try {
-                var socket = this.serverSocket.accept();
-                Thread.ofVirtual().name("NioTCPServer-Handler-" + socket.getRemoteAddress()).start(() -> handle(socket));
-            } catch (IOException e) {
-                LOGGER.log(ERROR, "服务器 接受连接 时发生错误 !!!", e);
+                var socket = this.serverSocket.accept().get();
+                Thread.ofVirtual().name("AsyncTCPServer-Handler-" + socket.getRemoteAddress()).start(() -> handle(socket));
+            } catch (IOException | InterruptedException | ExecutionException e) {
+                LOGGER.log(ERROR, "服务器接受连接时发生错误 !!!", e);
                 stop();
             }
         }
     }
 
-    private void handle(SocketChannel socket) {
+    private void handle(AsynchronousSocketChannel socket) {
 
-        var tcpSocket = new NioTCPSocket(socket);
+        var tcpSocket = new AsyncTCPSocket(socket);
 
         if (options.autoUpgradeToTLS()) {
             try {
