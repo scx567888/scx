@@ -11,6 +11,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+//todo 未完成
 public class TLSAsynchronousSocketChannel extends AbstractAsynchronousSocketChannel {
 
     private final SSLEngine sslEngine;
