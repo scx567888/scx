@@ -109,11 +109,11 @@ public class TLSAsynchronousSocketChannel extends AsynchronousSocketChannel {
     }
 
     public void startHandshake() {
-        
+
     }
 
     public SSLEngine sslEngine() {
         return null;
     }
-    
+
 }

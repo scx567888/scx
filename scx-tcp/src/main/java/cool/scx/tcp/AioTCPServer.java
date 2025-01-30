@@ -85,7 +85,7 @@ public class AioTCPServer implements ScxTCPServer {
             try {
                 var socketChannel = this.serverSocketChannel.accept().get();
                 Thread.ofVirtual().name("AioTCPServer-Handler-" + socketChannel.getRemoteAddress()).start(() -> handle(socketChannel));
-            } catch (IOException |ExecutionException | InterruptedException e) {
+            } catch (IOException | ExecutionException | InterruptedException e) {
                 LOGGER.log(ERROR, "服务器 接受连接 时发生错误 !!!", e);
                 stop();
             }
@@ -143,5 +143,5 @@ public class AioTCPServer implements ScxTCPServer {
             LOGGER.log(TRACE, "关闭 Socket 时发生错误 !!!", ex);
         }
     }
-    
+
 }

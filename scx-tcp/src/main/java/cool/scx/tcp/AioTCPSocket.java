@@ -2,7 +2,6 @@ package cool.scx.tcp;
 
 import cool.scx.tcp.tls.TLS;
 import cool.scx.tcp.tls.TLSAsynchronousSocketChannel;
-import cool.scx.tcp.tls.TLSSocketChannel;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,7 +10,6 @@ import java.io.UncheckedIOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.Channels;
-import java.nio.channels.SocketChannel;
 
 /**
  * NIO TCP Socket
