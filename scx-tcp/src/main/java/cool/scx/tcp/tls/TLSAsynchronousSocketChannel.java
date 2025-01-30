@@ -28,7 +28,7 @@ public class TLSAsynchronousSocketChannel extends AbstractAsynchronousSocketChan
 
     @Override
     public <A> void read(ByteBuffer dst, long timeout, TimeUnit unit, A attachment, CompletionHandler<Integer, ? super A> handler) {
-        
+
     }
 
     @Override
@@ -60,5 +60,5 @@ public class TLSAsynchronousSocketChannel extends AbstractAsynchronousSocketChan
     public void close() throws IOException {
 
     }
-    
+
 }
