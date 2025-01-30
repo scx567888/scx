@@ -2,6 +2,7 @@ package cool.scx.tcp;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.lang.System.Logger;
 import java.net.InetSocketAddress;
 import java.nio.channels.AsynchronousServerSocketChannel;
 import java.nio.channels.AsynchronousSocketChannel;
@@ -11,9 +12,12 @@ import java.util.function.Consumer;
 import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.Logger.Level.TRACE;
 
+/**
+ * AIO TCP 服务器 (但是同步版本)
+ */
 public class AioTCPServer implements ScxTCPServer {
 
-    private static final System.Logger LOGGER = System.getLogger(ClassicTCPServer.class.getName());
+    private static final Logger LOGGER = System.getLogger(ClassicTCPServer.class.getName());
 
     private final ScxTCPServerOptions options;
     private final Thread serverThread;
