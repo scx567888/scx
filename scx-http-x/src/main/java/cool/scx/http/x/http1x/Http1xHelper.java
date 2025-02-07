@@ -79,7 +79,7 @@ final class Http1xHelper {
         var address = tcpSocket.localAddress();
         return PeerInfo.of().address(address).host(address.getHostString()).port(address.getPort());
     }
-    
+
     //验证 http1.x 中的 host
     public static void validateHeaders(ScxHttpHeadersWritable headers) {
         //我们只验证是否存在 HOST 字段 (有且只能有一个)

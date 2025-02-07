@@ -5,7 +5,6 @@ import cool.scx.http.ScxHttpMethod;
 import cool.scx.http.uri.URIEncoder;
 
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
