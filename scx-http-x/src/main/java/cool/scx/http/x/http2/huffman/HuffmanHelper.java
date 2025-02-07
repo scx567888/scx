@@ -4,10 +4,7 @@ import cool.scx.common.count_map.CountMap;
 import cool.scx.common.count_map.ICountMap;
 import cool.scx.common.util.$;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.PriorityQueue;
+import java.util.*;
 
 public class HuffmanHelper {
 
@@ -41,56 +38,63 @@ public class HuffmanHelper {
         return queue.poll();
     }
 
-    public static <T> HashMap<T, String> buildHuffmanCodeTable(HuffmanNode<T> node) {
-        var huffmanCode = new HashMap<T, String>();
-        buildHuffmanCodeTable0(node, "", huffmanCode);
+    public static <T> Map<T, HuffmanCodePath> normalHuffmanCode(Map<T, String> huffmanCode) {
+        var map = new HashMap<T, HuffmanCodePath>();
+        for (var e : huffmanCode.entrySet()) {
+            map.put(e.getKey(), HuffmanCodePath.fromBinaryString(e.getValue()));
+        }
+        return map;
+    }
+
+    // 构建霍夫曼编码表 (使用 BitSet)
+    public static <T> Map<T, HuffmanCodePath> buildHuffmanCodeTable(HuffmanNode<T> root) {
+        Map<T, HuffmanCodePath> huffmanCode = new HashMap<>();
+        buildHuffmanCodeTable0(root, new BitSet(), 0, huffmanCode);
         return huffmanCode;
     }
 
-    public static <T> void buildHuffmanCodeTable0(HuffmanNode<T> node, String path, Map<T, String> huffmanCode) {
+    // 辅助递归方法
+    private static <T> void buildHuffmanCodeTable0(HuffmanNode<T> node, BitSet path, int length, Map<T, HuffmanCodePath> huffmanCode) {
         if (node.isLeaf()) {
-            huffmanCode.put(node.value, path);
+            huffmanCode.put(node.value, new HuffmanCodePath((BitSet) path.clone(), length)); // 保存当前路径
             return;
         }
-        buildHuffmanCodeTable0(node.left, path + "0", huffmanCode);
-        buildHuffmanCodeTable0(node.right, path + "1", huffmanCode);
+        if (node.left != null) {
+            path.set(length, false); // 左子节点设置为 0
+            buildHuffmanCodeTable0(node.left, path, length + 1, huffmanCode);
+        }
+        if (node.right != null) {
+            path.set(length, true); // 右子节点设置为 1
+            buildHuffmanCodeTable0(node.right, path, length + 1, huffmanCode);
+        }
     }
 
-    public static <T> HuffmanNode<T> buildHuffmanTreeFromCode(Map<T, String> huffmanCode) {
-        // 初始化根节点
-        var root = new HuffmanNode<T>(null, 0);
+    // 从编码表还原霍夫曼树
+    public static <T> HuffmanNode<T> buildHuffmanTreeFromCode(Map<T, HuffmanCodePath> huffmanCode) {
+        var root = new HuffmanNode<T>(null, 0); // 初始化根节点
 
-        // 遍历编码表
         for (var entry : huffmanCode.entrySet()) {
             T symbol = entry.getKey();
-            String code = entry.getValue();
+            HuffmanCodePath codePath = entry.getValue();
 
-            // 从根节点开始构建
             HuffmanNode<T> current = root;
 
-            for (char c : code.toCharArray()) {
-                switch (c) {
-                    case '0' -> {
-                        // 如果当前位是 '0'，进入或创建左子节点
-                        if (current.left == null) {
-                            current.left = new HuffmanNode<>(null, 0);
-                        }
-                        current = current.left;
+            for (int i = 0; i < codePath.length(); i++) {
+                if (codePath.bitSet().get(i)) {
+                    // 如果当前位是 '1'，进入或创建右子节点
+                    if (current.right == null) {
+                        current.right = new HuffmanNode<>(null, 0);
                     }
-                    case '1' -> {
-                        // 如果当前位是 '1'，进入或创建右子节点
-                        if (current.right == null) {
-                            current.right = new HuffmanNode<>(null, 0);
-                        }
-                        current = current.right;
+                    current = current.right;
+                } else {
+                    // 如果当前位是 '0'，进入或创建左子节点
+                    if (current.left == null) {
+                        current.left = new HuffmanNode<>(null, 0);
                     }
-                    default -> {
-                        //忽略其他的 字符 比如为了方便维护添加的 分隔符
-                    }
+                    current = current.left;
                 }
             }
-
-            // 到达编码末尾，设置叶子节点的值
+            // 到达路径末尾，设置叶子节点的值
             current.value = symbol;
         }
 
