@@ -45,5 +45,5 @@ public class Http3ServerRequest implements ScxHttpServerRequest {
     public PeerInfo localPeer() {
         return null;
     }
-    
+
 }

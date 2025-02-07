@@ -5,14 +5,14 @@ import java.util.Map;
 
 public class Http2SettingsHelper {
 
-    public static Map<Integer,Integer> readHttp2Settings(byte[] frame) {
+    public static Map<Integer, Integer> readHttp2Settings(byte[] frame) {
         // a combination of 16bit identifier and 32bits of value
         if (frame.length % 6 != 0) {
             throw new RuntimeException("Each setting must be 6 bytes, but frame size is " + frame.length);
         }
 
         int settingCount = frame.length / 6; // each setting is 6 bytes
-        Map<Integer,Integer> values = new HashMap<>();
+        Map<Integer, Integer> values = new HashMap<>();
 
         for (int i = 0; i < settingCount; i++) {
             // 读取标识符
@@ -27,5 +27,5 @@ public class Http2SettingsHelper {
         }
         return values;
     }
-    
+
 }

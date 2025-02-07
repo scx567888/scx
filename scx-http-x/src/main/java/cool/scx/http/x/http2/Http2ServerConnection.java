@@ -150,7 +150,7 @@ public class Http2ServerConnection {
 
     private void doSettings(Http2FrameHeader frameHeader) {
         if (frameHeader.streamId() != 0) {
-            throw new RuntimeException( "Settings must use stream ID 0, but use " + frameHeader.streamId());
+            throw new RuntimeException("Settings must use stream ID 0, but use " + frameHeader.streamId());
         }
 
         byte[] payload = dataReader.read(frameHeader.length());
@@ -219,7 +219,7 @@ public class Http2ServerConnection {
     // 解码头块片段的方法
     private Map<String, String> decodeHeaders(byte[] headerBlockFragment) {
         //解码 head
-        
+
         return null;
     }
 
@@ -231,7 +231,7 @@ public class Http2ServerConnection {
             Http2FrameHeader continuationFrameHeader = readFrameHeader();
 
             if (continuationFrameHeader.type() != Http2FrameType.CONTINUATION) {
-                throw new RuntimeException( "Expected CONTINUATION frame but got " + continuationFrameHeader.type());
+                throw new RuntimeException("Expected CONTINUATION frame but got " + continuationFrameHeader.type());
             }
 
             byte[] payload = dataReader.read(continuationFrameHeader.length());
