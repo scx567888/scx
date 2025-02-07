@@ -1,6 +1,7 @@
 package cool.scx.http.x.http2.huffman;
 
 import java.util.BitSet;
+import java.util.List;
 
 /**
  * bitset 不包含 长度信息 所以需要这个包装类
@@ -10,13 +11,66 @@ import java.util.BitSet;
  */
 public record HuffmanCodePath(BitSet bitSet, int length) {
 
-    // 将路径转为二进制字符串
-    public String toBinaryString() {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < length; i++) {
-            sb.append(bitSet.get(i) ? '1' : '0');
+    public static HuffmanCodePath concat(List<HuffmanCodePath> paths) {
+        BitSet[] bitSets = new BitSet[paths.size()];
+        int[] lengths = new int[paths.size()];
+        int totalLength = 0;
+
+        for (int i = 0; i < paths.size(); i++) {
+            var n = paths.get(i);
+            bitSets[i] = n.bitSet();
+            lengths[i] = n.length();
+            totalLength += lengths[i];
         }
-        return sb.toString();
+
+        BitSet combined = concatenateBitSetsOptimized(bitSets, lengths);
+        return new HuffmanCodePath(combined, totalLength);
+    }
+
+    public static HuffmanCodePath concat(HuffmanCodePath... paths) {
+        BitSet[] bitSets = new BitSet[paths.length];
+        int[] lengths = new int[paths.length];
+        int totalLength = 0;
+
+        for (int i = 0; i < paths.length; i++) {
+            var n = paths[i];
+            bitSets[i] = n.bitSet();
+            lengths[i] = n.length();
+            totalLength += lengths[i];
+        }
+
+        BitSet combined = concatenateBitSetsOptimized(bitSets, lengths);
+        return new HuffmanCodePath(combined, totalLength);
+    }
+
+    private static BitSet concatenateBitSetsOptimized(BitSet[] bitSets, int[] lengths) {
+        if (bitSets.length != lengths.length) {
+            throw new IllegalArgumentException("bitSets and lengths must have the same size.");
+        }
+
+        // 计算总长度，初始化结果 BitSet 的 long 数组
+        int totalLength = 0;
+        for (int length : lengths) {
+            totalLength += length;
+        }
+
+        BitSet result = new BitSet(totalLength);
+        int currentIndex = 0;
+
+        for (int i = 0; i < bitSets.length; i++) {
+            BitSet bitSet = bitSets[i];
+            int length = lengths[i];
+
+            // 优化拷贝，直接从 bitSet 的 long[] 中读取并写入 result
+            for (int j = 0; j < length; j++) {
+                if (bitSet.get(j)) {
+                    result.set(currentIndex);
+                }
+                currentIndex++;
+            }
+        }
+
+        return result;
     }
 
     // 静态方法：从二进制字符串创建
@@ -39,6 +93,31 @@ public record HuffmanCodePath(BitSet bitSet, int length) {
             }
         }
         return new HuffmanCodePath(bitSet, bitIndex);
+    }
+
+    // 将路径转为二进制字符串
+    public String toBinaryString() {
+        var sb = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            sb.append(bitSet.get(i) ? '1' : '0');
+        }
+        return sb.toString();
+    }
+
+    // 转换为紧凑的字节数组表示
+    public byte[] toBytes() {
+        // 计算所需的字节长度 (向上取整)
+        int byteLength = (length + 7) / 8;
+        byte[] bytes = new byte[byteLength];
+
+        // 将位信息写入字节数组
+        for (int i = 0; i < length; i++) {
+            if (bitSet.get(i)) {
+                bytes[i / 8] |= (byte) (1 << (7 - (i % 8))); // 高位优先存储
+            }
+        }
+
+        return bytes;
     }
 
     @Override
