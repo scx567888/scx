@@ -60,7 +60,7 @@
 
 English | [简体中文](./README.zh-CN.md)
 
-> A Web rapid development framework
+> A simple Web development framework
 
 ## Maven
 

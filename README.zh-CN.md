@@ -60,7 +60,7 @@
 
 简体中文 | [English](./README.md)
 
-> 一个 Web 快速开发框架
+> 一个简单的 Web 开发框架
 
 ## Maven
 
