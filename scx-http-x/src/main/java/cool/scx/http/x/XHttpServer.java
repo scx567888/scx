@@ -10,7 +10,7 @@ import cool.scx.tcp.ScxTCPServer;
 import cool.scx.tcp.ScxTCPSocket;
 
 import java.io.IOException;
-import java.io.UncheckedIOException;
+import java.lang.System.Logger;
 import java.net.InetSocketAddress;
 import java.util.function.Consumer;
 
@@ -21,6 +21,8 @@ import java.util.function.Consumer;
  * @version 0.0.1
  */
 public class XHttpServer implements ScxHttpServer {
+
+    private static final Logger LOGGER = System.getLogger(XHttpServer.class.getName());
 
     private final XHttpServerOptions options;
     private final ScxTCPServer tcpServer;
@@ -55,7 +57,8 @@ public class XHttpServer implements ScxHttpServer {
                 } catch (IOException ex) {
                     e.addSuppressed(ex);
                 }
-                throw new UncheckedIOException("TLS 握手失败 !!!!", e);
+                LOGGER.log(Logger.Level.TRACE, "处理 TLS 握手 时发生错误 !!!", e);
+                return;
             }
             var applicationProtocol = tcpSocket.tlsManager().getApplicationProtocol();
             useHttp2 = "h2".equals(applicationProtocol);
