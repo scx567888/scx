@@ -11,9 +11,9 @@ import java.util.Map;
  */
 public class HPACKHuffmanTable {
 
-    public static final Map<Integer, String> MAP = initMap();
+    public static final Map<Integer, String> HPACK_HUFFMAN_TABLE = initTable();
 
-    private static Map<Integer, String> initMap() {
+    private static Map<Integer, String> initTable() {
         //为了便于开发人员 维护编写成以下形式 
         var m = new HashMap<Integer, String>();
         m.put(0, "|11111111|11000");
