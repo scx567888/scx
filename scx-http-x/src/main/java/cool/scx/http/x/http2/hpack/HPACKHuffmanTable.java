@@ -1,4 +1,4 @@
-package cool.scx.http.x.http2.huffman;
+package cool.scx.http.x.http2.hpack;
 
 import java.util.HashMap;
 import java.util.Map;
