@@ -3,7 +3,6 @@ package cool.scx.http.x.http1x;
 import cool.scx.http.*;
 import cool.scx.http.exception.ScxHttpException;
 import cool.scx.http.media.MediaWriter;
-import cool.scx.http.uri.ScxURIWritable;
 import cool.scx.http.x.XHttpClientOptions;
 import cool.scx.io.*;
 import cool.scx.tcp.ScxTCPSocket;
@@ -12,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import static cool.scx.http.HttpFieldName.HOST;
 import static cool.scx.http.HttpVersion.HTTP_1_1;
 import static cool.scx.http.x.http1x.Http1xHelper.CRLF_BYTES;
 import static cool.scx.http.x.http1x.Http1xHelper.CRLF_CRLF_BYTES;
@@ -30,35 +30,34 @@ public class Http1xClientConnection {
         this.options = options.http1xConnectionOptions();
     }
 
-    public static String getPath(ScxURIWritable uri) {
-        var encode = uri.scheme(null).host(null).port(-1).encode(true);
-        return encode;
-    }
-
     public Http1xClientConnection sendRequest(ScxHttpClientRequest request, MediaWriter writer) {
-        var sb = new StringBuilder();
-        sb.append(request.method().value());
-        sb.append(" ");
-        sb.append(getPath(request.uri()));
-        sb.append(" ");
-        sb.append(request.version() != null ? request.version().value() : HTTP_1_1.value());
-        sb.append("\r\n");
+        //1,创建 请求头
+        var requestLine = new Http1xRequestLine(request.method(), request.uri().path(), request.version() != null ? request.version() : HTTP_1_1);
+
+        var requestLineStr = requestLine.encode();
+
+        //复制一份请求头便于修改
+        var requestHeaders = ScxHttpHeaders.of(request.headers());
 
         //让用户能够设置头信息
-        writer.beforeWrite(request.headers(), ScxHttpHeaders.of());
+        writer.beforeWrite(requestHeaders, ScxHttpHeaders.of());
 
-        var headerStr = request.headers().encode();
+        //设置 HOST 头
+        if (!requestHeaders.contains(HOST)) {
+            requestHeaders.set(HOST, request.uri().host());
+        }
 
-        sb.append(headerStr);
-        sb.append("\r\n");
+        var requestHeaderStr = requestHeaders.encode();
 
-        //先写入头 然后写入内容
+        //先写入请求行 请求头的内容
         try {
-            dataWriter.write(sb.toString().getBytes());
+            var h = requestLineStr + "\r\n" + requestHeaderStr + "\r\n";
+            dataWriter.write(h.getBytes());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
+        //写入请求体的内容
         writer.write(dataWriter);
 
         return this;

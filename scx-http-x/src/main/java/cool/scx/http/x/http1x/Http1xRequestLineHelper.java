@@ -2,9 +2,9 @@ package cool.scx.http.x.http1x;
 
 import cool.scx.http.HttpVersion;
 import cool.scx.http.ScxHttpMethod;
+import cool.scx.http.uri.URIEncoder;
 
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -30,7 +30,7 @@ public final class Http1xRequestLineHelper {
 
     public static String encodeRequestLine(Http1xRequestLine requestLine) {
         var method = requestLine.method().value();
-        var path = URLEncoder.encode(requestLine.path(), UTF_8);
+        var path = URIEncoder.encodeURI(requestLine.path());
         var version = requestLine.version().value();
         return method + " " + path + " " + version;
     }

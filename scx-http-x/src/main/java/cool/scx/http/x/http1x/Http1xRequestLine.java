@@ -18,4 +18,8 @@ public record Http1xRequestLine(ScxHttpMethod method, String path, HttpVersion v
         return Http1xRequestLineHelper.parseRequestLine(requestLineStr);
     }
 
+    public String encode() {
+        return Http1xRequestLineHelper.encodeRequestLine(this);
+    }
+
 }

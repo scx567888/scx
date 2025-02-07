@@ -4,7 +4,7 @@ import cool.scx.http.ScxHttpClientRequestBase;
 import cool.scx.http.ScxHttpClientResponse;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.x.http1x.Http1xClientConnection;
-import cool.scx.http.x.http2.Http2xClientConnection;
+import cool.scx.http.x.http2.Http2ClientConnection;
 import cool.scx.tcp.ScxTCPSocket;
 
 /**
@@ -37,7 +37,7 @@ public class XHttpClientRequest extends ScxHttpClientRequestBase {
         }
 
         if (useHttp2) {
-            return new Http2xClientConnection(tcpSocket, options).sendRequest(this, writer).waitResponse();
+            return new Http2ClientConnection(tcpSocket, options).sendRequest(this, writer).waitResponse();
         } else {
             return new Http1xClientConnection(tcpSocket, options).sendRequest(this, writer).waitResponse();
         }

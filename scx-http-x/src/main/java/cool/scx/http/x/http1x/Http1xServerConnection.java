@@ -56,6 +56,9 @@ public class Http1xServerConnection {
                 // 2, 读取 请求头 
                 var headers = readHeaders();
 
+                // 2.1 验证请求头
+                validateHeaders(headers);
+
                 // 3, 读取 请求体流
                 var bodyInputStream = readBodyInputStream(headers);
 
