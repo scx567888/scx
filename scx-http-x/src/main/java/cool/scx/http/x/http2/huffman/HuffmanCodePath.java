@@ -73,6 +73,24 @@ public record HuffmanCodePath(BitSet bitSet, int length) {
         return result;
     }
 
+    // 从字节数组和长度恢复 HuffmanCodePath
+    public static HuffmanCodePath fromBytes(byte[] bytes) {
+        // 使用 BitSet 的内置方法将字节数组转换为 BitSet
+        BitSet bitSet = BitSet.valueOf(bytes);
+
+        // 注意：需要提供长度信息确保 BitSet 不包含多余位
+        return new HuffmanCodePath(bitSet, bytes.length*8);
+    }
+
+    // 从字节数组和长度恢复 HuffmanCodePath
+    public static HuffmanCodePath fromBytes(byte[] bytes, int length) {
+        // 使用 BitSet 的内置方法将字节数组转换为 BitSet
+        BitSet bitSet = BitSet.valueOf(bytes);
+
+        // 注意：需要提供长度信息确保 BitSet 不包含多余位
+        return new HuffmanCodePath(bitSet, length);
+    }
+
     // 静态方法：从二进制字符串创建
     public static HuffmanCodePath fromBinaryString(String binaryString) {
         BitSet bitSet = new BitSet();
@@ -106,18 +124,18 @@ public record HuffmanCodePath(BitSet bitSet, int length) {
 
     // 转换为紧凑的字节数组表示
     public byte[] toBytes() {
-        // 计算所需的字节长度 (向上取整)
-        int byteLength = (length + 7) / 8;
-        byte[] bytes = new byte[byteLength];
+//        // 计算所需的字节长度 (向上取整)
+//        int byteLength = (length + 7) / 8;
+//        byte[] bytes = new byte[byteLength];
+//
+//        // 将位信息写入字节数组
+//        for (int i = 0; i < length; i++) {
+//            if (bitSet.get(i)) {
+//                bytes[i / 8] |= (byte) (1 << (7 - (i % 8))); // 高位优先存储
+//            }
+//        }
 
-        // 将位信息写入字节数组
-        for (int i = 0; i < length; i++) {
-            if (bitSet.get(i)) {
-                bytes[i / 8] |= (byte) (1 << (7 - (i % 8))); // 高位优先存储
-            }
-        }
-
-        return bytes;
+        return bitSet.toByteArray();
     }
 
     @Override

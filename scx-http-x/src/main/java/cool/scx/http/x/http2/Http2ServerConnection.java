@@ -2,6 +2,7 @@ package cool.scx.http.x.http2;
 
 import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.x.XHttpServerOptions;
+import cool.scx.http.x.http2.hpack.HPACKDecoder;
 import cool.scx.io.BufferedInputStreamDataSupplier;
 import cool.scx.io.LinkedDataReader;
 import cool.scx.tcp.ScxTCPSocket;
@@ -25,6 +26,7 @@ public class Http2ServerConnection {
     private final Consumer<ScxHttpServerRequest> requestHandler;
     private final LinkedDataReader dataReader;
     private final OutputStream dataWriter;
+    private final HPACKDecoder hpackDecoder;
     private State state;
 
     public Http2ServerConnection(ScxTCPSocket tcpSocket, XHttpServerOptions options, Consumer<ScxHttpServerRequest> requestHandler) {
@@ -33,6 +35,7 @@ public class Http2ServerConnection {
         this.requestHandler = requestHandler;
         this.dataReader = new LinkedDataReader(new BufferedInputStreamDataSupplier(this.tcpSocket.inputStream()));
         this.dataWriter = this.tcpSocket.outputStream();
+        this.hpackDecoder = new HPACKDecoder();
     }
 
     public void start() {
@@ -206,8 +209,7 @@ public class Http2ServerConnection {
         }
 
         // 解码头块片段 (Header Block Fragment) 为头部字段
-        Map<String, String> headers = decodeHeaders(headerBlockFragment);
-
+        Map<String, String> headers =hpackDecoder.decode(headerBlockFragment);
         System.out.println("Headers: " + headers);
 
         if (!endHeaders) {

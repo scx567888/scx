@@ -69,7 +69,7 @@ public class HuffmanCoding<T> {
 
     // 批量解码
     public T[] decode(HuffmanCodePath path, Class<T> type) {
-        var list = new java.util.ArrayList<T>();
+        var list = new ArrayList<T>();
         HuffmanNode<T> current = root;
 
         for (int i = 0; i < path.length(); i++) {
