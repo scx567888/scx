@@ -6,13 +6,13 @@ import cool.scx.http.x.XHttpClientOptions;
 import cool.scx.http.x.XHttpClientRequest;
 import cool.scx.tcp.ScxTCPSocket;
 
-public class Http2xClientConnection {
+public class Http2ClientConnection {
 
-    public Http2xClientConnection(ScxTCPSocket tcpSocket, XHttpClientOptions options) {
+    public Http2ClientConnection(ScxTCPSocket tcpSocket, XHttpClientOptions options) {
 
     }
 
-    public Http2xClientConnection sendRequest(XHttpClientRequest request, MediaWriter writer) {
+    public Http2ClientConnection sendRequest(XHttpClientRequest request, MediaWriter writer) {
         return null;
     }
 
