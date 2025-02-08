@@ -5,11 +5,11 @@ import java.util.Arrays;
 public class BitArray implements IBitArray {
 
     private byte[] data;    // 用字节数组存储位
-    private int length;    // 当前的位数组长度（实际的位数）
+    private int length;     // 当前的位数组长度（实际的位数）
     private long capacity;  // 当前容量（以位为单位）
 
     /**
-     * 无参构造函数，创建默认的空位数组（初始容量为 64 位）。
+     * 无参构造函数，创建默认的空位数组（初始容量为 0 位，会在第一次 set 时扩容）。
      */
     public BitArray() {
         this(new byte[0], 0);
@@ -18,7 +18,7 @@ public class BitArray implements IBitArray {
     /**
      * 带参数的构造函数，使用指定的数据和长度初始化。
      *
-     * @param data   初始数据
+     * @param data   初始数据（外部保证不修改）
      * @param length 位数组的长度（位数）
      */
     public BitArray(byte[] data, int length) {
@@ -33,20 +33,23 @@ public class BitArray implements IBitArray {
         if (index >= length) {
             length = index + 1; // 更新长度
         }
-        int byteIndex = index / 8; // 对应的字节索引
-        int bitIndex = index % 8;  // 对应字节中的位索引
+        // 用位运算替换除法和取模
+        int byteIndex = index >> 3;  // index / 8
+        int bitIndex = index & 7;    // index % 8
+        int shift = 7 - bitIndex;    // 大端序：高位在前
         if (value) {
-            data[byteIndex] |= (1 << (7 - bitIndex)); // 将对应位设置为1
+            data[byteIndex] |= (byte) (1 << shift);
         } else {
-            data[byteIndex] &= ~(1 << (7 - bitIndex)); // 将对应位清0
+            data[byteIndex] &= (byte) ~(1 << shift);
         }
     }
 
     @Override
     public boolean get(int index) {
-        int byteIndex = index / 8;
-        int bitIndex = index % 8;
-        return (data[byteIndex] & (1 << (7 - bitIndex))) != 0;
+        int byteIndex = index >> 3;
+        int bitIndex = index & 7;
+        int shift = 7 - bitIndex;    // 大端序：高位在前
+        return (data[byteIndex] & 1 << shift) != 0;
     }
 
     @Override
@@ -55,17 +58,13 @@ public class BitArray implements IBitArray {
     }
 
     /**
-     * 将位数组转换为 byte 数组。
-     * 对于最后一个字节中未使用的低位，进行清零处理。
+     * 直接返回内部数组（注意：调用者需要保证不修改该数组）
      */
     @Override
     public byte[] toBytes() {
         return data;
     }
 
-    /**
-     * 将位数组转换为二进制字符串表示，位按照顺序排列（'1' 或 '0'）。
-     */
     @Override
     public String toBinaryString() {
         var sb = new StringBuilder(length);
@@ -77,19 +76,17 @@ public class BitArray implements IBitArray {
 
     /**
      * 确保容量足够存储至少 minCapacity 个位。
+     * 采用整数运算替换 Math.ceil，避免浮点数转换。
      *
      * @param minCapacity 需要的最小容量（以位为单位）
      */
     private void ensureCapacity(long minCapacity) {
         if (minCapacity <= capacity) {
-            return; // 当前容量足够
+            return;
         }
         long newCapacity = Math.max(minCapacity, capacity * 2);
-        int newByteSize = (int) Math.ceil((double) newCapacity / 8);
-        // 检查扩容后的字节数是否溢出
-        if (newByteSize < 0) {
-            throw new OutOfMemoryError("Required array size too large");
-        }
+        // 计算新字节数组大小：(newCapacity + 7) / 8 等价于向上取整 newCapacity/8
+        int newByteSize = (int) ((newCapacity + 7) / 8);
         data = Arrays.copyOf(data, newByteSize);
         capacity = newByteSize * 8L;
     }
