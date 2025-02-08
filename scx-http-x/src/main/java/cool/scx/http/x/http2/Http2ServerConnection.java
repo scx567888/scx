@@ -209,7 +209,7 @@ public class Http2ServerConnection {
         }
 
         // 解码头块片段 (Header Block Fragment) 为头部字段
-        Map<String, String> headers =hpackDecoder.decode(headerBlockFragment);
+        Map<String, String> headers = hpackDecoder.decode(headerBlockFragment);
         System.out.println("Headers: " + headers);
 
         if (!endHeaders) {

@@ -77,5 +77,5 @@ class HPACKStaticTable {
     static String[] get(int index) {
         return STATIC_TABLE.get(index - 1);
     }
-    
+
 }

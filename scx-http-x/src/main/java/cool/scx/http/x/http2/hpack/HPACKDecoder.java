@@ -10,8 +10,27 @@ import static cool.scx.http.x.http2.hpack.HPACKHuffmanCodec.HPACK_HUFFMAN_CODEC;
 //todo 实现不正确
 public class HPACKDecoder {
 
-    private final List<String[]> dynamicTable = new ArrayList<>();
     private static final int MAX_DYNAMIC_TABLE_SIZE = 4096;
+    private final List<String[]> dynamicTable = new ArrayList<>();
+
+    private static int[] decodeInteger(byte[] data, int startIndex, int prefixBits) {
+        int prefixMask = (1 << prefixBits) - 1;
+        int index = startIndex;
+        int value = data[index] & prefixMask;
+        index += 1;
+
+        if (value == prefixMask) {
+            int m = 0;
+            int b;
+            do {
+                b = data[index] & 0xFF;
+                value += (b & 0x7F) << m;
+                m += 7;
+                index += 1;
+            } while ((b & 0x80) != 0);
+        }
+        return new int[]{value, index};
+    }
 
     public Map<String, String> decode(byte[] data) {
         Map<String, String> headersMap = new HashMap<>();
@@ -73,25 +92,6 @@ public class HPACKDecoder {
             addToDynamicTable(new String[]{name, value});
         }
         return index;
-    }
-
-    private static int[] decodeInteger(byte[] data, int startIndex, int prefixBits) {
-        int prefixMask = (1 << prefixBits) - 1;
-        int index = startIndex;
-        int value = data[index] & prefixMask;
-        index += 1;
-
-        if (value == prefixMask) {
-            int m = 0;
-            int b;
-            do {
-                b = data[index] & 0xFF;
-                value += (b & 0x7F) << m;
-                m += 7;
-                index += 1;
-            } while ((b & 0x80) != 0);
-        }
-        return new int[]{value, index};
     }
 
     private String decodeString(byte[] data, int start, int length, boolean huffman) {

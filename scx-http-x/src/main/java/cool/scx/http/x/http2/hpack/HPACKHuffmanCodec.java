@@ -21,6 +21,6 @@ public class HPACKHuffmanCodec {
         var charArray = ArrayUtils.toPrimitive(chars.toArray(Character[]::new));
         return new String(charArray);
     }
-    
+
 
 }
