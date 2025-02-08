@@ -7,6 +7,7 @@ import java.util.Map;
 
 import static cool.scx.http.x.http2.hpack.HPACKHuffmanCodec.HPACK_HUFFMAN_CODEC;
 
+//todo 实现不正确
 public class HPACKDecoder {
 
     private final List<String[]> dynamicTable = new ArrayList<>();
@@ -96,7 +97,7 @@ public class HPACKDecoder {
     private String decodeString(byte[] data, int start, int length, boolean huffman) {
         byte[] bytes = new byte[length];
         System.arraycopy(data, start, bytes, 0, length);
-        return huffman ? HPACK_HUFFMAN_CODEC.decode(bytes, length) : new String(bytes);
+        return huffman ? HPACK_HUFFMAN_CODEC.decode(bytes) : new String(bytes);
     }
 
     private void addToDynamicTable(String[] header) {
