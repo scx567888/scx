@@ -66,16 +66,16 @@ public class HuffmanCodec<T> {
     // 解码方法
     public T decodeSingle(IBitArray path) {
         var current = root;
-        
+
         //从路径遍历 
         for (int i = 0; i < path.length(); i++) {
             if (current == null) {
-                break;
+                throw new IllegalStateException("Invalid Huffman code path: reached a null node.");
             }
             current = path.get(i) ? current.right : current.left;
         }
-        
-        //全部变量完成如果没有 找到任何 对应值 则抛出异常
+
+        //全部变量完成如果没有 找到任何 或者不是叶子节点 则抛出异常
         if (current == null || !current.isLeaf()) {
             throw new IllegalStateException("Invalid Huffman code path: did not reach a leaf node.");
         }
@@ -89,12 +89,12 @@ public class HuffmanCodec<T> {
         var current = root;
 
         for (int i = 0; i < path.length(); i++) {
-            current = path.get(i) ? current.right : current.left;
-
             if (current == null) {
                 throw new IllegalStateException("Invalid Huffman code path: reached a null node.");
             }
-
+            current = path.get(i) ? current.right : current.left;
+            
+            //如果是叶子节点
             if (current.isLeaf()) {
                 list.add(current.value);
                 current = root; // 重置到根节点
