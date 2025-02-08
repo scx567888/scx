@@ -2,6 +2,8 @@ package cool.scx.common.bit_array;
 
 import java.util.Arrays;
 
+import static cool.scx.common.bit_array.BitArrayHelper.setByBinaryString;
+
 public class BitArray implements IBitArray {
 
     // 掩码静态查找表
@@ -10,9 +12,9 @@ public class BitArray implements IBitArray {
             (byte) 0x08, (byte) 0x04, (byte) 0x02, (byte) 0x01
     };
 
-    private byte[] data; // 用字节数组存储位
-    private long capacity; // 当前容量（以位为单位）
-    private int length; // 当前的位数组长度（实际的位数）
+    byte[] data; // 用字节数组存储位
+    long capacity; // 当前容量（以位为单位）
+    int length; // 当前的位数组长度（实际的位数）
 
     public BitArray() {
         this(new byte[0], 0);
@@ -26,23 +28,7 @@ public class BitArray implements IBitArray {
 
     public BitArray(String binaryString) {
         this();//初始化一下
-        int bitIndex = 0; // 当前 BitSet 的索引
-        // 遍历字符串
-        for (var c : binaryString.toCharArray()) {
-            switch (c) {
-                case '1' -> {
-                    this.set(bitIndex, true); // 仅当字符是 '1' 时设置为 true
-                    bitIndex++;
-                }
-                case '0' -> {
-                    this.set(bitIndex, false);
-                    bitIndex++;
-                } // 仅当字符是 '1' 时设置为 true
-                default -> {
-                    // 其他字符（分隔符）直接跳过        
-                }
-            }
-        }
+        setByBinaryString(this, binaryString);
     }
 
     @Override
@@ -72,7 +58,10 @@ public class BitArray implements IBitArray {
 
     @Override
     public byte[] toBytes() {
-        return data;
+        // 计算实际需要的字节数
+        int actualByteLength = (length + 7) >> 3; // 向上取整
+        // 创建一个新数组，仅复制有效数据部分
+        return Arrays.copyOf(data, actualByteLength);
     }
 
     @Override
