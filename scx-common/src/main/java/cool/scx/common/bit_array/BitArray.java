@@ -102,20 +102,16 @@ public class BitArray implements IBitArray {
             // 情况 2：未字节对齐，需要处理跨字节拼接
             int remainingBits = 8 - bitOffset;
             int pByteLength = byteLength(p.length);
+
             for (int i = 0; i < pByteLength; i++) {
-                byte b = p.data[i];
+                int bUnsigned = p.data[i] & 0xFF; // 将 byte 转换为无符号 int
 
-                // 将 p.data[i] 的高位部分拼接到当前字节的空位
-                this.data[byteOffset] |= (byte) ((b & 0xFF) >>> bitOffset);
+                // 将 b 的高位部分拼接到当前字节的空位
+                this.data[byteOffset] |= (byte) (bUnsigned >>> bitOffset);
 
-                // 处理低位部分，拼接到下一个字节
-                if (byteOffset + 1 < this.data.length) {
-                    this.data[byteOffset + 1] |= (byte) (b << remainingBits);
-                } else {
-                    // 如果超出当前数组长度，进行扩容
-                    this.data = Arrays.copyOf(this.data, this.data.length + 1);
-                    this.data[byteOffset + 1] = (byte) (b << remainingBits);
-                }
+                // 将 b 的低位部分拼接到下一个字节
+                this.data[byteOffset + 1] |= (byte) ((bUnsigned << remainingBits) & 0xFF);
+
                 byteOffset++;
             }
         }
