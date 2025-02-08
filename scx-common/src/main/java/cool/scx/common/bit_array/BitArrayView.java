@@ -1,12 +1,12 @@
 package cool.scx.common.bit_array;
 
-public class CombinedBitArray implements IBitArray {
+public class BitArrayView implements IBitArray {
 
-    private final BitArray[] bitArrays;
+    private final IBitArray[] bitArrays;
     private final int[] startIndices; // 每个 BitArray 的起始索引
     private final int totalLength;
 
-    public CombinedBitArray(BitArray... bitArrays) {
+    public BitArrayView(IBitArray... bitArrays) {
         this.bitArrays = bitArrays;
 
         // 初始化 startIndices 并计算总长度
@@ -14,7 +14,7 @@ public class CombinedBitArray implements IBitArray {
         int length = 0;
         for (int i = 0; i < bitArrays.length; i++) {
             startIndices[i] = length;
-            length += bitArrays[i].length; // 直接访问 BitArray 的 length 字段
+            length += bitArrays[i].length(); // 直接访问 BitArray 的 length 字段
         }
         this.totalLength = length;
     }
@@ -36,47 +36,22 @@ public class CombinedBitArray implements IBitArray {
     }
 
     @Override
+    public void append(IBitArray array) {
+        throw new UnsupportedOperationException("视图不支持 append !!!");
+    }
+
+    @Override
     public int length() {
         return totalLength;
     }
 
     @Override
     public byte[] toBytes() {
-        int totalBytes = (totalLength + 7) / 8; // 计算最终需要的字节数
-        byte[] combinedBytes = new byte[totalBytes];
-
-        int currentBitOffset = 0; // 当前全局位偏移量（以位为单位）
-
-        for (BitArray bitArray : bitArrays) {
-            byte[] bitArrayData = bitArray.data; // 直接访问 BitArray 的 data
-            int bitArrayLength = bitArray.length; // 当前 BitArray 的位长度
-            int bitArrayBytes = (bitArrayLength + 7) >> 3; // 当前 BitArray 的实际字节数
-
-            int startByteOffset = currentBitOffset >> 3; // 目标数组中的起始字节偏移
-            int startBitOffset = currentBitOffset % 8; // 目标数组中的起始位偏移
-
-            if (startBitOffset == 0) {
-                // 如果对齐字节边界，直接拷贝整个数组
-                System.arraycopy(bitArrayData, 0, combinedBytes, startByteOffset, bitArrayBytes);
-            } else {
-                // 如果不对齐字节边界，需要进行跨字节拼接
-                for (int i = 0; i < bitArrayBytes; i++) {
-                    int targetIndex = startByteOffset + i;
-
-                    // 将当前字节的高位部分拼接到目标数组
-                    combinedBytes[targetIndex] |= (byte) ((bitArrayData[i] & 0xFF) >>> startBitOffset);
-
-                    // 如果下一个字节还在数组范围内，将低位部分拼接到下一字节
-                    if (targetIndex + 1 < totalBytes) {
-                        combinedBytes[targetIndex + 1] |= (byte) ((bitArrayData[i] & 0xFF) << (8 - startBitOffset));
-                    }
-                }
-            }
-
-            currentBitOffset += bitArrayLength; // 更新全局位偏移量
+        var ba = new BitArray(totalLength);
+        for (var bitArray : bitArrays) {
+            ba.append(bitArray);
         }
-
-        return combinedBytes;
+        return ba.toBytes();
     }
 
     @Override
