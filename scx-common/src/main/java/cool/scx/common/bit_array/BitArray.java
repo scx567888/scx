@@ -25,6 +25,9 @@ public class BitArray implements IBitArray {
     public BitArray(byte[] data, int length) {
         this.data = data;
         this.capacity = data.length << 3; // data.length * 8
+        if (length > this.capacity) {
+            throw new IllegalArgumentException("length 不应该大于容量 capacity");
+        }
         this.length = length;
     }
 
@@ -86,7 +89,7 @@ public class BitArray implements IBitArray {
 
     private void appendFast(BitArray p) {
         int newLength = this.length + p.length; // 拼接后的总长度
-        ensureCapacity(newLength - 1); // 提前扩容
+        ensureCapacity(newLength + 7); // 提前扩容，预留额外空间
 
         int currentByteOffset = this.length / 8; // 当前最后一个字节的索引
         int currentBitOffset = this.length % 8; // 当前最后一个字节的位偏移量
