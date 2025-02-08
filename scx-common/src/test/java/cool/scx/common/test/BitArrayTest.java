@@ -174,7 +174,7 @@ public class BitArrayTest {
             binaryString.append(String.format("%8s", Integer.toBinaryString(b & 0xFF)).replace(' ', '0'));
         }
 
-        assert "1100110000110011".equals(binaryString.toString()) : "testToBytes：拼接后内容不匹配";
+        assert "1100110000110011".contentEquals(binaryString) : "testToBytes：拼接后内容不匹配";
         assert bitArrayView.length() == 16 : "testToBytes：长度不匹配";
     }
 

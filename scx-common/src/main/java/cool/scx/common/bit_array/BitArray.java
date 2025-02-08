@@ -10,9 +10,9 @@ public class BitArray implements IBitArray {
             (byte) 0x08, (byte) 0x04, (byte) 0x02, (byte) 0x01
     };
 
-   private byte[] data; // 用字节数组存储位
-   private int capacity; // 当前容量（以位为单位）
-   private int length; // 当前的位数组长度（实际的位数）
+    private byte[] data; // 用字节数组存储位
+    private int capacity; // 当前容量（以位为单位）
+    private int length; // 当前的位数组长度（实际的位数）
 
     public BitArray() {
         this(new byte[0], 0);
