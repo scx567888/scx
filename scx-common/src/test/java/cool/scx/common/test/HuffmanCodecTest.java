@@ -75,5 +75,5 @@ public class HuffmanCodecTest {
         String codecString = codec.toString();
         assertNotNull(codecString);
     }
-    
+
 }
