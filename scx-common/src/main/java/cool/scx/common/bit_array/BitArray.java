@@ -13,16 +13,20 @@ public class BitArray implements IBitArray {
     };
 
     byte[] data; // 用字节数组存储位
-    long capacity; // 当前容量（以位为单位）
+    int capacity; // 当前容量（以位为单位）
     int length; // 当前的位数组长度（实际的位数）
 
     public BitArray() {
-        this(new byte[0], 0);
+        this(new byte[]{});
+    }
+
+    public BitArray(byte[] data) {
+        this(data, data.length << 3);// data.length * 8
     }
 
     public BitArray(byte[] data, int length) {
         this.data = data;
-        this.capacity = (long) data.length << 3;
+        this.capacity = data.length << 3; // data.length * 8
         this.length = length;
     }
 
@@ -77,7 +81,7 @@ public class BitArray implements IBitArray {
         if (index >= capacity) {
             int newByteSize = Math.max((index + 8) >> 3, data.length + (data.length >> 1));
             data = Arrays.copyOf(data, newByteSize);
-            capacity = (long) newByteSize << 3;
+            capacity = newByteSize << 3;
         }
     }
 
