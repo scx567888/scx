@@ -35,20 +35,13 @@ public class BitArray implements IBitArray {
 
     @Override
     public void set(int index, boolean value) {
-        // 合并 ensureCapacity 和 updateLength 的逻辑
-        if (index >= length) {
-            length = index + 1;    // 更新长度
-            ensureCapacity(); // 确保容量足够
-        }
-
-        int byteIndex = byteIndex(index);   // index / 8
-        int bitIndex = bitIndex(index);     // index % 8
-
-        // 设置位
+        ensureCapacityAndLength(index);//确保容量并更新长度
+        int byteIndex = byteIndex(index);
+        int bitIndex = bitIndex(index);
         if (value) {
-            data[byteIndex] |= BIT_MASKS[bitIndex];  // 设置对应位为 1
+            data[byteIndex] |= BIT_MASKS[bitIndex];
         } else {
-            data[byteIndex] &= (byte) ~BIT_MASKS[bitIndex]; // 清除对应位为 0
+            data[byteIndex] &= (byte) ~BIT_MASKS[bitIndex];
         }
     }
 
@@ -92,21 +85,18 @@ public class BitArray implements IBitArray {
         return index & 7;
     }
 
-    private void updateLength(int index) {
+    //确保容量和长度
+    private void ensureCapacityAndLength(int index) {
         if (index >= length) {
             length = index + 1; // 更新长度
         }
-    }
 
-    private void ensureCapacity() {
-        if (length <= capacity) {
-            return; // 容量足够，直接返回
+        if (index >= capacity) { // 如果超出当前容量，扩容
+            long newCapacity = Math.max(index + 1, capacity * 2); // 确保容量足够
+            int newByteSize = (int) ((newCapacity + 7) >> 3);
+            data = Arrays.copyOf(data, newByteSize);
+            capacity = (long) newByteSize << 3;
         }
-        // 扩容策略：每次容量翻倍，确保最小需求
-        long newCapacity = Math.max(length, capacity * 2);
-        int newByteSize = (int) ((newCapacity + 7) >> 3);
-        data = Arrays.copyOf(data, newByteSize);
-        capacity = (long) newByteSize << 3;
     }
 
 }
