@@ -108,11 +108,18 @@ public class HuffmanCodec<T> {
         return list;
     }
 
-
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("HuffmanCoding:\n");
-        huffmanCode.forEach((key, value) -> sb.append(key).append(" -> ").append(value).append("\n"));
+        var sb = new StringBuilder("HuffmanCodec:\n");
+
+        // 显示编码表
+        sb.append("编码表:\n");
+        huffmanCode.forEach((key, value) -> sb.append(key).append(" -> ").append(value.toBinaryString()).append("\n"));
+
+        // 显示霍夫曼树
+        sb.append("霍夫曼树:\n");
+        buildTreeString(root, sb, "");
+
         return sb.toString();
     }
 
