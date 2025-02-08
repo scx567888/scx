@@ -96,7 +96,7 @@ public class CombinedBitArray implements IBitArray {
      */
     private void checkIndexBounds(int index) {
         if (index < 0 || index >= totalLength) {
-            throw new IndexOutOfBoundsException("索引超出范围: " + index);
+            throw new IndexOutOfBoundsException("索引超出范围: " + index + ", 总长度: " + totalLength);
         }
     }
 
@@ -107,9 +107,16 @@ public class CombinedBitArray implements IBitArray {
      * @return 对应的 BitArray 索引
      */
     private int findBitArrayIndex(int index) {
-        for (int i = 0; i < startIndices.length; i++) {
-            if (index < startIndices[i] + bitArrays[i].length) {
-                return i;
+        int low = 0, high = startIndices.length - 1;
+
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            if (index < startIndices[mid]) {
+                high = mid - 1;
+            } else if (mid == startIndices.length - 1 || index < startIndices[mid + 1]) {
+                return mid;
+            } else {
+                low = mid + 1;
             }
         }
         throw new IndexOutOfBoundsException("索引超出范围: " + index); // 理论上不应该触发
