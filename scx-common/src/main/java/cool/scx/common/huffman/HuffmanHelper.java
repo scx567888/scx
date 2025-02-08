@@ -6,7 +6,9 @@ import cool.scx.common.count_map.CountMap;
 import cool.scx.common.count_map.ICountMap;
 import cool.scx.common.util.$;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.PriorityQueue;
 
 import static java.util.Comparator.comparingInt;
 
@@ -50,26 +52,33 @@ public class HuffmanHelper {
         return map;
     }
 
-    // 构建霍夫曼编码表 (使用 BitSet)
+    // 构建霍夫曼编码表
     public static <T> Map<T, IBitArray> buildHuffmanCodeTable(HuffmanNode<T> root) {
         Map<T, IBitArray> huffmanCode = new HashMap<>();
-        buildHuffmanCodeTable0(root, new BitArray(), 0, huffmanCode);
+        buildHuffmanCodeTable0(root, new BitArray(), huffmanCode);
         return huffmanCode;
     }
 
     // 辅助递归方法
-    private static <T> void buildHuffmanCodeTable0(HuffmanNode<T> node, IBitArray path, int length, Map<T, IBitArray> huffmanCode) {
+    private static <T> void buildHuffmanCodeTable0(HuffmanNode<T> node, IBitArray path, Map<T, IBitArray> huffmanCode) {
         if (node.isLeaf()) {
-            huffmanCode.put(node.value, new BitArray(path.toBytes(), length)); // 保存当前路径
-            return;
-        }
-        if (node.left != null) {
-            path.set(length, false); // 左子节点设置为 0
-            buildHuffmanCodeTable0(node.left, path, length + 1, huffmanCode);
-        }
-        if (node.right != null) {
-            path.set(length, true); // 右子节点设置为 1
-            buildHuffmanCodeTable0(node.right, path, length + 1, huffmanCode);
+            // 如果是叶子节点，直接保存路径
+            huffmanCode.put(node.value, path);
+        } else {
+            // 处理左子节点
+            if (node.left != null) {
+                var leftPath = new BitArray();
+                leftPath.append(path); // 追加原始路径
+                leftPath.append(false); // 左子节点路径添加0
+                buildHuffmanCodeTable0(node.left, leftPath, huffmanCode);
+            }
+            // 处理右子节点
+            if (node.right != null) {
+                var rightPath = new BitArray();
+                rightPath.append(path); // 追加原始路径
+                rightPath.append(true); // 右子节点路径添加1
+                buildHuffmanCodeTable0(node.right, rightPath, huffmanCode);
+            }
         }
     }
 
