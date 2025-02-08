@@ -11,8 +11,8 @@ public class BitArray implements IBitArray {
     };
 
     private byte[] data; // 用字节数组存储位
-    private int length; // 当前的位数组长度（实际的位数）
     private long capacity; // 当前容量（以位为单位）
+    private int length; // 当前的位数组长度（实际的位数）
 
     public BitArray() {
         this(new byte[0], 0);
@@ -24,9 +24,31 @@ public class BitArray implements IBitArray {
         this.length = length;
     }
 
+    public BitArray(String binaryString) {
+        this();//初始化一下
+        int bitIndex = 0; // 当前 BitSet 的索引
+        // 遍历字符串
+        for (var c : binaryString.toCharArray()) {
+            switch (c) {
+                case '1' -> {
+                    this.set(bitIndex, true); // 仅当字符是 '1' 时设置为 true
+                    bitIndex++;
+                }
+                case '0' -> {
+                    this.set(bitIndex, false);
+                    bitIndex++;
+                } // 仅当字符是 '1' 时设置为 true
+                default -> {
+                    // 其他字符（分隔符）直接跳过        
+                }
+            }
+        }
+    }
+
     @Override
     public void set(int index, boolean value) {
-        ensureCapacityAndLength(index);//确保容量并更新长度
+        ensureCapacity(index);// 确保容量
+        updateLength(index);// 更新长度
         int byteIndex = byteIndex(index);
         int bitIndex = bitIndex(index);
         if (value) {
@@ -62,16 +84,17 @@ public class BitArray implements IBitArray {
         return sb.toString();
     }
 
-    //确保容量和长度
-    private void ensureCapacityAndLength(int index) {
-        if (index >= length) {
-            length = index + 1; //更新长度
-        }
-
+    private void ensureCapacity(int index) {
         if (index >= capacity) {
             int newByteSize = Math.max((index + 8) >> 3, data.length + (data.length >> 1));
             data = Arrays.copyOf(data, newByteSize);
             capacity = (long) newByteSize << 3;
+        }
+    }
+
+    private void updateLength(int index) {
+        if (index >= length) {
+            length = index + 1;
         }
     }
 
