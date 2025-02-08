@@ -35,17 +35,20 @@ public class BitArray implements IBitArray {
 
     @Override
     public void set(int index, boolean value) {
-        ensureCapacity(index + 1); // 确保容量足够
+        // 合并 ensureCapacity 和 updateLength 的逻辑
         if (index >= length) {
-            length = index + 1; // 更新长度
+            length = index + 1;    // 更新长度
+            ensureCapacity(); // 确保容量足够
         }
-        // 用位运算替换除法和取模
-        int byteIndex = byteIndex(index);  // index / 8
-        int bitIndex = index & 7;    // index % 8
+
+        int byteIndex = byteIndex(index);   // index / 8
+        int bitIndex = bitIndex(index);     // index % 8
+
+        // 设置位
         if (value) {
-            data[byteIndex] |= BIT_MASKS[bitIndex];
+            data[byteIndex] |= BIT_MASKS[bitIndex];  // 设置对应位为 1
         } else {
-            data[byteIndex] &= (byte) ~BIT_MASKS[bitIndex];
+            data[byteIndex] &= (byte) ~BIT_MASKS[bitIndex]; // 清除对应位为 0
         }
     }
 
@@ -79,18 +82,6 @@ public class BitArray implements IBitArray {
         return sb.toString();
     }
 
-    //扩容
-    private void ensureCapacity(long minCapacity) {
-        if (minCapacity <= capacity) {
-            return;
-        }
-        long newCapacity = Math.max(minCapacity, capacity * 2);
-        // 计算新字节数组大小：(newCapacity + 7) / 8 等价于向上取整 newCapacity/8
-        int newByteSize = (int) ((newCapacity + 7) >> 3);
-        data = Arrays.copyOf(data, newByteSize);
-        capacity = (long) newByteSize << 3;
-    }
-
     //计算 对应的 byte 索引
     private int byteIndex(int index) {
         return index >> 3;
@@ -99,6 +90,23 @@ public class BitArray implements IBitArray {
     //计算 对应的 bit 索引
     private int bitIndex(int index) {
         return index & 7;
+    }
+
+    private void updateLength(int index) {
+        if (index >= length) {
+            length = index + 1; // 更新长度
+        }
+    }
+
+    private void ensureCapacity() {
+        if (length <= capacity) {
+            return; // 容量足够，直接返回
+        }
+        // 扩容策略：每次容量翻倍，确保最小需求
+        long newCapacity = Math.max(length, capacity * 2);
+        int newByteSize = (int) ((newCapacity + 7) >> 3);
+        data = Arrays.copyOf(data, newByteSize);
+        capacity = (long) newByteSize << 3;
     }
 
 }
