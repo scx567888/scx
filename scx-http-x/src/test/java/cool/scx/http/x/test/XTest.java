@@ -3,9 +3,6 @@ package cool.scx.http.x.test;
 import cool.scx.http.web_socket.ScxServerWebSocketHandshakeRequest;
 import cool.scx.http.x.XHttpServer;
 import cool.scx.http.x.XHttpServerOptions;
-import cool.scx.tcp.tls.TLS;
-
-import java.nio.file.Path;
 
 public class XTest {
 

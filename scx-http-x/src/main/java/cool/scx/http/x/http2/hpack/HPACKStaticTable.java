@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 class HPACKStaticTable {
+
     static final List<String[]> STATIC_TABLE = new ArrayList<>();
 
     static {
