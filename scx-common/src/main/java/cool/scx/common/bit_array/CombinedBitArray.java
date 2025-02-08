@@ -21,35 +21,18 @@ public class CombinedBitArray implements IBitArray {
 
     @Override
     public void set(int index, boolean value) {
-        checkIndexBounds(index); // 检查索引合法性
-        int arrayIndex = findBitArrayIndex(index); // 定位对应的 BitArray
-        int relativeIndex = index - startIndices[arrayIndex];
-        int byteIndex = relativeIndex >> 3; // 计算字节索引
-        int bitIndex = relativeIndex & 7; // 计算位索引
-
-        // 直接操作 data 字段进行设置
-        if (value) {
-            bitArrays[arrayIndex].data[byteIndex] |= (1 << (7 - bitIndex));
-        } else {
-            bitArrays[arrayIndex].data[byteIndex] &= ~(1 << (7 - bitIndex));
-        }
-
-        // 更新长度
-        if (relativeIndex >= bitArrays[arrayIndex].length) {
-            bitArrays[arrayIndex].length = relativeIndex + 1;
-        }
+        checkIndexBounds(index); // 检查索引合法性 因为这种组合视图的模式下 不允许扩容
+        var arrayIndex = findBitArrayIndex(index); // 定位对应的 BitArray
+        var relativeIndex = index - startIndices[arrayIndex]; // 转换为局部索引
+        bitArrays[arrayIndex].set(relativeIndex, value); // 直接调用 BitArray 的 set 方法
     }
 
     @Override
     public boolean get(int index) {
         checkIndexBounds(index); // 检查索引合法性
-        int arrayIndex = findBitArrayIndex(index); // 定位对应的 BitArray
-        int relativeIndex = index - startIndices[arrayIndex];
-        int byteIndex = relativeIndex >> 3; // 计算字节索引
-        int bitIndex = relativeIndex & 7; // 计算位索引
-
-        // 直接操作 data 字段进行获取
-        return (bitArrays[arrayIndex].data[byteIndex] & (1 << (7 - bitIndex))) != 0;
+        var arrayIndex = findBitArrayIndex(index); // 定位对应的 BitArray
+        var relativeIndex = index - startIndices[arrayIndex]; // 转换为局部索引
+        return bitArrays[arrayIndex].get(relativeIndex); // 直接调用 BitArray 的 get 方法
     }
 
     @Override
@@ -67,9 +50,9 @@ public class CombinedBitArray implements IBitArray {
         for (BitArray bitArray : bitArrays) {
             byte[] bitArrayData = bitArray.data; // 直接访问 BitArray 的 data
             int bitArrayLength = bitArray.length; // 当前 BitArray 的位长度
-            int bitArrayBytes = (bitArrayLength + 7) / 8; // 当前 BitArray 的实际字节数
+            int bitArrayBytes = (bitArrayLength + 7) >> 3; // 当前 BitArray 的实际字节数
 
-            int startByteOffset = currentBitOffset / 8; // 目标数组中的起始字节偏移
+            int startByteOffset = currentBitOffset >> 3; // 目标数组中的起始字节偏移
             int startBitOffset = currentBitOffset % 8; // 目标数组中的起始位偏移
 
             if (startBitOffset == 0) {
