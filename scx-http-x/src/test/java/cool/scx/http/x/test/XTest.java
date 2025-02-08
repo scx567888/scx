@@ -14,9 +14,7 @@ public class XTest {
     }
 
     public static void test1() {
-        var httpServer = new XHttpServer(new XHttpServerOptions().port(8899)
-                .tls(TLS.of(Path.of("C:\\Users\\scx\\Desktop\\15717129_sichangxu.com_iis\\sichangxu.com.pfx"),"9kr5a0q6"))
-                .enableHttp2(true));
+        var httpServer = new XHttpServer(new XHttpServerOptions().port(8899));
         httpServer.onRequest(c -> {
             System.out.println(c.method() + " " + c.uri() + " -> " + c.body().asString());
             //通过 c 的类型判断是不是 websocket 连接
