@@ -89,27 +89,34 @@ public class BitArray implements IBitArray {
 
     private void appendFast(BitArray p) {
         int newLength = this.length + p.length; // 拼接后的总长度
-        ensureCapacity(newLength + 7); // 提前扩容，预留额外空间
+        ensureCapacity(newLength); // 确保容量足够
 
-        int currentByteOffset = this.length / 8; // 当前最后一个字节的索引
-        int currentBitOffset = this.length % 8; // 当前最后一个字节的位偏移量
+        int bitOffset = this.length % 8; // 当前字节内的位偏移量
+        int byteOffset = this.length / 8; // 当前字节的索引
 
-        if (currentBitOffset == 0) {
-            // 情况 1: 当前位数组按字节对齐，直接拷贝字节
-            System.arraycopy(p.data, 0, this.data, currentByteOffset, byteLength(p.length));
+        if (bitOffset == 0) {
+            // 情况 1：字节对齐，直接复制字节数据
+            int pByteLength = byteLength(p.length);
+            System.arraycopy(p.data, 0, this.data, byteOffset, pByteLength);
         } else {
-            // 情况 2: 跨字节拼接
-            int otherByteLength = byteLength(p.length);
-            for (int i = 0; i < otherByteLength; i++) {
-                byte otherByte = p.data[i];
+            // 情况 2：未字节对齐，需要处理跨字节拼接
+            int remainingBits = 8 - bitOffset;
+            int pByteLength = byteLength(p.length);
+            for (int i = 0; i < pByteLength; i++) {
+                byte b = p.data[i];
 
-                // 将 otherByte 的高位移入当前字节的低位空闲部分
-                this.data[currentByteOffset] |= (byte) ((otherByte & 0xFF) >>> currentBitOffset);
+                // 将 p.data[i] 的高位部分拼接到当前字节的空位
+                this.data[byteOffset] |= (byte) ((b & 0xFF) >>> bitOffset);
 
-                // 如果有跨字节操作，将 otherByte 的低位写入下一字节
-                this.data[currentByteOffset + 1] |= (byte) (otherByte << (8 - currentBitOffset));
-
-                currentByteOffset++; // 移动到下一个目标字节
+                // 处理低位部分，拼接到下一个字节
+                if (byteOffset + 1 < this.data.length) {
+                    this.data[byteOffset + 1] |= (byte) (b << remainingBits);
+                } else {
+                    // 如果超出当前数组长度，进行扩容
+                    this.data = Arrays.copyOf(this.data, this.data.length + 1);
+                    this.data[byteOffset + 1] = (byte) (b << remainingBits);
+                }
+                byteOffset++;
             }
         }
 
