@@ -11,7 +11,7 @@ import static cool.scx.common.huffman.HuffmanHelper.*;
 
 public class HuffmanCodec<T> {
 
-    private final HuffmanNode<T> root;// 跟节点
+    private final HuffmanNode<T> root;// 根节点
     private final Map<T, IBitArray> huffmanCode; //编码表
 
     // 根据一个数组来创建树
