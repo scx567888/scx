@@ -108,34 +108,6 @@ public class HuffmanCodec<T> {
         return list;
     }
 
-    // 批量解码，带有最大值参数
-    public List<T> decode(IBitArray path, int maxValues) {
-        var list = new ArrayList<T>();
-        var current = root;
-
-        for (var b : path) {
-            if (list.size() >= maxValues) {
-                break;
-            }
-            if (current == null) {
-                throw new IllegalStateException("Invalid Huffman code path: reached a null node.");
-            }
-            current = b ? current.right : current.left;
-
-            // 如果是叶子节点
-            if (current.isLeaf()) {
-                list.add(current.value);
-                current = root; // 重置到根节点
-            }
-        }
-
-        if (current != root) {
-            throw new IllegalStateException("Invalid Huffman code path: leftover bits.");
-        }
-
-        return list;
-    }
-
     @Override
     public String toString() {
         var sb = new StringBuilder("HuffmanCodec:\n");
