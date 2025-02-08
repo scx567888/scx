@@ -75,6 +75,36 @@ public class BitArray implements IBitArray {
         return sb.toString();
     }
 
+    @Override
+    public void append(IBitArray array) {
+        if (array instanceof BitArray otherBitArray) {
+            // 高效拼接两个 BitArray 的 data
+            int newLength = this.length + otherBitArray.length;
+
+            // 确保容量足够存储拼接后的数据
+            ensureCapacity(newLength - 1);
+
+            int currentBitOffset = this.length % 8; // 当前的位偏移
+            int currentByteOffset = this.length / 8; // 当前的字节偏移
+
+            if (currentBitOffset == 0) {
+                // 对齐字节边界，直接复制字节
+                System.arraycopy(otherBitArray.data, 0, this.data, currentByteOffset, byteLength(otherBitArray.length));
+            } else {
+                // 跨字节拼接
+                for (int i = 0; i < otherBitArray.length; i++) {
+                    int bitValue = otherBitArray.get(i) ? 1 : 0;
+                    set(this.length + i, bitValue == 1);
+                }
+            }
+
+            // 更新长度
+            this.length = newLength;
+        } else {
+            IBitArray.super.append(array);
+        }
+    }
+
     private void ensureCapacity(int index) {
         if (index >= capacity) {
             int newByteSize = Math.max((index + 8) >> 3, data.length + (data.length >> 1));// 1.5倍 扩容
