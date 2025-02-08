@@ -62,30 +62,30 @@ public class CombinedBitArray implements IBitArray {
         int totalBytes = (totalLength + 7) / 8; // 计算最终需要的字节数
         byte[] combinedBytes = new byte[totalBytes];
 
-        int currentBitOffset = 0; // 记录全局位偏移量（以位为单位）
+        int currentBitOffset = 0; // 当前全局位偏移量（以位为单位）
 
         for (BitArray bitArray : bitArrays) {
             byte[] bitArrayData = bitArray.data; // 直接访问 BitArray 的 data
             int bitArrayLength = bitArray.length; // 当前 BitArray 的位长度
             int bitArrayBytes = (bitArrayLength + 7) / 8; // 当前 BitArray 的实际字节数
 
-            // 跨字节拼接
             int startByteOffset = currentBitOffset / 8; // 目标数组中的起始字节偏移
             int startBitOffset = currentBitOffset % 8; // 目标数组中的起始位偏移
 
             if (startBitOffset == 0) {
-                // 字节对齐，直接拷贝
+                // 如果对齐字节边界，直接拷贝整个数组
                 System.arraycopy(bitArrayData, 0, combinedBytes, startByteOffset, bitArrayBytes);
             } else {
-                // 跨字节处理
+                // 如果不对齐字节边界，需要进行跨字节拼接
                 for (int i = 0; i < bitArrayBytes; i++) {
-                    int combinedIndex = startByteOffset + i;
+                    int targetIndex = startByteOffset + i;
 
-                    // 当前字节的前部分
-                    combinedBytes[combinedIndex] |= (byte) ((bitArrayData[i] & 0xFF) >>> startBitOffset);
-                    // 当前字节的后部分，拼接到下一个字节
-                    if (combinedIndex + 1 < totalBytes) {
-                        combinedBytes[combinedIndex + 1] |= (byte) ((bitArrayData[i] & 0xFF) << (8 - startBitOffset));
+                    // 将当前字节的高位部分拼接到目标数组
+                    combinedBytes[targetIndex] |= (byte) ((bitArrayData[i] & 0xFF) >>> startBitOffset);
+
+                    // 如果下一个字节还在数组范围内，将低位部分拼接到下一字节
+                    if (targetIndex + 1 < totalBytes) {
+                        combinedBytes[targetIndex + 1] |= (byte) ((bitArrayData[i] & 0xFF) << (8 - startBitOffset));
                     }
                 }
             }
