@@ -92,8 +92,7 @@ public class BitArray implements IBitArray {
         }
 
         if (index >= capacity) { // 如果超出当前容量，扩容
-            long newCapacity = Math.max(index + 1, capacity * 2); // 确保容量足够
-            int newByteSize = (int) ((newCapacity + 7) >> 3);
+            int newByteSize = Math.max((index + 8) >> 3, data.length * 2);
             data = Arrays.copyOf(data, newByteSize);
             capacity = (long) newByteSize << 3;
         }
