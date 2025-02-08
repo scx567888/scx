@@ -77,24 +77,29 @@ public class BitArray implements IBitArray {
 
     @Override
     public void append(IBitArray array) {
-        if (array instanceof BitArray otherBitArray) {
-            // 高效拼接两个 BitArray 的 data
-            int newLength = this.length + otherBitArray.length;
+        if (array instanceof BitArray p) {
+            int newLength = this.length + p.length; // 拼接后的长度
+            ensureCapacity(newLength - 1); // 提前扩容
 
-            // 确保容量足够存储拼接后的数据
-            ensureCapacity(newLength - 1);
-
-            int currentBitOffset = this.length % 8; // 当前的位偏移
-            int currentByteOffset = this.length / 8; // 当前的字节偏移
+            int currentByteOffset = this.length / 8; // 当前位数组最后一个字节中未使用的位数
+            int currentBitOffset = this.length % 8; // 当前位数组中最后一个有效字节的索引
 
             if (currentBitOffset == 0) {
-                // 对齐字节边界，直接复制字节
-                System.arraycopy(otherBitArray.data, 0, this.data, currentByteOffset, byteLength(otherBitArray.length));
+                // 情况 1: 当前位数组按字节对齐，直接拷贝字节
+                System.arraycopy(p.data, 0, this.data, currentByteOffset, byteLength(p.length));
             } else {
-                // 跨字节拼接
-                for (int i = 0; i < otherBitArray.length; i++) {
-                    int bitValue = otherBitArray.get(i) ? 1 : 0;
-                    set(this.length + i, bitValue == 1);
+                // 情况 2: 跨字节拼接
+                int otherByteLength = byteLength(p.length);
+                for (int i = 0; i < otherByteLength; i++) {
+                    byte otherByte = p.data[i];
+
+                    // 将 otherByte 的高位移入当前字节的低位空闲部分
+                    this.data[currentByteOffset] |= (byte) ((otherByte & 0xFF) >>> currentBitOffset);
+
+                    // 如果有跨字节操作，将 otherByte 的低位写入下一字节
+                    this.data[currentByteOffset + 1] |= (byte) (otherByte << (8 - currentBitOffset));
+
+                    currentByteOffset++; // 移动到下一个目标字节
                 }
             }
 
