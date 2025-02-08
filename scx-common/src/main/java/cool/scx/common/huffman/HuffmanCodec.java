@@ -93,7 +93,7 @@ public class HuffmanCodec<T> {
                 throw new IllegalStateException("Invalid Huffman code path: reached a null node.");
             }
             current = path.get(i) ? current.right : current.left;
-            
+
             //如果是叶子节点
             if (current.isLeaf()) {
                 list.add(current.value);
