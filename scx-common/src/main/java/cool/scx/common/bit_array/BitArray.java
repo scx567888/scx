@@ -29,7 +29,7 @@ public class BitArray implements IBitArray {
     }
 
     public BitArray(String binaryString) {
-        this();//初始化一下
+        this();
         setByBinaryString(this, binaryString);
     }
 

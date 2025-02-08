@@ -1,7 +1,7 @@
 package cool.scx.common.bit_array;
 
 class BitArrayHelper {
-    
+
     // 掩码静态查找表
     public static final byte[] BIT_MASKS = {
             (byte) 0x80, (byte) 0x40, (byte) 0x20, (byte) 0x10,
