@@ -96,8 +96,8 @@ public class HuffmanCodec<T> {
 
             //如果是叶子节点
             if (current.isLeaf()) {
-                list.add(current.value);
-                current = root; // 重置到根节点
+                list.add(current.value); // 添加符号
+                current = root;          // 重置到根节点
             }
         }
 
