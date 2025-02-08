@@ -78,36 +78,40 @@ public class BitArray implements IBitArray {
     @Override
     public void append(IBitArray array) {
         if (array instanceof BitArray p) {
-            int newLength = this.length + p.length; // 拼接后的长度
-            ensureCapacity(newLength - 1); // 提前扩容
-
-            int currentByteOffset = this.length / 8; // 当前位数组最后一个字节中未使用的位数
-            int currentBitOffset = this.length % 8; // 当前位数组中最后一个有效字节的索引
-
-            if (currentBitOffset == 0) {
-                // 情况 1: 当前位数组按字节对齐，直接拷贝字节
-                System.arraycopy(p.data, 0, this.data, currentByteOffset, byteLength(p.length));
-            } else {
-                // 情况 2: 跨字节拼接
-                int otherByteLength = byteLength(p.length);
-                for (int i = 0; i < otherByteLength; i++) {
-                    byte otherByte = p.data[i];
-
-                    // 将 otherByte 的高位移入当前字节的低位空闲部分
-                    this.data[currentByteOffset] |= (byte) ((otherByte & 0xFF) >>> currentBitOffset);
-
-                    // 如果有跨字节操作，将 otherByte 的低位写入下一字节
-                    this.data[currentByteOffset + 1] |= (byte) (otherByte << (8 - currentBitOffset));
-
-                    currentByteOffset++; // 移动到下一个目标字节
-                }
-            }
-
-            // 更新长度
-            this.length = newLength;
+            appendFast(p);
         } else {
             IBitArray.super.append(array);
         }
+    }
+
+    private void appendFast(BitArray p) {
+        int newLength = this.length + p.length; // 拼接后的总长度
+        ensureCapacity(newLength - 1); // 提前扩容
+
+        int currentByteOffset = this.length / 8; // 当前最后一个字节的索引
+        int currentBitOffset = this.length % 8; // 当前最后一个字节的位偏移量
+
+        if (currentBitOffset == 0) {
+            // 情况 1: 当前位数组按字节对齐，直接拷贝字节
+            System.arraycopy(p.data, 0, this.data, currentByteOffset, byteLength(p.length));
+        } else {
+            // 情况 2: 跨字节拼接
+            int otherByteLength = byteLength(p.length);
+            for (int i = 0; i < otherByteLength; i++) {
+                byte otherByte = p.data[i];
+
+                // 将 otherByte 的高位移入当前字节的低位空闲部分
+                this.data[currentByteOffset] |= (byte) ((otherByte & 0xFF) >>> currentBitOffset);
+
+                // 如果有跨字节操作，将 otherByte 的低位写入下一字节
+                this.data[currentByteOffset + 1] |= (byte) (otherByte << (8 - currentBitOffset));
+
+                currentByteOffset++; // 移动到下一个目标字节
+            }
+        }
+
+        // 更新长度
+        this.length = newLength;
     }
 
     private void ensureCapacity(int index) {
