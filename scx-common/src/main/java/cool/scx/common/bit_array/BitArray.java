@@ -40,7 +40,7 @@ public class BitArray implements IBitArray {
             length = index + 1; // 更新长度
         }
         // 用位运算替换除法和取模
-        int byteIndex = index >> 3;  // index / 8
+        int byteIndex = byteIndex(index);  // index / 8
         int bitIndex = index & 7;    // index % 8
         if (value) {
             data[byteIndex] |= BIT_MASKS[bitIndex];
@@ -49,10 +49,11 @@ public class BitArray implements IBitArray {
         }
     }
 
+    //已经达到理论上的性能极限 无需优化
     @Override
     public boolean get(int index) {
-        int byteIndex = index >> 3;
-        int bitIndex = index & 7;
+        int byteIndex = byteIndex(index);
+        int bitIndex = bitIndex(index);
         return (data[byteIndex] & BIT_MASKS[bitIndex]) != 0;
     }
 
@@ -72,18 +73,13 @@ public class BitArray implements IBitArray {
     @Override
     public String toBinaryString() {
         var sb = new StringBuilder(length);
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i < length; i = i + 1) {
             sb.append(get(i) ? '1' : '0');
         }
         return sb.toString();
     }
 
-    /**
-     * 确保容量足够存储至少 minCapacity 个位。
-     * 采用整数运算替换 Math.ceil，避免浮点数转换。
-     *
-     * @param minCapacity 需要的最小容量（以位为单位）
-     */
+    //扩容
     private void ensureCapacity(long minCapacity) {
         if (minCapacity <= capacity) {
             return;
@@ -93,6 +89,16 @@ public class BitArray implements IBitArray {
         int newByteSize = (int) ((newCapacity + 7) >> 3);
         data = Arrays.copyOf(data, newByteSize);
         capacity = (long) newByteSize << 3;
+    }
+
+    //计算 对应的 byte 索引
+    private int byteIndex(int index) {
+        return index >> 3;
+    }
+
+    //计算 对应的 bit 索引
+    private int bitIndex(int index) {
+        return index & 7;
     }
 
 }
