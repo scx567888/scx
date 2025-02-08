@@ -11,9 +11,9 @@ import java.util.Map;
  */
 public class HPACKHuffmanTable {
 
-    public static final Map<Byte, String> HPACK_HUFFMAN_TABLE = initTable();
+    public static final Map<Character, String> HPACK_HUFFMAN_TABLE = initTable();
 
-    private static Map<Byte, String> initTable() {
+    private static Map<Character, String> initTable() {
         //为了便于开发人员 维护编写成以下形式 
         var m = new HashMap<Integer, String>();
         m.put(0, "|11111111|11000");
@@ -274,10 +274,10 @@ public class HPACKHuffmanTable {
         m.put(255, "|11111111|11111111|11111011|10");
         m.put(256, "|11111111|11111111|11111111|111111");            //EOS
 
-        var s = new HashMap<Byte, String>();
+        var s = new HashMap<Character, String>();
         //最后的 256 我们丢弃
-        for (int i = 0; i < 256; i++) {
-            s.put((byte) i, m.get(i));
+        for (int i = 0; i < 257; i++) {
+            s.put((char) i, m.get(i));
         }
         return Map.copyOf(s); //转换为不可变的 map
     }
