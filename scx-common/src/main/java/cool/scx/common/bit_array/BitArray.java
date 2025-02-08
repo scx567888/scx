@@ -2,6 +2,12 @@ package cool.scx.common.bit_array;
 
 import java.util.Arrays;
 
+/**
+ * 基于 byte 数组的实现 优点是相比较 {@link java.util.BitSet} 在数组方面会快一点
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class BitArray implements IBitArray {
 
     // 掩码静态查找表

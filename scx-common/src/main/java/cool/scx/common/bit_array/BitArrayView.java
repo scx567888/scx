@@ -1,5 +1,11 @@
 package cool.scx.common.bit_array;
 
+/**
+ * 一个只读的 BitArray 视图
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public class BitArrayView implements IBitArray {
 
     private final IBitArray[] bitArrays;
@@ -21,10 +27,7 @@ public class BitArrayView implements IBitArray {
 
     @Override
     public void set(int index, boolean value) {
-        checkIndexBounds(index); // 检查索引合法性 因为这种组合视图的模式下 不允许扩容
-        var arrayIndex = findBitArrayIndex(index); // 定位对应的 BitArray
-        var relativeIndex = index - startIndices[arrayIndex]; // 转换为局部索引
-        bitArrays[arrayIndex].set(relativeIndex, value); // 直接调用 BitArray 的 set 方法
+        throw new UnsupportedOperationException("视图不支持 set !!!");
     }
 
     @Override

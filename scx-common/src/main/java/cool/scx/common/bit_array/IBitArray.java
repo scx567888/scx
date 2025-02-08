@@ -1,5 +1,11 @@
 package cool.scx.common.bit_array;
 
+/**
+ * BitArray 基本上等同于 {@link java.util.BitSet}
+ *
+ * @author scx567888
+ * @version 0.0.1
+ */
 public interface IBitArray {
 
     /**
