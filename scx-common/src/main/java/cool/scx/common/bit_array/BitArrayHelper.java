@@ -1,8 +1,26 @@
 package cool.scx.common.bit_array;
 
-public class BitArrayHelper {
+class BitArrayHelper {
+    
+    // 掩码静态查找表
+    public static final byte[] BIT_MASKS = {
+            (byte) 0x80, (byte) 0x40, (byte) 0x20, (byte) 0x10,
+            (byte) 0x08, (byte) 0x04, (byte) 0x02, (byte) 0x01
+    };
 
-    public static void setByBinaryString(IBitArray bitArray, String binaryString) {
+    public static int byteIndex(int index) {
+        return index >> 3;
+    }
+
+    public static int bitIndex(int index) {
+        return index & 7;
+    }
+
+    public static int byteLength(int bitLength) {
+        return (bitLength + 7) >> 3; // 向上取整，计算最小字节数
+    }
+
+    public static void setByBinaryString(BitArray bitArray, String binaryString) {
         int bitIndex = 0; // 当前 BitSet 的索引
         // 遍历字符串
         for (var c : binaryString.toCharArray()) {

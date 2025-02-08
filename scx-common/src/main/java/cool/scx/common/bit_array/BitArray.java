@@ -2,27 +2,20 @@ package cool.scx.common.bit_array;
 
 import java.util.Arrays;
 
-public class BitArray implements IBitArray {
+import static cool.scx.common.bit_array.BitArrayHelper.*;
 
-    // 掩码静态查找表
-    private static final byte[] BIT_MASKS = {
-            (byte) 0x80, (byte) 0x40, (byte) 0x20, (byte) 0x10,
-            (byte) 0x08, (byte) 0x04, (byte) 0x02, (byte) 0x01
-    };
+public class BitArray implements IBitArray {
 
     byte[] data; // 用字节数组存储位
     int capacity; // 当前容量（以位为单位）
     int length; // 当前的位数组长度（实际的位数）
 
     public BitArray() {
-        this(new byte[]{});
+        this(new byte[0], 0);
     }
 
     public BitArray(int length) {
-        int byteLength = byteLength(length); // 计算所需字节数
-        this.data = new byte[byteLength];
-        this.capacity = byteLength << 3;
-        this.length = length;
+        this(new byte[byteLength(length)], length);
     }
 
     public BitArray(byte[] data) {
@@ -93,38 +86,6 @@ public class BitArray implements IBitArray {
     private void updateLength(int index) {
         if (index >= length) {
             length = index + 1;
-        }
-    }
-
-    private static int byteIndex(int index) {
-        return index >> 3;
-    }
-
-    private static int bitIndex(int index) {
-        return index & 7;
-    }
-
-    private static int byteLength(int bitLength) {
-        return (bitLength + 7) >> 3; // 向上取整，计算最小字节数
-    }
-
-    private static void setByBinaryString(BitArray bitArray, String binaryString) {
-        int bitIndex = 0; // 当前 BitSet 的索引
-        // 遍历字符串
-        for (var c : binaryString.toCharArray()) {
-            switch (c) {
-                case '1' -> {
-                    bitArray.set(bitIndex, true); // 仅当字符是 '1' 时设置为 true
-                    bitIndex++;
-                }
-                case '0' -> {
-                    bitArray.set(bitIndex, false);
-                    bitIndex++;
-                } // 仅当字符是 '1' 时设置为 true
-                default -> {
-                    // 其他字符（分隔符）直接跳过        
-                }
-            }
         }
     }
 
