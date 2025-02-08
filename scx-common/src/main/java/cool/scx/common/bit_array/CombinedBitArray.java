@@ -52,31 +52,25 @@ public class CombinedBitArray implements IBitArray {
 
         int currentBitOffset = 0; // 当前总偏移量（以 bit 为单位）
         for (BitArray bitArray : bitArrays) {
-            byte[] bitArrayBytes = bitArray.toBytes();
+            byte[] bitArrayData = bitArray.data; // 直接访问 BitArray 的 data
             int bitArrayLength = bitArray.length(); // 当前 BitArray 的 bit 长度
+            int bitArrayBytes = (bitArrayLength + 7) / 8; // 当前 BitArray 的实际字节数
 
-            int startByteOffset = currentBitOffset / 8; // 当前写入的起始字节
-            int startBitOffset = currentBitOffset % 8; // 当前写入的起始位偏移
+            int startByteOffset = currentBitOffset / 8; // 写入的起始字节
+            int startBitOffset = currentBitOffset % 8; // 写入的起始位偏移
 
             if (startBitOffset == 0) {
-                // 如果刚好对齐字节，直接拷贝字节数据
-                int numBytesToCopy = (bitArrayLength + 7) / 8;
-                System.arraycopy(bitArrayBytes, 0, combinedBytes, startByteOffset, numBytesToCopy);
+                // 对齐字节边界，直接拷贝
+                System.arraycopy(bitArrayData, 0, combinedBytes, startByteOffset, bitArrayBytes);
             } else {
-                // 如果没有对齐字节，需要逐字节处理跨字节的位拼接
-                int byteIndex = 0;
-                for (int i = 0; i < bitArrayLength; i++) {
-                    if (i % 8 == 0 && i > 0) {
-                        byteIndex++;
-                    }
-
-                    boolean bitValue = (bitArrayBytes[byteIndex] & (1 << (7 - (i % 8)))) != 0;
-                    int globalBitIndex = currentBitOffset + i;
-                    int globalByteIndex = globalBitIndex / 8;
-                    int globalBitOffset = globalBitIndex % 8;
-
-                    if (bitValue) {
-                        combinedBytes[globalByteIndex] |= (byte) (1 << (7 - globalBitOffset));
+                // 跨字节拼接
+                for (int i = 0; i < bitArrayBytes; i++) {
+                    int combinedIndex = startByteOffset + i;
+                    // 当前字节的前部分
+                    combinedBytes[combinedIndex] |= (byte) ((bitArrayData[i] & 0xFF) >>> startBitOffset);
+                    // 当前字节的后部分，拼接到下一个字节
+                    if (combinedIndex + 1 < totalBytes) {
+                        combinedBytes[combinedIndex + 1] |= (byte) ((bitArrayData[i] & 0xFF) << (8 - startBitOffset));
                     }
                 }
             }
@@ -96,5 +90,5 @@ public class CombinedBitArray implements IBitArray {
         }
         return sb.toString();
     }
-    
+
 }
