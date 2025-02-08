@@ -2,18 +2,14 @@ package cool.scx.common.bit_array;
 
 public interface IBitArray {
 
-    void set(long index, boolean value);
+    void set(int index, boolean value);
 
-    boolean get(long index);
+    boolean get(int index);
 
-    long length();
-
-    boolean[] toBooleans();
+    int length();
 
     byte[] toBytes();
 
-    long[] toLongs();
-
-    String toBinaryStrings();
+    String toBinaryString();
 
 }
