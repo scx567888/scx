@@ -1,12 +1,11 @@
 package cool.scx.http.x.http2.hpack;
 
-import cool.scx.http.x.http2.huffman.HuffmanCodePath;
-import cool.scx.http.x.http2.huffman.HuffmanCoding;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static cool.scx.http.x.http2.hpack.HPACKHuffmanCodec.HPACK_HUFFMAN_CODEC;
 
 public class HPACKDecoder {
 
@@ -97,7 +96,7 @@ public class HPACKDecoder {
     private String decodeString(byte[] data, int start, int length, boolean huffman) {
         byte[] bytes = new byte[length];
         System.arraycopy(data, start, bytes, 0, length);
-        return huffman ? Huffman.decode(bytes) : new String(bytes);
+        return huffman ? HPACK_HUFFMAN_CODEC.decode(bytes, length) : new String(bytes);
     }
 
     private void addToDynamicTable(String[] header) {
@@ -123,19 +122,4 @@ public class HPACKDecoder {
         }
     }
 
-    
-
-    static class Huffman {
-        static String decode(byte[] data) {
-            var huffmanCoding = new HuffmanCoding<Byte>(HPACKHuffmanTable.HPACK_HUFFMAN_TABLE);
-            HuffmanCodePath huffmanCodePath = HuffmanCodePath.fromBytes(data);
-            var ddd=huffmanCodePath.toBytes();
-            var decode = huffmanCoding.decode(HuffmanCodePath.fromBytes(data), Byte.class);
-            //todo 
-            System.out.println(decode);
-//             需要ai 来写
-//            return new String(decode);
-            return null;
-        }
-    }
 }
