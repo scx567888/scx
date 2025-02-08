@@ -57,4 +57,12 @@ public interface IBitArray {
         }
     }
 
+    /**
+     * 追加单个 bit
+     * @param value v
+     */
+    default void append(boolean value) {
+        set(this.length(), value);
+    }
+
 }

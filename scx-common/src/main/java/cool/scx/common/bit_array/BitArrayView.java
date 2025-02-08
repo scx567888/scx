@@ -39,11 +39,6 @@ public class BitArrayView implements IBitArray {
     }
 
     @Override
-    public void append(IBitArray array) {
-        throw new UnsupportedOperationException("视图不支持 append !!!");
-    }
-
-    @Override
     public int length() {
         return totalLength;
     }
