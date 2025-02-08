@@ -1,12 +1,14 @@
 package cool.scx.common.bit_array;
 
+import java.util.Iterator;
+
 /**
  * BitArray 基本上等同于 {@link java.util.BitSet}
  *
  * @author scx567888
  * @version 0.0.1
  */
-public interface IBitArray {
+public interface IBitArray extends Iterable<Boolean> {
 
     /**
      * 设置某一个位
@@ -64,6 +66,11 @@ public interface IBitArray {
      */
     default void append(boolean value) {
         set(this.length(), value);
+    }
+
+    @Override
+    default Iterator<Boolean> iterator() {
+        return new BitArrayIterator(this);
     }
 
 }
