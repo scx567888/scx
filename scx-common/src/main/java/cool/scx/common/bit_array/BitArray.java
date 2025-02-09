@@ -1,6 +1,5 @@
 package cool.scx.common.bit_array;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
