@@ -47,7 +47,7 @@ public interface IBitArray extends Iterable<Boolean> {
      *
      * @param other bitArray
      */
-    default void append(IBitArray other){
+    default void append(IBitArray other) {
         for (var b : other) {
             append(b);
         }
