@@ -3,7 +3,7 @@ package cool.scx.common.bit_array;
 import java.util.Iterator;
 
 /**
- * BitArray 可以理解为一个 boolean[]
+ * BitArray 可以理解为一个 boolean[] (bit 数组)
  *
  * @author scx567888
  * @version 0.0.1
@@ -11,7 +11,7 @@ import java.util.Iterator;
 public interface IBitArray extends Iterable<Boolean> {
 
     /**
-     * 设置某一个位 (不会自动扩容)
+     * 设置某一个位 (等同于数组的 xxx[index] = value , 不会自动扩容)
      *
      * @param index 索引
      * @param value bit
@@ -20,7 +20,7 @@ public interface IBitArray extends Iterable<Boolean> {
     void set(int index, boolean value) throws IndexOutOfBoundsException;
 
     /**
-     * 获取某一个位 (不会自动扩容)
+     * 获取某一个位 (等同于数组的 value = xxx[index] , 不会自动扩容)
      *
      * @param index 索引
      * @return bit
@@ -43,7 +43,7 @@ public interface IBitArray extends Iterable<Boolean> {
     void append(boolean value);
 
     /**
-     * 追加另一个 bitArray
+     * 追加另一个 bitArray (会自动扩容)
      *
      * @param bitArray bitArray
      */
