@@ -45,9 +45,13 @@ public interface IBitArray extends Iterable<Boolean> {
     /**
      * 追加另一个 bitArray (会自动扩容)
      *
-     * @param bitArray bitArray
+     * @param other bitArray
      */
-    void append(IBitArray bitArray);
+    default void append(IBitArray other){
+        for (var b : other) {
+            append(b);
+        }
+    }
 
     /**
      * 转换为字节 (注意因为字节无法完全表示 BitArray 在序列化时请结合 length 使用)
