@@ -44,6 +44,11 @@ public class BitArrayView implements IBitArray {
     }
 
     @Override
+    public void append(boolean value) {
+        throw new UnsupportedOperationException("视图不支持 append !!!");
+    }
+
+    @Override
     public byte[] toBytes() {
         var ba = new BitArray(totalLength);
         for (var bitArray : bitArrays) {
