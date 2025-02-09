@@ -1,5 +1,6 @@
 package cool.scx.common.bit_array;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -88,17 +89,13 @@ public class BitArray implements IBitArray {
 
     @Override
     public void set(int index, boolean value) {
-        if (index < 0 || index >= length) {
-            throw new IndexOutOfBoundsException("索引 " + index + " 超出范围，长度为 " + length);
-        }
+        checkIndex(index);
         set0(index, value);
     }
 
     @Override
     public boolean get(int index) {
-        if (index < 0 || index >= length) {
-            throw new IndexOutOfBoundsException("索引 " + index + " 超出范围，长度为 " + length);
-        }
+        checkIndex(index);
         return get0(index);
     }
 
@@ -178,6 +175,12 @@ public class BitArray implements IBitArray {
             int newByteSize = Math.max((index + 8) >> 3, data.length + (data.length >> 1));// 1.5倍 扩容
             data = Arrays.copyOf(data, newByteSize);
             capacity = newByteSize << 3;
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= length) {
+            throw new IndexOutOfBoundsException("索引 " + index + " 超出范围，长度为 " + length);
         }
     }
 
