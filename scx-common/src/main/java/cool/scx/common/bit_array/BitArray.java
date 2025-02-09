@@ -59,29 +59,18 @@ public class BitArray implements IBitArray {
     }
 
     public static void setByBinaryString(BitArray bitArray, String binaryString) {
-        int bitIndex = 0; // 当前 BitSet 的索引
         // 遍历字符串
         for (var c : binaryString.toCharArray()) {
-            switch (c) {
-                case '1' -> {
-                    bitArray.set(bitIndex, true); // 仅当字符是 '1' 时设置为 true
-                    bitIndex++;
-                }
-                case '0' -> {
-                    bitArray.set(bitIndex, false);
-                    bitIndex++;
-                } // 仅当字符是 '1' 时设置为 true
-                default -> {
-                    // 其他字符（分隔符）直接跳过        
-                }
+            // 其他字符（分隔符）直接跳过        
+            if (c == '1') {
+                bitArray.append(true); // 仅当字符是 '1' 时设置为 true
+            } else if (c == '0') {
+                bitArray.append(false); // 仅当字符是 '1' 时设置为 true
             }
         }
     }
 
-    @Override
-    public void set(int index, boolean value) {
-        ensureCapacity(index);// 确保容量
-        updateLength(index);// 更新长度
+    private void set0(int index, boolean value) {
         int byteIndex = byteIndex(index);
         int bitIndex = bitIndex(index);
         if (value) {
@@ -91,16 +80,47 @@ public class BitArray implements IBitArray {
         }
     }
 
-    @Override
-    public boolean get(int index) {
+    private boolean get0(int index) {
         int byteIndex = byteIndex(index);
         int bitIndex = bitIndex(index);
         return (data[byteIndex] & BIT_MASKS[bitIndex]) != 0;
     }
 
     @Override
+    public void set(int index, boolean value) {
+        if (index < 0 || index >= length) {
+            throw new IndexOutOfBoundsException("索引 " + index + " 超出范围，长度为 " + length);
+        }
+        set0(index, value);
+    }
+
+    @Override
+    public boolean get(int index) {
+        if (index < 0 || index >= length) {
+            throw new IndexOutOfBoundsException("索引 " + index + " 超出范围，长度为 " + length);
+        }
+        return get0(index);
+    }
+
+    @Override
     public int length() {
         return length;
+    }
+
+    @Override
+    public void append(boolean value) {
+        ensureCapacity(length);// 确保容量
+        set0(length, value);
+        length = length + 1;// 更新长度
+    }
+
+    @Override
+    public void append(IBitArray other) {
+        if (other instanceof BitArray p) {
+            appendFast(p);
+        } else {
+            IBitArray.super.append(other);
+        }
     }
 
     @Override
@@ -115,18 +135,9 @@ public class BitArray implements IBitArray {
     public String toBinaryString() {
         var sb = new StringBuilder(length);
         for (int i = 0; i < length; i = i + 1) {
-            sb.append(get(i) ? '1' : '0');
+            sb.append(get0(i) ? '1' : '0');
         }
         return sb.toString();
-    }
-
-    @Override
-    public void append(IBitArray array) {
-        if (array instanceof BitArray p) {
-            appendFast(p);
-        } else {
-            IBitArray.super.append(array);
-        }
     }
 
     private void appendFast(BitArray p) {
@@ -167,12 +178,6 @@ public class BitArray implements IBitArray {
             int newByteSize = Math.max((index + 8) >> 3, data.length + (data.length >> 1));// 1.5倍 扩容
             data = Arrays.copyOf(data, newByteSize);
             capacity = newByteSize << 3;
-        }
-    }
-
-    private void updateLength(int index) {
-        if (index >= length) {
-            length = index + 1;
         }
     }
 
