@@ -29,7 +29,12 @@ public interface IBitArray extends Iterable<Boolean> {
     boolean get(int index) throws IndexOutOfBoundsException;
 
     /**
-     * 长度
+     * 设置长度
+     */
+    void length(int length);
+
+    /**
+     * 获取长度
      *
      * @return 长度
      */

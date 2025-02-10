@@ -69,6 +69,12 @@ public class BitArray implements IBitArray {
     }
 
     @Override
+    public void length(int length) {
+        ensureCapacity(length);
+        this.length = length;
+    }
+
+    @Override
     public int length() {
         return length;
     }
