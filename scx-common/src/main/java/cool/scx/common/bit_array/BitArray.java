@@ -12,48 +12,35 @@ import static cool.scx.common.bit_array.BitArrayHelper.*;
  */
 public class BitArray implements IBitArray {
 
-    private byte[] data; // 用字节数组存储位
+    private byte[] bytes; // 用字节数组存储位
     private int length; // 当前的位数组长度（实际的位数）
 
     public BitArray() {
-        this(new byte[0], 0);
+        this.bytes = new byte[0];
+        this.length = 0;
     }
 
     public BitArray(int length) {
-        this(new byte[byteLength(length)], length);
+        this.bytes = new byte[byteLength(length)];
+        this.length = length;
     }
 
-    public BitArray(byte[] data) {
-        this(data, byteCapacity(data));// data.length * 8
+    public BitArray(byte[] bytes) {
+        this.bytes = bytes;
+        this.length = byteCapacity(this.bytes);
     }
 
-    public BitArray(byte[] data, int length) {
-        if (length > byteCapacity(data)) {
+    public BitArray(byte[] bytes, int length) {
+        if (length > byteCapacity(bytes)) {
             throw new IllegalArgumentException("length 不应该大于总容量 capacity");
         }
-        this.data = data;
+        this.bytes = bytes;
         this.length = length;
     }
 
     public BitArray(String binaryString) {
         this();
         setByBinaryString(this, binaryString);
-    }
-
-    private void set0(int index, boolean value) {
-        int byteIndex = byteIndex(index);
-        int bitIndex = bitIndex(index);
-        if (value) {
-            data[byteIndex] |= BIT_MASKS[bitIndex];
-        } else {
-            data[byteIndex] &= (byte) ~BIT_MASKS[bitIndex];
-        }
-    }
-
-    private boolean get0(int index) {
-        int byteIndex = byteIndex(index);
-        int bitIndex = bitIndex(index);
-        return (data[byteIndex] & BIT_MASKS[bitIndex]) != 0;
     }
 
     @Override
@@ -91,10 +78,8 @@ public class BitArray implements IBitArray {
 
     @Override
     public byte[] toBytes() {
-        // 计算实际需要的字节数
-        int actualByteLength = byteLength(length); // 向上取整
-        // 创建一个新数组，仅复制有效数据部分
-        return Arrays.copyOf(data, actualByteLength);
+        int actualByteLength = byteLength(length);// 计算实际需要的字节数
+        return Arrays.copyOf(bytes, actualByteLength);
     }
 
     @Override
@@ -104,6 +89,35 @@ public class BitArray implements IBitArray {
             sb.append(get0(i) ? '1' : '0');
         }
         return sb.toString();
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= length) {
+            throw new IndexOutOfBoundsException("索引 " + index + " 超出范围，长度为 " + length);
+        }
+    }
+
+    private void set0(int index, boolean value) {
+        int byteIndex = byteIndex(index);
+        int bitIndex = bitIndex(index);
+        if (value) {
+            bytes[byteIndex] |= BIT_MASKS[bitIndex];
+        } else {
+            bytes[byteIndex] &= (byte) ~BIT_MASKS[bitIndex];
+        }
+    }
+
+    private boolean get0(int index) {
+        int byteIndex = byteIndex(index);
+        int bitIndex = bitIndex(index);
+        return (bytes[byteIndex] & BIT_MASKS[bitIndex]) != 0;
+    }
+
+    private void ensureCapacity(int index) {
+        if (index >= byteCapacity(bytes)) {
+            var newByteSize = Math.max(byteLength(index + 1), bytes.length << 1);// 所需最小字节数 或 2倍扩容
+            bytes = Arrays.copyOf(bytes, newByteSize);
+        }
     }
 
     private void appendFast(BitArray p) {
@@ -116,20 +130,20 @@ public class BitArray implements IBitArray {
         if (bitOffset == 0) {
             // 情况 1：字节对齐，直接复制字节数据
             int pByteLength = byteLength(p.length);
-            System.arraycopy(p.data, 0, this.data, byteOffset, pByteLength);
+            System.arraycopy(p.bytes, 0, this.bytes, byteOffset, pByteLength);
         } else {
             // 情况 2：未字节对齐，需要处理跨字节拼接
             int remainingBits = 8 - bitOffset;
             int pByteLength = byteLength(p.length);
 
             for (int i = 0; i < pByteLength; i++) {
-                int bUnsigned = p.data[i] & 0xFF; // 将 byte 转换为无符号 int
+                int bUnsigned = p.bytes[i] & 0xFF; // 将 byte 转换为无符号 int
 
                 // 将 b 的高位部分拼接到当前字节的空位
-                this.data[byteOffset] |= (byte) (bUnsigned >>> bitOffset);
+                this.bytes[byteOffset] |= (byte) (bUnsigned >>> bitOffset);
 
                 // 将 b 的低位部分拼接到下一个字节
-                this.data[byteOffset + 1] |= (byte) ((bUnsigned << remainingBits) & 0xFF);
+                this.bytes[byteOffset + 1] |= (byte) ((bUnsigned << remainingBits) & 0xFF);
 
                 byteOffset++;
             }
@@ -137,21 +151,6 @@ public class BitArray implements IBitArray {
 
         // 更新长度
         this.length = newLength;
-    }
-
-    private void ensureCapacity(int index) {
-        if (index >= byteCapacity(data)) {
-            var newByteSize = Math.max(byteLength(index + 1), data.length << 1);  // 所需的最小字节数 和 2倍 扩容 最大值
-            var newData = new byte[newByteSize];
-            System.arraycopy(data, 0, newData, 0, data.length);
-            data = newData;
-        }
-    }
-
-    private void checkIndex(int index) {
-        if (index < 0 || index >= length) {
-            throw new IndexOutOfBoundsException("索引 " + index + " 超出范围，长度为 " + length);
-        }
     }
 
 }
