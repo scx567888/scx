@@ -28,12 +28,11 @@ public class BitArrayHelper {
         // 遍历字符串
         for (var c : binaryString.toCharArray()) {
             // 其他字符（分隔符）直接跳过        
-            if (c == '1') {
-                bitArray.append(true); // 仅当字符是 '1' 时设置为 true
-            } else if (c == '0') {
-                bitArray.append(false); // 仅当字符是 '1' 时设置为 true
+            switch (c) {
+                case '1' -> bitArray.append(true); // 仅当字符是 '1' 时设置为 true
+                case '0' -> bitArray.append(false); // 仅当字符是 '1' 时设置为 true
             }
         }
     }
-    
+
 }
