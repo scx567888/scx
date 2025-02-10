@@ -18,7 +18,7 @@ public class BitArrayView implements IBitArray {
         // 初始化 startIndices 并计算总长度
         this.startIndices = new int[bitArrays.length];
         int length = 0;
-        for (int i = 0; i < bitArrays.length; i++) {
+        for (int i = 0; i < bitArrays.length; i = i + 1) {
             startIndices[i] = length;
             length += bitArrays[i].length(); // 直接访问 BitArray 的 length 字段
         }

@@ -120,9 +120,10 @@ public class BitArray implements IBitArray {
 
     @Override
     public void append(IBitArray other) {
-        _ensureCapacity(this.length + other.length());
-        for (var b : other) {
-            this._append0(b);
+        int otherLength = other.length();
+        _ensureCapacity(this.length + otherLength);
+        for (int i = 0; i < otherLength; i = i + 1) {
+            _append0(other.get(i));
         }
     }
 
