@@ -1,7 +1,6 @@
 package cool.scx.common.bit_array;
 
 import java.util.Arrays;
-import java.util.Iterator;
 
 import static cool.scx.common.bit_array.BitArrayHelper.*;
 
@@ -165,11 +164,6 @@ public class BitArray implements IBitArray {
             var newByteSize = Math.max(byteLength(index + 1), bytes.length << 1);// 所需最小字节数 或 2倍扩容
             bytes = Arrays.copyOf(bytes, newByteSize);
         }
-    }
-
-    @Override
-    public Iterator<Boolean> iterator() {
-        return null;
     }
 
 }

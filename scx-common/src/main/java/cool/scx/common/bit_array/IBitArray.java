@@ -1,5 +1,7 @@
 package cool.scx.common.bit_array;
 
+import java.util.Iterator;
+
 /**
  * BitArray 可以理解为一个 boolean[] (bit 数组) 但是兼具了一些动态长度的功能
  *
@@ -27,5 +29,10 @@ public interface IBitArray extends Iterable<Boolean> {
     void append(boolean value);
 
     void append(IBitArray other);
+
+    @Override
+    default Iterator<Boolean> iterator() {
+        return new BitArrayIterator(this);
+    }
 
 }
