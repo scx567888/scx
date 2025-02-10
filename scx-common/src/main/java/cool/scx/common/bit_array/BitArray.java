@@ -2,6 +2,8 @@ package cool.scx.common.bit_array;
 
 import java.util.Arrays;
 
+import static cool.scx.common.bit_array.BitArrayHelper.*;
+
 /**
  * 基于 byte 数组的实现 优点是相比较 {@link java.util.BitSet} 在数组方面会快一点
  *
@@ -10,14 +12,7 @@ import java.util.Arrays;
  */
 public class BitArray implements IBitArray {
 
-    // 掩码静态查找表
-    public static final byte[] BIT_MASKS = {
-            (byte) 0x80, (byte) 0x40, (byte) 0x20, (byte) 0x10,
-            (byte) 0x08, (byte) 0x04, (byte) 0x02, (byte) 0x01
-    };
-
     private byte[] data; // 用字节数组存储位
-    private int capacity; // 当前容量（以位为单位）
     private int length; // 当前的位数组长度（实际的位数）
 
     public BitArray() {
@@ -29,45 +24,20 @@ public class BitArray implements IBitArray {
     }
 
     public BitArray(byte[] data) {
-        this(data, data.length << 3);// data.length * 8
+        this(data, byteCapacity(data));// data.length * 8
     }
 
     public BitArray(byte[] data, int length) {
-        this.data = data;
-        this.capacity = data.length << 3; // data.length * 8
-        if (length > this.capacity) {
-            throw new IllegalArgumentException("length 不应该大于容量 capacity");
+        if (length > byteCapacity(data)) {
+            throw new IllegalArgumentException("length 不应该大于总容量 capacity");
         }
+        this.data = data;
         this.length = length;
     }
 
     public BitArray(String binaryString) {
         this();
         setByBinaryString(this, binaryString);
-    }
-
-    public static int byteIndex(int index) {
-        return index >> 3;
-    }
-
-    public static int bitIndex(int index) {
-        return index & 7;
-    }
-
-    public static int byteLength(int bitLength) {
-        return (bitLength + 7) >> 3; // 向上取整，计算最小字节数
-    }
-
-    public static void setByBinaryString(BitArray bitArray, String binaryString) {
-        // 遍历字符串
-        for (var c : binaryString.toCharArray()) {
-            // 其他字符（分隔符）直接跳过        
-            if (c == '1') {
-                bitArray.append(true); // 仅当字符是 '1' 时设置为 true
-            } else if (c == '0') {
-                bitArray.append(false); // 仅当字符是 '1' 时设置为 true
-            }
-        }
     }
 
     private void set0(int index, boolean value) {
@@ -170,10 +140,11 @@ public class BitArray implements IBitArray {
     }
 
     private void ensureCapacity(int index) {
-        if (index >= capacity) {
-            int newByteSize = Math.max((index + 8) >> 3, data.length + (data.length >> 1));// 1.5倍 扩容
-            data = Arrays.copyOf(data, newByteSize);
-            capacity = newByteSize << 3;
+        if (index >= byteCapacity(data)) {
+            var newByteSize = Math.max(byteLength(index + 1), data.length << 1);  // 所需的最小字节数 和 2倍 扩容 最大值
+            var newData = new byte[newByteSize];
+            System.arraycopy(data, 0, newData, 0, data.length);
+            data = newData;
         }
     }
 
