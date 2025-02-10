@@ -43,6 +43,19 @@ public class BitArray implements IBitArray {
         setByBinaryString(this, binaryString);
     }
 
+    public BitArray(BitArray old) {
+        this.bytes = Arrays.copyOf(old.bytes, old.bytes.length);
+        this.length = old.length;
+    }
+
+    public BitArray(BitArray old, int length) {
+        if (length > byteCapacity(old.bytes)) {
+            throw new IllegalArgumentException("length 不应该大于总容量 capacity");
+        }
+        this.bytes = Arrays.copyOf(old.bytes, byteLength(length));
+        this.length = length;
+    }
+
     @Override
     public void set(int index, boolean value) {
         checkIndex(index);
