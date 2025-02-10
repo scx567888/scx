@@ -3,7 +3,7 @@ package cool.scx.common.bit_array;
 import java.util.Iterator;
 
 /**
- * BitArray 基本上等同于 {@link java.util.BitSet}
+ * BitArray 可以理解为一个 boolean[] (bit 数组)
  *
  * @author scx567888
  * @version 0.0.1
@@ -11,27 +11,47 @@ import java.util.Iterator;
 public interface IBitArray extends Iterable<Boolean> {
 
     /**
-     * 设置某一个位
+     * 设置某一个位 (等同于数组的 xxx[index] = value , 不会自动扩容)
      *
      * @param index 索引
      * @param value bit
+     * @throws IndexOutOfBoundsException 索引越界异常
      */
-    void set(int index, boolean value);
+    void set(int index, boolean value) throws IndexOutOfBoundsException;
 
     /**
-     * 获取某一个位
+     * 获取某一个位 (等同于数组的 value = xxx[index] , 不会自动扩容)
      *
      * @param index 索引
      * @return bit
+     * @throws IndexOutOfBoundsException 索引越界异常
      */
-    boolean get(int index);
+    boolean get(int index) throws IndexOutOfBoundsException;
 
     /**
      * 长度
      *
-     * @return l
+     * @return 长度
      */
     int length();
+
+    /**
+     * 追加单个 bit (会自动扩容)
+     *
+     * @param value v
+     */
+    void append(boolean value);
+
+    /**
+     * 追加另一个 bitArray (会自动扩容)
+     *
+     * @param other bitArray
+     */
+    default void append(IBitArray other) {
+        for (var b : other) {
+            append(b);
+        }
+    }
 
     /**
      * 转换为字节 (注意因为字节无法完全表示 BitArray 在序列化时请结合 length 使用)
@@ -46,27 +66,6 @@ public interface IBitArray extends Iterable<Boolean> {
      * @return s
      */
     String toBinaryString();
-
-    /**
-     * 追加
-     *
-     * @param array a
-     */
-    default void append(IBitArray array) {
-        var nowLength = this.length();
-        for (int i = 0; i < array.length(); i++) {
-            set(nowLength + i, array.get(i));
-        }
-    }
-
-    /**
-     * 追加单个 bit
-     *
-     * @param value v
-     */
-    default void append(boolean value) {
-        set(this.length(), value);
-    }
 
     @Override
     default Iterator<Boolean> iterator() {
