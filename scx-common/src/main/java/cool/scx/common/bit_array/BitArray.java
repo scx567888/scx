@@ -99,7 +99,7 @@ public class BitArray implements IBitArray {
 
     @Override
     public byte[] toBytes() {
-        int actualByteLength = byteLength(length);// 计算实际需要的最小字节数
+        int actualByteLength = byteLength(length);// 这里我们返回最小可容纳的字节数量
         return Arrays.copyOf(bytes, actualByteLength);
     }
 
@@ -114,13 +114,13 @@ public class BitArray implements IBitArray {
 
     @Override
     public void append(boolean value) {
-        _ensureCapacity(length);// 确保容量
+        _ensureCapacity(length);
         _append0(value);
     }
 
     @Override
     public void append(IBitArray other) {
-        _ensureCapacity(this.length + other.length()); // 确保容量足够
+        _ensureCapacity(this.length + other.length());
         for (var b : other) {
             this._append0(b);
         }
@@ -138,6 +138,7 @@ public class BitArray implements IBitArray {
         }
     }
 
+    //无检查 set
     private void _set0(int index, boolean value) {
         int byteIndex = byteIndex(index);
         int bitIndex = bitIndex(index);
@@ -148,20 +149,23 @@ public class BitArray implements IBitArray {
         }
     }
 
+    //无检查 get
     private boolean _get0(int index) {
         int byteIndex = byteIndex(index);
         int bitIndex = bitIndex(index);
         return (bytes[byteIndex] & BIT_MASKS[bitIndex]) != 0;
     }
 
+    //无检查 append
     private void _append0(boolean value) {
         _set0(length, value);
-        length = length + 1;// 更新长度
+        length = length + 1;
     }
 
+    //确保容量足够容纳索引所指的大小 , 扩容策略为 (所需最小字节数 或 当前的2倍)
     private void _ensureCapacity(int index) {
         if (index >= byteCapacity(bytes)) {
-            var newByteSize = Math.max(byteLength(index + 1), bytes.length << 1);// 所需最小字节数 或 2倍扩容
+            var newByteSize = Math.max(byteLength(index + 1), bytes.length << 1);
             bytes = Arrays.copyOf(bytes, newByteSize);
         }
     }
