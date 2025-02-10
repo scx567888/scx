@@ -18,8 +18,6 @@ public interface IBitArray extends Iterable<Boolean> {
 
     void length(int length);
 
-    void length(int length, boolean fillValue);
-
     int length();
 
     byte[] toBytes();
