@@ -67,17 +67,17 @@ public class RoutingContext {
         Throwable e = new NotFoundException();
 
         while (iter.hasNext()) {
-            var routeState = iter.next();
+            var route = iter.next();
 
             //匹配类型
-            var typeMatcherResult = routeState.typeMatcher().matches(request);
+            var typeMatcherResult = route.typeMatcher().matches(request);
 
             if (!typeMatcherResult) {
                 continue;
             }
 
             //匹配路径
-            var pathMatchResult = routeState.pathMatcher().matches(request.path());
+            var pathMatchResult = route.pathMatcher().matches(request.path());
 
             this.nowPathParams = pathMatchResult.pathParams();
 
@@ -87,7 +87,7 @@ public class RoutingContext {
             }
 
             //匹配方法
-            var methodMatchResult = routeState.methodMatcher().matches(request.method());
+            var methodMatchResult = route.methodMatcher().matches(request.method());
 
             //匹配方法失败
             if (!methodMatchResult) {
@@ -95,7 +95,7 @@ public class RoutingContext {
                 continue;
             }
 
-            routeState.handler().accept(this);
+            route.handler().accept(this);
 
             return;
 
