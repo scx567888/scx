@@ -3,15 +3,8 @@ package cool.scx.http.routing;
 import cool.scx.http.Parameters;
 import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.ScxHttpServerResponse;
-import cool.scx.http.exception.MethodNotAllowedException;
-import cool.scx.http.exception.NotFoundException;
-import cool.scx.http.exception.ScxHttpException;
 
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-
-import static cool.scx.http.HttpStatusCode.INTERNAL_SERVER_ERROR;
 
 /**
  * RoutingContext
@@ -19,104 +12,36 @@ import static cool.scx.http.HttpStatusCode.INTERNAL_SERVER_ERROR;
  * @author scx567888
  * @version 0.0.1
  */
-public class RoutingContext {
+@SuppressWarnings("unchecked")
+public interface RoutingContext {
 
-    private final RouterImpl router;
-    private final ScxHttpServerRequest request;
-    private final Iterator<Route> iter;
-    private final Map<String, Object> contentParams;
-    private Parameters<String, String> nowPathParams;
+    <T extends ScxHttpServerRequest> T request();
 
-    RoutingContext(RouterImpl router, ScxHttpServerRequest request) {
-        this.router = router;
-        this.request = request;
-        this.iter = router.routes.iterator();
-        this.contentParams = new HashMap<>();
-    }
+    <T extends ScxHttpServerResponse> T response();
 
-    @SuppressWarnings("unchecked")
-    public <T extends ScxHttpServerRequest> T request() {
-        return (T) request;
-    }
+    void next();
 
-    @SuppressWarnings("unchecked")
-    public <T extends ScxHttpServerResponse> T response() {
-        return (T) request.response();
-    }
+    Parameters<String, String> pathParams();
 
-    public final void next() {
-        try {
-            tryNext();
-        } catch (Throwable e) {
-            //如果有自定义的处理器则使用
-            if (router.errorHandler != null) {
-                router.errorHandler.accept(e, this);
-            } else {
-                if (e instanceof ScxHttpException httpException) {
-                    var code = httpException.statusCode();
-                    response().status(code).send(code.toString());
-                } else {
-                    response().status(INTERNAL_SERVER_ERROR).send("Internal Server Error");
-                }
-            }
-        }
-    }
+    <T> Map<String, T> data();
 
-    void tryNext() throws Throwable {
+    //************* 以下为 data 辅助方法 *************
 
-        Throwable e = new NotFoundException();
-
-        while (iter.hasNext()) {
-            var routeState = iter.next();
-
-            //匹配类型
-            var typeMatcherResult = routeState.typeMatcher().matches(request);
-
-            if (!typeMatcherResult) {
-                continue;
-            }
-
-            //匹配路径
-            var pathMatchResult = routeState.pathMatcher().matches(request.path());
-
-            this.nowPathParams = pathMatchResult.pathParams();
-
-            //匹配不到就下一次
-            if (!pathMatchResult.accepted()) {
-                continue;
-            }
-
-            //匹配方法
-            var methodMatchResult = routeState.methodMatcher().matches(request.method());
-
-            //匹配方法失败
-            if (!methodMatchResult) {
-                e = new MethodNotAllowedException();
-                continue;
-            }
-
-            routeState.handler().accept(this);
-
-            return;
-
-        }
-
-        throw e;
-
-    }
-
-    public Parameters<String, String> pathParams() {
-        return this.nowPathParams;
-    }
-
-    @SuppressWarnings("unchecked")
-    public <T> T get(String name) {
-        return (T) contentParams.get(name);
-    }
-
-    public RoutingContext put(String name, Object value) {
-        contentParams.put(name, value);
+    default RoutingContext put(String key, Object obj) {
+        data().put(key, obj);
         return this;
+    }
+
+    default <T> T get(String key) {
+        return (T) data().get(key);
+    }
+
+    default <T> T getOrDefault(String key, T defaultValue) {
+        return (T) data().getOrDefault(key, defaultValue);
+    }
+
+    default <T> T remove(String key) {
+        return (T) data().remove(key);
     }
 
 }
