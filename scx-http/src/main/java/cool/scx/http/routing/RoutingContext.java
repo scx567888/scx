@@ -3,15 +3,6 @@ package cool.scx.http.routing;
 import cool.scx.http.Parameters;
 import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.ScxHttpServerResponse;
-import cool.scx.http.exception.MethodNotAllowedException;
-import cool.scx.http.exception.NotFoundException;
-import cool.scx.http.exception.ScxHttpException;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
-import static cool.scx.http.HttpStatusCode.INTERNAL_SERVER_ERROR;
 
 /**
  * RoutingContext
@@ -31,6 +22,6 @@ public interface RoutingContext {
 
     <T> T get(String name);
 
-    RoutingContext set(String name, Object value);
+    RoutingContext put(String name, Object value);
 
 }
