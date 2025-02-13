@@ -242,7 +242,7 @@
         <!-- *********************** 以下为依赖包版本 *********************** -->
         <helidon.version>4.1.6</helidon.version>
         <jackson.version>2.18.2</jackson.version>
-        <spring-framework.version>6.2.2</spring-framework.version>
+        <spring-framework.version>6.2.3</spring-framework.version>
         <hikaricp.version>6.2.1</hikaricp.version>
         <freemarker.version>2.3.34</freemarker.version>
         <thumbnailator.version>0.4.20</thumbnailator.version>
