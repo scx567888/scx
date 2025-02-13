@@ -25,14 +25,14 @@ public class RoutingContextImpl implements RoutingContext {
     private final RouterImpl router;
     private final ScxHttpServerRequest request;
     private final Iterator<Route> iter;
-    private final Map<String, Object> contentParams;
+    private final Map<String, Object> data;
     private Parameters<String, String> nowPathParams;
 
     RoutingContextImpl(RouterImpl router, ScxHttpServerRequest request) {
         this.router = router;
         this.request = request;
         this.iter = router.routes.iterator();
-        this.contentParams = new HashMap<>();
+        this.data = new HashMap<>();
     }
 
     @Override
@@ -70,14 +70,8 @@ public class RoutingContextImpl implements RoutingContext {
     }
 
     @Override
-    public <T> T get(String name) {
-        return (T) contentParams.get(name);
-    }
-
-    @Override
-    public RoutingContext put(String name, Object value) {
-        contentParams.put(name, value);
-        return this;
+    public <T> Map<String, T> data() {
+        return (Map<String, T>) data;
     }
 
     //真正进行路由匹配的方法
