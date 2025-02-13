@@ -48,7 +48,7 @@ public class RouterImpl implements Router {
 
     @Override
     public void accept(ScxHttpServerRequest scxHttpRequest) {
-        new RoutingContext(this, scxHttpRequest).next();
+        new RoutingContextImpl(this, scxHttpRequest).next();
     }
 
     @Override
