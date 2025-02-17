@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
  * @author scx567888
  * @version 0.0.1
  */
-class TLSHelper {
+public class TLSHelper {
 
     public static final Pattern PEM_PATTERN = Pattern.compile("-----BEGIN (.+?)-----([\\s\\S]+?)-----END \\1-----");
 
@@ -38,11 +38,26 @@ class TLSHelper {
         }
     }
 
-    public static KeyStore createKeyStore(PrivateKey privateKey, X509Certificate certificate, String password) {
+    /**
+     * 创建 KetStore
+     *
+     * @param certificate 公钥证书
+     * @param privateKey  私钥证书 (可为空)
+     * @param password    密码 (当私钥为空时可为空)
+     * @return KetStore
+     */
+    public static KeyStore createKeyStore(X509Certificate certificate, PrivateKey privateKey, String password) {
         try {
             var keyStore = KeyStore.getInstance("PKCS12");
             keyStore.load(null, null); // 初始化空的 KeyStore
-            keyStore.setKeyEntry("default", privateKey, password.toCharArray(), new Certificate[]{certificate});
+            //私钥证书是可选的
+            if (privateKey != null) {
+                // 存储私钥和证书（用于服务器端或需要客户端身份验证的情况）
+                keyStore.setKeyEntry("default", privateKey, password.toCharArray(), new Certificate[]{certificate});
+            } else {
+                // 仅存储证书（用于客户端信任库）
+                keyStore.setCertificateEntry("default", certificate);
+            }
             return keyStore;
         } catch (Exception e) {
             throw new IllegalArgumentException("failed to create keystore ", e);
@@ -130,10 +145,18 @@ class TLSHelper {
         return createSSLContext(KeyManagerFactory, trustManagerFactory);
     }
 
+    /**
+     * 根据 pem 格式证书 创建 SSLContext
+     *
+     * @param certPemPath 公钥证书
+     * @param keyPemPath  私钥证书 (可选的 可穿 null)
+     * @return SSLContext
+     */
     public static SSLContext createSSLContextFromPem(Path certPemPath, Path keyPemPath) {
         try {
             var certPemContent = Files.readString(certPemPath);
-            var keyPemContent = Files.readString(keyPemPath);
+            //私钥是可选的
+            var keyPemContent = keyPemPath != null ? Files.readString(keyPemPath) : null;
             return createSSLContextFromPem(certPemContent, keyPemContent);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -146,9 +169,10 @@ class TLSHelper {
 
     public static SSLContext createSSLContextFromPem(String certPemContent, String keyPemContent, String keyPassword) {
         var certificate = createCertificateFromPem(certPemContent);
-        var privateKey = createPrivateKeyFromPem(keyPemContent);
+        //私钥是可选的
+        var privateKey = keyPemContent != null ? createPrivateKeyFromPem(keyPemContent) : null;
         // 创建 KeyStore
-        var keyStore = createKeyStore(privateKey, certificate, keyPassword);
+        var keyStore = createKeyStore(certificate, privateKey, keyPassword);
         // 创建 SSLContext
         return createSSLContext(keyStore, keyPassword);
     }
@@ -233,6 +257,8 @@ class TLSHelper {
     }
 
     /**
+     * 存储解析出来的 PEM 文件内容
+     *
      * @param content PEM 中的二进制数据
      * @param marker  PEM 的标记，例如 "CERTIFICATE"
      */
