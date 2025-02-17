@@ -23,6 +23,14 @@ public interface TLS {
         return new TLSImpl(sslContext);
     }
 
+    static TLS ofPem(Path pemPath, Path keyPath) {
+        return new TLSImpl(createSSLContextFromPem(pemPath, keyPath));
+    }
+
+    static TLS ofPem(String pemPath, String keyPath) {
+        return new TLSImpl(createSSLContextFromPem(pemPath, keyPath));
+    }
+
     static TLS ofDefault() {
         return new TLSImpl(createDefaultSSLContext());
     }
