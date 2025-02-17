@@ -27,8 +27,8 @@ public interface TLS {
         return new TLSImpl(createSSLContextFromPem(pemPath, keyPath));
     }
 
-    static TLS ofPem(String pemPath, String keyPath) {
-        return new TLSImpl(createSSLContextFromPem(pemPath, keyPath));
+    static TLS ofPem(String pemContent, String keyContent) {
+        return new TLSImpl(createSSLContextFromPem(pemContent, keyContent));
     }
 
     static TLS ofDefault() {
