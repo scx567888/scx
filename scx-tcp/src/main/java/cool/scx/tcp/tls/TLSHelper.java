@@ -208,14 +208,12 @@ class TLSHelper {
 
     public static byte[] convertPKCS1ToPKCS8(byte[] pkcs1Bytes) {
         // 构造 PKCS#8 私钥的头部信息
-        final byte[] pkcs8Header = new byte[]{
-                0x30, (byte) 0x82, // SEQUENCE 标签和长度占位
+        final byte[] pkcs8Header = new byte[]{0x30, (byte) 0x82, // SEQUENCE 标签和长度占位
                 0x00, 0x00,       // 总长度，占位符
                 0x02, 0x01, 0x00, // Version: INTEGER 0
                 0x30, 0x0d,       // SEQUENCE
                 0x06, 0x09,       // OID: OBJECT IDENTIFIER
-                0x2a, (byte) 0x86, 0x48, (byte) 0x86,
-                (byte) 0xf7, 0x0d, 0x01, 0x01, 0x01, // 1.2.840.113549.1.1.1 (RSA)
+                0x2a, (byte) 0x86, 0x48, (byte) 0x86, (byte) 0xf7, 0x0d, 0x01, 0x01, 0x01, // 1.2.840.113549.1.1.1 (RSA)
                 0x05, 0x00,       // NULL
                 0x04, (byte) 0x82, // OCTET STRING 标签和长度占位
                 0x00, 0x00        // 私钥长度，占位符
