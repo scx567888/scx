@@ -1,6 +1,6 @@
 package cool.scx.ansi;
 
-/// Ansi 8Bit 背景色
+/// ANSI 8Bit 背景色
 ///
 /// @author scx567888
 /// @version 0.0.1

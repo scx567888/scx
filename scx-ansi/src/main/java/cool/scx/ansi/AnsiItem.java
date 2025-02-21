@@ -2,7 +2,7 @@ package cool.scx.ansi;
 
 import static cool.scx.ansi.AnsiStyle.RESET;
 
-/// AnsiItem
+/// ANSI Item
 ///
 /// @author scx567888
 /// @version 0.0.1
@@ -31,7 +31,7 @@ record AnsiItem(Object value, AnsiElement... elements) {
             return;
         }
 
-        //1, 添加 ansi 转义符
+        //1, 添加 ANSI 转义符
         sb.append(ENCODE_START);
         appendAnsiElements(sb);
         sb.append(ENCODE_END);

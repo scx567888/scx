@@ -1,6 +1,6 @@
 package cool.scx.ansi;
 
-/// Ansi 基本样式
+/// ANSI 基本样式
 ///
 /// @author scx567888
 /// @version 0.0.1

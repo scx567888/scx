@@ -8,13 +8,13 @@ import static cool.scx.ffm.platform.win32.Kernel32.KERNEL32;
 import static cool.scx.ffm.platform.win32.WinBase.STD_OUTPUT_HANDLE;
 import static cool.scx.ffm.platform.win32.WinCon.ENABLE_VIRTUAL_TERMINAL_PROCESSING;
 
-/// AnsiHelper
+/// ANSI Helper
 ///
 /// @author scx567888
 /// @version 0.0.1
 class AnsiHelper {
 
-    /// Windows 10 支持 Ansi 但是默认并没有开启, 这个方法用来开启 Windows 10 的 Ansi 支持
+    /// Windows 10 支持 ANSI 但是默认并没有开启, 这个方法用来开启 Windows 10 的 ANSI 支持
     static void enableWindows10AnsiSupport() {
         // 获取 标准输出设备句柄
         var hOut = KERNEL32.GetStdHandle(STD_OUTPUT_HANDLE);
@@ -23,13 +23,13 @@ class AnsiHelper {
         var lpModeMapper = new IntMapper();
         KERNEL32.GetConsoleMode(hOut, lpModeMapper);
 
-        //设置 标准输出设备 支持 Ansi, 这里按位或操作 防止覆盖原有模式
+        //设置 标准输出设备 支持 ANSI, 这里按位或操作 防止覆盖原有模式
         KERNEL32.SetConsoleMode(hOut, lpModeMapper.getValue() | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
     }
 
-    /// 检测是否支持 ansi
+    /// 检测是否支持 ANSI
     ///
-    /// @return ansi
+    /// @return 是否支持
     static boolean checkAnsiSupport() {
         var osInfo = OSHelper.getOSInfo();
 
@@ -43,7 +43,7 @@ class AnsiHelper {
             return false;
         }
 
-        //尝试启用 Windows 10 Ansi 支持
+        //尝试启用 Windows 10 ANSI 支持
         try {
             enableWindows10AnsiSupport();
             return true;

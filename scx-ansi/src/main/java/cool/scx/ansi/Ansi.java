@@ -8,7 +8,7 @@ import static cool.scx.ansi.AnsiColor.*;
 import static cool.scx.ansi.AnsiHelper.checkAnsiSupport;
 import static cool.scx.common.util.ArrayUtils.tryConcat;
 
-/// Ansi 用于在控制台上打印带有颜色和样式的文本
+/// ANSI 用于在控制台上打印带有颜色和样式的文本
 ///
 /// @author scx567888
 /// @version 0.0.1
