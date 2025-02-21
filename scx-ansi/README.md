@@ -1,4 +1,4 @@
-# Scx Ansi 库
+# Scx ANSI 库
 
 该库提供了在控制台上打印带有颜色和样式的文本的功能。它支持基本的 ANSI 颜色、8 位颜色、背景色以及不同的样式，如加粗、斜体、下划线等。该库还自动检测操作系统是否支持 ANSI，并在 Windows 10 系统上启用 ANSI 支持。
 
@@ -100,20 +100,4 @@ Ansi.ansi()
 
 ### Windows 10 ANSI 支持
 
-在 Windows 10 系统上，ANSI 支持默认是禁用的。你可以通过 `AnsiHelper` 类手动启用：
-
-```java
-AnsiHelper.enableWindows10AnsiSupport();
-```
-
-`checkAnsiSupport()` 方法将自动检测是否支持 ANSI。
-
-### AnsiItem 类
-
-`AnsiItem` 是一个数据类，包含了需要显示的文本（`value`）和应用的 ANSI 元素（`elements`）。它会将这些元素转换为 ANSI 转义码，并构建带有样式的字符串。
-
-```java
-AnsiItem item = new AnsiItem("这是一段带样式的文本", AnsiStyle.BOLD, AnsiColor.RED);
-```
-
-`AnsiItem` 会根据启用的 ANSI 样式生成适当的转义码，并在输出时自动应用它们。
+在 Windows 10 系统上，ANSI 支持默认是禁用的。Ansi 会为您自动尝试启用 您无需进行任何操作
