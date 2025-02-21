@@ -1,11 +1,9 @@
 package cool.scx.ansi;
 
-/**
- * Ansi 基本背景色
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// Ansi 基本背景色
+///
+/// @author scx567888
+/// @version 0.0.1
 public enum AnsiBackground implements AnsiElement {
 
     DEFAULT("49"),

@@ -1,11 +1,9 @@
 package cool.scx.ansi;
 
-/**
- * Ansi 8Bit 前景色
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// Ansi 8Bit 前景色
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class Ansi8BitColor implements AnsiElement {
 
     private final int color;
