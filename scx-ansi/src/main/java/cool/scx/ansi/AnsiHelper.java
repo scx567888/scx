@@ -5,6 +5,7 @@ import cool.scx.ffm.type.mapper.IntMapper;
 
 import static cool.scx.common.os.OSType.WINDOWS;
 import static cool.scx.ffm.platform.win32.Kernel32.KERNEL32;
+import static cool.scx.ffm.platform.win32.WinCon.ENABLE_VIRTUAL_TERMINAL_PROCESSING;
 
 /**
  * AnsiHelper
@@ -24,21 +25,15 @@ class AnsiHelper {
      * Reported issue: <a href="https://github.com/PowerShell/PowerShell/issues/11449#issuecomment-569531747">...</a>
      */
     static void enableWindows10AnsiSupport() {
-
-        // See https://learn.microsoft.com/zh-cn/windows/console/getstdhandle
+        // 获取 标准输出设备句柄
         var hOut = KERNEL32.GetStdHandle(-11);
 
-        // See https://learn.microsoft.com/zh-cn/windows/console/getconsolemode
-        var lpModeMemorySegment = new IntMapper(0);
-        KERNEL32.GetConsoleMode(hOut, lpModeMemorySegment);
+        // 获取 当前输出模式
+        var lpModeMapper = new IntMapper();
+        KERNEL32.GetConsoleMode(hOut, lpModeMapper);
 
-        // See https://learn.microsoft.com/zh-cn/windows/console/setconsolemode
-        int ENABLE_VIRTUAL_TERMINAL_PROCESSING = 4;
-
-        long lpMode = lpModeMemorySegment.getValue();
-        long dwMode = lpMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING;
-        KERNEL32.SetConsoleMode(hOut, dwMode);
-
+        //设置 标准输出设备 支持 Ansi, 通过按位或操作 防止覆盖原有模式
+        KERNEL32.SetConsoleMode(hOut, lpModeMapper.getValue() | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
     }
 
     /**
