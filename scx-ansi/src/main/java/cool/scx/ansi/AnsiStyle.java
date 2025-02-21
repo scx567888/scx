@@ -1,11 +1,9 @@
 package cool.scx.ansi;
 
-/**
- * Ansi 基本样式
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ANSI 基本样式
+///
+/// @author scx567888
+/// @version 0.0.1
 public enum AnsiStyle implements AnsiElement {
 
     RESET("0"),

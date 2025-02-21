@@ -2,20 +2,15 @@ package cool.scx.ansi;
 
 import static cool.scx.ansi.AnsiStyle.RESET;
 
-/**
- * AnsiItem
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ANSI Item
+///
+/// @author scx567888
+/// @version 0.0.1
 record AnsiItem(Object value, AnsiElement... elements) {
 
-    //起始字符
-    private static final String ENCODE_START = "\033[";
-    //合并字符
-    private static final String ENCODE_JOIN = ";";
-    //结束字符
-    private static final String ENCODE_END = "m";
+    private static final String ENCODE_START = "\033["; //起始字符
+    private static final char ENCODE_JOIN = ';'; //合并字符
+    private static final char ENCODE_END = 'm'; //结束字符
 
     private void appendAnsiElements(StringBuilder sb) {
         var isFirst = true;
@@ -36,7 +31,7 @@ record AnsiItem(Object value, AnsiElement... elements) {
             return;
         }
 
-        //1, 添加 ansi 转义符
+        //1, 添加 ANSI 转义符
         sb.append(ENCODE_START);
         appendAnsiElements(sb);
         sb.append(ENCODE_END);

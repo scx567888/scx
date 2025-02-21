@@ -5,18 +5,17 @@ import java.util.EnumSet;
 import java.util.List;
 
 import static cool.scx.ansi.AnsiColor.*;
+import static cool.scx.ansi.AnsiHelper.checkAnsiSupport;
 import static cool.scx.common.util.ArrayUtils.tryConcat;
 
-/**
- * Ansi 用于在控制台上打印带有颜色和样式的文本
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ANSI 用于在控制台上打印带有颜色和样式的文本
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class Ansi {
 
     // 是否启用 ANSI 支持
-    private static final boolean ENABLED = AnsiHelper.detectIfAnsiCapable();
+    private static final boolean SUPPORTED = checkAnsiSupport();
 
     private final List<AnsiItem> items;
 
@@ -163,7 +162,7 @@ public final class Ansi {
     public String toString(boolean useAnsi) {
         var sb = new StringBuilder();
         //系统支持 && 用户启用
-        if (ENABLED && useAnsi) {
+        if (SUPPORTED && useAnsi) {
             for (var i : items) {
                 i.buildEnabled(sb);
             }

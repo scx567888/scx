@@ -1,25 +1,23 @@
 package cool.scx.ansi;
 
-/**
- * Ansi 8Bit 背景色
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ANSI 8Bit 背景色
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class Ansi8BitBackground implements AnsiElement {
 
-    private final int code;
+    private final int color;
 
-    public Ansi8BitBackground(int code) {
-        if (code < 0 || code > 255) {
-            throw new IllegalArgumentException("Code must be between 0 and 255");
+    public Ansi8BitBackground(int color) {
+        if (color < 0 || color > 255) {
+            throw new IllegalArgumentException("color 必须介于 0 到 255 之间 !!! color : " + color);
         }
-        this.code = code;
+        this.color = color;
     }
 
     @Override
     public String code() {
-        return "48;5;" + this.code;
+        return "48;5;" + this.color;
     }
 
 }

@@ -1,11 +1,9 @@
 package cool.scx.ansi;
 
-/**
- * Ansi 基本前景色
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ANSI 基本前景色
+///
+/// @author scx567888
+/// @version 0.0.1
 public enum AnsiColor implements AnsiElement {
 
     DEFAULT("39"),

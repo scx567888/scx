@@ -5,64 +5,53 @@ import cool.scx.ffm.type.mapper.IntMapper;
 
 import static cool.scx.common.os.OSType.WINDOWS;
 import static cool.scx.ffm.platform.win32.Kernel32.KERNEL32;
+import static cool.scx.ffm.platform.win32.WinBase.STD_OUTPUT_HANDLE;
+import static cool.scx.ffm.platform.win32.WinCon.ENABLE_VIRTUAL_TERMINAL_PROCESSING;
 
-/**
- * AnsiHelper
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ANSI Helper
+///
+/// @author scx567888
+/// @version 0.0.1
 class AnsiHelper {
 
-    /**
-     * Windows 10 supports Ansi codes. However, it's still experimental and not enabled by default.
-     * <br>
-     * This method enables the necessary Windows 10 feature.
-     * <br>
-     * More info: <a href="https://stackoverflow.com/a/51681675/675577">...</a>
-     * Code source: <a href="https://stackoverflow.com/a/52767586/675577">...</a>
-     * Reported issue: <a href="https://github.com/PowerShell/PowerShell/issues/11449#issuecomment-569531747">...</a>
-     */
+    /// Windows 10 支持 ANSI 但是默认并没有开启, 这个方法用来开启 Windows 10 的 ANSI 支持
     static void enableWindows10AnsiSupport() {
+        // 获取 标准输出设备句柄
+        var hOut = KERNEL32.GetStdHandle(STD_OUTPUT_HANDLE);
 
-        // See https://learn.microsoft.com/zh-cn/windows/console/getstdhandle
-        var hOut = KERNEL32.GetStdHandle(-11);
+        // 获取 当前输出模式
+        var lpModeMapper = new IntMapper();
+        KERNEL32.GetConsoleMode(hOut, lpModeMapper);
 
-        // See https://learn.microsoft.com/zh-cn/windows/console/getconsolemode
-        var lpModeMemorySegment = new IntMapper(0);
-        KERNEL32.GetConsoleMode(hOut, lpModeMemorySegment);
-
-        // See https://learn.microsoft.com/zh-cn/windows/console/setconsolemode
-        int ENABLE_VIRTUAL_TERMINAL_PROCESSING = 4;
-
-        long lpMode = lpModeMemorySegment.getValue();
-        long dwMode = lpMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING;
-        KERNEL32.SetConsoleMode(hOut, dwMode);
-
+        //设置 标准输出设备 支持 ANSI, 这里按位或操作 防止覆盖原有模式
+        KERNEL32.SetConsoleMode(hOut, lpModeMapper.getValue() | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
     }
 
-    /**
-     * 检测是否支持 ansi
-     *
-     * @return ansi
-     */
-    static boolean detectIfAnsiCapable() {
+    /// 检测是否支持 ANSI
+    ///
+    /// @return 是否支持
+    static boolean checkAnsiSupport() {
         var osInfo = OSHelper.getOSInfo();
-        if (osInfo.type() == WINDOWS) {
-            if (osInfo.version().startsWith("10") || osInfo.version().startsWith("11")) {
-                try {
-                    enableWindows10AnsiSupport();
-                    return true;
-                } catch (Exception e) {
-                    // 如果开启失败 则表示不支持
-                    return false;
-                }
-            } else {// 不是 Windows 10 以上则表示不支持
-                return false;
-            }
-        } else {// 不是 Windows 表示支持
+
+        // 不是 Windows 表示支持
+        if (osInfo.type() != WINDOWS) {
             return true;
         }
+
+        // 不是 Windows 10 以上则表示不支持
+        if (!osInfo.version().startsWith("10") && !osInfo.version().startsWith("11")) {
+            return false;
+        }
+
+        //尝试启用 Windows 10 ANSI 支持
+        try {
+            enableWindows10AnsiSupport();
+            return true;
+        } catch (Exception e) {
+            // 如果开启失败 则表示不支持
+            return false;
+        }
+
     }
 
 }
