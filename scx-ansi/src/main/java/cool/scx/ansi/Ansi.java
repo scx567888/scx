@@ -26,9 +26,9 @@ public final class Ansi {
         return new Ansi();
     }
 
-    private static List<AnsiElement> filterAnsiElement(AnsiElement... elements) {
+    private static AnsiElement[] filterAnsiElement(AnsiElement... elements) {
         if (elements.length < 2) {
-            return List.of(elements);
+            return elements;
         }
         //颜色 和 背景色 只留一个, 样式可以存在多个但是需要去重
         AnsiElement ansiColor = null;
@@ -47,18 +47,21 @@ public final class Ansi {
 
         //为了极致的性能优化 直接创建数组而不是 使用 List 
         int size = (ansiColor != null ? 1 : 0) + (ansiBackground != null ? 1 : 0) + ansiStyleSet.size();
-        var result = new ArrayList<AnsiElement>();
+        var result = new AnsiElement[size];
         int index = 0;
 
         if (ansiColor != null) {
-            result.add(ansiColor);
+            result[index] = ansiColor;
+            index = index + 1;
         }
         if (ansiBackground != null) {
-            result.add(ansiBackground);
+            result[index] = ansiBackground;
+            index = index + 1;
         }
-
-        result.addAll(ansiStyleSet);
-
+        for (var element : ansiStyleSet) {
+            result[index] = element;
+            index = index + 1;
+        }
         return result;
     }
 
