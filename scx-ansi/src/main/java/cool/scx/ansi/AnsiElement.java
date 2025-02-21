@@ -11,7 +11,7 @@ public interface AnsiElement {
     /**
      * ANSI 转义码
      *
-     * @return 转移码
+     * @return 转义码
      */
     String code();
 
