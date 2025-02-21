@@ -7,12 +7,10 @@ import java.util.List;
 import static cool.scx.ansi.AnsiColor.*;
 import static cool.scx.common.util.ArrayUtils.tryConcat;
 
-/**
- * Ansi 用于在控制台上打印带有颜色和样式的文本
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// Ansi 用于在控制台上打印带有颜色和样式的文本
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class Ansi {
 
     // 是否启用 ANSI 支持
@@ -28,9 +26,9 @@ public final class Ansi {
         return new Ansi();
     }
 
-    private static AnsiElement[] filterAnsiElement(AnsiElement... elements) {
+    private static List<AnsiElement> filterAnsiElement(AnsiElement... elements) {
         if (elements.length < 2) {
-            return elements;
+            return List.of(elements);
         }
         //颜色 和 背景色 只留一个, 样式可以存在多个但是需要去重
         AnsiElement ansiColor = null;
@@ -49,21 +47,18 @@ public final class Ansi {
 
         //为了极致的性能优化 直接创建数组而不是 使用 List 
         int size = (ansiColor != null ? 1 : 0) + (ansiBackground != null ? 1 : 0) + ansiStyleSet.size();
-        var result = new AnsiElement[size];
+        var result = new ArrayList<AnsiElement>();
         int index = 0;
 
         if (ansiColor != null) {
-            result[index] = ansiColor;
-            index = index + 1;
+            result.add(ansiColor);
         }
         if (ansiBackground != null) {
-            result[index] = ansiBackground;
-            index = index + 1;
+            result.add(ansiBackground);
         }
-        for (var element : ansiStyleSet) {
-            result[index] = element;
-            index = index + 1;
-        }
+
+        result.addAll(ansiStyleSet);
+
         return result;
     }
 
