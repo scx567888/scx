@@ -15,7 +15,7 @@ import static cool.scx.common.util.ArrayUtils.tryConcat;
 public final class Ansi {
 
     // 是否启用 ANSI 支持
-    private static final boolean IS_ANSI_SUPPORTED = checkAnsiSupport();
+    private static final boolean SUPPORTED = checkAnsiSupport();
 
     private final List<AnsiItem> items;
 
@@ -162,7 +162,7 @@ public final class Ansi {
     public String toString(boolean useAnsi) {
         var sb = new StringBuilder();
         //系统支持 && 用户启用
-        if (IS_ANSI_SUPPORTED && useAnsi) {
+        if (SUPPORTED && useAnsi) {
             for (var i : items) {
                 i.buildEnabled(sb);
             }
