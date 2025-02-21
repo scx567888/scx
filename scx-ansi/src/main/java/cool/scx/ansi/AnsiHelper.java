@@ -30,7 +30,7 @@ class AnsiHelper {
     /// 检测是否支持 ansi
     ///
     /// @return ansi
-    static boolean detectIfAnsiCapable() {
+    static boolean checkAnsiSupport() {
         var osInfo = OSHelper.getOSInfo();
 
         // 不是 Windows 表示支持
