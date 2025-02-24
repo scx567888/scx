@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-/// 命名方法转换工具类   
+/// 命名方法转换工具类
 /// 提供 驼峰 匈牙利 短横线 及 蛇形命名法的互相转换
 ///
 /// @author scx567888
