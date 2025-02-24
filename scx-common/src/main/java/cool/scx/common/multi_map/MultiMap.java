@@ -4,33 +4,27 @@ import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-/**
- * MultiMap
- *
- * @param <K> Key
- * @param <V> Value
- * @author scx567888
- * @version 0.0.1
- */
+/// MultiMap
+///
+/// @param <K> Key
+/// @param <V> Value
+/// @author scx567888
+/// @version 0.0.1
 public class MultiMap<K, V> implements IMultiMap<K, V> {
 
     private final Map<K, List<V>> map;
     private final Supplier<List<V>> listSupplier;
 
-    /**
-     * 指定内部的 map 实现和内部的 key 实现
-     *
-     * @param mapSupplier  mapSupplier
-     * @param listSupplier listSupplier
-     */
+    /// 指定内部的 map 实现和内部的 key 实现
+    ///
+    /// @param mapSupplier  mapSupplier
+    /// @param listSupplier listSupplier
     public MultiMap(Supplier<Map<K, List<V>>> mapSupplier, Supplier<List<V>> listSupplier) {
         this.map = mapSupplier.get();
         this.listSupplier = listSupplier;
     }
 
-    /**
-     * 默认内部 map 使用 HashMap, key 使用 ArrayList
-     */
+    /// 默认内部 map 使用 HashMap, key 使用 ArrayList
     public MultiMap() {
         this(HashMap::new, ArrayList::new);
     }

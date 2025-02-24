@@ -3,6 +3,7 @@ package cool.scx.common.iterator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+/// 迭代器
 public class SingleIterator<T> implements Iterator<T>, Iterable<T> {
 
     private T next;
