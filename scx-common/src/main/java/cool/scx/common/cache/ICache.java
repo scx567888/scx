@@ -2,12 +2,10 @@ package cool.scx.common.cache;
 
 import java.util.function.Function;
 
-/**
- * 缓存接口
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 缓存接口
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface ICache<K, V> {
 
     V get(K key);
