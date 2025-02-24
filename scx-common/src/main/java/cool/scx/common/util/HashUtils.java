@@ -19,17 +19,13 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.security.MessageDigest.getInstance;
 import static java.util.Objects.requireNonNull;
 
-/**
- * HASH 工具类 (注意 !!! 返回的十六进制均为大写格式)
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// HASH 工具类 (注意 !!! 返回的十六进制均为大写格式)
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class HashUtils {
 
-    /**
-     * 此缓冲区大小在内存和速度的综合测试中表现最优
-     */
+    /// 此缓冲区大小在内存和速度的综合测试中表现最优
     private static final int DEFAULT_BUFFER_SIZE = 1024 * 64;
 
     private static final HexFormat HEX_FORMAT = HexFormat.of().withUpperCase();
@@ -408,13 +404,11 @@ public final class HashUtils {
         return hashAsHex(data, CRC32C::new, options);
     }
 
-    /**
-     * 此方法假定 指定算法一定存在 所以不向外显式抛出 {@link NoSuchAlgorithmException} 异常 . 下同
-     *
-     * @param data      data
-     * @param algorithm algorithm
-     * @return hash
-     */
+    /// 此方法假定 指定算法一定存在 所以不向外显式抛出 [NoSuchAlgorithmException] 异常 . 下同
+    ///
+    /// @param data      data
+    /// @param algorithm algorithm
+    /// @return hash
     private static byte[] hash0(byte[] data, String algorithm) {
         try {
             return hash(data, algorithm);
