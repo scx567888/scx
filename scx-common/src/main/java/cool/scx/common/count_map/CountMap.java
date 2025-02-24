@@ -7,13 +7,11 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Supplier;
 
-/**
- * CountMap
- *
- * @param <K> Key
- * @author scx567888
- * @version 0.0.1
- */
+/// CountMap
+///
+/// @param <K> Key
+/// @author scx567888
+/// @version 0.0.1
 public class CountMap<K> implements ICountMap<K> {
 
     private final Map<K, AtomicLong> map;
