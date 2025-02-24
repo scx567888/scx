@@ -2,12 +2,10 @@ package cool.scx.common.os;
 
 import static cool.scx.common.os.OSType.*;
 
-/**
- * OSHelper 用来获取操作系统信息
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// OSHelper 用来获取操作系统信息
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class OSHelper {
 
     private static final OSInfo osInfo = initOSInfo();

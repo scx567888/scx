@@ -5,12 +5,10 @@ import cool.scx.common.multi_map.MultiMap;
 
 import java.util.function.Function;
 
-/**
- * 未分类方法
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 未分类方法
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class $ {
 
     public static void sleep(long millis) {

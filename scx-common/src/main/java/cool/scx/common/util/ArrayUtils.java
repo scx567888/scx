@@ -3,12 +3,10 @@ package cool.scx.common.util;
 import java.lang.reflect.Array;
 import java.util.*;
 
-/**
- * 提供一些操作 Array 的方法
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 提供一些操作 Array 的方法
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class ArrayUtils {
 
     //************  toPrimitive START *****************
@@ -948,14 +946,12 @@ public final class ArrayUtils {
         return result;
     }
 
-    /**
-     * 按照指定长度切割 List, 注意和 {@link ArrayUtils#splitListN(List, int)}} 进行区分
-     *
-     * @param list list
-     * @param size 每份的长度
-     * @param <T>  T
-     * @return 切割后的 list
-     */
+    /// 按照指定长度切割 List, 注意和 [#splitListN(List,int)]} 进行区分
+    ///
+    /// @param list list
+    /// @param size 每份的长度
+    /// @param <T>  T
+    /// @return 切割后的 list
     public static <T> List<List<T>> splitList(List<T> list, int size) {
         List<List<T>> result = new ArrayList<>();
         for (int i = 0; i < list.size(); i = i + size) {
@@ -1001,26 +997,22 @@ public final class ArrayUtils {
         return splitArray(arr, numOfSlices(arr.length, n));
     }
 
-    /**
-     * 按照指定份数切割 List, 注意和 {@link ArrayUtils#splitList(List, int)} 进行区分
-     *
-     * @param arr arr
-     * @param n   份数
-     * @param <T> T
-     * @return 切割后的 list
-     */
+    /// 按照指定份数切割 List, 注意和 [#splitList(List,int)] 进行区分
+    ///
+    /// @param arr arr
+    /// @param n   份数
+    /// @param <T> T
+    /// @return 切割后的 list
     public static <T> T[][] splitArrayN(T[] arr, int n) {
         return splitArray(arr, numOfSlices(arr.length, n));
     }
 
-    /**
-     * 按照指定份数切割 List, 注意和 {@link ArrayUtils#splitList(List, int)} 进行区分
-     *
-     * @param list list
-     * @param n    份数
-     * @param <T>  T
-     * @return 切割后的 list
-     */
+    /// 按照指定份数切割 List, 注意和 [#splitList(List,int)] 进行区分
+    ///
+    /// @param list list
+    /// @param n    份数
+    /// @param <T>  T
+    /// @return 切割后的 list
     public static <T> List<List<T>> splitListN(List<T> list, int n) {
         return splitList(list, numOfSlices(list.size(), n));
     }
@@ -1061,13 +1053,11 @@ public final class ArrayUtils {
         return longArray;
     }
 
-    /**
-     * 计算 长度可以被分割为几个子长度 (向上取整)
-     *
-     * @param length l
-     * @param n      n
-     * @return c
-     */
+    /// 计算 长度可以被分割为几个子长度 (向上取整)
+    ///
+    /// @param length l
+    /// @param n      n
+    /// @return c
     public static int numOfSlices(int length, int n) {
         return length % n > 0 ? length / n + 1 : length / n;
     }

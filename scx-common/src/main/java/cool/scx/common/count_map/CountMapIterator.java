@@ -5,12 +5,10 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
-/**
- * CountMapIterator
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// CountMapIterator
+///
+/// @author scx567888
+/// @version 0.0.1
 class CountMapIterator<K> implements Iterator<Map.Entry<K, Long>> {
 
     private final Iterator<Map.Entry<K, AtomicLong>> iterator;

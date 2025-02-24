@@ -7,14 +7,12 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-/**
- * MultiMap 接口 用来约束
- *
- * @param <K> Key
- * @param <V> Value
- * @author scx567888
- * @version 0.0.1
- */
+/// MultiMap 接口 用来约束
+///
+/// @param <K> Key
+/// @param <V> Value
+/// @author scx567888
+/// @version 0.0.1
 public interface IMultiMap<K, V> extends Iterable<Map.Entry<K, List<V>>> {
 
     //*********** 添加 ************

@@ -13,38 +13,30 @@ import java.util.function.Supplier;
  */
 public interface ICountMap<K> extends Iterable<Map.Entry<K, Long>> {
 
-    /**
-     * add
-     *
-     * @param key   key
-     * @param count count
-     * @return 添加后的数量
-     */
+    /// add
+    ///
+    /// @param key   key
+    /// @param count count
+    /// @return 添加后的数量
     long add(K key, long count);
 
-    /**
-     * set
-     *
-     * @param key   key
-     * @param count count
-     * @return 之前的数量 (可为空)
-     */
+    /// set
+    ///
+    /// @param key   key
+    /// @param count count
+    /// @return 之前的数量 (可为空)
     Long set(K key, long count);
 
-    /**
-     * get
-     *
-     * @param key key
-     * @return 数量 (可为空)
-     */
+    /// get
+    ///
+    /// @param key key
+    /// @return 数量 (可为空)
     Long get(K key);
 
-    /**
-     * set
-     *
-     * @param key key
-     * @return 之前的数量 (可为空)
-     */
+    /// set
+    ///
+    /// @param key key
+    /// @return 之前的数量 (可为空)
     Long remove(K key);
 
     long size();
