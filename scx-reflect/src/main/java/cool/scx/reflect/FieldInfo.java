@@ -5,78 +5,78 @@ import com.fasterxml.jackson.databind.JavaType;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
-import static cool.scx.reflect.FieldInfoHelper.*;
+import static cool.scx.reflect.Helper._findAccessModifier;
+import static cool.scx.reflect.Helper._findType;
 
-/**
- * FieldInfo
- *
- * @author scx567888
- * @version 0.0.1
- */
-public final class FieldInfo {
+
+/// FieldInfo
+///
+/// @author scx567888
+/// @version 0.0.1
+public final class FieldInfo implements MemberInfo {
 
     private final Field field;
     private final ClassInfo classInfo;
-    private final String name;
     private final AccessModifier accessModifier;
+    private final String name;
     private final JavaType type;
     private final Annotation[] annotations;
 
     FieldInfo(Field field, ClassInfo classInfo) {
         this.field = field;
         this.classInfo = classInfo;
-        this.name = _findName(this);
-        this.accessModifier = _findAccessModifier(this);
-        this.type = _findType(this);
-        this.annotations = _findAnnotations(this);
+        this.accessModifier = _findAccessModifier(field.accessFlags());
+        this.name = field.getName();
+        this.type = _findType(field.getGenericType(), classInfo);
+        this.annotations = field.getDeclaredAnnotations();
     }
 
     public Field field() {
-        return this.field;
-    }
-
-    public ClassInfo classInfo() {
-        return this.classInfo;
+        return field;
     }
 
     public String name() {
         return name;
     }
 
-    public AccessModifier accessModifier() {
-        return this.accessModifier;
-    }
-
     public JavaType type() {
-        return this.type;
+        return type;
     }
 
     public Annotation[] annotations() {
-        return this.annotations;
+        return annotations;
     }
 
     public <T extends Annotation> T getAnnotation(Class<T> annotationClass) {
-        return this.field.getAnnotation(annotationClass);
-    }
-
-    public Annotation[] getAnnotations() {
-        return this.field.getAnnotations();
-    }
-
-    public <T extends Annotation> T[] getAnnotationsByType(Class<T> annotationClass) {
-        return this.field.getAnnotationsByType(annotationClass);
-    }
-
-    public void setAccessible(boolean flag) {
-        this.field.setAccessible(flag);
+        for (var annotation : annotations) {
+            if (annotationClass.isInstance(annotation)) {
+                return annotationClass.cast(annotation);
+            }
+        }
+        return null;
     }
 
     public void set(Object obj, Object value) throws IllegalAccessException {
-        this.field.set(obj, value);
+        field.set(obj, value);
     }
 
     public Object get(Object obj) throws IllegalAccessException {
-        return this.field.get(obj);
+        return field.get(obj);
+    }
+
+    @Override
+    public ClassInfo classInfo() {
+        return classInfo;
+    }
+
+    @Override
+    public AccessModifier accessModifier() {
+        return accessModifier;
+    }
+
+    @Override
+    public void setAccessible(boolean flag) {
+        field.setAccessible(flag);
     }
 
 }

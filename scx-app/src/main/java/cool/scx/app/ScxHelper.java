@@ -25,6 +25,7 @@ import cool.scx.logging.ScxLoggerConfig;
 import cool.scx.logging.ScxLoggerFactory;
 import cool.scx.logging.recorder.ConsoleRecorder;
 import cool.scx.logging.recorder.FileRecorder;
+import cool.scx.reflect.MethodType;
 import cool.scx.reflect.ReflectHelper;
 import cool.scx.scheduling.ScxScheduling;
 import cool.scx.web.annotation.ScxRoute;
@@ -241,7 +242,7 @@ public final class ScxHelper {
                         );
                         break;
                     }
-                    if (method.isStatic()) {
+                    if (method.methodType() == MethodType.STATIC) {
                         ScxScheduling.cron()
                                 .expression(scheduled.cron())
                                 .start(c -> {

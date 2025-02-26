@@ -31,7 +31,8 @@ public class ClassInfoTest {
 
         System.out.println((System.nanoTime() - l) / 1000_000);
         var classInfo1 = ReflectHelper.getClassInfo(ee.class);
-        var classInfo2 = ReflectHelper.getClassInfo(ee.b.getClass());
+        var classInfo2 = ReflectHelper.getClassInfo(ee.b.getClass());// ee.b.getClass().isEnum 判断并不准确 这里测试 ClassInfo 是否能够正确处理这种情况
+        var classInfo3 = ReflectHelper.getClassInfo(ggg.class);
 
     }
 
@@ -51,6 +52,12 @@ public class ClassInfoTest {
     @Retention(RetentionPolicy.RUNTIME)
     @interface ab {
         aa[] value();
+    }
+
+    interface ggg {
+        default void gg() {
+
+        }
     }
 
     @aa

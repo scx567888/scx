@@ -9,6 +9,7 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static cool.scx.reflect.AccessModifier.PUBLIC;
+import static cool.scx.reflect.ClassType.RECORD;
 
 /**
  * FieldSetter
@@ -43,7 +44,7 @@ final class FieldSetter {
 
     static FieldSetter[] ofArray(Class<?> type, Function<Field, String> columnNameMapping) {
         var classInfo = ReflectHelper.getClassInfo(type);
-        var fields = classInfo.isRecord() ? classInfo.allFields() : Stream.of(classInfo.allFields()).filter(c -> c.accessModifier() == PUBLIC).toArray(FieldInfo[]::new);
+        var fields = classInfo.classType() == RECORD ? classInfo.allFields() : Stream.of(classInfo.allFields()).filter(c -> c.accessModifier() == PUBLIC).toArray(FieldInfo[]::new);
         var fieldSetters = new FieldSetter[fields.length];
         for (int i = 0; i < fields.length; i = i + 1) {
             fieldSetters[i] = of(fields[i], columnNameMapping);

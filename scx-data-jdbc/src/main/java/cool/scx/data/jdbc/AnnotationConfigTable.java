@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import static cool.scx.reflect.AccessModifier.PUBLIC;
+import static cool.scx.reflect.ClassType.RECORD;
 
 /**
  * AnnotationConfigTable
@@ -72,7 +73,7 @@ public class AnnotationConfigTable implements Table {
 
     private static AnnotationConfigColumn[] initAllColumns(Class<?> clazz) {
         var classInfo = ReflectHelper.getClassInfo(clazz);
-        var fields = classInfo.isRecord() ? classInfo.allFields() : Stream.of(classInfo.allFields()).filter(c -> c.accessModifier() == PUBLIC).toArray(FieldInfo[]::new);
+        var fields = classInfo.classType() == RECORD ? classInfo.allFields() : Stream.of(classInfo.allFields()).filter(c -> c.accessModifier() == PUBLIC).toArray(FieldInfo[]::new);
         var list = Stream.of(fields)
                 .filter(field -> field.getAnnotation(NoColumn.class) == null)
                 .map(AnnotationConfigColumn::new)

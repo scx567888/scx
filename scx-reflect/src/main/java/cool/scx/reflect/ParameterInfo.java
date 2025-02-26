@@ -4,15 +4,12 @@ import com.fasterxml.jackson.databind.JavaType;
 
 import java.lang.reflect.Parameter;
 
-import static cool.scx.reflect.ParameterInfoHelper._findName;
-import static cool.scx.reflect.ParameterInfoHelper._findType;
+import static cool.scx.reflect.Helper._findType;
 
-/**
- * ParameterInfo
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ParameterInfo
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class ParameterInfo {
 
     private final Parameter parameter;
@@ -23,8 +20,8 @@ public final class ParameterInfo {
     ParameterInfo(Parameter parameter, ExecutableInfo executableInfo) {
         this.parameter = parameter;
         this.executableInfo = executableInfo;
-        this.name = _findName(this);
-        this.type = _findType(this);
+        this.name = parameter.getName();
+        this.type = _findType(parameter.getParameterizedType(), executableInfo.classInfo());
     }
 
     public Parameter parameter() {
