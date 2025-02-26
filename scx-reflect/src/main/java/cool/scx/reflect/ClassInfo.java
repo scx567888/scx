@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.JavaType;
 import java.lang.annotation.Annotation;
 
 import static cool.scx.reflect.Helper.*;
+import static java.lang.reflect.AccessFlag.FINAL;
+import static java.lang.reflect.AccessFlag.STATIC;
 
 /// ClassInfo
 ///
@@ -52,12 +54,12 @@ public final class ClassInfo {
         this.allMethods = _findAllMethodInfos(this);
         this.annotations = _findAnnotations(rawClass);
         this.allAnnotations = _findAllAnnotations(this);
-        this.isFinal = _isFinal(accessFlags);
-        this.isStatic = _isStatic(accessFlags);
-        this.isAnonymousClass = _isAnonymousClass(rawClass);
-        this.isMemberClass = _isMemberClass(rawClass);
-        this.isPrimitive = _isPrimitive(rawClass);
-        this.isArray = _isArray(rawClass);
+        this.isFinal = accessFlags.contains(FINAL);
+        this.isStatic = accessFlags.contains(STATIC);
+        this.isAnonymousClass = rawClass.isAnonymousClass();
+        this.isMemberClass = rawClass.isMemberClass();
+        this.isPrimitive = rawClass.isPrimitive();
+        this.isArray = rawClass.isArray();
         this.enumClass = _findEnumClass(this);
         this.componentType = _findComponentType(this);
     }

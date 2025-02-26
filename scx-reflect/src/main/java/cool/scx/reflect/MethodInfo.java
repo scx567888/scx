@@ -6,8 +6,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 import static cool.scx.reflect.Helper.*;
-import static java.lang.reflect.AccessFlag.ABSTRACT;
-import static java.lang.reflect.AccessFlag.STATIC;
+import static java.lang.reflect.AccessFlag.*;
 
 /// MethodInfo
 ///
@@ -19,13 +18,13 @@ public final class MethodInfo implements ExecutableInfo {
     private final ClassInfo classInfo;
     private final String name;
     private final AccessModifier accessModifier;
+    private final MethodType methodType;
     private final JavaType returnType;
     private final ParameterInfo[] parameters;
     private final MethodInfo superMethod;
     private final Annotation[] annotations;
     private final Annotation[] allAnnotations;
-    private final boolean isAbstract;
-    private final boolean isStatic;
+    private final boolean isFinal;
 
     MethodInfo(Method method, ClassInfo classInfo) {
         this.method = method;
@@ -33,13 +32,13 @@ public final class MethodInfo implements ExecutableInfo {
         this.name = method.getName();
         var accessFlags = method.accessFlags();
         this.accessModifier = _findAccessModifier(accessFlags);
+        this.methodType = _findMethodType(method, accessFlags);
         this.returnType = _findType(method.getGenericReturnType(), classInfo);
         this.parameters = _findParameterInfos(this);
         this.superMethod = _findSuperMethod(this);
         this.annotations = method.getDeclaredAnnotations();
         this.allAnnotations = _findAllAnnotations(this);
-        this.isAbstract = accessFlags.contains(ABSTRACT);
-        this.isStatic = accessFlags.contains(STATIC);
+        this.isFinal = accessFlags.contains(FINAL);
     }
 
     public Method method() {
@@ -48,6 +47,10 @@ public final class MethodInfo implements ExecutableInfo {
 
     public String name() {
         return name;
+    }
+
+    public MethodType methodType() {
+        return methodType;
     }
 
     public JavaType returnType() {
@@ -66,12 +69,8 @@ public final class MethodInfo implements ExecutableInfo {
         return allAnnotations;
     }
 
-    public boolean isAbstract() {
-        return isAbstract;
-    }
-
-    public boolean isStatic() {
-        return isStatic;
+    public boolean isFinal() {
+        return isFinal;
     }
 
     @Override

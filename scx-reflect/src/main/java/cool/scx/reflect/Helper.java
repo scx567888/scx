@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JavaType;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AccessFlag;
+import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -16,7 +17,58 @@ import static cool.scx.reflect.ClassType.RECORD;
 import static cool.scx.reflect.ReflectHelper.getClassInfo;
 import static java.util.Collections.addAll;
 
-class Helper {
+final class Helper {
+
+
+    public static AccessModifier _findAccessModifier(Set<AccessFlag> accessFlags) {
+        if (accessFlags.contains(AccessFlag.PUBLIC)) {
+            return AccessModifier.PUBLIC;
+        }
+        if (accessFlags.contains(AccessFlag.PROTECTED)) {
+            return AccessModifier.PROTECTED;
+        }
+        if (accessFlags.contains(AccessFlag.PRIVATE)) {
+            return AccessModifier.PRIVATE;
+        }
+        return AccessModifier.PACKAGE_PRIVATE;
+    }
+
+    public static ClassType _findClassType(Class<?> rawClass, Set<AccessFlag> accessFlags) {
+        if (accessFlags.contains(AccessFlag.ANNOTATION)) {
+            return ClassType.ANNOTATION;
+        }
+        if (accessFlags.contains(AccessFlag.INTERFACE)) {
+            return ClassType.INTERFACE;
+        }
+        if (accessFlags.contains(AccessFlag.ABSTRACT)) {
+            return ClassType.ABSTRACT_CLASS;
+        }
+        if (accessFlags.contains(AccessFlag.ENUM)) {
+            return ClassType.ENUM;
+        }
+        if (rawClass.isRecord()) {
+            return RECORD;
+        }
+        return ClassType.CONCRETE;
+    }
+
+    public static MethodType _findMethodType(Method method,Set<AccessFlag> accessFlags) {
+        if (accessFlags.contains(AccessFlag.ABSTRACT)) {
+            return MethodType.ABSTRACT;
+        }
+        if (accessFlags.contains(AccessFlag.STATIC)) {
+            return MethodType.STATIC;
+        }
+        if (method.isDefault()){
+            return MethodType.DEFAULT;
+        }
+        if (method.isBridge()){
+            
+        }
+        return MethodType.NORMAL;
+    }
+    
+    
 
     public static ParameterInfo[] _findParameterInfos(ConstructorInfo constructorInfo) {
         var parameters = constructorInfo.constructor().getParameters();
@@ -92,37 +144,6 @@ class Helper {
         return true;
     }
 
-    public static AccessModifier _findAccessModifier(Set<AccessFlag> accessFlags) {
-        if (accessFlags.contains(AccessFlag.PUBLIC)) {
-            return AccessModifier.PUBLIC;
-        }
-        if (accessFlags.contains(AccessFlag.PROTECTED)) {
-            return AccessModifier.PROTECTED;
-        }
-        if (accessFlags.contains(AccessFlag.PRIVATE)) {
-            return AccessModifier.PRIVATE;
-        }
-        return AccessModifier.PACKAGE_PRIVATE;
-    }
-
-    public static ClassType _findClassType(Class<?> rawClass, Set<AccessFlag> accessFlags) {
-        if (accessFlags.contains(AccessFlag.ANNOTATION)) {
-            return ClassType.ANNOTATION;
-        }
-        if (accessFlags.contains(AccessFlag.INTERFACE)) {
-            return ClassType.INTERFACE;
-        }
-        if (accessFlags.contains(AccessFlag.ABSTRACT)) {
-            return ClassType.ABSTRACT_CLASS;
-        }
-        if (accessFlags.contains(AccessFlag.ENUM)) {
-            return ClassType.ENUM;
-        }
-        if (rawClass.isRecord()) {
-            return RECORD;
-        }
-        return ClassType.CONCRETE;
-    }
 
     public static ClassInfo _findSuperClass(JavaType type) {
         var superClass = type.getSuperClass();
@@ -245,30 +266,6 @@ class Helper {
             classInfo = classInfo.superClass();
         }
         return allAnnotations.toArray(Annotation[]::new);
-    }
-
-    public static boolean _isFinal(Set<AccessFlag> accessFlags) {
-        return accessFlags.contains(AccessFlag.FINAL);
-    }
-
-    public static boolean _isStatic(Set<AccessFlag> accessFlags) {
-        return accessFlags.contains(AccessFlag.STATIC);
-    }
-
-    public static boolean _isAnonymousClass(Class<?> rawClass) {
-        return rawClass.isAnonymousClass();
-    }
-
-    public static boolean _isMemberClass(Class<?> rawClass) {
-        return rawClass.isMemberClass();
-    }
-
-    public static boolean _isPrimitive(Class<?> rawClass) {
-        return rawClass.isPrimitive();
-    }
-
-    public static boolean _isArray(Class<?> rawClass) {
-        return rawClass.isArray();
     }
 
     public static ClassInfo _findEnumClass(ClassInfo classInfo) {
