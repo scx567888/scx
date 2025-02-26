@@ -93,10 +93,7 @@ public final class MethodInfo implements IMethodInfo {
     public IMethodInfo superMethod() {
         return superMethod;
     }
-
-    /**
-     * 获取当前方法的注解 以及 重写的父类方法的注解
-     */
+    
     @Override
     public Annotation[] allAnnotations() {
         return allAnnotations;

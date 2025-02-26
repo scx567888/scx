@@ -4,12 +4,10 @@ import com.fasterxml.jackson.databind.JavaType;
 
 import java.lang.reflect.Parameter;
 
-/**
- * ParameterInfoHelper
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ParameterInfoHelper
+///
+/// @author scx567888
+/// @version 0.0.1
 class ParameterInfoHelper {
 
     static String _findName(Parameter parameter) {

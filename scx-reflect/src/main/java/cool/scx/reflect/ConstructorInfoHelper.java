@@ -1,11 +1,9 @@
 package cool.scx.reflect;
 
-/**
- * ConstructorInfoHelper
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ConstructorInfoHelper
+///
+/// @author scx567888
+/// @version 0.0.1
 final class ConstructorInfoHelper {
 
     static ParameterInfo[] _findParameterInfos(ConstructorInfo constructorInfo) {

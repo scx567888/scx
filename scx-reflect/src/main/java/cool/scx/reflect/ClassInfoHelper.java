@@ -63,12 +63,10 @@ final class ClassInfoHelper {
         return result;
     }
 
-    /**
-     * 寻找 无参构造函数 (不支持成员类)
-     *
-     * @param classInfo c
-     * @return a
-     */
+    /// 寻找 无参构造函数 (不支持成员类)
+    ///
+    /// @param classInfo c
+    /// @return a
     public static IConstructorInfo _findDefaultConstructor(ClassInfo classInfo) {
         for (var constructor : classInfo.constructors()) {
             if (constructor.parameters().length == 0) {
@@ -78,9 +76,7 @@ final class ClassInfoHelper {
         return null;
     }
 
-    /**
-     * 寻找 Record 规范构造参数
-     */
+    /// 寻找 Record 规范构造参数
     public static IConstructorInfo _findRecordConstructor(IClassInfo classInfo) {
         if (classInfo.classType() != RECORD) {
             return null;
@@ -114,12 +110,10 @@ final class ClassInfoHelper {
         return allFieldInfos.toArray(IFieldInfo[]::new);
     }
 
-    /**
-     * 获取当前 ClassInfo 的所有方法 (不包括父类方法 不包括桥接方法)
-     *
-     * @param classInfo c
-     * @return c
-     */
+    /// 获取当前 ClassInfo 的所有方法 (不包括父类方法 不包括桥接方法)
+    ///
+    /// @param classInfo c
+    /// @return c
     public static MethodInfo[] _findMethodInfos(ClassInfo classInfo) {
         var methods = classInfo.type().getRawClass().getDeclaredMethods();
         var list = new ArrayList<MethodInfo>();
@@ -157,11 +151,9 @@ final class ClassInfoHelper {
         return rawClass.getDeclaredAnnotations();
     }
 
-    /**
-     * 获取当前方法的注解 同时包含 重写方法的注解
-     *
-     * @return a
-     */
+    /// 获取当前方法的注解 同时包含 重写方法的注解
+    ///
+    /// @return a
     public static Annotation[] _findAllAnnotations(IClassInfo classInfo) {
         var allAnnotations = new ArrayList<Annotation>();
         while (classInfo != null) {

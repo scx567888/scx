@@ -12,13 +12,11 @@ import static cool.scx.reflect.AccessModifier.PRIVATE;
 import static java.util.Collections.addAll;
 
 
-/**
- * MethodInfoHelper
- *
- * @author scx567888
- * @version 0.0.1
- */
-class MethodInfoHelper {
+/// MethodInfoHelper
+///
+/// @author scx567888
+/// @version 0.0.1
+final class MethodInfoHelper {
 
     static String _findName(Method method) {
         return method.getName();
@@ -65,11 +63,9 @@ class MethodInfoHelper {
         return null;
     }
 
-    /**
-     * 获取当前方法的注解 同时包含 重写方法的注解
-     *
-     * @return a
-     */
+    /// 获取当前方法的注解 同时包含 重写方法的注解
+    ///
+    /// @return a
     static Annotation[] _findAllAnnotations(IMethodInfo methodInfo) {
         var allAnnotations = new ArrayList<Annotation>();
         while (methodInfo != null) {
@@ -80,13 +76,11 @@ class MethodInfoHelper {
     }
 
 
-    /**
-     * 判断是否为重写方法
-     *
-     * @param rootMethod      a
-     * @param candidateMethod a
-     * @return a
-     */
+    /// 判断是否为重写方法
+    ///
+    /// @param rootMethod      a
+    /// @param candidateMethod a
+    /// @return a
     private static boolean isOverride(IMethodInfo rootMethod, IMethodInfo candidateMethod) {
         return PRIVATE != candidateMethod.accessModifier() &&
                 candidateMethod.name().equals(rootMethod.name()) &&
