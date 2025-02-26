@@ -10,7 +10,7 @@ import static cool.scx.reflect.ReflectHelper._findAccessModifier;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public final class ConstructorInfo implements IConstructorInfo {
+final class ConstructorInfo implements IConstructorInfo {
 
     private final Constructor<?> constructor;
     private final ClassInfo classInfo;

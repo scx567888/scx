@@ -1,7 +1,7 @@
 package cool.scx.web.parameter_handler.from_upload;
 
 import cool.scx.http.media.multi_part.MultiPartPart;
-import cool.scx.reflect.ParameterInfo;
+import cool.scx.reflect.IParameterInfo;
 import cool.scx.web.parameter_handler.ParameterHandler;
 import cool.scx.web.parameter_handler.ParameterHandlerBuilder;
 
@@ -14,7 +14,7 @@ import cool.scx.web.parameter_handler.ParameterHandlerBuilder;
 public final class FromUploadParameterHandlerBuilder implements ParameterHandlerBuilder {
 
     @Override
-    public ParameterHandler tryBuild(ParameterInfo parameter) {
+    public ParameterHandler tryBuild(IParameterInfo parameter) {
         var isArray = parameter.type().isCollectionLikeType() || parameter.type().isArrayType();
         var rawType = isArray ? parameter.type().getContentType().getRawClass() : parameter.type().getRawClass();
         if (rawType != MultiPartPart.class) {

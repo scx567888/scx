@@ -12,7 +12,7 @@ import static cool.scx.reflect.ReflectHelper._findAccessModifier;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public final class MethodInfo implements IMethodInfo {
+final class MethodInfo implements IMethodInfo {
 
     private final Method method;
     private final ClassInfo classInfo;

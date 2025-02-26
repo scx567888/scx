@@ -11,7 +11,7 @@ import static cool.scx.reflect.ReflectHelper._findAccessModifier;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public final class ClassInfo implements IClassInfo {
+final class ClassInfo implements IClassInfo {
 
     private final JavaType type;
     private final AccessModifier accessModifier;

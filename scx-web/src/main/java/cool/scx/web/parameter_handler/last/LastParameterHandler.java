@@ -1,6 +1,6 @@
 package cool.scx.web.parameter_handler.last;
 
-import cool.scx.reflect.ParameterInfo;
+import cool.scx.reflect.IParameterInfo;
 import cool.scx.web.parameter_handler.ParameterHandler;
 import cool.scx.web.parameter_handler.RequestInfo;
 
@@ -17,9 +17,9 @@ import static cool.scx.web.parameter_handler.from_query.FromQueryParameterHandle
  */
 public final class LastParameterHandler implements ParameterHandler {
 
-    private final ParameterInfo parameter;
+    private final IParameterInfo parameter;
 
-    public LastParameterHandler(ParameterInfo parameter) {
+    public LastParameterHandler(IParameterInfo parameter) {
         this.parameter = parameter;
     }
 

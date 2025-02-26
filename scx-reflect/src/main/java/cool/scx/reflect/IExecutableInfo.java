@@ -6,8 +6,8 @@ package cool.scx.reflect;
 /// @version 0.0.1
 public interface IExecutableInfo {
 
-    ParameterInfo[] parameters();
+    IParameterInfo[] parameters();
 
-    ClassInfo classInfo();
+    IClassInfo classInfo();
 
 }

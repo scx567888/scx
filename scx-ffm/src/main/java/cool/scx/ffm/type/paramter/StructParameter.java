@@ -2,7 +2,7 @@ package cool.scx.ffm.type.paramter;
 
 import cool.scx.ffm.type.struct.Struct;
 import cool.scx.reflect.AccessModifier;
-import cool.scx.reflect.FieldInfo;
+import cool.scx.reflect.IFieldInfo;
 import cool.scx.reflect.ReflectHelper;
 
 import java.lang.foreign.Arena;
@@ -27,7 +27,7 @@ import static cool.scx.ffm.FFMHelper.getMemoryLayout;
 public class StructParameter implements Parameter {
 
     private final Object value;
-    private final Map<FieldInfo, VarHandle> fieldMap;
+    private final Map<IFieldInfo, VarHandle> fieldMap;
     private final StructLayout LAYOUT;
     private MemorySegment memorySegment;
 

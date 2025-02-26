@@ -7,7 +7,7 @@ import cool.scx.common.util.URIUtils;
 import cool.scx.http.HttpMethod;
 import cool.scx.http.ScxHttpMethod;
 import cool.scx.http.routing.*;
-import cool.scx.reflect.MethodInfo;
+import cool.scx.reflect.IMethodInfo;
 import cool.scx.web.annotation.ScxRoute;
 import cool.scx.web.parameter_handler.ParameterHandler;
 
@@ -26,7 +26,7 @@ import static cool.scx.web.RouteRegistrar.findScxRouteOrThrow;
  */
 public final class ScxRouteHandler implements Route, Consumer<RoutingContext> {
 
-    public final MethodInfo method;
+    public final IMethodInfo method;
     public final boolean isVoid;
     public final Object instance;
     public final Class<?> clazz;
@@ -39,7 +39,7 @@ public final class ScxRouteHandler implements Route, Consumer<RoutingContext> {
     private final MethodMatcher methodMatcher;
     private final ParameterHandler[] parameterHandlers;
 
-    ScxRouteHandler(MethodInfo method, Object instance, ScxWeb scxWeb) {
+    ScxRouteHandler(IMethodInfo method, Object instance, ScxWeb scxWeb) {
         this.scxWeb = scxWeb;
         this.clazz = instance.getClass();
         this.method = method;

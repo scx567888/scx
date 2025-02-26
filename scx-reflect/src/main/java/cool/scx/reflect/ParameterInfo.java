@@ -11,7 +11,7 @@ import static cool.scx.reflect.ParameterInfoHelper._findType;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public final class ParameterInfo implements IParameterInfo {
+final class ParameterInfo implements IParameterInfo {
 
     private final Parameter parameter;
     private final IExecutableInfo executableInfo;

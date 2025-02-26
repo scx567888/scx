@@ -2,7 +2,7 @@ package cool.scx.data.jdbc;
 
 import cool.scx.data.jdbc.annotation.Column;
 import cool.scx.jdbc.mapping.type.TypeColumn;
-import cool.scx.reflect.FieldInfo;
+import cool.scx.reflect.IFieldInfo;
 
 import static cool.scx.common.constant.AnnotationValueHelper.getRealValue;
 import static cool.scx.common.util.CaseUtils.toSnake;
@@ -15,7 +15,7 @@ import static cool.scx.common.util.CaseUtils.toSnake;
  */
 public class AnnotationConfigColumn implements TypeColumn {
 
-    private final FieldInfo javaField;
+    private final IFieldInfo javaField;
     private final String columnName;
     private final AnnotationConfigDataType dataType;
     private final String defaultValue;
@@ -26,7 +26,7 @@ public class AnnotationConfigColumn implements TypeColumn {
     private final boolean unique;
     private final boolean index;
 
-    public AnnotationConfigColumn(FieldInfo javaField) {
+    public AnnotationConfigColumn(IFieldInfo javaField) {
         this.javaField = javaField;
         this.javaField.setAccessible(true);
         var column = javaField.getAnnotation(Column.class);
@@ -59,7 +59,7 @@ public class AnnotationConfigColumn implements TypeColumn {
         }
     }
 
-    public FieldInfo javaField() {
+    public IFieldInfo javaField() {
         return javaField;
     }
 

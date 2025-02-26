@@ -4,7 +4,7 @@ import cool.scx.common.multi_map.MultiMap;
 import cool.scx.common.util.ClassUtils;
 import cool.scx.http.routing.PathMatcherImpl;
 import cool.scx.http.routing.Router;
-import cool.scx.reflect.MethodInfo;
+import cool.scx.reflect.IMethodInfo;
 import cool.scx.reflect.ReflectHelper;
 import cool.scx.web.annotation.NoScxRoute;
 import cool.scx.web.annotation.ScxRoute;
@@ -79,7 +79,7 @@ public final class RouteRegistrar {
         return handlers.stream().sorted(ORDER_COMPARATOR.thenComparing(EXACT_PATH_COMPARATOR).thenComparing(GROUPS_COMPARATOR)).toList();
     }
 
-    private static ScxRouteHandler createScxRouteHandler(MethodInfo m, Object bean, ScxWeb scxWeb) {
+    private static ScxRouteHandler createScxRouteHandler(IMethodInfo m, Object bean, ScxWeb scxWeb) {
         return new ScxRouteHandler(m, bean, scxWeb);
     }
 
@@ -91,7 +91,7 @@ public final class RouteRegistrar {
         return classList.stream().filter(RouteRegistrar::isRoute).toList();
     }
 
-    private static List<MethodInfo> filterMethod(Object object) {
+    private static List<IMethodInfo> filterMethod(Object object) {
         return Arrays.stream(ReflectHelper.getClassInfo(object.getClass()).allMethods()).filter(m -> m.accessModifier() == PUBLIC && isRoute(m)).toList();
     }
 
@@ -112,7 +112,7 @@ public final class RouteRegistrar {
      * @param m a
      * @return a
      */
-    public static boolean isRoute(MethodInfo m) {
+    public static boolean isRoute(IMethodInfo m) {
         var noScxRoute = m.method().getAnnotation(NoScxRoute.class);
         if (noScxRoute != null) {
             return false;
@@ -121,7 +121,7 @@ public final class RouteRegistrar {
         return s != null;
     }
 
-    public static ScxRoute findScxRoute(MethodInfo method) {
+    public static ScxRoute findScxRoute(IMethodInfo method) {
         var annotations = method.allAnnotations();
         for (var a : annotations) {
             if (a instanceof ScxRoute s) {
@@ -131,7 +131,7 @@ public final class RouteRegistrar {
         return null;
     }
 
-    public static ScxRoute findScxRouteOrThrow(MethodInfo method) {
+    public static ScxRoute findScxRouteOrThrow(IMethodInfo method) {
         var scxRoute = findScxRoute(method);
         if (scxRoute == null) {
             throw new NullPointerException();

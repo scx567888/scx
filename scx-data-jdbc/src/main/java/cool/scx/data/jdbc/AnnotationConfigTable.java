@@ -5,7 +5,8 @@ import cool.scx.common.multi_map.MultiMap;
 import cool.scx.common.util.CaseUtils;
 import cool.scx.data.jdbc.annotation.NoColumn;
 import cool.scx.jdbc.mapping.Table;
-import cool.scx.reflect.FieldInfo;
+import cool.scx.reflect.ClassType;
+import cool.scx.reflect.IFieldInfo;
 import cool.scx.reflect.ReflectHelper;
 
 import java.util.HashMap;
@@ -14,6 +15,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import static cool.scx.reflect.AccessModifier.PUBLIC;
+import static cool.scx.reflect.ClassType.RECORD;
 
 /**
  * AnnotationConfigTable
@@ -72,7 +74,7 @@ public class AnnotationConfigTable implements Table {
 
     private static AnnotationConfigColumn[] initAllColumns(Class<?> clazz) {
         var classInfo = ReflectHelper.getClassInfo(clazz);
-        var fields = classInfo.isRecord() ? classInfo.allFields() : Stream.of(classInfo.allFields()).filter(c -> c.accessModifier() == PUBLIC).toArray(FieldInfo[]::new);
+        var fields = classInfo.classType()== RECORD ? classInfo.allFields() : Stream.of(classInfo.allFields()).filter(c -> c.accessModifier() == PUBLIC).toArray(IFieldInfo[]::new);
         var list = Stream.of(fields)
                 .filter(field -> field.getAnnotation(NoColumn.class) == null)
                 .map(AnnotationConfigColumn::new)
