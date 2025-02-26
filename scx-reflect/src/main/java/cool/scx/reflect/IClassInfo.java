@@ -64,7 +64,7 @@ public interface IClassInfo {
 
     /// 是否基本类型
     boolean isPrimitive();
-    
+
     /// 是否数组
     boolean isArray();
 
