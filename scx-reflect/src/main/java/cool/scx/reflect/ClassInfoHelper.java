@@ -15,26 +15,11 @@ import static cool.scx.reflect.ReflectHelper.getClassInfo;
 import static java.util.Collections.addAll;
 
 
-/**
- * ClassInfoHelper
- *
- * @author scx567888
- * @version 0.0.1
- */
-class ClassInfoHelper {
-
-    public static AccessModifier _findAccessModifier(Set<AccessFlag> accessFlags) {
-        if (accessFlags.contains(AccessFlag.PUBLIC)) {
-            return AccessModifier.PUBLIC;
-        }
-        if (accessFlags.contains(AccessFlag.PROTECTED)) {
-            return AccessModifier.PROTECTED;
-        }
-        if (accessFlags.contains(AccessFlag.PRIVATE)) {
-            return AccessModifier.PRIVATE;
-        }
-        return AccessModifier.PACKAGE_PRIVATE;
-    }
+/// ClassInfoHelper
+///
+/// @author scx567888
+/// @version 0.0.1
+final class ClassInfoHelper {
 
     public static ClassType _findClassType(Class<?> rawClass, Set<AccessFlag> accessFlags) {
         if (accessFlags.contains(AccessFlag.ANNOTATION)) {
