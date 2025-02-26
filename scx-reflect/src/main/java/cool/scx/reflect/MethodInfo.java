@@ -3,12 +3,9 @@ package cool.scx.reflect;
 import com.fasterxml.jackson.databind.JavaType;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.AccessFlag;
 import java.lang.reflect.Method;
 
-import static cool.scx.reflect.ClassInfoHelper._findAccessModifier;
-import static cool.scx.reflect.ClassInfoHelper._findType;
-import static cool.scx.reflect.MethodInfoHelper.*;
+import static cool.scx.reflect.Helper.*;
 import static java.lang.reflect.AccessFlag.ABSTRACT;
 import static java.lang.reflect.AccessFlag.STATIC;
 
@@ -16,7 +13,7 @@ import static java.lang.reflect.AccessFlag.STATIC;
 ///
 /// @author scx567888
 /// @version 0.0.1
-final class MethodInfo implements ExecutableInfo {
+public final class MethodInfo implements ExecutableInfo {
 
     private final Method method;
     private final ClassInfo classInfo;
@@ -52,7 +49,7 @@ final class MethodInfo implements ExecutableInfo {
     public String name() {
         return name;
     }
-    
+
     public JavaType returnType() {
         return returnType;
     }

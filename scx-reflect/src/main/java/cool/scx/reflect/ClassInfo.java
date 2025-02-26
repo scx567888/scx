@@ -35,7 +35,7 @@ public final class ClassInfo  {
     private final ClassInfo enumClass;
     private final ClassInfo componentType;
 
-    public ClassInfo(JavaType type) {
+    ClassInfo(JavaType type) {
         this.type = type;
         var rawClass = type.getRawClass();
         var accessFlags = rawClass.accessFlags();
