@@ -4,9 +4,10 @@ import com.fasterxml.jackson.databind.JavaType;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AccessFlag;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Set;
 
 import static cool.scx.reflect.ClassType.ENUM;
 import static cool.scx.reflect.ClassType.RECORD;
@@ -23,8 +24,7 @@ import static java.util.Collections.addAll;
  */
 class ClassInfoHelper {
 
-    static AccessModifier _findAccessModifier(ClassInfo classInfo) {
-        var accessFlags = classInfo.type().getRawClass().accessFlags();
+    public static AccessModifier _findAccessModifier(Set<AccessFlag> accessFlags) {
         if (accessFlags.contains(AccessFlag.PUBLIC)) {
             return AccessModifier.PUBLIC;
         }
@@ -37,9 +37,7 @@ class ClassInfoHelper {
         return AccessModifier.PACKAGE_PRIVATE;
     }
 
-    static ClassType _findClassType(ClassInfo classInfo) {
-        var rawClass = classInfo.type().getRawClass();
-        var accessFlags = rawClass.accessFlags();
+    public static ClassType _findClassType(Class<?> rawClass, Set<AccessFlag> accessFlags) {
         if (accessFlags.contains(AccessFlag.ANNOTATION)) {
             return ClassType.ANNOTATION;
         }
@@ -58,14 +56,13 @@ class ClassInfoHelper {
         return ClassType.CONCRETE;
     }
 
-    //********************* ClassInfo START *********************
-
-    static ClassInfo _findSuperClass(ClassInfo classInfo) {
-        return classInfo.type().getSuperClass() != null ? getClassInfo(classInfo.type().getSuperClass()) : null;
+    public static ClassInfo _findSuperClass(JavaType type) {
+        var superClass = type.getSuperClass();
+        return superClass != null ? getClassInfo(superClass) : null;
     }
 
-    static ClassInfo[] _findInterfaces(ClassInfo classInfo) {
-        var interfaces = classInfo.type().getInterfaces();
+    public static ClassInfo[] _findInterfaces(JavaType type) {
+        var interfaces = type.getInterfaces();
         var result = new ClassInfo[interfaces.size()];
         for (int i = 0; i < interfaces.size(); i = i + 1) {
             result[i] = getClassInfo(interfaces.get(i));
@@ -73,37 +70,7 @@ class ClassInfoHelper {
         return result;
     }
 
-    static boolean _isRecord(ClassInfo classInfo) {
-        return classInfo.type().getRawClass().isRecord();
-    }
-
-    static boolean _isInterface(ClassInfo classInfo) {
-        return classInfo.type().getRawClass().isInterface();
-    }
-
-    static boolean _isAbstract(ClassInfo classInfo) {
-        return Modifier.isAbstract(classInfo.type().getRawClass().getModifiers());
-    }
-
-    /**
-     * 判断是否为 Enum , {@link Class#isEnum()} 无法处理内部类的情况
-     *
-     * @param classInfo classInfo
-     * @return isEnum
-     */
-    static boolean _isEnum(ClassInfo classInfo) {
-        return Enum.class.isAssignableFrom(classInfo.type().getRawClass());
-    }
-
-    static boolean _isAnonymousClass(ClassInfo classInfo) {
-        return classInfo.type().getRawClass().isAnonymousClass();
-    }
-
-    static Annotation[] _findAnnotations(ClassInfo classInfo) {
-        return classInfo.type().getRawClass().getDeclaredAnnotations();
-    }
-
-    static ConstructorInfo[] _findConstructorInfos(ClassInfo classInfo) {
+    public static ConstructorInfo[] _findConstructorInfos(ClassInfo classInfo) {
         var constructors = classInfo.type().getRawClass().getDeclaredConstructors();
         var result = new ConstructorInfo[constructors.length];
         for (int i = 0; i < constructors.length; i = i + 1) {
@@ -112,7 +79,40 @@ class ClassInfoHelper {
         return result;
     }
 
-    static FieldInfo[] _findFieldInfos(ClassInfo classInfo) {
+    /**
+     * 寻找 无参构造函数 (不支持成员类)
+     *
+     * @param classInfo c
+     * @return a
+     */
+    public static ConstructorInfo _findDefaultConstructor(ClassInfo classInfo) {
+        for (var constructor : classInfo.constructors()) {
+            if (constructor.parameters().length == 0) {
+                return constructor;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 寻找 Record 规范构造参数
+     */
+    public static ConstructorInfo _findRecordConstructor(ClassInfo classInfo) {
+        if (classInfo.classType() != RECORD) {
+            return null;
+        }
+        var recordComponentTypes = _getRecordComponentsTypes(classInfo);
+        for (var constructor : classInfo.constructors()) {
+            // 判断参数类型是否匹配
+            var matched = _hasSameParameterTypes(constructor, recordComponentTypes);
+            if (matched) {
+                return constructor;
+            }
+        }
+        return null;
+    }
+
+    public static FieldInfo[] _findFieldInfos(ClassInfo classInfo) {
         var fields = classInfo.type().getRawClass().getDeclaredFields();
         var result = new FieldInfo[fields.length];
         for (int i = 0; i < fields.length; i = i + 1) {
@@ -121,13 +121,22 @@ class ClassInfoHelper {
         return result;
     }
 
+    public static FieldInfo[] _findAllFieldInfos(IClassInfo classInfo) {
+        var allFieldInfos = new ArrayList<FieldInfo>();
+        while (classInfo != null) {
+            addAll(allFieldInfos, classInfo.fields());
+            classInfo = classInfo.superClass();
+        }
+        return allFieldInfos.toArray(FieldInfo[]::new);
+    }
+
     /**
      * 获取当前 ClassInfo 的所有方法 (不包括父类方法 不包括桥接方法)
      *
      * @param classInfo c
      * @return c
      */
-    static MethodInfo[] _findMethodInfos(ClassInfo classInfo) {
+    public static MethodInfo[] _findMethodInfos(ClassInfo classInfo) {
         var methods = classInfo.type().getRawClass().getDeclaredMethods();
         var list = new ArrayList<MethodInfo>();
         for (var method : methods) {
@@ -138,30 +147,7 @@ class ClassInfoHelper {
         return list.toArray(MethodInfo[]::new);
     }
 
-    /**
-     * 获取当前方法的注解 同时包含 重写方法的注解
-     *
-     * @return a
-     */
-    static Annotation[] _findAllAnnotations(IClassInfo classInfo) {
-        var allAnnotations = new ArrayList<Annotation>();
-        while (classInfo != null) {
-            addAll(allAnnotations, classInfo.annotations());
-            classInfo = classInfo.superClass();
-        }
-        return allAnnotations.toArray(Annotation[]::new);
-    }
-
-    static FieldInfo[] _findAllFieldInfos(IClassInfo classInfo) {
-        var allFieldInfos = new ArrayList<FieldInfo>();
-        while (classInfo != null) {
-            addAll(allFieldInfos, classInfo.fields());
-            classInfo = classInfo.superClass();
-        }
-        return allFieldInfos.toArray(FieldInfo[]::new);
-    }
-
-    static MethodInfo[] _findAllMethodInfos(IClassInfo classInfo) {
+    public static MethodInfo[] _findAllMethodInfos(IClassInfo classInfo) {
         //存储所有出现过的父类方法 用于过滤
         var filter = new HashSet<MethodInfo>();
         var allMethodInfo = new ArrayList<MethodInfo>();
@@ -183,45 +169,67 @@ class ClassInfoHelper {
         return allMethodInfo.toArray(MethodInfo[]::new);
     }
 
+    public static Annotation[] _findAnnotations(Class<?> rawClass) {
+        return rawClass.getDeclaredAnnotations();
+    }
+
     /**
-     * 寻找 无参构造函数 (不支持成员类)
+     * 获取当前方法的注解 同时包含 重写方法的注解
      *
-     * @param classInfo c
      * @return a
      */
-    static ConstructorInfo _findNoArgsConstructor(ClassInfo classInfo) {
-        for (var constructor : classInfo.constructors()) {
-            if (constructor.parameters().length == 0) {
-                return constructor;
-            }
+    public static Annotation[] _findAllAnnotations(IClassInfo classInfo) {
+        var allAnnotations = new ArrayList<Annotation>();
+        while (classInfo != null) {
+            addAll(allAnnotations, classInfo.annotations());
+            classInfo = classInfo.superClass();
         }
-        return null;
+        return allAnnotations.toArray(Annotation[]::new);
     }
 
-    /**
-     * 寻找 Record 规范构造参数
-     */
-    static ConstructorInfo _findRecordConstructor(ClassInfo classInfo) {
-        if (classInfo.classType() != RECORD) {
-            return null;
-        }
-        var recordComponentTypes = _getRecordComponentsTypes(classInfo);
-        for (var constructor : classInfo.constructors()) {
-            // 判断参数类型是否匹配
-            var matched = _hasSameParameterTypes(constructor, recordComponentTypes);
-            if (matched) {
-                return constructor;
-            }
-        }
-        return null;
+    public static boolean _isFinal(Set<AccessFlag> accessFlags) {
+        return accessFlags.contains(AccessFlag.FINAL);
     }
 
-    static IClassInfo _findEnumClass(ClassInfo classInfo) {
+    public static boolean _isStatic(Set<AccessFlag> accessFlags) {
+        return accessFlags.contains(AccessFlag.STATIC);
+    }
+
+    public static boolean _isAnonymousClass(Class<?> rawClass) {
+        return rawClass.isAnonymousClass();
+    }
+
+    public static boolean _isMemberClass(Class<?> rawClass) {
+        return rawClass.isMemberClass();
+    }
+
+    public static boolean _isPrimitive(Class<?> rawClass) {
+        return rawClass.isPrimitive();
+    }
+
+    public static boolean _isArray(Class<?> rawClass) {
+        return rawClass.isArray();
+    }
+
+    public static IClassInfo _findEnumClass(ClassInfo classInfo) {
         if (classInfo.classType() == ENUM) {
             return classInfo.isAnonymousClass() ? classInfo.superClass() : classInfo;
         } else {
             return null;
         }
+    }
+
+    public static IClassInfo _findComponentType(ClassInfo classInfo) {
+        if (classInfo.isArray()) {
+            return getClassInfo(classInfo.type().getRawClass().componentType());
+        } else {
+            return null;
+        }
+    }
+
+    public static Type[] _findGenericTypes(ClassInfo classInfo) {
+        //todo 
+        return null;
     }
 
     private static JavaType[] _getRecordComponentsTypes(ClassInfo classInfo) {
@@ -247,8 +255,5 @@ class ClassInfoHelper {
         }
         return true;
     }
-
-    //********************* ClassInfo END *********************
-
 
 }

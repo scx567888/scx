@@ -31,8 +31,11 @@ public final class ClassInfo implements IClassInfo {
     private final boolean isStatic;
     private final boolean isAnonymousClass;
     private final boolean isMemberClass;
-    private final Type[] genericTypes;
+    private final boolean isPrimitive;
+    private final boolean isArray;
     private final IClassInfo enumClass;
+    private final IClassInfo componentType;
+    private final Type[] genericTypes;
 
     public ClassInfo(JavaType type) {
         this.type = type;
@@ -55,8 +58,11 @@ public final class ClassInfo implements IClassInfo {
         this.isStatic = _isStatic(accessFlags);
         this.isAnonymousClass = _isAnonymousClass(rawClass);
         this.isMemberClass = _isMemberClass(rawClass);
-        this.genericTypes = _findGenericTypes(this);
+        this.isPrimitive = _isPrimitive(rawClass);
+        this.isArray = _isArray(rawClass);
         this.enumClass = _findEnumClass(this);
+        this.componentType = _findComponentType(this);
+        this.genericTypes = _findGenericTypes(this);
     }
 
     @Override
@@ -151,13 +157,29 @@ public final class ClassInfo implements IClassInfo {
     }
 
     @Override
-    public Type[] genericTypes() {
-        return genericTypes;
+    public boolean isPrimitive() {
+        return isPrimitive;
     }
+
+    @Override
+    public boolean isArray() {
+        return isArray;
+    }
+
 
     @Override
     public IClassInfo enumClass() {
         return enumClass;
+    }
+
+    @Override
+    public IClassInfo componentType() {
+        return componentType;
+    }
+
+    @Override
+    public Type[] genericTypes() {
+        return genericTypes;
     }
 
     @Override
