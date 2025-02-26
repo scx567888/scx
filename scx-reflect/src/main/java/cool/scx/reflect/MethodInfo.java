@@ -3,50 +3,78 @@ package cool.scx.reflect;
 import com.fasterxml.jackson.databind.JavaType;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.AccessFlag;
 import java.lang.reflect.Method;
 
+import static cool.scx.reflect.ClassInfoHelper._findAccessModifier;
+import static cool.scx.reflect.ClassInfoHelper._findType;
 import static cool.scx.reflect.MethodInfoHelper.*;
-import static cool.scx.reflect.ReflectHelper._findAccessModifier;
+import static java.lang.reflect.AccessFlag.ABSTRACT;
+import static java.lang.reflect.AccessFlag.STATIC;
 
 /// MethodInfo
 ///
 /// @author scx567888
 /// @version 0.0.1
-final class MethodInfo implements IMethodInfo {
+final class MethodInfo implements ExecutableInfo {
 
     private final Method method;
     private final ClassInfo classInfo;
     private final String name;
+    private final AccessModifier accessModifier;
+    private final JavaType returnType;
+    private final ParameterInfo[] parameters;
+    private final MethodInfo superMethod;
+    private final Annotation[] annotations;
+    private final Annotation[] allAnnotations;
     private final boolean isAbstract;
     private final boolean isStatic;
-    private final AccessModifier accessModifier;
-
-    private final Annotation[] annotations;
-    private final JavaType returnType;
-
-    private final ParameterInfo[] parameters;
-    private final IMethodInfo superMethod;
-    private final Annotation[] allAnnotations;
 
     MethodInfo(Method method, ClassInfo classInfo) {
         this.method = method;
         this.classInfo = classInfo;
+        this.name = method.getName();
         var accessFlags = method.accessFlags();
-        this.name = _findName(method);
-        this.isAbstract = _isAbstract(accessFlags);
-        this.isStatic = _isStatic(accessFlags);
         this.accessModifier = _findAccessModifier(accessFlags);
-        this.annotations = _findAnnotations(method);
-        this.returnType = _findReturnType(this);
+        this.returnType = _findType(method.getGenericReturnType(), classInfo);
         this.parameters = _findParameterInfos(this);
         this.superMethod = _findSuperMethod(this);
+        this.annotations = method.getDeclaredAnnotations();
         this.allAnnotations = _findAllAnnotations(this);
-
+        this.isAbstract = accessFlags.contains(ABSTRACT);
+        this.isStatic = accessFlags.contains(STATIC);
     }
 
-    @Override
     public Method method() {
         return method;
+    }
+
+    public String name() {
+        return name;
+    }
+    
+    public JavaType returnType() {
+        return returnType;
+    }
+
+    public MethodInfo superMethod() {
+        return superMethod;
+    }
+
+    public Annotation[] annotations() {
+        return annotations;
+    }
+
+    public Annotation[] allAnnotations() {
+        return allAnnotations;
+    }
+
+    public boolean isAbstract() {
+        return isAbstract;
+    }
+
+    public boolean isStatic() {
+        return isStatic;
     }
 
     @Override
@@ -55,53 +83,18 @@ final class MethodInfo implements IMethodInfo {
     }
 
     @Override
-    public String name() {
-        return name;
-    }
-
-    @Override
-    public boolean isAbstract() {
-        return isAbstract;
-    }
-
-    @Override
-    public boolean isStatic() {
-        return isStatic;
-    }
-
-    @Override
     public AccessModifier accessModifier() {
         return accessModifier;
     }
 
     @Override
-    public Annotation[] annotations() {
-        return annotations;
-    }
-
-    @Override
-    public JavaType returnType() {
-        return returnType;
+    public void setAccessible(boolean flag) {
+        this.method.setAccessible(flag);
     }
 
     @Override
     public ParameterInfo[] parameters() {
         return parameters;
-    }
-
-    @Override
-    public IMethodInfo superMethod() {
-        return superMethod;
-    }
-
-    @Override
-    public Annotation[] allAnnotations() {
-        return allAnnotations;
-    }
-
-    @Override
-    public void setAccessible(boolean flag) {
-        this.method.setAccessible(flag);
     }
 
 }
