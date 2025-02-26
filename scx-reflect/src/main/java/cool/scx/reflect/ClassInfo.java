@@ -17,12 +17,12 @@ public final class ClassInfo  {
     private final ClassType classType;
     private final ClassInfo superClass;
     private final ClassInfo[] interfaces;
-    private final IConstructorInfo[] constructors;
-    private final IConstructorInfo defaultConstructor;
-    private final IConstructorInfo recordConstructor;
-    private final IFieldInfo[] fields;
-    private final IFieldInfo[] allFields;
-    private final IMethodInfo[] methods;
+    private final ConstructorInfo[] constructors;
+    private final ConstructorInfo defaultConstructor;
+    private final ConstructorInfo recordConstructor;
+    private final FieldInfo[] fields;
+    private final FieldInfo[] allFields;
+    private final MethodInfo[] methods;
     private final IMethodInfo[] allMethods;
     private final Annotation[] annotations;
     private final Annotation[] allAnnotations;
