@@ -55,14 +55,14 @@ final class Helper {
         return ClassType.CONCRETE;
     }
 
-    public static MethodType _findMethodType(Method method,Set<AccessFlag> accessFlags) {
+    public static MethodType _findMethodType(Method method, Set<AccessFlag> accessFlags) {
         if (accessFlags.contains(AccessFlag.ABSTRACT)) {
             return MethodType.ABSTRACT;
         }
         if (accessFlags.contains(AccessFlag.STATIC)) {
             return MethodType.STATIC;
         }
-        if (method.isDefault()){
+        if (method.isDefault()) {
             return MethodType.DEFAULT;
         }
         return MethodType.NORMAL;

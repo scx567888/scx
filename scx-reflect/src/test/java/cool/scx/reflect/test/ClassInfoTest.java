@@ -54,6 +54,12 @@ public class ClassInfoTest {
         aa[] value();
     }
 
+    interface ggg {
+        default void gg() {
+
+        }
+    }
+
     @aa
     @aa
     static class a {
@@ -70,12 +76,6 @@ public class ClassInfoTest {
     @aa
     static class d extends a {
 
-    }
-    
-    interface ggg{
-        default void gg() {
-            
-        }
     }
 
 }

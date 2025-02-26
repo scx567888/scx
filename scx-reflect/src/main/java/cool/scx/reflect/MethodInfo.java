@@ -6,7 +6,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 import static cool.scx.reflect.Helper.*;
-import static java.lang.reflect.AccessFlag.*;
+import static java.lang.reflect.AccessFlag.FINAL;
 
 /// MethodInfo
 ///
