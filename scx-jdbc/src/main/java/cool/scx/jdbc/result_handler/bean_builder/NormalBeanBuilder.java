@@ -22,7 +22,7 @@ final class NormalBeanBuilder<T> extends BeanBuilder<T> {
     private final FieldSetter[] fieldSetters;
 
     public NormalBeanBuilder(Class<T> type, Function<Field, String> columnNameMapping) {
-        this.constructor = checkNoArgsConstructor(ReflectHelper.getClassInfo(type));
+        this.constructor = checkDefaultConstructor(ReflectHelper.getClassInfo(type));
         this.constructor.setAccessible(true);
         this.fieldSetters = FieldSetter.ofArray(type, columnNameMapping);
     }
@@ -37,7 +37,7 @@ final class NormalBeanBuilder<T> extends BeanBuilder<T> {
      * @param classInfo c
      * @return a
      */
-    private static ConstructorInfo checkNoArgsConstructor(ClassInfo classInfo) {
+    private static ConstructorInfo checkDefaultConstructor(ClassInfo classInfo) {
         var defaultConstructor = classInfo.defaultConstructor();
         if (defaultConstructor == null) {
             throw new IllegalArgumentException("寻找 无参 构造函数失败, type " + classInfo.type().getRawClass().getName());
