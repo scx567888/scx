@@ -11,13 +11,13 @@ import static cool.scx.reflect.ReflectHelper._findAccessModifier;
 ///
 /// @author scx567888
 /// @version 0.0.1
-final class ClassInfo implements IClassInfo {
+public final class ClassInfo  {
 
     private final JavaType type;
     private final AccessModifier accessModifier;
     private final ClassType classType;
-    private final IClassInfo superClass;
-    private final IClassInfo[] interfaces;
+    private final ClassInfo superClass;
+    private final ClassInfo[] interfaces;
     private final IConstructorInfo[] constructors;
     private final IConstructorInfo defaultConstructor;
     private final IConstructorInfo recordConstructor;
@@ -33,8 +33,8 @@ final class ClassInfo implements IClassInfo {
     private final boolean isMemberClass;
     private final boolean isPrimitive;
     private final boolean isArray;
-    private final IClassInfo enumClass;
-    private final IClassInfo componentType;
+    private final ClassInfo enumClass;
+    private final ClassInfo componentType;
 
     public ClassInfo(JavaType type) {
         this.type = type;
@@ -63,120 +63,118 @@ final class ClassInfo implements IClassInfo {
         this.componentType = _findComponentType(this);
     }
 
-    @Override
+    /// Java Type 这里我们使用 Jackson 的 JavaType 来方便进行诸如序列化等操作
     public JavaType type() {
         return type;
     }
 
-    @Override
+    /// 类修饰符
     public AccessModifier accessModifier() {
         return accessModifier;
     }
 
-    @Override
+    /// 类的类型
     public ClassType classType() {
         return classType;
     }
 
-    @Override
-    public IClassInfo superClass() {
+    /// 父类 可能为空
+    public ClassInfo superClass() {
         return superClass;
     }
 
-    @Override
-    public IClassInfo[] interfaces() {
+    /// 接口
+    public ClassInfo[] interfaces() {
         return interfaces;
     }
 
-    @Override
+    /// 构造参数
     public IConstructorInfo[] constructors() {
         return constructors;
     }
 
-    @Override
+    /// 默认构造函数 (无参构造函数) 可能为空
     public IConstructorInfo defaultConstructor() {
         return defaultConstructor;
     }
 
-    @Override
+    /// Record 规范构造参数 可能为空
     public IConstructorInfo recordConstructor() {
         return recordConstructor;
     }
 
-    @Override
+    /// 字段
     public IFieldInfo[] fields() {
         return fields;
     }
 
-    @Override
+    /// 获取类所有字段 包括继承自父类的字段
     public IFieldInfo[] allFields() {
         return allFields;
     }
 
-    @Override
+    /// 方法
     public IMethodInfo[] methods() {
         return methods;
     }
 
-    @Override
+    /// 获取类所有方法 包括继承自父类的方法
     public IMethodInfo[] allMethods() {
         return allMethods;
     }
 
-    @Override
+    /// 注解
     public Annotation[] annotations() {
         return annotations;
     }
 
-    @Override
+    /// 获取类所有的注解 包括继承自父类的注解
     public Annotation[] allAnnotations() {
         return allAnnotations;
     }
 
-
-    @Override
+    /// 是否 final 类
     public boolean isFinal() {
         return isFinal;
     }
 
-    @Override
+    /// 是否 静态类
     public boolean isStatic() {
         return isStatic;
     }
 
-    @Override
+    /// 是否 匿名类
     public boolean isAnonymousClass() {
         return isAnonymousClass;
     }
 
-    @Override
+    /// 是否 内部类
     public boolean isMemberClass() {
         return isMemberClass;
     }
 
-    @Override
+    /// 是否基本类型
     public boolean isPrimitive() {
         return isPrimitive;
     }
 
-    @Override
+    /// 是否数组
     public boolean isArray() {
         return isArray;
     }
 
-
-    @Override
-    public IClassInfo enumClass() {
+    /// 枚举类型
+    public ClassInfo enumClass() {
         return enumClass;
     }
 
-    @Override
-    public IClassInfo componentType() {
+    /// 数组成员类型
+    public ClassInfo componentType() {
         return componentType;
     }
 
-    @Override
-    public IClassInfo findSuperType(Class<?> rawTarget) {
+    /// 返回指定类型的 父级 ClassInfo 支持常规类,抽象类,接口
+    public ClassInfo findSuperType(Class<?> rawTarget) {
         if (rawTarget == type.getRawClass()) {
             return this;
         }
