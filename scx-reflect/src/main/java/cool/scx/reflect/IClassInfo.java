@@ -62,13 +62,22 @@ public interface IClassInfo {
     /// 是否 内部类
     boolean isMemberClass();
 
-    /// 泛型
-    Type[] genericTypes();
+    /// 是否基本类型
+    boolean isPrimitive();
+    
+    /// 是否数组
+    boolean isArray();
 
     /// 枚举类型
     IClassInfo enumClass();
 
-    /// 返回指定的 type
+    /// 数组成员类型
+    IClassInfo componentType();
+
+    /// 泛型
+    Type[] genericTypes();
+
+    /// 返回指定类型的 父级 ClassInfo 支持常规类,抽象类,接口
     IClassInfo findSuperType(Class<?> type);
 
 }
