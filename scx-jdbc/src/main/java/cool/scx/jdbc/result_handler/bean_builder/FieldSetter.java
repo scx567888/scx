@@ -1,8 +1,6 @@
 package cool.scx.jdbc.result_handler.bean_builder;
 
 import cool.scx.jdbc.type_handler.TypeHandler;
-import cool.scx.reflect.ClassType;
-import cool.scx.reflect.IFieldInfo;
 import cool.scx.reflect.IFieldInfo;
 import cool.scx.reflect.ReflectHelper;
 
@@ -46,7 +44,7 @@ final class FieldSetter {
 
     static FieldSetter[] ofArray(Class<?> type, Function<Field, String> columnNameMapping) {
         var classInfo = ReflectHelper.getClassInfo(type);
-        var fields = classInfo.classType()== RECORD ? classInfo.allFields() : Stream.of(classInfo.allFields()).filter(c -> c.accessModifier() == PUBLIC).toArray(IFieldInfo[]::new);
+        var fields = classInfo.classType() == RECORD ? classInfo.allFields() : Stream.of(classInfo.allFields()).filter(c -> c.accessModifier() == PUBLIC).toArray(IFieldInfo[]::new);
         var fieldSetters = new FieldSetter[fields.length];
         for (int i = 0; i < fields.length; i = i + 1) {
             fieldSetters[i] = of(fields[i], columnNameMapping);

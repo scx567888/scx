@@ -93,7 +93,7 @@ final class MethodInfo implements IMethodInfo {
     public IMethodInfo superMethod() {
         return superMethod;
     }
-    
+
     @Override
     public Annotation[] allAnnotations() {
         return allAnnotations;
