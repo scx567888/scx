@@ -20,7 +20,7 @@ public enum EnumBug {
     },
     Epsilon(9);
 
-    private int value;
+    private final int value;
 
     EnumBug(int value) {
         this.value = value;

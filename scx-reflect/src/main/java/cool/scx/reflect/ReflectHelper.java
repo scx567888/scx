@@ -11,7 +11,7 @@ import java.util.Set;
 import static cool.scx.common.util.ObjectUtils.constructType;
 import static cool.scx.common.util.ObjectUtils.resolveMemberType;
 
-public class ReflectHelper {
+public final class ReflectHelper {
 
     private static final Map<JavaType, IClassInfo> CLASS_INFO_CACHE = new HashMap<>();
 

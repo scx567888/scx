@@ -8,7 +8,7 @@ import java.lang.reflect.Parameter;
 ///
 /// @author scx567888
 /// @version 0.0.1
-class ParameterInfoHelper {
+final class ParameterInfoHelper {
 
     static String _findName(Parameter parameter) {
         return parameter.getName();
