@@ -4,43 +4,38 @@ import com.fasterxml.jackson.databind.JavaType;
 
 import java.lang.reflect.Parameter;
 
-import static cool.scx.reflect.ParameterInfoHelper._findName;
-import static cool.scx.reflect.ParameterInfoHelper._findType;
+import static cool.scx.reflect.ClassInfoHelper._findType;
 
 /// ParameterInfo
 ///
 /// @author scx567888
 /// @version 0.0.1
-final class ParameterInfo implements IParameterInfo {
+public final class ParameterInfo {
 
     private final Parameter parameter;
-    private final IExecutableInfo executableInfo;
+    private final ExecutableInfo executableInfo;
     private final String name;
     private final JavaType type;
 
-    ParameterInfo(Parameter parameter, IExecutableInfo executableInfo) {
+    ParameterInfo(Parameter parameter, ExecutableInfo executableInfo) {
         this.parameter = parameter;
         this.executableInfo = executableInfo;
-        this.name = _findName(parameter);
-        this.type = _findType(this);
+        this.name = this.parameter.getName();
+        this.type = _findType(parameter.getParameterizedType(), executableInfo.classInfo());
     }
 
-    @Override
     public Parameter parameter() {
         return parameter;
     }
 
-    @Override
-    public IExecutableInfo executableInfo() {
+    public ExecutableInfo executableInfo() {
         return executableInfo;
     }
 
-    @Override
     public String name() {
         return name;
     }
 
-    @Override
     public JavaType type() {
         return type;
     }
