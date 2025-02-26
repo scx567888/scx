@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.JavaType;
 import java.lang.annotation.Annotation;
 
 import static cool.scx.reflect.ClassInfoHelper.*;
-import static cool.scx.reflect.ReflectHelper._findAccessModifier;
 
 /// ClassInfo
 ///
