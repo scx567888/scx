@@ -36,7 +36,7 @@ public class ReflectHelper {
         } else if (Modifier.isPrivate(m)) {
             return PRIVATE;
         } else {
-            return DEFAULT;
+            return PACKAGE_PRIVATE;
         }
     }
 
