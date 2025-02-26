@@ -3,10 +3,13 @@ package cool.scx.reflect;
 import com.fasterxml.jackson.databind.JavaType;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.AccessFlag;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import static cool.scx.reflect.ClassType.ENUM;
+import static cool.scx.reflect.ClassType.RECORD;
 import static cool.scx.reflect.ReflectHelper._findType;
 import static cool.scx.reflect.ReflectHelper.getClassInfo;
 import static java.util.Collections.addAll;
@@ -19,6 +22,41 @@ import static java.util.Collections.addAll;
  * @version 0.0.1
  */
 class ClassInfoHelper {
+
+    static AccessModifier _findAccessModifier(ClassInfo classInfo) {
+        var accessFlags = classInfo.type().getRawClass().accessFlags();
+        if (accessFlags.contains(AccessFlag.PUBLIC)) {
+            return AccessModifier.PUBLIC;
+        }
+        if (accessFlags.contains(AccessFlag.PROTECTED)) {
+            return AccessModifier.PROTECTED;
+        }
+        if (accessFlags.contains(AccessFlag.PRIVATE)) {
+            return AccessModifier.PRIVATE;
+        }
+        return AccessModifier.PACKAGE_PRIVATE;
+    }
+
+    static ClassType _findClassType(ClassInfo classInfo) {
+        var rawClass = classInfo.type().getRawClass();
+        var accessFlags = rawClass.accessFlags();
+        if (accessFlags.contains(AccessFlag.ANNOTATION)) {
+            return ClassType.ANNOTATION;
+        }
+        if (accessFlags.contains(AccessFlag.INTERFACE)) {
+            return ClassType.INTERFACE;
+        }
+        if (accessFlags.contains(AccessFlag.ABSTRACT)) {
+            return ClassType.ABSTRACT_CLASS;
+        }
+        if (accessFlags.contains(AccessFlag.ENUM)) {
+            return ClassType.ENUM;
+        }
+        if (rawClass.isRecord()) {
+            return RECORD;
+        }
+        return ClassType.CONCRETE;
+    }
 
     //********************* ClassInfo START *********************
 
@@ -105,7 +143,7 @@ class ClassInfoHelper {
      *
      * @return a
      */
-    static Annotation[] _findAllAnnotations(ClassInfo classInfo) {
+    static Annotation[] _findAllAnnotations(IClassInfo classInfo) {
         var allAnnotations = new ArrayList<Annotation>();
         while (classInfo != null) {
             addAll(allAnnotations, classInfo.annotations());
@@ -114,7 +152,7 @@ class ClassInfoHelper {
         return allAnnotations.toArray(Annotation[]::new);
     }
 
-    static FieldInfo[] _findAllFieldInfos(ClassInfo classInfo) {
+    static FieldInfo[] _findAllFieldInfos(IClassInfo classInfo) {
         var allFieldInfos = new ArrayList<FieldInfo>();
         while (classInfo != null) {
             addAll(allFieldInfos, classInfo.fields());
@@ -123,7 +161,7 @@ class ClassInfoHelper {
         return allFieldInfos.toArray(FieldInfo[]::new);
     }
 
-    static MethodInfo[] _findAllMethodInfos(ClassInfo classInfo) {
+    static MethodInfo[] _findAllMethodInfos(IClassInfo classInfo) {
         //存储所有出现过的父类方法 用于过滤
         var filter = new HashSet<MethodInfo>();
         var allMethodInfo = new ArrayList<MethodInfo>();
@@ -164,7 +202,7 @@ class ClassInfoHelper {
      * 寻找 Record 规范构造参数
      */
     static ConstructorInfo _findRecordConstructor(ClassInfo classInfo) {
-        if (!classInfo.isRecord()) {
+        if (classInfo.classType() != RECORD) {
             return null;
         }
         var recordComponentTypes = _getRecordComponentsTypes(classInfo);
@@ -178,8 +216,8 @@ class ClassInfoHelper {
         return null;
     }
 
-    static ClassInfo _findEnumClass(ClassInfo classInfo) {
-        if (classInfo.isEnum()) {
+    static IClassInfo _findEnumClass(ClassInfo classInfo) {
+        if (classInfo.classType() == ENUM) {
             return classInfo.isAnonymousClass() ? classInfo.superClass() : classInfo;
         } else {
             return null;

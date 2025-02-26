@@ -3,151 +3,162 @@ package cool.scx.reflect;
 import com.fasterxml.jackson.databind.JavaType;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
 
 import static cool.scx.reflect.ClassInfoHelper.*;
 
-/**
- * ClassInfo
- *
- * @author scx567888
- * @version 0.0.1
- */
-public final class ClassInfo {
+/// ClassInfo
+///
+/// @author scx567888
+/// @version 0.0.1
+public final class ClassInfo implements IClassInfo {
 
     private final JavaType type;
-    private final ClassInfo superClass;
-    private final ClassInfo[] interfaces;
-    private final boolean isRecord;
-    private final boolean isInterface;
-    private final boolean isAbstract;
-    private final boolean isEnum;
-    private final boolean isAnonymousClass;
-    private final Annotation[] annotations;
+    private final AccessModifier accessModifier;
+    private final ClassType classType;
+    private final IClassInfo superClass;
+    private final IClassInfo[] interfaces;
     private final ConstructorInfo[] constructors;
-    private final FieldInfo[] fields;
-    private final MethodInfo[] methods;
-    private final Annotation[] allAnnotations;
-    private final FieldInfo[] allFields;
-    private final MethodInfo[] allMethods;
-    private final ConstructorInfo noArgsConstructor;
+    private final ConstructorInfo defaultConstructor;
     private final ConstructorInfo recordConstructor;
-    private final ClassInfo enumClass;
+    private final FieldInfo[] fields;
+    private final FieldInfo[] allFields;
+    private final MethodInfo[] methods;
+    private final MethodInfo[] allMethods;
+    private final Annotation[] annotations;
+    private final Annotation[] allAnnotations;
+    private final Type[] genericTypes;
+    private final IClassInfo enumClass;
+    private final boolean isFinal;
+    private final boolean isStatic;
+    private final boolean isAnonymousClass;
+    private final boolean isInnerClass;
 
-    ClassInfo(JavaType type) {
+    public ClassInfo(JavaType type) {
         this.type = type;
+        this.accessModifier = _findAccessModifier(this);
+        this.classType = _findClassType(this);
         this.superClass = _findSuperClass(this);
         this.interfaces = _findInterfaces(this);
-        this.isRecord = _isRecord(this);
-        this.isInterface = _isInterface(this);
-        this.isAbstract = _isAbstract(this);
-        this.isEnum = _isEnum(this);
-        this.isAnonymousClass = _isAnonymousClass(this);
-        this.annotations = _findAnnotations(this);
         this.constructors = _findConstructorInfos(this);
-        this.fields = _findFieldInfos(this);
-        this.methods = _findMethodInfos(this);
-        this.allAnnotations = _findAllAnnotations(this);
-        this.allFields = _findAllFieldInfos(this);
-        this.allMethods = _findAllMethodInfos(this);
-        this.noArgsConstructor = _findNoArgsConstructor(this);
+        this.defaultConstructor = _findNoArgsConstructor(this);
         this.recordConstructor = _findRecordConstructor(this);
+        this.fields = _findFieldInfos(this);
+        this.allFields = _findAllFieldInfos(this);
+        this.methods = _findMethodInfos(this);
+        this.allMethods = _findAllMethodInfos(this);
+        this.annotations = _findAnnotations(this);
+        this.allAnnotations = _findAllAnnotations(this);
+        this.genericTypes = null; //
         this.enumClass = _findEnumClass(this);
+        this.isFinal = _findIsFinal(this);
+        this.isStatic = _findIsStatic(this);
+        this.isAnonymousClass = _findIsAnonymousClass(this);
+        this.isInnerClass = _findIsInnerClass(this);
     }
 
+    @Override
     public JavaType type() {
         return type;
     }
 
-    public ClassInfo superClass() {
+    @Override
+    public AccessModifier accessModifier() {
+        return accessModifier;
+    }
+
+    @Override
+    public ClassType classType() {
+        return classType;
+    }
+
+    @Override
+    public IClassInfo superClass() {
         return superClass;
     }
 
-    public ClassInfo[] interfaces() {
+    @Override
+    public IClassInfo[] interfaces() {
         return interfaces;
     }
 
-    public boolean isRecord() {
-        return isRecord;
-    }
-
-    public boolean isInterface() {
-        return isInterface;
-    }
-
-    public boolean isAbstract() {
-        return isAbstract;
-    }
-
-    public boolean isEnum() {
-        return isEnum;
-    }
-
-    public boolean isAnonymousClass() {
-        return isAnonymousClass;
-    }
-
-    public Annotation[] annotations() {
-        return annotations;
-    }
-
+    @Override
     public ConstructorInfo[] constructors() {
         return constructors;
     }
 
-    public FieldInfo[] fields() {
-        return fields;
+    @Override
+    public ConstructorInfo defaultConstructor() {
+        return defaultConstructor;
     }
 
-    public MethodInfo[] methods() {
-        return methods;
-    }
-
-    /**
-     * 获取类所有的注解 包括继承自父类的注解
-     *
-     * @return 所有注解
-     */
-    public Annotation[] allAnnotations() {
-        return allAnnotations;
-    }
-
-    /**
-     * 获取类所有字段 包括继承自父类的字段
-     *
-     * @return 所有字段
-     */
-    public FieldInfo[] allFields() {
-        return allFields;
-    }
-
-    /**
-     * 获取类所有方法 包括继承自父类的方法
-     *
-     * @return 所有方法
-     */
-    public MethodInfo[] allMethods() {
-        return allMethods;
-    }
-
-    /**
-     * 无参构造函数
-     */
-    public ConstructorInfo noArgsConstructor() {
-        return noArgsConstructor;
-    }
-
-    /**
-     * Record 规范构造参数
-     */
+    @Override
     public ConstructorInfo recordConstructor() {
         return recordConstructor;
     }
 
-    public ClassInfo enumClass() {
+    @Override
+    public FieldInfo[] fields() {
+        return fields;
+    }
+
+    @Override
+    public FieldInfo[] allFields() {
+        return allFields;
+    }
+
+    @Override
+    public MethodInfo[] methods() {
+        return methods;
+    }
+
+    @Override
+    public MethodInfo[] allMethods() {
+        return allMethods;
+    }
+
+    @Override
+    public Annotation[] annotations() {
+        return annotations;
+    }
+
+    @Override
+    public Annotation[] allAnnotations() {
+        return allAnnotations;
+    }
+
+    @Override
+    public Type[] genericTypes() {
+        return genericTypes;
+    }
+
+    @Override
+    public IClassInfo enumClass() {
         return enumClass;
     }
 
-    public ClassInfo findSuperType(Class<?> rawTarget) {
+    @Override
+    public boolean isFinal() {
+        return isFinal;
+    }
+
+    @Override
+    public boolean isStatic() {
+        return isStatic;
+    }
+
+    @Override
+    public boolean isAnonymousClass() {
+        return isAnonymousClass;
+    }
+
+    @Override
+    public boolean isInnerClass() {
+        return isInnerClass;
+    }
+
+    @Override
+    public IClassInfo findSuperType(Class<?> rawTarget) {
         if (rawTarget == type.getRawClass()) {
             return this;
         }
