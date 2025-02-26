@@ -27,34 +27,36 @@ public final class ClassInfo implements IClassInfo {
     private final MethodInfo[] allMethods;
     private final Annotation[] annotations;
     private final Annotation[] allAnnotations;
-    private final Type[] genericTypes;
-    private final IClassInfo enumClass;
     private final boolean isFinal;
     private final boolean isStatic;
     private final boolean isAnonymousClass;
-    private final boolean isInnerClass;
+    private final boolean isMemberClass;
+    private final Type[] genericTypes;
+    private final IClassInfo enumClass;
 
     public ClassInfo(JavaType type) {
         this.type = type;
-        this.accessModifier = _findAccessModifier(this);
-        this.classType = _findClassType(this);
-        this.superClass = _findSuperClass(this);
-        this.interfaces = _findInterfaces(this);
+        var rawClass = type.getRawClass();
+        var accessFlags = rawClass.accessFlags();
+        this.accessModifier = _findAccessModifier(accessFlags);
+        this.classType = _findClassType(rawClass, accessFlags);
+        this.superClass = _findSuperClass(type);
+        this.interfaces = _findInterfaces(type);
         this.constructors = _findConstructorInfos(this);
-        this.defaultConstructor = _findNoArgsConstructor(this);
+        this.defaultConstructor = _findDefaultConstructor(this);
         this.recordConstructor = _findRecordConstructor(this);
         this.fields = _findFieldInfos(this);
         this.allFields = _findAllFieldInfos(this);
         this.methods = _findMethodInfos(this);
         this.allMethods = _findAllMethodInfos(this);
-        this.annotations = _findAnnotations(this);
+        this.annotations = _findAnnotations(rawClass);
         this.allAnnotations = _findAllAnnotations(this);
-        this.genericTypes = null; //
+        this.isFinal = _isFinal(accessFlags);
+        this.isStatic = _isStatic(accessFlags);
+        this.isAnonymousClass = _isAnonymousClass(rawClass);
+        this.isMemberClass = _isMemberClass(rawClass);
+        this.genericTypes = _findGenericTypes(this);
         this.enumClass = _findEnumClass(this);
-        this.isFinal = _findIsFinal(this);
-        this.isStatic = _findIsStatic(this);
-        this.isAnonymousClass = _findIsAnonymousClass(this);
-        this.isInnerClass = _findIsInnerClass(this);
     }
 
     @Override
@@ -127,15 +129,6 @@ public final class ClassInfo implements IClassInfo {
         return allAnnotations;
     }
 
-    @Override
-    public Type[] genericTypes() {
-        return genericTypes;
-    }
-
-    @Override
-    public IClassInfo enumClass() {
-        return enumClass;
-    }
 
     @Override
     public boolean isFinal() {
@@ -153,8 +146,18 @@ public final class ClassInfo implements IClassInfo {
     }
 
     @Override
-    public boolean isInnerClass() {
-        return isInnerClass;
+    public boolean isMemberClass() {
+        return isMemberClass;
+    }
+
+    @Override
+    public Type[] genericTypes() {
+        return genericTypes;
+    }
+
+    @Override
+    public IClassInfo enumClass() {
+        return enumClass;
     }
 
     @Override
