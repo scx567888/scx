@@ -55,6 +55,18 @@ public interface IClassInfo {
 
     /// 枚举类型
     IClassInfo enumClass();
+    
+    /// 是否 final 类
+    boolean isFinal();
+    
+    /// 是否 静态类
+    boolean isStatic();
+    
+    /// 是否 匿名类
+    boolean isAnonymousClass();
+    
+    /// 是否 内部类
+    boolean isInnerClass();
 
     /// 返回指定的 type
     IClassInfo findSuperType(Class<?> type);
