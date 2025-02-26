@@ -10,7 +10,7 @@ import static cool.scx.reflect.Helper.*;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public final class ClassInfo  {
+public final class ClassInfo {
 
     private final JavaType type;
     private final AccessModifier accessModifier;

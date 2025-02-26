@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JavaType;
 
 import java.lang.reflect.Parameter;
 
-import static cool.scx.reflect.ClassInfoHelper._findType;
+import static cool.scx.reflect.Helper._findType;
 
 /// ParameterInfo
 ///
@@ -20,7 +20,7 @@ public final class ParameterInfo {
     ParameterInfo(Parameter parameter, ExecutableInfo executableInfo) {
         this.parameter = parameter;
         this.executableInfo = executableInfo;
-        this.name = this.parameter.getName();
+        this.name = parameter.getName();
         this.type = _findType(parameter.getParameterizedType(), executableInfo.classInfo());
     }
 

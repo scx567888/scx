@@ -13,7 +13,7 @@ import static cool.scx.reflect.Helper._findType;
 ///
 /// @author scx567888
 /// @version 0.0.1
-final class FieldInfo implements MemberInfo {
+public final class FieldInfo implements MemberInfo {
 
     private final Field field;
     private final ClassInfo classInfo;

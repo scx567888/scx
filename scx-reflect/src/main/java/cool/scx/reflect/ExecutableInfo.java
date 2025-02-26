@@ -4,10 +4,8 @@ package cool.scx.reflect;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public interface IExecutableInfo {
+public interface ExecutableInfo extends MemberInfo {
 
-    IParameterInfo[] parameters();
-
-    IClassInfo classInfo();
+    ParameterInfo[] parameters();
 
 }
