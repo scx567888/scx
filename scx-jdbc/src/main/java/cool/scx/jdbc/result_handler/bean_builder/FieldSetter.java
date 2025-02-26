@@ -1,7 +1,7 @@
 package cool.scx.jdbc.result_handler.bean_builder;
 
 import cool.scx.jdbc.type_handler.TypeHandler;
-import cool.scx.reflect.IFieldInfo;
+import cool.scx.reflect.FieldInfo;
 import cool.scx.reflect.ReflectHelper;
 
 import java.lang.reflect.Field;
@@ -19,20 +19,20 @@ import static cool.scx.reflect.ClassType.RECORD;
  */
 final class FieldSetter {
 
-    private final IFieldInfo fieldInfo;
+    private final FieldInfo fieldInfo;
     private final String columnName;
     private TypeHandler<?> typeHandler;
 
     /**
      *
      */
-    FieldSetter(IFieldInfo fieldInfo, String columnName) {
+    FieldSetter(FieldInfo fieldInfo, String columnName) {
         this.fieldInfo = fieldInfo;
         this.columnName = columnName;
         this.typeHandler = null;
     }
 
-    static FieldSetter of(IFieldInfo field, Function<Field, String> columnNameMapping) {
+    static FieldSetter of(FieldInfo field, Function<Field, String> columnNameMapping) {
         field.setAccessible(true);
         var columnName = columnNameMapping.apply(field.field());
         //若 columnNameMapping 提供空值, 则回退到 field.getName()
@@ -44,7 +44,7 @@ final class FieldSetter {
 
     static FieldSetter[] ofArray(Class<?> type, Function<Field, String> columnNameMapping) {
         var classInfo = ReflectHelper.getClassInfo(type);
-        var fields = classInfo.classType() == RECORD ? classInfo.allFields() : Stream.of(classInfo.allFields()).filter(c -> c.accessModifier() == PUBLIC).toArray(IFieldInfo[]::new);
+        var fields = classInfo.classType() == RECORD ? classInfo.allFields() : Stream.of(classInfo.allFields()).filter(c -> c.accessModifier() == PUBLIC).toArray(FieldInfo[]::new);
         var fieldSetters = new FieldSetter[fields.length];
         for (int i = 0; i < fields.length; i = i + 1) {
             fieldSetters[i] = of(fields[i], columnNameMapping);
@@ -56,7 +56,7 @@ final class FieldSetter {
         this.typeHandler = typeHandler;
     }
 
-    public IFieldInfo fieldInfo() {
+    public FieldInfo fieldInfo() {
         return fieldInfo;
     }
 

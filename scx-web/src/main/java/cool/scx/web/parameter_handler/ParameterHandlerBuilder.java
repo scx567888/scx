@@ -1,6 +1,6 @@
 package cool.scx.web.parameter_handler;
 
-import cool.scx.reflect.IParameterInfo;
+import cool.scx.reflect.ParameterInfo;
 
 /**
  * 参数处理器
@@ -16,6 +16,6 @@ public interface ParameterHandlerBuilder {
      * @param parameter 参数实例
      * @return 参数处理器 (为 null 表示不支持)
      */
-    ParameterHandler tryBuild(IParameterInfo parameter);
+    ParameterHandler tryBuild(ParameterInfo parameter);
 
 }

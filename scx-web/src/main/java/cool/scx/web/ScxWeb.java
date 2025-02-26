@@ -4,7 +4,7 @@ import cool.scx.common.exception.ScxExceptionHelper;
 import cool.scx.http.exception.BadRequestException;
 import cool.scx.http.routing.Router;
 import cool.scx.http.routing.RoutingContext;
-import cool.scx.reflect.IParameterInfo;
+import cool.scx.reflect.ParameterInfo;
 import cool.scx.web.exception_handler.ExceptionHandler;
 import cool.scx.web.exception_handler.LastExceptionHandler;
 import cool.scx.web.exception_handler.ScxHttpExceptionHandler;
@@ -180,7 +180,7 @@ public final class ScxWeb {
         return lastReturnValueHandler;
     }
 
-    ParameterHandler findParameterHandler(IParameterInfo parameter) {
+    ParameterHandler findParameterHandler(ParameterInfo parameter) {
         for (var handler : parameterHandlerBuilders) {
             var parameterHandler = handler.tryBuild(parameter);
             if (parameterHandler != null) {
@@ -208,7 +208,7 @@ public final class ScxWeb {
         return methodParameter;
     }
 
-    ParameterHandler[] buildParameterHandlers(IParameterInfo[] parameters) {
+    ParameterHandler[] buildParameterHandlers(ParameterInfo[] parameters) {
         var s = new ParameterHandler[parameters.length];
         for (int i = 0; i < parameters.length; i = i + 1) {
             s[i] = findParameterHandler(parameters[i]);

@@ -6,7 +6,7 @@ import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.ScxHttpServerResponse;
 import cool.scx.http.cookie.Cookies;
 import cool.scx.http.routing.RoutingContext;
-import cool.scx.reflect.IParameterInfo;
+import cool.scx.reflect.ParameterInfo;
 import cool.scx.web.parameter_handler.ParameterHandler;
 import cool.scx.web.parameter_handler.ParameterHandlerBuilder;
 import cool.scx.web.parameter_handler.RequestInfo;
@@ -20,7 +20,7 @@ import cool.scx.web.parameter_handler.RequestInfo;
 public final class FromContextParameterHandlerBuilder implements ParameterHandlerBuilder {
 
     @Override
-    public ParameterHandler tryBuild(IParameterInfo parameter) {
+    public ParameterHandler tryBuild(ParameterInfo parameter) {
         var rawClass = parameter.type().getRawClass();
         if (rawClass == RoutingContext.class) {
             return RequestInfo::routingContext;

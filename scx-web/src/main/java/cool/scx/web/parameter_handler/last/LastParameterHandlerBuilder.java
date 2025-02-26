@@ -1,6 +1,6 @@
 package cool.scx.web.parameter_handler.last;
 
-import cool.scx.reflect.IParameterInfo;
+import cool.scx.reflect.ParameterInfo;
 import cool.scx.web.parameter_handler.ParameterHandler;
 import cool.scx.web.parameter_handler.ParameterHandlerBuilder;
 
@@ -13,7 +13,7 @@ import cool.scx.web.parameter_handler.ParameterHandlerBuilder;
 public final class LastParameterHandlerBuilder implements ParameterHandlerBuilder {
 
     @Override
-    public ParameterHandler tryBuild(IParameterInfo parameter) {
+    public ParameterHandler tryBuild(ParameterInfo parameter) {
         return new LastParameterHandler(parameter);
     }
 

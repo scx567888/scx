@@ -1,7 +1,7 @@
 package cool.scx.web.parameter_handler.from_query;
 
 import com.fasterxml.jackson.databind.JavaType;
-import cool.scx.reflect.IParameterInfo;
+import cool.scx.reflect.ParameterInfo;
 import cool.scx.web.annotation.FromQuery;
 import cool.scx.web.parameter_handler.ParameterHandler;
 import cool.scx.web.parameter_handler.RequestInfo;
@@ -20,10 +20,10 @@ import static cool.scx.web.parameter_handler.from_body.FromBodyParameterHandler.
 public final class FromQueryParameterHandler implements ParameterHandler {
 
     private final FromQuery fromQuery;
-    private final IParameterInfo parameter;
+    private final ParameterInfo parameter;
     private final String value;
 
-    public FromQueryParameterHandler(FromQuery fromQuery, IParameterInfo parameter) {
+    public FromQueryParameterHandler(FromQuery fromQuery, ParameterInfo parameter) {
         this.fromQuery = fromQuery;
         this.parameter = parameter;
         var tempValue = getRealValue(fromQuery.value());

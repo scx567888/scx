@@ -1,7 +1,7 @@
 package cool.scx.app.x.crud.parameter_handler.crud_list_param;
 
 import cool.scx.app.x.crud.CRUDListParam;
-import cool.scx.reflect.IParameterInfo;
+import cool.scx.reflect.ParameterInfo;
 import cool.scx.web.parameter_handler.ParameterHandler;
 import cool.scx.web.parameter_handler.RequestInfo;
 
@@ -15,9 +15,9 @@ import static cool.scx.web.parameter_handler.from_body.FromBodyParameterHandler.
  */
 public final class CRUDListParamParameterHandler implements ParameterHandler {
 
-    private final IParameterInfo parameter;
+    private final ParameterInfo parameter;
 
-    public CRUDListParamParameterHandler(IParameterInfo parameter) {
+    public CRUDListParamParameterHandler(ParameterInfo parameter) {
         this.parameter = parameter;
     }
 

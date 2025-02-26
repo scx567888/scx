@@ -1,7 +1,7 @@
 package cool.scx.web.parameter_handler.from_upload;
 
 import cool.scx.http.media.multi_part.MultiPartPart;
-import cool.scx.reflect.IParameterInfo;
+import cool.scx.reflect.ParameterInfo;
 import cool.scx.web.annotation.FromUpload;
 import cool.scx.web.parameter_handler.ParameterHandler;
 import cool.scx.web.parameter_handler.RequestInfo;
@@ -23,11 +23,11 @@ public final class FromUploadParameterHandler implements ParameterHandler {
 
     private final boolean isCollection;
     private final boolean isArray;
-    private final IParameterInfo parameter;
+    private final ParameterInfo parameter;
     private String value;
     private boolean required;
 
-    public FromUploadParameterHandler(IParameterInfo parameter) {
+    public FromUploadParameterHandler(ParameterInfo parameter) {
         this.parameter = parameter;
         this.value = parameter.name();
         this.required = false;

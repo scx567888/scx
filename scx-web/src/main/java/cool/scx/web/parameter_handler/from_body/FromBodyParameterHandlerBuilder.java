@@ -1,6 +1,6 @@
 package cool.scx.web.parameter_handler.from_body;
 
-import cool.scx.reflect.IParameterInfo;
+import cool.scx.reflect.ParameterInfo;
 import cool.scx.web.annotation.FromBody;
 import cool.scx.web.parameter_handler.ParameterHandler;
 import cool.scx.web.parameter_handler.ParameterHandlerBuilder;
@@ -14,7 +14,7 @@ import cool.scx.web.parameter_handler.ParameterHandlerBuilder;
 public final class FromBodyParameterHandlerBuilder implements ParameterHandlerBuilder {
 
     @Override
-    public ParameterHandler tryBuild(IParameterInfo parameter) {
+    public ParameterHandler tryBuild(ParameterInfo parameter) {
         var fromBody = parameter.parameter().getAnnotation(FromBody.class);
         if (fromBody == null) {
             return null;

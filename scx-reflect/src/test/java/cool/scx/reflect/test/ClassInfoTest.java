@@ -32,6 +32,7 @@ public class ClassInfoTest {
         System.out.println((System.nanoTime() - l) / 1000_000);
         var classInfo1 = ReflectHelper.getClassInfo(ee.class);
         var classInfo2 = ReflectHelper.getClassInfo(ee.b.getClass());
+        var classInfo3 = ReflectHelper.getClassInfo(ggg.class);
 
     }
 
@@ -69,6 +70,12 @@ public class ClassInfoTest {
     @aa
     static class d extends a {
 
+    }
+    
+    interface ggg{
+        default void gg() {
+            
+        }
     }
 
 }

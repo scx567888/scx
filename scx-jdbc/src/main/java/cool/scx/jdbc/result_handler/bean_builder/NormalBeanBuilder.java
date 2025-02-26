@@ -1,7 +1,7 @@
 package cool.scx.jdbc.result_handler.bean_builder;
 
-import cool.scx.reflect.IClassInfo;
-import cool.scx.reflect.IConstructorInfo;
+import cool.scx.reflect.ClassInfo;
+import cool.scx.reflect.ConstructorInfo;
 import cool.scx.reflect.ReflectHelper;
 
 import java.lang.reflect.Field;
@@ -18,7 +18,7 @@ import java.util.function.Function;
  */
 final class NormalBeanBuilder<T> extends BeanBuilder<T> {
 
-    private final IConstructorInfo constructor;
+    private final ConstructorInfo constructor;
     private final FieldSetter[] fieldSetters;
 
     public NormalBeanBuilder(Class<T> type, Function<Field, String> columnNameMapping) {
@@ -37,7 +37,7 @@ final class NormalBeanBuilder<T> extends BeanBuilder<T> {
      * @param classInfo c
      * @return a
      */
-    private static IConstructorInfo checkNoArgsConstructor(IClassInfo classInfo) {
+    private static ConstructorInfo checkNoArgsConstructor(ClassInfo classInfo) {
         var defaultConstructor = classInfo.defaultConstructor();
         if (defaultConstructor == null) {
             throw new IllegalArgumentException("寻找 无参 构造函数失败, type " + classInfo.type().getRawClass().getName());

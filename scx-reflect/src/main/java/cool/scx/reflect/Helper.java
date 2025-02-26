@@ -19,6 +19,9 @@ import static java.util.Collections.addAll;
 
 final class Helper {
 
+    public static JavaType _findType(Type type, ClassInfo classInfo) {
+        return resolveMemberType(type, classInfo.type().getBindings());
+    }
 
     public static AccessModifier _findAccessModifier(Set<AccessFlag> accessFlags) {
         if (accessFlags.contains(AccessFlag.PUBLIC)) {
@@ -62,88 +65,8 @@ final class Helper {
         if (method.isDefault()){
             return MethodType.DEFAULT;
         }
-        if (method.isBridge()){
-            
-        }
         return MethodType.NORMAL;
     }
-    
-    
-
-    public static ParameterInfo[] _findParameterInfos(ConstructorInfo constructorInfo) {
-        var parameters = constructorInfo.constructor().getParameters();
-        var result = new ParameterInfo[parameters.length];
-        for (int i = 0; i < parameters.length; i = i + 1) {
-            result[i] = new ParameterInfo(parameters[i], constructorInfo);
-        }
-        return result;
-    }
-
-    public static ParameterInfo[] _findParameterInfos(MethodInfo methodInfo) {
-        var parameters = methodInfo.method().getParameters();
-        var result = new ParameterInfo[parameters.length];
-        for (int i = 0; i < parameters.length; i = i + 1) {
-            result[i] = new ParameterInfo(parameters[i], methodInfo);
-        }
-        return result;
-    }
-
-    public static MethodInfo _findSuperMethod(MethodInfo methodInfo) {
-        var superClass = methodInfo.classInfo().superClass();
-        while (superClass != null) {
-            var superMethods = superClass.methods();
-            for (var superMethod : superMethods) {
-                var b = isOverride(methodInfo, superMethod);
-                // 只查找第一次匹配的方法 
-                if (b) {
-                    return superMethod;
-                }
-            }
-            superClass = superClass.superClass();
-        }
-        return null;
-    }
-
-    /// 获取当前方法的注解 同时包含 重写方法的注解
-    ///
-    /// @return a
-    public static Annotation[] _findAllAnnotations(MethodInfo methodInfo) {
-        var allAnnotations = new ArrayList<Annotation>();
-        while (methodInfo != null) {
-            addAll(allAnnotations, methodInfo.annotations());
-            methodInfo = methodInfo.superMethod();
-        }
-        return allAnnotations.toArray(Annotation[]::new);
-    }
-
-
-    /// 判断是否为重写方法
-    ///
-    /// @param rootMethod      a
-    /// @param candidateMethod a
-    /// @return a
-    private static boolean isOverride(MethodInfo rootMethod, MethodInfo candidateMethod) {
-        return PRIVATE != candidateMethod.accessModifier() &&
-                candidateMethod.name().equals(rootMethod.name()) &&
-                _hasSameParameterTypes(rootMethod, candidateMethod);
-    }
-
-    private static boolean _hasSameParameterTypes(MethodInfo rootMethod, MethodInfo candidateMethod) {
-        if (candidateMethod.parameters().length != rootMethod.parameters().length) {
-            return false;
-        }
-        var p1 = rootMethod.parameters();
-        var p2 = candidateMethod.parameters();
-        for (int i = 0; i < p1.length; i = i + 1) {
-            var p1Type = p1[i].type().getRawClass();
-            var p2Type = p2[i].type().getRawClass();
-            if (p1Type != p2Type) {
-                return false;
-            }
-        }
-        return true;
-    }
-
 
     public static ClassInfo _findSuperClass(JavaType type) {
         var superClass = type.getSuperClass();
@@ -293,8 +216,77 @@ final class Helper {
         return result;
     }
 
-    public static JavaType _findType(Type type, ClassInfo classInfo) {
-        return resolveMemberType(type, classInfo.type().getBindings());
+    public static ParameterInfo[] _findParameterInfos(ConstructorInfo constructorInfo) {
+        var parameters = constructorInfo.constructor().getParameters();
+        var result = new ParameterInfo[parameters.length];
+        for (int i = 0; i < parameters.length; i = i + 1) {
+            result[i] = new ParameterInfo(parameters[i], constructorInfo);
+        }
+        return result;
+    }
+
+    public static ParameterInfo[] _findParameterInfos(MethodInfo methodInfo) {
+        var parameters = methodInfo.method().getParameters();
+        var result = new ParameterInfo[parameters.length];
+        for (int i = 0; i < parameters.length; i = i + 1) {
+            result[i] = new ParameterInfo(parameters[i], methodInfo);
+        }
+        return result;
+    }
+
+    public static MethodInfo _findSuperMethod(MethodInfo methodInfo) {
+        var superClass = methodInfo.classInfo().superClass();
+        while (superClass != null) {
+            var superMethods = superClass.methods();
+            for (var superMethod : superMethods) {
+                var b = isOverride(methodInfo, superMethod);
+                // 只查找第一次匹配的方法 
+                if (b) {
+                    return superMethod;
+                }
+            }
+            superClass = superClass.superClass();
+        }
+        return null;
+    }
+
+    /// 获取当前方法的注解 同时包含 重写方法的注解
+    ///
+    /// @return a
+    public static Annotation[] _findAllAnnotations(MethodInfo methodInfo) {
+        var allAnnotations = new ArrayList<Annotation>();
+        while (methodInfo != null) {
+            addAll(allAnnotations, methodInfo.annotations());
+            methodInfo = methodInfo.superMethod();
+        }
+        return allAnnotations.toArray(Annotation[]::new);
+    }
+
+    /// 判断是否为重写方法
+    ///
+    /// @param rootMethod      a
+    /// @param candidateMethod a
+    /// @return a
+    private static boolean isOverride(MethodInfo rootMethod, MethodInfo candidateMethod) {
+        return PRIVATE != candidateMethod.accessModifier() &&
+                candidateMethod.name().equals(rootMethod.name()) &&
+                _hasSameParameterTypes(rootMethod, candidateMethod);
+    }
+
+    private static boolean _hasSameParameterTypes(MethodInfo rootMethod, MethodInfo candidateMethod) {
+        if (candidateMethod.parameters().length != rootMethod.parameters().length) {
+            return false;
+        }
+        var p1 = rootMethod.parameters();
+        var p2 = candidateMethod.parameters();
+        for (int i = 0; i < p1.length; i = i + 1) {
+            var p1Type = p1[i].type().getRawClass();
+            var p2Type = p2[i].type().getRawClass();
+            if (p1Type != p2Type) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private static boolean _hasSameParameterTypes(ConstructorInfo constructorInfo, JavaType[] types) {

@@ -1,8 +1,8 @@
 package cool.scx.jdbc.result_handler.bean_builder;
 
-import cool.scx.reflect.IClassInfo;
-import cool.scx.reflect.IConstructorInfo;
-import cool.scx.reflect.IParameterInfo;
+import cool.scx.reflect.ClassInfo;
+import cool.scx.reflect.ConstructorInfo;
+import cool.scx.reflect.ParameterInfo;
 import cool.scx.reflect.ReflectHelper;
 
 import java.lang.reflect.Field;
@@ -20,7 +20,7 @@ import java.util.function.Function;
  */
 final class RecordBeanBuilder<T> extends BeanBuilder<T> {
 
-    private final IConstructorInfo constructor;
+    private final ConstructorInfo constructor;
 
     private final FieldSetter[] fieldSetters;
 
@@ -41,7 +41,7 @@ final class RecordBeanBuilder<T> extends BeanBuilder<T> {
      * @param fieldSetters a
      * @return a
      */
-    private static FieldSetter[] sortFieldSetters(IParameterInfo[] parameters, FieldSetter[] fieldSetters) {
+    private static FieldSetter[] sortFieldSetters(ParameterInfo[] parameters, FieldSetter[] fieldSetters) {
         //使用 map 加速查找
         var map = new HashMap<String, FieldSetter>();
         for (var fieldSetter : fieldSetters) {
@@ -59,7 +59,7 @@ final class RecordBeanBuilder<T> extends BeanBuilder<T> {
     /**
      * 寻找 Record 规范构造参数
      */
-    public static IConstructorInfo checkRecordConstructor(IClassInfo type) {
+    public static ConstructorInfo checkRecordConstructor(ClassInfo type) {
         var canonicalConstructor = type.recordConstructor();
         if (canonicalConstructor == null) {
             throw new IllegalArgumentException("寻找 Record 规范构造函数失败, type " + type.type().getRawClass().getName());
