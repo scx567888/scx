@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JavaType;
 
 import java.lang.annotation.Annotation;
 
-import static cool.scx.reflect.ClassInfoHelper.*;
+import static cool.scx.reflect.Helper.*;
 
 /// ClassInfo
 ///
@@ -23,7 +23,7 @@ public final class ClassInfo  {
     private final FieldInfo[] fields;
     private final FieldInfo[] allFields;
     private final MethodInfo[] methods;
-    private final IMethodInfo[] allMethods;
+    private final MethodInfo[] allMethods;
     private final Annotation[] annotations;
     private final Annotation[] allAnnotations;
     private final boolean isFinal;
@@ -88,37 +88,37 @@ public final class ClassInfo  {
     }
 
     /// 构造参数
-    public IConstructorInfo[] constructors() {
+    public ConstructorInfo[] constructors() {
         return constructors;
     }
 
     /// 默认构造函数 (无参构造函数) 可能为空
-    public IConstructorInfo defaultConstructor() {
+    public ConstructorInfo defaultConstructor() {
         return defaultConstructor;
     }
 
     /// Record 规范构造参数 可能为空
-    public IConstructorInfo recordConstructor() {
+    public ConstructorInfo recordConstructor() {
         return recordConstructor;
     }
 
     /// 字段
-    public IFieldInfo[] fields() {
+    public FieldInfo[] fields() {
         return fields;
     }
 
     /// 获取类所有字段 包括继承自父类的字段
-    public IFieldInfo[] allFields() {
+    public FieldInfo[] allFields() {
         return allFields;
     }
 
     /// 方法
-    public IMethodInfo[] methods() {
+    public MethodInfo[] methods() {
         return methods;
     }
 
     /// 获取类所有方法 包括继承自父类的方法
-    public IMethodInfo[] allMethods() {
+    public MethodInfo[] allMethods() {
         return allMethods;
     }
 
