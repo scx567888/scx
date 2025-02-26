@@ -3,34 +3,24 @@ package cool.scx.reflect;
 import com.fasterxml.jackson.databind.JavaType;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 
-/**
- * FieldInfoHelper
- *
- * @author scx567888
- * @version 0.0.1
- */
-class FieldInfoHelper {
+/// FieldInfoHelper
+///
+/// @author scx567888
+/// @version 0.0.1
+final class FieldInfoHelper {
 
-
-    //*********************** FieldInfo START ********************
-
-    static String _findName(FieldInfo fieldInfo) {
-        return fieldInfo.field().getName();
+    public static String _findName(Field field) {
+        return field.getName();
     }
 
-    static AccessModifier _findAccessModifier(FieldInfo fieldInfo) {
-        return ReflectHelper._findAccessModifier(fieldInfo.field().getModifiers());
-    }
-
-    static JavaType _findType(FieldInfo fieldInfo) {
+    public static JavaType _findType(FieldInfo fieldInfo) {
         return ReflectHelper._findType(fieldInfo.field().getGenericType(), fieldInfo.classInfo());
     }
 
-    static Annotation[] _findAnnotations(FieldInfo fieldInfo) {
-        return fieldInfo.field().getDeclaredAnnotations();
+    public static Annotation[] _findAnnotations(Field field) {
+        return field.getDeclaredAnnotations();
     }
-
-    //*********************** FieldInfo END *******************
 
 }
