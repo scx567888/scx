@@ -3,14 +3,14 @@ package cool.scx.reflect;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-import static cool.scx.reflect.ConstructorInfoHelper._findParameterInfos;
-import static cool.scx.reflect.ReflectHelper._findAccessModifier;
+import static cool.scx.reflect.ClassInfoHelper._findAccessModifier;
+import static cool.scx.reflect.Helper._findParameterInfos;
 
 /// ConstructorInfo
 ///
 /// @author scx567888
 /// @version 0.0.1
-final class ConstructorInfo implements IConstructorInfo {
+public final class ConstructorInfo implements ExecutableInfo {
 
     private final Constructor<?> constructor;
     private final ClassInfo classInfo;
@@ -20,14 +20,17 @@ final class ConstructorInfo implements IConstructorInfo {
     ConstructorInfo(Constructor<?> constructor, ClassInfo classInfo) {
         this.constructor = constructor;
         this.classInfo = classInfo;
-        var accessFlags = constructor.accessFlags();
-        this.accessModifier = _findAccessModifier(accessFlags);
+        this.accessModifier = _findAccessModifier(constructor.accessFlags());
         this.parameters = _findParameterInfos(this);
     }
 
-    @Override
     public Constructor<?> constructor() {
         return constructor;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T newInstance(Object... args) throws InvocationTargetException, InstantiationException, IllegalAccessException {
+        return (T) constructor.newInstance(args);
     }
 
     @Override
@@ -41,19 +44,13 @@ final class ConstructorInfo implements IConstructorInfo {
     }
 
     @Override
-    public ParameterInfo[] parameters() {
-        return parameters;
-    }
-
-    @Override
     public void setAccessible(boolean flag) {
         constructor.setAccessible(flag);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public <T> T newInstance(Object... args) throws InvocationTargetException, InstantiationException, IllegalAccessException {
-        return (T) constructor.newInstance(args);
+    public ParameterInfo[] parameters() {
+        return parameters;
     }
 
 }
