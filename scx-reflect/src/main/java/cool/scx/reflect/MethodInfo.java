@@ -85,7 +85,7 @@ public final class MethodInfo implements ExecutableInfo {
 
     @Override
     public void setAccessible(boolean flag) {
-        this.method.setAccessible(flag);
+        method.setAccessible(flag);
     }
 
     @Override

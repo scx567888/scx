@@ -44,11 +44,11 @@ public final class FieldInfo implements MemberInfo {
     }
 
     public Annotation[] annotations() {
-        return this.annotations;
+        return annotations;
     }
 
     public <T extends Annotation> T getAnnotation(Class<T> annotationClass) {
-        for (var annotation : this.annotations) {
+        for (var annotation : annotations) {
             if (annotationClass.isInstance(annotation)) {
                 return annotationClass.cast(annotation);
             }
@@ -76,7 +76,7 @@ public final class FieldInfo implements MemberInfo {
 
     @Override
     public void setAccessible(boolean flag) {
-        this.field.setAccessible(flag);
+        field.setAccessible(flag);
     }
 
 }
