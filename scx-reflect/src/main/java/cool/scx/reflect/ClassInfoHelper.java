@@ -40,14 +40,14 @@ final class ClassInfoHelper {
         return ClassType.CONCRETE;
     }
 
-    public static ClassInfo _findSuperClass(JavaType type) {
+    public static IClassInfo _findSuperClass(JavaType type) {
         var superClass = type.getSuperClass();
         return superClass != null ? getClassInfo(superClass) : null;
     }
 
-    public static ClassInfo[] _findInterfaces(JavaType type) {
+    public static IClassInfo[] _findInterfaces(JavaType type) {
         var interfaces = type.getInterfaces();
-        var result = new ClassInfo[interfaces.size()];
+        var result = new IClassInfo[interfaces.size()];
         for (int i = 0; i < interfaces.size(); i = i + 1) {
             result[i] = getClassInfo(interfaces.get(i));
         }

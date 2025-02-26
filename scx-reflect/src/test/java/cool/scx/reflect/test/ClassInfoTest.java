@@ -1,6 +1,6 @@
 package cool.scx.reflect.test;
 
-import cool.scx.reflect.ClassInfo;
+import cool.scx.reflect.IClassInfo;
 import cool.scx.reflect.ReflectHelper;
 import org.testng.annotations.Test;
 
@@ -20,7 +20,7 @@ public class ClassInfoTest {
         var d2 = ReflectHelper.getClassInfo(d.class);
 
         var l = System.nanoTime();
-        ClassInfo classInfo;
+        IClassInfo classInfo;
         for (int i = 0; i < 9999; i = i + 1) {
 
             classInfo = ReflectHelper.getClassInfo(a.class);

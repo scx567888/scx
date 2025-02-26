@@ -26,10 +26,6 @@ public enum EnumBug {
         this.value = value;
     }
 
-    public int getValue() {
-        return this.value;
-    }
-
     public static void main(String[] args) {
         for (var thing : EnumBug.values()) {
             String nameString = thing + " (" + thing.name() + ")  ";
@@ -38,5 +34,9 @@ public enum EnumBug {
             System.out.println(nameString + " isEnum = " + a + " ClassInfo = " + b);
         }
     }
-    
+
+    public int getValue() {
+        return this.value;
+    }
+
 }
