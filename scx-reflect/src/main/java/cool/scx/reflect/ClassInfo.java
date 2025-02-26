@@ -3,7 +3,6 @@ package cool.scx.reflect;
 import com.fasterxml.jackson.databind.JavaType;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
 
 import static cool.scx.reflect.ClassInfoHelper.*;
 
@@ -35,7 +34,6 @@ public final class ClassInfo implements IClassInfo {
     private final boolean isArray;
     private final IClassInfo enumClass;
     private final IClassInfo componentType;
-    private final Type[] genericTypes;
 
     public ClassInfo(JavaType type) {
         this.type = type;
@@ -62,7 +60,6 @@ public final class ClassInfo implements IClassInfo {
         this.isArray = _isArray(rawClass);
         this.enumClass = _findEnumClass(this);
         this.componentType = _findComponentType(this);
-        this.genericTypes = _findGenericTypes(this);
     }
 
     @Override
@@ -175,11 +172,6 @@ public final class ClassInfo implements IClassInfo {
     @Override
     public IClassInfo componentType() {
         return componentType;
-    }
-
-    @Override
-    public Type[] genericTypes() {
-        return genericTypes;
     }
 
     @Override

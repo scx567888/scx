@@ -3,7 +3,6 @@ package cool.scx.reflect;
 import com.fasterxml.jackson.databind.JavaType;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
 
 /// 仅用作规范实现
 public interface IClassInfo {
@@ -73,9 +72,6 @@ public interface IClassInfo {
 
     /// 数组成员类型
     IClassInfo componentType();
-
-    /// 泛型
-    Type[] genericTypes();
 
     /// 返回指定类型的 父级 ClassInfo 支持常规类,抽象类,接口
     IClassInfo findSuperType(Class<?> type);
