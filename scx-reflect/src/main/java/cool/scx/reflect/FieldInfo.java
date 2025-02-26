@@ -9,12 +9,10 @@ import static cool.scx.reflect.FieldInfoHelper.*;
 import static cool.scx.reflect.ReflectHelper._findAccessModifier;
 
 
-/**
- * FieldInfo
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// FieldInfo
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class FieldInfo implements IFieldInfo {
 
     private final Field field;

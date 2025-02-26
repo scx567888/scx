@@ -3,16 +3,14 @@ package cool.scx.reflect;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-import static cool.scx.reflect.ConstructorInfoHelper._findAccessModifier;
 import static cool.scx.reflect.ConstructorInfoHelper._findParameterInfos;
+import static cool.scx.reflect.ReflectHelper._findAccessModifier;
 
-/**
- * ConstructorInfo
- *
- * @author scx567888
- * @version 0.0.1
- */
-public final class ConstructorInfo implements ExecutableInfo {
+/// ConstructorInfo
+///
+/// @author scx567888
+/// @version 0.0.1
+public final class ConstructorInfo implements IConstructorInfo {
 
     private final Constructor<?> constructor;
     private final ClassInfo classInfo;
@@ -22,10 +20,12 @@ public final class ConstructorInfo implements ExecutableInfo {
     ConstructorInfo(Constructor<?> constructor, ClassInfo classInfo) {
         this.constructor = constructor;
         this.classInfo = classInfo;
-        this.accessModifier = _findAccessModifier(this);
+        var accessFlags = constructor.accessFlags();
+        this.accessModifier = _findAccessModifier(accessFlags);
         this.parameters = _findParameterInfos(this);
     }
 
+    @Override
     public Constructor<?> constructor() {
         return constructor;
     }
@@ -35,6 +35,7 @@ public final class ConstructorInfo implements ExecutableInfo {
         return classInfo;
     }
 
+    @Override
     public AccessModifier accessModifier() {
         return accessModifier;
     }
@@ -44,11 +45,13 @@ public final class ConstructorInfo implements ExecutableInfo {
         return parameters;
     }
 
+    @Override
     public void setAccessible(boolean flag) {
         constructor.setAccessible(flag);
     }
 
     @SuppressWarnings("unchecked")
+    @Override
     public <T> T newInstance(Object... args) throws InvocationTargetException, InstantiationException, IllegalAccessException {
         return (T) constructor.newInstance(args);
     }

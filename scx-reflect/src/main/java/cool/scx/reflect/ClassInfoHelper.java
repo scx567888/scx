@@ -69,7 +69,7 @@ final class ClassInfoHelper {
      * @param classInfo c
      * @return a
      */
-    public static ConstructorInfo _findDefaultConstructor(ClassInfo classInfo) {
+    public static IConstructorInfo _findDefaultConstructor(ClassInfo classInfo) {
         for (var constructor : classInfo.constructors()) {
             if (constructor.parameters().length == 0) {
                 return constructor;
@@ -81,7 +81,7 @@ final class ClassInfoHelper {
     /**
      * 寻找 Record 规范构造参数
      */
-    public static ConstructorInfo _findRecordConstructor(ClassInfo classInfo) {
+    public static IConstructorInfo _findRecordConstructor(IClassInfo classInfo) {
         if (classInfo.classType() != RECORD) {
             return null;
         }
@@ -105,13 +105,13 @@ final class ClassInfoHelper {
         return result;
     }
 
-    public static FieldInfo[] _findAllFieldInfos(IClassInfo classInfo) {
-        var allFieldInfos = new ArrayList<FieldInfo>();
+    public static IFieldInfo[] _findAllFieldInfos(IClassInfo classInfo) {
+        var allFieldInfos = new ArrayList<IFieldInfo>();
         while (classInfo != null) {
             addAll(allFieldInfos, classInfo.fields());
             classInfo = classInfo.superClass();
         }
-        return allFieldInfos.toArray(FieldInfo[]::new);
+        return allFieldInfos.toArray(IFieldInfo[]::new);
     }
 
     /**
@@ -131,10 +131,10 @@ final class ClassInfoHelper {
         return list.toArray(MethodInfo[]::new);
     }
 
-    public static MethodInfo[] _findAllMethodInfos(IClassInfo classInfo) {
+    public static IMethodInfo[] _findAllMethodInfos(IClassInfo classInfo) {
         //存储所有出现过的父类方法 用于过滤
-        var filter = new HashSet<MethodInfo>();
-        var allMethodInfo = new ArrayList<MethodInfo>();
+        var filter = new HashSet<IMethodInfo>();
+        var allMethodInfo = new ArrayList<IMethodInfo>();
         //这里 排除 Object 的所有方法
         while (classInfo != null) {
             var methods = classInfo.methods();
@@ -150,7 +150,7 @@ final class ClassInfoHelper {
             }
             classInfo = classInfo.superClass();
         }
-        return allMethodInfo.toArray(MethodInfo[]::new);
+        return allMethodInfo.toArray(IMethodInfo[]::new);
     }
 
     public static Annotation[] _findAnnotations(Class<?> rawClass) {
@@ -211,7 +211,7 @@ final class ClassInfoHelper {
         }
     }
 
-    private static JavaType[] _getRecordComponentsTypes(ClassInfo classInfo) {
+    private static JavaType[] _getRecordComponentsTypes(IClassInfo classInfo) {
         var recordComponents = classInfo.type().getRawClass().getRecordComponents();
         var result = new JavaType[recordComponents.length];
         for (int i = 0; i < recordComponents.length; i = i + 1) {
@@ -220,7 +220,7 @@ final class ClassInfoHelper {
         return result;
     }
 
-    private static boolean _hasSameParameterTypes(ConstructorInfo constructorInfo, JavaType[] types) {
+    private static boolean _hasSameParameterTypes(IConstructorInfo constructorInfo, JavaType[] types) {
         if (constructorInfo.parameters().length != types.length) {
             return false;
         }

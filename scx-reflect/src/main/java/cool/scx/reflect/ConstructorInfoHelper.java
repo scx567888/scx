@@ -6,11 +6,7 @@ package cool.scx.reflect;
  * @author scx567888
  * @version 0.0.1
  */
-class ConstructorInfoHelper {
-
-    static AccessModifier _findAccessModifier(ConstructorInfo constructorInfo) {
-        return ReflectHelper._findAccessModifier(constructorInfo.constructor().getModifiers());
-    }
+final class ConstructorInfoHelper {
 
     static ParameterInfo[] _findParameterInfos(ConstructorInfo constructorInfo) {
         var parameters = constructorInfo.constructor().getParameters();
@@ -20,7 +16,5 @@ class ConstructorInfoHelper {
         }
         return result;
     }
-
-    //*********************** ConstructorInfo END *****************
 
 }

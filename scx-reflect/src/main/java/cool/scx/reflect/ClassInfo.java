@@ -18,13 +18,13 @@ public final class ClassInfo implements IClassInfo {
     private final ClassType classType;
     private final IClassInfo superClass;
     private final IClassInfo[] interfaces;
-    private final ConstructorInfo[] constructors;
-    private final ConstructorInfo defaultConstructor;
-    private final ConstructorInfo recordConstructor;
-    private final FieldInfo[] fields;
-    private final FieldInfo[] allFields;
-    private final MethodInfo[] methods;
-    private final MethodInfo[] allMethods;
+    private final IConstructorInfo[] constructors;
+    private final IConstructorInfo defaultConstructor;
+    private final IConstructorInfo recordConstructor;
+    private final IFieldInfo[] fields;
+    private final IFieldInfo[] allFields;
+    private final IMethodInfo[] methods;
+    private final IMethodInfo[] allMethods;
     private final Annotation[] annotations;
     private final Annotation[] allAnnotations;
     private final boolean isFinal;
@@ -89,37 +89,37 @@ public final class ClassInfo implements IClassInfo {
     }
 
     @Override
-    public ConstructorInfo[] constructors() {
+    public IConstructorInfo[] constructors() {
         return constructors;
     }
 
     @Override
-    public ConstructorInfo defaultConstructor() {
+    public IConstructorInfo defaultConstructor() {
         return defaultConstructor;
     }
 
     @Override
-    public ConstructorInfo recordConstructor() {
+    public IConstructorInfo recordConstructor() {
         return recordConstructor;
     }
 
     @Override
-    public FieldInfo[] fields() {
+    public IFieldInfo[] fields() {
         return fields;
     }
 
     @Override
-    public FieldInfo[] allFields() {
+    public IFieldInfo[] allFields() {
         return allFields;
     }
 
     @Override
-    public MethodInfo[] methods() {
+    public IMethodInfo[] methods() {
         return methods;
     }
 
     @Override
-    public MethodInfo[] allMethods() {
+    public IMethodInfo[] allMethods() {
         return allMethods;
     }
 

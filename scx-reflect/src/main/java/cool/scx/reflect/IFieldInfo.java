@@ -31,5 +31,5 @@ public interface IFieldInfo {
     void set(Object obj, Object value) throws IllegalAccessException;
 
     Object get(Object obj) throws IllegalAccessException;
-    
+
 }

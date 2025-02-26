@@ -2,10 +2,12 @@ package cool.scx.reflect;
 
 import com.fasterxml.jackson.databind.JavaType;
 
+import java.lang.reflect.AccessFlag;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import static cool.scx.common.util.ObjectUtils.constructType;
 import static cool.scx.common.util.ObjectUtils.resolveMemberType;
@@ -28,6 +30,19 @@ public class ReflectHelper {
         return classInfo;
     }
 
+    public static AccessModifier _findAccessModifier(Set<AccessFlag> accessFlags) {
+        if (accessFlags.contains(AccessFlag.PUBLIC)) {
+            return AccessModifier.PUBLIC;
+        }
+        if (accessFlags.contains(AccessFlag.PROTECTED)) {
+            return AccessModifier.PROTECTED;
+        }
+        if (accessFlags.contains(AccessFlag.PRIVATE)) {
+            return AccessModifier.PRIVATE;
+        }
+        return AccessModifier.PACKAGE_PRIVATE;
+    }
+
     static AccessModifier _findAccessModifier(int m) {
         if (Modifier.isPublic(m)) {
             return PUBLIC;
@@ -40,7 +55,7 @@ public class ReflectHelper {
         }
     }
 
-    static JavaType _findType(Type type, ClassInfo classInfo) {
+    static JavaType _findType(Type type, IClassInfo classInfo) {
         return resolveMemberType(type, classInfo.type().getBindings());
     }
 

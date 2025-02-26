@@ -3,8 +3,10 @@ package cool.scx.reflect;
 import com.fasterxml.jackson.databind.JavaType;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.AccessFlag;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Set;
 
 import static cool.scx.reflect.AccessModifier.PRIVATE;
 import static java.util.Collections.addAll;
@@ -18,27 +20,20 @@ import static java.util.Collections.addAll;
  */
 class MethodInfoHelper {
 
-
-    //*********************** MethodInfo START *******************
-
-    static String _findName(MethodInfo methodInfo) {
-        return methodInfo.method().getName();
+    static String _findName(Method method) {
+        return method.getName();
     }
 
-    static boolean _isAbstract(MethodInfo methodInfo) {
-        return Modifier.isAbstract(methodInfo.method().getModifiers());
+    static boolean _isAbstract(Set<AccessFlag> accessFlags) {
+        return accessFlags.contains(AccessFlag.ABSTRACT);
     }
 
-    static boolean _isStatic(MethodInfo methodInfo) {
-        return Modifier.isStatic(methodInfo.method().getModifiers());
+    static boolean _isStatic(Set<AccessFlag> accessFlags) {
+        return accessFlags.contains(AccessFlag.STATIC);
     }
 
-    static AccessModifier _findAccessModifier(MethodInfo methodInfo) {
-        return ReflectHelper._findAccessModifier(methodInfo.method().getModifiers());
-    }
-
-    static Annotation[] _findAnnotations(MethodInfo methodInfo) {
-        return methodInfo.method().getDeclaredAnnotations();
+    static Annotation[] _findAnnotations(Method method) {
+        return method.getDeclaredAnnotations();
     }
 
     static JavaType _findReturnType(MethodInfo methodInfo) {
@@ -54,7 +49,7 @@ class MethodInfoHelper {
         return result;
     }
 
-    static MethodInfo _findSuperMethod(MethodInfo methodInfo) {
+    static IMethodInfo _findSuperMethod(MethodInfo methodInfo) {
         var superClass = methodInfo.classInfo().superClass();
         while (superClass != null) {
             var superMethods = superClass.methods();
@@ -75,7 +70,7 @@ class MethodInfoHelper {
      *
      * @return a
      */
-    static Annotation[] _findAllAnnotations(MethodInfo methodInfo) {
+    static Annotation[] _findAllAnnotations(IMethodInfo methodInfo) {
         var allAnnotations = new ArrayList<Annotation>();
         while (methodInfo != null) {
             addAll(allAnnotations, methodInfo.annotations());
@@ -92,13 +87,13 @@ class MethodInfoHelper {
      * @param candidateMethod a
      * @return a
      */
-    private static boolean isOverride(MethodInfo rootMethod, MethodInfo candidateMethod) {
+    private static boolean isOverride(IMethodInfo rootMethod, IMethodInfo candidateMethod) {
         return PRIVATE != candidateMethod.accessModifier() &&
                 candidateMethod.name().equals(rootMethod.name()) &&
                 _hasSameParameterTypes(rootMethod, candidateMethod);
     }
 
-    private static boolean _hasSameParameterTypes(MethodInfo rootMethod, MethodInfo candidateMethod) {
+    private static boolean _hasSameParameterTypes(IMethodInfo rootMethod, IMethodInfo candidateMethod) {
         if (candidateMethod.parameters().length != rootMethod.parameters().length) {
             return false;
         }
@@ -113,7 +108,5 @@ class MethodInfoHelper {
         }
         return true;
     }
-
-    //*********************** MethodInfo END *******************
 
 }

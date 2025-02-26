@@ -23,25 +23,25 @@ public interface IClassInfo {
     IClassInfo[] interfaces();
 
     /// 构造参数
-    ConstructorInfo[] constructors();
+    IConstructorInfo[] constructors();
 
     /// 默认构造函数 (无参构造函数) 可能为空
-    ConstructorInfo defaultConstructor();
+    IConstructorInfo defaultConstructor();
 
     /// Record 规范构造参数 可能为空
-    ConstructorInfo recordConstructor();
+    IConstructorInfo recordConstructor();
 
     /// 字段
-    FieldInfo[] fields();
+    IFieldInfo[] fields();
 
     /// 获取类所有字段 包括继承自父类的字段
-    FieldInfo[] allFields();
+    IFieldInfo[] allFields();
 
     /// 方法
-    MethodInfo[] methods();
+    IMethodInfo[] methods();
 
     /// 获取类所有方法 包括继承自父类的方法
-    MethodInfo[] allMethods();
+    IMethodInfo[] allMethods();
 
     /// 注解
     Annotation[] annotations();
