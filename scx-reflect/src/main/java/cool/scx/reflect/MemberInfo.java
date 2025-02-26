@@ -7,4 +7,6 @@ public interface MemberInfo {
 
     AccessModifier accessModifier();
 
+    void setAccessible(boolean flag);
+
 }
