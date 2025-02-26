@@ -49,12 +49,6 @@ public interface IClassInfo {
 
     /// 获取类所有的注解 包括继承自父类的注解
     Annotation[] allAnnotations();
-
-    /// 泛型
-    Type[] genericTypes();
-
-    /// 枚举类型
-    IClassInfo enumClass();
     
     /// 是否 final 类
     boolean isFinal();
@@ -66,7 +60,13 @@ public interface IClassInfo {
     boolean isAnonymousClass();
     
     /// 是否 内部类
-    boolean isInnerClass();
+    boolean isMemberClass();
+
+    /// 泛型
+    Type[] genericTypes();
+
+    /// 枚举类型
+    IClassInfo enumClass();
 
     /// 返回指定的 type
     IClassInfo findSuperType(Class<?> type);
