@@ -13,13 +13,10 @@ import static cool.scx.ffm.FFMHelper.getMemoryLayouts;
 import static java.lang.foreign.Linker.nativeLinker;
 import static java.lang.invoke.MethodHandles.lookup;
 
-/**
- * CallbackParameter
- * todo 参数校验不是特别完善
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// CallbackParameter
+///
+/// @author scx567888
+/// @version 0.0.1
 public class CallbackParameter implements Parameter {
 
     private final Callback callback;
@@ -28,12 +25,12 @@ public class CallbackParameter implements Parameter {
 
     public CallbackParameter(Callback callback) throws NoSuchMethodException, IllegalAccessException {
         this.callback = callback;
-        var cc = callback.getClass().getInterfaces()[0];
-        var s = ClassInfoFactory.getClassInfo(cc);
-        var methodInfo = Arrays.stream(s.methods())
-                .filter(method -> callback.callbackMethodName().equals(method.name()))
-                .findFirst()
-                .orElseThrow(() -> new NoSuchMethodException("callback"));
+        var callbackMethodName = callback.callbackMethodName();
+        var classInfo = ClassInfoFactory.getClassInfo(callback.getClass());
+        var methodInfo = Arrays.stream(classInfo.methods())
+                .filter(method -> method.name().equals(callbackMethodName))
+                .findFirst().orElseThrow(() -> new NoSuchMethodException(callbackMethodName));
+        methodInfo.setAccessible(true);// 有时我们会遇到 callback 是一个 lambda 表达式的情况 这时需要 强制设置访问权限
         var method = methodInfo.method();
         this.fun = lookup().unreflect(method).bindTo(callback);
         var r = getMemoryLayout(method.getReturnType());
