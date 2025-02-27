@@ -1,7 +1,7 @@
 package cool.scx.tcp;
 
 import cool.scx.tcp.tls.TLS;
-import cool.scx.tcp.tls.TLSSocketChannel;
+import cool.scx.tcp.tls_channel.TLSSocketChannel;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -1,13 +1,11 @@
-package cool.scx.tcp.tls;
+package cool.scx.tcp.tls_channel;
 
 import javax.net.ssl.SSLEngineResult.Status;
 
-/**
- * WrapResult
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// WrapResult
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class WrapResult {
 
     public Status status;
