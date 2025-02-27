@@ -13,19 +13,15 @@ import java.lang.foreign.MemorySegment;
 /// @version 0.0.1
 public interface Mapper {
 
-    /**
-     * 将内部数据转换为 MemorySegment (内存段)
-     *
-     * @param arena 作用域
-     * @return MemorySegment
-     */
+    /// 将内部数据转换为 MemorySegment (内存段)
+    ///
+    /// @param arena 作用域
+    /// @return MemorySegment
     MemorySegment toMemorySegment(Arena arena);
 
-    /**
-     * 从 MemorySegment (内存段) 设置值
-     *
-     * @param memorySegment a
-     */
+    /// 从 MemorySegment (内存段) 设置值
+    ///
+    /// @param memorySegment a
     Object fromMemorySegment(MemorySegment memorySegment);
 
 }
