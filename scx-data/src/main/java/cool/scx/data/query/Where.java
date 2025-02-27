@@ -4,12 +4,10 @@ import static cool.scx.common.util.StringUtils.isBlank;
 import static cool.scx.data.query.QueryOption.Info;
 import static cool.scx.data.query.QueryOption.ofInfo;
 
-/**
- * Where
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// Where
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class Where extends QueryLike<Where> {
 
     private final String name;

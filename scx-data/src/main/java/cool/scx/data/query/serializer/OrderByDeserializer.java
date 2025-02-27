@@ -9,12 +9,10 @@ import java.util.ArrayList;
 import static cool.scx.common.util.ObjectUtils.convertValue;
 import static cool.scx.data.query.QueryOption.Info;
 
-/**
- * OrderByDeserializer
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// OrderByDeserializer
+///
+/// @author scx567888
+/// @version 0.0.1
 public class OrderByDeserializer {
 
     public Object deserialize(JsonNode v) {

@@ -8,12 +8,10 @@ import cool.scx.data.field_filter.FilterMode;
 import static cool.scx.common.util.ObjectUtils.convertValue;
 import static cool.scx.data.field_filter.FilterMode.EXCLUDED;
 
-/**
- * FieldFilterDeserializer
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// FieldFilterDeserializer
+///
+/// @author scx567888
+/// @version 0.0.1
 public class FieldFilterDeserializer {
 
     public static final FieldFilterDeserializer FIELD_FILTER_DESERIALIZER = new FieldFilterDeserializer();

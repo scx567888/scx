@@ -1,11 +1,9 @@
 package cool.scx.data.query;
 
-/**
- * WhereType
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// WhereType
+///
+/// @author scx567888
+/// @version 0.0.1
 public enum WhereType {
 
     EQUAL,

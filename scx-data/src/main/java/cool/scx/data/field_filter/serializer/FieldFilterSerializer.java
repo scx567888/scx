@@ -4,12 +4,10 @@ import cool.scx.data.field_filter.FieldFilter;
 
 import java.util.LinkedHashMap;
 
-/**
- * FieldFilterDeserializer
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// FieldFilterDeserializer
+///
+/// @author scx567888
+/// @version 0.0.1
 public class FieldFilterSerializer {
 
     public static final FieldFilterSerializer FIELD_FILTER_SERIALIZER = new FieldFilterSerializer();

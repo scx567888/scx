@@ -6,12 +6,10 @@ import cool.scx.data.query.Query;
 
 import java.util.LinkedHashMap;
 
-/**
- * QuerySerializer
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// QuerySerializer
+///
+/// @author scx567888
+/// @version 0.0.1
 public class QuerySerializer {
 
     public static final QuerySerializer QUERY_SERIALIZER = new QuerySerializer();

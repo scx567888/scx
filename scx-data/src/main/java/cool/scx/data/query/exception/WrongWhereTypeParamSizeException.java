@@ -2,12 +2,10 @@ package cool.scx.data.query.exception;
 
 import cool.scx.data.query.WhereType;
 
-/**
- * WhereBody 参数长度异常
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// WhereBody 参数长度异常
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class WrongWhereTypeParamSizeException extends IllegalArgumentException {
 
     public WrongWhereTypeParamSizeException(String name, WhereType whereType, int paramSize) {

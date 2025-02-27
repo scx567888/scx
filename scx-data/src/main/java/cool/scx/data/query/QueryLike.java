@@ -1,11 +1,9 @@
 package cool.scx.data.query;
 
-/**
- * QueryLike
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// QueryLike
+///
+/// @author scx567888
+/// @version 0.0.1
 @SuppressWarnings("unchecked")
 public abstract class QueryLike<QL extends QueryLike<QL>> implements Query {
 

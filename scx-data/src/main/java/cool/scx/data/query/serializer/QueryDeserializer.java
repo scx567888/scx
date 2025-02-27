@@ -6,12 +6,10 @@ import cool.scx.common.util.ObjectUtils;
 import cool.scx.data.query.Query;
 import cool.scx.data.query.QueryImpl;
 
-/**
- * QueryDeserializer
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// QueryDeserializer
+///
+/// @author scx567888
+/// @version 0.0.1
 public class QueryDeserializer {
 
     public static final QueryDeserializer QUERY_DESERIALIZER = new QueryDeserializer();
