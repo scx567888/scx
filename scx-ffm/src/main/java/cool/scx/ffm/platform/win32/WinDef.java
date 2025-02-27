@@ -13,5 +13,5 @@ public final class WinDef {
         public int bottom;
 
     }
-    
+
 }

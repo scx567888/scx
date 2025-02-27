@@ -6,6 +6,7 @@ import cool.scx.ffm.platform.win32.WinUser.WNDENUMPROC;
 import java.lang.foreign.MemorySegment;
 
 import static cool.scx.ffm.FFMProxy.ffmProxy;
+import static cool.scx.ffm.platform.win32.WinUser.POINT;
 
 /// 提供一些 User32 标准的接口
 ///
@@ -42,5 +43,9 @@ public interface User32 {
     boolean CloseWindow(MemorySegment hWnd);
 
     boolean GetWindowRect(MemorySegment hWnd, RECT lpRect);
+
+    boolean SetCursorPos(int x, int y);
+
+    boolean GetCursorPos(POINT lpPoint);
 
 }
