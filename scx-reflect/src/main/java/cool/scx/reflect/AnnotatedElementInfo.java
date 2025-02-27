@@ -27,7 +27,7 @@ public interface AnnotatedElementInfo {
     }
 
     /// 查找所有指定类型的注解
-    default <T extends Annotation> List<T> findAnnotations(Class<T> annotationClass) {
+    default <T extends Annotation> List<T> findAnnotationList(Class<T> annotationClass) {
         var annotations = annotations();
         var result = new ArrayList<T>();
         for (var annotation : annotations) {
@@ -50,7 +50,7 @@ public interface AnnotatedElementInfo {
     }
 
     /// 从整个继承层次查找 所有注解
-    default <T extends Annotation> List<T> findAnnotationsFromAll(Class<T> annotationClass) {
+    default <T extends Annotation> List<T> findAnnotationListFromAll(Class<T> annotationClass) {
         var annotations = allAnnotations();
         var result = new ArrayList<T>();
         for (var annotation : annotations) {
