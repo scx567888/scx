@@ -3,7 +3,7 @@ package cool.scx.http.x.web_socket;
 import cool.scx.common.util.RandomUtils;
 import cool.scx.http.web_socket.ScxClientWebSocket;
 import cool.scx.http.web_socket.WebSocketOpCode;
-import cool.scx.io.DataReader;
+import cool.scx.io.data_reader.DataReader;
 import cool.scx.tcp.ScxTCPSocket;
 
 import java.io.IOException;

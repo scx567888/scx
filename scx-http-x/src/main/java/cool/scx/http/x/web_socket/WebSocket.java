@@ -1,8 +1,8 @@
 package cool.scx.http.x.web_socket;
 
 import cool.scx.http.web_socket.WebSocketOpCode;
-import cool.scx.io.DataReader;
-import cool.scx.io.NoMoreDataException;
+import cool.scx.io.data_reader.DataReader;
+import cool.scx.io.exception.NoMoreDataException;
 import cool.scx.tcp.ScxTCPSocket;
 
 import java.io.IOException;

@@ -3,8 +3,8 @@ package cool.scx.http.x.http2;
 import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.x.XHttpServerOptions;
 import cool.scx.http.x.http2.hpack.HPACKDecoder;
-import cool.scx.io.BufferedInputStreamDataSupplier;
-import cool.scx.io.LinkedDataReader;
+import cool.scx.io.data_reader.LinkedDataReader;
+import cool.scx.io.data_supplier.BufferedInputStreamDataSupplier;
 import cool.scx.tcp.ScxTCPSocket;
 
 import java.io.IOException;

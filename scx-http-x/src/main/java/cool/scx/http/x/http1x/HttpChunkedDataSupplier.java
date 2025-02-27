@@ -2,9 +2,9 @@ package cool.scx.http.x.http1x;
 
 import cool.scx.http.HttpStatusCode;
 import cool.scx.http.exception.ScxHttpException;
-import cool.scx.io.DataNode;
-import cool.scx.io.DataReader;
-import cool.scx.io.DataSupplier;
+import cool.scx.io.data_node.DataNode;
+import cool.scx.io.data_reader.DataReader;
+import cool.scx.io.data_supplier.DataSupplier;
 
 /**
  * 用来解析 HttpChunked 分块传输数据

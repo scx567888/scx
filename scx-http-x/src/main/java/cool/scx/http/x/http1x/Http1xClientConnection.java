@@ -4,7 +4,12 @@ import cool.scx.http.*;
 import cool.scx.http.exception.ScxHttpException;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.x.XHttpClientOptions;
-import cool.scx.io.*;
+import cool.scx.io.data_reader.PowerfulLinkedDataReader;
+import cool.scx.io.data_supplier.InputStreamDataSupplier;
+import cool.scx.io.exception.NoMatchFoundException;
+import cool.scx.io.exception.NoMoreDataException;
+import cool.scx.io.io_stream.DataReaderInputStream;
+import cool.scx.io.io_stream.FixedLengthDataReaderInputStream;
 import cool.scx.tcp.ScxTCPSocket;
 
 import java.io.IOException;
