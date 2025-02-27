@@ -3,8 +3,8 @@ package cool.scx.http.x.test;
 import cool.scx.http.web_socket.WebSocketOpCode;
 import cool.scx.http.x.web_socket.WebSocketFrame;
 import cool.scx.http.x.web_socket.WebSocketFrameHelper;
-import cool.scx.io.ByteArrayDataReader;
-import cool.scx.io.NoMoreDataException;
+import cool.scx.io.data_reader.ByteArrayDataReader;
+import cool.scx.io.exception.NoMoreDataException;
 import org.testng.annotations.Test;
 
 import java.io.ByteArrayOutputStream;

@@ -1,20 +1,20 @@
-package cool.scx.io;
+package cool.scx.io.data_supplier;
+
+import cool.scx.io.data_node.DataNode;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
 
-/**
- * InputStreamDataSupplier
- * 1, 当大部分时候读取的数据长度等于 bufferLength 的时候, 性能会高一点 因为只会进行数组创建这一步
- * 2, 当大部分时候读取的数据长度小于 bufferLength 的时候, 性能会差一点 因为每次都会创建一个 bufferLength 大小的数组
- * 如果启用压缩则会产生第二次复制 增加时间
- * 如果未启用压缩则会造成内存上的一些浪费
- * 这时建议使用  {@link BufferedInputStreamDataSupplier}
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// InputStreamDataSupplier
+/// 1, 当大部分时候读取的数据长度等于 bufferLength 的时候, 性能会高一点 因为只会进行数组创建这一步
+/// 2, 当大部分时候读取的数据长度小于 bufferLength 的时候, 性能会差一点 因为每次都会创建一个 bufferLength 大小的数组
+/// 如果启用压缩则会产生第二次复制 增加时间
+/// 如果未启用压缩则会造成内存上的一些浪费
+/// 这时建议使用  [BufferedInputStreamDataSupplier]
+///
+/// @author scx567888
+/// @version 0.0.1
 public class InputStreamDataSupplier implements DataSupplier {
 
     private final InputStream inputStream;

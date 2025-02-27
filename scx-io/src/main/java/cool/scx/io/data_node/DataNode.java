@@ -1,17 +1,15 @@
-package cool.scx.io;
+package cool.scx.io.data_node;
 
-/**
- * DataNode
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// DataNode
+///
+/// @author scx567888
+/// @version 0.0.1
 public class DataNode {
 
-    final byte[] bytes;
-    final int limit;
-    int position;
-    DataNode next;
+    public final byte[] bytes;
+    public final int limit;
+    public int position;
+    public DataNode next;
 
     public DataNode(byte[] bytes) {
         this(bytes, 0, bytes.length);
@@ -23,11 +21,11 @@ public class DataNode {
         this.limit = limit;
     }
 
-    int available() {
+    public int available() {
         return limit - position;
     }
 
-    boolean hasAvailable() {
+    public boolean hasAvailable() {
         return position < limit;
     }
 

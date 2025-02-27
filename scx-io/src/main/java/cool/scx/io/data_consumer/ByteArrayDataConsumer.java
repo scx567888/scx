@@ -1,11 +1,12 @@
-package cool.scx.io;
+package cool.scx.io.data_consumer;
 
-/**
- * ByteArrayDataConsumer
- *
- * @author scx567888
- * @version 0.0.1
- */
+import cool.scx.io.IOHelper;
+import cool.scx.io.data_node.DataNode;
+
+/// ByteArrayDataConsumer
+///
+/// @author scx567888
+/// @version 0.0.1
 public class ByteArrayDataConsumer implements DataConsumer {
 
     private DataNode head;

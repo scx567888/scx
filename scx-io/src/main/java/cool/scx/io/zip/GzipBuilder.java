@@ -1,6 +1,6 @@
 package cool.scx.io.zip;
 
-import cool.scx.io.LazyInputStream;
+import cool.scx.io.io_stream.LazyInputStream;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -13,12 +13,10 @@ import java.util.zip.CheckedInputStream;
 import java.util.zip.Deflater;
 import java.util.zip.DeflaterInputStream;
 
-/**
- * 用来 压缩 GZIP
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 用来 压缩 GZIP
+///
+/// @author scx567888
+/// @version 0.0.1
 public class GzipBuilder extends SequenceInputStream {
 
     public GzipBuilder(InputStream inputStream) {
@@ -42,9 +40,7 @@ public class GzipBuilder extends SequenceInputStream {
 
     public static class GzipHeaderInputStream extends ByteArrayInputStream {
 
-        /*
-         * GZIP header magic number.
-         */
+        /// GZIP header magic number.
         private static final int GZIP_MAGIC = 0x8b1f;
 
         // Represents the default "unknown" value for OS header, per RFC-1952
@@ -81,10 +77,7 @@ public class GzipBuilder extends SequenceInputStream {
 
     public static class GzipTrailerInputStream extends LazyInputStream {
 
-        /*
-         * Trailer size in bytes.
-         *
-         */
+        /// Trailer size in bytes.
         private static final int TRAILER_SIZE = 8;
 
         private final CRC32 crc;
@@ -96,16 +89,14 @@ public class GzipBuilder extends SequenceInputStream {
         }
 
         @Override
-        public InputStream toInputStream0() {
+        public InputStream inputStream0() {
             byte[] trailer = new byte[TRAILER_SIZE];
             writeTrailer(trailer, 0);
             return new ByteArrayInputStream(trailer);
         }
 
-        /*
-         * Writes GZIP member trailer to a byte array, starting at a given
-         * offset.
-         */
+        /// Writes GZIP member trailer to a byte array, starting at a given
+        /// offset.
         private void writeTrailer(byte[] buf, int offset) {
             writeInt((int) crc.getValue(), buf, offset); // CRC-32 of uncompr. data
             // RFC 1952: Size of the original (uncompressed) input data modulo 2^32
@@ -113,19 +104,15 @@ public class GzipBuilder extends SequenceInputStream {
             writeInt(iSize, buf, offset + 4);
         }
 
-        /*
-         * Writes integer in Intel byte order to a byte array, starting at a
-         * given offset.
-         */
+        /// Writes integer in Intel byte order to a byte array, starting at a
+        /// given offset.
         private void writeInt(int i, byte[] buf, int offset) {
             writeShort(i & 0xffff, buf, offset);
             writeShort((i >> 16) & 0xffff, buf, offset + 2);
         }
 
-        /*
-         * Writes short integer in Intel byte order to a byte array, starting
-         * at a given offset
-         */
+        /// Writes short integer in Intel byte order to a byte array, starting
+        /// at a given offset
         private void writeShort(int s, byte[] buf, int offset) {
             buf[offset] = (byte) (s & 0xff);
             buf[offset + 1] = (byte) ((s >> 8) & 0xff);

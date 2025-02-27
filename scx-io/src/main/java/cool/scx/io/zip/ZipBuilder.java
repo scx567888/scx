@@ -13,12 +13,10 @@ import java.util.List;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
-/**
- * 简化 zip 的创建
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 简化 zip 的创建
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class ZipBuilder {
 
     private final List<ZipBuilderItem> items = new ArrayList<>();
@@ -109,23 +107,19 @@ public final class ZipBuilder {
         return bo.toByteArray();
     }
 
-    /**
-     * 将 virtualFile 转换为 byte 数组 方便前台用户下载使用
-     *
-     * @return a
-     * @throws java.lang.Exception a
-     */
+    /// 将 virtualFile 转换为 byte 数组 方便前台用户下载使用
+    ///
+    /// @return a
+    /// @throws java.lang.Exception a
     public byte[] toBytes() throws Exception {
         return toBytes(new ZipOptions());
     }
 
-    /**
-     * 将一个虚拟文件压缩
-     *
-     * @param outputPath a
-     * @return a
-     * @throws java.io.IOException if any.
-     */
+    /// 将一个虚拟文件压缩
+    ///
+    /// @param outputPath a
+    /// @return a
+    /// @throws java.io.IOException if any.
     public Path toFile(Path outputPath, ZipOptions zipOptions) throws IOException {
         // 创建一个新的空的输出文件的临时文件
         Files.createDirectories(outputPath.getParent());

@@ -1,13 +1,12 @@
-package cool.scx.io;
+package cool.scx.io.data_supplier;
 
 import cool.scx.common.iterator.ArrayIterator;
+import cool.scx.io.data_node.DataNode;
 
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * 可以一次性将多个 DataSupplier 组合成一个
- */
+/// 可以一次性将多个 DataSupplier 组合成一个
 public class SequenceDataSupplier implements DataSupplier {
 
     private final Iterator<DataSupplier> iterator;

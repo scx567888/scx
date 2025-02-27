@@ -1,7 +1,8 @@
-package cool.scx.io;
+package cool.scx.io.data_supplier;
 
 import cool.scx.common.iterator.ArrayIterator;
 import cool.scx.common.iterator.SingleIterator;
+import cool.scx.io.data_node.DataNode;
 
 import java.util.Collection;
 import java.util.Iterator;

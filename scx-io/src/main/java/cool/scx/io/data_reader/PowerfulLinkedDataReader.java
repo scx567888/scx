@@ -1,4 +1,8 @@
-package cool.scx.io;
+package cool.scx.io.data_reader;
+
+import cool.scx.io.data_consumer.FillByteArrayDataConsumer;
+import cool.scx.io.data_consumer.OutputStreamDataConsumer;
+import cool.scx.io.data_supplier.DataSupplier;
 
 import java.io.OutputStream;
 

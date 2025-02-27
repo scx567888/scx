@@ -11,12 +11,10 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.zip.ZipInputStream;
 
-/**
- * UnZipBuilder
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// UnZipBuilder
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class UnZipBuilder {
 
     private final InputStream source;
@@ -36,13 +34,11 @@ public final class UnZipBuilder {
         this(new ByteArrayInputStream(bytes));
     }
 
-    /**
-     * 解压
-     *
-     * @param outputPath 解压到的目录
-     * @param zipOptions a
-     * @throws IOException a
-     */
+    /// 解压
+    ///
+    /// @param outputPath 解压到的目录
+    /// @param zipOptions a
+    /// @throws IOException a
     public void toFile(Path outputPath, ZipOptions zipOptions) throws IOException {
         Files.createDirectories(outputPath);
         var rootPath = getRootPath(zipOptions);

@@ -9,12 +9,10 @@ import java.nio.file.attribute.FileTime;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * 通过 FileWatcher 主动更新 代替高频的 Files.readAttributes 查询
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 通过 FileWatcher 主动更新 代替高频的 Files.readAttributes 查询
+///
+/// @author scx567888
+/// @version 0.0.1
 public class FileAttributesReader {
 
     //为了解决 ConcurrentHashMap 无法存储空值的问题
@@ -42,14 +40,12 @@ public class FileAttributesReader {
         }
     }
 
-    /**
-     * 这里为了性能考虑并没有在 方法内部判断
-     * 但是请保证 参数 path 一定是 target 的子目录或者子文件 否则将无法正确判断文件变化
-     *
-     * @param path path
-     * @return 文件内容 (可能为 null )
-     * @throws IOException a
-     */
+    /// 这里为了性能考虑并没有在 方法内部判断
+    /// 但是请保证 参数 path 一定是 target 的子目录或者子文件 否则将无法正确判断文件变化
+    ///
+    /// @param path path
+    /// @return 文件内容 (可能为 null )
+    /// @throws IOException a
     public BasicFileAttributes get(Path path) throws IOException {
         var f = cache.computeIfAbsent(path, c -> {
             try {

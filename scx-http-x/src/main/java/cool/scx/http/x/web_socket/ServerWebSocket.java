@@ -4,7 +4,7 @@ import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.web_socket.ScxServerWebSocket;
 import cool.scx.http.x.http1x.Http1xServerWebSocketHandshakeRequest;
-import cool.scx.io.DataReader;
+import cool.scx.io.data_reader.DataReader;
 import cool.scx.tcp.ScxTCPSocket;
 
 import java.io.OutputStream;

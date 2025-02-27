@@ -1,11 +1,9 @@
-package cool.scx.io;
+package cool.scx.io.data_indexer;
 
-/**
- * KMPDataIndexer
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// KMPDataIndexer
+///
+/// @author scx567888
+/// @version 0.0.1
 public class KMPDataIndexer implements DataIndexer {
 
     private final int[] lps;
