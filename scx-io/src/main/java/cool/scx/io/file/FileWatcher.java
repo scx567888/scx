@@ -6,12 +6,10 @@ import java.util.function.Consumer;
 
 import static java.nio.file.StandardWatchEventKinds.*;
 
-/**
- * 文件监听器
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 文件监听器
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class FileWatcher {
 
     private final WatchService watchService;

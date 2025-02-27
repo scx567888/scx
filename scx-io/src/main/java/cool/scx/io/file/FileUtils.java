@@ -1,4 +1,6 @@
-package cool.scx.common.util;
+package cool.scx.io.file;
+
+import cool.scx.common.util.HashUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,12 +14,10 @@ import java.util.regex.Pattern;
 
 import static java.nio.file.StandardOpenOption.*;
 
-/**
- * 文件 操作类
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 文件 操作类
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class FileUtils {
 
     /**

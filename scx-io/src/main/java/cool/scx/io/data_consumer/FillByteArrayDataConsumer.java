@@ -1,8 +1,6 @@
-package cool.scx.io;
+package cool.scx.io.data_consumer;
 
-/**
- * 填充方式
- */
+/// 填充方式
 public class FillByteArrayDataConsumer implements DataConsumer {
 
     private final byte[] data;

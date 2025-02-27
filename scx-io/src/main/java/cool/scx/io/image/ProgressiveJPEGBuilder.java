@@ -10,12 +10,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-/**
- * 将图片转换为 渐进式 JPEG
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 将图片转换为 渐进式 JPEG
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class ProgressiveJPEGBuilder {
 
     public static ImageWriter getImageWriter(String formatName) {

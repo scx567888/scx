@@ -1,6 +1,6 @@
 package cool.scx.io.zip;
 
-import cool.scx.io.LazyInputStream;
+import cool.scx.io.io_stream.LazyInputStream;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -13,12 +13,10 @@ import java.util.zip.CheckedInputStream;
 import java.util.zip.Deflater;
 import java.util.zip.DeflaterInputStream;
 
-/**
- * 用来 压缩 GZIP
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 用来 压缩 GZIP
+///
+/// @author scx567888
+/// @version 0.0.1
 public class GzipBuilder extends SequenceInputStream {
 
     public GzipBuilder(InputStream inputStream) {
@@ -96,7 +94,7 @@ public class GzipBuilder extends SequenceInputStream {
         }
 
         @Override
-        public InputStream toInputStream0() {
+        public InputStream inputStream0() {
             byte[] trailer = new byte[TRAILER_SIZE];
             writeTrailer(trailer, 0);
             return new ByteArrayInputStream(trailer);

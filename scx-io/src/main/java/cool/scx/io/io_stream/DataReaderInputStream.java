@@ -1,4 +1,7 @@
-package cool.scx.io;
+package cool.scx.io.io_stream;
+
+import cool.scx.io.data_reader.PowerfulLinkedDataReader;
+import cool.scx.io.data_supplier.DataSupplier;
 
 import java.io.IOException;
 import java.io.InputStream;

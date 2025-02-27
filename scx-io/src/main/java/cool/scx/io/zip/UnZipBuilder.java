@@ -1,6 +1,6 @@
 package cool.scx.io.zip;
 
-import cool.scx.common.util.FileUtils;
+import cool.scx.io.file.FileUtils;
 import cool.scx.common.util.URIUtils;
 
 import java.io.ByteArrayInputStream;

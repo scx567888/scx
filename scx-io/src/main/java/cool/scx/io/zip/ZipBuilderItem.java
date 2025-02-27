@@ -9,17 +9,13 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
-/**
- * ZipBuilderItem
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ZipBuilderItem
+///
+/// @author scx567888
+/// @version 0.0.1
 public class ZipBuilderItem {
 
-    /**
-     * 经过处理后必须为 "" 或者 结尾是 "/", 开头不允许有 "/"
-     */
+    /// 经过处理后必须为 "" 或者 结尾是 "/", 开头不允许有 "/"
     protected final String zipPath;
 
     protected final InputStream source;

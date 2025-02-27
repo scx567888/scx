@@ -1,16 +1,16 @@
-package cool.scx.io;
+package cool.scx.io.data_supplier;
+
+import cool.scx.io.data_node.DataNode;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.ReadableByteChannel;
 
-/**
- * ByteChannelDataSupplier
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ByteChannelDataSupplier
+///
+/// @author scx567888
+/// @version 0.0.1
 public class BufferedByteChannelDataSupplier implements DataSupplier {
 
     private final ReadableByteChannel dataChannel;

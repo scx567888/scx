@@ -9,12 +9,10 @@ import java.nio.file.attribute.FileTime;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * 通过 FileWatcher 主动更新 代替高频的 Files.readAttributes 查询
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 通过 FileWatcher 主动更新 代替高频的 Files.readAttributes 查询
+///
+/// @author scx567888
+/// @version 0.0.1
 public class FileAttributesReader {
 
     //为了解决 ConcurrentHashMap 无法存储空值的问题

@@ -1,15 +1,16 @@
-package cool.scx.io;
+package cool.scx.io.data_reader;
 
 import cool.scx.common.util.ArrayUtils;
+import cool.scx.io.data_consumer.DataConsumer;
+import cool.scx.io.exception.NoMatchFoundException;
+import cool.scx.io.exception.NoMoreDataException;
 
 import static java.lang.Math.min;
 
-/**
- * ByteArrayDataReader
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ByteArrayDataReader
+///
+/// @author scx567888
+/// @version 0.0.1
 public class ByteArrayDataReader implements DataReader {
 
     private final byte[] bytes;
