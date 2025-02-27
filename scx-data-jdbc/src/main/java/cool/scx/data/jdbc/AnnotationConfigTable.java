@@ -75,7 +75,7 @@ public class AnnotationConfigTable implements Table {
         var classInfo = ClassInfoFactory.getClassInfo(clazz);
         var fields = classInfo.classType() == RECORD ? classInfo.allFields() : Stream.of(classInfo.allFields()).filter(c -> c.accessModifier() == PUBLIC).toArray(FieldInfo[]::new);
         var list = Stream.of(fields)
-                .filter(field -> field.findAnnotations(NoColumn.class) == null)
+                .filter(field -> field.findAnnotation(NoColumn.class) == null)
                 .map(AnnotationConfigColumn::new)
                 .toList();
         checkDuplicateColumnName(list, clazz);
