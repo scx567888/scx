@@ -12,7 +12,7 @@ import static java.lang.reflect.AccessFlag.STATIC;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public final class ClassInfo {
+public final class ClassInfo implements AnnotatedElementInfo {
 
     private final JavaType type;
     private final AccessModifier accessModifier;
@@ -52,7 +52,7 @@ public final class ClassInfo {
         this.allFields = _findAllFieldInfos(this);
         this.methods = _findMethodInfos(this);
         this.allMethods = _findAllMethodInfos(this);
-        this.annotations = _findAnnotations(rawClass);
+        this.annotations = rawClass.getDeclaredAnnotations();
         this.allAnnotations = _findAllAnnotations(this);
         this.isFinal = accessFlags.contains(FINAL);
         this.isStatic = accessFlags.contains(STATIC);
@@ -124,12 +124,12 @@ public final class ClassInfo {
         return allMethods;
     }
 
-    /// 注解
+    @Override
     public Annotation[] annotations() {
         return annotations;
     }
 
-    /// 获取类所有的注解 包括继承自父类的注解
+    @Override
     public Annotation[] allAnnotations() {
         return allAnnotations;
     }
