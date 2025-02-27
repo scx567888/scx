@@ -1,8 +1,8 @@
 package cool.scx.app.x.fss;
 
+import cool.scx.common.util.FileUtils;
 import cool.scx.common.util.RandomUtils;
 import cool.scx.http.exception.NotFoundException;
-import cool.scx.common.util.FileUtils;
 import net.coobird.thumbnailator.geometry.Positions;
 
 import java.io.IOException;

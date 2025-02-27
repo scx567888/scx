@@ -8,6 +8,7 @@ import cool.scx.app.annotation.ScheduledList;
 import cool.scx.app.annotation.ScxService;
 import cool.scx.app.base.BaseModel;
 import cool.scx.app.base.BaseModelService;
+import cool.scx.common.util.ClassUtils;
 import cool.scx.common.util.ConsoleUtils;
 import cool.scx.common.util.ObjectUtils;
 import cool.scx.common.util.StringUtils;
@@ -25,7 +26,6 @@ import cool.scx.logging.ScxLoggerFactory;
 import cool.scx.logging.recorder.ConsoleRecorder;
 import cool.scx.logging.recorder.FileRecorder;
 import cool.scx.reflect.ClassInfoFactory;
-import cool.scx.common.util.ClassUtils;
 import cool.scx.reflect.MethodType;
 import cool.scx.scheduling.ScxScheduling;
 import cool.scx.web.annotation.ScxRoute;
@@ -47,8 +47,8 @@ import java.util.stream.Stream;
 
 import static cool.scx.app.enumeration.ScxAppFeature.ALLOW_CIRCULAR_REFERENCES;
 import static cool.scx.app.enumeration.ScxAppFeature.USE_SPY;
-import static cool.scx.reflect.AccessModifier.PUBLIC;
 import static cool.scx.common.util.ClassUtils.*;
+import static cool.scx.reflect.AccessModifier.PUBLIC;
 import static java.lang.System.Logger.Level.*;
 import static java.util.Objects.requireNonNull;
 
