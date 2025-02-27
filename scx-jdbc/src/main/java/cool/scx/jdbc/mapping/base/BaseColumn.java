@@ -3,12 +3,10 @@ package cool.scx.jdbc.mapping.base;
 import cool.scx.jdbc.mapping.Column;
 import cool.scx.jdbc.mapping.DataType;
 
-/**
- * 用于手动编写 Column
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 用于手动编写 Column
+///
+/// @author scx567888
+/// @version 0.0.1
 public class BaseColumn implements Column {
 
     private String table;

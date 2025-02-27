@@ -11,12 +11,10 @@ import java.util.Objects;
 
 import static cool.scx.jdbc.result_handler.ResultHandler.ofBeanList;
 
-/**
- * MetaDataHelper
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// MetaDataHelper
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class MetaDataHelper {
 
     private static final ResultHandler<List<_Catalog>> CATALOG_LIST_HANDLER = ofBeanList(_Catalog.class);
@@ -72,9 +70,7 @@ public final class MetaDataHelper {
         return getSchemas(con, con.getCatalog(), con.getSchema())[0];
     }
 
-    /**
-     * @see DatabaseMetaData#getCatalogs()
-     */
+    /// @see DatabaseMetaData#getCatalogs()
     private record _Catalog(String TABLE_CAT) {
 
         public CatalogMetaData toCatalogMetaData() {
@@ -83,9 +79,7 @@ public final class MetaDataHelper {
 
     }
 
-    /**
-     * @see DatabaseMetaData#getSchemas(String, String)
-     */
+    /// @see DatabaseMetaData#getSchemas(String, String)
     private record _Schema(String TABLE_SCHEM,
                            String TABLE_CATALOG) {
 
@@ -95,9 +89,7 @@ public final class MetaDataHelper {
 
     }
 
-    /**
-     * @see DatabaseMetaData#getTables(String, String, String, String[])
-     */
+    /// @see DatabaseMetaData#getTables(String, String, String, String[])
     private record _Table(String TABLE_CAT,
                           String TABLE_SCHEM,
                           String TABLE_NAME,
@@ -116,9 +108,7 @@ public final class MetaDataHelper {
     }
 
 
-    /**
-     * @see DatabaseMetaData#getColumns(String, String, String, String)
-     */
+    /// @see DatabaseMetaData#getColumns(String, String, String, String)
     private record _Column(String TABLE_CAT,
                            String TABLE_SCHEM,
                            String TABLE_NAME,
@@ -193,9 +183,7 @@ public final class MetaDataHelper {
 
     }
 
-    /**
-     * @see DatabaseMetaData#getPrimaryKeys(String, String, String)
-     */
+    /// @see DatabaseMetaData#getPrimaryKeys(String, String, String)
     private record _Key(String TABLE_CAT,
                         String TABLE_SCHEM,
                         String TABLE_NAME,
@@ -209,9 +197,7 @@ public final class MetaDataHelper {
 
     }
 
-    /**
-     * @see DatabaseMetaData#getIndexInfo(String, String, String, boolean, boolean)
-     */
+    /// @see DatabaseMetaData#getIndexInfo(String, String, String, boolean, boolean)
     private record _Index(String TABLE_CAT,
                           String TABLE_SCHEM,
                           String TABLE_NAME,

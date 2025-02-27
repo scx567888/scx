@@ -5,14 +5,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/**
- * BlobInputStreamTypeHandler
- * todo 在驱动不支持时 转换为 string 或者 byte[] 存储 ?
- *
- * @author scx567888
- * @version 0.0.1
- */
-
+/// BlobInputStreamTypeHandler
+/// todo 在驱动不支持时 转换为 string 或者 byte[] 存储 ?
+///
+/// @author scx567888
+/// @version 0.0.1
 public class BlobInputStreamTypeHandler implements TypeHandler<InputStream> {
 
     @Override

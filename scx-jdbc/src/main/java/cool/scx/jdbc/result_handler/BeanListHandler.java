@@ -8,12 +8,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * BeanListHandler
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// BeanListHandler
+///
+/// @author scx567888
+/// @version 0.0.1
 record BeanListHandler<T>(BeanBuilder<T> beanBuilder) implements ResultHandler<List<T>> {
 
     @Override

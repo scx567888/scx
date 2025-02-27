@@ -9,12 +9,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-/**
- * SchemaMetaData
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// SchemaMetaData
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class SchemaMetaData implements Schema {
 
     private final String catalog;

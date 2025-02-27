@@ -7,12 +7,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Duration;
 
-/**
- * DurationTypeHandler
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// DurationTypeHandler
+///
+/// @author scx567888
+/// @version 0.0.1
 public class DurationTypeHandler implements TypeHandler<Duration> {
 
     @Override

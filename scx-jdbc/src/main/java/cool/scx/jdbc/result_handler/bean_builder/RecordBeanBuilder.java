@@ -12,12 +12,10 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.function.Function;
 
-/**
- * RecordBeanBuilder
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// RecordBeanBuilder
+///
+/// @author scx567888
+/// @version 0.0.1
 final class RecordBeanBuilder<T> extends BeanBuilder<T> {
 
     private final ConstructorInfo constructor;
@@ -34,13 +32,11 @@ final class RecordBeanBuilder<T> extends BeanBuilder<T> {
         this(type, Field::getName);
     }
 
-    /**
-     * 根据构造函数的参数顺序重新排序 fieldSetter
-     *
-     * @param parameters   a
-     * @param fieldSetters a
-     * @return a
-     */
+    /// 根据构造函数的参数顺序重新排序 fieldSetter
+    ///
+    /// @param parameters   a
+    /// @param fieldSetters a
+    /// @return a
     private static FieldSetter[] sortFieldSetters(ParameterInfo[] parameters, FieldSetter[] fieldSetters) {
         //使用 map 加速查找
         var map = new HashMap<String, FieldSetter>();
@@ -56,9 +52,7 @@ final class RecordBeanBuilder<T> extends BeanBuilder<T> {
         return temp;
     }
 
-    /**
-     * 寻找 Record 规范构造参数
-     */
+    /// 寻找 Record 规范构造参数
     public static ConstructorInfo checkRecordConstructor(ClassInfo type) {
         var canonicalConstructor = type.recordConstructor();
         if (canonicalConstructor == null) {

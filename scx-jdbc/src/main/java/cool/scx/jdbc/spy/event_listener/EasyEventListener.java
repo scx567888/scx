@@ -6,12 +6,10 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-/**
- * EasyEventListener
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// EasyEventListener
+///
+/// @author scx567888
+/// @version 0.0.1
 public class EasyEventListener implements SpyEventListener {
 
     public void onBeforeAnyExecute(Statement statement) {

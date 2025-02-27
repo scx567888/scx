@@ -6,12 +6,10 @@ import cool.scx.jdbc.mapping.Table;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * 用于手动编写 Schema
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 用于手动编写 Schema
+///
+/// @author scx567888
+/// @version 0.0.1
 public class BaseSchema implements Schema {
 
     private final Map<String, BaseTable> tableMap = new HashMap<>();

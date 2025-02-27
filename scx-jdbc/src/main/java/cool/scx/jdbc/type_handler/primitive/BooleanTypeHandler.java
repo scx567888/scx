@@ -4,12 +4,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/**
- * BooleanTypeHandler
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// BooleanTypeHandler
+///
+/// @author scx567888
+/// @version 0.0.1
 public class BooleanTypeHandler extends PrimitiveTypeHandler<Boolean> {
 
     public BooleanTypeHandler(boolean isPrimitive) {

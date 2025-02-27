@@ -6,115 +6,79 @@ import java.time.*;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * JDBCType
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// JDBCType
+///
+/// @author scx567888
+/// @version 0.0.1
 public enum JDBCType {
 
     //***************** 整数 ********************
 
-    /**
-     * 微小的整数类型 取值范围参照 {@link Byte}
-     */
+    /// 微小的整数类型 取值范围参照 [Byte]
     TINYINT,
 
-    /**
-     * 较小的整数类型 取值范围参照 {@link Short}
-     */
+    /// 较小的整数类型 取值范围参照 [Short]
     SMALLINT,
 
-    /**
-     * 整数类型 取值范围参照 {@link Integer}
-     */
+    /// 整数类型 取值范围参照 [Integer]
     INT,
 
-    /**
-     * 非常大的整数类型 取值范围参照 {@link Long}
-     */
+    /// 非常大的整数类型 取值范围参照 [Long]
     BIGINT,
 
     //**************** 浮点数 (近似值) ********************    
 
-    /**
-     * FLOAT (同义词 REAL) 浮点数 取值范围参照 {@link Float}
-     */
+    /// FLOAT (同义词 REAL) 浮点数 取值范围参照 [Float]
     FLOAT,
 
-    /**
-     * DOUBLE 浮点数 取值范围参照 {@link Double}
-     */
+    /// DOUBLE 浮点数 取值范围参照 [Double]
     DOUBLE,
 
     //**************** 布尔 ************************
 
-    /**
-     * BOOLEAN (同义词 BIT) 一般对应 {@link Boolean}
-     */
+    /// BOOLEAN (同义词 BIT) 一般对应 [Boolean]
     BOOLEAN,
 
     //**************** 浮点数 (精确值) *********************
 
-    /**
-     * 精确浮点数 (同义词 NUMERIC) 一般对应 {@link BigDecimal} 或 {@link BigInteger}
-     */
+    /// 精确浮点数 (同义词 NUMERIC) 一般对应 [BigDecimal] 或 [BigInteger]
     DECIMAL,
 
     //**************** 日期和时间 **********************
 
-    /**
-     * 日期类型  一般对应 {@link LocalDate}
-     */
+    /// 日期类型  一般对应 [LocalDate]
     DATE,
 
-    /**
-     * 时间类型 一般对应 {@link LocalTime}
-     */
+    /// 时间类型 一般对应 [LocalTime]
     TIME,
 
-    /**
-     * 日期和时间类型 一般对应 {@link LocalDateTime}
-     */
+    /// 日期和时间类型 一般对应 [LocalDateTime]
     DATETIME,
 
     //***************** 文本类型 *********************
 
-    /**
-     * 较短的文字 一般对应 {@link String}
-     */
+    /// 较短的文字 一般对应 [String]
     VARCHAR,
 
     //**************** TEXT 类型 ********************
 
-    /**
-     * 很长的文字 (用于 VARCHAR 无法存储的大小)
-     */
+    /// 很长的文字 (用于 VARCHAR 无法存储的大小)
     TEXT,
 
-    /**
-     * 非常大的文字 (用于 TEXT 无法存储的大小)
-     */
+    /// 非常大的文字 (用于 TEXT 无法存储的大小)
     LONGTEXT,
 
     //***************** BLOB 类型 ********************
 
-    /**
-     * 二进制数据  一般用于存储 byte 数组
-     */
+    /// 二进制数据  一般用于存储 byte 数组
     BLOB,
 
-    /**
-     * 非常大的二进制数据 (用于 BLOB 无法存储的大小)
-     */
+    /// 非常大的二进制数据 (用于 BLOB 无法存储的大小)
     LONGBLOB,
 
     //**************** 其余类型 *********************
 
-    /**
-     * JSON 格式
-     */
+    /// JSON 格式
     JSON;
 
     private static final Map<Class<?>, JDBCType> MAP = initMap();

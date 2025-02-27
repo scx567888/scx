@@ -8,12 +8,10 @@ import javax.sql.DataSource;
 import java.sql.Driver;
 import java.util.function.Function;
 
-/**
- * Spy
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// Spy
+///
+/// @author scx567888
+/// @version 0.0.1
 public class Spy {
 
     private static Function<DataSource, SpyEventListener> eventListenerBuilderByDataSource = (dataSource) -> new LoggingEventListener(DialectSelector.findDialect(dataSource));

@@ -9,12 +9,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-/**
- * TableMetaData
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// TableMetaData
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class TableMetaData implements Table {
 
     private final String catalog;

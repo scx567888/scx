@@ -2,12 +2,10 @@ package cool.scx.jdbc.meta_data;
 
 import cool.scx.jdbc.mapping.Column;
 
-/**
- * ColumnMetaData
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ColumnMetaData
+///
+/// @author scx567888
+/// @version 0.0.1
 public record ColumnMetaData(String table,
                              String name,
                              DataTypeMetaData dataType,

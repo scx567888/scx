@@ -1,6 +1,5 @@
 package cool.scx.jdbc.sql;
 
-import cool.scx.common.exception.ScxExceptionHelper;
 import cool.scx.common.functional.ScxConsumer;
 import cool.scx.common.functional.ScxFunction;
 import cool.scx.common.functional.ScxRunnable;
@@ -23,17 +22,13 @@ import static java.sql.ResultSet.CONCUR_READ_ONLY;
 import static java.sql.ResultSet.TYPE_FORWARD_ONLY;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
-/**
- * SQLRunner 用于执行简单的 jdbc 查询
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// SQLRunner 用于执行简单的 jdbc 查询
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class SQLRunner {
 
-    /**
-     * 此处采用线程的方式实现事务隔离 此字段用于存储 不同线程对应的 Connection 连接
-     */
+    /// 此处采用线程的方式实现事务隔离 此字段用于存储 不同线程对应的 Connection 连接
     private static final InheritableThreadLocal<Connection> CONNECTION_THREAD_LOCAL = new InheritableThreadLocal<>();
     private final AtomicLong threadNumber = new AtomicLong(0);
     private final JDBCContext jdbcContext;
@@ -42,13 +37,11 @@ public final class SQLRunner {
         this.jdbcContext = jdbcContext;
     }
 
-    /**
-     * 自动事务
-     *
-     * @param con     con
-     * @param handler handler
-     * @throws Exception e
-     */
+    /// 自动事务
+    ///
+    /// @param con     con
+    /// @param handler handler
+    /// @throws Exception e
     public static void autoTransaction(Connection con, ScxConsumer<Connection, Exception> handler) throws Exception {
         con.setAutoCommit(false);
         try {
@@ -60,15 +53,13 @@ public final class SQLRunner {
         }
     }
 
-    /**
-     * 自动事务 (带返回值)
-     *
-     * @param con     con
-     * @param handler handler
-     * @param <T>     T
-     * @return 返回值
-     * @throws Exception e
-     */
+    /// 自动事务 (带返回值)
+    ///
+    /// @param con     con
+    /// @param handler handler
+    /// @param <T>     T
+    /// @return 返回值
+    /// @throws Exception e
     public static <T> T autoTransaction(Connection con, ScxFunction<Connection, T, Exception> handler) throws Exception {
         con.setAutoCommit(false);
         try {
@@ -130,16 +121,14 @@ public final class SQLRunner {
         }
     }
 
-    /**
-     * query
-     *
-     * @param con           con
-     * @param sql           sql
-     * @param resultHandler resultHandler
-     * @param <T>           T
-     * @return result
-     * @throws SQLException e
-     */
+    /// query
+    ///
+    /// @param con           con
+    /// @param sql           sql
+    /// @param resultHandler resultHandler
+    /// @param <T>           T
+    /// @return result
+    /// @throws SQLException e
     public <T> T query(Connection con, SQL sql, ResultHandler<T> resultHandler) throws SQLException {
         try (var preparedStatement = con.prepareStatement(sql.sql(), TYPE_FORWARD_ONLY, CONCUR_READ_ONLY)) {
             fillParams(sql, preparedStatement, jdbcContext.dialect());
@@ -149,14 +138,12 @@ public final class SQLRunner {
         }
     }
 
-    /**
-     * query (自动管理连接)
-     *
-     * @param sql           sql
-     * @param resultHandler resultHandler
-     * @param <T>           T
-     * @return result
-     */
+    /// query (自动管理连接)
+    ///
+    /// @param sql           sql
+    /// @param resultHandler resultHandler
+    /// @param <T>           T
+    /// @return result
     public <T> T query(SQL sql, ResultHandler<T> resultHandler) {
         return wrap(() -> {
             //我们根据 CONNECTION_THREAD_LOCAL.get() 是否为 null 来判断是否处于 autoTransaction 中
@@ -171,14 +158,12 @@ public final class SQLRunner {
         });
     }
 
-    /**
-     * execute
-     *
-     * @param con con
-     * @param sql sql
-     * @return 受影响的行数
-     * @throws SQLException e
-     */
+    /// execute
+    ///
+    /// @param con con
+    /// @param sql sql
+    /// @return 受影响的行数
+    /// @throws SQLException e
     public long execute(Connection con, SQL sql) throws SQLException {
         try (var preparedStatement = con.prepareStatement(sql.sql(), RETURN_GENERATED_KEYS)) {
             fillParams(sql, preparedStatement, jdbcContext.dialect());
@@ -187,12 +172,10 @@ public final class SQLRunner {
         }
     }
 
-    /**
-     * execute (自动管理连接)
-     *
-     * @param sql sql
-     * @return 受影响的行数
-     */
+    /// execute (自动管理连接)
+    ///
+    /// @param sql sql
+    /// @return 受影响的行数
     public long execute(SQL sql) {
         return wrap(() -> {
             //我们根据 CONNECTION_THREAD_LOCAL.get() 是否为 null 来判断是否处于 autoTransaction 中
@@ -207,14 +190,12 @@ public final class SQLRunner {
         });
     }
 
-    /**
-     * update
-     *
-     * @param con con
-     * @param sql sql
-     * @return UpdateResult
-     * @throws SQLException e
-     */
+    /// update
+    ///
+    /// @param con con
+    /// @param sql sql
+    /// @return UpdateResult
+    /// @throws SQLException e
     public UpdateResult update(Connection con, SQL sql) throws SQLException {
         try (var preparedStatement = con.prepareStatement(sql.sql(), RETURN_GENERATED_KEYS)) {
             fillParams(sql, preparedStatement, jdbcContext.dialect());
@@ -224,12 +205,10 @@ public final class SQLRunner {
         }
     }
 
-    /**
-     * update (自动管理连接)
-     *
-     * @param sql sql
-     * @return UpdateResult
-     */
+    /// update (自动管理连接)
+    ///
+    /// @param sql sql
+    /// @return UpdateResult
     public UpdateResult update(SQL sql) {
         return wrap(() -> {
             //我们根据 CONNECTION_THREAD_LOCAL.get() 是否为 null 来判断是否处于 autoTransaction 中
@@ -244,14 +223,12 @@ public final class SQLRunner {
         });
     }
 
-    /**
-     * updateBatch
-     *
-     * @param con con
-     * @param sql sql
-     * @return UpdateResult
-     * @throws SQLException e
-     */
+    /// updateBatch
+    ///
+    /// @param con con
+    /// @param sql sql
+    /// @return UpdateResult
+    /// @throws SQLException e
     public UpdateResult updateBatch(Connection con, SQL sql) throws SQLException {
         try (var preparedStatement = con.prepareStatement(sql.sql(), RETURN_GENERATED_KEYS)) {
             fillParams(sql, preparedStatement, jdbcContext.dialect());
@@ -261,12 +238,10 @@ public final class SQLRunner {
         }
     }
 
-    /**
-     * updateBatch (自动管理连接)
-     *
-     * @param sql sql
-     * @return UpdateResult
-     */
+    /// updateBatch (自动管理连接)
+    ///
+    /// @param sql sql
+    /// @return UpdateResult
     public UpdateResult updateBatch(SQL sql) {
         return wrap(() -> {
             //我们根据 CONNECTION_THREAD_LOCAL.get() 是否为 null 来判断是否处于 autoTransaction 中
@@ -281,34 +256,14 @@ public final class SQLRunner {
         });
     }
 
-    /**
-     * 自动处理事务并在产生异常时进行自动回滚
-     * 注意 其中的操作会在另一个线程中执行 所以需要注意线程的操作
-     * 当抛出异常时 请使用 {@link ScxExceptionHelper#getRootCause(Throwable)} 来获取真正的异常
-     * 用法
-     * <pre>{@code
-     *      假设有以下结构的数据表
-     *      create table test (
-     *          name varchar(32) null unique,
-     *      );
-     *      在连接消费者中传入要执行的操作
-     *      SQLRunner sqlRunner = xxx;
-     *         try {
-     *             sqlRunner.autoTransaction(() -> {
-     *                 // 这句代码会正确执行
-     *                 sqlRunner.execute(NoParametersSQL.of("insert into test(name) values('uniqueName') "));
-     *                 // 这句会产生异常 这时上一个语句会进行回滚 (rollback) 同时将异常抛出
-     *                 sqlRunner.execute(NoParametersSQL.of("insert into test(name) values('uniqueName') "));
-     *             });
-     *         } catch (Exception e) {
-     *             //这里会捕获 getConnection 可能产生的 SQLException 和 autoTransaction 代码块中产生的所有异常
-     *             //因为会进行多层包裹 所以建议使用 ScxExceptionHelper.getRootCause(e); 来获取真正的异常
-     *             ScxExceptionHelper.getRootCause(e).printStackTrace();
-     *         }
-     *  }</pre>
-     *
-     * @param handler 连接消费者
-     */
+    /// 自动处理事务并在产生异常时进行自动回滚
+    /// 注意 其中的操作会在另一个线程中执行 所以需要注意线程的操作
+    /// 当抛出异常时 请使用 [#getRootCause(Throwable)] 来获取真正的异常
+    /// 用法
+    /// <pre>
+    /// `假设有以下结构的数据表create table test (name varchar(32) null unique,);在连接消费者中传入要执行的操作SQLRunner sqlRunner = xxx;try{sqlRunner.autoTransaction(() ->{// 这句代码会正确执行sqlRunner.execute(NoParametersSQL.of("insert into test(name) values('uniqueName') "));// 这句会产生异常 这时上一个语句会进行回滚 (rollback) 同时将异常抛出sqlRunner.execute(NoParametersSQL.of("insert into test(name) values('uniqueName') "));});}catch (Exception e){//这里会捕获 getConnection 可能产生的 SQLException 和 autoTransaction 代码块中产生的所有异常//因为会进行多层包裹 所以建议使用 ScxExceptionHelper.getRootCause(e); 来获取真正的异常ScxExceptionHelper.getRootCause(e).printStackTrace();}`</pre>
+    ///
+    /// @param handler 连接消费者
     public void autoTransaction(ScxRunnable<?> handler) {
         var promise = new CompletableFuture<Void>();
         Thread.ofVirtual().name("scx-auto-transaction-thread-", threadNumber.getAndIncrement()).start(() -> {
@@ -331,13 +286,11 @@ public final class SQLRunner {
         wrap(() -> promise.get());
     }
 
-    /**
-     * 同上 {@link SQLRunner#autoTransaction(ScxRunnable)} 但是有返回值
-     *
-     * @param handler a
-     * @param <T>     a
-     * @return a
-     */
+    /// 同上 [#autoTransaction(ScxRunnable)] 但是有返回值
+    ///
+    /// @param handler a
+    /// @param <T>     a
+    /// @return a
     public <T> T autoTransaction(Callable<T> handler) {
         var promise = new CompletableFuture<T>();
         Thread.ofVirtual().name("scx-auto-transaction-thread-", threadNumber.getAndIncrement()).start(() -> {

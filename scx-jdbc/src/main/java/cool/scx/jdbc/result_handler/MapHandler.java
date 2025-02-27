@@ -8,12 +8,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-/**
- * MapHandler
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// MapHandler
+///
+/// @author scx567888
+/// @version 0.0.1
 record MapHandler(Supplier<Map<String, Object>> mapSupplier) implements ResultHandler<Map<String, Object>> {
 
     static final MapHandler INSTANCE = new MapHandler();

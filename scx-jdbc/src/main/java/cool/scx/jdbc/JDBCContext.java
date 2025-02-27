@@ -7,12 +7,10 @@ import javax.sql.DataSource;
 
 import static cool.scx.jdbc.dialect.DialectSelector.findDialect;
 
-/**
- * JDBCContext
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// JDBCContext
+///
+/// @author scx567888
+/// @version 0.0.1
 public class JDBCContext {
 
     private final DataSource dataSource;

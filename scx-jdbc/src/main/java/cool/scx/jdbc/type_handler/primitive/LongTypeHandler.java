@@ -4,12 +4,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/**
- * LongTypeHandler
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// LongTypeHandler
+///
+/// @author scx567888
+/// @version 0.0.1
 public class LongTypeHandler extends PrimitiveTypeHandler<Long> {
 
     public LongTypeHandler(boolean isPrimitive) {

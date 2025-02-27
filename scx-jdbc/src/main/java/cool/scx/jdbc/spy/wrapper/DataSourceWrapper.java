@@ -8,12 +8,10 @@ import java.io.PrintWriter;
 import java.sql.*;
 import java.util.logging.Logger;
 
-/**
- * DataSourceWrapper
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// DataSourceWrapper
+///
+/// @author scx567888
+/// @version 0.0.1
 public class DataSourceWrapper extends SpyWrapper<DataSource> implements DataSource {
 
     public DataSourceWrapper(DataSource dataSource, SpyEventListener eventListener) {

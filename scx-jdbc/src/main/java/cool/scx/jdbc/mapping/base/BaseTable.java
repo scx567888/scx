@@ -8,12 +8,10 @@ import cool.scx.jdbc.mapping.Table;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * 用于手动编写 Table
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 用于手动编写 Table
+///
+/// @author scx567888
+/// @version 0.0.1
 public class BaseTable implements Table {
 
     private final Map<String, BaseColumn> columnMap = new HashMap<>();

@@ -7,14 +7,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Month;
 
-/**
- * MonthTypeHandler
- * todo test
- *
- * @author scx567888
- * @version 0.0.1
- */
-
+/// MonthTypeHandler
+/// todo test
+///
+/// @author scx567888
+/// @version 0.0.1
 public class MonthTypeHandler implements TypeHandler<Month> {
 
     @Override

@@ -8,12 +8,10 @@ import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.time.OffsetDateTime;
 
-/**
- * OffsetDateTimeTypeHandler
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// OffsetDateTimeTypeHandler
+///
+/// @author scx567888
+/// @version 0.0.1
 public class OffsetDateTimeTypeHandler implements TypeHandler<OffsetDateTime> {
 
     @Override

@@ -8,12 +8,10 @@ import java.util.Arrays;
 
 import static cool.scx.common.util.StringUtils.notEmpty;
 
-/**
- * 此 SQLBuilder 并不用于构建 {@link SQL} 只是用于构建普通的 SQL 语句
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 此 SQLBuilder 并不用于构建 [SQL] 只是用于构建普通的 SQL 语句
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class SQLBuilder {
 
     private final SQLBuilderType sqlBuilderType;

@@ -9,12 +9,10 @@ import java.util.logging.Logger;
 import static cool.scx.common.util.StringUtils.startsWithIgnoreCase;
 import static cool.scx.jdbc.spy.Spy.buildEventListener;
 
-/**
- * SpyDriver
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// SpyDriver
+///
+/// @author scx567888
+/// @version 0.0.1
 public class SpyDriver implements Driver {
 
     public static final String PREFIX = "ScxSpy:";

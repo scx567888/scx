@@ -8,12 +8,10 @@ import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.time.ZonedDateTime;
 
-/**
- * ZonedDateTimeTypeHandler
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ZonedDateTimeTypeHandler
+///
+/// @author scx567888
+/// @version 0.0.1
 public class ZonedDateTimeTypeHandler implements TypeHandler<ZonedDateTime> {
 
     @Override
