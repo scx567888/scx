@@ -17,17 +17,13 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
-/**
- * 加密,解密工具类 <br>
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 加密,解密工具类
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class CryptoUtils {
 
-    /**
-     * 密码 加密器
-     */
+    /// 密码 加密器
     private static final PasswordEncryptor DEFAULT_PASSWORD_ENCRYPTOR = new BasicPasswordEncryptor();
 
     private static TextEncryptor getTextEncryptor(String encryptorPassword) {
@@ -42,84 +38,70 @@ public final class CryptoUtils {
         return encryptor;
     }
 
-    /**
-     * 使用自定义的密码 , 加密字符串
-     *
-     * @param text              待加密的字符串
-     * @param encryptorPassword 自定义的密码
-     * @return a 密文
-     */
+    /// 使用自定义的密码 , 加密字符串
+    ///
+    /// @param text              待加密的字符串
+    /// @param encryptorPassword 自定义的密码
+    /// @return a 密文
     public static String encryptText(String text, String encryptorPassword) {
         return getTextEncryptor(encryptorPassword).encrypt(text);
     }
 
-    /**
-     * 使用自定义的密码 , 解密字符串
-     *
-     * @param text              密文
-     * @param encryptorPassword 自定义的密码
-     * @return a 结果
-     */
+    /// 使用自定义的密码 , 解密字符串
+    ///
+    /// @param text              密文
+    /// @param encryptorPassword 自定义的密码
+    /// @return a 结果
     public static String decryptText(String text, String encryptorPassword) {
         return getTextEncryptor(encryptorPassword).decrypt(text);
     }
 
-    /**
-     * 使用自定义的密码 , 加密
-     *
-     * @param binary            待加密的字符串
-     * @param encryptorPassword 自定义的密码
-     * @return a 密文
-     */
+    /// 使用自定义的密码 , 加密
+    ///
+    /// @param binary            待加密的字符串
+    /// @param encryptorPassword 自定义的密码
+    /// @return a 密文
     public static byte[] encryptBinary(byte[] binary, String encryptorPassword) {
         return getBinaryEncryptor(encryptorPassword).encrypt(binary);
     }
 
-    /**
-     * 使用自定义的密码 , 解密
-     *
-     * @param encryptedBinary   密文
-     * @param encryptorPassword 自定义的密码
-     * @return a 结果
-     */
+    /// 使用自定义的密码 , 解密
+    ///
+    /// @param encryptedBinary   密文
+    /// @param encryptorPassword 自定义的密码
+    /// @return a 结果
     public static byte[] decryptBinary(byte[] encryptedBinary, String encryptorPassword) {
         return getBinaryEncryptor(encryptorPassword).decrypt(encryptedBinary);
     }
 
-    /**
-     * 加密密码
-     *
-     * @param password p
-     * @return p
-     */
+    /// 加密密码
+    ///
+    /// @param password p
+    /// @return p
     public static String encryptPassword(String password) {
         return DEFAULT_PASSWORD_ENCRYPTOR.encryptPassword(password);
     }
 
-    /**
-     * 校验密码
-     *
-     * @param plainPassword     原密码
-     * @param encryptedPassword 加密后的密码
-     * @return a
-     */
+    /// 校验密码
+    ///
+    /// @param plainPassword     原密码
+    /// @param encryptedPassword 加密后的密码
+    /// @return a
     public static boolean checkPassword(String plainPassword, String encryptedPassword) {
         return DEFAULT_PASSWORD_ENCRYPTOR.checkPassword(plainPassword, encryptedPassword);
     }
 
-    /**
-     * 加密
-     *
-     * @param algorithm 算法
-     * @param password  密码
-     * @param data      数据
-     * @return 加密后的数据
-     * @throws java.security.NoSuchAlgorithmException a
-     * @throws javax.crypto.NoSuchPaddingException    a
-     * @throws java.security.InvalidKeyException      a
-     * @throws javax.crypto.IllegalBlockSizeException a
-     * @throws javax.crypto.BadPaddingException       a
-     */
+    /// 加密
+    ///
+    /// @param algorithm 算法
+    /// @param password  密码
+    /// @param data      数据
+    /// @return 加密后的数据
+    /// @throws java.security.NoSuchAlgorithmException a
+    /// @throws javax.crypto.NoSuchPaddingException    a
+    /// @throws java.security.InvalidKeyException      a
+    /// @throws javax.crypto.IllegalBlockSizeException a
+    /// @throws javax.crypto.BadPaddingException       a
     public static byte[] encrypt(String algorithm, byte[] password, byte[] data) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
         var key = new SecretKeySpec(password, algorithm);
         var cipher = Cipher.getInstance(algorithm);
@@ -127,19 +109,17 @@ public final class CryptoUtils {
         return cipher.doFinal(data);
     }
 
-    /**
-     * 解密
-     *
-     * @param algorithm 算法
-     * @param password  密码
-     * @param data      密文
-     * @return 解密后的数据
-     * @throws javax.crypto.NoSuchPaddingException    a
-     * @throws java.security.NoSuchAlgorithmException a
-     * @throws java.security.InvalidKeyException      a
-     * @throws javax.crypto.IllegalBlockSizeException a
-     * @throws javax.crypto.BadPaddingException       a
-     */
+    /// 解密
+    ///
+    /// @param algorithm 算法
+    /// @param password  密码
+    /// @param data      密文
+    /// @return 解密后的数据
+    /// @throws javax.crypto.NoSuchPaddingException    a
+    /// @throws java.security.NoSuchAlgorithmException a
+    /// @throws java.security.InvalidKeyException      a
+    /// @throws javax.crypto.IllegalBlockSizeException a
+    /// @throws javax.crypto.BadPaddingException       a
     public static byte[] decrypt(String algorithm, byte[] password, byte[] data) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
         var key = new SecretKeySpec(password, algorithm);
         var cipher = Cipher.getInstance(algorithm);
@@ -147,21 +127,19 @@ public final class CryptoUtils {
         return cipher.doFinal(data);
     }
 
-    /**
-     * 加密
-     *
-     * @param algorithm 算法
-     * @param params    算法参数
-     * @param password  密码
-     * @param data      数据
-     * @return 加密后的数据
-     * @throws java.security.NoSuchAlgorithmException           a
-     * @throws javax.crypto.NoSuchPaddingException              a
-     * @throws java.security.InvalidKeyException                a
-     * @throws javax.crypto.IllegalBlockSizeException           a
-     * @throws javax.crypto.BadPaddingException                 a
-     * @throws java.security.InvalidAlgorithmParameterException a
-     */
+    /// 加密
+    ///
+    /// @param algorithm 算法
+    /// @param params    算法参数
+    /// @param password  密码
+    /// @param data      数据
+    /// @return 加密后的数据
+    /// @throws java.security.NoSuchAlgorithmException           a
+    /// @throws javax.crypto.NoSuchPaddingException              a
+    /// @throws java.security.InvalidKeyException                a
+    /// @throws javax.crypto.IllegalBlockSizeException           a
+    /// @throws javax.crypto.BadPaddingException                 a
+    /// @throws java.security.InvalidAlgorithmParameterException a
     public static byte[] encrypt(String algorithm, AlgorithmParameters params, byte[] password, byte[] data) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
         var key = new SecretKeySpec(password, algorithm);
         var cipher = Cipher.getInstance(algorithm);
@@ -169,21 +147,19 @@ public final class CryptoUtils {
         return cipher.doFinal(data);
     }
 
-    /**
-     * 解密
-     *
-     * @param algorithm 算法
-     * @param params    算法参数
-     * @param password  密码
-     * @param data      密文
-     * @return 解密后的数据
-     * @throws javax.crypto.NoSuchPaddingException              a
-     * @throws java.security.NoSuchAlgorithmException           a
-     * @throws java.security.InvalidKeyException                a
-     * @throws javax.crypto.IllegalBlockSizeException           a
-     * @throws javax.crypto.BadPaddingException                 a
-     * @throws java.security.InvalidAlgorithmParameterException a
-     */
+    /// 解密
+    ///
+    /// @param algorithm 算法
+    /// @param params    算法参数
+    /// @param password  密码
+    /// @param data      密文
+    /// @return 解密后的数据
+    /// @throws javax.crypto.NoSuchPaddingException              a
+    /// @throws java.security.NoSuchAlgorithmException           a
+    /// @throws java.security.InvalidKeyException                a
+    /// @throws javax.crypto.IllegalBlockSizeException           a
+    /// @throws javax.crypto.BadPaddingException                 a
+    /// @throws java.security.InvalidAlgorithmParameterException a
     public static byte[] decrypt(String algorithm, AlgorithmParameters params, byte[] password, byte[] data) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
         var key = new SecretKeySpec(password, algorithm);
         var cipher = Cipher.getInstance(algorithm);

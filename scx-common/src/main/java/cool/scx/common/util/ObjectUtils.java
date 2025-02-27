@@ -18,20 +18,16 @@ import java.util.Map;
 
 import static cool.scx.common.jackson.JacksonHelper.createObjectMapper;
 
-/**
- * 处理对象的工具类<br>
- * 本质上就是对 {@link com.fasterxml.jackson.databind.ObjectMapper} 进行了一些简单的封装
- * todo 我们是否真的需要如此多的 ObjectMapper 来完成忽略注解这件事
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 处理对象的工具类
+/// 本质上就是对 [com.fasterxml.jackson.databind.ObjectMapper] 进行了一些简单的封装
+/// todo 我们是否真的需要如此多的 ObjectMapper 来完成忽略注解这件事
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class ObjectUtils {
 
-    /**
-     * 因为 java 无法方便的存储泛型 使用 TypeReference 创建一些常用的类型
-     * 此类为 Map 类型
-     */
+    /// 因为 java 无法方便的存储泛型 使用 TypeReference 创建一些常用的类型
+    /// 此类为 Map 类型
     public static final TypeReference<Map<String, Object>> MAP_TYPE = new TypeReference<>() {};
 
     private static final JsonMapper JSON_MAPPER;
@@ -161,13 +157,11 @@ public final class ObjectUtils {
         return xmlMapper().writeValueAsString(value);
     }
 
-    /**
-     * 将嵌套的 map 扁平化
-     *
-     * @param sourceMap 源 map
-     * @param parentKey a {@link java.lang.String} object.
-     * @return 扁平化后的 map
-     */
+    /// 将嵌套的 map 扁平化
+    ///
+    /// @param sourceMap 源 map
+    /// @param parentKey a [java.lang.String] object.
+    /// @return 扁平化后的 map
     private static Map<String, Object> flatMap0(Map<?, ?> sourceMap, String parentKey) {
         var result = new LinkedHashMap<String, Object>();
         var prefix = StringUtils.isBlank(parentKey) ? "" : parentKey + ".";
@@ -182,12 +176,10 @@ public final class ObjectUtils {
         return result;
     }
 
-    /**
-     * 将嵌套的 map 扁平化
-     *
-     * @param sourceMap 源 map
-     * @return 扁平化后的 map
-     */
+    /// 将嵌套的 map 扁平化
+    ///
+    /// @param sourceMap 源 map
+    /// @return 扁平化后的 map
     public static Map<String, Object> flatMap(Map<?, ?> sourceMap) {
         return flatMap0(sourceMap, null);
     }
@@ -195,16 +187,12 @@ public final class ObjectUtils {
     //todo 支持字段过滤器 (如何表现一个路径 是否应该拓展出一个 JsonPath)
     public static class Options {
 
-        /**
-         * 忽略 空值 如 原数据 user { name = "123" age = null}
-         * 默认输出为  { "name" : "123" , "age" : null}
-         * 启用此参数后则变为 { "name" : "123" }
-         */
+        /// 忽略 空值 如 原数据 user { name = "123" age = null}
+        /// 默认输出为  { "name" : "123" , "age" : null}
+        /// 启用此参数后则变为 { "name" : "123" }
         boolean ignoreNullValue;
 
-        /**
-         * 忽略 {@link com.fasterxml.jackson.annotation.JsonIgnore} 注解
-         */
+        /// 忽略 [com.fasterxml.jackson.annotation.JsonIgnore] 注解
         boolean ignoreJsonIgnore;
         boolean failOnUnknownProperties;
         boolean failOnEmptyBeans;

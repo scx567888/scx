@@ -7,14 +7,12 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
-/**
- * 使用 threadLocal 模拟的 ScopedValue
- * todo ScopedValue 正式版本发布时 移除此类
- *
- * @param <T> a
- * @author scx567888
- * @version 0.0.1
- */
+/// 使用 threadLocal 模拟的 ScopedValue
+/// todo ScopedValue 正式版本发布时 移除此类
+///
+/// @param <T> a
+/// @author scx567888
+/// @version 0.0.1
 public final class ScopedValue<T> {
 
     private static final AtomicLong THREAD_NUMBER = new AtomicLong(0);

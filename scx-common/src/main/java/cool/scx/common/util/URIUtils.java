@@ -4,25 +4,19 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.regex.Pattern;
 
-/**
- * URIBuilder
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// URIBuilder
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class URIUtils {
 
-    /**
-     * 切割正则表达式
-     */
+    /// 切割正则表达式
     private static final Pattern PATH_SEPARATOR = Pattern.compile("[/\\\\]+");
 
-    /**
-     * 拼接多个 uri 并进行一些简单的清理  例 : 处理前 ["a/b/", "/c"] 处理后 "a/b/c"
-     *
-     * @param uris 需要清理的 uri 集合
-     * @return 拼接后的结果
-     */
+    /// 拼接多个 uri 并进行一些简单的清理  例 : 处理前 ["a/b/", "/c"] 处理后 "a/b/c"
+    ///
+    /// @param uris 需要清理的 uri 集合
+    /// @return 拼接后的结果
     public static String join(String... uris) {
         return normalize(String.join("/", Arrays.stream(uris).filter(StringUtils::notBlank).toArray(String[]::new)));
     }
@@ -31,13 +25,11 @@ public final class URIUtils {
         return normalize(String.join("/", uris.stream().filter(StringUtils::notBlank).toArray(String[]::new)));
     }
 
-    /**
-     * 移除两端的 "/" 或 "\"
-     * 注意不要和 {@link java.lang.String#trim()} 混淆 此方法不处理空格 只处理斜杠
-     *
-     * @param uri a
-     * @return a
-     */
+    /// 移除两端的 "/" 或 "\"
+    /// 注意不要和 [#trim()] 混淆 此方法不处理空格 只处理斜杠
+    ///
+    /// @param uri a
+    /// @return a
     public static String trimSlash(String uri) {
         var value = uri.toCharArray();
         int length = value.length;
@@ -84,12 +76,10 @@ public final class URIUtils {
         return trimSlashEnd(uri) + "/";
     }
 
-    /**
-     * 将 \ 分割的全部转换为 / 并清除多余的 /
-     *
-     * @param uri a
-     * @return a
-     */
+    /// 将 \ 分割的全部转换为 / 并清除多余的 /
+    ///
+    /// @param uri a
+    /// @return a
     public static String normalize(String uri) {
         var chars = uri.toCharArray();
         var index = 0;

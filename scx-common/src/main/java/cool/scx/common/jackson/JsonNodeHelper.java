@@ -6,13 +6,11 @@ import cool.scx.common.util.ObjectUtils;
 
 import java.io.IOException;
 
-/**
- * 用来处理一些简单的 JsonNode 的节点操作
- * todo 后续需要将其拓展出完整的 JsonPath
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 用来处理一些简单的 JsonNode 的节点操作
+/// todo 后续需要将其拓展出完整的 JsonPath
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class JsonNodeHelper {
 
     public static JsonNode get(JsonNode jsonNode, String jsonPath) {

@@ -1,11 +1,9 @@
 package cool.scx.common.constant;
 
-/**
- * AnnotationValue
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// AnnotationValue
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class AnnotationValue {
 
     public static final String NULL = """

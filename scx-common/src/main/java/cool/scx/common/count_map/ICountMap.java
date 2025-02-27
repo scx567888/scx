@@ -4,13 +4,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
 
-/**
- * CountMap 接口 用来约束
- *
- * @param <K> Key
- * @author scx567888
- * @version 0.0.1
- */
+/// CountMap 接口 用来约束
+///
+/// @param <K> Key
+/// @author scx567888
+/// @version 0.0.1
 public interface ICountMap<K> extends Iterable<Map.Entry<K, Long>> {
 
     /// add

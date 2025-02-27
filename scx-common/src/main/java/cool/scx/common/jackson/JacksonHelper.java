@@ -11,27 +11,23 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import static cool.scx.common.jackson.IgnoreJsonIgnore.IGNORE_JSON_IGNORE;
 import static cool.scx.common.jackson.NullKeySerializer.NULL_KEY_SERIALIZER;
 
-/**
- * JacksonHelper
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// JacksonHelper
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class JacksonHelper {
 
-    /**
-     * 根据 MapperBuilder 获取 ObjectMapper 对象 并对默认属性进行一些设置,具体如下
-     * 如需获得原始的 ObjectMapper 对象请使用 {@link com.fasterxml.jackson.databind.cfg.MapperBuilder}; 自行创建
-     * 1, 针对 日期 类型设置 自定义的格式  {@link MyJavaTimeModule}
-     * 2, DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES 设置为  false
-     * 3, SerializationFeature.FAIL_ON_EMPTY_BEANS          设置为  false
-     * 4, NullKeySerializer                                 设置为  JacksonHelper.NULL_KEY_SERIALIZER
-     *
-     * @param <M>           a M class
-     * @param <B>           a B class
-     * @param mapperBuilder a {@link com.fasterxml.jackson.databind.cfg.MapperBuilder} object
-     * @return a {@link com.fasterxml.jackson.databind.ObjectMapper} object
-     */
+    /// 根据 MapperBuilder 获取 ObjectMapper 对象 并对默认属性进行一些设置,具体如下
+    /// 如需获得原始的 ObjectMapper 对象请使用 [com.fasterxml.jackson.databind.cfg.MapperBuilder]; 自行创建
+    /// 1, 针对 日期 类型设置 自定义的格式  [MyJavaTimeModule]
+    /// 2, DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES 设置为  false
+    /// 3, SerializationFeature.FAIL_ON_EMPTY_BEANS          设置为  false
+    /// 4, NullKeySerializer                                 设置为  JacksonHelper.NULL_KEY_SERIALIZER
+    ///
+    /// @param <M>           a M class
+    /// @param **            a B class
+    /// @param mapperBuilder a [com.fasterxml.jackson.databind.cfg.MapperBuilder] object
+    /// @return a [com.fasterxml.jackson.databind.ObjectMapper] object
     public static <M extends ObjectMapper, B extends MapperBuilder<M, B>> M createObjectMapper(MapperBuilder<M, B> mapperBuilder, BuildOptions o) {
         // 初始化一个 JsonMapper 构建器
         mapperBuilder
