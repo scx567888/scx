@@ -10,13 +10,11 @@ import java.util.List;
 
 import static cool.scx.common.util.StringUtils.notBlank;
 
-/**
- * MySQLDDLBuilder
- *
- * @author scx567888
- * @version 0.0.1
- * @see <a href="https://dev.mysql.com/doc/refman/8.0/en/create-table.html">https://dev.mysql.com/doc/refman/8.0/en/create-table.html</a>
- */
+/// MySQLDDLBuilder
+///
+/// @author scx567888
+/// @version 0.0.1
+/// @see <a href="https://dev.mysql.com/doc/refman/8.0/en/create-table.html">https://dev.mysql.com/doc/refman/8.0/en/create-table.html</a>
 public class MySQLDDLBuilder implements DDLBuilder {
 
     @Override
