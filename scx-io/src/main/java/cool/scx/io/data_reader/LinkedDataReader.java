@@ -1,11 +1,11 @@
 package cool.scx.io.data_reader;
 
-import cool.scx.io.data_node.DataNode;
 import cool.scx.io.data_consumer.ByteArrayDataConsumer;
 import cool.scx.io.data_consumer.DataConsumer;
 import cool.scx.io.data_indexer.ByteIndexer;
 import cool.scx.io.data_indexer.DataIndexer;
 import cool.scx.io.data_indexer.KMPDataIndexer;
+import cool.scx.io.data_node.DataNode;
 import cool.scx.io.data_supplier.DataSupplier;
 import cool.scx.io.exception.NoMatchFoundException;
 import cool.scx.io.exception.NoMoreDataException;
