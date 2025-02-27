@@ -1,4 +1,4 @@
-package cool.scx.common.util;
+package cool.scx.reflect;
 
 import java.io.File;
 import java.io.IOException;
