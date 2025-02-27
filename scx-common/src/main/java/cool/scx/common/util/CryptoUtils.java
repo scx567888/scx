@@ -17,7 +17,7 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
-/// 加密,解密工具类   
+/// 加密,解密工具类
 ///
 /// @author scx567888
 /// @version 0.0.1

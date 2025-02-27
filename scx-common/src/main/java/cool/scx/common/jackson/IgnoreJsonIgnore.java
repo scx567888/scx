@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.introspect.AnnotatedMember;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 
 /// 忽略 JsonIgnore 注解
-/// 
+///
 /// 这里可能有点难以理解 我们假设一下这种情况 一个实体类的某个字段不想再向前台发送时序列化某个字段
 /// 如 password 但是在前台向后台发送 json 时则需要进行序列化
 /// 我们可以使用此类 通过 objectMapper.setAnnotationIntrospector(new IgnoreJsonIgnore());

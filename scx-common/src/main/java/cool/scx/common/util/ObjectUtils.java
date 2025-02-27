@@ -18,7 +18,7 @@ import java.util.Map;
 
 import static cool.scx.common.jackson.JacksonHelper.createObjectMapper;
 
-/// 处理对象的工具类  
+/// 处理对象的工具类
 /// 本质上就是对 [com.fasterxml.jackson.databind.ObjectMapper] 进行了一些简单的封装
 /// todo 我们是否真的需要如此多的 ObjectMapper 来完成忽略注解这件事
 ///

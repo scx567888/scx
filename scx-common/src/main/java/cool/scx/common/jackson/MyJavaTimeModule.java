@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 /// 获取针对日期处理的 jackson module;
-///   
+///
 /// 仅仅是在 jackson-datatype-jsr310 包的基础上 添加了一些自定义的日期序列化格式
 ///
 /// @author scx567888

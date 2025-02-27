@@ -25,7 +25,7 @@ public final class JacksonHelper {
     /// 4, NullKeySerializer                                 设置为  JacksonHelper.NULL_KEY_SERIALIZER
     ///
     /// @param <M>           a M class
-    /// @param **           a B class
+    /// @param **            a B class
     /// @param mapperBuilder a [com.fasterxml.jackson.databind.cfg.MapperBuilder] object
     /// @return a [com.fasterxml.jackson.databind.ObjectMapper] object
     public static <M extends ObjectMapper, B extends MapperBuilder<M, B>> M createObjectMapper(MapperBuilder<M, B> mapperBuilder, BuildOptions o) {
