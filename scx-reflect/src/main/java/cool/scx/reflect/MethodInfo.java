@@ -3,6 +3,7 @@ package cool.scx.reflect;
 import com.fasterxml.jackson.databind.JavaType;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import static cool.scx.reflect.ReflectHelper.*;
@@ -43,6 +44,10 @@ public final class MethodInfo implements ExecutableInfo {
 
     public Method method() {
         return method;
+    }
+
+    public Object invoke(Object obj, Object... args) throws InvocationTargetException, IllegalAccessException {
+        return method.invoke(obj, args);
     }
 
     @Override

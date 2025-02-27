@@ -15,6 +15,7 @@ import static java.lang.reflect.AccessFlag.STATIC;
 public final class ClassInfo implements AnnotatedElementInfo {
 
     private final JavaType type;
+    private final String name;
     private final AccessModifier accessModifier;
     private final ClassType classType;
     private final ClassInfo superClass;
@@ -40,6 +41,7 @@ public final class ClassInfo implements AnnotatedElementInfo {
     ClassInfo(JavaType type) {
         this.type = type;
         var rawClass = type.getRawClass();
+        this.name = rawClass.getName();
         var accessFlags = rawClass.accessFlags();
         this.accessModifier = _findAccessModifier(accessFlags);
         this.classType = _findClassType(rawClass, accessFlags);
@@ -67,6 +69,10 @@ public final class ClassInfo implements AnnotatedElementInfo {
     /// Java Type 这里我们使用 Jackson 的 JavaType 来方便进行诸如序列化等操作
     public JavaType type() {
         return type;
+    }
+
+    public  String name() {
+        return name;
     }
 
     /// 类修饰符
