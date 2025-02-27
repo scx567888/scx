@@ -34,14 +34,12 @@ public final class TLSHelper {
         }
     }
 
-    /**
-     * 创建 KetStore
-     *
-     * @param certificate 公钥证书
-     * @param privateKey  私钥证书 (可为空)
-     * @param password    密码 (当私钥为空时可为空)
-     * @return KetStore
-     */
+    /// 创建 KetStore
+    ///
+    /// @param certificate 公钥证书
+    /// @param privateKey  私钥证书 (可为空)
+    /// @param password    密码 (当私钥为空时可为空)
+    /// @return KetStore
     public static KeyStore createKeyStore(X509Certificate certificate, PrivateKey privateKey, String password) {
         try {
             var keyStore = KeyStore.getInstance("PKCS12");
@@ -141,13 +139,11 @@ public final class TLSHelper {
         return createSSLContext(KeyManagerFactory, trustManagerFactory);
     }
 
-    /**
-     * 根据 pem 格式证书 创建 SSLContext
-     *
-     * @param certPemPath 公钥证书
-     * @param keyPemPath  私钥证书 (可选的 可穿 null)
-     * @return SSLContext
-     */
+    /// 根据 pem 格式证书 创建 SSLContext
+    ///
+    /// @param certPemPath 公钥证书
+    /// @param keyPemPath  私钥证书 (可选的 可穿 null)
+    /// @return SSLContext
     public static SSLContext createSSLContextFromPem(Path certPemPath, Path keyPemPath) {
         try {
             var certPemContent = Files.readString(certPemPath);

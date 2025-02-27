@@ -5,12 +5,10 @@ import javax.net.ssl.SSLParameters;
 import java.util.List;
 import java.util.function.BiFunction;
 
-/**
- * NIO TLS Manager
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// NIO TLS Manager
+///
+/// @author scx567888
+/// @version 0.0.1
 public class NioTLSManager implements ScxTLSManager {
 
     private final SSLEngine sslEngine;

@@ -11,12 +11,10 @@ import java.util.function.Consumer;
 import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.Logger.Level.TRACE;
 
-/**
- * NIO TCP 服务器
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// NIO TCP 服务器
+///
+/// @author scx567888
+/// @version 0.0.1
 public class NioTCPServer implements ScxTCPServer {
 
     private static final Logger LOGGER = System.getLogger(ClassicTCPServer.class.getName());

@@ -5,12 +5,10 @@ import javax.net.ssl.SSLSocket;
 import java.util.List;
 import java.util.function.BiFunction;
 
-/**
- * 经典 TLS Manager
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 经典 TLS Manager
+///
+/// @author scx567888
+/// @version 0.0.1
 public class ClassicTLSManager implements ScxTLSManager {
 
     private final SSLSocket sslSocket;

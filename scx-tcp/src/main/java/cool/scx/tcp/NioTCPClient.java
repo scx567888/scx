@@ -5,12 +5,10 @@ import java.io.UncheckedIOException;
 import java.net.SocketAddress;
 import java.nio.channels.SocketChannel;
 
-/**
- * NIO TCP 客户端
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// NIO TCP 客户端
+///
+/// @author scx567888
+/// @version 0.0.1
 public class NioTCPClient implements ScxTCPClient {
 
     private final ScxTCPClientOptions options;

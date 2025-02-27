@@ -7,12 +7,10 @@ import java.nio.file.Path;
 
 import static cool.scx.tcp.tls.TLSHelper.*;
 
-/**
- * TLS 配置
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// TLS 配置
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface TLS {
 
     static TLS of(Path path, String password) {
