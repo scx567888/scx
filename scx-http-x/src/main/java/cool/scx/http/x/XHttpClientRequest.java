@@ -7,12 +7,10 @@ import cool.scx.http.x.http1x.Http1xClientConnection;
 import cool.scx.http.x.http2.Http2ClientConnection;
 import cool.scx.tcp.ScxTCPSocket;
 
-/**
- * todo 待完成
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// todo 待完成
+///
+/// @author scx567888
+/// @version 0.0.1
 public class XHttpClientRequest extends ScxHttpClientRequestBase {
 
     private final XHttpClient httpClient;

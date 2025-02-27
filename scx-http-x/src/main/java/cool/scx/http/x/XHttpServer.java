@@ -14,12 +14,10 @@ import java.lang.System.Logger;
 import java.net.InetSocketAddress;
 import java.util.function.Consumer;
 
-/**
- * Http 服务器
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// Http 服务器
+///
+/// @author scx567888
+/// @version 0.0.1
 public class XHttpServer implements ScxHttpServer {
 
     private static final Logger LOGGER = System.getLogger(XHttpServer.class.getName());

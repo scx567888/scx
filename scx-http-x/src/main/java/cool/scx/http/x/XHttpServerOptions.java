@@ -7,12 +7,10 @@ import cool.scx.tcp.tls.TLS;
 
 import java.net.InetSocketAddress;
 
-/**
- * Http 服务器配置
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// Http 服务器配置
+///
+/// @author scx567888
+/// @version 0.0.1
 public class XHttpServerOptions {
 
     private final ScxTCPServerOptions tcpServerOptions; // TCP 服务器配置

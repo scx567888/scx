@@ -17,12 +17,10 @@ import cool.scx.tcp.ScxTCPSocket;
 import static cool.scx.http.HttpFieldName.*;
 
 
-/**
- * todo 待完成
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// todo 待完成
+///
+/// @author scx567888
+/// @version 0.0.1
 public class XClientWebSocketHandshakeRequest implements ScxClientWebSocketHandshakeRequest {
 
     private final XHttpClient httpClient;

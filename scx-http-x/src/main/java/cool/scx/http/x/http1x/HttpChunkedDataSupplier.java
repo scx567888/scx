@@ -6,12 +6,10 @@ import cool.scx.io.data_node.DataNode;
 import cool.scx.io.data_reader.DataReader;
 import cool.scx.io.data_supplier.DataSupplier;
 
-/**
- * 用来解析 HttpChunked 分块传输数据
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 用来解析 HttpChunked 分块传输数据
+///
+/// @author scx567888
+/// @version 0.0.1
 public class HttpChunkedDataSupplier implements DataSupplier {
 
     private final DataReader dataReader;

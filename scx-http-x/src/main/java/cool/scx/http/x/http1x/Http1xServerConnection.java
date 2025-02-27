@@ -24,12 +24,10 @@ import static cool.scx.http.x.http1x.Http1xHelper.*;
 import static java.lang.System.Logger.Level.TRACE;
 import static java.lang.System.getLogger;
 
-/**
- * Http 1.x 连接处理器
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// Http 1.x 连接处理器
+///
+/// @author scx567888
+/// @version 0.0.1
 public class Http1xServerConnection {
 
     private final static Logger LOGGER = getLogger(Http1xServerConnection.class.getName());

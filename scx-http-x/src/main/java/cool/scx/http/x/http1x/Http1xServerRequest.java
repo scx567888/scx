@@ -5,12 +5,10 @@ import cool.scx.http.uri.ScxURI;
 
 import static cool.scx.http.x.http1x.Http1xHelper.*;
 
-/**
- * Http1xServerRequest
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// Http1xServerRequest
+///
+/// @author scx567888
+/// @version 0.0.1
 public class Http1xServerRequest implements ScxHttpServerRequest {
 
     public final Http1xServerConnection connection;
