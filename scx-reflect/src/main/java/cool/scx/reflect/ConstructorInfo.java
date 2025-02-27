@@ -1,5 +1,6 @@
 package cool.scx.reflect;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
@@ -16,12 +17,14 @@ public final class ConstructorInfo implements ExecutableInfo {
     private final ClassInfo classInfo;
     private final AccessModifier accessModifier;
     private final ParameterInfo[] parameters;
+    private final Annotation[] annotations;
 
     ConstructorInfo(Constructor<?> constructor, ClassInfo classInfo) {
         this.constructor = constructor;
         this.classInfo = classInfo;
         this.accessModifier = _findAccessModifier(constructor.accessFlags());
         this.parameters = _findParameterInfos(this);
+        this.annotations = constructor.getDeclaredAnnotations();
     }
 
     public Constructor<?> constructor() {
@@ -51,6 +54,11 @@ public final class ConstructorInfo implements ExecutableInfo {
     @Override
     public ParameterInfo[] parameters() {
         return parameters;
+    }
+
+    @Override
+    public Annotation[] annotations() {
+        return annotations;
     }
 
 }
