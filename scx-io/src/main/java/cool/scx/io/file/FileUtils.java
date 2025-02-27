@@ -20,21 +20,17 @@ import static java.nio.file.StandardOpenOption.*;
 /// @version 0.0.1
 public final class FileUtils {
 
-    /**
-     * 文件大小格式化 正则表达式
-     */
+    /// 文件大小格式化 正则表达式
     private final static Pattern DISPLAY_SIZE_PATTERN = Pattern.compile("^([\\d.]+) *([a-zA-Z]{0,2})$");
 
-    /**
-     * 删除文件或文件夹
-     *
-     * @param start       起始目录
-     * @param excludeRoot 实现清空文件夹的效果
-     *                    排除根目录 (删除文件为 "文件" 时无效, "目录" 时有效)
-     *                    比如 未使用此选项调用 delete("/user/test") 文件夹 则 test 文件夹会被删除
-     *                    若使用此选项则 会清空 test 下所有文件 test 目录则会保留
-     * @throws IOException e
-     */
+    /// 删除文件或文件夹
+    ///
+    /// @param start       起始目录
+    /// @param excludeRoot 实现清空文件夹的效果
+    ///                    排除根目录 (删除文件为 "文件" 时无效, "目录" 时有效)
+    ///                    比如 未使用此选项调用 delete("/user/test") 文件夹 则 test 文件夹会被删除
+    ///                    若使用此选项则 会清空 test 下所有文件 test 目录则会保留
+    /// @throws IOException e
     public static void delete(Path start, boolean excludeRoot) throws IOException {
         var visitor = new SimpleFileVisitor<Path>() {
             @Override
@@ -64,14 +60,12 @@ public final class FileUtils {
         delete(start, false);
     }
 
-    /**
-     * 本质上就是调用 {@link java.nio.file.Files#move(Path, Path, CopyOption...)} ,但是在之前会创建不存在的父目录
-     *
-     * @param source  a
-     * @param target  a
-     * @param options a
-     * @throws java.io.IOException a
-     */
+    /// 本质上就是调用 [#move(Path,Path,CopyOption...)] ,但是在之前会创建不存在的父目录
+    ///
+    /// @param source  a
+    /// @param target  a
+    /// @param options a
+    /// @throws java.io.IOException a
     public static void move(Path source, Path target, CopyOption... options) throws IOException {
         try {
             Files.move(source, target, options);
@@ -81,14 +75,12 @@ public final class FileUtils {
         }
     }
 
-    /**
-     * 本质上就是调用 {@link java.nio.file.Files#copy(Path, Path, CopyOption...)} ,但是在之前会创建不存在的父目录
-     *
-     * @param source  a
-     * @param target  a
-     * @param options a
-     * @throws java.io.IOException a
-     */
+    /// 本质上就是调用 [#copy(Path,Path,CopyOption...)] ,但是在之前会创建不存在的父目录
+    ///
+    /// @param source  a
+    /// @param target  a
+    /// @param options a
+    /// @throws java.io.IOException a
     public static void copy(Path source, Path target, CopyOption... options) throws IOException {
         try {
             Files.copy(source, target, options);
@@ -98,14 +90,12 @@ public final class FileUtils {
         }
     }
 
-    /**
-     * 本质上就是调用 {@link java.nio.file.Files#write(Path, byte[], OpenOption...)} ,但是在之前会创建不存在的父目录
-     *
-     * @param path    a
-     * @param bytes   a
-     * @param options a
-     * @throws java.io.IOException a
-     */
+    /// 本质上就是调用 [#write(Path,byte[],OpenOption...)] ,但是在之前会创建不存在的父目录
+    ///
+    /// @param path    a
+    /// @param bytes   a
+    /// @param options a
+    /// @throws java.io.IOException a
     public static void write(Path path, byte[] bytes, OpenOption... options) throws IOException {
         try {
             Files.write(path, bytes, options);
@@ -127,47 +117,39 @@ public final class FileUtils {
         }
     }
 
-    /**
-     * 获取文件名
-     *
-     * @param path a
-     * @return a
-     */
+    /// 获取文件名
+    ///
+    /// @param path a
+    /// @return a
     public static String getFileName(String path) {
         return new File(path).getName();
     }
 
-    /**
-     * 获取拓展名 (不包括 . ) 例 : "cat.png" 会获得 "png"
-     *
-     * @param path a {@link java.lang.String} object
-     * @return a {@link java.lang.String} object
-     */
+    /// 获取拓展名 (不包括 . ) 例 : "cat.png" 会获得 "png"
+    ///
+    /// @param path a [java.lang.String] object
+    /// @return a [java.lang.String] object
     public static String getExtension(String path) {
         var fileName = getFileName(path);
         var dotIndex = fileName.lastIndexOf('.');
         return dotIndex == -1 ? "" : fileName.substring(dotIndex + 1);
     }
 
-    /**
-     * 获取文件名 (不包括拓展名 ) 例 : "cat.png" 会获得 "cat"
-     *
-     * @param path a {@link java.lang.String} object
-     * @return a {@link java.lang.String} object
-     */
+    /// 获取文件名 (不包括拓展名 ) 例 : "cat.png" 会获得 "cat"
+    ///
+    /// @param path a [java.lang.String] object
+    /// @return a [java.lang.String] object
     public static String getFileNameWithoutExtension(String path) {
         var fileName = getFileName(path);
         var dotIndex = fileName.lastIndexOf('.');
         return dotIndex == -1 ? fileName : fileName.substring(0, dotIndex);
     }
 
-    /**
-     * 将 long 类型的文件大小 格式化(转换为人类可以看懂的形式)
-     * 如 1024 转换为 1KB
-     *
-     * @param size a long.
-     * @return a {@link java.lang.String} object.
-     */
+    /// 将 long 类型的文件大小 格式化(转换为人类可以看懂的形式)
+    /// 如 1024 转换为 1KB
+    ///
+    /// @param size a long.
+    /// @return a [java.lang.String] object.
     public static String longToDisplaySize(long size) {
         if (size <= 0) {
             return "0";
@@ -177,13 +159,11 @@ public final class FileUtils {
         return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
     }
 
-    /**
-     * 将 格式化后的大小转换为 long
-     * 如将 1KB 转换为 1024
-     *
-     * @param str 待转换的值 如 5MB 13.6GB
-     * @return a long.
-     */
+    /// 将 格式化后的大小转换为 long
+    /// 如将 1KB 转换为 1024
+    ///
+    /// @param str 待转换的值 如 5MB 13.6GB
+    /// @return a long.
     public static long displaySizeToLong(String str) {
         var matcher = DISPLAY_SIZE_PATTERN.matcher(str);
         if (!matcher.matches()) {
