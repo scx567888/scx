@@ -6,12 +6,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-/**
- * ScxTreeUtils
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ScxTreeUtils
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class ScxTreeHelper {
 
     public static <T extends ScxTree<T>> void walk(final T scxTree, final ScxTreeVisitor<T> visitor) {
@@ -29,25 +27,21 @@ public final class ScxTreeHelper {
         }
     }
 
-    /**
-     * 将 list 类型数据转换为 树形结构 (默认忽略孤儿节点)
-     *
-     * @param list 原始 list
-     * @param <T>  T
-     * @return 树形结构
-     */
+    /// 将 list 类型数据转换为 树形结构 (默认忽略孤儿节点)
+    ///
+    /// @param list 原始 list
+    /// @param <T>  T
+    /// @return 树形结构
     public static <T extends ScxTreeModel<T>> List<T> listToTree(List<T> list) {
         return listToTree(list, false);
     }
 
-    /**
-     * 将 list 类型数据转换为 树形结构
-     *
-     * @param list          原始 list
-     * @param ignoreOrphans 是否忽略孤儿节点
-     * @param <T>           T
-     * @return 树形结构
-     */
+    /// 将 list 类型数据转换为 树形结构
+    ///
+    /// @param list          原始 list
+    /// @param ignoreOrphans 是否忽略孤儿节点
+    /// @param <T>           T
+    /// @return 树形结构
     public static <T extends ScxTreeModel<T>> List<T> listToTree(List<T> list, boolean ignoreOrphans) {
         //数据合法性判断
         if (list == null) {

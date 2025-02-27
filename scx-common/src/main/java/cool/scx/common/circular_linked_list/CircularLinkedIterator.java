@@ -1,12 +1,10 @@
 package cool.scx.common.circular_linked_list;
 
-/**
- * 无限循环的迭代器
- *
- * @param <T>
- * @author scx567888
- * @version 0.0.1
- */
+/// 无限循环的迭代器
+///
+/// @param <T>
+/// @author scx567888
+/// @version 0.0.1
 public final class CircularLinkedIterator<T> implements ICircularLinkedIterator<T> {
 
     private Node<T> now;

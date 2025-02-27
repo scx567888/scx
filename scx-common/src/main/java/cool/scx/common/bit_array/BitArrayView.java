@@ -1,11 +1,9 @@
 package cool.scx.common.bit_array;
 
-/**
- * 一个 BitArray 视图
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 一个 BitArray 视图
+///
+/// @author scx567888
+/// @version 0.0.1
 public class BitArrayView implements IBitArray {
 
     private final IBitArray[] bitArrays;

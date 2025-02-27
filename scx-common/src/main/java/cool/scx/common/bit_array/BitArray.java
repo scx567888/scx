@@ -4,12 +4,10 @@ import java.util.Arrays;
 
 import static cool.scx.common.bit_array.BitArrayHelper.*;
 
-/**
- * 基于 byte 数组的实现 优点是相比较 {@link java.util.BitSet} 在数组方面会快一点
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 基于 byte 数组的实现 优点是相比较 [java.util.BitSet] 在数组方面会快一点
+///
+/// @author scx567888
+/// @version 0.0.1
 public class BitArray implements IBitArray {
 
     private byte[] bytes;

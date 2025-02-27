@@ -2,13 +2,11 @@ package cool.scx.common.circular_linked_list;
 
 import java.util.function.IntFunction;
 
-/**
- * ReverseCircularLinkedList
- *
- * @param <T>
- * @author scx567888
- * @version 0.0.1
- */
+/// ReverseCircularLinkedList
+///
+/// @param <T>
+/// @author scx567888
+/// @version 0.0.1
 final class ReverseCircularLinkedList<T> implements ICircularLinkedList<T> {
 
     private final CircularLinkedList<T> circularLinkedList;

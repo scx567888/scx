@@ -3,13 +3,11 @@ package cool.scx.common.circular_linked_list;
 import java.util.Objects;
 import java.util.function.IntFunction;
 
-/**
- * CircularLinkedList
- *
- * @param <T>
- * @author scx567888
- * @version 0.0.1
- */
+/// CircularLinkedList
+///
+/// @param <T>
+/// @author scx567888
+/// @version 0.0.1
 public final class CircularLinkedList<T> implements ICircularLinkedList<T> {
 
     private Node<T> first;
