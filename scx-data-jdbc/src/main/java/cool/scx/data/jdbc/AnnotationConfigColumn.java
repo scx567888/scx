@@ -29,7 +29,7 @@ public class AnnotationConfigColumn implements TypeColumn {
     public AnnotationConfigColumn(FieldInfo javaField) {
         this.javaField = javaField;
         this.javaField.setAccessible(true);
-        var column = javaField.getAnnotation(Column.class);
+        var column = javaField.findAnnotation(Column.class);
         var defaultColumnName = toSnake(javaField.name());
         var defaultDataType = new AnnotationConfigDataType(this.javaField.type());
         if (column != null) {
