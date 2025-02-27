@@ -10,12 +10,10 @@ import static cool.scx.logging.spi.log4j.ScxLog4jLoggerHelper.toJDKLevel;
 import static cool.scx.logging.spi.log4j.ScxLog4jLoggerHelper.toLog4jLevel;
 
 
-/**
- * ScxLog4jLogger
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ScxLog4jLogger
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class ScxLog4jLogger extends AbstractLogger {
 
     private final ScxLogger scxLogger;

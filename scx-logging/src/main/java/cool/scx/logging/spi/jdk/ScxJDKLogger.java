@@ -7,12 +7,10 @@ import java.util.ResourceBundle;
 
 import static cool.scx.logging.spi.jdk.ScxJDKLoggerHelper.*;
 
-/**
- * ScxJDKLogger
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ScxJDKLogger
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class ScxJDKLogger implements Logger {
 
     private final ScxLogger scxLogger;

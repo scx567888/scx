@@ -10,12 +10,10 @@ import java.time.temporal.TemporalAccessor;
 
 import static java.lang.System.Logger.Level;
 
-/**
- * AbstractRecorder
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// AbstractRecorder
+///
+/// @author scx567888
+/// @version 0.0.1
 public abstract class AbstractRecorder implements ScxLogRecorder {
 
     public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");

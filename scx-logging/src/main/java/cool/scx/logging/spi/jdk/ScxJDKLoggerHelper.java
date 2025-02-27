@@ -4,12 +4,10 @@ import java.text.MessageFormat;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-/**
- * ScxJDKLoggerHelper
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ScxJDKLoggerHelper
+///
+/// @author scx567888
+/// @version 0.0.1
 final class ScxJDKLoggerHelper {
 
     public static String formatMessage(String format, Object... parameters) {

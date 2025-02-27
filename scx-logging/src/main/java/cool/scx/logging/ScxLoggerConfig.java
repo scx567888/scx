@@ -8,12 +8,10 @@ import static java.lang.System.Logger.Level;
 import static java.util.Collections.addAll;
 
 
-/**
- * ScxLoggerConfig
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ScxLoggerConfig
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class ScxLoggerConfig {
 
     private final ScxLoggerConfig parent;
@@ -87,12 +85,10 @@ public final class ScxLoggerConfig {
         return this;
     }
 
-    /**
-     * 根据其他配置更新当前配置
-     *
-     * @param newConfig 新的配置对象
-     * @return this
-     */
+    /// 根据其他配置更新当前配置
+    ///
+    /// @param newConfig 新的配置对象
+    /// @return this
     public ScxLoggerConfig updateConfig(ScxLoggerConfig newConfig) {
         setLevel(newConfig.level);
         setStackTrace(newConfig.stackTrace);

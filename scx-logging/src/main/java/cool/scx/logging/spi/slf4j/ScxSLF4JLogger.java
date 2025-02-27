@@ -10,12 +10,10 @@ import static org.slf4j.event.Level.*;
 import static org.slf4j.helpers.MessageFormatter.basicArrayFormat;
 
 
-/**
- * ScxSLF4JLogger
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ScxSLF4JLogger
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class ScxSLF4JLogger extends LegacyAbstractLogger {
 
     private final ScxLogger scxLogger;
