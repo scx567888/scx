@@ -91,33 +91,6 @@
     <dependencyManagement>
         <dependencies>
 
-            <!-- helidon webserver -->
-            <dependency>
-                <groupId>io.helidon.webserver</groupId>
-                <artifactId>helidon-webserver</artifactId>
-                <version>${helidon.version}</version>
-            </dependency>
-
-            <!-- helidon websocket -->
-            <dependency>
-                <groupId>io.helidon.webserver</groupId>
-                <artifactId>helidon-webserver-websocket</artifactId>
-                <version>${helidon.version}</version>
-            </dependency>
-
-            <!-- helidon webclient -->
-            <dependency>
-                <groupId>io.helidon.webclient</groupId>
-                <artifactId>helidon-webclient</artifactId>
-                <version>${helidon.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>io.helidon.webclient</groupId>
-                <artifactId>helidon-webclient-websocket</artifactId>
-                <version>${helidon.version}</version>
-            </dependency>
-
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-core</artifactId>
@@ -174,12 +147,6 @@
                 <version>${jasypt.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>io.vertx</groupId>
-                <artifactId>vertx-core</artifactId>
-                <version>${vertx.version}</version>
-            </dependency>
-
             <!-- 解析 Cron 表达式 -->
             <dependency>
                 <groupId>com.cronutils</groupId>
@@ -192,20 +159,6 @@
                 <groupId>com.mysql</groupId>
                 <artifactId>mysql-connector-j</artifactId>
                 <version>${mysql-connector-j.version}</version>
-            </dependency>
-
-            <!-- sql server 驱动 -->
-            <dependency>
-                <groupId>com.microsoft.sqlserver</groupId>
-                <artifactId>mssql-jdbc</artifactId>
-                <version>${mssql-jdbc.version}</version>
-            </dependency>
-
-            <!-- sqlite 驱动 -->
-            <dependency>
-                <groupId>org.xerial</groupId>
-                <artifactId>sqlite-jdbc</artifactId>
-                <version>${sqlite-jdbc.version}</version>
             </dependency>
 
             <!-- slf4j 日志框架 -->
@@ -235,18 +188,14 @@
     <properties>
 
         <!-- *********************** 以下为依赖包版本 *********************** -->
-        <helidon.version>4.1.6</helidon.version>
         <jackson.version>2.18.2</jackson.version>
         <spring-framework.version>6.2.2</spring-framework.version>
         <hikaricp.version>6.2.1</hikaricp.version>
         <freemarker.version>2.3.34</freemarker.version>
         <thumbnailator.version>0.4.20</thumbnailator.version>
         <jasypt.version>1.9.3</jasypt.version>
-        <vertx.version>4.5.11</vertx.version>
         <cron-utils.version>9.2.1</cron-utils.version>
         <mysql-connector-j.version>9.2.0</mysql-connector-j.version>
-        <mssql-jdbc.version>12.8.1.jre11</mssql-jdbc.version>
-        <sqlite-jdbc.version>3.48.0.0</sqlite-jdbc.version>
         <slf4j.version>2.0.16</slf4j.version>
         <log4j2.version>2.24.3</log4j2.version>
         <testng.version>7.10.2</testng.version>

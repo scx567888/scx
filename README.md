@@ -19,14 +19,11 @@
     </a>
 </p>
 <p align="center">
-    <a target="_blank" href="https://github.com/helidon-io/helidon">
-        <img src="https://img.shields.io/badge/Helidon-f44336" alt="Helidon"/>
-    </a>
     <a target="_blank" href="https://github.com/FasterXML/jackson">
-        <img src="https://img.shields.io/badge/Jackson-ff8000" alt="Jackson"/>
+        <img src="https://img.shields.io/badge/Jackson-f44336" alt="Jackson"/>
     </a>
     <a target="_blank" href="https://github.com/spring-projects/spring-framework">
-        <img src="https://img.shields.io/badge/Spring Framework-d8b125" alt="Spring Framework"/>
+        <img src="https://img.shields.io/badge/Spring Framework-ff8000" alt="Spring Framework"/>
     </a>
     <a target="_blank" href="https://github.com/brettwooldridge/HikariCP">
         <img src="https://img.shields.io/badge/HikariCP-44be16" alt="HikariCP"/>
@@ -45,16 +42,13 @@
         <img src="https://img.shields.io/badge/MySQL Connector/J-ff8000" alt="MySQL Connector/J"/>
     </a>
     <a target="_blank" href="https://github.com/jmrozanec/cron-utils">
-        <img src="https://img.shields.io/badge/Cron utils-d8b125" alt="Cron utils"/>
+        <img src="https://img.shields.io/badge/Cron utils-44be16" alt="Cron utils"/>
     </a>
     <a target="_blank" href="https://github.com/qos-ch/slf4j">
-        <img src="https://img.shields.io/badge/SLF4J-44be16" alt="SLF4J"/>
+        <img src="https://img.shields.io/badge/SLF4J-29aaf5" alt="SLF4J"/>
     </a>
     <a target="_blank" href="https://github.com/apache/logging-log4j2">
-        <img src="https://img.shields.io/badge/Apache Log4j 2-29aaf5" alt="Apache Log4j 2"/>
-    </a>
-    <a target="_blank" href="https://github.com/cbeust/testng">
-        <img src="https://img.shields.io/badge/TestNG-9c27b0" alt="TestNG"/>
+        <img src="https://img.shields.io/badge/Apache Log4j 2-9c27b0" alt="Apache Log4j 2"/>
     </a>
 </p>
 

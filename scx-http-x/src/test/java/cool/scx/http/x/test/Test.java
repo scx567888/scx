@@ -72,7 +72,7 @@ public class Test {
 
         server.start();
 
-        System.out.println("HelidonHttpServer 启动完成 !!! 耗时 : " + (System.nanoTime() - l) / 1000_000);
+        System.out.println("HttpServer 启动完成 !!! 耗时 : " + (System.nanoTime() - l) / 1000_000);
     }
 
 }
