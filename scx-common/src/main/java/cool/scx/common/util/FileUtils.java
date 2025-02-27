@@ -1,6 +1,4 @@
-package cool.scx.io.file;
-
-import cool.scx.common.util.HashUtils;
+package cool.scx.common.util;
 
 import java.io.File;
 import java.io.IOException;

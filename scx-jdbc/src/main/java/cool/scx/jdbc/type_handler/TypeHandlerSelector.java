@@ -16,8 +16,8 @@ import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static cool.scx.reflect.ClassUtils.getEnumClass;
-import static cool.scx.reflect.ClassUtils.isEnum;
+import static cool.scx.common.util.ClassUtils.getEnumClass;
+import static cool.scx.common.util.ClassUtils.isEnum;
 
 /// TypeHandlerSelector
 ///

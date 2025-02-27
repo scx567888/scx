@@ -2,7 +2,7 @@ package cool.scx.app.x.fss;
 
 import cool.scx.app.annotation.ScxService;
 import cool.scx.app.base.BaseModelService;
-import cool.scx.io.file.FileUtils;
+import cool.scx.common.util.FileUtils;
 
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;

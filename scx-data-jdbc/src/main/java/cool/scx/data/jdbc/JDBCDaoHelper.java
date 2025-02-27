@@ -10,7 +10,7 @@ import java.util.Arrays;
 
 import static cool.scx.jdbc.JDBCType.JSON;
 import static cool.scx.jdbc.JDBCType.VARCHAR;
-import static cool.scx.reflect.ClassUtils.isEnum;
+import static cool.scx.common.util.ClassUtils.isEnum;
 
 /**
  * 列过滤器

@@ -12,7 +12,7 @@ import cool.scx.data.jdbc.AnnotationConfigTable;
 import cool.scx.http.ScxHttpServer;
 import cool.scx.http.x.XHttpServer;
 import cool.scx.http.x.XHttpServerOptions;
-import cool.scx.io.file.FileUtils;
+import cool.scx.common.util.FileUtils;
 import cool.scx.jdbc.JDBCContext;
 import cool.scx.jdbc.SchemaHelper;
 import cool.scx.jdbc.sql.SQLRunner;
