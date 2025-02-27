@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JavaType;
 
 import java.lang.reflect.Parameter;
 
-import static cool.scx.reflect.Helper._findType;
+import static cool.scx.reflect.ReflectHelper._findType;
 
 /// ParameterInfo
 ///

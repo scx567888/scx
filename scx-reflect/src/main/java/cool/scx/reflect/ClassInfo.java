@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JavaType;
 
 import java.lang.annotation.Annotation;
 
-import static cool.scx.reflect.Helper.*;
+import static cool.scx.reflect.ReflectHelper.*;
 import static java.lang.reflect.AccessFlag.FINAL;
 import static java.lang.reflect.AccessFlag.STATIC;
 
