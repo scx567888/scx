@@ -71,7 +71,7 @@ public final class ClassInfo implements AnnotatedElementInfo {
         return type;
     }
 
-    public  String name() {
+    public String name() {
         return name;
     }
 
