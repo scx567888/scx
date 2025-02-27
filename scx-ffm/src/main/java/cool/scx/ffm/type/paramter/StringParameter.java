@@ -5,12 +5,10 @@ import java.nio.charset.Charset;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-/**
- * StringParameter
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// StringParameter
+///
+/// @author scx567888
+/// @version 0.0.1
 public class StringParameter implements Parameter {
 
     private final String value;
