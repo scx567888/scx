@@ -1,9 +1,9 @@
 package cool.scx.jdbc.result_handler.bean_builder;
 
 import cool.scx.reflect.ClassInfo;
+import cool.scx.reflect.ClassInfoFactory;
 import cool.scx.reflect.ConstructorInfo;
 import cool.scx.reflect.ParameterInfo;
-import cool.scx.reflect.ReflectHelper;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -25,7 +25,7 @@ final class RecordBeanBuilder<T> extends BeanBuilder<T> {
     private final FieldSetter[] fieldSetters;
 
     public RecordBeanBuilder(Class<T> type, Function<Field, String> columnNameMapping) {
-        this.constructor = checkRecordConstructor(ReflectHelper.getClassInfo(type));
+        this.constructor = checkRecordConstructor(ClassInfoFactory.getClassInfo(type));
         this.constructor.setAccessible(true);
         this.fieldSetters = sortFieldSetters(this.constructor.parameters(), FieldSetter.ofArray(type, columnNameMapping));
     }
@@ -62,7 +62,7 @@ final class RecordBeanBuilder<T> extends BeanBuilder<T> {
     public static ConstructorInfo checkRecordConstructor(ClassInfo type) {
         var canonicalConstructor = type.recordConstructor();
         if (canonicalConstructor == null) {
-            throw new IllegalArgumentException("寻找 Record 规范构造函数失败, type " + type.type().getRawClass().getName());
+            throw new IllegalArgumentException("寻找 Record 规范构造函数失败, type " + type.name());
         }
         return canonicalConstructor;
     }
