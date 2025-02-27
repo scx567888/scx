@@ -9,7 +9,6 @@ import cool.scx.http.media.multi_part.MultiPartStreamCachedReader;
 import cool.scx.http.media.object.ObjectReader;
 import cool.scx.http.media.path.PathReader;
 import cool.scx.http.media.string.StringReader;
-import io.helidon.webserver.WebServer;
 
 import java.io.InputStream;
 import java.nio.charset.Charset;
