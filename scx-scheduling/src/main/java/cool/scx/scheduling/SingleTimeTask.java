@@ -4,12 +4,10 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.function.Supplier;
 
-/**
- * SingleTimeTask
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// SingleTimeTask
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface SingleTimeTask extends ScheduleTask<SingleTimeTask> {
 
     SingleTimeTask startTime(Supplier<Instant> startTime);

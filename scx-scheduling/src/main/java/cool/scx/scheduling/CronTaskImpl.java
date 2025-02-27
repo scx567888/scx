@@ -14,17 +14,16 @@ import java.util.function.Consumer;
 import static com.cronutils.model.CronType.QUARTZ;
 import static com.cronutils.model.definition.CronDefinitionBuilder.instanceDefinitionFor;
 import static java.lang.System.Logger.Level.ERROR;
+import static java.lang.System.getLogger;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
-/**
- * Cron 执行的任务
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// Cron 执行的任务
+///
+/// @author scx567888
+/// @version 0.0.1
 public class CronTaskImpl implements CronTask {
 
-    private static final Logger logger = System.getLogger(CronTaskImpl.class.getName());
+    private static final Logger logger = getLogger(CronTaskImpl.class.getName());
 
     //这里默认用 QUARTZ 的格式
     private static final CronParser CRON_PARSER = new CronParser(instanceDefinitionFor(QUARTZ));

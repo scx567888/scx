@@ -1,5 +1,6 @@
 package cool.scx.scheduling;
 
+import java.lang.System.Logger;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.concurrent.ScheduledExecutorService;
@@ -10,19 +11,18 @@ import java.util.function.Supplier;
 
 import static cool.scx.scheduling.ExpirationPolicy.*;
 import static java.lang.System.Logger.Level.ERROR;
+import static java.lang.System.getLogger;
 import static java.time.Duration.between;
 import static java.time.Instant.now;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 
-/**
- * 多次执行的任务
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 多次执行的任务
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class MultipleTimeTaskImpl implements MultipleTimeTask {
 
-    private static final System.Logger logger = System.getLogger(MultipleTimeTaskImpl.class.getName());
+    private static final Logger logger = getLogger(MultipleTimeTaskImpl.class.getName());
 
     private final AtomicLong runCount;
     private Supplier<Instant> startTimeSupplier;

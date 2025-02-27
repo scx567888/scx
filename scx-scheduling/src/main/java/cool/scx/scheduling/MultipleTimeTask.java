@@ -5,12 +5,10 @@ import java.time.Instant;
 import java.util.function.Supplier;
 
 
-/**
- * MultipleTimeTask
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// MultipleTimeTask
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface MultipleTimeTask extends ScheduleTask<MultipleTimeTask> {
 
     MultipleTimeTask startTime(Supplier<Instant> startTime);

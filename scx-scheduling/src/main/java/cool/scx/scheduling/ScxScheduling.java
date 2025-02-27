@@ -6,12 +6,10 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import static cool.scx.scheduling.MultipleTimeTask.Type.FIXED_DELAY;
 import static cool.scx.scheduling.MultipleTimeTask.Type.FIXED_RATE;
 
-/**
- * 用来创建 调度任务的工具类
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 用来创建 调度任务的工具类
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class ScxScheduling {
 
     private static ScheduledThreadPoolExecutor defaultScheduler;
