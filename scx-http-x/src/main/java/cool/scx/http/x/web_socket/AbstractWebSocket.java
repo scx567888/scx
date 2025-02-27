@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 import static cool.scx.http.web_socket.WebSocketOpCode.*;
 import static cool.scx.http.x.web_socket.WebSocketFrameHelper.createClosePayload;
 
-/// 实现一些最基本的方法  
+/// 实现一些最基本的方法
 public abstract class AbstractWebSocket implements ScxWebSocket {
 
     protected TextMessageHandler textMessageHandler;
