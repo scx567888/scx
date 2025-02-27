@@ -5,12 +5,10 @@ import java.lang.foreign.MemorySegment;
 
 import static java.lang.foreign.ValueLayout.JAVA_CHAR;
 
-/**
- * CharMapper
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// CharMapper
+///
+/// @author scx567888
+/// @version 0.0.1
 public class CharMapper implements Mapper {
 
     private char value;

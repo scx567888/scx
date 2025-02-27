@@ -5,12 +5,10 @@ import java.lang.foreign.MemorySegment;
 
 import static java.lang.foreign.ValueLayout.JAVA_INT;
 
-/**
- * IntArrayMapper
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// IntArrayMapper
+///
+/// @author scx567888
+/// @version 0.0.1
 public class IntArrayMapper implements Mapper {
 
     private int[] value;
