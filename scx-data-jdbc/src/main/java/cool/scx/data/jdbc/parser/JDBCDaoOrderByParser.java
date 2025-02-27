@@ -6,12 +6,10 @@ import cool.scx.data.query.parser.OrderByParser;
 
 import static cool.scx.data.jdbc.parser.ColumnNameParser.parseColumnName;
 
-/**
- * JDBCDaoOrderByParser
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// JDBCDaoOrderByParser
+///
+/// @author scx567888
+/// @version 0.0.1
 public class JDBCDaoOrderByParser extends OrderByParser {
 
     private final AnnotationConfigTable tableInfo;

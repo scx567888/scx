@@ -16,27 +16,19 @@ import java.util.stream.Stream;
 import static cool.scx.reflect.AccessModifier.PUBLIC;
 import static cool.scx.reflect.ClassType.RECORD;
 
-/**
- * AnnotationConfigTable
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// AnnotationConfigTable
+///
+/// @author scx567888
+/// @version 0.0.1
 public class AnnotationConfigTable implements Table {
 
-    /**
-     * 实体类型不含 @NoColumn 注解的field
-     */
+    /// 实体类型不含 @NoColumn 注解的field
     private final AnnotationConfigColumn[] columns;
 
-    /**
-     * 表名
-     */
+    /// 表名
     private final String name;
 
-    /**
-     * 因为 循环查找速度太慢了 所以这里 使用 map (key:javaFieldName,value:ColumnInfo)
-     */
+    /// 因为 循环查找速度太慢了 所以这里 使用 map (key:javaFieldName,value:ColumnInfo)
     private final Map<String, AnnotationConfigColumn> columnMap;
 
     public AnnotationConfigTable(Class<?> clazz) {
@@ -45,12 +37,10 @@ public class AnnotationConfigTable implements Table {
         this.columnMap = initAllColumnMap(columns);
     }
 
-    /**
-     * 这里判断一下是否使用了数据库 如果使用 则表名省略掉 数据库限定名 否则的话则添加数据库限定名
-     *
-     * @param clazz c
-     * @return c
-     */
+    /// 这里判断一下是否使用了数据库 如果使用 则表名省略掉 数据库限定名 否则的话则添加数据库限定名
+    ///
+    /// @param clazz c
+    /// @return c
     public static String initTableName(Class<?> clazz) {
         var table = clazz.getAnnotation(cool.scx.data.jdbc.annotation.Table.class);
         var defaultTableName = CaseUtils.toSnake(clazz.getSimpleName());
@@ -94,12 +84,10 @@ public class AnnotationConfigTable implements Table {
         return map;
     }
 
-    /**
-     * 检测 columnName 重复值
-     *
-     * @param list  a
-     * @param clazz a
-     */
+    /// 检测 columnName 重复值
+    ///
+    /// @param list  a
+    /// @param clazz a
     private static void checkDuplicateColumnName(List<AnnotationConfigColumn> list, Class<?> clazz) {
         var multiMap = new MultiMap<String, AnnotationConfigColumn>();
         for (var info : list) {

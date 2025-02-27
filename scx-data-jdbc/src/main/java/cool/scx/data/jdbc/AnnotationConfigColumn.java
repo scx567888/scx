@@ -7,12 +7,10 @@ import cool.scx.reflect.FieldInfo;
 import static cool.scx.common.constant.AnnotationValueHelper.getRealValue;
 import static cool.scx.common.util.CaseUtils.toSnake;
 
-/**
- * AnnotationConfigColumn
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// AnnotationConfigColumn
+///
+/// @author scx567888
+/// @version 0.0.1
 public class AnnotationConfigColumn implements TypeColumn {
 
     private final FieldInfo javaField;
