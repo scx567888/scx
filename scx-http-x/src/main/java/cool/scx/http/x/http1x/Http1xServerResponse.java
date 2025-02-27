@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import static cool.scx.http.HttpFieldName.*;
+import static cool.scx.http.x.http1x.Http1xHelper.CRLF_BYTES;
+import static cool.scx.http.x.http1x.Http1xHelper.sendChunkedEnd;
 
 /**
  * todo 待完成
@@ -63,9 +65,9 @@ public class Http1xServerResponse extends OutputStream implements ScxHttpServerR
     public void end() {
         if (useChunkedTransfer) {
             try {
-                dataWriter.write("0\r\n\r\n".getBytes());  // 结束分块传输
+                sendChunkedEnd(dataWriter);
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                throw new CloseConnectionException();
             }
         }
     }
@@ -126,33 +128,8 @@ public class Http1xServerResponse extends OutputStream implements ScxHttpServerR
 
     @Override
     public void write(int b) throws IOException {
-        checkFirstSend();
-
-        if (useChunkedTransfer) {
-            // 将一个字节作为一个块进行传输
-            dataWriter.write(Integer.toHexString(1).getBytes());  // 1 byte chunk size (hex)
-            dataWriter.write("\r\n".getBytes());
-            dataWriter.write(b);  // 写入实际数据
-            dataWriter.write("\r\n".getBytes());  // 分块结束符
-        } else {
-            dataWriter.write(b);
-        }
-    }
-
-    @Override
-    public void write(byte[] b) throws IOException {
-        checkFirstSend();
-
-        if (useChunkedTransfer) {
-            // 发送分块
-            String chunkSize = Integer.toHexString(b.length); // 获取块大小的16进制字符串
-            dataWriter.write(chunkSize.getBytes());  // 发送块大小
-            dataWriter.write("\r\n".getBytes());  // 块大小结束
-            dataWriter.write(b);  // 发送数据块内容
-            dataWriter.write("\r\n".getBytes());  // 分块结束符
-        } else {
-            dataWriter.write(b);
-        }
+        var a = new byte[] { (byte) b };
+        write(a, 0, 1);
     }
 
     @Override
@@ -161,11 +138,10 @@ public class Http1xServerResponse extends OutputStream implements ScxHttpServerR
 
         if (useChunkedTransfer) {
             // 发送分块
-            var chunkSize = Integer.toHexString(len); // 获取块大小的16进制字符串
-            dataWriter.write(chunkSize.getBytes());  // 发送块大小
-            dataWriter.write("\r\n".getBytes());  // 块大小结束
+            dataWriter.write(Integer.toUnsignedString(len,16).getBytes());  // 发送块大小
+            dataWriter.write(CRLF_BYTES);  // 块大小结束
             dataWriter.write(b, off, len);  // 发送数据块内容
-            dataWriter.write("\r\n".getBytes());  // 分块结束符
+            dataWriter.write(CRLF_BYTES);  // 分块结束符
         } else {
             dataWriter.write(b, off, len);
         }
