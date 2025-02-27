@@ -11,12 +11,10 @@ import java.time.temporal.TemporalAccessor;
 
 import static java.nio.file.StandardOpenOption.*;
 
-/**
- * 文件记录器
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 文件记录器
+///
+/// @author scx567888
+/// @version 0.0.1
 public class FileRecorder extends AbstractRecorder {
 
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
