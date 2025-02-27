@@ -8,12 +8,10 @@ import java.util.TreeMap;
 
 import static java.lang.String.CASE_INSENSITIVE_ORDER;
 
-/**
- * MySQLDialectHelper
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// MySQLDialectHelper
+///
+/// @author scx567888
+/// @version 0.0.1
 final class MySQLDialectHelper {
 
     private final static Map<String, JDBCType> MAP = initMAP();

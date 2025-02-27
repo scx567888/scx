@@ -14,12 +14,10 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-/**
- * MySQLDialect
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// MySQLDialect
+///
+/// @author scx567888
+/// @version 0.0.1
 public class MySQLDialect extends Dialect {
 
     private static final com.mysql.cj.jdbc.NonRegisteringDriver DRIVER = initDRIVER();
