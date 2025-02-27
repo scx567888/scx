@@ -11,13 +11,11 @@ import java.util.List;
 import static cool.scx.http.HttpFieldName.*;
 import static cool.scx.http.ScxHttpHeadersHelper.parseHeaders;
 
-/**
- * 只读的 Headers 可用于 ServerRequest 和 ClientResponse
- * 在 Parameters 的基础上实现了一些 方便操作 Http 头协议的方法
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 只读的 Headers 可用于 ServerRequest 和 ClientResponse
+/// 在 Parameters 的基础上实现了一些 方便操作 Http 头协议的方法
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface ScxHttpHeaders extends Parameters<ScxHttpHeaderName, String> {
 
     static ScxHttpHeadersWritable of() {

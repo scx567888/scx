@@ -5,12 +5,10 @@ import cool.scx.http.media.MediaReader;
 
 import java.io.InputStream;
 
-/**
- * 此类保持单例模式即可
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 此类保持单例模式即可
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class InputStreamReader implements MediaReader<InputStream> {
 
     public final static InputStreamReader INPUT_STREAM_READER = new InputStreamReader();

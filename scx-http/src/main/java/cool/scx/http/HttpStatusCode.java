@@ -1,12 +1,10 @@
 package cool.scx.http;
 
-/**
- * HttpStatusCode
- *
- * @author scx567888
- * @version 0.0.1
- * @see <a href="https://www.rfc-editor.org/rfc/rfc9110#name-status-codes">https://www.rfc-editor.org/rfc/rfc9110#name-status-codes</a>
- */
+/// HttpStatusCode
+///
+/// @author scx567888
+/// @version 0.0.1
+/// @see <a href="https://www.rfc-editor.org/rfc/rfc9110#name-status-codes">https://www.rfc-editor.org/rfc/rfc9110#name-status-codes</a>
 public enum HttpStatusCode {
 
     CONTINUE(100, "Continue"),
@@ -55,9 +53,7 @@ public enum HttpStatusCode {
     GATEWAY_TIMEOUT(504, "Gateway Timeout"),
     HTTP_VERSION_NOT_SUPPORTED(505, "HTTP Version Not Supported");
 
-    /**
-     * 存储 code 和 对应枚举的映射
-     */
+    /// 存储 code 和 对应枚举的映射
     private static final HttpStatusCode[] MAP = initMap();
 
     private final int code;
@@ -78,10 +74,8 @@ public enum HttpStatusCode {
         return m;
     }
 
-    /**
-     * @param code c
-     * @return 未找到时 抛出异常
-     */
+    /// @param code c
+    /// @return 未找到时 抛出异常
     public static HttpStatusCode of(int code) {
         if (code < 0 || code > 505) {
             throw new IllegalArgumentException("Invalid HTTP status code: " + code);
@@ -93,10 +87,8 @@ public enum HttpStatusCode {
         return c;
     }
 
-    /**
-     * @param code c
-     * @return 未找到时 返回 null
-     */
+    /// @param code c
+    /// @return 未找到时 返回 null
     public static HttpStatusCode find(int code) {
         if (code < 0 || code > 505) {
             return null;

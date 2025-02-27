@@ -7,12 +7,10 @@ import cool.scx.http.media.MediaReader;
 import java.io.InputStream;
 import java.nio.file.Path;
 
-/**
- * MultiPartStreamCachedReader
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// MultiPartStreamCachedReader
+///
+/// @author scx567888
+/// @version 0.0.1
 public class MultiPartStreamCachedReader implements MediaReader<MultiPart> {
 
     public static final MultiPartStreamCachedReader MULTI_PART_READER_CACHED = new MultiPartStreamCachedReader();

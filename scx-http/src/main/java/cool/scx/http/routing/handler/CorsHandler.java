@@ -16,12 +16,10 @@ import java.util.function.Consumer;
 import static cool.scx.http.HttpFieldName.*;
 import static java.util.Collections.addAll;
 
-/**
- * CorsHandler
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// CorsHandler
+///
+/// @author scx567888
+/// @version 0.0.1
 public class CorsHandler implements Consumer<RoutingContext> {
 
     private final Set<String> allowedMethods = new LinkedHashSet<>();

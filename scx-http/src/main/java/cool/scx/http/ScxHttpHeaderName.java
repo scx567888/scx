@@ -1,11 +1,9 @@
 package cool.scx.http;
 
-/**
- * HttpHeaderName 是不区分大小写的 所以我们这里全部按照小写处理
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// HttpHeaderName 是不区分大小写的 所以我们这里全部按照小写处理
+///
+/// @author scx567888
+/// @version 0.0.1
 public sealed interface ScxHttpHeaderName permits HttpFieldName, ScxHttpHeaderNameImpl {
 
     static ScxHttpHeaderName of(String name) {

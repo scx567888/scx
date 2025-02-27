@@ -4,12 +4,10 @@ import cool.scx.http.Parameters;
 
 import static cool.scx.http.content_disposition.ContentDispositionHelper.decodedContentDisposition;
 
-/**
- * ContentDisposition
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ContentDisposition
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface ContentDisposition {
 
     static ContentDispositionWritable of() {

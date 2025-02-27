@@ -5,12 +5,10 @@ import cool.scx.http.cookie.Cookie;
 import cool.scx.http.cookie.Cookies;
 import cool.scx.http.uri.ScxURI;
 
-/**
- * ScxHttpServerRequest
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ScxHttpServerRequest
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface ScxHttpServerRequest {
 
     ScxHttpServerResponse response();

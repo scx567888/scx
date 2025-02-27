@@ -6,12 +6,10 @@ import cool.scx.http.ScxHttpServerResponse;
 
 import java.util.Map;
 
-/**
- * RoutingContext
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// RoutingContext
+///
+/// @author scx567888
+/// @version 0.0.1
 @SuppressWarnings("unchecked")
 public interface RoutingContext {
 

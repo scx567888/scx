@@ -14,12 +14,10 @@ import static cool.scx.http.MediaType.APPLICATION_JSON;
 import static cool.scx.http.MediaType.APPLICATION_XML;
 import static cool.scx.http.media.string.StringReader.STRING_READER;
 
-/**
- * JsonNodeReader
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// JsonNodeReader
+///
+/// @author scx567888
+/// @version 0.0.1
 public class JsonNodeReader implements MediaReader<JsonNode> {
 
     public static final JsonNodeReader JSON_NODE_READER = new JsonNodeReader();

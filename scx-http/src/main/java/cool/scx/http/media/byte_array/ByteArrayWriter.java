@@ -7,12 +7,10 @@ import cool.scx.http.media.MediaWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 
-/**
- * ByteArrayWriter
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ByteArrayWriter
+///
+/// @author scx567888
+/// @version 0.0.1
 public class ByteArrayWriter implements MediaWriter {
 
     private final byte[] bytes;

@@ -6,12 +6,10 @@ import java.net.URI;
 
 import static cool.scx.http.uri.URIEncoder.encodeURI;
 
-/**
- * ScxURI
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ScxURI
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface ScxURI {
 
     static ScxURIWritable of() {
@@ -58,11 +56,9 @@ public interface ScxURI {
         return query().get(name);
     }
 
-    /**
-     * 注意此编码会进行 URL编码 转换
-     *
-     * @return a
-     */
+    /// 注意此编码会进行 URL编码 转换
+    ///
+    /// @return a
     default String encode() {
         return encode(false);
     }

@@ -1,33 +1,27 @@
 package cool.scx.http.cookie;
 
-/**
- * Cookies
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// Cookies
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface Cookies extends Iterable<Cookie> {
 
     static CookiesImpl of() {
         return new CookiesImpl();
     }
 
-    /**
-     * cookie 头
-     *
-     * @param cookieStr c
-     * @return c
-     */
+    /// cookie 头
+    ///
+    /// @param cookieStr c
+    /// @return c
     static CookiesImpl of(String cookieStr) {
         return CookieHelper.parseCookies(cookieStr);
     }
 
-    /**
-     * set-cookie 头
-     *
-     * @param cookieStr c
-     * @return c
-     */
+    /// set-cookie 头
+    ///
+    /// @param cookieStr c
+    /// @return c
     static CookiesImpl of(String[] cookieStr) {
         return CookieHelper.parseSetCookie(cookieStr);
     }

@@ -21,12 +21,10 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 
-/**
- * ScxHttpServerResponse
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ScxHttpServerResponse
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface ScxHttpServerResponse {
 
     // ************* 基本方法 ****************

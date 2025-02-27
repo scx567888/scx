@@ -1,11 +1,9 @@
 package cool.scx.http.web_socket;
 
-/**
- * WebSocketOpCode
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// WebSocketOpCode
+///
+/// @author scx567888
+/// @version 0.0.1
 public enum WebSocketOpCode {
 
     CONTINUATION(0x0),
@@ -32,10 +30,8 @@ public enum WebSocketOpCode {
         return m;
     }
 
-    /**
-     * @param code c
-     * @return 未找到时 抛出异常
-     */
+    /// @param code c
+    /// @return 未找到时 抛出异常
     public static WebSocketOpCode of(int code) {
         if (code < 0 || code > 10) {
             throw new IllegalArgumentException("Invalid WebSocket OpCode: " + code);
@@ -47,10 +43,8 @@ public enum WebSocketOpCode {
         return c;
     }
 
-    /**
-     * @param code c
-     * @return 未找到时 返回 null
-     */
+    /// @param code c
+    /// @return 未找到时 返回 null
     public static WebSocketOpCode find(int code) {
         if (code < 0 || code > 10) {
             return null;

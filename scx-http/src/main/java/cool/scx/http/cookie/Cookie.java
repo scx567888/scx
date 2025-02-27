@@ -1,11 +1,9 @@
 package cool.scx.http.cookie;
 
-/**
- * Cookie
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// Cookie
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface Cookie {
 
     static CookieWritable of(String name, String value) {

@@ -1,11 +1,9 @@
 package cool.scx.http.cookie;
 
-/**
- * CookieSameSite
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// CookieSameSite
+///
+/// @author scx567888
+/// @version 0.0.1
 public enum CookieSameSite {
 
     NONE("None"),
@@ -18,10 +16,8 @@ public enum CookieSameSite {
         this.value = label;
     }
 
-    /**
-     * @param attrValue a
-     * @return 未找到会抛出异常
-     */
+    /// @param attrValue a
+    /// @return 未找到会抛出异常
     public static CookieSameSite of(String attrValue) {
         if ("None".equalsIgnoreCase(attrValue)) {
             return NONE;
@@ -35,10 +31,8 @@ public enum CookieSameSite {
         throw new IllegalArgumentException("Unknown cookie same site: " + attrValue);
     }
 
-    /**
-     * @param attrValue a
-     * @return 未找到会返回 null
-     */
+    /// @param attrValue a
+    /// @return 未找到会返回 null
     public static CookieSameSite find(String attrValue) {
         if ("None".equalsIgnoreCase(attrValue)) {
             return NONE;

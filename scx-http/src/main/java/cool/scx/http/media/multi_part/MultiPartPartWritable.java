@@ -12,12 +12,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Supplier;
 
-/**
- * MultiPartPartWritable
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// MultiPartPartWritable
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface MultiPartPartWritable extends MultiPartPart {
 
     ScxHttpHeadersWritable headers();

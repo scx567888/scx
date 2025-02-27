@@ -8,12 +8,10 @@ import java.util.List;
 import java.util.TreeSet;
 import java.util.function.BiConsumer;
 
-/**
- * Router
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// Router
+///
+/// @author scx567888
+/// @version 0.0.1
 public class RouterImpl implements Router {
 
     private static final Comparator<Route> ROUTE_COMPARATOR = (o1, o2) -> {

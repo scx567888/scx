@@ -8,23 +8,17 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-/**
- * 1, 如果未指定字符集则 使用 请求头中的字符集 如果请求头中的字符集为空则回退到 UTF_8
- * 2, 如果指定字符集 忽略 请求头中的字符集
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 1, 如果未指定字符集则 使用 请求头中的字符集 如果请求头中的字符集为空则回退到 UTF_8
+/// 2, 如果指定字符集 忽略 请求头中的字符集
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class StringReader implements MediaReader<String> {
 
-    /**
-     * 常用情况 特殊情况直接 new
-     */
+    /// 常用情况 特殊情况直接 new
     public static final StringReader STRING_READER = new StringReader();
 
-    /**
-     * 用户指定的 charset
-     */
+    /// 用户指定的 charset
     private final Charset charset;
 
     public StringReader(Charset charset) {

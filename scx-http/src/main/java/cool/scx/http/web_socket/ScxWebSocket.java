@@ -8,12 +8,10 @@ import java.util.function.Consumer;
 
 import static cool.scx.http.web_socket.WebSocketCloseInfo.NORMAL_CLOSE;
 
-/**
- * ScxWebSocket
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ScxWebSocket
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface ScxWebSocket {
 
     ScxWebSocket onTextMessage(TextMessageHandler textMessageHandler);

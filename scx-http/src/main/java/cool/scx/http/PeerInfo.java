@@ -4,12 +4,10 @@ import java.net.SocketAddress;
 import java.security.Principal;
 import java.security.cert.Certificate;
 
-/**
- * PeerInfo
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// PeerInfo
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface PeerInfo {
 
     static PeerInfoWritable of() {

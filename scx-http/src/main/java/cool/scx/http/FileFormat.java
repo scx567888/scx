@@ -6,12 +6,10 @@ import java.util.TreeMap;
 import static cool.scx.http.MediaType.*;
 import static java.lang.String.CASE_INSENSITIVE_ORDER;
 
-/**
- * 常见 文件格式 (文件类型/文件后缀/文件拓展名)
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 常见 文件格式 (文件类型/文件后缀/文件拓展名)
+///
+/// @author scx567888
+/// @version 0.0.1
 public enum FileFormat {
 
     // Text
@@ -81,11 +79,9 @@ public enum FileFormat {
         return null;
     }
 
-    /**
-     * 对应的 mediaType
-     *
-     * @return mediaType
-     */
+    /// 对应的 mediaType
+    ///
+    /// @return mediaType
     public MediaType mediaType() {
         return mediaType;
     }

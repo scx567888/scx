@@ -7,12 +7,10 @@ import java.util.function.Consumer;
 import static cool.scx.http.HttpFieldName.SEC_WEBSOCKET_KEY;
 import static cool.scx.http.HttpFieldName.SEC_WEBSOCKET_VERSION;
 
-/**
- * ScxServerWebSocketHandshakeRequest
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ScxServerWebSocketHandshakeRequest
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface ScxServerWebSocketHandshakeRequest extends ScxHttpServerRequest {
 
     @Override

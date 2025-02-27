@@ -8,12 +8,10 @@ import java.io.InputStream;
 import static cool.scx.http.media.form_params.FormParamsHelper.decodeFormParams;
 import static cool.scx.http.media.string.StringReader.STRING_READER;
 
-/**
- * FormParamsReader
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// FormParamsReader
+///
+/// @author scx567888
+/// @version 0.0.1
 public class FormParamsReader implements MediaReader<FormParams> {
 
     public static final FormParamsReader FORM_PARAMS_READER = new FormParamsReader();

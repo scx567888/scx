@@ -2,12 +2,10 @@ package cool.scx.http.exception;
 
 import static cool.scx.http.HttpStatusCode.FORBIDDEN;
 
-/**
- * 登录了但是没权限
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 登录了但是没权限
+///
+/// @author scx567888
+/// @version 0.0.1
 public class ForbiddenException extends ScxHttpException {
 
     public ForbiddenException() {

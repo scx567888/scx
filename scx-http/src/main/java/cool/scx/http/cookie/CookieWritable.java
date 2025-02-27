@@ -1,11 +1,9 @@
 package cool.scx.http.cookie;
 
-/**
- * CookieWritable
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// CookieWritable
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface CookieWritable extends Cookie {
 
     CookieWritable domain(String domain);

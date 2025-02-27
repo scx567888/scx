@@ -7,12 +7,10 @@ import java.nio.charset.Charset;
 
 import static cool.scx.http.content_type.ContentTypeHelper.decodedContentType;
 
-/**
- * ContentType
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ContentType
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface ContentType {
 
     static ContentTypeWritable of() {

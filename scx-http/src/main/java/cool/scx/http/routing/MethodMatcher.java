@@ -2,12 +2,10 @@ package cool.scx.http.routing;
 
 import cool.scx.http.ScxHttpMethod;
 
-/**
- * MethodMatcher
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// MethodMatcher
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface MethodMatcher {
 
     static MethodMatcher any() {
