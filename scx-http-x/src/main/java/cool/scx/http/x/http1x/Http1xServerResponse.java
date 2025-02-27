@@ -5,8 +5,7 @@ import cool.scx.http.*;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import static cool.scx.http.HttpFieldName.CONNECTION;
-import static cool.scx.http.HttpFieldName.SERVER;
+import static cool.scx.http.HttpFieldName.*;
 
 /**
  * todo 待完成
@@ -22,6 +21,7 @@ public class Http1xServerResponse extends OutputStream implements ScxHttpServerR
     private final OutputStream dataWriter;
     private HttpStatusCode status;
     private boolean firstSend;
+    private boolean useChunkedTransfer;
 
     Http1xServerResponse(Http1xServerConnection connection, Http1xServerRequest request) {
         this.connection = connection;
@@ -30,6 +30,7 @@ public class Http1xServerResponse extends OutputStream implements ScxHttpServerR
         this.status = HttpStatusCode.OK;
         this.headers = ScxHttpHeaders.of();
         this.firstSend = true;
+        this.useChunkedTransfer = false;
     }
 
     @Override
@@ -60,7 +61,13 @@ public class Http1xServerResponse extends OutputStream implements ScxHttpServerR
 
     @Override
     public void end() {
-
+        if (useChunkedTransfer) {
+            try {
+                dataWriter.write("0\r\n\r\n".getBytes());  // 结束分块传输
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     @Override
@@ -91,6 +98,11 @@ public class Http1xServerResponse extends OutputStream implements ScxHttpServerR
             headers.set(SERVER, "SCX");
         }
 
+        //这里 如果用户没有设置相应长度 我们采用 默认 分块传输
+        if (headers.contentLength() == null) {
+            headers.set(TRANSFER_ENCODING, "chunked");
+            this.useChunkedTransfer = true;
+        }
 
         var headerStr = headers.encode();
 
@@ -115,19 +127,49 @@ public class Http1xServerResponse extends OutputStream implements ScxHttpServerR
     @Override
     public void write(int b) throws IOException {
         checkFirstSend();
-        dataWriter.write(b);
+
+        if (useChunkedTransfer) {
+            // 将一个字节作为一个块进行传输
+            dataWriter.write(Integer.toHexString(1).getBytes());  // 1 byte chunk size (hex)
+            dataWriter.write("\r\n".getBytes());
+            dataWriter.write(b);  // 写入实际数据
+            dataWriter.write("\r\n".getBytes());  // 分块结束符
+        } else {
+            dataWriter.write(b);
+        }
     }
 
     @Override
     public void write(byte[] b) throws IOException {
         checkFirstSend();
-        dataWriter.write(b);
+
+        if (useChunkedTransfer) {
+            // 发送分块
+            String chunkSize = Integer.toHexString(b.length); // 获取块大小的16进制字符串
+            dataWriter.write(chunkSize.getBytes());  // 发送块大小
+            dataWriter.write("\r\n".getBytes());  // 块大小结束
+            dataWriter.write(b);  // 发送数据块内容
+            dataWriter.write("\r\n".getBytes());  // 分块结束符
+        } else {
+            dataWriter.write(b);
+        }
     }
 
     @Override
     public void write(byte[] b, int off, int len) throws IOException {
         checkFirstSend();
-        dataWriter.write(b, off, len);
+
+        if (useChunkedTransfer) {
+            // 发送分块
+            var chunkSize = Integer.toHexString(len); // 获取块大小的16进制字符串
+            dataWriter.write(chunkSize.getBytes());  // 发送块大小
+            dataWriter.write("\r\n".getBytes());  // 块大小结束
+            dataWriter.write(b, off, len);  // 发送数据块内容
+            dataWriter.write("\r\n".getBytes());  // 分块结束符
+        } else {
+            dataWriter.write(b, off, len);
+        }
+
     }
 
     @Override
