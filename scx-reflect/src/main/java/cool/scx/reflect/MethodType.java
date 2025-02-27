@@ -7,5 +7,5 @@ public enum MethodType {
     STATIC,
     ABSTRACT,
     DEFAULT
-    
+
 }

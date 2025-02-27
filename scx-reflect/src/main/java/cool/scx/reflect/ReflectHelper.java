@@ -12,9 +12,9 @@ import java.util.Set;
 
 import static cool.scx.common.util.ObjectUtils.resolveMemberType;
 import static cool.scx.reflect.AccessModifier.PRIVATE;
+import static cool.scx.reflect.ClassInfoFactory.getClassInfo;
 import static cool.scx.reflect.ClassType.ENUM;
 import static cool.scx.reflect.ClassType.RECORD;
-import static cool.scx.reflect.ClassInfoFactory.getClassInfo;
 import static java.util.Collections.addAll;
 
 final class ReflectHelper {
@@ -173,10 +173,6 @@ final class ReflectHelper {
             classInfo = classInfo.superClass();
         }
         return allMethodInfo.toArray(MethodInfo[]::new);
-    }
-
-    public static Annotation[] _findAnnotations(Class<?> rawClass) {
-        return rawClass.getDeclaredAnnotations();
     }
 
     /// 获取当前方法的注解 同时包含 重写方法的注解
