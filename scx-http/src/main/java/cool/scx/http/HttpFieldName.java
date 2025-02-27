@@ -3,13 +3,11 @@ package cool.scx.http;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * HttpFieldName
- *
- * @author scx567888
- * @version 0.0.1
- * @see <a href="https://www.iana.org/assignments/http-fields/http-fields.xhtml">https://www.iana.org/assignments/http-fields/http-fields.xhtml</a>
- */
+/// HttpFieldName
+///
+/// @author scx567888
+/// @version 0.0.1
+/// @see <a href="https://www.iana.org/assignments/http-fields/http-fields.xhtml">https://www.iana.org/assignments/http-fields/http-fields.xhtml</a>
 public enum HttpFieldName implements ScxHttpHeaderName {
 
     ACCEPT("Accept"),
@@ -91,10 +89,8 @@ public enum HttpFieldName implements ScxHttpHeaderName {
         return map;
     }
 
-    /**
-     * @param v v
-     * @return 未找到 抛出异常
-     */
+    /// @param v v
+    /// @return 未找到 抛出异常
     public static HttpFieldName of(String v) {
         var lowerCase = v.toLowerCase();
         var httpFieldName = MAP.get(lowerCase);
@@ -104,10 +100,8 @@ public enum HttpFieldName implements ScxHttpHeaderName {
         return httpFieldName;
     }
 
-    /**
-     * @param v v
-     * @return 未找到返回 null
-     */
+    /// @param v v
+    /// @return 未找到返回 null
     public static HttpFieldName find(String v) {
         var lowerCase = v.toLowerCase();
         return MAP.get(lowerCase);

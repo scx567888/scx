@@ -4,12 +4,10 @@ import java.net.SocketAddress;
 import java.security.Principal;
 import java.security.cert.Certificate;
 
-/**
- * PeerInfoImpl
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// PeerInfoImpl
+///
+/// @author scx567888
+/// @version 0.0.1
 class PeerInfoImpl implements PeerInfoWritable {
 
     private SocketAddress socketAddress;

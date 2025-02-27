@@ -2,12 +2,10 @@ package cool.scx.http.accept;
 
 import cool.scx.http.ScxMediaType;
 
-/**
- * AcceptImpl
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// AcceptImpl
+///
+/// @author scx567888
+/// @version 0.0.1
 public class AcceptImpl implements AcceptWritable {
 
     private ScxMediaType mediaType;

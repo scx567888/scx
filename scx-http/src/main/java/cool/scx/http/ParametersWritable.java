@@ -1,11 +1,9 @@
 package cool.scx.http;
 
-/**
- * ParametersWritable
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ParametersWritable
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface ParametersWritable<K, V> extends Parameters<K, V> {
 
     @SuppressWarnings("unchecked")

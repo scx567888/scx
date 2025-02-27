@@ -10,22 +10,18 @@ import java.nio.file.Path;
 
 import static cool.scx.io.IOHelper.readInToFile;
 
-/**
- * 将内容写入到文件
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 将内容写入到文件
+///
+/// @author scx567888
+/// @version 0.0.1
 public class PathReader implements MediaReader<Path> {
 
     private final Path path;
     private final OpenOption[] options;
 
-    /**
-     * 写入的路径
-     *
-     * @param path a
-     */
+    /// 写入的路径
+    ///
+    /// @param path a
     public PathReader(Path path, OpenOption... options) {
         this.path = path;
         this.options = options;

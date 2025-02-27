@@ -4,12 +4,10 @@ import cool.scx.http.Parameters;
 import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.uri.ScxURI;
 
-/**
- * ScxServerWebSocket
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ScxServerWebSocket
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface ScxServerWebSocket extends ScxWebSocket {
 
     ScxURI uri();

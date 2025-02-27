@@ -4,12 +4,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * AcceptsImpl
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// AcceptsImpl
+///
+/// @author scx567888
+/// @version 0.0.1
 public class AcceptsImpl implements AcceptsWritable {
 
     private final List<Accept> accepts;

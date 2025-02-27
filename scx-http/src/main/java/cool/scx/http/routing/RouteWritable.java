@@ -5,12 +5,10 @@ import cool.scx.http.routing.TypeMatcher.Type;
 
 import java.util.function.Consumer;
 
-/**
- * RouteWritable
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// RouteWritable
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface RouteWritable extends Route {
 
     RouteWritable type(Type type);

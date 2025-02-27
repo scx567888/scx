@@ -6,14 +6,12 @@ import java.util.List;
 import static java.lang.Long.min;
 import static java.lang.Long.parseLong;
 
-/**
- * HttpHeader Range
- *
- * @param start 可以为空
- * @param end   可以为空
- * @author scx567888
- * @version 0.0.1
- */
+/// HttpHeader Range
+///
+/// @param start 可以为空
+/// @param end   可以为空
+/// @author scx567888
+/// @version 0.0.1
 public record Range(Long start, Long end) {
 
     public static List<Range> parseRange(String rangeHeader) {

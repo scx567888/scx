@@ -9,6 +9,7 @@ import cool.scx.http.media.multi_part.MultiPartStreamCachedReader;
 import cool.scx.http.media.object.ObjectReader;
 import cool.scx.http.media.path.PathReader;
 import cool.scx.http.media.string.StringReader;
+import io.helidon.webserver.WebServer;
 
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -22,12 +23,10 @@ import static cool.scx.http.media.multi_part.MultiPartStreamCachedReader.MULTI_P
 import static cool.scx.http.media.multi_part.MultiPartStreamReader.MULTI_PART_READER;
 import static cool.scx.http.media.string.StringReader.STRING_READER;
 
-/**
- * ScxHttpBody
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ScxHttpBody
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface ScxHttpBody {
 
     InputStream inputStream();

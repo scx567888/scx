@@ -8,12 +8,10 @@ import java.util.function.Consumer;
 
 import static cool.scx.http.routing.TypeMatcher.Type.WEB_SOCKET_HANDSHAKE;
 
-/**
- * Router
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// Router
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface Router extends Consumer<ScxHttpServerRequest> {
 
     static Router of() {

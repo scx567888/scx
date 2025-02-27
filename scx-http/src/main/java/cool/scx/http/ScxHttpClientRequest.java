@@ -22,12 +22,10 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 
-/**
- * ScxHttpClientRequest
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ScxHttpClientRequest
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface ScxHttpClientRequest {
 
     // ************* 基本方法 ****************

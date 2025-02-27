@@ -2,12 +2,10 @@ package cool.scx.http.media.form_params;
 
 import cool.scx.http.ParametersImpl;
 
-/**
- * FormParams
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// FormParams
+///
+/// @author scx567888
+/// @version 0.0.1
 public class FormParams extends ParametersImpl<String, String> {
 
     @Override

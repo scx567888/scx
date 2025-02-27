@@ -1,11 +1,9 @@
 package cool.scx.http.web_socket;
 
-/**
- * WebSocketCloseInfo
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// WebSocketCloseInfo
+///
+/// @author scx567888
+/// @version 0.0.1
 public enum WebSocketCloseInfo {
 
     NORMAL_CLOSE(1000, "normal close"),

@@ -5,21 +5,17 @@ import java.util.ArrayList;
 import static cool.scx.http.content_type.ContentTypeHelper.SEMICOLON_PATTERN;
 
 
-/**
- * CookieHelper
- * todo 中文编码有一些问题
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// CookieHelper
+/// todo 中文编码有一些问题
+///
+/// @author scx567888
+/// @version 0.0.1
 public class CookieHelper {
 
-    /**
-     * 注意 用来解析 cookie 不是 setCookie
-     *
-     * @param cookieStr c
-     * @return c
-     */
+    /// 注意 用来解析 cookie 不是 setCookie
+    ///
+    /// @param cookieStr c
+    /// @return c
     public static CookiesImpl parseCookies(String cookieStr) {
         var cookies = new CookiesImpl();
         if (cookieStr != null) {

@@ -13,12 +13,10 @@ import java.util.Map;
 
 import static cool.scx.http.HttpStatusCode.INTERNAL_SERVER_ERROR;
 
-/**
- * RoutingContext
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// RoutingContext
+///
+/// @author scx567888
+/// @version 0.0.1
 @SuppressWarnings("unchecked")
 public class RoutingContextImpl implements RoutingContext {
 

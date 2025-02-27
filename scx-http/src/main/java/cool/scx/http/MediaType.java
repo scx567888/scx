@@ -3,13 +3,11 @@ package cool.scx.http;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * MediaType
- *
- * @author scx567888
- * @version 0.0.1
- * @see <a href="https://www.iana.org/assignments/media-types/media-types.xhtml">https://www.iana.org/assignments/media-types/media-types.xhtml</a>
- */
+/// MediaType
+///
+/// @author scx567888
+/// @version 0.0.1
+/// @see <a href="https://www.iana.org/assignments/media-types/media-types.xhtml">https://www.iana.org/assignments/media-types/media-types.xhtml</a>
 public enum MediaType implements ScxMediaType {
 
     // Text
@@ -71,10 +69,8 @@ public enum MediaType implements ScxMediaType {
         return map;
     }
 
-    /**
-     * @param str s
-     * @return 未找到时抛出异常
-     */
+    /// @param str s
+    /// @return 未找到时抛出异常
     public static MediaType of(String str) {
         var mediaType = MAP.get(str.toLowerCase());
         if (mediaType == null) {
@@ -83,10 +79,8 @@ public enum MediaType implements ScxMediaType {
         return mediaType;
     }
 
-    /**
-     * @param str s
-     * @return 未找到时返回 null
-     */
+    /// @param str s
+    /// @return 未找到时返回 null
     public static MediaType find(String str) {
         return MAP.get(str.toLowerCase());
     }

@@ -1,11 +1,9 @@
 package cool.scx.http;
 
-/**
- * HttpVersion
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// HttpVersion
+///
+/// @author scx567888
+/// @version 0.0.1
 public enum HttpVersion {
 
     HTTP_1_0("HTTP/1.0"),
@@ -19,10 +17,8 @@ public enum HttpVersion {
         this.value = value;
     }
 
-    /**
-     * @param version v
-     * @return 未找到时 抛出异常
-     */
+    /// @param version v
+    /// @return 未找到时 抛出异常
     public static HttpVersion of(String version) {
         var upperCase = version.toUpperCase();
         return switch (upperCase) {
@@ -34,10 +30,8 @@ public enum HttpVersion {
         };
     }
 
-    /**
-     * @param version v
-     * @return 未找到时返回 null
-     */
+    /// @param version v
+    /// @return 未找到时返回 null
     public static HttpVersion find(String version) {
         var upperCase = version.toUpperCase();
         return switch (upperCase) {

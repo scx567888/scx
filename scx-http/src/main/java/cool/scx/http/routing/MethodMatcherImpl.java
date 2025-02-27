@@ -4,12 +4,10 @@ import cool.scx.http.ScxHttpMethod;
 
 import java.util.Set;
 
-/**
- * MethodMatcherImpl
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// MethodMatcherImpl
+///
+/// @author scx567888
+/// @version 0.0.1
 class MethodMatcherImpl implements MethodMatcher {
 
     private final Set<ScxHttpMethod> methods;

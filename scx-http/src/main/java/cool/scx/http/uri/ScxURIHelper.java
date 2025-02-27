@@ -7,12 +7,10 @@ import java.util.ArrayList;
 
 import static cool.scx.http.uri.URIEncoder.encodeURIComponent;
 
-/**
- * ScxURIHelper
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ScxURIHelper
+///
+/// @author scx567888
+/// @version 0.0.1
 public class ScxURIHelper {
 
     public static ParametersWritable<String, String> decodeQuery(String value) {

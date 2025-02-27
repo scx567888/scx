@@ -11,12 +11,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.NoSuchElementException;
 
-/**
- * MultiPartStreamCached
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// MultiPartStreamCached
+///
+/// @author scx567888
+/// @version 0.0.1
 public class MultiPartStreamCached extends MultiPartStream {
 
     private final Path cachePath;

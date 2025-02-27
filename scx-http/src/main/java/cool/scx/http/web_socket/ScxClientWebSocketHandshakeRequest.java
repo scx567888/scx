@@ -10,14 +10,12 @@ import java.util.function.Consumer;
 import static cool.scx.http.HttpMethod.GET;
 import static cool.scx.http.HttpVersion.HTTP_1_1;
 
-/**
- * ScxClientWebSocketHandshakeRequest
- * 1, WebSocket 协议中指定了 必须由 GET 方法 和 空请求体 所以我们这里屏蔽掉一些方法
- * 2, 重写一些方法的返回值 方便我们链式调用
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ScxClientWebSocketHandshakeRequest
+/// 1, WebSocket 协议中指定了 必须由 GET 方法 和 空请求体 所以我们这里屏蔽掉一些方法
+/// 2, 重写一些方法的返回值 方便我们链式调用
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface ScxClientWebSocketHandshakeRequest extends ScxHttpClientRequest {
 
     //发送握手请求

@@ -7,12 +7,10 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * PathMatcherImpl (Some Code Copy From Vertx RouteImpl)
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// PathMatcherImpl (Some Code Copy From Vertx RouteImpl)
+///
+/// @author scx567888
+/// @version 0.0.1
 public class PathMatcherImpl implements PathMatcher {
 
     // Allow end users to select either the regular valid characters or the extender pattern

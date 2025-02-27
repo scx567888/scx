@@ -9,12 +9,10 @@ import java.io.OutputStream;
 
 import static cool.scx.http.MediaType.MULTIPART_FORM_DATA;
 
-/**
- * MultiPartWriter
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// MultiPartWriter
+///
+/// @author scx567888
+/// @version 0.0.1
 public class MultiPartWriter implements MediaWriter {
 
     private final MultiPart multiPart;

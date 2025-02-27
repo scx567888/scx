@@ -6,12 +6,10 @@ import cool.scx.http.ScxMediaType;
 
 import java.nio.charset.Charset;
 
-/**
- * ContentTypeWritable
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ContentTypeWritable
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface ContentTypeWritable extends ContentType {
 
     ContentTypeWritable mediaType(ScxMediaType mediaType);

@@ -4,12 +4,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * MultiPartImpl
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// MultiPartImpl
+///
+/// @author scx567888
+/// @version 0.0.1
 public class MultiPartImpl implements MultiPartWritable {
 
     private final List<MultiPartPart> parts;

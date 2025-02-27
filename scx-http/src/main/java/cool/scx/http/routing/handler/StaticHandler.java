@@ -16,12 +16,10 @@ import static cool.scx.http.HttpMethod.GET;
 import static cool.scx.http.HttpMethod.HEAD;
 import static cool.scx.http.routing.handler.StaticHelper.sendStatic;
 
-/**
- * StaticHandler
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// StaticHandler
+///
+/// @author scx567888
+/// @version 0.0.1
 public class StaticHandler implements Consumer<RoutingContext> {
 
     private final Path root;

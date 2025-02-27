@@ -4,12 +4,10 @@ import java.nio.CharBuffer;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-/**
- * URIEncoder
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// URIEncoder
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class URIEncoder {
 
     private static final char[] HEX_DIGITS = {
@@ -37,12 +35,10 @@ public final class URIEncoder {
             "~"
     );
 
-    /**
-     * 此方法会生成一个 128 位的 boolean 数组 索引表示 codePoint 值表示是否需要编码
-     *
-     * @param c a
-     * @return a
-     */
+    /// 此方法会生成一个 128 位的 boolean 数组 索引表示 codePoint 值表示是否需要编码
+    ///
+    /// @param c a
+    /// @return a
     private static boolean[] initDontNeedEncoding(String... c) {
         var table = new boolean[128];
         for (var s : c) {

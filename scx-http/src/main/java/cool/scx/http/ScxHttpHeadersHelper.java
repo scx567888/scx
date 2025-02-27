@@ -2,12 +2,10 @@ package cool.scx.http;
 
 import java.util.regex.Pattern;
 
-/**
- * ScxHttpHeadersHelper
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ScxHttpHeadersHelper
+///
+/// @author scx567888
+/// @version 0.0.1
 public class ScxHttpHeadersHelper {
 
     public static final Pattern CRLF_PATTERN = Pattern.compile("\r\n");

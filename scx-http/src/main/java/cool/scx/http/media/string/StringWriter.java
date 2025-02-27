@@ -12,12 +12,10 @@ import java.nio.charset.Charset;
 import static cool.scx.http.MediaType.TEXT_PLAIN;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-/**
- * StringWriter
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// StringWriter
+///
+/// @author scx567888
+/// @version 0.0.1
 public class StringWriter implements MediaWriter {
 
     private final Charset charset;
