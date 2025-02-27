@@ -4,12 +4,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/**
- * CharacterTypeHandler
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// CharacterTypeHandler
+///
+/// @author scx567888
+/// @version 0.0.1
 public class CharacterTypeHandler extends PrimitiveTypeHandler<Character> {
 
     public CharacterTypeHandler(boolean isPrimitive) {

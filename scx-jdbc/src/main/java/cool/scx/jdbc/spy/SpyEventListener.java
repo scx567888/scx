@@ -4,12 +4,10 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-/**
- * SpyEventListener
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// SpyEventListener
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface SpyEventListener {
 
     default void onBeforeAddBatch(PreparedStatement statementInformation) {

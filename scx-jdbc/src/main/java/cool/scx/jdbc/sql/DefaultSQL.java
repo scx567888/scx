@@ -3,12 +3,10 @@ package cool.scx.jdbc.sql;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * 默认 问号形式 (?) 占位的 SQL
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 默认 问号形式 (?) 占位的 SQL
+///
+/// @author scx567888
+/// @version 0.0.1
 final class DefaultSQL implements SQL {
 
     private final String sql;

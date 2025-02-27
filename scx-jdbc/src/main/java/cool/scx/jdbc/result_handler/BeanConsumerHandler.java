@@ -7,12 +7,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.function.Consumer;
 
-/**
- * BeanConsumerHandler
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// BeanConsumerHandler
+///
+/// @author scx567888
+/// @version 0.0.1
 record BeanConsumerHandler<T>(BeanBuilder<T> beanBuilder, Consumer<T> consumer) implements ResultHandler<Void> {
 
     @Override

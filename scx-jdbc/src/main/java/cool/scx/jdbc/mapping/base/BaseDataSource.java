@@ -6,12 +6,10 @@ import cool.scx.jdbc.mapping.DataSource;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * 用于手动编写 DataSource
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 用于手动编写 DataSource
+///
+/// @author scx567888
+/// @version 0.0.1
 public class BaseDataSource implements DataSource {
 
     private final Map<String, BaseCatalog> catalogMap = new HashMap<>();

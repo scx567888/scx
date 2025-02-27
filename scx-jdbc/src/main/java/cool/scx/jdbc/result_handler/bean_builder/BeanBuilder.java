@@ -9,12 +9,10 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.function.Function;
 
-/**
- * BeanBuilder
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// BeanBuilder
+///
+/// @author scx567888
+/// @version 0.0.1
 public abstract class BeanBuilder<T> {
 
     private Dialect lastDialect;
@@ -31,13 +29,11 @@ public abstract class BeanBuilder<T> {
 
     abstract FieldSetter[] fieldSetters();
 
-    /**
-     * 返回 fieldSetters 索引对应的 rsm 的索引数组 若无对应则使用 -1 占位
-     *
-     * @param rsm rsm
-     * @return f
-     * @throws SQLException f
-     */
+    /// 返回 fieldSetters 索引对应的 rsm 的索引数组 若无对应则使用 -1 占位
+    ///
+    /// @param rsm rsm
+    /// @return f
+    /// @throws SQLException f
     public final int[] getIndexInfo(ResultSetMetaData rsm) throws SQLException {
         var count = rsm.getColumnCount();
         var nameIndexMap = new HashMap<String, Integer>();
@@ -52,11 +48,9 @@ public abstract class BeanBuilder<T> {
         return indexInfo;
     }
 
-    /**
-     * 绑定方言 增加性能
-     *
-     * @param dialect t
-     */
+    /// 绑定方言 增加性能
+    ///
+    /// @param dialect t
     public final void bindDialect(Dialect dialect) {
         //如果方言和上次相同 则不需要进行重复绑定
         if (lastDialect != dialect) {

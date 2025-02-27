@@ -4,12 +4,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/**
- * DoubleTypeHandler
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// DoubleTypeHandler
+///
+/// @author scx567888
+/// @version 0.0.1
 public class DoubleTypeHandler extends PrimitiveTypeHandler<Double> {
 
     public DoubleTypeHandler(boolean isPrimitive) {

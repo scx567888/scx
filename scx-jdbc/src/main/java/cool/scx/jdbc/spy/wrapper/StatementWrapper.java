@@ -6,12 +6,10 @@ import cool.scx.jdbc.spy.SpyWrapper;
 
 import java.sql.*;
 
-/**
- * StatementWrapper
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// StatementWrapper
+///
+/// @author scx567888
+/// @version 0.0.1
 public class StatementWrapper<T extends Statement> extends SpyWrapper<T> implements Statement {
 
     protected StatementWrapper(T delegate, SpyEventListener eventListener) {

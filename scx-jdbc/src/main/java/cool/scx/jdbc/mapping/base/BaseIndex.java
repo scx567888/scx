@@ -2,12 +2,10 @@ package cool.scx.jdbc.mapping.base;
 
 import cool.scx.jdbc.mapping.Index;
 
-/**
- * 用于手动编写 Index
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 用于手动编写 Index
+///
+/// @author scx567888
+/// @version 0.0.1
 public class BaseIndex implements Index {
 
     private String name;

@@ -6,13 +6,11 @@ import java.sql.SQLException;
 
 import static java.lang.System.Logger.Level.ERROR;
 
-/**
- * EnumTypeHandler
- * 此处不使用枚举序号而是使用枚举名称 是为了保证如果 后期 枚举修改了仍然能够对应读取
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// EnumTypeHandler
+/// 此处不使用枚举序号而是使用枚举名称 是为了保证如果 后期 枚举修改了仍然能够对应读取
+///
+/// @author scx567888
+/// @version 0.0.1
 public class EnumTypeHandler<E extends Enum<E>> implements TypeHandler<E> {
 
     private static final System.Logger logger = System.getLogger(EnumTypeHandler.class.getName());

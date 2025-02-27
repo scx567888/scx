@@ -1,20 +1,16 @@
 package cool.scx.jdbc;
 
-/**
- * JDBCHelper
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// JDBCHelper
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class JDBCHelper {
 
-    /**
-     * 格式化 SQL 和 参数, 使用简单的占位符替换方式 一般用来辅助编写 Dialect
-     *
-     * @param sql    sql
-     * @param params 参数
-     * @return sql
-     */
+    /// 格式化 SQL 和 参数, 使用简单的占位符替换方式 一般用来辅助编写 Dialect
+    ///
+    /// @param sql    sql
+    /// @param params 参数
+    /// @return sql
     public static String getSqlWithValues(String sql, Object[] params) {
         final StringBuilder sb = new StringBuilder();
 

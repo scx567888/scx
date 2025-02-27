@@ -6,12 +6,10 @@ import cool.scx.jdbc.mapping.Schema;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * 用于手动编写 Catalog
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 用于手动编写 Catalog
+///
+/// @author scx567888
+/// @version 0.0.1
 public class BaseCatalog implements Catalog {
 
     private final Map<String, BaseSchema> schemaMap = new HashMap<>();

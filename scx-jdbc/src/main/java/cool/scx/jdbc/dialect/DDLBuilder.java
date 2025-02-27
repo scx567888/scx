@@ -11,19 +11,15 @@ import java.util.stream.Collectors;
 
 import static cool.scx.common.util.StringUtils.notEmpty;
 
-/**
- * DDLBuilder
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// DDLBuilder
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface DDLBuilder {
 
-    /**
-     * 获取建表语句
-     *
-     * @return s
-     */
+    /// 获取建表语句
+    ///
+    /// @return s
     default String getCreateTableDDL(Table table) {
         var s = new StringBuilder();
         s.append("CREATE TABLE ");
@@ -88,9 +84,7 @@ public interface DDLBuilder {
         return defaultDateType();
     }
 
-    /**
-     * 当前列对象通常的 DDL 如设置 字段名 类型 是否可以为空 默认值等 (建表语句片段 , 需和 specialDDL 一起使用才完整)
-     */
+    /// 当前列对象通常的 DDL 如设置 字段名 类型 是否可以为空 默认值等 (建表语句片段 , 需和 specialDDL 一起使用才完整)
     default List<String> getColumnConstraint(Column column) {
         return new ArrayList<>();
     }
@@ -101,23 +95,19 @@ public interface DDLBuilder {
         return length != null ? dataType + "(" + length + ")" : dataType;
     }
 
-    /**
-     * 默认值
-     * todo 是否需要 ?
-     *
-     * @return 默认类型值
-     */
+    /// 默认值
+    /// todo 是否需要 ?
+    ///
+    /// @return 默认类型值
     default String defaultDateType() {
         return null;
     }
 
-    /**
-     * todo 暂时只支持添加新字段 需要同时支持 删除或修改
-     * 获取 AlertTableDDL
-     *
-     * @param needAdds  a
-     * @param tableInfo a
-     */
+    /// todo 暂时只支持添加新字段 需要同时支持 删除或修改
+    /// 获取 AlertTableDDL
+    ///
+    /// @param needAdds  a
+    /// @param tableInfo a
     default String getAlertTableDDL(Column[] needAdds, Table tableInfo) {
         var s = new StringBuilder();
         s.append("ALTER TABLE ");

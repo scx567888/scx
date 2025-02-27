@@ -10,12 +10,10 @@ import java.sql.Statement;
 
 import static cool.scx.jdbc.dialect._default.DefaultDDLBuilder.DEFAULT_DDL_BUILDER;
 
-/**
- * DefaultDialect
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// DefaultDialect
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class DefaultDialect extends Dialect {
 
     public static final Dialect DEFAULT_DIALECT = new DefaultDialect();

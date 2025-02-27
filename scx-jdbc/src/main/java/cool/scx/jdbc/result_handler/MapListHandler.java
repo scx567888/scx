@@ -10,12 +10,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-/**
- * MapListHandler
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// MapListHandler
+///
+/// @author scx567888
+/// @version 0.0.1
 record MapListHandler(Supplier<Map<String, Object>> mapSupplier) implements ResultHandler<List<Map<String, Object>>> {
 
     static final MapListHandler INSTANCE = new MapListHandler();

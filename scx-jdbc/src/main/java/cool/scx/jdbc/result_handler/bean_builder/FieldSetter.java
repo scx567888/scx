@@ -11,21 +11,17 @@ import java.util.stream.Stream;
 import static cool.scx.reflect.AccessModifier.PUBLIC;
 import static cool.scx.reflect.ClassType.RECORD;
 
-/**
- * FieldSetter
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// FieldSetter
+///
+/// @author scx567888
+/// @version 0.0.1
 final class FieldSetter {
 
     private final FieldInfo fieldInfo;
     private final String columnName;
     private TypeHandler<?> typeHandler;
 
-    /**
-     *
-     */
+    ///
     FieldSetter(FieldInfo fieldInfo, String columnName) {
         this.fieldInfo = fieldInfo;
         this.columnName = columnName;

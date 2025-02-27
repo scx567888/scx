@@ -7,12 +7,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/**
- * BigDecimalTypeHandler
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// BigDecimalTypeHandler
+///
+/// @author scx567888
+/// @version 0.0.1
 public class BigDecimalTypeHandler implements TypeHandler<BigDecimal> {
 
     @Override

@@ -7,12 +7,10 @@ import java.sql.SQLException;
 import static cool.scx.common.util.ArrayUtils.toPrimitive;
 import static cool.scx.common.util.ArrayUtils.toWrapper;
 
-/**
- * ByteObjectArrayTypeHandler
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ByteObjectArrayTypeHandler
+///
+/// @author scx567888
+/// @version 0.0.1
 public class ByteObjectArrayTypeHandler implements TypeHandler<Byte[]> {
 
     @Override

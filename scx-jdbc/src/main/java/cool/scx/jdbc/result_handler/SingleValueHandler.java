@@ -5,33 +5,23 @@ import cool.scx.jdbc.dialect.Dialect;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/**
- * SingleValueHandler
- *
- * @param <T> t
- * @author scx567888
- * @version 0.0.1
- */
+/// SingleValueHandler
+///
+/// @param <T> t
+/// @author scx567888
+/// @version 0.0.1
 final class SingleValueHandler<T> implements ResultHandler<T> {
 
-    /**
-     * 列索引
-     */
+    /// 列索引
     private final int columnIndex;
 
-    /**
-     * 列名
-     */
+    /// 列名
     private final String columnName;
 
-    /**
-     * 所需 class
-     */
+    /// 所需 class
     private final Class<T> clazz;
 
-    /**
-     * 使用名称还是索引
-     */
+    /// 使用名称还是索引
     private final boolean useName;
 
     public SingleValueHandler() {

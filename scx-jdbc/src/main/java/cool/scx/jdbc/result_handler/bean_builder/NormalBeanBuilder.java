@@ -10,12 +10,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.function.Function;
 
-/**
- * NormalBeanBuilder
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// NormalBeanBuilder
+///
+/// @author scx567888
+/// @version 0.0.1
 final class NormalBeanBuilder<T> extends BeanBuilder<T> {
 
     private final ConstructorInfo constructor;
@@ -31,12 +29,10 @@ final class NormalBeanBuilder<T> extends BeanBuilder<T> {
         this(type, Field::getName);
     }
 
-    /**
-     * 寻找 无参构造函数 (不支持成员类)
-     *
-     * @param classInfo c
-     * @return a
-     */
+    /// 寻找 无参构造函数 (不支持成员类)
+    ///
+    /// @param classInfo c
+    /// @return a
     private static ConstructorInfo checkDefaultConstructor(ClassInfo classInfo) {
         var defaultConstructor = classInfo.defaultConstructor();
         if (defaultConstructor == null) {

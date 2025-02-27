@@ -3,12 +3,10 @@ package cool.scx.jdbc.spy;
 import java.sql.SQLException;
 import java.sql.Wrapper;
 
-/**
- * SpyWrapper
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// SpyWrapper
+///
+/// @author scx567888
+/// @version 0.0.1
 public class SpyWrapper<W extends Wrapper> implements Wrapper {
 
     protected final W delegate;

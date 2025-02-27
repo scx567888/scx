@@ -5,12 +5,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-/**
- * 具名参数 SQL
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 具名参数 SQL
+///
+/// @author scx567888
+/// @version 0.0.1
 final class NamedSQL implements SQL {
 
     private final String sql;
@@ -56,9 +54,7 @@ final class NamedSQL implements SQL {
 
     private record NormalSQLParser(String normalSQL, String[] nameIndex) {
 
-        /**
-         * 具名参数匹配的正则表达式
-         */
+        /// 具名参数匹配的正则表达式
         private static final Pattern NAMED_SQL_PATTERN = Pattern.compile(":([\\w.-]+)");
 
         private static NormalSQLParser parse(String namedSQL) {

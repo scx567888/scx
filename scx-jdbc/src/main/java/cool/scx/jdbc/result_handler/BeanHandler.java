@@ -6,12 +6,10 @@ import cool.scx.jdbc.result_handler.bean_builder.BeanBuilder;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/**
- * BeanHandler
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// BeanHandler
+///
+/// @author scx567888
+/// @version 0.0.1
 record BeanHandler<T>(BeanBuilder<T> beanBuilder) implements ResultHandler<T> {
 
     @Override

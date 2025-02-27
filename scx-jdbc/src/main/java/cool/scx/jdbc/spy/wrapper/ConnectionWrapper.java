@@ -8,12 +8,10 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
-/**
- * ConnectionWrapper
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ConnectionWrapper
+///
+/// @author scx567888
+/// @version 0.0.1
 public class ConnectionWrapper extends SpyWrapper<Connection> implements Connection {
 
     public ConnectionWrapper(Connection connection, SpyEventListener eventListener) {
