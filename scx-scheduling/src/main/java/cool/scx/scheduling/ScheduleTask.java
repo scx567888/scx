@@ -7,14 +7,14 @@ import java.util.function.Consumer;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public interface ScheduleTask<T extends ScheduleTask<T>> {
+public interface ScheduleTask {
 
     /// 是否运行并发执行
     /// 运行并发执行的时候 当到达规定时间时 无论上一次任务是否结束 都会开启下一次任务
     ///
     /// @param concurrent 并发执行
     /// @return self
-    T concurrent(boolean concurrent);
+    ScheduleTask concurrent(boolean concurrent);
 
     /// 最大运行次数 (此参数不受并发影响)
     /// 注意 当 并行(concurrent) 设置为 false 的时候 也可以在任务内部 取消 如下
@@ -25,13 +25,13 @@ public interface ScheduleTask<T extends ScheduleTask<T>> {
     ///
     /// @param maxRunCount 最大运行次数
     /// @return self
-    T maxRunCount(long maxRunCount);
+    ScheduleTask maxRunCount(long maxRunCount);
 
     /// 过期策略
     ///
     /// @param expirationPolicy a
     /// @return a
-    T expirationPolicy(ExpirationPolicy expirationPolicy);
+    ScheduleTask expirationPolicy(ExpirationPolicy expirationPolicy);
 
     /// 执行器
     /// 默认会使用单例的 ScxScheduler
@@ -39,13 +39,13 @@ public interface ScheduleTask<T extends ScheduleTask<T>> {
     ///
     /// @param executor 执行器
     /// @return self
-    T executor(ScheduledExecutorService executor);
+    ScheduleTask executor(ScheduledExecutorService executor);
 
     /// 任务
     ///
     /// @param task 任务
     /// @return self
-    T task(Consumer<ScheduleStatus> task);
+    ScheduleTask task(Consumer<ScheduleStatus> task);
 
     /// 启动任务
     ///

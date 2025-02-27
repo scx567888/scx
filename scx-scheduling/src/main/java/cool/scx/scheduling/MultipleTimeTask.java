@@ -9,7 +9,7 @@ import java.util.function.Supplier;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public interface MultipleTimeTask extends ScheduleTask<MultipleTimeTask> {
+public interface MultipleTimeTask extends ScheduleTask {
 
     MultipleTimeTask startTime(Supplier<Instant> startTime);
 
