@@ -11,12 +11,10 @@ import java.lang.foreign.MemorySegment;
 
 import static java.lang.foreign.ValueLayout.*;
 
-/**
- * FFMHelper
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// FFMHelper
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class FFMHelper {
 
     public static MemoryLayout getMemoryLayout(Class<?> type) {

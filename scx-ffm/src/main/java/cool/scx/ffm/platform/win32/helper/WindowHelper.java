@@ -8,12 +8,10 @@ import java.util.List;
 import static cool.scx.ffm.platform.win32.User32.USER32;
 import static java.lang.foreign.ValueLayout.JAVA_LONG;
 
-/**
- * 简化操作 Window
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 简化操作 Window
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class WindowHelper {
 
     public static List<WindowInfo> FindAllWindow() throws Throwable {

@@ -15,13 +15,11 @@ import java.util.TreeMap;
 import static cool.scx.ffm.platform.win32.Advapi32.ADVAPI32;
 import static cool.scx.ffm.platform.win32.WinNT.*;
 
-/**
- * 简化操作 注册表
- * todo 代码待整理
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 简化操作 注册表
+/// todo 代码待整理
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class Advapi32Helper {
 
     public static TreeMap<String, Object> registryGetValues(int root, String keyPath) {

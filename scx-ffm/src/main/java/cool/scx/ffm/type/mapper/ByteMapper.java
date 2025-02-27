@@ -5,12 +5,10 @@ import java.lang.foreign.MemorySegment;
 
 import static java.lang.foreign.ValueLayout.JAVA_BYTE;
 
-/**
- * ByteMapper
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ByteMapper
+///
+/// @author scx567888
+/// @version 0.0.1
 public class ByteMapper implements Mapper {
 
     private byte value;

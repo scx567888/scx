@@ -2,12 +2,10 @@ package cool.scx.ffm.platform.c;
 
 import cool.scx.ffm.FFMProxy;
 
-/**
- * 提供一些 C 标准的接口
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 提供一些 C 标准的接口
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface C {
 
     C C = FFMProxy.ffmProxy(C.class);

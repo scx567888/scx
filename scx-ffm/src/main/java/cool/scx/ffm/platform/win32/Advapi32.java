@@ -1,18 +1,16 @@
 package cool.scx.ffm.platform.win32;
 
-import cool.scx.ffm.platform.win32.type.FILETIME;
+import cool.scx.ffm.platform.win32.WinBase.FILETIME;
 import cool.scx.ffm.type.mapper.IntMapper;
 
 import java.lang.foreign.MemorySegment;
 
 import static cool.scx.ffm.FFMProxy.ffmProxy;
 
-/**
- * 提供一些 Advapi32 标准的接口
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 提供一些 Advapi32 标准的接口
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface Advapi32 {
 
     Advapi32 ADVAPI32 = ffmProxy("Advapi32", Advapi32.class);

@@ -5,12 +5,10 @@ import java.lang.foreign.MemorySegment;
 
 import static java.lang.foreign.ValueLayout.JAVA_DOUBLE;
 
-/**
- * DoubleArrayMapper
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// DoubleArrayMapper
+///
+/// @author scx567888
+/// @version 0.0.1
 public class DoubleArrayMapper implements Mapper {
 
     private double[] value;

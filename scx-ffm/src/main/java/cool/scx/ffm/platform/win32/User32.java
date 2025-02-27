@@ -1,19 +1,17 @@
 package cool.scx.ffm.platform.win32;
 
-
-import cool.scx.ffm.platform.win32.type.RECT;
-import cool.scx.ffm.platform.win32.type.WNDENUMPROC;
+import cool.scx.ffm.platform.win32.WinDef.RECT;
+import cool.scx.ffm.platform.win32.WinUser.WNDENUMPROC;
 
 import java.lang.foreign.MemorySegment;
 
 import static cool.scx.ffm.FFMProxy.ffmProxy;
+import static cool.scx.ffm.platform.win32.WinUser.POINT;
 
-/**
- * 提供一些 User32 标准的接口
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 提供一些 User32 标准的接口
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface User32 {
 
     User32 USER32 = ffmProxy("user32", User32.class);
@@ -45,5 +43,9 @@ public interface User32 {
     boolean CloseWindow(MemorySegment hWnd);
 
     boolean GetWindowRect(MemorySegment hWnd, RECT lpRect);
+
+    boolean SetCursorPos(int x, int y);
+
+    boolean GetCursorPos(POINT lpPoint);
 
 }
