@@ -1,7 +1,7 @@
 package cool.scx.io.zip;
 
-import cool.scx.common.util.URIUtils;
 import cool.scx.common.util.FileUtils;
+import cool.scx.common.util.URIUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
