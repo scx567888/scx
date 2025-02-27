@@ -260,8 +260,31 @@ public final class SQLRunner {
     /// 注意 其中的操作会在另一个线程中执行 所以需要注意线程的操作
     /// 当抛出异常时 请使用 [#getRootCause(Throwable)] 来获取真正的异常
     /// 用法
-    /// <pre>
-    /// `假设有以下结构的数据表create table test (name varchar(32) null unique,);在连接消费者中传入要执行的操作SQLRunner sqlRunner = xxx;try{sqlRunner.autoTransaction(() ->{// 这句代码会正确执行sqlRunner.execute(NoParametersSQL.of("insert into test(name) values('uniqueName') "));// 这句会产生异常 这时上一个语句会进行回滚 (rollback) 同时将异常抛出sqlRunner.execute(NoParametersSQL.of("insert into test(name) values('uniqueName') "));});}catch (Exception e){//这里会捕获 getConnection 可能产生的 SQLException 和 autoTransaction 代码块中产生的所有异常//因为会进行多层包裹 所以建议使用 ScxExceptionHelper.getRootCause(e); 来获取真正的异常ScxExceptionHelper.getRootCause(e).printStackTrace();}`</pre>
+    /// 
+    /// ```sql
+    /// 假设有以下结构的数据表
+    /// create table test (
+    ///    name varchar(32) null unique,
+    /// );
+    ///
+    /// ```
+    /// ```java
+    ///在连接消费者中传入要执行的操作
+    /// SQLRunner sqlRunner = xxx;
+    /// try {
+    ///              sqlRunner.autoTransaction(() -> {
+    ///                  // 这句代码会正确执行
+    ///                  sqlRunner.execute(NoParametersSQL.of("insert into test(name) values('uniqueName') "));
+    ///                  // 这句会产生异常 这时上一个语句会进行回滚 (rollback) 同时将异常抛出
+    ///                  sqlRunner.execute(NoParametersSQL.of("insert into test(name) values('uniqueName') "));
+    ///              });
+    ///          } catch (Exception e) {
+    ///              //这里会捕获 getConnection 可能产生的 SQLException 和 autoTransaction 代码块中产生的所有异常
+    ///              //因为会进行多层包裹 所以建议使用 ScxExceptionHelper.getRootCause(e); 来获取真正的异常
+    ///              ScxExceptionHelper.getRootCause(e).printStackTrace();
+    ///          }
+    ///   }
+    /// ```
     ///
     /// @param handler 连接消费者
     public void autoTransaction(ScxRunnable<?> handler) {
