@@ -128,7 +128,7 @@ public class Http1xServerResponse extends OutputStream implements ScxHttpServerR
 
     @Override
     public void write(int b) throws IOException {
-        var a = new byte[] { (byte) b };
+        var a = new byte[]{(byte) b};
         write(a, 0, 1);
     }
 
@@ -138,7 +138,7 @@ public class Http1xServerResponse extends OutputStream implements ScxHttpServerR
 
         if (useChunkedTransfer) {
             // 发送分块
-            dataWriter.write(Integer.toUnsignedString(len,16).getBytes());  // 发送块大小
+            dataWriter.write(Integer.toUnsignedString(len, 16).getBytes());  // 发送块大小
             dataWriter.write(CRLF_BYTES);  // 块大小结束
             dataWriter.write(b, off, len);  // 发送数据块内容
             dataWriter.write(CRLF_BYTES);  // 分块结束符
