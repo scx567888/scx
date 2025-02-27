@@ -16,12 +16,10 @@ import static java.lang.foreign.Arena.global;
 import static java.lang.foreign.Linker.nativeLinker;
 import static java.lang.foreign.SymbolLookup.libraryLookup;
 
-/**
- * FFMHelper
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// FFMHelper
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class FFMProxy implements InvocationHandler {
 
     private final SymbolLookup lookup;
