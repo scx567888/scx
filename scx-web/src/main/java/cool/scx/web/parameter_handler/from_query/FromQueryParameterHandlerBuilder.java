@@ -15,7 +15,7 @@ public class FromQueryParameterHandlerBuilder implements ParameterHandlerBuilder
 
     @Override
     public ParameterHandler tryBuild(ParameterInfo parameter) {
-        var fromQuery = parameter.parameter().getAnnotation(FromQuery.class);
+        var fromQuery = parameter.findAnnotation(FromQuery.class);
         if (fromQuery == null) {
             return null;
         }

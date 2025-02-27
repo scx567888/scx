@@ -31,7 +31,7 @@ public final class FromUploadParameterHandler implements ParameterHandler {
         this.parameter = parameter;
         this.value = parameter.name();
         this.required = false;
-        var fromUpload = parameter.parameter().getAnnotation(FromUpload.class);
+        var fromUpload = parameter.findAnnotation(FromUpload.class);
         if (fromUpload != null) {
             var _value = getRealValue(fromUpload.value());
             if (_value != null) {

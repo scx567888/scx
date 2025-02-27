@@ -15,7 +15,7 @@ public final class FromPathParameterHandlerBuilder implements ParameterHandlerBu
 
     @Override
     public ParameterHandler tryBuild(ParameterInfo parameter) {
-        var fromPath = parameter.parameter().getAnnotation(FromPath.class);
+        var fromPath = parameter.findAnnotation(FromPath.class);
         if (fromPath == null) {
             return null;
         }

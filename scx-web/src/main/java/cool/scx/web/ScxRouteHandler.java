@@ -88,7 +88,7 @@ public final class ScxRouteHandler implements Route, Consumer<RoutingContext> {
             //2, 根据 method 参数获取 invoke 时的参数
             var methodParameters = this.scxWeb.buildMethodParameters(parameterHandlers, context);
             //3, 执行具体方法 (用来从请求中获取参数并执行反射调用方法以获取返回值)
-            var tempResult = this.method.method().invoke(this.instance, methodParameters);
+            var tempResult = this.method.invoke(this.instance, methodParameters);
             //4, 执行后置处理器
             var finalResult = this.scxWeb.interceptor().postHandle(context, this, tempResult);
             //5, 如果方法返回值不为 void 并且 response 可用 , 则调用返回值处理器
