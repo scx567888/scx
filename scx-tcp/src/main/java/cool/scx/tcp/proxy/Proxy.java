@@ -1,12 +1,10 @@
 package cool.scx.tcp.proxy;
 
-/**
- * 代理
- * todo 待完成
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 代理
+/// todo 待完成
+///
+/// @author scx567888
+/// @version 0.0.1
 public class Proxy {
 
     private boolean enabled;

@@ -1,4 +1,4 @@
-package cool.scx.tcp.tls;
+package cool.scx.tcp.tls_channel;
 
 import javax.net.ssl.SSLEngine;
 import javax.net.ssl.SSLException;
@@ -8,14 +8,12 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
 import static cool.scx.io.IOHelper.transferByteBuffer;
-import static cool.scx.tcp.tls.UnwrapResult.Status.*;
+import static cool.scx.tcp.tls_channel.UnwrapResult.Status.*;
 
-/**
- * TLSSocketChannel
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// TLSSocketChannel
+///
+/// @author scx567888
+/// @version 0.0.1
 public class TLSSocketChannel extends AbstractSocketChannel {
 
     private final SSLEngine sslEngine;

@@ -10,12 +10,10 @@ import java.io.UncheckedIOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
-/**
- * 经典 TCP Socket
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 经典 TCP Socket
+///
+/// @author scx567888
+/// @version 0.0.1
 public class ClassicTCPSocket implements ScxTCPSocket {
 
     private Socket socket;

@@ -1,4 +1,4 @@
-package cool.scx.tcp.tls;
+package cool.scx.tcp.tls_channel;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -8,12 +8,10 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.Set;
 
-/**
- * AbstractSocketChannel
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// AbstractSocketChannel
+///
+/// @author scx567888
+/// @version 0.0.1
 public abstract class AbstractSocketChannel extends SocketChannel {
 
     protected final SocketChannel socketChannel;

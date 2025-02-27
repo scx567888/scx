@@ -1,7 +1,7 @@
 package cool.scx.tcp;
 
 import cool.scx.tcp.tls.TLS;
-import cool.scx.tcp.tls.TLSSocketChannel;
+import cool.scx.tcp.tls_channel.TLSSocketChannel;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,12 +11,10 @@ import java.net.InetSocketAddress;
 import java.nio.channels.Channels;
 import java.nio.channels.SocketChannel;
 
-/**
- * NIO TCP Socket
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// NIO TCP Socket
+///
+/// @author scx567888
+/// @version 0.0.1
 public class NioTCPSocket implements ScxTCPSocket {
 
     private SocketChannel socketChannel;

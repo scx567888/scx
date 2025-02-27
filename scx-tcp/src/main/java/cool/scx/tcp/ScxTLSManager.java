@@ -4,12 +4,10 @@ import javax.net.ssl.SSLParameters;
 import java.util.List;
 import java.util.function.BiFunction;
 
-/**
- * ScxTLSManager
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ScxTLSManager
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface ScxTLSManager {
 
     void setUseClientMode(boolean mode);
@@ -27,6 +25,5 @@ public interface ScxTLSManager {
         sslParameters.setApplicationProtocols(protocols);
         setSSLParameters(sslParameters);
     }
-
 
 }

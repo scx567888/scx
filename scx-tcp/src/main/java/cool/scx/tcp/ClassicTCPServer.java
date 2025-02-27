@@ -11,12 +11,10 @@ import java.util.function.Consumer;
 import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.Logger.Level.TRACE;
 
-/**
- * 经典 TCP 服务器
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 经典 TCP 服务器
+///
+/// @author scx567888
+/// @version 0.0.1
 public class ClassicTCPServer implements ScxTCPServer {
 
     private static final Logger LOGGER = System.getLogger(ClassicTCPServer.class.getName());

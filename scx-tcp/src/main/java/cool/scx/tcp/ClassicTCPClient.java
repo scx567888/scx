@@ -5,12 +5,10 @@ import java.io.UncheckedIOException;
 import java.net.Socket;
 import java.net.SocketAddress;
 
-/**
- * 经典 TCP 客户端
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 经典 TCP 客户端
+///
+/// @author scx567888
+/// @version 0.0.1
 public class ClassicTCPClient implements ScxTCPClient {
 
     private final ScxTCPClientOptions options;

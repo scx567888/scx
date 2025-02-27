@@ -4,12 +4,10 @@ import cool.scx.tcp.tls.TLS;
 
 import java.net.InetSocketAddress;
 
-/**
- * ScxTCPServerOptions
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ScxTCPServerOptions
+///
+/// @author scx567888
+/// @version 0.0.1
 public class ScxTCPServerOptions {
 
     private InetSocketAddress localAddress;

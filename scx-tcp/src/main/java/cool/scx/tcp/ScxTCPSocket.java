@@ -8,12 +8,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 
-/**
- * ScxTCPSocket
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ScxTCPSocket
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface ScxTCPSocket extends Closeable {
 
     InputStream inputStream();
