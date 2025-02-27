@@ -12,20 +12,16 @@ import static cool.scx.common.util.ClassUtils.isEnum;
 import static cool.scx.jdbc.JDBCType.JSON;
 import static cool.scx.jdbc.JDBCType.VARCHAR;
 
-/**
- * 列过滤器
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 列过滤器
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class JDBCDaoHelper {
 
-    /**
-     * 过滤
-     *
-     * @param tableInfo 带过滤的列表
-     * @return 过滤后的列表
-     */
+    /// 过滤
+    ///
+    /// @param tableInfo 带过滤的列表
+    /// @return 过滤后的列表
     public static AnnotationConfigColumn[] filter(FieldFilter fieldFilter, AnnotationConfigTable tableInfo) {
         return fieldFilter.getFieldNames().length == 0 ?
                 switch (fieldFilter.getFilterMode()) {
@@ -50,24 +46,20 @@ public final class JDBCDaoHelper {
                 };
     }
 
-    /**
-     * 过滤
-     *
-     * @param entity    a
-     * @param tableInfo 带过滤的列表
-     * @return 过滤后的列表
-     */
+    /// 过滤
+    ///
+    /// @param entity    a
+    /// @param tableInfo 带过滤的列表
+    /// @return 过滤后的列表
     public static AnnotationConfigColumn[] filter(FieldFilter fieldFilter, Object entity, AnnotationConfigTable tableInfo) {
         return fieldFilter.getIgnoreNullValue() ? excludeIfFieldValueIsNull(entity, filter(fieldFilter, tableInfo)) : filter(fieldFilter, tableInfo);
     }
 
-    /**
-     * 过滤空值
-     *
-     * @param entity            e
-     * @param scxDaoColumnInfos s
-     * @return e
-     */
+    /// 过滤空值
+    ///
+    /// @param entity            e
+    /// @param scxDaoColumnInfos s
+    /// @return e
     private static AnnotationConfigColumn[] excludeIfFieldValueIsNull(Object entity, AnnotationConfigColumn... scxDaoColumnInfos) {
         return Arrays.stream(scxDaoColumnInfos).filter(field -> field.javaFieldValue(entity) != null).toArray(AnnotationConfigColumn[]::new);
     }

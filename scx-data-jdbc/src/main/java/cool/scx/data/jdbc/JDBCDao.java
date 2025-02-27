@@ -29,47 +29,31 @@ import static cool.scx.jdbc.result_handler.ResultHandler.*;
 import static cool.scx.jdbc.sql.SQL.sql;
 import static cool.scx.jdbc.sql.SQLBuilder.*;
 
-/**
- * 使用 JDBC 接口, 通过 SQL 操作关系型数据库的 DAO
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 使用 JDBC 接口, 通过 SQL 操作关系型数据库的 DAO
+///
+/// @author scx567888
+/// @version 0.0.1
 public class JDBCDao<Entity> implements Dao<Entity, Long> {
 
-    /**
-     * 实体类对应的 table 结构
-     */
+    /// 实体类对应的 table 结构
     protected final AnnotationConfigTable tableInfo;
 
-    /**
-     * 实体类 class 用于泛型转换
-     */
+    /// 实体类 class 用于泛型转换
     protected final Class<Entity> entityClass;
 
-    /**
-     * SQLRunner
-     */
+    /// SQLRunner
     protected final SQLRunner sqlRunner;
 
-    /**
-     * 实体类对应的 BeanListHandler
-     */
+    /// 实体类对应的 BeanListHandler
     protected final ResultHandler<List<Entity>> entityBeanListHandler;
 
-    /**
-     * 实体类对应的 BeanListHandler
-     */
+    /// 实体类对应的 BeanListHandler
     protected final ResultHandler<Entity> entityBeanHandler;
 
-    /**
-     * 查询 count 所用的 handler
-     */
+    /// 查询 count 所用的 handler
     protected final ResultHandler<Long> countResultHandler;
 
-    /**
-     * where 解析器
-     */
+    /// where 解析器
     protected final JDBCDaoWhereParser whereParser;
 
     protected final JDBCDaoGroupByParser groupByParser;
@@ -82,11 +66,9 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
 
     protected final BeanBuilder<Entity> beanBuilder;
 
-    /**
-     * a
-     *
-     * @param entityClass a
-     */
+    /// a
+    ///
+    /// @param entityClass a
     public JDBCDao(Class<Entity> entityClass, JDBCContext jdbcContext) {
         this.entityClass = entityClass;
         this.jdbcContext = jdbcContext;
@@ -216,67 +198,29 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
                 .GetSQL(jdbcContext.dialect());
     }
 
-    /**
-     * 构建 (根据聚合查询条件 {@link Query} 获取数据列表) 的SQL
-     * <br>
-     * 可用于另一条查询语句的 where 条件
-     * 用法<pre>{@code
-     *      // 假设有以下结构的两个实体类
-     *      public class Person {
-     *
-     *          // ID
-     *          public Long id;
-     *
-     *          // 关联的 汽车 ID
-     *          public Long carID;
-     *
-     *          // 年龄
-     *          public Integer age;
-     *
-     *      }
-     *      public class Car {
-     *
-     *          // ID
-     *          public Long id;
-     *
-     *          // 汽车 名称
-     *          public String name;
-     *
-     *      }
-     *      // 现在想做如下查询 根据所有 person 表中年龄小于 100 的 carID 查询 car 表中的数据
-     *      // 可以按照如下写法
-     *      var cars = carService._select(new Query().in("id",
-     *                 personService._buildSelectSQL(new Query().lessThan("age", 100), ColumnFilter.ofIncluded("carID")),
-     *                 ColumnFilter.ofExcluded()
-     *      ));
-     *      // 同时也支持 whereSQL 方法
-     *      // 这个写法和上方完全相同
-     *      var cars1 = carService._select(new Query().whereSQL("id IN ",
-     *                 personService._buildSelectSQL(new Query().lessThan("age", 100), ColumnFilter.ofIncluded("carID")),
-     *                 ColumnFilter.ofExcluded()
-     *      ));
-     *  }</pre>
-     * <br>
-     * 注意 !!! 若同时使用 limit 和 in/not in 请使用 {@link JDBCDao#buildSelectSQLWithAlias(Query, FieldFilter)}
-     *
-     * @param query        聚合查询参数对象
-     * @param selectFilter 查询字段过滤器
-     * @return selectSQL
-     */
+    /// 构建 (根据聚合查询条件 [Query] 获取数据列表) 的SQL
+    ///
+    /// 可用于另一条查询语句的 where 条件
+    /// 用法<pre>
+    /// `// 假设有以下结构的两个实体类public class Person{// IDpublic Long id;// 关联的 汽车 IDpublic Long carID;// 年龄public Integer age;}public class Car{// IDpublic Long id;// 汽车 名称public String name;}// 现在想做如下查询 根据所有 person 表中年龄小于 100 的 carID 查询 car 表中的数据// 可以按照如下写法var cars = carService._select(new Query().in("id",personService._buildSelectSQL(new Query().lessThan("age", 100), ColumnFilter.ofIncluded("carID")),ColumnFilter.ofExcluded()));// 同时也支持 whereSQL 方法// 这个写法和上方完全相同var cars1 = carService._select(new Query().whereSQL("id IN ",personService._buildSelectSQL(new Query().lessThan("age", 100), ColumnFilter.ofIncluded("carID")),ColumnFilter.ofExcluded()));`</pre>
+    ///
+    /// 注意 !!! 若同时使用 limit 和 in/not in 请使用 [#buildSelectSQLWithAlias(Query,FieldFilter)]
+    ///
+    /// @param query        聚合查询参数对象
+    /// @param selectFilter 查询字段过滤器
+    /// @return selectSQL
     public final SQL buildSelectSQL(Query query, FieldFilter selectFilter) {
         var whereClause = whereParser.parse(query.getWhere());
         var sql = _buildSelectSQL0(query, selectFilter, whereClause);
         return sql(sql, whereClause.params());
     }
 
-    /**
-     * 在 mysql 中 不支持 in 子句中包含 limit 但是我们可以使用 一个嵌套的别名表来跳过检查
-     * 此方法便是用于生成嵌套的 sql 的
-     *
-     * @param query        q
-     * @param selectFilter s
-     * @return a
-     */
+    /// 在 mysql 中 不支持 in 子句中包含 limit 但是我们可以使用 一个嵌套的别名表来跳过检查
+    /// 此方法便是用于生成嵌套的 sql 的
+    ///
+    /// @param query        q
+    /// @param selectFilter s
+    /// @return a
     public final SQL buildSelectSQLWithAlias(Query query, FieldFilter selectFilter) {
         var whereClause = whereParser.parse(query.getWhere());
         var sql0 = _buildSelectSQL0(query, selectFilter, whereClause);
@@ -305,14 +249,12 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
         return sql(sql, whereClause.params());
     }
 
-    /**
-     * 在 mysql 中 不支持 in 子句中包含 limit 但是我们可以使用 一个嵌套的别名表来跳过检查
-     * 此方法便是用于生成嵌套的 sql 的
-     *
-     * @param query        q
-     * @param selectFilter s
-     * @return a
-     */
+    /// 在 mysql 中 不支持 in 子句中包含 limit 但是我们可以使用 一个嵌套的别名表来跳过检查
+    /// 此方法便是用于生成嵌套的 sql 的
+    ///
+    /// @param query        q
+    /// @param selectFilter s
+    /// @return a
     public final SQL buildGetSQLWithAlias(Query query, FieldFilter selectFilter) {
         var whereClause = whereParser.parse(query.getWhere());
         var sql0 = _buildGetSQL0(query, selectFilter, whereClause);

@@ -5,12 +5,10 @@ import cool.scx.jdbc.mapping.Table;
 
 import static cool.scx.common.util.StringUtils.notBlank;
 
-/**
- * ColumnNameParser
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ColumnNameParser
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class ColumnNameParser {
 
     public static String parseColumnName(Table tableInfo, String name, boolean useJsonExtract, boolean useOriginalName) {
