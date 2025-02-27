@@ -55,8 +55,6 @@
         <module>scx-io</module>
         <module>scx-jdbc</module>
         <module>scx-jdbc-mysql</module>
-        <module>scx-jdbc-sql-server</module>
-        <module>scx-jdbc-sqlite</module>
         <module>scx-logging</module>
         <module>scx-reflect</module>
         <module>scx-scheduling</module>
