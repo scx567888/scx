@@ -3,12 +3,10 @@ package cool.scx.data.query;
 import cool.scx.common.util.ArrayUtils;
 import cool.scx.common.util.StringUtils;
 
-/**
- * WhereClause
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// WhereClause
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class WhereClause extends QueryLike<WhereClause> {
 
     private final String whereClause;
@@ -19,12 +17,10 @@ public final class WhereClause extends QueryLike<WhereClause> {
         this.params = params;
     }
 
-    /**
-     * 拼接
-     *
-     * @param other a
-     * @return a
-     */
+    /// 拼接
+    ///
+    /// @param other a
+    /// @return a
     public WhereClause concat(WhereClause other) {
         return new WhereClause(StringUtils.concat(whereClause, other.whereClause), ArrayUtils.concat(params, other.params));
     }

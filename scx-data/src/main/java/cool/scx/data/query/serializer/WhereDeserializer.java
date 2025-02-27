@@ -8,12 +8,10 @@ import java.util.ArrayList;
 
 import static cool.scx.common.util.ObjectUtils.convertValue;
 
-/**
- * WhereDeserializer
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// WhereDeserializer
+///
+/// @author scx567888
+/// @version 0.0.1
 public class WhereDeserializer {
 
     public Object deserialize(JsonNode v) {

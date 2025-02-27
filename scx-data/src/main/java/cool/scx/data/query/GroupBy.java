@@ -4,12 +4,10 @@ import static cool.scx.common.util.StringUtils.isBlank;
 import static cool.scx.data.query.QueryOption.Info;
 import static cool.scx.data.query.QueryOption.ofInfo;
 
-/**
- * GroupBy
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// GroupBy
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class GroupBy extends QueryLike<GroupBy> {
 
     private final String name;

@@ -8,12 +8,10 @@ import java.util.ArrayList;
 
 import static cool.scx.common.util.ObjectUtils.convertValue;
 
-/**
- * GroupByDeserializer
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// GroupByDeserializer
+///
+/// @author scx567888
+/// @version 0.0.1
 public class GroupByDeserializer {
 
     public Object deserialize(JsonNode v) {

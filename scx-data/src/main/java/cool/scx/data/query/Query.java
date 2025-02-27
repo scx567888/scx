@@ -1,11 +1,9 @@
 package cool.scx.data.query;
 
-/**
- * Query
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// Query
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface Query {
 
     Query where(Object... whereClauses);

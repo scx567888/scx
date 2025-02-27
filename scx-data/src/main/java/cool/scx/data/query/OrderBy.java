@@ -4,12 +4,10 @@ import static cool.scx.common.util.StringUtils.isBlank;
 import static cool.scx.data.query.QueryOption.Info;
 import static cool.scx.data.query.QueryOption.ofInfo;
 
-/**
- * OrderBy
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// OrderBy
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class OrderBy extends QueryLike<OrderBy> {
 
     private final String name;
@@ -28,13 +26,11 @@ public final class OrderBy extends QueryLike<OrderBy> {
         this.info = info;
     }
 
-    /**
-     * 添加一个排序字段
-     *
-     * @param name        排序字段的名称 (默认是实体类的字段名 , 不是数据库中的字段名)
-     * @param orderByType 排序类型 正序或倒序
-     * @param options     配置
-     */
+    /// 添加一个排序字段
+    ///
+    /// @param name        排序字段的名称 (默认是实体类的字段名 , 不是数据库中的字段名)
+    /// @param orderByType 排序类型 正序或倒序
+    /// @param options     配置
     public OrderBy(String name, OrderByType orderByType, QueryOption... options) {
         this(name, orderByType, ofInfo(options));
     }

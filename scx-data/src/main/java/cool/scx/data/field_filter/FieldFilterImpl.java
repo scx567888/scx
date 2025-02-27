@@ -5,12 +5,10 @@ import java.util.Set;
 
 import static java.util.Collections.addAll;
 
-/**
- * 字段过滤器
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 字段过滤器
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class FieldFilterImpl implements FieldFilter {
 
     private final FilterMode filterMode;

@@ -3,12 +3,10 @@ package cool.scx.data.query;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * QueryImpl
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// QueryImpl
+///
+/// @author scx567888
+/// @version 0.0.1
 public class QueryImpl implements Query {
 
     private final List<Object> where;
