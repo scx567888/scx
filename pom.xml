@@ -49,7 +49,6 @@
         <module>scx-config</module>
         <module>scx-data</module>
         <module>scx-data-jdbc</module>
-        <module>scx-data-mysql-x</module>
         <module>scx-ffm</module>
         <module>scx-http</module>
         <module>scx-http-x</module>
