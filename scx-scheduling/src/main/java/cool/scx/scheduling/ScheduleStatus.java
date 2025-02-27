@@ -1,5 +1,7 @@
 package cool.scx.scheduling;
 
+import java.time.Instant;
+
 /// 调度状态
 ///
 /// @author scx567888
@@ -12,6 +14,16 @@ public interface ScheduleStatus {
     ///
     /// @return c
     long runCount();
+
+    /// 下一次运行的时间
+    ///
+    /// @return c
+    Instant nextRunTime();
+
+    /// 指定次数后运行的时间
+    ///
+    /// @return c
+    Instant nextRunTime(int count);
 
     /// 取消任务 (有两种情况)
     /// 1, 当作为 task 回调参数时可用来取消下一次未执行的任务
