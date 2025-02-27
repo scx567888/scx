@@ -18,6 +18,7 @@ final class Http1xHelper {
     public static final byte[] CONTINUE_100 = "HTTP/1.1 100 Continue\r\n\r\n".getBytes(StandardCharsets.UTF_8);
     public static final byte[] CRLF_BYTES = "\r\n".getBytes();
     public static final byte[] CRLF_CRLF_BYTES = "\r\n\r\n".getBytes();
+    public static final byte[] CHUNKED_END_BYTES = "0\r\n\r\n".getBytes();
 
     public static boolean checkIsWebSocketHandshake(Http1xRequestLine requestLine, ScxHttpHeaders headers) {
         if (requestLine.method() == GET) {
@@ -58,6 +59,10 @@ final class Http1xHelper {
 
     public static void sendContinue100(OutputStream out) throws IOException {
         out.write(CONTINUE_100);
+    }
+
+    public static void sendChunkedEnd(OutputStream out) throws IOException {
+        out.write(CHUNKED_END_BYTES);
     }
 
     public static void consumeInputStream(InputStream inputStream) {

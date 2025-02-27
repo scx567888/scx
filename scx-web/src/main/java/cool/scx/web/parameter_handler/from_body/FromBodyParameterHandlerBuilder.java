@@ -15,7 +15,7 @@ public final class FromBodyParameterHandlerBuilder implements ParameterHandlerBu
 
     @Override
     public ParameterHandler tryBuild(ParameterInfo parameter) {
-        var fromBody = parameter.parameter().getAnnotation(FromBody.class);
+        var fromBody = parameter.findAnnotation(FromBody.class);
         if (fromBody == null) {
             return null;
         }

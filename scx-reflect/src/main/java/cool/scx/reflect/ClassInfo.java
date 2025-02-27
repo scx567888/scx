@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JavaType;
 
 import java.lang.annotation.Annotation;
 
-import static cool.scx.reflect.Helper.*;
+import static cool.scx.reflect.ReflectHelper.*;
 import static java.lang.reflect.AccessFlag.FINAL;
 import static java.lang.reflect.AccessFlag.STATIC;
 
@@ -12,9 +12,10 @@ import static java.lang.reflect.AccessFlag.STATIC;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public final class ClassInfo {
+public final class ClassInfo implements AnnotatedElementInfo {
 
     private final JavaType type;
+    private final String name;
     private final AccessModifier accessModifier;
     private final ClassType classType;
     private final ClassInfo superClass;
@@ -40,6 +41,7 @@ public final class ClassInfo {
     ClassInfo(JavaType type) {
         this.type = type;
         var rawClass = type.getRawClass();
+        this.name = rawClass.getName();
         var accessFlags = rawClass.accessFlags();
         this.accessModifier = _findAccessModifier(accessFlags);
         this.classType = _findClassType(rawClass, accessFlags);
@@ -52,7 +54,7 @@ public final class ClassInfo {
         this.allFields = _findAllFieldInfos(this);
         this.methods = _findMethodInfos(this);
         this.allMethods = _findAllMethodInfos(this);
-        this.annotations = _findAnnotations(rawClass);
+        this.annotations = rawClass.getDeclaredAnnotations();
         this.allAnnotations = _findAllAnnotations(this);
         this.isFinal = accessFlags.contains(FINAL);
         this.isStatic = accessFlags.contains(STATIC);
@@ -67,6 +69,10 @@ public final class ClassInfo {
     /// Java Type 这里我们使用 Jackson 的 JavaType 来方便进行诸如序列化等操作
     public JavaType type() {
         return type;
+    }
+
+    public String name() {
+        return name;
     }
 
     /// 类修饰符
@@ -124,12 +130,12 @@ public final class ClassInfo {
         return allMethods;
     }
 
-    /// 注解
+    @Override
     public Annotation[] annotations() {
         return annotations;
     }
 
-    /// 获取类所有的注解 包括继承自父类的注解
+    @Override
     public Annotation[] allAnnotations() {
         return allAnnotations;
     }

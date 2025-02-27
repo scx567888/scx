@@ -25,8 +25,8 @@ import cool.scx.logging.ScxLoggerConfig;
 import cool.scx.logging.ScxLoggerFactory;
 import cool.scx.logging.recorder.ConsoleRecorder;
 import cool.scx.logging.recorder.FileRecorder;
+import cool.scx.reflect.ClassInfoFactory;
 import cool.scx.reflect.MethodType;
-import cool.scx.reflect.ReflectHelper;
 import cool.scx.scheduling.ScxScheduling;
 import cool.scx.web.annotation.ScxRoute;
 import cool.scx.web.annotation.ScxWebSocketRoute;
@@ -129,7 +129,7 @@ public final class ScxHelper {
 
     @SuppressWarnings("unchecked")
     public static <Entity extends BaseModel> Class<Entity> findBaseModelServiceEntityClass(Class<?> baseModelServiceClass) {
-        var superClass = ReflectHelper.getClassInfo(baseModelServiceClass).findSuperType(BaseModelService.class);
+        var superClass = ClassInfoFactory.getClassInfo(baseModelServiceClass).findSuperType(BaseModelService.class);
         if (superClass != null) {
             var boundType = superClass.type().getBindings().getBoundType(0);
             if (boundType != null) {
@@ -223,7 +223,7 @@ public final class ScxHelper {
         var beanDefinitionNames = beanFactory.getBeanDefinitionNames();
         for (var beanDefinitionName : beanDefinitionNames) {
             var bean = beanFactory.getBean(beanDefinitionName);
-            var classInfo = ReflectHelper.getClassInfo(bean.getClass());
+            var classInfo = ClassInfoFactory.getClassInfo(bean.getClass());
             for (var method : classInfo.methods()) {
                 if (method.accessModifier() != PUBLIC) {
                     continue;
@@ -237,7 +237,7 @@ public final class ScxHelper {
                     if (method.parameters().length != 0) {
                         Scx.logger.log(ERROR,
                                 "被 Scheduled 注解标识的方法不可以有参数 Class [{0}] , Method [{1}]",
-                                classInfo.type().getRawClass().getName(),
+                                classInfo.name(),
                                 method.name()
                         );
                         break;
@@ -247,7 +247,7 @@ public final class ScxHelper {
                                 .expression(scheduled.cron())
                                 .start(c -> {
                                     try {
-                                        method.method().invoke(null);
+                                        method.invoke(null);
                                     } catch (Exception e) {
                                         throw new RuntimeException(e);
                                     }
@@ -257,7 +257,7 @@ public final class ScxHelper {
                                 .expression(scheduled.cron())
                                 .start(c -> {
                                     try {
-                                        method.method().invoke(bean);
+                                        method.invoke(bean);
                                     } catch (Exception e) {
                                         throw new RuntimeException(e);
                                     }

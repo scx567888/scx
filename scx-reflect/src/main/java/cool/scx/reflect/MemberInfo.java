@@ -1,7 +1,7 @@
 package cool.scx.reflect;
 
 ///  类成员接口
-public interface MemberInfo {
+public interface MemberInfo extends AnnotatedElementInfo {
 
     ClassInfo classInfo();
 

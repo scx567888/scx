@@ -3,9 +3,10 @@ package cool.scx.reflect;
 import com.fasterxml.jackson.databind.JavaType;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import static cool.scx.reflect.Helper.*;
+import static cool.scx.reflect.ReflectHelper.*;
 import static java.lang.reflect.AccessFlag.FINAL;
 
 /// MethodInfo
@@ -45,8 +46,22 @@ public final class MethodInfo implements ExecutableInfo {
         return method;
     }
 
+    public Object invoke(Object obj, Object... args) throws InvocationTargetException, IllegalAccessException {
+        return method.invoke(obj, args);
+    }
+
+    @Override
+    public ClassInfo classInfo() {
+        return classInfo;
+    }
+
     public String name() {
         return name;
+    }
+
+    @Override
+    public AccessModifier accessModifier() {
+        return accessModifier;
     }
 
     public MethodType methodType() {
@@ -57,14 +72,21 @@ public final class MethodInfo implements ExecutableInfo {
         return returnType;
     }
 
+    @Override
+    public ParameterInfo[] parameters() {
+        return parameters;
+    }
+
     public MethodInfo superMethod() {
         return superMethod;
     }
 
+    @Override
     public Annotation[] annotations() {
         return annotations;
     }
 
+    @Override
     public Annotation[] allAnnotations() {
         return allAnnotations;
     }
@@ -74,23 +96,8 @@ public final class MethodInfo implements ExecutableInfo {
     }
 
     @Override
-    public ClassInfo classInfo() {
-        return classInfo;
-    }
-
-    @Override
-    public AccessModifier accessModifier() {
-        return accessModifier;
-    }
-
-    @Override
     public void setAccessible(boolean flag) {
         method.setAccessible(flag);
-    }
-
-    @Override
-    public ParameterInfo[] parameters() {
-        return parameters;
     }
 
 }

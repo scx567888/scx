@@ -5,8 +5,9 @@ import cool.scx.http.*;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import static cool.scx.http.HttpFieldName.CONNECTION;
-import static cool.scx.http.HttpFieldName.SERVER;
+import static cool.scx.http.HttpFieldName.*;
+import static cool.scx.http.x.http1x.Http1xHelper.CRLF_BYTES;
+import static cool.scx.http.x.http1x.Http1xHelper.sendChunkedEnd;
 
 /**
  * todo 待完成
@@ -22,6 +23,7 @@ public class Http1xServerResponse extends OutputStream implements ScxHttpServerR
     private final OutputStream dataWriter;
     private HttpStatusCode status;
     private boolean firstSend;
+    private boolean useChunkedTransfer;
 
     Http1xServerResponse(Http1xServerConnection connection, Http1xServerRequest request) {
         this.connection = connection;
@@ -30,6 +32,7 @@ public class Http1xServerResponse extends OutputStream implements ScxHttpServerR
         this.status = HttpStatusCode.OK;
         this.headers = ScxHttpHeaders.of();
         this.firstSend = true;
+        this.useChunkedTransfer = false;
     }
 
     @Override
@@ -60,7 +63,13 @@ public class Http1xServerResponse extends OutputStream implements ScxHttpServerR
 
     @Override
     public void end() {
-
+        if (useChunkedTransfer) {
+            try {
+                sendChunkedEnd(dataWriter);
+            } catch (Exception e) {
+                throw new CloseConnectionException();
+            }
+        }
     }
 
     @Override
@@ -91,6 +100,11 @@ public class Http1xServerResponse extends OutputStream implements ScxHttpServerR
             headers.set(SERVER, "SCX");
         }
 
+        //这里 如果用户没有设置相应长度 我们采用 默认 分块传输
+        if (headers.contentLength() == null) {
+            headers.set(TRANSFER_ENCODING, "chunked");
+            this.useChunkedTransfer = true;
+        }
 
         var headerStr = headers.encode();
 
@@ -114,20 +128,24 @@ public class Http1xServerResponse extends OutputStream implements ScxHttpServerR
 
     @Override
     public void write(int b) throws IOException {
-        checkFirstSend();
-        dataWriter.write(b);
-    }
-
-    @Override
-    public void write(byte[] b) throws IOException {
-        checkFirstSend();
-        dataWriter.write(b);
+        var a = new byte[]{(byte) b};
+        write(a, 0, 1);
     }
 
     @Override
     public void write(byte[] b, int off, int len) throws IOException {
         checkFirstSend();
-        dataWriter.write(b, off, len);
+
+        if (useChunkedTransfer) {
+            // 发送分块
+            dataWriter.write(Integer.toUnsignedString(len, 16).getBytes());  // 发送块大小
+            dataWriter.write(CRLF_BYTES);  // 块大小结束
+            dataWriter.write(b, off, len);  // 发送数据块内容
+            dataWriter.write(CRLF_BYTES);  // 分块结束符
+        } else {
+            dataWriter.write(b, off, len);
+        }
+
     }
 
     @Override

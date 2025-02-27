@@ -2,8 +2,8 @@ package cool.scx.ffm.type.paramter;
 
 import cool.scx.ffm.type.struct.Struct;
 import cool.scx.reflect.AccessModifier;
+import cool.scx.reflect.ClassInfoFactory;
 import cool.scx.reflect.FieldInfo;
-import cool.scx.reflect.ReflectHelper;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemoryLayout;
@@ -33,7 +33,7 @@ public class StructParameter implements Parameter {
 
     public StructParameter(Struct value) {
         this.value = value;
-        var classInfo = ReflectHelper.getClassInfo(this.value.getClass());
+        var classInfo = ClassInfoFactory.getClassInfo(this.value.getClass());
         this.fieldMap = new HashMap<>();
         //1, 寻找 public 的 fields
         var field = Arrays.stream(classInfo.fields()).filter(c -> c.accessModifier() == AccessModifier.PUBLIC).toList();

@@ -1,7 +1,7 @@
 package cool.scx.ffm.type.paramter;
 
 import cool.scx.ffm.type.callback.Callback;
-import cool.scx.reflect.ReflectHelper;
+import cool.scx.reflect.ClassInfoFactory;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.FunctionDescriptor;
@@ -29,7 +29,7 @@ public class CallbackParameter implements Parameter {
     public CallbackParameter(Callback callback) throws NoSuchMethodException, IllegalAccessException {
         this.callback = callback;
         var cc = callback.getClass().getInterfaces()[0];
-        var s = ReflectHelper.getClassInfo(cc);
+        var s = ClassInfoFactory.getClassInfo(cc);
         var methodInfo = Arrays.stream(s.methods())
                 .filter(method -> callback.callbackMethodName().equals(method.name()))
                 .findFirst()
