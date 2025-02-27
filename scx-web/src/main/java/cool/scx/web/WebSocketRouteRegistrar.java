@@ -1,10 +1,10 @@
 package cool.scx.web;
 
-import cool.scx.common.util.ClassUtils;
 import cool.scx.common.util.URIUtils;
 import cool.scx.http.routing.Route;
 import cool.scx.http.routing.Router;
 import cool.scx.http.web_socket.ScxServerWebSocketHandshakeRequest;
+import cool.scx.reflect.ClassUtils;
 import cool.scx.web.annotation.ScxWebSocketRoute;
 
 import java.util.Arrays;
