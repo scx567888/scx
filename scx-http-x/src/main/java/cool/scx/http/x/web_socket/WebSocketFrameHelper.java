@@ -9,13 +9,11 @@ import java.util.ArrayList;
 
 import static cool.scx.http.web_socket.WebSocketCloseInfo.TOO_BIG;
 
-/**
- * WebSocketFrameHelper
- *
- * @author scx567888
- * @version 0.0.1
- * @see <a href="https://www.rfc-editor.org/rfc/rfc6455">https://www.rfc-editor.org/rfc/rfc6455</a>
- */
+/// WebSocketFrameHelper
+///
+/// @author scx567888
+/// @version 0.0.1
+/// @see <a href="https://www.rfc-editor.org/rfc/rfc6455">https://www.rfc-editor.org/rfc/rfc6455</a>
 public class WebSocketFrameHelper {
 
     public static WebSocketFrame readFrameHeader(DataReader reader) {

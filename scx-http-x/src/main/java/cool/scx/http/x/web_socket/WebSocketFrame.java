@@ -2,13 +2,11 @@ package cool.scx.http.x.web_socket;
 
 import cool.scx.http.web_socket.WebSocketOpCode;
 
-/**
- * WebSocketFrame
- *
- * @author scx567888
- * @version 0.0.1
- * @see <a href="https://www.rfc-editor.org/rfc/rfc6455">https://www.rfc-editor.org/rfc/rfc6455</a>
- */
+/// WebSocketFrame
+///
+/// @author scx567888
+/// @version 0.0.1
+/// @see <a href="https://www.rfc-editor.org/rfc/rfc6455">https://www.rfc-editor.org/rfc/rfc6455</a>
 public final class WebSocketFrame {
 
     private final boolean fin;

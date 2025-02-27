@@ -5,12 +5,10 @@ import cool.scx.http.uri.ScxURI;
 import cool.scx.http.web_socket.ScxServerWebSocketHandshakeRequest;
 import cool.scx.http.web_socket.ScxServerWebSocketHandshakeResponse;
 
-/**
- * 基于 http1 的 websocket 握手请求
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 基于 http1 的 websocket 握手请求
+///
+/// @author scx567888
+/// @version 0.0.1
 public class Http1xServerWebSocketHandshakeRequest implements ScxServerWebSocketHandshakeRequest {
 
     public final Http1xServerRequest request;

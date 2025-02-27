@@ -5,12 +5,10 @@ import cool.scx.http.x.web_socket.WebSocketOptions;
 import cool.scx.tcp.ScxTCPClientOptions;
 import cool.scx.tcp.tls.TLS;
 
-/**
- * XHttpClientOptions
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// XHttpClientOptions
+///
+/// @author scx567888
+/// @version 0.0.1
 public class XHttpClientOptions {
 
     private final ScxTCPClientOptions tcpClientOptions;// TCP 客户端 配置

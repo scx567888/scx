@@ -9,12 +9,10 @@ import cool.scx.http.web_socket.ScxClientWebSocketHandshakeRequest;
 
 import static cool.scx.http.HttpMethod.*;
 
-/**
- * ScxHttpClientHelper
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ScxHttpClientHelper
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class ScxHttpClientHelper {
 
     public static final ScxHttpClient DEFAULT_HTTP_CLIENT = new XHttpClient();

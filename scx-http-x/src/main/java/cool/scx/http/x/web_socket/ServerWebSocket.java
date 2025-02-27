@@ -9,12 +9,10 @@ import cool.scx.tcp.ScxTCPSocket;
 
 import java.io.OutputStream;
 
-/**
- * X ServerWebSocket
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// X ServerWebSocket
+///
+/// @author scx567888
+/// @version 0.0.1
 public class ServerWebSocket extends WebSocket implements ScxServerWebSocket {
 
     private final Http1xServerWebSocketHandshakeRequest handshakeRequest;

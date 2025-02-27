@@ -3,12 +3,10 @@ package cool.scx.http.x.http2.hpack;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * HPACK 静态霍夫曼编码表，取自 RFC 7541 附录 B。
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// HPACK 静态霍夫曼编码表，取自 RFC 7541 附录 B。
+///
+/// @author scx567888
+/// @version 0.0.1
 public class HPACKHuffmanTable {
 
     public static final Map<Character, String> HPACK_HUFFMAN_TABLE = initTable();

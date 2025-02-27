@@ -12,12 +12,10 @@ import java.io.UncheckedIOException;
 
 import static cool.scx.http.x.web_socket.WebSocketFrameHelper.writeFrame;
 
-/**
- * ClientWebSocket
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ClientWebSocket
+///
+/// @author scx567888
+/// @version 0.0.1
 public class ClientWebSocket extends WebSocket implements ScxClientWebSocket {
 
     public ClientWebSocket(ScxTCPSocket tcpSocket, DataReader reader, OutputStream writer, WebSocketOptions options) {

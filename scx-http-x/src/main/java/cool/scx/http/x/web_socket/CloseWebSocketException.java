@@ -1,6 +1,6 @@
 package cool.scx.http.x.web_socket;
 
-// WebSocket 消息 太大异常
+/// WebSocket 消息 太大异常
 class CloseWebSocketException extends RuntimeException {
 
     private final int closeCode;

@@ -2,12 +2,10 @@ package cool.scx.http.x.http1x;
 
 import cool.scx.http.*;
 
-/**
- * Http1xClientResponse
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// Http1xClientResponse
+///
+/// @author scx567888
+/// @version 0.0.1
 public class Http1xClientResponse implements ScxHttpClientResponse {
 
     private final HttpStatusCode status;

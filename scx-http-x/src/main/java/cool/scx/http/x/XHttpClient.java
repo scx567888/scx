@@ -16,12 +16,10 @@ import java.io.IOException;
 import static cool.scx.http.x.XHttpClientHelper.checkIsTLS;
 import static cool.scx.http.x.XHttpClientHelper.getRemoteAddress;
 
-/**
- * todo 待完成
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// todo 待完成
+///
+/// @author scx567888
+/// @version 0.0.1
 public class XHttpClient implements ScxHttpClient {
 
     private final XHttpClientOptions options;

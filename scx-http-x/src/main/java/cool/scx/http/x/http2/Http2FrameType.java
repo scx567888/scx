@@ -1,8 +1,6 @@
 package cool.scx.http.x.http2;
 
-/**
- * @see <a href="https://www.rfc-editor.org/rfc/rfc9113.html#name-frame-definitions">https://www.rfc-editor.org/rfc/rfc9113.html#name-frame-definitions</a>
- */
+/// @see <a href="https://www.rfc-editor.org/rfc/rfc9113.html#name-frame-definitions">https://www.rfc-editor.org/rfc/rfc9113.html#name-frame-definitions</a>
 public enum Http2FrameType {
 
     DATA(0x00),
@@ -16,9 +14,7 @@ public enum Http2FrameType {
     WINDOW_UPDATE(0x08),
     CONTINUATION(0x09);
 
-    /**
-     * 存储 code 和 对应枚举的映射
-     */
+    /// 存储 code 和 对应枚举的映射
     private static final Http2FrameType[] MAP = initMap();
 
     private final byte code;

@@ -15,12 +15,10 @@ import static cool.scx.http.x.web_socket.WebSocketFrameHelper.parseCloseInfo;
 import static cool.scx.http.x.web_socket.WebSocketFrameHelper.writeFrame;
 import static java.lang.System.Logger.Level.ERROR;
 
-/**
- * WebSocket
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// WebSocket
+///
+/// @author scx567888
+/// @version 0.0.1
 public class WebSocket extends AbstractWebSocket {
 
     private static final System.Logger LOGGER = System.getLogger(WebSocket.class.getName());

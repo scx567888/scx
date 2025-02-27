@@ -3,12 +3,10 @@ package cool.scx.http.x.http1x;
 import java.io.IOException;
 import java.io.OutputStream;
 
-/**
- * NoCloseOutputStream
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// NoCloseOutputStream
+///
+/// @author scx567888
+/// @version 0.0.1
 public class NoCloseOutputStream extends OutputStream {
 
     private final OutputStream out;

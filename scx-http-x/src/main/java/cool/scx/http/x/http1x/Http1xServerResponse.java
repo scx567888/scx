@@ -9,12 +9,10 @@ import static cool.scx.http.HttpFieldName.*;
 import static cool.scx.http.x.http1x.Http1xHelper.CRLF_BYTES;
 import static cool.scx.http.x.http1x.Http1xHelper.sendChunkedEnd;
 
-/**
- * todo 待完成
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// todo 待完成
+///
+/// @author scx567888
+/// @version 0.0.1
 public class Http1xServerResponse extends OutputStream implements ScxHttpServerResponse {
 
     private final Http1xServerConnection connection;
@@ -63,6 +61,7 @@ public class Http1xServerResponse extends OutputStream implements ScxHttpServerR
 
     @Override
     public void end() {
+        //分块传输别忘了最后的 终结块
         if (useChunkedTransfer) {
             try {
                 sendChunkedEnd(dataWriter);
