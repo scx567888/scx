@@ -273,7 +273,7 @@ final class ReflectHelper {
                 _hasSameParameterTypes(rootMethod, candidateMethod);
     }
 
-    private static boolean _hasSameParameterTypes(MethodInfo rootMethod, MethodInfo candidateMethod) {
+    private static boolean _hasSameParameterTypes(ExecutableInfo rootMethod, ExecutableInfo candidateMethod) {
         if (candidateMethod.parameters().length != rootMethod.parameters().length) {
             return false;
         }
@@ -289,7 +289,7 @@ final class ReflectHelper {
         return true;
     }
 
-    private static boolean _hasSameParameterTypes(ConstructorInfo constructorInfo, JavaType[] types) {
+    private static boolean _hasSameParameterTypes(ExecutableInfo constructorInfo, JavaType[] types) {
         if (constructorInfo.parameters().length != types.length) {
             return false;
         }

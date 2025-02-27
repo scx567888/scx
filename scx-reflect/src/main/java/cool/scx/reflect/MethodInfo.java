@@ -61,10 +61,6 @@ public final class MethodInfo implements ExecutableInfo {
         return superMethod;
     }
 
-    public Annotation[] annotations() {
-        return annotations;
-    }
-
     public Annotation[] allAnnotations() {
         return allAnnotations;
     }
@@ -91,6 +87,11 @@ public final class MethodInfo implements ExecutableInfo {
     @Override
     public ParameterInfo[] parameters() {
         return parameters;
+    }
+
+    @Override
+    public Annotation[] annotations() {
+        return annotations;
     }
 
 }

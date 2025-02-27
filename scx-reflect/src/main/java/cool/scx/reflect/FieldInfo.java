@@ -43,19 +43,6 @@ public final class FieldInfo implements MemberInfo {
         return type;
     }
 
-    public Annotation[] annotations() {
-        return annotations;
-    }
-
-    public <T extends Annotation> T getAnnotation(Class<T> annotationClass) {
-        for (var annotation : annotations) {
-            if (annotationClass.isInstance(annotation)) {
-                return annotationClass.cast(annotation);
-            }
-        }
-        return null;
-    }
-
     public void set(Object obj, Object value) throws IllegalAccessException {
         field.set(obj, value);
     }
@@ -77,6 +64,11 @@ public final class FieldInfo implements MemberInfo {
     @Override
     public void setAccessible(boolean flag) {
         field.setAccessible(flag);
+    }
+
+    @Override
+    public Annotation[] annotations() {
+        return annotations;
     }
 
 }
