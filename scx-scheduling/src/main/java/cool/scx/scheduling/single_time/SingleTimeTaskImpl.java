@@ -185,7 +185,7 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
                 };
             }
         };
-        return context;
+        return this.context;
     }
 
     private void run() {
