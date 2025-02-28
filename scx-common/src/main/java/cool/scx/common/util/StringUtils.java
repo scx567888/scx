@@ -6,7 +6,7 @@ package cool.scx.common.util;
 /// @version 0.0.1
 public final class StringUtils {
 
-    /// 创建重复字符串 (带分隔符) 拓展了 [#repeat(int)] 无法添加分隔符的功能
+    /// 创建重复字符串 (带分隔符) 拓展了 {@link String#repeat(int)} 无法添加分隔符的功能
     ///
     /// @param str       源字符串
     /// @param delimiter 分隔符

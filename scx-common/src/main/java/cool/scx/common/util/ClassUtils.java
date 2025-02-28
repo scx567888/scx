@@ -24,7 +24,7 @@ public final class ClassUtils {
     /// 默认 classLoader
     private static final ClassLoader DEFAULT_CLASS_LOADER = ClassUtils.class.getClassLoader();
 
-    /// 判断是否为 Enum , [#isEnum()] 无法处理内部类的情况
+    /// 判断是否为 Enum , {@link Class#isEnum()} 无法处理内部类的情况
     ///
     /// @param c c
     /// @return isEnum
