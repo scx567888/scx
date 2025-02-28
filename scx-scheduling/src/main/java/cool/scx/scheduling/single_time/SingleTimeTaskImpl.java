@@ -98,6 +98,16 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
                 }
 
                 @Override
+                public Instant nextRunTime() {
+                    return null;
+                }
+
+                @Override
+                public Instant nextRunTime(int count) {
+                    return null;
+                }
+
+                @Override
                 public void cancel() {
                     //任务从未执行所以无需取消
                 }
@@ -121,6 +131,16 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
             }
 
             @Override
+            public Instant nextRunTime() {
+                return null;
+            }
+
+            @Override
+            public Instant nextRunTime(int count) {
+                return null;
+            }
+
+            @Override
             public void cancel() {
                 scheduledFuture.cancel(false);
             }
@@ -135,6 +155,16 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
                 @Override
                 public long runCount() {
                     return l;
+                }
+
+                @Override
+                public Instant nextRunTime() {
+                    return null;
+                }
+
+                @Override
+                public Instant nextRunTime(int count) {
+                    return null;
                 }
 
                 @Override
