@@ -78,6 +78,9 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
 
     @Override
     public ScheduleStatus start() {
+        if (executor == null) {
+            throw new IllegalStateException("executor 未设置 !!!");
+        }
         //此处立即获取当前时间保证准确
         var now = now();
         //获取开始时间
@@ -131,10 +134,10 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
         throw new IllegalStateException("Unexpected value: " + expirationPolicy);
     }
 
-    public ScheduleStatus doStart(long startDelay) {
+    private ScheduleStatus doStart(long startDelay) {
         // 计算任务的实际启动时间
         var scheduledTime = now().plusNanos(startDelay);
-
+        // 调用任务
         var scheduledFuture = executor.schedule(this::run, startDelay, NANOSECONDS);
         return new ScheduleStatus() {
 
@@ -151,7 +154,7 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
 
             @Override
             public Instant nextRunTime(int count) {
-                return count == 1 ?  nextRunTime() : null;
+                return count == 1 ? nextRunTime() : null;
             }
 
             @Override
