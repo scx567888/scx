@@ -40,6 +40,8 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
     private ScheduledFuture<?> scheduledFuture;
     private Consumer<Throwable> errorHandler;
     private ScheduleContext context;
+    private volatile Instant initialScheduledTime;
+    private volatile Instant lastExecutionEndTime;
 
     public MultiTimeTaskImpl() {
         this.runCount = new AtomicLong(0);
@@ -161,6 +163,7 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
 
 
     private ScheduleContext doStart(long startDelay) {
+        this.initialScheduledTime = Instant.now().plusNanos(startDelay);
         this.scheduledFuture = switch (executionPolicy) {
             case FIXED_RATE -> executor.scheduleAtFixedRate(this::run, startDelay, delay.toNanos(), NANOSECONDS);
             case FIXED_DELAY -> executor.scheduleWithFixedDelay(this::run, startDelay, delay.toNanos(), NANOSECONDS);
@@ -173,12 +176,33 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
 
             @Override
             public Instant nextRunTime() {
-                return null;
+                if (scheduledFuture.isCancelled() || scheduledFuture.isDone()) {
+                    return null;
+                }
+                return switch (executionPolicy) {
+                    case FIXED_RATE -> initialScheduledTime.plus(delay.multipliedBy(runCount.get()));
+                    case FIXED_DELAY -> {
+                        Instant lastEnd = lastExecutionEndTime;
+                        yield (lastEnd != null) ? lastEnd.plus(delay) : initialScheduledTime;
+                    }
+                };
             }
 
             @Override
             public Instant nextRunTime(int count) {
-                return null;
+                if (count <= 0) {
+                    throw new IllegalArgumentException("count must be positive");
+                }
+                if (scheduledFuture.isCancelled() || scheduledFuture.isDone()) {
+                    return null;
+                }
+                return switch (executionPolicy) {
+                    case FIXED_RATE -> initialScheduledTime.plus(delay.multipliedBy(runCount.get() + count));
+                    case FIXED_DELAY -> {
+                        Instant next = nextRunTime();
+                        yield (next != null) ? next.plus(delay.multipliedBy(count - 1)) : null;
+                    }
+                };
             }
 
             @Override
@@ -188,7 +212,13 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
 
             @Override
             public Status status() {
-                return null;
+                //todo 此处应该返回 任务本身的 而不是 scheduledFuture 的状态
+                var s = scheduledFuture.state();
+                return switch (s) {
+                    case RUNNING -> Status.RUNNING;
+                    case SUCCESS, FAILED -> Status.DONE;
+                    case CANCELLED -> Status.CANCELED;
+                };
             }
         };
         return this.context;
@@ -243,6 +273,7 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
                 logger.log(ERROR, "调度任务时发生错误 !!!", e);
             }
         }
+        this.lastExecutionEndTime = Instant.now();
     }
 
 }
