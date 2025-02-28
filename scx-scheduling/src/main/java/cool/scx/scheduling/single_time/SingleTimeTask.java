@@ -10,7 +10,7 @@ import java.util.function.Supplier;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public interface SingleTimeTask extends ScheduleTask {
+public interface SingleTimeTask extends ScheduleTask<SingleTimeTask> {
 
     SingleTimeTask startTime(Supplier<Instant> startTime);
 
