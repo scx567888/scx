@@ -5,12 +5,10 @@ import cool.scx.ansi.Ansi;
 import cool.scx.common.util.ObjectUtils;
 import cool.scx.config.ScxConfigValueHandler;
 
-/**
- * DefaultValueHandler
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// DefaultValueHandler
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class DefaultValueHandler<T> implements ScxConfigValueHandler<T> {
 
     private final T defaultVal;

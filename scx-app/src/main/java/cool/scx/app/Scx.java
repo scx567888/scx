@@ -41,19 +41,15 @@ import static cool.scx.http.routing.TypeMatcher.Type.*;
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.WARNING;
 
-/**
- * 启动类
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 启动类
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class Scx {
 
     static final Logger logger = System.getLogger(Scx.class.getName());
 
-    /**
-     * 默认 http 请求 body 限制大小
-     */
+    /// 默认 http 请求 body 限制大小
     private static final long DEFAULT_BODY_LIMIT = FileUtils.displaySizeToLong("16384KB");
     private final ScxEnvironment scxEnvironment;
 
@@ -106,9 +102,7 @@ public final class Scx {
         return new ScxBuilder();
     }
 
-    /**
-     * 执行模块启动的生命周期
-     */
+    /// 执行模块启动的生命周期
     private void startAllScxModules() {
         for (var m : scxModules) {
             if (this.scxFeatureConfig.get(SHOW_MODULE_LIFE_CYCLE_INFO)) {
@@ -121,9 +115,7 @@ public final class Scx {
         }
     }
 
-    /**
-     * 执行模块结束的生命周期
-     */
+    /// 执行模块结束的生命周期
     private void stopAllScxModules() {
         if (this.scxFeatureConfig.get(SHOW_MODULE_LIFE_CYCLE_INFO)) {
             for (var m : scxModules) {
@@ -142,9 +134,7 @@ public final class Scx {
         return ScopedValue.where(GLOBAL_SCX, this).get(this::run0);
     }
 
-    /**
-     * 运行项目
-     */
+    /// 运行项目
     private Scx run0() {
         //0, 启动 核心计时器
         StopWatch.start("ScxRun");
@@ -203,11 +193,9 @@ public final class Scx {
         return new XHttpServer(httpServerOptions);
     }
 
-    /**
-     * 启动服务器
-     *
-     * @param port a int
-     */
+    /// 启动服务器
+    ///
+    /// @param port a int
     private void startServer(int port) {
         try {
             this.httpServer.start();
@@ -240,11 +228,9 @@ public final class Scx {
         }));
     }
 
-    /**
-     * 检查数据源是否可用
-     *
-     * @return b
-     */
+    /// 检查数据源是否可用
+    ///
+    /// @return b
     public boolean checkDataSource() {
         try (var conn = dataSource().getConnection()) {
             var dm = conn.getMetaData();
@@ -292,11 +278,9 @@ public final class Scx {
 
     }
 
-    /**
-     * 获取所有 class
-     *
-     * @return s
-     */
+    /// 获取所有 class
+    ///
+    /// @return s
     private List<Class<?>> getAllScxBaseModelClassList() {
         return Arrays.stream(scxModules)
                 .flatMap(c -> c.classList().stream())
@@ -304,11 +288,9 @@ public final class Scx {
                 .toList();
     }
 
-    /**
-     * 检查是否有任何 (BaseModel) 类需要修复表
-     *
-     * @return 是否有
-     */
+    /// 检查是否有任何 (BaseModel) 类需要修复表
+    ///
+    /// @return 是否有
     public boolean checkNeedFixTable() {
         logger.log(DEBUG, "检查数据表结构中...");
         for (var v : getAllScxBaseModelClassList()) {

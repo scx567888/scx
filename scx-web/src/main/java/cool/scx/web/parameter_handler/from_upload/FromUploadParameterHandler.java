@@ -41,13 +41,11 @@ public final class FromUploadParameterHandler implements ParameterHandler {
         this.isArray = parameter.type().isArrayType();
     }
 
-    /**
-     * 从 RoutingContext 查找 对应名称的 上传对象 为空会返回 null
-     *
-     * @param routingContext a
-     * @param name           a
-     * @return a
-     */
+    /// 从 RoutingContext 查找 对应名称的 上传对象 为空会返回 null
+    ///
+    /// @param routingContext a
+    /// @param name           a
+    /// @return a
     private static MultiPartPart[] findFileUploadListByName(RequestInfo routingContext, String name) {
         var fileUploads = routingContext.uploadFiles();
         return fileUploads.getAll(name).toArray(MultiPartPart[]::new);
