@@ -4,7 +4,6 @@ import cool.scx.scheduling.ExpirationPolicy;
 import cool.scx.scheduling.ScheduleStatus;
 
 import java.lang.System.Logger;
-import java.time.Duration;
 import java.time.Instant;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicLong;
@@ -43,18 +42,6 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
     @Override
     public SingleTimeTask startTime(Supplier<Instant> startTime) {
         this.startTimeSupplier = startTime;
-        return this;
-    }
-
-    @Override
-    public SingleTimeTask startTime(Instant startTime) {
-        this.startTimeSupplier = () -> startTime;
-        return this;
-    }
-
-    @Override
-    public SingleTimeTask startDelay(Duration delay) {
-        this.startTimeSupplier = () -> now().plus(delay);
         return this;
     }
 
