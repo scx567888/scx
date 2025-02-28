@@ -1,13 +1,14 @@
 package cool.scx.scheduling.single_time;
 
 import cool.scx.scheduling.ExpirationPolicy;
-import cool.scx.scheduling.ScheduleStatus;
+import cool.scx.scheduling.ScheduleContext;
+import cool.scx.scheduling.Task;
+import cool.scx.scheduling.TaskStatus;
 
 import java.lang.System.Logger;
 import java.time.Instant;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import static cool.scx.scheduling.ExpirationPolicy.*;
@@ -29,7 +30,8 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
     private Supplier<Instant> startTimeSupplier;
     private ExpirationPolicy expirationPolicy;
     private ScheduledExecutorService executor;
-    private Consumer<ScheduleStatus> task;
+    private Task task;
+    private ScheduleContext context;
 
     public SingleTimeTaskImpl() {
         this.runCount = new AtomicLong(0);
@@ -37,6 +39,7 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
         this.expirationPolicy = IMMEDIATE_COMPENSATION; //默认过期补偿
         this.executor = null;
         this.task = null;
+        this.context = null;
     }
 
     @Override
@@ -58,13 +61,13 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
     }
 
     @Override
-    public SingleTimeTask task(Consumer<ScheduleStatus> task) {
+    public SingleTimeTask task(Task task) {
         this.task = task;
         return this;
     }
 
     @Override
-    public ScheduleStatus start() {
+    public ScheduleContext start() {
         if (executor == null) {
             throw new IllegalStateException("executor 未设置 !!!");
         }
@@ -90,7 +93,7 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
                 runCount.incrementAndGet();
             }
             //单次任务 直接返回虚拟的 Status 即可 无需执行
-            return new ScheduleStatus() {
+            return new ScheduleContext() {
                 @Override
                 public long runCount() {
                     return runCount.get();
@@ -110,6 +113,12 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
                 public void cancel() {
                     //任务从未执行所以无需取消
                 }
+
+                @Override
+                public Status status() {
+                    return null;
+                }
+
             };
         }
 
@@ -121,12 +130,12 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
         throw new IllegalStateException("Unexpected value: " + expirationPolicy);
     }
 
-    private ScheduleStatus doStart(long startDelay) {
+    private ScheduleContext doStart(long startDelay) {
         // 计算任务的实际启动时间
         var scheduledTime = now().plusNanos(startDelay);
         // 调用任务
         var scheduledFuture = executor.schedule(this::run, startDelay, NANOSECONDS);
-        return new ScheduleStatus() {
+        this.context = new ScheduleContext() {
 
             @Override
             public long runCount() {
@@ -155,32 +164,30 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
             public void cancel() {
                 scheduledFuture.cancel(false);
             }
+
+            @Override
+            public Status status() {
+                return null;
+            }
         };
+        return context;
     }
 
     private void run() {
         var l = runCount.incrementAndGet();
         try {
-            task.accept(new ScheduleStatus() {
+            task.run(new TaskStatus() {
 
                 @Override
-                public long runCount() {
+                public long currentRunCount() {
                     return l;
                 }
 
                 @Override
-                public Instant nextRunTime() {
-                    return null;// 因为只执行一次所以没有下一次 这里返回 null
-                }
-
-                @Override
-                public Instant nextRunTime(int count) {
-                    return null;// 同上
-                }
-
-                @Override
-                public void cancel() {
-                    // 因为只执行一次所以没法取消也没必要取消 这里什么都不做
+                public ScheduleContext context() {
+                    //todo 这里有可能是 null , 假设 startDelay 为 0 时 有可能先调用 run 然后有返回值
+                    //是否使用锁 来强制 等待创建完成
+                    return context;
                 }
 
             });
