@@ -1,8 +1,6 @@
 package cool.scx.app.test.car;
 
-/**
- * 车主
- */
+/// 车主
 public class CarOwner {
 
     public String name;

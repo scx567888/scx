@@ -24,7 +24,6 @@ import java.util.concurrent.Callable;
 public final class ScxContext {
 
     /// 全局唯一的 SCX APP
-    ///   
     /// 为了保证方法使用的简易 我们建议使用静态的方法
     /// 但是其本质上是调用 GLOBAL_UNIQUE_SCX_APP 方法中的实例对象
     final static ScopedValue<Scx> GLOBAL_SCX = ScopedValue.newInstance();

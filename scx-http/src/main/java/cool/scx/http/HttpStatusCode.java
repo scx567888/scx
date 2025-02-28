@@ -77,10 +77,7 @@ public enum HttpStatusCode {
     /// @param code c
     /// @return 未找到时 抛出异常
     public static HttpStatusCode of(int code) {
-        if (code < 0 || code > 505) {
-            throw new IllegalArgumentException("Invalid HTTP status code: " + code);
-        }
-        var c = MAP[code];
+        var c = find(code);
         if (c == null) {
             throw new IllegalArgumentException("Invalid HTTP status code: " + code);
         }

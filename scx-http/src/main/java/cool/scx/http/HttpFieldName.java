@@ -92,12 +92,11 @@ public enum HttpFieldName implements ScxHttpHeaderName {
     /// @param v v
     /// @return 未找到 抛出异常
     public static HttpFieldName of(String v) {
-        var lowerCase = v.toLowerCase();
-        var httpFieldName = MAP.get(lowerCase);
-        if (httpFieldName == null) {
+        var h = find(v);
+        if (h == null) {
             throw new IllegalArgumentException(v);
         }
-        return httpFieldName;
+        return h;
     }
 
     /// @param v v

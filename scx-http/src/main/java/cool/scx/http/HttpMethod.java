@@ -27,18 +27,11 @@ public enum HttpMethod implements ScxHttpMethod {
     /// @return 未找到抛出异常
     public static HttpMethod of(String v) {
         //数量较少时 switch 性能要高于 Map
-        return switch (v) {
-            case "CONNECT" -> CONNECT;
-            case "DELETE" -> DELETE;
-            case "GET" -> GET;
-            case "HEAD" -> HEAD;
-            case "OPTIONS" -> OPTIONS;
-            case "PATCH" -> PATCH;
-            case "POST" -> POST;
-            case "PUT" -> PUT;
-            case "TRACE" -> TRACE;
-            default -> throw new IllegalArgumentException("Unknown http method: " + v);
-        };
+        var h = find(v);
+        if (h == null) {
+            throw new IllegalArgumentException("Unknown http method: " + v);
+        }
+        return h;
     }
 
     /// @param v v

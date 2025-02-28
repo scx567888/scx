@@ -72,7 +72,7 @@ public enum MediaType implements ScxMediaType {
     /// @param str s
     /// @return 未找到时抛出异常
     public static MediaType of(String str) {
-        var mediaType = MAP.get(str.toLowerCase());
+        var mediaType = find(str);
         if (mediaType == null) {
             throw new IllegalArgumentException("Unknown media type: " + str);
         }

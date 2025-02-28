@@ -37,12 +37,10 @@ public abstract class Result implements BaseVo {
         return new ResultOfMap("fail");
     }
 
-    /**
-     * 返回操作失败的 Json 带有消息
-     *
-     * @param failMessage 自定义的错误信息
-     * @return json
-     */
+    /// 返回操作失败的 Json 带有消息
+    ///
+    /// @param failMessage 自定义的错误信息
+    /// @return json
     public static ResultOfMap fail(String failMessage) {
         return new ResultOfMap(failMessage);
     }
