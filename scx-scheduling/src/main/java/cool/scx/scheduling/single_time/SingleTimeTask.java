@@ -1,5 +1,6 @@
 package cool.scx.scheduling.single_time;
 
+import cool.scx.scheduling.ConcurrencyPolicy;
 import cool.scx.scheduling.ScheduleTask;
 
 import java.time.Duration;
@@ -25,14 +26,14 @@ public interface SingleTimeTask extends ScheduleTask<SingleTimeTask> {
     }
 
     @Override
-    default SingleTimeTask concurrent(boolean concurrent) {
-        //不支持所以直接跳过
+    default SingleTimeTask concurrencyPolicy(ConcurrencyPolicy concurrencyPolicy) {
+        // 不支持, 直接跳过
         return this;
     }
 
     @Override
     default SingleTimeTask maxRunCount(long maxRunCount) {
-        //不支持所以直接跳过
+        // 不支持, 直接跳过
         return this;
     }
 
