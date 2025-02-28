@@ -20,14 +20,11 @@ public enum HttpVersion {
     /// @param version v
     /// @return 未找到时 抛出异常
     public static HttpVersion of(String version) {
-        var upperCase = version.toUpperCase();
-        return switch (upperCase) {
-            case "HTTP/1.0" -> HTTP_1_0;
-            case "HTTP/1.1" -> HTTP_1_1;
-            case "HTTP/2" -> HTTP_2;
-            case "HTTP/3" -> HTTP_3;
-            default -> throw new IllegalArgumentException("Unsupported HTTP version: " + version);
-        };
+        var h = find(version);
+        if (h == null) {
+            throw new IllegalArgumentException("Unsupported HTTP version: " + version);
+        }
+        return h;
     }
 
     /// @param version v

@@ -31,12 +31,10 @@ import java.util.zip.ZipOutputStream;
 
 import static cool.scx.common.constant.ScxDateTimeFormatter.yyyy_MM_dd_HH_mm_ss;
 
-/**
- * 简单测试
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 简单测试
+///
+/// @author scx567888
+/// @version 0.0.1
 @ScxRoute
 public class WebSiteController {
 
@@ -97,12 +95,10 @@ public class WebSiteController {
         Html.of(sb.toString()).accept(ctx);
     }
 
-    /**
-     * 测试!!!
-     *
-     * @return 页面
-     * @throws java.io.IOException if any.
-     */
+    /// 测试!!!
+    ///
+    /// @return 页面
+    /// @throws java.io.IOException if any.
     @ScxRoute(value = "", methods = HttpMethod.GET, order = 10)
     public Template TestIndex(RoutingContext c) throws IOException {
         System.err.println("最后一次匹配的路由" + c.request().path());
@@ -112,12 +108,10 @@ public class WebSiteController {
         return index;
     }
 
-    /**
-     * 多个路由
-     *
-     * @param c a
-     * @throws IOException a
-     */
+    /// 多个路由
+    ///
+    /// @param c a
+    /// @throws IOException a
     @ScxRoute(value = "", methods = HttpMethod.GET, order = 5)
     public void TestIndex1(RoutingContext c) throws IOException {
         System.err.println("第二个匹配的路由" + c.request().path());
@@ -125,12 +119,10 @@ public class WebSiteController {
         c.next();
     }
 
-    /**
-     * 这里如果 order 小于其他的 order 根据 其会因其路径为(模糊路径) 在最后进行才进行匹配
-     *
-     * @param c a
-     * @throws IOException a
-     */
+    /// 这里如果 order 小于其他的 order 根据 其会因其路径为(模糊路径) 在最后进行才进行匹配
+    ///
+    /// @param c a
+    /// @throws IOException a
     @ScxRoute(value = "/*", methods = HttpMethod.GET, order = 1)
     public void TestIndex1a(RoutingContext c) throws IOException {
         System.err.println("两个 carService 是否相等 " + (carService == carService1));
@@ -138,22 +130,18 @@ public class WebSiteController {
         c.next();
     }
 
-    /**
-     * 测试!!!
-     *
-     * @return a
-     */
+    /// 测试!!!
+    ///
+    /// @return a
     @ScxRoute(value = "/baidu", methods = HttpMethod.GET)
     public Html TestHttpUtils() throws IOException, InterruptedException {
         var baiduHtml = ScxHttpClientHelper.get("https://www.baidu.com/").body().asString();
         return Html.of(baiduHtml);
     }
 
-    /**
-     * 测试!!!
-     *
-     * @return a
-     */
+    /// 测试!!!
+    ///
+    /// @return a
     @ScxRoute(value = "/download", methods = HttpMethod.GET)
     public Download TestDownload() {
         StringBuilder s = new StringBuilder();
@@ -163,11 +151,9 @@ public class WebSiteController {
         return Download.of(s.toString().getBytes(StandardCharsets.UTF_8), "测试中 + - ~!文 a😊😂 🤣 ghj ❤😍😒👌.txt");
     }
 
-    /**
-     * 测试!!!
-     *
-     * @return a {@link BaseVo} object
-     */
+    /// 测试!!!
+    ///
+    /// @return a [BaseVo] object
     @ScxRoute(value = "/raw", methods = HttpMethod.GET)
     public BaseVo TestRaw() {
         StringBuilder s = new StringBuilder();
@@ -177,31 +163,25 @@ public class WebSiteController {
         return Raw.of(s.toString().getBytes(StandardCharsets.UTF_8), FileFormat.TXT);
     }
 
-    /**
-     * 测试!!!
-     *
-     * @return a {@link java.lang.String} object
-     */
+    /// 测试!!!
+    ///
+    /// @return a [java.lang.String] object
     @ScxRoute(value = "/md5", methods = HttpMethod.GET)
     public String TestMd5() {
         return HashUtils.md5Hex("123");
     }
 
-    /**
-     * 测试!!!
-     *
-     * @return a {@link java.lang.String} object
-     */
+    /// 测试!!!
+    ///
+    /// @return a [java.lang.String] object
     @ScxRoute(methods = HttpMethod.GET)
     public String getRandomCode() {
         return RandomUtils.randomString(9999);
     }
 
-    /**
-     * 测试!!!
-     *
-     * @return a {@link BaseVo} object
-     */
+    /// 测试!!!
+    ///
+    /// @return a [BaseVo] object
     @ScxRoute(methods = HttpMethod.GET)
     public BaseVo bigJson() {
         var users = carService1.find();
@@ -214,51 +194,41 @@ public class WebSiteController {
         return Xml.of(users);
     }
 
-    /**
-     * 测试!!!
-     *
-     * @return a {@link BaseVo} object
-     */
+    /// 测试!!!
+    ///
+    /// @return a [BaseVo] object
     @ScxRoute(methods = HttpMethod.GET)
     public BaseVo a() {
         return Result.ok().put("items", "a");
     }
 
-    /**
-     * 测试!!!
-     *
-     * @return a {@link BaseVo} object
-     */
+    /// 测试!!!
+    ///
+    /// @return a [BaseVo] object
     @ScxRoute(value = "a", methods = HttpMethod.GET)
     public BaseVo b() {
         return Result.ok().put("items", "b");
     }
 
-    /**
-     * 测试 重复路由 !!!
-     *
-     * @return a {@link BaseVo} object
-     */
+    /// 测试 重复路由 !!!
+    ///
+    /// @return a [BaseVo] object
     @ScxRoute(value = "/v/:aaa", methods = {HttpMethod.GET, HttpMethod.POST})
     public BaseVo c() {
         return Result.ok().put("items", "aaa");
     }
 
-    /**
-     * 测试 重复路由 !!!
-     *
-     * @return a {@link BaseVo} object
-     */
+    /// 测试 重复路由 !!!
+    ///
+    /// @return a [BaseVo] object
     @ScxRoute(value = "/v/:bbb", methods = HttpMethod.GET)
     public BaseVo d() {
         return Result.ok().put("items", "bbb");
     }
 
-    /**
-     * 测试 ZIP
-     *
-     * @return a {@link BaseVo} object
-     */
+    /// 测试 ZIP
+    ///
+    /// @return a [BaseVo] object
     @ScxRoute(methods = HttpMethod.GET)
     public Download zip() throws Exception {
         var zipBuilder = new ZipBuilder();
