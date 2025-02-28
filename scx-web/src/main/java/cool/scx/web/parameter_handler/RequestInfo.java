@@ -13,12 +13,10 @@ import static cool.scx.common.util.ObjectUtils.jsonMapper;
 import static cool.scx.common.util.ObjectUtils.xmlMapper;
 import static cool.scx.http.MediaType.*;
 
-/**
- * 封装 RoutingContext 的参数 防止反复取值造成性能损失
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 封装 RoutingContext 的参数 防止反复取值造成性能损失
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class RequestInfo {
 
     private final RoutingContext routingContext;
@@ -54,12 +52,10 @@ public final class RequestInfo {
         }
     }
 
-    /**
-     * 走到这里标识以上的匹配全部失败 , 这里不知道 body 的具体格式 所以进行猜测转换
-     *
-     * @param str a
-     * @return a
-     */
+    /// 走到这里标识以上的匹配全部失败 , 这里不知道 body 的具体格式 所以进行猜测转换
+    ///
+    /// @param str a
+    /// @return a
     public static JsonNode tryReadOrTextNode(String str) {
         try { //先尝试以 json 格式进行尝试转换
             return jsonMapper().readTree(str);
@@ -73,12 +69,10 @@ public final class RequestInfo {
         }
     }
 
-    /**
-     * 根据不同的 ContentType 以不同的逻辑初始化 body
-     *
-     * @param ctx         ctx
-     * @param contentType a
-     */
+    /// 根据不同的 ContentType 以不同的逻辑初始化 body
+    ///
+    /// @param ctx         ctx
+    /// @param contentType a
     private void initBody(RoutingContext ctx, ContentType contentType) {
         var mediaType = contentType != null ? contentType.mediaType() : null;
         // 除了 MULTIPART_FORM_DATA 其余全部转为 JsonNode 的形式方便后续使用

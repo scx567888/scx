@@ -7,12 +7,10 @@ import static cool.scx.http.HttpFieldName.LOCATION;
 import static cool.scx.http.HttpStatusCode.FOUND;
 import static cool.scx.http.HttpStatusCode.MOVED_PERMANENTLY;
 
-/**
- * 重定向
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 重定向
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class Redirection implements BaseVo {
 
     private final String location;
@@ -23,22 +21,18 @@ public final class Redirection implements BaseVo {
         this.statusCode = statusCode;
     }
 
-    /**
-     * 永久重定向
-     *
-     * @param location 重定向地址
-     * @return r
-     */
+    /// 永久重定向
+    ///
+    /// @param location 重定向地址
+    /// @return r
     public static Redirection ofPermanent(String location) {
         return new Redirection(location, MOVED_PERMANENTLY);
     }
 
-    /**
-     * 临时重定向
-     *
-     * @param location 重定向地址
-     * @return r
-     */
+    /// 临时重定向
+    ///
+    /// @param location 重定向地址
+    /// @return r
     public static Redirection ofTemporary(String location) {
         return new Redirection(location, FOUND);
     }

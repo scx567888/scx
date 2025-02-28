@@ -9,12 +9,10 @@ import java.nio.file.Path;
 import static cool.scx.http.MediaType.TEXT_HTML;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-/**
- * html 渲染类
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// html 渲染类
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class Html implements BaseVo {
 
     private final boolean usePath;

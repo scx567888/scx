@@ -12,12 +12,10 @@ import java.nio.file.Path;
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.INFO;
 
-/**
- * 模板处理器
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 模板处理器
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class ScxTemplateHandler {
 
     private static final Logger logger = System.getLogger(ScxTemplateHandler.class.getName());

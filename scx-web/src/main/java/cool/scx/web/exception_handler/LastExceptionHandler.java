@@ -7,12 +7,10 @@ import java.lang.System.Logger;
 
 import static java.lang.System.Logger.Level.ERROR;
 
-/**
- * 兜底异常处理器
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 兜底异常处理器
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class LastExceptionHandler extends ScxHttpExceptionHandler {
 
     private static final Logger logger = System.getLogger(LastExceptionHandler.class.getName());

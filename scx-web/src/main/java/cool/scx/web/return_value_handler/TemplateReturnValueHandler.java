@@ -4,12 +4,10 @@ import cool.scx.http.routing.RoutingContext;
 import cool.scx.web.template.ScxTemplateHandler;
 import cool.scx.web.vo.Template;
 
-/**
- * 用于渲染 freemarker
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 用于渲染 freemarker
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class TemplateReturnValueHandler implements ReturnValueHandler {
 
     private final ScxTemplateHandler templateHandler;

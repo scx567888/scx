@@ -7,12 +7,10 @@ import static cool.scx.common.util.ObjectUtils.toXml;
 import static cool.scx.http.MediaType.APPLICATION_XML;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-/**
- * Xml 格式的返回值
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// Xml 格式的返回值
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class Xml implements BaseVo {
 
     private final Object data;

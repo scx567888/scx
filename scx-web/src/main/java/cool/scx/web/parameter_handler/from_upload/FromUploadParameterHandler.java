@@ -13,12 +13,10 @@ import static cool.scx.common.constant.AnnotationValueHelper.getRealValue;
 import static cool.scx.common.util.ObjectUtils.convertValue;
 import static java.util.Collections.addAll;
 
-/**
- * 处理 FileUpload 类型参数
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 处理 FileUpload 类型参数
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class FromUploadParameterHandler implements ParameterHandler {
 
     private final boolean isCollection;

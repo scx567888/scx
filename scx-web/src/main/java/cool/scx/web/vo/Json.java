@@ -7,12 +7,10 @@ import static cool.scx.common.util.ObjectUtils.toJson;
 import static cool.scx.http.MediaType.APPLICATION_JSON;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-/**
- * Json 格式的返回值
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// Json 格式的返回值
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class Json implements BaseVo {
 
     private final Object data;

@@ -17,19 +17,15 @@ import static cool.scx.http.MediaType.TEXT_HTML;
 import static java.lang.System.Logger.Level.ERROR;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-/**
- * ScxHttpException 处理器
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ScxHttpException 处理器
+///
+/// @author scx567888
+/// @version 0.0.1
 public class ScxHttpExceptionHandler implements ExceptionHandler {
 
     private static final Logger logger = System.getLogger(ScxHttpExceptionHandler.class.getName());
 
-    /**
-     * 默认 html 模板
-     */
+    /// 默认 html 模板
     private static final String htmlTemplate = """
             <!DOCTYPE html>
             <html lang="en">

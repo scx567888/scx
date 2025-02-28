@@ -2,12 +2,10 @@ package cool.scx.web.return_value_handler;
 
 import cool.scx.http.routing.RoutingContext;
 
-/**
- * 空值处理器
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 空值处理器
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class NullReturnValueHandler implements ReturnValueHandler {
 
     @Override

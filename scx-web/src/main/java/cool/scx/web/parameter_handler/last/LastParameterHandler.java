@@ -9,12 +9,10 @@ import static cool.scx.web.parameter_handler.from_body.FromBodyParameterHandler.
 import static cool.scx.web.parameter_handler.from_path.FromPathParameterHandler.getValueFromPath;
 import static cool.scx.web.parameter_handler.from_query.FromQueryParameterHandler.getValueFromQuery;
 
-/**
- * LastParameterHandler
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// LastParameterHandler
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class LastParameterHandler implements ParameterHandler {
 
     private final ParameterInfo parameter;

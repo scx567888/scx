@@ -20,12 +20,10 @@ import java.util.stream.Collectors;
 import static cool.scx.reflect.AccessModifier.PUBLIC;
 import static java.lang.System.Logger.Level.WARNING;
 
-/**
- * 路由注册器
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 路由注册器
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class RouteRegistrar {
 
     private static final Logger logger = System.getLogger(RouteRegistrar.class.getName());
@@ -41,9 +39,7 @@ public final class RouteRegistrar {
     private static final Pattern RE_TOKEN_SEARCH = Pattern.compile(":(\\w+)");
     private final ScxWeb scxWeb;
 
-    /**
-     * 扫描所有被 ScxMapping注解标记的方法 并封装为 ScxMappingHandler.
-     */
+    /// 扫描所有被 ScxMapping注解标记的方法 并封装为 ScxMappingHandler.
     public RouteRegistrar(ScxWeb scxWeb) {
         this.scxWeb = scxWeb;
     }
@@ -60,21 +56,19 @@ public final class RouteRegistrar {
         return sortedScxRouteHandlers(handlers);
     }
 
-    /**
-     * 在注册路由前我们要进行一个排序 规则如下
-     * <br>
-     * 1 若注解上标识了 order 则按照注解上的 order 进行插入 如下
-     * 0 > 5 > 13 > 199
-     * <br>
-     * 2 如果根据路径是否为精确路径 进行排序 如 如下
-     * /api/user > /api/*
-     * <br>
-     * 3 根据路径参数数量进行排序 (按照参数数量倒序排序) 如下
-     * /api/user/list > /api/user/:m > /api/:u/:m/
-     *
-     * @param handlers s
-     * @return s
-     */
+    /// 在注册路由前我们要进行一个排序 规则如下
+    ///
+    /// 1 若注解上标识了 order 则按照注解上的 order 进行插入 如下
+    /// 0 > 5 > 13 > 199
+    ///
+    /// 2 如果根据路径是否为精确路径 进行排序 如 如下
+    /// /api/user > /api/*
+    ///
+    /// 3 根据路径参数数量进行排序 (按照参数数量倒序排序) 如下
+    /// /api/user/list > /api/user/:m > /api/:u/:m/
+    ///
+    /// @param handlers s
+    /// @return s
     private static List<ScxRouteHandler> sortedScxRouteHandlers(List<ScxRouteHandler> handlers) {
         return handlers.stream().sorted(ORDER_COMPARATOR.thenComparing(EXACT_PATH_COMPARATOR).thenComparing(GROUPS_COMPARATOR)).toList();
     }
@@ -95,23 +89,19 @@ public final class RouteRegistrar {
         return Arrays.stream(ClassInfoFactory.getClassInfo(object.getClass()).allMethods()).filter(m -> m.accessModifier() == PUBLIC && isRoute(m)).toList();
     }
 
-    /**
-     * 初始化 ScxMappingClassList
-     *
-     * @param c a
-     * @return a
-     */
+    /// 初始化 ScxMappingClassList
+    ///
+    /// @param c a
+    /// @return a
     public static boolean isRoute(Class<?> c) {
         return c.isAnnotationPresent(ScxRoute.class) && //拥有注解
                 ClassUtils.isNormalClass(c); // 是一个普通的类 (不是接口, 不是抽象类) ; 此处不要求有必须有无参构造函数 因为此类的创建会由 beanFactory 进行处理
     }
 
-    /**
-     * 判断是否为 ScxMapping 方法
-     *
-     * @param m a
-     * @return a
-     */
+    /// 判断是否为 ScxMapping 方法
+    ///
+    /// @param m a
+    /// @return a
     public static boolean isRoute(MethodInfo m) {
         var noScxRoute = m.findAnnotation(NoScxRoute.class);
         if (noScxRoute != null) {
@@ -139,11 +129,9 @@ public final class RouteRegistrar {
         return scxRoute;
     }
 
-    /**
-     * 校验路由是否已经存在
-     *
-     * @param handlers a {@link java.util.List} object
-     */
+    /// 校验路由是否已经存在
+    ///
+    /// @param handlers a [java.util.List] object
     private static void checkRouteExists(List<ScxRouteHandler> handlers) {
         var m = new MultiMap<NormalPathInfo, ScxRouteHandler>();
         for (var handler : handlers) {
@@ -167,12 +155,10 @@ public final class RouteRegistrar {
         });
     }
 
-    /**
-     * 获取美化后的去除路径参数的 url 主要用来在判断重复路径中进行展示
-     *
-     * @param path p
-     * @return r
-     */
+    /// 获取美化后的去除路径参数的 url 主要用来在判断重复路径中进行展示
+    ///
+    /// @param path p
+    /// @return r
     private static String getPatternUrl(String path) {
         return RE_TOKEN_SEARCH.matcher(path).replaceAll("?");
     }

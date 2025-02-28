@@ -5,12 +5,10 @@ import cool.scx.reflect.ParameterInfo;
 import cool.scx.web.parameter_handler.ParameterHandler;
 import cool.scx.web.parameter_handler.ParameterHandlerBuilder;
 
-/**
- * 处理 FileUpload 类型参数
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 处理 FileUpload 类型参数
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class FromUploadParameterHandlerBuilder implements ParameterHandlerBuilder {
 
     @Override

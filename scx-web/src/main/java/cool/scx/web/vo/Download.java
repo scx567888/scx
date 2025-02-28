@@ -6,12 +6,10 @@ import java.nio.file.Path;
 import static cool.scx.http.HttpHelper.getDownloadContentDisposition;
 import static cool.scx.http.HttpHelper.getMediaTypeByFileName;
 
-/**
- * 文件下载 vo
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 文件下载 vo
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class Download extends BaseWriter {
 
     private Download(InputStream inputStream, String downloadName) {
