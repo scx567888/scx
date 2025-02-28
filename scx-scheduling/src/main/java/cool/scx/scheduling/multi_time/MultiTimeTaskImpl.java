@@ -165,7 +165,7 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
             case FIXED_RATE -> executor.scheduleAtFixedRate(this::run, startDelay, delay.toNanos(), NANOSECONDS);
             case FIXED_DELAY -> executor.scheduleWithFixedDelay(this::run, startDelay, delay.toNanos(), NANOSECONDS);
         };
-        return new ScheduleContext() {
+        this.context = new ScheduleContext() {
             @Override
             public long runCount() {
                 return runCount.get();
@@ -191,6 +191,7 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
                 return null;
             }
         };
+        return this.context;
     }
 
     private void run() {
