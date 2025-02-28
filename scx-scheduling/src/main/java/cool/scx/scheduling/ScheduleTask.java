@@ -9,7 +9,7 @@ import java.util.concurrent.ScheduledExecutorService;
 public interface ScheduleTask<T extends ScheduleTask<T>> {
 
     /// 并发策略
-    T concurrentPolicy(ConcurrencyPolicy concurrencyPolicy);
+    T concurrencyPolicy(ConcurrencyPolicy concurrencyPolicy);
 
     /// 最大运行次数
     T maxRunCount(long maxRunCount);
