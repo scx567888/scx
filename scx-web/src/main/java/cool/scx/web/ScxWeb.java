@@ -29,17 +29,13 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
-/**
- * ScxWeb
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ScxWeb
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class ScxWeb {
 
-    /**
-     * 路由上下文 THREAD_LOCAL
-     */
+    /// 路由上下文 THREAD_LOCAL
     private static final InheritableThreadLocal<RoutingContext> ROUTING_CONTEXT_THREAD_LOCAL = new InheritableThreadLocal<>();
     private final List<ExceptionHandler> exceptionHandlers = new ArrayList<>();
     private final LastExceptionHandler lastExceptionHandler;
@@ -82,22 +78,18 @@ public final class ScxWeb {
         this.lastParameterHandlerBuilder = new LastParameterHandlerBuilder();
     }
 
-    /**
-     * 获取当前线程的 RoutingContext (只限在 scx mapping 注解的方法及其调用链上)
-     *
-     * @return 当前线程的 RoutingContext
-     */
+    /// 获取当前线程的 RoutingContext (只限在 scx mapping 注解的方法及其调用链上)
+    ///
+    /// @return 当前线程的 RoutingContext
     public static RoutingContext routingContext() {
         return ROUTING_CONTEXT_THREAD_LOCAL.get();
     }
 
-    /**
-     * 设置当前线程的 routingContext
-     * 此方法正常之给 scxMappingHandler 调用
-     * 若无特殊需求 不必调用此方法
-     *
-     * @param routingContext 要设置的 routingContext
-     */
+    /// 设置当前线程的 routingContext
+    /// 此方法正常之给 scxMappingHandler 调用
+    /// 若无特殊需求 不必调用此方法
+    ///
+    /// @param routingContext 要设置的 routingContext
     static void _routingContext(RoutingContext routingContext) {
         ROUTING_CONTEXT_THREAD_LOCAL.set(routingContext);
     }

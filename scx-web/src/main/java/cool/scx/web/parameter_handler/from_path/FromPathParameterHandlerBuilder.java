@@ -5,12 +5,10 @@ import cool.scx.web.annotation.FromPath;
 import cool.scx.web.parameter_handler.ParameterHandler;
 import cool.scx.web.parameter_handler.ParameterHandlerBuilder;
 
-/**
- * FromPathParameterHandler
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// FromPathParameterHandler
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class FromPathParameterHandlerBuilder implements ParameterHandlerBuilder {
 
     @Override

@@ -12,12 +12,10 @@ import static cool.scx.http.MediaType.APPLICATION_JSON;
 import static cool.scx.http.MediaType.APPLICATION_XML;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-/**
- * 兜底 返回值处理器
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 兜底 返回值处理器
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class LastReturnValueHandler implements ReturnValueHandler {
 
     @Override

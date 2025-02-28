@@ -18,9 +18,7 @@ public class ScxWebTest {
         test1();
     }
 
-    /**
-     * 测试 bindErrorHandler
-     */
+    /// 测试 bindErrorHandler
     @Test
     public static void test0() {
         var httpServer = new XHttpServer(new XHttpServerOptions().port(8080));
@@ -48,9 +46,7 @@ public class ScxWebTest {
 
     }
 
-    /**
-     * 测试  registerHttpRoutes
-     */
+    /// 测试  registerHttpRoutes
     public static void test1() {
 
         var httpServer = new XHttpServer(new XHttpServerOptions().port(8081));

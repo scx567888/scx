@@ -13,12 +13,10 @@ import static cool.scx.http.HttpFieldName.CONTENT_DISPOSITION;
 import static cool.scx.http.MediaType.APPLICATION_OCTET_STREAM;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-/**
- * 基本写入程序 可以直接向相应体中写入数据
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 基本写入程序 可以直接向相应体中写入数据
+///
+/// @author scx567888
+/// @version 0.0.1
 class BaseWriter implements BaseVo {
 
     protected final InputStream inputStream;

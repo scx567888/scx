@@ -2,12 +2,10 @@ package cool.scx.web;
 
 import java.nio.file.Path;
 
-/**
- * ScxWebOptions
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ScxWebOptions
+///
+/// @author scx567888
+/// @version 0.0.1
 public class ScxWebOptions {
 
     private Path templateRoot;

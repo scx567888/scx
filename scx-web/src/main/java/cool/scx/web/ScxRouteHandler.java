@@ -18,12 +18,10 @@ import java.util.function.Consumer;
 import static cool.scx.common.constant.AnnotationValueHelper.getRealValue;
 import static cool.scx.web.RouteRegistrar.findScxRouteOrThrow;
 
-/**
- * ScxRouteHandler
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ScxRouteHandler
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class ScxRouteHandler implements Route, Consumer<RoutingContext> {
 
     public final MethodInfo method;

@@ -13,12 +13,10 @@ import java.util.List;
 
 import static cool.scx.http.routing.TypeMatcher.Type.WEB_SOCKET_HANDSHAKE;
 
-/**
- * WebSocketRouteRegistrar
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// WebSocketRouteRegistrar
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class WebSocketRouteRegistrar {
 
     private static final Comparator<Route> orderComparator = Comparator.comparing(Route::order);

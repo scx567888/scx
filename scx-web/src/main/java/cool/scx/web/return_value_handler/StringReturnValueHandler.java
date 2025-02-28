@@ -6,12 +6,10 @@ import cool.scx.http.routing.RoutingContext;
 import static cool.scx.http.MediaType.TEXT_PLAIN;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-/**
- * String 类型处理器
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// String 类型处理器
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class StringReturnValueHandler implements ReturnValueHandler {
 
     @Override

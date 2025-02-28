@@ -11,12 +11,10 @@ import cool.scx.web.parameter_handler.exception.RequiredParamEmptyException;
 import static cool.scx.common.constant.AnnotationValueHelper.getRealValue;
 import static cool.scx.web.parameter_handler.from_body.FromBodyParameterHandler.readValue;
 
-/**
- * FromQueryParameterHandler
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// FromQueryParameterHandler
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class FromQueryParameterHandler implements ParameterHandler {
 
     private final FromQuery fromQuery;

@@ -11,22 +11,18 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Freemarker 标签父类
- * <p>
- * 让子类实现后，利用模版设计模式，委派给子类
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// Freemarker 标签父类
+/// 
+/// 让子类实现后，利用模版设计模式，委派给子类
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface BaseTemplateDirective extends TemplateDirectiveModel {
 
-    /**
-     * 格式化参数
-     *
-     * @param params p
-     * @return p
-     */
+    /// 格式化参数
+    ///
+    /// @param params p
+    /// @return p
     @SuppressWarnings("unchecked")
     static Map<String, Object> formatMapParams(Map<?, ?> params) {
         var newMap = new HashMap<String, Object>();
@@ -52,27 +48,21 @@ public interface BaseTemplateDirective extends TemplateDirectiveModel {
         body.render(env.getOut());
     }
 
-    /**
-     * 获取自定义指令的名称
-     *
-     * @return a {@link java.lang.String} object.
-     */
+    /// 获取自定义指令的名称
+    ///
+    /// @return a [java.lang.String] object.
     String directiveName();
 
-    /**
-     * 获取自定义 变量的名称
-     *
-     * @return a
-     */
+    /// 获取自定义 变量的名称
+    ///
+    /// @return a
     String variableName();
 
-    /**
-     * 委派下去让子类实现，并且返回加工后的返回值
-     * 可返回业务对象，或者集合
-     *
-     * @param params r
-     * @return r
-     */
+    /// 委派下去让子类实现，并且返回加工后的返回值
+    /// 可返回业务对象，或者集合
+    ///
+    /// @param params r
+    /// @return r
     Object handle(Map<String, Object> params);
 
 }

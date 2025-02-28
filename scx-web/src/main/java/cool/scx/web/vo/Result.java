@@ -13,19 +13,15 @@ import static cool.scx.http.MediaType.APPLICATION_JSON;
 import static cool.scx.http.MediaType.APPLICATION_XML;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-/**
- * 一般用来表达业务逻辑
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 一般用来表达业务逻辑
+///
+/// @author scx567888
+/// @version 0.0.1
 public abstract class Result implements BaseVo {
 
-    /**
-     * 操作成功
-     *
-     * @return json
-     */
+    /// 操作成功
+    ///
+    /// @return json
     public static ResultOfMap ok() {
         return new ResultOfMap("ok");
     }
@@ -34,11 +30,9 @@ public abstract class Result implements BaseVo {
         return new ResultOfData("ok", object);
     }
 
-    /**
-     * 操作失败
-     *
-     * @return json
-     */
+    /// 操作失败
+    ///
+    /// @return json
     public static ResultOfMap fail() {
         return new ResultOfMap("fail");
     }
@@ -53,13 +47,11 @@ public abstract class Result implements BaseVo {
         return new ResultOfMap(failMessage);
     }
 
-    /**
-     * 返回操作失败的 Json 带有消息
-     *
-     * @param failMessage 自定义的错误信息
-     * @param object      错误内容
-     * @return json
-     */
+    /// 返回操作失败的 Json 带有消息
+    ///
+    /// @param failMessage 自定义的错误信息
+    /// @param object      错误内容
+    /// @return json
     public static ResultOfData fail(String failMessage, Object object) {
         return new ResultOfData(failMessage, object);
     }
@@ -124,13 +116,11 @@ public abstract class Result implements BaseVo {
             this.body = new Body<>(message, new LinkedHashMap<>());
         }
 
-        /**
-         * 设置操作返回的数据，数据使用自定义的key存储
-         *
-         * @param dataKey 自定义的key
-         * @param dataVal 值
-         * @return json
-         */
+        /// 设置操作返回的数据，数据使用自定义的key存储
+        ///
+        /// @param dataKey 自定义的key
+        /// @param dataVal 值
+        /// @return json
         public ResultOfMap put(String dataKey, Object dataVal) {
             body.data.put(dataKey, dataVal);
             return this;

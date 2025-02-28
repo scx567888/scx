@@ -5,12 +5,10 @@ import cool.scx.http.FileFormat;
 import java.io.InputStream;
 import java.nio.file.Path;
 
-/**
- * 原始文件 但不需要下载的 vo 比如 pdf 之类
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 原始文件 但不需要下载的 vo 比如 pdf 之类
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class Raw extends BaseWriter {
 
     private Raw(InputStream inputStream, FileFormat fileFormat) {
