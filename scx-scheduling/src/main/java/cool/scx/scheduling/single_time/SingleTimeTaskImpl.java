@@ -78,7 +78,7 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
     @Override
     public ScheduleContext start() {
         if (executor == null) {
-            throw new IllegalStateException("executor 未设置 !!!");
+            throw new IllegalStateException("Executor 未设置 !!!");
         }
         //此处立即获取当前时间保证准确
         var now = now();
