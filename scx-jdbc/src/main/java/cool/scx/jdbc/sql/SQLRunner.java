@@ -258,7 +258,7 @@ public final class SQLRunner {
 
     /// 自动处理事务并在产生异常时进行自动回滚
     /// 注意 其中的操作会在另一个线程中执行 所以需要注意线程的操作
-    /// 当抛出异常时 请使用 [#getRootCause(Throwable)] 来获取真正的异常
+    /// 当抛出异常时 请使用 {@link cool.scx.common.exception.ScxExceptionHelper#getRootCause(Throwable)} 来获取真正的异常
     /// 用法
     ///
     /// ```sql

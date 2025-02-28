@@ -26,7 +26,7 @@ public final class URIUtils {
     }
 
     /// 移除两端的 "/" 或 "\"
-    /// 注意不要和 [#trim()] 混淆 此方法不处理空格 只处理斜杠
+    /// 注意不要和 {@link java.lang.String#trim()}  混淆 此方法不处理空格 只处理斜杠
     ///
     /// @param uri a
     /// @return a

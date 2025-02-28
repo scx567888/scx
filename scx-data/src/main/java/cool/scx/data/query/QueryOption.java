@@ -22,7 +22,7 @@ public enum QueryOption {
     USE_ORIGINAL_NAME,
 
     /// 使用 JSON 查询
-    /// 注意和 [#JSON_CONTAINS] 一起使用时无效 因为 [#JSON_CONTAINS] 自己有针对 Json 的特殊实现
+    /// 注意和 {@link WhereType#JSON_CONTAINS} 一起使用时无效 因为 {@link WhereType#JSON_CONTAINS} 自己有针对 Json 的特殊实现
     USE_JSON_EXTRACT,
 
     /// 注意只适用于 JSON_CONTAINS
