@@ -27,14 +27,14 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
     private static final Logger logger = getLogger(SingleTimeTaskImpl.class.getName());
 
     private final AtomicLong runCount;
-    private Supplier<Long> startDelaySupplier;
+    private Supplier<Instant> startTimeSupplier;
     private ExpirationPolicy expirationPolicy;
     private ScheduledExecutorService executor;
     private Consumer<ScheduleStatus> task;
 
     public SingleTimeTaskImpl() {
         this.runCount = new AtomicLong(0);
-        this.startDelaySupplier = null;
+        this.startTimeSupplier = null;
         this.expirationPolicy = IMMEDIATE_COMPENSATION; //默认过期补偿
         this.executor = null;
         this.task = null;
@@ -42,19 +42,19 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
 
     @Override
     public SingleTimeTask startTime(Supplier<Instant> startTime) {
-        this.startDelaySupplier = () -> between(now(), startTime.get()).toNanos();
+        this.startTimeSupplier = startTime;
         return this;
     }
 
     @Override
     public SingleTimeTask startTime(Instant startTime) {
-        this.startDelaySupplier = () -> between(now(), startTime).toNanos();
+        this.startTimeSupplier = () -> startTime;
         return this;
     }
 
     @Override
     public SingleTimeTask startDelay(Duration delay) {
-        this.startDelaySupplier = delay::toNanos;
+        this.startTimeSupplier = () -> now().plus(delay);
         return this;
     }
 
@@ -78,10 +78,19 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
 
     @Override
     public ScheduleStatus start() {
-        var startDelay = startDelaySupplier != null ? startDelaySupplier.get() : 0;
-        //判断任务是否过期
-        if (startDelay >= 0) {
-            return doStart(startDelay);
+        //此处立即获取当前时间保证准确
+        var now = now();
+        //获取开始时间
+        var startTime = startTimeSupplier != null ? startTimeSupplier.get() : null;
+        //没有开始时间 就不需要验证任何过期策略 直接执行
+        if (startTime == null) {
+            return doStart(0);
+        }
+        //先判断过没过期
+        var between = between(now, startTime);
+        //不为负数 则没有过期
+        if (!between.isNegative()) {
+            return doStart(between.toNanos());
         }
 
         //因为在单次执行任务中 只有忽略的策略需要特殊处理
@@ -99,12 +108,12 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
 
                 @Override
                 public Instant nextRunTime() {
-                    return null;
+                    return null; // 忽略策略没有下一次运行时间
                 }
 
                 @Override
                 public Instant nextRunTime(int count) {
-                    return null;
+                    return null;// 同上
                 }
 
                 @Override
@@ -132,12 +141,12 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
 
             @Override
             public Instant nextRunTime() {
-                return null;
+                return null;//todo
             }
 
             @Override
             public Instant nextRunTime(int count) {
-                return null;
+                return null;//todo
             }
 
             @Override
@@ -159,17 +168,17 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
 
                 @Override
                 public Instant nextRunTime() {
-                    return null;
+                    return null;// 因为只执行一次所以没有下一次 这里返回 null
                 }
 
                 @Override
                 public Instant nextRunTime(int count) {
-                    return null;
+                    return null;// 同上
                 }
 
                 @Override
                 public void cancel() {
-                    //因为只执行一次所以没法取消也没必要取消 这里什么都不做
+                    // 因为只执行一次所以没法取消也没必要取消 这里什么都不做
                 }
 
             });
