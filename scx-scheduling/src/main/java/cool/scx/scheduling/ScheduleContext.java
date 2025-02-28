@@ -24,8 +24,9 @@ public interface ScheduleContext {
     Status status();
 
     enum Status {
-        DONE,        // 已完成
-        CANCELED,    // 已取消
+        RUNNING,    // 运行中
+        DONE,       // 已完成
+        CANCELED,   // 已取消
     }
 
 }

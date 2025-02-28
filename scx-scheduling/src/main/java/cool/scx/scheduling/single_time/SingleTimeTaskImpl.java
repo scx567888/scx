@@ -167,7 +167,12 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
 
             @Override
             public Status status() {
-                return null;
+                var s = scheduledFuture.state();
+                return switch (s) {
+                    case RUNNING -> Status.RUNNING;
+                    case SUCCESS, FAILED -> Status.DONE;
+                    case CANCELLED -> Status.CANCELED;
+                };
             }
         };
         return context;
