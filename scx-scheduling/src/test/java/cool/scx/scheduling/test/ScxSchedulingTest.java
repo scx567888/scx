@@ -7,6 +7,7 @@ import java.time.Duration;
 import java.time.Instant;
 
 import static cool.scx.scheduling.ConcurrencyPolicy.CONCURRENCY;
+import static cool.scx.scheduling.ExpirationPolicy.*;
 
 public class ScxSchedulingTest {
 
@@ -32,18 +33,18 @@ public class ScxSchedulingTest {
         ScxScheduling
                 .once()
                 .startTime(Instant.now().minusSeconds(1))
-                .expirationPolicy(ExpirationPolicy.BACKTRACKING_IGNORE)
+                .expirationPolicy(BACKTRACKING_IGNORE)
                 .start((a) -> {
-                    System.err.println("这是通过 once() 1 打印的 !!! runCount : " + a.currentRunCount());
+                    System.err.println("这是通过 once() 1 打印的 !!! 但因为被忽略了 所以不会打印 !!! ");
                 });
 
         //过期执行 2
         ScxScheduling
                 .once()
                 .startTime(Instant.now().minusSeconds(1))
-                .expirationPolicy(ExpirationPolicy.BACKTRACKING_COMPENSATION)
+                .expirationPolicy(BACKTRACKING_COMPENSATION)
                 .start((a) -> {
-                    System.err.println("这是通过 once() 2 打印的 !!! runCount : " + a.currentRunCount());
+                    System.err.println("这是通过 once() 2 打印的 !!! 因为补偿策略所以会瞬间打印 runCount : " + a.currentRunCount());
                 });
 
         //测试取消
@@ -79,7 +80,7 @@ public class ScxSchedulingTest {
         ScxScheduling
                 .fixedRate()
                 .startTime(Instant.now().minusMillis(10000))
-                .expirationPolicy(ExpirationPolicy.IMMEDIATE_IGNORE)
+                .expirationPolicy(IMMEDIATE_IGNORE)
                 .delay(Duration.ofMillis(500))
                 .concurrencyPolicy(CONCURRENCY)
                 .maxRunCount(10)
@@ -93,7 +94,7 @@ public class ScxSchedulingTest {
         ScxScheduling
                 .fixedRate()
                 .startTime(Instant.now().minusMillis(1000))
-                .expirationPolicy(ExpirationPolicy.BACKTRACKING_IGNORE)
+                .expirationPolicy(BACKTRACKING_IGNORE)
                 .delay(Duration.ofMillis(500))
                 .concurrencyPolicy(CONCURRENCY)
                 .maxRunCount(10)
@@ -107,7 +108,7 @@ public class ScxSchedulingTest {
         ScxScheduling
                 .fixedRate()
                 .startTime(Instant.now().minusMillis(1000))
-                .expirationPolicy(ExpirationPolicy.IMMEDIATE_COMPENSATION)
+                .expirationPolicy(IMMEDIATE_COMPENSATION)
                 .delay(Duration.ofMillis(500))
                 .concurrencyPolicy(CONCURRENCY)
                 .maxRunCount(10)
@@ -121,7 +122,7 @@ public class ScxSchedulingTest {
         ScxScheduling
                 .fixedRate()
                 .startTime(Instant.now().minusMillis(1000))
-                .expirationPolicy(ExpirationPolicy.BACKTRACKING_COMPENSATION)
+                .expirationPolicy(BACKTRACKING_COMPENSATION)
                 .delay(Duration.ofMillis(500))
                 .concurrencyPolicy(CONCURRENCY)
                 .maxRunCount(10)
