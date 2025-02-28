@@ -1,6 +1,7 @@
 package cool.scx.scheduling;
 
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.function.Consumer;
 
 /// 调度任务
 ///
@@ -22,6 +23,9 @@ public interface ScheduleTask<T extends ScheduleTask<T>> {
 
     /// 设置任务
     T task(Task task);
+    
+    /// 设置错误处理器
+    T onError(Consumer<Throwable> errorHandler);
 
     /// 启动任务
     ScheduleContext start();
