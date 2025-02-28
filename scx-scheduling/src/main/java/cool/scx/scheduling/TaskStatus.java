@@ -13,5 +13,5 @@ public interface TaskStatus {
     default void cancelSchedule() {
         context().cancel();
     }
-    
+
 }
