@@ -9,6 +9,7 @@ import java.lang.System.Logger;
 import java.time.Instant;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import static cool.scx.scheduling.ExpirationPolicy.*;
@@ -32,6 +33,7 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
     private ScheduledExecutorService executor;
     private Task task;
     private ScheduleContext context;
+    private Consumer<Throwable> errorHandler;
 
     public SingleTimeTaskImpl() {
         this.runCount = new AtomicLong(0);
@@ -40,6 +42,7 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
         this.executor = null;
         this.task = null;
         this.context = null;
+        this.errorHandler = null;
     }
 
     @Override
@@ -63,6 +66,12 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
     @Override
     public SingleTimeTask task(Task task) {
         this.task = task;
+        return this;
+    }
+
+    @Override
+    public SingleTimeTask onError(Consumer<Throwable> errorHandler) {
+        this.errorHandler = errorHandler;
         return this;
     }
 
@@ -167,6 +176,7 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
 
             @Override
             public Status status() {
+                //todo 此处应该返回 任务本身的 而不是 scheduledFuture 的状态
                 var s = scheduledFuture.state();
                 return switch (s) {
                     case RUNNING -> Status.RUNNING;
@@ -197,7 +207,16 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
 
             });
         } catch (Throwable e) {
-            logger.log(ERROR, "调度任务时发生错误 !!!", e);
+            if (errorHandler != null) {
+                try {
+                    errorHandler.accept(e);
+                } catch (Throwable ex) {
+                    e.addSuppressed(ex);
+                    logger.log(ERROR, "errorHandler 发生错误 !!!", e);
+                }
+            } else {
+                logger.log(ERROR, "调度任务时发生错误 !!!", e);
+            }
         }
     }
 
