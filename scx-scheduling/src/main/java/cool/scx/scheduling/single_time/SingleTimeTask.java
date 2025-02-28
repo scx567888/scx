@@ -1,4 +1,6 @@
-package cool.scx.scheduling;
+package cool.scx.scheduling.single_time;
+
+import cool.scx.scheduling.ScheduleTask;
 
 import java.time.Duration;
 import java.time.Instant;

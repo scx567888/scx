@@ -18,8 +18,18 @@ public interface ScheduleTask {
 
     /// 最大运行次数 (此参数不受并发影响)
     /// 注意 当 并行(concurrent) 设置为 false 的时候 也可以在任务内部 取消 如下
-    /// <pre>
-    /// `ScxScheduling.fixedRate().delay(Duration.ofMillis(1)).concurrent(false).start(c ->{if (c.runCount() > 10){c.cancel();}System.err.println(" runCount : " + c.runCount());});`</pre>
+    /// ```java
+    /// ScxScheduling
+    ///     .fixedRate()
+    ///     .delay(Duration.ofMillis(1))
+    ///     .concurrent(false)
+    ///     .start(c ->{
+    ///         if (c.runCount() > 10){
+    ///             c.cancel();
+    ///         }
+    ///         System.err.println(" runCount : " + c.runCount());
+    ///     });
+    /// ```
     /// 但是此方式在 允许并发时并不准确 runCount 计数会因为多个线程同时运行累加从而跳过判断条件
     /// 所以如果需要 限制最大运行次数 推荐使用此参数
     ///

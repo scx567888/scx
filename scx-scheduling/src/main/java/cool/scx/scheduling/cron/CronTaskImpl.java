@@ -1,7 +1,8 @@
-package cool.scx.scheduling;
+package cool.scx.scheduling.cron;
 
 import com.cronutils.model.time.ExecutionTime;
 import com.cronutils.parser.CronParser;
+import cool.scx.scheduling.ScheduleStatus;
 
 import java.lang.System.Logger;
 import java.time.Duration;
