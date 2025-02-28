@@ -6,6 +6,8 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.function.Supplier;
 
+import static java.time.Instant.now;
+
 /// SingleTimeTask
 ///
 /// @author scx567888
@@ -14,9 +16,13 @@ public interface SingleTimeTask extends ScheduleTask<SingleTimeTask> {
 
     SingleTimeTask startTime(Supplier<Instant> startTime);
 
-    SingleTimeTask startTime(Instant startTime);
+    default SingleTimeTask startTime(Instant startTime) {
+        return startTime(() -> startTime);
+    }
 
-    SingleTimeTask startDelay(Duration delay);
+    default SingleTimeTask startDelay(Duration delay) {
+        return startTime(() -> now().plus(delay));
+    }
 
     @Override
     default SingleTimeTask concurrent(boolean concurrent) {
