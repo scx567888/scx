@@ -23,7 +23,7 @@ public interface ScheduleTask<T extends ScheduleTask<T>> {
 
     /// 设置任务
     T task(Task task);
-    
+
     /// 设置错误处理器
     T onError(Consumer<Throwable> errorHandler);
 
