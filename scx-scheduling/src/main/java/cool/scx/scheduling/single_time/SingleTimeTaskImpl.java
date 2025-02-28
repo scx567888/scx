@@ -72,9 +72,9 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
         var now = now();
         //获取开始时间
         var startTime = startTimeSupplier != null ? startTimeSupplier.get() : null;
-        //没有开始时间 就不需要验证任何过期策略 直接执行
+        //没有开始时间 就以当前时间为开始时间
         if (startTime == null) {
-            return doStart(0);
+            startTime = now;
         }
         //先判断过没过期
         var between = between(now, startTime);
@@ -135,8 +135,15 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
 
             @Override
             public Instant nextRunTime() {
+                // 任务取消 没有下一次执行时间
+                if (scheduledFuture.isCancelled()) {
+                    return null;
+                }
                 // 如果任务已执行，则没有下一次运行时间
-                return runCount() > 0 ? null : scheduledTime;
+                if (runCount() > 0) {
+                    return null;
+                }
+                return scheduledTime;
             }
 
             @Override
