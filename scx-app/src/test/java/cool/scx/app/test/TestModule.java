@@ -242,23 +242,23 @@ public class TestModule extends ScxModule {
                 .maxRunCount(10)
                 .start((a) -> {
                     //测试
-                    logger.log(ERROR, "这是通过 ScxContext.scheduleAtFixedRate() 打印的 : 一共 10 次 , 这时第 " + a.runCount() + " 次执行 !!!");
+                    logger.log(ERROR, "这是通过 ScxContext.scheduleAtFixedRate() 打印的 : 一共 10 次 , 这时第 " + a.currentRunCount() + " 次执行 !!!");
                 });
 
         ScxScheduling.cron()
                 .expression("*/1 * * * * ?")
                 .start((a) -> {
                     //测试
-                    logger.log(ERROR, "这是通过 ScxContext.scheduler() 使用 Cron 表达式 打印的 : 这时第 " + a.runCount() + " 次执行 !!!");
+                    logger.log(ERROR, "这是通过 ScxContext.scheduler() 使用 Cron 表达式 打印的 : 这时第 " + a.currentRunCount() + " 次执行 !!!");
                 });
 
         ScxScheduling.fixedRate()
                 .startTime(Instant.now().plusSeconds(3))
                 .delay(Duration.of(1, ChronoUnit.SECONDS))
                 .start((a) -> {
-                    logger.log(ERROR, "这是通过 ScxContext.scheduleAtFixedRate() 打印的 : 不限次数 不过到 第 10 次手动取消 , 这是第 " + a.runCount() + " 次执行 !!!");
-                    if (a.runCount() >= 10) {
-                        a.cancel();
+                    logger.log(ERROR, "这是通过 ScxContext.scheduleAtFixedRate() 打印的 : 不限次数 不过到 第 10 次手动取消 , 这是第 " + a.currentRunCount() + " 次执行 !!!");
+                    if (a.currentRunCount() >= 10) {
+                        a.cancelSchedule();
                     }
                 });
 
