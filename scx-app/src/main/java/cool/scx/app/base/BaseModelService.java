@@ -16,7 +16,6 @@ import static cool.scx.data.field_filter.FieldFilterBuilder.ofExcluded;
 import static cool.scx.data.query.QueryBuilder.*;
 
 /// 提供一些针对 BaseModel 类型实体类 简单的 CRUD 操作的 service 类
-///
 /// 业务 service 可以继承此类 (注意 : 如需要被 beanFactory 扫描到 请标注 [cool.scx.app.annotation.ScxService] 注解)
 ///
 /// 或手动创建 : new BaseModelService()
