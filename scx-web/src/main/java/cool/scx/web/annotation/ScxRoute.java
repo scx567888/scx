@@ -30,9 +30,9 @@ public @interface ScxRoute {
     boolean ignoreParentUrl() default false;
 
     /// 注意 : 仅当作用于方法时生效 !!!
-    /// 是否使用方法名称作为 url 路径   
-    /// 仅当 value 为 "" 时生效   
-    /// 规则为 获取方法名称 然后转换为 短横线命名法   
+    /// 是否使用方法名称作为 url 路径
+    /// 仅当 value 为 "" 时生效
+    /// 规则为 获取方法名称 然后转换为 短横线命名法
     /// 如 方法名为  getUserList 则 url 为 /user/get-user-list
     boolean useNameAsUrl() default true;
 
