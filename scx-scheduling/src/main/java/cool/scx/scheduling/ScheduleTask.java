@@ -1,7 +1,6 @@
 package cool.scx.scheduling;
 
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.function.Consumer;
 
 /// 调度任务
 ///
@@ -51,21 +50,22 @@ public interface ScheduleTask<T extends ScheduleTask<T>> {
     /// @return self
     T executor(ScheduledExecutorService executor);
 
-    /// 任务
-    ///
+    /// 设置任务
+    /// 注意 这里任务会获得一个 ScheduleStatus 但是和 start 返回的 ScheduleStatus 不同
+    /// 这里的 ScheduleStatus 相当于一个快照 即 不会根据 调度任务本身的状态进行变化
     /// @param task 任务
     /// @return self
-    T task(Consumer<ScheduleStatus> task);
+    T task(Task task);
 
     /// 启动任务
     ///
     /// @return 调度状态
-    ScheduleStatus start();
+    ScheduleContext start();
 
     /// 直接启动任务
     ///
     /// @return 调度状态
-    default ScheduleStatus start(Consumer<ScheduleStatus> task) {
+    default ScheduleContext start(Task task) {
         return task(task).start();
     }
 
