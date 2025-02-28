@@ -39,6 +39,7 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
     private Task task;
     private ScheduledFuture<?> scheduledFuture;
     private Consumer<Throwable> errorHandler;
+    private ScheduleContext context;
 
     public MultiTimeTaskImpl() {
         this.runCount = new AtomicLong(0);
@@ -110,17 +111,17 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
 
     @Override
     public ScheduleContext start() {
-        if (this.executor == null) {
+        if (executor == null) {
             throw new IllegalStateException("Executor 未设置 !!!");
         }
-        if (this.delay == null) {
+        if (delay == null) {
             throw new IllegalStateException("Delay 未设置");
         }
-        //此处立即获取当前时间保证准确行
+        //此处立即获取当前时间保证准确
         var now = now();
         //获取开始时间
-        var startTime = this.startTimeSupplier != null ? this.startTimeSupplier.get() : null;
-        //没有开始时间 就不需要验证任何过期策略 直接执行
+        var startTime = startTimeSupplier != null ? startTimeSupplier.get() : null;
+        //没有开始时间 就以当前时间为开始时间
         if (startTime == null) {
             startTime = now;
         }
@@ -158,70 +159,6 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
         throw new IllegalStateException("Unexpected value: " + expirationPolicy);
     }
 
-    private void run() {
-        //如果允许并发执行则 开启虚拟线程执行
-        switch (concurrencyPolicy) {
-            case CONCURRENCY -> executor.execute(this::run0);
-            case NO_CONCURRENCY -> run0();
-            default -> {
-                //这里只可能是 null 
-            }
-        }
-    }
-
-    private void run0() {
-        var l = runCount.incrementAndGet();
-        //判断是否 达到最大次数 停止运行并取消任务
-        if (maxRunCount != -1 && l > maxRunCount) {
-            //todo 这里 scheduledFuture 可能为空吗 ? 
-            if (scheduledFuture != null) {
-                scheduledFuture.cancel(false);
-            }
-            return;
-        }
-        try {
-            task.run(new TaskStatus() {
-                @Override
-                public long currentRunCount() {
-                    return 0;
-                }
-
-                @Override
-                public ScheduleContext context() {
-                    return null;
-                }
-
-//                @Override
-//                public long runCount() {
-//                    return l;
-//                }
-//
-//                @Override
-//                public Instant nextRunTime() {
-//                    return null;
-//                }
-//
-//                @Override
-//                public Instant nextRunTime(int count) {
-//                    return null;
-//                }
-//
-//                @Override
-//                public void cancel() {
-//                    // todo 这里也是 可能为空吗?
-//                    scheduledFuture.cancel(false);
-//                }
-//
-//                @Override
-//                public Status status() {
-//                    return null;
-//                }
-
-            });
-        } catch (Throwable e) {
-            logger.log(ERROR, "调度任务时发生错误 !!!", e);
-        }
-    }
 
     private ScheduleContext doStart(long startDelay) {
         this.scheduledFuture = switch (executionPolicy) {
@@ -254,6 +191,57 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
                 return null;
             }
         };
+    }
+
+    private void run() {
+        //如果允许并发执行则 开启虚拟线程执行
+        switch (concurrencyPolicy) {
+            case CONCURRENCY -> executor.execute(this::run0);
+            case NO_CONCURRENCY -> run0();
+            default -> {
+                //这里只可能是 null 
+            }
+        }
+    }
+
+    private void run0() {
+        var l = runCount.incrementAndGet();
+        //判断是否 达到最大次数 停止运行并取消任务
+        if (maxRunCount != -1 && l > maxRunCount) {
+            //todo 这里 scheduledFuture 可能为空吗 ? 
+            if (scheduledFuture != null) {
+                scheduledFuture.cancel(false);
+            }
+            return;
+        }
+        try {
+            task.run(new TaskStatus() {
+
+                @Override
+                public long currentRunCount() {
+                    return l;
+                }
+
+                @Override
+                public ScheduleContext context() {
+                    //todo 这里有可能是 null , 假设 startDelay 为 0 时 有可能先调用 run 然后有返回值
+                    //是否使用锁 来强制 等待创建完成
+                    return context;
+                }
+
+            });
+        } catch (Throwable e) {
+            if (errorHandler != null) {
+                try {
+                    errorHandler.accept(e);
+                } catch (Throwable ex) {
+                    e.addSuppressed(ex);
+                    logger.log(ERROR, "errorHandler 发生错误 !!!", e);
+                }
+            } else {
+                logger.log(ERROR, "调度任务时发生错误 !!!", e);
+            }
+        }
     }
 
 }
