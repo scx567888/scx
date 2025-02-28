@@ -6,7 +6,7 @@ import java.time.Instant;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public interface ScheduleStatus {
+public interface ScheduleContext {
 
     /// 任务运行的次数 (有两种情况)
     /// 1, 当作为 task 回调参数时表示当前任务的运行次数(包括当前次数) 不会变化
@@ -31,8 +31,6 @@ public interface ScheduleStatus {
     Status status();
 
     enum Status {
-        READY,       // 未开始
-        RUNNING,     // 正在进行中
         DONE,        // 已完成
         CANCELED,    // 已取消
     }
