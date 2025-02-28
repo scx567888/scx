@@ -1,7 +1,6 @@
 package cool.scx.scheduling.multi_time;
 
-import cool.scx.scheduling.ExpirationPolicy;
-import cool.scx.scheduling.ScheduleStatus;
+import cool.scx.scheduling.*;
 
 import java.lang.System.Logger;
 import java.time.Duration;
@@ -12,7 +11,9 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import static cool.scx.scheduling.ConcurrencyPolicy.NO_CONCURRENCY;
 import static cool.scx.scheduling.ExpirationPolicy.*;
+import static cool.scx.scheduling.multi_time.ExecutionPolicy.FIXED_RATE;
 import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.getLogger;
 import static java.time.Duration.between;
@@ -30,36 +31,32 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
     private final AtomicLong runCount;
     private Supplier<Instant> startTimeSupplier;
     private Duration delay;
-    private Type type;
-    private boolean concurrent;
+    private ExecutionPolicy executionPolicy;
+    private ConcurrencyPolicy concurrencyPolicy;
     private long maxRunCount;
     private ExpirationPolicy expirationPolicy;
     private ScheduledExecutorService executor;
-    private Consumer<ScheduleStatus> task;
+    private Task task;
     private ScheduledFuture<?> scheduledFuture;
+    private Consumer<Throwable> errorHandler;
 
     public MultiTimeTaskImpl() {
         this.runCount = new AtomicLong(0);
         this.startTimeSupplier = null;
         this.delay = null;
-        this.type = Type.FIXED_RATE;//默认类型
-        this.concurrent = false; //默认不允许并发
+        this.executionPolicy = FIXED_RATE;//默认类型
+        this.concurrencyPolicy = NO_CONCURRENCY; //默认不允许并发
         this.maxRunCount = -1;// 默认没有最大运行次数
         this.expirationPolicy = IMMEDIATE_COMPENSATION;//默认策略
         this.executor = null;
         this.task = null;
         this.scheduledFuture = null;
+        this.errorHandler = null;
     }
 
     @Override
     public MultiTimeTask startTime(Supplier<Instant> startTime) {
         this.startTimeSupplier = startTime;
-        return this;
-    }
-
-    @Override
-    public MultiTimeTask startTime(Instant startTime) {
-        this.startTimeSupplier = () -> startTime;
         return this;
     }
 
@@ -70,14 +67,14 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
     }
 
     @Override
-    public MultiTimeTask type(Type type) {
-        this.type = type;
+    public MultiTimeTask executionPolicy(ExecutionPolicy executionPolicy) {
+        this.executionPolicy = executionPolicy;
         return this;
     }
 
     @Override
-    public MultiTimeTask concurrent(boolean concurrentExecution) {
-        this.concurrent = concurrentExecution;
+    public MultiTimeTask concurrencyPolicy(ConcurrencyPolicy concurrencyPolicy) {
+        this.concurrencyPolicy = concurrencyPolicy;
         return this;
     }
 
@@ -100,15 +97,24 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
     }
 
     @Override
-    public MultiTimeTask task(Consumer<ScheduleStatus> task) {
+    public MultiTimeTask task(Task task) {
         this.task = task;
         return this;
     }
 
     @Override
-    public ScheduleStatus start() {
+    public MultiTimeTask onError(Consumer<Throwable> errorHandler) {
+        this.errorHandler = errorHandler;
+        return this;
+    }
+
+    @Override
+    public ScheduleContext start() {
+        if (this.executor == null) {
+            throw new IllegalStateException("Executor 未设置 !!!");
+        }
         if (this.delay == null) {
-            throw new IllegalArgumentException("Delay must be non-null");
+            throw new IllegalStateException("Delay 未设置");
         }
         //此处立即获取当前时间保证准确行
         var now = now();
@@ -116,7 +122,7 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
         var startTime = this.startTimeSupplier != null ? this.startTimeSupplier.get() : null;
         //没有开始时间 就不需要验证任何过期策略 直接执行
         if (startTime == null) {
-            return doStart(0);
+            startTime = now;
         }
         //先判断过没过期
         var between = between(now, startTime);
@@ -154,10 +160,12 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
 
     private void run() {
         //如果允许并发执行则 开启虚拟线程执行
-        if (concurrent) {
-            executor.execute(this::run0);
-        } else {
-            run0();
+        switch (concurrencyPolicy) {
+            case CONCURRENCY -> executor.execute(this::run0);
+            case NO_CONCURRENCY -> run0();
+            default -> {
+                //这里只可能是 null 
+            }
         }
     }
 
@@ -172,18 +180,42 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
             return;
         }
         try {
-            task.accept(new ScheduleStatus() {
-
+            task.run(new TaskStatus() {
                 @Override
-                public long runCount() {
-                    return l;
+                public long currentRunCount() {
+                    return 0;
                 }
 
                 @Override
-                public void cancel() {
-                    // todo 这里也是 可能为空吗?
-                    scheduledFuture.cancel(false);
+                public ScheduleContext context() {
+                    return null;
                 }
+
+//                @Override
+//                public long runCount() {
+//                    return l;
+//                }
+//
+//                @Override
+//                public Instant nextRunTime() {
+//                    return null;
+//                }
+//
+//                @Override
+//                public Instant nextRunTime(int count) {
+//                    return null;
+//                }
+//
+//                @Override
+//                public void cancel() {
+//                    // todo 这里也是 可能为空吗?
+//                    scheduledFuture.cancel(false);
+//                }
+//
+//                @Override
+//                public Status status() {
+//                    return null;
+//                }
 
             });
         } catch (Throwable e) {
@@ -191,20 +223,35 @@ public final class MultiTimeTaskImpl implements MultiTimeTask {
         }
     }
 
-    private ScheduleStatus doStart(long startDelay) {
-        this.scheduledFuture = switch (type) {
+    private ScheduleContext doStart(long startDelay) {
+        this.scheduledFuture = switch (executionPolicy) {
             case FIXED_RATE -> executor.scheduleAtFixedRate(this::run, startDelay, delay.toNanos(), NANOSECONDS);
             case FIXED_DELAY -> executor.scheduleWithFixedDelay(this::run, startDelay, delay.toNanos(), NANOSECONDS);
         };
-        return new ScheduleStatus() {
+        return new ScheduleContext() {
             @Override
             public long runCount() {
                 return runCount.get();
             }
 
             @Override
+            public Instant nextRunTime() {
+                return null;
+            }
+
+            @Override
+            public Instant nextRunTime(int count) {
+                return null;
+            }
+
+            @Override
             public void cancel() {
                 scheduledFuture.cancel(false);
+            }
+
+            @Override
+            public Status status() {
+                return null;
             }
         };
     }
