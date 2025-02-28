@@ -3,8 +3,8 @@ package cool.scx.scheduling;
 import java.time.Duration;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
-import static cool.scx.scheduling.MultipleTimeTask.Type.FIXED_DELAY;
-import static cool.scx.scheduling.MultipleTimeTask.Type.FIXED_RATE;
+import static cool.scx.scheduling.MultiTimeTask.Type.FIXED_DELAY;
+import static cool.scx.scheduling.MultiTimeTask.Type.FIXED_RATE;
 
 /// 用来创建 调度任务的工具类
 ///
@@ -21,12 +21,12 @@ public final class ScxScheduling {
         return defaultScheduler;
     }
 
-    public static MultipleTimeTask fixedRate() {
-        return new MultipleTimeTaskImpl().executor(defaultScheduler()).type(FIXED_RATE);
+    public static MultiTimeTask fixedRate() {
+        return new MultiTimeTaskImpl().executor(defaultScheduler()).type(FIXED_RATE);
     }
 
-    public static MultipleTimeTask fixedDelay() {
-        return new MultipleTimeTaskImpl().executor(defaultScheduler()).type(FIXED_DELAY);
+    public static MultiTimeTask fixedDelay() {
+        return new MultiTimeTaskImpl().executor(defaultScheduler()).type(FIXED_DELAY);
     }
 
     public static CronTask cron() {

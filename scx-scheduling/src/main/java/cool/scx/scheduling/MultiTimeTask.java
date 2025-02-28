@@ -9,15 +9,15 @@ import java.util.function.Supplier;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public interface MultipleTimeTask extends ScheduleTask {
+public interface MultiTimeTask extends ScheduleTask {
 
-    MultipleTimeTask startTime(Supplier<Instant> startTime);
+    MultiTimeTask startTime(Supplier<Instant> startTime);
 
-    MultipleTimeTask startTime(Instant startTime);
+    MultiTimeTask startTime(Instant startTime);
 
-    MultipleTimeTask delay(Duration delay);
+    MultiTimeTask delay(Duration delay);
 
-    MultipleTimeTask type(Type type);
+    MultiTimeTask type(Type type);
 
     enum Type {
         FIXED_RATE,

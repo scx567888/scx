@@ -20,9 +20,9 @@ import static java.util.concurrent.TimeUnit.NANOSECONDS;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public final class MultipleTimeTaskImpl implements MultipleTimeTask {
+public final class MultiTimeTaskImpl implements MultiTimeTask {
 
-    private static final Logger logger = getLogger(MultipleTimeTaskImpl.class.getName());
+    private static final Logger logger = getLogger(MultiTimeTaskImpl.class.getName());
 
     private final AtomicLong runCount;
     private Supplier<Instant> startTimeSupplier;
@@ -35,7 +35,7 @@ public final class MultipleTimeTaskImpl implements MultipleTimeTask {
     private Consumer<ScheduleStatus> task;
     private ScheduledFuture<?> scheduledFuture;
 
-    public MultipleTimeTaskImpl() {
+    public MultiTimeTaskImpl() {
         this.runCount = new AtomicLong(0);
         this.startTimeSupplier = null;
         this.delay = null;
@@ -49,55 +49,55 @@ public final class MultipleTimeTaskImpl implements MultipleTimeTask {
     }
 
     @Override
-    public MultipleTimeTask startTime(Supplier<Instant> startTime) {
+    public MultiTimeTask startTime(Supplier<Instant> startTime) {
         this.startTimeSupplier = startTime;
         return this;
     }
 
     @Override
-    public MultipleTimeTask startTime(Instant startTime) {
+    public MultiTimeTask startTime(Instant startTime) {
         this.startTimeSupplier = () -> startTime;
         return this;
     }
 
     @Override
-    public MultipleTimeTask delay(Duration delay) {
+    public MultiTimeTask delay(Duration delay) {
         this.delay = delay;
         return this;
     }
 
     @Override
-    public MultipleTimeTask type(Type type) {
+    public MultiTimeTask type(Type type) {
         this.type = type;
         return this;
     }
 
     @Override
-    public MultipleTimeTask concurrent(boolean concurrentExecution) {
+    public MultiTimeTask concurrent(boolean concurrentExecution) {
         this.concurrent = concurrentExecution;
         return this;
     }
 
     @Override
-    public MultipleTimeTask maxRunCount(long maxRunCount) {
+    public MultiTimeTask maxRunCount(long maxRunCount) {
         this.maxRunCount = maxRunCount;
         return this;
     }
 
     @Override
-    public MultipleTimeTask expirationPolicy(ExpirationPolicy expirationPolicy) {
+    public MultiTimeTask expirationPolicy(ExpirationPolicy expirationPolicy) {
         this.expirationPolicy = expirationPolicy;
         return this;
     }
 
     @Override
-    public MultipleTimeTask executor(ScheduledExecutorService executor) {
+    public MultiTimeTask executor(ScheduledExecutorService executor) {
         this.executor = executor;
         return this;
     }
 
     @Override
-    public MultipleTimeTask task(Consumer<ScheduleStatus> task) {
+    public MultiTimeTask task(Consumer<ScheduleStatus> task) {
         this.task = task;
         return this;
     }
