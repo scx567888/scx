@@ -13,74 +13,50 @@ import cool.scx.http.x.XHttpServerOptions;
 
 import java.util.*;
 
-/**
- * Scx 构建器
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// Scx 构建器
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class ScxBuilder {
 
-    /**
-     * 默认配置键值对, 以便在没有配置文件的时候可以使项目正确启动
-     */
+    /// 默认配置键值对, 以便在没有配置文件的时候可以使项目正确启动
     private static final Map<String, Object> DEFAULT_CONFIG_MAP = initDefaultConfigMap();
 
-    /**
-     * 默认的核心包 APP KEY (密码) , 注意请不要在您自己的模块中使用此常量 , 非常不安全
-     */
+    /// 默认的核心包 APP KEY (密码) , 注意请不要在您自己的模块中使用此常量 , 非常不安全
     private static final String DEFAULT_APP_KEY = "SCX-123456";
 
-    /**
-     * 默认配置文件 路径
-     */
+    /// 默认配置文件 路径
     private static final String DEFAULT_SCX_CONFIG_PATH = "AppRoot:scx-config.json";
 
-    /**
-     * 用来存储临时待添加的 scxModules
-     */
+    /// 用来存储临时待添加的 scxModules
     private final List<ScxModule> scxModules = new ArrayList<>();
 
-    /**
-     * 用来存储临时待添加的 scxFeatureConfig
-     */
+    /// 用来存储临时待添加的 scxFeatureConfig
     private final ScxFeatureConfig scxFeatureConfig = new ScxFeatureConfig();
 
-    /**
-     * 配置源
-     */
+    /// 配置源
     private final List<ScxConfigSource> scxConfigSources = new ArrayList<>();
 
-    /**
-     * 用来存储临时待添加的 外部参数
-     */
+    /// 用来存储临时待添加的 外部参数
     private String[] args = new String[]{};
 
-    /**
-     * 用来存储临时待添加的 mainClass
-     */
+    /// 用来存储临时待添加的 mainClass
     private Class<?> mainClass = null;
 
-    /**
-     * 用来存储临时待添加的 appKey
-     */
+    /// 用来存储临时待添加的 appKey
     private String appKey;
 
     private Object defaultHttpServerOptions;
 
-    /**
-     * 构造函数
-     */
+    /// 构造函数
     public ScxBuilder() {
         appKey = DEFAULT_APP_KEY;
         defaultHttpServerOptions = null;
     }
 
-    /**
-     * a
-     *
-     * @return a
-     */
+    /// a
+    ///
+    /// @return a
     private static Map<String, Object> initDefaultConfigMap() {
         var tempMap = new LinkedHashMap<String, Object>();
         tempMap.put("scx.port", 8080);
@@ -104,12 +80,10 @@ public final class ScxBuilder {
         return tempMap;
     }
 
-    /**
-     * 初始化 AppKey
-     *
-     * @param appKey a
-     * @return a
-     */
+    /// 初始化 AppKey
+    ///
+    /// @param appKey a
+    /// @return a
     private static String checkAppKey(String appKey) {
         if (StringUtils.isBlank(appKey)) {
             throw new IllegalArgumentException("AppKey cannot be set empty");
@@ -133,18 +107,14 @@ public final class ScxBuilder {
         return scxConfigPath != null ? scxConfigPath : DEFAULT_SCX_CONFIG_PATH;
     }
 
-    /**
-     * a
-     */
+    /// a
     public Scx run() {
         return this.build().run();
     }
 
-    /**
-     * 构建
-     *
-     * @return a
-     */
+    /// 构建
+    ///
+    /// @return a
     public Scx build() {
         //检查 appKey
         checkAppKey(appKey);
@@ -164,57 +134,47 @@ public final class ScxBuilder {
         return new Scx(scxEnvironment, appKey, scxFeatureConfig, scxConfig, scxModules.toArray(ScxModule[]::new), defaultHttpServerOptions);
     }
 
-    /**
-     * 添加多个模块
-     *
-     * @param modules a
-     * @return a
-     */
+    /// 添加多个模块
+    ///
+    /// @param modules a
+    /// @return a
     public ScxBuilder addModule(ScxModule... modules) {
         this.scxModules.addAll(Arrays.asList(modules));
         return this;
     }
 
-    /**
-     * 添加多个模块
-     *
-     * @param mainClass a
-     * @return a
-     */
+    /// 添加多个模块
+    ///
+    /// @param mainClass a
+    /// @return a
     public ScxBuilder setMainClass(Class<?> mainClass) {
         this.mainClass = mainClass;
         return this;
     }
 
-    /**
-     * 添加多个模块
-     *
-     * @param appKey a
-     * @return a
-     */
+    /// 添加多个模块
+    ///
+    /// @param appKey a
+    /// @return a
     public ScxBuilder setAppKey(String appKey) {
         this.appKey = appKey;
         return this;
     }
 
-    /**
-     * 添加 外部参数
-     *
-     * @param args a
-     * @return a
-     */
+    /// 添加 外部参数
+    ///
+    /// @param args a
+    /// @return a
     public ScxBuilder setArgs(String... args) {
         this.args = args;
         return this;
     }
 
-    /**
-     * 设置配置内容
-     *
-     * @param scxFeature s
-     * @param state      s
-     * @return a
-     */
+    /// 设置配置内容
+    ///
+    /// @param scxFeature s
+    /// @param state      s
+    /// @return a
     public ScxBuilder configure(ScxAppFeature scxFeature, boolean state) {
         scxFeatureConfig.set(scxFeature, state);
         return this;

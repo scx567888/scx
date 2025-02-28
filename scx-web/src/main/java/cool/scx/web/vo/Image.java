@@ -31,11 +31,9 @@ import static cool.scx.http.MediaType.IMAGE_PNG;
 /// @version 0.0.1
 public abstract class Image implements BaseVo {
 
-    /**
-     * 用来校验 file 是否可用
-     *
-     * @param _file a {@link java.io.File} object.
-     */
+    /// 用来校验 file 是否可用
+    ///
+    /// @param _file a [java.io.File] object.
     protected Image(Path _file) {
         Objects.requireNonNull(_file, "图片文件不能为 null");
         // 图片不存在 这里抛出不存在异常
@@ -81,12 +79,10 @@ public abstract class Image implements BaseVo {
             this.buffer = getBuffer(file);
         }
 
-        /**
-         * 就不是普通的图片 我们就返回他在操作系统中的展示图标即可
-         *
-         * @return a
-         * @throws ScxHttpException if any.
-         */
+        /// 就不是普通的图片 我们就返回他在操作系统中的展示图标即可
+        ///
+        /// @return a
+        /// @throws ScxHttpException if any.
         private byte[] getBuffer(Path file) {
             try (var out = new ByteArrayOutputStream()) {
                 var image = ((ImageIcon) FileSystemView.getFileSystemView().getSystemIcon(file.toFile())).getImage();
@@ -128,9 +124,7 @@ public abstract class Image implements BaseVo {
 
         private final String contentType;
 
-        /**
-         * 如果图片是需要裁剪的这里存储裁剪过后的字节数组 以提高多次调用的性能
-         */
+        /// 如果图片是需要裁剪的这里存储裁剪过后的字节数组 以提高多次调用的性能
         private final byte[] buffer;
 
         public CroppedImage(Path file, Integer width, Integer height, Position position) {
@@ -141,12 +135,10 @@ public abstract class Image implements BaseVo {
             this.buffer = getBuffer(file, width, height, position);
         }
 
-        /**
-         * 裁剪后的图片
-         *
-         * @return a
-         * @throws ScxHttpException if any.
-         */
+        /// 裁剪后的图片
+        ///
+        /// @return a
+        /// @throws ScxHttpException if any.
         private byte[] getBuffer(Path file, Integer width, Integer height, Position position) {
             try (var out = new ByteArrayOutputStream()) {
                 var image = Thumbnails.of(file.toFile()).scale(1.0).asBufferedImage();

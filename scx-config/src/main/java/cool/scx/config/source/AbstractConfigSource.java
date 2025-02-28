@@ -5,12 +5,10 @@ import cool.scx.config.ScxConfigSource;
 
 import java.util.function.BiConsumer;
 
-/**
- * AbstractConfigSource
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// AbstractConfigSource
+///
+/// @author scx567888
+/// @version 0.0.1
 public abstract class AbstractConfigSource implements ScxConfigSource {
 
     protected ObjectNode configMapping;

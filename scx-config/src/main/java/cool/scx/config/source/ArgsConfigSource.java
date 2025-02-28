@@ -4,12 +4,10 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import cool.scx.common.jackson.JsonNodeHelper;
 
-/**
- * ArgsConfigSource
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ArgsConfigSource
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class ArgsConfigSource extends AbstractConfigSource {
 
     private ArgsConfigSource(String... args) {

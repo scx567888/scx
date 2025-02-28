@@ -9,12 +9,10 @@ import cool.scx.http.routing.handler.CorsHandler;
 import static cool.scx.http.HttpFieldName.*;
 import static cool.scx.http.HttpMethod.*;
 
-/**
- * ScxHttp 路由 内部使用 Router 进行具体路由的处理
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ScxHttp 路由 内部使用 Router 进行具体路由的处理
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class ScxHttpRouter extends RouterImpl {
 
     private static final HttpMethod[] DEFAULT_ALLOWED_METHODS = new HttpMethod[]{GET, POST, OPTIONS, DELETE, PATCH, PUT};

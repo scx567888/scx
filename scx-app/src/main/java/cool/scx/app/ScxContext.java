@@ -17,41 +17,31 @@ import javax.sql.DataSource;
 import java.nio.file.Path;
 import java.util.concurrent.Callable;
 
-/**
- * 用来存储 整个项目的上下文
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 用来存储 整个项目的上下文
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class ScxContext {
 
-    /**
-     * 全局唯一的 SCX APP
-     * <br>
-     * 为了保证方法使用的简易 我们建议使用静态的方法
-     * 但是其本质上是调用 GLOBAL_UNIQUE_SCX_APP 方法中的实例对象
-     */
+    /// 全局唯一的 SCX APP
+    ///   
+    /// 为了保证方法使用的简易 我们建议使用静态的方法
+    /// 但是其本质上是调用 GLOBAL_UNIQUE_SCX_APP 方法中的实例对象
     final static ScopedValue<Scx> GLOBAL_SCX = ScopedValue.newInstance();
 
-    /**
-     * 兼容 旧版本 todo 待移除
-     */
+    /// 兼容 旧版本 todo 待移除
     private static Scx GLOBAL_SCX_0 = null;
 
-    /**
-     * 设置全局的 Scx 兼容 旧版本 todo 待移除
-     *
-     * @param scx scx
-     */
+    /// 设置全局的 Scx 兼容 旧版本 todo 待移除
+    ///
+    /// @param scx scx
     static void scx(Scx scx) {
         GLOBAL_SCX_0 = scx;
     }
 
-    /**
-     * 获取全局的 Scx
-     *
-     * @return scx
-     */
+    /// 获取全局的 Scx
+    ///
+    /// @return scx
     public static Scx scx() {
         if (GLOBAL_SCX.get() != null) {
             return GLOBAL_SCX.get();

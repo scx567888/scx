@@ -6,25 +6,21 @@ import cool.scx.config.handler.ConvertValueHandler;
 import cool.scx.config.handler.DefaultValueHandler;
 import cool.scx.config.source.MultiConfigSource;
 
-/**
- * 配置文件类
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// 配置文件类
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class ScxConfig extends MultiConfigSource {
 
     public ScxConfig(ScxConfigSource... scxConfigSources) {
         super(scxConfigSources);
     }
 
-    /**
-     * 从配置文件中获取配置值
-     * 没有找到会返回 null
-     *
-     * @param keyPath keyPath
-     * @return a T object.
-     */
+    /// 从配置文件中获取配置值
+    /// 没有找到会返回 null
+    ///
+    /// @param keyPath keyPath
+    /// @return a T object.
     public JsonNode get(String keyPath) {
         return JsonNodeHelper.get(configMapping, keyPath);
     }

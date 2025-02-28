@@ -8,12 +8,10 @@ import cool.scx.config.ScxEnvironment;
 
 import java.nio.file.Path;
 
-/**
- * AppRootHandler
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// AppRootHandler
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class AppRootHandler implements ScxConfigValueHandler<Path> {
 
     private final Path defaultPath;

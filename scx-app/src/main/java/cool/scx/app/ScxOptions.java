@@ -15,62 +15,40 @@ import java.util.stream.Collectors;
 import static cool.scx.common.exception.ScxExceptionHelper.ignore;
 import static cool.scx.common.util.NetUtils.getLocalIPAddress;
 
-/**
- * ScxOptions
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ScxOptions
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class ScxOptions {
 
-    /**
-     * 端口号
-     */
+    /// 端口号
     private final int port;
 
-    /**
-     * 允许的 域
-     */
+    /// 允许的 域
     private final String allowedOrigin;
 
-    /**
-     * 数据源地址
-     */
+    /// 数据源地址
     private final String dataSourceUrl;
 
-    /**
-     * 数据源 用户名
-     */
+    /// 数据源 用户名
     private final String dataSourceUsername;
 
-    /**
-     * 数据源密码 真实值(解密后)
-     */
+    /// 数据源密码 真实值(解密后)
     private final String dataSourcePassword;
 
-    /**
-     * 其他连接参数
-     */
+    /// 其他连接参数
     private final String[] dataSourceParameters;
 
-    /**
-     * 是否开启 https
-     */
+    /// 是否开启 https
     private final boolean httpsEnabled;
 
-    /**
-     * ssl 证书路径 字符串值
-     */
+    /// ssl 证书路径 字符串值
     private final Path sslPath;
 
-    /**
-     * ssl 证书密码 (解密后)
-     */
+    /// ssl 证书密码 (解密后)
     private final String sslPassword;
 
-    /**
-     * 模板 根目录 字符串值
-     */
+    /// 模板 根目录 字符串值
     private final Path templateRoot;
 
     public ScxOptions(ScxConfig scxConfig, ScxEnvironment scxEnvironment, String appKey) {

@@ -52,17 +52,13 @@ import static cool.scx.reflect.AccessModifier.PUBLIC;
 import static java.lang.System.Logger.Level.*;
 import static java.util.Objects.requireNonNull;
 
-/**
- * ScxHelper
- *
- * @author scx567888
- * @version 0.0.1
- */
+/// ScxHelper
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class ScxHelper {
 
-    /**
-     * Constant <code>beanFilterAnnotation</code>
-     */
+    /// Constant <code>beanFilterAnnotation</code>
     private static final List<Class<? extends Annotation>> beanFilterAnnotation = List.of(
             //scx 注解
             ScxRoute.class, Table.class, ScxService.class, ScxWebSocketRoute.class);
@@ -75,13 +71,11 @@ public final class ScxHelper {
         return isJar ? classSourcePath.getParent() : classSourcePath;
     }
 
-    /**
-     * 根据 ScxModule 的 class 查找 所有 class
-     *
-     * @param c c
-     * @return class 列表 (注意这里返回的是不可变的列表 !!!)
-     * @throws IOException r
-     */
+    /// 根据 ScxModule 的 class 查找 所有 class
+    ///
+    /// @param c c
+    /// @return class 列表 (注意这里返回的是不可变的列表 !!!)
+    /// @throws IOException r
     static List<Class<?>> findClassListByScxModule(Class<? extends ScxModule> c) throws IOException {
         var classSource = getCodeSource(c);
         var classSourcePath = Path.of(classSource);
@@ -93,12 +87,10 @@ public final class ScxHelper {
         return List.of(filterByBasePackage(allClassList, basePackage));
     }
 
-    /**
-     * 拥有 scx 注解
-     *
-     * @param clazz class
-     * @return b
-     */
+    /// 拥有 scx 注解
+    ///
+    /// @param clazz class
+    /// @return b
     public static boolean isBeanClass(Class<?> clazz) {
         for (var a : beanFilterAnnotation) {
             if (clazz.getAnnotation(a) != null) {
@@ -108,12 +100,10 @@ public final class ScxHelper {
         return false;
     }
 
-    /**
-     * 初始化 ScxModelClassList
-     *
-     * @param c a
-     * @return a
-     */
+    /// 初始化 ScxModelClassList
+    ///
+    /// @param c a
+    /// @return a
     public static boolean isScxBaseModelClass(Class<?> c) {
         return c.isAnnotationPresent(Table.class) &&  // 拥有注解
                 ClassUtils.isInstantiableClass(c) &&  // 是一个可以不需要其他参数直接生成实例化的对象
@@ -142,12 +132,10 @@ public final class ScxHelper {
         }
     }
 
-    /**
-     * 获取新的可用的端口号 (使用弹窗让用户进行选择)
-     *
-     * @param port a
-     * @return a
-     */
+    /// 获取新的可用的端口号 (使用弹窗让用户进行选择)
+    ///
+    /// @param port a
+    /// @return a
     static boolean isUseNewPort(int port) {
         while (true) {
             var errMessage = """
@@ -269,11 +257,9 @@ public final class ScxHelper {
         }
     }
 
-    /**
-     * 数据源连接异常
-     *
-     * @param e a {@link java.lang.Exception} object.
-     */
+    /// 数据源连接异常
+    ///
+    /// @param e a [java.lang.Exception] object.
     static void dataSourceExceptionHandler(Exception e) {
         while (true) {
             var errMessage = """
@@ -312,12 +298,10 @@ public final class ScxHelper {
         });
     }
 
-    /**
-     * a
-     *
-     * @param scxConfig      a
-     * @param scxEnvironment a
-     */
+    /// a
+    ///
+    /// @param scxConfig      a
+    /// @param scxEnvironment a
     static void initScxLoggerFactory0(ScxConfig scxConfig, ScxEnvironment scxEnvironment) {
         //先初始化好 DefaultScxLoggerInfo
         var defaultLevel = toLevel(scxConfig.get("scx.logging.default.level", String.class));
@@ -391,19 +375,13 @@ public final class ScxHelper {
 
     private enum LoggingType {
 
-        /**
-         * 打印到控制台
-         */
+        /// 打印到控制台
         CONSOLE,
 
-        /**
-         * 写入到文件
-         */
+        /// 写入到文件
         FILE,
 
-        /**
-         * 既打印到控制台也同时写入到文件
-         */
+        /// 既打印到控制台也同时写入到文件
         BOTH
     }
 
