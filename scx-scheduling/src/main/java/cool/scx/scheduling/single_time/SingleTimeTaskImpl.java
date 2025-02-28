@@ -132,8 +132,12 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
     }
 
     public ScheduleStatus doStart(long startDelay) {
+        // 计算任务的实际启动时间
+        var scheduledTime = now().plusNanos(startDelay);
+
         var scheduledFuture = executor.schedule(this::run, startDelay, NANOSECONDS);
         return new ScheduleStatus() {
+
             @Override
             public long runCount() {
                 return runCount.get();
@@ -141,12 +145,13 @@ public final class SingleTimeTaskImpl implements SingleTimeTask {
 
             @Override
             public Instant nextRunTime() {
-                return null;//todo
+                // 如果任务已执行，则没有下一次运行时间
+                return runCount() > 0 ? null : scheduledTime;
             }
 
             @Override
             public Instant nextRunTime(int count) {
-                return null;//todo
+                return count == 1 ?  nextRunTime() : null;
             }
 
             @Override
