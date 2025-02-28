@@ -1,6 +1,5 @@
 package cool.scx.scheduling.test;
 
-import cool.scx.scheduling.ExpirationPolicy;
 import cool.scx.scheduling.ScxScheduling;
 
 import java.time.Duration;
