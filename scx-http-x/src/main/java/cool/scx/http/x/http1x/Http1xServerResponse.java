@@ -101,8 +101,13 @@ public class Http1xServerResponse extends OutputStream implements ScxHttpServerR
 
         //这里 如果用户没有设置相应长度 我们采用 默认 分块传输
         if (headers.contentLength() == null) {
-            headers.set(TRANSFER_ENCODING, "chunked");
-            this.useChunkedTransfer = true;
+            //不是所有响应都有响应体 一些不需要响应体的响应 我们不启用分块传输
+            if (status != HttpStatusCode.SWITCHING_PROTOCOLS &&
+                    status != HttpStatusCode.NO_CONTENT &&
+                    status != HttpStatusCode.NOT_MODIFIED) {
+                headers.set(TRANSFER_ENCODING, "chunked");
+                this.useChunkedTransfer = true;
+            }
         }
 
         var headerStr = headers.encode();
