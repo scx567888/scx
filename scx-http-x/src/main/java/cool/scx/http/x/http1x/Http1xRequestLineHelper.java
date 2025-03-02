@@ -2,10 +2,11 @@ package cool.scx.http.x.http1x;
 
 import cool.scx.http.HttpVersion;
 import cool.scx.http.ScxHttpMethod;
-import cool.scx.http.uri.URIEncoder;
+import cool.scx.http.uri.ScxURI;
 
 import java.net.URLDecoder;
 
+import static cool.scx.http.HttpVersion.HTTP_1_1;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public final class Http1xRequestLineHelper {
@@ -22,7 +23,7 @@ public final class Http1xRequestLineHelper {
         var versionStr = parts[2];
 
         var method = ScxHttpMethod.of(methodStr);
-        var path = URLDecoder.decode(pathStr, UTF_8);
+        var path = ScxURI.of(URLDecoder.decode(pathStr, UTF_8));
         var version = HttpVersion.of(versionStr);
 
         return new Http1xRequestLine(method, path, version);
@@ -30,8 +31,8 @@ public final class Http1xRequestLineHelper {
 
     public static String encodeRequestLine(Http1xRequestLine requestLine) {
         var method = requestLine.method().value();
-        var path = URIEncoder.encodeURI(requestLine.path());
-        var version = requestLine.version().value();
+        var path = ScxURI.of(requestLine.path()).scheme(null).host(null).encode(true);
+        var version = requestLine.version() != null ? requestLine.version().value() : HTTP_1_1.value();
         return method + " " + path + " " + version;
     }
 

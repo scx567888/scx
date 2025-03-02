@@ -17,7 +17,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import static cool.scx.http.HttpFieldName.HOST;
-import static cool.scx.http.HttpVersion.HTTP_1_1;
 import static cool.scx.http.x.http1x.Http1xHelper.CRLF_BYTES;
 import static cool.scx.http.x.http1x.Http1xHelper.CRLF_CRLF_BYTES;
 
@@ -37,7 +36,7 @@ public class Http1xClientConnection {
 
     public Http1xClientConnection sendRequest(ScxHttpClientRequest request, MediaWriter writer) {
         //1,创建 请求头
-        var requestLine = new Http1xRequestLine(request.method(), request.uri().path(), request.version() != null ? request.version() : HTTP_1_1);
+        var requestLine = new Http1xRequestLine(request.method(), request.uri(), request.version());
 
         var requestLineStr = requestLine.encode();
 

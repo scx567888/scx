@@ -4,8 +4,6 @@ import cool.scx.http.Parameters;
 
 import java.net.URI;
 
-import static cool.scx.http.uri.URIEncoder.encodeURI;
-
 /// ScxURI
 ///
 /// @author scx567888
@@ -17,7 +15,7 @@ public interface ScxURI {
     }
 
     static ScxURIWritable of(String uri) {
-        return of(URI.create(encodeURI(uri)));
+        return of(URI.create(uri));
     }
 
     static ScxURIWritable of(URI u) {
