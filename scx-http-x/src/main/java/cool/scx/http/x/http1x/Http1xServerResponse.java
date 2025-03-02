@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import static cool.scx.http.HttpFieldName.*;
-import static cool.scx.http.x.http1x.Http1xHelper.CRLF_BYTES;
-import static cool.scx.http.x.http1x.Http1xHelper.sendChunkedEnd;
+import static cool.scx.http.HttpStatusCode.*;
+import static cool.scx.http.x.http1x.Http1xHelper.*;
 
 /// todo 待完成
 ///
@@ -22,6 +22,7 @@ public class Http1xServerResponse extends OutputStream implements ScxHttpServerR
     private HttpStatusCode status;
     private boolean firstSend;
     private boolean useChunkedTransfer;
+    private boolean hasBody;
 
     Http1xServerResponse(Http1xServerConnection connection, Http1xServerRequest request) {
         this.connection = connection;
@@ -31,6 +32,7 @@ public class Http1xServerResponse extends OutputStream implements ScxHttpServerR
         this.headers = ScxHttpHeaders.of();
         this.firstSend = true;
         this.useChunkedTransfer = false;
+        this.hasBody = true;
     }
 
     @Override
@@ -62,7 +64,7 @@ public class Http1xServerResponse extends OutputStream implements ScxHttpServerR
     @Override
     public void end() {
         //分块传输别忘了最后的 终结块
-        if (useChunkedTransfer) {
+        if (hasBody && useChunkedTransfer) {
             try {
                 sendChunkedEnd(dataWriter);
             } catch (Exception e) {
@@ -77,6 +79,7 @@ public class Http1xServerResponse extends OutputStream implements ScxHttpServerR
     }
 
     public void doFirstSend() {
+        //1, 响应头
         var sb = new StringBuilder();
         sb.append(request.version().value());
         sb.append(" ");
@@ -99,15 +102,22 @@ public class Http1xServerResponse extends OutputStream implements ScxHttpServerR
             headers.set(SERVER, "SCX");
         }
 
-        //这里 如果用户没有设置相应长度 我们采用 默认 分块传输
-        if (headers.contentLength() == null) {
-            //不是所有响应都有响应体 一些不需要响应体的响应 我们不启用分块传输
-            if (status != HttpStatusCode.SWITCHING_PROTOCOLS &&
-                    status != HttpStatusCode.NO_CONTENT &&
-                    status != HttpStatusCode.NOT_MODIFIED) {
+        //是否不需要响应体
+        if (status == SWITCHING_PROTOCOLS || status == NO_CONTENT || status == NOT_MODIFIED) {
+            this.hasBody = false;
+        }
+
+        //如果需要响应体
+        if (this.hasBody) {
+            //没有设置 contentLength 我们帮助设置 
+            if (headers.contentLength() == null) {
                 headers.set(TRANSFER_ENCODING, "chunked");
-                this.useChunkedTransfer = true;
             }
+        }
+
+        //判断是否需要分段传输
+        if (checkIsChunkedTransfer(headers)) {
+            this.useChunkedTransfer = true;
         }
 
         var headerStr = headers.encode();
