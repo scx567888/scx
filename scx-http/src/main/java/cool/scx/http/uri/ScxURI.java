@@ -17,7 +17,7 @@ public interface ScxURI {
     }
 
     static ScxURIWritable of(String uri) {
-        return of(URI.create(encodeURI(uri)));
+        return of(URI.create(uri));
     }
 
     static ScxURIWritable of(URI u) {
