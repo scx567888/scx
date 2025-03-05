@@ -187,7 +187,7 @@
     <properties>
 
         <!-- *********************** 以下为依赖包版本 *********************** -->
-        <jackson.version>2.18.2</jackson.version>
+        <jackson.version>2.18.3</jackson.version>
         <spring-framework.version>6.2.2</spring-framework.version>
         <hikaricp.version>6.2.1</hikaricp.version>
         <freemarker.version>2.3.34</freemarker.version>
