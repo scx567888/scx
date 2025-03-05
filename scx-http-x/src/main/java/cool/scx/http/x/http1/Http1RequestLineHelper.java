@@ -12,7 +12,7 @@ import static cool.scx.http.HttpStatusCode.HTTP_VERSION_NOT_SUPPORTED;
 import static cool.scx.http.HttpVersion.HTTP_1_1;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-final class Http1RequestLineHelper {
+public final class Http1RequestLineHelper {
 
     public static Http1RequestLine parseRequestLine(String requestLineStr) {
         var parts = requestLineStr.split(" ");
@@ -29,7 +29,7 @@ final class Http1RequestLineHelper {
         var versionStr = parts[2];
 
         //尝试解码路径 如果解析失败, 则可能是路径中包含非法字符
-        //但是此处我们同样没必要细化异常 所以全部抛出 400 异常
+        //此处我们同样不去细化异常 所以全部抛出 400 异常
         String decodedPath;
         try {
             decodedPath = URLDecoder.decode(pathStr, UTF_8);
@@ -50,10 +50,13 @@ final class Http1RequestLineHelper {
     }
 
     public static String encodeRequestLine(Http1RequestLine requestLine) {
-        var method = requestLine.method().value();
-        var path = ScxURI.of(requestLine.path()).scheme(null).host(null).encode(true);
-        var version = requestLine.version() != null ? requestLine.version().value() : HTTP_1_1.value();
-        return method + " " + path + " " + version;
+        var methodStr = requestLine.method().value();
+        //HTTP 路径我们不允许携带 协议和主机 这里通过创建一个新的 ScxURI 来进行移除
+        var pathStr = ScxURI.of(requestLine.path()).scheme(null).host(null).encode(true);
+        //此处我们强制使用 HTTP/1.1 , 忽略 requestLine 的版本号
+        var versionStr = HTTP_1_1.value();
+        //拼接返回
+        return methodStr + " " + pathStr + " " + versionStr;
     }
 
 }
