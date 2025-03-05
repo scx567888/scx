@@ -14,6 +14,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 public final class Http1RequestLineHelper {
 
+    /// 解析 请求行
     public static Http1RequestLine parseRequestLine(String requestLineStr) {
         var parts = requestLineStr.split(" ");
 
@@ -49,6 +50,7 @@ public final class Http1RequestLineHelper {
         return new Http1RequestLine(method, path, version);
     }
 
+    /// 编码请求行
     public static String encodeRequestLine(Http1RequestLine requestLine) {
         var methodStr = requestLine.method().value();
         //HTTP 路径我们不允许携带 协议和主机 这里通过创建一个新的 ScxURI 来进行移除
