@@ -1,10 +1,10 @@
-package cool.scx.http.x.http1x;
+package cool.scx.http.x.http1;
 
 import cool.scx.http.HttpVersion;
 
-public class Http1xStatusLineHelper {
+public class Http1StatusLineHelper {
 
-    public static Http1xStatusLine parseStatusLine(String statusLineStr) {
+    public static Http1StatusLine parseStatusLine(String statusLineStr) {
         var parts = statusLineStr.split(" ", 3);
 
         if (parts.length != 3) {
@@ -18,7 +18,7 @@ public class Http1xStatusLineHelper {
         var version = HttpVersion.of(versionStr);
         var code = Integer.parseInt(codeStr);
 
-        return new Http1xStatusLine(version, code, reasonStr);
+        return new Http1StatusLine(version, code, reasonStr);
     }
 
 }

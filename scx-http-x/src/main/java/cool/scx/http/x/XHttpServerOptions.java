@@ -1,6 +1,6 @@
 package cool.scx.http.x;
 
-import cool.scx.http.x.http1x.Http1xServerConnectionOptions;
+import cool.scx.http.x.http1.Http1ServerConnectionOptions;
 import cool.scx.http.x.web_socket.WebSocketOptions;
 import cool.scx.tcp.ScxTCPServerOptions;
 import cool.scx.tcp.tls.TLS;
@@ -14,7 +14,7 @@ import java.net.InetSocketAddress;
 public class XHttpServerOptions {
 
     private final ScxTCPServerOptions tcpServerOptions; // TCP 服务器配置
-    private final Http1xServerConnectionOptions http1xConnectionOptions;// Http1 配置
+    private final Http1ServerConnectionOptions http1xConnectionOptions;// Http1 配置
     private final WebSocketOptions webSocketOptions;// WebSocket 配置
     private TCPServerType tcpServerType; // TCP 服务器类型
     private boolean enableHttp2; // 是否开启 Http2
@@ -22,7 +22,7 @@ public class XHttpServerOptions {
     public XHttpServerOptions() {
         //默认不自动握手
         this.tcpServerOptions = new ScxTCPServerOptions().autoUpgradeToTLS(true).autoHandshake(false);
-        this.http1xConnectionOptions = new Http1xServerConnectionOptions();
+        this.http1xConnectionOptions = new Http1ServerConnectionOptions();
         this.webSocketOptions = new WebSocketOptions();
         this.tcpServerType = TCPServerType.CLASSIC; // 默认 使用 CLASSIC 实现
         this.enableHttp2 = false;//默认不启用 http2
@@ -31,7 +31,7 @@ public class XHttpServerOptions {
     public XHttpServerOptions(XHttpServerOptions oldOptions) {
         //默认不自动握手
         this.tcpServerOptions = new ScxTCPServerOptions(oldOptions.tcpServerOptions()).autoUpgradeToTLS(true).autoHandshake(false);
-        this.http1xConnectionOptions = new Http1xServerConnectionOptions(oldOptions.http1xConnectionOptions());
+        this.http1xConnectionOptions = new Http1ServerConnectionOptions(oldOptions.http1xConnectionOptions());
         this.webSocketOptions = new WebSocketOptions(oldOptions.webSocketOptions());
         tcpServerType(oldOptions.tcpServerType());
         enableHttp2(oldOptions.enableHttp2());
@@ -42,7 +42,7 @@ public class XHttpServerOptions {
         return tcpServerOptions;
     }
 
-    public Http1xServerConnectionOptions http1xConnectionOptions() {
+    public Http1ServerConnectionOptions http1xConnectionOptions() {
         return http1xConnectionOptions;
     }
 

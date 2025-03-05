@@ -1,4 +1,4 @@
-package cool.scx.http.x.http1x;
+package cool.scx.http.x.http1;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,7 +36,7 @@ public class AutoContinueInputStream extends InputStream {
 
     private void trySendContinueResponse() throws IOException {
         if (!continueSent) {
-            Http1xHelper.sendContinue100(out);
+            Http1Helper.sendContinue100(out);
             continueSent = true;
         }
     }

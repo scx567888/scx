@@ -1,4 +1,4 @@
-package cool.scx.http.x.http1x;
+package cool.scx.http.x.http1;
 
 import cool.scx.http.*;
 import cool.scx.http.exception.InternalServerErrorException;
@@ -20,17 +20,17 @@ import java.lang.System.Logger;
 import java.util.function.Consumer;
 
 import static cool.scx.http.HttpFieldName.CONNECTION;
-import static cool.scx.http.x.http1x.Http1xHelper.*;
+import static cool.scx.http.x.http1.Http1Helper.*;
 import static java.lang.System.Logger.Level.TRACE;
 import static java.lang.System.getLogger;
 
-/// Http 1.x 连接处理器
+/// Http 1.1 连接处理器
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class Http1xServerConnection {
+public class Http1ServerConnection {
 
-    private final static Logger LOGGER = getLogger(Http1xServerConnection.class.getName());
+    private final static Logger LOGGER = getLogger(Http1ServerConnection.class.getName());
 
     public final ScxTCPSocket tcpSocket;
     public final XHttpServerOptions options;
@@ -40,7 +40,7 @@ public class Http1xServerConnection {
     private final Consumer<ScxHttpServerRequest> requestHandler;
     private boolean running;
 
-    public Http1xServerConnection(ScxTCPSocket tcpSocket, XHttpServerOptions options, Consumer<ScxHttpServerRequest> requestHandler) {
+    public Http1ServerConnection(ScxTCPSocket tcpSocket, XHttpServerOptions options, Consumer<ScxHttpServerRequest> requestHandler) {
         this.tcpSocket = tcpSocket;
         this.options = options;
         this.requestHandler = requestHandler;
@@ -71,7 +71,7 @@ public class Http1xServerConnection {
                     //如果自动响应 我们直接发送
                     if (options.autoRespond100Continue()) {
                         try {
-                            Http1xHelper.sendContinue100(dataWriter);
+                            Http1Helper.sendContinue100(dataWriter);
                         } catch (IOException e) {
                             throw new CloseConnectionException("Failed to write continue", e);
                         }
@@ -87,8 +87,8 @@ public class Http1xServerConnection {
                 var isWebSocketHandshake = checkIsWebSocketHandshake(requestLine, headers);
 
                 var request = isWebSocketHandshake ?
-                        new Http1xServerWebSocketHandshakeRequest(this, requestLine, headers, body) :
-                        new Http1xServerRequest(this, requestLine, headers, body);
+                        new Http1ServerWebSocketHandshakeRequest(this, requestLine, headers, body) :
+                        new Http1ServerRequest(this, requestLine, headers, body);
 
                 try {
                     // 6, 调用用户处理器
@@ -125,12 +125,12 @@ public class Http1xServerConnection {
         }
     }
 
-    private Http1xRequestLine readRequestLine() {
+    private Http1RequestLine readRequestLine() {
         //尝试读取 请求行
         try {
             var requestLineBytes = dataReader.readUntil(CRLF_BYTES, options.maxRequestLineSize());
             var requestLineStr = new String(requestLineBytes);
-            return Http1xRequestLine.of(requestLineStr);
+            return Http1RequestLine.of(requestLineStr);
         } catch (NoMoreDataException | UncheckedIOException e) {
             // Socket 关闭了 或者底层 Socket 发生异常
             throw new CloseConnectionException();

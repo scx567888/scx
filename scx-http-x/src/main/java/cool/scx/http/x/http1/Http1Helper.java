@@ -1,4 +1,4 @@
-package cool.scx.http.x.http1x;
+package cool.scx.http.x.http1;
 
 import cool.scx.http.*;
 import cool.scx.http.exception.BadRequestException;
@@ -13,14 +13,14 @@ import static cool.scx.common.util.StringUtils.isBlank;
 import static cool.scx.http.HttpFieldName.*;
 import static cool.scx.http.HttpMethod.GET;
 
-final class Http1xHelper {
+final class Http1Helper {
 
     public static final byte[] CONTINUE_100 = "HTTP/1.1 100 Continue\r\n\r\n".getBytes(StandardCharsets.UTF_8);
     public static final byte[] CRLF_BYTES = "\r\n".getBytes();
     public static final byte[] CRLF_CRLF_BYTES = "\r\n\r\n".getBytes();
     public static final byte[] CHUNKED_END_BYTES = "0\r\n\r\n".getBytes();
 
-    public static boolean checkIsWebSocketHandshake(Http1xRequestLine requestLine, ScxHttpHeaders headers) {
+    public static boolean checkIsWebSocketHandshake(Http1RequestLine requestLine, ScxHttpHeaders headers) {
         if (requestLine.method() == GET) {
             var connection = headers.get(CONNECTION);
             if ("upgrade".equalsIgnoreCase(connection)) {
@@ -36,7 +36,7 @@ final class Http1xHelper {
         return "chunked".equalsIgnoreCase(transferEncoding);
     }
 
-    public static boolean checkIsKeepAlive(Http1xRequestLine requestLine, ScxHttpHeaders headers) {
+    public static boolean checkIsKeepAlive(Http1RequestLine requestLine, ScxHttpHeaders headers) {
         // Http 1.1 以下的均不支持持久连接  
         if (requestLine.version() == HttpVersion.HTTP_1_1) {
             var connection = headers.get(CONNECTION);

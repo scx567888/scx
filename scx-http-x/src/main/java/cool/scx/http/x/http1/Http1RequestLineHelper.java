@@ -1,4 +1,4 @@
-package cool.scx.http.x.http1x;
+package cool.scx.http.x.http1;
 
 import cool.scx.http.HttpVersion;
 import cool.scx.http.ScxHttpMethod;
@@ -9,9 +9,9 @@ import java.net.URLDecoder;
 import static cool.scx.http.HttpVersion.HTTP_1_1;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-public final class Http1xRequestLineHelper {
+public final class Http1RequestLineHelper {
 
-    public static Http1xRequestLine parseRequestLine(String requestLineStr) {
+    public static Http1RequestLine parseRequestLine(String requestLineStr) {
         var parts = requestLineStr.split(" ");
 
         if (parts.length != 3) {
@@ -26,10 +26,10 @@ public final class Http1xRequestLineHelper {
         var path = ScxURI.of(URLDecoder.decode(pathStr, UTF_8));
         var version = HttpVersion.of(versionStr);
 
-        return new Http1xRequestLine(method, path, version);
+        return new Http1RequestLine(method, path, version);
     }
 
-    public static String encodeRequestLine(Http1xRequestLine requestLine) {
+    public static String encodeRequestLine(Http1RequestLine requestLine) {
         var method = requestLine.method().value();
         var path = ScxURI.of(requestLine.path()).scheme(null).host(null).encode(true);
         var version = requestLine.version() != null ? requestLine.version().value() : HTTP_1_1.value();

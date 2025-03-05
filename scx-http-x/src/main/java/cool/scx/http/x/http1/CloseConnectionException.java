@@ -1,4 +1,4 @@
-package cool.scx.http.x.http1x;
+package cool.scx.http.x.http1;
 
 /// 主动关闭 Socket异常  (仅内部使用)
 /// 调用方 当捕获到此异常的时候 应该直接断开连接

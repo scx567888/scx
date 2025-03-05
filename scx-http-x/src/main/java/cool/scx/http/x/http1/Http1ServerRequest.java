@@ -1,20 +1,20 @@
-package cool.scx.http.x.http1x;
+package cool.scx.http.x.http1;
 
 import cool.scx.http.*;
 import cool.scx.http.uri.ScxURI;
 
-import static cool.scx.http.x.http1x.Http1xHelper.*;
+import static cool.scx.http.x.http1.Http1Helper.*;
 
 /// Http1xServerRequest
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class Http1xServerRequest implements ScxHttpServerRequest {
+public class Http1ServerRequest implements ScxHttpServerRequest {
 
-    public final Http1xServerConnection connection;
+    public final Http1ServerConnection connection;
     public final boolean isKeepAlive;
 
-    private final Http1xServerResponse response;
+    private final Http1ServerResponse response;
     private final ScxHttpMethod method;
     private final ScxURI uri;
     private final HttpVersion version;
@@ -23,7 +23,7 @@ public class Http1xServerRequest implements ScxHttpServerRequest {
     private final PeerInfo remotePeer;
     private final PeerInfo localPeer;
 
-    public Http1xServerRequest(Http1xServerConnection connection, Http1xRequestLine requestLine, ScxHttpHeadersWritable headers, ScxHttpBody body) {
+    public Http1ServerRequest(Http1ServerConnection connection, Http1RequestLine requestLine, ScxHttpHeadersWritable headers, ScxHttpBody body) {
         this.connection = connection;
         this.isKeepAlive = checkIsKeepAlive(requestLine, headers);
 
@@ -35,7 +35,7 @@ public class Http1xServerRequest implements ScxHttpServerRequest {
         this.body = body;
         this.remotePeer = getRemotePeer(connection.tcpSocket);
         this.localPeer = getLocalPeer(connection.tcpSocket);
-        this.response = new Http1xServerResponse(connection, this);
+        this.response = new Http1ServerResponse(connection, this);
     }
 
     @Override

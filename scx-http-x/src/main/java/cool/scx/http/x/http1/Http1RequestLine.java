@@ -1,4 +1,4 @@
-package cool.scx.http.x.http1x;
+package cool.scx.http.x.http1;
 
 import cool.scx.http.HttpVersion;
 import cool.scx.http.ScxHttpMethod;
@@ -11,14 +11,14 @@ import cool.scx.http.uri.ScxURI;
 /// @param version
 /// @author scx567888
 /// @version 0.0.1
-public record Http1xRequestLine(ScxHttpMethod method, ScxURI path, HttpVersion version) {
+public record Http1RequestLine(ScxHttpMethod method, ScxURI path, HttpVersion version) {
 
-    public static Http1xRequestLine of(String requestLineStr) {
-        return Http1xRequestLineHelper.parseRequestLine(requestLineStr);
+    public static Http1RequestLine of(String requestLineStr) {
+        return Http1RequestLineHelper.parseRequestLine(requestLineStr);
     }
 
     public String encode() {
-        return Http1xRequestLineHelper.encodeRequestLine(this);
+        return Http1RequestLineHelper.encodeRequestLine(this);
     }
 
 }
