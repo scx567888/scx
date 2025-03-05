@@ -4,6 +4,8 @@ import cool.scx.http.HttpVersion;
 import cool.scx.http.ScxHttpMethod;
 import cool.scx.http.uri.ScxURI;
 
+import static cool.scx.http.HttpVersion.HTTP_1_1;
+
 /// Http 1.x 的请求行
 ///
 /// @param method
@@ -12,6 +14,10 @@ import cool.scx.http.uri.ScxURI;
 /// @author scx567888
 /// @version 0.0.1
 public record Http1RequestLine(ScxHttpMethod method, ScxURI path, HttpVersion version) {
+
+    public Http1RequestLine(ScxHttpMethod method, ScxURI path) {
+        this(method, path, HTTP_1_1);
+    }
 
     public static Http1RequestLine of(String requestLineStr) {
         return Http1RequestLineHelper.parseRequestLine(requestLineStr);
