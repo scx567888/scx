@@ -65,6 +65,7 @@ public class XHttpServer implements ScxHttpServer {
         if (useHttp2) {
             new Http2ServerConnection(tcpSocket, options, requestHandler).start();
         } else {
+            //此处的Http1 特指 HTTP/1.1
             new Http1ServerConnection(tcpSocket, options, requestHandler).start();
         }
     }
