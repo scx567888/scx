@@ -1,7 +1,7 @@
 package cool.scx.http;
 
 /// HttpVersion
-/// 这里我们只保留流行的 Http 版本,较久的如 HTTP/0.9 和 HTTP/1.0 不再做保留
+/// 这里我们只保留流行的 Http 版本,较旧的版本如 HTTP/0.9 和 HTTP/1.0 不再做保留
 ///
 /// @author scx567888
 /// @version 0.0.1
