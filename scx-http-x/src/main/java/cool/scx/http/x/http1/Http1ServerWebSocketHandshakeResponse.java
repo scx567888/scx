@@ -1,4 +1,4 @@
-package cool.scx.http.x.http1x;
+package cool.scx.http.x.http1;
 
 import cool.scx.http.HttpStatusCode;
 import cool.scx.http.ScxHttpHeadersWritable;
@@ -13,14 +13,14 @@ import java.io.OutputStream;
 import static cool.scx.http.HttpFieldName.*;
 import static cool.scx.http.HttpHelper.generateSecWebSocketAccept;
 
-public class Http1xServerWebSocketHandshakeResponse implements ScxServerWebSocketHandshakeResponse {
+public class Http1ServerWebSocketHandshakeResponse implements ScxServerWebSocketHandshakeResponse {
 
-    private final Http1xServerConnection connection;
-    private final Http1xServerWebSocketHandshakeRequest request;
+    private final Http1ServerConnection connection;
+    private final Http1ServerWebSocketHandshakeRequest request;
     private final ScxHttpServerResponse response;
     private ServerWebSocket webSocket;
 
-    public Http1xServerWebSocketHandshakeResponse(Http1xServerConnection connection, Http1xServerWebSocketHandshakeRequest request) {
+    public Http1ServerWebSocketHandshakeResponse(Http1ServerConnection connection, Http1ServerWebSocketHandshakeRequest request) {
         this.connection = connection;
         this.request = request;
         this.response = request.request.response();// 获取到最原始的 响应对象

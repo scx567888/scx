@@ -1,4 +1,4 @@
-package cool.scx.http.x.http1x;
+package cool.scx.http.x.http1;
 
 import cool.scx.http.*;
 
@@ -7,16 +7,16 @@ import java.io.OutputStream;
 
 import static cool.scx.http.HttpFieldName.*;
 import static cool.scx.http.HttpStatusCode.*;
-import static cool.scx.http.x.http1x.Http1xHelper.*;
+import static cool.scx.http.x.http1.Http1Helper.*;
 
 /// todo 待完成
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class Http1xServerResponse extends OutputStream implements ScxHttpServerResponse {
+public class Http1ServerResponse extends OutputStream implements ScxHttpServerResponse {
 
-    private final Http1xServerConnection connection;
-    private final Http1xServerRequest request;
+    private final Http1ServerConnection connection;
+    private final Http1ServerRequest request;
     private final ScxHttpHeadersWritable headers;
     private final OutputStream dataWriter;
     private HttpStatusCode status;
@@ -24,7 +24,7 @@ public class Http1xServerResponse extends OutputStream implements ScxHttpServerR
     private boolean useChunkedTransfer;
     private boolean hasBody;
 
-    Http1xServerResponse(Http1xServerConnection connection, Http1xServerRequest request) {
+    Http1ServerResponse(Http1ServerConnection connection, Http1ServerRequest request) {
         this.connection = connection;
         this.dataWriter = this.connection.dataWriter;
         this.request = request;

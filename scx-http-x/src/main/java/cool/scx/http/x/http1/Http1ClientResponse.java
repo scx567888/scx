@@ -1,18 +1,18 @@
-package cool.scx.http.x.http1x;
+package cool.scx.http.x.http1;
 
 import cool.scx.http.*;
 
-/// Http1xClientResponse
+/// HTTP/1.1 ClientResponse
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class Http1xClientResponse implements ScxHttpClientResponse {
+public class Http1ClientResponse implements ScxHttpClientResponse {
 
     private final HttpStatusCode status;
     private final ScxHttpHeadersWritable headers;
     private final ScxHttpBody body;
 
-    public Http1xClientResponse(Http1xStatusLine statusLine, ScxHttpHeadersWritable headers, ScxHttpBody body) {
+    public Http1ClientResponse(Http1StatusLine statusLine, ScxHttpHeadersWritable headers, ScxHttpBody body) {
         this.status = HttpStatusCode.of(statusLine.code());
         this.headers = headers;
         this.body = body;

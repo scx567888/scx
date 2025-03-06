@@ -6,16 +6,16 @@ import cool.scx.http.ScxHttpClientResponse;
 import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.web_socket.ScxClientWebSocket;
 import cool.scx.http.web_socket.ScxClientWebSocketHandshakeResponse;
-import cool.scx.http.x.http1x.Http1xClientConnection;
+import cool.scx.http.x.http1.Http1ClientConnection;
 
 public class XClientWebSocketHandshakeResponse implements ScxClientWebSocketHandshakeResponse {
 
-    private final Http1xClientConnection connection;
+    private final Http1ClientConnection connection;
     private final ScxHttpClientResponse response;
     private final WebSocketOptions webSocketOptions;
     private ScxClientWebSocket webSocket;
 
-    public XClientWebSocketHandshakeResponse(Http1xClientConnection connection, ScxHttpClientResponse response, WebSocketOptions webSocketOptions) {
+    public XClientWebSocketHandshakeResponse(Http1ClientConnection connection, ScxHttpClientResponse response, WebSocketOptions webSocketOptions) {
         this.connection = connection;
         this.response = response;
         this.webSocketOptions = webSocketOptions;

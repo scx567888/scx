@@ -3,7 +3,7 @@ package cool.scx.http.x.web_socket;
 import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.web_socket.ScxServerWebSocket;
-import cool.scx.http.x.http1x.Http1xServerWebSocketHandshakeRequest;
+import cool.scx.http.x.http1.Http1ServerWebSocketHandshakeRequest;
 import cool.scx.io.data_reader.DataReader;
 import cool.scx.tcp.ScxTCPSocket;
 
@@ -15,9 +15,9 @@ import java.io.OutputStream;
 /// @version 0.0.1
 public class ServerWebSocket extends WebSocket implements ScxServerWebSocket {
 
-    private final Http1xServerWebSocketHandshakeRequest handshakeRequest;
+    private final Http1ServerWebSocketHandshakeRequest handshakeRequest;
 
-    public ServerWebSocket(ScxTCPSocket tcpSocket, DataReader reader, OutputStream writer, WebSocketOptions options, Http1xServerWebSocketHandshakeRequest handshakeRequest) {
+    public ServerWebSocket(ScxTCPSocket tcpSocket, DataReader reader, OutputStream writer, WebSocketOptions options, Http1ServerWebSocketHandshakeRequest handshakeRequest) {
         super(tcpSocket, reader, writer, options);
         this.handshakeRequest = handshakeRequest;
     }

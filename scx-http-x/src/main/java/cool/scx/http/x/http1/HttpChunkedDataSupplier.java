@@ -1,4 +1,4 @@
-package cool.scx.http.x.http1x;
+package cool.scx.http.x.http1;
 
 import cool.scx.http.HttpStatusCode;
 import cool.scx.http.exception.ScxHttpException;

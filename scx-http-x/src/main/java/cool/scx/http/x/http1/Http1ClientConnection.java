@@ -1,4 +1,4 @@
-package cool.scx.http.x.http1x;
+package cool.scx.http.x.http1;
 
 import cool.scx.http.*;
 import cool.scx.http.exception.ScxHttpException;
@@ -17,26 +17,26 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import static cool.scx.http.HttpFieldName.HOST;
-import static cool.scx.http.x.http1x.Http1xHelper.CRLF_BYTES;
-import static cool.scx.http.x.http1x.Http1xHelper.CRLF_CRLF_BYTES;
+import static cool.scx.http.x.http1.Http1Helper.CRLF_BYTES;
+import static cool.scx.http.x.http1.Http1Helper.CRLF_CRLF_BYTES;
 
-public class Http1xClientConnection {
+public class Http1ClientConnection {
 
     public final ScxTCPSocket tcpSocket;
     public final PowerfulLinkedDataReader dataReader;
     public final OutputStream dataWriter;
-    public final Http1xClientConnectionOptions options;
+    public final Http1ClientConnectionOptions options;
 
-    public Http1xClientConnection(ScxTCPSocket tcpSocket, XHttpClientOptions options) {
+    public Http1ClientConnection(ScxTCPSocket tcpSocket, XHttpClientOptions options) {
         this.tcpSocket = tcpSocket;
         this.dataReader = new PowerfulLinkedDataReader(new InputStreamDataSupplier(tcpSocket.inputStream()));
         this.dataWriter = new NoCloseOutputStream(tcpSocket.outputStream());
-        this.options = options.http1xConnectionOptions();
+        this.options = options.http1ConnectionOptions();
     }
 
-    public Http1xClientConnection sendRequest(ScxHttpClientRequest request, MediaWriter writer) {
+    public Http1ClientConnection sendRequest(ScxHttpClientRequest request, MediaWriter writer) {
         //1,创建 请求头
-        var requestLine = new Http1xRequestLine(request.method(), request.uri(), request.version());
+        var requestLine = new Http1RequestLine(request.method(), request.uri());
 
         var requestLineStr = requestLine.encode();
 
@@ -77,14 +77,14 @@ public class Http1xClientConnection {
         //3, 读取响应体
         var body = readBody(headers);
 
-        return new Http1xClientResponse(statusLine, headers, body);
+        return new Http1ClientResponse(statusLine, headers, body);
     }
 
-    public Http1xStatusLine readStatusLine() {
+    public Http1StatusLine readStatusLine() {
         try {
             var statusLineBytes = dataReader.readUntil(CRLF_BYTES, options.maxStatusLineSize());
             var statusLineStr = new String(statusLineBytes);
-            return Http1xStatusLine.of(statusLineStr);
+            return Http1StatusLine.of(statusLineStr);
         } catch (NoMoreDataException e) {
             throw new CloseConnectionException();
         } catch (NoMatchFoundException e) {
@@ -108,7 +108,7 @@ public class Http1xClientConnection {
 
     //todo 超出最大长度怎么办
     public ScxHttpBody readBody(ScxHttpHeaders headers) {
-        var isChunkedTransfer = Http1xHelper.checkIsChunkedTransfer(headers);
+        var isChunkedTransfer = Http1Helper.checkIsChunkedTransfer(headers);
         if (isChunkedTransfer) {
             return new ScxHttpBodyImpl(new DataReaderInputStream(new HttpChunkedDataSupplier(dataReader, options.maxPayloadSize())), headers, 65535);
         }

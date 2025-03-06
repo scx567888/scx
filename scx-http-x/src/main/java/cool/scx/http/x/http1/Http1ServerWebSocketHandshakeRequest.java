@@ -1,4 +1,4 @@
-package cool.scx.http.x.http1x;
+package cool.scx.http.x.http1;
 
 import cool.scx.http.*;
 import cool.scx.http.uri.ScxURI;
@@ -9,14 +9,14 @@ import cool.scx.http.web_socket.ScxServerWebSocketHandshakeResponse;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class Http1xServerWebSocketHandshakeRequest implements ScxServerWebSocketHandshakeRequest {
+public class Http1ServerWebSocketHandshakeRequest implements ScxServerWebSocketHandshakeRequest {
 
-    public final Http1xServerRequest request;
-    private final Http1xServerWebSocketHandshakeResponse response;
+    public final Http1ServerRequest request;
+    private final Http1ServerWebSocketHandshakeResponse response;
 
-    public Http1xServerWebSocketHandshakeRequest(Http1xServerConnection connection, Http1xRequestLine requestLine, ScxHttpHeadersWritable headers, ScxHttpBody body) {
-        this.request = new Http1xServerRequest(connection, requestLine, headers, body);
-        this.response = new Http1xServerWebSocketHandshakeResponse(connection, this);
+    public Http1ServerWebSocketHandshakeRequest(Http1ServerConnection connection, Http1RequestLine requestLine, ScxHttpHeadersWritable headers, ScxHttpBody body) {
+        this.request = new Http1ServerRequest(connection, requestLine, headers, body);
+        this.response = new Http1ServerWebSocketHandshakeResponse(connection, this);
     }
 
     @Override

@@ -10,7 +10,7 @@ import cool.scx.http.uri.ScxURIWritable;
 import cool.scx.http.web_socket.ScxClientWebSocketHandshakeRequest;
 import cool.scx.http.web_socket.ScxClientWebSocketHandshakeResponse;
 import cool.scx.http.x.XHttpClient;
-import cool.scx.http.x.http1x.Http1xClientConnection;
+import cool.scx.http.x.http1.Http1ClientConnection;
 import cool.scx.tcp.ScxTCPClient;
 import cool.scx.tcp.ScxTCPSocket;
 
@@ -75,7 +75,7 @@ public class XClientWebSocketHandshakeRequest implements ScxClientWebSocketHands
         this.headers.add(HOST, "127.0.0.1");
         this.headers.add(SEC_WEBSOCKET_VERSION, "13");
 
-        var connection = new Http1xClientConnection(tcpSocket, httpClient.options());
+        var connection = new Http1ClientConnection(tcpSocket, httpClient.options());
         var response = connection.sendRequest(this, new EmptyWriter()).waitResponse();
 
         return new XClientWebSocketHandshakeResponse(connection, response, this.webSocketOptions);
