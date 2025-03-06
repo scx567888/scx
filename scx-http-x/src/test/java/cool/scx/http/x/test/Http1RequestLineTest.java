@@ -3,6 +3,7 @@ package cool.scx.http.x.test;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.x.http1.Http1RequestLine;
 import org.testng.Assert;
+import org.testng.annotations.Test;
 
 import static cool.scx.http.HttpMethod.GET;
 import static org.testng.Assert.assertEquals;
@@ -14,6 +15,7 @@ public class Http1RequestLineTest {
         test2();
     }
 
+    @Test
     public static void test1() {
 
         //这是正确的
@@ -53,6 +55,7 @@ public class Http1RequestLineTest {
 
     }
 
+    @Test
     public static void test2() {
         var http1RequestLine = new Http1RequestLine(GET, ScxURI.of().path("/中文/bar").addQuery("aaa", "bbb")).encode();
         assertEquals(http1RequestLine, "GET /%E4%B8%AD%E6%96%87/bar?aaa=bbb HTTP/1.1");
