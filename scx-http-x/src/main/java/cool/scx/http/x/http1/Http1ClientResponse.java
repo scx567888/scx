@@ -2,7 +2,7 @@ package cool.scx.http.x.http1;
 
 import cool.scx.http.*;
 
-/// Http1xClientResponse
+/// HTTP/1.1 ClientResponse
 ///
 /// @author scx567888
 /// @version 0.0.1

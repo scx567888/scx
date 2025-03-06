@@ -14,7 +14,7 @@ import java.net.InetSocketAddress;
 public class XHttpServerOptions {
 
     private final ScxTCPServerOptions tcpServerOptions; // TCP 服务器配置
-    private final Http1ServerConnectionOptions http1xConnectionOptions;// Http1 配置
+    private final Http1ServerConnectionOptions http1ConnectionOptions;// Http1 配置
     private final WebSocketOptions webSocketOptions;// WebSocket 配置
     private TCPServerType tcpServerType; // TCP 服务器类型
     private boolean enableHttp2; // 是否开启 Http2
@@ -22,7 +22,7 @@ public class XHttpServerOptions {
     public XHttpServerOptions() {
         //默认不自动握手
         this.tcpServerOptions = new ScxTCPServerOptions().autoUpgradeToTLS(true).autoHandshake(false);
-        this.http1xConnectionOptions = new Http1ServerConnectionOptions();
+        this.http1ConnectionOptions = new Http1ServerConnectionOptions();
         this.webSocketOptions = new WebSocketOptions();
         this.tcpServerType = TCPServerType.CLASSIC; // 默认 使用 CLASSIC 实现
         this.enableHttp2 = false;//默认不启用 http2
@@ -31,7 +31,7 @@ public class XHttpServerOptions {
     public XHttpServerOptions(XHttpServerOptions oldOptions) {
         //默认不自动握手
         this.tcpServerOptions = new ScxTCPServerOptions(oldOptions.tcpServerOptions()).autoUpgradeToTLS(true).autoHandshake(false);
-        this.http1xConnectionOptions = new Http1ServerConnectionOptions(oldOptions.http1xConnectionOptions());
+        this.http1ConnectionOptions = new Http1ServerConnectionOptions(oldOptions.http1ConnectionOptions());
         this.webSocketOptions = new WebSocketOptions(oldOptions.webSocketOptions());
         tcpServerType(oldOptions.tcpServerType());
         enableHttp2(oldOptions.enableHttp2());
@@ -42,8 +42,8 @@ public class XHttpServerOptions {
         return tcpServerOptions;
     }
 
-    public Http1ServerConnectionOptions http1xConnectionOptions() {
-        return http1xConnectionOptions;
+    public Http1ServerConnectionOptions http1ConnectionOptions() {
+        return http1ConnectionOptions;
     }
 
     public WebSocketOptions webSocketOptions() {
@@ -60,38 +60,38 @@ public class XHttpServerOptions {
     }
 
     public int maxRequestLineSize() {
-        return http1xConnectionOptions.maxRequestLineSize();
+        return http1ConnectionOptions.maxRequestLineSize();
     }
 
     public XHttpServerOptions maxRequestLineSize(int maxRequestLineSize) {
-        http1xConnectionOptions.maxRequestLineSize(maxRequestLineSize);
+        http1ConnectionOptions.maxRequestLineSize(maxRequestLineSize);
         return this;
     }
 
     public int maxHeaderSize() {
-        return http1xConnectionOptions.maxHeaderSize();
+        return http1ConnectionOptions.maxHeaderSize();
     }
 
     public XHttpServerOptions maxHeaderSize(int maxHeaderSize) {
-        http1xConnectionOptions.maxHeaderSize(maxHeaderSize);
+        http1ConnectionOptions.maxHeaderSize(maxHeaderSize);
         return this;
     }
 
     public long maxPayloadSize() {
-        return http1xConnectionOptions.maxPayloadSize();
+        return http1ConnectionOptions.maxPayloadSize();
     }
 
     public XHttpServerOptions maxPayloadSize(long maxPayloadSize) {
-        http1xConnectionOptions.maxPayloadSize(maxPayloadSize);
+        http1ConnectionOptions.maxPayloadSize(maxPayloadSize);
         return this;
     }
 
     public boolean autoRespond100Continue() {
-        return http1xConnectionOptions.autoRespond100Continue();
+        return http1ConnectionOptions.autoRespond100Continue();
     }
 
     public XHttpServerOptions autoRespond100Continue(boolean autoRespond100Continue) {
-        http1xConnectionOptions.autoRespond100Continue(autoRespond100Continue);
+        http1ConnectionOptions.autoRespond100Continue(autoRespond100Continue);
         return this;
     }
 

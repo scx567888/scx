@@ -5,7 +5,7 @@ import cool.scx.http.uri.ScxURI;
 
 import static cool.scx.http.x.http1.Http1Helper.*;
 
-/// Http1xServerRequest
+/// HTTP/1.1 ServerRequest
 ///
 /// @author scx567888
 /// @version 0.0.1

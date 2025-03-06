@@ -31,12 +31,12 @@ public class Http1ClientConnection {
         this.tcpSocket = tcpSocket;
         this.dataReader = new PowerfulLinkedDataReader(new InputStreamDataSupplier(tcpSocket.inputStream()));
         this.dataWriter = new NoCloseOutputStream(tcpSocket.outputStream());
-        this.options = options.http1xConnectionOptions();
+        this.options = options.http1ConnectionOptions();
     }
 
     public Http1ClientConnection sendRequest(ScxHttpClientRequest request, MediaWriter writer) {
         //1,创建 请求头
-        var requestLine = new Http1RequestLine(request.method(), request.uri(), request.version());
+        var requestLine = new Http1RequestLine(request.method(), request.uri());
 
         var requestLineStr = requestLine.encode();
 
