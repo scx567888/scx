@@ -17,9 +17,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.lang.System.Logger;
+import java.util.Arrays;
 import java.util.function.Consumer;
 
 import static cool.scx.http.HttpFieldName.CONNECTION;
+import static cool.scx.http.HttpStatusCode.*;
 import static cool.scx.http.x.http1.Http1Helper.*;
 import static java.lang.System.Logger.Level.TRACE;
 import static java.lang.System.getLogger;
@@ -136,16 +138,23 @@ public class Http1ServerConnection {
             throw new CloseConnectionException();
         } catch (NoMatchFoundException e) {
             // 在指定长度内未匹配到 这里抛出 URI 过长异常
-            throw new ScxHttpException(HttpStatusCode.URI_TOO_LONG, e.getMessage());
-        } catch (IllegalArgumentException e) {
+            throw new ScxHttpException(URI_TOO_LONG, e.getMessage());
+        } catch (Exception e) {
             // 解析 RequestLine 异常
-            throw new ScxHttpException(HttpStatusCode.BAD_REQUEST, e.getMessage());
+            throw new ScxHttpException(BAD_REQUEST, e.getMessage());
         }
     }
 
     private ScxHttpHeadersWritable readHeaders() {
         //尝试读取 headers
         try {
+            // 有可能没有头 也就是说 请求行后直接跟着 \r\n
+            var a = dataReader.read(2);
+            if (Arrays.equals(a, CRLF_BYTES)) {
+                dataReader.skip(2);
+                return ScxHttpHeaders.of();
+            }
+
             var headerBytes = dataReader.readUntil(CRLF_CRLF_BYTES, options.maxHeaderSize());
             var headerStr = new String(headerBytes);
             return ScxHttpHeaders.of(headerStr);
@@ -154,10 +163,10 @@ public class Http1ServerConnection {
             throw new CloseConnectionException();
         } catch (NoMatchFoundException e) {
             // 在指定长度内未匹配到 这里抛出请求头过大异常
-            throw new ScxHttpException(HttpStatusCode.REQUEST_HEADER_FIELDS_TOO_LARGE, e.getMessage());
-        } catch (IllegalArgumentException e) {
+            throw new ScxHttpException(REQUEST_HEADER_FIELDS_TOO_LARGE, e.getMessage());
+        } catch (Exception e) {
             // 解析 Header 异常
-            throw new ScxHttpException(HttpStatusCode.BAD_REQUEST, e.getMessage());
+            throw new ScxHttpException(BAD_REQUEST, e.getMessage());
         }
     }
 
@@ -176,7 +185,7 @@ public class Http1ServerConnection {
         if (contentLength != null) {
             // 请求体长度过大 这里抛出异常
             if (contentLength > options.maxPayloadSize()) {
-                throw new ScxHttpException(HttpStatusCode.CONTENT_TOO_LARGE);
+                throw new ScxHttpException(CONTENT_TOO_LARGE);
             }
             return new FixedLengthDataReaderInputStream(dataReader, contentLength);
         }
