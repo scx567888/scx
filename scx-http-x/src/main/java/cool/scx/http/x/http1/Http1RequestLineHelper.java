@@ -64,13 +64,13 @@ public final class Http1RequestLineHelper {
         public InvalidHttpRequestLineException(String requestLineStr) {
             this.requestLineStr = requestLineStr;
         }
-        
+
     }
 
     public static class InvalidHttpVersion extends Exception {
-        
+
         public final String versionStr;
-        
+
         public InvalidHttpVersion(String versionStr) {
             this.versionStr = versionStr;
         }
