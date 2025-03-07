@@ -153,8 +153,8 @@ public class Http1ServerConnection {
     private ScxHttpHeadersWritable readHeaders() {
         //尝试读取 headers
         try {
-            // 有可能没有头 也就是说 请求行后直接跟着 \r\n
-            var a = dataReader.read(2);
+            // 有可能没有头 也就是说 请求行后直接跟着 \r\n , 这里检查一下
+            var a = dataReader.peek(2);
             if (Arrays.equals(a, CRLF_BYTES)) {
                 dataReader.skip(2);
                 return ScxHttpHeaders.of();
