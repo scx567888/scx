@@ -4,6 +4,8 @@ import cool.scx.http.Parameters;
 
 import java.net.URI;
 
+import static cool.scx.http.uri.URIEncoder.encodeURI;
+
 /// ScxURI
 ///
 /// @author scx567888
@@ -14,8 +16,10 @@ public interface ScxURI {
         return new ScxURIImpl();
     }
 
+    /// 根据 字符串进行解码
     static ScxURIWritable of(String uri) {
-        return of(URI.create(uri));
+        // URI.create 只能处理编码后的标准格式 在此处为了兼容用户传入的特殊字符 我们先编码一次
+        return of(URI.create(encodeURI(uri)));
     }
 
     static ScxURIWritable of(URI u) {
@@ -54,18 +58,23 @@ public interface ScxURI {
         return query().get(name);
     }
 
-    /// 注意此编码会进行 URL编码 转换
+    /// 编码 (默认不进行转换)
     ///
-    /// @return a
+    /// @return 编码结果
     default String encode() {
         return encode(false);
     }
 
+    /// 编码
+    ///
+    /// @param uriEncoding 是否进行 URI 编码
+    /// @return 编码结果
     default String encode(boolean uriEncoding) {
         return ScxURIHelper.encodeScxURI(this, uriEncoding);
     }
 
     default URI toURI() {
+        // 此处同样因为 URI.create 只能处理编码后的标准格式 所以先编码
         return URI.create(encode(true));
     }
 
