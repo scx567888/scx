@@ -1,9 +1,12 @@
 package cool.scx.http.x.http1;
 
 import cool.scx.http.*;
+import cool.scx.http.exception.BadRequestException;
 import cool.scx.http.exception.InternalServerErrorException;
 import cool.scx.http.exception.ScxHttpException;
 import cool.scx.http.x.XHttpServerOptions;
+import cool.scx.http.x.http1.Http1RequestLineHelper.InvalidHttpRequestLineException;
+import cool.scx.http.x.http1.Http1RequestLineHelper.InvalidHttpVersion;
 import cool.scx.io.data_reader.PowerfulLinkedDataReader;
 import cool.scx.io.data_supplier.InputStreamDataSupplier;
 import cool.scx.io.exception.NoMatchFoundException;
@@ -139,9 +142,11 @@ public class Http1ServerConnection {
         } catch (NoMatchFoundException e) {
             // 在指定长度内未匹配到 这里抛出 URI 过长异常
             throw new ScxHttpException(URI_TOO_LONG, e.getMessage());
-        } catch (Exception e) {
+        } catch (InvalidHttpRequestLineException e) {
             // 解析 RequestLine 异常
-            throw new ScxHttpException(BAD_REQUEST, e.getMessage());
+            throw new BadRequestException("Invalid HTTP request line : " + e.requestLineStr);
+        } catch (InvalidHttpVersion e) {
+            throw new ScxHttpException(HTTP_VERSION_NOT_SUPPORTED, "Invalid HTTP version : " + e.versionStr);
         }
     }
 
