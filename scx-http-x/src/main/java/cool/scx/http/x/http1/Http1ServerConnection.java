@@ -200,7 +200,8 @@ public class Http1ServerConnection {
     }
 
     private void handleHttpException(ScxHttpException e) {
-        //todo 这个方法不是特别合理
+        //todo 这个方法不是特别合理,
+        // 不一定所有的 情况都需要关闭连接 是否可以在 ScxHttpException 中添加是否严重 或者根据状态码来区分 ?
 
         var sb = new StringBuilder();
         sb.append(HttpVersion.HTTP_1_1.value());
