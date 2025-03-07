@@ -18,7 +18,7 @@ public interface ScxURI {
 
     /// 根据 字符串进行解码
     static ScxURIWritable of(String uri) {
-        // URI.create 只能处理标准格式 在此处为了兼容用户传入的特殊字符 我们先编码一次
+        // URI.create 只能处理编码后的标准格式 在此处为了兼容用户传入的特殊字符 我们先编码一次
         return of(URI.create(encodeURI(uri)));
     }
 
@@ -74,6 +74,7 @@ public interface ScxURI {
     }
 
     default URI toURI() {
+        // 此处同样因为 URI.create 只能处理编码后的标准格式 所以先编码
         return URI.create(encode(true));
     }
 
