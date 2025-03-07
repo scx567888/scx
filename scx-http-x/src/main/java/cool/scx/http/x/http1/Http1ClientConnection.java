@@ -15,6 +15,7 @@ import cool.scx.tcp.ScxTCPSocket;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
 
 import static cool.scx.http.HttpFieldName.HOST;
 import static cool.scx.http.x.http1.Http1Helper.CRLF_BYTES;
@@ -95,6 +96,13 @@ public class Http1ClientConnection {
 
     public ScxHttpHeadersWritable readHeaders() {
         try {
+            // 有可能没有头 也就是说 请求行后直接跟着 \r\n , 这里检查一下
+            var a = dataReader.peek(2);
+            if (Arrays.equals(a, CRLF_BYTES)) {
+                dataReader.skip(2);
+                return ScxHttpHeaders.of();
+            }
+
             var headerBytes = dataReader.readUntil(CRLF_CRLF_BYTES, options.maxHeaderSize());
             var headerStr = new String(headerBytes);
             return ScxHttpHeaders.of(headerStr);
