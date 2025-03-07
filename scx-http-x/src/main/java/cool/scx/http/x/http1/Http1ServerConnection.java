@@ -201,7 +201,6 @@ public class Http1ServerConnection {
 
     private void handleHttpException(ScxHttpException e) {
         //todo 这个方法不是特别合理
-        var headers = ScxHttpHeaders.of();
 
         var sb = new StringBuilder();
         sb.append(HttpVersion.HTTP_1_1.value());
@@ -211,6 +210,7 @@ public class Http1ServerConnection {
         sb.append(e.statusCode().description());
         sb.append("\r\n");
 
+        var headers = ScxHttpHeaders.of();
         // we are escaping the connection loop, the connection will be closed
         headers.set(CONNECTION, "close");
 
