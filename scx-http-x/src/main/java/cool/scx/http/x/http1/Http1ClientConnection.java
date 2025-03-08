@@ -73,7 +73,7 @@ public class Http1ClientConnection {
             useChunkedTransfer = true;
         }
 
-        //todo 此处功能和 Http1ServerResponse 重复是否需要抽取
+        //todo 此处功能和 Http1ServerResponse 重复是否需要抽取 此处 是否也需要 BufferedOutputStream 进行包装
         if (useChunkedTransfer) {
             writer.write(new OutputStream() {
 
