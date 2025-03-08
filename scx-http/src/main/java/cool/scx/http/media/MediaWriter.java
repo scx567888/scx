@@ -13,8 +13,8 @@ public interface MediaWriter {
 
     /// 写入内容之前 在这里可以设置 header 头
     ///
-    /// @param responseHeaders 响应头
-    /// @param requestHeaders  请求头
+    /// @param responseHeaders 响应头 (在客户端状态下是 requestHeaders)
+    /// @param requestHeaders  请求头 (在客户端状态下是 空 Header)
     void beforeWrite(ScxHttpHeadersWritable responseHeaders, ScxHttpHeaders requestHeaders);
 
     /// 写入内容
