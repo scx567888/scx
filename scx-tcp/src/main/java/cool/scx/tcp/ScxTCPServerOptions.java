@@ -18,7 +18,7 @@ public class ScxTCPServerOptions {
 
     public ScxTCPServerOptions() {
         this.localAddress = new InetSocketAddress(0); // 默认随机端口号
-        this.backlog = 0; // 默认采用实现的默认背压
+        this.backlog = 128; // 默认背压大小 128
         this.tls = null; // 默认没有 tls
         this.autoUpgradeToTLS = true; // 自动升级到 TLS
         this.autoHandshake = true; // 自动握手

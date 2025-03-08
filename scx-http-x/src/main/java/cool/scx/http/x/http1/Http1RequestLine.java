@@ -3,6 +3,8 @@ package cool.scx.http.x.http1;
 import cool.scx.http.HttpVersion;
 import cool.scx.http.ScxHttpMethod;
 import cool.scx.http.uri.ScxURI;
+import cool.scx.http.x.http1.Http1RequestLineHelper.InvalidHttpRequestLineException;
+import cool.scx.http.x.http1.Http1RequestLineHelper.InvalidHttpVersion;
 
 import static cool.scx.http.HttpVersion.HTTP_1_1;
 
@@ -19,7 +21,7 @@ public record Http1RequestLine(ScxHttpMethod method, ScxURI path, HttpVersion ve
         this(method, path, HTTP_1_1);
     }
 
-    public static Http1RequestLine of(String requestLineStr) {
+    public static Http1RequestLine of(String requestLineStr) throws InvalidHttpRequestLineException, InvalidHttpVersion {
         return Http1RequestLineHelper.parseRequestLine(requestLineStr);
     }
 
