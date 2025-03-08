@@ -36,16 +36,14 @@ public interface ScxHttpServerResponse {
 
     ScxHttpServerResponse status(HttpStatusCode code);
 
+    /// 在向 outputStream 中写入数据前请保证已经设置好 状态码和 header
     OutputStream outputStream();
-
-    void end();
 
     boolean isClosed();
 
     default void send(MediaWriter writer) {
         writer.beforeWrite(headers(), request().headers());
         writer.write(outputStream());
-        end();
     }
 
     //************** 简化操作 ***************
