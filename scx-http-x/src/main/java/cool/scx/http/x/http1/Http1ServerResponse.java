@@ -62,19 +62,8 @@ public class Http1ServerResponse extends OutputStream implements ScxHttpServerRe
     }
 
     @Override
-    public void end() {
-        //分块传输别忘了最后的 终结块
-        if (hasBody && useChunkedTransfer) {
-            try {
-                sendChunkedEnd(dataWriter);
-            } catch (Exception e) {
-                throw new CloseConnectionException();
-            }
-        }
-    }
-
-    @Override
     public boolean isClosed() {
+        //todo 这里的 isClosed 应该表示 什么 是当前 响应已结束 还是 当前连接已结束
         return false;
     }
 
@@ -169,11 +158,20 @@ public class Http1ServerResponse extends OutputStream implements ScxHttpServerRe
 
     @Override
     public void close() throws IOException {
+        //1, 有可能从来没有调用过 write , 这里需要检查一下
         checkFirstSend();
+        //2, 分块传输别忘了最后的 终结块
+        if (hasBody && useChunkedTransfer) {
+            try {
+                sendChunkedEnd(dataWriter);
+            } catch (IOException e) {
+                throw new CloseConnectionException();
+            }
+        }
+        //3, 只有明确表示 close 的时候我们才关闭
         var connection = headers.get(CONNECTION);
-        //只有明确表示 close 的时候我们才关闭
         if ("close".equalsIgnoreCase(connection)) {
-            this.connection.stop();
+            this.connection.close();// 服务器也需要显式关闭连接
         }
     }
 

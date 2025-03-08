@@ -124,6 +124,13 @@ public class Http1ServerConnection {
         running = false;
     }
 
+    public void close() throws IOException {
+        //关闭连接就表示 不需要继续读取了
+        stop();
+        //关闭连接
+        tcpSocket.close();
+    }
+
     private void _callRequestHandler(ScxHttpServerRequest request) {
         if (requestHandler != null) {
             requestHandler.accept(request);
