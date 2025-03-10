@@ -20,7 +20,6 @@ import java.util.Arrays;
 import static cool.scx.http.HttpFieldName.HOST;
 import static cool.scx.http.HttpFieldName.TRANSFER_ENCODING;
 import static cool.scx.http.HttpMethod.GET;
-import static cool.scx.http.HttpStatusCode.*;
 import static cool.scx.http.x.http1.Http1Helper.*;
 import static java.io.OutputStream.nullOutputStream;
 
@@ -57,7 +56,7 @@ public class Http1ClientConnection {
 
         var hasBody = true;
         //是否不需要响应体
-        if (request.method() == GET ) {
+        if (request.method() == GET) {
             hasBody = false;
         }
 
@@ -86,8 +85,7 @@ public class Http1ClientConnection {
             throw new RuntimeException(e);
         }
 
-        
-        if (!hasBody){
+        if (!hasBody) {
             writer.write(nullOutputStream());
         }
 
