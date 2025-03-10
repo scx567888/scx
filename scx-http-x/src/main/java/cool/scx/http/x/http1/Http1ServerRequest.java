@@ -19,11 +19,11 @@ public class Http1ServerRequest implements ScxHttpServerRequest {
     private final ScxURI uri;
     private final HttpVersion version;
     private final ScxHttpHeaders headers;
-    private final ScxHttpBody body;
+    private final ScxHttpBodyImpl body;
     private final PeerInfo remotePeer;
     private final PeerInfo localPeer;
 
-    public Http1ServerRequest(Http1ServerConnection connection, Http1RequestLine requestLine, ScxHttpHeadersWritable headers, ScxHttpBody body) {
+    public Http1ServerRequest(Http1ServerConnection connection, Http1RequestLine requestLine, ScxHttpHeadersWritable headers, ScxHttpBodyImpl body) {
         this.connection = connection;
         this.isKeepAlive = checkIsKeepAlive(requestLine, headers);
 
@@ -64,7 +64,7 @@ public class Http1ServerRequest implements ScxHttpServerRequest {
     }
 
     @Override
-    public ScxHttpBody body() {
+    public ScxHttpBodyImpl body() {
         return body;
     }
 
