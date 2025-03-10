@@ -58,7 +58,7 @@ public final class Http1RequestLineHelper {
     }
 
     public static class InvalidHttpRequestLineException extends Exception {
-        
+
         public final String requestLineStr;
 
         public InvalidHttpRequestLineException(String requestLineStr) {
