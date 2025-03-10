@@ -56,7 +56,7 @@ public class HttpChunkedOutputStream extends OutputStream {
         var pos = 8;
         do {
             bytes[--pos] = HEX_DIGITS[value & 0xF]; // 取最后 4 位
-            value >>>= 4; // 右移 4 位
+            value = value >>> 4; // 右移 4 位
         } while (value != 0);
 
         out.write(bytes, pos, 8 - pos);
