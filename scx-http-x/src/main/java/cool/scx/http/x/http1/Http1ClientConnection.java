@@ -85,17 +85,18 @@ public class Http1ClientConnection {
             throw new RuntimeException(e);
         }
 
+        OutputStream out;
+
         if (!hasBody) {
-            writer.write(nullOutputStream());
+            out = nullOutputStream();
+        } else if (useChunkedTransfer) {
+            out = new HttpChunkedOutputStream(dataWriter);
+        } else {
+            out = dataWriter;
         }
 
         //todo 此处功能和 Http1ServerResponse 重复是否需要抽取 此处 是否也需要 BufferedOutputStream 进行包装
-        if (useChunkedTransfer) {
-            writer.write(new HttpChunkedOutputStream(dataWriter));
-        } else {
-            //写入请求体的内容
-            writer.write(dataWriter);
-        }
+        writer.write(out);
 
         return this;
     }
