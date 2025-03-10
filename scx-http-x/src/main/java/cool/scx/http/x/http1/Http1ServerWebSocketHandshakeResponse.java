@@ -68,8 +68,8 @@ public class Http1ServerWebSocketHandshakeResponse implements ScxServerWebSocket
     }
 
     @Override
-    public OutputStream outputStream() {
-        return response.outputStream();
+    public OutputStream sendHeaders() {
+        return response.sendHeaders();
     }
 
     @Override
