@@ -19,7 +19,9 @@ import java.util.Arrays;
 
 import static cool.scx.http.HttpFieldName.HOST;
 import static cool.scx.http.HttpFieldName.TRANSFER_ENCODING;
+import static cool.scx.http.HttpMethod.GET;
 import static cool.scx.http.x.http1.Http1Helper.*;
+import static java.io.OutputStream.nullOutputStream;
 
 public class Http1ClientConnection {
 
@@ -52,8 +54,25 @@ public class Http1ClientConnection {
             requestHeaders.set(HOST, request.uri().host());
         }
 
-        if (requestHeaders.contentLength() == null) {
-            requestHeaders.set(TRANSFER_ENCODING, "chunked");
+        var hasBody = true;
+        //是否不需要响应体
+        if (request.method() == GET) {
+            hasBody = false;
+        }
+
+        //如果需要响应体
+        if (hasBody) {
+            //没有长度 我们就设置为 分块传输
+            if (requestHeaders.contentLength() == null) {
+                requestHeaders.set(TRANSFER_ENCODING, "chunked");
+            }
+        }
+
+        var useChunkedTransfer = false;
+
+        //判断是否需要分段传输
+        if (checkIsChunkedTransfer(requestHeaders)) {
+            useChunkedTransfer = true;
         }
 
         var requestHeaderStr = requestHeaders.encode();
@@ -66,20 +85,18 @@ public class Http1ClientConnection {
             throw new RuntimeException(e);
         }
 
-        var useChunkedTransfer = false;
+        OutputStream out;
 
-        //判断是否需要分段传输
-        if (checkIsChunkedTransfer(requestHeaders)) {
-            useChunkedTransfer = true;
+        if (!hasBody) {
+            out = nullOutputStream();
+        } else if (useChunkedTransfer) {
+            out = new HttpChunkedOutputStream(dataWriter);
+        } else {
+            out = dataWriter;
         }
 
         //todo 此处功能和 Http1ServerResponse 重复是否需要抽取 此处 是否也需要 BufferedOutputStream 进行包装
-        if (useChunkedTransfer) {
-            writer.write(new HttpChunkedOutputStream(dataWriter));
-        } else {
-            //写入请求体的内容
-            writer.write(dataWriter);
-        }
+        writer.write(out);
 
         return this;
     }

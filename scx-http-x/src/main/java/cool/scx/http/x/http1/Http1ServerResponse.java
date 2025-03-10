@@ -4,35 +4,29 @@ import cool.scx.http.*;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UncheckedIOException;
 
 import static cool.scx.http.HttpFieldName.*;
 import static cool.scx.http.HttpStatusCode.*;
-import static cool.scx.http.x.http1.Http1Helper.*;
+import static cool.scx.http.x.http1.Http1Helper.checkIsChunkedTransfer;
+import static java.io.OutputStream.nullOutputStream;
 
 /// todo 待完成
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class Http1ServerResponse extends OutputStream implements ScxHttpServerResponse {
+public class Http1ServerResponse implements ScxHttpServerResponse {
 
-    private final Http1ServerConnection connection;
     private final Http1ServerRequest request;
     private final ScxHttpHeadersWritable headers;
     private final OutputStream dataWriter;
     private HttpStatusCode status;
-    private boolean firstSend;
-    private boolean useChunkedTransfer;
-    private boolean hasBody;
 
     Http1ServerResponse(Http1ServerConnection connection, Http1ServerRequest request) {
-        this.connection = connection;
-        this.dataWriter = this.connection.dataWriter;
         this.request = request;
         this.status = HttpStatusCode.OK;
         this.headers = ScxHttpHeaders.of();
-        this.firstSend = true;
-        this.useChunkedTransfer = false;
-        this.hasBody = true;
+        this.dataWriter = new Http1ServerResponseOutputStream(connection, this.headers);
     }
 
     @Override
@@ -57,17 +51,8 @@ public class Http1ServerResponse extends OutputStream implements ScxHttpServerRe
     }
 
     @Override
-    public OutputStream outputStream() {
-        return this;
-    }
+    public OutputStream sendHeaders() {
 
-    @Override
-    public boolean isClosed() {
-        //todo 这里的 isClosed 应该表示 什么 是当前 响应已结束 还是 当前连接已结束
-        return false;
-    }
-
-    public void doFirstSend() {
         //1, 响应头
         var sb = new StringBuilder();
         sb.append(request.version().value());
@@ -91,22 +76,25 @@ public class Http1ServerResponse extends OutputStream implements ScxHttpServerRe
             headers.set(SERVER, "SCX");
         }
 
+        var hasBody = true;
         //是否不需要响应体
         if (status == SWITCHING_PROTOCOLS || status == NO_CONTENT || status == NOT_MODIFIED) {
-            this.hasBody = false;
+            hasBody = false;
         }
 
         //如果需要响应体
-        if (this.hasBody) {
+        if (hasBody) {
             //没有设置 contentLength 我们帮助设置 
             if (headers.contentLength() == null) {
                 headers.set(TRANSFER_ENCODING, "chunked");
             }
         }
 
+        var useChunkedTransfer = false;
+
         //判断是否需要分段传输
         if (checkIsChunkedTransfer(headers)) {
-            this.useChunkedTransfer = true;
+            useChunkedTransfer = true;
         }
 
         var headerStr = headers.encode();
@@ -117,62 +105,27 @@ public class Http1ServerResponse extends OutputStream implements ScxHttpServerRe
         try {
             dataWriter.write(sb.toString().getBytes());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new UncheckedIOException(e);
         }
 
-    }
-
-    public void checkFirstSend() {
-        if (firstSend) {
-            doFirstSend();
-            firstSend = false;
+        //没有响应体
+        if (!hasBody) {
+            return nullOutputStream();
         }
-    }
 
-    @Override
-    public void write(int b) throws IOException {
-        var a = new byte[]{(byte) b};
-        write(a, 0, 1);
-    }
-
-    @Override
-    public void write(byte[] b, int off, int len) throws IOException {
-        checkFirstSend();
-
+        //采用分块传输
         if (useChunkedTransfer) {
-            // 发送分块
-            dataWriter.write(Integer.toUnsignedString(len, 16).getBytes());  // 发送块大小
-            dataWriter.write(CRLF_BYTES);  // 块大小结束
-            dataWriter.write(b, off, len);  // 发送数据块内容
-            dataWriter.write(CRLF_BYTES);  // 分块结束符
+            return new HttpChunkedOutputStream(dataWriter);
         } else {
-            dataWriter.write(b, off, len);
+            //直接返回原始格式
+            return dataWriter;
         }
-
     }
 
     @Override
-    public void flush() throws IOException {
-        dataWriter.flush();
-    }
-
-    @Override
-    public void close() throws IOException {
-        //1, 有可能从来没有调用过 write , 这里需要检查一下
-        checkFirstSend();
-        //2, 分块传输别忘了最后的 终结块
-        if (hasBody && useChunkedTransfer) {
-            try {
-                sendChunkedEnd(dataWriter);
-            } catch (IOException e) {
-                throw new CloseConnectionException();
-            }
-        }
-        //3, 只有明确表示 close 的时候我们才关闭
-        var connection = headers.get(CONNECTION);
-        if ("close".equalsIgnoreCase(connection)) {
-            this.connection.close();// 服务器也需要显式关闭连接
-        }
+    public boolean isClosed() {
+        //todo 这里的 isClosed 应该表示 什么 是当前 响应已结束 还是 当前连接已结束
+        return false;
     }
 
 }
