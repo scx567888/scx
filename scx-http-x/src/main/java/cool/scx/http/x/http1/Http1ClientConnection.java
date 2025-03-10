@@ -75,38 +75,7 @@ public class Http1ClientConnection {
 
         //todo 此处功能和 Http1ServerResponse 重复是否需要抽取 此处 是否也需要 BufferedOutputStream 进行包装
         if (useChunkedTransfer) {
-            writer.write(new OutputStream() {
-
-                @Override
-                public void write(int b) throws IOException {
-                    var a = new byte[]{(byte) b};
-                    write(a, 0, 1);
-                }
-
-                @Override
-                public void write(byte[] b, int off, int len) throws IOException {
-                    // 发送分块
-                    dataWriter.write(Integer.toUnsignedString(len, 16).getBytes());  // 发送块大小
-                    dataWriter.write(CRLF_BYTES);  // 块大小结束
-                    dataWriter.write(b, off, len);  // 发送数据块内容
-                    dataWriter.write(CRLF_BYTES);  // 分块结束符
-                }
-
-                @Override
-                public void flush() throws IOException {
-                    dataWriter.flush();
-                }
-
-                @Override
-                public void close() throws IOException {
-                    //1, 分块传输别忘了最后的 终结块
-                    try {
-                        sendChunkedEnd(dataWriter);
-                    } catch (IOException e) {
-                        throw new CloseConnectionException();
-                    }
-                }
-            });
+            writer.write(new HttpChunkedOutputStream(dataWriter));
         } else {
             //写入请求体的内容
             writer.write(dataWriter);
