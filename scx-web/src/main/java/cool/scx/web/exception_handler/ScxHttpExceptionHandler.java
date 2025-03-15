@@ -3,8 +3,8 @@ package cool.scx.web.exception_handler;
 import cool.scx.common.exception.ScxExceptionHelper;
 import cool.scx.common.util.ObjectUtils;
 import cool.scx.http.HttpStatusCode;
-import cool.scx.http.header.content_type.ContentType;
 import cool.scx.http.exception.ScxHttpException;
+import cool.scx.http.header.content_type.ContentType;
 import cool.scx.http.routing.RoutingContext;
 
 import java.lang.System.Logger;
