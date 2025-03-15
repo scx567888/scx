@@ -1,11 +1,11 @@
-package cool.scx.http.content_type;
+package cool.scx.http.header.content_type;
 
 import cool.scx.http.Parameters;
 import cool.scx.http.ScxMediaType;
 
 import java.nio.charset.Charset;
 
-import static cool.scx.http.content_type.ContentTypeHelper.decodedContentType;
+import static cool.scx.http.header.content_type.ContentTypeHelper.decodedContentType;
 
 /// ContentType
 ///

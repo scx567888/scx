@@ -1,4 +1,4 @@
-package cool.scx.http.cookie;
+package cool.scx.http.header.cookie;
 
 /// CookieSameSite
 ///

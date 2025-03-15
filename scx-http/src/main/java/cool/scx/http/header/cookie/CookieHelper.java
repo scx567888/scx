@@ -1,8 +1,8 @@
-package cool.scx.http.cookie;
+package cool.scx.http.header.cookie;
 
 import java.util.ArrayList;
 
-import static cool.scx.http.content_type.ContentTypeHelper.SEMICOLON_PATTERN;
+import static cool.scx.http.header.content_type.ContentTypeHelper.SEMICOLON_PATTERN;
 
 
 /// CookieHelper

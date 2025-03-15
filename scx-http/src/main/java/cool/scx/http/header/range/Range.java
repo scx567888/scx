@@ -1,4 +1,4 @@
-package cool.scx.http.range;
+package cool.scx.http.header.range;
 
 import java.util.ArrayList;
 import java.util.List;

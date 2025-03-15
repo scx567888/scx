@@ -1,4 +1,4 @@
-package cool.scx.http.content_type;
+package cool.scx.http.header.content_type;
 
 import cool.scx.http.Parameters;
 import cool.scx.http.ParametersWritable;

@@ -1,8 +1,8 @@
-package cool.scx.http.accept;
+package cool.scx.http.header.accept;
 
 import cool.scx.http.ScxMediaType;
 
-import static cool.scx.http.accept.AcceptHelper.decodeAccept;
+import static cool.scx.http.header.accept.AcceptHelper.decodeAccept;
 
 /// Accept
 ///

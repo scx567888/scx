@@ -2,7 +2,7 @@ package cool.scx.web.vo;
 
 import cool.scx.http.FileFormat;
 import cool.scx.http.MediaType;
-import cool.scx.http.content_type.ContentType;
+import cool.scx.http.header.content_type.ContentType;
 import cool.scx.http.exception.BadRequestException;
 import cool.scx.http.exception.NotFoundException;
 import cool.scx.http.exception.ScxHttpException;

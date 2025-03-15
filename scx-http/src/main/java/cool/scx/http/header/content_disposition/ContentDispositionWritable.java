@@ -1,4 +1,4 @@
-package cool.scx.http.content_disposition;
+package cool.scx.http.header.content_disposition;
 
 import cool.scx.http.Parameters;
 import cool.scx.http.ParametersWritable;

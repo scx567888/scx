@@ -1,6 +1,6 @@
-package cool.scx.http.cookie;
+package cool.scx.http.header.cookie;
 
-import static cool.scx.http.cookie.CookieHelper.encodeCookie;
+import static cool.scx.http.header.cookie.CookieHelper.encodeCookie;
 
 /// CookieImpl
 ///

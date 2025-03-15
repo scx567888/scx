@@ -3,7 +3,7 @@ package cool.scx.http.media.form_params;
 import cool.scx.http.MediaType;
 import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.ScxHttpHeadersWritable;
-import cool.scx.http.content_type.ContentType;
+import cool.scx.http.header.content_type.ContentType;
 import cool.scx.http.media.MediaWriter;
 
 import java.io.IOException;

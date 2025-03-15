@@ -3,7 +3,7 @@ package cool.scx.http.test;
 import cool.scx.common.util.ArrayUtils;
 import cool.scx.http.MediaType;
 import cool.scx.http.ScxHttpHeaders;
-import cool.scx.http.content_type.ContentType;
+import cool.scx.http.header.content_type.ContentType;
 import cool.scx.http.media.multi_part.*;
 import org.testng.annotations.Test;
 

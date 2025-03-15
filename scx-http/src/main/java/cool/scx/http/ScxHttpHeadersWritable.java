@@ -1,12 +1,12 @@
 package cool.scx.http;
 
-import cool.scx.http.content_disposition.ContentDisposition;
-import cool.scx.http.content_disposition.ContentDispositionWritable;
-import cool.scx.http.content_type.ContentType;
-import cool.scx.http.content_type.ContentTypeWritable;
-import cool.scx.http.cookie.Cookie;
-import cool.scx.http.cookie.Cookies;
-import cool.scx.http.cookie.CookiesWritable;
+import cool.scx.http.header.content_disposition.ContentDisposition;
+import cool.scx.http.header.content_disposition.ContentDispositionWritable;
+import cool.scx.http.header.content_type.ContentType;
+import cool.scx.http.header.content_type.ContentTypeWritable;
+import cool.scx.http.header.cookie.Cookie;
+import cool.scx.http.header.cookie.Cookies;
+import cool.scx.http.header.cookie.CookiesWritable;
 
 import java.nio.charset.Charset;
 

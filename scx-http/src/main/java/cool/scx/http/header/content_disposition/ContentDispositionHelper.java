@@ -1,11 +1,11 @@
-package cool.scx.http.content_disposition;
+package cool.scx.http.header.content_disposition;
 
 import cool.scx.http.Parameters;
 import cool.scx.http.ParametersWritable;
 
 import static cool.scx.common.util.StringUtils.removeQuotes;
-import static cool.scx.http.content_type.ContentTypeHelper.SEMICOLON_PATTERN;
-import static cool.scx.http.content_type.ContentTypeHelper.encodeParams;
+import static cool.scx.http.header.content_type.ContentTypeHelper.SEMICOLON_PATTERN;
+import static cool.scx.http.header.content_type.ContentTypeHelper.encodeParams;
 
 /// ContentDispositionHelper
 ///

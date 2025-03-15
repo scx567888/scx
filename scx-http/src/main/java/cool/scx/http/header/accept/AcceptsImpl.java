@@ -1,4 +1,4 @@
-package cool.scx.http.accept;
+package cool.scx.http.header.accept;
 
 import java.util.ArrayList;
 import java.util.Iterator;

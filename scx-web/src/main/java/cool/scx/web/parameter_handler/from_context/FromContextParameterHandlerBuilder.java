@@ -4,7 +4,7 @@ import cool.scx.http.ScxHttpBody;
 import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.ScxHttpServerResponse;
-import cool.scx.http.cookie.Cookies;
+import cool.scx.http.header.cookie.Cookies;
 import cool.scx.http.routing.RoutingContext;
 import cool.scx.reflect.ParameterInfo;
 import cool.scx.web.parameter_handler.ParameterHandler;

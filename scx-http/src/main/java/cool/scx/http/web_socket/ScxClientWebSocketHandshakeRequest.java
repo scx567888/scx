@@ -1,7 +1,7 @@
 package cool.scx.http.web_socket;
 
 import cool.scx.http.*;
-import cool.scx.http.cookie.Cookie;
+import cool.scx.http.header.cookie.Cookie;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.uri.ScxURI;
 
