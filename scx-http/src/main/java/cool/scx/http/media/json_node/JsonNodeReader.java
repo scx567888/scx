@@ -2,8 +2,8 @@ package cool.scx.http.media.json_node;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.exception.BadRequestException;
+import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.media.MediaReader;
 
 import java.io.InputStream;

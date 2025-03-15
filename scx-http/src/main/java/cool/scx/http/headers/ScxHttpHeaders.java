@@ -1,6 +1,6 @@
 package cool.scx.http.headers;
 
-import cool.scx.http.*;
+import cool.scx.http.Parameters;
 import cool.scx.http.headers.accept.Accepts;
 import cool.scx.http.headers.content_disposition.ContentDisposition;
 import cool.scx.http.headers.content_type.ContentType;

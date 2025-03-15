@@ -1,6 +1,9 @@
 package cool.scx.http.x.http1;
 
-import cool.scx.http.*;
+import cool.scx.http.HttpStatusCode;
+import cool.scx.http.ScxHttpBody;
+import cool.scx.http.ScxHttpClientRequest;
+import cool.scx.http.ScxHttpClientResponse;
 import cool.scx.http.exception.ScxHttpException;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;

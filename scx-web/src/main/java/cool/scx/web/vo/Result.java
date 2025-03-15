@@ -8,9 +8,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static cool.scx.common.util.StringUtils.startsWithIgnoreCase;
-import static cool.scx.http.headers.HttpFieldName.ACCEPT;
 import static cool.scx.http.MediaType.APPLICATION_JSON;
 import static cool.scx.http.MediaType.APPLICATION_XML;
+import static cool.scx.http.headers.HttpFieldName.ACCEPT;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /// 一般用来表达业务逻辑

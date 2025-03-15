@@ -1,6 +1,8 @@
 package cool.scx.http.x;
 
-import cool.scx.http.*;
+import cool.scx.http.HttpVersion;
+import cool.scx.http.ScxHttpClientRequest;
+import cool.scx.http.ScxHttpClientResponse;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.media.MediaWriter;

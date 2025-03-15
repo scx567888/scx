@@ -9,8 +9,8 @@ import cool.scx.http.routing.handler.StaticHelper;
 import java.io.InputStream;
 import java.nio.file.Path;
 
-import static cool.scx.http.headers.HttpFieldName.CONTENT_DISPOSITION;
 import static cool.scx.http.MediaType.APPLICATION_OCTET_STREAM;
+import static cool.scx.http.headers.HttpFieldName.CONTENT_DISPOSITION;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /// 基本写入程序 可以直接向相应体中写入数据
