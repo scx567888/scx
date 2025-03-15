@@ -1,6 +1,6 @@
 package cool.scx.http.media;
 
-import cool.scx.http.ScxHttpHeaders;
+import cool.scx.http.headers.ScxHttpHeaders;
 
 import java.io.InputStream;
 

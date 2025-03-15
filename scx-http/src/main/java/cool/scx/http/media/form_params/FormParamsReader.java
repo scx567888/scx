@@ -1,6 +1,6 @@
 package cool.scx.http.media.form_params;
 
-import cool.scx.http.ScxHttpHeaders;
+import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.media.MediaReader;
 
 import java.io.InputStream;

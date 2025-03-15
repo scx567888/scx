@@ -1,11 +1,11 @@
 package cool.scx.http.x.http1;
 
-import cool.scx.http.ScxHttpHeaders;
+import cool.scx.http.headers.ScxHttpHeaders;
 
 import java.io.IOException;
 import java.io.OutputStream;
 
-import static cool.scx.http.HttpFieldName.CONNECTION;
+import static cool.scx.http.headers.HttpFieldName.CONNECTION;
 
 public class Http1ServerResponseOutputStream extends OutputStream {
 

@@ -1,7 +1,7 @@
 package cool.scx.http.x.http1;
 
 import cool.scx.http.HttpVersion;
-import cool.scx.http.ScxHttpMethod;
+import cool.scx.http.method.ScxHttpMethod;
 import cool.scx.http.uri.ScxURI;
 
 import java.net.URI;

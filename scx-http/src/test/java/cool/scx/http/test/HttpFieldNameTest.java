@@ -1,7 +1,7 @@
 package cool.scx.http.test;
 
 import cool.scx.common.util.CaseUtils;
-import cool.scx.http.HttpFieldName;
+import cool.scx.http.headers.HttpFieldName;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

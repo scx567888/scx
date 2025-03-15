@@ -1,6 +1,8 @@
 package cool.scx.http.x.http3;
 
 import cool.scx.http.*;
+import cool.scx.http.headers.ScxHttpHeaders;
+import cool.scx.http.method.ScxHttpMethod;
 import cool.scx.http.uri.ScxURI;
 
 //todo 待完成

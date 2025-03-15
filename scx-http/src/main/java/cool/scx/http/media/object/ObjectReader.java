@@ -3,7 +3,7 @@ package cool.scx.http.media.object;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JavaType;
 import cool.scx.common.util.ObjectUtils;
-import cool.scx.http.ScxHttpHeaders;
+import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.media.MediaReader;
 
 import java.io.InputStream;

@@ -1,6 +1,6 @@
 package cool.scx.web.annotation;
 
-import cool.scx.http.HttpMethod;
+import cool.scx.http.method.HttpMethod;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

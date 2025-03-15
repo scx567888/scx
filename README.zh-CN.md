@@ -73,7 +73,7 @@
 ``` java
 import cool.scx.app.Scx;
 import cool.scx.app.ScxModule;
-import cool.scx.http.HttpMethod;
+import cool.scx.http.method.HttpMethod;
 import cool.scx.web.annotation.ScxRoute;
 
 // 注意 : 自定义的模块需要继承 ScxModule

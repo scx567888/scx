@@ -1,6 +1,6 @@
 package cool.scx.http.routing;
 
-import cool.scx.http.ScxHttpMethod;
+import cool.scx.http.method.ScxHttpMethod;
 
 /// MethodMatcher
 ///

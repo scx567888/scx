@@ -6,7 +6,7 @@ import cool.scx.http.x.http1.Http1RequestLineHelper.InvalidHttpRequestLineExcept
 import cool.scx.http.x.http1.Http1RequestLineHelper.InvalidHttpVersion;
 import org.testng.annotations.Test;
 
-import static cool.scx.http.HttpMethod.GET;
+import static cool.scx.http.method.HttpMethod.GET;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertThrows;
 
