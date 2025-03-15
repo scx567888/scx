@@ -1,8 +1,10 @@
 package cool.scx.http;
 
-import cool.scx.http.header.content_type.ContentType;
-import cool.scx.http.header.cookie.Cookie;
-import cool.scx.http.header.cookie.Cookies;
+import cool.scx.http.headers.ScxHttpHeaderName;
+import cool.scx.http.headers.ScxHttpHeaders;
+import cool.scx.http.headers.content_type.ContentType;
+import cool.scx.http.headers.cookie.Cookie;
+import cool.scx.http.headers.cookie.Cookies;
 
 /// ScxHttpClientResponse
 ///

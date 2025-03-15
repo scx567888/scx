@@ -1,12 +1,14 @@
 package cool.scx.http.x.http1;
 
 import cool.scx.http.*;
+import cool.scx.http.headers.ScxHttpHeaders;
+import cool.scx.http.headers.ScxHttpHeadersWritable;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
 
-import static cool.scx.http.HttpFieldName.*;
+import static cool.scx.http.headers.HttpFieldName.*;
 import static cool.scx.http.HttpStatusCode.*;
 import static cool.scx.http.x.http1.Http1Helper.checkIsChunkedTransfer;
 import static java.io.OutputStream.nullOutputStream;

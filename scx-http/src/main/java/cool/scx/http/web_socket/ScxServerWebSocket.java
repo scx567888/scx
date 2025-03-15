@@ -1,7 +1,7 @@
 package cool.scx.http.web_socket;
 
 import cool.scx.http.Parameters;
-import cool.scx.http.ScxHttpHeaders;
+import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.uri.ScxURI;
 
 /// ScxServerWebSocket

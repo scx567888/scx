@@ -1,13 +1,17 @@
 package cool.scx.http.web_socket;
 
 import cool.scx.http.*;
-import cool.scx.http.header.cookie.Cookie;
+import cool.scx.http.headers.ScxHttpHeaderName;
+import cool.scx.http.headers.ScxHttpHeaders;
+import cool.scx.http.headers.cookie.Cookie;
 import cool.scx.http.media.MediaWriter;
+import cool.scx.http.method.HttpMethod;
+import cool.scx.http.method.ScxHttpMethod;
 import cool.scx.http.uri.ScxURI;
 
 import java.util.function.Consumer;
 
-import static cool.scx.http.HttpMethod.GET;
+import static cool.scx.http.method.HttpMethod.GET;
 import static cool.scx.http.HttpVersion.HTTP_1_1;
 
 /// ScxClientWebSocketHandshakeRequest

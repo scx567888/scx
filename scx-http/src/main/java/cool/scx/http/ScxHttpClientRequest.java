@@ -1,8 +1,11 @@
 package cool.scx.http;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import cool.scx.http.header.content_type.ContentType;
-import cool.scx.http.header.cookie.Cookie;
+import cool.scx.http.headers.ScxHttpHeaderName;
+import cool.scx.http.headers.ScxHttpHeaders;
+import cool.scx.http.headers.ScxHttpHeadersWritable;
+import cool.scx.http.headers.content_type.ContentType;
+import cool.scx.http.headers.cookie.Cookie;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.media.byte_array.ByteArrayWriter;
 import cool.scx.http.media.empty.EmptyWriter;
@@ -15,6 +18,8 @@ import cool.scx.http.media.multi_part.MultiPartWriter;
 import cool.scx.http.media.object.ObjectWriter;
 import cool.scx.http.media.path.PathWriter;
 import cool.scx.http.media.string.StringWriter;
+import cool.scx.http.method.HttpMethod;
+import cool.scx.http.method.ScxHttpMethod;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.uri.ScxURIWritable;
 

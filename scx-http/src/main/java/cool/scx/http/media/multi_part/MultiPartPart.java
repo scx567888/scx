@@ -1,9 +1,9 @@
 package cool.scx.http.media.multi_part;
 
 import cool.scx.http.ScxHttpBody;
-import cool.scx.http.ScxHttpHeaders;
-import cool.scx.http.header.content_disposition.ContentDisposition;
-import cool.scx.http.header.content_type.ContentType;
+import cool.scx.http.headers.ScxHttpHeaders;
+import cool.scx.http.headers.content_disposition.ContentDisposition;
+import cool.scx.http.headers.content_type.ContentType;
 import cool.scx.http.media.MediaReader;
 import cool.scx.io.IOHelper;
 

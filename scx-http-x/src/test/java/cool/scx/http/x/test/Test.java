@@ -6,8 +6,8 @@ import cool.scx.http.routing.Router;
 import cool.scx.http.x.XHttpServer;
 import cool.scx.http.x.XHttpServerOptions;
 
-import static cool.scx.http.HttpMethod.GET;
-import static cool.scx.http.HttpMethod.POST;
+import static cool.scx.http.method.HttpMethod.GET;
+import static cool.scx.http.method.HttpMethod.POST;
 import static cool.scx.http.HttpStatusCode.INTERNAL_SERVER_ERROR;
 
 public class Test {

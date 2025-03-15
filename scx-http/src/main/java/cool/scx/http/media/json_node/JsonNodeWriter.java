@@ -2,10 +2,10 @@ package cool.scx.http.media.json_node;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import cool.scx.http.ScxHttpHeaders;
-import cool.scx.http.ScxHttpHeadersWritable;
-import cool.scx.http.header.content_type.ContentType;
-import cool.scx.http.header.content_type.ContentTypeWritable;
+import cool.scx.http.headers.ScxHttpHeaders;
+import cool.scx.http.headers.ScxHttpHeadersWritable;
+import cool.scx.http.headers.content_type.ContentType;
+import cool.scx.http.headers.content_type.ContentTypeWritable;
 import cool.scx.http.media.MediaWriter;
 
 import java.io.OutputStream;

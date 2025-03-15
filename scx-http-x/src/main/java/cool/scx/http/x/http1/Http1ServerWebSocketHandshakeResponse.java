@@ -1,7 +1,7 @@
 package cool.scx.http.x.http1;
 
 import cool.scx.http.HttpStatusCode;
-import cool.scx.http.ScxHttpHeadersWritable;
+import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.ScxHttpServerResponse;
 import cool.scx.http.web_socket.ScxServerWebSocket;
 import cool.scx.http.web_socket.ScxServerWebSocketHandshakeRequest;
@@ -10,7 +10,7 @@ import cool.scx.http.x.web_socket.ServerWebSocket;
 
 import java.io.OutputStream;
 
-import static cool.scx.http.HttpFieldName.*;
+import static cool.scx.http.headers.HttpFieldName.*;
 import static cool.scx.http.HttpHelper.generateSecWebSocketAccept;
 
 public class Http1ServerWebSocketHandshakeResponse implements ScxServerWebSocketHandshakeResponse {

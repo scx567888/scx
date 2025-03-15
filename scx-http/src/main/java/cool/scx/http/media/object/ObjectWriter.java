@@ -2,8 +2,8 @@ package cool.scx.http.media.object;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.common.util.ObjectUtils;
-import cool.scx.http.ScxHttpHeaders;
-import cool.scx.http.ScxHttpHeadersWritable;
+import cool.scx.http.headers.ScxHttpHeaders;
+import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.media.json_node.JsonNodeWriter;
 

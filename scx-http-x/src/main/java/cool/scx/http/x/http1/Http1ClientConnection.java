@@ -2,6 +2,8 @@ package cool.scx.http.x.http1;
 
 import cool.scx.http.*;
 import cool.scx.http.exception.ScxHttpException;
+import cool.scx.http.headers.ScxHttpHeaders;
+import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.x.XHttpClientOptions;
 import cool.scx.io.data_reader.PowerfulLinkedDataReader;
@@ -17,9 +19,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
 
-import static cool.scx.http.HttpFieldName.HOST;
-import static cool.scx.http.HttpFieldName.TRANSFER_ENCODING;
-import static cool.scx.http.HttpMethod.GET;
+import static cool.scx.http.headers.HttpFieldName.HOST;
+import static cool.scx.http.headers.HttpFieldName.TRANSFER_ENCODING;
+import static cool.scx.http.method.HttpMethod.GET;
 import static cool.scx.http.x.http1.Http1Helper.*;
 import static java.io.OutputStream.nullOutputStream;
 

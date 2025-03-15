@@ -1,6 +1,8 @@
 package cool.scx.http.x.http1;
 
 import cool.scx.http.*;
+import cool.scx.http.headers.ScxHttpHeaders;
+import cool.scx.http.headers.ScxHttpHeadersWritable;
 
 /// HTTP/1.1 ClientResponse
 ///

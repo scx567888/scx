@@ -2,6 +2,7 @@ package cool.scx.http;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
+import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.media.MediaReader;
 import cool.scx.http.media.form_params.FormParams;
 import cool.scx.http.media.multi_part.MultiPart;

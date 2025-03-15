@@ -3,7 +3,7 @@ package cool.scx.web.vo;
 import cool.scx.http.HttpStatusCode;
 import cool.scx.http.routing.RoutingContext;
 
-import static cool.scx.http.HttpFieldName.LOCATION;
+import static cool.scx.http.headers.HttpFieldName.LOCATION;
 import static cool.scx.http.HttpStatusCode.FOUND;
 import static cool.scx.http.HttpStatusCode.MOVED_PERMANENTLY;
 

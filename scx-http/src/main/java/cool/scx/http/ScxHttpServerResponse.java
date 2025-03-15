@@ -1,8 +1,10 @@
 package cool.scx.http;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import cool.scx.http.header.content_type.ContentType;
-import cool.scx.http.header.cookie.Cookie;
+import cool.scx.http.headers.ScxHttpHeaderName;
+import cool.scx.http.headers.ScxHttpHeadersWritable;
+import cool.scx.http.headers.content_type.ContentType;
+import cool.scx.http.headers.cookie.Cookie;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.media.byte_array.ByteArrayWriter;
 import cool.scx.http.media.empty.EmptyWriter;

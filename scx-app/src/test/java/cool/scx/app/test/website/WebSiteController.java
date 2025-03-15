@@ -9,7 +9,7 @@ import cool.scx.common.util.HashUtils;
 import cool.scx.common.util.RandomUtils;
 import cool.scx.http.FileFormat;
 import cool.scx.http.HttpHelper;
-import cool.scx.http.HttpMethod;
+import cool.scx.http.method.HttpMethod;
 import cool.scx.http.media.multi_part.MultiPartPart;
 import cool.scx.http.routing.RoutingContext;
 import cool.scx.http.x.ScxHttpClientHelper;

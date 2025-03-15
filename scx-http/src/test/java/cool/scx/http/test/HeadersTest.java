@@ -1,8 +1,8 @@
 package cool.scx.http.test;
 
 import cool.scx.http.MediaType;
-import cool.scx.http.ScxHttpHeaders;
-import cool.scx.http.header.content_type.ContentType;
+import cool.scx.http.headers.ScxHttpHeaders;
+import cool.scx.http.headers.content_type.ContentType;
 
 import java.nio.charset.StandardCharsets;
 

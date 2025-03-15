@@ -1,13 +1,13 @@
 package cool.scx.app;
 
-import cool.scx.http.HttpFieldName;
-import cool.scx.http.HttpMethod;
+import cool.scx.http.headers.HttpFieldName;
+import cool.scx.http.method.HttpMethod;
 import cool.scx.http.routing.Route;
 import cool.scx.http.routing.RouterImpl;
 import cool.scx.http.routing.handler.CorsHandler;
 
-import static cool.scx.http.HttpFieldName.*;
-import static cool.scx.http.HttpMethod.*;
+import static cool.scx.http.headers.HttpFieldName.*;
+import static cool.scx.http.method.HttpMethod.*;
 
 /// ScxHttp 路由 内部使用 Router 进行具体路由的处理
 ///

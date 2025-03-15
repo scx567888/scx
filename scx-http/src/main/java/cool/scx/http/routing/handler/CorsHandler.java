@@ -1,8 +1,8 @@
 package cool.scx.http.routing.handler;
 
-import cool.scx.http.HttpMethod;
-import cool.scx.http.ScxHttpHeaderName;
-import cool.scx.http.ScxHttpMethod;
+import cool.scx.http.method.HttpMethod;
+import cool.scx.http.headers.ScxHttpHeaderName;
+import cool.scx.http.method.ScxHttpMethod;
 import cool.scx.http.ScxHttpServerResponse;
 import cool.scx.http.exception.ForbiddenException;
 import cool.scx.http.routing.RoutingContext;
@@ -13,7 +13,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import static cool.scx.http.HttpFieldName.*;
+import static cool.scx.http.headers.HttpFieldName.*;
 import static java.util.Collections.addAll;
 
 /// CorsHandler

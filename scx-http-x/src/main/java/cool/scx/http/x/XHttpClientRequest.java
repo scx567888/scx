@@ -1,14 +1,18 @@
 package cool.scx.http.x;
 
 import cool.scx.http.*;
+import cool.scx.http.headers.ScxHttpHeaders;
+import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.media.MediaWriter;
+import cool.scx.http.method.HttpMethod;
+import cool.scx.http.method.ScxHttpMethod;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.uri.ScxURIWritable;
 import cool.scx.http.x.http1.Http1ClientConnection;
 import cool.scx.http.x.http2.Http2ClientConnection;
 import cool.scx.tcp.ScxTCPSocket;
 
-import static cool.scx.http.HttpMethod.GET;
+import static cool.scx.http.method.HttpMethod.GET;
 
 /// todo 待完成
 ///

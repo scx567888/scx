@@ -1,13 +1,13 @@
 package cool.scx.web.return_value_handler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import cool.scx.http.header.content_type.ContentType;
+import cool.scx.http.headers.content_type.ContentType;
 import cool.scx.http.routing.RoutingContext;
 
 import static cool.scx.common.util.ObjectUtils.toJson;
 import static cool.scx.common.util.ObjectUtils.toXml;
 import static cool.scx.common.util.StringUtils.startsWithIgnoreCase;
-import static cool.scx.http.HttpFieldName.ACCEPT;
+import static cool.scx.http.headers.HttpFieldName.ACCEPT;
 import static cool.scx.http.MediaType.APPLICATION_JSON;
 import static cool.scx.http.MediaType.APPLICATION_XML;
 import static java.nio.charset.StandardCharsets.UTF_8;
