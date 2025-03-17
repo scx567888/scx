@@ -4,8 +4,8 @@ import cool.scx.http.ScxHttpServerRequest;
 
 import java.util.function.Consumer;
 
-import static cool.scx.http.HttpFieldName.SEC_WEBSOCKET_KEY;
-import static cool.scx.http.HttpFieldName.SEC_WEBSOCKET_VERSION;
+import static cool.scx.http.headers.HttpFieldName.SEC_WEBSOCKET_KEY;
+import static cool.scx.http.headers.HttpFieldName.SEC_WEBSOCKET_VERSION;
 
 /// ScxServerWebSocketHandshakeRequest
 ///

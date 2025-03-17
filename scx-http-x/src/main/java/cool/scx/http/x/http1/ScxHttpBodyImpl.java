@@ -1,7 +1,7 @@
 package cool.scx.http.x.http1;
 
 import cool.scx.http.ScxHttpBody;
-import cool.scx.http.ScxHttpHeaders;
+import cool.scx.http.headers.ScxHttpHeaders;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;

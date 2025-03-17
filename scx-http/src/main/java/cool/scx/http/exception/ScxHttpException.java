@@ -1,6 +1,6 @@
 package cool.scx.http.exception;
 
-import cool.scx.http.HttpStatusCode;
+import cool.scx.http.status.HttpStatusCode;
 
 /// 当我们的代码中有需要向客户端返回错误信息的时候
 ///

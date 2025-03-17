@@ -7,7 +7,7 @@ import cool.scx.http.media.multi_part.MultiPart;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.web_socket.ScxClientWebSocketHandshakeRequest;
 
-import static cool.scx.http.HttpMethod.*;
+import static cool.scx.http.method.HttpMethod.*;
 
 /// ScxHttpClientHelper
 ///

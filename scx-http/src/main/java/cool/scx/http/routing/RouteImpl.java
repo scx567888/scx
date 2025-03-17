@@ -1,6 +1,6 @@
 package cool.scx.http.routing;
 
-import cool.scx.http.HttpMethod;
+import cool.scx.http.method.HttpMethod;
 
 import java.util.HashSet;
 import java.util.Set;

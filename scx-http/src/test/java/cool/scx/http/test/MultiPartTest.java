@@ -1,10 +1,10 @@
 package cool.scx.http.test;
 
 import cool.scx.common.util.ArrayUtils;
-import cool.scx.http.MediaType;
-import cool.scx.http.ScxHttpHeaders;
-import cool.scx.http.content_type.ContentType;
+import cool.scx.http.headers.ScxHttpHeaders;
+import cool.scx.http.headers.content_type.ContentType;
 import cool.scx.http.media.multi_part.*;
+import cool.scx.http.media_type.MediaType;
 import org.testng.annotations.Test;
 
 import java.io.ByteArrayInputStream;

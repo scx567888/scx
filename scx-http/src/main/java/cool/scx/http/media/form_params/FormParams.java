@@ -1,6 +1,6 @@
 package cool.scx.http.media.form_params;
 
-import cool.scx.http.ParametersImpl;
+import cool.scx.http.parameters.ParametersImpl;
 
 /// FormParams
 ///

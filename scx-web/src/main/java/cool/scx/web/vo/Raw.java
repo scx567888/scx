@@ -1,6 +1,6 @@
 package cool.scx.web.vo;
 
-import cool.scx.http.FileFormat;
+import cool.scx.http.media_type.FileFormat;
 
 import java.io.InputStream;
 import java.nio.file.Path;

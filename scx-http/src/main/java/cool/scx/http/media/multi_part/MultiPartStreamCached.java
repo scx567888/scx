@@ -1,7 +1,7 @@
 package cool.scx.http.media.multi_part;
 
 import cool.scx.common.util.RandomUtils;
-import cool.scx.http.ScxHttpHeaders;
+import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.io.data_consumer.OutputStreamDataConsumer;
 import cool.scx.io.exception.NoMatchFoundException;
 

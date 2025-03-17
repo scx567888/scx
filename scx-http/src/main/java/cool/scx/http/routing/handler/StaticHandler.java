@@ -11,9 +11,9 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.function.Consumer;
 
-import static cool.scx.http.HttpFieldName.*;
-import static cool.scx.http.HttpMethod.GET;
-import static cool.scx.http.HttpMethod.HEAD;
+import static cool.scx.http.headers.HttpFieldName.*;
+import static cool.scx.http.method.HttpMethod.GET;
+import static cool.scx.http.method.HttpMethod.HEAD;
 import static cool.scx.http.routing.handler.StaticHelper.sendStatic;
 
 /// StaticHandler

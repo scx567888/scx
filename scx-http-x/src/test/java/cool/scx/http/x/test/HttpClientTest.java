@@ -2,7 +2,7 @@ package cool.scx.http.x.test;
 
 import cool.scx.http.x.XHttpClient;
 
-import static cool.scx.http.HttpMethod.POST;
+import static cool.scx.http.method.HttpMethod.POST;
 
 public class HttpClientTest {
 

@@ -1,6 +1,6 @@
 package cool.scx.http.x.http1;
 
-import cool.scx.http.HttpVersion;
+import cool.scx.http.version.HttpVersion;
 
 public class Http1StatusLineHelper {
 

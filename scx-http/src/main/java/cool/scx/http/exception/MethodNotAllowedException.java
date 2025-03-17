@@ -1,6 +1,6 @@
 package cool.scx.http.exception;
 
-import static cool.scx.http.HttpStatusCode.METHOD_NOT_ALLOWED;
+import static cool.scx.http.status.HttpStatusCode.METHOD_NOT_ALLOWED;
 
 /// 方法不被允许
 ///

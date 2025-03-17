@@ -1,9 +1,9 @@
 package cool.scx.http.x.web_socket;
 
-import cool.scx.http.HttpStatusCode;
 import cool.scx.http.ScxHttpBody;
 import cool.scx.http.ScxHttpClientResponse;
-import cool.scx.http.ScxHttpHeaders;
+import cool.scx.http.headers.ScxHttpHeaders;
+import cool.scx.http.status.HttpStatusCode;
 import cool.scx.http.web_socket.ScxClientWebSocket;
 import cool.scx.http.web_socket.ScxClientWebSocketHandshakeResponse;
 import cool.scx.http.x.http1.Http1ClientConnection;

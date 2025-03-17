@@ -1,9 +1,9 @@
 package cool.scx.web.return_value_handler;
 
-import cool.scx.http.content_type.ContentType;
+import cool.scx.http.headers.content_type.ContentType;
 import cool.scx.http.routing.RoutingContext;
 
-import static cool.scx.http.MediaType.TEXT_PLAIN;
+import static cool.scx.http.media_type.MediaType.TEXT_PLAIN;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /// String 类型处理器

@@ -1,10 +1,10 @@
 package cool.scx.http.test;
 
-import cool.scx.http.ScxHttpHeaders;
+import cool.scx.http.headers.ScxHttpHeaders;
 import org.testng.annotations.Test;
 
-import static cool.scx.http.HttpFieldName.CONTENT_LENGTH;
-import static cool.scx.http.HttpFieldName.CONTENT_TYPE;
+import static cool.scx.http.headers.HttpFieldName.CONTENT_LENGTH;
+import static cool.scx.http.headers.HttpFieldName.CONTENT_TYPE;
 
 public class ScxHttpHeadersTest {
 

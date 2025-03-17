@@ -73,7 +73,7 @@ English | [简体中文](./README.zh-CN.md)
 ``` java
 import cool.scx.app.Scx;
 import cool.scx.app.ScxModule;
-import cool.scx.http.HttpMethod;
+import cool.scx.http.method.HttpMethod;
 import cool.scx.web.annotation.ScxRoute;
 
 // Note : Custom modules need extends ScxModule

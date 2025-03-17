@@ -1,12 +1,12 @@
 package cool.scx.http.x.http1;
 
-import cool.scx.http.HttpVersion;
-import cool.scx.http.ScxHttpMethod;
+import cool.scx.http.method.ScxHttpMethod;
 import cool.scx.http.uri.ScxURI;
+import cool.scx.http.version.HttpVersion;
 
 import java.net.URI;
 
-import static cool.scx.http.HttpVersion.HTTP_1_1;
+import static cool.scx.http.version.HttpVersion.HTTP_1_1;
 
 public final class Http1RequestLineHelper {
 

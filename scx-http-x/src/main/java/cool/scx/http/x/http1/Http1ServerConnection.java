@@ -1,12 +1,12 @@
 package cool.scx.http.x.http1;
 
-import cool.scx.http.HttpVersion;
-import cool.scx.http.ScxHttpHeaders;
-import cool.scx.http.ScxHttpHeadersWritable;
 import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.exception.BadRequestException;
 import cool.scx.http.exception.InternalServerErrorException;
 import cool.scx.http.exception.ScxHttpException;
+import cool.scx.http.headers.ScxHttpHeaders;
+import cool.scx.http.headers.ScxHttpHeadersWritable;
+import cool.scx.http.version.HttpVersion;
 import cool.scx.http.x.XHttpServerOptions;
 import cool.scx.http.x.http1.Http1RequestLineHelper.InvalidHttpRequestLineException;
 import cool.scx.http.x.http1.Http1RequestLineHelper.InvalidHttpVersion;
@@ -26,8 +26,8 @@ import java.lang.System.Logger;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
-import static cool.scx.http.HttpFieldName.CONNECTION;
-import static cool.scx.http.HttpStatusCode.*;
+import static cool.scx.http.headers.HttpFieldName.CONNECTION;
+import static cool.scx.http.status.HttpStatusCode.*;
 import static cool.scx.http.x.http1.Http1Helper.*;
 import static java.lang.System.Logger.Level.TRACE;
 import static java.lang.System.getLogger;

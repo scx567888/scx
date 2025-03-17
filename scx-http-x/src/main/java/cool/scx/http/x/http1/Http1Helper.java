@@ -1,7 +1,11 @@
 package cool.scx.http.x.http1;
 
-import cool.scx.http.*;
 import cool.scx.http.exception.BadRequestException;
+import cool.scx.http.headers.ScxHttpHeaders;
+import cool.scx.http.headers.ScxHttpHeadersWritable;
+import cool.scx.http.peer_Info.PeerInfo;
+import cool.scx.http.peer_Info.PeerInfoWritable;
+import cool.scx.http.version.HttpVersion;
 import cool.scx.tcp.ScxTCPSocket;
 
 import java.io.IOException;
@@ -10,8 +14,8 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
 import static cool.scx.common.util.StringUtils.isBlank;
-import static cool.scx.http.HttpFieldName.*;
-import static cool.scx.http.HttpMethod.GET;
+import static cool.scx.http.headers.HttpFieldName.*;
+import static cool.scx.http.method.HttpMethod.GET;
 
 final class Http1Helper {
 

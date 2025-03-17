@@ -2,8 +2,8 @@ package cool.scx.http.x.web_socket;
 
 import cool.scx.common.util.Base64Utils;
 import cool.scx.common.util.RandomUtils;
-import cool.scx.http.ScxHttpHeaders;
-import cool.scx.http.ScxHttpHeadersWritable;
+import cool.scx.http.headers.ScxHttpHeaders;
+import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.media.empty.EmptyWriter;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.uri.ScxURIWritable;
@@ -14,7 +14,7 @@ import cool.scx.http.x.http1.Http1ClientConnection;
 import cool.scx.tcp.ScxTCPClient;
 import cool.scx.tcp.ScxTCPSocket;
 
-import static cool.scx.http.HttpFieldName.*;
+import static cool.scx.http.headers.HttpFieldName.*;
 
 
 /// todo 待完成

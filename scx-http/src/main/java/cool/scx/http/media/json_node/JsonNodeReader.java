@@ -2,17 +2,17 @@ package cool.scx.http.media.json_node;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import cool.scx.http.ScxHttpHeaders;
 import cool.scx.http.exception.BadRequestException;
+import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.media.MediaReader;
 
 import java.io.InputStream;
 
 import static cool.scx.common.util.ObjectUtils.jsonMapper;
 import static cool.scx.common.util.ObjectUtils.xmlMapper;
-import static cool.scx.http.MediaType.APPLICATION_JSON;
-import static cool.scx.http.MediaType.APPLICATION_XML;
 import static cool.scx.http.media.string.StringReader.STRING_READER;
+import static cool.scx.http.media_type.MediaType.APPLICATION_JSON;
+import static cool.scx.http.media_type.MediaType.APPLICATION_XML;
 
 /// JsonNodeReader
 ///
