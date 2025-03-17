@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import cool.scx.common.multi_map.MultiMap;
 import cool.scx.http.exception.BadRequestException;
-import cool.scx.http.headers.content_type.ContentType;
 import cool.scx.http.media.multi_part.MultiPartPart;
+import cool.scx.http.media_type.ScxMediaType;
 import cool.scx.http.routing.RoutingContext;
 
 import static cool.scx.common.util.ObjectUtils.jsonMapper;
@@ -20,7 +20,7 @@ import static cool.scx.http.media_type.MediaType.*;
 public final class RequestInfo {
 
     private final RoutingContext routingContext;
-    private final ContentType contentType;
+    private final ScxMediaType contentType;
     private final JsonNode pathParams;
     private final JsonNode query;
     private final boolean cachedMultiPart;
@@ -73,42 +73,35 @@ public final class RequestInfo {
     ///
     /// @param ctx         ctx
     /// @param contentType a
-    private void initBody(RoutingContext ctx, ContentType contentType) {
-        var mediaType = contentType != null ? contentType.mediaType() : null;
+    private void initBody(RoutingContext ctx, ScxMediaType contentType) {
         // 除了 MULTIPART_FORM_DATA 其余全部转为 JsonNode 的形式方便后续使用
-        switch (mediaType) {
-            case APPLICATION_JSON -> {
-                var string = ctx.request().body().asString();
-                this.body = readJson(string);
-            }
-            case APPLICATION_XML -> {
-                var string = ctx.request().body().asString();
-                this.body = readXml(string);
-            }
-            case APPLICATION_X_WWW_FORM_URLENCODED -> {
-                var formParams = ctx.request().body().asFormParams();
-                this.body = jsonMapper().convertValue(formParams.toMap(), JsonNode.class);
-            }
-            case MULTIPART_FORM_DATA -> {
-                //这里我们分为两类
-                var m = new MultiMap<String, String>();
-                var f = new MultiMap<String, MultiPartPart>();
-                //文件和非文件
-                var multiPart = cachedMultiPart ? ctx.request().body().asMultiPartCached() : ctx.request().body().asMultiPart();
-                for (var multiPartPart : multiPart) {
-                    //没有文件名我们就当成 空文件
-                    if (multiPartPart.filename() == null) {
-                        m.add(multiPartPart.name(), multiPartPart.asString());
-                    }
-                    f.add(multiPartPart.name(), multiPartPart);
+        if (APPLICATION_JSON.equalsIgnoreParams(contentType)) {
+            var string = ctx.request().body().asString();
+            this.body = readJson(string);
+        } else if (APPLICATION_XML.equalsIgnoreParams(contentType)) {
+            var string = ctx.request().body().asString();
+            this.body = readXml(string);
+        } else if (APPLICATION_X_WWW_FORM_URLENCODED.equalsIgnoreParams(contentType)) {
+            var formParams = ctx.request().body().asFormParams();
+            this.body = jsonMapper().convertValue(formParams.toMap(), JsonNode.class);
+        } else if (MULTIPART_FORM_DATA.equalsIgnoreParams(contentType)) {
+            //这里我们分为两类
+            var m = new MultiMap<String, String>();
+            var f = new MultiMap<String, MultiPartPart>();
+            //文件和非文件
+            var multiPart = cachedMultiPart ? ctx.request().body().asMultiPartCached() : ctx.request().body().asMultiPart();
+            for (var multiPartPart : multiPart) {
+                //没有文件名我们就当成 空文件
+                if (multiPartPart.filename() == null) {
+                    m.add(multiPartPart.name(), multiPartPart.asString());
                 }
-                this.body = jsonMapper().convertValue(m.toMultiValueMap(), JsonNode.class);
-                this.uploadFiles = f;
+                f.add(multiPartPart.name(), multiPartPart);
             }
-            case null, default -> {
-                var string = ctx.request().body().asString();
-                this.body = string != null ? tryReadOrTextNode(string) : null;
-            }
+            this.body = jsonMapper().convertValue(m.toMultiValueMap(), JsonNode.class);
+            this.uploadFiles = f;
+        } else {
+            var string = ctx.request().body().asString();
+            this.body = string != null ? tryReadOrTextNode(string) : null;
         }
     }
 
@@ -128,7 +121,7 @@ public final class RequestInfo {
         return uploadFiles;
     }
 
-    public ContentType contentType() {
+    public ScxMediaType contentType() {
         return contentType;
     }
 
