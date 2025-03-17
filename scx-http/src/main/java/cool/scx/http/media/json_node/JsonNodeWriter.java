@@ -4,9 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
-import cool.scx.http.headers.content_type.ContentType;
-import cool.scx.http.headers.content_type.ContentTypeWritable;
 import cool.scx.http.media.MediaWriter;
+import cool.scx.http.media_type.ScxMediaType;
 
 import java.io.OutputStream;
 
@@ -30,29 +29,25 @@ public class JsonNodeWriter implements MediaWriter {
         this.data = null;
     }
 
-    public static ContentTypeWritable trySetContentType(ScxHttpHeadersWritable headersWritable, ScxHttpHeaders headers) {
+    public static ScxMediaType trySetContentType(ScxHttpHeadersWritable headersWritable, ScxHttpHeaders headers) {
         //已经设置了则跳过设置
         if (headersWritable.contentType() != null) {
             return headersWritable.contentType();
         }
-        var accepts = headers.accepts();
+        var accept = headers.accept();
         // 如果客户端未指明 accepts 则返回 json 
-        if (accepts == null) {
-            headersWritable.contentType(ContentType.of(APPLICATION_JSON).charset(UTF_8));
+        if (accept == null) {
+            headersWritable.contentType(ScxMediaType.of(APPLICATION_JSON).charset(UTF_8));
             return headersWritable.contentType();
         }
-        //如果 拥有 XML 或者 JSON 则返回二者其一
-        for (var accept : accepts) {
-            if (accept.mediaType() == APPLICATION_XML) {
-                headersWritable.contentType(ContentType.of(APPLICATION_XML).charset(UTF_8));
-                return headersWritable.contentType();
-            } else if (accept.mediaType() == APPLICATION_JSON) {
-                headersWritable.contentType(ContentType.of(APPLICATION_JSON).charset(UTF_8));
-                return headersWritable.contentType();
-            }
+        //测试 XML 或者 JSON 
+        var mediaType = accept.negotiate(APPLICATION_JSON, APPLICATION_XML);
+        if (mediaType == APPLICATION_XML) {
+            headersWritable.contentType(ScxMediaType.of(APPLICATION_XML).charset(UTF_8));
+        } else {
+            //否则回退到 JSON 
+            headersWritable.contentType(ScxMediaType.of(APPLICATION_JSON).charset(UTF_8));
         }
-        //否则回退到 JSON 
-        headersWritable.contentType(ContentType.of(APPLICATION_JSON).charset(UTF_8));
         return headersWritable.contentType();
     }
 
@@ -61,12 +56,12 @@ public class JsonNodeWriter implements MediaWriter {
         var contentType = trySetContentType(responseHeaders, requestHeaders);
         //根据类型确定内容长度
         try {
-            if (contentType.mediaType() == APPLICATION_JSON) {
+            if (APPLICATION_JSON.equalsIgnoreParams(contentType)) {
                 data = jsonMapper().writeValueAsBytes(jsonNode);
-            } else if (contentType.mediaType() == APPLICATION_XML) {
+            } else if (APPLICATION_XML.equalsIgnoreParams(contentType)) {
                 data = xmlMapper().writeValueAsBytes(jsonNode);
             } else {
-                throw new IllegalArgumentException("Unsupported media type: " + contentType.mediaType());
+                throw new IllegalArgumentException("Unsupported media type: " + contentType);
             }
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
