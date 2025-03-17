@@ -1,8 +1,8 @@
 package cool.scx.web.vo;
 
 import cool.scx.http.ScxHttpServerResponse;
-import cool.scx.http.headers.content_type.ContentType;
 import cool.scx.http.media_type.MediaType;
+import cool.scx.http.media_type.ScxMediaType;
 import cool.scx.http.routing.RoutingContext;
 import cool.scx.http.routing.handler.StaticHelper;
 
@@ -49,13 +49,14 @@ class BaseWriter implements BaseVo {
 
     public static ScxHttpServerResponse fillContentType(ScxHttpServerResponse response, MediaType contentType) {
         if (contentType != null) {
+            //文本我们统一加上 UTF-8 编码
             if (contentType.type().equals("text")) {
-                return response.contentType(ContentType.of(contentType).charset(UTF_8));
+                return response.contentType(ScxMediaType.of(contentType).charset(UTF_8));
             } else {
-                return response.contentType(ContentType.of(contentType));
+                return response.contentType(contentType);
             }
         } else {
-            return response.contentType(ContentType.of(APPLICATION_OCTET_STREAM));
+            return response.contentType(APPLICATION_OCTET_STREAM);
         }
     }
 
