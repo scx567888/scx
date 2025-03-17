@@ -19,7 +19,11 @@ public interface MediaRangeWritable extends MediaRange {
     ParametersWritable<String, String> params();
 
     default MediaRangeWritable q(Double q) {
-        params().set("q", String.valueOf(q));
+        if (q == 1.0) {
+            params().remove("q");
+        } else {
+            params().set("q", String.valueOf(q));
+        }
         return this;
     }
 

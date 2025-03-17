@@ -1,5 +1,6 @@
 package cool.scx.http.headers.accept;
 
+import cool.scx.http.media_type.ScxMediaType;
 import cool.scx.http.parameters.Parameters;
 
 /// MediaRange
@@ -24,7 +25,14 @@ public interface MediaRange {
 
     default Double q() {
         var s = params().get("q");
-        return s != null ? Double.parseDouble(s) : null;
+        return s != null ? Double.parseDouble(s) : 1.0;
+    }
+
+    // 判断是否匹配某个 MediaType
+    default boolean matches(ScxMediaType mediaType) {
+        boolean typeMatch = type().equals("*") || type().equals(mediaType.type());
+        boolean subtypeMatch = subtype().equals("*") || subtype().equals(mediaType.subtype());
+        return typeMatch && subtypeMatch;
     }
 
 }

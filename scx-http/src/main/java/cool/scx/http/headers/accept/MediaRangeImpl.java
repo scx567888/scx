@@ -17,7 +17,6 @@ public class MediaRangeImpl implements MediaRangeWritable {
         this.type = "*";
         this.subtype = "*";
         this.params = Parameters.of();
-        q(1.0);
     }
 
     @Override
