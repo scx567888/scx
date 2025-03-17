@@ -3,8 +3,8 @@ package cool.scx.http.x.http1;
 import cool.scx.http.exception.BadRequestException;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
-import cool.scx.http.peer_Info.PeerInfo;
-import cool.scx.http.peer_Info.PeerInfoWritable;
+import cool.scx.http.peer_info.PeerInfo;
+import cool.scx.http.peer_info.PeerInfoWritable;
 import cool.scx.http.version.HttpVersion;
 import cool.scx.tcp.ScxTCPSocket;
 

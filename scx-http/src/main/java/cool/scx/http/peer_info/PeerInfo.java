@@ -1,4 +1,4 @@
-package cool.scx.http.peer_Info;
+package cool.scx.http.peer_info;
 
 import java.net.SocketAddress;
 import java.security.Principal;
