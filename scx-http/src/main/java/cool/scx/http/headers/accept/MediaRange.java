@@ -18,6 +18,9 @@ public interface MediaRange {
 
     Parameters<String, String> params();
 
-    Double q();
+    default Double q(){
+        var s = params().get("q");
+        return s != null ? Double.parseDouble(s) : null;
+    }
 
 }

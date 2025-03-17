@@ -15,9 +15,12 @@ public interface MediaRangeWritable extends MediaRange {
 
     MediaRangeWritable params(Parameters<String, String> params);
 
-    MediaRangeWritable q(Double q);
-
     @Override
     ParametersWritable<String, String> params();
+
+    default MediaRangeWritable q(Double q) {
+        params().set("q", String.valueOf(q));
+        return this;
+    }
 
 }

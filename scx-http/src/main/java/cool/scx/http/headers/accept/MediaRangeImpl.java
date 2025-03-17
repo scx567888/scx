@@ -12,13 +12,12 @@ public class MediaRangeImpl implements MediaRangeWritable {
     private String type;
     private String subtype;
     private ParametersWritable<String, String> params;
-    private Double q;
 
     public MediaRangeImpl() {
-        this.type = null;
-        this.subtype = null;
-        this.params = null;
-        this.q = 1.0;
+        this.type = "*";
+        this.subtype = "*";
+        this.params = Parameters.of();
+        q(1.0);
     }
 
     @Override
@@ -40,12 +39,6 @@ public class MediaRangeImpl implements MediaRangeWritable {
     }
 
     @Override
-    public MediaRangeWritable q(Double q) {
-        this.q = q;
-        return this;
-    }
-
-    @Override
     public String type() {
         return type;
     }
@@ -58,11 +51,6 @@ public class MediaRangeImpl implements MediaRangeWritable {
     @Override
     public ParametersWritable<String, String> params() {
         return params;
-    }
-
-    @Override
-    public Double q() {
-        return q;
     }
 
 }
