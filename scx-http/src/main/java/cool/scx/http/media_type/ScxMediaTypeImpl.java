@@ -1,4 +1,4 @@
-package cool.scx.http;
+package cool.scx.http.media_type;
 
 /// ScxMediaType
 ///

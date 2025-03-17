@@ -1,6 +1,6 @@
 package cool.scx.http.routing;
 
-import cool.scx.http.Parameters;
+import cool.scx.http.parameters.Parameters;
 import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.ScxHttpServerResponse;
 import cool.scx.http.exception.MethodNotAllowedException;
@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import static cool.scx.http.HttpStatusCode.INTERNAL_SERVER_ERROR;
+import static cool.scx.http.status.HttpStatusCode.INTERNAL_SERVER_ERROR;
 
 /// RoutingContext
 ///

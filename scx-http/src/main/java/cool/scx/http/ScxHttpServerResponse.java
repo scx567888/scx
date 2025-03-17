@@ -17,6 +17,8 @@ import cool.scx.http.media.multi_part.MultiPartWriter;
 import cool.scx.http.media.object.ObjectWriter;
 import cool.scx.http.media.path.PathWriter;
 import cool.scx.http.media.string.StringWriter;
+import cool.scx.http.media_type.ScxMediaType;
+import cool.scx.http.status.HttpStatusCode;
 
 import java.io.InputStream;
 import java.io.OutputStream;

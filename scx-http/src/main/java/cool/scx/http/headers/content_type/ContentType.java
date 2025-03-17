@@ -1,7 +1,7 @@
 package cool.scx.http.headers.content_type;
 
-import cool.scx.http.Parameters;
-import cool.scx.http.ScxMediaType;
+import cool.scx.http.parameters.Parameters;
+import cool.scx.http.media_type.ScxMediaType;
 
 import java.nio.charset.Charset;
 

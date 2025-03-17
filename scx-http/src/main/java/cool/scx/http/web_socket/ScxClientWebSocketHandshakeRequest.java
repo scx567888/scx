@@ -1,6 +1,6 @@
 package cool.scx.http.web_socket;
 
-import cool.scx.http.HttpVersion;
+import cool.scx.http.version.HttpVersion;
 import cool.scx.http.ScxHttpClientRequest;
 import cool.scx.http.ScxHttpClientResponse;
 import cool.scx.http.headers.ScxHttpHeaderName;
@@ -13,7 +13,7 @@ import cool.scx.http.uri.ScxURI;
 
 import java.util.function.Consumer;
 
-import static cool.scx.http.HttpVersion.HTTP_1_1;
+import static cool.scx.http.version.HttpVersion.HTTP_1_1;
 import static cool.scx.http.method.HttpMethod.GET;
 
 /// ScxClientWebSocketHandshakeRequest

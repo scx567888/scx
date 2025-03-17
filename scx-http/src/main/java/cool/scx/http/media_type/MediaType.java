@@ -1,4 +1,4 @@
-package cool.scx.http;
+package cool.scx.http.media_type;
 
 import java.util.HashMap;
 import java.util.Map;

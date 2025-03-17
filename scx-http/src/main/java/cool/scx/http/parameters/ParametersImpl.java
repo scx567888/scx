@@ -1,4 +1,4 @@
-package cool.scx.http;
+package cool.scx.http.parameters;
 
 import cool.scx.common.multi_map.MultiMap;
 

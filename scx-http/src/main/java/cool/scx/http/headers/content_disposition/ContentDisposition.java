@@ -1,6 +1,6 @@
 package cool.scx.http.headers.content_disposition;
 
-import cool.scx.http.Parameters;
+import cool.scx.http.parameters.Parameters;
 
 import static cool.scx.http.headers.content_disposition.ContentDispositionHelper.decodedContentDisposition;
 

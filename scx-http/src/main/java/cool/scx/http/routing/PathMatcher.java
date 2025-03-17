@@ -1,6 +1,6 @@
 package cool.scx.http.routing;
 
-import cool.scx.http.Parameters;
+import cool.scx.http.parameters.Parameters;
 
 /// PathMatcher
 ///

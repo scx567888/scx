@@ -6,7 +6,10 @@ import cool.scx.http.headers.content_type.ContentType;
 import cool.scx.http.headers.cookie.Cookie;
 import cool.scx.http.headers.cookie.Cookies;
 import cool.scx.http.method.ScxHttpMethod;
+import cool.scx.http.parameters.Parameters;
+import cool.scx.http.peer_Info.PeerInfo;
 import cool.scx.http.uri.ScxURI;
+import cool.scx.http.version.HttpVersion;
 
 /// ScxHttpServerRequest
 ///

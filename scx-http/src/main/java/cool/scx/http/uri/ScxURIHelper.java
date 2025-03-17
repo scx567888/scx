@@ -1,7 +1,7 @@
 package cool.scx.http.uri;
 
-import cool.scx.http.Parameters;
-import cool.scx.http.ParametersWritable;
+import cool.scx.http.parameters.Parameters;
+import cool.scx.http.parameters.ParametersWritable;
 
 import java.util.ArrayList;
 

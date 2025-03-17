@@ -1,6 +1,6 @@
 package cool.scx.http.exception;
 
-import static cool.scx.http.HttpStatusCode.FORBIDDEN;
+import static cool.scx.http.status.HttpStatusCode.FORBIDDEN;
 
 /// 登录了但是没权限
 ///

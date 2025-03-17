@@ -12,8 +12,8 @@ import java.io.OutputStream;
 
 import static cool.scx.common.util.ObjectUtils.jsonMapper;
 import static cool.scx.common.util.ObjectUtils.xmlMapper;
-import static cool.scx.http.MediaType.APPLICATION_JSON;
-import static cool.scx.http.MediaType.APPLICATION_XML;
+import static cool.scx.http.media_type.MediaType.APPLICATION_JSON;
+import static cool.scx.http.media_type.MediaType.APPLICATION_XML;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /// JsonNodeWriter

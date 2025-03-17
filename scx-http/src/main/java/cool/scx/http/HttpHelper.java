@@ -2,6 +2,8 @@ package cool.scx.http;
 
 import cool.scx.common.util.Base64Utils;
 import cool.scx.common.util.HashUtils;
+import cool.scx.http.media_type.FileFormat;
+import cool.scx.http.media_type.MediaType;
 
 import static cool.scx.common.util.StringUtils.notBlank;
 import static java.net.URLEncoder.encode;

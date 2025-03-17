@@ -7,7 +7,7 @@ import cool.scx.http.media.MediaWriter;
 
 import java.io.OutputStream;
 
-import static cool.scx.http.MediaType.MULTIPART_FORM_DATA;
+import static cool.scx.http.media_type.MediaType.MULTIPART_FORM_DATA;
 
 /// MultiPartWriter
 ///

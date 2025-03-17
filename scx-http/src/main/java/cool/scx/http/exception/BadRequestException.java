@@ -1,6 +1,6 @@
 package cool.scx.http.exception;
 
-import static cool.scx.http.HttpStatusCode.BAD_REQUEST;
+import static cool.scx.http.status.HttpStatusCode.BAD_REQUEST;
 
 /// 请求错误异常
 ///

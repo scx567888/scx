@@ -1,6 +1,6 @@
 package cool.scx.http.headers;
 
-import cool.scx.http.ParametersImpl;
+import cool.scx.http.parameters.ParametersImpl;
 
 /// ScxHttpHeadersImpl
 ///

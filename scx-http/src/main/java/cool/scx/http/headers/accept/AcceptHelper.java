@@ -1,6 +1,6 @@
 package cool.scx.http.headers.accept;
 
-import cool.scx.http.ScxMediaType;
+import cool.scx.http.media_type.ScxMediaType;
 
 /// AcceptHelper
 ///

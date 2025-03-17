@@ -1,7 +1,7 @@
 package cool.scx.http.test;
 
 import cool.scx.common.util.ArrayUtils;
-import cool.scx.http.MediaType;
+import cool.scx.http.media_type.MediaType;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.content_type.ContentType;
 import cool.scx.http.media.multi_part.*;

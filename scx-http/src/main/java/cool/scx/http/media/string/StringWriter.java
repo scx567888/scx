@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 
-import static cool.scx.http.MediaType.TEXT_PLAIN;
+import static cool.scx.http.media_type.MediaType.TEXT_PLAIN;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /// StringWriter

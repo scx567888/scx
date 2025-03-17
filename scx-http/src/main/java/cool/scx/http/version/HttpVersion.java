@@ -1,4 +1,4 @@
-package cool.scx.http;
+package cool.scx.http.version;
 
 /// HttpVersion
 /// 这里我们只保留流行的 Http 版本,较旧的版本如 HTTP/0.9 和 HTTP/1.0 不再做保留

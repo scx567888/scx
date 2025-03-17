@@ -18,10 +18,12 @@ import cool.scx.http.media.multi_part.MultiPartWriter;
 import cool.scx.http.media.object.ObjectWriter;
 import cool.scx.http.media.path.PathWriter;
 import cool.scx.http.media.string.StringWriter;
+import cool.scx.http.media_type.ScxMediaType;
 import cool.scx.http.method.HttpMethod;
 import cool.scx.http.method.ScxHttpMethod;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.uri.ScxURIWritable;
+import cool.scx.http.version.HttpVersion;
 
 import java.io.InputStream;
 import java.nio.charset.Charset;

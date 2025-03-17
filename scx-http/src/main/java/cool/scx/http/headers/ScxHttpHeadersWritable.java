@@ -1,7 +1,7 @@
 package cool.scx.http.headers;
 
-import cool.scx.http.ParametersWritable;
-import cool.scx.http.ScxMediaType;
+import cool.scx.http.parameters.ParametersWritable;
+import cool.scx.http.media_type.ScxMediaType;
 import cool.scx.http.headers.content_disposition.ContentDisposition;
 import cool.scx.http.headers.content_disposition.ContentDispositionWritable;
 import cool.scx.http.headers.content_type.ContentType;

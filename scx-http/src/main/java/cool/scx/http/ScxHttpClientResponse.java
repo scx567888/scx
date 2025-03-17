@@ -5,6 +5,7 @@ import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.content_type.ContentType;
 import cool.scx.http.headers.cookie.Cookie;
 import cool.scx.http.headers.cookie.Cookies;
+import cool.scx.http.status.HttpStatusCode;
 
 /// ScxHttpClientResponse
 ///
