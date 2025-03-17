@@ -1,16 +1,16 @@
 package cool.scx.web.vo;
 
-import cool.scx.http.media_type.MediaType;
 import cool.scx.http.ScxHttpServerResponse;
 import cool.scx.http.headers.content_type.ContentType;
+import cool.scx.http.media_type.MediaType;
 import cool.scx.http.routing.RoutingContext;
 import cool.scx.http.routing.handler.StaticHelper;
 
 import java.io.InputStream;
 import java.nio.file.Path;
 
-import static cool.scx.http.media_type.MediaType.APPLICATION_OCTET_STREAM;
 import static cool.scx.http.headers.HttpFieldName.CONTENT_DISPOSITION;
+import static cool.scx.http.media_type.MediaType.APPLICATION_OCTET_STREAM;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /// 基本写入程序 可以直接向相应体中写入数据

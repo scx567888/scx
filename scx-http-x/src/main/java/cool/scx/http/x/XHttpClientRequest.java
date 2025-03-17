@@ -1,6 +1,5 @@
 package cool.scx.http.x;
 
-import cool.scx.http.version.HttpVersion;
 import cool.scx.http.ScxHttpClientRequest;
 import cool.scx.http.ScxHttpClientResponse;
 import cool.scx.http.headers.ScxHttpHeaders;
@@ -10,6 +9,7 @@ import cool.scx.http.method.HttpMethod;
 import cool.scx.http.method.ScxHttpMethod;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.uri.ScxURIWritable;
+import cool.scx.http.version.HttpVersion;
 import cool.scx.http.x.http1.Http1ClientConnection;
 import cool.scx.http.x.http2.Http2ClientConnection;
 import cool.scx.tcp.ScxTCPSocket;

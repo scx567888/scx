@@ -1,11 +1,11 @@
 package cool.scx.web.vo;
 
-import cool.scx.http.media_type.FileFormat;
-import cool.scx.http.media_type.MediaType;
 import cool.scx.http.exception.BadRequestException;
 import cool.scx.http.exception.NotFoundException;
 import cool.scx.http.exception.ScxHttpException;
 import cool.scx.http.headers.content_type.ContentType;
+import cool.scx.http.media_type.FileFormat;
+import cool.scx.http.media_type.MediaType;
 import cool.scx.http.routing.RoutingContext;
 import cool.scx.http.routing.handler.StaticHelper;
 import net.coobird.thumbnailator.Thumbnails;
@@ -21,9 +21,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 
-import static cool.scx.http.media_type.MediaType.IMAGE_PNG;
 import static cool.scx.http.headers.HttpFieldName.ACCEPT_RANGES;
 import static cool.scx.http.headers.HttpFieldName.CACHE_CONTROL;
+import static cool.scx.http.media_type.MediaType.IMAGE_PNG;
 
 /// Image
 ///

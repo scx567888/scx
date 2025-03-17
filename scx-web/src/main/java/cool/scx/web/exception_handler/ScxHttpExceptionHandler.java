@@ -2,18 +2,18 @@ package cool.scx.web.exception_handler;
 
 import cool.scx.common.exception.ScxExceptionHelper;
 import cool.scx.common.util.ObjectUtils;
-import cool.scx.http.status.HttpStatusCode;
 import cool.scx.http.exception.ScxHttpException;
 import cool.scx.http.headers.content_type.ContentType;
 import cool.scx.http.routing.RoutingContext;
+import cool.scx.http.status.HttpStatusCode;
 
 import java.lang.System.Logger;
 import java.util.LinkedHashMap;
 
 import static cool.scx.common.util.StringUtils.startsWithIgnoreCase;
+import static cool.scx.http.headers.HttpFieldName.ACCEPT;
 import static cool.scx.http.media_type.MediaType.APPLICATION_JSON;
 import static cool.scx.http.media_type.MediaType.TEXT_HTML;
-import static cool.scx.http.headers.HttpFieldName.ACCEPT;
 import static java.lang.System.Logger.Level.ERROR;
 import static java.nio.charset.StandardCharsets.UTF_8;
 

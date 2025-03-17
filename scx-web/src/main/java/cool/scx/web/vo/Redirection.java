@@ -1,11 +1,11 @@
 package cool.scx.web.vo;
 
-import cool.scx.http.status.HttpStatusCode;
 import cool.scx.http.routing.RoutingContext;
+import cool.scx.http.status.HttpStatusCode;
 
+import static cool.scx.http.headers.HttpFieldName.LOCATION;
 import static cool.scx.http.status.HttpStatusCode.FOUND;
 import static cool.scx.http.status.HttpStatusCode.MOVED_PERMANENTLY;
-import static cool.scx.http.headers.HttpFieldName.LOCATION;
 
 /// 重定向
 ///
