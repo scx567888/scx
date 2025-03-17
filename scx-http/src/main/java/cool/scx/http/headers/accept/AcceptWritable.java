@@ -6,8 +6,8 @@ package cool.scx.http.headers.accept;
 /// @version 0.0.1
 public interface AcceptWritable extends Accept {
 
-    AcceptWritable add(AcceptElement acceptElement);
+    AcceptWritable add(MediaRange mediaRange);
 
-    AcceptWritable remove(AcceptElement acceptElement);
+    AcceptWritable remove(MediaRange mediaRange);
 
 }
