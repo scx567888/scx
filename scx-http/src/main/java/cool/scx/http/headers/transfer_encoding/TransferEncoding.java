@@ -42,5 +42,13 @@ public class TransferEncoding implements Iterable<ScxEncodingType> {
     public String encode() {
         return encodingTypes.stream().map(ScxEncodingType::value).collect(Collectors.joining(","));
     }
+
+    public int size() {
+        return encodingTypes.size();
+    }
+
+    public ScxEncodingType get(int i) {
+        return encodingTypes.get(i);
+    }
     
 }

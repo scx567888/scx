@@ -15,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 
 import static cool.scx.common.util.StringUtils.isBlank;
 import static cool.scx.http.headers.HttpFieldName.*;
+import static cool.scx.http.headers.transfer_encoding.EncodingType.CHUNKED;
 import static cool.scx.http.method.HttpMethod.GET;
 
 final class Http1Helper {
@@ -36,8 +37,16 @@ final class Http1Helper {
     }
 
     public static boolean checkIsChunkedTransfer(ScxHttpHeaders headers) {
-        var transferEncoding = headers.get(TRANSFER_ENCODING);
-        return "chunked".equalsIgnoreCase(transferEncoding);
+        var transferEncoding = headers.transferEncoding();
+        if (transferEncoding == null) {
+            return false;
+        }
+        //todo 我们暂时不支持 多个编码合并的格式 比如 GZIP, CHUNKED 这种,  后期会支持
+        if (transferEncoding.size() != 1) {
+            return false;
+        }
+        var c = transferEncoding.get(0);
+        return c == CHUNKED;
     }
 
     public static boolean checkIsKeepAlive(Http1RequestLine requestLine, ScxHttpHeaders headers) {
