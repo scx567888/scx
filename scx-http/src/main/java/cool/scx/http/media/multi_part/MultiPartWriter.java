@@ -2,8 +2,8 @@ package cool.scx.http.media.multi_part;
 
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
-import cool.scx.http.headers.content_type.ContentType;
 import cool.scx.http.media.MediaWriter;
+import cool.scx.http.media_type.ScxMediaType;
 
 import java.io.OutputStream;
 
@@ -25,7 +25,7 @@ public class MultiPartWriter implements MediaWriter {
     public void beforeWrite(ScxHttpHeadersWritable responseHeaders, ScxHttpHeaders requestHeaders) {
         if (responseHeaders.contentType() == null) {
             // MULTIPART 有很多类型 这里暂时只当成 MULTIPART_FORM_DATA
-            responseHeaders.contentType(ContentType.of().mediaType(MULTIPART_FORM_DATA).boundary(this.multiPart.boundary()));
+            responseHeaders.contentType(ScxMediaType.of(MULTIPART_FORM_DATA).boundary(this.multiPart.boundary()));
         }
     }
 
