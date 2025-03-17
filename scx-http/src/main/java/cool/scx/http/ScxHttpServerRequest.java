@@ -2,9 +2,9 @@ package cool.scx.http;
 
 import cool.scx.http.headers.ScxHttpHeaderName;
 import cool.scx.http.headers.ScxHttpHeaders;
-import cool.scx.http.headers.content_type.ContentType;
 import cool.scx.http.headers.cookie.Cookie;
 import cool.scx.http.headers.cookie.Cookies;
+import cool.scx.http.media_type.ScxMediaType;
 import cool.scx.http.method.ScxHttpMethod;
 import cool.scx.http.parameters.Parameters;
 import cool.scx.http.peer_info.PeerInfo;
@@ -53,7 +53,7 @@ public interface ScxHttpServerRequest {
         return headers().get(name);
     }
 
-    default ContentType contentType() {
+    default ScxMediaType contentType() {
         return headers().contentType();
     }
 
