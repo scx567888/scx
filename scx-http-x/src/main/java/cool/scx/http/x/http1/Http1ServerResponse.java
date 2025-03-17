@@ -11,6 +11,9 @@ import java.io.OutputStream;
 import java.io.UncheckedIOException;
 
 import static cool.scx.http.headers.HttpFieldName.*;
+import static cool.scx.http.headers.connection.ConnectionType.CLOSE;
+import static cool.scx.http.headers.connection.ConnectionType.KEEP_ALIVE;
+import static cool.scx.http.headers.transfer_encoding.EncodingType.CHUNKED;
 import static cool.scx.http.status.HttpStatusCode.*;
 import static cool.scx.http.x.http1.Http1Helper.checkIsChunkedTransfer;
 import static java.io.OutputStream.nullOutputStream;
@@ -67,11 +70,11 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
         sb.append("\r\n");
 
         //用户可能已经自行设置了 CONNECTION
-        if (!headers.contains(CONNECTION)) {
+        if (headers.connection() == null) {
             if (request.isKeepAlive) {
-                headers.set(CONNECTION, "keep-alive");
+                headers.connection( KEEP_ALIVE);
             } else {
-                headers.set(CONNECTION, "close");
+                headers.connection(CLOSE);
             }
         }
 
@@ -90,7 +93,7 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
         if (hasBody) {
             //没有设置 contentLength 我们帮助设置 
             if (headers.contentLength() == null) {
-                headers.set(TRANSFER_ENCODING, "chunked");
+                headers.transferEncoding(CHUNKED);
             }
         }
 

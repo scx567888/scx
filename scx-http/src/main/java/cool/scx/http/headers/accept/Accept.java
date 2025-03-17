@@ -2,23 +2,22 @@ package cool.scx.http.headers.accept;
 
 import cool.scx.http.media_type.ScxMediaType;
 
-import static cool.scx.http.headers.accept.AcceptHelper.decodeAccept;
-
-/// Accept
+/// Accepts
 ///
 /// @author scx567888
 /// @version 0.0.1
-public interface Accept {
+public interface Accept extends Iterable<AcceptElement> {
 
-    static Accept of(String accept) {
-        if (accept == null) {
-            return null;
-        }
-        return decodeAccept(accept);
+    static AcceptWritable of(String acceptsStr) {
+        return AcceptHelper.decodeAccepts(acceptsStr);
     }
 
-    ScxMediaType mediaType();
+    static AcceptWritable of(Accept oldAccept) {
+        return new AcceptImpl(oldAccept);
+    }
 
-    Double q();
+    long size();
+    
+    boolean contains(ScxMediaType mediaType);
 
 }

@@ -1,15 +1,13 @@
 package cool.scx.http.headers.accept;
 
-import cool.scx.http.media_type.ScxMediaType;
-
-/// AcceptWritable
+/// AcceptsWritable
 ///
 /// @author scx567888
 /// @version 0.0.1
 public interface AcceptWritable extends Accept {
 
-    AcceptWritable mediaType(ScxMediaType mediaType);
+    AcceptWritable add(AcceptElement acceptElement);
 
-    AcceptWritable q(Double q);
+    AcceptWritable remove(AcceptElement acceptElement);
 
 }

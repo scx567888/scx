@@ -8,7 +8,7 @@ import cool.scx.http.media_type.ScxMediaType;
 /// @version 0.0.1
 public class AcceptHelper {
 
-    public static AcceptWritable decodeAccept(String s) {
+    public static AcceptElementWritable decodeAccept(String s) {
         var parts = s.split(";");
         var type = parts[0].trim();
         double weight = 1.0; // 默认权重为1.0
@@ -24,14 +24,14 @@ public class AcceptHelper {
                 }
             }
         }
-        return new AcceptImpl().mediaType(ScxMediaType.of(type)).q(weight);
+        return new AcceptElementImpl().mediaType(ScxMediaType.of(type)).q(weight);
     }
 
-    public static AcceptsWritable decodeAccepts(String s) {
+    public static AcceptWritable decodeAccepts(String s) {
         if (s == null) {
             return null;
         }
-        var writable = new AcceptsImpl();
+        var writable = new AcceptImpl();
         var mediaTypes = s.split(",");
         for (var mediaType : mediaTypes) {
             var a = decodeAccept(mediaType);

@@ -1,5 +1,8 @@
 package cool.scx.http.headers;
 
+import cool.scx.http.headers.connection.Connection;
+import cool.scx.http.headers.connection.ConnectionType;
+import cool.scx.http.headers.connection.ScxConnectionType;
 import cool.scx.http.headers.content_disposition.ContentDisposition;
 import cool.scx.http.headers.content_disposition.ContentDispositionWritable;
 import cool.scx.http.headers.content_type.ContentType;
@@ -124,6 +127,15 @@ public interface ScxHttpHeadersWritable extends ScxHttpHeaders, ParametersWritab
 
     default ScxHttpHeadersWritable transferEncoding(ScxEncodingType scxEncodingType) {
         return transferEncoding(new TransferEncoding(scxEncodingType));
+    }
+
+    default ScxHttpHeadersWritable connection(Connection connection) {
+        set(CONNECTION, connection.encode());
+        return this;
+    }
+
+    default ScxHttpHeadersWritable connection(ConnectionType... connectionType) {
+        return connection(new Connection(connectionType));
     }
 
 }

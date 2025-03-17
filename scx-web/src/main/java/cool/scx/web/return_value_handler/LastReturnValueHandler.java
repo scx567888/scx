@@ -6,8 +6,6 @@ import cool.scx.http.routing.RoutingContext;
 
 import static cool.scx.common.util.ObjectUtils.toJson;
 import static cool.scx.common.util.ObjectUtils.toXml;
-import static cool.scx.common.util.StringUtils.startsWithIgnoreCase;
-import static cool.scx.http.headers.HttpFieldName.ACCEPT;
 import static cool.scx.http.media_type.MediaType.APPLICATION_JSON;
 import static cool.scx.http.media_type.MediaType.APPLICATION_XML;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -25,8 +23,8 @@ public final class LastReturnValueHandler implements ReturnValueHandler {
 
     @Override
     public void handle(Object returnValue, RoutingContext routingContext) throws JsonProcessingException {
-        var accept = routingContext.request().getHeader(ACCEPT);
-        if (accept != null && startsWithIgnoreCase(accept, APPLICATION_XML.value())) {
+        var accepts = routingContext.request().headers().accepts();
+        if (accepts != null && accepts.contains(APPLICATION_XML)) {
             // 只有明确指定 接受参数是 application/xml 的才返回 xml
             routingContext.response()
                     .contentType(ContentType.of(APPLICATION_XML).charset(UTF_8))

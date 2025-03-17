@@ -1,6 +1,7 @@
 package cool.scx.http.headers;
 
-import cool.scx.http.headers.accept.Accepts;
+import cool.scx.http.headers.accept.Accept;
+import cool.scx.http.headers.connection.Connection;
 import cool.scx.http.headers.content_disposition.ContentDisposition;
 import cool.scx.http.headers.content_type.ContentType;
 import cool.scx.http.headers.cookie.Cookie;
@@ -79,14 +80,19 @@ public interface ScxHttpHeaders extends Parameters<ScxHttpHeaderName, String> {
         return v != null ? v.get(name) : null;
     }
 
-    default Accepts accepts() {
+    default Accept accepts() {
         var c = get(ACCEPT);
-        return c != null ? Accepts.of(c) : null;
+        return c != null ? Accept.of(c) : null;
     }
 
     default TransferEncoding transferEncoding() {
         var c = get(TRANSFER_ENCODING);
         return c != null ? TransferEncoding.parseTransferEncoding(c) : null;
+    }
+
+    default Connection connection() {
+        var c = get(CONNECTION);
+        return c != null ? Connection.parseConnection(c) : null;
     }
 
     default String encode() {
