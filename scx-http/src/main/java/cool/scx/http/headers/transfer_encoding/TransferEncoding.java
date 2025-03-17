@@ -25,7 +25,7 @@ public class TransferEncoding implements Iterable<ScxEncodingType> {
         var split = transferEncodingHeader.split(",");
         var list = new ArrayList<ScxEncodingType>();
         for (var s : split) {
-            list.add(ScxEncodingType.of(s));
+            list.add(ScxEncodingType.of(s.trim()));
         }
         return new TransferEncoding(list);
     }
