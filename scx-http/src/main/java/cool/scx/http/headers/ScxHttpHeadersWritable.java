@@ -1,7 +1,5 @@
 package cool.scx.http.headers;
 
-import cool.scx.http.parameters.ParametersWritable;
-import cool.scx.http.media_type.ScxMediaType;
 import cool.scx.http.headers.content_disposition.ContentDisposition;
 import cool.scx.http.headers.content_disposition.ContentDispositionWritable;
 import cool.scx.http.headers.content_type.ContentType;
@@ -9,6 +7,8 @@ import cool.scx.http.headers.content_type.ContentTypeWritable;
 import cool.scx.http.headers.cookie.Cookie;
 import cool.scx.http.headers.cookie.Cookies;
 import cool.scx.http.headers.cookie.CookiesWritable;
+import cool.scx.http.media_type.ScxMediaType;
+import cool.scx.http.parameters.ParametersWritable;
 
 import java.nio.charset.Charset;
 

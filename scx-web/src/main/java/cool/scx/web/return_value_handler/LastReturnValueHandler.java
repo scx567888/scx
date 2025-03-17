@@ -7,8 +7,8 @@ import cool.scx.http.routing.RoutingContext;
 import static cool.scx.common.util.ObjectUtils.toJson;
 import static cool.scx.common.util.ObjectUtils.toXml;
 import static cool.scx.common.util.StringUtils.startsWithIgnoreCase;
-import static cool.scx.http.MediaType.APPLICATION_JSON;
-import static cool.scx.http.MediaType.APPLICATION_XML;
+import static cool.scx.http.media_type.MediaType.APPLICATION_JSON;
+import static cool.scx.http.media_type.MediaType.APPLICATION_XML;
 import static cool.scx.http.headers.HttpFieldName.ACCEPT;
 import static java.nio.charset.StandardCharsets.UTF_8;
 

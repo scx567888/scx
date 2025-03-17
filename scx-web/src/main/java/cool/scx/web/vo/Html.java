@@ -6,7 +6,7 @@ import cool.scx.http.routing.RoutingContext;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import static cool.scx.http.MediaType.TEXT_HTML;
+import static cool.scx.http.media_type.MediaType.TEXT_HTML;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /// html 渲染类

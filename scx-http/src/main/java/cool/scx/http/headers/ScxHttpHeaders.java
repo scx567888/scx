@@ -1,11 +1,11 @@
 package cool.scx.http.headers;
 
-import cool.scx.http.parameters.Parameters;
 import cool.scx.http.headers.accept.Accepts;
 import cool.scx.http.headers.content_disposition.ContentDisposition;
 import cool.scx.http.headers.content_type.ContentType;
 import cool.scx.http.headers.cookie.Cookie;
 import cool.scx.http.headers.cookie.Cookies;
+import cool.scx.http.parameters.Parameters;
 
 import java.util.List;
 

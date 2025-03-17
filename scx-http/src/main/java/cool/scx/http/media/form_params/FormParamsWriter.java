@@ -1,10 +1,10 @@
 package cool.scx.http.media.form_params;
 
-import cool.scx.http.media_type.MediaType;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.headers.content_type.ContentType;
 import cool.scx.http.media.MediaWriter;
+import cool.scx.http.media_type.MediaType;
 
 import java.io.IOException;
 import java.io.OutputStream;

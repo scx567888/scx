@@ -10,9 +10,9 @@ import java.io.InputStream;
 
 import static cool.scx.common.util.ObjectUtils.jsonMapper;
 import static cool.scx.common.util.ObjectUtils.xmlMapper;
+import static cool.scx.http.media.string.StringReader.STRING_READER;
 import static cool.scx.http.media_type.MediaType.APPLICATION_JSON;
 import static cool.scx.http.media_type.MediaType.APPLICATION_XML;
-import static cool.scx.http.media.string.StringReader.STRING_READER;
 
 /// JsonNodeReader
 ///

@@ -1,9 +1,13 @@
 package cool.scx.http.x.http2;
 
-import cool.scx.http.*;
+import cool.scx.http.ScxHttpBody;
+import cool.scx.http.ScxHttpServerRequest;
+import cool.scx.http.ScxHttpServerResponse;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.method.ScxHttpMethod;
+import cool.scx.http.peer_Info.PeerInfo;
 import cool.scx.http.uri.ScxURI;
+import cool.scx.http.version.HttpVersion;
 
 //todo 未完成
 public class Http2ServerRequest implements ScxHttpServerRequest {

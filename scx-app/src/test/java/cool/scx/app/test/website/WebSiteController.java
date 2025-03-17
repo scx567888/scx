@@ -7,7 +7,7 @@ import cool.scx.app.test.person.PersonService;
 import cool.scx.common.exception.ScxExceptionHelper;
 import cool.scx.common.util.HashUtils;
 import cool.scx.common.util.RandomUtils;
-import cool.scx.http.FileFormat;
+import cool.scx.http.media_type.FileFormat;
 import cool.scx.http.HttpHelper;
 import cool.scx.http.media.multi_part.MultiPartPart;
 import cool.scx.http.method.HttpMethod;

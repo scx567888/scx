@@ -11,7 +11,7 @@ import cool.scx.http.routing.RoutingContext;
 
 import static cool.scx.common.util.ObjectUtils.jsonMapper;
 import static cool.scx.common.util.ObjectUtils.xmlMapper;
-import static cool.scx.http.MediaType.*;
+import static cool.scx.http.media_type.MediaType.*;
 
 /// 封装 RoutingContext 的参数 防止反复取值造成性能损失
 ///

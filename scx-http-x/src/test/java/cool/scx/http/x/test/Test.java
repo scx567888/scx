@@ -6,7 +6,7 @@ import cool.scx.http.routing.Router;
 import cool.scx.http.x.XHttpServer;
 import cool.scx.http.x.XHttpServerOptions;
 
-import static cool.scx.http.HttpStatusCode.INTERNAL_SERVER_ERROR;
+import static cool.scx.http.status.HttpStatusCode.INTERNAL_SERVER_ERROR;
 import static cool.scx.http.method.HttpMethod.GET;
 import static cool.scx.http.method.HttpMethod.POST;
 

@@ -4,7 +4,7 @@ import cool.scx.http.headers.content_type.ContentType;
 import cool.scx.http.routing.RoutingContext;
 
 import static cool.scx.common.util.ObjectUtils.toXml;
-import static cool.scx.http.MediaType.APPLICATION_XML;
+import static cool.scx.http.media_type.MediaType.APPLICATION_XML;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /// Xml 格式的返回值

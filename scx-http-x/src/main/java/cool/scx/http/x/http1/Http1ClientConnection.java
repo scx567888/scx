@@ -1,6 +1,6 @@
 package cool.scx.http.x.http1;
 
-import cool.scx.http.HttpStatusCode;
+import cool.scx.http.status.HttpStatusCode;
 import cool.scx.http.ScxHttpBody;
 import cool.scx.http.ScxHttpClientRequest;
 import cool.scx.http.ScxHttpClientResponse;

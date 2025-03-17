@@ -1,6 +1,5 @@
 package cool.scx.http.web_socket;
 
-import cool.scx.http.version.HttpVersion;
 import cool.scx.http.ScxHttpClientRequest;
 import cool.scx.http.ScxHttpClientResponse;
 import cool.scx.http.headers.ScxHttpHeaderName;
@@ -10,11 +9,12 @@ import cool.scx.http.media.MediaWriter;
 import cool.scx.http.method.HttpMethod;
 import cool.scx.http.method.ScxHttpMethod;
 import cool.scx.http.uri.ScxURI;
+import cool.scx.http.version.HttpVersion;
 
 import java.util.function.Consumer;
 
-import static cool.scx.http.version.HttpVersion.HTTP_1_1;
 import static cool.scx.http.method.HttpMethod.GET;
+import static cool.scx.http.version.HttpVersion.HTTP_1_1;
 
 /// ScxClientWebSocketHandshakeRequest
 /// 1, WebSocket 协议中指定了 必须由 GET 方法 和 空请求体 所以我们这里屏蔽掉一些方法

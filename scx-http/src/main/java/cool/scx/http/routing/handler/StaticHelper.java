@@ -1,10 +1,10 @@
 package cool.scx.http.routing.handler;
 
-import cool.scx.http.media_type.FileFormat;
 import cool.scx.http.exception.NotFoundException;
 import cool.scx.http.headers.content_type.ContentType;
 import cool.scx.http.headers.content_type.ContentTypeWritable;
 import cool.scx.http.headers.range.Range;
+import cool.scx.http.media_type.FileFormat;
 import cool.scx.http.routing.RoutingContext;
 import cool.scx.io.IOHelper;
 
@@ -12,10 +12,10 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static cool.scx.http.status.HttpStatusCode.PARTIAL_CONTENT;
-import static cool.scx.http.media_type.MediaType.*;
 import static cool.scx.http.headers.HttpFieldName.ACCEPT_RANGES;
 import static cool.scx.http.headers.HttpFieldName.CONTENT_RANGE;
+import static cool.scx.http.media_type.MediaType.*;
+import static cool.scx.http.status.HttpStatusCode.PARTIAL_CONTENT;
 
 /// StaticHelper
 ///

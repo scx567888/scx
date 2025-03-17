@@ -10,7 +10,7 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-import static cool.scx.http.MediaType.TEXT_HTML;
+import static cool.scx.http.media_type.MediaType.TEXT_HTML;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /// 模板

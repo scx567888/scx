@@ -1,6 +1,6 @@
 package cool.scx.http.x.http1;
 
-import cool.scx.http.HttpVersion;
+import cool.scx.http.version.HttpVersion;
 import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.exception.BadRequestException;
 import cool.scx.http.exception.InternalServerErrorException;
@@ -26,7 +26,7 @@ import java.lang.System.Logger;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
-import static cool.scx.http.HttpStatusCode.*;
+import static cool.scx.http.status.HttpStatusCode.*;
 import static cool.scx.http.headers.HttpFieldName.CONNECTION;
 import static cool.scx.http.x.http1.Http1Helper.*;
 import static java.lang.System.Logger.Level.TRACE;
