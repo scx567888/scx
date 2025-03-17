@@ -2,8 +2,8 @@ package cool.scx.http.media.string;
 
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
-import cool.scx.http.headers.content_type.ContentType;
 import cool.scx.http.media.MediaWriter;
+import cool.scx.http.media_type.ScxMediaType;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -37,7 +37,7 @@ public class StringWriter implements MediaWriter {
             responseHeaders.contentLength(bytes.length);
         }
         if (responseHeaders.contentType() == null) {
-            responseHeaders.contentType(ContentType.of(TEXT_PLAIN).charset(charset));
+            responseHeaders.contentType(ScxMediaType.of(TEXT_PLAIN).charset(charset));
         }
     }
 
