@@ -1,7 +1,6 @@
 package cool.scx.http.media_type;
 
-import java.util.HashMap;
-import java.util.Map;
+import cool.scx.http.parameters.Parameters;
 
 /// MediaType
 ///
@@ -50,39 +49,14 @@ public enum MediaType implements ScxMediaType {
     // Multipart
     MULTIPART_FORM_DATA("multipart", "form-data");
 
-    private static final Map<String, MediaType> MAP = initMap();
     private final String type;
     private final String subtype;
-    private final String value;
+    private final Parameters<String, String> params;
 
     MediaType(String type, String subtype) {
         this.type = type;
         this.subtype = subtype;
-        this.value = type + "/" + subtype;
-    }
-
-    private static HashMap<String, MediaType> initMap() {
-        var map = new HashMap<String, MediaType>();
-        for (var h : MediaType.values()) {
-            map.put(h.value(), h);
-        }
-        return map;
-    }
-
-    /// @param str s
-    /// @return 未找到时抛出异常
-    public static MediaType of(String str) {
-        var mediaType = find(str);
-        if (mediaType == null) {
-            throw new IllegalArgumentException("Unknown media type: " + str);
-        }
-        return mediaType;
-    }
-
-    /// @param str s
-    /// @return 未找到时返回 null
-    public static MediaType find(String str) {
-        return MAP.get(str.toLowerCase());
+        this.params = Parameters.of();
     }
 
     @Override
@@ -96,8 +70,8 @@ public enum MediaType implements ScxMediaType {
     }
 
     @Override
-    public String value() {
-        return value;
+    public Parameters<String, String> params() {
+        return params;
     }
 
 }

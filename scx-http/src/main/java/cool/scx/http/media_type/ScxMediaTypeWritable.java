@@ -3,6 +3,8 @@ package cool.scx.http.media_type;
 import cool.scx.http.parameters.Parameters;
 import cool.scx.http.parameters.ParametersWritable;
 
+import java.nio.charset.Charset;
+
 /// ScxMediaTypeWritable
 ///
 /// @author scx567888
@@ -17,5 +19,15 @@ public interface ScxMediaTypeWritable extends ScxMediaType {
 
     @Override
     ParametersWritable<String, String> params();
+
+    default ScxMediaTypeWritable charset(Charset c) {
+        params().set("charset", c.name());
+        return this;
+    }
+
+    default ScxMediaTypeWritable boundary(String boundary) {
+        params().set("boundary", boundary);
+        return this;
+    }
 
 }

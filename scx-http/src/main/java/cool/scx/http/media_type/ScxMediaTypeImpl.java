@@ -13,6 +13,18 @@ public class ScxMediaTypeImpl implements ScxMediaTypeWritable {
     private String subtype;
     private ParametersWritable<String, String> params;
 
+    public ScxMediaTypeImpl() {
+        this.type = null;
+        this.subtype = null;
+        this.params = Parameters.of();
+    }
+
+    public ScxMediaTypeImpl(String type, String subtype, Parameters<String, String> params) {
+        type(type);
+        subtype(subtype);
+        params(params);
+    }
+
     @Override
     public ScxMediaTypeWritable type(String type) {
         this.type = type;
@@ -44,6 +56,11 @@ public class ScxMediaTypeImpl implements ScxMediaTypeWritable {
     @Override
     public ParametersWritable<String, String> params() {
         return params;
+    }
+
+    @Override
+    public String toString() {
+        return encode();
     }
 
 }
