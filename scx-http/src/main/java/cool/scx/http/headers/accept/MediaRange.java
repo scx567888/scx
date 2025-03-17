@@ -8,6 +8,10 @@ import cool.scx.http.parameters.Parameters;
 /// @version 0.0.1
 public interface MediaRange {
 
+    static MediaRangeWritable of(String mediaRangeStr) {
+        return MediaRangeHelper.parseMediaRange(mediaRangeStr);
+    }
+
     static MediaRangeWritable of() {
         return new MediaRangeImpl();
     }
@@ -18,7 +22,7 @@ public interface MediaRange {
 
     Parameters<String, String> params();
 
-    default Double q(){
+    default Double q() {
         var s = params().get("q");
         return s != null ? Double.parseDouble(s) : null;
     }
