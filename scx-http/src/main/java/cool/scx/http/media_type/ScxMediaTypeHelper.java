@@ -8,7 +8,7 @@ public class ScxMediaTypeHelper {
 
     public static final Pattern SEMICOLON_PATTERN = Pattern.compile(";\\s*");
 
-    public static ScxMediaType decodedMediaType(String str) {
+    public static ScxMediaTypeWritable decodedMediaType(String str) {
         var parts = SEMICOLON_PATTERN.split(str);
 
         //处理意外情况

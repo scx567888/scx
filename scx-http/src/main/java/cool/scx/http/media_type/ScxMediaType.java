@@ -10,15 +10,15 @@ import java.nio.charset.Charset;
 /// @version 0.0.1
 public interface ScxMediaType {
 
-    static ScxMediaTypeImpl of() {
+    static ScxMediaTypeWritable of() {
         return new ScxMediaTypeImpl();
     }
 
-    static ScxMediaTypeImpl of(ScxMediaType oldMediaType) {
+    static ScxMediaTypeWritable of(ScxMediaType oldMediaType) {
         return new ScxMediaTypeImpl(oldMediaType.type(), oldMediaType.subtype(), oldMediaType.params());
     }
 
-    static ScxMediaType of(String mediaTypeStr) {
+    static ScxMediaTypeWritable of(String mediaTypeStr) {
         return ScxMediaTypeHelper.decodedMediaType(mediaTypeStr);
     }
 
@@ -27,6 +27,13 @@ public interface ScxMediaType {
     String subtype();
 
     Parameters<String, String> params();
+
+    default boolean equalsIgnoreParams(ScxMediaType other) {
+        if (other == null) {
+            return false;
+        }
+        return type().equalsIgnoreCase(other.type()) && subtype().equalsIgnoreCase(other.subtype());
+    }
 
     default String encode() {
         return ScxMediaTypeHelper.encodeMediaType(this);
