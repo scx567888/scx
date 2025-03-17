@@ -18,6 +18,6 @@ public interface Accept extends Iterable<MediaRange> {
     boolean isAcceptable(ScxMediaType mediaType);
 
     /// 根据提供的媒体类型列表 找到最优支持
-    ScxMediaType negotiate(ScxMediaType... mediaTypes);
+    <T extends ScxMediaType> T negotiate(T... mediaTypes);
 
 }
