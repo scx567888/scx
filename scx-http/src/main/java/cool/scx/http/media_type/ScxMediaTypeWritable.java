@@ -13,7 +13,7 @@ public interface ScxMediaTypeWritable extends ScxMediaType {
 
     ScxMediaTypeWritable subtype(String subtype);
 
-    ScxMediaTypeWritable params(Parameters<String, String> parameters);
+    ScxMediaTypeWritable params(Parameters<String, String> params);
 
     @Override
     ParametersWritable<String, String> params();

@@ -1,19 +1,34 @@
 package cool.scx.http.media_type;
 
+import cool.scx.http.parameters.Parameters;
+import cool.scx.http.parameters.ParametersWritable;
+
 /// ScxMediaType
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class ScxMediaTypeImpl implements ScxMediaType {
+public class ScxMediaTypeImpl implements ScxMediaTypeWritable {
 
-    private final String type;
-    private final String subtype;
-    private final String value;
+    private String type;
+    private String subtype;
+    private ParametersWritable<String, String> params;
 
-    public ScxMediaTypeImpl(String type, String subtype) {
+    @Override
+    public ScxMediaTypeWritable type(String type) {
         this.type = type;
+        return this;
+    }
+
+    @Override
+    public ScxMediaTypeWritable subtype(String subtype) {
         this.subtype = subtype;
-        this.value = type + "/" + subtype;
+        return this;
+    }
+
+    @Override
+    public ScxMediaTypeWritable params(Parameters<String, String> params) {
+        this.params = Parameters.of(params);
+        return this;
     }
 
     @Override
@@ -27,8 +42,8 @@ public class ScxMediaTypeImpl implements ScxMediaType {
     }
 
     @Override
-    public String value() {
-        return value;
+    public ParametersWritable<String, String> params() {
+        return params;
     }
 
 }
