@@ -1,6 +1,6 @@
 package cool.scx.web.vo;
 
-import cool.scx.http.headers.content_type.ContentType;
+import cool.scx.http.media_type.ScxMediaType;
 import cool.scx.http.routing.RoutingContext;
 
 import static cool.scx.common.util.ObjectUtils.toXml;
@@ -26,7 +26,7 @@ public final class Xml implements BaseVo {
     @Override
     public void accept(RoutingContext context) {
         context.response()
-                .contentType(ContentType.of(APPLICATION_XML).charset(UTF_8))
+                .contentType(ScxMediaType.of(APPLICATION_XML).charset(UTF_8))
                 .send(toXml(data, ""));
     }
 
