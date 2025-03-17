@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
 
-import static cool.scx.http.headers.HttpFieldName.*;
+import static cool.scx.http.headers.HttpFieldName.SERVER;
 import static cool.scx.http.headers.connection.ConnectionType.CLOSE;
 import static cool.scx.http.headers.connection.ConnectionType.KEEP_ALIVE;
 import static cool.scx.http.headers.transfer_encoding.EncodingType.CHUNKED;
@@ -72,7 +72,7 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
         //用户可能已经自行设置了 CONNECTION
         if (headers.connection() == null) {
             if (request.isKeepAlive) {
-                headers.connection( KEEP_ALIVE);
+                headers.connection(KEEP_ALIVE);
             } else {
                 headers.connection(CLOSE);
             }

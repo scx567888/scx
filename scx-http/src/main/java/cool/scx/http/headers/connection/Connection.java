@@ -52,7 +52,7 @@ public class Connection implements Iterable<ScxConnectionType> {
     }
 
     public boolean contains(ScxConnectionType connectionType) {
-         return connectionTypes.contains(connectionType);
+        return connectionTypes.contains(connectionType);
     }
 
 }

@@ -1,7 +1,7 @@
 package cool.scx.http.headers.connection;
 
 public enum ConnectionType implements ScxConnectionType {
-    
+
     KEEP_ALIVE("keep-alive"),
     CLOSE("close"),
     UPGRADE("upgrade");
@@ -27,5 +27,5 @@ public enum ConnectionType implements ScxConnectionType {
     public String value() {
         return value;
     }
-    
+
 }

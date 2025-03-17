@@ -50,5 +50,5 @@ public class TransferEncoding implements Iterable<ScxEncodingType> {
     public ScxEncodingType get(int i) {
         return encodingTypes.get(i);
     }
-    
+
 }

@@ -12,7 +12,8 @@ import cool.scx.http.x.web_socket.ServerWebSocket;
 import java.io.OutputStream;
 
 import static cool.scx.http.HttpHelper.generateSecWebSocketAccept;
-import static cool.scx.http.headers.HttpFieldName.*;
+import static cool.scx.http.headers.HttpFieldName.SEC_WEBSOCKET_ACCEPT;
+import static cool.scx.http.headers.HttpFieldName.UPGRADE;
 
 public class Http1ServerWebSocketHandshakeResponse implements ScxServerWebSocketHandshakeResponse {
 

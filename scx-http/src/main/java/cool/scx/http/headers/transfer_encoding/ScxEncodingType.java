@@ -7,7 +7,7 @@ public sealed interface ScxEncodingType permits EncodingType, ScxEncodingTypeImp
         var m = EncodingType.find(v);
         return m != null ? m : new ScxEncodingTypeImpl(v);
     }
-    
+
     String value();
-    
+
 }
