@@ -3,10 +3,10 @@ package cool.scx.http.headers;
 import cool.scx.http.headers.accept.Accept;
 import cool.scx.http.headers.connection.Connection;
 import cool.scx.http.headers.content_disposition.ContentDisposition;
-import cool.scx.http.headers.content_type.ContentType;
 import cool.scx.http.headers.cookie.Cookie;
 import cool.scx.http.headers.cookie.Cookies;
 import cool.scx.http.headers.transfer_encoding.TransferEncoding;
+import cool.scx.http.media_type.ScxMediaType;
 import cool.scx.http.parameters.Parameters;
 
 import java.util.List;
@@ -55,9 +55,9 @@ public interface ScxHttpHeaders extends Parameters<ScxHttpHeaderName, String> {
         return Cookies.of(getAll(SET_COOKIE).toArray(String[]::new));
     }
 
-    default ContentType contentType() {
+    default ScxMediaType contentType() {
         var v = get(CONTENT_TYPE);
-        return v != null ? ContentType.of(v) : null;
+        return v != null ? ScxMediaType.of(v) : null;
     }
 
     default ContentDisposition contentDisposition() {
@@ -80,7 +80,7 @@ public interface ScxHttpHeaders extends Parameters<ScxHttpHeaderName, String> {
         return v != null ? v.get(name) : null;
     }
 
-    default Accept accepts() {
+    default Accept accept() {
         var c = get(ACCEPT);
         return c != null ? Accept.of(c) : null;
     }

@@ -2,11 +2,7 @@ package cool.scx.http.headers;
 
 import cool.scx.http.headers.connection.Connection;
 import cool.scx.http.headers.connection.ConnectionType;
-import cool.scx.http.headers.connection.ScxConnectionType;
 import cool.scx.http.headers.content_disposition.ContentDisposition;
-import cool.scx.http.headers.content_disposition.ContentDispositionWritable;
-import cool.scx.http.headers.content_type.ContentType;
-import cool.scx.http.headers.content_type.ContentTypeWritable;
 import cool.scx.http.headers.cookie.Cookie;
 import cool.scx.http.headers.cookie.Cookies;
 import cool.scx.http.headers.cookie.CookiesWritable;
@@ -14,8 +10,6 @@ import cool.scx.http.headers.transfer_encoding.ScxEncodingType;
 import cool.scx.http.headers.transfer_encoding.TransferEncoding;
 import cool.scx.http.media_type.ScxMediaType;
 import cool.scx.http.parameters.ParametersWritable;
-
-import java.nio.charset.Charset;
 
 import static cool.scx.http.headers.HttpFieldName.*;
 
@@ -59,27 +53,9 @@ public interface ScxHttpHeadersWritable extends ScxHttpHeaders, ParametersWritab
         return this;
     }
 
-    default ContentTypeWritable contentType() {
-        return ContentType.of(get(CONTENT_TYPE));
-    }
-
-    default ScxHttpHeadersWritable contentType(ContentType contentType) {
-        set(CONTENT_TYPE, contentType.encode());
-        return this;
-    }
-
     default ScxHttpHeadersWritable contentType(ScxMediaType mediaType) {
-        contentType(ContentType.of(mediaType));
+        set(CONTENT_TYPE, mediaType.encode());
         return this;
-    }
-
-    default ScxHttpHeadersWritable contentType(ScxMediaType mediaType, Charset charset) {
-        contentType(ContentType.of(mediaType).charset(charset));
-        return this;
-    }
-
-    default ContentDispositionWritable contentDisposition() {
-        return ContentDisposition.of(get(CONTENT_DISPOSITION));
     }
 
     default ScxHttpHeadersWritable contentDisposition(ContentDisposition contentDisposition) {
