@@ -12,48 +12,58 @@ import java.util.List;
 /// @version 0.0.1
 public class AcceptImpl implements AcceptWritable {
 
-    private final List<AcceptElement> acceptElements;
-
-    public AcceptImpl(Accept oldAccepts) {
-        this.acceptElements = new ArrayList<>();
-        for (var oldAccept : oldAccepts) {
-            this.acceptElements.add(oldAccept);
-        }
-    }
+    /// 在进行匹配的时候 请将此 List 进行排序
+    private final List<MediaRange> mediaRanges;
 
     public AcceptImpl() {
-        this.acceptElements = new ArrayList<>();
+        this.mediaRanges = new ArrayList<>();
+    }
+
+    public AcceptImpl(List<MediaRange> sorted) {
+        this.mediaRanges = sorted;
     }
 
     @Override
     public long size() {
-        return acceptElements.size();
+        return mediaRanges.size();
     }
 
-    @Override
-    public boolean contains(ScxMediaType accept) {
-        for (var a : acceptElements) {
-            if (a.mediaType().equals(accept)) {
+    public boolean isAcceptable(ScxMediaType mediaType) {
+        // 遍历所有 MediaRange，判断是否有任意一个匹配该 MediaType
+        for (var range : mediaRanges) {
+            if (range.matches(mediaType)) {
                 return true;
             }
         }
         return false;
     }
 
-    @Override
-    public Iterator<AcceptElement> iterator() {
-        return acceptElements.iterator();
+    public ScxMediaType negotiate(ScxMediaType... serverSupportedTypes) {
+        // 遍历已排序的 MediaRange，找到第一个匹配的服务端支持的类型
+        for (MediaRange range : mediaRanges) {
+            for (var supportedType : serverSupportedTypes) {
+                if (range.matches(supportedType)) {
+                    return supportedType;
+                }
+            }
+        }
+        return null;
     }
 
     @Override
-    public AcceptWritable add(AcceptElement acceptElement) {
-        this.acceptElements.add(acceptElement);
+    public Iterator<MediaRange> iterator() {
+        return mediaRanges.iterator();
+    }
+
+    @Override
+    public AcceptWritable add(MediaRange mediaRange) {
+        this.mediaRanges.add(mediaRange);
         return this;
     }
 
     @Override
-    public AcceptWritable remove(AcceptElement acceptElement) {
-        this.acceptElements.remove(acceptElement);
+    public AcceptWritable remove(MediaRange mediaRange) {
+        this.mediaRanges.remove(mediaRange);
         return this;
     }
 

@@ -1,6 +1,8 @@
 package cool.scx.http.headers.accept;
 
-import cool.scx.http.media_type.ScxMediaType;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /// AcceptHelper
 ///
@@ -8,36 +10,44 @@ import cool.scx.http.media_type.ScxMediaType;
 /// @version 0.0.1
 public class AcceptHelper {
 
-    public static AcceptElementWritable decodeAccept(String s) {
-        var parts = s.split(";");
-        var type = parts[0].trim();
-        double weight = 1.0; // 默认权重为1.0
-        if (parts.length > 1) {
-            for (String part : parts) {
-                part = part.trim();
-                if (part.startsWith("q=")) {
-                    try {
-                        weight = Double.parseDouble(part.substring(2));
-                    } catch (NumberFormatException e) {
-                        // 如果解析失败，保持默认权重
-                    }
-                }
-            }
-        }
-        return new AcceptElementImpl().mediaType(ScxMediaType.of(type)).q(weight);
-    }
-
     public static AcceptWritable decodeAccepts(String s) {
-        if (s == null) {
-            return null;
-        }
-        var writable = new AcceptImpl();
+        var list = new ArrayList<MediaRange>();
         var mediaTypes = s.split(",");
         for (var mediaType : mediaTypes) {
-            var a = decodeAccept(mediaType);
-            writable.add(a);
+            list.add(MediaRange.of(mediaType));
         }
-        return writable;
+        var sorted = sortMediaRanges(list);
+        return new AcceptImpl(sorted);
+    }
+
+
+    // 按 q 值降序 > 类型特异性 > 子类型特异性 排序
+    public static List<MediaRange> sortMediaRanges(List<MediaRange> ranges) {
+        return ranges.stream()
+                .sorted((a, b) -> {
+                    // 1. 按 q 值降序
+                    int qCompare = Double.compare(b.q(), a.q());
+                    if (qCompare != 0) {
+                        return qCompare;
+                    }
+
+                    // 2. 类型非通配符优先
+                    int typeCompare = Boolean.compare(
+                            !a.type().equals("*"),
+                            !b.type().equals("*")
+                    );
+                    if (typeCompare != 0) {
+                        return -typeCompare;
+                    }
+
+                    // 3. 子类型非通配符优先
+                    int subtypeCompare = Boolean.compare(
+                            !a.subtype().equals("*"),
+                            !b.subtype().equals("*")
+                    );
+                    return -subtypeCompare;
+                })
+                .collect(Collectors.toList());
     }
 
 }
