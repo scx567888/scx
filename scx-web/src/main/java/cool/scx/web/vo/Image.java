@@ -3,9 +3,9 @@ package cool.scx.web.vo;
 import cool.scx.http.exception.BadRequestException;
 import cool.scx.http.exception.NotFoundException;
 import cool.scx.http.exception.ScxHttpException;
-import cool.scx.http.headers.content_type.ContentType;
 import cool.scx.http.media_type.FileFormat;
 import cool.scx.http.media_type.MediaType;
+import cool.scx.http.media_type.ScxMediaType;
 import cool.scx.http.routing.RoutingContext;
 import cool.scx.http.routing.handler.StaticHelper;
 import net.coobird.thumbnailator.Thumbnails;
@@ -99,7 +99,7 @@ public abstract class Image implements BaseVo {
 
         @Override
         public void imageHandler(RoutingContext context) {
-            context.response().contentType(ContentType.of(IMAGE_PNG)).send(buffer);
+            context.response().contentType(ScxMediaType.of(IMAGE_PNG)).send(buffer);
         }
 
     }
@@ -131,7 +131,7 @@ public abstract class Image implements BaseVo {
             super(file);
             var fileFormat = FileFormat.findByFileName(file.toString());
             var mediaType = fileFormat != null ? fileFormat.mediaType() : MediaType.APPLICATION_OCTET_STREAM;
-            this.contentType = mediaType.value();
+            this.contentType = mediaType.encode();
             this.buffer = getBuffer(file, width, height, position);
         }
 
@@ -163,7 +163,7 @@ public abstract class Image implements BaseVo {
 
         @Override
         public void imageHandler(RoutingContext context) {
-            context.response().contentType(ContentType.of(contentType)).send(buffer);
+            context.response().contentType(ScxMediaType.of(contentType)).send(buffer);
         }
 
     }
