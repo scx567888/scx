@@ -2,7 +2,7 @@ package cool.scx.http.headers.cookie;
 
 import java.util.ArrayList;
 
-import static cool.scx.http.headers.content_type.ContentTypeHelper.SEMICOLON_PATTERN;
+import static cool.scx.http.media_type.ScxMediaTypeHelper.SEMICOLON_PATTERN;
 
 
 /// CookieHelper

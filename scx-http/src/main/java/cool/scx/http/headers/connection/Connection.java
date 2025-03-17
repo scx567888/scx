@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import static java.util.Collections.addAll;
 
+/// todo 待优化
 public class Connection implements Iterable<ScxConnectionType> {
 
     private final List<ScxConnectionType> connectionTypes;

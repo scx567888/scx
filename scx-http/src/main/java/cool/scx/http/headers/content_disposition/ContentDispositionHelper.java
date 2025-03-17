@@ -4,8 +4,8 @@ import cool.scx.http.parameters.Parameters;
 import cool.scx.http.parameters.ParametersWritable;
 
 import static cool.scx.common.util.StringUtils.removeQuotes;
-import static cool.scx.http.headers.content_type.ContentTypeHelper.SEMICOLON_PATTERN;
-import static cool.scx.http.headers.content_type.ContentTypeHelper.encodeParams;
+import static cool.scx.http.media_type.ScxMediaTypeHelper.SEMICOLON_PATTERN;
+import static cool.scx.http.media_type.ScxMediaTypeHelper.encodeParams;
 
 /// ContentDispositionHelper
 ///
