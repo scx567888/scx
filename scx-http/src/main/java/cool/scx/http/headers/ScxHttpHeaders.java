@@ -5,6 +5,7 @@ import cool.scx.http.headers.content_disposition.ContentDisposition;
 import cool.scx.http.headers.content_type.ContentType;
 import cool.scx.http.headers.cookie.Cookie;
 import cool.scx.http.headers.cookie.Cookies;
+import cool.scx.http.headers.transfer_encoding.TransferEncoding;
 import cool.scx.http.parameters.Parameters;
 
 import java.util.List;
@@ -44,19 +45,23 @@ public interface ScxHttpHeaders extends Parameters<ScxHttpHeaderName, String> {
     }
 
     default Cookies cookies() {
-        return Cookies.of(get(COOKIE));
+        var c = get(COOKIE);
+        return c != null ? Cookies.of(c) : null;
     }
 
     default Cookies setCookies() {
+        //todo 这里没有判空
         return Cookies.of(getAll(SET_COOKIE).toArray(String[]::new));
     }
 
     default ContentType contentType() {
-        return ContentType.of(get(CONTENT_TYPE));
+        var v = get(CONTENT_TYPE);
+        return v != null ? ContentType.of(v) : null;
     }
 
     default ContentDisposition contentDisposition() {
-        return ContentDisposition.of(get(CONTENT_DISPOSITION));
+        var c = get(CONTENT_DISPOSITION);
+        return c != null ? ContentDisposition.of(c) : null;
     }
 
     default Long contentLength() {
@@ -65,15 +70,23 @@ public interface ScxHttpHeaders extends Parameters<ScxHttpHeaderName, String> {
     }
 
     default Cookie getCookie(String name) {
-        return cookies().get(name);
+        var v = cookies();
+        return v != null ? v.get(name) : null;
     }
 
     default Cookie getSetCookie(String name) {
-        return setCookies().get(name);
+        var v = setCookies();
+        return v != null ? v.get(name) : null;
     }
 
     default Accepts accepts() {
-        return Accepts.of(get(ACCEPT));
+        var c = get(ACCEPT);
+        return c != null ? Accepts.of(c) : null;
+    }
+
+    default TransferEncoding transferEncoding() {
+        var c = get(TRANSFER_ENCODING);
+        return c != null ? TransferEncoding.parseTransferEncoding(c) : null;
     }
 
     default String encode() {

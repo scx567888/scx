@@ -7,6 +7,8 @@ import cool.scx.http.headers.content_type.ContentTypeWritable;
 import cool.scx.http.headers.cookie.Cookie;
 import cool.scx.http.headers.cookie.Cookies;
 import cool.scx.http.headers.cookie.CookiesWritable;
+import cool.scx.http.headers.transfer_encoding.ScxEncodingType;
+import cool.scx.http.headers.transfer_encoding.TransferEncoding;
 import cool.scx.http.media_type.ScxMediaType;
 import cool.scx.http.parameters.ParametersWritable;
 
@@ -113,6 +115,15 @@ public interface ScxHttpHeadersWritable extends ScxHttpHeaders, ParametersWritab
     default ScxHttpHeadersWritable contentLength(long contentLength) {
         set(CONTENT_LENGTH, String.valueOf(contentLength));
         return this;
+    }
+
+    default ScxHttpHeadersWritable transferEncoding(TransferEncoding transferEncoding) {
+        set(TRANSFER_ENCODING, transferEncoding.encode());
+        return this;
+    }
+
+    default ScxHttpHeadersWritable transferEncoding(ScxEncodingType scxEncodingType) {
+        return transferEncoding(new TransferEncoding(scxEncodingType));
     }
 
 }
