@@ -86,7 +86,7 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
 
         var hasBody = true;
         //是否不需要响应体
-        if (status == SWITCHING_PROTOCOLS || status == NO_CONTENT || status == NOT_MODIFIED) {
+        if (SWITCHING_PROTOCOLS.equals(status) || NO_CONTENT.equals(status) || NOT_MODIFIED.equals(status)) {
             hasBody = false;
         }
 
