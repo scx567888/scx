@@ -17,7 +17,7 @@ import cool.scx.http.media.object.ObjectWriter;
 import cool.scx.http.media.path.PathWriter;
 import cool.scx.http.media.string.StringWriter;
 import cool.scx.http.media_type.ScxMediaType;
-import cool.scx.http.status.ScxHttpStatus;
+import cool.scx.http.status.HttpStatus;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -33,11 +33,11 @@ public interface ScxHttpServerResponse {
     // ************* 基本方法 ****************
     ScxHttpServerRequest request();
 
-    ScxHttpStatus status();
+    HttpStatus status();
 
     ScxHttpHeadersWritable headers();
 
-    ScxHttpServerResponse status(ScxHttpStatus code);
+    ScxHttpServerResponse status(HttpStatus code);
 
     ///  发送响应头
     ///
@@ -54,7 +54,7 @@ public interface ScxHttpServerResponse {
     //************** 简化操作 ***************
 
     default ScxHttpServerResponse status(int code) {
-        return status(ScxHttpStatus.of(code));
+        return status(HttpStatus.of(code));
     }
 
     default void send() {
