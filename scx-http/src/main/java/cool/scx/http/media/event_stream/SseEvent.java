@@ -2,11 +2,11 @@ package cool.scx.http.media.event_stream;
 
 public interface SseEvent {
 
-    static SseEvent of() {
+    static SseEventWritable of() {
         return new SseEventImpl();
     }
 
-    static SseEvent of(String data) {
+    static SseEventWritable of(String data) {
         return new SseEventImpl().data(data);
     }
 
