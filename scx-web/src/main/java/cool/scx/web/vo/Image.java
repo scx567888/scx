@@ -99,7 +99,7 @@ public abstract class Image implements BaseVo {
 
         @Override
         public void imageHandler(RoutingContext context) {
-            context.response().contentType(ScxMediaType.of(IMAGE_PNG)).send(buffer);
+            context.response().contentType(IMAGE_PNG).send(buffer);
         }
 
     }
@@ -122,7 +122,7 @@ public abstract class Image implements BaseVo {
 
     private static final class CroppedImage extends Image {
 
-        private final String contentType;
+        private final ScxMediaType contentType;
 
         /// 如果图片是需要裁剪的这里存储裁剪过后的字节数组 以提高多次调用的性能
         private final byte[] buffer;
@@ -130,8 +130,7 @@ public abstract class Image implements BaseVo {
         public CroppedImage(Path file, Integer width, Integer height, Position position) {
             super(file);
             var fileFormat = FileFormat.findByFileName(file.toString());
-            var mediaType = fileFormat != null ? fileFormat.mediaType() : MediaType.APPLICATION_OCTET_STREAM;
-            this.contentType = mediaType.encode();
+            this.contentType = fileFormat != null ? fileFormat.mediaType() : MediaType.APPLICATION_OCTET_STREAM;
             this.buffer = getBuffer(file, width, height, position);
         }
 
@@ -163,7 +162,7 @@ public abstract class Image implements BaseVo {
 
         @Override
         public void imageHandler(RoutingContext context) {
-            context.response().contentType(ScxMediaType.of(contentType)).send(buffer);
+            context.response().contentType(contentType).send(buffer);
         }
 
     }
