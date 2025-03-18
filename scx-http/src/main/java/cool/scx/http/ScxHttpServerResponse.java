@@ -7,6 +7,8 @@ import cool.scx.http.headers.cookie.Cookie;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.media.byte_array.ByteArrayWriter;
 import cool.scx.http.media.empty.EmptyWriter;
+import cool.scx.http.media.event_stream.EventStream;
+import cool.scx.http.media.event_stream.EventStreamWriter;
 import cool.scx.http.media.form_params.FormParams;
 import cool.scx.http.media.form_params.FormParamsWriter;
 import cool.scx.http.media.input_stream.InputStreamWriter;
@@ -99,6 +101,12 @@ public interface ScxHttpServerResponse {
 
     default void send(Object object) {
         send(new ObjectWriter(object));
+    }
+
+    default EventStream sendEventStream() {
+        var writer = new EventStreamWriter();
+        send(writer);
+        return writer.eventStream();
     }
 
     //************** 简化 Headers 操作 *************
