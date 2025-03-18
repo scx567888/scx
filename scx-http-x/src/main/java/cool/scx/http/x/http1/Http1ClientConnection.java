@@ -3,11 +3,10 @@ package cool.scx.http.x.http1;
 import cool.scx.http.ScxHttpBody;
 import cool.scx.http.ScxHttpClientRequest;
 import cool.scx.http.ScxHttpClientResponse;
-import cool.scx.http.exception.ScxHttpException;
+import cool.scx.http.exception.ContentTooLargeException;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.media.MediaWriter;
-import cool.scx.http.status.HttpStatus;
 import cool.scx.http.x.XHttpClientOptions;
 import cool.scx.io.data_reader.PowerfulLinkedDataReader;
 import cool.scx.io.data_supplier.InputStreamDataSupplier;
@@ -164,7 +163,7 @@ public class Http1ClientConnection {
         if (contentLength != null) {
             // 请求体长度过大 这里抛出异常
             if (contentLength > options.maxPayloadSize()) {
-                throw new ScxHttpException(HttpStatus.CONTENT_TOO_LARGE);
+                throw new ContentTooLargeException();
             }
             return new ScxHttpBodyImpl(new FixedLengthDataReaderInputStream(dataReader, contentLength), headers, 65536);
         }

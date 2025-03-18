@@ -1,9 +1,7 @@
 package cool.scx.http.x.http1;
 
 import cool.scx.http.ScxHttpServerRequest;
-import cool.scx.http.exception.BadRequestException;
-import cool.scx.http.exception.InternalServerErrorException;
-import cool.scx.http.exception.ScxHttpException;
+import cool.scx.http.exception.*;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.version.HttpVersion;
@@ -27,7 +25,6 @@ import java.util.Arrays;
 import java.util.function.Consumer;
 
 import static cool.scx.http.headers.connection.ConnectionType.CLOSE;
-import static cool.scx.http.status.HttpStatusCode.*;
 import static cool.scx.http.x.http1.Http1Helper.*;
 import static java.lang.System.Logger.Level.TRACE;
 import static java.lang.System.getLogger;
@@ -151,12 +148,12 @@ public class Http1ServerConnection {
             throw new CloseConnectionException();
         } catch (NoMatchFoundException e) {
             // 在指定长度内未匹配到 这里抛出 URI 过长异常
-            throw new ScxHttpException(URI_TOO_LONG, e.getMessage());
+            throw new URITooLongException(e.getMessage());
         } catch (InvalidHttpRequestLineException e) {
             // 解析 RequestLine 异常
             throw new BadRequestException("Invalid HTTP request line : " + e.requestLineStr);
         } catch (InvalidHttpVersion e) {
-            throw new ScxHttpException(HTTP_VERSION_NOT_SUPPORTED, "Invalid HTTP version : " + e.versionStr);
+            throw new HttpVersionNotSupportedException("Invalid HTTP version : " + e.versionStr);
         }
     }
 
@@ -178,10 +175,10 @@ public class Http1ServerConnection {
             throw new CloseConnectionException();
         } catch (NoMatchFoundException e) {
             // 在指定长度内未匹配到 这里抛出请求头过大异常
-            throw new ScxHttpException(REQUEST_HEADER_FIELDS_TOO_LARGE, e.getMessage());
+            throw new RequestHeaderFieldsTooLargeException(e.getMessage());
         } catch (Exception e) {
             // 解析 Header 异常
-            throw new ScxHttpException(BAD_REQUEST, e.getMessage());
+            throw new BadRequestException(e.getMessage());
         }
     }
 
@@ -200,7 +197,7 @@ public class Http1ServerConnection {
         if (contentLength != null) {
             // 请求体长度过大 这里抛出异常
             if (contentLength > options.maxPayloadSize()) {
-                throw new ScxHttpException(CONTENT_TOO_LARGE);
+                throw new ContentTooLargeException();
             }
             return new FixedLengthDataReaderInputStream(dataReader, contentLength);
         }
@@ -216,16 +213,16 @@ public class Http1ServerConnection {
         var sb = new StringBuilder();
         sb.append(HttpVersion.HTTP_1_1.value());
         sb.append(" ");
-        sb.append(e.statusCode().code());
+        sb.append(e.status().code());
         sb.append(" ");
-        sb.append(e.statusCode().description());
+        sb.append(e.status().description());
         sb.append("\r\n");
 
         var headers = ScxHttpHeaders.of();
         // we are escaping the connection loop, the connection will be closed
         headers.connection(CLOSE);
 
-        var message = e.statusCode().description().getBytes();
+        var message = e.status().description().getBytes();
 
         headers.contentLength(message.length);
 
