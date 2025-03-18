@@ -5,7 +5,6 @@ import cool.scx.http.headers.connection.ConnectionType;
 import cool.scx.http.headers.content_disposition.ContentDisposition;
 import cool.scx.http.headers.cookie.Cookie;
 import cool.scx.http.headers.cookie.Cookies;
-import cool.scx.http.headers.cookie.CookiesWritable;
 import cool.scx.http.headers.transfer_encoding.ScxEncodingType;
 import cool.scx.http.headers.transfer_encoding.TransferEncoding;
 import cool.scx.http.media_type.ScxMediaType;
@@ -35,17 +34,9 @@ public interface ScxHttpHeadersWritable extends ScxHttpHeaders, ParametersWritab
         return this;
     }
 
-    default CookiesWritable cookies() {
-        return Cookies.of(get(COOKIE));
-    }
-
     default ScxHttpHeadersWritable cookies(Cookies cookies) {
         set(COOKIE, cookies.encodeCookie());
         return this;
-    }
-
-    default CookiesWritable setCookies() {
-        return Cookies.of(getAll(SET_COOKIE).toArray(String[]::new));
     }
 
     default ScxHttpHeadersWritable setCookies(Cookies cookies) {
@@ -64,31 +55,41 @@ public interface ScxHttpHeadersWritable extends ScxHttpHeaders, ParametersWritab
     }
 
     default ScxHttpHeadersWritable addCookie(Cookie... cookie) {
-        var cookies = cookies();
+        var oldCookies = cookies();
+        var newCookies = oldCookies != null ? Cookies.of(oldCookies) : Cookies.of();
         for (var c : cookie) {
-            cookies.add(c);
+            newCookies.add(c);
         }
-        return cookies(cookies);
+        return cookies(newCookies);
     }
 
     default ScxHttpHeadersWritable removeCookie(String name) {
-        var cookies = cookies();
-        cookies.remove(name);
-        return cookies(cookies);
+        var oldCookies = cookies();
+        if (oldCookies == null) {
+            return this;
+        }
+        var newCookies = Cookies.of(oldCookies);
+        newCookies.remove(name);
+        return cookies(newCookies);
     }
 
     default ScxHttpHeadersWritable addSetCookie(Cookie... cookie) {
-        var cookies = setCookies();
+        var oldSetCookies = setCookies();
+        var newSetCookies = oldSetCookies != null ? Cookies.of(oldSetCookies) : Cookies.of();
         for (var c : cookie) {
-            cookies.add(c);
+            newSetCookies.add(c);
         }
-        return setCookies(cookies);
+        return setCookies(newSetCookies);
     }
 
     default ScxHttpHeadersWritable removeSetCookie(String name) {
-        var cookies = setCookies();
-        cookies.remove(name);
-        return setCookies(cookies);
+        var oldSetCookies = setCookies();
+        if (oldSetCookies == null) {
+            return this;
+        }
+        var newSetCookies = Cookies.of(oldSetCookies);
+        newSetCookies.remove(name);
+        return cookies(newSetCookies);
     }
 
     default ScxHttpHeadersWritable contentLength(long contentLength) {
@@ -101,7 +102,7 @@ public interface ScxHttpHeadersWritable extends ScxHttpHeaders, ParametersWritab
         return this;
     }
 
-    default ScxHttpHeadersWritable transferEncoding(ScxEncodingType scxEncodingType) {
+    default ScxHttpHeadersWritable transferEncoding(ScxEncodingType... scxEncodingType) {
         return transferEncoding(new TransferEncoding(scxEncodingType));
     }
 

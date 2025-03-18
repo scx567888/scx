@@ -51,8 +51,8 @@ public interface ScxHttpHeaders extends Parameters<ScxHttpHeaderName, String> {
     }
 
     default Cookies setCookies() {
-        //todo 这里没有判空
-        return Cookies.of(getAll(SET_COOKIE).toArray(String[]::new));
+        var c = getAll(SET_COOKIE);
+        return !c.isEmpty() ? Cookies.of(c.toArray(String[]::new)) : null;
     }
 
     default ScxMediaType contentType() {
