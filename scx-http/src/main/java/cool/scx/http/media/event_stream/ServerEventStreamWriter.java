@@ -10,11 +10,11 @@ import java.io.OutputStream;
 import static cool.scx.http.media_type.MediaType.TEXT_EVENT_STREAM;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-public class EventStreamWriter implements MediaWriter {
+public class ServerEventStreamWriter implements MediaWriter {
 
-    private EventStream eventStream;
+    private ServerEventStream eventStream;
 
-    public EventStreamWriter() {
+    public ServerEventStreamWriter() {
 
     }
 
@@ -27,10 +27,10 @@ public class EventStreamWriter implements MediaWriter {
 
     @Override
     public void write(OutputStream outputStream) {
-        eventStream = new EventStream(outputStream);
+        eventStream = new ServerEventStream(outputStream);
     }
 
-    public EventStream eventStream() {
+    public ServerEventStream eventStream() {
         return eventStream;
     }
 

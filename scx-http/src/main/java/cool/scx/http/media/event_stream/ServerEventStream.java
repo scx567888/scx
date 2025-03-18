@@ -6,11 +6,11 @@ import java.io.UncheckedIOException;
 
 import static cool.scx.http.media.event_stream.EventStreamHelper.writeToOutputStream;
 
-public class EventStream implements AutoCloseable{
+public class ServerEventStream implements AutoCloseable{
 
     private final OutputStream out;
 
-    public EventStream(OutputStream out) {
+    public ServerEventStream(OutputStream out) {
         this.out = out;
     }
 

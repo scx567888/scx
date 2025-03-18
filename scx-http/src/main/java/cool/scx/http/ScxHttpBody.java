@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.media.MediaReader;
+import cool.scx.http.media.event_stream.ClientEventStream;
+import cool.scx.http.media.event_stream.ClientEventStreamReader;
 import cool.scx.http.media.form_params.FormParams;
 import cool.scx.http.media.multi_part.MultiPart;
 import cool.scx.http.media.multi_part.MultiPartStreamCachedReader;
@@ -79,6 +81,10 @@ public interface ScxHttpBody {
 
     default <T> T asObject(TypeReference<T> c) {
         return as(new ObjectReader<>(c));
+    }
+    
+    default ClientEventStream asEventStream() {
+        return as(new ClientEventStreamReader());
     }
 
 }
