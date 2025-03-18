@@ -11,7 +11,7 @@ import cool.scx.http.status.HttpStatusCode;
 public class ScxHttpException extends RuntimeException {
 
     /// http 状态码
-    final HttpStatusCode statusCode;
+    protected final HttpStatusCode statusCode;
 
     public ScxHttpException(HttpStatusCode statusCode) {
         super();

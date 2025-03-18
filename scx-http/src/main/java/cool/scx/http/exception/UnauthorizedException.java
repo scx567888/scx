@@ -2,7 +2,7 @@ package cool.scx.http.exception;
 
 import static cool.scx.http.status.HttpStatusCode.UNAUTHORIZED;
 
-/// 未认证异常 (未登录)
+/// UnauthorizedException
 ///
 /// @author scx567888
 /// @version 0.0.1

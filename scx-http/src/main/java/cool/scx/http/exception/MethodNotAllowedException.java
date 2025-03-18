@@ -2,7 +2,7 @@ package cool.scx.http.exception;
 
 import static cool.scx.http.status.HttpStatusCode.METHOD_NOT_ALLOWED;
 
-/// 方法不被允许
+/// MethodNotAllowedException
 ///
 /// @author scx567888
 /// @version 0.0.1
