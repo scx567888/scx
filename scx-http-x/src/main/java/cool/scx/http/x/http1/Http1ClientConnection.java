@@ -155,7 +155,7 @@ public class Http1ClientConnection {
     public ScxHttpBody readBody(ScxHttpHeaders headers) {
         var isChunkedTransfer = Http1Helper.checkIsChunkedTransfer(headers);
         if (isChunkedTransfer) {
-            return new ScxHttpBodyImpl(new DataReaderInputStream(new HttpChunkedDataSupplier(dataReader, options.maxPayloadSize())), headers, 65535);
+            return new ScxHttpBodyImpl(new DataReaderInputStream(new HttpChunkedDataSupplier(dataReader, options.maxPayloadSize())), headers);
         }
 
         //2, 判断请求体是不是有 长度
@@ -165,11 +165,11 @@ public class Http1ClientConnection {
             if (contentLength > options.maxPayloadSize()) {
                 throw new ContentTooLargeException();
             }
-            return new ScxHttpBodyImpl(new FixedLengthDataReaderInputStream(dataReader, contentLength), headers, 65536);
+            return new ScxHttpBodyImpl(new FixedLengthDataReaderInputStream(dataReader, contentLength), headers);
         }
 
         //3, 没有长度的空请求体
-        return new ScxHttpBodyImpl(InputStream.nullInputStream(), headers, 65536);
+        return new ScxHttpBodyImpl(InputStream.nullInputStream(), headers);
     }
 
 }

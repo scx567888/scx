@@ -3,13 +3,14 @@ package cool.scx.http.media.multi_part;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.io.data_reader.LinkedDataReader;
-import cool.scx.io.data_supplier.InputStreamDataSupplier;
 import cool.scx.io.exception.NoMatchFoundException;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+
+import static cool.scx.io.IOHelper.inputStreamToDataReader;
 
 /// MultiPartStream
 ///
@@ -25,7 +26,7 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart> {
 
     public MultiPartStream(InputStream inputStream, String boundary) {
         this.boundaryBytes = ("--" + boundary).getBytes();
-        this.linkedDataReader = new LinkedDataReader(new InputStreamDataSupplier(inputStream));
+        this.linkedDataReader = inputStreamToDataReader(inputStream);
         this.hasNextPart = readNext();
     }
 

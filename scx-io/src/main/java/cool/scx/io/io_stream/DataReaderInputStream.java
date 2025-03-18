@@ -34,4 +34,8 @@ public class DataReaderInputStream extends InputStream {
         return dataReader.inputStreamTransferTo(out);
     }
 
+    public PowerfulLinkedDataReader dataReader() {
+        return dataReader;
+    }
+
 }
