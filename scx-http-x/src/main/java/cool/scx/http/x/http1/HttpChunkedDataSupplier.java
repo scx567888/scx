@@ -1,7 +1,6 @@
 package cool.scx.http.x.http1;
 
-import cool.scx.http.exception.ScxHttpException;
-import cool.scx.http.status.HttpStatus;
+import cool.scx.http.exception.ContentTooLargeException;
 import cool.scx.io.data_node.DataNode;
 import cool.scx.io.data_reader.DataReader;
 import cool.scx.io.data_supplier.DataSupplier;
@@ -58,7 +57,7 @@ public class HttpChunkedDataSupplier implements DataSupplier {
     public void checkMaxPayload(int chunkLength) {
         // 检查数据块大小是否超过最大值
         if (position + chunkLength > maxLength) {
-            throw new ScxHttpException(HttpStatus.CONTENT_TOO_LARGE);
+            throw new ContentTooLargeException();
         }
         position += chunkLength;
     }
