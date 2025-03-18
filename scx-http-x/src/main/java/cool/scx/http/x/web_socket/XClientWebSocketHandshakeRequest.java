@@ -73,7 +73,6 @@ public class XClientWebSocketHandshakeRequest implements ScxClientWebSocketHands
         this.headers.connection(ConnectionType.UPGRADE);
         this.headers.add(UPGRADE, "websocket");
         this.headers.add(SEC_WEBSOCKET_KEY, secWebsocketKey);
-        this.headers.add(HOST, "127.0.0.1");
         this.headers.add(SEC_WEBSOCKET_VERSION, "13");
 
         var connection = new Http1ClientConnection(tcpSocket, httpClient.options());
