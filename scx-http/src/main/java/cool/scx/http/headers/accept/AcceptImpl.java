@@ -54,6 +54,17 @@ public class AcceptImpl implements AcceptWritable {
     }
 
     @Override
+    public boolean contains(ScxMediaType mediaType) {
+        // 遍历所有 MediaRange，判断是否有任意一个精确匹配该 MediaType
+        for (var range : mediaRanges) {
+            if (range.exactMatch(mediaType)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
     public Iterator<MediaRange> iterator() {
         return mediaRanges.iterator();
     }
