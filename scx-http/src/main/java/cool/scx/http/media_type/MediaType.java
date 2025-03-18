@@ -14,6 +14,7 @@ public enum MediaType implements ScxMediaType {
     TEXT_HTML("text", "html"),
     TEXT_CSS("text", "css"),
     TEXT_JS("text", "javascript"),
+    TEXT_EVENT_STREAM("text", "event-stream"),
 
     // Application
     APPLICATION_OCTET_STREAM("application", "octet-stream"),
