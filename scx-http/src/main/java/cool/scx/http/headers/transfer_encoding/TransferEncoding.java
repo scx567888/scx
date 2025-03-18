@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static cool.scx.http.media_type.ScxMediaTypeHelper.SEMICOLON_PATTERN;
 import static java.util.Collections.addAll;
 
 /// todo 没有做 分块为最后一个的校验
@@ -22,7 +23,7 @@ public class TransferEncoding implements Iterable<ScxEncodingType> {
     }
 
     public static TransferEncoding parseTransferEncoding(String transferEncodingHeader) {
-        var split = transferEncodingHeader.split(",");
+        var split = SEMICOLON_PATTERN.split(transferEncodingHeader);
         var list = new ArrayList<ScxEncodingType>();
         for (var s : split) {
             list.add(ScxEncodingType.of(s.trim()));
@@ -40,7 +41,7 @@ public class TransferEncoding implements Iterable<ScxEncodingType> {
     }
 
     public String encode() {
-        return encodingTypes.stream().map(ScxEncodingType::value).collect(Collectors.joining(","));
+        return encodingTypes.stream().map(ScxEncodingType::value).collect(Collectors.joining(", "));
     }
 
     public int size() {
