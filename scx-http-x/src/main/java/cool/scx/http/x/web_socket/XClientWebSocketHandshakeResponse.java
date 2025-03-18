@@ -3,10 +3,12 @@ package cool.scx.http.x.web_socket;
 import cool.scx.http.ScxHttpBody;
 import cool.scx.http.ScxHttpClientResponse;
 import cool.scx.http.headers.ScxHttpHeaders;
-import cool.scx.http.status.HttpStatusCode;
+import cool.scx.http.status.ScxHttpStatus;
 import cool.scx.http.web_socket.ScxClientWebSocket;
 import cool.scx.http.web_socket.ScxClientWebSocketHandshakeResponse;
 import cool.scx.http.x.http1.Http1ClientConnection;
+
+import static cool.scx.http.status.HttpStatus.SWITCHING_PROTOCOLS;
 
 public class XClientWebSocketHandshakeResponse implements ScxClientWebSocketHandshakeResponse {
 
@@ -23,7 +25,7 @@ public class XClientWebSocketHandshakeResponse implements ScxClientWebSocketHand
 
     @Override
     public boolean handshakeSucceeded() {
-        return response.status() == HttpStatusCode.SWITCHING_PROTOCOLS;
+        return SWITCHING_PROTOCOLS.equals(response.status());
     }
 
     @Override
@@ -38,7 +40,7 @@ public class XClientWebSocketHandshakeResponse implements ScxClientWebSocketHand
     }
 
     @Override
-    public HttpStatusCode status() {
+    public ScxHttpStatus status() {
         return response.status();
     }
 
