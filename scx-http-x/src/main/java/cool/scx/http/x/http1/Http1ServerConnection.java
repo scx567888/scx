@@ -86,7 +86,7 @@ public class Http1ServerConnection {
                     }
                 }
 
-                var body = new ScxHttpBodyImpl(bodyInputStream, headers, 65535);
+                var body = new ScxHttpBodyImpl(bodyInputStream, headers);
 
                 // 5, 判断是否为 WebSocket 握手请求 并创建对应请求
                 var isWebSocketHandshake = checkIsWebSocketHandshake(requestLine, headers);

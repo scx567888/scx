@@ -3,8 +3,6 @@ package cool.scx.http.x.http1;
 import cool.scx.http.ScxHttpBody;
 import cool.scx.http.headers.ScxHttpHeaders;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -19,16 +17,10 @@ public class ScxHttpBodyImpl implements ScxHttpBody {
     private final InputStream inputStream;
     private final ScxHttpHeaders headers;
 
-    /// @param inputStream   inputStream
-    /// @param headers       headers
-    /// @param maxBufferSize 最大缓冲数量 如果小于 0 则不缓冲
-    public ScxHttpBodyImpl(InputStream inputStream, ScxHttpHeaders headers, int maxBufferSize) {
-        if (maxBufferSize > 0) {
-            this.inputStream = new BufferedInputStream(inputStream, maxBufferSize);
-            this.inputStream.mark(0);
-        } else {
-            this.inputStream = inputStream;
-        }
+    /// @param inputStream inputStream
+    /// @param headers     headers
+    public ScxHttpBodyImpl(InputStream inputStream, ScxHttpHeaders headers) {
+        this.inputStream = inputStream;
         this.headers = headers;
         this.alreadyRead = new AtomicBoolean(false);
     }
@@ -40,20 +32,11 @@ public class ScxHttpBodyImpl implements ScxHttpBody {
 
     @Override
     public InputStream inputStream() {
-        if (inputStream instanceof BufferedInputStream) {
-            try {
-                inputStream.reset();
-                return inputStream;
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        } else {
-            if (alreadyRead.get()) {
-                throw new IllegalStateException("非缓冲模式的 Body 只能读取一次 !!!");
-            }
-            alreadyRead.set(true);
-            return inputStream;
+        if (alreadyRead.get()) {
+            throw new IllegalStateException("非缓冲模式的 Body 只能读取一次 !!!");
         }
+        alreadyRead.set(true);
+        return inputStream;
     }
 
     @Override
