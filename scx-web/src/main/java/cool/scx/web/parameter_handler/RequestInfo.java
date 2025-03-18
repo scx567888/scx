@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import cool.scx.common.multi_map.MultiMap;
-import cool.scx.http.exception.BadRequestException;
 import cool.scx.http.media.multi_part.MultiPartPart;
 import cool.scx.http.media_type.ScxMediaType;
 import cool.scx.http.routing.RoutingContext;
@@ -36,22 +35,6 @@ public final class RequestInfo {
         initBody(ctx, this.contentType);
     }
 
-    public static JsonNode readJson(String jsonStr) {
-        try {
-            return jsonMapper().readTree(jsonStr);
-        } catch (JsonProcessingException e) {
-            throw new BadRequestException(e);
-        }
-    }
-
-    public static JsonNode readXml(String xmlStr) {
-        try {
-            return xmlMapper().readTree(xmlStr);
-        } catch (JsonProcessingException e) {
-            throw new BadRequestException(e);
-        }
-    }
-
     /// 走到这里标识以上的匹配全部失败 , 这里不知道 body 的具体格式 所以进行猜测转换
     ///
     /// @param str a
@@ -75,16 +58,16 @@ public final class RequestInfo {
     /// @param contentType a
     private void initBody(RoutingContext ctx, ScxMediaType contentType) {
         // 除了 MULTIPART_FORM_DATA 其余全部转为 JsonNode 的形式方便后续使用
-        if (APPLICATION_JSON.equalsIgnoreParams(contentType)) {
-            var string = ctx.request().body().asString();
-            this.body = readJson(string);
-        } else if (APPLICATION_XML.equalsIgnoreParams(contentType)) {
-            var string = ctx.request().body().asString();
-            this.body = readXml(string);
-        } else if (APPLICATION_X_WWW_FORM_URLENCODED.equalsIgnoreParams(contentType)) {
+        if (APPLICATION_JSON.equalsIgnoreParams(contentType) || APPLICATION_XML.equalsIgnoreParams(contentType)) {
+            this.body = ctx.request().body().asJsonNode();
+            return;
+        }
+        if (APPLICATION_X_WWW_FORM_URLENCODED.equalsIgnoreParams(contentType)) {
             var formParams = ctx.request().body().asFormParams();
             this.body = jsonMapper().convertValue(formParams.toMap(), JsonNode.class);
-        } else if (MULTIPART_FORM_DATA.equalsIgnoreParams(contentType)) {
+            return;
+        }
+        if (MULTIPART_FORM_DATA.equalsIgnoreParams(contentType)) {
             //这里我们分为两类
             var m = new MultiMap<String, String>();
             var f = new MultiMap<String, MultiPartPart>();
@@ -99,10 +82,10 @@ public final class RequestInfo {
             }
             this.body = jsonMapper().convertValue(m.toMultiValueMap(), JsonNode.class);
             this.uploadFiles = f;
-        } else {
-            var string = ctx.request().body().asString();
-            this.body = string != null ? tryReadOrTextNode(string) : null;
+            return;
         }
+        var string = ctx.request().body().asString();
+        this.body = string != null ? tryReadOrTextNode(string) : null;
     }
 
     public JsonNode pathParams() {
