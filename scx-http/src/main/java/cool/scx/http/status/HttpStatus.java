@@ -5,7 +5,7 @@ package cool.scx.http.status;
 /// @author scx567888
 /// @version 0.0.1
 /// @see <a href="https://www.rfc-editor.org/rfc/rfc9110#name-status-codes">https://www.rfc-editor.org/rfc/rfc9110#name-status-codes</a>
-public enum HttpStatus {
+public enum HttpStatus implements ScxHttpStatus {
 
     CONTINUE(100, "Continue"),
     SWITCHING_PROTOCOLS(101, "Switching Protocols"),
@@ -93,10 +93,12 @@ public enum HttpStatus {
         return MAP[code];
     }
 
+    @Override
     public int code() {
         return code;
     }
 
+    @Override
     public String description() {
         return description;
     }
