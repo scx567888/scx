@@ -1,12 +1,12 @@
 package cool.scx.http.exception;
 
-import cool.scx.http.status.HttpStatusCode;
+import cool.scx.http.status.HttpStatus;
 
 /// ScxHttpException
-/// 这是一个基于 [HttpStatusCode] 的运行时异常类，用于表示 HTTP 请求处理过程中的异常情况。
+/// 这是一个基于 [HttpStatus] 的运行时异常类，用于表示 HTTP 请求处理过程中的异常情况。
 ///
 /// 该异常旨在处理 HTTP 规范中 4xx（客户端错误）和 5xx（服务器错误）序列的状态码，表示请求失败的各种可能原因。
-/// 通过 [HttpStatusCode] 提供了详细的状态码和描述信息，使异常的语义更加清晰。
+/// 通过 [HttpStatus] 提供了详细的状态码和描述信息，使异常的语义更加清晰。
 ///
 /// ### 注意：
 ///
@@ -15,7 +15,7 @@ import cool.scx.http.status.HttpStatusCode;
 /// ### 适用场景：
 ///
 ///   - 在 HTTP 请求处理失败时，抛出此异常以便调用方捕获并作出相应处理。
-///   - 结合 [HttpStatusCode] 使用，可以快速标识具体的错误类型并生成标准化的响应。
+///   - 结合 [HttpStatus] 使用，可以快速标识具体的错误类型并生成标准化的响应。
 ///
 /// ### 使用示例：
 /// ```java
@@ -26,30 +26,30 @@ import cool.scx.http.status.HttpStatusCode;
 /// @version 0.0.1
 public class ScxHttpException extends RuntimeException {
 
-    private final HttpStatusCode statusCode;
+    private final HttpStatus status;
 
-    public ScxHttpException(HttpStatusCode statusCode) {
+    public ScxHttpException(HttpStatus status) {
         super();
-        this.statusCode = statusCode;
+        this.status = status;
     }
 
-    public ScxHttpException(HttpStatusCode statusCode, String message) {
+    public ScxHttpException(HttpStatus status, String message) {
         super(message);
-        this.statusCode = statusCode;
+        this.status = status;
     }
 
-    public ScxHttpException(HttpStatusCode statusCode, Throwable cause) {
+    public ScxHttpException(HttpStatus status, Throwable cause) {
         super(cause);
-        this.statusCode = statusCode;
+        this.status = status;
     }
 
-    public ScxHttpException(HttpStatusCode statusCode, String message, Throwable cause) {
+    public ScxHttpException(HttpStatus status, String message, Throwable cause) {
         super(message, cause);
-        this.statusCode = statusCode;
+        this.status = status;
     }
 
-    public final HttpStatusCode statusCode() {
-        return this.statusCode;
+    public final HttpStatus status() {
+        return this.status;
     }
 
 }

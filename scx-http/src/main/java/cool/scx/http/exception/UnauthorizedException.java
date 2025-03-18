@@ -1,6 +1,6 @@
 package cool.scx.http.exception;
 
-import static cool.scx.http.status.HttpStatusCode.UNAUTHORIZED;
+import static cool.scx.http.status.HttpStatus.UNAUTHORIZED;
 
 /// UnauthorizedException
 ///
