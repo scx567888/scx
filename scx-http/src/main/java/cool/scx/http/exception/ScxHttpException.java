@@ -19,7 +19,7 @@ import cool.scx.http.status.ScxHttpStatus;
 ///
 /// ### 使用示例：
 /// ```java
-/// throw new ScxHttpException(HttpStatusCode.NOT_FOUND, "Requested resource not found");
+/// throw new ScxHttpException(HttpStatus.NOT_FOUND, "Requested resource not found");
 ///```
 ///
 /// @author scx567888
