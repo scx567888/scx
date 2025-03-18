@@ -1,7 +1,6 @@
 package cool.scx.web.exception_handler;
 
 import cool.scx.common.exception.ScxExceptionHelper;
-import cool.scx.common.util.ObjectUtils;
 import cool.scx.http.exception.ScxHttpException;
 import cool.scx.http.media_type.MediaType;
 import cool.scx.http.media_type.ScxMediaType;
@@ -53,28 +52,29 @@ public class ScxHttpExceptionHandler implements ExceptionHandler {
         }
         var accepts = routingContext.request().headers().accept();
         //根据 accept 返回不同的错误信息
-        MediaType m = APPLICATION_JSON;
+        MediaType m;
         if (accepts != null) {
             var mediaType = accepts.negotiate(APPLICATION_JSON, TEXT_HTML);
-            if (mediaType != null) {
-                m = mediaType;
-            }
+            m = mediaType != null ? mediaType : APPLICATION_JSON;
+        } else {
+            m = APPLICATION_JSON;
         }
+
         if (m == TEXT_HTML) {
             var htmlStr = String.format(htmlTemplate, statusCode.description(), statusCode, statusCode.description(), info);
             routingContext.response()
                     .contentType(ScxMediaType.of(TEXT_HTML).charset(UTF_8))
-                    .status(statusCode).send(htmlStr);
+                    .status(statusCode)
+                    .send(htmlStr);
         } else {
             var tempMap = new LinkedHashMap<>();
             tempMap.put("statusCode", statusCode);
             tempMap.put("title", statusCode.description());
             tempMap.put("info", info);
-            var jsonStr = ObjectUtils.toJson(tempMap, "");
             routingContext.response()
                     .contentType(ScxMediaType.of(APPLICATION_JSON).charset(UTF_8))
                     .status(statusCode)
-                    .send(jsonStr);
+                    .send(tempMap);
         }
     }
 
