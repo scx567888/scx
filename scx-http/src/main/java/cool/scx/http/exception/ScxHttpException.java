@@ -2,15 +2,12 @@ package cool.scx.http.exception;
 
 import cool.scx.http.status.HttpStatusCode;
 
-/// 当我们的代码中有需要向客户端返回错误信息的时候
-///
-/// 推荐创建 HttpRequestException 的实现类并抛出异常 , 而不是手动进行异常的处理与响应的返回
+/// ScxHttpException
 ///
 /// @author scx567888
 /// @version 0.0.1
 public class ScxHttpException extends RuntimeException {
 
-    /// http 状态码
     protected final HttpStatusCode statusCode;
 
     public ScxHttpException(HttpStatusCode statusCode) {
