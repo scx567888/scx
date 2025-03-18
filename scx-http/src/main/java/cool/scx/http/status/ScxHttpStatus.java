@@ -12,7 +12,7 @@ public sealed interface ScxHttpStatus permits HttpStatus, ScxHttpStatusImpl {
         // 优先使用 HttpStatus
         var s = HttpStatus.find(code);
         // 描述相同时也 直接使用 HttpStatus
-        return s != null && (description == null || s.description().equals(description)) ? s : new ScxHttpStatusImpl(code);
+        return s != null && (description == null || s.description().equals(description)) ? s : new ScxHttpStatusImpl(code, description);
     }
 
     int code();

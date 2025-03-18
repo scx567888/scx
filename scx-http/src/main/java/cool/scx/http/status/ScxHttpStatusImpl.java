@@ -5,5 +5,5 @@ public record ScxHttpStatusImpl(int code, String description) implements ScxHttp
     public ScxHttpStatusImpl(int code) {
         this(code, null);
     }
-    
+
 }
