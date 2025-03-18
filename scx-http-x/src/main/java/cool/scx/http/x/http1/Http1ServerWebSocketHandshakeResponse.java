@@ -3,7 +3,7 @@ package cool.scx.http.x.http1;
 import cool.scx.http.ScxHttpServerResponse;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.headers.connection.ConnectionType;
-import cool.scx.http.status.HttpStatusCode;
+import cool.scx.http.status.ScxHttpStatus;
 import cool.scx.http.web_socket.ScxServerWebSocket;
 import cool.scx.http.web_socket.ScxServerWebSocketHandshakeRequest;
 import cool.scx.http.web_socket.ScxServerWebSocketHandshakeResponse;
@@ -55,7 +55,7 @@ public class Http1ServerWebSocketHandshakeResponse implements ScxServerWebSocket
     }
 
     @Override
-    public HttpStatusCode status() {
+    public ScxHttpStatus status() {
         return response.status();
     }
 
@@ -65,7 +65,7 @@ public class Http1ServerWebSocketHandshakeResponse implements ScxServerWebSocket
     }
 
     @Override
-    public ScxHttpServerResponse status(HttpStatusCode code) {
+    public ScxHttpServerResponse status(ScxHttpStatus code) {
         return response.status(code);
     }
 
