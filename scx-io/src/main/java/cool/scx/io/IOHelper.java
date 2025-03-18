@@ -1,5 +1,9 @@
 package cool.scx.io;
 
+import cool.scx.io.data_reader.LinkedDataReader;
+import cool.scx.io.data_supplier.InputStreamDataSupplier;
+import cool.scx.io.io_stream.DataReaderInputStream;
+
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
@@ -11,6 +15,15 @@ import java.nio.file.Path;
 /// @author scx567888
 /// @version 0.0.1
 public final class IOHelper {
+
+    /// 此方法会尽量脱壳 防止过多的包装层
+    public static LinkedDataReader inputStreamToDataReader(InputStream inputStream) {
+        if (inputStream instanceof DataReaderInputStream d) {
+            return d.dataReader();
+        } else {
+            return new LinkedDataReader(new InputStreamDataSupplier(inputStream));
+        }
+    }
 
     public static long getFileSize(Path path) {
         try {
