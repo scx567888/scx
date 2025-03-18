@@ -57,9 +57,9 @@ public class JsonNodeWriter implements MediaWriter {
         //根据类型确定内容长度
         try {
             if (APPLICATION_JSON.equalsIgnoreParams(contentType)) {
-                data = jsonMapper().writeValueAsBytes(jsonNode);
+                data = jsonMapper().writeValueAsString(jsonNode).getBytes(UTF_8);
             } else if (APPLICATION_XML.equalsIgnoreParams(contentType)) {
-                data = xmlMapper().writeValueAsBytes(jsonNode);
+                data = xmlMapper().writeValueAsString(jsonNode).getBytes(UTF_8);
             } else {
                 throw new IllegalArgumentException("Unsupported media type: " + contentType);
             }
