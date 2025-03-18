@@ -43,7 +43,7 @@ public class Http1ServerResponseOutputStream extends OutputStream {
     public void close() throws IOException {
         //3, 只有明确表示 close 的时候我们才关闭
         var connection = headers.connection();
-        if (connection.contains(CLOSE)) {
+        if (connection != null && connection.contains(CLOSE)) {
             this.connection.close();// 服务器也需要显式关闭连接
         }
     }
