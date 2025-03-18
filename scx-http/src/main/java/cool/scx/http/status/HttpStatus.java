@@ -1,11 +1,11 @@
 package cool.scx.http.status;
 
-/// HttpStatusCode
+/// HttpStatus
 ///
 /// @author scx567888
 /// @version 0.0.1
 /// @see <a href="https://www.rfc-editor.org/rfc/rfc9110#name-status-codes">https://www.rfc-editor.org/rfc/rfc9110#name-status-codes</a>
-public enum HttpStatusCode {
+public enum HttpStatus implements ScxHttpStatus {
 
     CONTINUE(100, "Continue"),
     SWITCHING_PROTOCOLS(101, "Switching Protocols"),
@@ -54,20 +54,20 @@ public enum HttpStatusCode {
     HTTP_VERSION_NOT_SUPPORTED(505, "HTTP Version Not Supported");
 
     /// 存储 code 和 对应枚举的映射
-    private static final HttpStatusCode[] MAP = initMap();
+    private static final HttpStatus[] MAP = initMap();
 
     private final int code;
 
     private final String description;
 
-    HttpStatusCode(int code, String description) {
+    HttpStatus(int code, String description) {
         this.code = code;
         this.description = description;
     }
 
-    private static HttpStatusCode[] initMap() {
-        var m = new HttpStatusCode[506];
-        var values = HttpStatusCode.values();
+    private static HttpStatus[] initMap() {
+        var m = new HttpStatus[506];
+        var values = HttpStatus.values();
         for (var v : values) {
             m[v.code] = v;
         }
@@ -76,7 +76,7 @@ public enum HttpStatusCode {
 
     /// @param code c
     /// @return 未找到时 抛出异常
-    public static HttpStatusCode of(int code) {
+    public static HttpStatus of(int code) {
         var c = find(code);
         if (c == null) {
             throw new IllegalArgumentException("Invalid HTTP status code: " + code);
@@ -86,7 +86,7 @@ public enum HttpStatusCode {
 
     /// @param code c
     /// @return 未找到时 返回 null
-    public static HttpStatusCode find(int code) {
+    public static HttpStatus find(int code) {
         if (code < 0 || code > 505) {
             return null;
         }
