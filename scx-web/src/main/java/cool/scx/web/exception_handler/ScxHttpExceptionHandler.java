@@ -9,7 +9,6 @@ import cool.scx.http.status.HttpStatusCode;
 import java.lang.System.Logger;
 import java.util.LinkedHashMap;
 
-import static cool.scx.http.media_type.MediaType.APPLICATION_JSON;
 import static cool.scx.http.media_type.MediaType.TEXT_HTML;
 import static java.lang.System.Logger.Level.ERROR;
 import static java.nio.charset.StandardCharsets.UTF_8;
