@@ -57,6 +57,7 @@ public class JsonNodeWriter implements MediaWriter {
         //根据类型确定内容长度
         try {
             if (APPLICATION_JSON.equalsIgnoreParams(contentType)) {
+                // 这里直接 writeValueAsBytes 的话会导致 emoji 表情符被 转义 所以这里转换成 字符串 然后在处理
                 data = jsonMapper().writeValueAsString(jsonNode).getBytes(UTF_8);
             } else if (APPLICATION_XML.equalsIgnoreParams(contentType)) {
                 data = xmlMapper().writeValueAsString(jsonNode).getBytes(UTF_8);
