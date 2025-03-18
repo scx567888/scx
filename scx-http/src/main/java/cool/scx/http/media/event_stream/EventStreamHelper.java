@@ -7,6 +7,8 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class EventStreamHelper {
 
+    public static final byte[] LF_BYTES = "\n".getBytes();
+
     public static void writeToOutputStream(SseEvent sseEvent, OutputStream out) throws IOException {
         // 获取事件的各个部分
         var event = sseEvent.event();
