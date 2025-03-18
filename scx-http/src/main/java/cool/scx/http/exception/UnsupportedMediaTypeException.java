@@ -2,7 +2,7 @@ package cool.scx.http.exception;
 
 import static cool.scx.http.status.HttpStatusCode.UNSUPPORTED_MEDIA_TYPE;
 
-/// 415 参数异常
+/// UnsupportedMediaTypeException
 ///
 /// @author scx567888
 /// @version 0.0.1

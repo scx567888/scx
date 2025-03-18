@@ -2,7 +2,7 @@ package cool.scx.http.exception;
 
 import static cool.scx.http.status.HttpStatusCode.INTERNAL_SERVER_ERROR;
 
-/// 服务器内部异常
+/// InternalServerErrorException
 ///
 /// @author scx567888
 /// @version 0.0.1

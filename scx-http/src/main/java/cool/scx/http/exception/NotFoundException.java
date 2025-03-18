@@ -2,7 +2,7 @@ package cool.scx.http.exception;
 
 import static cool.scx.http.status.HttpStatusCode.NOT_FOUND;
 
-/// 404 not found 未找到异常
+/// NotFoundException
 ///
 /// @author scx567888
 /// @version 0.0.1

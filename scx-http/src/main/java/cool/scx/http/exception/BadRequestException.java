@@ -2,7 +2,7 @@ package cool.scx.http.exception;
 
 import static cool.scx.http.status.HttpStatusCode.BAD_REQUEST;
 
-/// 请求错误异常
+/// BadRequestException
 ///
 /// @author scx567888
 /// @version 0.0.1
