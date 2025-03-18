@@ -23,7 +23,7 @@ import java.io.OutputStream;
 import java.util.Arrays;
 
 import static cool.scx.http.headers.HttpFieldName.HOST;
-import static cool.scx.http.headers.HttpFieldName.TRANSFER_ENCODING;
+import static cool.scx.http.headers.transfer_encoding.EncodingType.CHUNKED;
 import static cool.scx.http.method.HttpMethod.GET;
 import static cool.scx.http.x.http1.Http1Helper.*;
 import static java.io.OutputStream.nullOutputStream;
@@ -69,7 +69,7 @@ public class Http1ClientConnection {
         if (hasBody) {
             //没有长度 我们就设置为 分块传输
             if (requestHeaders.contentLength() == null) {
-                requestHeaders.set(TRANSFER_ENCODING, "chunked");
+                requestHeaders.transferEncoding(CHUNKED);
             }
         }
 

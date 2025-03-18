@@ -1,6 +1,6 @@
 package cool.scx.web.vo;
 
-import cool.scx.http.headers.content_type.ContentType;
+import cool.scx.http.media_type.ScxMediaType;
 import cool.scx.http.routing.RoutingContext;
 
 import static cool.scx.common.util.ObjectUtils.toJson;
@@ -25,9 +25,9 @@ public final class Json implements BaseVo {
 
     @Override
     public void accept(RoutingContext context) {
-        context.request().response()
-                .contentType(ContentType.of(APPLICATION_JSON).charset(UTF_8))
-                .send(toJson(data, ""));
+        context.response()
+                .contentType(ScxMediaType.of(APPLICATION_JSON).charset(UTF_8))
+                .send(data);
     }
 
 }

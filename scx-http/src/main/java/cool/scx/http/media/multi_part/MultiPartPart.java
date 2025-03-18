@@ -3,8 +3,8 @@ package cool.scx.http.media.multi_part;
 import cool.scx.http.ScxHttpBody;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.content_disposition.ContentDisposition;
-import cool.scx.http.headers.content_type.ContentType;
 import cool.scx.http.media.MediaReader;
+import cool.scx.http.media_type.ScxMediaType;
 import cool.scx.io.IOHelper;
 
 import java.io.InputStream;
@@ -52,7 +52,7 @@ public interface MultiPartPart extends ScxHttpBody {
         return t.read(inputStream(), headers());
     }
 
-    default ContentType contentType() {
+    default ScxMediaType contentType() {
         return headers().contentType();
     }
 

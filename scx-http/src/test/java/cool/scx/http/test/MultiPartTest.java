@@ -2,9 +2,9 @@ package cool.scx.http.test;
 
 import cool.scx.common.util.ArrayUtils;
 import cool.scx.http.headers.ScxHttpHeaders;
-import cool.scx.http.headers.content_type.ContentType;
 import cool.scx.http.media.multi_part.*;
 import cool.scx.http.media_type.MediaType;
+import cool.scx.http.media_type.ScxMediaType;
 import org.testng.annotations.Test;
 
 import java.io.ByteArrayInputStream;
@@ -47,7 +47,7 @@ public class MultiPartTest {
             var i = new MultiPartStreamCachedReader();
 
             var s = new ByteArrayInputStream(byteArray);
-            MultiPart read = i.read(s, ScxHttpHeaders.of().contentType(ContentType.of(MediaType.MULTIPART_FORM_DATA).boundary("wwwwwwwwww")));
+            MultiPart read = i.read(s, ScxHttpHeaders.of().contentType(ScxMediaType.of(MediaType.MULTIPART_FORM_DATA).boundary("wwwwwwwwww")));
 
             for (MultiPartPart multiPartPart : read) {
 //                System.out.println(multiPartPart.name() + " : " + multiPartPart.asBytes().length);
@@ -62,7 +62,7 @@ public class MultiPartTest {
             var i = new MultiPartStreamReader();
 
             var s = new ByteArrayInputStream(byteArray);
-            MultiPart read = i.read(s, ScxHttpHeaders.of().contentType(ContentType.of(MediaType.MULTIPART_FORM_DATA).boundary("wwwwwwwwww")));
+            MultiPart read = i.read(s, ScxHttpHeaders.of().contentType(ScxMediaType.of(MediaType.MULTIPART_FORM_DATA).boundary("wwwwwwwwww")));
 
             for (MultiPartPart multiPartPart : read) {
 //                System.out.println(multiPartPart.name() + " : " + multiPartPart.asBytes().length);

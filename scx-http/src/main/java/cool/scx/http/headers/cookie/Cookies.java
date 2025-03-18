@@ -10,6 +10,12 @@ public interface Cookies extends Iterable<Cookie> {
         return new CookiesImpl();
     }
 
+    static CookiesImpl of(Cookies oldCookies) {
+        var c= new CookiesImpl();
+        oldCookies.forEach(c::add);
+        return c;
+    }
+
     /// cookie 头
     ///
     /// @param cookieStr c

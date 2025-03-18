@@ -4,6 +4,7 @@ import cool.scx.common.util.Base64Utils;
 import cool.scx.common.util.RandomUtils;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
+import cool.scx.http.headers.connection.ConnectionType;
 import cool.scx.http.media.empty.EmptyWriter;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.uri.ScxURIWritable;
@@ -69,10 +70,9 @@ public class XClientWebSocketHandshakeRequest implements ScxClientWebSocketHands
         var secWebsocketKey = Base64Utils.encodeToString(RandomUtils.randomBytes(16));
 
         //2, 创建 请求头
-        this.headers.add(CONNECTION, "Upgrade");
+        this.headers.connection(ConnectionType.UPGRADE);
         this.headers.add(UPGRADE, "websocket");
         this.headers.add(SEC_WEBSOCKET_KEY, secWebsocketKey);
-        this.headers.add(HOST, "127.0.0.1");
         this.headers.add(SEC_WEBSOCKET_VERSION, "13");
 
         var connection = new Http1ClientConnection(tcpSocket, httpClient.options());

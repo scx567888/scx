@@ -2,6 +2,7 @@ package cool.scx.http.x.http1;
 
 import cool.scx.http.ScxHttpServerResponse;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
+import cool.scx.http.headers.connection.ConnectionType;
 import cool.scx.http.status.HttpStatusCode;
 import cool.scx.http.web_socket.ScxServerWebSocket;
 import cool.scx.http.web_socket.ScxServerWebSocketHandshakeRequest;
@@ -11,7 +12,8 @@ import cool.scx.http.x.web_socket.ServerWebSocket;
 import java.io.OutputStream;
 
 import static cool.scx.http.HttpHelper.generateSecWebSocketAccept;
-import static cool.scx.http.headers.HttpFieldName.*;
+import static cool.scx.http.headers.HttpFieldName.SEC_WEBSOCKET_ACCEPT;
+import static cool.scx.http.headers.HttpFieldName.UPGRADE;
 
 public class Http1ServerWebSocketHandshakeResponse implements ScxServerWebSocketHandshakeResponse {
 
@@ -31,7 +33,7 @@ public class Http1ServerWebSocketHandshakeResponse implements ScxServerWebSocket
         // 实现握手接受逻辑，返回适当的响应头
         if (webSocket == null) {
             setHeader(UPGRADE, "websocket");
-            setHeader(CONNECTION, "Upgrade");
+            headers().connection(ConnectionType.UPGRADE);
             setHeader(SEC_WEBSOCKET_ACCEPT, generateSecWebSocketAccept(request.secWebSocketKey()));
             status(101).send();
 

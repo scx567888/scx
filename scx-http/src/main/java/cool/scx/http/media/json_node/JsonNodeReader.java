@@ -26,16 +26,15 @@ public class JsonNodeReader implements MediaReader<JsonNode> {
     public JsonNode read(InputStream inputStream, ScxHttpHeaders requestHeaders) {
         var str = STRING_READER.read(inputStream, requestHeaders);
         var contentType = requestHeaders.contentType();
-        var mediaType = contentType != null ? contentType.mediaType() : null;
         //猜测一下
-        if (APPLICATION_JSON.equals(mediaType)) {
+        if (APPLICATION_JSON.equalsIgnoreParams(contentType)) {
             try {
                 return jsonMapper().readTree(str);
             } catch (JsonProcessingException e) {
                 throw new BadRequestException(e);
             }
         }
-        if (APPLICATION_XML.equals(mediaType)) {
+        if (APPLICATION_XML.equalsIgnoreParams(contentType)) {
             try {
                 return xmlMapper().readTree(str);
             } catch (JsonProcessingException e) {

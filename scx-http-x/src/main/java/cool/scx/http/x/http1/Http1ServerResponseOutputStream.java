@@ -5,7 +5,7 @@ import cool.scx.http.headers.ScxHttpHeaders;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import static cool.scx.http.headers.HttpFieldName.CONNECTION;
+import static cool.scx.http.headers.connection.ConnectionType.CLOSE;
 
 public class Http1ServerResponseOutputStream extends OutputStream {
 
@@ -42,8 +42,8 @@ public class Http1ServerResponseOutputStream extends OutputStream {
     @Override
     public void close() throws IOException {
         //3, 只有明确表示 close 的时候我们才关闭
-        var connection = headers.get(CONNECTION);
-        if ("close".equalsIgnoreCase(connection)) {
+        var connection = headers.connection();
+        if (connection != null && connection.contains(CLOSE)) {
             this.connection.close();// 服务器也需要显式关闭连接
         }
     }

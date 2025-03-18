@@ -1,10 +1,12 @@
 package cool.scx.http.headers;
 
-import cool.scx.http.headers.accept.Accepts;
+import cool.scx.http.headers.accept.Accept;
+import cool.scx.http.headers.connection.Connection;
 import cool.scx.http.headers.content_disposition.ContentDisposition;
-import cool.scx.http.headers.content_type.ContentType;
 import cool.scx.http.headers.cookie.Cookie;
 import cool.scx.http.headers.cookie.Cookies;
+import cool.scx.http.headers.transfer_encoding.TransferEncoding;
+import cool.scx.http.media_type.ScxMediaType;
 import cool.scx.http.parameters.Parameters;
 
 import java.util.List;
@@ -44,19 +46,23 @@ public interface ScxHttpHeaders extends Parameters<ScxHttpHeaderName, String> {
     }
 
     default Cookies cookies() {
-        return Cookies.of(get(COOKIE));
+        var c = get(COOKIE);
+        return c != null ? Cookies.of(c) : null;
     }
 
     default Cookies setCookies() {
-        return Cookies.of(getAll(SET_COOKIE).toArray(String[]::new));
+        var c = getAll(SET_COOKIE);
+        return !c.isEmpty() ? Cookies.of(c.toArray(String[]::new)) : null;
     }
 
-    default ContentType contentType() {
-        return ContentType.of(get(CONTENT_TYPE));
+    default ScxMediaType contentType() {
+        var v = get(CONTENT_TYPE);
+        return v != null ? ScxMediaType.of(v) : null;
     }
 
     default ContentDisposition contentDisposition() {
-        return ContentDisposition.of(get(CONTENT_DISPOSITION));
+        var c = get(CONTENT_DISPOSITION);
+        return c != null ? ContentDisposition.of(c) : null;
     }
 
     default Long contentLength() {
@@ -65,15 +71,28 @@ public interface ScxHttpHeaders extends Parameters<ScxHttpHeaderName, String> {
     }
 
     default Cookie getCookie(String name) {
-        return cookies().get(name);
+        var v = cookies();
+        return v != null ? v.get(name) : null;
     }
 
     default Cookie getSetCookie(String name) {
-        return setCookies().get(name);
+        var v = setCookies();
+        return v != null ? v.get(name) : null;
     }
 
-    default Accepts accepts() {
-        return Accepts.of(get(ACCEPT));
+    default Accept accept() {
+        var c = get(ACCEPT);
+        return c != null ? Accept.of(c) : null;
+    }
+
+    default TransferEncoding transferEncoding() {
+        var c = get(TRANSFER_ENCODING);
+        return c != null ? TransferEncoding.parseTransferEncoding(c) : null;
+    }
+
+    default Connection connection() {
+        var c = get(CONNECTION);
+        return c != null ? Connection.parseConnection(c) : null;
     }
 
     default String encode() {

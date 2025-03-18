@@ -1,17 +1,10 @@
 package cool.scx.web.vo;
 
 import cool.scx.common.util.ObjectUtils;
-import cool.scx.http.headers.content_type.ContentType;
 import cool.scx.http.routing.RoutingContext;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import static cool.scx.common.util.StringUtils.startsWithIgnoreCase;
-import static cool.scx.http.headers.HttpFieldName.ACCEPT;
-import static cool.scx.http.media_type.MediaType.APPLICATION_JSON;
-import static cool.scx.http.media_type.MediaType.APPLICATION_XML;
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 /// 一般用来表达业务逻辑
 ///
@@ -64,17 +57,7 @@ public abstract class Result implements BaseVo {
 
     @Override
     public void accept(RoutingContext context) {
-        var accept = context.request().getHeader(ACCEPT);
-        if (accept != null && startsWithIgnoreCase(accept, APPLICATION_XML.value())) {
-            // 只有明确指定 接受参数是 application/xml 的才返回 xml
-            context.response()
-                    .contentType(ContentType.of(APPLICATION_XML).charset(UTF_8))
-                    .send(toXml(""));
-        } else { // 其余全部返回 json
-            context.request().response()
-                    .contentType(ContentType.of(APPLICATION_JSON).charset(UTF_8))
-                    .send(toJson(""));
-        }
+        context.response().send(body());
     }
 
     public abstract Body<?> body();

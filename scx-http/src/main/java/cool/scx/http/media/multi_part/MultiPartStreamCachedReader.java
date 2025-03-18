@@ -2,10 +2,11 @@ package cool.scx.http.media.multi_part;
 
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.media.MediaReader;
-import cool.scx.http.media_type.MediaType;
 
 import java.io.InputStream;
 import java.nio.file.Path;
+
+import static cool.scx.http.media_type.MediaType.MULTIPART_FORM_DATA;
 
 /// MultiPartStreamCachedReader
 ///
@@ -31,7 +32,7 @@ public class MultiPartStreamCachedReader implements MediaReader<MultiPart> {
         if (contentType == null) {
             throw new IllegalArgumentException("No Content-Type header found");
         }
-        if (contentType.mediaType() != MediaType.MULTIPART_FORM_DATA) {
+        if (!MULTIPART_FORM_DATA.equalsIgnoreParams(contentType)) {
             throw new IllegalArgumentException("Content-Type is not multipart/form-data");
         }
         var boundary = contentType.boundary();

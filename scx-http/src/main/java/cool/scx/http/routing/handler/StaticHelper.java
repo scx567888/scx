@@ -1,10 +1,9 @@
 package cool.scx.http.routing.handler;
 
 import cool.scx.http.exception.NotFoundException;
-import cool.scx.http.headers.content_type.ContentType;
-import cool.scx.http.headers.content_type.ContentTypeWritable;
 import cool.scx.http.headers.range.Range;
 import cool.scx.http.media_type.FileFormat;
+import cool.scx.http.media_type.ScxMediaType;
 import cool.scx.http.routing.RoutingContext;
 import cool.scx.io.IOHelper;
 
@@ -81,13 +80,13 @@ public class StaticHelper {
 
     }
 
-    public static ContentTypeWritable getMediaTypeByFile(Path path) {
+    public static ScxMediaType getMediaTypeByFile(Path path) {
         var fileFormat = FileFormat.findByFileName(path.getFileName().toString());
         if (fileFormat == null) {
             fileFormat = FileFormat.BIN;
         }
         var mediaType = fileFormat.mediaType();
-        var contentType = ContentType.of(mediaType);
+        var contentType = ScxMediaType.of(mediaType);
         if (mediaType == TEXT_PLAIN || mediaType == TEXT_HTML || mediaType == APPLICATION_XML || mediaType == APPLICATION_JSON) {
             contentType.charset(StandardCharsets.UTF_8);
         }

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.http.headers.ScxHttpHeaderName;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
-import cool.scx.http.headers.content_type.ContentType;
 import cool.scx.http.headers.cookie.Cookie;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.media.byte_array.ByteArrayWriter;
@@ -136,22 +135,12 @@ public interface ScxHttpClientRequest {
         return this;
     }
 
-    default ContentType contentType() {
+    default ScxMediaType contentType() {
         return headers().contentType();
-    }
-
-    default ScxHttpClientRequest contentType(ContentType contentType) {
-        headers().contentType(contentType);
-        return this;
     }
 
     default ScxHttpClientRequest contentType(ScxMediaType mediaType) {
         headers().contentType(mediaType);
-        return this;
-    }
-
-    default ScxHttpClientRequest contentType(ScxMediaType mediaType, Charset charset) {
-        headers().contentType(mediaType, charset);
         return this;
     }
 

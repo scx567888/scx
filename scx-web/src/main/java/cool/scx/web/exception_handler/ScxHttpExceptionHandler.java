@@ -1,17 +1,14 @@
 package cool.scx.web.exception_handler;
 
 import cool.scx.common.exception.ScxExceptionHelper;
-import cool.scx.common.util.ObjectUtils;
 import cool.scx.http.exception.ScxHttpException;
-import cool.scx.http.headers.content_type.ContentType;
+import cool.scx.http.media_type.ScxMediaType;
 import cool.scx.http.routing.RoutingContext;
 import cool.scx.http.status.HttpStatusCode;
 
 import java.lang.System.Logger;
 import java.util.LinkedHashMap;
 
-import static cool.scx.common.util.StringUtils.startsWithIgnoreCase;
-import static cool.scx.http.headers.HttpFieldName.ACCEPT;
 import static cool.scx.http.media_type.MediaType.APPLICATION_JSON;
 import static cool.scx.http.media_type.MediaType.TEXT_HTML;
 import static java.lang.System.Logger.Level.ERROR;
@@ -52,23 +49,22 @@ public class ScxHttpExceptionHandler implements ExceptionHandler {
         if (info == null) {
             info = "";
         }
-        var accept = routingContext.request().getHeader(ACCEPT);
-        //根据 accept 返回不同的错误信息
-        if (accept != null && startsWithIgnoreCase(accept, TEXT_HTML.value())) {
+        var accepts = routingContext.request().headers().accept();
+        //根据 accept 返回不同的错误信息 只有明确包含的时候才返回 html
+        if (accepts != null && accepts.contains(TEXT_HTML)) {
             var htmlStr = String.format(htmlTemplate, statusCode.description(), statusCode, statusCode.description(), info);
             routingContext.response()
-                    .contentType(ContentType.of(TEXT_HTML).charset(UTF_8))
-                    .status(statusCode).send(htmlStr);
+                    .contentType(ScxMediaType.of(TEXT_HTML).charset(UTF_8))
+                    .status(statusCode)
+                    .send(htmlStr);
         } else {
             var tempMap = new LinkedHashMap<>();
             tempMap.put("statusCode", statusCode);
             tempMap.put("title", statusCode.description());
             tempMap.put("info", info);
-            var jsonStr = ObjectUtils.toJson(tempMap, "");
             routingContext.response()
-                    .contentType(ContentType.of(APPLICATION_JSON).charset(UTF_8))
                     .status(statusCode)
-                    .send(jsonStr);
+                    .send(tempMap);
         }
     }
 

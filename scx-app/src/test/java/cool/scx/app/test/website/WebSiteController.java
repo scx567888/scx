@@ -185,7 +185,7 @@ public class WebSiteController {
     @ScxRoute(methods = HttpMethod.GET)
     public BaseVo bigJson() {
         var users = carService1.find();
-        return Result.ok().put("items", users);
+        return Json.of(users);
     }
 
     @ScxRoute(methods = HttpMethod.GET)

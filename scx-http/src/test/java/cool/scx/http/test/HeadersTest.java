@@ -1,8 +1,8 @@
 package cool.scx.http.test;
 
 import cool.scx.http.headers.ScxHttpHeaders;
-import cool.scx.http.headers.content_type.ContentType;
 import cool.scx.http.media_type.MediaType;
+import cool.scx.http.media_type.ScxMediaType;
 
 import java.nio.charset.StandardCharsets;
 
@@ -18,7 +18,7 @@ public class HeadersTest {
             var h = ScxHttpHeaders.of();
             h.add("Content-Disposition", "form-data; name=myname");
             h.contentLength(100);
-            h.contentType(ContentType.of(MediaType.APPLICATION_JSON).charset(StandardCharsets.UTF_8));
+            h.contentType(ScxMediaType.of(MediaType.APPLICATION_JSON).charset(StandardCharsets.UTF_8));
             var s = h.encode();
             var nw = ScxHttpHeaders.of(s);
         }

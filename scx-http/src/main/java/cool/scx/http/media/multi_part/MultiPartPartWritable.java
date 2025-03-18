@@ -3,7 +3,7 @@ package cool.scx.http.media.multi_part;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.headers.content_disposition.ContentDisposition;
-import cool.scx.http.headers.content_type.ContentType;
+import cool.scx.http.media_type.ScxMediaType;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -24,7 +24,7 @@ public interface MultiPartPartWritable extends MultiPartPart {
 
     MultiPartPartWritable body(Supplier<InputStream> os);
 
-    default MultiPartPartWritable contentType(ContentType contentType) {
+    default MultiPartPartWritable contentType(ScxMediaType contentType) {
         headers().contentType(contentType);
         return this;
     }
@@ -37,8 +37,7 @@ public interface MultiPartPartWritable extends MultiPartPart {
     default MultiPartPartWritable name(String name) {
         var contentDisposition = headers().contentDisposition();
         if (contentDisposition != null) {
-            contentDisposition.name(name);
-            contentDisposition(contentDisposition);
+            contentDisposition(ContentDisposition.of(contentDisposition).name(name));
         } else {
             contentDisposition(ContentDisposition.of().type("form-data").name(name));
         }
@@ -48,8 +47,7 @@ public interface MultiPartPartWritable extends MultiPartPart {
     default MultiPartPartWritable filename(String filename) {
         var contentDisposition = headers().contentDisposition();
         if (contentDisposition != null) {
-            contentDisposition.filename(filename);
-            contentDisposition(contentDisposition);
+            contentDisposition(ContentDisposition.of(contentDisposition).filename(filename));
         } else {
             contentDisposition(ContentDisposition.of().type("form-data").filename(filename));
         }
@@ -59,8 +57,7 @@ public interface MultiPartPartWritable extends MultiPartPart {
     default MultiPartPartWritable size(long size) {
         var contentDisposition = headers().contentDisposition();
         if (contentDisposition != null) {
-            contentDisposition.size(size);
-            contentDisposition(contentDisposition);
+            contentDisposition(ContentDisposition.of(contentDisposition).size(size));
         } else {
             contentDisposition(ContentDisposition.of().type("form-data").size(size));
         }

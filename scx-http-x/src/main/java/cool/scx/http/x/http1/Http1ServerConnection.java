@@ -26,7 +26,7 @@ import java.lang.System.Logger;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
-import static cool.scx.http.headers.HttpFieldName.CONNECTION;
+import static cool.scx.http.headers.connection.ConnectionType.CLOSE;
 import static cool.scx.http.status.HttpStatusCode.*;
 import static cool.scx.http.x.http1.Http1Helper.*;
 import static java.lang.System.Logger.Level.TRACE;
@@ -223,7 +223,7 @@ public class Http1ServerConnection {
 
         var headers = ScxHttpHeaders.of();
         // we are escaping the connection loop, the connection will be closed
-        headers.set(CONNECTION, "close");
+        headers.connection(CLOSE);
 
         var message = e.statusCode().description().getBytes();
 

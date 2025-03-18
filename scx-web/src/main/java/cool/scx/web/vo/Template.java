@@ -1,6 +1,6 @@
 package cool.scx.web.vo;
 
-import cool.scx.http.headers.content_type.ContentType;
+import cool.scx.http.media_type.ScxMediaType;
 import cool.scx.http.routing.RoutingContext;
 import cool.scx.web.template.ScxTemplateHandler;
 import freemarker.template.TemplateException;
@@ -44,7 +44,7 @@ public final class Template {
         var template = templateHandler.getTemplate(templatePath);
         template.process(dataMap, sw);
         context.response()
-                .contentType(ContentType.of(TEXT_HTML).charset(UTF_8))
+                .contentType(ScxMediaType.of(TEXT_HTML).charset(UTF_8))
                 .send(sw.toString());
     }
 
