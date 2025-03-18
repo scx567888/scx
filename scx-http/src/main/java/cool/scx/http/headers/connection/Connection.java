@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static cool.scx.http.media_type.ScxMediaTypeHelper.SEMICOLON_PATTERN;
 import static java.util.Collections.addAll;
 
 /// todo 待优化
@@ -22,7 +23,7 @@ public class Connection implements Iterable<ScxConnectionType> {
     }
 
     public static Connection parseConnection(String connectionHeader) {
-        var split = connectionHeader.split(",");
+        var split = SEMICOLON_PATTERN.split(connectionHeader);
         var list = new ArrayList<ScxConnectionType>();
         for (var s : split) {
             list.add(ScxConnectionType.of(s.trim()));
@@ -40,7 +41,7 @@ public class Connection implements Iterable<ScxConnectionType> {
     }
 
     public String encode() {
-        return connectionTypes.stream().map(ScxConnectionType::value).collect(Collectors.joining(","));
+        return connectionTypes.stream().map(ScxConnectionType::value).collect(Collectors.joining(", "));
     }
 
     public int size() {
