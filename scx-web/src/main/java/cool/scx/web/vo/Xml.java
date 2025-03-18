@@ -27,7 +27,7 @@ public final class Xml implements BaseVo {
     public void accept(RoutingContext context) {
         context.response()
                 .contentType(ScxMediaType.of(APPLICATION_XML).charset(UTF_8))
-                .send(toXml(data, ""));
+                .send(data);
     }
 
 }
