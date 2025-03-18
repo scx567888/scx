@@ -1,6 +1,6 @@
 package cool.scx.http.exception;
 
-import static cool.scx.http.status.HttpStatusCode.FORBIDDEN;
+import static cool.scx.http.status.HttpStatus.FORBIDDEN;
 
 /// ForbiddenException
 ///

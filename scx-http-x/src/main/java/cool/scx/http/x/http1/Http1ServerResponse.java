@@ -4,7 +4,8 @@ import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.ScxHttpServerResponse;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
-import cool.scx.http.status.HttpStatusCode;
+import cool.scx.http.status.HttpStatus;
+import cool.scx.http.status.ScxHttpStatus;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -14,7 +15,7 @@ import static cool.scx.http.headers.HttpFieldName.SERVER;
 import static cool.scx.http.headers.connection.ConnectionType.CLOSE;
 import static cool.scx.http.headers.connection.ConnectionType.KEEP_ALIVE;
 import static cool.scx.http.headers.transfer_encoding.EncodingType.CHUNKED;
-import static cool.scx.http.status.HttpStatusCode.*;
+import static cool.scx.http.status.HttpStatus.*;
 import static cool.scx.http.x.http1.Http1Helper.checkIsChunkedTransfer;
 import static java.io.OutputStream.nullOutputStream;
 
@@ -27,11 +28,11 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
     private final Http1ServerRequest request;
     private final ScxHttpHeadersWritable headers;
     private final OutputStream dataWriter;
-    private HttpStatusCode status;
+    private ScxHttpStatus status;
 
     Http1ServerResponse(Http1ServerConnection connection, Http1ServerRequest request) {
         this.request = request;
-        this.status = HttpStatusCode.OK;
+        this.status = HttpStatus.OK;
         this.headers = ScxHttpHeaders.of();
         this.dataWriter = new Http1ServerResponseOutputStream(connection, this.headers);
     }
@@ -42,7 +43,7 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
     }
 
     @Override
-    public HttpStatusCode status() {
+    public ScxHttpStatus status() {
         return status;
     }
 
@@ -52,7 +53,7 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
     }
 
     @Override
-    public ScxHttpServerResponse status(HttpStatusCode code) {
+    public ScxHttpServerResponse status(ScxHttpStatus code) {
         status = code;
         return this;
     }
@@ -85,7 +86,7 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
 
         var hasBody = true;
         //是否不需要响应体
-        if (status == SWITCHING_PROTOCOLS || status == NO_CONTENT || status == NOT_MODIFIED) {
+        if (SWITCHING_PROTOCOLS.equals(status) || NO_CONTENT.equals(status) || NOT_MODIFIED.equals(status)) {
             hasBody = false;
         }
 

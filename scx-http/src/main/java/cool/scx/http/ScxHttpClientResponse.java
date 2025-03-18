@@ -5,7 +5,7 @@ import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.cookie.Cookie;
 import cool.scx.http.headers.cookie.Cookies;
 import cool.scx.http.media_type.ScxMediaType;
-import cool.scx.http.status.HttpStatusCode;
+import cool.scx.http.status.ScxHttpStatus;
 
 /// ScxHttpClientResponse
 ///
@@ -13,7 +13,7 @@ import cool.scx.http.status.HttpStatusCode;
 /// @version 0.0.1
 public interface ScxHttpClientResponse {
 
-    HttpStatusCode status();
+    ScxHttpStatus status();
 
     ScxHttpHeaders headers();
 

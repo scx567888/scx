@@ -14,7 +14,7 @@ import java.nio.file.Path;
 import static cool.scx.http.headers.HttpFieldName.ACCEPT_RANGES;
 import static cool.scx.http.headers.HttpFieldName.CONTENT_RANGE;
 import static cool.scx.http.media_type.MediaType.*;
-import static cool.scx.http.status.HttpStatusCode.PARTIAL_CONTENT;
+import static cool.scx.http.status.HttpStatus.PARTIAL_CONTENT;
 
 /// StaticHelper
 ///

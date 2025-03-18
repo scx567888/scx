@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import static cool.scx.http.status.HttpStatusCode.INTERNAL_SERVER_ERROR;
+import static cool.scx.http.status.HttpStatus.INTERNAL_SERVER_ERROR;
 
 /// RoutingContext
 ///
@@ -53,7 +53,7 @@ public class RoutingContextImpl implements RoutingContext {
                 router.errorHandler.accept(e, this);
             } else {
                 if (e instanceof ScxHttpException httpException) {
-                    var code = httpException.statusCode();
+                    var code = httpException.status();
                     response().status(code).send(code.toString());
                 } else {
                     response().status(INTERNAL_SERVER_ERROR).send("Internal Server Error");

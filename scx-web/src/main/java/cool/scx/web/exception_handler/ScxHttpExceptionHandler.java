@@ -4,7 +4,7 @@ import cool.scx.common.exception.ScxExceptionHelper;
 import cool.scx.http.exception.ScxHttpException;
 import cool.scx.http.media_type.ScxMediaType;
 import cool.scx.http.routing.RoutingContext;
-import cool.scx.http.status.HttpStatusCode;
+import cool.scx.http.status.ScxHttpStatus;
 
 import java.lang.System.Logger;
 import java.util.LinkedHashMap;
@@ -43,7 +43,7 @@ public class ScxHttpExceptionHandler implements ExceptionHandler {
         this.useDevelopmentErrorPage = useDevelopmentErrorPage;
     }
 
-    public static void sendToClient(HttpStatusCode statusCode, String info, RoutingContext routingContext) {
+    public static void sendToClient(ScxHttpStatus status, String info, RoutingContext routingContext) {
         //防止页面出现 null 这种奇怪的情况
         if (info == null) {
             info = "";
@@ -51,18 +51,18 @@ public class ScxHttpExceptionHandler implements ExceptionHandler {
         var accepts = routingContext.request().headers().accept();
         //根据 accept 返回不同的错误信息 只有明确包含的时候才返回 html
         if (accepts != null && accepts.contains(TEXT_HTML)) {
-            var htmlStr = String.format(htmlTemplate, statusCode.description(), statusCode, statusCode.description(), info);
+            var htmlStr = String.format(htmlTemplate, status.description(), status, status.description(), info);
             routingContext.response()
                     .contentType(ScxMediaType.of(TEXT_HTML).charset(UTF_8))
-                    .status(statusCode)
+                    .status(status)
                     .send(htmlStr);
         } else {
             var tempMap = new LinkedHashMap<>();
-            tempMap.put("statusCode", statusCode);
-            tempMap.put("title", statusCode.description());
+            tempMap.put("status", status);
+            tempMap.put("title", status.description());
             tempMap.put("info", info);
             routingContext.response()
-                    .status(statusCode)
+                    .status(status)
                     .send(tempMap);
         }
     }
@@ -78,7 +78,7 @@ public class ScxHttpExceptionHandler implements ExceptionHandler {
                 info = ScxExceptionHelper.getStackTraceString(cause);
             }
         }
-        sendToClient(scxHttpException.statusCode(), info, routingContext);
+        sendToClient(scxHttpException.status(), info, routingContext);
     }
 
     @Override

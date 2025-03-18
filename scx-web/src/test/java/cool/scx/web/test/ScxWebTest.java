@@ -9,7 +9,7 @@ import cool.scx.web.ScxWeb;
 import cool.scx.web.ScxWebOptions;
 import org.testng.annotations.Test;
 
-import static cool.scx.http.status.HttpStatusCode.FORBIDDEN;
+import static cool.scx.http.status.HttpStatus.FORBIDDEN;
 
 public class ScxWebTest {
 

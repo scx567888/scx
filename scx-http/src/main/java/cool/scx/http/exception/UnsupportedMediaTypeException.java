@@ -1,6 +1,6 @@
 package cool.scx.http.exception;
 
-import static cool.scx.http.status.HttpStatusCode.UNSUPPORTED_MEDIA_TYPE;
+import static cool.scx.http.status.HttpStatus.UNSUPPORTED_MEDIA_TYPE;
 
 /// UnsupportedMediaTypeException
 ///
