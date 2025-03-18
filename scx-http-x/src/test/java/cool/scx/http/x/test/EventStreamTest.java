@@ -22,9 +22,9 @@ public class EventStreamTest {
             c.response().setHeader("Access-Control-Allow-Origin", "*");
             var eventStream = c.response().sendEventStream();
             try (eventStream) {
-                for (int i = 0; i < 100; i++) {
-                    eventStream.send(SseEvent.of("hello" + i).id("123").event("这是事件" + i).comment("这是注释"));
-                    $.sleep(10);
+                for (int i = 0; i < 20; i++) {
+                    eventStream.send(SseEvent.of("hello" + i).id("123").event("message").comment("这是注释"));
+                    $.sleep(100);
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
