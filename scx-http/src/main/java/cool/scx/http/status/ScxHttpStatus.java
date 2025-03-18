@@ -12,6 +12,7 @@ public sealed interface ScxHttpStatus permits HttpStatus, ScxHttpStatusImpl {
         return m != null ? m : new ScxHttpStatusImpl(code);
     }
 
+    /// 创建自定义的 状态码 支持 自定义描述
     static ScxHttpStatus of(int code, String description) {
         return new ScxHttpStatusImpl(code, description);
     }

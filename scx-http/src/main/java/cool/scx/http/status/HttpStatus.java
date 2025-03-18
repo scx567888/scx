@@ -93,10 +93,12 @@ public enum HttpStatus implements ScxHttpStatus {
         return MAP[code];
     }
 
+    @Override
     public int code() {
         return code;
     }
 
+    @Override
     public String description() {
         return description;
     }
