@@ -32,8 +32,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Executors;
 
-import static cool.scx.app.ScxContext.GLOBAL_SCX;
-import static cool.scx.app.ScxHelper.*;
+import static cool.scx.app.ScxAppContext.GLOBAL_SCX;
+import static cool.scx.app.ScxAppHelper.*;
 import static cool.scx.app.enumeration.ScxAppFeature.*;
 import static cool.scx.common.exception.ScxExceptionHelper.ignore;
 import static cool.scx.common.util.NetUtils.getLocalIPAddress;
@@ -45,9 +45,9 @@ import static java.lang.System.Logger.Level.WARNING;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public final class Scx {
+public final class ScxApp {
 
-    static final Logger logger = System.getLogger(Scx.class.getName());
+    static final Logger logger = System.getLogger(ScxApp.class.getName());
 
     /// 默认 http 请求 body 限制大小
     private static final long DEFAULT_BODY_LIMIT = FileUtils.displaySizeToLong("16384KB");
@@ -59,9 +59,9 @@ public final class Scx {
 
     private final ScxConfig scxConfig;
 
-    private final ScxModule[] scxModules;
+    private final ScxAppModule[] scxModules;
 
-    private final ScxOptions scxOptions;
+    private final ScxAppOptions scxOptions;
 
     private final DefaultListableBeanFactory beanFactory;
 
@@ -73,20 +73,20 @@ public final class Scx {
 
     private JDBCContext jdbcContext = null;
 
-    private ScxHttpRouter scxHttpRouter = null;
+    private ScxAppHttpRouter scxHttpRouter = null;
 
     private ScxHttpServer httpServer = null;
 
-    Scx(ScxEnvironment scxEnvironment, String appKey, ScxFeatureConfig scxFeatureConfig, ScxConfig scxConfig, ScxModule[] scxModules, Object defaultHttpServerOptions) {
+    ScxApp(ScxEnvironment scxEnvironment, String appKey, ScxFeatureConfig scxFeatureConfig, ScxConfig scxConfig, ScxAppModule[] scxModules, Object defaultHttpServerOptions) {
         //0, 赋值到全局
-        ScxContext.scx(this);
+        ScxAppContext.scx(this);
         //1, 初始化基本参数
         this.scxEnvironment = scxEnvironment;
         this.appKey = appKey;
         this.scxFeatureConfig = scxFeatureConfig;
         this.scxConfig = scxConfig;
         this.scxModules = initScxModuleMetadataList(scxModules);
-        this.scxOptions = new ScxOptions(this.scxConfig, this.scxEnvironment, this.appKey);
+        this.scxOptions = new ScxAppOptions(this.scxConfig, this.scxEnvironment, this.appKey);
         this.defaultHttpServerOptions = defaultHttpServerOptions;
         //2, 初始化 ScxLog 日志框架
         initScxLoggerFactory(this.scxConfig, this.scxEnvironment);
@@ -98,8 +98,8 @@ public final class Scx {
         this.scxWeb = new ScxWeb(new ScxWebOptions().templateRoot(scxOptions.templateRoot()).useDevelopmentErrorPage(scxFeatureConfig.get(USE_DEVELOPMENT_ERROR_PAGE)));
     }
 
-    public static ScxBuilder builder() {
-        return new ScxBuilder();
+    public static ScxAppBuilder builder() {
+        return new ScxAppBuilder();
     }
 
     /// 执行模块启动的生命周期
@@ -130,23 +130,23 @@ public final class Scx {
         }
     }
 
-    public Scx run() {
+    public ScxApp run() {
         return ScopedValue.where(GLOBAL_SCX, this).get(this::run0);
     }
 
     /// 运行项目
-    private Scx run0() {
+    private ScxApp run0() {
         //0, 启动 核心计时器
         StopWatch.start("ScxRun");
         //1, 根据配置打印一下 banner 或者配置文件信息之类
         if (this.scxFeatureConfig.get(SHOW_BANNER)) {
-            ScxVersion.printBanner();
+            ScxAppVersion.printBanner();
         }
         if (this.scxFeatureConfig.get(SHOW_OPTIONS_INFO)) {
             this.scxOptions.printInfo();
         }
         //2, 初始化路由器 (Http 和 WebSocket)
-        this.scxHttpRouter = new ScxHttpRouter(this);
+        this.scxHttpRouter = new ScxAppHttpRouter(this);
         //3, 注册 路由
         var classList = Arrays.stream(this.scxModules()).flatMap(c -> c.classList().stream()).toList();
         var httpRoutes = RouteRegistrar.filterClass(classList).stream().map(beanFactory::getBean).toArray();
@@ -284,7 +284,7 @@ public final class Scx {
     private List<Class<?>> getAllScxBaseModelClassList() {
         return Arrays.stream(scxModules)
                 .flatMap(c -> c.classList().stream())
-                .filter(ScxHelper::isScxBaseModelClass)// 继承自 BaseModel
+                .filter(ScxAppHelper::isScxBaseModelClass)// 继承自 BaseModel
                 .toList();
     }
 
@@ -309,7 +309,7 @@ public final class Scx {
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends ScxModule> T findScxModule(Class<T> clazz) {
+    public <T extends ScxAppModule> T findScxModule(Class<T> clazz) {
         for (var m : this.scxModules) {
             if (m.getClass() == clazz) {
                 return (T) m;
@@ -318,7 +318,7 @@ public final class Scx {
         return null;
     }
 
-    public ScxModule[] scxModules() {
+    public ScxAppModule[] scxModules() {
         return Arrays.copyOf(scxModules, scxModules.length);
     }
 
@@ -330,7 +330,7 @@ public final class Scx {
         return appKey;
     }
 
-    public ScxOptions scxOptions() {
+    public ScxAppOptions scxOptions() {
         return scxOptions;
     }
 
@@ -338,7 +338,7 @@ public final class Scx {
         return beanFactory;
     }
 
-    public ScxHttpRouter scxHttpRouter() {
+    public ScxAppHttpRouter scxHttpRouter() {
         return this.scxHttpRouter;
     }
 

@@ -21,27 +21,27 @@ import java.util.concurrent.Callable;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public final class ScxContext {
+public final class ScxAppContext {
 
     /// 全局唯一的 SCX APP
     /// 为了保证方法使用的简易 我们建议使用静态的方法
     /// 但是其本质上是调用 GLOBAL_UNIQUE_SCX_APP 方法中的实例对象
-    final static ScopedValue<Scx> GLOBAL_SCX = ScopedValue.newInstance();
+    final static ScopedValue<ScxApp> GLOBAL_SCX = ScopedValue.newInstance();
 
     /// 兼容 旧版本 todo 待移除
-    private static Scx GLOBAL_SCX_0 = null;
+    private static ScxApp GLOBAL_SCX_0 = null;
 
     /// 设置全局的 Scx 兼容 旧版本 todo 待移除
     ///
     /// @param scx scx
-    static void scx(Scx scx) {
+    static void scx(ScxApp scx) {
         GLOBAL_SCX_0 = scx;
     }
 
     /// 获取全局的 Scx
     ///
     /// @return scx
-    public static Scx scx() {
+    public static ScxApp scx() {
         if (GLOBAL_SCX.get() != null) {
             return GLOBAL_SCX.get();
         } else {
@@ -81,11 +81,11 @@ public final class ScxContext {
         return scx().appKey();
     }
 
-    public static ScxModule[] scxModules() {
+    public static ScxAppModule[] scxModules() {
         return scx().scxModules();
     }
 
-    public static ScxOptions options() {
+    public static ScxAppOptions options() {
         return scx().scxOptions();
     }
 
@@ -93,7 +93,7 @@ public final class ScxContext {
         return scx().beanFactory();
     }
 
-    public static ScxHttpRouter router() {
+    public static ScxAppHttpRouter router() {
         return scx().scxHttpRouter();
     }
 
@@ -121,7 +121,7 @@ public final class ScxContext {
         return scx().getBean(requiredType);
     }
 
-    public static <T extends ScxModule> T findScxModule(Class<T> clazz) {
+    public static <T extends ScxAppModule> T findScxModule(Class<T> clazz) {
         return scx().findScxModule(clazz);
     }
 
