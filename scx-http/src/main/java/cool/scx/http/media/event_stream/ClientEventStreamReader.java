@@ -11,5 +11,5 @@ public class ClientEventStreamReader implements MediaReader<ClientEventStream> {
     public ClientEventStream read(InputStream inputStream, ScxHttpHeaders requestHeaders) {
         return new ClientEventStream(inputStream);
     }
-    
+
 }
