@@ -12,18 +12,18 @@ public class DataReaderInputStream extends InputStream {
     private final PowerfulLinkedDataReader dataReader;
     private volatile boolean closed;
 
-    private void ensureOpen() throws IOException {
-        if (closed) {
-            throw new IOException("Stream closed");
-        }
-    }
-
     public DataReaderInputStream(PowerfulLinkedDataReader dataReader) {
         this.dataReader = dataReader;
     }
 
     public DataReaderInputStream(DataSupplier dataSupplier) {
         this.dataReader = new PowerfulLinkedDataReader(dataSupplier);
+    }
+
+    private void ensureOpen() throws IOException {
+        if (closed) {
+            throw new IOException("Stream closed");
+        }
     }
 
     @Override

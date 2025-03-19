@@ -17,16 +17,16 @@ public class FixedLengthDataReaderInputStream extends InputStream {
     private long position;
     private volatile boolean closed;
 
-    private void ensureOpen() throws IOException {
-        if (closed) {
-            throw new IOException("Stream closed");
-        }
-    }
-
     public FixedLengthDataReaderInputStream(PowerfulLinkedDataReader dataReader, long maxLength) {
         this.dataReader = dataReader;
         this.maxLength = maxLength;
         this.position = 0;
+    }
+
+    private void ensureOpen() throws IOException {
+        if (closed) {
+            throw new IOException("Stream closed");
+        }
     }
 
     @Override
@@ -83,5 +83,5 @@ public class FixedLengthDataReaderInputStream extends InputStream {
     public void close() throws IOException {
         closed = true;
     }
-    
+
 }

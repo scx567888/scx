@@ -18,7 +18,7 @@ public class Http1Headers extends ScxHttpHeadersImpl {
     }
 
     public Http1Headers() {
-        
+
     }
 
     public TransferEncoding transferEncoding() {
@@ -48,5 +48,5 @@ public class Http1Headers extends ScxHttpHeadersImpl {
     public ScxHttpHeadersWritable connection(ConnectionType... connectionType) {
         return connection(new Connection(connectionType));
     }
-    
+
 }

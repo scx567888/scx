@@ -82,7 +82,7 @@ public interface ScxHttpBody {
     default <T> T asObject(TypeReference<T> c) {
         return as(new ObjectReader<>(c));
     }
-    
+
     default ClientEventStream asEventStream() {
         return as(new ClientEventStreamReader());
     }

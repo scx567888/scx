@@ -15,8 +15,8 @@ import java.nio.charset.StandardCharsets;
 
 import static cool.scx.common.util.StringUtils.isBlank;
 import static cool.scx.http.headers.HttpFieldName.*;
-import static cool.scx.http.x.http1.transfer_encoding.EncodingType.CHUNKED;
 import static cool.scx.http.method.HttpMethod.GET;
+import static cool.scx.http.x.http1.transfer_encoding.EncodingType.CHUNKED;
 
 final class Http1Helper {
 

@@ -11,11 +11,11 @@ import java.io.UncheckedIOException;
 
 import static cool.scx.http.headers.HttpFieldName.SERVER;
 import static cool.scx.http.headers.ScxHttpHeadersHelper.encodeHeaders;
+import static cool.scx.http.status.HttpStatus.*;
+import static cool.scx.http.x.http1.Http1Helper.checkIsChunkedTransfer;
 import static cool.scx.http.x.http1.connection.ConnectionType.CLOSE;
 import static cool.scx.http.x.http1.connection.ConnectionType.KEEP_ALIVE;
 import static cool.scx.http.x.http1.transfer_encoding.EncodingType.CHUNKED;
-import static cool.scx.http.status.HttpStatus.*;
-import static cool.scx.http.x.http1.Http1Helper.checkIsChunkedTransfer;
 import static java.io.OutputStream.nullOutputStream;
 
 /// todo 待完成

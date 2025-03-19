@@ -24,8 +24,8 @@ import java.util.function.Consumer;
 
 import static cool.scx.http.headers.ScxHttpHeadersHelper.encodeHeaders;
 import static cool.scx.http.headers.ScxHttpHeadersHelper.parseHeaders;
-import static cool.scx.http.x.http1.connection.ConnectionType.CLOSE;
 import static cool.scx.http.x.http1.Http1Helper.*;
+import static cool.scx.http.x.http1.connection.ConnectionType.CLOSE;
 import static java.lang.System.Logger.Level.TRACE;
 import static java.lang.System.getLogger;
 
@@ -169,7 +169,7 @@ public class Http1ServerConnection {
 
             var headerBytes = dataReader.readUntil(CRLF_CRLF_BYTES, options.maxHeaderSize());
             var headerStr = new String(headerBytes);
-            return parseHeaders(new Http1Headers(),headerStr);
+            return parseHeaders(new Http1Headers(), headerStr);
         } catch (NoMoreDataException | UncheckedIOException e) {
             // Socket 关闭了 或者底层 Socket 发生异常
             throw new CloseConnectionException();
