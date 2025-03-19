@@ -1,8 +1,8 @@
 package cool.scx.app.test;
 
 import cool.scx.app.ScxApp;
-import cool.scx.app.ScxAppModule;
 import cool.scx.app.ScxAppContext;
+import cool.scx.app.ScxAppModule;
 import cool.scx.app.base.BaseModelService;
 import cool.scx.app.enumeration.ScxAppFeature;
 import cool.scx.app.test.car.Car;
