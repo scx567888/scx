@@ -25,6 +25,7 @@ public final class RequestInfo {
     private final boolean cachedMultiPart;
     private JsonNode body;
     private MultiMap<String, MultiPartPart> uploadFiles;
+    private boolean bodyInit;
 
     public RequestInfo(RoutingContext ctx, boolean cachedMultiPart) {
         this.routingContext = ctx;
@@ -32,7 +33,7 @@ public final class RequestInfo {
         this.contentType = ctx.request().contentType();
         this.pathParams = jsonMapper().convertValue(ctx.pathParams().toMap(), JsonNode.class);
         this.query = jsonMapper().convertValue(ctx.request().query().toMap(), JsonNode.class);
-        initBody(ctx, this.contentType);
+        this.bodyInit = false;
     }
 
     /// 走到这里标识以上的匹配全部失败 , 这里不知道 body 的具体格式 所以进行猜测转换
@@ -57,6 +58,7 @@ public final class RequestInfo {
     /// @param ctx         ctx
     /// @param contentType a
     private void initBody(RoutingContext ctx, ScxMediaType contentType) {
+        bodyInit = true;
         // 除了 MULTIPART_FORM_DATA 其余全部转为 JsonNode 的形式方便后续使用
         if (APPLICATION_JSON.equalsIgnoreParams(contentType) || APPLICATION_XML.equalsIgnoreParams(contentType)) {
             this.body = ctx.request().body().asJsonNode();
@@ -97,10 +99,16 @@ public final class RequestInfo {
     }
 
     public JsonNode body() {
+        if (!bodyInit) {
+            initBody(this.routingContext, this.contentType);
+        }
         return body;
     }
 
     public MultiMap<String, MultiPartPart> uploadFiles() {
+        if (!bodyInit) {
+            initBody(this.routingContext, this.contentType);
+        }
         return uploadFiles;
     }
 

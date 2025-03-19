@@ -5,7 +5,6 @@ import cool.scx.http.ScxHttpClientRequest;
 import cool.scx.http.ScxHttpClientResponse;
 import cool.scx.http.exception.ContentTooLargeException;
 import cool.scx.http.headers.ScxHttpHeaders;
-import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.x.XHttpClientOptions;
 import cool.scx.io.data_reader.PowerfulLinkedDataReader;
@@ -22,9 +21,11 @@ import java.io.OutputStream;
 import java.util.Arrays;
 
 import static cool.scx.http.headers.HttpFieldName.HOST;
-import static cool.scx.http.headers.transfer_encoding.EncodingType.CHUNKED;
+import static cool.scx.http.headers.ScxHttpHeadersHelper.encodeHeaders;
+import static cool.scx.http.headers.ScxHttpHeadersHelper.parseHeaders;
 import static cool.scx.http.method.HttpMethod.GET;
 import static cool.scx.http.x.http1.Http1Helper.*;
+import static cool.scx.http.x.http1.transfer_encoding.EncodingType.CHUNKED;
 import static java.io.OutputStream.nullOutputStream;
 
 public class Http1ClientConnection {
@@ -48,7 +49,7 @@ public class Http1ClientConnection {
         var requestLineStr = requestLine.encode();
 
         //复制一份请求头便于修改
-        var requestHeaders = ScxHttpHeaders.of(request.headers());
+        var requestHeaders = new Http1Headers(request.headers());
 
         //让用户能够设置头信息
         writer.beforeWrite(requestHeaders, ScxHttpHeaders.of());
@@ -79,7 +80,7 @@ public class Http1ClientConnection {
             useChunkedTransfer = true;
         }
 
-        var requestHeaderStr = requestHeaders.encode();
+        var requestHeaderStr = encodeHeaders(requestHeaders);
 
         //先写入请求行 请求头的内容
         try {
@@ -131,18 +132,18 @@ public class Http1ClientConnection {
         }
     }
 
-    public ScxHttpHeadersWritable readHeaders() {
+    public Http1Headers readHeaders() {
         try {
             // 有可能没有头 也就是说 请求行后直接跟着 \r\n , 这里检查一下
             var a = dataReader.peek(2);
             if (Arrays.equals(a, CRLF_BYTES)) {
                 dataReader.skip(2);
-                return ScxHttpHeaders.of();
+                return new Http1Headers();
             }
 
             var headerBytes = dataReader.readUntil(CRLF_CRLF_BYTES, options.maxHeaderSize());
             var headerStr = new String(headerBytes);
-            return ScxHttpHeaders.of(headerStr);
+            return parseHeaders(new Http1Headers(), headerStr);
         } catch (NoMoreDataException e) {
             throw new CloseConnectionException();
         } catch (NoMatchFoundException e) {
@@ -152,7 +153,7 @@ public class Http1ClientConnection {
     }
 
     //todo 超出最大长度怎么办
-    public ScxHttpBody readBody(ScxHttpHeaders headers) {
+    public ScxHttpBody readBody(Http1Headers headers) {
         var isChunkedTransfer = Http1Helper.checkIsChunkedTransfer(headers);
         if (isChunkedTransfer) {
             return new ScxHttpBodyImpl(new DataReaderInputStream(new HttpChunkedDataSupplier(dataReader, options.maxPayloadSize())), headers);

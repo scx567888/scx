@@ -10,8 +10,7 @@ public class ScxHttpHeadersHelper {
 
     public static final Pattern CRLF_PATTERN = Pattern.compile("\r\n");
 
-    public static ScxHttpHeadersWritable parseHeaders(String headersStr) {
-        var headers = new ScxHttpHeadersImpl();
+    public static <T extends ScxHttpHeadersWritable> T parseHeaders(T headers, String headersStr) {
         var lines = CRLF_PATTERN.split(headersStr);
 
         for (var line : lines) {

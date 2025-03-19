@@ -34,9 +34,9 @@ public class ClientEventStream {
         while (true) {
 
             var bytes = dataReader.readUntil(LF_BYTES);
-            
+
             var line = new String(bytes, UTF_8);
-            
+
             if (line.isEmpty()) {
                 // 事件结束，返回 SseEvent
                 return event;

@@ -4,7 +4,6 @@ import cool.scx.common.util.Base64Utils;
 import cool.scx.common.util.RandomUtils;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
-import cool.scx.http.headers.connection.ConnectionType;
 import cool.scx.http.media.empty.EmptyWriter;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.uri.ScxURIWritable;
@@ -12,6 +11,8 @@ import cool.scx.http.web_socket.ScxClientWebSocketHandshakeRequest;
 import cool.scx.http.web_socket.ScxClientWebSocketHandshakeResponse;
 import cool.scx.http.x.XHttpClient;
 import cool.scx.http.x.http1.Http1ClientConnection;
+import cool.scx.http.x.http1.Http1Headers;
+import cool.scx.http.x.http1.connection.ConnectionType;
 import cool.scx.tcp.ScxTCPClient;
 import cool.scx.tcp.ScxTCPSocket;
 
@@ -30,13 +31,13 @@ public class XClientWebSocketHandshakeRequest implements ScxClientWebSocketHands
     private ScxURIWritable uri;
     private ScxTCPClient tcpClient;
     private ScxTCPSocket tcpSocket;
-    private ScxHttpHeadersWritable headers;
+    private Http1Headers headers;
 
     public XClientWebSocketHandshakeRequest(XHttpClient httpClient) {
         this.httpClient = httpClient;
         this.webSocketOptions = httpClient.options().webSocketOptions();
         this.uri = ScxURI.of();
-        this.headers = ScxHttpHeaders.of();
+        this.headers = new Http1Headers();
     }
 
     @Override
@@ -57,7 +58,7 @@ public class XClientWebSocketHandshakeRequest implements ScxClientWebSocketHands
 
     @Override
     public ScxClientWebSocketHandshakeRequest headers(ScxHttpHeaders headers) {
-        this.headers = ScxHttpHeaders.of(headers);
+        this.headers = new Http1Headers(headers);
         return this;
     }
 

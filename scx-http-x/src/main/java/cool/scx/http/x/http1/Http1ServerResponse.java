@@ -2,8 +2,6 @@ package cool.scx.http.x.http1;
 
 import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.ScxHttpServerResponse;
-import cool.scx.http.headers.ScxHttpHeaders;
-import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.status.HttpStatus;
 import cool.scx.http.status.ScxHttpStatus;
 
@@ -12,11 +10,12 @@ import java.io.OutputStream;
 import java.io.UncheckedIOException;
 
 import static cool.scx.http.headers.HttpFieldName.SERVER;
-import static cool.scx.http.headers.connection.ConnectionType.CLOSE;
-import static cool.scx.http.headers.connection.ConnectionType.KEEP_ALIVE;
-import static cool.scx.http.headers.transfer_encoding.EncodingType.CHUNKED;
+import static cool.scx.http.headers.ScxHttpHeadersHelper.encodeHeaders;
 import static cool.scx.http.status.HttpStatus.*;
 import static cool.scx.http.x.http1.Http1Helper.checkIsChunkedTransfer;
+import static cool.scx.http.x.http1.connection.ConnectionType.CLOSE;
+import static cool.scx.http.x.http1.connection.ConnectionType.KEEP_ALIVE;
+import static cool.scx.http.x.http1.transfer_encoding.EncodingType.CHUNKED;
 import static java.io.OutputStream.nullOutputStream;
 
 /// todo 待完成
@@ -26,14 +25,14 @@ import static java.io.OutputStream.nullOutputStream;
 public class Http1ServerResponse implements ScxHttpServerResponse {
 
     private final Http1ServerRequest request;
-    private final ScxHttpHeadersWritable headers;
+    private final Http1Headers headers;
     private final OutputStream dataWriter;
     private ScxHttpStatus status;
 
     Http1ServerResponse(Http1ServerConnection connection, Http1ServerRequest request) {
         this.request = request;
         this.status = HttpStatus.OK;
-        this.headers = ScxHttpHeaders.of();
+        this.headers = new Http1Headers();
         this.dataWriter = new Http1ServerResponseOutputStream(connection, this.headers);
     }
 
@@ -48,7 +47,7 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
     }
 
     @Override
-    public ScxHttpHeadersWritable headers() {
+    public Http1Headers headers() {
         return headers;
     }
 
@@ -105,7 +104,7 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
             useChunkedTransfer = true;
         }
 
-        var headerStr = headers.encode();
+        var headerStr = encodeHeaders(headers);
 
         sb.append(headerStr);
         sb.append("\r\n");

@@ -2,7 +2,6 @@ package cool.scx.http.x.http1;
 
 import cool.scx.http.ScxHttpBody;
 import cool.scx.http.ScxHttpServerRequest;
-import cool.scx.http.ScxHttpServerResponse;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.method.ScxHttpMethod;
@@ -46,7 +45,7 @@ public class Http1ServerRequest implements ScxHttpServerRequest {
     }
 
     @Override
-    public ScxHttpServerResponse response() {
+    public Http1ServerResponse response() {
         return this.response;
     }
 

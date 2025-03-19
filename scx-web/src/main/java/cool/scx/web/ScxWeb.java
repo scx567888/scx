@@ -183,7 +183,7 @@ public final class ScxWeb {
     }
 
     Object[] buildMethodParameters(ParameterHandler[] parameterHandlers, RoutingContext context) throws Exception {
-        var info = new RequestInfo(context, options.cachedMultiPart());
+        var info = (RequestInfo) context.data().computeIfAbsent(context.hashCode() + "", (_) -> new RequestInfo(context, options.cachedMultiPart()));
         var exceptionArrayList = new ArrayList<Exception>();
         var methodParameter = new Object[parameterHandlers.length];
         for (int i = 0; i < methodParameter.length; i = i + 1) {

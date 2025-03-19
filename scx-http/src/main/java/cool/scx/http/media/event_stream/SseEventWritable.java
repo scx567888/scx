@@ -16,5 +16,5 @@ public interface SseEventWritable extends SseEvent {
 
     // 可选的评论
     SseEventWritable comment(String comment);
-    
+
 }

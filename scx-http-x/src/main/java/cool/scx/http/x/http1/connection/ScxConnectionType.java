@@ -1,4 +1,4 @@
-package cool.scx.http.headers.connection;
+package cool.scx.http.x.http1.connection;
 
 public sealed interface ScxConnectionType permits ConnectionType, ScxConnectionTypeImpl {
 

@@ -10,9 +10,11 @@ import java.io.InputStream;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import static cool.scx.http.headers.ScxHttpHeadersHelper.parseHeaders;
 import static cool.scx.io.IOHelper.inputStreamToDataReader;
 
 /// MultiPartStream
+/// todo 这里没有关闭流 可能出现问题
 ///
 /// @author scx567888
 /// @version 0.0.1
@@ -37,7 +39,7 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart> {
         // content
         var headersBytes = linkedDataReader.readUntil(CRLF_CRLF_BYTES);
         var headersStr = new String(headersBytes);
-        return ScxHttpHeaders.of(headersStr);
+        return parseHeaders(ScxHttpHeaders.of(), headersStr);
     }
 
     public byte[] readContentToByte() throws IOException {

@@ -15,8 +15,8 @@ import java.nio.charset.StandardCharsets;
 
 import static cool.scx.common.util.StringUtils.isBlank;
 import static cool.scx.http.headers.HttpFieldName.*;
-import static cool.scx.http.headers.transfer_encoding.EncodingType.CHUNKED;
 import static cool.scx.http.method.HttpMethod.GET;
+import static cool.scx.http.x.http1.transfer_encoding.EncodingType.CHUNKED;
 
 final class Http1Helper {
 
@@ -36,7 +36,7 @@ final class Http1Helper {
         return false;
     }
 
-    public static boolean checkIsChunkedTransfer(ScxHttpHeaders headers) {
+    public static boolean checkIsChunkedTransfer(Http1Headers headers) {
         var transferEncoding = headers.transferEncoding();
         if (transferEncoding == null) {
             return false;
@@ -82,7 +82,7 @@ final class Http1Helper {
         try (inputStream) {
             inputStream.transferTo(OutputStream.nullOutputStream());
         } catch (IOException e) {
-            throw new CloseConnectionException();
+            // todo 这里需要 忽略异常 还是根据 不同类型忽略
         }
     }
 
