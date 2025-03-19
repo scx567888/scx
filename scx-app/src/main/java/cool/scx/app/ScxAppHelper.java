@@ -56,14 +56,14 @@ import static java.util.Objects.requireNonNull;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public final class ScxHelper {
+public final class ScxAppHelper {
 
     /// Constant <code>beanFilterAnnotation</code>
     private static final List<Class<? extends Annotation>> beanFilterAnnotation = List.of(
             //scx 注解
             ScxRoute.class, Table.class, ScxService.class, ScxWebSocketRoute.class);
 
-    static Path findRootPathByScxModule(Class<? extends ScxModule> c) throws IOException {
+    static Path findRootPathByScxModule(Class<? extends ScxAppModule> c) throws IOException {
         var classSource = getCodeSource(c);
         var classSourcePath = Path.of(classSource);
         var isJar = isJar(classSourcePath);
@@ -76,7 +76,7 @@ public final class ScxHelper {
     /// @param c c
     /// @return class 列表 (注意这里返回的是不可变的列表 !!!)
     /// @throws IOException r
-    static List<Class<?>> findClassListByScxModule(Class<? extends ScxModule> c) throws IOException {
+    static List<Class<?>> findClassListByScxModule(Class<? extends ScxAppModule> c) throws IOException {
         var classSource = getCodeSource(c);
         var classSourcePath = Path.of(classSource);
         var isJar = isJar(classSourcePath);
@@ -166,7 +166,7 @@ public final class ScxHelper {
         }
     }
 
-    static DataSource initDataSource(ScxOptions scxOptions, ScxFeatureConfig scxFeatureConfig) {
+    static DataSource initDataSource(ScxAppOptions scxOptions, ScxFeatureConfig scxFeatureConfig) {
         var url = scxOptions.dataSourceUrl();
         var dialect = DialectSelector.findDialect(url);
         var realDataSource = dialect.createDataSource(url, scxOptions.dataSourceUsername(), scxOptions.dataSourcePassword(), scxOptions.dataSourceParameters());
@@ -177,7 +177,7 @@ public final class ScxHelper {
         return scxFeatureConfig.get(USE_SPY) ? Spy.wrap(hikariDataSource) : hikariDataSource;
     }
 
-    static ScxModule[] initScxModuleMetadataList(ScxModule[] scxModules) {
+    static ScxAppModule[] initScxModuleMetadataList(ScxAppModule[] scxModules) {
         //2, 检查模块参数是否正确
         if (scxModules == null || Arrays.stream(scxModules).noneMatch(Objects::nonNull)) {
             throw new IllegalArgumentException("Modules must not be empty !!!");
@@ -185,7 +185,7 @@ public final class ScxHelper {
         return scxModules;
     }
 
-    static DefaultListableBeanFactory initBeanFactory(ScxModule[] modules, ScxFeatureConfig scxFeatureConfig) {
+    static DefaultListableBeanFactory initBeanFactory(ScxAppModule[] modules, ScxFeatureConfig scxFeatureConfig) {
         var beanFactory = new DefaultListableBeanFactory();
         //这里添加一个 bean 的后置处理器以便可以使用 @Autowired 注解
         var beanPostProcessor = new AutowiredAnnotationBeanPostProcessor();
@@ -196,7 +196,7 @@ public final class ScxHelper {
         //注册 bean
         var beanClass = Arrays.stream(modules)
                 .flatMap(c -> c.classList().stream())
-                .filter(ScxHelper::isBeanClass)
+                .filter(ScxAppHelper::isBeanClass)
                 .toArray(Class<?>[]::new);
 
         for (var c : beanClass) {
@@ -223,7 +223,7 @@ public final class ScxHelper {
                 }).toList();
                 for (Scheduled scheduled : scheduledList) {
                     if (method.parameters().length != 0) {
-                        Scx.logger.log(ERROR,
+                        ScxApp.logger.log(ERROR,
                                 "被 Scheduled 注解标识的方法不可以有参数 Class [{0}] , Method [{1}]",
                                 classInfo.name(),
                                 method.name()

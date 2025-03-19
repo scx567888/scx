@@ -13,7 +13,7 @@ import static cool.scx.http.method.HttpMethod.*;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public final class ScxHttpRouter extends RouterImpl {
+public final class ScxAppHttpRouter extends RouterImpl {
 
     private static final HttpMethod[] DEFAULT_ALLOWED_METHODS = new HttpMethod[]{GET, POST, OPTIONS, DELETE, PATCH, PUT};
     private static final HttpFieldName[] DEFAULT_ALLOWED_HEADERS = new HttpFieldName[]{ACCEPT, CONTENT_TYPE};
@@ -24,7 +24,7 @@ public final class ScxHttpRouter extends RouterImpl {
     //基本 handler 对应的 路由
     private final Route corsHandlerRoute;
 
-    public ScxHttpRouter(Scx scx) {
+    public ScxAppHttpRouter(ScxApp scx) {
         //设置基本的 handler
         this.corsHandler = initCorsHandler(scx.scxOptions().allowedOrigin());
         //注册路由

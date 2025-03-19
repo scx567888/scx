@@ -1,6 +1,6 @@
 package cool.scx.app.test.website;
 
-import cool.scx.app.ScxContext;
+import cool.scx.app.ScxAppContext;
 import cool.scx.app.test.car.CarService;
 import cool.scx.app.test.person.Person;
 import cool.scx.app.test.person.PersonService;
@@ -62,14 +62,14 @@ public class WebSiteController {
 
     @ScxRoute(methods = HttpMethod.GET)
     public static void TestTransaction(RoutingContext ctx) throws Exception {
-        var personService = ScxContext.getBean(PersonService.class);
+        var personService = ScxAppContext.getBean(PersonService.class);
         var p1 = personService.add(new Person().setMoney(100));
         var p2 = personService.add(new Person().setMoney(200));
         var sb = new StringBuilder();
         sb.append("转账开始前: ").append("p1(").append(p1.money).append(") p2(").append(p2.money).append(")</br>");
         try {
             //模拟 转账
-            ScxContext.autoTransaction(() -> {
+            ScxAppContext.autoTransaction(() -> {
 
                 // todo 此处需要支持并发处理 及 同时执行 给 p1 扣钱 和 给 p2 加钱                 
                 //给 p1 扣钱

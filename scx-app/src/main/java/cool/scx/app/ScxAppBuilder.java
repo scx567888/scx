@@ -17,7 +17,7 @@ import java.util.*;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public final class ScxBuilder {
+public final class ScxAppBuilder {
 
     /// 默认配置键值对, 以便在没有配置文件的时候可以使项目正确启动
     private static final Map<String, Object> DEFAULT_CONFIG_MAP = initDefaultConfigMap();
@@ -29,7 +29,7 @@ public final class ScxBuilder {
     private static final String DEFAULT_SCX_CONFIG_PATH = "AppRoot:scx-config.json";
 
     /// 用来存储临时待添加的 scxModules
-    private final List<ScxModule> scxModules = new ArrayList<>();
+    private final List<ScxAppModule> scxModules = new ArrayList<>();
 
     /// 用来存储临时待添加的 scxFeatureConfig
     private final ScxFeatureConfig scxFeatureConfig = new ScxFeatureConfig();
@@ -49,7 +49,7 @@ public final class ScxBuilder {
     private Object defaultHttpServerOptions;
 
     /// 构造函数
-    public ScxBuilder() {
+    public ScxAppBuilder() {
         appKey = DEFAULT_APP_KEY;
         defaultHttpServerOptions = null;
     }
@@ -108,14 +108,14 @@ public final class ScxBuilder {
     }
 
     /// a
-    public Scx run() {
+    public ScxApp run() {
         return this.build().run();
     }
 
     /// 构建
     ///
     /// @return a
-    public Scx build() {
+    public ScxApp build() {
         //检查 appKey
         checkAppKey(appKey);
         //检查 mainClass
@@ -131,14 +131,14 @@ public final class ScxBuilder {
         scxConfigSources.add(defaultArgsConfigSource);
         //创建 scx 实例
         var scxConfig = new ScxConfig(scxConfigSources.toArray(ScxConfigSource[]::new));
-        return new Scx(scxEnvironment, appKey, scxFeatureConfig, scxConfig, scxModules.toArray(ScxModule[]::new), defaultHttpServerOptions);
+        return new ScxApp(scxEnvironment, appKey, scxFeatureConfig, scxConfig, scxModules.toArray(ScxAppModule[]::new), defaultHttpServerOptions);
     }
 
     /// 添加多个模块
     ///
     /// @param modules a
     /// @return a
-    public ScxBuilder addModule(ScxModule... modules) {
+    public ScxAppBuilder addModule(ScxAppModule... modules) {
         this.scxModules.addAll(Arrays.asList(modules));
         return this;
     }
@@ -147,7 +147,7 @@ public final class ScxBuilder {
     ///
     /// @param mainClass a
     /// @return a
-    public ScxBuilder setMainClass(Class<?> mainClass) {
+    public ScxAppBuilder setMainClass(Class<?> mainClass) {
         this.mainClass = mainClass;
         return this;
     }
@@ -156,7 +156,7 @@ public final class ScxBuilder {
     ///
     /// @param appKey a
     /// @return a
-    public ScxBuilder setAppKey(String appKey) {
+    public ScxAppBuilder setAppKey(String appKey) {
         this.appKey = appKey;
         return this;
     }
@@ -165,7 +165,7 @@ public final class ScxBuilder {
     ///
     /// @param args a
     /// @return a
-    public ScxBuilder setArgs(String... args) {
+    public ScxAppBuilder setArgs(String... args) {
         this.args = args;
         return this;
     }
@@ -175,12 +175,12 @@ public final class ScxBuilder {
     /// @param scxFeature s
     /// @param state      s
     /// @return a
-    public ScxBuilder configure(ScxAppFeature scxFeature, boolean state) {
+    public ScxAppBuilder configure(ScxAppFeature scxFeature, boolean state) {
         scxFeatureConfig.set(scxFeature, state);
         return this;
     }
 
-    public ScxBuilder setDefaultHttpServerOptions(XHttpServerOptions options) {
+    public ScxAppBuilder setDefaultHttpServerOptions(XHttpServerOptions options) {
         this.defaultHttpServerOptions = options;
         return this;
     }

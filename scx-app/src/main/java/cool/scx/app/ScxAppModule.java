@@ -5,8 +5,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import static cool.scx.app.ScxHelper.findClassListByScxModule;
-import static cool.scx.app.ScxHelper.findRootPathByScxModule;
+import static cool.scx.app.ScxAppHelper.findClassListByScxModule;
+import static cool.scx.app.ScxAppHelper.findRootPathByScxModule;
 
 /// Scx 模块接口 , 自定义模块必须实现此接口
 /// 当自定义的模块实现此接口之后 , 会根据 自定义模块的 根 package 进行扫描 , 所以功能代码请放在自定义模块的包或子包下
@@ -14,7 +14,7 @@ import static cool.scx.app.ScxHelper.findRootPathByScxModule;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public abstract class ScxModule {
+public abstract class ScxAppModule {
 
     /// 模块中所有的 class
     protected final List<Class<?>> classList;
@@ -28,7 +28,7 @@ public abstract class ScxModule {
     protected final String defaultName = this.getClass().getSimpleName();
 
     /// 在模块创建时 加载所有包含的 class
-    public ScxModule() {
+    public ScxAppModule() {
         try {
             //这里使用 ArrayList 重新包装一下 以便后续可以修改
             this.classList = new ArrayList<>(findClassListByScxModule(this.getClass()));
@@ -40,13 +40,13 @@ public abstract class ScxModule {
 
     /// 核心模块初始化完成调用
     /// 注意请不要阻塞此方法
-    public void start(Scx scx) {
+    public void start(ScxApp scx) {
 
     }
 
     /// 项目停止或结束时调用
     /// 注意请不要阻塞此方法
-    public void stop(Scx scx) {
+    public void stop(ScxApp scx) {
 
     }
 
