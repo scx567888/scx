@@ -82,7 +82,7 @@ final class Http1Helper {
         try (inputStream) {
             inputStream.transferTo(OutputStream.nullOutputStream());
         } catch (IOException e) {
-            // 忽略异常
+            // todo 这里需要 忽略异常 还是根据 不同类型忽略
         }
     }
 
