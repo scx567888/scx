@@ -30,7 +30,7 @@ public class ScxHttpHeadersTest {
 
     @Test
     public static void test2() {
-        var h = parseHeaders(ScxHttpHeaders.of(),"""
+        var h = parseHeaders(ScxHttpHeaders.of(), """
                 a:b\r
                 c: d\r
                 e:   f\r

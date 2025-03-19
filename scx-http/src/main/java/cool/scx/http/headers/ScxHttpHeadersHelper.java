@@ -2,7 +2,7 @@ package cool.scx.http.headers;
 
 import java.util.regex.Pattern;
 
-/// ScxHttpHeadersHelper 
+/// ScxHttpHeadersHelper
 ///
 /// @author scx567888
 /// @version 0.0.1

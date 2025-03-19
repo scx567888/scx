@@ -23,7 +23,7 @@ public class HeadersTest {
             h.contentLength(100);
             h.contentType(ScxMediaType.of(MediaType.APPLICATION_JSON).charset(StandardCharsets.UTF_8));
             var s = encodeHeaders(h);
-            var nw = parseHeaders(ScxHttpHeaders.of(),s);
+            var nw = parseHeaders(ScxHttpHeaders.of(), s);
         }
         System.out.println((System.nanoTime() - l) / 1000_000);
     }
