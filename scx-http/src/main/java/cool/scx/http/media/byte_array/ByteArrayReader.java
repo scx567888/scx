@@ -20,7 +20,7 @@ public final class ByteArrayReader implements MediaReader<byte[]> {
 
     @Override
     public byte[] read(InputStream inputStream, ScxHttpHeaders headers) {
-        try {
+        try (inputStream) {
             return inputStream.readAllBytes();
         } catch (IOException e) {
             throw new RuntimeException(e);

@@ -43,7 +43,7 @@ public final class StringReader implements MediaReader<String> {
     @Override
     public String read(InputStream inputStream, ScxHttpHeaders headers) {
         var c = charset != null ? charset : getContentTypeCharsetOrUTF8(headers);
-        try {
+        try (inputStream) {
             var bytes = inputStream.readAllBytes();
             return new String(bytes, c);
         } catch (IOException e) {
