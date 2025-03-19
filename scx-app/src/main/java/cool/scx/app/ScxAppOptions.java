@@ -19,7 +19,7 @@ import static cool.scx.common.util.NetUtils.getLocalIPAddress;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public final class ScxOptions {
+public final class ScxAppOptions {
 
     /// 端口号
     private final int port;
@@ -51,7 +51,7 @@ public final class ScxOptions {
     /// 模板 根目录 字符串值
     private final Path templateRoot;
 
-    public ScxOptions(ScxConfig scxConfig, ScxEnvironment scxEnvironment, String appKey) {
+    public ScxAppOptions(ScxConfig scxConfig, ScxEnvironment scxEnvironment, String appKey) {
         port = scxConfig.getOrDefault("scx.port", 8080);
         allowedOrigin = scxConfig.getOrDefault("scx.allowed-origin", "*");
         templateRoot = scxConfig.get("scx.template.root", AppRootHandler.of(scxEnvironment, "AppRoot:/c/"));

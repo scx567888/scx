@@ -6,7 +6,7 @@ import cool.scx.ansi.Ansi;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class ScxVersion {
+public class ScxAppVersion {
 
     /// SCX 版本号
     public static final String SCX_VERSION = "3.4.4";

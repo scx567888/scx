@@ -1,8 +1,8 @@
 package cool.scx.app.test;
 
-import cool.scx.app.Scx;
-import cool.scx.app.ScxContext;
-import cool.scx.app.ScxModule;
+import cool.scx.app.ScxApp;
+import cool.scx.app.ScxAppModule;
+import cool.scx.app.ScxAppContext;
 import cool.scx.app.base.BaseModelService;
 import cool.scx.app.enumeration.ScxAppFeature;
 import cool.scx.app.test.car.Car;
@@ -44,7 +44,7 @@ import static cool.scx.data.query.QueryBuilder.*;
 import static java.lang.System.Logger.Level.ERROR;
 import static org.testng.AssertJUnit.assertEquals;
 
-public class TestModule extends ScxModule {
+public class TestModule extends ScxAppModule {
 
     public static void main(String[] args) throws SocketException {
         runModule();
@@ -59,7 +59,7 @@ public class TestModule extends ScxModule {
     public static void runModule() {
         //模拟外部参数
         var args = new String[]{"--scx.port=8888", "--scx.config.path=AppRoot:scx-config.json"};
-        Scx.builder()
+        ScxApp.builder()
                 .setMainClass(TestModule.class)
                 .addModule(new TestModule())
                 .setArgs(args)
@@ -73,16 +73,16 @@ public class TestModule extends ScxModule {
                 .run();
         //修复表
         try {
-            ScxContext.sqlRunner().execute(SQL.sql("drop database if exists scx_test; create database scx_test; use scx_test"));
+            ScxAppContext.sqlRunner().execute(SQL.sql("drop database if exists scx_test; create database scx_test; use scx_test"));
         } catch (Exception ignored) {
 
         }
-        ScxContext.scx().fixTable();
+        ScxAppContext.scx().fixTable();
     }
 
     @Test
     public static void test0() {
-        var carService = ScxContext.getBean(CarService.class);
+        var carService = ScxAppContext.getBean(CarService.class);
         var carService1 = new BaseModelService<>(Car.class);
         try {
             if (carService1.count() < 1500) {
@@ -132,7 +132,7 @@ public class TestModule extends ScxModule {
             //插入数据 方式2
             System.err.println("事务开始前数据库中 数据条数 : " + carService.count());
 
-            ScxContext.autoTransaction(() -> {
+            ScxAppContext.autoTransaction(() -> {
                 System.err.println("现在插入 1 数据条数");
                 var bb = new Car();
                 bb.name = "唯一ID";
@@ -150,7 +150,7 @@ public class TestModule extends ScxModule {
 
     @Test
     public static void test1() throws SocketException {
-        ScxExceptionHelper.wrap(() -> FileUtils.write(ScxContext.getTempPath("test.txt"), "内容2内容2内容2内容2😂😂😂!!!".getBytes(StandardCharsets.UTF_8)));
+        ScxExceptionHelper.wrap(() -> FileUtils.write(ScxAppContext.getTempPath("test.txt"), "内容2内容2内容2内容2😂😂😂!!!".getBytes(StandardCharsets.UTF_8)));
         var ip = Arrays.stream(NetUtils.getLocalIPAddress()).filter(i -> i instanceof Inet4Address).toList().getFirst();
         var logger = System.getLogger(TestModule.class.getName());
         //测试 URIBuilder
@@ -162,7 +162,7 @@ public class TestModule extends ScxModule {
                             .addQuery("age", 18),
                     MultiPart.of()
                             .add("content", "内容内容内容内容内容".getBytes(StandardCharsets.UTF_8))
-                            .add("content1", ScxContext.getTempPath("test.txt"))
+                            .add("content1", ScxAppContext.getTempPath("test.txt"))
             ).body();
             logger.log(ERROR, "测试请求[{0}] : {1}", i, stringHttpResponse.asString());
         }
@@ -171,16 +171,16 @@ public class TestModule extends ScxModule {
     @Test
     public static void test2() {
         var car = new Car();
-        ScxContext.eventBus().consumer("test-event-bus", (c) -> {
+        ScxAppContext.eventBus().consumer("test-event-bus", (c) -> {
             assertEquals(c, car);
         });
-        ScxContext.eventBus().publish("test-event-bus", car);
+        ScxAppContext.eventBus().publish("test-event-bus", car);
     }
 
     @Test
     public static void test3() {
-        var personService = ScxContext.getBean(PersonService.class);
-        var carService = ScxContext.getBean(CarService.class);
+        var personService = ScxAppContext.getBean(PersonService.class);
+        var carService = ScxAppContext.getBean(CarService.class);
         if (personService.count() < 200) {
             List<Car> list = carService.find();
             var ps = new ArrayList<Person>();
@@ -215,14 +215,14 @@ public class TestModule extends ScxModule {
             zipBuilder.put("第一个目录/这是一系列空目录/这是一系列空目录/这是一系列空目录/这是一系列空目录/这是一系列空目录");
             zipBuilder.put("第一个目录/这不是一系列空目录/这不是一系列空目录/这不是一系列空目录/这不是一系列空目录/这不是一系列空目录");
             zipBuilder.put("第一个目录/这不是一系列空目录/这不是一系列空目录/这不是一系列空目录/这不是一系列空目录/这不是一系列空目录/一个文本文件.txt", "一些内容,一些内容,一些内容,一些内容 下😊😂🤣❤😍😒👌😘".getBytes(StandardCharsets.UTF_8));
-            zipBuilder.toFile(ScxContext.getTempPath("aaaaa.zip"));
+            zipBuilder.toFile(ScxAppContext.getTempPath("aaaaa.zip"));
 
             //解压再压缩
-            new UnZipBuilder(ScxContext.getTempPath("aaaaa.zip")).toFile(ScxContext.getTempPath("hhhh"));
-            new ZipBuilder(ScxContext.getTempPath("hhhh")).toFile(ScxContext.getTempPath("bbbbb.zip"));
+            new UnZipBuilder(ScxAppContext.getTempPath("aaaaa.zip")).toFile(ScxAppContext.getTempPath("hhhh"));
+            new ZipBuilder(ScxAppContext.getTempPath("hhhh")).toFile(ScxAppContext.getTempPath("bbbbb.zip"));
             //重复一次
-            new UnZipBuilder(ScxContext.getTempPath("bbbbb.zip")).toFile(ScxContext.getTempPath("gggggg"), new ZipOptions().setIncludeRoot(true));
-            new ZipBuilder(ScxContext.getTempPath("gggggg"), new ZipOptions().setIncludeRoot(true)).toFile(ScxContext.getTempPath("ccccc.zip"));
+            new UnZipBuilder(ScxAppContext.getTempPath("bbbbb.zip")).toFile(ScxAppContext.getTempPath("gggggg"), new ZipOptions().setIncludeRoot(true));
+            new ZipBuilder(ScxAppContext.getTempPath("gggggg"), new ZipOptions().setIncludeRoot(true)).toFile(ScxAppContext.getTempPath("ccccc.zip"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -230,7 +230,7 @@ public class TestModule extends ScxModule {
     }
 
     @Override
-    public void start(Scx scx) {
+    public void start(ScxApp scx) {
         scx.scxHttpRouter().route()
                 .path("/static/*")
                 .handler(new StaticHandler(scx.scxEnvironment().getPathByAppRoot("AppRoot:c\\static")));
