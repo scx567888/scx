@@ -1,4 +1,4 @@
-package cool.scx.http.headers.connection;
+package cool.scx.http.x.http1.headers.connection;
 
 record ScxConnectionTypeImpl(String value) implements ScxConnectionType {
 
