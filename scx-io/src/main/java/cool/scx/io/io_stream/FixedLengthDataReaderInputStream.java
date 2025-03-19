@@ -15,6 +15,13 @@ public class FixedLengthDataReaderInputStream extends InputStream {
     private final PowerfulLinkedDataReader dataReader;
     private final long maxLength;
     private long position;
+    private volatile boolean closed;
+
+    private void ensureOpen() throws IOException {
+        if (closed) {
+            throw new IOException("Stream closed");
+        }
+    }
 
     public FixedLengthDataReaderInputStream(PowerfulLinkedDataReader dataReader, long maxLength) {
         this.dataReader = dataReader;
@@ -23,7 +30,8 @@ public class FixedLengthDataReaderInputStream extends InputStream {
     }
 
     @Override
-    public int read() {
+    public int read() throws IOException {
+        ensureOpen();
         if (position >= maxLength) {
             return -1;
         }
@@ -38,7 +46,8 @@ public class FixedLengthDataReaderInputStream extends InputStream {
     }
 
     @Override
-    public int read(byte[] b, int off, int len) {
+    public int read(byte[] b, int off, int len) throws IOException {
+        ensureOpen();
         if (position >= maxLength) {
             return -1;
         }
@@ -55,6 +64,7 @@ public class FixedLengthDataReaderInputStream extends InputStream {
 
     @Override
     public long transferTo(OutputStream out) throws IOException {
+        ensureOpen();
         if (position >= maxLength) {
             return -1;
         }
@@ -69,4 +79,9 @@ public class FixedLengthDataReaderInputStream extends InputStream {
         }
     }
 
+    @Override
+    public void close() throws IOException {
+        closed = true;
+    }
+    
 }
