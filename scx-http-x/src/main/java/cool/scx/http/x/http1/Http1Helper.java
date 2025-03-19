@@ -6,7 +6,6 @@ import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.peer_info.PeerInfo;
 import cool.scx.http.peer_info.PeerInfoWritable;
 import cool.scx.http.version.HttpVersion;
-import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.tcp.ScxTCPSocket;
 
 import java.io.IOException;
@@ -16,7 +15,7 @@ import java.nio.charset.StandardCharsets;
 
 import static cool.scx.common.util.StringUtils.isBlank;
 import static cool.scx.http.headers.HttpFieldName.*;
-import static cool.scx.http.x.http1.headers.transfer_encoding.EncodingType.CHUNKED;
+import static cool.scx.http.x.http1.transfer_encoding.EncodingType.CHUNKED;
 import static cool.scx.http.method.HttpMethod.GET;
 
 final class Http1Helper {

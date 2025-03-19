@@ -2,12 +2,10 @@ package cool.scx.http.x.http1;
 
 import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.exception.*;
-import cool.scx.http.headers.ScxHttpHeadersHelper;
 import cool.scx.http.version.HttpVersion;
 import cool.scx.http.x.XHttpServerOptions;
 import cool.scx.http.x.http1.Http1RequestLineHelper.InvalidHttpRequestLineException;
 import cool.scx.http.x.http1.Http1RequestLineHelper.InvalidHttpVersion;
-import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.io.data_reader.PowerfulLinkedDataReader;
 import cool.scx.io.data_supplier.InputStreamDataSupplier;
 import cool.scx.io.exception.NoMatchFoundException;
@@ -26,7 +24,7 @@ import java.util.function.Consumer;
 
 import static cool.scx.http.headers.ScxHttpHeadersHelper.encodeHeaders;
 import static cool.scx.http.headers.ScxHttpHeadersHelper.parseHeaders;
-import static cool.scx.http.x.http1.headers.connection.ConnectionType.CLOSE;
+import static cool.scx.http.x.http1.connection.ConnectionType.CLOSE;
 import static cool.scx.http.x.http1.Http1Helper.*;
 import static java.lang.System.Logger.Level.TRACE;
 import static java.lang.System.getLogger;
