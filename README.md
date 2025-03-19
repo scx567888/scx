@@ -71,19 +71,19 @@ English | [简体中文](./README.zh-CN.md)
 #### 1. Write your own module and run the main method .
 
 ``` java
-import cool.scx.app.Scx;
-import cool.scx.app.ScxModule;
+import cool.scx.app.ScxApp;
+import cool.scx.app.ScxAppModule;
 import cool.scx.http.method.HttpMethod;
 import cool.scx.web.annotation.ScxRoute;
 
 // Note : Custom modules need extends ScxModule
 // This @ScxRoute indicate this class needs to be scanned by WebHandler
 @ScxRoute
-public class YourModule extends ScxModule {
+public class YourModule extends ScxAppModule {
 
     public static void main(String[] args) {
         // Use Scx Builder, build and run project
-        Scx.builder()
+        ScxApp.builder()
                 .setMainClass(YourModule.class) // 1, The class of the Main method
                 .addModule(new YourModule())    // 2, Your own modules
                 .setArgs(args)                  // 3, External parameters
