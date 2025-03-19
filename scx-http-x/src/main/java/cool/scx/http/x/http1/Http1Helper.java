@@ -82,7 +82,7 @@ final class Http1Helper {
         try (inputStream) {
             inputStream.transferTo(OutputStream.nullOutputStream());
         } catch (IOException e) {
-            throw new CloseConnectionException();
+            // 忽略异常
         }
     }
 
