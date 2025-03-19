@@ -2,12 +2,12 @@ package cool.scx.http.x.http1;
 
 import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.exception.*;
-import cool.scx.http.headers.ScxHttpHeaders;
-import cool.scx.http.headers.ScxHttpHeadersWritable;
+import cool.scx.http.headers.ScxHttpHeadersHelper;
 import cool.scx.http.version.HttpVersion;
 import cool.scx.http.x.XHttpServerOptions;
 import cool.scx.http.x.http1.Http1RequestLineHelper.InvalidHttpRequestLineException;
 import cool.scx.http.x.http1.Http1RequestLineHelper.InvalidHttpVersion;
+import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.io.data_reader.PowerfulLinkedDataReader;
 import cool.scx.io.data_supplier.InputStreamDataSupplier;
 import cool.scx.io.exception.NoMatchFoundException;
@@ -24,7 +24,9 @@ import java.lang.System.Logger;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
-import static cool.scx.http.headers.connection.ConnectionType.CLOSE;
+import static cool.scx.http.headers.ScxHttpHeadersHelper.encodeHeaders;
+import static cool.scx.http.headers.ScxHttpHeadersHelper.parseHeaders;
+import static cool.scx.http.x.http1.headers.connection.ConnectionType.CLOSE;
 import static cool.scx.http.x.http1.Http1Helper.*;
 import static java.lang.System.Logger.Level.TRACE;
 import static java.lang.System.getLogger;
@@ -157,19 +159,19 @@ public class Http1ServerConnection {
         }
     }
 
-    private ScxHttpHeadersWritable readHeaders() {
+    private Http1Headers readHeaders() {
         //尝试读取 headers
         try {
             // 有可能没有头 也就是说 请求行后直接跟着 \r\n , 这里检查一下
             var a = dataReader.peek(2);
             if (Arrays.equals(a, CRLF_BYTES)) {
                 dataReader.skip(2);
-                return ScxHttpHeaders.of();
+                return new Http1Headers();
             }
 
             var headerBytes = dataReader.readUntil(CRLF_CRLF_BYTES, options.maxHeaderSize());
             var headerStr = new String(headerBytes);
-            return ScxHttpHeaders.of(headerStr);
+            return parseHeaders(new Http1Headers(),headerStr);
         } catch (NoMoreDataException | UncheckedIOException e) {
             // Socket 关闭了 或者底层 Socket 发生异常
             throw new CloseConnectionException();
@@ -183,7 +185,7 @@ public class Http1ServerConnection {
     }
 
     //todo 这里如果 dataReader 抛出了 NoMoreDataException 我们需要处理
-    private InputStream readBodyInputStream(ScxHttpHeaders headers) {
+    private InputStream readBodyInputStream(Http1Headers headers) {
         // http1.1 本质上只有两种请求体格式 1, 分块传输 2, 指定长度 (当然也可以没有长度 那就表示没有请求体)
 
         //1, 判断请求体是不是分块传输
@@ -218,7 +220,7 @@ public class Http1ServerConnection {
         sb.append(e.status().description());
         sb.append("\r\n");
 
-        var headers = ScxHttpHeaders.of();
+        var headers = new Http1Headers();
         // we are escaping the connection loop, the connection will be closed
         headers.connection(CLOSE);
 
@@ -226,7 +228,7 @@ public class Http1ServerConnection {
 
         headers.contentLength(message.length);
 
-        var headerStr = headers.encode();
+        var headerStr = encodeHeaders(headers);
 
         sb.append(headerStr);
         sb.append("\r\n");

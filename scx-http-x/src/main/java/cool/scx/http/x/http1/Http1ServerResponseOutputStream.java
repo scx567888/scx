@@ -1,19 +1,19 @@
 package cool.scx.http.x.http1;
 
-import cool.scx.http.headers.ScxHttpHeaders;
+import cool.scx.http.x.http1.headers.Http1Headers;
 
 import java.io.IOException;
 import java.io.OutputStream;
 
-import static cool.scx.http.headers.connection.ConnectionType.CLOSE;
+import static cool.scx.http.x.http1.headers.connection.ConnectionType.CLOSE;
 
 public class Http1ServerResponseOutputStream extends OutputStream {
 
     private final Http1ServerConnection connection;
-    private final ScxHttpHeaders headers;
+    private final Http1Headers headers;
     private final OutputStream out;
 
-    public Http1ServerResponseOutputStream(Http1ServerConnection connection, ScxHttpHeaders headers) {
+    public Http1ServerResponseOutputStream(Http1ServerConnection connection, Http1Headers headers) {
         this.connection = connection;
         this.headers = headers;
         this.out = connection.dataWriter;

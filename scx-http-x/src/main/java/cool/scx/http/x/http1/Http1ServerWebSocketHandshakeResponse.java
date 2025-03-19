@@ -1,8 +1,8 @@
 package cool.scx.http.x.http1;
 
 import cool.scx.http.ScxHttpServerResponse;
-import cool.scx.http.headers.ScxHttpHeadersWritable;
-import cool.scx.http.headers.connection.ConnectionType;
+import cool.scx.http.x.http1.headers.Http1Headers;
+import cool.scx.http.x.http1.headers.connection.ConnectionType;
 import cool.scx.http.status.ScxHttpStatus;
 import cool.scx.http.web_socket.ScxServerWebSocket;
 import cool.scx.http.web_socket.ScxServerWebSocketHandshakeRequest;
@@ -19,7 +19,7 @@ public class Http1ServerWebSocketHandshakeResponse implements ScxServerWebSocket
 
     private final Http1ServerConnection connection;
     private final Http1ServerWebSocketHandshakeRequest request;
-    private final ScxHttpServerResponse response;
+    private final Http1ServerResponse response;
     private ServerWebSocket webSocket;
 
     public Http1ServerWebSocketHandshakeResponse(Http1ServerConnection connection, Http1ServerWebSocketHandshakeRequest request) {
@@ -60,7 +60,7 @@ public class Http1ServerWebSocketHandshakeResponse implements ScxServerWebSocket
     }
 
     @Override
-    public ScxHttpHeadersWritable headers() {
+    public Http1Headers headers() {
         return response.headers();
     }
 

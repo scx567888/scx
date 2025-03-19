@@ -46,7 +46,7 @@ public class Http1ServerRequest implements ScxHttpServerRequest {
     }
 
     @Override
-    public ScxHttpServerResponse response() {
+    public Http1ServerResponse response() {
         return this.response;
     }
 

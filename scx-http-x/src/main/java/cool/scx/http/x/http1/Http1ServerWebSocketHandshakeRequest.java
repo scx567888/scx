@@ -25,7 +25,7 @@ public class Http1ServerWebSocketHandshakeRequest implements ScxServerWebSocketH
     }
 
     @Override
-    public ScxServerWebSocketHandshakeResponse response() {
+    public Http1ServerWebSocketHandshakeResponse response() {
         return this.response;
     }
 
