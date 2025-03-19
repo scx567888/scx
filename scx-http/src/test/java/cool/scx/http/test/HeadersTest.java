@@ -6,6 +6,9 @@ import cool.scx.http.media_type.ScxMediaType;
 
 import java.nio.charset.StandardCharsets;
 
+import static cool.scx.http.headers.ScxHttpHeadersHelper.encodeHeaders;
+import static cool.scx.http.headers.ScxHttpHeadersHelper.parseHeaders;
+
 public class HeadersTest {
 
     public static void main(String[] args) {
@@ -19,8 +22,8 @@ public class HeadersTest {
             h.add("Content-Disposition", "form-data; name=myname");
             h.contentLength(100);
             h.contentType(ScxMediaType.of(MediaType.APPLICATION_JSON).charset(StandardCharsets.UTF_8));
-            var s = h.encode();
-            var nw = ScxHttpHeaders.of(s);
+            var s = encodeHeaders(h);
+            var nw = parseHeaders(ScxHttpHeaders.of(),s);
         }
         System.out.println((System.nanoTime() - l) / 1000_000);
     }

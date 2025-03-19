@@ -7,6 +7,7 @@ import cool.scx.http.media_type.ScxMediaType;
 
 import java.io.OutputStream;
 
+import static cool.scx.http.headers.ScxHttpHeadersHelper.encodeHeaders;
 import static cool.scx.http.media_type.MediaType.MULTIPART_FORM_DATA;
 
 /// MultiPartWriter
@@ -42,7 +43,7 @@ public class MultiPartWriter implements MediaWriter {
             for (var multiPartPart : multiPart) {
                 //发送头
                 outputStream.write(h);
-                var headers = multiPartPart.headers().encode();
+                var headers = encodeHeaders(multiPartPart.headers());
                 //写入头
                 outputStream.write(headers.getBytes());
                 //写入换行符

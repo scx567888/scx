@@ -1,18 +1,15 @@
 package cool.scx.http.headers;
 
 import cool.scx.http.headers.accept.Accept;
-import cool.scx.http.headers.connection.Connection;
 import cool.scx.http.headers.content_disposition.ContentDisposition;
 import cool.scx.http.headers.cookie.Cookie;
 import cool.scx.http.headers.cookie.Cookies;
-import cool.scx.http.headers.transfer_encoding.TransferEncoding;
 import cool.scx.http.media_type.ScxMediaType;
 import cool.scx.http.parameters.Parameters;
 
 import java.util.List;
 
 import static cool.scx.http.headers.HttpFieldName.*;
-import static cool.scx.http.headers.ScxHttpHeadersHelper.parseHeaders;
 
 /// 只读的 Headers 可用于 ServerRequest 和 ClientResponse
 /// 在 Parameters 的基础上实现了一些 方便操作 Http 头协议的方法
@@ -23,10 +20,6 @@ public interface ScxHttpHeaders extends Parameters<ScxHttpHeaderName, String> {
 
     static ScxHttpHeadersWritable of() {
         return new ScxHttpHeadersImpl();
-    }
-
-    static ScxHttpHeadersWritable of(String headerStr) {
-        return parseHeaders(headerStr);
     }
 
     static ScxHttpHeadersWritable of(ScxHttpHeaders oldHeaders) {
@@ -83,20 +76,6 @@ public interface ScxHttpHeaders extends Parameters<ScxHttpHeaderName, String> {
     default Accept accept() {
         var c = get(ACCEPT);
         return c != null ? Accept.of(c) : null;
-    }
-
-    default TransferEncoding transferEncoding() {
-        var c = get(TRANSFER_ENCODING);
-        return c != null ? TransferEncoding.parseTransferEncoding(c) : null;
-    }
-
-    default Connection connection() {
-        var c = get(CONNECTION);
-        return c != null ? Connection.parseConnection(c) : null;
-    }
-
-    default String encode() {
-        return ScxHttpHeadersHelper.encodeHeaders(this);
     }
 
 }

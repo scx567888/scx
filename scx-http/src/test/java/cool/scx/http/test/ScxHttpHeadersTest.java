@@ -5,6 +5,8 @@ import org.testng.annotations.Test;
 
 import static cool.scx.http.headers.HttpFieldName.CONTENT_LENGTH;
 import static cool.scx.http.headers.HttpFieldName.CONTENT_TYPE;
+import static cool.scx.http.headers.ScxHttpHeadersHelper.encodeHeaders;
+import static cool.scx.http.headers.ScxHttpHeadersHelper.parseHeaders;
 
 public class ScxHttpHeadersTest {
 
@@ -22,13 +24,13 @@ public class ScxHttpHeadersTest {
         headers.add("abc", "456");
         headers.remove("abc");
         for (var header : headers) {
-            System.out.println(header);
+            System.out.println(encodeHeaders(headers));
         }
     }
 
     @Test
     public static void test2() {
-        var h = ScxHttpHeaders.of("""
+        var h = parseHeaders(ScxHttpHeaders.of(),"""
                 a:b\r
                 c: d\r
                 e:   f\r
