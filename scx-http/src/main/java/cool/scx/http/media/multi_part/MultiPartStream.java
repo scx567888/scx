@@ -14,6 +14,7 @@ import static cool.scx.http.headers.ScxHttpHeadersHelper.parseHeaders;
 import static cool.scx.io.IOHelper.inputStreamToDataReader;
 
 /// MultiPartStream
+/// todo 这里没有关闭流 可能出现问题
 ///
 /// @author scx567888
 /// @version 0.0.1
