@@ -5,7 +5,6 @@ import cool.scx.http.exception.ScxHttpException;
 import cool.scx.http.media_type.ScxMediaType;
 import cool.scx.http.routing.RoutingContext;
 import cool.scx.http.status.ScxHttpStatus;
-import cool.scx.http.status.ScxHttpStatusHelper;
 
 import java.lang.System.Logger;
 import java.util.LinkedHashMap;
@@ -50,7 +49,7 @@ public class ScxHttpExceptionHandler implements ExceptionHandler {
         if (info == null) {
             info = "";
         }
-        var reasonPhrase= getReasonPhrase(status, "unknown");
+        var reasonPhrase = getReasonPhrase(status, "unknown");
         var accepts = routingContext.request().headers().accept();
         //根据 accept 返回不同的错误信息 只有明确包含的时候才返回 html
         if (accepts != null && accepts.contains(TEXT_HTML)) {

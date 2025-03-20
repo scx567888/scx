@@ -3,7 +3,6 @@ package cool.scx.http.x.test;
 import cool.scx.http.exception.ScxHttpException;
 import cool.scx.http.exception.UnauthorizedException;
 import cool.scx.http.routing.Router;
-import cool.scx.http.status.ScxHttpStatusHelper;
 import cool.scx.http.x.XHttpServer;
 import cool.scx.http.x.XHttpServerOptions;
 
@@ -64,7 +63,7 @@ public class Test {
 
         router.errorHandler((e, ctx) -> {
             if (e instanceof ScxHttpException s) {
-                ctx.response().status(s.status()).send(getReasonPhrase(s.status(),"unknown"));
+                ctx.response().status(s.status()).send(getReasonPhrase(s.status(), "unknown"));
             } else {
                 ctx.response().status(INTERNAL_SERVER_ERROR).send(e.getMessage());
             }
