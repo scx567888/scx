@@ -33,7 +33,7 @@ public interface ScxHttpServerRequest {
 
     PeerInfo localPeer();
 
-    //******************** 以下为 uri 简化操作方法 *******************
+    //******************** 简化 URI 操作 *******************
 
     default String path() {
         return uri().path();
@@ -47,7 +47,7 @@ public interface ScxHttpServerRequest {
         return uri().getQuery(name);
     }
 
-    //******************** 以下为 headers 简化操作方法 *******************
+    //******************** 简化 Headers 操作 *******************
 
     default String getHeader(ScxHttpHeaderName name) {
         return headers().get(name);
