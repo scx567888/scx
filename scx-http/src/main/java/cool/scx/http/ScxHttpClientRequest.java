@@ -34,7 +34,6 @@ import java.nio.file.Path;
 /// @version 0.0.1
 public interface ScxHttpClientRequest {
 
-    // ************* 基本方法 ****************
     HttpVersion version();
 
     ScxHttpMethod method();
@@ -53,11 +52,7 @@ public interface ScxHttpClientRequest {
 
     ScxHttpClientResponse send(MediaWriter writer);
 
-    //************** 简化操作 ***************
-
-    default ScxHttpClientRequest uri(String uri) {
-        return uri(ScxURI.of(uri));
-    }
+    //******************** send 操作 *******************
 
     default ScxHttpClientResponse send() {
         return send(new EmptyWriter());
@@ -103,7 +98,14 @@ public interface ScxHttpClientRequest {
         return send(new ObjectWriter(object));
     }
 
-    //************** 简化 Headers 操作 *************
+
+    //******************** 简化操作 *******************
+
+    default ScxHttpClientRequest uri(String uri) {
+        return uri(ScxURI.of(uri));
+    }
+
+    //******************** 简化 Headers 操作 *******************
 
     default ScxHttpClientRequest setHeader(ScxHttpHeaderName headerName, String... values) {
         this.headers().set(headerName, values);
