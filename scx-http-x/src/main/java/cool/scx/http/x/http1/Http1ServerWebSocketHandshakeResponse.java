@@ -75,8 +75,8 @@ public class Http1ServerWebSocketHandshakeResponse implements ScxServerWebSocket
     }
 
     @Override
-    public boolean isClosed() {
-        return response.isClosed();
+    public boolean isSent() {
+        return response.isSent();
     }
 
 

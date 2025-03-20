@@ -7,6 +7,8 @@ import cool.scx.http.status.ScxHttpStatus;
 import cool.scx.http.x.http1.chunked.HttpChunkedOutputStream;
 import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.http.x.http1.status_line.Http1StatusLine;
+import cool.scx.io.io_stream.CheckedOutputStream;
+import cool.scx.io.io_stream.NullCheckedOutputStream;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -19,7 +21,6 @@ import static cool.scx.http.x.http1.Http1Helper.checkResponseHasBody;
 import static cool.scx.http.x.http1.headers.connection.ConnectionType.CLOSE;
 import static cool.scx.http.x.http1.headers.connection.ConnectionType.KEEP_ALIVE;
 import static cool.scx.http.x.http1.headers.transfer_encoding.EncodingType.CHUNKED;
-import static java.io.OutputStream.nullOutputStream;
 
 /// todo 待完成
 ///
@@ -27,9 +28,9 @@ import static java.io.OutputStream.nullOutputStream;
 /// @version 0.0.1
 public class Http1ServerResponse implements ScxHttpServerResponse {
 
+    private final Http1ServerConnection connection;
     private final Http1ServerRequest request;
     private final Http1Headers headers;
-    private final OutputStream dataWriter;
     private ScxHttpStatus status;
     private String reasonPhrase;
     private OutputStream outputStream;
@@ -38,7 +39,7 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
         this.request = request;
         this.status = HttpStatus.OK;
         this.headers = new Http1Headers();
-        this.dataWriter = new Http1ServerResponseOutputStream(connection, this.headers);
+        this.connection = connection;
     }
 
     @Override
@@ -80,9 +81,15 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
     }
 
     @Override
-    public boolean isClosed() {
-        //todo 这里的 isClosed 应该表示 什么 是当前 响应已结束 还是 当前连接已结束
-        return false;
+    public boolean isSent() {
+        if (outputStream == null) {
+            return false;
+        }
+        var o = outputStream instanceof HttpChunkedOutputStream c ? c.outputStream() : outputStream;
+        if (o instanceof CheckedOutputStream c) {
+            return c.isClosed();
+        }
+        throw new IllegalStateException("unknown type output stream");
     }
 
     public String createReasonPhrase() {
@@ -124,23 +131,24 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
         sb.append("\r\n");
 
         try {
-            dataWriter.write(sb.toString().getBytes());
+            connection.dataWriter.write(sb.toString().getBytes());
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
 
+        //3, 只有明确表示 close 的时候我们才关闭
+        var c = headers.connection();
+        var closeConnection = c != null && c.contains(CLOSE);
+
         //没有响应体
         if (!hasBody) {
-            return nullOutputStream();
+            return new NullCheckedOutputStream();
         }
 
+        // todo 这里的 Http1ServerResponseOutputStream 应该根据 contentLength 进行限制
+        var baseOutputStream = new Http1ServerResponseOutputStream(connection, closeConnection);
         //采用分块传输
-        if (useChunkedTransfer) {
-            return new HttpChunkedOutputStream(dataWriter);
-        } else {
-            //直接返回原始格式
-            return dataWriter;
-        }
+        return useChunkedTransfer ? new HttpChunkedOutputStream(baseOutputStream) : baseOutputStream;
 
     }
 

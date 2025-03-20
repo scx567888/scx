@@ -62,4 +62,8 @@ public class HttpChunkedOutputStream extends OutputStream {
         out.write(bytes, pos, 8 - pos);
     }
 
+    public OutputStream outputStream() {
+        return out;
+    }
+
 }

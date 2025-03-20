@@ -1,49 +1,48 @@
 package cool.scx.http.x.http1;
 
-import cool.scx.http.x.http1.headers.Http1Headers;
+import cool.scx.io.io_stream.CheckedOutputStream;
 
 import java.io.IOException;
-import java.io.OutputStream;
 
-import static cool.scx.http.x.http1.headers.connection.ConnectionType.CLOSE;
-
-public class Http1ServerResponseOutputStream extends OutputStream {
+public class Http1ServerResponseOutputStream extends CheckedOutputStream {
 
     private final Http1ServerConnection connection;
-    private final Http1Headers headers;
-    private final OutputStream out;
+    private final boolean closeConnection;
 
-    public Http1ServerResponseOutputStream(Http1ServerConnection connection, Http1Headers headers) {
+    public Http1ServerResponseOutputStream(Http1ServerConnection connection, boolean closeConnection) {
         this.connection = connection;
-        this.headers = headers;
-        this.out = connection.dataWriter;
+        this.closeConnection = closeConnection;
     }
 
     @Override
     public void write(int b) throws IOException {
-        this.out.write(b);
+        ensureOpen();
+        connection.dataWriter.write(b);
     }
 
     @Override
     public void write(byte[] b) throws IOException {
-        this.out.write(b);
+        ensureOpen();
+        connection.dataWriter.write(b);
     }
 
     @Override
     public void write(byte[] b, int off, int len) throws IOException {
-        this.out.write(b, off, len);
+        ensureOpen();
+        connection.dataWriter.write(b, off, len);
     }
 
     @Override
     public void flush() throws IOException {
-        this.out.flush();
+        ensureOpen();
+        connection.dataWriter.flush();
     }
 
     @Override
     public void close() throws IOException {
+        closed = true;
         //3, 只有明确表示 close 的时候我们才关闭
-        var connection = headers.connection();
-        if (connection != null && connection.contains(CLOSE)) {
+        if (closeConnection) {
             this.connection.close();// 服务器也需要显式关闭连接
         }
     }
