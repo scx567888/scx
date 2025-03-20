@@ -7,7 +7,9 @@ import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.media_type.ScxMediaType;
 
+import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UncheckedIOException;
 
 import static cool.scx.common.util.ObjectUtils.jsonMapper;
 import static cool.scx.common.util.ObjectUtils.xmlMapper;
@@ -35,7 +37,7 @@ public class JsonNodeWriter implements MediaWriter {
             return headersWritable.contentType();
         }
         var accept = headers.accept();
-        // 如果客户端未指明 accepts 则返回 json 
+        // 如果客户端未指明 Accepts 则返回 JSON 
         if (accept == null) {
             headersWritable.contentType(ScxMediaType.of(APPLICATION_JSON).charset(UTF_8));
             return headersWritable.contentType();
@@ -62,10 +64,12 @@ public class JsonNodeWriter implements MediaWriter {
             } else if (APPLICATION_XML.equalsIgnoreParams(contentType)) {
                 data = xmlMapper().writeValueAsString(jsonNode).getBytes(UTF_8);
             } else {
+                //这里 表示用户设置的 类型 既不是 JSON 也不是 XML 我们无法处理 抛出异常
                 throw new IllegalArgumentException("Unsupported media type: " + contentType);
             }
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            //这里表示用户的 jsonNode 无法被转换为字符串 (比如递归引用) 这里抛出异常
+            throw new IllegalArgumentException(e);
         }
         if (responseHeaders.contentLength() == null) {
             responseHeaders.contentLength(data.length);
@@ -76,8 +80,8 @@ public class JsonNodeWriter implements MediaWriter {
     public void write(OutputStream outputStream) {
         try (outputStream) {
             outputStream.write(data);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
         }
     }
 

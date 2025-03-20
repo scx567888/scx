@@ -6,6 +6,7 @@ import cool.scx.http.media.MediaWriter;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UncheckedIOException;
 
 /// ByteArrayWriter
 ///
@@ -31,7 +32,7 @@ public class ByteArrayWriter implements MediaWriter {
         try (outputStream) {
             outputStream.write(bytes);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new UncheckedIOException(e);
         }
     }
 
