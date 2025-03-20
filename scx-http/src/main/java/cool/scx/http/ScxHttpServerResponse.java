@@ -40,7 +40,7 @@ public interface ScxHttpServerResponse {
 
     ScxHttpServerResponse status(ScxHttpStatus code);
 
-    OutputStream outputstream();
+    OutputStream outputStream();
 
     boolean isClosed();
 
