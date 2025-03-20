@@ -19,6 +19,8 @@ public interface ScxHttpClientResponse {
 
     ScxHttpBody body();
 
+    //******************** 以下为 headers 简化操作方法 *******************
+
     default String getHeader(ScxHttpHeaderName name) {
         return headers().get(name);
     }
