@@ -40,7 +40,11 @@ public interface ScxHttpServerResponse {
 
     ScxHttpServerResponse status(ScxHttpStatus code);
 
-    OutputStream sendHeaders();
+    /// 发送头部 , 多次调用会抛出异常
+    void sendHeaders();
+
+    /// 获取 body 的输出流 , 初次调用会自动尝试发送头部
+    OutputStream bodyOutputStream();
 
     boolean isClosed();
 
@@ -48,7 +52,7 @@ public interface ScxHttpServerResponse {
 
     default void send(MediaWriter writer) {
         writer.beforeWrite(headers(), request().headers());
-        writer.write(sendHeaders());
+        writer.write(bodyOutputStream());
     }
 
     default void send() {
