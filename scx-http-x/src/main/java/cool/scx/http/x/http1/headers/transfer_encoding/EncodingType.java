@@ -1,4 +1,4 @@
-package cool.scx.http.x.http1.transfer_encoding;
+package cool.scx.http.x.http1.headers.transfer_encoding;
 
 public enum EncodingType implements ScxEncodingType {
 

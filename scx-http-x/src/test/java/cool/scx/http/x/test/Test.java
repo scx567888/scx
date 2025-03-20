@@ -9,6 +9,7 @@ import cool.scx.http.x.XHttpServerOptions;
 import static cool.scx.http.method.HttpMethod.GET;
 import static cool.scx.http.method.HttpMethod.POST;
 import static cool.scx.http.status.HttpStatus.INTERNAL_SERVER_ERROR;
+import static cool.scx.http.status.ScxHttpStatusHelper.getReasonPhrase;
 
 public class Test {
 
@@ -62,7 +63,7 @@ public class Test {
 
         router.errorHandler((e, ctx) -> {
             if (e instanceof ScxHttpException s) {
-                ctx.response().status(s.status()).send(s.status().description());
+                ctx.response().status(s.status()).send(getReasonPhrase(s.status(), "unknown"));
             } else {
                 ctx.response().status(INTERNAL_SERVER_ERROR).send(e.getMessage());
             }

@@ -1,4 +1,4 @@
-package cool.scx.http.x.http1;
+package cool.scx.http.x.http1.request_line;
 
 import cool.scx.http.method.ScxHttpMethod;
 import cool.scx.http.uri.ScxURI;

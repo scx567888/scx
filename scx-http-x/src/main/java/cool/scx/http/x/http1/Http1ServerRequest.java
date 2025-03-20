@@ -8,6 +8,7 @@ import cool.scx.http.method.ScxHttpMethod;
 import cool.scx.http.peer_info.PeerInfo;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.version.HttpVersion;
+import cool.scx.http.x.http1.request_line.Http1RequestLine;
 
 import static cool.scx.http.x.http1.Http1Helper.*;
 

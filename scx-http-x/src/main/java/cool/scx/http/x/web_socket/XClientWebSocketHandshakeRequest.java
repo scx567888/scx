@@ -11,8 +11,8 @@ import cool.scx.http.web_socket.ScxClientWebSocketHandshakeRequest;
 import cool.scx.http.web_socket.ScxClientWebSocketHandshakeResponse;
 import cool.scx.http.x.XHttpClient;
 import cool.scx.http.x.http1.Http1ClientConnection;
-import cool.scx.http.x.http1.Http1Headers;
-import cool.scx.http.x.http1.connection.ConnectionType;
+import cool.scx.http.x.http1.headers.Http1Headers;
+import cool.scx.http.x.http1.headers.connection.ConnectionType;
 import cool.scx.tcp.ScxTCPClient;
 import cool.scx.tcp.ScxTCPSocket;
 

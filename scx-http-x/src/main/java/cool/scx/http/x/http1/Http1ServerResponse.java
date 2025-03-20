@@ -4,6 +4,8 @@ import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.ScxHttpServerResponse;
 import cool.scx.http.status.HttpStatus;
 import cool.scx.http.status.ScxHttpStatus;
+import cool.scx.http.x.http1.chunked.HttpChunkedOutputStream;
+import cool.scx.http.x.http1.headers.Http1Headers;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -12,10 +14,11 @@ import java.io.UncheckedIOException;
 import static cool.scx.http.headers.HttpFieldName.SERVER;
 import static cool.scx.http.headers.ScxHttpHeadersHelper.encodeHeaders;
 import static cool.scx.http.status.HttpStatus.*;
+import static cool.scx.http.status.ScxHttpStatusHelper.getReasonPhrase;
 import static cool.scx.http.x.http1.Http1Helper.checkIsChunkedTransfer;
-import static cool.scx.http.x.http1.connection.ConnectionType.CLOSE;
-import static cool.scx.http.x.http1.connection.ConnectionType.KEEP_ALIVE;
-import static cool.scx.http.x.http1.transfer_encoding.EncodingType.CHUNKED;
+import static cool.scx.http.x.http1.headers.connection.ConnectionType.CLOSE;
+import static cool.scx.http.x.http1.headers.connection.ConnectionType.KEEP_ALIVE;
+import static cool.scx.http.x.http1.headers.transfer_encoding.EncodingType.CHUNKED;
 import static java.io.OutputStream.nullOutputStream;
 
 /// todo 待完成
@@ -28,6 +31,7 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
     private final Http1Headers headers;
     private final OutputStream dataWriter;
     private ScxHttpStatus status;
+    private String reasonPhrase;
 
     Http1ServerResponse(Http1ServerConnection connection, Http1ServerRequest request) {
         this.request = request;
@@ -44,6 +48,15 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
     @Override
     public ScxHttpStatus status() {
         return status;
+    }
+
+    public String reasonPhrase() {
+        return reasonPhrase;
+    }
+
+    public Http1ServerResponse reasonPhrase(String reasonPhrase) {
+        this.reasonPhrase = reasonPhrase;
+        return this;
     }
 
     @Override
@@ -66,7 +79,7 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
         sb.append(" ");
         sb.append(status.code());
         sb.append(" ");
-        sb.append(status.description());
+        sb.append(createReasonPhrase());
         sb.append("\r\n");
 
         //用户可能已经自行设置了 CONNECTION
@@ -133,6 +146,10 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
     public boolean isClosed() {
         //todo 这里的 isClosed 应该表示 什么 是当前 响应已结束 还是 当前连接已结束
         return false;
+    }
+
+    public String createReasonPhrase() {
+        return reasonPhrase != null ? reasonPhrase : getReasonPhrase(status, "unknown");
     }
 
 }

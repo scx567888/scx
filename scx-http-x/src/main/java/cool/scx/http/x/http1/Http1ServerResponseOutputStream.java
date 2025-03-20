@@ -1,9 +1,11 @@
 package cool.scx.http.x.http1;
 
+import cool.scx.http.x.http1.headers.Http1Headers;
+
 import java.io.IOException;
 import java.io.OutputStream;
 
-import static cool.scx.http.x.http1.connection.ConnectionType.CLOSE;
+import static cool.scx.http.x.http1.headers.connection.ConnectionType.CLOSE;
 
 public class Http1ServerResponseOutputStream extends OutputStream {
 

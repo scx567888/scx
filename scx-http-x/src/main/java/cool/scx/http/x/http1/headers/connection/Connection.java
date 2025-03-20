@@ -1,4 +1,4 @@
-package cool.scx.http.x.http1.connection;
+package cool.scx.http.x.http1.headers.connection;
 
 import java.util.ArrayList;
 import java.util.Iterator;
