@@ -5,11 +5,13 @@ import cool.scx.http.exception.ScxHttpException;
 import cool.scx.http.media_type.ScxMediaType;
 import cool.scx.http.routing.RoutingContext;
 import cool.scx.http.status.ScxHttpStatus;
+import cool.scx.http.status.ScxHttpStatusHelper;
 
 import java.lang.System.Logger;
 import java.util.LinkedHashMap;
 
 import static cool.scx.http.media_type.MediaType.TEXT_HTML;
+import static cool.scx.http.status.ScxHttpStatusHelper.getReasonPhrase;
 import static java.lang.System.Logger.Level.ERROR;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -48,10 +50,11 @@ public class ScxHttpExceptionHandler implements ExceptionHandler {
         if (info == null) {
             info = "";
         }
+        var reasonPhrase= getReasonPhrase(status, "unknown");
         var accepts = routingContext.request().headers().accept();
         //根据 accept 返回不同的错误信息 只有明确包含的时候才返回 html
         if (accepts != null && accepts.contains(TEXT_HTML)) {
-            var htmlStr = String.format(htmlTemplate, status.description(), status, status.description(), info);
+            var htmlStr = String.format(htmlTemplate, reasonPhrase, status, reasonPhrase, info);
             routingContext.response()
                     .contentType(ScxMediaType.of(TEXT_HTML).charset(UTF_8))
                     .status(status)
@@ -59,7 +62,7 @@ public class ScxHttpExceptionHandler implements ExceptionHandler {
         } else {
             var tempMap = new LinkedHashMap<>();
             tempMap.put("status", status);
-            tempMap.put("title", status.description());
+            tempMap.put("title", reasonPhrase);
             tempMap.put("info", info);
             routingContext.response()
                     .status(status)

@@ -4,13 +4,13 @@ import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.exception.*;
 import cool.scx.http.version.HttpVersion;
 import cool.scx.http.x.XHttpServerOptions;
+import cool.scx.http.x.http1.chunked.HttpChunkedDataSupplier;
 import cool.scx.http.x.http1.exception.HttpVersionNotSupportedException;
 import cool.scx.http.x.http1.exception.RequestHeaderFieldsTooLargeException;
+import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.http.x.http1.request_line.Http1RequestLine;
 import cool.scx.http.x.http1.request_line.Http1RequestLineHelper.InvalidHttpRequestLineException;
 import cool.scx.http.x.http1.request_line.Http1RequestLineHelper.InvalidHttpVersion;
-import cool.scx.http.x.http1.headers.Http1Headers;
-import cool.scx.http.x.http1.chunked.HttpChunkedDataSupplier;
 import cool.scx.io.data_reader.PowerfulLinkedDataReader;
 import cool.scx.io.data_supplier.InputStreamDataSupplier;
 import cool.scx.io.exception.NoMatchFoundException;
@@ -29,6 +29,7 @@ import java.util.function.Consumer;
 
 import static cool.scx.http.headers.ScxHttpHeadersHelper.encodeHeaders;
 import static cool.scx.http.headers.ScxHttpHeadersHelper.parseHeaders;
+import static cool.scx.http.status.ScxHttpStatusHelper.getReasonPhrase;
 import static cool.scx.http.x.http1.Http1Helper.*;
 import static cool.scx.http.x.http1.headers.connection.ConnectionType.CLOSE;
 import static java.lang.System.Logger.Level.TRACE;
@@ -215,19 +216,22 @@ public class Http1ServerConnection {
         //todo 这个方法不是特别合理,
         // 不一定所有的 情况都需要关闭连接 是否可以在 ScxHttpException 中添加是否严重 或者根据状态码来区分 ?
 
+        var status = e.status();
+        var reasonPhrase = getReasonPhrase(status, "unknown");
+
         var sb = new StringBuilder();
         sb.append(HttpVersion.HTTP_1_1.value());
         sb.append(" ");
-        sb.append(e.status().code());
+        sb.append(status.code());
         sb.append(" ");
-        sb.append(e.status().description());
+        sb.append(reasonPhrase);
         sb.append("\r\n");
 
         var headers = new Http1Headers();
         // we are escaping the connection loop, the connection will be closed
         headers.connection(CLOSE);
 
-        var message = e.status().description().getBytes();
+        var message = reasonPhrase.getBytes();
 
         headers.contentLength(message.length);
 

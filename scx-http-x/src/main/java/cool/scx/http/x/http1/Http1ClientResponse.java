@@ -15,9 +15,11 @@ public class Http1ClientResponse implements ScxHttpClientResponse {
     private final ScxHttpStatus status;
     private final ScxHttpHeaders headers;
     private final ScxHttpBody body;
+    private final String reasonPhrase;
 
     public Http1ClientResponse(Http1StatusLine statusLine, ScxHttpHeaders headers, ScxHttpBody body) {
-        this.status = ScxHttpStatus.of(statusLine.code(), statusLine.reason());
+        this.status = ScxHttpStatus.of(statusLine.code());
+        this.reasonPhrase = statusLine.reason();
         this.headers = headers;
         this.body = body;
     }
@@ -25,6 +27,10 @@ public class Http1ClientResponse implements ScxHttpClientResponse {
     @Override
     public ScxHttpStatus status() {
         return status;
+    }
+
+    public String reasonPhrase() {
+        return reasonPhrase;
     }
 
     @Override
