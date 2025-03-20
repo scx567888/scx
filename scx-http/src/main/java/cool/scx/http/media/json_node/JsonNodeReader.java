@@ -22,33 +22,43 @@ public class JsonNodeReader implements MediaReader<JsonNode> {
 
     public static final JsonNodeReader JSON_NODE_READER = new JsonNodeReader();
 
+    private JsonNodeReader() {
+
+    }
+
     @Override
     public JsonNode read(InputStream inputStream, ScxHttpHeaders requestHeaders) {
+        // 1, 先读取为字符串
         var str = STRING_READER.read(inputStream, requestHeaders);
+        // 2, 根据不同 contentType 进行处理
         var contentType = requestHeaders.contentType();
-        //猜测一下
+        // 尝试 JSON
         if (APPLICATION_JSON.equalsIgnoreParams(contentType)) {
             try {
                 return jsonMapper().readTree(str);
             } catch (JsonProcessingException e) {
-                throw new BadRequestException(e);
+                throw new BadRequestException("JSON 格式不正确 !!!", e);
             }
         }
+        // 尝试 XML
         if (APPLICATION_XML.equalsIgnoreParams(contentType)) {
             try {
                 return xmlMapper().readTree(str);
             } catch (JsonProcessingException e) {
-                throw new BadRequestException(e);
+                throw new BadRequestException("XML 格式不正确 !!!", e);
             }
         }
-        try { //先尝试以 json 格式进行尝试转换
+
+        //JSON 和 XML 均不匹配 进行猜测
+        try { //先尝试以 JSON 格式进行尝试转换
             return jsonMapper().readTree(str);
         } catch (Exception exception) {
-            try {//再尝试以 xml 的格式进行转换
+            try {//再尝试以 XML 的格式进行转换
                 return xmlMapper().readTree(str);
             } catch (JsonProcessingException e) {
-                // json 和 xml 均转换失败 直接报错
-                throw new IllegalArgumentException(str);
+                // JSON 和 XML 均转换失败 直接报错
+                // 这里因为客户端没有指定格式 所以不能抛出 BadRequestException 这种客户端错误 而是应该抛出内部错误
+                throw new IllegalArgumentException("无法转换为 JsonNode !!! : " + str);
             }
         }
     }
