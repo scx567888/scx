@@ -42,7 +42,7 @@ public interface ScxHttpServerResponse {
 
     OutputStream outputStream();
 
-    boolean isClosed();
+    boolean isSent();
 
     //******************** send 操作 *******************
 
