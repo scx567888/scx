@@ -32,7 +32,6 @@ import java.nio.file.Path;
 /// @version 0.0.1
 public interface ScxHttpServerResponse {
 
-    // ************* 基本方法 ****************
     ScxHttpServerRequest request();
 
     ScxHttpStatus status();
@@ -41,22 +40,15 @@ public interface ScxHttpServerResponse {
 
     ScxHttpServerResponse status(ScxHttpStatus code);
 
-    ///  发送响应头
-    ///
-    /// @return body 流
     OutputStream sendHeaders();
 
     boolean isClosed();
 
+    //******************** send 操作 *******************
+
     default void send(MediaWriter writer) {
         writer.beforeWrite(headers(), request().headers());
         writer.write(sendHeaders());
-    }
-
-    //************** 简化操作 ***************
-
-    default ScxHttpServerResponse status(int code) {
-        return status(ScxHttpStatus.of(code));
     }
 
     default void send() {
@@ -109,7 +101,13 @@ public interface ScxHttpServerResponse {
         return writer.eventStream();
     }
 
-    //************** 简化 Headers 操作 *************
+    //******************** 简化操作 *******************
+
+    default ScxHttpServerResponse status(int code) {
+        return status(ScxHttpStatus.of(code));
+    }
+
+    //******************** 简化 Headers 操作 *******************
 
     default ScxHttpServerResponse setHeader(ScxHttpHeaderName headerName, String... values) {
         this.headers().set(headerName, values);
