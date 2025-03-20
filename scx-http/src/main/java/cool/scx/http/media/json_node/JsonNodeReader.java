@@ -37,6 +37,8 @@ public class JsonNodeReader implements MediaReader<JsonNode> {
             try {
                 return jsonMapper().readTree(str);
             } catch (JsonProcessingException e) {
+                // 这里既然客户端已经 指定了 contentType 为 JSON 我们却无法转换 说明 客户端发送的 内容格式可能有误 
+                // 所以这里 抛出 客户端错误 BadRequestException
                 throw new BadRequestException("JSON 格式不正确 !!!", e);
             }
         }
@@ -45,6 +47,7 @@ public class JsonNodeReader implements MediaReader<JsonNode> {
             try {
                 return xmlMapper().readTree(str);
             } catch (JsonProcessingException e) {
+                // 同上
                 throw new BadRequestException("XML 格式不正确 !!!", e);
             }
         }

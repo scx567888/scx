@@ -22,6 +22,7 @@ public class FormParamsReader implements MediaReader<FormParams> {
 
     @Override
     public FormParams read(InputStream inputStream, ScxHttpHeaders headers) {
+        // FormParams 本质上就是字符串 所以这里使用 STRING_READER 先进行内容读取
         var str = STRING_READER.read(inputStream, headers);
         return decodeFormParams(str);
     }
