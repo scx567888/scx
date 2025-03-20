@@ -7,6 +7,7 @@ import java.io.InputStream;
 
 import static cool.scx.http.media.string.StringReader.getContentTypeCharsetOrUTF8;
 
+/// ClientEventStreamReader
 public class ClientEventStreamReader implements MediaReader<ClientEventStream> {
 
     public static final ClientEventStreamReader CLIENT_EVENT_STREAM_READER = new ClientEventStreamReader();
