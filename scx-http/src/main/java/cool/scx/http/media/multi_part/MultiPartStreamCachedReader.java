@@ -22,7 +22,7 @@ public class MultiPartStreamCachedReader implements MediaReader<MultiPart> {
         this.cachePath = cachePath;
     }
 
-    public MultiPartStreamCachedReader() {
+    private MultiPartStreamCachedReader() {
         // 默认放在 操作系统临时目录下 .SCX-CACHE
         this.cachePath = Path.of(System.getProperty("java.io.tmpdir")).resolve(".SCX-CACHE");
     }
