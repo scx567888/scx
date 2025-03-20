@@ -17,11 +17,10 @@ public class MultiPartStreamReader implements MediaReader<MultiPart> {
     public static final MultiPartStreamReader MULTI_PART_READER = new MultiPartStreamReader();
 
     private MultiPartStreamReader() {
-        
+
     }
 
-    @Override
-    public MultiPart read(InputStream inputStream, ScxHttpHeaders headers) {
+    public static String checkedBoundary(ScxHttpHeaders headers) {
         var contentType = headers.contentType();
         // 分块传输依赖 contentType 所以这里需要强制校验
         if (contentType == null) {
@@ -37,6 +36,12 @@ public class MultiPartStreamReader implements MediaReader<MultiPart> {
             // 当 Content-Type 已经是 MULTIPART_FORM_DATA 了 ,  boundary 是必须的 所以这里抛出客户端错误 
             throw new BadRequestException("No boundary found");
         }
+        return boundary;
+    }
+
+    @Override
+    public MultiPart read(InputStream inputStream, ScxHttpHeaders headers) {
+        var boundary = checkedBoundary(headers);
         return new MultiPartStream(inputStream, boundary);
     }
 

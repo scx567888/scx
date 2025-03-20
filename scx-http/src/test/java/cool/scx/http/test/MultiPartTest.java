@@ -10,6 +10,8 @@ import org.testng.annotations.Test;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
+import static cool.scx.http.media.multi_part.MultiPartStreamReader.MULTI_PART_READER;
+
 public class MultiPartTest {
 
     public static void main(String[] args) {
@@ -59,10 +61,8 @@ public class MultiPartTest {
         long l1 = System.nanoTime();
         for (int j = 0; j < 9999; j = j + 1) {
 
-            var i = new MultiPartStreamReader();
-
             var s = new ByteArrayInputStream(byteArray);
-            MultiPart read = i.read(s, ScxHttpHeaders.of().contentType(ScxMediaType.of(MediaType.MULTIPART_FORM_DATA).boundary("wwwwwwwwww")));
+            MultiPart read = MULTI_PART_READER.read(s, ScxHttpHeaders.of().contentType(ScxMediaType.of(MediaType.MULTIPART_FORM_DATA).boundary("wwwwwwwwww")));
 
             for (MultiPartPart multiPartPart : read) {
 //                System.out.println(multiPartPart.name() + " : " + multiPartPart.asBytes().length);
