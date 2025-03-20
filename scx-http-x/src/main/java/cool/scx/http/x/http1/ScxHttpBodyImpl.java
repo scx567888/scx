@@ -2,6 +2,7 @@ package cool.scx.http.x.http1;
 
 import cool.scx.http.ScxHttpBody;
 import cool.scx.http.headers.ScxHttpHeaders;
+import cool.scx.http.media.MediaReader;
 
 import java.io.InputStream;
 
@@ -14,6 +15,11 @@ public record ScxHttpBodyImpl(InputStream inputStream, ScxHttpHeaders headers) i
     @Override
     public String toString() {
         return asString();
+    }
+
+    @Override
+    public <T> T as(MediaReader<T> t) {
+        return t.read(inputStream, headers);
     }
 
 }

@@ -6,16 +6,16 @@ import cool.scx.http.status.HttpStatus;
 import cool.scx.http.status.ScxHttpStatus;
 import cool.scx.http.x.http1.chunked.HttpChunkedOutputStream;
 import cool.scx.http.x.http1.headers.Http1Headers;
+import cool.scx.http.x.http1.status_line.Http1StatusLine;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
 
-import static cool.scx.http.headers.HttpFieldName.SERVER;
 import static cool.scx.http.headers.ScxHttpHeadersHelper.encodeHeaders;
-import static cool.scx.http.status.HttpStatus.*;
 import static cool.scx.http.status.ScxHttpStatusHelper.getReasonPhrase;
 import static cool.scx.http.x.http1.Http1Helper.checkIsChunkedTransfer;
+import static cool.scx.http.x.http1.Http1Helper.checkResponseHasBody;
 import static cool.scx.http.x.http1.headers.connection.ConnectionType.CLOSE;
 import static cool.scx.http.x.http1.headers.connection.ConnectionType.KEEP_ALIVE;
 import static cool.scx.http.x.http1.headers.transfer_encoding.EncodingType.CHUNKED;
@@ -32,6 +32,7 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
     private final OutputStream dataWriter;
     private ScxHttpStatus status;
     private String reasonPhrase;
+    private OutputStream outputStream;
 
     Http1ServerResponse(Http1ServerConnection connection, Http1ServerRequest request) {
         this.request = request;
@@ -71,16 +72,29 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
     }
 
     @Override
-    public OutputStream sendHeaders() {
+    public OutputStream outputStream() {
+        if (outputStream == null) {
+            outputStream = sendHeaders();
+        }
+        return outputStream;
+    }
 
-        //1, 响应头
-        var sb = new StringBuilder();
-        sb.append(request.version().value());
-        sb.append(" ");
-        sb.append(status.code());
-        sb.append(" ");
-        sb.append(createReasonPhrase());
-        sb.append("\r\n");
+    @Override
+    public boolean isClosed() {
+        //todo 这里的 isClosed 应该表示 什么 是当前 响应已结束 还是 当前连接已结束
+        return false;
+    }
+
+    public String createReasonPhrase() {
+        return reasonPhrase != null ? reasonPhrase : getReasonPhrase(status, "unknown");
+    }
+
+    private OutputStream sendHeaders() {
+
+        //1, 响应行
+        var statusLine = new Http1StatusLine(request.version(), status.code(), createReasonPhrase());
+
+        var sb = new StringBuilder(statusLine.encode()).append("\r\n");
 
         //用户可能已经自行设置了 CONNECTION
         if (headers.connection() == null) {
@@ -91,16 +105,7 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
             }
         }
 
-        //用户可能已经自行设置了 SERVER
-        if (!headers.contains(SERVER)) {
-            headers.set(SERVER, "SCX");
-        }
-
-        var hasBody = true;
-        //是否不需要响应体
-        if (SWITCHING_PROTOCOLS.equals(status) || NO_CONTENT.equals(status) || NOT_MODIFIED.equals(status)) {
-            hasBody = false;
-        }
+        var hasBody = checkResponseHasBody(status);
 
         //如果需要响应体
         if (hasBody) {
@@ -110,13 +115,9 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
             }
         }
 
-        var useChunkedTransfer = false;
+        var useChunkedTransfer = checkIsChunkedTransfer(headers);
 
         //判断是否需要分段传输
-        if (checkIsChunkedTransfer(headers)) {
-            useChunkedTransfer = true;
-        }
-
         var headerStr = encodeHeaders(headers);
 
         sb.append(headerStr);
@@ -140,16 +141,7 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
             //直接返回原始格式
             return dataWriter;
         }
-    }
 
-    @Override
-    public boolean isClosed() {
-        //todo 这里的 isClosed 应该表示 什么 是当前 响应已结束 还是 当前连接已结束
-        return false;
-    }
-
-    public String createReasonPhrase() {
-        return reasonPhrase != null ? reasonPhrase : getReasonPhrase(status, "unknown");
     }
 
 }
