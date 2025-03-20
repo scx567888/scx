@@ -14,7 +14,7 @@ public abstract class CheckedOutputStream extends OutputStream {
         }
     }
 
-    public boolean isClosed(){
+    public boolean isClosed() {
         return closed;
     }
 

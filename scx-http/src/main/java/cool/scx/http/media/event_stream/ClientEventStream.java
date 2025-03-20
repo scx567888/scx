@@ -9,7 +9,6 @@ import java.util.function.Consumer;
 
 import static cool.scx.http.media.event_stream.EventStreamHelper.LF_BYTES;
 import static cool.scx.io.IOHelper.inputStreamToDataReader;
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 // todo 整体待重构
 // todo 这里和 MultiPartStream 一样 没有正确处理 inputStream 的关闭

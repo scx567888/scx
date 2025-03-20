@@ -45,7 +45,7 @@ public final class StringReader implements MediaReader<String> {
     public String read(InputStream inputStream, ScxHttpHeaders headers) {
         // 如果用户没有指定编码 我们尝试查找 ContentType 中的编码
         var c = charset != null ? charset : getContentTypeCharsetOrUTF8(headers);
-        
+
         try (inputStream) {
             var bytes = inputStream.readAllBytes();
             return new String(bytes, c);
