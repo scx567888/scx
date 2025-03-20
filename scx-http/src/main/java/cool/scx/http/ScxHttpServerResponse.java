@@ -48,7 +48,7 @@ public interface ScxHttpServerResponse {
 
     default void send(MediaWriter writer) {
         writer.beforeWrite(headers(), request().headers());
-        writer.write(outputstream());
+        writer.write(outputStream());
     }
 
     default void send() {
