@@ -22,7 +22,7 @@ public class Http1StatusLineHelper {
     }
 
     public static String encode(Http1StatusLine statusLine) {
-        return statusLine.version() + " " + statusLine.code() + " " + statusLine.reason();
+        return statusLine.version().value() + " " + statusLine.code() + " " + statusLine.reason();
     }
 
 }
