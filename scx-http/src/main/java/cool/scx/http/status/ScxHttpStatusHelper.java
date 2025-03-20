@@ -4,7 +4,7 @@ import java.util.EnumMap;
 
 import static cool.scx.http.status.HttpStatus.*;
 
-public final class HttpStatusHelper {
+public final class ScxHttpStatusHelper {
 
     private static final EnumMap<HttpStatus, String> MAP = initMap();
 
@@ -60,6 +60,10 @@ public final class HttpStatusHelper {
 
     public static String getReasonPhrase(HttpStatus status) {
         return MAP.get(status);
+    }
+
+    public static String getReasonPhrase(ScxHttpStatus status, String defaultReasonPhrase) {
+        return status instanceof HttpStatus s ? getReasonPhrase(s) : defaultReasonPhrase;
     }
 
 }
