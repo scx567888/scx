@@ -7,62 +7,59 @@ package cool.scx.http.status;
 /// @see <a href="https://www.rfc-editor.org/rfc/rfc9110#name-status-codes">https://www.rfc-editor.org/rfc/rfc9110#name-status-codes</a>
 public enum HttpStatus implements ScxHttpStatus {
 
-    CONTINUE(100, "Continue"),
-    SWITCHING_PROTOCOLS(101, "Switching Protocols"),
-    OK(200, "OK"),
-    CREATED(201, "Created"),
-    ACCEPTED(202, "Accepted"),
-    NON_AUTHORITATIVE_INFORMATION(203, "Non-Authoritative Information"),
-    NO_CONTENT(204, "No Content"),
-    RESET_CONTENT(205, "Reset Content"),
-    PARTIAL_CONTENT(206, "Partial Content"),
-    MULTIPLE_CHOICES(300, "Multiple Choices"),
-    MOVED_PERMANENTLY(301, "Moved Permanently"),
-    FOUND(302, "Found"),
-    SEE_OTHER(303, "See Other"),
-    NOT_MODIFIED(304, "Not Modified"),
-    TEMPORARY_REDIRECT(307, "Temporary Redirect"),
-    PERMANENT_REDIRECT(308, "Permanent Redirect"),
-    BAD_REQUEST(400, "Bad Request"),
-    UNAUTHORIZED(401, "Unauthorized"),
-    PAYMENT_REQUIRED(402, "Payment Required"),
-    FORBIDDEN(403, "Forbidden"),
-    NOT_FOUND(404, "Not Found"),
-    METHOD_NOT_ALLOWED(405, "Method Not Allowed"),
-    NOT_ACCEPTABLE(406, "Not Acceptable"),
-    PROXY_AUTHENTICATION_REQUIRED(407, "Proxy Authentication Required"),
-    REQUEST_TIMEOUT(408, "Request Timeout"),
-    CONFLICT(409, "Conflict"),
-    GONE(410, "Gone"),
-    LENGTH_REQUIRED(411, "Length Required"),
-    PRECONDITION_FAILED(412, "Precondition Failed"),
-    CONTENT_TOO_LARGE(413, "Content Too Large"),
-    URI_TOO_LONG(414, "URI Too Long"),
-    UNSUPPORTED_MEDIA_TYPE(415, "Unsupported Media Type"),
-    RANGE_NOT_SATISFIABLE(416, "Range Not Satisfiable"),
-    EXPECTATION_FAILED(417, "Expectation Failed"),
-    MISDIRECTED_REQUEST(421, "Misdirected Request"),
-    UNPROCESSABLE_CONTENT(422, "Unprocessable Content"),
-    UPGRADE_REQUIRED(426, "Upgrade Required"),
-    TOO_MANY_REQUESTS(429, "Too Many Requests"),
-    REQUEST_HEADER_FIELDS_TOO_LARGE(431, "Request Header Fields Too Large"),
-    INTERNAL_SERVER_ERROR(500, "Internal Server Error"),
-    NOT_IMPLEMENTED(501, "Not Implemented"),
-    BAD_GATEWAY(502, "Bad Gateway"),
-    SERVICE_UNAVAILABLE(503, "Service Unavailable"),
-    GATEWAY_TIMEOUT(504, "Gateway Timeout"),
-    HTTP_VERSION_NOT_SUPPORTED(505, "HTTP Version Not Supported");
+    CONTINUE(100),
+    SWITCHING_PROTOCOLS(101),
+    OK(200),
+    CREATED(201),
+    ACCEPTED(202),
+    NON_AUTHORITATIVE_INFORMATION(203),
+    NO_CONTENT(204),
+    RESET_CONTENT(205),
+    PARTIAL_CONTENT(206),
+    MULTIPLE_CHOICES(300),
+    MOVED_PERMANENTLY(301),
+    FOUND(302),
+    SEE_OTHER(303),
+    NOT_MODIFIED(304),
+    TEMPORARY_REDIRECT(307),
+    PERMANENT_REDIRECT(308),
+    BAD_REQUEST(400),
+    UNAUTHORIZED(401),
+    PAYMENT_REQUIRED(402),
+    FORBIDDEN(403),
+    NOT_FOUND(404),
+    METHOD_NOT_ALLOWED(405),
+    NOT_ACCEPTABLE(406),
+    PROXY_AUTHENTICATION_REQUIRED(407),
+    REQUEST_TIMEOUT(408),
+    CONFLICT(409),
+    GONE(410),
+    LENGTH_REQUIRED(411),
+    PRECONDITION_FAILED(412),
+    CONTENT_TOO_LARGE(413),
+    URI_TOO_LONG(414),
+    UNSUPPORTED_MEDIA_TYPE(415),
+    RANGE_NOT_SATISFIABLE(416),
+    EXPECTATION_FAILED(417),
+    MISDIRECTED_REQUEST(421),
+    UNPROCESSABLE_CONTENT(422),
+    UPGRADE_REQUIRED(426),
+    TOO_MANY_REQUESTS(429),
+    REQUEST_HEADER_FIELDS_TOO_LARGE(431),
+    INTERNAL_SERVER_ERROR(500),
+    NOT_IMPLEMENTED(501),
+    BAD_GATEWAY(502),
+    SERVICE_UNAVAILABLE(503),
+    GATEWAY_TIMEOUT(504),
+    HTTP_VERSION_NOT_SUPPORTED(505);
 
     /// 存储 code 和 对应枚举的映射
     private static final HttpStatus[] MAP = initMap();
 
     private final int code;
 
-    private final String description;
-
-    HttpStatus(int code, String description) {
+    HttpStatus(int code) {
         this.code = code;
-        this.description = description;
     }
 
     private static HttpStatus[] initMap() {
@@ -96,16 +93,6 @@ public enum HttpStatus implements ScxHttpStatus {
     @Override
     public int code() {
         return code;
-    }
-
-    @Override
-    public String description() {
-        return description;
-    }
-
-    @Override
-    public String toString() {
-        return code + " " + description;
     }
 
 }
