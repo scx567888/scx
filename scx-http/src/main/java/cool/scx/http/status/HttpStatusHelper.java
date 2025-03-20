@@ -4,7 +4,7 @@ import java.util.EnumMap;
 
 import static cool.scx.http.status.HttpStatus.*;
 
-public class HttpStatusHelper {
+public final class HttpStatusHelper {
 
     private static final EnumMap<HttpStatus, String> MAP = initMap();
 
