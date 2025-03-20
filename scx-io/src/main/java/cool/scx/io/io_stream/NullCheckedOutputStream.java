@@ -5,14 +5,6 @@ import java.io.IOException;
 /// 什么都不处理的 输出流
 public class NullCheckedOutputStream extends CheckedOutputStream {
 
-    public NullCheckedOutputStream() {
-
-    }
-
-    public NullCheckedOutputStream(boolean closed) {
-        this.closed = closed;
-    }
-
     @Override
     public void write(int b) throws IOException {
         ensureOpen();
