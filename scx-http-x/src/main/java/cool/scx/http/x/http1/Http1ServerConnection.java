@@ -4,6 +4,8 @@ import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.exception.*;
 import cool.scx.http.version.HttpVersion;
 import cool.scx.http.x.XHttpServerOptions;
+import cool.scx.http.x.http1.exception.HttpVersionNotSupportedException;
+import cool.scx.http.x.http1.exception.RequestHeaderFieldsTooLargeException;
 import cool.scx.http.x.http1.request_line.Http1RequestLine;
 import cool.scx.http.x.http1.request_line.Http1RequestLineHelper.InvalidHttpRequestLineException;
 import cool.scx.http.x.http1.request_line.Http1RequestLineHelper.InvalidHttpVersion;

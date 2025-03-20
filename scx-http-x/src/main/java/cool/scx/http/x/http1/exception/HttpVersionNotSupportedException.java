@@ -1,4 +1,6 @@
-package cool.scx.http.exception;
+package cool.scx.http.x.http1.exception;
+
+import cool.scx.http.exception.ScxHttpException;
 
 import static cool.scx.http.status.HttpStatus.HTTP_VERSION_NOT_SUPPORTED;
 
