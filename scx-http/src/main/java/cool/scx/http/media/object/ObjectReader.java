@@ -32,6 +32,7 @@ public class ObjectReader<T> implements MediaReader<T> {
 
     @Override
     public T read(InputStream inputStream, ScxHttpHeaders requestHeaders) {
+        // 这里我们直接使用 JSON_NODE_READER 来进行解析
         var jsonNode = JSON_NODE_READER.read(inputStream, requestHeaders);
         return ObjectUtils.convertValue(jsonNode, type);
     }

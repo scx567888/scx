@@ -4,20 +4,24 @@ import cool.scx.io.data_reader.LinkedDataReader;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.function.Consumer;
 
 import static cool.scx.http.media.event_stream.EventStreamHelper.LF_BYTES;
 import static cool.scx.io.IOHelper.inputStreamToDataReader;
-import static java.nio.charset.StandardCharsets.UTF_8;
 
+// todo 整体待重构
+// todo 这里和 MultiPartStream 一样 没有正确处理 inputStream 的关闭
 public class ClientEventStream {
 
     private final LinkedDataReader dataReader;
+    private final Charset charset;
     private Consumer<SseEvent> eventHandler;
     private boolean running;
 
-    public ClientEventStream(InputStream in) {
+    public ClientEventStream(InputStream in, Charset charset) {
         this.dataReader = inputStreamToDataReader(in);
+        this.charset = charset;
         this.running = true;
     }
 
@@ -35,7 +39,7 @@ public class ClientEventStream {
 
             var bytes = dataReader.readUntil(LF_BYTES);
 
-            var line = new String(bytes, UTF_8);
+            var line = new String(bytes, charset);
 
             if (line.isEmpty()) {
                 // 事件结束，返回 SseEvent

@@ -6,7 +6,7 @@ import cool.scx.http.media.MediaReader;
 import java.io.InputStream;
 import java.nio.file.Path;
 
-import static cool.scx.http.media_type.MediaType.MULTIPART_FORM_DATA;
+import static cool.scx.http.media.multi_part.MultiPartStreamReader.checkedBoundary;
 
 /// MultiPartStreamCachedReader
 ///
@@ -22,23 +22,14 @@ public class MultiPartStreamCachedReader implements MediaReader<MultiPart> {
         this.cachePath = cachePath;
     }
 
-    public MultiPartStreamCachedReader() {
+    private MultiPartStreamCachedReader() {
+        // 默认放在 操作系统临时目录下 .SCX-CACHE
         this.cachePath = Path.of(System.getProperty("java.io.tmpdir")).resolve(".SCX-CACHE");
     }
 
     @Override
     public MultiPart read(InputStream inputStream, ScxHttpHeaders headers) {
-        var contentType = headers.contentType();
-        if (contentType == null) {
-            throw new IllegalArgumentException("No Content-Type header found");
-        }
-        if (!MULTIPART_FORM_DATA.equalsIgnoreParams(contentType)) {
-            throw new IllegalArgumentException("Content-Type is not multipart/form-data");
-        }
-        var boundary = contentType.boundary();
-        if (boundary == null) {
-            throw new IllegalArgumentException("No boundary found");
-        }
+        var boundary = checkedBoundary(headers);
         return new MultiPartStreamCached(inputStream, boundary, cachePath);
     }
 
