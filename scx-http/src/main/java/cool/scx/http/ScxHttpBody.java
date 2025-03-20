@@ -18,6 +18,7 @@ import java.nio.file.OpenOption;
 import java.nio.file.Path;
 
 import static cool.scx.http.media.byte_array.ByteArrayReader.BYTE_ARRAY_READER;
+import static cool.scx.http.media.event_stream.ClientEventStreamReader.CLIENT_EVENT_STREAM_READER;
 import static cool.scx.http.media.form_params.FormParamsReader.FORM_PARAMS_READER;
 import static cool.scx.http.media.json_node.JsonNodeReader.JSON_NODE_READER;
 import static cool.scx.http.media.multi_part.MultiPartStreamCachedReader.MULTI_PART_READER_CACHED;
@@ -79,7 +80,7 @@ public interface ScxHttpBody {
     }
 
     default ClientEventStream asEventStream() {
-        return as(new ClientEventStreamReader());
+        return as(CLIENT_EVENT_STREAM_READER);
     }
 
 }
