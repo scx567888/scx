@@ -8,4 +8,8 @@ public record Http1StatusLine(HttpVersion version, int code, String reason) {
         return Http1StatusLineHelper.parseStatusLine(statusLineStr);
     }
 
+    public String encode() {
+        return Http1StatusLineHelper.encode(this);
+    }
+
 }

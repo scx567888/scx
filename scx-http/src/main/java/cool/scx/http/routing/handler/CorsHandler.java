@@ -102,7 +102,7 @@ public class CorsHandler implements Consumer<RoutingContext> {
             // 不是 CORS 请求 - 什么都不做 直接 next
             context.next();
         } else if (isValidOrigin(origin)) {
-            var accessControlRequestMethod = request.headers().get(ACCESS_CONTROL_REQUEST_METHOD);
+            var accessControlRequestMethod = request.getHeader(ACCESS_CONTROL_REQUEST_METHOD);
             if (request.method() == HttpMethod.OPTIONS && accessControlRequestMethod != null) {
                 // 预检 请求
                 addCredentialsAndOriginHeader(response, origin);

@@ -5,6 +5,7 @@ import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.peer_info.PeerInfo;
 import cool.scx.http.peer_info.PeerInfoWritable;
+import cool.scx.http.status.ScxHttpStatus;
 import cool.scx.http.version.HttpVersion;
 import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.http.x.http1.request_line.Http1RequestLine;
@@ -18,6 +19,7 @@ import java.nio.charset.StandardCharsets;
 import static cool.scx.common.util.StringUtils.isBlank;
 import static cool.scx.http.headers.HttpFieldName.*;
 import static cool.scx.http.method.HttpMethod.GET;
+import static cool.scx.http.status.HttpStatus.*;
 import static cool.scx.http.x.http1.headers.transfer_encoding.EncodingType.CHUNKED;
 
 public final class Http1Helper {
@@ -115,6 +117,10 @@ public final class Http1Helper {
         if (isBlank(hostValue)) {
             throw new BadRequestException("HOST header is empty");
         }
+    }
+
+    public static boolean checkResponseHasBody(ScxHttpStatus status) {
+        return SWITCHING_PROTOCOLS != status && NO_CONTENT != status && NOT_MODIFIED != status;
     }
 
 }

@@ -2,7 +2,6 @@ package cool.scx.http;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
-import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.media.MediaReader;
 import cool.scx.http.media.event_stream.ClientEventStream;
 import cool.scx.http.media.event_stream.ClientEventStreamReader;
@@ -33,11 +32,7 @@ public interface ScxHttpBody {
 
     InputStream inputStream();
 
-    ScxHttpHeaders headers();
-
-    default <T> T as(MediaReader<T> t) {
-        return t.read(inputStream(), headers());
-    }
+    <T> T as(MediaReader<T> t);
 
     default byte[] asBytes() {
         return as(BYTE_ARRAY_READER);

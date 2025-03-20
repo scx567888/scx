@@ -21,4 +21,8 @@ public class Http1StatusLineHelper {
         return new Http1StatusLine(version, code, reasonStr);
     }
 
+    public static String encode(Http1StatusLine statusLine) {
+        return statusLine.version().value() + " " + statusLine.code() + " " + statusLine.reason();
+    }
+
 }
