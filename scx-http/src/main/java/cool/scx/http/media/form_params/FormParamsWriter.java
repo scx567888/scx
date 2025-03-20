@@ -7,8 +7,10 @@ import cool.scx.http.media_type.MediaType;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UncheckedIOException;
 
 import static cool.scx.http.media.form_params.FormParamsHelper.encodeFormParams;
+import static cool.scx.http.media_type.MediaType.APPLICATION_X_WWW_FORM_URLENCODED;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /// FormParamsWriter
@@ -31,7 +33,7 @@ public class FormParamsWriter implements MediaWriter {
             responseHeaders.contentLength(bytes.length);
         }
         if (responseHeaders.contentType() == null) {
-            responseHeaders.contentType(MediaType.APPLICATION_X_WWW_FORM_URLENCODED);
+            responseHeaders.contentType(APPLICATION_X_WWW_FORM_URLENCODED);
         }
     }
 
@@ -40,7 +42,7 @@ public class FormParamsWriter implements MediaWriter {
         try (outputStream) {
             outputStream.write(bytes);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new UncheckedIOException(e);
         }
     }
 

@@ -10,6 +10,7 @@ import java.io.OutputStream;
 import static cool.scx.http.media_type.MediaType.TEXT_EVENT_STREAM;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+/// todo 整体待重构 比如没有正确处理 输出流的关闭
 public class ServerEventStreamWriter implements MediaWriter {
 
     private ServerEventStream eventStream;

@@ -4,7 +4,9 @@ import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.media.MediaWriter;
 
+import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UncheckedIOException;
 
 /// EmptyWriter
 ///
@@ -21,8 +23,8 @@ public class EmptyWriter implements MediaWriter {
     public void write(OutputStream outputStream) {
         try (outputStream) {
 
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
         }
     }
 

@@ -5,7 +5,9 @@ import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.media_type.ScxMediaType;
 
+import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UncheckedIOException;
 
 import static cool.scx.http.headers.ScxHttpHeadersHelper.encodeHeaders;
 import static cool.scx.http.media_type.MediaType.MULTIPART_FORM_DATA;
@@ -56,8 +58,8 @@ public class MultiPartWriter implements MediaWriter {
                 outputStream.write(l);
             }
             outputStream.write(f);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
         }
     }
 

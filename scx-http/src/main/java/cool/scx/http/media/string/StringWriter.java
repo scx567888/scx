@@ -7,6 +7,7 @@ import cool.scx.http.media_type.ScxMediaType;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UncheckedIOException;
 import java.nio.charset.Charset;
 
 import static cool.scx.http.media_type.MediaType.TEXT_PLAIN;
@@ -36,6 +37,7 @@ public class StringWriter implements MediaWriter {
         if (responseHeaders.contentLength() == null) {
             responseHeaders.contentLength(bytes.length);
         }
+        // 只有在没设置 contentType 的时候我们才主动设置 
         if (responseHeaders.contentType() == null) {
             responseHeaders.contentType(ScxMediaType.of(TEXT_PLAIN).charset(charset));
         }
@@ -46,7 +48,7 @@ public class StringWriter implements MediaWriter {
         try (outputStream) {
             outputStream.write(bytes);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new UncheckedIOException(e);
         }
     }
 
