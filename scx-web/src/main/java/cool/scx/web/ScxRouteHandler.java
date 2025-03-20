@@ -90,7 +90,7 @@ public final class ScxRouteHandler implements Route, Consumer<RoutingContext> {
             //4, 执行后置处理器
             var finalResult = this.scxWeb.interceptor().postHandle(context, this, tempResult);
             //5, 如果方法返回值不为 void 并且 response 可用 , 则调用返回值处理器
-            if (!isVoid && !context.response().isClosed()) {
+            if (!isVoid && !context.response().isSent()) {
                 this.scxWeb.findReturnValueHandler(finalResult).handle(finalResult, context);
             }
         } catch (Throwable e) {

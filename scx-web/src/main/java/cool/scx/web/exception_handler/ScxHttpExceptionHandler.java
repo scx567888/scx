@@ -90,7 +90,7 @@ public class ScxHttpExceptionHandler implements ExceptionHandler {
 
     @Override
     public void handle(Throwable throwable, RoutingContext routingContext) {
-        if (!routingContext.response().isClosed()) {
+        if (!routingContext.response().isSent()) {
             //1, 这里根据是否开启了开发人员错误页面 进行相应的返回
             this.handleScxHttpException((ScxHttpException) throwable, routingContext);
         } else {
