@@ -34,7 +34,7 @@ public interface ScxHttpServerRequest {
     PeerInfo localPeer();
 
     //******************** 以下为 uri 简化操作方法 *******************
-    
+
     default String path() {
         return uri().path();
     }
