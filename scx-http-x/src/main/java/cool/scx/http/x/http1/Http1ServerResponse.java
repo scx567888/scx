@@ -4,6 +4,8 @@ import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.ScxHttpServerResponse;
 import cool.scx.http.status.HttpStatus;
 import cool.scx.http.status.ScxHttpStatus;
+import cool.scx.http.x.http1.headers.Http1Headers;
+import cool.scx.http.x.http1.chunked.HttpChunkedOutputStream;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -13,9 +15,9 @@ import static cool.scx.http.headers.HttpFieldName.SERVER;
 import static cool.scx.http.headers.ScxHttpHeadersHelper.encodeHeaders;
 import static cool.scx.http.status.HttpStatus.*;
 import static cool.scx.http.x.http1.Http1Helper.checkIsChunkedTransfer;
-import static cool.scx.http.x.http1.connection.ConnectionType.CLOSE;
-import static cool.scx.http.x.http1.connection.ConnectionType.KEEP_ALIVE;
-import static cool.scx.http.x.http1.transfer_encoding.EncodingType.CHUNKED;
+import static cool.scx.http.x.http1.headers.connection.ConnectionType.CLOSE;
+import static cool.scx.http.x.http1.headers.connection.ConnectionType.KEEP_ALIVE;
+import static cool.scx.http.x.http1.headers.transfer_encoding.EncodingType.CHUNKED;
 import static java.io.OutputStream.nullOutputStream;
 
 /// todo 待完成

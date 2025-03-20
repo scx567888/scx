@@ -4,6 +4,7 @@ import cool.scx.http.ScxHttpBody;
 import cool.scx.http.ScxHttpClientResponse;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.status.ScxHttpStatus;
+import cool.scx.http.x.http1.status_line.Http1StatusLine;
 
 /// HTTP/1.1 ClientResponse
 ///

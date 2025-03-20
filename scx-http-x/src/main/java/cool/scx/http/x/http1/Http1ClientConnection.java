@@ -7,6 +7,11 @@ import cool.scx.http.exception.ContentTooLargeException;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.x.XHttpClientOptions;
+import cool.scx.http.x.http1.headers.Http1Headers;
+import cool.scx.http.x.http1.chunked.HttpChunkedDataSupplier;
+import cool.scx.http.x.http1.chunked.HttpChunkedOutputStream;
+import cool.scx.http.x.http1.request_line.Http1RequestLine;
+import cool.scx.http.x.http1.status_line.Http1StatusLine;
 import cool.scx.io.data_reader.PowerfulLinkedDataReader;
 import cool.scx.io.data_supplier.InputStreamDataSupplier;
 import cool.scx.io.exception.NoMatchFoundException;
@@ -25,7 +30,7 @@ import static cool.scx.http.headers.ScxHttpHeadersHelper.encodeHeaders;
 import static cool.scx.http.headers.ScxHttpHeadersHelper.parseHeaders;
 import static cool.scx.http.method.HttpMethod.GET;
 import static cool.scx.http.x.http1.Http1Helper.*;
-import static cool.scx.http.x.http1.transfer_encoding.EncodingType.CHUNKED;
+import static cool.scx.http.x.http1.headers.transfer_encoding.EncodingType.CHUNKED;
 import static java.io.OutputStream.nullOutputStream;
 
 public class Http1ClientConnection {

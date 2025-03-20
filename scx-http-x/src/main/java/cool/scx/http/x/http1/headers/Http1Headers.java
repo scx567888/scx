@@ -1,12 +1,12 @@
-package cool.scx.http.x.http1;
+package cool.scx.http.x.http1.headers;
 
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersImpl;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
-import cool.scx.http.x.http1.connection.Connection;
-import cool.scx.http.x.http1.connection.ConnectionType;
-import cool.scx.http.x.http1.transfer_encoding.ScxEncodingType;
-import cool.scx.http.x.http1.transfer_encoding.TransferEncoding;
+import cool.scx.http.x.http1.headers.connection.Connection;
+import cool.scx.http.x.http1.headers.connection.ConnectionType;
+import cool.scx.http.x.http1.headers.transfer_encoding.ScxEncodingType;
+import cool.scx.http.x.http1.headers.transfer_encoding.TransferEncoding;
 
 import static cool.scx.http.headers.HttpFieldName.CONNECTION;
 import static cool.scx.http.headers.HttpFieldName.TRANSFER_ENCODING;

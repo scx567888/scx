@@ -8,6 +8,7 @@ import cool.scx.http.peer_info.PeerInfo;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.version.HttpVersion;
 import cool.scx.http.web_socket.ScxServerWebSocketHandshakeRequest;
+import cool.scx.http.x.http1.request_line.Http1RequestLine;
 
 /// 基于 http1 的 websocket 握手请求
 ///

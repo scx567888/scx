@@ -1,4 +1,4 @@
-package cool.scx.http.x.http1;
+package cool.scx.http.x.http1.chunked;
 
 import cool.scx.http.exception.ContentTooLargeException;
 import cool.scx.io.data_node.DataNode;

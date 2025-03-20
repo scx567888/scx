@@ -1,6 +1,6 @@
 package cool.scx.http.x.test;
 
-import cool.scx.http.x.http1.HttpChunkedDataSupplier;
+import cool.scx.http.x.http1.chunked.HttpChunkedDataSupplier;
 import cool.scx.io.data_node.DataNode;
 import cool.scx.io.data_reader.DataReader;
 import cool.scx.io.data_reader.LinkedDataReader;

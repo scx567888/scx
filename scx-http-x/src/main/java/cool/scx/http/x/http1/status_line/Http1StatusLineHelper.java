@@ -1,4 +1,4 @@
-package cool.scx.http.x.http1;
+package cool.scx.http.x.http1.status_line;
 
 import cool.scx.http.version.HttpVersion;
 

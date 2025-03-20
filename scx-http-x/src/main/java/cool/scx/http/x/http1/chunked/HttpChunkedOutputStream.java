@@ -1,4 +1,4 @@
-package cool.scx.http.x.http1;
+package cool.scx.http.x.http1.chunked;
 
 import java.io.IOException;
 import java.io.OutputStream;
