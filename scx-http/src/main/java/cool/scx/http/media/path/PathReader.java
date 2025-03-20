@@ -5,12 +5,14 @@ import cool.scx.http.media.MediaReader;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
 
 import static cool.scx.io.IOHelper.readInToFile;
 
 /// 将内容写入到文件
+/// todo 这里是否有必要支持 复杂的写入 比如指定文件的偏移量和写入长度 还是保持当前类的简便化 因为 用户可以直接拿到 InputStream 添加复杂的功能是否有意义 ? 
 ///
 /// @author scx567888
 /// @version 0.0.1
@@ -32,8 +34,9 @@ public class PathReader implements MediaReader<Path> {
         try (inputStream) {
             readInToFile(inputStream, path, options);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new UncheckedIOException(e);
         }
+        //这里直接返回 path 方便用户链式调用
         return path;
     }
 
