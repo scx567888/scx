@@ -16,7 +16,7 @@ public enum TransferEncoding implements ScxTransferEncoding {
         //数量较少时 switch 性能要高于 Map
         var h = find(v);
         if (h == null) {
-            throw new IllegalArgumentException("Unknown encoding type : " + v);
+            throw new IllegalArgumentException("Unknown transfer encoding : " + v);
         }
         return h;
     }

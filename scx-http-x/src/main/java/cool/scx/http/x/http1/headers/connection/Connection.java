@@ -12,6 +12,17 @@ public enum Connection implements ScxConnection {
         this.value = value;
     }
 
+    /// @param v v
+    /// @return 未找到抛出异常
+    public static Connection of(String v) {
+        //数量较少时 switch 性能要高于 Map
+        var h = find(v);
+        if (h == null) {
+            throw new IllegalArgumentException("Unknown connection : " + v);
+        }
+        return h;
+    }
+
     public static Connection find(String v) {
         var v1 = v.toLowerCase();
         //数量较少时 switch 性能要高于 Map

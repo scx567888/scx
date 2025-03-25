@@ -1,5 +1,6 @@
 package cool.scx.http.x.http1.headers.expect;
 
+/// 实际上在 HTTP/1.1 中 只有一个合法值 即 "100-continue"
 public enum Expect implements ScxExpect {
 
     CONTINUE("100-continue");
@@ -14,7 +15,6 @@ public enum Expect implements ScxExpect {
     public String value() {
         return value;
     }
-
 
     /// @param v v
     /// @return 未找到抛出异常
