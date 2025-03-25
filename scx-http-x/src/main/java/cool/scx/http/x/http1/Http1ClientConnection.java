@@ -1,13 +1,10 @@
 package cool.scx.http.x.http1;
 
-import cool.scx.http.ScxHttpBody;
 import cool.scx.http.ScxHttpClientRequest;
 import cool.scx.http.ScxHttpClientResponse;
-import cool.scx.http.exception.ContentTooLargeException;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.x.XHttpClientOptions;
-import cool.scx.http.x.http1.chunked.HttpChunkedDataSupplier;
 import cool.scx.http.x.http1.chunked.HttpChunkedOutputStream;
 import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.http.x.http1.request_line.Http1RequestLine;
@@ -16,22 +13,17 @@ import cool.scx.io.data_reader.PowerfulLinkedDataReader;
 import cool.scx.io.data_supplier.InputStreamDataSupplier;
 import cool.scx.io.exception.NoMatchFoundException;
 import cool.scx.io.exception.NoMoreDataException;
-import cool.scx.io.io_stream.DataReaderInputStream;
-import cool.scx.io.io_stream.FixedLengthDataReaderInputStream;
 import cool.scx.tcp.ScxTCPSocket;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
-import java.util.Arrays;
 
 import static cool.scx.http.headers.HttpFieldName.HOST;
 import static cool.scx.http.headers.ScxHttpHeadersHelper.encodeHeaders;
-import static cool.scx.http.headers.ScxHttpHeadersHelper.parseHeaders;
 import static cool.scx.http.method.HttpMethod.GET;
 import static cool.scx.http.x.http1.Http1Helper.CRLF_BYTES;
-import static cool.scx.http.x.http1.Http1Helper.CRLF_CRLF_BYTES;
 import static cool.scx.http.x.http1.headers.transfer_encoding.TransferEncoding.CHUNKED;
 import static java.io.OutputStream.nullOutputStream;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -114,9 +106,9 @@ public class Http1ClientConnection {
         var headers = readHeaders();
 
         //3, 读取响应体
-        var body = readBody(headers);
+        var bodyInputStream = readBodyInputStream(headers);
 
-        return new Http1ClientResponse(statusLine, headers, body);
+        return new Http1ClientResponse(statusLine, headers, bodyInputStream);
     }
 
     public Http1StatusLine readStatusLine() {
@@ -133,44 +125,12 @@ public class Http1ClientConnection {
     }
 
     public Http1Headers readHeaders() {
-        try {
-            // 有可能没有头 也就是说 请求行后直接跟着 \r\n , 这里检查一下
-            var a = dataReader.peek(2);
-            if (Arrays.equals(a, CRLF_BYTES)) {
-                dataReader.skip(2);
-                return new Http1Headers();
-            }
-
-            var headerBytes = dataReader.readUntil(CRLF_CRLF_BYTES, options.maxHeaderSize());
-            var headerStr = new String(headerBytes);
-            return parseHeaders(new Http1Headers(), headerStr);
-        } catch (NoMoreDataException e) {
-            throw new CloseConnectionException();
-        } catch (NoMatchFoundException e) {
-            //todo 未找到 这里应该抛出什么异常 ?
-            throw new CloseConnectionException();
-        }
+        return Http1Helper.readHeaders(dataReader, options.maxHeaderSize());
     }
 
     //todo 超出最大长度怎么办
-    public ScxHttpBody readBody(Http1Headers headers) {
-        var transferEncoding = headers.transferEncoding();
-        if (transferEncoding == CHUNKED) {
-            return new ScxHttpBodyImpl(new DataReaderInputStream(new HttpChunkedDataSupplier(dataReader, options.maxPayloadSize())), headers);
-        }
-
-        //2, 判断请求体是不是有 长度
-        var contentLength = headers.contentLength();
-        if (contentLength != null) {
-            // 请求体长度过大 这里抛出异常
-            if (contentLength > options.maxPayloadSize()) {
-                throw new ContentTooLargeException();
-            }
-            return new ScxHttpBodyImpl(new FixedLengthDataReaderInputStream(dataReader, contentLength), headers);
-        }
-
-        //3, 没有长度的空请求体
-        return new ScxHttpBodyImpl(InputStream.nullInputStream(), headers);
+    public InputStream readBodyInputStream(Http1Headers headers) {
+        return Http1Helper.readBodyInputStream(headers, dataReader, options.maxPayloadSize());
     }
 
 }
