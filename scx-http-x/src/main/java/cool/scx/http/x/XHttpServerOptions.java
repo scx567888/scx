@@ -93,6 +93,15 @@ public class XHttpServerOptions {
     public XHttpServerOptions autoRespond100Continue(boolean autoRespond100Continue) {
         http1ConnectionOptions.autoRespond100Continue(autoRespond100Continue);
         return this;
+    }   
+    
+    public boolean validateHost() {
+        return http1ConnectionOptions.validateHost();
+    }
+
+    public XHttpServerOptions validateHost(boolean validateHost) {
+        http1ConnectionOptions.validateHost(validateHost);
+        return this;
     }
 
     public boolean mergeWebSocketFrame() {
