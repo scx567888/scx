@@ -16,11 +16,10 @@ import java.io.UncheckedIOException;
 
 import static cool.scx.http.headers.ScxHttpHeadersHelper.encodeHeaders;
 import static cool.scx.http.status.ScxHttpStatusHelper.getReasonPhrase;
-import static cool.scx.http.x.http1.Http1Helper.checkIsChunkedTransfer;
 import static cool.scx.http.x.http1.Http1Helper.checkResponseHasBody;
-import static cool.scx.http.x.http1.headers.connection.ConnectionType.CLOSE;
-import static cool.scx.http.x.http1.headers.connection.ConnectionType.KEEP_ALIVE;
-import static cool.scx.http.x.http1.headers.transfer_encoding.EncodingType.CHUNKED;
+import static cool.scx.http.x.http1.headers.connection.Connection.CLOSE;
+import static cool.scx.http.x.http1.headers.connection.Connection.KEEP_ALIVE;
+import static cool.scx.http.x.http1.headers.transfer_encoding.TransferEncoding.CHUNKED;
 
 /// todo 待完成
 ///
@@ -36,10 +35,10 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
     private OutputStream outputStream;
 
     Http1ServerResponse(Http1ServerConnection connection, Http1ServerRequest request) {
+        this.connection = connection;
         this.request = request;
         this.status = HttpStatus.OK;
         this.headers = new Http1Headers();
-        this.connection = connection;
     }
 
     @Override
@@ -105,7 +104,8 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
 
         //用户可能已经自行设置了 CONNECTION
         if (headers.connection() == null) {
-            if (request.isKeepAlive) {
+            if (request.isKeepAlive()) {
+                // 正常我们可以忽略设置 KEEP_ALIVE, 但是这里我们显式设置
                 headers.connection(KEEP_ALIVE);
             } else {
                 headers.connection(CLOSE);
@@ -122,7 +122,7 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
             }
         }
 
-        var useChunkedTransfer = checkIsChunkedTransfer(headers);
+        var useChunkedTransfer = headers.transferEncoding() == CHUNKED;
 
         //判断是否需要分段传输
         var headerStr = encodeHeaders(headers);
@@ -137,8 +137,7 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
         }
 
         //3, 只有明确表示 close 的时候我们才关闭
-        var c = headers.connection();
-        var closeConnection = c != null && c.contains(CLOSE);
+        var closeConnection = headers.connection() == CLOSE;
 
         //没有响应体
         if (!hasBody) {
