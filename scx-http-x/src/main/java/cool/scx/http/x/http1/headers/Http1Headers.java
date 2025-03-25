@@ -7,6 +7,7 @@ import cool.scx.http.x.http1.headers.connection.Connection;
 import cool.scx.http.x.http1.headers.connection.ScxConnection;
 import cool.scx.http.x.http1.headers.expect.ScxExpect;
 import cool.scx.http.x.http1.headers.transfer_encoding.ScxTransferEncoding;
+import cool.scx.http.x.http1.headers.upgrade.ScxUpgrade;
 
 import static cool.scx.http.headers.HttpFieldName.*;
 
@@ -48,6 +49,16 @@ public class Http1Headers extends ScxHttpHeadersImpl {
 
     public ScxHttpHeadersWritable expect(ScxExpect expect) {
         set(EXPECT, expect.value());
+        return this;
+    }
+
+    public ScxUpgrade upgrade() {
+        var c = get(UPGRADE);
+        return c != null ? ScxUpgrade.of(c) : null;
+    }
+
+    public ScxHttpHeadersWritable upgrade(ScxUpgrade upgrade) {
+        set(UPGRADE, upgrade.value());
         return this;
     }
 

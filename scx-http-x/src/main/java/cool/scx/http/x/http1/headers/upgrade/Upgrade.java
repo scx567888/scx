@@ -1,34 +1,33 @@
-package cool.scx.http.x.http1.headers.expect;
+package cool.scx.http.x.http1.headers.upgrade;
 
-/// 实际上在 HTTP/1.1 中 只有一个合法值 即 "100-continue"
-public enum Expect implements ScxExpect {
+public enum Upgrade implements ScxUpgrade {
 
-    CONTINUE("100-continue");
+    WEB_SOCKET("websocket");
 
     private final String value;
 
-    Expect(String value) {
+    Upgrade(String value) {
         this.value = value;
     }
 
     /// @param v v
     /// @return 未找到抛出异常
-    public static Expect of(String v) {
+    public static Upgrade of(String v) {
         //数量较少时 switch 性能要高于 Map
         var h = find(v);
         if (h == null) {
-            throw new IllegalArgumentException("Unknown expect : " + v);
+            throw new IllegalArgumentException("Unknown upgrade : " + v);
         }
         return h;
     }
 
     /// @param v v
     /// @return 未找到返回 null
-    public static Expect find(String v) {
+    public static Upgrade find(String v) {
         var v1 = v.toLowerCase();
         //数量较少时 switch 性能要高于 Map
         return switch (v1) {
-            case "100-continue" -> CONTINUE;
+            case "websocket" -> WEB_SOCKET;
             default -> null;
         };
     }

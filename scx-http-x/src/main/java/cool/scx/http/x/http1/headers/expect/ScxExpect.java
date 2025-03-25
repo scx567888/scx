@@ -9,5 +9,5 @@ public interface ScxExpect {
     }
 
     String value();
-    
+
 }
