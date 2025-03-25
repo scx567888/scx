@@ -31,7 +31,9 @@ import static cool.scx.http.headers.ScxHttpHeadersHelper.encodeHeaders;
 import static cool.scx.http.headers.ScxHttpHeadersHelper.parseHeaders;
 import static cool.scx.http.status.ScxHttpStatusHelper.getReasonPhrase;
 import static cool.scx.http.x.http1.Http1Helper.*;
-import static cool.scx.http.x.http1.headers.connection.ConnectionType.CLOSE;
+import static cool.scx.http.x.http1.headers.connection.Connection.CLOSE;
+import static cool.scx.http.x.http1.headers.expect.Expect.CONTINUE;
+import static cool.scx.http.x.http1.headers.transfer_encoding.TransferEncoding.CHUNKED;
 import static java.lang.System.Logger.Level.TRACE;
 import static java.lang.System.getLogger;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -71,19 +73,22 @@ public class Http1ServerConnection {
                 // 2, 读取 请求头 
                 var headers = readHeaders();
 
-                // 2.1 验证请求头
-                validateHeaders(headers);
-
                 // 3, 读取 请求体流
                 var bodyInputStream = readBodyInputStream(headers);
 
-                // 4, 处理 100-continue 临时请求
-                var is100ContinueExpected = checkIs100ContinueExpected(headers);
-                if (is100ContinueExpected) {
-                    //如果自动响应 我们直接发送
+                // 4, 在交给用户处理器进行处理之前, 我们需要做一些预处理
+
+                // 4.1, 验证 请求头
+                if (options.validateHost()) {
+                    validateHost(headers);
+                }
+
+                // 4.2, 处理 100-continue 临时请求
+                if (headers.expect() == CONTINUE) {
+                    //如果启用了自动响应 我们直接发送
                     if (options.autoRespond100Continue()) {
                         try {
-                            Http1Helper.sendContinue100(dataWriter);
+                            sendContinue100(dataWriter);
                         } catch (IOException e) {
                             throw new CloseConnectionException("Failed to write continue", e);
                         }
@@ -93,14 +98,12 @@ public class Http1ServerConnection {
                     }
                 }
 
-                var body = new ScxHttpBodyImpl(bodyInputStream, headers);
-
                 // 5, 判断是否为 WebSocket 握手请求 并创建对应请求
                 var isWebSocketHandshake = checkIsWebSocketHandshake(requestLine, headers);
 
                 var request = isWebSocketHandshake ?
-                        new Http1ServerWebSocketHandshakeRequest(this, requestLine, headers, body) :
-                        new Http1ServerRequest(this, requestLine, headers, body);
+                        new Http1ServerWebSocketHandshakeRequest(this, requestLine, headers, bodyInputStream) :
+                        new Http1ServerRequest(this, requestLine, headers, bodyInputStream);
 
                 try {
                     // 6, 调用用户处理器
@@ -189,17 +192,16 @@ public class Http1ServerConnection {
         }
     }
 
-    //todo 这里如果 dataReader 抛出了 NoMoreDataException 我们需要处理
     private InputStream readBodyInputStream(Http1Headers headers) {
-        // http1.1 本质上只有两种请求体格式 1, 分块传输 2, 指定长度 (当然也可以没有长度 那就表示没有请求体)
+        // HTTP/1.1 本质上只有两种请求体格式 1, 分块传输 2, 指定长度 (当然也可以没有长度 那就表示没有请求体)
 
         //1, 判断请求体是不是分块传输
-        var isChunkedTransfer = checkIsChunkedTransfer(headers);
-        if (isChunkedTransfer) {
+        var transferEncoding = headers.transferEncoding();
+        if (transferEncoding == CHUNKED) {
             return new DataReaderInputStream(new HttpChunkedDataSupplier(dataReader, options.maxPayloadSize()));
         }
 
-        //2, 判断请求体是不是有 长度
+        //2, 判断请求体是不是有 指定长度
         var contentLength = headers.contentLength();
         if (contentLength != null) {
             // 请求体长度过大 这里抛出异常
