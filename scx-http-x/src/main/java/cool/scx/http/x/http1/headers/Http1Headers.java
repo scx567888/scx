@@ -4,7 +4,7 @@ import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersImpl;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.x.http1.headers.connection.Connection;
-import cool.scx.http.x.http1.headers.connection.ConnectionType;
+import cool.scx.http.x.http1.headers.connection.ScxConnection;
 import cool.scx.http.x.http1.headers.transfer_encoding.ScxTransferEncoding;
 
 import static cool.scx.http.headers.HttpFieldName.CONNECTION;
@@ -25,9 +25,9 @@ public class Http1Headers extends ScxHttpHeadersImpl {
         return c != null ? ScxTransferEncoding.of(c) : null;
     }
 
-    public Connection connection() {
+    public ScxConnection connection() {
         var c = get(CONNECTION);
-        return c != null ? Connection.parseConnection(c) : null;
+        return c != null ? ScxConnection.of(c) : null;
     }
 
     public ScxHttpHeadersWritable transferEncoding(ScxTransferEncoding transferEncoding) {
@@ -36,12 +36,8 @@ public class Http1Headers extends ScxHttpHeadersImpl {
     }
 
     public ScxHttpHeadersWritable connection(Connection connection) {
-        set(CONNECTION, connection.encode());
+        set(CONNECTION, connection.value());
         return this;
-    }
-
-    public ScxHttpHeadersWritable connection(ConnectionType... connectionType) {
-        return connection(new Connection(connectionType));
     }
 
 }
