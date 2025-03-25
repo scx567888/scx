@@ -147,6 +147,7 @@ public class Http1ServerConnection {
     private Http1RequestLine readRequestLine() {
         //尝试读取 请求行
         try {
+            // 1, 尝试读取到 第一个 \r\n 为止
             var requestLineBytes = dataReader.readUntil(CRLF_BYTES, options.maxRequestLineSize());
             var requestLineStr = new String(requestLineBytes, UTF_8);
             return Http1RequestLine.of(requestLineStr);
@@ -164,29 +165,20 @@ public class Http1ServerConnection {
             throw new HttpVersionNotSupportedException("Invalid HTTP version : " + e.versionStr);
         }
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
     private Http1Headers readHeaders() {
         //尝试读取 headers
         try {
-            // 有可能没有头 也就是说 请求行后直接跟着 \r\n , 这里检查一下
-            var a = dataReader.peek(2);
-            if (Arrays.equals(a, CRLF_BYTES)) {
+            // 1, 尝试检查空头的情况 , 即请求行后紧跟 \r\n
+            var b = dataReader.peek(2);
+            if (Arrays.equals(b, CRLF_BYTES)) {
                 dataReader.skip(2);
                 return new Http1Headers();
             }
 
+            // 2, 尝试正常读取 , 读取到 第一个 \r\n\r\n 为止
             var headerBytes = dataReader.readUntil(CRLF_CRLF_BYTES, options.maxHeaderSize());
-            var headerStr = new String(headerBytes);
+            var headerStr = new String(headerBytes, UTF_8);
             return parseHeaders(new Http1Headers(), headerStr);
         } catch (NoMoreDataException | UncheckedIOException e) {
             // Socket 关闭了 或者底层 Socket 发生异常
@@ -194,9 +186,6 @@ public class Http1ServerConnection {
         } catch (NoMatchFoundException e) {
             // 在指定长度内未匹配到 这里抛出请求头过大异常
             throw new RequestHeaderFieldsTooLargeException(e.getMessage());
-        } catch (Exception e) {
-            // 解析 Header 异常
-            throw new BadRequestException(e.getMessage());
         }
     }
 

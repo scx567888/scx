@@ -2,8 +2,8 @@ package cool.scx.http.x.test;
 
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.x.http1.request_line.Http1RequestLine;
-import cool.scx.http.x.http1.request_line.Http1RequestLineHelper.InvalidHttpRequestLineException;
-import cool.scx.http.x.http1.request_line.Http1RequestLineHelper.InvalidHttpVersion;
+import cool.scx.http.x.http1.request_line.InvalidHttpRequestLineException;
+import cool.scx.http.x.http1.request_line.InvalidHttpVersion;
 import org.testng.annotations.Test;
 
 import static cool.scx.http.method.HttpMethod.GET;
