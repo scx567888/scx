@@ -23,7 +23,7 @@ import static cool.scx.http.x.http1.headers.upgrade.Upgrade.WEB_SOCKET;
 
 public final class Http1Helper {
 
-    private static final byte[] CONTINUE_100 = "HTTP/1.1 100 Continue\r\n\r\n".getBytes(StandardCharsets.UTF_8);
+    public static final byte[] CONTINUE_100 = "HTTP/1.1 100 Continue\r\n\r\n".getBytes(StandardCharsets.UTF_8);
     public static final byte[] CRLF_BYTES = "\r\n".getBytes();
     public static final byte[] CRLF_CRLF_BYTES = "\r\n\r\n".getBytes();
     public static final byte[] CHUNKED_END_BYTES = "0\r\n\r\n".getBytes();
