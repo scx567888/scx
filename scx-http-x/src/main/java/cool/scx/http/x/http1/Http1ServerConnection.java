@@ -9,8 +9,8 @@ import cool.scx.http.x.http1.exception.HttpVersionNotSupportedException;
 import cool.scx.http.x.http1.exception.RequestHeaderFieldsTooLargeException;
 import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.http.x.http1.request_line.Http1RequestLine;
-import cool.scx.http.x.http1.request_line.Http1RequestLineHelper.InvalidHttpRequestLineException;
-import cool.scx.http.x.http1.request_line.Http1RequestLineHelper.InvalidHttpVersion;
+import cool.scx.http.x.http1.request_line.InvalidHttpRequestLineException;
+import cool.scx.http.x.http1.request_line.InvalidHttpVersion;
 import cool.scx.io.data_reader.PowerfulLinkedDataReader;
 import cool.scx.io.data_supplier.InputStreamDataSupplier;
 import cool.scx.io.exception.NoMatchFoundException;
@@ -34,6 +34,7 @@ import static cool.scx.http.x.http1.Http1Helper.*;
 import static cool.scx.http.x.http1.headers.connection.ConnectionType.CLOSE;
 import static java.lang.System.Logger.Level.TRACE;
 import static java.lang.System.getLogger;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /// Http 1.1 连接处理器
 ///
@@ -147,7 +148,7 @@ public class Http1ServerConnection {
         //尝试读取 请求行
         try {
             var requestLineBytes = dataReader.readUntil(CRLF_BYTES, options.maxRequestLineSize());
-            var requestLineStr = new String(requestLineBytes);
+            var requestLineStr = new String(requestLineBytes, UTF_8);
             return Http1RequestLine.of(requestLineStr);
         } catch (NoMoreDataException | UncheckedIOException e) {
             // Socket 关闭了 或者底层 Socket 发生异常
@@ -159,9 +160,20 @@ public class Http1ServerConnection {
             // 解析 RequestLine 异常
             throw new BadRequestException("Invalid HTTP request line : " + e.requestLineStr);
         } catch (InvalidHttpVersion e) {
+            // 错误的 Http 版本异常
             throw new HttpVersionNotSupportedException("Invalid HTTP version : " + e.versionStr);
         }
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     private Http1Headers readHeaders() {
         //尝试读取 headers
