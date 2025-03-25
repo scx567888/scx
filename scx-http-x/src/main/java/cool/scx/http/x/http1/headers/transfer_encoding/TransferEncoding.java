@@ -1,55 +1,40 @@
 package cool.scx.http.x.http1.headers.transfer_encoding;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.stream.Collectors;
+public enum TransferEncoding implements ScxTransferEncoding {
 
-import static cool.scx.http.media_type.ScxMediaTypeHelper.SEMICOLON_PATTERN;
-import static java.util.Collections.addAll;
+    CHUNKED("chunked");
 
-/// todo 没有做 分块为最后一个的校验
-public class TransferEncoding implements Iterable<ScxEncodingType> {
+    private final String value;
 
-    private final List<ScxEncodingType> encodingTypes;
-
-    public TransferEncoding(List<ScxEncodingType> encodingTypes) {
-        this.encodingTypes = encodingTypes;
+    TransferEncoding(String value) {
+        this.value = value;
     }
 
-    public TransferEncoding(ScxEncodingType... encodingTypes) {
-        this.encodingTypes = new ArrayList<>(encodingTypes.length);
-        addAll(this.encodingTypes, encodingTypes);
-    }
-
-    public static TransferEncoding parseTransferEncoding(String transferEncodingHeader) {
-        var split = SEMICOLON_PATTERN.split(transferEncodingHeader);
-        var list = new ArrayList<ScxEncodingType>();
-        for (var s : split) {
-            list.add(ScxEncodingType.of(s.trim()));
+    /// @param v v
+    /// @return 未找到抛出异常
+    public static TransferEncoding of(String v) {
+        //数量较少时 switch 性能要高于 Map
+        var h = find(v);
+        if (h == null) {
+            throw new IllegalArgumentException("Unknown encoding type : " + v);
         }
-        return new TransferEncoding(list);
+        return h;
     }
 
-    public List<ScxEncodingType> encodingTypes() {
-        return encodingTypes;
+    /// @param v v
+    /// @return 未找到返回 null
+    public static TransferEncoding find(String v) {
+        var v1 = v.toLowerCase();
+        //数量较少时 switch 性能要高于 Map
+        return switch (v1) {
+            case "chunked" -> CHUNKED;
+            default -> null;
+        };
     }
 
     @Override
-    public Iterator<ScxEncodingType> iterator() {
-        return encodingTypes.iterator();
-    }
-
-    public String encode() {
-        return encodingTypes.stream().map(ScxEncodingType::value).collect(Collectors.joining(", "));
-    }
-
-    public int size() {
-        return encodingTypes.size();
-    }
-
-    public ScxEncodingType get(int i) {
-        return encodingTypes.get(i);
+    public String value() {
+        return value;
     }
 
 }

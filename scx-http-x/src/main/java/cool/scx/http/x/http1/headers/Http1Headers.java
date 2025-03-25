@@ -5,8 +5,7 @@ import cool.scx.http.headers.ScxHttpHeadersImpl;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.x.http1.headers.connection.Connection;
 import cool.scx.http.x.http1.headers.connection.ConnectionType;
-import cool.scx.http.x.http1.headers.transfer_encoding.ScxEncodingType;
-import cool.scx.http.x.http1.headers.transfer_encoding.TransferEncoding;
+import cool.scx.http.x.http1.headers.transfer_encoding.ScxTransferEncoding;
 
 import static cool.scx.http.headers.HttpFieldName.CONNECTION;
 import static cool.scx.http.headers.HttpFieldName.TRANSFER_ENCODING;
@@ -21,9 +20,9 @@ public class Http1Headers extends ScxHttpHeadersImpl {
 
     }
 
-    public TransferEncoding transferEncoding() {
+    public ScxTransferEncoding transferEncoding() {
         var c = get(TRANSFER_ENCODING);
-        return c != null ? TransferEncoding.parseTransferEncoding(c) : null;
+        return c != null ? ScxTransferEncoding.of(c) : null;
     }
 
     public Connection connection() {
@@ -31,13 +30,9 @@ public class Http1Headers extends ScxHttpHeadersImpl {
         return c != null ? Connection.parseConnection(c) : null;
     }
 
-    public ScxHttpHeadersWritable transferEncoding(TransferEncoding transferEncoding) {
-        set(TRANSFER_ENCODING, transferEncoding.encode());
+    public ScxHttpHeadersWritable transferEncoding(ScxTransferEncoding transferEncoding) {
+        set(TRANSFER_ENCODING, transferEncoding.value());
         return this;
-    }
-
-    public ScxHttpHeadersWritable transferEncoding(ScxEncodingType... scxEncodingType) {
-        return transferEncoding(new TransferEncoding(scxEncodingType));
     }
 
     public ScxHttpHeadersWritable connection(Connection connection) {
