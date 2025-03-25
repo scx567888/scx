@@ -21,18 +21,18 @@ import static cool.scx.http.x.http1.headers.connection.Connection.CLOSE;
 import static cool.scx.http.x.http1.headers.connection.Connection.KEEP_ALIVE;
 import static cool.scx.http.x.http1.headers.transfer_encoding.TransferEncoding.CHUNKED;
 
-/// todo 待完成
+/// Http1ServerResponse
 ///
 /// @author scx567888
 /// @version 0.0.1
 public class Http1ServerResponse implements ScxHttpServerResponse {
 
-    private final Http1ServerConnection connection;
-    private final Http1ServerRequest request;
-    private final Http1Headers headers;
-    private ScxHttpStatus status;
-    private String reasonPhrase;
-    private OutputStream outputStream;
+    protected final Http1ServerConnection connection;
+    protected final Http1ServerRequest request;
+    protected final Http1Headers headers;
+    protected ScxHttpStatus status;
+    protected String reasonPhrase;
+    protected OutputStream outputStream;
 
     Http1ServerResponse(Http1ServerConnection connection, Http1ServerRequest request) {
         this.connection = connection;
