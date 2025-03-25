@@ -6,6 +6,8 @@ import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.status.ScxHttpStatus;
 import cool.scx.http.x.http1.status_line.Http1StatusLine;
 
+import java.io.InputStream;
+
 /// HTTP/1.1 ClientResponse
 ///
 /// @author scx567888
@@ -17,11 +19,11 @@ public class Http1ClientResponse implements ScxHttpClientResponse {
     private final ScxHttpBody body;
     private final String reasonPhrase;
 
-    public Http1ClientResponse(Http1StatusLine statusLine, ScxHttpHeaders headers, ScxHttpBody body) {
+    public Http1ClientResponse(Http1StatusLine statusLine, ScxHttpHeaders headers, InputStream bodyInputStream) {
         this.status = ScxHttpStatus.of(statusLine.code());
         this.reasonPhrase = statusLine.reason();
         this.headers = headers;
-        this.body = body;
+        this.body = new ScxHttpBodyImpl(bodyInputStream, this.headers);
     }
 
     @Override
