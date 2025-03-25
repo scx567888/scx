@@ -1,37 +1,33 @@
-package cool.scx.http.x.http1.headers.transfer_encoding;
+package cool.scx.http.x.http1.headers.upgrade;
 
-public enum EncodingType implements ScxEncodingType {
+public enum Upgrade implements ScxUpgrade {
 
-    CHUNKED("chunked"),
-    GZIP("gzip"),
-    COMPRESS("compress");
+    WEB_SOCKET("websocket");
 
     private final String value;
 
-    EncodingType(String value) {
+    Upgrade(String value) {
         this.value = value;
     }
 
     /// @param v v
     /// @return 未找到抛出异常
-    public static EncodingType of(String v) {
+    public static Upgrade of(String v) {
         //数量较少时 switch 性能要高于 Map
         var h = find(v);
         if (h == null) {
-            throw new IllegalArgumentException("Unknown encoding type : " + v);
+            throw new IllegalArgumentException("Unknown upgrade : " + v);
         }
         return h;
     }
 
     /// @param v v
     /// @return 未找到返回 null
-    public static EncodingType find(String v) {
+    public static Upgrade find(String v) {
         var v1 = v.toLowerCase();
         //数量较少时 switch 性能要高于 Map
         return switch (v1) {
-            case "chunked" -> CHUNKED;
-            case "gzip" -> GZIP;
-            case "compress" -> COMPRESS;
+            case "websocket" -> WEB_SOCKET;
             default -> null;
         };
     }

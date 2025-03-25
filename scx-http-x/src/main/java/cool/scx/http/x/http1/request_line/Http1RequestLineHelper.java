@@ -57,23 +57,4 @@ public final class Http1RequestLineHelper {
         return methodStr + " " + pathStr + " " + versionStr;
     }
 
-    public static class InvalidHttpRequestLineException extends Exception {
-
-        public final String requestLineStr;
-
-        public InvalidHttpRequestLineException(String requestLineStr) {
-            this.requestLineStr = requestLineStr;
-        }
-
-    }
-
-    public static class InvalidHttpVersion extends Exception {
-
-        public final String versionStr;
-
-        public InvalidHttpVersion(String versionStr) {
-            this.versionStr = versionStr;
-        }
-    }
-
 }

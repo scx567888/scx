@@ -4,6 +4,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import static cool.scx.http.x.http1.Http1Helper.sendContinue100;
+
+/// 当初次读取的时候 自动响应 Continue-100 响应
+/// todo close 时是否也应该响应 ?
 public class AutoContinueInputStream extends InputStream {
 
     private final InputStream in;
@@ -23,6 +27,12 @@ public class AutoContinueInputStream extends InputStream {
     }
 
     @Override
+    public int read(byte[] b) throws IOException {
+        trySendContinueResponse();
+        return in.read(b);
+    }
+
+    @Override
     public int read(byte[] b, int off, int len) throws IOException {
         trySendContinueResponse();
         return in.read(b, off, len);
@@ -36,7 +46,7 @@ public class AutoContinueInputStream extends InputStream {
 
     private void trySendContinueResponse() throws IOException {
         if (!continueSent) {
-            Http1Helper.sendContinue100(out);
+            sendContinue100(out);
             continueSent = true;
         }
     }

@@ -4,12 +4,12 @@ import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersImpl;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.x.http1.headers.connection.Connection;
-import cool.scx.http.x.http1.headers.connection.ConnectionType;
-import cool.scx.http.x.http1.headers.transfer_encoding.ScxEncodingType;
-import cool.scx.http.x.http1.headers.transfer_encoding.TransferEncoding;
+import cool.scx.http.x.http1.headers.connection.ScxConnection;
+import cool.scx.http.x.http1.headers.expect.ScxExpect;
+import cool.scx.http.x.http1.headers.transfer_encoding.ScxTransferEncoding;
+import cool.scx.http.x.http1.headers.upgrade.ScxUpgrade;
 
-import static cool.scx.http.headers.HttpFieldName.CONNECTION;
-import static cool.scx.http.headers.HttpFieldName.TRANSFER_ENCODING;
+import static cool.scx.http.headers.HttpFieldName.*;
 
 public class Http1Headers extends ScxHttpHeadersImpl {
 
@@ -21,32 +21,45 @@ public class Http1Headers extends ScxHttpHeadersImpl {
 
     }
 
-    public TransferEncoding transferEncoding() {
-        var c = get(TRANSFER_ENCODING);
-        return c != null ? TransferEncoding.parseTransferEncoding(c) : null;
-    }
-
-    public Connection connection() {
+    public ScxConnection connection() {
         var c = get(CONNECTION);
-        return c != null ? Connection.parseConnection(c) : null;
-    }
-
-    public ScxHttpHeadersWritable transferEncoding(TransferEncoding transferEncoding) {
-        set(TRANSFER_ENCODING, transferEncoding.encode());
-        return this;
-    }
-
-    public ScxHttpHeadersWritable transferEncoding(ScxEncodingType... scxEncodingType) {
-        return transferEncoding(new TransferEncoding(scxEncodingType));
+        return c != null ? ScxConnection.of(c) : null;
     }
 
     public ScxHttpHeadersWritable connection(Connection connection) {
-        set(CONNECTION, connection.encode());
+        set(CONNECTION, connection.value());
         return this;
     }
 
-    public ScxHttpHeadersWritable connection(ConnectionType... connectionType) {
-        return connection(new Connection(connectionType));
+
+    public ScxTransferEncoding transferEncoding() {
+        var c = get(TRANSFER_ENCODING);
+        return c != null ? ScxTransferEncoding.of(c) : null;
+    }
+
+    public ScxHttpHeadersWritable transferEncoding(ScxTransferEncoding transferEncoding) {
+        set(TRANSFER_ENCODING, transferEncoding.value());
+        return this;
+    }
+
+    public ScxExpect expect() {
+        var c = get(EXPECT);
+        return c != null ? ScxExpect.of(c) : null;
+    }
+
+    public ScxHttpHeadersWritable expect(ScxExpect expect) {
+        set(EXPECT, expect.value());
+        return this;
+    }
+
+    public ScxUpgrade upgrade() {
+        var c = get(UPGRADE);
+        return c != null ? ScxUpgrade.of(c) : null;
+    }
+
+    public ScxHttpHeadersWritable upgrade(ScxUpgrade upgrade) {
+        set(UPGRADE, upgrade.value());
+        return this;
     }
 
 }

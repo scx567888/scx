@@ -3,8 +3,6 @@ package cool.scx.http.x.http1.request_line;
 import cool.scx.http.method.ScxHttpMethod;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.version.HttpVersion;
-import cool.scx.http.x.http1.request_line.Http1RequestLineHelper.InvalidHttpRequestLineException;
-import cool.scx.http.x.http1.request_line.Http1RequestLineHelper.InvalidHttpVersion;
 
 import static cool.scx.http.version.HttpVersion.HTTP_1_1;
 

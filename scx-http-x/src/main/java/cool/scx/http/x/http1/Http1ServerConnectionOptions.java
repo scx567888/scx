@@ -6,12 +6,14 @@ public class Http1ServerConnectionOptions {
     private int maxHeaderSize;// 最大请求头大小
     private long maxPayloadSize;// 最大请求体大小
     private boolean autoRespond100Continue;// 自动响应 100-continue
+    private boolean validateHost;// 验证 Host 字段
 
     public Http1ServerConnectionOptions() {
         this.maxRequestLineSize = 1024 * 64; // 默认 64 KB
         this.maxHeaderSize = 1024 * 128; // 默认 128 KB
         this.maxPayloadSize = 1024 * 1024 * 16; // 默认 16 MB
-        this.autoRespond100Continue = true;// 默认自动响应
+        this.autoRespond100Continue = true; // 默认自动响应
+        this.validateHost = true; // 默认验证 Host
     }
 
     public Http1ServerConnectionOptions(Http1ServerConnectionOptions oldOptions) {
@@ -19,6 +21,7 @@ public class Http1ServerConnectionOptions {
         maxHeaderSize(oldOptions.maxHeaderSize());
         maxPayloadSize(oldOptions.maxPayloadSize());
         autoRespond100Continue(oldOptions.autoRespond100Continue());
+        validateHost(oldOptions.validateHost());
     }
 
     public int maxRequestLineSize() {
@@ -56,4 +59,14 @@ public class Http1ServerConnectionOptions {
         this.autoRespond100Continue = autoRespond100Continue;
         return this;
     }
+
+    public boolean validateHost() {
+        return validateHost;
+    }
+
+    public Http1ServerConnectionOptions validateHost(boolean validateHost) {
+        this.validateHost = validateHost;
+        return this;
+    }
+
 }

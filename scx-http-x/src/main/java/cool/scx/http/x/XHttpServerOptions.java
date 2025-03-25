@@ -95,6 +95,15 @@ public class XHttpServerOptions {
         return this;
     }
 
+    public boolean validateHost() {
+        return http1ConnectionOptions.validateHost();
+    }
+
+    public XHttpServerOptions validateHost(boolean validateHost) {
+        http1ConnectionOptions.validateHost(validateHost);
+        return this;
+    }
+
     public boolean mergeWebSocketFrame() {
         return webSocketOptions.mergeWebSocketFrame();
     }

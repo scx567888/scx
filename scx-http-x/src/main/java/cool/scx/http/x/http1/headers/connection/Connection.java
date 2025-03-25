@@ -1,59 +1,42 @@
 package cool.scx.http.x.http1.headers.connection;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.stream.Collectors;
+public enum Connection implements ScxConnection {
 
-import static cool.scx.http.media_type.ScxMediaTypeHelper.SEMICOLON_PATTERN;
-import static java.util.Collections.addAll;
+    KEEP_ALIVE("keep-alive"),
+    CLOSE("close"),
+    UPGRADE("upgrade");
 
-/// todo 待优化
-public class Connection implements Iterable<ScxConnectionType> {
+    private final String value;
 
-    private final List<ScxConnectionType> connectionTypes;
-
-    public Connection(List<ScxConnectionType> connectionTypes) {
-        this.connectionTypes = connectionTypes;
+    Connection(String value) {
+        this.value = value;
     }
 
-    public Connection(ScxConnectionType... connectionTypes) {
-        this.connectionTypes = new ArrayList<>(connectionTypes.length);
-        addAll(this.connectionTypes, connectionTypes);
-    }
-
-    public static Connection parseConnection(String connectionHeader) {
-        var split = SEMICOLON_PATTERN.split(connectionHeader);
-        var list = new ArrayList<ScxConnectionType>();
-        for (var s : split) {
-            list.add(ScxConnectionType.of(s.trim()));
+    /// @param v v
+    /// @return 未找到抛出异常
+    public static Connection of(String v) {
+        //数量较少时 switch 性能要高于 Map
+        var h = find(v);
+        if (h == null) {
+            throw new IllegalArgumentException("Unknown connection : " + v);
         }
-        return new Connection(list);
+        return h;
     }
 
-    public List<ScxConnectionType> connectionTypes() {
-        return connectionTypes;
+    public static Connection find(String v) {
+        var v1 = v.toLowerCase();
+        //数量较少时 switch 性能要高于 Map
+        return switch (v1) {
+            case "keep-alive" -> KEEP_ALIVE;
+            case "close" -> CLOSE;
+            case "upgrade" -> UPGRADE;
+            default -> null;
+        };
     }
 
     @Override
-    public Iterator<ScxConnectionType> iterator() {
-        return connectionTypes.iterator();
-    }
-
-    public String encode() {
-        return connectionTypes.stream().map(ScxConnectionType::value).collect(Collectors.joining(", "));
-    }
-
-    public int size() {
-        return connectionTypes.size();
-    }
-
-    public ScxConnectionType get(int i) {
-        return connectionTypes.get(i);
-    }
-
-    public boolean contains(ScxConnectionType connectionType) {
-        return connectionTypes.contains(connectionType);
+    public String value() {
+        return value;
     }
 
 }

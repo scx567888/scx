@@ -53,7 +53,7 @@ public class ScxHttpExceptionHandler implements ExceptionHandler {
         var accepts = routingContext.request().headers().accept();
         //根据 accept 返回不同的错误信息 只有明确包含的时候才返回 html
         if (accepts != null && accepts.contains(TEXT_HTML)) {
-            var htmlStr = String.format(htmlTemplate, reasonPhrase, status, reasonPhrase, info);
+            var htmlStr = String.format(htmlTemplate, reasonPhrase, status.code(), reasonPhrase, info);
             routingContext.response()
                     .contentType(ScxMediaType.of(TEXT_HTML).charset(UTF_8))
                     .status(status)

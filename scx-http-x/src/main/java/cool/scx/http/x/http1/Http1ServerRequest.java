@@ -2,15 +2,18 @@ package cool.scx.http.x.http1;
 
 import cool.scx.http.ScxHttpBody;
 import cool.scx.http.ScxHttpServerRequest;
-import cool.scx.http.headers.ScxHttpHeaders;
-import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.method.ScxHttpMethod;
 import cool.scx.http.peer_info.PeerInfo;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.version.HttpVersion;
+import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.http.x.http1.request_line.Http1RequestLine;
 
-import static cool.scx.http.x.http1.Http1Helper.*;
+import java.io.InputStream;
+
+import static cool.scx.http.x.http1.Http1Helper.getLocalPeer;
+import static cool.scx.http.x.http1.Http1Helper.getRemotePeer;
+import static cool.scx.http.x.http1.headers.connection.Connection.CLOSE;
 
 /// HTTP/1.1 ServerRequest
 ///
@@ -18,31 +21,27 @@ import static cool.scx.http.x.http1.Http1Helper.*;
 /// @version 0.0.1
 public class Http1ServerRequest implements ScxHttpServerRequest {
 
-    public final Http1ServerConnection connection;
-    public final boolean isKeepAlive;
+    protected final Http1ServerConnection connection;
+    protected final ScxHttpMethod method;
+    protected final ScxURI uri;
+    protected final HttpVersion version;
+    protected final Http1Headers headers;
+    protected final ScxHttpBody body;
+    protected final PeerInfo remotePeer;
+    protected final PeerInfo localPeer;
+    protected final Http1ServerResponse response;
 
-    private final Http1ServerResponse response;
-    private final ScxHttpMethod method;
-    private final ScxURI uri;
-    private final HttpVersion version;
-    private final ScxHttpHeaders headers;
-    private final ScxHttpBody body;
-    private final PeerInfo remotePeer;
-    private final PeerInfo localPeer;
-
-    public Http1ServerRequest(Http1ServerConnection connection, Http1RequestLine requestLine, ScxHttpHeadersWritable headers, ScxHttpBody body) {
+    public Http1ServerRequest(Http1ServerConnection connection, Http1RequestLine requestLine, Http1Headers headers, InputStream bodyInputStream) {
         this.connection = connection;
-        this.isKeepAlive = checkIsKeepAlive(requestLine, headers);
-
         this.method = requestLine.method();
         // todo uri 需要 通过请求头 , socket 等 获取 请求主机 
         this.uri = ScxURI.of(requestLine.path());
         this.version = requestLine.version();
         this.headers = headers;
-        this.body = body;
+        this.body = new ScxHttpBodyImpl(bodyInputStream, this.headers);
         this.remotePeer = getRemotePeer(connection.tcpSocket);
         this.localPeer = getLocalPeer(connection.tcpSocket);
-        this.response = new Http1ServerResponse(connection, this);
+        this.response = createResponse();
     }
 
     @Override
@@ -66,7 +65,7 @@ public class Http1ServerRequest implements ScxHttpServerRequest {
     }
 
     @Override
-    public ScxHttpHeaders headers() {
+    public Http1Headers headers() {
         return headers;
     }
 
@@ -83,6 +82,14 @@ public class Http1ServerRequest implements ScxHttpServerRequest {
     @Override
     public PeerInfo localPeer() {
         return localPeer;
+    }
+
+    public boolean isKeepAlive() {
+        return headers.connection() != CLOSE;
+    }
+
+    protected Http1ServerResponse createResponse() {
+        return new Http1ServerResponse(connection, this);
     }
 
 }

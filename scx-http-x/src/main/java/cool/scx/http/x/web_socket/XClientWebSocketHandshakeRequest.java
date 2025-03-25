@@ -12,11 +12,13 @@ import cool.scx.http.web_socket.ScxClientWebSocketHandshakeResponse;
 import cool.scx.http.x.XHttpClient;
 import cool.scx.http.x.http1.Http1ClientConnection;
 import cool.scx.http.x.http1.headers.Http1Headers;
-import cool.scx.http.x.http1.headers.connection.ConnectionType;
 import cool.scx.tcp.ScxTCPClient;
 import cool.scx.tcp.ScxTCPSocket;
 
-import static cool.scx.http.headers.HttpFieldName.*;
+import static cool.scx.http.headers.HttpFieldName.SEC_WEBSOCKET_KEY;
+import static cool.scx.http.headers.HttpFieldName.SEC_WEBSOCKET_VERSION;
+import static cool.scx.http.x.http1.headers.connection.Connection.UPGRADE;
+import static cool.scx.http.x.http1.headers.upgrade.Upgrade.WEB_SOCKET;
 
 
 /// todo 待完成
@@ -71,10 +73,10 @@ public class XClientWebSocketHandshakeRequest implements ScxClientWebSocketHands
         var secWebsocketKey = Base64Utils.encodeToString(RandomUtils.randomBytes(16));
 
         //2, 创建 请求头
-        this.headers.connection(ConnectionType.UPGRADE);
-        this.headers.add(UPGRADE, "websocket");
-        this.headers.add(SEC_WEBSOCKET_KEY, secWebsocketKey);
-        this.headers.add(SEC_WEBSOCKET_VERSION, "13");
+        this.headers.connection(UPGRADE);
+        this.headers.upgrade(WEB_SOCKET);
+        this.headers.set(SEC_WEBSOCKET_KEY, secWebsocketKey);
+        this.headers.set(SEC_WEBSOCKET_VERSION, "13");
 
         var connection = new Http1ClientConnection(tcpSocket, httpClient.options());
         var response = connection.sendRequest(this, new EmptyWriter()).waitResponse();
