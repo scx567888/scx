@@ -23,15 +23,18 @@ import cool.scx.tcp.ScxTCPSocket;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UncheckedIOException;
 import java.util.Arrays;
 
 import static cool.scx.http.headers.HttpFieldName.HOST;
 import static cool.scx.http.headers.ScxHttpHeadersHelper.encodeHeaders;
 import static cool.scx.http.headers.ScxHttpHeadersHelper.parseHeaders;
 import static cool.scx.http.method.HttpMethod.GET;
-import static cool.scx.http.x.http1.Http1Helper.*;
-import static cool.scx.http.x.http1.headers.transfer_encoding.EncodingType.CHUNKED;
+import static cool.scx.http.x.http1.Http1Helper.CRLF_BYTES;
+import static cool.scx.http.x.http1.Http1Helper.CRLF_CRLF_BYTES;
+import static cool.scx.http.x.http1.headers.transfer_encoding.TransferEncoding.CHUNKED;
 import static java.io.OutputStream.nullOutputStream;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class Http1ClientConnection {
 
@@ -48,7 +51,7 @@ public class Http1ClientConnection {
     }
 
     public Http1ClientConnection sendRequest(ScxHttpClientRequest request, MediaWriter writer) {
-        //1,创建 请求头
+        // 1, 创建 请求头
         var requestLine = new Http1RequestLine(request.method(), request.uri());
 
         var requestLineStr = requestLine.encode();
@@ -64,11 +67,8 @@ public class Http1ClientConnection {
             requestHeaders.set(HOST, request.uri().host());
         }
 
-        var hasBody = true;
-        //是否不需要响应体
-        if (request.method() == GET) {
-            hasBody = false;
-        }
+        // 是否不需要响应体 todo 这里的检查过于简单了
+        var hasBody = request.method() != GET;
 
         //如果需要响应体
         if (hasBody) {
@@ -78,22 +78,18 @@ public class Http1ClientConnection {
             }
         }
 
-        var useChunkedTransfer = false;
-
-        //判断是否需要分段传输
-        if (checkIsChunkedTransfer(requestHeaders)) {
-            useChunkedTransfer = true;
-        }
-
         var requestHeaderStr = encodeHeaders(requestHeaders);
 
         //先写入请求行 请求头的内容
         try {
             var h = requestLineStr + "\r\n" + requestHeaderStr + "\r\n";
-            dataWriter.write(h.getBytes());
+            dataWriter.write(h.getBytes(UTF_8));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new UncheckedIOException(e);
         }
+
+        //判断是否需要分段传输
+        var useChunkedTransfer = requestHeaders.transferEncoding() == CHUNKED;
 
         OutputStream out;
 
@@ -105,7 +101,6 @@ public class Http1ClientConnection {
             out = dataWriter;
         }
 
-        //todo 此处功能和 Http1ServerResponse 重复是否需要抽取 此处 是否也需要 BufferedOutputStream 进行包装
         writer.write(out);
 
         return this;
@@ -159,8 +154,8 @@ public class Http1ClientConnection {
 
     //todo 超出最大长度怎么办
     public ScxHttpBody readBody(Http1Headers headers) {
-        var isChunkedTransfer = Http1Helper.checkIsChunkedTransfer(headers);
-        if (isChunkedTransfer) {
+        var transferEncoding = headers.transferEncoding();
+        if (transferEncoding == CHUNKED) {
             return new ScxHttpBodyImpl(new DataReaderInputStream(new HttpChunkedDataSupplier(dataReader, options.maxPayloadSize())), headers);
         }
 
