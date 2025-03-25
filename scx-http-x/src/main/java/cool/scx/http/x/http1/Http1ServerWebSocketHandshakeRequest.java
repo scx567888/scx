@@ -22,7 +22,7 @@ public class Http1ServerWebSocketHandshakeRequest extends Http1ServerRequest imp
     }
 
     @Override
-    public Http1ServerResponse createResponse() {
+    protected Http1ServerResponse createResponse() {
         return new Http1ServerWebSocketHandshakeResponse(connection, this);
     }
 
