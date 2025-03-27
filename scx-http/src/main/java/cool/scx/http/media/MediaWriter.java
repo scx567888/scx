@@ -15,7 +15,8 @@ public interface MediaWriter {
     ///
     /// @param responseHeaders 响应头 (在客户端状态下是 requestHeaders)
     /// @param requestHeaders  请求头 (在客户端状态下是 空 Header)
-    void beforeWrite(ScxHttpHeadersWritable responseHeaders, ScxHttpHeaders requestHeaders);
+    /// @return 预期的内容长度 : (-1 未知长度, 0 无内容, 大于 0 标准长度)
+    long beforeWrite(ScxHttpHeadersWritable responseHeaders, ScxHttpHeaders requestHeaders);
 
     /// 写入内容
     ///
