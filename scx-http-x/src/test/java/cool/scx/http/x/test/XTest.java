@@ -23,6 +23,7 @@ public class XTest {
                 });
                 d.send("hello");
             } else {
+                // c.response().setHeader("transfer-encoding", "chunked");
                 c.response().send("123");
             }
         });
