@@ -17,6 +17,7 @@ import cool.scx.tcp.ScxTCPSocket;
 
 import static cool.scx.http.headers.HttpFieldName.SEC_WEBSOCKET_KEY;
 import static cool.scx.http.headers.HttpFieldName.SEC_WEBSOCKET_VERSION;
+import static cool.scx.http.media.empty.EmptyWriter.EMPTY_WRITER;
 import static cool.scx.http.x.http1.headers.connection.Connection.UPGRADE;
 import static cool.scx.http.x.http1.headers.upgrade.Upgrade.WEB_SOCKET;
 
@@ -79,7 +80,7 @@ public class XClientWebSocketHandshakeRequest implements ScxClientWebSocketHands
         this.headers.set(SEC_WEBSOCKET_VERSION, "13");
 
         var connection = new Http1ClientConnection(tcpSocket, httpClient.options());
-        var response = connection.sendRequest(this, new EmptyWriter()).waitResponse();
+        var response = connection.sendRequest(this, EMPTY_WRITER).waitResponse();
 
         return new XClientWebSocketHandshakeResponse(connection, response, this.webSocketOptions);
 

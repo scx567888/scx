@@ -16,7 +16,6 @@ import java.io.UncheckedIOException;
 
 import static cool.scx.http.headers.ScxHttpHeadersHelper.encodeHeaders;
 import static cool.scx.http.status.ScxHttpStatusHelper.getReasonPhrase;
-import static cool.scx.http.x.http1.Http1Helper.checkResponseHasBody;
 import static cool.scx.http.x.http1.headers.connection.Connection.CLOSE;
 import static cool.scx.http.x.http1.headers.connection.Connection.KEEP_ALIVE;
 import static cool.scx.http.x.http1.headers.transfer_encoding.TransferEncoding.CHUNKED;
@@ -72,9 +71,9 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
     }
 
     @Override
-    public OutputStream outputStream() {
+    public OutputStream outputStream(long expectedLength) {
         if (outputStream == null) {
-            outputStream = sendHeaders();
+            outputStream = sendHeaders(expectedLength);
         }
         return outputStream;
     }
@@ -95,7 +94,7 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
         return reasonPhrase != null ? reasonPhrase : getReasonPhrase(status, "unknown");
     }
 
-    private OutputStream sendHeaders() {
+    private OutputStream sendHeaders(long expectedLength) {
 
         //1, 响应行
         var statusLine = new Http1StatusLine(request.version(), status.code(), createReasonPhrase());
@@ -112,17 +111,19 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
             }
         }
 
-        var hasBody = checkResponseHasBody(status);
-
-        //如果需要响应体
-        if (hasBody) {
-            //没有设置 contentLength 我们帮助设置 
+        if (expectedLength < 0) {//表示不知道响应体的长度
+            // 如果用户已经手动设置了 Content-Length, 我们便不在设置 分块传输
             if (headers.contentLength() == null) {
                 headers.transferEncoding(CHUNKED);
             }
+        } else if (expectedLength > 0) {//拥有指定长度的响应体
+            // 如果用户已经手动设置 分块传输, 我们便不在设置 Content-Length
+            if (headers.transferEncoding() != CHUNKED) {
+                headers.contentLength(expectedLength);
+            }
+        } else {
+            // 响应体长度为0 什么都不做
         }
-
-        var useChunkedTransfer = headers.transferEncoding() == CHUNKED;
 
         //判断是否需要分段传输
         var headerStr = encodeHeaders(headers);
@@ -139,10 +140,12 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
         //3, 只有明确表示 close 的时候我们才关闭
         var closeConnection = headers.connection() == CLOSE;
 
-        //没有响应体
-        if (!hasBody) {
-            return new NullCheckedOutputStream();
-        }
+        var useChunkedTransfer = headers.transferEncoding() == CHUNKED;
+
+//        //没有响应体
+//        if (expectedLength == 0) {
+//            return new NullCheckedOutputStream();
+//        }
 
         // todo 这里的 Http1ServerResponseOutputStream 应该根据 contentLength 进行限制
         var baseOutputStream = new Http1ServerResponseOutputStream(connection, closeConnection);
