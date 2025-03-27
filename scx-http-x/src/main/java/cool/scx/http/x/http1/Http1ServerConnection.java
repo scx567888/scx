@@ -144,7 +144,7 @@ public class Http1ServerConnection {
     }
 
     private void handlerSystemException(Throwable e) {
-        //这个 request 对象 仅为了做响应 实际上 并不包含任何内容
+        //此时我们并没有拿到一个完整的 request 对象 所以这里创建一个 虚拟 request 用于后续响应
         var fakeRequest = new Http1ServerRequest(this, new Http1RequestLine(ScxHttpMethod.of("unknow"), ScxURI.of()), new Http1Headers().connection(CLOSE), InputStream.nullInputStream());
         handlerException(e, fakeRequest.response(), "解析 Request");
 
