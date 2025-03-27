@@ -1,37 +1,28 @@
 package cool.scx.http.x.http1;
 
 import cool.scx.http.ScxHttpServerRequest;
-import cool.scx.http.exception.BadRequestException;
 import cool.scx.http.exception.InternalServerErrorException;
 import cool.scx.http.exception.ScxHttpException;
-import cool.scx.http.exception.URITooLongException;
 import cool.scx.http.version.HttpVersion;
 import cool.scx.http.x.XHttpServerOptions;
-import cool.scx.http.x.http1.exception.HttpVersionNotSupportedException;
 import cool.scx.http.x.http1.headers.Http1Headers;
-import cool.scx.http.x.http1.request_line.Http1RequestLine;
-import cool.scx.http.x.http1.request_line.InvalidHttpRequestLineException;
-import cool.scx.http.x.http1.request_line.InvalidHttpVersion;
 import cool.scx.io.data_reader.PowerfulLinkedDataReader;
 import cool.scx.io.data_supplier.InputStreamDataSupplier;
-import cool.scx.io.exception.NoMatchFoundException;
-import cool.scx.io.exception.NoMoreDataException;
 import cool.scx.tcp.ScxTCPSocket;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UncheckedIOException;
 import java.lang.System.Logger;
 import java.util.function.Consumer;
 
 import static cool.scx.http.headers.ScxHttpHeadersHelper.encodeHeaders;
 import static cool.scx.http.status.ScxHttpStatusHelper.getReasonPhrase;
 import static cool.scx.http.x.http1.Http1Helper.*;
+import static cool.scx.http.x.http1.Http1Reader.*;
 import static cool.scx.http.x.http1.headers.connection.Connection.CLOSE;
 import static cool.scx.http.x.http1.headers.expect.Expect.CONTINUE;
 import static java.lang.System.Logger.Level.TRACE;
 import static java.lang.System.getLogger;
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 /// Http 1.1 连接处理器
 ///
@@ -90,7 +81,7 @@ public class Http1ServerConnection {
 
     public Http1ServerRequest readRequest() {
         // 1, 读取 请求行
-        var requestLine = readRequestLine();
+        var requestLine = readRequestLine(dataReader, options.maxRequestLineSize());
 
         // 2, 读取 请求头 
         var headers = readHeaders(dataReader, options.maxHeaderSize());
@@ -143,28 +134,6 @@ public class Http1ServerConnection {
     private void _callRequestHandler(ScxHttpServerRequest request) {
         if (requestHandler != null) {
             requestHandler.accept(request);
-        }
-    }
-
-    private Http1RequestLine readRequestLine() {
-        //尝试读取 请求行
-        try {
-            // 1, 尝试读取到 第一个 \r\n 为止
-            var requestLineBytes = dataReader.readUntil(CRLF_BYTES, options.maxRequestLineSize());
-            var requestLineStr = new String(requestLineBytes, UTF_8);
-            return Http1RequestLine.of(requestLineStr);
-        } catch (NoMoreDataException | UncheckedIOException e) {
-            // Socket 关闭了 或者底层 Socket 发生异常
-            throw new CloseConnectionException();
-        } catch (NoMatchFoundException e) {
-            // 在指定长度内未匹配到 这里抛出 URI 过长异常
-            throw new URITooLongException(e.getMessage());
-        } catch (InvalidHttpRequestLineException e) {
-            // 解析 RequestLine 异常
-            throw new BadRequestException("Invalid HTTP request line : " + e.requestLineStr);
-        } catch (InvalidHttpVersion e) {
-            // 错误的 Http 版本异常
-            throw new HttpVersionNotSupportedException("Invalid HTTP version : " + e.versionStr);
         }
     }
 

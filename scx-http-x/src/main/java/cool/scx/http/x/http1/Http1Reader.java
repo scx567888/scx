@@ -99,7 +99,7 @@ final class Http1Reader {
         }
     }
 
-    public Http1StatusLine readStatusLine(DataReader dataReader, int maxStatusLineSize) {
+    public static Http1StatusLine readStatusLine(DataReader dataReader, int maxStatusLineSize) {
         try {
             var statusLineBytes = dataReader.readUntil(CRLF_BYTES, maxStatusLineSize);
             var statusLineStr = new String(statusLineBytes);
