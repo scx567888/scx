@@ -40,11 +40,7 @@ public class PathWriter implements MediaWriter {
     }
 
     @Override
-    public void beforeWrite(ScxHttpHeadersWritable responseHeaders, ScxHttpHeaders requestHeaders) {
-        //如果用户已经设置了 contentLength 我们跳过
-        if (responseHeaders.contentLength() == null) {
-            responseHeaders.contentLength(length);
-        }
+    public long beforeWrite(ScxHttpHeadersWritable responseHeaders, ScxHttpHeaders requestHeaders) {
         // 这里如果用户没有指定格式的话 我们尝试猜测一下 
         if (responseHeaders.contentType() == null) {
             var fileFormat = FileFormat.findByFileName(path.toString());
@@ -54,6 +50,7 @@ public class PathWriter implements MediaWriter {
                 responseHeaders.contentType(fileFormat.mediaType());
             }
         }
+        return length;
     }
 
     @Override
