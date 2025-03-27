@@ -98,7 +98,7 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
     private OutputStream sendHeaders(long expectedLength) {
         // 1, 创建 响应行
         var statusLine = new Http1StatusLine(request.version(), status.code(), createReasonPhrase());
-        // 1.1 编码
+
         var statusLineStr = statusLine.encode();
 
         // 处理头相关

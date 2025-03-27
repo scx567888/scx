@@ -45,7 +45,7 @@ public class Http1ClientConnection {
     public Http1ClientConnection sendRequest(ScxHttpClientRequest request, MediaWriter writer) {
         // 1, 创建 请求行
         var requestLine = new Http1RequestLine(request.method(), request.uri());
-        // 1.1 编码
+
         var requestLineStr = requestLine.encode();
 
         //复制一份头便于修改
