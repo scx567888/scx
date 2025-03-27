@@ -23,7 +23,7 @@ import java.io.UncheckedIOException;
 import static cool.scx.http.headers.HttpFieldName.HOST;
 import static cool.scx.http.headers.ScxHttpHeadersHelper.encodeHeaders;
 import static cool.scx.http.method.HttpMethod.GET;
-import static cool.scx.http.x.http1.Http1Helper.CRLF_BYTES;
+import static cool.scx.http.x.http1.Http1Helper.*;
 import static cool.scx.http.x.http1.headers.transfer_encoding.TransferEncoding.CHUNKED;
 import static java.io.OutputStream.nullOutputStream;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -43,35 +43,48 @@ public class Http1ClientConnection {
     }
 
     public Http1ClientConnection sendRequest(ScxHttpClientRequest request, MediaWriter writer) {
+        //复制一份头便于修改
+        var headers = new Http1Headers(request.headers());
+
+        //让用户设置头信息
+        var expectedLength = writer.beforeWrite(headers, ScxHttpHeaders.of());
+
         // 1, 创建 请求行
         var requestLine = new Http1RequestLine(request.method(), request.uri());
 
         var requestLineStr = requestLine.encode();
 
-        //复制一份头便于修改
-        var requestHeaders = new Http1Headers(request.headers());
-
-        //让用户能够设置头信息
-        writer.beforeWrite(requestHeaders, ScxHttpHeaders.of());
-
         // 处理头相关
-        //设置 HOST 头
-        if (!requestHeaders.contains(HOST)) {
-            requestHeaders.set(HOST, request.uri().host());
+        // 1, 处理 HOST 相关
+        if (!headers.contains(HOST)) {
+            headers.set(HOST, request.uri().host());
         }
 
-        // 是否不需要响应体 todo 这里的检查过于简单了
-        var hasBody = request.method() != GET;
-
-        //如果需要响应体
-        if (hasBody) {
-            //没有长度 我们就设置为 分块传输
-            if (requestHeaders.contentLength() == null) {
-                requestHeaders.transferEncoding(CHUNKED);
+        // 2, 处理响应体 相关
+        if (expectedLength < 0) {//表示不知道响应体的长度
+            // 如果用户已经手动设置了 Content-Length, 我们便不再设置 分块传输
+            if (headers.contentLength() == null) {
+                headers.transferEncoding(CHUNKED);
+            }
+        } else if (expectedLength > 0) {//拥有指定长度的响应体
+            // 如果用户已经手动设置 分块传输, 我们便不再设置 Content-Length
+            if (headers.transferEncoding() != CHUNKED) {
+                headers.contentLength(expectedLength);
+            }
+        } else {
+            // 响应体长度为 0 时 , 分两种情况
+            // 1, 是需要明确写入 Content-Length : 0 的
+            // 2, 是不需要写入任何长度相关字段
+            var hasBody = checkRequestHasBody(request.method());
+            if (hasBody) {
+                // 这里同上, 进行分块传输判断
+                if (headers.transferEncoding() != CHUNKED) {
+                    headers.contentLength(expectedLength);
+                }
             }
         }
 
-        var requestHeaderStr = encodeHeaders(requestHeaders);
+        var requestHeaderStr = encodeHeaders(headers);
 
         //先写入请求行 请求头的内容
         try {
@@ -82,17 +95,9 @@ public class Http1ClientConnection {
         }
 
         // 只有明确表示 分块的时候才使用分块
-        var useChunkedTransfer = requestHeaders.transferEncoding() == CHUNKED;
+        var useChunkedTransfer = headers.transferEncoding() == CHUNKED;
 
-        OutputStream out;
-
-        if (!hasBody) {
-            out = nullOutputStream();
-        } else if (useChunkedTransfer) {
-            out = new HttpChunkedOutputStream(dataWriter);
-        } else {
-            out = dataWriter;
-        }
+        var out = useChunkedTransfer ? new HttpChunkedOutputStream(dataWriter) : dataWriter;
 
         writer.write(out);
 
