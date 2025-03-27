@@ -1,8 +1,8 @@
 package cool.scx.http.x.http1;
 
 import cool.scx.http.ScxHttpBody;
-import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.media.MediaReader;
+import cool.scx.http.x.http1.headers.Http1Headers;
 
 import java.io.InputStream;
 
@@ -10,7 +10,7 @@ import java.io.InputStream;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public record ScxHttpBodyImpl(InputStream inputStream, ScxHttpHeaders headers) implements ScxHttpBody {
+public record Http1Body(InputStream inputStream, Http1Headers headers) implements ScxHttpBody {
 
     @Override
     public String toString() {
