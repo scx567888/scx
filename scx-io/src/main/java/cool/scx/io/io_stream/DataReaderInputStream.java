@@ -7,10 +7,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class DataReaderInputStream extends InputStream {
+public class DataReaderInputStream extends CheckedInputStream {
 
     private final PowerfulLinkedDataReader dataReader;
-    private volatile boolean closed;
 
     public DataReaderInputStream(PowerfulLinkedDataReader dataReader) {
         this.dataReader = dataReader;
@@ -18,12 +17,6 @@ public class DataReaderInputStream extends InputStream {
 
     public DataReaderInputStream(DataSupplier dataSupplier) {
         this.dataReader = new PowerfulLinkedDataReader(dataSupplier);
-    }
-
-    private void ensureOpen() throws IOException {
-        if (closed) {
-            throw new IOException("Stream closed");
-        }
     }
 
     @Override
