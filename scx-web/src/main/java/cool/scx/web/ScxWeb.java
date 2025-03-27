@@ -37,14 +37,11 @@ public final class ScxWeb {
 
     /// 路由上下文 THREAD_LOCAL
     private static final InheritableThreadLocal<RoutingContext> ROUTING_CONTEXT_THREAD_LOCAL = new InheritableThreadLocal<>();
-    private final List<ExceptionHandler> exceptionHandlers = new ArrayList<>();
-    private final LastExceptionHandler lastExceptionHandler;
     private final List<ReturnValueHandler> returnValueHandlers = new ArrayList<>();
     private final LastReturnValueHandler lastReturnValueHandler;
     private final List<ParameterHandlerBuilder> parameterHandlerBuilders = new ArrayList<>();
     private final LastParameterHandlerBuilder lastParameterHandlerBuilder;
     private final ScxTemplateHandler templateHandler;
-    private final RouterErrorHandler routerErrorHandler;
     private final RouteRegistrar routeRegistrar;
     private final WebSocketRouteRegistrar webSocketRouteRegistrar;
     private final ScxWebOptions options;
@@ -57,12 +54,8 @@ public final class ScxWeb {
     public ScxWeb(ScxWebOptions options) {
         this.options = options;
         this.templateHandler = new ScxTemplateHandler(options.templateRoot());
-        this.routerErrorHandler = new RouterErrorHandler(this);
         this.routeRegistrar = new RouteRegistrar(this);
         this.webSocketRouteRegistrar = new WebSocketRouteRegistrar(this);
-        //初始化默认的异常处理器
-        addExceptionHandler(new ScxHttpExceptionHandler(options.useDevelopmentErrorPage()));
-        this.lastExceptionHandler = new LastExceptionHandler(options.useDevelopmentErrorPage());
         //初始化默认的返回值处理器
         addReturnValueHandler(new NullReturnValueHandler());
         addReturnValueHandler(new StringReturnValueHandler());
@@ -116,11 +109,6 @@ public final class ScxWeb {
         return this;
     }
 
-    public ScxWeb addExceptionHandler(ExceptionHandler exceptionHandler) {
-        exceptionHandlers.add(exceptionHandler);
-        return this;
-    }
-
     public ScxWeb addParameterHandlerBuilder(ParameterHandlerBuilder handlerBuilder) {
         parameterHandlerBuilders.add(handlerBuilder);
         return this;
@@ -128,11 +116,6 @@ public final class ScxWeb {
 
     public ScxWeb addReturnValueHandler(ReturnValueHandler returnValueHandler) {
         returnValueHandlers.add(returnValueHandler);
-        return this;
-    }
-
-    public ScxWeb addExceptionHandler(int index, ExceptionHandler handler) {
-        exceptionHandlers.add(index, handler);
         return this;
     }
 
@@ -152,15 +135,6 @@ public final class ScxWeb {
 
     public ScxTemplateHandler templateHandler() {
         return this.templateHandler;
-    }
-
-    ExceptionHandler findExceptionHandler(Throwable throwable) {
-        for (var handler : exceptionHandlers) {
-            if (handler.canHandle(throwable)) {
-                return handler;
-            }
-        }
-        return lastExceptionHandler;
     }
 
     ReturnValueHandler findReturnValueHandler(Object result) {
@@ -206,21 +180,6 @@ public final class ScxWeb {
             s[i] = findParameterHandler(parameters[i]);
         }
         return s;
-    }
-
-    public ScxWeb bindErrorHandler(Router router) {
-        router.errorHandler(routerErrorHandler);
-        return this;
-    }
-
-    private record RouterErrorHandler(ScxWeb scxWeb) implements BiConsumer<Throwable, RoutingContext> {
-
-        @Override
-        public void accept(Throwable throwable, RoutingContext routingContext) {
-            var cause = ScxExceptionHelper.getRootCause(throwable);
-            this.scxWeb.findExceptionHandler(cause).handle(cause, routingContext);
-        }
-
     }
 
 }
