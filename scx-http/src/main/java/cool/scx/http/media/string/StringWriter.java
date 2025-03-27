@@ -20,27 +20,27 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class StringWriter implements MediaWriter {
 
     private final Charset charset;
-    private final byte[] bytes;
+    private final String str;
+    private byte[] bytes;
 
     public StringWriter(String str) {
-        this.charset = UTF_8;
-        this.bytes = str.getBytes(UTF_8);
+        this(str, UTF_8);
     }
 
     public StringWriter(String str, Charset charset) {
+        this.str = str;
         this.charset = charset;
-        this.bytes = str.getBytes(charset);
+        this.bytes = null;
     }
 
     @Override
-    public void beforeWrite(ScxHttpHeadersWritable responseHeaders, ScxHttpHeaders requestHeaders) {
-        if (responseHeaders.contentLength() == null) {
-            responseHeaders.contentLength(bytes.length);
-        }
+    public long beforeWrite(ScxHttpHeadersWritable responseHeaders, ScxHttpHeaders requestHeaders) {
         // 只有在没设置 contentType 的时候我们才主动设置 
         if (responseHeaders.contentType() == null) {
             responseHeaders.contentType(ScxMediaType.of(TEXT_PLAIN).charset(charset));
         }
+        bytes = str.getBytes(charset);
+        return bytes.length;
     }
 
     @Override
