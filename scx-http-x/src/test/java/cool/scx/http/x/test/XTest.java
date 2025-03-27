@@ -3,9 +3,6 @@ package cool.scx.http.x.test;
 import cool.scx.http.web_socket.ScxServerWebSocketHandshakeRequest;
 import cool.scx.http.x.XHttpServer;
 import cool.scx.http.x.XHttpServerOptions;
-import cool.scx.http.x.http1.headers.transfer_encoding.TransferEncoding;
-
-import static cool.scx.http.headers.HttpFieldName.TRANSFER_ENCODING;
 
 public class XTest {
 
@@ -26,8 +23,7 @@ public class XTest {
                 });
                 d.send("hello");
             } else {
-//                c.response().setHeader(TRANSFER_ENCODING,"chunked");
-                c.response().send();
+                c.response().send("123");
             }
         });
         httpServer.start();
