@@ -61,14 +61,6 @@ public class Test {
             var r = 1 / 0;
         });
 
-        router.errorHandler((e, ctx) -> {
-            if (e instanceof ScxHttpException s) {
-                ctx.response().status(s.status()).send(getReasonPhrase(s.status(), "unknown"));
-            } else {
-                ctx.response().status(INTERNAL_SERVER_ERROR).send(e.getMessage());
-            }
-        });
-
         server.onRequest(router);
 
         server.start();
