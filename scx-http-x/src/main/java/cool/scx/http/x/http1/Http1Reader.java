@@ -11,6 +11,8 @@ import cool.scx.http.x.http1.request_line.Http1RequestLine;
 import cool.scx.http.x.http1.request_line.InvalidHttpRequestLineException;
 import cool.scx.http.x.http1.request_line.InvalidHttpVersion;
 import cool.scx.http.x.http1.status_line.Http1StatusLine;
+import cool.scx.http.x.http1.status_line.InvalidHttpStatusException;
+import cool.scx.http.x.http1.status_line.InvalidHttpStatusLineException;
 import cool.scx.io.data_reader.DataReader;
 import cool.scx.io.data_reader.PowerfulLinkedDataReader;
 import cool.scx.io.exception.NoMatchFoundException;
@@ -107,8 +109,11 @@ final class Http1Reader {
         } catch (NoMoreDataException e) {
             throw new CloseConnectionException();
         } catch (NoMatchFoundException e) {
-            // 在指定长度内未匹配到 这里抛出响应行过大异常
+            // 在指定长度内未匹配到 这里抛出响应行过大异常, 包装到 RuntimeException 中 因为这其中的异常一般都会由用户来处理 
             throw new RuntimeException("响应行过大 !!!");
+        } catch (InvalidHttpStatusLineException | InvalidHttpStatusException | InvalidHttpVersion e) {
+            // 解析异常我们全部包装到 RuntimeException 中
+            throw new RuntimeException(e);
         }
     }
 
