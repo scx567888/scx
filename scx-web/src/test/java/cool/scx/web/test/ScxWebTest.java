@@ -25,9 +25,6 @@ public class ScxWebTest {
 
         var router = Router.of();
 
-        //绑定异常处理器后可以直接再 handler 中抛出异常
-        new ScxWeb(new ScxWebOptions().useDevelopmentErrorPage(true)).bindErrorHandler(router);
-
         router.addRoute(Route.of().path("/no-perm").handler(c -> {
             //这里可以直接抛出 异常
             throw new ForbiddenException(new RuntimeException("你没有权限 !!!"));
@@ -55,7 +52,7 @@ public class ScxWebTest {
 
         // 直接将 class 扫描并注册到 router 中 这样可以实现类似 spring mvc 的写法
         // 具体参照 HelloWorldController
-        new ScxWeb().bindErrorHandler(router).registerHttpRoutes(router, new HelloWorldController());
+        new ScxWeb().registerHttpRoutes(router, new HelloWorldController());
 
         // 原有的并不会收到任何影响
         router.addRoute(Route.of().path("/my-route").handler(c -> {
