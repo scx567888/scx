@@ -1,9 +1,6 @@
 package cool.scx.http.x.http1;
 
 import cool.scx.http.ScxHttpServerRequest;
-import cool.scx.http.ScxHttpServerResponse;
-import cool.scx.http.exception.InternalServerErrorException;
-import cool.scx.http.exception.ScxHttpException;
 import cool.scx.http.method.ScxHttpMethod;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.x.XHttpServerOptions;
@@ -17,13 +14,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.System.Logger;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import static cool.scx.http.status.ScxHttpStatusHelper.getReasonPhrase;
+import static cool.scx.http.x.XHttpErrorHandler.X_HTTP_ERROR_HANDLER;
 import static cool.scx.http.x.http1.Http1Helper.*;
 import static cool.scx.http.x.http1.Http1Reader.*;
 import static cool.scx.http.x.http1.headers.connection.Connection.CLOSE;
 import static cool.scx.http.x.http1.headers.expect.Expect.CONTINUE;
+import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.getLogger;
 
@@ -41,12 +40,14 @@ public class Http1ServerConnection {
     public final OutputStream dataWriter;
 
     private final Consumer<ScxHttpServerRequest> requestHandler;
+    private final BiConsumer<Throwable, ScxHttpServerRequest> errorHandler;
     private boolean running;
 
-    public Http1ServerConnection(ScxTCPSocket tcpSocket, XHttpServerOptions options, Consumer<ScxHttpServerRequest> requestHandler) {
+    public Http1ServerConnection(ScxTCPSocket tcpSocket, XHttpServerOptions options, Consumer<ScxHttpServerRequest> requestHandler, BiConsumer<Throwable, ScxHttpServerRequest> errorHandler) {
         this.tcpSocket = tcpSocket;
         this.options = options;
         this.requestHandler = requestHandler;
+        this.errorHandler = errorHandler;
         this.dataReader = new PowerfulLinkedDataReader(new InputStreamDataSupplier(this.tcpSocket.inputStream()));
         this.dataWriter = this.tcpSocket.outputStream();
         this.running = true;
@@ -146,7 +147,7 @@ public class Http1ServerConnection {
     private void handlerSystemException(Throwable e) {
         //此时我们并没有拿到一个完整的 request 对象 所以这里创建一个 虚拟 request 用于后续响应
         var fakeRequest = new Http1ServerRequest(this, new Http1RequestLine(ScxHttpMethod.of("unknow"), ScxURI.of()), new Http1Headers().connection(CLOSE), InputStream.nullInputStream());
-        handlerException(e, fakeRequest.response(), "解析 Request");
+        handlerException(e, fakeRequest, "解析 Request");
 
         // 这里我们停止监听并关闭连接
         try {
@@ -157,26 +158,27 @@ public class Http1ServerConnection {
     }
 
     private void handlerUserException(Throwable e, ScxHttpServerRequest request) {
-        handlerException(e, request.response(), "用户处理器");
+        handlerException(e, request, "用户处理器");
     }
 
-    private void handlerException(Throwable e, ScxHttpServerResponse response, String type) {
-        var httpException = e instanceof ScxHttpException h ? h : new InternalServerErrorException(e.getMessage());
-        var status = httpException.status();
-        var reasonPhrase = getReasonPhrase(status, "unknown");
-
+    private void handlerException(Throwable e, ScxHttpServerRequest request, String type) {
         if (tcpSocket.isClosed()) {
             LOGGER.log(ERROR, type + " 发生异常 !!!, 因为 Socket 已被关闭, 所以错误信息可能没有正确返回给客户端 !!!", e);
-        } else if (response.isSent()) {
+        } else if (request.response().isSent()) {
             //这里表示 响应对象已经被使用了 我们只能打印日志
             LOGGER.log(ERROR, type + " 发生异常 !!!, 因为请求已被相应, 所以错误信息可能没有正确返回给客户端 !!!", e);
         } else {
             //这里尝试响应给客户端
-            LOGGER.log(ERROR, type + " 发生异常 !!!", e);
+            LOGGER.log(DEBUG, type + " 发生异常 !!!", e);
             try {
-                response.status(status).send(reasonPhrase);
+                if (errorHandler != null) {
+                    errorHandler.accept(e, request);
+                } else {
+                    //没有就回退到默认
+                    X_HTTP_ERROR_HANDLER.accept(e, request);
+                }
             } catch (Exception ex) {
-                LOGGER.log(ERROR, type + " 发生异常 !!!, 尝试响应给客户端时发生异常 !!!", ex);
+                LOGGER.log(ERROR, type + " 发生异常 !!!, 尝试通过 错误处理器 响应给客户端时发生异常 !!!", ex);
             }
         }
     }

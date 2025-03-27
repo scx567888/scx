@@ -9,11 +9,9 @@ import java.nio.file.Path;
 public class ScxWebOptions {
 
     private Path templateRoot;
-    private boolean useDevelopmentErrorPage;
     private boolean cachedMultiPart;
 
     public ScxWebOptions() {
-        this.useDevelopmentErrorPage = false;
         this.templateRoot = null;
         this.cachedMultiPart = false;
     }
@@ -24,15 +22,6 @@ public class ScxWebOptions {
 
     public ScxWebOptions templateRoot(Path templateRoot) {
         this.templateRoot = templateRoot;
-        return this;
-    }
-
-    public boolean useDevelopmentErrorPage() {
-        return useDevelopmentErrorPage;
-    }
-
-    public ScxWebOptions useDevelopmentErrorPage(boolean useDevelopmentErrorPage) {
-        this.useDevelopmentErrorPage = useDevelopmentErrorPage;
         return this;
     }
 

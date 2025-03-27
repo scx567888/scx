@@ -11,6 +11,7 @@ import cool.scx.config.ScxEnvironment;
 import cool.scx.config.ScxFeatureConfig;
 import cool.scx.data.jdbc.AnnotationConfigTable;
 import cool.scx.http.ScxHttpServer;
+import cool.scx.http.x.XHttpErrorHandler;
 import cool.scx.http.x.XHttpServer;
 import cool.scx.http.x.XHttpServerOptions;
 import cool.scx.jdbc.JDBCContext;
@@ -95,7 +96,7 @@ public final class ScxApp {
         //4, 初始化事件总线
         this.eventBus = new EventBus(Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2));
         //4, 初始化 Web
-        this.scxWeb = new ScxWeb(new ScxWebOptions().templateRoot(scxOptions.templateRoot()).useDevelopmentErrorPage(scxFeatureConfig.get(USE_DEVELOPMENT_ERROR_PAGE)));
+        this.scxWeb = new ScxWeb(new ScxWebOptions().templateRoot(scxOptions.templateRoot()));
     }
 
     public static ScxAppBuilder builder() {
@@ -151,7 +152,7 @@ public final class ScxApp {
         var classList = Arrays.stream(this.scxModules()).flatMap(c -> c.classList().stream()).toList();
         var httpRoutes = RouteRegistrar.filterClass(classList).stream().map(beanFactory::getBean).toArray();
         var webSocketRoutes = WebSocketRouteRegistrar.filterClass(classList).stream().map(beanFactory::getBean).toArray();
-        this.scxWeb.bindErrorHandler(this.scxHttpRouter).registerHttpRoutes(scxHttpRouter, httpRoutes).registerWebSocketRoutes(scxHttpRouter, webSocketRoutes);
+        this.scxWeb.registerHttpRoutes(scxHttpRouter, httpRoutes).registerWebSocketRoutes(scxHttpRouter, webSocketRoutes);
         //4, 依次执行 模块的 start 生命周期 , 在这里我们可以操作 router 等对象 "手动注册新路由" 或其他任何操作
         this.startAllScxModules();
         //5, 打印基本信息
@@ -190,7 +191,7 @@ public final class ScxApp {
             var tls = TLS.of(this.scxOptions.sslPath(), this.scxOptions.sslPassword());
             httpServerOptions.tls(tls);
         }
-        return new XHttpServer(httpServerOptions);
+        return new XHttpServer(httpServerOptions).onError(new XHttpErrorHandler(scxFeatureConfig.get(USE_DEVELOPMENT_ERROR_PAGE)));
     }
 
     /// 启动服务器

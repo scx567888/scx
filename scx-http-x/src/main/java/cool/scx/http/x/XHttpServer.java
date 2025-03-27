@@ -12,6 +12,7 @@ import cool.scx.tcp.ScxTCPSocket;
 import java.io.IOException;
 import java.lang.System.Logger;
 import java.net.InetSocketAddress;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /// Http 服务器
@@ -25,6 +26,7 @@ public class XHttpServer implements ScxHttpServer {
     private final XHttpServerOptions options;
     private final ScxTCPServer tcpServer;
     private Consumer<ScxHttpServerRequest> requestHandler;
+    private BiConsumer<Throwable, ScxHttpServerRequest> errorHandler;
 
     public XHttpServer(XHttpServerOptions options) {
         this.options = options;
@@ -63,16 +65,22 @@ public class XHttpServer implements ScxHttpServer {
         }
 
         if (useHttp2) {
-            new Http2ServerConnection(tcpSocket, options, requestHandler).start();
+            new Http2ServerConnection(tcpSocket, options, requestHandler, errorHandler).start();
         } else {
             //此处的Http1 特指 HTTP/1.1
-            new Http1ServerConnection(tcpSocket, options, requestHandler).start();
+            new Http1ServerConnection(tcpSocket, options, requestHandler, errorHandler).start();
         }
     }
 
     @Override
     public ScxHttpServer onRequest(Consumer<ScxHttpServerRequest> requestHandler) {
         this.requestHandler = requestHandler;
+        return this;
+    }
+
+    @Override
+    public ScxHttpServer onError(BiConsumer<Throwable, ScxHttpServerRequest> errorHandler) {
+        this.errorHandler = errorHandler;
         return this;
     }
 

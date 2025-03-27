@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.TreeSet;
-import java.util.function.BiConsumer;
 
 /// Router
 ///
@@ -26,11 +25,9 @@ public class RouterImpl implements Router {
     };
 
     final TreeSet<Route> routes;
-    BiConsumer<Throwable, RoutingContext> errorHandler;
 
     public RouterImpl() {
         this.routes = new TreeSet<>(ROUTE_COMPARATOR);
-        this.errorHandler = null;
     }
 
     @Override
@@ -47,12 +44,6 @@ public class RouterImpl implements Router {
     @Override
     public void accept(ScxHttpServerRequest scxHttpRequest) {
         new RoutingContextImpl(this, scxHttpRequest).next();
-    }
-
-    @Override
-    public RouterImpl errorHandler(BiConsumer<Throwable, RoutingContext> handler) {
-        this.errorHandler = handler;
-        return this;
     }
 
 }

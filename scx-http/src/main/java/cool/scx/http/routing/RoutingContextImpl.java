@@ -11,8 +11,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import static cool.scx.http.status.HttpStatus.INTERNAL_SERVER_ERROR;
-
 /// RoutingContext
 ///
 /// @author scx567888
@@ -45,37 +43,7 @@ public class RoutingContextImpl implements RoutingContext {
 
     @Override
     public void next() {
-        try {
-            tryNext();
-        } catch (Throwable e) {
-            //如果有自定义的处理器则使用
-            if (router.errorHandler != null) {
-                router.errorHandler.accept(e, this);
-            } else {
-                if (e instanceof ScxHttpException httpException) {
-                    var code = httpException.status();
-                    response().status(code).send(code.toString());
-                } else {
-                    response().status(INTERNAL_SERVER_ERROR).send("Internal Server Error");
-                }
-            }
-        }
-    }
-
-    @Override
-    public Parameters<String, String> pathParams() {
-        return this.nowPathParams;
-    }
-
-    @Override
-    public <T> Map<String, T> data() {
-        return (Map<String, T>) data;
-    }
-
-    //真正进行路由匹配的方法
-    private void tryNext() throws Throwable {
-
-        Throwable e = new NotFoundException();
+        ScxHttpException e = new NotFoundException();
 
         while (iter.hasNext()) {
             var route = iter.next();
@@ -113,7 +81,16 @@ public class RoutingContextImpl implements RoutingContext {
         }
 
         throw e;
+    }
 
+    @Override
+    public Parameters<String, String> pathParams() {
+        return this.nowPathParams;
+    }
+
+    @Override
+    public <T> Map<String, T> data() {
+        return (Map<String, T>) data;
     }
 
 }
