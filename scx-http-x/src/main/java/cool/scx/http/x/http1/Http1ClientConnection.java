@@ -22,10 +22,9 @@ import java.io.UncheckedIOException;
 
 import static cool.scx.http.headers.HttpFieldName.HOST;
 import static cool.scx.http.headers.ScxHttpHeadersHelper.encodeHeaders;
-import static cool.scx.http.method.HttpMethod.GET;
-import static cool.scx.http.x.http1.Http1Helper.*;
+import static cool.scx.http.x.http1.Http1Helper.CRLF_BYTES;
+import static cool.scx.http.x.http1.Http1Helper.checkRequestHasBody;
 import static cool.scx.http.x.http1.headers.transfer_encoding.TransferEncoding.CHUNKED;
-import static java.io.OutputStream.nullOutputStream;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class Http1ClientConnection {
@@ -60,8 +59,8 @@ public class Http1ClientConnection {
             headers.set(HOST, request.uri().host());
         }
 
-        // 2, 处理响应体 相关
-        if (expectedLength < 0) {//表示不知道响应体的长度
+        // 2, 处理 body 相关
+        if (expectedLength < 0) {//表示不知道 body 的长度
             // 如果用户已经手动设置了 Content-Length, 我们便不再设置 分块传输
             if (headers.contentLength() == null) {
                 headers.transferEncoding(CHUNKED);
@@ -72,7 +71,7 @@ public class Http1ClientConnection {
                 headers.contentLength(expectedLength);
             }
         } else {
-            // 响应体长度为 0 时 , 分两种情况
+            // body 长度为 0 时 , 分两种情况
             // 1, 是需要明确写入 Content-Length : 0 的
             // 2, 是不需要写入任何长度相关字段
             var hasBody = checkRequestHasBody(request.method());
@@ -86,7 +85,7 @@ public class Http1ClientConnection {
 
         var requestHeaderStr = encodeHeaders(headers);
 
-        //先写入请求行 请求头的内容
+        //先写入头部内容
         try {
             var h = requestLineStr + "\r\n" + requestHeaderStr + "\r\n";
             dataWriter.write(h.getBytes(UTF_8));

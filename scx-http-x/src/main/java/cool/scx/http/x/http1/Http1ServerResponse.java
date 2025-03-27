@@ -112,8 +112,8 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
             }
         }
 
-        // 2, 处理响应体 相关
-        if (expectedLength < 0) {//表示不知道响应体的长度
+        // 2, 处理 body 相关
+        if (expectedLength < 0) {//表示不知道 body 的长度
             // 如果用户已经手动设置了 Content-Length, 我们便不再设置 分块传输
             if (headers.contentLength() == null) {
                 headers.transferEncoding(CHUNKED);
@@ -124,7 +124,7 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
                 headers.contentLength(expectedLength);
             }
         } else {
-            // 响应体长度为 0 时 , 分两种情况
+            // body 长度为 0 时 , 分两种情况
             // 1, 是需要明确写入 Content-Length : 0 的
             // 2, 是不需要写入任何长度相关字段
             var hasBody = checkResponseHasBody(status);
@@ -138,7 +138,7 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
 
         var responseHeaderStr = encodeHeaders(headers);
 
-        //先写入响应行 响应头的内容
+        //先写入头部内容
         try {
             var h = statusLineStr + "\r\n" + responseHeaderStr + "\r\n";
             connection.dataWriter.write(h.getBytes(UTF_8));
