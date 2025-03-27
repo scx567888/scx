@@ -26,11 +26,9 @@ public class RouterImpl implements Router {
     };
 
     final TreeSet<Route> routes;
-    BiConsumer<Throwable, RoutingContext> errorHandler;
 
     public RouterImpl() {
         this.routes = new TreeSet<>(ROUTE_COMPARATOR);
-        this.errorHandler = null;
     }
 
     @Override
@@ -47,12 +45,6 @@ public class RouterImpl implements Router {
     @Override
     public void accept(ScxHttpServerRequest scxHttpRequest) {
         new RoutingContextImpl(this, scxHttpRequest).next();
-    }
-
-    @Override
-    public RouterImpl errorHandler(BiConsumer<Throwable, RoutingContext> handler) {
-        this.errorHandler = handler;
-        return this;
     }
 
 }

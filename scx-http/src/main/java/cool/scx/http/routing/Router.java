@@ -22,8 +22,6 @@ public interface Router extends Consumer<ScxHttpServerRequest> {
 
     List<Route> getRoutes();
 
-    Router errorHandler(BiConsumer<Throwable, RoutingContext> handler);
-
     default RouteWritable route() {
         var route = Route.of();
         addRoute(route);
