@@ -43,17 +43,18 @@ public class Http1ClientConnection {
     }
 
     public Http1ClientConnection sendRequest(ScxHttpClientRequest request, MediaWriter writer) {
-        // 1, 创建 请求头
+        // 1, 创建 请求行
         var requestLine = new Http1RequestLine(request.method(), request.uri());
-
+        // 1.1 编码
         var requestLineStr = requestLine.encode();
 
-        //复制一份请求头便于修改
+        //复制一份头便于修改
         var requestHeaders = new Http1Headers(request.headers());
 
         //让用户能够设置头信息
         writer.beforeWrite(requestHeaders, ScxHttpHeaders.of());
 
+        // 处理头相关
         //设置 HOST 头
         if (!requestHeaders.contains(HOST)) {
             requestHeaders.set(HOST, request.uri().host());
@@ -80,7 +81,7 @@ public class Http1ClientConnection {
             throw new UncheckedIOException(e);
         }
 
-        //判断是否需要分段传输
+        // 只有明确表示 分块的时候才使用分块
         var useChunkedTransfer = requestHeaders.transferEncoding() == CHUNKED;
 
         OutputStream out;

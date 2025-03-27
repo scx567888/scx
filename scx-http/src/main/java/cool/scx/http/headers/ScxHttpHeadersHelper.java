@@ -26,10 +26,7 @@ public class ScxHttpHeadersHelper {
     }
 
     public static String encodeHeaders(ScxHttpHeaders headers) {
-        return encodeHeaders(headers, new StringBuilder()).toString();
-    }
-
-    public static StringBuilder encodeHeaders(ScxHttpHeaders headers, StringBuilder sb) {
+        var sb = new StringBuilder();
         for (var header : headers) {
             var key = header.getKey();
             var values = header.getValue();
@@ -37,7 +34,7 @@ public class ScxHttpHeadersHelper {
                 sb.append(key.value()).append(": ").append(value).append("\r\n");
             }
         }
-        return sb;
+        return sb.toString();
     }
 
 }
