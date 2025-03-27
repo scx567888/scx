@@ -8,21 +8,17 @@ import cool.scx.http.x.XHttpClientOptions;
 import cool.scx.http.x.http1.chunked.HttpChunkedOutputStream;
 import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.http.x.http1.request_line.Http1RequestLine;
-import cool.scx.http.x.http1.status_line.Http1StatusLine;
 import cool.scx.io.data_reader.PowerfulLinkedDataReader;
 import cool.scx.io.data_supplier.InputStreamDataSupplier;
-import cool.scx.io.exception.NoMatchFoundException;
-import cool.scx.io.exception.NoMoreDataException;
 import cool.scx.tcp.ScxTCPSocket;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
 
 import static cool.scx.http.headers.HttpFieldName.HOST;
 import static cool.scx.http.headers.ScxHttpHeadersHelper.encodeHeaders;
-import static cool.scx.http.x.http1.Http1Helper.*;
+import static cool.scx.http.x.http1.Http1Helper.checkRequestHasBody;
 import static cool.scx.http.x.http1.Http1Reader.*;
 import static cool.scx.http.x.http1.headers.transfer_encoding.TransferEncoding.CHUNKED;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -109,7 +105,7 @@ public class Http1ClientConnection {
 
     public ScxHttpClientResponse waitResponse() {
         //1, 读取状态行
-        var statusLine = readStatusLine(dataReader,options.maxStatusLineSize());
+        var statusLine = readStatusLine(dataReader, options.maxStatusLineSize());
 
         //2, 读取响应头
         var headers = readHeaders(dataReader, options.maxHeaderSize());

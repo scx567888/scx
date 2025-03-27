@@ -1,13 +1,9 @@
 package cool.scx.web;
 
-import cool.scx.common.exception.ScxExceptionHelper;
 import cool.scx.http.exception.BadRequestException;
 import cool.scx.http.routing.Router;
 import cool.scx.http.routing.RoutingContext;
 import cool.scx.reflect.ParameterInfo;
-import cool.scx.web.exception_handler.ExceptionHandler;
-import cool.scx.web.exception_handler.LastExceptionHandler;
-import cool.scx.web.exception_handler.ScxHttpExceptionHandler;
 import cool.scx.web.interceptor.DefaultInterceptor;
 import cool.scx.web.interceptor.Interceptor;
 import cool.scx.web.parameter_handler.ParameterHandler;
@@ -26,7 +22,6 @@ import cool.scx.web.template.ScxTemplateHandler;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 /// ScxWeb

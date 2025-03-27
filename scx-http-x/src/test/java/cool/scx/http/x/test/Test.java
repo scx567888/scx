@@ -1,6 +1,5 @@
 package cool.scx.http.x.test;
 
-import cool.scx.http.exception.ScxHttpException;
 import cool.scx.http.exception.UnauthorizedException;
 import cool.scx.http.routing.Router;
 import cool.scx.http.x.XHttpServer;
@@ -8,8 +7,6 @@ import cool.scx.http.x.XHttpServerOptions;
 
 import static cool.scx.http.method.HttpMethod.GET;
 import static cool.scx.http.method.HttpMethod.POST;
-import static cool.scx.http.status.HttpStatus.INTERNAL_SERVER_ERROR;
-import static cool.scx.http.status.ScxHttpStatusHelper.getReasonPhrase;
 
 public class Test {
 

@@ -6,7 +6,6 @@ import cool.scx.http.routing.Router;
 import cool.scx.http.x.XHttpServer;
 import cool.scx.http.x.XHttpServerOptions;
 import cool.scx.web.ScxWeb;
-import cool.scx.web.ScxWebOptions;
 import org.testng.annotations.Test;
 
 import static cool.scx.http.status.HttpStatus.FORBIDDEN;
