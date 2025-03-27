@@ -7,7 +7,6 @@ import cool.scx.http.media_type.ScxMediaType;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UncheckedIOException;
 import java.nio.charset.Charset;
 
 import static cool.scx.http.media_type.MediaType.TEXT_PLAIN;

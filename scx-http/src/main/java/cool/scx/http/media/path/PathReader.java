@@ -5,7 +5,6 @@ import cool.scx.http.media.MediaReader;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UncheckedIOException;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
 

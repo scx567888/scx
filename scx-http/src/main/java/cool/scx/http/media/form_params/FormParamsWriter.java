@@ -6,7 +6,6 @@ import cool.scx.http.media.MediaWriter;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UncheckedIOException;
 
 import static cool.scx.http.media.form_params.FormParamsHelper.encodeFormParams;
 import static cool.scx.http.media_type.MediaType.APPLICATION_X_WWW_FORM_URLENCODED;

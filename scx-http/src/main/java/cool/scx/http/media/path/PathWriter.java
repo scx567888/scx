@@ -8,7 +8,6 @@ import cool.scx.io.IOHelper;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UncheckedIOException;
 import java.nio.file.Path;
 
 import static cool.scx.http.media_type.MediaType.APPLICATION_OCTET_STREAM;

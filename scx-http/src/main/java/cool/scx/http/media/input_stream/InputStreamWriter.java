@@ -7,7 +7,6 @@ import cool.scx.http.media.MediaWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UncheckedIOException;
 
 /// InputStreamWriter
 ///
