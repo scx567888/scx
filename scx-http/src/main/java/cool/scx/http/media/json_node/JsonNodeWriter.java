@@ -13,6 +13,7 @@ import java.io.UncheckedIOException;
 
 import static cool.scx.common.util.ObjectUtils.jsonMapper;
 import static cool.scx.common.util.ObjectUtils.xmlMapper;
+import static cool.scx.http.media.json_node.JsonNodeHelper.trySetContentType;
 import static cool.scx.http.media_type.MediaType.APPLICATION_JSON;
 import static cool.scx.http.media_type.MediaType.APPLICATION_XML;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -31,30 +32,8 @@ public class JsonNodeWriter implements MediaWriter {
         this.data = null;
     }
 
-    public static ScxMediaType trySetContentType(ScxHttpHeadersWritable headersWritable, ScxHttpHeaders headers) {
-        //已经设置了则跳过设置
-        if (headersWritable.contentType() != null) {
-            return headersWritable.contentType();
-        }
-        var accept = headers.accept();
-        // 如果客户端未指明 Accepts 则返回 JSON 
-        if (accept == null) {
-            headersWritable.contentType(ScxMediaType.of(APPLICATION_JSON).charset(UTF_8));
-            return headersWritable.contentType();
-        }
-        //测试 XML 或者 JSON 
-        var mediaType = accept.negotiate(APPLICATION_JSON, APPLICATION_XML);
-        if (mediaType == APPLICATION_XML) {
-            headersWritable.contentType(ScxMediaType.of(APPLICATION_XML).charset(UTF_8));
-        } else {
-            //否则回退到 JSON 
-            headersWritable.contentType(ScxMediaType.of(APPLICATION_JSON).charset(UTF_8));
-        }
-        return headersWritable.contentType();
-    }
-
     @Override
-    public void beforeWrite(ScxHttpHeadersWritable responseHeaders, ScxHttpHeaders requestHeaders) {
+    public long beforeWrite(ScxHttpHeadersWritable responseHeaders, ScxHttpHeaders requestHeaders) {
         var contentType = trySetContentType(responseHeaders, requestHeaders);
         //根据类型确定内容长度
         try {
@@ -71,9 +50,7 @@ public class JsonNodeWriter implements MediaWriter {
             //这里表示用户的 jsonNode 无法被转换为字符串 (比如递归引用) 这里抛出异常
             throw new IllegalArgumentException(e);
         }
-        if (responseHeaders.contentLength() == null) {
-            responseHeaders.contentLength(data.length);
-        }
+        return data.length;
     }
 
     @Override
