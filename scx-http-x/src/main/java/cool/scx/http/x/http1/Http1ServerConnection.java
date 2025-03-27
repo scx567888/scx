@@ -19,7 +19,6 @@ import cool.scx.io.exception.NoMoreDataException;
 import cool.scx.tcp.ScxTCPSocket;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.lang.System.Logger;
@@ -63,43 +62,7 @@ public class Http1ServerConnection {
         //开始读取 Http 请求
         while (running) {
             try {
-                // 1, 读取 请求行
-                var requestLine = readRequestLine();
-
-                // 2, 读取 请求头 
-                var headers = readHeaders();
-
-                // 3, 读取 请求体流
-                var bodyInputStream = readBodyInputStream(headers);
-
-                // 4, 在交给用户处理器进行处理之前, 我们需要做一些预处理
-
-                // 4.1, 验证 请求头
-                if (options.validateHost()) {
-                    validateHost(headers);
-                }
-
-                // 4.2, 处理 100-continue 临时请求
-                if (headers.expect() == CONTINUE) {
-                    //如果启用了自动响应 我们直接发送
-                    if (options.autoRespond100Continue()) {
-                        try {
-                            sendContinue100(dataWriter);
-                        } catch (IOException e) {
-                            throw new CloseConnectionException("Failed to write continue", e);
-                        }
-                    } else {
-                        //否则交给用户去处理
-                        bodyInputStream = new AutoContinueInputStream(bodyInputStream, dataWriter);
-                    }
-                }
-
-                // 5, 判断是否为 WebSocket 握手请求 并创建对应请求
-                var isWebSocketHandshake = checkIsWebSocketHandshake(requestLine, headers);
-
-                var request = isWebSocketHandshake ?
-                        new Http1ServerWebSocketHandshakeRequest(this, requestLine, headers, bodyInputStream) :
-                        new Http1ServerRequest(this, requestLine, headers, bodyInputStream);
+                var request = readRequest();
 
                 try {
                     // 6, 调用用户处理器
@@ -110,7 +73,7 @@ public class Http1ServerConnection {
                     // 6, 如果 还是 running 说明需要继续复用当前 tcp 连接,并进行下一次 Request 的读取
                     if (running) {
                         // 7, 用户处理器可能没有消费完请求体 这里我们帮助消费用户未消费的数据
-                        consumeInputStream(bodyInputStream);
+                        consumeInputStream(request.body().inputStream());
                     }
                 }
 
@@ -123,6 +86,46 @@ public class Http1ServerConnection {
                 handleHttpException(new InternalServerErrorException(e));
             }
         }
+    }
+
+    public Http1ServerRequest readRequest() {
+        // 1, 读取 请求行
+        var requestLine = readRequestLine();
+
+        // 2, 读取 请求头 
+        var headers = readHeaders(dataReader, options.maxHeaderSize());
+
+        // 3, 读取 请求体流
+        var bodyInputStream = readBodyInputStream(headers, dataReader, options.maxPayloadSize());
+
+        // 4, 在交给用户处理器进行处理之前, 我们需要做一些预处理
+
+        // 4.1, 验证 请求头
+        if (options.validateHost()) {
+            validateHost(headers);
+        }
+
+        // 4.2, 处理 100-continue 临时请求
+        if (headers.expect() == CONTINUE) {
+            //如果启用了自动响应 我们直接发送
+            if (options.autoRespond100Continue()) {
+                try {
+                    sendContinue100(dataWriter);
+                } catch (IOException e) {
+                    throw new CloseConnectionException("Failed to write continue", e);
+                }
+            } else {
+                //否则交给用户去处理
+                bodyInputStream = new AutoContinueInputStream(bodyInputStream, dataWriter);
+            }
+        }
+
+        // 5, 判断是否为 WebSocket 握手请求 并创建对应请求
+        var isWebSocketHandshake = checkIsWebSocketHandshake(requestLine, headers);
+
+        return isWebSocketHandshake ?
+                new Http1ServerWebSocketHandshakeRequest(this, requestLine, headers, bodyInputStream) :
+                new Http1ServerRequest(this, requestLine, headers, bodyInputStream);
     }
 
     public void stop() {
@@ -163,14 +166,6 @@ public class Http1ServerConnection {
             // 错误的 Http 版本异常
             throw new HttpVersionNotSupportedException("Invalid HTTP version : " + e.versionStr);
         }
-    }
-
-    private Http1Headers readHeaders() {
-        return Http1Helper.readHeaders(dataReader, options.maxHeaderSize());
-    }
-
-    private InputStream readBodyInputStream(Http1Headers headers) {
-        return Http1Helper.readBodyInputStream(headers, dataReader, options.maxPayloadSize());
     }
 
     private void handleHttpException(ScxHttpException e) {
