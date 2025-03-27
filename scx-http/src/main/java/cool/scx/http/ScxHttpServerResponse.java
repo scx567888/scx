@@ -6,7 +6,6 @@ import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.headers.cookie.Cookie;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.media.byte_array.ByteArrayWriter;
-import cool.scx.http.media.empty.EmptyWriter;
 import cool.scx.http.media.event_stream.ServerEventStream;
 import cool.scx.http.media.event_stream.ServerEventStreamWriter;
 import cool.scx.http.media.form_params.FormParams;
@@ -26,6 +25,8 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 
+import static cool.scx.http.media.empty.EmptyWriter.EMPTY_WRITER;
+
 /// ScxHttpServerResponse
 ///
 /// @author scx567888
@@ -40,19 +41,26 @@ public interface ScxHttpServerResponse {
 
     ScxHttpServerResponse status(ScxHttpStatus code);
 
-    OutputStream outputStream();
+    /// 获取输出流
+    ///
+    /// @param expectedLength 预期的内容长度 : (-1 未知长度, 0 无内容, 大于 0 标准长度)
+    OutputStream outputStream(long expectedLength);
 
     boolean isSent();
+
+    default OutputStream outputStream() {
+        return outputStream(-1);
+    }
 
     //******************** send 操作 *******************
 
     default void send(MediaWriter writer) {
-        writer.beforeWrite(headers(), request().headers());
-        writer.write(outputStream());
+        var expectedLength = writer.beforeWrite(headers(), request().headers());
+        writer.write(outputStream(expectedLength));
     }
 
     default void send() {
-        send(new EmptyWriter());
+        send(EMPTY_WRITER);
     }
 
     default void send(byte[] bytes) {

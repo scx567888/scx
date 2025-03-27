@@ -22,8 +22,8 @@ public class InputStreamWriter implements MediaWriter {
     }
 
     @Override
-    public void beforeWrite(ScxHttpHeadersWritable responseHeaders, ScxHttpHeaders requestHeaders) {
-        //什么都不做
+    public long beforeWrite(ScxHttpHeadersWritable responseHeaders, ScxHttpHeaders requestHeaders) {
+        return -1;// 我们不知道流的长度
     }
 
     @Override

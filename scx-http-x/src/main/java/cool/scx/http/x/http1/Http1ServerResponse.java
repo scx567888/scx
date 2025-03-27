@@ -72,7 +72,7 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
     }
 
     @Override
-    public OutputStream outputStream() {
+    public OutputStream outputStream(long expectedLength) {
         if (outputStream == null) {
             outputStream = sendHeaders();
         }

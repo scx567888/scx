@@ -14,9 +14,15 @@ import java.io.UncheckedIOException;
 /// @version 0.0.1
 public class EmptyWriter implements MediaWriter {
 
-    @Override
-    public void beforeWrite(ScxHttpHeadersWritable responseHeaders, ScxHttpHeaders requestHeaders) {
+    public static final EmptyWriter EMPTY_WRITER = new EmptyWriter();
 
+    private EmptyWriter() {
+
+    }
+
+    @Override
+    public long beforeWrite(ScxHttpHeadersWritable responseHeaders, ScxHttpHeaders requestHeaders) {
+        return 0;
     }
 
     @Override

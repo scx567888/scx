@@ -20,10 +20,11 @@ public class ServerEventStreamWriter implements MediaWriter {
     }
 
     @Override
-    public void beforeWrite(ScxHttpHeadersWritable responseHeaders, ScxHttpHeaders requestHeaders) {
+    public long beforeWrite(ScxHttpHeadersWritable responseHeaders, ScxHttpHeaders requestHeaders) {
         if (responseHeaders.contentType() == null) {
             responseHeaders.contentType(ScxMediaType.of(TEXT_EVENT_STREAM).charset(UTF_8));
         }
+        return -1;// 我们无法确定长度 因为 ServerEventStream 是由用户动态写入的
     }
 
     @Override

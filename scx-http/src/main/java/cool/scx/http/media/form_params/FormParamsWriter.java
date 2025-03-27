@@ -19,21 +19,19 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class FormParamsWriter implements MediaWriter {
 
     private final FormParams formParams;
-    private final byte[] bytes;
+    private byte[] bytes;
 
     public FormParamsWriter(FormParams formParams) {
         this.formParams = formParams;
-        this.bytes = encodeFormParams(formParams).getBytes(UTF_8);
     }
 
     @Override
-    public void beforeWrite(ScxHttpHeadersWritable responseHeaders, ScxHttpHeaders requestHeaders) {
-        if (responseHeaders.contentLength() == null) {
-            responseHeaders.contentLength(bytes.length);
-        }
+    public long beforeWrite(ScxHttpHeadersWritable responseHeaders, ScxHttpHeaders requestHeaders) {
         if (responseHeaders.contentType() == null) {
             responseHeaders.contentType(APPLICATION_X_WWW_FORM_URLENCODED);
         }
+        bytes = encodeFormParams(formParams).getBytes(UTF_8);
+        return bytes.length;
     }
 
     @Override

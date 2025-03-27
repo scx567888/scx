@@ -7,7 +7,6 @@ import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.headers.cookie.Cookie;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.media.byte_array.ByteArrayWriter;
-import cool.scx.http.media.empty.EmptyWriter;
 import cool.scx.http.media.form_params.FormParams;
 import cool.scx.http.media.form_params.FormParamsWriter;
 import cool.scx.http.media.input_stream.InputStreamWriter;
@@ -27,6 +26,8 @@ import cool.scx.http.version.HttpVersion;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
+
+import static cool.scx.http.media.empty.EmptyWriter.EMPTY_WRITER;
 
 /// ScxHttpClientRequest
 ///
@@ -55,7 +56,7 @@ public interface ScxHttpClientRequest {
     //******************** send 操作 *******************
 
     default ScxHttpClientResponse send() {
-        return send(new EmptyWriter());
+        return send(EMPTY_WRITER);
     }
 
     default ScxHttpClientResponse send(byte[] bytes) {
