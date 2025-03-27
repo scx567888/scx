@@ -3,25 +3,27 @@ package cool.scx.http.x.http1;
 import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.exception.InternalServerErrorException;
 import cool.scx.http.exception.ScxHttpException;
-import cool.scx.http.version.HttpVersion;
+import cool.scx.http.method.ScxHttpMethod;
+import cool.scx.http.uri.ScxURI;
 import cool.scx.http.x.XHttpServerOptions;
 import cool.scx.http.x.http1.headers.Http1Headers;
+import cool.scx.http.x.http1.request_line.Http1RequestLine;
 import cool.scx.io.data_reader.PowerfulLinkedDataReader;
 import cool.scx.io.data_supplier.InputStreamDataSupplier;
 import cool.scx.tcp.ScxTCPSocket;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.System.Logger;
 import java.util.function.Consumer;
 
-import static cool.scx.http.headers.ScxHttpHeadersHelper.encodeHeaders;
 import static cool.scx.http.status.ScxHttpStatusHelper.getReasonPhrase;
 import static cool.scx.http.x.http1.Http1Helper.*;
 import static cool.scx.http.x.http1.Http1Reader.*;
 import static cool.scx.http.x.http1.headers.connection.Connection.CLOSE;
 import static cool.scx.http.x.http1.headers.expect.Expect.CONTINUE;
-import static java.lang.System.Logger.Level.TRACE;
+import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.getLogger;
 
 /// Http 1.1 连接处理器
@@ -52,34 +54,43 @@ public class Http1ServerConnection {
     public void start() {
         //开始读取 Http 请求
         while (running) {
+
+            //1, 我们先读取请求
+            ScxHttpServerRequest request;
             try {
-                var request = readRequest();
-
-                try {
-                    // 6, 调用用户处理器
-                    _callRequestHandler(request);
-                } finally {
-                    //todo 这里如果  _callRequestHandler 中 异步读取 body 怎么办?
-
-                    // 6, 如果 还是 running 说明需要继续复用当前 tcp 连接,并进行下一次 Request 的读取
-                    if (running) {
-                        // 7, 用户处理器可能没有消费完请求体 这里我们帮助消费用户未消费的数据
-                        consumeInputStream(request.body().inputStream());
-                    }
-                }
-
-            } catch (CloseConnectionException e) {
-                //这种情况是我们主动触发的, 表示需要关闭连接 这里直接跳出循环, 以便完成关闭
-                stop();
-            } catch (ScxHttpException e) {
-                handleHttpException(e);
+                request = readRequest();
             } catch (Throwable e) {
-                handleHttpException(new InternalServerErrorException(e));
+                //如果读取请求失败 我们将其理解为系统错误 不可恢复
+                handlerSystemException(e);
+                break;
+            } finally {
+                try {
+                    close();
+                } catch (IOException e) {
+                    LOGGER.log(ERROR, "Error closing connection", e);
+                }
             }
+
+            //2, 交由用户处理器处理
+            try {
+                _callRequestHandler(request);
+            } catch (Throwable e) {
+                //用户处理器 错误 我们尝试恢复
+                handlerUserException(e, request);
+            } finally {
+                //todo 这里如果  _callRequestHandler 中 异步读取 body 怎么办?
+
+                // 6, 如果 还是 running 说明需要继续复用当前 tcp 连接,并进行下一次 Request 的读取
+                if (running) {
+                    // 7, 用户处理器可能没有消费完请求体 这里我们帮助消费用户未消费的数据
+                    consumeInputStream(request.body().inputStream());
+                }
+            }
+
         }
     }
 
-    public Http1ServerRequest readRequest() {
+    private Http1ServerRequest readRequest() throws CloseConnectionException {
         // 1, 读取 请求行
         var requestLine = readRequestLine(dataReader, options.maxRequestLineSize());
 
@@ -137,43 +148,35 @@ public class Http1ServerConnection {
         }
     }
 
-    private void handleHttpException(ScxHttpException e) {
-        //todo 这个方法不是特别合理,
-        // 不一定所有的 情况都需要关闭连接 是否可以在 ScxHttpException 中添加是否严重 或者根据状态码来区分 ?
-
-        var status = e.status();
+    public void handlerSystemException(Throwable e) {
+        var httpException = e instanceof ScxHttpException h ? h : new InternalServerErrorException(e.getMessage());
+        var status = httpException.status();
         var reasonPhrase = getReasonPhrase(status, "unknown");
 
-        var sb = new StringBuilder();
-        sb.append(HttpVersion.HTTP_1_1.value());
-        sb.append(" ");
-        sb.append(status.code());
-        sb.append(" ");
-        sb.append(reasonPhrase);
-        sb.append("\r\n");
+        //这个 request 对象 仅为了做响应 实际上 并不包含任何内容
+        var request = new Http1ServerRequest(this, new Http1RequestLine(ScxHttpMethod.of("unknow"), ScxURI.of()), new Http1Headers().connection(CLOSE), InputStream.nullInputStream());
 
-        var headers = new Http1Headers();
-        // we are escaping the connection loop, the connection will be closed
-        headers.connection(CLOSE);
-
-        var message = reasonPhrase.getBytes();
-
-        headers.contentLength(message.length);
-
-        var headerStr = encodeHeaders(headers);
-
-        sb.append(headerStr);
-        sb.append("\r\n");
-
-
-        try {
-            dataWriter.write(sb.toString().getBytes());
-            dataWriter.write(message);
-        } catch (IOException ee) {
-            LOGGER.log(TRACE, "发送请求错误时发生错误 !!!");
-            stop();
+        if (!request.response().isSent()) {
+            LOGGER.log(ERROR, "解析 Request 发生异常 !!!", e);
+            request.response().status(status).send(reasonPhrase);
+        } else {
+            //这里表示 响应对象已经被使用了 我们只能打印日志
+            LOGGER.log(ERROR, "解析 Request 发生异常 !!!, 因为请求已被相应, 所以错误信息可能没有正确返回给客户端 !!!", e);
         }
+    }
 
+    public void handlerUserException(Throwable e, ScxHttpServerRequest request) {
+        var httpException = e instanceof ScxHttpException h ? h : new InternalServerErrorException(e.getMessage());
+        var status = httpException.status();
+        var reasonPhrase = getReasonPhrase(status, "unknown");
+
+        if (!request.response().isSent()) {
+            LOGGER.log(ERROR, "用户处理器 发生异常 !!!", e);
+            request.response().status(status).send(reasonPhrase);
+        } else {
+            //这里表示 响应对象已经被使用了 我们只能打印日志
+            LOGGER.log(ERROR, "用户处理器 发生异常 !!!, 因为请求已被相应, 所以错误信息可能没有正确返回给客户端 !!!", e);
+        }
     }
 
 }
