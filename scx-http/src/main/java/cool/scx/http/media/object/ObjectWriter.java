@@ -11,12 +11,12 @@ import java.io.UncheckedIOException;
 
 import static cool.scx.common.util.ObjectUtils.toJson;
 import static cool.scx.common.util.ObjectUtils.toXml;
-import static cool.scx.http.media.json_node.JsonNodeWriter.trySetContentType;
+import static cool.scx.http.media.json_node.JsonNodeHelper.trySetContentType;
 import static cool.scx.http.media_type.MediaType.APPLICATION_JSON;
 import static cool.scx.http.media_type.MediaType.APPLICATION_XML;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-/// ObjectWriter
+/// ObjectWriter  逻辑参考 {@link cool.scx.http.media.json_node.JsonNodeWriter}
 ///
 /// @author scx567888
 /// @version 0.0.1
@@ -31,7 +31,7 @@ public class ObjectWriter implements MediaWriter {
     }
 
     @Override
-    public void beforeWrite(ScxHttpHeadersWritable responseHeaders, ScxHttpHeaders requestHeaders) {
+    public long beforeWrite(ScxHttpHeadersWritable responseHeaders, ScxHttpHeaders requestHeaders) {
         var contentType = trySetContentType(responseHeaders, requestHeaders);
         //根据类型确定内容长度
         try {
@@ -48,9 +48,7 @@ public class ObjectWriter implements MediaWriter {
             //这里表示用户的 jsonNode 无法被转换为字符串 (比如递归引用) 这里抛出异常
             throw new IllegalArgumentException(e);
         }
-        if (responseHeaders.contentLength() == null) {
-            responseHeaders.contentLength(data.length);
-        }
+        return data.length;
     }
 
     @Override

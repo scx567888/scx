@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.media.MediaWriter;
-import cool.scx.http.media_type.ScxMediaType;
 
 import java.io.IOException;
 import java.io.OutputStream;
