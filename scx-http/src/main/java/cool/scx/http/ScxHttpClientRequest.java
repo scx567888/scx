@@ -28,6 +28,8 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 
+import static cool.scx.http.media.empty.EmptyWriter.EMPTY_WRITER;
+
 /// ScxHttpClientRequest
 ///
 /// @author scx567888
@@ -55,7 +57,7 @@ public interface ScxHttpClientRequest {
     //******************** send 操作 *******************
 
     default ScxHttpClientResponse send() {
-        return send(new EmptyWriter());
+        return send(EMPTY_WRITER);
     }
 
     default ScxHttpClientResponse send(byte[] bytes) {
