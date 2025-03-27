@@ -81,7 +81,8 @@ public class XHttpErrorHandler implements BiConsumer<Throwable, ScxHttpServerReq
 
     @Override
     public void accept(Throwable throwable, ScxHttpServerRequest request) {
-        var httpException = throwable instanceof ScxHttpException h ? h : new InternalServerErrorException(throwable);
+        var e = ScxExceptionHelper.getRootCause(throwable);
+        var httpException = e instanceof ScxHttpException h ? h : new InternalServerErrorException(e);
         //1, 这里根据是否开启了开发人员错误页面 进行相应的返回
         this.handleScxHttpException(httpException, request);
     }

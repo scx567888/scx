@@ -174,10 +174,11 @@ public class Http1ServerConnection {
                 if (errorHandler != null) {
                     errorHandler.accept(e, request);
                 } else {
+                    //没有就回退到默认
                     X_HTTP_ERROR_HANDLER.accept(e, request);
                 }
             } catch (Exception ex) {
-                LOGGER.log(ERROR, type + " 发生异常 !!!, 尝试响应给客户端时发生异常 !!!", ex);
+                LOGGER.log(ERROR, type + " 发生异常 !!!, 尝试通过 错误处理器 响应给客户端时发生异常 !!!", ex);
             }
         }
     }
