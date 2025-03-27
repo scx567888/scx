@@ -3,7 +3,6 @@ package cool.scx.http.routing;
 import cool.scx.http.ScxHttpServerRequest;
 
 import java.util.List;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import static cool.scx.http.routing.TypeMatcher.Type.WEB_SOCKET_HANDSHAKE;
