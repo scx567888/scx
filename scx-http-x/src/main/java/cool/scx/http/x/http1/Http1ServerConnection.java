@@ -1,6 +1,7 @@
 package cool.scx.http.x.http1;
 
 import cool.scx.http.ScxHttpServerRequest;
+import cool.scx.http.ScxHttpServerResponse;
 import cool.scx.http.exception.InternalServerErrorException;
 import cool.scx.http.exception.ScxHttpException;
 import cool.scx.http.method.ScxHttpMethod;
@@ -63,12 +64,6 @@ public class Http1ServerConnection {
                 //如果读取请求失败 我们将其理解为系统错误 不可恢复
                 handlerSystemException(e);
                 break;
-            } finally {
-                try {
-                    close();
-                } catch (IOException e) {
-                    LOGGER.log(ERROR, "Error closing connection", e);
-                }
             }
 
             //2, 交由用户处理器处理
@@ -149,33 +144,39 @@ public class Http1ServerConnection {
     }
 
     public void handlerSystemException(Throwable e) {
-        var httpException = e instanceof ScxHttpException h ? h : new InternalServerErrorException(e.getMessage());
-        var status = httpException.status();
-        var reasonPhrase = getReasonPhrase(status, "unknown");
-
         //这个 request 对象 仅为了做响应 实际上 并不包含任何内容
-        var request = new Http1ServerRequest(this, new Http1RequestLine(ScxHttpMethod.of("unknow"), ScxURI.of()), new Http1Headers().connection(CLOSE), InputStream.nullInputStream());
+        var fakeRequest = new Http1ServerRequest(this, new Http1RequestLine(ScxHttpMethod.of("unknow"), ScxURI.of()), new Http1Headers().connection(CLOSE), InputStream.nullInputStream());
+        handlerException(e, fakeRequest.response());
 
-        if (!request.response().isSent()) {
-            LOGGER.log(ERROR, "解析 Request 发生异常 !!!", e);
-            request.response().status(status).send(reasonPhrase);
-        } else {
-            //这里表示 响应对象已经被使用了 我们只能打印日志
-            LOGGER.log(ERROR, "解析 Request 发生异常 !!!, 因为请求已被相应, 所以错误信息可能没有正确返回给客户端 !!!", e);
+        // 这里我们停止监听并关闭连接
+        try {
+            close();
+        } catch (IOException _) {
+            
         }
     }
 
     public void handlerUserException(Throwable e, ScxHttpServerRequest request) {
+        handlerException(e, request.response());
+    }
+
+    private void handlerException(Throwable e, ScxHttpServerResponse response) {
         var httpException = e instanceof ScxHttpException h ? h : new InternalServerErrorException(e.getMessage());
         var status = httpException.status();
         var reasonPhrase = getReasonPhrase(status, "unknown");
 
-        if (!request.response().isSent()) {
-            LOGGER.log(ERROR, "用户处理器 发生异常 !!!", e);
-            request.response().status(status).send(reasonPhrase);
-        } else {
+        if (tcpSocket.isClosed()) {
+            LOGGER.log(ERROR, "用户处理器 发生异常 !!!, 因为 Socket 已被关闭, 所以错误信息可能没有正确返回给客户端 !!!", e);
+        } else if (response.isSent()) {
             //这里表示 响应对象已经被使用了 我们只能打印日志
             LOGGER.log(ERROR, "用户处理器 发生异常 !!!, 因为请求已被相应, 所以错误信息可能没有正确返回给客户端 !!!", e);
+        } else {
+            LOGGER.log(ERROR, "用户处理器 发生异常 !!!", e);
+            try {
+                response.status(status).send(reasonPhrase);
+            } catch (Exception ex) {
+                LOGGER.log(ERROR, "用户处理器 发生异常 !!!, 尝试响应给客户端时发生异常 !!!", ex);
+            }
         }
     }
 
