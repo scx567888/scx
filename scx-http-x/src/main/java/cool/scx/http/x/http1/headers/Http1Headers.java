@@ -26,7 +26,7 @@ public class Http1Headers extends ScxHttpHeadersImpl {
         return c != null ? ScxConnection.of(c) : null;
     }
 
-    public ScxHttpHeadersWritable connection(Connection connection) {
+    public Http1Headers connection(Connection connection) {
         set(CONNECTION, connection.value());
         return this;
     }
@@ -47,7 +47,7 @@ public class Http1Headers extends ScxHttpHeadersImpl {
         return c != null ? ScxExpect.of(c) : null;
     }
 
-    public ScxHttpHeadersWritable expect(ScxExpect expect) {
+    public Http1Headers expect(ScxExpect expect) {
         set(EXPECT, expect.value());
         return this;
     }
@@ -57,7 +57,7 @@ public class Http1Headers extends ScxHttpHeadersImpl {
         return c != null ? ScxUpgrade.of(c) : null;
     }
 
-    public ScxHttpHeadersWritable upgrade(ScxUpgrade upgrade) {
+    public Http1Headers upgrade(ScxUpgrade upgrade) {
         set(UPGRADE, upgrade.value());
         return this;
     }
