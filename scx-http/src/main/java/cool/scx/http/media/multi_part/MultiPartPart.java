@@ -7,7 +7,9 @@ import cool.scx.http.media.MediaReader;
 import cool.scx.http.media_type.ScxMediaType;
 import cool.scx.io.IOHelper;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.nio.file.Path;
 import java.util.function.Supplier;
 
@@ -49,7 +51,11 @@ public interface MultiPartPart extends ScxHttpBody {
 
     @Override
     default <T> T as(MediaReader<T> t) {
-        return t.read(inputStream(), headers());
+        try {
+            return t.read(inputStream(), headers());
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 
     default ScxMediaType contentType() {
