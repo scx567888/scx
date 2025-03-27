@@ -143,39 +143,40 @@ public class Http1ServerConnection {
         }
     }
 
-    public void handlerSystemException(Throwable e) {
+    private void handlerSystemException(Throwable e) {
         //这个 request 对象 仅为了做响应 实际上 并不包含任何内容
         var fakeRequest = new Http1ServerRequest(this, new Http1RequestLine(ScxHttpMethod.of("unknow"), ScxURI.of()), new Http1Headers().connection(CLOSE), InputStream.nullInputStream());
-        handlerException(e, fakeRequest.response());
+        handlerException(e, fakeRequest.response(), "解析 Request");
 
         // 这里我们停止监听并关闭连接
         try {
             close();
         } catch (IOException _) {
-            
+
         }
     }
 
-    public void handlerUserException(Throwable e, ScxHttpServerRequest request) {
-        handlerException(e, request.response());
+    private void handlerUserException(Throwable e, ScxHttpServerRequest request) {
+        handlerException(e, request.response(), "用户处理器");
     }
 
-    private void handlerException(Throwable e, ScxHttpServerResponse response) {
+    private void handlerException(Throwable e, ScxHttpServerResponse response, String type) {
         var httpException = e instanceof ScxHttpException h ? h : new InternalServerErrorException(e.getMessage());
         var status = httpException.status();
         var reasonPhrase = getReasonPhrase(status, "unknown");
 
         if (tcpSocket.isClosed()) {
-            LOGGER.log(ERROR, "用户处理器 发生异常 !!!, 因为 Socket 已被关闭, 所以错误信息可能没有正确返回给客户端 !!!", e);
+            LOGGER.log(ERROR, type + " 发生异常 !!!, 因为 Socket 已被关闭, 所以错误信息可能没有正确返回给客户端 !!!", e);
         } else if (response.isSent()) {
             //这里表示 响应对象已经被使用了 我们只能打印日志
-            LOGGER.log(ERROR, "用户处理器 发生异常 !!!, 因为请求已被相应, 所以错误信息可能没有正确返回给客户端 !!!", e);
+            LOGGER.log(ERROR, type + " 发生异常 !!!, 因为请求已被相应, 所以错误信息可能没有正确返回给客户端 !!!", e);
         } else {
-            LOGGER.log(ERROR, "用户处理器 发生异常 !!!", e);
+            //这里尝试响应给客户端
+            LOGGER.log(ERROR, type + " 发生异常 !!!", e);
             try {
                 response.status(status).send(reasonPhrase);
             } catch (Exception ex) {
-                LOGGER.log(ERROR, "用户处理器 发生异常 !!!, 尝试响应给客户端时发生异常 !!!", ex);
+                LOGGER.log(ERROR, type + " 发生异常 !!!, 尝试响应给客户端时发生异常 !!!", ex);
             }
         }
     }
