@@ -6,6 +6,7 @@ import cool.scx.http.exception.BadRequestException;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.media.MediaReader;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 import static cool.scx.common.util.ObjectUtils.jsonMapper;
@@ -27,7 +28,7 @@ public class JsonNodeReader implements MediaReader<JsonNode> {
     }
 
     @Override
-    public JsonNode read(InputStream inputStream, ScxHttpHeaders requestHeaders) {
+    public JsonNode read(InputStream inputStream, ScxHttpHeaders requestHeaders) throws IOException {
         // 1, 先读取为字符串
         var str = STRING_READER.read(inputStream, requestHeaders);
         // 2, 根据不同 contentType 进行处理

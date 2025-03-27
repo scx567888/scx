@@ -54,7 +54,7 @@ public class PathWriter implements MediaWriter {
     }
 
     @Override
-    public void write(OutputStream outputStream) {
+    public void write(OutputStream outputStream) throws IOException {
         try (outputStream) {
             //判断一下是不是发送整个文件
             var writeFullFile = offset == 0 && length == fileRealSize;
@@ -63,8 +63,6 @@ public class PathWriter implements MediaWriter {
             } else {
                 writeFileToOut(path, outputStream, offset, length);
             }
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
         }
     }
 

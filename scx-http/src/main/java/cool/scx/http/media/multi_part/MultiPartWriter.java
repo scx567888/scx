@@ -35,7 +35,7 @@ public class MultiPartWriter implements MediaWriter {
     }
 
     @Override
-    public void write(OutputStream outputStream) {
+    public void write(OutputStream outputStream) throws IOException {
         //头
         var h = ("--" + multiPart.boundary() + "\r\n").getBytes();
         //尾
@@ -60,8 +60,6 @@ public class MultiPartWriter implements MediaWriter {
                 outputStream.write(l);
             }
             outputStream.write(f);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
         }
     }
 

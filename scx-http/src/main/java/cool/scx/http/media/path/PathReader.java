@@ -30,11 +30,9 @@ public class PathReader implements MediaReader<Path> {
     }
 
     @Override
-    public Path read(InputStream inputStream, ScxHttpHeaders headers) {
+    public Path read(InputStream inputStream, ScxHttpHeaders headers) throws IOException {
         try (inputStream) {
             readInToFile(inputStream, path, options);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
         }
         //这里直接返回 path 方便用户链式调用
         return path;

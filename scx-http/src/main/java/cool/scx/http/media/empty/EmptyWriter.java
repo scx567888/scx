@@ -26,11 +26,9 @@ public class EmptyWriter implements MediaWriter {
     }
 
     @Override
-    public void write(OutputStream outputStream) {
+    public void write(OutputStream outputStream) throws IOException {
         try (outputStream) {
 
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
         }
     }
 

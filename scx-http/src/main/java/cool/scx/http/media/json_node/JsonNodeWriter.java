@@ -53,11 +53,9 @@ public class JsonNodeWriter implements MediaWriter {
     }
 
     @Override
-    public void write(OutputStream outputStream) {
+    public void write(OutputStream outputStream) throws IOException {
         try (outputStream) {
             outputStream.write(data);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
         }
     }
 

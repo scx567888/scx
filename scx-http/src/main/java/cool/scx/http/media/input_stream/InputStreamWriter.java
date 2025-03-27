@@ -27,12 +27,10 @@ public class InputStreamWriter implements MediaWriter {
     }
 
     @Override
-    public void write(OutputStream outputStream) {
+    public void write(OutputStream outputStream) throws IOException {
         // 直接传输的时候 一般表示 整个输入流已经被用尽了 所以这里我们顺便关闭输入流
         try (inputStream; outputStream) {
             inputStream.transferTo(outputStream);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
         }
     }
 

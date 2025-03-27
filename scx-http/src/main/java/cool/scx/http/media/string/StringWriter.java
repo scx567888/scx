@@ -44,11 +44,9 @@ public class StringWriter implements MediaWriter {
     }
 
     @Override
-    public void write(OutputStream outputStream) {
+    public void write(OutputStream outputStream) throws IOException {
         try (outputStream) {
             outputStream.write(bytes);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
         }
     }
 
