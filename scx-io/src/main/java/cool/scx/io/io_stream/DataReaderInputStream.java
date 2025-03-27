@@ -4,7 +4,6 @@ import cool.scx.io.data_reader.PowerfulLinkedDataReader;
 import cool.scx.io.data_supplier.DataSupplier;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 
 public class DataReaderInputStream extends CheckedInputStream {

@@ -3,7 +3,6 @@ package cool.scx.io.io_stream;
 import cool.scx.io.data_reader.PowerfulLinkedDataReader;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 
 /// 固定长度的 读取器
