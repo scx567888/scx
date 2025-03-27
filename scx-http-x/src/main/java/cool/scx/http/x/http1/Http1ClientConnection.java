@@ -98,7 +98,11 @@ public class Http1ClientConnection {
 
         var out = useChunkedTransfer ? new HttpChunkedOutputStream(dataWriter) : dataWriter;
 
-        writer.write(out);
+        try {
+            writer.write(out);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
 
         return this;
     }
