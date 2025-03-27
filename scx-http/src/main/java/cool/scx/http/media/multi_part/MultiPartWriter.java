@@ -25,11 +25,13 @@ public class MultiPartWriter implements MediaWriter {
     }
 
     @Override
-    public void beforeWrite(ScxHttpHeadersWritable responseHeaders, ScxHttpHeaders requestHeaders) {
+    public long beforeWrite(ScxHttpHeadersWritable responseHeaders, ScxHttpHeaders requestHeaders) {
         if (responseHeaders.contentType() == null) {
             // MULTIPART 有很多类型 这里暂时只当成 MULTIPART_FORM_DATA
             responseHeaders.contentType(ScxMediaType.of(MULTIPART_FORM_DATA).boundary(this.multiPart.boundary()));
         }
+        // 正常来说我们是可以通过计算拿到 MultiPart 的长度, 但是这里我们为了简化计算量, 仍然采取未知
+        return -1;
     }
 
     @Override
