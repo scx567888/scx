@@ -11,18 +11,19 @@ import org.testng.annotations.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 import static cool.scx.http.media.multi_part.MultiPartStreamCachedReader.MULTI_PART_READER_CACHED;
 import static cool.scx.http.media.multi_part.MultiPartStreamReader.MULTI_PART_READER;
 
 public class MultiPartTest {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         test1();
     }
 
     @Test
-    public static void test1() {
+    public static void test1() throws IOException {
         var multipart = MultiPart.of("wwwwwwwwww");
         multipart.add("name", "123");
         multipart.add("name", "456");

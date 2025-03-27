@@ -7,7 +7,6 @@ import cool.scx.http.media_type.ScxMediaType;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UncheckedIOException;
 
 import static cool.scx.http.headers.ScxHttpHeadersHelper.encodeHeaders;
 import static cool.scx.http.media_type.MediaType.MULTIPART_FORM_DATA;
@@ -35,7 +34,7 @@ public class MultiPartWriter implements MediaWriter {
     }
 
     @Override
-    public void write(OutputStream outputStream) {
+    public void write(OutputStream outputStream) throws IOException {
         //头
         var h = ("--" + multiPart.boundary() + "\r\n").getBytes();
         //尾
@@ -60,8 +59,6 @@ public class MultiPartWriter implements MediaWriter {
                 outputStream.write(l);
             }
             outputStream.write(f);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
         }
     }
 

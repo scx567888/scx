@@ -20,8 +20,10 @@ import cool.scx.http.media.string.StringWriter;
 import cool.scx.http.media_type.ScxMediaType;
 import cool.scx.http.status.ScxHttpStatus;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UncheckedIOException;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 
@@ -56,7 +58,11 @@ public interface ScxHttpServerResponse {
 
     default void send(MediaWriter writer) {
         var expectedLength = writer.beforeWrite(headers(), request().headers());
-        writer.write(outputStream(expectedLength));
+        try {
+            writer.write(outputStream(expectedLength));
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 
     default void send() {

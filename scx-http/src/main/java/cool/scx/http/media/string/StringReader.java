@@ -5,7 +5,6 @@ import cool.scx.http.media.MediaReader;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UncheckedIOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
@@ -42,16 +41,13 @@ public final class StringReader implements MediaReader<String> {
     }
 
     @Override
-    public String read(InputStream inputStream, ScxHttpHeaders headers) {
+    public String read(InputStream inputStream, ScxHttpHeaders headers) throws IOException {
         // 如果用户没有指定编码 我们尝试查找 ContentType 中的编码
         var c = charset != null ? charset : getContentTypeCharsetOrUTF8(headers);
 
         try (inputStream) {
             var bytes = inputStream.readAllBytes();
             return new String(bytes, c);
-        } catch (IOException e) {
-            // 这里能出现 IO 异常的情况只可能是 连接关闭 所以不应该抛出 客户端异常
-            throw new UncheckedIOException(e);
         }
     }
 

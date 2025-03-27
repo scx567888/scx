@@ -10,7 +10,7 @@ import java.io.OutputStream;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class FixedLengthDataReaderInputStream extends InputStream {
+public class FixedLengthDataReaderInputStream extends CheckedInputStream {
 
     private final PowerfulLinkedDataReader dataReader;
     private final long maxLength;
@@ -21,12 +21,6 @@ public class FixedLengthDataReaderInputStream extends InputStream {
         this.dataReader = dataReader;
         this.maxLength = maxLength;
         this.position = 0;
-    }
-
-    private void ensureOpen() throws IOException {
-        if (closed) {
-            throw new IOException("Stream closed");
-        }
     }
 
     @Override

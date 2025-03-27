@@ -5,7 +5,6 @@ import cool.scx.http.media.MediaReader;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UncheckedIOException;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
 
@@ -30,11 +29,9 @@ public class PathReader implements MediaReader<Path> {
     }
 
     @Override
-    public Path read(InputStream inputStream, ScxHttpHeaders headers) {
+    public Path read(InputStream inputStream, ScxHttpHeaders headers) throws IOException {
         try (inputStream) {
             readInToFile(inputStream, path, options);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
         }
         //这里直接返回 path 方便用户链式调用
         return path;

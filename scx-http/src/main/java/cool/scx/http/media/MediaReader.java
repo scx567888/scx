@@ -2,6 +2,7 @@ package cool.scx.http.media;
 
 import cool.scx.http.headers.ScxHttpHeaders;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 /// 读取器 可用于 ServerRequest 和 ClientResponse
@@ -15,6 +16,6 @@ public interface MediaReader<T> {
     ///
     /// @param inputStream    输入流
     /// @param requestHeaders 请求头 (在客户端状态下是 responseHeaders)
-    T read(InputStream inputStream, ScxHttpHeaders requestHeaders);
+    T read(InputStream inputStream, ScxHttpHeaders requestHeaders) throws IOException;
 
 }

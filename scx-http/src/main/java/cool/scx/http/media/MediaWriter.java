@@ -3,6 +3,7 @@ package cool.scx.http.media;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 
+import java.io.IOException;
 import java.io.OutputStream;
 
 /// 写入器 可用于 ServerResponse 和 ClientRequest
@@ -21,6 +22,6 @@ public interface MediaWriter {
     /// 写入内容
     ///
     /// @param outputStream 输入流
-    void write(OutputStream outputStream);
+    void write(OutputStream outputStream) throws IOException;
 
 }

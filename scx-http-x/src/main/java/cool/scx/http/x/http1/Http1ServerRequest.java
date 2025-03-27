@@ -38,7 +38,7 @@ public class Http1ServerRequest implements ScxHttpServerRequest {
         this.uri = ScxURI.of(requestLine.path());
         this.version = requestLine.version();
         this.headers = headers;
-        this.body = new ScxHttpBodyImpl(bodyInputStream, this.headers);
+        this.body = new Http1Body(bodyInputStream, this.headers);
         this.remotePeer = getRemotePeer(connection.tcpSocket);
         this.localPeer = getLocalPeer(connection.tcpSocket);
         this.response = createResponse();

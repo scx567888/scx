@@ -6,7 +6,6 @@ import cool.scx.http.media.MediaWriter;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UncheckedIOException;
 
 import static cool.scx.http.media.form_params.FormParamsHelper.encodeFormParams;
 import static cool.scx.http.media_type.MediaType.APPLICATION_X_WWW_FORM_URLENCODED;
@@ -35,11 +34,9 @@ public class FormParamsWriter implements MediaWriter {
     }
 
     @Override
-    public void write(OutputStream outputStream) {
+    public void write(OutputStream outputStream) throws IOException {
         try (outputStream) {
             outputStream.write(bytes);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
         }
     }
 

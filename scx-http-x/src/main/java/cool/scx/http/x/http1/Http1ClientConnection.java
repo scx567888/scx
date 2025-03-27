@@ -22,8 +22,8 @@ import java.io.UncheckedIOException;
 
 import static cool.scx.http.headers.HttpFieldName.HOST;
 import static cool.scx.http.headers.ScxHttpHeadersHelper.encodeHeaders;
-import static cool.scx.http.x.http1.Http1Helper.CRLF_BYTES;
-import static cool.scx.http.x.http1.Http1Helper.checkRequestHasBody;
+import static cool.scx.http.x.http1.Http1Helper.*;
+import static cool.scx.http.x.http1.Http1Reader.*;
 import static cool.scx.http.x.http1.headers.transfer_encoding.TransferEncoding.CHUNKED;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -98,44 +98,26 @@ public class Http1ClientConnection {
 
         var out = useChunkedTransfer ? new HttpChunkedOutputStream(dataWriter) : dataWriter;
 
-        writer.write(out);
+        try {
+            writer.write(out);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
 
         return this;
     }
 
     public ScxHttpClientResponse waitResponse() {
         //1, 读取状态行
-        var statusLine = readStatusLine();
+        var statusLine = readStatusLine(dataReader,options.maxStatusLineSize());
 
         //2, 读取响应头
-        var headers = readHeaders();
+        var headers = readHeaders(dataReader, options.maxHeaderSize());
 
-        //3, 读取响应体
-        var bodyInputStream = readBodyInputStream(headers);
+        //3, 读取响应体 todo 超出最大长度怎么办
+        var bodyInputStream = readBodyInputStream(headers, dataReader, options.maxPayloadSize());
 
         return new Http1ClientResponse(statusLine, headers, bodyInputStream);
-    }
-
-    public Http1StatusLine readStatusLine() {
-        try {
-            var statusLineBytes = dataReader.readUntil(CRLF_BYTES, options.maxStatusLineSize());
-            var statusLineStr = new String(statusLineBytes);
-            return Http1StatusLine.of(statusLineStr);
-        } catch (NoMoreDataException e) {
-            throw new CloseConnectionException();
-        } catch (NoMatchFoundException e) {
-            //todo 未找到 这里应该抛出什么异常 ?
-            throw new CloseConnectionException();
-        }
-    }
-
-    public Http1Headers readHeaders() {
-        return Http1Helper.readHeaders(dataReader, options.maxHeaderSize());
-    }
-
-    //todo 超出最大长度怎么办
-    public InputStream readBodyInputStream(Http1Headers headers) {
-        return Http1Helper.readBodyInputStream(headers, dataReader, options.maxPayloadSize());
     }
 
 }

@@ -8,7 +8,6 @@ import cool.scx.http.media.MediaWriter;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UncheckedIOException;
 
 import static cool.scx.common.util.ObjectUtils.jsonMapper;
 import static cool.scx.common.util.ObjectUtils.xmlMapper;
@@ -53,11 +52,9 @@ public class JsonNodeWriter implements MediaWriter {
     }
 
     @Override
-    public void write(OutputStream outputStream) {
+    public void write(OutputStream outputStream) throws IOException {
         try (outputStream) {
             outputStream.write(data);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
         }
     }
 

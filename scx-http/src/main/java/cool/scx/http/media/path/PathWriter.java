@@ -8,7 +8,6 @@ import cool.scx.io.IOHelper;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UncheckedIOException;
 import java.nio.file.Path;
 
 import static cool.scx.http.media_type.MediaType.APPLICATION_OCTET_STREAM;
@@ -54,7 +53,7 @@ public class PathWriter implements MediaWriter {
     }
 
     @Override
-    public void write(OutputStream outputStream) {
+    public void write(OutputStream outputStream) throws IOException {
         try (outputStream) {
             //判断一下是不是发送整个文件
             var writeFullFile = offset == 0 && length == fileRealSize;
@@ -63,8 +62,6 @@ public class PathWriter implements MediaWriter {
             } else {
                 writeFileToOut(path, outputStream, offset, length);
             }
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
         }
     }
 
