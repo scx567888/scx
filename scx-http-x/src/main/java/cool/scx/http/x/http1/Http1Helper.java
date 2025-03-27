@@ -89,7 +89,9 @@ public final class Http1Helper {
     }
 
     public static boolean checkResponseHasBody(ScxHttpStatus status) {
-        return SWITCHING_PROTOCOLS != status && NO_CONTENT != status && NOT_MODIFIED != status;
+        return SWITCHING_PROTOCOLS != status &&
+                NO_CONTENT != status &&
+                NOT_MODIFIED != status;
     }
 
     public static InputStream readBodyInputStream(Http1Headers headers, PowerfulLinkedDataReader dataReader, long maxPayloadSize) {

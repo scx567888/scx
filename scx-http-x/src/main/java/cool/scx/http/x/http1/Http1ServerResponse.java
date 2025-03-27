@@ -8,7 +8,6 @@ import cool.scx.http.x.http1.chunked.HttpChunkedOutputStream;
 import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.http.x.http1.status_line.Http1StatusLine;
 import cool.scx.io.io_stream.CheckedOutputStream;
-import cool.scx.io.io_stream.NullCheckedOutputStream;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -20,6 +19,7 @@ import static cool.scx.http.x.http1.Http1Helper.checkResponseHasBody;
 import static cool.scx.http.x.http1.headers.connection.Connection.CLOSE;
 import static cool.scx.http.x.http1.headers.connection.Connection.KEEP_ALIVE;
 import static cool.scx.http.x.http1.headers.transfer_encoding.TransferEncoding.CHUNKED;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /// Http1ServerResponse
 ///
@@ -74,7 +74,7 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
     @Override
     public OutputStream outputStream(long expectedLength) {
         if (outputStream == null) {
-            outputStream = sendHeaders();
+            outputStream = sendHeaders(expectedLength);
         }
         return outputStream;
     }
@@ -95,14 +95,9 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
         return reasonPhrase != null ? reasonPhrase : getReasonPhrase(status, "unknown");
     }
 
-    private OutputStream sendHeaders() {
+    private OutputStream sendHeaders(long expectedLength) {
 
-        //1, 响应行
-        var statusLine = new Http1StatusLine(request.version(), status.code(), createReasonPhrase());
-
-        var sb = new StringBuilder(statusLine.encode()).append("\r\n");
-
-        //用户可能已经自行设置了 CONNECTION
+        // 1, 处理 连接相关
         if (headers.connection() == null) {
             if (request.isKeepAlive()) {
                 // 正常我们可以忽略设置 KEEP_ALIVE, 但是这里我们显式设置
@@ -112,37 +107,50 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
             }
         }
 
-        var hasBody = checkResponseHasBody(status);
-
-        //如果需要响应体
-        if (hasBody) {
-            //没有设置 contentLength 我们帮助设置 
+        // 2, 处理响应体 相关
+        if (expectedLength < 0) {//表示不知道响应体的长度
+            // 如果用户已经手动设置了 Content-Length, 我们便不再设置 分块传输
             if (headers.contentLength() == null) {
                 headers.transferEncoding(CHUNKED);
             }
+        } else if (expectedLength > 0) {//拥有指定长度的响应体
+            // 如果用户已经手动设置 分块传输, 我们便不再设置 Content-Length
+            if (headers.transferEncoding() != CHUNKED) {
+                headers.contentLength(expectedLength);
+            }
+        } else {
+            // 响应体长度为 0 时 , 分两种情况
+            // 1, 是需要明确写入 Content-Length : 0 的
+            // 2, 是不需要写入任何长度相关字段
+            var hasBody = checkResponseHasBody(status);
+            if (hasBody) {
+                // 这里同上, 进行分块传输判断
+                if (headers.transferEncoding() != CHUNKED) {
+                    headers.contentLength(expectedLength);
+                }
+            }
         }
 
-        var useChunkedTransfer = headers.transferEncoding() == CHUNKED;
+        //3, 写入响应行和响应头内容
+        var statusLine = new Http1StatusLine(request.version(), status.code(), createReasonPhrase());
 
-        //判断是否需要分段传输
-        var headerStr = encodeHeaders(headers);
-
-        sb.append(headerStr);
+        var sb = new StringBuilder();
+        sb.append(statusLine.encode());
+        sb.append("\r\n");
+        encodeHeaders(headers, sb);
         sb.append("\r\n");
 
         try {
-            connection.dataWriter.write(sb.toString().getBytes());
+            connection.dataWriter.write(sb.toString().getBytes(UTF_8));
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
 
-        //3, 只有明确表示 close 的时候我们才关闭
+        // 只有明确表示 close 的时候我们才关闭
         var closeConnection = headers.connection() == CLOSE;
 
-        //没有响应体
-        if (!hasBody) {
-            return new NullCheckedOutputStream();
-        }
+        // 只有明确表示 分块的时候才使用分块
+        var useChunkedTransfer = headers.transferEncoding() == CHUNKED;
 
         // todo 这里的 Http1ServerResponseOutputStream 应该根据 contentLength 进行限制
         var baseOutputStream = new Http1ServerResponseOutputStream(connection, closeConnection);
