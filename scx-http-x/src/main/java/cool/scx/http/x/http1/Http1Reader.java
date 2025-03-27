@@ -107,8 +107,8 @@ final class Http1Reader {
         } catch (NoMoreDataException e) {
             throw new CloseConnectionException();
         } catch (NoMatchFoundException e) {
-            //todo 未找到 这里应该抛出什么异常 ?
-            throw new CloseConnectionException();
+            // 在指定长度内未匹配到 这里抛出响应行过大异常
+            throw new RuntimeException("响应行过大 !!!");
         }
     }
 
