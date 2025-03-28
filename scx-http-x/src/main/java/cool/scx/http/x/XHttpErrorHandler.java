@@ -7,14 +7,19 @@ import cool.scx.http.exception.ScxHttpException;
 import cool.scx.http.media_type.ScxMediaType;
 import cool.scx.http.status.ScxHttpStatus;
 
+import java.lang.System.Logger;
 import java.util.LinkedHashMap;
 import java.util.function.BiConsumer;
 
 import static cool.scx.http.media_type.MediaType.TEXT_HTML;
 import static cool.scx.http.status.ScxHttpStatusHelper.getReasonPhrase;
+import static java.lang.System.Logger.Level.ERROR;
+import static java.lang.System.getLogger;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class XHttpErrorHandler implements BiConsumer<Throwable, ScxHttpServerRequest> {
+
+    public static final Logger LOGGER = getLogger(XHttpErrorHandler.class.getName());
 
     public static final XHttpErrorHandler X_HTTP_ERROR_HANDLER = new XHttpErrorHandler(true);
 
@@ -82,9 +87,14 @@ public class XHttpErrorHandler implements BiConsumer<Throwable, ScxHttpServerReq
     @Override
     public void accept(Throwable throwable, ScxHttpServerRequest request) {
         var e = ScxExceptionHelper.getRootCause(throwable);
-        var httpException = e instanceof ScxHttpException h ? h : new InternalServerErrorException(e);
-        //1, 这里根据是否开启了开发人员错误页面 进行相应的返回
-        this.handleScxHttpException(httpException, request);
+        // Http 异常无需打印
+        if (e instanceof ScxHttpException h) {
+            this.handleScxHttpException(h, request);
+        } else {
+            // 其余异常包装为 500 异常, 同时需要打印
+            LOGGER.log(ERROR, e.getMessage(), e);
+            this.handleScxHttpException(new InternalServerErrorException(e), request);
+        }
     }
 
 }
