@@ -1,16 +1,19 @@
 package cool.scx.http.x;
 
 import cool.scx.common.exception.ScxExceptionHelper;
+import cool.scx.common.util.ObjectUtils;
 import cool.scx.http.ScxHttpServerErrorHandler;
 import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.exception.InternalServerErrorException;
 import cool.scx.http.exception.ScxHttpException;
+import cool.scx.http.headers.accept.Accept;
 import cool.scx.http.media_type.ScxMediaType;
 import cool.scx.http.status.ScxHttpStatus;
 
 import java.lang.System.Logger;
-import java.util.LinkedHashMap;
+import java.util.Map;
 
+import static cool.scx.http.media_type.MediaType.APPLICATION_JSON;
 import static cool.scx.http.media_type.MediaType.TEXT_HTML;
 import static cool.scx.http.status.ScxHttpStatusHelper.getReasonPhrase;
 import static cool.scx.http.x.http1.Http1Helper.getErrorPhaseStr;
@@ -18,6 +21,7 @@ import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.getLogger;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+/// 错误处理器
 public class XHttpErrorHandler implements ScxHttpServerErrorHandler {
 
     public static final Logger LOGGER = getLogger(XHttpErrorHandler.class.getName());
@@ -52,7 +56,12 @@ public class XHttpErrorHandler implements ScxHttpServerErrorHandler {
             info = "";
         }
         var reasonPhrase = getReasonPhrase(status, "unknown");
-        var accepts = request.headers().accept();
+        Accept accepts = null;
+        try {
+            accepts = request.headers().accept();
+        } catch (Exception _) {
+
+        }
         //根据 accept 返回不同的错误信息 只有明确包含的时候才返回 html
         if (accepts != null && accepts.contains(TEXT_HTML)) {
             var htmlStr = String.format(htmlTemplate, reasonPhrase, status.code(), reasonPhrase, info);
@@ -61,13 +70,11 @@ public class XHttpErrorHandler implements ScxHttpServerErrorHandler {
                     .status(status)
                     .send(htmlStr);
         } else {
-            var tempMap = new LinkedHashMap<>();
-            tempMap.put("status", status.code());
-            tempMap.put("title", reasonPhrase);
-            tempMap.put("info", info);
+            var jsonStr = ObjectUtils.toJson(Map.of("status", status.code(), "title", reasonPhrase, "info", info), "");
             request.response()
+                    .contentType(ScxMediaType.of(APPLICATION_JSON).charset(UTF_8))
                     .status(status)
-                    .send(tempMap);
+                    .send(jsonStr);
         }
     }
 
