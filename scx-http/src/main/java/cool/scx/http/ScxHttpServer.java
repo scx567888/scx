@@ -1,7 +1,6 @@
 package cool.scx.http;
 
 import java.net.InetSocketAddress;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /// ScxHttpServer

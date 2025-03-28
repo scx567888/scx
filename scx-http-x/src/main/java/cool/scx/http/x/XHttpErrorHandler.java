@@ -62,7 +62,7 @@ public class XHttpErrorHandler implements ScxHttpServerErrorHandler {
                     .send(htmlStr);
         } else {
             var tempMap = new LinkedHashMap<>();
-            tempMap.put("status", status);
+            tempMap.put("status", status.code());
             tempMap.put("title", reasonPhrase);
             tempMap.put("info", info);
             request.response()
