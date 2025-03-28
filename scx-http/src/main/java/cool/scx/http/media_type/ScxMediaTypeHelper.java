@@ -13,7 +13,7 @@ public class ScxMediaTypeHelper {
 
         //处理意外情况
         if (parts.length == 0) {
-            throw new IllegalMediaTypeException( str);
+            throw new IllegalMediaTypeException(str);
         }
 
         var mediaTypeStr = parts[0];
