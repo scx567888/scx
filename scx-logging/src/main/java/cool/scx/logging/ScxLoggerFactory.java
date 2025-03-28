@@ -2,6 +2,7 @@ package cool.scx.logging;
 
 import cool.scx.logging.recorder.ConsoleRecorder;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -33,7 +34,9 @@ public final class ScxLoggerFactory {
     }
 
     private static ScxLoggerConfig findConfig(String name) {
-        for (var entry : CONFIGS.entrySet()) {
+        //我们需要倒序, 以便匹配最新的 配置
+        var list = new ArrayList<>(CONFIGS.entrySet());
+        for (var entry : list.reversed()) {
             var b = Pattern.matches(entry.getKey(), name);
             if (b) {
                 return entry.getValue();
