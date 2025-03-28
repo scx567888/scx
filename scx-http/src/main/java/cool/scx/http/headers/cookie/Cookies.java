@@ -1,5 +1,7 @@
 package cool.scx.http.headers.cookie;
 
+import java.util.List;
+
 /// Cookies
 ///
 /// @author scx567888
@@ -26,10 +28,10 @@ public interface Cookies extends Iterable<Cookie> {
 
     /// set-cookie 头
     ///
-    /// @param cookieStr c
+    /// @param setCookieStrList c
     /// @return c
-    static CookiesImpl of(String[] cookieStr) {
-        return CookieHelper.parseSetCookie(cookieStr);
+    static CookiesImpl ofSetCookie(List<String> setCookieStrList) {
+        return CookieHelper.parseSetCookie(setCookieStrList);
     }
 
     long size();

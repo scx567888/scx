@@ -1,6 +1,7 @@
 package cool.scx.http.headers.cookie;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static cool.scx.http.media_type.ScxMediaTypeHelper.SEMICOLON_PATTERN;
 
@@ -64,9 +65,9 @@ public class CookieHelper {
         return cookie;
     }
 
-    public static CookiesImpl parseSetCookie(String[] setCookies) {
+    public static CookiesImpl parseSetCookie(List<String> setCookieStrList) {
         var c = new CookiesImpl();
-        for (var str : setCookies) {
+        for (var str : setCookieStrList) {
             var cookies = parseSetCookie(str);
             c.add(cookies);
         }
