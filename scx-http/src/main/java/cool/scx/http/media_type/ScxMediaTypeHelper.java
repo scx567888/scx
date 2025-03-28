@@ -8,18 +8,18 @@ public class ScxMediaTypeHelper {
 
     public static final Pattern SEMICOLON_PATTERN = Pattern.compile(";\\s*");
 
-    public static ScxMediaTypeWritable decodedMediaType(String str) {
+    public static ScxMediaTypeWritable decodedMediaType(String str) throws IllegalMediaTypeException {
         var parts = SEMICOLON_PATTERN.split(str);
 
         //处理意外情况
         if (parts.length == 0) {
-            throw new IllegalArgumentException("Invalid media type: " + str);
+            throw new IllegalMediaTypeException( str);
         }
 
         var mediaTypeStr = parts[0];
         var split = mediaTypeStr.split("/");
         if (split.length != 2) {
-            throw new IllegalArgumentException("Invalid media type: " + str);
+            throw new IllegalMediaTypeException(str);
         }
 
         var m = new ScxMediaTypeImpl();

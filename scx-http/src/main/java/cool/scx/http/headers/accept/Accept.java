@@ -8,7 +8,7 @@ import cool.scx.http.media_type.ScxMediaType;
 /// @version 0.0.1
 public interface Accept extends Iterable<MediaRange> {
 
-    static AcceptWritable of(String acceptsStr) {
+    static AcceptWritable of(String acceptsStr) throws IllegalMediaRangeException {
         return AcceptHelper.decodeAccepts(acceptsStr);
     }
 

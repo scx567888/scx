@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 /// @version 0.0.1
 public class AcceptHelper {
 
-    public static AcceptWritable decodeAccepts(String s) {
+    public static AcceptWritable decodeAccepts(String s) throws IllegalMediaRangeException {
         var list = new ArrayList<MediaRange>();
         var mediaTypes = s.split(",");
         for (var mediaType : mediaTypes) {

@@ -18,7 +18,7 @@ public interface ScxMediaType {
         return new ScxMediaTypeImpl(oldMediaType.type(), oldMediaType.subtype(), oldMediaType.params());
     }
 
-    static ScxMediaTypeWritable of(String mediaTypeStr) {
+    static ScxMediaTypeWritable of(String mediaTypeStr) throws IllegalMediaTypeException {
         return ScxMediaTypeHelper.decodedMediaType(mediaTypeStr);
     }
 
