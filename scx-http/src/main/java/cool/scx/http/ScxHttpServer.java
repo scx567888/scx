@@ -1,5 +1,7 @@
 package cool.scx.http;
 
+import cool.scx.http.error_handler.ScxHttpServerErrorHandler;
+
 import java.net.InetSocketAddress;
 import java.util.function.Consumer;
 

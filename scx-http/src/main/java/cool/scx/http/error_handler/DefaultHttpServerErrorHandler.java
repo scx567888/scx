@@ -1,8 +1,7 @@
-package cool.scx.http.x;
+package cool.scx.http.error_handler;
 
 import cool.scx.common.exception.ScxExceptionHelper;
 import cool.scx.common.util.ObjectUtils;
-import cool.scx.http.ScxHttpServerErrorHandler;
 import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.exception.InternalServerErrorException;
 import cool.scx.http.exception.ScxHttpException;
@@ -13,20 +12,20 @@ import cool.scx.http.status.ScxHttpStatus;
 import java.lang.System.Logger;
 import java.util.Map;
 
+import static cool.scx.http.error_handler.ErrorPhaseHelper.getErrorPhaseStr;
 import static cool.scx.http.media_type.MediaType.APPLICATION_JSON;
 import static cool.scx.http.media_type.MediaType.TEXT_HTML;
 import static cool.scx.http.status.ScxHttpStatusHelper.getReasonPhrase;
-import static cool.scx.http.x.http1.Http1Helper.getErrorPhaseStr;
 import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.getLogger;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-/// 错误处理器
-public class XHttpErrorHandler implements ScxHttpServerErrorHandler {
+/// 默认错误处理器
+public class DefaultHttpServerErrorHandler implements ScxHttpServerErrorHandler {
 
-    public static final Logger LOGGER = getLogger(XHttpErrorHandler.class.getName());
+    public static final DefaultHttpServerErrorHandler DEFAULT_HTTP_SERVER_ERROR_HANDLER = new DefaultHttpServerErrorHandler(true);
 
-    public static final XHttpErrorHandler X_HTTP_ERROR_HANDLER = new XHttpErrorHandler(true);
+    private static final Logger LOGGER = getLogger(DefaultHttpServerErrorHandler.class.getName());
 
     /// 默认 html 模板
     private static final String htmlTemplate = """
@@ -46,7 +45,7 @@ public class XHttpErrorHandler implements ScxHttpServerErrorHandler {
 
     private final boolean useDevelopmentErrorPage;
 
-    public XHttpErrorHandler(boolean useDevelopmentErrorPage) {
+    public DefaultHttpServerErrorHandler(boolean useDevelopmentErrorPage) {
         this.useDevelopmentErrorPage = useDevelopmentErrorPage;
     }
 

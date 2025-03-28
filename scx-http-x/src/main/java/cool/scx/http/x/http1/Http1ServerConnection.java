@@ -1,8 +1,8 @@
 package cool.scx.http.x.http1;
 
-import cool.scx.http.ScxHttpServerErrorHandler;
-import cool.scx.http.ScxHttpServerErrorHandler.ErrorPhase;
 import cool.scx.http.ScxHttpServerRequest;
+import cool.scx.http.error_handler.ErrorPhase;
+import cool.scx.http.error_handler.ScxHttpServerErrorHandler;
 import cool.scx.http.method.ScxHttpMethod;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.x.XHttpServerOptions;
@@ -18,9 +18,10 @@ import java.io.OutputStream;
 import java.lang.System.Logger;
 import java.util.function.Consumer;
 
-import static cool.scx.http.ScxHttpServerErrorHandler.ErrorPhase.SYSTEM;
-import static cool.scx.http.ScxHttpServerErrorHandler.ErrorPhase.USER;
-import static cool.scx.http.x.XHttpErrorHandler.X_HTTP_ERROR_HANDLER;
+import static cool.scx.http.error_handler.DefaultHttpServerErrorHandler.DEFAULT_HTTP_SERVER_ERROR_HANDLER;
+import static cool.scx.http.error_handler.ErrorPhase.SYSTEM;
+import static cool.scx.http.error_handler.ErrorPhase.USER;
+import static cool.scx.http.error_handler.ErrorPhaseHelper.getErrorPhaseStr;
 import static cool.scx.http.x.http1.Http1Helper.*;
 import static cool.scx.http.x.http1.Http1Reader.*;
 import static cool.scx.http.x.http1.headers.connection.Connection.CLOSE;
@@ -190,7 +191,7 @@ public class Http1ServerConnection {
                 errorHandler.accept(e, request, errorPhase);
             } else {
                 //没有就回退到默认
-                X_HTTP_ERROR_HANDLER.accept(e, request, errorPhase);
+                DEFAULT_HTTP_SERVER_ERROR_HANDLER.accept(e, request, errorPhase);
             }
         } catch (Exception ex) {
             e.addSuppressed(ex);
