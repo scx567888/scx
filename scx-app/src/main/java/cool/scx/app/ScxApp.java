@@ -11,7 +11,7 @@ import cool.scx.config.ScxEnvironment;
 import cool.scx.config.ScxFeatureConfig;
 import cool.scx.data.jdbc.AnnotationConfigTable;
 import cool.scx.http.ScxHttpServer;
-import cool.scx.http.x.XHttpErrorHandler;
+import cool.scx.http.error_handler.DefaultHttpServerErrorHandler;
 import cool.scx.http.x.XHttpServer;
 import cool.scx.http.x.XHttpServerOptions;
 import cool.scx.jdbc.JDBCContext;
@@ -191,7 +191,7 @@ public final class ScxApp {
             var tls = TLS.of(this.scxOptions.sslPath(), this.scxOptions.sslPassword());
             httpServerOptions.tls(tls);
         }
-        return new XHttpServer(httpServerOptions).onError(new XHttpErrorHandler(scxFeatureConfig.get(USE_DEVELOPMENT_ERROR_PAGE)));
+        return new XHttpServer(httpServerOptions).onError(new DefaultHttpServerErrorHandler(scxFeatureConfig.get(USE_DEVELOPMENT_ERROR_PAGE)));
     }
 
     /// 启动服务器
