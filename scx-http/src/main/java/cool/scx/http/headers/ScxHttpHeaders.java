@@ -43,12 +43,14 @@ public interface ScxHttpHeaders extends Parameters<ScxHttpHeaderName, String> {
 
     default Cookies cookies() {
         var c = get(COOKIE);
-        return c != null ? Cookies.of(c) : null;
+        // cookies 表示一个 cookie 的集合 所以这里 返回 Cookies 而不是 null
+        return c != null ? Cookies.of(c) : Cookies.of();
     }
 
     default Cookies setCookies() {
         var c = getAll(SET_COOKIE);
-        return !c.isEmpty() ? Cookies.of(c.toArray(String[]::new)) : null;
+        // cookies 表示一个 cookie 的集合 所以这里 返回 Cookies 而不是 null
+        return !c.isEmpty() ? Cookies.ofSetCookie(c) : Cookies.of();
     }
 
     default ScxMediaType contentType() {
@@ -75,13 +77,11 @@ public interface ScxHttpHeaders extends Parameters<ScxHttpHeaderName, String> {
     }
 
     default Cookie getCookie(String name) {
-        var v = cookies();
-        return v != null ? v.get(name) : null;
+        return cookies().get(name);
     }
 
     default Cookie getSetCookie(String name) {
-        var v = setCookies();
-        return v != null ? v.get(name) : null;
+        return setCookies().get(name);
     }
 
     default Accept accept() {

@@ -3,6 +3,7 @@ package cool.scx.http.headers;
 import cool.scx.http.headers.content_disposition.ContentDisposition;
 import cool.scx.http.headers.cookie.Cookie;
 import cool.scx.http.headers.cookie.Cookies;
+import cool.scx.http.headers.cookie.CookiesWritable;
 import cool.scx.http.media_type.ScxMediaType;
 import cool.scx.http.parameters.ParametersWritable;
 
@@ -51,8 +52,7 @@ public interface ScxHttpHeadersWritable extends ScxHttpHeaders, ParametersWritab
     }
 
     default ScxHttpHeadersWritable addCookie(Cookie... cookie) {
-        var oldCookies = cookies();
-        var newCookies = oldCookies != null ? Cookies.of(oldCookies) : Cookies.of();
+        var newCookies = (CookiesWritable) cookies();
         for (var c : cookie) {
             newCookies.add(c);
         }
@@ -60,18 +60,13 @@ public interface ScxHttpHeadersWritable extends ScxHttpHeaders, ParametersWritab
     }
 
     default ScxHttpHeadersWritable removeCookie(String name) {
-        var oldCookies = cookies();
-        if (oldCookies == null) {
-            return this;
-        }
-        var newCookies = Cookies.of(oldCookies);
+        var newCookies = (CookiesWritable) cookies();
         newCookies.remove(name);
         return cookies(newCookies);
     }
 
     default ScxHttpHeadersWritable addSetCookie(Cookie... cookie) {
-        var oldSetCookies = setCookies();
-        var newSetCookies = oldSetCookies != null ? Cookies.of(oldSetCookies) : Cookies.of();
+        var newSetCookies = (CookiesWritable) setCookies();
         for (var c : cookie) {
             newSetCookies.add(c);
         }
@@ -79,11 +74,7 @@ public interface ScxHttpHeadersWritable extends ScxHttpHeaders, ParametersWritab
     }
 
     default ScxHttpHeadersWritable removeSetCookie(String name) {
-        var oldSetCookies = setCookies();
-        if (oldSetCookies == null) {
-            return this;
-        }
-        var newSetCookies = Cookies.of(oldSetCookies);
+        var newSetCookies = (CookiesWritable) setCookies();
         newSetCookies.remove(name);
         return cookies(newSetCookies);
     }
