@@ -1,5 +1,7 @@
 package cool.scx.http.x.http1;
 
+import cool.scx.http.ScxHttpServerErrorHandler;
+import cool.scx.http.ScxHttpServerErrorHandler.ErrorPhase;
 import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.method.ScxHttpMethod;
 import cool.scx.http.uri.ScxURI;
@@ -14,15 +16,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.System.Logger;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+import static cool.scx.http.ScxHttpServerErrorHandler.ErrorPhase.SYSTEM;
+import static cool.scx.http.ScxHttpServerErrorHandler.ErrorPhase.USER;
 import static cool.scx.http.x.XHttpErrorHandler.X_HTTP_ERROR_HANDLER;
 import static cool.scx.http.x.http1.Http1Helper.*;
 import static cool.scx.http.x.http1.Http1Reader.*;
 import static cool.scx.http.x.http1.headers.connection.Connection.CLOSE;
 import static cool.scx.http.x.http1.headers.expect.Expect.CONTINUE;
-import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.getLogger;
 
@@ -40,10 +42,10 @@ public class Http1ServerConnection {
     public final OutputStream dataWriter;
 
     private final Consumer<ScxHttpServerRequest> requestHandler;
-    private final BiConsumer<Throwable, ScxHttpServerRequest> errorHandler;
+    private final ScxHttpServerErrorHandler errorHandler;
     private boolean running;
 
-    public Http1ServerConnection(ScxTCPSocket tcpSocket, XHttpServerOptions options, Consumer<ScxHttpServerRequest> requestHandler, BiConsumer<Throwable, ScxHttpServerRequest> errorHandler) {
+    public Http1ServerConnection(ScxTCPSocket tcpSocket, XHttpServerOptions options, Consumer<ScxHttpServerRequest> requestHandler, ScxHttpServerErrorHandler errorHandler) {
         this.tcpSocket = tcpSocket;
         this.options = options;
         this.requestHandler = requestHandler;
@@ -61,6 +63,10 @@ public class Http1ServerConnection {
             ScxHttpServerRequest request;
             try {
                 request = readRequest();
+            } catch (CloseConnectionException e) {
+                // 底层连接已断开 我们停止解析即可
+                stop();
+                break;
             } catch (Throwable e) {
                 //如果读取请求失败 我们将其理解为系统错误 不可恢复
                 handlerSystemException(e);
@@ -146,8 +152,13 @@ public class Http1ServerConnection {
 
     private void handlerSystemException(Throwable e) {
         //此时我们并没有拿到一个完整的 request 对象 所以这里创建一个 虚拟 request 用于后续响应
-        var fakeRequest = new Http1ServerRequest(this, new Http1RequestLine(ScxHttpMethod.of("unknow"), ScxURI.of()), new Http1Headers().connection(CLOSE), InputStream.nullInputStream());
-        handlerException(e, fakeRequest, "解析 Request");
+        var fakeRequest = new Http1ServerRequest(
+                this,
+                new Http1RequestLine(ScxHttpMethod.of("unknown"), ScxURI.of()),
+                new Http1Headers().connection(CLOSE),
+                InputStream.nullInputStream()
+        );
+        handlerException(e, fakeRequest, SYSTEM);
 
         // 这里我们停止监听并关闭连接
         try {
@@ -158,29 +169,34 @@ public class Http1ServerConnection {
     }
 
     private void handlerUserException(Throwable e, ScxHttpServerRequest request) {
-        handlerException(e, request, "用户处理器");
+        handlerException(e, request, USER);
     }
 
-    private void handlerException(Throwable e, ScxHttpServerRequest request, String type) {
+    private void handlerException(Throwable e, ScxHttpServerRequest request, ErrorPhase errorPhase) {
+
         if (tcpSocket.isClosed()) {
-            LOGGER.log(ERROR, type + " 发生异常 !!!, 因为 Socket 已被关闭, 所以错误信息可能没有正确返回给客户端 !!!", e);
-        } else if (request.response().isSent()) {
-            //这里表示 响应对象已经被使用了 我们只能打印日志
-            LOGGER.log(ERROR, type + " 发生异常 !!!, 因为请求已被相应, 所以错误信息可能没有正确返回给客户端 !!!", e);
-        } else {
-            //这里尝试响应给客户端
-            LOGGER.log(DEBUG, type + " 发生异常 !!!", e);
-            try {
-                if (errorHandler != null) {
-                    errorHandler.accept(e, request);
-                } else {
-                    //没有就回退到默认
-                    X_HTTP_ERROR_HANDLER.accept(e, request);
-                }
-            } catch (Exception ex) {
-                LOGGER.log(ERROR, type + " 发生异常 !!!, 尝试通过 错误处理器 响应给客户端时发生异常 !!!", ex);
-            }
+            LOGGER.log(ERROR, getErrorPhaseStr(errorPhase) + " 发生异常 !!!, 因为 Socket 已被关闭, 所以错误信息可能没有正确返回给客户端 !!!", e);
+            return;
         }
+
+        if (request.response().isSent()) {
+            //这里表示 响应对象已经被使用了 我们只能打印日志
+            LOGGER.log(ERROR, getErrorPhaseStr(errorPhase) + " 发生异常 !!!, 因为请求已被相应, 所以错误信息可能没有正确返回给客户端 !!!", e);
+            return;
+        }
+
+        try {
+            if (errorHandler != null) {
+                errorHandler.accept(e, request, errorPhase);
+            } else {
+                //没有就回退到默认
+                X_HTTP_ERROR_HANDLER.accept(e, request, errorPhase);
+            }
+        } catch (Exception ex) {
+            e.addSuppressed(ex);
+            LOGGER.log(ERROR, getErrorPhaseStr(errorPhase) + " 发生异常 !!!, 尝试通过 错误处理器 响应给客户端时发生异常 !!!", e);
+        }
+
     }
 
 }

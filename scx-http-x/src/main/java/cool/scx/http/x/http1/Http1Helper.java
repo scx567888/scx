@@ -1,5 +1,6 @@
 package cool.scx.http.x.http1;
 
+import cool.scx.http.ScxHttpServerErrorHandler;
 import cool.scx.http.exception.BadRequestException;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.method.ScxHttpMethod;
@@ -83,6 +84,13 @@ public final class Http1Helper {
 
     public static boolean checkRequestHasBody(ScxHttpMethod method) {
         return GET != method;
+    }
+
+    public static String getErrorPhaseStr(ScxHttpServerErrorHandler.ErrorPhase errorPhase) {
+        return switch (errorPhase) {
+            case SYSTEM -> "解析 Request";
+            case USER -> "用户处理器";
+        };
     }
 
 }
