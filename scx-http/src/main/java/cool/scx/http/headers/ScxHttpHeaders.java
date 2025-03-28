@@ -1,9 +1,12 @@
 package cool.scx.http.headers;
 
+import cool.scx.http.exception.BadRequestException;
 import cool.scx.http.headers.accept.Accept;
+import cool.scx.http.headers.accept.IllegalMediaRangeException;
 import cool.scx.http.headers.content_disposition.ContentDisposition;
 import cool.scx.http.headers.cookie.Cookie;
 import cool.scx.http.headers.cookie.Cookies;
+import cool.scx.http.media_type.IllegalMediaTypeException;
 import cool.scx.http.media_type.ScxMediaType;
 import cool.scx.http.parameters.Parameters;
 
@@ -50,7 +53,11 @@ public interface ScxHttpHeaders extends Parameters<ScxHttpHeaderName, String> {
 
     default ScxMediaType contentType() {
         var v = get(CONTENT_TYPE);
-        return v != null ? ScxMediaType.of(v) : null;
+        try {
+            return v != null ? ScxMediaType.of(v) : null;
+        } catch (IllegalMediaTypeException e) {
+            throw new BadRequestException("Invalid Content-Type: " + v, e);
+        }
     }
 
     default ContentDisposition contentDisposition() {
@@ -60,7 +67,11 @@ public interface ScxHttpHeaders extends Parameters<ScxHttpHeaderName, String> {
 
     default Long contentLength() {
         var c = get(CONTENT_LENGTH);
-        return c != null ? Long.parseLong(c) : null;
+        try {
+            return c != null ? Long.parseLong(c) : null;
+        } catch (NumberFormatException e) {
+            throw new BadRequestException("Invalid Content-Length: " + c, e);
+        }
     }
 
     default Cookie getCookie(String name) {
@@ -75,7 +86,11 @@ public interface ScxHttpHeaders extends Parameters<ScxHttpHeaderName, String> {
 
     default Accept accept() {
         var c = get(ACCEPT);
-        return c != null ? Accept.of(c) : null;
+        try {
+            return c != null ? Accept.of(c) : null;
+        } catch (IllegalMediaRangeException e) {
+            throw new BadRequestException("Invalid Accept: " + c, e);
+        }
     }
 
 }

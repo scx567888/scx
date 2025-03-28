@@ -9,7 +9,7 @@ import cool.scx.http.parameters.Parameters;
 /// @version 0.0.1
 public interface MediaRange {
 
-    static MediaRangeWritable of(String mediaRangeStr) {
+    static MediaRangeWritable of(String mediaRangeStr) throws IllegalMediaRangeException {
         return MediaRangeHelper.parseMediaRange(mediaRangeStr);
     }
 

@@ -4,18 +4,18 @@ import static cool.scx.http.media_type.ScxMediaTypeHelper.SEMICOLON_PATTERN;
 
 public class MediaRangeHelper {
 
-    public static MediaRangeWritable parseMediaRange(String mediaRangeStr) {
+    public static MediaRangeWritable parseMediaRange(String mediaRangeStr) throws IllegalMediaRangeException {
         var parts = SEMICOLON_PATTERN.split(mediaRangeStr);
 
         //处理意外情况
         if (parts.length == 0) {
-            throw new IllegalArgumentException("Invalid media range: " + mediaRangeStr);
+            throw new IllegalMediaRangeException("Invalid media range: " + mediaRangeStr);
         }
 
         var mediaTypeStr = parts[0];
         var split = mediaTypeStr.split("/");
         if (split.length != 2) {
-            throw new IllegalArgumentException("Invalid media type: " + mediaRangeStr);
+            throw new IllegalMediaRangeException("Invalid media type: " + mediaRangeStr);
         }
 
         var m = new MediaRangeImpl();
