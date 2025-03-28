@@ -23,9 +23,9 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 /// 默认错误处理器
 public class DefaultHttpServerErrorHandler implements ScxHttpServerErrorHandler {
 
-    private static final Logger LOGGER = getLogger(DefaultHttpServerErrorHandler.class.getName());
-
     public static final DefaultHttpServerErrorHandler DEFAULT_HTTP_SERVER_ERROR_HANDLER = new DefaultHttpServerErrorHandler(true);
+
+    private static final Logger LOGGER = getLogger(DefaultHttpServerErrorHandler.class.getName());
 
     /// 默认 html 模板
     private static final String htmlTemplate = """

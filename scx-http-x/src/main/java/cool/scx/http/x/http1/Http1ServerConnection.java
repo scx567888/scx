@@ -1,8 +1,8 @@
 package cool.scx.http.x.http1;
 
-import cool.scx.http.error_handler.ScxHttpServerErrorHandler;
-import cool.scx.http.error_handler.ErrorPhase;
 import cool.scx.http.ScxHttpServerRequest;
+import cool.scx.http.error_handler.ErrorPhase;
+import cool.scx.http.error_handler.ScxHttpServerErrorHandler;
 import cool.scx.http.method.ScxHttpMethod;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.x.XHttpServerOptions;
@@ -18,9 +18,9 @@ import java.io.OutputStream;
 import java.lang.System.Logger;
 import java.util.function.Consumer;
 
+import static cool.scx.http.error_handler.DefaultHttpServerErrorHandler.DEFAULT_HTTP_SERVER_ERROR_HANDLER;
 import static cool.scx.http.error_handler.ErrorPhase.SYSTEM;
 import static cool.scx.http.error_handler.ErrorPhase.USER;
-import static cool.scx.http.error_handler.DefaultHttpServerErrorHandler.DEFAULT_HTTP_SERVER_ERROR_HANDLER;
 import static cool.scx.http.error_handler.ErrorPhaseHelper.getErrorPhaseStr;
 import static cool.scx.http.x.http1.Http1Helper.*;
 import static cool.scx.http.x.http1.Http1Reader.*;
