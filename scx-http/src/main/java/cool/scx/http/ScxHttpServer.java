@@ -12,7 +12,7 @@ public interface ScxHttpServer {
 
     ScxHttpServer onRequest(Consumer<ScxHttpServerRequest> requestHandler);
 
-    ScxHttpServer onError(BiConsumer<Throwable, ScxHttpServerRequest> errorHandler);
+    ScxHttpServer onError(ScxHttpServerErrorHandler errorHandler);
 
     void start();
 

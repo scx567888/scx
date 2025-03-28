@@ -1,6 +1,7 @@
 package cool.scx.http.x;
 
 import cool.scx.common.exception.ScxExceptionHelper;
+import cool.scx.http.ScxHttpServerErrorHandler;
 import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.exception.InternalServerErrorException;
 import cool.scx.http.exception.ScxHttpException;
@@ -9,15 +10,15 @@ import cool.scx.http.status.ScxHttpStatus;
 
 import java.lang.System.Logger;
 import java.util.LinkedHashMap;
-import java.util.function.BiConsumer;
 
 import static cool.scx.http.media_type.MediaType.TEXT_HTML;
 import static cool.scx.http.status.ScxHttpStatusHelper.getReasonPhrase;
+import static cool.scx.http.x.http1.Http1Helper.getErrorPhaseStr;
 import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.getLogger;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-public class XHttpErrorHandler implements BiConsumer<Throwable, ScxHttpServerRequest> {
+public class XHttpErrorHandler implements ScxHttpServerErrorHandler {
 
     public static final Logger LOGGER = getLogger(XHttpErrorHandler.class.getName());
 
@@ -85,14 +86,14 @@ public class XHttpErrorHandler implements BiConsumer<Throwable, ScxHttpServerReq
     }
 
     @Override
-    public void accept(Throwable throwable, ScxHttpServerRequest request) {
+    public void accept(Throwable throwable, ScxHttpServerRequest request, ErrorPhase errorPhase) {
         var e = ScxExceptionHelper.getRootCause(throwable);
         // Http 异常无需打印
         if (e instanceof ScxHttpException h) {
             this.handleScxHttpException(h, request);
         } else {
             // 其余异常包装为 500 异常, 同时需要打印
-            LOGGER.log(ERROR, e.getMessage(), e);
+            LOGGER.log(ERROR, getErrorPhaseStr(errorPhase) + " 发生异常 !!!", e);
             this.handleScxHttpException(new InternalServerErrorException(e), request);
         }
     }

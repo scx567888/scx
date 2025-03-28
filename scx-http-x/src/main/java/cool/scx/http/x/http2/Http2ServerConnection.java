@@ -1,5 +1,6 @@
 package cool.scx.http.x.http2;
 
+import cool.scx.http.ScxHttpServerErrorHandler;
 import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.x.XHttpServerOptions;
 import cool.scx.http.x.http2.hpack.HPACKDecoder;
@@ -11,7 +12,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import static cool.scx.http.x.http2.Http2Helper.HTTP2_CONNECTION_PREFACE;
@@ -25,13 +25,13 @@ public class Http2ServerConnection {
     private final ScxTCPSocket tcpSocket;
     private final XHttpServerOptions options;
     private final Consumer<ScxHttpServerRequest> requestHandler;
-    private final BiConsumer<Throwable, ScxHttpServerRequest> errorHandler;
+    private final ScxHttpServerErrorHandler errorHandler;
     private final LinkedDataReader dataReader;
     private final OutputStream dataWriter;
     private final HPACKDecoder hpackDecoder;
     private State state;
 
-    public Http2ServerConnection(ScxTCPSocket tcpSocket, XHttpServerOptions options, Consumer<ScxHttpServerRequest> requestHandler, BiConsumer<Throwable, ScxHttpServerRequest> errorHandler) {
+    public Http2ServerConnection(ScxTCPSocket tcpSocket, XHttpServerOptions options, Consumer<ScxHttpServerRequest> requestHandler, ScxHttpServerErrorHandler errorHandler) {
         this.tcpSocket = tcpSocket;
         this.options = options;
         this.requestHandler = requestHandler;
