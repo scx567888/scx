@@ -2,12 +2,14 @@ package cool.scx.logging;
 
 import cool.scx.logging.recorder.ConsoleRecorder;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 import static java.lang.System.Logger.Level.ERROR;
+import static java.util.Collections.synchronizedMap;
 
 
 /// ScxLoggerFactory
@@ -21,7 +23,8 @@ public final class ScxLoggerFactory {
     static final Set<ScxLogRecorder> DEFAULT_RECORDERS = Set.of(new ConsoleRecorder());
 
     private static final Map<String, ScxLogger> LOGGERS = new ConcurrentHashMap<>();
-    private static final Map<String, ScxLoggerConfig> CONFIGS = new ConcurrentHashMap<>();
+    // 配置需要保证顺序 以便用户能够控制 模糊和精确匹配的级别
+    private static final Map<String, ScxLoggerConfig> CONFIGS = synchronizedMap(new LinkedHashMap<>());
     private static final ScxLoggerConfig ROOT_CONFIG = new ScxLoggerConfig();
 
     /// 根配置 可修改此配置来影响根配置
