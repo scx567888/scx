@@ -74,7 +74,7 @@ public final class ScxLoggerFactory {
         }
         // 更新现有 Logger 的配置
         for (var value : LOGGERS.values()) {
-            boolean b = Pattern.matches(name, value.name());
+            var b = Pattern.matches(name, value.name());
             if (b) {
                 value.config().updateConfig(newConfig);
             }
