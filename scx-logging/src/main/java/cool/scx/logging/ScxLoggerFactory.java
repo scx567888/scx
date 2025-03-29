@@ -67,7 +67,7 @@ public final class ScxLoggerFactory {
     public static void setConfig(String name, ScxLoggerConfig newConfig) {
         CONFIGS_LOCK.writeLock().lock();
         try {
-            //倒序插入保证遍历的时候 新配置永远在前
+            //设置未来的日志配置, 倒序插入保证遍历的时候 新配置永远在前
             CONFIGS.putFirst(name, newConfig);
         } finally {
             CONFIGS_LOCK.writeLock().unlock();
