@@ -31,7 +31,7 @@ public class ScxLoggerConcurrentTest {
         Thread thread2 = Thread.ofPlatform().start(() -> {
             // 线程创建 Logger
             for (int i = 0; i < 1000; i++) {
-                cool.scx.logging.ScxLogger logger = ScxLoggerFactory.getLogger(i + "");
+                var logger = ScxLoggerFactory.getLogger(i + "");
                 try {
                     Thread.sleep(1);
                 } catch (InterruptedException e) {
