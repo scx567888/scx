@@ -73,15 +73,15 @@ public final class ScxLoggerFactory {
         try {
             //设置未来的日志配置, 倒序插入保证遍历的时候 新配置永远在前
             CONFIGS.putFirst(name, newConfig);
+            // 更新现有 Logger 的配置
+            for (var value : LOGGERS.values()) {
+                var b = Pattern.matches(name, value.name());
+                if (b) {
+                    value.config().updateConfig(newConfig);
+                }
+            }
         } finally {
             CONFIGS_LOCK.writeLock().unlock();
-        }
-        // 更新现有 Logger 的配置
-        for (var value : LOGGERS.values()) {
-            var b = Pattern.matches(name, value.name());
-            if (b) {
-                value.config().updateConfig(newConfig);
-            }
         }
     }
 
