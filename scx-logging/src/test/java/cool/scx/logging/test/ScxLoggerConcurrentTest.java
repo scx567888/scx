@@ -46,7 +46,7 @@ public class ScxLoggerConcurrentTest {
         Thread.sleep(4000);// 等待运行完成
 
         for (int i = 0; i < 1000; i++) {
-            cool.scx.logging.ScxLogger logger = ScxLoggerFactory.getLogger(i + "");
+            var logger = ScxLoggerFactory.getLogger(i + "");
             //这里应该全部都是  TRACE
             var level = logger.config().level();
             if (level != TRACE) {
