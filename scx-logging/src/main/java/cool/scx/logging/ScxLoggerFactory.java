@@ -5,7 +5,7 @@ import cool.scx.logging.recorder.ConsoleRecorder;
 import java.util.LinkedHashMap;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.regex.Pattern;
 
 import static java.lang.System.Logger.Level.ERROR;
@@ -25,7 +25,7 @@ public final class ScxLoggerFactory {
     private static final LinkedHashMap<String, ScxLoggerConfig> CONFIGS = new LinkedHashMap<>();
 
     // 保护 CONFIGS 的锁
-    private static final ReentrantLock CONFIGS_LOCK = new ReentrantLock();
+    private static final ReentrantReadWriteLock CONFIGS_LOCK = new ReentrantReadWriteLock();
 
     /// 根配置 可修改此配置来影响根配置
     public static ScxLoggerConfig rootConfig() {
@@ -33,7 +33,7 @@ public final class ScxLoggerFactory {
     }
 
     private static ScxLoggerConfig findConfig(String name) {
-        CONFIGS_LOCK.lock();
+        CONFIGS_LOCK.readLock().lock();
         try {
             for (var entry : CONFIGS.entrySet()) {
                 var b = Pattern.matches(entry.getKey(), name);
@@ -43,7 +43,7 @@ public final class ScxLoggerFactory {
             }
             return null;
         } finally {
-            CONFIGS_LOCK.unlock();
+            CONFIGS_LOCK.readLock().unlock();
         }
     }
 
@@ -67,7 +67,7 @@ public final class ScxLoggerFactory {
 
     // 使用显式锁保护 CONFIGS 的更新
     public static void setConfig(String name, ScxLoggerConfig newConfig) {
-        CONFIGS_LOCK.lock();
+        CONFIGS_LOCK.writeLock().lock();
         try {
             CONFIGS.putFirst(name, newConfig);
             // 更新现有 Logger 的配置
@@ -78,16 +78,16 @@ public final class ScxLoggerFactory {
                 }
             }
         } finally {
-            CONFIGS_LOCK.unlock();
+            CONFIGS_LOCK.writeLock().unlock();
         }
     }
 
     public static void removeConfig(String name) {
-        CONFIGS_LOCK.lock();
+        CONFIGS_LOCK.writeLock().lock();
         try {
             CONFIGS.remove(name);
         } finally {
-            CONFIGS_LOCK.unlock();
+            CONFIGS_LOCK.writeLock().unlock();
         }
     }
 
