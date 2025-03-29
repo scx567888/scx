@@ -2,28 +2,29 @@ package cool.scx.logging;
 
 import cool.scx.logging.recorder.ConsoleRecorder;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.regex.Pattern;
 
 import static java.lang.System.Logger.Level.ERROR;
 
-
-/// ScxLoggerFactory
-///
-/// @author scx567888
-/// @version 0.0.1
 public final class ScxLoggerFactory {
 
     static final System.Logger.Level DEFAULT_LEVEL = ERROR;
     static final Boolean DEFAULT_STACK_TRACE = false;
     static final Set<ScxLogRecorder> DEFAULT_RECORDERS = Set.of(new ConsoleRecorder());
 
-    private static final HashMap<String, ScxLogger> LOGGERS = new HashMap<>();
-    // 配置需要保证顺序 以便用户能够控制 模糊和精确匹配的级别
-    private static final LinkedHashMap<String, ScxLoggerConfig> CONFIGS = new LinkedHashMap<>();
     private static final ScxLoggerConfig ROOT_CONFIG = new ScxLoggerConfig();
+
+    // 存储所有日志
+    private static final ConcurrentHashMap<String, ScxLogger> LOGGERS = new ConcurrentHashMap<>();
+
+    // 存储所有配置
+    private static final LinkedHashMap<String, ScxLoggerConfig> CONFIGS = new LinkedHashMap<>();
+
+    // 保护 CONFIGS 的锁
+    private static final ReentrantLock CONFIGS_LOCK = new ReentrantLock();
 
     /// 根配置 可修改此配置来影响根配置
     public static ScxLoggerConfig rootConfig() {
@@ -31,14 +32,18 @@ public final class ScxLoggerFactory {
     }
 
     private static ScxLoggerConfig findConfig(String name) {
-        //我们需要倒序, 以便匹配最新的 配置
-        for (var entry : CONFIGS.entrySet()) {
-            var b = Pattern.matches(entry.getKey(), name);
-            if (b) {
-                return entry.getValue();
+        CONFIGS_LOCK.lock();
+        try {
+            for (var entry : CONFIGS.entrySet()) {
+                var b = Pattern.matches(entry.getKey(), name);
+                if (b) {
+                    return entry.getValue();
+                }
             }
+            return null;
+        } finally {
+            CONFIGS_LOCK.unlock();
         }
-        return null;
     }
 
     private static ScxLogger createLogger(String name) {
@@ -50,7 +55,8 @@ public final class ScxLoggerFactory {
         return scxLogger;
     }
 
-    public synchronized static ScxLogger getLogger(String name) {
+    // 去除了 synchronized，利用 ConcurrentHashMap 的线程安全性
+    public static ScxLogger getLogger(String name) {
         return LOGGERS.computeIfAbsent(name, ScxLoggerFactory::createLogger);
     }
 
@@ -58,27 +64,30 @@ public final class ScxLoggerFactory {
         return getLogger(clazz.getName());
     }
 
-    /// 更新日志配置
-    ///
-    /// @param name      日志名称 也可以为正则表达式
-    /// @param newConfig 新配置
-    public synchronized static void setConfig(String name, ScxLoggerConfig newConfig) {
-        //设置未来的日志配置
-        CONFIGS.putFirst(name, newConfig);
-        //更新现有日志配置    
-        for (var value : LOGGERS.values()) {
-            var b = Pattern.matches(name, value.name());
-            if (b) {
-                value.config().updateConfig(newConfig);
+    // 使用显式锁保护 CONFIGS 的更新
+    public static void setConfig(String name, ScxLoggerConfig newConfig) {
+        CONFIGS_LOCK.lock();
+        try {
+            CONFIGS.putFirst(name,newConfig);
+            // 更新现有 Logger 的配置
+            for (var value : LOGGERS.values()) {
+                boolean b = Pattern.matches(name, value.name());
+                if (b) {
+                    value.config().updateConfig(newConfig);
+                }
             }
+        } finally {
+            CONFIGS_LOCK.unlock();
         }
     }
 
-    /// 移除日志配置 , 已存在的日志对象不会收到影响
-    ///
-    /// @param name 日志名称 也可以为正则表达式
     public static void removeConfig(String name) {
-        CONFIGS.remove(name);
+        CONFIGS_LOCK.lock();
+        try {
+            CONFIGS.remove(name);
+        } finally {
+            CONFIGS_LOCK.unlock();
+        }
     }
 
 }
