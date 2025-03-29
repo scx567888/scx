@@ -2,7 +2,8 @@ package cool.scx.logging;
 
 import cool.scx.logging.recorder.ConsoleRecorder;
 
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.regex.Pattern;
@@ -68,7 +69,7 @@ public final class ScxLoggerFactory {
     public static void setConfig(String name, ScxLoggerConfig newConfig) {
         CONFIGS_LOCK.lock();
         try {
-            CONFIGS.putFirst(name,newConfig);
+            CONFIGS.putFirst(name, newConfig);
             // 更新现有 Logger 的配置
             for (var value : LOGGERS.values()) {
                 boolean b = Pattern.matches(name, value.name());
