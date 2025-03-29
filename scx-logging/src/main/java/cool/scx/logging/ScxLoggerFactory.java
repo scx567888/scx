@@ -2,15 +2,12 @@ package cool.scx.logging;
 
 import cool.scx.logging.recorder.ConsoleRecorder;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 import static java.lang.System.Logger.Level.ERROR;
-import static java.util.Collections.synchronizedMap;
 
 
 /// ScxLoggerFactory
@@ -23,9 +20,9 @@ public final class ScxLoggerFactory {
     static final Boolean DEFAULT_STACK_TRACE = false;
     static final Set<ScxLogRecorder> DEFAULT_RECORDERS = Set.of(new ConsoleRecorder());
 
-    private static final Map<String, ScxLogger> LOGGERS = new ConcurrentHashMap<>();
+    private static final HashMap<String, ScxLogger> LOGGERS = new HashMap<>();
     // 配置需要保证顺序 以便用户能够控制 模糊和精确匹配的级别
-    private static final Map<String, ScxLoggerConfig> CONFIGS = synchronizedMap(new LinkedHashMap<>());
+    private static final LinkedHashMap<String, ScxLoggerConfig> CONFIGS = new LinkedHashMap<>();
     private static final ScxLoggerConfig ROOT_CONFIG = new ScxLoggerConfig();
 
     /// 根配置 可修改此配置来影响根配置
@@ -35,8 +32,7 @@ public final class ScxLoggerFactory {
 
     private static ScxLoggerConfig findConfig(String name) {
         //我们需要倒序, 以便匹配最新的 配置
-        var list = new ArrayList<>(CONFIGS.entrySet());
-        for (var entry : list.reversed()) {
+        for (var entry : CONFIGS.entrySet()) {
             var b = Pattern.matches(entry.getKey(), name);
             if (b) {
                 return entry.getValue();
@@ -54,7 +50,7 @@ public final class ScxLoggerFactory {
         return scxLogger;
     }
 
-    public static ScxLogger getLogger(String name) {
+    public synchronized static ScxLogger getLogger(String name) {
         return LOGGERS.computeIfAbsent(name, ScxLoggerFactory::createLogger);
     }
 
@@ -66,7 +62,9 @@ public final class ScxLoggerFactory {
     ///
     /// @param name      日志名称 也可以为正则表达式
     /// @param newConfig 新配置
-    public static void setConfig(String name, ScxLoggerConfig newConfig) {
+    public synchronized static void setConfig(String name, ScxLoggerConfig newConfig) {
+        //设置未来的日志配置
+        CONFIGS.putFirst(name, newConfig);
         //更新现有日志配置    
         for (var value : LOGGERS.values()) {
             var b = Pattern.matches(name, value.name());
@@ -74,8 +72,6 @@ public final class ScxLoggerFactory {
                 value.config().updateConfig(newConfig);
             }
         }
-        //设置未来的日志配置
-        CONFIGS.put(name, newConfig);
     }
 
     /// 移除日志配置 , 已存在的日志对象不会收到影响
