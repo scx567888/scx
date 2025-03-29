@@ -56,7 +56,6 @@ public final class ScxLoggerFactory {
         return scxLogger;
     }
 
-    // 去除了 synchronized，利用 ConcurrentHashMap 的线程安全性
     public static ScxLogger getLogger(String name) {
         return LOGGERS.computeIfAbsent(name, ScxLoggerFactory::createLogger);
     }
@@ -65,20 +64,19 @@ public final class ScxLoggerFactory {
         return getLogger(clazz.getName());
     }
 
-    // 使用显式锁保护 CONFIGS 的更新
     public static void setConfig(String name, ScxLoggerConfig newConfig) {
         CONFIGS_LOCK.writeLock().lock();
         try {
             CONFIGS.putFirst(name, newConfig);
-            // 更新现有 Logger 的配置
-            for (var value : LOGGERS.values()) {
-                boolean b = Pattern.matches(name, value.name());
-                if (b) {
-                    value.config().updateConfig(newConfig);
-                }
-            }
         } finally {
             CONFIGS_LOCK.writeLock().unlock();
+        }
+        // 更新现有 Logger 的配置
+        for (var value : LOGGERS.values()) {
+            boolean b = Pattern.matches(name, value.name());
+            if (b) {
+                value.config().updateConfig(newConfig);
+            }
         }
     }
 
