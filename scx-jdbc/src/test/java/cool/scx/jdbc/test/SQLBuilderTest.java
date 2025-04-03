@@ -1,5 +1,6 @@
 package cool.scx.jdbc.test;
 
+import cool.scx.jdbc.sql.NamedSQLListParameter;
 import cool.scx.jdbc.sql.SQL;
 import cool.scx.jdbc.sql.SQLBuilder;
 import org.testng.Assert;
@@ -78,6 +79,24 @@ public class SQLBuilderTest {
         Assert.assertEquals(s3.sql(), a3);
         Assert.assertEquals(s4.sql(), a4);
         Assert.assertEquals(s3.sql(), s3_1.sql());
+
+        var sql5 = "select * from user where id in (:ids) and name = :name";
+
+        //测试动态填充
+        var a5 = "select * from user where id in (?, ?, ?, ?, ?) and name = ?";
+
+        var s5 = SQL.sqlNamed(sql5, Map.of("ids", NamedSQLListParameter.of(1, 2, 3, 4, 5), "name", "小明"));
+
+        Assert.assertEquals(s5.sql(), a5);
+
+        Assert.assertEquals(s5.params(), new Object[]{1, 2, 3, 4, 5, "小明"});
+
+        var s51 = SQL.sqlNamed(sql5, Map.of("ids", NamedSQLListParameter.of(List.of(1, 2, 3, 4, 5)), "name", "小明"));
+
+        Assert.assertEquals(s51.sql(), a5);
+
+        Assert.assertEquals(s51.params(), new Object[]{1, 2, 3, 4, 5, "小明"});
+
     }
 
 }
