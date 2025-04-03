@@ -19,20 +19,14 @@ import java.util.List;
 /// @author scx567888
 /// @version 0.0.1
 /// @see NamedSQL
-public class NamedSQLListParameter {
+public record NamedSQLListParameter(Collection<?> values) {
 
-    private final Collection<?> values;
-
-    public NamedSQLListParameter(Object... values) {
-        this.values = List.of(values);
+    public static NamedSQLListParameter of(Object... values) {
+        return new NamedSQLListParameter(List.of(values));
     }
 
-    public NamedSQLListParameter(Collection<?> values) {
-        this.values = values;
-    }
-
-    public Collection<?> values() {
-        return values;
+    public static NamedSQLListParameter of(Collection<?> values) {
+        return new NamedSQLListParameter(values);
     }
 
 }
