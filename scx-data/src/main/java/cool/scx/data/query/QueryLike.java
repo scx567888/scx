@@ -1,5 +1,7 @@
 package cool.scx.data.query;
 
+import java.util.function.Predicate;
+
 /// QueryLike
 ///
 /// @author scx567888
@@ -98,6 +100,42 @@ public abstract class QueryLike<QL extends QueryLike<QL>> implements Query {
     @Override
     public QL clearLimit() {
         query().clearLimit();
+        return (QL) this;
+    }
+
+    @Override
+    public QL addWhere(Object... whereClauses) {
+        query().addWhere(whereClauses);
+        return (QL) this;
+    }
+
+    @Override
+    public QL addGroupBy(Object... groupByClauses) {
+        query().addGroupBy(groupByClauses);
+        return (QL) this;
+    }
+
+    @Override
+    public QL addOrderBy(Object... orderByClauses) {
+        query().addOrderBy(orderByClauses);
+        return (QL) this;
+    }
+
+    @Override
+    public QL removeWhereIf(Predicate<Object> filter) {
+        query().removeWhereIf(filter);
+        return (QL) this;
+    }
+
+    @Override
+    public QL removeGroupByIf(Predicate<Object> filter) {
+        query().removeGroupByIf(filter);
+        return (QL) this;
+    }
+
+    @Override
+    public QL removeOrderByIf(Predicate<Object> filter) {
+        query().removeOrderByIf(filter);
         return (QL) this;
     }
 

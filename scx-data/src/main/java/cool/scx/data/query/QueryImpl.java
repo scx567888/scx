@@ -2,6 +2,7 @@ package cool.scx.data.query;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 /// QueryImpl
 ///
@@ -130,7 +131,8 @@ public class QueryImpl implements Query {
         return this;
     }
 
-    private QueryImpl addWhere(Object... whereClauses) {
+    @Override
+    public QueryImpl addWhere(Object... whereClauses) {
         for (var whereClause : whereClauses) {
             if (whereClause == null) {
                 continue;
@@ -147,7 +149,8 @@ public class QueryImpl implements Query {
         return this;
     }
 
-    private QueryImpl addGroupBy(Object... groupByClauses) {
+    @Override
+    public QueryImpl addGroupBy(Object... groupByClauses) {
         for (var groupByClause : groupByClauses) {
             if (groupByClause == null) {
                 continue;
@@ -164,7 +167,8 @@ public class QueryImpl implements Query {
         return this;
     }
 
-    private QueryImpl addOrderBy(Object... orderByClauses) {
+    @Override
+    public QueryImpl addOrderBy(Object... orderByClauses) {
         for (var orderByClause : orderByClauses) {
             if (orderByClause == null) {
                 continue;
@@ -178,6 +182,24 @@ public class QueryImpl implements Query {
             }
             orderBy.add(orderByClause);
         }
+        return this;
+    }
+
+    @Override
+    public Query removeWhereIf(Predicate<Object> filter) {
+        where.removeIf(filter);
+        return this;
+    }
+
+    @Override
+    public Query removeGroupByIf(Predicate<Object> filter) {
+        groupBy.removeIf(filter);
+        return this;
+    }
+
+    @Override
+    public Query removeOrderByIf(Predicate<Object> filter) {
+        orderBy.removeIf(filter);
         return this;
     }
 

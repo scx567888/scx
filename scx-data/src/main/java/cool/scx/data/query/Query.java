@@ -1,5 +1,7 @@
 package cool.scx.data.query;
 
+import java.util.function.Predicate;
+
 /// Query
 ///
 /// @author scx567888
@@ -35,5 +37,17 @@ public interface Query {
     Query clearOffset();
 
     Query clearLimit();
+
+    Query addWhere(Object... whereClauses);
+
+    Query addGroupBy(Object... groupByClauses);
+
+    Query addOrderBy(Object... orderByClauses);
+
+    Query removeWhereIf(Predicate<Object> filter);
+
+    Query removeGroupByIf(Predicate<Object> filter);
+
+    Query removeOrderByIf(Predicate<Object> filter);
 
 }
