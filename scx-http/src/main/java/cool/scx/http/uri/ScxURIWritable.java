@@ -20,7 +20,7 @@ public interface ScxURIWritable extends ScxURI {
 
     ScxURIWritable host(String host);
 
-    ScxURIWritable port(int port);
+    ScxURIWritable port(Integer port);
 
     ScxURIWritable path(String path);
 
