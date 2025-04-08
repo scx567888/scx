@@ -1,12 +1,21 @@
 package cool.scx.http.test;
 
 import cool.scx.http.uri.ScxURI;
+import org.testng.annotations.Test;
 
 import java.util.List;
+
+import static org.testng.AssertJUnit.assertEquals;
 
 public class ScxURITest {
 
     public static void main(String[] args) {
+        test1();
+        test2();
+    }
+
+    @Test
+    public static void test1() {
         var s = List.of(
                 "http://www.example.com/abc/bcd?name=小明&age=20#999",
                 "www.example.com/abc/bcd?name=小明&age=20#999",
@@ -21,7 +30,19 @@ public class ScxURITest {
         for (String string : s) {
             var uri = ScxURI.of(string);
             var encode = uri.encode();
-            System.out.println(encode.equals(string) + " " + encode);
+            assertEquals(encode, string);
+        }
+    }
+
+    @Test
+    public static void test2() {
+        var s = List.of(
+                "https://kns.cnki.net/nzkhtml/zkread/litNotes/getPaperInfo?fileName=ZGJY20250407A030&tableName=CCNDTOTAL&dbCode=CCND&fsType=1&invoice=DS8l5AWorB2tDlNB%2BlI30JdcKHGwwaK3nRGSEuHIOQ2EaRJXE%2B7BTKYjP0GfaTa90%2FB8OLxYcwtzBsb9QR9xfWVm1dXh%2BfXIm9IfmwZKV%2FamiZEsNTfvmbWlWLd56q5TJfJYcS14JSvI4uByISxfWYrgLmbpjcJ3U9koVtVbWA0%3D"
+        );
+        for (String string : s) {
+            var uri = ScxURI.ofEncoded(string);
+            var encode = uri.encode(true);
+            assertEquals(encode, string);
         }
     }
 
