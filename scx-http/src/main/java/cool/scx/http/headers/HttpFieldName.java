@@ -115,5 +115,5 @@ public enum HttpFieldName implements ScxHttpHeaderName {
     public String toString() {
         return value;
     }
-    
+
 }
