@@ -63,7 +63,7 @@ public final class URIUtils {
         int len = value.length;
         int st = 0;
         while (st < len && (value[len - 1] == '/' || value[len - 1] == '\\')) {
-            len--;
+            len = len - 1;
         }
         return len;
     }

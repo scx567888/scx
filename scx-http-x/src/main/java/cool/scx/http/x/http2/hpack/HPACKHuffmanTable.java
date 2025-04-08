@@ -274,7 +274,7 @@ public class HPACKHuffmanTable {
 
         var s = new HashMap<Character, String>();
         //最后的 256 我们丢弃
-        for (int i = 0; i < 257; i++) {
+        for (int i = 0; i < 257; i = i + 1) {
             s.put((char) i, m.get(i));
         }
         return Map.copyOf(s); //转换为不可变的 map

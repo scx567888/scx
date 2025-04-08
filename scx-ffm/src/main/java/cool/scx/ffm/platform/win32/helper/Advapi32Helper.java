@@ -59,7 +59,7 @@ public final class Advapi32Helper {
         // terminating WCHARs -- the memory is zeroed so after
         // value request we should not overread when reading strings
         try (var arena = Arena.ofConfined()) {
-            for (int i = 0; i < lpcValues.getValue(); i++) {
+            for (int i = 0; i < lpcValues.getValue(); i = i + 1) {
                 var byteData = arena.allocate(lpcMaxValueLen.getValue());
                 IntMapper lpcchValueName = new IntMapper(lpcMaxValueNameLen.getValue() + 1);
                 IntMapper lpcbData = new IntMapper(lpcMaxValueLen.getValue());

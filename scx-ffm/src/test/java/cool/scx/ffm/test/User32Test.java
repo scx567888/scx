@@ -30,7 +30,7 @@ public class User32Test {
         int centerY = currentPos.y;
 
         // 画圆
-        for (int i = 0; i < steps; i++) {
+        for (int i = 0; i < steps; i = i + 1) {
             double angle = 2 * Math.PI * i / steps;
             int x = centerX + (int) (radius * Math.cos(angle));
             int y = centerY + (int) (radius * Math.sin(angle));

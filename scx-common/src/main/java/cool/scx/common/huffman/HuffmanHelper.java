@@ -92,7 +92,7 @@ public class HuffmanHelper {
 
             HuffmanNode<T> current = root;
 
-            for (int i = 0; i < codePath.length(); i++) {
+            for (int i = 0; i < codePath.length(); i = i + 1) {
                 if (codePath.get(i)) {
                     // 如果当前位是 '1'，进入或创建右子节点
                     if (current.right == null) {

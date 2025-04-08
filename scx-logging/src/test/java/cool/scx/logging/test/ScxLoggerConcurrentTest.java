@@ -17,7 +17,7 @@ public class ScxLoggerConcurrentTest {
 
         // 先启动配置更新线程
         Thread thread1 = Thread.ofPlatform().start(() -> {
-            for (int i = 0; i < 1000; i++) {
+            for (int i = 0; i < 1000; i = i + 1) {
                 ScxLoggerFactory.setConfig(i + "", scxLoggerConfig);
                 try {
                     Thread.sleep(1);
@@ -30,7 +30,7 @@ public class ScxLoggerConcurrentTest {
 
         Thread thread2 = Thread.ofPlatform().start(() -> {
             // 线程创建 Logger
-            for (int i = 0; i < 1000; i++) {
+            for (int i = 0; i < 1000; i = i + 1) {
                 var logger = ScxLoggerFactory.getLogger(i + "");
                 try {
                     Thread.sleep(1);
@@ -45,7 +45,7 @@ public class ScxLoggerConcurrentTest {
 
         Thread.sleep(4000);// 等待运行完成
 
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 1000; i = i + 1) {
             var logger = ScxLoggerFactory.getLogger(i + "");
             //这里应该全部都是  TRACE
             var level = logger.config().level();
