@@ -7,9 +7,7 @@ import java.lang.annotation.Target;
 
 import static cool.scx.common.constant.AnnotationValue.NULL;
 
-/// ScxModel
-/// model 层映射
-/// 设置此注解的方法 必须同时 继承 BaseModel
+/// Table
 ///
 /// @author scx567888
 /// @version 0.0.1
@@ -17,14 +15,10 @@ import static cool.scx.common.constant.AnnotationValue.NULL;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Table {
 
-    /// 表名称
+    /// 表名称 
+    /// 不指定时为类名转下划线如 UserInfo -> user_info
     ///
     /// @return 表全限定名称
-    String tableName() default NULL;
-
-    /// 表名称前缀
-    ///
-    /// @return 表前缀
-    String tablePrefix() default NULL;
+    String value() default NULL;
 
 }
