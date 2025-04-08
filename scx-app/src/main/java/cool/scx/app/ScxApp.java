@@ -2,6 +2,7 @@ package cool.scx.app;
 
 import cool.scx.ansi.Ansi;
 import cool.scx.app.eventbus.EventBus;
+import cool.scx.bean.DefaultListableBeanFactory;
 import cool.scx.common.util.$;
 import cool.scx.common.util.FileUtils;
 import cool.scx.common.util.ScopedValue;
@@ -22,7 +23,6 @@ import cool.scx.web.RouteRegistrar;
 import cool.scx.web.ScxWeb;
 import cool.scx.web.ScxWebOptions;
 import cool.scx.web.WebSocketRouteRegistrar;
-import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 import javax.sql.DataSource;
 import java.lang.System.Logger;

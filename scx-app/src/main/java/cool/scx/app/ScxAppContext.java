@@ -2,6 +2,7 @@ package cool.scx.app;
 
 import cool.scx.app.enumeration.ScxAppFeature;
 import cool.scx.app.eventbus.EventBus;
+import cool.scx.bean.BeanFactory;
 import cool.scx.common.functional.ScxRunnable;
 import cool.scx.common.util.ScopedValue;
 import cool.scx.config.ScxConfig;
@@ -11,7 +12,6 @@ import cool.scx.http.ScxHttpServer;
 import cool.scx.jdbc.JDBCContext;
 import cool.scx.jdbc.sql.SQLRunner;
 import cool.scx.web.ScxWeb;
-import org.springframework.beans.factory.BeanFactory;
 
 import javax.sql.DataSource;
 import java.nio.file.Path;
