@@ -40,15 +40,15 @@ public class AutowiredAnnotationBeanPostProcessor implements BeanPostProcessor {
 
     public void setBeanFactory(DefaultListableBeanFactory beanFactory) {
         springAutowiredAnnotationBeanPostProcessor.setBeanFactory(new ConfigurableListableBeanFactory() {
-            
+
             @Override
             public void registerSingleton(String beanName, Object singletonObject) {
-                beanFactory.registerSingleton(beanName,singletonObject);
+                beanFactory.registerSingleton(beanName, singletonObject);
             }
 
             @Override
             public void addSingletonCallback(String beanName, Consumer<Object> singletonConsumer) {
-                beanFactory.addSingletonCallback(beanName,singletonConsumer);
+                beanFactory.addSingletonCallback(beanName, singletonConsumer);
             }
 
             @Override
@@ -77,8 +77,8 @@ public class AutowiredAnnotationBeanPostProcessor implements BeanPostProcessor {
             }
 
             @Override
-            public void setParentBeanFactory(org.springframework.beans.factory.BeanFactory parentBeanFactory) throws IllegalStateException {
-                beanFactory.setParentBeanFactory(parentBeanFactory);
+            public ClassLoader getBeanClassLoader() {
+                return beanFactory.getBeanClassLoader();
             }
 
             @Override
@@ -87,8 +87,8 @@ public class AutowiredAnnotationBeanPostProcessor implements BeanPostProcessor {
             }
 
             @Override
-            public ClassLoader getBeanClassLoader() {
-                return beanFactory.getBeanClassLoader();
+            public ClassLoader getTempClassLoader() {
+                return beanFactory.getTempClassLoader();
             }
 
             @Override
@@ -97,8 +97,8 @@ public class AutowiredAnnotationBeanPostProcessor implements BeanPostProcessor {
             }
 
             @Override
-            public ClassLoader getTempClassLoader() {
-                return beanFactory.getTempClassLoader();
+            public boolean isCacheBeanMetadata() {
+                return beanFactory.isCacheBeanMetadata();
             }
 
             @Override
@@ -107,8 +107,8 @@ public class AutowiredAnnotationBeanPostProcessor implements BeanPostProcessor {
             }
 
             @Override
-            public boolean isCacheBeanMetadata() {
-                return beanFactory.isCacheBeanMetadata();
+            public BeanExpressionResolver getBeanExpressionResolver() {
+                return beanFactory.getBeanExpressionResolver();
             }
 
             @Override
@@ -117,8 +117,8 @@ public class AutowiredAnnotationBeanPostProcessor implements BeanPostProcessor {
             }
 
             @Override
-            public BeanExpressionResolver getBeanExpressionResolver() {
-                return beanFactory.getBeanExpressionResolver();
+            public Executor getBootstrapExecutor() {
+                return beanFactory.getBootstrapExecutor();
             }
 
             @Override
@@ -127,18 +127,13 @@ public class AutowiredAnnotationBeanPostProcessor implements BeanPostProcessor {
             }
 
             @Override
-            public Executor getBootstrapExecutor() {
-                return beanFactory.getBootstrapExecutor();
+            public ConversionService getConversionService() {
+                return beanFactory.getConversionService();
             }
 
             @Override
             public void setConversionService(ConversionService conversionService) {
                 beanFactory.setConversionService(conversionService);
-            }
-
-            @Override
-            public ConversionService getConversionService() {
-                return beanFactory.getConversionService();
             }
 
             @Override
@@ -148,7 +143,7 @@ public class AutowiredAnnotationBeanPostProcessor implements BeanPostProcessor {
 
             @Override
             public void registerCustomEditor(Class<?> requiredType, Class<? extends PropertyEditor> propertyEditorClass) {
-                beanFactory.registerCustomEditor(requiredType,propertyEditorClass);
+                beanFactory.registerCustomEditor(requiredType, propertyEditorClass);
             }
 
             @Override
@@ -157,13 +152,13 @@ public class AutowiredAnnotationBeanPostProcessor implements BeanPostProcessor {
             }
 
             @Override
-            public void setTypeConverter(TypeConverter typeConverter) {
-                beanFactory.setTypeConverter(typeConverter);
+            public TypeConverter getTypeConverter() {
+                return beanFactory.getTypeConverter();
             }
 
             @Override
-            public TypeConverter getTypeConverter() {
-                return beanFactory.getTypeConverter();
+            public void setTypeConverter(TypeConverter typeConverter) {
+                beanFactory.setTypeConverter(typeConverter);
             }
 
             @Override
@@ -193,7 +188,7 @@ public class AutowiredAnnotationBeanPostProcessor implements BeanPostProcessor {
 
             @Override
             public void registerScope(String scopeName, Scope scope) {
-                beanFactory.registerScope(scopeName,scope);
+                beanFactory.registerScope(scopeName, scope);
             }
 
             @Override
@@ -207,13 +202,13 @@ public class AutowiredAnnotationBeanPostProcessor implements BeanPostProcessor {
             }
 
             @Override
-            public void setApplicationStartup(ApplicationStartup applicationStartup) {
-                beanFactory.setApplicationStartup(applicationStartup);
+            public ApplicationStartup getApplicationStartup() {
+                return beanFactory.getApplicationStartup();
             }
 
             @Override
-            public ApplicationStartup getApplicationStartup() {
-                return beanFactory.getApplicationStartup();
+            public void setApplicationStartup(ApplicationStartup applicationStartup) {
+                beanFactory.setApplicationStartup(applicationStartup);
             }
 
             @Override
@@ -223,7 +218,7 @@ public class AutowiredAnnotationBeanPostProcessor implements BeanPostProcessor {
 
             @Override
             public void registerAlias(String beanName, String alias) throws BeanDefinitionStoreException {
-                beanFactory.registerAlias(beanName,alias);
+                beanFactory.registerAlias(beanName, alias);
             }
 
             @Override
@@ -243,7 +238,7 @@ public class AutowiredAnnotationBeanPostProcessor implements BeanPostProcessor {
 
             @Override
             public void setCurrentlyInCreation(String beanName, boolean inCreation) {
-                beanFactory.setCurrentlyInCreation(beanName,inCreation);
+                beanFactory.setCurrentlyInCreation(beanName, inCreation);
             }
 
             @Override
@@ -253,7 +248,7 @@ public class AutowiredAnnotationBeanPostProcessor implements BeanPostProcessor {
 
             @Override
             public void registerDependentBean(String beanName, String dependentBeanName) {
-                beanFactory.registerDependentBean(beanName,dependentBeanName);
+                beanFactory.registerDependentBean(beanName, dependentBeanName);
             }
 
             @Override
@@ -268,7 +263,7 @@ public class AutowiredAnnotationBeanPostProcessor implements BeanPostProcessor {
 
             @Override
             public void destroyBean(String beanName, Object beanInstance) {
-                beanFactory.destroyBean(beanName,beanInstance);
+                beanFactory.destroyBean(beanName, beanInstance);
             }
 
             @Override
@@ -293,42 +288,42 @@ public class AutowiredAnnotationBeanPostProcessor implements BeanPostProcessor {
 
             @Override
             public Object configureBean(Object existingBean, String beanName) throws BeansException {
-                return beanFactory.configureBean(existingBean,beanName);
+                return beanFactory.configureBean(existingBean, beanName);
             }
 
             @Override
             public Object createBean(Class<?> beanClass, int autowireMode, boolean dependencyCheck) throws BeansException {
-                return beanFactory.createBean(beanClass,autowireMode,dependencyCheck);
+                return beanFactory.createBean(beanClass, autowireMode, dependencyCheck);
             }
 
             @Override
             public Object autowire(Class<?> beanClass, int autowireMode, boolean dependencyCheck) throws BeansException {
-                return beanFactory.autowire(beanClass,autowireMode,dependencyCheck);
+                return beanFactory.autowire(beanClass, autowireMode, dependencyCheck);
             }
 
             @Override
             public void autowireBeanProperties(Object existingBean, int autowireMode, boolean dependencyCheck) throws BeansException {
-                beanFactory.autowireBeanProperties(existingBean,autowireMode,dependencyCheck);
+                beanFactory.autowireBeanProperties(existingBean, autowireMode, dependencyCheck);
             }
 
             @Override
             public void applyBeanPropertyValues(Object existingBean, String beanName) throws BeansException {
-                beanFactory.applyBeanPropertyValues(existingBean,beanName);
+                beanFactory.applyBeanPropertyValues(existingBean, beanName);
             }
 
             @Override
             public Object initializeBean(Object existingBean, String beanName) throws BeansException {
-                return beanFactory.initializeBean(existingBean,beanName);
+                return beanFactory.initializeBean(existingBean, beanName);
             }
 
             @Override
             public Object applyBeanPostProcessorsBeforeInitialization(Object existingBean, String beanName) throws BeansException {
-                return beanFactory.applyBeanPostProcessorsBeforeInitialization(existingBean,beanName);
+                return beanFactory.applyBeanPostProcessorsBeforeInitialization(existingBean, beanName);
             }
 
             @Override
             public Object applyBeanPostProcessorsAfterInitialization(Object existingBean, String beanName) throws BeansException {
-                return beanFactory.applyBeanPostProcessorsAfterInitialization(existingBean,beanName);
+                return beanFactory.applyBeanPostProcessorsAfterInitialization(existingBean, beanName);
             }
 
             @Override
@@ -343,17 +338,17 @@ public class AutowiredAnnotationBeanPostProcessor implements BeanPostProcessor {
 
             @Override
             public Object resolveBeanByName(String name, DependencyDescriptor descriptor) throws BeansException {
-                return beanFactory.resolveBeanByName(name,descriptor);
+                return beanFactory.resolveBeanByName(name, descriptor);
             }
 
             @Override
             public Object resolveDependency(DependencyDescriptor descriptor, String requestingBeanName) throws BeansException {
-                return beanFactory.resolveDependency(descriptor,requestingBeanName);
+                return beanFactory.resolveDependency(descriptor, requestingBeanName);
             }
 
             @Override
             public Object resolveDependency(DependencyDescriptor descriptor, String requestingBeanName, Set<String> autowiredBeanNames, TypeConverter typeConverter) throws BeansException {
-                return beanFactory.resolveDependency(descriptor,requestingBeanName,autowiredBeanNames,typeConverter);
+                return beanFactory.resolveDependency(descriptor, requestingBeanName, autowiredBeanNames, typeConverter);
             }
 
             @Override
@@ -373,12 +368,12 @@ public class AutowiredAnnotationBeanPostProcessor implements BeanPostProcessor {
 
             @Override
             public <T> ObjectProvider<T> getBeanProvider(Class<T> requiredType, boolean allowEagerInit) {
-                return beanFactory.getBeanProvider(requiredType,allowEagerInit);
+                return beanFactory.getBeanProvider(requiredType, allowEagerInit);
             }
 
             @Override
             public <T> ObjectProvider<T> getBeanProvider(ResolvableType requiredType, boolean allowEagerInit) {
-                return beanFactory.getBeanProvider(requiredType,allowEagerInit);
+                return beanFactory.getBeanProvider(requiredType, allowEagerInit);
             }
 
             @Override
@@ -388,7 +383,7 @@ public class AutowiredAnnotationBeanPostProcessor implements BeanPostProcessor {
 
             @Override
             public String[] getBeanNamesForType(ResolvableType type, boolean includeNonSingletons, boolean allowEagerInit) {
-                return beanFactory.getBeanNamesForType(type,includeNonSingletons,allowEagerInit);
+                return beanFactory.getBeanNamesForType(type, includeNonSingletons, allowEagerInit);
             }
 
             @Override
@@ -398,7 +393,7 @@ public class AutowiredAnnotationBeanPostProcessor implements BeanPostProcessor {
 
             @Override
             public String[] getBeanNamesForType(Class<?> type, boolean includeNonSingletons, boolean allowEagerInit) {
-                return beanFactory.getBeanNamesForType(type,includeNonSingletons,allowEagerInit);
+                return beanFactory.getBeanNamesForType(type, includeNonSingletons, allowEagerInit);
             }
 
             @Override
@@ -408,7 +403,7 @@ public class AutowiredAnnotationBeanPostProcessor implements BeanPostProcessor {
 
             @Override
             public <T> Map<String, T> getBeansOfType(Class<T> type, boolean includeNonSingletons, boolean allowEagerInit) throws BeansException {
-                return beanFactory.getBeansOfType(type,includeNonSingletons,allowEagerInit);
+                return beanFactory.getBeansOfType(type, includeNonSingletons, allowEagerInit);
             }
 
             @Override
@@ -423,22 +418,27 @@ public class AutowiredAnnotationBeanPostProcessor implements BeanPostProcessor {
 
             @Override
             public <A extends Annotation> A findAnnotationOnBean(String beanName, Class<A> annotationType) throws NoSuchBeanDefinitionException {
-                return beanFactory.findAnnotationOnBean(beanName,annotationType);
+                return beanFactory.findAnnotationOnBean(beanName, annotationType);
             }
 
             @Override
             public <A extends Annotation> A findAnnotationOnBean(String beanName, Class<A> annotationType, boolean allowFactoryBeanInit) throws NoSuchBeanDefinitionException {
-                return beanFactory.findAnnotationOnBean(beanName,annotationType,allowFactoryBeanInit);
+                return beanFactory.findAnnotationOnBean(beanName, annotationType, allowFactoryBeanInit);
             }
 
             @Override
             public <A extends Annotation> Set<A> findAllAnnotationsOnBean(String beanName, Class<A> annotationType, boolean allowFactoryBeanInit) throws NoSuchBeanDefinitionException {
-                return beanFactory.findAllAnnotationsOnBean(beanName,annotationType,allowFactoryBeanInit);
+                return beanFactory.findAllAnnotationsOnBean(beanName, annotationType, allowFactoryBeanInit);
             }
 
             @Override
             public org.springframework.beans.factory.BeanFactory getParentBeanFactory() {
                 return beanFactory.getParentBeanFactory();
+            }
+
+            @Override
+            public void setParentBeanFactory(org.springframework.beans.factory.BeanFactory parentBeanFactory) throws IllegalStateException {
+                beanFactory.setParentBeanFactory(parentBeanFactory);
             }
 
             @Override
@@ -458,12 +458,12 @@ public class AutowiredAnnotationBeanPostProcessor implements BeanPostProcessor {
 
             @Override
             public void registerResolvableDependency(Class<?> dependencyType, Object autowiredValue) {
-                beanFactory.registerResolvableDependency(dependencyType,autowiredValue);
+                beanFactory.registerResolvableDependency(dependencyType, autowiredValue);
             }
 
             @Override
             public boolean isAutowireCandidate(String beanName, DependencyDescriptor descriptor) throws NoSuchBeanDefinitionException {
-                return beanFactory.isAutowireCandidate(beanName,descriptor);
+                return beanFactory.isAutowireCandidate(beanName, descriptor);
             }
 
             @Override
@@ -574,31 +574,31 @@ public class AutowiredAnnotationBeanPostProcessor implements BeanPostProcessor {
     }
 
     public Class<?> predictBeanType(Class<?> beanClass, String beanName) {
-        return springAutowiredAnnotationBeanPostProcessor.predictBeanType(beanClass,beanName);
+        return springAutowiredAnnotationBeanPostProcessor.predictBeanType(beanClass, beanName);
     }
 
     public Class<?> determineBeanType(Class<?> beanClass, String beanName) {
-        return springAutowiredAnnotationBeanPostProcessor.determineBeanType(beanClass,beanName);
+        return springAutowiredAnnotationBeanPostProcessor.determineBeanType(beanClass, beanName);
     }
 
     public Constructor<?>[] determineCandidateConstructors(Class<?> beanClass, String beanName) {
-        return springAutowiredAnnotationBeanPostProcessor.determineCandidateConstructors(beanClass,beanName);
+        return springAutowiredAnnotationBeanPostProcessor.determineCandidateConstructors(beanClass, beanName);
     }
 
     public Object getEarlyBeanReference(Object bean, String beanName) {
-        return springAutowiredAnnotationBeanPostProcessor.getEarlyBeanReference(bean,beanName);
+        return springAutowiredAnnotationBeanPostProcessor.getEarlyBeanReference(bean, beanName);
     }
 
     public Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) {
-        return springAutowiredAnnotationBeanPostProcessor.postProcessBeforeInstantiation(beanClass,beanName);
+        return springAutowiredAnnotationBeanPostProcessor.postProcessBeforeInstantiation(beanClass, beanName);
     }
 
     public boolean postProcessAfterInstantiation(Object bean, String beanName) {
-        return springAutowiredAnnotationBeanPostProcessor.postProcessAfterInstantiation(bean,beanName);
+        return springAutowiredAnnotationBeanPostProcessor.postProcessAfterInstantiation(bean, beanName);
     }
 
     public PropertyValues postProcessProperties(PropertyValues pvs, Object bean, String beanName) {
-        return springAutowiredAnnotationBeanPostProcessor.postProcessProperties(pvs,bean,beanName);
+        return springAutowiredAnnotationBeanPostProcessor.postProcessProperties(pvs, bean, beanName);
     }
-    
+
 }

@@ -34,5 +34,5 @@ public interface BeanFactory {
     Class<?> getType(String name, boolean allowFactoryBeanInit);
 
     String[] getAliases(String name);
-    
+
 }

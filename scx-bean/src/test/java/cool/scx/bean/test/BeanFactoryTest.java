@@ -6,6 +6,7 @@ import cool.scx.bean.DefaultListableBeanFactory;
 import cool.scx.bean.test.b.A;
 import cool.scx.bean.test.b.B;
 import cool.scx.bean.test.b.C;
+import org.testng.annotations.Test;
 
 public class BeanFactoryTest {
 
@@ -13,6 +14,7 @@ public class BeanFactoryTest {
         test1();
     }
 
+    @Test
     public static void test1() {
         //1, 创建 beanFactory
         var beanFactory = new DefaultListableBeanFactory();

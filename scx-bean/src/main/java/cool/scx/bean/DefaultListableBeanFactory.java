@@ -145,18 +145,13 @@ public class DefaultListableBeanFactory implements BeanFactory {
             }
 
             @Override
-            public void setParentName(String parentName) {
-                beanDefinition.setParentName(parentName);
-            }
-
-            @Override
             public String getParentName() {
                 return beanDefinition.getParentName();
             }
 
             @Override
-            public void setBeanClassName(String beanClassName) {
-                beanDefinition.setBeanClassName(beanClassName);
+            public void setParentName(String parentName) {
+                beanDefinition.setParentName(parentName);
             }
 
             @Override
@@ -165,8 +160,8 @@ public class DefaultListableBeanFactory implements BeanFactory {
             }
 
             @Override
-            public void setScope(String scope) {
-                beanDefinition.setScope(scope);
+            public void setBeanClassName(String beanClassName) {
+                beanDefinition.setBeanClassName(beanClassName);
             }
 
             @Override
@@ -175,8 +170,8 @@ public class DefaultListableBeanFactory implements BeanFactory {
             }
 
             @Override
-            public void setLazyInit(boolean lazyInit) {
-                beanDefinition.setLazyInit(lazyInit);
+            public void setScope(String scope) {
+                beanDefinition.setScope(scope);
             }
 
             @Override
@@ -185,8 +180,8 @@ public class DefaultListableBeanFactory implements BeanFactory {
             }
 
             @Override
-            public void setDependsOn(String... dependsOn) {
-                beanDefinition.setDependsOn(dependsOn);
+            public void setLazyInit(boolean lazyInit) {
+                beanDefinition.setLazyInit(lazyInit);
             }
 
             @Override
@@ -195,8 +190,8 @@ public class DefaultListableBeanFactory implements BeanFactory {
             }
 
             @Override
-            public void setAutowireCandidate(boolean autowireCandidate) {
-                beanDefinition.setAutowireCandidate(autowireCandidate);
+            public void setDependsOn(String... dependsOn) {
+                beanDefinition.setDependsOn(dependsOn);
             }
 
             @Override
@@ -205,8 +200,8 @@ public class DefaultListableBeanFactory implements BeanFactory {
             }
 
             @Override
-            public void setPrimary(boolean primary) {
-                beanDefinition.setPrimary(primary);
+            public void setAutowireCandidate(boolean autowireCandidate) {
+                beanDefinition.setAutowireCandidate(autowireCandidate);
             }
 
             @Override
@@ -215,8 +210,8 @@ public class DefaultListableBeanFactory implements BeanFactory {
             }
 
             @Override
-            public void setFallback(boolean fallback) {
-                beanDefinition.setFallback(fallback);
+            public void setPrimary(boolean primary) {
+                beanDefinition.setPrimary(primary);
             }
 
             @Override
@@ -225,8 +220,8 @@ public class DefaultListableBeanFactory implements BeanFactory {
             }
 
             @Override
-            public void setFactoryBeanName(String factoryBeanName) {
-                beanDefinition.setFactoryBeanName(factoryBeanName);
+            public void setFallback(boolean fallback) {
+                beanDefinition.setFallback(fallback);
             }
 
             @Override
@@ -235,13 +230,18 @@ public class DefaultListableBeanFactory implements BeanFactory {
             }
 
             @Override
-            public void setFactoryMethodName(String factoryMethodName) {
-                beanDefinition.setFactoryMethodName(factoryMethodName);
+            public void setFactoryBeanName(String factoryBeanName) {
+                beanDefinition.setFactoryBeanName(factoryBeanName);
             }
 
             @Override
             public String getFactoryMethodName() {
                 return beanDefinition.getFactoryMethodName();
+            }
+
+            @Override
+            public void setFactoryMethodName(String factoryMethodName) {
+                beanDefinition.setFactoryMethodName(factoryMethodName);
             }
 
             @Override
@@ -255,18 +255,13 @@ public class DefaultListableBeanFactory implements BeanFactory {
             }
 
             @Override
-            public void setInitMethodName(String initMethodName) {
-                beanDefinition.setInitMethodName(initMethodName);
-            }
-
-            @Override
             public String getInitMethodName() {
                 return beanDefinition.getInitMethodName();
             }
 
             @Override
-            public void setDestroyMethodName(String destroyMethodName) {
-                beanDefinition.setDestroyMethodName(destroyMethodName);
+            public void setInitMethodName(String initMethodName) {
+                beanDefinition.setInitMethodName(initMethodName);
             }
 
             @Override
@@ -275,8 +270,8 @@ public class DefaultListableBeanFactory implements BeanFactory {
             }
 
             @Override
-            public void setRole(int role) {
-                beanDefinition.setRole(role);
+            public void setDestroyMethodName(String destroyMethodName) {
+                beanDefinition.setDestroyMethodName(destroyMethodName);
             }
 
             @Override
@@ -285,13 +280,18 @@ public class DefaultListableBeanFactory implements BeanFactory {
             }
 
             @Override
-            public void setDescription(String description) {
-                beanDefinition.setDescription(description);
+            public void setRole(int role) {
+                beanDefinition.setRole(role);
             }
 
             @Override
             public String getDescription() {
                 return beanDefinition.getDescription();
+            }
+
+            @Override
+            public void setDescription(String description) {
+                beanDefinition.setDescription(description);
             }
 
             @Override
@@ -437,48 +437,44 @@ public class DefaultListableBeanFactory implements BeanFactory {
         return springDefaultListableBeanFactory.getSingletonMutex();
     }
 
-    public void setParentBeanFactory(org.springframework.beans.factory.BeanFactory parentBeanFactory) {
-        springDefaultListableBeanFactory.setParentBeanFactory(parentBeanFactory);
+    public ClassLoader getBeanClassLoader() {
+        return springDefaultListableBeanFactory.getBeanClassLoader();
     }
 
     public void setBeanClassLoader(ClassLoader beanClassLoader) {
         springDefaultListableBeanFactory.setBeanClassLoader(beanClassLoader);
     }
 
-    public ClassLoader getBeanClassLoader() {
-        return springDefaultListableBeanFactory.getBeanClassLoader();
+    public ClassLoader getTempClassLoader() {
+        return springDefaultListableBeanFactory.getTempClassLoader();
     }
 
     public void setTempClassLoader(ClassLoader tempClassLoader) {
         springDefaultListableBeanFactory.setTempClassLoader(tempClassLoader);
     }
 
-    public ClassLoader getTempClassLoader() {
-        return springDefaultListableBeanFactory.getTempClassLoader();
+    public boolean isCacheBeanMetadata() {
+        return springDefaultListableBeanFactory.isCacheBeanMetadata();
     }
 
     public void setCacheBeanMetadata(boolean cacheBeanMetadata) {
         springDefaultListableBeanFactory.setCacheBeanMetadata(cacheBeanMetadata);
     }
 
-    public boolean isCacheBeanMetadata() {
-        return springDefaultListableBeanFactory.isCacheBeanMetadata();
+    public BeanExpressionResolver getBeanExpressionResolver() {
+        return springDefaultListableBeanFactory.getBeanExpressionResolver();
     }
 
     public void setBeanExpressionResolver(BeanExpressionResolver resolver) {
         springDefaultListableBeanFactory.setBeanExpressionResolver(resolver);
     }
 
-    public BeanExpressionResolver getBeanExpressionResolver() {
-        return springDefaultListableBeanFactory.getBeanExpressionResolver();
+    public Executor getBootstrapExecutor() {
+        return springDefaultListableBeanFactory.getBootstrapExecutor();
     }
 
     public void setBootstrapExecutor(Executor executor) {
         springDefaultListableBeanFactory.setBootstrapExecutor(executor);
-    }
-
-    public Executor getBootstrapExecutor() {
-        return springDefaultListableBeanFactory.getBootstrapExecutor();
     }
 
     public Object initializeBean(Object existingBean, String beanName) {
@@ -508,6 +504,10 @@ public class DefaultListableBeanFactory implements BeanFactory {
 
     public org.springframework.beans.factory.BeanFactory getParentBeanFactory() {
         return springDefaultListableBeanFactory.getParentBeanFactory();
+    }
+
+    public void setParentBeanFactory(org.springframework.beans.factory.BeanFactory parentBeanFactory) {
+        springDefaultListableBeanFactory.setParentBeanFactory(parentBeanFactory);
     }
 
     public boolean containsLocalBean(String name) {
@@ -780,5 +780,5 @@ public class DefaultListableBeanFactory implements BeanFactory {
     public org.springframework.beans.factory.support.DefaultListableBeanFactory springDefaultListableBeanFactory() {
         return springDefaultListableBeanFactory;
     }
-    
+
 }

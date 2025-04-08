@@ -42,18 +42,13 @@ public class AnnotatedGenericBeanDefinition implements BeanDefinition {
     }
 
     @Override
-    public void setParentName(String parentName) {
-        springAnnotatedGenericBeanDefinition.setParentName(parentName);
-    }
-
-    @Override
     public String getParentName() {
         return springAnnotatedGenericBeanDefinition.getParentName();
     }
 
     @Override
-    public void setBeanClassName(String beanClassName) {
-        springAnnotatedGenericBeanDefinition.setBeanClassName(beanClassName);
+    public void setParentName(String parentName) {
+        springAnnotatedGenericBeanDefinition.setParentName(parentName);
     }
 
     @Override
@@ -62,8 +57,8 @@ public class AnnotatedGenericBeanDefinition implements BeanDefinition {
     }
 
     @Override
-    public void setScope(String scope) {
-        springAnnotatedGenericBeanDefinition.setScope(scope);
+    public void setBeanClassName(String beanClassName) {
+        springAnnotatedGenericBeanDefinition.setBeanClassName(beanClassName);
     }
 
     @Override
@@ -72,8 +67,8 @@ public class AnnotatedGenericBeanDefinition implements BeanDefinition {
     }
 
     @Override
-    public void setLazyInit(boolean lazyInit) {
-        springAnnotatedGenericBeanDefinition.setLazyInit(lazyInit);
+    public void setScope(String scope) {
+        springAnnotatedGenericBeanDefinition.setScope(scope);
     }
 
     @Override
@@ -82,8 +77,8 @@ public class AnnotatedGenericBeanDefinition implements BeanDefinition {
     }
 
     @Override
-    public void setDependsOn(String[] dependsOn) {
-        springAnnotatedGenericBeanDefinition.setDependsOn(dependsOn);
+    public void setLazyInit(boolean lazyInit) {
+        springAnnotatedGenericBeanDefinition.setLazyInit(lazyInit);
     }
 
     @Override
@@ -92,8 +87,8 @@ public class AnnotatedGenericBeanDefinition implements BeanDefinition {
     }
 
     @Override
-    public void setAutowireCandidate(boolean autowireCandidate) {
-        springAnnotatedGenericBeanDefinition.setAutowireCandidate(autowireCandidate);
+    public void setDependsOn(String[] dependsOn) {
+        springAnnotatedGenericBeanDefinition.setDependsOn(dependsOn);
     }
 
     @Override
@@ -102,8 +97,8 @@ public class AnnotatedGenericBeanDefinition implements BeanDefinition {
     }
 
     @Override
-    public void setPrimary(boolean primary) {
-        springAnnotatedGenericBeanDefinition.setPrimary(primary);
+    public void setAutowireCandidate(boolean autowireCandidate) {
+        springAnnotatedGenericBeanDefinition.setAutowireCandidate(autowireCandidate);
     }
 
     @Override
@@ -112,8 +107,8 @@ public class AnnotatedGenericBeanDefinition implements BeanDefinition {
     }
 
     @Override
-    public void setFallback(boolean fallback) {
-        springAnnotatedGenericBeanDefinition.setFallback(fallback);
+    public void setPrimary(boolean primary) {
+        springAnnotatedGenericBeanDefinition.setPrimary(primary);
     }
 
     @Override
@@ -122,8 +117,8 @@ public class AnnotatedGenericBeanDefinition implements BeanDefinition {
     }
 
     @Override
-    public void setFactoryBeanName(String factoryBeanName) {
-        springAnnotatedGenericBeanDefinition.setFactoryBeanName(factoryBeanName);
+    public void setFallback(boolean fallback) {
+        springAnnotatedGenericBeanDefinition.setFallback(fallback);
     }
 
     @Override
@@ -132,13 +127,18 @@ public class AnnotatedGenericBeanDefinition implements BeanDefinition {
     }
 
     @Override
-    public void setFactoryMethodName(String factoryMethodName) {
-        springAnnotatedGenericBeanDefinition.setFactoryMethodName(factoryMethodName);
+    public void setFactoryBeanName(String factoryBeanName) {
+        springAnnotatedGenericBeanDefinition.setFactoryBeanName(factoryBeanName);
     }
 
     @Override
     public String getFactoryMethodName() {
         return springAnnotatedGenericBeanDefinition.getFactoryMethodName();
+    }
+
+    @Override
+    public void setFactoryMethodName(String factoryMethodName) {
+        springAnnotatedGenericBeanDefinition.setFactoryMethodName(factoryMethodName);
     }
 
     @Override
@@ -152,18 +152,13 @@ public class AnnotatedGenericBeanDefinition implements BeanDefinition {
     }
 
     @Override
-    public void setInitMethodName(String initMethodName) {
-        springAnnotatedGenericBeanDefinition.setInitMethodName(initMethodName);
-    }
-
-    @Override
     public String getInitMethodName() {
         return springAnnotatedGenericBeanDefinition.getInitMethodName();
     }
 
     @Override
-    public void setDestroyMethodName(String destroyMethodName) {
-        springAnnotatedGenericBeanDefinition.setDestroyMethodName(destroyMethodName);
+    public void setInitMethodName(String initMethodName) {
+        springAnnotatedGenericBeanDefinition.setInitMethodName(initMethodName);
     }
 
     @Override
@@ -172,8 +167,8 @@ public class AnnotatedGenericBeanDefinition implements BeanDefinition {
     }
 
     @Override
-    public void setRole(int role) {
-        springAnnotatedGenericBeanDefinition.setRole(role);
+    public void setDestroyMethodName(String destroyMethodName) {
+        springAnnotatedGenericBeanDefinition.setDestroyMethodName(destroyMethodName);
     }
 
     @Override
@@ -182,13 +177,18 @@ public class AnnotatedGenericBeanDefinition implements BeanDefinition {
     }
 
     @Override
-    public void setDescription(String description) {
-        springAnnotatedGenericBeanDefinition.setDescription(description);
+    public void setRole(int role) {
+        springAnnotatedGenericBeanDefinition.setRole(role);
     }
 
     @Override
     public String getDescription() {
         return springAnnotatedGenericBeanDefinition.getDescription();
+    }
+
+    @Override
+    public void setDescription(String description) {
+        springAnnotatedGenericBeanDefinition.setDescription(description);
     }
 
     @Override

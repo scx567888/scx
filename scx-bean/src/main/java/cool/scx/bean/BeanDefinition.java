@@ -18,65 +18,65 @@ public interface BeanDefinition {
 
     String[] attributeNames();
 
-    void setParentName(String parentName);
-
     String getParentName();
 
-    void setBeanClassName(String beanClassName);
+    void setParentName(String parentName);
 
     String getBeanClassName();
 
-    void setScope(String scope);
+    void setBeanClassName(String beanClassName);
 
     String getScope();
 
-    void setLazyInit(boolean lazyInit);
+    void setScope(String scope);
 
     boolean isLazyInit();
 
-    void setDependsOn(String[] dependsOn);
+    void setLazyInit(boolean lazyInit);
 
     String[] getDependsOn();
 
-    void setAutowireCandidate(boolean autowireCandidate);
+    void setDependsOn(String[] dependsOn);
 
     boolean isAutowireCandidate();
 
-    void setPrimary(boolean primary);
+    void setAutowireCandidate(boolean autowireCandidate);
 
     boolean isPrimary();
 
-    void setFallback(boolean fallback);
+    void setPrimary(boolean primary);
 
     boolean isFallback();
 
-    void setFactoryBeanName(String factoryBeanName);
+    void setFallback(boolean fallback);
 
     String getFactoryBeanName();
 
-    void setFactoryMethodName(String factoryMethodName);
+    void setFactoryBeanName(String factoryBeanName);
 
     String getFactoryMethodName();
+
+    void setFactoryMethodName(String factoryMethodName);
 
     ConstructorArgumentValues getConstructorArgumentValues();
 
     MutablePropertyValues getPropertyValues();
 
-    void setInitMethodName(String initMethodName);
-
     String getInitMethodName();
 
-    void setDestroyMethodName(String destroyMethodName);
+    void setInitMethodName(String initMethodName);
 
     String getDestroyMethodName();
 
-    void setRole(int role);
+    void setDestroyMethodName(String destroyMethodName);
 
     int getRole();
 
-    void setDescription(String description);
+    void setRole(int role);
 
     String getDescription();
+
+    void setDescription(String description);
 
     ResolvableType getResolvableType();
 
