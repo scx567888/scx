@@ -2,7 +2,6 @@ package cool.scx.http.x.http1.headers;
 
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersImpl;
-import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.x.http1.headers.connection.Connection;
 import cool.scx.http.x.http1.headers.connection.ScxConnection;
 import cool.scx.http.x.http1.headers.expect.ScxExpect;
@@ -46,7 +45,7 @@ public class Http1Headers extends ScxHttpHeadersImpl {
     }
 
     public Http1Headers expect(ScxExpect expect) {
-       return (Http1Headers) set(EXPECT, expect.value());
+        return (Http1Headers) set(EXPECT, expect.value());
     }
 
     public ScxUpgrade upgrade() {
@@ -55,7 +54,7 @@ public class Http1Headers extends ScxHttpHeadersImpl {
     }
 
     public Http1Headers upgrade(ScxUpgrade upgrade) {
-       return (Http1Headers) set(UPGRADE, upgrade.value());
+        return (Http1Headers) set(UPGRADE, upgrade.value());
     }
 
 }

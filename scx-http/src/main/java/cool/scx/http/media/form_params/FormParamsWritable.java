@@ -7,7 +7,7 @@ import cool.scx.http.parameters.ParametersWritable;
 /// @author scx567888
 /// @version 0.0.1
 public interface FormParamsWritable extends FormParams, ParametersWritable<String, String> {
-    
+
     @Override
     FormParamsWritable clear();
 
@@ -19,5 +19,5 @@ public interface FormParamsWritable extends FormParams, ParametersWritable<Strin
 
     @Override
     FormParamsWritable set(String name, String... value);
-    
+
 }
