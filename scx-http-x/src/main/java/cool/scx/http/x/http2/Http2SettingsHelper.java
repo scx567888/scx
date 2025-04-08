@@ -14,7 +14,7 @@ public class Http2SettingsHelper {
         int settingCount = frame.length / 6; // each setting is 6 bytes
         Map<Integer, Integer> values = new HashMap<>();
 
-        for (int i = 0; i < settingCount; i++) {
+        for (int i = 0; i < settingCount; i = i + 1) {
             // 读取标识符
             int id = (frame[i * 6] & 0xFF) << 8 |
                     frame[i * 6 + 1] & 0xFF;

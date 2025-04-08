@@ -188,7 +188,7 @@ public class Http2ServerConnection {
 
         if (padded) {
             int padLength = payload[offset] & 0xFF;
-            offset++;
+            offset = offset + 1;
         }
 
         if (priority) {

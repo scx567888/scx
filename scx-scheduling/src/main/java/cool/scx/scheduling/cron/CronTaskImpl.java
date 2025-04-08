@@ -113,7 +113,7 @@ public class CronTaskImpl implements CronTask {
             @Override
             public Instant nextRunTime(int count) {
                 ZonedDateTime nextTime = lastNext;
-                for (int i = 0; i < count; i++) {
+                for (int i = 0; i < count; i = i + 1) {
                     nextTime = executionTime.nextExecution(nextTime).orElse(null);
                 }
                 return nextTime != null ? nextTime.toInstant() : null;

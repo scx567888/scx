@@ -79,10 +79,10 @@ public class BitArrayTest {
         BitArray bitArray2 = new BitArray(size2);
 
         // Initialize the arrays with alternating bits
-        for (int i = 0; i < size1; i++) {
+        for (int i = 0; i < size1; i = i + 1) {
             bitArray1.set(i, i % 2 == 0);
         }
-        for (int i = 0; i < size2; i++) {
+        for (int i = 0; i < size2; i = i + 1) {
             bitArray2.set(i, i % 2 != 0);
         }
 

@@ -68,7 +68,7 @@ public class HuffmanCodec<T> {
         var current = root;
 
         //从路径遍历 
-        for (int i = 0; i < path.length(); i++) {
+        for (int i = 0; i < path.length(); i = i + 1) {
             if (current == null) {
                 throw new IllegalStateException("Invalid Huffman code path: reached a null node.");
             }

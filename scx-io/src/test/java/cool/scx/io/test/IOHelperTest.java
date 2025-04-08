@@ -19,7 +19,7 @@ public class IOHelperTest {
     public static void testTransferByteBufferFullTransfer() {
         ByteBuffer source = ByteBuffer.allocate(10);
         ByteBuffer dest = ByteBuffer.allocate(10);
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 10; i = i + 1) {
             source.put((byte) i);
         }
         source.flip(); // Prepare source for reading
@@ -30,7 +30,7 @@ public class IOHelperTest {
         assertEquals(0, source.remaining());
         assertEquals(10, dest.position());
         dest.flip(); // Prepare destination for reading
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 10; i = i + 1) {
             assertEquals((byte) i, dest.get());
         }
     }
@@ -39,7 +39,7 @@ public class IOHelperTest {
     public static void testTransferByteBufferPartialTransfer() {
         ByteBuffer source = ByteBuffer.allocate(15);
         ByteBuffer dest = ByteBuffer.allocate(10);
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < 15; i = i + 1) {
             source.put((byte) i);
         }
         source.flip(); // Prepare source for reading
@@ -50,7 +50,7 @@ public class IOHelperTest {
         assertEquals(5, source.remaining());
         assertEquals(10, dest.position());
         dest.flip(); // Prepare destination for reading
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 10; i = i + 1) {
             assertEquals((byte) i, dest.get());
         }
     }

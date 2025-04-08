@@ -42,7 +42,7 @@ public interface ScxURIWritable extends ScxURI {
 
     default ScxURIWritable addQuery(String name, Object... value) {
         var strArray = new String[value.length];
-        for (int i = 0; i < value.length; i++) {
+        for (int i = 0; i < value.length; i = i + 1) {
             strArray[i] = value[i].toString();
         }
         query().add(name, strArray);

@@ -53,7 +53,7 @@ public class PathMatcherImpl implements PathMatcher {
         } else {
             if (other.charAt(len - 1) == '/') {
                 // final slash is not significant, ignore it
-                len--;
+                len = len - 1;
                 if (base.length() != len) {
                     return false;
                 }
