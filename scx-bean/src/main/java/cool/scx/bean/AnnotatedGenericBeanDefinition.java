@@ -3,6 +3,8 @@ package cool.scx.bean;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.factory.config.ConstructorArgumentValues;
 import org.springframework.core.ResolvableType;
+import org.springframework.core.type.AnnotationMetadata;
+import org.springframework.core.type.MethodMetadata;
 
 import java.util.function.Function;
 
@@ -239,4 +241,12 @@ public class AnnotatedGenericBeanDefinition implements BeanDefinition {
         return springAnnotatedGenericBeanDefinition.computeAttribute(name, computeFunction);
     }
 
+    public AnnotationMetadata getMetadata() {
+        return springAnnotatedGenericBeanDefinition.getMetadata();
+    }
+
+    public MethodMetadata getFactoryMethodMetadata() {
+        return springAnnotatedGenericBeanDefinition.getFactoryMethodMetadata();
+    }
+    
 }

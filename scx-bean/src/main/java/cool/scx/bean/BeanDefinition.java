@@ -45,7 +45,7 @@ public interface BeanDefinition {
     void setPrimary(boolean primary);
 
     boolean isPrimary();
-    
+
     void setFallback(boolean fallback);
 
     boolean isFallback();

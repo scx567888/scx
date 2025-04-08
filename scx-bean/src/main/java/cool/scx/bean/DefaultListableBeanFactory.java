@@ -1,11 +1,25 @@
 package cool.scx.bean;
 
-import org.springframework.beans.BeansException;
-import org.springframework.beans.MutablePropertyValues;
+import org.springframework.beans.*;
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.beans.factory.config.ConstructorArgumentValues;
+import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
+import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
+import org.springframework.beans.factory.config.*;
 import org.springframework.core.ResolvableType;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.core.metrics.ApplicationStartup;
+import org.springframework.core.type.AnnotationMetadata;
+import org.springframework.core.type.MethodMetadata;
+import org.springframework.util.StringValueResolver;
 
+import java.beans.PropertyEditor;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.Executor;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 /// 目前内部使用 spring 做实现
@@ -92,12 +106,22 @@ public class DefaultListableBeanFactory implements BeanFactory {
         return springDefaultListableBeanFactory.getAliases(name);
     }
 
-    public void registerBeanDefinition(String beanName, BeanDefinition beanDefinition) {
-        springDefaultListableBeanFactory.registerBeanDefinition(beanName, new org.springframework.beans.factory.config.BeanDefinition() {
-            
+    public void registerBeanDefinition(String beanName, AnnotatedGenericBeanDefinition beanDefinition) {
+        springDefaultListableBeanFactory.registerBeanDefinition(beanName, new AnnotatedBeanDefinition() {
+
+            @Override
+            public AnnotationMetadata getMetadata() {
+                return beanDefinition.getMetadata();
+            }
+
+            @Override
+            public MethodMetadata getFactoryMethodMetadata() {
+                return beanDefinition.getFactoryMethodMetadata();
+            }
+
             @Override
             public void setAttribute(String name, Object value) {
-                beanDefinition.setAttribute(name,value);
+                beanDefinition.setAttribute(name, value);
             }
 
             @Override
@@ -325,13 +349,48 @@ public class DefaultListableBeanFactory implements BeanFactory {
     public String[] getBeanDefinitionNames() {
         return springDefaultListableBeanFactory.getBeanDefinitionNames();
     }
-    
+
     public void preInstantiateSingletons() {
         springDefaultListableBeanFactory.preInstantiateSingletons();
     }
 
-    public void addBeanPostProcessor(BeanPostProcessor beanPostProcessor) {
-        springDefaultListableBeanFactory.addBeanPostProcessor(new org.springframework.beans.factory.config.BeanPostProcessor() {
+    public void addBeanPostProcessor(cool.scx.bean.AutowiredAnnotationBeanPostProcessor beanPostProcessor) {
+        springDefaultListableBeanFactory.addBeanPostProcessor(new org.springframework.beans.factory.config.SmartInstantiationAwareBeanPostProcessor() {
+
+            @Override
+            public Class<?> predictBeanType(Class<?> beanClass, String beanName) throws BeansException {
+                return beanPostProcessor.predictBeanType(beanClass, beanName);
+            }
+
+            @Override
+            public Class<?> determineBeanType(Class<?> beanClass, String beanName) throws BeansException {
+                return beanPostProcessor.determineBeanType(beanClass, beanName);
+            }
+
+            @Override
+            public Constructor<?>[] determineCandidateConstructors(Class<?> beanClass, String beanName) throws BeansException {
+                return beanPostProcessor.determineCandidateConstructors(beanClass, beanName);
+            }
+
+            @Override
+            public Object getEarlyBeanReference(Object bean, String beanName) throws BeansException {
+                return beanPostProcessor.getEarlyBeanReference(bean, beanName);
+            }
+
+            @Override
+            public Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) throws BeansException {
+                return beanPostProcessor.postProcessBeforeInstantiation(beanClass, beanName);
+            }
+
+            @Override
+            public boolean postProcessAfterInstantiation(Object bean, String beanName) throws BeansException {
+                return beanPostProcessor.postProcessAfterInstantiation(bean, beanName);
+            }
+
+            @Override
+            public PropertyValues postProcessProperties(PropertyValues pvs, Object bean, String beanName) throws BeansException {
+                return beanPostProcessor.postProcessProperties(pvs, bean, beanName);
+            }
 
             @Override
             public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
@@ -345,9 +404,381 @@ public class DefaultListableBeanFactory implements BeanFactory {
 
         });
     }
-    
+
     public void setAllowCircularReferences(boolean aBoolean) {
         springDefaultListableBeanFactory.setAllowCircularReferences(aBoolean);
+    }
+
+    public void registerSingleton(String beanName, Object singletonObject) {
+        springDefaultListableBeanFactory.registerSingleton(beanName, singletonObject);
+    }
+
+    public void addSingletonCallback(String beanName, Consumer<Object> singletonConsumer) {
+        springDefaultListableBeanFactory.addSingletonCallback(beanName, singletonConsumer);
+    }
+
+    public Object getSingleton(String beanName) {
+        return springDefaultListableBeanFactory.getSingleton(beanName);
+    }
+
+    public boolean containsSingleton(String beanName) {
+        return springDefaultListableBeanFactory.containsSingleton(beanName);
+    }
+
+    public String[] getSingletonNames() {
+        return springDefaultListableBeanFactory.getSingletonNames();
+    }
+
+    public int getSingletonCount() {
+        return springDefaultListableBeanFactory.getSingletonCount();
+    }
+
+    public Object getSingletonMutex() {
+        return springDefaultListableBeanFactory.getSingletonMutex();
+    }
+
+    public void setParentBeanFactory(org.springframework.beans.factory.BeanFactory parentBeanFactory) {
+        springDefaultListableBeanFactory.setParentBeanFactory(parentBeanFactory);
+    }
+
+    public void setBeanClassLoader(ClassLoader beanClassLoader) {
+        springDefaultListableBeanFactory.setBeanClassLoader(beanClassLoader);
+    }
+
+    public ClassLoader getBeanClassLoader() {
+        return springDefaultListableBeanFactory.getBeanClassLoader();
+    }
+
+    public void setTempClassLoader(ClassLoader tempClassLoader) {
+        springDefaultListableBeanFactory.setTempClassLoader(tempClassLoader);
+    }
+
+    public ClassLoader getTempClassLoader() {
+        return springDefaultListableBeanFactory.getTempClassLoader();
+    }
+
+    public void setCacheBeanMetadata(boolean cacheBeanMetadata) {
+        springDefaultListableBeanFactory.setCacheBeanMetadata(cacheBeanMetadata);
+    }
+
+    public boolean isCacheBeanMetadata() {
+        return springDefaultListableBeanFactory.isCacheBeanMetadata();
+    }
+
+    public void setBeanExpressionResolver(BeanExpressionResolver resolver) {
+        springDefaultListableBeanFactory.setBeanExpressionResolver(resolver);
+    }
+
+    public BeanExpressionResolver getBeanExpressionResolver() {
+        return springDefaultListableBeanFactory.getBeanExpressionResolver();
+    }
+
+    public void setBootstrapExecutor(Executor executor) {
+        springDefaultListableBeanFactory.setBootstrapExecutor(executor);
+    }
+
+    public Executor getBootstrapExecutor() {
+        return springDefaultListableBeanFactory.getBootstrapExecutor();
+    }
+
+    public Object initializeBean(Object existingBean, String beanName) {
+        return springDefaultListableBeanFactory.initializeBean(existingBean, beanName);
+    }
+
+    public String[] getBeanNamesForType(Class<?> type, boolean includeNonSingletons, boolean allowEagerInit) {
+        return springDefaultListableBeanFactory.getBeanNamesForType(type, includeNonSingletons, allowEagerInit);
+    }
+
+    public <T> Map<String, T> getBeansOfType(Class<T> type) {
+        return springDefaultListableBeanFactory.getBeansOfType(type);
+
+    }
+
+    public <T> Map<String, T> getBeansOfType(Class<T> type, boolean includeNonSingletons, boolean allowEagerInit) {
+        return springDefaultListableBeanFactory.getBeansOfType(type, includeNonSingletons, allowEagerInit);
+    }
+
+    public String[] getBeanNamesForAnnotation(Class<? extends Annotation> annotationType) {
+        return springDefaultListableBeanFactory.getBeanNamesForAnnotation(annotationType);
+    }
+
+    public Map<String, Object> getBeansWithAnnotation(Class<? extends Annotation> annotationType) {
+        return springDefaultListableBeanFactory.getBeansWithAnnotation(annotationType);
+    }
+
+    public org.springframework.beans.factory.BeanFactory getParentBeanFactory() {
+        return springDefaultListableBeanFactory.getParentBeanFactory();
+    }
+
+    public boolean containsLocalBean(String name) {
+        return springDefaultListableBeanFactory.containsLocalBean(name);
+    }
+
+    public void registerResolvableDependency(Class<?> dependencyType, Object autowiredValue) {
+
+        springDefaultListableBeanFactory.registerResolvableDependency(dependencyType, autowiredValue);
+    }
+
+    public org.springframework.beans.factory.config.BeanDefinition getBeanDefinition(String beanName) {
+
+        return springDefaultListableBeanFactory.getBeanDefinition(beanName);
+    }
+
+    public Iterator<String> getBeanNamesIterator() {
+        return springDefaultListableBeanFactory.getBeanNamesIterator();
+
+    }
+
+    public void clearMetadataCache() {
+
+        springDefaultListableBeanFactory.clearMetadataCache();
+
+    }
+
+    public void freezeConfiguration() {
+        springDefaultListableBeanFactory.freezeConfiguration();
+
+    }
+
+    public boolean isConfigurationFrozen() {
+        return springDefaultListableBeanFactory.isConfigurationFrozen();
+    }
+
+    public boolean isAutowireCandidate(String beanName, DependencyDescriptor descriptor) {
+        return springDefaultListableBeanFactory.isAutowireCandidate(beanName, descriptor);
+    }
+
+    public void ignoreDependencyInterface(Class<?> ifc) {
+        springDefaultListableBeanFactory.ignoreDependencyInterface(ifc);
+    }
+
+    public void ignoreDependencyType(Class<?> type) {
+        springDefaultListableBeanFactory.ignoreDependencyType(type);
+    }
+
+    public <A extends Annotation> Set<A> findAllAnnotationsOnBean(String beanName, Class<A> annotationType, boolean allowFactoryBeanInit) {
+
+        return springDefaultListableBeanFactory.findAllAnnotationsOnBean(beanName, annotationType, allowFactoryBeanInit);
+    }
+
+    public <A extends Annotation> A findAnnotationOnBean(String beanName, Class<A> annotationType, boolean allowFactoryBeanInit) {
+        return springDefaultListableBeanFactory.findAnnotationOnBean(beanName, annotationType, allowFactoryBeanInit);
+    }
+
+    public <A extends Annotation> A findAnnotationOnBean(String beanName, Class<A> annotationType) {
+        return springDefaultListableBeanFactory.findAnnotationOnBean(beanName, annotationType);
+    }
+
+    public <T> ObjectProvider<T> getBeanProvider(ResolvableType requiredType, boolean allowEagerInit) {
+        return springDefaultListableBeanFactory.getBeanProvider(requiredType, allowEagerInit);
+    }
+
+    public <T> ObjectProvider<T> getBeanProvider(Class<T> requiredType, boolean allowEagerInit) {
+        return springDefaultListableBeanFactory.getBeanProvider(requiredType, allowEagerInit);
+    }
+
+    public String[] getBeanNamesForType(ResolvableType type) {
+        return springDefaultListableBeanFactory.getBeanNamesForType(type);
+    }
+
+    public int getBeanDefinitionCount() {
+        return springDefaultListableBeanFactory.getBeanDefinitionCount();
+    }
+
+    public boolean containsBeanDefinition(String beanName) {
+        return springDefaultListableBeanFactory.containsBeanDefinition(beanName);
+    }
+
+    public Object resolveDependency(DependencyDescriptor descriptor, String requestingBeanName, Set<String> autowiredBeanNames, TypeConverter typeConverter) {
+        return springDefaultListableBeanFactory.resolveDependency(descriptor, requestingBeanName, autowiredBeanNames, typeConverter);
+    }
+
+    public Object resolveDependency(DependencyDescriptor descriptor, String requestingBeanName) {
+        return springDefaultListableBeanFactory.resolveDependency(descriptor, requestingBeanName);
+    }
+
+    public Object resolveBeanByName(String name, DependencyDescriptor descriptor) {
+        return springDefaultListableBeanFactory.getBean(name, descriptor);
+    }
+
+    public <T> NamedBeanHolder<T> resolveNamedBean(Class<T> requiredType) {
+        return springDefaultListableBeanFactory.resolveNamedBean(requiredType);
+    }
+
+    public void destroyBean(Object existingBean) {
+        springDefaultListableBeanFactory.destroyBean(existingBean);
+    }
+
+    public Object applyBeanPostProcessorsAfterInitialization(Object existingBean, String beanName) {
+        return springDefaultListableBeanFactory.applyBeanPostProcessorsAfterInitialization(existingBean, beanName);
+    }
+
+    public Object applyBeanPostProcessorsBeforeInitialization(Object existingBean, String beanName) {
+        return springDefaultListableBeanFactory.applyBeanPostProcessorsAfterInitialization(existingBean, beanName);
+    }
+
+    public void applyBeanPropertyValues(Object existingBean, String beanName) {
+        springDefaultListableBeanFactory.applyBeanPropertyValues(existingBean, beanName);
+    }
+
+    public void autowireBeanProperties(Object existingBean, int autowireMode, boolean dependencyCheck) {
+        springDefaultListableBeanFactory.autowireBeanProperties(existingBean, autowireMode, dependencyCheck);
+    }
+
+    public Object autowire(Class<?> beanClass, int autowireMode, boolean dependencyCheck) {
+        return springDefaultListableBeanFactory.autowire(beanClass, autowireMode, dependencyCheck);
+    }
+
+    public Object createBean(Class<?> beanClass, int autowireMode, boolean dependencyCheck) {
+        return springDefaultListableBeanFactory.createBean(beanClass, autowireMode, dependencyCheck);
+    }
+
+    public Object configureBean(Object existingBean, String beanName) {
+        return springDefaultListableBeanFactory.configureBean(existingBean, beanName);
+    }
+
+    public void autowireBean(Object existingBean) {
+        springDefaultListableBeanFactory.autowireBean(existingBean);
+    }
+
+    public <T> T createBean(Class<T> beanClass) {
+        return springDefaultListableBeanFactory.createBean(beanClass);
+    }
+
+    public void destroySingletons() {
+        springDefaultListableBeanFactory.destroySingletons();
+    }
+
+    public void destroyScopedBean(String beanName) {
+        springDefaultListableBeanFactory.destroyScopedBean(beanName);
+    }
+
+    public void destroyBean(String beanName, Object beanInstance) {
+        springDefaultListableBeanFactory.destroyBean(beanName, beanInstance);
+    }
+
+    public String[] getDependenciesForBean(String beanName) {
+        return springDefaultListableBeanFactory.getDependenciesForBean(beanName);
+    }
+
+    public String[] getDependentBeans(String beanName) {
+        return springDefaultListableBeanFactory.getDependentBeans(beanName);
+    }
+
+    public void registerDependentBean(String beanName, String dependentBeanName) {
+        springDefaultListableBeanFactory.registerDependentBean(beanName, dependentBeanName);
+    }
+
+    public boolean isCurrentlyInCreation(String beanName) {
+        return springDefaultListableBeanFactory.isCurrentlyInCreation(beanName);
+    }
+
+    public void setCurrentlyInCreation(String beanName, boolean inCreation) {
+        springDefaultListableBeanFactory.setCurrentlyInCreation(beanName, inCreation);
+    }
+
+    public boolean isFactoryBean(String name) {
+        return springDefaultListableBeanFactory.isFactoryBean(name);
+    }
+
+    public org.springframework.beans.factory.config.BeanDefinition getMergedBeanDefinition(String beanName) {
+        return springDefaultListableBeanFactory.getMergedBeanDefinition(beanName);
+    }
+
+    public void resolveAliases(StringValueResolver valueResolver) {
+        springDefaultListableBeanFactory.resolveAliases(valueResolver);
+    }
+
+    public void registerAlias(String beanName, String alias) {
+        springDefaultListableBeanFactory.registerAlias(beanName, alias);
+    }
+
+    public void copyConfigurationFrom(ConfigurableBeanFactory otherFactory) {
+        springDefaultListableBeanFactory.copyConfigurationFrom(otherFactory);
+    }
+
+    public ApplicationStartup getApplicationStartup() {
+        return springDefaultListableBeanFactory.getApplicationStartup();
+    }
+
+    public void setApplicationStartup(ApplicationStartup applicationStartup) {
+        springDefaultListableBeanFactory.setApplicationStartup(applicationStartup);
+    }
+
+    public Scope getRegisteredScope(String scopeName) {
+        return springDefaultListableBeanFactory.getRegisteredScope(scopeName);
+    }
+
+    public String[] getRegisteredScopeNames() {
+        return springDefaultListableBeanFactory.getRegisteredScopeNames();
+    }
+
+    public void registerScope(String scopeName, Scope scope) {
+        springDefaultListableBeanFactory.registerScope(scopeName, scope);
+    }
+
+    public int getBeanPostProcessorCount() {
+        return springDefaultListableBeanFactory.getBeanPostProcessorCount();
+    }
+
+    public String resolveEmbeddedValue(String value) {
+        return springDefaultListableBeanFactory.resolveEmbeddedValue(value);
+    }
+
+    public boolean hasEmbeddedValueResolver() {
+        return springDefaultListableBeanFactory.hasEmbeddedValueResolver();
+    }
+
+    public void addEmbeddedValueResolver(StringValueResolver valueResolver) {
+        springDefaultListableBeanFactory.addEmbeddedValueResolver(valueResolver);
+    }
+
+    public TypeConverter getTypeConverter() {
+        return springDefaultListableBeanFactory.getTypeConverter();
+    }
+
+    public void setTypeConverter(TypeConverter typeConverter) {
+        springDefaultListableBeanFactory.setTypeConverter(typeConverter);
+    }
+
+    public void copyRegisteredEditorsTo(PropertyEditorRegistry registry) {
+        springDefaultListableBeanFactory.copyRegisteredEditorsTo(registry);
+    }
+
+    public void registerCustomEditor(Class<?> requiredType, Class<? extends PropertyEditor> propertyEditorClass) {
+        springDefaultListableBeanFactory.registerCustomEditor(requiredType, propertyEditorClass);
+    }
+
+    public void addPropertyEditorRegistrar(PropertyEditorRegistrar registrar) {
+        springDefaultListableBeanFactory.addPropertyEditorRegistrar(registrar);
+    }
+
+    public ConversionService getConversionService() {
+        return springDefaultListableBeanFactory.getConversionService();
+    }
+
+    public void setConversionService(ConversionService conversionService) {
+        springDefaultListableBeanFactory.setConversionService(conversionService);
+    }
+
+    public String[] getBeanNamesForType(Class<?> type) {
+        return springDefaultListableBeanFactory.getBeanNamesForType(type);
+    }
+
+    public String[] getBeanNamesForType(ResolvableType type, boolean includeNonSingletons, boolean allowEagerInit) {
+        return springDefaultListableBeanFactory.getBeanNamesForType(type, includeNonSingletons, allowEagerInit);
+    }
+
+    public void registerBeanDefinition(String name, org.springframework.beans.factory.annotation.AnnotatedGenericBeanDefinition annotatedGenericBeanDefinition) {
+        springDefaultListableBeanFactory.registerBeanDefinition(name, annotatedGenericBeanDefinition);
+    }
+
+    public void addBeanPostProcessor(AutowiredAnnotationBeanPostProcessor beanPostProcessor) {
+        springDefaultListableBeanFactory.addBeanPostProcessor(beanPostProcessor);
+    }
+
+    public org.springframework.beans.factory.support.DefaultListableBeanFactory springDefaultListableBeanFactory() {
+        return springDefaultListableBeanFactory;
     }
     
 }
