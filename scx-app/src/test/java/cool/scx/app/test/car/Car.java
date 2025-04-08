@@ -4,7 +4,7 @@ import cool.scx.app.base.BaseModel;
 import cool.scx.data.jdbc.annotation.Column;
 import cool.scx.data.jdbc.annotation.Table;
 
-@Table(tablePrefix = "test")
+@Table
 public class Car extends BaseModel {
 
     @Column(unique = true)

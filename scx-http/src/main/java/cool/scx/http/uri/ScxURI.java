@@ -6,27 +6,62 @@ import java.net.URI;
 
 import static cool.scx.http.uri.URIEncoder.encodeURI;
 
-/// ScxURI
+/// ScxURI 是对 URI 的抽象 ，提供了更直观、灵活的操作方式。
+///
+/// 该接口强调 "原始未编码" 值的使用, 所有 URI 组成部分（如 scheme、host、path、query 等）在内部均以 **未编码的原始字符串** 形式存储
 ///
 /// @author scx567888
 /// @version 0.0.1
 public interface ScxURI {
 
+    /// 创建一个空的 ScxURI 实例
     static ScxURIWritable of() {
         return new ScxURIImpl();
     }
 
-    /// 根据 字符串进行解码
-    static ScxURIWritable of(String uri) {
-        // URI.create 只能处理编码后的标准格式 在此处为了兼容用户传入的特殊字符 我们先编码一次
-        return of(URI.create(encodeURI(uri)));
+    /// 从一个原始的 URI 字符串创建 URI 实例。
+    ///
+    /// 此方法适用于传入的是未经 URI 编码的原始字符串（如直接从用户输入中获取），
+    /// 内部会自动对其进行 URI 编码后再构造 ScxURI 实例。
+    ///
+    ///
+    /// 示例：
+    /// ```java
+    /// ScxURI.of("http://xxxx.com/路径?a=空 格");
+    /// // 内部会先编码为 http://xxxx.com/%E8%B7%AF%E5%BE%84?a=%E7%A9%BA+%E6%A0%BC
+    ///```
+    ///
+    /// @param rawStr 原始未编码的 URI 字符串
+    /// @return 编码后解析得到的 ScxURI
+    static ScxURIWritable of(String rawStr) {
+        return ofEncoded(encodeURI(rawStr));
     }
 
+    /// 从一个已编码的标准 URI 字符串创建 URI 实例。
+    ///
+    /// 此方法假设传入的字符串已经是合法的 URI 编码格式，内部不会再次进行编码，直接解析为 ScxURI
+    ///
+    ///
+    /// 示例：
+    /// ```java
+    /// ScxURI.ofEncoded("https://xxxx.com/%E8%B7%AF%E5%BE%84?a=%E7%A9%BA+%E6%A0%BC");
+    ///```
+    ///
+    /// @param encodedStr 已编码的 URI 字符串
+    /// @return 解析得到的 ScxURI
+    static ScxURIWritable ofEncoded(String encodedStr) {
+        return of(URI.create(encodedStr));
+    }
+
+    /// 从一个标准 URI 对象创建 URI 实例。
+    ///
+    /// @param u 标准 URI 对象
+    /// @return 构造得到的 ScxURI
     static ScxURIWritable of(URI u) {
         return new ScxURIImpl()
                 .scheme(u.getScheme())
                 .host(u.getHost())
-                .port(u.getPort())
+                .port(u.getPort() == -1 ? null : u.getPort())
                 .path(u.getPath())
                 .query(u.getQuery())
                 .fragment(u.getFragment());
@@ -46,7 +81,7 @@ public interface ScxURI {
 
     String host();
 
-    int port();
+    Integer port();
 
     String path();
 
@@ -58,7 +93,7 @@ public interface ScxURI {
         return query().get(name);
     }
 
-    /// 编码 (默认不进行转换)
+    /// 编码 (默认不进行 URI 编码)
     ///
     /// @return 编码结果
     default String encode() {
@@ -73,6 +108,7 @@ public interface ScxURI {
         return ScxURIHelper.encodeScxURI(this, uriEncoding);
     }
 
+    /// 转换为 URI
     default URI toURI() {
         // 此处同样因为 URI.create 只能处理编码后的标准格式 所以先编码
         return URI.create(encode(true));

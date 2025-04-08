@@ -19,7 +19,7 @@ class XHttpClientHelper {
         var host = uri.host();
         var port = uri.port();
         var scheme = uri.scheme().toLowerCase();
-        if (port == -1) {
+        if (port == null) {
             port = switch (scheme) {
                 case "http", "ws" -> 80;
                 case "https", "wss" -> 443;

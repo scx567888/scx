@@ -1,6 +1,5 @@
 package cool.scx.data.jdbc;
 
-import cool.scx.common.constant.AnnotationValueHelper;
 import cool.scx.common.multi_map.MultiMap;
 import cool.scx.common.util.CaseUtils;
 import cool.scx.data.jdbc.annotation.NoColumn;
@@ -13,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import static cool.scx.common.constant.AnnotationValueHelper.getRealValue;
 import static cool.scx.reflect.AccessModifier.PUBLIC;
 import static cool.scx.reflect.ClassType.RECORD;
 
@@ -46,19 +46,14 @@ public class AnnotationConfigTable implements Table {
         var defaultTableName = CaseUtils.toSnake(clazz.getSimpleName());
 
         if (table != null) {
-            var _tableName = AnnotationValueHelper.getRealValue(table.tableName());
-            var _tablePrefix = AnnotationValueHelper.getRealValue(table.tablePrefix());
+            var _tableName = getRealValue(table.value());
 
             if (_tableName != null) {
                 return _tableName;
             }
-
-            if (_tablePrefix != null) {
-                return _tablePrefix + "_" + defaultTableName;
-            }
         }
 
-        return "scx_" + defaultTableName;
+        return defaultTableName;
     }
 
     private static AnnotationConfigColumn[] initAllColumns(Class<?> clazz) {

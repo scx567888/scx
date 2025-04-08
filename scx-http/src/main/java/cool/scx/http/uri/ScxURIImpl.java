@@ -7,11 +7,11 @@ import cool.scx.http.parameters.ParametersWritable;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class ScxURIImpl implements ScxURIWritable {
+class ScxURIImpl implements ScxURIWritable {
 
     private String scheme;
     private String host;
-    private int port;
+    private Integer port;
     private String path;
     private ParametersWritable<String, String> query;
     private String fragment;
@@ -19,7 +19,7 @@ public class ScxURIImpl implements ScxURIWritable {
     public ScxURIImpl() {
         this.scheme = null;
         this.host = null;
-        this.port = -1;
+        this.port = null;
         this.path = null;
         this.query = Parameters.of();
         this.fragment = null;
@@ -38,7 +38,7 @@ public class ScxURIImpl implements ScxURIWritable {
     }
 
     @Override
-    public ScxURIWritable port(int port) {
+    public ScxURIWritable port(Integer port) {
         this.port = port;
         return this;
     }
@@ -72,7 +72,7 @@ public class ScxURIImpl implements ScxURIWritable {
     }
 
     @Override
-    public int port() {
+    public Integer port() {
         return port;
     }
 

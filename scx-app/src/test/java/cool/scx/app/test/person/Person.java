@@ -3,7 +3,7 @@ package cool.scx.app.test.person;
 import cool.scx.app.base.BaseModel;
 import cool.scx.data.jdbc.annotation.Table;
 
-@Table(tablePrefix = "scx")
+@Table
 public class Person extends BaseModel {
     /// 关联的 汽车 ID
     public Long carID;
