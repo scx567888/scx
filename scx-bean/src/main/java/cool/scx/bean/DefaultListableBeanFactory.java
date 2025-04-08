@@ -22,7 +22,7 @@ import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-/// 目前内部使用 spring 做实现
+/// 暂时使用 spring 做实现
 public class DefaultListableBeanFactory implements BeanFactory {
 
     private final org.springframework.beans.factory.support.DefaultListableBeanFactory springDefaultListableBeanFactory;
@@ -767,18 +767,6 @@ public class DefaultListableBeanFactory implements BeanFactory {
 
     public String[] getBeanNamesForType(ResolvableType type, boolean includeNonSingletons, boolean allowEagerInit) {
         return springDefaultListableBeanFactory.getBeanNamesForType(type, includeNonSingletons, allowEagerInit);
-    }
-
-    public void registerBeanDefinition(String name, org.springframework.beans.factory.annotation.AnnotatedGenericBeanDefinition annotatedGenericBeanDefinition) {
-        springDefaultListableBeanFactory.registerBeanDefinition(name, annotatedGenericBeanDefinition);
-    }
-
-    public void addBeanPostProcessor(AutowiredAnnotationBeanPostProcessor beanPostProcessor) {
-        springDefaultListableBeanFactory.addBeanPostProcessor(beanPostProcessor);
-    }
-
-    public org.springframework.beans.factory.support.DefaultListableBeanFactory springDefaultListableBeanFactory() {
-        return springDefaultListableBeanFactory;
     }
 
 }
