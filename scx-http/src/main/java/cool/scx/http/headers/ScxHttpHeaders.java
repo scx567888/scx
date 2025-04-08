@@ -29,6 +29,14 @@ public interface ScxHttpHeaders extends Parameters<ScxHttpHeaderName, String> {
         return new ScxHttpHeadersImpl(oldHeaders);
     }
 
+    /// Http1 写法的 header
+    ///
+    /// @param headersStr s
+    /// @return s
+    static ScxHttpHeadersWritable of(String headersStr) {
+        return ScxHttpHeadersHelper.parseHeaders(new ScxHttpHeadersImpl(), headersStr);
+    }
+
     default String get(String name) {
         return get(ScxHttpHeaderName.of(name));
     }

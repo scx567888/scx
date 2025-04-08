@@ -13,16 +13,18 @@ public final class ScxHttpHeadersHelper {
         // 使用 indexOf("\r\n") 查找每行的结束位置
         while (start < length) {
             // 查找 \r\n 的位置
-            int end = headersStr.indexOf("\r\n", start);
+            var end = headersStr.indexOf("\r\n", start);
 
             // 如果没有找到 \r\n 说明到达字符串末尾
             if (end == -1) {
-                break;
+                end = length;
             }
 
             // 进行 key:value 的解析
-            int colonIndex = headersStr.indexOf(':', start, end);
+            var colonIndex = headersStr.indexOf(':', start, end);
+            //没有 : 直接跳过
             if (colonIndex != -1) {
+                //这里的 trim 有点性能问题
                 var key = headersStr.substring(start, colonIndex).trim();
                 var value = headersStr.substring(colonIndex + 1, end).trim();
                 headers.add(key, value);
