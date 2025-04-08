@@ -3,7 +3,6 @@ package cool.scx.bean;
 import org.springframework.beans.*;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
-import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
 import org.springframework.beans.factory.config.*;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.convert.ConversionService;

@@ -248,5 +248,5 @@ public class AnnotatedGenericBeanDefinition implements BeanDefinition {
     public MethodMetadata getFactoryMethodMetadata() {
         return springAnnotatedGenericBeanDefinition.getFactoryMethodMetadata();
     }
-    
+
 }
