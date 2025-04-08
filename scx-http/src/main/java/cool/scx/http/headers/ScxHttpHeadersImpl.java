@@ -16,4 +16,9 @@ public class ScxHttpHeadersImpl extends ParametersImpl<ScxHttpHeaderName, String
 
     }
 
+    @Override
+    public String toString() {
+        return encode();
+    }
+
 }

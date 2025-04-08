@@ -8,7 +8,6 @@ import cool.scx.http.media_type.ScxMediaType;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import static cool.scx.http.headers.ScxHttpHeadersHelper.encodeHeaders;
 import static cool.scx.http.media_type.MediaType.MULTIPART_FORM_DATA;
 
 /// MultiPartWriter

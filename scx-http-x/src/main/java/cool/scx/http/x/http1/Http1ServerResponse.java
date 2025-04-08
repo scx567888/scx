@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
 
-import static cool.scx.http.headers.ScxHttpHeadersHelper.encodeHeaders;
 import static cool.scx.http.status.ScxHttpStatusHelper.getReasonPhrase;
 import static cool.scx.http.x.http1.Http1Helper.checkResponseHasBody;
 import static cool.scx.http.x.http1.headers.connection.Connection.CLOSE;
@@ -136,7 +135,7 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
             }
         }
 
-        var responseHeaderStr = encodeHeaders(headers);
+        var responseHeaderStr = headers.encode();
 
         //先写入头部内容
         try {
