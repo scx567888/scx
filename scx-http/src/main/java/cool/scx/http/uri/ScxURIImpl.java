@@ -7,7 +7,7 @@ import cool.scx.http.parameters.ParametersWritable;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class ScxURIImpl implements ScxURIWritable {
+class ScxURIImpl implements ScxURIWritable {
 
     private String scheme;
     private String host;

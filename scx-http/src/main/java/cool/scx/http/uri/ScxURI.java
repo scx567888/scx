@@ -6,7 +6,9 @@ import java.net.URI;
 
 import static cool.scx.http.uri.URIEncoder.encodeURI;
 
-/// ScxURI
+/// ScxURI 是对 URI 的抽象 ，提供了更直观、灵活的操作方式。
+///
+/// 该接口强调 "原始未编码" 值的使用, 所有 URI 组成部分（如 scheme、host、path、query 等）在内部均以 **未编码的原始字符串** 形式存储
 ///
 /// @author scx567888
 /// @version 0.0.1
@@ -106,6 +108,7 @@ public interface ScxURI {
         return ScxURIHelper.encodeScxURI(this, uriEncoding);
     }
 
+    /// 转换为 URI
     default URI toURI() {
         // 此处同样因为 URI.create 只能处理编码后的标准格式 所以先编码
         return URI.create(encode(true));
