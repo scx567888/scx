@@ -46,7 +46,7 @@ public class MultiPartWriter implements MediaWriter {
             for (var multiPartPart : multiPart) {
                 //发送头
                 outputStream.write(h);
-                var headers = encodeHeaders(multiPartPart.headers());
+                var headers = multiPartPart.headers().encode();
                 //写入头
                 outputStream.write(headers.getBytes());
                 //写入换行符
