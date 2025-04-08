@@ -30,6 +30,7 @@ public interface ScxHttpHeaders extends Parameters<ScxHttpHeaderName, String> {
     }
 
     /// Http1 写法的 header
+    /// 在某些情况下很好用
     ///
     /// @param headersStr s
     /// @return s
