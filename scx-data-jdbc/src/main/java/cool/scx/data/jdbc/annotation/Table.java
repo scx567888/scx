@@ -15,7 +15,7 @@ import static cool.scx.common.constant.AnnotationValue.NULL;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Table {
 
-    /// 表名称 
+    /// 表名称
     /// 不指定时为类名转下划线如 UserInfo -> user_info
     ///
     /// @return 表全限定名称
