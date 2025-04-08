@@ -95,4 +95,9 @@ public enum HttpStatus implements ScxHttpStatus {
         return code;
     }
 
+    @Override
+    public String toString() {
+        return code + "";
+    }
+
 }
