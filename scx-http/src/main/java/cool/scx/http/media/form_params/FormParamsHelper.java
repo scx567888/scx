@@ -10,7 +10,20 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class FormParamsHelper {
+public final class FormParamsHelper {
+
+    public static <T extends FormParamsWritable> T decodeFormParams(T formParams, String str) {
+        var pairs = str.split("&");
+        for (var pair : pairs) {
+            var keyValue = pair.split("=", 2);
+            if (keyValue.length == 2) {
+                var key = decode(keyValue[0], UTF_8);
+                var value = decode(keyValue[1], UTF_8);
+                formParams.add(key, value);
+            }
+        }
+        return formParams;
+    }
 
     public static String encodeFormParams(FormParams formParams) {
         var l = new ArrayList<String>();
@@ -24,20 +37,6 @@ public class FormParamsHelper {
             }
         }
         return String.join("&", l);
-    }
-
-    public static FormParams decodeFormParams(String str) {
-        var formParams = new FormParams();
-        var pairs = str.split("&");
-        for (var pair : pairs) {
-            var keyValue = pair.split("=", 2);
-            if (keyValue.length == 2) {
-                var key = decode(keyValue[0], UTF_8);
-                var value = decode(keyValue[1], UTF_8);
-                formParams.add(key, value);
-            }
-        }
-        return formParams;
     }
 
 }

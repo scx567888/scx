@@ -16,39 +16,44 @@ import static cool.scx.http.headers.HttpFieldName.*;
 /// @version 0.0.1
 public interface ScxHttpHeadersWritable extends ScxHttpHeaders, ParametersWritable<ScxHttpHeaderName, String> {
 
+    @Override
+    ScxHttpHeadersWritable set(ScxHttpHeaderName name, String... value);
+
+    @Override
+    ScxHttpHeadersWritable add(ScxHttpHeaderName name, String... value);
+
+    @Override
+    ScxHttpHeadersWritable remove(ScxHttpHeaderName name);
+
+    @Override
+    ScxHttpHeadersWritable clear();
+
     default ScxHttpHeadersWritable set(String name, String... value) {
-        set(ScxHttpHeaderName.of(name), value);
-        return this;
+        return set(ScxHttpHeaderName.of(name), value);
     }
 
     default ScxHttpHeadersWritable add(String name, String... value) {
-        add(ScxHttpHeaderName.of(name), value);
-        return this;
+        return add(ScxHttpHeaderName.of(name), value);
     }
 
     default ScxHttpHeadersWritable remove(String name) {
-        remove(ScxHttpHeaderName.of(name));
-        return this;
+        return remove(ScxHttpHeaderName.of(name));
     }
 
     default ScxHttpHeadersWritable cookies(Cookies cookies) {
-        set(COOKIE, cookies.encodeCookie());
-        return this;
+        return set(COOKIE, cookies.encodeCookie());
     }
 
     default ScxHttpHeadersWritable setCookies(Cookies cookies) {
-        set(SET_COOKIE, cookies.encodeSetCookie());
-        return this;
+        return set(SET_COOKIE, cookies.encodeSetCookie());
     }
 
     default ScxHttpHeadersWritable contentType(ScxMediaType mediaType) {
-        set(CONTENT_TYPE, mediaType.encode());
-        return this;
+        return set(CONTENT_TYPE, mediaType.encode());
     }
 
     default ScxHttpHeadersWritable contentDisposition(ContentDisposition contentDisposition) {
-        set(CONTENT_DISPOSITION, contentDisposition.encode());
-        return this;
+        return set(CONTENT_DISPOSITION, contentDisposition.encode());
     }
 
     default ScxHttpHeadersWritable addCookie(Cookie... cookie) {
@@ -80,8 +85,7 @@ public interface ScxHttpHeadersWritable extends ScxHttpHeaders, ParametersWritab
     }
 
     default ScxHttpHeadersWritable contentLength(long contentLength) {
-        set(CONTENT_LENGTH, String.valueOf(contentLength));
-        return this;
+        return set(CONTENT_LENGTH, String.valueOf(contentLength));
     }
 
 }

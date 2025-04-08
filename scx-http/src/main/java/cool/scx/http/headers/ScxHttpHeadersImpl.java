@@ -17,6 +17,26 @@ public class ScxHttpHeadersImpl extends ParametersImpl<ScxHttpHeaderName, String
     }
 
     @Override
+    public ScxHttpHeadersImpl set(ScxHttpHeaderName name, String... value) {
+        return (ScxHttpHeadersImpl) super.set(name, value);
+    }
+
+    @Override
+    public ScxHttpHeadersImpl add(ScxHttpHeaderName name, String... value) {
+        return (ScxHttpHeadersImpl) super.add(name, value);
+    }
+
+    @Override
+    public ScxHttpHeadersImpl remove(ScxHttpHeaderName name) {
+        return (ScxHttpHeadersImpl) super.remove(name);
+    }
+
+    @Override
+    public ScxHttpHeadersImpl clear() {
+        return (ScxHttpHeadersImpl) super.clear();
+    }
+
+    @Override
     public String toString() {
         return encode();
     }

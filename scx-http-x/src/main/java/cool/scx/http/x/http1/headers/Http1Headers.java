@@ -2,7 +2,6 @@ package cool.scx.http.x.http1.headers;
 
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersImpl;
-import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.x.http1.headers.connection.Connection;
 import cool.scx.http.x.http1.headers.connection.ScxConnection;
 import cool.scx.http.x.http1.headers.expect.ScxExpect;
@@ -27,8 +26,7 @@ public class Http1Headers extends ScxHttpHeadersImpl {
     }
 
     public Http1Headers connection(Connection connection) {
-        set(CONNECTION, connection.value());
-        return this;
+        return (Http1Headers) set(CONNECTION, connection.value());
     }
 
 
@@ -37,9 +35,8 @@ public class Http1Headers extends ScxHttpHeadersImpl {
         return c != null ? ScxTransferEncoding.of(c) : null;
     }
 
-    public ScxHttpHeadersWritable transferEncoding(ScxTransferEncoding transferEncoding) {
-        set(TRANSFER_ENCODING, transferEncoding.value());
-        return this;
+    public Http1Headers transferEncoding(ScxTransferEncoding transferEncoding) {
+        return (Http1Headers) set(TRANSFER_ENCODING, transferEncoding.value());
     }
 
     public ScxExpect expect() {
@@ -48,8 +45,7 @@ public class Http1Headers extends ScxHttpHeadersImpl {
     }
 
     public Http1Headers expect(ScxExpect expect) {
-        set(EXPECT, expect.value());
-        return this;
+        return (Http1Headers) set(EXPECT, expect.value());
     }
 
     public ScxUpgrade upgrade() {
@@ -58,8 +54,7 @@ public class Http1Headers extends ScxHttpHeadersImpl {
     }
 
     public Http1Headers upgrade(ScxUpgrade upgrade) {
-        set(UPGRADE, upgrade.value());
-        return this;
+        return (Http1Headers) set(UPGRADE, upgrade.value());
     }
 
 }

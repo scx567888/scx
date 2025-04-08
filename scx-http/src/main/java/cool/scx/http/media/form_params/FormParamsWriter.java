@@ -7,7 +7,6 @@ import cool.scx.http.media.MediaWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import static cool.scx.http.media.form_params.FormParamsHelper.encodeFormParams;
 import static cool.scx.http.media_type.MediaType.APPLICATION_X_WWW_FORM_URLENCODED;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -29,7 +28,7 @@ public class FormParamsWriter implements MediaWriter {
         if (responseHeaders.contentType() == null) {
             responseHeaders.contentType(APPLICATION_X_WWW_FORM_URLENCODED);
         }
-        bytes = encodeFormParams(formParams).getBytes(UTF_8);
+        bytes = formParams.encode().getBytes(UTF_8);
         return bytes.length;
     }
 
