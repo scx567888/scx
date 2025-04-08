@@ -12,8 +12,8 @@ public interface FormParams extends Parameters<String, String> {
         return new FormParamsImpl();
     }
 
-    /// 从编码后的内容中生成 FormParams
-    static FormParamsWritable ofEncoded(String encodedStr) {
+    /// 从编码后的文本内容中生成 FormParams
+    static FormParamsWritable of(String encodedStr) {
         return FormParamsHelper.decodeFormParams(new FormParamsImpl(), encodedStr);
     }
 

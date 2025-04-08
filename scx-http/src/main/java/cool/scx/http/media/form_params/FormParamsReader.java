@@ -24,7 +24,7 @@ public class FormParamsReader implements MediaReader<FormParams> {
     public FormParams read(InputStream inputStream, ScxHttpHeaders headers) throws IOException {
         // FormParams 本质上就是字符串 所以这里使用 STRING_READER 先进行内容读取
         var str = STRING_READER.read(inputStream, headers);
-        return FormParams.ofEncoded(str);
+        return FormParams.of(str);
     }
 
 }
