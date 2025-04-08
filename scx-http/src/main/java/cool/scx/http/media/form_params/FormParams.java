@@ -1,31 +1,25 @@
 package cool.scx.http.media.form_params;
 
-import cool.scx.http.parameters.ParametersImpl;
+import cool.scx.http.parameters.Parameters;
 
 /// FormParams
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class FormParams extends ParametersImpl<String, String> {
+public interface FormParams extends Parameters<String, String> {
 
-    @Override
-    public FormParams set(String name, String... value) {
-        return (FormParams) super.set(name, value);
+    static FormParamsWritable of() {
+        return new FormParamsImpl();
     }
 
-    @Override
-    public FormParams add(String name, String... value) {
-        return (FormParams) super.add(name, value);
+    /// 从编码后的内容中生成 FormParams
+    static FormParamsWritable ofEncoded(String encodedStr) {
+        return FormParamsHelper.decodeFormParams(new FormParamsImpl(), encodedStr);
     }
 
-    @Override
-    public FormParams remove(String name) {
-        return (FormParams) super.remove(name);
-    }
-
-    @Override
-    public FormParams clear() {
-        return (FormParams) super.clear();
+    /// 编码成 from 表单格式
+    default String encode() {
+        return FormParamsHelper.encodeFormParams(this);
     }
 
 }

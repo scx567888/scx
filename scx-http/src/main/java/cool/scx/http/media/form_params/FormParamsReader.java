@@ -6,7 +6,6 @@ import cool.scx.http.media.MediaReader;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static cool.scx.http.media.form_params.FormParamsHelper.decodeFormParams;
 import static cool.scx.http.media.string.StringReader.STRING_READER;
 
 /// FormParamsReader
@@ -25,7 +24,7 @@ public class FormParamsReader implements MediaReader<FormParams> {
     public FormParams read(InputStream inputStream, ScxHttpHeaders headers) throws IOException {
         // FormParams 本质上就是字符串 所以这里使用 STRING_READER 先进行内容读取
         var str = STRING_READER.read(inputStream, headers);
-        return decodeFormParams(str);
+        return FormParams.ofEncoded(str);
     }
 
 }
