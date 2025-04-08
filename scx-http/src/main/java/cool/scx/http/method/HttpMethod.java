@@ -57,4 +57,9 @@ public enum HttpMethod implements ScxHttpMethod {
         return value;
     }
 
+    @Override
+    public String toString() {
+        return value;
+    }
+
 }
