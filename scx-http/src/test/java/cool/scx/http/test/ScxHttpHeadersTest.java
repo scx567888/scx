@@ -31,8 +31,8 @@ public class ScxHttpHeadersTest {
                 c: d\r
                 e:   f\r
                 """);
-        for (var a : h) {
-            System.out.println(a.getKey() + ": " + a.getValue());
+        for (var c : h) {
+            System.out.println(c);
         }
     }
 
