@@ -68,7 +68,7 @@ public class ScxURIHelper {
             sb.append(host);
 
             //拼接 端口号
-            if (port != -1) {
+            if (port != null) {
                 sb.append(':');
                 sb.append(port);
             }
