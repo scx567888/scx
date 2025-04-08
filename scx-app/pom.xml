@@ -68,10 +68,10 @@
             <version>${project.version}</version>
         </dependency>
 
-        <!-- Spring Context 框架 , 主要使用其依赖注入及部分注解功能 -->
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-beans</artifactId>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>scx-bean</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <!-- 数据库连接池 用于减少数据库连接创建时的性能消耗 -->
