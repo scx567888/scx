@@ -13,6 +13,7 @@ import cool.scx.http.parameters.Parameters;
 import java.util.List;
 
 import static cool.scx.http.headers.HttpFieldName.*;
+import static cool.scx.http.headers.ScxHttpHeadersHelper.parseHeaders;
 
 /// 只读的 Headers 可用于 ServerRequest 和 ClientResponse
 /// 在 Parameters 的基础上实现了一些 方便操作 Http 头协议的方法
@@ -27,6 +28,15 @@ public interface ScxHttpHeaders extends Parameters<ScxHttpHeaderName, String> {
 
     static ScxHttpHeadersWritable of(ScxHttpHeaders oldHeaders) {
         return new ScxHttpHeadersImpl(oldHeaders);
+    }
+
+    /// Http1 写法的 header
+    /// 在某些情况下很好用
+    ///
+    /// @param headersStr s
+    /// @return s
+    static ScxHttpHeadersWritable of(String headersStr) {
+        return parseHeaders(new ScxHttpHeadersImpl(), headersStr);
     }
 
     default String get(String name) {
@@ -91,6 +101,11 @@ public interface ScxHttpHeaders extends Parameters<ScxHttpHeaderName, String> {
         } catch (IllegalMediaRangeException e) {
             throw new BadRequestException("Invalid Accept: " + c, e);
         }
+    }
+
+    /// 转换成标准的 Http1 格式, 人类可读, 可用于传输或调试
+    default String encode() {
+        return ScxHttpHeadersHelper.encodeHeaders(this);
     }
 
 }

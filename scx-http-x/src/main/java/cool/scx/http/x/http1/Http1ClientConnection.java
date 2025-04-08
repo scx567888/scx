@@ -17,7 +17,6 @@ import java.io.OutputStream;
 import java.io.UncheckedIOException;
 
 import static cool.scx.http.headers.HttpFieldName.HOST;
-import static cool.scx.http.headers.ScxHttpHeadersHelper.encodeHeaders;
 import static cool.scx.http.x.http1.Http1Helper.checkRequestHasBody;
 import static cool.scx.http.x.http1.Http1Reader.*;
 import static cool.scx.http.x.http1.headers.transfer_encoding.TransferEncoding.CHUNKED;
@@ -79,7 +78,7 @@ public class Http1ClientConnection {
             }
         }
 
-        var requestHeaderStr = encodeHeaders(headers);
+        var requestHeaderStr = headers.encode();
 
         //先写入头部内容
         try {

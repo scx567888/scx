@@ -1,25 +1,37 @@
 package cool.scx.http.headers;
 
-import java.util.regex.Pattern;
-
 /// ScxHttpHeadersHelper
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class ScxHttpHeadersHelper {
-
-    public static final Pattern CRLF_PATTERN = Pattern.compile("\r\n");
+public final class ScxHttpHeadersHelper {
 
     public static <T extends ScxHttpHeadersWritable> T parseHeaders(T headers, String headersStr) {
-        var lines = CRLF_PATTERN.split(headersStr);
+        var length = headersStr.length();
+        var start = 0;
 
-        for (var line : lines) {
-            int i = line.indexOf(':');
-            if (i != -1) {
-                var key = line.substring(0, i).trim();
-                var value = line.substring(i + 1).trim();
+        // 使用 indexOf("\r\n") 查找每行的结束位置
+        while (start < length) {
+            // 查找 \r\n 的位置
+            var end = headersStr.indexOf("\r\n", start);
+
+            // 如果没有找到 \r\n 说明到达字符串末尾
+            if (end == -1) {
+                end = length;
+            }
+
+            // 进行 key:value 的解析
+            var colonIndex = headersStr.indexOf(':', start, end);
+            //没有 : 直接跳过
+            if (colonIndex != -1) {
+                //这里的 trim 有点性能问题
+                var key = headersStr.substring(start, colonIndex).trim();
+                var value = headersStr.substring(colonIndex + 1, end).trim();
                 headers.add(key, value);
             }
+
+            // 跳到下一行的开始位置
+            start = end + 2;  // +2 跳过 "\r\n"
         }
 
         return headers;

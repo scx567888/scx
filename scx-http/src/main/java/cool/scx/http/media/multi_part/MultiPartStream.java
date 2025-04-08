@@ -10,7 +10,6 @@ import java.io.InputStream;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import static cool.scx.http.headers.ScxHttpHeadersHelper.parseHeaders;
 import static cool.scx.io.IOHelper.inputStreamToDataReader;
 
 /// MultiPartStream
@@ -39,7 +38,7 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart> {
         // content
         var headersBytes = linkedDataReader.readUntil(CRLF_CRLF_BYTES);
         var headersStr = new String(headersBytes);
-        return parseHeaders(ScxHttpHeaders.of(), headersStr);
+        return ScxHttpHeaders.of(headersStr);
     }
 
     public byte[] readContentToByte() throws IOException {
