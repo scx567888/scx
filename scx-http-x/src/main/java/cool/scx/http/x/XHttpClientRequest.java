@@ -24,7 +24,7 @@ public class XHttpClientRequest implements ScxHttpClientRequest {
 
     private final XHttpClient httpClient;
     private final XHttpClientOptions options;
-    public ScxTCPSocket tcpSocket;
+    //public ScxTCPSocket tcpSocket; //todo 这个类更像是一个发起程序 所以我们是不是没有持有这个tcpSocket的意义 毕竟不是长连接
 
     protected HttpVersion version;
     protected HttpMethod method;
@@ -43,12 +43,12 @@ public class XHttpClientRequest implements ScxHttpClientRequest {
     @Override
     public ScxHttpClientResponse send(MediaWriter writer) {
 
-        this.tcpSocket = httpClient.createTCPSocket(uri, getApplicationProtocols());
+        var tcpSocket = httpClient.createTCPSocket(uri, getApplicationProtocols());
 
         var useHttp2 = false;
 
-        if (this.tcpSocket.isTLS()) {
-            var applicationProtocol = this.tcpSocket.tlsManager().getApplicationProtocol();
+        if (tcpSocket.isTLS()) {
+            var applicationProtocol = tcpSocket.tlsManager().getApplicationProtocol();
             useHttp2 = "h2".equals(applicationProtocol);
         }
 

@@ -32,7 +32,7 @@ public class XClientWebSocketHandshakeRequest implements ScxClientWebSocketHands
     private WebSocketOptions options;
     private ScxURIWritable uri;
     private ScxTCPClient tcpClient;
-    private ScxTCPSocket tcpSocket;
+//    private ScxTCPSocket tcpSocket; //todo 和 XHttpClientRequest 中一样 有必要持有一个吗?
     private Http1Headers headers;
 
     public XClientWebSocketHandshakeRequest(XHttpClient httpClient) {
@@ -67,7 +67,7 @@ public class XClientWebSocketHandshakeRequest implements ScxClientWebSocketHands
     @Override
     public ScxClientWebSocketHandshakeResponse sendHandshake() {
         //0, 创建 tcp 连接
-        this.tcpSocket = httpClient.createTCPSocket(uri, "http/1.1");
+        var tcpSocket = httpClient.createTCPSocket(uri, "http/1.1");
 
         //1, 创建 secWebsocketKey
         var secWebsocketKey = Base64Utils.encodeToString(RandomUtils.randomBytes(16));
