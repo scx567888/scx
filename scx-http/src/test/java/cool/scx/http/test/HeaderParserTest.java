@@ -97,5 +97,5 @@ public class HeaderParserTest {
         assertEquals(headers.get("Content-Type"), "");
         assertEquals(headers.get("X-Request-ID"), "12345");
     }
-    
+
 }

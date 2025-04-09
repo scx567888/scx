@@ -68,7 +68,7 @@ public final class ScxHttpHeadersHelper {
             }
 
             // 跳到下一行的开始位置
-            start = strictMode ? 
+            start = strictMode ?
                     end + 2 : // 严格模式跳过 "\r\n"
                     end + 1;  // 兼容模式 跳过 "\n"
         }

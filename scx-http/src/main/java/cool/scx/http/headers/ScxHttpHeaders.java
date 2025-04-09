@@ -38,7 +38,7 @@ public interface ScxHttpHeaders extends Parameters<ScxHttpHeaderName, String> {
     static ScxHttpHeadersWritable of(String headersStr) {
         return parseHeaders(new ScxHttpHeadersImpl(), headersStr, false);
     }
-    
+
     static ScxHttpHeadersWritable of(String headersStr, boolean strictMode) {
         return parseHeaders(new ScxHttpHeadersImpl(), headersStr, strictMode);
     }
