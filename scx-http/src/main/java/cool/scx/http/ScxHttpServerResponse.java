@@ -20,10 +20,7 @@ import cool.scx.http.media.string.StringWriter;
 import cool.scx.http.media_type.ScxMediaType;
 import cool.scx.http.status.ScxHttpStatus;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.UncheckedIOException;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 
@@ -43,27 +40,11 @@ public interface ScxHttpServerResponse {
 
     ScxHttpServerResponse status(ScxHttpStatus code);
 
-    /// 获取输出流
-    ///
-    /// @param expectedLength 预期的内容长度 : (-1 未知长度, 0 无内容, 大于 0 标准长度)
-    OutputStream outputStream(long expectedLength);
+    void send(MediaWriter writer);
 
     boolean isSent();
 
-    default OutputStream outputStream() {
-        return outputStream(-1);
-    }
-
     //******************** send 操作 *******************
-
-    default void send(MediaWriter writer) {
-        var expectedLength = writer.beforeWrite(headers(), request().headers());
-        try {
-            writer.write(outputStream(expectedLength));
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
-    }
 
     default void send() {
         send(EMPTY_WRITER);

@@ -1,7 +1,5 @@
 package cool.scx.http.media.input_stream;
 
-import cool.scx.http.headers.ScxHttpHeaders;
-import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.media.MediaWriter;
 
 import java.io.IOException;
@@ -18,11 +16,6 @@ public class InputStreamWriter implements MediaWriter {
 
     public InputStreamWriter(InputStream inputStream) {
         this.inputStream = inputStream;
-    }
-
-    @Override
-    public long beforeWrite(ScxHttpHeadersWritable responseHeaders, ScxHttpHeaders requestHeaders) {
-        return -1;// 我们不知道流的长度
     }
 
     @Override
