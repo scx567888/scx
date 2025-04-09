@@ -35,7 +35,7 @@ public class ScxHttpHeadersTest {
                 """);
         System.out.println(h);
 
-        //在严格模式下 我们的 值是可以包含单独的 \n 而不导致解析错误的 虽然这种头格式并不合法
+        //在严格模式下 虽然只支持 \r\n  但这同时意味着我们的值是可以包含单独的 \n 而不导致解析错误的 虽然这种头格式并不合法
         var h1 = ScxHttpHeaders.ofStrict("""
                 a:换行
                     b\r
