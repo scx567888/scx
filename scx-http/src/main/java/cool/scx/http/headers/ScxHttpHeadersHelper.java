@@ -19,10 +19,11 @@ public final class ScxHttpHeadersHelper {
         var length = headersStr.length();
         var start = 0;
 
-        // 使用 indexOf("\r\n") 查找每行的结束位置
         while (start < length) {
-            // 查找 \n 的位置
-            var end = headersStr.indexOf('\n', start);
+            // 查找 换行符 的位置 
+            var end = strictMode ?
+                    headersStr.indexOf("\r\n", start) : // 严格模式找 \r\n
+                    headersStr.indexOf('\n', start); // 兼容模式找 \n
 
             // 如果没有找到 \n 说明到达字符串末尾
             if (end == -1) {
@@ -38,22 +39,25 @@ public final class ScxHttpHeadersHelper {
                 var valueStart = colonIndex + 1;
                 var valueEnd = end;
 
-                //这里需要处理 keyStart 去除前面的空格 
+                //这里需要处理 keyStart 去除前面的空白字符
                 while (keyStart < keyEnd && isWhitespace(headersStr.charAt(keyStart))) {
                     keyStart = keyStart + 1;
                 }
-                //这里需要处理 keyEnd 去除后边空格
+                //这里需要处理 keyEnd 去除后边的空白字符
                 while (keyEnd > keyStart && isWhitespace(headersStr.charAt(keyEnd - 1))) {
                     keyEnd = keyEnd - 1;
                 }
-                //这里需要处理 valueStart 去除前面的空格
+                //这里需要处理 valueStart 去除前面的空白字符
                 while (valueStart < valueEnd && isWhitespace(headersStr.charAt(valueStart))) {
                     valueStart = valueStart + 1;
                 }
-                //这里需要处理 valueEnd 去除末尾的 '\r' 如果有 同时需要去除空格
-                if (headersStr.charAt(valueEnd - 1) == '\r') {
+
+                //仅在兼容模式 才处理 尾部残留 \r
+                if (!strictMode && headersStr.charAt(valueEnd - 1) == '\r') {
                     valueEnd = valueEnd - 1;
                 }
+
+                //这里需要处理 valueEnd 去除后边的空白字符
                 while (valueEnd > valueStart && isWhitespace(headersStr.charAt(valueEnd - 1))) {
                     valueEnd = valueEnd - 1;
                 }
@@ -64,7 +68,9 @@ public final class ScxHttpHeadersHelper {
             }
 
             // 跳到下一行的开始位置
-            start = end + 1;  // +1 跳过 "\n"
+            start = strictMode ? 
+                    end + 2 : // 严格模式跳过 "\r\n"
+                    end + 1;  // 兼容模式 跳过 "\n"
         }
 
         return headers;
