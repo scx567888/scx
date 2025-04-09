@@ -25,6 +25,11 @@ public final class Http1RequestLineHelper {
         var pathStr = parts[1];
         var versionStr = parts[2];
 
+        //处理空请求路径
+        if ("".equals(pathStr)) {
+            pathStr = "/";
+        }
+
         //尝试解码路径 如果解析失败, 则可能是路径中包含非法字符
         //此处我们同样不去细化异常 直接抛出 InvalidHttpRequestLineException 异常
         URI decodedPath;
@@ -53,6 +58,12 @@ public final class Http1RequestLineHelper {
         var pathStr = ScxURI.of(requestLine.path()).scheme(null).host(null).encode(true);
         //此处我们强制使用 HTTP/1.1 , 忽略 requestLine 的版本号
         var versionStr = HTTP_1_1.value();
+
+        //处理空请求路径
+        if ("".equals(pathStr)) {
+            pathStr = "/";
+        }
+
         //拼接返回
         return methodStr + " " + pathStr + " " + versionStr;
     }
