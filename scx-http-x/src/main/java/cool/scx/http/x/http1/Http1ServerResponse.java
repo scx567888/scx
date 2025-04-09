@@ -2,6 +2,7 @@ package cool.scx.http.x.http1;
 
 import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.ScxHttpServerResponse;
+import cool.scx.http.media.MediaWriter;
 import cool.scx.http.status.HttpStatus;
 import cool.scx.http.status.ScxHttpStatus;
 import cool.scx.http.x.http1.chunked.HttpChunkedOutputStream;
@@ -71,11 +72,13 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
     }
 
     @Override
-    public OutputStream outputStream(long expectedLength) {
-        if (outputStream == null) {
-            outputStream = sendHeaders(expectedLength);
+    public void send(MediaWriter writer) {
+        var expectedLength = writer.beforeWrite(headers, request.headers());
+        try {
+            writer.write(outputStream(expectedLength));
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
         }
-        return outputStream;
     }
 
     @Override
@@ -92,6 +95,13 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
 
     public String createReasonPhrase() {
         return reasonPhrase != null ? reasonPhrase : getReasonPhrase(status, "unknown");
+    }
+
+    private OutputStream outputStream(long expectedLength) {
+        if (outputStream == null) {
+            outputStream = sendHeaders(expectedLength);
+        }
+        return outputStream;
     }
 
     private OutputStream sendHeaders(long expectedLength) {
