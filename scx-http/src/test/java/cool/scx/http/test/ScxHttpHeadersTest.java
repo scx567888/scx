@@ -26,14 +26,25 @@ public class ScxHttpHeadersTest {
 
     @Test
     public static void test2() {
+        //在兼容模式下 允许同时存在两种换行
         var h = ScxHttpHeaders.of("""
                 a:b\r
-                c: d\r
+                c: d
+                e:   f\r
+                g: h
+                """);
+        System.out.println(h);
+
+        //在严格模式下 虽然只支持 \r\n  但这同时意味着我们的值是可以包含单独的 \n 而不导致解析错误的 虽然这种头格式并不合法
+        var h1 = ScxHttpHeaders.ofStrict("""
+                a:换行
+                    b\r
+                c: 换行
+                      d\r
                 e:   f\r
                 """);
-        for (var c : h) {
-            System.out.println(c);
-        }
+
+        System.out.println(h1);
     }
 
 }

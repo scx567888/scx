@@ -38,7 +38,7 @@ public class MultiPartStream implements MultiPart, Iterator<MultiPartPart> {
         // content
         var headersBytes = linkedDataReader.readUntil(CRLF_CRLF_BYTES);
         var headersStr = new String(headersBytes);
-        return ScxHttpHeaders.of(headersStr);
+        return ScxHttpHeaders.ofStrict(headersStr);// 使用严格模式解析
     }
 
     public byte[] readContentToByte() throws IOException {

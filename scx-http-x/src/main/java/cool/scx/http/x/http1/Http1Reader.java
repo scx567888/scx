@@ -69,7 +69,7 @@ final class Http1Reader {
             // 2, 尝试正常读取 , 读取到 第一个 \r\n\r\n 为止
             var headerBytes = dataReader.readUntil(CRLF_CRLF_BYTES, maxHeaderSize);
             var headerStr = new String(headerBytes, UTF_8);
-            return parseHeaders(new Http1Headers(), headerStr);
+            return parseHeaders(new Http1Headers(), headerStr, true); //使用严格模式解析
         } catch (NoMoreDataException | UncheckedIOException e) {
             // Socket 关闭了 或者底层 Socket 发生异常
             throw new CloseConnectionException();

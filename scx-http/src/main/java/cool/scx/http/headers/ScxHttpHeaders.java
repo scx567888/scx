@@ -30,13 +30,24 @@ public interface ScxHttpHeaders extends Parameters<ScxHttpHeaderName, String> {
         return new ScxHttpHeadersImpl(oldHeaders);
     }
 
-    /// Http1 写法的 header
-    /// 在某些情况下很好用
+    /// 通过 Http1 格式文本直接构建 headers
+    /// 在某些情况下很好用 比如调试
+    /// 分隔符同时支持 '\r\n' 和 '\n'
     ///
     /// @param headersStr s
     /// @return s
     static ScxHttpHeadersWritable of(String headersStr) {
-        return parseHeaders(new ScxHttpHeadersImpl(), headersStr);
+        return parseHeaders(new ScxHttpHeadersImpl(), headersStr, false);
+    }
+
+    /// 通过 Http1 格式文本直接构建 headers
+    /// 在某些情况下很好用 比如调试
+    /// 分隔符仅支持 '\r\n'
+    ///
+    /// @param headersStr s
+    /// @return s
+    static ScxHttpHeadersWritable ofStrict(String headersStr) {
+        return parseHeaders(new ScxHttpHeadersImpl(), headersStr, true);
     }
 
     default String get(String name) {
