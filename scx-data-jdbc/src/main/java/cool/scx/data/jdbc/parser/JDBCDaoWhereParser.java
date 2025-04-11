@@ -3,14 +3,12 @@ package cool.scx.data.jdbc.parser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.common.util.ObjectUtils;
 import cool.scx.common.util.StringUtils;
-import cool.scx.data.jdbc.AnnotationConfigTable;
 import cool.scx.data.query.Where;
 import cool.scx.data.query.WhereClause;
 import cool.scx.data.query.exception.ValidParamListIsEmptyException;
 import cool.scx.data.query.exception.WrongWhereParamTypeException;
 import cool.scx.data.query.exception.WrongWhereTypeParamSizeException;
 import cool.scx.data.query.parser.WhereParser;
-import cool.scx.jdbc.dialect.Dialect;
 import cool.scx.jdbc.sql.SQL;
 
 import java.util.ArrayList;
@@ -19,8 +17,7 @@ import java.util.Objects;
 
 import static cool.scx.common.util.ArrayUtils.toObjectArray;
 import static cool.scx.common.util.ObjectUtils.toJson;
-import static cool.scx.data.jdbc.parser.ColumnNameParser.parseColumnName;
-import static cool.scx.data.jdbc.parser.ColumnNameParser.splitIntoColumnNameAndFieldPath;
+import static cool.scx.data.jdbc.parser.JDBCDaoColumnNameParser.splitIntoColumnNameAndFieldPath;
 import static java.util.Collections.addAll;
 
 /// JDBCDaoWhereParser
@@ -29,17 +26,15 @@ import static java.util.Collections.addAll;
 /// @version 0.0.1
 public class JDBCDaoWhereParser extends WhereParser {
 
-    private final AnnotationConfigTable tableInfo;
-    private final Dialect dialect;
+    private final JDBCDaoColumnNameParser columnNameParser;
 
-    public JDBCDaoWhereParser(AnnotationConfigTable tableInfo, Dialect dialect) {
-        this.tableInfo = tableInfo;
-        this.dialect = dialect;
+    public JDBCDaoWhereParser(JDBCDaoColumnNameParser columnNameParser) {
+        this.columnNameParser = columnNameParser;
     }
 
     @Override
     public WhereClause parseIsNull(Where w) {
-        var columnName = parseColumnName(tableInfo, w.name(), w.info().useJsonExtract(), w.info().useOriginalName());
+        var columnName = columnNameParser.parseColumnName(w);
         var whereParams = new Object[]{};
         var whereClause = columnName + " " + getWhereKeyWord(w.whereType());
         return new WhereClause(whereClause, whereParams);
@@ -54,7 +49,7 @@ public class JDBCDaoWhereParser extends WhereParser {
                 throw new WrongWhereTypeParamSizeException(w.name(), w.whereType(), 1);
             }
         }
-        var columnName = parseColumnName(tableInfo, w.name(), w.info().useJsonExtract(), w.info().useOriginalName());
+        var columnName = columnNameParser.parseColumnName(w);
         String v1;
         Object[] whereParams;
         //针对 参数类型是 AbstractPlaceholderSQL 的情况进行特殊处理 下同
@@ -78,7 +73,7 @@ public class JDBCDaoWhereParser extends WhereParser {
                 throw new WrongWhereTypeParamSizeException(w.name(), w.whereType(), 1);
             }
         }
-        var columnName = parseColumnName(tableInfo, w.name(), w.info().useJsonExtract(), w.info().useOriginalName());
+        var columnName = columnNameParser.parseColumnName(w);
         String v1;
         Object[] whereParams;
         if (w.value1() instanceof SQL a) {
@@ -101,7 +96,7 @@ public class JDBCDaoWhereParser extends WhereParser {
                 throw new WrongWhereTypeParamSizeException(w.name(), w.whereType(), 1);
             }
         }
-        var columnName = parseColumnName(tableInfo, w.name(), w.info().useJsonExtract(), w.info().useOriginalName());
+        var columnName = columnNameParser.parseColumnName(w);
         String v1;
         Object[] whereParams;
         if (w.value1() instanceof SQL a) {
@@ -141,7 +136,7 @@ public class JDBCDaoWhereParser extends WhereParser {
                 throw new WrongWhereTypeParamSizeException(w.name(), w.whereType(), 2);
             }
         }
-        var columnName = parseColumnName(tableInfo, w.name(), w.info().useJsonExtract(), w.info().useOriginalName());
+        var columnName = columnNameParser.parseColumnName(w);
         String v1;
         String v2;
         var whereParams = new ArrayList<>();
@@ -173,7 +168,7 @@ public class JDBCDaoWhereParser extends WhereParser {
             }
         }
         var c = splitIntoColumnNameAndFieldPath(w.name());
-        var columnName = w.info().useOriginalName() ? c.columnName() : tableInfo.getColumn(c.columnName()).name();
+        var columnName = columnNameParser.parseColumnName(c.columnName(), w.info().useOriginalName());
         if (StringUtils.isBlank(c.columnName())) {
             throw new IllegalArgumentException("使用 " + w.whereType() + " 时, 查询名称不合法 !!! 字段名 : " + w.name());
         }

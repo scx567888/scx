@@ -1,8 +1,10 @@
 package cool.scx.jdbc.dialect;
 
 import cool.scx.jdbc.JDBCType;
+import cool.scx.jdbc.mapping.Column;
+import cool.scx.jdbc.mapping.Table;
+import cool.scx.jdbc.mapping.type.TypeDataType;
 import cool.scx.jdbc.type_handler.TypeHandler;
-import cool.scx.jdbc.type_handler.TypeHandlerSelector;
 
 import javax.sql.DataSource;
 import java.lang.reflect.Type;
@@ -10,43 +12,41 @@ import java.sql.Driver;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static cool.scx.common.util.StringUtils.notEmpty;
 
 /// 方言 用于针对不同数据库进行差异归一化
 ///
 /// @author scx567888
 /// @version 0.0.1
-public abstract class Dialect {
-
-    protected final TypeHandlerSelector typeHandlerSelector = new TypeHandlerSelector();
+public interface Dialect {
 
     /// 是否可以处理
     ///
     /// @param url 数据连接地址
     /// @return 是否可以处理
-    public abstract boolean canHandle(String url);
+    boolean canHandle(String url);
 
     /// 是否可以处理
     ///
     /// @param dataSource 数据源
     /// @return 是否可以处理
-    public abstract boolean canHandle(DataSource dataSource);
+    boolean canHandle(DataSource dataSource);
 
     /// 是否可以处理
     ///
     /// @param driver 驱动
     /// @return 是否可以处理
-    public abstract boolean canHandle(Driver driver);
+    boolean canHandle(Driver driver);
 
     /// 　获取最终的 SQL, 一般用于 Debug
     ///
     /// @param statement s
     /// @return SQL 语句
-    public abstract String getFinalSQL(Statement statement);
-
-    /// DDL 构建器
-    ///
-    /// @return ddlBuilder
-    public abstract DDLBuilder ddlBuilder();
+    String getFinalSQL(Statement statement);
 
     /// 获取分页 SQL (默认采用最常见的 LIMIT 关键词分页)
     ///
@@ -54,7 +54,7 @@ public abstract class Dialect {
     /// @param offset 偏移量
     /// @param limit  行数
     /// @return SQL 语句
-    public String getLimitSQL(String sql, Long offset, Long limit) {
+    default String getLimitSQL(String sql, Long offset, Long limit) {
         var limitClauses = limit == null ? "" : offset == null || offset == 0 ? " LIMIT " + limit : " LIMIT " + offset + "," + limit;
         return sql + limitClauses;
     }
@@ -66,31 +66,146 @@ public abstract class Dialect {
     /// @param password   a
     /// @param parameters a
     /// @return a
-    public abstract DataSource createDataSource(String url, String username, String password, String[] parameters);
+    DataSource createDataSource(String url, String username, String password, String[] parameters);
 
     /// 执行前
     ///
     /// @param preparedStatement a
     /// @return a
     /// @throws SQLException a
-    public PreparedStatement beforeExecuteQuery(PreparedStatement preparedStatement) throws SQLException {
+    default PreparedStatement beforeExecuteQuery(PreparedStatement preparedStatement) throws SQLException {
         return preparedStatement;
     }
 
-    public final <T> TypeHandler<T> findTypeHandler(Type type) {
-        return typeHandlerSelector.findTypeHandler(type);
-    }
+    /// 查找
+    <T> TypeHandler<T> findTypeHandler(Type type);
 
     /// 方言数据类型 转换为 标准数据类型
     ///
     /// @param dialectDataType 方言数据类型
     /// @return 标准数据类型
-    public abstract JDBCType dialectDataTypeToJDBCType(String dialectDataType);
+    JDBCType dialectDataTypeToJDBCType(String dialectDataType);
 
     /// 标准数据类型 转换为 方言数据类型
     ///
     /// @param jdbcType 标准数据类型
     /// @return 方言数据类型
-    public abstract String jdbcTypeToDialectDataType(JDBCType jdbcType);
+    String jdbcTypeToDialectDataType(JDBCType jdbcType);
+
+    /// 将字段名或表名用数据库对应的转义符包装（如 MySQL 使用反引号）
+    ///
+    /// @param identifier 原始字段名或表名
+    /// @return 加了转义符的 SQL 标识符
+    default String quoteIdentifier(String identifier) {
+        return identifier;
+    }
+
+    /// 获取建表语句
+    ///
+    /// @return s
+    default String getCreateTableDDL(Table table) {
+        var s = new StringBuilder();
+        s.append("CREATE TABLE ");
+        if (notEmpty(table.schema())) {
+            s.append(table.schema()).append(".");
+        }
+        s.append(quoteIdentifier(table.name())).append("\n");
+        s.append("(\n");
+
+        // 创建子句
+        var createDefinitionStr = getCreateDefinition(table).stream()
+                .map(c -> "    " + c)
+                .collect(Collectors.joining(",\n"));
+        s.append(createDefinitionStr);
+
+        s.append("\n);");
+        return s.toString();
+    }
+
+    default List<String> getCreateDefinition(Table table) {
+        var createDefinitions = new ArrayList<String>();
+        createDefinitions.addAll(getColumnDefinitions(table.columns()));
+        createDefinitions.addAll(getTableConstraint(table));
+        return createDefinitions;
+    }
+
+    default List<String> getColumnDefinitions(Column[] columns) {
+        var list = new ArrayList<String>();
+        for (var column : columns) {
+            list.add(getColumnDefinition(column));
+        }
+        return list;
+    }
+
+    default List<String> getTableConstraint(Table table) {
+        return new ArrayList<>();
+    }
+
+    default String getColumnDefinition(Column column) {
+        var s = new StringBuilder();
+        s.append(quoteIdentifier(column.name())).append(" ");// 列名
+        var dataTypeDefinition = getDataTypeDefinition(column);
+        if (dataTypeDefinition != null) {
+            s.append(dataTypeDefinition).append(" ");
+        }
+        // 限制条件
+        var columnConstraintStr = String.join(" ", getColumnConstraint(column));
+        s.append(columnConstraintStr);
+        return s.toString();
+    }
+
+    default String getDataTypeDefinition(Column column) {
+        if (column.dataType() != null) {
+            var _dataType = column.dataType();
+            var _name = _dataType.name();
+            // TypeDataType 做特殊处理
+            if (_dataType instanceof TypeDataType m && m.jdbcType() != null) {
+                _name = getDataTypeNameByJDBCType(m.jdbcType());
+            }
+            return getDataTypeDefinitionByName(_name, _dataType.length());
+        }
+        return defaultDateType();
+    }
+
+    /// 当前列对象通常的 DDL 如设置 字段名 类型 是否可以为空 默认值等 (建表语句片段 , 需和 specialDDL 一起使用才完整)
+    default List<String> getColumnConstraint(Column column) {
+        return new ArrayList<>();
+    }
+
+    String getDataTypeNameByJDBCType(JDBCType dataType);
+
+    default String getDataTypeDefinitionByName(String dataType, Integer length) {
+        return length != null ? dataType + "(" + length + ")" : dataType;
+    }
+
+    /// 默认值
+    /// todo 是否需要 ?
+    ///
+    /// @return 默认类型值
+    default String defaultDateType() {
+        return null;
+    }
+
+    /// todo 暂时只支持添加新字段 需要同时支持 删除或修改
+    /// 获取 AlertTableDDL
+    ///
+    /// @param needAdds  a
+    /// @param tableInfo a
+    default String getAlertTableDDL(Column[] needAdds, Table tableInfo) {
+        var s = new StringBuilder();
+        s.append("ALTER TABLE ");
+        if (notEmpty(tableInfo.schema())) {
+            s.append(tableInfo.schema()).append(".");
+        }
+        s.append(quoteIdentifier(tableInfo.name())).append("\n");
+
+        var columnDefinitionStr = getColumnDefinitions(needAdds).stream()
+                .map(c -> "    ADD COLUMN " + c)
+                .collect(Collectors.joining(",\n"));
+
+        s.append(columnDefinitionStr);
+        s.append("\n;");
+        return s.toString();
+    }
 
 }

@@ -3,6 +3,8 @@ package cool.scx.data.jdbc;
 import com.fasterxml.jackson.databind.JavaType;
 import cool.scx.data.field_filter.FieldFilter;
 import cool.scx.jdbc.JDBCType;
+import cool.scx.jdbc.dialect.Dialect;
+import cool.scx.jdbc.mapping.Column;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -79,6 +81,31 @@ public final class JDBCDaoHelper {
             }
         }
         return JSON;
+    }
+
+    public static String[] createUpdateSetColumns(Column[] columns, Dialect dialect) {
+        var result = new String[columns.length];
+        for (var i = 0; i < columns.length; i = i + 1) {
+            result[i] = dialect.quoteIdentifier(columns[i].name()) + " = ?";
+        }
+        return result;
+    }
+
+    public static String[] createInsertValues(Column[] columns) {
+        var result = new String[columns.length];
+        for (var i = 0; i < result.length; i++) {
+            result[i] = "?";
+        }
+        return result;
+    }
+
+    /// 提取值
+    public static Object[] extractValues(AnnotationConfigColumn[] column, Object entity) {
+        var result = new Object[column.length];
+        for (var i = 0; i < column.length; i = i + 1) {
+            result[i] = column[i].javaFieldValue(entity);
+        }
+        return result;
     }
 
     private static JDBCType getDataTypeByJavaType0(Class<?> clazz) {

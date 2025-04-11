@@ -5,23 +5,36 @@ import com.mysql.cj.jdbc.ClientPreparedStatement;
 import com.mysql.cj.jdbc.MysqlDataSource;
 import com.mysql.cj.jdbc.NonRegisteringDriver;
 import cool.scx.jdbc.JDBCType;
-import cool.scx.jdbc.dialect.DDLBuilder;
 import cool.scx.jdbc.dialect.Dialect;
+import cool.scx.jdbc.mapping.Column;
+import cool.scx.jdbc.mapping.Table;
+import cool.scx.jdbc.type_handler.TypeHandler;
+import cool.scx.jdbc.type_handler.TypeHandlerSelector;
 
 import javax.sql.DataSource;
+import java.lang.reflect.Type;
 import java.sql.Driver;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import static cool.scx.common.util.StringUtils.notBlank;
 
 /// MySQLDialect
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class MySQLDialect extends Dialect {
+/// @see <a href="https://dev.mysql.com/doc/refman/8.0/en/create-table.html">https://dev.mysql.com/doc/refman/8.0/en/create-table.html</a>
+public class MySQLDialect implements Dialect {
 
     private static final com.mysql.cj.jdbc.NonRegisteringDriver DRIVER = initDRIVER();
-    private static final MySQLDDLBuilder MYSQL_DDL_BUILDER = new MySQLDDLBuilder();
+    private final TypeHandlerSelector typeHandlerSelector;
+
+    public MySQLDialect() {
+        this.typeHandlerSelector = new TypeHandlerSelector();
+    }
 
     private static NonRegisteringDriver initDRIVER() {
         try {
@@ -70,11 +83,6 @@ public class MySQLDialect extends Dialect {
     }
 
     @Override
-    public DDLBuilder ddlBuilder() {
-        return MYSQL_DDL_BUILDER;
-    }
-
-    @Override
     public DataSource createDataSource(String url, String username, String password, String[] parameters) {
         var mysqlDataSource = new MysqlDataSource();
         mysqlDataSource.setUrl(url);
@@ -98,6 +106,11 @@ public class MySQLDialect extends Dialect {
     }
 
     @Override
+    public <T> TypeHandler<T> findTypeHandler(Type type) {
+        return typeHandlerSelector.findTypeHandler(type);
+    }
+
+    @Override
     public JDBCType dialectDataTypeToJDBCType(String dialectDataType) {
         return MySQLDialectHelper.dialectDataTypeToJDBCType(dialectDataType);
     }
@@ -105,6 +118,58 @@ public class MySQLDialect extends Dialect {
     @Override
     public String jdbcTypeToDialectDataType(JDBCType jdbcType) {
         return MySQLDialectHelper.jdbcTypeToDialectDataType(jdbcType).getName();
+    }
+
+    @Override
+    public String quoteIdentifier(String identifier) {
+        return "`" + identifier + "`";
+    }
+
+    @Override
+    public List<String> getColumnConstraint(Column column) {
+        var list = new ArrayList<String>();
+        list.add(column.notNull() || column.primary() ? "NOT NULL" : "NULL");
+        if (column.autoIncrement()) {
+            list.add("AUTO_INCREMENT");
+        }
+        if (notBlank(column.defaultValue())) {
+            list.add("DEFAULT " + column.defaultValue());
+        }
+        if (notBlank(column.onUpdate())) {
+            list.add("ON UPDATE " + column.onUpdate());
+        }
+        return list;
+    }
+
+    @Override
+    public String getDataTypeNameByJDBCType(JDBCType dataType) {
+        var mysqlType = MySQLDialectHelper.jdbcTypeToDialectDataType(dataType);
+        return mysqlType.getName();
+    }
+
+    @Override
+    public List<String> getTableConstraint(Table table) {
+        var list = new ArrayList<String>();
+        for (var column : table.columns()) {
+            var name = column.name();
+            if (column.primary()) {
+                list.add("PRIMARY KEY (" + quoteIdentifier(name) + ")");
+            }
+            if (column.unique()) {
+                var key = "unique_" + name;
+                list.add("UNIQUE KEY " + quoteIdentifier(key) + "(" + quoteIdentifier(name) + ")");
+            }
+            if (column.index()) {
+                var key = "index_" + name;
+                list.add("KEY " + quoteIdentifier(key) + "(" + quoteIdentifier(name) + ")");
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public String defaultDateType() {
+        return "VARCHAR(128)";
     }
 
 }

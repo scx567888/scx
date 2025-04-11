@@ -9,7 +9,7 @@ import org.testng.annotations.Test;
 import java.util.List;
 import java.util.Map;
 
-import static cool.scx.jdbc.dialect._default.DefaultDialect.DEFAULT_DIALECT;
+import static cool.scx.jdbc.dialect.DefaultDialect.DEFAULT_DIALECT;
 
 public class SQLBuilderTest {
 
