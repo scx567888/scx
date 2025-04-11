@@ -95,7 +95,8 @@ public final class SQLBuilder {
     }
 
     public SQLBuilder From(Table table) {
-        return From(table.name());
+        this.tableName = table;
+        return this;
     }
 
     public SQLBuilder From(String tableName) {
