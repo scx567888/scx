@@ -153,13 +153,15 @@ public class MySQLDialect implements Dialect {
         for (var column : table.columns()) {
             var name = column.name();
             if (column.primary()) {
-                list.add("PRIMARY KEY (`" + name + "`)");
+                list.add("PRIMARY KEY (" + quoteIdentifier(name) + ")");
             }
             if (column.unique()) {
-                list.add("UNIQUE KEY `unique_" + name + "`(`" + name + "`)");
+                var key = "unique_" + name;
+                list.add("UNIQUE KEY " + quoteIdentifier(key) + "(" + quoteIdentifier(name) + ")");
             }
             if (column.index()) {
-                list.add("KEY `index_" + name + "`(`" + name + "`)");
+                var key = "index_" + name;
+                list.add("KEY " + quoteIdentifier(key) + "(" + quoteIdentifier(name) + ")");
             }
         }
         return list;
