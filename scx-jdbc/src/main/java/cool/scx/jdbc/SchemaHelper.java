@@ -30,7 +30,7 @@ public final class SchemaHelper {
         // 获取不存在的字段
         var needAdd = verifyResult.needAdd();
         if (needAdd.length > 0) {
-            return dialect.ddlBuilder().getAlertTableDDL(needAdd, newTable);
+            return dialect.getAlertTableDDL(needAdd, newTable);
         }
         return null;
     }
@@ -68,7 +68,7 @@ public final class SchemaHelper {
             var tableMetaData = getCurrentSchema(con).refreshTables(con).getTable(tableInfo.name());
 
             // 没有这个表 创建表 , 有表 获取迁移 SQL
-            var fixTableSQL = tableMetaData == null ? jdbcContext.dialect().ddlBuilder().getCreateTableDDL(tableInfo) : getMigrateSQL(tableMetaData.refreshColumns(con), tableInfo, jdbcContext.dialect());
+            var fixTableSQL = tableMetaData == null ? jdbcContext.dialect().getCreateTableDDL(tableInfo) : getMigrateSQL(tableMetaData.refreshColumns(con), tableInfo, jdbcContext.dialect());
 
             if (notBlank(fixTableSQL)) {
                 jdbcContext.sqlRunner().execute(con, sql(fixTableSQL));
