@@ -3,6 +3,7 @@ package cool.scx.data.jdbc;
 import cool.scx.common.util.RandomUtils;
 import cool.scx.data.Dao;
 import cool.scx.data.field_filter.FieldFilter;
+import cool.scx.data.jdbc.parser.JDBCDaoColumnNameParser;
 import cool.scx.data.jdbc.parser.JDBCDaoGroupByParser;
 import cool.scx.data.jdbc.parser.JDBCDaoOrderByParser;
 import cool.scx.data.jdbc.parser.JDBCDaoWhereParser;
@@ -24,7 +25,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static cool.scx.common.util.ArrayUtils.concat;
-import static cool.scx.data.jdbc.JDBCDaoHelper.filter;
+import static cool.scx.data.jdbc.JDBCDaoHelper.*;
 import static cool.scx.jdbc.result_handler.ResultHandler.*;
 import static cool.scx.jdbc.sql.SQL.sql;
 import static cool.scx.jdbc.sql.SQLBuilder.*;
@@ -52,6 +53,8 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
 
     /// 查询 count 所用的 handler
     protected final ResultHandler<Long> countResultHandler;
+
+    private final JDBCDaoColumnNameParser columnNameParser;
 
     /// where 解析器
     protected final JDBCDaoWhereParser whereParser;
@@ -82,9 +85,10 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
         this.entityBeanListHandler = ofBeanList(this.beanBuilder);
         this.entityBeanHandler = ofBean(this.beanBuilder);
         this.countResultHandler = ofSingleValue("count", Long.class);
-        this.whereParser = new JDBCDaoWhereParser(tableInfo, jdbcContext.dialect());
-        this.groupByParser = new JDBCDaoGroupByParser(tableInfo, jdbcContext.dialect());
-        this.orderByParser = new JDBCDaoOrderByParser(tableInfo, jdbcContext.dialect());
+        this.columnNameParser = new JDBCDaoColumnNameParser(this.tableInfo, jdbcContext.dialect());
+        this.whereParser = new JDBCDaoWhereParser(this.columnNameParser);
+        this.groupByParser = new JDBCDaoGroupByParser(this.columnNameParser);
+        this.orderByParser = new JDBCDaoOrderByParser(this.columnNameParser);
     }
 
     @Override
@@ -166,7 +170,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
     private SQL buildInsertSQL(Entity entity, FieldFilter updateFilter) {
         var insertColumnInfos = filter(updateFilter, entity, tableInfo);
         var sql = _buildInsertSQL0(insertColumnInfos);
-        var objectArray = Arrays.stream(insertColumnInfos).map(c -> c.javaFieldValue(entity)).toArray();
+        var objectArray = extractValues(insertColumnInfos, entity);
         return sql(sql, objectArray);
     }
 
@@ -175,10 +179,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
         //将 entityList 转换为 objectArrayList 这里因为 stream 实在太慢所以改为传统循环方式
         var objectArrayList = new ArrayList<Object[]>();
         for (var entity : entityList) {
-            var o = new Object[insertColumnInfos.length];
-            for (int i = 0; i < insertColumnInfos.length; i = i + 1) {
-                o[i] = insertColumnInfos[i].javaFieldValue(entity);
-            }
+            var o = extractValues(insertColumnInfos, entity);
             objectArrayList.add(o);
         }
         var sql = _buildInsertSQL0(insertColumnInfos);
@@ -269,7 +270,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
             throw new IllegalArgumentException("更新数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
         }
         var updateSetColumnInfos = filter(updateFilter, entity, tableInfo);
-        var updateSetColumns = Arrays.stream(updateSetColumnInfos).map(c -> jdbcContext.dialect().quoteIdentifier(c.name()) + " = ?").toArray(String[]::new);
+        var updateSetColumns = getUpdateSetColumns(updateSetColumnInfos, jdbcContext.dialect());
         var whereClause = whereParser.parse(query.getWhere());
         var orderByClauses = orderByParser.parse(query.getOrderBy());
         var sql = Update(tableInfo)
@@ -278,7 +279,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
                 .OrderBy(orderByClauses)
                 .Limit(null, query.getLimit())
                 .GetSQL(jdbcContext.dialect());
-        var entityParams = Arrays.stream(updateSetColumnInfos).map(c -> c.javaFieldValue(entity)).toArray();
+        var entityParams = extractValues(updateSetColumnInfos, entity);
         return sql(sql, concat(entityParams, whereClause.params()));
     }
 
