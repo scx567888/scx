@@ -9,7 +9,7 @@ import static cool.scx.common.util.StringUtils.notBlank;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public final class ColumnNameParser {
+public final class ColumnNameHelper {
 
     public static String parseColumnName(Table tableInfo, String name, boolean useJsonExtract, boolean useOriginalName) {
         if (useJsonExtract) {

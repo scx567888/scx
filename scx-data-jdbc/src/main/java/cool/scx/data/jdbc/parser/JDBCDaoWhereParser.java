@@ -19,8 +19,8 @@ import java.util.Objects;
 
 import static cool.scx.common.util.ArrayUtils.toObjectArray;
 import static cool.scx.common.util.ObjectUtils.toJson;
-import static cool.scx.data.jdbc.parser.ColumnNameParser.parseColumnName;
-import static cool.scx.data.jdbc.parser.ColumnNameParser.splitIntoColumnNameAndFieldPath;
+import static cool.scx.data.jdbc.parser.ColumnNameHelper.parseColumnName;
+import static cool.scx.data.jdbc.parser.ColumnNameHelper.splitIntoColumnNameAndFieldPath;
 import static java.util.Collections.addAll;
 
 /// JDBCDaoWhereParser

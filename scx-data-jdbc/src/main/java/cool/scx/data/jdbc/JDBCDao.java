@@ -83,8 +83,8 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
         this.entityBeanHandler = ofBean(this.beanBuilder);
         this.countResultHandler = ofSingleValue("count", Long.class);
         this.whereParser = new JDBCDaoWhereParser(tableInfo, jdbcContext.dialect());
-        this.groupByParser = new JDBCDaoGroupByParser(tableInfo);
-        this.orderByParser = new JDBCDaoOrderByParser(tableInfo);
+        this.groupByParser = new JDBCDaoGroupByParser(tableInfo, jdbcContext.dialect());
+        this.orderByParser = new JDBCDaoOrderByParser(tableInfo, jdbcContext.dialect());
     }
 
     @Override
