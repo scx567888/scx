@@ -93,4 +93,10 @@ public abstract class Dialect {
     /// @return 方言数据类型
     public abstract String jdbcTypeToDialectDataType(JDBCType jdbcType);
 
+    /// 将字段名或表名用数据库对应的转义符包装（如 MySQL 使用反引号）
+    ///
+    /// @param identifier 原始字段名或表名
+    /// @return 加了转义符的 SQL 标识符
+    public abstract String quoteIdentifier(String identifier);
+
 }

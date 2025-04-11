@@ -62,4 +62,9 @@ public final class DefaultDialect extends Dialect {
         return null;
     }
 
+    @Override
+    public String quoteIdentifier(String identifier) {
+        return identifier;
+    }
+
 }

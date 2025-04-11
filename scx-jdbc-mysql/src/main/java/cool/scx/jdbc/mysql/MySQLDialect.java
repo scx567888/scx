@@ -107,4 +107,9 @@ public class MySQLDialect extends Dialect {
         return MySQLDialectHelper.jdbcTypeToDialectDataType(jdbcType).getName();
     }
 
+    @Override
+    public String quoteIdentifier(String identifier) {
+        return "`" + identifier + "`";
+    }
+
 }
