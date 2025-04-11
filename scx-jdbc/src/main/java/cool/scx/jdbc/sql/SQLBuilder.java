@@ -70,6 +70,20 @@ public final class SQLBuilder {
         return Delete(table.name());
     }
 
+    private static String joinWithQuoteIdentifier(String[] values, Dialect dialect) {
+        var isFirst = true;
+        var sb = new StringBuilder();
+        for (var value : values) {
+            if (isFirst) {
+                isFirst = false;
+            } else {
+                sb.append(", ");
+            }
+            sb.append(dialect.quoteIdentifier(value));
+        }
+        return sb.toString();
+    }
+
     private SQLBuilder _Select(String... selectColumns) {
         if (selectColumns.length == 0) {
             throw new IllegalArgumentException("Select 子句错误 : 待查询的数据列 不能为空 !!!");
@@ -195,20 +209,6 @@ public final class SQLBuilder {
 
     private String getOrderByClause() {
         return orderByClauses != null && orderByClauses.length != 0 ? " ORDER BY " + String.join(", ", orderByClauses) : "";
-    }
-
-    private static String joinWithQuoteIdentifier(String[] values, Dialect dialect) {
-        var isFirst = true;
-        var sb = new StringBuilder();
-        for (var value : values) {
-            if (isFirst) {
-                isFirst = false;
-            } else {
-                sb.append(", ");
-            }
-            sb.append(dialect.quoteIdentifier(value));
-        }
-        return sb.toString();
     }
 
     private enum SQLBuilderType {
