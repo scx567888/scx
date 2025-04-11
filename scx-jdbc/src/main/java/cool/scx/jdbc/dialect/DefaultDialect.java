@@ -1,22 +1,23 @@
-package cool.scx.jdbc.dialect._default;
+package cool.scx.jdbc.dialect;
 
 import cool.scx.jdbc.JDBCType;
-import cool.scx.jdbc.dialect.DDLBuilder;
-import cool.scx.jdbc.dialect.Dialect;
+import cool.scx.jdbc.type_handler.TypeHandler;
+import cool.scx.jdbc.type_handler.TypeHandlerSelector;
 
 import javax.sql.DataSource;
+import java.lang.reflect.Type;
 import java.sql.Driver;
 import java.sql.Statement;
-
-import static cool.scx.jdbc.dialect._default.DefaultDDLBuilder.DEFAULT_DDL_BUILDER;
 
 /// DefaultDialect
 ///
 /// @author scx567888
 /// @version 0.0.1
-public final class DefaultDialect extends Dialect {
+public final class DefaultDialect implements Dialect {
 
     public static final Dialect DEFAULT_DIALECT = new DefaultDialect();
+
+    private final TypeHandlerSelector typeHandlerSelector = new TypeHandlerSelector();
 
     private DefaultDialect() {
 
@@ -43,13 +44,13 @@ public final class DefaultDialect extends Dialect {
     }
 
     @Override
-    public DDLBuilder ddlBuilder() {
-        return DEFAULT_DDL_BUILDER;
+    public DataSource createDataSource(String url, String username, String password, String[] parameters) {
+        return null;
     }
 
     @Override
-    public DataSource createDataSource(String url, String username, String password, String[] parameters) {
-        return null;
+    public <T> TypeHandler<T> findTypeHandler(Type type) {
+        return typeHandlerSelector.findTypeHandler(type);
     }
 
     @Override
@@ -65,6 +66,11 @@ public final class DefaultDialect extends Dialect {
     @Override
     public String quoteIdentifier(String identifier) {
         return identifier;
+    }
+
+    @Override
+    public String getDataTypeNameByJDBCType(JDBCType dataType) {
+        return dataType.name();
     }
 
 }
