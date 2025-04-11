@@ -15,16 +15,16 @@ import static cool.scx.common.util.StringUtils.notEmpty;
 public final class SQLBuilder {
 
     private final SQLBuilderType sqlBuilderType;
-    private String[] selectColumns = null;
+    private String[] selectColumns = null;// 存储列名 如 [name, age]
     private String tableName = null;
-    private String whereClause = null;
-    private String[] groupByColumns = null;
-    private String[] orderByClauses = null;
+    private String whereClause = null;// 存储子句 如 [name = 'scx', age > 18]
+    private String[] groupByColumns = null;// 存储列名 如 [name, age]
+    private String[] orderByClauses = null;// 存储子句 如 [name desc, age asc]
     private Long offset = null;
     private Long limit = null;
-    private String[] insertColumns = null;
-    private String[] insertValues = null;
-    private String[] updateSetColumns = null;
+    private String[] insertColumns = null;// 存储列名 如 [name, age]
+    private String[] insertValues = null;// 存储 values 如 ['scx', 1]
+    private String[] updateSetClauses = null;//存储子句 如 [name = 'scx', age = 18]
 
     private SQLBuilder(SQLBuilderType sqlBuilderType) {
         this.sqlBuilderType = sqlBuilderType;
@@ -142,11 +142,11 @@ public final class SQLBuilder {
         return this;
     }
 
-    public SQLBuilder Set(String... updateSetColumns) {
-        if (updateSetColumns.length == 0) {
+    public SQLBuilder Set(String... updateSetClauses) {
+        if (updateSetClauses.length == 0) {
             throw new IllegalArgumentException("Set 子句错误 : 待更新的数据列 不能为空 !!!");
         }
-        this.updateSetColumns = updateSetColumns;
+        this.updateSetClauses = updateSetClauses;
         return this;
     }
 
@@ -157,31 +157,31 @@ public final class SQLBuilder {
 
     public String GetSQL(Dialect dialect) {
         return switch (this.sqlBuilderType) {
-            case INSERT -> GetInsertSQL();
+            case INSERT -> GetInsertSQL(dialect);
             case UPDATE -> GetUpdateSQL(dialect);
             case DELETE -> GetDeleteSQL(dialect);
             case SELECT -> GetSelectSQL(dialect);
         };
     }
 
-    private String GetInsertSQL() {
-        return "INSERT INTO " + tableName + " (" + String.join(", ", insertColumns) + ") VALUES (" + String.join(", ", insertValues) + ")";
+    private String GetInsertSQL(Dialect dialect) {
+        return "INSERT INTO " + dialect.quoteIdentifier(tableName) + " (" + joinWithQuoteIdentifier(insertColumns, dialect) + ") VALUES (" + String.join(", ", insertValues) + ")";
     }
 
     private String GetUpdateSQL(Dialect dialect) {
-        var sql = "UPDATE " + tableName + " SET " + String.join(", ", updateSetColumns) + getWhereClause() + getOrderByClause();
+        var sql = "UPDATE " + dialect.quoteIdentifier(tableName) + " SET " + String.join(", ", updateSetClauses) + getWhereClause() + getOrderByClause();
         // 更新时 limit 不能有 offset (偏移量)
         return dialect.getLimitSQL(sql, null, limit);
     }
 
     private String GetDeleteSQL(Dialect dialect) {
-        var sql = "DELETE FROM " + tableName + getWhereClause() + getOrderByClause();
+        var sql = "DELETE FROM " + dialect.quoteIdentifier(tableName) + getWhereClause() + getOrderByClause();
         // 删除时 limit 不能有 offset (偏移量)
         return dialect.getLimitSQL(sql, null, limit);
     }
 
     private String GetSelectSQL(Dialect dialect) {
-        var sql = "SELECT " + String.join(", ", selectColumns) + " FROM " + tableName + getWhereClause() + getGroupByClause() + getOrderByClause();
+        var sql = "SELECT " + joinWithQuoteIdentifier(selectColumns, dialect) + " FROM " + dialect.quoteIdentifier(tableName) + getWhereClause() + getGroupByClause(dialect) + getOrderByClause();
         return dialect.getLimitSQL(sql, offset, limit);
     }
 
@@ -189,12 +189,26 @@ public final class SQLBuilder {
         return notEmpty(whereClause) ? " WHERE " + whereClause : "";
     }
 
-    private String getGroupByClause() {
-        return groupByColumns != null && groupByColumns.length != 0 ? " GROUP BY " + String.join(", ", groupByColumns) : "";
+    private String getGroupByClause(Dialect dialect) {
+        return groupByColumns != null && groupByColumns.length != 0 ? " GROUP BY " + joinWithQuoteIdentifier(groupByColumns, dialect) : "";
     }
 
     private String getOrderByClause() {
         return orderByClauses != null && orderByClauses.length != 0 ? " ORDER BY " + String.join(", ", orderByClauses) : "";
+    }
+
+    private static String joinWithQuoteIdentifier(String[] values, Dialect dialect) {
+        var isFirst = true;
+        var sb = new StringBuilder();
+        for (var value : values) {
+            if (isFirst) {
+                isFirst = false;
+            } else {
+                sb.append(", ");
+            }
+            sb.append(dialect.quoteIdentifier(value));
+        }
+        return sb.toString();
     }
 
     private enum SQLBuilderType {
