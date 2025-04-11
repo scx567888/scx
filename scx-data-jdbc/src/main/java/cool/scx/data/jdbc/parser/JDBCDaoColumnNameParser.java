@@ -22,6 +22,21 @@ public final class JDBCDaoColumnNameParser {
         this.dialect = dialect;
     }
 
+    public static ColumnNameAndFieldPath splitIntoColumnNameAndFieldPath(String name) {
+        var charArray = name.toCharArray();
+        var index = charArray.length;
+        for (int i = 0; i < charArray.length; i = i + 1) {
+            var c = charArray[i];
+            if (c == '.' || c == '[') {
+                index = i;
+                break;
+            }
+        }
+        var columnName = name.substring(0, index);
+        var fieldPath = name.substring(index);
+        return new ColumnNameAndFieldPath(columnName, fieldPath);
+    }
+
     public String parseColumnName(Where w) {
         return parseColumnName(w.name(), w.info().useJsonExtract(), w.info().useOriginalName());
     }
@@ -59,21 +74,6 @@ public final class JDBCDaoColumnNameParser {
         } else {
             return dialect.quoteIdentifier(column.name());
         }
-    }
-
-    public static ColumnNameAndFieldPath splitIntoColumnNameAndFieldPath(String name) {
-        var charArray = name.toCharArray();
-        var index = charArray.length;
-        for (int i = 0; i < charArray.length; i = i + 1) {
-            var c = charArray[i];
-            if (c == '.' || c == '[') {
-                index = i;
-                break;
-            }
-        }
-        var columnName = name.substring(0, index);
-        var fieldPath = name.substring(index);
-        return new ColumnNameAndFieldPath(columnName, fieldPath);
     }
 
     public record ColumnNameAndFieldPath(String columnName, String fieldPath) {

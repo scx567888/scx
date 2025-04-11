@@ -1,9 +1,7 @@
 package cool.scx.data.jdbc.parser;
 
-import cool.scx.data.jdbc.AnnotationConfigTable;
 import cool.scx.data.query.GroupBy;
 import cool.scx.data.query.parser.GroupByParser;
-import cool.scx.jdbc.dialect.Dialect;
 
 /// JDBCDaoGroupByParser
 ///

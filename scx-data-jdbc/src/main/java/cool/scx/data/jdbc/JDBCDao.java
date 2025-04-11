@@ -53,7 +53,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
     /// 查询 count 所用的 handler
     protected final ResultHandler<Long> countResultHandler;
 
-    private final JDBCDaoColumnNameParser columnNameParser;
+    protected final JDBCDaoColumnNameParser columnNameParser;
 
     /// where 解析器
     protected final JDBCDaoWhereParser whereParser;
