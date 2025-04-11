@@ -18,7 +18,6 @@ import cool.scx.jdbc.sql.SQLRunner;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
@@ -161,7 +160,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
     }
 
     private String _buildInsertSQL0(Column[] insertColumns) {
-        var insertValues = Arrays.stream(insertColumns).map(columnInfo -> "?").toArray(String[]::new);
+        var insertValues = createInsertValues(insertColumns);
         return Insert(tableInfo, insertColumns)
                 .Values(insertValues)
                 .GetSQL(jdbcContext.dialect());
@@ -179,8 +178,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
         //将 entityList 转换为 objectArrayList 这里因为 stream 实在太慢所以改为传统循环方式
         var objectArrayList = new ArrayList<Object[]>();
         for (var entity : entityList) {
-            var o = extractValues(insertColumnInfos, entity);
-            objectArrayList.add(o);
+            objectArrayList.add(extractValues(insertColumnInfos, entity));
         }
         var sql = _buildInsertSQL0(insertColumnInfos);
         return sql(sql, objectArrayList);
@@ -270,7 +268,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
             throw new IllegalArgumentException("更新数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
         }
         var updateSetColumnInfos = filter(updateFilter, entity, tableInfo);
-        var updateSetColumns = getUpdateSetColumns(updateSetColumnInfos, jdbcContext.dialect());
+        var updateSetColumns = createUpdateSetColumns(updateSetColumnInfos, jdbcContext.dialect());
         var whereClause = whereParser.parse(query.getWhere());
         var orderByClauses = orderByParser.parse(query.getOrderBy());
         var sql = Update(tableInfo)
