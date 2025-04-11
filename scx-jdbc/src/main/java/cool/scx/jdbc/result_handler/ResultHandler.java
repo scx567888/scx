@@ -1,7 +1,6 @@
 package cool.scx.jdbc.result_handler;
 
 import cool.scx.jdbc.dialect.Dialect;
-import cool.scx.jdbc.dialect._default.DefaultDialect;
 import cool.scx.jdbc.result_handler.bean_builder.BeanBuilder;
 
 import java.lang.reflect.Field;
@@ -12,6 +11,8 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
+
+import static cool.scx.jdbc.dialect.DefaultDialect.DEFAULT_DIALECT;
 
 /// ResultHandler
 ///
@@ -90,7 +91,7 @@ public interface ResultHandler<T> {
     T apply(ResultSet rs, Dialect dialect) throws SQLException;
 
     default T apply(ResultSet rs) throws SQLException {
-        return apply(rs, DefaultDialect.DEFAULT_DIALECT);
+        return apply(rs, DEFAULT_DIALECT);
     }
 
 }
