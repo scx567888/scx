@@ -30,7 +30,7 @@ public final class SchemaHelper {
         // 获取不存在的字段
         var needAdd = verifyResult.needAdd();
         if (needAdd.length > 0) {
-            return dialect.getAlertTableDDL(needAdd, newTable);
+            return dialect.getAlterTableDDL(needAdd, newTable);
         }
         return null;
     }

@@ -191,7 +191,7 @@ public interface Dialect {
     ///
     /// @param needAdds  a
     /// @param tableInfo a
-    default String getAlertTableDDL(Column[] needAdds, Table tableInfo) {
+    default String getAlterTableDDL(Column[] needAdds, Table tableInfo) {
         var s = new StringBuilder();
         s.append("ALTER TABLE ");
         if (notEmpty(tableInfo.schema())) {
