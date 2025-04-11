@@ -12,6 +12,7 @@ import cool.scx.http.x.XHttpClient;
 import cool.scx.http.x.http1.Http1ClientConnection;
 import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.tcp.ScxTCPClient;
+import cool.scx.tcp.ScxTCPSocket;
 
 import static cool.scx.http.headers.HttpFieldName.SEC_WEBSOCKET_KEY;
 import static cool.scx.http.headers.HttpFieldName.SEC_WEBSOCKET_VERSION;
@@ -31,7 +32,7 @@ public class XClientWebSocketHandshakeRequest implements ScxClientWebSocketHands
     private WebSocketOptions options;
     private ScxURIWritable uri;
     private ScxTCPClient tcpClient;
-    //    private ScxTCPSocket tcpSocket; //todo 和 XHttpClientRequest 中一样 有必要持有一个吗?
+//    private ScxTCPSocket tcpSocket; //todo 和 XHttpClientRequest 中一样 有必要持有一个吗?
     private Http1Headers headers;
 
     public XClientWebSocketHandshakeRequest(XHttpClient httpClient) {

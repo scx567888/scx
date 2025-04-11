@@ -12,6 +12,7 @@ import cool.scx.http.uri.ScxURIWritable;
 import cool.scx.http.version.HttpVersion;
 import cool.scx.http.x.http1.Http1ClientConnection;
 import cool.scx.http.x.http2.Http2ClientConnection;
+import cool.scx.tcp.ScxTCPSocket;
 
 import static cool.scx.http.method.HttpMethod.GET;
 
