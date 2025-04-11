@@ -93,7 +93,7 @@ public final class JDBCDaoHelper {
 
     public static String[] createInsertValues(Column[] columns) {
         var result = new String[columns.length];
-        for (var i = 0; i < result.length; i++) {
+        for (var i = 0; i < result.length; i = i + 1) {
             result[i] = "?";
         }
         return result;
