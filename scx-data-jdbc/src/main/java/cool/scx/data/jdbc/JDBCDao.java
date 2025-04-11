@@ -269,7 +269,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
             throw new IllegalArgumentException("更新数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
         }
         var updateSetColumnInfos = filter(updateFilter, entity, tableInfo);
-        var updateSetColumns = Arrays.stream(updateSetColumnInfos).map(c -> c.name() + " = ?").toArray(String[]::new);
+        var updateSetColumns = Arrays.stream(updateSetColumnInfos).map(c -> jdbcContext.dialect().quoteIdentifier(c.name()) + " = ?").toArray(String[]::new);
         var whereClause = whereParser.parse(query.getWhere());
         var orderByClauses = orderByParser.parse(query.getOrderBy());
         var sql = Update(tableInfo)

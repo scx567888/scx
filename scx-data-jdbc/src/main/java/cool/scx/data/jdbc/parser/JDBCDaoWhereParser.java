@@ -41,7 +41,7 @@ public class JDBCDaoWhereParser extends WhereParser {
     public WhereClause parseIsNull(Where w) {
         var columnName = parseColumnName(tableInfo, w.name(), w.info().useJsonExtract(), w.info().useOriginalName());
         var whereParams = new Object[]{};
-        var whereClause = columnName + " " + getWhereKeyWord(w.whereType());
+        var whereClause = dialect.quoteIdentifier(columnName) + " " + getWhereKeyWord(w.whereType());
         return new WhereClause(whereClause, whereParams);
     }
 
@@ -65,7 +65,7 @@ public class JDBCDaoWhereParser extends WhereParser {
             v1 = "?";
             whereParams = new Object[]{w.value1()};
         }
-        var whereClause = columnName + " " + getWhereKeyWord(w.whereType()) + " " + v1;
+        var whereClause = dialect.quoteIdentifier(columnName) + " " + getWhereKeyWord(w.whereType()) + " " + v1;
         return new WhereClause(whereClause, whereParams);
     }
 
@@ -88,7 +88,7 @@ public class JDBCDaoWhereParser extends WhereParser {
             v1 = "?";
             whereParams = new Object[]{w.value1()};
         }
-        var whereClause = columnName + " " + getWhereKeyWord(w.whereType()) + " CONCAT('%'," + v1 + ",'%')";
+        var whereClause = dialect.quoteIdentifier(columnName) + " " + getWhereKeyWord(w.whereType()) + " CONCAT('%'," + v1 + ",'%')";
         return new WhereClause(whereClause, whereParams);
     }
 
@@ -128,7 +128,7 @@ public class JDBCDaoWhereParser extends WhereParser {
             }
             v1 = "(" + StringUtils.repeat("?", ", ", whereParams.length) + ")";
         }
-        var whereClause = columnName + " " + getWhereKeyWord(w.whereType()) + " " + v1;
+        var whereClause = dialect.quoteIdentifier(columnName) + " " + getWhereKeyWord(w.whereType()) + " " + v1;
         return new WhereClause(whereClause, whereParams);
     }
 
@@ -159,7 +159,7 @@ public class JDBCDaoWhereParser extends WhereParser {
             v2 = "?";
             whereParams.add(w.value2());
         }
-        var whereClause = columnName + " " + getWhereKeyWord(w.whereType()) + " " + v1 + " AND " + v2;
+        var whereClause = dialect.quoteIdentifier(columnName) + " " + getWhereKeyWord(w.whereType()) + " " + v1 + " AND " + v2;
         return new WhereClause(whereClause, whereParams.toArray());
     }
 
@@ -194,7 +194,7 @@ public class JDBCDaoWhereParser extends WhereParser {
                 }
             }
         }
-        var whereClause = getWhereKeyWord(w.whereType()) + "(" + columnName;
+        var whereClause = getWhereKeyWord(w.whereType()) + "(" + dialect.quoteIdentifier(columnName);
         if (StringUtils.notBlank(c.fieldPath())) {
             whereClause = whereClause + ", " + v1 + ", '$" + c.fieldPath() + "')";
         } else {
