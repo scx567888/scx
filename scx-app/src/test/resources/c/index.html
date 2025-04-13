@@ -31,9 +31,9 @@
 <script src="static/js/index.js"></script>
 <script>
     let time = document.querySelector("#time");
-    const ws=new WebSocket("./now");
-    ws.onmessage=(c)=>{
-        time.innerHTML=c.data;
+    const ws = new WebSocket("./now");
+    ws.onmessage = (c) => {
+        time.innerHTML = c.data;
         ws.send("收到");
     }
 </script>
