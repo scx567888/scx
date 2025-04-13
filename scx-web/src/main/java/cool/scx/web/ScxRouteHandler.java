@@ -17,6 +17,7 @@ import java.util.function.Consumer;
 
 import static cool.scx.common.constant.AnnotationValueHelper.getRealValue;
 import static cool.scx.web.RouteRegistrar.findScxRouteOrThrow;
+import static cool.scx.websocket.routing.WebSocketTypeMatcher.NOT_WEB_SOCKET_HANDSHAKE;
 
 /// ScxRouteHandler
 ///
@@ -50,7 +51,7 @@ public final class ScxRouteHandler implements Route, Consumer<RoutingContext> {
         this.path = initPath(clazzAnnotation, methodAnnotation);
         this.methods = Set.of(methodAnnotation.methods());
         this.order = methodAnnotation.order();
-        this.typeMatcher = TypeMatcher.normal();
+        this.typeMatcher = NOT_WEB_SOCKET_HANDSHAKE;
         this.pathMatcher = path.isBlank() ? PathMatcher.any() : PathMatcher.of(path);
         this.methodMatcher = methods.isEmpty() ? MethodMatcher.any() : MethodMatcher.of(methods.toArray(ScxHttpMethod[]::new));
         this.parameterHandlers = scxWeb.buildParameterHandlers(this.method.parameters());

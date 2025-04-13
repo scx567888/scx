@@ -13,6 +13,8 @@ import cool.scx.config.ScxFeatureConfig;
 import cool.scx.data.jdbc.AnnotationConfigTable;
 import cool.scx.http.ScxHttpServer;
 import cool.scx.http.error_handler.DefaultHttpServerErrorHandler;
+import cool.scx.http.routing.Route;
+import cool.scx.http.routing.TypeMatcher;
 import cool.scx.http.x.XHttpServer;
 import cool.scx.http.x.XHttpServerOptions;
 import cool.scx.jdbc.JDBCContext;
@@ -23,6 +25,8 @@ import cool.scx.web.RouteRegistrar;
 import cool.scx.web.ScxWeb;
 import cool.scx.web.ScxWebOptions;
 import cool.scx.web.WebSocketRouteRegistrar;
+import cool.scx.websocket.routing.WebSocketTypeMatcher;
+import cool.scx.websocket.x.WebSocketUpgradeHandler;
 
 import javax.sql.DataSource;
 import java.lang.System.Logger;
@@ -38,7 +42,6 @@ import static cool.scx.app.ScxAppHelper.*;
 import static cool.scx.app.enumeration.ScxAppFeature.*;
 import static cool.scx.common.exception.ScxExceptionHelper.ignore;
 import static cool.scx.common.util.NetUtils.getLocalIPAddress;
-import static cool.scx.http.routing.TypeMatcher.Type.*;
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.WARNING;
 
@@ -158,10 +161,10 @@ public final class ScxApp {
         //5, 打印基本信息
         if (this.scxFeatureConfig.get(SHOW_START_UP_INFO)) {
             var routes = this.scxHttpRouter.getRoutes();
-            var entries = $.countingBy(routes, c -> c.typeMatcher().type());
-            var a = entries.get(ANY);
-            var b = entries.get(NORMAL);
-            var c = entries.get(WEB_SOCKET_HANDSHAKE);
+            var entries = $.countingBy(routes, Route::typeMatcher);
+            var a = entries.get(TypeMatcher.any());
+            var b = entries.get(WebSocketTypeMatcher.NOT_WEB_SOCKET_HANDSHAKE);
+            var c = entries.get(WebSocketTypeMatcher.WEB_SOCKET_HANDSHAKE);
             Ansi.ansi()
                     .brightYellow("已加载 " + this.beanFactory.getBeanDefinitionNames().length + " 个 Bean !!!").ln()
                     .brightGreen("已加载 " + ((a != null ? a : 0) + (b != null ? b : 0)) + " 个 Http 路由 !!!").ln()
@@ -191,6 +194,8 @@ public final class ScxApp {
             var tls = TLS.of(this.scxOptions.sslPath(), this.scxOptions.sslPassword());
             httpServerOptions.tls(tls);
         }
+        //别忘了添加一个 websocket 处理器
+        httpServerOptions.addUpgradeHandlerList(new WebSocketUpgradeHandler());
         return new XHttpServer(httpServerOptions).onError(new DefaultHttpServerErrorHandler(scxFeatureConfig.get(USE_DEVELOPMENT_ERROR_PAGE)));
     }
 

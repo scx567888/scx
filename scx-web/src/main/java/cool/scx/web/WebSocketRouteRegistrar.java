@@ -4,14 +4,14 @@ import cool.scx.common.util.ClassUtils;
 import cool.scx.common.util.URIUtils;
 import cool.scx.http.routing.Route;
 import cool.scx.http.routing.Router;
-import cool.scx.http.web_socket.ScxServerWebSocketHandshakeRequest;
 import cool.scx.web.annotation.ScxWebSocketRoute;
+import cool.scx.websocket.ScxServerWebSocketHandshakeRequest;
 
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
-import static cool.scx.http.routing.TypeMatcher.Type.WEB_SOCKET_HANDSHAKE;
+import static cool.scx.websocket.routing.WebSocketTypeMatcher.WEB_SOCKET_HANDSHAKE;
 
 /// WebSocketRouteRegistrar
 ///
