@@ -1,18 +1,18 @@
-package cool.scx.http.x.web_socket;
+package cool.scx.websocket.x;
 
-import cool.scx.http.web_socket.WebSocketOpCode;
 import cool.scx.io.data_reader.DataReader;
 import cool.scx.io.exception.NoMoreDataException;
 import cool.scx.tcp.ScxTCPSocket;
+import cool.scx.websocket.WebSocketOpCode;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.util.concurrent.locks.ReentrantLock;
 
-import static cool.scx.http.web_socket.WebSocketCloseInfo.*;
-import static cool.scx.http.x.web_socket.WebSocketFrameHelper.parseCloseInfo;
-import static cool.scx.http.x.web_socket.WebSocketFrameHelper.writeFrame;
+import static cool.scx.websocket.WebSocketCloseInfo.*;
+import static cool.scx.websocket.x.WebSocketFrameHelper.parseCloseInfo;
+import static cool.scx.websocket.x.WebSocketFrameHelper.writeFrame;
 import static java.lang.System.Logger.Level.ERROR;
 
 /// WebSocket

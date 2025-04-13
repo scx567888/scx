@@ -1,4 +1,4 @@
-package cool.scx.http.x.web_socket;
+package cool.scx.websocket.x;
 
 public class WebSocketOptions {
 
