@@ -41,7 +41,7 @@ public class Http1ServerRequest implements ScxHttpServerRequest {
         this.body = new Http1Body(bodyInputStream, this.headers);
         this.remotePeer = getRemotePeer(connection.tcpSocket);
         this.localPeer = getLocalPeer(connection.tcpSocket);
-        this.response = createResponse();
+        this.response = new Http1ServerResponse(connection, this);
     }
 
     @Override
@@ -86,10 +86,6 @@ public class Http1ServerRequest implements ScxHttpServerRequest {
 
     public boolean isKeepAlive() {
         return headers.connection() != CLOSE;
-    }
-
-    protected Http1ServerResponse createResponse() {
-        return new Http1ServerResponse(connection, this);
     }
 
 }

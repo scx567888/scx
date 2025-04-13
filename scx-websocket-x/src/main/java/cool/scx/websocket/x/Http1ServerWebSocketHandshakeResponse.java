@@ -1,5 +1,9 @@
 package cool.scx.websocket.x;
 
+import cool.scx.http.ScxHttpServerResponse;
+import cool.scx.http.headers.ScxHttpHeadersWritable;
+import cool.scx.http.media.MediaWriter;
+import cool.scx.http.status.ScxHttpStatus;
 import cool.scx.http.x.http1.Http1ServerConnection;
 import cool.scx.http.x.http1.Http1ServerResponse;
 import cool.scx.websocket.ScxServerWebSocket;
@@ -11,13 +15,18 @@ import static cool.scx.http.status.HttpStatus.SWITCHING_PROTOCOLS;
 import static cool.scx.http.x.http1.headers.connection.Connection.UPGRADE;
 import static cool.scx.http.x.http1.headers.upgrade.Upgrade.WEB_SOCKET;
 
-public class Http1ServerWebSocketHandshakeResponse extends Http1ServerResponse implements ScxServerWebSocketHandshakeResponse {
+public class Http1ServerWebSocketHandshakeResponse implements ScxServerWebSocketHandshakeResponse {
 
     private final WebSocketOptions webSocketOptions;
+    private final Http1ServerWebSocketHandshakeRequest request;
+    private final Http1ServerConnection connection;
+    private final Http1ServerResponse _response;
     private ServerWebSocket webSocket;
 
-    public Http1ServerWebSocketHandshakeResponse(Http1ServerConnection connection, Http1ServerWebSocketHandshakeRequest request, WebSocketOptions webSocketOptions) {
-        super(connection, request);
+    public Http1ServerWebSocketHandshakeResponse(Http1ServerConnection connection, Http1ServerWebSocketHandshakeRequest request, Http1ServerResponse _response, WebSocketOptions webSocketOptions) {
+        this.connection = connection;
+        this.request = request;
+        this._response = _response;
         this.webSocketOptions = webSocketOptions;
     }
 
@@ -25,9 +34,9 @@ public class Http1ServerWebSocketHandshakeResponse extends Http1ServerResponse i
     public ScxServerWebSocket acceptHandshake() {
         // 实现握手接受逻辑，返回适当的响应头
         if (webSocket == null) {
-            headers.upgrade(WEB_SOCKET);
-            headers.connection(UPGRADE);
-            headers.set(SEC_WEBSOCKET_ACCEPT, generateSecWebSocketAccept(request().secWebSocketKey()));
+            _response.headers().upgrade(WEB_SOCKET);
+            _response.headers().connection(UPGRADE);
+            _response.headers().set(SEC_WEBSOCKET_ACCEPT, generateSecWebSocketAccept(request().secWebSocketKey()));
             status(SWITCHING_PROTOCOLS).send();
 
             webSocket = new ServerWebSocket(connection.tcpSocket, connection.dataReader, connection.dataWriter, webSocketOptions, request());
@@ -44,7 +53,32 @@ public class Http1ServerWebSocketHandshakeResponse extends Http1ServerResponse i
 
     @Override
     public Http1ServerWebSocketHandshakeRequest request() {
-        return (Http1ServerWebSocketHandshakeRequest) this.request;
+        return this.request;
+    }
+
+    @Override
+    public ScxHttpStatus status() {
+        return _response.status();
+    }
+
+    @Override
+    public ScxHttpHeadersWritable headers() {
+        return _response.headers();
+    }
+
+    @Override
+    public ScxHttpServerResponse status(ScxHttpStatus code) {
+        return _response.status(code);
+    }
+
+    @Override
+    public void send(MediaWriter writer) {
+        _response.send(writer);
+    }
+
+    @Override
+    public boolean isSent() {
+        return _response.isSent();
     }
 
 }

@@ -25,6 +25,7 @@ public class XTest {
                     System.out.println("收到消息 :" + s);
                 });
                 d.send("hello");
+                d.start();
             } else {
                 // c.response().setHeader("transfer-encoding", "chunked");
                 c.response().send("123");
