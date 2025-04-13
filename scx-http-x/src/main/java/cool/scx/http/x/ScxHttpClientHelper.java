@@ -5,7 +5,6 @@ import cool.scx.http.ScxHttpClientRequest;
 import cool.scx.http.ScxHttpClientResponse;
 import cool.scx.http.media.multi_part.MultiPart;
 import cool.scx.http.uri.ScxURI;
-import cool.scx.http.web_socket.ScxClientWebSocketHandshakeRequest;
 
 import static cool.scx.http.method.HttpMethod.*;
 
@@ -19,10 +18,6 @@ public final class ScxHttpClientHelper {
 
     public static ScxHttpClientRequest request() {
         return DEFAULT_HTTP_CLIENT.request();
-    }
-
-    public static ScxClientWebSocketHandshakeRequest webSocketHandshakeRequest() {
-        return DEFAULT_HTTP_CLIENT.webSocketHandshakeRequest();
     }
 
     public static ScxHttpClientResponse get(ScxURI uri) {

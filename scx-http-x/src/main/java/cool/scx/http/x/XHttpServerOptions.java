@@ -1,11 +1,12 @@
 package cool.scx.http.x;
 
 import cool.scx.http.x.http1.Http1ServerConnectionOptions;
-import cool.scx.http.x.web_socket.WebSocketOptions;
+import cool.scx.http.x.http1.Http1UpgradeHandler;
 import cool.scx.tcp.ScxTCPServerOptions;
 import cool.scx.tcp.tls.TLS;
 
 import java.net.InetSocketAddress;
+import java.util.List;
 
 /// Http 服务器配置
 ///
@@ -15,7 +16,6 @@ public class XHttpServerOptions {
 
     private final ScxTCPServerOptions tcpServerOptions; // TCP 服务器配置
     private final Http1ServerConnectionOptions http1ConnectionOptions;// Http1 配置
-    private final WebSocketOptions webSocketOptions;// WebSocket 配置
     private TCPServerType tcpServerType; // TCP 服务器类型
     private boolean enableHttp2; // 是否开启 Http2
 
@@ -23,7 +23,6 @@ public class XHttpServerOptions {
         //默认不自动握手
         this.tcpServerOptions = new ScxTCPServerOptions().autoUpgradeToTLS(true).autoHandshake(false);
         this.http1ConnectionOptions = new Http1ServerConnectionOptions();
-        this.webSocketOptions = new WebSocketOptions();
         this.tcpServerType = TCPServerType.CLASSIC; // 默认 使用 CLASSIC 实现
         this.enableHttp2 = false;//默认不启用 http2
     }
@@ -32,7 +31,6 @@ public class XHttpServerOptions {
         //默认不自动握手
         this.tcpServerOptions = new ScxTCPServerOptions(oldOptions.tcpServerOptions()).autoUpgradeToTLS(true).autoHandshake(false);
         this.http1ConnectionOptions = new Http1ServerConnectionOptions(oldOptions.http1ConnectionOptions());
-        this.webSocketOptions = new WebSocketOptions(oldOptions.webSocketOptions());
         tcpServerType(oldOptions.tcpServerType());
         enableHttp2(oldOptions.enableHttp2());
     }
@@ -44,10 +42,6 @@ public class XHttpServerOptions {
 
     public Http1ServerConnectionOptions http1ConnectionOptions() {
         return http1ConnectionOptions;
-    }
-
-    public WebSocketOptions webSocketOptions() {
-        return webSocketOptions;
     }
 
     public TCPServerType tcpServerType() {
@@ -104,30 +98,12 @@ public class XHttpServerOptions {
         return this;
     }
 
-    public boolean mergeWebSocketFrame() {
-        return webSocketOptions.mergeWebSocketFrame();
+    public List<Http1UpgradeHandler> upgradeHandlerList() {
+        return http1ConnectionOptions.upgradeHandlerList();
     }
 
-    public XHttpServerOptions mergeWebSocketFrame(boolean mergeWebSocketFrame) {
-        webSocketOptions.mergeWebSocketFrame(mergeWebSocketFrame);
-        return this;
-    }
-
-    public int maxWebSocketFrameSize() {
-        return webSocketOptions.maxWebSocketFrameSize();
-    }
-
-    public XHttpServerOptions maxWebSocketFrameSize(int maxWebSocketFrameSize) {
-        webSocketOptions.maxWebSocketFrameSize(maxWebSocketFrameSize);
-        return this;
-    }
-
-    public int maxWebSocketMessageSize() {
-        return webSocketOptions.maxWebSocketMessageSize();
-    }
-
-    public XHttpServerOptions maxWebSocketMessageSize(int maxWebSocketMessageSize) {
-        webSocketOptions.maxWebSocketMessageSize(maxWebSocketMessageSize);
+    public XHttpServerOptions upgradeHandlerList(List<Http1UpgradeHandler> upgradeHandlerList) {
+        http1ConnectionOptions.upgradeHandlerList(upgradeHandlerList);
         return this;
     }
 
