@@ -1,10 +1,10 @@
-package cool.scx.http.x.test;
+package cool.scx.websocket.x.test;
 
-import cool.scx.http.web_socket.WebSocketOpCode;
-import cool.scx.http.x.web_socket.WebSocketFrame;
-import cool.scx.http.x.web_socket.WebSocketFrameHelper;
 import cool.scx.io.data_reader.ByteArrayDataReader;
 import cool.scx.io.exception.NoMoreDataException;
+import cool.scx.websocket.WebSocketOpCode;
+import cool.scx.websocket.x.WebSocketFrame;
+import cool.scx.websocket.x.WebSocketFrameHelper;
 import org.testng.annotations.Test;
 
 import java.io.ByteArrayOutputStream;

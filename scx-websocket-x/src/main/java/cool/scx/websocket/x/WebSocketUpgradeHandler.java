@@ -19,6 +19,10 @@ public class WebSocketUpgradeHandler implements Http1UpgradeHandler {
         this.webSocketOptions = webSocketOptions;
     }
 
+    public WebSocketUpgradeHandler() {
+        this.webSocketOptions = new WebSocketOptions();
+    }
+
     @Override
     public boolean canHandle(ScxUpgrade scxUpgrade) {
         return scxUpgrade == WEB_SOCKET;
@@ -26,7 +30,7 @@ public class WebSocketUpgradeHandler implements Http1UpgradeHandler {
 
     @Override
     public ScxHttpServerRequest createScxHttpServerRequest(Http1ServerConnection connection, Http1RequestLine requestLine, Http1Headers headers, InputStream bodyInputStream) {
-        return new Http1ServerWebSocketHandshakeRequest(connection, requestLine, headers, bodyInputStream,webSocketOptions);
+        return new Http1ServerWebSocketHandshakeRequest(connection, requestLine, headers, bodyInputStream, webSocketOptions);
     }
 
 }
