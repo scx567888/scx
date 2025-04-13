@@ -3,6 +3,8 @@ package cool.scx.http.x.http1;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Collections.addAll;
+
 public class Http1ServerConnectionOptions {
 
     private int maxRequestLineSize;// 最大请求行大小
@@ -81,6 +83,11 @@ public class Http1ServerConnectionOptions {
 
     public Http1ServerConnectionOptions upgradeHandlerList(List<Http1UpgradeHandler> upgradeHandlerList) {
         this.upgradeHandlerList = upgradeHandlerList;
+        return this;
+    }
+
+    public Http1ServerConnectionOptions addUpgradeHandlerList(Http1UpgradeHandler... upgradeHandlerList) {
+        addAll(this.upgradeHandlerList, upgradeHandlerList);
         return this;
     }
 

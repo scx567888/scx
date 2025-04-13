@@ -107,6 +107,11 @@ public class XHttpServerOptions {
         return this;
     }
 
+    public XHttpServerOptions addUpgradeHandlerList(Http1UpgradeHandler... upgradeHandlerList) {
+        http1ConnectionOptions.addUpgradeHandlerList(upgradeHandlerList);
+        return this;
+    }
+
     public boolean enableHttp2() {
         return enableHttp2;
     }
