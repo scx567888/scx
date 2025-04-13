@@ -1,15 +1,15 @@
-package cool.scx.http.x.web_socket;
+package cool.scx.websocket.x;
 
-import cool.scx.http.web_socket.ScxWebSocket;
-import cool.scx.http.web_socket.WebSocketOpCode;
-import cool.scx.http.web_socket.handler.BinaryMessageHandler;
-import cool.scx.http.web_socket.handler.CloseHandler;
-import cool.scx.http.web_socket.handler.TextMessageHandler;
+import cool.scx.websocket.ScxWebSocket;
+import cool.scx.websocket.WebSocketOpCode;
+import cool.scx.websocket.handler.BinaryMessageHandler;
+import cool.scx.websocket.handler.CloseHandler;
+import cool.scx.websocket.handler.TextMessageHandler;
 
 import java.util.function.Consumer;
 
-import static cool.scx.http.web_socket.WebSocketOpCode.*;
-import static cool.scx.http.x.web_socket.WebSocketFrameHelper.createClosePayload;
+import static cool.scx.websocket.WebSocketOpCode.*;
+import static cool.scx.websocket.x.WebSocketFrameHelper.createClosePayload;
 
 /// 实现一些最基本的方法
 public abstract class AbstractWebSocket implements ScxWebSocket {
