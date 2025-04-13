@@ -24,7 +24,7 @@ public class TypeMatcherImpl implements TypeMatcher {
 
     @Override
     public boolean matches(ScxHttpServerRequest request) {
-        // todo
+        // todo 这里如何处理 不同类型?
 //        return switch (type) {
 //            case ANY -> true;
 //            case NORMAL -> !(request instanceof ScxServerWebSocketHandshakeRequest);
