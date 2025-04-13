@@ -34,7 +34,7 @@ public class XClientWebSocketHandshakeRequest implements ScxClientWebSocketHands
 //    private ScxTCPSocket tcpSocket; //todo 和 XHttpClientRequest 中一样 有必要持有一个吗?
     private Http1Headers headers;
 
-    public XClientWebSocketHandshakeRequest(XWebSocketClient httpClient, WebSocketOptions webSocketOptions) {
+    public XClientWebSocketHandshakeRequest(XHttpClient httpClient, WebSocketOptions webSocketOptions) {
         this.httpClient = httpClient;
         this.webSocketOptions = webSocketOptions;
         this.uri = ScxURI.of();
