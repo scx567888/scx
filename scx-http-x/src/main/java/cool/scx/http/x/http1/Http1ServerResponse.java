@@ -34,7 +34,7 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
     protected String reasonPhrase;
     protected OutputStream outputStream;
 
-    protected Http1ServerResponse(Http1ServerConnection connection, Http1ServerRequest request) {
+    Http1ServerResponse(Http1ServerConnection connection, Http1ServerRequest request) {
         this.connection = connection;
         this.request = request;
         this.status = HttpStatus.OK;
