@@ -1,4 +1,4 @@
-package cool.scx.http.x.web_socket;
+package cool.scx.websocket.x;
 
 import cool.scx.common.util.Base64Utils;
 import cool.scx.common.util.RandomUtils;
@@ -6,13 +6,12 @@ import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.uri.ScxURIWritable;
-import cool.scx.http.web_socket.ScxClientWebSocketHandshakeRequest;
-import cool.scx.http.web_socket.ScxClientWebSocketHandshakeResponse;
 import cool.scx.http.x.XHttpClient;
 import cool.scx.http.x.http1.Http1ClientConnection;
 import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.tcp.ScxTCPClient;
-import cool.scx.tcp.ScxTCPSocket;
+import cool.scx.websocket.ScxClientWebSocketHandshakeRequest;
+import cool.scx.websocket.ScxClientWebSocketHandshakeResponse;
 
 import static cool.scx.http.headers.HttpFieldName.SEC_WEBSOCKET_KEY;
 import static cool.scx.http.headers.HttpFieldName.SEC_WEBSOCKET_VERSION;
@@ -35,9 +34,9 @@ public class XClientWebSocketHandshakeRequest implements ScxClientWebSocketHands
 //    private ScxTCPSocket tcpSocket; //todo 和 XHttpClientRequest 中一样 有必要持有一个吗?
     private Http1Headers headers;
 
-    public XClientWebSocketHandshakeRequest(XHttpClient httpClient) {
+    public XClientWebSocketHandshakeRequest(XWebSocketClient httpClient, WebSocketOptions webSocketOptions) {
         this.httpClient = httpClient;
-        this.webSocketOptions = httpClient.options().webSocketOptions();
+        this.webSocketOptions = webSocketOptions;
         this.uri = ScxURI.of();
         this.headers = new Http1Headers();
     }
