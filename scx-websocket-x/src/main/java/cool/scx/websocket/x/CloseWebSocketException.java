@@ -1,4 +1,4 @@
-package cool.scx.http.x.web_socket;
+package cool.scx.websocket.x;
 
 /// WebSocket 消息 太大异常
 class CloseWebSocketException extends RuntimeException {
