@@ -1,7 +1,5 @@
 package cool.scx.http;
 
-import cool.scx.http.web_socket.ScxClientWebSocketHandshakeRequest;
-
 /// ScxHttpClient
 ///
 /// @author scx567888
@@ -9,7 +7,5 @@ import cool.scx.http.web_socket.ScxClientWebSocketHandshakeRequest;
 public interface ScxHttpClient {
 
     ScxHttpClientRequest request();
-
-    ScxClientWebSocketHandshakeRequest webSocketHandshakeRequest();
 
 }
