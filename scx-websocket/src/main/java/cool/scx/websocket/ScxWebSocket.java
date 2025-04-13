@@ -1,12 +1,12 @@
-package cool.scx.http.web_socket;
+package cool.scx.websocket;
 
-import cool.scx.http.web_socket.handler.BinaryMessageHandler;
-import cool.scx.http.web_socket.handler.CloseHandler;
-import cool.scx.http.web_socket.handler.TextMessageHandler;
+import cool.scx.websocket.handler.BinaryMessageHandler;
+import cool.scx.websocket.handler.CloseHandler;
+import cool.scx.websocket.handler.TextMessageHandler;
 
 import java.util.function.Consumer;
 
-import static cool.scx.http.web_socket.WebSocketCloseInfo.NORMAL_CLOSE;
+import static cool.scx.websocket.WebSocketCloseInfo.NORMAL_CLOSE;
 
 /// ScxWebSocket
 ///

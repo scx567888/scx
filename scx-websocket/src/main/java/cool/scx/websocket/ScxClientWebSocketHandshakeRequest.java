@@ -1,4 +1,4 @@
-package cool.scx.http.web_socket;
+package cool.scx.websocket;
 
 import cool.scx.http.ScxHttpClientRequest;
 import cool.scx.http.ScxHttpClientResponse;

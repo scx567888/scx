@@ -1,4 +1,4 @@
-package cool.scx.http.web_socket.handler;
+package cool.scx.websocket.handler;
 
 public interface CloseHandler {
 
