@@ -2,12 +2,12 @@ package cool.scx.http.routing;
 
 import cool.scx.http.ScxHttpServerRequest;
 
-import static cool.scx.http.routing.TypeMatcherImpl.ANY_TYPE;
-
 public interface TypeMatcher {
 
+    TypeMatcher ANY = _ -> true;
+
     static TypeMatcher any() {
-        return ANY_TYPE;
+        return ANY;
     }
 
     boolean matches(ScxHttpServerRequest request);

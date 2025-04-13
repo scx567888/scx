@@ -8,8 +8,10 @@ import cool.scx.http.method.ScxHttpMethod;
 /// @version 0.0.1
 public interface MethodMatcher {
 
+    MethodMatcher ANY = _ -> true;
+
     static MethodMatcher any() {
-        return method -> true;
+        return ANY;
     }
 
     static MethodMatcher of(ScxHttpMethod... method) {
