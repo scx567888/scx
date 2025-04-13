@@ -1,13 +1,13 @@
-package cool.scx.http.x.web_socket;
+package cool.scx.websocket.x;
 
-import cool.scx.http.web_socket.WebSocketOpCode;
 import cool.scx.io.data_reader.DataReader;
+import cool.scx.websocket.WebSocketOpCode;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
-import static cool.scx.http.web_socket.WebSocketCloseInfo.TOO_BIG;
+import static cool.scx.websocket.WebSocketCloseInfo.TOO_BIG;
 
 /// WebSocketFrameHelper
 ///
