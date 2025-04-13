@@ -9,11 +9,11 @@ import cool.scx.http.x.http1.Http1ServerResponse;
 import cool.scx.websocket.ScxServerWebSocket;
 import cool.scx.websocket.ScxServerWebSocketHandshakeResponse;
 
-import static cool.scx.http.HttpHelper.generateSecWebSocketAccept;
 import static cool.scx.http.headers.HttpFieldName.SEC_WEBSOCKET_ACCEPT;
 import static cool.scx.http.status.HttpStatus.SWITCHING_PROTOCOLS;
 import static cool.scx.http.x.http1.headers.connection.Connection.UPGRADE;
 import static cool.scx.http.x.http1.headers.upgrade.Upgrade.WEB_SOCKET;
+import static cool.scx.websocket.WebSocketHelper.generateSecWebSocketAccept;
 
 public class Http1ServerWebSocketHandshakeResponse implements ScxServerWebSocketHandshakeResponse {
 
