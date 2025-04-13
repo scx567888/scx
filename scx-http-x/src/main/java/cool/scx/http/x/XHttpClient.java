@@ -3,8 +3,6 @@ package cool.scx.http.x;
 import cool.scx.http.ScxHttpClient;
 import cool.scx.http.ScxHttpClientRequest;
 import cool.scx.http.uri.ScxURI;
-import cool.scx.http.web_socket.ScxClientWebSocketHandshakeRequest;
-import cool.scx.http.x.web_socket.XClientWebSocketHandshakeRequest;
 import cool.scx.tcp.ClassicTCPClient;
 import cool.scx.tcp.NioTCPClient;
 import cool.scx.tcp.ScxTCPClientOptions;
@@ -69,11 +67,6 @@ public class XHttpClient implements ScxHttpClient {
     @Override
     public ScxHttpClientRequest request() {
         return new XHttpClientRequest(this);
-    }
-
-    @Override
-    public ScxClientWebSocketHandshakeRequest webSocketHandshakeRequest() {
-        return new XClientWebSocketHandshakeRequest(this);
     }
 
 }

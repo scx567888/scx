@@ -31,8 +31,8 @@ class RouteImpl implements RouteWritable {
     }
 
     @Override
-    public RouteWritable type(TypeMatcher.Type type) {
-        this.typeMatcher = TypeMatcher.of(type);
+    public RouteWritable type(TypeMatcher type) {
+        this.typeMatcher = type;
         return this;
     }
 

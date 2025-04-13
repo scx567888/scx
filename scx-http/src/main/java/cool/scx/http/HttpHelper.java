@@ -1,7 +1,5 @@
 package cool.scx.http;
 
-import cool.scx.common.util.Base64Utils;
-import cool.scx.common.util.HashUtils;
 import cool.scx.http.media_type.FileFormat;
 import cool.scx.http.media_type.MediaType;
 
@@ -64,12 +62,6 @@ public class HttpHelper {
     public static MediaType getMediaTypeByFileName(String filename) {
         var fileFormat = FileFormat.findByFileName(filename);
         return fileFormat != null ? fileFormat.mediaType() : null;
-    }
-
-    // 生成 Sec-WebSocket-Accept 的方法
-    public static String generateSecWebSocketAccept(String key) {
-        // 根据 WebSocket 协议生成接受密钥
-        return Base64Utils.encodeToString(HashUtils.sha1(key + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"));
     }
 
 }

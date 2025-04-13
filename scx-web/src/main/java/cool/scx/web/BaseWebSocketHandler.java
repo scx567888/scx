@@ -1,7 +1,7 @@
 package cool.scx.web;
 
-import cool.scx.http.web_socket.ScxServerWebSocket;
 import cool.scx.web.annotation.ScxWebSocketRoute;
+import cool.scx.websocket.ScxServerWebSocket;
 
 /// BaseWebSocketHandler 基本接口 请与 [ScxWebSocketRoute] 配合使用
 ///

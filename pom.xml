@@ -60,6 +60,8 @@
         <module>scx-scheduling</module>
         <module>scx-tcp</module>
         <module>scx-web</module>
+        <module>scx-websocket</module>
+        <module>scx-websocket-x</module>
     </modules>
 
     <build>

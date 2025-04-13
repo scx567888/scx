@@ -8,8 +8,10 @@ import cool.scx.http.parameters.Parameters;
 /// @version 0.0.1
 public interface PathMatcher {
 
+    PathMatcher ANY = _ -> new MatchResult(true, Parameters.of());
+
     static PathMatcher any() {
-        return path -> new MatchResult(true, Parameters.of());
+        return ANY;
     }
 
     static PathMatcher of(String path) {

@@ -7,6 +7,7 @@ import cool.scx.http.peer_info.PeerInfo;
 import cool.scx.http.peer_info.PeerInfoWritable;
 import cool.scx.http.status.ScxHttpStatus;
 import cool.scx.http.x.http1.headers.Http1Headers;
+import cool.scx.http.x.http1.headers.upgrade.ScxUpgrade;
 import cool.scx.http.x.http1.request_line.Http1RequestLine;
 import cool.scx.tcp.ScxTCPSocket;
 
@@ -20,7 +21,6 @@ import static cool.scx.http.headers.HttpFieldName.HOST;
 import static cool.scx.http.method.HttpMethod.GET;
 import static cool.scx.http.status.HttpStatus.*;
 import static cool.scx.http.x.http1.headers.connection.Connection.UPGRADE;
-import static cool.scx.http.x.http1.headers.upgrade.Upgrade.WEB_SOCKET;
 
 public final class Http1Helper {
 
@@ -29,10 +29,9 @@ public final class Http1Helper {
     public static final byte[] CRLF_CRLF_BYTES = "\r\n\r\n".getBytes();
     public static final byte[] CHUNKED_END_BYTES = "0\r\n\r\n".getBytes();
 
-    public static boolean checkIsWebSocketHandshake(Http1RequestLine requestLine, Http1Headers headers) {
-        return requestLine.method() == GET &&
-                headers.connection() == UPGRADE &&
-                headers.upgrade() == WEB_SOCKET;
+    /// 检查是不是 升级请求 如果不是 返回 null
+    public static ScxUpgrade checkUpgradeRequest(Http1RequestLine requestLine, Http1Headers headers) {
+        return requestLine.method() == GET && headers.connection() == UPGRADE ? headers.upgrade() : null;
     }
 
     public static void sendContinue100(OutputStream out) throws IOException {

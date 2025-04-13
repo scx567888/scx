@@ -93,7 +93,7 @@ public class Http1ServerConnection {
         }
     }
 
-    private Http1ServerRequest readRequest() throws CloseConnectionException {
+    private ScxHttpServerRequest readRequest() throws CloseConnectionException {
         // 1, 读取 请求行
         var requestLine = readRequestLine(dataReader, options.maxRequestLineSize());
 
@@ -125,12 +125,19 @@ public class Http1ServerConnection {
             }
         }
 
-        // 5, 判断是否为 WebSocket 握手请求 并创建对应请求
-        var isWebSocketHandshake = checkIsWebSocketHandshake(requestLine, headers);
+        // 5, 判断是否为 升级请求 并创建对应请求
+        var upgrade = checkUpgradeRequest(requestLine, headers);
 
-        return isWebSocketHandshake ?
-                new Http1ServerWebSocketHandshakeRequest(this, requestLine, headers, bodyInputStream) :
-                new Http1ServerRequest(this, requestLine, headers, bodyInputStream);
+        if (upgrade != null) {
+            for (var upgradeHandler : options.upgradeHandlerList()) {
+                var canHandle = upgradeHandler.canHandle(upgrade);
+                if (canHandle) {
+                    return upgradeHandler.createScxHttpServerRequest(this, requestLine, headers, bodyInputStream);
+                }
+            }
+        }
+
+        return new Http1ServerRequest(this, requestLine, headers, bodyInputStream);
     }
 
     public void stop() {

@@ -28,6 +28,12 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>scx-websocket</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>scx-reflect</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -45,6 +51,13 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>scx-http-x</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>scx-websocket-x</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
