@@ -21,7 +21,6 @@ import static cool.scx.http.headers.HttpFieldName.HOST;
 import static cool.scx.http.method.HttpMethod.GET;
 import static cool.scx.http.status.HttpStatus.*;
 import static cool.scx.http.x.http1.headers.connection.Connection.UPGRADE;
-import static cool.scx.http.x.http1.headers.upgrade.Upgrade.WEB_SOCKET;
 
 public final class Http1Helper {
 

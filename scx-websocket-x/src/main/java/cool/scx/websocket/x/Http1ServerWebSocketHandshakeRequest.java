@@ -26,7 +26,7 @@ public class Http1ServerWebSocketHandshakeRequest implements ScxServerWebSocketH
 
     public Http1ServerWebSocketHandshakeRequest(Http1ServerConnection connection, Http1RequestLine requestLine, Http1Headers headers, InputStream bodyInputStream, WebSocketOptions webSocketOptions) {
         this._request = new Http1ServerRequest(connection, requestLine, headers, bodyInputStream);
-        this.response = new Http1ServerWebSocketHandshakeResponse(connection, this, this._request.response(),webSocketOptions);
+        this.response = new Http1ServerWebSocketHandshakeResponse(connection, this, this._request.response(), webSocketOptions);
         this.webSocketOptions = webSocketOptions;
     }
 
