@@ -194,8 +194,11 @@ public final class ScxApp {
             var tls = TLS.of(this.scxOptions.sslPath(), this.scxOptions.sslPassword());
             httpServerOptions.tls(tls);
         }
+        var hasWebSocketUpgradeHandler= httpServerOptions.upgradeHandlerList().stream().anyMatch(http1UpgradeHandler -> http1UpgradeHandler instanceof WebSocketUpgradeHandler);
         //别忘了添加一个 websocket 处理器
-        httpServerOptions.addUpgradeHandlerList(new WebSocketUpgradeHandler());
+        if (!hasWebSocketUpgradeHandler) {
+            httpServerOptions.addUpgradeHandlerList(new WebSocketUpgradeHandler());    
+        }
         return new XHttpServer(httpServerOptions).onError(new DefaultHttpServerErrorHandler(scxFeatureConfig.get(USE_DEVELOPMENT_ERROR_PAGE)));
     }
 
