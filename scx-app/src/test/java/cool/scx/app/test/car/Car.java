@@ -16,7 +16,7 @@ public class Car extends BaseModel {
     public CarOwner owner;
 
     public String[] tags;
-    
+
     //测试虚拟字段
     @NoColumn
     public String reverseName;
