@@ -13,11 +13,13 @@ public final class FieldFilterImpl implements FieldFilter {
 
     private final FilterMode filterMode;
     private final Set<String> fieldNames;
+    private final Set<VirtualField> virtualFields;
     private boolean ignoreNullValue;
 
     public FieldFilterImpl(FilterMode filterMode) {
         this.filterMode = filterMode;
         this.fieldNames = new HashSet<>();
+        this.virtualFields = new HashSet<>();
         this.ignoreNullValue = true;
     }
 
@@ -72,6 +74,17 @@ public final class FieldFilterImpl implements FieldFilter {
     public FieldFilter clear() {
         this.fieldNames.clear();
         return this;
+    }
+
+    @Override
+    public FieldFilter addVirtualField(String virtualFiledName, String expression) {
+        this.virtualFields.add(new VirtualField(virtualFiledName, expression));
+        return this;
+    }
+
+    @Override
+    public VirtualField[] getVirtualFields() {
+        return virtualFields.toArray(VirtualField[]::new);
     }
 
     public FieldFilter addFieldNames(String... fieldNames) {
