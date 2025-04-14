@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static cool.scx.data.field_filter.FieldFilterBuilder.ofExcluded;
 import static cool.scx.data.field_filter.FieldFilterBuilder.ofIncluded;
 import static cool.scx.data.query.QueryBuilder.*;
 import static cool.scx.data.query.QueryOption.USE_JSON_EXTRACT;
@@ -149,6 +150,9 @@ public class TestModule extends ScxAppModule {
         } catch (Exception e) {
             System.err.println("出错了 后滚后数据库中数据条数 : " + carService.count());
         }
+        //测试虚拟字段
+        var list = carService.find(ofExcluded().addVirtualField("reverseName", "REVERSE(name)"));
+        System.out.println(list.get(0).reverseName);
 
     }
 
