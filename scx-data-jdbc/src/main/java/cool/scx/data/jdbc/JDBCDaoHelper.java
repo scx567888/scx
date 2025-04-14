@@ -20,6 +20,16 @@ import static cool.scx.jdbc.JDBCType.VARCHAR;
 /// @version 0.0.1
 public final class JDBCDaoHelper {
 
+    public static String[] getVirtualColumns(FieldFilter fieldFilter) {
+        var virtualFields = fieldFilter.getVirtualFields();
+        var virtualColumns = new String[virtualFields.length];
+        for (int i = 0; i < virtualFields.length; i++) {
+            var virtualField = virtualFields[i];
+            virtualColumns[i] = virtualField.expression() + " AS " + virtualField.virtualFiledName();
+        }
+        return virtualColumns;
+    }
+
     /// 过滤
     ///
     /// @param tableInfo 带过滤的列表

@@ -746,6 +746,15 @@ public final class ArrayUtils {
         return result;
     }
 
+    /// 可处理 {@link ArrayUtils#concat(Object[], Object...)} 无法处理的协变问题
+    public static Object[] concatAny(Object[] first, Object... second) {
+        var result = new Object[first.length + second.length];
+        System.arraycopy(first, 0, result, 0, first.length);
+        System.arraycopy(second, 0, result, first.length, second.length);
+        return result;
+    }
+
+
     //********************* concat END *********************
 
     //********************* tryConcat START *********************
@@ -839,6 +848,17 @@ public final class ArrayUtils {
             return first;
         }
         return concat(first, second);
+    }
+
+    /// 可处理 {@link ArrayUtils#tryConcat(Object[], Object...)} 无法处理的协变问题
+    public static Object[] tryConcatAny(Object[] first, Object... second) {
+        if (first == null || first.length == 0) {
+            return second;
+        }
+        if (second == null || second.length == 0) {
+            return first;
+        }
+        return concatAny(first, second);
     }
 
     //********************* tryConcat END *********************

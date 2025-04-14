@@ -36,6 +36,10 @@ public final class SQLBuilder {
         return new SQLBuilder(SQLBuilderType.SELECT)._Select(selectColumns);
     }
 
+    public static SQLBuilder Select(Object... selectColumns) {
+        return new SQLBuilder(SQLBuilderType.SELECT)._Select(selectColumns);
+    }
+
     public static SQLBuilder Insert(String tableName, String... insertColumns) {
         return new SQLBuilder(SQLBuilderType.INSERT)._Insert(tableName, insertColumns);
     }

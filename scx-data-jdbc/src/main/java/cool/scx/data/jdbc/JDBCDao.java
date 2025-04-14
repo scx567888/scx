@@ -24,6 +24,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static cool.scx.common.util.ArrayUtils.concat;
+import static cool.scx.common.util.ArrayUtils.tryConcatAny;
 import static cool.scx.data.jdbc.JDBCDaoHelper.*;
 import static cool.scx.jdbc.result_handler.ResultHandler.*;
 import static cool.scx.jdbc.sql.SQL.sql;
@@ -186,9 +187,11 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
 
     private String _buildSelectSQL0(Query query, FieldFilter selectFilter, WhereClause whereClause) {
         var selectColumns = filter(selectFilter, tableInfo);
+        Object[] selectVirtualColumns = getVirtualColumns(selectFilter);
         var groupByColumns = groupByParser.parse(query.getGroupBy());
         var orderByClauses = orderByParser.parse(query.getOrderBy());
-        return Select(selectColumns)
+        var finalSelectColumns = tryConcatAny(selectColumns, selectVirtualColumns);
+        return Select(finalSelectColumns)
                 .From(tableInfo)
                 .Where(whereClause.whereClause())
                 .GroupBy(groupByColumns)
@@ -231,9 +234,11 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
 
     private String _buildGetSQL0(Query query, FieldFilter selectFilter, WhereClause whereClause) {
         var selectColumns = filter(selectFilter, tableInfo);
+        Object[] selectVirtualColumns = getVirtualColumns(selectFilter);
         var groupByColumns = groupByParser.parse(query.getGroupBy());
         var orderByClauses = orderByParser.parse(query.getOrderBy());
-        return Select(selectColumns)
+        var finalSelectColumns = tryConcatAny(selectColumns, selectVirtualColumns);
+        return Select(finalSelectColumns)
                 .From(tableInfo)
                 .Where(whereClause.whereClause())
                 .GroupBy(groupByColumns)
