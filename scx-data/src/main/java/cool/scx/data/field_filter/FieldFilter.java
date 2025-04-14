@@ -49,7 +49,7 @@ public interface FieldFilter {
 
     /// 清除所有 包含类型的列
     FieldFilter clear();
-    
+
     /// 添加虚拟列支持
     FieldFilter addVirtualField(String virtualFiledName, String expression);
 
