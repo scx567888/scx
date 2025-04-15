@@ -37,7 +37,7 @@ public final class JDBCDaoHelper {
         var result = new String[fieldExpressions.length];
         for (var i = 0; i < fieldExpressions.length; i = i + 1) {
             var fieldExpression = fieldExpressions[i];
-            result[i] = dialect.quoteIdentifier(fieldExpression.fieldName()) + " = "+ fieldExpression.expression();
+            result[i] = dialect.quoteIdentifier(fieldExpression.fieldName()) + " = " + fieldExpression.expression();
         }
         return result;
     }
@@ -103,7 +103,7 @@ public final class JDBCDaoHelper {
         return fieldFilter.getIgnoreNullValue() ? excludeIfFieldValueIsNull(entity, filter(fieldFilter, tableInfo)) : filter(fieldFilter, tableInfo);
     }
 
-    public static Column[] filter(FieldPolicy fieldFilter, Map<String,Object> entity, Table tableInfo) {
+    public static Column[] filter(FieldPolicy fieldFilter, Map<String, Object> entity, Table tableInfo) {
         return fieldFilter.getIgnoreNullValue() ? excludeIfFieldValueIsNull(entity, filter(fieldFilter, tableInfo)) : filter(fieldFilter, tableInfo);
     }
 
@@ -118,8 +118,8 @@ public final class JDBCDaoHelper {
         ).toArray(AnnotationConfigColumn[]::new);
     }
 
-    private static Column[] excludeIfFieldValueIsNull(Map<String,Object> entity, Column... scxDaoColumnInfos) {
-        return Arrays.stream(scxDaoColumnInfos).filter(field -> entity.get(field.name())!=null).toArray(Column[]::new);
+    private static Column[] excludeIfFieldValueIsNull(Map<String, Object> entity, Column... scxDaoColumnInfos) {
+        return Arrays.stream(scxDaoColumnInfos).filter(field -> entity.get(field.name()) != null).toArray(Column[]::new);
     }
 
     public static JDBCType getDataTypeByJavaType(Type type) {
@@ -165,7 +165,7 @@ public final class JDBCDaoHelper {
     }
 
     /// 提取值
-    public static Object[] extractValues(Column[] column,Map<String,Object> entity) {
+    public static Object[] extractValues(Column[] column, Map<String, Object> entity) {
         var result = new Object[column.length];
         for (var i = 0; i < column.length; i = i + 1) {
             result[i] = entity.get(column[i].name());

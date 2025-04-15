@@ -52,8 +52,8 @@ public interface FieldPolicy {
 
     /// 添加字段表达式支持
     FieldPolicy addFieldExpression(FieldExpression... fieldExpressions);
-    
-    default FieldPolicy addFieldExpression(String fieldName, String expression){
+
+    default FieldPolicy addFieldExpression(String fieldName, String expression) {
         return addFieldExpression(new FieldExpression(fieldName, expression));
     }
 
