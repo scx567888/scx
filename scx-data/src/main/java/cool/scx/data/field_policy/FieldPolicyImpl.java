@@ -1,4 +1,4 @@
-package cool.scx.data.field_filter;
+package cool.scx.data.field_policy;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -9,14 +9,14 @@ import static java.util.Collections.addAll;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public final class FieldFilterImpl implements FieldFilter {
+public final class FieldPolicyImpl implements FieldPolicy {
 
     private final FilterMode filterMode;
     private final Set<String> fieldNames;
     private final Set<VirtualField> virtualFields;
     private boolean ignoreNullValue;
 
-    public FieldFilterImpl(FilterMode filterMode) {
+    public FieldPolicyImpl(FilterMode filterMode) {
         this.filterMode = filterMode;
         this.fieldNames = new HashSet<>();
         this.virtualFields = new HashSet<>();
@@ -24,7 +24,7 @@ public final class FieldFilterImpl implements FieldFilter {
     }
 
     @Override
-    public FieldFilter addIncluded(String... fieldNames) {
+    public FieldPolicy addIncluded(String... fieldNames) {
         return switch (filterMode) {
             case INCLUDED -> addFieldNames(fieldNames);
             case EXCLUDED -> removeFieldNames(fieldNames);
@@ -32,7 +32,7 @@ public final class FieldFilterImpl implements FieldFilter {
     }
 
     @Override
-    public FieldFilter addExcluded(String... fieldNames) {
+    public FieldPolicy addExcluded(String... fieldNames) {
         return switch (filterMode) {
             case EXCLUDED -> addFieldNames(fieldNames);
             case INCLUDED -> removeFieldNames(fieldNames);
@@ -40,17 +40,17 @@ public final class FieldFilterImpl implements FieldFilter {
     }
 
     @Override
-    public FieldFilter removeIncluded(String... fieldNames) {
+    public FieldPolicy removeIncluded(String... fieldNames) {
         return addExcluded(fieldNames);
     }
 
     @Override
-    public FieldFilter removeExcluded(String... fieldNames) {
+    public FieldPolicy removeExcluded(String... fieldNames) {
         return addIncluded(fieldNames);
     }
 
     @Override
-    public FieldFilter ignoreNullValue(boolean ignoreNullValue) {
+    public FieldPolicy ignoreNullValue(boolean ignoreNullValue) {
         this.ignoreNullValue = ignoreNullValue;
         return this;
     }
@@ -71,13 +71,13 @@ public final class FieldFilterImpl implements FieldFilter {
     }
 
     @Override
-    public FieldFilter clear() {
+    public FieldPolicy clear() {
         this.fieldNames.clear();
         return this;
     }
 
     @Override
-    public FieldFilter addVirtualField(String virtualFiledName, String expression) {
+    public FieldPolicy addVirtualField(String virtualFiledName, String expression) {
         this.virtualFields.add(new VirtualField(virtualFiledName, expression));
         return this;
     }
@@ -87,12 +87,12 @@ public final class FieldFilterImpl implements FieldFilter {
         return virtualFields.toArray(VirtualField[]::new);
     }
 
-    public FieldFilter addFieldNames(String... fieldNames) {
+    public FieldPolicy addFieldNames(String... fieldNames) {
         addAll(this.fieldNames, fieldNames);
         return this;
     }
 
-    public FieldFilter removeFieldNames(String... fieldNames) {
+    public FieldPolicy removeFieldNames(String... fieldNames) {
         for (var fieldName : fieldNames) {
             this.fieldNames.remove(fieldName);
         }

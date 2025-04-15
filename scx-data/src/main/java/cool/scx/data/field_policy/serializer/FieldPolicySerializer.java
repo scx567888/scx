@@ -1,6 +1,6 @@
-package cool.scx.data.field_filter.serializer;
+package cool.scx.data.field_policy.serializer;
 
-import cool.scx.data.field_filter.FieldFilter;
+import cool.scx.data.field_policy.FieldPolicy;
 
 import java.util.LinkedHashMap;
 
@@ -8,18 +8,18 @@ import java.util.LinkedHashMap;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class FieldFilterSerializer {
+public class FieldPolicySerializer {
 
-    public static final FieldFilterSerializer FIELD_FILTER_SERIALIZER = new FieldFilterSerializer();
+    public static final FieldPolicySerializer FIELD_FILTER_SERIALIZER = new FieldPolicySerializer();
 
     public Object serialize(Object obj) {
         return switch (obj) {
-            case FieldFilter s -> serializeFieldFilter(s);
+            case FieldPolicy s -> serializeFieldFilter(s);
             default -> obj;
         };
     }
 
-    public LinkedHashMap<String, Object> serializeFieldFilter(FieldFilter fieldFilter) {
+    public LinkedHashMap<String, Object> serializeFieldFilter(FieldPolicy fieldFilter) {
         var m = new LinkedHashMap<String, Object>();
         m.put("@type", "FieldFilter");
         m.put("filterMode", fieldFilter.getFilterMode());

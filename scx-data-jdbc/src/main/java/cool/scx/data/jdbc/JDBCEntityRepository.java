@@ -1,8 +1,8 @@
 package cool.scx.data.jdbc;
 
 import cool.scx.common.util.RandomUtils;
-import cool.scx.data.Dao;
-import cool.scx.data.field_filter.FieldFilter;
+import cool.scx.data.Repository;
+import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.data.jdbc.parser.JDBCDaoColumnNameParser;
 import cool.scx.data.jdbc.parser.JDBCDaoGroupByParser;
 import cool.scx.data.jdbc.parser.JDBCDaoOrderByParser;
@@ -34,7 +34,7 @@ import static cool.scx.jdbc.sql.SQLBuilder.*;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class JDBCDao<Entity> implements Dao<Entity, Long> {
+public class JDBCEntityRepository<Entity> implements Repository<Entity, Long> {
 
     /// 实体类对应的 table 结构
     protected final AnnotationConfigTable tableInfo;
@@ -72,7 +72,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
     /// a
     ///
     /// @param entityClass a
-    public JDBCDao(Class<Entity> entityClass, JDBCContext jdbcContext) {
+    public JDBCEntityRepository(Class<Entity> entityClass, JDBCContext jdbcContext) {
         this.entityClass = entityClass;
         this.jdbcContext = jdbcContext;
         this.sqlRunner = jdbcContext.sqlRunner();
@@ -92,31 +92,31 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
     }
 
     @Override
-    public final Long add(Entity entity, FieldFilter updateFilter) {
+    public final Long add(Entity entity, FieldPolicy updateFilter) {
         return sqlRunner.update(buildInsertSQL(entity, updateFilter)).firstGeneratedKey();
     }
 
     @Override
-    public final List<Long> add(Collection<Entity> entityList, FieldFilter updateFilter) {
+    public final List<Long> add(Collection<Entity> entityList, FieldPolicy updateFilter) {
         return sqlRunner.updateBatch(buildInsertBatchSQL(entityList, updateFilter)).generatedKeys();
     }
 
     @Override
-    public final List<Entity> find(Query query, FieldFilter selectFilter) {
+    public final List<Entity> find(Query query, FieldPolicy selectFilter) {
         return sqlRunner.query(buildSelectSQL(query, selectFilter), entityBeanListHandler);
     }
 
     @Override
-    public void find(Query query, FieldFilter fieldFilter, Consumer<Entity> consumer) {
+    public void find(Query query, FieldPolicy fieldFilter, Consumer<Entity> consumer) {
         sqlRunner.query(buildSelectSQL(query, fieldFilter), ofBeanConsumer(beanBuilder, consumer));
     }
 
-    public Entity get(Query query, FieldFilter columnFilter) {
+    public Entity get(Query query, FieldPolicy columnFilter) {
         return sqlRunner.query(buildGetSQL(query, columnFilter), entityBeanHandler);
     }
 
     @Override
-    public final long update(Entity entity, Query query, FieldFilter updateFilter) {
+    public final long update(Entity entity, Query query, FieldPolicy updateFilter) {
         return sqlRunner.update(buildUpdateSQL(entity, query, updateFilter)).affectedItemsCount();
     }
 
@@ -160,6 +160,10 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
         return entityBeanHandler;
     }
 
+    public JDBCContext jdbcContext() {
+        return jdbcContext;
+    }
+
     private String _buildInsertSQL0(Column[] insertColumns) {
         var insertValues = createInsertValues(insertColumns);
         return Insert(tableInfo, insertColumns)
@@ -167,14 +171,14 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
                 .GetSQL(jdbcContext.dialect());
     }
 
-    private SQL buildInsertSQL(Entity entity, FieldFilter updateFilter) {
+    private SQL buildInsertSQL(Entity entity, FieldPolicy updateFilter) {
         var insertColumnInfos = filter(updateFilter, entity, tableInfo);
         var sql = _buildInsertSQL0(insertColumnInfos);
         var objectArray = extractValues(insertColumnInfos, entity);
         return sql(sql, objectArray);
     }
 
-    private SQL buildInsertBatchSQL(Collection<? extends Entity> entityList, FieldFilter updateFilter) {
+    private SQL buildInsertBatchSQL(Collection<? extends Entity> entityList, FieldPolicy updateFilter) {
         var insertColumnInfos = filter(updateFilter, tableInfo);
         //将 entityList 转换为 objectArrayList 这里因为 stream 实在太慢所以改为传统循环方式
         var objectArrayList = new ArrayList<Object[]>();
@@ -185,7 +189,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
         return sql(sql, objectArrayList);
     }
 
-    private String _buildSelectSQL0(Query query, FieldFilter selectFilter, WhereClause whereClause) {
+    private String _buildSelectSQL0(Query query, FieldPolicy selectFilter, WhereClause whereClause) {
         var selectColumns = filter(selectFilter, tableInfo);
         Object[] selectVirtualColumns = getVirtualColumns(selectFilter);
         var groupByColumns = groupByParser.parse(query.getGroupBy());
@@ -206,12 +210,12 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
     /// 用法<pre>
     /// `// 假设有以下结构的两个实体类public class Person{// IDpublic Long id;// 关联的 汽车 IDpublic Long carID;// 年龄public Integer age;}public class Car{// IDpublic Long id;// 汽车 名称public String name;}// 现在想做如下查询 根据所有 person 表中年龄小于 100 的 carID 查询 car 表中的数据// 可以按照如下写法var cars = carService._select(new Query().in("id",personService._buildSelectSQL(new Query().lessThan("age", 100), ColumnFilter.ofIncluded("carID")),ColumnFilter.ofExcluded()));// 同时也支持 whereSQL 方法// 这个写法和上方完全相同var cars1 = carService._select(new Query().whereSQL("id IN ",personService._buildSelectSQL(new Query().lessThan("age", 100), ColumnFilter.ofIncluded("carID")),ColumnFilter.ofExcluded()));`</pre>
     ///
-    /// 注意 !!! 若同时使用 limit 和 in/not in 请使用 [#buildSelectSQLWithAlias(Query,FieldFilter)]
+    /// 注意 !!! 若同时使用 limit 和 in/not in 请使用 [#buildSelectSQLWithAlias(Query, FieldPolicy)]
     ///
     /// @param query        聚合查询参数对象
     /// @param selectFilter 查询字段过滤器
     /// @return selectSQL
-    public final SQL buildSelectSQL(Query query, FieldFilter selectFilter) {
+    public final SQL buildSelectSQL(Query query, FieldPolicy selectFilter) {
         var whereClause = whereParser.parse(query.getWhere());
         var sql = _buildSelectSQL0(query, selectFilter, whereClause);
         return sql(sql, whereClause.params());
@@ -223,7 +227,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
     /// @param query        q
     /// @param selectFilter s
     /// @return a
-    public final SQL buildSelectSQLWithAlias(Query query, FieldFilter selectFilter) {
+    public final SQL buildSelectSQLWithAlias(Query query, FieldPolicy selectFilter) {
         var whereClause = whereParser.parse(query.getWhere());
         var sql0 = _buildSelectSQL0(query, selectFilter, whereClause);
         var sql = Select("*")
@@ -232,7 +236,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
         return sql(sql + " AS " + tableInfo.name() + "_" + RandomUtils.randomString(6), whereClause.params());
     }
 
-    private String _buildGetSQL0(Query query, FieldFilter selectFilter, WhereClause whereClause) {
+    private String _buildGetSQL0(Query query, FieldPolicy selectFilter, WhereClause whereClause) {
         var selectColumns = filter(selectFilter, tableInfo);
         Object[] selectVirtualColumns = getVirtualColumns(selectFilter);
         var groupByColumns = groupByParser.parse(query.getGroupBy());
@@ -247,7 +251,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
                 .GetSQL(jdbcContext.dialect());
     }
 
-    public final SQL buildGetSQL(Query query, FieldFilter selectFilter) {
+    public final SQL buildGetSQL(Query query, FieldPolicy selectFilter) {
         var whereClause = whereParser.parse(query.getWhere());
         var sql = _buildGetSQL0(query, selectFilter, whereClause);
         return sql(sql, whereClause.params());
@@ -259,7 +263,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
     /// @param query        q
     /// @param selectFilter s
     /// @return a
-    public final SQL buildGetSQLWithAlias(Query query, FieldFilter selectFilter) {
+    public final SQL buildGetSQLWithAlias(Query query, FieldPolicy selectFilter) {
         var whereClause = whereParser.parse(query.getWhere());
         var sql0 = _buildGetSQL0(query, selectFilter, whereClause);
         var sql = Select("*")
@@ -268,7 +272,7 @@ public class JDBCDao<Entity> implements Dao<Entity, Long> {
         return sql(sql + " AS " + tableInfo.name() + "_" + RandomUtils.randomString(6), whereClause.params());
     }
 
-    private SQL buildUpdateSQL(Entity entity, Query query, FieldFilter updateFilter) {
+    private SQL buildUpdateSQL(Entity entity, Query query, FieldPolicy updateFilter) {
         if (query.getWhere().length == 0) {
             throw new IllegalArgumentException("更新数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
         }
