@@ -23,13 +23,23 @@ import static cool.scx.jdbc.JDBCType.VARCHAR;
 public final class JDBCDaoHelper {
 
     public static String[] getVirtualColumns(FieldPolicy fieldFilter) {
-        var virtualFields = fieldFilter.getVirtualFields();
-        var virtualColumns = new String[virtualFields.length];
-        for (int i = 0; i < virtualFields.length; i++) {
-            var virtualField = virtualFields[i];
-            virtualColumns[i] = virtualField.expression() + " AS " + virtualField.virtualFiledName();
+        var fieldExpressions = fieldFilter.getFieldExpressions();
+        var virtualColumns = new String[fieldExpressions.length];
+        for (int i = 0; i < fieldExpressions.length; i++) {
+            var fieldExpression = fieldExpressions[i];
+            virtualColumns[i] = fieldExpression.expression() + " AS " + fieldExpression.fieldName();
         }
         return virtualColumns;
+    }
+
+    public static String[] createUpdateSetExpressionsColumns(FieldPolicy fieldFilter, Dialect dialect) {
+        var fieldExpressions = fieldFilter.getFieldExpressions();
+        var result = new String[fieldExpressions.length];
+        for (var i = 0; i < fieldExpressions.length; i = i + 1) {
+            var fieldExpression = fieldExpressions[i];
+            result[i] = dialect.quoteIdentifier(fieldExpression.fieldName()) + " = " + fieldExpression.expression();
+        }
+        return result;
     }
 
     /// 过滤
@@ -93,7 +103,7 @@ public final class JDBCDaoHelper {
         return fieldFilter.getIgnoreNullValue() ? excludeIfFieldValueIsNull(entity, filter(fieldFilter, tableInfo)) : filter(fieldFilter, tableInfo);
     }
 
-    public static Column[] filter(FieldPolicy fieldFilter, Map<String,Object> entity, Table tableInfo) {
+    public static Column[] filter(FieldPolicy fieldFilter, Map<String, Object> entity, Table tableInfo) {
         return fieldFilter.getIgnoreNullValue() ? excludeIfFieldValueIsNull(entity, filter(fieldFilter, tableInfo)) : filter(fieldFilter, tableInfo);
     }
 
@@ -103,11 +113,13 @@ public final class JDBCDaoHelper {
     /// @param scxDaoColumnInfos s
     /// @return e
     private static AnnotationConfigColumn[] excludeIfFieldValueIsNull(Object entity, AnnotationConfigColumn... scxDaoColumnInfos) {
-        return Arrays.stream(scxDaoColumnInfos).filter(field -> field.javaFieldValue(entity) != null).toArray(AnnotationConfigColumn[]::new);
+        return Arrays.stream(scxDaoColumnInfos).filter(field ->
+                entity != null && field.javaFieldValue(entity) != null
+        ).toArray(AnnotationConfigColumn[]::new);
     }
 
-    private static Column[] excludeIfFieldValueIsNull(Map<String,Object> entity, Column... scxDaoColumnInfos) {
-        return Arrays.stream(scxDaoColumnInfos).filter(field -> entity.get(field.name())!=null).toArray(Column[]::new);
+    private static Column[] excludeIfFieldValueIsNull(Map<String, Object> entity, Column... scxDaoColumnInfos) {
+        return Arrays.stream(scxDaoColumnInfos).filter(field -> entity.get(field.name()) != null).toArray(Column[]::new);
     }
 
     public static JDBCType getDataTypeByJavaType(Type type) {
@@ -153,7 +165,7 @@ public final class JDBCDaoHelper {
     }
 
     /// 提取值
-    public static Object[] extractValues(Column[] column,Map<String,Object> entity) {
+    public static Object[] extractValues(Column[] column, Map<String, Object> entity) {
         var result = new Object[column.length];
         for (var i = 0; i < column.length; i = i + 1) {
             result[i] = entity.get(column[i].name());

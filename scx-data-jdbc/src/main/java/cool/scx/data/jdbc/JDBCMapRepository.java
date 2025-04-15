@@ -13,7 +13,6 @@ import cool.scx.jdbc.JDBCContext;
 import cool.scx.jdbc.mapping.Column;
 import cool.scx.jdbc.mapping.Table;
 import cool.scx.jdbc.result_handler.ResultHandler;
-import cool.scx.jdbc.result_handler.bean_builder.BeanBuilder;
 import cool.scx.jdbc.sql.SQL;
 import cool.scx.jdbc.sql.SQLRunner;
 
@@ -25,8 +24,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import static cool.scx.common.util.ArrayUtils.concat;
-import static cool.scx.common.util.ArrayUtils.tryConcatAny;
+import static cool.scx.common.util.ArrayUtils.*;
 import static cool.scx.data.jdbc.JDBCDaoHelper.*;
 import static cool.scx.jdbc.result_handler.ResultHandler.*;
 import static cool.scx.jdbc.sql.SQL.sql;
@@ -36,7 +34,7 @@ import static cool.scx.jdbc.sql.SQLBuilder.*;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class JDBCMapRepository implements Repository<Map<String,Object>, Long> {
+public class JDBCMapRepository implements Repository<Map<String, Object>, Long> {
 
     /// 实体类对应的 table 结构
     protected final Table tableInfo;
@@ -45,10 +43,10 @@ public class JDBCMapRepository implements Repository<Map<String,Object>, Long> {
     protected final SQLRunner sqlRunner;
 
     /// 实体类对应的 BeanListHandler
-    protected final ResultHandler<List<Map<String,Object>>> entityBeanListHandler;
+    protected final ResultHandler<List<Map<String, Object>>> entityBeanListHandler;
 
     /// 实体类对应的 BeanListHandler
-    protected final ResultHandler<Map<String,Object>> entityBeanHandler;
+    protected final ResultHandler<Map<String, Object>> entityBeanHandler;
 
     /// 查询 count 所用的 handler
     protected final ResultHandler<Long> countResultHandler;
@@ -84,31 +82,31 @@ public class JDBCMapRepository implements Repository<Map<String,Object>, Long> {
     }
 
     @Override
-    public final Long add(Map<String,Object> entity, FieldPolicy updateFilter) {
+    public final Long add(Map<String, Object> entity, FieldPolicy updateFilter) {
         return sqlRunner.update(buildInsertSQL(entity, updateFilter)).firstGeneratedKey();
     }
 
     @Override
-    public final List<Long> add(Collection<Map<String,Object>> entityList, FieldPolicy updateFilter) {
+    public final List<Long> add(Collection<Map<String, Object>> entityList, FieldPolicy updateFilter) {
         return sqlRunner.updateBatch(buildInsertBatchSQL(entityList, updateFilter)).generatedKeys();
     }
 
     @Override
-    public final List<Map<String,Object>> find(Query query, FieldPolicy selectFilter) {
+    public final List<Map<String, Object>> find(Query query, FieldPolicy selectFilter) {
         return sqlRunner.query(buildSelectSQL(query, selectFilter), entityBeanListHandler);
     }
 
     @Override
-    public void find(Query query, FieldPolicy fieldFilter, Consumer<Map<String,Object>> consumer) {
+    public void find(Query query, FieldPolicy fieldFilter, Consumer<Map<String, Object>> consumer) {
         sqlRunner.query(buildSelectSQL(query, fieldFilter), ofMapConsumer(consumer));
     }
 
-    public Map<String,Object> get(Query query, FieldPolicy columnFilter) {
+    public Map<String, Object> get(Query query, FieldPolicy columnFilter) {
         return sqlRunner.query(buildGetSQL(query, columnFilter), entityBeanHandler);
     }
 
     @Override
-    public final long update(Map<String,Object> entity, Query query, FieldPolicy updateFilter) {
+    public final long update(Map<String, Object> entity, Query query, FieldPolicy updateFilter) {
         return sqlRunner.update(buildUpdateSQL(entity, query, updateFilter)).affectedItemsCount();
     }
 
@@ -128,7 +126,7 @@ public class JDBCMapRepository implements Repository<Map<String,Object>, Long> {
     }
 
     @Override
-    public final Class<Map<String,Object>> entityClass() {
+    public final Class<Map<String, Object>> entityClass() {
         return null;
     }
 
@@ -140,11 +138,11 @@ public class JDBCMapRepository implements Repository<Map<String,Object>, Long> {
         return this.sqlRunner;
     }
 
-    public ResultHandler<List<Map<String,Object>>> entityBeanListHandler() {
+    public ResultHandler<List<Map<String, Object>>> entityBeanListHandler() {
         return entityBeanListHandler;
     }
 
-    public ResultHandler<Map<String,Object>> entityBeanHandler() {
+    public ResultHandler<Map<String, Object>> entityBeanHandler() {
         return entityBeanHandler;
     }
 
@@ -159,14 +157,14 @@ public class JDBCMapRepository implements Repository<Map<String,Object>, Long> {
                 .GetSQL(jdbcContext.dialect());
     }
 
-    private SQL buildInsertSQL(Map<String,Object> entity, FieldPolicy updateFilter) {
+    private SQL buildInsertSQL(Map<String, Object> entity, FieldPolicy updateFilter) {
         var insertColumnInfos = filter(updateFilter, entity, tableInfo);
         var sql = _buildInsertSQL0(insertColumnInfos);
         var objectArray = extractValues(insertColumnInfos, entity);
         return sql(sql, objectArray);
     }
 
-    private SQL buildInsertBatchSQL(Collection<? extends Map<String,Object>> entityList, FieldPolicy updateFilter) {
+    private SQL buildInsertBatchSQL(Collection<? extends Map<String, Object>> entityList, FieldPolicy updateFilter) {
         var insertColumnInfos = filter(updateFilter, tableInfo);
         //将 entityList 转换为 objectArrayList 这里因为 stream 实在太慢所以改为传统循环方式
         var objectArrayList = new ArrayList<Object[]>();
@@ -260,16 +258,18 @@ public class JDBCMapRepository implements Repository<Map<String,Object>, Long> {
         return sql(sql + " AS " + tableInfo.name() + "_" + RandomUtils.randomString(6), whereClause.params());
     }
 
-    private SQL buildUpdateSQL(Map<String,Object> entity, Query query, FieldPolicy updateFilter) {
+    private SQL buildUpdateSQL(Map<String, Object> entity, Query query, FieldPolicy updateFilter) {
         if (query.getWhere().length == 0) {
             throw new IllegalArgumentException("更新数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
         }
         var updateSetColumnInfos = filter(updateFilter, entity, tableInfo);
         var updateSetColumns = createUpdateSetColumns(updateSetColumnInfos, jdbcContext.dialect());
+        var updateSetExpressionsColumns = createUpdateSetExpressionsColumns(updateFilter, jdbcContext.dialect());
+        var finalUpdateSetColumns = tryConcat(updateSetColumns, updateSetExpressionsColumns);
         var whereClause = whereParser.parse(query.getWhere());
         var orderByClauses = orderByParser.parse(query.getOrderBy());
         var sql = Update(tableInfo)
-                .Set(updateSetColumns)
+                .Set(finalUpdateSetColumns)
                 .Where(whereClause.whereClause())
                 .OrderBy(orderByClauses)
                 .Limit(null, query.getLimit())

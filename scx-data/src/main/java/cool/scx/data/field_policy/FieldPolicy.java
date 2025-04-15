@@ -50,10 +50,14 @@ public interface FieldPolicy {
     /// 清除所有 包含类型的列
     FieldPolicy clear();
 
-    /// 添加虚拟列支持
-    FieldPolicy addVirtualField(String virtualFiledName, String expression);
+    /// 添加字段表达式支持
+    FieldPolicy addFieldExpression(FieldExpression... fieldExpressions);
 
-    /// 获取虚拟列
-    VirtualField[] getVirtualFields();
+    default FieldPolicy addFieldExpression(String fieldName, String expression) {
+        return addFieldExpression(new FieldExpression(fieldName, expression));
+    }
+
+    /// 获取字段表达式
+    FieldExpression[] getFieldExpressions();
 
 }

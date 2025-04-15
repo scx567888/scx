@@ -1,6 +1,7 @@
 package cool.scx.data.field_policy.serializer;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import cool.scx.data.field_policy.FieldExpression;
 import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.data.field_policy.FieldPolicyImpl;
 import cool.scx.data.field_policy.FilterMode;
@@ -47,6 +48,11 @@ public class FieldPolicyDeserializer {
         if (objectNode.get("ignoreNullValue") != null && !objectNode.get("ignoreNullValue").isNull()) {
             var ignoreNullValue = objectNode.get("ignoreNullValue").asBoolean();
             fieldFilter.ignoreNullValue(ignoreNullValue);
+        }
+
+        if (objectNode.get("fieldExpressions") != null && !objectNode.get("fieldExpressions").isNull()) {
+            var fieldExpressions = convertValue(objectNode.get("fieldExpressions"), FieldExpression[].class);
+            fieldFilter.addFieldExpression(fieldExpressions);
         }
 
         return fieldFilter;
