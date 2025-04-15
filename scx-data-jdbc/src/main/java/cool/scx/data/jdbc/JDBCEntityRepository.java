@@ -165,7 +165,7 @@ public class JDBCEntityRepository<Entity> implements Repository<Entity, Long> {
 
     private String _buildInsertSQL0(Column[] insertColumns, FieldPolicy updateFilter) {
         var insertValues = createInsertValues(insertColumns);
-        Object[] insertExpressionsColumns = createInsertExpressionsColumns(updateFilter,columnNameParser);
+        Object[] insertExpressionsColumns = createInsertExpressionsColumns(updateFilter, columnNameParser);
         var insertExpressionsValue = createInsertExpressionsValue(updateFilter);
         var finalInsertColumns = tryConcatAny(insertColumns, insertExpressionsColumns);
         var finalValues = tryConcat(insertValues, insertExpressionsValue);
@@ -194,7 +194,7 @@ public class JDBCEntityRepository<Entity> implements Repository<Entity, Long> {
 
     private String _buildSelectSQL0(Query query, FieldPolicy selectFilter, WhereClause whereClause) {
         var selectColumns = filter(selectFilter, tableInfo);
-        Object[] selectVirtualColumns = getVirtualColumns(selectFilter,jdbcContext.dialect());
+        Object[] selectVirtualColumns = getVirtualColumns(selectFilter, jdbcContext.dialect());
         var groupByColumns = groupByParser.parse(query.getGroupBy());
         var orderByClauses = orderByParser.parse(query.getOrderBy());
         var finalSelectColumns = tryConcatAny(selectColumns, selectVirtualColumns);

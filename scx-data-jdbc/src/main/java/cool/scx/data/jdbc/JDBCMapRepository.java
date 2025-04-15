@@ -152,7 +152,7 @@ public class JDBCMapRepository implements Repository<Map<String, Object>, Long> 
 
     private String _buildInsertSQL0(Column[] insertColumns, FieldPolicy updateFilter) {
         var insertValues = createInsertValues(insertColumns);
-        Object[] insertExpressionsColumns = createInsertExpressionsColumns(updateFilter,columnNameParser);
+        Object[] insertExpressionsColumns = createInsertExpressionsColumns(updateFilter, columnNameParser);
         var insertExpressionsValue = createInsertExpressionsValue(updateFilter);
         var finalInsertColumns = tryConcatAny(insertColumns, insertExpressionsColumns);
         var finalValues = tryConcat(insertValues, insertExpressionsValue);
@@ -268,7 +268,7 @@ public class JDBCMapRepository implements Repository<Map<String, Object>, Long> 
         }
         var updateSetColumnInfos = filter(updateFilter, entity, tableInfo);
         var updateSetColumns = createUpdateSetColumns(updateSetColumnInfos, jdbcContext.dialect());
-        var updateSetExpressionsColumns = createUpdateSetExpressionsColumns(updateFilter,  columnNameParser);
+        var updateSetExpressionsColumns = createUpdateSetExpressionsColumns(updateFilter, columnNameParser);
         var finalUpdateSetColumns = tryConcat(updateSetColumns, updateSetExpressionsColumns);
         var whereClause = whereParser.parse(query.getWhere());
         var orderByClauses = orderByParser.parse(query.getOrderBy());

@@ -33,22 +33,22 @@ public final class JDBCDaoHelper {
         return virtualColumns;
     }
 
-    public static String[] createUpdateSetExpressionsColumns(FieldPolicy fieldFilter,  JDBCDaoColumnNameParser columnNameParser) {
+    public static String[] createUpdateSetExpressionsColumns(FieldPolicy fieldFilter, JDBCDaoColumnNameParser columnNameParser) {
         var fieldExpressions = fieldFilter.getFieldExpressions();
         var result = new String[fieldExpressions.length];
         for (var i = 0; i < fieldExpressions.length; i = i + 1) {
             var fieldExpression = fieldExpressions[i];
-            result[i] = columnNameParser.parseColumnName(fieldExpression.fieldName(),false)  + " = " + fieldExpression.expression();
+            result[i] = columnNameParser.parseColumnName(fieldExpression.fieldName(), false) + " = " + fieldExpression.expression();
         }
         return result;
     }
 
     //todo 是否需要 调用方言 或者转成列名
-    public static String[] createInsertExpressionsColumns(FieldPolicy fieldFilter,JDBCDaoColumnNameParser parser) {
+    public static String[] createInsertExpressionsColumns(FieldPolicy fieldFilter, JDBCDaoColumnNameParser parser) {
         var fieldExpressions = fieldFilter.getFieldExpressions();
         var result = new String[fieldExpressions.length];
         for (var i = 0; i < fieldExpressions.length; i = i + 1) {
-            result[i] = parser.parseColumnName(fieldExpressions[i].fieldName(),false);
+            result[i] = parser.parseColumnName(fieldExpressions[i].fieldName(), false);
         }
         return result;
     }
