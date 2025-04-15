@@ -1,6 +1,5 @@
 package cool.scx.data.jdbc;
 
-import cool.scx.common.util.RandomUtils;
 import cool.scx.data.Repository;
 import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.data.jdbc.parser.JDBCDaoColumnNameParser;
@@ -8,23 +7,23 @@ import cool.scx.data.jdbc.parser.JDBCDaoGroupByParser;
 import cool.scx.data.jdbc.parser.JDBCDaoOrderByParser;
 import cool.scx.data.jdbc.parser.JDBCDaoWhereParser;
 import cool.scx.data.query.Query;
-import cool.scx.data.query.WhereClause;
 import cool.scx.jdbc.JDBCContext;
-import cool.scx.jdbc.mapping.Column;
 import cool.scx.jdbc.result_handler.ResultHandler;
 import cool.scx.jdbc.result_handler.bean_builder.BeanBuilder;
 import cool.scx.jdbc.sql.SQL;
 import cool.scx.jdbc.sql.SQLRunner;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import static cool.scx.common.util.ArrayUtils.*;
-import static cool.scx.data.jdbc.JDBCDaoHelper.*;
+import static cool.scx.common.util.ArrayUtils.tryConcat;
+import static cool.scx.common.util.ArrayUtils.tryConcatAny;
+import static cool.scx.common.util.RandomUtils.randomString;
+import static cool.scx.data.jdbc.A.filterByFieldPolicy;
+import static cool.scx.data.jdbc.DataJDBCHelper.*;
 import static cool.scx.jdbc.result_handler.ResultHandler.*;
 import static cool.scx.jdbc.sql.SQL.sql;
 import static cool.scx.jdbc.sql.SQLBuilder.*;
@@ -36,7 +35,7 @@ import static cool.scx.jdbc.sql.SQLBuilder.*;
 public class JDBCEntityRepository<Entity> implements Repository<Entity, Long> {
 
     /// 实体类对应的 table 结构
-    protected final AnnotationConfigTable tableInfo;
+    protected final AnnotationConfigTable table;
 
     /// 实体类 class 用于泛型转换
     protected final Class<Entity> entityClass;
@@ -53,13 +52,16 @@ public class JDBCEntityRepository<Entity> implements Repository<Entity, Long> {
     /// 查询 count 所用的 handler
     protected final ResultHandler<Long> countResultHandler;
 
+    /// 列名解析器
     protected final JDBCDaoColumnNameParser columnNameParser;
 
     /// where 解析器
     protected final JDBCDaoWhereParser whereParser;
 
+    /// 分组解析器
     protected final JDBCDaoGroupByParser groupByParser;
 
+    /// 排序解析器
     protected final JDBCDaoOrderByParser orderByParser;
 
     protected final JDBCContext jdbcContext;
@@ -75,16 +77,13 @@ public class JDBCEntityRepository<Entity> implements Repository<Entity, Long> {
         this.entityClass = entityClass;
         this.jdbcContext = jdbcContext;
         this.sqlRunner = jdbcContext.sqlRunner();
-        this.tableInfo = new AnnotationConfigTable(entityClass);
-        this.columnNameMapping = field -> {
-            var columnInfo = this.tableInfo.getColumn(field.getName());
-            return columnInfo == null ? null : columnInfo.name();
-        };
-        this.beanBuilder = BeanBuilder.of(this.entityClass, columnNameMapping);
+        this.table = new AnnotationConfigTable(entityClass);
+        this.columnNameMapping = new FieldColumnNameMapping(this.table);
+        this.beanBuilder = BeanBuilder.of(this.entityClass, this.columnNameMapping);
         this.entityBeanListHandler = ofBeanList(this.beanBuilder);
         this.entityBeanHandler = ofBean(this.beanBuilder);
         this.countResultHandler = ofSingleValue("count", Long.class);
-        this.columnNameParser = new JDBCDaoColumnNameParser(this.tableInfo, jdbcContext.dialect());
+        this.columnNameParser = new JDBCDaoColumnNameParser(this.table, jdbcContext.dialect());
         this.whereParser = new JDBCDaoWhereParser(this.columnNameParser);
         this.groupByParser = new JDBCDaoGroupByParser(this.columnNameParser);
         this.orderByParser = new JDBCDaoOrderByParser(this.columnNameParser);
@@ -131,7 +130,7 @@ public class JDBCEntityRepository<Entity> implements Repository<Entity, Long> {
 
     @Override
     public final void clear() {
-        this.sqlRunner.execute(sql("truncate " + tableInfo.name()));
+        this.sqlRunner.execute(sql("truncate " + table.name()));
     }
 
     @Override
@@ -140,7 +139,7 @@ public class JDBCEntityRepository<Entity> implements Repository<Entity, Long> {
     }
 
     public final AnnotationConfigTable tableInfo() {
-        return this.tableInfo;
+        return this.table;
     }
 
     public final SQLRunner sqlRunner() {
@@ -163,55 +162,82 @@ public class JDBCEntityRepository<Entity> implements Repository<Entity, Long> {
         return jdbcContext;
     }
 
-    private String _buildInsertSQL0(Column[] insertColumns, FieldPolicy updateFilter) {
+    private SQL buildInsertSQL(Entity entity, FieldPolicy fieldPolicy) {
+        //1, 根据 字段策略过滤 可以插入的列
+        var insertColumns = filterByFieldPolicy(fieldPolicy, table, entity);
+        //2, 根据 字段策略 创建插入的表达式列
+        var insertExpressionsColumns = createInsertExpressionsColumns(fieldPolicy, columnNameParser);
+        //3, 创建 插入值 其实都是 '?' 
         var insertValues = createInsertValues(insertColumns);
-        Object[] insertExpressionsColumns = createInsertExpressionsColumns(updateFilter, columnNameParser);
-        var insertExpressionsValue = createInsertExpressionsValue(updateFilter);
-        var finalInsertColumns = tryConcatAny(insertColumns, insertExpressionsColumns);
-        var finalValues = tryConcat(insertValues, insertExpressionsValue);
-        return Insert(tableInfo, finalInsertColumns)
-                .Values(finalValues)
+        //4, 创建 插入表达式
+        var insertExpressionsValue = createInsertExpressionsValue(fieldPolicy);
+        //5, 拼接最终的 插入列
+        var finalInsertColumns = tryConcatAny(insertColumns, (Object[]) insertExpressionsColumns);
+        //6, 拼接最终的 插入值
+        var finalInsertValues = tryConcat(insertValues, insertExpressionsValue);
+        //7, 创建 SQL 语句字符串
+        var sql = Insert(table, finalInsertColumns)
+                .Values(finalInsertValues)
                 .GetSQL(jdbcContext.dialect());
+        //8, 提取 entity 中的值作为 SQL 参数
+        var params = extractValues(insertColumns, entity);
+        return sql(sql, params);
     }
 
-    private SQL buildInsertSQL(Entity entity, FieldPolicy updateFilter) {
-        var insertColumnInfos = filter(updateFilter, entity, tableInfo);
-        var sql = _buildInsertSQL0(insertColumnInfos, updateFilter);
-        var objectArray = extractValues(insertColumnInfos, entity);
-        return sql(sql, objectArray);
-    }
-
-    private SQL buildInsertBatchSQL(Collection<? extends Entity> entityList, FieldPolicy updateFilter) {
-        var insertColumnInfos = filter(updateFilter, tableInfo);
-        //将 entityList 转换为 objectArrayList 这里因为 stream 实在太慢所以改为传统循环方式
-        var objectArrayList = new ArrayList<Object[]>();
+    private SQL buildInsertBatchSQL(Collection<? extends Entity> entityList, FieldPolicy fieldPolicy) {
+        //1, 根据 字段策略过滤 可以插入的列
+        var insertColumns = filterByFieldPolicy(fieldPolicy, table);
+        //2, 根据 字段策略 创建插入的表达式列
+        var insertExpressionsColumns = createInsertExpressionsColumns(fieldPolicy, columnNameParser);
+        //3, 创建 插入值 其实都是 '?' 
+        var insertValues = createInsertValues(insertColumns);
+        //4, 创建 插入表达式
+        var insertExpressionsValue = createInsertExpressionsValue(fieldPolicy);
+        //5, 拼接最终的 插入列
+        var finalInsertColumns = tryConcatAny(insertColumns, (Object[]) insertExpressionsColumns);
+        //6, 拼接最终的 插入值
+        var finalInsertValues = tryConcat(insertValues, insertExpressionsValue);
+        //7, 创建 SQL 语句字符串
+        var sql = Insert(table, finalInsertColumns)
+                .Values(finalInsertValues)
+                .GetSQL(jdbcContext.dialect());
+        //8, 提取 entity 中的值作为 SQL 参数
+        var batchParams = new Object[entityList.size()];
+        var i = 0;
         for (var entity : entityList) {
-            objectArrayList.add(extractValues(insertColumnInfos, entity));
+            batchParams[i] = extractValues(insertColumns, entity);
+            i = i + 1;
         }
-        var sql = _buildInsertSQL0(insertColumnInfos, updateFilter);
-        return sql(sql, objectArrayList);
-    }
-
-    private String _buildSelectSQL0(Query query, FieldPolicy selectFilter, WhereClause whereClause) {
-        var selectColumns = filter(selectFilter, tableInfo);
-        Object[] selectVirtualColumns = getVirtualColumns(selectFilter, jdbcContext.dialect());
-        var groupByColumns = groupByParser.parse(query.getGroupBy());
-        var orderByClauses = orderByParser.parse(query.getOrderBy());
-        var finalSelectColumns = tryConcatAny(selectColumns, selectVirtualColumns);
-        return Select(finalSelectColumns)
-                .From(tableInfo)
-                .Where(whereClause.whereClause())
-                .GroupBy(groupByColumns)
-                .OrderBy(orderByClauses)
-                .Limit(query.getOffset(), query.getLimit())
-                .GetSQL(jdbcContext.dialect());
+        return sql(sql, batchParams);
     }
 
     /// 构建 (根据聚合查询条件 [Query] 获取数据列表) 的SQL
     ///
     /// 可用于另一条查询语句的 where 条件
-    /// 用法<pre>
-    /// `// 假设有以下结构的两个实体类public class Person{// IDpublic Long id;// 关联的 汽车 IDpublic Long carID;// 年龄public Integer age;}public class Car{// IDpublic Long id;// 汽车 名称public String name;}// 现在想做如下查询 根据所有 person 表中年龄小于 100 的 carID 查询 car 表中的数据// 可以按照如下写法var cars = carService._select(new Query().in("id",personService._buildSelectSQL(new Query().lessThan("age", 100), ColumnFilter.ofIncluded("carID")),ColumnFilter.ofExcluded()));// 同时也支持 whereSQL 方法// 这个写法和上方完全相同var cars1 = carService._select(new Query().whereSQL("id IN ",personService._buildSelectSQL(new Query().lessThan("age", 100), ColumnFilter.ofIncluded("carID")),ColumnFilter.ofExcluded()));`</pre>
+    /// 用法
+    ///
+    /// ```
+    /// // 假设有以下结构的两个实体类
+    /// public class Person{
+    /// // ID
+    /// public Long id;
+    /// // 关联的 汽车 ID
+    /// public Long carID;
+    /// // 年龄public Integer age;
+    /// }
+    /// public class Car{
+    /// // ID
+    /// public Long id;
+    /// // 汽车 名称
+    /// public String name;
+    /// }
+    /// // 现在想做如下查询 根据所有 person 表中年龄小于 100 的 carID 查询 car 表中的数据
+    /// // 可以按照如下写法
+    /// var cars = carService._select(new Query().in("id",personService._buildSelectSQL(new Query().lessThan("age", 100), ColumnFilter.ofIncluded("carID")),ColumnFilter.ofExcluded()));
+    /// // 同时也支持 whereSQL 方法
+    /// // 这个写法和上方完全相同
+    /// var cars1 = carService._select(new Query().whereSQL("id IN ",personService._buildSelectSQL(new Query().lessThan("age", 100), ColumnFilter.ofIncluded("carID")),ColumnFilter.ofExcluded()));
+    /// ```
     ///
     /// 注意 !!! 若同时使用 limit 和 in/not in 请使用 [#buildSelectSQLWithAlias(Query, FieldPolicy)]
     ///
@@ -219,44 +245,105 @@ public class JDBCEntityRepository<Entity> implements Repository<Entity, Long> {
     /// @param selectFilter 查询字段过滤器
     /// @return selectSQL
     public final SQL buildSelectSQL(Query query, FieldPolicy selectFilter) {
+        //1, 过滤查询列
+        var selectColumns = filter(selectFilter, table);
+        //2, 创建虚拟查询列
+        var virtualSelectColumns = createVirtualSelectColumns(selectFilter, jdbcContext.dialect());
+        //3, 创建最终查询列
+        var finalSelectColumns = tryConcatAny(selectColumns, (Object[]) virtualSelectColumns);
+        //4, 创建 where 子句
         var whereClause = whereParser.parse(query.getWhere());
-        var sql = _buildSelectSQL0(query, selectFilter, whereClause);
+        //5, 创建 groupBy 子句
+        var groupByColumns = groupByParser.parse(query.getGroupBy());
+        //6, 创建 orderBy 子句
+        var orderByClauses = orderByParser.parse(query.getOrderBy());
+        //7, 创建 SQL
+        var sql = Select(finalSelectColumns)
+                .From(table)
+                .Where(whereClause.whereClause())
+                .GroupBy(groupByColumns)
+                .OrderBy(orderByClauses)
+                .Limit(query.getOffset(), query.getLimit())
+                .GetSQL(jdbcContext.dialect());
         return sql(sql, whereClause.params());
     }
 
-    /// 在 mysql 中 不支持 in 子句中包含 limit 但是我们可以使用 一个嵌套的别名表来跳过检查
-    /// 此方法便是用于生成嵌套的 sql 的
-    ///
-    /// @param query        q
-    /// @param selectFilter s
-    /// @return a
-    public final SQL buildSelectSQLWithAlias(Query query, FieldPolicy selectFilter) {
+    public SQL buildGetSQL(Query query, FieldPolicy selectFilter) {
+        //1, 过滤查询列
+        var selectColumns = filter(selectFilter, table);
+        //2, 创建虚拟查询列
+        var virtualSelectColumns = createVirtualSelectColumns(selectFilter, jdbcContext.dialect());
+        //3, 创建最终查询列
+        var finalSelectColumns = tryConcatAny(selectColumns, (Object[]) virtualSelectColumns);
+        //4, 创建 where 子句
         var whereClause = whereParser.parse(query.getWhere());
-        var sql0 = _buildSelectSQL0(query, selectFilter, whereClause);
-        var sql = Select("*")
-                .From("(" + sql0 + ")")
-                .GetSQL(jdbcContext.dialect());
-        return sql(sql + " AS " + tableInfo.name() + "_" + RandomUtils.randomString(6), whereClause.params());
-    }
-
-    private String _buildGetSQL0(Query query, FieldPolicy selectFilter, WhereClause whereClause) {
-        var selectColumns = filter(selectFilter, tableInfo);
-        Object[] selectVirtualColumns = getVirtualColumns(selectFilter, jdbcContext.dialect());
+        //5, 创建 groupBy 子句
         var groupByColumns = groupByParser.parse(query.getGroupBy());
+        //6, 创建 orderBy 子句
         var orderByClauses = orderByParser.parse(query.getOrderBy());
-        var finalSelectColumns = tryConcatAny(selectColumns, selectVirtualColumns);
-        return Select(finalSelectColumns)
-                .From(tableInfo)
+        //7, 创建 SQL
+        var sql = Select(finalSelectColumns)
+                .From(table)
                 .Where(whereClause.whereClause())
                 .GroupBy(groupByColumns)
                 .OrderBy(orderByClauses)
                 .Limit(null, 1L)
                 .GetSQL(jdbcContext.dialect());
+        return sql(sql, whereClause.params());
     }
 
-    public final SQL buildGetSQL(Query query, FieldPolicy selectFilter) {
+    public SQL buildUpdateSQL(Entity entity, Query query, FieldPolicy updateFilter) {
+        if (query.getWhere().length == 0) {
+            throw new IllegalArgumentException("更新数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
+        }
+        //1, 过滤需要更新的列
+        var updateSetColumns = filterByFieldPolicy(updateFilter, table, entity);
+        //2, 创建 set 子句 其实都是 '?'
+        var updateSetClauses = createUpdateSetClauses(updateSetColumns, jdbcContext.dialect());
+        //3, 创建 表达式 set 子句
+        var updateSetExpressionsColumns = createUpdateSetExpressionsClauses(updateFilter, columnNameParser);
+        //4, 创建最终的 set 子句
+        var finalUpdateSetClauses = tryConcat(updateSetClauses, updateSetExpressionsColumns);
+        //5, 创建 where 子句
         var whereClause = whereParser.parse(query.getWhere());
-        var sql = _buildGetSQL0(query, selectFilter, whereClause);
+        //6, 创建 orderBy 子句
+        var orderByClauses = orderByParser.parse(query.getOrderBy());
+        //7, 创建 SQL
+        var sql = Update(table)
+                .Set(finalUpdateSetClauses)
+                .Where(whereClause.whereClause())
+                .OrderBy(orderByClauses)
+                .Limit(null, query.getLimit())
+                .GetSQL(jdbcContext.dialect());
+        //8, 提取 entity 参数
+        var entityParams = extractValues(updateSetColumns, entity);
+        //9, 拼接参数 
+        var finalParams = tryConcat(entityParams, whereClause.params());
+        return sql(sql, finalParams);
+    }
+
+    public SQL buildDeleteSQL(Query query) {
+        if (query.getWhere().length == 0) {
+            throw new IllegalArgumentException("删除数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
+        }
+        var whereClause = whereParser.parse(query.getWhere());
+        var orderByClauses = orderByParser.parse(query.getOrderBy());
+        var sql = Delete(table)
+                .Where(whereClause.whereClause())
+                .OrderBy(orderByClauses)
+                .Limit(null, query.getLimit())
+                .GetSQL(jdbcContext.dialect());
+        return sql(sql, whereClause.params());
+    }
+
+    public SQL buildCountSQL(Query query) {
+        var whereClause = whereParser.parse(query.getWhere());
+        var groupByColumns = groupByParser.parse(query.getGroupBy());
+        var sql = Select("COUNT(*) AS count")
+                .From(table)
+                .Where(whereClause.whereClause())
+                .GroupBy(groupByColumns)
+                .GetSQL(jdbcContext.dialect());
         return sql(sql, whereClause.params());
     }
 
@@ -267,57 +354,25 @@ public class JDBCEntityRepository<Entity> implements Repository<Entity, Long> {
     /// @param selectFilter s
     /// @return a
     public final SQL buildGetSQLWithAlias(Query query, FieldPolicy selectFilter) {
-        var whereClause = whereParser.parse(query.getWhere());
-        var sql0 = _buildGetSQL0(query, selectFilter, whereClause);
+        var sql0 = buildGetSQL(query, selectFilter);
         var sql = Select("*")
-                .From("(" + sql0 + ")")
+                .From("(" + sql0.sql() + ")")
                 .GetSQL(jdbcContext.dialect());
-        return sql(sql + " AS " + tableInfo.name() + "_" + RandomUtils.randomString(6), whereClause.params());
+        return sql(sql + " AS " + table.name() + "_" + randomString(6), sql0.params());
     }
 
-    private SQL buildUpdateSQL(Entity entity, Query query, FieldPolicy updateFilter) {
-        if (query.getWhere().length == 0) {
-            throw new IllegalArgumentException("更新数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
-        }
-        var updateSetColumnInfos = filter(updateFilter, entity, tableInfo);
-        var updateSetColumns = createUpdateSetColumns(updateSetColumnInfos, jdbcContext.dialect());
-        var updateSetExpressionsColumns = createUpdateSetExpressionsColumns(updateFilter, columnNameParser);
-        var finalUpdateSetColumns = tryConcat(updateSetColumns, updateSetExpressionsColumns);
-        var whereClause = whereParser.parse(query.getWhere());
-        var orderByClauses = orderByParser.parse(query.getOrderBy());
-        var sql = Update(tableInfo)
-                .Set(finalUpdateSetColumns)
-                .Where(whereClause.whereClause())
-                .OrderBy(orderByClauses)
-                .Limit(null, query.getLimit())
+    /// 在 mysql 中 不支持 in 子句中包含 limit 但是我们可以使用 一个嵌套的别名表来跳过检查
+    /// 此方法便是用于生成嵌套的 sql 的
+    ///
+    /// @param query        q
+    /// @param selectFilter s
+    /// @return a
+    public final SQL buildSelectSQLWithAlias(Query query, FieldPolicy selectFilter) {
+        var sql0 = buildSelectSQL(query, selectFilter);
+        var sql = Select("*")
+                .From("(" + sql0.sql() + ")")
                 .GetSQL(jdbcContext.dialect());
-        var entityParams = extractValues(updateSetColumnInfos, entity);
-        return sql(sql, concat(entityParams, whereClause.params()));
-    }
-
-    private SQL buildDeleteSQL(Query query) {
-        if (query.getWhere().length == 0) {
-            throw new IllegalArgumentException("删除数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
-        }
-        var whereClause = whereParser.parse(query.getWhere());
-        var orderByClauses = orderByParser.parse(query.getOrderBy());
-        var sql = Delete(tableInfo)
-                .Where(whereClause.whereClause())
-                .OrderBy(orderByClauses)
-                .Limit(null, query.getLimit())
-                .GetSQL(jdbcContext.dialect());
-        return sql(sql, whereClause.params());
-    }
-
-    private SQL buildCountSQL(Query query) {
-        var whereClause = whereParser.parse(query.getWhere());
-        var groupByColumns = groupByParser.parse(query.getGroupBy());
-        var sql = Select("COUNT(*) AS count")
-                .From(tableInfo)
-                .Where(whereClause.whereClause())
-                .GroupBy(groupByColumns)
-                .GetSQL(jdbcContext.dialect());
-        return sql(sql, whereClause.params());
+        return sql(sql + " AS " + table.name() + "_" + randomString(6), sql0.params());
     }
 
 }
