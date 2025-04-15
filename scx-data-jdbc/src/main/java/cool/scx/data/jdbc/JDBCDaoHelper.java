@@ -32,6 +32,16 @@ public final class JDBCDaoHelper {
         return virtualColumns;
     }
 
+    public static String[] createUpdateSetExpressionsColumns(FieldPolicy fieldFilter, Dialect dialect) {
+        var fieldExpressions = fieldFilter.getFieldExpressions();
+        var result = new String[fieldExpressions.length];
+        for (var i = 0; i < fieldExpressions.length; i = i + 1) {
+            var fieldExpression = fieldExpressions[i];
+            result[i] = dialect.quoteIdentifier(fieldExpression.fieldName()) + " = "+ fieldExpression.expression();
+        }
+        return result;
+    }
+
     /// 过滤
     ///
     /// @param tableInfo 带过滤的列表

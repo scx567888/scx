@@ -153,9 +153,10 @@ public class TestModule extends ScxAppModule {
             System.err.println("出错了 后滚后数据库中数据条数 : " + carService.count());
         }
         //测试虚拟字段
-        var list = carService.find(ofExcluded().addVirtualField("reverseName", "REVERSE(name)"));
+        carService.dao().update(new Car(),where("1 = 1"),ofIncluded().addFieldExpression("name","REVERSE(name)"));
+        var list = carService.find(ofExcluded().addFieldExpression("reverseName", "REVERSE(name)"));
         var s = new JDBCMapRepository(carService.dao().tableInfo(), carService.dao().jdbcContext());
-        var maps1 = s.find(isNotNull("createdDate"),ofExcluded().addVirtualField("reverseName", "REVERSE(name)"));
+        var maps1 = s.find(isNotNull("createdDate"),ofExcluded().addFieldExpression("reverseName", "REVERSE(name)"));
         System.out.println(list.get(0).reverseName);
 
     }

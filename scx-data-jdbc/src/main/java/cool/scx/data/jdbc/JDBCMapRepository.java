@@ -25,8 +25,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import static cool.scx.common.util.ArrayUtils.concat;
-import static cool.scx.common.util.ArrayUtils.tryConcatAny;
+import static cool.scx.common.util.ArrayUtils.*;
 import static cool.scx.data.jdbc.JDBCDaoHelper.*;
 import static cool.scx.jdbc.result_handler.ResultHandler.*;
 import static cool.scx.jdbc.sql.SQL.sql;
@@ -266,10 +265,12 @@ public class JDBCMapRepository implements Repository<Map<String,Object>, Long> {
         }
         var updateSetColumnInfos = filter(updateFilter, entity, tableInfo);
         var updateSetColumns = createUpdateSetColumns(updateSetColumnInfos, jdbcContext.dialect());
+        var updateSetExpressionsColumns = createUpdateSetExpressionsColumns(updateFilter, jdbcContext.dialect());
+        var finalUpdateSetColumns = tryConcat(updateSetColumns, updateSetExpressionsColumns);
         var whereClause = whereParser.parse(query.getWhere());
         var orderByClauses = orderByParser.parse(query.getOrderBy());
         var sql = Update(tableInfo)
-                .Set(updateSetColumns)
+                .Set(finalUpdateSetColumns)
                 .Where(whereClause.whereClause())
                 .OrderBy(orderByClauses)
                 .Limit(null, query.getLimit())
