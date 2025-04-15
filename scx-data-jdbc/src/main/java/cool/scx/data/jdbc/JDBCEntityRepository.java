@@ -69,6 +69,8 @@ public class JDBCEntityRepository<Entity> implements Repository<Entity, Long> {
     protected final Function<Field, String> columnNameMapping;
 
     protected final BeanBuilder<Entity> beanBuilder;
+    private final SelectSQLBuilder selectSQLBuilder;
+    private final InsertSQLBuilder insertSQLBuilder;
 
     /// a
     ///
@@ -87,6 +89,8 @@ public class JDBCEntityRepository<Entity> implements Repository<Entity, Long> {
         this.whereParser = new JDBCDaoWhereParser(this.columnNameParser);
         this.groupByParser = new JDBCDaoGroupByParser(this.columnNameParser);
         this.orderByParser = new JDBCDaoOrderByParser(this.columnNameParser);
+        this.selectSQLBuilder = new SelectSQLBuilder(table, jdbcContext.dialect(), whereParser, groupByParser, orderByParser);
+        this.insertSQLBuilder = new InsertSQLBuilder(table, jdbcContext.dialect(), columnNameParser);
     }
 
     @Override
@@ -163,100 +167,19 @@ public class JDBCEntityRepository<Entity> implements Repository<Entity, Long> {
     }
 
     public SQL buildInsertSQL(Entity entity, FieldPolicy fieldPolicy) {
-        //1, 根据 字段策略过滤 可以插入的列
-        var insertColumns = filterByFieldPolicy(fieldPolicy, table, entity);
-        //2, 根据 字段策略 创建插入的表达式列
-        var insertExpressionsColumns = createInsertExpressionsColumns(fieldPolicy, columnNameParser);
-        //3, 创建 插入值 其实都是 '?' 
-        var insertValues = createInsertValues(insertColumns);
-        //4, 创建 插入表达式
-        var insertExpressionsValue = createInsertExpressionsValue(fieldPolicy);
-        //5, 拼接最终的 插入列
-        var finalInsertColumns = tryConcatAny(insertColumns, (Object[]) insertExpressionsColumns);
-        //6, 拼接最终的 插入值
-        var finalInsertValues = tryConcat(insertValues, insertExpressionsValue);
-        //7, 创建 SQL 语句字符串
-        var sql = Insert(table, finalInsertColumns)
-                .Values(finalInsertValues)
-                .GetSQL(jdbcContext.dialect());
-        //8, 提取 entity 中的值作为 SQL 参数
-        var params = extractValues(insertColumns, entity);
-        return sql(sql, params);
+        return insertSQLBuilder.buildInsertSQL(entity, fieldPolicy);
     }
 
     public SQL buildInsertBatchSQL(Collection<? extends Entity> entityList, FieldPolicy fieldPolicy) {
-        //1, 根据 字段策略过滤 可以插入的列
-        var insertColumns = filterByFieldPolicy(fieldPolicy, table);
-        //2, 根据 字段策略 创建插入的表达式列
-        var insertExpressionsColumns = createInsertExpressionsColumns(fieldPolicy, columnNameParser);
-        //3, 创建 插入值 其实都是 '?' 
-        var insertValues = createInsertValues(insertColumns);
-        //4, 创建 插入表达式
-        var insertExpressionsValue = createInsertExpressionsValue(fieldPolicy);
-        //5, 拼接最终的 插入列
-        var finalInsertColumns = tryConcatAny(insertColumns, (Object[]) insertExpressionsColumns);
-        //6, 拼接最终的 插入值
-        var finalInsertValues = tryConcat(insertValues, insertExpressionsValue);
-        //7, 创建 SQL 语句字符串
-        var sql = Insert(table, finalInsertColumns)
-                .Values(finalInsertValues)
-                .GetSQL(jdbcContext.dialect());
-        //8, 提取 entity 中的值作为 SQL 参数
-        var batchParams = new Object[entityList.size()];
-        var i = 0;
-        for (var entity : entityList) {
-            batchParams[i] = extractValues(insertColumns, entity);
-            i = i + 1;
-        }
-        return sql(sql, batchParams);
+        return insertSQLBuilder.buildInsertBatchSQL(entityList, fieldPolicy);
     }
 
-    public SQL buildSelectSQL(Query query, FieldPolicy selectFilter) {
-        //1, 过滤查询列
-        var selectColumns = filter(selectFilter, table);
-        //2, 创建虚拟查询列
-        var virtualSelectColumns = createVirtualSelectColumns(selectFilter, jdbcContext.dialect());
-        //3, 创建最终查询列
-        var finalSelectColumns = tryConcatAny(selectColumns, (Object[]) virtualSelectColumns);
-        //4, 创建 where 子句
-        var whereClause = whereParser.parse(query.getWhere());
-        //5, 创建 groupBy 子句
-        var groupByColumns = groupByParser.parse(query.getGroupBy());
-        //6, 创建 orderBy 子句
-        var orderByClauses = orderByParser.parse(query.getOrderBy());
-        //7, 创建 SQL
-        var sql = Select(finalSelectColumns)
-                .From(table)
-                .Where(whereClause.whereClause())
-                .GroupBy(groupByColumns)
-                .OrderBy(orderByClauses)
-                .Limit(query.getOffset(), query.getLimit())
-                .GetSQL(jdbcContext.dialect());
-        return sql(sql, whereClause.params());
+    public SQL buildSelectSQL(Query query, FieldPolicy fieldPolicy) {
+        return selectSQLBuilder.buildSelectSQL(query, fieldPolicy);
     }
 
-    public SQL buildGetSQL(Query query, FieldPolicy selectFilter) {
-        //1, 过滤查询列
-        var selectColumns = filter(selectFilter, table);
-        //2, 创建虚拟查询列
-        var virtualSelectColumns = createVirtualSelectColumns(selectFilter, jdbcContext.dialect());
-        //3, 创建最终查询列
-        var finalSelectColumns = tryConcatAny(selectColumns, (Object[]) virtualSelectColumns);
-        //4, 创建 where 子句
-        var whereClause = whereParser.parse(query.getWhere());
-        //5, 创建 groupBy 子句
-        var groupByColumns = groupByParser.parse(query.getGroupBy());
-        //6, 创建 orderBy 子句
-        var orderByClauses = orderByParser.parse(query.getOrderBy());
-        //7, 创建 SQL
-        var sql = Select(finalSelectColumns)
-                .From(table)
-                .Where(whereClause.whereClause())
-                .GroupBy(groupByColumns)
-                .OrderBy(orderByClauses)
-                .Limit(null, 1L)
-                .GetSQL(jdbcContext.dialect());
-        return sql(sql, whereClause.params());
+    public SQL buildGetSQL(Query query, FieldPolicy fieldPolicy) {
+        return selectSQLBuilder.buildGetSQL(query,fieldPolicy);
     }
 
     public SQL buildUpdateSQL(Entity entity, Query query, FieldPolicy updateFilter) {
