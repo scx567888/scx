@@ -51,7 +51,11 @@ public interface FieldPolicy {
     FieldPolicy clear();
 
     /// 添加字段表达式支持
-    FieldPolicy addFieldExpression(String fieldName, String expression);
+    FieldPolicy addFieldExpression(FieldExpression... fieldExpressions);
+    
+    default FieldPolicy addFieldExpression(String fieldName, String expression){
+        return addFieldExpression(new FieldExpression(fieldName, expression));
+    }
 
     /// 获取字段表达式
     FieldExpression[] getFieldExpressions();

@@ -21,35 +21,35 @@ public interface Repository<Entity, ID> {
     /// 添加一条数据
     ///
     /// @param entity      数据
-    /// @param fieldPolicy 列过滤器
+    /// @param fieldPolicy 字段策略
     /// @return 主键 ID (无主键则为 null)
     ID add(Entity entity, FieldPolicy fieldPolicy);
 
     /// 添加多条数据
     ///
     /// @param entityList  数据
-    /// @param fieldPolicy 列过滤器
+    /// @param fieldPolicy 字段策略
     /// @return 主键 ID 列表 (无主键则为 null)
     List<ID> add(Collection<Entity> entityList, FieldPolicy fieldPolicy);
 
     /// 查询多条数据
     ///
     /// @param query       查询条件
-    /// @param fieldPolicy 列过滤器
+    /// @param fieldPolicy 字段策略
     /// @return 数据列表
     List<Entity> find(Query query, FieldPolicy fieldPolicy);
 
     /// 查询多条数据
     ///
     /// @param query       查询条件
-    /// @param fieldPolicy 列过滤器
+    /// @param fieldPolicy 字段策略
     /// @param consumer    消费者
     void find(Query query, FieldPolicy fieldPolicy, Consumer<Entity> consumer);
 
     /// 查询单条数据
     ///
     /// @param query       查询条件
-    /// @param fieldPolicy 列过滤器
+    /// @param fieldPolicy 字段策略
     /// @return 数据
     Entity get(Query query, FieldPolicy fieldPolicy);
 
@@ -57,7 +57,7 @@ public interface Repository<Entity, ID> {
     ///
     /// @param entity      需要更新的数据
     /// @param query       查询条件
-    /// @param fieldPolicy 列过滤器
+    /// @param fieldPolicy 字段策略
     /// @return 更新成功的条数
     long update(Entity entity, Query query, FieldPolicy fieldPolicy);
 

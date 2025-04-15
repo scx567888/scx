@@ -13,13 +13,13 @@ public final class FieldPolicyImpl implements FieldPolicy {
 
     private final FilterMode filterMode;
     private final Set<String> fieldNames;
-    private final Set<VirtualField> virtualFields;
+    private final Set<FieldExpression> fieldExpressions;
     private boolean ignoreNullValue;
 
     public FieldPolicyImpl(FilterMode filterMode) {
         this.filterMode = filterMode;
         this.fieldNames = new HashSet<>();
-        this.virtualFields = new HashSet<>();
+        this.fieldExpressions = new HashSet<>();
         this.ignoreNullValue = true;
     }
 
@@ -77,14 +77,14 @@ public final class FieldPolicyImpl implements FieldPolicy {
     }
 
     @Override
-    public FieldPolicy addVirtualField(String virtualFiledName, String expression) {
-        this.virtualFields.add(new VirtualField(virtualFiledName, expression));
+    public FieldPolicy addFieldExpression(FieldExpression... fieldExpressions) {
+        addAll(this.fieldExpressions, fieldExpressions);
         return this;
     }
 
     @Override
-    public VirtualField[] getVirtualFields() {
-        return virtualFields.toArray(VirtualField[]::new);
+    public FieldExpression[] getFieldExpressions() {
+        return fieldExpressions.toArray(FieldExpression[]::new);
     }
 
     public FieldPolicy addFieldNames(String... fieldNames) {
