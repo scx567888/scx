@@ -23,11 +23,11 @@ import static cool.scx.jdbc.JDBCType.VARCHAR;
 public final class JDBCDaoHelper {
 
     public static String[] getVirtualColumns(FieldPolicy fieldFilter) {
-        var virtualFields = fieldFilter.getVirtualFields();
-        var virtualColumns = new String[virtualFields.length];
-        for (int i = 0; i < virtualFields.length; i++) {
-            var virtualField = virtualFields[i];
-            virtualColumns[i] = virtualField.expression() + " AS " + virtualField.virtualFiledName();
+        var fieldExpressions = fieldFilter.getFieldExpressions();
+        var virtualColumns = new String[fieldExpressions.length];
+        for (int i = 0; i < fieldExpressions.length; i++) {
+            var fieldExpression = fieldExpressions[i];
+            virtualColumns[i] = fieldExpression.expression() + " AS " + fieldExpression.fieldName();
         }
         return virtualColumns;
     }
