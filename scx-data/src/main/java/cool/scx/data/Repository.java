@@ -27,8 +27,9 @@ public interface Repository<Entity, ID> {
     ID add(Entity entity, FieldPolicy fieldPolicy);
 
     /// 添加多条数据
+    /// 因为无法判断 entityList 所有成员的情况, 所以所有插入字段均由 fieldPolicy 提供
     ///
-    /// @param entityList  数据
+    /// @param entityList  待插入的数据 (成员 可以为 null)
     /// @param fieldPolicy 字段策略
     /// @return 主键 ID 列表 (无主键则为 null)
     List<ID> add(Collection<Entity> entityList, FieldPolicy fieldPolicy);
