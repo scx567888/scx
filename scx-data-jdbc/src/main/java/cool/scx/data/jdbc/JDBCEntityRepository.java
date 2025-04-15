@@ -162,7 +162,7 @@ public class JDBCEntityRepository<Entity> implements Repository<Entity, Long> {
         return jdbcContext;
     }
 
-    private SQL buildInsertSQL(Entity entity, FieldPolicy fieldPolicy) {
+    public SQL buildInsertSQL(Entity entity, FieldPolicy fieldPolicy) {
         //1, 根据 字段策略过滤 可以插入的列
         var insertColumns = filterByFieldPolicy(fieldPolicy, table, entity);
         //2, 根据 字段策略 创建插入的表达式列
@@ -184,7 +184,7 @@ public class JDBCEntityRepository<Entity> implements Repository<Entity, Long> {
         return sql(sql, params);
     }
 
-    private SQL buildInsertBatchSQL(Collection<? extends Entity> entityList, FieldPolicy fieldPolicy) {
+    public SQL buildInsertBatchSQL(Collection<? extends Entity> entityList, FieldPolicy fieldPolicy) {
         //1, 根据 字段策略过滤 可以插入的列
         var insertColumns = filterByFieldPolicy(fieldPolicy, table);
         //2, 根据 字段策略 创建插入的表达式列
@@ -211,40 +211,7 @@ public class JDBCEntityRepository<Entity> implements Repository<Entity, Long> {
         return sql(sql, batchParams);
     }
 
-    /// 构建 (根据聚合查询条件 [Query] 获取数据列表) 的SQL
-    ///
-    /// 可用于另一条查询语句的 where 条件
-    /// 用法
-    ///
-    /// ```
-    /// // 假设有以下结构的两个实体类
-    /// public class Person{
-    /// // ID
-    /// public Long id;
-    /// // 关联的 汽车 ID
-    /// public Long carID;
-    /// // 年龄public Integer age;
-    /// }
-    /// public class Car{
-    /// // ID
-    /// public Long id;
-    /// // 汽车 名称
-    /// public String name;
-    /// }
-    /// // 现在想做如下查询 根据所有 person 表中年龄小于 100 的 carID 查询 car 表中的数据
-    /// // 可以按照如下写法
-    /// var cars = carService._select(new Query().in("id",personService._buildSelectSQL(new Query().lessThan("age", 100), ColumnFilter.ofIncluded("carID")),ColumnFilter.ofExcluded()));
-    /// // 同时也支持 whereSQL 方法
-    /// // 这个写法和上方完全相同
-    /// var cars1 = carService._select(new Query().whereSQL("id IN ",personService._buildSelectSQL(new Query().lessThan("age", 100), ColumnFilter.ofIncluded("carID")),ColumnFilter.ofExcluded()));
-    /// ```
-    ///
-    /// 注意 !!! 若同时使用 limit 和 in/not in 请使用 [#buildSelectSQLWithAlias(Query, FieldPolicy)]
-    ///
-    /// @param query        聚合查询参数对象
-    /// @param selectFilter 查询字段过滤器
-    /// @return selectSQL
-    public final SQL buildSelectSQL(Query query, FieldPolicy selectFilter) {
+    public SQL buildSelectSQL(Query query, FieldPolicy selectFilter) {
         //1, 过滤查询列
         var selectColumns = filter(selectFilter, table);
         //2, 创建虚拟查询列
@@ -353,7 +320,7 @@ public class JDBCEntityRepository<Entity> implements Repository<Entity, Long> {
     /// @param query        q
     /// @param selectFilter s
     /// @return a
-    public final SQL buildGetSQLWithAlias(Query query, FieldPolicy selectFilter) {
+    public SQL buildGetSQLWithAlias(Query query, FieldPolicy selectFilter) {
         var sql0 = buildGetSQL(query, selectFilter);
         var sql = Select("*")
                 .From("(" + sql0.sql() + ")")
@@ -367,7 +334,7 @@ public class JDBCEntityRepository<Entity> implements Repository<Entity, Long> {
     /// @param query        q
     /// @param selectFilter s
     /// @return a
-    public final SQL buildSelectSQLWithAlias(Query query, FieldPolicy selectFilter) {
+    public SQL buildSelectSQLWithAlias(Query query, FieldPolicy selectFilter) {
         var sql0 = buildSelectSQL(query, selectFilter);
         var sql = Select("*")
                 .From("(" + sql0.sql() + ")")
