@@ -2,6 +2,7 @@ package cool.scx.data.jdbc;
 
 import com.fasterxml.jackson.databind.JavaType;
 import cool.scx.data.field_policy.FieldPolicy;
+import cool.scx.data.jdbc.parser.JDBCDaoColumnNameParser;
 import cool.scx.jdbc.JDBCType;
 import cool.scx.jdbc.dialect.Dialect;
 import cool.scx.jdbc.mapping.Column;
@@ -22,32 +23,32 @@ import static cool.scx.jdbc.JDBCType.VARCHAR;
 /// @version 0.0.1
 public final class JDBCDaoHelper {
 
-    public static String[] getVirtualColumns(FieldPolicy fieldFilter) {
+    public static String[] getVirtualColumns(FieldPolicy fieldFilter, Dialect dialect) {
         var fieldExpressions = fieldFilter.getFieldExpressions();
         var virtualColumns = new String[fieldExpressions.length];
         for (int i = 0; i < fieldExpressions.length; i++) {
             var fieldExpression = fieldExpressions[i];
-            virtualColumns[i] = fieldExpression.expression() + " AS " + fieldExpression.fieldName();
+            virtualColumns[i] = fieldExpression.expression() + " AS " + dialect.quoteIdentifier(fieldExpression.fieldName());
         }
         return virtualColumns;
     }
 
-    public static String[] createUpdateSetExpressionsColumns(FieldPolicy fieldFilter, Dialect dialect) {
+    public static String[] createUpdateSetExpressionsColumns(FieldPolicy fieldFilter,  JDBCDaoColumnNameParser columnNameParser) {
         var fieldExpressions = fieldFilter.getFieldExpressions();
         var result = new String[fieldExpressions.length];
         for (var i = 0; i < fieldExpressions.length; i = i + 1) {
             var fieldExpression = fieldExpressions[i];
-            result[i] = dialect.quoteIdentifier(fieldExpression.fieldName()) + " = " + fieldExpression.expression();
+            result[i] = columnNameParser.parseColumnName(fieldExpression.fieldName(),false)  + " = " + fieldExpression.expression();
         }
         return result;
     }
 
     //todo 是否需要 调用方言 或者转成列名
-    public static String[] createInsertExpressionsColumns(FieldPolicy fieldFilter) {
+    public static String[] createInsertExpressionsColumns(FieldPolicy fieldFilter,JDBCDaoColumnNameParser parser) {
         var fieldExpressions = fieldFilter.getFieldExpressions();
         var result = new String[fieldExpressions.length];
         for (var i = 0; i < fieldExpressions.length; i = i + 1) {
-            result[i] = fieldExpressions[i].fieldName();
+            result[i] = parser.parseColumnName(fieldExpressions[i].fieldName(),false);
         }
         return result;
     }
