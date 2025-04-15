@@ -155,7 +155,7 @@ public class TestModule extends ScxAppModule {
         //测试虚拟字段
         var list = carService.find(ofExcluded().addVirtualField("reverseName", "REVERSE(name)"));
         var s = new JDBCMapRepository(carService.dao().tableInfo(), carService.dao().jdbcContext());
-        var maps = s.find(ofExcluded().addVirtualField("reverseName", "REVERSE(name)"));
+        var maps1 = s.find(isNotNull("createdDate"),ofExcluded().addVirtualField("reverseName", "REVERSE(name)"));
         System.out.println(list.get(0).reverseName);
 
     }
