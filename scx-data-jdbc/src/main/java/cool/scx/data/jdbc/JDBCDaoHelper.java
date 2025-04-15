@@ -1,7 +1,7 @@
 package cool.scx.data.jdbc;
 
 import com.fasterxml.jackson.databind.JavaType;
-import cool.scx.data.field_filter.FieldFilter;
+import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.jdbc.JDBCType;
 import cool.scx.jdbc.dialect.Dialect;
 import cool.scx.jdbc.mapping.Column;
@@ -20,7 +20,7 @@ import static cool.scx.jdbc.JDBCType.VARCHAR;
 /// @version 0.0.1
 public final class JDBCDaoHelper {
 
-    public static String[] getVirtualColumns(FieldFilter fieldFilter) {
+    public static String[] getVirtualColumns(FieldPolicy fieldFilter) {
         var virtualFields = fieldFilter.getVirtualFields();
         var virtualColumns = new String[virtualFields.length];
         for (int i = 0; i < virtualFields.length; i++) {
@@ -34,7 +34,7 @@ public final class JDBCDaoHelper {
     ///
     /// @param tableInfo 带过滤的列表
     /// @return 过滤后的列表
-    public static AnnotationConfigColumn[] filter(FieldFilter fieldFilter, AnnotationConfigTable tableInfo) {
+    public static AnnotationConfigColumn[] filter(FieldPolicy fieldFilter, AnnotationConfigTable tableInfo) {
         return fieldFilter.getFieldNames().length == 0 ?
                 switch (fieldFilter.getFilterMode()) {
                     case INCLUDED -> new AnnotationConfigColumn[0];
@@ -63,7 +63,7 @@ public final class JDBCDaoHelper {
     /// @param entity    a
     /// @param tableInfo 带过滤的列表
     /// @return 过滤后的列表
-    public static AnnotationConfigColumn[] filter(FieldFilter fieldFilter, Object entity, AnnotationConfigTable tableInfo) {
+    public static AnnotationConfigColumn[] filter(FieldPolicy fieldFilter, Object entity, AnnotationConfigTable tableInfo) {
         return fieldFilter.getIgnoreNullValue() ? excludeIfFieldValueIsNull(entity, filter(fieldFilter, tableInfo)) : filter(fieldFilter, tableInfo);
     }
 
