@@ -55,7 +55,7 @@ public interface Repository<Entity, ID> {
 
     /// 更新数据
     ///
-    /// @param entity      需要更新的数据
+    /// @param entity      需要更新的数据 可以为 null
     /// @param query       查询条件
     /// @param fieldPolicy 字段策略
     /// @return 更新成功的条数
@@ -119,6 +119,10 @@ public interface Repository<Entity, ID> {
 
     default long update(Entity entity, Query query) {
         return update(entity, query, ofExcluded());
+    }
+
+    default long update(Query query, FieldPolicy fieldPolicy) {
+        return update(null, query, fieldPolicy);
     }
 
 }

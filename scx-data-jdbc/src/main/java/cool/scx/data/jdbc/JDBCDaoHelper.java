@@ -113,7 +113,9 @@ public final class JDBCDaoHelper {
     /// @param scxDaoColumnInfos s
     /// @return e
     private static AnnotationConfigColumn[] excludeIfFieldValueIsNull(Object entity, AnnotationConfigColumn... scxDaoColumnInfos) {
-        return Arrays.stream(scxDaoColumnInfos).filter(field -> field.javaFieldValue(entity) != null).toArray(AnnotationConfigColumn[]::new);
+        return Arrays.stream(scxDaoColumnInfos).filter(field ->
+                entity != null && field.javaFieldValue(entity) != null
+        ).toArray(AnnotationConfigColumn[]::new);
     }
 
     private static Column[] excludeIfFieldValueIsNull(Map<String,Object> entity, Column... scxDaoColumnInfos) {
