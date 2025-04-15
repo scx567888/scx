@@ -42,6 +42,25 @@ public final class JDBCDaoHelper {
         return result;
     }
 
+    //todo 是否需要 调用方言 或者转成列名
+    public static String[] createInsertExpressionsColumns(FieldPolicy fieldFilter) {
+        var fieldExpressions = fieldFilter.getFieldExpressions();
+        var result = new String[fieldExpressions.length];
+        for (var i = 0; i < fieldExpressions.length; i = i + 1) {
+            result[i] = fieldExpressions[i].fieldName();
+        }
+        return result;
+    }
+
+    public static String[] createInsertExpressionsValue(FieldPolicy fieldFilter) {
+        var fieldExpressions = fieldFilter.getFieldExpressions();
+        var result = new String[fieldExpressions.length];
+        for (var i = 0; i < fieldExpressions.length; i = i + 1) {
+            result[i] = fieldExpressions[i].expression();
+        }
+        return result;
+    }
+
     /// 过滤
     ///
     /// @param tableInfo 带过滤的列表
@@ -158,6 +177,9 @@ public final class JDBCDaoHelper {
     /// 提取值
     public static Object[] extractValues(AnnotationConfigColumn[] column, Object entity) {
         var result = new Object[column.length];
+        if (entity == null) {
+            return result;
+        }
         for (var i = 0; i < column.length; i = i + 1) {
             result[i] = column[i].javaFieldValue(entity);
         }
@@ -167,6 +189,9 @@ public final class JDBCDaoHelper {
     /// 提取值
     public static Object[] extractValues(Column[] column, Map<String, Object> entity) {
         var result = new Object[column.length];
+        if (entity == null) {
+            return result;
+        }
         for (var i = 0; i < column.length; i = i + 1) {
             result[i] = entity.get(column[i].name());
         }

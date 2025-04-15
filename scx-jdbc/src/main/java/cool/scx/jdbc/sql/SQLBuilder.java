@@ -56,6 +56,10 @@ public final class SQLBuilder {
         return new SQLBuilder(SQLBuilderType.INSERT)._Insert(table, insertColumns);
     }
 
+    public static SQLBuilder Insert(Table table, Object... insertColumnInfos) {
+        return new SQLBuilder(SQLBuilderType.INSERT)._Insert(table, insertColumnInfos);
+    }
+
     public static SQLBuilder Update(String tableName) {
         return new SQLBuilder(SQLBuilderType.UPDATE)._Update(tableName);
     }

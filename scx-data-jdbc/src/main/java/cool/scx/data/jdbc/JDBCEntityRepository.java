@@ -163,16 +163,20 @@ public class JDBCEntityRepository<Entity> implements Repository<Entity, Long> {
         return jdbcContext;
     }
 
-    private String _buildInsertSQL0(Column[] insertColumns) {
+    private String _buildInsertSQL0(Column[] insertColumns, FieldPolicy updateFilter) {
         var insertValues = createInsertValues(insertColumns);
-        return Insert(tableInfo, insertColumns)
-                .Values(insertValues)
+        Object[] insertExpressionsColumns = createInsertExpressionsColumns(updateFilter);
+        var insertExpressionsValue = createInsertExpressionsValue(updateFilter);
+        var finalInsertColumns = tryConcatAny(insertColumns, insertExpressionsColumns);
+        var finalValues = tryConcat(insertValues, insertExpressionsValue);
+        return Insert(tableInfo, finalInsertColumns)
+                .Values(finalValues)
                 .GetSQL(jdbcContext.dialect());
     }
 
     private SQL buildInsertSQL(Entity entity, FieldPolicy updateFilter) {
         var insertColumnInfos = filter(updateFilter, entity, tableInfo);
-        var sql = _buildInsertSQL0(insertColumnInfos);
+        var sql = _buildInsertSQL0(insertColumnInfos, updateFilter);
         var objectArray = extractValues(insertColumnInfos, entity);
         return sql(sql, objectArray);
     }
@@ -184,7 +188,7 @@ public class JDBCEntityRepository<Entity> implements Repository<Entity, Long> {
         for (var entity : entityList) {
             objectArrayList.add(extractValues(insertColumnInfos, entity));
         }
-        var sql = _buildInsertSQL0(insertColumnInfos);
+        var sql = _buildInsertSQL0(insertColumnInfos, updateFilter);
         return sql(sql, objectArrayList);
     }
 
