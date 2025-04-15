@@ -25,6 +25,7 @@ public class FieldPolicySerializer {
         m.put("filterMode", fieldFilter.getFilterMode());
         m.put("fieldNames", fieldFilter.getFieldNames());
         m.put("ignoreNullValue", fieldFilter.getIgnoreNullValue());
+        m.put("fieldExpressions", fieldFilter.getFieldExpressions());
         return m;
     }
 
