@@ -47,6 +47,7 @@ public interface Repository<Entity, ID> {
     void find(Query query, FieldPolicy fieldPolicy, Consumer<Entity> consumer);
 
     /// 查询单条数据
+    /// 如果匹配到多个会返回第一个 如果无匹配会返回 null
     ///
     /// @param query       查询条件
     /// @param fieldPolicy 字段策略
@@ -55,7 +56,7 @@ public interface Repository<Entity, ID> {
 
     /// 更新数据
     ///
-    /// @param entity      需要更新的数据 可以为 null
+    /// @param entity      需要更新的数据 可以为 null, 为 null 时请保证 fieldPolicy 中存在 表达式字段
     /// @param query       查询条件
     /// @param fieldPolicy 字段策略
     /// @return 更新成功的条数
