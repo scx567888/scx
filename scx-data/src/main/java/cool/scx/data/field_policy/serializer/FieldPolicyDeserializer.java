@@ -1,20 +1,20 @@
-package cool.scx.data.field_filter.serializer;
+package cool.scx.data.field_policy.serializer;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import cool.scx.data.field_filter.FieldFilter;
-import cool.scx.data.field_filter.FieldFilterImpl;
-import cool.scx.data.field_filter.FilterMode;
+import cool.scx.data.field_policy.FieldPolicy;
+import cool.scx.data.field_policy.FieldPolicyImpl;
+import cool.scx.data.field_policy.FilterMode;
 
 import static cool.scx.common.util.ObjectUtils.convertValue;
-import static cool.scx.data.field_filter.FilterMode.EXCLUDED;
+import static cool.scx.data.field_policy.FilterMode.EXCLUDED;
 
 /// FieldFilterDeserializer
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class FieldFilterDeserializer {
+public class FieldPolicyDeserializer {
 
-    public static final FieldFilterDeserializer FIELD_FILTER_DESERIALIZER = new FieldFilterDeserializer();
+    public static final FieldPolicyDeserializer FIELD_FILTER_DESERIALIZER = new FieldPolicyDeserializer();
 
     public Object deserialize(JsonNode v) {
         if (v.isObject()) {
@@ -26,18 +26,18 @@ public class FieldFilterDeserializer {
         return v;
     }
 
-    public FieldFilter deserializeFieldFilter(JsonNode objectNode) {
+    public FieldPolicy deserializeFieldFilter(JsonNode objectNode) {
         var filterMode = EXCLUDED;
 
         if (objectNode == null) {
-            return new FieldFilterImpl(filterMode);
+            return new FieldPolicyImpl(filterMode);
         }
 
         if (objectNode.get("filterMode") != null && !objectNode.get("filterMode").isNull()) {
             filterMode = convertValue(objectNode.get("filterMode"), FilterMode.class);
         }
 
-        var fieldFilter = new FieldFilterImpl(filterMode);
+        var fieldFilter = new FieldPolicyImpl(filterMode);
 
         if (objectNode.get("fieldNames") != null && !objectNode.get("fieldNames").isNull()) {
             var fieldNames = convertValue(objectNode.get("fieldNames"), String[].class);

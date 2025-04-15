@@ -1,13 +1,13 @@
 package cool.scx.data;
 
-import cool.scx.data.field_filter.FieldFilter;
+import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.data.query.Query;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static cool.scx.data.field_filter.FieldFilterBuilder.ofExcluded;
+import static cool.scx.data.field_policy.FieldPolicyBuilder.ofExcluded;
 import static cool.scx.data.query.QueryBuilder.query;
 
 /// 用于定义数据访问层的规范
@@ -16,42 +16,42 @@ import static cool.scx.data.query.QueryBuilder.query;
 /// @param <ID>
 /// @author scx567888
 /// @version 0.0.1
-public interface Dao<Entity, ID> {
+public interface Repository<Entity, ID> {
 
     /// 添加一条数据
     ///
     /// @param entity      数据
     /// @param fieldFilter 列过滤器
     /// @return 主键 ID (无主键则为 null)
-    ID add(Entity entity, FieldFilter fieldFilter);
+    ID add(Entity entity, FieldPolicy fieldFilter);
 
     /// 添加多条数据
     ///
     /// @param entityList  数据
     /// @param fieldFilter 列过滤器
     /// @return 主键 ID 列表 (无主键则为 null)
-    List<ID> add(Collection<Entity> entityList, FieldFilter fieldFilter);
+    List<ID> add(Collection<Entity> entityList, FieldPolicy fieldFilter);
 
     /// 查询多条数据
     ///
     /// @param query       查询条件
     /// @param fieldFilter 列过滤器
     /// @return 数据列表
-    List<Entity> find(Query query, FieldFilter fieldFilter);
+    List<Entity> find(Query query, FieldPolicy fieldFilter);
 
     /// 查询多条数据
     ///
     /// @param query       查询条件
     /// @param fieldFilter 列过滤器
     /// @param consumer    消费者
-    void find(Query query, FieldFilter fieldFilter, Consumer<Entity> consumer);
+    void find(Query query, FieldPolicy fieldFilter, Consumer<Entity> consumer);
 
     /// 查询单条数据
     ///
     /// @param query       查询条件
     /// @param fieldFilter 列过滤器
     /// @return 数据
-    Entity get(Query query, FieldFilter fieldFilter);
+    Entity get(Query query, FieldPolicy fieldFilter);
 
     /// 更新数据
     ///
@@ -59,7 +59,7 @@ public interface Dao<Entity, ID> {
     /// @param query       查询条件
     /// @param fieldFilter 列过滤器
     /// @return 更新成功的条数
-    long update(Entity entity, Query query, FieldFilter fieldFilter);
+    long update(Entity entity, Query query, FieldPolicy fieldFilter);
 
     /// 删除数据
     ///
@@ -93,7 +93,7 @@ public interface Dao<Entity, ID> {
         return find(query, ofExcluded());
     }
 
-    default List<Entity> find(FieldFilter fieldFilter) {
+    default List<Entity> find(FieldPolicy fieldFilter) {
         return find(query(), fieldFilter);
     }
 
@@ -105,7 +105,7 @@ public interface Dao<Entity, ID> {
         find(query, ofExcluded(), consumer);
     }
 
-    default void find(FieldFilter fieldFilter, Consumer<Entity> consumer) {
+    default void find(FieldPolicy fieldFilter, Consumer<Entity> consumer) {
         find(query(), fieldFilter, consumer);
     }
 
