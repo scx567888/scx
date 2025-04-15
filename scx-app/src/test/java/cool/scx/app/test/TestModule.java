@@ -41,8 +41,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static cool.scx.data.field_filter.FieldFilterBuilder.ofExcluded;
-import static cool.scx.data.field_filter.FieldFilterBuilder.ofIncluded;
+import static cool.scx.data.field_policy.FieldPolicyBuilder.ofExcluded;
+import static cool.scx.data.field_policy.FieldPolicyBuilder.ofIncluded;
 import static cool.scx.data.query.QueryBuilder.*;
 import static cool.scx.data.query.QueryOption.USE_JSON_EXTRACT;
 import static java.lang.System.Logger.Level.ERROR;
