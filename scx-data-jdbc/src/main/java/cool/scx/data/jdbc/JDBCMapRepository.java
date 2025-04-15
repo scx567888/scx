@@ -148,6 +148,10 @@ public class JDBCMapRepository implements Repository<Map<String,Object>, Long> {
         return entityBeanHandler;
     }
 
+    public JDBCContext jdbcContext() {
+        return jdbcContext;
+    }
+
     private String _buildInsertSQL0(Column[] insertColumns) {
         var insertValues = createInsertValues(insertColumns);
         return Insert(tableInfo, insertColumns)

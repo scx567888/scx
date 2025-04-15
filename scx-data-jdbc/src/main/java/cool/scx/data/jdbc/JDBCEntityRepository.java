@@ -160,6 +160,10 @@ public class JDBCEntityRepository<Entity> implements Repository<Entity, Long> {
         return entityBeanHandler;
     }
 
+    public JDBCContext jdbcContext() {
+        return jdbcContext;
+    }
+
     private String _buildInsertSQL0(Column[] insertColumns) {
         var insertValues = createInsertValues(insertColumns);
         return Insert(tableInfo, insertColumns)

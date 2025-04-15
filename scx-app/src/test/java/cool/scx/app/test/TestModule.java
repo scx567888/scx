@@ -19,6 +19,7 @@ import cool.scx.common.util.FileUtils;
 import cool.scx.common.util.NetUtils;
 import cool.scx.common.util.RandomUtils;
 import cool.scx.common.util.StopWatch;
+import cool.scx.data.jdbc.JDBCMapRepository;
 import cool.scx.http.media.multi_part.MultiPart;
 import cool.scx.http.routing.handler.StaticHandler;
 import cool.scx.http.uri.ScxURI;
@@ -40,6 +41,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import static cool.scx.data.field_policy.FieldPolicyBuilder.ofExcluded;
 import static cool.scx.data.field_policy.FieldPolicyBuilder.ofIncluded;
@@ -152,6 +154,8 @@ public class TestModule extends ScxAppModule {
         }
         //测试虚拟字段
         var list = carService.find(ofExcluded().addVirtualField("reverseName", "REVERSE(name)"));
+        var s = new JDBCMapRepository(carService.dao().tableInfo(), carService.dao().jdbcContext());
+        var maps = s.find(ofExcluded().addVirtualField("reverseName", "REVERSE(name)"));
         System.out.println(list.get(0).reverseName);
 
     }
