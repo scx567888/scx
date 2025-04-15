@@ -5,10 +5,12 @@ import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.jdbc.JDBCType;
 import cool.scx.jdbc.dialect.Dialect;
 import cool.scx.jdbc.mapping.Column;
+import cool.scx.jdbc.mapping.Table;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map;
 
 import static cool.scx.common.util.ClassUtils.isEnum;
 import static cool.scx.jdbc.JDBCType.JSON;
@@ -58,12 +60,40 @@ public final class JDBCDaoHelper {
                 };
     }
 
+    public static Column[] filter(FieldPolicy fieldFilter, Table tableInfo) {
+        return fieldFilter.getFieldNames().length == 0 ?
+                switch (fieldFilter.getFilterMode()) {
+                    case INCLUDED -> new Column[0];
+                    case EXCLUDED -> tableInfo.columns();
+                } :
+                switch (fieldFilter.getFilterMode()) {
+                    case INCLUDED -> {
+                        var list = new ArrayList<Column>();
+                        for (var fieldName : fieldFilter.getFieldNames()) {
+                            list.add(tableInfo.getColumn(fieldName));
+                        }
+                        yield list.toArray(Column[]::new);
+                    }
+                    case EXCLUDED -> {
+                        var objects = new ArrayList<>(Arrays.asList(tableInfo.columns()));
+                        for (var fieldName : fieldFilter.getFieldNames()) {
+                            objects.remove(tableInfo.getColumn(fieldName));
+                        }
+                        yield objects.toArray(Column[]::new);
+                    }
+                };
+    }
+
     /// 过滤
     ///
     /// @param entity    a
     /// @param tableInfo 带过滤的列表
     /// @return 过滤后的列表
     public static AnnotationConfigColumn[] filter(FieldPolicy fieldFilter, Object entity, AnnotationConfigTable tableInfo) {
+        return fieldFilter.getIgnoreNullValue() ? excludeIfFieldValueIsNull(entity, filter(fieldFilter, tableInfo)) : filter(fieldFilter, tableInfo);
+    }
+
+    public static Column[] filter(FieldPolicy fieldFilter, Map<String,Object> entity, Table tableInfo) {
         return fieldFilter.getIgnoreNullValue() ? excludeIfFieldValueIsNull(entity, filter(fieldFilter, tableInfo)) : filter(fieldFilter, tableInfo);
     }
 
@@ -74,6 +104,10 @@ public final class JDBCDaoHelper {
     /// @return e
     private static AnnotationConfigColumn[] excludeIfFieldValueIsNull(Object entity, AnnotationConfigColumn... scxDaoColumnInfos) {
         return Arrays.stream(scxDaoColumnInfos).filter(field -> field.javaFieldValue(entity) != null).toArray(AnnotationConfigColumn[]::new);
+    }
+
+    private static Column[] excludeIfFieldValueIsNull(Map<String,Object> entity, Column... scxDaoColumnInfos) {
+        return Arrays.stream(scxDaoColumnInfos).filter(field -> entity.get(field.name())!=null).toArray(Column[]::new);
     }
 
     public static JDBCType getDataTypeByJavaType(Type type) {
@@ -114,6 +148,15 @@ public final class JDBCDaoHelper {
         var result = new Object[column.length];
         for (var i = 0; i < column.length; i = i + 1) {
             result[i] = column[i].javaFieldValue(entity);
+        }
+        return result;
+    }
+
+    /// 提取值
+    public static Object[] extractValues(Column[] column,Map<String,Object> entity) {
+        var result = new Object[column.length];
+        for (var i = 0; i < column.length; i = i + 1) {
+            result[i] = entity.get(column[i].name());
         }
         return result;
     }

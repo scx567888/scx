@@ -5,6 +5,7 @@ import cool.scx.data.query.GroupBy;
 import cool.scx.data.query.OrderBy;
 import cool.scx.data.query.Where;
 import cool.scx.jdbc.dialect.Dialect;
+import cool.scx.jdbc.mapping.Table;
 
 import static cool.scx.common.util.StringUtils.notBlank;
 
@@ -14,10 +15,10 @@ import static cool.scx.common.util.StringUtils.notBlank;
 /// @version 0.0.1
 public final class JDBCDaoColumnNameParser {
 
-    private final AnnotationConfigTable tableInfo;
+    private final Table tableInfo;
     private final Dialect dialect;
 
-    public JDBCDaoColumnNameParser(AnnotationConfigTable tableInfo, Dialect dialect) {
+    public JDBCDaoColumnNameParser(Table tableInfo, Dialect dialect) {
         this.tableInfo = tableInfo;
         this.dialect = dialect;
     }
