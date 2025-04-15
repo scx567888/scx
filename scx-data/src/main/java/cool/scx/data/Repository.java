@@ -55,8 +55,9 @@ public interface Repository<Entity, ID> {
     Entity get(Query query, FieldPolicy fieldPolicy);
 
     /// 更新数据
+    /// 当 entity 为 null 时，fieldPolicy 必须包含至少一个字段表达式
     ///
-    /// @param entity      需要更新的数据 可以为 null, 为 null 时请保证 fieldPolicy 中存在 表达式字段
+    /// @param entity      需要更新的数据 可以为 null
     /// @param query       查询条件
     /// @param fieldPolicy 字段策略
     /// @return 更新成功的条数
