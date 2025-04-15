@@ -19,7 +19,7 @@ import static cool.scx.data.query.QueryBuilder.query;
 public interface Repository<Entity, ID> {
 
     /// 添加一条数据
-    /// 当 entity 为 null 时, 所有插入字段均由 fieldPolicy 提供
+    /// 当 entity 为 null 时, 会使用纯表达式插入, 所有插入字段均由 fieldPolicy 提供
     ///
     /// @param entity      待插入的数据  (可以为 null)
     /// @param fieldPolicy 字段策略
@@ -57,7 +57,7 @@ public interface Repository<Entity, ID> {
     Entity get(Query query, FieldPolicy fieldPolicy);
 
     /// 更新数据
-    /// 当 entity 为 null 时, fieldPolicy 必须包含至少一个字段表达式
+    /// 当 entity 为 null 时, 会使用纯表达式更新,  fieldPolicy 必须包含至少一个字段表达式
     ///
     /// @param entity      需要更新的数据 (可以为 null)
     /// @param query       查询条件

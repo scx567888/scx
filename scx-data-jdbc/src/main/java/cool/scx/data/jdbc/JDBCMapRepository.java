@@ -152,7 +152,7 @@ public class JDBCMapRepository implements Repository<Map<String, Object>, Long> 
 
     private String _buildInsertSQL0(Column[] insertColumns, FieldPolicy updateFilter) {
         var insertValues = createInsertValues(insertColumns);
-        Object[] insertExpressionsColumns = createInsertExpressionsColumns(updateFilter);
+        Object[] insertExpressionsColumns = createInsertExpressionsColumns(updateFilter, columnNameParser);
         var insertExpressionsValue = createInsertExpressionsValue(updateFilter);
         var finalInsertColumns = tryConcatAny(insertColumns, insertExpressionsColumns);
         var finalValues = tryConcat(insertValues, insertExpressionsValue);
@@ -181,7 +181,7 @@ public class JDBCMapRepository implements Repository<Map<String, Object>, Long> 
 
     private String _buildSelectSQL0(Query query, FieldPolicy selectFilter, WhereClause whereClause) {
         var selectColumns = filter(selectFilter, tableInfo);
-        Object[] selectVirtualColumns = getVirtualColumns(selectFilter);
+        Object[] selectVirtualColumns = getVirtualColumns(selectFilter, jdbcContext.dialect());
         var groupByColumns = groupByParser.parse(query.getGroupBy());
         var orderByClauses = orderByParser.parse(query.getOrderBy());
         var finalSelectColumns = tryConcatAny(selectColumns, selectVirtualColumns);
@@ -228,7 +228,7 @@ public class JDBCMapRepository implements Repository<Map<String, Object>, Long> 
 
     private String _buildGetSQL0(Query query, FieldPolicy selectFilter, WhereClause whereClause) {
         var selectColumns = filter(selectFilter, tableInfo);
-        Object[] selectVirtualColumns = getVirtualColumns(selectFilter);
+        Object[] selectVirtualColumns = getVirtualColumns(selectFilter, jdbcContext.dialect());
         var groupByColumns = groupByParser.parse(query.getGroupBy());
         var orderByClauses = orderByParser.parse(query.getOrderBy());
         var finalSelectColumns = tryConcatAny(selectColumns, selectVirtualColumns);
@@ -268,7 +268,7 @@ public class JDBCMapRepository implements Repository<Map<String, Object>, Long> 
         }
         var updateSetColumnInfos = filter(updateFilter, entity, tableInfo);
         var updateSetColumns = createUpdateSetColumns(updateSetColumnInfos, jdbcContext.dialect());
-        var updateSetExpressionsColumns = createUpdateSetExpressionsColumns(updateFilter, jdbcContext.dialect());
+        var updateSetExpressionsColumns = createUpdateSetExpressionsColumns(updateFilter, columnNameParser);
         var finalUpdateSetColumns = tryConcat(updateSetColumns, updateSetExpressionsColumns);
         var whereClause = whereParser.parse(query.getWhere());
         var orderByClauses = orderByParser.parse(query.getOrderBy());
