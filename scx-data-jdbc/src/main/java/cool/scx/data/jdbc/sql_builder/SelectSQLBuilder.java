@@ -11,9 +11,7 @@ import cool.scx.jdbc.sql.SQL;
 
 import static cool.scx.common.util.ArrayUtils.tryConcatAny;
 import static cool.scx.common.util.RandomUtils.randomString;
-import static cool.scx.data.jdbc.A.filterByFieldPolicy;
-import static cool.scx.data.jdbc.DataJDBCHelper.createVirtualSelectColumns;
-import static cool.scx.data.jdbc.DataJDBCHelper.filter;
+import static cool.scx.data.jdbc.sql_builder.Helper.filterByFieldPolicy;
 import static cool.scx.jdbc.sql.SQL.sql;
 import static cool.scx.jdbc.sql.SQLBuilder.Select;
 
@@ -59,7 +57,7 @@ public class SelectSQLBuilder {
 
     public SQL buildGetSQL(Query query, FieldPolicy fieldPolicy) {
         //1, 过滤查询列
-        var selectColumns = filter(fieldPolicy, table);
+        var selectColumns = filterByFieldPolicy(fieldPolicy, table);
         //2, 创建虚拟查询列
         var virtualSelectColumns = createVirtualSelectColumns(fieldPolicy, dialect);
         //3, 创建最终查询列
@@ -99,6 +97,17 @@ public class SelectSQLBuilder {
                 .From("(" + sql0.sql() + ")")
                 .GetSQL(dialect);
         return sql(sql + " AS " + table.name() + "_" + randomString(6), sql0.params());
+    }
+
+    /// 创建虚拟查询列
+    public static String[] createVirtualSelectColumns(FieldPolicy fieldFilter, Dialect dialect) {
+        var fieldExpressions = fieldFilter.getFieldExpressions();
+        var virtualSelectColumns = new String[fieldExpressions.length];
+        for (int i = 0; i < fieldExpressions.length; i++) {
+            var fieldExpression = fieldExpressions[i];
+            virtualSelectColumns[i] = fieldExpression.expression() + " AS " + dialect.quoteIdentifier(fieldExpression.fieldName());
+        }
+        return virtualSelectColumns;
     }
 
 }

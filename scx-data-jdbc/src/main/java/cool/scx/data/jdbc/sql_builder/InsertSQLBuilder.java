@@ -4,14 +4,15 @@ import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.data.jdbc.AnnotationConfigTable;
 import cool.scx.data.jdbc.parser.JDBCDaoColumnNameParser;
 import cool.scx.jdbc.dialect.Dialect;
+import cool.scx.jdbc.mapping.Column;
 import cool.scx.jdbc.sql.SQL;
 
 import java.util.Collection;
 
 import static cool.scx.common.util.ArrayUtils.tryConcat;
 import static cool.scx.common.util.ArrayUtils.tryConcatAny;
-import static cool.scx.data.jdbc.A.filterByFieldPolicy;
-import static cool.scx.data.jdbc.DataJDBCHelper.*;
+import static cool.scx.data.jdbc.sql_builder.Helper.extractValues;
+import static cool.scx.data.jdbc.sql_builder.Helper.filterByFieldPolicy;
 import static cool.scx.jdbc.sql.SQL.sql;
 import static cool.scx.jdbc.sql.SQLBuilder.Insert;
 
@@ -75,6 +76,32 @@ public class InsertSQLBuilder {
             i = i + 1;
         }
         return sql(sql, batchParams);
+    }
+
+    public static String[] createInsertExpressionsColumns(FieldPolicy fieldFilter, JDBCDaoColumnNameParser parser) {
+        var fieldExpressions = fieldFilter.getFieldExpressions();
+        var result = new String[fieldExpressions.length];
+        for (var i = 0; i < fieldExpressions.length; i = i + 1) {
+            result[i] = parser.parseColumnName(fieldExpressions[i].fieldName(), false);
+        }
+        return result;
+    }
+
+    public static String[] createInsertValues(Column[] columns) {
+        var result = new String[columns.length];
+        for (var i = 0; i < result.length; i = i + 1) {
+            result[i] = "?";
+        }
+        return result;
+    }
+
+    public static String[] createInsertExpressionsValue(FieldPolicy fieldFilter) {
+        var fieldExpressions = fieldFilter.getFieldExpressions();
+        var result = new String[fieldExpressions.length];
+        for (var i = 0; i < fieldExpressions.length; i = i + 1) {
+            result[i] = fieldExpressions[i].expression();
+        }
+        return result;
     }
 
 }

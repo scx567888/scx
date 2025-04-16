@@ -7,11 +7,12 @@ import cool.scx.data.jdbc.parser.JDBCDaoOrderByParser;
 import cool.scx.data.jdbc.parser.JDBCDaoWhereParser;
 import cool.scx.data.query.Query;
 import cool.scx.jdbc.dialect.Dialect;
+import cool.scx.jdbc.mapping.Column;
 import cool.scx.jdbc.sql.SQL;
 
 import static cool.scx.common.util.ArrayUtils.tryConcat;
-import static cool.scx.data.jdbc.A.filterByFieldPolicy;
-import static cool.scx.data.jdbc.DataJDBCHelper.*;
+import static cool.scx.data.jdbc.sql_builder.Helper.extractValues;
+import static cool.scx.data.jdbc.sql_builder.Helper.filterByFieldPolicy;
 import static cool.scx.jdbc.sql.SQL.sql;
 import static cool.scx.jdbc.sql.SQLBuilder.Update;
 
@@ -59,6 +60,24 @@ public class UpdateSQLBuilder {
         //9, 拼接参数 
         var finalParams = tryConcat(entityParams, whereClause.params());
         return sql(sql, finalParams);
+    }
+
+    public static String[] createUpdateSetClauses(Column[] columns, Dialect dialect) {
+        var result = new String[columns.length];
+        for (var i = 0; i < columns.length; i = i + 1) {
+            result[i] = dialect.quoteIdentifier(columns[i].name()) + " = ?";
+        }
+        return result;
+    }
+
+    public static String[] createUpdateSetExpressionsClauses(FieldPolicy fieldFilter, JDBCDaoColumnNameParser columnNameParser) {
+        var fieldExpressions = fieldFilter.getFieldExpressions();
+        var result = new String[fieldExpressions.length];
+        for (var i = 0; i < fieldExpressions.length; i = i + 1) {
+            var fieldExpression = fieldExpressions[i];
+            result[i] = columnNameParser.parseColumnName(fieldExpression.fieldName(), false) + " = " + fieldExpression.expression();
+        }
+        return result;
     }
 
 }
