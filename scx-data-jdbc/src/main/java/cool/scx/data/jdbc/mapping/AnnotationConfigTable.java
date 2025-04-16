@@ -1,4 +1,4 @@
-package cool.scx.data.jdbc;
+package cool.scx.data.jdbc.mapping;
 
 import cool.scx.common.multi_map.MultiMap;
 import cool.scx.common.util.CaseUtils;

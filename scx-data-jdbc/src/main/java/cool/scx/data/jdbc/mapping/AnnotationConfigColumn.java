@@ -1,4 +1,4 @@
-package cool.scx.data.jdbc;
+package cool.scx.data.jdbc.mapping;
 
 import cool.scx.data.jdbc.annotation.Column;
 import cool.scx.jdbc.mapping.type.TypeColumn;

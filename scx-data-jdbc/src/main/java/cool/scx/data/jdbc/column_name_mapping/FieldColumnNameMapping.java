@@ -1,4 +1,4 @@
-package cool.scx.data.jdbc;
+package cool.scx.data.jdbc.column_name_mapping;
 
 import cool.scx.jdbc.mapping.Table;
 

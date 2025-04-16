@@ -1,14 +1,14 @@
 package cool.scx.data.jdbc.sql_builder;
 
 import cool.scx.data.field_policy.FieldPolicy;
-import cool.scx.data.jdbc.AnnotationConfigColumn;
-import cool.scx.data.jdbc.AnnotationConfigTable;
+import cool.scx.data.jdbc.mapping.AnnotationConfigColumn;
+import cool.scx.data.jdbc.mapping.AnnotationConfigTable;
 
 import java.util.ArrayList;
 
 import static java.util.Collections.addAll;
 
-public class Helper {
+class Helper {
 
     /// 根据 字段策略过滤 可以插入的列
     public static AnnotationConfigColumn[] filterByFieldPolicy(FieldPolicy fieldPolicy, AnnotationConfigTable table, Object entity) {
