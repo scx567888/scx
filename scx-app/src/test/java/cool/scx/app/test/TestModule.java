@@ -41,8 +41,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static cool.scx.data.field_policy.FieldPolicyBuilder.ofExcluded;
-import static cool.scx.data.field_policy.FieldPolicyBuilder.ofIncluded;
+import static cool.scx.data.field_policy.FieldPolicyBuilder.*;
 import static cool.scx.data.query.QueryBuilder.*;
 import static cool.scx.data.query.QueryOption.USE_JSON_EXTRACT;
 import static java.lang.System.Logger.Level.ERROR;
@@ -90,7 +89,7 @@ public class TestModule extends ScxAppModule {
         var carService = ScxAppContext.getBean(CarService.class);
         var carService1 = new BaseModelService<>(Car.class);
         //纯表达式插入
-        var name = carService.dao().add(ofIncluded().addFieldExpression("name", "RAND()"));
+        var name = carService.dao().add(ofFieldExpression("name", "RAND()"));
         try {
             if (carService1.count() < 1500) {
                 System.err.println("开始: 方式1 (批量) 插入");
@@ -153,8 +152,8 @@ public class TestModule extends ScxAppModule {
             System.err.println("出错了 后滚后数据库中数据条数 : " + carService.count());
         }
         //测试虚拟字段
-        carService.dao().update(where("1 = 1"), ofIncluded().addFieldExpression("name", "REVERSE(name)"));
-        var list = carService.find(ofExcluded().addFieldExpression("reverseName", "REVERSE(name)"));
+        carService.update(where("1 = 1"), ofFieldExpression("name", "REVERSE(name)"));
+        var list = carService.find(ofFieldExpression("reverseName", "REVERSE(name)"));
         System.out.println(list.get(0).reverseName);
 
     }
