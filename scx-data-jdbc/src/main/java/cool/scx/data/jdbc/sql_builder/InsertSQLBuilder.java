@@ -2,7 +2,7 @@ package cool.scx.data.jdbc.sql_builder;
 
 import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.data.jdbc.mapping.AnnotationConfigTable;
-import cool.scx.data.jdbc.parser.JDBCDaoColumnNameParser;
+import cool.scx.data.jdbc.parser.JDBCColumnNameParser;
 import cool.scx.jdbc.dialect.Dialect;
 import cool.scx.jdbc.mapping.Column;
 import cool.scx.jdbc.sql.SQL;
@@ -20,9 +20,9 @@ public class InsertSQLBuilder {
 
     private final AnnotationConfigTable table;
     private final Dialect dialect;
-    private final JDBCDaoColumnNameParser columnNameParser;
+    private final JDBCColumnNameParser columnNameParser;
 
-    public InsertSQLBuilder(AnnotationConfigTable table, Dialect dialect, JDBCDaoColumnNameParser columnNameParser) {
+    public InsertSQLBuilder(AnnotationConfigTable table, Dialect dialect, JDBCColumnNameParser columnNameParser) {
         this.table = table;
         this.dialect = dialect;
         this.columnNameParser = columnNameParser;
@@ -78,7 +78,7 @@ public class InsertSQLBuilder {
         return sql(sql, batchParams);
     }
 
-    public static String[] createInsertExpressionsColumns(FieldPolicy fieldFilter, JDBCDaoColumnNameParser parser) {
+    public static String[] createInsertExpressionsColumns(FieldPolicy fieldFilter, JDBCColumnNameParser parser) {
         var fieldExpressions = fieldFilter.getFieldExpressions();
         var result = new String[fieldExpressions.length];
         for (var i = 0; i < fieldExpressions.length; i = i + 1) {

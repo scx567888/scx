@@ -2,9 +2,9 @@ package cool.scx.data.jdbc.sql_builder;
 
 import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.data.jdbc.mapping.AnnotationConfigTable;
-import cool.scx.data.jdbc.parser.JDBCDaoColumnNameParser;
-import cool.scx.data.jdbc.parser.JDBCDaoOrderByParser;
-import cool.scx.data.jdbc.parser.JDBCDaoWhereParser;
+import cool.scx.data.jdbc.parser.JDBCColumnNameParser;
+import cool.scx.data.jdbc.parser.JDBCOrderByParser;
+import cool.scx.data.jdbc.parser.JDBCWhereParser;
 import cool.scx.data.query.Query;
 import cool.scx.jdbc.dialect.Dialect;
 import cool.scx.jdbc.mapping.Column;
@@ -20,11 +20,11 @@ public class UpdateSQLBuilder {
 
     private final AnnotationConfigTable table;
     private final Dialect dialect;
-    private final JDBCDaoColumnNameParser columnNameParser;
-    private final JDBCDaoWhereParser whereParser;
-    private final JDBCDaoOrderByParser orderByParser;
+    private final JDBCColumnNameParser columnNameParser;
+    private final JDBCWhereParser whereParser;
+    private final JDBCOrderByParser orderByParser;
 
-    public UpdateSQLBuilder(AnnotationConfigTable table, Dialect dialect, JDBCDaoColumnNameParser columnNameParser, JDBCDaoWhereParser whereParser, JDBCDaoOrderByParser orderByParser) {
+    public UpdateSQLBuilder(AnnotationConfigTable table, Dialect dialect, JDBCColumnNameParser columnNameParser, JDBCWhereParser whereParser, JDBCOrderByParser orderByParser) {
         this.table = table;
         this.dialect = dialect;
         this.columnNameParser = columnNameParser;
@@ -70,7 +70,7 @@ public class UpdateSQLBuilder {
         return result;
     }
 
-    public static String[] createUpdateSetExpressionsClauses(FieldPolicy fieldFilter, JDBCDaoColumnNameParser columnNameParser) {
+    public static String[] createUpdateSetExpressionsClauses(FieldPolicy fieldFilter, JDBCColumnNameParser columnNameParser) {
         var fieldExpressions = fieldFilter.getFieldExpressions();
         var result = new String[fieldExpressions.length];
         for (var i = 0; i < fieldExpressions.length; i = i + 1) {

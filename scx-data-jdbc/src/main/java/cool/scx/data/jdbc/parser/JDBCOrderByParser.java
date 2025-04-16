@@ -7,11 +7,11 @@ import cool.scx.data.query.parser.OrderByParser;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class JDBCDaoOrderByParser extends OrderByParser {
+public class JDBCOrderByParser extends OrderByParser {
 
-    private final JDBCDaoColumnNameParser columnNameParser;
+    private final JDBCColumnNameParser columnNameParser;
 
-    public JDBCDaoOrderByParser(JDBCDaoColumnNameParser columnNameParser) {
+    public JDBCOrderByParser(JDBCColumnNameParser columnNameParser) {
         this.columnNameParser = columnNameParser;
     }
 

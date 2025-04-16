@@ -4,10 +4,10 @@ import cool.scx.data.Repository;
 import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.data.jdbc.column_name_mapping.FieldColumnNameMapping;
 import cool.scx.data.jdbc.mapping.AnnotationConfigTable;
-import cool.scx.data.jdbc.parser.JDBCDaoColumnNameParser;
-import cool.scx.data.jdbc.parser.JDBCDaoGroupByParser;
-import cool.scx.data.jdbc.parser.JDBCDaoOrderByParser;
-import cool.scx.data.jdbc.parser.JDBCDaoWhereParser;
+import cool.scx.data.jdbc.parser.JDBCColumnNameParser;
+import cool.scx.data.jdbc.parser.JDBCGroupByParser;
+import cool.scx.data.jdbc.parser.JDBCOrderByParser;
+import cool.scx.data.jdbc.parser.JDBCWhereParser;
 import cool.scx.data.jdbc.sql_builder.*;
 import cool.scx.data.query.Query;
 import cool.scx.jdbc.JDBCContext;
@@ -64,10 +64,10 @@ public class JDBCRepository<Entity> implements Repository<Entity, Long> {
 
         //3, 创建 SQL 语句构造器
         var dialect = jdbcContext.dialect();
-        var columnNameParser = new JDBCDaoColumnNameParser(table, dialect);
-        var whereParser = new JDBCDaoWhereParser(columnNameParser);
-        var groupByParser = new JDBCDaoGroupByParser(columnNameParser);
-        var orderByParser = new JDBCDaoOrderByParser(columnNameParser);
+        var columnNameParser = new JDBCColumnNameParser(table, dialect);
+        var whereParser = new JDBCWhereParser(columnNameParser);
+        var groupByParser = new JDBCGroupByParser(columnNameParser);
+        var orderByParser = new JDBCOrderByParser(columnNameParser);
         this.insertSQLBuilder = new InsertSQLBuilder(table, dialect, columnNameParser);
         this.selectSQLBuilder = new SelectSQLBuilder(table, dialect, whereParser, groupByParser, orderByParser);
         this.updateSQLBuilder = new UpdateSQLBuilder(table, dialect, columnNameParser, whereParser, orderByParser);

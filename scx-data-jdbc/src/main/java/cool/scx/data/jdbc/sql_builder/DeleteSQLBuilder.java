@@ -1,7 +1,7 @@
 package cool.scx.data.jdbc.sql_builder;
 
-import cool.scx.data.jdbc.parser.JDBCDaoOrderByParser;
-import cool.scx.data.jdbc.parser.JDBCDaoWhereParser;
+import cool.scx.data.jdbc.parser.JDBCOrderByParser;
+import cool.scx.data.jdbc.parser.JDBCWhereParser;
 import cool.scx.data.query.Query;
 import cool.scx.jdbc.dialect.Dialect;
 import cool.scx.jdbc.mapping.Table;
@@ -14,10 +14,10 @@ public class DeleteSQLBuilder {
 
     private final Table table;
     private final Dialect dialect;
-    private final JDBCDaoWhereParser whereParser;
-    private final JDBCDaoOrderByParser orderByParser;
+    private final JDBCWhereParser whereParser;
+    private final JDBCOrderByParser orderByParser;
 
-    public DeleteSQLBuilder(Table table, Dialect dialect, JDBCDaoWhereParser whereParser, JDBCDaoOrderByParser orderByParser) {
+    public DeleteSQLBuilder(Table table, Dialect dialect, JDBCWhereParser whereParser, JDBCOrderByParser orderByParser) {
         this.table = table;
         this.dialect = dialect;
         this.whereParser = whereParser;

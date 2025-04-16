@@ -2,9 +2,9 @@ package cool.scx.data.jdbc.sql_builder;
 
 import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.data.jdbc.mapping.AnnotationConfigTable;
-import cool.scx.data.jdbc.parser.JDBCDaoGroupByParser;
-import cool.scx.data.jdbc.parser.JDBCDaoOrderByParser;
-import cool.scx.data.jdbc.parser.JDBCDaoWhereParser;
+import cool.scx.data.jdbc.parser.JDBCGroupByParser;
+import cool.scx.data.jdbc.parser.JDBCOrderByParser;
+import cool.scx.data.jdbc.parser.JDBCWhereParser;
 import cool.scx.data.query.Query;
 import cool.scx.jdbc.dialect.Dialect;
 import cool.scx.jdbc.sql.SQL;
@@ -19,11 +19,11 @@ public class SelectSQLBuilder {
 
     private final AnnotationConfigTable table;
     private final Dialect dialect;
-    private final JDBCDaoWhereParser whereParser;
-    private final JDBCDaoGroupByParser groupByParser;
-    private final JDBCDaoOrderByParser orderByParser;
+    private final JDBCWhereParser whereParser;
+    private final JDBCGroupByParser groupByParser;
+    private final JDBCOrderByParser orderByParser;
 
-    public SelectSQLBuilder(AnnotationConfigTable table, Dialect dialect, JDBCDaoWhereParser whereParser, JDBCDaoGroupByParser groupByParser, JDBCDaoOrderByParser orderByParser) {
+    public SelectSQLBuilder(AnnotationConfigTable table, Dialect dialect, JDBCWhereParser whereParser, JDBCGroupByParser groupByParser, JDBCOrderByParser orderByParser) {
         this.table = table;
         this.dialect = dialect;
         this.whereParser = whereParser;
