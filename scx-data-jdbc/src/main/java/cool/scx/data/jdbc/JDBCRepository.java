@@ -2,6 +2,8 @@ package cool.scx.data.jdbc;
 
 import cool.scx.data.Repository;
 import cool.scx.data.field_policy.FieldPolicy;
+import cool.scx.data.jdbc.column_name_mapping.FieldColumnNameMapping;
+import cool.scx.data.jdbc.mapping.AnnotationConfigTable;
 import cool.scx.data.jdbc.parser.JDBCDaoColumnNameParser;
 import cool.scx.data.jdbc.parser.JDBCDaoGroupByParser;
 import cool.scx.data.jdbc.parser.JDBCDaoOrderByParser;
@@ -21,19 +23,14 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import static cool.scx.common.util.ArrayUtils.tryConcat;
-import static cool.scx.common.util.RandomUtils.randomString;
-import static cool.scx.data.jdbc.A.filterByFieldPolicy;
-import static cool.scx.data.jdbc.DataJDBCHelper.*;
 import static cool.scx.jdbc.result_handler.ResultHandler.*;
 import static cool.scx.jdbc.sql.SQL.sql;
-import static cool.scx.jdbc.sql.SQLBuilder.*;
 
 /// 使用 JDBC 接口, 通过 SQL 操作关系型数据库的 DAO
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class JDBCEntityRepository<Entity> implements Repository<Entity, Long> {
+public class JDBCRepository<Entity> implements Repository<Entity, Long> {
     
     private final AnnotationConfigTable table;
     private final Class<Entity> entityClass;
@@ -55,7 +52,7 @@ public class JDBCEntityRepository<Entity> implements Repository<Entity, Long> {
     private final DeleteSQLBuilder deleteSQLBuilder;
     private final CountSQLBuilder countSQLBuilder;
     
-    public JDBCEntityRepository(Class<Entity> entityClass, JDBCContext jdbcContext) {
+    public JDBCRepository(Class<Entity> entityClass, JDBCContext jdbcContext) {
         this.entityClass = entityClass;
         this.jdbcContext = jdbcContext;
         this.sqlRunner = jdbcContext.sqlRunner();
