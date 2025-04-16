@@ -28,6 +28,32 @@ public class InsertSQLBuilder {
         this.columnNameParser = columnNameParser;
     }
 
+    public static String[] createInsertExpressionsColumns(FieldPolicy fieldFilter, JDBCColumnNameParser parser) {
+        var fieldExpressions = fieldFilter.getFieldExpressions();
+        var result = new String[fieldExpressions.length];
+        for (var i = 0; i < fieldExpressions.length; i = i + 1) {
+            result[i] = parser.parseColumnName(fieldExpressions[i].fieldName(), false);
+        }
+        return result;
+    }
+
+    public static String[] createInsertValues(Column[] columns) {
+        var result = new String[columns.length];
+        for (var i = 0; i < result.length; i = i + 1) {
+            result[i] = "?";
+        }
+        return result;
+    }
+
+    public static String[] createInsertExpressionsValue(FieldPolicy fieldFilter) {
+        var fieldExpressions = fieldFilter.getFieldExpressions();
+        var result = new String[fieldExpressions.length];
+        for (var i = 0; i < fieldExpressions.length; i = i + 1) {
+            result[i] = fieldExpressions[i].expression();
+        }
+        return result;
+    }
+
     public SQL buildInsertSQL(Object entity, FieldPolicy fieldPolicy) {
         //1, 根据 字段策略过滤 可以插入的列
         var insertColumns = filterByFieldPolicy(fieldPolicy, table, entity);
@@ -49,7 +75,6 @@ public class InsertSQLBuilder {
         var params = extractValues(insertColumns, entity);
         return sql(sql, params);
     }
-
 
     public SQL buildInsertBatchSQL(Collection<?> entityList, FieldPolicy fieldPolicy) {
         //1, 根据 字段策略过滤 可以插入的列
@@ -76,32 +101,6 @@ public class InsertSQLBuilder {
             i = i + 1;
         }
         return sql(sql, batchParams);
-    }
-
-    public static String[] createInsertExpressionsColumns(FieldPolicy fieldFilter, JDBCColumnNameParser parser) {
-        var fieldExpressions = fieldFilter.getFieldExpressions();
-        var result = new String[fieldExpressions.length];
-        for (var i = 0; i < fieldExpressions.length; i = i + 1) {
-            result[i] = parser.parseColumnName(fieldExpressions[i].fieldName(), false);
-        }
-        return result;
-    }
-
-    public static String[] createInsertValues(Column[] columns) {
-        var result = new String[columns.length];
-        for (var i = 0; i < result.length; i = i + 1) {
-            result[i] = "?";
-        }
-        return result;
-    }
-
-    public static String[] createInsertExpressionsValue(FieldPolicy fieldFilter) {
-        var fieldExpressions = fieldFilter.getFieldExpressions();
-        var result = new String[fieldExpressions.length];
-        for (var i = 0; i < fieldExpressions.length; i = i + 1) {
-            result[i] = fieldExpressions[i].expression();
-        }
-        return result;
     }
 
 }

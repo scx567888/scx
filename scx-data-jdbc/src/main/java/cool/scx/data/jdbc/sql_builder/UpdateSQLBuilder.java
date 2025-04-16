@@ -32,6 +32,24 @@ public class UpdateSQLBuilder {
         this.orderByParser = orderByParser;
     }
 
+    public static String[] createUpdateSetClauses(Column[] columns, Dialect dialect) {
+        var result = new String[columns.length];
+        for (var i = 0; i < columns.length; i = i + 1) {
+            result[i] = dialect.quoteIdentifier(columns[i].name()) + " = ?";
+        }
+        return result;
+    }
+
+    public static String[] createUpdateSetExpressionsClauses(FieldPolicy fieldFilter, JDBCColumnNameParser columnNameParser) {
+        var fieldExpressions = fieldFilter.getFieldExpressions();
+        var result = new String[fieldExpressions.length];
+        for (var i = 0; i < fieldExpressions.length; i = i + 1) {
+            var fieldExpression = fieldExpressions[i];
+            result[i] = columnNameParser.parseColumnName(fieldExpression.fieldName(), false) + " = " + fieldExpression.expression();
+        }
+        return result;
+    }
+
     public SQL buildUpdateSQL(Object entity, Query query, FieldPolicy updateFilter) {
         if (query.getWhere().length == 0) {
             throw new IllegalArgumentException("更新数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
@@ -60,24 +78,6 @@ public class UpdateSQLBuilder {
         //9, 拼接参数 
         var finalParams = tryConcat(entityParams, whereClause.params());
         return sql(sql, finalParams);
-    }
-
-    public static String[] createUpdateSetClauses(Column[] columns, Dialect dialect) {
-        var result = new String[columns.length];
-        for (var i = 0; i < columns.length; i = i + 1) {
-            result[i] = dialect.quoteIdentifier(columns[i].name()) + " = ?";
-        }
-        return result;
-    }
-
-    public static String[] createUpdateSetExpressionsClauses(FieldPolicy fieldFilter, JDBCColumnNameParser columnNameParser) {
-        var fieldExpressions = fieldFilter.getFieldExpressions();
-        var result = new String[fieldExpressions.length];
-        for (var i = 0; i < fieldExpressions.length; i = i + 1) {
-            var fieldExpression = fieldExpressions[i];
-            result[i] = columnNameParser.parseColumnName(fieldExpression.fieldName(), false) + " = " + fieldExpression.expression();
-        }
-        return result;
     }
 
 }

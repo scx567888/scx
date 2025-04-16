@@ -35,5 +35,5 @@ class Helper {
             return JDBCType.getByJavaType(clazz);
         }
     }
-    
+
 }

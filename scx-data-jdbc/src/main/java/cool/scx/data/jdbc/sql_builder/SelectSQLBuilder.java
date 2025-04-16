@@ -31,6 +31,17 @@ public class SelectSQLBuilder {
         this.orderByParser = orderByParser;
     }
 
+    /// 创建虚拟查询列
+    public static String[] createVirtualSelectColumns(FieldPolicy fieldFilter, Dialect dialect) {
+        var fieldExpressions = fieldFilter.getFieldExpressions();
+        var virtualSelectColumns = new String[fieldExpressions.length];
+        for (int i = 0; i < fieldExpressions.length; i++) {
+            var fieldExpression = fieldExpressions[i];
+            virtualSelectColumns[i] = fieldExpression.expression() + " AS " + dialect.quoteIdentifier(fieldExpression.fieldName());
+        }
+        return virtualSelectColumns;
+    }
+
     public SQL buildSelectSQL(Query query, FieldPolicy fieldPolicy) {
         //1, 过滤查询列
         var selectColumns = filterByFieldPolicy(fieldPolicy, table);
@@ -97,17 +108,6 @@ public class SelectSQLBuilder {
                 .From("(" + sql0.sql() + ")")
                 .GetSQL(dialect);
         return sql(sql + " AS " + table.name() + "_" + randomString(6), sql0.params());
-    }
-
-    /// 创建虚拟查询列
-    public static String[] createVirtualSelectColumns(FieldPolicy fieldFilter, Dialect dialect) {
-        var fieldExpressions = fieldFilter.getFieldExpressions();
-        var virtualSelectColumns = new String[fieldExpressions.length];
-        for (int i = 0; i < fieldExpressions.length; i++) {
-            var fieldExpression = fieldExpressions[i];
-            virtualSelectColumns[i] = fieldExpression.expression() + " AS " + dialect.quoteIdentifier(fieldExpression.fieldName());
-        }
-        return virtualSelectColumns;
     }
 
 }

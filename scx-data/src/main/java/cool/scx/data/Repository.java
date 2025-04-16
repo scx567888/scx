@@ -132,8 +132,8 @@ public interface Repository<Entity, ID> {
     default long update(Query query, FieldPolicy fieldPolicy) {
         return update(null, query, fieldPolicy);
     }
-    
-    default long count(){
+
+    default long count() {
         return count(query());
     }
 

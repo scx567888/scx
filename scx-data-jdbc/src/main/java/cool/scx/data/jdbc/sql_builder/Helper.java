@@ -88,5 +88,5 @@ class Helper {
         }
         return result;
     }
-    
+
 }
