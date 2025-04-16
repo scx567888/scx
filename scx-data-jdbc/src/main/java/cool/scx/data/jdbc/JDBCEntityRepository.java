@@ -61,10 +61,10 @@ public class JDBCEntityRepository<Entity> implements Repository<Entity, Long> {
         this.sqlRunner = jdbcContext.sqlRunner();
         this.dialect = jdbcContext.dialect();
         this.table = new AnnotationConfigTable(entityClass);
-        this.columnNameMapping = new FieldColumnNameMapping(this.table);
-        this.beanBuilder = BeanBuilder.of(this.entityClass, this.columnNameMapping);
-        this.entityBeanListHandler = ofBeanList(this.beanBuilder);
-        this.entityBeanHandler = ofBean(this.beanBuilder);
+        this.columnNameMapping = new FieldColumnNameMapping(table);
+        this.beanBuilder = BeanBuilder.of(this.entityClass, columnNameMapping);
+        this.entityBeanListHandler = ofBeanList(beanBuilder);
+        this.entityBeanHandler = ofBean(beanBuilder);
         this.countResultHandler = ofSingleValue("count", Long.class);
         this.columnNameParser = new JDBCDaoColumnNameParser(table, dialect);
         this.whereParser = new JDBCDaoWhereParser(columnNameParser);
@@ -118,20 +118,20 @@ public class JDBCEntityRepository<Entity> implements Repository<Entity, Long> {
 
     @Override
     public final void clear() {
-        this.sqlRunner.execute(sql("truncate " + table.name()));
+        sqlRunner.execute(sql("truncate " + table.name()));
     }
 
     @Override
     public final Class<Entity> entityClass() {
-        return this.entityClass;
+        return entityClass;
     }
 
-    public final AnnotationConfigTable tableInfo() {
-        return this.table;
+    public final AnnotationConfigTable table() {
+        return table;
     }
 
     public final SQLRunner sqlRunner() {
-        return this.sqlRunner;
+        return sqlRunner;
     }
 
     public BeanBuilder<Entity> beanBuilder() {
@@ -166,8 +166,8 @@ public class JDBCEntityRepository<Entity> implements Repository<Entity, Long> {
         return selectSQLBuilder.buildGetSQL(query, fieldPolicy);
     }
 
-    public SQL buildUpdateSQL(Entity entity, Query query, FieldPolicy updateFilter) {
-        return updateSQLBuilder.buildUpdateSQL(entity, query, updateFilter);
+    public SQL buildUpdateSQL(Entity entity, Query query, FieldPolicy fieldPolicy) {
+        return updateSQLBuilder.buildUpdateSQL(entity, query, fieldPolicy);
     }
 
     public SQL buildDeleteSQL(Query query) {
@@ -178,32 +178,12 @@ public class JDBCEntityRepository<Entity> implements Repository<Entity, Long> {
         return countSQLBuilder.buildCountSQL(query);
     }
 
-    /// 在 mysql 中 不支持 in 子句中包含 limit 但是我们可以使用 一个嵌套的别名表来跳过检查
-    /// 此方法便是用于生成嵌套的 sql 的
-    ///
-    /// @param query        q
-    /// @param selectFilter s
-    /// @return a
-    public SQL buildGetSQLWithAlias(Query query, FieldPolicy selectFilter) {
-        var sql0 = buildGetSQL(query, selectFilter);
-        var sql = Select("*")
-                .From("(" + sql0.sql() + ")")
-                .GetSQL(dialect);
-        return sql(sql + " AS " + table.name() + "_" + randomString(6), sql0.params());
+    public SQL buildGetSQLWithAlias(Query query, FieldPolicy fieldPolicy) {
+        return selectSQLBuilder.buildGetSQLWithAlias(query, fieldPolicy);
     }
 
-    /// 在 mysql 中 不支持 in 子句中包含 limit 但是我们可以使用 一个嵌套的别名表来跳过检查
-    /// 此方法便是用于生成嵌套的 sql 的
-    ///
-    /// @param query        q
-    /// @param selectFilter s
-    /// @return a
-    public SQL buildSelectSQLWithAlias(Query query, FieldPolicy selectFilter) {
-        var sql0 = buildSelectSQL(query, selectFilter);
-        var sql = Select("*")
-                .From("(" + sql0.sql() + ")")
-                .GetSQL(dialect);
-        return sql(sql + " AS " + table.name() + "_" + randomString(6), sql0.params());
+    public SQL buildSelectSQLWithAlias(Query query, FieldPolicy fieldPolicy) {
+        return selectSQLBuilder.buildSelectSQLWithAlias(query, fieldPolicy);
     }
 
 }
