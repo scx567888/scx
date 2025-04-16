@@ -61,7 +61,7 @@ public class JDBCRepository<Entity> implements Repository<Entity, Long> {
         this.entityBeanListHandler = ofBeanList(beanBuilder);
         this.entityBeanHandler = ofBean(beanBuilder);
         this.countResultHandler = ofSingleValue("count", Long.class);
-        
+
         //3, 创建 SQL 语句构造器
         var dialect = jdbcContext.dialect();
         var columnNameParser = new JDBCDaoColumnNameParser(table, dialect);
