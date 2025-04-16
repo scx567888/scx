@@ -37,5 +37,5 @@ public class DeleteSQLBuilder {
                 .GetSQL(dialect);
         return sql(sql, whereClause.params());
     }
-    
+
 }

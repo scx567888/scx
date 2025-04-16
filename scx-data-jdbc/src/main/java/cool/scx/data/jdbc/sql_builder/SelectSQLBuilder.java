@@ -100,5 +100,5 @@ public class SelectSQLBuilder {
                 .GetSQL(dialect);
         return sql(sql + " AS " + table.name() + "_" + randomString(6), sql0.params());
     }
-    
+
 }

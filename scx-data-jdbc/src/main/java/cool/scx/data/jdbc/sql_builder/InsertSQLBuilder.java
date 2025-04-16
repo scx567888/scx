@@ -12,12 +12,11 @@ import static cool.scx.common.util.ArrayUtils.tryConcat;
 import static cool.scx.common.util.ArrayUtils.tryConcatAny;
 import static cool.scx.data.jdbc.A.filterByFieldPolicy;
 import static cool.scx.data.jdbc.DataJDBCHelper.*;
-import static cool.scx.data.jdbc.DataJDBCHelper.extractValues;
 import static cool.scx.jdbc.sql.SQL.sql;
 import static cool.scx.jdbc.sql.SQLBuilder.Insert;
 
 public class InsertSQLBuilder {
-    
+
     private final AnnotationConfigTable table;
     private final Dialect dialect;
     private final JDBCDaoColumnNameParser columnNameParser;
@@ -77,5 +76,5 @@ public class InsertSQLBuilder {
         }
         return sql(sql, batchParams);
     }
-    
+
 }
