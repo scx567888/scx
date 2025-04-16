@@ -11,17 +11,14 @@ import cool.scx.data.jdbc.parser.JDBCDaoWhereParser;
 import cool.scx.data.jdbc.sql_builder.*;
 import cool.scx.data.query.Query;
 import cool.scx.jdbc.JDBCContext;
-import cool.scx.jdbc.dialect.Dialect;
 import cool.scx.jdbc.result_handler.ResultHandler;
 import cool.scx.jdbc.result_handler.bean_builder.BeanBuilder;
 import cool.scx.jdbc.sql.SQL;
 import cool.scx.jdbc.sql.SQLRunner;
 
-import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 import static cool.scx.jdbc.result_handler.ResultHandler.*;
 import static cool.scx.jdbc.sql.SQL.sql;
@@ -50,19 +47,21 @@ public class JDBCRepository<Entity> implements Repository<Entity, Long> {
     private final UpdateSQLBuilder updateSQLBuilder;
     private final DeleteSQLBuilder deleteSQLBuilder;
     private final CountSQLBuilder countSQLBuilder;
-    
+
     public JDBCRepository(Class<Entity> entityClass, JDBCContext jdbcContext) {
         //1, 初始化基本字段
         this.entityClass = entityClass;
         this.jdbcContext = jdbcContext;
         this.table = new AnnotationConfigTable(entityClass);
         this.sqlRunner = jdbcContext.sqlRunner();
+        
         //2, 创建返回值解析器
         var columnNameMapping = new FieldColumnNameMapping(table);
         this.beanBuilder = BeanBuilder.of(this.entityClass, columnNameMapping);
         this.entityBeanListHandler = ofBeanList(beanBuilder);
         this.entityBeanHandler = ofBean(beanBuilder);
         this.countResultHandler = ofSingleValue("count", Long.class);
+        
         //3, 创建 SQL 语句构造器
         var dialect = jdbcContext.dialect();
         var columnNameParser = new JDBCDaoColumnNameParser(table, dialect);
@@ -170,7 +169,7 @@ public class JDBCRepository<Entity> implements Repository<Entity, Long> {
     }
 
     public SQL buildDeleteSQL(Query query) {
-       return deleteSQLBuilder.buildDeleteSQL(query);
+        return deleteSQLBuilder.buildDeleteSQL(query);
     }
 
     public SQL buildCountSQL(Query query) {
