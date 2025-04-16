@@ -89,7 +89,7 @@ public class TestModule extends ScxAppModule {
         var carService = ScxAppContext.getBean(CarService.class);
         var carService1 = new BaseModelService<>(Car.class);
         //纯表达式插入
-        var name = carService.dao().add(ofFieldExpression("name", "RAND()"));
+        var name = carService.add(ofFieldExpression("name", "RAND()"));
         try {
             if (carService1.count() < 1500) {
                 System.err.println("开始: 方式1 (批量) 插入");
