@@ -31,21 +31,20 @@ import static cool.scx.jdbc.sql.SQL.sql;
 /// @author scx567888
 /// @version 0.0.1
 public class JDBCRepository<Entity> implements Repository<Entity, Long> {
-    
-    private final AnnotationConfigTable table;
+
+    // *********** 基本字段 ***************
     private final Class<Entity> entityClass;
+    private final JDBCContext jdbcContext;
+    private final AnnotationConfigTable table;
     private final SQLRunner sqlRunner;
-    private final Dialect dialect;
+
+    // *********** 结果解析器 ***************
     private final BeanBuilder<Entity> beanBuilder;
     private final ResultHandler<List<Entity>> entityBeanListHandler;
     private final ResultHandler<Entity> entityBeanHandler;
     private final ResultHandler<Long> countResultHandler;
-    private final JDBCDaoColumnNameParser columnNameParser;
-    private final JDBCDaoWhereParser whereParser;
-    private final JDBCDaoGroupByParser groupByParser;
-    private final JDBCDaoOrderByParser orderByParser;
-    private final JDBCContext jdbcContext;
-    private final Function<Field, String> columnNameMapping;
+
+    // *********** SQL 语句构造器 ***************
     private final InsertSQLBuilder insertSQLBuilder;
     private final SelectSQLBuilder selectSQLBuilder;
     private final UpdateSQLBuilder updateSQLBuilder;
@@ -53,24 +52,27 @@ public class JDBCRepository<Entity> implements Repository<Entity, Long> {
     private final CountSQLBuilder countSQLBuilder;
     
     public JDBCRepository(Class<Entity> entityClass, JDBCContext jdbcContext) {
+        //1, 初始化基本字段
         this.entityClass = entityClass;
         this.jdbcContext = jdbcContext;
-        this.sqlRunner = jdbcContext.sqlRunner();
-        this.dialect = jdbcContext.dialect();
         this.table = new AnnotationConfigTable(entityClass);
-        this.columnNameMapping = new FieldColumnNameMapping(table);
+        this.sqlRunner = jdbcContext.sqlRunner();
+        //2, 创建返回值解析器
+        var columnNameMapping = new FieldColumnNameMapping(table);
         this.beanBuilder = BeanBuilder.of(this.entityClass, columnNameMapping);
         this.entityBeanListHandler = ofBeanList(beanBuilder);
         this.entityBeanHandler = ofBean(beanBuilder);
         this.countResultHandler = ofSingleValue("count", Long.class);
-        this.columnNameParser = new JDBCDaoColumnNameParser(table, dialect);
-        this.whereParser = new JDBCDaoWhereParser(columnNameParser);
-        this.groupByParser = new JDBCDaoGroupByParser(columnNameParser);
-        this.orderByParser = new JDBCDaoOrderByParser(columnNameParser);
+        //3, 创建 SQL 语句构造器
+        var dialect = jdbcContext.dialect();
+        var columnNameParser = new JDBCDaoColumnNameParser(table, dialect);
+        var whereParser = new JDBCDaoWhereParser(columnNameParser);
+        var groupByParser = new JDBCDaoGroupByParser(columnNameParser);
+        var orderByParser = new JDBCDaoOrderByParser(columnNameParser);
         this.insertSQLBuilder = new InsertSQLBuilder(table, dialect, columnNameParser);
         this.selectSQLBuilder = new SelectSQLBuilder(table, dialect, whereParser, groupByParser, orderByParser);
         this.updateSQLBuilder = new UpdateSQLBuilder(table, dialect, columnNameParser, whereParser, orderByParser);
-        this.deleteSQLBuilder = new DeleteSQLBuilder(table, dialect,  whereParser, orderByParser);
+        this.deleteSQLBuilder = new DeleteSQLBuilder(table, dialect, whereParser, orderByParser);
         this.countSQLBuilder = new CountSQLBuilder(table, dialect, whereParser, groupByParser);
     }
 
