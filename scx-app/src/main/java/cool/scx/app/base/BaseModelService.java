@@ -70,6 +70,12 @@ public class BaseModelService<Entity extends BaseModel> {
         return newID != null ? this.get(newID) : null;
     }
 
+    /// 纯表达式插入
+    public Entity add(FieldPolicy updateFilter) {
+        var newID = dao().add(updateFilterProcessor(updateFilter));
+        return newID != null ? this.get(newID) : null;
+    }
+
     /// 批量插入数据
     ///
     /// @param entityList 数据集合
@@ -227,6 +233,11 @@ public class BaseModelService<Entity extends BaseModel> {
     /// @return 更新成功的数据条数
     public long update(Entity entity, Query query, FieldPolicy updateFilter) {
         return dao().update(entity, query, updateFilterProcessor(updateFilter));
+    }
+
+    /// 根据 表达式更新数据
+    public long update(Query query, FieldPolicy updateFilter) {
+        return dao().update(query, updateFilterProcessor(updateFilter));
     }
 
     /// 根据 ID 列表删除指定的数据
