@@ -1,12 +1,12 @@
-package cool.scx.data.jdbc;
+package cool.scx.data.jdbc.sql_builder;
 
 import cool.scx.data.field_policy.FieldPolicy;
+import cool.scx.data.jdbc.AnnotationConfigTable;
 import cool.scx.data.jdbc.parser.JDBCDaoGroupByParser;
 import cool.scx.data.jdbc.parser.JDBCDaoOrderByParser;
 import cool.scx.data.jdbc.parser.JDBCDaoWhereParser;
 import cool.scx.data.query.Query;
 import cool.scx.jdbc.dialect.Dialect;
-import cool.scx.jdbc.mapping.Table;
 import cool.scx.jdbc.sql.SQL;
 
 import static cool.scx.common.util.ArrayUtils.tryConcatAny;
