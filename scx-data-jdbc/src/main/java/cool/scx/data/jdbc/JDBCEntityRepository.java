@@ -6,8 +6,10 @@ import cool.scx.data.jdbc.parser.JDBCDaoColumnNameParser;
 import cool.scx.data.jdbc.parser.JDBCDaoGroupByParser;
 import cool.scx.data.jdbc.parser.JDBCDaoOrderByParser;
 import cool.scx.data.jdbc.parser.JDBCDaoWhereParser;
+import cool.scx.data.jdbc.sql_builder.*;
 import cool.scx.data.query.Query;
 import cool.scx.jdbc.JDBCContext;
+import cool.scx.jdbc.dialect.Dialect;
 import cool.scx.jdbc.result_handler.ResultHandler;
 import cool.scx.jdbc.result_handler.bean_builder.BeanBuilder;
 import cool.scx.jdbc.sql.SQL;
@@ -20,7 +22,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static cool.scx.common.util.ArrayUtils.tryConcat;
-import static cool.scx.common.util.ArrayUtils.tryConcatAny;
 import static cool.scx.common.util.RandomUtils.randomString;
 import static cool.scx.data.jdbc.A.filterByFieldPolicy;
 import static cool.scx.data.jdbc.DataJDBCHelper.*;
@@ -33,64 +34,47 @@ import static cool.scx.jdbc.sql.SQLBuilder.*;
 /// @author scx567888
 /// @version 0.0.1
 public class JDBCEntityRepository<Entity> implements Repository<Entity, Long> {
-
-    /// 实体类对应的 table 结构
-    protected final AnnotationConfigTable table;
-
-    /// 实体类 class 用于泛型转换
-    protected final Class<Entity> entityClass;
-
-    /// SQLRunner
-    protected final SQLRunner sqlRunner;
-
-    /// 实体类对应的 BeanListHandler
-    protected final ResultHandler<List<Entity>> entityBeanListHandler;
-
-    /// 实体类对应的 BeanListHandler
-    protected final ResultHandler<Entity> entityBeanHandler;
-
-    /// 查询 count 所用的 handler
-    protected final ResultHandler<Long> countResultHandler;
-
-    /// 列名解析器
-    protected final JDBCDaoColumnNameParser columnNameParser;
-
-    /// where 解析器
-    protected final JDBCDaoWhereParser whereParser;
-
-    /// 分组解析器
-    protected final JDBCDaoGroupByParser groupByParser;
-
-    /// 排序解析器
-    protected final JDBCDaoOrderByParser orderByParser;
-
-    protected final JDBCContext jdbcContext;
-
-    protected final Function<Field, String> columnNameMapping;
-
-    protected final BeanBuilder<Entity> beanBuilder;
-    private final SelectSQLBuilder selectSQLBuilder;
+    
+    private final AnnotationConfigTable table;
+    private final Class<Entity> entityClass;
+    private final SQLRunner sqlRunner;
+    private final Dialect dialect;
+    private final BeanBuilder<Entity> beanBuilder;
+    private final ResultHandler<List<Entity>> entityBeanListHandler;
+    private final ResultHandler<Entity> entityBeanHandler;
+    private final ResultHandler<Long> countResultHandler;
+    private final JDBCDaoColumnNameParser columnNameParser;
+    private final JDBCDaoWhereParser whereParser;
+    private final JDBCDaoGroupByParser groupByParser;
+    private final JDBCDaoOrderByParser orderByParser;
+    private final JDBCContext jdbcContext;
+    private final Function<Field, String> columnNameMapping;
     private final InsertSQLBuilder insertSQLBuilder;
-
-    /// a
-    ///
-    /// @param entityClass a
+    private final SelectSQLBuilder selectSQLBuilder;
+    private final UpdateSQLBuilder updateSQLBuilder;
+    private final DeleteSQLBuilder deleteSQLBuilder;
+    private final CountSQLBuilder countSQLBuilder;
+    
     public JDBCEntityRepository(Class<Entity> entityClass, JDBCContext jdbcContext) {
         this.entityClass = entityClass;
         this.jdbcContext = jdbcContext;
         this.sqlRunner = jdbcContext.sqlRunner();
+        this.dialect = jdbcContext.dialect();
         this.table = new AnnotationConfigTable(entityClass);
         this.columnNameMapping = new FieldColumnNameMapping(this.table);
         this.beanBuilder = BeanBuilder.of(this.entityClass, this.columnNameMapping);
         this.entityBeanListHandler = ofBeanList(this.beanBuilder);
         this.entityBeanHandler = ofBean(this.beanBuilder);
         this.countResultHandler = ofSingleValue("count", Long.class);
-        this.columnNameParser = new JDBCDaoColumnNameParser(this.table, jdbcContext.dialect());
-        this.whereParser = new JDBCDaoWhereParser(this.columnNameParser);
-        this.groupByParser = new JDBCDaoGroupByParser(this.columnNameParser);
-        this.orderByParser = new JDBCDaoOrderByParser(this.columnNameParser);
-        this.selectSQLBuilder = new SelectSQLBuilder(table, jdbcContext.dialect(), whereParser, groupByParser, orderByParser);
-        this.insertSQLBuilder = new InsertSQLBuilder(table, jdbcContext.dialect(), columnNameParser);
+        this.columnNameParser = new JDBCDaoColumnNameParser(table, dialect);
+        this.whereParser = new JDBCDaoWhereParser(columnNameParser);
+        this.groupByParser = new JDBCDaoGroupByParser(columnNameParser);
+        this.orderByParser = new JDBCDaoOrderByParser(columnNameParser);
+        this.insertSQLBuilder = new InsertSQLBuilder(table, dialect, columnNameParser);
+        this.selectSQLBuilder = new SelectSQLBuilder(table, dialect, whereParser, groupByParser, orderByParser);
+        this.updateSQLBuilder = new UpdateSQLBuilder(table, dialect, columnNameParser, whereParser, orderByParser);
+        this.deleteSQLBuilder = new DeleteSQLBuilder(table, dialect,  whereParser, orderByParser);
+        this.countSQLBuilder = new CountSQLBuilder(table, dialect, whereParser, groupByParser);
     }
 
     @Override
@@ -179,62 +163,19 @@ public class JDBCEntityRepository<Entity> implements Repository<Entity, Long> {
     }
 
     public SQL buildGetSQL(Query query, FieldPolicy fieldPolicy) {
-        return selectSQLBuilder.buildGetSQL(query,fieldPolicy);
+        return selectSQLBuilder.buildGetSQL(query, fieldPolicy);
     }
 
     public SQL buildUpdateSQL(Entity entity, Query query, FieldPolicy updateFilter) {
-        if (query.getWhere().length == 0) {
-            throw new IllegalArgumentException("更新数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
-        }
-        //1, 过滤需要更新的列
-        var updateSetColumns = filterByFieldPolicy(updateFilter, table, entity);
-        //2, 创建 set 子句 其实都是 '?'
-        var updateSetClauses = createUpdateSetClauses(updateSetColumns, jdbcContext.dialect());
-        //3, 创建 表达式 set 子句
-        var updateSetExpressionsColumns = createUpdateSetExpressionsClauses(updateFilter, columnNameParser);
-        //4, 创建最终的 set 子句
-        var finalUpdateSetClauses = tryConcat(updateSetClauses, updateSetExpressionsColumns);
-        //5, 创建 where 子句
-        var whereClause = whereParser.parse(query.getWhere());
-        //6, 创建 orderBy 子句
-        var orderByClauses = orderByParser.parse(query.getOrderBy());
-        //7, 创建 SQL
-        var sql = Update(table)
-                .Set(finalUpdateSetClauses)
-                .Where(whereClause.whereClause())
-                .OrderBy(orderByClauses)
-                .Limit(null, query.getLimit())
-                .GetSQL(jdbcContext.dialect());
-        //8, 提取 entity 参数
-        var entityParams = extractValues(updateSetColumns, entity);
-        //9, 拼接参数 
-        var finalParams = tryConcat(entityParams, whereClause.params());
-        return sql(sql, finalParams);
+        return updateSQLBuilder.buildUpdateSQL(entity, query, updateFilter);
     }
 
     public SQL buildDeleteSQL(Query query) {
-        if (query.getWhere().length == 0) {
-            throw new IllegalArgumentException("删除数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
-        }
-        var whereClause = whereParser.parse(query.getWhere());
-        var orderByClauses = orderByParser.parse(query.getOrderBy());
-        var sql = Delete(table)
-                .Where(whereClause.whereClause())
-                .OrderBy(orderByClauses)
-                .Limit(null, query.getLimit())
-                .GetSQL(jdbcContext.dialect());
-        return sql(sql, whereClause.params());
+       return deleteSQLBuilder.buildDeleteSQL(query);
     }
 
     public SQL buildCountSQL(Query query) {
-        var whereClause = whereParser.parse(query.getWhere());
-        var groupByColumns = groupByParser.parse(query.getGroupBy());
-        var sql = Select("COUNT(*) AS count")
-                .From(table)
-                .Where(whereClause.whereClause())
-                .GroupBy(groupByColumns)
-                .GetSQL(jdbcContext.dialect());
-        return sql(sql, whereClause.params());
+        return countSQLBuilder.buildCountSQL(query);
     }
 
     /// 在 mysql 中 不支持 in 子句中包含 limit 但是我们可以使用 一个嵌套的别名表来跳过检查
@@ -247,7 +188,7 @@ public class JDBCEntityRepository<Entity> implements Repository<Entity, Long> {
         var sql0 = buildGetSQL(query, selectFilter);
         var sql = Select("*")
                 .From("(" + sql0.sql() + ")")
-                .GetSQL(jdbcContext.dialect());
+                .GetSQL(dialect);
         return sql(sql + " AS " + table.name() + "_" + randomString(6), sql0.params());
     }
 
@@ -261,7 +202,7 @@ public class JDBCEntityRepository<Entity> implements Repository<Entity, Long> {
         var sql0 = buildSelectSQL(query, selectFilter);
         var sql = Select("*")
                 .From("(" + sql0.sql() + ")")
-                .GetSQL(jdbcContext.dialect());
+                .GetSQL(dialect);
         return sql(sql + " AS " + table.name() + "_" + randomString(6), sql0.params());
     }
 
