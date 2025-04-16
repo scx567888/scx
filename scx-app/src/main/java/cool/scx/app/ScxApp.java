@@ -10,7 +10,7 @@ import cool.scx.common.util.StopWatch;
 import cool.scx.config.ScxConfig;
 import cool.scx.config.ScxEnvironment;
 import cool.scx.config.ScxFeatureConfig;
-import cool.scx.data.jdbc.AnnotationConfigTable;
+import cool.scx.data.jdbc.mapping.AnnotationConfigTable;
 import cool.scx.http.ScxHttpServer;
 import cool.scx.http.error_handler.DefaultHttpServerErrorHandler;
 import cool.scx.http.routing.Route;

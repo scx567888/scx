@@ -3,7 +3,7 @@ package cool.scx.app.base;
 import cool.scx.app.ScxAppContext;
 import cool.scx.data.Repository;
 import cool.scx.data.field_policy.FieldPolicy;
-import cool.scx.data.jdbc.JDBCEntityRepository;
+import cool.scx.data.jdbc.JDBCRepository;
 import cool.scx.data.query.Query;
 import cool.scx.jdbc.sql.SQL;
 import cool.scx.jdbc.sql.SQLRunner;
@@ -30,7 +30,7 @@ public class BaseModelService<Entity extends BaseModel> {
     /// BaseDao
     protected final Class<Entity> entityClass;
 
-    private JDBCEntityRepository<Entity> dao;
+    private JDBCRepository<Entity> dao;
 
     /// 从泛型中获取 entityClass
     public BaseModelService() {
@@ -253,7 +253,7 @@ public class BaseModelService<Entity extends BaseModel> {
     ///
     /// @return 所有数据的条数
     public final long count() {
-        return count(query());
+        return dao().count();
     }
 
     /// 根据聚合查询条件 [Query] 获取数据条数
@@ -264,9 +264,9 @@ public class BaseModelService<Entity extends BaseModel> {
         return dao().count(query);
     }
 
-    public final JDBCEntityRepository<Entity> dao() {
+    public final JDBCRepository<Entity> dao() {
         if (dao == null) {
-            this.dao = new JDBCEntityRepository<>(entityClass, ScxAppContext.jdbcContext());
+            this.dao = new JDBCRepository<>(entityClass, ScxAppContext.jdbcContext());
         }
         return dao;
     }

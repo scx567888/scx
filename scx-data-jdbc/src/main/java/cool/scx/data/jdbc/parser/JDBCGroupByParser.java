@@ -7,11 +7,11 @@ import cool.scx.data.query.parser.GroupByParser;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class JDBCDaoGroupByParser extends GroupByParser {
+public class JDBCGroupByParser extends GroupByParser {
 
-    private final JDBCDaoColumnNameParser columnNameParser;
+    private final JDBCColumnNameParser columnNameParser;
 
-    public JDBCDaoGroupByParser(JDBCDaoColumnNameParser columnNameParser) {
+    public JDBCGroupByParser(JDBCColumnNameParser columnNameParser) {
         this.columnNameParser = columnNameParser;
     }
 

@@ -12,12 +12,12 @@ import static cool.scx.common.util.StringUtils.notBlank;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public final class JDBCDaoColumnNameParser {
+public final class JDBCColumnNameParser {
 
     private final Table tableInfo;
     private final Dialect dialect;
 
-    public JDBCDaoColumnNameParser(Table tableInfo, Dialect dialect) {
+    public JDBCColumnNameParser(Table tableInfo, Dialect dialect) {
         this.tableInfo = tableInfo;
         this.dialect = dialect;
     }

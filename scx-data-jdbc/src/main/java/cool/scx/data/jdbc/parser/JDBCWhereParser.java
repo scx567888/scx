@@ -17,18 +17,18 @@ import java.util.Objects;
 
 import static cool.scx.common.util.ArrayUtils.toObjectArray;
 import static cool.scx.common.util.ObjectUtils.toJson;
-import static cool.scx.data.jdbc.parser.JDBCDaoColumnNameParser.splitIntoColumnNameAndFieldPath;
+import static cool.scx.data.jdbc.parser.JDBCColumnNameParser.splitIntoColumnNameAndFieldPath;
 import static java.util.Collections.addAll;
 
 /// JDBCDaoWhereParser
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class JDBCDaoWhereParser extends WhereParser {
+public class JDBCWhereParser extends WhereParser {
 
-    private final JDBCDaoColumnNameParser columnNameParser;
+    private final JDBCColumnNameParser columnNameParser;
 
-    public JDBCDaoWhereParser(JDBCDaoColumnNameParser columnNameParser) {
+    public JDBCWhereParser(JDBCColumnNameParser columnNameParser) {
         this.columnNameParser = columnNameParser;
     }
 

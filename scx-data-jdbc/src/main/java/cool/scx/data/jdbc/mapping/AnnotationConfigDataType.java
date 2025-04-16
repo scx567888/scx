@@ -1,4 +1,4 @@
-package cool.scx.data.jdbc;
+package cool.scx.data.jdbc.mapping;
 
 import cool.scx.data.jdbc.annotation.DataType;
 import cool.scx.jdbc.JDBCType;
@@ -6,7 +6,7 @@ import cool.scx.jdbc.mapping.type.TypeDataType;
 
 import java.lang.reflect.Type;
 
-import static cool.scx.data.jdbc.JDBCDaoHelper.getDataTypeByJavaType;
+import static cool.scx.data.jdbc.mapping.Helper.getDataTypeByJavaType;
 import static cool.scx.jdbc.JDBCType.VARCHAR;
 
 /// AnnotationConfigDataType
