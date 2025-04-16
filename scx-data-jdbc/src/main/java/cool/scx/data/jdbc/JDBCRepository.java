@@ -54,7 +54,7 @@ public class JDBCRepository<Entity> implements Repository<Entity, Long> {
         this.jdbcContext = jdbcContext;
         this.table = new AnnotationConfigTable(entityClass);
         this.sqlRunner = jdbcContext.sqlRunner();
-        
+
         //2, 创建返回值解析器
         var columnNameMapping = new FieldColumnNameMapping(table);
         this.beanBuilder = BeanBuilder.of(this.entityClass, columnNameMapping);
