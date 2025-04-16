@@ -26,7 +26,7 @@ public class FieldPolicyBuilder {
 
     /// 表达式
     public static FieldPolicy ofFieldExpression(String fieldName, String expression) {
-        return new FieldPolicyImpl(EXCLUDED).addFieldExpression(fieldName,expression);
+        return new FieldPolicyImpl(EXCLUDED).addFieldExpression(fieldName, expression);
     }
 
 }
