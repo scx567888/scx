@@ -10,6 +10,7 @@ import cool.scx.jdbc.dialect.Dialect;
 import cool.scx.jdbc.sql.SQL;
 
 import static cool.scx.common.util.ArrayUtils.tryConcatAny;
+import static cool.scx.common.util.RandomUtils.randomString;
 import static cool.scx.data.jdbc.A.filterByFieldPolicy;
 import static cool.scx.data.jdbc.DataJDBCHelper.createVirtualSelectColumns;
 import static cool.scx.data.jdbc.DataJDBCHelper.filter;
@@ -19,13 +20,9 @@ import static cool.scx.jdbc.sql.SQLBuilder.Select;
 public class SelectSQLBuilder {
 
     private final AnnotationConfigTable table;
-    
     private final Dialect dialect;
-    
     private final JDBCDaoWhereParser whereParser;
-    
     private final JDBCDaoGroupByParser groupByParser;
-    
     private final JDBCDaoOrderByParser orderByParser;
 
     public SelectSQLBuilder(AnnotationConfigTable table, Dialect dialect, JDBCDaoWhereParser whereParser, JDBCDaoGroupByParser groupByParser, JDBCDaoOrderByParser orderByParser) {
@@ -82,6 +79,26 @@ public class SelectSQLBuilder {
                 .Limit(null, 1L)
                 .GetSQL(dialect);
         return sql(sql, whereClause.params());
+    }
+
+    /// 在 mysql 中 不支持 in 子句中包含 limit 但是我们可以使用 一个嵌套的别名表来跳过检查
+    /// 此方法便是用于生成嵌套的 sql 的
+    public SQL buildGetSQLWithAlias(Query query, FieldPolicy fieldPolicy) {
+        var sql0 = buildGetSQL(query, fieldPolicy);
+        var sql = Select("*")
+                .From("(" + sql0.sql() + ")")
+                .GetSQL(dialect);
+        return sql(sql + " AS " + table.name() + "_" + randomString(6), sql0.params());
+    }
+
+    /// 在 mysql 中 不支持 in 子句中包含 limit 但是我们可以使用 一个嵌套的别名表来跳过检查
+    /// 此方法便是用于生成嵌套的 sql 的
+    public SQL buildSelectSQLWithAlias(Query query, FieldPolicy fieldPolicy) {
+        var sql0 = buildSelectSQL(query, fieldPolicy);
+        var sql = Select("*")
+                .From("(" + sql0.sql() + ")")
+                .GetSQL(dialect);
+        return sql(sql + " AS " + table.name() + "_" + randomString(6), sql0.params());
     }
     
 }
