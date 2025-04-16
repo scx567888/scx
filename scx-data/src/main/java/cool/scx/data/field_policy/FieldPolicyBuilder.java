@@ -19,4 +19,14 @@ public class FieldPolicyBuilder {
         return new FieldPolicyImpl(EXCLUDED).addExcluded(fieldNames);
     }
 
+    /// 表达式
+    public static FieldPolicy ofFieldExpression(FieldExpression... fieldExpressions) {
+        return new FieldPolicyImpl(EXCLUDED).addFieldExpression(fieldExpressions);
+    }
+
+    /// 表达式
+    public static FieldPolicy ofFieldExpression(String fieldName, String expression) {
+        return new FieldPolicyImpl(EXCLUDED).addFieldExpression(fieldName, expression);
+    }
+
 }
