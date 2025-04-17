@@ -1,7 +1,6 @@
 package cool.scx.io.test;
 
 import cool.scx.io.data_node.DataNode;
-import cool.scx.io.data_reader.ByteArrayDataReader;
 import cool.scx.io.data_reader.LinkedDataReader;
 import cool.scx.io.data_supplier.ByteArrayDataSupplier;
 import cool.scx.io.data_supplier.SequenceDataSupplier;
@@ -23,7 +22,7 @@ public class DataReaderTest {
 
     @Test
     public static void test1() {
-        var dataReader = new ByteArrayDataReader("11112345678".getBytes(StandardCharsets.UTF_8));
+        var dataReader = new LinkedDataReader(new ByteArrayDataSupplier("11112345678".getBytes(StandardCharsets.UTF_8)));
 
         //不会影响读取
         dataReader.peek(99);
@@ -32,12 +31,10 @@ public class DataReaderTest {
 
         var index = dataReader.readUntil("123".getBytes());
 
-        try {
-            //第二次应该匹配失败
+        //第二次应该匹配失败
+        Assert.assertThrows(NoMatchFoundException.class, () -> {
             var index1 = dataReader.readUntil("123".getBytes());
-        } catch (NoMatchFoundException _) {
-
-        }
+        });
     }
 
     @Test
