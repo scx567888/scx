@@ -191,7 +191,7 @@
 
         <!-- *********************** 以下为依赖包版本 *********************** -->
         <jackson.version>2.18.3</jackson.version>
-        <spring-framework.version>6.2.5</spring-framework.version>
+        <spring-framework.version>6.2.6</spring-framework.version>
         <hikaricp.version>6.2.1</hikaricp.version>
         <freemarker.version>2.3.34</freemarker.version>
         <thumbnailator.version>0.4.20</thumbnailator.version>
