@@ -76,32 +76,32 @@ public class JDBCRepository<Entity> implements Repository<Entity, Long> {
     }
 
     @Override
-    public final Long add(Entity entity, FieldPolicy updateFilter) {
-        return sqlRunner.update(buildInsertSQL(entity, updateFilter)).firstGeneratedKey();
+    public final Long add(Entity entity, FieldPolicy fieldPolicy) {
+        return sqlRunner.update(buildInsertSQL(entity, fieldPolicy)).firstGeneratedKey();
     }
 
     @Override
-    public final List<Long> add(Collection<Entity> entityList, FieldPolicy updateFilter) {
-        return sqlRunner.updateBatch(buildInsertBatchSQL(entityList, updateFilter)).generatedKeys();
+    public final List<Long> add(Collection<Entity> entityList, FieldPolicy fieldPolicy) {
+        return sqlRunner.updateBatch(buildInsertBatchSQL(entityList, fieldPolicy)).generatedKeys();
     }
 
     @Override
-    public final List<Entity> find(Query query, FieldPolicy selectFilter) {
-        return sqlRunner.query(buildSelectSQL(query, selectFilter), entityBeanListHandler);
+    public final List<Entity> find(Query query, FieldPolicy fieldPolicy) {
+        return sqlRunner.query(buildSelectSQL(query, fieldPolicy), entityBeanListHandler);
     }
 
     @Override
-    public void find(Query query, FieldPolicy fieldFilter, Consumer<Entity> entityConsumer) {
-        sqlRunner.query(buildSelectSQL(query, fieldFilter), ofBeanConsumer(beanBuilder, entityConsumer));
+    public void find(Query query, FieldPolicy fieldPolicy, Consumer<Entity> entityConsumer) {
+        sqlRunner.query(buildSelectSQL(query, fieldPolicy), ofBeanConsumer(beanBuilder, entityConsumer));
     }
 
-    public Entity get(Query query, FieldPolicy columnFilter) {
-        return sqlRunner.query(buildGetSQL(query, columnFilter), entityBeanHandler);
+    public Entity get(Query query, FieldPolicy fieldPolicy) {
+        return sqlRunner.query(buildGetSQL(query, fieldPolicy), entityBeanHandler);
     }
 
     @Override
-    public final long update(Entity entity, Query query, FieldPolicy updateFilter) {
-        return sqlRunner.update(buildUpdateSQL(entity, query, updateFilter)).affectedItemsCount();
+    public final long update(Entity entity, Query query, FieldPolicy fieldPolicy) {
+        return sqlRunner.update(buildUpdateSQL(entity, query, fieldPolicy)).affectedItemsCount();
     }
 
     @Override
