@@ -30,9 +30,9 @@ public class FieldPolicyBuilder {
         return includedAll().ignoreNullValue(ignoreNullValue);
     }
 
-    /// 默认排除所有
+    /// 默认包含所有
     public static FieldPolicy fieldExpression(String fieldName, String expression) {
-        return excludedAll().fieldExpression(fieldName, expression);
+        return includedAll().fieldExpression(fieldName, expression);
     }
 
 }

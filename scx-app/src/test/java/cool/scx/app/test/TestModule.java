@@ -41,8 +41,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static cool.scx.data.field_policy.FieldPolicyBuilder.ofFieldExpression;
-import static cool.scx.data.field_policy.FieldPolicyBuilder.ofIncluded;
+import static cool.scx.data.field_policy.FieldPolicyBuilder.fieldExpression;
+import static cool.scx.data.field_policy.FieldPolicyBuilder.included;
 import static cool.scx.data.query.QueryBuilder.*;
 import static cool.scx.data.query.QueryOption.USE_JSON_EXTRACT;
 import static java.lang.System.Logger.Level.ERROR;
@@ -90,7 +90,7 @@ public class TestModule extends ScxAppModule {
         var carService = ScxAppContext.getBean(CarService.class);
         var carService1 = new BaseModelService<>(Car.class);
         //纯表达式插入
-        var name = carService.add(ofFieldExpression("name", "RAND()"));
+        var name = carService.add(fieldExpression("name", "RAND()"));
         try {
             if (carService1.count() < 1500) {
                 System.err.println("开始: 方式1 (批量) 插入");
@@ -124,7 +124,7 @@ public class TestModule extends ScxAppModule {
             System.err.println("将 id 大于 200 的 name 设置为空 !!!");
             var c = new Car();
             c.name = null;
-            carService.update(c, query().where(gt("id", 200)), ofIncluded("name").ignoreNullValue(false));
+            carService.update(c, query().where(gt("id", 200)), included("name").ignoreNullValue(false));
 
             System.err.println("查询所有数据条数 !!! : " + carService.find().size());
             System.err.println("查询所有 id 大于 200 条数 !!! : " + carService.find(gt("id", 200)).size());
@@ -153,8 +153,8 @@ public class TestModule extends ScxAppModule {
             System.err.println("出错了 后滚后数据库中数据条数 : " + carService.count());
         }
         //测试虚拟字段
-        carService.update(where("1 = 1"), ofFieldExpression("name", "REVERSE(name)"));
-        var list = carService.find(ofFieldExpression("reverseName", "REVERSE(name)"));
+        carService.update(where("1 = 1"), fieldExpression("name", "REVERSE(name)"));
+        var list = carService.find(fieldExpression("reverseName", "REVERSE(name)"));
         System.out.println(list.get(0).reverseName);
 
     }
@@ -205,13 +205,13 @@ public class TestModule extends ScxAppModule {
         }
         //根据所有 person 表中年龄小于 100 的 carID 查询 car 表中的数据
         var cars = carService.find(query().where(in("id",
-                personService.buildListSQL(query().where(lt("age", 100)), ofIncluded("carID"))
+                personService.buildListSQL(query().where(lt("age", 100)), included("carID"))
         )));
         var logger = System.getLogger(TestModule.class.getName());
         logger.log(ERROR, "根据所有 person 表中年龄小于 100 的 carID 查询 car 表中的数据 总条数 {0}", cars.size());
         //根据所有 person 表中年龄小于 100 的 carID 查询 car 表中的数据
         var cars1 = carService.find(query().where("id IN ",
-                personService.buildListSQL(query().where(lt("age", 100)), ofIncluded("carID"))
+                personService.buildListSQL(query().where(lt("age", 100)), included("carID"))
         ));
         logger.log(ERROR, "第二种方式 (whereSQL) : 根据所有 person 表中年龄小于 100 的 carID 查询 car 表中的数据 总条数 {0}", cars1.size());
     }
