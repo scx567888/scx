@@ -7,6 +7,7 @@ import cool.scx.jdbc.dialect.Dialect;
 import cool.scx.jdbc.mapping.Column;
 import cool.scx.jdbc.sql.SQL;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import static cool.scx.common.util.ArrayUtils.tryConcat;
@@ -100,11 +101,9 @@ public class InsertSQLBuilder {
                 .Values(finalInsertValues)
                 .GetSQL(dialect);
         //8, 提取 entity 中的值作为 SQL 参数
-        var batchParams = new Object[entityList.size()];
-        var i = 0;
+        var batchParams = new ArrayList<Object[]>(entityList.size());
         for (var entity : entityList) {
-            batchParams[i] = extractValues(insertColumns, entity);
-            i = i + 1;
+            batchParams.add(extractValues(insertColumns, entity)) ;
         }
         return sql(sql, batchParams);
     }
