@@ -11,7 +11,7 @@ import cool.scx.jdbc.sql.SQL;
 
 import static cool.scx.common.util.ArrayUtils.tryConcatAny;
 import static cool.scx.common.util.RandomUtils.randomString;
-import static cool.scx.data.jdbc.sql_builder.Helper.filterByFieldPolicy;
+import static cool.scx.data.jdbc.sql_builder.SQLBuilderHelper.filterByFieldPolicy;
 import static cool.scx.jdbc.sql.SQL.sql;
 import static cool.scx.jdbc.sql.SQLBuilder.Select;
 
