@@ -40,8 +40,8 @@ public class UpdateSQLBuilder {
         return result;
     }
 
-    public static String[] createUpdateSetExpressionsClauses(FieldPolicy fieldFilter, JDBCColumnNameParser columnNameParser) {
-        var fieldExpressions = fieldFilter.fieldExpressions();
+    public static String[] createUpdateSetExpressionsClauses(FieldPolicy fieldPolicy, JDBCColumnNameParser columnNameParser) {
+        var fieldExpressions = fieldPolicy.fieldExpressions();
         var result = new String[fieldExpressions.size()];
         var i = 0;
         for (var entry : fieldExpressions.entrySet()) {

@@ -131,8 +131,8 @@ public interface Repository<Entity, ID> {
         return find(query, includedAll());
     }
 
-    default List<Entity> find(FieldPolicy fieldFilter) {
-        return find(query(), fieldFilter);
+    default List<Entity> find(FieldPolicy fieldPolicy) {
+        return find(query(), fieldPolicy);
     }
 
     default List<Entity> find() {
@@ -143,8 +143,8 @@ public interface Repository<Entity, ID> {
         find(query, includedAll(), entityConsumer);
     }
 
-    default void find(FieldPolicy fieldFilter, Consumer<Entity> entityConsumer) {
-        find(query(), fieldFilter, entityConsumer);
+    default void find(FieldPolicy fieldPolicy, Consumer<Entity> entityConsumer) {
+        find(query(), fieldPolicy, entityConsumer);
     }
 
     default void find(Consumer<Entity> entityConsumer) {
@@ -159,8 +159,8 @@ public interface Repository<Entity, ID> {
         return findAs(resultClass, query, includedAll());
     }
 
-    default <T> List<T> findAs(Class<T> resultClass, FieldPolicy fieldFilter) {
-        return findAs(resultClass, query(), fieldFilter);
+    default <T> List<T> findAs(Class<T> resultClass, FieldPolicy fieldPolicy) {
+        return findAs(resultClass, query(), fieldPolicy);
     }
 
     default <T> List<T> findAs(Class<T> resultClass) {
@@ -171,8 +171,8 @@ public interface Repository<Entity, ID> {
         findAs(resultClass, query, includedAll(), entityConsumer);
     }
 
-    default <T> void findAs(Class<T> resultClass, FieldPolicy fieldFilter, Consumer<T> entityConsumer) {
-        findAs(resultClass, query(), fieldFilter, entityConsumer);
+    default <T> void findAs(Class<T> resultClass, FieldPolicy fieldPolicy, Consumer<T> entityConsumer) {
+        findAs(resultClass, query(), fieldPolicy, entityConsumer);
     }
 
     default <T> void findAs(Class<T> resultClass, Consumer<T> entityConsumer) {
