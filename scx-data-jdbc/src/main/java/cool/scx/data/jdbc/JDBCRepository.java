@@ -91,8 +91,8 @@ public class JDBCRepository<Entity> implements Repository<Entity, Long> {
     }
 
     @Override
-    public void find(Query query, FieldPolicy fieldFilter, Consumer<Entity> consumer) {
-        sqlRunner.query(buildSelectSQL(query, fieldFilter), ofBeanConsumer(beanBuilder, consumer));
+    public void find(Query query, FieldPolicy fieldFilter, Consumer<Entity> entityConsumer) {
+        sqlRunner.query(buildSelectSQL(query, fieldFilter), ofBeanConsumer(beanBuilder, entityConsumer));
     }
 
     public Entity get(Query query, FieldPolicy columnFilter) {
@@ -119,7 +119,6 @@ public class JDBCRepository<Entity> implements Repository<Entity, Long> {
         sqlRunner.execute(sql("truncate " + table.name()));
     }
 
-    @Override
     public final Class<Entity> entityClass() {
         return entityClass;
     }
