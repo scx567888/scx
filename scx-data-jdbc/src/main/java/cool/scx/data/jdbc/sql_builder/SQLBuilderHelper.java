@@ -9,7 +9,7 @@ import java.util.Map;
 
 import static java.util.Collections.addAll;
 
-class Helper {
+public class SQLBuilderHelper {
 
     /// 根据 字段策略过滤 可以插入的列
     public static AnnotationConfigColumn[] filterByFieldPolicy(FieldPolicy fieldPolicy, AnnotationConfigTable table, Object entity) {

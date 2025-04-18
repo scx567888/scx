@@ -20,6 +20,9 @@ public interface FieldPolicy {
     /// 获取 FieldName
     String[] fieldNames();
 
+    /// 清除 fieldNames
+    FieldPolicy clearFieldNames();
+
     /// 设置忽略空值
     FieldPolicy ignoreNullValue(boolean ignoreNullValue);
 
@@ -31,5 +34,8 @@ public interface FieldPolicy {
 
     /// 获取字段表达式
     Map<String, String> fieldExpressions();
+
+    /// 清除所有表达式
+    FieldPolicy clearFieldExpressions();
 
 }
