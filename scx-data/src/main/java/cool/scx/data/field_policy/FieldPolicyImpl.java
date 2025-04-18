@@ -52,6 +52,12 @@ public final class FieldPolicyImpl implements FieldPolicy {
     }
 
     @Override
+    public FieldPolicy clearFieldNames() {
+        fieldNames.clear();
+        return this;
+    }
+
+    @Override
     public FieldPolicy ignoreNullValue(boolean ignoreNullValue) {
         this.ignoreNullValue = ignoreNullValue;
         return this;
@@ -71,6 +77,12 @@ public final class FieldPolicyImpl implements FieldPolicy {
     @Override
     public Map<String, String> fieldExpressions() {
         return fieldExpressions;
+    }
+
+    @Override
+    public FieldPolicy clearFieldExpressions() {
+        fieldExpressions.clear();
+        return this;
     }
 
     public FieldPolicy addFieldNames(String... fieldNames) {
