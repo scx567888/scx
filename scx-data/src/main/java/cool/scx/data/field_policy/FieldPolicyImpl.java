@@ -73,12 +73,12 @@ public final class FieldPolicyImpl implements FieldPolicy {
         return fieldExpressions;
     }
 
-    private FieldPolicy addFieldNames(String... fieldNames) {
+    public FieldPolicy addFieldNames(String... fieldNames) {
         addAll(this.fieldNames, fieldNames);
         return this;
     }
 
-    private FieldPolicy removeFieldNames(String... fieldNames) {
+    public FieldPolicy removeFieldNames(String... fieldNames) {
         for (var fieldName : fieldNames) {
             this.fieldNames.remove(fieldName);
         }
