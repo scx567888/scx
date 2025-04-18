@@ -17,7 +17,7 @@ import static cool.scx.data.field_policy.FilterMode.EXCLUDED;
 /// @version 0.0.1
 public class FieldPolicyDeserializer {
 
-    public static final FieldPolicyDeserializer FIELD_FILTER_DESERIALIZER = new FieldPolicyDeserializer();
+    public static final FieldPolicyDeserializer FIELD_POLICY_DESERIALIZER = new FieldPolicyDeserializer();
 
     public Object deserialize(JsonNode v) {
         if (v.isObject()) {

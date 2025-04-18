@@ -10,7 +10,7 @@ import java.util.LinkedHashMap;
 /// @version 0.0.1
 public class FieldPolicySerializer {
 
-    public static final FieldPolicySerializer FIELD_FILTER_SERIALIZER = new FieldPolicySerializer();
+    public static final FieldPolicySerializer FIELD_POLICY_SERIALIZER = new FieldPolicySerializer();
 
     public Object serialize(Object obj) {
         return switch (obj) {
