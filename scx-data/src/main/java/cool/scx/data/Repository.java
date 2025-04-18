@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static cool.scx.data.field_policy.FieldPolicyBuilder.ofExcluded;
+import static cool.scx.data.field_policy.FieldPolicyBuilder.includedAll;
 import static cool.scx.data.query.QueryBuilder.query;
 
 /// 用于定义数据访问层的规范
@@ -86,7 +86,7 @@ public interface Repository<Entity, ID> {
     void clear();
 
     default ID add(Entity entity) {
-        return add(entity, ofExcluded());
+        return add(entity, includedAll());
     }
 
     default ID add(FieldPolicy fieldPolicy) {
@@ -94,11 +94,11 @@ public interface Repository<Entity, ID> {
     }
 
     default List<ID> add(Collection<Entity> entityList) {
-        return add(entityList, ofExcluded());
+        return add(entityList, includedAll());
     }
 
     default List<Entity> find(Query query) {
-        return find(query, ofExcluded());
+        return find(query, includedAll());
     }
 
     default List<Entity> find(FieldPolicy fieldFilter) {
@@ -106,11 +106,11 @@ public interface Repository<Entity, ID> {
     }
 
     default List<Entity> find() {
-        return find(query(), ofExcluded());
+        return find(query(), includedAll());
     }
 
     default void find(Query query, Consumer<Entity> entityConsumer) {
-        find(query, ofExcluded(), entityConsumer);
+        find(query, includedAll(), entityConsumer);
     }
 
     default void find(FieldPolicy fieldFilter, Consumer<Entity> entityConsumer) {
@@ -118,15 +118,15 @@ public interface Repository<Entity, ID> {
     }
 
     default void find(Consumer<Entity> entityConsumer) {
-        find(query(), ofExcluded(), entityConsumer);
+        find(query(), includedAll(), entityConsumer);
     }
 
     default Entity get(Query query) {
-        return get(query, ofExcluded());
+        return get(query, includedAll());
     }
 
     default long update(Entity entity, Query query) {
-        return update(entity, query, ofExcluded());
+        return update(entity, query, includedAll());
     }
 
     default long update(Query query, FieldPolicy fieldPolicy) {
