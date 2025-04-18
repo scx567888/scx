@@ -14,7 +14,7 @@ public final class SQLBuilder {
 
     private final SQLBuilderType sqlBuilderType;
     private Object[] selectColumns = null;// 存储列名 如 [name, age]
-    private Object tableName = null;
+    private Object table = null;
     private String whereClause = null;// 存储子句 如 [name = 'scx', age > 18]
     private Object[] groupByColumns = null;// 存储列名 如 [name, age]
     private String[] orderByClauses = null;// 存储子句 如 [name desc, age asc]
@@ -28,51 +28,19 @@ public final class SQLBuilder {
         this.sqlBuilderType = sqlBuilderType;
     }
 
-    public static SQLBuilder Select(String... selectColumns) {
-        return new SQLBuilder(SQLBuilderType.SELECT)._Select(selectColumns);
-    }
-
-    public static SQLBuilder Select(Column... selectColumns) {
-        return new SQLBuilder(SQLBuilderType.SELECT)._Select(selectColumns);
-    }
-
     public static SQLBuilder Select(Object... selectColumns) {
         return new SQLBuilder(SQLBuilderType.SELECT)._Select(selectColumns);
     }
 
-    public static SQLBuilder Insert(String tableName, String... insertColumns) {
-        return new SQLBuilder(SQLBuilderType.INSERT)._Insert(tableName, insertColumns);
-    }
-
-    public static SQLBuilder Insert(String tableName, Column... insertColumnInfos) {
-        return new SQLBuilder(SQLBuilderType.INSERT)._Insert(tableName, insertColumnInfos);
-    }
-
-    public static SQLBuilder Insert(Table table, Column... insertColumnInfos) {
+    public static SQLBuilder Insert(Object table, Object... insertColumnInfos) {
         return new SQLBuilder(SQLBuilderType.INSERT)._Insert(table, insertColumnInfos);
     }
 
-    public static SQLBuilder Insert(Table table, String... insertColumns) {
-        return new SQLBuilder(SQLBuilderType.INSERT)._Insert(table, insertColumns);
-    }
-
-    public static SQLBuilder Insert(Table table, Object... insertColumnInfos) {
-        return new SQLBuilder(SQLBuilderType.INSERT)._Insert(table, insertColumnInfos);
-    }
-
-    public static SQLBuilder Update(String tableName) {
-        return new SQLBuilder(SQLBuilderType.UPDATE)._Update(tableName);
-    }
-
-    public static SQLBuilder Update(Table table) {
+    public static SQLBuilder Update(Object table) {
         return new SQLBuilder(SQLBuilderType.UPDATE)._Update(table);
     }
 
-    public static SQLBuilder Delete(String tableName) {
-        return new SQLBuilder(SQLBuilderType.DELETE)._Delete(tableName);
-    }
-
-    public static SQLBuilder Delete(Table table) {
+    public static SQLBuilder Delete(Object table) {
         return new SQLBuilder(SQLBuilderType.DELETE)._Delete(table);
     }
 
@@ -102,13 +70,8 @@ public final class SQLBuilder {
         return this;
     }
 
-    public SQLBuilder From(Table table) {
-        this.tableName = table;
-        return this;
-    }
-
-    public SQLBuilder From(String tableName) {
-        this.tableName = tableName;
+    public SQLBuilder From(Object table) {
+        this.table = table;
         return this;
     }
 
@@ -149,7 +112,7 @@ public final class SQLBuilder {
     }
 
     private SQLBuilder _Insert(Object tableName, Object[] insertColumns) {
-        this.tableName = tableName;
+        this.table = tableName;
         this.insertColumns = insertColumns;
         return this;
     }
@@ -160,7 +123,7 @@ public final class SQLBuilder {
     }
 
     private SQLBuilder _Update(Object tableName) {
-        this.tableName = tableName;
+        this.table = tableName;
         return this;
     }
 
@@ -173,7 +136,7 @@ public final class SQLBuilder {
     }
 
     public SQLBuilder _Delete(Object tableName) {
-        this.tableName = tableName;
+        this.table = tableName;
         return this;
     }
 
@@ -232,10 +195,10 @@ public final class SQLBuilder {
     }
 
     private String getTableName(Dialect dialect) {
-        if (tableName instanceof Table t) {
+        if (table instanceof Table t) {
             return dialect.quoteIdentifier(t.name());
         } else {
-            return tableName.toString();
+            return table.toString();
         }
     }
 
