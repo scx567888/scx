@@ -29,10 +29,13 @@ public class InsertSQLBuilder {
     }
 
     public static String[] createInsertExpressionsColumns(FieldPolicy fieldFilter, JDBCColumnNameParser parser) {
-        var fieldExpressions = fieldFilter.getFieldExpressions();
-        var result = new String[fieldExpressions.length];
-        for (var i = 0; i < fieldExpressions.length; i = i + 1) {
-            result[i] = parser.parseColumnName(fieldExpressions[i].fieldName(), false);
+        var fieldExpressions = fieldFilter.fieldExpressions();
+        var fieldNames = fieldExpressions.keySet();
+        var result = new String[fieldNames.size()];
+        int i = 0;
+        for (var fieldName : fieldNames) {
+            result[i] = parser.parseColumnName(fieldName, false);
+            i = i + 1;
         }
         return result;
     }
@@ -46,10 +49,13 @@ public class InsertSQLBuilder {
     }
 
     public static String[] createInsertExpressionsValue(FieldPolicy fieldFilter) {
-        var fieldExpressions = fieldFilter.getFieldExpressions();
-        var result = new String[fieldExpressions.length];
-        for (var i = 0; i < fieldExpressions.length; i = i + 1) {
-            result[i] = fieldExpressions[i].expression();
+        var fieldExpressions = fieldFilter.fieldExpressions();
+        var expressions = fieldExpressions.values();
+        var result = new String[expressions.size()];
+        int i = 0;
+        for (var expression : expressions) {
+            result[i] = expression;
+            i = i + 1;
         }
         return result;
     }
