@@ -45,9 +45,9 @@ public interface Repository<Entity, ID> {
 
     /// 查询多条数据
     ///
-    /// @param query       查询条件
-    /// @param fieldPolicy 字段策略
-    /// @param entityConsumer    数据消费者
+    /// @param query          查询条件
+    /// @param fieldPolicy    字段策略
+    /// @param entityConsumer 数据消费者
     void find(Query query, FieldPolicy fieldPolicy, Consumer<Entity> entityConsumer);
 
     /// 查询单条数据
