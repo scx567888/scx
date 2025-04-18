@@ -32,8 +32,8 @@ public class SelectSQLBuilder {
     }
 
     /// 创建虚拟查询列
-    public static String[] createVirtualSelectColumns(FieldPolicy fieldFilter, Dialect dialect) {
-        var fieldExpressions = fieldFilter.fieldExpressions();
+    public static String[] createVirtualSelectColumns(FieldPolicy fieldPolicy, Dialect dialect) {
+        var fieldExpressions = fieldPolicy.fieldExpressions();
         var virtualSelectColumns = new String[fieldExpressions.size()];
         int i = 0;
         for (var fieldExpression : fieldExpressions.entrySet()) {

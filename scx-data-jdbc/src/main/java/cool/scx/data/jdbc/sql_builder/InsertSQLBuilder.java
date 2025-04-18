@@ -29,8 +29,8 @@ public class InsertSQLBuilder {
         this.columnNameParser = columnNameParser;
     }
 
-    public static String[] createInsertExpressionsColumns(FieldPolicy fieldFilter, JDBCColumnNameParser parser) {
-        var fieldExpressions = fieldFilter.fieldExpressions();
+    public static String[] createInsertExpressionsColumns(FieldPolicy fieldPolicy, JDBCColumnNameParser parser) {
+        var fieldExpressions = fieldPolicy.fieldExpressions();
         var fieldNames = fieldExpressions.keySet();
         var result = new String[fieldNames.size()];
         int i = 0;
@@ -49,8 +49,8 @@ public class InsertSQLBuilder {
         return result;
     }
 
-    public static String[] createInsertExpressionsValue(FieldPolicy fieldFilter) {
-        var fieldExpressions = fieldFilter.fieldExpressions();
+    public static String[] createInsertExpressionsValue(FieldPolicy fieldPolicy) {
+        var fieldExpressions = fieldPolicy.fieldExpressions();
         var expressions = fieldExpressions.values();
         var result = new String[expressions.size()];
         int i = 0;

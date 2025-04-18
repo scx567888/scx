@@ -3,7 +3,7 @@ package cool.scx.data.field_policy;
 import static cool.scx.data.field_policy.FilterMode.EXCLUDED;
 import static cool.scx.data.field_policy.FilterMode.INCLUDED;
 
-/// FieldFilterBuilder
+/// FieldPolicyBuilder
 ///
 /// @author scx567888
 /// @version 0.0.1

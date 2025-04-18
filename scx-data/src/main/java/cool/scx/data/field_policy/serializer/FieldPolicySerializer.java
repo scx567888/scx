@@ -4,7 +4,7 @@ import cool.scx.data.field_policy.FieldPolicy;
 
 import java.util.LinkedHashMap;
 
-/// FieldFilterDeserializer
+/// FieldPolicySerializer
 ///
 /// @author scx567888
 /// @version 0.0.1
@@ -14,18 +14,18 @@ public class FieldPolicySerializer {
 
     public Object serialize(Object obj) {
         return switch (obj) {
-            case FieldPolicy s -> serializeFieldFilter(s);
+            case FieldPolicy s -> serializeFieldPolicy(s);
             default -> obj;
         };
     }
 
-    public LinkedHashMap<String, Object> serializeFieldFilter(FieldPolicy fieldFilter) {
+    public LinkedHashMap<String, Object> serializeFieldPolicy(FieldPolicy fieldPolicy) {
         var m = new LinkedHashMap<String, Object>();
-        m.put("@type", "FieldFilter");
-        m.put("filterMode", fieldFilter.filterMode());
-        m.put("fieldNames", fieldFilter.fieldNames());
-        m.put("ignoreNullValue", fieldFilter.ignoreNullValue());
-        m.put("fieldExpressions", fieldFilter.fieldExpressions());
+        m.put("@type", "FieldPolicy");
+        m.put("filterMode", fieldPolicy.filterMode());
+        m.put("fieldNames", fieldPolicy.fieldNames());
+        m.put("ignoreNullValue", fieldPolicy.ignoreNullValue());
+        m.put("fieldExpressions", fieldPolicy.fieldExpressions());
         return m;
     }
 
