@@ -195,6 +195,107 @@ public class BaseModelService<Entity extends BaseModel> {
         return this.dao().get(query, selectFilter);
     }
 
+    /// 获取所有数据
+    ///
+    /// @return 所有数据
+    public final <T> List<T> findAs(Class<T> resultClass) {
+        return findAs(resultClass, query(), includedAll());
+    }
+
+    /// 获取所有数据 (使用查询过滤器)
+    ///
+    /// @param selectFilter 查询字段过滤器
+    /// @return 所有数据
+    public final <T> List<T> findAs(Class<T> resultClass, FieldPolicy selectFilter) {
+        return findAs(resultClass, query(), selectFilter);
+    }
+
+    /// 根据聚合查询条件 [Query] 获取数据列表
+    ///
+    /// @param query 聚合查询参数对象
+    /// @return 数据列表
+    public final <T> List<T> findAs(Class<T> resultClass, Query query) {
+        return findAs(resultClass, query, includedAll());
+    }
+
+    /// 根据聚合查询条件 [Query] 获取数据列表
+    ///
+    /// @param query        聚合查询参数对象
+    /// @param selectFilter 查询字段过滤器
+    /// @return 数据列表
+    public <T> List<T> findAs(Class<T> resultClass, Query query, FieldPolicy selectFilter) {
+        return dao().findAs(resultClass, query, selectFilter);
+    }
+
+    /// 获取所有数据
+    public final <T> void findAs(Class<T> resultClass, Consumer<T> consumer) {
+        findAs(resultClass, query(), includedAll(), consumer);
+    }
+
+    /// 获取所有数据 (使用查询过滤器)
+    ///
+    /// @param selectFilter 查询字段过滤器
+    public final <T> void findAs(Class<T> resultClass, FieldPolicy selectFilter, Consumer<T> consumer) {
+        findAs(resultClass, query(), selectFilter, consumer);
+    }
+
+    /// 根据聚合查询条件 [Query] 获取数据列表
+    ///
+    /// @param query 聚合查询参数对象
+    public final <T> void findAs(Class<T> resultClass, Query query, Consumer<T> consumer) {
+        findAs(resultClass, query, includedAll(), consumer);
+    }
+
+    /// 根据聚合查询条件 [Query] 获取数据列表
+    ///
+    /// @param query        聚合查询参数对象
+    /// @param selectFilter 查询字段过滤器
+    public <T> void findAs(Class<T> resultClass, Query query, FieldPolicy selectFilter, Consumer<T> consumer) {
+        dao().findAs(resultClass, query, selectFilter, consumer);
+    }
+
+    /// 根据 id 获取数据
+    ///
+    /// @param ids id 列表
+    /// @return 列表数据
+    public final <T> List<T> findAs(Class<T> resultClass, long... ids) {
+        return findAs(resultClass, ids.length == 1 ? eq("id", ids[0]) : in("id", ids));
+    }
+
+    /// 根据 ID (主键) 查询单条数据
+    ///
+    /// @param id id ( 主键 )
+    /// @return 查到多个则返回第一个 没有则返回 null
+    public final <T> T getAs(Class<T> resultClass, long id) {
+        return getAs(resultClass, id, includedAll());
+    }
+
+    /// 根据 ID (主键) 查询单条数据
+    ///
+    /// @param id           id ( 主键 )
+    /// @param selectFilter 查询字段过滤器
+    /// @return 查到多个则返回第一个 没有则返回 null
+    public final <T> T getAs(Class<T> resultClass, long id, FieldPolicy selectFilter) {
+        return getAs(resultClass, eq("id", id), selectFilter);
+    }
+
+    /// 根据聚合查询条件 [Query] 获取单条数据
+    ///
+    /// @param query 聚合查询参数对象
+    /// @return 查到多个则返回第一个 没有则返回 null
+    public final <T> T getAs(Class<T> resultClass, Query query) {
+        return getAs(resultClass, query, includedAll());
+    }
+
+    /// 根据聚合查询条件 [Query] 获取单条数据
+    ///
+    /// @param query        聚合查询参数对象
+    /// @param selectFilter 查询字段过滤器
+    /// @return 查到多个则返回第一个 没有则返回 null
+    public <T> T getAs(Class<T> resultClass, Query query, FieldPolicy selectFilter) {
+        return this.dao().getAs(resultClass, query, selectFilter);
+    }
+
     /// 根据 ID 更新 (注意 !!! 这里会在更新之后根据主键再次进行一次查询, 若只是进行更新且对性能有要求请使用 {@link Repository#update(Object, Query, FieldPolicy)})
     ///
     /// @param entity 待更新的数据 ( 注意: 请保证数据中 id 字段不为空 )
