@@ -60,6 +60,36 @@ public interface Repository<Entity, ID> {
     /// @return 数据
     Entity get(Query query, FieldPolicy fieldPolicy);
 
+    /// 查询多条数据
+    ///
+    /// @param resultClass 结果类型
+    /// @param query       查询条件
+    /// @param fieldPolicy 字段策略
+    /// @param <T>         结果类型
+    /// @return 数据列表
+    <T> List<T> findAs(Class<T> resultClass, Query query, FieldPolicy fieldPolicy);
+
+    /// 查询多条数据
+    ///
+    /// @param resultClass    结果类型
+    /// @param query          查询条件
+    /// @param fieldPolicy    字段策略
+    /// @param entityConsumer 数据消费者
+    /// @param <T>            结果类型
+    <T> void findAs(Class<T> resultClass, Query query, FieldPolicy fieldPolicy, Consumer<T> entityConsumer);
+
+    /// 查询单条数据
+    ///
+    /// - 如果匹配到多条数据, 则返回第一个匹配项
+    /// - 如果没有匹配项, 返回 null
+    ///
+    /// @param resultClass 结果类型
+    /// @param query       查询条件
+    /// @param fieldPolicy 字段策略
+    /// @param <T>         结果类型
+    /// @return 数据
+    <T> T getAs(Class<T> resultClass, Query query, FieldPolicy fieldPolicy);
+
     /// 更新数据
     ///
     /// 当 entity 为 null 时, 将使用 fieldPolicy 进行纯表达式更新, 此时要求 fieldPolicy 必须包含至少一个字段表达式
@@ -123,6 +153,34 @@ public interface Repository<Entity, ID> {
 
     default Entity get(Query query) {
         return get(query, includedAll());
+    }
+
+    default <T> List<T> findAs(Class<T> resultClass, Query query) {
+        return findAs(resultClass, query, includedAll());
+    }
+
+    default <T> List<T> findAs(Class<T> resultClass, FieldPolicy fieldFilter) {
+        return findAs(resultClass, query(), fieldFilter);
+    }
+
+    default <T> List<T> findAs(Class<T> resultClass) {
+        return findAs(resultClass, query(), includedAll());
+    }
+
+    default <T> void findAs(Class<T> resultClass, Query query, Consumer<T> entityConsumer) {
+        findAs(resultClass, query, includedAll(), entityConsumer);
+    }
+
+    default <T> void findAs(Class<T> resultClass, FieldPolicy fieldFilter, Consumer<T> entityConsumer) {
+        findAs(resultClass, query(), fieldFilter, entityConsumer);
+    }
+
+    default <T> void findAs(Class<T> resultClass, Consumer<T> entityConsumer) {
+        findAs(resultClass, query(), includedAll(), entityConsumer);
+    }
+
+    default <T> T getAs(Class<T> resultClass, Query query) {
+        return getAs(resultClass, query, includedAll());
     }
 
     default long update(Entity entity, Query query) {
