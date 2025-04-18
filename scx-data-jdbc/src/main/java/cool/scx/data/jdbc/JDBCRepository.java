@@ -36,6 +36,7 @@ public class JDBCRepository<Entity> implements Repository<Entity, Long> {
     private final SQLRunner sqlRunner;
 
     // *********** 结果解析器 ***************
+    private final FieldColumnNameMapping columnNameMapping;
     private final BeanBuilder<Entity> beanBuilder;
     private final ResultHandler<List<Entity>> entityBeanListHandler;
     private final ResultHandler<Entity> entityBeanHandler;
@@ -56,7 +57,7 @@ public class JDBCRepository<Entity> implements Repository<Entity, Long> {
         this.sqlRunner = jdbcContext.sqlRunner();
 
         //2, 创建返回值解析器
-        var columnNameMapping = new FieldColumnNameMapping(table);
+        this.columnNameMapping = new FieldColumnNameMapping(table);
         this.beanBuilder = BeanBuilder.of(this.entityClass, columnNameMapping);
         this.entityBeanListHandler = ofBeanList(beanBuilder);
         this.entityBeanHandler = ofBean(beanBuilder);
@@ -97,6 +98,21 @@ public class JDBCRepository<Entity> implements Repository<Entity, Long> {
 
     public Entity get(Query query, FieldPolicy fieldPolicy) {
         return sqlRunner.query(buildGetSQL(query, fieldPolicy), entityBeanHandler);
+    }
+
+    @Override
+    public <T> List<T> findAs(Class<T> resultClass, Query query, FieldPolicy fieldPolicy) {
+        return sqlRunner.query(buildSelectSQL(query, fieldPolicy), ofBeanList(resultClass, columnNameMapping));
+    }
+
+    @Override
+    public <T> void findAs(Class<T> resultClass, Query query, FieldPolicy fieldPolicy, Consumer<T> entityConsumer) {
+        sqlRunner.query(buildSelectSQL(query, fieldPolicy), ofBeanConsumer(resultClass, columnNameMapping, entityConsumer));
+    }
+
+    @Override
+    public <T> T getAs(Class<T> resultClass, Query query, FieldPolicy fieldPolicy) {
+        return sqlRunner.query(buildGetSQL(query, fieldPolicy), ofBean(resultClass, columnNameMapping));
     }
 
     @Override
