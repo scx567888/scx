@@ -9,7 +9,7 @@ import static cool.scx.common.util.ClassUtils.isEnum;
 import static cool.scx.jdbc.JDBCType.JSON;
 import static cool.scx.jdbc.JDBCType.VARCHAR;
 
-class Helper {
+class AnnotationConfigHelper {
 
     public static JDBCType getDataTypeByJavaType(Type type) {
         if (type instanceof Class<?> clazz) {
