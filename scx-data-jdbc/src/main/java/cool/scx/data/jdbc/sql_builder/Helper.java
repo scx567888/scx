@@ -15,7 +15,7 @@ class Helper {
     public static AnnotationConfigColumn[] filterByFieldPolicy(FieldPolicy fieldPolicy, AnnotationConfigTable table, Object entity) {
         //1, 先根据 黑白名单进行过滤
         var columns = filterByFilterMode(fieldPolicy, table);
-        
+
         //2, 再根据 fieldExpressions 过滤
         var fieldExpressions = fieldPolicy.fieldExpressions();
         columns = filterByFieldExpressions(fieldExpressions, table, columns);
@@ -24,7 +24,7 @@ class Helper {
         if (fieldPolicy.ignoreNullValue()) {
             columns = filterByFieldValueIsNull(entity, columns);
         }
-        
+
         return columns;
     }
 

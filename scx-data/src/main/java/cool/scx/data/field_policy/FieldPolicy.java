@@ -30,6 +30,6 @@ public interface FieldPolicy {
     FieldPolicy fieldExpression(String fieldName, String expression);
 
     /// 获取字段表达式
-    Map<String,String> fieldExpressions();
+    Map<String, String> fieldExpressions();
 
 }

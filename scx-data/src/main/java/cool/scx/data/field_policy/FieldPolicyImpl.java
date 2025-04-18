@@ -1,6 +1,9 @@
 package cool.scx.data.field_policy;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
 
 import static java.util.Collections.addAll;
 
