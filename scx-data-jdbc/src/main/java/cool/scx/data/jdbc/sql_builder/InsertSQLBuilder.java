@@ -103,7 +103,7 @@ public class InsertSQLBuilder {
         //8, 提取 entity 中的值作为 SQL 参数
         var batchParams = new ArrayList<Object[]>(entityList.size());
         for (var entity : entityList) {
-            batchParams.add(extractValues(insertColumns, entity)) ;
+            batchParams.add(extractValues(insertColumns, entity));
         }
         return sql(sql, batchParams);
     }

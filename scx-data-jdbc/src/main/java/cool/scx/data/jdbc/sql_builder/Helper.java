@@ -19,7 +19,7 @@ class Helper {
         //2, 再根据 fieldExpressions 过滤
         var fieldExpressions = fieldPolicy.fieldExpressions();
         columns = filterByFieldExpressions(fieldExpressions, table, columns);
-        
+
         //3, 根据 是否包含空值进行过滤 
         if (fieldPolicy.ignoreNullValue()) {
             columns = filterByFieldValueIsNull(entity, columns);
