@@ -24,7 +24,7 @@ public interface Repository<Entity, ID> {
     ///
     /// @param entity      待插入的数据 (可以为 null)
     /// @param fieldPolicy 字段策略
-    /// @return 主键 ID (无主键则为 null)
+    /// @return 主键 ID (若数据没有主键, 则为 null)
     ID add(Entity entity, FieldPolicy fieldPolicy);
 
     /// 添加多条数据
@@ -33,7 +33,7 @@ public interface Repository<Entity, ID> {
     ///
     /// @param entityList  待插入的数据列表 (成员 可以为 null)
     /// @param fieldPolicy 字段策略
-    /// @return 主键 ID 列表 (无主键则为 null)
+    /// @return 主键 ID 列表 (若数据没有主键, 则为 null 列表)
     List<ID> add(Collection<Entity> entityList, FieldPolicy fieldPolicy);
 
     /// 查询多条数据
@@ -52,7 +52,8 @@ public interface Repository<Entity, ID> {
 
     /// 查询单条数据
     ///
-    /// 如果匹配到多个会返回第一个 如果无匹配会返回 null
+    /// - 如果匹配到多条数据, 则返回第一个匹配项
+    /// - 如果没有匹配项, 返回 null
     ///
     /// @param query       查询条件
     /// @param fieldPolicy 字段策略
