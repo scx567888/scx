@@ -1,6 +1,8 @@
 package cool.scx.data.field_policy;
 
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 
 import static java.util.Collections.addAll;
@@ -13,18 +15,18 @@ public final class FieldPolicyImpl implements FieldPolicy {
 
     private final FilterMode filterMode;
     private final Set<String> fieldNames;
-    private final Set<FieldExpression> fieldExpressions;
+    private final Map<String, String> fieldExpressions;
     private boolean ignoreNullValue;
 
     public FieldPolicyImpl(FilterMode filterMode) {
         this.filterMode = filterMode;
         this.fieldNames = new HashSet<>();
-        this.fieldExpressions = new HashSet<>();
+        this.fieldExpressions = new LinkedHashMap<>();//保证顺序很重要
         this.ignoreNullValue = true;
     }
 
     @Override
-    public FieldPolicy addIncluded(String... fieldNames) {
+    public FieldPolicy included(String... fieldNames) {
         return switch (filterMode) {
             case INCLUDED -> addFieldNames(fieldNames);
             case EXCLUDED -> removeFieldNames(fieldNames);
@@ -32,7 +34,7 @@ public final class FieldPolicyImpl implements FieldPolicy {
     }
 
     @Override
-    public FieldPolicy addExcluded(String... fieldNames) {
+    public FieldPolicy excluded(String... fieldNames) {
         return switch (filterMode) {
             case EXCLUDED -> addFieldNames(fieldNames);
             case INCLUDED -> removeFieldNames(fieldNames);
@@ -40,13 +42,13 @@ public final class FieldPolicyImpl implements FieldPolicy {
     }
 
     @Override
-    public FieldPolicy removeIncluded(String... fieldNames) {
-        return addExcluded(fieldNames);
+    public FilterMode filterMode() {
+        return filterMode;
     }
 
     @Override
-    public FieldPolicy removeExcluded(String... fieldNames) {
-        return addIncluded(fieldNames);
+    public String[] fieldNames() {
+        return fieldNames.toArray(String[]::new);
     }
 
     @Override
@@ -56,35 +58,19 @@ public final class FieldPolicyImpl implements FieldPolicy {
     }
 
     @Override
-    public FilterMode getFilterMode() {
-        return filterMode;
-    }
-
-    @Override
-    public String[] getFieldNames() {
-        return fieldNames.toArray(String[]::new);
-    }
-
-    @Override
-    public boolean getIgnoreNullValue() {
+    public boolean ignoreNullValue() {
         return ignoreNullValue;
     }
 
     @Override
-    public FieldPolicy clear() {
-        this.fieldNames.clear();
+    public FieldPolicy fieldExpression(String fieldName, String expression) {
+        fieldExpressions.put(fieldName, expression);
         return this;
     }
 
     @Override
-    public FieldPolicy addFieldExpression(FieldExpression... fieldExpressions) {
-        addAll(this.fieldExpressions, fieldExpressions);
-        return this;
-    }
-
-    @Override
-    public FieldExpression[] getFieldExpressions() {
-        return fieldExpressions.toArray(FieldExpression[]::new);
+    public Map<String, String> fieldExpressions() {
+        return fieldExpressions;
     }
 
     public FieldPolicy addFieldNames(String... fieldNames) {

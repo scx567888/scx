@@ -1,10 +1,12 @@
 package cool.scx.data.field_policy.serializer;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
-import cool.scx.data.field_policy.FieldExpression;
 import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.data.field_policy.FieldPolicyImpl;
 import cool.scx.data.field_policy.FilterMode;
+
+import java.util.Map;
 
 import static cool.scx.common.util.ObjectUtils.convertValue;
 import static cool.scx.data.field_policy.FilterMode.EXCLUDED;
@@ -51,8 +53,10 @@ public class FieldPolicyDeserializer {
         }
 
         if (objectNode.get("fieldExpressions") != null && !objectNode.get("fieldExpressions").isNull()) {
-            var fieldExpressions = convertValue(objectNode.get("fieldExpressions"), FieldExpression[].class);
-            fieldFilter.addFieldExpression(fieldExpressions);
+            var fieldExpressions = convertValue(objectNode.get("fieldExpressions"), new TypeReference<Map<String, String>>() {});
+            for (var entry : fieldExpressions.entrySet()) {
+                fieldFilter.fieldExpression(entry.getKey(), entry.getValue());
+            }
         }
 
         return fieldFilter;

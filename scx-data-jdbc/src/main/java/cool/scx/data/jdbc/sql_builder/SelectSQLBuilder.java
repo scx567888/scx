@@ -33,11 +33,15 @@ public class SelectSQLBuilder {
 
     /// 创建虚拟查询列
     public static String[] createVirtualSelectColumns(FieldPolicy fieldFilter, Dialect dialect) {
-        var fieldExpressions = fieldFilter.getFieldExpressions();
-        var virtualSelectColumns = new String[fieldExpressions.length];
-        for (int i = 0; i < fieldExpressions.length; i++) {
-            var fieldExpression = fieldExpressions[i];
-            virtualSelectColumns[i] = fieldExpression.expression() + " AS " + dialect.quoteIdentifier(fieldExpression.fieldName());
+        var fieldExpressions = fieldFilter.fieldExpressions();
+        var virtualSelectColumns = new String[fieldExpressions.size()];
+        int i = 0;
+        for (var fieldExpression : fieldExpressions.entrySet()) {
+            var fieldName = fieldExpression.getKey();
+            var expression = fieldExpression.getValue();
+            // 这个虚拟列 因为可能在表中不存在 所以此处不进行名称映射了 直接引用包装一下即可  
+            virtualSelectColumns[i] = expression + " AS " + dialect.quoteIdentifier(fieldName);
+            i = i + 1;
         }
         return virtualSelectColumns;
     }

@@ -22,10 +22,10 @@ public class FieldPolicySerializer {
     public LinkedHashMap<String, Object> serializeFieldFilter(FieldPolicy fieldFilter) {
         var m = new LinkedHashMap<String, Object>();
         m.put("@type", "FieldFilter");
-        m.put("filterMode", fieldFilter.getFilterMode());
-        m.put("fieldNames", fieldFilter.getFieldNames());
-        m.put("ignoreNullValue", fieldFilter.getIgnoreNullValue());
-        m.put("fieldExpressions", fieldFilter.getFieldExpressions());
+        m.put("filterMode", fieldFilter.filterMode());
+        m.put("fieldNames", fieldFilter.fieldNames());
+        m.put("ignoreNullValue", fieldFilter.ignoreNullValue());
+        m.put("fieldExpressions", fieldFilter.fieldExpressions());
         return m;
     }
 

@@ -7,6 +7,7 @@ import cool.scx.jdbc.dialect.Dialect;
 import cool.scx.jdbc.mapping.Column;
 import cool.scx.jdbc.sql.SQL;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import static cool.scx.common.util.ArrayUtils.tryConcat;
@@ -29,10 +30,13 @@ public class InsertSQLBuilder {
     }
 
     public static String[] createInsertExpressionsColumns(FieldPolicy fieldFilter, JDBCColumnNameParser parser) {
-        var fieldExpressions = fieldFilter.getFieldExpressions();
-        var result = new String[fieldExpressions.length];
-        for (var i = 0; i < fieldExpressions.length; i = i + 1) {
-            result[i] = parser.parseColumnName(fieldExpressions[i].fieldName(), false);
+        var fieldExpressions = fieldFilter.fieldExpressions();
+        var fieldNames = fieldExpressions.keySet();
+        var result = new String[fieldNames.size()];
+        int i = 0;
+        for (var fieldName : fieldNames) {
+            result[i] = parser.parseColumnName(fieldName, false);
+            i = i + 1;
         }
         return result;
     }
@@ -46,10 +50,13 @@ public class InsertSQLBuilder {
     }
 
     public static String[] createInsertExpressionsValue(FieldPolicy fieldFilter) {
-        var fieldExpressions = fieldFilter.getFieldExpressions();
-        var result = new String[fieldExpressions.length];
-        for (var i = 0; i < fieldExpressions.length; i = i + 1) {
-            result[i] = fieldExpressions[i].expression();
+        var fieldExpressions = fieldFilter.fieldExpressions();
+        var expressions = fieldExpressions.values();
+        var result = new String[expressions.size()];
+        int i = 0;
+        for (var expression : expressions) {
+            result[i] = expression;
+            i = i + 1;
         }
         return result;
     }
@@ -94,11 +101,9 @@ public class InsertSQLBuilder {
                 .Values(finalInsertValues)
                 .GetSQL(dialect);
         //8, 提取 entity 中的值作为 SQL 参数
-        var batchParams = new Object[entityList.size()];
-        var i = 0;
+        var batchParams = new ArrayList<Object[]>(entityList.size());
         for (var entity : entityList) {
-            batchParams[i] = extractValues(insertColumns, entity);
-            i = i + 1;
+            batchParams.add(extractValues(insertColumns, entity));
         }
         return sql(sql, batchParams);
     }

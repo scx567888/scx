@@ -1,63 +1,35 @@
 package cool.scx.data.field_policy;
 
+import java.util.Map;
+
 /// 字段策略
 ///
 /// @author scx567888
 /// @version 0.0.1
 public interface FieldPolicy {
 
-    /// 添加 白名单
-    ///
-    /// @param fieldNames 包含的列名 (注意是 java 字段名称 ,不是 数据库 字段名称)
-    /// @return this 方便链式调用
-    FieldPolicy addIncluded(String... fieldNames);
+    /// 包含
+    FieldPolicy included(String... fieldNames);
 
-    /// 添加 黑名单
-    ///
-    /// @param fieldNames 包含的列名 (注意是 java 字段名称 ,不是 数据库 字段名称)
-    /// @return this 方便链式调用
-    FieldPolicy addExcluded(String... fieldNames);
-
-    /// 移除白名单
-    ///
-    /// @param fieldNames 包含的列名 (注意是 java 字段名称 ,不是 数据库 字段名称)
-    /// @return this 方便链式调用
-    FieldPolicy removeIncluded(String... fieldNames);
-
-    /// 移除黑名单
-    ///
-    /// @param fieldNames 包含的列名 (注意是 java 字段名称 ,不是 数据库 字段名称)
-    /// @return this 方便链式调用
-    FieldPolicy removeExcluded(String... fieldNames);
-
-    /// 设置忽略空值
-    ///
-    /// @param ignoreNullValue a
-    /// @return a
-    FieldPolicy ignoreNullValue(boolean ignoreNullValue);
+    /// 排除
+    FieldPolicy excluded(String... fieldNames);
 
     /// 获取当前模式
-    ///
-    /// @return mode 分三种 禁用 : 0 ,包含模式 : 1 排除模式 : 2
-    FilterMode getFilterMode();
+    FilterMode filterMode();
 
     /// 获取 FieldName
-    String[] getFieldNames();
+    String[] fieldNames();
 
-    /// 忽略 空值
-    boolean getIgnoreNullValue();
+    /// 设置忽略空值
+    FieldPolicy ignoreNullValue(boolean ignoreNullValue);
 
-    /// 清除所有 包含类型的列
-    FieldPolicy clear();
+    /// 是否忽略 空值
+    boolean ignoreNullValue();
 
-    /// 添加字段表达式支持
-    FieldPolicy addFieldExpression(FieldExpression... fieldExpressions);
+    /// 设置字段表达式
+    FieldPolicy fieldExpression(String fieldName, String expression);
 
     /// 获取字段表达式
-    FieldExpression[] getFieldExpressions();
-
-    default FieldPolicy addFieldExpression(String fieldName, String expression) {
-        return addFieldExpression(new FieldExpression(fieldName, expression));
-    }
+    Map<String, String> fieldExpressions();
 
 }
