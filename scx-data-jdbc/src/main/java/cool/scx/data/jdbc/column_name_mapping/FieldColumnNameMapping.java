@@ -16,7 +16,7 @@ public class FieldColumnNameMapping implements Function<Field, String> {
     @Override
     public String apply(Field field) {
         var column = this.table.getColumn(field.getName());
-        return column == null ? field.getName() : column.name();
+        return column == null ? null : column.name();
     }
 
 }
