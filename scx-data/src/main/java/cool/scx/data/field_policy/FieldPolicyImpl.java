@@ -1,9 +1,6 @@
 package cool.scx.data.field_policy;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static java.util.Collections.addAll;
 
@@ -21,7 +18,7 @@ public final class FieldPolicyImpl implements FieldPolicy {
     public FieldPolicyImpl(FilterMode filterMode) {
         this.filterMode = filterMode;
         this.fieldNames = new HashSet<>();
-        this.fieldExpressions = new HashMap<>();
+        this.fieldExpressions = new LinkedHashMap<>();//保证顺序很重要
         this.ignoreNullValue = true;
     }
 
