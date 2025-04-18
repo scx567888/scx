@@ -20,7 +20,7 @@ public interface FieldPolicy {
     /// 获取 FieldName
     String[] fieldNames();
 
-    /// 清楚 fieldNames
+    /// 清除 fieldNames
     FieldPolicy clearFieldNames();
 
     /// 设置忽略空值
