@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 /// @param <Entity>
 /// @author scx567888
 /// @version 0.0.1
-public interface FindExecutor<Entity> {
+public interface Finder<Entity> {
 
     List<Entity> list();
 

@@ -52,42 +52,42 @@ public interface Repository<Entity, ID> {
     /// @param query       查询条件
     /// @param fieldPolicy 字段策略
     /// @return 查询执行器
-    FindExecutor<Entity> findExecutor(Query query, FieldPolicy fieldPolicy);
+    Finder<Entity> finder(Query query, FieldPolicy fieldPolicy);
 
-    default FindExecutor<Entity> findExecutor(Query query) {
-        return findExecutor(query, includedAll());
+    default Finder<Entity> finder(Query query) {
+        return finder(query, includedAll());
     }
 
-    default FindExecutor<Entity> findExecutor(FieldPolicy fieldPolicy) {
-        return findExecutor(query(), fieldPolicy);
+    default Finder<Entity> finder(FieldPolicy fieldPolicy) {
+        return finder(query(), fieldPolicy);
     }
 
-    default FindExecutor<Entity> findExecutor() {
-        return findExecutor(query(), includedAll());
+    default Finder<Entity> finder() {
+        return finder(query(), includedAll());
     }
 
     default List<Entity> find(Query query, FieldPolicy fieldPolicy) {
-        return findExecutor(query, fieldPolicy).list();
+        return finder(query, fieldPolicy).list();
     }
 
     default List<Entity> find(Query query) {
-        return findExecutor(query).list();
+        return finder(query).list();
     }
 
     default List<Entity> find(FieldPolicy fieldPolicy) {
-        return findExecutor(fieldPolicy).list();
+        return finder(fieldPolicy).list();
     }
 
     default List<Entity> find() {
-        return findExecutor().list();
+        return finder().list();
     }
 
     default Entity get(Query query, FieldPolicy fieldPolicy) {
-        return findExecutor(query, fieldPolicy).first();
+        return finder(query, fieldPolicy).first();
     }
 
     default Entity get(Query query) {
-        return findExecutor(query).first();
+        return finder(query).first();
     }
 
     /// 更新数据
@@ -109,11 +109,11 @@ public interface Repository<Entity, ID> {
     }
 
     default long count(Query query) {
-        return findExecutor(query).count();
+        return finder(query).count();
     }
 
     default long count() {
-        return findExecutor().count();
+        return finder().count();
     }
 
     /// 删除数据
