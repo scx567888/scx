@@ -1,6 +1,6 @@
 package cool.scx.data.jdbc;
 
-import cool.scx.data.FindExecutor;
+import cool.scx.data.Finder;
 import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.data.query.Query;
 
@@ -10,13 +10,13 @@ import java.util.function.Consumer;
 
 import static cool.scx.jdbc.result_handler.ResultHandler.*;
 
-public class JDBCFindExecutor<Entity> implements FindExecutor<Entity> {
+public class JDBCFinder<Entity> implements Finder<Entity> {
 
     private final JDBCRepository<Entity> repository;
     private final Query query;
     private final FieldPolicy fieldPolicy;
 
-    public JDBCFindExecutor(JDBCRepository<Entity> repository, Query query, FieldPolicy fieldPolicy) {
+    public JDBCFinder(JDBCRepository<Entity> repository, Query query, FieldPolicy fieldPolicy) {
         this.repository = repository;
         this.query = query;
         this.fieldPolicy = fieldPolicy;
