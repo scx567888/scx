@@ -48,7 +48,7 @@ public interface Repository<Entity, ID> {
     /// @param query       查询条件
     /// @param fieldPolicy 字段策略
     /// @return 更新成功的条数
-    long update(Entity entity, Query query, FieldPolicy fieldPolicy);
+    long update(Entity entity, FieldPolicy fieldPolicy, Query query);
 
     /// 删除数据
     ///
@@ -84,11 +84,11 @@ public interface Repository<Entity, ID> {
     }
 
     default long update(Entity entity, Query query) {
-        return update(entity, query, includedAll());
+        return update(entity, includedAll(), query);
     }
 
-    default long update(Query query, FieldPolicy fieldPolicy) {
-        return update(null, query, fieldPolicy);
+    default long update(FieldPolicy fieldPolicy, Query query) {
+        return update(null, fieldPolicy, query);
     }
 
 }
