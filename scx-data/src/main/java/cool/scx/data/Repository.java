@@ -35,12 +35,14 @@ public interface Repository<Entity, ID> {
     /// @return 主键 ID 列表 (若数据没有主键, 则为 null 列表)
     List<ID> add(Collection<Entity> entityList, FieldPolicy fieldPolicy);
 
-    /// 查询
+    /// 创建一个数据查询器
+    ///
+    /// 因为查询操作复杂度较高, 进而独立出一个 Finder 概念, 但你仍可以使用 find 来覆盖大部分场景
     ///
     /// @param query       查询条件
     /// @param fieldPolicy 字段策略
-    /// @return 查询执行器
-    FindExecutor<Entity> find(Query query, FieldPolicy fieldPolicy);
+    /// @return 查询器
+    Finder<Entity> finder(Query query, FieldPolicy fieldPolicy);
 
     /// 更新数据
     ///
@@ -73,16 +75,40 @@ public interface Repository<Entity, ID> {
         return add(entityList, includedAll());
     }
 
-    default FindExecutor<Entity> find(Query query) {
-        return find(query, includedAll());
+    default Finder<Entity> finder(Query query) {
+        return finder(query, includedAll());
     }
 
-    default FindExecutor<Entity> find(FieldPolicy fieldPolicy) {
-        return find(query(), fieldPolicy);
+    default Finder<Entity> finder(FieldPolicy fieldPolicy) {
+        return finder(query(), fieldPolicy);
     }
 
-    default FindExecutor<Entity> find() {
-        return find(query(), includedAll());
+    default Finder<Entity> finder() {
+        return finder(query(), includedAll());
+    }
+
+    default List<Entity> find(Query query, FieldPolicy fieldPolicy) {
+        return finder(query, fieldPolicy).list();
+    }
+
+    default List<Entity> find(Query query) {
+        return finder(query).list();
+    }
+
+    default List<Entity> find(FieldPolicy fieldPolicy) {
+        return finder(fieldPolicy).list();
+    }
+
+    default List<Entity> find() {
+        return finder().list();
+    }
+
+    default Entity get(Query query, FieldPolicy fieldPolicy) {
+        return finder(query, fieldPolicy).first();
+    }
+
+    default Entity get(Query query) {
+        return finder(query).first();
     }
 
     default long update(Entity entity, Query query) {
@@ -91,6 +117,14 @@ public interface Repository<Entity, ID> {
 
     default long update(FieldPolicy fieldPolicy, Query query) {
         return update(null, fieldPolicy, query);
+    }
+
+    default long count(Query query) {
+        return finder(query).count();
+    }
+
+    default long count() {
+        return finder().count();
     }
 
 }

@@ -1,6 +1,7 @@
 package cool.scx.app.base;
 
 import cool.scx.app.ScxAppContext;
+import cool.scx.data.Finder;
 import cool.scx.data.Repository;
 import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.data.jdbc.JDBCRepository;
@@ -10,7 +11,6 @@ import cool.scx.jdbc.sql.SQLRunner;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.function.Consumer;
 
 import static cool.scx.app.ScxAppHelper.findBaseModelServiceEntityClass;
 import static cool.scx.data.field_policy.FieldPolicyBuilder.includedAll;
@@ -60,6 +60,11 @@ public class BaseModelService<Entity extends BaseModel> {
         return add(entity, includedAll());
     }
 
+    /// 纯表达式插入
+    public final Entity add(FieldPolicy updateFilter) {
+        return add((Entity) null, updateFilter);
+    }
+
     /// 插入数据 (注意 !!! 这里会在插入之后根据主键再次进行一次查询, 若只是进行插入且对性能有要求请使用 {@link Repository#add(Object, FieldPolicy)} )})
     ///
     /// @param entity       待插入的数据
@@ -67,12 +72,6 @@ public class BaseModelService<Entity extends BaseModel> {
     /// @return 插入成功的数据 如果插入失败或数据没有主键则返回 null
     public Entity add(Entity entity, FieldPolicy updateFilter) {
         var newID = dao().add(entity, updateFilterProcessor(updateFilter));
-        return newID != null ? this.get(newID) : null;
-    }
-
-    /// 纯表达式插入
-    public Entity add(FieldPolicy updateFilter) {
-        var newID = dao().add(updateFilterProcessor(updateFilter));
         return newID != null ? this.get(newID) : null;
     }
 
@@ -123,34 +122,7 @@ public class BaseModelService<Entity extends BaseModel> {
     /// @param selectFilter 查询字段过滤器
     /// @return 数据列表
     public List<Entity> find(Query query, FieldPolicy selectFilter) {
-        return dao().find(query, selectFilter).list();
-    }
-
-    /// 获取所有数据
-    public final void find(Consumer<Entity> consumer) {
-        find(query(), includedAll(), consumer);
-    }
-
-    /// 获取所有数据 (使用查询过滤器)
-    ///
-    /// @param selectFilter 查询字段过滤器
-    public final void find(FieldPolicy selectFilter, Consumer<Entity> consumer) {
-        find(query(), selectFilter, consumer);
-    }
-
-    /// 根据聚合查询条件 [Query] 获取数据列表
-    ///
-    /// @param query 聚合查询参数对象
-    public final void find(Query query, Consumer<Entity> consumer) {
-        find(query, includedAll(), consumer);
-    }
-
-    /// 根据聚合查询条件 [Query] 获取数据列表
-    ///
-    /// @param query        聚合查询参数对象
-    /// @param selectFilter 查询字段过滤器
-    public void find(Query query, FieldPolicy selectFilter, Consumer<Entity> consumer) {
-        dao().find(query, selectFilter).forEach(consumer);
+        return dao().find(query, selectFilter);
     }
 
     /// 根据 id 获取数据
@@ -192,108 +164,34 @@ public class BaseModelService<Entity extends BaseModel> {
     /// @param selectFilter 查询字段过滤器
     /// @return 查到多个则返回第一个 没有则返回 null
     public Entity get(Query query, FieldPolicy selectFilter) {
-        return dao().find(query, selectFilter).first();
+        return dao().get(query, selectFilter);
     }
 
     /// 获取所有数据
     ///
     /// @return 所有数据
-    public final <T> List<T> findAs(Class<T> resultClass) {
-        return findAs(resultClass, query(), includedAll());
+    public final Finder<Entity> finder() {
+        return finder(query(), includedAll());
     }
 
     /// 获取所有数据 (使用查询过滤器)
     ///
     /// @param selectFilter 查询字段过滤器
     /// @return 所有数据
-    public final <T> List<T> findAs(Class<T> resultClass, FieldPolicy selectFilter) {
-        return findAs(resultClass, query(), selectFilter);
+    public final Finder<Entity> finder(FieldPolicy selectFilter) {
+        return finder(query(), selectFilter);
     }
 
     /// 根据聚合查询条件 [Query] 获取数据列表
     ///
     /// @param query 聚合查询参数对象
     /// @return 数据列表
-    public final <T> List<T> findAs(Class<T> resultClass, Query query) {
-        return findAs(resultClass, query, includedAll());
+    public final Finder<Entity> finder(Query query) {
+        return finder(query, includedAll());
     }
 
-    /// 根据聚合查询条件 [Query] 获取数据列表
-    ///
-    /// @param query        聚合查询参数对象
-    /// @param selectFilter 查询字段过滤器
-    /// @return 数据列表
-    public <T> List<T> findAs(Class<T> resultClass, Query query, FieldPolicy selectFilter) {
-        return dao().find(query, selectFilter).list(resultClass);
-    }
-
-    /// 获取所有数据
-    public final <T> void findAs(Class<T> resultClass, Consumer<T> consumer) {
-        findAs(resultClass, query(), includedAll(), consumer);
-    }
-
-    /// 获取所有数据 (使用查询过滤器)
-    ///
-    /// @param selectFilter 查询字段过滤器
-    public final <T> void findAs(Class<T> resultClass, FieldPolicy selectFilter, Consumer<T> consumer) {
-        findAs(resultClass, query(), selectFilter, consumer);
-    }
-
-    /// 根据聚合查询条件 [Query] 获取数据列表
-    ///
-    /// @param query 聚合查询参数对象
-    public final <T> void findAs(Class<T> resultClass, Query query, Consumer<T> consumer) {
-        findAs(resultClass, query, includedAll(), consumer);
-    }
-
-    /// 根据聚合查询条件 [Query] 获取数据列表
-    ///
-    /// @param query        聚合查询参数对象
-    /// @param selectFilter 查询字段过滤器
-    public <T> void findAs(Class<T> resultClass, Query query, FieldPolicy selectFilter, Consumer<T> consumer) {
-        dao().find(query, selectFilter).forEach(consumer, resultClass);
-    }
-
-    /// 根据 id 获取数据
-    ///
-    /// @param ids id 列表
-    /// @return 列表数据
-    public final <T> List<T> findAs(Class<T> resultClass, long... ids) {
-        return findAs(resultClass, ids.length == 1 ? eq("id", ids[0]) : in("id", ids));
-    }
-
-    /// 根据 ID (主键) 查询单条数据
-    ///
-    /// @param id id ( 主键 )
-    /// @return 查到多个则返回第一个 没有则返回 null
-    public final <T> T getAs(Class<T> resultClass, long id) {
-        return getAs(resultClass, id, includedAll());
-    }
-
-    /// 根据 ID (主键) 查询单条数据
-    ///
-    /// @param id           id ( 主键 )
-    /// @param selectFilter 查询字段过滤器
-    /// @return 查到多个则返回第一个 没有则返回 null
-    public final <T> T getAs(Class<T> resultClass, long id, FieldPolicy selectFilter) {
-        return getAs(resultClass, eq("id", id), selectFilter);
-    }
-
-    /// 根据聚合查询条件 [Query] 获取单条数据
-    ///
-    /// @param query 聚合查询参数对象
-    /// @return 查到多个则返回第一个 没有则返回 null
-    public final <T> T getAs(Class<T> resultClass, Query query) {
-        return getAs(resultClass, query, includedAll());
-    }
-
-    /// 根据聚合查询条件 [Query] 获取单条数据
-    ///
-    /// @param query        聚合查询参数对象
-    /// @param selectFilter 查询字段过滤器
-    /// @return 查到多个则返回第一个 没有则返回 null
-    public <T> T getAs(Class<T> resultClass, Query query, FieldPolicy selectFilter) {
-        return dao().find(query, selectFilter).first(resultClass);
+    public Finder<Entity> finder(Query query, FieldPolicy selectFilter) {
+        return dao().finder(query, selectFilter);
     }
 
     /// 根据 ID 更新 (注意 !!! 这里会在更新之后根据主键再次进行一次查询, 若只是进行更新且对性能有要求请使用 {@link Repository#update(Object, FieldPolicy, Query)})
@@ -326,6 +224,11 @@ public class BaseModelService<Entity extends BaseModel> {
         return update(entity, includedAll(), query);
     }
 
+    /// 根据 表达式更新数据
+    public final long update(FieldPolicy updateFilter, Query query) {
+        return update(null, updateFilter, query);
+    }
+
     /// 根据指定条件更新数据
     ///
     /// @param entity       待更新的数据
@@ -334,11 +237,6 @@ public class BaseModelService<Entity extends BaseModel> {
     /// @return 更新成功的数据条数
     public long update(Entity entity, FieldPolicy updateFilter, Query query) {
         return dao().update(entity, updateFilterProcessor(updateFilter), query);
-    }
-
-    /// 根据 表达式更新数据
-    public long update(FieldPolicy updateFilter, Query query) {
-        return dao().update(updateFilterProcessor(updateFilter), query);
     }
 
     /// 根据 ID 列表删除指定的数据
@@ -365,7 +263,7 @@ public class BaseModelService<Entity extends BaseModel> {
     ///
     /// @return 所有数据的条数
     public final long count() {
-        return dao().find().count();
+        return dao().count();
     }
 
     /// 根据聚合查询条件 [Query] 获取数据条数
@@ -373,7 +271,7 @@ public class BaseModelService<Entity extends BaseModel> {
     /// @param query 聚合查询参数对象
     /// @return 数据条数
     public final long count(Query query) {
-        return dao().find(query).count();
+        return dao().count(query);
     }
 
     public final JDBCRepository<Entity> dao() {

@@ -1,6 +1,6 @@
 package cool.scx.data.jdbc;
 
-import cool.scx.data.FindExecutor;
+import cool.scx.data.Finder;
 import cool.scx.data.Repository;
 import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.data.jdbc.column_name_mapping.FieldColumnNameMapping;
@@ -87,8 +87,8 @@ public class JDBCRepository<Entity> implements Repository<Entity, Long> {
     }
 
     @Override
-    public final FindExecutor<Entity> find(Query query, FieldPolicy fieldPolicy) {
-        return new JDBCFindExecutor<>(this, query, fieldPolicy);
+    public final Finder<Entity> finder(Query query, FieldPolicy fieldPolicy) {
+        return new JDBCFinder<>(this, query, fieldPolicy);
     }
 
     @Override
