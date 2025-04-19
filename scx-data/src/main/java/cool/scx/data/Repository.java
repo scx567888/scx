@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static cool.scx.data.field_policy.FieldPolicyBuilder.includedAll;
+import static cool.scx.data.query.QueryBuilder.query;
 
 /// 用于定义数据访问层的规范
 ///
@@ -37,7 +38,7 @@ public interface Repository<Entity, ID> {
     /// 构建查询
     ///
     /// @return 查询构建器
-    FindBuilder<Entity> find();
+    FindBuilder<Entity> find(Query query, FieldPolicy fieldPolicy);
 
     /// 更新数据
     ///
@@ -68,6 +69,18 @@ public interface Repository<Entity, ID> {
 
     default List<ID> add(Collection<Entity> entityList) {
         return add(entityList, includedAll());
+    }
+
+    default FindBuilder<Entity> find(Query query) {
+        return find(query, includedAll());
+    }
+
+    default FindBuilder<Entity> find(FieldPolicy fieldPolicy) {
+        return find(query(), fieldPolicy);
+    }
+
+    default FindBuilder<Entity> find() {
+        return find(query(), includedAll());
     }
 
     default long update(Entity entity, Query query) {

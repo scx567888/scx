@@ -1,20 +1,10 @@
 package cool.scx.data;
 
-import cool.scx.data.field_policy.FieldPolicy;
-import cool.scx.data.query.Query;
-
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
 public interface FindBuilder<Entity> {
-
-    //******************** 设置 ********************
-
-    FindBuilder<Entity> query(Query query);
-
-    FindBuilder<Entity> fieldPolicy(FieldPolicy fieldPolicy);
-
 
     //******************** 结果 ********************    
 
