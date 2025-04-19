@@ -4,13 +4,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+/**
+ * 查询执行器
+ *
+ * @param <Entity>
+ */
 public interface FindExecutor<Entity> {
 
-    List<Entity> toList();
+    List<Entity> fetchList();
 
-    <T> List<T> toList(Class<T> resultType);
+    <T> List<T> fetchList(Class<T> resultType);
 
-    List<Map<String, Object>> toMapList();
+    List<Map<String, Object>> fetchMapList();
 
     void forEach(Consumer<Entity> entityConsumer);
 
@@ -18,11 +23,11 @@ public interface FindExecutor<Entity> {
 
     void forEachMap(Consumer<Map<String, Object>> entityConsumer);
 
-    Entity getFirst();
+    Entity fetchFirst();
 
-    <T> T getFirst(Class<T> resultType);
+    <T> T fetchFirst(Class<T> resultType);
 
-    Map<String, Object> getFirstMap();
+    Map<String, Object> fetchFirstMap();
 
     long count();
 
