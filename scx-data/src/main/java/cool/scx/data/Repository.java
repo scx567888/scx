@@ -26,6 +26,14 @@ public interface Repository<Entity, ID> {
     /// @return 主键 ID (若数据没有主键, 则为 null)
     ID add(Entity entity, FieldPolicy fieldPolicy);
 
+    default ID add(Entity entity) {
+        return add(entity, includedAll());
+    }
+
+    default ID add(FieldPolicy fieldPolicy) {
+        return add((Entity) null, fieldPolicy);
+    }
+
     /// 添加多条数据
     ///
     /// 因为无法判断 entityList 中每个成员的情况, 所以所有插入字段均由 fieldPolicy 提供
@@ -35,12 +43,52 @@ public interface Repository<Entity, ID> {
     /// @return 主键 ID 列表 (若数据没有主键, 则为 null 列表)
     List<ID> add(Collection<Entity> entityList, FieldPolicy fieldPolicy);
 
+    default List<ID> add(Collection<Entity> entityList) {
+        return add(entityList, includedAll());
+    }
+
     /// 查询
     ///
     /// @param query       查询条件
     /// @param fieldPolicy 字段策略
     /// @return 查询执行器
-    FindExecutor<Entity> find(Query query, FieldPolicy fieldPolicy);
+    FindExecutor<Entity> findExecutor(Query query, FieldPolicy fieldPolicy);
+
+    default FindExecutor<Entity> findExecutor(Query query) {
+        return findExecutor(query, includedAll());
+    }
+
+    default FindExecutor<Entity> findExecutor(FieldPolicy fieldPolicy) {
+        return findExecutor(query(), fieldPolicy);
+    }
+
+    default FindExecutor<Entity> findExecutor() {
+        return findExecutor(query(), includedAll());
+    }
+
+    default List<Entity> find(Query query, FieldPolicy fieldPolicy) {
+        return findExecutor(query, fieldPolicy).list();
+    }
+
+    default List<Entity> find(Query query) {
+        return findExecutor(query).list();
+    }
+
+    default List<Entity> find(FieldPolicy fieldPolicy) {
+        return findExecutor(fieldPolicy).list();
+    }
+
+    default List<Entity> find() {
+        return findExecutor().list();
+    }
+
+    default Entity get(Query query, FieldPolicy fieldPolicy) {
+        return findExecutor(query, fieldPolicy).first();
+    }
+
+    default Entity get(Query query) {
+        return findExecutor(query).first();
+    }
 
     /// 更新数据
     ///
@@ -52,6 +100,22 @@ public interface Repository<Entity, ID> {
     /// @return 更新成功的条数
     long update(Entity entity, FieldPolicy fieldPolicy, Query query);
 
+    default long update(Entity entity, Query query) {
+        return update(entity, includedAll(), query);
+    }
+
+    default long update(FieldPolicy fieldPolicy, Query query) {
+        return update(null, fieldPolicy, query);
+    }
+
+    default long count(Query query) {
+        return findExecutor(query).count();
+    }
+
+    default long count() {
+        return findExecutor().count();
+    }
+
     /// 删除数据
     ///
     /// @param query 查询条件
@@ -60,37 +124,5 @@ public interface Repository<Entity, ID> {
 
     /// 清空整个数据源 (慎用)
     void clear();
-
-    default ID add(Entity entity) {
-        return add(entity, includedAll());
-    }
-
-    default ID add(FieldPolicy fieldPolicy) {
-        return add((Entity) null, fieldPolicy);
-    }
-
-    default List<ID> add(Collection<Entity> entityList) {
-        return add(entityList, includedAll());
-    }
-
-    default FindExecutor<Entity> find(Query query) {
-        return find(query, includedAll());
-    }
-
-    default FindExecutor<Entity> find(FieldPolicy fieldPolicy) {
-        return find(query(), fieldPolicy);
-    }
-
-    default FindExecutor<Entity> find() {
-        return find(query(), includedAll());
-    }
-
-    default long update(Entity entity, Query query) {
-        return update(entity, includedAll(), query);
-    }
-
-    default long update(FieldPolicy fieldPolicy, Query query) {
-        return update(null, fieldPolicy, query);
-    }
 
 }
