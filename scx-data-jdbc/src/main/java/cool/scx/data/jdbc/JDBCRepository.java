@@ -88,32 +88,8 @@ public class JDBCRepository<Entity> implements Repository<Entity, Long> {
     }
 
     @Override
-    public final List<Entity> find(Query query, FieldPolicy fieldPolicy) {
-        return sqlRunner.query(buildSelectSQL(query, fieldPolicy), entityBeanListHandler);
-    }
-
-    @Override
-    public void find(Query query, FieldPolicy fieldPolicy, Consumer<Entity> entityConsumer) {
-        sqlRunner.query(buildSelectSQL(query, fieldPolicy), ofBeanConsumer(beanBuilder, entityConsumer));
-    }
-
-    public Entity get(Query query, FieldPolicy fieldPolicy) {
-        return sqlRunner.query(buildGetSQL(query, fieldPolicy), entityBeanHandler);
-    }
-
-    @Override
-    public <T> List<T> findAs(Class<T> resultClass, Query query, FieldPolicy fieldPolicy) {
-        return sqlRunner.query(buildSelectSQL(query, fieldPolicy), ofBeanList(resultClass, columnNameMapping));
-    }
-
-    @Override
-    public <T> void findAs(Class<T> resultClass, Query query, FieldPolicy fieldPolicy, Consumer<T> entityConsumer) {
-        sqlRunner.query(buildSelectSQL(query, fieldPolicy), ofBeanConsumer(resultClass, columnNameMapping, entityConsumer));
-    }
-
-    @Override
-    public <T> T getAs(Class<T> resultClass, Query query, FieldPolicy fieldPolicy) {
-        return sqlRunner.query(buildGetSQL(query, fieldPolicy), ofBean(resultClass, columnNameMapping));
+    public final FindBuilder<Entity> find() {
+        return new JDBCFindBuilder<>(this);
     }
 
     @Override
@@ -127,18 +103,8 @@ public class JDBCRepository<Entity> implements Repository<Entity, Long> {
     }
 
     @Override
-    public final long count(Query query) {
-        return sqlRunner.query(buildCountSQL(query), countResultHandler);
-    }
-
-    @Override
     public final void clear() {
         sqlRunner.execute(sql("truncate " + table.name()));
-    }
-
-    @Override
-    public FindBuilder<Entity> buildFind() {
-        return new JDBCFindBuilder<>(this);
     }
 
     public final Class<Entity> entityClass() {
