@@ -92,8 +92,8 @@ public class JDBCRepository<Entity> implements Repository<Entity, Long> {
     }
 
     @Override
-    public final long update(Entity entity, Query query, FieldPolicy fieldPolicy) {
-        return sqlRunner.update(buildUpdateSQL(entity, query, fieldPolicy)).affectedItemsCount();
+    public final long update(Entity entity, FieldPolicy fieldPolicy, Query query) {
+        return sqlRunner.update(buildUpdateSQL(entity, fieldPolicy, query)).affectedItemsCount();
     }
 
     @Override
@@ -150,8 +150,8 @@ public class JDBCRepository<Entity> implements Repository<Entity, Long> {
         return selectSQLBuilder.buildGetSQL(query, fieldPolicy);
     }
 
-    public SQL buildUpdateSQL(Entity entity, Query query, FieldPolicy fieldPolicy) {
-        return updateSQLBuilder.buildUpdateSQL(entity, query, fieldPolicy);
+    public SQL buildUpdateSQL(Entity entity, FieldPolicy fieldPolicy, Query query) {
+        return updateSQLBuilder.buildUpdateSQL(entity, fieldPolicy, query);
     }
 
     public SQL buildDeleteSQL(Query query) {
