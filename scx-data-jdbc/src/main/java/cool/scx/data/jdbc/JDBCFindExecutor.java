@@ -23,17 +23,17 @@ public class JDBCFindExecutor<Entity> implements FindExecutor<Entity> {
     }
 
     @Override
-    public List<Entity> toList() {
+    public List<Entity> list() {
         return repository.sqlRunner.query(repository.buildSelectSQL(query, fieldPolicy), repository.entityBeanListHandler);
     }
 
     @Override
-    public <T> List<T> toList(Class<T> resultType) {
+    public <T> List<T> list(Class<T> resultType) {
         return repository.sqlRunner.query(repository.buildSelectSQL(query, fieldPolicy), ofBeanList(resultType, repository.columnNameMapping));
     }
 
     @Override
-    public List<Map<String, Object>> toMapList() {
+    public List<Map<String, Object>> mapList() {
         return repository.sqlRunner.query(repository.buildSelectSQL(query, fieldPolicy), ofMapList());
     }
 
@@ -53,17 +53,17 @@ public class JDBCFindExecutor<Entity> implements FindExecutor<Entity> {
     }
 
     @Override
-    public Entity getFirst() {
+    public Entity first() {
         return repository.sqlRunner.query(repository.buildGetSQL(query, fieldPolicy), repository.entityBeanHandler);
     }
 
     @Override
-    public <T> T getFirst(Class<T> resultType) {
+    public <T> T first(Class<T> resultType) {
         return repository.sqlRunner.query(repository.buildGetSQL(query, fieldPolicy), ofBean(resultType, repository.columnNameMapping));
     }
 
     @Override
-    public Map<String, Object> getFirstMap() {
+    public Map<String, Object> firstMap() {
         return repository.sqlRunner.query(repository.buildGetSQL(query, fieldPolicy), ofMap());
     }
 

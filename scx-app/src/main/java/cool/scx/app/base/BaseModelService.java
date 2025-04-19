@@ -123,7 +123,7 @@ public class BaseModelService<Entity extends BaseModel> {
     /// @param selectFilter 查询字段过滤器
     /// @return 数据列表
     public List<Entity> find(Query query, FieldPolicy selectFilter) {
-        return dao().find(query, selectFilter).toList();
+        return dao().find(query, selectFilter).list();
     }
 
     /// 获取所有数据
@@ -192,7 +192,7 @@ public class BaseModelService<Entity extends BaseModel> {
     /// @param selectFilter 查询字段过滤器
     /// @return 查到多个则返回第一个 没有则返回 null
     public Entity get(Query query, FieldPolicy selectFilter) {
-        return dao().find(query, selectFilter).getFirst();
+        return dao().find(query, selectFilter).first();
     }
 
     /// 获取所有数据
@@ -224,7 +224,7 @@ public class BaseModelService<Entity extends BaseModel> {
     /// @param selectFilter 查询字段过滤器
     /// @return 数据列表
     public <T> List<T> findAs(Class<T> resultClass, Query query, FieldPolicy selectFilter) {
-        return dao().find(query, selectFilter).toList(resultClass);
+        return dao().find(query, selectFilter).list(resultClass);
     }
 
     /// 获取所有数据
@@ -293,7 +293,7 @@ public class BaseModelService<Entity extends BaseModel> {
     /// @param selectFilter 查询字段过滤器
     /// @return 查到多个则返回第一个 没有则返回 null
     public <T> T getAs(Class<T> resultClass, Query query, FieldPolicy selectFilter) {
-        return dao().find(query, selectFilter).getFirst(resultClass);
+        return dao().find(query, selectFilter).first(resultClass);
     }
 
     /// 根据 ID 更新 (注意 !!! 这里会在更新之后根据主键再次进行一次查询, 若只是进行更新且对性能有要求请使用 {@link Repository#update(Object, Query, FieldPolicy)})

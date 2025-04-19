@@ -11,11 +11,11 @@ import java.util.function.Consumer;
  */
 public interface FindExecutor<Entity> {
 
-    List<Entity> fetchList();
+    List<Entity> list();
 
-    <T> List<T> fetchList(Class<T> resultType);
+    <T> List<T> list(Class<T> resultType);
 
-    List<Map<String, Object>> fetchMapList();
+    List<Map<String, Object>> mapList();
 
     void forEach(Consumer<Entity> entityConsumer);
 
@@ -23,11 +23,11 @@ public interface FindExecutor<Entity> {
 
     void forEachMap(Consumer<Map<String, Object>> entityConsumer);
 
-    Entity fetchFirst();
+    Entity first();
 
-    <T> T fetchFirst(Class<T> resultType);
+    <T> T first(Class<T> resultType);
 
-    Map<String, Object> fetchFirstMap();
+    Map<String, Object> firstMap();
 
     long count();
 
