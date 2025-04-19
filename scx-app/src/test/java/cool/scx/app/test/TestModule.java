@@ -124,7 +124,7 @@ public class TestModule extends ScxAppModule {
             System.err.println("将 id 大于 200 的 name 设置为空 !!!");
             var c = new Car();
             c.name = null;
-            carService.update(c, query().where(gt("id", 200)), included("name").ignoreNullValue(false));
+            carService.update(c, included("name").ignoreNullValue(false), query().where(gt("id", 200)));
 
             System.err.println("查询所有数据条数 !!! : " + carService.find().size());
             System.err.println("查询所有 id 大于 200 条数 !!! : " + carService.find(gt("id", 200)).size());
@@ -153,7 +153,7 @@ public class TestModule extends ScxAppModule {
             System.err.println("出错了 后滚后数据库中数据条数 : " + carService.count());
         }
         //测试虚拟字段
-        carService.update(where("1 = 1"), fieldExpression("name", "REVERSE(name)"));
+        carService.update(fieldExpression("name", "REVERSE(name)"), where("1 = 1"));
         var list = carService.find(fieldExpression("reverseName", "REVERSE(name)"));
         System.out.println(list.get(0).reverseName);
 

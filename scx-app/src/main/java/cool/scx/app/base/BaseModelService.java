@@ -123,7 +123,7 @@ public class BaseModelService<Entity extends BaseModel> {
     /// @param selectFilter 查询字段过滤器
     /// @return 数据列表
     public List<Entity> find(Query query, FieldPolicy selectFilter) {
-        return dao().find(query, selectFilter);
+        return dao().find(query, selectFilter).list();
     }
 
     /// 获取所有数据
@@ -150,7 +150,7 @@ public class BaseModelService<Entity extends BaseModel> {
     /// @param query        聚合查询参数对象
     /// @param selectFilter 查询字段过滤器
     public void find(Query query, FieldPolicy selectFilter, Consumer<Entity> consumer) {
-        dao().find(query, selectFilter, consumer);
+        dao().find(query, selectFilter).forEach(consumer);
     }
 
     /// 根据 id 获取数据
@@ -192,7 +192,7 @@ public class BaseModelService<Entity extends BaseModel> {
     /// @param selectFilter 查询字段过滤器
     /// @return 查到多个则返回第一个 没有则返回 null
     public Entity get(Query query, FieldPolicy selectFilter) {
-        return this.dao().get(query, selectFilter);
+        return dao().find(query, selectFilter).first();
     }
 
     /// 获取所有数据
@@ -224,7 +224,7 @@ public class BaseModelService<Entity extends BaseModel> {
     /// @param selectFilter 查询字段过滤器
     /// @return 数据列表
     public <T> List<T> findAs(Class<T> resultClass, Query query, FieldPolicy selectFilter) {
-        return dao().findAs(resultClass, query, selectFilter);
+        return dao().find(query, selectFilter).list(resultClass);
     }
 
     /// 获取所有数据
@@ -251,7 +251,7 @@ public class BaseModelService<Entity extends BaseModel> {
     /// @param query        聚合查询参数对象
     /// @param selectFilter 查询字段过滤器
     public <T> void findAs(Class<T> resultClass, Query query, FieldPolicy selectFilter, Consumer<T> consumer) {
-        dao().findAs(resultClass, query, selectFilter, consumer);
+        dao().find(query, selectFilter).forEach(consumer, resultClass);
     }
 
     /// 根据 id 获取数据
@@ -293,10 +293,10 @@ public class BaseModelService<Entity extends BaseModel> {
     /// @param selectFilter 查询字段过滤器
     /// @return 查到多个则返回第一个 没有则返回 null
     public <T> T getAs(Class<T> resultClass, Query query, FieldPolicy selectFilter) {
-        return this.dao().getAs(resultClass, query, selectFilter);
+        return dao().find(query, selectFilter).first(resultClass);
     }
 
-    /// 根据 ID 更新 (注意 !!! 这里会在更新之后根据主键再次进行一次查询, 若只是进行更新且对性能有要求请使用 {@link Repository#update(Object, Query, FieldPolicy)})
+    /// 根据 ID 更新 (注意 !!! 这里会在更新之后根据主键再次进行一次查询, 若只是进行更新且对性能有要求请使用 {@link Repository#update(Object, FieldPolicy, Query)})
     ///
     /// @param entity 待更新的数据 ( 注意: 请保证数据中 id 字段不为空 )
     /// @return 更新成功后的数据
@@ -304,7 +304,7 @@ public class BaseModelService<Entity extends BaseModel> {
         return update(entity, includedAll());
     }
 
-    /// 根据 ID 更新 (注意 !!! 这里会在更新之后根据主键再次进行一次查询, 若只是进行更新且对性能有要求请使用 {@link Repository#update(Object, Query, FieldPolicy)})
+    /// 根据 ID 更新 (注意 !!! 这里会在更新之后根据主键再次进行一次查询, 若只是进行更新且对性能有要求请使用 {@link Repository#update(Object, FieldPolicy, Query)})
     ///
     /// @param entity       待更新的数据 ( 注意: 请保证数据中 id 字段不为空 )
     /// @param updateFilter 更新字段过滤器
@@ -313,7 +313,7 @@ public class BaseModelService<Entity extends BaseModel> {
         if (entity.id == null) {
             throw new RuntimeException("根据 id 更新时 id 不能为空");
         }
-        this.update(entity, eq("id", entity.id), updateFilter);
+        this.update(entity, updateFilter, eq("id", entity.id));
         return this.get(entity.id);
     }
 
@@ -323,7 +323,7 @@ public class BaseModelService<Entity extends BaseModel> {
     /// @param query  更新的条件
     /// @return 更新成功的数据条数
     public final long update(Entity entity, Query query) {
-        return update(entity, query, includedAll());
+        return update(entity, includedAll(), query);
     }
 
     /// 根据指定条件更新数据
@@ -332,13 +332,13 @@ public class BaseModelService<Entity extends BaseModel> {
     /// @param query        更新的条件
     /// @param updateFilter 更新字段过滤器
     /// @return 更新成功的数据条数
-    public long update(Entity entity, Query query, FieldPolicy updateFilter) {
-        return dao().update(entity, query, updateFilterProcessor(updateFilter));
+    public long update(Entity entity, FieldPolicy updateFilter, Query query) {
+        return dao().update(entity, updateFilterProcessor(updateFilter), query);
     }
 
     /// 根据 表达式更新数据
-    public long update(Query query, FieldPolicy updateFilter) {
-        return dao().update(query, updateFilterProcessor(updateFilter));
+    public long update(FieldPolicy updateFilter, Query query) {
+        return dao().update(updateFilterProcessor(updateFilter), query);
     }
 
     /// 根据 ID 列表删除指定的数据
@@ -365,7 +365,7 @@ public class BaseModelService<Entity extends BaseModel> {
     ///
     /// @return 所有数据的条数
     public final long count() {
-        return dao().count();
+        return dao().find().count();
     }
 
     /// 根据聚合查询条件 [Query] 获取数据条数
@@ -373,7 +373,7 @@ public class BaseModelService<Entity extends BaseModel> {
     /// @param query 聚合查询参数对象
     /// @return 数据条数
     public final long count(Query query) {
-        return dao().count(query);
+        return dao().find(query).count();
     }
 
     public final JDBCRepository<Entity> dao() {

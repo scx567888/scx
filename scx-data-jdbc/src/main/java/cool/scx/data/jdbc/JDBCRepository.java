@@ -1,5 +1,6 @@
 package cool.scx.data.jdbc;
 
+import cool.scx.data.FindExecutor;
 import cool.scx.data.Repository;
 import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.data.jdbc.column_name_mapping.FieldColumnNameMapping;
@@ -18,7 +19,6 @@ import cool.scx.jdbc.sql.SQLRunner;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.function.Consumer;
 
 import static cool.scx.jdbc.result_handler.ResultHandler.*;
 import static cool.scx.jdbc.sql.SQL.sql;
@@ -30,24 +30,24 @@ import static cool.scx.jdbc.sql.SQL.sql;
 public class JDBCRepository<Entity> implements Repository<Entity, Long> {
 
     // *********** 基本字段 ***************
-    private final Class<Entity> entityClass;
-    private final JDBCContext jdbcContext;
-    private final AnnotationConfigTable table;
-    private final SQLRunner sqlRunner;
+    final Class<Entity> entityClass;
+    final JDBCContext jdbcContext;
+    final AnnotationConfigTable table;
+    final SQLRunner sqlRunner;
 
     // *********** 结果解析器 ***************
-    private final FieldColumnNameMapping columnNameMapping;
-    private final BeanBuilder<Entity> beanBuilder;
-    private final ResultHandler<List<Entity>> entityBeanListHandler;
-    private final ResultHandler<Entity> entityBeanHandler;
-    private final ResultHandler<Long> countResultHandler;
+    final FieldColumnNameMapping columnNameMapping;
+    final BeanBuilder<Entity> beanBuilder;
+    final ResultHandler<List<Entity>> entityBeanListHandler;
+    final ResultHandler<Entity> entityBeanHandler;
+    final ResultHandler<Long> countResultHandler;
 
     // *********** SQL 语句构造器 ***************
-    private final InsertSQLBuilder insertSQLBuilder;
-    private final SelectSQLBuilder selectSQLBuilder;
-    private final UpdateSQLBuilder updateSQLBuilder;
-    private final DeleteSQLBuilder deleteSQLBuilder;
-    private final CountSQLBuilder countSQLBuilder;
+    final InsertSQLBuilder insertSQLBuilder;
+    final SelectSQLBuilder selectSQLBuilder;
+    final UpdateSQLBuilder updateSQLBuilder;
+    final DeleteSQLBuilder deleteSQLBuilder;
+    final CountSQLBuilder countSQLBuilder;
 
     public JDBCRepository(Class<Entity> entityClass, JDBCContext jdbcContext) {
         //1, 初始化基本字段
@@ -87,47 +87,18 @@ public class JDBCRepository<Entity> implements Repository<Entity, Long> {
     }
 
     @Override
-    public final List<Entity> find(Query query, FieldPolicy fieldPolicy) {
-        return sqlRunner.query(buildSelectSQL(query, fieldPolicy), entityBeanListHandler);
+    public final FindExecutor<Entity> find(Query query, FieldPolicy fieldPolicy) {
+        return new JDBCFindExecutor<>(this, query, fieldPolicy);
     }
 
     @Override
-    public void find(Query query, FieldPolicy fieldPolicy, Consumer<Entity> entityConsumer) {
-        sqlRunner.query(buildSelectSQL(query, fieldPolicy), ofBeanConsumer(beanBuilder, entityConsumer));
-    }
-
-    public Entity get(Query query, FieldPolicy fieldPolicy) {
-        return sqlRunner.query(buildGetSQL(query, fieldPolicy), entityBeanHandler);
-    }
-
-    @Override
-    public <T> List<T> findAs(Class<T> resultClass, Query query, FieldPolicy fieldPolicy) {
-        return sqlRunner.query(buildSelectSQL(query, fieldPolicy), ofBeanList(resultClass, columnNameMapping));
-    }
-
-    @Override
-    public <T> void findAs(Class<T> resultClass, Query query, FieldPolicy fieldPolicy, Consumer<T> entityConsumer) {
-        sqlRunner.query(buildSelectSQL(query, fieldPolicy), ofBeanConsumer(resultClass, columnNameMapping, entityConsumer));
-    }
-
-    @Override
-    public <T> T getAs(Class<T> resultClass, Query query, FieldPolicy fieldPolicy) {
-        return sqlRunner.query(buildGetSQL(query, fieldPolicy), ofBean(resultClass, columnNameMapping));
-    }
-
-    @Override
-    public final long update(Entity entity, Query query, FieldPolicy fieldPolicy) {
-        return sqlRunner.update(buildUpdateSQL(entity, query, fieldPolicy)).affectedItemsCount();
+    public final long update(Entity entity, FieldPolicy fieldPolicy, Query query) {
+        return sqlRunner.update(buildUpdateSQL(entity, fieldPolicy, query)).affectedItemsCount();
     }
 
     @Override
     public final long delete(Query query) {
         return sqlRunner.update(buildDeleteSQL(query)).affectedItemsCount();
-    }
-
-    @Override
-    public final long count(Query query) {
-        return sqlRunner.query(buildCountSQL(query), countResultHandler);
     }
 
     @Override
@@ -179,8 +150,8 @@ public class JDBCRepository<Entity> implements Repository<Entity, Long> {
         return selectSQLBuilder.buildGetSQL(query, fieldPolicy);
     }
 
-    public SQL buildUpdateSQL(Entity entity, Query query, FieldPolicy fieldPolicy) {
-        return updateSQLBuilder.buildUpdateSQL(entity, query, fieldPolicy);
+    public SQL buildUpdateSQL(Entity entity, FieldPolicy fieldPolicy, Query query) {
+        return updateSQLBuilder.buildUpdateSQL(entity, fieldPolicy, query);
     }
 
     public SQL buildDeleteSQL(Query query) {
