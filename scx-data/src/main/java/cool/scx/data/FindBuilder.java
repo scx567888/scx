@@ -6,8 +6,6 @@ import java.util.function.Consumer;
 
 public interface FindBuilder<Entity> {
 
-    //******************** 结果 ********************    
-
     List<Entity> toList();
 
     <T> List<T> toList(Class<T> resultType);
