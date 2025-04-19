@@ -60,6 +60,11 @@ public class BaseModelService<Entity extends BaseModel> {
         return add(entity, includedAll());
     }
 
+    /// 纯表达式插入
+    public final Entity add(FieldPolicy updateFilter) {
+        return add((Entity) null, updateFilter);
+    }
+
     /// 插入数据 (注意 !!! 这里会在插入之后根据主键再次进行一次查询, 若只是进行插入且对性能有要求请使用 {@link Repository#add(Object, FieldPolicy)} )})
     ///
     /// @param entity       待插入的数据
@@ -67,12 +72,6 @@ public class BaseModelService<Entity extends BaseModel> {
     /// @return 插入成功的数据 如果插入失败或数据没有主键则返回 null
     public Entity add(Entity entity, FieldPolicy updateFilter) {
         var newID = dao().add(entity, updateFilterProcessor(updateFilter));
-        return newID != null ? this.get(newID) : null;
-    }
-
-    /// 纯表达式插入
-    public Entity add(FieldPolicy updateFilter) {
-        var newID = dao().add(updateFilterProcessor(updateFilter));
         return newID != null ? this.get(newID) : null;
     }
 
@@ -225,6 +224,11 @@ public class BaseModelService<Entity extends BaseModel> {
         return update(entity, includedAll(), query);
     }
 
+    /// 根据 表达式更新数据
+    public final long update(FieldPolicy updateFilter, Query query) {
+        return update(null, updateFilter, query);
+    }
+
     /// 根据指定条件更新数据
     ///
     /// @param entity       待更新的数据
@@ -233,11 +237,6 @@ public class BaseModelService<Entity extends BaseModel> {
     /// @return 更新成功的数据条数
     public long update(Entity entity, FieldPolicy updateFilter, Query query) {
         return dao().update(entity, updateFilterProcessor(updateFilter), query);
-    }
-
-    /// 根据 表达式更新数据
-    public long update(FieldPolicy updateFilter, Query query) {
-        return dao().update(updateFilterProcessor(updateFilter), query);
     }
 
     /// 根据 ID 列表删除指定的数据
