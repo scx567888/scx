@@ -35,7 +35,9 @@ public interface Repository<Entity, ID> {
     /// @return 主键 ID 列表 (若数据没有主键, 则为 null 列表)
     List<ID> add(Collection<Entity> entityList, FieldPolicy fieldPolicy);
 
-    /// 创建一个查询器
+    /// 创建一个数据查询器
+    ///
+    /// 因为查询操作复杂度较高, 进而独立出一个 Finder 概念, 但你仍可以使用 find 来覆盖大部分场景
     ///
     /// @param query       查询条件
     /// @param fieldPolicy 字段策略
