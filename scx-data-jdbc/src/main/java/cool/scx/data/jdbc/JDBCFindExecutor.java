@@ -1,39 +1,25 @@
 package cool.scx.data.jdbc;
 
-import cool.scx.data.FindBuilder;
+import cool.scx.data.FindExecutor;
 import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.data.query.Query;
-import cool.scx.data.query.QueryBuilder;
 
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import static cool.scx.data.field_policy.FieldPolicyBuilder.includedAll;
 import static cool.scx.jdbc.result_handler.ResultHandler.*;
 
-public class JDBCFindBuilder<Entity> implements FindBuilder<Entity> {
+public class JDBCFindExecutor<Entity> implements FindExecutor<Entity> {
 
     private final JDBCRepository<Entity> repository;
-    private Query query;
-    private FieldPolicy fieldPolicy;
+    private final Query query;
+    private final FieldPolicy fieldPolicy;
 
-    public JDBCFindBuilder(JDBCRepository<Entity> repository) {
+    public JDBCFindExecutor(JDBCRepository<Entity> repository, Query query, FieldPolicy fieldPolicy) {
         this.repository = repository;
-        this.query = QueryBuilder.query();
-        this.fieldPolicy = includedAll();
-    }
-
-    @Override
-    public FindBuilder<Entity> query(Query query) {
         this.query = query;
-        return this;
-    }
-
-    @Override
-    public FindBuilder<Entity> fieldPolicy(FieldPolicy fieldPolicy) {
         this.fieldPolicy = fieldPolicy;
-        return this;
     }
 
     @Override

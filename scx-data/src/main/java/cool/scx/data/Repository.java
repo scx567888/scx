@@ -35,10 +35,10 @@ public interface Repository<Entity, ID> {
     /// @return 主键 ID 列表 (若数据没有主键, 则为 null 列表)
     List<ID> add(Collection<Entity> entityList, FieldPolicy fieldPolicy);
 
-    /// 构建查询
+    /// 查询
     ///
-    /// @return 查询构建器
-    FindBuilder<Entity> find(Query query, FieldPolicy fieldPolicy);
+    /// @return 查询执行器
+    FindExecutor<Entity> find(Query query, FieldPolicy fieldPolicy);
 
     /// 更新数据
     ///
@@ -71,15 +71,15 @@ public interface Repository<Entity, ID> {
         return add(entityList, includedAll());
     }
 
-    default FindBuilder<Entity> find(Query query) {
+    default FindExecutor<Entity> find(Query query) {
         return find(query, includedAll());
     }
 
-    default FindBuilder<Entity> find(FieldPolicy fieldPolicy) {
+    default FindExecutor<Entity> find(FieldPolicy fieldPolicy) {
         return find(query(), fieldPolicy);
     }
 
-    default FindBuilder<Entity> find() {
+    default FindExecutor<Entity> find() {
         return find(query(), includedAll());
     }
 
