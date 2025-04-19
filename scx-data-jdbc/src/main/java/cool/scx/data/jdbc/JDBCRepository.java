@@ -1,5 +1,6 @@
 package cool.scx.data.jdbc;
 
+import cool.scx.data.FindBuilder;
 import cool.scx.data.Repository;
 import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.data.jdbc.column_name_mapping.FieldColumnNameMapping;
@@ -30,24 +31,24 @@ import static cool.scx.jdbc.sql.SQL.sql;
 public class JDBCRepository<Entity> implements Repository<Entity, Long> {
 
     // *********** 基本字段 ***************
-    private final Class<Entity> entityClass;
-    private final JDBCContext jdbcContext;
-    private final AnnotationConfigTable table;
-    private final SQLRunner sqlRunner;
+    final Class<Entity> entityClass;
+    final JDBCContext jdbcContext;
+    final AnnotationConfigTable table;
+    final SQLRunner sqlRunner;
 
     // *********** 结果解析器 ***************
-    private final FieldColumnNameMapping columnNameMapping;
-    private final BeanBuilder<Entity> beanBuilder;
-    private final ResultHandler<List<Entity>> entityBeanListHandler;
-    private final ResultHandler<Entity> entityBeanHandler;
-    private final ResultHandler<Long> countResultHandler;
+    final FieldColumnNameMapping columnNameMapping;
+    final BeanBuilder<Entity> beanBuilder;
+    final ResultHandler<List<Entity>> entityBeanListHandler;
+    final ResultHandler<Entity> entityBeanHandler;
+    final ResultHandler<Long> countResultHandler;
 
     // *********** SQL 语句构造器 ***************
-    private final InsertSQLBuilder insertSQLBuilder;
-    private final SelectSQLBuilder selectSQLBuilder;
-    private final UpdateSQLBuilder updateSQLBuilder;
-    private final DeleteSQLBuilder deleteSQLBuilder;
-    private final CountSQLBuilder countSQLBuilder;
+    final InsertSQLBuilder insertSQLBuilder;
+    final SelectSQLBuilder selectSQLBuilder;
+    final UpdateSQLBuilder updateSQLBuilder;
+    final DeleteSQLBuilder deleteSQLBuilder;
+    final CountSQLBuilder countSQLBuilder;
 
     public JDBCRepository(Class<Entity> entityClass, JDBCContext jdbcContext) {
         //1, 初始化基本字段
@@ -133,6 +134,11 @@ public class JDBCRepository<Entity> implements Repository<Entity, Long> {
     @Override
     public final void clear() {
         sqlRunner.execute(sql("truncate " + table.name()));
+    }
+
+    @Override
+    public FindBuilder<Entity> buildFind() {
+        return new JDBCFindBuilder<>(this);
     }
 
     public final Class<Entity> entityClass() {
