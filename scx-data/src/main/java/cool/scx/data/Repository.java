@@ -37,6 +37,8 @@ public interface Repository<Entity, ID> {
 
     /// 查询
     ///
+    /// @param query       查询条件
+    /// @param fieldPolicy 字段策略
     /// @return 查询执行器
     FindExecutor<Entity> find(Query query, FieldPolicy fieldPolicy);
 

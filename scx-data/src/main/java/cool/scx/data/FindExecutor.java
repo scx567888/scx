@@ -4,11 +4,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-/**
- * 查询执行器
- *
- * @param <Entity>
- */
+/// 查询执行器
+///
+/// @param <Entity>
+/// @author scx567888
+/// @version 0.0.1
 public interface FindExecutor<Entity> {
 
     List<Entity> list();
