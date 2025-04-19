@@ -123,7 +123,7 @@ public class BaseModelService<Entity extends BaseModel> {
     /// @param selectFilter 查询字段过滤器
     /// @return 数据列表
     public List<Entity> find(Query query, FieldPolicy selectFilter) {
-        return dao().find().query(query).fieldPolicy(selectFilter).toList();
+        return dao().find(query, selectFilter).toList();
     }
 
     /// 获取所有数据
@@ -150,7 +150,7 @@ public class BaseModelService<Entity extends BaseModel> {
     /// @param query        聚合查询参数对象
     /// @param selectFilter 查询字段过滤器
     public void find(Query query, FieldPolicy selectFilter, Consumer<Entity> consumer) {
-        dao().find().query(query).fieldPolicy(selectFilter).forEach(consumer);
+        dao().find(query, selectFilter).forEach(consumer);
     }
 
     /// 根据 id 获取数据
@@ -192,7 +192,7 @@ public class BaseModelService<Entity extends BaseModel> {
     /// @param selectFilter 查询字段过滤器
     /// @return 查到多个则返回第一个 没有则返回 null
     public Entity get(Query query, FieldPolicy selectFilter) {
-        return dao().find().query(query).fieldPolicy(selectFilter).getFirst();
+        return dao().find(query, selectFilter).getFirst();
     }
 
     /// 获取所有数据
@@ -224,7 +224,7 @@ public class BaseModelService<Entity extends BaseModel> {
     /// @param selectFilter 查询字段过滤器
     /// @return 数据列表
     public <T> List<T> findAs(Class<T> resultClass, Query query, FieldPolicy selectFilter) {
-        return dao().find().query(query).fieldPolicy(selectFilter).toList(resultClass);
+        return dao().find(query, selectFilter).toList(resultClass);
     }
 
     /// 获取所有数据
@@ -251,7 +251,7 @@ public class BaseModelService<Entity extends BaseModel> {
     /// @param query        聚合查询参数对象
     /// @param selectFilter 查询字段过滤器
     public <T> void findAs(Class<T> resultClass, Query query, FieldPolicy selectFilter, Consumer<T> consumer) {
-        dao().find().query(query).fieldPolicy(selectFilter).forEach(consumer, resultClass);
+        dao().find(query, selectFilter).forEach(consumer,resultClass);
     }
 
     /// 根据 id 获取数据
@@ -293,7 +293,7 @@ public class BaseModelService<Entity extends BaseModel> {
     /// @param selectFilter 查询字段过滤器
     /// @return 查到多个则返回第一个 没有则返回 null
     public <T> T getAs(Class<T> resultClass, Query query, FieldPolicy selectFilter) {
-        return dao().find().query(query).fieldPolicy(selectFilter).getFirst(resultClass);
+        return dao().find(query, selectFilter).getFirst(resultClass);
     }
 
     /// 根据 ID 更新 (注意 !!! 这里会在更新之后根据主键再次进行一次查询, 若只是进行更新且对性能有要求请使用 {@link Repository#update(Object, Query, FieldPolicy)})
@@ -373,7 +373,7 @@ public class BaseModelService<Entity extends BaseModel> {
     /// @param query 聚合查询参数对象
     /// @return 数据条数
     public final long count(Query query) {
-        return dao().find().query(query).count();
+        return dao().find(query).count();
     }
 
     public final JDBCRepository<Entity> dao() {
