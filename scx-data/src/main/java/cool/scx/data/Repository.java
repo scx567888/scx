@@ -41,14 +41,18 @@ public interface Repository<Entity, ID> {
     /// @param query       查询条件
     /// @param fieldPolicy 字段策略
     /// @return 数据列表
-    List<Entity> find(Query query, FieldPolicy fieldPolicy);
+    default List<Entity> find(Query query, FieldPolicy fieldPolicy) {
+        return buildFind().query(query).fieldPolicy(fieldPolicy).toList();
+    }
 
     /// 查询多条数据
     ///
     /// @param query          查询条件
     /// @param fieldPolicy    字段策略
     /// @param entityConsumer 数据消费者
-    void find(Query query, FieldPolicy fieldPolicy, Consumer<Entity> entityConsumer);
+    default void find(Query query, FieldPolicy fieldPolicy, Consumer<Entity> entityConsumer) {
+        buildFind().query(query).fieldPolicy(fieldPolicy).forEach(entityConsumer);
+    }
 
     /// 查询单条数据
     ///
@@ -58,7 +62,9 @@ public interface Repository<Entity, ID> {
     /// @param query       查询条件
     /// @param fieldPolicy 字段策略
     /// @return 数据
-    Entity get(Query query, FieldPolicy fieldPolicy);
+    default Entity get(Query query, FieldPolicy fieldPolicy) {
+        return buildFind().query(query).fieldPolicy(fieldPolicy).getFirst();
+    }
 
     /// 查询多条数据
     ///
@@ -67,7 +73,9 @@ public interface Repository<Entity, ID> {
     /// @param fieldPolicy 字段策略
     /// @param <T>         结果类型
     /// @return 数据列表
-    <T> List<T> findAs(Class<T> resultClass, Query query, FieldPolicy fieldPolicy);
+    default <T> List<T> findAs(Class<T> resultClass, Query query, FieldPolicy fieldPolicy) {
+        return buildFind().query(query).fieldPolicy(fieldPolicy).toList(resultClass);
+    }
 
     /// 查询多条数据
     ///
@@ -76,7 +84,10 @@ public interface Repository<Entity, ID> {
     /// @param fieldPolicy    字段策略
     /// @param entityConsumer 数据消费者
     /// @param <T>            结果类型
-    <T> void findAs(Class<T> resultClass, Query query, FieldPolicy fieldPolicy, Consumer<T> entityConsumer);
+    default  <T> void findAs(Class<T> resultClass, Query query, FieldPolicy fieldPolicy, Consumer<T> entityConsumer){
+        buildFind().query(query).fieldPolicy(fieldPolicy).forEach(entityConsumer,resultClass);
+    }
+
 
     /// 查询单条数据
     ///
@@ -88,7 +99,9 @@ public interface Repository<Entity, ID> {
     /// @param fieldPolicy 字段策略
     /// @param <T>         结果类型
     /// @return 数据
-    <T> T getAs(Class<T> resultClass, Query query, FieldPolicy fieldPolicy);
+    default  <T> T getAs(Class<T> resultClass, Query query, FieldPolicy fieldPolicy){
+        return buildFind().query(query).fieldPolicy(fieldPolicy).getFirst(resultClass);
+    }
 
     /// 更新数据
     ///
@@ -110,7 +123,9 @@ public interface Repository<Entity, ID> {
     ///
     /// @param query 查询条件
     /// @return 符合条件的行数
-    long count(Query query);
+    default long count(Query query){
+        return buildFind().query(query).count();
+    }
 
     /// 清空整个数据源 (慎用)
     void clear();
@@ -194,5 +209,7 @@ public interface Repository<Entity, ID> {
     default long count() {
         return count(query());
     }
+
+    FindBuilder<Entity> buildFind();
 
 }
