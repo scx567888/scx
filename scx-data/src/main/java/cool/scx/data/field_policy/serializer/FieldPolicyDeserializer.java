@@ -59,10 +59,10 @@ public class FieldPolicyDeserializer {
             }
         }
 
-        if (objectNode.get("fieldExpressions") != null && !objectNode.get("fieldExpressions").isNull()) {
-            var fieldExpressions = convertValue(objectNode.get("fieldExpressions"), new TypeReference<Map<String, String>>() {});
-            for (var entry : fieldExpressions.entrySet()) {
-                fieldPolicy.fieldExpression(entry.getKey(), entry.getValue());
+        if (objectNode.get("expressions") != null && !objectNode.get("expressions").isNull()) {
+            var expressions = convertValue(objectNode.get("expressions"), new TypeReference<Map<String, String>>() {});
+            for (var entry : expressions.entrySet()) {
+                fieldPolicy.expression(entry.getKey(), entry.getValue());
             }
         }
 

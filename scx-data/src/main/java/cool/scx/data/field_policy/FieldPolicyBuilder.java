@@ -36,8 +36,8 @@ public class FieldPolicyBuilder {
     }
 
     /// 默认包含所有
-    public static FieldPolicy fieldExpression(String fieldName, String expression) {
-        return includedAll().fieldExpression(fieldName, expression);
+    public static FieldPolicy expression(String fieldName, String expression) {
+        return includedAll().expression(fieldName, expression);
     }
 
 }
