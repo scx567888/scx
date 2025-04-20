@@ -21,7 +21,7 @@ public class FieldPolicyTest {
         var fieldPolicy = excluded("a", "b", "c", "d", "e", "f", "g", "h", "i")
                 .ignoreNull(false)
                 .ignoreNull("name", true)
-                .fieldExpression("w", "w * 2");
+                .expression("w", "w * 2");
         var serialize = FIELD_POLICY_SERIALIZER.serialize(fieldPolicy);
         var json = ObjectUtils.toJson(serialize);
         var jsonNode = ObjectUtils.jsonMapper().readTree(json);
@@ -30,7 +30,7 @@ public class FieldPolicyTest {
         Assert.assertEquals(fieldPolicy.filterMode(), newFieldPolicy.filterMode());
         Assert.assertEquals(fieldPolicy.ignoreNull(), newFieldPolicy.ignoreNull());
         Assert.assertEquals(fieldPolicy.ignoreNulls(), newFieldPolicy.ignoreNulls());
-        Assert.assertEquals(fieldPolicy.fieldExpressions(), newFieldPolicy.fieldExpressions());
+        Assert.assertEquals(fieldPolicy.expressions(), newFieldPolicy.expressions());
     }
 
 }

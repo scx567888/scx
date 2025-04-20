@@ -26,7 +26,7 @@ public class FieldPolicySerializer {
         m.put("fieldNames", fieldPolicy.fieldNames());
         m.put("ignoreNull", fieldPolicy.ignoreNull());
         m.put("ignoreNulls", fieldPolicy.ignoreNulls());
-        m.put("fieldExpressions", fieldPolicy.fieldExpressions());
+        m.put("expressions", fieldPolicy.expressions());
         return m;
     }
 
