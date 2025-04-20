@@ -42,15 +42,15 @@ public interface FieldPolicy {
     FieldPolicy clearIgnoreNulls();
 
     /// 设置字段表达式
-    FieldPolicy fieldExpression(String fieldName, String expression);
+    FieldPolicy expression(String fieldName, String expression);
 
     /// 字段表达式
-    Map<String, String> fieldExpressions();
+    Map<String, String> expressions();
 
     /// 清除 某个表达式
-    FieldPolicy removeFieldExpression(String fieldName);
+    FieldPolicy removeExpression(String fieldName);
 
     /// 清除 所有表达式
-    FieldPolicy clearFieldExpressions();
+    FieldPolicy clearExpressions();
 
 }

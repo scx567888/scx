@@ -94,24 +94,24 @@ public final class FieldPolicyImpl implements FieldPolicy {
     }
 
     @Override
-    public FieldPolicy fieldExpression(String fieldName, String expression) {
+    public FieldPolicy expression(String fieldName, String expression) {
         fieldExpressions.put(fieldName, expression);
         return this;
     }
 
     @Override
-    public Map<String, String> fieldExpressions() {
+    public Map<String, String> expressions() {
         return fieldExpressions;
     }
 
     @Override
-    public FieldPolicy removeFieldExpression(String fieldName) {
+    public FieldPolicy removeExpression(String fieldName) {
         fieldExpressions.remove(fieldName);
         return this;
     }
 
     @Override
-    public FieldPolicy clearFieldExpressions() {
+    public FieldPolicy clearExpressions() {
         fieldExpressions.clear();
         return this;
     }
