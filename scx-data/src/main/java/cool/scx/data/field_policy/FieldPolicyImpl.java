@@ -16,13 +16,15 @@ public final class FieldPolicyImpl implements FieldPolicy {
     private final FilterMode filterMode;
     private final Set<String> fieldNames;
     private final Map<String, String> fieldExpressions;
-    private boolean ignoreNullValue;
+    private final Map<String, Boolean> ignoreNulls;
+    private boolean ignoreNull;
 
     public FieldPolicyImpl(FilterMode filterMode) {
         this.filterMode = filterMode;
         this.fieldNames = new HashSet<>();
         this.fieldExpressions = new LinkedHashMap<>();//保证顺序很重要
-        this.ignoreNullValue = true;
+        this.ignoreNulls = new LinkedHashMap<>();
+        this.ignoreNull = true;
     }
 
     @Override
@@ -58,14 +60,37 @@ public final class FieldPolicyImpl implements FieldPolicy {
     }
 
     @Override
-    public FieldPolicy ignoreNullValue(boolean ignoreNullValue) {
-        this.ignoreNullValue = ignoreNullValue;
+    public FieldPolicy ignoreNull(boolean ignoreNull) {
+        this.ignoreNull = ignoreNull;
         return this;
     }
 
     @Override
-    public boolean ignoreNullValue() {
-        return ignoreNullValue;
+    public boolean ignoreNull() {
+        return ignoreNull;
+    }
+
+    @Override
+    public FieldPolicy ignoreNull(String fieldName, boolean ignoreNull) {
+        this.ignoreNulls.put(fieldName, ignoreNull);
+        return this;
+    }
+
+    @Override
+    public FieldPolicy removeIgnoreNull(String fieldName) {
+        ignoreNulls.remove(fieldName);
+        return this;
+    }
+
+    @Override
+    public Map<String, Boolean> ignoreNulls() {
+        return ignoreNulls;
+    }
+
+    @Override
+    public FieldPolicy clearIgnoreNulls() {
+        ignoreNulls.clear();
+        return this;
     }
 
     @Override
@@ -77,6 +102,12 @@ public final class FieldPolicyImpl implements FieldPolicy {
     @Override
     public Map<String, String> fieldExpressions() {
         return fieldExpressions;
+    }
+
+    @Override
+    public FieldPolicy removeFieldExpression(String fieldName) {
+        fieldExpressions.remove(fieldName);
+        return this;
     }
 
     @Override
