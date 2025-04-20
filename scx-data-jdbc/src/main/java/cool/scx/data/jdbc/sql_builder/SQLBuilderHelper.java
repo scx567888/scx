@@ -21,10 +21,9 @@ public class SQLBuilderHelper {
         columns = filterByFieldExpressions(fieldExpressions, table, columns);
 
         //3, 根据 是否包含空值进行过滤 
-        if (fieldPolicy.ignoreNullValue()) {
-            columns = filterByFieldValueIsNull(entity, columns);
-        }
-
+        var globalIgnoreNull = fieldPolicy.ignoreNull();
+        var ignoreNulls = fieldPolicy.ignoreNulls();
+        columns = filterByFieldValueIsNull(entity, globalIgnoreNull, ignoreNulls, columns);
         return columns;
     }
 
@@ -77,14 +76,29 @@ public class SQLBuilderHelper {
     }
 
     /// 根据是否空值进行过滤
-    private static AnnotationConfigColumn[] filterByFieldValueIsNull(Object entity, AnnotationConfigColumn... columns) {
-        // 快速处理
-        if (entity == null) {
+    private static AnnotationConfigColumn[] filterByFieldValueIsNull(Object entity, boolean globalIgnoreNull, Map<String, Boolean> ignoreNulls, AnnotationConfigColumn... columns) {
+        //快速方法
+        
+        // 快速返回：entity 为 null 且全部都忽略 null
+        if (entity == null && globalIgnoreNull && ignoreNulls.isEmpty()) {
             return new AnnotationConfigColumn[0];
         }
+
+        // 快速返回：entity 不为 null，且全部都不忽略 null
+        if (entity != null && !globalIgnoreNull && ignoreNulls.isEmpty()) {
+            return columns;
+        }
+        
+        // 正常过滤
         var result = new ArrayList<AnnotationConfigColumn>();
         for (var column : columns) {
-            if (column.javaFieldValue(entity) != null) {
+            var fieldName = column.javaField().name();
+            //判断是否需要忽略这个字段
+            var ignoreNull = ignoreNulls.getOrDefault(fieldName, globalIgnoreNull);
+            var value = (entity != null) ? column.javaFieldValue(entity) : null;
+
+            // 若字段不忽略 null，或者字段值本身不为 null，则保留
+            if (!ignoreNull || value != null) {
                 result.add(column);
             }
         }
