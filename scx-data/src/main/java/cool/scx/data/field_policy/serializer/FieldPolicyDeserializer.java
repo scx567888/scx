@@ -47,9 +47,16 @@ public class FieldPolicyDeserializer {
             fieldPolicy.addFieldNames(fieldNames);
         }
 
-        if (objectNode.get("ignoreNullValue") != null && !objectNode.get("ignoreNullValue").isNull()) {
-            var ignoreNullValue = objectNode.get("ignoreNullValue").asBoolean();
-            fieldPolicy.ignoreNullValue(ignoreNullValue);
+        if (objectNode.get("ignoreNull") != null && !objectNode.get("ignoreNull").isNull()) {
+            var ignoreNull = objectNode.get("ignoreNull").asBoolean();
+            fieldPolicy.ignoreNull(ignoreNull);
+        }
+
+        if (objectNode.get("ignoreNulls") != null && !objectNode.get("ignoreNulls").isNull()) {
+            var ignoreNulls = convertValue(objectNode.get("ignoreNulls"), new TypeReference<Map<String, Boolean>>() {});
+            for (var entry : ignoreNulls.entrySet()) {
+                fieldPolicy.ignoreNull(entry.getKey(), entry.getValue());
+            }
         }
 
         if (objectNode.get("fieldExpressions") != null && !objectNode.get("fieldExpressions").isNull()) {

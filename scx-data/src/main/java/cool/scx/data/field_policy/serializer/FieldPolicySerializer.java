@@ -24,7 +24,8 @@ public class FieldPolicySerializer {
         m.put("@type", "FieldPolicy");
         m.put("filterMode", fieldPolicy.filterMode());
         m.put("fieldNames", fieldPolicy.fieldNames());
-        m.put("ignoreNullValue", fieldPolicy.ignoreNullValue());
+        m.put("ignoreNull", fieldPolicy.ignoreNull());
+        m.put("ignoreNulls", fieldPolicy.ignoreNulls());
         m.put("fieldExpressions", fieldPolicy.fieldExpressions());
         return m;
     }

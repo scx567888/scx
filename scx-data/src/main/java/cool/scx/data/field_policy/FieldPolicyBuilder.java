@@ -26,8 +26,13 @@ public class FieldPolicyBuilder {
     }
 
     /// 默认包含所有
-    public static FieldPolicy ignoreNullValue(boolean ignoreNullValue) {
-        return includedAll().ignoreNullValue(ignoreNullValue);
+    public static FieldPolicy ignoreNull(boolean ignoreNull) {
+        return includedAll().ignoreNull(ignoreNull);
+    }
+
+    /// 默认包含所有
+    public static FieldPolicy ignoreNull(String fieldName, boolean ignoreNull) {
+        return includedAll().ignoreNull(fieldName, ignoreNull);
     }
 
     /// 默认包含所有

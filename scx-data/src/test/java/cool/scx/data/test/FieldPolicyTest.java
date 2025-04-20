@@ -19,7 +19,8 @@ public class FieldPolicyTest {
     @Test
     public static void test1() throws JsonProcessingException {
         var fieldPolicy = excluded("a", "b", "c", "d", "e", "f", "g", "h", "i")
-                .ignoreNullValue(false)
+                .ignoreNull(false)
+                .ignoreNull("name", true)
                 .fieldExpression("w", "w * 2");
         var serialize = FIELD_POLICY_SERIALIZER.serialize(fieldPolicy);
         var json = ObjectUtils.toJson(serialize);
@@ -27,7 +28,8 @@ public class FieldPolicyTest {
         var newFieldPolicy = (FieldPolicy) FIELD_POLICY_DESERIALIZER.deserialize(jsonNode);
         Assert.assertEquals(fieldPolicy.fieldNames(), newFieldPolicy.fieldNames());
         Assert.assertEquals(fieldPolicy.filterMode(), newFieldPolicy.filterMode());
-        Assert.assertEquals(fieldPolicy.ignoreNullValue(), newFieldPolicy.ignoreNullValue());
+        Assert.assertEquals(fieldPolicy.ignoreNull(), newFieldPolicy.ignoreNull());
+        Assert.assertEquals(fieldPolicy.ignoreNulls(), newFieldPolicy.ignoreNulls());
         Assert.assertEquals(fieldPolicy.fieldExpressions(), newFieldPolicy.fieldExpressions());
     }
 
