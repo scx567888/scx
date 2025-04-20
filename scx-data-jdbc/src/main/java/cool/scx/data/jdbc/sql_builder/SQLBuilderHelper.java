@@ -78,14 +78,12 @@ public class SQLBuilderHelper {
     /// 根据是否空值进行过滤
     private static AnnotationConfigColumn[] filterByFieldValueIsNull(Object entity, boolean globalIgnoreNull, Map<String, Boolean> ignoreNulls, AnnotationConfigColumn... columns) {
         //快速方法
-        
-        // 快速返回：entity 为 null 且全部都忽略 null
+
         if (entity == null && globalIgnoreNull && ignoreNulls.isEmpty()) {
             return new AnnotationConfigColumn[0];
         }
 
-        // 快速返回：entity 不为 null，且全部都不忽略 null
-        if (entity != null && !globalIgnoreNull && ignoreNulls.isEmpty()) {
+        if (!globalIgnoreNull && ignoreNulls.isEmpty()) {
             return columns;
         }
         
