@@ -17,7 +17,7 @@ public class SQLBuilderHelper {
         var columns = filterByFilterMode(fieldPolicy, table);
 
         //2, 再根据 fieldExpressions 过滤
-        var fieldExpressions = fieldPolicy.fieldExpressions();
+        var fieldExpressions = fieldPolicy.expressions();
         columns = filterByFieldExpressions(fieldExpressions, table, columns);
 
         //3, 根据 是否包含空值进行过滤 
@@ -33,7 +33,7 @@ public class SQLBuilderHelper {
         var columns = filterByFilterMode(fieldPolicy, table);
 
         //2, 再根据 fieldExpressions 过滤
-        var fieldExpressions = fieldPolicy.fieldExpressions();
+        var fieldExpressions = fieldPolicy.expressions();
         return filterByFieldExpressions(fieldExpressions, table, columns);
     }
 

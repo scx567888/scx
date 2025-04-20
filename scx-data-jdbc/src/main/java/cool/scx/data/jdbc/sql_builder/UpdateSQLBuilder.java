@@ -41,7 +41,7 @@ public class UpdateSQLBuilder {
     }
 
     public static String[] createUpdateSetExpressionsClauses(FieldPolicy fieldPolicy, JDBCColumnNameParser columnNameParser) {
-        var fieldExpressions = fieldPolicy.fieldExpressions();
+        var fieldExpressions = fieldPolicy.expressions();
         var result = new String[fieldExpressions.size()];
         var i = 0;
         for (var entry : fieldExpressions.entrySet()) {

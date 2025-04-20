@@ -15,14 +15,14 @@ public final class FieldPolicyImpl implements FieldPolicy {
 
     private final FilterMode filterMode;
     private final Set<String> fieldNames;
-    private final Map<String, String> fieldExpressions;
+    private final Map<String, String> expressions;
     private final Map<String, Boolean> ignoreNulls;
     private boolean ignoreNull;
 
     public FieldPolicyImpl(FilterMode filterMode) {
         this.filterMode = filterMode;
         this.fieldNames = new HashSet<>();
-        this.fieldExpressions = new LinkedHashMap<>();//保证顺序很重要
+        this.expressions = new LinkedHashMap<>();//保证顺序很重要
         this.ignoreNulls = new LinkedHashMap<>();
         this.ignoreNull = true;
     }
@@ -95,24 +95,24 @@ public final class FieldPolicyImpl implements FieldPolicy {
 
     @Override
     public FieldPolicy expression(String fieldName, String expression) {
-        fieldExpressions.put(fieldName, expression);
+        expressions.put(fieldName, expression);
         return this;
     }
 
     @Override
     public Map<String, String> expressions() {
-        return fieldExpressions;
+        return expressions;
     }
 
     @Override
     public FieldPolicy removeExpression(String fieldName) {
-        fieldExpressions.remove(fieldName);
+        expressions.remove(fieldName);
         return this;
     }
 
     @Override
     public FieldPolicy clearExpressions() {
-        fieldExpressions.clear();
+        expressions.clear();
         return this;
     }
 

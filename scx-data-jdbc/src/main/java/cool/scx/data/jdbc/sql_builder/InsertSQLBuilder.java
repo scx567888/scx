@@ -30,7 +30,7 @@ public class InsertSQLBuilder {
     }
 
     public static String[] createInsertExpressionsColumns(FieldPolicy fieldPolicy, JDBCColumnNameParser parser) {
-        var fieldExpressions = fieldPolicy.fieldExpressions();
+        var fieldExpressions = fieldPolicy.expressions();
         var fieldNames = fieldExpressions.keySet();
         var result = new String[fieldNames.size()];
         int i = 0;
@@ -50,7 +50,7 @@ public class InsertSQLBuilder {
     }
 
     public static String[] createInsertExpressionsValue(FieldPolicy fieldPolicy) {
-        var fieldExpressions = fieldPolicy.fieldExpressions();
+        var fieldExpressions = fieldPolicy.expressions();
         var expressions = fieldExpressions.values();
         var result = new String[expressions.size()];
         int i = 0;
