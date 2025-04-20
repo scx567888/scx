@@ -86,7 +86,7 @@ public class SQLBuilderHelper {
         if (!globalIgnoreNull && ignoreNulls.isEmpty()) {
             return columns;
         }
-        
+
         // 正常过滤
         var result = new ArrayList<AnnotationConfigColumn>();
         for (var column : columns) {

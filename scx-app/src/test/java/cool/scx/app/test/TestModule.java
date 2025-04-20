@@ -127,10 +127,10 @@ public class TestModule extends ScxAppModule {
             carService.update(c, included("name").ignoreNull(false), query().where(gt("id", 200)));
 
             //方式2
-            carService.update(ignoreNull("name",false), query().where(gt("id", 200)));
-            
+            carService.update(ignoreNull("name", false), query().where(gt("id", 200)));
+
             //方式3
-            carService.update(fieldExpression("name","NULL"), query().where(gt("id", 200)));
+            carService.update(fieldExpression("name", "NULL"), query().where(gt("id", 200)));
 
             System.err.println("查询所有数据条数 !!! : " + carService.find().size());
             System.err.println("查询所有 id 大于 200 条数 !!! : " + carService.find(gt("id", 200)).size());
