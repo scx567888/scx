@@ -38,7 +38,7 @@ public interface FieldPolicy {
     /// 忽略 空值
     Map<String, Boolean> ignoreNulls();
 
-    /// 清除 所有忽略空值 
+    /// 清除 所有忽略空值
     FieldPolicy clearIgnoreNulls();
 
     /// 设置字段表达式

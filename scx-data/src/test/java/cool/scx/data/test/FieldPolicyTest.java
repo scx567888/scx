@@ -20,7 +20,7 @@ public class FieldPolicyTest {
     public static void test1() throws JsonProcessingException {
         var fieldPolicy = excluded("a", "b", "c", "d", "e", "f", "g", "h", "i")
                 .ignoreNull(false)
-                .ignoreNull("name",true)
+                .ignoreNull("name", true)
                 .fieldExpression("w", "w * 2");
         var serialize = FIELD_POLICY_SERIALIZER.serialize(fieldPolicy);
         var json = ObjectUtils.toJson(serialize);
