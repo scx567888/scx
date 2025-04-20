@@ -41,8 +41,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static cool.scx.data.field_policy.FieldPolicyBuilder.fieldExpression;
-import static cool.scx.data.field_policy.FieldPolicyBuilder.included;
+import static cool.scx.data.field_policy.FieldPolicyBuilder.*;
 import static cool.scx.data.query.QueryBuilder.*;
 import static cool.scx.data.query.QueryOption.USE_JSON_EXTRACT;
 import static java.lang.System.Logger.Level.ERROR;
@@ -122,9 +121,16 @@ public class TestModule extends ScxAppModule {
             }
 
             System.err.println("将 id 大于 200 的 name 设置为空 !!!");
+            //方式1
             var c = new Car();
             c.name = null;
-            carService.update(c, included("name").ignoreNullValue(false), query().where(gt("id", 200)));
+            carService.update(c, included("name").ignoreNull(false), query().where(gt("id", 200)));
+
+            //方式2
+            carService.update(ignoreNull("name",false), query().where(gt("id", 200)));
+            
+            //方式3
+            carService.update(fieldExpression("name","NULL"), query().where(gt("id", 200)));
 
             System.err.println("查询所有数据条数 !!! : " + carService.find().size());
             System.err.println("查询所有 id 大于 200 条数 !!! : " + carService.find(gt("id", 200)).size());
