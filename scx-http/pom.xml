@@ -6,7 +6,7 @@
     <parent>
         <groupId>cool.scx</groupId>
         <artifactId>scx</artifactId>
-        <version>3.5.8</version>
+        <version>3.5.9</version>
     </parent>
 
     <artifactId>scx-http</artifactId>
