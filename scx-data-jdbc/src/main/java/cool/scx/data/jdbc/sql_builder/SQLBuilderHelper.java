@@ -54,7 +54,10 @@ public class SQLBuilderHelper {
 
         var columns = new ArrayList<AnnotationConfigColumn>();
         for (var fieldName : fieldNames) {
-            columns.add(table.getColumn(fieldName));
+            var column = table.getColumn(fieldName);
+            if (column != null) {
+                columns.add(column);
+            }
         }
         return columns.toArray(AnnotationConfigColumn[]::new);
     }
