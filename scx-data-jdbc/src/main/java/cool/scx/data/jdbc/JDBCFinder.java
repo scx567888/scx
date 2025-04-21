@@ -49,7 +49,7 @@ public class JDBCFinder<Entity> implements Finder<Entity> {
 
     @Override
     public void forEachMap(Consumer<Map<String, Object>> entityConsumer) {
-        repository.sqlRunner.query(repository.buildSelectSQL(query, fieldPolicy), ofMapConsumer(repository.mapBuilder,entityConsumer));
+        repository.sqlRunner.query(repository.buildSelectSQL(query, fieldPolicy), ofMapConsumer(repository.mapBuilder, entityConsumer));
     }
 
     @Override
