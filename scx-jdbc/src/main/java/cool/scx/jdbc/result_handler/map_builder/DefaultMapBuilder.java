@@ -16,9 +16,9 @@ record DefaultMapBuilder(Supplier<Map<String, Object>> mapSupplier,
         var map = mapSupplier.get();
 
         for (int i = 1; i < columnLabelIndex.length; i = i + 1) {
-            var key = fieldNameMapping.apply(columnLabelIndex[i]);
+            var fieldName = fieldNameMapping.apply(columnLabelIndex[i]);
             var value = rs.getObject(i);
-            map.put(key, value);
+            map.put(fieldName, value);
         }
 
         return map;
