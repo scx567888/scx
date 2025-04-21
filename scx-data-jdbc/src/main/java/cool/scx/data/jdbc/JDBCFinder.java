@@ -29,12 +29,12 @@ public class JDBCFinder<Entity> implements Finder<Entity> {
 
     @Override
     public <T> List<T> list(Class<T> resultType) {
-        return repository.sqlRunner.query(repository.buildSelectSQL(query, fieldPolicy), ofBeanList(resultType, repository.columnNameMapping));
+        return repository.sqlRunner.query(repository.buildSelectSQL(query, fieldPolicy), ofBeanList(resultType, repository.beanColumnNameMapping));
     }
 
     @Override
     public List<Map<String, Object>> mapList() {
-        return repository.sqlRunner.query(repository.buildSelectSQL(query, fieldPolicy), ofMapList());
+        return repository.sqlRunner.query(repository.buildSelectSQL(query, fieldPolicy), ofMapList(repository.mapBuilder));
     }
 
     @Override
@@ -44,12 +44,12 @@ public class JDBCFinder<Entity> implements Finder<Entity> {
 
     @Override
     public <T> void forEach(Consumer<T> entityConsumer, Class<T> resultType) {
-        repository.sqlRunner.query(repository.buildSelectSQL(query, fieldPolicy), ofBeanConsumer(resultType, repository.columnNameMapping, entityConsumer));
+        repository.sqlRunner.query(repository.buildSelectSQL(query, fieldPolicy), ofBeanConsumer(resultType, repository.beanColumnNameMapping, entityConsumer));
     }
 
     @Override
     public void forEachMap(Consumer<Map<String, Object>> entityConsumer) {
-        repository.sqlRunner.query(repository.buildSelectSQL(query, fieldPolicy), ofMapConsumer(entityConsumer));
+        repository.sqlRunner.query(repository.buildSelectSQL(query, fieldPolicy), ofMapConsumer(repository.mapBuilder, entityConsumer));
     }
 
     @Override
@@ -59,12 +59,12 @@ public class JDBCFinder<Entity> implements Finder<Entity> {
 
     @Override
     public <T> T first(Class<T> resultType) {
-        return repository.sqlRunner.query(repository.buildGetSQL(query, fieldPolicy), ofBean(resultType, repository.columnNameMapping));
+        return repository.sqlRunner.query(repository.buildGetSQL(query, fieldPolicy), ofBean(resultType, repository.beanColumnNameMapping));
     }
 
     @Override
     public Map<String, Object> firstMap() {
-        return repository.sqlRunner.query(repository.buildGetSQL(query, fieldPolicy), ofMap());
+        return repository.sqlRunner.query(repository.buildGetSQL(query, fieldPolicy), ofMap(repository.mapBuilder));
     }
 
     @Override
