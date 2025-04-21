@@ -15,7 +15,7 @@ record DefaultMapBuilder(Supplier<Map<String, Object>> mapSupplier,
     public Map<String, Object> createMap(ResultSet rs, String[] columnLabelIndex) throws SQLException {
         var map = mapSupplier.get();
 
-        for (int i = 1; i <= columnLabelIndex.length; i = i + 1) {
+        for (int i = 1; i < columnLabelIndex.length; i = i + 1) {
             var key = columnNameMapping.apply(columnLabelIndex[i]);
             var value = rs.getObject(i);
             map.put(key, value);

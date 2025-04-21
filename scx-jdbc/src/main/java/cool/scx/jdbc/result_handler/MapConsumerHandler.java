@@ -1,34 +1,27 @@
 package cool.scx.jdbc.result_handler;
 
 import cool.scx.jdbc.dialect.Dialect;
+import cool.scx.jdbc.result_handler.map_builder.MapBuilder;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
+
+import static cool.scx.jdbc.result_handler.MapHandler.createColumnLabelIndex;
 
 /// MapConsumerHandler
 ///
 /// @author scx567888
 /// @version 0.0.1
-record MapConsumerHandler(Supplier<Map<String, Object>> mapSupplier,
+record MapConsumerHandler(MapBuilder mapBuilder,
                           Consumer<Map<String, Object>> consumer) implements ResultHandler<Void> {
-
-    public MapConsumerHandler(Consumer<Map<String, Object>> consumer) {
-        this(HashMap::new, consumer);
-    }
 
     @Override
     public Void apply(ResultSet rs, Dialect dialect) throws SQLException {
-        var rsm = rs.getMetaData();
-        var count = rsm.getColumnCount();
+        var columnLabelIndex = createColumnLabelIndex(rs);
         while (rs.next()) {
-            var map = mapSupplier.get();
-            for (int i = 1; i <= count; i = i + 1) {
-                map.put(rsm.getColumnLabel(i), rs.getObject(i));
-            }
+            var map = mapBuilder.createMap(rs, columnLabelIndex);
             consumer.accept(map);
         }
         return null;

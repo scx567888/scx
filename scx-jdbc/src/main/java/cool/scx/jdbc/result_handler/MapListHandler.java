@@ -1,37 +1,30 @@
 package cool.scx.jdbc.result_handler;
 
 import cool.scx.jdbc.dialect.Dialect;
+import cool.scx.jdbc.result_handler.map_builder.MapBuilder;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
+
+import static cool.scx.jdbc.result_handler.MapHandler.createColumnLabelIndex;
 
 /// MapListHandler
 ///
 /// @author scx567888
 /// @version 0.0.1
-record MapListHandler(Supplier<Map<String, Object>> mapSupplier) implements ResultHandler<List<Map<String, Object>>> {
+record MapListHandler(MapBuilder mapBuilder) implements ResultHandler<List<Map<String, Object>>> {
 
-    static final MapListHandler INSTANCE = new MapListHandler();
-
-    public MapListHandler() {
-        this(HashMap::new);
-    }
+    static final MapListHandler INSTANCE = new MapListHandler(MapBuilder.of());
 
     @Override
     public List<Map<String, Object>> apply(ResultSet rs, Dialect dialect) throws SQLException {
         var list = new ArrayList<Map<String, Object>>();
-        var rsm = rs.getMetaData();
-        var count = rsm.getColumnCount();
+        var columnLabelIndex = createColumnLabelIndex(rs);
         while (rs.next()) {
-            var map = mapSupplier.get();
-            for (int i = 1; i <= count; i = i + 1) {
-                map.put(rsm.getColumnLabel(i), rs.getObject(i));
-            }
+            var map = mapBuilder.createMap(rs, columnLabelIndex);
             list.add(map);
         }
         return list;

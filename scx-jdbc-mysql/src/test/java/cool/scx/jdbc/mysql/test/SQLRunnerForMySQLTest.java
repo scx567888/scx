@@ -135,7 +135,7 @@ public class SQLRunnerForMySQLTest {
         //查询单个
         var ofMap = sqlRunner.query(sql, ResultHandler.ofMap());
         System.out.println("ofMap " + ofMap);
-        var ofMap1 = sqlRunner.query(sql, ResultHandler.ofMap(LinkedHashMap::new));
+        var ofMap1 = sqlRunner.query(sql, ResultHandler.ofMap(()->new LinkedHashMap<>()));
         System.out.println("ofMap1 " + ofMap1);
         var ofBean = sqlRunner.query(sql, ResultHandler.ofBean(StudentRecord.class));
         System.out.println("ofBean " + ofBean);
@@ -146,7 +146,7 @@ public class SQLRunnerForMySQLTest {
         //查询多个
         var ofMapList = sqlRunner.query(sql, ResultHandler.ofMapList());
         System.out.println("ofMapList " + ofMapList.size());
-        var ofMapList1 = sqlRunner.query(sql, ResultHandler.ofMapList(LinkedHashMap::new));
+        var ofMapList1 = sqlRunner.query(sql, ResultHandler.ofMapList(()->new LinkedHashMap<>()));
         System.out.println("ofMapList1 " + ofMapList1.size());
         var ofBeanList = sqlRunner.query(sql, ResultHandler.ofBeanList(StudentRecord.class));
         System.out.println("ofBeanList " + ofBeanList.size());
@@ -158,7 +158,7 @@ public class SQLRunnerForMySQLTest {
         sqlRunner.query(sql, ResultHandler.ofMapConsumer(x -> size.getAndIncrement()));
         System.out.println("ofMapConsumer " + size);
         size.set(0);
-        sqlRunner.query(sql, ResultHandler.ofMapConsumer(LinkedHashMap::new, x -> size.getAndIncrement()));
+        sqlRunner.query(sql, ResultHandler.ofMapConsumer(()->new LinkedHashMap<>(), x -> size.getAndIncrement()));
         System.out.println("ofMapConsumer1 " + size);
         size.set(0);
         sqlRunner.query(sql, ResultHandler.ofBeanConsumer(StudentRecord.class, x -> size.getAndIncrement()));
