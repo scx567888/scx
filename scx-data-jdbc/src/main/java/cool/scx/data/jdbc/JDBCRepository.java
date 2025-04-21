@@ -3,7 +3,8 @@ package cool.scx.data.jdbc;
 import cool.scx.data.Finder;
 import cool.scx.data.Repository;
 import cool.scx.data.field_policy.FieldPolicy;
-import cool.scx.data.jdbc.column_name_mapping.FieldColumnNameMapping;
+import cool.scx.data.jdbc.column_name_mapping.BeanColumnNameMapping;
+import cool.scx.data.jdbc.column_name_mapping.MapColumnNameMapping;
 import cool.scx.data.jdbc.mapping.AnnotationConfigTable;
 import cool.scx.data.jdbc.parser.JDBCColumnNameParser;
 import cool.scx.data.jdbc.parser.JDBCGroupByParser;
@@ -14,6 +15,7 @@ import cool.scx.data.query.Query;
 import cool.scx.jdbc.JDBCContext;
 import cool.scx.jdbc.result_handler.ResultHandler;
 import cool.scx.jdbc.result_handler.bean_builder.BeanBuilder;
+import cool.scx.jdbc.result_handler.map_builder.MapBuilder;
 import cool.scx.jdbc.sql.SQL;
 import cool.scx.jdbc.sql.SQLRunner;
 
@@ -36,8 +38,10 @@ public class JDBCRepository<Entity> implements Repository<Entity, Long> {
     final SQLRunner sqlRunner;
 
     // *********** 结果解析器 ***************
-    final FieldColumnNameMapping columnNameMapping;
+    final BeanColumnNameMapping beanColumnNameMapping;
+    final MapColumnNameMapping mapColumnNameMapping;
     final BeanBuilder<Entity> beanBuilder;
+    final MapBuilder mapBuilder;
     final ResultHandler<List<Entity>> entityBeanListHandler;
     final ResultHandler<Entity> entityBeanHandler;
     final ResultHandler<Long> countResultHandler;
@@ -57,8 +61,10 @@ public class JDBCRepository<Entity> implements Repository<Entity, Long> {
         this.sqlRunner = jdbcContext.sqlRunner();
 
         //2, 创建返回值解析器
-        this.columnNameMapping = new FieldColumnNameMapping(table);
-        this.beanBuilder = BeanBuilder.of(this.entityClass, columnNameMapping);
+        this.beanColumnNameMapping = new BeanColumnNameMapping(table);
+        this.mapColumnNameMapping = new MapColumnNameMapping(table);
+        this.beanBuilder = BeanBuilder.of(this.entityClass, beanColumnNameMapping);
+        this.mapBuilder = MapBuilder.of(mapColumnNameMapping);
         this.entityBeanListHandler = ofBeanList(beanBuilder);
         this.entityBeanHandler = ofBean(beanBuilder);
         this.countResultHandler = ofSingleValue("count", Long.class);

@@ -5,11 +5,12 @@ import cool.scx.jdbc.mapping.Table;
 import java.lang.reflect.Field;
 import java.util.function.Function;
 
-public class FieldColumnNameMapping implements Function<Field, String> {
+/// 这个映射表示 字段 -> 列名
+public class BeanColumnNameMapping implements Function<Field, String> {
 
     private final Table table;
 
-    public FieldColumnNameMapping(Table table) {
+    public BeanColumnNameMapping(Table table) {
         this.table = table;
     }
 
