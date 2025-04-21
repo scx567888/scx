@@ -28,7 +28,7 @@ public final class FieldPolicyImpl implements FieldPolicy {
     }
 
     @Override
-    public FieldPolicy included(String... fieldNames) {
+    public FieldPolicy include(String... fieldNames) {
         return switch (filterMode) {
             case INCLUDED -> addFieldNames(fieldNames);
             case EXCLUDED -> removeFieldNames(fieldNames);
@@ -36,7 +36,7 @@ public final class FieldPolicyImpl implements FieldPolicy {
     }
 
     @Override
-    public FieldPolicy excluded(String... fieldNames) {
+    public FieldPolicy exclude(String... fieldNames) {
         return switch (filterMode) {
             case EXCLUDED -> addFieldNames(fieldNames);
             case INCLUDED -> removeFieldNames(fieldNames);

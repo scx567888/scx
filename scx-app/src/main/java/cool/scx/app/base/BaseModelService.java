@@ -13,7 +13,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static cool.scx.app.ScxAppHelper.findBaseModelServiceEntityClass;
-import static cool.scx.data.field_policy.FieldPolicyBuilder.includedAll;
+import static cool.scx.data.field_policy.FieldPolicyBuilder.includeAll;
 import static cool.scx.data.query.QueryBuilder.*;
 
 /// 提供一些针对 BaseModel 类型实体类 简单的 CRUD 操作的 service 类
@@ -49,7 +49,7 @@ public class BaseModelService<Entity extends BaseModel> {
     /// @param updateFilter u
     /// @return a [FieldPolicy] object
     private static FieldPolicy updateFilterProcessor(FieldPolicy updateFilter) {
-        return updateFilter.excluded("id", "createdDate", "updatedDate");
+        return updateFilter.exclude("id", "createdDate", "updatedDate");
     }
 
     /// 插入数据 (注意 !!! 这里会在插入之后根据主键再次进行一次查询, 若只是进行插入且对性能有要求请使用 {@link Repository#add(Object)})
@@ -57,7 +57,7 @@ public class BaseModelService<Entity extends BaseModel> {
     /// @param entity 待插入的数据
     /// @return 插入成功的数据 如果插入失败或数据没有主键则返回 null
     public final Entity add(Entity entity) {
-        return add(entity, includedAll());
+        return add(entity, includeAll());
     }
 
     /// 纯表达式插入
@@ -81,7 +81,7 @@ public class BaseModelService<Entity extends BaseModel> {
     /// @return 插入成功的数据的自增主键列表
     public final List<Long> add(Collection<Entity> entityList) {
         //此处没有设置 f
-        return add(entityList, includedAll());
+        return add(entityList, includeAll());
     }
 
     /// 批量插入数据
@@ -97,7 +97,7 @@ public class BaseModelService<Entity extends BaseModel> {
     ///
     /// @return 所有数据
     public final List<Entity> find() {
-        return find(query(), includedAll());
+        return find(query(), includeAll());
     }
 
     /// 获取所有数据 (使用查询过滤器)
@@ -113,7 +113,7 @@ public class BaseModelService<Entity extends BaseModel> {
     /// @param query 聚合查询参数对象
     /// @return 数据列表
     public final List<Entity> find(Query query) {
-        return find(query, includedAll());
+        return find(query, includeAll());
     }
 
     /// 根据聚合查询条件 [Query] 获取数据列表
@@ -138,7 +138,7 @@ public class BaseModelService<Entity extends BaseModel> {
     /// @param id id ( 主键 )
     /// @return 查到多个则返回第一个 没有则返回 null
     public final Entity get(long id) {
-        return get(id, includedAll());
+        return get(id, includeAll());
     }
 
     /// 根据 ID (主键) 查询单条数据
@@ -155,7 +155,7 @@ public class BaseModelService<Entity extends BaseModel> {
     /// @param query 聚合查询参数对象
     /// @return 查到多个则返回第一个 没有则返回 null
     public final Entity get(Query query) {
-        return get(query, includedAll());
+        return get(query, includeAll());
     }
 
     /// 根据聚合查询条件 [Query] 获取单条数据
@@ -171,7 +171,7 @@ public class BaseModelService<Entity extends BaseModel> {
     ///
     /// @return 所有数据
     public final Finder<Entity> finder() {
-        return finder(query(), includedAll());
+        return finder(query(), includeAll());
     }
 
     /// 获取所有数据 (使用查询过滤器)
@@ -187,7 +187,7 @@ public class BaseModelService<Entity extends BaseModel> {
     /// @param query 聚合查询参数对象
     /// @return 数据列表
     public final Finder<Entity> finder(Query query) {
-        return finder(query, includedAll());
+        return finder(query, includeAll());
     }
 
     public Finder<Entity> finder(Query query, FieldPolicy selectFilter) {
@@ -199,7 +199,7 @@ public class BaseModelService<Entity extends BaseModel> {
     /// @param entity 待更新的数据 ( 注意: 请保证数据中 id 字段不为空 )
     /// @return 更新成功后的数据
     public final Entity update(Entity entity) {
-        return update(entity, includedAll());
+        return update(entity, includeAll());
     }
 
     /// 根据 ID 更新 (注意 !!! 这里会在更新之后根据主键再次进行一次查询, 若只是进行更新且对性能有要求请使用 {@link Repository#update(Object, FieldPolicy, Query)})
@@ -221,7 +221,7 @@ public class BaseModelService<Entity extends BaseModel> {
     /// @param query  更新的条件
     /// @return 更新成功的数据条数
     public final long update(Entity entity, Query query) {
-        return update(entity, includedAll(), query);
+        return update(entity, includeAll(), query);
     }
 
     /// 根据 表达式更新数据

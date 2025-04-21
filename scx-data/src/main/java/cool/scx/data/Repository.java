@@ -6,7 +6,7 @@ import cool.scx.data.query.Query;
 import java.util.Collection;
 import java.util.List;
 
-import static cool.scx.data.field_policy.FieldPolicyBuilder.includedAll;
+import static cool.scx.data.field_policy.FieldPolicyBuilder.includeAll;
 import static cool.scx.data.query.QueryBuilder.query;
 
 /// 用于定义数据访问层的规范
@@ -64,7 +64,7 @@ public interface Repository<Entity, ID> {
     void clear();
 
     default ID add(Entity entity) {
-        return add(entity, includedAll());
+        return add(entity, includeAll());
     }
 
     default ID add(FieldPolicy fieldPolicy) {
@@ -72,11 +72,11 @@ public interface Repository<Entity, ID> {
     }
 
     default List<ID> add(Collection<Entity> entityList) {
-        return add(entityList, includedAll());
+        return add(entityList, includeAll());
     }
 
     default Finder<Entity> finder(Query query) {
-        return finder(query, includedAll());
+        return finder(query, includeAll());
     }
 
     default Finder<Entity> finder(FieldPolicy fieldPolicy) {
@@ -84,7 +84,7 @@ public interface Repository<Entity, ID> {
     }
 
     default Finder<Entity> finder() {
-        return finder(query(), includedAll());
+        return finder(query(), includeAll());
     }
 
     default List<Entity> find(Query query, FieldPolicy fieldPolicy) {
@@ -112,7 +112,7 @@ public interface Repository<Entity, ID> {
     }
 
     default long update(Entity entity, Query query) {
-        return update(entity, includedAll(), query);
+        return update(entity, includeAll(), query);
     }
 
     default long update(FieldPolicy fieldPolicy, Query query) {

@@ -9,35 +9,35 @@ import static cool.scx.data.field_policy.FilterMode.INCLUDED;
 /// @version 0.0.1
 public class FieldPolicyBuilder {
 
-    public static FieldPolicy includedAll() {
+    public static FieldPolicy includeAll() {
         return new FieldPolicyImpl(EXCLUDED);
     }
 
-    public static FieldPolicy excludedAll() {
+    public static FieldPolicy excludeAll() {
         return new FieldPolicyImpl(INCLUDED);
     }
 
-    public static FieldPolicy included(String... fieldNames) {
-        return excludedAll().included(fieldNames);
+    public static FieldPolicy include(String... fieldNames) {
+        return excludeAll().include(fieldNames);
     }
 
-    public static FieldPolicy excluded(String... fieldNames) {
-        return includedAll().excluded(fieldNames);
+    public static FieldPolicy exclude(String... fieldNames) {
+        return includeAll().exclude(fieldNames);
     }
 
     /// 默认包含所有
     public static FieldPolicy ignoreNull(boolean ignoreNull) {
-        return includedAll().ignoreNull(ignoreNull);
+        return includeAll().ignoreNull(ignoreNull);
     }
 
     /// 默认包含所有
     public static FieldPolicy ignoreNull(String fieldName, boolean ignoreNull) {
-        return includedAll().ignoreNull(fieldName, ignoreNull);
+        return includeAll().ignoreNull(fieldName, ignoreNull);
     }
 
     /// 默认包含所有
     public static FieldPolicy expression(String fieldName, String expression) {
-        return includedAll().expression(fieldName, expression);
+        return includeAll().expression(fieldName, expression);
     }
 
 }
