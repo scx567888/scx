@@ -15,16 +15,16 @@ public interface MapBuilder {
         return MAP_BUILDER;
     }
 
-    static MapBuilder of(Function<String, String> columnNameMapping) {
-        return new DefaultMapBuilder(HashMap::new, columnNameMapping);
+    static MapBuilder of(Function<String, String> fieldNameMapping) {
+        return new DefaultMapBuilder(HashMap::new, fieldNameMapping);
     }
 
     static MapBuilder of(Supplier<Map<String, Object>> mapSupplier) {
         return new DefaultMapBuilder(mapSupplier, c -> c);
     }
 
-    static MapBuilder of(Supplier<Map<String, Object>> mapSupplier, Function<String, String> columnNameMapping) {
-        return new DefaultMapBuilder(mapSupplier, columnNameMapping);
+    static MapBuilder of(Supplier<Map<String, Object>> mapSupplier, Function<String, String> fieldNameMapping) {
+        return new DefaultMapBuilder(mapSupplier, fieldNameMapping);
     }
 
     Map<String, Object> createMap(ResultSet rs, String[] columnLabelIndex) throws SQLException;

@@ -33,8 +33,8 @@ public interface ResultHandler<T> {
         return new MapHandler(MapBuilder.of(mapSupplier));
     }
 
-    static ResultHandler<Map<String, Object>> ofMap(Function<String, String> columnNameMapping) {
-        return new MapHandler(MapBuilder.of(columnNameMapping));
+    static ResultHandler<Map<String, Object>> ofMap(Function<String, String> fieldNameMapping) {
+        return new MapHandler(MapBuilder.of(fieldNameMapping));
     }
 
     static ResultHandler<List<Map<String, Object>>> ofMapList() {
@@ -49,8 +49,8 @@ public interface ResultHandler<T> {
         return new MapListHandler(MapBuilder.of(mapSupplier));
     }
 
-    static ResultHandler<List<Map<String, Object>>> ofMapList(Function<String, String> columnNameMapping) {
-        return new MapListHandler(MapBuilder.of(columnNameMapping));
+    static ResultHandler<List<Map<String, Object>>> ofMapList(Function<String, String> fieldNameMapping) {
+        return new MapListHandler(MapBuilder.of(fieldNameMapping));
     }
 
     static <C> ResultHandler<C> ofBean(Class<C> clazz) {
@@ -101,8 +101,8 @@ public interface ResultHandler<T> {
         return new MapConsumerHandler(MapBuilder.of(mapSupplier), consumer);
     }
 
-    static ResultHandler<Void> ofMapConsumer(Function<String, String> columnNameMapping, Consumer<Map<String, Object>> consumer) {
-        return new MapConsumerHandler(MapBuilder.of(columnNameMapping), consumer);
+    static ResultHandler<Void> ofMapConsumer(Function<String, String> fieldNameMapping, Consumer<Map<String, Object>> consumer) {
+        return new MapConsumerHandler(MapBuilder.of(fieldNameMapping), consumer);
     }
 
     static <C> ResultHandler<C> ofSingleValue(String columnName, Class<C> clazz) {

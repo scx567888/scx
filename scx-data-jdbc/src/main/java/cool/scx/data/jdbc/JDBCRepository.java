@@ -4,7 +4,7 @@ import cool.scx.data.Finder;
 import cool.scx.data.Repository;
 import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.data.jdbc.column_name_mapping.BeanColumnNameMapping;
-import cool.scx.data.jdbc.column_name_mapping.MapColumnNameMapping;
+import cool.scx.data.jdbc.column_name_mapping.MapFieldNameMapping;
 import cool.scx.data.jdbc.mapping.AnnotationConfigTable;
 import cool.scx.data.jdbc.parser.JDBCColumnNameParser;
 import cool.scx.data.jdbc.parser.JDBCGroupByParser;
@@ -39,7 +39,7 @@ public class JDBCRepository<Entity> implements Repository<Entity, Long> {
 
     // *********** 结果解析器 ***************
     final BeanColumnNameMapping beanColumnNameMapping;
-    final MapColumnNameMapping mapColumnNameMapping;
+    final MapFieldNameMapping mapFieldNameMapping;
     final BeanBuilder<Entity> beanBuilder;
     final MapBuilder mapBuilder;
     final ResultHandler<List<Entity>> entityBeanListHandler;
@@ -62,9 +62,9 @@ public class JDBCRepository<Entity> implements Repository<Entity, Long> {
 
         //2, 创建返回值解析器
         this.beanColumnNameMapping = new BeanColumnNameMapping(table);
-        this.mapColumnNameMapping = new MapColumnNameMapping(table);
+        this.mapFieldNameMapping = new MapFieldNameMapping(table);
         this.beanBuilder = BeanBuilder.of(this.entityClass, beanColumnNameMapping);
-        this.mapBuilder = MapBuilder.of(mapColumnNameMapping);
+        this.mapBuilder = MapBuilder.of(mapFieldNameMapping);
         this.entityBeanListHandler = ofBeanList(beanBuilder);
         this.entityBeanHandler = ofBean(beanBuilder);
         this.countResultHandler = ofSingleValue("count", Long.class);

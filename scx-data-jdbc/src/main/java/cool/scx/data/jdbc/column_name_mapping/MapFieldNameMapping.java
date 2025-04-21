@@ -5,11 +5,11 @@ import cool.scx.data.jdbc.mapping.AnnotationConfigTable;
 import java.util.function.Function;
 
 /// 这个映射表示 列名 -> 字段
-public class MapColumnNameMapping implements Function<String, String> {
+public class MapFieldNameMapping implements Function<String, String> {
 
     private final AnnotationConfigTable table;
 
-    public MapColumnNameMapping(AnnotationConfigTable table) {
+    public MapFieldNameMapping(AnnotationConfigTable table) {
         this.table = table;
     }
 

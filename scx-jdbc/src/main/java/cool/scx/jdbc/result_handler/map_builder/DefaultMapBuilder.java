@@ -8,7 +8,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 record DefaultMapBuilder(Supplier<Map<String, Object>> mapSupplier,
-                         Function<String, String> columnNameMapping) implements MapBuilder {
+                         Function<String, String> fieldNameMapping) implements MapBuilder {
 
     public static final MapBuilder MAP_BUILDER = new DefaultMapBuilder(HashMap::new, c -> c);
 
@@ -16,7 +16,7 @@ record DefaultMapBuilder(Supplier<Map<String, Object>> mapSupplier,
         var map = mapSupplier.get();
 
         for (int i = 1; i < columnLabelIndex.length; i = i + 1) {
-            var key = columnNameMapping.apply(columnLabelIndex[i]);
+            var key = fieldNameMapping.apply(columnLabelIndex[i]);
             var value = rs.getObject(i);
             map.put(key, value);
         }
