@@ -9,10 +9,10 @@ import java.util.Map;
 public interface FieldPolicy {
 
     /// 包含
-    FieldPolicy included(String... fieldNames);
+    FieldPolicy include(String... fieldNames);
 
     /// 排除
-    FieldPolicy excluded(String... fieldNames);
+    FieldPolicy exclude(String... fieldNames);
 
     /// 获取当前模式
     FilterMode filterMode();

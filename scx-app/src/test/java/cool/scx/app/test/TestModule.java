@@ -124,7 +124,7 @@ public class TestModule extends ScxAppModule {
             //方式1
             var c = new Car();
             c.name = null;
-            carService.update(c, included("name").ignoreNull(false), query().where(gt("id", 200)));
+            carService.update(c, include("name").ignoreNull(false), query().where(gt("id", 200)));
 
             //方式2
             carService.update(ignoreNull("name", false), query().where(gt("id", 200)));
@@ -211,13 +211,13 @@ public class TestModule extends ScxAppModule {
         }
         //根据所有 person 表中年龄小于 100 的 carID 查询 car 表中的数据
         var cars = carService.find(query().where(in("id",
-                personService.buildListSQL(query().where(lt("age", 100)), included("carID"))
+                personService.buildListSQL(query().where(lt("age", 100)), include("carID"))
         )));
         var logger = System.getLogger(TestModule.class.getName());
         logger.log(ERROR, "根据所有 person 表中年龄小于 100 的 carID 查询 car 表中的数据 总条数 {0}", cars.size());
         //根据所有 person 表中年龄小于 100 的 carID 查询 car 表中的数据
         var cars1 = carService.find(query().where("id IN ",
-                personService.buildListSQL(query().where(lt("age", 100)), included("carID"))
+                personService.buildListSQL(query().where(lt("age", 100)), include("carID"))
         ));
         logger.log(ERROR, "第二种方式 (whereSQL) : 根据所有 person 表中年龄小于 100 的 carID 查询 car 表中的数据 总条数 {0}", cars1.size());
     }

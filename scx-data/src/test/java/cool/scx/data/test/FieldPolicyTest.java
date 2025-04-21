@@ -6,7 +6,7 @@ import cool.scx.data.field_policy.FieldPolicy;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static cool.scx.data.field_policy.FieldPolicyBuilder.excluded;
+import static cool.scx.data.field_policy.FieldPolicyBuilder.exclude;
 import static cool.scx.data.field_policy.serializer.FieldPolicyDeserializer.FIELD_POLICY_DESERIALIZER;
 import static cool.scx.data.field_policy.serializer.FieldPolicySerializer.FIELD_POLICY_SERIALIZER;
 
@@ -18,7 +18,7 @@ public class FieldPolicyTest {
 
     @Test
     public static void test1() throws JsonProcessingException {
-        var fieldPolicy = excluded("a", "b", "c", "d", "e", "f", "g", "h", "i")
+        var fieldPolicy = exclude("a", "b", "c", "d", "e", "f", "g", "h", "i")
                 .ignoreNull(false)
                 .ignoreNull("name", true)
                 .expression("w", "w * 2");
