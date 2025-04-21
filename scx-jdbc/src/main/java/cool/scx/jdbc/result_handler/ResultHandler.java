@@ -2,6 +2,7 @@ package cool.scx.jdbc.result_handler;
 
 import cool.scx.jdbc.dialect.Dialect;
 import cool.scx.jdbc.result_handler.bean_builder.BeanBuilder;
+import cool.scx.jdbc.result_handler.map_builder.MapBuilder;
 
 import java.lang.reflect.Field;
 import java.sql.ResultSet;
@@ -24,16 +25,32 @@ public interface ResultHandler<T> {
         return MapHandler.INSTANCE;
     }
 
+    static ResultHandler<Map<String, Object>> ofMap(MapBuilder mapBuilder) {
+        return new MapHandler(mapBuilder);
+    }
+
     static ResultHandler<Map<String, Object>> ofMap(Supplier<Map<String, Object>> mapSupplier) {
-        return new MapHandler(mapSupplier);
+        return new MapHandler(MapBuilder.of(mapSupplier));
+    }
+
+    static ResultHandler<Map<String, Object>> ofMap(Function<String, String> columnNameMapping) {
+        return new MapHandler(MapBuilder.of(columnNameMapping));
     }
 
     static ResultHandler<List<Map<String, Object>>> ofMapList() {
         return MapListHandler.INSTANCE;
     }
 
+    static ResultHandler<List<Map<String, Object>>> ofMapList(MapBuilder mapBuilder) {
+        return new MapListHandler(mapBuilder);
+    }
+
     static ResultHandler<List<Map<String, Object>>> ofMapList(Supplier<Map<String, Object>> mapSupplier) {
-        return new MapListHandler(mapSupplier);
+        return new MapListHandler(MapBuilder.of(mapSupplier));
+    }
+
+    static ResultHandler<List<Map<String, Object>>> ofMapList(Function<String, String> columnNameMapping) {
+        return new MapListHandler(MapBuilder.of(columnNameMapping));
     }
 
     static <C> ResultHandler<C> ofBean(Class<C> clazz) {
@@ -73,11 +90,19 @@ public interface ResultHandler<T> {
     }
 
     static ResultHandler<Void> ofMapConsumer(Consumer<Map<String, Object>> consumer) {
-        return new MapConsumerHandler(consumer);
+        return new MapConsumerHandler(MapBuilder.of(), consumer);
+    }
+
+    static ResultHandler<Void> ofMapConsumer(MapBuilder mapBuilder, Consumer<Map<String, Object>> consumer) {
+        return new MapConsumerHandler(mapBuilder, consumer);
     }
 
     static ResultHandler<Void> ofMapConsumer(Supplier<Map<String, Object>> mapSupplier, Consumer<Map<String, Object>> consumer) {
-        return new MapConsumerHandler(mapSupplier, consumer);
+        return new MapConsumerHandler(MapBuilder.of(mapSupplier), consumer);
+    }
+
+    static ResultHandler<Void> ofMapConsumer(Function<String, String> columnNameMapping, Consumer<Map<String, Object>> consumer) {
+        return new MapConsumerHandler(MapBuilder.of(columnNameMapping), consumer);
     }
 
     static <C> ResultHandler<C> ofSingleValue(String columnName, Class<C> clazz) {
