@@ -16,7 +16,12 @@ record DefaultMapBuilder(Supplier<Map<String, Object>> mapSupplier,
         var map = mapSupplier.get();
 
         for (int i = 1; i < columnLabelIndex.length; i = i + 1) {
-            var fieldName = fieldNameMapping.apply(columnLabelIndex[i]);
+            var columnLabel = columnLabelIndex[i];
+            var fieldName = fieldNameMapping.apply(columnLabel);
+            //为空 回退到 列名
+            if (fieldName == null) {
+                fieldName = columnLabel;
+            }
             var value = rs.getObject(i);
             map.put(fieldName, value);
         }
