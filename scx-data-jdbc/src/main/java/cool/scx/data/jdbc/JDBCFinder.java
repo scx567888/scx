@@ -33,7 +33,7 @@ public class JDBCFinder<Entity> implements Finder<Entity> {
     }
 
     @Override
-    public List<Map<String, Object>> mapList() {
+    public List<Map<String, Object>> listMap() {
         return repository.sqlRunner.query(repository.buildSelectSQL(query, fieldPolicy), ofMapList(repository.mapBuilder));
     }
 
