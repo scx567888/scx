@@ -15,7 +15,7 @@ public interface Finder<Entity> {
 
     <T> List<T> list(Class<T> resultType);
 
-    List<Map<String, Object>> mapList();
+    List<Map<String, Object>> listMap();
 
     void forEach(Consumer<Entity> entityConsumer);
 
