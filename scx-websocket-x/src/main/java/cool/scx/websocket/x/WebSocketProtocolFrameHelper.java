@@ -9,14 +9,14 @@ import java.util.ArrayList;
 
 import static cool.scx.websocket.WebSocketCloseInfo.TOO_BIG;
 
-/// WebSocketFrameHelper
+/// WebSocketProtocolFrameHelper
 ///
 /// @author scx567888
 /// @version 0.0.1
 /// @see <a href="https://www.rfc-editor.org/rfc/rfc6455">https://www.rfc-editor.org/rfc/rfc6455</a>
-public class WebSocketFrameHelper {
+public class WebSocketProtocolFrameHelper {
 
-    public static WebSocketFrame readFrameHeader(DataReader reader) {
+    public static WebSocketProtocolFrame readFrameHeader(DataReader reader) {
         byte[] header = reader.read(2);
 
         var b1 = header[0];
@@ -56,10 +56,10 @@ public class WebSocketFrameHelper {
             maskingKey = reader.read(4);
         }
 
-        return new WebSocketFrame(fin, rsv1, rsv2, rsv3, opCode, masked, payloadLength, maskingKey);
+        return new WebSocketProtocolFrame(fin, rsv1, rsv2, rsv3, opCode, masked, payloadLength, maskingKey);
     }
 
-    public static WebSocketFrame readFramePayload(WebSocketFrame frame, DataReader reader) {
+    public static WebSocketProtocolFrame readFramePayload(WebSocketProtocolFrame frame, DataReader reader) {
         var payloadLength = frame.payloadLength();
         var masked = frame.masked();
         var maskingKey = frame.maskingKey();
@@ -76,7 +76,7 @@ public class WebSocketFrameHelper {
         return frame.payloadData(payloadData);
     }
 
-    public static void writeFrame(WebSocketFrame frame, OutputStream out) throws IOException {
+    public static void writeFrame(WebSocketProtocolFrame frame, OutputStream out) throws IOException {
         // 头部
         int fullOpCode = (frame.fin() ? 0b1000_0000 : 0) |
                 (frame.rsv1() ? 0b0100_0000 : 0) |
@@ -124,7 +124,7 @@ public class WebSocketFrameHelper {
     }
 
     //读取单个帧
-    public static WebSocketFrame readFrame(DataReader reader, long maxWebSocketFrameSize) {
+    public static WebSocketProtocolFrame readFrame(DataReader reader, long maxWebSocketFrameSize) {
         var webSocketFrame = readFrameHeader(reader);
 
         //这里检查 最大帧大小
@@ -135,8 +135,8 @@ public class WebSocketFrameHelper {
         return readFramePayload(webSocketFrame, reader);
     }
 
-    public static WebSocketFrame readFrameUntilLast(DataReader reader, long maxWebSocketFrameSize, long maxWebSocketMessageSize) {
-        var frameList = new ArrayList<WebSocketFrame>();
+    public static WebSocketProtocolFrame readFrameUntilLast(DataReader reader, long maxWebSocketFrameSize, long maxWebSocketMessageSize) {
+        var frameList = new ArrayList<WebSocketProtocolFrame>();
         long totalPayloadLength = 0;
 
         while (true) {
@@ -171,7 +171,7 @@ public class WebSocketFrameHelper {
         }
 
         var opCode = first.opCode();
-        var length = frameList.stream().mapToInt(WebSocketFrame::payloadLength).sum();
+        var length = frameList.stream().mapToInt(WebSocketProtocolFrame::payloadLength).sum();
         var payloadData = new byte[length];
 
         int offset = 0;
@@ -180,37 +180,7 @@ public class WebSocketFrameHelper {
             offset += webSocketFrame.payloadLength();
         }
 
-        return WebSocketFrame.of(true, opCode, payloadData);
-
-    }
-
-    public static CloseInfo parseCloseInfo(byte[] frame) {
-        int len = frame.length;
-        int code = 1005; // 默认值（表示没有状态码） 
-        // 读取状态码（如果存在） 
-        if (len >= 2) {
-            code = (frame[0] & 0b1111_1111) << 8 |
-                    frame[1] & 0b1111_1111;
-        } // 读取关闭原因（如果存在）
-        String reason = null;
-        if (len > 2) {
-            reason = new String(frame, 2, len - 2);
-        }
-        return new CloseInfo(code, reason);
-    }
-
-    public static byte[] createClosePayload(int code, String reason) {
-        byte[] reasonBytes = reason != null ? reason.getBytes() : new byte[0];
-        byte[] payload = new byte[2 + reasonBytes.length];
-        // 设置状态码
-        payload[0] = (byte) (code >> 8);
-        payload[1] = (byte) (code & 0b1111_1111);
-        // 设置关闭原因
-        System.arraycopy(reasonBytes, 0, payload, 2, reasonBytes.length);
-        return payload;
-    }
-
-    public record CloseInfo(int code, String reason) {
+        return WebSocketProtocolFrame.of(true, opCode, payloadData);
 
     }
 

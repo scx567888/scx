@@ -7,7 +7,7 @@ import cool.scx.websocket.WebSocketOpCode;
 /// @author scx567888
 /// @version 0.0.1
 /// @see <a href="https://www.rfc-editor.org/rfc/rfc6455">https://www.rfc-editor.org/rfc/rfc6455</a>
-public final class WebSocketFrame {
+public final class WebSocketProtocolFrame {
 
     private final boolean fin;
     private final boolean rsv1;
@@ -19,15 +19,15 @@ public final class WebSocketFrame {
     private final byte[] maskingKey;
     private byte[] payloadData;
 
-    public WebSocketFrame(boolean fin,
-                          boolean rsv1,
-                          boolean rsv2,
-                          boolean rsv3,
-                          WebSocketOpCode opCode,
-                          boolean masked,
-                          int payloadLength,
-                          byte[] maskingKey,
-                          byte[] payloadData) {
+    public WebSocketProtocolFrame(boolean fin,
+                                  boolean rsv1,
+                                  boolean rsv2,
+                                  boolean rsv3,
+                                  WebSocketOpCode opCode,
+                                  boolean masked,
+                                  int payloadLength,
+                                  byte[] maskingKey,
+                                  byte[] payloadData) {
         this.fin = fin;
         this.rsv1 = rsv1;
         this.rsv2 = rsv2;
@@ -39,19 +39,19 @@ public final class WebSocketFrame {
         this.payloadData = payloadData;
     }
 
-    public WebSocketFrame(boolean fin, boolean rsv1, boolean rsv2, boolean rsv3, WebSocketOpCode opCode, boolean masked, int payloadLength, byte[] maskingKey) {
+    public WebSocketProtocolFrame(boolean fin, boolean rsv1, boolean rsv2, boolean rsv3, WebSocketOpCode opCode, boolean masked, int payloadLength, byte[] maskingKey) {
         this(fin, rsv1, rsv2, rsv3, opCode, masked, payloadLength, maskingKey, null);
     }
 
-    public static WebSocketFrame of(boolean fin, WebSocketOpCode opCode, byte[] maskingKey, byte[] payloadData) {
-        return new WebSocketFrame(fin, false, false, false, opCode, maskingKey != null, payloadData.length, maskingKey, payloadData);
+    public static WebSocketProtocolFrame of(boolean fin, WebSocketOpCode opCode, byte[] maskingKey, byte[] payloadData) {
+        return new WebSocketProtocolFrame(fin, false, false, false, opCode, maskingKey != null, payloadData.length, maskingKey, payloadData);
     }
 
-    public static WebSocketFrame of(boolean fin, WebSocketOpCode opCode, byte[] payloadData) {
+    public static WebSocketProtocolFrame of(boolean fin, WebSocketOpCode opCode, byte[] payloadData) {
         return of(fin, opCode, null, payloadData);
     }
 
-    public static WebSocketFrame of(WebSocketOpCode opCode, byte[] payloadData) {
+    public static WebSocketProtocolFrame of(WebSocketOpCode opCode, byte[] payloadData) {
         return of(true, opCode, payloadData);
     }
 
@@ -92,7 +92,7 @@ public final class WebSocketFrame {
         return payloadData;
     }
 
-    public WebSocketFrame payloadData(byte[] payloadData) {
+    public WebSocketProtocolFrame payloadData(byte[] payloadData) {
         this.payloadData = payloadData;
         return this;
     }
