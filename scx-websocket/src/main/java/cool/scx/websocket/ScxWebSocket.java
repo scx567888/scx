@@ -40,14 +40,14 @@ public interface ScxWebSocket {
     }
 
     default ScxWebSocket pong(byte[] data) {
-        var frame = WebSocketFrame.of(PONG, data, false);
+        var frame = WebSocketFrame.of(PONG, data);
         sendFrame(frame);
         return this;
     }
 
     default ScxWebSocket close(int code, String reason) {
         var closePayload = createClosePayload(code, reason);
-        var frame = WebSocketFrame.of(CLOSE, closePayload, true);
+        var frame = WebSocketFrame.of(CLOSE, closePayload);
         sendFrame(frame);
         return this;
     }
