@@ -12,7 +12,6 @@ import cool.scx.http.uri.ScxURIWritable;
 import cool.scx.http.version.HttpVersion;
 import cool.scx.http.x.http1.Http1ClientConnection;
 import cool.scx.http.x.http2.Http2ClientConnection;
-import cool.scx.tcp.ScxTCPSocket;
 
 import static cool.scx.http.method.HttpMethod.GET;
 
@@ -24,7 +23,6 @@ public class XHttpClientRequest implements ScxHttpClientRequest {
 
     private final XHttpClient httpClient;
     private final XHttpClientOptions options;
-    //public ScxTCPSocket tcpSocket; //todo 这个类更像是一个发起程序 所以我们是不是没有持有这个tcpSocket的意义 毕竟不是长连接
 
     protected HttpVersion version;
     protected HttpMethod method;

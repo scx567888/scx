@@ -4,7 +4,8 @@ import cool.scx.common.constant.ScxDateTimeFormatter;
 import cool.scx.scheduling.ScxScheduling;
 import cool.scx.web.BaseWebSocketHandler;
 import cool.scx.web.annotation.ScxWebSocketRoute;
-import cool.scx.websocket.ScxServerWebSocket;
+import cool.scx.websocket.ScxServerWebSocketHandshakeRequest;
+import cool.scx.websocket.handler.ScxEventWebSocket;
 
 import java.time.LocalDateTime;
 
@@ -13,7 +14,8 @@ public class WsHandler implements BaseWebSocketHandler {
 
 
     @Override
-    public void onOpen(ScxServerWebSocket context) throws Exception {
+    public void onHandshakeRequest(ScxServerWebSocketHandshakeRequest request) throws Exception {
+        var context = ScxEventWebSocket.of(request.webSocket());
         System.out.println("连接了");
         var scheduleContext = ScxScheduling.setInterval(() -> {
             System.out.println("发送消息");
@@ -30,5 +32,6 @@ public class WsHandler implements BaseWebSocketHandler {
             System.out.println("Error " + error);
             scheduleContext.cancel();
         });
+        context.start();
     }
 }
