@@ -10,7 +10,7 @@ import static cool.scx.websocket.WebSocketOpCode.*;
 /// @version 0.0.1
 public interface ScxWebSocket {
 
-    WebSocketFrame readFrame();
+    WebSocketFrame readFrame() throws WebSocketException;
 
     ScxWebSocket sendFrame(WebSocketFrame frame);
 

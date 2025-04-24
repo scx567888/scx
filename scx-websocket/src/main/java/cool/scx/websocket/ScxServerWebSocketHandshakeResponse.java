@@ -9,14 +9,15 @@ public interface ScxServerWebSocketHandshakeResponse extends ScxHttpServerRespon
     @Override
     ScxServerWebSocketHandshakeRequest request();
 
-    ScxServerWebSocket acceptHandshake();
+    ScxWebSocket acceptHandshake();
 
-    ScxServerWebSocket webSocket();
+    ScxWebSocket webSocket();
 
-    default void onWebSocket(Consumer<ScxServerWebSocket> consumer) {
+    default void onWebSocket(Consumer<ScxEventWebSocket> consumer) {
         var ws = webSocket();
-        consumer.accept(ws);
-        ws.start();
+        var eventWS = ScxEventWebSocket.of(ws);
+        consumer.accept(eventWS);
+        eventWS.start();
     }
 
 }

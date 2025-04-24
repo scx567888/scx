@@ -8,12 +8,13 @@ public interface ScxClientWebSocketHandshakeResponse extends ScxHttpClientRespon
 
     boolean handshakeSucceeded();
 
-    ScxClientWebSocket webSocket();
+    ScxWebSocket webSocket();
 
-    default void onWebSocket(Consumer<ScxClientWebSocket> consumer) {
+    default void onWebSocket(Consumer<ScxEventWebSocket> consumer) {
         var ws = webSocket();
-        consumer.accept(ws);
-        ws.start();
+        var eventWS = ScxEventWebSocket.of(ws);
+        consumer.accept(eventWS);
+        eventWS.start();
     }
 
 }

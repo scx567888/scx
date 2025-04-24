@@ -9,6 +9,10 @@ import java.util.function.Consumer;
 /// 事件形式的 websocket
 public interface ScxEventWebSocket extends ScxWebSocket {
 
+    static ScxEventWebSocket of(ScxWebSocket scxWebSocket) {
+        return new ScxEventWebSocketImpl(scxWebSocket);
+    }
+
     ScxEventWebSocket onTextMessage(TextMessageHandler textMessageHandler);
 
     ScxEventWebSocket onBinaryMessage(BinaryMessageHandler binaryMessageHandler);
