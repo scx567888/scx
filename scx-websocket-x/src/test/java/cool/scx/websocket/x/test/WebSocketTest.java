@@ -48,7 +48,7 @@ public class WebSocketTest {
 
         //这里只有当 onConnect 走完才会 执行 来自客户端请求的监听 所以这里 创建线程发送 不阻塞 onConnect
         Thread.ofVirtual().start(() -> {
-            for (int i = 0; i < 10; i = i + 1) {
+            for (int i = 0; i < 99999; i = i + 1) {
                 webSocket.send(i + "😀😀😀😀😀😀".repeat(100));
             }
             webSocket.close();
