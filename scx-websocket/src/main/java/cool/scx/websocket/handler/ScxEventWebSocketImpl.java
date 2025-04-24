@@ -1,17 +1,19 @@
-package cool.scx.websocket;
+package cool.scx.websocket.handler;
 
-import cool.scx.websocket.handler.BinaryMessageHandler;
-import cool.scx.websocket.handler.CloseHandler;
-import cool.scx.websocket.handler.TextMessageHandler;
+import cool.scx.websocket.ScxWebSocket;
+import cool.scx.websocket.WebSocketFrame;
+import cool.scx.websocket.exception.WebSocketException;
 
+import java.lang.System.Logger;
 import java.util.function.Consumer;
 
 import static cool.scx.websocket.WebSocketCloseInfo.*;
 import static java.lang.System.Logger.Level.ERROR;
+import static java.lang.System.getLogger;
 
-public class ScxEventWebSocketImpl implements ScxEventWebSocket {
+class ScxEventWebSocketImpl implements ScxEventWebSocket {
 
-    private static final System.Logger LOGGER = System.getLogger(ScxEventWebSocketImpl.class.getName());
+    private static final Logger LOGGER = getLogger(ScxEventWebSocketImpl.class.getName());
 
     private final ScxWebSocket ws;
     protected ContinuationType continuationType;
@@ -201,6 +203,7 @@ public class ScxEventWebSocketImpl implements ScxEventWebSocket {
         } catch (Exception e) {
             LOGGER.log(ERROR, "Error while call onClose : ", e);
         }
+        //todo 这个 2 和 3 是否应该存在 是否和 WebSocket 中的 close 处理相冲突 或者说 拆分成两个 _handleClose 主动发生的和被动发生的 ?
         //2, 发送关闭响应帧
         try {
             close(peerCode, peerReason); // 这里有可能无法发送 我们忽略异常

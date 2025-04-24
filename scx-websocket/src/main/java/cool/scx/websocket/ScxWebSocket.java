@@ -1,5 +1,7 @@
 package cool.scx.websocket;
 
+import cool.scx.websocket.exception.WebSocketException;
+
 import static cool.scx.websocket.WebSocketCloseInfo.NORMAL_CLOSE;
 import static cool.scx.websocket.WebSocketHelper.createClosePayload;
 import static cool.scx.websocket.WebSocketOpCode.*;
