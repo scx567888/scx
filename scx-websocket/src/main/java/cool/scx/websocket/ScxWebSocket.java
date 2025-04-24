@@ -1,5 +1,6 @@
 package cool.scx.websocket;
 
+import static cool.scx.websocket.WebSocketCloseInfo.NORMAL_CLOSE;
 import static cool.scx.websocket.WebSocketHelper.createClosePayload;
 import static cool.scx.websocket.WebSocketOpCode.*;
 
@@ -47,6 +48,22 @@ public interface ScxWebSocket {
         var frame = WebSocketFrame.of(CLOSE, closePayload, true);
         sendFrame(frame);
         return this;
+    }
+
+    default ScxWebSocket send(String textMessage) {
+        return send(textMessage, true);
+    }
+
+    default ScxWebSocket send(byte[] binaryMessage) {
+        return send(binaryMessage, true);
+    }
+
+    default ScxWebSocket close(WebSocketCloseInfo closeInfo) {
+        return close(closeInfo.code(), closeInfo.reason());
+    }
+
+    default ScxWebSocket close() {
+        return close(NORMAL_CLOSE);
     }
 
 }
