@@ -23,7 +23,7 @@ public class ClassicTCPServer implements ScxTCPServer {
     private final Thread serverThread;
     private Consumer<ScxTCPSocket> connectHandler;
     private ServerSocket serverSocket;
-    private boolean running;
+    private volatile boolean running;
 
     public ClassicTCPServer() {
         this(new ScxTCPServerOptions());
@@ -32,6 +32,7 @@ public class ClassicTCPServer implements ScxTCPServer {
     public ClassicTCPServer(ScxTCPServerOptions options) {
         this.options = options;
         this.serverThread = Thread.ofPlatform().name("ClassicTCPServer-Listener").unstarted(this::listen);
+        this.running = false;
     }
 
     @Override
@@ -72,7 +73,12 @@ public class ClassicTCPServer implements ScxTCPServer {
             throw new UncheckedIOException("关闭服务器失败 !!!", e);
         }
 
-        serverThread.interrupt();
+        try {
+            serverThread.join();
+        } catch (InterruptedException _) {
+            // 这里理论上永远都不会发生
+        }
+
     }
 
     @Override
@@ -86,8 +92,19 @@ public class ClassicTCPServer implements ScxTCPServer {
                 var socket = this.serverSocket.accept();
                 Thread.ofVirtual().name("ClassicTCPServer-Handler-" + socket.getRemoteSocketAddress()).start(() -> handle(socket));
             } catch (IOException e) {
+                //第一种情况 服务器主动关闭
+                if (!running) {
+                    break;
+                }
+                //第二种情况 accept 出现异常 
+                running = false;
                 LOGGER.log(ERROR, "服务器 接受连接 时发生错误 !!!", e);
-                stop();
+                try {
+                    serverSocket.close();
+                } catch (IOException ex) {
+                    LOGGER.log(TRACE, "关闭 serverSocket 时发生错误 !!!", ex);
+                }
+                break;
             }
         }
     }
