@@ -2,6 +2,7 @@ package cool.scx.http.x.test;
 
 import cool.scx.common.util.$;
 import cool.scx.http.media.event_stream.SseEvent;
+import cool.scx.http.media.event_stream.event.EventClientEventStream;
 import cool.scx.http.x.XHttpClient;
 import cool.scx.http.x.XHttpServer;
 import cool.scx.http.x.XHttpServerOptions;
@@ -38,10 +39,9 @@ public class EventStreamTest {
     public static void test2() {
         var client = new XHttpClient();
         var eventStream = client.request().uri("http://127.0.0.1:8080").send().body().asEventStream();
-        eventStream.onEvent(event -> {
+        EventClientEventStream.of(eventStream).onEvent(event -> {
             System.err.println(event.event() + " " + event.data());
-        });
-        eventStream.start();
+        }).start();
     }
 
 }
