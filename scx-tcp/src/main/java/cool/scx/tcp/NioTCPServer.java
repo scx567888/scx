@@ -106,7 +106,7 @@ public class NioTCPServer implements ScxTCPServer {
                 try {
                     serverSocketChannel.close();
                 } catch (IOException ex) {
-                    LOGGER.log(TRACE, "关闭 serverSocket 时发生错误 !!!", ex);
+                    LOGGER.log(TRACE, "关闭 serverSocketChannel 时发生错误 !!!", ex);
                 }
                 break;
             }
