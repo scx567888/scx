@@ -11,13 +11,14 @@ public class HttpClientTest {
     public static void test1() {
         XTest.test1();
         var client = new XWebSocketClient();
-        client.webSocketHandshakeRequest()
+        var webSocket = client.webSocketHandshakeRequest()
                 .uri("http://localhost:8899/中文路径😎😎😎😎?a=1&b=llll")
                 .addHeader("a", "b")
-                .onWebSocket(c -> {
-                    System.out.println("连接成功");
-                    c.send("测试数据");
-                });
+                .webSocket();
+
+        System.out.println("连接成功");
+        webSocket.send("测试数据");
+
     }
 
 }
