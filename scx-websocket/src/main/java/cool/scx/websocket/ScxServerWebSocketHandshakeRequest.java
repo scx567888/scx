@@ -2,8 +2,6 @@ package cool.scx.websocket;
 
 import cool.scx.http.ScxHttpServerRequest;
 
-import java.util.function.Consumer;
-
 import static cool.scx.http.headers.HttpFieldName.SEC_WEBSOCKET_KEY;
 import static cool.scx.http.headers.HttpFieldName.SEC_WEBSOCKET_VERSION;
 
@@ -24,16 +22,8 @@ public interface ScxServerWebSocketHandshakeRequest extends ScxHttpServerRequest
         return getHeader(SEC_WEBSOCKET_VERSION);
     }
 
-    default ScxWebSocket acceptHandshake() {
-        return response().acceptHandshake();
-    }
-
     default ScxWebSocket webSocket() {
         return response().webSocket();
-    }
-
-    default void onWebSocket(Consumer<ScxEventWebSocket> consumer) {
-        response().onWebSocket(consumer);
     }
 
 }

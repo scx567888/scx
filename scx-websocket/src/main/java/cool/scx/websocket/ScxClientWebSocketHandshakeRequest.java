@@ -11,8 +11,6 @@ import cool.scx.http.method.ScxHttpMethod;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.version.HttpVersion;
 
-import java.util.function.Consumer;
-
 import static cool.scx.http.method.HttpMethod.GET;
 import static cool.scx.http.version.HttpVersion.HTTP_1_1;
 
@@ -30,11 +28,6 @@ public interface ScxClientWebSocketHandshakeRequest extends ScxHttpClientRequest
     //发送握手然后等待远端接受握手并返回 websocket 对象
     default ScxWebSocket webSocket() {
         return sendHandshake().webSocket();
-    }
-
-    //同上 但是 不需要手动调用 startListening
-    default void onWebSocket(Consumer<ScxEventWebSocket> consumer) {
-        sendHandshake().onWebSocket(consumer);
     }
 
     @Override
