@@ -1,5 +1,7 @@
 package cool.scx.tcp;
 
+import cool.scx.io.io_stream.DetectingInputStream;
+import cool.scx.io.io_stream.DetectingOutputStream;
 import cool.scx.tcp.tls.TLS;
 
 import javax.net.ssl.SSLSocket;
@@ -20,6 +22,8 @@ public class ClassicTCPSocket implements ScxTCPSocket {
     private InputStream in;
     private OutputStream out;
     private ScxTLSManager tlsManager;
+    private Runnable closeHandler;
+    private boolean remoteClosed = false;
 
     public ClassicTCPSocket(Socket socket) {
         setSocket(socket);
@@ -69,13 +73,19 @@ public class ClassicTCPSocket implements ScxTCPSocket {
     }
 
     @Override
+    public ScxTLSManager tlsManager() {
+        return tlsManager;
+    }
+
+    @Override
     public boolean isClosed() {
         return socket.isClosed();
     }
 
     @Override
-    public ScxTLSManager tlsManager() {
-        return tlsManager;
+    public ScxTCPSocket onClose(Runnable closeHandler) {
+        this.closeHandler = closeHandler;
+        return this;
     }
 
     @Override
@@ -86,13 +96,35 @@ public class ClassicTCPSocket implements ScxTCPSocket {
     private void setSocket(Socket socket) {
         this.socket = socket;
         try {
-            this.in = socket.getInputStream();
-            this.out = socket.getOutputStream();
+            this.in = new DetectingInputStream(socket.getInputStream(), this::inputEnd, this::inputException);
+            this.out = new DetectingOutputStream(socket.getOutputStream(), this::outputException);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
         if (socket instanceof SSLSocket sslSocket) {
             tlsManager = new ClassicTLSManager(sslSocket);
+        }
+    }
+
+    private void inputEnd() {
+        callOnRemoteClose();
+    }
+
+    private void inputException(IOException e) {
+        callOnRemoteClose();
+    }
+
+    private void outputException(IOException e) {
+        callOnRemoteClose();
+    }
+
+    private void callOnRemoteClose() {
+        if (remoteClosed) {
+            return;
+        }
+        remoteClosed = true;
+        if (closeHandler != null) {
+            closeHandler.run();
         }
     }
 

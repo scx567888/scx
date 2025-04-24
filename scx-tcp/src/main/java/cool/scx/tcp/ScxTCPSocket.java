@@ -31,5 +31,7 @@ public interface ScxTCPSocket extends Closeable {
     ScxTLSManager tlsManager();
 
     boolean isClosed();
+    
+    ScxTCPSocket onClose(Runnable closeHandler);
 
 }
