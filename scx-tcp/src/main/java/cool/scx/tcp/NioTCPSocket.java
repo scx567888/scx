@@ -1,7 +1,5 @@
 package cool.scx.tcp;
 
-import cool.scx.io.io_stream.DetectingInputStream;
-import cool.scx.io.io_stream.DetectingOutputStream;
 import cool.scx.tcp.tls.TLS;
 import cool.scx.tcp.tls_channel.TLSSocketChannel;
 
@@ -25,8 +23,6 @@ public class NioTCPSocket implements ScxTCPSocket {
     private InputStream in;
     private OutputStream out;
     private ScxTLSManager tlsManager;
-    private Runnable closeHandler;
-    private boolean remoteClosed = false;
 
     public NioTCPSocket(SocketChannel socketChannel) {
         setSocket(socketChannel);
@@ -94,44 +90,16 @@ public class NioTCPSocket implements ScxTCPSocket {
     }
 
     @Override
-    public ScxTCPSocket onClose(Runnable closeHandler) {
-        this.closeHandler = closeHandler;
-        return this;
-    }
-
-    @Override
     public void close() throws IOException {
         socketChannel.close();
     }
 
     private void setSocket(SocketChannel socketChannel) {
         this.socketChannel = socketChannel;
-        this.in = new DetectingInputStream(newInputStream(socketChannel), this::inputEnd, this::inputException);
-        this.out = new DetectingOutputStream(newOutputStream(socketChannel), this::outputException);
+        this.in = newInputStream(socketChannel);
+        this.out = newOutputStream(socketChannel);
         if (socketChannel instanceof TLSSocketChannel tlsSocketChannel) {
             tlsManager = new NioTLSManager(tlsSocketChannel.sslEngine());
-        }
-    }
-
-    private void inputEnd() {
-        callOnRemoteClose();
-    }
-
-    private void inputException(IOException e) {
-        callOnRemoteClose();
-    }
-
-    private void outputException(IOException e) {
-        callOnRemoteClose();
-    }
-
-    private void callOnRemoteClose() {
-        if (remoteClosed) {
-            return;
-        }
-        remoteClosed = true;
-        if (closeHandler != null) {
-            closeHandler.run();
         }
     }
 
