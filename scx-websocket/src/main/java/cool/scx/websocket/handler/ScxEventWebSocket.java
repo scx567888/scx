@@ -1,11 +1,10 @@
-package cool.scx.websocket;
+package cool.scx.websocket.handler;
 
-import cool.scx.websocket.handler.BinaryMessageHandler;
-import cool.scx.websocket.handler.CloseHandler;
-import cool.scx.websocket.handler.TextMessageHandler;
+import cool.scx.websocket.ScxWebSocket;
 
 import java.util.function.Consumer;
 
+/// todo 支持自定义 执行器
 /// 事件形式的 websocket
 public interface ScxEventWebSocket extends ScxWebSocket {
 
