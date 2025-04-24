@@ -8,10 +8,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.net.InetSocketAddress;
+import java.nio.channels.Channels;
 import java.nio.channels.SocketChannel;
-
-import static java.nio.channels.Channels.newInputStream;
-import static java.nio.channels.Channels.newOutputStream;
 
 /// NIO TCP Socket
 ///
@@ -96,8 +94,8 @@ public class NioTCPSocket implements ScxTCPSocket {
 
     private void setSocket(SocketChannel socketChannel) {
         this.socketChannel = socketChannel;
-        this.in = newInputStream(socketChannel);
-        this.out = newOutputStream(socketChannel);
+        this.in = Channels.newInputStream(socketChannel);
+        this.out = Channels.newOutputStream(socketChannel);
         if (socketChannel instanceof TLSSocketChannel tlsSocketChannel) {
             tlsManager = new NioTLSManager(tlsSocketChannel.sslEngine());
         }
