@@ -1,4 +1,4 @@
-package cool.scx.websocket;
+package cool.scx.websocket.exception;
 
 /// WebSocket 异常
 public class WebSocketException extends RuntimeException {
