@@ -31,22 +31,6 @@ public class Http1ServerWebSocketHandshakeResponse implements ScxServerWebSocket
     }
 
     @Override
-    public ScxWebSocket acceptHandshake() {
-        // 实现握手接受逻辑，返回适当的响应头
-        if (webSocket == null) {
-            _response.headers().upgrade(WEB_SOCKET);
-            _response.headers().connection(UPGRADE);
-            _response.headers().set(SEC_WEBSOCKET_ACCEPT, generateSecWebSocketAccept(request().secWebSocketKey()));
-            status(SWITCHING_PROTOCOLS).send();
-
-            webSocket = new WebSocket(connection.tcpSocket, connection.dataReader, connection.dataWriter, webSocketOptions, false);
-            // 一旦成功接受了 websocket 请求, 整个 tcp 将会被 websocket 独占 所以这里需要停止 http 监听
-            connection.stop();
-        }
-        return webSocket;
-    }
-
-    @Override
     public ScxWebSocket webSocket() {
         return webSocket != null ? webSocket : acceptHandshake();
     }
@@ -79,6 +63,21 @@ public class Http1ServerWebSocketHandshakeResponse implements ScxServerWebSocket
     @Override
     public boolean isSent() {
         return _response.isSent();
+    }
+
+    private ScxWebSocket acceptHandshake() {
+        // 实现握手接受逻辑，返回适当的响应头
+        if (webSocket == null) {
+            _response.headers().upgrade(WEB_SOCKET);
+            _response.headers().connection(UPGRADE);
+            _response.headers().set(SEC_WEBSOCKET_ACCEPT, generateSecWebSocketAccept(request().secWebSocketKey()));
+            status(SWITCHING_PROTOCOLS).send();
+
+            webSocket = new WebSocket(connection.tcpSocket, connection.dataReader, connection.dataWriter, webSocketOptions, false);
+            // 一旦成功接受了 websocket 请求, 整个 tcp 将会被 websocket 独占 所以这里需要停止 http 监听
+            connection.stop();
+        }
+        return webSocket;
     }
 
 }
