@@ -23,7 +23,7 @@ public class NioTCPServer implements ScxTCPServer {
     private final Thread serverThread;
     private Consumer<ScxTCPSocket> connectHandler;
     private ServerSocketChannel serverSocketChannel;
-    private boolean running;
+    private volatile boolean running;
 
     public NioTCPServer() {
         this(new ScxTCPServerOptions());
@@ -32,6 +32,7 @@ public class NioTCPServer implements ScxTCPServer {
     public NioTCPServer(ScxTCPServerOptions options) {
         this.options = options;
         this.serverThread = Thread.ofPlatform().name("NioTCPServer-Listener").unstarted(this::listen);
+        this.running = false;
     }
 
     @Override
@@ -72,7 +73,12 @@ public class NioTCPServer implements ScxTCPServer {
             throw new UncheckedIOException("关闭服务器失败 !!!", e);
         }
 
-        serverThread.interrupt();
+        try {
+            serverThread.join();
+        } catch (InterruptedException _) {
+            // 这里理论上永远都不会发生
+        }
+
     }
 
     @Override
@@ -90,8 +96,19 @@ public class NioTCPServer implements ScxTCPServer {
                 var socketChannel = this.serverSocketChannel.accept();
                 Thread.ofVirtual().name("NioTCPServer-Handler-" + socketChannel.getRemoteAddress()).start(() -> handle(socketChannel));
             } catch (IOException e) {
+                //第一种情况 服务器主动关闭
+                if (!running) {
+                    break;
+                }
+                //第二种情况 accept 出现异常 
+                running = false;
                 LOGGER.log(ERROR, "服务器 接受连接 时发生错误 !!!", e);
-                stop();
+                try {
+                    serverSocketChannel.close();
+                } catch (IOException ex) {
+                    LOGGER.log(TRACE, "关闭 serverSocket 时发生错误 !!!", ex);
+                }
+                break;
             }
         }
     }
