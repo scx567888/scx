@@ -78,13 +78,13 @@ public class NioTCPSocket implements ScxTCPSocket {
     }
 
     @Override
-    public boolean isClosed() {
-        return !socketChannel.isOpen();
+    public ScxTLSManager tlsManager() {
+        return tlsManager;
     }
 
     @Override
-    public ScxTLSManager tlsManager() {
-        return tlsManager;
+    public boolean isClosed() {
+        return !socketChannel.isOpen();
     }
 
     @Override

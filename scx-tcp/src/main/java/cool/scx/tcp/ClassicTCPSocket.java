@@ -69,13 +69,13 @@ public class ClassicTCPSocket implements ScxTCPSocket {
     }
 
     @Override
-    public boolean isClosed() {
-        return socket.isClosed();
+    public ScxTLSManager tlsManager() {
+        return tlsManager;
     }
 
     @Override
-    public ScxTLSManager tlsManager() {
-        return tlsManager;
+    public boolean isClosed() {
+        return socket.isClosed();
     }
 
     @Override

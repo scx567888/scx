@@ -3,6 +3,7 @@ package cool.scx.websocket.x.test;
 import cool.scx.http.x.XHttpServer;
 import cool.scx.http.x.XHttpServerOptions;
 import cool.scx.websocket.ScxServerWebSocketHandshakeRequest;
+import cool.scx.websocket.handler.ScxEventWebSocket;
 import cool.scx.websocket.x.WebSocketUpgradeHandler;
 
 public class XTest {
@@ -20,12 +21,11 @@ public class XTest {
             //通过 c 的类型判断是不是 websocket 连接
             if (c instanceof ScxServerWebSocketHandshakeRequest w) {
                 System.out.println("这是 websocket handshake");
-                var d = w.webSocket();
-                d.onTextMessage((s, _) -> {
+                w.webSocket().send("hello");
+                ScxEventWebSocket.of(w.webSocket()).onTextMessage((s, _) -> {
                     System.out.println("收到消息 :" + s);
-                });
-                d.send("hello");
-                d.start();
+                }).start();
+
             } else {
                 // c.response().setHeader("transfer-encoding", "chunked");
                 c.response().send("123");

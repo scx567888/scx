@@ -1,12 +1,10 @@
 package cool.scx.websocket;
 
-import cool.scx.websocket.handler.BinaryMessageHandler;
-import cool.scx.websocket.handler.CloseHandler;
-import cool.scx.websocket.handler.TextMessageHandler;
-
-import java.util.function.Consumer;
+import cool.scx.websocket.exception.WebSocketException;
 
 import static cool.scx.websocket.WebSocketCloseInfo.NORMAL_CLOSE;
+import static cool.scx.websocket.WebSocketHelper.createClosePayload;
+import static cool.scx.websocket.WebSocketOpCode.*;
 
 /// ScxWebSocket
 ///
@@ -14,34 +12,45 @@ import static cool.scx.websocket.WebSocketCloseInfo.NORMAL_CLOSE;
 /// @version 0.0.1
 public interface ScxWebSocket {
 
-    ScxWebSocket onTextMessage(TextMessageHandler textMessageHandler);
+    WebSocketFrame readFrame() throws WebSocketException;
 
-    ScxWebSocket onBinaryMessage(BinaryMessageHandler binaryMessageHandler);
-
-    ScxWebSocket onPing(Consumer<byte[]> pingHandler);
-
-    ScxWebSocket onPong(Consumer<byte[]> pongHandler);
-
-    ScxWebSocket onClose(CloseHandler closeHandler);
-
-    ScxWebSocket onError(Consumer<Throwable> errorHandler);
-
-    //以上回调设置完成之后调用以便启动 websocket 监听
-    void start();
-
-    ScxWebSocket send(String textMessage, boolean last);
-
-    ScxWebSocket send(byte[] binaryMessage, boolean last);
-
-    ScxWebSocket ping(byte[] data);
-
-    ScxWebSocket pong(byte[] data);
-
-    ScxWebSocket close(int code, String reason);
+    ScxWebSocket sendFrame(WebSocketFrame frame);
 
     ScxWebSocket terminate();
 
     boolean isClosed();
+
+    default ScxWebSocket send(String textMessage, boolean last) {
+        var payload = textMessage != null ? textMessage.getBytes() : new byte[]{};
+        var frame = WebSocketFrame.of(TEXT, payload, last);
+        sendFrame(frame);
+        return this;
+    }
+
+    default ScxWebSocket send(byte[] binaryMessage, boolean last) {
+        var frame = WebSocketFrame.of(BINARY, binaryMessage, last);
+        sendFrame(frame);
+        return this;
+    }
+
+    default ScxWebSocket ping(byte[] data) {
+        var frame = WebSocketFrame.of(PING, data);
+        sendFrame(frame);
+        return this;
+    }
+
+    default ScxWebSocket pong(byte[] data) {
+        var frame = WebSocketFrame.of(PONG, data);
+        sendFrame(frame);
+        return this;
+    }
+
+    default ScxWebSocket close(int code, String reason) {
+        var closePayload = createClosePayload(code, reason);
+        var frame = WebSocketFrame.of(CLOSE, closePayload);
+        sendFrame(frame);
+        return this;
+    }
 
     default ScxWebSocket send(String textMessage) {
         return send(textMessage, true);

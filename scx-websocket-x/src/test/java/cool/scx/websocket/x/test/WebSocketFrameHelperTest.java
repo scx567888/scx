@@ -4,8 +4,8 @@ import cool.scx.io.data_reader.LinkedDataReader;
 import cool.scx.io.data_supplier.ByteArrayDataSupplier;
 import cool.scx.io.exception.NoMoreDataException;
 import cool.scx.websocket.WebSocketOpCode;
-import cool.scx.websocket.x.WebSocketFrame;
-import cool.scx.websocket.x.WebSocketFrameHelper;
+import cool.scx.websocket.x.WebSocketProtocolFrame;
+import cool.scx.websocket.x.WebSocketProtocolFrameHelper;
 import org.testng.annotations.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -29,7 +29,7 @@ public class WebSocketFrameHelperTest {
                 'H', 'e', 'l', 'l', 'o'
         };
         var reader = new LinkedDataReader(new ByteArrayDataSupplier(frameData));
-        WebSocketFrame frame = WebSocketFrameHelper.readFrame(reader, Integer.MAX_VALUE);
+        var frame = WebSocketProtocolFrameHelper.readFrame(reader, Integer.MAX_VALUE);
 
         assertTrue(frame.fin());
         assertFalse(frame.rsv1());
@@ -43,9 +43,9 @@ public class WebSocketFrameHelperTest {
 
     @Test
     public static void testWriteFrame() throws IOException {
-        WebSocketFrame frame = WebSocketFrame.of(true, WebSocketOpCode.TEXT, new byte[]{'H', 'e', 'l', 'l', 'o'});
+        var frame = WebSocketProtocolFrame.of(true, WebSocketOpCode.TEXT, new byte[]{'H', 'e', 'l', 'l', 'o'});
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        WebSocketFrameHelper.writeFrame(frame, out);
+        WebSocketProtocolFrameHelper.writeFrame(frame, out);
         byte[] expectedFrame = {
                 (byte) 0b1000_0001, // FIN + Text frame
                 (byte) 0b0000_0101, // No mask, payload length = 5
@@ -65,7 +65,7 @@ public class WebSocketFrameHelperTest {
                 'l', 'o'
         };
         var reader = new LinkedDataReader(new ByteArrayDataSupplier(frameData));
-        var frame = WebSocketFrameHelper.readFrameUntilLast(reader, Integer.MAX_VALUE, Integer.MAX_VALUE);
+        var frame = WebSocketProtocolFrameHelper.readFrameUntilLast(reader, Integer.MAX_VALUE, Integer.MAX_VALUE);
 
         assertTrue(frame.fin());
         assertFalse(frame.rsv1());

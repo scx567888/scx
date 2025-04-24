@@ -1,11 +1,11 @@
 package cool.scx.web;
 
+import cool.scx.common.exception.ScxRuntimeException;
 import cool.scx.common.util.ClassUtils;
 import cool.scx.common.util.URIUtils;
 import cool.scx.http.routing.Route;
 import cool.scx.http.routing.Router;
 import cool.scx.web.annotation.ScxWebSocketRoute;
-import cool.scx.websocket.ScxServerWebSocketHandshakeRequest;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -40,12 +40,9 @@ public final class WebSocketRouteRegistrar {
         //todo 需要重新设计
         return Route.of().type(WEB_SOCKET_HANDSHAKE).order(order).path(path).handler((d) -> {
             try {
-                ScxServerWebSocketHandshakeRequest request = d.request();
-                var ws = request.webSocket();
-                o.onOpen(ws);
-                ws.start();
+                o.onHandshakeRequest(d.request());
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                throw new ScxRuntimeException(e);
             }
         });
     }
