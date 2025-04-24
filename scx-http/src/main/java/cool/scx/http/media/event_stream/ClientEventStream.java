@@ -11,6 +11,7 @@ import static cool.scx.http.media.event_stream.EventStreamHelper.LF_BYTES;
 import static cool.scx.io.IOHelper.inputStreamToDataReader;
 
 // todo 整体待重构
+// todo 这里参考 websocket 的设计 以流的形式来看待 然后 抽取出一个 EventClientEventStream 来承接事件模型
 // todo 这里和 MultiPartStream 一样 没有正确处理 inputStream 的关闭
 public class ClientEventStream {
 
