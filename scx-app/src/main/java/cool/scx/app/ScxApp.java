@@ -80,8 +80,8 @@ public final class ScxApp {
 
     private ScxAppHttpRouter scxHttpRouter = null;
 
-    private XHttpServerOptions httpServerOptions=null;
-    
+    private XHttpServerOptions httpServerOptions = null;
+
     private ScxHttpServer httpServer = null;
 
     ScxApp(ScxEnvironment scxEnvironment, String appKey, ScxFeatureConfig scxFeatureConfig, ScxConfig scxConfig, ScxAppModule[] scxModules, Object defaultHttpServerOptions) {
