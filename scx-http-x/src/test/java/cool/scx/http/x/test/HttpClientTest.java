@@ -2,7 +2,6 @@ package cool.scx.http.x.test;
 
 import cool.scx.http.x.XHttpClient;
 
-import static cool.scx.http.media.gzip.GzipBodyReader.GZIP_BODY_READER;
 import static cool.scx.http.method.HttpMethod.POST;
 
 public class HttpClientTest {

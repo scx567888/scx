@@ -11,7 +11,7 @@ public class GzipBodyReader implements MediaReader<GzipBody> {
     public static final GzipBodyReader GZIP_BODY_READER = new GzipBodyReader();
 
     private GzipBodyReader() {
-        
+
     }
 
     @Override

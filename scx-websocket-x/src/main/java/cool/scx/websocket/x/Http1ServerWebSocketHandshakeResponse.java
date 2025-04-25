@@ -56,8 +56,8 @@ public class Http1ServerWebSocketHandshakeResponse implements ScxServerWebSocket
     }
 
     @Override
-    public void send(MediaWriter writer) {
-        _response.send(writer);
+    public Void send(MediaWriter writer) {
+        return _response.send(writer);
     }
 
     @Override

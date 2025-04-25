@@ -72,13 +72,14 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
     }
 
     @Override
-    public void send(MediaWriter writer) {
+    public Void send(MediaWriter writer) {
         var expectedLength = writer.beforeWrite(headers, request.headers());
         try {
             writer.write(outputStream(expectedLength));
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
+        return null;
     }
 
     @Override
