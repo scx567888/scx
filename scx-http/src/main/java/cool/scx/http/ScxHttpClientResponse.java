@@ -1,6 +1,7 @@
 package cool.scx.http;
 
 import cool.scx.http.headers.ScxHttpHeaders;
+import cool.scx.http.easy.ScxHttpHeadersReader;
 import cool.scx.http.status.ScxHttpStatus;
 
 /// ScxHttpClientResponse

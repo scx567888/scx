@@ -1,6 +1,7 @@
 package cool.scx.http;
 
 import cool.scx.http.headers.ScxHttpHeaders;
+import cool.scx.http.easy.ScxHttpHeadersReader;
 import cool.scx.http.method.ScxHttpMethod;
 import cool.scx.http.parameters.Parameters;
 import cool.scx.http.peer_info.PeerInfo;

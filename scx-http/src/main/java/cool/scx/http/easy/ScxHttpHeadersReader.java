@@ -1,7 +1,8 @@
-package cool.scx.http;
+package cool.scx.http.easy;
 
 import cool.scx.http.headers.ScxHttpHeaderName;
 import cool.scx.http.headers.ScxHttpHeaders;
+import cool.scx.http.headers.content_encoding.ScxContentEncoding;
 import cool.scx.http.headers.cookie.Cookie;
 import cool.scx.http.headers.cookie.Cookies;
 import cool.scx.http.media_type.ScxMediaType;
@@ -23,6 +24,14 @@ public interface ScxHttpHeadersReader {
         return headers().contentType();
     }
 
+    default Long contentLength() {
+        return headers().contentLength();
+    }
+
+    default ScxContentEncoding contentEncoding() {
+        return headers().contentEncoding();
+    }
+
     default Cookies cookies() {
         return headers().cookies();
     }
@@ -30,5 +39,13 @@ public interface ScxHttpHeadersReader {
     default Cookie getCookie(String name) {
         return headers().getCookie(name);
     }
-    
+
+    default Cookies setCookies() {
+        return headers().setCookies();
+    }
+
+    default Cookie getSetCookie(String name) {
+        return headers().getSetCookie(name);
+    }
+
 }
