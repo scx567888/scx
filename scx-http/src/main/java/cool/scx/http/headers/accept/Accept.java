@@ -6,6 +6,7 @@ import cool.scx.http.media_type.ScxMediaType;
 ///
 /// @author scx567888
 /// @version 0.0.1
+@SuppressWarnings("unchecked")
 public interface Accept extends Iterable<MediaRange> {
 
     static AcceptWritable of(String acceptsStr) throws IllegalMediaRangeException {

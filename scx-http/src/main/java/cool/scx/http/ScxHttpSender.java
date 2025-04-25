@@ -77,7 +77,7 @@ public interface ScxHttpSender<T> {
         if (this instanceof GzipSender<T>) {
             return this;
         }
-        return new GzipSender<T>(this);
+        return new GzipSender<>(this);
     }
 
     //理论上只有 服务器才支持发送这种格式

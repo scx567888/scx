@@ -74,7 +74,7 @@ public final class ClassUtils {
 
     /// 根据 codeSource 获取 app 根路径(文件夹)
     ///
-    /// @param codeSource [#getCodeSource(Class)]
+    /// @param codeSource 参考 getCodeSource(Class)
     /// @return app 根路径(文件夹)
     public static Path getAppRoot(URI codeSource) {
         var path = Path.of(codeSource);
@@ -83,7 +83,7 @@ public final class ClassUtils {
 
     /// 根据 class 获取 app 根路径(文件夹)
     ///
-    /// @param source [#getCodeSource(Class)]
+    /// @param source s
     /// @return app 根路径(文件夹)
     public static Path getAppRoot(Class<?> source) {
         return getAppRoot(getCodeSource(source));
