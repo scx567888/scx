@@ -29,6 +29,7 @@ import cool.scx.websocket.routing.WebSocketTypeMatcher;
 import cool.scx.websocket.x.WebSocketUpgradeHandler;
 
 import javax.sql.DataSource;
+import java.io.UncheckedIOException;
 import java.lang.System.Logger;
 import java.net.BindException;
 import java.net.Inet4Address;
@@ -78,6 +79,8 @@ public final class ScxApp {
     private JDBCContext jdbcContext = null;
 
     private ScxAppHttpRouter scxHttpRouter = null;
+
+    private XHttpServerOptions httpServerOptions = null;
 
     private ScxHttpServer httpServer = null;
 
@@ -187,7 +190,7 @@ public final class ScxApp {
     }
 
     private ScxHttpServer createServer() {
-        var httpServerOptions = (this.defaultHttpServerOptions != null ? new XHttpServerOptions((XHttpServerOptions) this.defaultHttpServerOptions) : new XHttpServerOptions())
+        this.httpServerOptions = (this.defaultHttpServerOptions != null ? new XHttpServerOptions((XHttpServerOptions) this.defaultHttpServerOptions) : new XHttpServerOptions())
                 .maxPayloadSize(DEFAULT_BODY_LIMIT)
                 .port(this.scxOptions.port());
         if (this.scxOptions.isHttpsEnabled()) {
@@ -207,6 +210,7 @@ public final class ScxApp {
     /// @param port a int
     private void startServer(int port) {
         try {
+            this.httpServerOptions.port(port);
             this.httpServer.start();
             var httpOrHttps = this.scxOptions.isHttpsEnabled() ? "https" : "http";
             var o = Ansi.ansi().green("服务器启动成功... 用时 " + StopWatch.stopToMillis("ScxRun") + " ms").ln();
@@ -218,8 +222,7 @@ public final class ScxApp {
             }
             o.print();
         } catch (Exception cause) {
-            //todo 此处判断有误
-            if (cause instanceof BindException) {
+            if (cause instanceof UncheckedIOException && cause.getCause() instanceof BindException) {
                 //获取新的端口号然后 重新启动服务器
                 if (isUseNewPort(port)) {
                     startServer(0);

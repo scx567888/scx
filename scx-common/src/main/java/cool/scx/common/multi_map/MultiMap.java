@@ -10,6 +10,7 @@ import java.util.function.Supplier;
 /// @param <V> Value
 /// @author scx567888
 /// @version 0.0.1
+@SuppressWarnings("unchecked")
 public class MultiMap<K, V> implements IMultiMap<K, V> {
 
     private final Map<K, List<V>> map;
