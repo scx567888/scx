@@ -5,7 +5,6 @@ import cool.scx.http.ScxHttpClientResponse;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.media.MediaWriter;
-import cool.scx.http.method.HttpMethod;
 import cool.scx.http.method.ScxHttpMethod;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.uri.ScxURIWritable;
@@ -25,7 +24,7 @@ public class XHttpClientRequest implements ScxHttpClientRequest {
     private final XHttpClientOptions options;
 
     protected HttpVersion version;
-    protected HttpMethod method;
+    protected ScxHttpMethod method;
     protected ScxURIWritable uri;
     protected ScxHttpHeadersWritable headers;
 
@@ -94,7 +93,7 @@ public class XHttpClientRequest implements ScxHttpClientRequest {
     }
 
     @Override
-    public ScxHttpClientRequest method(HttpMethod method) {
+    public ScxHttpClientRequest method(ScxHttpMethod method) {
         this.method = method;
         return this;
     }
