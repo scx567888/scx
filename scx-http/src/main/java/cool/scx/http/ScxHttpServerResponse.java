@@ -2,6 +2,7 @@ package cool.scx.http;
 
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.easy.ScxHttpHeadersWriter;
+import cool.scx.http.media.MediaWriter;
 import cool.scx.http.status.ScxHttpStatus;
 
 /// ScxHttpServerResponse
@@ -14,11 +15,15 @@ public interface ScxHttpServerResponse extends ScxHttpSender<Void>, ScxHttpHeade
 
     ScxHttpStatus status();
 
+    @Override
     ScxHttpHeadersWritable headers();
 
     ScxHttpServerResponse status(ScxHttpStatus code);
 
     boolean isSent();
+
+    @Override
+    Void send(MediaWriter writer);
 
     //******************** 简化操作 *******************
 

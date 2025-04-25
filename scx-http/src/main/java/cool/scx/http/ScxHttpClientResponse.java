@@ -12,6 +12,7 @@ public interface ScxHttpClientResponse extends ScxHttpHeadersReader {
 
     ScxHttpStatus status();
 
+    @Override
     ScxHttpHeaders headers();
 
     ScxHttpBody body();

@@ -22,6 +22,7 @@ public interface ScxHttpServerRequest extends ScxHttpHeadersReader {
 
     HttpVersion version();
 
+    @Override
     ScxHttpHeaders headers();
 
     ScxHttpBody body();
