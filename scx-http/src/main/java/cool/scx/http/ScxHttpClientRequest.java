@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.http.headers.ScxHttpHeaderName;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
+import cool.scx.http.headers.content_encoding.ScxContentEncoding;
 import cool.scx.http.headers.cookie.Cookie;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.media.byte_array.ByteArrayWriter;
@@ -153,6 +154,15 @@ public interface ScxHttpClientRequest {
 
     default ScxHttpClientRequest contentLength(long contentLength) {
         headers().contentLength(contentLength);
+        return this;
+    }
+
+    default ScxContentEncoding contentEncoding() {
+        return headers().contentEncoding();
+    }
+
+    default ScxHttpClientRequest contentEncoding(ScxContentEncoding contentEncoding) {
+        headers().contentEncoding(contentEncoding);
         return this;
     }
 
