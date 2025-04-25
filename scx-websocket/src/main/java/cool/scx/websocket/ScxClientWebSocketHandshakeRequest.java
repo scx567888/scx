@@ -6,7 +6,6 @@ import cool.scx.http.headers.ScxHttpHeaderName;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.cookie.Cookie;
 import cool.scx.http.media.MediaWriter;
-import cool.scx.http.method.HttpMethod;
 import cool.scx.http.method.ScxHttpMethod;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.version.HttpVersion;
@@ -88,7 +87,7 @@ public interface ScxClientWebSocketHandshakeRequest extends ScxHttpClientRequest
     }
 
     @Override
-    default ScxHttpClientRequest method(HttpMethod method) {
+    default ScxHttpClientRequest method(ScxHttpMethod method) {
         throw new UnsupportedOperationException("Not supported Custom HttpMethod.");
     }
 
