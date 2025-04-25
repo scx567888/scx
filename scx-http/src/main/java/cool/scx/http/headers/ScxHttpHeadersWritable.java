@@ -1,6 +1,7 @@
 package cool.scx.http.headers;
 
 import cool.scx.http.headers.content_disposition.ContentDisposition;
+import cool.scx.http.headers.content_encoding.ScxContentEncoding;
 import cool.scx.http.headers.cookie.Cookie;
 import cool.scx.http.headers.cookie.Cookies;
 import cool.scx.http.headers.cookie.CookiesWritable;
@@ -86,6 +87,10 @@ public interface ScxHttpHeadersWritable extends ScxHttpHeaders, ParametersWritab
 
     default ScxHttpHeadersWritable contentLength(long contentLength) {
         return set(CONTENT_LENGTH, String.valueOf(contentLength));
+    }
+
+    default ScxHttpHeadersWritable contentEncoding(ScxContentEncoding contentEncoding) {
+        return set(CONTENT_ENCODING, contentEncoding.value());
     }
 
 }

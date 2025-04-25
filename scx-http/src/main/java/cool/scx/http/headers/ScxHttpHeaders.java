@@ -4,6 +4,7 @@ import cool.scx.http.exception.BadRequestException;
 import cool.scx.http.headers.accept.Accept;
 import cool.scx.http.headers.accept.IllegalMediaRangeException;
 import cool.scx.http.headers.content_disposition.ContentDisposition;
+import cool.scx.http.headers.content_encoding.ScxContentEncoding;
 import cool.scx.http.headers.cookie.Cookie;
 import cool.scx.http.headers.cookie.Cookies;
 import cool.scx.http.media_type.IllegalMediaTypeException;
@@ -95,6 +96,11 @@ public interface ScxHttpHeaders extends Parameters<ScxHttpHeaderName, String> {
         } catch (NumberFormatException e) {
             throw new BadRequestException("Invalid Content-Length: " + c, e);
         }
+    }
+
+    default ScxContentEncoding contentEncoding() {
+        var c = get(CONTENT_ENCODING);
+        return c != null ? ScxContentEncoding.of(c) : null;
     }
 
     default Cookie getCookie(String name) {
