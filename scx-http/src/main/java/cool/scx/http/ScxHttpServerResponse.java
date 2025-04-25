@@ -11,6 +11,7 @@ import cool.scx.http.media.event_stream.ServerEventStream;
 import cool.scx.http.media.event_stream.ServerEventStreamWriter;
 import cool.scx.http.media.form_params.FormParams;
 import cool.scx.http.media.form_params.FormParamsWriter;
+import cool.scx.http.media.gzip.ServerGzipSender;
 import cool.scx.http.media.input_stream.InputStreamWriter;
 import cool.scx.http.media.json_node.JsonNodeWriter;
 import cool.scx.http.media.multi_part.MultiPart;
@@ -95,6 +96,10 @@ public interface ScxHttpServerResponse {
         var writer = new ServerEventStreamWriter();
         send(writer);
         return writer.eventStream();
+    }
+
+    default ServerGzipSender sendGzip() {
+        return new ServerGzipSender(this);
     }
 
     //******************** 简化操作 *******************

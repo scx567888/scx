@@ -18,7 +18,6 @@ import java.io.UncheckedIOException;
 
 import static cool.scx.http.headers.HttpFieldName.HOST;
 import static cool.scx.http.x.http1.Http1Helper.checkRequestHasBody;
-import static cool.scx.http.x.http1.Http1Helper.decodeContent;
 import static cool.scx.http.x.http1.Http1Reader.*;
 import static cool.scx.http.x.http1.headers.transfer_encoding.TransferEncoding.CHUNKED;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -28,13 +27,13 @@ public class Http1ClientConnection {
     public final ScxTCPSocket tcpSocket;
     public final PowerfulLinkedDataReader dataReader;
     public final OutputStream dataWriter;
-    public final XHttpClientOptions options;
+    public final Http1ClientConnectionOptions options;
 
     public Http1ClientConnection(ScxTCPSocket tcpSocket, XHttpClientOptions options) {
         this.tcpSocket = tcpSocket;
         this.dataReader = new PowerfulLinkedDataReader(new InputStreamDataSupplier(tcpSocket.inputStream()));
         this.dataWriter = new NoCloseOutputStream(tcpSocket.outputStream());
-        this.options = options;
+        this.options = options.http1ConnectionOptions();
     }
 
     public Http1ClientConnection sendRequest(ScxHttpClientRequest request, MediaWriter writer) {
@@ -105,19 +104,13 @@ public class Http1ClientConnection {
 
     public ScxHttpClientResponse waitResponse() {
         //1, 读取状态行
-        var statusLine = readStatusLine(dataReader, options.http1ConnectionOptions().maxStatusLineSize());
+        var statusLine = readStatusLine(dataReader, options.maxStatusLineSize());
 
         //2, 读取响应头
-        var headers = readHeaders(dataReader, options.http1ConnectionOptions().maxHeaderSize());
+        var headers = readHeaders(dataReader, options.maxHeaderSize());
 
         //3, 读取响应体 todo 超出最大长度怎么办
-        var bodyInputStream = readBodyInputStream(headers, dataReader, options.http1ConnectionOptions().maxPayloadSize());
-
-        //4, 处理 contentEncoding
-        var contentEncoding = headers.contentEncoding();
-        if (contentEncoding != null) {
-            bodyInputStream = decodeContent(contentEncoding, options.contentCodecList(), bodyInputStream);
-        }
+        var bodyInputStream = readBodyInputStream(headers, dataReader, options.maxPayloadSize());
 
         return new Http1ClientResponse(statusLine, headers, bodyInputStream);
     }

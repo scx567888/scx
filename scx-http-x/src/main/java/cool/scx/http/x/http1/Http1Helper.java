@@ -1,14 +1,11 @@
 package cool.scx.http.x.http1;
 
 import cool.scx.http.exception.BadRequestException;
-import cool.scx.http.exception.UnsupportedMediaTypeException;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
-import cool.scx.http.headers.content_encoding.ScxContentEncoding;
 import cool.scx.http.method.ScxHttpMethod;
 import cool.scx.http.peer_info.PeerInfo;
 import cool.scx.http.peer_info.PeerInfoWritable;
 import cool.scx.http.status.ScxHttpStatus;
-import cool.scx.http.x.content_codec.HttpContentCodec;
 import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.http.x.http1.headers.upgrade.ScxUpgrade;
 import cool.scx.http.x.http1.request_line.Http1RequestLine;
@@ -18,7 +15,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 
 import static cool.scx.common.util.StringUtils.isBlank;
 import static cool.scx.http.headers.HttpFieldName.HOST;
@@ -86,19 +82,6 @@ public final class Http1Helper {
 
     public static boolean checkRequestHasBody(ScxHttpMethod method) {
         return GET != method;
-    }
-
-    /// 处理解码
-    ///
-    /// @return 处理后的编码
-    public static InputStream decodeContent(ScxContentEncoding scxContentEncoding, List<HttpContentCodec> contentCodecs, InputStream inputStream) {
-        for (var contentCodec : contentCodecs) {
-            var b = contentCodec.canHandle(scxContentEncoding);
-            if (b) {
-                return contentCodec.decode(inputStream);
-            }
-        }
-        throw new UnsupportedMediaTypeException("unsupported content encoding : " + scxContentEncoding);
     }
 
 }

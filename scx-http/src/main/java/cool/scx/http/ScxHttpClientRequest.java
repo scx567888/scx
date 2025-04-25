@@ -10,6 +10,7 @@ import cool.scx.http.media.MediaWriter;
 import cool.scx.http.media.byte_array.ByteArrayWriter;
 import cool.scx.http.media.form_params.FormParams;
 import cool.scx.http.media.form_params.FormParamsWriter;
+import cool.scx.http.media.gzip.ClientGzipSender;
 import cool.scx.http.media.input_stream.InputStreamWriter;
 import cool.scx.http.media.json_node.JsonNodeWriter;
 import cool.scx.http.media.multi_part.MultiPart;
@@ -100,6 +101,9 @@ public interface ScxHttpClientRequest {
         return send(new ObjectWriter(object));
     }
 
+    default ClientGzipSender sendGzip() {
+        return new ClientGzipSender(this);
+    }
 
     //******************** 简化操作 *******************
 

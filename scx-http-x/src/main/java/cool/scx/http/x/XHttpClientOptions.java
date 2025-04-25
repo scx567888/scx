@@ -1,15 +1,8 @@
 package cool.scx.http.x;
 
-import cool.scx.http.x.content_codec.HttpContentCodec;
 import cool.scx.http.x.http1.Http1ClientConnectionOptions;
 import cool.scx.tcp.ScxTCPClientOptions;
 import cool.scx.tcp.tls.TLS;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static cool.scx.http.x.content_codec.GZipContentCodec.GZIP_CONTENT_CODEC;
-import static java.util.Collections.addAll;
 
 /// XHttpClientOptions
 ///
@@ -21,15 +14,12 @@ public class XHttpClientOptions {
     private final Http1ClientConnectionOptions http1ConnectionOptions;// Http1 配置
     private TCPClientType tcpClientType;// TCP 客户端类型
     private boolean enableHttp2; // 是否开启 Http2
-    private List<HttpContentCodec> contentCodecList;//内容编解码器列表
 
     public XHttpClientOptions() {
         this.tcpClientOptions = new ScxTCPClientOptions().autoUpgradeToTLS(true).autoHandshake(false);
         this.http1ConnectionOptions = new Http1ClientConnectionOptions();
         this.tcpClientType = TCPClientType.CLASSIC;
-        this.enableHttp2 = false;//默认不启用 http2 
-        this.contentCodecList = new ArrayList<>();
-        addContentCodecList(GZIP_CONTENT_CODEC);// 默认支持 GZIP
+        this.enableHttp2 = false;//默认不启用 http2
     }
 
     public XHttpClientOptions(XHttpClientOptions oldOptions) {
@@ -37,7 +27,6 @@ public class XHttpClientOptions {
         this.http1ConnectionOptions = new Http1ClientConnectionOptions(oldOptions.http1ConnectionOptions());
         tcpClientType(oldOptions.tcpClientType());
         enableHttp2(oldOptions.enableHttp2());
-        contentCodecList(oldOptions.contentCodecList());
     }
 
     public Http1ClientConnectionOptions http1ConnectionOptions() {
@@ -73,20 +62,6 @@ public class XHttpClientOptions {
 
     public XHttpClientOptions tls(TLS tls) {
         this.tcpClientOptions.tls(tls);
-        return this;
-    }
-
-    public List<HttpContentCodec> contentCodecList() {
-        return contentCodecList;
-    }
-
-    public XHttpClientOptions contentCodecList(List<HttpContentCodec> contentCodecList) {
-        this.contentCodecList = contentCodecList;
-        return this;
-    }
-
-    public XHttpClientOptions addContentCodecList(HttpContentCodec... contentCodecList) {
-        addAll(this.contentCodecList, contentCodecList);
         return this;
     }
 

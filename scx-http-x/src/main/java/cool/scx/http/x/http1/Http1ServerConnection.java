@@ -110,13 +110,7 @@ public class Http1ServerConnection {
             validateHost(headers);
         }
 
-        // 4.2 处理 contentEncoding
-        var contentEncoding = headers.contentEncoding();
-        if (contentEncoding != null) {
-            bodyInputStream = decodeContent(contentEncoding, options.contentCodecList(), bodyInputStream);
-        }
-
-        // 4.3, 处理 100-continue 临时请求
+        // 4.2, 处理 100-continue 临时请求
         if (headers.expect() == CONTINUE) {
             //如果启用了自动响应 我们直接发送
             if (options.autoRespond100Continue()) {
