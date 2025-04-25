@@ -67,5 +67,5 @@ public interface ScxHttpHeadersWriter<T extends ScxHttpHeadersWriter<T>> extends
         headers().removeSetCookie(name);
         return (T) this;
     }
-    
+
 }
