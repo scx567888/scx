@@ -1,12 +1,13 @@
-package cool.scx.http.media.gzip;
+package cool.scx.http;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import cool.scx.http.ScxHttpClientRequest;
-import cool.scx.http.ScxHttpClientResponse;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.media.byte_array.ByteArrayWriter;
+import cool.scx.http.media.event_stream.ServerEventStream;
+import cool.scx.http.media.event_stream.ServerEventStreamWriter;
 import cool.scx.http.media.form_params.FormParams;
 import cool.scx.http.media.form_params.FormParamsWriter;
+import cool.scx.http.media.gzip.GzipSender;
 import cool.scx.http.media.input_stream.InputStreamWriter;
 import cool.scx.http.media.json_node.JsonNodeWriter;
 import cool.scx.http.media.multi_part.MultiPart;
@@ -21,60 +22,69 @@ import java.nio.file.Path;
 
 import static cool.scx.http.media.empty.EmptyWriter.EMPTY_WRITER;
 
-public class ClientGzipSender {
+public interface ScxHttpSender<T> {
 
-    private final ScxHttpClientRequest clientRequest;
+    T send(MediaWriter writer);
 
-    public ClientGzipSender(ScxHttpClientRequest clientRequest) {
-        this.clientRequest = clientRequest;
-    }
+    //******************** send 操作 *******************
 
-    public ScxHttpClientResponse send(MediaWriter writer) {
-        return this.clientRequest.send(new GzipWriter(writer));
-    }
-
-    public ScxHttpClientResponse send() {
+    default T send() {
         return send(EMPTY_WRITER);
     }
 
-    public ScxHttpClientResponse send(byte[] bytes) {
+    default T send(byte[] bytes) {
         return send(new ByteArrayWriter(bytes));
     }
 
-    public ScxHttpClientResponse send(String str) {
+    default T send(String str) {
         return send(new StringWriter(str));
     }
 
-    public ScxHttpClientResponse send(String str, Charset charset) {
+    default T send(String str, Charset charset) {
         return send(new StringWriter(str, charset));
     }
 
-    public ScxHttpClientResponse send(Path path) {
+    default T send(Path path) {
         return send(new PathWriter(path));
     }
 
-    public ScxHttpClientResponse send(Path path, long offset, long length) {
+    default T send(Path path, long offset, long length) {
         return send(new PathWriter(path, offset, length));
     }
 
-    public ScxHttpClientResponse send(InputStream inputStream) {
+    default T send(InputStream inputStream) {
         return send(new InputStreamWriter(inputStream));
     }
 
-    public ScxHttpClientResponse send(FormParams formParams) {
+    default T send(FormParams formParams) {
         return send(new FormParamsWriter(formParams));
     }
 
-    public ScxHttpClientResponse send(MultiPart multiPart) {
+    default T send(MultiPart multiPart) {
         return send(new MultiPartWriter(multiPart));
     }
 
-    public ScxHttpClientResponse send(JsonNode jsonNode) {
+    default T send(JsonNode jsonNode) {
         return send(new JsonNodeWriter(jsonNode));
     }
 
-    public ScxHttpClientResponse send(Object object) {
+    default T send(Object object) {
         return send(new ObjectWriter(object));
+    }
+
+    default ScxHttpSender<T> sendGzip() {
+        //禁止多次包装
+        if (this instanceof GzipSender<T>) {
+            return this;
+        }
+        return new GzipSender<T>(this);
+    }
+
+    //理论上只有 服务器才支持发送这种格式
+    default ServerEventStream sendEventStream() {
+        var writer = new ServerEventStreamWriter();
+        send(writer);
+        return writer.eventStream();
     }
 
 }
