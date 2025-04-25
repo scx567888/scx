@@ -1,14 +1,12 @@
-package cool.scx.http.easy;
+package cool.scx.http.headers;
 
-import cool.scx.http.headers.ScxHttpHeaderName;
-import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.headers.content_encoding.ScxContentEncoding;
 import cool.scx.http.headers.cookie.Cookie;
 import cool.scx.http.media_type.ScxMediaType;
 
 /// 这只是一个帮助类 用于简化 header 的写入
 @SuppressWarnings("unchecked")
-public interface ScxHttpHeadersWriter<T extends ScxHttpHeadersWriter<T>> extends ScxHttpHeadersReader {
+public interface ScxHttpHeadersWriteHelper<T extends ScxHttpHeadersWriteHelper<T>> extends ScxHttpHeadersReadHelper {
 
     @Override
     ScxHttpHeadersWritable headers();

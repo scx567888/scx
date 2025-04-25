@@ -1,6 +1,6 @@
 package cool.scx.http;
 
-import cool.scx.http.easy.ScxHttpHeadersReader;
+import cool.scx.http.headers.ScxHttpHeadersReadHelper;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.method.ScxHttpMethod;
 import cool.scx.http.parameters.Parameters;
@@ -12,7 +12,7 @@ import cool.scx.http.version.HttpVersion;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public interface ScxHttpServerRequest extends ScxHttpHeadersReader {
+public interface ScxHttpServerRequest extends ScxHttpHeadersReadHelper {
 
     ScxHttpServerResponse response();
 

@@ -1,6 +1,6 @@
 package cool.scx.http;
 
-import cool.scx.http.easy.ScxHttpHeadersWriter;
+import cool.scx.http.headers.ScxHttpHeadersWriteHelper;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.media.MediaWriter;
@@ -13,7 +13,7 @@ import cool.scx.http.version.HttpVersion;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public interface ScxHttpClientRequest extends ScxHttpSender<ScxHttpClientResponse>, ScxHttpHeadersWriter<ScxHttpClientRequest> {
+public interface ScxHttpClientRequest extends ScxHttpSender<ScxHttpClientResponse>, ScxHttpHeadersWriteHelper<ScxHttpClientRequest> {
 
     HttpVersion version();
 
