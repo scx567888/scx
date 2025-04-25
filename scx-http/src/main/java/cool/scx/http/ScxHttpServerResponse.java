@@ -3,6 +3,7 @@ package cool.scx.http;
 import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.http.headers.ScxHttpHeaderName;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
+import cool.scx.http.headers.content_encoding.ScxContentEncoding;
 import cool.scx.http.headers.cookie.Cookie;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.media.byte_array.ByteArrayWriter;
@@ -10,6 +11,7 @@ import cool.scx.http.media.event_stream.ServerEventStream;
 import cool.scx.http.media.event_stream.ServerEventStreamWriter;
 import cool.scx.http.media.form_params.FormParams;
 import cool.scx.http.media.form_params.FormParamsWriter;
+import cool.scx.http.media.gzip.ServerGzipSender;
 import cool.scx.http.media.input_stream.InputStreamWriter;
 import cool.scx.http.media.json_node.JsonNodeWriter;
 import cool.scx.http.media.multi_part.MultiPart;
@@ -96,6 +98,10 @@ public interface ScxHttpServerResponse {
         return writer.eventStream();
     }
 
+    default ServerGzipSender sendGzip() {
+        return new ServerGzipSender(this);
+    }
+
     //******************** 简化操作 *******************
 
     default ScxHttpServerResponse status(int code) {
@@ -149,6 +155,15 @@ public interface ScxHttpServerResponse {
 
     default ScxHttpServerResponse contentLength(long contentLength) {
         headers().contentLength(contentLength);
+        return this;
+    }
+
+    default ScxContentEncoding contentEncoding() {
+        return headers().contentEncoding();
+    }
+
+    default ScxHttpServerResponse contentEncoding(ScxContentEncoding contentEncoding) {
+        headers().contentEncoding(contentEncoding);
         return this;
     }
 
