@@ -10,5 +10,5 @@ record ScxUpgradeImpl(String value) implements ScxUpgrade {
     public String toString() {
         return value;
     }
-    
+
 }
