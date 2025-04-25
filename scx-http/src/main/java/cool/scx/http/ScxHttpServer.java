@@ -13,6 +13,7 @@ public interface ScxHttpServer {
 
     ScxHttpServer onRequest(Consumer<ScxHttpServerRequest> requestHandler);
 
+    /// 只在连接可能可用时调用, 若远端断开连接,或其他网络中断类错误 则不会触发
     ScxHttpServer onError(ScxHttpServerErrorHandler errorHandler);
 
     void start();
