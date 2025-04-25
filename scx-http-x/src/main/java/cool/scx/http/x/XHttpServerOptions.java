@@ -1,12 +1,17 @@
 package cool.scx.http.x;
 
+import cool.scx.http.x.content_codec.HttpContentCodec;
 import cool.scx.http.x.http1.Http1ServerConnectionOptions;
 import cool.scx.http.x.http1.Http1UpgradeHandler;
 import cool.scx.tcp.ScxTCPServerOptions;
 import cool.scx.tcp.tls.TLS;
 
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
 import java.util.List;
+
+import static cool.scx.http.x.content_codec.GZipContentCodec.GZIP_CONTENT_CODEC;
+import static java.util.Collections.addAll;
 
 /// Http 服务器配置
 ///
@@ -18,6 +23,7 @@ public class XHttpServerOptions {
     private final Http1ServerConnectionOptions http1ConnectionOptions;// Http1 配置
     private TCPServerType tcpServerType; // TCP 服务器类型
     private boolean enableHttp2; // 是否开启 Http2
+    private List<HttpContentCodec> contentCodecList;//内容编解码器列表
 
     public XHttpServerOptions() {
         //默认不自动握手
@@ -25,6 +31,8 @@ public class XHttpServerOptions {
         this.http1ConnectionOptions = new Http1ServerConnectionOptions();
         this.tcpServerType = TCPServerType.CLASSIC; // 默认 使用 CLASSIC 实现
         this.enableHttp2 = false;//默认不启用 http2
+        this.contentCodecList = new ArrayList<>();
+        addContentCodecList(GZIP_CONTENT_CODEC);// 默认支持 GZIP
     }
 
     public XHttpServerOptions(XHttpServerOptions oldOptions) {
@@ -33,6 +41,7 @@ public class XHttpServerOptions {
         this.http1ConnectionOptions = new Http1ServerConnectionOptions(oldOptions.http1ConnectionOptions());
         tcpServerType(oldOptions.tcpServerType());
         enableHttp2(oldOptions.enableHttp2());
+        contentCodecList(oldOptions.contentCodecList());
     }
 
     //因为涉及到一些底层实现, 所以不允许外界访问
@@ -150,6 +159,20 @@ public class XHttpServerOptions {
 
     public XHttpServerOptions port(int port) {
         tcpServerOptions.port(port);
+        return this;
+    }
+
+    public List<HttpContentCodec> contentCodecList() {
+        return contentCodecList;
+    }
+
+    public XHttpServerOptions contentCodecList(List<HttpContentCodec> contentCodecList) {
+        this.contentCodecList = contentCodecList;
+        return this;
+    }
+
+    public XHttpServerOptions addContentCodecList(HttpContentCodec... contentCodecList) {
+        addAll(this.contentCodecList, contentCodecList);
         return this;
     }
 

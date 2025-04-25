@@ -24,7 +24,7 @@ public class PowerfulLinkedDataReader extends LinkedDataReader {
         }
         var b = head.bytes[head.position];
         head.position = head.position + 1;
-        return b;
+        return b & 0xFF;
     }
 
     // InputStream 写法的 read
