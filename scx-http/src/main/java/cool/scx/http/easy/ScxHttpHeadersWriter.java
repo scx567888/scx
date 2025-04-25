@@ -1,4 +1,4 @@
-package cool.scx.http;
+package cool.scx.http.easy;
 
 import cool.scx.http.headers.ScxHttpHeaderName;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
@@ -7,8 +7,10 @@ import cool.scx.http.headers.cookie.Cookie;
 import cool.scx.http.media_type.ScxMediaType;
 
 /// 这只是一个帮助类 用于简化 header 的写入
-public interface ScxHttpHeadersWriter<T extends ScxHttpHeadersWriter<T>> {
+@SuppressWarnings("unchecked")
+public interface ScxHttpHeadersWriter<T extends ScxHttpHeadersWriter<T>> extends ScxHttpHeadersReader {
 
+    @Override
     ScxHttpHeadersWritable headers();
 
     default T setHeader(ScxHttpHeaderName headerName, String... values) {
@@ -31,27 +33,9 @@ public interface ScxHttpHeadersWriter<T extends ScxHttpHeadersWriter<T>> {
         return (T) this;
     }
 
-    default T addSetCookie(Cookie... cookie) {
-        headers().addSetCookie(cookie);
-        return (T) this;
-    }
-
-    default T removeSetCookie(String name) {
-        headers().removeSetCookie(name);
-        return (T) this;
-    }
-
-    default ScxMediaType contentType() {
-        return headers().contentType();
-    }
-
     default T contentType(ScxMediaType contentType) {
         headers().contentType(contentType);
         return (T) this;
-    }
-
-    default Long contentLength() {
-        return headers().contentLength();
     }
 
     default T contentLength(long contentLength) {
@@ -59,12 +43,28 @@ public interface ScxHttpHeadersWriter<T extends ScxHttpHeadersWriter<T>> {
         return (T) this;
     }
 
-    default ScxContentEncoding contentEncoding() {
-        return headers().contentEncoding();
-    }
-
     default T contentEncoding(ScxContentEncoding contentEncoding) {
         headers().contentEncoding(contentEncoding);
+        return (T) this;
+    }
+
+    default T addCookie(Cookie... cookie) {
+        headers().addCookie(cookie);
+        return (T) this;
+    }
+
+    default T removeCookie(String name) {
+        headers().removeCookie(name);
+        return (T) this;
+    }
+
+    default T addSetCookie(Cookie... cookie) {
+        headers().addSetCookie(cookie);
+        return (T) this;
+    }
+
+    default T removeSetCookie(String name) {
+        headers().removeSetCookie(name);
         return (T) this;
     }
     
