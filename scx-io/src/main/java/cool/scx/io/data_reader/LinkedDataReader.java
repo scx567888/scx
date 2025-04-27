@@ -341,14 +341,17 @@ public class LinkedDataReader implements DataReader {
 
     @Override
     public int inputStreamRead(byte[] b, int off, int len) {
+        var maxPullCount = 1;
         if (len > 0) {
-            var r = ensureAvailable();
-            if (!r) {
+            var pullCount = ensureAvailable(maxPullCount);
+            if (pullCount == -1) {
                 return -1;
+            } else {
+                maxPullCount = maxPullCount - pullCount;
             }
         }
         var consumer = new FillByteArrayDataConsumer(b, off, len);
-        walk(consumer, len, true);
+        walk(consumer, len, true, maxPullCount);
         return consumer.getFilledLength();
     }
 
