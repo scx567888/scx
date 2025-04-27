@@ -7,6 +7,7 @@ package cool.scx.io.data_node;
 public class DataNode {
 
     public final byte[] bytes;
+    public final int start;
     public final int limit;
     public int position;
     public DataNode next;
@@ -15,10 +16,11 @@ public class DataNode {
         this(bytes, 0, bytes.length);
     }
 
-    public DataNode(byte[] bytes, int position, int limit) {
+    public DataNode(byte[] bytes, int start, int limit) {
         this.bytes = bytes;
-        this.position = position;
+        this.start = start;
         this.limit = limit;
+        this.position = start;
     }
 
     public int available() {
@@ -27,6 +29,10 @@ public class DataNode {
 
     public boolean hasAvailable() {
         return position < limit;
+    }
+
+    public void reset() {
+        position = start;
     }
 
     @Override
