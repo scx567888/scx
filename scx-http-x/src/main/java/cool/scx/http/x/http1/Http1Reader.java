@@ -48,7 +48,7 @@ final class Http1Reader {
             if (contentLength > maxPayloadSize) {
                 throw new ContentTooLargeException();
             }
-            return new DataReaderInputStream(new FixedLengthDataSupplier(dataReader,contentLength));
+            return new DataReaderInputStream(new FixedLengthDataSupplier(dataReader, contentLength));
         }
 
         //3, 没有长度的空请求体
