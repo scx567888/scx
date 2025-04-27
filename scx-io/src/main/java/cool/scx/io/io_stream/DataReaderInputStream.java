@@ -42,6 +42,21 @@ public class DataReaderInputStream extends CheckedInputStream {
     }
 
     @Override
+    public void mark(int readlimit) {
+        dataReader.mark();
+    }
+
+    @Override
+    public void reset() throws IOException {
+        dataReader.reset();
+    }
+
+    @Override
+    public boolean markSupported() {
+        return true;
+    }
+
+    @Override
     public void close() throws IOException {
         closed = true;
     }
