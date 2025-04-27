@@ -8,7 +8,8 @@ import cool.scx.http.uri.ScxURI;
 import cool.scx.http.x.XHttpServerOptions;
 import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.http.x.http1.request_line.Http1RequestLine;
-import cool.scx.io.data_reader.PowerfulLinkedDataReader;
+import cool.scx.io.data_reader.DataReader;
+import cool.scx.io.data_reader.LinkedDataReader;
 import cool.scx.io.data_supplier.InputStreamDataSupplier;
 import cool.scx.tcp.ScxTCPSocket;
 
@@ -39,7 +40,7 @@ public class Http1ServerConnection {
 
     public final ScxTCPSocket tcpSocket;
     public final XHttpServerOptions options;
-    public final PowerfulLinkedDataReader dataReader;
+    public final DataReader dataReader;
     public final OutputStream dataWriter;
 
     private final Consumer<ScxHttpServerRequest> requestHandler;
@@ -51,7 +52,7 @@ public class Http1ServerConnection {
         this.options = options;
         this.requestHandler = requestHandler;
         this.errorHandler = errorHandler;
-        this.dataReader = new PowerfulLinkedDataReader(new InputStreamDataSupplier(this.tcpSocket.inputStream()));
+        this.dataReader = new LinkedDataReader(new InputStreamDataSupplier(this.tcpSocket.inputStream()));
         this.dataWriter = this.tcpSocket.outputStream();
         this.running = true;
     }

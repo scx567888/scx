@@ -14,7 +14,6 @@ import cool.scx.http.x.http1.status_line.Http1StatusLine;
 import cool.scx.http.x.http1.status_line.InvalidHttpStatusException;
 import cool.scx.http.x.http1.status_line.InvalidHttpStatusLineException;
 import cool.scx.io.data_reader.DataReader;
-import cool.scx.io.data_reader.PowerfulLinkedDataReader;
 import cool.scx.io.exception.NoMatchFoundException;
 import cool.scx.io.exception.NoMoreDataException;
 import cool.scx.io.io_stream.DataReaderInputStream;
@@ -33,7 +32,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 /// 读取 HTTP/1.1 请求或响应内容工具类
 final class Http1Reader {
 
-    public static InputStream readBodyInputStream(Http1Headers headers, PowerfulLinkedDataReader dataReader, long maxPayloadSize) {
+    public static InputStream readBodyInputStream(Http1Headers headers, DataReader dataReader, long maxPayloadSize) {
         // HTTP/1.1 本质上只有两种请求体格式 1, 分块传输 2, 指定长度 (当然也可以没有长度 那就表示没有请求体)
 
         //1, 因为 分块传输的优先级高于 contentLength 所以先判断是否为分块传输
