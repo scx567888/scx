@@ -76,6 +76,34 @@ public class LinkedDataReader implements DataReader {
         }
     }
 
+    public int ensureAvailable(int maxPullCount) {
+        var pullCount = 0;
+        while (!head.hasAvailable()) {
+            if (head.next == null) {
+                if (pullCount >= maxPullCount) {
+                    break;
+                }
+                var result = this.pullData();
+                if (!result) {
+                    return -1;
+                } else {
+                    pullCount = pullCount + 1;
+                }
+            }
+            head = head.next;
+        }
+        return pullCount;
+    }
+
+    public int ensureAvailableOrThrow(int maxPullCount) throws NoMoreDataException {
+        var b = ensureAvailable(maxPullCount);
+        if (b == -1) {
+            throw new NoMoreDataException();
+        } else {
+            return b;
+        }
+    }
+
     public void walk(DataConsumer consumer, long maxLength, boolean movePointer) {
 
         var remaining = maxLength; // 剩余需要读取的字节数
@@ -104,6 +132,50 @@ public class LinkedDataReader implements DataReader {
                     var result = this.pullData();
                     if (!result) {
                         break;
+                    }
+                }
+                n = n.next;
+                if (movePointer) {
+                    head = n;
+                }
+            }
+        }
+    }
+
+    public void walk(DataConsumer consumer, long maxLength, boolean movePointer, int maxPullCount) {
+
+        var remaining = maxLength; // 剩余需要读取的字节数
+        var n = head; // 用于循环的节点
+        var pullCount = 0; // 拉取次数计数器
+
+        // 循环有 2 种情况会退出
+        // 1, 已经读取到足够的数据
+        // 2, 没有更多数据可读了
+        while (remaining > 0) {
+            // 计算当前节点可以读取的长度 (这里因为是将 int 和 long 值进行最小值比较 所以返回值一定是 int 所以类型转换不会丢失精度) 
+            var length = (int) min(remaining, n.available());
+            // 写入数据
+            consumer.accept(n.bytes, n.position, length);
+            // 计算剩余字节数
+            remaining -= length;
+
+            if (movePointer) {
+                // 移动当前节点的指针位置
+                n.position += length;
+            }
+
+            // 如果 remaining > 0 说明还需要继续读取
+            if (remaining > 0) {
+                if (n.next == null) {
+                    if (pullCount >= maxPullCount) {
+                        break;
+                    }
+                    // 如果 当前节点没有下一个节点 并且拉取失败 则退出循环
+                    var result = this.pullData();
+                    if (!result) {
+                        break;
+                    } else {
+                        pullCount = pullCount + 1;
                     }
                 }
                 n = n.next;
@@ -173,6 +245,17 @@ public class LinkedDataReader implements DataReader {
             ensureAvailableOrThrow();
         }
         walk(dataConsumer, maxLength, true);
+    }
+
+    @Override
+    public byte[] read(int maxLength, int maxPullCount) throws NoMoreDataException {
+        if (maxLength > 0) {
+            var pullCount = ensureAvailableOrThrow(maxPullCount);
+            maxPullCount = maxPullCount - pullCount;
+        }
+        var consumer = new ByteArrayDataConsumer();
+        walk(consumer, maxLength, true, maxPullCount);
+        return consumer.getBytes();
     }
 
     @Override

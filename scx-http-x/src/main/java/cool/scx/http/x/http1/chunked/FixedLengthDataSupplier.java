@@ -25,7 +25,7 @@ public class FixedLengthDataSupplier implements DataSupplier {
         try {
             // 每次尽量多读一点，但不能超过 remaining
             int readLength = (int) min(8192, remaining); // 8 KB 一块，可以调整
-            var bytes = dataReader.read(readLength);
+            var bytes = dataReader.read(readLength, 1);//我们只尝试拉取一次 
             remaining -= bytes.length;
             return new DataNode(bytes);
         } catch (NoMoreDataException e) {

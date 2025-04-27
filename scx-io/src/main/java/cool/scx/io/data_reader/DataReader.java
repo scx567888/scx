@@ -36,6 +36,9 @@ public interface DataReader {
     /// @throws NoMoreDataException 没有更多数据时抛出
     void read(DataConsumer dataConsumer, long maxLength) throws NoMoreDataException;
 
+    /// 指定拉取次数的读取
+    byte[] read(int maxLength, int maxPullCount) throws NoMoreDataException;
+
     /// 向 dataConsumer 写入指定长度字节 (指针不会移动)
     /// 当没有更多的数据时会抛出异常
     ///
