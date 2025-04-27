@@ -1,6 +1,7 @@
 package cool.scx.io.io_stream;
 
-import cool.scx.io.data_reader.PowerfulLinkedDataReader;
+import cool.scx.io.data_reader.DataReader;
+import cool.scx.io.data_reader.LinkedDataReader;
 import cool.scx.io.data_supplier.DataSupplier;
 
 import java.io.IOException;
@@ -8,14 +9,14 @@ import java.io.OutputStream;
 
 public class DataReaderInputStream extends CheckedInputStream {
 
-    private final PowerfulLinkedDataReader dataReader;
+    private final DataReader dataReader;
 
-    public DataReaderInputStream(PowerfulLinkedDataReader dataReader) {
+    public DataReaderInputStream(DataReader dataReader) {
         this.dataReader = dataReader;
     }
 
     public DataReaderInputStream(DataSupplier dataSupplier) {
-        this.dataReader = new PowerfulLinkedDataReader(dataSupplier);
+        this.dataReader = new LinkedDataReader(dataSupplier);
     }
 
     @Override
@@ -36,7 +37,7 @@ public class DataReaderInputStream extends CheckedInputStream {
         return dataReader.inputStreamTransferTo(out);
     }
 
-    public PowerfulLinkedDataReader dataReader() {
+    public DataReader dataReader() {
         return dataReader;
     }
 

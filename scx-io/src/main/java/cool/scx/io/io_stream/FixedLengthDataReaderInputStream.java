@@ -1,6 +1,6 @@
 package cool.scx.io.io_stream;
 
-import cool.scx.io.data_reader.PowerfulLinkedDataReader;
+import cool.scx.io.data_reader.DataReader;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -11,12 +11,11 @@ import java.io.OutputStream;
 /// @version 0.0.1
 public class FixedLengthDataReaderInputStream extends CheckedInputStream {
 
-    private final PowerfulLinkedDataReader dataReader;
+    private final DataReader dataReader;
     private final long maxLength;
     private long position;
-    private volatile boolean closed;
 
-    public FixedLengthDataReaderInputStream(PowerfulLinkedDataReader dataReader, long maxLength) {
+    public FixedLengthDataReaderInputStream(DataReader dataReader, long maxLength) {
         this.dataReader = dataReader;
         this.maxLength = maxLength;
         this.position = 0;
