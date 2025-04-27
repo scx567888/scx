@@ -1,4 +1,4 @@
-package cool.scx.http.x.http1.chunked;
+package cool.scx.http.x.http1.fixed_length;
 
 import cool.scx.io.data_node.DataNode;
 import cool.scx.io.data_reader.DataReader;
