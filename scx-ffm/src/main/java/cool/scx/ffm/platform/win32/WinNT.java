@@ -14,11 +14,10 @@ public final class WinNT {
     public static final int SYNCHRONIZE = 0x00100000;
     public static final int STANDARD_RIGHTS_REQUIRED = 0x000F0000;
     public static final int STANDARD_RIGHTS_READ = READ_CONTROL;
-    public static final int KEY_READ = (STANDARD_RIGHTS_READ | KEY_QUERY_VALUE | KEY_ENUMERATE_SUB_KEYS | KEY_NOTIFY) & (~SYNCHRONIZE);
     public static final int STANDARD_RIGHTS_WRITE = READ_CONTROL;
-    public static final int KEY_WRITE = (STANDARD_RIGHTS_WRITE | KEY_SET_VALUE | KEY_CREATE_SUB_KEY) & (~SYNCHRONIZE);
     public static final int STANDARD_RIGHTS_EXECUTE = READ_CONTROL;
     public static final int STANDARD_RIGHTS_ALL = 0x001F0000;
+
     // 注册表键访问权限常量
     public static final int KEY_QUERY_VALUE = 0x0001;
     public static final int KEY_SET_VALUE = 0x0002;
@@ -29,6 +28,9 @@ public final class WinNT {
     public static final int KEY_WOW64_32KEY = 0x0200;
     public static final int KEY_WOW64_64KEY = 0x0100;
     public static final int KEY_WOW64_RES = 0x0300;
+    public static final int KEY_READ = (STANDARD_RIGHTS_READ | KEY_QUERY_VALUE | KEY_ENUMERATE_SUB_KEYS | KEY_NOTIFY) & (~SYNCHRONIZE);
+    public static final int KEY_WRITE = (STANDARD_RIGHTS_WRITE | KEY_SET_VALUE | KEY_CREATE_SUB_KEY) & (~SYNCHRONIZE);
+
     // 注册表值类型常量
     public static final int REG_NONE = 0;
     public static final int REG_SZ = 1;
