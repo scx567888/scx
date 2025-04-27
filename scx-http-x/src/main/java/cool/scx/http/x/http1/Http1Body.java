@@ -15,11 +15,6 @@ import java.io.UncheckedIOException;
 public record Http1Body(InputStream inputStream, Http1Headers headers) implements ScxHttpBody {
 
     @Override
-    public String toString() {
-        return asString();
-    }
-
-    @Override
     public <T> T as(MediaReader<T> t) {
         try {
             return t.read(inputStream, headers);

@@ -3,6 +3,7 @@ package cool.scx.http.x.http1;
 import cool.scx.http.exception.BadRequestException;
 import cool.scx.http.exception.ContentTooLargeException;
 import cool.scx.http.exception.URITooLongException;
+import cool.scx.http.x.http1.chunked.FixedLengthDataSupplier;
 import cool.scx.http.x.http1.chunked.HttpChunkedDataSupplier;
 import cool.scx.http.x.http1.exception.HttpVersionNotSupportedException;
 import cool.scx.http.x.http1.exception.RequestHeaderFieldsTooLargeException;
@@ -17,7 +18,6 @@ import cool.scx.io.data_reader.DataReader;
 import cool.scx.io.exception.NoMatchFoundException;
 import cool.scx.io.exception.NoMoreDataException;
 import cool.scx.io.io_stream.DataReaderInputStream;
-import cool.scx.io.io_stream.FixedLengthDataReaderInputStream;
 
 import java.io.InputStream;
 import java.io.UncheckedIOException;
@@ -48,7 +48,7 @@ final class Http1Reader {
             if (contentLength > maxPayloadSize) {
                 throw new ContentTooLargeException();
             }
-            return new FixedLengthDataReaderInputStream(dataReader, contentLength);
+            return new DataReaderInputStream(new FixedLengthDataSupplier(dataReader,contentLength));
         }
 
         //3, 没有长度的空请求体
