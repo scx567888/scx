@@ -8,7 +8,8 @@ import cool.scx.http.x.XHttpClientOptions;
 import cool.scx.http.x.http1.chunked.HttpChunkedOutputStream;
 import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.http.x.http1.request_line.Http1RequestLine;
-import cool.scx.io.data_reader.PowerfulLinkedDataReader;
+import cool.scx.io.data_reader.DataReader;
+import cool.scx.io.data_reader.LinkedDataReader;
 import cool.scx.io.data_supplier.InputStreamDataSupplier;
 import cool.scx.tcp.ScxTCPSocket;
 
@@ -25,13 +26,13 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class Http1ClientConnection {
 
     public final ScxTCPSocket tcpSocket;
-    public final PowerfulLinkedDataReader dataReader;
+    public final DataReader dataReader;
     public final OutputStream dataWriter;
     public final Http1ClientConnectionOptions options;
 
     public Http1ClientConnection(ScxTCPSocket tcpSocket, XHttpClientOptions options) {
         this.tcpSocket = tcpSocket;
-        this.dataReader = new PowerfulLinkedDataReader(new InputStreamDataSupplier(tcpSocket.inputStream()));
+        this.dataReader = new LinkedDataReader(new InputStreamDataSupplier(tcpSocket.inputStream()));
         this.dataWriter = new NoCloseOutputStream(tcpSocket.outputStream());
         this.options = options.http1ConnectionOptions();
     }

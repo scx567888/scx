@@ -3,6 +3,7 @@ package cool.scx.http;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.http.media.MediaReader;
+import cool.scx.http.media.cache.CacheBody;
 import cool.scx.http.media.event_stream.ClientEventStream;
 import cool.scx.http.media.form_params.FormParams;
 import cool.scx.http.media.gzip.GzipBody;
@@ -18,6 +19,7 @@ import java.nio.file.OpenOption;
 import java.nio.file.Path;
 
 import static cool.scx.http.media.byte_array.ByteArrayReader.BYTE_ARRAY_READER;
+import static cool.scx.http.media.cache.CacheBodyReader.CACHE_BODY_READER;
 import static cool.scx.http.media.event_stream.ClientEventStreamReader.CLIENT_EVENT_STREAM_READER;
 import static cool.scx.http.media.form_params.FormParamsReader.FORM_PARAMS_READER;
 import static cool.scx.http.media.gzip.GzipBodyReader.GZIP_BODY_READER;
@@ -86,6 +88,10 @@ public interface ScxHttpBody {
 
     default GzipBody asGzipBody() {
         return as(GZIP_BODY_READER);
+    }
+
+    default CacheBody asCacheBody() {
+        return as(CACHE_BODY_READER);
     }
 
 }

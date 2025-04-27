@@ -1,6 +1,6 @@
 package cool.scx.http.media.event_stream;
 
-import cool.scx.io.data_reader.LinkedDataReader;
+import cool.scx.io.data_reader.DataReader;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,7 +13,7 @@ import static cool.scx.io.IOHelper.inputStreamToDataReader;
 // todo 这里和 MultiPartStream 一样 没有正确处理 inputStream 的关闭
 public class ClientEventStream {
 
-    private final LinkedDataReader dataReader;
+    private final DataReader dataReader;
     private final Charset charset;
 
     public ClientEventStream(InputStream in, Charset charset) {

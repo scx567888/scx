@@ -12,7 +12,10 @@ public class XTest {
     public static void test1() {
         var httpServer = new XHttpServer(new XHttpServerOptions().port(8899));
         httpServer.onRequest(c -> {
-            System.out.println(c.method() + " " + c.uri() + " -> " + c.body().asGzipBody().asString());
+            var cacheBody = c.body().asGzipBody().asCacheBody();
+            var bodyStr1 = cacheBody.asString();
+            var bodyStr2 = cacheBody.asString();
+            System.out.println(c.method() + " " + c.uri() + " -> " + bodyStr1 + " " + bodyStr1.equals(bodyStr2));
             // c.response().setHeader("transfer-encoding", "chunked");
             c.response().sendGzip().send("123");
         });

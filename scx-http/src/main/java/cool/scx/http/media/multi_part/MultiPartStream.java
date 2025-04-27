@@ -2,7 +2,7 @@ package cool.scx.http.media.multi_part;
 
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
-import cool.scx.io.data_reader.LinkedDataReader;
+import cool.scx.io.data_reader.DataReader;
 import cool.scx.io.exception.NoMatchFoundException;
 
 import java.io.IOException;
@@ -20,7 +20,7 @@ import static cool.scx.io.IOHelper.inputStreamToDataReader;
 public class MultiPartStream implements MultiPart, Iterator<MultiPartPart> {
 
     protected static final byte[] CRLF_CRLF_BYTES = "\r\n\r\n".getBytes();
-    protected final LinkedDataReader linkedDataReader;
+    protected final DataReader linkedDataReader;
     protected final byte[] boundaryBytes;
     protected boolean hasNextPart;
     protected String boundary;
