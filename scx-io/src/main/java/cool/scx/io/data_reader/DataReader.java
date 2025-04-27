@@ -4,6 +4,8 @@ import cool.scx.io.data_consumer.DataConsumer;
 import cool.scx.io.exception.NoMatchFoundException;
 import cool.scx.io.exception.NoMoreDataException;
 
+import java.io.OutputStream;
+
 import static java.lang.Math.toIntExact;
 
 /// DataReader
@@ -76,6 +78,26 @@ public interface DataReader {
     ///
     /// @param length 移动长度
     void skip(long length) throws NoMoreDataException;
+
+    /// 标记
+    void mark();
+
+    /// 重置
+    void reset();
+
+    /// InputStream 写法的 read
+    int inputStreamRead();
+
+    /// InputStream 写法的 read
+    int inputStreamRead(byte[] b, int off, int len);
+
+    /// InputStream 写法的 read
+    long inputStreamTransferTo(OutputStream out, long maxLength);
+
+    /// InputStream 写法的 read
+    default long inputStreamTransferTo(OutputStream out) {
+        return inputStreamTransferTo(out, Long.MAX_VALUE);
+    }
 
     /// 查找 指定字节 第一次出现的 index (指针不会移动)
     ///

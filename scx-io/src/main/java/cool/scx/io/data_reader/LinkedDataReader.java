@@ -2,6 +2,8 @@ package cool.scx.io.data_reader;
 
 import cool.scx.io.data_consumer.ByteArrayDataConsumer;
 import cool.scx.io.data_consumer.DataConsumer;
+import cool.scx.io.data_consumer.FillByteArrayDataConsumer;
+import cool.scx.io.data_consumer.OutputStreamDataConsumer;
 import cool.scx.io.data_indexer.ByteIndexer;
 import cool.scx.io.data_indexer.DataIndexer;
 import cool.scx.io.data_indexer.KMPDataIndexer;
@@ -9,6 +11,8 @@ import cool.scx.io.data_node.DataNode;
 import cool.scx.io.data_supplier.DataSupplier;
 import cool.scx.io.exception.NoMatchFoundException;
 import cool.scx.io.exception.NoMoreDataException;
+
+import java.io.OutputStream;
 
 import static cool.scx.io.data_consumer.SkipDataConsumer.SKIP_DATA_CONSUMER;
 import static java.lang.Math.min;
@@ -22,11 +26,16 @@ public class LinkedDataReader implements DataReader {
     public final DataSupplier dataSupplier;
     public DataNode head;
     public DataNode tail;
+    //标记
+    public DataNode markNode;
+    public int markNodePosition;
 
     public LinkedDataReader(DataSupplier dataSupplier) {
         this.dataSupplier = dataSupplier;
         this.head = new DataNode(new byte[]{});
         this.tail = this.head;
+        this.markNode = null;
+        this.markNodePosition = 0;
     }
 
     public LinkedDataReader() {
@@ -212,6 +221,65 @@ public class LinkedDataReader implements DataReader {
             ensureAvailableOrThrow();
         }
         walk(SKIP_DATA_CONSUMER, length, true);
+    }
+
+    @Override
+    public void mark() {
+        markNode = head;
+        markNodePosition = head.position;
+    }
+
+    @Override
+    public void reset() {
+        if (markNode == null) {
+            return;
+        }
+        //重置当前 mark
+        head = markNode;
+        head.position = markNodePosition;
+        //后续节点全部设为 0 todo 这里 0 不正确 因为 node 节点并不一定都是从0 开始
+        var n = head.next;
+        while (n != null) {
+            n.position = 0;
+            n = n.next;
+        }
+    }
+
+    @Override
+    public int inputStreamRead() {
+        var r = ensureAvailable();
+        if (!r) {
+            return -1;
+        }
+        var b = head.bytes[head.position];
+        head.position = head.position + 1;
+        return b & 0xFF;
+    }
+
+    @Override
+    public int inputStreamRead(byte[] b, int off, int len) {
+        if (len > 0) {
+            var r = ensureAvailable();
+            if (!r) {
+                return -1;
+            }
+        }
+        var consumer = new FillByteArrayDataConsumer(b, off, len);
+        walk(consumer, len, true);
+        return consumer.getFilledLength();
+    }
+
+    @Override
+    public long inputStreamTransferTo(OutputStream out, long maxLength) {
+        if (maxLength > 0) {
+            var r = ensureAvailable();
+            if (!r) {
+                return -1;
+            }
+        }
+        var consumer = new OutputStreamDataConsumer(out);
+        walk(consumer, maxLength, true);
+        return consumer.byteCount();
     }
 
 }
