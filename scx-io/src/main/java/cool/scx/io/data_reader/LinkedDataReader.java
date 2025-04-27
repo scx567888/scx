@@ -320,10 +320,10 @@ public class LinkedDataReader implements DataReader {
         //重置当前 mark
         head = markNode;
         head.position = markNodePosition;
-        //后续节点全部设为 0 todo 这里 0 不正确 因为 node 节点并不一定都是从0 开始
+        //后续节点全部重置
         var n = head.next;
         while (n != null) {
-            n.position = 0;
+            n.reset();
             n = n.next;
         }
     }
