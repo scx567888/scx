@@ -3,9 +3,7 @@ package cool.scx.io.data_reader;
 import cool.scx.io.data_consumer.DataConsumer;
 import cool.scx.io.data_consumer.FillByteArrayDataConsumer;
 import cool.scx.io.data_consumer.OutputStreamDataConsumer;
-import cool.scx.io.data_indexer.ByteIndexer;
 import cool.scx.io.data_indexer.DataIndexer;
-import cool.scx.io.data_indexer.KMPDataIndexer;
 import cool.scx.io.data_node.DataNode;
 import cool.scx.io.data_supplier.DataSupplier;
 import cool.scx.io.exception.NoMatchFoundException;
@@ -126,7 +124,7 @@ public class LinkedDataReader implements DataReader {
         }
     }
 
-    public long indexOf(DataIndexer indexer, long maxLength, long maxPullCount) throws NoMatchFoundException {
+    public long findIndex(DataIndexer indexer, long maxLength, long maxPullCount) throws NoMatchFoundException {
 
         var index = 0L; // 主串索引
 
@@ -200,21 +198,12 @@ public class LinkedDataReader implements DataReader {
     }
 
     @Override
-    public long indexOf(byte b, long maxLength, long maxPullCount) throws NoMatchFoundException, NoMoreDataException {
+    public long indexOf(DataIndexer indexer, long maxLength, long maxPullCount) throws NoMatchFoundException, NoMoreDataException {
         if (maxLength > 0) {
             var pullCount = ensureAvailableOrThrow(maxPullCount);
             maxPullCount = maxPullCount - pullCount;
         }
-        return indexOf(new ByteIndexer(b), maxLength, maxPullCount);
-    }
-
-    @Override
-    public long indexOf(byte[] pattern, long maxLength, long maxPullCount) throws NoMatchFoundException, NoMoreDataException {
-        if (maxLength > 0) {
-            var pullCount = ensureAvailableOrThrow(maxPullCount);
-            maxPullCount = maxPullCount - pullCount;
-        }
-        return indexOf(new KMPDataIndexer(pattern), maxLength, maxPullCount);
+        return findIndex(indexer, maxLength, maxPullCount);
     }
 
     @Override
