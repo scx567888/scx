@@ -22,7 +22,7 @@ public class FixedLengthDataSupplier implements DataSupplier {
             return null;
         }
         try {
-            //这里我们将 原始 dataReader 中的 dataNode 中的 bytes 直接拷贝 实现尽量少的 数据复制
+            // 这里我们直接引用 原始 dataReader 中的 bytes，避免了数组的多次拷贝
             var consumer = new DataNodeDataConsumer();
             dataReader.read(consumer, remaining, 1);// 我们只尝试拉取一次
             var dataNode = consumer.getDataNode();
