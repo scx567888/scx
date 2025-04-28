@@ -56,28 +56,8 @@ public class LinkedDataReader implements DataReader {
         return true;
     }
 
-    public boolean ensureAvailable() {
-        while (!head.hasAvailable()) {
-            if (head.next == null) {
-                var result = this.pullData();
-                if (!result) {
-                    return false;
-                }
-            }
-            head = head.next;
-        }
-        return true;
-    }
-
-    public void ensureAvailableOrThrow() throws NoMoreDataException {
-        var b = ensureAvailable();
-        if (!b) {
-            throw new NoMoreDataException();
-        }
-    }
-
-    public int ensureAvailable(int maxPullCount) {
-        var pullCount = 0;
+    public long ensureAvailable(long maxPullCount) {
+        var pullCount = 0L;
         while (!head.hasAvailable()) {
             if (head.next == null) {
                 if (pullCount >= maxPullCount) {
@@ -95,7 +75,7 @@ public class LinkedDataReader implements DataReader {
         return pullCount;
     }
 
-    public int ensureAvailableOrThrow(int maxPullCount) throws NoMoreDataException {
+    public long ensureAvailableOrThrow(long maxPullCount) throws NoMoreDataException {
         var b = ensureAvailable(maxPullCount);
         if (b == -1) {
             throw new NoMoreDataException();
@@ -104,49 +84,11 @@ public class LinkedDataReader implements DataReader {
         }
     }
 
-    public void walk(DataConsumer consumer, long maxLength, boolean movePointer) {
+    public void walk(DataConsumer consumer, long maxLength, boolean movePointer, long maxPullCount) {
 
         var remaining = maxLength; // 剩余需要读取的字节数
         var n = head; // 用于循环的节点
-
-        // 循环有 2 种情况会退出
-        // 1, 已经读取到足够的数据
-        // 2, 没有更多数据可读了
-        while (remaining > 0) {
-            // 计算当前节点可以读取的长度 (这里因为是将 int 和 long 值进行最小值比较 所以返回值一定是 int 所以类型转换不会丢失精度) 
-            var length = (int) min(remaining, n.available());
-            // 写入数据
-            consumer.accept(n.bytes, n.position, length);
-            // 计算剩余字节数
-            remaining -= length;
-
-            if (movePointer) {
-                // 移动当前节点的指针位置
-                n.position += length;
-            }
-
-            // 如果 remaining > 0 说明还需要继续读取
-            if (remaining > 0) {
-                if (n.next == null) {
-                    // 如果 当前节点没有下一个节点 并且拉取失败 则退出循环
-                    var result = this.pullData();
-                    if (!result) {
-                        break;
-                    }
-                }
-                n = n.next;
-                if (movePointer) {
-                    head = n;
-                }
-            }
-        }
-    }
-
-    public void walk(DataConsumer consumer, long maxLength, boolean movePointer, int maxPullCount) {
-
-        var remaining = maxLength; // 剩余需要读取的字节数
-        var n = head; // 用于循环的节点
-        var pullCount = 0; // 拉取次数计数器
+        var pullCount = 0L; // 拉取次数计数器
 
         // 循环有 2 种情况会退出
         // 1, 已经读取到足够的数据
@@ -223,7 +165,7 @@ public class LinkedDataReader implements DataReader {
 
     @Override
     public byte read() throws NoMoreDataException {
-        ensureAvailableOrThrow();
+        ensureAvailableOrThrow(Long.MAX_VALUE);
         var b = head.bytes[head.position];
         head.position = head.position + 1;
         return b;
@@ -232,23 +174,15 @@ public class LinkedDataReader implements DataReader {
     @Override
     public byte[] read(int maxLength) throws NoMoreDataException {
         if (maxLength > 0) {
-            ensureAvailableOrThrow();
+            ensureAvailableOrThrow(Long.MAX_VALUE);
         }
         var consumer = new ByteArrayDataConsumer();
-        walk(consumer, maxLength, true);
+        walk(consumer, maxLength, true, Long.MAX_VALUE);
         return consumer.getBytes();
     }
 
     @Override
-    public void read(DataConsumer dataConsumer, long maxLength) throws NoMoreDataException {
-        if (maxLength > 0) {
-            ensureAvailableOrThrow();
-        }
-        walk(dataConsumer, maxLength, true);
-    }
-
-    @Override
-    public byte[] read(int maxLength, int maxPullCount) throws NoMoreDataException {
+    public byte[] read(int maxLength, long maxPullCount) throws NoMoreDataException {
         if (maxLength > 0) {
             var pullCount = ensureAvailableOrThrow(maxPullCount);
             maxPullCount = maxPullCount - pullCount;
@@ -259,33 +193,70 @@ public class LinkedDataReader implements DataReader {
     }
 
     @Override
+    public void read(DataConsumer dataConsumer, long maxLength) throws NoMoreDataException {
+        if (maxLength > 0) {
+            ensureAvailableOrThrow(Long.MAX_VALUE);
+        }
+        walk(dataConsumer, maxLength, true, Long.MAX_VALUE);
+    }
+
+    @Override
+    public void read(DataConsumer dataConsumer, long maxLength, long maxPullCount) throws NoMoreDataException {
+        if (maxLength > 0) {
+            var pullCount = ensureAvailableOrThrow(maxPullCount);
+            maxPullCount = maxPullCount - pullCount;
+        }
+        walk(dataConsumer, maxLength, true, maxPullCount);
+    }
+
+    @Override
     public byte peek() throws NoMoreDataException {
-        ensureAvailableOrThrow();
+        ensureAvailableOrThrow(Long.MAX_VALUE);
         return head.bytes[head.position];
     }
 
     @Override
     public byte[] peek(int maxLength) throws NoMoreDataException {
         if (maxLength > 0) {
-            ensureAvailableOrThrow();
+            ensureAvailableOrThrow(Long.MAX_VALUE);
         }
         var consumer = new ByteArrayDataConsumer();
-        walk(consumer, maxLength, false);
+        walk(consumer, maxLength, false, Long.MAX_VALUE);
+        return consumer.getBytes();
+    }
+
+    @Override
+    public byte[] peek(int maxLength, long maxPullCount) throws NoMoreDataException {
+        if (maxLength > 0) {
+            var pullCount = ensureAvailableOrThrow(maxPullCount);
+            maxPullCount = maxPullCount - pullCount;
+        }
+        var consumer = new ByteArrayDataConsumer();
+        walk(consumer, maxLength, false, maxPullCount);
         return consumer.getBytes();
     }
 
     @Override
     public void peek(DataConsumer dataConsumer, long maxLength) throws NoMoreDataException {
         if (maxLength > 0) {
-            ensureAvailableOrThrow();
+            ensureAvailableOrThrow(Long.MAX_VALUE);
         }
-        walk(dataConsumer, maxLength, false);
+        walk(dataConsumer, maxLength, false, Long.MAX_VALUE);
+    }
+
+    @Override
+    public void peek(DataConsumer dataConsumer, long maxLength, long maxPullCount) throws NoMoreDataException {
+        if (maxLength > 0) {
+            var pullCount = ensureAvailableOrThrow(maxPullCount);
+            maxPullCount = maxPullCount - pullCount;
+        }
+        walk(dataConsumer, maxLength, false, maxPullCount);
     }
 
     @Override
     public long indexOf(byte b, long maxLength) throws NoMatchFoundException, NoMoreDataException {
         if (maxLength > 0) {
-            ensureAvailableOrThrow();
+            ensureAvailableOrThrow(Long.MAX_VALUE);
         }
         return indexOf(new ByteIndexer(b), maxLength);
     }
@@ -293,7 +264,7 @@ public class LinkedDataReader implements DataReader {
     @Override
     public long indexOf(byte[] pattern, long maxLength) throws NoMatchFoundException, NoMoreDataException {
         if (maxLength > 0) {
-            ensureAvailableOrThrow();
+            ensureAvailableOrThrow(Long.MAX_VALUE);
         }
         return indexOf(new KMPDataIndexer(pattern), maxLength);
     }
@@ -301,9 +272,9 @@ public class LinkedDataReader implements DataReader {
     @Override
     public void skip(long length) throws NoMoreDataException {
         if (length > 0) {
-            ensureAvailableOrThrow();
+            ensureAvailableOrThrow(Long.MAX_VALUE);
         }
-        walk(SKIP_DATA_CONSUMER, length, true);
+        walk(SKIP_DATA_CONSUMER, length, true, Long.MAX_VALUE);
     }
 
     @Override
@@ -330,8 +301,8 @@ public class LinkedDataReader implements DataReader {
 
     @Override
     public int inputStreamRead() {
-        var r = ensureAvailable();
-        if (!r) {
+        var pullCount = ensureAvailable(1);
+        if (pullCount == -1) {
             return -1;
         }
         var b = head.bytes[head.position];
@@ -341,7 +312,7 @@ public class LinkedDataReader implements DataReader {
 
     @Override
     public int inputStreamRead(byte[] b, int off, int len) {
-        var maxPullCount = 1;
+        var maxPullCount = 1L;
         if (len > 0) {
             var pullCount = ensureAvailable(maxPullCount);
             if (pullCount == -1) {
@@ -358,13 +329,13 @@ public class LinkedDataReader implements DataReader {
     @Override
     public long inputStreamTransferTo(OutputStream out, long maxLength) {
         if (maxLength > 0) {
-            var r = ensureAvailable();
-            if (!r) {
+            var pullCount = ensureAvailable(Long.MAX_VALUE);
+            if (pullCount == -1) {
                 return -1;
             }
         }
         var consumer = new OutputStreamDataConsumer(out);
-        walk(consumer, maxLength, true);
+        walk(consumer, maxLength, true, Long.MAX_VALUE);
         return consumer.byteCount();
     }
 

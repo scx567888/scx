@@ -29,6 +29,9 @@ public interface DataReader {
     /// @throws NoMoreDataException 没有更多数据时抛出
     byte[] read(int maxLength) throws NoMoreDataException;
 
+    /// 指定拉取次数的读取
+    byte[] read(int maxLength, long maxPullCount) throws NoMoreDataException;
+
     /// 向 dataConsumer 写入指定长度字节 (指针会移动)
     /// 当没有更多的数据时会抛出异常
     ///
@@ -37,7 +40,7 @@ public interface DataReader {
     void read(DataConsumer dataConsumer, long maxLength) throws NoMoreDataException;
 
     /// 指定拉取次数的读取
-    byte[] read(int maxLength, int maxPullCount) throws NoMoreDataException;
+    void read(DataConsumer dataConsumer, long maxLength, long maxPullCount) throws NoMoreDataException;
 
     /// 向 dataConsumer 写入指定长度字节 (指针不会移动)
     /// 当没有更多的数据时会抛出异常
@@ -54,12 +57,18 @@ public interface DataReader {
     /// @throws NoMoreDataException 没有更多数据时抛出
     byte[] peek(int maxLength) throws NoMoreDataException;
 
+    /// 指定拉取次数的读取
+    byte[] peek(int maxLength, long maxPullCount) throws NoMoreDataException;
+
     /// 向 outputStream 写入指定长度字节 (指针不会移动)
     /// 当没有更多的数据时会抛出异常
     ///
     /// @param maxLength 最大长度
     /// @throws NoMoreDataException 没有更多数据时抛出
     void peek(DataConsumer dataConsumer, long maxLength) throws NoMoreDataException;
+
+    /// 指定拉取次数的读取
+    void peek(DataConsumer dataConsumer, long maxLength, long maxPullCount) throws NoMoreDataException;
 
     /// 查找 指定字节 第一次出现的 index (指针不会移动)
     ///
