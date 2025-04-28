@@ -1,6 +1,5 @@
 package cool.scx.io.data_reader;
 
-import cool.scx.io.data_consumer.ByteArrayDataConsumer;
 import cool.scx.io.data_consumer.DataConsumer;
 import cool.scx.io.data_consumer.FillByteArrayDataConsumer;
 import cool.scx.io.data_consumer.OutputStreamDataConsumer;
@@ -14,7 +13,6 @@ import cool.scx.io.exception.NoMoreDataException;
 
 import java.io.OutputStream;
 
-import static cool.scx.io.data_consumer.SkipDataConsumer.SKIP_DATA_CONSUMER;
 import static java.lang.Math.min;
 
 /// LinkedDataReader
@@ -178,35 +176,6 @@ public class LinkedDataReader implements DataReader {
     }
 
     @Override
-    public byte[] read(int maxLength) throws NoMoreDataException {
-        if (maxLength > 0) {
-            ensureAvailableOrThrow(Long.MAX_VALUE);
-        }
-        var consumer = new ByteArrayDataConsumer();
-        walk(consumer, maxLength, true, Long.MAX_VALUE);
-        return consumer.getBytes();
-    }
-
-    @Override
-    public byte[] read(int maxLength, long maxPullCount) throws NoMoreDataException {
-        if (maxLength > 0) {
-            var pullCount = ensureAvailableOrThrow(maxPullCount);
-            maxPullCount = maxPullCount - pullCount;
-        }
-        var consumer = new ByteArrayDataConsumer();
-        walk(consumer, maxLength, true, maxPullCount);
-        return consumer.getBytes();
-    }
-
-    @Override
-    public void read(DataConsumer dataConsumer, long maxLength) throws NoMoreDataException {
-        if (maxLength > 0) {
-            ensureAvailableOrThrow(Long.MAX_VALUE);
-        }
-        walk(dataConsumer, maxLength, true, Long.MAX_VALUE);
-    }
-
-    @Override
     public void read(DataConsumer dataConsumer, long maxLength, long maxPullCount) throws NoMoreDataException {
         if (maxLength > 0) {
             var pullCount = ensureAvailableOrThrow(maxPullCount);
@@ -222,49 +191,12 @@ public class LinkedDataReader implements DataReader {
     }
 
     @Override
-    public byte[] peek(int maxLength) throws NoMoreDataException {
-        if (maxLength > 0) {
-            ensureAvailableOrThrow(Long.MAX_VALUE);
-        }
-        var consumer = new ByteArrayDataConsumer();
-        walk(consumer, maxLength, false, Long.MAX_VALUE);
-        return consumer.getBytes();
-    }
-
-    @Override
-    public byte[] peek(int maxLength, long maxPullCount) throws NoMoreDataException {
-        if (maxLength > 0) {
-            var pullCount = ensureAvailableOrThrow(maxPullCount);
-            maxPullCount = maxPullCount - pullCount;
-        }
-        var consumer = new ByteArrayDataConsumer();
-        walk(consumer, maxLength, false, maxPullCount);
-        return consumer.getBytes();
-    }
-
-    @Override
-    public void peek(DataConsumer dataConsumer, long maxLength) throws NoMoreDataException {
-        if (maxLength > 0) {
-            ensureAvailableOrThrow(Long.MAX_VALUE);
-        }
-        walk(dataConsumer, maxLength, false, Long.MAX_VALUE);
-    }
-
-    @Override
     public void peek(DataConsumer dataConsumer, long maxLength, long maxPullCount) throws NoMoreDataException {
         if (maxLength > 0) {
             var pullCount = ensureAvailableOrThrow(maxPullCount);
             maxPullCount = maxPullCount - pullCount;
         }
         walk(dataConsumer, maxLength, false, maxPullCount);
-    }
-
-    @Override
-    public long indexOf(byte b, long maxLength) throws NoMatchFoundException, NoMoreDataException {
-        if (maxLength > 0) {
-            ensureAvailableOrThrow(Long.MAX_VALUE);
-        }
-        return indexOf(new ByteIndexer(b), maxLength, Long.MAX_VALUE);
     }
 
     @Override
@@ -277,37 +209,12 @@ public class LinkedDataReader implements DataReader {
     }
 
     @Override
-    public long indexOf(byte[] pattern, long maxLength) throws NoMatchFoundException, NoMoreDataException {
-        if (maxLength > 0) {
-            ensureAvailableOrThrow(Long.MAX_VALUE);
-        }
-        return indexOf(new KMPDataIndexer(pattern), maxLength, Long.MAX_VALUE);
-    }
-
-    @Override
     public long indexOf(byte[] pattern, long maxLength, long maxPullCount) throws NoMatchFoundException, NoMoreDataException {
         if (maxLength > 0) {
             var pullCount = ensureAvailableOrThrow(maxPullCount);
             maxPullCount = maxPullCount - pullCount;
         }
         return indexOf(new KMPDataIndexer(pattern), maxLength, maxPullCount);
-    }
-
-    @Override
-    public void skip(long length) throws NoMoreDataException {
-        if (length > 0) {
-            ensureAvailableOrThrow(Long.MAX_VALUE);
-        }
-        walk(SKIP_DATA_CONSUMER, length, true, Long.MAX_VALUE);
-    }
-
-    @Override
-    public void skip(long length, long maxPullCount) throws NoMoreDataException {
-        if (length > 0) {
-            var pullCount = ensureAvailableOrThrow(maxPullCount);
-            maxPullCount = maxPullCount - pullCount;
-        }
-        walk(SKIP_DATA_CONSUMER, length, true, maxPullCount);
     }
 
     @Override

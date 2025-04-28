@@ -1,11 +1,13 @@
 package cool.scx.io.data_reader;
 
+import cool.scx.io.data_consumer.ByteArrayDataConsumer;
 import cool.scx.io.data_consumer.DataConsumer;
 import cool.scx.io.exception.NoMatchFoundException;
 import cool.scx.io.exception.NoMoreDataException;
 
 import java.io.OutputStream;
 
+import static cool.scx.io.data_consumer.SkipDataConsumer.SKIP_DATA_CONSUMER;
 import static java.lang.Math.toIntExact;
 
 /// DataReader
@@ -21,53 +23,29 @@ public interface DataReader {
     /// @throws NoMoreDataException 没有更多数据时抛出
     byte read() throws NoMoreDataException;
 
-    /// 读取字节 (指针会移动)
-    /// 当没有更多的数据时会抛出异常
-    ///
-    /// @param maxLength 最大长度
-    /// @return bytes
-    /// @throws NoMoreDataException 没有更多数据时抛出
-    byte[] read(int maxLength) throws NoMoreDataException;
-
-    /// 指定拉取次数的读取
-    byte[] read(int maxLength, long maxPullCount) throws NoMoreDataException;
-
     /// 向 dataConsumer 写入指定长度字节 (指针会移动)
     /// 当没有更多的数据时会抛出异常
     ///
-    /// @param maxLength 最大长度
+    /// @param dataConsumer 消费者
+    /// @param maxLength    最大长度
+    /// @param maxPullCount 最大长度
     /// @throws NoMoreDataException 没有更多数据时抛出
-    void read(DataConsumer dataConsumer, long maxLength) throws NoMoreDataException;
-
-    /// 指定拉取次数的读取
     void read(DataConsumer dataConsumer, long maxLength, long maxPullCount) throws NoMoreDataException;
 
-    /// 向 dataConsumer 写入指定长度字节 (指针不会移动)
+    /// 查看单个字节 (指针会移动)
     /// 当没有更多的数据时会抛出异常
     ///
     /// @return byte
     /// @throws NoMoreDataException 没有更多数据时抛出
     byte peek() throws NoMoreDataException;
 
-    /// 读取指定长度字节 (指针不会移动)
+    /// 向 dataConsumer 写入指定长度字节 (指针不会移动)
     /// 当没有更多的数据时会抛出异常
     ///
-    /// @param maxLength 最大长度
-    /// @return byte
+    /// @param dataConsumer 消费者
+    /// @param maxLength    最大长度
+    /// @param maxPullCount 最大长度
     /// @throws NoMoreDataException 没有更多数据时抛出
-    byte[] peek(int maxLength) throws NoMoreDataException;
-
-    /// 指定拉取次数的读取
-    byte[] peek(int maxLength, long maxPullCount) throws NoMoreDataException;
-
-    /// 向 outputStream 写入指定长度字节 (指针不会移动)
-    /// 当没有更多的数据时会抛出异常
-    ///
-    /// @param maxLength 最大长度
-    /// @throws NoMoreDataException 没有更多数据时抛出
-    void peek(DataConsumer dataConsumer, long maxLength) throws NoMoreDataException;
-
-    /// 指定拉取次数的读取
     void peek(DataConsumer dataConsumer, long maxLength, long maxPullCount) throws NoMoreDataException;
 
     /// 查找 指定字节 第一次出现的 index (指针不会移动)
@@ -76,9 +54,6 @@ public interface DataReader {
     /// @param maxLength 最大长度
     /// @return index 或者 -1 (未找到)
     /// @throws NoMatchFoundException 没有匹配时抛出
-    long indexOf(byte b, long maxLength) throws NoMatchFoundException, NoMoreDataException;
-
-    /// 指定拉取次数
     long indexOf(byte b, long maxLength, long maxPullCount) throws NoMatchFoundException, NoMoreDataException;
 
     /// 查找 指定字节数组 第一次出现的 index (指针不会移动)
@@ -87,18 +62,7 @@ public interface DataReader {
     /// @param maxLength 最大长度
     /// @return index 或者 -1 (未找到)
     /// @throws NoMatchFoundException 没有匹配时抛出
-    long indexOf(byte[] b, long maxLength) throws NoMatchFoundException, NoMoreDataException;
-
-    /// 指定拉取次数
     long indexOf(byte[] b, long maxLength, long maxPullCount) throws NoMatchFoundException, NoMoreDataException;
-
-    /// 向后移动指定字节
-    ///
-    /// @param length 移动长度
-    void skip(long length) throws NoMoreDataException;
-
-    /// 指定拉取次数
-    void skip(long length, long maxPullCount) throws NoMoreDataException;
 
     /// 标记
     void mark();
@@ -115,9 +79,88 @@ public interface DataReader {
     /// InputStream 写法的 read
     long inputStreamTransferTo(OutputStream out, long maxLength);
 
-    /// InputStream 写法的 read
-    default long inputStreamTransferTo(OutputStream out) {
-        return inputStreamTransferTo(out, Long.MAX_VALUE);
+    /// 读取字节 (指针会移动)
+    /// 当没有更多的数据时会抛出异常
+    ///
+    /// @param maxLength 最大长度
+    /// @return bytes
+    /// @throws NoMoreDataException 没有更多数据时抛出
+    default byte[] read(int maxLength) throws NoMoreDataException {
+        return read(maxLength, Long.MAX_VALUE);
+    }
+
+    /// 指定拉取次数的读取
+    default byte[] read(int maxLength, long maxPullCount) throws NoMoreDataException {
+        var consumer = new ByteArrayDataConsumer();
+        read(consumer, maxLength, maxPullCount);
+        return consumer.getBytes();
+    }
+
+    /// 向 dataConsumer 写入指定长度字节 (指针会移动)
+    /// 当没有更多的数据时会抛出异常
+    ///
+    /// @param maxLength 最大长度
+    /// @throws NoMoreDataException 没有更多数据时抛出
+    default void read(DataConsumer dataConsumer, long maxLength) throws NoMoreDataException {
+        read(dataConsumer, maxLength, Long.MAX_VALUE);
+    }
+
+    /// 读取指定长度字节 (指针不会移动)
+    /// 当没有更多的数据时会抛出异常
+    ///
+    /// @param maxLength 最大长度
+    /// @return byte
+    /// @throws NoMoreDataException 没有更多数据时抛出
+    default byte[] peek(int maxLength) throws NoMoreDataException {
+        return peek(maxLength, Long.MAX_VALUE);
+    }
+
+    /// 指定拉取次数的读取
+    default byte[] peek(int maxLength, long maxPullCount) throws NoMoreDataException {
+        var consumer = new ByteArrayDataConsumer();
+        peek(consumer, maxLength, maxPullCount);
+        return consumer.getBytes();
+    }
+
+    /// 向 outputStream 写入指定长度字节 (指针不会移动)
+    /// 当没有更多的数据时会抛出异常
+    ///
+    /// @param maxLength 最大长度
+    /// @throws NoMoreDataException 没有更多数据时抛出
+    default void peek(DataConsumer dataConsumer, long maxLength) throws NoMoreDataException {
+        peek(dataConsumer, maxLength, Long.MAX_VALUE);
+    }
+
+    /// 查找 指定字节 第一次出现的 index (指针不会移动)
+    ///
+    /// @param b         指定字节
+    /// @param maxLength 最大长度
+    /// @return index 或者 -1 (未找到)
+    /// @throws NoMatchFoundException 没有匹配时抛出
+    default long indexOf(byte b, long maxLength) throws NoMatchFoundException, NoMoreDataException {
+        return indexOf(b, maxLength, Long.MAX_VALUE);
+    }
+
+    /// 查找 指定字节数组 第一次出现的 index (指针不会移动)
+    ///
+    /// @param b         指定字节数组
+    /// @param maxLength 最大长度
+    /// @return index 或者 -1 (未找到)
+    /// @throws NoMatchFoundException 没有匹配时抛出
+    default long indexOf(byte[] b, long maxLength) throws NoMatchFoundException, NoMoreDataException {
+        return indexOf(b, maxLength, Long.MAX_VALUE);
+    }
+
+    /// 向后移动指定字节
+    ///
+    /// @param length 移动长度
+    default void skip(long length) throws NoMoreDataException {
+        skip(length, Long.MAX_VALUE);
+    }
+
+    /// 指定拉取次数
+    default void skip(long length, long maxPullCount) throws NoMoreDataException {
+        read(SKIP_DATA_CONSUMER, length, maxPullCount);
     }
 
     /// 查找 指定字节 第一次出现的 index (指针不会移动)
@@ -224,6 +267,11 @@ public interface DataReader {
     default byte[] peekUntil(byte[] b) throws NoMatchFoundException, NoMoreDataException {
         var index = indexOf(b);
         return peek(toIntExact(index));
+    }
+
+    /// InputStream 写法的 read
+    default long inputStreamTransferTo(OutputStream out) {
+        return inputStreamTransferTo(out, Long.MAX_VALUE);
     }
 
 }
