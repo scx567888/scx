@@ -85,15 +85,21 @@ public class LinkedDataReader implements DataReader {
         var remaining = maxLength; // 剩余需要读取的字节数
         var n = head; // 用于循环的节点
         var pullCount = 0L; // 拉取次数计数器
+        var needMore = true;// 是否需要更多数据 我们默认是 true 表示 至少执行调用一次消费者
 
-        // 循环有 2 种情况会退出
-        // 1, 已经读取到足够的数据
-        // 2, 没有更多数据可读了
+        // 循环中有 4 种情况
+        // 1, 已经读取到足够的数据 我们无需循环
+        // 2, 消费者返回 false 我们会至少循环一次
+        // 3, 达到最大拉取次数 我们会至少循环一次
+        // 4, 没有更多数据了 我们会至少循环一次
+
+        // 初始只判断是否 已经读取到足够的数据
         while (remaining > 0) {
+
             // 计算当前节点可以读取的长度 (这里因为是将 int 和 long 值进行最小值比较 所以返回值一定是 int 所以类型转换不会丢失精度) 
             var length = (int) min(remaining, n.available());
-            // 写入数据
-            consumer.accept(n.bytes, n.position, length);
+            // 调用消费者 写入数据
+            needMore = consumer.accept(n.bytes, n.position, length);
             // 计算剩余字节数
             remaining -= length;
 
@@ -102,26 +108,36 @@ public class LinkedDataReader implements DataReader {
                 n.position += length;
             }
 
-            // 如果 remaining > 0 说明还需要继续读取
-            if (remaining > 0) {
-                if (n.next == null) {
-                    if (pullCount >= maxPullCount) {
-                        break;
-                    }
-                    // 如果 当前节点没有下一个节点 并且拉取失败 则退出循环
-                    var result = this.pullData();
-                    if (!result) {
-                        break;
-                    } else {
-                        pullCount = pullCount + 1;
-                    }
-                }
-                n = n.next;
-                if (movePointer) {
-                    head = n;
-                }
+            // 数据已经读取够 或者 无需继续读取了 我们直接跳出循环
+            if (remaining <= 0 || !needMore) {
+                break;
             }
+
+            // 当走到这里时 说明 remaining 一定大于 0,
+            // 而从 remaining 和 length 的计算方式得出 此时 n 一定已经被彻底消耗掉了
+            // 所以我们 直接更新下一节点 即可
+
+            if (n.next == null) {
+                //已经达到最大拉取次数 直接退出
+                if (pullCount >= maxPullCount) {
+                    break;
+                }
+                // 如果 当前节点没有下一个节点 并且拉取失败 则退出循环
+                var result = this.pullData();
+                if (!result) {
+                    break;
+                }
+                pullCount = pullCount + 1;
+            }
+            n = n.next;
+            
+            //更新 头节点
+            if (movePointer) {
+                head = n;
+            }
+            
         }
+
     }
 
     public long findIndex(DataIndexer indexer, long maxLength, long maxPullCount) throws NoMatchFoundException {
@@ -155,11 +171,11 @@ public class LinkedDataReader implements DataReader {
                 var result = this.pullData();
                 if (!result) {
                     break;
-                } else {
-                    pullCount = pullCount + 1;
                 }
+                pullCount = pullCount + 1;
             }
             n = n.next;
+
         }
 
         throw new NoMatchFoundException();
