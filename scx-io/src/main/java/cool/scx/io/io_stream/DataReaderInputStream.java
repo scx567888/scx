@@ -57,6 +57,11 @@ public class DataReaderInputStream extends CheckedInputStream {
     }
 
     @Override
+    public byte[] readAllBytes() throws IOException {
+        return dataReader.read(Integer.MAX_VALUE);
+    }
+
+    @Override
     public void close() throws IOException {
         closed = true;
     }
