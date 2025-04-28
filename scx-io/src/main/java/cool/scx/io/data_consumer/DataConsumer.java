@@ -6,6 +6,10 @@ package cool.scx.io.data_consumer;
 /// @version 0.0.1
 public interface DataConsumer {
 
-    void accept(byte[] bytes, int position, int length);
+    /// @param bytes    字节
+    /// @param position 起始位置
+    /// @param length   长度
+    /// @return 是否需要更多数据
+    boolean accept(byte[] bytes, int position, int length);
 
 }

@@ -14,11 +14,12 @@ public class FillByteBufferDataConsumer implements DataConsumer {
     }
 
     @Override
-    public void accept(byte[] bytes, int position, int length) {
+    public boolean accept(byte[] bytes, int position, int length) {
         if (data.remaining() < length) {
             throw new IllegalStateException("Buffer overflow: not enough space to accept more data");
         }
         data.put(bytes, position, length);
+        return true;
     }
 
     public int getFilledLength() {
