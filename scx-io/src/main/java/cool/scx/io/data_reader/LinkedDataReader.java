@@ -128,15 +128,16 @@ public class LinkedDataReader implements DataReader {
         }
     }
 
-    public long indexOf(DataIndexer indexer, long max) throws NoMatchFoundException {
+    public long indexOf(DataIndexer indexer, long maxLength, long maxPullCount) throws NoMatchFoundException {
 
         var index = 0L; // 主串索引
 
         var n = head;
+        var pullCount = 0L; // 拉取次数计数器
 
         while (true) {
             // 计算当前节点中可读取的最大长度，确保不超过 max (这里因为是将 int 和 long 值进行最小值比较 所以返回值一定是 int 所以类型转换不会丢失精度)
-            var length = (int) min(n.available(), max - index);
+            var length = (int) min(n.available(), maxLength - index);
             var i = indexer.indexOf(n.bytes, n.position, length);
             //此处因为支持回溯匹配 所以可能是负数 Integer.MIN_VALUE 表示真正未找到
             if (i != Integer.MIN_VALUE) {
@@ -146,15 +147,20 @@ public class LinkedDataReader implements DataReader {
             }
 
             // 检查是否已达到最大长度
-            if (index >= max) {
+            if (index >= maxLength) {
                 break;
             }
 
             // 如果 currentNode 没有下一个节点并且尝试拉取数据失败，直接退出循环
             if (n.next == null) {
+                if (pullCount >= maxPullCount) {
+                    break;
+                }
                 var result = this.pullData();
                 if (!result) {
                     break;
+                } else {
+                    pullCount = pullCount + 1;
                 }
             }
             n = n.next;
@@ -258,7 +264,16 @@ public class LinkedDataReader implements DataReader {
         if (maxLength > 0) {
             ensureAvailableOrThrow(Long.MAX_VALUE);
         }
-        return indexOf(new ByteIndexer(b), maxLength);
+        return indexOf(new ByteIndexer(b), maxLength, Long.MAX_VALUE);
+    }
+
+    @Override
+    public long indexOf(byte b, long maxLength, long maxPullCount) throws NoMatchFoundException, NoMoreDataException {
+        if (maxLength > 0) {
+            var pullCount = ensureAvailableOrThrow(maxPullCount);
+            maxPullCount = maxPullCount - pullCount;
+        }
+        return indexOf(new ByteIndexer(b), maxLength, maxPullCount);
     }
 
     @Override
@@ -266,7 +281,16 @@ public class LinkedDataReader implements DataReader {
         if (maxLength > 0) {
             ensureAvailableOrThrow(Long.MAX_VALUE);
         }
-        return indexOf(new KMPDataIndexer(pattern), maxLength);
+        return indexOf(new KMPDataIndexer(pattern), maxLength, Long.MAX_VALUE);
+    }
+
+    @Override
+    public long indexOf(byte[] pattern, long maxLength, long maxPullCount) throws NoMatchFoundException, NoMoreDataException {
+        if (maxLength > 0) {
+            var pullCount = ensureAvailableOrThrow(maxPullCount);
+            maxPullCount = maxPullCount - pullCount;
+        }
+        return indexOf(new KMPDataIndexer(pattern), maxLength, maxPullCount);
     }
 
     @Override
@@ -275,6 +299,15 @@ public class LinkedDataReader implements DataReader {
             ensureAvailableOrThrow(Long.MAX_VALUE);
         }
         walk(SKIP_DATA_CONSUMER, length, true, Long.MAX_VALUE);
+    }
+
+    @Override
+    public void skip(long length, long maxPullCount) throws NoMoreDataException {
+        if (length > 0) {
+            var pullCount = ensureAvailableOrThrow(maxPullCount);
+            maxPullCount = maxPullCount - pullCount;
+        }
+        walk(SKIP_DATA_CONSUMER, length, true, maxPullCount);
     }
 
     @Override

@@ -78,6 +78,9 @@ public interface DataReader {
     /// @throws NoMatchFoundException 没有匹配时抛出
     long indexOf(byte b, long maxLength) throws NoMatchFoundException, NoMoreDataException;
 
+    /// 指定拉取次数
+    long indexOf(byte b, long maxLength, long maxPullCount) throws NoMatchFoundException, NoMoreDataException;
+
     /// 查找 指定字节数组 第一次出现的 index (指针不会移动)
     ///
     /// @param b         指定字节数组
@@ -86,10 +89,16 @@ public interface DataReader {
     /// @throws NoMatchFoundException 没有匹配时抛出
     long indexOf(byte[] b, long maxLength) throws NoMatchFoundException, NoMoreDataException;
 
+    /// 指定拉取次数
+    long indexOf(byte[] b, long maxLength, long maxPullCount) throws NoMatchFoundException, NoMoreDataException;
+
     /// 向后移动指定字节
     ///
     /// @param length 移动长度
     void skip(long length) throws NoMoreDataException;
+
+    /// 指定拉取次数
+    void skip(long length, long maxPullCount) throws NoMoreDataException;
 
     /// 标记
     void mark();
