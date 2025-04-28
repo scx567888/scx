@@ -22,11 +22,12 @@ public class ByteArrayDataConsumer implements DataConsumer {
     @Override
     public boolean accept(byte[] bytes, int position, int length) {
         total += length;
+        var dataNode = new DataNode(bytes, position, position + length);
         if (head == null) {
-            head = new DataNode(bytes, position, length);
+            head = dataNode;
             tail = head;
         } else {
-            tail.next = new DataNode(bytes, position, length);
+            tail.next = dataNode;
             tail = tail.next;
         }
         return true;
@@ -42,7 +43,7 @@ public class ByteArrayDataConsumer implements DataConsumer {
 
         //只调用了一次 accept, 我们直接返回当前数据
         if (node.next == null) {
-            return IOHelper.compressBytes(node.bytes, node.position, node.limit);
+            return IOHelper.compressBytes(node.bytes, node.position, node.available());
         }
 
         //多个数据我们合并
@@ -50,8 +51,9 @@ public class ByteArrayDataConsumer implements DataConsumer {
         int offset = 0;
 
         do {
-            System.arraycopy(node.bytes, node.position, bytes, offset, node.limit);
-            offset += node.limit;
+            int length = node.available();
+            System.arraycopy(node.bytes, node.position, bytes, offset, length);
+            offset += length;
             node = node.next;
         } while (node != null);
 
