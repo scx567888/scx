@@ -115,7 +115,7 @@ public class LinkedDataReader implements DataReader {
 
             // 当走到这里时 说明 remaining 一定大于 0,
             // 而从 remaining 和 length 的计算方式得出 此时 n 一定已经被彻底消耗掉了
-            // 所以我们 直接更新下一节点 即可
+            // 所以我们可以放心的直接更新到下一节点 即可
 
             if (n.next == null) {
                 //已经达到最大拉取次数 直接退出
@@ -130,12 +130,12 @@ public class LinkedDataReader implements DataReader {
                 pullCount = pullCount + 1;
             }
             n = n.next;
-            
+
             //更新 头节点
             if (movePointer) {
                 head = n;
             }
-            
+
         }
 
     }
