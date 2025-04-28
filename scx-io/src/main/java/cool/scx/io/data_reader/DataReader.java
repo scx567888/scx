@@ -51,6 +51,7 @@ public interface DataReader {
     /// @throws NoMoreDataException 没有更多数据时抛出
     void peek(DataConsumer dataConsumer, long maxLength, long maxPullCount) throws NoMoreDataException;
 
+    /// 查找索引
     long indexOf(DataIndexer indexer, long maxLength, long maxPullCount) throws NoMatchFoundException, NoMoreDataException;
 
     /// 标记
