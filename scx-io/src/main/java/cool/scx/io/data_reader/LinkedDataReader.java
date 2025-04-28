@@ -364,7 +364,7 @@ public class LinkedDataReader implements DataReader {
         if (maxLength > 0) {
             var pullCount = ensureAvailable(Long.MAX_VALUE);
             if (pullCount == -1) {
-                return -1;
+                return 0;
             }
         }
         var consumer = new OutputStreamDataConsumer(out);
