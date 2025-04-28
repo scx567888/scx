@@ -68,19 +68,16 @@ public interface DataReader {
     /// InputStream 写法的 read
     long inputStreamTransferTo(OutputStream out, long maxLength);
 
-    
     default byte[] read(int maxLength) throws NoMoreDataException {
         return read(maxLength, Long.MAX_VALUE);
     }
 
-    
     default byte[] read(int maxLength, long maxPullCount) throws NoMoreDataException {
         var consumer = new ByteArrayDataConsumer();
         read(consumer, maxLength, maxPullCount);
         return consumer.getBytes();
     }
 
-  
     default void read(DataConsumer dataConsumer, long maxLength) throws NoMoreDataException {
         read(dataConsumer, maxLength, Long.MAX_VALUE);
     }
@@ -89,7 +86,6 @@ public interface DataReader {
         return peek(maxLength, Long.MAX_VALUE);
     }
 
-    
     default byte[] peek(int maxLength, long maxPullCount) throws NoMoreDataException {
         var consumer = new ByteArrayDataConsumer();
         peek(consumer, maxLength, maxPullCount);
@@ -111,12 +107,12 @@ public interface DataReader {
     default long indexOf(byte b) throws NoMatchFoundException, NoMoreDataException {
         return indexOf(b, Long.MAX_VALUE);
     }
-    
+
     default long indexOf(byte b, long maxLength) throws NoMatchFoundException, NoMoreDataException {
         return indexOf(b, maxLength, Long.MAX_VALUE);
     }
 
-    default long indexOf(byte b, long maxLength, long maxPullCount) throws NoMatchFoundException, NoMoreDataException{
+    default long indexOf(byte b, long maxLength, long maxPullCount) throws NoMatchFoundException, NoMoreDataException {
         return indexOf(new ByteIndexer(b), maxLength, maxPullCount);
     }
 
@@ -128,7 +124,7 @@ public interface DataReader {
         return indexOf(b, maxLength, Long.MAX_VALUE);
     }
 
-    default long indexOf(byte[] b, long maxLength, long maxPullCount) throws NoMatchFoundException, NoMoreDataException{
+    default long indexOf(byte[] b, long maxLength, long maxPullCount) throws NoMatchFoundException, NoMoreDataException {
         return indexOf(new KMPDataIndexer(b), maxLength, maxPullCount);
     }
 
@@ -138,7 +134,7 @@ public interface DataReader {
         skip(1);
         return data;
     }
-   
+
     default byte[] readUntil(byte b, int maxLength) throws NoMatchFoundException, NoMoreDataException {
         var index = indexOf(b, maxLength);
         var data = read(toIntExact(index));
@@ -152,7 +148,7 @@ public interface DataReader {
         skip(b.length);
         return data;
     }
- 
+
     default byte[] readUntil(byte[] b, int maxLength) throws NoMatchFoundException, NoMoreDataException {
         var index = indexOf(b, maxLength);
         var data = read(toIntExact(index));
@@ -174,7 +170,7 @@ public interface DataReader {
         var index = indexOf(b);
         return peek(toIntExact(index));
     }
- 
+
     default byte[] peekUntil(byte[] b, int maxLength) throws NoMatchFoundException, NoMoreDataException {
         var index = indexOf(b, maxLength);
         return peek(toIntExact(index));
