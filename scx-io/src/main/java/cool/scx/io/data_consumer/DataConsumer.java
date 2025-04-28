@@ -9,7 +9,7 @@ public interface DataConsumer {
     /// @param bytes    字节
     /// @param position 起始位置
     /// @param length   长度
-    /// @return 是否需要继续
+    /// @return 是否需要更多数据
     boolean accept(byte[] bytes, int position, int length);
 
 }

@@ -20,7 +20,7 @@ public class ByteArrayDataConsumer implements DataConsumer {
     }
 
     @Override
-    public void accept(byte[] bytes, int position, int length) {
+    public boolean accept(byte[] bytes, int position, int length) {
         total += length;
         if (head == null) {
             head = new DataNode(bytes, position, length);
@@ -29,6 +29,7 @@ public class ByteArrayDataConsumer implements DataConsumer {
             tail.next = new DataNode(bytes, position, length);
             tail = tail.next;
         }
+        return true;
     }
 
     public byte[] getBytes() {

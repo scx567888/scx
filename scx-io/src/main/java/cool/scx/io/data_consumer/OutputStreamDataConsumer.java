@@ -17,13 +17,14 @@ public class OutputStreamDataConsumer implements DataConsumer {
     }
 
     @Override
-    public void accept(byte[] bytes, int position, int length) {
+    public boolean accept(byte[] bytes, int position, int length) {
         try {
             out.write(bytes, position, length);
             byteCount += length;
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
+        return true;
     }
 
     public long byteCount() {

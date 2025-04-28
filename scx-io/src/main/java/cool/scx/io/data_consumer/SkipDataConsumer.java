@@ -10,8 +10,9 @@ public class SkipDataConsumer implements DataConsumer {
     }
 
     @Override
-    public void accept(byte[] bytes, int position, int length) {
+    public boolean accept(byte[] bytes, int position, int length) {
         //什么都不做
+        return true;
     }
 
 }
