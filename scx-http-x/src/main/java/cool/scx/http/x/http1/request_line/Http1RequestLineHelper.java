@@ -64,7 +64,14 @@ public final class Http1RequestLineHelper {
 
         var pathStr = switch (requestTargetForm) {
             case ORIGIN_FORM -> uri.scheme(null).host(null).encode(true);
-            case ABSOLUTE_FORM -> uri.encode(true);
+            case ABSOLUTE_FORM -> {
+                var scheme = switch (uri.scheme().toLowerCase()) {
+                    case "ws" -> "http";
+                    case "wss" -> "https";
+                    default -> uri.scheme().toLowerCase(); // 确保统一小写
+                };
+                yield uri.scheme(scheme).encode(true);
+            }
             case AUTHORITY_FORM -> uri.host() + ":" + (uri.port() != null ? uri.port() : getDefaultPort(uri.scheme()));
             case ASTERISK_FORM -> "*";
         };
