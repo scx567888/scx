@@ -1,7 +1,7 @@
 package cool.scx.tcp.test;
 
-import cool.scx.tcp.NioTCPClient;
-import cool.scx.tcp.ScxTCPClientOptions;
+import cool.scx.tcp.TCPClient;
+import cool.scx.tcp.TCPClientOptions;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -20,7 +20,7 @@ public class TCPClientTest {
 
         for (int j = 0; j < 10; j = j + 1) {
             Thread.ofVirtual().start(() -> {
-                var tcpClient = new NioTCPClient(new ScxTCPClientOptions().tls(tls));
+                var tcpClient = new TCPClient(new TCPClientOptions().tls(tls));
                 var tcpSocket = tcpClient.connect(new InetSocketAddress(8899));
                 try (tcpSocket) {
                     var out = tcpSocket.outputStream();
