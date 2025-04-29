@@ -7,21 +7,21 @@ import cool.scx.tcp.tls.TLS;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class ScxTCPClientOptions {
+public class TCPClientOptions {
 
     private Proxy proxy;
     private TLS tls;
     private boolean autoUpgradeToTLS;
     private boolean autoHandshake;
 
-    public ScxTCPClientOptions() {
+    public TCPClientOptions() {
         this.tls = null;
         this.proxy = null;
         this.autoUpgradeToTLS = true;
         this.autoHandshake = true;
     }
 
-    public ScxTCPClientOptions(ScxTCPClientOptions oldOptions) {
+    public TCPClientOptions(TCPClientOptions oldOptions) {
         tls(oldOptions.tls());
         proxy(oldOptions.proxy());
         autoUpgradeToTLS(oldOptions.autoUpgradeToTLS());
@@ -32,7 +32,7 @@ public class ScxTCPClientOptions {
         return tls;
     }
 
-    public ScxTCPClientOptions tls(TLS tls) {
+    public TCPClientOptions tls(TLS tls) {
         this.tls = tls;
         return this;
     }
@@ -41,7 +41,7 @@ public class ScxTCPClientOptions {
         return this.proxy;
     }
 
-    public ScxTCPClientOptions proxy(Proxy proxy) {
+    public TCPClientOptions proxy(Proxy proxy) {
         this.proxy = proxy;
         return this;
     }
@@ -50,7 +50,7 @@ public class ScxTCPClientOptions {
         return autoUpgradeToTLS;
     }
 
-    public ScxTCPClientOptions autoUpgradeToTLS(boolean autoUpgradeToTLS) {
+    public TCPClientOptions autoUpgradeToTLS(boolean autoUpgradeToTLS) {
         this.autoUpgradeToTLS = autoUpgradeToTLS;
         return this;
     }
@@ -59,7 +59,7 @@ public class ScxTCPClientOptions {
         return autoHandshake;
     }
 
-    public ScxTCPClientOptions autoHandshake(boolean autoHandshake) {
+    public TCPClientOptions autoHandshake(boolean autoHandshake) {
         this.autoHandshake = autoHandshake;
         return this;
     }

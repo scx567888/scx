@@ -11,13 +11,13 @@ import java.net.SocketAddress;
 /// @version 0.0.1
 public class TCPClient implements ScxTCPClient {
 
-    private final ScxTCPClientOptions options;
+    private final TCPClientOptions options;
 
     public TCPClient() {
-        this(new ScxTCPClientOptions());
+        this(new TCPClientOptions());
     }
 
-    public TCPClient(ScxTCPClientOptions options) {
+    public TCPClient(TCPClientOptions options) {
         this.options = options;
     }
 

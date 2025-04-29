@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.Logger.Level.TRACE;
 
-/// 经典 TCP 服务器
+/// TCP 服务器
 ///
 /// @author scx567888
 /// @version 0.0.1
@@ -19,19 +19,19 @@ public class TCPServer implements ScxTCPServer {
 
     private static final Logger LOGGER = System.getLogger(TCPServer.class.getName());
 
-    private final ScxTCPServerOptions options;
+    private final TCPServerOptions options;
     private final Thread serverThread;
     private Consumer<ScxTCPSocket> connectHandler;
     private ServerSocket serverSocket;
     private volatile boolean running;
 
     public TCPServer() {
-        this(new ScxTCPServerOptions());
+        this(new TCPServerOptions());
     }
 
-    public TCPServer(ScxTCPServerOptions options) {
+    public TCPServer(TCPServerOptions options) {
         this.options = options;
-        this.serverThread = Thread.ofPlatform().name("ClassicTCPServer-Listener").unstarted(this::listen);
+        this.serverThread = Thread.ofPlatform().name("TCPServer-Listener").unstarted(this::listen);
         this.running = false;
     }
 
@@ -90,7 +90,7 @@ public class TCPServer implements ScxTCPServer {
         while (running) {
             try {
                 var socket = this.serverSocket.accept();
-                Thread.ofVirtual().name("ClassicTCPServer-Handler-" + socket.getRemoteSocketAddress()).start(() -> handle(socket));
+                Thread.ofVirtual().name("TCPServer-Handler-" + socket.getRemoteSocketAddress()).start(() -> handle(socket));
             } catch (IOException e) {
                 //第一种情况 服务器主动关闭
                 if (!running) {
