@@ -18,7 +18,8 @@ public class XHttpClientOptions {
     private boolean enableHttp2; // 是否开启 Http2
 
     public XHttpClientOptions() {
-        this.tcpClientOptions = new TCPClientOptions().autoUpgradeToTLS(true).autoHandshake(false);
+        //默认 不自动升级也不自动握手 已实现代理
+        this.tcpClientOptions = new TCPClientOptions().autoUpgradeToTLS(false).autoHandshake(false);
         this.http1ConnectionOptions = new Http1ClientConnectionOptions();
         this.proxy = null;//默认不启用代理
         this.timeout = 10 * 1000;//默认 10 秒
@@ -26,7 +27,8 @@ public class XHttpClientOptions {
     }
 
     public XHttpClientOptions(XHttpClientOptions oldOptions) {
-        this.tcpClientOptions = new TCPClientOptions(oldOptions.tcpClientOptions()).autoUpgradeToTLS(true).autoHandshake(false);
+        //默认 不自动升级也不自动握手 已实现代理
+        this.tcpClientOptions = new TCPClientOptions(oldOptions.tcpClientOptions()).autoUpgradeToTLS(false).autoHandshake(false);
         this.http1ConnectionOptions = new Http1ClientConnectionOptions(oldOptions.http1ConnectionOptions());
         proxy(oldOptions.proxy());
         timeout(oldOptions.timeout());
