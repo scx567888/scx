@@ -7,6 +7,7 @@ import cool.scx.http.version.HttpVersion;
 import java.net.URI;
 
 import static cool.scx.http.version.HttpVersion.HTTP_1_1;
+import static cool.scx.http.x.XHttpClientHelper.getDefaultPort;
 
 public final class Http1RequestLineHelper {
 
@@ -52,7 +53,7 @@ public final class Http1RequestLineHelper {
     }
 
     /// 编码请求行
-    public static String encodeRequestLine(Http1RequestLine requestLine, boolean useFullPath) {
+    public static String encodeRequestLine(Http1RequestLine requestLine, RequestTargetForm requestTargetForm) {
         var methodStr = requestLine.method().value();
 
         var uri = ScxURI.of(requestLine.path());
@@ -61,15 +62,12 @@ public final class Http1RequestLineHelper {
             uri.path("/");
         }
 
-        String pathStr;
-
-        if (!useFullPath) {
-            //HTTP 路径我们不允许携带 协议和主机 这里通过创建一个新的 ScxURI 来进行移除
-            pathStr = uri.scheme(null).host(null).encode(true);
-        } else {
-            //代理状态下我们需要处理
-            pathStr = uri.encode(true);
-        }
+        var pathStr = switch (requestTargetForm) {
+            case ORIGIN_FORM -> uri.scheme(null).host(null).encode(true);
+            case ABSOLUTE_FORM -> uri.encode(true);
+            case AUTHORITY_FORM -> uri.host() + ":" + (uri.port() != null ? uri.port() : getDefaultPort(uri.scheme()));
+            case ASTERISK_FORM -> "*";
+        };
 
         //此处我们强制使用 HTTP/1.1 , 忽略 requestLine 的版本号
         var versionStr = HTTP_1_1.value();

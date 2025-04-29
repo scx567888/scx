@@ -24,11 +24,11 @@ public record Http1RequestLine(ScxHttpMethod method, ScxURI path, HttpVersion ve
     }
 
     public String encode() {
-        return encode(false);
+        return encode(RequestTargetForm.ORIGIN_FORM);
     }
 
-    public String encode(boolean useFullPath) {
-        return Http1RequestLineHelper.encodeRequestLine(this,useFullPath);
+    public String encode(RequestTargetForm requestTargetForm) {
+        return Http1RequestLineHelper.encodeRequestLine(this, requestTargetForm);
     }
 
 }
