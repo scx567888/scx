@@ -30,7 +30,14 @@ public class ScxMediaTypeHelper {
         for (var i = 1; i < parts.length; i = i + 1) {
             var s = parts[i].split("=", 2);
             if (s.length == 2) {
-                m.params().add(s[0], s[1]);
+                var key = s[0];
+                var value = s[1];
+
+                // 如果值有引号，去掉引号
+                if (value.startsWith("\"") && value.endsWith("\"")) {
+                    value = value.substring(1, value.length() - 1);
+                }
+                m.params().add(key, value);
             }
         }
 
