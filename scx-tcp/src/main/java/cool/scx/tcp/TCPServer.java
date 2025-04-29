@@ -15,9 +15,9 @@ import static java.lang.System.Logger.Level.TRACE;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class ClassicTCPServer implements ScxTCPServer {
+public class TCPServer implements ScxTCPServer {
 
-    private static final Logger LOGGER = System.getLogger(ClassicTCPServer.class.getName());
+    private static final Logger LOGGER = System.getLogger(TCPServer.class.getName());
 
     private final ScxTCPServerOptions options;
     private final Thread serverThread;
@@ -25,11 +25,11 @@ public class ClassicTCPServer implements ScxTCPServer {
     private ServerSocket serverSocket;
     private volatile boolean running;
 
-    public ClassicTCPServer() {
+    public TCPServer() {
         this(new ScxTCPServerOptions());
     }
 
-    public ClassicTCPServer(ScxTCPServerOptions options) {
+    public TCPServer(ScxTCPServerOptions options) {
         this.options = options;
         this.serverThread = Thread.ofPlatform().name("ClassicTCPServer-Listener").unstarted(this::listen);
         this.running = false;
@@ -111,7 +111,7 @@ public class ClassicTCPServer implements ScxTCPServer {
 
     private void handle(Socket socket) {
 
-        var tcpSocket = new ClassicTCPSocket(socket);
+        var tcpSocket = new TCPSocket(socket);
 
         if (options.autoUpgradeToTLS()) {
             try {

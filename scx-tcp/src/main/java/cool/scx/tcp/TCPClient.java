@@ -9,15 +9,15 @@ import java.net.SocketAddress;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class ClassicTCPClient implements ScxTCPClient {
+public class TCPClient implements ScxTCPClient {
 
     private final ScxTCPClientOptions options;
 
-    public ClassicTCPClient() {
+    public TCPClient() {
         this(new ScxTCPClientOptions());
     }
 
-    public ClassicTCPClient(ScxTCPClientOptions options) {
+    public TCPClient(ScxTCPClientOptions options) {
         this.options = options;
     }
 
@@ -35,7 +35,7 @@ public class ClassicTCPClient implements ScxTCPClient {
             throw new UncheckedIOException("客户端连接失败 !!!", e);
         }
 
-        var tcpSocket = new ClassicTCPSocket(socket);
+        var tcpSocket = new TCPSocket(socket);
 
         if (options.autoUpgradeToTLS()) {
             try {
