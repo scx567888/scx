@@ -14,14 +14,14 @@ import java.net.Socket;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class ClassicTCPSocket implements ScxTCPSocket {
+public class TCPSocket implements ScxTCPSocket {
 
     private Socket socket;
     private InputStream in;
     private OutputStream out;
     private ScxTLSManager tlsManager;
 
-    public ClassicTCPSocket(Socket socket) {
+    public TCPSocket(Socket socket) {
         setSocket(socket);
     }
 
@@ -46,7 +46,7 @@ public class ClassicTCPSocket implements ScxTCPSocket {
     }
 
     @Override
-    public ClassicTCPSocket upgradeToTLS(TLS tls) throws IOException {
+    public TCPSocket upgradeToTLS(TLS tls) throws IOException {
         if (tls != null && tls.enabled()) {
             //创建 sslSocket (服务器端不需要设置 host 和 port)
             var sslSocket = tls.socketFactory().createSocket(socket, null, -1, true);
@@ -92,7 +92,7 @@ public class ClassicTCPSocket implements ScxTCPSocket {
             throw new UncheckedIOException(e);
         }
         if (socket instanceof SSLSocket sslSocket) {
-            tlsManager = new ClassicTLSManager(sslSocket);
+            tlsManager = new TLSManager(sslSocket);
         }
     }
 

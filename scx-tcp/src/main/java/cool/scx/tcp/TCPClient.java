@@ -2,40 +2,40 @@ package cool.scx.tcp;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.net.Socket;
 import java.net.SocketAddress;
-import java.nio.channels.SocketChannel;
 
-/// NIO TCP 客户端
+/// 经典 TCP 客户端
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class NioTCPClient implements ScxTCPClient {
+public class TCPClient implements ScxTCPClient {
 
-    private final ScxTCPClientOptions options;
+    private final TCPClientOptions options;
 
-    public NioTCPClient() {
-        this(new ScxTCPClientOptions());
+    public TCPClient() {
+        this(new TCPClientOptions());
     }
 
-    public NioTCPClient(ScxTCPClientOptions options) {
+    public TCPClient(TCPClientOptions options) {
         this.options = options;
     }
 
     @Override
-    public ScxTCPSocket connect(SocketAddress endpoint) {
+    public ScxTCPSocket connect(SocketAddress endpoint, int timeout) {
 
         //todo 处理代理
         var proxy = options.proxy();
 
-        SocketChannel socketChannel;
+        Socket socket;
         try {
-            socketChannel = SocketChannel.open();
-            socketChannel.connect(endpoint);
+            socket = new Socket();
+            socket.connect(endpoint, timeout);
         } catch (IOException e) {
             throw new UncheckedIOException("客户端连接失败 !!!", e);
         }
 
-        var tcpSocket = new NioTCPSocket(socketChannel);
+        var tcpSocket = new TCPSocket(socket);
 
         if (options.autoUpgradeToTLS()) {
             try {

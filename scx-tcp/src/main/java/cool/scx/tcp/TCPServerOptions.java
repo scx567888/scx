@@ -8,7 +8,7 @@ import java.net.InetSocketAddress;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class ScxTCPServerOptions {
+public class TCPServerOptions {
 
     private InetSocketAddress localAddress;
     private int backlog;
@@ -16,7 +16,7 @@ public class ScxTCPServerOptions {
     private boolean autoUpgradeToTLS;
     private boolean autoHandshake;
 
-    public ScxTCPServerOptions() {
+    public TCPServerOptions() {
         this.localAddress = new InetSocketAddress(0); // 默认随机端口号
         this.backlog = 128; // 默认背压大小 128
         this.tls = null; // 默认没有 tls
@@ -24,7 +24,7 @@ public class ScxTCPServerOptions {
         this.autoHandshake = true; // 自动握手
     }
 
-    public ScxTCPServerOptions(ScxTCPServerOptions oldOptions) {
+    public TCPServerOptions(TCPServerOptions oldOptions) {
         localAddress(oldOptions.localAddress());
         backlog(oldOptions.backlog());
         tls(oldOptions.tls());
@@ -36,7 +36,7 @@ public class ScxTCPServerOptions {
         return localAddress;
     }
 
-    public ScxTCPServerOptions localAddress(InetSocketAddress localAddress) {
+    public TCPServerOptions localAddress(InetSocketAddress localAddress) {
         this.localAddress = localAddress;
         return this;
     }
@@ -45,7 +45,7 @@ public class ScxTCPServerOptions {
         return backlog;
     }
 
-    public ScxTCPServerOptions backlog(int backlog) {
+    public TCPServerOptions backlog(int backlog) {
         this.backlog = backlog;
         return this;
     }
@@ -54,7 +54,7 @@ public class ScxTCPServerOptions {
         return tls;
     }
 
-    public ScxTCPServerOptions tls(TLS tls) {
+    public TCPServerOptions tls(TLS tls) {
         this.tls = tls;
         return this;
     }
@@ -63,7 +63,7 @@ public class ScxTCPServerOptions {
         return autoUpgradeToTLS;
     }
 
-    public ScxTCPServerOptions autoUpgradeToTLS(boolean autoUpgradeToTLS) {
+    public TCPServerOptions autoUpgradeToTLS(boolean autoUpgradeToTLS) {
         this.autoUpgradeToTLS = autoUpgradeToTLS;
         return this;
     }
@@ -72,13 +72,13 @@ public class ScxTCPServerOptions {
         return autoHandshake;
     }
 
-    public ScxTCPServerOptions autoHandshake(boolean autoHandshake) {
+    public TCPServerOptions autoHandshake(boolean autoHandshake) {
         this.autoHandshake = autoHandshake;
         return this;
     }
 
     //简易方法
-    public ScxTCPServerOptions port(int port) {
+    public TCPServerOptions port(int port) {
         return localAddress(new InetSocketAddress(port));
     }
 

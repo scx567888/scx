@@ -22,8 +22,15 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>scx-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>scx-io</artifactId>
             <version>${project.version}</version>
+            <scope>test</scope>
         </dependency>
 
         <!-- TestNG 测试包 -->

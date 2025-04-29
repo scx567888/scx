@@ -4,34 +4,34 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.lang.System.Logger;
 import java.net.InetSocketAddress;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.function.Consumer;
 
 import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.Logger.Level.TRACE;
 
-/// NIO TCP 服务器
+/// TCP 服务器
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class NioTCPServer implements ScxTCPServer {
+public class TCPServer implements ScxTCPServer {
 
-    private static final Logger LOGGER = System.getLogger(ClassicTCPServer.class.getName());
+    private static final Logger LOGGER = System.getLogger(TCPServer.class.getName());
 
-    private final ScxTCPServerOptions options;
+    private final TCPServerOptions options;
     private final Thread serverThread;
     private Consumer<ScxTCPSocket> connectHandler;
-    private ServerSocketChannel serverSocketChannel;
+    private ServerSocket serverSocket;
     private volatile boolean running;
 
-    public NioTCPServer() {
-        this(new ScxTCPServerOptions());
+    public TCPServer() {
+        this(new TCPServerOptions());
     }
 
-    public NioTCPServer(ScxTCPServerOptions options) {
+    public TCPServer(TCPServerOptions options) {
         this.options = options;
-        this.serverThread = Thread.ofPlatform().name("NioTCPServer-Listener").unstarted(this::listen);
+        this.serverThread = Thread.ofPlatform().name("TCPServer-Listener").unstarted(this::listen);
         this.running = false;
     }
 
@@ -48,8 +48,8 @@ public class NioTCPServer implements ScxTCPServer {
         }
 
         try {
-            this.serverSocketChannel = ServerSocketChannel.open();
-            this.serverSocketChannel.bind(options.localAddress(), options.backlog());
+            this.serverSocket = new ServerSocket();
+            this.serverSocket.bind(options.localAddress(), options.backlog());
         } catch (IOException e) {
             throw new UncheckedIOException("启动服务器失败 !!!", e);
         }
@@ -68,7 +68,7 @@ public class NioTCPServer implements ScxTCPServer {
         running = false;
 
         try {
-            serverSocketChannel.close();
+            serverSocket.close();
         } catch (IOException e) {
             throw new UncheckedIOException("关闭服务器失败 !!!", e);
         }
@@ -83,18 +83,14 @@ public class NioTCPServer implements ScxTCPServer {
 
     @Override
     public InetSocketAddress localAddress() {
-        try {
-            return (InetSocketAddress) serverSocketChannel.getLocalAddress();
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
+        return (InetSocketAddress) serverSocket.getLocalSocketAddress();
     }
 
     private void listen() {
         while (running) {
             try {
-                var socketChannel = this.serverSocketChannel.accept();
-                Thread.ofVirtual().name("NioTCPServer-Handler-" + socketChannel.getRemoteAddress()).start(() -> handle(socketChannel));
+                var socket = this.serverSocket.accept();
+                Thread.ofVirtual().name("TCPServer-Handler-" + socket.getRemoteSocketAddress()).start(() -> handle(socket));
             } catch (IOException e) {
                 //第一种情况 服务器主动关闭
                 if (!running) {
@@ -104,18 +100,18 @@ public class NioTCPServer implements ScxTCPServer {
                 running = false;
                 LOGGER.log(ERROR, "服务器 接受连接 时发生错误 !!!", e);
                 try {
-                    serverSocketChannel.close();
+                    serverSocket.close();
                 } catch (IOException ex) {
-                    LOGGER.log(TRACE, "关闭 serverSocketChannel 时发生错误 !!!", ex);
+                    LOGGER.log(TRACE, "关闭 serverSocket 时发生错误 !!!", ex);
                 }
                 break;
             }
         }
     }
 
-    private void handle(SocketChannel socketChannel) {
+    private void handle(Socket socket) {
 
-        var tcpSocket = new NioTCPSocket(socketChannel);
+        var tcpSocket = new TCPSocket(socket);
 
         if (options.autoUpgradeToTLS()) {
             try {

@@ -2,7 +2,7 @@ package cool.scx.http.x;
 
 import cool.scx.http.x.http1.Http1ServerConnectionOptions;
 import cool.scx.http.x.http1.Http1UpgradeHandler;
-import cool.scx.tcp.ScxTCPServerOptions;
+import cool.scx.tcp.TCPServerOptions;
 import cool.scx.tcp.tls.TLS;
 
 import java.net.InetSocketAddress;
@@ -14,43 +14,31 @@ import java.util.List;
 /// @version 0.0.1
 public class XHttpServerOptions {
 
-    private final ScxTCPServerOptions tcpServerOptions; // TCP 服务器配置
+    private final TCPServerOptions tcpServerOptions; // TCP 服务器配置
     private final Http1ServerConnectionOptions http1ConnectionOptions;// Http1 配置
-    private TCPServerType tcpServerType; // TCP 服务器类型
     private boolean enableHttp2; // 是否开启 Http2
 
     public XHttpServerOptions() {
         //默认不自动握手
-        this.tcpServerOptions = new ScxTCPServerOptions().autoUpgradeToTLS(true).autoHandshake(false);
+        this.tcpServerOptions = new TCPServerOptions().autoUpgradeToTLS(true).autoHandshake(false);
         this.http1ConnectionOptions = new Http1ServerConnectionOptions();
-        this.tcpServerType = TCPServerType.CLASSIC; // 默认 使用 CLASSIC 实现
         this.enableHttp2 = false;//默认不启用 http2
     }
 
     public XHttpServerOptions(XHttpServerOptions oldOptions) {
         //默认不自动握手
-        this.tcpServerOptions = new ScxTCPServerOptions(oldOptions.tcpServerOptions()).autoUpgradeToTLS(true).autoHandshake(false);
+        this.tcpServerOptions = new TCPServerOptions(oldOptions.tcpServerOptions()).autoUpgradeToTLS(true).autoHandshake(false);
         this.http1ConnectionOptions = new Http1ServerConnectionOptions(oldOptions.http1ConnectionOptions());
-        tcpServerType(oldOptions.tcpServerType());
         enableHttp2(oldOptions.enableHttp2());
     }
 
     //因为涉及到一些底层实现, 所以不允许外界访问
-    ScxTCPServerOptions tcpServerOptions() {
+    TCPServerOptions tcpServerOptions() {
         return tcpServerOptions;
     }
 
     public Http1ServerConnectionOptions http1ConnectionOptions() {
         return http1ConnectionOptions;
-    }
-
-    public TCPServerType tcpServerType() {
-        return tcpServerType;
-    }
-
-    public XHttpServerOptions tcpServerType(TCPServerType tcpServerType) {
-        this.tcpServerType = tcpServerType;
-        return this;
     }
 
     public int maxRequestLineSize() {
