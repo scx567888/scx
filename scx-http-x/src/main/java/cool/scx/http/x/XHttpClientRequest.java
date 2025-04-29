@@ -10,9 +10,12 @@ import cool.scx.http.uri.ScxURI;
 import cool.scx.http.uri.ScxURIWritable;
 import cool.scx.http.version.HttpVersion;
 import cool.scx.http.x.http1.Http1ClientConnection;
+import cool.scx.http.x.http1.request_line.RequestTargetForm;
 import cool.scx.http.x.http2.Http2ClientConnection;
 
 import static cool.scx.http.method.HttpMethod.GET;
+import static cool.scx.http.x.http1.request_line.RequestTargetForm.ABSOLUTE_FORM;
+import static cool.scx.http.x.http1.request_line.RequestTargetForm.ORIGIN_FORM;
 
 /// todo 待完成
 ///
@@ -27,6 +30,7 @@ public class XHttpClientRequest implements ScxHttpClientRequest {
     protected ScxHttpMethod method;
     protected ScxURIWritable uri;
     protected ScxHttpHeadersWritable headers;
+    protected RequestTargetForm requestTargetForm;
 
     public XHttpClientRequest(XHttpClient httpClient) {
         this.httpClient = httpClient;
@@ -35,6 +39,7 @@ public class XHttpClientRequest implements ScxHttpClientRequest {
         this.method = GET;
         this.uri = ScxURI.of();
         this.headers = ScxHttpHeaders.of();
+        this.requestTargetForm = ORIGIN_FORM;
     }
 
     @Override
@@ -52,6 +57,10 @@ public class XHttpClientRequest implements ScxHttpClientRequest {
         if (useHttp2) {
             return new Http2ClientConnection(tcpSocket, options).sendRequest(this, writer).waitResponse();
         } else {
+            //仅当 http 协议并且开启代理的时候才使用 绝对路径
+            if (!tcpSocket.isTLS() && options.proxy() != null && options.proxy().enabled()) {
+                this.requestTargetForm = ABSOLUTE_FORM;
+            }
             return new Http1ClientConnection(tcpSocket, options).sendRequest(this, writer).waitResponse();
         }
 
@@ -108,6 +117,14 @@ public class XHttpClientRequest implements ScxHttpClientRequest {
     public ScxHttpClientRequest headers(ScxHttpHeaders headers) {
         this.headers = ScxHttpHeaders.of(headers);
         return this;
+    }
+
+    public RequestTargetForm requestTargetForm() {
+        return requestTargetForm;
+    }
+
+    public void requestTargetForm(RequestTargetForm requestTargetForm) {
+        this.requestTargetForm = requestTargetForm;
     }
 
 }
