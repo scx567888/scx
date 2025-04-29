@@ -8,6 +8,7 @@ import cool.scx.tcp.TCPClientOptions;
 import cool.scx.tcp.tls.TLS;
 
 import java.io.IOException;
+import java.net.SocketAddress;
 
 import static cool.scx.http.x.XHttpClientHelper.checkIsTLS;
 import static cool.scx.http.x.XHttpClientHelper.getRemoteAddress;
@@ -44,8 +45,15 @@ public class XHttpClient implements ScxHttpClient {
 
         var tcpClient = new TCPClient(tcpClientOptions);
 
-        var remoteAddress = getRemoteAddress(uri);
-        var tcpSocket = tcpClient.connect(remoteAddress);
+        SocketAddress remoteAddress;
+        //这里如果没有代理就使用 uri 作为远端地址, 否则使用代理地址
+        if (options.proxy() != null && options.proxy().enabled()) {
+            remoteAddress = options.proxy().proxyAddress();
+        } else {
+            remoteAddress = getRemoteAddress(uri);
+        }
+
+        var tcpSocket = tcpClient.connect(remoteAddress, options().timeout());
 
         if (tcpSocket.isTLS()) {
             tcpSocket.tlsManager().setApplicationProtocols(applicationProtocols);

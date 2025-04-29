@@ -28,12 +28,14 @@ public class Http1ClientConnection {
     public final ScxTCPSocket tcpSocket;
     public final DataReader dataReader;
     public final OutputStream dataWriter;
+    public final XHttpClientOptions clientOptions;
     public final Http1ClientConnectionOptions options;
 
     public Http1ClientConnection(ScxTCPSocket tcpSocket, XHttpClientOptions options) {
         this.tcpSocket = tcpSocket;
         this.dataReader = new LinkedDataReader(new InputStreamDataSupplier(tcpSocket.inputStream()));
         this.dataWriter = new NoCloseOutputStream(tcpSocket.outputStream());
+        this.clientOptions = options;
         this.options = options.http1ConnectionOptions();
     }
 
@@ -47,7 +49,8 @@ public class Http1ClientConnection {
         // 1, 创建 请求行
         var requestLine = new Http1RequestLine(request.method(), request.uri());
 
-        var requestLineStr = requestLine.encode();
+        // 根据是否启用代理来判断是否使用全路径
+        var requestLineStr = requestLine.encode(clientOptions.proxy() != null && clientOptions.proxy().enabled());
 
         // 处理头相关
         // 1, 处理 HOST 相关

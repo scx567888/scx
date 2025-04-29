@@ -52,17 +52,27 @@ public final class Http1RequestLineHelper {
     }
 
     /// 编码请求行
-    public static String encodeRequestLine(Http1RequestLine requestLine) {
+    public static String encodeRequestLine(Http1RequestLine requestLine, boolean useFullPath) {
         var methodStr = requestLine.method().value();
-        //HTTP 路径我们不允许携带 协议和主机 这里通过创建一个新的 ScxURI 来进行移除
-        var pathStr = ScxURI.of(requestLine.path()).scheme(null).host(null).encode(true);
+
+        var uri = ScxURI.of(requestLine.path());
+        //处理空请求路径
+        if ("".equals(uri.path())) {
+            uri.path("/");
+        }
+
+        String pathStr;
+
+        if (!useFullPath) {
+            //HTTP 路径我们不允许携带 协议和主机 这里通过创建一个新的 ScxURI 来进行移除
+            pathStr = uri.scheme(null).host(null).encode(true);
+        } else {
+            //代理状态下我们需要处理
+            pathStr = uri.encode(true);
+        }
+
         //此处我们强制使用 HTTP/1.1 , 忽略 requestLine 的版本号
         var versionStr = HTTP_1_1.value();
-
-        //处理空请求路径
-        if ("".equals(pathStr)) {
-            pathStr = "/";
-        }
 
         //拼接返回
         return methodStr + " " + pathStr + " " + versionStr;
