@@ -63,7 +63,10 @@ public class ScxURIHelper {
 
         //拼接 host
         if (host != null) {
-            sb.append("//");
+            // "//" 应该只在 scheme 和 host 同时存在时才拼接
+            if (scheme != null) {
+                sb.append("//");
+            }
 
             sb.append(host);
 
