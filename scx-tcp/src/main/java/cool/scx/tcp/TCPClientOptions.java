@@ -1,6 +1,5 @@
 package cool.scx.tcp;
 
-import cool.scx.tcp.proxy.Proxy;
 import cool.scx.tcp.tls.TLS;
 
 /// ScxTCPClientOptions
@@ -9,21 +8,18 @@ import cool.scx.tcp.tls.TLS;
 /// @version 0.0.1
 public class TCPClientOptions {
 
-    private Proxy proxy;
     private TLS tls;
     private boolean autoUpgradeToTLS;
     private boolean autoHandshake;
 
     public TCPClientOptions() {
         this.tls = null;
-        this.proxy = null;
         this.autoUpgradeToTLS = true;
         this.autoHandshake = true;
     }
 
     public TCPClientOptions(TCPClientOptions oldOptions) {
         tls(oldOptions.tls());
-        proxy(oldOptions.proxy());
         autoUpgradeToTLS(oldOptions.autoUpgradeToTLS());
         autoHandshake(oldOptions.autoHandshake());
     }
@@ -34,15 +30,6 @@ public class TCPClientOptions {
 
     public TCPClientOptions tls(TLS tls) {
         this.tls = tls;
-        return this;
-    }
-
-    public Proxy proxy() {
-        return this.proxy;
-    }
-
-    public TCPClientOptions proxy(Proxy proxy) {
-        this.proxy = proxy;
         return this;
     }
 
