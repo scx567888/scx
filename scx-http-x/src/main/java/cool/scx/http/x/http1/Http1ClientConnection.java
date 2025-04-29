@@ -27,14 +27,12 @@ public class Http1ClientConnection {
     public final ScxTCPSocket tcpSocket;
     public final DataReader dataReader;
     public final OutputStream dataWriter;
-    public final XHttpClientOptions clientOptions;
     public final Http1ClientConnectionOptions options;
 
     public Http1ClientConnection(ScxTCPSocket tcpSocket, XHttpClientOptions options) {
         this.tcpSocket = tcpSocket;
         this.dataReader = new LinkedDataReader(new InputStreamDataSupplier(tcpSocket.inputStream()));
         this.dataWriter = new NoCloseOutputStream(tcpSocket.outputStream());
-        this.clientOptions = options;
         this.options = options.http1ConnectionOptions();
     }
 
