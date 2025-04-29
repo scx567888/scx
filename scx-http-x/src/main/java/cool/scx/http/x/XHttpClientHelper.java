@@ -4,7 +4,7 @@ import cool.scx.http.uri.ScxURI;
 
 import java.net.InetSocketAddress;
 
-class XHttpClientHelper {
+public class XHttpClientHelper {
 
     public static boolean checkIsTLS(ScxURI uri) {
         var scheme = uri.scheme().toLowerCase();
@@ -18,15 +18,19 @@ class XHttpClientHelper {
     public static InetSocketAddress getRemoteAddress(ScxURI uri) {
         var host = uri.host();
         var port = uri.port();
-        var scheme = uri.scheme().toLowerCase();
         if (port == null) {
-            port = switch (scheme) {
-                case "http", "ws" -> 80;
-                case "https", "wss" -> 443;
-                default -> throw new IllegalArgumentException("Unsupported scheme: " + uri.scheme());
-            };
+            port = getDefaultPort(uri.scheme());
         }
         return new InetSocketAddress(host, port);
+    }
+
+    public static int getDefaultPort(String scheme) {
+        scheme = scheme.toLowerCase();
+        return switch (scheme) {
+            case "http", "ws" -> 80;
+            case "https", "wss" -> 443;
+            default -> throw new IllegalArgumentException("Unsupported scheme: " + scheme);
+        };
     }
 
 }

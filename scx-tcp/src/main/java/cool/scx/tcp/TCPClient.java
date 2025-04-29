@@ -24,12 +24,8 @@ public class TCPClient implements ScxTCPClient {
     @Override
     public ScxTCPSocket connect(SocketAddress endpoint, int timeout) {
 
-        //todo 处理代理
-        var proxy = options.proxy();
-
-        Socket socket;
+        var socket = new Socket();
         try {
-            socket = new Socket();
             socket.connect(endpoint, timeout);
         } catch (IOException e) {
             throw new UncheckedIOException("客户端连接失败 !!!", e);

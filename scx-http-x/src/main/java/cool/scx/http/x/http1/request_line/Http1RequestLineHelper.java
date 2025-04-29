@@ -7,6 +7,7 @@ import cool.scx.http.version.HttpVersion;
 import java.net.URI;
 
 import static cool.scx.http.version.HttpVersion.HTTP_1_1;
+import static cool.scx.http.x.XHttpClientHelper.getDefaultPort;
 
 public final class Http1RequestLineHelper {
 
@@ -52,17 +53,32 @@ public final class Http1RequestLineHelper {
     }
 
     /// 编码请求行
-    public static String encodeRequestLine(Http1RequestLine requestLine) {
+    public static String encodeRequestLine(Http1RequestLine requestLine, RequestTargetForm requestTargetForm) {
         var methodStr = requestLine.method().value();
-        //HTTP 路径我们不允许携带 协议和主机 这里通过创建一个新的 ScxURI 来进行移除
-        var pathStr = ScxURI.of(requestLine.path()).scheme(null).host(null).encode(true);
+
+        var uri = ScxURI.of(requestLine.path());
+        //处理空请求路径
+        if ("".equals(uri.path())) {
+            uri.path("/");
+        }
+
+        var pathStr = switch (requestTargetForm) {
+            case ORIGIN_FORM -> uri.scheme(null).host(null).encode(true);
+            case ABSOLUTE_FORM -> {
+                //注意转换 ws -> http
+                var scheme = switch (uri.scheme().toLowerCase()) {
+                    case "ws" -> "http";
+                    case "wss" -> "https";
+                    default -> uri.scheme().toLowerCase(); // 确保统一小写
+                };
+                yield uri.scheme(scheme).encode(true);
+            }
+            case AUTHORITY_FORM -> uri.host() + ":" + (uri.port() != null ? uri.port() : getDefaultPort(uri.scheme()));
+            case ASTERISK_FORM -> "*";
+        };
+
         //此处我们强制使用 HTTP/1.1 , 忽略 requestLine 的版本号
         var versionStr = HTTP_1_1.value();
-
-        //处理空请求路径
-        if ("".equals(pathStr)) {
-            pathStr = "/";
-        }
 
         //拼接返回
         return methodStr + " " + pathStr + " " + versionStr;

@@ -24,7 +24,11 @@ public record Http1RequestLine(ScxHttpMethod method, ScxURI path, HttpVersion ve
     }
 
     public String encode() {
-        return Http1RequestLineHelper.encodeRequestLine(this);
+        return encode(RequestTargetForm.ORIGIN_FORM);
+    }
+
+    public String encode(RequestTargetForm requestTargetForm) {
+        return Http1RequestLineHelper.encodeRequestLine(this, requestTargetForm);
     }
 
 }

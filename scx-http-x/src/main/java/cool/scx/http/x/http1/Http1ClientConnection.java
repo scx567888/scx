@@ -1,6 +1,5 @@
 package cool.scx.http.x.http1;
 
-import cool.scx.http.ScxHttpClientRequest;
 import cool.scx.http.ScxHttpClientResponse;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.media.MediaWriter;
@@ -37,7 +36,7 @@ public class Http1ClientConnection {
         this.options = options.http1ConnectionOptions();
     }
 
-    public Http1ClientConnection sendRequest(ScxHttpClientRequest request, MediaWriter writer) {
+    public Http1ClientConnection sendRequest(Http1ClientRequest request, MediaWriter writer) {
         //复制一份头便于修改
         var headers = new Http1Headers(request.headers());
 
@@ -47,7 +46,8 @@ public class Http1ClientConnection {
         // 1, 创建 请求行
         var requestLine = new Http1RequestLine(request.method(), request.uri());
 
-        var requestLineStr = requestLine.encode();
+        // 根据 requestTargetForm 编码
+        var requestLineStr = requestLine.encode(request.requestTargetForm());
 
         // 处理头相关
         // 1, 处理 HOST 相关

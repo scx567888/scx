@@ -8,7 +8,9 @@ import cool.scx.http.uri.ScxURI;
 import cool.scx.http.uri.ScxURIWritable;
 import cool.scx.http.x.XHttpClient;
 import cool.scx.http.x.http1.Http1ClientConnection;
+import cool.scx.http.x.http1.Http1ClientRequest;
 import cool.scx.http.x.http1.headers.Http1Headers;
+import cool.scx.http.x.http1.request_line.RequestTargetForm;
 import cool.scx.tcp.ScxTCPClient;
 import cool.scx.websocket.ScxClientWebSocketHandshakeRequest;
 import cool.scx.websocket.ScxClientWebSocketHandshakeResponse;
@@ -18,13 +20,15 @@ import static cool.scx.http.headers.HttpFieldName.SEC_WEBSOCKET_VERSION;
 import static cool.scx.http.media.empty.EmptyWriter.EMPTY_WRITER;
 import static cool.scx.http.x.http1.headers.connection.Connection.UPGRADE;
 import static cool.scx.http.x.http1.headers.upgrade.Upgrade.WEB_SOCKET;
+import static cool.scx.http.x.http1.request_line.RequestTargetForm.ABSOLUTE_FORM;
+import static cool.scx.http.x.http1.request_line.RequestTargetForm.ORIGIN_FORM;
 
 
 /// todo 待完成
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class XClientWebSocketHandshakeRequest implements ScxClientWebSocketHandshakeRequest {
+public class XClientWebSocketHandshakeRequest implements ScxClientWebSocketHandshakeRequest, Http1ClientRequest {
 
     private final XHttpClient httpClient;
     private final WebSocketOptions webSocketOptions;
@@ -32,12 +36,14 @@ public class XClientWebSocketHandshakeRequest implements ScxClientWebSocketHands
     private ScxURIWritable uri;
     private ScxTCPClient tcpClient;
     private Http1Headers headers;
+    private RequestTargetForm requestTargetForm;
 
     public XClientWebSocketHandshakeRequest(XHttpClient httpClient, WebSocketOptions webSocketOptions) {
         this.httpClient = httpClient;
         this.webSocketOptions = webSocketOptions;
         this.uri = ScxURI.of();
         this.headers = new Http1Headers();
+        this.requestTargetForm = ORIGIN_FORM;
     }
 
     @Override
@@ -76,11 +82,26 @@ public class XClientWebSocketHandshakeRequest implements ScxClientWebSocketHands
         this.headers.set(SEC_WEBSOCKET_KEY, secWebsocketKey);
         this.headers.set(SEC_WEBSOCKET_VERSION, "13");
 
+        //仅当 http 协议并且开启代理的时候才使用 绝对路径
+        if (!tcpSocket.isTLS() && httpClient.options().proxy() != null && httpClient.options().proxy().enabled()) {
+            this.requestTargetForm = ABSOLUTE_FORM;
+        }
         var connection = new Http1ClientConnection(tcpSocket, httpClient.options());
         var response = connection.sendRequest(this, EMPTY_WRITER).waitResponse();
 
         return new XClientWebSocketHandshakeResponse(connection, response, this.webSocketOptions);
 
+    }
+
+    @Override
+    public RequestTargetForm requestTargetForm() {
+        return this.requestTargetForm;
+    }
+
+    @Override
+    public Http1ClientRequest requestTargetForm(RequestTargetForm requestTargetForm) {
+        this.requestTargetForm = requestTargetForm;
+        return this;
     }
 
 }
