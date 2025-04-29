@@ -22,7 +22,7 @@ public class ClassicTCPClient implements ScxTCPClient {
     }
 
     @Override
-    public ScxTCPSocket connect(SocketAddress endpoint) {
+    public ScxTCPSocket connect(SocketAddress endpoint, int timeout) {
 
         //todo 处理代理
         var proxy = options.proxy();
@@ -30,7 +30,7 @@ public class ClassicTCPClient implements ScxTCPClient {
         Socket socket;
         try {
             socket = new Socket();
-            socket.connect(endpoint);
+            socket.connect(endpoint, timeout);
         } catch (IOException e) {
             throw new UncheckedIOException("客户端连接失败 !!!", e);
         }
