@@ -39,7 +39,7 @@ public class Http1ClientConnection {
         this.options = options.http1ConnectionOptions();
     }
 
-    public Http1ClientConnection sendRequest(XHttpClientRequest request, MediaWriter writer) {
+    public Http1ClientConnection sendRequest(Http1ClientRequest request, MediaWriter writer) {
         //复制一份头便于修改
         var headers = new Http1Headers(request.headers());
 

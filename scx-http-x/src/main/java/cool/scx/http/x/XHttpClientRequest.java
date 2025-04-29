@@ -10,6 +10,7 @@ import cool.scx.http.uri.ScxURI;
 import cool.scx.http.uri.ScxURIWritable;
 import cool.scx.http.version.HttpVersion;
 import cool.scx.http.x.http1.Http1ClientConnection;
+import cool.scx.http.x.http1.Http1ClientRequest;
 import cool.scx.http.x.http1.request_line.RequestTargetForm;
 import cool.scx.http.x.http2.Http2ClientConnection;
 
@@ -21,7 +22,7 @@ import static cool.scx.http.x.http1.request_line.RequestTargetForm.ORIGIN_FORM;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class XHttpClientRequest implements ScxHttpClientRequest {
+public class XHttpClientRequest implements Http1ClientRequest {
 
     private final XHttpClient httpClient;
     private final XHttpClientOptions options;
@@ -119,12 +120,15 @@ public class XHttpClientRequest implements ScxHttpClientRequest {
         return this;
     }
 
+    @Override
     public RequestTargetForm requestTargetForm() {
         return requestTargetForm;
     }
 
-    public void requestTargetForm(RequestTargetForm requestTargetForm) {
+    @Override
+    public XHttpClientRequest requestTargetForm(RequestTargetForm requestTargetForm) {
         this.requestTargetForm = requestTargetForm;
+        return this;
     }
 
 }
