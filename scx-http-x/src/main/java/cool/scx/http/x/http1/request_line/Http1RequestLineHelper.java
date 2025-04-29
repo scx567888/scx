@@ -65,6 +65,7 @@ public final class Http1RequestLineHelper {
         var pathStr = switch (requestTargetForm) {
             case ORIGIN_FORM -> uri.scheme(null).host(null).encode(true);
             case ABSOLUTE_FORM -> {
+                //注意转换 ws -> http
                 var scheme = switch (uri.scheme().toLowerCase()) {
                     case "ws" -> "http";
                     case "wss" -> "https";
