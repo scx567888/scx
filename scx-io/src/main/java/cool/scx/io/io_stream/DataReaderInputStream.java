@@ -3,6 +3,7 @@ package cool.scx.io.io_stream;
 import cool.scx.io.data_reader.DataReader;
 import cool.scx.io.data_reader.LinkedDataReader;
 import cool.scx.io.data_supplier.DataSupplier;
+import cool.scx.io.exception.NoMoreDataException;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -58,12 +59,22 @@ public class DataReaderInputStream extends CheckedInputStream {
 
     @Override
     public byte[] readNBytes(int len) throws IOException {
-        return dataReader.read(len);
+        //模拟 inputStream 的行为 没数据 返回 0 字节 而不是抛出 NoMoreDataException
+        try {
+            return dataReader.read(len);
+        } catch (NoMoreDataException e) {
+            return new byte[0];
+        }
     }
 
     @Override
     public byte[] readAllBytes() throws IOException {
-        return dataReader.read(Integer.MAX_VALUE);
+        //模拟 inputStream 的行为 没数据 返回 0 字节 而不是抛出 NoMoreDataException
+        try {
+            return dataReader.read(Integer.MAX_VALUE);
+        } catch (NoMoreDataException e) {
+            return new byte[0];
+        }
     }
 
     @Override
