@@ -3,9 +3,9 @@ package cool.scx.http.x.proxy;
 import java.net.SocketAddress;
 
 class ProxyImpl implements Proxy {
-    
-    private boolean enabled;
+
     private final SocketAddress proxyAddress;
+    private boolean enabled;
 
     public ProxyImpl(SocketAddress proxyAddress) {
         this.enabled = true;
@@ -27,5 +27,5 @@ class ProxyImpl implements Proxy {
     public SocketAddress proxyAddress() {
         return this.proxyAddress;
     }
-    
+
 }

@@ -33,6 +33,33 @@ public class XHttpClient implements ScxHttpClient {
         this(new XHttpClientOptions());
     }
 
+    private static ScxTCPSocket configTLS(ScxTCPSocket tcpSocket, TLS tls, String... applicationProtocols) {
+        //手动升级
+        try {
+            tcpSocket.upgradeToTLS(tls);
+        } catch (IOException e) {
+            tryCloseSocket(tcpSocket, e);
+            throw new UncheckedIOException("升级到 TLS 时发生错误 !!!", e);
+        }
+        tcpSocket.tlsManager().setUseClientMode(true);
+        tcpSocket.tlsManager().setApplicationProtocols(applicationProtocols);
+        try {
+            tcpSocket.startHandshake();
+        } catch (IOException e) {
+            tryCloseSocket(tcpSocket, e);
+            throw new UncheckedIOException("处理 TLS 握手 时发生错误 !!!", e);
+        }
+        return tcpSocket;
+    }
+
+    private static void tryCloseSocket(ScxTCPSocket tcpSocket, Exception e) {
+        try {
+            tcpSocket.close();
+        } catch (IOException ex) {
+            e.addSuppressed(ex);
+        }
+    }
+
     public XHttpClientOptions options() {
         return options;
     }
@@ -99,33 +126,6 @@ public class XHttpClient implements ScxHttpClient {
 
         //4, 这种情况下我们信任所有证书
         return configTLS(tcpSocket, TLS.ofTrustAny(), applicationProtocols);
-    }
-
-    public static ScxTCPSocket configTLS(ScxTCPSocket tcpSocket, TLS tls, String... applicationProtocols) {
-        //手动升级
-        try {
-            tcpSocket.upgradeToTLS(tls);
-        } catch (IOException e) {
-            tryCloseSocket(tcpSocket, e);
-            throw new UncheckedIOException("升级到 TLS 时发生错误 !!!", e);
-        }
-        tcpSocket.tlsManager().setUseClientMode(true);
-        tcpSocket.tlsManager().setApplicationProtocols(applicationProtocols);
-        try {
-            tcpSocket.startHandshake();
-        } catch (IOException e) {
-            tryCloseSocket(tcpSocket, e);
-            throw new UncheckedIOException("处理 TLS 握手 时发生错误 !!!", e);
-        }
-        return tcpSocket;
-    }
-
-    private static void tryCloseSocket(ScxTCPSocket tcpSocket, Exception e) {
-        try {
-            tcpSocket.close();
-        } catch (IOException ex) {
-            e.addSuppressed(ex);
-        }
     }
 
     @Override
