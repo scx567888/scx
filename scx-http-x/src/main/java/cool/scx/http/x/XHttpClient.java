@@ -1,12 +1,10 @@
 package cool.scx.http.x;
 
 import cool.scx.http.ScxHttpClient;
-import cool.scx.http.ScxHttpClientRequest;
 import cool.scx.http.uri.ScxURI;
-import cool.scx.tcp.ClassicTCPClient;
-import cool.scx.tcp.NioTCPClient;
-import cool.scx.tcp.ScxTCPClientOptions;
 import cool.scx.tcp.ScxTCPSocket;
+import cool.scx.tcp.TCPClient;
+import cool.scx.tcp.TCPClientOptions;
 import cool.scx.tcp.tls.TLS;
 
 import java.io.IOException;
@@ -41,13 +39,10 @@ public class XHttpClient implements ScxHttpClient {
         var tcpClientOptions = options.tcpClientOptions();
 
         if (isTLS) {
-            tcpClientOptions = new ScxTCPClientOptions(tcpClientOptions).tls(TLS.ofDefault());
+            tcpClientOptions = new TCPClientOptions(tcpClientOptions).tls(TLS.ofDefault());
         }
 
-        var tcpClient = switch (options.tcpClientType()) {
-            case CLASSIC -> new ClassicTCPClient(tcpClientOptions);
-            case NIO -> new NioTCPClient(tcpClientOptions);
-        };
+        var tcpClient = new TCPClient(tcpClientOptions);
 
         var remoteAddress = getRemoteAddress(uri);
         var tcpSocket = tcpClient.connect(remoteAddress);
@@ -65,7 +60,7 @@ public class XHttpClient implements ScxHttpClient {
     }
 
     @Override
-    public ScxHttpClientRequest request() {
+    public XHttpClientRequest request() {
         return new XHttpClientRequest(this);
     }
 

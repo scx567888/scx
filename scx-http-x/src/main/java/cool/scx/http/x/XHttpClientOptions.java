@@ -1,7 +1,7 @@
 package cool.scx.http.x;
 
 import cool.scx.http.x.http1.Http1ClientConnectionOptions;
-import cool.scx.tcp.ScxTCPClientOptions;
+import cool.scx.tcp.TCPClientOptions;
 import cool.scx.tcp.tls.TLS;
 
 /// XHttpClientOptions
@@ -10,22 +10,19 @@ import cool.scx.tcp.tls.TLS;
 /// @version 0.0.1
 public class XHttpClientOptions {
 
-    private final ScxTCPClientOptions tcpClientOptions;// TCP 客户端 配置
+    private final TCPClientOptions tcpClientOptions;// TCP 客户端 配置
     private final Http1ClientConnectionOptions http1ConnectionOptions;// Http1 配置
-    private TCPClientType tcpClientType;// TCP 客户端类型
     private boolean enableHttp2; // 是否开启 Http2
 
     public XHttpClientOptions() {
-        this.tcpClientOptions = new ScxTCPClientOptions().autoUpgradeToTLS(true).autoHandshake(false);
+        this.tcpClientOptions = new TCPClientOptions().autoUpgradeToTLS(true).autoHandshake(false);
         this.http1ConnectionOptions = new Http1ClientConnectionOptions();
-        this.tcpClientType = TCPClientType.CLASSIC;
         this.enableHttp2 = false;//默认不启用 http2
     }
 
     public XHttpClientOptions(XHttpClientOptions oldOptions) {
-        this.tcpClientOptions = new ScxTCPClientOptions(oldOptions.tcpClientOptions()).autoUpgradeToTLS(true).autoHandshake(false);
+        this.tcpClientOptions = new TCPClientOptions(oldOptions.tcpClientOptions()).autoUpgradeToTLS(true).autoHandshake(false);
         this.http1ConnectionOptions = new Http1ClientConnectionOptions(oldOptions.http1ConnectionOptions());
-        tcpClientType(oldOptions.tcpClientType());
         enableHttp2(oldOptions.enableHttp2());
     }
 
@@ -33,19 +30,9 @@ public class XHttpClientOptions {
         return http1ConnectionOptions;
     }
 
-    ScxTCPClientOptions tcpClientOptions() {
+    TCPClientOptions tcpClientOptions() {
         return tcpClientOptions;
     }
-
-    public TCPClientType tcpClientType() {
-        return tcpClientType;
-    }
-
-    public XHttpClientOptions tcpClientType(TCPClientType tcpClientType) {
-        this.tcpClientType = tcpClientType;
-        return this;
-    }
-
 
     public boolean enableHttp2() {
         return enableHttp2;
@@ -63,11 +50,6 @@ public class XHttpClientOptions {
     public XHttpClientOptions tls(TLS tls) {
         this.tcpClientOptions.tls(tls);
         return this;
-    }
-
-    public enum TCPClientType {
-        CLASSIC,
-        NIO
     }
 
 }
