@@ -1,10 +1,10 @@
 package cool.scx.http.x.http1;
 
-import cool.scx.http.ScxHttpClientRequest;
 import cool.scx.http.ScxHttpClientResponse;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.x.XHttpClientOptions;
+import cool.scx.http.x.XHttpClientRequest;
 import cool.scx.http.x.http1.chunked.HttpChunkedOutputStream;
 import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.http.x.http1.request_line.Http1RequestLine;
@@ -39,7 +39,7 @@ public class Http1ClientConnection {
         this.options = options.http1ConnectionOptions();
     }
 
-    public Http1ClientConnection sendRequest(ScxHttpClientRequest request, MediaWriter writer) {
+    public Http1ClientConnection sendRequest(XHttpClientRequest request, MediaWriter writer) {
         //复制一份头便于修改
         var headers = new Http1Headers(request.headers());
 
@@ -49,8 +49,8 @@ public class Http1ClientConnection {
         // 1, 创建 请求行
         var requestLine = new Http1RequestLine(request.method(), request.uri());
 
-        // 根据是否启用代理来判断是否使用全路径
-        var requestLineStr = requestLine.encode(clientOptions.proxy() != null && clientOptions.proxy().enabled());
+        // 根据 requestTargetForm 编码
+        var requestLineStr = requestLine.encode(request.requestTargetForm());
 
         // 处理头相关
         // 1, 处理 HOST 相关
