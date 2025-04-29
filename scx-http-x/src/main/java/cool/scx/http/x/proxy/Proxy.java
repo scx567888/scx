@@ -17,10 +17,6 @@ public interface Proxy {
         return new ProxyImpl(new InetSocketAddress(host, port));
     }
 
-    static Proxy of(int port) {
-        return new ProxyImpl(new InetSocketAddress(port));
-    }
-
     boolean enabled();
 
     Proxy enabled(boolean enabled);
