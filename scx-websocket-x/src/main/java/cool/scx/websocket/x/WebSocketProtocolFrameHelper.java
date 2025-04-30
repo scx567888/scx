@@ -2,12 +2,13 @@ package cool.scx.websocket.x;
 
 import cool.scx.io.data_reader.DataReader;
 import cool.scx.websocket.WebSocketOpCode;
+import cool.scx.websocket.exception.WebSocketException;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
-import static cool.scx.websocket.WebSocketCloseInfo.TOO_BIG;
+import static cool.scx.websocket.close_info.WebSocketCloseInfo.TOO_BIG;
 
 /// WebSocketProtocolFrameHelper
 ///
@@ -129,7 +130,7 @@ public class WebSocketProtocolFrameHelper {
 
         //这里检查 最大帧大小
         if (webSocketFrame.payloadLength() > maxWebSocketFrameSize) {
-            throw new CloseWebSocketException(TOO_BIG.code(), "Frame too big");
+            throw new WebSocketException(TOO_BIG.code(), "Frame too big");
         }
 
         return readFramePayload(webSocketFrame, reader);
@@ -145,12 +146,12 @@ public class WebSocketProtocolFrameHelper {
 
             // 检查单个帧大小限制 
             if (framePayloadLength > maxWebSocketFrameSize) {
-                throw new CloseWebSocketException(TOO_BIG.code(), "Frame too big");
+                throw new WebSocketException(TOO_BIG.code(), "Frame too big");
             }
 
             // 检查合并后的消息大小限制 
             if (totalPayloadLength + framePayloadLength > maxWebSocketMessageSize) {
-                throw new CloseWebSocketException(TOO_BIG.code(), "Message too big");
+                throw new WebSocketException(TOO_BIG.code(), "Message too big");
             }
 
             webSocketFrame = readFramePayload(webSocketFrame, reader);

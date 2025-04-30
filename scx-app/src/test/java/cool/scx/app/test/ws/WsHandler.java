@@ -5,7 +5,7 @@ import cool.scx.scheduling.ScxScheduling;
 import cool.scx.web.BaseWebSocketHandler;
 import cool.scx.web.annotation.ScxWebSocketRoute;
 import cool.scx.websocket.ScxServerWebSocketHandshakeRequest;
-import cool.scx.websocket.handler.ScxEventWebSocket;
+import cool.scx.websocket.event.ScxEventWebSocket;
 
 import java.time.LocalDateTime;
 

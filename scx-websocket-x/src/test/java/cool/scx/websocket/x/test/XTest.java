@@ -3,7 +3,7 @@ package cool.scx.websocket.x.test;
 import cool.scx.http.x.XHttpServer;
 import cool.scx.http.x.XHttpServerOptions;
 import cool.scx.websocket.ScxServerWebSocketHandshakeRequest;
-import cool.scx.websocket.handler.ScxEventWebSocket;
+import cool.scx.websocket.event.ScxEventWebSocket;
 import cool.scx.websocket.x.WebSocketUpgradeHandler;
 
 public class XTest {
