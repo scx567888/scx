@@ -1,4 +1,4 @@
-package cool.scx.websocket.handler;
+package cool.scx.websocket.event;
 
 public interface TextMessageHandler {
 

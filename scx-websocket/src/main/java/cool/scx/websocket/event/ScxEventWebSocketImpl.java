@@ -1,4 +1,4 @@
-package cool.scx.websocket.handler;
+package cool.scx.websocket.event;
 
 import cool.scx.websocket.ScxWebSocket;
 import cool.scx.websocket.WebSocketFrame;
@@ -7,7 +7,7 @@ import cool.scx.websocket.exception.WebSocketException;
 import java.lang.System.Logger;
 import java.util.function.Consumer;
 
-import static cool.scx.websocket.WebSocketCloseInfo.*;
+import static cool.scx.websocket.close_info.WebSocketCloseInfo.*;
 import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.getLogger;
 
@@ -106,10 +106,10 @@ class ScxEventWebSocketImpl implements ScxEventWebSocket {
                 //处理帧
                 handleFrame(frame);
             } catch (WebSocketException e) {
-                _handleClose(NORMAL_CLOSE.code(), NORMAL_CLOSE.reason(), e.closeCode(), e.getMessage());
+                _handleCloseByException(NORMAL_CLOSE.code(), NORMAL_CLOSE.reason(), e.closeCode(), e.getMessage());
             } catch (Exception e) {
                 _handleError(e);
-                _handleClose(CLOSED_ABNORMALLY.code(), CLOSED_ABNORMALLY.reason(), UNEXPECTED_CONDITION.code(), e.getMessage());
+                _handleCloseByException(CLOSED_ABNORMALLY.code(), CLOSED_ABNORMALLY.reason(), UNEXPECTED_CONDITION.code(), e.getMessage());
             }
         }
     }
@@ -192,18 +192,28 @@ class ScxEventWebSocketImpl implements ScxEventWebSocket {
     }
 
     private void _handleClose(WebSocketFrame frame) {
-        var closeInfo = frame.parseCloseInfo();
-        _handleClose(closeInfo.code(), closeInfo.reason(), NORMAL_CLOSE.code(), NORMAL_CLOSE.reason());
+        var closeInfo = frame.getCloseInfo();
+        _handleCloseByFrame(closeInfo.code(), closeInfo.reason(), NORMAL_CLOSE.code(), NORMAL_CLOSE.reason());
     }
 
-    public void _handleClose(int code, String reason, int peerCode, String peerReason) {
+    public void _handleCloseByFrame(int code, String reason, int peerCode, String peerReason) {
         //1, 调用用户处理器
         try {
             _callOnClose(code, reason);
         } catch (Exception e) {
             LOGGER.log(ERROR, "Error while call onClose : ", e);
         }
-        //todo 这个 2 和 3 是否应该存在 是否和 WebSocket 中的 close 处理相冲突 或者说 拆分成两个 _handleClose 主动发生的和被动发生的 ?
+        //4, 停止监听
+        stop();
+    }
+
+    public void _handleCloseByException(int code, String reason, int peerCode, String peerReason) {
+        //1, 调用用户处理器
+        try {
+            _callOnClose(code, reason);
+        } catch (Exception e) {
+            LOGGER.log(ERROR, "Error while call onClose : ", e);
+        }
         //2, 发送关闭响应帧
         try {
             close(peerCode, peerReason); // 这里有可能无法发送 我们忽略异常

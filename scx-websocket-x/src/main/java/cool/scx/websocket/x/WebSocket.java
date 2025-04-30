@@ -6,14 +6,16 @@ import cool.scx.io.exception.NoMoreDataException;
 import cool.scx.tcp.ScxTCPSocket;
 import cool.scx.websocket.ScxWebSocket;
 import cool.scx.websocket.WebSocketFrame;
+import cool.scx.websocket.WebSocketHelper;
+import cool.scx.websocket.exception.WebSocketException;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.util.concurrent.locks.ReentrantLock;
 
-import static cool.scx.websocket.WebSocketCloseInfo.NORMAL_CLOSE;
 import static cool.scx.websocket.WebSocketOpCode.CLOSE;
+import static cool.scx.websocket.close_info.WebSocketCloseInfo.NORMAL_CLOSE;
 import static cool.scx.websocket.x.WebSocketProtocolFrameHelper.writeFrame;
 
 /// WebSocket
@@ -45,55 +47,43 @@ public class WebSocket implements ScxWebSocket {
     @Override
     public WebSocketFrame readFrame() {
         try {
-            var frame = options.mergeWebSocketFrame() ?
-                    WebSocketProtocolFrameHelper.readFrameUntilLast(reader, options.maxWebSocketFrameSize(), options.maxWebSocketMessageSize()) :
-                    WebSocketProtocolFrameHelper.readFrame(reader, options.maxWebSocketFrameSize());
+            var protocolFrame = readProtocolFrame();
             //当我们接收到了 close 帧 我们应该发送 close 帧并关闭
-            if (frame.opCode() == CLOSE) {
-                //1, 发送关闭响应帧
-                try {
-                    close(NORMAL_CLOSE); // 这里有可能无法发送 我们忽略异常
-                } catch (Exception _) {
-
-                }
-                //2, 关闭底层 tcp 连接
-                this.terminate();
+            if (protocolFrame.opCode() == CLOSE) {
+                handleCloseFrame(protocolFrame);
             }
-            return WebSocketFrame.of(frame.opCode(), frame.payloadData(), frame.fin());
+            return WebSocketFrame.of(protocolFrame.opCode(), protocolFrame.payloadData(), protocolFrame.fin());
         } catch (NoMoreDataException e) {
-            throw new CloseWebSocketException(NORMAL_CLOSE.code(), NORMAL_CLOSE.reason());
+            throw new WebSocketException(NORMAL_CLOSE.code(), NORMAL_CLOSE.reason());
         }
     }
 
     @Override
     public ScxWebSocket sendFrame(WebSocketFrame frame) {
-        lock.lock();
+        if (isClosed()) {
+            throw new IllegalStateException("Cannot send frame: WebSocket is already closed");
+        }
+
+        if (closeSent) {
+            if (frame.opCode() == CLOSE) { //允许 用户多次发送 close 我们直接忽略
+                return this;
+            } else {// 其余则抛出异常
+                throw new IllegalStateException("Cannot send non-close frames after a Close frame has been sent");
+            }
+        }
+
+        var protocolFrame = createProtocolFrame(frame);
+
         try {
-            WebSocketProtocolFrame protocolFrame;
-            // 和服务器端不同, 客户端的是需要发送掩码的
-            if (isClient) {
-                var maskingKey = RandomUtils.randomBytes(4);
-                protocolFrame = WebSocketProtocolFrame.of(frame.fin(), frame.opCode(), maskingKey, frame.payloadData());
-            } else {
-                protocolFrame = WebSocketProtocolFrame.of(frame.fin(), frame.opCode(), frame.payloadData());
-            }
-
-            if (frame.opCode() == CLOSE) {
-                //close 帧只允许成功发送一次
-                if (closeSent) {
-                    return this;
-                }
-                writeFrame(protocolFrame, writer);
-                closeSent = true;
-            } else {
-                writeFrame(protocolFrame, writer);
-            }
-
+            writeProtocolFrame(protocolFrame);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
-        } finally {
-            lock.unlock();
         }
+
+        if (frame.opCode() == CLOSE) {
+            closeSent = true;
+        }
+
         return this;
     }
 
@@ -110,6 +100,45 @@ public class WebSocket implements ScxWebSocket {
     @Override
     public boolean isClosed() {
         return tcpSocket.isClosed();
+    }
+
+    private WebSocketProtocolFrame createProtocolFrame(WebSocketFrame frame) {
+        // 和服务器端不同, 客户端的是需要发送掩码的
+        if (isClient) {
+            var maskingKey = RandomUtils.randomBytes(4);
+            return WebSocketProtocolFrame.of(frame.fin(), frame.opCode(), maskingKey, frame.payloadData());
+        } else {
+            return WebSocketProtocolFrame.of(frame.fin(), frame.opCode(), frame.payloadData());
+        }
+    }
+
+    private void writeProtocolFrame(WebSocketProtocolFrame protocolFrame) throws IOException {
+        lock.lock();
+        try {
+            writeFrame(protocolFrame, writer);
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    private WebSocketProtocolFrame readProtocolFrame() {
+        if (options.mergeWebSocketFrame()) {
+            return WebSocketProtocolFrameHelper.readFrameUntilLast(reader, options.maxWebSocketFrameSize(), options.maxWebSocketMessageSize());
+        } else {
+            return WebSocketProtocolFrameHelper.readFrame(reader, options.maxWebSocketFrameSize());
+        }
+    }
+
+    public void handleCloseFrame(WebSocketProtocolFrame protocolFrame) {
+        var closeInfo = WebSocketHelper.parseCloseInfo(protocolFrame.payloadData());
+        //1, 发送关闭响应帧
+        try {
+            close(closeInfo); // 这里有可能无法发送 我们忽略异常
+        } catch (Exception _) {
+
+        }
+        //2, 关闭底层 tcp 连接
+        this.terminate();
     }
 
 }
