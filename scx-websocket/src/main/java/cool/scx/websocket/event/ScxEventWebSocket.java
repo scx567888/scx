@@ -35,7 +35,7 @@ public interface ScxEventWebSocket extends ScxWebSocket {
     default void start(Executor executor) {
         executor.execute(this::start);
     }
-    
+
     /// 终止监听
     void stop();
 
