@@ -11,7 +11,6 @@ import cool.scx.http.x.http1.Http1ClientConnection;
 import cool.scx.http.x.http1.Http1ClientRequest;
 import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.http.x.http1.request_line.RequestTargetForm;
-import cool.scx.tcp.ScxTCPClient;
 import cool.scx.websocket.ScxClientWebSocketHandshakeRequest;
 import cool.scx.websocket.ScxClientWebSocketHandshakeResponse;
 
@@ -24,7 +23,7 @@ import static cool.scx.http.x.http1.request_line.RequestTargetForm.ABSOLUTE_FORM
 import static cool.scx.http.x.http1.request_line.RequestTargetForm.ORIGIN_FORM;
 
 
-/// todo 待完成
+/// ClientWebSocketHandshakeRequest
 ///
 /// @author scx567888
 /// @version 0.0.1
@@ -32,9 +31,7 @@ public class ClientWebSocketHandshakeRequest implements ScxClientWebSocketHandsh
 
     private final HttpClient httpClient;
     private final WebSocketOptions webSocketOptions;
-    private WebSocketOptions options;
     private ScxURIWritable uri;
-    private ScxTCPClient tcpClient;
     private Http1Headers headers;
     private RequestTargetForm requestTargetForm;
 
