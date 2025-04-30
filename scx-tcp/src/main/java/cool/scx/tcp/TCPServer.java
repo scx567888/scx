@@ -91,6 +91,10 @@ public class TCPServer implements ScxTCPServer {
         return (InetSocketAddress) serverSocket.getLocalSocketAddress();
     }
 
+    public TCPServerOptions options() {
+        return options;
+    }
+
     private void listen() {
         while (running) {
             try {

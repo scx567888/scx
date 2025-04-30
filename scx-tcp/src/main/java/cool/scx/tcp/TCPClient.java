@@ -59,6 +59,10 @@ public class TCPClient implements ScxTCPClient {
 
     }
 
+    public TCPClientOptions options() {
+        return options;
+    }
+
     private void tryCloseSocket(ScxTCPSocket tcpSocket, Exception e) {
         try {
             tcpSocket.close();
