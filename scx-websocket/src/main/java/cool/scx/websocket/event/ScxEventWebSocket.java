@@ -5,12 +5,15 @@ import cool.scx.websocket.ScxWebSocket;
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 
-/// todo 支持自定义 执行器
 /// 事件形式的 websocket
 public interface ScxEventWebSocket extends ScxWebSocket {
 
     static ScxEventWebSocket of(ScxWebSocket scxWebSocket) {
         return new ScxEventWebSocketImpl(scxWebSocket);
+    }
+
+    static ScxEventWebSocket of(ScxWebSocket scxWebSocket, Executor executor) {
+        return new ScxEventWebSocketImpl(scxWebSocket, executor);
     }
 
     ScxEventWebSocket onTextMessage(TextMessageHandler textMessageHandler);
