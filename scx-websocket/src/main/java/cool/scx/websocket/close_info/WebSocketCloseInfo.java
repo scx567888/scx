@@ -4,7 +4,7 @@ package cool.scx.websocket.close_info;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public enum WebSocketCloseInfo implements ScxWebSocketCloseInfo{
+public enum WebSocketCloseInfo implements ScxWebSocketCloseInfo {
 
     NORMAL_CLOSE(1000, "normal close"),
     GOING_AWAY(1001, "going away"),
