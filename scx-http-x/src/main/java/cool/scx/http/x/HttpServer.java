@@ -17,6 +17,7 @@ import java.util.function.Consumer;
 
 import static cool.scx.http.version.HttpVersion.HTTP_1_1;
 import static cool.scx.http.version.HttpVersion.HTTP_2;
+import static java.lang.System.Logger.Level.TRACE;
 
 /// Http 服务器
 ///
@@ -47,7 +48,6 @@ public class HttpServer implements ScxHttpServer {
         } catch (IOException ex) {
             e.addSuppressed(ex);
         }
-        LOGGER.log(Logger.Level.TRACE, "处理 TLS 握手 时发生错误 !!!", e);
     }
 
     private void handle(ScxTCPSocket tcpSocket) {
@@ -62,6 +62,7 @@ public class HttpServer implements ScxHttpServer {
                 tcpSocket.startHandshake();
             } catch (IOException e) {
                 tryCloseSocket(tcpSocket, e);
+                LOGGER.log(TRACE, "处理 TLS 握手 时发生错误 !!!", e);
                 return;
             }
             var applicationProtocol = tcpSocket.tlsManager().getApplicationProtocol();
