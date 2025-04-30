@@ -11,20 +11,20 @@ import cool.scx.http.x.http1.Http1ClientConnection;
 import cool.scx.http.x.http1.Http1ClientRequest;
 import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.http.x.http1.request_line.RequestTargetForm;
-import cool.scx.tcp.ScxTCPClient;
 import cool.scx.websocket.ScxClientWebSocketHandshakeRequest;
 import cool.scx.websocket.ScxClientWebSocketHandshakeResponse;
 
 import static cool.scx.http.headers.HttpFieldName.SEC_WEBSOCKET_KEY;
 import static cool.scx.http.headers.HttpFieldName.SEC_WEBSOCKET_VERSION;
 import static cool.scx.http.media.empty.EmptyWriter.EMPTY_WRITER;
+import static cool.scx.http.version.HttpVersion.HTTP_1_1;
 import static cool.scx.http.x.http1.headers.connection.Connection.UPGRADE;
 import static cool.scx.http.x.http1.headers.upgrade.Upgrade.WEB_SOCKET;
 import static cool.scx.http.x.http1.request_line.RequestTargetForm.ABSOLUTE_FORM;
 import static cool.scx.http.x.http1.request_line.RequestTargetForm.ORIGIN_FORM;
 
 
-/// todo 待完成
+/// ClientWebSocketHandshakeRequest
 ///
 /// @author scx567888
 /// @version 0.0.1
@@ -32,9 +32,7 @@ public class ClientWebSocketHandshakeRequest implements ScxClientWebSocketHandsh
 
     private final HttpClient httpClient;
     private final WebSocketOptions webSocketOptions;
-    private WebSocketOptions options;
     private ScxURIWritable uri;
-    private ScxTCPClient tcpClient;
     private Http1Headers headers;
     private RequestTargetForm requestTargetForm;
 
@@ -71,7 +69,7 @@ public class ClientWebSocketHandshakeRequest implements ScxClientWebSocketHandsh
     @Override
     public ScxClientWebSocketHandshakeResponse sendHandshake() {
         //0, 创建 tcp 连接
-        var tcpSocket = httpClient.createTCPSocket(uri, "http/1.1");
+        var tcpSocket = httpClient.createTCPSocket(uri, HTTP_1_1.alpnValue());
 
         //1, 创建 secWebsocketKey
         var secWebsocketKey = Base64Utils.encodeToString(RandomUtils.randomBytes(16));

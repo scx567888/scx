@@ -36,7 +36,7 @@ public class Http1StatusLineHelper {
     }
 
     public static String encode(Http1StatusLine statusLine) {
-        return statusLine.version().value() + " " + statusLine.code() + " " + statusLine.reason();
+        return statusLine.version().protocolVersion() + " " + statusLine.code() + " " + statusLine.reason();
     }
 
 }

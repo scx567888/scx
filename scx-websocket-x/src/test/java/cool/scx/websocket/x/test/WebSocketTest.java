@@ -33,7 +33,7 @@ public class WebSocketTest {
                     System.out.println("服 : " + data);
                 }
                 System.err.println("结束了 !!!");
-                httpServer.stop();//todo 这里会引发 tcpserver 异常 需要处理
+                httpServer.stop();
             }
         });
 

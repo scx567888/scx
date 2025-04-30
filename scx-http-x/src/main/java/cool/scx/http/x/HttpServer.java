@@ -15,6 +15,10 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.function.Consumer;
 
+import static cool.scx.http.version.HttpVersion.HTTP_1_1;
+import static cool.scx.http.version.HttpVersion.HTTP_2;
+import static java.lang.System.Logger.Level.TRACE;
+
 /// Http 服务器
 ///
 /// @author scx567888
@@ -38,33 +42,37 @@ public class HttpServer implements ScxHttpServer {
         this(new HttpServerOptions());
     }
 
+    private static void tryCloseSocket(ScxTCPSocket tcpSocket, Exception e) {
+        try {
+            tcpSocket.close();
+        } catch (IOException ex) {
+            e.addSuppressed(ex);
+        }
+    }
+
     private void handle(ScxTCPSocket tcpSocket) {
         //是否使用 http2
         var useHttp2 = false;
 
         if (tcpSocket.isTLS()) {
             // 配置应用协议协商选择器
-            tcpSocket.tlsManager().setHandshakeApplicationProtocolSelector((_, protocols) -> options.enableHttp2() && protocols.contains("h2") ? "h2" : protocols.contains("http/1.1") ? "http/1.1" : null);
+            tcpSocket.tlsManager().setHandshakeApplicationProtocolSelector((_, protocols) -> options.enableHttp2() && protocols.contains(HTTP_2.alpnValue()) ? HTTP_2.alpnValue() : protocols.contains(HTTP_1_1.alpnValue()) ? HTTP_1_1.alpnValue() : null);
             // 开始握手
             try {
                 tcpSocket.startHandshake();
             } catch (IOException e) {
-                try {
-                    tcpSocket.close();
-                } catch (IOException ex) {
-                    e.addSuppressed(ex);
-                }
-                LOGGER.log(Logger.Level.TRACE, "处理 TLS 握手 时发生错误 !!!", e);
+                tryCloseSocket(tcpSocket, e);
+                LOGGER.log(TRACE, "处理 TLS 握手 时发生错误 !!!", e);
                 return;
             }
             var applicationProtocol = tcpSocket.tlsManager().getApplicationProtocol();
-            useHttp2 = "h2".equals(applicationProtocol);
+            useHttp2 = HTTP_2.alpnValue().equals(applicationProtocol);
         }
 
         if (useHttp2) {
             new Http2ServerConnection(tcpSocket, options, requestHandler, errorHandler).start();
         } else {
-            //此处的Http1 特指 HTTP/1.1
+            //此处的 Http1 特指 HTTP/1.1
             new Http1ServerConnection(tcpSocket, options, requestHandler, errorHandler).start();
         }
     }
@@ -94,6 +102,10 @@ public class HttpServer implements ScxHttpServer {
     @Override
     public InetSocketAddress localAddress() {
         return tcpServer.localAddress();
+    }
+
+    public HttpServerOptions options() {
+        return options;
     }
 
 }
