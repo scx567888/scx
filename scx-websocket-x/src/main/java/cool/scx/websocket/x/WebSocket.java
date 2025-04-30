@@ -14,8 +14,8 @@ import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.util.concurrent.locks.ReentrantLock;
 
-import static cool.scx.websocket.close_info.WebSocketCloseInfo.NORMAL_CLOSE;
 import static cool.scx.websocket.WebSocketOpCode.CLOSE;
+import static cool.scx.websocket.close_info.WebSocketCloseInfo.NORMAL_CLOSE;
 import static cool.scx.websocket.x.WebSocketProtocolFrameHelper.writeFrame;
 
 /// WebSocket
@@ -60,10 +60,16 @@ public class WebSocket implements ScxWebSocket {
 
     @Override
     public ScxWebSocket sendFrame(WebSocketFrame frame) {
+        if (isClosed()) {
+            throw new IllegalStateException("Cannot send frame: WebSocket is already closed");
+        }
 
-        // 1, 先处理 close 帧的发送次数限制
-        if (frame.opCode() == CLOSE && closeSent) {
-            return this;
+        if (closeSent) {
+            if (frame.opCode() == CLOSE) { //允许 用户多次发送 close 我们直接忽略
+                return this;
+            } else {// 其余则抛出异常
+                throw new IllegalStateException("Cannot send non-close frames after a Close frame has been sent");
+            }
         }
 
         var protocolFrame = createProtocolFrame(frame);
