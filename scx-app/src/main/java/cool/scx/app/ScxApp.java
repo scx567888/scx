@@ -190,9 +190,9 @@ public final class ScxApp {
     }
 
     private ScxHttpServer createServer() {
-        this.httpServerOptions = (this.defaultHttpServerOptions != null ? new XHttpServerOptions((XHttpServerOptions) this.defaultHttpServerOptions) : new XHttpServerOptions())
-                .maxPayloadSize(DEFAULT_BODY_LIMIT)
-                .port(this.scxOptions.port());
+        this.httpServerOptions = (this.defaultHttpServerOptions != null ?
+                new XHttpServerOptions((XHttpServerOptions) this.defaultHttpServerOptions) :
+                new XHttpServerOptions()).maxPayloadSize(DEFAULT_BODY_LIMIT);
         if (this.scxOptions.isHttpsEnabled()) {
             var tls = TLS.of(this.scxOptions.sslPath(), this.scxOptions.sslPassword());
             httpServerOptions.tls(tls);
@@ -210,8 +210,7 @@ public final class ScxApp {
     /// @param port a int
     private void startServer(int port) {
         try {
-            this.httpServerOptions.port(port);
-            this.httpServer.start();
+            this.httpServer.start(port);
             var httpOrHttps = this.scxOptions.isHttpsEnabled() ? "https" : "http";
             var o = Ansi.ansi().green("服务器启动成功... 用时 " + StopWatch.stopToMillis("ScxRun") + " ms").ln();
             var p = this.httpServer.localAddress().getPort();

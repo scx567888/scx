@@ -109,15 +109,6 @@ public class XHttpServerOptions {
         return this;
     }
 
-    public InetSocketAddress localAddress() {
-        return tcpServerOptions.localAddress();
-    }
-
-    public XHttpServerOptions localAddress(InetSocketAddress localAddress) {
-        tcpServerOptions.localAddress(localAddress);
-        return this;
-    }
-
     public int backlog() {
         return tcpServerOptions.backlog();
     }
@@ -134,16 +125,6 @@ public class XHttpServerOptions {
     public XHttpServerOptions tls(TLS tls) {
         this.tcpServerOptions.tls(tls);
         return this;
-    }
-
-    public XHttpServerOptions port(int port) {
-        tcpServerOptions.port(port);
-        return this;
-    }
-
-    public enum TCPServerType {
-        CLASSIC,
-        NIO
     }
 
 }

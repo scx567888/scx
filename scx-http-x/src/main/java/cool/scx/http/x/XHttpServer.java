@@ -12,6 +12,7 @@ import cool.scx.tcp.TCPServer;
 import java.io.IOException;
 import java.lang.System.Logger;
 import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.util.function.Consumer;
 
 /// Http 服务器
@@ -81,8 +82,8 @@ public class XHttpServer implements ScxHttpServer {
     }
 
     @Override
-    public void start() {
-        tcpServer.start();
+    public void start(SocketAddress localAddress) {
+        tcpServer.start(localAddress);
     }
 
     @Override
