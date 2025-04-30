@@ -38,6 +38,15 @@ public class HttpServer implements ScxHttpServer {
         this(new HttpServerOptions());
     }
 
+    private static void tryCloseSocket(ScxTCPSocket tcpSocket, Exception e) {
+        try {
+            tcpSocket.close();
+        } catch (IOException ex) {
+            e.addSuppressed(ex);
+        }
+        LOGGER.log(Logger.Level.TRACE, "处理 TLS 握手 时发生错误 !!!", e);
+    }
+
     private void handle(ScxTCPSocket tcpSocket) {
         //是否使用 http2
         var useHttp2 = false;
@@ -49,12 +58,7 @@ public class HttpServer implements ScxHttpServer {
             try {
                 tcpSocket.startHandshake();
             } catch (IOException e) {
-                try {
-                    tcpSocket.close();
-                } catch (IOException ex) {
-                    e.addSuppressed(ex);
-                }
-                LOGGER.log(Logger.Level.TRACE, "处理 TLS 握手 时发生错误 !!!", e);
+                tryCloseSocket(tcpSocket, e);
                 return;
             }
             var applicationProtocol = tcpSocket.tlsManager().getApplicationProtocol();
@@ -64,7 +68,7 @@ public class HttpServer implements ScxHttpServer {
         if (useHttp2) {
             new Http2ServerConnection(tcpSocket, options, requestHandler, errorHandler).start();
         } else {
-            //此处的Http1 特指 HTTP/1.1
+            //此处的 Http1 特指 HTTP/1.1
             new Http1ServerConnection(tcpSocket, options, requestHandler, errorHandler).start();
         }
     }
@@ -94,6 +98,10 @@ public class HttpServer implements ScxHttpServer {
     @Override
     public InetSocketAddress localAddress() {
         return tcpServer.localAddress();
+    }
+
+    public HttpServerOptions options() {
+        return options;
     }
 
 }
