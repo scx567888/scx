@@ -17,7 +17,7 @@ public class WebSocketTest {
 
     public static void startServer() {
         var s = System.nanoTime();
-        var httpServer = new XHttpServer(new XHttpServerOptions().port(8080).addUpgradeHandlerList(new WebSocketUpgradeHandler()));
+        var httpServer = new XHttpServer(new XHttpServerOptions().addUpgradeHandlerList(new WebSocketUpgradeHandler()));
 
         httpServer.onRequest(req -> {
             if (req instanceof ScxServerWebSocketHandshakeRequest wsReq) {
@@ -37,7 +37,7 @@ public class WebSocketTest {
             }
         });
 
-        httpServer.start();
+        httpServer.start(8080);
         System.out.println("http server started " + (System.nanoTime() - s) / 1000_000);
     }
 

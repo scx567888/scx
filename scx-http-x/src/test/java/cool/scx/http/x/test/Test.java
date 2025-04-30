@@ -16,7 +16,7 @@ public class Test {
 
     public static void test1() {
         var l = System.nanoTime();
-        var server = new XHttpServer(new XHttpServerOptions().port(8080));
+        var server = new XHttpServer();
 
         var router = Router.of();
 
@@ -60,7 +60,7 @@ public class Test {
 
         server.onRequest(router);
 
-        server.start();
+        server.start(8080);
 
         System.out.println("HttpServer 启动完成 !!! 耗时 : " + (System.nanoTime() - l) / 1000_000);
     }
