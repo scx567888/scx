@@ -15,6 +15,8 @@ import cool.scx.http.x.http1.request_line.RequestTargetForm;
 import cool.scx.http.x.http2.Http2ClientConnection;
 
 import static cool.scx.http.method.HttpMethod.GET;
+import static cool.scx.http.version.HttpVersion.HTTP_1_1;
+import static cool.scx.http.version.HttpVersion.HTTP_2;
 import static cool.scx.http.x.http1.request_line.RequestTargetForm.ABSOLUTE_FORM;
 import static cool.scx.http.x.http1.request_line.RequestTargetForm.ORIGIN_FORM;
 
@@ -69,9 +71,9 @@ public class HttpClientRequest implements Http1ClientRequest {
 
     private String[] getApplicationProtocols() {
         if (this.options.enableHttp2()) {
-            return new String[]{"http/1.1", "h2"};
+            return new String[]{HTTP_1_1.alpnValue(), HTTP_2.alpnValue()};
         } else {
-            return new String[]{"http/1.1"};
+            return new String[]{HTTP_1_1.alpnValue()};
         }
     }
 

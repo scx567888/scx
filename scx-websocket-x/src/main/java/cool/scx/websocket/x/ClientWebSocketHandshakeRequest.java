@@ -17,6 +17,7 @@ import cool.scx.websocket.ScxClientWebSocketHandshakeResponse;
 import static cool.scx.http.headers.HttpFieldName.SEC_WEBSOCKET_KEY;
 import static cool.scx.http.headers.HttpFieldName.SEC_WEBSOCKET_VERSION;
 import static cool.scx.http.media.empty.EmptyWriter.EMPTY_WRITER;
+import static cool.scx.http.version.HttpVersion.HTTP_1_1;
 import static cool.scx.http.x.http1.headers.connection.Connection.UPGRADE;
 import static cool.scx.http.x.http1.headers.upgrade.Upgrade.WEB_SOCKET;
 import static cool.scx.http.x.http1.request_line.RequestTargetForm.ABSOLUTE_FORM;
@@ -68,7 +69,7 @@ public class ClientWebSocketHandshakeRequest implements ScxClientWebSocketHandsh
     @Override
     public ScxClientWebSocketHandshakeResponse sendHandshake() {
         //0, 创建 tcp 连接
-        var tcpSocket = httpClient.createTCPSocket(uri, "http/1.1");
+        var tcpSocket = httpClient.createTCPSocket(uri, HTTP_1_1.alpnValue());
 
         //1, 创建 secWebsocketKey
         var secWebsocketKey = Base64Utils.encodeToString(RandomUtils.randomBytes(16));

@@ -78,7 +78,7 @@ public final class Http1RequestLineHelper {
         };
 
         //此处我们强制使用 HTTP/1.1 , 忽略 requestLine 的版本号
-        var versionStr = HTTP_1_1.value();
+        var versionStr = HTTP_1_1.protocolVersion();
 
         //拼接返回
         return methodStr + " " + pathStr + " " + versionStr;

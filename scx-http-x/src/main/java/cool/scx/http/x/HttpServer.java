@@ -15,6 +15,9 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.function.Consumer;
 
+import static cool.scx.http.version.HttpVersion.HTTP_1_1;
+import static cool.scx.http.version.HttpVersion.HTTP_2;
+
 /// Http 服务器
 ///
 /// @author scx567888
@@ -53,7 +56,7 @@ public class HttpServer implements ScxHttpServer {
 
         if (tcpSocket.isTLS()) {
             // 配置应用协议协商选择器
-            tcpSocket.tlsManager().setHandshakeApplicationProtocolSelector((_, protocols) -> options.enableHttp2() && protocols.contains("h2") ? "h2" : protocols.contains("http/1.1") ? "http/1.1" : null);
+            tcpSocket.tlsManager().setHandshakeApplicationProtocolSelector((_, protocols) -> options.enableHttp2() && protocols.contains(HTTP_2.alpnValue()) ? HTTP_2.alpnValue() : protocols.contains(HTTP_1_1.alpnValue()) ? HTTP_1_1.alpnValue() : null);
             // 开始握手
             try {
                 tcpSocket.startHandshake();
@@ -62,7 +65,7 @@ public class HttpServer implements ScxHttpServer {
                 return;
             }
             var applicationProtocol = tcpSocket.tlsManager().getApplicationProtocol();
-            useHttp2 = "h2".equals(applicationProtocol);
+            useHttp2 = HTTP_2.alpnValue().equals(applicationProtocol);
         }
 
         if (useHttp2) {
