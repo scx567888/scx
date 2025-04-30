@@ -4,7 +4,6 @@ import cool.scx.http.exception.ForbiddenException;
 import cool.scx.http.routing.Route;
 import cool.scx.http.routing.Router;
 import cool.scx.http.x.XHttpServer;
-import cool.scx.http.x.XHttpServerOptions;
 import cool.scx.web.ScxWeb;
 import org.testng.annotations.Test;
 

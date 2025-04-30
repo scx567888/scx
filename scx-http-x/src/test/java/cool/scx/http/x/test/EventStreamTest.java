@@ -5,7 +5,6 @@ import cool.scx.http.media.event_stream.SseEvent;
 import cool.scx.http.media.event_stream.event.EventClientEventStream;
 import cool.scx.http.x.XHttpClient;
 import cool.scx.http.x.XHttpServer;
-import cool.scx.http.x.XHttpServerOptions;
 
 import java.io.IOException;
 

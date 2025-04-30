@@ -3,7 +3,6 @@ package cool.scx.http.x.test;
 import cool.scx.http.exception.UnauthorizedException;
 import cool.scx.http.routing.Router;
 import cool.scx.http.x.XHttpServer;
-import cool.scx.http.x.XHttpServerOptions;
 
 import static cool.scx.http.method.HttpMethod.GET;
 import static cool.scx.http.method.HttpMethod.POST;

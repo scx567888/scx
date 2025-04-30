@@ -5,7 +5,6 @@ import cool.scx.http.x.http1.Http1UpgradeHandler;
 import cool.scx.tcp.TCPServerOptions;
 import cool.scx.tcp.tls.TLS;
 
-import java.net.InetSocketAddress;
 import java.util.List;
 
 /// Http 服务器配置

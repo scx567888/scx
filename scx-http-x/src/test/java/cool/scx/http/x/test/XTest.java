@@ -1,7 +1,6 @@
 package cool.scx.http.x.test;
 
 import cool.scx.http.x.XHttpServer;
-import cool.scx.http.x.XHttpServerOptions;
 
 public class XTest {
 

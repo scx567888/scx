@@ -22,7 +22,7 @@ public interface ScxHttpServer {
     void stop();
 
     InetSocketAddress localAddress();
-    
+
     default void start(int port) {
         start(new InetSocketAddress(port));
     }
