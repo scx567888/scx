@@ -43,7 +43,7 @@ public class TCPServer implements ScxTCPServer {
     }
 
     @Override
-    public void start(SocketAddress localAddress, int backlog) {
+    public void start(SocketAddress localAddress) {
         if (running) {
             throw new IllegalStateException("服务器已在运行 !!!");
         }
@@ -54,7 +54,7 @@ public class TCPServer implements ScxTCPServer {
 
         try {
             this.serverSocket = new ServerSocket();
-            this.serverSocket.bind(localAddress, backlog);
+            this.serverSocket.bind(localAddress, options.backlog());
         } catch (IOException e) {
             throw new UncheckedIOException("启动服务器失败 !!!", e);
         }
