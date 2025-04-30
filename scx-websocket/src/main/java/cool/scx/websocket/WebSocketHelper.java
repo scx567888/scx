@@ -2,6 +2,7 @@ package cool.scx.websocket;
 
 import cool.scx.common.util.Base64Utils;
 import cool.scx.common.util.HashUtils;
+import cool.scx.websocket.close_info.ScxWebSocketCloseInfo;
 
 public class WebSocketHelper {
 
@@ -11,7 +12,7 @@ public class WebSocketHelper {
         return Base64Utils.encodeToString(HashUtils.sha1(key + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"));
     }
 
-    public static CloseInfo parseCloseInfo(byte[] frame) {
+    public static ScxWebSocketCloseInfo parseCloseInfo(byte[] frame) {
         int len = frame.length;
         int code = 1005; // 默认值（表示没有状态码） 
         // 读取状态码（如果存在） 
@@ -23,7 +24,7 @@ public class WebSocketHelper {
         if (len > 2) {
             reason = new String(frame, 2, len - 2);
         }
-        return new CloseInfo(code, reason);
+        return ScxWebSocketCloseInfo.of(code, reason);
     }
 
     public static byte[] createClosePayload(int code, String reason) {

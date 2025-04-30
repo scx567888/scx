@@ -7,7 +7,7 @@ import cool.scx.websocket.exception.WebSocketException;
 import java.lang.System.Logger;
 import java.util.function.Consumer;
 
-import static cool.scx.websocket.WebSocketCloseInfo.*;
+import static cool.scx.websocket.close_info.WebSocketCloseInfo.*;
 import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.getLogger;
 
