@@ -5,7 +5,6 @@ import cool.scx.http.x.http1.Http1UpgradeHandler;
 import cool.scx.tcp.TCPServerOptions;
 import cool.scx.tcp.tls.TLS;
 
-import java.net.InetSocketAddress;
 import java.util.List;
 
 /// Http 服务器配置
@@ -109,15 +108,6 @@ public class XHttpServerOptions {
         return this;
     }
 
-    public InetSocketAddress localAddress() {
-        return tcpServerOptions.localAddress();
-    }
-
-    public XHttpServerOptions localAddress(InetSocketAddress localAddress) {
-        tcpServerOptions.localAddress(localAddress);
-        return this;
-    }
-
     public int backlog() {
         return tcpServerOptions.backlog();
     }
@@ -134,16 +124,6 @@ public class XHttpServerOptions {
     public XHttpServerOptions tls(TLS tls) {
         this.tcpServerOptions.tls(tls);
         return this;
-    }
-
-    public XHttpServerOptions port(int port) {
-        tcpServerOptions.port(port);
-        return this;
-    }
-
-    public enum TCPServerType {
-        CLASSIC,
-        NIO
     }
 
 }

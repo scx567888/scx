@@ -1,7 +1,6 @@
 package cool.scx.http.x.test;
 
 import cool.scx.http.x.XHttpServer;
-import cool.scx.http.x.XHttpServerOptions;
 
 public class XTest {
 
@@ -10,7 +9,7 @@ public class XTest {
     }
 
     public static void test1() {
-        var httpServer = new XHttpServer(new XHttpServerOptions().port(8899));
+        var httpServer = new XHttpServer();
         httpServer.onRequest(c -> {
             var cacheBody = c.body().asGzipBody().asCacheBody();
             var bodyStr1 = cacheBody.asString();
@@ -19,7 +18,7 @@ public class XTest {
             // c.response().setHeader("transfer-encoding", "chunked");
             c.response().sendGzip().send("123");
         });
-        httpServer.start();
+        httpServer.start(8899);
         System.out.println("启动完成 !!! 端口号 : " + httpServer.localAddress().getPort());
     }
 

@@ -13,7 +13,7 @@ public class XTest {
     }
 
     public static void test1() {
-        var httpServer = new XHttpServer(new XHttpServerOptions().port(8899).addUpgradeHandlerList(
+        var httpServer = new XHttpServer(new XHttpServerOptions().addUpgradeHandlerList(
                 new WebSocketUpgradeHandler()
         ));
         httpServer.onRequest(c -> {
@@ -31,7 +31,7 @@ public class XTest {
                 c.response().send("123");
             }
         });
-        httpServer.start();
+        httpServer.start(8899);
         System.out.println("启动完成 !!! 端口号 : " + httpServer.localAddress().getPort());
     }
 

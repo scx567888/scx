@@ -2,7 +2,7 @@ package cool.scx.tcp;
 
 import cool.scx.tcp.tls.TLS;
 
-/// ScxTCPClientOptions
+/// TCPClientOptions
 ///
 /// @author scx567888
 /// @version 0.0.1
@@ -13,9 +13,9 @@ public class TCPClientOptions {
     private boolean autoHandshake;
 
     public TCPClientOptions() {
-        this.tls = null;
-        this.autoUpgradeToTLS = true;
-        this.autoHandshake = true;
+        this.tls = null; // 默认没有 tls
+        this.autoUpgradeToTLS = true; // 自动升级到 TLS
+        this.autoHandshake = true; // 自动握手
     }
 
     public TCPClientOptions(TCPClientOptions oldOptions) {

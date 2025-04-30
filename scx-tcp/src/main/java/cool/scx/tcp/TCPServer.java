@@ -6,6 +6,7 @@ import java.lang.System.Logger;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.util.function.Consumer;
 
 import static java.lang.System.Logger.Level.ERROR;
@@ -42,14 +43,18 @@ public class TCPServer implements ScxTCPServer {
     }
 
     @Override
-    public void start() {
+    public void start(SocketAddress localAddress) {
         if (running) {
             throw new IllegalStateException("服务器已在运行 !!!");
         }
 
+        if (connectHandler == null) {
+            throw new IllegalStateException("未设置 连接处理器 !!!");
+        }
+
         try {
             this.serverSocket = new ServerSocket();
-            this.serverSocket.bind(options.localAddress(), options.backlog());
+            this.serverSocket.bind(localAddress, options.backlog());
         } catch (IOException e) {
             throw new UncheckedIOException("启动服务器失败 !!!", e);
         }
@@ -135,12 +140,6 @@ public class TCPServer implements ScxTCPServer {
                 tryCloseSocket(tcpSocket);
                 return;
             }
-        }
-
-        if (connectHandler == null) {
-            LOGGER.log(ERROR, "未设置 连接处理器, 关闭连接 !!!");
-            tryCloseSocket(tcpSocket);
-            return;
         }
 
         try {

@@ -19,7 +19,7 @@ public class TCPServerTest {
     }
 
     public static void test1() {
-        var tcpServer = new TCPServer(new TCPServerOptions().port(8899).tls(tls));
+        var tcpServer = new TCPServer(new TCPServerOptions().tls(tls));
 
         tcpServer.onConnect(c -> {
             System.out.println("客户端连接了 !!!");
@@ -40,7 +40,7 @@ public class TCPServerTest {
             }
             System.err.println("完成");
         });
-        tcpServer.start();
+        tcpServer.start(8899);
         System.out.println("已监听端口号 : " + tcpServer.localAddress().getPort());
     }
 

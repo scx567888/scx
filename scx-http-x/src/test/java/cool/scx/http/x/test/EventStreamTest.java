@@ -5,7 +5,6 @@ import cool.scx.http.media.event_stream.SseEvent;
 import cool.scx.http.media.event_stream.event.EventClientEventStream;
 import cool.scx.http.x.XHttpClient;
 import cool.scx.http.x.XHttpServer;
-import cool.scx.http.x.XHttpServerOptions;
 
 import java.io.IOException;
 
@@ -17,7 +16,7 @@ public class EventStreamTest {
     }
 
     public static void test1() {
-        var httpServer = new XHttpServer(new XHttpServerOptions().port(8080));
+        var httpServer = new XHttpServer();
         httpServer.onRequest(c -> {
             System.out.println("连接了");
             c.response().setHeader("Access-Control-Allow-Origin", "*");
@@ -32,7 +31,7 @@ public class EventStreamTest {
             }
             System.out.println("全部发送完成");
         });
-        httpServer.start();
+        httpServer.start(8080);
 
     }
 

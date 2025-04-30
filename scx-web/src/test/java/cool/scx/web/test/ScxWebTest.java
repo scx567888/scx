@@ -4,7 +4,6 @@ import cool.scx.http.exception.ForbiddenException;
 import cool.scx.http.routing.Route;
 import cool.scx.http.routing.Router;
 import cool.scx.http.x.XHttpServer;
-import cool.scx.http.x.XHttpServerOptions;
 import cool.scx.web.ScxWeb;
 import org.testng.annotations.Test;
 
@@ -20,7 +19,7 @@ public class ScxWebTest {
     /// 测试 bindErrorHandler
     @Test
     public static void test0() {
-        var httpServer = new XHttpServer(new XHttpServerOptions().port(8080));
+        var httpServer = new XHttpServer();
 
         var router = Router.of();
 
@@ -34,7 +33,7 @@ public class ScxWebTest {
             c.response().status(FORBIDDEN).send("Error");
         }));
 
-        httpServer.onRequest(router).start();
+        httpServer.onRequest(router).start(8080);
 
         for (var route : router.getRoutes()) {
             System.out.println("http://127.0.0.1:" + httpServer.localAddress().getPort() + route.path());
@@ -45,7 +44,7 @@ public class ScxWebTest {
     /// 测试  registerHttpRoutes
     public static void test1() {
 
-        var httpServer = new XHttpServer(new XHttpServerOptions().port(8081));
+        var httpServer = new XHttpServer();
 
         var router = Router.of();
 
@@ -59,7 +58,7 @@ public class ScxWebTest {
             c.response().send("my-route");
         }));
 
-        httpServer.onRequest(router).start();
+        httpServer.onRequest(router).start(8081);
 
         for (var route : router.getRoutes()) {
             System.out.println("http://127.0.0.1:" + httpServer.localAddress().getPort() + route.path());
