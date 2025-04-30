@@ -48,6 +48,10 @@ public class TCPServer implements ScxTCPServer {
             throw new IllegalStateException("服务器已在运行 !!!");
         }
 
+        if (connectHandler == null) {
+            throw new IllegalStateException("未设置 连接处理器 !!!");
+        }
+
         try {
             this.serverSocket = new ServerSocket();
             this.serverSocket.bind(localAddress, backlog);
@@ -136,12 +140,6 @@ public class TCPServer implements ScxTCPServer {
                 tryCloseSocket(tcpSocket);
                 return;
             }
-        }
-
-        if (connectHandler == null) {
-            LOGGER.log(ERROR, "未设置 连接处理器, 关闭连接 !!!");
-            tryCloseSocket(tcpSocket);
-            return;
         }
 
         try {
