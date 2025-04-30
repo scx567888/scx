@@ -13,7 +13,6 @@ public enum HttpVersion {
     HTTP_3("HTTP/3", "h3");
 
     private final String protocolVersion;
-
     private final String alpnValue;
 
     HttpVersion(String protocolVersion, String alpnValue) {
