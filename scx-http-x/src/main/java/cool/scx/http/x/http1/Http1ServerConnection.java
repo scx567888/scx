@@ -5,7 +5,7 @@ import cool.scx.http.error_handler.ErrorPhase;
 import cool.scx.http.error_handler.ScxHttpServerErrorHandler;
 import cool.scx.http.method.ScxHttpMethod;
 import cool.scx.http.uri.ScxURI;
-import cool.scx.http.x.XHttpServerOptions;
+import cool.scx.http.x.HttpServerOptions;
 import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.http.x.http1.request_line.Http1RequestLine;
 import cool.scx.io.data_reader.DataReader;
@@ -39,7 +39,7 @@ public class Http1ServerConnection {
     private final static Logger LOGGER = getLogger(Http1ServerConnection.class.getName());
 
     public final ScxTCPSocket tcpSocket;
-    public final XHttpServerOptions options;
+    public final HttpServerOptions options;
     public final DataReader dataReader;
     public final OutputStream dataWriter;
 
@@ -47,7 +47,7 @@ public class Http1ServerConnection {
     private final ScxHttpServerErrorHandler errorHandler;
     private boolean running;
 
-    public Http1ServerConnection(ScxTCPSocket tcpSocket, XHttpServerOptions options, Consumer<ScxHttpServerRequest> requestHandler, ScxHttpServerErrorHandler errorHandler) {
+    public Http1ServerConnection(ScxTCPSocket tcpSocket, HttpServerOptions options, Consumer<ScxHttpServerRequest> requestHandler, ScxHttpServerErrorHandler errorHandler) {
         this.tcpSocket = tcpSocket;
         this.options = options;
         this.requestHandler = requestHandler;

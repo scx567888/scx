@@ -11,20 +11,20 @@ import java.util.List;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class XHttpServerOptions {
+public class HttpServerOptions {
 
     private final TCPServerOptions tcpServerOptions; // TCP 服务器配置
     private final Http1ServerConnectionOptions http1ConnectionOptions;// Http1 配置
     private boolean enableHttp2; // 是否开启 Http2
 
-    public XHttpServerOptions() {
+    public HttpServerOptions() {
         //默认不自动握手
         this.tcpServerOptions = new TCPServerOptions().autoUpgradeToTLS(true).autoHandshake(false);
         this.http1ConnectionOptions = new Http1ServerConnectionOptions();
         this.enableHttp2 = false;//默认不启用 http2
     }
 
-    public XHttpServerOptions(XHttpServerOptions oldOptions) {
+    public HttpServerOptions(HttpServerOptions oldOptions) {
         //默认不自动握手
         this.tcpServerOptions = new TCPServerOptions(oldOptions.tcpServerOptions()).autoUpgradeToTLS(true).autoHandshake(false);
         this.http1ConnectionOptions = new Http1ServerConnectionOptions(oldOptions.http1ConnectionOptions());
@@ -44,7 +44,7 @@ public class XHttpServerOptions {
         return http1ConnectionOptions.maxRequestLineSize();
     }
 
-    public XHttpServerOptions maxRequestLineSize(int maxRequestLineSize) {
+    public HttpServerOptions maxRequestLineSize(int maxRequestLineSize) {
         http1ConnectionOptions.maxRequestLineSize(maxRequestLineSize);
         return this;
     }
@@ -53,7 +53,7 @@ public class XHttpServerOptions {
         return http1ConnectionOptions.maxHeaderSize();
     }
 
-    public XHttpServerOptions maxHeaderSize(int maxHeaderSize) {
+    public HttpServerOptions maxHeaderSize(int maxHeaderSize) {
         http1ConnectionOptions.maxHeaderSize(maxHeaderSize);
         return this;
     }
@@ -62,7 +62,7 @@ public class XHttpServerOptions {
         return http1ConnectionOptions.maxPayloadSize();
     }
 
-    public XHttpServerOptions maxPayloadSize(long maxPayloadSize) {
+    public HttpServerOptions maxPayloadSize(long maxPayloadSize) {
         http1ConnectionOptions.maxPayloadSize(maxPayloadSize);
         return this;
     }
@@ -71,7 +71,7 @@ public class XHttpServerOptions {
         return http1ConnectionOptions.autoRespond100Continue();
     }
 
-    public XHttpServerOptions autoRespond100Continue(boolean autoRespond100Continue) {
+    public HttpServerOptions autoRespond100Continue(boolean autoRespond100Continue) {
         http1ConnectionOptions.autoRespond100Continue(autoRespond100Continue);
         return this;
     }
@@ -80,7 +80,7 @@ public class XHttpServerOptions {
         return http1ConnectionOptions.validateHost();
     }
 
-    public XHttpServerOptions validateHost(boolean validateHost) {
+    public HttpServerOptions validateHost(boolean validateHost) {
         http1ConnectionOptions.validateHost(validateHost);
         return this;
     }
@@ -89,12 +89,12 @@ public class XHttpServerOptions {
         return http1ConnectionOptions.upgradeHandlerList();
     }
 
-    public XHttpServerOptions upgradeHandlerList(List<Http1UpgradeHandler> upgradeHandlerList) {
+    public HttpServerOptions upgradeHandlerList(List<Http1UpgradeHandler> upgradeHandlerList) {
         http1ConnectionOptions.upgradeHandlerList(upgradeHandlerList);
         return this;
     }
 
-    public XHttpServerOptions addUpgradeHandlerList(Http1UpgradeHandler... upgradeHandlerList) {
+    public HttpServerOptions addUpgradeHandlerList(Http1UpgradeHandler... upgradeHandlerList) {
         http1ConnectionOptions.addUpgradeHandlerList(upgradeHandlerList);
         return this;
     }
@@ -103,7 +103,7 @@ public class XHttpServerOptions {
         return enableHttp2;
     }
 
-    public XHttpServerOptions enableHttp2(boolean enableHttp2) {
+    public HttpServerOptions enableHttp2(boolean enableHttp2) {
         this.enableHttp2 = enableHttp2;
         return this;
     }
@@ -112,7 +112,7 @@ public class XHttpServerOptions {
         return tcpServerOptions.backlog();
     }
 
-    public XHttpServerOptions backlog(int backlog) {
+    public HttpServerOptions backlog(int backlog) {
         this.tcpServerOptions.backlog(backlog);
         return this;
     }
@@ -121,7 +121,7 @@ public class XHttpServerOptions {
         return tcpServerOptions.tls();
     }
 
-    public XHttpServerOptions tls(TLS tls) {
+    public HttpServerOptions tls(TLS tls) {
         this.tcpServerOptions.tls(tls);
         return this;
     }

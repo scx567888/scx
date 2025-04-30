@@ -7,7 +7,7 @@ import cool.scx.http.version.HttpVersion;
 import java.net.URI;
 
 import static cool.scx.http.version.HttpVersion.HTTP_1_1;
-import static cool.scx.http.x.XHttpClientHelper.getDefaultPort;
+import static cool.scx.http.x.HttpClientHelper.getDefaultPort;
 
 public final class Http1RequestLineHelper {
 

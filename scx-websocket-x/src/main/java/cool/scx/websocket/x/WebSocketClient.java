@@ -1,28 +1,28 @@
 package cool.scx.websocket.x;
 
-import cool.scx.http.x.XHttpClient;
+import cool.scx.http.x.HttpClient;
 import cool.scx.websocket.ScxClientWebSocketHandshakeRequest;
 import cool.scx.websocket.ScxWebSocketClient;
 
-public class XWebSocketClient implements ScxWebSocketClient {
+public class WebSocketClient implements ScxWebSocketClient {
 
-    private final XHttpClient httpClient;
+    private final HttpClient httpClient;
 
     private final WebSocketOptions webSocketOptions;
 
-    public XWebSocketClient(XHttpClient httpClient, WebSocketOptions webSocketOptions) {
+    public WebSocketClient(HttpClient httpClient, WebSocketOptions webSocketOptions) {
         this.httpClient = httpClient;
         this.webSocketOptions = webSocketOptions;
     }
 
-    public XWebSocketClient() {
-        this.httpClient = new XHttpClient();
+    public WebSocketClient() {
+        this.httpClient = new HttpClient();
         this.webSocketOptions = new WebSocketOptions();
     }
 
     @Override
     public ScxClientWebSocketHandshakeRequest webSocketHandshakeRequest() {
-        return new XClientWebSocketHandshakeRequest(httpClient, webSocketOptions);
+        return new ClientWebSocketHandshakeRequest(httpClient, webSocketOptions);
     }
 
 }

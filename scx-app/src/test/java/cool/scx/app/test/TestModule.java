@@ -22,6 +22,7 @@ import cool.scx.common.util.StopWatch;
 import cool.scx.http.media.multi_part.MultiPart;
 import cool.scx.http.routing.handler.StaticHandler;
 import cool.scx.http.uri.ScxURI;
+import cool.scx.http.x.HttpClient;
 import cool.scx.http.x.ScxHttpClientHelper;
 import cool.scx.io.zip.UnZipBuilder;
 import cool.scx.io.zip.ZipBuilder;

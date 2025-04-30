@@ -1,6 +1,6 @@
 package cool.scx.http.x.test;
 
-import cool.scx.http.x.XHttpClient;
+import cool.scx.http.x.HttpClient;
 
 import static cool.scx.http.method.HttpMethod.POST;
 
@@ -13,7 +13,7 @@ public class HttpClientTest {
     public static void test1() {
         XTest.test1();
 
-        var client = new XHttpClient();
+        var client = new HttpClient();
         var send = client.request()
                 .uri("http://localhost:8899/中文路径😎😎😎😎?a=1&b=llll")
                 .addHeader("a", "b")

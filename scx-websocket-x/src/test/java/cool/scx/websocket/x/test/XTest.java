@@ -1,7 +1,7 @@
 package cool.scx.websocket.x.test;
 
-import cool.scx.http.x.XHttpServer;
-import cool.scx.http.x.XHttpServerOptions;
+import cool.scx.http.x.HttpServer;
+import cool.scx.http.x.HttpServerOptions;
 import cool.scx.websocket.ScxServerWebSocketHandshakeRequest;
 import cool.scx.websocket.event.ScxEventWebSocket;
 import cool.scx.websocket.x.WebSocketUpgradeHandler;
@@ -13,7 +13,7 @@ public class XTest {
     }
 
     public static void test1() {
-        var httpServer = new XHttpServer(new XHttpServerOptions().addUpgradeHandlerList(
+        var httpServer = new HttpServer(new HttpServerOptions().addUpgradeHandlerList(
                 new WebSocketUpgradeHandler()
         ));
         httpServer.onRequest(c -> {
