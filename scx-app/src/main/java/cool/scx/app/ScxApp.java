@@ -80,8 +80,6 @@ public final class ScxApp {
 
     private ScxAppHttpRouter scxHttpRouter = null;
 
-    private HttpServerOptions httpServerOptions = null;
-
     private ScxHttpServer httpServer = null;
 
     ScxApp(ScxEnvironment scxEnvironment, String appKey, ScxFeatureConfig scxFeatureConfig, ScxConfig scxConfig, ScxAppModule[] scxModules, Object defaultHttpServerOptions) {
@@ -190,7 +188,7 @@ public final class ScxApp {
     }
 
     private ScxHttpServer createServer() {
-        this.httpServerOptions = (this.defaultHttpServerOptions != null ?
+        var httpServerOptions = (this.defaultHttpServerOptions != null ?
                 new HttpServerOptions((HttpServerOptions) this.defaultHttpServerOptions) :
                 new HttpServerOptions()).maxPayloadSize(DEFAULT_BODY_LIMIT);
         if (this.scxOptions.isHttpsEnabled()) {
