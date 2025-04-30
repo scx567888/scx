@@ -16,7 +16,7 @@ public record WebSocketFrame(WebSocketOpCode opCode, byte[] payloadData, boolean
         return new WebSocketFrame(opCode, payloadData, true);
     }
 
-    public ScxWebSocketCloseInfo parseCloseInfo() {
+    public ScxWebSocketCloseInfo getCloseInfo() {
         return WebSocketHelper.parseCloseInfo(payloadData);
     }
 

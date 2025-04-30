@@ -192,7 +192,7 @@ class ScxEventWebSocketImpl implements ScxEventWebSocket {
     }
 
     private void _handleClose(WebSocketFrame frame) {
-        var closeInfo = frame.parseCloseInfo();
+        var closeInfo = frame.getCloseInfo();
         _handleClose(closeInfo.code(), closeInfo.reason(), NORMAL_CLOSE.code(), NORMAL_CLOSE.reason());
     }
 
