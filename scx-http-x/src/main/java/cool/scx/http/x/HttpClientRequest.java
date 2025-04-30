@@ -22,10 +22,10 @@ import static cool.scx.http.x.http1.request_line.RequestTargetForm.ORIGIN_FORM;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class XHttpClientRequest implements Http1ClientRequest {
+public class HttpClientRequest implements Http1ClientRequest {
 
-    private final XHttpClient httpClient;
-    private final XHttpClientOptions options;
+    private final HttpClient httpClient;
+    private final HttpClientOptions options;
 
     protected HttpVersion version;
     protected ScxHttpMethod method;
@@ -33,7 +33,7 @@ public class XHttpClientRequest implements Http1ClientRequest {
     protected ScxHttpHeadersWritable headers;
     protected RequestTargetForm requestTargetForm;
 
-    public XHttpClientRequest(XHttpClient httpClient) {
+    public HttpClientRequest(HttpClient httpClient) {
         this.httpClient = httpClient;
         this.options = httpClient.options();
         this.version = null;// null 表示自动协商
@@ -126,7 +126,7 @@ public class XHttpClientRequest implements Http1ClientRequest {
     }
 
     @Override
-    public XHttpClientRequest requestTargetForm(RequestTargetForm requestTargetForm) {
+    public HttpClientRequest requestTargetForm(RequestTargetForm requestTargetForm) {
         this.requestTargetForm = requestTargetForm;
         return this;
     }

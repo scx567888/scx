@@ -5,11 +5,11 @@ import cool.scx.http.x.proxy.Proxy;
 import cool.scx.tcp.TCPClientOptions;
 import cool.scx.tcp.tls.TLS;
 
-/// XHttpClientOptions
+/// HttpClientOptions
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class XHttpClientOptions {
+public class HttpClientOptions {
 
     private final TCPClientOptions tcpClientOptions;// TCP 客户端 配置
     private final Http1ClientConnectionOptions http1ConnectionOptions;// Http1 配置
@@ -17,7 +17,7 @@ public class XHttpClientOptions {
     private int timeout;// 超时设置
     private boolean enableHttp2; // 是否开启 Http2
 
-    public XHttpClientOptions() {
+    public HttpClientOptions() {
         //默认 不自动升级也不自动握手 已实现代理
         this.tcpClientOptions = new TCPClientOptions().autoUpgradeToTLS(false).autoHandshake(false);
         this.http1ConnectionOptions = new Http1ClientConnectionOptions();
@@ -26,7 +26,7 @@ public class XHttpClientOptions {
         this.enableHttp2 = false;//默认不启用 http2
     }
 
-    public XHttpClientOptions(XHttpClientOptions oldOptions) {
+    public HttpClientOptions(HttpClientOptions oldOptions) {
         //默认 不自动升级也不自动握手 已实现代理
         this.tcpClientOptions = new TCPClientOptions(oldOptions.tcpClientOptions()).autoUpgradeToTLS(false).autoHandshake(false);
         this.http1ConnectionOptions = new Http1ClientConnectionOptions(oldOptions.http1ConnectionOptions());
@@ -47,7 +47,7 @@ public class XHttpClientOptions {
         return enableHttp2;
     }
 
-    public XHttpClientOptions enableHttp2(boolean enableHttp2) {
+    public HttpClientOptions enableHttp2(boolean enableHttp2) {
         this.enableHttp2 = enableHttp2;
         return this;
     }
@@ -56,7 +56,7 @@ public class XHttpClientOptions {
         return tcpClientOptions.tls();
     }
 
-    public XHttpClientOptions tls(TLS tls) {
+    public HttpClientOptions tls(TLS tls) {
         this.tcpClientOptions.tls(tls);
         return this;
     }
@@ -65,7 +65,7 @@ public class XHttpClientOptions {
         return proxy;
     }
 
-    public XHttpClientOptions proxy(Proxy proxy) {
+    public HttpClientOptions proxy(Proxy proxy) {
         this.proxy = proxy;
         return this;
     }
@@ -74,7 +74,7 @@ public class XHttpClientOptions {
         return timeout;
     }
 
-    public XHttpClientOptions timeout(int timeout) {
+    public HttpClientOptions timeout(int timeout) {
         this.timeout = timeout;
         return this;
     }

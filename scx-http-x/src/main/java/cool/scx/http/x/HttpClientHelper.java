@@ -4,7 +4,7 @@ import cool.scx.http.uri.ScxURI;
 
 import java.net.InetSocketAddress;
 
-public class XHttpClientHelper {
+public class HttpClientHelper {
 
     public static boolean checkIsTLS(ScxURI uri) {
         var scheme = uri.scheme().toLowerCase();

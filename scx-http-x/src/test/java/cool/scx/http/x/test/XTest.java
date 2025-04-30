@@ -1,6 +1,6 @@
 package cool.scx.http.x.test;
 
-import cool.scx.http.x.XHttpServer;
+import cool.scx.http.x.HttpServer;
 
 public class XTest {
 
@@ -9,7 +9,7 @@ public class XTest {
     }
 
     public static void test1() {
-        var httpServer = new XHttpServer();
+        var httpServer = new HttpServer();
         httpServer.onRequest(c -> {
             var cacheBody = c.body().asGzipBody().asCacheBody();
             var bodyStr1 = cacheBody.asString();

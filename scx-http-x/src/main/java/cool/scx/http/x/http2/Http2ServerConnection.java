@@ -2,7 +2,7 @@ package cool.scx.http.x.http2;
 
 import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.error_handler.ScxHttpServerErrorHandler;
-import cool.scx.http.x.XHttpServerOptions;
+import cool.scx.http.x.HttpServerOptions;
 import cool.scx.http.x.http2.hpack.HPACKDecoder;
 import cool.scx.io.data_reader.LinkedDataReader;
 import cool.scx.io.data_supplier.BufferedInputStreamDataSupplier;
@@ -23,7 +23,7 @@ public class Http2ServerConnection {
     private final static System.Logger LOGGER = System.getLogger(Http2ServerConnection.class.getName());
 
     private final ScxTCPSocket tcpSocket;
-    private final XHttpServerOptions options;
+    private final HttpServerOptions options;
     private final Consumer<ScxHttpServerRequest> requestHandler;
     private final ScxHttpServerErrorHandler errorHandler;
     private final LinkedDataReader dataReader;
@@ -31,7 +31,7 @@ public class Http2ServerConnection {
     private final HPACKDecoder hpackDecoder;
     private State state;
 
-    public Http2ServerConnection(ScxTCPSocket tcpSocket, XHttpServerOptions options, Consumer<ScxHttpServerRequest> requestHandler, ScxHttpServerErrorHandler errorHandler) {
+    public Http2ServerConnection(ScxTCPSocket tcpSocket, HttpServerOptions options, Consumer<ScxHttpServerRequest> requestHandler, ScxHttpServerErrorHandler errorHandler) {
         this.tcpSocket = tcpSocket;
         this.options = options;
         this.requestHandler = requestHandler;

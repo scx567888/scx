@@ -2,7 +2,7 @@ package cool.scx.http.x.test;
 
 import cool.scx.http.exception.UnauthorizedException;
 import cool.scx.http.routing.Router;
-import cool.scx.http.x.XHttpServer;
+import cool.scx.http.x.HttpServer;
 
 import static cool.scx.http.method.HttpMethod.GET;
 import static cool.scx.http.method.HttpMethod.POST;
@@ -15,7 +15,7 @@ public class Test {
 
     public static void test1() {
         var l = System.nanoTime();
-        var server = new XHttpServer();
+        var server = new HttpServer();
 
         var router = Router.of();
 

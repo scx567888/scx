@@ -1,12 +1,12 @@
 package cool.scx.websocket.x.test;
 
-import cool.scx.http.x.XHttpServer;
-import cool.scx.http.x.XHttpServerOptions;
+import cool.scx.http.x.HttpServer;
+import cool.scx.http.x.HttpServerOptions;
 import cool.scx.websocket.ScxServerWebSocketHandshakeRequest;
 import cool.scx.websocket.WebSocketOpCode;
 import cool.scx.websocket.event.ScxEventWebSocket;
+import cool.scx.websocket.x.WebSocketClient;
 import cool.scx.websocket.x.WebSocketUpgradeHandler;
-import cool.scx.websocket.x.XWebSocketClient;
 
 public class WebSocketTest {
 
@@ -17,7 +17,7 @@ public class WebSocketTest {
 
     public static void startServer() {
         var s = System.nanoTime();
-        var httpServer = new XHttpServer(new XHttpServerOptions().addUpgradeHandlerList(new WebSocketUpgradeHandler()));
+        var httpServer = new HttpServer(new HttpServerOptions().addUpgradeHandlerList(new WebSocketUpgradeHandler()));
 
         httpServer.onRequest(req -> {
             if (req instanceof ScxServerWebSocketHandshakeRequest wsReq) {
@@ -42,7 +42,7 @@ public class WebSocketTest {
     }
 
     public static void startClient() {
-        var httpClient = new XWebSocketClient();
+        var httpClient = new WebSocketClient();
 
         var webSocket = httpClient.webSocketHandshakeRequest().uri("ws://127.0.0.1:8080/websocket").webSocket();
 

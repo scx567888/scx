@@ -6,7 +6,7 @@ import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.uri.ScxURIWritable;
-import cool.scx.http.x.XHttpClient;
+import cool.scx.http.x.HttpClient;
 import cool.scx.http.x.http1.Http1ClientConnection;
 import cool.scx.http.x.http1.Http1ClientRequest;
 import cool.scx.http.x.http1.headers.Http1Headers;
@@ -28,9 +28,9 @@ import static cool.scx.http.x.http1.request_line.RequestTargetForm.ORIGIN_FORM;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class XClientWebSocketHandshakeRequest implements ScxClientWebSocketHandshakeRequest, Http1ClientRequest {
+public class ClientWebSocketHandshakeRequest implements ScxClientWebSocketHandshakeRequest, Http1ClientRequest {
 
-    private final XHttpClient httpClient;
+    private final HttpClient httpClient;
     private final WebSocketOptions webSocketOptions;
     private WebSocketOptions options;
     private ScxURIWritable uri;
@@ -38,7 +38,7 @@ public class XClientWebSocketHandshakeRequest implements ScxClientWebSocketHands
     private Http1Headers headers;
     private RequestTargetForm requestTargetForm;
 
-    public XClientWebSocketHandshakeRequest(XHttpClient httpClient, WebSocketOptions webSocketOptions) {
+    public ClientWebSocketHandshakeRequest(HttpClient httpClient, WebSocketOptions webSocketOptions) {
         this.httpClient = httpClient;
         this.webSocketOptions = webSocketOptions;
         this.uri = ScxURI.of();
@@ -89,7 +89,7 @@ public class XClientWebSocketHandshakeRequest implements ScxClientWebSocketHands
         var connection = new Http1ClientConnection(tcpSocket, httpClient.options());
         var response = connection.sendRequest(this, EMPTY_WRITER).waitResponse();
 
-        return new XClientWebSocketHandshakeResponse(connection, response, this.webSocketOptions);
+        return new ClientWebSocketHandshakeResponse(connection, response, this.webSocketOptions);
 
     }
 

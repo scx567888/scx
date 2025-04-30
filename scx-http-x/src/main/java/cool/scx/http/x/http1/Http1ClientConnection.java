@@ -3,7 +3,7 @@ package cool.scx.http.x.http1;
 import cool.scx.http.ScxHttpClientResponse;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.media.MediaWriter;
-import cool.scx.http.x.XHttpClientOptions;
+import cool.scx.http.x.HttpClientOptions;
 import cool.scx.http.x.http1.chunked.HttpChunkedOutputStream;
 import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.http.x.http1.request_line.Http1RequestLine;
@@ -29,7 +29,7 @@ public class Http1ClientConnection {
     public final OutputStream dataWriter;
     public final Http1ClientConnectionOptions options;
 
-    public Http1ClientConnection(ScxTCPSocket tcpSocket, XHttpClientOptions options) {
+    public Http1ClientConnection(ScxTCPSocket tcpSocket, HttpClientOptions options) {
         this.tcpSocket = tcpSocket;
         this.dataReader = new LinkedDataReader(new InputStreamDataSupplier(tcpSocket.inputStream()));
         this.dataWriter = new NoCloseOutputStream(tcpSocket.outputStream());

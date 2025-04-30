@@ -13,24 +13,24 @@ import java.io.UncheckedIOException;
 import static cool.scx.http.media.empty.EmptyWriter.EMPTY_WRITER;
 import static cool.scx.http.method.HttpMethod.CONNECT;
 import static cool.scx.http.status.HttpStatus.OK;
-import static cool.scx.http.x.XHttpClientHelper.checkIsTLS;
-import static cool.scx.http.x.XHttpClientHelper.getRemoteAddress;
+import static cool.scx.http.x.HttpClientHelper.checkIsTLS;
+import static cool.scx.http.x.HttpClientHelper.getRemoteAddress;
 import static cool.scx.http.x.http1.request_line.RequestTargetForm.AUTHORITY_FORM;
 
 /// todo 待完成
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class XHttpClient implements ScxHttpClient {
+public class HttpClient implements ScxHttpClient {
 
-    private final XHttpClientOptions options;
+    private final HttpClientOptions options;
 
-    public XHttpClient(XHttpClientOptions options) {
+    public HttpClient(HttpClientOptions options) {
         this.options = options;
     }
 
-    public XHttpClient() {
-        this(new XHttpClientOptions());
+    public HttpClient() {
+        this(new HttpClientOptions());
     }
 
     private static ScxTCPSocket configTLS(ScxTCPSocket tcpSocket, TLS tls, String... applicationProtocols) {
@@ -60,7 +60,7 @@ public class XHttpClient implements ScxHttpClient {
         }
     }
 
-    public XHttpClientOptions options() {
+    public HttpClientOptions options() {
         return options;
     }
 
@@ -110,7 +110,7 @@ public class XHttpClient implements ScxHttpClient {
 
         //2, 和代理服务器 握手
         var proxyResponse = new Http1ClientConnection(tcpSocket, options).sendRequest(
-                        (XHttpClientRequest) new XHttpClientRequest(this)
+                        (HttpClientRequest) new HttpClientRequest(this)
                                 .requestTargetForm(AUTHORITY_FORM)
                                 .method(CONNECT)
                                 .addHeader("proxy-connection", "keep-alive")
@@ -129,8 +129,8 @@ public class XHttpClient implements ScxHttpClient {
     }
 
     @Override
-    public XHttpClientRequest request() {
-        return new XHttpClientRequest(this);
+    public HttpClientRequest request() {
+        return new HttpClientRequest(this);
     }
 
 }

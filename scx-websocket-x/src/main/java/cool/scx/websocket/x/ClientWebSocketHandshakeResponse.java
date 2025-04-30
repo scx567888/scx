@@ -10,14 +10,14 @@ import cool.scx.websocket.ScxWebSocket;
 
 import static cool.scx.http.status.HttpStatus.SWITCHING_PROTOCOLS;
 
-public class XClientWebSocketHandshakeResponse implements ScxClientWebSocketHandshakeResponse {
+public class ClientWebSocketHandshakeResponse implements ScxClientWebSocketHandshakeResponse {
 
     private final Http1ClientConnection connection;
     private final ScxHttpClientResponse response;
     private final WebSocketOptions webSocketOptions;
     private ScxWebSocket webSocket;
 
-    public XClientWebSocketHandshakeResponse(Http1ClientConnection connection, ScxHttpClientResponse response, WebSocketOptions webSocketOptions) {
+    public ClientWebSocketHandshakeResponse(Http1ClientConnection connection, ScxHttpClientResponse response, WebSocketOptions webSocketOptions) {
         this.connection = connection;
         this.response = response;
         this.webSocketOptions = webSocketOptions;

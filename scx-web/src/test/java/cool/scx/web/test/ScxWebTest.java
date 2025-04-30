@@ -3,7 +3,7 @@ package cool.scx.web.test;
 import cool.scx.http.exception.ForbiddenException;
 import cool.scx.http.routing.Route;
 import cool.scx.http.routing.Router;
-import cool.scx.http.x.XHttpServer;
+import cool.scx.http.x.HttpServer;
 import cool.scx.web.ScxWeb;
 import org.testng.annotations.Test;
 
@@ -19,7 +19,7 @@ public class ScxWebTest {
     /// 测试 bindErrorHandler
     @Test
     public static void test0() {
-        var httpServer = new XHttpServer();
+        var httpServer = new HttpServer();
 
         var router = Router.of();
 
@@ -44,7 +44,7 @@ public class ScxWebTest {
     /// 测试  registerHttpRoutes
     public static void test1() {
 
-        var httpServer = new XHttpServer();
+        var httpServer = new HttpServer();
 
         var router = Router.of();
 

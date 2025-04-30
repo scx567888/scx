@@ -15,8 +15,8 @@ import cool.scx.http.ScxHttpServer;
 import cool.scx.http.error_handler.DefaultHttpServerErrorHandler;
 import cool.scx.http.routing.Route;
 import cool.scx.http.routing.TypeMatcher;
-import cool.scx.http.x.XHttpServer;
-import cool.scx.http.x.XHttpServerOptions;
+import cool.scx.http.x.HttpServer;
+import cool.scx.http.x.HttpServerOptions;
 import cool.scx.jdbc.JDBCContext;
 import cool.scx.jdbc.SchemaHelper;
 import cool.scx.jdbc.sql.SQLRunner;
@@ -80,7 +80,7 @@ public final class ScxApp {
 
     private ScxAppHttpRouter scxHttpRouter = null;
 
-    private XHttpServerOptions httpServerOptions = null;
+    private HttpServerOptions httpServerOptions = null;
 
     private ScxHttpServer httpServer = null;
 
@@ -191,8 +191,8 @@ public final class ScxApp {
 
     private ScxHttpServer createServer() {
         this.httpServerOptions = (this.defaultHttpServerOptions != null ?
-                new XHttpServerOptions((XHttpServerOptions) this.defaultHttpServerOptions) :
-                new XHttpServerOptions()).maxPayloadSize(DEFAULT_BODY_LIMIT);
+                new HttpServerOptions((HttpServerOptions) this.defaultHttpServerOptions) :
+                new HttpServerOptions()).maxPayloadSize(DEFAULT_BODY_LIMIT);
         if (this.scxOptions.isHttpsEnabled()) {
             var tls = TLS.of(this.scxOptions.sslPath(), this.scxOptions.sslPassword());
             httpServerOptions.tls(tls);
@@ -202,7 +202,7 @@ public final class ScxApp {
         if (!hasWebSocketUpgradeHandler) {
             httpServerOptions.addUpgradeHandlerList(new WebSocketUpgradeHandler());
         }
-        return new XHttpServer(httpServerOptions).onError(new DefaultHttpServerErrorHandler(scxFeatureConfig.get(USE_DEVELOPMENT_ERROR_PAGE)));
+        return new HttpServer(httpServerOptions).onError(new DefaultHttpServerErrorHandler(scxFeatureConfig.get(USE_DEVELOPMENT_ERROR_PAGE)));
     }
 
     /// 启动服务器

@@ -1,6 +1,6 @@
 package cool.scx.websocket.x.test;
 
-import cool.scx.websocket.x.XWebSocketClient;
+import cool.scx.websocket.x.ScxWebSocketClientHelper;
 
 public class HttpClientTest {
 
@@ -10,8 +10,7 @@ public class HttpClientTest {
 
     public static void test1() {
         XTest.test1();
-        var client = new XWebSocketClient();
-        var webSocket = client.webSocketHandshakeRequest()
+        var webSocket = ScxWebSocketClientHelper.webSocketHandshakeRequest()
                 .uri("http://localhost:8899/中文路径😎😎😎😎?a=1&b=llll")
                 .addHeader("a", "b")
                 .webSocket();

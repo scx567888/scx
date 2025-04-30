@@ -14,7 +14,7 @@ import static cool.scx.http.method.HttpMethod.*;
 /// @version 0.0.1
 public final class ScxHttpClientHelper {
 
-    public static final ScxHttpClient DEFAULT_HTTP_CLIENT = new XHttpClient();
+    public static final ScxHttpClient DEFAULT_HTTP_CLIENT = new HttpClient();
 
     public static ScxHttpClientRequest request() {
         return DEFAULT_HTTP_CLIENT.request();

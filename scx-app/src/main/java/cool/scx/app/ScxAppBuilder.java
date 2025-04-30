@@ -9,7 +9,7 @@ import cool.scx.config.ScxFeatureConfig;
 import cool.scx.config.source.ArgsConfigSource;
 import cool.scx.config.source.JsonFileConfigSource;
 import cool.scx.config.source.MapConfigSource;
-import cool.scx.http.x.XHttpServerOptions;
+import cool.scx.http.x.HttpServerOptions;
 
 import java.util.*;
 
@@ -180,7 +180,7 @@ public final class ScxAppBuilder {
         return this;
     }
 
-    public ScxAppBuilder setDefaultHttpServerOptions(XHttpServerOptions options) {
+    public ScxAppBuilder setDefaultHttpServerOptions(HttpServerOptions options) {
         this.defaultHttpServerOptions = options;
         return this;
     }

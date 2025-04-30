@@ -19,23 +19,23 @@ import java.util.function.Consumer;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class XHttpServer implements ScxHttpServer {
+public class HttpServer implements ScxHttpServer {
 
-    private static final Logger LOGGER = System.getLogger(XHttpServer.class.getName());
+    private static final Logger LOGGER = System.getLogger(HttpServer.class.getName());
 
-    private final XHttpServerOptions options;
+    private final HttpServerOptions options;
     private final ScxTCPServer tcpServer;
     private Consumer<ScxHttpServerRequest> requestHandler;
     private ScxHttpServerErrorHandler errorHandler;
 
-    public XHttpServer(XHttpServerOptions options) {
+    public HttpServer(HttpServerOptions options) {
         this.options = options;
         this.tcpServer = new TCPServer(options.tcpServerOptions());
         this.tcpServer.onConnect(this::handle);
     }
 
-    public XHttpServer() {
-        this(new XHttpServerOptions());
+    public HttpServer() {
+        this(new HttpServerOptions());
     }
 
     private void handle(ScxTCPSocket tcpSocket) {
