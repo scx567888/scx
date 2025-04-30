@@ -13,7 +13,7 @@ public class XTest {
     }
 
     public static void test1() {
-        var httpServer = new HttpServer(new HttpServerOptions().addUpgradeHandlerList(
+        var httpServer = new HttpServer(new HttpServerOptions().addUpgradeHandler(
                 new WebSocketUpgradeHandler()
         ));
         httpServer.onRequest(c -> {

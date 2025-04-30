@@ -17,7 +17,7 @@ public class WebSocketTest {
 
     public static void startServer() {
         var s = System.nanoTime();
-        var httpServer = new HttpServer(new HttpServerOptions().addUpgradeHandlerList(new WebSocketUpgradeHandler()));
+        var httpServer = new HttpServer(new HttpServerOptions().addUpgradeHandler(new WebSocketUpgradeHandler()));
 
         httpServer.onRequest(req -> {
             if (req instanceof ScxServerWebSocketHandshakeRequest wsReq) {

@@ -5,6 +5,7 @@ import cool.scx.websocket.WebSocketFrame;
 import cool.scx.websocket.exception.WebSocketException;
 
 import java.lang.System.Logger;
+import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 
 import static cool.scx.websocket.close_info.WebSocketCloseInfo.*;
@@ -16,6 +17,7 @@ class ScxEventWebSocketImpl implements ScxEventWebSocket {
     private static final Logger LOGGER = getLogger(ScxEventWebSocketImpl.class.getName());
 
     private final ScxWebSocket ws;
+    private final Executor callbackExecutor;// 回调执行器
     protected ContinuationType continuationType;
     private TextMessageHandler textMessageHandler;
     private BinaryMessageHandler binaryMessageHandler;
@@ -25,9 +27,13 @@ class ScxEventWebSocketImpl implements ScxEventWebSocket {
     private Consumer<Throwable> errorHandler;
     private boolean running;
 
-
     public ScxEventWebSocketImpl(ScxWebSocket websocket) {
+        this(websocket, null);
+    }
+
+    public ScxEventWebSocketImpl(ScxWebSocket websocket, Executor callbackExecutor) {
         this.ws = websocket;
+        this.callbackExecutor = callbackExecutor;
         this.textMessageHandler = null;
         this.binaryMessageHandler = null;
         this.pingHandler = null;
@@ -114,10 +120,10 @@ class ScxEventWebSocketImpl implements ScxEventWebSocket {
         }
     }
 
+    @Override
     public void stop() {
         this.running = false;
     }
-
 
     private void handleFrame(WebSocketFrame frame) {
         switch (frame.opCode()) {
@@ -235,38 +241,68 @@ class ScxEventWebSocketImpl implements ScxEventWebSocket {
     }
 
     private void _callOnTextMessage(String text, boolean last) {
-        if (textMessageHandler != null) {
+        if (textMessageHandler == null) {
+            return;
+        }
+        if (callbackExecutor == null) {
             textMessageHandler.handle(text, last);
+        } else {
+            callbackExecutor.execute(() -> textMessageHandler.handle(text, last));
         }
     }
 
     private void _callOnBinaryMessage(byte[] binary, boolean last) {
-        if (binaryMessageHandler != null) {
+        if (binaryMessageHandler == null) {
+            return;
+        }
+        if (callbackExecutor == null) {
             binaryMessageHandler.handle(binary, last);
+        } else {
+            callbackExecutor.execute(() -> binaryMessageHandler.handle(binary, last));
         }
     }
 
     private void _callOnPing(byte[] bytes) {
-        if (pingHandler != null) {
+        if (pingHandler == null) {
+            return;
+        }
+        if (callbackExecutor == null) {
             pingHandler.accept(bytes);
+        } else {
+            callbackExecutor.execute(() -> pingHandler.accept(bytes));
         }
     }
 
     private void _callOnPong(byte[] bytes) {
-        if (pongHandler != null) {
+        if (pongHandler == null) {
+            return;
+        }
+        if (callbackExecutor == null) {
             pongHandler.accept(bytes);
+        } else {
+            callbackExecutor.execute(() -> pongHandler.accept(bytes));
         }
     }
 
     private void _callOnClose(int code, String reason) {
-        if (closeHandler != null) {
+        if (closeHandler == null) {
+            return;
+        }
+        if (callbackExecutor == null) {
             closeHandler.handle(code, reason);
+        } else {
+            callbackExecutor.execute(() -> closeHandler.handle(code, reason));
         }
     }
 
     private void _callOnError(Exception e) {
-        if (errorHandler != null) {
+        if (errorHandler == null) {
+            return;
+        }
+        if (callbackExecutor == null) {
             errorHandler.accept(e);
+        } else {
+            callbackExecutor.execute(() -> errorHandler.accept(e));
         }
     }
 
