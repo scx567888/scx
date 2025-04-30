@@ -1,4 +1,4 @@
-package cool.scx.websocket.handler;
+package cool.scx.websocket.event;
 
 import cool.scx.websocket.ScxWebSocket;
 import cool.scx.websocket.WebSocketFrame;
