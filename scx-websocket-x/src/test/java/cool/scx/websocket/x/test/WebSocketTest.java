@@ -5,8 +5,8 @@ import cool.scx.http.x.HttpServerOptions;
 import cool.scx.websocket.ScxServerWebSocketHandshakeRequest;
 import cool.scx.websocket.WebSocketOpCode;
 import cool.scx.websocket.event.ScxEventWebSocket;
-import cool.scx.websocket.x.WebSocketUpgradeHandler;
 import cool.scx.websocket.x.WebSocketClient;
+import cool.scx.websocket.x.WebSocketUpgradeHandler;
 
 public class WebSocketTest {
 
