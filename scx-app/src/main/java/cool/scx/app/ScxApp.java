@@ -200,7 +200,7 @@ public final class ScxApp {
         var hasWebSocketUpgradeHandler = httpServerOptions.upgradeHandlerList().stream().anyMatch(http1UpgradeHandler -> http1UpgradeHandler instanceof WebSocketUpgradeHandler);
         //别忘了添加一个 websocket 处理器
         if (!hasWebSocketUpgradeHandler) {
-            httpServerOptions.addUpgradeHandlerList(new WebSocketUpgradeHandler());
+            httpServerOptions.addUpgradeHandler(new WebSocketUpgradeHandler());
         }
         return new HttpServer(httpServerOptions).onError(new DefaultHttpServerErrorHandler(scxFeatureConfig.get(USE_DEVELOPMENT_ERROR_PAGE)));
     }

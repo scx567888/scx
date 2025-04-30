@@ -86,7 +86,7 @@ public class Http1ServerConnectionOptions {
         return this;
     }
 
-    public Http1ServerConnectionOptions addUpgradeHandlerList(Http1UpgradeHandler... upgradeHandlerList) {
+    public Http1ServerConnectionOptions addUpgradeHandler(Http1UpgradeHandler... upgradeHandlerList) {
         addAll(this.upgradeHandlerList, upgradeHandlerList);
         return this;
     }

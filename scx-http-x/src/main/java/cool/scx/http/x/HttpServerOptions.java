@@ -94,8 +94,8 @@ public class HttpServerOptions {
         return this;
     }
 
-    public HttpServerOptions addUpgradeHandlerList(Http1UpgradeHandler... upgradeHandlerList) {
-        http1ConnectionOptions.addUpgradeHandlerList(upgradeHandlerList);
+    public HttpServerOptions addUpgradeHandler(Http1UpgradeHandler... upgradeHandlerList) {
+        http1ConnectionOptions.addUpgradeHandler(upgradeHandlerList);
         return this;
     }
 
