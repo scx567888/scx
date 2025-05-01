@@ -33,11 +33,11 @@ public final class Http1RequestLineHelper {
         ScxURI path;
 
         if (method == CONNECT) {
-            path = ScxURI.ofAuthority(pathStr);
+            path = ScxURI.ofAuthority(pathStr);  // CONNECT 使用 Authority 格式
         } else {
-            //处理空请求路径
+            // 处理空请求路径
             if ("".equals(pathStr)) {
-                pathStr = "/";
+                pathStr = "/";  // 空路径默认处理为 "/"
             }
             //尝试解码路径 如果解析失败, 则可能是路径中包含非法字符
             //此处我们同样不去细化异常 直接抛出 InvalidHttpRequestLineException 异常
@@ -47,6 +47,7 @@ public final class Http1RequestLineHelper {
             } catch (IllegalArgumentException e) {
                 throw new InvalidHttpRequestLineException(requestLineStr);
             }
+
             path = ScxURI.of(decodedPath);
         }
 
