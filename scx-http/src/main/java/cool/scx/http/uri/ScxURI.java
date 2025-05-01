@@ -4,6 +4,7 @@ import cool.scx.http.parameters.Parameters;
 
 import java.net.URI;
 
+import static cool.scx.http.uri.ScxURIHelper.decodeAuthority;
 import static cool.scx.http.uri.URIEncoder.encodeURI;
 
 /// ScxURI 是对 URI 的抽象 ，提供了更直观、灵活的操作方式。
@@ -75,6 +76,10 @@ public interface ScxURI {
                 .path(u.path())
                 .query(u.query())
                 .fragment(u.fragment());
+    }
+
+    static ScxURI ofAuthority(String authority) {
+        return decodeAuthority(authority);
     }
 
     String scheme();

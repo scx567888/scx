@@ -3,6 +3,7 @@ package cool.scx.http.uri;
 import cool.scx.http.parameters.Parameters;
 import cool.scx.http.parameters.ParametersWritable;
 
+import java.net.URI;
 import java.util.ArrayList;
 
 import static cool.scx.http.uri.URIEncoder.encodeURIComponent;
@@ -104,6 +105,11 @@ public class ScxURIHelper {
             }
         }
         return sb.toString();
+    }
+
+    public static ScxURIWritable decodeAuthority(String authority) {
+        var u = URI.create("scx://" + authority);
+        return new ScxURIImpl().host(u.getHost()).port(u.getPort() == -1 ? null : u.getPort());
     }
 
 }

@@ -15,6 +15,7 @@ public class Http1RequestLineTest {
     public static void main(String[] args) throws InvalidHttpRequestLineException, InvalidHttpVersion {
         test1();
         test2();
+        test3();
     }
 
     @Test
@@ -50,6 +51,18 @@ public class Http1RequestLineTest {
     public static void test2() {
         var http1RequestLine = new Http1RequestLine(GET, ScxURI.of().path("/中文/bar").addQuery("aaa", "bbb")).encode();
         assertEquals(http1RequestLine, "GET /%E4%B8%AD%E6%96%87/bar?aaa=bbb HTTP/1.1");
+    }
+
+    @Test
+    public static void test3() throws InvalidHttpRequestLineException, InvalidHttpVersion {
+
+        var s = Http1RequestLine.of("GET http://www.test.com/a/b/c/ HTTP/1.1");
+
+        var c = Http1RequestLine.of("CONNECT www.test.com:443 HTTP/1.1");
+
+        System.out.println(s.path());
+        System.out.println(c.path());
+
     }
 
 }
