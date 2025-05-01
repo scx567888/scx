@@ -33,7 +33,7 @@ public class HttpClient implements ScxHttpClient {
         this(new HttpClientOptions());
     }
 
-    private static ScxTCPSocket configTLS(ScxTCPSocket tcpSocket, TLS tls, String... applicationProtocols) {
+    private static ScxTCPSocket configTLS(ScxTCPSocket tcpSocket, TLS tls, ScxURI uri, String... applicationProtocols) {
         //手动升级
         try {
             tcpSocket.upgradeToTLS(tls);
@@ -43,6 +43,7 @@ public class HttpClient implements ScxHttpClient {
         }
         tcpSocket.tlsManager().setUseClientMode(true);
         tcpSocket.tlsManager().setApplicationProtocols(applicationProtocols);
+        tcpSocket.tlsManager().setServerNames(uri.host());
         try {
             tcpSocket.startHandshake();
         } catch (IOException e) {
@@ -92,7 +93,7 @@ public class HttpClient implements ScxHttpClient {
         var remoteAddress = getRemoteAddress(uri);
         var tcpSocket = tcpClient.connect(remoteAddress, options.timeout());
         //配置一下 tls 为系统默认
-        return configTLS(tcpSocket, TLS.ofDefault(), applicationProtocols);
+        return configTLS(tcpSocket, TLS.ofDefault(), uri, applicationProtocols);
     }
 
     /// 创建 具有代理 的 明文 socket
@@ -125,7 +126,7 @@ public class HttpClient implements ScxHttpClient {
         }
 
         //4, 这种情况下我们信任所有证书
-        return configTLS(tcpSocket, TLS.ofTrustAny(), applicationProtocols);
+        return configTLS(tcpSocket, TLS.ofTrustAny(), uri, applicationProtocols);
     }
 
     @Override
