@@ -6,6 +6,7 @@ import cool.scx.http.version.HttpVersion;
 
 import java.net.URI;
 
+import static cool.scx.http.method.HttpMethod.CONNECT;
 import static cool.scx.http.version.HttpVersion.HTTP_1_1;
 import static cool.scx.http.x.HttpClientHelper.getDefaultPort;
 
@@ -26,23 +27,29 @@ public final class Http1RequestLineHelper {
         var pathStr = parts[1];
         var versionStr = parts[2];
 
-        //处理空请求路径
-        if ("".equals(pathStr)) {
-            pathStr = "/";
-        }
-
-        //尝试解码路径 如果解析失败, 则可能是路径中包含非法字符
-        //此处我们同样不去细化异常 直接抛出 InvalidHttpRequestLineException 异常
-        URI decodedPath;
-        try {
-            decodedPath = URI.create(pathStr);
-        } catch (IllegalArgumentException e) {
-            throw new InvalidHttpRequestLineException(requestLineStr);
-        }
-
         var method = ScxHttpMethod.of(methodStr);
-        var path = ScxURI.of(decodedPath);
         var version = HttpVersion.find(versionStr);
+
+        ScxURI path;
+
+        if (method == CONNECT) {
+            path = ScxURI.ofAuthority(pathStr);  // CONNECT 使用 Authority 格式
+        } else {
+            // 处理空请求路径
+            if ("".equals(pathStr)) {
+                pathStr = "/";  // 空路径默认处理为 "/"
+            }
+            //尝试解码路径 如果解析失败, 则可能是路径中包含非法字符
+            //此处我们同样不去细化异常 直接抛出 InvalidHttpRequestLineException 异常
+            URI decodedPath;
+            try {
+                decodedPath = URI.create(pathStr);
+            } catch (IllegalArgumentException e) {
+                throw new InvalidHttpRequestLineException(requestLineStr);
+            }
+
+            path = ScxURI.of(decodedPath);
+        }
 
         //这里我们强制 版本号必须是 HTTP/1.1 , 这里需要细化一下 异常
         if (version != HTTP_1_1) {
