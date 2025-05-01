@@ -15,9 +15,12 @@ public class WebSocketClient implements ScxWebSocketClient {
         this.options = options;
     }
 
+    public WebSocketClient(WebSocketOptions options) {
+        this(new HttpClient(), options);
+    }
+
     public WebSocketClient() {
-        this.httpClient = new HttpClient();
-        this.options = new WebSocketOptions();
+        this(new HttpClient(), new WebSocketOptions());
     }
 
     @Override
