@@ -8,21 +8,32 @@ public class WebSocketClient implements ScxWebSocketClient {
 
     private final HttpClient httpClient;
 
-    private final WebSocketOptions webSocketOptions;
+    private final WebSocketOptions options;
 
-    public WebSocketClient(HttpClient httpClient, WebSocketOptions webSocketOptions) {
+    public WebSocketClient(HttpClient httpClient, WebSocketOptions options) {
         this.httpClient = httpClient;
-        this.webSocketOptions = webSocketOptions;
+        this.options = options;
+    }
+
+    public WebSocketClient(WebSocketOptions options) {
+        this(new HttpClient(), options);
     }
 
     public WebSocketClient() {
-        this.httpClient = new HttpClient();
-        this.webSocketOptions = new WebSocketOptions();
+        this(new HttpClient(), new WebSocketOptions());
     }
 
     @Override
     public ScxClientWebSocketHandshakeRequest webSocketHandshakeRequest() {
-        return new ClientWebSocketHandshakeRequest(httpClient, webSocketOptions);
+        return new ClientWebSocketHandshakeRequest(httpClient, options);
+    }
+
+    public HttpClient httpClient() {
+        return httpClient;
+    }
+
+    public WebSocketOptions options() {
+        return options;
     }
 
 }
