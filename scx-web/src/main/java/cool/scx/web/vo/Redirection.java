@@ -1,5 +1,6 @@
 package cool.scx.web.vo;
 
+import cool.scx.http.ScxHttpServerResponse;
 import cool.scx.http.routing.RoutingContext;
 import cool.scx.http.status.ScxHttpStatus;
 
@@ -37,9 +38,13 @@ public final class Redirection implements BaseVo {
         return new Redirection(location, FOUND);
     }
 
+    public void handle(ScxHttpServerResponse response) {
+        response.setHeader(LOCATION, location).status(status).send();
+    }
+
     @Override
     public void accept(RoutingContext routingContext) {
-        routingContext.response().setHeader(LOCATION, location).status(status).send();
+        handle(routingContext.response());
     }
 
 }
