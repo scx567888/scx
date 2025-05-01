@@ -11,8 +11,7 @@ import cool.scx.http.x.http1.request_line.Http1RequestLine;
 
 import java.io.InputStream;
 
-import static cool.scx.http.x.http1.Http1Helper.getLocalPeer;
-import static cool.scx.http.x.http1.Http1Helper.getRemotePeer;
+import static cool.scx.http.x.http1.Http1Helper.*;
 import static cool.scx.http.x.http1.headers.connection.Connection.CLOSE;
 
 /// HTTP/1.1 ServerRequest
@@ -34,8 +33,7 @@ public class Http1ServerRequest implements ScxHttpServerRequest {
     public Http1ServerRequest(Http1ServerConnection connection, Http1RequestLine requestLine, Http1Headers headers, InputStream bodyInputStream) {
         this.connection = connection;
         this.method = requestLine.method();
-        // todo uri 需要 通过请求头 , socket 等 获取 请求主机 
-        this.uri = ScxURI.of(requestLine.path());
+        this.uri = inferURI(requestLine.path(),headers,connection.tcpSocket);
         this.version = requestLine.version();
         this.headers = headers;
         this.body = new Http1Body(bodyInputStream, this.headers);

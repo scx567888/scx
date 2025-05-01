@@ -1,11 +1,13 @@
 package cool.scx.http.x.http1;
 
 import cool.scx.http.exception.BadRequestException;
+import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.method.ScxHttpMethod;
 import cool.scx.http.peer_info.PeerInfo;
 import cool.scx.http.peer_info.PeerInfoWritable;
 import cool.scx.http.status.ScxHttpStatus;
+import cool.scx.http.uri.ScxURI;
 import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.http.x.http1.headers.upgrade.ScxUpgrade;
 import cool.scx.http.x.http1.request_line.Http1RequestLine;
@@ -82,6 +84,30 @@ public final class Http1Helper {
 
     public static boolean checkRequestHasBody(ScxHttpMethod method) {
         return GET != method;
+    }
+
+    public static ScxURI inferURI(ScxURI requestLineTarget, ScxHttpHeaders headers, ScxTCPSocket tcpSocket) {
+        var uri = ScxURI.of(requestLineTarget);
+        //1, 有可能已经是全路径 我们判断一下是否存在协议
+        if (uri.scheme() != null) {
+            return uri;
+        }
+        //2, 推测协议
+        if (tcpSocket.isTLS()) {
+            uri.scheme("https");
+        } else {
+            uri.scheme("http");
+        }
+        //3, 开始推测 host 和端口号
+        var host = headers.get(HOST);
+        if (host != null) {
+            var authority = ScxURI.ofAuthority(host);
+            uri.host(authority.host()).port(authority.port());
+        } else {
+            var localAddress = tcpSocket.localAddress();
+            uri.host(localAddress.getHostString()).port(localAddress.getPort());
+        }
+        return uri;
     }
 
 }

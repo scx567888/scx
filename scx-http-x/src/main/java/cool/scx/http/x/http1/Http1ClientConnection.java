@@ -52,7 +52,12 @@ public class Http1ClientConnection {
         // 处理头相关
         // 1, 处理 HOST 相关
         if (!headers.contains(HOST)) {
-            headers.set(HOST, request.uri().host());
+            var port = request.uri().port();
+            if (port != null) {
+                headers.set(HOST, request.uri().host() + ":" + port);
+            } else {
+                headers.set(HOST, request.uri().host());
+            }
         }
 
         // 2, 处理 body 相关
