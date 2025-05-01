@@ -86,6 +86,7 @@ public final class Http1Helper {
         return GET != method;
     }
 
+    /// 事实上我们无法拿到真正的地址 所以这里只是推测而已
     public static ScxURI inferURI(ScxURI requestLineTarget, ScxHttpHeaders headers, ScxTCPSocket tcpSocket) {
         var uri = ScxURI.of(requestLineTarget);
         //1, 有可能已经是全路径 我们判断一下是否存在协议
