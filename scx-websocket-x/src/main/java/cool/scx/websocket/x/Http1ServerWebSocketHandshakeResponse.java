@@ -1,6 +1,7 @@
 package cool.scx.websocket.x;
 
 import cool.scx.http.ScxHttpServerResponse;
+import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.status.ScxHttpStatus;
@@ -53,6 +54,11 @@ public class Http1ServerWebSocketHandshakeResponse implements ScxServerWebSocket
     @Override
     public ScxHttpServerResponse status(ScxHttpStatus code) {
         return _response.status(code);
+    }
+
+    @Override
+    public ScxHttpServerResponse headers(ScxHttpHeaders headers) {
+        return _response.headers(headers);
     }
 
     @Override

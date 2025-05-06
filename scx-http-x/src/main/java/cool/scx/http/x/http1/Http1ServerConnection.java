@@ -11,10 +11,10 @@ import cool.scx.http.x.http1.request_line.Http1RequestLine;
 import cool.scx.io.data_reader.DataReader;
 import cool.scx.io.data_reader.LinkedDataReader;
 import cool.scx.io.data_supplier.InputStreamDataSupplier;
+import cool.scx.io.io_stream.NullCheckedInputStream;
 import cool.scx.tcp.ScxTCPSocket;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.System.Logger;
 import java.util.function.Consumer;
@@ -166,7 +166,7 @@ public class Http1ServerConnection {
                 this,
                 new Http1RequestLine(ScxHttpMethod.of("unknown"), ScxURI.of()),
                 new Http1Headers().connection(CLOSE),
-                InputStream.nullInputStream()
+                new NullCheckedInputStream()
         );
         handlerException(e, fakeRequest, SYSTEM);
 

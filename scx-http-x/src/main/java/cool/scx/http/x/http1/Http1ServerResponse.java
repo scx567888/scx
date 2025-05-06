@@ -2,6 +2,7 @@ package cool.scx.http.x.http1;
 
 import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.ScxHttpServerResponse;
+import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.status.HttpStatus;
 import cool.scx.http.status.ScxHttpStatus;
@@ -27,12 +28,13 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 /// @version 0.0.1
 public class Http1ServerResponse implements ScxHttpServerResponse {
 
-    protected final Http1ServerConnection connection;
-    protected final Http1ServerRequest request;
-    protected final Http1Headers headers;
-    protected ScxHttpStatus status;
-    protected String reasonPhrase;
-    protected OutputStream outputStream;
+    public final Http1ServerConnection connection;
+
+    private final Http1ServerRequest request;
+    private Http1Headers headers;
+    private ScxHttpStatus status;
+    private String reasonPhrase;
+    private OutputStream outputStream;
 
     Http1ServerResponse(Http1ServerConnection connection, Http1ServerRequest request) {
         this.connection = connection;
@@ -63,6 +65,12 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
     @Override
     public Http1Headers headers() {
         return headers;
+    }
+
+    @Override
+    public ScxHttpServerResponse headers(ScxHttpHeaders headers) {
+        this.headers = new Http1Headers(headers);
+        return this;
     }
 
     @Override
