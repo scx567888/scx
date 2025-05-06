@@ -1,23 +1,80 @@
 package cool.scx.http.x.http1.headers;
 
+import cool.scx.http.headers.ScxHttpHeaderName;
 import cool.scx.http.headers.ScxHttpHeaders;
-import cool.scx.http.headers.ScxHttpHeadersImpl;
+import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.x.http1.headers.connection.Connection;
 import cool.scx.http.x.http1.headers.connection.ScxConnection;
 import cool.scx.http.x.http1.headers.expect.ScxExpect;
 import cool.scx.http.x.http1.headers.transfer_encoding.ScxTransferEncoding;
 import cool.scx.http.x.http1.headers.upgrade.ScxUpgrade;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import static cool.scx.http.headers.HttpFieldName.*;
 
-public class Http1Headers extends ScxHttpHeadersImpl {
+public class Http1Headers implements ScxHttpHeadersWritable {
 
-    public Http1Headers(ScxHttpHeaders headers) {
-        super(headers);
+    private final ScxHttpHeadersWritable h;
+
+    public Http1Headers(ScxHttpHeadersWritable h) {
+        this.h = ScxHttpHeaders.of(h);
     }
 
     public Http1Headers() {
+        this.h = ScxHttpHeaders.of();
+    }
 
+    @Override
+    public Http1Headers set(ScxHttpHeaderName name, String... value) {
+        h.set(name, value);
+        return this;
+    }
+
+    @Override
+    public ScxHttpHeadersWritable add(ScxHttpHeaderName name, String... value) {
+        h.add(name, value);
+        return this;
+    }
+
+    @Override
+    public ScxHttpHeadersWritable remove(ScxHttpHeaderName name) {
+        h.remove(name);
+        return this;
+    }
+
+    @Override
+    public ScxHttpHeadersWritable clear() {
+        h.clear();
+        return this;
+    }
+
+    @Override
+    public long size() {
+        return h.size();
+    }
+
+    @Override
+    public Set<ScxHttpHeaderName> names() {
+        return h.names();
+    }
+
+    @Override
+    public String get(ScxHttpHeaderName name) {
+        return h.get(name);
+    }
+
+    @Override
+    public List<String> getAll(ScxHttpHeaderName name) {
+        return h.getAll(name);
+    }
+
+    @Override
+    public Iterator<Map.Entry<ScxHttpHeaderName, List<String>>> iterator() {
+        return h.iterator();
     }
 
     public ScxConnection connection() {
@@ -26,9 +83,8 @@ public class Http1Headers extends ScxHttpHeadersImpl {
     }
 
     public Http1Headers connection(Connection connection) {
-        return (Http1Headers) set(CONNECTION, connection.value());
+        return set(CONNECTION, connection.value());
     }
-
 
     public ScxTransferEncoding transferEncoding() {
         var c = get(TRANSFER_ENCODING);
@@ -36,7 +92,7 @@ public class Http1Headers extends ScxHttpHeadersImpl {
     }
 
     public Http1Headers transferEncoding(ScxTransferEncoding transferEncoding) {
-        return (Http1Headers) set(TRANSFER_ENCODING, transferEncoding.value());
+        return set(TRANSFER_ENCODING, transferEncoding.value());
     }
 
     public ScxExpect expect() {
@@ -45,7 +101,7 @@ public class Http1Headers extends ScxHttpHeadersImpl {
     }
 
     public Http1Headers expect(ScxExpect expect) {
-        return (Http1Headers) set(EXPECT, expect.value());
+        return set(EXPECT, expect.value());
     }
 
     public ScxUpgrade upgrade() {
@@ -54,7 +110,7 @@ public class Http1Headers extends ScxHttpHeadersImpl {
     }
 
     public Http1Headers upgrade(ScxUpgrade upgrade) {
-        return (Http1Headers) set(UPGRADE, upgrade.value());
+        return set(UPGRADE, upgrade.value());
     }
 
 }
