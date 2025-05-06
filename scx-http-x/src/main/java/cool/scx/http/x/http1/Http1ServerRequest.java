@@ -1,6 +1,6 @@
 package cool.scx.http.x.http1;
 
-import cool.scx.http.ScxHttpBody;
+import cool.scx.http.body.ScxHttpBody;
 import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.method.ScxHttpMethod;
 import cool.scx.http.peer_info.PeerInfo;
