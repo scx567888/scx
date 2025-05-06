@@ -28,12 +28,13 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 /// @version 0.0.1
 public class Http1ServerResponse implements ScxHttpServerResponse {
 
-    protected final Http1ServerConnection connection;
-    protected final Http1ServerRequest request;
-    protected Http1Headers headers;
-    protected ScxHttpStatus status;
-    protected String reasonPhrase;
-    protected OutputStream outputStream;
+    public final Http1ServerConnection connection;
+
+    private final Http1ServerRequest request;
+    private Http1Headers headers;
+    private ScxHttpStatus status;
+    private String reasonPhrase;
+    private OutputStream outputStream;
 
     Http1ServerResponse(Http1ServerConnection connection, Http1ServerRequest request) {
         this.connection = connection;
