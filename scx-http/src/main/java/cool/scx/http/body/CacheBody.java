@@ -1,7 +1,5 @@
-package cool.scx.http.media.cache;
+package cool.scx.http.body;
 
-import cool.scx.http.body.BodyAlreadyConsumedException;
-import cool.scx.http.body.ScxHttpBody;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.media.MediaReader;
 import cool.scx.io.data_reader.DataReader;
@@ -42,4 +40,9 @@ public class CacheBody implements ScxHttpBody {
         }
     }
 
+    @Override
+    public CacheBody asCacheBody() {
+        return this;
+    }
+    
 }

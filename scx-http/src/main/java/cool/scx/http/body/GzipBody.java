@@ -1,7 +1,5 @@
-package cool.scx.http.media.gzip;
+package cool.scx.http.body;
 
-import cool.scx.http.body.BodyAlreadyConsumedException;
-import cool.scx.http.body.ScxHttpBody;
 import cool.scx.http.exception.UnsupportedMediaTypeException;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.content_encoding.ScxContentEncoding;
@@ -63,4 +61,9 @@ public class GzipBody implements ScxHttpBody {
         }
     }
 
+    @Override
+    public GzipBody asGzipBody() {
+        return this;
+    }
+    
 }

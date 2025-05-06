@@ -7,7 +7,6 @@ import cool.scx.http.media.event_stream.ServerEventStream;
 import cool.scx.http.media.event_stream.ServerEventStreamWriter;
 import cool.scx.http.media.form_params.FormParams;
 import cool.scx.http.media.form_params.FormParamsWriter;
-import cool.scx.http.media.gzip.GzipSender;
 import cool.scx.http.media.input_stream.InputStreamWriter;
 import cool.scx.http.media.json_node.JsonNodeWriter;
 import cool.scx.http.media.multi_part.MultiPart;
@@ -72,19 +71,15 @@ public interface ScxHttpSender<T> {
         return send(new ObjectWriter(object));
     }
 
-    default ScxHttpSender<T> sendGzip() {
-        //禁止多次包装
-        if (this instanceof GzipSender<T>) {
-            return this;
-        }
-        return new GzipSender<>(this);
-    }
-
     //理论上只有 服务器才支持发送这种格式
     default ServerEventStream sendEventStream() {
         var writer = new ServerEventStreamWriter();
         send(writer);
         return writer.eventStream();
+    }
+
+    default ScxHttpSender<T> sendGzip() {
+        return new GzipSender<>(this);
     }
 
 }
