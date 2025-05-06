@@ -212,5 +212,5 @@ public class Http1ServerConnection {
     public boolean running() {
         return running;
     }
-    
+
 }
