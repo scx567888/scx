@@ -107,7 +107,7 @@ public class YourModule extends ScxAppModule {
 Hello World
 ```
 
-有关更多信息，请参阅 [文档](https://scx.cool/scx-docs/)
+有关更多信息，请参阅 [文档](https://scx.cool/scx/)
 
 ## Stats
 
