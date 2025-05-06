@@ -5,6 +5,7 @@ import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.headers.ScxHttpHeadersWriteHelper;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.method.ScxHttpMethod;
+import cool.scx.http.sender.BodyAlreadySentException;
 import cool.scx.http.sender.ScxHttpSender;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.uri.ScxURIWritable;
@@ -34,7 +35,7 @@ public interface ScxHttpClientRequest extends ScxHttpSender<ScxHttpClientRespons
     ScxHttpClientRequest headers(ScxHttpHeaders headers);
 
     @Override
-    ScxHttpClientResponse send(MediaWriter writer);
+    ScxHttpClientResponse send(MediaWriter writer) throws BodyAlreadySentException;
 
     //******************** 简化操作 *******************
 
