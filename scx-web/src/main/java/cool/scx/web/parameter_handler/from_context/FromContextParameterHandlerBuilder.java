@@ -1,6 +1,6 @@
 package cool.scx.web.parameter_handler.from_context;
 
-import cool.scx.http.ScxHttpBody;
+import cool.scx.http.body.ScxHttpBody;
 import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.ScxHttpServerResponse;
 import cool.scx.http.headers.ScxHttpHeaders;

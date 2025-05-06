@@ -3,8 +3,8 @@ package cool.scx.web.vo;
 import java.io.InputStream;
 import java.nio.file.Path;
 
-import static cool.scx.http.HttpHelper.getDownloadContentDisposition;
-import static cool.scx.http.HttpHelper.getMediaTypeByFileName;
+import static cool.scx.web.HttpHelper.getDownloadContentDisposition;
+import static cool.scx.web.HttpHelper.getMediaTypeByFileName;
 
 /// 文件下载 vo
 ///
