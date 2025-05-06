@@ -7,6 +7,7 @@ import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.cookie.Cookie;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.method.ScxHttpMethod;
+import cool.scx.http.sender.BodyAlreadySentException;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.version.HttpVersion;
 
@@ -92,7 +93,7 @@ public interface ScxClientWebSocketHandshakeRequest extends ScxHttpClientRequest
     }
 
     @Override
-    default ScxHttpClientResponse send(MediaWriter writer) {
+    default ScxHttpClientResponse send(MediaWriter writer) throws BodyAlreadySentException {
         throw new UnsupportedOperationException("Not supported Custom HttpBody.");
     }
 

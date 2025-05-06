@@ -1,6 +1,6 @@
 package cool.scx.http.x.http3;
 
-import cool.scx.http.ScxHttpBody;
+import cool.scx.http.body.ScxHttpBody;
 import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.ScxHttpServerResponse;
 import cool.scx.http.headers.ScxHttpHeaders;
