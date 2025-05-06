@@ -1,7 +1,7 @@
 package cool.scx.http.media.gzip;
 
-import cool.scx.http.body.ScxHttpBody;
 import cool.scx.http.body.BodyAlreadyConsumedException;
+import cool.scx.http.body.ScxHttpBody;
 import cool.scx.http.exception.UnsupportedMediaTypeException;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.content_encoding.ScxContentEncoding;
