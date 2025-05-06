@@ -61,4 +61,9 @@ public class GzipBody implements ScxHttpBody {
         }
     }
 
+    @Override
+    public GzipBody asGzipBody() {
+        return this;
+    }
+    
 }

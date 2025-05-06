@@ -15,4 +15,9 @@ public class GzipSender<T> implements ScxHttpSender<T> {
         return this.sender.send(new GzipWriter(writer));
     }
 
+    @Override
+    public ScxHttpSender<T> sendGzip() {
+        return this;
+    }
+    
 }

@@ -79,10 +79,6 @@ public interface ScxHttpSender<T> {
     }
 
     default ScxHttpSender<T> sendGzip() {
-        //禁止多次包装
-        if (this instanceof GzipSender<T>) {
-            return this;
-        }
         return new GzipSender<>(this);
     }
 

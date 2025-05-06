@@ -40,4 +40,9 @@ public class CacheBody implements ScxHttpBody {
         }
     }
 
+    @Override
+    public CacheBody asCacheBody() {
+        return this;
+    }
+    
 }
