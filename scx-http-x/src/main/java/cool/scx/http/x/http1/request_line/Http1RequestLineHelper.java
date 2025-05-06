@@ -2,6 +2,7 @@ package cool.scx.http.x.http1.request_line;
 
 import cool.scx.http.method.ScxHttpMethod;
 import cool.scx.http.uri.ScxURI;
+import cool.scx.http.uri.ScxURIWritable;
 import cool.scx.http.version.HttpVersion;
 
 import java.net.URI;
@@ -69,26 +70,38 @@ public final class Http1RequestLineHelper {
             requestTarget.path("/");
         }
 
-        var pathStr = switch (requestTargetForm) {
-            case ORIGIN_FORM -> requestTarget.scheme(null).host(null).encode(true);
-            case ABSOLUTE_FORM -> {
-                //注意转换 ws -> http
-                var scheme = switch (requestTarget.scheme().toLowerCase()) {
-                    case "ws" -> "http";
-                    case "wss" -> "https";
-                    default -> requestTarget.scheme().toLowerCase(); // 确保统一小写
-                };
-                yield requestTarget.scheme(scheme).encode(true);
-            }
-            case AUTHORITY_FORM -> requestTarget.host() + ":" + (requestTarget.port() != null ? requestTarget.port() : getDefaultPort(requestTarget.scheme()));
-            case ASTERISK_FORM -> "*";
-        };
+        var requestTargetStr = getRequestTargetStr(requestTarget, requestTargetForm);
 
         //此处我们强制使用 HTTP/1.1 , 忽略 requestLine 的版本号
         var versionStr = HTTP_1_1.protocolVersion();
 
         //拼接返回
-        return methodStr + " " + pathStr + " " + versionStr;
+        return methodStr + " " + requestTargetStr + " " + versionStr;
+    }
+
+    public static String getRequestTargetStr(ScxURIWritable requestTarget, RequestTargetForm requestTargetForm) {
+        return switch (requestTargetForm) {
+            case ORIGIN_FORM -> requestTarget.scheme(null).host(null).encode(true);
+            case ABSOLUTE_FORM -> {
+                // 确保统一小写
+                var scheme = requestTarget.scheme().toLowerCase();
+                //注意转换 ws -> http
+                if (scheme.equals("ws")) {
+                    scheme = "http";
+                } else if (scheme.equals("wss")) {
+                    scheme = "https";
+                }
+                yield requestTarget.scheme(scheme).encode(true);
+            }
+            case AUTHORITY_FORM -> {
+                var port = requestTarget.port();
+                if (port == null) {
+                    port = getDefaultPort(requestTarget.scheme());
+                }
+                yield requestTarget.host() + ":" + port;
+            }
+            case ASTERISK_FORM -> "*";
+        };
     }
 
 }
