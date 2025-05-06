@@ -60,8 +60,8 @@ public class Http1RequestLineTest {
 
         var c = Http1RequestLine.of("CONNECT www.test.com:443 HTTP/1.1");
 
-        System.out.println(s.path());
-        System.out.println(c.path());
+        System.out.println(s.requestTarget());
+        System.out.println(c.requestTarget());
 
     }
 

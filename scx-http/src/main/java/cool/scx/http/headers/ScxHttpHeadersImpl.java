@@ -6,7 +6,7 @@ import cool.scx.http.parameters.ParametersImpl;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class ScxHttpHeadersImpl extends ParametersImpl<ScxHttpHeaderName, String> implements ScxHttpHeadersWritable {
+class ScxHttpHeadersImpl extends ParametersImpl<ScxHttpHeaderName, String> implements ScxHttpHeadersWritable {
 
     public ScxHttpHeadersImpl(ScxHttpHeaders h) {
         super(h);

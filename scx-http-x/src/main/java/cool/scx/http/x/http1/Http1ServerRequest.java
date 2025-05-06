@@ -33,7 +33,7 @@ public class Http1ServerRequest implements ScxHttpServerRequest {
     public Http1ServerRequest(Http1ServerConnection connection, Http1RequestLine requestLine, Http1Headers headers, InputStream bodyInputStream) {
         this.connection = connection;
         this.method = requestLine.method();
-        this.uri = inferURI(requestLine.path(), headers, connection.tcpSocket);
+        this.uri = inferURI(requestLine.requestTarget(), headers, connection.tcpSocket);
         this.version = requestLine.version();
         this.headers = headers;
         this.body = new Http1Body(bodyInputStream, this.headers);
@@ -84,6 +84,10 @@ public class Http1ServerRequest implements ScxHttpServerRequest {
 
     public boolean isKeepAlive() {
         return headers.connection() != CLOSE;
+    }
+
+    public Http1ServerConnection connection() {
+        return connection ;
     }
 
 }

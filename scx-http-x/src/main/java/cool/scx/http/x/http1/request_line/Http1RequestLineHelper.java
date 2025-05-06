@@ -24,31 +24,31 @@ public final class Http1RequestLineHelper {
         }
 
         var methodStr = parts[0];
-        var pathStr = parts[1];
+        var requestTargetStr = parts[1];
         var versionStr = parts[2];
 
         var method = ScxHttpMethod.of(methodStr);
         var version = HttpVersion.find(versionStr);
 
-        ScxURI path;
+        ScxURI requestTarget;
 
         if (method == CONNECT) {
-            path = ScxURI.ofAuthority(pathStr);  // CONNECT 使用 Authority 格式
+            requestTarget = ScxURI.ofAuthority(requestTargetStr);  // CONNECT 使用 Authority 格式
         } else {
             // 处理空请求路径
-            if ("".equals(pathStr)) {
-                pathStr = "/";  // 空路径默认处理为 "/"
+            if ("".equals(requestTargetStr)) {
+                requestTargetStr = "/";  // 空路径默认处理为 "/"
             }
             //尝试解码路径 如果解析失败, 则可能是路径中包含非法字符
             //此处我们同样不去细化异常 直接抛出 InvalidHttpRequestLineException 异常
             URI decodedPath;
             try {
-                decodedPath = URI.create(pathStr);
+                decodedPath = URI.create(requestTargetStr);
             } catch (IllegalArgumentException e) {
                 throw new InvalidHttpRequestLineException(requestLineStr);
             }
 
-            path = ScxURI.of(decodedPath);
+            requestTarget = ScxURI.of(decodedPath);
         }
 
         //这里我们强制 版本号必须是 HTTP/1.1 , 这里需要细化一下 异常
@@ -56,31 +56,31 @@ public final class Http1RequestLineHelper {
             throw new InvalidHttpVersion(versionStr);
         }
 
-        return new Http1RequestLine(method, path, version);
+        return new Http1RequestLine(method, requestTarget, version);
     }
 
     /// 编码请求行
     public static String encodeRequestLine(Http1RequestLine requestLine, RequestTargetForm requestTargetForm) {
         var methodStr = requestLine.method().value();
 
-        var uri = ScxURI.of(requestLine.path());
+        var requestTarget = ScxURI.of(requestLine.requestTarget());
         //处理空请求路径
-        if ("".equals(uri.path())) {
-            uri.path("/");
+        if ("".equals(requestTarget.path())) {
+            requestTarget.path("/");
         }
 
         var pathStr = switch (requestTargetForm) {
-            case ORIGIN_FORM -> uri.scheme(null).host(null).encode(true);
+            case ORIGIN_FORM -> requestTarget.scheme(null).host(null).encode(true);
             case ABSOLUTE_FORM -> {
                 //注意转换 ws -> http
-                var scheme = switch (uri.scheme().toLowerCase()) {
+                var scheme = switch (requestTarget.scheme().toLowerCase()) {
                     case "ws" -> "http";
                     case "wss" -> "https";
-                    default -> uri.scheme().toLowerCase(); // 确保统一小写
+                    default -> requestTarget.scheme().toLowerCase(); // 确保统一小写
                 };
-                yield uri.scheme(scheme).encode(true);
+                yield requestTarget.scheme(scheme).encode(true);
             }
-            case AUTHORITY_FORM -> uri.host() + ":" + (uri.port() != null ? uri.port() : getDefaultPort(uri.scheme()));
+            case AUTHORITY_FORM -> requestTarget.host() + ":" + (requestTarget.port() != null ? requestTarget.port() : getDefaultPort(requestTarget.scheme()));
             case ASTERISK_FORM -> "*";
         };
 
