@@ -86,9 +86,9 @@ public final class Http1RequestLineHelper {
                 // 确保统一小写
                 var scheme = requestTarget.scheme().toLowerCase();
                 //注意转换 ws -> http
-                if (scheme.equals("ws")) {
+                if ("ws".equals(scheme)) {
                     scheme = "http";
-                } else if (scheme.equals("wss")) {
+                } else if ("wss".equals(scheme)) {
                     scheme = "https";
                 }
                 yield requestTarget.scheme(scheme).encode(true);
