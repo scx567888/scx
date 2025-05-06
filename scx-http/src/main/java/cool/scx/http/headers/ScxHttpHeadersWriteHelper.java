@@ -21,6 +21,11 @@ public interface ScxHttpHeadersWriteHelper<T extends ScxHttpHeadersWriteHelper<T
         return (T) this;
     }
 
+    default T removeHeader(ScxHttpHeaderName headerName) {
+        this.headers().remove(headerName);
+        return (T) this;
+    }
+
     default T setHeader(String headerName, String... values) {
         this.headers().set(headerName, values);
         return (T) this;
@@ -28,6 +33,11 @@ public interface ScxHttpHeadersWriteHelper<T extends ScxHttpHeadersWriteHelper<T
 
     default T addHeader(String headerName, String... values) {
         this.headers().add(headerName, values);
+        return (T) this;
+    }
+
+    default T removeHeader(String headerName) {
+        this.headers().remove(headerName);
         return (T) this;
     }
 
