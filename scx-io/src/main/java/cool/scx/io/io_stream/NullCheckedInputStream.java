@@ -8,7 +8,7 @@ import java.util.Objects;
 public class NullCheckedInputStream extends CheckedInputStream {
 
     @Override
-    public int available () throws IOException {
+    public int available() throws IOException {
         ensureOpen();
         return 0;
     }
@@ -77,5 +77,5 @@ public class NullCheckedInputStream extends CheckedInputStream {
     public void close() throws IOException {
         closed = true;
     }
-    
+
 }

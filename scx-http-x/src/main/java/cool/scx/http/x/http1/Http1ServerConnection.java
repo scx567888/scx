@@ -15,7 +15,6 @@ import cool.scx.io.io_stream.NullCheckedInputStream;
 import cool.scx.tcp.ScxTCPSocket;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.System.Logger;
 import java.util.function.Consumer;
