@@ -4,6 +4,7 @@ import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.headers.ScxHttpHeadersWriteHelper;
 import cool.scx.http.media.MediaWriter;
+import cool.scx.http.sender.ScxHttpSender;
 import cool.scx.http.status.ScxHttpStatus;
 
 /// ScxHttpServerResponse
