@@ -20,7 +20,7 @@ public class Http1Headers implements ScxHttpHeadersWritable {
 
     private final ScxHttpHeadersWritable h;
 
-    public Http1Headers(ScxHttpHeadersWritable h) {
+    public Http1Headers(ScxHttpHeaders h) {
         this.h = ScxHttpHeaders.of(h);
     }
 
