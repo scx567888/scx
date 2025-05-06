@@ -1,6 +1,6 @@
 package cool.scx.websocket.x;
 
-import cool.scx.http.ScxHttpBody;
+import cool.scx.http.body.ScxHttpBody;
 import cool.scx.http.ScxHttpClientResponse;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.status.ScxHttpStatus;
