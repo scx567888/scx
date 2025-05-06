@@ -98,7 +98,7 @@ public class HttpProxyServerTest {
 
     /// 尝试解码内容 可以拓展为抓包工具
     public static void test2() {
-     
+        // 这里 https 需要 伪造 tls 证书, 完成握手之后 后续步骤和 test1 相同 即可解密内容
     }
 
 }
