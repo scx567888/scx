@@ -18,6 +18,7 @@ import cool.scx.io.data_reader.DataReader;
 import cool.scx.io.exception.NoMatchFoundException;
 import cool.scx.io.exception.NoMoreDataException;
 import cool.scx.io.io_stream.DataReaderInputStream;
+import cool.scx.io.io_stream.NullCheckedInputStream;
 
 import java.io.InputStream;
 import java.io.UncheckedIOException;
@@ -52,7 +53,7 @@ final class Http1Reader {
         }
 
         //3, 没有长度的空请求体
-        return InputStream.nullInputStream();
+        return new NullCheckedInputStream();
     }
 
     public static Http1Headers readHeaders(DataReader dataReader, int maxHeaderSize) {

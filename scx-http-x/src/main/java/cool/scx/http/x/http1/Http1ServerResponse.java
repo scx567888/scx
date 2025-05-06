@@ -2,6 +2,7 @@ package cool.scx.http.x.http1;
 
 import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.ScxHttpServerResponse;
+import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.status.HttpStatus;
 import cool.scx.http.status.ScxHttpStatus;
@@ -29,7 +30,7 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
 
     protected final Http1ServerConnection connection;
     protected final Http1ServerRequest request;
-    protected final Http1Headers headers;
+    protected Http1Headers headers;
     protected ScxHttpStatus status;
     protected String reasonPhrase;
     protected OutputStream outputStream;
@@ -63,6 +64,12 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
     @Override
     public Http1Headers headers() {
         return headers;
+    }
+
+    @Override
+    public ScxHttpServerResponse headers(ScxHttpHeaders headers) {
+        this.headers = new Http1Headers(headers);
+        return this;
     }
 
     @Override
