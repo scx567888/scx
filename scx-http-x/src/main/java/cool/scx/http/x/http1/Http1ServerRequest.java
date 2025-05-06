@@ -86,4 +86,8 @@ public class Http1ServerRequest implements ScxHttpServerRequest {
         return headers.connection() != CLOSE;
     }
 
+    public Http1ServerConnection connection() {
+        return connection ;
+    }
+
 }

@@ -40,11 +40,12 @@ public class Http1ServerConnection {
 
     public final ScxTCPSocket tcpSocket;
     public final HttpServerOptions options;
+    public final Consumer<ScxHttpServerRequest> requestHandler;
+    public final ScxHttpServerErrorHandler errorHandler;
+
     public final DataReader dataReader;
     public final OutputStream dataWriter;
 
-    private final Consumer<ScxHttpServerRequest> requestHandler;
-    private final ScxHttpServerErrorHandler errorHandler;
     private boolean running;
 
     public Http1ServerConnection(ScxTCPSocket tcpSocket, HttpServerOptions options, Consumer<ScxHttpServerRequest> requestHandler, ScxHttpServerErrorHandler errorHandler) {
@@ -208,4 +209,8 @@ public class Http1ServerConnection {
 
     }
 
+    public boolean running() {
+        return running;
+    }
+    
 }
