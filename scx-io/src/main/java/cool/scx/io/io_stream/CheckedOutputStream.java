@@ -10,7 +10,7 @@ public abstract class CheckedOutputStream extends OutputStream {
 
     protected void ensureOpen() throws IOException {
         if (closed) {
-            throw new IOException("Stream closed");
+            throw new StreamClosedException();
         }
     }
 

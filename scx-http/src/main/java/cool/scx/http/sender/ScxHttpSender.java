@@ -1,4 +1,4 @@
-package cool.scx.http;
+package cool.scx.http.sender;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.http.media.MediaWriter;
@@ -24,7 +24,7 @@ import static cool.scx.http.media.empty.EmptyWriter.EMPTY_WRITER;
 
 public interface ScxHttpSender<T> {
 
-    T send(MediaWriter writer);
+    T send(MediaWriter writer) throws BodyAlreadySentException;
 
     //******************** send 操作 *******************
 

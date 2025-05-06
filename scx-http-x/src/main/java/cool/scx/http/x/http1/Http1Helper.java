@@ -11,6 +11,7 @@ import cool.scx.http.uri.ScxURI;
 import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.http.x.http1.headers.upgrade.ScxUpgrade;
 import cool.scx.http.x.http1.request_line.Http1RequestLine;
+import cool.scx.io.io_stream.StreamClosedException;
 import cool.scx.tcp.ScxTCPSocket;
 
 import java.io.IOException;
@@ -43,8 +44,8 @@ public final class Http1Helper {
     public static void consumeInputStream(InputStream inputStream) {
         try (inputStream) {
             inputStream.transferTo(OutputStream.nullOutputStream());
-        } catch (IOException e) {
-            // todo 这里需要 忽略异常 还是根据 不同类型忽略
+        } catch (StreamClosedException | IOException e) {
+            // 忽略
         }
     }
 

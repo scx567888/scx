@@ -4,12 +4,14 @@ import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.ScxHttpServerResponse;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.media.MediaWriter;
+import cool.scx.http.sender.BodyAlreadySentException;
 import cool.scx.http.status.HttpStatus;
 import cool.scx.http.status.ScxHttpStatus;
 import cool.scx.http.x.http1.chunked.HttpChunkedOutputStream;
 import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.http.x.http1.status_line.Http1StatusLine;
 import cool.scx.io.io_stream.CheckedOutputStream;
+import cool.scx.io.io_stream.StreamClosedException;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -80,12 +82,14 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
     }
 
     @Override
-    public Void send(MediaWriter writer) {
+    public Void send(MediaWriter writer) throws BodyAlreadySentException {
         var expectedLength = writer.beforeWrite(headers, request.headers());
         try {
             writer.write(outputStream(expectedLength));
         } catch (IOException e) {
             throw new UncheckedIOException(e);
+        } catch (StreamClosedException e) {
+            throw new BodyAlreadySentException();
         }
         return null;
     }

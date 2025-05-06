@@ -1,11 +1,13 @@
 package cool.scx.http.media.multi_part;
 
-import cool.scx.http.ScxHttpBody;
+import cool.scx.http.body.BodyAlreadyConsumedException;
+import cool.scx.http.body.ScxHttpBody;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.content_disposition.ContentDisposition;
 import cool.scx.http.media.MediaReader;
 import cool.scx.http.media_type.ScxMediaType;
 import cool.scx.io.IOHelper;
+import cool.scx.io.io_stream.StreamClosedException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -55,6 +57,8 @@ public interface MultiPartPart extends ScxHttpBody {
             return t.read(inputStream(), headers());
         } catch (IOException e) {
             throw new UncheckedIOException(e);
+        } catch (StreamClosedException e) {
+            throw new BodyAlreadyConsumedException();
         }
     }
 

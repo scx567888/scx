@@ -1,5 +1,6 @@
-package cool.scx.http;
+package cool.scx.web;
 
+import cool.scx.http.ScxHttpServerRequest;
 import cool.scx.http.media_type.FileFormat;
 import cool.scx.http.media_type.MediaType;
 
