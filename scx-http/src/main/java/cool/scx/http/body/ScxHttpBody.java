@@ -1,4 +1,4 @@
-package cool.scx.http;
+package cool.scx.http.body;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -36,7 +36,7 @@ public interface ScxHttpBody {
 
     InputStream inputStream();
 
-    <T> T as(MediaReader<T> t);
+    <T> T as(MediaReader<T> t) throws BodyAlreadyConsumedException;
 
     default byte[] asBytes() {
         return as(BYTE_ARRAY_READER);
