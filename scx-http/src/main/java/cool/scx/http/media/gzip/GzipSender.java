@@ -1,6 +1,6 @@
 package cool.scx.http.media.gzip;
 
-import cool.scx.http.ScxHttpSender;
+import cool.scx.http.sender.ScxHttpSender;
 import cool.scx.http.media.MediaWriter;
 
 public class GzipSender<T> implements ScxHttpSender<T> {

@@ -1,10 +1,12 @@
 package cool.scx.http.media.cache;
 
-import cool.scx.http.ScxHttpBody;
+import cool.scx.http.body.ScxHttpBody;
+import cool.scx.http.body.BodyAlreadyConsumedException;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.media.MediaReader;
 import cool.scx.io.data_reader.DataReader;
 import cool.scx.io.io_stream.DataReaderInputStream;
+import cool.scx.io.io_stream.StreamClosedException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,6 +37,8 @@ public class CacheBody implements ScxHttpBody {
             return t.read(inputStream(), headers);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
+        }catch (StreamClosedException e){
+            throw new BodyAlreadyConsumedException();
         }
     }
 
