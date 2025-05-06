@@ -10,6 +10,7 @@ import java.util.zip.GZIPOutputStream;
 
 import static cool.scx.http.headers.content_encoding.ContentEncoding.GZIP;
 
+// todo 这个 还可以支持 指定的长度 前提是先压缩然后发送字节
 public record GzipWriter(MediaWriter mediaWriter) implements MediaWriter {
 
     @Override
