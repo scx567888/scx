@@ -1,5 +1,7 @@
 package cool.scx.bean.x;
 
+import java.util.List;
+
 public interface BeanFactory {
 
     Object getBean(String name);
@@ -13,6 +15,12 @@ public interface BeanFactory {
     BeanContext getBeanContext(Class<?> requiredType);
 
     void addBeanInjector(BeanInjector beanInjector);
+    
+    List<BeanInjector> beanInjectors();
+
+    void addBeanProcessor(BeanProcessor beanProcessor);
+
+    List<BeanProcessor> beanProcessors();
 
     /// 初始化所有 bean
     void initializeBeans();
