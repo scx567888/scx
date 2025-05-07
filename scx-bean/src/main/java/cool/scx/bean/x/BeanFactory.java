@@ -6,7 +6,9 @@ public interface BeanFactory {
 
     <T> T getBean(Class<T> requiredType);
 
-    void registerBeanCreator(String name, BeanCreator beanCreator);
+    void registerBeanContext(String name, BeanContext beanContext);
+
+    void addBeanInjector(BeanInjector beanInjector);
 
     /// 初始化所有 bean
     void initializeBeans();
@@ -14,11 +16,16 @@ public interface BeanFactory {
     String[] getBeanNames();
 
     default void registerBean(String name, Object instance) {
-        registerBeanCreator(name, new ExistingBeanCreator(instance));
+        registerBeanContext(name, new InstanceBeanContext(instance));
     }
 
     default void registerBeanClass(String name, Class<?> beanClass) {
-        registerBeanCreator(name, new AnnotationConfigBeanCreator(beanClass));
+        //这里是否单例需要 读取 beanClass 
+        registerBeanContext(name, new BeanContextImpl(new AnnotationConfigBeanCreator(beanClass), true));
+    }
+
+    default void registerBeanCreator(String name, BeanCreator beanCreator, boolean singleton) {
+        registerBeanContext(name, new BeanContextImpl(beanCreator, singleton));
     }
 
 }
