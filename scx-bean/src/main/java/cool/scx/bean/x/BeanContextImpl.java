@@ -42,11 +42,11 @@ public class BeanContextImpl implements BeanContext {
             if (alreadyInjected) {
                 return bean;
             }
+            alreadyInjected = true;
             //循环注入
             for (var injector : injectors) {
                 injector.inject(bean);
             }
-            alreadyInjected = true;
             return bean;
         } else {
             for (var injector : injectors) {
