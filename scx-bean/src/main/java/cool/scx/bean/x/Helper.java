@@ -3,7 +3,7 @@ package cool.scx.bean.x;
 import cool.scx.reflect.AccessModifier;
 import cool.scx.reflect.ClassInfoFactory;
 
-public class BeanHelper {
+class Helper {
 
     public static void injectFieldAndMethod(Object bean, Class<?> objectClass, BeanFactory beanFactory) {
         var classInfo = ClassInfoFactory.getClassInfo(objectClass);
