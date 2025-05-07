@@ -1,11 +1,11 @@
 package cool.scx.bean.x;
 
-/// 单例 bean 创建器
-public class SingletonBeanCreator implements BeanCreator {
+/// 根据一个 已经存在的 bean
+public class ExistingBeanCreator implements BeanCreator {
 
     private final Object bean;
 
-    public SingletonBeanCreator(Object bean) {
+    public ExistingBeanCreator(Object bean) {
         this.bean = bean;
     }
 
