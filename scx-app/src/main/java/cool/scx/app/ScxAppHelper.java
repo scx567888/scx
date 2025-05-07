@@ -8,9 +8,9 @@ import cool.scx.app.annotation.ScheduledList;
 import cool.scx.app.annotation.ScxService;
 import cool.scx.app.base.BaseModel;
 import cool.scx.app.base.BaseModelService;
-import cool.scx.bean.AnnotatedGenericBeanDefinition;
-import cool.scx.bean.AutowiredAnnotationBeanPostProcessor;
-import cool.scx.bean.DefaultListableBeanFactory;
+import cool.scx.bean.AutowiredAnnotationResolver;
+import cool.scx.bean.BeanFactory;
+import cool.scx.bean.BeanFactoryImpl;
 import cool.scx.common.util.ClassUtils;
 import cool.scx.common.util.ConsoleUtils;
 import cool.scx.common.util.ObjectUtils;
@@ -185,14 +185,10 @@ public final class ScxAppHelper {
         return scxModules;
     }
 
-    static DefaultListableBeanFactory initBeanFactory(ScxAppModule[] modules, ScxFeatureConfig scxFeatureConfig) {
-        var beanFactory = new DefaultListableBeanFactory();
+    static BeanFactory initBeanFactory(ScxAppModule[] modules, ScxFeatureConfig scxFeatureConfig) {
+        var beanFactory = new BeanFactoryImpl();
         //这里添加一个 bean 的后置处理器以便可以使用 @Autowired 注解
-        var beanPostProcessor = new AutowiredAnnotationBeanPostProcessor();
-        beanPostProcessor.setBeanFactory(beanFactory);
-        beanFactory.addBeanPostProcessor(beanPostProcessor);
-        //设置是否允许循环依赖 (默认禁止循环依赖)
-        beanFactory.setAllowCircularReferences(scxFeatureConfig.get(ALLOW_CIRCULAR_REFERENCES));
+        beanFactory.addBeanDependencyResolver(new AutowiredAnnotationResolver(beanFactory));
         //注册 bean
         var beanClass = Arrays.stream(modules)
                 .flatMap(c -> c.classList().stream())
@@ -200,15 +196,14 @@ public final class ScxAppHelper {
                 .toArray(Class<?>[]::new);
 
         for (var c : beanClass) {
-            var beanDefinition = new AnnotatedGenericBeanDefinition(c);
             //这里是为了兼容 spring context 的部分注解
-            beanFactory.registerBeanDefinition(c.getName(), beanDefinition);
+            beanFactory.registerBeanClass(c.getName(), c);
         }
         return beanFactory;
     }
 
-    public static void startAnnotationScheduled(DefaultListableBeanFactory beanFactory) {
-        var beanDefinitionNames = beanFactory.getBeanDefinitionNames();
+    public static void startAnnotationScheduled(BeanFactory beanFactory) {
+        var beanDefinitionNames = beanFactory.getBeanNames();
         for (var beanDefinitionName : beanDefinitionNames) {
             var bean = beanFactory.getBean(beanDefinitionName);
             var classInfo = ClassInfoFactory.getClassInfo(bean.getClass());

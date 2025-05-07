@@ -4,6 +4,7 @@ import cool.scx.app.ScxAppContext;
 import cool.scx.app.test.car.CarService;
 import cool.scx.app.test.person.Person;
 import cool.scx.app.test.person.PersonService;
+import cool.scx.bean.annotation.Autowired;
 import cool.scx.common.exception.ScxExceptionHelper;
 import cool.scx.common.util.HashUtils;
 import cool.scx.common.util.RandomUtils;
@@ -19,7 +20,6 @@ import cool.scx.web.annotation.FromQuery;
 import cool.scx.web.annotation.FromUpload;
 import cool.scx.web.annotation.ScxRoute;
 import cool.scx.web.vo.*;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.io.PipedInputStream;
@@ -41,7 +41,7 @@ public class WebSiteController {
     final CarService carService;
 
     @Autowired
-    CarService carService1;
+    public CarService carService1;
 
     public WebSiteController(CarService carService) {
         this.carService = carService;
