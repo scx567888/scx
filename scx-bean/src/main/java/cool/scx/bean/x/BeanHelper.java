@@ -12,8 +12,8 @@ public class BeanHelper {
             //只处理 public 字段
             if (fieldInfo.accessModifier() == AccessModifier.PUBLIC) {
                 fieldInfo.setAccessible(true);
-                for (var injector : beanFactory.beanInjectors()) {
-                    var fieldValue = injector.resolveFieldValue(fieldInfo);
+                for (var resolver : beanFactory.beanDependencyResolvers()) {
+                    var fieldValue = resolver.resolveFieldValue(fieldInfo);
                     if (fieldValue != null) {
                         try {
                             fieldInfo.set(bean, fieldValue);
@@ -30,8 +30,8 @@ public class BeanHelper {
             //只处理 public 方法
             if (methodInfo.accessModifier() == AccessModifier.PUBLIC) {
                 methodInfo.setAccessible(true);
-                for (var injector : beanFactory.beanInjectors()) {
-                    var b = injector.resolveMethod(methodInfo);
+                for (var resolver : beanFactory.beanDependencyResolvers()) {
+                    var b = resolver.resolveMethod(methodInfo);
                     if (b) {
                         break;
                     }
