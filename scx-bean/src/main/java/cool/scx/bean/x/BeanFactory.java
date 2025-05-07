@@ -6,15 +6,17 @@ public interface BeanFactory {
 
     <T> T getBean(Class<T> requiredType);
 
-    void registerBean(String name, Object instance);
-    
     void registerBeanCreator(String name, BeanCreator beanCreator);
 
-    void registerBeanClass(String name, Class<?> beanClass);
+    /// 初始化所有 bean
+    void initializeBeans();
 
-    void registerBeanDefinition(String name, BeanDefinition beanDefinition);
+    default void registerBean(String name, Object instance) {
+        registerBeanCreator(name, new ExistingBeanCreator(instance));
+    }
 
-    /// 注册完 bean 的时候需要调用一次
-    void refresh();
+    default void registerBeanClass(String name, Class<?> beanClass) {
+        registerBeanCreator(name, new AnnotationConfigBeanCreator(beanClass));
+    }
 
 }
