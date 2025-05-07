@@ -15,19 +15,11 @@ public class AnnotationConfigBeanCreator implements BeanCreator {
     private static final ThreadLocal<List<AnnotationConfigBeanCreator>> CURRENTLY_CREATING = ThreadLocal.withInitial(ArrayList::new);
 
     private final Class<?> beanClass;
-    private final boolean singleton;
     private final ConstructorInfo constructor;
-    private Object beanInstance;
 
     public AnnotationConfigBeanCreator(Class<?> beanClass) {
         this.beanClass = beanClass;
-        this.singleton = initSingleton(beanClass);
         this.constructor = initPreferredConstructor(beanClass);
-    }
-
-    public static boolean initSingleton(Class<?> beanClass) {
-        //todo 这里后期需要从注解来 解析 暂时先为 true
-        return true;
     }
 
     public static ConstructorInfo initPreferredConstructor(Class<?> beanClass) {
@@ -52,7 +44,8 @@ public class AnnotationConfigBeanCreator implements BeanCreator {
         return beanClass;
     }
 
-    private Object create0(BeanFactory beanFactory) {
+    @Override
+    public Object create(BeanFactory beanFactory) {
         var creatingList = CURRENTLY_CREATING.get();
         if (creatingList.contains(this)) {
             // 如果已存在，组装一条依赖链
@@ -78,18 +71,6 @@ public class AnnotationConfigBeanCreator implements BeanCreator {
             throw new RuntimeException(e);
         } finally {
             creatingList.remove(creatingList.size() - 1); // 创建结束，移除自己
-        }
-    }
-
-    @Override
-    public Object create(BeanFactory beanFactory) {
-        if (singleton) {
-            if (beanInstance == null) {
-                beanInstance = create0(beanFactory);
-            }
-            return beanInstance;
-        } else {
-            return create0(beanFactory);
         }
     }
 
