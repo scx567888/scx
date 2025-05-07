@@ -1,29 +1,49 @@
 package cool.scx.bean.x;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@SuppressWarnings("unchecked")
 public class BeanFactoryImpl implements BeanFactory {
 
-    private final Map<String, BeanCreator> beanCreatorMap = new ConcurrentHashMap<>();
+    private final Map<String, BeanContext> beanContextMap = new ConcurrentHashMap<>();
+    private final List<BeanInjector> beanInjectors = new ArrayList<>();
 
     @Override
     public Object getBean(String name) {
-        var bean = beanCreatorMap.get(name);
-        if (bean == null) {
-            throw new IllegalArgumentException("未找到任何符合名称的 bean !!! name = " + name);
-        }
-        return bean.create(this);
+        var beanContext = getBeanContext(name);
+        return beanContext.createAndInject(this, beanInjectors);
     }
 
     @Override
     public <T> T getBean(Class<T> requiredType) {
-        var beanCreators = beanCreatorMap.values();
-        var list = new ArrayList<BeanCreator>();
-        for (var beanCreator : beanCreators) {
-            if (requiredType.isAssignableFrom(beanCreator.beanClass())) {
-                list.add(beanCreator);
+        var beanContext = getBeanContext(requiredType);
+        return (T) beanContext.createAndInject(this, beanInjectors);
+    }
+
+    @Override
+    public void registerBeanContext(String name, BeanContext beanContext) {
+        beanContextMap.put(name, beanContext);
+    }
+
+    @Override
+    public BeanContext getBeanContext(String name) {
+        var beanContext = beanContextMap.get(name);
+        if (beanContext == null) {
+            throw new IllegalArgumentException("未找到任何符合名称的 BeanContext !!! name = " + name);
+        }
+        return beanContext;
+    }
+
+    @Override
+    public BeanContext getBeanContext(Class<?> requiredType) {
+        var beanContexts = beanContextMap.values();
+        var list = new ArrayList<BeanContext>();
+        for (var beanContext : beanContexts) {
+            if (requiredType.isAssignableFrom(beanContext.beanClass())) {
+                list.add(beanContext);
             }
         }
         var size = list.size();
@@ -33,24 +53,24 @@ public class BeanFactoryImpl implements BeanFactory {
         if (size > 1) {
             throw new IllegalArgumentException("找到多个符合类型的 bean !!! class = " + requiredType.getName() + " 已找到 = " + list.stream().map(c -> c.beanClass().getName()).toList());
         }
-        return (T) list.get(0).create(this);
+        return list.get(0);
     }
 
     @Override
-    public void registerBeanCreator(String name, BeanCreator beanCreator) {
-        beanCreatorMap.put(name, beanCreator);
+    public void addBeanInjector(BeanInjector beanInjector) {
+        this.beanInjectors.add(beanInjector);
     }
 
     @Override
     public void initializeBeans() {
-        for (var entry : beanCreatorMap.values()) {
-            entry.create(this);
+        for (var entry : beanContextMap.values()) {
+            entry.createAndInject(this, beanInjectors);
         }
     }
 
     @Override
     public String[] getBeanNames() {
-        return beanCreatorMap.keySet().toArray(String[]::new);
+        return beanContextMap.keySet().toArray(String[]::new);
     }
 
 }

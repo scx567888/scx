@@ -9,6 +9,8 @@ public interface BeanFactory {
     void registerBeanContext(String name, BeanContext beanContext);
     
     BeanContext getBeanContext(String name);
+    
+    BeanContext getBeanContext(Class<?> requiredType);
 
     void addBeanInjector(BeanInjector beanInjector);
 
