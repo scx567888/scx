@@ -7,6 +7,8 @@ public interface BeanFactory {
     <T> T getBean(Class<T> requiredType);
 
     void registerBean(String name, Object instance);
+    
+    void registerBeanCreator(String name, BeanCreator beanCreator);
 
     void registerBeanClass(String name, Class<?> beanClass);
 
