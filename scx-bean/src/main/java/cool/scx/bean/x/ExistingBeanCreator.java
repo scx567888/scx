@@ -10,7 +10,7 @@ public class ExistingBeanCreator implements BeanCreator {
     }
 
     @Override
-    public Object create() {
+    public Object create(BeanFactory beanFactory) {
         return bean;
     }
 

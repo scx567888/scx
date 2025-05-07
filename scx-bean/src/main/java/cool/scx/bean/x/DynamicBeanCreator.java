@@ -14,7 +14,7 @@ public class DynamicBeanCreator implements BeanCreator {
     }
 
     @Override
-    public Object create() {
+    public Object create(BeanFactory beanFactory) {
         return supplier.get();
     }
 

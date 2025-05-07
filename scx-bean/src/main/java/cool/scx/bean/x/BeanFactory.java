@@ -11,6 +11,8 @@ public interface BeanFactory {
     /// 初始化所有 bean
     void initializeBeans();
 
+    String[] getBeanNames();
+
     default void registerBean(String name, Object instance) {
         registerBeanCreator(name, new ExistingBeanCreator(instance));
     }
