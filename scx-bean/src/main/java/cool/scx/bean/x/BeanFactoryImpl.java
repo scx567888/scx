@@ -10,17 +10,18 @@ public class BeanFactoryImpl implements BeanFactory {
 
     private final Map<String, BeanContext> beanContextMap = new ConcurrentHashMap<>();
     private final List<BeanInjector> beanInjectors = new ArrayList<>();
+    private final List<BeanProcessor> beanProcessors = new ArrayList<>();
 
     @Override
     public Object getBean(String name) {
         var beanContext = getBeanContext(name);
-        return beanContext.createAndInject(this, beanInjectors);
+        return beanContext.createAndInject(this);
     }
 
     @Override
     public <T> T getBean(Class<T> requiredType) {
         var beanContext = getBeanContext(requiredType);
-        return (T) beanContext.createAndInject(this, beanInjectors);
+        return (T) beanContext.createAndInject(this);
     }
 
     @Override
@@ -62,9 +63,24 @@ public class BeanFactoryImpl implements BeanFactory {
     }
 
     @Override
+    public List<BeanInjector> beanInjectors() {
+        return beanInjectors;
+    }
+
+    @Override
+    public void addBeanProcessor(BeanProcessor beanProcessor) {
+        this.beanProcessors.add(beanProcessor);
+    }
+
+    @Override
+    public List<BeanProcessor> beanProcessors() {
+        return beanProcessors;
+    }
+
+    @Override
     public void initializeBeans() {
         for (var entry : beanContextMap.values()) {
-            entry.createAndInject(this, beanInjectors);
+            entry.createAndInject(this);
         }
     }
 
