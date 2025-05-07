@@ -23,10 +23,10 @@ public final class InstanceBeanContext implements BeanContext {
         if (alreadyInjected) {
             return bean;
         }
+        alreadyInjected = true;
         for (var injector : injectors) {
             injector.inject(bean);
         }
-        alreadyInjected = true;
         return bean;
     }
 
