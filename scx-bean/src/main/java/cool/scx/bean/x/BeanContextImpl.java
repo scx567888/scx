@@ -2,6 +2,7 @@ package cool.scx.bean.x;
 
 import static cool.scx.bean.x.BeanHelper.injectFieldAndMethod;
 
+/// 默认实现
 public class BeanContextImpl implements BeanContext {
 
     private final BeanCreator beanCreator;
