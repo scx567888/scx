@@ -1,21 +1,21 @@
 package cool.scx.bean.x;
 
-import java.util.function.Supplier;
+import java.util.function.Function;
 
-/// 动态生成 
+/// 动态生成
 public class DynamicBeanCreator implements BeanCreator {
 
-    private final Supplier<?> supplier;
+    private final Function<BeanFactory, ?> beanCreator;
     private final Class<?> beanClass;
 
-    public <T> DynamicBeanCreator(Supplier<T> supplier, Class<T> beanClass) {
-        this.supplier = supplier;
+    public <T> DynamicBeanCreator(Function<BeanFactory, T> beanCreator, Class<T> beanClass) {
+        this.beanCreator = beanCreator;
         this.beanClass = beanClass;
     }
 
     @Override
     public Object create(BeanFactory beanFactory) {
-        return supplier.get();
+        return beanCreator.apply(beanFactory);
     }
 
     @Override
