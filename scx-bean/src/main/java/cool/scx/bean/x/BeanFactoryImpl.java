@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class BeanFactoryImpl implements BeanFactory {
 
     private final Map<String, BeanContext> beanContextMap = new ConcurrentHashMap<>();
-    private final List<BeanInjector> beanInjectors = new ArrayList<>();
+    private final List<BeanDependencyResolver> beanDependencyResolvers = new ArrayList<>();
     private final List<BeanProcessor> beanProcessors = new ArrayList<>();
 
     @Override
@@ -58,13 +58,13 @@ public class BeanFactoryImpl implements BeanFactory {
     }
 
     @Override
-    public void addBeanInjector(BeanInjector beanInjector) {
-        this.beanInjectors.add(beanInjector);
+    public void addBeanDependencyResolver(BeanDependencyResolver beanDependencyResolver) {
+        this.beanDependencyResolvers.add(beanDependencyResolver);
     }
 
     @Override
-    public List<BeanInjector> beanInjectors() {
-        return beanInjectors;
+    public List<BeanDependencyResolver> beanDependencyResolvers() {
+        return beanDependencyResolvers;
     }
 
     @Override

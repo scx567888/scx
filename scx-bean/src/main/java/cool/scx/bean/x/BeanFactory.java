@@ -14,9 +14,9 @@ public interface BeanFactory {
     
     BeanContext getBeanContext(Class<?> requiredType);
 
-    void addBeanInjector(BeanInjector beanInjector);
+    void addBeanDependencyResolver(BeanDependencyResolver beanDependencyResolver);
     
-    List<BeanInjector> beanInjectors();
+    List<BeanDependencyResolver> beanDependencyResolvers();
 
     void addBeanProcessor(BeanProcessor beanProcessor);
 
