@@ -7,11 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.lang.annotation.Annotation;
 
-public class AutowiredAnnotationBeanDependencyResolver implements BeanDependencyResolver {
+/// 处理 Autowired 注解 同时也承担最核心的 配置
+public class AutowiredAnnotationResolver implements BeanDependencyResolver {
 
     private final BeanFactory beanFactory;
 
-    public AutowiredAnnotationBeanDependencyResolver(BeanFactory beanFactory) {
+    public AutowiredAnnotationResolver(BeanFactory beanFactory) {
         this.beanFactory = beanFactory;
     }
 
