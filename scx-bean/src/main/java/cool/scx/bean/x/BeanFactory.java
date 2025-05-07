@@ -4,40 +4,31 @@ import java.util.List;
 
 public interface BeanFactory {
 
+    /// 根据名称 获取 Bean
     Object getBean(String name);
 
+    /// 根据 类型 获取 Bean
     <T> T getBean(Class<T> requiredType);
 
-    void registerBeanContext(String name, BeanContext beanContext);
-    
-    BeanContext getBeanContext(String name);
-    
-    BeanContext getBeanContext(Class<?> requiredType);
+    /// 注册一个单例的 Bean
+    void registerBean(String name, Object instance);
 
+    /// 根据 Class 注册一个 Bean 
+    void registerBeanClass(String name, Class<?> beanClass);
+
+    /// 注册一个 Bean 上下文
+    void registerBeanContext(String name, BeanContext beanContext);
+
+    /// 添加一个 Bean 依赖解析器
     void addBeanDependencyResolver(BeanDependencyResolver beanDependencyResolver);
-    
+
+    /// 获取所有 Bean 依赖解析器
     List<BeanDependencyResolver> beanDependencyResolvers();
 
-    void addBeanProcessor(BeanProcessor beanProcessor);
-
-    List<BeanProcessor> beanProcessors();
-
-    /// 初始化所有 bean
+    /// 初始化所有 Bean
     void initializeBeans();
 
+    /// 获取所有 Bean 的名字
     String[] getBeanNames();
-
-    default void registerBean(String name, Object instance) {
-        registerBeanContext(name, new InstanceBeanContext(instance));
-    }
-
-    default void registerBeanClass(String name, Class<?> beanClass) {
-        //这里是否单例需要 读取 beanClass 
-        registerBeanContext(name, new BeanContextImpl(new AnnotationConfigBeanCreator(beanClass), true));
-    }
-
-    default void registerBeanCreator(String name, BeanCreator beanCreator, boolean singleton) {
-        registerBeanContext(name, new BeanContextImpl(beanCreator, singleton));
-    }
 
 }
