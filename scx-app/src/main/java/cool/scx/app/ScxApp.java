@@ -2,7 +2,7 @@ package cool.scx.app;
 
 import cool.scx.ansi.Ansi;
 import cool.scx.app.eventbus.EventBus;
-import cool.scx.bean.DefaultListableBeanFactory;
+import cool.scx.bean.BeanFactory;
 import cool.scx.common.util.$;
 import cool.scx.common.util.FileUtils;
 import cool.scx.common.util.ScopedValue;
@@ -68,7 +68,7 @@ public final class ScxApp {
 
     private final ScxAppOptions scxOptions;
 
-    private final DefaultListableBeanFactory beanFactory;
+    private final BeanFactory beanFactory;
 
     private final ScxWeb scxWeb;
 
@@ -167,7 +167,7 @@ public final class ScxApp {
             var b = entries.get(WebSocketTypeMatcher.NOT_WEB_SOCKET_HANDSHAKE);
             var c = entries.get(WebSocketTypeMatcher.WEB_SOCKET_HANDSHAKE);
             Ansi.ansi()
-                    .brightYellow("已加载 " + this.beanFactory.getBeanDefinitionNames().length + " 个 Bean !!!").ln()
+                    .brightYellow("已加载 " + this.beanFactory.getBeanNames().length + " 个 Bean !!!").ln()
                     .brightGreen("已加载 " + ((a != null ? a : 0) + (b != null ? b : 0)) + " 个 Http 路由 !!!").ln()
                     .brightBlue("已加载 " + (c != null ? c : 0) + " 个 WebSocket 路由 !!!").println();
         }
@@ -179,7 +179,7 @@ public final class ScxApp {
         //8, 使用初始端口号 启动服务器
         this.startServer(this.scxOptions.port());
         //9, 此处刷新 scxBeanFactory 使其实例化所有符合条件的 Bean
-        this.beanFactory.preInstantiateSingletons();
+        this.beanFactory.initializeBeans();
         //10, 启动调度器注解
         if (scxFeatureConfig.get(ENABLE_SCHEDULING_WITH_ANNOTATION)) {
             startAnnotationScheduled(this.beanFactory);
@@ -343,7 +343,7 @@ public final class ScxApp {
         return scxOptions;
     }
 
-    public DefaultListableBeanFactory beanFactory() {
+    public BeanFactory beanFactory() {
         return beanFactory;
     }
 

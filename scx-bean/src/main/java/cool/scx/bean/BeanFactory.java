@@ -1,38 +1,34 @@
 package cool.scx.bean;
 
-import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.core.ResolvableType;
+import java.util.List;
 
 public interface BeanFactory {
 
+    /// 根据名称 获取 Bean
     Object getBean(String name);
 
-    <T> T getBean(String name, Class<T> requiredType);
-
-    Object getBean(String name, Object... args);
-
+    /// 根据 类型 获取 Bean
     <T> T getBean(Class<T> requiredType);
 
-    <T> T getBean(Class<T> requiredType, Object... args);
+    /// 注册一个单例的 Bean
+    void registerBean(String name, Object instance);
 
-    <T> ObjectProvider<T> getBeanProvider(Class<T> requiredType);
+    /// 根据 Class 注册一个 Bean 
+    void registerBeanClass(String name, Class<?> beanClass);
 
-    <T> ObjectProvider<T> getBeanProvider(ResolvableType requiredType);
+    /// 注册一个 Bean 上下文
+    void registerBeanContext(String name, BeanContext beanContext);
 
-    boolean containsBean(String name);
+    /// 添加一个 Bean 依赖解析器
+    void addBeanDependencyResolver(BeanDependencyResolver beanDependencyResolver);
 
-    boolean isSingleton(String name);
+    /// 获取所有 Bean 依赖解析器
+    List<BeanDependencyResolver> beanDependencyResolvers();
 
-    boolean isPrototype(String name);
+    /// 初始化所有 Bean
+    void initializeBeans();
 
-    boolean isTypeMatch(String name, ResolvableType typeToMatch);
-
-    boolean isTypeMatch(String name, Class<?> typeToMatch);
-
-    Class<?> getType(String name);
-
-    Class<?> getType(String name, boolean allowFactoryBeanInit);
-
-    String[] getAliases(String name);
+    /// 获取所有 Bean 的名字
+    String[] getBeanNames();
 
 }
