@@ -1,13 +1,7 @@
 package cool.scx.bean.x;
 
 /// 根据一个 已经存在的 bean
-public class ExistingBeanCreator implements BeanCreator {
-
-    private final Object bean;
-
-    public ExistingBeanCreator(Object bean) {
-        this.bean = bean;
-    }
+public record ExistingBeanCreator(Object bean) implements BeanCreator {
 
     @Override
     public Object create(BeanFactory beanFactory) {
