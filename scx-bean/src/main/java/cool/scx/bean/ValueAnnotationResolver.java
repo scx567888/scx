@@ -1,6 +1,6 @@
-package cool.scx.bean.x;
+package cool.scx.bean;
 
-import cool.scx.bean.x.annotation.Value;
+import cool.scx.bean.annotation.Value;
 import cool.scx.common.util.ObjectUtils;
 import cool.scx.reflect.FieldInfo;
 import cool.scx.reflect.MethodInfo;

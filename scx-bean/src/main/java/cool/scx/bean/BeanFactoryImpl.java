@@ -1,4 +1,4 @@
-package cool.scx.bean.x;
+package cool.scx.bean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ public class BeanFactoryImpl implements BeanFactory {
 
     @Override
     public void registerBeanClass(String name, Class<?> beanClass) {
-        // todo 这里是否单例 需要 通过注解判断
+        // todo 这里是否单例 需要 通过注解判断 暂时全部采用 单例
         registerBeanContext(name, new BeanContextImpl(new AnnotationConfigBeanCreator(beanClass), true));
     }
 

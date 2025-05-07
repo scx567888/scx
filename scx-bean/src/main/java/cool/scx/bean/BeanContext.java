@@ -1,4 +1,4 @@
-package cool.scx.bean.x;
+package cool.scx.bean;
 
 /// Bean 上下文
 public interface BeanContext {

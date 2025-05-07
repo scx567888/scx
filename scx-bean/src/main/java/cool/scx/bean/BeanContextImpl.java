@@ -1,6 +1,6 @@
-package cool.scx.bean.x;
+package cool.scx.bean;
 
-import static cool.scx.bean.x.Helper.injectFieldAndMethod;
+import static cool.scx.bean.Helper.injectFieldAndMethod;
 
 /// 默认实现
 public class BeanContextImpl implements BeanContext {

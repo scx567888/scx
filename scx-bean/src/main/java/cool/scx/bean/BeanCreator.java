@@ -1,4 +1,4 @@
-package cool.scx.bean.x;
+package cool.scx.bean;
 
 /// bean 创建器
 public interface BeanCreator {

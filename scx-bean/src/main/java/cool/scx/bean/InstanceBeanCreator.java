@@ -1,4 +1,4 @@
-package cool.scx.bean.x;
+package cool.scx.bean;
 
 /// 根据一个 已经存在的 bean 创建
 public record InstanceBeanCreator(Object bean) implements BeanCreator {

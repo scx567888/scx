@@ -1,10 +1,10 @@
 package cool.scx.bean.test;
 
-import cool.scx.bean.x.AutowiredAnnotationBeanInjector;
-import cool.scx.bean.x.BeanFactoryImpl;
-import cool.scx.bean.x.ValueAnnotationBeanInjector;
-import cool.scx.bean.x.annotation.Value;
-import org.springframework.beans.factory.annotation.Autowired;
+import cool.scx.bean.AutowiredAnnotationResolver;
+import cool.scx.bean.BeanFactoryImpl;
+import cool.scx.bean.ValueAnnotationResolver;
+import cool.scx.bean.annotation.Autowired;
+import cool.scx.bean.annotation.Value;
 
 import javax.sql.DataSource;
 import java.util.Map;
@@ -14,12 +14,20 @@ public class Test {
 
     public static class A {
         
+        private final int w;
+        
+        @Autowired
+        public A a;
+        
         @Autowired
         public B b;
         
-        @Value("abc.password")
+        @Value("key1")
         public String bbb;
 
+        public A(@Value("key2") int w) {
+            this.w = w;
+        }
     }
 
     public static class B {
@@ -56,8 +64,8 @@ public class Test {
 
     public static void main(String[] args) {
         var beanFactory = new BeanFactoryImpl();
-        beanFactory.addBeanInjector(new AutowiredAnnotationBeanInjector(beanFactory));
-        beanFactory.addBeanInjector(new ValueAnnotationBeanInjector(Map.of("abc.password","你好")));
+        beanFactory.addBeanDependencyResolver(new AutowiredAnnotationResolver(beanFactory));
+        beanFactory.addBeanDependencyResolver(new ValueAnnotationResolver(Map.of("key1","你好","key2","888")));
         
         beanFactory.registerBeanClass("a", A.class);
         beanFactory.registerBeanClass("b", B.class);
@@ -65,16 +73,10 @@ public class Test {
         beanFactory.registerBeanClass("d", D.class);
         beanFactory.registerBeanClass("f", F.class);
         beanFactory.registerBeanClass("g", G.class);
-//        beanFactory.registerBeanClass("c",C.class);
-//        Object a = beanFactory.getBean(G.class);
+
         Object a = beanFactory.getBean(A.class);
         System.out.println(a);
-//        beanFactory.registerBeanCreator("b",new DynamicBeanCreator(()-> new B(),B.class));
-//        beanFactory.initializeBeans();
-//        Object a = beanFactory.getBean(C.class);
-//        Object a1 = beanFactory.getBean("a");
-//        Object b = beanFactory.getBean("b");
-//        System.out.println(a);
+        System.out.println(beanFactory.getBean(F.class));
     }
 
 }

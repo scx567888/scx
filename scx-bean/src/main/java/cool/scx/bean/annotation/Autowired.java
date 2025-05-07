@@ -1,12 +1,12 @@
-package cool.scx.bean.x.annotation;
+package cool.scx.bean.annotation;
 
 import java.lang.annotation.*;
 
 @Target({ElementType.CONSTRUCTOR, ElementType.METHOD, ElementType.PARAMETER, ElementType.FIELD, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface Value {
+public @interface Autowired {
     
-    String value();
+    boolean required() default true;
     
 }

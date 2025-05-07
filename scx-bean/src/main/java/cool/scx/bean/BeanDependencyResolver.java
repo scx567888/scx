@@ -1,4 +1,4 @@
-package cool.scx.bean.x;
+package cool.scx.bean;
 
 import cool.scx.reflect.FieldInfo;
 import cool.scx.reflect.MethodInfo;
