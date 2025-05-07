@@ -1,6 +1,6 @@
 package cool.scx.bean.x;
 
-import java.util.List;
+import static cool.scx.bean.x.BeanHelper.injectFieldAndMethod;
 
 public class BeanContextImpl implements BeanContext {
 
@@ -16,13 +16,7 @@ public class BeanContextImpl implements BeanContext {
         this.alreadyInjected = false;
     }
 
-    @Override
-    public boolean singleton() {
-        return singleton;
-    }
-
-    @Override
-    public Object create(BeanFactory beanFactory) {
+    private Object create(BeanFactory beanFactory) {
         if (singleton) {
             if (beanInstance == null) {
                 beanInstance = beanCreator.create(beanFactory);
@@ -34,7 +28,7 @@ public class BeanContextImpl implements BeanContext {
     }
 
     @Override
-    public Object createAndInject(BeanFactory beanFactory, List<BeanInjector> injectors) {
+    public Object getBean(BeanFactory beanFactory) {
         var bean = create(beanFactory);
         // 单例模式
         if (singleton) {
@@ -44,14 +38,10 @@ public class BeanContextImpl implements BeanContext {
             }
             alreadyInjected = true;
             //循环注入
-            for (var injector : injectors) {
-                injector.inject(bean);
-            }
+            injectFieldAndMethod(bean, beanClass(), beanFactory);
             return bean;
         } else {
-            for (var injector : injectors) {
-                injector.inject(bean);
-            }
+            injectFieldAndMethod(bean, beanClass(), beanFactory);
             return bean;
         }
     }
