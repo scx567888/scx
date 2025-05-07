@@ -9,6 +9,8 @@ import java.util.List;
 
 import static cool.scx.reflect.AccessModifier.PUBLIC;
 
+/// 根据 class 创建 bean 
+/// todo 此类待优化
 public class AnnotationConfigBeanCreator implements BeanCreator {
 
     // 改成 List，保存依赖链路
@@ -64,7 +66,13 @@ public class AnnotationConfigBeanCreator implements BeanCreator {
             var objects = new Object[parameters.length];
             for (int i = 0; i < parameters.length; i++) {
                 var parameter = parameters[i];
-                objects[i] = beanFactory.getBean(parameter.parameter().getType());
+                for (var beanInjector : beanFactory.beanDependencyResolvers()) {
+                    Object o = beanInjector.resolveConstructorArgument(parameter);
+                    if (o != null) {
+                        objects[i] = o;
+                        break;
+                    }
+                }
             }
             return constructor.newInstance(objects);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
