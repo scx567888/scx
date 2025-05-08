@@ -8,7 +8,10 @@ public interface BeanProvider {
     /// 获取 Bean
     Object getBean(BeanFactory beanFactory);
 
-    /// Bean 类型
+    /// 表示 getBean() 是否始终返回同一实例
+    boolean singleton();
+
+    /// 表示 getBean() 返回的对象类型
     Class<?> beanClass();
 
 }
