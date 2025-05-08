@@ -2,6 +2,7 @@ package cool.scx.bean.resolver;
 
 import cool.scx.bean.BeanFactory;
 import cool.scx.bean.annotation.Autowired;
+import cool.scx.common.constant.AnnotationValueHelper;
 import cool.scx.reflect.FieldInfo;
 import cool.scx.reflect.MethodInfo;
 import cool.scx.reflect.ParameterInfo;
@@ -26,7 +27,12 @@ public class AutowiredAnnotationResolver implements BeanResolver {
         } else {
             // 只有一个注解 并且这个注解 还是 Autowired, 一样强制获取
             if (annotations.length == 1 && annotations[0] instanceof Autowired autowired) {
-                return beanFactory.getBean(parameter.parameter().getType());
+                var name = AnnotationValueHelper.getRealValue(autowired.value());
+                if (name != null) {
+                    return beanFactory.getBean(name, parameter.parameter().getType());
+                } else {
+                    return beanFactory.getBean(parameter.parameter().getType());
+                }
             }
         }
         return null;
@@ -35,12 +41,16 @@ public class AutowiredAnnotationResolver implements BeanResolver {
     @Override
     public Object resolveFieldValue(FieldInfo fieldInfo) {
         //只处理有 Autowired 注解的
-        var annotation = fieldInfo.findAnnotation(Autowired.class);
-        if (annotation == null) {
+        var autowired = fieldInfo.findAnnotation(Autowired.class);
+        if (autowired == null) {
             return null;
         }
-        var type = fieldInfo.field().getType();
-        return beanFactory.getBean(type);
+        var name = AnnotationValueHelper.getRealValue(autowired.value());
+        if (name != null) {
+            return beanFactory.getBean(name, fieldInfo.field().getType());
+        } else {
+            return beanFactory.getBean(fieldInfo.field().getType());
+        }
     }
 
     @Override

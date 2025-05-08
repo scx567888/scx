@@ -1,6 +1,7 @@
 package cool.scx.bean.provider;
 
 import cool.scx.bean.BeanFactory;
+import cool.scx.bean.exception.BeanCreationException;
 import cool.scx.reflect.ClassInfoFactory;
 import cool.scx.reflect.ConstructorInfo;
 
@@ -76,15 +77,19 @@ public class AnnotationConfigBeanProvider implements BeanProvider {
         // 检测循环依赖
         if (creatingList.contains(this.beanClass)) {
             var message = buildCycleText(creatingList, this.beanClass);
-            throw new IllegalStateException("检测到构造函数循环依赖, 依赖链 = [" + message + "]");
+            throw new BeanCreationException("检测到构造函数循环依赖, 依赖链 = [" + message + "]");
         }
 
         creatingList.add(this.beanClass); // 加入正在创建列表
         // 创建实例
         try {
             return newInstance(beanFactory);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+        } catch (InstantiationException e) {
             throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            throw new BeanCreationException("创建 bean 时发生异常 ", e.getCause());
         } finally {
             creatingList.removeLast();
         }

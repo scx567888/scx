@@ -1,6 +1,7 @@
 package cool.scx.bean.resolver;
 
 import cool.scx.bean.annotation.Value;
+import cool.scx.bean.exception.MissingValueException;
 import cool.scx.common.util.ObjectUtils;
 import cool.scx.reflect.FieldInfo;
 import cool.scx.reflect.MethodInfo;
@@ -24,6 +25,9 @@ public class ValueAnnotationResolver implements BeanResolver {
             return null;
         }
         var rawValue = map.get(annotation.value());
+        if (rawValue == null) {
+            throw new MissingValueException("未找到 @Value 值 " + annotation.value());
+        }
         return ObjectUtils.convertValue(rawValue, parameterInfo.type());
     }
 
@@ -34,6 +38,9 @@ public class ValueAnnotationResolver implements BeanResolver {
             return null;
         }
         var rawValue = map.get(annotation.value());
+        if (rawValue == null) {
+            throw new MissingValueException("未找到 @Value 值 " + annotation.value());
+        }
         return ObjectUtils.convertValue(rawValue, fieldInfo.type());
     }
 

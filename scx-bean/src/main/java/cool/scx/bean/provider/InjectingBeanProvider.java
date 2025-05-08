@@ -1,6 +1,7 @@
 package cool.scx.bean.provider;
 
 import cool.scx.bean.BeanFactory;
+import cool.scx.bean.exception.BeanCreationException;
 import cool.scx.reflect.AccessModifier;
 import cool.scx.reflect.ClassInfoFactory;
 
@@ -40,7 +41,7 @@ public class InjectingBeanProvider implements BeanProvider {
             boolean b = checkAllArePrototype(creatingList);
             if (b) { // 多例
                 var message = buildCycleText(creatingList, this);
-                throw new IllegalStateException("检测到字段循环依赖（多例禁止），依赖链 = [" + message + "]");
+                throw new BeanCreationException("检测到字段循环依赖（多例禁止），依赖链 = [" + message + "]");
             }
         }
 
@@ -72,15 +73,16 @@ public class InjectingBeanProvider implements BeanProvider {
             if (fieldInfo.accessModifier() == AccessModifier.PUBLIC) {
                 fieldInfo.setAccessible(true);
                 for (var resolver : beanFactory.beanResolvers()) {
-                    var fieldValue = resolver.resolveFieldValue(fieldInfo);
-                    if (fieldValue != null) {
-                        try {
+                    try {
+                        var fieldValue = resolver.resolveFieldValue(fieldInfo);
+                        if (fieldValue != null) {
                             fieldInfo.set(bean, fieldValue);
                             break;
-                        } catch (IllegalAccessException e) {
-                            throw new RuntimeException("注入 Field 异常 !!!", e);
                         }
+                    } catch (Exception e) {
+                        throw new BeanCreationException("注入字段 [" + fieldInfo.name() + "] 阶段发生异常 !!!", e);
                     }
+
                 }
             }
         }
