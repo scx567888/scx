@@ -19,5 +19,5 @@ public class GzipSender<T> implements ScxHttpSender<T> {
     public ScxHttpSender<T> sendGzip() {
         return this;
     }
-    
+
 }

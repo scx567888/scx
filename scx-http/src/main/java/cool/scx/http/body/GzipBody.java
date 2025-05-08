@@ -65,5 +65,5 @@ public class GzipBody implements ScxHttpBody {
     public GzipBody asGzipBody() {
         return this;
     }
-    
+
 }
