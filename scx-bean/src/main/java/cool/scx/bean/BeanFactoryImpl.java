@@ -12,9 +12,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-import static cool.scx.bean.provider.InjectingBeanProvider.InjectionPolicy.ALWAYS;
-import static cool.scx.bean.provider.InjectingBeanProvider.InjectionPolicy.ONCE;
-
 // todo 根据 class getBean 速度优化
 @SuppressWarnings("unchecked")
 public class BeanFactoryImpl implements BeanFactory {
@@ -39,15 +36,15 @@ public class BeanFactoryImpl implements BeanFactory {
 
     @Override
     public void registerBean(String name, Object bean) {
-        registerBeanProvider(name, new InjectingBeanProvider(new InstanceBeanProvider(bean), ONCE));
+        registerBeanProvider(name, new InjectingBeanProvider(new InstanceBeanProvider(bean)));
     }
 
     @Override
     public void registerBeanClass(String name, Class<?> beanClass, boolean singleton) throws DuplicateBeanNameException {
         if (singleton) {
-            registerBeanProvider(name, new InjectingBeanProvider(new SingletonBeanProvider(new AnnotationConfigBeanProvider(beanClass)), ONCE));
+            registerBeanProvider(name, new InjectingBeanProvider(new SingletonBeanProvider(new AnnotationConfigBeanProvider(beanClass))));
         } else {
-            registerBeanProvider(name, new InjectingBeanProvider(new AnnotationConfigBeanProvider(beanClass), ALWAYS));
+            registerBeanProvider(name, new InjectingBeanProvider(new AnnotationConfigBeanProvider(beanClass)));
         }
     }
 
