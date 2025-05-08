@@ -72,13 +72,13 @@ public class InjectingBeanProvider implements BeanProvider {
     }
 
     public enum InjectionPolicy {
-        
+
         /// 每次都注入
         ALWAYS,
-        
+
         /// 注入一次
         ONCE,
-        
+
         /// 从不注入
         NEVER
 
