@@ -4,29 +4,28 @@ import cool.scx.bean.BeanFactory;
 import cool.scx.reflect.AccessModifier;
 import cool.scx.reflect.ClassInfoFactory;
 
+import static cool.scx.bean.provider.InjectingBeanProvider.InjectionPolicy.NEVER;
+import static cool.scx.bean.provider.InjectingBeanProvider.InjectionPolicy.ONCE;
+
 /// 支持字段和方法注入 的 提供器
 public class InjectingBeanProvider implements BeanProvider {
 
     private final BeanProvider beanProvider;
-    private final boolean singleton;
-    private boolean alreadyInjected;
+    private InjectionPolicy injectionPolicy;
 
-    public InjectingBeanProvider(BeanProvider beanProvider, boolean singleton) {
+    public InjectingBeanProvider(BeanProvider beanProvider, InjectionPolicy injectionPolicy) {
         this.beanProvider = beanProvider;
-        this.singleton = singleton;
-        this.alreadyInjected = false;
+        this.injectionPolicy = injectionPolicy;
     }
 
     @Override
     public Object getBean(BeanFactory beanFactory) {
         var bean = beanProvider.getBean(beanFactory);
-        // 单例模式
-        if (singleton) {
-            //已经注入 直接返回
-            if (alreadyInjected) {
-                return bean;
-            }
-            alreadyInjected = true;
+        if (injectionPolicy == NEVER) {
+            return bean;
+        }
+        if (injectionPolicy == ONCE) {
+            injectionPolicy = NEVER; // 修改策略：从 ONCE 转为 NEVER, 防止再次注入, 同时先修改状态 再执行注入也是为了支持 循环注入
         }
         injectFieldAndMethod(bean, beanFactory);
         return bean;
@@ -70,6 +69,19 @@ public class InjectingBeanProvider implements BeanProvider {
                 }
             }
         }
+    }
+
+    public enum InjectionPolicy {
+        
+        /// 每次都注入
+        ALWAYS,
+        
+        /// 注入一次
+        ONCE,
+        
+        /// 从不注入
+        NEVER
+
     }
 
 }
