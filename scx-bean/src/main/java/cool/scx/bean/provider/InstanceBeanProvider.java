@@ -11,6 +11,11 @@ public record InstanceBeanProvider(Object bean) implements BeanProvider {
     }
 
     @Override
+    public boolean singleton() {
+        return true;
+    }
+
+    @Override
     public Class<?> beanClass() {
         return bean.getClass();
     }
