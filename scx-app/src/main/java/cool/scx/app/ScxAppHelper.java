@@ -195,7 +195,6 @@ public final class ScxAppHelper {
                 .toArray(Class<?>[]::new);
 
         for (var c : beanClass) {
-            //这里是为了兼容 spring context 的部分注解
             beanFactory.registerBeanClass(c.getName(), c);
         }
         return beanFactory;

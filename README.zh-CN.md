@@ -22,33 +22,33 @@
     <a target="_blank" href="https://github.com/FasterXML/jackson">
         <img src="https://img.shields.io/badge/Jackson-f44336" alt="Jackson"/>
     </a>
-    <a target="_blank" href="https://github.com/spring-projects/spring-framework">
-        <img src="https://img.shields.io/badge/Spring Framework-ff8000" alt="Spring Framework"/>
-    </a>
     <a target="_blank" href="https://github.com/brettwooldridge/HikariCP">
-        <img src="https://img.shields.io/badge/HikariCP-44be16" alt="HikariCP"/>
+        <img src="https://img.shields.io/badge/HikariCP-ff8000" alt="HikariCP"/>
     </a>
     <a target="_blank" href="https://github.com/apache/freemarker">
-        <img src="https://img.shields.io/badge/FreeMarker-29aaf5" alt="FreeMarker"/>
+        <img src="https://img.shields.io/badge/FreeMarker-44be16" alt="FreeMarker"/>
     </a>
     <a target="_blank" href="https://github.com/coobird/thumbnailator">
-        <img src="https://img.shields.io/badge/Thumbnailator-9c27b0" alt="Thumbnailator"/>
+        <img src="https://img.shields.io/badge/Thumbnailator-29aaf5" alt="Thumbnailator"/>
+    </a>
+    <a target="_blank" href="https://github.com/jasypt/jasypt">
+        <img src="https://img.shields.io/badge/Jasypt-9c27b0" alt="Jasypt"/>
     </a>
     <br/>
-    <a target="_blank" href="https://github.com/jasypt/jasypt">
-        <img src="https://img.shields.io/badge/Jasypt-f44336" alt="Jasypt"/>
+    <a target="_blank" href="https://github.com/jmrozanec/cron-utils">
+        <img src="https://img.shields.io/badge/Cron utils-f44336" alt="Cron utils"/>
     </a>
     <a target="_blank" href="https://github.com/mysql/mysql-connector-j">
         <img src="https://img.shields.io/badge/MySQL Connector/J-ff8000" alt="MySQL Connector/J"/>
     </a>
-    <a target="_blank" href="https://github.com/jmrozanec/cron-utils">
-        <img src="https://img.shields.io/badge/Cron utils-44be16" alt="Cron utils"/>
-    </a>
     <a target="_blank" href="https://github.com/qos-ch/slf4j">
-        <img src="https://img.shields.io/badge/SLF4J-29aaf5" alt="SLF4J"/>
+        <img src="https://img.shields.io/badge/SLF4J-44be16" alt="SLF4J"/>
     </a>
     <a target="_blank" href="https://github.com/apache/logging-log4j2">
-        <img src="https://img.shields.io/badge/Apache Log4j 2-9c27b0" alt="Apache Log4j 2"/>
+        <img src="https://img.shields.io/badge/Apache Log4j 2-29aaf5" alt="Apache Log4j 2"/>
+    </a>
+    <a target="_blank" href="https://github.com/cbeust/testng">
+        <img src="https://img.shields.io/badge/TestNG-9c27b0" alt="TestNG"/>
     </a>
 </p>
 
