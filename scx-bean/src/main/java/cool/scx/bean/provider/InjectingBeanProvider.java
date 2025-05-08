@@ -22,6 +22,34 @@ public class InjectingBeanProvider implements BeanProvider {
         this.alreadyInjected = false;
     }
 
+    public static boolean checkContains(List<InjectingBeanProvider> creatingList, InjectingBeanProvider injectingBeanProvider) {
+        for (InjectingBeanProvider beanProvider : creatingList) {
+            if (beanProvider.beanClass() == injectingBeanProvider.beanClass()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean checkAllArePrototype(List<InjectingBeanProvider> creatingList) {
+        for (var beanClass : creatingList) {
+            if (beanClass.singleton()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static String buildCycleText(List<InjectingBeanProvider> creatingList, InjectingBeanProvider beanClass) {
+        // 如果已存在，组装一条依赖链
+        var cycle = new ArrayList<String>();
+        for (var creator : creatingList) {
+            cycle.add(creator.beanClass().getName());
+        }
+        cycle.add(beanClass.beanClass().getName()); // 再加上自己形成完整回环
+        return String.join(" -> ", cycle);
+    }
+
     @Override
     public Object getBean(BeanFactory beanFactory) {
         var bean = beanProvider.getBean(beanFactory);
@@ -99,34 +127,6 @@ public class InjectingBeanProvider implements BeanProvider {
                 }
             }
         }
-    }
-
-    public static boolean checkContains(List<InjectingBeanProvider> creatingList, InjectingBeanProvider injectingBeanProvider) {
-        for (InjectingBeanProvider beanProvider : creatingList) {
-            if (beanProvider.beanClass() == injectingBeanProvider.beanClass()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static boolean checkAllArePrototype(List<InjectingBeanProvider> creatingList) {
-        for (var beanClass : creatingList) {
-            if (beanClass.singleton()) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public static String buildCycleText(List<InjectingBeanProvider> creatingList, InjectingBeanProvider beanClass) {
-        // 如果已存在，组装一条依赖链
-        var cycle = new ArrayList<String>();
-        for (var creator : creatingList) {
-            cycle.add(creator.beanClass().getName());
-        }
-        cycle.add(beanClass.beanClass().getName()); // 再加上自己形成完整回环
-        return String.join(" -> ", cycle);
     }
 
 }

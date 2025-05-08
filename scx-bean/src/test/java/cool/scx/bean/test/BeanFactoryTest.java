@@ -126,42 +126,124 @@ public class BeanFactoryTest {
 
     // =========== 内部静态类（Bean定义） ===========
 
-    public static class A { @Autowired public B b; }
-    public static class B { @Autowired public C c; }
-    public static class C {}
-    public static class D { @Autowired public E e; }
-    public static class E { @Autowired public F f; }
-    public static class F { @Autowired public D d; }
-    public static class G { public G(H h) {} }
-    public static class H { public H(I i) {} }
-    public static class I { public I(G g) {} }
-    public static class J { @Autowired public K k; }
-    public static class K { @Autowired public L l; }
-    public static class L {}
-    public static class M { @Autowired public N n; }
-    public static class N { @Autowired public O o; }
-    public static class O { @Autowired public M m; }
-    public static class P { @Autowired public Q q; }
-    public static class Q {}
-    public static class R { @Autowired public S s; }
-    public static class S {}
-    public static class T {
-        @Autowired public U u;
-        public T(V v) {}
+    public static class A {
+        @Autowired
+        public B b;
     }
-    public static class U {}
-    public static class V {}
-    public static class W {}
-    public static class X {}
+
+    public static class B {
+        @Autowired
+        public C c;
+    }
+
+    public static class C {
+    }
+
+    public static class D {
+        @Autowired
+        public E e;
+    }
+
+    public static class E {
+        @Autowired
+        public F f;
+    }
+
+    public static class F {
+        @Autowired
+        public D d;
+    }
+
+    public static class G {
+        public G(H h) {
+        }
+    }
+
+    public static class H {
+        public H(I i) {
+        }
+    }
+
+    public static class I {
+        public I(G g) {
+        }
+    }
+
+    public static class J {
+        @Autowired
+        public K k;
+    }
+
+    public static class K {
+        @Autowired
+        public L l;
+    }
+
+    public static class L {
+    }
+
+    public static class M {
+        @Autowired
+        public N n;
+    }
+
+    public static class N {
+        @Autowired
+        public O o;
+    }
+
+    public static class O {
+        @Autowired
+        public M m;
+    }
+
+    public static class P {
+        @Autowired
+        public Q q;
+    }
+
+    public static class Q {
+    }
+
+    public static class R {
+        @Autowired
+        public S s;
+    }
+
+    public static class S {
+    }
+
+    public static class T {
+        @Autowired
+        public U u;
+
+        public T(V v) {
+        }
+    }
+
+    public static class U {
+    }
+
+    public static class V {
+    }
+
+    public static class W {
+    }
+
+    public static class X {
+    }
+
     public static class Y {
         @Value("key1")
         public String key1;
     }
+
     public static class Z {
         public int key2;
+
         public Z(@Value("key2") int key2) {
             this.key2 = key2;
         }
     }
-    
+
 }

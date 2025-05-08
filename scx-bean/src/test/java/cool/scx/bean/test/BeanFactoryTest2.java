@@ -149,16 +149,31 @@ public class BeanFactoryTest2 {
 
     //============= 极端测试 Bean 定义 =============
 
+    // 多实现测试
+    public interface MultiService {}
+
     // 多层循环依赖
-    public static class MultiA { @Autowired public MultiB b; }
-    public static class MultiB { @Autowired public MultiC c; }
-    public static class MultiC { @Autowired public MultiA a; }
+    public static class MultiA {
+        @Autowired
+        public MultiB b;
+    }
+
+    public static class MultiB {
+        @Autowired
+        public MultiC c;
+    }
+
+    public static class MultiC {
+        @Autowired
+        public MultiA a;
+    }
 
     // 混合作用域循环
     public static class SingletonM {
         @Autowired
         public PrototypeM prototype;
     }
+
     public static class PrototypeM {
         @Autowired
         public SingletonM singleton; // 依赖单例不会形成真正循环
@@ -166,16 +181,25 @@ public class BeanFactoryTest2 {
 
     // 构造器+字段混合循环
     public static class ConstructorCycleX {
-        public ConstructorCycleX(ConstructorCycleY y) {}
+        public ConstructorCycleX(ConstructorCycleY y) {
+        }
     }
+
     public static class ConstructorCycleY {
         @Autowired
         public ConstructorCycleX x;
     }
 
     // 原型循环依赖
-    public static class PrototypeP { @Autowired public PrototypeQ q; }
-    public static class PrototypeQ { @Autowired public PrototypeP p; }
+    public static class PrototypeP {
+        @Autowired
+        public PrototypeQ q;
+    }
+
+    public static class PrototypeQ {
+        @Autowired
+        public PrototypeP p;
+    }
 
     // @Value 缺失配置
     public static class MissingValue {
@@ -183,10 +207,10 @@ public class BeanFactoryTest2 {
         public String val;
     }
 
-    // 多实现测试
-    public interface MultiService {}
     public static class PrimaryServiceImpl implements MultiService {}
+
     public static class SecondaryServiceImpl implements MultiService {}
+
     public static class MultiServiceUser {
         @Autowired("primaryService")
         public MultiService service; // 需通过名称或 @Primary 解决
@@ -198,5 +222,5 @@ public class BeanFactoryTest2 {
             throw new IllegalStateException("模拟构造异常");
         }
     }
-    
+
 }
