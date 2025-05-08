@@ -22,6 +22,11 @@ public class SingletonBeanProvider implements BeanProvider {
     }
 
     @Override
+    public boolean singleton() {
+        return true;
+    }
+
+    @Override
     public Class<?> beanClass() {
         return beanProvider.beanClass();
     }
