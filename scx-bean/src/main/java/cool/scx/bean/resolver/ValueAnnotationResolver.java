@@ -39,7 +39,7 @@ public class ValueAnnotationResolver implements BeanResolver {
 
     @Override
     public boolean resolveMethod(MethodInfo methodInfo) {
-        //todo 暂时未处理
+        // 不支持 method 注入
         return false;
     }
 
