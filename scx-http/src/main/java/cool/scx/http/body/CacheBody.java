@@ -44,5 +44,5 @@ public class CacheBody implements ScxHttpBody {
     public CacheBody asCacheBody() {
         return this;
     }
-    
+
 }

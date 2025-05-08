@@ -8,9 +8,9 @@ import cool.scx.app.annotation.ScheduledList;
 import cool.scx.app.annotation.ScxService;
 import cool.scx.app.base.BaseModel;
 import cool.scx.app.base.BaseModelService;
-import cool.scx.bean.AutowiredAnnotationResolver;
 import cool.scx.bean.BeanFactory;
 import cool.scx.bean.BeanFactoryImpl;
+import cool.scx.bean.resolver.AutowiredAnnotationResolver;
 import cool.scx.common.util.ClassUtils;
 import cool.scx.common.util.ConsoleUtils;
 import cool.scx.common.util.ObjectUtils;
@@ -45,7 +45,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import static cool.scx.app.enumeration.ScxAppFeature.ALLOW_CIRCULAR_REFERENCES;
 import static cool.scx.app.enumeration.ScxAppFeature.USE_SPY;
 import static cool.scx.common.util.ClassUtils.*;
 import static cool.scx.reflect.AccessModifier.PUBLIC;
@@ -188,7 +187,7 @@ public final class ScxAppHelper {
     static BeanFactory initBeanFactory(ScxAppModule[] modules, ScxFeatureConfig scxFeatureConfig) {
         var beanFactory = new BeanFactoryImpl();
         //这里添加一个 bean 的后置处理器以便可以使用 @Autowired 注解
-        beanFactory.addBeanDependencyResolver(new AutowiredAnnotationResolver(beanFactory));
+        beanFactory.addBeanResolver(new AutowiredAnnotationResolver(beanFactory));
         //注册 bean
         var beanClass = Arrays.stream(modules)
                 .flatMap(c -> c.classList().stream())
