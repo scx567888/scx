@@ -1,4 +1,4 @@
-package cool.scx.bean;
+package cool.scx.bean.resolver;
 
 import cool.scx.bean.annotation.Value;
 import cool.scx.common.util.ObjectUtils;
@@ -9,7 +9,7 @@ import cool.scx.reflect.ParameterInfo;
 import java.util.Map;
 
 /// 处理 value 注解
-public class ValueAnnotationResolver implements BeanDependencyResolver {
+public class ValueAnnotationResolver implements BeanResolver {
 
     private final Map<String, Object> map;
 
@@ -39,6 +39,7 @@ public class ValueAnnotationResolver implements BeanDependencyResolver {
 
     @Override
     public boolean resolveMethod(MethodInfo methodInfo) {
+        //todo 暂时未处理
         return false;
     }
 

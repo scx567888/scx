@@ -1,5 +1,6 @@
-package cool.scx.bean;
+package cool.scx.bean.resolver;
 
+import cool.scx.bean.BeanFactory;
 import cool.scx.bean.annotation.Autowired;
 import cool.scx.reflect.FieldInfo;
 import cool.scx.reflect.MethodInfo;
@@ -8,7 +9,7 @@ import cool.scx.reflect.ParameterInfo;
 import java.lang.annotation.Annotation;
 
 /// 处理 Autowired 注解 同时也承担最核心的 配置
-public class AutowiredAnnotationResolver implements BeanDependencyResolver {
+public class AutowiredAnnotationResolver implements BeanResolver {
 
     private final BeanFactory beanFactory;
 
@@ -44,6 +45,7 @@ public class AutowiredAnnotationResolver implements BeanDependencyResolver {
 
     @Override
     public boolean resolveMethod(MethodInfo methodInfo) {
+        //todo 暂时未处理
         return false;
     }
 
