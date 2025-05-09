@@ -53,6 +53,8 @@ public class CircularDependencyChecker {
     /// 是否是无法解决的循环
     /// todo 这个方法有待确认是否正确
     public static boolean isUnsolvableCycle(List<DependencyContext> creatingList, DependencyContext context) {
+        //todo 这里需要先提取 真正的循环链
+
         // 如果当前上下文是构造器注入类型，直接返回无法解决的循环依赖
         if (context.type() == CONSTRUCTOR) {
             return true;
