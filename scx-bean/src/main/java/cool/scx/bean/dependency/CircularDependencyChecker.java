@@ -5,6 +5,9 @@ import cool.scx.bean.exception.BeanCreationException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
+
+import static cool.scx.bean.dependency.DependencyContext.Type.CONSTRUCTOR;
 
 public class CircularDependencyChecker {
 
@@ -48,8 +51,36 @@ public class CircularDependencyChecker {
     }
 
     /// 是否是无法解决的循环
+    /// todo 这个方法有待确认是否正确
     public static boolean isUnsolvableCycle(List<DependencyContext> creatingList, DependencyContext context) {
-        // todo 如何判断无法解决
+        // 如果当前上下文是构造器注入类型，直接返回无法解决的循环依赖
+        if (context.type() == CONSTRUCTOR) {
+            return true;
+        }
+
+        // 检查链路中是否有构造器注入类型的依赖
+        for (DependencyContext dependencyContext : creatingList) {
+            if (dependencyContext.type() == DependencyContext.Type.CONSTRUCTOR) {
+                return true; // 构造器注入 => 无法解决
+            }
+        }
+
+        // 检查链路中是否有单例
+        boolean hasSingleInstance = false;
+        for (DependencyContext dependencyContext : creatingList) {
+            if (dependencyContext.singleton()) {
+                hasSingleInstance = true;
+                break;
+            }
+        }
+        
+        // 如果链路中没有单例（只有多例），无法解决循环依赖
+        if (!hasSingleInstance && !context.singleton()) {
+            return true;
+        }
+        
+        // 其余情况都能解决
+        return false;
     }
 
     /// 构建循环链的错误信息
