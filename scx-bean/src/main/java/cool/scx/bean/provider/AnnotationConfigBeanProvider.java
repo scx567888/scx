@@ -136,7 +136,7 @@ public class AnnotationConfigBeanProvider implements BeanProvider {
         var parameters = constructor.parameters();
         var objects = new Object[parameters.length];
 
-        for (int i = 0; i < parameters.length; i++) {
+        for (int i = 0; i < parameters.length; i = i + 1) {
             var parameter = parameters[i];
             // 开始循环依赖检查
             // 虽然这里我们无法得知 经过多层包装的最终 BeanProvider 的 singleton 的值, 但是这对依赖检查没有影响, 此处硬编码 false  

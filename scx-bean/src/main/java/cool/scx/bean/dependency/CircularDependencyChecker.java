@@ -42,7 +42,7 @@ public class CircularDependencyChecker {
     /// 查找循环链条
     public static List<DependencyContext> extractCircularDependencyChain(List<DependencyContext> creatingList, DependencyContext context) {
         var cycleStartIndex = -1;
-        for (int i = 0; i < creatingList.size(); i++) {
+        for (int i = 0; i < creatingList.size(); i = i + 1) {
             if (creatingList.get(i).beanClass() == context.beanClass()) {
                 cycleStartIndex = i;
                 break;
