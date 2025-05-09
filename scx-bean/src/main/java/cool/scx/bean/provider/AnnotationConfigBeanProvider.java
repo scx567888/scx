@@ -1,7 +1,10 @@
 package cool.scx.bean.provider;
 
 import cool.scx.bean.BeanFactory;
+import cool.scx.bean.annotation.PreferredConstructor;
 import cool.scx.bean.exception.BeanCreationException;
+import cool.scx.bean.exception.NoSuchConstructorException;
+import cool.scx.bean.exception.NoUniqueConstructorException;
 import cool.scx.reflect.ClassInfoFactory;
 import cool.scx.reflect.ConstructorInfo;
 
@@ -26,14 +29,36 @@ public class AnnotationConfigBeanProvider implements BeanProvider {
     }
 
     public static ConstructorInfo findPreferredConstructor(Class<?> beanClass) {
-        // todo 暂时使用 找到的第一个 public 构造函数 后期可能需要 注解
+        // 我们只使用 public 的 构造函数
         var classInfo = ClassInfoFactory.getClassInfo(beanClass);
+        var publicConstructor = new ArrayList<ConstructorInfo>();
         for (var constructor : classInfo.constructors()) {
             if (constructor.accessModifier() == PUBLIC) {
-                return constructor;
+                publicConstructor.add(constructor);
             }
         }
-        throw new IllegalArgumentException("No constructor found for " + beanClass);
+        //一个都没有 报错
+        if (publicConstructor.size() == 0) {
+            throw new NoSuchConstructorException(beanClass.getName() + " 没有任何可用 public 构造函数 !!!");
+        }
+        //只找到一个直接用
+        if (publicConstructor.size() == 1) {
+            return publicConstructor.get(0);
+        }
+        //找到多个 需要查看是否有切只有一个标注了 PreferredConstructor 注解的
+        var preferredConstructor = new ArrayList<ConstructorInfo>();
+        for (var constructorInfo : publicConstructor) {
+            if (constructorInfo.findAnnotation(PreferredConstructor.class) != null) {
+                preferredConstructor.add(constructorInfo);
+            }
+        }
+        if (preferredConstructor.size() == 0) {
+            throw new NoUniqueConstructorException(beanClass.getName() + " 检测到 多个 可用的 public 构造函数 !!! 无法确定");
+        }
+        if (preferredConstructor.size() == 1) {
+            return preferredConstructor.get(0);
+        }
+        throw new NoUniqueConstructorException(beanClass.getName()+" 检测到 多个 标识 PreferredConstructor 注解的 public 构造函数 !!! 无法确定 !!!" );
     }
 
     public static String buildCycleText(List<Class<?>> creatingList, Class<?> beanClass) {
