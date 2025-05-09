@@ -14,8 +14,8 @@ public record DependencyContext(
         this(Type.FIELD, beanClass, singleton, fieldInfo, null, null);
     }
 
-    public DependencyContext(Class<?> beanClass, ConstructorInfo constructor, ParameterInfo parameter) {
-        this(Type.CONSTRUCTOR, beanClass, false, null, constructor, parameter);
+    public DependencyContext(Class<?> beanClass, boolean singleton, ConstructorInfo constructor, ParameterInfo parameter) {
+        this(Type.CONSTRUCTOR, beanClass, singleton, null, constructor, parameter);
     }
 
     public enum Type {

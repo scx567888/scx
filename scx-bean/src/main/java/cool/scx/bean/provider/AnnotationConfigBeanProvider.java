@@ -2,11 +2,11 @@ package cool.scx.bean.provider;
 
 import cool.scx.bean.BeanFactory;
 import cool.scx.bean.annotation.PreferredConstructor;
+import cool.scx.bean.dependency.DependencyContext;
 import cool.scx.bean.exception.BeanCreationException;
 import cool.scx.bean.exception.IllegalBeanClassException;
 import cool.scx.bean.exception.NoSuchConstructorException;
 import cool.scx.bean.exception.NoUniqueConstructorException;
-import cool.scx.bean.dependency.DependencyContext;
 import cool.scx.reflect.ClassInfoFactory;
 import cool.scx.reflect.ConstructorInfo;
 import cool.scx.reflect.ParameterInfo;
@@ -139,7 +139,8 @@ public class AnnotationConfigBeanProvider implements BeanProvider {
         for (int i = 0; i < parameters.length; i++) {
             var parameter = parameters[i];
             // 开始循环依赖检查
-            startDependencyCheck(new DependencyContext(this.beanClass, this.constructor, parameter));
+            // 这里我们无法得知 经过多层包裹的 最终 BeanProvider 的 singleton 是不是 true, 但是这对依赖检查没有影响, 此处硬编码 false  
+            startDependencyCheck(new DependencyContext(this.beanClass, false, this.constructor, parameter));
             try {
                 objects[i] = resolveConstructorArgument(beanFactory, parameter);
             } catch (Exception e) {
