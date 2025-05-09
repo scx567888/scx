@@ -3,12 +3,13 @@ package cool.scx.bean.provider.injecting;
 import cool.scx.bean.BeanFactory;
 import cool.scx.bean.exception.BeanCreationException;
 import cool.scx.bean.provider.BeanProvider;
+import cool.scx.bean.provider.x.DependencyContext;
 import cool.scx.reflect.AccessModifier;
 import cool.scx.reflect.ClassInfoFactory;
 
-import static cool.scx.bean.provider.injecting.CircularDependencyChecker.endDependencyCheck;
-import static cool.scx.bean.provider.injecting.CircularDependencyChecker.startDependencyCheck;
 import static cool.scx.bean.provider.injecting.Helper.resolveFieldValue;
+import static cool.scx.bean.provider.x.CircularDependencyChecker.endDependencyCheck;
+import static cool.scx.bean.provider.x.CircularDependencyChecker.startDependencyCheck;
 
 /// 支持字段和方法注入 的 提供器
 public class InjectingBeanProvider implements BeanProvider {
@@ -60,7 +61,7 @@ public class InjectingBeanProvider implements BeanProvider {
             }
 
             //开始检查依赖
-            startDependencyCheck(new DependentContext(this.beanClass(), this.singleton(), fieldInfo));
+            startDependencyCheck(new DependencyContext(this.beanClass(), this.singleton(), fieldInfo));
 
             try {
                 var value = resolveFieldValue(beanFactory, fieldInfo);
