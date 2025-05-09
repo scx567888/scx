@@ -139,7 +139,7 @@ public class AnnotationConfigBeanProvider implements BeanProvider {
         for (int i = 0; i < parameters.length; i++) {
             var parameter = parameters[i];
             // 开始循环依赖检查
-            // 这里我们无法得知 经过多层包裹的 最终 BeanProvider 的 singleton 是不是 true, 但是这对依赖检查没有影响, 此处硬编码 false  
+            // 虽然这里我们无法得知 经过多层包装的最终 BeanProvider 的 singleton 的值, 但是这对依赖检查没有影响, 此处硬编码 false  
             startDependencyCheck(new DependencyContext(this.beanClass, false, this.constructor, parameter));
             try {
                 objects[i] = resolveConstructorArgument(beanFactory, parameter);
