@@ -24,7 +24,7 @@ public class InjectingBeanProvider implements BeanProvider {
     @Override
     public Object getBean(BeanFactory beanFactory) {
         var bean = beanProvider.getBean(beanFactory);
-        // 单例模式
+        // 单例模式只注入一遍
         if (beanProvider.singleton()) {
             //已经注入 直接返回
             if (alreadyInjected) {
@@ -33,8 +33,8 @@ public class InjectingBeanProvider implements BeanProvider {
             alreadyInjected = true;
         }
 
+        //开始注入
         injectField(bean, beanFactory);
-        injectMethod(bean, beanFactory);
 
         return bean;
     }
@@ -77,10 +77,6 @@ public class InjectingBeanProvider implements BeanProvider {
             }
 
         }
-    }
-
-    private void injectMethod(Object bean, BeanFactory beanFactory) {
-        //todo 暂未实现方法注入
     }
 
 }
