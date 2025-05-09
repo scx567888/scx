@@ -37,17 +37,17 @@ public class AnnotationConfigBeanProvider implements BeanProvider {
                 publicConstructors.add(constructor);
             }
         }
-        
+
         //一个都没有 报错
         if (publicConstructors.isEmpty()) {
             throw new NoSuchConstructorException("无法找到类 " + beanClass.getName() + " 的任何 public 构造方法," + "至少需要一个 public 构造方法用于创建 Bean.");
         }
-        
+
         //只找到一个直接用
         if (publicConstructors.size() == 1) {
             return publicConstructors.get(0);
         }
-        
+
         //找到多个 需要查看是否有切只有一个标注了 PreferredConstructor 注解的
         var preferredConstructors = new ArrayList<ConstructorInfo>();
         for (var constructorInfo : publicConstructors) {
@@ -73,7 +73,7 @@ public class AnnotationConfigBeanProvider implements BeanProvider {
                         "冲突的构造方法列表：\n" + formatConstructors(preferredConstructors) +
                         "\n同一个类中只能有一个构造方法标注 @PreferredConstructor，请检查修正."
         );
-        
+
     }
 
     private static String formatConstructors(List<ConstructorInfo> constructors) {
@@ -127,7 +127,7 @@ public class AnnotationConfigBeanProvider implements BeanProvider {
         // 检测循环依赖
         if (creatingList.contains(this.beanClass)) {
             var message = buildCycleText(creatingList, this.beanClass);
-            throw new BeanCreationException("检测到构造函数循环依赖, 依赖链 = [" + message + "]");
+            throw new BeanCreationException("在类 " + this.beanClass.getName() + " 中, 检测到构造函数循环依赖, 依赖链 = [" + message + "]");
         }
 
         creatingList.add(this.beanClass); // 加入正在创建列表
@@ -135,9 +135,9 @@ public class AnnotationConfigBeanProvider implements BeanProvider {
         try {
             return newInstance(beanFactory);
         } catch (InstantiationException | IllegalAccessException e) {
-            throw new BeanCreationException("创建 bean 时发生异常 ", e);
+            throw new BeanCreationException("在类 " + this.beanClass.getName() + "中, 创建 bean 时发生异常 ", e);
         } catch (InvocationTargetException e) {
-            throw new BeanCreationException("创建 bean 时发生异常 ", e.getCause());
+            throw new BeanCreationException("在类 " + this.beanClass.getName() + "中, 创建 bean 时发生异常 ", e.getCause());
         } finally {
             creatingList.removeLast();
         }

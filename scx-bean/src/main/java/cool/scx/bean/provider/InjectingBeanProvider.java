@@ -69,7 +69,7 @@ public class InjectingBeanProvider implements BeanProvider {
             boolean b = checkAllArePrototype(creatingList);
             if (b) { // 多例
                 var message = buildCycleText(creatingList, this);
-                throw new BeanCreationException("检测到字段循环依赖（多例禁止），依赖链 = [" + message + "]");
+                throw new BeanCreationException("在类 " + beanClass().getName() + " 中, 检测到字段循环依赖（多例禁止），依赖链 = [" + message + "]");
             }
         }
 
@@ -108,7 +108,7 @@ public class InjectingBeanProvider implements BeanProvider {
                             break;
                         }
                     } catch (Exception e) {
-                        throw new BeanCreationException("注入字段 [" + fieldInfo.name() + "] 阶段发生异常 !!!", e);
+                        throw new BeanCreationException("在类 " + beanClass().getName() + " 中, 注入字段 [" + fieldInfo.name() + "] 阶段发生异常 !!!", e);
                     }
 
                 }
