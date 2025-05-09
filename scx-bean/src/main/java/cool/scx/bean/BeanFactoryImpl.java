@@ -3,7 +3,11 @@ package cool.scx.bean;
 import cool.scx.bean.exception.DuplicateBeanNameException;
 import cool.scx.bean.exception.NoSuchBeanException;
 import cool.scx.bean.exception.NoUniqueBeanException;
-import cool.scx.bean.provider.*;
+import cool.scx.bean.provider.BeanProvider;
+import cool.scx.bean.provider.InstanceBeanProvider;
+import cool.scx.bean.provider.SingletonBeanProvider;
+import cool.scx.bean.provider.annotation_config.AnnotationConfigBeanProvider;
+import cool.scx.bean.provider.injecting.InjectingBeanProvider;
 import cool.scx.bean.resolver.BeanResolver;
 
 import java.util.ArrayList;
