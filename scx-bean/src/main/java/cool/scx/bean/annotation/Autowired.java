@@ -14,7 +14,4 @@ public @interface Autowired {
     /// 名字
     String value() default NULL;
 
-    /// 是否必填
-    boolean required() default true;
-
 }

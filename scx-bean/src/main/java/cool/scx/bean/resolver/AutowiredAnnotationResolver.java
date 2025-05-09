@@ -3,11 +3,9 @@ package cool.scx.bean.resolver;
 import cool.scx.bean.BeanFactory;
 import cool.scx.bean.annotation.Autowired;
 import cool.scx.common.constant.AnnotationValueHelper;
+import cool.scx.reflect.AnnotatedElementInfo;
 import cool.scx.reflect.FieldInfo;
-import cool.scx.reflect.MethodInfo;
 import cool.scx.reflect.ParameterInfo;
-
-import java.lang.annotation.Annotation;
 
 /// 处理 Autowired 注解 同时也承担最核心的 配置
 public class AutowiredAnnotationResolver implements BeanResolver {
@@ -18,45 +16,33 @@ public class AutowiredAnnotationResolver implements BeanResolver {
         this.beanFactory = beanFactory;
     }
 
-    @Override
-    public Object resolveConstructorArgument(ParameterInfo parameter) {
-        Annotation[] annotations = parameter.allAnnotations();
-        // 没有任何其他注解我们就当作是必须设置的, 强制获取
-        if (annotations.length == 0) {
-            return beanFactory.getBean(parameter.parameter().getType());
-        } else {
-            // 只有一个注解 并且这个注解 还是 Autowired, 一样强制获取
-            if (annotations.length == 1 && annotations[0] instanceof Autowired autowired) {
-                var name = AnnotationValueHelper.getRealValue(autowired.value());
-                if (name != null) {
-                    return beanFactory.getBean(name, parameter.parameter().getType());
-                } else {
-                    return beanFactory.getBean(parameter.parameter().getType());
-                }
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public Object resolveFieldValue(FieldInfo fieldInfo) {
+    public Object resolveValue(AnnotatedElementInfo annotatedElementInfo, Class<?> clazz) {
         //只处理有 Autowired 注解的
-        var autowired = fieldInfo.findAnnotation(Autowired.class);
+        var autowired = annotatedElementInfo.findAnnotation(Autowired.class);
         if (autowired == null) {
             return null;
         }
         var name = AnnotationValueHelper.getRealValue(autowired.value());
         if (name != null) {
-            return beanFactory.getBean(name, fieldInfo.field().getType());
+            return beanFactory.getBean(name, clazz);
         } else {
-            return beanFactory.getBean(fieldInfo.field().getType());
+            return beanFactory.getBean(clazz);
         }
     }
 
     @Override
-    public boolean resolveMethod(MethodInfo methodInfo) {
-        // 不支持 method 注入
-        return false;
+    public Object resolveConstructorArgument(ParameterInfo parameter) {
+        var annotations = parameter.allAnnotations();
+        // 构造参数和 fieldValue 规则略有不同, 没有任何其他注解 强制注入
+        if (annotations.length == 0) {
+            return beanFactory.getBean(parameter.parameter().getType());
+        }
+        return resolveValue(parameter, parameter.parameter().getType());
+    }
+
+    @Override
+    public Object resolveFieldValue(FieldInfo fieldInfo) {
+        return resolveValue(fieldInfo, fieldInfo.field().getType());
     }
 
 }
