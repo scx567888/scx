@@ -4,6 +4,7 @@ import cool.scx.bean.exception.DuplicateBeanNameException;
 import cool.scx.bean.exception.NoSuchBeanException;
 import cool.scx.bean.exception.NoUniqueBeanException;
 import cool.scx.bean.provider.*;
+import cool.scx.bean.provider.annotation_config.AnnotationConfigBeanProvider;
 import cool.scx.bean.resolver.BeanResolver;
 
 import java.util.ArrayList;
