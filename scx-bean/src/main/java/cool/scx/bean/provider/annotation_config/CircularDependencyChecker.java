@@ -5,7 +5,7 @@ import cool.scx.bean.exception.BeanCreationException;
 import java.util.ArrayList;
 import java.util.List;
 
-/// 循环依赖检查器
+/// 循环依赖检查器 todo 循环依赖输出待美化
 class CircularDependencyChecker {
 
     /// 保存依赖链路
