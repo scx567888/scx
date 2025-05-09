@@ -134,10 +134,8 @@ public class AnnotationConfigBeanProvider implements BeanProvider {
         // 创建实例
         try {
             return newInstance(beanFactory);
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new BeanCreationException("创建 bean 时发生异常 ", e);
         } catch (InvocationTargetException e) {
             throw new BeanCreationException("创建 bean 时发生异常 ", e.getCause());
         } finally {
