@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-// todo 根据 class getBean 速度优化
 @SuppressWarnings("unchecked")
 public class BeanFactoryImpl implements BeanFactory {
 

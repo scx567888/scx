@@ -2,6 +2,8 @@ package cool.scx.bean.resolver;
 
 import cool.scx.bean.BeanFactory;
 import cool.scx.bean.annotation.Autowired;
+import cool.scx.bean.exception.NoSuchBeanException;
+import cool.scx.bean.exception.NoUniqueBeanException;
 import cool.scx.common.constant.AnnotationValueHelper;
 import cool.scx.reflect.AnnotatedElementInfo;
 import cool.scx.reflect.FieldInfo;
@@ -16,7 +18,7 @@ public class AutowiredAnnotationResolver implements BeanResolver {
         this.beanFactory = beanFactory;
     }
 
-    public Object resolveValue(AnnotatedElementInfo annotatedElementInfo, Class<?> clazz) {
+    public Object resolveValue(AnnotatedElementInfo annotatedElementInfo, Class<?> clazz) throws NoSuchBeanException, NoUniqueBeanException {
         //只处理有 Autowired 注解的
         var autowired = annotatedElementInfo.findAnnotation(Autowired.class);
         if (autowired == null) {
