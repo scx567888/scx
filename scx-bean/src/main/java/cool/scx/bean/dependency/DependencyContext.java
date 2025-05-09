@@ -1,4 +1,4 @@
-package cool.scx.bean.provider.x;
+package cool.scx.bean.dependency;
 
 import cool.scx.reflect.ConstructorInfo;
 import cool.scx.reflect.FieldInfo;
