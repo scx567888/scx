@@ -13,7 +13,4 @@ public interface BeanResolver {
     /// 提供 字段 无法处理返回 null
     Object resolveFieldValue(FieldInfo fieldInfo);
 
-    /// 配置 方法 无法配置 返回 false
-    boolean resolveMethod(MethodInfo methodInfo);
-
 }
