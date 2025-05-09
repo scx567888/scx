@@ -7,8 +7,8 @@ import cool.scx.reflect.ConstructorInfo;
 
 import java.lang.reflect.InvocationTargetException;
 
-import static cool.scx.bean.provider.annotation_config.CircularDependencyChecker.endCircularDependencyCheck;
-import static cool.scx.bean.provider.annotation_config.CircularDependencyChecker.startCircularDependencyCheck;
+import static cool.scx.bean.provider.annotation_config.CircularDependencyChecker.endDependencyCheck;
+import static cool.scx.bean.provider.annotation_config.CircularDependencyChecker.startDependencyCheck;
 import static cool.scx.bean.provider.annotation_config.Helper.findPreferredConstructor;
 import static cool.scx.bean.provider.annotation_config.Helper.resolveConstructorArgument;
 
@@ -37,12 +37,12 @@ public class AnnotationConfigBeanProvider implements BeanProvider {
             for (int i = 0; i < parameters.length; i++) {
                 var parameter = parameters[i];
                 // 开始循环依赖检查
-                startCircularDependencyCheck(new DependentContext(this.beanClass, this.constructor, parameter));
+                startDependencyCheck(new DependentContext(this.beanClass, this.constructor, parameter));
                 try {
                     objects[i] = resolveConstructorArgument(beanFactory, parameter);
                 } finally {
                     //结束检查
-                    endCircularDependencyCheck();
+                    endDependencyCheck();
                 }
             }
 
