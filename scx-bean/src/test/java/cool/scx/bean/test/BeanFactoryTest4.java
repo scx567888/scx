@@ -29,14 +29,14 @@ public class BeanFactoryTest4 {
         // 注册阶段就会报错
         Assert.expectThrows(NoUniqueConstructorException.class, () -> {
             beanFactory.registerBeanClass("c", C.class);
-        }).printStackTrace();
+        });
         beanFactory.registerBeanClass("d", D.class);
         Assert.expectThrows(NoSuchConstructorException.class, () -> {
             beanFactory.registerBeanClass("e", E.class);
-        }).printStackTrace();
+        });
         Assert.expectThrows(NoUniqueConstructorException.class, () -> {
             beanFactory.registerBeanClass("f", F.class);
-        }).printStackTrace();
+        });
 
         //正常获取
         A a = beanFactory.getBean(A.class);

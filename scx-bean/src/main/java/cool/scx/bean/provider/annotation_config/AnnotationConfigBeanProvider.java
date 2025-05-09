@@ -33,7 +33,7 @@ public class AnnotationConfigBeanProvider implements BeanProvider {
         try {
             var parameters = constructor.parameters();
             var objects = new Object[parameters.length];
-            
+
             for (int i = 0; i < parameters.length; i++) {
                 var parameter = parameters[i];
                 // 开始循环依赖检查

@@ -52,5 +52,5 @@ class CircularDependencyChecker {
         cycle.add(dependentContext.beanClass().getName()); // 再加上自己形成完整回环
         return String.join(" -> ", cycle);
     }
-    
+
 }

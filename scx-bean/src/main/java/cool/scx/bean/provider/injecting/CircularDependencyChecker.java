@@ -58,5 +58,5 @@ class CircularDependencyChecker {
         }
         return true;
     }
-    
+
 }
