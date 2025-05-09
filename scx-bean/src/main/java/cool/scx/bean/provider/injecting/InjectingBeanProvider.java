@@ -59,25 +59,21 @@ public class InjectingBeanProvider implements BeanProvider {
                 continue;
             }
             fieldInfo.setAccessible(true);
-            
+
             //开始检查依赖
             startDependencyCheck(new DependentContext(this.beanClass(), this.singleton(), fieldInfo));
 
-            Object value;
             try {
-                value = resolveFieldValue(beanFactory, fieldInfo);
+                var value = resolveFieldValue(beanFactory, fieldInfo);
+                //只设置非空值
+                if (value != null) {
+                    fieldInfo.set(bean, value);
+                }
+            } catch (Exception e) {
+                throw new BeanCreationException("在类 " + beanClass().getName() + " 中, 注入字段 [" + fieldInfo.name() + "] 阶段发生异常 !!!", e);
             } finally {
                 //结束检查
                 endDependencyCheck();
-            }
-            
-            //只设置非空值
-            if (value != null) {
-                try {
-                    fieldInfo.set(bean, value);
-                } catch (IllegalAccessException e) {
-                    throw new BeanCreationException("在类 " + beanClass().getName() + " 中, 注入字段 [" + fieldInfo.name() + "] 阶段发生异常 !!!", e);
-                }
             }
 
         }
