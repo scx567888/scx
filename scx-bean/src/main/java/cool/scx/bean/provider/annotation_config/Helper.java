@@ -2,6 +2,7 @@ package cool.scx.bean.provider.annotation_config;
 
 import cool.scx.bean.BeanFactory;
 import cool.scx.bean.annotation.PreferredConstructor;
+import cool.scx.bean.exception.IllegalBeanClassException;
 import cool.scx.bean.exception.NoSuchConstructorException;
 import cool.scx.bean.exception.NoUniqueConstructorException;
 import cool.scx.reflect.ClassInfoFactory;
@@ -12,11 +13,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static cool.scx.reflect.AccessModifier.PUBLIC;
+import static cool.scx.reflect.ClassType.*;
 
 class Helper {
 
+    public static void checkClass(Class<?> beanClass) throws IllegalBeanClassException {
+        var classInfo = ClassInfoFactory.getClassInfo(beanClass);
+        var classType = classInfo.classType();
+        if (classType == CONCRETE) {
+            if (classInfo.isMemberClass() && !classInfo.isStatic()) {
+                throw new IllegalBeanClassException("beanClass " + beanClass.getName() + " 不支持非静态的成员类 ");
+            }
+        }
+        if (classType == INTERFACE) {
+            throw new IllegalBeanClassException("beanClass " + beanClass.getName() + " is an interface");
+        }
+        if (classType == ABSTRACT_CLASS) {
+            throw new IllegalBeanClassException("beanClass " + beanClass.getName() + " is an abstract class");
+        }
+        if (classType == ANNOTATION) {
+            throw new IllegalBeanClassException("beanClass " + beanClass.getName() + " is an annotation");
+        }
+        if (classType == ENUM) {
+            throw new IllegalBeanClassException("beanClass " + beanClass.getName() + " is an enum");
+        }
+    }
+
     /// 查找构造函数
-    public static ConstructorInfo findPreferredConstructor(Class<?> beanClass) {
+    public static ConstructorInfo findPreferredConstructor(Class<?> beanClass) throws NoSuchConstructorException, NoUniqueConstructorException {
         // 我们只使用 public 的 构造函数
         var classInfo = ClassInfoFactory.getClassInfo(beanClass);
         var publicConstructors = new ArrayList<ConstructorInfo>();

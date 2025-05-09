@@ -11,7 +11,7 @@ class CircularDependencyChecker {
     /// 保存依赖链路
     private static final ThreadLocal<List<DependentContext>> CURRENTLY_CREATING = ThreadLocal.withInitial(ArrayList::new);
 
-    public static void startDependencyCheck(DependentContext dependentContext) {
+    public static void startDependencyCheck(DependentContext dependentContext) throws BeanCreationException {
         // 获取当前的依赖链
         var creatingList = CURRENTLY_CREATING.get();
 

@@ -1,8 +1,6 @@
 package cool.scx.bean;
 
-import cool.scx.bean.exception.DuplicateBeanNameException;
-import cool.scx.bean.exception.NoSuchBeanException;
-import cool.scx.bean.exception.NoUniqueBeanException;
+import cool.scx.bean.exception.*;
 import cool.scx.bean.provider.BeanProvider;
 import cool.scx.bean.resolver.BeanResolver;
 
@@ -24,10 +22,10 @@ public interface BeanFactory {
     String[] getBeanNames();
 
     /// 注册一个单例的 Bean
-    void registerBean(String name, Object bean) throws DuplicateBeanNameException;
+    void registerBean(String name, Object bean, boolean injecting) throws DuplicateBeanNameException;
 
     /// 根据 Class 注册一个 Bean
-    void registerBeanClass(String name, Class<?> beanClass, boolean singleton) throws DuplicateBeanNameException;
+    void registerBeanClass(String name, Class<?> beanClass, boolean singleton) throws DuplicateBeanNameException, IllegalBeanClassException, NoSuchConstructorException, NoUniqueConstructorException;
 
     /// 注册一个 Bean 提供器
     void registerBeanProvider(String name, BeanProvider beanProvider) throws DuplicateBeanNameException;
@@ -42,8 +40,13 @@ public interface BeanFactory {
     void initializeBeans();
 
     /// 根据 Class 注册一个 Bean, 单例模式
-    default void registerBeanClass(String name, Class<?> beanClass) throws DuplicateBeanNameException {
+    default void registerBeanClass(String name, Class<?> beanClass) throws DuplicateBeanNameException, IllegalBeanClassException {
         registerBeanClass(name, beanClass, true);
+    }
+
+    /// 注册一个单例的 Bean, 不注入字段
+    default void registerBean(String name, Object bean) throws DuplicateBeanNameException, IllegalBeanClassException {
+        registerBean(name, bean, false);
     }
 
 }

@@ -24,7 +24,7 @@ public class InjectingBeanProvider implements BeanProvider {
     @Override
     public Object getBean(BeanFactory beanFactory) {
         var bean = beanProvider.getBean(beanFactory);
-        // 单例模式
+        // 单例模式只注入一遍
         if (beanProvider.singleton()) {
             //已经注入 直接返回
             if (alreadyInjected) {
@@ -33,8 +33,8 @@ public class InjectingBeanProvider implements BeanProvider {
             alreadyInjected = true;
         }
 
+        //开始注入
         injectField(bean, beanFactory);
-        injectMethod(bean, beanFactory);
 
         return bean;
     }
@@ -49,16 +49,15 @@ public class InjectingBeanProvider implements BeanProvider {
         return beanProvider.beanClass();
     }
 
-    private void injectField(Object bean, BeanFactory beanFactory) {
+    private void injectField(Object bean, BeanFactory beanFactory) throws BeanCreationException {
         var classInfo = ClassInfoFactory.getClassInfo(beanClass());
         var fieldInfos = classInfo.allFields();
 
         for (var fieldInfo : fieldInfos) {
-            //只处理 public 字段
-            if (fieldInfo.accessModifier() != AccessModifier.PUBLIC) {
+            //只处理非 final 的 public 字段
+            if (fieldInfo.accessModifier() != AccessModifier.PUBLIC || fieldInfo.isFinal()) {
                 continue;
             }
-            fieldInfo.setAccessible(true);
 
             //开始检查依赖
             startDependencyCheck(new DependentContext(this.beanClass(), this.singleton(), fieldInfo));
@@ -77,10 +76,6 @@ public class InjectingBeanProvider implements BeanProvider {
             }
 
         }
-    }
-
-    private void injectMethod(Object bean, BeanFactory beanFactory) {
-        //todo 暂未实现方法注入
     }
 
 }

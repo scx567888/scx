@@ -1,8 +1,6 @@
 package cool.scx.bean;
 
-import cool.scx.bean.exception.DuplicateBeanNameException;
-import cool.scx.bean.exception.NoSuchBeanException;
-import cool.scx.bean.exception.NoUniqueBeanException;
+import cool.scx.bean.exception.*;
 import cool.scx.bean.provider.BeanProvider;
 import cool.scx.bean.provider.InstanceBeanProvider;
 import cool.scx.bean.provider.SingletonBeanProvider;
@@ -16,7 +14,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-// todo 根据 class getBean 速度优化
 @SuppressWarnings("unchecked")
 public class BeanFactoryImpl implements BeanFactory {
 
@@ -39,12 +36,16 @@ public class BeanFactoryImpl implements BeanFactory {
     }
 
     @Override
-    public void registerBean(String name, Object bean) {
-        registerBeanProvider(name, new InjectingBeanProvider(new InstanceBeanProvider(bean)));
+    public void registerBean(String name, Object bean, boolean injecting) {
+        if (injecting) {
+            registerBeanProvider(name, new InjectingBeanProvider(new InstanceBeanProvider(bean)));
+        } else {
+            registerBeanProvider(name, new InstanceBeanProvider(bean));
+        }
     }
 
     @Override
-    public void registerBeanClass(String name, Class<?> beanClass, boolean singleton) throws DuplicateBeanNameException {
+    public void registerBeanClass(String name, Class<?> beanClass, boolean singleton) throws DuplicateBeanNameException, IllegalBeanClassException, NoSuchConstructorException, NoUniqueConstructorException {
         if (singleton) {
             registerBeanProvider(name, new InjectingBeanProvider(new SingletonBeanProvider(new AnnotationConfigBeanProvider(beanClass))));
         } else {
