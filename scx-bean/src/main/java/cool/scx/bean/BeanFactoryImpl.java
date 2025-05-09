@@ -4,8 +4,8 @@ import cool.scx.bean.exception.*;
 import cool.scx.bean.provider.BeanProvider;
 import cool.scx.bean.provider.InstanceBeanProvider;
 import cool.scx.bean.provider.SingletonBeanProvider;
-import cool.scx.bean.provider.annotation_config.AnnotationConfigBeanProvider;
-import cool.scx.bean.provider.injecting.InjectingBeanProvider;
+import cool.scx.bean.provider.AnnotationConfigBeanProvider;
+import cool.scx.bean.provider.InjectingBeanProvider;
 import cool.scx.bean.resolver.BeanResolver;
 
 import java.util.ArrayList;

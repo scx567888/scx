@@ -1,15 +1,14 @@
-package cool.scx.bean.provider.injecting;
+package cool.scx.bean.provider;
 
 import cool.scx.bean.BeanFactory;
 import cool.scx.bean.exception.BeanCreationException;
-import cool.scx.bean.provider.BeanProvider;
-import cool.scx.bean.provider.x.DependencyContext;
+import cool.scx.bean.dependency.DependencyContext;
 import cool.scx.reflect.AccessModifier;
 import cool.scx.reflect.ClassInfoFactory;
+import cool.scx.reflect.FieldInfo;
 
-import static cool.scx.bean.provider.injecting.Helper.resolveFieldValue;
-import static cool.scx.bean.provider.x.CircularDependencyChecker.endDependencyCheck;
-import static cool.scx.bean.provider.x.CircularDependencyChecker.startDependencyCheck;
+import static cool.scx.bean.dependency.CircularDependencyChecker.endDependencyCheck;
+import static cool.scx.bean.dependency.CircularDependencyChecker.startDependencyCheck;
 
 /// 支持字段和方法注入 的 提供器
 public class InjectingBeanProvider implements BeanProvider {
@@ -20,6 +19,17 @@ public class InjectingBeanProvider implements BeanProvider {
     public InjectingBeanProvider(BeanProvider beanProvider) {
         this.beanProvider = beanProvider;
         this.alreadyInjected = false;
+    }
+
+    /// 解析构造函数参数
+    public static Object resolveFieldValue(BeanFactory beanFactory, FieldInfo fieldInfo) {
+        for (var beanResolver : beanFactory.beanResolvers()) {
+            var value = beanResolver.resolveFieldValue(fieldInfo);
+            if (value != null) {
+                return value;
+            }
+        }
+        return null;
     }
 
     @Override
