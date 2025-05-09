@@ -30,22 +30,25 @@ public class AnnotationConfigBeanProvider implements BeanProvider {
 
     @Override
     public Object getBean(BeanFactory beanFactory) {
-        try {
-            var parameters = constructor.parameters();
-            var objects = new Object[parameters.length];
 
-            for (int i = 0; i < parameters.length; i++) {
-                var parameter = parameters[i];
-                // 开始循环依赖检查
-                startDependencyCheck(new DependentContext(this.beanClass, this.constructor, parameter));
-                try {
-                    objects[i] = resolveConstructorArgument(beanFactory, parameter);
-                } finally {
-                    //结束检查
-                    endDependencyCheck();
-                }
+        var parameters = constructor.parameters();
+        var objects = new Object[parameters.length];
+
+        for (int i = 0; i < parameters.length; i++) {
+            var parameter = parameters[i];
+            // 开始循环依赖检查
+            startDependencyCheck(new DependentContext(this.beanClass, this.constructor, parameter));
+            try {
+                objects[i] = resolveConstructorArgument(beanFactory, parameter);
+            } catch (Exception e) {
+                throw new BeanCreationException("在类 " + this.beanClass.getName() + "中, 解析构造参数 " + parameter.name() + " 时发生异常 ", e);
+            } finally {
+                //结束检查
+                endDependencyCheck();
             }
+        }
 
+        try {
             return constructor.newInstance(objects);
         } catch (InstantiationException | IllegalAccessException e) {
             throw new BeanCreationException("在类 " + this.beanClass.getName() + "中, 创建 bean 时发生异常 ", e);
