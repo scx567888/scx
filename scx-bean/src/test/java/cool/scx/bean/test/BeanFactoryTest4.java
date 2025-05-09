@@ -27,30 +27,30 @@ public class BeanFactoryTest4 {
         beanFactory.registerBeanClass("a", A.class);
         beanFactory.registerBeanClass("b", B.class);
         // 注册阶段就会报错
-        Assert.assertThrows(NoUniqueConstructorException.class, () -> {
+        Assert.expectThrows(NoUniqueConstructorException.class, () -> {
             beanFactory.registerBeanClass("c", C.class);
-        });
+        }).printStackTrace();
         beanFactory.registerBeanClass("d", D.class);
-        Assert.assertThrows(NoSuchConstructorException.class, () -> {
+        Assert.expectThrows(NoSuchConstructorException.class, () -> {
             beanFactory.registerBeanClass("e", E.class);
-        });
-        Assert.assertThrows(NoUniqueConstructorException.class, () -> {
+        }).printStackTrace();
+        Assert.expectThrows(NoUniqueConstructorException.class, () -> {
             beanFactory.registerBeanClass("f", F.class);
-        });
+        }).printStackTrace();
 
         //正常获取
         A a = beanFactory.getBean(A.class);
         B b = beanFactory.getBean(B.class);
 
-        Assert.assertThrows(NoSuchBeanException.class, () -> {
+        Assert.expectThrows(NoSuchBeanException.class, () -> {
             C c = beanFactory.getBean(C.class);
         });
 
         beanFactory.getBean(D.class);
-        Assert.assertThrows(NoSuchBeanException.class, () -> {
+        Assert.expectThrows(NoSuchBeanException.class, () -> {
             beanFactory.getBean(E.class);
         });
-        Assert.assertThrows(NoSuchBeanException.class, () -> {
+        Assert.expectThrows(NoSuchBeanException.class, () -> {
             beanFactory.getBean(F.class);
         });
     }
