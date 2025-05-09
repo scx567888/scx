@@ -7,6 +7,7 @@ import java.lang.reflect.Field;
 
 import static cool.scx.reflect.ReflectHelper._findAccessModifier;
 import static cool.scx.reflect.ReflectHelper._findType;
+import static java.lang.reflect.AccessFlag.FINAL;
 
 
 /// FieldInfo
@@ -21,14 +22,17 @@ public final class FieldInfo implements MemberInfo {
     private final String name;
     private final JavaType type;
     private final Annotation[] annotations;
+    private final boolean isFinal;
 
     FieldInfo(Field field, ClassInfo classInfo) {
         this.field = field;
         this.classInfo = classInfo;
-        this.accessModifier = _findAccessModifier(field.accessFlags());
+        var accessFlags = field.accessFlags();
+        this.accessModifier = _findAccessModifier(accessFlags);
         this.name = field.getName();
         this.type = _findType(field.getGenericType(), classInfo);
         this.annotations = field.getDeclaredAnnotations();
+        this.isFinal = accessFlags.contains(FINAL);
     }
 
     public Field field() {
@@ -69,6 +73,11 @@ public final class FieldInfo implements MemberInfo {
     @Override
     public Annotation[] annotations() {
         return annotations;
+    }
+
+    /// 是否 final 字段
+    public boolean isFinal() {
+        return isFinal;
     }
 
 }

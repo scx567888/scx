@@ -36,8 +36,12 @@ public class BeanFactoryImpl implements BeanFactory {
     }
 
     @Override
-    public void registerBean(String name, Object bean) {
-        registerBeanProvider(name, new InjectingBeanProvider(new InstanceBeanProvider(bean)));
+    public void registerBean(String name, Object bean, boolean injecting) {
+        if (injecting) {
+            registerBeanProvider(name, new InjectingBeanProvider(new InstanceBeanProvider(bean)));
+        } else {
+            registerBeanProvider(name, new InstanceBeanProvider(bean));
+        }
     }
 
     @Override

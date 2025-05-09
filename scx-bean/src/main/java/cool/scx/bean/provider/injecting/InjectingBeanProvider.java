@@ -49,16 +49,15 @@ public class InjectingBeanProvider implements BeanProvider {
         return beanProvider.beanClass();
     }
 
-    private void injectField(Object bean, BeanFactory beanFactory) {
+    private void injectField(Object bean, BeanFactory beanFactory) throws BeanCreationException {
         var classInfo = ClassInfoFactory.getClassInfo(beanClass());
         var fieldInfos = classInfo.allFields();
 
         for (var fieldInfo : fieldInfos) {
-            //只处理 public 字段
-            if (fieldInfo.accessModifier() != AccessModifier.PUBLIC) {
+            //只处理非 final 的 public 字段
+            if (fieldInfo.accessModifier() != AccessModifier.PUBLIC || fieldInfo.isFinal()) {
                 continue;
             }
-            fieldInfo.setAccessible(true);
 
             //开始检查依赖
             startDependencyCheck(new DependentContext(this.beanClass(), this.singleton(), fieldInfo));
