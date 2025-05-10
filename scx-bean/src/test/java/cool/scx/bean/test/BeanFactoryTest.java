@@ -239,7 +239,7 @@ public class BeanFactoryTest {
     }
 
     public static class Z {
-        public int key2;
+        public final int key2;
 
         public Z(@Value("key2") int key2) {
             this.key2 = key2;
