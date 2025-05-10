@@ -43,14 +43,9 @@ public class CircularDependencyChecker {
         dependencyChain.removeLast();
     }
 
-    /// 获取最后一个依赖链条 (也就是上一个依赖链条)
-    public static DependencyContext getLastDependencyContext() {
-        var dependencyChain = CURRENT_DEPENDENCY_CHAIN.get();
-        if (dependencyChain.isEmpty()) {
-            return null;
-        } else {
-            return dependencyChain.getLast();
-        }
+    /// 获取依赖链条
+    public static List<DependencyContext> getCurrentDependencyChain() {
+        return CURRENT_DEPENDENCY_CHAIN.get();
     }
 
     /// 查找循环链条

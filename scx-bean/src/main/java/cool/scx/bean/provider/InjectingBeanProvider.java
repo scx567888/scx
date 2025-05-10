@@ -7,7 +7,7 @@ import cool.scx.reflect.ClassInfoFactory;
 import cool.scx.reflect.FieldInfo;
 
 import static cool.scx.bean.dependency.CircularDependencyChecker.*;
-import static cool.scx.bean.dependency.DependencyContext.Type.FIELD;
+import static cool.scx.bean.dependency.DependencyContext.Type.CONSTRUCTOR;
 import static cool.scx.bean.provider.InjectingBeanProvider.BeanStatus.*;
 import static cool.scx.reflect.AccessModifier.PUBLIC;
 
@@ -34,11 +34,22 @@ public class InjectingBeanProvider implements BeanProvider {
     }
 
     /// 判断是否可以返回早期对象
+    /// 此方法核心逻辑和 CircularDependencyChecker 中检查循环依赖是否可解很相似
     private static boolean shouldReturnEarly() {
-        var lastDependencyContext = getLastDependencyContext();
-        // 事实上 我们不需要判断整个链条 我们只需要关注我们自己的上一个调用链就可以了
-        // 只有上一个调用链不是 构造函数或者 null (用户调用), 才支持返回早期对象, 换句话说也就是只有 字段 才支持 早期对象
-        return lastDependencyContext != null && lastDependencyContext.type() == FIELD;
+        //如果 没有调用链条 说明是 (用户调用), 我们 不支持 早期对象
+        var dependencyChain = getCurrentDependencyChain();
+        if (dependencyChain.isEmpty()) {
+            return false;
+        }
+        // 有链条而且链条上 有任意一个构造函数 我们 不支持 早期对象
+        // 因为如果此时返回早期对象就会导致 构造函数中拿到的不是一个 完全体 用户调用时可能引发空指针
+        for (var context : dependencyChain) {
+            if (context.type() == CONSTRUCTOR) {
+                return false;
+            }
+        }
+        //没有任何一个 构造函数链条 那就是 全是 字段链条
+        return true;
     }
 
     @Override
