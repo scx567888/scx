@@ -7,7 +7,6 @@ import cool.scx.reflect.ClassInfoFactory;
 import cool.scx.reflect.FieldInfo;
 
 import static cool.scx.bean.dependency.CircularDependencyChecker.*;
-import static cool.scx.bean.dependency.DependencyContext.Type.CONSTRUCTOR;
 import static cool.scx.bean.provider.InjectingBeanProvider.BeanStatus.*;
 import static cool.scx.reflect.AccessModifier.PUBLIC;
 
@@ -35,20 +34,24 @@ public class InjectingBeanProvider implements BeanProvider {
 
     /// 判断是否可以返回早期对象
     /// 此方法核心逻辑和 CircularDependencyChecker 中检查循环依赖是否可解很相似
-    private static boolean shouldReturnEarly() {
-        //如果 没有调用链条 说明是 (用户调用), 我们 不支持 早期对象
+    private static boolean shouldReturnEarly(Class<?> beanClass) {
         var dependencyChain = getCurrentDependencyChain();
+        // 依赖链为空 (可能是用户调用或者已经创建完成)
         if (dependencyChain.isEmpty()) {
             return false;
         }
-        // 有链条而且链条上 有任意一个构造函数 我们 不支持 早期对象
-        // 因为如果此时返回早期对象就会导致 构造函数中拿到的不是一个 完全体 用户调用时可能引发空指针
-        for (var context : dependencyChain) {
-            if (context.type() == CONSTRUCTOR) {
+        // 提取循环链
+        var circularDependencyChain = extractCircularDependencyChain(dependencyChain, beanClass);
+        //有循环链 检查循环链是否能够解决
+        if (circularDependencyChain != null) {
+            // 检查是否是不可解决的循环依赖
+            var unsolvableCycleType = isUnsolvableCycle(circularDependencyChain);
+            // 无法解决就不允许暴漏
+            if (unsolvableCycleType != null) {
                 return false;
             }
         }
-        //没有任何一个 构造函数链条 那就是 全是 字段链条
+        //允许暴漏早期对象
         return true;
     }
 
@@ -62,7 +65,7 @@ public class InjectingBeanProvider implements BeanProvider {
                 return bean;
             }
             //半注入状态 需要判断是否应该返回早期对象
-            if (beanStatus == INJECTING && shouldReturnEarly()) {
+            if (beanStatus == INJECTING && shouldReturnEarly(this.beanClass())) {
                 return bean;
             }
             //这里提前设置 在第二次调用时 就可以暴漏半成品
