@@ -138,13 +138,13 @@ public class CircularDependencyChecker {
           
             if (i < findCycleStartIndex) { // 不处于循环中
                 sb.append("    ").append(baseInfo);
-                sb.append("              ↓\n");
+                sb.append("              🡻\n");
             } else if (i == findCycleStartIndex) {// 循环开始
                 sb.append("╭─➤ ").append(baseInfo);
-                sb.append("|             ↓\n");
+                sb.append("|             🡻\n");
             } else if (i < circularChain.size() - 1) {// 循环节点
                 sb.append("|   ").append(baseInfo);
-                sb.append("|             ↓\n");
+                sb.append("|             🡻\n");
             } else { // 闭环
                 sb.append("╰── ").append(baseInfo);
             }
