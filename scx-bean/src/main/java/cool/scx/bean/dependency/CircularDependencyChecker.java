@@ -8,6 +8,25 @@ import java.util.List;
 
 import static cool.scx.bean.dependency.DependencyContext.Type.CONSTRUCTOR;
 
+/// 循环依赖检测器。
+/// 
+/// 本类负责检测并处理循环依赖链条。为了确保循环依赖的检测正确性，设计上假设：
+/// 
+/// 【DependencyContext 幂等性假设】
+/// - 在同一条依赖链（CURRENT_DEPENDENCY_CHAIN）内，
+/// 如果出现相同的 beanClass（即类对象）多次，
+/// 则这些 DependencyContext 实例的关键属性（singleton、type 等）
+/// 必然一致。
+/// 
+/// 该假设基于以下设计保证：
+/// - 依赖链是线性推进的，每次依赖的创建都是按照顺序发生的，不会跳跃或分支。
+/// - 每个 DependencyContext 实例在第一次创建时即被固定下来，并且不会发生变化。
+/// - 使用 ThreadLocal 确保每个线程的依赖链独立，避免线程间相互干扰。
+/// 
+/// 在此假设下，我们可以简单地从创建链中提取循环依赖的子链，而无需手动添加当前依赖的 context。
+/// 
+/// ⚠️ 请注意，未来引入更复杂的功能（如动态 Scope、并发构建等）时，
+/// 需要重新评估此假设是否仍然有效。
 public class CircularDependencyChecker {
 
     /// 保存依赖链路
@@ -48,7 +67,16 @@ public class CircularDependencyChecker {
         return CURRENT_DEPENDENCY_CHAIN.get();
     }
 
-    /// 查找循环链条
+
+    /// 提取循环依赖链条。
+    /// 根据当前依赖链（creatingList），从链条中提取出一个循环依赖的子链。
+    /// 该方法假设，当前依赖上下文（context）与循环链条中第一次出现的相同 beanClass 的
+    /// DependencyContext 实例具有相同的关键属性（singleton、type 等），因此我们只需要
+    /// 从创建链中提取相应的子链，而不需要将当前 context 额外加入。
+    /// 这一设计保证是建立在以下前提之上的：
+    ///  - 在依赖链中，同一类的多个 DependencyContext 实例的属性（如类型、作用域等）是一致的。
+    ///  - 因为创建是线性的，每次依赖的实例都是由上下文顺序逐步推进的，没有突变。
+    /// 这种方式有助于减少冗余和避免不必要的计算，同时保持循环依赖的准确检测。
     private static List<DependencyContext> extractCircularDependencyChain(List<DependencyContext> creatingList, DependencyContext context) {
         var cycleStartIndex = -1;
         for (int i = 0; i < creatingList.size(); i = i + 1) {
@@ -60,7 +88,7 @@ public class CircularDependencyChecker {
         if (cycleStartIndex == -1) {
             return null;
         } else {
-            // todo 是否应该拼接上 context ?
+            // 此处无需拼接 context
             return creatingList.subList(cycleStartIndex, creatingList.size());
         }
     }
