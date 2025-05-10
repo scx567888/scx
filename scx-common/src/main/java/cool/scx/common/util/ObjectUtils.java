@@ -183,6 +183,30 @@ public final class ObjectUtils {
         return flatMap0(sourceMap, null);
     }
 
+    /// null -> true
+    public static boolean isEmpty(Object obj) {
+        if (obj == null) {
+            return true;
+        } else if (obj instanceof Optional<?> optional) {
+            return optional.isEmpty();
+        } else if (obj instanceof CharSequence charSequence) {
+            return charSequence.isEmpty();
+        } else if (obj.getClass().isArray()) {
+            return Array.getLength(obj) == 0;
+        } else if (obj instanceof Collection<?> collection) {
+            return collection.isEmpty();
+        } else if (obj instanceof Map<?, ?> map) {
+            return map.isEmpty();
+        } else {
+            return false;
+        }
+    }
+
+    /// null -> true
+    public static boolean isEmpty(Object[] array) {
+        return array == null || array.length == 0;
+    }
+
     //todo 支持字段过滤器 (如何表现一个路径 是否应该拓展出一个 JsonPath)
     public static class Options {
 
@@ -237,30 +261,6 @@ public final class ObjectUtils {
             return new BuildOptions(this.ignoreNullValue, this.ignoreJsonIgnore, false, false, visibilityConfig);
         }
 
-    }
-
-    /// null -> true
-    public static boolean isEmpty(Object obj) {
-        if (obj == null) {
-            return true;
-        } else if (obj instanceof Optional<?> optional) {
-            return optional.isEmpty();
-        } else if (obj instanceof CharSequence charSequence) {
-            return charSequence.isEmpty();
-        } else if (obj.getClass().isArray()) {
-            return Array.getLength(obj) == 0;
-        } else if (obj instanceof Collection<?> collection) {
-            return collection.isEmpty();
-        } else if (obj instanceof Map<?, ?> map) {
-            return map.isEmpty();
-        } else {
-            return false;
-        }
-    }
-
-    /// null -> true
-    public static boolean isEmpty(Object[] array) {
-        return array == null || array.length == 0;
     }
 
 }
