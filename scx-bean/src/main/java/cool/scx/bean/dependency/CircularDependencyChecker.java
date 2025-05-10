@@ -9,22 +9,22 @@ import java.util.List;
 import static cool.scx.bean.dependency.DependencyContext.Type.CONSTRUCTOR;
 
 /// 循环依赖检测器。
-/// 
+///
 /// 本类负责检测并处理循环依赖链条。为了确保循环依赖的检测正确性，设计上假设：
-/// 
+///
 /// 【DependencyContext 幂等性假设】
 /// - 在同一条依赖链（CURRENT_DEPENDENCY_CHAIN）内，
 /// 如果出现相同的 beanClass（即类对象）多次，
 /// 则这些 DependencyContext 实例的关键属性（singleton、type 等）
 /// 必然一致。
-/// 
+///
 /// 该假设基于以下设计保证：
 /// - 依赖链是线性推进的，每次依赖的创建都是按照顺序发生的，不会跳跃或分支。
 /// - 每个 DependencyContext 实例在第一次创建时即被固定下来，并且不会发生变化。
 /// - 使用 ThreadLocal 确保每个线程的依赖链独立，避免线程间相互干扰。
-/// 
+///
 /// 在此假设下，我们可以简单地从创建链中提取循环依赖的子链，而无需手动添加当前依赖的 context。
-/// 
+///
 /// ⚠️ 请注意，未来引入更复杂的功能（如动态 Scope、并发构建等）时，
 /// 需要重新评估此假设是否仍然有效。
 public class CircularDependencyChecker {
@@ -48,7 +48,9 @@ public class CircularDependencyChecker {
                     case CONSTRUCTOR -> "构造函数循环依赖";
                     case ALL_PROTOTYPE -> "多例循环依赖";
                 };
-                throw new BeanCreationException("在创建类 " + dependentContext.beanClass() + "时, 检测到无法解决的循环依赖 (" + why + "), 依赖链 = [" + message + "]");
+                var s= new BeanCreationException("在创建类 " + dependentContext.beanClass() + "时, 检测到无法解决的" + why + ": \r\n\r\n" + message);
+                s.printStackTrace();
+                throw s;
             }
         }
 
@@ -67,7 +69,6 @@ public class CircularDependencyChecker {
         return CURRENT_DEPENDENCY_CHAIN.get();
     }
 
-
     /// 提取循环依赖链条。
     /// 根据当前依赖链（creatingList），从链条中提取出一个循环依赖的子链。
     /// 该方法假设，当前依赖上下文（context）与循环链条中第一次出现的相同 beanClass 的
@@ -78,19 +79,22 @@ public class CircularDependencyChecker {
     ///  - 因为创建是线性的，每次依赖的实例都是由上下文顺序逐步推进的，没有突变。
     /// 这种方式有助于减少冗余和避免不必要的计算，同时保持循环依赖的准确检测。
     private static List<DependencyContext> extractCircularDependencyChain(List<DependencyContext> creatingList, DependencyContext context) {
-        var cycleStartIndex = -1;
-        for (int i = 0; i < creatingList.size(); i = i + 1) {
-            if (creatingList.get(i).beanClass() == context.beanClass()) {
-                cycleStartIndex = i;
-                break;
-            }
-        }
+        var cycleStartIndex = findCycleStartIndex(creatingList, context);
         if (cycleStartIndex == -1) {
             return null;
         } else {
             // 此处无需拼接 context
             return creatingList.subList(cycleStartIndex, creatingList.size());
         }
+    }
+
+    private static int findCycleStartIndex(List<DependencyContext> creatingList, DependencyContext context) {
+        for (int i = 0; i < creatingList.size(); i = i + 1) {
+            if (creatingList.get(i).beanClass() == context.beanClass()) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     /// 是否是无法解决的循环
@@ -122,14 +126,38 @@ public class CircularDependencyChecker {
     }
 
     /// 构建循环链的错误信息
-    private static String buildCycleMessage(List<DependencyContext> stack, DependencyContext context) {
-        var cycleNames = new ArrayList<String>();
-        for (DependencyContext dependencyContext : stack) {
-            var name = dependencyContext.beanClass().getName();
-            cycleNames.add(name);
+    private static String buildCycleMessage(List<DependencyContext> circularChain, DependencyContext dependentContext) {
+        // 1. 找到循环起始点
+        var findCycleStartIndex = findCycleStartIndex(circularChain, dependentContext);
+        // 2. 构建可视化链条
+        var sb = new StringBuilder();
+
+        for (int i = 0; i < circularChain.size(); i = i + 1) {
+            var ctx = circularChain.get(i);
+            var baseInfo = ctx.beanClass().getName() + " " + getDependencyDescription(ctx) + "\n";
+          
+            if (i < findCycleStartIndex) { // 不处于循环中
+                sb.append("    ").append(baseInfo);
+                sb.append("              ↓\n");
+            } else if (i == findCycleStartIndex) {// 循环开始
+                sb.append("╭─➤ ").append(baseInfo);
+                sb.append("|             ↓\n");
+            } else if (i < circularChain.size() - 1) {// 循环节点
+                sb.append("|   ").append(baseInfo);
+                sb.append("|             ↓\n");
+            } else { // 闭环
+                sb.append("╰── ").append(baseInfo);
+            }
         }
-        cycleNames.add(context.beanClass().getName());
-        return String.join(" → ", cycleNames);
+
+        return sb.toString();
+    }
+
+    private static String getDependencyDescription(DependencyContext dependentContext) {
+        return switch (dependentContext.type()) {
+            case CONSTRUCTOR -> "(构造参数: " + dependentContext.parameter().name() + ")";
+            case FIELD -> "[字段: " + dependentContext.fieldInfo().name() + "]";
+        };
     }
 
     private enum UnsolvableCycleType {
