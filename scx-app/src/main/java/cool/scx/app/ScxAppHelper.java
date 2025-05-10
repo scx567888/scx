@@ -60,7 +60,7 @@ public final class ScxAppHelper {
     /// Constant <code>beanFilterAnnotation</code>
     private static final List<Class<? extends Annotation>> beanFilterAnnotation = List.of(
             //scx 注解
-            ScxRoute.class, Table.class, ScxService.class, ScxWebSocketRoute.class);
+            ScxRoute.class, ScxService.class, ScxWebSocketRoute.class);
 
     static Path findRootPathByScxModule(Class<? extends ScxAppModule> c) throws IOException {
         var classSource = getCodeSource(c);

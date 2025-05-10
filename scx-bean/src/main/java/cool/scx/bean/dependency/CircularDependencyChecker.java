@@ -86,6 +86,16 @@ public class CircularDependencyChecker {
         }
     }
 
+    public static List<DependencyContext> extractCircularDependencyChain(List<DependencyContext> creatingList, Class<?> beanClass) {
+        var cycleStartIndex = findCycleStartIndex(creatingList, beanClass);
+        if (cycleStartIndex == -1) {
+            return null;
+        } else {
+            // 此处无需拼接 context
+            return creatingList.subList(cycleStartIndex, creatingList.size());
+        }
+    }
+
     private static int findCycleStartIndex(List<DependencyContext> creatingList, DependencyContext context) {
         for (int i = 0; i < creatingList.size(); i = i + 1) {
             if (creatingList.get(i).beanClass() == context.beanClass()) {
@@ -95,8 +105,17 @@ public class CircularDependencyChecker {
         return -1;
     }
 
+    public static int findCycleStartIndex(List<DependencyContext> creatingList, Class<?> beanClass) {
+        for (int i = 0; i < creatingList.size(); i = i + 1) {
+            if (creatingList.get(i).beanClass() == beanClass) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     /// 是否是无法解决的循环
-    private static UnsolvableCycleType isUnsolvableCycle(List<DependencyContext> circularDependencyChain) {
+    public static UnsolvableCycleType isUnsolvableCycle(List<DependencyContext> circularDependencyChain) {
         // 1, 检查链路中是否有构造器注入类型的依赖, 构造器注入 => 无法解决
         // 确实在某些情况下 如: A 类 构造器注入 b, B 类 字段注入 a, 
         // 我们可以通过先创建 半成品 b, 再创建 a, 然后再 b.a = a 来完成创建
@@ -162,7 +181,7 @@ public class CircularDependencyChecker {
         };
     }
 
-    private enum UnsolvableCycleType {
+    public enum UnsolvableCycleType {
 
         CONSTRUCTOR,
 
