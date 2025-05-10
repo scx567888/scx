@@ -48,7 +48,7 @@ public class CircularDependencyChecker {
                     case CONSTRUCTOR -> "构造函数循环依赖";
                     case ALL_PROTOTYPE -> "多例循环依赖";
                 };
-                var s= new BeanCreationException("在创建类 " + dependentContext.beanClass() + "时, 检测到无法解决的" + why + ": \r\n\r\n" + message);
+                var s= new BeanCreationException("在创建类 " + dependentContext.beanClass() + "时, 检测到无法解决的" + why + ": \n\n" + message);
                 s.printStackTrace();
                 throw s;
             }
@@ -131,6 +131,15 @@ public class CircularDependencyChecker {
         var findCycleStartIndex = findCycleStartIndex(circularChain, dependentContext);
         // 2. 构建可视化链条
         var sb = new StringBuilder();
+
+        if (circularChain.size() == 1) {
+            var ctx = circularChain.getFirst();
+            var baseInfo = ctx.beanClass().getName() + " " + getDependencyDescription(ctx) + "\n";
+            sb.append("╭─➤ ").append(baseInfo);
+            sb.append("|             🡻\n");
+            sb.append("╰───────── (自我引用) \n");
+            return sb.toString();
+        }
 
         for (int i = 0; i < circularChain.size(); i = i + 1) {
             var ctx = circularChain.get(i);
