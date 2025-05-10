@@ -25,12 +25,11 @@ public class CircularDependencyChecker {
             if (unsolvableCycleType != null) {
                 //3, 创建友好的错误提示
                 var message = buildCycleMessage(dependencyChain, dependentContext);
-                switch (unsolvableCycleType) {
-                    case CONSTRUCTOR ->
-                            throw new BeanCreationException("在创建类 " + dependentContext.beanClass() + "时, 检测到无法解决的循环依赖 (构造函数循环依赖), 依赖链 = [" + message + "]");
-                    case ALL_PROTOTYPE ->
-                            throw new BeanCreationException("在创建类 " + dependentContext.beanClass() + "时, 检测到无法解决的循环依赖 (多例循环依赖), 依赖链 = [" + message + "]");
-                }
+                var why = switch (unsolvableCycleType) {
+                    case CONSTRUCTOR -> "构造函数循环依赖";
+                    case ALL_PROTOTYPE -> "多例循环依赖";
+                };
+                throw new BeanCreationException("在创建类 " + dependentContext.beanClass() + "时, 检测到无法解决的循环依赖 (" + why + "), 依赖链 = [" + message + "]");
             }
         }
 
