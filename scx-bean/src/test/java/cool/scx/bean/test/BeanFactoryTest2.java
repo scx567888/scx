@@ -70,8 +70,8 @@ public class BeanFactoryTest2 {
     private static void testConstructorFieldMixedCycle(BeanFactory beanFactory) {
         Assert.assertThrows(BeanCreationException.class, () -> {
             try {
-                beanFactory.getBean(ConstructorCycleY.class);    
-            }catch (BeanCreationException e) {
+                beanFactory.getBean(ConstructorCycleY.class);
+            } catch (BeanCreationException e) {
                 throw e.getCause().getCause();
             }
         });
