@@ -39,8 +39,18 @@ public class CircularDependencyChecker {
         dependencyChain.removeLast();
     }
 
+    /// 获取最后一个依赖链条 (也就是上一个依赖链条)
+    public static DependencyContext getLastDependencyContext() {
+        var dependencyChain = CURRENT_DEPENDENCY_CHAIN.get();
+        if (dependencyChain.isEmpty()) {
+            return null;
+        } else {
+            return dependencyChain.getLast();
+        }
+    }
+
     /// 查找循环链条
-    public static List<DependencyContext> extractCircularDependencyChain(List<DependencyContext> creatingList, DependencyContext context) {
+    private static List<DependencyContext> extractCircularDependencyChain(List<DependencyContext> creatingList, DependencyContext context) {
         var cycleStartIndex = -1;
         for (int i = 0; i < creatingList.size(); i = i + 1) {
             if (creatingList.get(i).beanClass() == context.beanClass()) {
@@ -51,12 +61,13 @@ public class CircularDependencyChecker {
         if (cycleStartIndex == -1) {
             return null;
         } else {
+            // todo 是否应该拼接上 context ?
             return creatingList.subList(cycleStartIndex, creatingList.size());
         }
     }
 
     /// 是否是无法解决的循环
-    public static boolean isUnsolvableCycle(List<DependencyContext> circularDependencyChain) {
+    private static boolean isUnsolvableCycle(List<DependencyContext> circularDependencyChain) {
         // 1, 检查链路中是否有构造器注入类型的依赖, 构造器注入 => 无法解决
         // 确实在某些情况下 如: A 类 构造器注入 b, B 类 字段注入 a, 
         // 我们可以通过先创建 半成品 b, 再创建 a, 然后再 b.a = a 来完成创建

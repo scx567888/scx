@@ -1,24 +1,25 @@
 package cool.scx.bean.provider;
 
 import cool.scx.bean.BeanFactory;
-import cool.scx.bean.exception.BeanCreationException;
 import cool.scx.bean.dependency.DependencyContext;
+import cool.scx.bean.exception.BeanCreationException;
 import cool.scx.reflect.AccessModifier;
 import cool.scx.reflect.ClassInfoFactory;
 import cool.scx.reflect.FieldInfo;
 
-import static cool.scx.bean.dependency.CircularDependencyChecker.endDependencyCheck;
-import static cool.scx.bean.dependency.CircularDependencyChecker.startDependencyCheck;
+import static cool.scx.bean.dependency.CircularDependencyChecker.*;
+import static cool.scx.bean.dependency.DependencyContext.Type.FIELD;
+import static cool.scx.bean.provider.InjectingBeanProvider.BeanStatus.*;
 
 /// 支持字段和方法注入 的 提供器
 public class InjectingBeanProvider implements BeanProvider {
 
     private final BeanProvider beanProvider;
-    private boolean alreadyInjected;
+    private BeanStatus beanStatus;
 
     public InjectingBeanProvider(BeanProvider beanProvider) {
         this.beanProvider = beanProvider;
-        this.alreadyInjected = false;
+        this.beanStatus = NULL;
     }
 
     /// 解析构造函数参数
@@ -38,15 +39,21 @@ public class InjectingBeanProvider implements BeanProvider {
         // 单例模式只注入一遍
         if (beanProvider.singleton()) {
             //已经注入 直接返回
-            if (alreadyInjected) {
+            if (beanStatus == READY) {
                 return bean;
             }
-            alreadyInjected = true;
+            //半注入状态 需要判断是否应该返回早期对象
+            if (beanStatus == INJECTING && shouldReturnEarly()) {
+                return bean;
+            }
+            //这里提前设置 在第二次调用时 就可以暴漏半成品
+            beanStatus = INJECTING;
+            injectField(bean, beanFactory);
+            beanStatus = READY;
+        } else {
+            //开始注入
+            injectField(bean, beanFactory);
         }
-
-        //开始注入
-        injectField(bean, beanFactory);
-
         return bean;
     }
 
@@ -87,6 +94,17 @@ public class InjectingBeanProvider implements BeanProvider {
             }
 
         }
+    }
+
+    private boolean shouldReturnEarly() {
+        var lastDependencyContext = getLastDependencyContext();
+        return lastDependencyContext != null && lastDependencyContext.type() == FIELD;
+    }
+
+    public enum BeanStatus {
+        NULL,      // 未开始初始化
+        INJECTING, // 正在注入依赖
+        READY      // 完全就绪
     }
 
 }
