@@ -126,29 +126,24 @@ public class CircularDependencyChecker {
     /// 构建循环链的错误信息
     private static String buildCycleMessage(List<DependencyContext> circularChain, DependencyContext dependentContext) {
         // 1. 找到循环起始点
-        var findCycleStartIndex = findCycleStartIndex(circularChain, dependentContext);
+        var cycleStartIndex = findCycleStartIndex(circularChain, dependentContext);
         // 2. 构建可视化链条
         var sb = new StringBuilder();
-
-        if (circularChain.size() == 1) {
-            var ctx = circularChain.getFirst();
-            var baseInfo = ctx.beanClass().getName() + " " + getDependencyDescription(ctx) + "\n";
-            sb.append("╭─➤ ").append(baseInfo);
-            sb.append("|             🡻\n");
-            sb.append("╰───────── (自我引用) \n");
-            return sb.toString();
-        }
 
         for (int i = 0; i < circularChain.size(); i = i + 1) {
             var ctx = circularChain.get(i);
             var baseInfo = ctx.beanClass().getName() + " " + getDependencyDescription(ctx) + "\n";
-          
-            if (i < findCycleStartIndex) { // 不处于循环中
+
+            if (i < cycleStartIndex) { // 不处于循环中
                 sb.append("    ").append(baseInfo);
                 sb.append("              🡻\n");
-            } else if (i == findCycleStartIndex) {// 循环开始
+            } else if (i == cycleStartIndex) {// 循环开始
                 sb.append("╭─➤ ").append(baseInfo);
                 sb.append("|             🡻\n");
+                // 循环结束 换句话说 起始等于结束 所以是自我引用
+                if (i == circularChain.size() - 1) {
+                    sb.append("╰───────── (自我引用) \n");
+                }
             } else if (i < circularChain.size() - 1) {// 循环节点
                 sb.append("|   ").append(baseInfo);
                 sb.append("|             🡻\n");
