@@ -18,14 +18,6 @@ public class BeanFactoryTest8 {
         testFieldAndConstructorMixedFail();
         testSingletonDependsOnPrototype();
     }
-    
-    public static class A{
-        
-        public A(A a){
-            
-        }
-        
-    }
 
     @Test
     public static void testSelfCircularDependency() {
@@ -35,7 +27,7 @@ public class BeanFactoryTest8 {
         beanFactory.registerBeanClass("a", A.class);
 
         Assert.assertThrows(BeanCreationException.class, () -> {
-            var a = beanFactory.getBean(A.class);    
+            var a = beanFactory.getBean(A.class);
         });
     }
 
@@ -143,6 +135,14 @@ public class BeanFactoryTest8 {
         Assert.assertNotEquals(a.b, anotherB); // 确保 A 中持有的 B 和容器新取的不一样
     }
 
+    public static class A {
+
+        public A(A a) {
+
+        }
+
+    }
+
     // 测试类定义们
     public static class A1 {
         @Autowired
@@ -201,6 +201,7 @@ public class BeanFactoryTest8 {
 
     public static class X4 {
         public final Y4 y;
+
         public X4(Y4 y) {
             this.y = y;
         }
@@ -208,6 +209,7 @@ public class BeanFactoryTest8 {
 
     public static class Y4 {
         public final X4 x;
+
         public Y4(X4 x) {
             this.x = x;
         }
@@ -220,6 +222,7 @@ public class BeanFactoryTest8 {
 
     public static class Q5 {
         public final R5 r;
+
         public Q5(R5 r) {
             this.r = r;
         }
