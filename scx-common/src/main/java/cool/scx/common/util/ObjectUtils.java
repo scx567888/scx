@@ -11,10 +11,9 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import cool.scx.common.jackson.BuildOptions;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 import static cool.scx.common.jackson.JacksonHelper.createObjectMapper;
 
@@ -238,6 +237,30 @@ public final class ObjectUtils {
             return new BuildOptions(this.ignoreNullValue, this.ignoreJsonIgnore, false, false, visibilityConfig);
         }
 
+    }
+
+    /// null -> true
+    public static boolean isEmpty(Object obj) {
+        if (obj == null) {
+            return true;
+        } else if (obj instanceof Optional<?> optional) {
+            return optional.isEmpty();
+        } else if (obj instanceof CharSequence charSequence) {
+            return charSequence.isEmpty();
+        } else if (obj.getClass().isArray()) {
+            return Array.getLength(obj) == 0;
+        } else if (obj instanceof Collection<?> collection) {
+            return collection.isEmpty();
+        } else if (obj instanceof Map<?, ?> map) {
+            return map.isEmpty();
+        } else {
+            return false;
+        }
+    }
+
+    /// null -> true
+    public static boolean isEmpty(Object[] array) {
+        return array == null || array.length == 0;
     }
 
 }
