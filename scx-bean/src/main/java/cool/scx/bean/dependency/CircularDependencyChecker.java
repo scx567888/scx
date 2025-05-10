@@ -48,9 +48,7 @@ public class CircularDependencyChecker {
                     case CONSTRUCTOR -> "构造函数循环依赖";
                     case ALL_PROTOTYPE -> "多例循环依赖";
                 };
-                var s= new BeanCreationException("在创建类 " + dependentContext.beanClass() + "时, 检测到无法解决的" + why + ": \n\n" + message);
-                s.printStackTrace();
-                throw s;
+                throw new BeanCreationException("在创建类 " + dependentContext.beanClass() + "时, 检测到无法解决的" + why + ": \n\n" + message);
             }
         }
 
