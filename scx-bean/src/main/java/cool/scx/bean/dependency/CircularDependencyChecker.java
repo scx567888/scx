@@ -21,11 +21,16 @@ public class CircularDependencyChecker {
         var circularDependencyChain = extractCircularDependencyChain(dependencyChain, dependentContext);
         if (circularDependencyChain != null) {
             //2, 检查是否是不可解决的循环依赖
-            var isUnsolvableCycle = isUnsolvableCycle(circularDependencyChain);
-            if (isUnsolvableCycle) {
+            var unsolvableCycleType = isUnsolvableCycle(circularDependencyChain);
+            if (unsolvableCycleType != null) {
                 //3, 创建友好的错误提示
                 var message = buildCycleMessage(dependencyChain, dependentContext);
-                throw new BeanCreationException("在创建类 " + dependentContext.beanClass() + "时, 检测到循环依赖，依赖链 = [" + message + "]");
+                switch (unsolvableCycleType) {
+                    case CONSTRUCTOR ->
+                            throw new BeanCreationException("在创建类 " + dependentContext.beanClass() + "时, 检测到无法解决的循环依赖 (构造函数循环依赖), 依赖链 = [" + message + "]");
+                    case ALL_PROTOTYPE ->
+                            throw new BeanCreationException("在创建类 " + dependentContext.beanClass() + "时, 检测到无法解决的循环依赖 (多例循环依赖), 依赖链 = [" + message + "]");
+                }
             }
         }
 
@@ -67,7 +72,7 @@ public class CircularDependencyChecker {
     }
 
     /// 是否是无法解决的循环
-    private static boolean isUnsolvableCycle(List<DependencyContext> circularDependencyChain) {
+    private static UnsolvableCycleType isUnsolvableCycle(List<DependencyContext> circularDependencyChain) {
         // 1, 检查链路中是否有构造器注入类型的依赖, 构造器注入 => 无法解决
         // 确实在某些情况下 如: A 类 构造器注入 b, B 类 字段注入 a, 
         // 我们可以通过先创建 半成品 b, 再创建 a, 然后再 b.a = a 来完成创建
@@ -76,7 +81,7 @@ public class CircularDependencyChecker {
 
         for (var c : circularDependencyChain) {
             if (c.type() == CONSTRUCTOR) {
-                return true;// 无法解决
+                return UnsolvableCycleType.CONSTRUCTOR;// 无法解决
             }
         }
 
@@ -86,12 +91,12 @@ public class CircularDependencyChecker {
 
         for (var c : circularDependencyChain) {
             if (c.singleton()) {
-                return false; // 只要存在单例 就表示能够解决
+                return null; // 只要存在单例 就表示能够解决
             }
         }
 
         // 3, 如果链路中没有单例（只有多例），无法解决循环依赖
-        return true;
+        return UnsolvableCycleType.ALL_PROTOTYPE;
     }
 
     /// 构建循环链的错误信息
@@ -103,6 +108,14 @@ public class CircularDependencyChecker {
         }
         cycleNames.add(context.beanClass().getName());
         return String.join(" → ", cycleNames);
+    }
+
+    private enum UnsolvableCycleType {
+
+        CONSTRUCTOR,
+
+        ALL_PROTOTYPE
+
     }
 
 }
