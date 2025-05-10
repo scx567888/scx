@@ -86,9 +86,28 @@ public class CircularDependencyChecker {
         }
     }
 
+    public static List<DependencyContext> extractCircularDependencyChain(List<DependencyContext> creatingList, Class<?> beanClass) {
+        var cycleStartIndex = findCycleStartIndex(creatingList, beanClass);
+        if (cycleStartIndex == -1) {
+            return null;
+        } else {
+            // 此处无需拼接 context
+            return creatingList.subList(cycleStartIndex, creatingList.size());
+        }
+    }
+
     private static int findCycleStartIndex(List<DependencyContext> creatingList, DependencyContext context) {
         for (int i = 0; i < creatingList.size(); i = i + 1) {
             if (creatingList.get(i).beanClass() == context.beanClass()) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public static int findCycleStartIndex(List<DependencyContext> creatingList, Class<?> beanClass) {
+        for (int i = 0; i < creatingList.size(); i = i + 1) {
+            if (creatingList.get(i).beanClass() == beanClass) {
                 return i;
             }
         }
