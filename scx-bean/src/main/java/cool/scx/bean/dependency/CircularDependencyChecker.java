@@ -115,7 +115,7 @@ public class CircularDependencyChecker {
     }
 
     /// 是否是无法解决的循环
-    private static UnsolvableCycleType isUnsolvableCycle(List<DependencyContext> circularDependencyChain) {
+    public static UnsolvableCycleType isUnsolvableCycle(List<DependencyContext> circularDependencyChain) {
         // 1, 检查链路中是否有构造器注入类型的依赖, 构造器注入 => 无法解决
         // 确实在某些情况下 如: A 类 构造器注入 b, B 类 字段注入 a, 
         // 我们可以通过先创建 半成品 b, 再创建 a, 然后再 b.a = a 来完成创建
@@ -181,7 +181,7 @@ public class CircularDependencyChecker {
         };
     }
 
-    private enum UnsolvableCycleType {
+    public enum UnsolvableCycleType {
 
         CONSTRUCTOR,
 
