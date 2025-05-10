@@ -10,12 +10,33 @@ import org.testng.annotations.Test;
 public class BeanFactoryTest8 {
 
     public static void main(String[] args) {
+        testSelfCircularDependency();
         testSimpleCircularDependency();
         testMixedScopeDependency();
         testDeepCircularDependency();
         testConstructorCircularDependencyFail();
         testFieldAndConstructorMixedFail();
         testSingletonDependsOnPrototype();
+    }
+    
+    public static class A{
+        
+        public A(A a){
+            
+        }
+        
+    }
+
+    @Test
+    public static void testSelfCircularDependency() {
+        var beanFactory = new BeanFactoryImpl();
+        beanFactory.addBeanResolver(new AutowiredAnnotationResolver(beanFactory));
+
+        beanFactory.registerBeanClass("a", A.class);
+
+        Assert.assertThrows(BeanCreationException.class, () -> {
+            var a = beanFactory.getBean(A.class);    
+        });
     }
 
     @Test

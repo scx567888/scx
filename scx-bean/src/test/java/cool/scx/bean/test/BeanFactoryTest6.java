@@ -14,6 +14,7 @@ public class BeanFactoryTest6 {
         test2();
         test3();
         test4();
+        test5();
     }
 
     @Test
@@ -129,6 +130,20 @@ public class BeanFactoryTest6 {
 
     }
 
+    @Test
+    public static void test5() {
+        var beanFactory = new BeanFactoryImpl();
+        beanFactory.addBeanResolver(new AutowiredAnnotationResolver(beanFactory));
+
+        beanFactory.registerBeanClass("w", W.class);
+        beanFactory.registerBeanClass("t", T.class);
+
+        Assert.assertThrows(BeanCreationException.class, () -> {
+            W bean = beanFactory.getBean(W.class);
+        });
+
+    }
+
     public static class A {
 
         @Autowired
@@ -164,5 +179,15 @@ public class BeanFactoryTest6 {
 
     }
 
+    public static class W {
+        public W(T t) {
+
+        }
+    }
+
+    public static class T {
+        public T(T t1) {
+        }
+    }
 
 }
