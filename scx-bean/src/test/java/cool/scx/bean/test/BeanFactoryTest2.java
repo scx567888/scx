@@ -69,6 +69,13 @@ public class BeanFactoryTest2 {
      */
     private static void testConstructorFieldMixedCycle(BeanFactory beanFactory) {
         Assert.assertThrows(BeanCreationException.class, () -> {
+            try {
+                beanFactory.getBean(ConstructorCycleY.class);    
+            }catch (BeanCreationException e) {
+                throw e.getCause().getCause();
+            }
+        });
+        Assert.assertThrows(BeanCreationException.class, () -> {
             beanFactory.getBean(ConstructorCycleX.class);
         });
     }
@@ -181,7 +188,9 @@ public class BeanFactoryTest2 {
 
     // 构造器+字段混合循环
     public static class ConstructorCycleX {
+        // 理论上这个是创建不出来的 因为 构造函数中不应该存在半成品对象
         public ConstructorCycleX(ConstructorCycleY y) {
+            Assert.assertNotNull(y.x);
         }
     }
 
