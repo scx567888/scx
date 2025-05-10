@@ -3,13 +3,13 @@ package cool.scx.bean.provider;
 import cool.scx.bean.BeanFactory;
 import cool.scx.bean.dependency.DependencyContext;
 import cool.scx.bean.exception.BeanCreationException;
-import cool.scx.reflect.AccessModifier;
 import cool.scx.reflect.ClassInfoFactory;
 import cool.scx.reflect.FieldInfo;
 
 import static cool.scx.bean.dependency.CircularDependencyChecker.*;
 import static cool.scx.bean.dependency.DependencyContext.Type.FIELD;
 import static cool.scx.bean.provider.InjectingBeanProvider.BeanStatus.*;
+import static cool.scx.reflect.AccessModifier.PUBLIC;
 
 /// 支持字段和方法注入 的 提供器
 public class InjectingBeanProvider implements BeanProvider {
@@ -31,6 +31,14 @@ public class InjectingBeanProvider implements BeanProvider {
             }
         }
         return null;
+    }
+
+    /// 判断是否可以返回早期对象
+    private static boolean shouldReturnEarly() {
+        var lastDependencyContext = getLastDependencyContext();
+        // 事实上 我们不需要判断整个链条 我们只需要关注我们自己的上一个调用链就可以了
+        // 只有上一个调用链不是 构造函数或者 null (用户调用), 才支持返回早期对象, 换句话说也就是只有 字段 才支持 早期对象
+        return lastDependencyContext != null && lastDependencyContext.type() == FIELD;
     }
 
     @Override
@@ -73,7 +81,7 @@ public class InjectingBeanProvider implements BeanProvider {
 
         for (var fieldInfo : fieldInfos) {
             //只处理非 final 的 public 字段
-            if (fieldInfo.accessModifier() != AccessModifier.PUBLIC || fieldInfo.isFinal()) {
+            if (fieldInfo.accessModifier() != PUBLIC || fieldInfo.isFinal()) {
                 continue;
             }
 
@@ -94,11 +102,6 @@ public class InjectingBeanProvider implements BeanProvider {
             }
 
         }
-    }
-
-    private boolean shouldReturnEarly() {
-        var lastDependencyContext = getLastDependencyContext();
-        return lastDependencyContext != null && lastDependencyContext.type() == FIELD;
     }
 
     public enum BeanStatus {
