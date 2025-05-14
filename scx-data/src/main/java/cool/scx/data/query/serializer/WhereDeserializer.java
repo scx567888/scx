@@ -18,7 +18,9 @@ public class WhereDeserializer {
         if (v.isObject()) {
             var type = v.get("@type").asText();
             return switch (type) {
-                case "Logic" -> deserializeLogic(v);
+                case "And" -> deserializeAnd(v);
+                case "Or" -> deserializeOr(v);
+                case "Not" -> deserializeNot(v);
                 case "WhereClause" -> deserializeWhereClause(v);
                 case "Where" -> deserializeWhere(v);
                 default -> v;
@@ -31,10 +33,19 @@ public class WhereDeserializer {
         return null;
     }
 
-    private Logic deserializeLogic(JsonNode v) {
-        var logicType = convertValue(v.get("logicType"), LogicType.class);
+    private Junction deserializeAnd(JsonNode v) {
         var clauses = deserializeAll(v.get("clauses"));
-        return new Logic(logicType).add(clauses);
+        return new And().add(clauses);
+    }
+
+    private Junction deserializeOr(JsonNode v) {
+        var clauses = deserializeAll(v.get("clauses"));
+        return new Or().add(clauses);
+    }
+
+    private Not deserializeNot(JsonNode v) {
+        var clause = deserializeAll(v.get("clause"));
+        return new Not(clause);
     }
 
     private WhereClause deserializeWhereClause(JsonNode v) {

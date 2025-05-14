@@ -16,7 +16,8 @@ public abstract class WhereParser {
         return switch (obj) {
             case String s -> parseString(s);
             case WhereClause w -> parseWhereClause(w);
-            case Logic l -> parseLogic(l);
+            case Junction j -> parseJunction(j);
+            case Not n -> parseNot(n);
             case Where w -> parseWhere(w);
             case Query q -> parseQuery(q);
             case Object[] o -> parseAll(o);
@@ -32,17 +33,17 @@ public abstract class WhereParser {
         return w;
     }
 
-    protected final WhereClause parseLogic(Logic l) {
+    protected final WhereClause parseJunction(Junction j) {
         var clauses = new ArrayList<String>();
         var whereParams = new ArrayList<>();
-        for (var c : l.clauses()) {
+        for (var c : j.clauses()) {
             var w = parse(c);
             if (w != null && !w.isEmpty()) {
                 clauses.add(w.whereClause());
                 addAll(whereParams, w.params());
             }
         }
-        var clause = String.join(" " + getLogicKeyWord(l.logicType()) + " ", clauses);
+        var clause = String.join(" " + getJunctionKeyWord(j) + " ", clauses);
         //只有 子句数量 大于 1 时, 我们才在两端拼接 括号
         if (clauses.size() > 1) {
             clause = "(" + clause + ")";
@@ -50,11 +51,32 @@ public abstract class WhereParser {
         return new WhereClause(clause, whereParams.toArray());
     }
 
-    protected String getLogicKeyWord(LogicType logicType) {
-        return switch (logicType) {
-            case OR -> "OR";
-            case AND -> "AND";
+    protected String getJunctionKeyWord(Junction junction) {
+        return switch (junction) {
+            case Or _ -> "OR";
+            case And _ -> "AND";
         };
+    }
+
+    protected WhereClause parseNot(Not n) {
+        String clause = null;
+        Object[] whereParams = null;
+
+        var c = n.clause();
+
+        var w = parse(c);
+        if (w != null && !w.isEmpty()) {
+            clause = w.whereClause();
+            whereParams = w.params();
+        }
+
+        //因为 and 和 or 已经保证了在两端拼接 括号, 所以 这里不用拼接 括号
+        clause = getNotKeyWord(n) + " " + clause;
+        return new WhereClause(clause, whereParams);
+    }
+
+    protected String getNotKeyWord(Not n) {
+        return "NOT";
     }
 
     protected WhereClause parseWhere(Where body) {
