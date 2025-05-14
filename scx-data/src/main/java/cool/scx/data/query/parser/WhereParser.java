@@ -70,7 +70,8 @@ public abstract class WhereParser {
             whereParams = w.params();
         }
 
-        //因为 and 和 or 已经保证了在两端拼接 括号, 所以 这里不用拼接 括号
+        //因为 and 和 or 已经保证了在两端拼接 括号, 所以 这里不用拼接 括号 
+        // todo 用户写的字符串表达式怎么办 加括号防御 ? 同理这样是不是表示 and 和 or 也需要为每个子句加括号 ? 还是统一在 字符串上加括号 ? 
         clause = getNotKeyWord(n) + " " + clause;
         return new WhereClause(clause, whereParams);
     }
