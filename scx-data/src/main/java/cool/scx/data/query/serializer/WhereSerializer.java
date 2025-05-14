@@ -1,9 +1,6 @@
 package cool.scx.data.query.serializer;
 
-import cool.scx.data.query.Logic;
-import cool.scx.data.query.Query;
-import cool.scx.data.query.Where;
-import cool.scx.data.query.WhereClause;
+import cool.scx.data.query.*;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -18,7 +15,9 @@ public class WhereSerializer {
         return switch (obj) {
             case String str -> serializeString(str);
             case WhereClause w -> serializeWhereClause(w);
-            case Logic l -> serializeLogic(l);
+            case And a -> serializeAnd(a);
+            case Or o -> serializeOr(o);
+            case Not n -> serializeNot(n);
             case Where whereBody -> serializeWhere(whereBody);
             case Query q -> serializeQuery(q);
             case Object[] o -> serializeAll(o);
@@ -38,11 +37,24 @@ public class WhereSerializer {
         return m;
     }
 
-    private Map<String, Object> serializeLogic(Logic l) {
+    private Map<String, Object> serializeAnd(And a) {
         var m = new LinkedHashMap<String, Object>();
-        m.put("@type", "Logic");
-        m.put("logicType", l.logicType());
-        m.put("clauses", serializeAll(l.clauses()));
+        m.put("@type", "And");
+        m.put("clauses", serializeAll(a.clauses()));
+        return m;
+    }
+
+    private Map<String, Object> serializeOr(Or o) {
+        var m = new LinkedHashMap<String, Object>();
+        m.put("@type", "Or");
+        m.put("clauses", serializeAll(o.clauses()));
+        return m;
+    }
+
+    private Map<String, Object> serializeNot(Not n) {
+        var m = new LinkedHashMap<String, Object>();
+        m.put("@type", "Not");
+        m.put("clause", serialize(n.clause()));
         return m;
     }
 

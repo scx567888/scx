@@ -38,12 +38,16 @@ public final class QueryBuilder {
         return new QueryImpl().limit(numberOfRows);
     }
 
-    public static Logic and(Object... clauses) {
-        return new Logic(LogicType.AND).add(clauses);
+    public static Junction and(Object... clauses) {
+        return new And().add(clauses);
     }
 
-    public static Logic or(Object... clauses) {
-        return new Logic(LogicType.OR).add(clauses);
+    public static Junction or(Object... clauses) {
+        return new Or().add(clauses);
+    }
+
+    public static Not not(Object clause) {
+        return new Not(clause);
     }
 
     /// 正序 : 也就是从小到大 (1,2,3,4,5,6)
