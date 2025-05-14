@@ -64,6 +64,10 @@ public abstract class WhereParser {
 
         var c = n.clause();
 
+        if (c == null) {
+            return null;
+        }
+
         var w = parse(c);
         if (w != null && !w.isEmpty()) {
             clause = w.whereClause();
