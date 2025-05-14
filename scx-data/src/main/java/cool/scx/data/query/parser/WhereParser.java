@@ -64,6 +64,7 @@ public abstract class WhereParser {
 
         var c = n.clause();
 
+        //没有子句 压根不处理
         if (c == null) {
             return null;
         }
