@@ -46,6 +46,11 @@ public abstract class WhereParser {
                 addAll(whereParams, w.params());
             }
         }
+
+        if (clauses.isEmpty()) {
+            return new WhereClause(null);
+        }
+
         var clause = String.join(" " + getJunctionKeyWord(j) + " ", clauses);
         //只有 子句数量 大于 1 时, 我们才在两端拼接 括号
         if (clauses.size() > 1) {
@@ -62,25 +67,16 @@ public abstract class WhereParser {
     }
 
     protected WhereClause parseNot(Not n) {
-        String clause = null;
-        Object[] whereParams = null;
 
-        var c = n.clause();
+        var w = parse(n.clause());
 
-        //没有子句 压根不处理
-        if (c == null) {
-            return null;
-        }
-
-        var w = parse(c);
         if (w != null && !w.isEmpty()) {
-            clause = w.whereClause();
-            whereParams = w.params();
+            //因为其余解析方法已经保证了在可能出现歧义的子句两端拼接了括号, 所以这里直接添加 NOT 即可
+            return new WhereClause(getNotKeyWord(n) + " " + w.whereClause(), w.params());
+        } else {
+            return new WhereClause(null);
         }
 
-        //因为其余解析方法已经保证了在可能出现歧义的子句两端拼接了括号, 所以这里添加 NOT 即可
-        clause = getNotKeyWord(n) + " " + clause;
-        return new WhereClause(clause, whereParams);
     }
 
     protected String getNotKeyWord(Not n) {
@@ -113,16 +109,21 @@ public abstract class WhereParser {
     }
 
     protected final WhereClause parseAll(Object[] objs) {
-        var whereClause = new StringBuilder();
+        var clauses = new ArrayList<String>();
         var whereParams = new ArrayList<>();
         for (var obj : objs) {
             var w = parse(obj);
             if (w != null && !w.isEmpty()) {
-                whereClause.append(w.whereClause());
+                clauses.add(w.whereClause());
                 addAll(whereParams, w.params());
             }
         }
-        return new WhereClause(whereClause.toString(), whereParams.toArray());
+
+        if (clauses.isEmpty()) {
+            return new WhereClause(null);
+        }
+
+        return new WhereClause(String.join("", clauses), whereParams.toArray());
     }
 
 }
