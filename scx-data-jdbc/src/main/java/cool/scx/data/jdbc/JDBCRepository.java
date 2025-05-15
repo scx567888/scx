@@ -72,7 +72,7 @@ public class JDBCRepository<Entity> implements Repository<Entity, Long> {
         //3, 创建 SQL 语句构造器
         var dialect = jdbcContext.dialect();
         var columnNameParser = new JDBCColumnNameParser(table, dialect);
-        var whereParser = new JDBCWhereParser(columnNameParser);
+        var whereParser = new JDBCWhereParser(columnNameParser, dialect);
         var groupByParser = new JDBCGroupByParser(columnNameParser);
         var orderByParser = new JDBCOrderByParser(columnNameParser);
         this.insertSQLBuilder = new InsertSQLBuilder(table, dialect, columnNameParser);
