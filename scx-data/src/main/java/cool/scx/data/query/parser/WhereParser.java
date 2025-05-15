@@ -83,27 +83,6 @@ public abstract class WhereParser {
         return "NOT";
     }
 
-    protected WhereClause parseWhere(Where body) {
-        return switch (body.whereType()) {
-            case EQ, NE, LT, LTE, GT, GTE,
-                 LIKE_REGEX, NOT_LIKE_REGEX -> parseEqual(body);
-            case LIKE, NOT_LIKE -> parseLike(body);
-            case IN, NOT_IN -> parseIn(body);
-            case BETWEEN, NOT_BETWEEN -> parseBetween(body);
-            case JSON_CONTAINS, JSON_OVERLAPS -> parseJsonContains(body);
-        };
-    }
-
-    protected abstract WhereClause parseEqual(Where where);
-
-    protected abstract WhereClause parseLike(Where where);
-
-    protected abstract WhereClause parseIn(Where where);
-
-    protected abstract WhereClause parseBetween(Where where);
-
-    protected abstract WhereClause parseJsonContains(Where where);
-
     protected WhereClause parseQuery(Query query) {
         return parse(query.getWhere());
     }
@@ -125,5 +104,58 @@ public abstract class WhereParser {
 
         return new WhereClause(String.join("", clauses), whereParams.toArray());
     }
+
+    protected WhereClause parseWhere(Where body) {
+        return switch (body.whereType()) {
+            case EQ -> parseEQ(body);
+            case NE -> parseNE(body);
+            case LT -> parseLT(body);
+            case LTE -> parseLTE(body);
+            case GT -> parseGT(body);
+            case GTE -> parseGTE(body);
+            case LIKE -> parseLIKE(body);
+            case NOT_LIKE -> parseNOT_LIKE(body);
+            case LIKE_REGEX -> parseLIKE_REGEX(body);
+            case NOT_LIKE_REGEX -> parseNOT_LIKE_REGEX(body);
+            case IN -> parseIN(body);
+            case NOT_IN -> parseNOT_IN(body);
+            case BETWEEN -> parseBETWEEN(body);
+            case NOT_BETWEEN -> parseNOT_BETWEEN(body);
+            case JSON_CONTAINS -> parseJSON_CONTAINS(body);
+            case JSON_OVERLAPS -> parseJSON_OVERLAPS(body);
+        };
+    }
+
+    protected abstract WhereClause parseEQ(Where where);
+
+    protected abstract WhereClause parseNE(Where where);
+
+    protected abstract WhereClause parseLT(Where where);
+
+    protected abstract WhereClause parseLTE(Where where);
+
+    protected abstract WhereClause parseGT(Where where);
+
+    protected abstract WhereClause parseGTE(Where where);
+
+    protected abstract WhereClause parseLIKE(Where where);
+
+    protected abstract WhereClause parseNOT_LIKE(Where where);
+
+    protected abstract WhereClause parseLIKE_REGEX(Where where);
+
+    protected abstract WhereClause parseNOT_LIKE_REGEX(Where where);
+
+    protected abstract WhereClause parseIN(Where where);
+
+    protected abstract WhereClause parseNOT_IN(Where where);
+
+    protected abstract WhereClause parseBETWEEN(Where where);
+
+    protected abstract WhereClause parseNOT_BETWEEN(Where where);
+
+    protected abstract WhereClause parseJSON_CONTAINS(Where where);
+
+    protected abstract WhereClause parseJSON_OVERLAPS(Where where);
 
 }
