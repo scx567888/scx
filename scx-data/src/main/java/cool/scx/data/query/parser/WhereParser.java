@@ -88,9 +88,7 @@ public abstract class WhereParser {
 
     protected WhereClause parseWhere(Where body) {
         return switch (body.whereType()) {
-            case EQ, NE,
-                 LT, LTE,
-                 GT, GTE,
+            case EQ, NE, LT, LTE, GT, GTE,
                  LIKE_REGEX, NOT_LIKE_REGEX -> parseEqual(body);
             case LIKE, NOT_LIKE -> parseLike(body);
             case IN, NOT_IN -> parseIn(body);
