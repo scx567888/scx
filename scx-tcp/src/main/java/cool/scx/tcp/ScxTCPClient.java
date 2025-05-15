@@ -2,7 +2,7 @@ package cool.scx.tcp;
 
 import java.net.SocketAddress;
 
-/// ScxTCPClient
+/// TCP 客户端
 ///
 /// @author scx567888
 /// @version 0.0.1

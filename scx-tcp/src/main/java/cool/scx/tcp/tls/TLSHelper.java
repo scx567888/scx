@@ -18,7 +18,6 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import static cool.scx.tcp.tls.PemHelper.convertPKCS1ToPKCS8;
 import static cool.scx.tcp.tls.PemHelper.parsePem;
 
-
 /// TLSHelper
 ///
 /// @author scx567888

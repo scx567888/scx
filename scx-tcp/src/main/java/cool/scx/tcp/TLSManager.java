@@ -5,7 +5,7 @@ import javax.net.ssl.SSLSocket;
 import java.util.List;
 import java.util.function.BiFunction;
 
-/// 经典 TLS Manager
+/// TLS 管理器
 ///
 /// @author scx567888
 /// @version 0.0.1

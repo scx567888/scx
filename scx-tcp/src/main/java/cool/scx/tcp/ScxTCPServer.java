@@ -4,7 +4,7 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.function.Consumer;
 
-/// ScxTCPServer
+/// TCP 服务器
 ///
 /// @author scx567888
 /// @version 0.0.1

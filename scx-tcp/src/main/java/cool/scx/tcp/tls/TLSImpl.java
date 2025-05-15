@@ -4,6 +4,10 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocketFactory;
 
+/// 默认实现
+///
+/// @author scx567888
+/// @version 0.0.1
 class TLSImpl implements TLS {
 
     private final SSLContext sslContext;
