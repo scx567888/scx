@@ -29,6 +29,11 @@ class TestWhereParser extends WhereParser {
 
     @Override
     public WhereClause parseEqual(Where w) {
+        if (w.value1() == null) {
+            if (w.info().skipIfNull()) {
+                return new WhereClause(null);
+            }
+        }
         return new WhereClause(w.name() + " " + getWhereKeyWord(w.whereType()) + " ?", w.value1());
     }
 

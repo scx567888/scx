@@ -52,7 +52,7 @@ public class JDBCWhereParser extends WhereParser {
     public WhereClause parseEqual(Where w) {
         if (w.value1() == null) {
             if (w.info().skipIfNull()) {
-                return new WhereClause("");
+                return new WhereClause(null);
             } else {
                 return parseIsNull(w);
             }
@@ -74,7 +74,7 @@ public class JDBCWhereParser extends WhereParser {
     public WhereClause parseLike(Where w) {
         if (w.value1() == null) {
             if (w.info().skipIfNull()) {
-                return new WhereClause("");
+                return new WhereClause(null);
             } else {
                 throw new WrongWhereTypeParamSizeException(w.name(), w.whereType(), 1);
             }
@@ -95,7 +95,7 @@ public class JDBCWhereParser extends WhereParser {
     public WhereClause parseIn(Where w) {
         if (w.value1() == null) {
             if (w.info().skipIfNull()) {
-                return new WhereClause("");
+                return new WhereClause(null);
             } else {
                 throw new WrongWhereTypeParamSizeException(w.name(), w.whereType(), 1);
             }
@@ -117,7 +117,7 @@ public class JDBCWhereParser extends WhereParser {
         //0, 先处理空数组
         if (v.length == 0) {
             if (w.info().skipIfEmptyList()) {
-                return new WhereClause("");
+                return new WhereClause(null);
             } else {
                 return switch (w.whereType()) {
                     case IN -> new WhereClause(dialect.falseExpression());
@@ -167,7 +167,7 @@ public class JDBCWhereParser extends WhereParser {
     public WhereClause parseBetween(Where w) {
         if (w.value1() == null || w.value2() == null) {
             if (w.info().skipIfNull()) {
-                return new WhereClause("");
+                return new WhereClause(null);
             } else {
                 throw new WrongWhereTypeParamSizeException(w.name(), w.whereType(), 2);
             }
@@ -202,7 +202,7 @@ public class JDBCWhereParser extends WhereParser {
     public WhereClause parseJsonContains(Where w) {
         if (w.value1() == null) {
             if (w.info().skipIfNull()) {
-                return new WhereClause("");
+                return new WhereClause(null);
             } else {
                 throw new WrongWhereTypeParamSizeException(w.name(), w.whereType(), 1);
             }
