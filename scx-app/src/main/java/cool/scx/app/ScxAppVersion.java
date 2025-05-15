@@ -9,7 +9,7 @@ import cool.scx.ansi.Ansi;
 public class ScxAppVersion {
 
     /// SCX 版本号
-    public static final String SCX_VERSION = "3.7.1";
+    public static final String SCX_VERSION = "3.7.2";
 
     /// 在控制台上打印 banner
     static void printBanner() {
