@@ -3,7 +3,7 @@ package cool.scx.websocket.routing;
 import cool.scx.http.routing.TypeMatcher;
 import cool.scx.websocket.ScxServerWebSocketHandshakeRequest;
 
-/// ScxHttp 路由匹配器 WebSocket 实现 
+/// ScxHttp 路由匹配器 WebSocket 实现
 ///
 /// @author scx567888
 /// @version 0.0.1
