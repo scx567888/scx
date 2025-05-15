@@ -69,8 +69,8 @@ public class WhereSerializer {
         return m;
     }
 
-    private Object[] serializeQuery(Query q) {
-        return serializeAll(q.getWhere());
+    private Object serializeQuery(Query q) {
+        return serialize(q.getWhere());
     }
 
     private Object[] serializeAll(Object[] objs) {

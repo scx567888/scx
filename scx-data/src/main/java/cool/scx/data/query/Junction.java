@@ -44,35 +44,27 @@ public abstract sealed class Junction extends QueryLike<Junction> permits And, O
     }
 
     public final Junction eq(String fieldName, Object value, QueryOption... options) {
-        return add(new Where(fieldName, EQUAL, value, null, options));
+        return add(new Where(fieldName, EQ, value, null, options));
     }
 
     public final Junction ne(String fieldName, Object value, QueryOption... options) {
-        return add(new Where(fieldName, NOT_EQUAL, value, null, options));
+        return add(new Where(fieldName, NE, value, null, options));
     }
 
     public final Junction lt(String fieldName, Object value, QueryOption... options) {
-        return add(new Where(fieldName, LESS_THAN, value, null, options));
+        return add(new Where(fieldName, LT, value, null, options));
     }
 
-    public final Junction le(String fieldName, Object value, QueryOption... options) {
-        return add(new Where(fieldName, LESS_THAN_OR_EQUAL, value, null, options));
+    public final Junction lte(String fieldName, Object value, QueryOption... options) {
+        return add(new Where(fieldName, LTE, value, null, options));
     }
 
     public final Junction gt(String fieldName, Object value, QueryOption... options) {
-        return add(new Where(fieldName, GREATER_THAN, value, null, options));
+        return add(new Where(fieldName, GT, value, null, options));
     }
 
-    public final Junction ge(String fieldName, Object value, QueryOption... options) {
-        return add(new Where(fieldName, GREATER_THAN_OR_EQUAL, value, null, options));
-    }
-
-    public final Junction isNull(String fieldName, QueryOption... options) {
-        return add(new Where(fieldName, IS_NULL, null, null, options));
-    }
-
-    public final Junction isNotNull(String fieldName, QueryOption... options) {
-        return add(new Where(fieldName, IS_NOT_NULL, null, null, options));
+    public final Junction gte(String fieldName, Object value, QueryOption... options) {
+        return add(new Where(fieldName, GTE, value, null, options));
     }
 
     public final Junction like(String fieldName, Object value, QueryOption... options) {

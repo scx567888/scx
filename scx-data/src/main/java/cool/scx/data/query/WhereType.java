@@ -6,23 +6,52 @@ package cool.scx.data.query;
 /// @version 0.0.1
 public enum WhereType {
 
-    EQUAL,
-    NOT_EQUAL,
-    LESS_THAN,
-    LESS_THAN_OR_EQUAL,
-    GREATER_THAN,
-    GREATER_THAN_OR_EQUAL,
-    IS_NULL,
-    IS_NOT_NULL,
+    /// 等于 == (支持 null 比较)
+    EQ,
+
+    /// 不等于 != (支持 null 比较)
+    NE,
+
+    /// 小于 <
+    LT,
+
+    /// 小于等于 <=
+    LTE,
+
+    /// 大于 >
+    GT,
+
+    /// 大于等于 >=
+    GTE,
+
+    /// 双端模糊匹配
     LIKE,
+
+    /// NOT 双端模糊匹配
     NOT_LIKE,
+
+    /// 正则表达式匹配
     LIKE_REGEX,
+
+    /// NOT 正则表达式匹配
     NOT_LIKE_REGEX,
+
+    /// 在集合内 (集合元素中 null 也是合法匹配项, 空集合则表示不匹配任何项)
     IN,
+
+    /// 不在集合内 (集合元素中 null 也是合法匹配项, 空集合则表示不匹配任何项)
     NOT_IN,
+
+    /// 在范围内 (low <= field <= high)
     BETWEEN,
+
+    /// 不在范围内 (field < low 或 field > high)
     NOT_BETWEEN,
+
+    /// JSON 包含某子结构, 针对 JSON 对象或数组的子集匹配
     JSON_CONTAINS,
+
+    /// JSON 数组之间有交集
     JSON_OVERLAPS
 
 }

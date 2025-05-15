@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 import static java.util.Collections.addAll;
 
-/// OrderByParser
+/// OrderByParser (只是一个帮助类, 实现可以选择性使用)
 ///
 /// @author scx567888
 /// @version 0.0.1
@@ -19,7 +19,7 @@ public abstract class OrderByParser {
             case OrderBy o -> parseOrderBy(o);
             case Query q -> parseQuery(q);
             case Object[] o -> parseAll(o);
-            default -> null;
+            default -> throw new IllegalArgumentException("Unsupported object type: " + obj.getClass());
         };
     }
 

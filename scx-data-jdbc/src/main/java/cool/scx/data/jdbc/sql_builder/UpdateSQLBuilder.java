@@ -54,7 +54,7 @@ public class UpdateSQLBuilder {
     }
 
     public SQL buildUpdateSQL(Object entity, FieldPolicy updateFilter, Query query) {
-        if (query.getWhere().length == 0) {
+        if (query.getWhere() == null) {
             throw new IllegalArgumentException("更新数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
         }
         //1, 过滤需要更新的列

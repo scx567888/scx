@@ -208,4 +208,12 @@ public interface Dialect {
         return s.toString();
     }
 
+    default String falseExpression() {
+        return "FALSE";
+    }
+
+    default String trueExpression() {
+        return "TRUE";
+    }
+
 }

@@ -47,7 +47,7 @@ public class BeanFactoryTest9 {
     public static class W {
 
         public W(A a, B b, C c) {
-            
+
         }
     }
 

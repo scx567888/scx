@@ -19,8 +19,8 @@ public abstract class QueryLike<QL extends QueryLike<QL>> implements Query {
     }
 
     @Override
-    public QL where(Object... whereClauses) {
-        query().where(whereClauses);
+    public QL where(Object where) {
+        query().where(where);
         return (QL) this;
     }
 
@@ -37,19 +37,19 @@ public abstract class QueryLike<QL extends QueryLike<QL>> implements Query {
     }
 
     @Override
-    public QL offset(long limitOffset) {
-        query().offset(limitOffset);
+    public QL offset(long offset) {
+        query().offset(offset);
         return (QL) this;
     }
 
     @Override
-    public QL limit(long numberOfRows) {
-        query().limit(numberOfRows);
+    public QL limit(long limit) {
+        query().limit(limit);
         return (QL) this;
     }
 
     @Override
-    public Object[] getWhere() {
+    public Object getWhere() {
         return query().getWhere();
     }
 
@@ -104,12 +104,6 @@ public abstract class QueryLike<QL extends QueryLike<QL>> implements Query {
     }
 
     @Override
-    public QL addWhere(Object... whereClauses) {
-        query().addWhere(whereClauses);
-        return (QL) this;
-    }
-
-    @Override
     public QL addGroupBy(Object... groupByClauses) {
         query().addGroupBy(groupByClauses);
         return (QL) this;
@@ -118,12 +112,6 @@ public abstract class QueryLike<QL extends QueryLike<QL>> implements Query {
     @Override
     public QL addOrderBy(Object... orderByClauses) {
         query().addOrderBy(orderByClauses);
-        return (QL) this;
-    }
-
-    @Override
-    public QL removeWhereIf(Predicate<Object> filter) {
-        query().removeWhereIf(filter);
         return (QL) this;
     }
 

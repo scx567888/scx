@@ -134,7 +134,7 @@ public class TestModule extends ScxAppModule {
 
             System.err.println("查询所有数据条数 !!! : " + carService.find().size());
             System.err.println("查询所有 id 大于 200 条数 !!! : " + carService.find(gt("id", 200)).size());
-            System.err.println("查询所有 name 为空 条数 !!! : " + carService.find(isNull("name")).size());
+            System.err.println("查询所有 name 为空 条数 !!! : " + carService.find(eq("name", null)).size());
             System.err.println("查询所有 车主为 Jack 的条数 !!! : " + carService.find(eq("owner.name", "Jack", USE_JSON_EXTRACT)).size());
             System.err.println("查询所有 车主年龄大于 18 的条数 !!! : " + carService.find(gt("owner.age", 18, USE_JSON_EXTRACT)).size());
             System.err.println("查询所有 拥有 fast 和 big 标签的条数 !!! : " + carService.find(jsonContains("tags", "fast,big")).size());
@@ -216,9 +216,9 @@ public class TestModule extends ScxAppModule {
         var logger = System.getLogger(TestModule.class.getName());
         logger.log(ERROR, "根据所有 person 表中年龄小于 100 的 carID 查询 car 表中的数据 总条数 {0}", cars.size());
         //根据所有 person 表中年龄小于 100 的 carID 查询 car 表中的数据
-        var cars1 = carService.find(query().where("id IN ",
+        var cars1 = carService.find(query().where(in("id",
                 personService.buildListSQL(query().where(lt("age", 100)), include("carID"))
-        ));
+        )));
         logger.log(ERROR, "第二种方式 (whereSQL) : 根据所有 person 表中年龄小于 100 的 carID 查询 car 表中的数据 总条数 {0}", cars1.size());
     }
 

@@ -60,24 +60,24 @@ public final class QueryBuilder {
         return new OrderBy(name, DESC, options);
     }
 
-    /// 相等
+    /// 相等 (支持 null 比较)
     ///
     /// @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
     /// @param value     比较值
     /// @param options   配置
     /// @return this 方便链式调用
     public static Where eq(String fieldName, Object value, QueryOption... options) {
-        return new Where(fieldName, EQUAL, value, null, options);
+        return new Where(fieldName, EQ, value, null, options);
     }
 
-    /// 不相等
+    /// 不相等 (支持 null 比较)
     ///
     /// @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
     /// @param value     比较值
     /// @param options   配置
     /// @return this 方便链式调用
     public static Where ne(String fieldName, Object value, QueryOption... options) {
-        return new Where(fieldName, NOT_EQUAL, value, null, options);
+        return new Where(fieldName, NE, value, null, options);
     }
 
     /// 小于
@@ -87,7 +87,7 @@ public final class QueryBuilder {
     /// @param options   配置
     /// @return this 方便链式调用
     public static Where lt(String fieldName, Object value, QueryOption... options) {
-        return new Where(fieldName, LESS_THAN, value, null, options);
+        return new Where(fieldName, LT, value, null, options);
     }
 
     /// 小于等于
@@ -96,8 +96,8 @@ public final class QueryBuilder {
     /// @param value     比较值
     /// @param options   配置
     /// @return this 方便链式调用
-    public static Where le(String fieldName, Object value, QueryOption... options) {
-        return new Where(fieldName, LESS_THAN_OR_EQUAL, value, null, options);
+    public static Where lte(String fieldName, Object value, QueryOption... options) {
+        return new Where(fieldName, LTE, value, null, options);
     }
 
     /// 大于
@@ -107,7 +107,7 @@ public final class QueryBuilder {
     /// @param options   配置
     /// @return this 方便链式调用
     public static Where gt(String fieldName, Object value, QueryOption... options) {
-        return new Where(fieldName, GREATER_THAN, value, null, options);
+        return new Where(fieldName, GT, value, null, options);
     }
 
     /// 大于等于
@@ -116,29 +116,11 @@ public final class QueryBuilder {
     /// @param value     比较值
     /// @param options   配置
     /// @return this 方便链式调用
-    public static Where ge(String fieldName, Object value, QueryOption... options) {
-        return new Where(fieldName, GREATER_THAN_OR_EQUAL, value, null, options);
+    public static Where gte(String fieldName, Object value, QueryOption... options) {
+        return new Where(fieldName, GTE, value, null, options);
     }
 
-    /// 为空
-    ///
-    /// @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
-    /// @param options   配置
-    /// @return this 方便链式调用
-    public static Where isNull(String fieldName, QueryOption... options) {
-        return new Where(fieldName, IS_NULL, null, null, options);
-    }
-
-    /// 不为空
-    ///
-    /// @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
-    /// @param options   配置
-    /// @return this 方便链式调用
-    public static Where isNotNull(String fieldName, QueryOption... options) {
-        return new Where(fieldName, IS_NOT_NULL, null, null, options);
-    }
-
-    /// like : 默认会在首尾添加 %
+    /// 双端模糊匹配
     ///
     /// @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
     /// @param value     参数 默认会在首尾添加 %
@@ -148,7 +130,7 @@ public final class QueryBuilder {
         return new Where(fieldName, LIKE, value, null, options);
     }
 
-    /// not like : 默认会在首尾添加 %
+    /// NOT 双端模糊匹配
     ///
     /// @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
     /// @param value     默认会在首尾添加 %
@@ -158,7 +140,7 @@ public final class QueryBuilder {
         return new Where(fieldName, NOT_LIKE, value, null, options);
     }
 
-    /// like : 根据 SQL 表达式进行判断
+    /// 正则表达式匹配
     ///
     /// @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
     /// @param value     SQL 表达式
@@ -168,7 +150,7 @@ public final class QueryBuilder {
         return new Where(fieldName, LIKE_REGEX, value, null, options);
     }
 
-    /// not like : 根据 SQL 表达式进行判断
+    /// NOT 正则表达式匹配
     ///
     /// @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
     /// @param value     SQL 表达式
@@ -178,7 +160,7 @@ public final class QueryBuilder {
         return new Where(fieldName, NOT_LIKE_REGEX, value, null, options);
     }
 
-    /// 在其中
+    /// 在集合内 (集合元素中 null 也是合法匹配项, 空集合则表示不匹配任何项)
     ///
     /// @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
     /// @param value     比较值
@@ -188,7 +170,7 @@ public final class QueryBuilder {
         return new Where(fieldName, IN, value, null, options);
     }
 
-    /// 不在其中
+    /// 不在集合内 (集合元素中 null 也是合法匹配项, 空集合则表示不匹配任何项)
     ///
     /// @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
     /// @param value     比较值
@@ -198,7 +180,7 @@ public final class QueryBuilder {
         return new Where(fieldName, NOT_IN, value, null, options);
     }
 
-    /// 两者之间
+    /// 在范围内 (low <= field <= high)
     ///
     /// @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
     /// @param value1    比较值1
@@ -209,7 +191,7 @@ public final class QueryBuilder {
         return new Where(fieldName, BETWEEN, value1, value2, options);
     }
 
-    /// 不处于两者之间
+    /// 不在范围内 (field < low 或 field > high)
     ///
     /// @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
     /// @param value1    比较值1
@@ -220,7 +202,7 @@ public final class QueryBuilder {
         return new Where(fieldName, NOT_BETWEEN, value1, value2, options);
     }
 
-    /// 包含  : 一般用于 JSON 格式字段 区别于 in
+    /// JSON 包含某子结构, 针对 JSON 对象或数组的子集匹配
     ///
     /// @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
     /// @param value     比较值
@@ -230,6 +212,12 @@ public final class QueryBuilder {
         return new Where(fieldName, JSON_CONTAINS, value, null, options);
     }
 
+    /// JSON 数组之间有交集
+    ///
+    /// @param fieldName 名称 (注意 : 默认为字段名称 , 不是数据库名称)
+    /// @param value     比较值
+    /// @param options   配置
+    /// @return this 方便链式调用
     public static Where jsonOverlaps(String fieldName, Object value, QueryOption... options) {
         return new Where(fieldName, JSON_OVERLAPS, value, null, options);
     }

@@ -10,14 +10,14 @@ import java.util.function.Predicate;
 /// @version 0.0.1
 public class QueryImpl implements Query {
 
-    private final List<Object> where;
+    private Object where;
     private final List<Object> groupBy;
     private final List<Object> orderBy;
     private Long offset;
     private Long limit;
 
     public QueryImpl() {
-        this.where = new ArrayList<>();
+        this.where = null;
         this.groupBy = new ArrayList<>();
         this.orderBy = new ArrayList<>();
         this.offset = null;
@@ -26,7 +26,7 @@ public class QueryImpl implements Query {
 
     public QueryImpl(Query oldQuery) {
         this();
-        addWhere(oldQuery.getWhere());
+        where(oldQuery.getWhere());
         addGroupBy(oldQuery.getGroupBy());
         addOrderBy(oldQuery.getOrderBy());
         if (oldQuery.getOffset() != null) {
@@ -38,9 +38,8 @@ public class QueryImpl implements Query {
     }
 
     @Override
-    public QueryImpl where(Object... whereClauses) {
-        clearWhere();
-        addWhere(whereClauses);
+    public QueryImpl where(Object where) {
+        this.where = where;
         return this;
     }
 
@@ -77,8 +76,8 @@ public class QueryImpl implements Query {
     }
 
     @Override
-    public Object[] getWhere() {
-        return where.toArray();
+    public Object getWhere() {
+        return where;
     }
 
     @Override
@@ -103,7 +102,7 @@ public class QueryImpl implements Query {
 
     @Override
     public QueryImpl clearWhere() {
-        where.clear();
+        where = null;
         return this;
     }
 
@@ -128,24 +127,6 @@ public class QueryImpl implements Query {
     @Override
     public QueryImpl clearLimit() {
         limit = null;
-        return this;
-    }
-
-    @Override
-    public QueryImpl addWhere(Object... whereClauses) {
-        for (var whereClause : whereClauses) {
-            if (whereClause == null) {
-                continue;
-            }
-            if (whereClause instanceof Object[] objs) {
-                addWhere(objs);
-                continue;
-            }
-            if (whereClause instanceof Where w && w.info().replace()) {
-                where.removeIf(c -> c instanceof Where w1 && w1.name().equals(w.name()));
-            }
-            where.add(whereClause);
-        }
         return this;
     }
 
@@ -182,12 +163,6 @@ public class QueryImpl implements Query {
             }
             orderBy.add(orderByClause);
         }
-        return this;
-    }
-
-    @Override
-    public Query removeWhereIf(Predicate<Object> filter) {
-        where.removeIf(filter);
         return this;
     }
 
