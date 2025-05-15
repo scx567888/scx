@@ -3,6 +3,9 @@ package cool.scx.bean.provider;
 import cool.scx.bean.BeanFactory;
 
 /// Bean 提供器
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface BeanProvider {
 
     /// 获取 Bean

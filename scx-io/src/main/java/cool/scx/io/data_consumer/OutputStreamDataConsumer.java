@@ -4,6 +4,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
 
+/// 写入到输出流中
+///
+/// @author scx567888
+/// @version 0.0.1
 public class OutputStreamDataConsumer implements DataConsumer {
 
     private final OutputStream out;

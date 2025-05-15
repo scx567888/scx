@@ -8,9 +8,9 @@ import java.util.List;
 
 import static cool.scx.bean.dependency.DependencyContext.Type.CONSTRUCTOR;
 
-/// 循环依赖检测器。
+/// 循环依赖检测器, 负责检测并处理循环依赖链条。
 ///
-/// 本类负责检测并处理循环依赖链条。为了确保循环依赖的检测正确性，设计上假设：
+/// 为了确保循环依赖的检测正确性，设计上假设：
 ///
 /// 【DependencyContext 幂等性假设】
 /// - 在同一条依赖链（CURRENT_DEPENDENCY_CHAIN）内，
@@ -25,8 +25,10 @@ import static cool.scx.bean.dependency.DependencyContext.Type.CONSTRUCTOR;
 ///
 /// 在此假设下，我们可以简单地从创建链中提取循环依赖的子链，而无需手动添加当前依赖的 context。
 ///
-/// ⚠️ 请注意，未来引入更复杂的功能（如动态 Scope、并发构建等）时，
-/// 需要重新评估此假设是否仍然有效。
+/// ⚠️ 请注意，未来引入更复杂的功能（如动态 Scope、并发构建等）时, 需要重新评估此假设是否仍然有效。
+///
+/// @author scx567888
+/// @version 0.0.1
 public class CircularDependencyChecker {
 
     /// 保存依赖链路

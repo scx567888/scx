@@ -3,6 +3,9 @@ package cool.scx.io.io_stream;
 import java.io.IOException;
 
 /// 什么都不处理的 输出流
+///
+/// @author scx567888
+/// @version 0.0.1
 public class NullCheckedOutputStream extends CheckedOutputStream {
 
     @Override

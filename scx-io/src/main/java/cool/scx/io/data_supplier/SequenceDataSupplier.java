@@ -7,6 +7,9 @@ import java.util.Iterator;
 import java.util.List;
 
 /// 可以一次性将多个 DataSupplier 组合成一个
+///
+/// @author scx567888
+/// @version 0.0.1
 public class SequenceDataSupplier implements DataSupplier {
 
     private final Iterator<DataSupplier> iterator;
