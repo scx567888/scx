@@ -134,7 +134,7 @@ public class TestModule extends ScxAppModule {
 
             System.err.println("查询所有数据条数 !!! : " + carService.find().size());
             System.err.println("查询所有 id 大于 200 条数 !!! : " + carService.find(gt("id", 200)).size());
-            System.err.println("查询所有 name 为空 条数 !!! : " + carService.find(eq("name",null)).size());
+            System.err.println("查询所有 name 为空 条数 !!! : " + carService.find(eq("name", null)).size());
             System.err.println("查询所有 车主为 Jack 的条数 !!! : " + carService.find(eq("owner.name", "Jack", USE_JSON_EXTRACT)).size());
             System.err.println("查询所有 车主年龄大于 18 的条数 !!! : " + carService.find(gt("owner.age", 18, USE_JSON_EXTRACT)).size());
             System.err.println("查询所有 拥有 fast 和 big 标签的条数 !!! : " + carService.find(jsonContains("tags", "fast,big")).size());
