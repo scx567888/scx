@@ -1,6 +1,7 @@
 package cool.scx.io.data_consumer;
 
 /// 直接跳过
+///
 /// @author scx567888
 /// @version 0.0.1
 public class SkipDataConsumer implements DataConsumer {

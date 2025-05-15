@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 /// ByteArrayDataSupplier
+///
 /// @author scx567888
 /// @version 0.0.1
 public class ByteArrayDataSupplier implements DataSupplier {

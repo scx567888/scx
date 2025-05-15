@@ -8,6 +8,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.ReadableByteChannel;
 
 /// ByteChannelDataSupplier
+///
 /// @author scx567888
 /// @version 0.0.1
 public class ByteChannelDataSupplier implements DataSupplier {

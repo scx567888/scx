@@ -3,6 +3,7 @@ package cool.scx.io.data_consumer;
 import cool.scx.io.data_node.DataNode;
 
 /// 接受为单个 DataNode
+///
 /// @author scx567888
 /// @version 0.0.1
 public class DataNodeDataConsumer implements DataConsumer {

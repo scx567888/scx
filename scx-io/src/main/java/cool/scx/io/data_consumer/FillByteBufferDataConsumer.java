@@ -3,6 +3,7 @@ package cool.scx.io.data_consumer;
 import java.nio.ByteBuffer;
 
 /// 填充方式
+///
 /// @author scx567888
 /// @version 0.0.1
 public class FillByteBufferDataConsumer implements DataConsumer {
