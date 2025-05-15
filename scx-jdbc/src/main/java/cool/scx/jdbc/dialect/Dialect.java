@@ -212,4 +212,8 @@ public interface Dialect {
         return "FALSE";
     }
 
+    default String trueExpression() {
+        return "TRUE";
+    }
+
 }
