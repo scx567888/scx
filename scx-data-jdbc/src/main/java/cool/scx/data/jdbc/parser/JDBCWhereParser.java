@@ -36,25 +36,28 @@ public class JDBCWhereParser extends WhereParser {
         this.dialect = dialect;
     }
 
-    public WhereClause parseIsNull(Where w) {
-
-        var columnName = columnNameParser.parseColumnName(w);
-
-        return switch (w.whereType()) {
-            case EQ -> new WhereClause(columnName + " IS NULL");
-            case NE -> new WhereClause(columnName + " IS NOT NULL");
-            default -> throw new IllegalArgumentException("Unexpected value: " + w.whereType());
-        };
-
+    @Override
+    public WhereClause parse(Object obj) {
+        if (obj instanceof SQL sql) {
+            return parseSQL(sql);
+        }
+        return super.parse(obj);
     }
 
     @Override
-    public WhereClause parseEqual(Where w) {
+    protected WhereClause parseEQ(Where w) {
+
         if (w.value1() == null) {
             if (w.info().skipIfNull()) {
                 return new WhereClause(null);
             } else {
-                return parseIsNull(w);
+                var columnName = columnNameParser.parseColumnName(w);
+
+                return switch (w.whereType()) {
+                    case EQ -> new WhereClause(columnName + " IS NULL");
+                    case NE -> new WhereClause(columnName + " IS NOT NULL");
+                    default -> throw new IllegalArgumentException("Unexpected value: " + w.whereType());
+                };
             }
         }
 
@@ -71,7 +74,45 @@ public class JDBCWhereParser extends WhereParser {
     }
 
     @Override
-    public WhereClause parseLike(Where w) {
+    protected WhereClause parseNE(Where w) {
+        return parseEQ(w);
+    }
+
+    @Override
+    protected WhereClause parseLT(Where w) {
+        if (w.value1() == null) {
+            if (w.info().skipIfNull()) {
+                return new WhereClause(null);
+            } else {
+                throw new WrongWhereTypeParamSizeException(w.name(), w.whereType(), 1);
+            }
+        }
+
+        //针对 参数类型是 SQL 的情况进行特殊处理 下同
+        if (w.value1() instanceof SQL a) {
+            return new WhereClause(columnNameParser.parseColumnName(w) + " " + getWhereKeyWord(w) + " (" + a.sql() + ")", a.params());
+        }
+
+        return new WhereClause(columnNameParser.parseColumnName(w) + " " + getWhereKeyWord(w) + " ?", w.value1());
+    }
+
+    @Override
+    protected WhereClause parseLTE(Where where) {
+        return parseLT(where);
+    }
+
+    @Override
+    protected WhereClause parseGT(Where where) {
+        return parseLT(where);
+    }
+
+    @Override
+    protected WhereClause parseGTE(Where where) {
+        return parseLT(where);
+    }
+
+    @Override
+    protected WhereClause parseLIKE(Where w) {
         if (w.value1() == null) {
             if (w.info().skipIfNull()) {
                 return new WhereClause(null);
@@ -88,11 +129,25 @@ public class JDBCWhereParser extends WhereParser {
         }
 
         return new WhereClause(columnDefinition + "CONCAT('%',?,'%')", w.value1());
-
     }
 
     @Override
-    public WhereClause parseIn(Where w) {
+    protected WhereClause parseNOT_LIKE(Where where) {
+        return parseLIKE(where);
+    }
+
+    @Override
+    protected WhereClause parseLIKE_REGEX(Where where) {
+        return parseLT(where);
+    }
+
+    @Override
+    protected WhereClause parseNOT_LIKE_REGEX(Where where) {
+        return parseLT(where);
+    }
+
+    @Override
+    public WhereClause parseIN(Where w) {
         if (w.value1() == null) {
             if (w.info().skipIfNull()) {
                 return new WhereClause(null);
@@ -164,7 +219,12 @@ public class JDBCWhereParser extends WhereParser {
     }
 
     @Override
-    public WhereClause parseBetween(Where w) {
+    protected WhereClause parseNOT_IN(Where where) {
+        return parseIN(where);
+    }
+
+    @Override
+    protected WhereClause parseBETWEEN(Where w) {
         if (w.value1() == null || w.value2() == null) {
             if (w.info().skipIfNull()) {
                 return new WhereClause(null);
@@ -199,7 +259,12 @@ public class JDBCWhereParser extends WhereParser {
     }
 
     @Override
-    public WhereClause parseJsonContains(Where w) {
+    protected WhereClause parseNOT_BETWEEN(Where where) {
+        return parseBETWEEN(where);
+    }
+
+    @Override
+    protected WhereClause parseJSON_CONTAINS(Where w) {
         if (w.value1() == null) {
             if (w.info().skipIfNull()) {
                 return new WhereClause(null);
@@ -239,11 +304,8 @@ public class JDBCWhereParser extends WhereParser {
     }
 
     @Override
-    public WhereClause parse(Object obj) {
-        if (obj instanceof SQL sql) {
-            return parseSQL(sql);
-        }
-        return super.parse(obj);
+    protected WhereClause parseJSON_OVERLAPS(Where where) {
+        return parseJSON_CONTAINS(where);
     }
 
     private WhereClause parseSQL(SQL sql) {

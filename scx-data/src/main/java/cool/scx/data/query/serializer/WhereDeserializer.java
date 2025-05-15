@@ -44,7 +44,7 @@ public class WhereDeserializer {
     }
 
     private Not deserializeNot(JsonNode v) {
-        var clause = deserializeAll(v.get("clause"));
+        var clause = deserialize(v.get("clause"));
         return new Not(clause);
     }
 
