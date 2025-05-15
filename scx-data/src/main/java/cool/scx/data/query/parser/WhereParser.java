@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 import static java.util.Collections.addAll;
 
-/// WhereParser
+/// WhereParser (只是一个帮助类, 实现可以选择性使用)
 ///
 /// @author scx567888
 /// @version 0.0.1
@@ -26,7 +26,9 @@ public abstract class WhereParser {
     }
 
     protected final WhereClause parseString(String s) {
-        return new WhereClause(s);
+        // 我们无法确定用户输入的内容 为了安全起见 我们为这种自定义查询 两端拼接 ()
+        // 保证在和其他子句拼接的时候不产生歧义
+        return new WhereClause("(" + s + ")");
     }
 
     protected WhereClause parseWhereClause(WhereClause w) {
@@ -75,8 +77,7 @@ public abstract class WhereParser {
             whereParams = w.params();
         }
 
-        //因为 and 和 or 已经保证了在两端拼接 括号, 所以 这里不用拼接 括号 
-        // todo 用户写的字符串表达式怎么办 加括号防御 ? 同理这样是不是表示 and 和 or 也需要为每个子句加括号 ? 还是统一在 字符串上加括号 ? 
+        //因为其余解析方法已经保证了在可能出现歧义的子句两端拼接了括号, 所以这里添加 NOT 即可
         clause = getNotKeyWord(n) + " " + clause;
         return new WhereClause(clause, whereParams);
     }
@@ -87,10 +88,9 @@ public abstract class WhereParser {
 
     protected WhereClause parseWhere(Where body) {
         return switch (body.whereType()) {
-            case IS_NULL, IS_NOT_NULL -> parseIsNull(body);
-            case EQUAL, NOT_EQUAL,
-                 LESS_THAN, LESS_THAN_OR_EQUAL,
-                 GREATER_THAN, GREATER_THAN_OR_EQUAL,
+            case EQ, NE,
+                 LT, LTE,
+                 GT, GTE,
                  LIKE_REGEX, NOT_LIKE_REGEX -> parseEqual(body);
             case LIKE, NOT_LIKE -> parseLike(body);
             case IN, NOT_IN -> parseIn(body);
@@ -98,8 +98,6 @@ public abstract class WhereParser {
             case JSON_CONTAINS, JSON_OVERLAPS -> parseJsonContains(body);
         };
     }
-
-    protected abstract WhereClause parseIsNull(Where where);
 
     protected abstract WhereClause parseEqual(Where where);
 
@@ -126,27 +124,6 @@ public abstract class WhereParser {
             }
         }
         return new WhereClause(whereClause.toString(), whereParams.toArray());
-    }
-
-    public String getWhereKeyWord(WhereType whereType) {
-        return switch (whereType) {
-            case IS_NULL -> "IS NULL";
-            case IS_NOT_NULL -> "IS NOT NULL";
-            case EQUAL -> "=";
-            case NOT_EQUAL -> "<>";
-            case LESS_THAN -> "<";
-            case LESS_THAN_OR_EQUAL -> "<=";
-            case GREATER_THAN -> ">";
-            case GREATER_THAN_OR_EQUAL -> ">=";
-            case LIKE, LIKE_REGEX -> "LIKE";
-            case NOT_LIKE, NOT_LIKE_REGEX -> "NOT LIKE";
-            case IN -> "IN";
-            case NOT_IN -> "NOT IN";
-            case BETWEEN -> "BETWEEN";
-            case NOT_BETWEEN -> "NOT BETWEEN";
-            case JSON_CONTAINS -> "JSON_CONTAINS";
-            case JSON_OVERLAPS -> "JSON_OVERLAPS";
-        };
     }
 
 }
