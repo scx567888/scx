@@ -8,7 +8,7 @@ import java.util.function.Predicate;
 /// @version 0.0.1
 public interface Query {
 
-    Query where(Object... whereClauses);
+    Query where(Object whereClause);
 
     Query groupBy(Object... groupByClauses);
 
@@ -18,7 +18,7 @@ public interface Query {
 
     Query limit(long numberOfRows);
 
-    Object[] getWhere();
+    Object getWhere();
 
     Object[] getGroupBy();
 
@@ -38,13 +38,9 @@ public interface Query {
 
     Query clearLimit();
 
-    Query addWhere(Object... whereClauses);
-
     Query addGroupBy(Object... groupByClauses);
 
     Query addOrderBy(Object... orderByClauses);
-
-    Query removeWhereIf(Predicate<Object> filter);
 
     Query removeGroupByIf(Predicate<Object> filter);
 
