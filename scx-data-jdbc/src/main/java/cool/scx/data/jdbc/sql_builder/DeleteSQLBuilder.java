@@ -25,7 +25,7 @@ public class DeleteSQLBuilder {
     }
 
     public SQL buildDeleteSQL(Query query) {
-        if (query.getWhere().length == 0) {
+        if (query.getWhere() == null) {
             throw new IllegalArgumentException("删除数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
         }
         var whereClause = whereParser.parse(query.getWhere());
