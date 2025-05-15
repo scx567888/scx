@@ -18,8 +18,8 @@ public final class QueryBuilder {
         return new QueryImpl(oldQuery);
     }
 
-    public static Query where(Object... whereClauses) {
-        return new QueryImpl().where(whereClauses);
+    public static Query where(Object where) {
+        return new QueryImpl().where(where);
     }
 
     public static Query groupBy(Object... groupByClauses) {
@@ -30,12 +30,12 @@ public final class QueryBuilder {
         return new QueryImpl().orderBy(orderByClauses);
     }
 
-    public static Query offset(long limitOffset) {
-        return new QueryImpl().offset(limitOffset);
+    public static Query offset(long offset) {
+        return new QueryImpl().offset(offset);
     }
 
-    public static Query limit(long numberOfRows) {
-        return new QueryImpl().limit(numberOfRows);
+    public static Query limit(long limit) {
+        return new QueryImpl().limit(limit);
     }
 
     public static Junction and(Object... clauses) {
