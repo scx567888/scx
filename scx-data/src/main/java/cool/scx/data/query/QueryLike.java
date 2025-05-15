@@ -19,8 +19,8 @@ public abstract class QueryLike<QL extends QueryLike<QL>> implements Query {
     }
 
     @Override
-    public QL where(Object whereClause) {
-        query().where(whereClause);
+    public QL where(Object where) {
+        query().where(where);
         return (QL) this;
     }
 
@@ -37,14 +37,14 @@ public abstract class QueryLike<QL extends QueryLike<QL>> implements Query {
     }
 
     @Override
-    public QL offset(long limitOffset) {
-        query().offset(limitOffset);
+    public QL offset(long offset) {
+        query().offset(offset);
         return (QL) this;
     }
 
     @Override
-    public QL limit(long numberOfRows) {
-        query().limit(numberOfRows);
+    public QL limit(long limit) {
+        query().limit(limit);
         return (QL) this;
     }
 

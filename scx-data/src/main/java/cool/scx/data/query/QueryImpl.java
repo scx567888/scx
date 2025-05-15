@@ -38,8 +38,8 @@ public class QueryImpl implements Query {
     }
 
     @Override
-    public QueryImpl where(Object whereClause) {
-        this.where = whereClause;
+    public QueryImpl where(Object where) {
+        this.where = where;
         return this;
     }
 

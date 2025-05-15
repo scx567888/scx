@@ -8,15 +8,15 @@ import java.util.function.Predicate;
 /// @version 0.0.1
 public interface Query {
 
-    Query where(Object whereClause);
+    Query where(Object where);
 
     Query groupBy(Object... groupByClauses);
 
     Query orderBy(Object... orderByClauses);
 
-    Query offset(long limitOffset);
+    Query offset(long offset);
 
-    Query limit(long numberOfRows);
+    Query limit(long limit);
 
     Object getWhere();
 
