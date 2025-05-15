@@ -20,7 +20,10 @@ import static cool.scx.bean.dependency.CircularDependencyChecker.startDependency
 import static cool.scx.reflect.AccessModifier.PUBLIC;
 import static cool.scx.reflect.ClassType.*;
 
-/// 根据 class 创建 Bean
+/// 注解配置的 BeanProvider, 根据 class 进行反射
+///
+/// @author scx567888
+/// @version 0.0.1
 public class AnnotationConfigBeanProvider implements BeanProvider {
 
     private final Class<?> beanClass;

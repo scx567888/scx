@@ -7,6 +7,10 @@ import java.lang.annotation.Target;
 
 import static cool.scx.common.constant.AnnotationValue.NULL;
 
+/// Autowired
+///
+/// @author scx567888
+/// @version 0.0.1
 @Target({ElementType.PARAMETER, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Autowired {

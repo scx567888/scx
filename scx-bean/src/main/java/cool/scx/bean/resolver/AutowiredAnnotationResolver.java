@@ -10,6 +10,9 @@ import cool.scx.reflect.FieldInfo;
 import cool.scx.reflect.ParameterInfo;
 
 /// 处理 Autowired 注解 同时也承担最核心的 配置
+///
+/// @author scx567888
+/// @version 0.0.1
 public class AutowiredAnnotationResolver implements BeanResolver {
 
     private final BeanFactory beanFactory;

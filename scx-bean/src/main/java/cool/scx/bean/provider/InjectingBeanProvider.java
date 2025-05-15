@@ -11,6 +11,9 @@ import static cool.scx.bean.provider.InjectingBeanProvider.BeanStatus.*;
 import static cool.scx.reflect.AccessModifier.PUBLIC;
 
 /// 支持字段和方法注入 的 提供器
+///
+/// @author scx567888
+/// @version 0.0.1
 public class InjectingBeanProvider implements BeanProvider {
 
     private final BeanProvider beanProvider;

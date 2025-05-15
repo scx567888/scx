@@ -11,6 +11,9 @@ import cool.scx.reflect.ParameterInfo;
 import java.util.Map;
 
 /// 处理 Value 注解
+///
+/// @author scx567888
+/// @version 0.0.1
 public class ValueAnnotationResolver implements BeanResolver {
 
     private final Map<String, Object> map;

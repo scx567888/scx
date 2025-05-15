@@ -3,6 +3,9 @@ package cool.scx.bean.provider;
 import cool.scx.bean.BeanFactory;
 
 /// 单例的 Bean 提供器
+///
+/// @author scx567888
+/// @version 0.0.1
 public class SingletonBeanProvider implements BeanProvider {
 
     private final BeanProvider beanProvider;

@@ -7,6 +7,9 @@ import cool.scx.bean.resolver.BeanResolver;
 import java.util.List;
 
 /// BeanFactory
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface BeanFactory {
 
     /// 根据 名称 获取 Bean

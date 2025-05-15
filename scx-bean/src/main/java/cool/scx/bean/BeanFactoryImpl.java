@@ -10,6 +10,10 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+/// BeanFactory 默认实现
+///
+/// @author scx567888
+/// @version 0.0.1
 @SuppressWarnings("unchecked")
 public class BeanFactoryImpl implements BeanFactory {
 
