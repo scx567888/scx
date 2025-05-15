@@ -6,9 +6,16 @@ package cool.scx.reflect;
 /// @version 0.0.1
 public enum AccessModifier {
 
+    /// PUBLIC
     PUBLIC,
+
+    /// PRIVATE
     PRIVATE,
+
+    /// PROTECTED
     PROTECTED,
+
+    /// PACKAGE_PRIVATE
     PACKAGE_PRIVATE
 
 }

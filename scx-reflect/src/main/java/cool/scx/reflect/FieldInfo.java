@@ -9,7 +9,6 @@ import static cool.scx.reflect.ReflectHelper._findAccessModifier;
 import static cool.scx.reflect.ReflectHelper._findType;
 import static java.lang.reflect.AccessFlag.FINAL;
 
-
 /// FieldInfo
 ///
 /// @author scx567888
