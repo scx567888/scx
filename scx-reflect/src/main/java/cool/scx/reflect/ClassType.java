@@ -8,19 +8,19 @@ public enum ClassType {
 
     /// 普通类
     CONCRETE,
-    
+
     /// 抽象类
     ABSTRACT_CLASS,
-    
+
     /// 接口
     INTERFACE,
-    
+
     /// 枚举
     ENUM,
-    
+
     /// 注解
     ANNOTATION,
-    
+
     /// 记录类型
     RECORD,
 
