@@ -107,6 +107,18 @@ public abstract sealed class Junction extends QueryLike<Junction> permits And, O
         return add(new Where(fieldName, JSON_OVERLAPS, value, null, options));
     }
 
+    public final Junction and(Object... clauses) {
+        return add(new And().add(clauses));
+    }
+
+    public final Junction or(Object... clauses) {
+        return add(new Or().add(clauses));
+    }
+
+    public final Junction not(Object clause) {
+        return add(new Not(clause));
+    }
+
     @Override
     protected Query toQuery() {
         return new QueryImpl().where(this);
