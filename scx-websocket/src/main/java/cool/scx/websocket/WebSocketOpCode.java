@@ -1,6 +1,6 @@
 package cool.scx.websocket;
 
-/// WebSocketOpCode
+/// WebSocket 操作码
 ///
 /// @author scx567888
 /// @version 0.0.1

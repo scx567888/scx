@@ -4,6 +4,10 @@ import cool.scx.common.util.Base64Utils;
 import cool.scx.common.util.HashUtils;
 import cool.scx.websocket.close_info.ScxWebSocketCloseInfo;
 
+/// Helper
+///
+/// @author scx567888
+/// @version 0.0.1
 public class WebSocketHelper {
 
     // 生成 Sec-WebSocket-Accept 的方法

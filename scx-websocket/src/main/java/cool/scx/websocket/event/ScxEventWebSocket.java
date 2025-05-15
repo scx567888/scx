@@ -6,6 +6,9 @@ import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 
 /// 事件形式的 websocket
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface ScxEventWebSocket extends ScxWebSocket {
 
     static ScxEventWebSocket of(ScxWebSocket scxWebSocket) {
