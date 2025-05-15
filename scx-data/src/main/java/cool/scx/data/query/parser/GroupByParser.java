@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 import static java.util.Collections.addAll;
 
-/// GroupByParser
+/// GroupByParser (只是一个帮助类, 实现可以选择性使用)
 ///
 /// @author scx567888
 /// @version 0.0.1
