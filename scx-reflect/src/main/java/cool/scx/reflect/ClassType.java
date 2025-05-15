@@ -6,11 +6,22 @@ package cool.scx.reflect;
 /// @version 0.0.1
 public enum ClassType {
 
-    CONCRETE,      // 普通类
-    ABSTRACT_CLASS,// 抽象类
-    INTERFACE,     // 接口
-    ENUM,          // 枚举
-    ANNOTATION,    // 注解
-    RECORD,        // 记录类型
+    /// 普通类
+    CONCRETE,
+    
+    /// 抽象类
+    ABSTRACT_CLASS,
+    
+    /// 接口
+    INTERFACE,
+    
+    /// 枚举
+    ENUM,
+    
+    /// 注解
+    ANNOTATION,
+    
+    /// 记录类型
+    RECORD,
 
 }
