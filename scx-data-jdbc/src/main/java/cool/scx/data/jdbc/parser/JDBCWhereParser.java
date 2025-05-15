@@ -51,7 +51,7 @@ public class JDBCWhereParser extends WhereParser {
             if (w.info().skipIfNull()) {
                 return new WhereClause(null);
             } else {
-                var columnName = parseColumnName(w);
+                var columnName = columnNameParser.parseColumnName(w);
 
                 return switch (w.whereType()) {
                     case EQ -> new WhereClause(columnName + " IS NULL");
@@ -62,7 +62,7 @@ public class JDBCWhereParser extends WhereParser {
         }
 
         // 类似这种 "name = " 
-        var columnDefinition = parseColumnName(w) + " " + getWhereKeyWord(w) + " ";
+        var columnDefinition = columnNameParser.parseColumnName(w) + " " + getWhereKeyWord(w) + " ";
 
         //针对 参数类型是 SQL 的情况进行特殊处理 下同
         if (w.value1() instanceof SQL a) {
@@ -90,10 +90,10 @@ public class JDBCWhereParser extends WhereParser {
 
         //针对 参数类型是 SQL 的情况进行特殊处理 下同
         if (w.value1() instanceof SQL a) {
-            return new WhereClause(parseColumnName(w) + " " + getWhereKeyWord(w) + " (" + a.sql() + ")", a.params());
+            return new WhereClause(columnNameParser.parseColumnName(w) + " " + getWhereKeyWord(w) + " (" + a.sql() + ")", a.params());
         }
 
-        return new WhereClause(parseColumnName(w) + " " + getWhereKeyWord(w) + " ?", w.value1());
+        return new WhereClause(columnNameParser.parseColumnName(w) + " " + getWhereKeyWord(w) + " ?", w.value1());
     }
 
     @Override
@@ -156,7 +156,7 @@ public class JDBCWhereParser extends WhereParser {
             }
         }
 
-        var columnName = parseColumnName(w);
+        var columnName = columnNameParser.parseColumnName(w);
 
         if (w.value1() instanceof SQL a) {
             return new WhereClause(columnName + " " + getWhereKeyWord(w) + " " + "(" + a.sql() + ")", a.params());
@@ -233,7 +233,7 @@ public class JDBCWhereParser extends WhereParser {
             }
         }
 
-        var columnName = parseColumnName(w);
+        var columnName = columnNameParser.parseColumnName(w);
 
         var columnDefinition = columnName + " " + getWhereKeyWord(w) + " ";
 
@@ -329,10 +329,6 @@ public class JDBCWhereParser extends WhereParser {
             case JSON_CONTAINS -> "JSON_CONTAINS";
             case JSON_OVERLAPS -> "JSON_OVERLAPS";
         };
-    }
-
-    private String parseColumnName(Where w) {
-        return columnNameParser.parseColumnName(w);
     }
 
 }
