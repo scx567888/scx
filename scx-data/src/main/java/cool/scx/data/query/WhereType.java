@@ -6,18 +6,18 @@ package cool.scx.data.query;
 /// @version 0.0.1
 public enum WhereType {
 
-    /// 等于 eq
-    EQUAL,
-    /// 不等于 ne
-    NOT_EQUAL,
-    /// 小于 lt
-    LESS_THAN,
-    /// 小于等于 lte
-    LESS_THAN_OR_EQUAL,
-    /// 大于 gt
-    GREATER_THAN,
-    /// 大于等于 gte
-    GREATER_THAN_OR_EQUAL,
+    /// 等于 ==
+    EQ,
+    /// 不等于 !=
+    NE,
+    /// 小于 <
+    LT,
+    /// 小于等于 <=
+    LTE,
+    /// 大于 >
+    GT,
+    /// 大于等于 >=
+    GTE,
     /// 双端模糊匹配
     LIKE,
     /// 非双端模糊匹配
@@ -26,9 +26,9 @@ public enum WhereType {
     LIKE_REGEX,
     /// 非正则表达式匹配
     NOT_LIKE_REGEX,
-    /// 在集合内 (集合元素中 null 同样是合法匹配项,空集合表示不匹配任何 )
+    /// 在集合内 (集合元素中 null 同样是合法匹配项, 空集合则表示不匹配任何项)
     IN,
-    /// 不在集合内 (集合元素中 null 同样是合法匹配项,空集合表示不匹配任何 )
+    /// 不在集合内 (集合元素中 null 同样是合法匹配项, 空集合则表示不匹配任何项)
     NOT_IN,
     /// 范围包含 (包含上下界, 即 low <= field <= high)
     BETWEEN,
