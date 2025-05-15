@@ -46,7 +46,7 @@ public class JDBCWhereParser extends WhereParser {
 
     @Override
     protected WhereClause parseEQ(Where w) {
-        
+
         if (w.value1() == null) {
             if (w.info().skipIfNull()) {
                 return new WhereClause(null);
@@ -70,7 +70,7 @@ public class JDBCWhereParser extends WhereParser {
         }
 
         return new WhereClause(columnDefinition + "?", w.value1());
-        
+
     }
 
     @Override
