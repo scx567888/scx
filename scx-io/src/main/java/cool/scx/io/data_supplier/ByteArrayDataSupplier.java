@@ -7,6 +7,9 @@ import cool.scx.io.data_node.DataNode;
 import java.util.Collection;
 import java.util.Iterator;
 
+/// ByteArrayDataSupplier
+/// @author scx567888
+/// @version 0.0.1
 public class ByteArrayDataSupplier implements DataSupplier {
 
     private final Iterator<byte[]> byteArrayIterator;

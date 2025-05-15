@@ -8,6 +8,9 @@ import cool.scx.io.exception.NoMoreDataException;
 import java.io.IOException;
 import java.io.OutputStream;
 
+/// 包装 DataReader 的输入流
+/// @author scx567888
+/// @version 0.0.1
 public class DataReaderInputStream extends CheckedInputStream {
 
     private final DataReader dataReader;

@@ -5,6 +5,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Objects;
 
+/// NullCheckedInputStream
+///
+/// @author scx567888
+/// @version 0.0.1
 public class NullCheckedInputStream extends CheckedInputStream {
 
     @Override
