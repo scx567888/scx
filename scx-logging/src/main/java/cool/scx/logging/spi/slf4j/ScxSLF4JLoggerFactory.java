@@ -4,7 +4,6 @@ import cool.scx.logging.ScxLoggerFactory;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.Logger;
 
-
 /// ScxSLF4JLoggerFactory
 ///
 /// @author scx567888

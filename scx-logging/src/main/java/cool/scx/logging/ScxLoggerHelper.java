@@ -2,7 +2,6 @@ package cool.scx.logging;
 
 import java.util.ArrayList;
 
-
 /// ScxLoggerHelper
 ///
 /// @author scx567888

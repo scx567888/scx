@@ -7,7 +7,6 @@ import static cool.scx.logging.ScxLoggerFactory.*;
 import static java.lang.System.Logger.Level;
 import static java.util.Collections.addAll;
 
-
 /// ScxLoggerConfig
 ///
 /// @author scx567888
