@@ -21,7 +21,8 @@ public abstract class WhereParser {
             case Where w -> parseWhere(w);
             case Query q -> parseQuery(q);
             case Object[] o -> parseAll(o);
-            default -> null;
+            case null -> new WhereClause(null);
+            default -> throw new IllegalArgumentException("Unsupported object type: " + obj.getClass());
         };
     }
 
@@ -108,7 +109,7 @@ public abstract class WhereParser {
     protected abstract WhereClause parseJsonContains(Where where);
 
     protected WhereClause parseQuery(Query query) {
-        return parseAll(query.getWhere());
+        return parse(query.getWhere());
     }
 
     protected final WhereClause parseAll(Object[] objs) {

@@ -19,8 +19,8 @@ public abstract class QueryLike<QL extends QueryLike<QL>> implements Query {
     }
 
     @Override
-    public QL where(Object... whereClauses) {
-        query().where(whereClauses);
+    public QL where(Object whereClause) {
+        query().where(whereClause);
         return (QL) this;
     }
 
@@ -49,7 +49,7 @@ public abstract class QueryLike<QL extends QueryLike<QL>> implements Query {
     }
 
     @Override
-    public Object[] getWhere() {
+    public Object getWhere() {
         return query().getWhere();
     }
 
@@ -104,12 +104,6 @@ public abstract class QueryLike<QL extends QueryLike<QL>> implements Query {
     }
 
     @Override
-    public QL addWhere(Object... whereClauses) {
-        query().addWhere(whereClauses);
-        return (QL) this;
-    }
-
-    @Override
     public QL addGroupBy(Object... groupByClauses) {
         query().addGroupBy(groupByClauses);
         return (QL) this;
@@ -118,12 +112,6 @@ public abstract class QueryLike<QL extends QueryLike<QL>> implements Query {
     @Override
     public QL addOrderBy(Object... orderByClauses) {
         query().addOrderBy(orderByClauses);
-        return (QL) this;
-    }
-
-    @Override
-    public QL removeWhereIf(Predicate<Object> filter) {
-        query().removeWhereIf(filter);
         return (QL) this;
     }
 

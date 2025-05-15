@@ -19,7 +19,7 @@ public abstract class OrderByParser {
             case OrderBy o -> parseOrderBy(o);
             case Query q -> parseQuery(q);
             case Object[] o -> parseAll(o);
-            default -> null;
+            default -> throw new IllegalArgumentException("Unsupported object type: " + obj.getClass());
         };
     }
 
