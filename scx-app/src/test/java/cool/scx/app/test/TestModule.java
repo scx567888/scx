@@ -216,9 +216,9 @@ public class TestModule extends ScxAppModule {
         var logger = System.getLogger(TestModule.class.getName());
         logger.log(ERROR, "根据所有 person 表中年龄小于 100 的 carID 查询 car 表中的数据 总条数 {0}", cars.size());
         //根据所有 person 表中年龄小于 100 的 carID 查询 car 表中的数据
-        var cars1 = carService.find(query().where("id IN ",
+        var cars1 = carService.find(query().where(in("id",
                 personService.buildListSQL(query().where(lt("age", 100)), include("carID"))
-        ));
+        )));
         logger.log(ERROR, "第二种方式 (whereSQL) : 根据所有 person 表中年龄小于 100 的 carID 查询 car 表中的数据 总条数 {0}", cars1.size());
     }
 
