@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import static cool.scx.logging.ScxLoggerHelper.getFilteredStackTrace;
 import static java.lang.System.Logger.Level;
 
-
 /// ScxLogger
 ///
 /// @author scx567888

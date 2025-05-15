@@ -4,6 +4,10 @@ import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 
+/// 可被注解的元素
+///
+/// @author scx567888
+/// @version 0.0.1
 @SuppressWarnings("unchecked")
 public interface AnnotatedElementInfo {
 

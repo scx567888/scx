@@ -12,6 +12,10 @@ import static cool.scx.websocket.close_info.WebSocketCloseInfo.*;
 import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.getLogger;
 
+/// ScxEventWebSocket 默认实现
+///
+/// @author scx567888
+/// @version 0.0.1
 class ScxEventWebSocketImpl implements ScxEventWebSocket {
 
     private static final Logger LOGGER = getLogger(ScxEventWebSocketImpl.class.getName());

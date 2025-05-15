@@ -7,6 +7,11 @@ import java.util.Map;
 
 import static cool.scx.common.util.ObjectUtils.constructType;
 
+/// ClassInfo 工厂
+/// 因为 Class 基本是固定的 所以此处全局缓存
+///
+/// @author scx567888
+/// @version 0.0.1
 public final class ClassInfoFactory {
 
     private static final Map<JavaType, ClassInfo> CLASS_INFO_CACHE = new HashMap<>();

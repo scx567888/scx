@@ -5,7 +5,11 @@ import cool.scx.common.util.Base64Utils;
 
 import java.util.regex.Pattern;
 
-public final class PemHelper {
+/// PEM 文件解析
+///
+/// @author scx567888
+/// @version 0.0.1
+final class PemHelper {
 
     public static final Pattern PEM_PATTERN = Pattern.compile("-----BEGIN (.+?)-----([\\s\\S]+?)-----END \\1-----");
 

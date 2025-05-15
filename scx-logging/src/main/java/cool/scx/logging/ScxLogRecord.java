@@ -3,7 +3,6 @@ package cool.scx.logging;
 import java.lang.System.Logger.Level;
 import java.time.LocalDateTime;
 
-
 /// 日志记录
 ///
 /// @author scx567888

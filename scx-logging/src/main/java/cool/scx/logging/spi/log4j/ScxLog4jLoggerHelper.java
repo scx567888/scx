@@ -4,7 +4,6 @@ import org.apache.logging.log4j.Level;
 
 import static org.apache.logging.log4j.Level.*;
 
-
 /// ScxLog4jLoggerHelper
 ///
 /// @author scx567888

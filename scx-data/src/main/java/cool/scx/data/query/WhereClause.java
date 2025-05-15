@@ -1,8 +1,5 @@
 package cool.scx.data.query;
 
-import cool.scx.common.util.ArrayUtils;
-import cool.scx.common.util.StringUtils;
-
 /// WhereClause
 ///
 /// @author scx567888

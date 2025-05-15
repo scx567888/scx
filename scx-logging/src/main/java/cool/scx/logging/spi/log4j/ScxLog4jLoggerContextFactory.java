@@ -5,7 +5,6 @@ import org.apache.logging.log4j.spi.LoggerContextFactory;
 
 import java.net.URI;
 
-
 /// ScxLog4jLoggerContextFactory
 ///
 /// @author scx567888

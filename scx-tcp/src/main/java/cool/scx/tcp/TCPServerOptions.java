@@ -2,7 +2,7 @@ package cool.scx.tcp;
 
 import cool.scx.tcp.tls.TLS;
 
-/// ScxTCPServerOptions
+/// TCP 服务器 配置
 ///
 /// @author scx567888
 /// @version 0.0.1

@@ -9,7 +9,6 @@ import static cool.scx.logging.spi.slf4j.ScxSLF4JLoggerHelper.toJDKLevel;
 import static org.slf4j.event.Level.*;
 import static org.slf4j.helpers.MessageFormatter.basicArrayFormat;
 
-
 /// ScxSLF4JLogger
 ///
 /// @author scx567888

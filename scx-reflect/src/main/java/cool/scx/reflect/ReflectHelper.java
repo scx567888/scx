@@ -17,6 +17,10 @@ import static cool.scx.reflect.ClassType.ENUM;
 import static cool.scx.reflect.ClassType.RECORD;
 import static java.util.Collections.addAll;
 
+/// 工具类
+///
+/// @author scx567888
+/// @version 0.0.1
 final class ReflectHelper {
 
     public static JavaType _findType(Type type, ClassInfo classInfo) {

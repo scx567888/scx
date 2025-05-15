@@ -2,7 +2,6 @@ package cool.scx.logging.spi.slf4j;
 
 import org.slf4j.event.Level;
 
-
 /// ScxSLF4JLoggerHelper
 ///
 /// @author scx567888
