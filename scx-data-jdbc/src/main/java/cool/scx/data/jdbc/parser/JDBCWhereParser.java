@@ -5,6 +5,7 @@ import cool.scx.common.util.ObjectUtils;
 import cool.scx.common.util.StringUtils;
 import cool.scx.data.query.Where;
 import cool.scx.data.query.WhereClause;
+import cool.scx.data.query.WhereType;
 import cool.scx.data.query.exception.ValidParamListIsEmptyException;
 import cool.scx.data.query.exception.WrongWhereParamTypeException;
 import cool.scx.data.query.exception.WrongWhereTypeParamSizeException;
@@ -32,11 +33,15 @@ public class JDBCWhereParser extends WhereParser {
         this.columnNameParser = columnNameParser;
     }
 
-    @Override
     public WhereClause parseIsNull(Where w) {
         var columnName = columnNameParser.parseColumnName(w);
         var whereParams = new Object[]{};
-        var whereClause = columnName + " " + getWhereKeyWord(w.whereType());
+        var keyWord = switch (w.whereType()) {
+            case EQ -> "IS NULL";
+            case NE -> "IS NOT NULL";
+            default -> throw new IllegalStateException("Unexpected value: " + w.whereType());
+        };
+        var whereClause = columnName + " " + keyWord;
         return new WhereClause(whereClause, whereParams);
     }
 
@@ -46,7 +51,7 @@ public class JDBCWhereParser extends WhereParser {
             if (w.info().skipIfNull()) {
                 return new WhereClause("");
             } else {
-                throw new WrongWhereTypeParamSizeException(w.name(), w.whereType(), 1);
+                return parseIsNull(w);
             }
         }
         var columnName = columnNameParser.parseColumnName(w);
@@ -208,6 +213,25 @@ public class JDBCWhereParser extends WhereParser {
 
     private WhereClause parseSQL(SQL sql) {
         return new WhereClause("(" + sql.sql() + ")", sql.params());
+    }
+
+    public String getWhereKeyWord(WhereType whereType) {
+        return switch (whereType) {
+            case EQ -> "=";
+            case NE -> "<>";
+            case LT -> "<";
+            case LTE -> "<=";
+            case GT -> ">";
+            case GTE -> ">=";
+            case LIKE, LIKE_REGEX -> "LIKE";
+            case NOT_LIKE, NOT_LIKE_REGEX -> "NOT LIKE";
+            case IN -> "IN";
+            case NOT_IN -> "NOT IN";
+            case BETWEEN -> "BETWEEN";
+            case NOT_BETWEEN -> "NOT BETWEEN";
+            case JSON_CONTAINS -> "JSON_CONTAINS";
+            case JSON_OVERLAPS -> "JSON_OVERLAPS";
+        };
     }
 
 }
