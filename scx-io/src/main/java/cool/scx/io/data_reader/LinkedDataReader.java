@@ -6,6 +6,7 @@ import cool.scx.io.data_consumer.OutputStreamDataConsumer;
 import cool.scx.io.data_indexer.DataIndexer;
 import cool.scx.io.data_node.DataNode;
 import cool.scx.io.data_supplier.DataSupplier;
+import cool.scx.io.exception.DataSupplierException;
 import cool.scx.io.exception.NoMatchFoundException;
 import cool.scx.io.exception.NoMoreDataException;
 
@@ -43,7 +44,7 @@ public class LinkedDataReader implements DataReader {
         tail = tail.next;
     }
 
-    public boolean pullData() {
+    public boolean pullData() throws DataSupplierException {
         var data = dataSupplier.get();
         if (data == null) {
             return false;
@@ -52,7 +53,7 @@ public class LinkedDataReader implements DataReader {
         return true;
     }
 
-    public long ensureAvailable(long maxPullCount) {
+    public long ensureAvailable(long maxPullCount) throws DataSupplierException {
         var pullCount = 0L;
         while (!head.hasAvailable()) {
             if (head.next == null) {
@@ -71,7 +72,7 @@ public class LinkedDataReader implements DataReader {
         return pullCount;
     }
 
-    public long ensureAvailableOrThrow(long maxPullCount) throws NoMoreDataException {
+    public long ensureAvailableOrThrow(long maxPullCount) throws NoMoreDataException, DataSupplierException {
         var b = ensureAvailable(maxPullCount);
         if (b == -1) {
             throw new NoMoreDataException();
@@ -80,7 +81,7 @@ public class LinkedDataReader implements DataReader {
         }
     }
 
-    public void walk(DataConsumer consumer, long maxLength, boolean movePointer, long maxPullCount) {
+    public void walk(DataConsumer consumer, long maxLength, boolean movePointer, long maxPullCount) throws DataSupplierException {
 
         var remaining = maxLength; // 剩余需要读取的字节数
         var n = head; // 用于循环的节点
@@ -140,7 +141,7 @@ public class LinkedDataReader implements DataReader {
 
     }
 
-    public long findIndex(DataIndexer indexer, long maxLength, long maxPullCount) throws NoMatchFoundException {
+    public long findIndex(DataIndexer indexer, long maxLength, long maxPullCount) throws NoMatchFoundException, DataSupplierException {
 
         var index = 0L; // 主串索引
 
@@ -182,7 +183,7 @@ public class LinkedDataReader implements DataReader {
     }
 
     @Override
-    public byte read() throws NoMoreDataException {
+    public byte read() throws NoMoreDataException, DataSupplierException {
         ensureAvailableOrThrow(Long.MAX_VALUE);
         var b = head.bytes[head.position];
         head.position = head.position + 1;
@@ -190,7 +191,7 @@ public class LinkedDataReader implements DataReader {
     }
 
     @Override
-    public void read(DataConsumer dataConsumer, long maxLength, long maxPullCount) throws NoMoreDataException {
+    public void read(DataConsumer dataConsumer, long maxLength, long maxPullCount) throws NoMoreDataException, DataSupplierException {
         if (maxLength > 0) {
             var pullCount = ensureAvailableOrThrow(maxPullCount);
             maxPullCount = maxPullCount - pullCount;
@@ -199,13 +200,13 @@ public class LinkedDataReader implements DataReader {
     }
 
     @Override
-    public byte peek() throws NoMoreDataException {
+    public byte peek() throws NoMoreDataException, DataSupplierException {
         ensureAvailableOrThrow(Long.MAX_VALUE);
         return head.bytes[head.position];
     }
 
     @Override
-    public void peek(DataConsumer dataConsumer, long maxLength, long maxPullCount) throws NoMoreDataException {
+    public void peek(DataConsumer dataConsumer, long maxLength, long maxPullCount) throws NoMoreDataException, DataSupplierException {
         if (maxLength > 0) {
             var pullCount = ensureAvailableOrThrow(maxPullCount);
             maxPullCount = maxPullCount - pullCount;
@@ -214,7 +215,7 @@ public class LinkedDataReader implements DataReader {
     }
 
     @Override
-    public long indexOf(DataIndexer indexer, long maxLength, long maxPullCount) throws NoMatchFoundException, NoMoreDataException {
+    public long indexOf(DataIndexer indexer, long maxLength, long maxPullCount) throws NoMatchFoundException, NoMoreDataException, DataSupplierException {
         if (maxLength > 0) {
             var pullCount = ensureAvailableOrThrow(maxPullCount);
             maxPullCount = maxPullCount - pullCount;
@@ -245,7 +246,7 @@ public class LinkedDataReader implements DataReader {
     }
 
     @Override
-    public int inputStreamRead() {
+    public int inputStreamRead() throws DataSupplierException {
         var pullCount = ensureAvailable(1);
         if (pullCount == -1) {
             return -1;
@@ -256,7 +257,7 @@ public class LinkedDataReader implements DataReader {
     }
 
     @Override
-    public int inputStreamRead(byte[] b, int off, int len) {
+    public int inputStreamRead(byte[] b, int off, int len) throws DataSupplierException {
         var maxPullCount = 1L;
         if (len > 0) {
             var pullCount = ensureAvailable(maxPullCount);
@@ -272,7 +273,7 @@ public class LinkedDataReader implements DataReader {
     }
 
     @Override
-    public long inputStreamTransferTo(OutputStream out, long maxLength) {
+    public long inputStreamTransferTo(OutputStream out, long maxLength) throws DataSupplierException {
         if (maxLength > 0) {
             var pullCount = ensureAvailable(Long.MAX_VALUE);
             if (pullCount == -1) {
