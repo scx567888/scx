@@ -5,7 +5,6 @@ import cool.scx.io.exception.DataSupplierException;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UncheckedIOException;
 
 /// BufferedInputStreamDataSupplier
 /// 和 [InputStreamDataSupplier] 性能相反

@@ -5,7 +5,6 @@ import cool.scx.io.exception.DataSupplierException;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UncheckedIOException;
 
 /// InputStreamDataSupplier
 /// 1, 当大部分时候读取的数据长度等于 bufferLength 的时候, 性能会高一点 因为只会进行数组创建这一步
