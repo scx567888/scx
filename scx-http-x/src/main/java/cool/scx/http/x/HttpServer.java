@@ -51,11 +51,16 @@ public class HttpServer implements ScxHttpServer {
     }
 
     private void handle(ScxTCPSocket tcpSocket) {
-        //是否使用 http2
-        var useHttp2 = false;
-
-        if (tcpSocket.isTLS()) {
-            // 配置应用协议协商选择器
+        //配置 tls
+        if (options.tls() != null) {
+            try {
+                tcpSocket.upgradeToTLS(options.tls());
+            } catch (IOException e) {
+                tryCloseSocket(tcpSocket, e);
+                LOGGER.log(TRACE, "升级到 TLS 时发生错误 !!!", e);
+                return;
+            }
+            tcpSocket.tlsManager().setUseClientMode(false);
             tcpSocket.tlsManager().setHandshakeApplicationProtocolSelector((_, protocols) -> options.enableHttp2() && protocols.contains(HTTP_2.alpnValue()) ? HTTP_2.alpnValue() : protocols.contains(HTTP_1_1.alpnValue()) ? HTTP_1_1.alpnValue() : null);
             // 开始握手
             try {
@@ -65,6 +70,11 @@ public class HttpServer implements ScxHttpServer {
                 LOGGER.log(TRACE, "处理 TLS 握手 时发生错误 !!!", e);
                 return;
             }
+        }
+
+        var useHttp2 = false;
+
+        if (tcpSocket.isTLS()) {
             var applicationProtocol = tcpSocket.tlsManager().getApplicationProtocol();
             useHttp2 = HTTP_2.alpnValue().equals(applicationProtocol);
         }
@@ -90,7 +100,7 @@ public class HttpServer implements ScxHttpServer {
     }
 
     @Override
-    public void start(SocketAddress localAddress) {
+    public void start(SocketAddress localAddress) throws IOException {
         tcpServer.start(localAddress);
     }
 

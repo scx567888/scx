@@ -11,8 +11,12 @@ import cool.scx.http.x.http1.Http1ClientConnection;
 import cool.scx.http.x.http1.Http1ClientRequest;
 import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.http.x.http1.request_line.RequestTargetForm;
+import cool.scx.tcp.ScxTCPSocket;
 import cool.scx.websocket.ScxClientWebSocketHandshakeRequest;
 import cool.scx.websocket.ScxClientWebSocketHandshakeResponse;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
 
 import static cool.scx.http.headers.HttpFieldName.SEC_WEBSOCKET_KEY;
 import static cool.scx.http.headers.HttpFieldName.SEC_WEBSOCKET_VERSION;
@@ -69,7 +73,12 @@ public class ClientWebSocketHandshakeRequest implements ScxClientWebSocketHandsh
     @Override
     public ScxClientWebSocketHandshakeResponse sendHandshake() {
         //0, 创建 tcp 连接
-        var tcpSocket = httpClient.createTCPSocket(uri, HTTP_1_1.alpnValue());
+        ScxTCPSocket tcpSocket;
+        try {
+            tcpSocket = httpClient.createTCPSocket(uri, HTTP_1_1.alpnValue());
+        } catch (IOException e) {
+            throw new UncheckedIOException("创建连接失败 !!!", e);
+        }
 
         //1, 创建 secWebsocketKey
         var secWebsocketKey = Base64Utils.encodeToString(RandomUtils.randomBytes(16));

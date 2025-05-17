@@ -29,7 +29,7 @@ import cool.scx.websocket.routing.WebSocketTypeMatcher;
 import cool.scx.websocket.x.WebSocketUpgradeHandler;
 
 import javax.sql.DataSource;
-import java.io.UncheckedIOException;
+import java.io.IOException;
 import java.lang.System.Logger;
 import java.net.BindException;
 import java.net.Inet4Address;
@@ -218,14 +218,14 @@ public final class ScxApp {
                 o.green("> 网络: " + httpOrHttps + "://" + ip.getHostAddress() + ":" + p + "/").ln();
             }
             o.print();
-        } catch (Exception cause) {
-            if (cause instanceof UncheckedIOException && cause.getCause() instanceof BindException) {
+        } catch (IOException e) {
+            if (e instanceof BindException) {
                 //获取新的端口号然后 重新启动服务器
                 if (isUseNewPort(port)) {
                     startServer(0);
                 }
             } else {
-                cause.printStackTrace();
+                e.printStackTrace();
             }
         }
     }

@@ -10,12 +10,12 @@ import java.io.IOException;
 
 public class EventStreamTest {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         test1();
         test2();
     }
 
-    public static void test1() {
+    public static void test1() throws IOException {
         var httpServer = new HttpServer();
         httpServer.onRequest(c -> {
             System.out.println("连接了");

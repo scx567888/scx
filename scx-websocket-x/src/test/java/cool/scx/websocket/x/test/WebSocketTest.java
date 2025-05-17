@@ -8,14 +8,16 @@ import cool.scx.websocket.event.ScxEventWebSocket;
 import cool.scx.websocket.x.WebSocketClient;
 import cool.scx.websocket.x.WebSocketUpgradeHandler;
 
+import java.io.IOException;
+
 public class WebSocketTest {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         startServer();
         startClient();
     }
 
-    public static void startServer() {
+    public static void startServer() throws IOException {
         var s = System.nanoTime();
         var httpServer = new HttpServer(new HttpServerOptions().addUpgradeHandler(new WebSocketUpgradeHandler()));
 

@@ -13,6 +13,10 @@ import cool.scx.http.x.http1.Http1ClientConnection;
 import cool.scx.http.x.http1.Http1ClientRequest;
 import cool.scx.http.x.http1.request_line.RequestTargetForm;
 import cool.scx.http.x.http2.Http2ClientConnection;
+import cool.scx.tcp.ScxTCPSocket;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
 
 import static cool.scx.http.method.HttpMethod.GET;
 import static cool.scx.http.version.HttpVersion.HTTP_1_1;
@@ -48,7 +52,13 @@ public class HttpClientRequest implements Http1ClientRequest {
     @Override
     public ScxHttpClientResponse send(MediaWriter writer) {
 
-        var tcpSocket = httpClient.createTCPSocket(uri, getApplicationProtocols());
+        ScxTCPSocket tcpSocket;
+
+        try {
+            tcpSocket = httpClient.createTCPSocket(uri, getApplicationProtocols());
+        } catch (IOException e) {
+            throw new UncheckedIOException("创建连接失败 !!!", e);
+        }
 
         var useHttp2 = false;
 
