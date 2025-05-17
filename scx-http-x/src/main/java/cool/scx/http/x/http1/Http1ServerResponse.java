@@ -5,6 +5,7 @@ import cool.scx.http.ScxHttpServerResponse;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.sender.BodyAlreadySentException;
+import cool.scx.http.sender.HttpSendException;
 import cool.scx.http.status.HttpStatus;
 import cool.scx.http.status.ScxHttpStatus;
 import cool.scx.http.x.http1.chunked.HttpChunkedOutputStream;
@@ -15,7 +16,6 @@ import cool.scx.io.io_stream.StreamClosedException;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UncheckedIOException;
 
 import static cool.scx.http.status.ScxHttpStatusHelper.getReasonPhrase;
 import static cool.scx.http.x.http1.Http1Helper.checkResponseHasBody;
@@ -87,7 +87,7 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
         try {
             writer.write(outputStream(expectedLength));
         } catch (IOException e) {
-            throw new UncheckedIOException(e);
+            throw new HttpSendException("发送 HTTP 响应失败 !!!", e);
         } catch (StreamClosedException e) {
             throw new BodyAlreadySentException();
         }
@@ -110,14 +110,14 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
         return reasonPhrase != null ? reasonPhrase : getReasonPhrase(status, "unknown");
     }
 
-    private OutputStream outputStream(long expectedLength) {
+    private OutputStream outputStream(long expectedLength) throws IOException {
         if (outputStream == null) {
             outputStream = sendHeaders(expectedLength);
         }
         return outputStream;
     }
 
-    private OutputStream sendHeaders(long expectedLength) {
+    private OutputStream sendHeaders(long expectedLength) throws IOException {
         // 1, 创建 响应行
         var statusLine = new Http1StatusLine(request.version(), status.code(), createReasonPhrase());
 
@@ -161,12 +161,8 @@ public class Http1ServerResponse implements ScxHttpServerResponse {
         var responseHeaderStr = headers.encode();
 
         //先写入头部内容
-        try {
-            var h = statusLineStr + "\r\n" + responseHeaderStr + "\r\n";
-            connection.dataWriter.write(h.getBytes(UTF_8));
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
+        var h = statusLineStr + "\r\n" + responseHeaderStr + "\r\n";
+        connection.dataWriter.write(h.getBytes(UTF_8));
 
         // 只有明确表示 close 的时候我们才关闭
         var closeConnection = headers.connection() == CLOSE;

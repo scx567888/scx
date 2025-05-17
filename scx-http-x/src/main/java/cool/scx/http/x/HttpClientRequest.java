@@ -6,6 +6,7 @@ import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
 import cool.scx.http.media.MediaWriter;
 import cool.scx.http.method.ScxHttpMethod;
+import cool.scx.http.sender.HttpSendException;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.uri.ScxURIWritable;
 import cool.scx.http.version.HttpVersion;
@@ -16,7 +17,6 @@ import cool.scx.http.x.http2.Http2ClientConnection;
 import cool.scx.tcp.ScxTCPSocket;
 
 import java.io.IOException;
-import java.io.UncheckedIOException;
 
 import static cool.scx.http.method.HttpMethod.GET;
 import static cool.scx.http.version.HttpVersion.HTTP_1_1;
@@ -50,14 +50,14 @@ public class HttpClientRequest implements Http1ClientRequest {
     }
 
     @Override
-    public ScxHttpClientResponse send(MediaWriter writer) {
+    public ScxHttpClientResponse send(MediaWriter writer) throws HttpSendException {
 
         ScxTCPSocket tcpSocket;
 
         try {
             tcpSocket = httpClient.createTCPSocket(uri, getApplicationProtocols());
         } catch (IOException e) {
-            throw new UncheckedIOException("创建连接失败 !!!", e);
+            throw new HttpSendException("创建连接失败 !!!", e);
         }
 
         var useHttp2 = false;
@@ -74,7 +74,11 @@ public class HttpClientRequest implements Http1ClientRequest {
             if (!tcpSocket.isTLS() && options.proxy() != null && options.proxy().enabled()) {
                 this.requestTargetForm = ABSOLUTE_FORM;
             }
-            return new Http1ClientConnection(tcpSocket, options).sendRequest(this, writer).waitResponse();
+            try {
+                return new Http1ClientConnection(tcpSocket, options).sendRequest(this, writer).waitResponse();
+            } catch (IOException e) {
+                throw new HttpSendException("发送 HTTP 请求失败 !!!", e);
+            }
         }
 
     }
