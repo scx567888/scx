@@ -14,7 +14,6 @@ import cool.scx.tcp.ScxTCPSocket;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UncheckedIOException;
 
 import static cool.scx.http.headers.HttpFieldName.HOST;
 import static cool.scx.http.x.http1.Http1Helper.checkRequestHasBody;
@@ -36,7 +35,7 @@ public class Http1ClientConnection {
         this.options = options.http1ConnectionOptions();
     }
 
-    public Http1ClientConnection sendRequest(Http1ClientRequest request, MediaWriter writer) {
+    public Http1ClientConnection sendRequest(Http1ClientRequest request, MediaWriter writer) throws IOException {
         //复制一份头便于修改
         var headers = new Http1Headers(request.headers());
 
@@ -87,23 +86,15 @@ public class Http1ClientConnection {
         var requestHeaderStr = headers.encode();
 
         //先写入头部内容
-        try {
-            var h = requestLineStr + "\r\n" + requestHeaderStr + "\r\n";
-            dataWriter.write(h.getBytes(UTF_8));
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
+        var h = requestLineStr + "\r\n" + requestHeaderStr + "\r\n";
+        dataWriter.write(h.getBytes(UTF_8));
 
         // 只有明确表示 分块的时候才使用分块
         var useChunkedTransfer = headers.transferEncoding() == CHUNKED;
 
         var out = useChunkedTransfer ? new HttpChunkedOutputStream(dataWriter) : dataWriter;
 
-        try {
-            writer.write(out);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
+        writer.write(out);
 
         return this;
     }
