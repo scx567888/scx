@@ -1,5 +1,6 @@
 package cool.scx.tcp;
 
+import java.io.IOException;
 import java.net.SocketAddress;
 
 /// TCP 客户端
@@ -8,9 +9,9 @@ import java.net.SocketAddress;
 /// @version 0.0.1
 public interface ScxTCPClient {
 
-    ScxTCPSocket connect(SocketAddress endpoint, int timeout);
+    ScxTCPSocket connect(SocketAddress endpoint, int timeout) throws IOException;
 
-    default ScxTCPSocket connect(SocketAddress endpoint) {
+    default ScxTCPSocket connect(SocketAddress endpoint) throws IOException {
         return connect(endpoint, 0);
     }
 
