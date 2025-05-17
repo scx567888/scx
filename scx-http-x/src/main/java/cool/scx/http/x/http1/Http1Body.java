@@ -1,6 +1,7 @@
 package cool.scx.http.x.http1;
 
 import cool.scx.http.body.BodyAlreadyConsumedException;
+import cool.scx.http.body.BodyReadException;
 import cool.scx.http.body.ScxHttpBody;
 import cool.scx.http.media.MediaReader;
 import cool.scx.http.x.http1.headers.Http1Headers;
@@ -21,7 +22,7 @@ public record Http1Body(InputStream inputStream, Http1Headers headers) implement
         try {
             return t.read(inputStream, headers);
         } catch (IOException e) {
-            throw new UncheckedIOException(e);
+            throw new BodyReadException(e); 
         } catch (StreamClosedException e) {
             throw new BodyAlreadyConsumedException();
         }

@@ -8,7 +8,6 @@ import cool.scx.io.io_stream.StreamClosedException;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UncheckedIOException;
 import java.util.zip.GZIPInputStream;
 
 import static cool.scx.http.headers.content_encoding.ContentEncoding.GZIP;
