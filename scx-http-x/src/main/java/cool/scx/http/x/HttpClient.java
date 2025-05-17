@@ -8,7 +8,6 @@ import cool.scx.tcp.TCPClient;
 import cool.scx.tcp.tls.TLS;
 
 import java.io.IOException;
-import java.io.UncheckedIOException;
 
 import static cool.scx.http.media.empty.EmptyWriter.EMPTY_WRITER;
 import static cool.scx.http.method.HttpMethod.CONNECT;

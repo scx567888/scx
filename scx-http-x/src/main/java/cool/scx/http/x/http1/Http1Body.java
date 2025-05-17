@@ -9,7 +9,6 @@ import cool.scx.io.io_stream.StreamClosedException;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UncheckedIOException;
 
 /// ScxHttpBodyImpl
 ///
@@ -22,7 +21,7 @@ public record Http1Body(InputStream inputStream, Http1Headers headers) implement
         try {
             return t.read(inputStream, headers);
         } catch (IOException e) {
-            throw new BodyReadException(e); 
+            throw new BodyReadException(e);
         } catch (StreamClosedException e) {
             throw new BodyAlreadyConsumedException();
         }

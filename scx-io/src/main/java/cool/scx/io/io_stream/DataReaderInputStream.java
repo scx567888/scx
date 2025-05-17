@@ -3,7 +3,6 @@ package cool.scx.io.io_stream;
 import cool.scx.io.data_reader.DataReader;
 import cool.scx.io.data_reader.LinkedDataReader;
 import cool.scx.io.data_supplier.DataSupplier;
-import cool.scx.io.exception.NoMoreDataException;
 
 import java.io.IOException;
 import java.io.OutputStream;

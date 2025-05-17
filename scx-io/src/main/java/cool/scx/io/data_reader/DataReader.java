@@ -70,7 +70,7 @@ public interface DataReader {
 
     /// InputStream 写法的 TransferTo
     long inputStreamTransferTo(OutputStream out, long maxLength) throws IOException;
-    
+
     /// InputStream 写法的 read
     byte[] inputStreamReadNBytes(long len) throws IOException;
 
