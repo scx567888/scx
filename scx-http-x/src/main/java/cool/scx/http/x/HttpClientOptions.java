@@ -50,7 +50,7 @@ public class HttpClientOptions {
     }
 
     public HttpClientOptions tls(TLS tls) {
-        this.tls=tls;
+        this.tls = tls;
         return this;
     }
 
