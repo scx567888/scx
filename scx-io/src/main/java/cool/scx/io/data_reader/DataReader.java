@@ -68,8 +68,11 @@ public interface DataReader {
     /// InputStream 写法的 read
     int inputStreamRead(byte[] b, int off, int len) throws IOException;
 
-    /// InputStream 写法的 read
+    /// InputStream 写法的 TransferTo
     long inputStreamTransferTo(OutputStream out, long maxLength) throws IOException;
+    
+    /// InputStream 写法的 read
+    byte[] inputStreamReadNBytes(long len) throws IOException;
 
     default byte[] read(int maxLength) throws NoMoreDataException, DataSupplierException {
         return read(maxLength, Long.MAX_VALUE);

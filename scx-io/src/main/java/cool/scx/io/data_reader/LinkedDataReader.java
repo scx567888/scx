@@ -1,5 +1,6 @@
 package cool.scx.io.data_reader;
 
+import cool.scx.io.data_consumer.ByteArrayDataConsumer;
 import cool.scx.io.data_consumer.DataConsumer;
 import cool.scx.io.data_consumer.FillByteArrayDataConsumer;
 import cool.scx.io.data_consumer.OutputStreamDataConsumer;
@@ -299,6 +300,26 @@ public class LinkedDataReader implements DataReader {
             var consumer = new OutputStreamDataConsumer(out);
             walk(consumer, maxLength, true, Long.MAX_VALUE);
             return consumer.byteCount();
+        } catch (DataSupplierException e) {
+            if (e.getCause() instanceof IOException i) {
+                throw i;
+            }
+            throw e;
+        }
+    }
+
+    @Override
+    public byte[] inputStreamReadNBytes(long len) throws IOException {
+        try {
+            if (len > 0) {
+                var pullCount = ensureAvailable(Long.MAX_VALUE);
+                if (pullCount == -1) {
+                    return new byte[0];
+                }
+            }
+            var consumer = new ByteArrayDataConsumer();
+            walk(consumer, len, true, Long.MAX_VALUE);
+            return consumer.getBytes();
         } catch (DataSupplierException e) {
             if (e.getCause() instanceof IOException i) {
                 throw i;
