@@ -1,7 +1,6 @@
 package cool.scx.tcp;
 
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.lang.System.Logger;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
@@ -43,7 +42,7 @@ public class TCPServer implements ScxTCPServer {
     }
 
     @Override
-    public void start(SocketAddress localAddress) {
+    public void start(SocketAddress localAddress) throws IOException {
         if (running) {
             throw new IllegalStateException("服务器已在运行 !!!");
         }
@@ -52,12 +51,8 @@ public class TCPServer implements ScxTCPServer {
             throw new IllegalStateException("未设置 连接处理器 !!!");
         }
 
-        try {
-            this.serverSocket = new ServerSocket();
-            this.serverSocket.bind(localAddress, options.backlog());
-        } catch (IOException e) {
-            throw new UncheckedIOException("启动服务器失败 !!!", e);
-        }
+        this.serverSocket = new ServerSocket();
+        this.serverSocket.bind(localAddress, options.backlog());
 
         running = true;
 
@@ -75,7 +70,7 @@ public class TCPServer implements ScxTCPServer {
         try {
             serverSocket.close();
         } catch (IOException e) {
-            throw new UncheckedIOException("关闭服务器失败 !!!", e);
+            LOGGER.log(TRACE, "关闭 ServerSocket 时发生错误 !!!", e);
         }
 
         try {
@@ -111,7 +106,7 @@ public class TCPServer implements ScxTCPServer {
                 try {
                     serverSocket.close();
                 } catch (IOException ex) {
-                    LOGGER.log(TRACE, "关闭 serverSocket 时发生错误 !!!", ex);
+                    LOGGER.log(TRACE, "关闭 ServerSocket 时发生错误 !!!", ex);
                 }
                 break;
             }
@@ -120,30 +115,14 @@ public class TCPServer implements ScxTCPServer {
 
     private void handle(Socket socket) {
 
-        var tcpSocket = new TCPSocket(socket);
+        ScxTCPSocket tcpSocket;
 
-        if (options.autoUpgradeToTLS()) {
-            try {
-                tcpSocket.upgradeToTLS(options.tls());
-            } catch (IOException e) {
-                LOGGER.log(TRACE, "升级到 TLS 时发生错误 !!!", e);
-                tryCloseSocket(tcpSocket);
-                return;
-            }
-        }
-
-        if (tcpSocket.tlsManager() != null) {
-            tcpSocket.tlsManager().setUseClientMode(false);
-        }
-
-        if (options.autoHandshake()) {
-            try {
-                tcpSocket.startHandshake();
-            } catch (IOException e) {
-                LOGGER.log(TRACE, "处理 TLS 握手 时发生错误 !!!", e);
-                tryCloseSocket(tcpSocket);
-                return;
-            }
+        try {
+            tcpSocket = new TCPSocket(socket);
+        } catch (IOException e) {
+            LOGGER.log(ERROR, "创建 TCPSocket 时发生错误 !!!", e);
+            tryCloseSocket(socket);
+            return;
         }
 
         try {
@@ -157,6 +136,14 @@ public class TCPServer implements ScxTCPServer {
     }
 
     private void tryCloseSocket(ScxTCPSocket tcpSocket) {
+        try {
+            tcpSocket.close();
+        } catch (IOException ex) {
+            LOGGER.log(TRACE, "关闭 TCPSocket 时发生错误 !!!", ex);
+        }
+    }
+
+    private void tryCloseSocket(Socket tcpSocket) {
         try {
             tcpSocket.close();
         } catch (IOException ex) {
