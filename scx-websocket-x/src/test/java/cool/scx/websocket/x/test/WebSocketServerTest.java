@@ -9,6 +9,7 @@ import cool.scx.websocket.event.ScxEventWebSocket;
 import cool.scx.websocket.x.ScxWebSocketClientHelper;
 import cool.scx.websocket.x.WebSocketUpgradeHandler;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -19,14 +20,14 @@ public class WebSocketServerTest {
     static List<String> eventWebSockets = new CopyOnWriteArrayList<>();
     static AtomicInteger number = new AtomicInteger(0);
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         //测试 是否存在 幽灵连接
         // 查看 localhost: 8080 eventWebSockets 最终应该为 0 , number 也应该为 0 (表示没有多次触发 onClose)
         test1();
         test2();
     }
 
-    public static void test1() {
+    public static void test1() throws IOException {
         var httpServer = new HttpServer(new HttpServerOptions().addUpgradeHandler(new WebSocketUpgradeHandler()));
 
         httpServer.onRequest(c -> {

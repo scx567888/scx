@@ -37,10 +37,6 @@ public interface TLS {
         return new TLSImpl(createTrustAnySSLContext());
     }
 
-    boolean enabled();
-
-    TLS enabled(boolean enabled);
-
     SSLContext sslContext();
 
     SSLServerSocketFactory serverSocketFactory();

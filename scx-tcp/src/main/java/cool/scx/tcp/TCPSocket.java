@@ -6,7 +6,6 @@ import javax.net.ssl.SSLSocket;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UncheckedIOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
@@ -21,7 +20,7 @@ public class TCPSocket implements ScxTCPSocket {
     private OutputStream out;
     private ScxTLSManager tlsManager;
 
-    public TCPSocket(Socket socket) {
+    public TCPSocket(Socket socket) throws IOException {
         setSocket(socket);
     }
 
@@ -47,11 +46,9 @@ public class TCPSocket implements ScxTCPSocket {
 
     @Override
     public TCPSocket upgradeToTLS(TLS tls) throws IOException {
-        if (tls != null && tls.enabled()) {
-            //创建 sslSocket (服务器端不需要设置 host 和 port)
-            var sslSocket = tls.socketFactory().createSocket(socket, null, -1, true);
-            setSocket(sslSocket);
-        }
+        //创建 sslSocket (服务器端不需要设置 host 和 port)
+        var sslSocket = tls.socketFactory().createSocket(socket, null, -1, true);
+        setSocket(sslSocket);
         return this;
     }
 
@@ -64,6 +61,8 @@ public class TCPSocket implements ScxTCPSocket {
     public ScxTCPSocket startHandshake() throws IOException {
         if (socket instanceof SSLSocket sslSocket) {
             sslSocket.startHandshake();
+        } else {
+            throw new IllegalStateException("非 TLS 连接，无法执行 TLS 握手");
         }
         return this;
     }
@@ -83,16 +82,12 @@ public class TCPSocket implements ScxTCPSocket {
         socket.close();
     }
 
-    private void setSocket(Socket socket) {
+    private void setSocket(Socket socket) throws IOException {
         this.socket = socket;
-        try {
-            this.in = socket.getInputStream();
-            this.out = socket.getOutputStream();
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
+        this.in = socket.getInputStream();
+        this.out = socket.getOutputStream();
         if (socket instanceof SSLSocket sslSocket) {
-            tlsManager = new TLSManager(sslSocket);
+            this.tlsManager = new TLSManager(sslSocket);
         }
     }
 

@@ -6,13 +6,15 @@ import cool.scx.websocket.ScxServerWebSocketHandshakeRequest;
 import cool.scx.websocket.event.ScxEventWebSocket;
 import cool.scx.websocket.x.WebSocketUpgradeHandler;
 
+import java.io.IOException;
+
 public class XTest {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         test1();
     }
 
-    public static void test1() {
+    public static void test1() throws IOException {
         var httpServer = new HttpServer(new HttpServerOptions().addUpgradeHandler(
                 new WebSocketUpgradeHandler()
         ));

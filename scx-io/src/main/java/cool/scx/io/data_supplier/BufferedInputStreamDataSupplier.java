@@ -1,10 +1,10 @@
 package cool.scx.io.data_supplier;
 
 import cool.scx.io.data_node.DataNode;
+import cool.scx.io.exception.DataSupplierException;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UncheckedIOException;
 
 /// BufferedInputStreamDataSupplier
 /// 和 [InputStreamDataSupplier] 性能相反
@@ -28,7 +28,7 @@ public class BufferedInputStreamDataSupplier implements DataSupplier {
     }
 
     @Override
-    public DataNode get() {
+    public DataNode get() throws DataSupplierException {
         try {
             int i = inputStream.read(buffer);
             if (i == -1) {
@@ -38,7 +38,7 @@ public class BufferedInputStreamDataSupplier implements DataSupplier {
             System.arraycopy(buffer, 0, data, 0, i); // 复制数据到新的数组
             return new DataNode(data);
         } catch (IOException e) {
-            throw new UncheckedIOException(e);
+            throw new DataSupplierException(e);
         }
     }
 

@@ -13,32 +13,24 @@ class TLSImpl implements TLS {
     private final SSLContext sslContext;
     private final SSLServerSocketFactory serverSocketFactory;
     private final SSLSocketFactory socketFactory;
-    private boolean enabled;
 
     TLSImpl(SSLContext sslContext) {
-        this.enabled = true;
         this.sslContext = sslContext;
         this.serverSocketFactory = this.sslContext.getServerSocketFactory();
         this.socketFactory = this.sslContext.getSocketFactory();
     }
 
-    public boolean enabled() {
-        return enabled;
-    }
-
-    public TLS enabled(boolean enabled) {
-        this.enabled = enabled;
-        return this;
-    }
-
+    @Override
     public SSLContext sslContext() {
         return sslContext;
     }
 
+    @Override
     public SSLServerSocketFactory serverSocketFactory() {
         return serverSocketFactory;
     }
 
+    @Override
     public SSLSocketFactory socketFactory() {
         return socketFactory;
     }

@@ -4,6 +4,7 @@ import cool.scx.common.util.Base64Utils;
 import cool.scx.common.util.RandomUtils;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
+import cool.scx.http.sender.HttpSendException;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.uri.ScxURIWritable;
 import cool.scx.http.x.HttpClient;
@@ -11,8 +12,11 @@ import cool.scx.http.x.http1.Http1ClientConnection;
 import cool.scx.http.x.http1.Http1ClientRequest;
 import cool.scx.http.x.http1.headers.Http1Headers;
 import cool.scx.http.x.http1.request_line.RequestTargetForm;
+import cool.scx.tcp.ScxTCPSocket;
 import cool.scx.websocket.ScxClientWebSocketHandshakeRequest;
 import cool.scx.websocket.ScxClientWebSocketHandshakeResponse;
+
+import java.io.IOException;
 
 import static cool.scx.http.headers.HttpFieldName.SEC_WEBSOCKET_KEY;
 import static cool.scx.http.headers.HttpFieldName.SEC_WEBSOCKET_VERSION;
@@ -69,7 +73,12 @@ public class ClientWebSocketHandshakeRequest implements ScxClientWebSocketHandsh
     @Override
     public ScxClientWebSocketHandshakeResponse sendHandshake() {
         //0, 创建 tcp 连接
-        var tcpSocket = httpClient.createTCPSocket(uri, HTTP_1_1.alpnValue());
+        ScxTCPSocket tcpSocket;
+        try {
+            tcpSocket = httpClient.createTCPSocket(uri, HTTP_1_1.alpnValue());
+        } catch (IOException e) {
+            throw new HttpSendException("创建连接失败 !!!", e);
+        }
 
         //1, 创建 secWebsocketKey
         var secWebsocketKey = Base64Utils.encodeToString(RandomUtils.randomBytes(16));
@@ -85,10 +94,13 @@ public class ClientWebSocketHandshakeRequest implements ScxClientWebSocketHandsh
             this.requestTargetForm = ABSOLUTE_FORM;
         }
         var connection = new Http1ClientConnection(tcpSocket, httpClient.options());
-        var response = connection.sendRequest(this, EMPTY_WRITER).waitResponse();
 
-        return new ClientWebSocketHandshakeResponse(connection, response, this.webSocketOptions);
-
+        try {
+            var response = connection.sendRequest(this, EMPTY_WRITER).waitResponse();
+            return new ClientWebSocketHandshakeResponse(connection, response, this.webSocketOptions);
+        } catch (IOException e) {
+            throw new HttpSendException("发送 WebSocket 握手请求失败 !!!", e);
+        }
     }
 
     @Override

@@ -23,56 +23,56 @@ import static cool.scx.http.media.empty.EmptyWriter.EMPTY_WRITER;
 
 public interface ScxHttpSender<T> {
 
-    T send(MediaWriter writer) throws BodyAlreadySentException;
+    T send(MediaWriter writer) throws BodyAlreadySentException, HttpSendException;
 
     //******************** send 操作 *******************
 
-    default T send() {
+    default T send() throws HttpSendException, BodyAlreadySentException {
         return send(EMPTY_WRITER);
     }
 
-    default T send(byte[] bytes) {
+    default T send(byte[] bytes) throws BodyAlreadySentException, HttpSendException {
         return send(new ByteArrayWriter(bytes));
     }
 
-    default T send(String str) {
+    default T send(String str) throws BodyAlreadySentException, HttpSendException {
         return send(new StringWriter(str));
     }
 
-    default T send(String str, Charset charset) {
+    default T send(String str, Charset charset) throws BodyAlreadySentException, HttpSendException {
         return send(new StringWriter(str, charset));
     }
 
-    default T send(Path path) {
+    default T send(Path path) throws BodyAlreadySentException, HttpSendException {
         return send(new PathWriter(path));
     }
 
-    default T send(Path path, long offset, long length) {
+    default T send(Path path, long offset, long length) throws BodyAlreadySentException, HttpSendException {
         return send(new PathWriter(path, offset, length));
     }
 
-    default T send(InputStream inputStream) {
+    default T send(InputStream inputStream) throws BodyAlreadySentException, HttpSendException {
         return send(new InputStreamWriter(inputStream));
     }
 
-    default T send(FormParams formParams) {
+    default T send(FormParams formParams) throws BodyAlreadySentException, HttpSendException {
         return send(new FormParamsWriter(formParams));
     }
 
-    default T send(MultiPart multiPart) {
+    default T send(MultiPart multiPart) throws BodyAlreadySentException, HttpSendException {
         return send(new MultiPartWriter(multiPart));
     }
 
-    default T send(JsonNode jsonNode) {
+    default T send(JsonNode jsonNode) throws BodyAlreadySentException, HttpSendException {
         return send(new JsonNodeWriter(jsonNode));
     }
 
-    default T send(Object object) {
+    default T send(Object object) throws BodyAlreadySentException, HttpSendException {
         return send(new ObjectWriter(object));
     }
 
     //理论上只有 服务器才支持发送这种格式
-    default ServerEventStream sendEventStream() {
+    default ServerEventStream sendEventStream() throws BodyAlreadySentException, HttpSendException {
         var writer = new ServerEventStreamWriter();
         send(writer);
         return writer.eventStream();

@@ -4,16 +4,18 @@ import cool.scx.http.exception.UnauthorizedException;
 import cool.scx.http.routing.Router;
 import cool.scx.http.x.HttpServer;
 
+import java.io.IOException;
+
 import static cool.scx.http.method.HttpMethod.GET;
 import static cool.scx.http.method.HttpMethod.POST;
 
 public class Test {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         test1();
     }
 
-    public static void test1() {
+    public static void test1() throws IOException {
         var l = System.nanoTime();
         var server = new HttpServer();
 

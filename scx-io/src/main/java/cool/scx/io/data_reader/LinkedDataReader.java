@@ -1,14 +1,17 @@
 package cool.scx.io.data_reader;
 
+import cool.scx.io.data_consumer.ByteArrayDataConsumer;
 import cool.scx.io.data_consumer.DataConsumer;
 import cool.scx.io.data_consumer.FillByteArrayDataConsumer;
 import cool.scx.io.data_consumer.OutputStreamDataConsumer;
 import cool.scx.io.data_indexer.DataIndexer;
 import cool.scx.io.data_node.DataNode;
 import cool.scx.io.data_supplier.DataSupplier;
+import cool.scx.io.exception.DataSupplierException;
 import cool.scx.io.exception.NoMatchFoundException;
 import cool.scx.io.exception.NoMoreDataException;
 
+import java.io.IOException;
 import java.io.OutputStream;
 
 import static java.lang.Math.min;
@@ -43,7 +46,7 @@ public class LinkedDataReader implements DataReader {
         tail = tail.next;
     }
 
-    public boolean pullData() {
+    public boolean pullData() throws DataSupplierException {
         var data = dataSupplier.get();
         if (data == null) {
             return false;
@@ -52,7 +55,7 @@ public class LinkedDataReader implements DataReader {
         return true;
     }
 
-    public long ensureAvailable(long maxPullCount) {
+    public long ensureAvailable(long maxPullCount) throws DataSupplierException {
         var pullCount = 0L;
         while (!head.hasAvailable()) {
             if (head.next == null) {
@@ -71,7 +74,7 @@ public class LinkedDataReader implements DataReader {
         return pullCount;
     }
 
-    public long ensureAvailableOrThrow(long maxPullCount) throws NoMoreDataException {
+    public long ensureAvailableOrThrow(long maxPullCount) throws NoMoreDataException, DataSupplierException {
         var b = ensureAvailable(maxPullCount);
         if (b == -1) {
             throw new NoMoreDataException();
@@ -80,7 +83,7 @@ public class LinkedDataReader implements DataReader {
         }
     }
 
-    public void walk(DataConsumer consumer, long maxLength, boolean movePointer, long maxPullCount) {
+    public void walk(DataConsumer consumer, long maxLength, boolean movePointer, long maxPullCount) throws DataSupplierException {
 
         var remaining = maxLength; // 剩余需要读取的字节数
         var n = head; // 用于循环的节点
@@ -140,7 +143,7 @@ public class LinkedDataReader implements DataReader {
 
     }
 
-    public long findIndex(DataIndexer indexer, long maxLength, long maxPullCount) throws NoMatchFoundException {
+    public long findIndex(DataIndexer indexer, long maxLength, long maxPullCount) throws NoMatchFoundException, DataSupplierException {
 
         var index = 0L; // 主串索引
 
@@ -182,7 +185,7 @@ public class LinkedDataReader implements DataReader {
     }
 
     @Override
-    public byte read() throws NoMoreDataException {
+    public byte read() throws NoMoreDataException, DataSupplierException {
         ensureAvailableOrThrow(Long.MAX_VALUE);
         var b = head.bytes[head.position];
         head.position = head.position + 1;
@@ -190,7 +193,7 @@ public class LinkedDataReader implements DataReader {
     }
 
     @Override
-    public void read(DataConsumer dataConsumer, long maxLength, long maxPullCount) throws NoMoreDataException {
+    public void read(DataConsumer dataConsumer, long maxLength, long maxPullCount) throws NoMoreDataException, DataSupplierException {
         if (maxLength > 0) {
             var pullCount = ensureAvailableOrThrow(maxPullCount);
             maxPullCount = maxPullCount - pullCount;
@@ -199,13 +202,13 @@ public class LinkedDataReader implements DataReader {
     }
 
     @Override
-    public byte peek() throws NoMoreDataException {
+    public byte peek() throws NoMoreDataException, DataSupplierException {
         ensureAvailableOrThrow(Long.MAX_VALUE);
         return head.bytes[head.position];
     }
 
     @Override
-    public void peek(DataConsumer dataConsumer, long maxLength, long maxPullCount) throws NoMoreDataException {
+    public void peek(DataConsumer dataConsumer, long maxLength, long maxPullCount) throws NoMoreDataException, DataSupplierException {
         if (maxLength > 0) {
             var pullCount = ensureAvailableOrThrow(maxPullCount);
             maxPullCount = maxPullCount - pullCount;
@@ -214,7 +217,7 @@ public class LinkedDataReader implements DataReader {
     }
 
     @Override
-    public long indexOf(DataIndexer indexer, long maxLength, long maxPullCount) throws NoMatchFoundException, NoMoreDataException {
+    public long indexOf(DataIndexer indexer, long maxLength, long maxPullCount) throws NoMatchFoundException, NoMoreDataException, DataSupplierException {
         if (maxLength > 0) {
             var pullCount = ensureAvailableOrThrow(maxPullCount);
             maxPullCount = maxPullCount - pullCount;
@@ -245,43 +248,84 @@ public class LinkedDataReader implements DataReader {
     }
 
     @Override
-    public int inputStreamRead() {
-        var pullCount = ensureAvailable(1);
-        if (pullCount == -1) {
-            return -1;
-        }
-        var b = head.bytes[head.position];
-        head.position = head.position + 1;
-        return b & 0xFF;
-    }
-
-    @Override
-    public int inputStreamRead(byte[] b, int off, int len) {
-        var maxPullCount = 1L;
-        if (len > 0) {
-            var pullCount = ensureAvailable(maxPullCount);
+    public int inputStreamRead() throws IOException {
+        try {
+            var pullCount = ensureAvailable(1);
             if (pullCount == -1) {
                 return -1;
-            } else {
-                maxPullCount = maxPullCount - pullCount;
             }
+            var b = head.bytes[head.position];
+            head.position = head.position + 1;
+            return b & 0xFF;
+        } catch (DataSupplierException e) {
+            if (e.getCause() instanceof IOException i) {
+                throw i;
+            }
+            throw e;
         }
-        var consumer = new FillByteArrayDataConsumer(b, off, len);
-        walk(consumer, len, true, maxPullCount);
-        return consumer.getFilledLength();
     }
 
     @Override
-    public long inputStreamTransferTo(OutputStream out, long maxLength) {
-        if (maxLength > 0) {
-            var pullCount = ensureAvailable(Long.MAX_VALUE);
-            if (pullCount == -1) {
-                return 0;
+    public int inputStreamRead(byte[] b, int off, int len) throws IOException {
+        try {
+            var maxPullCount = 1L;
+            if (len > 0) {
+                var pullCount = ensureAvailable(maxPullCount);
+                if (pullCount == -1) {
+                    return -1;
+                } else {
+                    maxPullCount = maxPullCount - pullCount;
+                }
             }
+            var consumer = new FillByteArrayDataConsumer(b, off, len);
+            walk(consumer, len, true, maxPullCount);
+            return consumer.getFilledLength();
+        } catch (DataSupplierException e) {
+            if (e.getCause() instanceof IOException i) {
+                throw i;
+            }
+            throw e;
         }
-        var consumer = new OutputStreamDataConsumer(out);
-        walk(consumer, maxLength, true, Long.MAX_VALUE);
-        return consumer.byteCount();
+    }
+
+    @Override
+    public long inputStreamTransferTo(OutputStream out, long maxLength) throws IOException {
+        try {
+            if (maxLength > 0) {
+                var pullCount = ensureAvailable(Long.MAX_VALUE);
+                if (pullCount == -1) {
+                    return 0;
+                }
+            }
+            var consumer = new OutputStreamDataConsumer(out);
+            walk(consumer, maxLength, true, Long.MAX_VALUE);
+            return consumer.byteCount();
+        } catch (DataSupplierException e) {
+            if (e.getCause() instanceof IOException i) {
+                throw i;
+            }
+            throw e;
+        }
+    }
+
+    @Override
+    public byte[] inputStreamReadNBytes(long len) throws IOException {
+        try {
+            if (len > 0) {
+                var pullCount = ensureAvailable(Long.MAX_VALUE);
+                if (pullCount == -1) {
+                    return new byte[0];
+                }
+            }
+            var consumer = new ByteArrayDataConsumer();
+            walk(consumer, len, true, Long.MAX_VALUE);
+            return consumer.getBytes();
+        } catch (DataSupplierException e) {
+            if (e.getCause() instanceof IOException i) {
+                throw i;
+            }
+            throw e;
+        }
     }
 
 }

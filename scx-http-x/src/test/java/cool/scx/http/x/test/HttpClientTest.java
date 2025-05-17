@@ -2,15 +2,17 @@ package cool.scx.http.x.test;
 
 import cool.scx.http.x.HttpClient;
 
+import java.io.IOException;
+
 import static cool.scx.http.method.HttpMethod.POST;
 
 public class HttpClientTest {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         test1();
     }
 
-    public static void test1() {
+    public static void test1() throws IOException {
         XTest.test1();
 
         var client = new HttpClient();

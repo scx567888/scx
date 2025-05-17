@@ -1,9 +1,9 @@
 package cool.scx.io.data_supplier;
 
 import cool.scx.io.data_node.DataNode;
+import cool.scx.io.exception.DataSupplierException;
 
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.ReadableByteChannel;
 
@@ -36,7 +36,7 @@ public class ByteChannelDataSupplier implements DataSupplier {
     }
 
     @Override
-    public DataNode get() {
+    public DataNode get() throws DataSupplierException {
         try {
             // 不使用成员变量作为缓冲区的原因 参照 InputStreamDataSupplier
             var bytes = ByteBuffer.allocate(bufferLength);
@@ -55,7 +55,7 @@ public class ByteChannelDataSupplier implements DataSupplier {
                 return new DataNode(bytes.array(), 0, i);
             }
         } catch (IOException e) {
-            throw new UncheckedIOException(e);
+            throw new DataSupplierException(e);
         }
     }
 

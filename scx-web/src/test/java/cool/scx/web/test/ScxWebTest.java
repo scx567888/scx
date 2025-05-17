@@ -7,18 +7,20 @@ import cool.scx.http.x.HttpServer;
 import cool.scx.web.ScxWeb;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
+
 import static cool.scx.http.status.HttpStatus.FORBIDDEN;
 
 public class ScxWebTest {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         test0();
         test1();
     }
 
     /// 测试 bindErrorHandler
     @Test
-    public static void test0() {
+    public static void test0() throws IOException {
         var httpServer = new HttpServer();
 
         var router = Router.of();
@@ -42,7 +44,7 @@ public class ScxWebTest {
     }
 
     /// 测试  registerHttpRoutes
-    public static void test1() {
+    public static void test1() throws IOException {
 
         var httpServer = new HttpServer();
 

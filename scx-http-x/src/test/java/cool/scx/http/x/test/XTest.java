@@ -2,13 +2,15 @@ package cool.scx.http.x.test;
 
 import cool.scx.http.x.HttpServer;
 
+import java.io.IOException;
+
 public class XTest {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         test1();
     }
 
-    public static void test1() {
+    public static void test1() throws IOException {
         var httpServer = new HttpServer();
         httpServer.onRequest(c -> {
             var cacheBody = c.body().asGzipBody().asCacheBody();

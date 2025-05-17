@@ -5,6 +5,7 @@ import cool.scx.http.x.HttpClient;
 import cool.scx.http.x.HttpServer;
 import cool.scx.http.x.http1.Http1ClientResponse;
 import cool.scx.http.x.http1.Http1ServerRequest;
+import cool.scx.tcp.ScxTCPSocket;
 import cool.scx.tcp.TCPClient;
 
 import java.io.IOException;
@@ -13,12 +14,12 @@ import java.net.InetSocketAddress;
 // 测试代理功能
 public class HttpProxyServerTest {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         test1();
     }
 
     /// 只做流量转发 不做任何解析
-    public static void test1() {
+    public static void test1() throws IOException {
         var httpServer = new HttpServer();
         httpServer.onRequest(c -> {
 
@@ -35,7 +36,12 @@ public class HttpProxyServerTest {
                 var serverTCPSocket = serverConnection.tcpSocket;
                 //4, 创建 远端连接
                 var tcpClient = new TCPClient();
-                var clientTCPSocket = tcpClient.connect(new InetSocketAddress(c.uri().host(), c.uri().port()));
+                ScxTCPSocket clientTCPSocket;
+                try {
+                    clientTCPSocket = tcpClient.connect(new InetSocketAddress(c.uri().host(), c.uri().port()));
+                } catch (IOException e) {
+                    throw new RuntimeException("连接远端失败 !!!", e);
+                }
 
                 //5, 通知代理连接成功
                 request.response().reasonPhrase("连接成功!!!").status(200).send();
