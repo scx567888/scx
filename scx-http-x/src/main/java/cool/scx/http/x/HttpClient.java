@@ -33,13 +33,13 @@ public class HttpClient implements ScxHttpClient {
         this(new HttpClientOptions());
     }
 
-    private static ScxTCPSocket configTLS(ScxTCPSocket tcpSocket, TLS tls, ScxURI uri, String... applicationProtocols) {
+    private static ScxTCPSocket configTLS(ScxTCPSocket tcpSocket, TLS tls, ScxURI uri, String... applicationProtocols) throws IOException {
         //手动升级
         try {
             tcpSocket.upgradeToTLS(tls);
         } catch (IOException e) {
             tryCloseSocket(tcpSocket, e);
-            throw new UncheckedIOException("升级到 TLS 时发生错误 !!!", e);
+            throw new IOException("升级到 TLS 时发生错误 !!!", e);
         }
         tcpSocket.tlsManager().setUseClientMode(true);
         tcpSocket.tlsManager().setApplicationProtocols(applicationProtocols);
@@ -48,7 +48,7 @@ public class HttpClient implements ScxHttpClient {
             tcpSocket.startHandshake();
         } catch (IOException e) {
             tryCloseSocket(tcpSocket, e);
-            throw new UncheckedIOException("处理 TLS 握手 时发生错误 !!!", e);
+            throw new IOException("处理 TLS 握手 时发生错误 !!!", e);
         }
         return tcpSocket;
     }
