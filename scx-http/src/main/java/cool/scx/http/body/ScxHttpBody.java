@@ -32,61 +32,61 @@ public interface ScxHttpBody {
 
     InputStream inputStream();
 
-    <T> T as(MediaReader<T> t) throws BodyAlreadyConsumedException;
+    <T> T as(MediaReader<T> t) throws BodyAlreadyConsumedException, BodyReadException;
 
-    default byte[] asBytes() {
+    default byte[] asBytes() throws BodyReadException, BodyAlreadyConsumedException {
         return as(BYTE_ARRAY_READER);
     }
 
-    default String asString() {
+    default String asString() throws BodyReadException, BodyAlreadyConsumedException {
         return as(STRING_READER);
     }
 
-    default String asString(Charset charset) {
+    default String asString(Charset charset) throws BodyReadException, BodyAlreadyConsumedException {
         return as(new StringReader(charset));
     }
 
-    default FormParams asFormParams() {
+    default FormParams asFormParams() throws BodyReadException, BodyAlreadyConsumedException {
         return as(FORM_PARAMS_READER);
     }
 
-    default MultiPart asMultiPart() {
+    default MultiPart asMultiPart() throws BodyReadException, BodyAlreadyConsumedException {
         return as(MULTI_PART_READER);
     }
 
-    default MultiPart asMultiPartCached() {
+    default MultiPart asMultiPartCached() throws BodyReadException, BodyAlreadyConsumedException {
         return as(MULTI_PART_READER_CACHED);
     }
 
-    default MultiPart asMultiPartCached(Path cachePath) {
+    default MultiPart asMultiPartCached(Path cachePath) throws BodyReadException, BodyAlreadyConsumedException {
         return as(new MultiPartStreamCachedReader(cachePath));
     }
 
-    default Path asPath(Path path, OpenOption... options) {
+    default Path asPath(Path path, OpenOption... options) throws BodyReadException, BodyAlreadyConsumedException {
         return as(new PathReader(path, options));
     }
 
-    default JsonNode asJsonNode() {
+    default JsonNode asJsonNode() throws BodyReadException, BodyAlreadyConsumedException {
         return as(JSON_NODE_READER);
     }
 
-    default <T> T asObject(Class<T> c) {
+    default <T> T asObject(Class<T> c) throws BodyReadException, BodyAlreadyConsumedException {
         return as(new ObjectReader<>(c));
     }
 
-    default <T> T asObject(TypeReference<T> c) {
+    default <T> T asObject(TypeReference<T> c) throws BodyReadException, BodyAlreadyConsumedException {
         return as(new ObjectReader<>(c));
     }
 
-    default ClientEventStream asEventStream() {
+    default ClientEventStream asEventStream() throws BodyReadException, BodyAlreadyConsumedException {
         return as(CLIENT_EVENT_STREAM_READER);
     }
 
-    default GzipBody asGzipBody() {
+    default GzipBody asGzipBody() throws BodyReadException, BodyAlreadyConsumedException {
         return as(GzipBody::new);
     }
 
-    default CacheBody asCacheBody() {
+    default CacheBody asCacheBody() throws BodyReadException, BodyAlreadyConsumedException {
         return as(CacheBody::new);
     }
 

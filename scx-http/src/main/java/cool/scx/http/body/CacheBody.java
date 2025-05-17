@@ -8,7 +8,6 @@ import cool.scx.io.io_stream.StreamClosedException;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UncheckedIOException;
 
 import static cool.scx.io.IOHelper.inputStreamToDataReader;
 
@@ -30,11 +29,11 @@ public class CacheBody implements ScxHttpBody {
     }
 
     @Override
-    public <T> T as(MediaReader<T> t) {
+    public <T> T as(MediaReader<T> t) throws BodyAlreadyConsumedException, BodyReadException {
         try {
             return t.read(inputStream(), headers);
         } catch (IOException e) {
-            throw new UncheckedIOException(e);
+            throw new BodyReadException(e);
         } catch (StreamClosedException e) {
             throw new BodyAlreadyConsumedException();
         }

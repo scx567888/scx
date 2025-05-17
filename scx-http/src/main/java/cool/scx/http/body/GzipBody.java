@@ -51,11 +51,11 @@ public class GzipBody implements ScxHttpBody {
     }
 
     @Override
-    public <T> T as(MediaReader<T> t) {
+    public <T> T as(MediaReader<T> t) throws BodyReadException, BodyAlreadyConsumedException {
         try {
             return t.read(inputStream, headers);
         } catch (IOException e) {
-            throw new UncheckedIOException(e);
+            throw new BodyReadException(e);
         } catch (StreamClosedException e) {
             throw new BodyAlreadyConsumedException();
         }
