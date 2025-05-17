@@ -6,7 +6,7 @@
     <parent>
         <groupId>cool.scx</groupId>
         <artifactId>scx</artifactId>
-        <version>3.7.2</version>
+        <version>3.7.3</version>
     </parent>
 
     <artifactId>scx-scheduling</artifactId>
