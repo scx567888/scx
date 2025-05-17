@@ -1,9 +1,9 @@
 package cool.scx.io.data_supplier;
 
 import cool.scx.io.data_node.DataNode;
+import cool.scx.io.exception.DataSupplierException;
 
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.ReadableByteChannel;
 
@@ -26,7 +26,7 @@ public class BufferedByteChannelDataSupplier implements DataSupplier {
     }
 
     @Override
-    public DataNode get() {
+    public DataNode get() throws DataSupplierException {
         try {
             buffer.clear(); // 重置缓冲区以进行新的读取操作
             int i = dataChannel.read(buffer);
@@ -37,7 +37,7 @@ public class BufferedByteChannelDataSupplier implements DataSupplier {
             buffer.flip().get(data); // 复制数据到新的数组
             return new DataNode(data);
         } catch (IOException e) {
-            throw new UncheckedIOException(e);
+            throw new DataSupplierException(e);
         }
     }
 
