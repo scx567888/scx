@@ -4,6 +4,7 @@ import cool.scx.common.util.Base64Utils;
 import cool.scx.common.util.RandomUtils;
 import cool.scx.http.headers.ScxHttpHeaders;
 import cool.scx.http.headers.ScxHttpHeadersWritable;
+import cool.scx.http.sender.HttpSendException;
 import cool.scx.http.uri.ScxURI;
 import cool.scx.http.uri.ScxURIWritable;
 import cool.scx.http.x.HttpClient;
@@ -16,7 +17,6 @@ import cool.scx.websocket.ScxClientWebSocketHandshakeRequest;
 import cool.scx.websocket.ScxClientWebSocketHandshakeResponse;
 
 import java.io.IOException;
-import java.io.UncheckedIOException;
 
 import static cool.scx.http.headers.HttpFieldName.SEC_WEBSOCKET_KEY;
 import static cool.scx.http.headers.HttpFieldName.SEC_WEBSOCKET_VERSION;
@@ -77,7 +77,7 @@ public class ClientWebSocketHandshakeRequest implements ScxClientWebSocketHandsh
         try {
             tcpSocket = httpClient.createTCPSocket(uri, HTTP_1_1.alpnValue());
         } catch (IOException e) {
-            throw new UncheckedIOException("创建连接失败 !!!", e);
+            throw new HttpSendException("创建连接失败 !!!", e);
         }
 
         //1, 创建 secWebsocketKey
@@ -94,10 +94,13 @@ public class ClientWebSocketHandshakeRequest implements ScxClientWebSocketHandsh
             this.requestTargetForm = ABSOLUTE_FORM;
         }
         var connection = new Http1ClientConnection(tcpSocket, httpClient.options());
-        var response = connection.sendRequest(this, EMPTY_WRITER).waitResponse();
 
-        return new ClientWebSocketHandshakeResponse(connection, response, this.webSocketOptions);
-
+        try {
+            var response = connection.sendRequest(this, EMPTY_WRITER).waitResponse();
+            return new ClientWebSocketHandshakeResponse(connection, response, this.webSocketOptions);
+        } catch (IOException e) {
+            throw new HttpSendException("发送 WebSocket 握手请求失败 !!!", e);
+        }
     }
 
     @Override
