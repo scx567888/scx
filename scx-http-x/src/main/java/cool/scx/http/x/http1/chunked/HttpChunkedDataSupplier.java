@@ -1,9 +1,11 @@
 package cool.scx.http.x.http1.chunked;
 
+import cool.scx.http.exception.BadRequestException;
 import cool.scx.http.exception.ContentTooLargeException;
 import cool.scx.io.data_node.DataNode;
 import cool.scx.io.data_reader.DataReader;
 import cool.scx.io.data_supplier.DataSupplier;
+import cool.scx.io.exception.DataSupplierException;
 
 /// 用来解析 HttpChunked 分块传输数据
 ///
@@ -28,14 +30,19 @@ public class HttpChunkedDataSupplier implements DataSupplier {
     }
 
     @Override
-    public DataNode get() {
+    public DataNode get() throws DataSupplierException {
         if (isFinished) {
             return null;
         }
 
         var chunkLengthBytes = dataReader.readUntil("\r\n".getBytes());
         var chunkLengthStr = new String(chunkLengthBytes);
-        int chunkLength = Integer.parseUnsignedInt(chunkLengthStr, 16);
+        int chunkLength;
+        try {
+            chunkLength = Integer.parseUnsignedInt(chunkLengthStr, 16);
+        } catch (NumberFormatException e) {
+            throw new BadRequestException("错误的分块长度 !!! " + chunkLengthStr);
+        }
 
         //这里做最大长度限制检查
         checkMaxPayload(chunkLength);
@@ -44,7 +51,7 @@ public class HttpChunkedDataSupplier implements DataSupplier {
         if (chunkLength == 0) {
             var endBytes = dataReader.readUntil("\r\n".getBytes());
             if (endBytes.length != 0) {
-                throw new IllegalArgumentException("错误的终结分块");
+                throw new BadRequestException("错误的终结分块 !!!");
             }
             isFinished = true;
             return null;
