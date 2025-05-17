@@ -2,6 +2,7 @@ package cool.scx.io.data_supplier;
 
 import cool.scx.common.iterator.ArrayIterator;
 import cool.scx.io.data_node.DataNode;
+import cool.scx.io.exception.DataSupplierException;
 
 import java.util.Iterator;
 import java.util.List;
@@ -30,7 +31,7 @@ public class SequenceDataSupplier implements DataSupplier {
     }
 
     @Override
-    public DataNode get() {
+    public DataNode get() throws DataSupplierException {
         while (currentSupplier != null) {
             var dataNode = currentSupplier.get();
             if (dataNode != null) {

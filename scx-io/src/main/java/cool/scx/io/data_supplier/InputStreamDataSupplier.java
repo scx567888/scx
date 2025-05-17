@@ -1,6 +1,7 @@
 package cool.scx.io.data_supplier;
 
 import cool.scx.io.data_node.DataNode;
+import cool.scx.io.exception.DataSupplierException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,7 +41,7 @@ public class InputStreamDataSupplier implements DataSupplier {
     }
 
     @Override
-    public DataNode get() {
+    public DataNode get() throws DataSupplierException {
         try {
             // 这里每次都创建一个 byte 数组是因为我们后续需要直接使用 这个数组
             // 即使使用成员变量 来作为缓冲 buffer
@@ -62,7 +63,7 @@ public class InputStreamDataSupplier implements DataSupplier {
                 return new DataNode(bytes, 0, i);
             }
         } catch (IOException e) {
-            throw new UncheckedIOException(e);
+            throw new DataSupplierException(e);
         }
     }
 
