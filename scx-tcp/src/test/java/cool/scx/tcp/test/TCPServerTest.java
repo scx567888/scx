@@ -3,23 +3,17 @@ package cool.scx.tcp.test;
 import cool.scx.io.data_reader.LinkedDataReader;
 import cool.scx.io.data_supplier.InputStreamDataSupplier;
 import cool.scx.tcp.TCPServer;
-import cool.scx.tcp.TCPServerOptions;
-import cool.scx.tcp.tls.TLS;
+
+import java.io.IOException;
 
 public class TCPServerTest {
 
-    public static TLS tls;
-
-    static {
-        tls = null;
-    }
-
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         test1();
     }
 
-    public static void test1() {
-        var tcpServer = new TCPServer(new TCPServerOptions().tls(tls));
+    public static void test1() throws IOException {
+        var tcpServer = new TCPServer();
 
         tcpServer.onConnect(c -> {
             System.out.println("客户端连接了 !!!");
