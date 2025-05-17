@@ -9,6 +9,7 @@ import cool.scx.io.exception.DataSupplierException;
 import cool.scx.io.exception.NoMatchFoundException;
 import cool.scx.io.exception.NoMoreDataException;
 
+import java.io.IOException;
 import java.io.OutputStream;
 
 import static cool.scx.io.data_consumer.SkipDataConsumer.SKIP_DATA_CONSUMER;
@@ -62,13 +63,13 @@ public interface DataReader {
     void reset();
 
     /// InputStream 写法的 read
-    int inputStreamRead() throws DataSupplierException;
+    int inputStreamRead() throws IOException;
 
     /// InputStream 写法的 read
-    int inputStreamRead(byte[] b, int off, int len) throws DataSupplierException;
+    int inputStreamRead(byte[] b, int off, int len) throws IOException;
 
     /// InputStream 写法的 read
-    long inputStreamTransferTo(OutputStream out, long maxLength) throws DataSupplierException;
+    long inputStreamTransferTo(OutputStream out, long maxLength) throws IOException;
 
     default byte[] read(int maxLength) throws NoMoreDataException, DataSupplierException {
         return read(maxLength, Long.MAX_VALUE);
@@ -178,7 +179,7 @@ public interface DataReader {
         return peek(toIntExact(index));
     }
 
-    default long inputStreamTransferTo(OutputStream out) throws DataSupplierException {
+    default long inputStreamTransferTo(OutputStream out) throws IOException {
         return inputStreamTransferTo(out, Long.MAX_VALUE);
     }
 

@@ -10,6 +10,7 @@ import cool.scx.io.exception.DataSupplierException;
 import cool.scx.io.exception.NoMatchFoundException;
 import cool.scx.io.exception.NoMoreDataException;
 
+import java.io.IOException;
 import java.io.OutputStream;
 
 import static java.lang.Math.min;
@@ -246,43 +247,64 @@ public class LinkedDataReader implements DataReader {
     }
 
     @Override
-    public int inputStreamRead() throws DataSupplierException {
-        var pullCount = ensureAvailable(1);
-        if (pullCount == -1) {
-            return -1;
-        }
-        var b = head.bytes[head.position];
-        head.position = head.position + 1;
-        return b & 0xFF;
-    }
-
-    @Override
-    public int inputStreamRead(byte[] b, int off, int len) throws DataSupplierException {
-        var maxPullCount = 1L;
-        if (len > 0) {
-            var pullCount = ensureAvailable(maxPullCount);
+    public int inputStreamRead() throws IOException {
+        try {
+            var pullCount = ensureAvailable(1);
             if (pullCount == -1) {
                 return -1;
-            } else {
-                maxPullCount = maxPullCount - pullCount;
             }
+            var b = head.bytes[head.position];
+            head.position = head.position + 1;
+            return b & 0xFF;
+        } catch (DataSupplierException e) {
+            if (e.getCause() instanceof IOException i) {
+                throw i;
+            }
+            throw e;
         }
-        var consumer = new FillByteArrayDataConsumer(b, off, len);
-        walk(consumer, len, true, maxPullCount);
-        return consumer.getFilledLength();
     }
 
     @Override
-    public long inputStreamTransferTo(OutputStream out, long maxLength) throws DataSupplierException {
-        if (maxLength > 0) {
-            var pullCount = ensureAvailable(Long.MAX_VALUE);
-            if (pullCount == -1) {
-                return 0;
+    public int inputStreamRead(byte[] b, int off, int len) throws IOException {
+        try {
+            var maxPullCount = 1L;
+            if (len > 0) {
+                var pullCount = ensureAvailable(maxPullCount);
+                if (pullCount == -1) {
+                    return -1;
+                } else {
+                    maxPullCount = maxPullCount - pullCount;
+                }
             }
+            var consumer = new FillByteArrayDataConsumer(b, off, len);
+            walk(consumer, len, true, maxPullCount);
+            return consumer.getFilledLength();
+        } catch (DataSupplierException e) {
+            if (e.getCause() instanceof IOException i) {
+                throw i;
+            }
+            throw e;
         }
-        var consumer = new OutputStreamDataConsumer(out);
-        walk(consumer, maxLength, true, Long.MAX_VALUE);
-        return consumer.byteCount();
+    }
+
+    @Override
+    public long inputStreamTransferTo(OutputStream out, long maxLength) throws IOException {
+        try {
+            if (maxLength > 0) {
+                var pullCount = ensureAvailable(Long.MAX_VALUE);
+                if (pullCount == -1) {
+                    return 0;
+                }
+            }
+            var consumer = new OutputStreamDataConsumer(out);
+            walk(consumer, maxLength, true, Long.MAX_VALUE);
+            return consumer.byteCount();
+        } catch (DataSupplierException e) {
+            if (e.getCause() instanceof IOException i) {
+                throw i;
+            }
+            throw e;
+        }
     }
 
 }
