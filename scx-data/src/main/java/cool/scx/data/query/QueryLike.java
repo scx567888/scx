@@ -25,12 +25,6 @@ public abstract class QueryLike<QL extends QueryLike<QL>> implements Query {
     }
 
     @Override
-    public QL groupBy(Object... groupByClauses) {
-        query().groupBy(groupByClauses);
-        return (QL) this;
-    }
-
-    @Override
     public QL orderBy(Object... orderByClauses) {
         query().orderBy(orderByClauses);
         return (QL) this;
@@ -51,11 +45,6 @@ public abstract class QueryLike<QL extends QueryLike<QL>> implements Query {
     @Override
     public Object getWhere() {
         return query().getWhere();
-    }
-
-    @Override
-    public Object[] getGroupBy() {
-        return query().getGroupBy();
     }
 
     @Override
@@ -80,12 +69,6 @@ public abstract class QueryLike<QL extends QueryLike<QL>> implements Query {
     }
 
     @Override
-    public QL clearGroupBy() {
-        query().clearGroupBy();
-        return (QL) this;
-    }
-
-    @Override
     public QL clearOrderBy() {
         query().clearOrderBy();
         return (QL) this;
@@ -104,20 +87,8 @@ public abstract class QueryLike<QL extends QueryLike<QL>> implements Query {
     }
 
     @Override
-    public QL addGroupBy(Object... groupByClauses) {
-        query().addGroupBy(groupByClauses);
-        return (QL) this;
-    }
-
-    @Override
     public QL addOrderBy(Object... orderByClauses) {
         query().addOrderBy(orderByClauses);
-        return (QL) this;
-    }
-
-    @Override
-    public QL removeGroupByIf(Predicate<Object> filter) {
-        query().removeGroupByIf(filter);
         return (QL) this;
     }
 
