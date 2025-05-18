@@ -34,7 +34,8 @@ public class GroupBySerializer {
     }
 
     private Object[] serializeQuery(Query q) {
-        return serializeAll(q.getGroupBy());
+//        return serializeAll(q.getGroupBy()); todo
+        return null;
     }
 
     private Object[] serializeAll(Object[] objs) {

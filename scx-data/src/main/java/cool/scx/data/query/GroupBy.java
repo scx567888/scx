@@ -35,7 +35,8 @@ public final class GroupBy extends QueryLike<GroupBy> {
 
     @Override
     protected Query toQuery() {
-        return new QueryImpl().groupBy(this);
+//        return new QueryImpl().groupBy(this); todo
+        return null;
     }
 
 }

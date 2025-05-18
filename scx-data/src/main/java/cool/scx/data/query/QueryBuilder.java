@@ -23,7 +23,8 @@ public final class QueryBuilder {
     }
 
     public static Query groupBy(Object... groupByClauses) {
-        return new QueryImpl().groupBy(groupByClauses);
+//        return new QueryImpl().groupBy(groupByClauses); todo 
+        return null;
     }
 
     public static Query orderBy(Object... orderByClauses) {

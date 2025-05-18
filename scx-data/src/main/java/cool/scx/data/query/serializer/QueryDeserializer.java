@@ -48,10 +48,10 @@ public class QueryDeserializer {
             var where = whereDeserializer.deserialize(objectNode.get("where"));
             query.where(where);
         }
-        if (objectNode.get("groupBy") != null && !objectNode.get("groupBy").isNull()) {
-            var groupBy = groupByDeserializer.deserialize(objectNode.path("groupBy"));
-            query.groupBy(groupBy);
-        }
+//        if (objectNode.get("groupBy") != null && !objectNode.get("groupBy").isNull()) { todo
+//            var groupBy = groupByDeserializer.deserialize(objectNode.path("groupBy"));
+//            query.groupBy(groupBy);
+//        }
         if (objectNode.get("orderBy") != null && !objectNode.get("orderBy").isNull()) {
             var orderBy = orderByDeserializer.deserialize(objectNode.path("orderBy"));
             query.orderBy(orderBy);

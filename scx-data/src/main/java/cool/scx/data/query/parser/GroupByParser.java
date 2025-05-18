@@ -30,7 +30,8 @@ public abstract class GroupByParser {
     protected abstract String[] parseGroupBy(GroupBy g);
 
     protected String[] parseQuery(Query q) {
-        return parseAll(q.getGroupBy());
+//        return parseAll(q.getGroupBy()); todo
+        return null;
     }
 
     protected final String[] parseAll(Object[] objs) {
