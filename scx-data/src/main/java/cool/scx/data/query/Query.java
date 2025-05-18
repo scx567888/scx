@@ -10,8 +10,6 @@ public interface Query {
 
     Query where(Object where);
 
-    Query groupBy(Object... groupByClauses);
-
     Query orderBy(Object... orderByClauses);
 
     Query offset(long offset);
@@ -19,8 +17,6 @@ public interface Query {
     Query limit(long limit);
 
     Object getWhere();
-
-    Object[] getGroupBy();
 
     Object[] getOrderBy();
 
@@ -30,19 +26,13 @@ public interface Query {
 
     Query clearWhere();
 
-    Query clearGroupBy();
-
     Query clearOrderBy();
 
     Query clearOffset();
 
     Query clearLimit();
 
-    Query addGroupBy(Object... groupByClauses);
-
     Query addOrderBy(Object... orderByClauses);
-
-    Query removeGroupByIf(Predicate<Object> filter);
 
     Query removeOrderByIf(Predicate<Object> filter);
 
