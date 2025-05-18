@@ -26,11 +26,11 @@ public class CountSQLBuilder {
 
     public SQL buildCountSQL(Query query) {
         var whereClause = whereParser.parse(query.getWhere());
-        var groupByColumns = groupByParser.parse(query.getGroupBy());
+//        var groupByColumns = groupByParser.parse(query.getGroupBy()); todo
         var sql = Select("COUNT(*) AS count")
                 .From(table)
                 .Where(whereClause.whereClause())
-                .GroupBy(groupByColumns)
+//                .GroupBy(groupByColumns) todo
                 .GetSQL(dialect);
         return sql(sql, whereClause.params());
     }

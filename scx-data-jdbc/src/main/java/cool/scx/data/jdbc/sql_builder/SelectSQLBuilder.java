@@ -56,14 +56,14 @@ public class SelectSQLBuilder {
         //4, 创建 where 子句
         var whereClause = whereParser.parse(query.getWhere());
         //5, 创建 groupBy 子句
-        var groupByColumns = groupByParser.parse(query.getGroupBy());
+//        var groupByColumns = groupByParser.parse(query.getGroupBy()); todo
         //6, 创建 orderBy 子句
         var orderByClauses = orderByParser.parse(query.getOrderBy());
         //7, 创建 SQL
         var sql = Select(finalSelectColumns)
                 .From(table)
                 .Where(whereClause.whereClause())
-                .GroupBy(groupByColumns)
+//                .GroupBy(groupByColumns) todo
                 .OrderBy(orderByClauses)
                 .Limit(query.getOffset(), query.getLimit())
                 .GetSQL(dialect);
@@ -80,14 +80,14 @@ public class SelectSQLBuilder {
         //4, 创建 where 子句
         var whereClause = whereParser.parse(query.getWhere());
         //5, 创建 groupBy 子句
-        var groupByColumns = groupByParser.parse(query.getGroupBy());
+//        var groupByColumns = groupByParser.parse(query.getGroupBy()); todo
         //6, 创建 orderBy 子句
         var orderByClauses = orderByParser.parse(query.getOrderBy());
         //7, 创建 SQL
         var sql = Select(finalSelectColumns)
                 .From(table)
                 .Where(whereClause.whereClause())
-                .GroupBy(groupByColumns)
+//                .GroupBy(groupByColumns) todo
                 .OrderBy(orderByClauses)
                 .Limit(null, 1L)
                 .GetSQL(dialect);
