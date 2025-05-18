@@ -31,14 +31,18 @@ public class QueryTest {
 
     @Test
     public static void test2() throws JsonProcessingException {
-        var q1 = and().eq("name", "小明").between("age", 1, 10).orderBy("desc name", desc("age")).groupBy("class", groupBy("abc")).limit(10).offset(12);
+        var q1 = and().eq("name", "小明").between("age", 1, 10).orderBy("desc name", desc("age"))
+//                .groupBy("class", groupBy("abc")) todo
+                .limit(10).offset(12);
         var q2 = and(
                 or(
                         and(
                                 eq("name", "小明")
                         )
                 )
-        ).orderBy("desc name", desc("age")).groupBy("class", groupBy("abc")).limit(10).offset(12);
+        ).orderBy("desc name", desc("age"))
+//                .groupBy("class", groupBy("abc")) todo
+                .limit(10).offset(12);
         String json = QUERY_SERIALIZER.toJson(q1);
         var andNew = QUERY_DESERIALIZER.fromJson(json);
         System.out.println(json);
