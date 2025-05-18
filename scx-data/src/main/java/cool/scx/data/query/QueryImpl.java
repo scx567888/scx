@@ -11,14 +11,12 @@ import java.util.function.Predicate;
 public class QueryImpl implements Query {
 
     private Object where;
-    private final List<Object> groupBy;
     private final List<Object> orderBy;
     private Long offset;
     private Long limit;
 
     public QueryImpl() {
         this.where = null;
-        this.groupBy = new ArrayList<>();
         this.orderBy = new ArrayList<>();
         this.offset = null;
         this.limit = null;
@@ -27,7 +25,6 @@ public class QueryImpl implements Query {
     public QueryImpl(Query oldQuery) {
         this();
         where(oldQuery.getWhere());
-        addGroupBy(oldQuery.getGroupBy());
         addOrderBy(oldQuery.getOrderBy());
         if (oldQuery.getOffset() != null) {
             offset(oldQuery.getOffset());
@@ -40,13 +37,6 @@ public class QueryImpl implements Query {
     @Override
     public QueryImpl where(Object where) {
         this.where = where;
-        return this;
-    }
-
-    @Override
-    public QueryImpl groupBy(Object... groupByClauses) {
-        clearGroupBy();
-        addGroupBy(groupByClauses);
         return this;
     }
 
@@ -81,11 +71,6 @@ public class QueryImpl implements Query {
     }
 
     @Override
-    public Object[] getGroupBy() {
-        return groupBy.toArray();
-    }
-
-    @Override
     public Object[] getOrderBy() {
         return orderBy.toArray();
     }
@@ -103,12 +88,6 @@ public class QueryImpl implements Query {
     @Override
     public QueryImpl clearWhere() {
         where = null;
-        return this;
-    }
-
-    @Override
-    public QueryImpl clearGroupBy() {
-        groupBy.clear();
         return this;
     }
 
@@ -131,24 +110,6 @@ public class QueryImpl implements Query {
     }
 
     @Override
-    public QueryImpl addGroupBy(Object... groupByClauses) {
-        for (var groupByClause : groupByClauses) {
-            if (groupByClause == null) {
-                continue;
-            }
-            if (groupByClause instanceof Object[] objs) {
-                addGroupBy(objs);
-                continue;
-            }
-            if (groupByClause instanceof GroupBy w && w.info().replace()) {
-                groupBy.removeIf(c -> c instanceof GroupBy w1 && w1.name().equals(w.name()));
-            }
-            groupBy.add(groupByClause);
-        }
-        return this;
-    }
-
-    @Override
     public QueryImpl addOrderBy(Object... orderByClauses) {
         for (var orderByClause : orderByClauses) {
             if (orderByClause == null) {
@@ -163,12 +124,6 @@ public class QueryImpl implements Query {
             }
             orderBy.add(orderByClause);
         }
-        return this;
-    }
-
-    @Override
-    public Query removeGroupByIf(Predicate<Object> filter) {
-        groupBy.removeIf(filter);
         return this;
     }
 
