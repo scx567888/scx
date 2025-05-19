@@ -50,4 +50,20 @@ public interface AggregatableRepository<Entity, ID> extends Repository<Entity, I
         return aggregator(aggregationDefinition).list();
     }
 
+    default Map<String, Object> aggregateFirst(Query beforeAggregateQuery, AggregationDefinition aggregationDefinition, Query afterAggregateQuery) {
+        return aggregator(beforeAggregateQuery, aggregationDefinition, afterAggregateQuery).first();
+    }
+
+    default Map<String, Object> aggregateFirst(AggregationDefinition aggregationDefinition, Query afterAggregateQuery) {
+        return aggregator(aggregationDefinition, afterAggregateQuery).first();
+    }
+
+    default Map<String, Object> aggregateFirst(Query beforeAggregateQuery, AggregationDefinition aggregationDefinition) {
+        return aggregator(beforeAggregateQuery, aggregationDefinition).first();
+    }
+
+    default Map<String, Object> aggregateFirst(AggregationDefinition aggregationDefinition) {
+        return aggregator(aggregationDefinition).first();
+    }
+
 }
