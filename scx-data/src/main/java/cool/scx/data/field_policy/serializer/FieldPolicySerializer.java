@@ -1,5 +1,7 @@
 package cool.scx.data.field_policy.serializer;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import cool.scx.common.util.ObjectUtils;
 import cool.scx.data.field_policy.FieldPolicy;
 
 import java.util.LinkedHashMap;
@@ -11,6 +13,11 @@ import java.util.LinkedHashMap;
 public class FieldPolicySerializer {
 
     public static final FieldPolicySerializer FIELD_POLICY_SERIALIZER = new FieldPolicySerializer();
+
+    public String toJson(FieldPolicy fieldPolicy) throws JsonProcessingException {
+        var v = serialize(fieldPolicy);
+        return ObjectUtils.jsonMapper().writeValueAsString(v);
+    }
 
     public Object serialize(FieldPolicy fieldPolicy) {
         return serializeFieldPolicy(fieldPolicy);
