@@ -1,32 +1,32 @@
-package cool.scx.data.aggregation_definition;
+package cool.scx.data.aggregation;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class AggregationDefinitionImpl implements AggregationDefinition {
+public class AggregationImpl implements Aggregation {
 
     private final Map<String, GroupBy> groupBys;
     private final Map<String, String> aggs;
 
-    public AggregationDefinitionImpl() {
+    public AggregationImpl() {
         this.groupBys = new HashMap<>();
         this.aggs = new HashMap<>();
     }
 
     @Override
-    public AggregationDefinition groupBy(String fieldName) {
+    public Aggregation groupBy(String fieldName) {
         groupBys.put(fieldName, new GroupBy(fieldName, null));
         return this;
     }
 
     @Override
-    public AggregationDefinition groupBy(String fieldName, GroupByOption... groupByOptions) {
+    public Aggregation groupBy(String fieldName, GroupByOption... groupByOptions) {
         groupBys.put(fieldName, new GroupBy(fieldName, null, groupByOptions));
         return this;
     }
 
     @Override
-    public AggregationDefinition groupBy(String fieldName, String expression) {
+    public Aggregation groupBy(String fieldName, String expression) {
         groupBys.put(fieldName, new GroupBy(fieldName, expression));
         return this;
     }
@@ -37,19 +37,19 @@ public class AggregationDefinitionImpl implements AggregationDefinition {
     }
 
     @Override
-    public AggregationDefinition removeGroupBy(String fieldName) {
+    public Aggregation removeGroupBy(String fieldName) {
         groupBys.remove(fieldName);
         return this;
     }
 
     @Override
-    public AggregationDefinition clearGroupBys() {
+    public Aggregation clearGroupBys() {
         groupBys.clear();
         return this;
     }
 
     @Override
-    public AggregationDefinition agg(String fieldName, String expression) {
+    public Aggregation agg(String fieldName, String expression) {
         aggs.put(fieldName, expression);
         return this;
     }
@@ -60,13 +60,13 @@ public class AggregationDefinitionImpl implements AggregationDefinition {
     }
 
     @Override
-    public AggregationDefinition removeAgg(String fieldName) {
+    public Aggregation removeAgg(String fieldName) {
         aggs.remove(fieldName);
         return this;
     }
 
     @Override
-    public AggregationDefinition clearAggs() {
+    public Aggregation clearAggs() {
         aggs.clear();
         return this;
     }
