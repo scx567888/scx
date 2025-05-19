@@ -1,7 +1,6 @@
 package cool.scx.data.aggregation_definition.serializer;
 
 import cool.scx.data.aggregation_definition.AggregationDefinition;
-import cool.scx.data.field_policy.FieldPolicy;
 
 import java.util.LinkedHashMap;
 
@@ -23,5 +22,5 @@ public class AggregationDefinitionSerializer {
         m.put("aggregateColumns", aggregationDefinition.aggregateColumns());
         return m;
     }
-    
+
 }
