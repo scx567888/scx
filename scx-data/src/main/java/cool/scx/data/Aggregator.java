@@ -18,5 +18,5 @@ public interface Aggregator {
     <T> T first(Class<T> resultType);
 
     Map<String, Object> first();
-    
+
 }

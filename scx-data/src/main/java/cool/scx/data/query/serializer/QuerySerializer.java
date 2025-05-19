@@ -15,12 +15,10 @@ public class QuerySerializer {
     public static final QuerySerializer QUERY_SERIALIZER = new QuerySerializer();
 
     private final WhereSerializer whereSerializer;
-    private final GroupBySerializer groupBySerializer;
     private final OrderBySerializer orderBySerializer;
 
     public QuerySerializer() {
         this.whereSerializer = new WhereSerializer();
-        this.groupBySerializer = new GroupBySerializer();
         this.orderBySerializer = new OrderBySerializer();
     }
 
@@ -40,7 +38,6 @@ public class QuerySerializer {
         var m = new LinkedHashMap<String, Object>();
         m.put("@type", "Query");
         m.put("where", whereSerializer.serialize(query));
-        m.put("groupBy", groupBySerializer.serialize(query));
         m.put("orderBy", orderBySerializer.serialize(query));
         m.put("offset", query.getOffset());
         m.put("limit", query.getLimit());

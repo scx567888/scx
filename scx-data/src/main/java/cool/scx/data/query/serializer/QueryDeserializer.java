@@ -15,12 +15,10 @@ public class QueryDeserializer {
     public static final QueryDeserializer QUERY_DESERIALIZER = new QueryDeserializer();
 
     private final WhereDeserializer whereDeserializer;
-    private final GroupByDeserializer groupByDeserializer;
     private final OrderByDeserializer orderByDeserializer;
 
     public QueryDeserializer() {
         this.whereDeserializer = new WhereDeserializer();
-        this.groupByDeserializer = new GroupByDeserializer();
         this.orderByDeserializer = new OrderByDeserializer();
     }
 
@@ -48,10 +46,6 @@ public class QueryDeserializer {
             var where = whereDeserializer.deserialize(objectNode.get("where"));
             query.where(where);
         }
-//        if (objectNode.get("groupBy") != null && !objectNode.get("groupBy").isNull()) { todo
-//            var groupBy = groupByDeserializer.deserialize(objectNode.path("groupBy"));
-//            query.groupBy(groupBy);
-//        }
         if (objectNode.get("orderBy") != null && !objectNode.get("orderBy").isNull()) {
             var orderBy = orderByDeserializer.deserialize(objectNode.path("orderBy"));
             query.orderBy(orderBy);
