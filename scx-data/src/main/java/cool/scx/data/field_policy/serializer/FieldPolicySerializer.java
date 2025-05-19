@@ -16,7 +16,7 @@ public class FieldPolicySerializer {
         return serializeFieldPolicy(fieldPolicy);
     }
 
-    public LinkedHashMap<String, Object> serializeFieldPolicy(FieldPolicy fieldPolicy) {
+    private LinkedHashMap<String, Object> serializeFieldPolicy(FieldPolicy fieldPolicy) {
         var m = new LinkedHashMap<String, Object>();
         m.put("@type", "FieldPolicy");
         m.put("filterMode", fieldPolicy.filterMode());
