@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class AggregationDefinitionImpl implements AggregationDefinition {
 
-    private final Map<String, String> groupBys;
+    private final Map<String, GroupBy> groupBys;
     private final Map<String, String> aggregateColumns;
 
     public AggregationDefinitionImpl() {
@@ -15,18 +15,24 @@ public class AggregationDefinitionImpl implements AggregationDefinition {
 
     @Override
     public AggregationDefinition groupBy(String fieldName) {
-        groupBys.put(fieldName, null);
+        groupBys.put(fieldName, new GroupBy(fieldName, null));
+        return this;
+    }
+
+    @Override
+    public AggregationDefinition groupBy(String fieldName, GroupByOption... groupByOptions) {
+        groupBys.put(fieldName, new GroupBy(fieldName, null, groupByOptions));
         return this;
     }
 
     @Override
     public AggregationDefinition groupBy(String fieldName, String expression) {
-        groupBys.put(fieldName, expression);
+        groupBys.put(fieldName, new GroupBy(fieldName, expression));
         return this;
     }
 
     @Override
-    public Map<String, String> groupBys() {
+    public Map<String, GroupBy> groupBys() {
         return groupBys;
     }
 

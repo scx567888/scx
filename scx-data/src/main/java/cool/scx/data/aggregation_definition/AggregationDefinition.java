@@ -9,10 +9,13 @@ public interface AggregationDefinition {
     AggregationDefinition groupBy(String fieldName);
 
     /// 设置分组
+    AggregationDefinition groupBy(String fieldName, GroupByOption... groupByOptions);
+
+    /// 设置分组
     AggregationDefinition groupBy(String fieldName, String expression);
 
     /// 获取 分组列
-    Map<String, String> groupBys();
+    Map<String, GroupBy> groupBys();
 
     /// 移除 某个分组
     AggregationDefinition removeGroupBy(String fieldName);
