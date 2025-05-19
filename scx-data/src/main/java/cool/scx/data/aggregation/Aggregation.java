@@ -6,16 +6,10 @@ import java.util.Map;
 public interface Aggregation {
 
     /// 设置分组
-    Aggregation groupBy(String fieldName);
-
-    /// 设置分组
-    Aggregation groupBy(String fieldName, GroupByOption... groupByOptions);
-
-    /// 设置分组
-    Aggregation groupBy(String fieldName, String expression);
+    Aggregation groupBy(GroupBy groupBy);
 
     /// 获取 分组列
-    Map<String, GroupBy> groupBys();
+    GroupBy[] groupBys();
 
     /// 移除 某个分组
     Aggregation removeGroupBy(String fieldName);
@@ -34,5 +28,20 @@ public interface Aggregation {
 
     /// 清除 所有聚合列
     Aggregation clearAggs();
+
+    /// 设置分组
+    default Aggregation groupBy(String fieldName) {
+        return this.groupBy(new GroupBy(fieldName, null));
+    }
+
+    /// 设置分组
+    default Aggregation groupBy(String fieldName, GroupByOption... groupByOptions) {
+        return this.groupBy(new GroupBy(fieldName, null, groupByOptions));
+    }
+
+    /// 设置分组
+    default Aggregation groupBy(String fieldName, String expression) {
+        return this.groupBy(new GroupBy(fieldName, expression));
+    }
 
 }

@@ -1,44 +1,34 @@
 package cool.scx.data.aggregation;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AggregationImpl implements Aggregation {
 
-    private final Map<String, GroupBy> groupBys;
+    private final List<GroupBy> groupBys;
     private final Map<String, String> aggs;
 
     public AggregationImpl() {
-        this.groupBys = new HashMap<>();
+        this.groupBys = new ArrayList<>();
         this.aggs = new HashMap<>();
     }
 
     @Override
-    public Aggregation groupBy(String fieldName) {
-        groupBys.put(fieldName, new GroupBy(fieldName, null));
+    public Aggregation groupBy(GroupBy groupBy) {
+        groupBys.add(groupBy);
         return this;
     }
 
     @Override
-    public Aggregation groupBy(String fieldName, GroupByOption... groupByOptions) {
-        groupBys.put(fieldName, new GroupBy(fieldName, null, groupByOptions));
-        return this;
-    }
-
-    @Override
-    public Aggregation groupBy(String fieldName, String expression) {
-        groupBys.put(fieldName, new GroupBy(fieldName, expression));
-        return this;
-    }
-
-    @Override
-    public Map<String, GroupBy> groupBys() {
-        return groupBys;
+    public GroupBy[] groupBys() {
+        return groupBys.toArray(GroupBy[]::new);
     }
 
     @Override
     public Aggregation removeGroupBy(String fieldName) {
-        groupBys.remove(fieldName);
+        groupBys.removeIf(c -> c.name().equals(fieldName));
         return this;
     }
 

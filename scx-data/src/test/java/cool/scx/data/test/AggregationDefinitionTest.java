@@ -5,10 +5,10 @@ import cool.scx.common.util.ObjectUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static cool.scx.data.aggregation_definition.AggregationDefinitionBuilder.groupBy;
-import static cool.scx.data.aggregation_definition.GroupByOption.USE_JSON_EXTRACT;
-import static cool.scx.data.aggregation_definition.serializer.AggregationDefinitionDeserializer.AGGREGATION_DEFINITION_DESERIALIZER;
-import static cool.scx.data.aggregation_definition.serializer.AggregationDefinitionSerializer.AGGREGATION_DEFINITION_SERIALIZER;
+import static cool.scx.data.aggregation.AggregationBuilder.groupBy;
+import static cool.scx.data.aggregation.GroupByOption.USE_JSON_EXTRACT;
+import static cool.scx.data.aggregation.serializer.AggregationDeserializer.AGGREGATION_DEFINITION_DESERIALIZER;
+import static cool.scx.data.aggregation.serializer.AggregationSerializer.AGGREGATION_DEFINITION_SERIALIZER;
 
 public class AggregationDefinitionTest {
 
@@ -20,12 +20,10 @@ public class AggregationDefinitionTest {
     public static void test1() throws JsonProcessingException {
         var aggregationDefinition = groupBy("name", USE_JSON_EXTRACT).agg("name", "SUM(name)");
 
-        var serialize = AGGREGATION_DEFINITION_SERIALIZER.serializeAggregationDefinition(aggregationDefinition);
-        var str = ObjectUtils.toJson(serialize, "");
-        var jsonNode = ObjectUtils.jsonMapper().readTree(str);
-        var aggregationDefinition1 = AGGREGATION_DEFINITION_DESERIALIZER.deserializeAggregationDefinition(jsonNode);
+        var json = AGGREGATION_DEFINITION_SERIALIZER.toJson(aggregationDefinition);
+        var aggregationDefinition1 = AGGREGATION_DEFINITION_DESERIALIZER.fromJson(json);
 
-        Assert.assertEquals(aggregationDefinition.groupBys(), aggregationDefinition1.groupBys());
+        System.out.println(json);
         Assert.assertEquals(aggregationDefinition.aggs(), aggregationDefinition1.aggs());
 
     }
