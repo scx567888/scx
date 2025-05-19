@@ -9,6 +9,7 @@ import java.util.Map;
 
 import static cool.scx.common.util.ObjectUtils.convertValue;
 
+//todo 未完成
 public class AggregationDefinitionDeserializer {
 
     public static final AggregationDefinitionDeserializer AGGREGATION_DEFINITION_DESERIALIZER = new AggregationDefinitionDeserializer();
@@ -38,10 +39,10 @@ public class AggregationDefinitionDeserializer {
             }
         }
 
-        if (objectNode.get("aggregateColumns") != null && !objectNode.get("aggregateColumns").isNull()) {
-            var aggregateColumns = convertValue(objectNode.get("aggregateColumns"), new TypeReference<Map<String, String>>() {});
+        if (objectNode.get("aggs") != null && !objectNode.get("aggs").isNull()) {
+            var aggregateColumns = convertValue(objectNode.get("aggs"), new TypeReference<Map<String, String>>() {});
             for (var aggregateColumn : aggregateColumns.entrySet()) {
-                aggregationDefinition.aggregateColumn(aggregateColumn.getKey(), aggregateColumn.getValue());
+                aggregationDefinition.agg(aggregateColumn.getKey(), aggregateColumn.getValue());
             }
         }
 

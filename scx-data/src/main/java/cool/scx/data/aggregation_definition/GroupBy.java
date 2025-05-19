@@ -25,7 +25,6 @@ public class GroupBy {
         this(name, expression, ofInfo(options));
     }
 
-
     public String name() {
         return name;
     }

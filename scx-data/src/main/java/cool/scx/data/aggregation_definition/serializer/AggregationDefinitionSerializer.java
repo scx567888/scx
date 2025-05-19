@@ -4,6 +4,7 @@ import cool.scx.data.aggregation_definition.AggregationDefinition;
 
 import java.util.LinkedHashMap;
 
+//todo 未完成
 public class AggregationDefinitionSerializer {
 
     public static final AggregationDefinitionSerializer AGGREGATION_DEFINITION_SERIALIZER = new AggregationDefinitionSerializer();
@@ -19,7 +20,7 @@ public class AggregationDefinitionSerializer {
         var m = new LinkedHashMap<String, Object>();
         m.put("@type", "AggregationDefinition");
         m.put("groupBys", aggregationDefinition.groupBys());
-        m.put("aggregateColumns", aggregationDefinition.aggregateColumns());
+        m.put("aggs", aggregationDefinition.aggs());
         return m;
     }
 
