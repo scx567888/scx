@@ -1,9 +1,9 @@
-package cool.scx.data.aggregation_definition;
+package cool.scx.data.aggregation;
 
-import cool.scx.data.aggregation_definition.GroupByOption.Info;
+import cool.scx.data.aggregation.GroupByOption.Info;
 
 import static cool.scx.common.util.StringUtils.isBlank;
-import static cool.scx.data.aggregation_definition.GroupByOption.ofInfo;
+import static cool.scx.data.aggregation.GroupByOption.ofInfo;
 
 public class GroupBy {
 

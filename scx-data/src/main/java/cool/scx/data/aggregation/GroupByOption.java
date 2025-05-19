@@ -1,4 +1,4 @@
-package cool.scx.data.aggregation_definition;
+package cool.scx.data.aggregation;
 
 import cool.scx.data.query.WhereType;
 
