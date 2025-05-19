@@ -1,7 +1,5 @@
 package cool.scx.data.query;
 
-import java.util.function.Predicate;
-
 /// Query
 ///
 /// @author scx567888
@@ -34,6 +32,6 @@ public interface Query {
 
     Query addOrderBy(Object... orderByClauses);
 
-    Query removeOrderByIf(Predicate<Object> filter);
+    Query removeOrderBy(String fieldName);
 
 }

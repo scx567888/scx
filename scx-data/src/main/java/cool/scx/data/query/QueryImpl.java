@@ -10,8 +10,8 @@ import java.util.function.Predicate;
 /// @version 0.0.1
 public class QueryImpl implements Query {
 
+    private final List<OrderBy> orderBy;
     private Object where;
-    private final List<Object> orderBy;
     private Long offset;
     private Long limit;
 
