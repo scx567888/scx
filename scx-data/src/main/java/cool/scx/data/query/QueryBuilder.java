@@ -22,11 +22,6 @@ public final class QueryBuilder {
         return new QueryImpl().where(where);
     }
 
-    public static Query groupBy(Object... groupByClauses) {
-//        return new QueryImpl().groupBy(groupByClauses); todo 
-        return null;
-    }
-
     public static Query orderBy(Object... orderByClauses) {
         return new QueryImpl().orderBy(orderByClauses);
     }
