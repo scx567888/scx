@@ -19,17 +19,17 @@ public class FieldPolicyDeserializer {
 
     public static final FieldPolicyDeserializer FIELD_POLICY_DESERIALIZER = new FieldPolicyDeserializer();
 
-    public Object deserialize(JsonNode v) {
+    public FieldPolicy deserialize(JsonNode v) {
         if (v.isObject()) {
             var type = v.get("@type").asText();
             if (type.equals("FieldPolicy")) {
                 return deserializeFieldPolicy(v);
             }
         }
-        return v;
+        throw new IllegalArgumentException("Invalid field policy: " + v);
     }
 
-    public FieldPolicy deserializeFieldPolicy(JsonNode objectNode) {
+    private FieldPolicy deserializeFieldPolicy(JsonNode objectNode) {
         var filterMode = EXCLUDED;
 
         if (objectNode == null) {

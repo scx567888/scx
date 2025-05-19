@@ -12,11 +12,8 @@ public class FieldPolicySerializer {
 
     public static final FieldPolicySerializer FIELD_POLICY_SERIALIZER = new FieldPolicySerializer();
 
-    public Object serialize(Object obj) {
-        return switch (obj) {
-            case FieldPolicy s -> serializeFieldPolicy(s);
-            default -> obj;
-        };
+    public Object serialize(FieldPolicy fieldPolicy) {
+        return serializeFieldPolicy(fieldPolicy);
     }
 
     public LinkedHashMap<String, Object> serializeFieldPolicy(FieldPolicy fieldPolicy) {
