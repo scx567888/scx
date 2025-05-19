@@ -1,6 +1,6 @@
 package cool.scx.data;
 
-import cool.scx.data.aggregation_definition.AggregationDefinition;
+import cool.scx.data.aggregation.Aggregation;
 import cool.scx.data.query.Query;
 
 import java.util.List;
@@ -17,53 +17,53 @@ public interface AggregatableRepository<Entity, ID> extends Repository<Entity, I
     /// 创建一个数据聚合器
     ///
     /// @param beforeAggregateQuery  聚合前 Query
-    /// @param aggregationDefinition 聚合定义
+    /// @param aggregation 聚合定义
     /// @param afterAggregateQuery   聚合后 Query
     /// @return 聚合器
-    Aggregator aggregator(Query beforeAggregateQuery, AggregationDefinition aggregationDefinition, Query afterAggregateQuery);
+    Aggregator aggregator(Query beforeAggregateQuery, Aggregation aggregation, Query afterAggregateQuery);
 
-    default Aggregator aggregator(AggregationDefinition aggregationDefinition, Query afterAggregateQuery) {
-        return aggregator(query(), aggregationDefinition, afterAggregateQuery);
+    default Aggregator aggregator(Aggregation aggregation, Query afterAggregateQuery) {
+        return aggregator(query(), aggregation, afterAggregateQuery);
     }
 
-    default Aggregator aggregator(Query beforeAggregateQuery, AggregationDefinition aggregationDefinition) {
-        return aggregator(beforeAggregateQuery, aggregationDefinition, query());
+    default Aggregator aggregator(Query beforeAggregateQuery, Aggregation aggregation) {
+        return aggregator(beforeAggregateQuery, aggregation, query());
     }
 
-    default Aggregator aggregator(AggregationDefinition aggregationDefinition) {
-        return aggregator(query(), aggregationDefinition, query());
+    default Aggregator aggregator(Aggregation aggregation) {
+        return aggregator(query(), aggregation, query());
     }
 
-    default List<Map<String, Object>> aggregate(Query beforeAggregateQuery, AggregationDefinition aggregationDefinition, Query afterAggregateQuery) {
-        return aggregator(beforeAggregateQuery, aggregationDefinition, afterAggregateQuery).list();
+    default List<Map<String, Object>> aggregate(Query beforeAggregateQuery, Aggregation aggregation, Query afterAggregateQuery) {
+        return aggregator(beforeAggregateQuery, aggregation, afterAggregateQuery).list();
     }
 
-    default List<Map<String, Object>> aggregate(AggregationDefinition aggregationDefinition, Query afterAggregateQuery) {
-        return aggregator(aggregationDefinition, afterAggregateQuery).list();
+    default List<Map<String, Object>> aggregate(Aggregation aggregation, Query afterAggregateQuery) {
+        return aggregator(aggregation, afterAggregateQuery).list();
     }
 
-    default List<Map<String, Object>> aggregate(Query beforeAggregateQuery, AggregationDefinition aggregationDefinition) {
-        return aggregator(beforeAggregateQuery, aggregationDefinition).list();
+    default List<Map<String, Object>> aggregate(Query beforeAggregateQuery, Aggregation aggregation) {
+        return aggregator(beforeAggregateQuery, aggregation).list();
     }
 
-    default List<Map<String, Object>> aggregate(AggregationDefinition aggregationDefinition) {
-        return aggregator(aggregationDefinition).list();
+    default List<Map<String, Object>> aggregate(Aggregation aggregation) {
+        return aggregator(aggregation).list();
     }
 
-    default Map<String, Object> aggregateFirst(Query beforeAggregateQuery, AggregationDefinition aggregationDefinition, Query afterAggregateQuery) {
-        return aggregator(beforeAggregateQuery, aggregationDefinition, afterAggregateQuery).first();
+    default Map<String, Object> aggregateFirst(Query beforeAggregateQuery, Aggregation aggregation, Query afterAggregateQuery) {
+        return aggregator(beforeAggregateQuery, aggregation, afterAggregateQuery).first();
     }
 
-    default Map<String, Object> aggregateFirst(AggregationDefinition aggregationDefinition, Query afterAggregateQuery) {
-        return aggregator(aggregationDefinition, afterAggregateQuery).first();
+    default Map<String, Object> aggregateFirst(Aggregation aggregation, Query afterAggregateQuery) {
+        return aggregator(aggregation, afterAggregateQuery).first();
     }
 
-    default Map<String, Object> aggregateFirst(Query beforeAggregateQuery, AggregationDefinition aggregationDefinition) {
-        return aggregator(beforeAggregateQuery, aggregationDefinition).first();
+    default Map<String, Object> aggregateFirst(Query beforeAggregateQuery, Aggregation aggregation) {
+        return aggregator(beforeAggregateQuery, aggregation).first();
     }
 
-    default Map<String, Object> aggregateFirst(AggregationDefinition aggregationDefinition) {
-        return aggregator(aggregationDefinition).first();
+    default Map<String, Object> aggregateFirst(Aggregation aggregation) {
+        return aggregator(aggregation).first();
     }
 
 }
