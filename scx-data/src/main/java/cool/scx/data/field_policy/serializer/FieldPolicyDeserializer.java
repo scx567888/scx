@@ -1,7 +1,9 @@
 package cool.scx.data.field_policy.serializer;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
+import cool.scx.common.util.ObjectUtils;
 import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.data.field_policy.FieldPolicyImpl;
 import cool.scx.data.field_policy.FilterMode;
@@ -18,6 +20,11 @@ import static cool.scx.data.field_policy.FilterMode.EXCLUDED;
 public class FieldPolicyDeserializer {
 
     public static final FieldPolicyDeserializer FIELD_POLICY_DESERIALIZER = new FieldPolicyDeserializer();
+
+    public FieldPolicy fromJson(String json) throws JsonProcessingException {
+        var v = ObjectUtils.jsonMapper().readTree(json);
+        return deserialize(v);
+    }
 
     public FieldPolicy deserialize(JsonNode v) {
         if (v.isObject()) {
@@ -36,31 +43,38 @@ public class FieldPolicyDeserializer {
             return new FieldPolicyImpl(filterMode);
         }
 
-        if (objectNode.get("filterMode") != null && !objectNode.get("filterMode").isNull()) {
-            filterMode = convertValue(objectNode.get("filterMode"), FilterMode.class);
+        var filterModeNode = objectNode.get("filterMode");
+        var fieldNamesNode = objectNode.get("fieldNames");
+        var ignoreNullNode = objectNode.get("ignoreNull");
+        var ignoreNullsNode = objectNode.get("ignoreNulls");
+        var expressionsNode = objectNode.get("expressions");
+
+
+        if (filterModeNode != null && !filterModeNode.isNull()) {
+            filterMode = convertValue(filterModeNode, FilterMode.class);
         }
 
         var fieldPolicy = new FieldPolicyImpl(filterMode);
 
-        if (objectNode.get("fieldNames") != null && !objectNode.get("fieldNames").isNull()) {
-            var fieldNames = convertValue(objectNode.get("fieldNames"), String[].class);
+        if (fieldNamesNode != null && !fieldNamesNode.isNull()) {
+            var fieldNames = convertValue(fieldNamesNode, String[].class);
             fieldPolicy.addFieldNames(fieldNames);
         }
 
-        if (objectNode.get("ignoreNull") != null && !objectNode.get("ignoreNull").isNull()) {
-            var ignoreNull = objectNode.get("ignoreNull").asBoolean();
+        if (ignoreNullNode != null && !ignoreNullNode.isNull()) {
+            var ignoreNull = ignoreNullNode.asBoolean();
             fieldPolicy.ignoreNull(ignoreNull);
         }
 
-        if (objectNode.get("ignoreNulls") != null && !objectNode.get("ignoreNulls").isNull()) {
-            var ignoreNulls = convertValue(objectNode.get("ignoreNulls"), new TypeReference<Map<String, Boolean>>() {});
+        if (ignoreNullsNode != null && !ignoreNullsNode.isNull()) {
+            var ignoreNulls = convertValue(ignoreNullsNode, new TypeReference<Map<String, Boolean>>() {});
             for (var entry : ignoreNulls.entrySet()) {
                 fieldPolicy.ignoreNull(entry.getKey(), entry.getValue());
             }
         }
 
-        if (objectNode.get("expressions") != null && !objectNode.get("expressions").isNull()) {
-            var expressions = convertValue(objectNode.get("expressions"), new TypeReference<Map<String, String>>() {});
+        if (expressionsNode != null && !expressionsNode.isNull()) {
+            var expressions = convertValue(expressionsNode, new TypeReference<Map<String, String>>() {});
             for (var entry : expressions.entrySet()) {
                 fieldPolicy.expression(entry.getKey(), entry.getValue());
             }
