@@ -6,6 +6,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static cool.scx.data.aggregation_definition.AggregationDefinitionBuilder.groupBy;
+import static cool.scx.data.aggregation_definition.GroupByOption.USE_JSON_EXTRACT;
 import static cool.scx.data.aggregation_definition.serializer.AggregationDefinitionDeserializer.AGGREGATION_DEFINITION_DESERIALIZER;
 import static cool.scx.data.aggregation_definition.serializer.AggregationDefinitionSerializer.AGGREGATION_DEFINITION_SERIALIZER;
 
@@ -17,7 +18,7 @@ public class AggregationDefinitionTest {
 
     @Test
     public static void test1() throws JsonProcessingException {
-        var aggregationDefinition = groupBy("name").aggregateColumn("name", "SUM(name)");
+        var aggregationDefinition = groupBy("name", USE_JSON_EXTRACT).agg("name", "SUM(name)");
 
         var serialize = AGGREGATION_DEFINITION_SERIALIZER.serializeAggregationDefinition(aggregationDefinition);
         var str = ObjectUtils.toJson(serialize, "");
@@ -25,7 +26,7 @@ public class AggregationDefinitionTest {
         var aggregationDefinition1 = AGGREGATION_DEFINITION_DESERIALIZER.deserializeAggregationDefinition(jsonNode);
 
         Assert.assertEquals(aggregationDefinition.groupBys(), aggregationDefinition1.groupBys());
-        Assert.assertEquals(aggregationDefinition.aggregateColumns(), aggregationDefinition1.aggregateColumns());
+        Assert.assertEquals(aggregationDefinition.aggs(), aggregationDefinition1.aggs());
 
     }
 
