@@ -24,15 +24,15 @@ public interface AggregationDefinition {
     AggregationDefinition clearGroupBys();
 
     /// 设置聚合列
-    AggregationDefinition aggregateColumn(String fieldName, String expression);
+    AggregationDefinition agg(String fieldName, String expression);
 
     /// 获取聚合列
-    Map<String, String> aggregateColumns();
+    Map<String, String> aggs();
 
     /// 清除 某个聚合列
-    AggregationDefinition removeAggregateColumn(String fieldName);
+    AggregationDefinition removeAgg(String fieldName);
 
     /// 清除 所有聚合列
-    AggregationDefinition clearAggregateColumns();
+    AggregationDefinition clearAggs();
 
 }

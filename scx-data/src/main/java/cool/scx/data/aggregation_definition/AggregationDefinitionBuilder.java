@@ -14,8 +14,8 @@ public class AggregationDefinitionBuilder {
         return new AggregationDefinitionImpl().groupBy(fieldName, expression);
     }
 
-    public static AggregationDefinition aggregateColumn(String fieldName, String expression) {
-        return new AggregationDefinitionImpl().aggregateColumn(fieldName, expression);
+    public static AggregationDefinition agg(String fieldName, String expression) {
+        return new AggregationDefinitionImpl().agg(fieldName, expression);
     }
 
 }

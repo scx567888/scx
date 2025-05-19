@@ -6,11 +6,11 @@ import java.util.Map;
 public class AggregationDefinitionImpl implements AggregationDefinition {
 
     private final Map<String, GroupBy> groupBys;
-    private final Map<String, String> aggregateColumns;
+    private final Map<String, String> aggs;
 
     public AggregationDefinitionImpl() {
         this.groupBys = new HashMap<>();
-        this.aggregateColumns = new HashMap<>();
+        this.aggs = new HashMap<>();
     }
 
     @Override
@@ -49,25 +49,25 @@ public class AggregationDefinitionImpl implements AggregationDefinition {
     }
 
     @Override
-    public AggregationDefinition aggregateColumn(String fieldName, String expression) {
-        aggregateColumns.put(fieldName, expression);
+    public AggregationDefinition agg(String fieldName, String expression) {
+        aggs.put(fieldName, expression);
         return this;
     }
 
     @Override
-    public Map<String, String> aggregateColumns() {
-        return aggregateColumns;
+    public Map<String, String> aggs() {
+        return aggs;
     }
 
     @Override
-    public AggregationDefinition removeAggregateColumn(String fieldName) {
-        aggregateColumns.remove(fieldName);
+    public AggregationDefinition removeAgg(String fieldName) {
+        aggs.remove(fieldName);
         return this;
     }
 
     @Override
-    public AggregationDefinition clearAggregateColumns() {
-        aggregateColumns.clear();
+    public AggregationDefinition clearAggs() {
+        aggs.clear();
         return this;
     }
 
