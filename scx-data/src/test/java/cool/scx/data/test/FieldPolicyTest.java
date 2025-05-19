@@ -22,10 +22,8 @@ public class FieldPolicyTest {
                 .ignoreNull(false)
                 .ignoreNull("name", true)
                 .expression("w", "w * 2");
-        var serialize = FIELD_POLICY_SERIALIZER.serialize(fieldPolicy);
-        var json = ObjectUtils.toJson(serialize);
-        var jsonNode = ObjectUtils.jsonMapper().readTree(json);
-        var newFieldPolicy = (FieldPolicy) FIELD_POLICY_DESERIALIZER.deserialize(jsonNode);
+        var json = FIELD_POLICY_SERIALIZER.toJson(fieldPolicy);
+        var newFieldPolicy = FIELD_POLICY_DESERIALIZER.fromJson(json);
         Assert.assertEquals(fieldPolicy.fieldNames(), newFieldPolicy.fieldNames());
         Assert.assertEquals(fieldPolicy.filterMode(), newFieldPolicy.filterMode());
         Assert.assertEquals(fieldPolicy.ignoreNull(), newFieldPolicy.ignoreNull());
