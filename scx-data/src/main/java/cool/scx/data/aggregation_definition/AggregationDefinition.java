@@ -12,7 +12,7 @@ public interface AggregationDefinition {
     AggregationDefinition groupBy(String fieldName, String expression);
 
     /// 获取 分组列
-    Map<String, String> getGroupBys();
+    Map<String, String> groupBys();
 
     /// 移除 某个分组
     AggregationDefinition removeGroupBy(String fieldName);

@@ -26,7 +26,7 @@ public class AggregationDefinitionImpl implements AggregationDefinition {
     }
 
     @Override
-    public Map<String, String> getGroupBys() {
+    public Map<String, String> groupBys() {
         return groupBys;
     }
 
