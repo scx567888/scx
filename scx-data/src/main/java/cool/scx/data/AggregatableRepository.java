@@ -16,9 +16,9 @@ public interface AggregatableRepository<Entity, ID> extends Repository<Entity, I
 
     /// 创建一个数据聚合器
     ///
-    /// @param beforeAggregateQuery  聚合前 Query
-    /// @param aggregation 聚合定义
-    /// @param afterAggregateQuery   聚合后 Query
+    /// @param beforeAggregateQuery 聚合前 Query
+    /// @param aggregation          聚合定义
+    /// @param afterAggregateQuery  聚合后 Query
     /// @return 聚合器
     Aggregator aggregator(Query beforeAggregateQuery, Aggregation aggregation, Query afterAggregateQuery);
 

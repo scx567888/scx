@@ -24,7 +24,7 @@ public class QuerySerializer {
         return serializeQuery(query);
     }
 
-    private Map<String,Object> serializeQuery(Query query) {
+    private Map<String, Object> serializeQuery(Query query) {
         var m = new LinkedHashMap<String, Object>();
         m.put("@type", "Query");
         m.put("where", serializeWhere(query.getWhere()));

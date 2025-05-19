@@ -9,7 +9,6 @@ import cool.scx.data.aggregation.AggregationImpl;
 import cool.scx.data.aggregation.GroupBy;
 import cool.scx.data.aggregation.GroupByOption;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 import static cool.scx.common.util.ObjectUtils.convertValue;

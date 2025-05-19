@@ -42,7 +42,7 @@ public class QueryDeserializer {
         var orderByNode = objectNode.get("orderBy");
         var offsetNode = objectNode.get("offset");
         var limitNode = objectNode.get("limit");
-        if (whereNode!= null && !whereNode.isNull()) {
+        if (whereNode != null && !whereNode.isNull()) {
             var where = deserializeWhere(whereNode);
             query.where(where);
         }

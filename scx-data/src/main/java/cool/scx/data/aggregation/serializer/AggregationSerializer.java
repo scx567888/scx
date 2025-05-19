@@ -31,15 +31,15 @@ public class AggregationSerializer {
         return m;
     }
 
-    private List<Map<String,Object>> serializeGroupBys(GroupBy[] groupBys) {
-        var m = new ArrayList<Map<String,Object>>();
+    private List<Map<String, Object>> serializeGroupBys(GroupBy[] groupBys) {
+        var m = new ArrayList<Map<String, Object>>();
         for (var groupBy : groupBys) {
             m.add(serializeGroupBy0(groupBy));
         }
         return m;
     }
 
-    private Map<String,Object> serializeGroupBy0(GroupBy g) {
+    private Map<String, Object> serializeGroupBy0(GroupBy g) {
         var m = new LinkedHashMap<String, Object>();
         m.put("@type", "GroupBy");
         m.put("name", g.name());

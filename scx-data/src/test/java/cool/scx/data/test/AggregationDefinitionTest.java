@@ -1,7 +1,6 @@
 package cool.scx.data.test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import cool.scx.common.util.ObjectUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
