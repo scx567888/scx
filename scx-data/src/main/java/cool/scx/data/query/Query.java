@@ -1,5 +1,7 @@
 package cool.scx.data.query;
 
+import cool.scx.data.build_control.BuildControl;
+
 /// Query
 ///
 /// @author scx567888
@@ -8,7 +10,7 @@ public interface Query {
 
     Query where(Object where);
 
-    Query orderBy(OrderBy... orderBys);
+    Query orderBys(OrderBy... orderBys);
 
     Query offset(long offset);
 
@@ -29,5 +31,11 @@ public interface Query {
     Query clearOffset();
 
     Query clearLimit();
+    
+    Query orderBy(OrderBy... orderBys);
+    
+    Query asc(String name, BuildControl... options);
+
+    Query desc(String name, BuildControl... options);
 
 }
