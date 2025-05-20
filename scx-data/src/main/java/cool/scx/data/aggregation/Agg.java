@@ -5,7 +5,7 @@ import cool.scx.data.build_control.BuildControlInfo;
 
 import static cool.scx.data.build_control.BuildControlInfo.ofInfo;
 
-public class Agg extends AggregationLike<Agg>{
+public class Agg extends AggregationLike<Agg> {
 
     private final String expression;
     private final String alias;
@@ -40,5 +40,5 @@ public class Agg extends AggregationLike<Agg>{
     public AggregationImpl toAggregation() {
         return new AggregationImpl().agg(this);
     }
-    
+
 }

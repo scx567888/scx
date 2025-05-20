@@ -47,5 +47,5 @@ public abstract class AggregationLike<AL extends AggregationLike<AL>> implements
     }
 
     public abstract AggregationImpl toAggregation();
-    
+
 }
