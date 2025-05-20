@@ -13,7 +13,7 @@ public class Not extends QueryLike<Not> {
     }
 
     @Override
-    protected Query toQuery() {
+    protected QueryImpl toQuery() {
         return new QueryImpl().where(this);
     }
 
