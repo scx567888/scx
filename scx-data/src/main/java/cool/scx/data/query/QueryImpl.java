@@ -1,23 +1,19 @@
 package cool.scx.data.query;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Predicate;
-
 /// QueryImpl
 ///
 /// @author scx567888
 /// @version 0.0.1
 public class QueryImpl implements Query {
 
-    private final List<OrderBy> orderBy;
     private Object where;
+    private OrderBy[] orderBys;
     private Long offset;
     private Long limit;
 
     public QueryImpl() {
         this.where = null;
-        this.orderBy = new ArrayList<>();
+        this.orderBys = new OrderBy[]{};
         this.offset = null;
         this.limit = null;
     }
@@ -25,7 +21,7 @@ public class QueryImpl implements Query {
     public QueryImpl(Query oldQuery) {
         this();
         where(oldQuery.getWhere());
-        addOrderBy(oldQuery.getOrderBy());
+        orderBy(oldQuery.getOrderBys());
         if (oldQuery.getOffset() != null) {
             offset(oldQuery.getOffset());
         }
@@ -41,9 +37,8 @@ public class QueryImpl implements Query {
     }
 
     @Override
-    public QueryImpl orderBy(Object... orderByClauses) {
-        clearOrderBy();
-        addOrderBy(orderByClauses);
+    public QueryImpl orderBy(OrderBy... orderBys) {
+        this.orderBys = orderBys;
         return this;
     }
 
@@ -71,8 +66,8 @@ public class QueryImpl implements Query {
     }
 
     @Override
-    public Object[] getOrderBy() {
-        return orderBy.toArray();
+    public OrderBy[] getOrderBys() {
+        return orderBys;
     }
 
     @Override
@@ -92,8 +87,8 @@ public class QueryImpl implements Query {
     }
 
     @Override
-    public QueryImpl clearOrderBy() {
-        orderBy.clear();
+    public QueryImpl clearOrderBys() {
+        orderBys = new OrderBy[]{};
         return this;
     }
 
@@ -106,30 +101,6 @@ public class QueryImpl implements Query {
     @Override
     public QueryImpl clearLimit() {
         limit = null;
-        return this;
-    }
-
-    @Override
-    public QueryImpl addOrderBy(Object... orderByClauses) {
-        for (var orderByClause : orderByClauses) {
-            if (orderByClause == null) {
-                continue;
-            }
-            if (orderByClause instanceof Object[] objs) {
-                addOrderBy(objs);
-                continue;
-            }
-            if (orderByClause instanceof OrderBy w && w.info().replace()) {
-                orderBy.removeIf(c -> c instanceof OrderBy w1 && w1.name().equals(w.name()));
-            }
-            orderBy.add(orderByClause);
-        }
-        return this;
-    }
-
-    @Override
-    public Query removeOrderByIf(Predicate<Object> filter) {
-        orderBy.removeIf(filter);
         return this;
     }
 
