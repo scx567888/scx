@@ -1,5 +1,7 @@
 package cool.scx.data.aggregation;
 
+import cool.scx.data.build_control.BuildControl;
+
 /// 聚合定义
 public interface Aggregation {
 
@@ -21,10 +23,13 @@ public interface Aggregation {
     /// 清除 所有聚合列
     Aggregation clearAggs();
 
-    /// 追加 分组  todo 参数有点问题
-    Aggregation groupBy(String name);
+    /// 追加 分组
+    Aggregation groupBy(String selector, BuildControl... controls);
+    
+    /// 追加 分组
+    Aggregation groupBy(String selector, String alias, BuildControl... controls);
 
     /// 追加 聚合  todo 参数有点问题
-    Aggregation agg(String name,String value);
+    Aggregation agg(String name, String value);
 
 }
