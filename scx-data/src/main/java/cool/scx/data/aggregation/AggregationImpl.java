@@ -1,63 +1,46 @@
 package cool.scx.data.aggregation;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 public class AggregationImpl implements Aggregation {
 
-    private final List<GroupBy> groupBys;
-    private final Map<String, String> aggs;
+    private GroupBy[] groupBys;
+    private Agg[] aggs;
 
     public AggregationImpl() {
-        this.groupBys = new ArrayList<>();
-        this.aggs = new HashMap<>();
+        this.groupBys = new GroupBy[]{};
+        this.aggs = new Agg[]{};
     }
 
     @Override
-    public Aggregation groupBy(GroupBy groupBy) {
-        groupBys.add(groupBy);
+    public Aggregation groupBy(GroupBy... groupBys) {
+        this.groupBys = groupBys;
         return this;
     }
 
     @Override
-    public GroupBy[] groupBys() {
-        return groupBys.toArray(GroupBy[]::new);
-    }
-
-    @Override
-    public Aggregation removeGroupBy(String fieldName) {
-        groupBys.removeIf(c -> c.name().equals(fieldName));
+    public Aggregation agg(Agg... aggs) {
+        this.aggs = aggs;
         return this;
     }
 
     @Override
-    public Aggregation clearGroupBys() {
-        groupBys.clear();
-        return this;
+    public GroupBy[] getGroupBys() {
+        return groupBys;
     }
 
     @Override
-    public Aggregation agg(String fieldName, String expression) {
-        aggs.put(fieldName, expression);
-        return this;
-    }
-
-    @Override
-    public Map<String, String> aggs() {
+    public Agg[] getAggs() {
         return aggs;
     }
 
     @Override
-    public Aggregation removeAgg(String fieldName) {
-        aggs.remove(fieldName);
+    public Aggregation clearGroupBys() {
+        groupBys = new GroupBy[]{};
         return this;
     }
 
     @Override
     public Aggregation clearAggs() {
-        aggs.clear();
+        aggs = new Agg[]{};
         return this;
     }
 
