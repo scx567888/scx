@@ -3,16 +3,16 @@ package cool.scx.data.aggregation;
 /// 聚合定义
 public interface Aggregation {
 
-    /// 设置分组
-    Aggregation groupBy(GroupBy... groupBy);
+    /// 设置 分组
+    Aggregation groupBys(GroupBy... groupBy);
 
-    /// 添加聚合列
-    Aggregation agg(Agg... aggs);
+    /// 设置 聚合列
+    Aggregation aggs(Agg... aggs);
 
-    /// 获取 分组列
+    /// 获取 分组
     GroupBy[] getGroupBys();
 
-    /// 获取聚合列
+    /// 获取 聚合列
     Agg[] getAggs();
 
     /// 清除 所有分组
@@ -20,5 +20,11 @@ public interface Aggregation {
 
     /// 清除 所有聚合列
     Aggregation clearAggs();
+
+    /// 追加 分组
+    Aggregation groupBy(String name);
+
+    /// 追加 聚合
+    Aggregation agg(String name,String value);
 
 }
