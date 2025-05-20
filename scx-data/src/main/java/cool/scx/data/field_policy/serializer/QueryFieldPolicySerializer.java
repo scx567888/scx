@@ -3,7 +3,6 @@ package cool.scx.data.field_policy.serializer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.common.util.ObjectUtils;
 import cool.scx.data.field_policy.QueryFieldPolicy;
-import cool.scx.data.field_policy.UpdateFieldPolicy;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

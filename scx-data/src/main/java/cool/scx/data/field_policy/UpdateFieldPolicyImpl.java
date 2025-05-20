@@ -15,7 +15,7 @@ public class UpdateFieldPolicyImpl extends FieldPolicyImpl<UpdateFieldPolicy> im
         this.ignoreNulls = new LinkedHashMap<>();
         this.ignoreNull = true;
     }
-    
+
     @Override
     public UpdateFieldPolicy ignoreNull(boolean ignoreNull) {
         this.ignoreNull = ignoreNull;
@@ -72,5 +72,5 @@ public class UpdateFieldPolicyImpl extends FieldPolicyImpl<UpdateFieldPolicy> im
         expressions.remove(fieldName);
         return this;
     }
-    
+
 }

@@ -59,7 +59,7 @@ public class FieldPolicyBuilder {
     public static QueryFieldPolicy virtualField(String expression, String virtualFieldName) {
         return queryIncludeAll().virtualField(expression, virtualFieldName);
     }
-    
+
     public static QueryFieldPolicy virtualField(String expression) {
         return queryIncludeAll().virtualField(expression);
     }

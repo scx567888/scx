@@ -4,7 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.common.util.ObjectUtils;
-import cool.scx.data.field_policy.*;
+import cool.scx.data.field_policy.FilterMode;
+import cool.scx.data.field_policy.UpdateFieldPolicy;
+import cool.scx.data.field_policy.UpdateFieldPolicyImpl;
 
 import java.util.Map;
 
