@@ -30,7 +30,7 @@ public interface Query {
 
     Query clearLimit();
 
-    Query addOrderBy(Object... orderBys);
+    Query addOrderBy(OrderBy... orderBys);
 
     Query removeOrderBy(String fieldName);
 
