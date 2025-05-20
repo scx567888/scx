@@ -1,5 +1,7 @@
 package cool.scx.data.aggregation;
 
+import cool.scx.data.build_control.BuildControl;
+
 @SuppressWarnings("unchecked")
 public abstract class AggregationLike<AL extends AggregationLike<AL>> implements Aggregation {
 
@@ -47,14 +49,26 @@ public abstract class AggregationLike<AL extends AggregationLike<AL>> implements
     }
 
     @Override
-    public AL groupBy(String name) {
-        aggregation().groupBy(name);
+    public AL groupBy(String selector, BuildControl... controls) {
+        aggregation().groupBy(selector, controls);
         return (AL) this;
     }
 
     @Override
-    public AL agg(String name, String value) {
-        aggregation().agg(name, value);
+    public AL groupBy(String selector, String alias, BuildControl... controls) {
+        aggregation().groupBy(selector, alias, controls);
+        return (AL) this;
+    }
+
+    @Override
+    public AL agg(String expression, BuildControl... controls) {
+        aggregation().agg(expression, controls);
+        return (AL) this;
+    }
+
+    @Override
+    public AL agg(String expression, String alias, BuildControl... controls) {
+        aggregation().agg(expression, alias, controls);
         return (AL) this;
     }
 
