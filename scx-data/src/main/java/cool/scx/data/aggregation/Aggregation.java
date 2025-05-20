@@ -21,10 +21,10 @@ public interface Aggregation {
     /// 清除 所有聚合列
     Aggregation clearAggs();
 
-    /// 追加 分组
+    /// 追加 分组  todo 参数有点问题
     Aggregation groupBy(String name);
 
-    /// 追加 聚合
+    /// 追加 聚合  todo 参数有点问题
     Aggregation agg(String name,String value);
 
 }

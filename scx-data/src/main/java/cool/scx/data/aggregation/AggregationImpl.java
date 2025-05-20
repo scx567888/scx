@@ -1,46 +1,61 @@
 package cool.scx.data.aggregation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AggregationImpl implements Aggregation {
 
-    private GroupBy[] groupBys;
-    private Agg[] aggs;
+    private List<GroupBy> groupBys;
+    private List<Agg> aggs;
 
     public AggregationImpl() {
-        this.groupBys = new GroupBy[]{};
-        this.aggs = new Agg[]{};
+        this.groupBys = new ArrayList<>();
+        this.aggs = new ArrayList<>();
     }
 
     @Override
-    public AggregationImpl groupBy(GroupBy... groupBys) {
-        this.groupBys = groupBys;
+    public AggregationImpl groupBys(GroupBy... groupBys) {
+        this.groupBys = new ArrayList<>(List.of(groupBys));
         return this;
     }
 
     @Override
-    public AggregationImpl agg(Agg... aggs) {
-        this.aggs = aggs;
+    public AggregationImpl aggs(Agg... aggs) {
+        this.aggs = new ArrayList<>(List.of(aggs));
         return this;
     }
 
     @Override
     public GroupBy[] getGroupBys() {
-        return groupBys;
+        return groupBys.toArray(GroupBy[]::new);
     }
 
     @Override
     public Agg[] getAggs() {
-        return aggs;
+        return aggs.toArray(Agg[]::new);
     }
 
     @Override
     public AggregationImpl clearGroupBys() {
-        groupBys = new GroupBy[]{};
+        groupBys.clear();
         return this;
     }
 
     @Override
     public AggregationImpl clearAggs() {
-        aggs = new Agg[]{};
+        aggs.clear();
+        return this;
+    }
+
+    @Override
+    public AggregationImpl groupBy(String name) {
+        groupBys.add(new GroupBy(name,null));
+        return this;
+    }
+
+    @Override
+    public AggregationImpl agg(String name, String value) {
+        aggs.add(new Agg(name, value));
         return this;
     }
 
