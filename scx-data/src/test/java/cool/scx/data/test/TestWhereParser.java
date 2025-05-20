@@ -14,7 +14,7 @@ class TestWhereParser extends WhereParser {
                 return new WhereClause(null);
             }
         }
-        return new WhereClause(w.name() + " " + getWhereKeyWord(w.whereType()) + " ?", w.value1());
+        return new WhereClause(w.selector() + " " + getWhereKeyWord(w.whereType()) + " ?", w.value1());
     }
 
     @Override
