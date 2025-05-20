@@ -1,39 +1,40 @@
 package cool.scx.data.aggregation;
 
-import cool.scx.data.aggregation.GroupByOption.Info;
+import cool.scx.data.build_control.BuildControl;
+import cool.scx.data.build_control.BuildControlInfo;
 
 import static cool.scx.common.util.StringUtils.isBlank;
-import static cool.scx.data.aggregation.GroupByOption.ofInfo;
+import static cool.scx.data.build_control.BuildControlInfo.ofInfo;
 
 public class GroupBy {
 
-    private final String name;
-    private final String expression;
-    private final Info info;
+    private final String selector;
+    private final String alias;
+    private final BuildControlInfo info;
 
-    public GroupBy(String name, String expression, Info info) {
+    public GroupBy(String selector, String alias, BuildControlInfo info) {
         //名称不能为空
-        if (isBlank(name)) {
-            throw new IllegalArgumentException("GroupBy 参数错误 : 名称 不能为空 !!!");
+        if (isBlank(selector)) {
+            throw new IllegalArgumentException("GroupBy 参数错误 : selector 不能为空 !!!");
         }
-        this.name = name;
-        this.expression = expression;
+        this.selector = selector;
+        this.alias = alias;
         this.info = info;
     }
 
-    public GroupBy(String name, String expression, GroupByOption... options) {
-        this(name, expression, ofInfo(options));
+    public GroupBy(String name, String alias, BuildControl... controls) {
+        this(name, alias, ofInfo(controls));
     }
 
-    public String name() {
-        return name;
+    public String selector() {
+        return selector;
     }
 
-    public String expression() {
-        return expression;
+    public String alias() {
+        return alias;
     }
 
-    public Info info() {
+    public BuildControlInfo info() {
         return info;
     }
 
