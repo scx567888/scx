@@ -1,8 +1,6 @@
 package cool.scx.data.field_policy;
 
 import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Set;
 
 import static java.util.Collections.addAll;
@@ -11,24 +9,19 @@ import static java.util.Collections.addAll;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public final class FieldPolicyImpl implements FieldPolicy {
+@SuppressWarnings("unchecked")
+class FieldPolicyImpl<T extends FieldPolicyImpl<T>> implements FieldPolicy<T> {
 
     private final FilterMode filterMode;
     private final Set<String> fieldNames;
-    private final Map<String, String> expressions;
-    private final Map<String, Boolean> ignoreNulls;
-    private boolean ignoreNull;
 
     public FieldPolicyImpl(FilterMode filterMode) {
         this.filterMode = filterMode;
         this.fieldNames = new HashSet<>();
-        this.expressions = new LinkedHashMap<>();//保证顺序很重要
-        this.ignoreNulls = new LinkedHashMap<>();
-        this.ignoreNull = true;
     }
 
     @Override
-    public FieldPolicy include(String... fieldNames) {
+    public T include(String... fieldNames) {
         return switch (filterMode) {
             case INCLUDED -> addFieldNames(fieldNames);
             case EXCLUDED -> removeFieldNames(fieldNames);
@@ -36,7 +29,7 @@ public final class FieldPolicyImpl implements FieldPolicy {
     }
 
     @Override
-    public FieldPolicy exclude(String... fieldNames) {
+    public T exclude(String... fieldNames) {
         return switch (filterMode) {
             case EXCLUDED -> addFieldNames(fieldNames);
             case INCLUDED -> removeFieldNames(fieldNames);
@@ -44,88 +37,31 @@ public final class FieldPolicyImpl implements FieldPolicy {
     }
 
     @Override
-    public FilterMode filterMode() {
+    public FilterMode getFilterMode() {
         return filterMode;
     }
 
     @Override
-    public String[] fieldNames() {
+    public String[] getFieldNames() {
         return fieldNames.toArray(String[]::new);
     }
 
     @Override
-    public FieldPolicy clearFieldNames() {
+    public T clearFieldNames() {
         fieldNames.clear();
-        return this;
+        return (T) this;
     }
 
-    @Override
-    public FieldPolicy ignoreNull(boolean ignoreNull) {
-        this.ignoreNull = ignoreNull;
-        return this;
-    }
-
-    @Override
-    public boolean ignoreNull() {
-        return ignoreNull;
-    }
-
-    @Override
-    public FieldPolicy ignoreNull(String fieldName, boolean ignoreNull) {
-        this.ignoreNulls.put(fieldName, ignoreNull);
-        return this;
-    }
-
-    @Override
-    public FieldPolicy removeIgnoreNull(String fieldName) {
-        ignoreNulls.remove(fieldName);
-        return this;
-    }
-
-    @Override
-    public Map<String, Boolean> ignoreNulls() {
-        return ignoreNulls;
-    }
-
-    @Override
-    public FieldPolicy clearIgnoreNulls() {
-        ignoreNulls.clear();
-        return this;
-    }
-
-    @Override
-    public FieldPolicy expression(String fieldName, String expression) {
-        expressions.put(fieldName, expression);
-        return this;
-    }
-
-    @Override
-    public Map<String, String> expressions() {
-        return expressions;
-    }
-
-    @Override
-    public FieldPolicy removeExpression(String fieldName) {
-        expressions.remove(fieldName);
-        return this;
-    }
-
-    @Override
-    public FieldPolicy clearExpressions() {
-        expressions.clear();
-        return this;
-    }
-
-    public FieldPolicy addFieldNames(String... fieldNames) {
+    public T addFieldNames(String... fieldNames) {
         addAll(this.fieldNames, fieldNames);
-        return this;
+        return (T) this;
     }
 
-    public FieldPolicy removeFieldNames(String... fieldNames) {
+    public T removeFieldNames(String... fieldNames) {
         for (var fieldName : fieldNames) {
             this.fieldNames.remove(fieldName);
         }
-        return this;
+        return (T) this;
     }
 
 }
