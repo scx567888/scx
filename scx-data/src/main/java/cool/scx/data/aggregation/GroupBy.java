@@ -6,7 +6,7 @@ import cool.scx.data.build_control.BuildControlInfo;
 import static cool.scx.common.util.StringUtils.isBlank;
 import static cool.scx.data.build_control.BuildControlInfo.ofInfo;
 
-public class GroupBy {
+public class GroupBy extends AggregationLike<GroupBy>{
 
     private final String selector;
     private final String alias;
@@ -38,4 +38,9 @@ public class GroupBy {
         return info;
     }
 
+    @Override
+    public AggregationImpl toAggregation() {
+        return new AggregationImpl().groupBy(this);
+    }
+    
 }
