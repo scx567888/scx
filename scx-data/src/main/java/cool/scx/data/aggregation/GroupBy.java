@@ -22,8 +22,8 @@ public class GroupBy extends AggregationLike<GroupBy> {
         this.info = info;
     }
 
-    public GroupBy(String name, String alias, BuildControl... controls) {
-        this(name, alias, ofInfo(controls));
+    public GroupBy(String selector, String alias, BuildControl... controls) {
+        this(selector, alias, ofInfo(controls));
     }
 
     public String selector() {
