@@ -29,7 +29,10 @@ public interface Aggregation {
     /// 追加 分组
     Aggregation groupBy(String selector, String alias, BuildControl... controls);
 
-    /// 追加 聚合  todo 参数有点问题
-    Aggregation agg(String name, String value);
+    /// 追加 聚合
+    Aggregation agg(String expression, BuildControl... controls);
+    
+    /// 追加 聚合 
+    Aggregation agg(String expression, String alias, BuildControl... controls);
 
 }
