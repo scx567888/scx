@@ -8,7 +8,7 @@ public interface Query {
 
     Query where(Object where);
 
-    Query orderBy(Object... orderByClauses);
+    Query orderBy(OrderBy... orderBys);
 
     Query offset(long offset);
 
@@ -16,7 +16,7 @@ public interface Query {
 
     Object getWhere();
 
-    Object[] getOrderBy();
+    OrderBy[] getOrderBy();
 
     Long getOffset();
 
@@ -30,7 +30,7 @@ public interface Query {
 
     Query clearLimit();
 
-    Query addOrderBy(Object... orderByClauses);
+    Query addOrderBy(Object... orderBys);
 
     Query removeOrderBy(String fieldName);
 
