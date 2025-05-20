@@ -4,13 +4,13 @@ package cool.scx.data.field_policy;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public interface FieldPolicy {
+public interface FieldPolicy<T extends FieldPolicy<T>> {
 
     /// 设置 包含
-    FieldPolicy include(String... fieldNames);
+    T include(String... fieldNames);
 
     /// 设置 排除
-    FieldPolicy exclude(String... fieldNames);
+    T exclude(String... fieldNames);
 
     /// 获取 当前模式
     FilterMode getFilterMode();
@@ -19,6 +19,6 @@ public interface FieldPolicy {
     String[] getFieldNames();
 
     /// 清除 fieldNames
-    FieldPolicy clearFieldNames();
+    T clearFieldNames();
 
 }
