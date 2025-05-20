@@ -1,5 +1,7 @@
 package cool.scx.data.query;
 
+import cool.scx.data.build_control.BuildControl;
+
 /// QueryLike
 ///
 /// @author scx567888
@@ -23,8 +25,8 @@ public abstract class QueryLike<QL extends QueryLike<QL>> implements Query {
     }
 
     @Override
-    public QL orderBy(OrderBy... orderBys) {
-        query().orderBy(orderBys);
+    public QL orderBys(OrderBy... orderBys) {
+        query().orderBys(orderBys);
         return (QL) this;
     }
 
@@ -81,6 +83,24 @@ public abstract class QueryLike<QL extends QueryLike<QL>> implements Query {
     @Override
     public QL clearLimit() {
         query().clearLimit();
+        return (QL) this;
+    }
+
+    @Override
+    public QL orderBy(OrderBy... orderBys) {
+        query().orderBy(orderBys);
+        return (QL) this;
+    }
+
+    @Override
+    public QL asc(String selector, BuildControl... options) {
+        query().asc(selector, options);
+        return (QL) this;
+    }
+
+    @Override
+    public QL desc(String selector, BuildControl... options) {
+        query().desc(selector, options);
         return (QL) this;
     }
 

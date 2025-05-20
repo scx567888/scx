@@ -47,8 +47,7 @@ public class QueryImpl implements Query {
 
     @Override
     public QueryImpl orderBys(OrderBy... orderBys) {
-        clearOrderBys();
-        orderBy(orderBys);
+        this.orderBys = new ArrayList<>(List.of(orderBys));
         return this;
     }
 
