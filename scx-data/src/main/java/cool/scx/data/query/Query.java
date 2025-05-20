@@ -34,8 +34,8 @@ public interface Query {
     
     Query orderBy(OrderBy... orderBys);
     
-    Query asc(String name, BuildControl... options);
+    Query asc(String selector, BuildControl... options);
 
-    Query desc(String name, BuildControl... options);
+    Query desc(String selector, BuildControl... options);
 
 }
