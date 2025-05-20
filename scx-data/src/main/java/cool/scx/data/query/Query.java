@@ -30,8 +30,4 @@ public interface Query {
 
     Query clearLimit();
 
-    Query addOrderBy(OrderBy... orderBys);
-
-    Query removeOrderBy(String fieldName);
-
 }
