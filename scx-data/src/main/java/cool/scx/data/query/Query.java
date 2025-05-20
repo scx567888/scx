@@ -16,7 +16,7 @@ public interface Query {
 
     Object getWhere();
 
-    OrderBy[] getOrderBy();
+    OrderBy[] getOrderBys();
 
     Long getOffset();
 
@@ -24,7 +24,7 @@ public interface Query {
 
     Query clearWhere();
 
-    Query clearOrderBy();
+    Query clearOrderBys();
 
     Query clearOffset();
 
