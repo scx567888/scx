@@ -1,5 +1,14 @@
 package cool.scx.data.query;
 
+import cool.scx.data.build_control.BuildControl;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static cool.scx.data.query.OrderByType.ASC;
+import static cool.scx.data.query.OrderByType.DESC;
+import static java.util.Collections.addAll;
+
 /// QueryImpl
 ///
 /// @author scx567888
@@ -7,13 +16,13 @@ package cool.scx.data.query;
 public class QueryImpl implements Query {
 
     private Object where;
-    private OrderBy[] orderBys;
+    private List<OrderBy> orderBys;
     private Long offset;
     private Long limit;
 
     public QueryImpl() {
         this.where = null;
-        this.orderBys = new OrderBy[]{};
+        this.orderBys = new ArrayList<>();
         this.offset = null;
         this.limit = null;
     }
@@ -37,8 +46,9 @@ public class QueryImpl implements Query {
     }
 
     @Override
-    public QueryImpl orderBy(OrderBy... orderBys) {
-        this.orderBys = orderBys;
+    public QueryImpl orderBys(OrderBy... orderBys) {
+        clearOrderBys();
+        orderBy(orderBys);
         return this;
     }
 
@@ -67,7 +77,7 @@ public class QueryImpl implements Query {
 
     @Override
     public OrderBy[] getOrderBys() {
-        return orderBys;
+        return orderBys.toArray(OrderBy[]::new);
     }
 
     @Override
@@ -88,7 +98,7 @@ public class QueryImpl implements Query {
 
     @Override
     public QueryImpl clearOrderBys() {
-        orderBys = new OrderBy[]{};
+        orderBys.clear();
         return this;
     }
 
@@ -101,6 +111,24 @@ public class QueryImpl implements Query {
     @Override
     public QueryImpl clearLimit() {
         limit = null;
+        return this;
+    }
+
+    @Override
+    public QueryImpl orderBy(OrderBy... orderBys) {
+        addAll(this.orderBys, orderBys);
+        return this;
+    }
+
+    @Override
+    public QueryImpl asc(String selector, BuildControl... options) {
+        orderBy(new OrderBy(selector, ASC, options));
+        return this;
+    }
+
+    @Override
+    public QueryImpl desc(String selector, BuildControl... options) {
+        orderBy(new OrderBy(selector, DESC, options));
         return this;
     }
 
