@@ -48,8 +48,8 @@ public class QueryDeserializer {
             query.where(where);
         }
         if (orderBysNode != null && !orderBysNode.isNull()) {
-            var orderBy = deserializeOrderByAll(orderBysNode);
-            query.orderBy(orderBy);
+            var orderBys = deserializeOrderByAll(orderBysNode);
+            query.orderBys(orderBys);
         }
         if (offsetNode != null && !offsetNode.isNull()) {
             query.offset(offsetNode.asLong());

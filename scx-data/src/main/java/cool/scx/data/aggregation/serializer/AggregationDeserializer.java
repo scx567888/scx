@@ -1,15 +1,15 @@
 package cool.scx.data.aggregation.serializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.common.util.ObjectUtils;
+import cool.scx.data.aggregation.Agg;
 import cool.scx.data.aggregation.Aggregation;
 import cool.scx.data.aggregation.AggregationImpl;
 import cool.scx.data.aggregation.GroupBy;
-import cool.scx.data.aggregation.GroupByOption;
+import cool.scx.data.build_control.BuildControlInfo;
 
-import java.util.Map;
+import java.util.ArrayList;
 
 import static cool.scx.common.util.ObjectUtils.convertValue;
 
@@ -45,16 +45,19 @@ public class AggregationDeserializer {
         var aggsNode = objectNode.get("aggs");
 
         if (groupBysNode != null && !groupBysNode.isNull()) {
+            var s = new ArrayList<GroupBy>();
             for (var groupByNode : groupBysNode) {
-                aggregationDefinition.groupBy(deserializeGroupBy(groupByNode));
+                s.add(deserializeGroupBy(groupByNode));
             }
+            aggregationDefinition.groupBys(s.toArray(GroupBy[]::new));
         }
 
         if (aggsNode != null && !aggsNode.isNull()) {
-            var aggregateColumns = convertValue(objectNode.get("aggs"), new TypeReference<Map<String, String>>() {});
-            for (var aggregateColumn : aggregateColumns.entrySet()) {
-                aggregationDefinition.agg(aggregateColumn.getKey(), aggregateColumn.getValue());
+            var s = new ArrayList<Agg>();
+            for (var aggNode : aggsNode) {
+                s.add(deserializeAgg(aggNode));
             }
+            aggregationDefinition.aggs(s.toArray(Agg[]::new));
         }
 
         return aggregationDefinition;
@@ -71,13 +74,33 @@ public class AggregationDeserializer {
     }
 
     private GroupBy deserializeGroupBy0(JsonNode v) {
-        var nameNode = v.path("name");
-        var expressionNode = v.path("expression");
+        var selectorNode = v.path("selector");
+        var aliasNode = v.path("alias");
         var infoNode = v.path("info");
-        var name = nameNode.asText();
-        var expression = expressionNode == null || expressionNode.isNull() ? null : expressionNode.asText();
-        var info = convertValue(infoNode, GroupByOption.Info.class);
+        var name = selectorNode.asText();
+        var expression = aliasNode == null || aliasNode.isNull() ? null : aliasNode.asText();
+        var info = convertValue(infoNode, BuildControlInfo.class);
         return new GroupBy(name, expression, info);
+    }
+
+    public Agg deserializeAgg(JsonNode v) {
+        if (v.isObject()) {
+            var type = v.get("@type").asText();
+            if (type.equals("Agg")) {
+                return deserializeAgg0(v);
+            }
+        }
+        throw new IllegalArgumentException("Invalid Group By: " + v);
+    }
+
+    private Agg deserializeAgg0(JsonNode v) {
+        var expressionNode = v.path("expression");
+        var aliasNode = v.path("alias");
+        var infoNode = v.path("info");
+        var name = expressionNode.asText();
+        var expression = aliasNode == null || aliasNode.isNull() ? null : aliasNode.asText();
+        var info = convertValue(infoNode, BuildControlInfo.class);
+        return new Agg(name, expression, info);
     }
 
 }

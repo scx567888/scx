@@ -30,7 +30,7 @@ public abstract class OrderByParser {
     protected abstract String[] parseOrderBy(OrderBy o);
 
     protected String[] parseQuery(Query q) {
-        return parseAll(q.getOrderBy());
+        return parseAll(q.getOrderBys());
     }
 
     protected final String[] parseAll(Object[] objs) {

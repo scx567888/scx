@@ -2,6 +2,7 @@ package cool.scx.data.aggregation.serializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.common.util.ObjectUtils;
+import cool.scx.data.aggregation.Agg;
 import cool.scx.data.aggregation.Aggregation;
 import cool.scx.data.aggregation.GroupBy;
 
@@ -26,24 +27,41 @@ public class AggregationSerializer {
     public Map<String, Object> serializeAggregationDefinition(Aggregation aggregation) {
         var m = new LinkedHashMap<String, Object>();
         m.put("@type", "Aggregation");
-        m.put("groupBys", serializeGroupBys(aggregation.groupBys()));
-        m.put("aggs", aggregation.aggs());
+        m.put("groupBys", serializeGroupBys(aggregation.getGroupBys()));
+        m.put("aggs", serializeAggs(aggregation.getAggs()));
         return m;
     }
 
     private List<Map<String, Object>> serializeGroupBys(GroupBy[] groupBys) {
         var m = new ArrayList<Map<String, Object>>();
         for (var groupBy : groupBys) {
-            m.add(serializeGroupBy0(groupBy));
+            m.add(serializeGroupBy(groupBy));
         }
         return m;
     }
 
-    private Map<String, Object> serializeGroupBy0(GroupBy g) {
+    private Map<String, Object> serializeGroupBy(GroupBy g) {
         var m = new LinkedHashMap<String, Object>();
         m.put("@type", "GroupBy");
-        m.put("name", g.name());
+        m.put("selector", g.selector());
+        m.put("alias", g.alias());
+        m.put("info", g.info());
+        return m;
+    }
+
+    private List<Map<String, Object>> serializeAggs(Agg[] aggs) {
+        var m = new ArrayList<Map<String, Object>>();
+        for (var agg : aggs) {
+            m.add(serializeAgg(agg));
+        }
+        return m;
+    }
+
+    private Map<String, Object> serializeAgg(Agg g) {
+        var m = new LinkedHashMap<String, Object>();
+        m.put("@type", "Agg");
         m.put("expression", g.expression());
+        m.put("alias", g.alias());
         m.put("info", g.info());
         return m;
     }
