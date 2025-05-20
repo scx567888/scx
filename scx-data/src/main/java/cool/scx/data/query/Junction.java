@@ -1,5 +1,7 @@
 package cool.scx.data.query;
 
+import cool.scx.data.build_control.BuildControl;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +33,7 @@ public abstract sealed class Junction extends QueryLike<Junction> permits And, O
                 continue;
             }
             if (logicCause instanceof Where w && w.info().replace()) {
-                clauses.removeIf(c -> c instanceof Where w1 && w1.name().equals(w.name()));
+                clauses.removeIf(c -> c instanceof Where w1 && w1.selector().equals(w.selector()));
             }
             clauses.add(logicCause);
         }
@@ -43,68 +45,68 @@ public abstract sealed class Junction extends QueryLike<Junction> permits And, O
         return this;
     }
 
-    public final Junction eq(String fieldName, Object value, QueryOption... options) {
-        return add(new Where(fieldName, EQ, value, null, options));
+    public final Junction eq(String selector, Object value, BuildControl... options) {
+        return add(new Where(selector, EQ, value, null, options));
     }
 
-    public final Junction ne(String fieldName, Object value, QueryOption... options) {
-        return add(new Where(fieldName, NE, value, null, options));
+    public final Junction ne(String selector, Object value, BuildControl... options) {
+        return add(new Where(selector, NE, value, null, options));
     }
 
-    public final Junction lt(String fieldName, Object value, QueryOption... options) {
-        return add(new Where(fieldName, LT, value, null, options));
+    public final Junction lt(String selector, Object value, BuildControl... options) {
+        return add(new Where(selector, LT, value, null, options));
     }
 
-    public final Junction lte(String fieldName, Object value, QueryOption... options) {
-        return add(new Where(fieldName, LTE, value, null, options));
+    public final Junction lte(String selector, Object value, BuildControl... options) {
+        return add(new Where(selector, LTE, value, null, options));
     }
 
-    public final Junction gt(String fieldName, Object value, QueryOption... options) {
-        return add(new Where(fieldName, GT, value, null, options));
+    public final Junction gt(String selector, Object value, BuildControl... options) {
+        return add(new Where(selector, GT, value, null, options));
     }
 
-    public final Junction gte(String fieldName, Object value, QueryOption... options) {
-        return add(new Where(fieldName, GTE, value, null, options));
+    public final Junction gte(String selector, Object value, BuildControl... options) {
+        return add(new Where(selector, GTE, value, null, options));
     }
 
-    public final Junction like(String fieldName, Object value, QueryOption... options) {
-        return add(new Where(fieldName, LIKE, value, null, options));
+    public final Junction like(String selector, Object value, BuildControl... options) {
+        return add(new Where(selector, LIKE, value, null, options));
     }
 
-    public final Junction notLike(String fieldName, Object value, QueryOption... options) {
-        return add(new Where(fieldName, NOT_LIKE, value, null, options));
+    public final Junction notLike(String selector, Object value, BuildControl... options) {
+        return add(new Where(selector, NOT_LIKE, value, null, options));
     }
 
-    public final Junction likeRegex(String fieldName, String value, QueryOption... options) {
-        return add(new Where(fieldName, LIKE_REGEX, value, null, options));
+    public final Junction likeRegex(String selector, String value, BuildControl... options) {
+        return add(new Where(selector, LIKE_REGEX, value, null, options));
     }
 
-    public final Junction notLikeRegex(String fieldName, String value, QueryOption... options) {
-        return add(new Where(fieldName, NOT_LIKE_REGEX, value, null, options));
+    public final Junction notLikeRegex(String selector, String value, BuildControl... options) {
+        return add(new Where(selector, NOT_LIKE_REGEX, value, null, options));
     }
 
-    public final Junction in(String fieldName, Object value, QueryOption... options) {
-        return add(new Where(fieldName, IN, value, null, options));
+    public final Junction in(String selector, Object value, BuildControl... options) {
+        return add(new Where(selector, IN, value, null, options));
     }
 
-    public final Junction notIn(String fieldName, Object value, QueryOption... options) {
-        return add(new Where(fieldName, NOT_IN, value, null, options));
+    public final Junction notIn(String selector, Object value, BuildControl... options) {
+        return add(new Where(selector, NOT_IN, value, null, options));
     }
 
-    public final Junction between(String fieldName, Object value1, Object value2, QueryOption... options) {
-        return add(new Where(fieldName, BETWEEN, value1, value2, options));
+    public final Junction between(String selector, Object value1, Object value2, BuildControl... options) {
+        return add(new Where(selector, BETWEEN, value1, value2, options));
     }
 
-    public final Junction notBetween(String fieldName, Object value1, Object value2, QueryOption... options) {
-        return add(new Where(fieldName, NOT_BETWEEN, value1, value2, options));
+    public final Junction notBetween(String selector, Object value1, Object value2, BuildControl... options) {
+        return add(new Where(selector, NOT_BETWEEN, value1, value2, options));
     }
 
-    public final Junction jsonContains(String fieldName, Object value, QueryOption... options) {
-        return add(new Where(fieldName, JSON_CONTAINS, value, null, options));
+    public final Junction jsonContains(String selector, Object value, BuildControl... options) {
+        return add(new Where(selector, JSON_CONTAINS, value, null, options));
     }
 
-    public final Junction jsonOverlaps(String fieldName, Object value, QueryOption... options) {
-        return add(new Where(fieldName, JSON_OVERLAPS, value, null, options));
+    public final Junction jsonOverlaps(String selector, Object value, BuildControl... options) {
+        return add(new Where(selector, JSON_OVERLAPS, value, null, options));
     }
 
     public final Junction and(Object... clauses) {
