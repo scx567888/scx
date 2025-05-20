@@ -13,14 +13,14 @@ public abstract class AggregationLike<AL extends AggregationLike<AL>> implements
     }
 
     @Override
-    public AL groupBy(GroupBy... groupBy) {
-        aggregation().groupBy(groupBy);
+    public AL groupBys(GroupBy... groupBys) {
+        aggregation().groupBys(groupBys);
         return (AL) this;
     }
 
     @Override
-    public AL agg(Agg... aggs) {
-        aggregation().agg(aggs);
+    public AL aggs(Agg... aggs) {
+        aggregation().aggs(aggs);
         return (AL) this;
     }
 
@@ -46,6 +46,18 @@ public abstract class AggregationLike<AL extends AggregationLike<AL>> implements
         return (AL) this;
     }
 
-    public abstract AggregationImpl toAggregation();
+    @Override
+    public AL groupBy(String name) {
+        aggregation().groupBy(name);
+        return (AL) this;
+    }
+
+    @Override
+    public AL agg(String name, String value) {
+        aggregation().agg(name, value);
+        return (AL) this;
+    }
+
+    protected abstract AggregationImpl toAggregation();
 
 }
