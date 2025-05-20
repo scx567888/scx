@@ -25,14 +25,14 @@ public interface Aggregation {
 
     /// 追加 分组
     Aggregation groupBy(String selector, BuildControl... controls);
-    
+
     /// 追加 分组
     Aggregation groupBy(String selector, String alias, BuildControl... controls);
 
     /// 追加 聚合
     Aggregation agg(String expression, BuildControl... controls);
-    
-    /// 追加 聚合 
+
+    /// 追加 聚合
     Aggregation agg(String expression, String alias, BuildControl... controls);
 
 }

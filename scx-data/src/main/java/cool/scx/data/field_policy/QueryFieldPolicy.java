@@ -16,5 +16,5 @@ public interface QueryFieldPolicy extends FieldPolicy<QueryFieldPolicy> {
 
     /// 清除 所有虚拟列
     QueryFieldPolicy clearVirtualFields();
-    
+
 }
