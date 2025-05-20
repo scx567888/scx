@@ -52,7 +52,7 @@ public final class OrderBy extends QueryLike<OrderBy> {
 
     @Override
     protected QueryImpl toQuery() {
-        return new QueryImpl().orderBy(this);
+        return new QueryImpl().orderBys(this);
     }
 
 }

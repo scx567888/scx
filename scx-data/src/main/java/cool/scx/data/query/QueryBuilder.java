@@ -24,8 +24,8 @@ public final class QueryBuilder {
         return new QueryImpl().where(where);
     }
 
-    public static Query orderBy(OrderBy... orderBys) {
-        return new QueryImpl().orderBy(orderBys);
+    public static Query orderBys(OrderBy... orderBys) {
+        return new QueryImpl().orderBys(orderBys);
     }
 
     public static Query offset(long offset) {

@@ -30,7 +30,7 @@ public class QueryImpl implements Query {
     public QueryImpl(Query oldQuery) {
         this();
         where(oldQuery.getWhere());
-        orderBy(oldQuery.getOrderBys());
+        orderBys(oldQuery.getOrderBys());
         if (oldQuery.getOffset() != null) {
             offset(oldQuery.getOffset());
         }
