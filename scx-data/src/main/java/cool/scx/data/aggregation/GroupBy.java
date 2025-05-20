@@ -39,8 +39,8 @@ public class GroupBy extends AggregationLike<GroupBy> {
     }
 
     @Override
-    public AggregationImpl toAggregation() {
-        return new AggregationImpl().groupBy(this);
+    protected AggregationImpl toAggregation() {
+        return new AggregationImpl().groupBys(this);
     }
 
 }

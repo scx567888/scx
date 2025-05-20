@@ -37,8 +37,8 @@ public class Agg extends AggregationLike<Agg> {
     }
 
     @Override
-    public AggregationImpl toAggregation() {
-        return new AggregationImpl().agg(this);
+    protected AggregationImpl toAggregation() {
+        return new AggregationImpl().aggs(this);
     }
 
 }
