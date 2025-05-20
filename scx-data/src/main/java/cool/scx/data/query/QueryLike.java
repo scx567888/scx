@@ -7,9 +7,9 @@ package cool.scx.data.query;
 @SuppressWarnings("unchecked")
 public abstract class QueryLike<QL extends QueryLike<QL>> implements Query {
 
-    private Query query;
+    private QueryImpl query;
 
-    private Query query() {
+    private QueryImpl query() {
         if (query == null) {
             query = toQuery();
         }
@@ -84,6 +84,6 @@ public abstract class QueryLike<QL extends QueryLike<QL>> implements Query {
         return (QL) this;
     }
 
-    protected abstract Query toQuery();
+    protected abstract QueryImpl toQuery();
 
 }

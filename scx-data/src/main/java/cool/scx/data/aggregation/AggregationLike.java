@@ -3,9 +3,9 @@ package cool.scx.data.aggregation;
 @SuppressWarnings("unchecked")
 public abstract class AggregationLike<AL extends AggregationLike<AL>> implements Aggregation {
 
-    private Aggregation aggregation;
+    private AggregationImpl aggregation;
 
-    private Aggregation aggregation() {
+    private AggregationImpl aggregation() {
         if (aggregation == null) {
             aggregation = toAggregation();
         }
@@ -46,6 +46,6 @@ public abstract class AggregationLike<AL extends AggregationLike<AL>> implements
         return (AL) this;
     }
 
-    public abstract Aggregation toAggregation();
+    public abstract AggregationImpl toAggregation();
     
 }

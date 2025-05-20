@@ -122,7 +122,7 @@ public abstract sealed class Junction extends QueryLike<Junction> permits And, O
     }
 
     @Override
-    protected Query toQuery() {
+    protected QueryImpl toQuery() {
         return new QueryImpl().where(this);
     }
 

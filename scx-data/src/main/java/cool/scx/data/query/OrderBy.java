@@ -51,7 +51,7 @@ public final class OrderBy extends QueryLike<OrderBy> {
     }
 
     @Override
-    protected Query toQuery() {
+    protected QueryImpl toQuery() {
         return new QueryImpl().orderBy(this);
     }
 

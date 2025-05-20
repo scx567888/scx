@@ -11,13 +11,13 @@ public class AggregationImpl implements Aggregation {
     }
 
     @Override
-    public Aggregation groupBy(GroupBy... groupBys) {
+    public AggregationImpl groupBy(GroupBy... groupBys) {
         this.groupBys = groupBys;
         return this;
     }
 
     @Override
-    public Aggregation agg(Agg... aggs) {
+    public AggregationImpl agg(Agg... aggs) {
         this.aggs = aggs;
         return this;
     }
@@ -33,13 +33,13 @@ public class AggregationImpl implements Aggregation {
     }
 
     @Override
-    public Aggregation clearGroupBys() {
+    public AggregationImpl clearGroupBys() {
         groupBys = new GroupBy[]{};
         return this;
     }
 
     @Override
-    public Aggregation clearAggs() {
+    public AggregationImpl clearAggs() {
         aggs = new Agg[]{};
         return this;
     }

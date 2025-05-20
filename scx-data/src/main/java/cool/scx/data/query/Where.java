@@ -60,7 +60,7 @@ public final class Where extends QueryLike<Where> {
     }
 
     @Override
-    protected Query toQuery() {
+    protected QueryImpl toQuery() {
         return new QueryImpl().where(this);
     }
 
