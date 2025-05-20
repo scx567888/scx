@@ -12,6 +12,8 @@ import static cool.scx.data.query.QueryBuilder.query;
 ///
 /// @param <Entity>
 /// @param <ID>
+/// @author scx567888
+/// @version 0.0.1
 public interface AggregatableRepository<Entity, ID> extends Repository<Entity, ID> {
 
     /// 创建一个数据聚合器

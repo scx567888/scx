@@ -5,6 +5,9 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 /// 聚合器
+///
+/// @author scx567888
+/// @version 0.0.1
 public interface Aggregator {
 
     <T> List<T> list(Class<T> resultType);
