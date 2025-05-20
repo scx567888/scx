@@ -28,7 +28,7 @@ public class QuerySerializer {
         var m = new LinkedHashMap<String, Object>();
         m.put("@type", "Query");
         m.put("where", serializeWhere(query.getWhere()));
-        m.put("orderBy", serializeOrderBy(query.orderBy()));
+        m.put("orderBys", serializeOrderBys(query.getOrderBys()));
         m.put("offset", query.getOffset());
         m.put("limit", query.getLimit());
         return m;
@@ -84,7 +84,7 @@ public class QuerySerializer {
     private Map<String, Object> serializeWhere(Where w) {
         var m = new LinkedHashMap<String, Object>();
         m.put("@type", "Where");
-        m.put("name", w.name());
+        m.put("selector", w.selector());
         m.put("whereType", w.whereType());
         m.put("value1", w.value1());
         m.put("value2", w.value2());
@@ -100,31 +100,21 @@ public class QuerySerializer {
         return arr;
     }
 
-    public Object serializeOrderBy(Object obj) {
-        return switch (obj) {
-            case String s -> serializeString(s);
-            case OrderBy o -> serializeOrderBy(o);
-            case Query q -> serializeOrderByAll(q.getOrderBy());
-            case Object[] o -> serializeOrderByAll(o);
-            default -> obj;
-        };
-    }
-
-    private Object serializeOrderBy(OrderBy orderByBody) {
-        var m = new LinkedHashMap<String, Object>();
-        m.put("@type", "OrderBy");
-        m.put("name", orderByBody.name());
-        m.put("orderByType", orderByBody.orderByType());
-        m.put("info", orderByBody.info());
-        return m;
-    }
-
-    private Object[] serializeOrderByAll(Object[] objs) {
+    public Object serializeOrderBys(OrderBy... objs) {
         var arr = new Object[objs.length];
         for (int i = 0; i < objs.length; i = i + 1) {
             arr[i] = serializeOrderBy(objs[i]);
         }
         return arr;
+    }
+
+    private Object serializeOrderBy(OrderBy orderByBody) {
+        var m = new LinkedHashMap<String, Object>();
+        m.put("@type", "OrderBy");
+        m.put("selector", orderByBody.selector());
+        m.put("orderByType", orderByBody.orderByType());
+        m.put("info", orderByBody.info());
+        return m;
     }
 
 }

@@ -3,6 +3,7 @@ package cool.scx.data.query.serializer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.common.util.ObjectUtils;
+import cool.scx.data.build_control.BuildControlInfo;
 import cool.scx.data.query.*;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class QueryDeserializer {
 
     public Query fromJson(String json) throws JsonProcessingException {
         var v = ObjectUtils.jsonMapper().readTree(json);
-        return deserializeQuery(v);
+        return deserialize(v);
     }
 
     public Query deserialize(JsonNode v) {
@@ -39,15 +40,15 @@ public class QueryDeserializer {
         }
 
         var whereNode = objectNode.get("where");
-        var orderByNode = objectNode.get("orderBy");
+        var orderBysNode = objectNode.get("orderBys");
         var offsetNode = objectNode.get("offset");
         var limitNode = objectNode.get("limit");
         if (whereNode != null && !whereNode.isNull()) {
             var where = deserializeWhere(whereNode);
             query.where(where);
         }
-        if (orderByNode != null && !orderByNode.isNull()) {
-            var orderBy = deserializeOrderBy(orderByNode);
+        if (orderBysNode != null && !orderBysNode.isNull()) {
+            var orderBy = deserializeOrderByAll(orderBysNode);
             query.orderBy(orderBy);
         }
         if (offsetNode != null && !offsetNode.isNull()) {
@@ -59,38 +60,33 @@ public class QueryDeserializer {
         return query;
     }
 
-    public Object deserializeOrderBy(JsonNode v) {
+    public OrderBy deserializeOrderBy(JsonNode v) {
         if (v.isObject()) {
             var type = v.get("@type").asText();
-            return switch (type) {
-                case "OrderBy" -> deserializeOrderBy0(v);
-                default -> v;
-            };
-        } else if (v.isTextual()) {
-            return deserializeString(v);
-        } else if (v.isArray()) {
-            return deserializeOrderByAll(v);
+            if (type.equals("OrderBy")) {
+                return deserializeOrderBy0(v);
+            }
         }
-        return null;
+        throw new IllegalArgumentException("Unknown orderBy type: " + v);
     }
 
     private OrderBy deserializeOrderBy0(JsonNode v) {
-        var name = v.get("name").asText();
+        var selector = v.get("selector").asText();
         var orderByType = convertValue(v.get("orderByType"), OrderByType.class);
-        var info = convertValue(v.path("info"), QueryOption.Info.class);
-        return new OrderBy(name, orderByType, info);
+        var info = convertValue(v.path("info"), BuildControlInfo.class);
+        return new OrderBy(selector, orderByType, info);
     }
 
     private String deserializeString(JsonNode v) {
         return v.textValue();
     }
 
-    private Object[] deserializeOrderByAll(JsonNode v) {
-        var s = new ArrayList<>();
+    private OrderBy[] deserializeOrderByAll(JsonNode v) {
+        var s = new ArrayList<OrderBy>();
         for (var jsonNode : v) {
             s.add(deserializeOrderBy(jsonNode));
         }
-        return s.toArray();
+        return s.toArray(OrderBy[]::new);
     }
 
     public Object deserializeWhere(JsonNode v) {
@@ -134,12 +130,12 @@ public class QueryDeserializer {
     }
 
     private Where deserializeWhere0(JsonNode v) {
-        var name = v.get("name").asText();
+        var selector = v.get("selector").asText();
         var whereType = convertValue(v.get("whereType"), WhereType.class);
         var value1 = convertValue(v.get("value1"), Object.class);
         var value2 = convertValue(v.get("value2"), Object.class);
-        var info = convertValue(v.get("info"), QueryOption.Info.class);
-        return new Where(name, whereType, value1, value2, info);
+        var info = convertValue(v.get("info"), BuildControlInfo.class);
+        return new Where(selector, whereType, value1, value2, info);
     }
 
     private Object[] deserializeWhereAll(JsonNode v) {
