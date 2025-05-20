@@ -58,7 +58,7 @@ public class SelectSQLBuilder {
         //5, 创建 groupBy 子句
 //        var groupByColumns = groupByParser.parse(query.getGroupBy()); todo
         //6, 创建 orderBy 子句
-        var orderByClauses = orderByParser.parse(query.getOrderBy());
+        var orderByClauses = orderByParser.parse(query.getOrderBys());
         //7, 创建 SQL
         var sql = Select(finalSelectColumns)
                 .From(table)
@@ -82,7 +82,7 @@ public class SelectSQLBuilder {
         //5, 创建 groupBy 子句
 //        var groupByColumns = groupByParser.parse(query.getGroupBy()); todo
         //6, 创建 orderBy 子句
-        var orderByClauses = orderByParser.parse(query.getOrderBy());
+        var orderByClauses = orderByParser.parse(query.getOrderBys());
         //7, 创建 SQL
         var sql = Select(finalSelectColumns)
                 .From(table)

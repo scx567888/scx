@@ -68,7 +68,7 @@ public class UpdateSQLBuilder {
         //5, 创建 where 子句
         var whereClause = whereParser.parse(query.getWhere());
         //6, 创建 orderBy 子句
-        var orderByClauses = orderByParser.parse(query.getOrderBy());
+        var orderByClauses = orderByParser.parse(query.getOrderBys());
         //7, 创建 SQL
         var sql = Update(table)
                 .Set(finalUpdateSetClauses)

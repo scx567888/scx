@@ -1,7 +1,7 @@
 package cool.scx.data.jdbc;
 
 import cool.scx.data.Aggregator;
-import cool.scx.data.aggregation_definition.AggregationDefinition;
+import cool.scx.data.aggregation.Aggregation;
 import cool.scx.data.query.Query;
 
 import java.util.List;
@@ -13,10 +13,10 @@ public class JDBCAggregator implements Aggregator {
 
     private final JDBCRepository<?> repository;
     private final Query beforeAggregateQuery;
-    private final AggregationDefinition aggregationDefinition;
+    private final Aggregation aggregationDefinition;
     private final Query afterAggregateQuery;
 
-    public JDBCAggregator(JDBCRepository<?> repository, Query beforeAggregateQuery, AggregationDefinition aggregationDefinition, Query afterAggregateQuery) {
+    public JDBCAggregator(JDBCRepository<?> repository, Query beforeAggregateQuery, Aggregation aggregationDefinition, Query afterAggregateQuery) {
         this.repository = repository;
         this.beforeAggregateQuery = beforeAggregateQuery;
         this.aggregationDefinition = aggregationDefinition;

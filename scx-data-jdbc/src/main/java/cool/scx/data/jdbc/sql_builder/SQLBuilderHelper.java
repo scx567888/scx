@@ -21,7 +21,7 @@ public class SQLBuilderHelper {
         columns = filterByFieldExpressions(fieldExpressions, table, columns);
 
         //3, 根据 是否包含空值进行过滤 
-        var globalIgnoreNull = fieldPolicy.ignoreNull();
+        var globalIgnoreNull = fieldPolicy.getIgnoreNull();
         var ignoreNulls = fieldPolicy.ignoreNulls();
         columns = filterByFieldValueIsNull(entity, globalIgnoreNull, ignoreNulls, columns);
         return columns;
@@ -40,8 +40,8 @@ public class SQLBuilderHelper {
     public static AnnotationConfigColumn[] filterByFilterMode(FieldPolicy fieldPolicy, AnnotationConfigTable table) {
         var filterMode = fieldPolicy.filterMode();
         return switch (filterMode) {
-            case INCLUDED -> filterByIncluded(fieldPolicy.fieldNames(), table);
-            case EXCLUDED -> filterByExcluded(fieldPolicy.fieldNames(), table);
+            case INCLUDED -> filterByIncluded(fieldPolicy.getFieldNames(), table);
+            case EXCLUDED -> filterByExcluded(fieldPolicy.getFieldNames(), table);
         };
     }
 

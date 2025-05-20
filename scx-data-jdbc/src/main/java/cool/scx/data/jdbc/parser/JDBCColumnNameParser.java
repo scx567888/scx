@@ -1,6 +1,6 @@
 package cool.scx.data.jdbc.parser;
 
-import cool.scx.data.aggregation_definition.GroupBy;
+import cool.scx.data.aggregation.GroupBy;
 import cool.scx.data.query.OrderBy;
 import cool.scx.data.query.Where;
 import cool.scx.jdbc.dialect.Dialect;

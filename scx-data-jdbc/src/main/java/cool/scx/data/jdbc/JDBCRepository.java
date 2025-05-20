@@ -3,7 +3,7 @@ package cool.scx.data.jdbc;
 import cool.scx.data.AggregatableRepository;
 import cool.scx.data.Aggregator;
 import cool.scx.data.Finder;
-import cool.scx.data.aggregation_definition.AggregationDefinition;
+import cool.scx.data.aggregation.Aggregation;
 import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.data.jdbc.column_name_mapping.BeanColumnNameMapping;
 import cool.scx.data.jdbc.column_name_mapping.MapFieldNameMapping;
@@ -115,8 +115,8 @@ public class JDBCRepository<Entity> implements AggregatableRepository<Entity, Lo
     }
 
     @Override
-    public final Aggregator aggregator(Query beforeAggregateQuery, AggregationDefinition aggregationDefinition, Query afterAggregateQuery) {
-        return new JDBCAggregator(this, beforeAggregateQuery, aggregationDefinition, afterAggregateQuery);
+    public final Aggregator aggregator(Query beforeAggregateQuery, Aggregation aggregation, Query afterAggregateQuery) {
+        return new JDBCAggregator(this, beforeAggregateQuery, aggregation, afterAggregateQuery);
     }
 
     public final Class<Entity> entityClass() {
