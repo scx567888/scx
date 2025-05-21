@@ -52,16 +52,16 @@ public class FieldPolicyBuilder {
     }
 
     /// 默认包含所有
-    public static UpdateFieldPolicy expression(String fieldName, String expression) {
-        return updateIncludeAll().expression(fieldName, expression);
+    public static Expression expression(String fieldName, String expression) {
+        return new Expression(fieldName, expression);
     }
 
-    public static QueryFieldPolicy virtualField(String expression, String virtualFieldName) {
-        return queryIncludeAll().virtualField(expression, virtualFieldName);
+    public static VirtualField virtualField(String expression, String virtualFieldName) {
+        return new VirtualField(expression, virtualFieldName);
     }
 
-    public static QueryFieldPolicy virtualField(String expression) {
-        return queryIncludeAll().virtualField(expression);
+    public static VirtualField virtualField(String expression) {
+        return new VirtualField(expression, null);
     }
 
 }

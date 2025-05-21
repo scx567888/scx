@@ -13,7 +13,7 @@ public class QueryFieldPolicyImpl extends FieldPolicyImpl<QueryFieldPolicy> impl
     }
 
     @Override
-    public QueryFieldPolicy virtualFields(VirtualField... virtualFields) {
+    public QueryFieldPolicyImpl virtualFields(VirtualField... virtualFields) {
         this.virtualFields = new ArrayList<>(List.of(virtualFields));
         return this;
     }
@@ -24,19 +24,19 @@ public class QueryFieldPolicyImpl extends FieldPolicyImpl<QueryFieldPolicy> impl
     }
 
     @Override
-    public QueryFieldPolicy clearVirtualFields() {
+    public QueryFieldPolicyImpl clearVirtualFields() {
         this.virtualFields.clear();
         return this;
     }
 
     @Override
-    public QueryFieldPolicy virtualField(String expression, String virtualFieldName) {
+    public QueryFieldPolicyImpl virtualField(String expression, String virtualFieldName) {
         this.virtualFields.add(new VirtualField(expression, virtualFieldName));
         return this;
     }
 
     @Override
-    public QueryFieldPolicy virtualField(String expression) {
+    public QueryFieldPolicyImpl virtualField(String expression) {
         this.virtualFields.add(new VirtualField(expression, null));
         return this;
     }
