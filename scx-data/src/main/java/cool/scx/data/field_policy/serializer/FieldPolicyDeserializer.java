@@ -90,7 +90,7 @@ public class FieldPolicyDeserializer {
         }
 
         return fieldPolicy;
-        
+
     }
 
     public VirtualField deserializeVirtualField(JsonNode v) {
