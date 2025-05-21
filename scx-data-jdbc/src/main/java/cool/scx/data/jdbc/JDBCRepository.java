@@ -5,6 +5,8 @@ import cool.scx.data.Aggregator;
 import cool.scx.data.Finder;
 import cool.scx.data.aggregation.Aggregation;
 import cool.scx.data.field_policy.FieldPolicy;
+import cool.scx.data.field_policy.QueryFieldPolicy;
+import cool.scx.data.field_policy.UpdateFieldPolicy;
 import cool.scx.data.jdbc.column_name_mapping.BeanColumnNameMapping;
 import cool.scx.data.jdbc.column_name_mapping.MapFieldNameMapping;
 import cool.scx.data.jdbc.mapping.AnnotationConfigTable;
@@ -85,22 +87,22 @@ public class JDBCRepository<Entity> implements AggregatableRepository<Entity, Lo
     }
 
     @Override
-    public final Long add(Entity entity, FieldPolicy fieldPolicy) {
+    public final Long add(Entity entity, UpdateFieldPolicy fieldPolicy) {
         return sqlRunner.update(buildInsertSQL(entity, fieldPolicy)).firstGeneratedKey();
     }
 
     @Override
-    public final List<Long> add(Collection<Entity> entityList, FieldPolicy fieldPolicy) {
+    public final List<Long> add(Collection<Entity> entityList, UpdateFieldPolicy fieldPolicy) {
         return sqlRunner.updateBatch(buildInsertBatchSQL(entityList, fieldPolicy)).generatedKeys();
     }
 
     @Override
-    public final Finder<Entity> finder(Query query, FieldPolicy fieldPolicy) {
+    public final Finder<Entity> finder(Query query, QueryFieldPolicy fieldPolicy) {
         return new JDBCFinder<>(this, query, fieldPolicy);
     }
 
     @Override
-    public final long update(Entity entity, FieldPolicy fieldPolicy, Query query) {
+    public final long update(Entity entity, UpdateFieldPolicy fieldPolicy, Query query) {
         return sqlRunner.update(buildUpdateSQL(entity, fieldPolicy, query)).affectedItemsCount();
     }
 
@@ -147,11 +149,11 @@ public class JDBCRepository<Entity> implements AggregatableRepository<Entity, Lo
         return jdbcContext;
     }
 
-    public SQL buildInsertSQL(Entity entity, FieldPolicy fieldPolicy) {
+    public SQL buildInsertSQL(Entity entity, UpdateFieldPolicy fieldPolicy) {
         return insertSQLBuilder.buildInsertSQL(entity, fieldPolicy);
     }
 
-    public SQL buildInsertBatchSQL(Collection<? extends Entity> entityList, FieldPolicy fieldPolicy) {
+    public SQL buildInsertBatchSQL(Collection<? extends Entity> entityList, UpdateFieldPolicy fieldPolicy) {
         return insertSQLBuilder.buildInsertBatchSQL(entityList, fieldPolicy);
     }
 
