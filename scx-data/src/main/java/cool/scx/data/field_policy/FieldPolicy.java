@@ -25,30 +25,30 @@ public interface FieldPolicy {
 
     //************** 查询 专用 ******************
     /// 设置 虚拟列
-    QueryFieldPolicy virtualFields(VirtualField... virtualFields);
+    FieldPolicy virtualFields(VirtualField... virtualFields);
 
     /// 获取 虚拟列
     VirtualField[] getVirtualFields();
 
     /// 清除 所有虚拟列
-    QueryFieldPolicy clearVirtualFields();
+    FieldPolicy clearVirtualFields();
 
     /// 追加 虚拟列 (用于查询)
-    QueryFieldPolicy virtualField(String expression, String virtualFieldName);
+    FieldPolicy virtualField(String expression, String virtualFieldName);
 
     /// 追加 虚拟列 (用于查询)
-    QueryFieldPolicy virtualField(String expression);
+    FieldPolicy virtualField(String expression);
 
     //***************** 插入/更新 专用 *****************
 
     /// 设置 全局 忽略空值
-    UpdateFieldPolicy ignoreNull(boolean ignoreNull);
+    FieldPolicy ignoreNull(boolean ignoreNull);
 
     /// 设置 忽略空值
-    UpdateFieldPolicy ignoreNull(String fieldName, boolean ignoreNull);
+    FieldPolicy ignoreNull(String fieldName, boolean ignoreNull);
 
     /// 设置 字段表达式 (用于插入和更新)
-    UpdateFieldPolicy expressions(Expression... expressions);
+    FieldPolicy expressions(Expression... expressions);
 
     /// 获取 全局是否忽略 空值
     boolean getIgnoreNull();
@@ -60,15 +60,15 @@ public interface FieldPolicy {
     Expression[] getExpressions();
 
     /// 清除 所有忽略空值
-    UpdateFieldPolicy clearIgnoreNulls();
+    FieldPolicy clearIgnoreNulls();
 
     /// 清除 所有表达式
-    UpdateFieldPolicy clearExpressions();
+    FieldPolicy clearExpressions();
 
     /// 移除 是否忽略 空值
-    UpdateFieldPolicy removeIgnoreNull(String fieldName);
+    FieldPolicy removeIgnoreNull(String fieldName);
 
     /// 追加 表达式
-    UpdateFieldPolicy expression(String fieldName, String expression);
+    FieldPolicy expression(String fieldName, String expression);
 
 }
