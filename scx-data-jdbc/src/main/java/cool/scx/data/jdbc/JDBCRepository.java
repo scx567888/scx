@@ -54,6 +54,7 @@ public class JDBCRepository<Entity> implements AggregatableRepository<Entity, Lo
     final UpdateSQLBuilder updateSQLBuilder;
     final DeleteSQLBuilder deleteSQLBuilder;
     final CountSQLBuilder countSQLBuilder;
+    final AggregateSQLBuilder aggregateSQLBuilder;
 
     public JDBCRepository(Class<Entity> entityClass, JDBCContext jdbcContext) {
         //1, 初始化基本字段
@@ -82,6 +83,7 @@ public class JDBCRepository<Entity> implements AggregatableRepository<Entity, Lo
         this.updateSQLBuilder = new UpdateSQLBuilder(table, dialect, columnNameParser, whereParser, orderByParser);
         this.deleteSQLBuilder = new DeleteSQLBuilder(table, dialect, whereParser, orderByParser);
         this.countSQLBuilder = new CountSQLBuilder(table, dialect, whereParser);
+        this.aggregateSQLBuilder = new AggregateSQLBuilder(table, dialect, whereParser, groupByParser, orderByParser);
     }
 
     @Override
@@ -181,6 +183,14 @@ public class JDBCRepository<Entity> implements AggregatableRepository<Entity, Lo
 
     public SQL buildSelectSQLWithAlias(Query query, FieldPolicy fieldPolicy) {
         return selectSQLBuilder.buildSelectSQLWithAlias(query, fieldPolicy);
+    }
+
+    public SQL buildAggregateSQL(Query beforeAggregateQuery, Aggregation aggregation, Query afterAggregateQuery) {
+        return aggregateSQLBuilder.buildAggregateSQL(beforeAggregateQuery, aggregation,afterAggregateQuery);
+    }
+
+    public SQL buildAggregateFirstSQL(Query beforeAggregateQuery, Aggregation aggregation, Query afterAggregateQuery) {
+        return aggregateSQLBuilder.buildAggregateFirstSQL(beforeAggregateQuery, aggregation,afterAggregateQuery);
     }
 
 }
