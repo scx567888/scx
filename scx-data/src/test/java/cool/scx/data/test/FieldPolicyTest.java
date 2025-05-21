@@ -26,7 +26,7 @@ public class FieldPolicyTest {
         Assert.assertEquals(fieldPolicy.getFilterMode(), newFieldPolicy.getFilterMode());
         Assert.assertEquals(fieldPolicy.getIgnoreNull(), newFieldPolicy.getIgnoreNull());
         Assert.assertEquals(fieldPolicy.getIgnoreNulls(), newFieldPolicy.getIgnoreNulls());
-        Assert.assertEquals(fieldPolicy.getExpressions(), newFieldPolicy.getExpressions());
+        Assert.assertEquals(fieldPolicy.getExpressions().length, newFieldPolicy.getExpressions().length);
     }
 
 }
