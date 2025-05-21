@@ -2,7 +2,7 @@ package cool.scx.data.field_policy;
 
 import static cool.scx.data.field_policy.FilterMode.EXCLUDED;
 
-public class Expression extends UpdateFieldPolicyLike<Expression> {
+public class Expression extends FieldPolicyLike<Expression> {
 
     private final String fieldName;
     private final String expression;
@@ -21,9 +21,9 @@ public class Expression extends UpdateFieldPolicyLike<Expression> {
     }
 
     @Override
-    protected UpdateFieldPolicyImpl toUpdateFieldPolicy() {
+    protected FieldPolicyImpl toFieldPolicy() {
         //排除 0个 就是包含所有
-        return new UpdateFieldPolicyImpl(EXCLUDED).expressions(this);
+        return new FieldPolicyImpl(EXCLUDED).expressions(this);
     }
 
 }
