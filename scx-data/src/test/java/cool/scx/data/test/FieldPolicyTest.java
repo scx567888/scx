@@ -36,7 +36,7 @@ public class FieldPolicyTest {
     @Test
     public static void test2() throws JsonProcessingException {
         var fieldPolicy = queryExclude("a", "b", "c", "d", "e", "f", "g", "h", "i")
-                .virtualField("LENGTH(a)","a");
+                .virtualField("LENGTH(a)", "a");
         var json = QUERY_FIELD_POLICY_SERIALIZER.toJson(fieldPolicy);
         var newFieldPolicy = QUERY_FIELD_POLICY_DESERIALIZER.fromJson(json);
         Assert.assertEquals(fieldPolicy.getFieldNames(), newFieldPolicy.getFieldNames());

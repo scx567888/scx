@@ -25,5 +25,5 @@ public class Expression extends UpdateFieldPolicyLike<Expression> {
         //排除 0个 就是包含所有
         return new UpdateFieldPolicyImpl(EXCLUDED).expressions(this);
     }
-    
+
 }

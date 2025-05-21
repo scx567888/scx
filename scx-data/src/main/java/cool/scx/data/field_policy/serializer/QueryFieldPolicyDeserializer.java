@@ -1,13 +1,14 @@
 package cool.scx.data.field_policy.serializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.common.util.ObjectUtils;
-import cool.scx.data.field_policy.*;
+import cool.scx.data.field_policy.FilterMode;
+import cool.scx.data.field_policy.QueryFieldPolicy;
+import cool.scx.data.field_policy.QueryFieldPolicyImpl;
+import cool.scx.data.field_policy.VirtualField;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 import static cool.scx.common.util.ObjectUtils.convertValue;
 import static cool.scx.data.field_policy.FilterMode.EXCLUDED;
@@ -59,8 +60,8 @@ public class QueryFieldPolicyDeserializer {
         }
 
         if (virtualFieldsNode != null && !virtualFieldsNode.isNull()) {
-            var a=new ArrayList<VirtualField>();
-            for (JsonNode jsonNode : virtualFieldsNode) {
+            var a = new ArrayList<VirtualField>();
+            for (var jsonNode : virtualFieldsNode) {
                 a.add(deserializeVirtualField(jsonNode));
             }
             fieldPolicy.virtualFields(a.toArray(VirtualField[]::new));

@@ -17,6 +17,14 @@ public class QueryFieldPolicySerializer {
 
     public static final QueryFieldPolicySerializer QUERY_FIELD_POLICY_SERIALIZER = new QueryFieldPolicySerializer();
 
+    public Map<String, Object> serializeVirtualField(VirtualField args) {
+        var s = new LinkedHashMap<String, Object>();
+        s.put("@type", "VirtualField");
+        s.put("expression", args.expression());
+        s.put("virtualFieldName", args.virtualFieldName());
+        return s;
+    }
+
     public String toJson(QueryFieldPolicy fieldPolicy) throws JsonProcessingException {
         var v = serialize(fieldPolicy);
         return ObjectUtils.jsonMapper().writeValueAsString(v);
@@ -40,14 +48,6 @@ public class QueryFieldPolicySerializer {
         for (VirtualField virtualField : virtualFields) {
             s.add(serializeVirtualField(virtualField));
         }
-        return s;
-    }
-
-    public static Map<String, Object> serializeVirtualField(VirtualField args) {
-        var s = new LinkedHashMap<String, Object>();
-        s.put("@type", "VirtualField");
-        s.put("expression", args.expression());
-        s.put("virtualFieldName", args.virtualFieldName());
         return s;
     }
 

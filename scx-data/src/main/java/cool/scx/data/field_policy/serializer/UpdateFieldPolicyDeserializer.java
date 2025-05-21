@@ -76,8 +76,8 @@ public class UpdateFieldPolicyDeserializer {
         }
 
         if (expressionsNode != null && !expressionsNode.isNull()) {
-            var a=new ArrayList<Expression>();
-            for (JsonNode jsonNode : expressionsNode) {
+            var a = new ArrayList<Expression>();
+            for (var jsonNode : expressionsNode) {
                 a.add(deserializeExpression(jsonNode));
             }
             fieldPolicy.expressions(a.toArray(Expression[]::new));

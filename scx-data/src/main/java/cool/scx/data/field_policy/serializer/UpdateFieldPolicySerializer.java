@@ -37,16 +37,16 @@ public class UpdateFieldPolicySerializer {
         return m;
     }
 
-    public  ArrayList<Object> serializeExpressions(Expression... expressions) {
-        var s=new ArrayList<Object>();
-        for (Expression expression : expressions) {
+    public ArrayList<Object> serializeExpressions(Expression... expressions) {
+        var s = new ArrayList<>();
+        for (var expression : expressions) {
             s.add(serializeExpression(expression));
         }
         return s;
     }
 
     public Map<String, Object> serializeExpression(Expression expression) {
-        var m=new LinkedHashMap<String, Object>();
+        var m = new LinkedHashMap<String, Object>();
         m.put("@type", "Expression");
         m.put("fieldName", expression.fieldName());
         m.put("expression", expression.expression());
