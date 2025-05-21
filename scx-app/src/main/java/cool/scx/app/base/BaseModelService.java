@@ -164,7 +164,7 @@ public class BaseModelService<Entity extends BaseModel> {
     /// @param selectFilter 查询字段过滤器
     /// @return 查到多个则返回第一个 没有则返回 null
     public Entity get(Query query, FieldPolicy selectFilter) {
-        return dao().get(query, selectFilter);
+        return dao().findFirst(query, selectFilter);
     }
 
     /// 获取所有数据
@@ -290,7 +290,7 @@ public class BaseModelService<Entity extends BaseModel> {
     }
 
     public final SQL buildGetSQL(Query query, FieldPolicy selectFilter) {
-        return dao().buildGetSQL(query, selectFilter);
+        return dao().buildSelectFirstSQL(query, selectFilter);
     }
 
     public final SQL buildListSQLWithAlias(Query query, FieldPolicy selectFilter) {
