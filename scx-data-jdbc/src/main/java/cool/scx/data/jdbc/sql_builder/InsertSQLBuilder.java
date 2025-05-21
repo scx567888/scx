@@ -102,6 +102,8 @@ public class InsertSQLBuilder {
         return sql(sql, batchParams);
     }
 
+    /// @param insertColumns 存储列名 如 (name, age)
+    /// @param insertValues  存储 values 如 ('scx', 1)
     private String GetInsertSQL(Object[] insertColumns, String[] insertValues) {
         return "INSERT INTO " + getTableName() + " (" + getInsertColumns(insertColumns) + ") VALUES (" + String.join(", ", insertValues) + ")";
     }

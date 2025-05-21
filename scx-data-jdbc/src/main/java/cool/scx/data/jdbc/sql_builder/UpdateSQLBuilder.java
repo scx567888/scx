@@ -78,6 +78,10 @@ public class UpdateSQLBuilder {
         return sql(sql, finalParams);
     }
 
+    /// @param updateSetClauses 存储子句 如 (name = 'scx', age = 18)
+    /// @param whereClause  存储子句 如 (name = 'scx', age > 18)
+    /// @param orderByClauses 存储子句 如 (name desc, age asc)
+    /// @param limit Limit
     private String GetUpdateSQL(String[] updateSetClauses, String whereClause, String[] orderByClauses, Long limit) {
         var sql = "UPDATE " + getTableName() + " SET " + String.join(", ", updateSetClauses) + getWhereClause(whereClause) + getOrderByClause(orderByClauses);
         // 更新时 limit 不能有 offset (偏移量)
