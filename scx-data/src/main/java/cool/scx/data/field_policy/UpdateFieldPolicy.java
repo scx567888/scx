@@ -3,7 +3,7 @@ package cool.scx.data.field_policy;
 import java.util.Map;
 
 /// 更新字段策略
-public interface UpdateFieldPolicy extends FieldPolicy<UpdateFieldPolicy> {
+public interface UpdateFieldPolicy extends FieldPolicy {
 
     /// 设置 全局 忽略空值
     UpdateFieldPolicy ignoreNull(boolean ignoreNull);
@@ -34,5 +34,15 @@ public interface UpdateFieldPolicy extends FieldPolicy<UpdateFieldPolicy> {
 
     /// 追加 表达式
     UpdateFieldPolicy expression(String fieldName, String expression);
+
+    // 重写 链式调用返回值类型
+    @Override
+    UpdateFieldPolicy include(String... fieldNames);
+
+    @Override
+    UpdateFieldPolicy exclude(String... fieldNames);
+
+    @Override
+    UpdateFieldPolicy clearFieldNames();
 
 }

@@ -10,7 +10,7 @@ import static java.util.Collections.addAll;
 /// @author scx567888
 /// @version 0.0.1
 @SuppressWarnings("unchecked")
-class FieldPolicyImpl<T extends FieldPolicy<T>> implements FieldPolicy<T> {
+class FieldPolicyImpl<T extends FieldPolicyImpl<T>> implements FieldPolicy {
 
     private final FilterMode filterMode;
     private final Set<String> fieldNames;

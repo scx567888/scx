@@ -3,7 +3,7 @@ package cool.scx.data.field_policy;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QueryFieldPolicyImpl extends FieldPolicyImpl<QueryFieldPolicy> implements QueryFieldPolicy {
+public class QueryFieldPolicyImpl extends FieldPolicyImpl<QueryFieldPolicyImpl> implements QueryFieldPolicy {
 
     private List<VirtualField> virtualFields;
 

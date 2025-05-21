@@ -1,9 +1,7 @@
 package cool.scx.data.field_policy;
 
-import java.util.Map;
-
 /// 查询字段策略
-public interface QueryFieldPolicy extends FieldPolicy<QueryFieldPolicy> {
+public interface QueryFieldPolicy extends FieldPolicy {
 
     /// 设置 虚拟列
     QueryFieldPolicy virtualFields(VirtualField... virtualFields);
@@ -13,11 +11,21 @@ public interface QueryFieldPolicy extends FieldPolicy<QueryFieldPolicy> {
 
     /// 清除 所有虚拟列
     QueryFieldPolicy clearVirtualFields();
-    
+
     /// 追加 虚拟列 (用于查询)
     QueryFieldPolicy virtualField(String expression, String virtualFieldName);
 
     /// 追加 虚拟列 (用于查询)
     QueryFieldPolicy virtualField(String expression);
+
+    // 重写 链式调用返回值类型
+    @Override
+    QueryFieldPolicy include(String... fieldNames);
+
+    @Override
+    QueryFieldPolicy exclude(String... fieldNames);
+
+    @Override
+    QueryFieldPolicy clearFieldNames();
 
 }

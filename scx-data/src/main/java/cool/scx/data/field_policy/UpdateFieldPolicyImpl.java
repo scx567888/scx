@@ -5,7 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class UpdateFieldPolicyImpl extends FieldPolicyImpl<UpdateFieldPolicy> implements UpdateFieldPolicy {
+public class UpdateFieldPolicyImpl extends FieldPolicyImpl<UpdateFieldPolicyImpl> implements UpdateFieldPolicy {
 
     private final Map<String, Boolean> ignoreNulls;
     private List<Expression> expressions;
