@@ -157,15 +157,15 @@ public class JDBCRepository<Entity> implements AggregatableRepository<Entity, Lo
         return insertSQLBuilder.buildInsertBatchSQL(entityList, fieldPolicy);
     }
 
-    public SQL buildSelectSQL(Query query, FieldPolicy fieldPolicy) {
+    public SQL buildSelectSQL(Query query, QueryFieldPolicy fieldPolicy) {
         return selectSQLBuilder.buildSelectSQL(query, fieldPolicy);
     }
 
-    public SQL buildGetSQL(Query query, FieldPolicy fieldPolicy) {
+    public SQL buildGetSQL(Query query, QueryFieldPolicy fieldPolicy) {
         return selectSQLBuilder.buildGetSQL(query, fieldPolicy);
     }
 
-    public SQL buildUpdateSQL(Entity entity, FieldPolicy fieldPolicy, Query query) {
+    public SQL buildUpdateSQL(Entity entity, UpdateFieldPolicy fieldPolicy, Query query) {
         return updateSQLBuilder.buildUpdateSQL(entity, fieldPolicy, query);
     }
 
@@ -177,11 +177,11 @@ public class JDBCRepository<Entity> implements AggregatableRepository<Entity, Lo
         return countSQLBuilder.buildCountSQL(query);
     }
 
-    public SQL buildGetSQLWithAlias(Query query, FieldPolicy fieldPolicy) {
+    public SQL buildGetSQLWithAlias(Query query, QueryFieldPolicy fieldPolicy) {
         return selectSQLBuilder.buildGetSQLWithAlias(query, fieldPolicy);
     }
 
-    public SQL buildSelectSQLWithAlias(Query query, FieldPolicy fieldPolicy) {
+    public SQL buildSelectSQLWithAlias(Query query, QueryFieldPolicy fieldPolicy) {
         return selectSQLBuilder.buildSelectSQLWithAlias(query, fieldPolicy);
     }
 
