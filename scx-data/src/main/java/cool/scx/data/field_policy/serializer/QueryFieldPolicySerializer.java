@@ -3,7 +3,9 @@ package cool.scx.data.field_policy.serializer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import cool.scx.common.util.ObjectUtils;
 import cool.scx.data.field_policy.QueryFieldPolicy;
+import cool.scx.data.field_policy.VirtualField;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -29,8 +31,25 @@ public class QueryFieldPolicySerializer {
         m.put("@type", "QueryFieldPolicy");
         m.put("filterMode", fieldPolicy.getFilterMode());
         m.put("fieldNames", fieldPolicy.getFieldNames());
-        m.put("virtualFields", fieldPolicy.getVirtualFields());
+        m.put("virtualFields", serializeVirtualFields(fieldPolicy.getVirtualFields()));
         return m;
     }
+
+    public ArrayList<Object> serializeVirtualFields(VirtualField... virtualFields) {
+        var s = new ArrayList<>();
+        for (VirtualField virtualField : virtualFields) {
+            s.add(serializeVirtualField(virtualField));
+        }
+        return s;
+    }
+
+    public static Map<String, Object> serializeVirtualField(VirtualField args) {
+        var s = new LinkedHashMap<String, Object>();
+        s.put("@type", "VirtualField");
+        s.put("expression", args.expression());
+        s.put("virtualFieldName", args.virtualFieldName());
+        return s;
+    }
+
 
 }

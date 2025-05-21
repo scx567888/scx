@@ -4,10 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import cool.scx.common.util.ObjectUtils;
-import cool.scx.data.field_policy.FilterMode;
-import cool.scx.data.field_policy.QueryFieldPolicy;
-import cool.scx.data.field_policy.QueryFieldPolicyImpl;
+import cool.scx.data.field_policy.*;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import static cool.scx.common.util.ObjectUtils.convertValue;
@@ -60,13 +59,20 @@ public class QueryFieldPolicyDeserializer {
         }
 
         if (virtualFieldsNode != null && !virtualFieldsNode.isNull()) {
-            var expressions = convertValue(virtualFieldsNode, new TypeReference<Map<String, String>>() {});
-            for (var entry : expressions.entrySet()) {
-                fieldPolicy.virtualField(entry.getKey(), entry.getValue());
+            var a=new ArrayList<VirtualField>();
+            for (JsonNode jsonNode : virtualFieldsNode) {
+                a.add(deserializeVirtualField(jsonNode));
             }
+            fieldPolicy.virtualFields(a.toArray(VirtualField[]::new));
         }
 
         return fieldPolicy;
+    }
+
+    public VirtualField deserializeVirtualField(JsonNode v) {
+        var expressionNode = v.get("expression");
+        var virtualFieldNameNode = v.get("virtualFieldName");
+        return new VirtualField(expressionNode.asText(), virtualFieldNameNode.asText());
     }
 
 }
