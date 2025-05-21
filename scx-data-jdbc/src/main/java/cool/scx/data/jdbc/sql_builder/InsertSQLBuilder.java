@@ -12,9 +12,10 @@ import java.util.Collection;
 
 import static cool.scx.common.util.ArrayUtils.tryConcat;
 import static cool.scx.common.util.ArrayUtils.tryConcatAny;
-import static cool.scx.data.jdbc.sql_builder.SQLBuilderHelper.*;
+import static cool.scx.data.jdbc.sql_builder.SQLBuilder.joinWithQuoteIdentifier;
+import static cool.scx.data.jdbc.sql_builder.SQLBuilderHelper.extractValues;
+import static cool.scx.data.jdbc.sql_builder.SQLBuilderHelper.filterByUpdateFieldPolicy;
 import static cool.scx.jdbc.sql.SQL.sql;
-import static cool.scx.jdbc.sql.SQLBuilder.Insert;
 
 public class InsertSQLBuilder {
 
@@ -72,9 +73,7 @@ public class InsertSQLBuilder {
         //6, 拼接最终的 插入值
         var finalInsertValues = tryConcat(insertValues, insertExpressionsValue);
         //7, 创建 SQL 语句字符串
-        var sql = Insert(table, finalInsertColumns)
-                .Values(finalInsertValues)
-                .GetSQL(dialect);
+        var sql = GetInsertSQL(finalInsertColumns, finalInsertValues);
         //8, 提取 entity 中的值作为 SQL 参数
         var params = extractValues(insertColumns, entity);
         return sql(sql, params);
@@ -94,15 +93,25 @@ public class InsertSQLBuilder {
         //6, 拼接最终的 插入值
         var finalInsertValues = tryConcat(insertValues, insertExpressionsValue);
         //7, 创建 SQL 语句字符串
-        var sql = Insert(table, finalInsertColumns)
-                .Values(finalInsertValues)
-                .GetSQL(dialect);
+        var sql = GetInsertSQL(finalInsertColumns, finalInsertValues);
         //8, 提取 entity 中的值作为 SQL 参数
         var batchParams = new ArrayList<Object[]>(entityList.size());
         for (var entity : entityList) {
             batchParams.add(extractValues(insertColumns, entity));
         }
         return sql(sql, batchParams);
+    }
+
+    private String GetInsertSQL(Object[] insertColumns, String[] insertValues) {
+        return "INSERT INTO " + getTableName() + " (" + getInsertColumns(insertColumns) + ") VALUES (" + String.join(", ", insertValues) + ")";
+    }
+
+    private String getTableName() {
+        return dialect.quoteIdentifier(table.name());
+    }
+
+    private String getInsertColumns(Object[] insertColumns) {
+        return joinWithQuoteIdentifier(insertColumns, dialect);
     }
 
 }
