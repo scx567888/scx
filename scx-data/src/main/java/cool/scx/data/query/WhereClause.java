@@ -27,7 +27,7 @@ public final class WhereClause extends QueryLike<WhereClause> {
     }
 
     @Override
-    protected Query toQuery() {
+    protected QueryImpl toQuery() {
         return new QueryImpl().where(this);
     }
 

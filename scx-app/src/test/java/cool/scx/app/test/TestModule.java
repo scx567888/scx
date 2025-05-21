@@ -41,9 +41,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static cool.scx.data.build_control.BuildControl.USE_JSON_EXTRACT;
 import static cool.scx.data.field_policy.FieldPolicyBuilder.*;
 import static cool.scx.data.query.QueryBuilder.*;
-import static cool.scx.data.query.QueryOption.USE_JSON_EXTRACT;
 import static java.lang.System.Logger.Level.ERROR;
 import static org.testng.AssertJUnit.assertEquals;
 

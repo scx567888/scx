@@ -1,8 +1,14 @@
 package cool.scx.data.field_policy.serializer;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import cool.scx.common.util.ObjectUtils;
+import cool.scx.data.field_policy.Expression;
 import cool.scx.data.field_policy.FieldPolicy;
+import cool.scx.data.field_policy.VirtualField;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 /// FieldPolicySerializer
 ///
@@ -12,21 +18,56 @@ public class FieldPolicySerializer {
 
     public static final FieldPolicySerializer FIELD_POLICY_SERIALIZER = new FieldPolicySerializer();
 
-    public Object serialize(Object obj) {
-        return switch (obj) {
-            case FieldPolicy s -> serializeFieldPolicy(s);
-            default -> obj;
-        };
+    public String toJson(FieldPolicy fieldPolicy) throws JsonProcessingException {
+        var v = serialize(fieldPolicy);
+        return ObjectUtils.jsonMapper().writeValueAsString(v);
     }
 
-    public LinkedHashMap<String, Object> serializeFieldPolicy(FieldPolicy fieldPolicy) {
+    public Map<String, Object> serializeVirtualField(VirtualField args) {
+        var s = new LinkedHashMap<String, Object>();
+        s.put("@type", "VirtualField");
+        s.put("expression", args.expression());
+        s.put("virtualFieldName", args.virtualFieldName());
+        return s;
+    }
+
+    public Map<String, Object> serialize(FieldPolicy fieldPolicy) {
+        return serializeFieldPolicy(fieldPolicy);
+    }
+
+    private Map<String, Object> serializeFieldPolicy(FieldPolicy fieldPolicy) {
         var m = new LinkedHashMap<String, Object>();
         m.put("@type", "FieldPolicy");
-        m.put("filterMode", fieldPolicy.filterMode());
-        m.put("fieldNames", fieldPolicy.fieldNames());
-        m.put("ignoreNull", fieldPolicy.ignoreNull());
-        m.put("ignoreNulls", fieldPolicy.ignoreNulls());
-        m.put("expressions", fieldPolicy.expressions());
+        m.put("filterMode", fieldPolicy.getFilterMode());
+        m.put("fieldNames", fieldPolicy.getFieldNames());
+        m.put("virtualFields", serializeVirtualFields(fieldPolicy.getVirtualFields()));
+        m.put("ignoreNull", fieldPolicy.getIgnoreNull());
+        m.put("ignoreNulls", fieldPolicy.getIgnoreNulls());
+        m.put("expressions", serializeExpressions(fieldPolicy.getExpressions()));
+        return m;
+    }
+
+    public ArrayList<Object> serializeVirtualFields(VirtualField... virtualFields) {
+        var s = new ArrayList<>();
+        for (VirtualField virtualField : virtualFields) {
+            s.add(serializeVirtualField(virtualField));
+        }
+        return s;
+    }
+
+    public ArrayList<Object> serializeExpressions(Expression... expressions) {
+        var s = new ArrayList<>();
+        for (var expression : expressions) {
+            s.add(serializeExpression(expression));
+        }
+        return s;
+    }
+
+    public Map<String, Object> serializeExpression(Expression expression) {
+        var m = new LinkedHashMap<String, Object>();
+        m.put("@type", "Expression");
+        m.put("fieldName", expression.fieldName());
+        m.put("expression", expression.expression());
         return m;
     }
 

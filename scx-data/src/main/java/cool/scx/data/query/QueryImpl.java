@@ -1,8 +1,13 @@
 package cool.scx.data.query;
 
+import cool.scx.data.build_control.BuildControl;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
+
+import static cool.scx.data.query.OrderByType.ASC;
+import static cool.scx.data.query.OrderByType.DESC;
+import static java.util.Collections.addAll;
 
 /// QueryImpl
 ///
@@ -11,15 +16,13 @@ import java.util.function.Predicate;
 public class QueryImpl implements Query {
 
     private Object where;
-    private final List<Object> groupBy;
-    private final List<Object> orderBy;
+    private List<OrderBy> orderBys;
     private Long offset;
     private Long limit;
 
     public QueryImpl() {
         this.where = null;
-        this.groupBy = new ArrayList<>();
-        this.orderBy = new ArrayList<>();
+        this.orderBys = new ArrayList<>();
         this.offset = null;
         this.limit = null;
     }
@@ -27,8 +30,7 @@ public class QueryImpl implements Query {
     public QueryImpl(Query oldQuery) {
         this();
         where(oldQuery.getWhere());
-        addGroupBy(oldQuery.getGroupBy());
-        addOrderBy(oldQuery.getOrderBy());
+        orderBys(oldQuery.getOrderBys());
         if (oldQuery.getOffset() != null) {
             offset(oldQuery.getOffset());
         }
@@ -44,16 +46,8 @@ public class QueryImpl implements Query {
     }
 
     @Override
-    public QueryImpl groupBy(Object... groupByClauses) {
-        clearGroupBy();
-        addGroupBy(groupByClauses);
-        return this;
-    }
-
-    @Override
-    public QueryImpl orderBy(Object... orderByClauses) {
-        clearOrderBy();
-        addOrderBy(orderByClauses);
+    public QueryImpl orderBys(OrderBy... orderBys) {
+        this.orderBys = new ArrayList<>(List.of(orderBys));
         return this;
     }
 
@@ -81,13 +75,8 @@ public class QueryImpl implements Query {
     }
 
     @Override
-    public Object[] getGroupBy() {
-        return groupBy.toArray();
-    }
-
-    @Override
-    public Object[] getOrderBy() {
-        return orderBy.toArray();
+    public OrderBy[] getOrderBys() {
+        return orderBys.toArray(OrderBy[]::new);
     }
 
     @Override
@@ -107,14 +96,8 @@ public class QueryImpl implements Query {
     }
 
     @Override
-    public QueryImpl clearGroupBy() {
-        groupBy.clear();
-        return this;
-    }
-
-    @Override
-    public QueryImpl clearOrderBy() {
-        orderBy.clear();
+    public QueryImpl clearOrderBys() {
+        orderBys.clear();
         return this;
     }
 
@@ -131,50 +114,20 @@ public class QueryImpl implements Query {
     }
 
     @Override
-    public QueryImpl addGroupBy(Object... groupByClauses) {
-        for (var groupByClause : groupByClauses) {
-            if (groupByClause == null) {
-                continue;
-            }
-            if (groupByClause instanceof Object[] objs) {
-                addGroupBy(objs);
-                continue;
-            }
-            if (groupByClause instanceof GroupBy w && w.info().replace()) {
-                groupBy.removeIf(c -> c instanceof GroupBy w1 && w1.name().equals(w.name()));
-            }
-            groupBy.add(groupByClause);
-        }
+    public QueryImpl orderBy(OrderBy... orderBys) {
+        addAll(this.orderBys, orderBys);
         return this;
     }
 
     @Override
-    public QueryImpl addOrderBy(Object... orderByClauses) {
-        for (var orderByClause : orderByClauses) {
-            if (orderByClause == null) {
-                continue;
-            }
-            if (orderByClause instanceof Object[] objs) {
-                addOrderBy(objs);
-                continue;
-            }
-            if (orderByClause instanceof OrderBy w && w.info().replace()) {
-                orderBy.removeIf(c -> c instanceof OrderBy w1 && w1.name().equals(w.name()));
-            }
-            orderBy.add(orderByClause);
-        }
+    public QueryImpl asc(String selector, BuildControl... options) {
+        orderBy(new OrderBy(selector, ASC, options));
         return this;
     }
 
     @Override
-    public Query removeGroupByIf(Predicate<Object> filter) {
-        groupBy.removeIf(filter);
-        return this;
-    }
-
-    @Override
-    public Query removeOrderByIf(Predicate<Object> filter) {
-        orderBy.removeIf(filter);
+    public QueryImpl desc(String selector, BuildControl... options) {
+        orderBy(new OrderBy(selector, DESC, options));
         return this;
     }
 

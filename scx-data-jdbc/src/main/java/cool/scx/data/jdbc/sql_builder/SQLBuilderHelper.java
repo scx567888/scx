@@ -1,6 +1,6 @@
 package cool.scx.data.jdbc.sql_builder;
 
-import cool.scx.data.field_policy.FieldPolicy;
+import cool.scx.data.field_policy.*;
 import cool.scx.data.jdbc.mapping.AnnotationConfigColumn;
 import cool.scx.data.jdbc.mapping.AnnotationConfigTable;
 
@@ -12,36 +12,61 @@ import static java.util.Collections.addAll;
 public class SQLBuilderHelper {
 
     /// 根据 字段策略过滤 可以插入的列
-    public static AnnotationConfigColumn[] filterByFieldPolicy(FieldPolicy fieldPolicy, AnnotationConfigTable table, Object entity) {
+    public static AnnotationConfigColumn[] filterByUpdateFieldPolicy(FieldPolicy fieldPolicy, AnnotationConfigTable table, Object entity) {
         //1, 先根据 黑白名单进行过滤
         var columns = filterByFilterMode(fieldPolicy, table);
 
         //2, 再根据 fieldExpressions 过滤
-        var fieldExpressions = fieldPolicy.expressions();
+        var fieldExpressions = fieldPolicy.getExpressions();
         columns = filterByFieldExpressions(fieldExpressions, table, columns);
 
         //3, 根据 是否包含空值进行过滤 
-        var globalIgnoreNull = fieldPolicy.ignoreNull();
-        var ignoreNulls = fieldPolicy.ignoreNulls();
+        var globalIgnoreNull = fieldPolicy.getIgnoreNull();
+        var ignoreNulls = fieldPolicy.getIgnoreNulls();
         columns = filterByFieldValueIsNull(entity, globalIgnoreNull, ignoreNulls, columns);
         return columns;
     }
 
     /// 根据 字段策略过滤 可以插入的列 (注意在 fieldExpressions 中存在的 fieldName 也会被移除)
-    public static AnnotationConfigColumn[] filterByFieldPolicy(FieldPolicy fieldPolicy, AnnotationConfigTable table) {
+    public static AnnotationConfigColumn[] filterByUpdateFieldPolicy(FieldPolicy fieldPolicy, AnnotationConfigTable table) {
         //1, 先根据 黑白名单进行过滤
         var columns = filterByFilterMode(fieldPolicy, table);
 
         //2, 再根据 fieldExpressions 过滤
-        var fieldExpressions = fieldPolicy.expressions();
+        var fieldExpressions = fieldPolicy.getExpressions();
         return filterByFieldExpressions(fieldExpressions, table, columns);
     }
 
+    /// 根据 字段策略过滤 可以插入的列 (注意在 fieldExpressions 中存在的 fieldName 也会被移除)
+    public static AnnotationConfigColumn[] filterByQueryFieldPolicy(FieldPolicy fieldPolicy, AnnotationConfigTable table) {
+        //1, 先根据 黑白名单进行过滤
+        var columns = filterByFilterMode(fieldPolicy, table);
+
+        //2, 再根据 virtualFields 过滤
+        var virtualFields = fieldPolicy.getVirtualFields();
+        return filterByVirtualFields(virtualFields, table, columns);
+    }
+
+    public static AnnotationConfigColumn[] filterByVirtualFields(VirtualField[] virtualFields, AnnotationConfigTable table, AnnotationConfigColumn... columns) {
+        // 快速判断
+        if (virtualFields.length==0) {
+            return columns;
+        }
+
+        var result = new ArrayList<AnnotationConfigColumn>();
+        addAll(result, columns);
+        //表达式中存在的就不应该 存在了
+        for (var fieldName : virtualFields) {
+            result.remove(table.getColumn(fieldName.virtualFieldName()));
+        }
+        return result.toArray(AnnotationConfigColumn[]::new);
+    }
+
     public static AnnotationConfigColumn[] filterByFilterMode(FieldPolicy fieldPolicy, AnnotationConfigTable table) {
-        var filterMode = fieldPolicy.filterMode();
+        var filterMode = fieldPolicy.getFilterMode();
         return switch (filterMode) {
-            case INCLUDED -> filterByIncluded(fieldPolicy.fieldNames(), table);
-            case EXCLUDED -> filterByExcluded(fieldPolicy.fieldNames(), table);
+            case INCLUDED -> filterByIncluded(fieldPolicy.getFieldNames(), table);
+            case EXCLUDED -> filterByExcluded(fieldPolicy.getFieldNames(), table);
         };
     }
 
@@ -106,17 +131,17 @@ public class SQLBuilderHelper {
         return result.toArray(AnnotationConfigColumn[]::new);
     }
 
-    public static AnnotationConfigColumn[] filterByFieldExpressions(Map<String, String> fieldExpressions, AnnotationConfigTable table, AnnotationConfigColumn... columns) {
+    public static AnnotationConfigColumn[] filterByFieldExpressions(Expression[] fieldExpressions, AnnotationConfigTable table, AnnotationConfigColumn... columns) {
         // 快速判断
-        if (fieldExpressions.isEmpty()) {
+        if (fieldExpressions.length==0) {
             return columns;
         }
 
         var result = new ArrayList<AnnotationConfigColumn>();
         addAll(result, columns);
         //表达式中存在的就不应该 存在了
-        for (var fieldName : fieldExpressions.keySet()) {
-            result.remove(table.getColumn(fieldName));
+        for (var fieldName : fieldExpressions) {
+            result.remove(table.getColumn(fieldName.fieldName()));
         }
         return result.toArray(AnnotationConfigColumn[]::new);
     }

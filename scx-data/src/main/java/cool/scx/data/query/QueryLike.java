@@ -1,6 +1,6 @@
 package cool.scx.data.query;
 
-import java.util.function.Predicate;
+import cool.scx.data.build_control.BuildControl;
 
 /// QueryLike
 ///
@@ -9,9 +9,9 @@ import java.util.function.Predicate;
 @SuppressWarnings("unchecked")
 public abstract class QueryLike<QL extends QueryLike<QL>> implements Query {
 
-    private Query query;
+    private QueryImpl query;
 
-    private Query query() {
+    private QueryImpl query() {
         if (query == null) {
             query = toQuery();
         }
@@ -25,14 +25,8 @@ public abstract class QueryLike<QL extends QueryLike<QL>> implements Query {
     }
 
     @Override
-    public QL groupBy(Object... groupByClauses) {
-        query().groupBy(groupByClauses);
-        return (QL) this;
-    }
-
-    @Override
-    public QL orderBy(Object... orderByClauses) {
-        query().orderBy(orderByClauses);
+    public QL orderBys(OrderBy... orderBys) {
+        query().orderBys(orderBys);
         return (QL) this;
     }
 
@@ -54,13 +48,8 @@ public abstract class QueryLike<QL extends QueryLike<QL>> implements Query {
     }
 
     @Override
-    public Object[] getGroupBy() {
-        return query().getGroupBy();
-    }
-
-    @Override
-    public Object[] getOrderBy() {
-        return query().getOrderBy();
+    public OrderBy[] getOrderBys() {
+        return query().getOrderBys();
     }
 
     @Override
@@ -80,14 +69,8 @@ public abstract class QueryLike<QL extends QueryLike<QL>> implements Query {
     }
 
     @Override
-    public QL clearGroupBy() {
-        query().clearGroupBy();
-        return (QL) this;
-    }
-
-    @Override
-    public QL clearOrderBy() {
-        query().clearOrderBy();
+    public QL clearOrderBys() {
+        query().clearOrderBys();
         return (QL) this;
     }
 
@@ -104,29 +87,23 @@ public abstract class QueryLike<QL extends QueryLike<QL>> implements Query {
     }
 
     @Override
-    public QL addGroupBy(Object... groupByClauses) {
-        query().addGroupBy(groupByClauses);
+    public QL orderBy(OrderBy... orderBys) {
+        query().orderBy(orderBys);
         return (QL) this;
     }
 
     @Override
-    public QL addOrderBy(Object... orderByClauses) {
-        query().addOrderBy(orderByClauses);
+    public QL asc(String selector, BuildControl... options) {
+        query().asc(selector, options);
         return (QL) this;
     }
 
     @Override
-    public QL removeGroupByIf(Predicate<Object> filter) {
-        query().removeGroupByIf(filter);
+    public QL desc(String selector, BuildControl... options) {
+        query().desc(selector, options);
         return (QL) this;
     }
 
-    @Override
-    public QL removeOrderByIf(Predicate<Object> filter) {
-        query().removeOrderByIf(filter);
-        return (QL) this;
-    }
-
-    protected abstract Query toQuery();
+    protected abstract QueryImpl toQuery();
 
 }

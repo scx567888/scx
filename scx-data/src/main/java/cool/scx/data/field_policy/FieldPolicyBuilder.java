@@ -36,8 +36,16 @@ public class FieldPolicyBuilder {
     }
 
     /// 默认包含所有
-    public static FieldPolicy expression(String fieldName, String expression) {
-        return includeAll().expression(fieldName, expression);
+    public static Expression expression(String fieldName, String expression) {
+        return new Expression(fieldName, expression);
+    }
+
+    public static VirtualField virtualField(String expression, String virtualFieldName) {
+        return new VirtualField(expression, virtualFieldName);
+    }
+
+    public static VirtualField virtualField(String expression) {
+        return new VirtualField(expression, null);
     }
 
 }

@@ -1,7 +1,9 @@
 package cool.scx.data.jdbc;
 
+import cool.scx.data.AggregatableRepository;
+import cool.scx.data.Aggregator;
 import cool.scx.data.Finder;
-import cool.scx.data.Repository;
+import cool.scx.data.aggregation.Aggregation;
 import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.data.jdbc.column_name_mapping.BeanColumnNameMapping;
 import cool.scx.data.jdbc.column_name_mapping.MapFieldNameMapping;
@@ -29,7 +31,7 @@ import static cool.scx.jdbc.sql.SQL.sql;
 ///
 /// @author scx567888
 /// @version 0.0.1
-public class JDBCRepository<Entity> implements Repository<Entity, Long> {
+public class JDBCRepository<Entity> implements AggregatableRepository<Entity, Long> {
 
     // *********** 基本字段 ***************
     final Class<Entity> entityClass;
@@ -110,6 +112,11 @@ public class JDBCRepository<Entity> implements Repository<Entity, Long> {
     @Override
     public final void clear() {
         sqlRunner.execute(sql("truncate " + table.name()));
+    }
+
+    @Override
+    public final Aggregator aggregator(Query beforeAggregateQuery, Aggregation aggregation, Query afterAggregateQuery) {
+        return new JDBCAggregator(this, beforeAggregateQuery, aggregation, afterAggregateQuery);
     }
 
     public final Class<Entity> entityClass() {

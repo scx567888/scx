@@ -11,7 +11,7 @@ import cool.scx.jdbc.sql.SQL;
 
 import static cool.scx.common.util.ArrayUtils.tryConcatAny;
 import static cool.scx.common.util.RandomUtils.randomString;
-import static cool.scx.data.jdbc.sql_builder.SQLBuilderHelper.filterByFieldPolicy;
+import static cool.scx.data.jdbc.sql_builder.SQLBuilderHelper.filterByQueryFieldPolicy;
 import static cool.scx.jdbc.sql.SQL.sql;
 import static cool.scx.jdbc.sql.SQLBuilder.Select;
 
@@ -33,12 +33,12 @@ public class SelectSQLBuilder {
 
     /// 创建虚拟查询列
     public static String[] createVirtualSelectColumns(FieldPolicy fieldPolicy, Dialect dialect) {
-        var fieldExpressions = fieldPolicy.expressions();
-        var virtualSelectColumns = new String[fieldExpressions.size()];
+        var fieldExpressions = fieldPolicy.getVirtualFields();
+        var virtualSelectColumns = new String[fieldExpressions.length];
         int i = 0;
-        for (var fieldExpression : fieldExpressions.entrySet()) {
-            var fieldName = fieldExpression.getKey();
-            var expression = fieldExpression.getValue();
+        for (var fieldExpression : fieldExpressions) {
+            var fieldName = fieldExpression.virtualFieldName();
+            var expression = fieldExpression.expression();
             // 这个虚拟列 因为可能在表中不存在 所以此处不进行名称映射了 直接引用包装一下即可  
             virtualSelectColumns[i] = expression + " AS " + dialect.quoteIdentifier(fieldName);
             i = i + 1;
@@ -48,7 +48,7 @@ public class SelectSQLBuilder {
 
     public SQL buildSelectSQL(Query query, FieldPolicy fieldPolicy) {
         //1, 过滤查询列
-        var selectColumns = filterByFieldPolicy(fieldPolicy, table);
+        var selectColumns = filterByQueryFieldPolicy(fieldPolicy, table);
         //2, 创建虚拟查询列
         var virtualSelectColumns = createVirtualSelectColumns(fieldPolicy, dialect);
         //3, 创建最终查询列
@@ -56,14 +56,14 @@ public class SelectSQLBuilder {
         //4, 创建 where 子句
         var whereClause = whereParser.parse(query.getWhere());
         //5, 创建 groupBy 子句
-        var groupByColumns = groupByParser.parse(query.getGroupBy());
+//        var groupByColumns = groupByParser.parse(query.getGroupBy()); todo
         //6, 创建 orderBy 子句
-        var orderByClauses = orderByParser.parse(query.getOrderBy());
+        var orderByClauses = orderByParser.parse(query.getOrderBys());
         //7, 创建 SQL
         var sql = Select(finalSelectColumns)
                 .From(table)
                 .Where(whereClause.whereClause())
-                .GroupBy(groupByColumns)
+//                .GroupBy(groupByColumns) todo
                 .OrderBy(orderByClauses)
                 .Limit(query.getOffset(), query.getLimit())
                 .GetSQL(dialect);
@@ -72,7 +72,7 @@ public class SelectSQLBuilder {
 
     public SQL buildGetSQL(Query query, FieldPolicy fieldPolicy) {
         //1, 过滤查询列
-        var selectColumns = filterByFieldPolicy(fieldPolicy, table);
+        var selectColumns = filterByQueryFieldPolicy(fieldPolicy, table);
         //2, 创建虚拟查询列
         var virtualSelectColumns = createVirtualSelectColumns(fieldPolicy, dialect);
         //3, 创建最终查询列
@@ -80,14 +80,14 @@ public class SelectSQLBuilder {
         //4, 创建 where 子句
         var whereClause = whereParser.parse(query.getWhere());
         //5, 创建 groupBy 子句
-        var groupByColumns = groupByParser.parse(query.getGroupBy());
+//        var groupByColumns = groupByParser.parse(query.getGroupBy()); todo
         //6, 创建 orderBy 子句
-        var orderByClauses = orderByParser.parse(query.getOrderBy());
+        var orderByClauses = orderByParser.parse(query.getOrderBys());
         //7, 创建 SQL
         var sql = Select(finalSelectColumns)
                 .From(table)
                 .Where(whereClause.whereClause())
-                .GroupBy(groupByColumns)
+//                .GroupBy(groupByColumns) todo
                 .OrderBy(orderByClauses)
                 .Limit(null, 1L)
                 .GetSQL(dialect);

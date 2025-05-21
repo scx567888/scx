@@ -1,6 +1,6 @@
 package cool.scx.data.jdbc.parser;
 
-import cool.scx.data.query.GroupBy;
+import cool.scx.data.aggregation.GroupBy;
 import cool.scx.data.query.OrderBy;
 import cool.scx.data.query.Where;
 import cool.scx.jdbc.dialect.Dialect;
@@ -38,34 +38,34 @@ public final class JDBCColumnNameParser {
     }
 
     public String parseColumnName(Where w) {
-        return parseColumnName(w.name(), w.info().useJsonExtract(), w.info().useOriginalName());
+        return parseColumnName(w.selector(), w.info().useJsonExtract(), w.info().useExpression());
     }
 
     public String parseColumnName(GroupBy g) {
-        return parseColumnName(g.name(), g.info().useJsonExtract(), g.info().useOriginalName());
+        return parseColumnName(g.selector(), g.info().useJsonExtract(), g.info().useExpression());
     }
 
     public String parseColumnName(OrderBy o) {
-        return parseColumnName(o.name(), o.info().useJsonExtract(), o.info().useOriginalName());
+        return parseColumnName(o.selector(), o.info().useJsonExtract(), o.info().useExpression());
     }
 
-    public String parseColumnName(String name, boolean useJsonExtract, boolean useOriginalName) {
+    public String parseColumnName(String name, boolean useJsonExtract, boolean useExpression) {
         if (useJsonExtract) {
             var c = splitIntoColumnNameAndFieldPath(name);
             if (notBlank(c.columnName()) && notBlank(c.fieldPath())) {
-                var jsonQueryColumnName = parseColumnName(c.columnName(), useOriginalName);
+                var jsonQueryColumnName = parseColumnName(c.columnName(), useExpression);
                 return jsonQueryColumnName + " -> " + "'$" + c.fieldPath() + "'";
             } else {
                 throw new IllegalArgumentException("使用 USE_JSON_EXTRACT 时, 查询名称不合法 !!! 字段名 : " + name);
             }
         }
         // 这里就是普通的判断一下是否使用 原始名称即可
-        return parseColumnName(name, useOriginalName);
+        return parseColumnName(name, useExpression);
     }
 
-    public String parseColumnName(String name, boolean useOriginalName) {
+    public String parseColumnName(String name, boolean useExpression) {
         // 这里就是普通的判断一下是否使用 原始名称即可
-        if (useOriginalName) {
+        if (useExpression) {
             return dialect.quoteIdentifier(name);
         }
         var column = tableInfo.getColumn(name);

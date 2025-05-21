@@ -29,7 +29,7 @@ public class DeleteSQLBuilder {
             throw new IllegalArgumentException("删除数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
         }
         var whereClause = whereParser.parse(query.getWhere());
-        var orderByClauses = orderByParser.parse(query.getOrderBy());
+        var orderByClauses = orderByParser.parse(query.getOrderBys());
         var sql = Delete(table)
                 .Where(whereClause.whereClause())
                 .OrderBy(orderByClauses)
