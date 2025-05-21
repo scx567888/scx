@@ -1,6 +1,6 @@
 package cool.scx.data.jdbc.sql_builder;
 
-import cool.scx.data.field_policy.FieldPolicy;
+import cool.scx.data.field_policy.UpdateFieldPolicy;
 import cool.scx.data.jdbc.mapping.AnnotationConfigTable;
 import cool.scx.data.jdbc.parser.JDBCColumnNameParser;
 import cool.scx.jdbc.dialect.Dialect;
@@ -29,13 +29,12 @@ public class InsertSQLBuilder {
         this.columnNameParser = columnNameParser;
     }
 
-    public static String[] createInsertExpressionsColumns(FieldPolicy fieldPolicy, JDBCColumnNameParser parser) {
-        var fieldExpressions = fieldPolicy.expressions();
-        var fieldNames = fieldExpressions.keySet();
-        var result = new String[fieldNames.size()];
+    public static String[] createInsertExpressionsColumns(UpdateFieldPolicy fieldPolicy, JDBCColumnNameParser parser) {
+        var fieldExpressions = fieldPolicy.getExpressions();
+        var result = new String[fieldExpressions.length];
         int i = 0;
-        for (var fieldName : fieldNames) {
-            result[i] = parser.parseColumnName(fieldName, false);
+        for (var fieldExpression : fieldExpressions) {
+            result[i] = parser.parseColumnName(fieldExpression.fieldName(), false);
             i = i + 1;
         }
         return result;
@@ -49,19 +48,18 @@ public class InsertSQLBuilder {
         return result;
     }
 
-    public static String[] createInsertExpressionsValue(FieldPolicy fieldPolicy) {
-        var fieldExpressions = fieldPolicy.expressions();
-        var expressions = fieldExpressions.values();
-        var result = new String[expressions.size()];
+    public static String[] createInsertExpressionsValue(UpdateFieldPolicy fieldPolicy) {
+        var fieldExpressions = fieldPolicy.getExpressions();
+        var result = new String[fieldExpressions.length];
         int i = 0;
-        for (var expression : expressions) {
-            result[i] = expression;
+        for (var fieldExpression : fieldExpressions) {
+            result[i] = fieldExpression.expression();
             i = i + 1;
         }
         return result;
     }
 
-    public SQL buildInsertSQL(Object entity, FieldPolicy fieldPolicy) {
+    public SQL buildInsertSQL(Object entity, UpdateFieldPolicy fieldPolicy) {
         //1, 根据 字段策略过滤 可以插入的列
         var insertColumns = filterByFieldPolicy(fieldPolicy, table, entity);
         //2, 根据 字段策略 创建插入的表达式列
@@ -83,7 +81,7 @@ public class InsertSQLBuilder {
         return sql(sql, params);
     }
 
-    public SQL buildInsertBatchSQL(Collection<?> entityList, FieldPolicy fieldPolicy) {
+    public SQL buildInsertBatchSQL(Collection<?> entityList, UpdateFieldPolicy fieldPolicy) {
         //1, 根据 字段策略过滤 可以插入的列
         var insertColumns = filterByFieldPolicy(fieldPolicy, table);
         //2, 根据 字段策略 创建插入的表达式列
