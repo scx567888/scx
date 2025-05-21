@@ -25,9 +25,6 @@ public class DeleteSQLBuilder {
     }
 
     public SQL buildDeleteSQL(Query query) {
-        if (query.getWhere() == null) {
-            throw new IllegalArgumentException("删除数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
-        }
         var whereClause = whereParser.parse(query.getWhere());
         var orderByClauses = orderByParser.parse(query.getOrderBys());
         var sql = GetDeleteSQL(whereClause.whereClause(), orderByClauses, query.getLimit());
@@ -35,12 +32,15 @@ public class DeleteSQLBuilder {
     }
 
     public String GetDeleteSQL(String whereClause, String[] orderByClauses, Long limit) {
+        if (whereClause == null || whereClause.isEmpty()) {
+            throw new IllegalArgumentException("删除数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
+        }
         var sql = "DELETE FROM " + getTableName() + getWhereClause(whereClause) + getOrderByClause(orderByClauses);
         // 删除时 limit 不能有 offset (偏移量)
         return dialect.getLimitSQL(sql, null, limit);
     }
 
-    public String getTableName() {
+    private String getTableName() {
         return dialect.quoteIdentifier(table.name());
     }
 
