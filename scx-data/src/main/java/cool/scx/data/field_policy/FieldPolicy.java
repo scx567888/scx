@@ -1,5 +1,7 @@
 package cool.scx.data.field_policy;
 
+import java.util.Map;
+
 /// 字段策略
 ///
 /// @author scx567888
@@ -20,5 +22,53 @@ public interface FieldPolicy {
 
     /// 清除 fieldNames
     FieldPolicy clearFieldNames();
+
+    //************** 查询 专用 ******************
+    /// 设置 虚拟列
+    QueryFieldPolicy virtualFields(VirtualField... virtualFields);
+
+    /// 获取 虚拟列
+    VirtualField[] getVirtualFields();
+
+    /// 清除 所有虚拟列
+    QueryFieldPolicy clearVirtualFields();
+
+    /// 追加 虚拟列 (用于查询)
+    QueryFieldPolicy virtualField(String expression, String virtualFieldName);
+
+    /// 追加 虚拟列 (用于查询)
+    QueryFieldPolicy virtualField(String expression);
+
+    //***************** 插入/更新 专用 *****************
+
+    /// 设置 全局 忽略空值
+    UpdateFieldPolicy ignoreNull(boolean ignoreNull);
+
+    /// 设置 忽略空值
+    UpdateFieldPolicy ignoreNull(String fieldName, boolean ignoreNull);
+
+    /// 设置 字段表达式 (用于插入和更新)
+    UpdateFieldPolicy expressions(Expression... expressions);
+
+    /// 获取 全局是否忽略 空值
+    boolean getIgnoreNull();
+
+    /// 获取 忽略 空值
+    Map<String, Boolean> getIgnoreNulls();
+
+    /// 获取 字段表达式
+    Expression[] getExpressions();
+
+    /// 清除 所有忽略空值
+    UpdateFieldPolicy clearIgnoreNulls();
+
+    /// 清除 所有表达式
+    UpdateFieldPolicy clearExpressions();
+
+    /// 移除 是否忽略 空值
+    UpdateFieldPolicy removeIgnoreNull(String fieldName);
+
+    /// 追加 表达式
+    UpdateFieldPolicy expression(String fieldName, String expression);
 
 }
