@@ -79,16 +79,19 @@ public class UpdateSQLBuilder {
     }
 
     /// @param updateSetClauses 存储子句 如 (name = 'scx', age = 18)
-    /// @param whereClause  存储子句 如 (name = 'scx', age > 18)
-    /// @param orderByClauses 存储子句 如 (name desc, age asc)
-    /// @param limit Limit
+    /// @param whereClause      存储子句 如 (name = 'scx', age > 18)
+    /// @param orderByClauses   存储子句 如 (name desc, age asc)
+    /// @param limit            Limit
     private String GetUpdateSQL(String[] updateSetClauses, String whereClause, String[] orderByClauses, Long limit) {
+        if (updateSetClauses.length == 0) {
+            throw new IllegalArgumentException("Set 子句错误 : 待更新的数据列 不能为空 !!!");
+        }
         var sql = "UPDATE " + getTableName() + " SET " + String.join(", ", updateSetClauses) + getWhereClause(whereClause) + getOrderByClause(orderByClauses);
         // 更新时 limit 不能有 offset (偏移量)
         return dialect.getLimitSQL(sql, null, limit);
     }
 
-    public String getTableName() {
+    private String getTableName() {
         return dialect.quoteIdentifier(table.name());
     }
 
