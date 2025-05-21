@@ -2,7 +2,6 @@ package cool.scx.data.jdbc.sql_builder;
 
 import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.data.jdbc.mapping.AnnotationConfigTable;
-import cool.scx.data.jdbc.parser.JDBCGroupByParser;
 import cool.scx.data.jdbc.parser.JDBCOrderByParser;
 import cool.scx.data.jdbc.parser.JDBCWhereParser;
 import cool.scx.data.query.Query;
@@ -11,23 +10,22 @@ import cool.scx.jdbc.sql.SQL;
 
 import static cool.scx.common.util.ArrayUtils.tryConcatAny;
 import static cool.scx.common.util.RandomUtils.randomString;
+import static cool.scx.common.util.StringUtils.notEmpty;
 import static cool.scx.data.jdbc.sql_builder.SQLBuilderHelper.filterByQueryFieldPolicy;
+import static cool.scx.data.jdbc.sql_builder.SQLBuilderHelper.joinWithQuoteIdentifier;
 import static cool.scx.jdbc.sql.SQL.sql;
-import static cool.scx.jdbc.sql.SQLBuilder.Select;
 
 public class SelectSQLBuilder {
 
     private final AnnotationConfigTable table;
     private final Dialect dialect;
     private final JDBCWhereParser whereParser;
-    private final JDBCGroupByParser groupByParser;
     private final JDBCOrderByParser orderByParser;
 
-    public SelectSQLBuilder(AnnotationConfigTable table, Dialect dialect, JDBCWhereParser whereParser, JDBCGroupByParser groupByParser, JDBCOrderByParser orderByParser) {
+    public SelectSQLBuilder(AnnotationConfigTable table, Dialect dialect, JDBCWhereParser whereParser, JDBCOrderByParser orderByParser) {
         this.table = table;
         this.dialect = dialect;
         this.whereParser = whereParser;
-        this.groupByParser = groupByParser;
         this.orderByParser = orderByParser;
     }
 
@@ -55,18 +53,10 @@ public class SelectSQLBuilder {
         var finalSelectColumns = tryConcatAny(selectColumns, (Object[]) virtualSelectColumns);
         //4, 创建 where 子句
         var whereClause = whereParser.parse(query.getWhere());
-        //5, 创建 groupBy 子句
-//        var groupByColumns = groupByParser.parse(query.getGroupBy()); todo
         //6, 创建 orderBy 子句
         var orderByClauses = orderByParser.parse(query.getOrderBys());
         //7, 创建 SQL
-        var sql = Select(finalSelectColumns)
-                .From(table)
-                .Where(whereClause.whereClause())
-//                .GroupBy(groupByColumns) todo
-                .OrderBy(orderByClauses)
-                .Limit(query.getOffset(), query.getLimit())
-                .GetSQL(dialect);
+        var sql = GetSelectSQL(finalSelectColumns, whereClause.whereClause(), orderByClauses, query.getOffset(), query.getLimit());
         return sql(sql, whereClause.params());
     }
 
@@ -79,18 +69,10 @@ public class SelectSQLBuilder {
         var finalSelectColumns = tryConcatAny(selectColumns, (Object[]) virtualSelectColumns);
         //4, 创建 where 子句
         var whereClause = whereParser.parse(query.getWhere());
-        //5, 创建 groupBy 子句
-//        var groupByColumns = groupByParser.parse(query.getGroupBy()); todo
         //6, 创建 orderBy 子句
         var orderByClauses = orderByParser.parse(query.getOrderBys());
         //7, 创建 SQL
-        var sql = Select(finalSelectColumns)
-                .From(table)
-                .Where(whereClause.whereClause())
-//                .GroupBy(groupByColumns) todo
-                .OrderBy(orderByClauses)
-                .Limit(null, 1L)
-                .GetSQL(dialect);
+        var sql = GetSelectSQL(finalSelectColumns, whereClause.whereClause(), orderByClauses, null, 1L);
         return sql(sql, whereClause.params());
     }
 
@@ -98,20 +80,48 @@ public class SelectSQLBuilder {
     /// 此方法便是用于生成嵌套的 sql 的
     public SQL buildGetSQLWithAlias(Query query, FieldPolicy fieldPolicy) {
         var sql0 = buildGetSQL(query, fieldPolicy);
-        var sql = Select("*")
-                .From("(" + sql0.sql() + ")")
-                .GetSQL(dialect);
-        return sql(sql + " AS " + table.name() + "_" + randomString(6), sql0.params());
+        var sql = GetWrapperSelectSQL(sql0.sql());
+        return sql(sql, sql0.params());
     }
 
     /// 在 mysql 中 不支持 in 子句中包含 limit 但是我们可以使用 一个嵌套的别名表来跳过检查
     /// 此方法便是用于生成嵌套的 sql 的
     public SQL buildSelectSQLWithAlias(Query query, FieldPolicy fieldPolicy) {
         var sql0 = buildSelectSQL(query, fieldPolicy);
-        var sql = Select("*")
-                .From("(" + sql0.sql() + ")")
-                .GetSQL(dialect);
-        return sql(sql + " AS " + table.name() + "_" + randomString(6), sql0.params());
+        var sql = GetWrapperSelectSQL(sql0.sql());
+        return sql(sql, sql0.params());
+    }
+
+    private String GetWrapperSelectSQL(String sql) {
+        return "SELECT * FROM (" + sql + ") AS " + getRandomTableName();
+    }
+
+    private String GetSelectSQL(Object[] selectColumns, String whereClause, String[] orderByClauses, Long offset, Long limit) {
+        if (selectColumns.length == 0) {
+            throw new IllegalArgumentException("Select 子句错误 : 待查询的数据列 不能为空 !!!");
+        }
+        var sql = "SELECT " + getSelectColumns(selectColumns) + " FROM " + getTableName() + getWhereClause(whereClause) + getOrderByClause(orderByClauses);
+        return dialect.getLimitSQL(sql, offset, limit);
+    }
+
+    private String getSelectColumns(Object[] selectColumns) {
+        return joinWithQuoteIdentifier(selectColumns, dialect);
+    }
+
+    private String getTableName() {
+        return dialect.quoteIdentifier(table.name());
+    }
+
+    private String getRandomTableName() {
+        return dialect.quoteIdentifier(table.name() + "_" + randomString(6));
+    }
+
+    private String getWhereClause(String whereClause) {
+        return notEmpty(whereClause) ? " WHERE " + whereClause : "";
+    }
+
+    private String getOrderByClause(String[] orderByClauses) {
+        return orderByClauses != null && orderByClauses.length != 0 ? " ORDER BY " + String.join(", ", orderByClauses) : "";
     }
 
 }

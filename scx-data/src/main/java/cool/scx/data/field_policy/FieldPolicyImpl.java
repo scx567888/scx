@@ -12,8 +12,8 @@ public class FieldPolicyImpl implements FieldPolicy {
 
     private final FilterMode filterMode;
     private final Set<String> fieldNames;
-    private List<VirtualField> virtualFields;
     private final Map<String, Boolean> ignoreNulls;
+    private List<VirtualField> virtualFields;
     private List<Expression> expressions;
     private boolean ignoreNull;
 

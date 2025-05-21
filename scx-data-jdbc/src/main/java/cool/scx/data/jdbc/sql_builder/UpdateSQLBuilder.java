@@ -11,10 +11,10 @@ import cool.scx.jdbc.mapping.Column;
 import cool.scx.jdbc.sql.SQL;
 
 import static cool.scx.common.util.ArrayUtils.tryConcat;
+import static cool.scx.common.util.StringUtils.notEmpty;
 import static cool.scx.data.jdbc.sql_builder.SQLBuilderHelper.extractValues;
 import static cool.scx.data.jdbc.sql_builder.SQLBuilderHelper.filterByUpdateFieldPolicy;
 import static cool.scx.jdbc.sql.SQL.sql;
-import static cool.scx.jdbc.sql.SQLBuilder.Update;
 
 public class UpdateSQLBuilder {
 
@@ -70,17 +70,37 @@ public class UpdateSQLBuilder {
         //6, 创建 orderBy 子句
         var orderByClauses = orderByParser.parse(query.getOrderBys());
         //7, 创建 SQL
-        var sql = Update(table)
-                .Set(finalUpdateSetClauses)
-                .Where(whereClause.whereClause())
-                .OrderBy(orderByClauses)
-                .Limit(null, query.getLimit())
-                .GetSQL(dialect);
+        var sql = GetUpdateSQL(finalUpdateSetClauses, whereClause.whereClause(), orderByClauses, query.getLimit());
         //8, 提取 entity 参数
         var entityParams = extractValues(updateSetColumns, entity);
         //9, 拼接参数 
         var finalParams = tryConcat(entityParams, whereClause.params());
         return sql(sql, finalParams);
+    }
+
+    /// @param updateSetClauses 存储子句 如 (name = 'scx', age = 18)
+    /// @param whereClause      存储子句 如 (name = 'scx', age > 18)
+    /// @param orderByClauses   存储子句 如 (name desc, age asc)
+    /// @param limit            Limit
+    private String GetUpdateSQL(String[] updateSetClauses, String whereClause, String[] orderByClauses, Long limit) {
+        if (updateSetClauses.length == 0) {
+            throw new IllegalArgumentException("Set 子句错误 : 待更新的数据列 不能为空 !!!");
+        }
+        var sql = "UPDATE " + getTableName() + " SET " + String.join(", ", updateSetClauses) + getWhereClause(whereClause) + getOrderByClause(orderByClauses);
+        // 更新时 limit 不能有 offset (偏移量)
+        return dialect.getLimitSQL(sql, null, limit);
+    }
+
+    private String getTableName() {
+        return dialect.quoteIdentifier(table.name());
+    }
+
+    private String getWhereClause(String whereClause) {
+        return notEmpty(whereClause) ? " WHERE " + whereClause : "";
+    }
+
+    private String getOrderByClause(String[] orderByClauses) {
+        return orderByClauses != null && orderByClauses.length != 0 ? " ORDER BY " + String.join(", ", orderByClauses) : "";
     }
 
 }

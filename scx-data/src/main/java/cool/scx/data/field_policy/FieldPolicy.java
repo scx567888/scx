@@ -24,6 +24,7 @@ public interface FieldPolicy {
     FieldPolicy clearFieldNames();
 
     //************** 查询 专用 ******************
+
     /// 设置 虚拟列
     FieldPolicy virtualFields(VirtualField... virtualFields);
 
