@@ -12,7 +12,7 @@ import static java.util.Collections.addAll;
 public class SQLBuilderHelper {
 
     /// 根据 字段策略过滤 可以插入的列
-    public static AnnotationConfigColumn[] filterByUpdateFieldPolicy(UpdateFieldPolicy fieldPolicy, AnnotationConfigTable table, Object entity) {
+    public static AnnotationConfigColumn[] filterByUpdateFieldPolicy(FieldPolicy fieldPolicy, AnnotationConfigTable table, Object entity) {
         //1, 先根据 黑白名单进行过滤
         var columns = filterByFilterMode(fieldPolicy, table);
 
@@ -28,7 +28,7 @@ public class SQLBuilderHelper {
     }
 
     /// 根据 字段策略过滤 可以插入的列 (注意在 fieldExpressions 中存在的 fieldName 也会被移除)
-    public static AnnotationConfigColumn[] filterByUpdateFieldPolicy(UpdateFieldPolicy fieldPolicy, AnnotationConfigTable table) {
+    public static AnnotationConfigColumn[] filterByUpdateFieldPolicy(FieldPolicy fieldPolicy, AnnotationConfigTable table) {
         //1, 先根据 黑白名单进行过滤
         var columns = filterByFilterMode(fieldPolicy, table);
 
@@ -38,7 +38,7 @@ public class SQLBuilderHelper {
     }
 
     /// 根据 字段策略过滤 可以插入的列 (注意在 fieldExpressions 中存在的 fieldName 也会被移除)
-    public static AnnotationConfigColumn[] filterByQueryFieldPolicy(QueryFieldPolicy fieldPolicy, AnnotationConfigTable table) {
+    public static AnnotationConfigColumn[] filterByQueryFieldPolicy(FieldPolicy fieldPolicy, AnnotationConfigTable table) {
         //1, 先根据 黑白名单进行过滤
         var columns = filterByFilterMode(fieldPolicy, table);
 

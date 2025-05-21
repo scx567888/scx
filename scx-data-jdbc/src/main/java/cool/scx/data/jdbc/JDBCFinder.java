@@ -1,7 +1,7 @@
 package cool.scx.data.jdbc;
 
 import cool.scx.data.Finder;
-import cool.scx.data.field_policy.QueryFieldPolicy;
+import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.data.query.Query;
 
 import java.util.List;
@@ -14,9 +14,9 @@ public class JDBCFinder<Entity> implements Finder<Entity> {
 
     private final JDBCRepository<Entity> repository;
     private final Query query;
-    private final QueryFieldPolicy fieldPolicy;
+    private final FieldPolicy fieldPolicy;
 
-    public JDBCFinder(JDBCRepository<Entity> repository, Query query, QueryFieldPolicy fieldPolicy) {
+    public JDBCFinder(JDBCRepository<Entity> repository, Query query, FieldPolicy fieldPolicy) {
         this.repository = repository;
         this.query = query;
         this.fieldPolicy = fieldPolicy;

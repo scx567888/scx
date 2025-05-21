@@ -1,6 +1,6 @@
 package cool.scx.data.jdbc.sql_builder;
 
-import cool.scx.data.field_policy.UpdateFieldPolicy;
+import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.data.jdbc.mapping.AnnotationConfigTable;
 import cool.scx.data.jdbc.parser.JDBCColumnNameParser;
 import cool.scx.data.jdbc.parser.JDBCOrderByParser;
@@ -40,7 +40,7 @@ public class UpdateSQLBuilder {
         return result;
     }
 
-    public static String[] createUpdateSetExpressionsClauses(UpdateFieldPolicy fieldPolicy, JDBCColumnNameParser columnNameParser) {
+    public static String[] createUpdateSetExpressionsClauses(FieldPolicy fieldPolicy, JDBCColumnNameParser columnNameParser) {
         var fieldExpressions = fieldPolicy.getExpressions();
         var result = new String[fieldExpressions.length];
         var i = 0;
@@ -53,7 +53,7 @@ public class UpdateSQLBuilder {
         return result;
     }
 
-    public SQL buildUpdateSQL(Object entity, UpdateFieldPolicy updateFilter, Query query) {
+    public SQL buildUpdateSQL(Object entity, FieldPolicy updateFilter, Query query) {
         if (query.getWhere() == null) {
             throw new IllegalArgumentException("更新数据时 必须指定 删除条件 或 自定义的 where 语句 !!!");
         }

@@ -1,6 +1,6 @@
 package cool.scx.data.jdbc.sql_builder;
 
-import cool.scx.data.field_policy.QueryFieldPolicy;
+import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.data.jdbc.mapping.AnnotationConfigTable;
 import cool.scx.data.jdbc.parser.JDBCGroupByParser;
 import cool.scx.data.jdbc.parser.JDBCOrderByParser;
@@ -32,7 +32,7 @@ public class SelectSQLBuilder {
     }
 
     /// 创建虚拟查询列
-    public static String[] createVirtualSelectColumns(QueryFieldPolicy fieldPolicy, Dialect dialect) {
+    public static String[] createVirtualSelectColumns(FieldPolicy fieldPolicy, Dialect dialect) {
         var fieldExpressions = fieldPolicy.getVirtualFields();
         var virtualSelectColumns = new String[fieldExpressions.length];
         int i = 0;
@@ -46,7 +46,7 @@ public class SelectSQLBuilder {
         return virtualSelectColumns;
     }
 
-    public SQL buildSelectSQL(Query query, QueryFieldPolicy fieldPolicy) {
+    public SQL buildSelectSQL(Query query, FieldPolicy fieldPolicy) {
         //1, 过滤查询列
         var selectColumns = filterByQueryFieldPolicy(fieldPolicy, table);
         //2, 创建虚拟查询列
@@ -70,7 +70,7 @@ public class SelectSQLBuilder {
         return sql(sql, whereClause.params());
     }
 
-    public SQL buildGetSQL(Query query, QueryFieldPolicy fieldPolicy) {
+    public SQL buildGetSQL(Query query, FieldPolicy fieldPolicy) {
         //1, 过滤查询列
         var selectColumns = filterByQueryFieldPolicy(fieldPolicy, table);
         //2, 创建虚拟查询列
@@ -96,7 +96,7 @@ public class SelectSQLBuilder {
 
     /// 在 mysql 中 不支持 in 子句中包含 limit 但是我们可以使用 一个嵌套的别名表来跳过检查
     /// 此方法便是用于生成嵌套的 sql 的
-    public SQL buildGetSQLWithAlias(Query query, QueryFieldPolicy fieldPolicy) {
+    public SQL buildGetSQLWithAlias(Query query, FieldPolicy fieldPolicy) {
         var sql0 = buildGetSQL(query, fieldPolicy);
         var sql = Select("*")
                 .From("(" + sql0.sql() + ")")
@@ -106,7 +106,7 @@ public class SelectSQLBuilder {
 
     /// 在 mysql 中 不支持 in 子句中包含 limit 但是我们可以使用 一个嵌套的别名表来跳过检查
     /// 此方法便是用于生成嵌套的 sql 的
-    public SQL buildSelectSQLWithAlias(Query query, QueryFieldPolicy fieldPolicy) {
+    public SQL buildSelectSQLWithAlias(Query query, FieldPolicy fieldPolicy) {
         var sql0 = buildSelectSQL(query, fieldPolicy);
         var sql = Select("*")
                 .From("(" + sql0.sql() + ")")

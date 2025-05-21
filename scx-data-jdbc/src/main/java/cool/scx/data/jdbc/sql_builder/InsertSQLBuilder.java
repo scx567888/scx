@@ -1,6 +1,6 @@
 package cool.scx.data.jdbc.sql_builder;
 
-import cool.scx.data.field_policy.UpdateFieldPolicy;
+import cool.scx.data.field_policy.FieldPolicy;
 import cool.scx.data.jdbc.mapping.AnnotationConfigTable;
 import cool.scx.data.jdbc.parser.JDBCColumnNameParser;
 import cool.scx.jdbc.dialect.Dialect;
@@ -28,7 +28,7 @@ public class InsertSQLBuilder {
         this.columnNameParser = columnNameParser;
     }
 
-    public static String[] createInsertExpressionsColumns(UpdateFieldPolicy fieldPolicy, JDBCColumnNameParser parser) {
+    public static String[] createInsertExpressionsColumns(FieldPolicy fieldPolicy, JDBCColumnNameParser parser) {
         var fieldExpressions = fieldPolicy.getExpressions();
         var result = new String[fieldExpressions.length];
         int i = 0;
@@ -47,7 +47,7 @@ public class InsertSQLBuilder {
         return result;
     }
 
-    public static String[] createInsertExpressionsValue(UpdateFieldPolicy fieldPolicy) {
+    public static String[] createInsertExpressionsValue(FieldPolicy fieldPolicy) {
         var fieldExpressions = fieldPolicy.getExpressions();
         var result = new String[fieldExpressions.length];
         int i = 0;
@@ -58,7 +58,7 @@ public class InsertSQLBuilder {
         return result;
     }
 
-    public SQL buildInsertSQL(Object entity, UpdateFieldPolicy fieldPolicy) {
+    public SQL buildInsertSQL(Object entity, FieldPolicy fieldPolicy) {
         //1, 根据 字段策略过滤 可以插入的列
         var insertColumns = filterByUpdateFieldPolicy(fieldPolicy, table, entity);
         //2, 根据 字段策略 创建插入的表达式列
@@ -80,7 +80,7 @@ public class InsertSQLBuilder {
         return sql(sql, params);
     }
 
-    public SQL buildInsertBatchSQL(Collection<?> entityList, UpdateFieldPolicy fieldPolicy) {
+    public SQL buildInsertBatchSQL(Collection<?> entityList, FieldPolicy fieldPolicy) {
         //1, 根据 字段策略过滤 可以插入的列
         var insertColumns = filterByUpdateFieldPolicy(fieldPolicy, table);
         //2, 根据 字段策略 创建插入的表达式列
