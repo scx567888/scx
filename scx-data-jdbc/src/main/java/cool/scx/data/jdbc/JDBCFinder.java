@@ -54,17 +54,17 @@ public class JDBCFinder<Entity> implements Finder<Entity> {
 
     @Override
     public Entity first() {
-        return repository.sqlRunner.query(repository.buildGetSQL(query, fieldPolicy), repository.entityBeanHandler);
+        return repository.sqlRunner.query(repository.buildSelectFirstSQL(query, fieldPolicy), repository.entityBeanHandler);
     }
 
     @Override
     public <T> T first(Class<T> resultType) {
-        return repository.sqlRunner.query(repository.buildGetSQL(query, fieldPolicy), ofBean(resultType, repository.beanColumnNameMapping));
+        return repository.sqlRunner.query(repository.buildSelectFirstSQL(query, fieldPolicy), ofBean(resultType, repository.beanColumnNameMapping));
     }
 
     @Override
     public Map<String, Object> firstMap() {
-        return repository.sqlRunner.query(repository.buildGetSQL(query, fieldPolicy), ofMap(repository.mapBuilder));
+        return repository.sqlRunner.query(repository.buildSelectFirstSQL(query, fieldPolicy), ofMap(repository.mapBuilder));
     }
 
     @Override

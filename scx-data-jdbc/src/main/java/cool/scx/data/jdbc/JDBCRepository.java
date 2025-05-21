@@ -161,8 +161,8 @@ public class JDBCRepository<Entity> implements AggregatableRepository<Entity, Lo
         return selectSQLBuilder.buildSelectSQL(query, fieldPolicy);
     }
 
-    public SQL buildGetSQL(Query query, FieldPolicy fieldPolicy) {
-        return selectSQLBuilder.buildGetSQL(query, fieldPolicy);
+    public SQL buildSelectFirstSQL(Query query, FieldPolicy fieldPolicy) {
+        return selectSQLBuilder.buildSelectFirstSQL(query, fieldPolicy);
     }
 
     public SQL buildUpdateSQL(Entity entity, FieldPolicy fieldPolicy, Query query) {
@@ -177,8 +177,8 @@ public class JDBCRepository<Entity> implements AggregatableRepository<Entity, Lo
         return countSQLBuilder.buildCountSQL(query);
     }
 
-    public SQL buildGetSQLWithAlias(Query query, FieldPolicy fieldPolicy) {
-        return selectSQLBuilder.buildGetSQLWithAlias(query, fieldPolicy);
+    public SQL buildSelectFirstSQLWithAlias(Query query, FieldPolicy fieldPolicy) {
+        return selectSQLBuilder.buildSelectFirstSQLWithAlias(query, fieldPolicy);
     }
 
     public SQL buildSelectSQLWithAlias(Query query, FieldPolicy fieldPolicy) {
