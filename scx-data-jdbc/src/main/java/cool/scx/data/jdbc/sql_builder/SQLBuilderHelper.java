@@ -1,8 +1,12 @@
 package cool.scx.data.jdbc.sql_builder;
 
-import cool.scx.data.field_policy.*;
+import cool.scx.data.field_policy.Expression;
+import cool.scx.data.field_policy.FieldPolicy;
+import cool.scx.data.field_policy.VirtualField;
 import cool.scx.data.jdbc.mapping.AnnotationConfigColumn;
 import cool.scx.data.jdbc.mapping.AnnotationConfigTable;
+import cool.scx.jdbc.dialect.Dialect;
+import cool.scx.jdbc.mapping.Column;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -49,7 +53,7 @@ public class SQLBuilderHelper {
 
     public static AnnotationConfigColumn[] filterByVirtualFields(VirtualField[] virtualFields, AnnotationConfigTable table, AnnotationConfigColumn... columns) {
         // 快速判断
-        if (virtualFields.length==0) {
+        if (virtualFields.length == 0) {
             return columns;
         }
 
@@ -133,7 +137,7 @@ public class SQLBuilderHelper {
 
     public static AnnotationConfigColumn[] filterByFieldExpressions(Expression[] fieldExpressions, AnnotationConfigTable table, AnnotationConfigColumn... columns) {
         // 快速判断
-        if (fieldExpressions.length==0) {
+        if (fieldExpressions.length == 0) {
             return columns;
         }
 
@@ -156,6 +160,24 @@ public class SQLBuilderHelper {
             result[i] = column[i].javaFieldValue(entity);
         }
         return result;
+    }
+
+    public static String joinWithQuoteIdentifier(Object[] values, Dialect dialect) {
+        var isFirst = true;
+        var sb = new StringBuilder();
+        for (var value : values) {
+            if (isFirst) {
+                isFirst = false;
+            } else {
+                sb.append(", ");
+            }
+            if (value instanceof Column c) {
+                sb.append(dialect.quoteIdentifier(c.name()));
+            } else {
+                sb.append(value.toString());
+            }
+        }
+        return sb.toString();
     }
 
 }

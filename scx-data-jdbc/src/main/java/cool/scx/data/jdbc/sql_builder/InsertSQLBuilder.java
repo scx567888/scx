@@ -12,9 +12,7 @@ import java.util.Collection;
 
 import static cool.scx.common.util.ArrayUtils.tryConcat;
 import static cool.scx.common.util.ArrayUtils.tryConcatAny;
-import static cool.scx.data.jdbc.sql_builder.SQLBuilder.joinWithQuoteIdentifier;
-import static cool.scx.data.jdbc.sql_builder.SQLBuilderHelper.extractValues;
-import static cool.scx.data.jdbc.sql_builder.SQLBuilderHelper.filterByUpdateFieldPolicy;
+import static cool.scx.data.jdbc.sql_builder.SQLBuilderHelper.*;
 import static cool.scx.jdbc.sql.SQL.sql;
 
 public class InsertSQLBuilder {
