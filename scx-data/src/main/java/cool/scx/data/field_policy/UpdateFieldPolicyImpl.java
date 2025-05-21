@@ -19,7 +19,7 @@ public class UpdateFieldPolicyImpl extends FieldPolicyImpl<UpdateFieldPolicy> im
     }
 
     @Override
-    public UpdateFieldPolicy ignoreNull(boolean ignoreNull) {
+    public UpdateFieldPolicyImpl ignoreNull(boolean ignoreNull) {
         this.ignoreNull = ignoreNull;
         return this;
     }
@@ -31,7 +31,7 @@ public class UpdateFieldPolicyImpl extends FieldPolicyImpl<UpdateFieldPolicy> im
     }
 
     @Override
-    public UpdateFieldPolicy expressions(Expression... expressions) {
+    public UpdateFieldPolicyImpl expressions(Expression... expressions) {
         this.expressions = new ArrayList<>(List.of(expressions));
         return this;
     }
@@ -52,25 +52,25 @@ public class UpdateFieldPolicyImpl extends FieldPolicyImpl<UpdateFieldPolicy> im
     }
 
     @Override
-    public UpdateFieldPolicy clearIgnoreNulls() {
+    public UpdateFieldPolicyImpl clearIgnoreNulls() {
         ignoreNulls.clear();
         return this;
     }
 
     @Override
-    public UpdateFieldPolicy clearExpressions() {
+    public UpdateFieldPolicyImpl clearExpressions() {
         expressions.clear();
         return this;
     }
 
     @Override
-    public UpdateFieldPolicy removeIgnoreNull(String fieldName) {
+    public UpdateFieldPolicyImpl removeIgnoreNull(String fieldName) {
         ignoreNulls.remove(fieldName);
         return this;
     }
 
     @Override
-    public UpdateFieldPolicy expression(String fieldName, String expression) {
+    public UpdateFieldPolicyImpl expression(String fieldName, String expression) {
         this.expressions.add(new Expression(fieldName, expression));
         return this;
     }
